@@ -23,11 +23,11 @@ Class {
 		'attributeBuffer'
 	],
 	#classVars : [
-		'NameDelimiters',
-		'SeparatorTable',
 		'CharEscapes',
 		'DigitTable',
-		'LiteralChars'
+		'LiteralChars',
+		'NameDelimiters',
+		'SeparatorTable'
 	],
 	#category : #'XML-Parser'
 }
