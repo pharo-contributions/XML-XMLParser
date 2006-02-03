@@ -23,11 +23,11 @@ Class {
 		'attributeBuffer'
 	],
 	#classVars : [
-		'NameDelimiters',
-		'SeparatorTable',
 		'CharEscapes',
 		'DigitTable',
-		'LiteralChars'
+		'LiteralChars',
+		'NameDelimiters',
+		'SeparatorTable'
 	],
 	#category : #'XML-Parser'
 }
@@ -80,6 +80,7 @@ XMLTokenizer class >> addressBookXML [
 XMLTokenizer class >> addressBookXMLWithDTD [
 	^'<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE addressbook SYSTEM "addressbook.dtd">
+<?xml:stylesheet type="text/xsl" href="demo.xsl"?>
 <addressbook>
   <person employee-number="A0000" family-name="Gates" first-name="Bob">
     <contact-info><!--Confidential--></contact-info>
@@ -539,7 +540,7 @@ XMLTokenizer >> nextCDataOrConditional [
 
 { #category : #tokenizing }
 XMLTokenizer >> nextCharReference [
-	| base charValue |
+	| base charValue nextChar numberString |
 	self next == $#
 		ifFalse: [self errorExpected: 'character reference'].
 	base _ self peek == $x
@@ -547,11 +548,14 @@ XMLTokenizer >> nextCharReference [
 			self next.
 			16]
 		ifFalse: [10].
-
-	charValue _ [self readNumberBase: base] on: Error do: [:ex | self errorExpected: 'Number.'].
-	(self next) == $;
+"	numberString _ (self nextUpTo: $;) asUppercase.
+	charValue _ [Number readFrom: numberString base: base] on: Error do: [:ex | self errorExpected: 'Number.'].
+"	charValue _ [self readNumberBase: base] on: Error do: [:ex | self errorExpected: 'Number.'].
+	(nextChar _ self next) == $;
 		ifFalse: [self errorExpected: '";"'].
-	^Unicode value: charValue
+	^charValue > 255
+		ifTrue: [^Character space]
+		ifFalse: [charValue asCharacter]
 ]
 
 { #category : #tokenizing }
@@ -933,7 +937,7 @@ XMLTokenizer >> nextWhitespace [
 	| nextChar resultStream resultString|
 	resultStream _ (String new: 10) writeStream.
 	[((nextChar _ self peek) == nil)
-		or: [SeparatorTable at: nextChar asciiValue+1 ifAbsent:[true]]]
+		or: [SeparatorTable at: nextChar asciiValue+1]]
 		whileFalse: [resultStream nextPut: nextChar. self next].
 	(nestedStreams == nil or: [self atEnd not])
 		ifFalse: [self checkNestedStream.
@@ -954,7 +958,9 @@ XMLTokenizer >> nextXMLDecl [
 	self next.
 	self next == $>
 		ifFalse: [self errorExpected: '> expected.'].
+	(attributes includesKey: 'encoding') ifTrue: [self streamEncoding: (attributes at: 'encoding')].
 	self handleXMLDecl: attributes namespaces: namespaces
+	
 ]
 
 { #category : #entities }
@@ -1035,13 +1041,6 @@ XMLTokenizer >> readNumberBase: base [
 	"Read a hex number from stream until encountering $; "
 
 	| value digit |
-
-	base = 10 ifFalse: [	| numberString | 
-		numberString _ self nextUpTo: $;.
-		self stream skip: -1.
-		^Integer readFrom: numberString asUppercase readStream base: base. 
-	].
-
 	value _ 0.
 	digit _ DigitTable at: self peek asciiValue.
 	digit < 0
@@ -1100,6 +1099,14 @@ XMLTokenizer >> stream [
 XMLTokenizer >> stream: newStream [
 	"Continue parsing from the new nested stream."
 	stream _ newStream
+]
+
+{ #category : #streaming }
+XMLTokenizer >> streamEncoding: encodingString [
+
+	Smalltalk at: #TextConverter ifPresent: [:tc | 
+		(stream respondsTo: #converter:) ifTrue: [
+			stream converter: (tc defaultConverterClassForEncoding: encodingString)]]
 ]
 
 { #category : #streaming }

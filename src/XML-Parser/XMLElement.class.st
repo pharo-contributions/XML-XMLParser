@@ -51,7 +51,7 @@ XMLElement >> attributeAt: attributeName put: attributeValue [
 
 { #category : #accessing }
 XMLElement >> attributes [
-	^attributes ifNil: [attributes _ Dictionary new]
+	^attributes
 ]
 
 { #category : #accessing }
