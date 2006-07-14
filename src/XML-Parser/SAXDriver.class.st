@@ -5,7 +5,8 @@ Class {
 		'saxHandler',
 		'scope',
 		'useNamespaces',
-		'validateAttributes'
+		'validateAttributes',
+		'languageEnvironment'
 	],
 	#category : #'XML-Parser'
 }
@@ -64,6 +65,8 @@ SAXDriver >> handleEndTag: elementName [
 
 { #category : #'handling tokens' }
 SAXDriver >> handlePCData: aString [
+	self languageEnvironment
+		ifNotNil: [aString applyLanguageInfomation: self languageEnvironment].
 	self saxHandler
 		checkEOD; 
 		characters: aString
@@ -86,6 +89,8 @@ SAXDriver >> handleStartTag: elementName attributes: attributeList namespaces: n
 
 	| localName namespace namespaceURI |
 
+	(attributeList includesKey: 'xml:lang')
+		ifTrue: [languageEnvironment := LanguageEnvironment localeID: (LocaleID isoString: (attributeList at: 'xml:lang'))].
 	self usesNamespaces
 		ifTrue: [
 			self scope enterScope.
@@ -141,6 +146,11 @@ SAXDriver >> initialize [
 	super initialize.
 	useNamespaces := false.
 	validateAttributes := false
+]
+
+{ #category : #accessing }
+SAXDriver >> languageEnvironment [
+	^languageEnvironment
 ]
 
 { #category : #accessing }
