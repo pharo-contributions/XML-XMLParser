@@ -80,7 +80,7 @@ XMLTokenizer class >> addressBookXML [
 XMLTokenizer class >> addressBookXMLWithDTD [
 	^'<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE addressbook SYSTEM "addressbook.dtd">
-<?xml:stylesheet type="text/xsl" href="demo.xsl"?>
+<?xml-stylesheet type="text/xsl" href="demo.xsl"?>
 <addressbook>
   <person employee-number="A0000" family-name="Gates" first-name="Bob">
     <contact-info><!--Confidential--></contact-info>
@@ -540,7 +540,7 @@ XMLTokenizer >> nextCDataOrConditional [
 
 { #category : #tokenizing }
 XMLTokenizer >> nextCharReference [
-	| base charValue nextChar numberString |
+	| base charValue |
 	self next == $#
 		ifFalse: [self errorExpected: 'character reference'].
 	base _ self peek == $x
@@ -548,14 +548,11 @@ XMLTokenizer >> nextCharReference [
 			self next.
 			16]
 		ifFalse: [10].
-"	numberString _ (self nextUpTo: $;) asUppercase.
-	charValue _ [Number readFrom: numberString base: base] on: Error do: [:ex | self errorExpected: 'Number.'].
-"	charValue _ [self readNumberBase: base] on: Error do: [:ex | self errorExpected: 'Number.'].
-	(nextChar _ self next) == $;
+
+	charValue _ [self readNumberBase: base] on: Error do: [:ex | self errorExpected: 'Number.'].
+	(self next) == $;
 		ifFalse: [self errorExpected: '";"'].
-	^charValue > 255
-		ifTrue: [^Character space]
-		ifFalse: [charValue asCharacter]
+	^Unicode value: charValue
 ]
 
 { #category : #tokenizing }
@@ -931,7 +928,7 @@ XMLTokenizer >> nextWhitespace [
 	| nextChar resultStream resultString|
 	resultStream _ (String new: 10) writeStream.
 	[((nextChar _ self peek) == nil)
-		or: [SeparatorTable at: nextChar asciiValue+1]]
+		or: [SeparatorTable at: nextChar asciiValue+1 ifAbsent:[true]]]
 		whileFalse: [resultStream nextPut: nextChar. self next].
 	(nestedStreams == nil or: [self atEnd not])
 		ifFalse: [self checkNestedStream.
@@ -1035,6 +1032,13 @@ XMLTokenizer >> readNumberBase: base [
 	"Read a hex number from stream until encountering $; "
 
 	| value digit |
+
+	base = 10 ifFalse: [	| numberString | 
+		numberString _ self nextUpTo: $;.
+		self stream skip: -1.
+		^Integer readFrom: numberString asUppercase readStream base: base. 
+	].
+
 	value _ 0.
 	digit _ DigitTable at: self peek asciiValue.
 	digit < 0
@@ -1098,9 +1102,11 @@ XMLTokenizer >> stream: newStream [
 { #category : #streaming }
 XMLTokenizer >> streamEncoding: encodingString [
 
+	| converterClass |
 	Smalltalk at: #TextConverter ifPresent: [:tc | 
 		(stream respondsTo: #converter:) ifTrue: [
-			stream converter: (tc defaultConverterClassForEncoding: encodingString)]]
+			converterClass := tc defaultConverterClassForEncoding: encodingString asLowercase.
+			converterClass ifNotNil: [stream converter: converterClass new]]]
 ]
 
 { #category : #streaming }

@@ -37,8 +37,14 @@ SAXHandler class >> parseDTDFrom: aStream [
 
 { #category : #'instance creation' }
 SAXHandler class >> parseDocumentFrom: aStream [
+	^self parseDocumentFrom: aStream useNamespaces: false
+]
+
+{ #category : #'instance creation' }
+SAXHandler class >> parseDocumentFrom: aStream useNamespaces: aBoolean [
 	|  parser |
 	parser _ self on: aStream.
+	parser useNamespaces: aBoolean.
 	parser startDocument.
 	parser parseDocument.
 	^parser

@@ -12,12 +12,17 @@ Class {
 { #category : #examples }
 XMLDOMParser class >> addressBookXMLWithDTD [
 	"XMLDOMParser addressBookXMLWithDTD"
-	^self parseDocumentFrom: XMLTokenizer addressBookXMLWithDTD readStream
+	^self parseDocumentFrom: XMLTokenizer addressBookXMLWithDTD readStream useNamespaces: true
 ]
 
 { #category : #'instance creation' }
 XMLDOMParser class >> parseDocumentFrom: aStream [
-	^(super parseDocumentFrom: aStream) document
+	^self parseDocumentFrom: aStream useNamespaces: false
+]
+
+{ #category : #'instance creation' }
+XMLDOMParser class >> parseDocumentFrom: aStream useNamespaces: aBoolean [
+	^(super parseDocumentFrom: aStream useNamespaces: aBoolean) document
 ]
 
 { #category : #content }

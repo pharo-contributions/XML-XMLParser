@@ -6,7 +6,9 @@ Class {
 		'stack',
 		'scope',
 		'scanner',
-		'canonical'
+		'canonical',
+		'currentIndent',
+		'indentString'
 	],
 	#classVars : [
 		'XMLTranslation',
@@ -128,12 +130,14 @@ XMLWriter >> endPI [
 { #category : #'writing xml' }
 XMLWriter >> endTag [
 	self stream nextPutAll: '>'.
+	self indent.
 	"self canonical
 		ifFalse: [self stream space]"
 ]
 
 { #category : #'writing xml' }
 XMLWriter >> endTag: tagName [
+	self outdent.
 	self endTag: tagName xmlns: nil
 ]
 
@@ -167,16 +171,43 @@ XMLWriter >> flush [
 	self stream flush
 ]
 
+{ #category : #private }
+XMLWriter >> indent [
+	currentIndent
+		ifNotNil: [currentIndent := currentIndent +1]
+]
+
+{ #category : #accessing }
+XMLWriter >> indentString: aString [
+	currentIndent := 0.
+	indentString := aString
+]
+
+{ #category : #accessing }
+XMLWriter >> indentTab [
+	self indentString: (String with: Character tab)
+]
+
 { #category : #initialize }
 XMLWriter >> initialize [
-	stack _ OrderedCollection new.
-	canonical _ false.
+	stack := OrderedCollection new.
+	canonical := false.
 	scope := XMLNamespaceScope new
 ]
 
 { #category : #namespaces }
 XMLWriter >> leaveScope [
 	self scope leaveScope
+]
+
+{ #category : #private }
+XMLWriter >> outdent [
+	currentIndent
+		ifNotNil: [
+			stream cr.
+			currentIndent := currentIndent-1.
+			self writeIndent.
+			currentIndent := currentIndent-1.]
 ]
 
 { #category : #'writing xml' }
@@ -289,6 +320,7 @@ XMLWriter >> startPI: identifier [
 
 { #category : #'writing xml' }
 XMLWriter >> startTag: tagName [
+	self writeIndent.
 	self startTag: tagName xmlns: nil
 ]
 
@@ -316,6 +348,12 @@ XMLWriter >> stream [
 { #category : #accessing }
 XMLWriter >> stream: aStream [
 	stream _ aStream
+]
+
+{ #category : #private }
+XMLWriter >> writeIndent [
+	currentIndent ifNotNil: [
+		currentIndent timesRepeat: [self stream nextPutAll: indentString]]
 ]
 
 { #category : #'writing xml' }
