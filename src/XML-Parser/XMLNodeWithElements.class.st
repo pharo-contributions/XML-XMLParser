@@ -2,16 +2,17 @@ Class {
 	#name : #XMLNodeWithElements,
 	#superclass : #XMLNode,
 	#instVars : [
-		'elements',
+		'elementsAndContents',
 		'uri',
-		'namespace'
+		'namespace',
+		'parent'
 	],
 	#category : #'XML-Parser'
 }
 
 { #category : #accessing }
 XMLNodeWithElements >> addElement: element [
-	self elements add: element
+	self elementsAndContents add: element
 ]
 
 { #category : #accessing }
@@ -26,9 +27,9 @@ XMLNodeWithElements >> elementAt: entityName [
 
 { #category : #accessing }
 XMLNodeWithElements >> elementAt: entityName ifAbsent: aBlock [
-	elements
+	elementsAndContents
 		ifNil: [^aBlock value].
-	^self elements detect: [:each | each name = entityName or: [each localName = entityName]] ifNone: [^aBlock value]
+	^self elements detect: [:each | each isProcessingInstruction not and: [each name = entityName or: [each localName = entityName]]] ifNone: [^aBlock value]
 ]
 
 { #category : #accessing }
@@ -38,22 +39,25 @@ XMLNodeWithElements >> elementUnqualifiedAt: entityName [
 
 { #category : #accessing }
 XMLNodeWithElements >> elementUnqualifiedAt: entityName ifAbsent: aBlock [
-	elements
+	elementsAndContents
 		ifNil: [^aBlock value].
 	^self elements detect: [:each | each localName = entityName] ifNone: [^aBlock value]
 ]
 
 { #category : #accessing }
 XMLNodeWithElements >> elements [
-	elements ifNil: [elements _ OrderedCollection new].
-	^elements
+	^self elementsAndContents
+]
+
+{ #category : #accessing }
+XMLNodeWithElements >> elementsAndContents [
+	elementsAndContents ifNil: [elementsAndContents := OrderedCollection new].
+	^elementsAndContents
 ]
 
 { #category : #enumerating }
 XMLNodeWithElements >> elementsDo: aBlock [
-	elements
-		ifNotNil: [
-			self elements do: [:each | aBlock value: each]]
+	self elements do: [:each | aBlock value: each]
 ]
 
 { #category : #'name space' }
@@ -63,8 +67,8 @@ XMLNodeWithElements >> namespace [
 
 { #category : #'name space' }
 XMLNodeWithElements >> namespace: ns uri: u [
-	namespace _ ns.
-	uri _ u
+	namespace := ns.
+	uri := u
 ]
 
 { #category : #'name space' }

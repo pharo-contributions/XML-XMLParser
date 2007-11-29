@@ -17,7 +17,7 @@ XMLDocument >> dtd [
 
 { #category : #accessing }
 XMLDocument >> dtd: aDTD [
-	dtd _ aDTD
+	dtd := aDTD
 ]
 
 { #category : #accessing }
@@ -27,14 +27,14 @@ XMLDocument >> encoding [
 
 { #category : #accessing }
 XMLDocument >> encoding: aString [	
-	encoding _ aString
+	encoding := aString
 ]
 
 { #category : #printing }
 XMLDocument >> printCanonicalOn: aStream [
 
 	| writer |
-	writer _ XMLWriter on: aStream.
+	writer := XMLWriter on: aStream.
 	writer canonical: true.
 	self printXMLOn: writer
 ]
@@ -52,7 +52,13 @@ XMLDocument >> requiredMarkup [
 
 { #category : #accessing }
 XMLDocument >> requiredMarkup: aString [	
-	requiredMarkup _ aString
+	requiredMarkup := aString
+]
+
+{ #category : #accessing }
+XMLDocument >> root [
+	"return my root element"
+	^ self topElement 
 ]
 
 { #category : #accessing }
@@ -62,5 +68,5 @@ XMLDocument >> version [
 
 { #category : #accessing }
 XMLDocument >> version: aString [	
-	version _ aString
+	version := aString
 ]

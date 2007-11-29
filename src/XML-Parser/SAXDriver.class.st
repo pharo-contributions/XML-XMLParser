@@ -37,8 +37,8 @@ SAXDriver >> handleEndTag: elementName [
 	self usesNamespaces
 		ifTrue: [
 			self splitName: elementName into: [:ns :ln |
-				namespace _ ns.
-				localName _ ln].
+				namespace := ns.
+				localName := ln].
 
 			"ensure our namespace is defined"
 			namespace
@@ -99,8 +99,8 @@ SAXDriver >> handleStartTag: elementName attributes: attributeList namespaces: n
 					self scope declareNamespace: ns uri: uri].
 
 			self splitName: elementName into: [:ns :ln |
-				namespace _ ns.
-				localName _ ln].
+				namespace := ns.
+				localName := ln].
 
 			"ensure our namespace is defined"
 			namespace
@@ -160,7 +160,7 @@ SAXDriver >> saxHandler [
 
 { #category : #accessing }
 SAXDriver >> saxHandler: aHandler [
-	saxHandler _ aHandler
+	saxHandler := aHandler
 ]
 
 { #category : #namespaces }
@@ -175,7 +175,7 @@ SAXDriver >> splitName: aName into: twoArgsBlock [
 	Handle both qualified and unqualified names using the default name space"
 
 	| i ns ln |
-	i _ aName lastIndexOf: $:.
+	i := aName lastIndexOf: $:.
 	i = 0
 		ifTrue: [
 			ns := nil.

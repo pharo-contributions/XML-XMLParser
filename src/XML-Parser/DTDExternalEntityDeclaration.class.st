@@ -8,7 +8,7 @@ Class {
 DTDExternalEntityDeclaration class >> initialize [
 	"DTDExternalEntityDeclaration initialize"
 
-	contextBehavior _ Dictionary new.
+	contextBehavior := Dictionary new.
 	contextBehavior
 		at: #content put: #include ;
 		at: #attributeValueContent put: #includedInLiteral ;

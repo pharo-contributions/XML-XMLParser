@@ -70,8 +70,8 @@ XMLNamespaceScope >> namespaceAliases: namespace [
 	"Locate all namespaces that are aliases of the given URI."
 
 	| aliases uri |
-	aliases _ Set new.
-	uri _ self namespaceURIOf: namespace ifAbsent: [self parseError: 'Attribute refers to undefined namespace ' , namespace asString ].
+	aliases := Set new.
+	uri := self namespaceURIOf: namespace ifAbsent: [self parseError: 'Attribute refers to undefined namespace ' , namespace asString ].
 	currentBindings keysAndValuesDo: [:ns :u |
 		(u = uri
 			and: [ns ~= namespace])
@@ -115,8 +115,8 @@ XMLNamespaceScope >> validateAttributes: attributeList [
 	| namespace localName |
 	attributeList keysDo: [:attrName |
 		self splitName: attrName into: [:ns :ln |
-			namespace _ ns.
-			localName _ ln].
+			namespace := ns.
+			localName := ln].
 		namespace ifNotNil: [
 			(self namespaceAliases: namespace) do: [:alias |
 				(attributeList includesKey: alias , ':' , localName)

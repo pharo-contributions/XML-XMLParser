@@ -26,7 +26,7 @@ DTDEntityDeclaration class >> contextBehavior [
 DTDEntityDeclaration class >> initialize [
 	"DTDEntityDeclaration initialize"
 
-	contextBehavior _ Dictionary new.
+	contextBehavior := Dictionary new.
 	contextBehavior
 		at: #content put: #include ;
 		at: #attributeValueContent put: #includedInLiteral ;
@@ -77,7 +77,7 @@ DTDEntityDeclaration >> name [
 
 { #category : #accessing }
 DTDEntityDeclaration >> name: aString [
-	name _ aString asSymbol
+	name := aString asSymbol
 ]
 
 { #category : #accessing }
@@ -87,7 +87,7 @@ DTDEntityDeclaration >> ndata [
 
 { #category : #accessing }
 DTDEntityDeclaration >> ndata: aString [
-	ndata _ aString
+	ndata := aString
 ]
 
 { #category : #behaviors }
@@ -108,7 +108,7 @@ DTDEntityDeclaration >> value [
 
 { #category : #accessing }
 DTDEntityDeclaration >> value: aString [
-	value _ aString
+	value := aString
 ]
 
 { #category : #invocation }

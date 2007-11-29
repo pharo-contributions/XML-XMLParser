@@ -58,7 +58,7 @@ XMLWriter >> canonical [
 
 { #category : #accessing }
 XMLWriter >> canonical: aBoolean [
-	canonical _ aBoolean
+	canonical := aBoolean
 ]
 
 { #category : #'writing xml' }
@@ -235,7 +235,7 @@ XMLWriter >> pi: piTarget data: piData [
 { #category : #private }
 XMLWriter >> popTag: tagName [
 	| stackTop |
-	stackTop _ self stack isEmpty
+	stackTop := self stack isEmpty
 		ifTrue: ['<empty>']
 		ifFalse: [self stack last].
 	^stackTop = tagName
@@ -347,7 +347,7 @@ XMLWriter >> stream [
 
 { #category : #accessing }
 XMLWriter >> stream: aStream [
-	stream _ aStream
+	stream := aStream
 ]
 
 { #category : #private }

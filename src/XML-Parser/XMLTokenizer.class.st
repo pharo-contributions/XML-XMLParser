@@ -128,7 +128,7 @@ XMLTokenizer class >> exampleAddressBook [
 	| tokenizer |
 	"XMLTokenizer exampleAddressBook"
 
-	tokenizer _ XMLTokenizer on: self addressBookXML readStream.
+	tokenizer := XMLTokenizer on: self addressBookXML readStream.
 	[tokenizer next notNil]
 		whileTrue: []
 ]
@@ -138,7 +138,7 @@ XMLTokenizer class >> exampleAddressBookWithDTD [
 	| tokenizer |
 	"XMLTokenizer exampleAddressBookWithDTD"
 
-	tokenizer _ XMLTokenizer on: self addressBookXMLWithDTD readStream.
+	tokenizer := XMLTokenizer on: self addressBookXMLWithDTD readStream.
 	[tokenizer next notNil]
 		whileTrue: []
 ]
@@ -147,40 +147,34 @@ XMLTokenizer class >> exampleAddressBookWithDTD [
 XMLTokenizer class >> initialize [
 	"XMLTokenizer initialize"
 
-	| nameDelimiters |
+	CharEscapes := CharacterSet newFrom: #( $& $" $' $> $< ).
 
-	CharEscapes _ #( $& $" $' $> $< ) asSet.
+	SeparatorTable  := CharacterSet new.
+	#(9 10 12 13 32) do: [:each | SeparatorTable add: each asCharacter].
 
-	SeparatorTable  _ Array new: 256.
-	SeparatorTable atAllPut: true.
-	#(9 10 12 13 32) do: [:each | SeparatorTable at: each+1 put: false].
+	LiteralChars := CharacterSet newFrom: #( $: $- $: $= $.).
+	0 to: 255 do: [:i | 
+		| char |
+		char := i asCharacter.
+		(char isDigit or: [char isLetter])
+		ifTrue: [LiteralChars add: char]].
 
-	LiteralChars _ Array new: 256.
-	LiteralChars atAllPut: false.
-	':-_.' do: [:each | LiteralChars at: each asciiValue put: true].
-	1 to: 256 do: [:i | ((i-1) asCharacter isDigit or: [(i-1) asCharacter isLetter])
-		ifTrue: [LiteralChars at: i put: true]].
+	NameDelimiters := CharacterSet new.
+	#(9 10 12 13 32 61 "$= asInteger 61" 62 "$> asInteger" 47 "$/ asInteger")
+		do: [:each | NameDelimiters add: each asCharacter].
 
-	nameDelimiters _ #(9 10 12 13 32 61 "$= asInteger 61" 62 "$> asInteger" 47 "$/ asInteger").
-	NameDelimiters _ Array new: 256.
-	NameDelimiters atAllPut: false.
-	nameDelimiters do: [:each | NameDelimiters at: each put: true].
-
-	DigitTable _ Array new: 256.
+	DigitTable := Array new: 256.
 	DigitTable atAllPut: -1.
 	($0 to: $9) do: [:each | DigitTable at: each asciiValue put: each digitValue].
+	($a to: $f) do: [:each | DigitTable at: each asciiValue put: each digitValue].
 	($A to: $F) do: [:each | DigitTable at: each asciiValue put: each digitValue].
 
 ]
 
 { #category : #accessing }
-XMLTokenizer class >> isCharEscape: aChar [
-	^CharEscapes includes: aChar
-]
-
-{ #category : #'instance creation' }
-XMLTokenizer class >> new [
-	^super new initialize
+XMLTokenizer class >> isCharEscape: entityValue [
+	^entityValue size = 1
+		and: [CharEscapes includes: entityValue first]
 ]
 
 { #category : #'instance creation' }
@@ -202,7 +196,7 @@ XMLTokenizer >> atEnd [
 { #category : #tokenizing }
 XMLTokenizer >> checkAndExpandReference: parsingContext [
 	| referenceString nextChar |
-	nextChar _ self peek.
+	nextChar := self peek.
 	self validating
 		ifFalse: [^nil].
 	nextChar == $&
@@ -210,7 +204,7 @@ XMLTokenizer >> checkAndExpandReference: parsingContext [
 			self next.
 			self peek == $#
 				ifTrue: [^self pushStream: (ReadStream on: self nextCharReference asString)].
-			referenceString _ self nextLiteral.
+			referenceString := self nextLiteral.
 			self next == $;
 				ifFalse: [self errorExpected: ';'].
 			self handleEntity: referenceString in: parsingContext ]
@@ -220,7 +214,7 @@ XMLTokenizer >> checkAndExpandReference: parsingContext [
 				and: [parsingContext == #entityValue])
 				ifTrue: [
 					self skipSeparators.
-					referenceString _ self nextLiteral.
+					referenceString := self nextLiteral.
 					self handleEntity: referenceString in: parsingContext]].
 
 	self atEnd ifTrue: [self errorExpected: 'Character expected.'].
@@ -255,12 +249,12 @@ XMLTokenizer >> endDocTypeDecl [
 
 { #category : #private }
 XMLTokenizer >> endParsingMarkup [
-	parsingMarkup _ false
+	parsingMarkup := false
 ]
 
 { #category : #entities }
 XMLTokenizer >> entities [
-	entities ifNil: [entities _ self initEntities].
+	entities ifNil: [entities := self initEntities].
 	^entities
 ]
 
@@ -294,7 +288,7 @@ XMLTokenizer >> errorExpected: expectedString [
 
 { #category : #entities }
 XMLTokenizer >> externalEntities [
-	externalEntities ifNil: [externalEntities _ Dictionary new].
+	externalEntities ifNil: [externalEntities := Dictionary new].
 	^externalEntities
 ]
 
@@ -308,7 +302,7 @@ XMLTokenizer >> externalEntity: refName [
 { #category : #private }
 XMLTokenizer >> fastStreamStringContents: writeStream [
 	| newSize |
-	newSize _ writeStream position.
+	newSize := writeStream position.
 	^(String new: newSize)
 		replaceFrom: 1
 		to: newSize
@@ -340,10 +334,10 @@ XMLTokenizer >> handleEndTag: aString [
 XMLTokenizer >> handleEntity: referenceString in: parsingContext [ 
 
 	| entity entityValue |
-	entity _ self entity: referenceString.
-	entityValue _ entity valueForContext: parsingContext.
+	entity := self entity: referenceString.
+	entityValue := entity valueForContext: parsingContext.
 	(self class isCharEscape: entityValue)
-		ifTrue: [entityValue _ entity reference].
+		ifTrue: [entityValue := entity reference].
 	self pushStream: (ReadStream on: entityValue asString)
 ]
 
@@ -388,22 +382,22 @@ XMLTokenizer >> hasNestedStreams [
 { #category : #entities }
 XMLTokenizer >> initEntities [
 	| ents |
-	ents _ Dictionary new.
+	ents := Dictionary new.
 	ents
-		at: 'amp' put: (DTDEntityDeclaration name: 'amp' value: $&);
-		at: 'quot' put: (DTDEntityDeclaration name: 'quot' value: $");
-		at: 'apos' put: (DTDEntityDeclaration name: 'apos' value: $');
-		at: 'gt' put: (DTDEntityDeclaration name: 'gt' value: $>);
-		at: 'lt' put: (DTDEntityDeclaration name: 'lt' value: $<).
+		at: 'amp' put: (DTDEntityDeclaration name: 'amp' value: '&');
+		at: 'quot' put: (DTDEntityDeclaration name: 'quot' value: '"');
+		at: 'apos' put: (DTDEntityDeclaration name: 'apos' value: '''');
+		at: 'gt' put: (DTDEntityDeclaration name: 'gt' value: '>');
+		at: 'lt' put: (DTDEntityDeclaration name: 'lt' value: '<').
 	^ents
 ]
 
 { #category : #initialize }
 XMLTokenizer >> initialize [
-	parsingMarkup _ false.
-	validating _ false.
-	attributeBuffer _ WriteStream on: (String new: 128).
-	nameBuffer _ WriteStream on: (String new: 128)
+	parsingMarkup := false.
+	validating := false.
+	attributeBuffer := WriteStream on: (String new: 128).
+	nameBuffer := WriteStream on: (String new: 128)
 ]
 
 { #category : #private }
@@ -416,9 +410,29 @@ XMLTokenizer >> malformedError: errorString [
 	SAXMalformedException signal: errorString
 ]
 
+{ #category : #streaming }
+XMLTokenizer >> match: subCollection into: resultStream [
+	"Set the access position of the receiver to be past the next occurrence of the subCollection. Answer whether subCollection is found.  No wildcards, and case does matter."
+
+	| pattern startMatch |
+	pattern _ ReadStream on: subCollection.
+	startMatch _ nil.
+	[pattern atEnd] whileFalse: 
+		[self atEnd ifTrue: [^ false].
+		(self next) = (pattern next) 
+			ifTrue: [pattern position = 1 ifTrue: [startMatch _ self position]]
+			ifFalse: [pattern position: 0.
+					startMatch ifNotNil: [
+						self position: startMatch.
+						startMatch _ nil]]].
+	^ true
+
+
+]
+
 { #category : #private }
 XMLTokenizer >> nestedStreams [
-	nestedStreams ifNil: [nestedStreams _ OrderedCollection new].
+	nestedStreams ifNil: [nestedStreams := OrderedCollection new].
 	^nestedStreams
 ]
 
@@ -430,10 +444,10 @@ XMLTokenizer >> next [
 	peekChar
 		ifNil: [
 			nestedStreams ifNotNil: [self checkNestedStream].
-			^nextChar _ stream next]
+			^nextChar := stream next]
 		ifNotNil: [
-			nextChar _ peekChar.
-			peekChar _ nil.
+			nextChar := peekChar.
+			peekChar := nil.
 			^nextChar].
 	
 ]
@@ -442,12 +456,12 @@ XMLTokenizer >> next [
 XMLTokenizer >> nextAttributeInto: attributes namespaces: namespaces [
 
 	| attrName attrValue |
-	attrName _ self nextName.
+	attrName := self nextName.
 	self skipSeparators.
 	self next == $=
 		ifFalse: [self errorExpected: '='].
 	self skipSeparators.
-	attrValue _ self nextAttributeValue.
+	attrValue := self nextAttributeValue.
 
 	(self usesNamespaces
 		and: [(attrName findString: 'xmlns') = 1])
@@ -460,37 +474,37 @@ XMLTokenizer >> nextAttributeInto: attributes namespaces: namespaces [
 { #category : #tokenizing }
 XMLTokenizer >> nextAttributeValue [
 	| delimiterChar attributeValueStream nextChar nextPeek referenceString entity entityValue |
-	delimiterChar _ self next.
+	delimiterChar := self next.
 	(delimiterChar == $"
 		or: [delimiterChar == $'])
 		ifFalse: [self errorExpected: 'Attribute value delimiter expected.'].
-	attributeValueStream _ attributeBuffer reset.
+	attributeValueStream := attributeBuffer reset.
 	[
-	nextPeek _ nextChar _ self next.
+	nextPeek := nextChar := self next.
 	nextChar ifNil: [self errorExpected: 'Character expected.'].
 	nextChar == $&
 		ifTrue: [
 			self peek == $#
 				ifTrue: [
-					nextPeek _ nil.
-					nextChar _ self nextCharReference]
+					nextPeek := nil.
+					nextChar := self nextCharReference]
 				ifFalse: [
-					referenceString _ self nextLiteral.
+					referenceString := self nextLiteral.
 					self next == $;
 						ifFalse: [self errorExpected: ';'].
-					entity _ self entity: referenceString.
-					entityValue _ entity valueForContext: #content.
+					entity := self entity: referenceString.
+					entityValue := entity valueForContext: #content.
 					(self class isCharEscape: entityValue)
 						ifTrue: [
-							nextPeek _ nil.
-							nextChar _ entityValue]
+							nextPeek := nil.
+							nextChar := entityValue first]
 						ifFalse: [
-							entityValue _ entityValue asString.
+							entityValue := entityValue asString.
 							entityValue isEmpty
-								ifTrue: [nextPeek _ nextChar _ nil]
+								ifTrue: [nextPeek := nextChar := nil]
 								ifFalse: [
 									self pushStream: (ReadStream on: entityValue asString).
-									nextPeek _ nextChar _ self next]]]].
+									nextPeek := nextChar := self next]]]].
 	nextPeek == delimiterChar]
 		whileFalse: [
 			nextChar ifNotNil: [attributeValueStream nextPut: nextChar]].
@@ -503,7 +517,7 @@ XMLTokenizer >> nextCDataContent [
 	| cdata |
 	"Skip $[ "
 	self next.
-	cdata _ self nextUpToAll: ']]>'.
+	cdata := self nextUpToAll: ']]>'.
 	self handleCData: cdata
 
 ]
@@ -515,11 +529,11 @@ XMLTokenizer >> nextCDataOrConditional [
 	"Skip ["
 	self next.
 	self skipSeparators.
-	nextChar _ self peek.
+	nextChar := self peek.
 	nextChar == $%
 		ifTrue: [
 			self checkAndExpandReference: (self parsingMarkup ifTrue: [#dtd] ifFalse: [#content]).
-			conditionalKeyword _ self nextLiteral.
+			conditionalKeyword := self nextLiteral.
 			self skipSeparators.
 			^self next == $[
 				ifTrue: [
@@ -543,13 +557,13 @@ XMLTokenizer >> nextCharReference [
 	| base charValue |
 	self next == $#
 		ifFalse: [self errorExpected: 'character reference'].
-	base _ self peek == $x
+	base := self peek == $x
 		ifTrue: [
 			self next.
 			16]
 		ifFalse: [10].
 
-	charValue _ [self readNumberBase: base] on: Error do: [:ex | self errorExpected: 'Number.'].
+	charValue := [self readNumberBase: base] on: Error do: [:ex | self errorExpected: 'Number.'].
 	(self next) == $;
 		ifFalse: [self errorExpected: '";"'].
 	^Unicode value: charValue
@@ -562,14 +576,14 @@ XMLTokenizer >> nextComment [
 	self next.
 	self next == $-
 		ifFalse: [self errorExpected: 'second comment $-'].
-	string _ self nextUpToAll: '-->'.
+	string := self nextUpToAll: '-->'.
 	self handleComment: string
 ]
 
 { #category : #'tokenizing dtd' }
 XMLTokenizer >> nextDocType [
 	| declType |
-	declType _ self nextLiteral.
+	declType := self nextLiteral.
 	declType = 'DOCTYPE'
 		ifTrue: [
 			self startParsingMarkup.
@@ -584,7 +598,7 @@ XMLTokenizer >> nextDocTypeDecl [
 	self nextLiteral.
 	self skipSeparators.
 	self peek == $[
-		ifFalse: [[nextChar _ self peek.
+		ifFalse: [[nextChar := self peek.
 				nextChar == $> or: [nextChar == $[ ]] whileFalse: [self next]].
 	self peek == $[
 		ifTrue: [
@@ -604,43 +618,50 @@ XMLTokenizer >> nextDocTypeDecl [
 
 { #category : #tokenizing }
 XMLTokenizer >> nextEndTag [
-	| string |
+	| tagName |
 	"Skip /"
 	self next.
-	string _ self nextTrimmedBlanksUpTo: $>.
-	self handleEndTag: string
+	tagName := self nextName.
+	self skipSeparators.
+	(self nextTrimmedBlanksUpTo: $>)
+		ifNotEmpty: [self parseError: 'XML invalid end tag ' , tagName].
+	self handleEndTag: tagName
 ]
 
 { #category : #tokenizing }
 XMLTokenizer >> nextEntity [
-	"return the next XMLnode, or nil if there are no more"
+	"return the next XMLnode, or nil if there are no more.
+	Fixed to retain leading whitespace when PCDATA is detected."
 
+	|whitespace|
 	"branch, depending on what the first character is"
-	self nextWhitespace.
+	whitespace := self nextWhitespace.
 	self atEnd ifTrue: [self handleEndDocument. ^ nil].
 	self checkAndExpandReference: (self parsingMarkup ifTrue: [#dtd] ifFalse: [#content]).
 	^self peek = $<
 		ifTrue: [self nextNode]
-		ifFalse: [self nextPCData]
+		ifFalse: [whitespace isEmpty
+					ifFalse: [self pushBack: whitespace].
+				self nextPCData]
 ]
 
 { #category : #'tokenizing dtd' }
 XMLTokenizer >> nextEntityDeclaration [
 	| entityName entityDef referenceClass reference |
 	self skipSeparators.
-	referenceClass _ self peek == $%
+	referenceClass := self peek == $%
 		ifTrue: [
 			self next.
 			self skipSeparators.
 			DTDParameterEntityDeclaration]
 		ifFalse: [DTDEntityDeclaration].
-	entityName _ self nextLiteral.
+	entityName := self nextLiteral.
 	self skipSeparators.
-	entityDef _ (self peek == $" or: [self peek == $'])
+	entityDef := (self peek == $" or: [self peek == $'])
 		ifTrue: [self nextEntityValue]
 		ifFalse: [self nextExternalId].
 	self skipUpTo: $>.
-	reference _ referenceClass name: entityName value: entityDef.
+	reference := referenceClass name: entityName value: entityDef.
 	reference registerIn: self.
 	^reference
 ]
@@ -648,37 +669,37 @@ XMLTokenizer >> nextEntityDeclaration [
 { #category : #tokenizing }
 XMLTokenizer >> nextEntityValue [
 	| delimiterChar entityValueStream nextChar nextPeek referenceString entity entityValue |
-	delimiterChar _ self next.
+	delimiterChar := self next.
 	(delimiterChar == $"
 		or: [delimiterChar == $'])
 		ifFalse: [self errorExpected: 'Entity value delimiter expected.'].
 
-	entityValueStream _ WriteStream on: (String new).
+	entityValueStream := WriteStream on: (String new).
 	[
-	nextPeek _ nextChar _ self peek.
+	nextPeek := nextChar := self peek.
 	nextChar ifNil: [self errorExpected: 'Character expected.'].
 	nextChar == $&
 		ifTrue: [
 			self next.
 			self peek == $#
 				ifTrue: [
-					nextPeek _ nil.
-					nextChar _ self nextCharReference]
+					nextPeek := nil.
+					nextChar := self nextCharReference]
 				ifFalse: [
-					referenceString _ self nextLiteral.
+					referenceString := self nextLiteral.
 					self next == $;
 						ifFalse: [self errorExpected: ';'].
-					entity _ self entity: referenceString.
-					entityValue _ entity valueForContext: #entityValue.
+					entity := self entity: referenceString.
+					entityValue := entity valueForContext: #entityValue.
 					self pushStream: (ReadStream on: entityValue asString).
-					nextPeek _ nextChar _ self next]]
+					nextPeek := nextChar := self next]]
 		ifFalse: [
 			nextChar == $%
 				ifTrue: [
 					self skipSeparators.
-					referenceString _ self nextLiteral.
-					nextChar _ self handleEntity: referenceString in: #entityValue.
-					nextPeek _ nextChar _ self next]
+					referenceString := self nextLiteral.
+					nextChar := self handleEntity: referenceString in: #entityValue.
+					nextPeek := nextChar := self next]
 				ifFalse: [self next]].
 	nextPeek == delimiterChar]
 		whileFalse: [
@@ -689,7 +710,7 @@ XMLTokenizer >> nextEntityValue [
 { #category : #'tokenizing dtd' }
 XMLTokenizer >> nextExternalId [
 	| extDefType systemId dir |
-	extDefType _ self nextLiteral.
+	extDefType := self nextLiteral.
 	extDefType = 'PUBLIC'
 		ifTrue: [
 			self skipSeparators.
@@ -697,12 +718,12 @@ XMLTokenizer >> nextExternalId [
 			self skipSeparators.
 			self peek == $>
 				ifFalse: [
-					systemId _ self nextSystemLiteral]].
+					systemId := self nextSystemLiteral]].
 
 	extDefType = 'SYSTEM'
 		ifTrue: [
 			self skipSeparators.
-			systemId _ self nextSystemLiteral].
+			systemId := self nextSystemLiteral].
 
 	systemId
 		ifNil: [^nil].
@@ -710,7 +731,7 @@ XMLTokenizer >> nextExternalId [
 	"The rest of this method only applies if we're reading aFileStream"
 	(self topStream isKindOf: FileStream)
 		ifFalse: [^''].
-	dir _ self topStream directory.
+	dir := self topStream directory.
 	^(dir fileExists: systemId)
 		ifTrue: [(dir readOnlyFileNamed: systemId) contentsOfEntireFile]
 		ifFalse: ['']
@@ -722,7 +743,7 @@ XMLTokenizer >> nextIncludeSection: parseSection [
 	"Read the file up to the next include section delimiter and parse it if parseSection is true"
 
 	
-	section _ self nextUpToAll: ']]>'.
+	section := self nextUpToAll: ']]>'.
 	parseSection
 		ifTrue: [
 			self pushStream: (ReadStream on: section)]
@@ -731,22 +752,22 @@ XMLTokenizer >> nextIncludeSection: parseSection [
 { #category : #tokenizing }
 XMLTokenizer >> nextLiteral [
 	| resultStream nextChar resultString |
-	resultStream _ (String new: 10) writeStream.
-	((nextChar _ self peek) isLetter
+	resultStream := (String new: 10) writeStream.
+	((nextChar := self peek) isLetter
 		or: [nextChar == $_])
 		ifFalse: [self errorExpected: 'Name literal.'].
-	[nextChar _ self peek.
-	(LiteralChars at: nextChar asciiValue+1)
+	[nextChar := self peek.
+	(LiteralChars includes: nextChar)
 		ifTrue: [
 			nextChar == $&
 				ifTrue: [
-					nextChar _ self next.
+					nextChar := self next.
 					resultStream nextPut: (self peek == $#
 						ifTrue: [self nextCharReference]
 						ifFalse: [^resultStream contents])]
 				ifFalse: [
 					resultStream nextPut: self next]]
-		ifFalse: [resultString _ resultStream contents.
+		ifFalse: [resultString := resultStream contents.
 			resultString isEmpty
 				ifTrue: [self errorExpected: 'Name literal']
 				ifFalse: [^resultString]]] repeat
@@ -755,7 +776,7 @@ XMLTokenizer >> nextLiteral [
 { #category : #'tokenizing dtd' }
 XMLTokenizer >> nextMarkupDeclaration [
 	| declType |
-	declType _ self nextLiteral.
+	declType := self nextLiteral.
 	self validating
 		ifFalse: [^self skipMarkupDeclaration].
 	declType = 'ENTITY'
@@ -769,12 +790,11 @@ XMLTokenizer >> nextName [
 	nameBuffer reset.
 	self peek == $.
 		ifTrue: [self malformedError: 'Character expected.'].
-	[(nextChar _ self peek)
+	[(nextChar := self peek)
 		ifNil: [self errorExpected: 'Character expected.'].
-	NameDelimiters at: nextChar asciiValue] whileFalse: [
+	NameDelimiters includes: nextChar] whileFalse: [
 			nameBuffer nextPut: self next].
 	^self fastStreamStringContents: nameBuffer
-"	^nameBuffer contents"
 ]
 
 { #category : #tokenizing }
@@ -782,11 +802,11 @@ XMLTokenizer >> nextNode [
 	| nextChar |
 	"Skip < "
 	self next.
-	nextChar _ self peek.
+	nextChar := self peek.
 	nextChar == $! ifTrue: [
 		"Skip !"
 		self next.
-		nextChar _ self peek.
+		nextChar := self peek.
 		nextChar == $- ifTrue: [^self nextComment].
 		nextChar == $[ ifTrue: [^self nextCDataOrConditional].
 		^self parsingMarkup
@@ -799,7 +819,7 @@ XMLTokenizer >> nextNode [
 { #category : #tokenizing }
 XMLTokenizer >> nextPCData [
 	| resultStream nextChar referenceString entity entityValue nextPeek |
-	resultStream _ (String new: 10) writeStream.
+	resultStream := (String new: 10) writeStream.
 	self validating
 		ifFalse: [
 			[self peek == $<]
@@ -807,32 +827,32 @@ XMLTokenizer >> nextPCData [
 			^self handlePCData: resultStream contents].
 
 	[
-	nextPeek _ nextChar _ self peek.
+	nextPeek := nextChar := self peek.
 	nextChar ifNil: [self errorExpected: 'Character expected.'].
 	nextChar == $&
 		ifTrue: [
 			self next.
 			self peek == $#
 				ifTrue: [
-					nextPeek _ nil.
-					nextChar _ self nextCharReference]
+					nextPeek := nil.
+					nextChar := self nextCharReference]
 				ifFalse: [
-					referenceString _ self nextLiteral.
+					referenceString := self nextLiteral.
 					self next == $;
 						ifFalse: [self errorExpected: ';'].
-					entity _ self entity: referenceString.
-					entityValue _ entity valueForContext: #content.
+					entity := self entity: referenceString.
+					entityValue := entity valueForContext: #content.
 					(self class isCharEscape: entityValue)
 						ifTrue: [
-							nextPeek _ nil.
-							nextChar _ entityValue]
+							nextPeek := nil.
+							nextChar := entityValue first]
 						ifFalse: [
-							entityValue _ entityValue asString.
+							entityValue := entityValue asString.
 							entityValue isEmpty
-								ifTrue: [nextPeek _ nextChar _ nil]
+								ifTrue: [nextPeek := nextChar := nil]
 								ifFalse: [
 									self pushStream: (ReadStream on: entityValue asString).
-									nextPeek _ nextChar _ self peek]]]]
+									nextPeek := nextChar := self peek]]]]
 		ifFalse: [nextPeek == $< ifFalse: [self next]].
 	nextPeek == $<]
 		whileFalse: [
@@ -845,11 +865,11 @@ XMLTokenizer >> nextPI [
 	| piTarget piData |
 	"Skip ?"
 	self next.
-	piTarget _ self nextLiteral.
+	piTarget := self nextLiteral.
 	piTarget asUppercase = 'XML'
 		ifTrue: [^self nextXMLDecl].
 	self skipSeparators.
-	piData _ self nextUpToAll: '?>'.
+	piData := self nextUpToAll: '?>'.
 	self handlePI: piTarget data: piData
 ]
 
@@ -868,11 +888,11 @@ XMLTokenizer >> nextTag [
 	| tagName attributes nextChar namespaces |
 	(self peek = $/)
 		ifTrue: [^self nextEndTag].
-	tagName _ self nextName.
+	tagName := self nextName.
 	self skipSeparators.
-	attributes _ Dictionary new: 33.
-	namespaces _ Dictionary new: 5.
-	[(nextChar _ self peek) == $> or: [nextChar == $/]] whileFalse: [
+	attributes := Dictionary new: 33.
+	namespaces := Dictionary new: 5.
+	[(nextChar := self peek) == $> or: [nextChar == $/]] whileFalse: [
 		self checkAndExpandReference: #content.
 		self nextAttributeInto: attributes namespaces: namespaces.
 		self skipSeparators.].
@@ -887,9 +907,9 @@ XMLTokenizer >> nextTag [
 { #category : #streaming }
 XMLTokenizer >> nextTrimmedBlanksUpTo: delimiter [
 	| resultStream nextChar |
-	resultStream _ WriteStream on: (String new: 10).
-	nextChar _ nil.
-	[(nextChar _ self next) == delimiter]
+	resultStream := WriteStream on: (String new: 10).
+	nextChar := nil.
+	[(nextChar := self next) == delimiter]
 		whileFalse: [
 			nextChar == $  ifFalse: [
 				resultStream nextPut: nextChar]].
@@ -902,8 +922,8 @@ XMLTokenizer >> nextTrimmedBlanksUpTo: delimiter [
 { #category : #streaming }
 XMLTokenizer >> nextUpTo: delimiter [
 	| resultStream nextChar |
-	resultStream _ WriteStream on: (String new: 10).
-	[self atEnd or: [(nextChar _ self next) == delimiter]]
+	resultStream := WriteStream on: (String new: 10).
+	[self atEnd or: [(nextChar := self next) == delimiter]]
 		whileFalse: [resultStream nextPut: nextChar].
 	nextChar == delimiter
 		ifFalse: [self parseError: 'XML no delimiting ' , delimiter printString , ' found'].
@@ -915,35 +935,34 @@ XMLTokenizer >> nextUpTo: delimiter [
 XMLTokenizer >> nextUpToAll: delimitingString [
 	| string |
 	self unpeek.
-	string _ self stream upToAll: delimitingString.
-	self stream skip: delimitingString size negated.
-	(self stream next: delimitingString size) = delimitingString
-		ifFalse: [self parseError: 'XML no delimiting ' , delimitingString printString , ' found'].
+	string := self upToAll: delimitingString.
+	string
+		ifNil: [self parseError: 'XML no delimiting ' , delimitingString printString , ' found'].
 	^string
-
 ]
 
 { #category : #tokenizing }
 XMLTokenizer >> nextWhitespace [
 	| nextChar resultStream resultString|
-	resultStream _ (String new: 10) writeStream.
-	[((nextChar _ self peek) == nil)
-		or: [SeparatorTable at: nextChar asciiValue+1 ifAbsent:[true]]]
-		whileFalse: [resultStream nextPut: nextChar. self next].
+	resultStream := (String new: 10) writeStream.
+	[((nextChar := self peek) ~~ nil)
+		and: [SeparatorTable includes: nextChar]]
+		whileTrue: [resultStream nextPut: nextChar. self next].
 	(nestedStreams == nil or: [self atEnd not])
 		ifFalse: [self checkNestedStream.
 				self nextWhitespace].
-	resultString _ resultStream contents.
+	resultString := resultStream contents.
 	resultString isEmpty ifFalse: [self handleWhitespace: resultString].
+	^resultString
 ]
 
 { #category : #tokenizing }
 XMLTokenizer >> nextXMLDecl [
 	| attributes nextChar namespaces |
 	self skipSeparators.
-	attributes _ Dictionary new.
-	namespaces _ Dictionary new.
-	[(nextChar _ self peek) == $?] whileFalse: [
+	attributes := Dictionary new.
+	namespaces := Dictionary new.
+	[(nextChar := self peek) == $?] whileFalse: [
 		self nextAttributeInto: attributes namespaces: namespaces.
 		self skipSeparators.].
 	self next.
@@ -956,7 +975,7 @@ XMLTokenizer >> nextXMLDecl [
 
 { #category : #entities }
 XMLTokenizer >> parameterEntities [
-	parameterEntities ifNil: [parameterEntities _ Dictionary new].
+	parameterEntities ifNil: [parameterEntities := Dictionary new].
 	^parameterEntities
 ]
 
@@ -995,7 +1014,7 @@ XMLTokenizer >> peek [
 	peekChar
 		ifNil: [
 			nestedStreams ifNotNil: [self checkNestedStream].
-			^peekChar _ stream next]
+			^peekChar := stream next]
 		ifNotNil: [^peekChar]
 ]
 
@@ -1006,16 +1025,18 @@ XMLTokenizer >> popNestingLevel [
 			self stream close.
 			self stream: self nestedStreams removeLast.
 			self nestedStreams size > 0
-				ifFalse: [nestedStreams _ nil]]
+				ifFalse: [nestedStreams := nil]]
 ]
 
 { #category : #streaming }
 XMLTokenizer >> pushBack: aString [
+	"Fixed to push the string before the peek char (if any)."
+	
 	| pushBackString |
-	pushBackString _ peekChar
+	pushBackString := peekChar
 		ifNil: [aString]
-		ifNotNil: [peekChar asString , aString].
-	peekChar _ nil.
+		ifNotNil: [aString, peekChar asString].
+	peekChar := nil.
 	self pushStream: (ReadStream on: pushBackString)
 ]
 
@@ -1034,23 +1055,23 @@ XMLTokenizer >> readNumberBase: base [
 	| value digit |
 
 	base = 10 ifFalse: [	| numberString | 
-		numberString _ self nextUpTo: $;.
+		numberString := self nextUpTo: $;.
 		self stream skip: -1.
 		^Integer readFrom: numberString asUppercase readStream base: base. 
 	].
 
-	value _ 0.
-	digit _ DigitTable at: self peek asciiValue.
+	value := 0.
+	digit := DigitTable at: self peek asciiValue.
 	digit < 0
 		ifTrue: [self error: 'At least one digit expected here'].
 	self next.
-	value _ digit.
-	[digit _ DigitTable at: self peek asciiValue.
+	value := digit.
+	[digit := DigitTable at: self peek asciiValue.
 	digit < 0
 		ifTrue: [^value]
 		ifFalse: [
 			self next.
-			value _ value * base + digit]
+			value := value * base + digit]
 		] repeat.
 	^ value
 ]
@@ -1063,9 +1084,9 @@ XMLTokenizer >> skipMarkupDeclaration [
 { #category : #streaming }
 XMLTokenizer >> skipSeparators [
 	| nextChar |
-	[((nextChar _ self peek) == nil)
-		or: [SeparatorTable at: nextChar asciiValue+1]]
-		whileFalse: [self next].
+	[((nextChar := self peek) ~~ nil)
+		and: [SeparatorTable includes: nextChar]]
+		whileTrue: [self next].
 	(nestedStreams == nil or: [self atEnd not])
 		ifFalse: [
 			self checkNestedStream.
@@ -1076,7 +1097,7 @@ XMLTokenizer >> skipSeparators [
 XMLTokenizer >> skipUpTo: delimiter [
 	| nextChar |
 	self unpeek.
-	[self atEnd or: [(nextChar _ self next) == delimiter]]
+	[self atEnd or: [(nextChar := self next) == delimiter]]
 		whileFalse: [].
 	nextChar == delimiter
 		ifFalse: [self parseError: 'XML no delimiting ' , delimiter printString , ' found']
@@ -1085,7 +1106,7 @@ XMLTokenizer >> skipUpTo: delimiter [
 
 { #category : #private }
 XMLTokenizer >> startParsingMarkup [
-	parsingMarkup _ true
+	parsingMarkup := true
 ]
 
 { #category : #private }
@@ -1096,7 +1117,24 @@ XMLTokenizer >> stream [
 { #category : #private }
 XMLTokenizer >> stream: newStream [
 	"Continue parsing from the new nested stream."
-	stream _ newStream
+	stream := newStream
+]
+
+{ #category : #streaming }
+XMLTokenizer >> stream: aStream upToAll: aCollection [
+	"Answer a subcollection from the current access position to the occurrence (not inclusive) of aCollection. If aCollection is not in the stream, answer nil."
+
+	| startPos endMatch result |
+	startPos := aStream position.
+	(aStream  match: aCollection) 
+		ifTrue: [endMatch := aStream position.
+			aStream position: startPos.
+			result := aStream next: endMatch - startPos - aCollection size.
+			aStream position: endMatch.
+			^ result]
+		ifFalse: [
+			aStream position: startPos.
+			^nil]
 ]
 
 { #category : #streaming }
@@ -1118,10 +1156,39 @@ XMLTokenizer >> topStream [
 
 { #category : #streaming }
 XMLTokenizer >> unpeek [
-	peekChar
-		ifNotNil: [
-			self stream pushBack: (String with: peekChar).
-			peekChar _ nil]
+	"Fixed to use nested stream since multi-byte streams
+	do not properly override pushBack: to deal with multi-byte
+	characters."
+	
+	peekChar ifNotNil: [self pushBack: '']
+]
+
+{ #category : #streaming }
+XMLTokenizer >> upToAll: delimitingString [
+	"Answer a subcollection from the current access position to the occurrence (if any, but not inclusive) of delimitingString. If delimitingString is not in the stream, answer the entire rest of the stream."
+
+	| result |
+
+	self hasNestedStreams
+		ifFalse: [
+			result := self stream: self stream upToAll: delimitingString.
+			result
+				ifNil: [self parseError: 'XML no delimiting ' , delimitingString printString , ' found'].
+			^result].
+
+	result := self stream: self stream upToAll: delimitingString.
+	result
+		ifNotNil: [^result].
+	result := String streamContents: [:resultStream |
+		resultStream nextPutAll: self stream upToEnd.
+		self atEnd
+			ifTrue: [self parseError: 'XML no delimiting ' , delimitingString printString , ' found'].
+		self stream position timesRepeat: [
+			self atEnd
+				ifFalse: [
+					resultStream nextPut: self next]]].
+	self pushBack: result.
+	^self upToAll: delimitingString
 ]
 
 { #category : #testing }
@@ -1136,5 +1203,5 @@ XMLTokenizer >> validating [
 
 { #category : #accessing }
 XMLTokenizer >> validating: aBoolean [
-	validating _ aBoolean
+	validating := aBoolean
 ]

@@ -10,26 +10,21 @@ Class {
 }
 
 { #category : #'instance creation' }
-SAXHandler class >> new [
-	^super new initialize
-]
-
-{ #category : #'instance creation' }
 SAXHandler class >> on: aStream [
 	| driver parser |
-	driver _ SAXDriver on: aStream.
+	driver := SAXDriver on: aStream.
 	driver validating: true.
-	parser _ self new driver: driver.
+	parser := self new driver: driver.
 	^parser
 ]
 
 { #category : #'instance creation' }
 SAXHandler class >> parseDTDFrom: aStream [
 	| driver parser |
-	driver _ SAXDriver on: aStream.
+	driver := SAXDriver on: aStream.
 	driver validating: true.
 	driver startParsingMarkup.
-	parser _ self new driver: driver.
+	parser := self new driver: driver.
 	parser startDocument.
 	parser parseDocument.
 	^parser
@@ -43,7 +38,7 @@ SAXHandler class >> parseDocumentFrom: aStream [
 { #category : #'instance creation' }
 SAXHandler class >> parseDocumentFrom: aStream useNamespaces: aBoolean [
 	|  parser |
-	parser _ self on: aStream.
+	parser := self on: aStream.
 	parser useNamespaces: aBoolean.
 	parser startDocument.
 	parser parseDocument.
@@ -58,10 +53,10 @@ SAXHandler class >> parseDocumentFromFileNamed: fileName [
 { #category : #'instance creation' }
 SAXHandler class >> parseDocumentFromFileNamed: fileName readIntoMemory: readIntoMemory [
 	| stream xmlDoc |
-	stream _ FileDirectory default readOnlyFileNamed: fileName.
+	stream := FileDirectory default readOnlyFileNamed: fileName.
 	readIntoMemory
-		ifTrue: [stream _ stream contentsOfEntireFile readStream].
-	[xmlDoc _ self parseDocumentFrom: stream]
+		ifTrue: [stream := stream contentsOfEntireFile readStream].
+	[xmlDoc := self parseDocumentFrom: stream]
 		ensure: [stream close].
 	^xmlDoc
 ]
@@ -74,9 +69,9 @@ SAXHandler class >> parserOnFileNamed: fileName [
 { #category : #'instance creation' }
 SAXHandler class >> parserOnFileNamed: fileName readIntoMemory: readIntoMemory [
 	| stream  |
-	stream _ FileDirectory default readOnlyFileNamed: fileName.
+	stream := FileDirectory default readOnlyFileNamed: fileName.
 	readIntoMemory
-		ifTrue: [stream _ stream contentsOfEntireFile readStream].
+		ifTrue: [stream := stream contentsOfEntireFile readStream].
 	^self on: stream
 ]
 
@@ -106,7 +101,7 @@ SAXHandler >> document [
 
 { #category : #accessing }
 SAXHandler >> document: aDocument [
-	document _ aDocument
+	document := aDocument
 ]
 
 { #category : #content }
@@ -120,7 +115,7 @@ SAXHandler >> driver [
 
 { #category : #accessing }
 SAXHandler >> driver: aDriver [
-	driver _ aDriver.
+	driver := aDriver.
 	driver saxHandler: self
 ]
 
@@ -128,7 +123,7 @@ SAXHandler >> driver: aDriver [
 SAXHandler >> endDocument [
 	"This call corresponds to the Java SAX call
 	endDocument()."
-	eod _ true
+	eod := true
 ]
 
 { #category : #content }
@@ -170,7 +165,7 @@ SAXHandler >> ignorableWhitespace: aString [
 
 { #category : #initialize }
 SAXHandler >> initialize [
-	eod _ false
+	eod := false
 ]
 
 { #category : #parsing }

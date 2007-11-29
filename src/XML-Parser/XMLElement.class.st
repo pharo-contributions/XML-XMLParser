@@ -3,7 +3,6 @@ Class {
 	#superclass : #XMLNodeWithElements,
 	#instVars : [
 		'name',
-		'contents',
 		'attributes'
 	],
 	#category : #'XML-Parser'
@@ -31,7 +30,7 @@ XMLElement class >> named: aString namespace: ns uri: uri attributes: attributeL
 
 { #category : #initialize }
 XMLElement >> addContent: contentString [
-	self contents add: contentString
+	self addElement: contentString
 ]
 
 { #category : #accessing }
@@ -51,7 +50,7 @@ XMLElement >> attributeAt: attributeName put: attributeValue [
 
 { #category : #accessing }
 XMLElement >> attributes [
-	^attributes ifNil: [attributes _ Dictionary new]
+	^attributes ifNil: [attributes := Dictionary new]
 ]
 
 { #category : #accessing }
@@ -61,9 +60,11 @@ XMLElement >> characterData [
 
 { #category : #accessing }
 XMLElement >> contentString [
-	^(self contents size == 1
-		and: [self contents first isKindOf: XMLStringNode])
-		ifTrue: [self contents first string]
+	| contentElements |
+	contentElements := self elementsAndContents.
+	^(contentElements size == 1
+		and: [contentElements first isText])
+		ifTrue: [contentElements first string]
 		ifFalse: ['']
 ]
 
@@ -74,15 +75,27 @@ XMLElement >> contentStringAt: entityName [
 
 { #category : #accessing }
 XMLElement >> contents [
-	contents ifNil: [contents _ OrderedCollection new].
-	^contents
+	^self elementsAndContents select: [:each | each isText]
 ]
 
 { #category : #enumerating }
 XMLElement >> contentsDo: aBlock [
-	contents
-		ifNotNil: [
-			self contents do: [:each | aBlock value: each]]
+	self elementsAndContentsDo: [:each | each isText ifTrue: [aBlock value: each]]
+]
+
+{ #category : #accessing }
+XMLElement >> elements [
+	^self elementsAndContents select: [:each | each isText not]
+]
+
+{ #category : #enumerating }
+XMLElement >> elementsAndContentsDo: aBlock [
+	super elementsDo: aBlock
+]
+
+{ #category : #enumerating }
+XMLElement >> elementsDo: aBlock [
+	self elementsAndContentsDo: [:each | each isText ifFalse: [aBlock value: each]]
 ]
 
 { #category : #searching }
@@ -111,7 +124,6 @@ XMLElement >> firstTagNamed: aSymbol with: aBlock [
 { #category : #testing }
 XMLElement >> isEmpty [
 	^self elements isEmpty
-		and: [self contents isEmpty]
 ]
 
 { #category : #testing }
@@ -131,7 +143,17 @@ XMLElement >> name [
 
 { #category : #initialize }
 XMLElement >> name: aString [
-	name _ aString asSymbol
+	name := aString asSymbol
+]
+
+{ #category : #accessing }
+XMLElement >> parent [
+	^ parent
+]
+
+{ #category : #accessing }
+XMLElement >> parent: anXMLElement [
+	parent := anXMLElement 
 ]
 
 { #category : #printing }
@@ -142,8 +164,7 @@ XMLElement >> printXMLOn: writer [
 		ifTrue: [writer endEmptyTag: self name]
 		ifFalse: [
 			writer endTag.
-			self contentsDo: [:content | content printXMLOn: writer].
-			super printXMLOn: writer.
+			self elementsAndContentsDo: [:content | content printXMLOn: writer].
 			writer endTag: self name]
 ]
 
@@ -156,7 +177,7 @@ XMLElement >> qualifiedName [
 
 { #category : #initialize }
 XMLElement >> setAttributes: newAttributes [
-	attributes _ newAttributes
+	attributes := newAttributes
 ]
 
 { #category : #accessing }

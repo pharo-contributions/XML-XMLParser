@@ -28,7 +28,7 @@ XMLDOMParser class >> parseDocumentFrom: aStream useNamespaces: aBoolean [
 { #category : #content }
 XMLDOMParser >> characters: aString [
 	| newElement |
-	newElement _ XMLStringNode string: aString.
+	newElement := XMLStringNode string: aString.
 	self top addContent: newElement.
 
 ]
@@ -63,7 +63,7 @@ XMLDOMParser >> endDocument [
 { #category : #content }
 XMLDOMParser >> endElement: elementName [
 	| currentElement |
-	currentElement _ self pop.
+	currentElement := self pop.
 	currentElement name = elementName
 		ifFalse: [self driver errorExpected: 'End tag "', elementName , '" doesn''t match "' , currentElement name , '".']
 ]
@@ -71,7 +71,7 @@ XMLDOMParser >> endElement: elementName [
 { #category : #content }
 XMLDOMParser >> endElement: localName namespace: namespace namespaceURI: uri qualifiedName: qualifiedName [
 	| currentElement |
-	currentElement _ self pop.
+	currentElement := self pop.
 	(currentElement namespace isNil
 		or: [currentElement namespace = self defaultNamespace])
 		ifTrue: [
@@ -89,20 +89,20 @@ XMLDOMParser >> incremental [
 
 { #category : #accessing }
 XMLDOMParser >> incremental: aBoolean [
-	incremental _ aBoolean
+	incremental := aBoolean
 ]
 
 { #category : #initialize }
 XMLDOMParser >> initialize [
 	super initialize.
-	stack _ OrderedCollection new.
-	incremental _ false
+	stack := OrderedCollection new.
+	incremental := false
 ]
 
 { #category : #parsing }
 XMLDOMParser >> nextEntity [
 	| currentTop |
-	currentTop _ self top.
+	currentTop := self top.
 	[self driver nextEntity isNil
 		or: [self top ~~ currentTop]] whileTrue.
 	^entity
@@ -118,22 +118,22 @@ XMLDOMParser >> nextEntityStart [
 { #category : #private }
 XMLDOMParser >> pop [
 	| oldTop |
-	oldTop _ self stack removeLast.
-	entity _ oldTop.
+	oldTop := self stack removeLast.
+	entity := oldTop.
 	^oldTop
 ]
 
 { #category : #content }
 XMLDOMParser >> processingInstruction: piName data: dataString [
 	| newElement |
-	newElement _ XMLPI target: piName data: dataString.
+	newElement := XMLPI target: piName data: dataString.
 	self top addElement: newElement
 ]
 
 { #category : #private }
 XMLDOMParser >> push: anObject [
 	self stack add: anObject.
-	entity _ anObject
+	entity := anObject
 
 ]
 
@@ -151,7 +151,7 @@ XMLDOMParser >> startDocument [
 { #category : #content }
 XMLDOMParser >> startElement: elementName attributeList: attributeList [
 	| newElement |
-	newElement _ XMLElement named: elementName attributes: attributeList.
+	newElement := XMLElement named: elementName attributes: attributeList.
 	self incremental
 		ifFalse: [self stack isEmpty
 			ifFalse: [self top addElement: newElement]].
@@ -161,10 +161,10 @@ XMLDOMParser >> startElement: elementName attributeList: attributeList [
 { #category : #content }
 XMLDOMParser >> startElement: localName namespaceURI: namespaceUri namespace: namespace attributeList: attributeList [
 	| newElement |
-	"newElement _ namespace = self defaultNamespace
+	"newElement := namespace = self defaultNamespace
 		ifTrue: [XMLElement named: localName namespace: nil uri: nil attributes: attributeList]
 		ifFalse: [XMLElement named: localName namespace: namespace uri: namespaceUri attributes: attributeList]."
-	newElement _ XMLElement named: localName namespace: namespace uri: namespaceUri attributes: attributeList.
+	newElement := XMLElement named: localName namespace: namespace uri: namespaceUri attributes: attributeList.
 	self incremental
 		ifFalse: [self stack isEmpty
 			ifFalse: [self top addElement: newElement]].

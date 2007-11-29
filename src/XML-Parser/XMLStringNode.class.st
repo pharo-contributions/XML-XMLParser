@@ -34,5 +34,5 @@ XMLStringNode >> string [
 
 { #category : #accessing }
 XMLStringNode >> string: aString [
-	string _ aString
+	string := aString
 ]

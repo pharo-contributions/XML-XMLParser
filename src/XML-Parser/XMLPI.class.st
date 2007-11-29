@@ -22,7 +22,7 @@ XMLPI >> data [
 
 { #category : #accessing }
 XMLPI >> data: aString [
-	data _ aString
+	data := aString
 ]
 
 { #category : #testing }
@@ -42,5 +42,5 @@ XMLPI >> target [
 
 { #category : #accessing }
 XMLPI >> target: aString [
-	target _ aString
+	target := aString
 ]
