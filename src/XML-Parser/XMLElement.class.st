@@ -90,7 +90,7 @@ XMLElement >> elements [
 
 { #category : #enumerating }
 XMLElement >> elementsAndContentsDo: aBlock [
-	super elementsDo: aBlock
+	self elementsAndContents do: aBlock
 ]
 
 { #category : #enumerating }
