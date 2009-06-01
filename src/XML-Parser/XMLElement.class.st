@@ -28,9 +28,25 @@ XMLElement class >> named: aString namespace: ns uri: uri attributes: attributeL
 		setAttributes: attributeList
 ]
 
+{ #category : #accessing }
+XMLElement >> @ aSymbol [
+	"shorthand form"
+	^ self at: aSymbol 
+]
+
 { #category : #initialize }
 XMLElement >> addContent: contentString [
 	self addElement: contentString
+]
+
+{ #category : #accessing }
+XMLElement >> allAttributes [
+	^ self attributes asOrderedCollection
+]
+
+{ #category : #accessing }
+XMLElement >> at: aSymbol [
+	^ self attributeAt: aSymbol 
 ]
 
 { #category : #accessing }
