@@ -46,7 +46,8 @@ XMLElement >> allAttributes [
 
 { #category : #accessing }
 XMLElement >> at: aSymbol [
-	^ self attributeAt: aSymbol 
+    ^ self attributeAt: aSymbol ifAbsent: ['']
+
 ]
 
 { #category : #accessing }
