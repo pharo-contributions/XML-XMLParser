@@ -8,7 +8,8 @@ Class {
 		'scanner',
 		'canonical',
 		'currentIndent',
-		'indentString'
+		'indentString',
+		'newLinesAllowed'
 	],
 	#classVars : [
 		'XMLTranslation',
@@ -75,6 +76,11 @@ XMLWriter >> comment: aString [
 	self endComment
 ]
 
+{ #category : #private }
+XMLWriter >> cr [
+	self newLinesAllowed ifTrue: [self stream cr].
+]
+
 { #category : #namespaces }
 XMLWriter >> declareNamespace: ns uri: uri [
 	self scope declareNamespace: ns uri: uri
@@ -93,12 +99,14 @@ XMLWriter >> defaultNamespace: ns [
 
 { #category : #'private tags' }
 XMLWriter >> endCData [
-	self stream nextPutAll: ']]>'
+	self stream nextPutAll: ']]>'.
+	self cr.
 ]
 
 { #category : #'private tags' }
 XMLWriter >> endComment [
-	self stream nextPutAll: ' -->'
+	self stream nextPutAll: ' -->'.
+	self cr.
 ]
 
 { #category : #'writing dtd' }
@@ -119,17 +127,20 @@ XMLWriter >> endEmptyTag: tagName [
 	self popTag: tagName.
 	self stream nextPutAll: '/>'.
 	self canonical
-		ifFalse: [self stream space]
+		ifFalse: [self stream space].
+	self cr.
 ]
 
 { #category : #'private tags' }
 XMLWriter >> endPI [
-	self stream nextPutAll: ' ?>'
+	self stream nextPutAll: ' ?>'.
+	self cr.
 ]
 
 { #category : #'writing xml' }
 XMLWriter >> endTag [
 	self stream nextPutAll: '>'.
+	self cr.
 	self indent.
 	"self canonical
 		ifFalse: [self stream space]"
@@ -138,20 +149,19 @@ XMLWriter >> endTag [
 { #category : #'writing xml' }
 XMLWriter >> endTag: tagName [
 	self outdent.
-	self endTag: tagName xmlns: nil
+	self endTag: tagName xmlns: nil.
 ]
 
 { #category : #'writing xml' }
 XMLWriter >> endTag: tagName xmlns: xmlns [
 	self popTag: tagName.
-	self stream
-		nextPutAll: '</'.
+	self stream nextPutAll: '</'.
 	(xmlns notNil
 		and: [xmlns ~= self defaultNamespace])
 		ifTrue: [self stream
 			nextPutAll: xmlns;
 			nextPut: $:].
-	stream nextPutAll: tagName.
+	self stream nextPutAll: tagName.
 	self endTag.
 
 ]
@@ -192,7 +202,8 @@ XMLWriter >> indentTab [
 XMLWriter >> initialize [
 	stack := OrderedCollection new.
 	canonical := false.
-	scope := XMLNamespaceScope new
+	scope := XMLNamespaceScope new.
+	newLinesAllowed := false
 ]
 
 { #category : #namespaces }
@@ -200,11 +211,20 @@ XMLWriter >> leaveScope [
 	self scope leaveScope
 ]
 
+{ #category : #accessing }
+XMLWriter >> newLinesAllowed [
+	^ newLinesAllowed
+]
+
+{ #category : #accessing }
+XMLWriter >> newLinesAllowed: aBoolean [
+	newLinesAllowed := aBoolean
+]
+
 { #category : #private }
 XMLWriter >> outdent [
 	currentIndent
 		ifNotNil: [
-			stream cr.
 			currentIndent := currentIndent-1.
 			self writeIndent.
 			currentIndent := currentIndent-1.]
@@ -212,17 +232,9 @@ XMLWriter >> outdent [
 
 { #category : #'writing xml' }
 XMLWriter >> pcData: aString [
-	| lastIndex nextIndex |
-	lastIndex := 1.
-	"Unroll the first search to avoid copying"
-	nextIndex := String findFirstInString: aString inSet: XMLTranslationMap startingAt: lastIndex.
-	nextIndex = 0 ifTrue:[^self stream nextPutAll: aString].
-	[self stream nextPutAll: (aString copyFrom: lastIndex to: nextIndex-1).
-	self stream nextPutAll: (XMLTranslation at: (aString at: nextIndex)).
-	lastIndex := nextIndex + 1.
-	nextIndex := String findFirstInString: aString inSet: XMLTranslationMap startingAt: lastIndex.
-	nextIndex = 0] whileFalse.
-	self stream nextPutAll: (aString copyFrom: lastIndex to: aString size).
+	self writeIndent.
+	self writeXmlEncoded: aString.
+	self cr.
 ]
 
 { #category : #'writing xml' }
@@ -243,6 +255,12 @@ XMLWriter >> popTag: tagName [
 		ifFalse: [self error: 'Closing tag "' , tagName , '" does not match "' , stackTop]
 ]
 
+{ #category : #accessing }
+XMLWriter >> prettyPrint [
+	self indentString: '    '.
+	self newLinesAllowed: true.
+]
+
 { #category : #private }
 XMLWriter >> pushTag: tagName [
 	self stack add: tagName
@@ -251,7 +269,7 @@ XMLWriter >> pushTag: tagName [
 { #category : #private }
 XMLWriter >> putAsXMLString: aValue [
 	self stream nextPut: $".
-	self pcData: aValue.
+	self writeXmlEncoded: aValue.
 	self stream nextPut: $"
 ]
 
@@ -303,8 +321,8 @@ XMLWriter >> startDeclaration: dtdName [
 
 { #category : #'writing xml' }
 XMLWriter >> startElement: elementName attributeList: attributeList [
-	self canonical
-		ifFalse: [self stream cr].
+	"self canonical
+		ifFalse: [self stream cr]."
 	self startTag: elementName.
 	attributeList keys asSortedCollection do: [:key |
 		self attribute: key value: (attributeList at: key)]
@@ -354,6 +372,21 @@ XMLWriter >> stream: aStream [
 XMLWriter >> writeIndent [
 	currentIndent ifNotNil: [
 		currentIndent timesRepeat: [self stream nextPutAll: indentString]]
+]
+
+{ #category : #private }
+XMLWriter >> writeXmlEncoded: aString [
+	| lastIndex nextIndex |
+	lastIndex := 1.
+	"Unroll the first search to avoid copying"
+	nextIndex := String findFirstInString: aString inSet: XMLTranslationMap startingAt: lastIndex.
+	nextIndex = 0 ifTrue:[self stream nextPutAll: aString. ^ self].
+	[self stream nextPutAll: (aString copyFrom: lastIndex to: nextIndex-1).
+	self stream nextPutAll: (XMLTranslation at: (aString at: nextIndex)).
+	lastIndex := nextIndex + 1.
+	nextIndex := String findFirstInString: aString inSet: XMLTranslationMap startingAt: lastIndex.
+	nextIndex = 0] whileFalse.
+	self stream nextPutAll: (aString copyFrom: lastIndex to: aString size).
 ]
 
 { #category : #'writing xml' }

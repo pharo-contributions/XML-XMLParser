@@ -193,6 +193,20 @@ XMLTokenizer >> atEnd [
 		ifFalse: [false]
 ]
 
+{ #category : #streaming }
+XMLTokenizer >> basicNext [
+	"Returns next character in the stream after performing line endings normalization"
+	| char nextChar |
+	
+	char := stream next.
+	char == Character cr 
+		ifTrue: [
+			char := Character lf.
+			nextChar := stream next.
+			(nextChar = Character lf or: [nextChar == nil]) ifFalse: [self pushBack: nextChar asString]].
+	^ char
+]
+
 { #category : #tokenizing }
 XMLTokenizer >> checkAndExpandReference: parsingContext [
 	| referenceString nextChar |
@@ -444,7 +458,7 @@ XMLTokenizer >> next [
 	peekChar
 		ifNil: [
 			nestedStreams ifNotNil: [self checkNestedStream].
-			^nextChar := stream next]
+			^nextChar := self basicNext]
 		ifNotNil: [
 			nextChar := peekChar.
 			peekChar := nil.
@@ -1014,7 +1028,7 @@ XMLTokenizer >> peek [
 	peekChar
 		ifNil: [
 			nestedStreams ifNotNil: [self checkNestedStream].
-			^peekChar := stream next]
+			^peekChar := self basicNext]
 		ifNotNil: [^peekChar]
 ]
 
