@@ -7,7 +7,7 @@ Class {
 		'encoding',
 		'requiredMarkup'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Nodes'
 }
 
 { #category : #comparing }

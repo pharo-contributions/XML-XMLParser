@@ -15,7 +15,7 @@ Class {
 		'XMLTranslation',
 		'XMLTranslationMap'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Parser'
 }
 
 { #category : #'class initialization' }

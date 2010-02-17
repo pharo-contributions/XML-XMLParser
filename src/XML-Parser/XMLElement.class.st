@@ -5,7 +5,7 @@ Class {
 		'name',
 		'attributes'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Nodes'
 }
 
 { #category : #'instance creation' }

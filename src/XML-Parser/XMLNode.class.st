@@ -7,7 +7,7 @@ Class {
 	#classVars : [
 		'CanonicalTable'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Nodes'
 }
 
 { #category : #accessing }

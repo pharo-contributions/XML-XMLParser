@@ -9,7 +9,7 @@ Class {
 	#classInstVars : [
 		'contextBehavior'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-DTD'
 }
 
 { #category : #accessing }

@@ -8,7 +8,7 @@ Class {
 		'uri',
 		'namespace'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Nodes'
 }
 
 { #category : #comparing }

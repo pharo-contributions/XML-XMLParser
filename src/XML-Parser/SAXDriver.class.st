@@ -8,7 +8,7 @@ Class {
 		'validateAttributes',
 		'languageEnvironment'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Parser'
 }
 
 { #category : #'handling tokens' }

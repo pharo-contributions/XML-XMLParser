@@ -6,7 +6,7 @@ Class {
 		'driver',
 		'eod'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Parser'
 }
 
 { #category : #'instance creation' }

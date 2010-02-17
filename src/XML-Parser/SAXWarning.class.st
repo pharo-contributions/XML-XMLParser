@@ -1,5 +1,5 @@
 Class {
 	#name : #SAXWarning,
 	#superclass : #Warning,
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Exception'
 }

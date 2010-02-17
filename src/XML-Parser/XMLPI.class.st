@@ -5,7 +5,7 @@ Class {
 		'target',
 		'data'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Nodes'
 }
 
 { #category : #'instance creation' }

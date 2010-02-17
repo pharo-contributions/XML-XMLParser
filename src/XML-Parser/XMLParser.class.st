@@ -5,7 +5,7 @@ There is two ways to parse XML files, either using SAX, or using DOM. Both ways 
 Class {
 	#name : #XMLParser,
 	#superclass : #XMLTokenizer,
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Parser'
 }
 
 { #category : #callbacks }

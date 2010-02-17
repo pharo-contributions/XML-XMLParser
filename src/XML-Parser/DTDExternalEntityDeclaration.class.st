@@ -1,7 +1,7 @@
 Class {
 	#name : #DTDExternalEntityDeclaration,
 	#superclass : #DTDEntityDeclaration,
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-DTD'
 }
 
 { #category : #'class initialization' }

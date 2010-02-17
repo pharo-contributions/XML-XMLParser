@@ -6,7 +6,7 @@ Class {
 		'stack',
 		'incremental'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Parser'
 }
 
 { #category : #examples }
