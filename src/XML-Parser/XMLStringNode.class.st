@@ -12,9 +12,22 @@ XMLStringNode class >> string: aString [
 	^self new string: aString
 ]
 
+{ #category : #comparing }
+XMLStringNode >> = anObject [
+
+	^ (anObject respondsTo: #string)
+		and: [self string = anObject string]
+]
+
 { #category : #accessing }
 XMLStringNode >> characterData [
 	^self string
+]
+
+{ #category : #testing }
+XMLStringNode >> hash [
+
+	^ self string hash
 ]
 
 { #category : #testing }
@@ -34,5 +47,5 @@ XMLStringNode >> string [
 
 { #category : #accessing }
 XMLStringNode >> string: aString [
-	string := aString
+	string := aString asString
 ]

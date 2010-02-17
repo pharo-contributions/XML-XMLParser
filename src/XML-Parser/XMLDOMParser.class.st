@@ -22,7 +22,9 @@ XMLDOMParser class >> parseDocumentFrom: aStream [
 
 { #category : #'instance creation' }
 XMLDOMParser class >> parseDocumentFrom: aStream useNamespaces: aBoolean [
-	^(super parseDocumentFrom: aStream useNamespaces: aBoolean) document
+	^(super
+		parseDocumentFrom: (aStream isStream ifTrue: [aStream] ifFalse: [aStream readStream])
+		useNamespaces: aBoolean) document
 ]
 
 { #category : #content }
@@ -125,9 +127,9 @@ XMLDOMParser >> pop [
 
 { #category : #content }
 XMLDOMParser >> processingInstruction: piName data: dataString [
-	| newElement |
-	newElement := XMLPI target: piName data: dataString.
-	self top addElement: newElement
+	| piNode |
+	piNode := XMLPI target: piName data: dataString.
+	self top addNode: piNode
 ]
 
 { #category : #private }
@@ -135,6 +137,15 @@ XMLDOMParser >> push: anObject [
 	self stack add: anObject.
 	entity := anObject
 
+]
+
+{ #category : #private }
+XMLDOMParser >> pushElement: anElement [
+
+	(self incremental not and: [self stack notEmpty])
+			ifTrue: [self top addElement: anElement].
+
+	self push: anElement.
 ]
 
 { #category : #private }
@@ -150,12 +161,8 @@ XMLDOMParser >> startDocument [
 
 { #category : #content }
 XMLDOMParser >> startElement: elementName attributeList: attributeList [
-	| newElement |
-	newElement := XMLElement named: elementName attributes: attributeList.
-	self incremental
-		ifFalse: [self stack isEmpty
-			ifFalse: [self top addElement: newElement]].
-	self push: newElement
+
+	self pushElement: (XMLElement named: elementName attributes: attributeList)
 ]
 
 { #category : #content }
@@ -165,10 +172,8 @@ XMLDOMParser >> startElement: localName namespaceURI: namespaceUri namespace: na
 		ifTrue: [XMLElement named: localName namespace: nil uri: nil attributes: attributeList]
 		ifFalse: [XMLElement named: localName namespace: namespace uri: namespaceUri attributes: attributeList]."
 	newElement := XMLElement named: localName namespace: namespace uri: namespaceUri attributes: attributeList.
-	self incremental
-		ifFalse: [self stack isEmpty
-			ifFalse: [self top addElement: newElement]].
-	self push: newElement
+
+	self pushElement: newElement.
 ]
 
 { #category : #private }

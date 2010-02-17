@@ -15,6 +15,14 @@ XMLPI class >> target: targetName data: aString [
 		data: aString
 ]
 
+{ #category : #comparing }
+XMLPI >> = anObject [
+
+	^ #(target data) allSatisfy: [:selector |
+		(anObject respondsTo: selector)
+			and: [(self perform: selector) = (anObject perform: selector)]]
+]
+
 { #category : #accessing }
 XMLPI >> data [
 	^data
@@ -23,6 +31,12 @@ XMLPI >> data [
 { #category : #accessing }
 XMLPI >> data: aString [
 	data := aString
+]
+
+{ #category : #testing }
+XMLPI >> hash [
+
+	^ self target hash bitXor: self data hash
 ]
 
 { #category : #testing }

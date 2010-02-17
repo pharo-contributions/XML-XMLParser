@@ -21,11 +21,35 @@ XMLElement class >> named: aString attributes: attributeList [
 ]
 
 { #category : #'instance creation' }
+XMLElement class >> named: aString attributes: attributeList contentString: aContentString [
+	^self new
+		name: aString;
+		setAttributes: attributeList;
+		contentString: aContentString
+]
+
+{ #category : #'instance creation' }
+XMLElement class >> named: aString contentString: aContentString [
+	^self new
+		name: aString;
+		contentString: aContentString
+]
+
+{ #category : #'instance creation' }
 XMLElement class >> named: aString namespace: ns uri: uri attributes: attributeList [
 	^self new
 		name: aString;
 		namespace: ns uri: uri;
 		setAttributes: attributeList
+]
+
+{ #category : #comparing }
+XMLElement >> = anObject [
+
+	^ (#(name attributes) allSatisfy: [:selector |
+		(anObject respondsTo: selector)
+			and: [(self perform: selector) = (anObject perform: selector)]])
+		and: [super = anObject]
 ]
 
 { #category : #accessing }
@@ -34,9 +58,9 @@ XMLElement >> @ aSymbol [
 	^ self at: aSymbol 
 ]
 
-{ #category : #initialize }
+{ #category : #accessing }
 XMLElement >> addContent: contentString [
-	self addElement: contentString
+	self addNode: (XMLStringNode string: contentString)
 ]
 
 { #category : #accessing }
@@ -86,33 +110,36 @@ XMLElement >> contentString [
 ]
 
 { #category : #accessing }
-XMLElement >> contentStringAt: entityName [
-	^(self elementAt: entityName ifAbsent: [^'']) contentString
+XMLElement >> contentString: aString [
+
+	self
+		removeAll;
+		addContent: aString
+]
+
+{ #category : #accessing }
+XMLElement >> contentStringAt: aSymbol [
+	^(self elementAt: aSymbol ifAbsent: [^'']) contentString
 ]
 
 { #category : #accessing }
 XMLElement >> contents [
-	^self elementsAndContents select: [:each | each isText]
+	^self nodes select: [:each | each isText]
 ]
 
 { #category : #enumerating }
 XMLElement >> contentsDo: aBlock [
-	self elementsAndContentsDo: [:each | each isText ifTrue: [aBlock value: each]]
+	self nodesDo: [:each | each isText ifTrue: [aBlock value: each]]
 ]
 
 { #category : #accessing }
-XMLElement >> elements [
-	^self elementsAndContents select: [:each | each isText not]
+XMLElement >> elementsAndContents [
+	^ self nodes select: [:each | each isTagOrText]
 ]
 
 { #category : #enumerating }
 XMLElement >> elementsAndContentsDo: aBlock [
-	self elementsAndContents do: aBlock
-]
-
-{ #category : #enumerating }
-XMLElement >> elementsDo: aBlock [
-	self elementsAndContentsDo: [:each | each isText ifFalse: [aBlock value: each]]
+	self nodesDo: [:each | each isTagOrText ifTrue: [aBlock value: each]]
 ]
 
 { #category : #searching }
@@ -120,8 +147,7 @@ XMLElement >> firstTagNamed: aSymbol [
 	"Return the first encountered node with the specified tag.
 	If it is not the receiver, pass the message on"
 
-	(self localName == aSymbol
-		or: [self tag == aSymbol])
+	(self isNamed: aSymbol)
 		ifTrue: [^self].
 	^super firstTagNamed: aSymbol 
 ]
@@ -131,16 +157,50 @@ XMLElement >> firstTagNamed: aSymbol with: aBlock [
 	"Return the first encountered node with the specified tag that allows
 	the block to evaluate to true. Pass the message on"
 
-	((self localName == aSymbol
-		or: [self tag == aSymbol])
- 		and: [aBlock value: self])
+	((self isNamed: aSymbol)
+		and: [aBlock value: self])
 		ifTrue: [^self].
 	^super firstTagNamed: aSymbol with: aBlock.
 ]
 
 { #category : #testing }
-XMLElement >> isEmpty [
-	^self elements isEmpty
+XMLElement >> hasContents [
+
+	^ self contents notEmpty
+]
+
+{ #category : #testing }
+XMLElement >> hasPrefix [
+
+	^ self localName ~~ self tag
+]
+
+{ #category : #testing }
+XMLElement >> hash [
+
+	^ (self name hash bitXor: self attributes hash) bitXor: super hash
+]
+
+{ #category : #searching }
+XMLElement >> ifNamed: aSymbol do: aOneArgumentBlock [
+	"If the receiver tag equals aSymbol, evaluate aOneArgumentBlock with the receiver"
+
+	(self isNamed: aSymbol)
+		ifTrue: [aOneArgumentBlock valueWithPossibleArgument: self]
+
+]
+
+{ #category : #testing }
+XMLElement >> includesAttribute: aSymbol [
+
+	^ self attributes includesKey: aSymbol
+]
+
+{ #category : #testing }
+XMLElement >> isNamed: aSymbol [
+
+	^ (self localName == aSymbol asSymbol)
+		or: [self tag == aSymbol asSymbol]
 ]
 
 { #category : #testing }
@@ -163,16 +223,6 @@ XMLElement >> name: aString [
 	name := aString asSymbol
 ]
 
-{ #category : #accessing }
-XMLElement >> parent [
-	^ parent
-]
-
-{ #category : #accessing }
-XMLElement >> parent: anXMLElement [
-	parent := anXMLElement 
-]
-
 { #category : #printing }
 XMLElement >> printXMLOn: writer [
 	writer startElement: self name attributeList: self attributes.
@@ -181,7 +231,7 @@ XMLElement >> printXMLOn: writer [
 		ifTrue: [writer endEmptyTag: self name]
 		ifFalse: [
 			writer endTag.
-			self elementsAndContentsDo: [:content | content printXMLOn: writer].
+			super printXMLOn: writer.
 			writer endTag: self name]
 ]
 
@@ -207,8 +257,7 @@ XMLElement >> tagsNamed: aSymbol contentsDo: aBlock [
 	"Evaluate aBlock for all of the contents of the receiver
 	if the receiver tag equals aSymbol. Pass the message on"
 
-	(self localName == aSymbol
-		or: [self tag == aSymbol])
+	(self isNamed: aSymbol)
 		ifTrue: [self contentsDo: aBlock].
 	super tagsNamed: aSymbol contentsDo: aBlock
 ]
@@ -218,42 +267,9 @@ XMLElement >> tagsNamed: aSymbol do: aOneArgumentBlock [
 	"If the receiver tag equals aSymbol, evaluate aOneArgumentBlock
 	with the receiver. Continue the search"
 
-	(self localName == aSymbol
-		or: [self tag == aSymbol])
+	(self isNamed: aSymbol)
 		ifTrue: [aOneArgumentBlock value: self].
 	super tagsNamed: aSymbol do: aOneArgumentBlock
-]
-
-{ #category : #searching }
-XMLElement >> tagsNamed: aSymbol ifReceiverDo: aOneArgumentBlock [
-	"If the receiver tag equals aSymbol, evaluate aOneArgumentBlock with the receiver"
-
-	(self localName == aSymbol
-		or: [self tag == aSymbol])
-		ifTrue: [aOneArgumentBlock value: self]
-
-]
-
-{ #category : #searching }
-XMLElement >> tagsNamed: aSymbol ifReceiverDoAndRecurse: aOneArgumentBlock [
-	"If the receiver tag equals aSymbol, evaluate aOneArgumentBlock
-	with the receiver. Then recurse through all the children"
-
-	(self localName == aSymbol
-		or: [self tag == aSymbol])
-		ifTrue: [aOneArgumentBlock value: self].
-	super tagsNamed: aSymbol ifReceiverDoAndRecurse: aOneArgumentBlock
-]
-
-{ #category : #searching }
-XMLElement >> tagsNamed: aSymbol ifReceiverOrChildDo: aOneArgumentBlock [
-	"If the receiver tag equals aSymbol, evaluate aOneArgumentBlock with the receiver.
-	For each of the receivers children do the same. Do not go beyond direct children"
-
-	(self localName == aSymbol
-		or: [self tag == aSymbol])
-		ifTrue: [aOneArgumentBlock value: self].
-	super tagsNamed: aSymbol ifReceiverDo: aOneArgumentBlock
 ]
 
 { #category : #accessing }

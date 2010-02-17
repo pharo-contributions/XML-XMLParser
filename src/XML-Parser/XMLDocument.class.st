@@ -10,6 +10,15 @@ Class {
 	#category : #'XML-Parser'
 }
 
+{ #category : #comparing }
+XMLDocument >> = anObject [
+
+	^ (#(version encoding) allSatisfy: [:selector |
+		(anObject respondsTo: selector)
+			and: [(self perform: selector) = (anObject perform: selector)]])
+		and: [super = anObject]
+]
+
 { #category : #accessing }
 XMLDocument >> dtd [
 	^dtd
@@ -28,6 +37,12 @@ XMLDocument >> encoding [
 { #category : #accessing }
 XMLDocument >> encoding: aString [	
 	encoding := aString
+]
+
+{ #category : #testing }
+XMLDocument >> hash [
+
+	^ (self version hash bitXor: self encoding hash) bitXor: super hash
 ]
 
 { #category : #printing }

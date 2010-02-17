@@ -131,9 +131,9 @@ XMLParserTest >> testParsing [
 	root := xmlDocument root.
 	self assert: (root class == XMLElement).
 	
-	"the tag has to be a symbol!"
-	self assert: (root firstTagNamed: 'person') isNil.
-	self assert: (root firstTagNamed: 'addressbook') isNil.
+	"the tag need not be a symbol!"
+	self assert: (root firstTagNamed: 'person') notNil.
+	self assert: (root firstTagNamed: 'addressbook') notNil.
 
 	self assert: (root firstTagNamed: #addressbook) == root.
 
