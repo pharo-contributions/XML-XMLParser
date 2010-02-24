@@ -161,6 +161,9 @@ XMLParserTest >> testParsing [
 	self assert: (firstPerson attributeAt: #'employee-number') = 'A0000'.
 	self assert: (firstPerson attributeAt: #'family-name') = 'Gates'.
 	self assert: (firstPerson attributeAt: #'first-name') = 'Bob'.
+	
+	self assert: (firstPerson @ #'employee-number') = (firstPerson attributeAt: #'employee-number').
+	self assert: (firstPerson @ #'employee-number') = (firstPerson @ 'employee-number').
 ]
 
 { #category : #tests }
@@ -176,4 +179,20 @@ XMLParserTest >> testParsingCharacters [
 	self assert: parser next = $d.
 	self assert: parser next = $d.
 	self assert: parser next = $r.
+]
+
+{ #category : #xmltokenizer }
+XMLParserTest >> testTokenizerAddressBook [
+	| tokenizer |
+	tokenizer := XMLTokenizer on: self addressBookXML readStream.
+	[tokenizer next notNil]
+		whileTrue: []
+]
+
+{ #category : #xmltokenizer }
+XMLParserTest >> testTokenizerAddressBookWithDTD [
+	| tokenizer |
+	tokenizer := XMLTokenizer on: self addressBookXMLWithDTD readStream.
+	[tokenizer next notNil]
+		whileTrue: []
 ]

@@ -53,9 +53,9 @@ XMLElement >> = anObject [
 ]
 
 { #category : #accessing }
-XMLElement >> @ aSymbol [
+XMLElement >> @ aSymbolOrAString [
 	"shorthand form"
-	^ self at: aSymbol 
+	^ self at: aSymbolOrAString
 ]
 
 { #category : #accessing }
@@ -75,13 +75,13 @@ XMLElement >> at: aSymbol [
 ]
 
 { #category : #accessing }
-XMLElement >> attributeAt: attributeName [
-	^self attributeAt: attributeName ifAbsent: [nil]
+XMLElement >> attributeAt: attributeNameAsSymbolOrString [
+	^self attributeAt: attributeNameAsSymbolOrString ifAbsent: [nil]
 ]
 
 { #category : #accessing }
-XMLElement >> attributeAt: attributeName ifAbsent: aBlock [
-	^self attributes at: attributeName ifAbsent: [^aBlock value]
+XMLElement >> attributeAt: attributeNameAsSymbolOrString ifAbsent: aBlock [
+	^self attributes at: attributeNameAsSymbolOrString asSymbol ifAbsent: [^aBlock value]
 ]
 
 { #category : #accessing }
