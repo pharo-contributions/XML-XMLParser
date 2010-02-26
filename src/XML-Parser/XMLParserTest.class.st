@@ -1,6 +1,6 @@
 Class {
 	#name : #XMLParserTest,
-	#superclass : #ClassTestCase,
+	#superclass : #TestCase,
 	#category : #'XML-Parser-Test'
 }
 
@@ -93,6 +93,25 @@ XMLParserTest >> addressBookXMLWithDTD [
   </person>
 </addressbook>
 '
+]
+
+{ #category : #'code test' }
+XMLParserTest >> categoriesForClass: aClass [
+
+ ^ aClass organization allMethodSelectors collect: 
+			[:each |  aClass organization categoryOfElement: each].
+
+]
+
+{ #category : #'code test' }
+XMLParserTest >> targetClass [
+	^ XMLParser
+]
+
+{ #category : #'code test' }
+XMLParserTest >> testClassComment [
+	"Check whether XMLParser has some comments"
+	self should: [self targetClass organization hasComment].
 ]
 
 { #category : #tests }
@@ -195,4 +214,12 @@ XMLParserTest >> testTokenizerAddressBookWithDTD [
 	tokenizer := XMLTokenizer on: self addressBookXMLWithDTD readStream.
 	[tokenizer next notNil]
 		whileTrue: []
+]
+
+{ #category : #'code test' }
+XMLParserTest >> testUnCategorizedMethods [
+	| categories slips  |
+	categories := self categoriesForClass: self targetClass.
+	slips := categories select: [:each | each = #'as yet unclassified'].
+	self should: [slips isEmpty].	
 ]
