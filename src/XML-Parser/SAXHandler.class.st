@@ -1,3 +1,6 @@
+"
+A SAXHandler is an XML parser that parses XML using event handling. The acronym ""SAX"" refers to Java's ""Simple API for XML,"" on which SAXHandler's API is based. To use this class, create a subclass and override handlers in ""content"" and ""lexical"" as needed.
+"
 Class {
 	#name : #SAXHandler,
 	#superclass : #Object,
@@ -117,6 +120,12 @@ SAXHandler >> driver [
 SAXHandler >> driver: aDriver [
 	driver := aDriver.
 	driver saxHandler: self
+]
+
+{ #category : #lexical }
+SAXHandler >> endCData [
+	"This call corresponds to the Java SAX ext call
+	endCData()."
 ]
 
 { #category : #content }

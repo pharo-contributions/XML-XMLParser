@@ -1,3 +1,6 @@
+"
+XMLDOMParser parses XML into a tree of XML nodes representing the document structure. To see what kinds of nodes it produces and what can be done with them, browse XML-Parser-Nodes.
+"
 Class {
 	#name : #XMLDOMParser,
 	#superclass : #SAXHandler,
@@ -16,6 +19,11 @@ XMLDOMParser class >> addressBookXMLWithDTD [
 ]
 
 { #category : #'instance creation' }
+XMLDOMParser class >> parse: aStream [
+	^ self parseDocumentFrom: aStream
+]
+
+{ #category : #'instance creation' }
 XMLDOMParser class >> parseDocumentFrom: aStream [
 	^self parseDocumentFrom: aStream useNamespaces: false
 ]
@@ -27,11 +35,14 @@ XMLDOMParser class >> parseDocumentFrom: aStream useNamespaces: aBoolean [
 		useNamespaces: aBoolean) document
 ]
 
+{ #category : #'instance creation' }
+XMLDOMParser class >> parseWithNamespaces: aStream [
+	^ self parseDocumentFrom: aStream useNamespaces: true
+]
+
 { #category : #content }
 XMLDOMParser >> characters: aString [
-	| newElement |
-	newElement := XMLStringNode string: aString.
-	self top addContent: newElement.
+	self top addContent: aString
 
 ]
 

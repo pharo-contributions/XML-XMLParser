@@ -1,3 +1,13 @@
+"
+A XMLNode is xxxxxxxxx.
+
+Instance Variables
+	parent:		<Object>
+
+parent
+	- xxxxx
+
+"
 Class {
 	#name : #XMLNode,
 	#superclass : #Object,
@@ -16,52 +26,68 @@ XMLNode >> addContent: contentString [
 ]
 
 { #category : #testing }
+XMLNode >> hasParent [
+	^ self parent notNil
+]
+
+{ #category : #testing }
+XMLNode >> isDocument [
+	^ false
+]
+
+{ #category : #testing }
 XMLNode >> isElement [
 	^ self isTag
 ]
 
 { #category : #testing }
 XMLNode >> isEmpty [
-
 	^ true
 ]
 
 { #category : #testing }
-XMLNode >> isPi [
+XMLNode >> isPI [
 	^ self isProcessingInstruction
 ]
 
 { #category : #testing }
 XMLNode >> isProcessingInstruction [
-	^false
+	^ false
 ]
 
 { #category : #testing }
 XMLNode >> isTag [
-	^false
+	^ false
 ]
 
 { #category : #testing }
 XMLNode >> isTagOrText [
-
 	^ self isTag or: [self isText]
 ]
 
 { #category : #testing }
 XMLNode >> isText [
-	^false
+	^ false
+]
+
+{ #category : #accessing }
+XMLNode >> nextNode [
+	^ self hasParent ifTrue: [self parent nodeAfter: self]
 ]
 
 { #category : #accessing }
 XMLNode >> parent [
-
 	^ parent
 ]
 
 { #category : #accessing }
 XMLNode >> parent: aParentNode [
-
 	parent := aParentNode
+]
+
+{ #category : #accessing }
+XMLNode >> previousNode [
+	^ self hasParent ifTrue: [self parent nodeBefore: self]
 ]
 
 { #category : #printing }

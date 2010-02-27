@@ -3,6 +3,7 @@ Class {
 	#superclass : #XMLNodeWithElements,
 	#instVars : [
 		'name',
+		'localName',
 		'attributes'
 	],
 	#category : #'XML-Parser-Nodes'
@@ -10,19 +11,19 @@ Class {
 
 { #category : #'instance creation' }
 XMLElement class >> named: aString [
-	^self new name: aString
+	^ self new name: aString
 ]
 
 { #category : #'instance creation' }
 XMLElement class >> named: aString attributes: attributeList [
-	^self new
+	^ self new
 		name: aString;
 		setAttributes: attributeList
 ]
 
 { #category : #'instance creation' }
 XMLElement class >> named: aString attributes: attributeList contentString: aContentString [
-	^self new
+	^ self new
 		name: aString;
 		setAttributes: attributeList;
 		contentString: aContentString
@@ -30,26 +31,16 @@ XMLElement class >> named: aString attributes: attributeList contentString: aCon
 
 { #category : #'instance creation' }
 XMLElement class >> named: aString contentString: aContentString [
-	^self new
+	^ self new
 		name: aString;
 		contentString: aContentString
 ]
 
 { #category : #'instance creation' }
 XMLElement class >> named: aString namespace: ns uri: uri attributes: attributeList [
-	^self new
-		name: aString;
-		namespace: ns uri: uri;
+	^ self new
+		name: aString namespace: ns uri: uri;
 		setAttributes: attributeList
-]
-
-{ #category : #comparing }
-XMLElement >> = anObject [
-
-	^ (#(name attributes) allSatisfy: [:selector |
-		(anObject respondsTo: selector)
-			and: [(self perform: selector) = (anObject perform: selector)]])
-		and: [super = anObject]
 ]
 
 { #category : #accessing }
@@ -60,7 +51,12 @@ XMLElement >> @ aSymbolOrAString [
 
 { #category : #accessing }
 XMLElement >> addContent: contentString [
-	self addNode: (XMLStringNode string: contentString)
+	"Adds a string or string node. If 'self nodes last' is already a string node, then
+	contentString gets concatenated to it."
+
+	(self hasContents and: [self nodes last isText])
+		ifTrue: [self nodes last addContent: contentString]
+		ifFalse: [self addNode: (XMLStringNode string: contentString)]
 ]
 
 { #category : #accessing }
@@ -70,8 +66,21 @@ XMLElement >> allAttributes [
 
 { #category : #accessing }
 XMLElement >> at: aSymbol [
-    ^ self attributeAt: aSymbol ifAbsent: ['']
 
+    ^ self at: aSymbol ifAbsent: ['']
+
+]
+
+{ #category : #accessing }
+XMLElement >> at: aSymbol ifAbsent: aBlock [
+
+    ^ self attributeAt: aSymbol ifAbsent: aBlock
+]
+
+{ #category : #accessing }
+XMLElement >> at: aSymbol put: aValue [
+
+    ^ self attributeAt: aSymbol put: aValue
 ]
 
 { #category : #accessing }
@@ -85,46 +94,45 @@ XMLElement >> attributeAt: attributeNameAsSymbolOrString ifAbsent: aBlock [
 ]
 
 { #category : #accessing }
-XMLElement >> attributeAt: attributeName put: attributeValue [
-	self attributes at: attributeName asSymbol put: attributeValue
+XMLElement >> attributeAt: aSymbol put: aValue [
+	^ self attributes at: aSymbol asSymbol put: aValue
 ]
 
 { #category : #accessing }
 XMLElement >> attributes [
-	^attributes ifNil: [attributes := Dictionary new]
+	^ attributes ifNil: [attributes := IdentityDictionary new]
 ]
 
 { #category : #accessing }
 XMLElement >> characterData [
-	^self contentString
+	^ self contentString
 ]
 
 { #category : #accessing }
 XMLElement >> contentString [
-	| contentElements |
-	contentElements := self elementsAndContents.
-	^(contentElements size > 0
-		and: [contentElements first isText])
-		ifTrue: [contentElements first string]
+	| firstContentNode |
+
+	firstContentNode := self elementsAndContents at: 1 ifAbsent: [^ ''].
+	^ firstContentNode isText
+		ifTrue: [firstContentNode string]
 		ifFalse: ['']
 ]
 
 { #category : #accessing }
 XMLElement >> contentString: aString [
-
 	self
-		removeAll;
+		removeNodes;
 		addContent: aString
 ]
 
 { #category : #accessing }
 XMLElement >> contentStringAt: aSymbol [
-	^(self elementAt: aSymbol ifAbsent: [^'']) contentString
+	^ (self elementAt: aSymbol ifAbsent: [^ '']) contentString
 ]
 
 { #category : #accessing }
 XMLElement >> contents [
-	^self nodes select: [:each | each isText]
+	^ self nodes select: [:each | each isText]
 ]
 
 { #category : #enumerating }
@@ -142,43 +150,19 @@ XMLElement >> elementsAndContentsDo: aBlock [
 	self nodesDo: [:each | each isTagOrText ifTrue: [aBlock value: each]]
 ]
 
-{ #category : #searching }
-XMLElement >> firstTagNamed: aSymbol [ 
-	"Return the first encountered node with the specified tag.
-	If it is not the receiver, pass the message on"
-
-	(self isNamed: aSymbol)
-		ifTrue: [^self].
-	^super firstTagNamed: aSymbol 
-]
-
-{ #category : #searching }
-XMLElement >> firstTagNamed: aSymbol with: aBlock [
-	"Return the first encountered node with the specified tag that allows
-	the block to evaluate to true. Pass the message on"
-
-	((self isNamed: aSymbol)
-		and: [aBlock value: self])
-		ifTrue: [^self].
-	^super firstTagNamed: aSymbol with: aBlock.
+{ #category : #testing }
+XMLElement >> hasAttributes [
+	^ self attributes notEmpty
 ]
 
 { #category : #testing }
 XMLElement >> hasContents [
-
 	^ self contents notEmpty
 ]
 
 { #category : #testing }
 XMLElement >> hasPrefix [
-
 	^ self localName ~~ self tag
-]
-
-{ #category : #testing }
-XMLElement >> hash [
-
-	^ (self name hash bitXor: self attributes hash) bitXor: super hash
 ]
 
 { #category : #searching }
@@ -192,25 +176,28 @@ XMLElement >> ifNamed: aSymbol do: aOneArgumentBlock [
 
 { #category : #testing }
 XMLElement >> includesAttribute: aSymbol [
-
-	^ self attributes includesKey: aSymbol
+	^ self attributes includesKey: aSymbol asSymbol
 ]
 
 { #category : #testing }
 XMLElement >> isNamed: aSymbol [
-
 	^ (self localName == aSymbol asSymbol)
 		or: [self tag == aSymbol asSymbol]
 ]
 
 { #category : #testing }
-XMLElement >> isTag [
-	^true
+XMLElement >> isNamedAny: aSymbolArray [
+	^ aSymbolArray anySatisfy: [:each | self isNamed: each]
 ]
 
-{ #category : #'name space' }
+{ #category : #testing }
+XMLElement >> isTag [
+	^ true
+]
+
+{ #category : #namespace }
 XMLElement >> localName [
-	^ name
+	^ localName ifNil: [#'']
 ]
 
 { #category : #accessing }
@@ -218,9 +205,49 @@ XMLElement >> name [
 	^ self qualifiedName
 ]
 
-{ #category : #initialize }
-XMLElement >> name: aString [
-	name := aString asSymbol
+{ #category : #accessing }
+XMLElement >> name: aSymbol [
+	self
+		name: aSymbol
+		namespace: self namespace
+		uri: self namespaceURI
+]
+
+{ #category : #accessing }
+XMLElement >> name: aLocalName namespace: aPrefix uri: aUri [
+	name :=
+		(aPrefix isEmptyOrNil
+			ifTrue: [aLocalName]
+			ifFalse: [aPrefix asString, ':', aLocalName asString]) asSymbol.
+	localName := aLocalName asSymbol.
+	super namespace: aPrefix uri: aUri.
+
+	self notifyParentOfChange.
+]
+
+{ #category : #accessing }
+XMLElement >> namespace: aPrefix uri: aUri [
+	self
+		name: self localName
+		namespace: aPrefix
+		uri: aUri
+]
+
+{ #category : #accessing }
+XMLElement >> nextElement [
+	^ self hasParent ifTrue: [self parent elementAfter: self]
+]
+
+{ #category : #private }
+XMLElement >> notifyParentOfChange [
+	self hasParent ifFalse: [^ self].
+
+	self parent changedChildElement: self.
+]
+
+{ #category : #accessing }
+XMLElement >> previousElement [
+	^ self hasParent ifTrue: [self parent elementBefore: self]
 ]
 
 { #category : #printing }
@@ -235,49 +262,56 @@ XMLElement >> printXMLOn: writer [
 			writer endTag: self name]
 ]
 
-{ #category : #'name space' }
+{ #category : #namespace }
 XMLElement >> qualifiedName [
-	^self namespace
-		ifNil: [self localName]
-		ifNotNil: [self namespace , ':' , self localName]
+	^ name ifNil: [#'']
+]
+
+{ #category : #searching }
+XMLElement >> recurse: aBlock [
+	"See superclass version."
+
+	aBlock valueWithPossibleArgument: self.
+
+	super recurse: aBlock.
+]
+
+{ #category : #searching }
+XMLElement >> recurseUntilTrue: aBlock [
+	"See superclass version."
+
+	(aBlock valueWithPossibleArgument: self)
+		ifTrue: [^ self].
+
+	^ super recurseUntilTrue: aBlock.
+]
+
+{ #category : #accessing }
+XMLElement >> removeAttribute: aSymbol [
+	^ self attributes removeKey: aSymbol
 ]
 
 { #category : #initialize }
-XMLElement >> setAttributes: newAttributes [
-	attributes := newAttributes
+XMLElement >> setAttributes: aDictionary [
+	self attributes removeAll.
+	aDictionary keysAndValuesDo: [:attrName :attrValue | self at: attrName put: attrValue].
 ]
 
 { #category : #accessing }
 XMLElement >> tag [
-	^ self name asSymbol
-]
-
-{ #category : #searching }
-XMLElement >> tagsNamed: aSymbol contentsDo: aBlock [
-	"Evaluate aBlock for all of the contents of the receiver
-	if the receiver tag equals aSymbol. Pass the message on"
-
-	(self isNamed: aSymbol)
-		ifTrue: [self contentsDo: aBlock].
-	super tagsNamed: aSymbol contentsDo: aBlock
-]
-
-{ #category : #searching }
-XMLElement >> tagsNamed: aSymbol do: aOneArgumentBlock [
-	"If the receiver tag equals aSymbol, evaluate aOneArgumentBlock
-	with the receiver. Continue the search"
-
-	(self isNamed: aSymbol)
-		ifTrue: [aOneArgumentBlock value: self].
-	super tagsNamed: aSymbol do: aOneArgumentBlock
+	^ self name
 ]
 
 { #category : #accessing }
-XMLElement >> valueFor: aSymbol [ 
-	^self valueFor: aSymbol ifAbsent: ['']
+XMLElement >> valueFor: aSymbol [
+	self deprecated: 'use #at: as a shortcut instead'.
+
+	^ self at: aSymbol.
 ]
 
 { #category : #accessing }
 XMLElement >> valueFor: aSymbol ifAbsent: aBlock [ 
-	^self attributes at: aSymbol ifAbsent: aBlock
+	self deprecated: 'use #at:ifAbsent: as a shortcut instead'.
+
+	^ self at: aSymbol ifAbsent: aBlock
 ]

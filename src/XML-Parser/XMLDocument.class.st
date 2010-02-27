@@ -10,18 +10,9 @@ Class {
 	#category : #'XML-Parser-Nodes'
 }
 
-{ #category : #comparing }
-XMLDocument >> = anObject [
-
-	^ (#(version encoding) allSatisfy: [:selector |
-		(anObject respondsTo: selector)
-			and: [(self perform: selector) = (anObject perform: selector)]])
-		and: [super = anObject]
-]
-
 { #category : #accessing }
 XMLDocument >> dtd [
-	^dtd
+	^ dtd
 ]
 
 { #category : #accessing }
@@ -31,7 +22,7 @@ XMLDocument >> dtd: aDTD [
 
 { #category : #accessing }
 XMLDocument >> encoding [	
-	^encoding ifNil: ['UTF-8']
+	^ encoding ifNil: ['UTF-8']
 ]
 
 { #category : #accessing }
@@ -40,14 +31,12 @@ XMLDocument >> encoding: aString [
 ]
 
 { #category : #testing }
-XMLDocument >> hash [
-
-	^ (self version hash bitXor: self encoding hash) bitXor: super hash
+XMLDocument >> isDocument [
+	^ true
 ]
 
 { #category : #printing }
 XMLDocument >> printCanonicalOn: aStream [
-
 	| writer |
 	writer := XMLWriter on: aStream.
 	writer canonical: true.
@@ -62,7 +51,7 @@ XMLDocument >> printXMLOn: writer [
 
 { #category : #accessing }
 XMLDocument >> requiredMarkup [	
-	^requiredMarkup
+	^ requiredMarkup
 ]
 
 { #category : #accessing }
@@ -78,7 +67,7 @@ XMLDocument >> root [
 
 { #category : #accessing }
 XMLDocument >> version [	
-	^version
+	^ version
 ]
 
 { #category : #accessing }

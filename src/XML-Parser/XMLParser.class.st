@@ -1,6 +1,5 @@
 "
-This is a generic parser. 
-There is two ways to parse XML files, either using SAX, or using DOM. Both ways are supported in the XML-Parser package. SAX is event-based while DOM is tree-based. Ask google for more information
+This is a generic parser that supports rudimentary handling of elements and character data. For a more complete SAX-like API, see SAXHandler (and SAXDriver). For a DOM-like API, see XMLDOMParser and the classes under XML-Parser-Nodes.
 "
 Class {
 	#name : #XMLParser,

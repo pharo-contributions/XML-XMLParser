@@ -10,22 +10,14 @@ Class {
 
 { #category : #'instance creation' }
 XMLPI class >> target: targetName data: aString [
-	^self new
+	^ self new
 		target: targetName;
 		data: aString
 ]
 
-{ #category : #comparing }
-XMLPI >> = anObject [
-
-	^ #(target data) allSatisfy: [:selector |
-		(anObject respondsTo: selector)
-			and: [(self perform: selector) = (anObject perform: selector)]]
-]
-
 { #category : #accessing }
 XMLPI >> data [
-	^data
+	^ data ifNil: ['']
 ]
 
 { #category : #accessing }
@@ -34,14 +26,8 @@ XMLPI >> data: aString [
 ]
 
 { #category : #testing }
-XMLPI >> hash [
-
-	^ self target hash bitXor: self data hash
-]
-
-{ #category : #testing }
 XMLPI >> isProcessingInstruction [
-	^true
+	^ true
 ]
 
 { #category : #printing }
@@ -51,7 +37,7 @@ XMLPI >> printXMLOn: writer [
 
 { #category : #accessing }
 XMLPI >> target [
-	^target
+	^ target ifNil: ['']
 ]
 
 { #category : #accessing }
