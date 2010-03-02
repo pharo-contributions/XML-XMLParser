@@ -60,8 +60,13 @@ XMLElement >> addContent: contentString [
 ]
 
 { #category : #accessing }
+XMLElement >> allAttributeAssociations [
+	^ self attributes associations
+]
+
+{ #category : #accessing }
 XMLElement >> allAttributes [
-	^ self attributes asOrderedCollection
+	^ self attributes keys
 ]
 
 { #category : #accessing }
