@@ -443,7 +443,8 @@ XMLNodeTest >> test053elementAttributes [
 		assertElement: element attribute: #bar is: 'test2';
 		assert: (element at: 'baz' put: 'test3') = 'test3';
 		assertElement: element attribute: #baz is: 'test3';
-		assert: element allAttributes asArray = #(#bar baz #foo).
+		assert: element allAttributes asArray =  #(#bar #baz #foo).
+
 	self
 		assert: element allAttributeAssociations asArray =
 			(Array with: #bar->'test2' with: #baz->'test3' with: #foo->'test').
@@ -534,8 +535,8 @@ XMLNodeTest >> test062elementPrinting [
 	attributes := Dictionary with: #a->'one' with: #b->'two'.
 	self
 		assert: element asString = '<foo></foo>';
-		assert: (element contentString: 'test') asString = '<foo>test</foo>';
-		assert: (element setAttributes: attributes) asString = '<foo a="one" b="two">test</foo>';
+		assert: (element contentString: 'test') printString = '<foo>test</foo>';
+		assert: (element setAttributes: attributes) printString = '<foo a="one" b="two">test</foo>';
 		assert: (element equalTo: (XMLElement
 			named: 'foo'
 			attributes: (Dictionary with: #a->'one' with: #b->'two')
