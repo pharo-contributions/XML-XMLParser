@@ -26,7 +26,7 @@ XMLNodeTest >> assertElement: anElement attribute: aSymbol is: aValue [
 XMLNodeTest >> assertElement: anElement attributes: aDictionary [
 	self assert:
 		anElement attributes =
-			(IdentityDictionary newFrom:
+			(anElement attributes species newFrom:
 				(aDictionary associations collect: [:a | a key asSymbol -> a value]))
 ]
 
