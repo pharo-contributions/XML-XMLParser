@@ -16,7 +16,6 @@ Class {
 		'externalEntities',
 		'parameterEntities',
 		'parsingMarkup',
-		'markedPosition',
 		'peekChar',
 		'validating',
 		'nameBuffer',
@@ -272,7 +271,7 @@ XMLTokenizer >> handleWhitespace: aString [
 ]
 
 { #category : #'handling tokens' }
-XMLTokenizer >> handleXMLDecl: attributes namespaces: namespaces [
+XMLTokenizer >> handleXMLDecl: attributes [
 	attributes keysAndValuesDo: [:key :value |
 		self log: key , '->' , value]
 ]
@@ -872,8 +871,7 @@ XMLTokenizer >> nextXMLDecl [
 	self next == $>
 		ifFalse: [self errorExpected: '> expected.'].
 	(attributes includesKey: 'encoding') ifTrue: [self streamEncoding: (attributes at: 'encoding')].
-	self handleXMLDecl: attributes namespaces: namespaces
-	
+	self handleXMLDecl: attributes.
 ]
 
 { #category : #entities }

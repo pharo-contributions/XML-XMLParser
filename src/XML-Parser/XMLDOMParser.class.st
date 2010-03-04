@@ -12,12 +12,6 @@ Class {
 	#category : #'XML-Parser-Parser'
 }
 
-{ #category : #examples }
-XMLDOMParser class >> addressBookXMLWithDTD [
-	"XMLDOMParser addressBookXMLWithDTD"
-	^self parseDocumentFrom: XMLTokenizer addressBookXMLWithDTD readStream useNamespaces: true
-]
-
 { #category : #'instance creation' }
 XMLDOMParser class >> parse: aStream [
 	^ self parseDocumentFrom: aStream
@@ -25,7 +19,7 @@ XMLDOMParser class >> parse: aStream [
 
 { #category : #'instance creation' }
 XMLDOMParser class >> parseDocumentFrom: aStream [
-	^self parseDocumentFrom: aStream useNamespaces: false
+	^self parseDocumentFrom: aStream useNamespaces: true
 ]
 
 { #category : #'instance creation' }
@@ -35,21 +29,10 @@ XMLDOMParser class >> parseDocumentFrom: aStream useNamespaces: aBoolean [
 		useNamespaces: aBoolean) document
 ]
 
-{ #category : #'instance creation' }
-XMLDOMParser class >> parseWithNamespaces: aStream [
-	^ self parseDocumentFrom: aStream useNamespaces: true
-]
-
 { #category : #content }
 XMLDOMParser >> characters: aString [
 	self top addContent: aString
 
-]
-
-{ #category : #private }
-XMLDOMParser >> defaultNamespace [
-	^self top
-		ifNotNil: [self top namespace]
 ]
 
 { #category : #content }
@@ -85,14 +68,44 @@ XMLDOMParser >> endElement: elementName [
 XMLDOMParser >> endElement: localName namespace: namespace namespaceURI: uri qualifiedName: qualifiedName [
 	| currentElement |
 	currentElement := self pop.
-	(currentElement namespace isNil
-		or: [currentElement namespace = self defaultNamespace])
+	(currentElement namespace isNil)
 		ifTrue: [
-			currentElement localName = localName
-				ifFalse: [self driver errorExpected: 'End tag "', localName , '" doesn''t match "' , currentElement localName  , '".']]
+			currentElement localName = localName asSymbol
+				ifFalse: [
+					self
+						errorExpectedEndTag: currentElement
+						localName butGot: localName]]
 		ifFalse: [
-			currentElement qualifiedName = qualifiedName
-				ifFalse: [self driver errorExpected: 'End tag "', qualifiedName , '" doesn''t match "' , currentElement qualifiedName  , '".']]
+			currentElement qualifiedName = qualifiedName asSymbol
+				ifFalse: [
+					self
+						errorExpectedEndTag: currentElement qualifiedName
+						butGot: qualifiedName]]
+]
+
+{ #category : #content }
+XMLDOMParser >> endElement: localName namespace: namespace qualifiedName: qualifiedName scope: namespaceScope [
+	| currentElement |
+	currentElement := self pop.
+	(currentElement namespace isNil)
+		ifTrue: [
+			currentElement localName = localName asSymbol
+				ifFalse: [
+					self
+						errorExpectedEndTag: currentElement
+						localName butGot: localName]]
+		ifFalse: [
+			currentElement qualifiedName = qualifiedName asSymbol
+				ifFalse: [
+					self
+						errorExpectedEndTag: currentElement qualifiedName
+						butGot: qualifiedName]]
+]
+
+{ #category : #errors }
+XMLDOMParser >> errorExpectedEndTag: anExpectedEndTag butGot: aTag [
+	self driver
+		errorExpected: 'End tag "', aTag, '" doesn''t match "', anExpectedEndTag, '".'
 ]
 
 { #category : #accessing }
@@ -177,14 +190,13 @@ XMLDOMParser >> startElement: elementName attributeList: attributeList [
 ]
 
 { #category : #content }
-XMLDOMParser >> startElement: localName namespaceURI: namespaceUri namespace: namespace attributeList: attributeList [
-	| newElement |
-	"newElement := namespace = self defaultNamespace
-		ifTrue: [XMLElement named: localName namespace: nil uri: nil attributes: attributeList]
-		ifFalse: [XMLElement named: localName namespace: namespace uri: namespaceUri attributes: attributeList]."
-	newElement := XMLElement named: localName namespace: namespace uri: namespaceUri attributes: attributeList.
-
-	self pushElement: newElement.
+XMLDOMParser >> startElement: localName namespace: namespace attributeList: attributeList scope: namespaceScope [
+	self pushElement:
+		(XMLElement
+			named: localName
+			namespace: namespace
+			attributes: attributeList
+			scope: namespaceScope)
 ]
 
 { #category : #private }

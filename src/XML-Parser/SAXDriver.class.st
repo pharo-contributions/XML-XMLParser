@@ -6,13 +6,27 @@ Class {
 	#superclass : #XMLTokenizer,
 	#instVars : [
 		'saxHandler',
-		'scope',
+		'scoping',
 		'useNamespaces',
 		'validateAttributes',
 		'languageEnvironment'
 	],
 	#category : #'XML-Parser-Parser'
 }
+
+{ #category : #errors }
+SAXDriver >> errorBadNamespace: aNamespace inEndTag: anElementName [
+	self parseError:
+		('End tag ', anElementName,
+		' refers to undefined namespace ', aNamespace asString)
+]
+
+{ #category : #errors }
+SAXDriver >> errorBadNamespace: aNamespace inStartTag: anElementName [
+	self parseError:
+		('Start tag ', anElementName,
+		' refers to undefined namespace ', aNamespace asString)
+]
 
 { #category : #'handling tokens' }
 SAXDriver >> handleCData: aString [
@@ -37,30 +51,25 @@ SAXDriver >> handleEndDocument [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleEndTag: elementName [
-	| namespace localName namespaceURI qualifiedName |
+	| namespace localName namespaceURI |
 
 	self usesNamespaces
 		ifTrue: [
-			self splitName: elementName into: [:ns :ln |
+			elementName splitQualifiedNameInto: [:ns :ln |
 				namespace := ns.
 				localName := ln].
 
-			"ensure our namespace is defined"
-			namespace
-				ifNil: [
-					namespace := self scope defaultNamespace.
-					qualifiedName := namespace , ':' , elementName]
-				ifNotNil: [
-					namespaceURI := self scope namespaceURIOf: namespace.
-					namespaceURI
-						ifNil: [self parseError: 'Start tag ' , elementName , ' refers to undefined namespace ' , namespace asString].
-					qualifiedName := elementName].
+			(namespace isNil or: [self scoping isBoundNamespace: namespace])
+				ifFalse: [self errorBadNamespace: namespace inEndTag: elementName].
 
 			"call the handler"
 			self saxHandler
 				checkEOD; 
-				endElement: localName namespace: namespace namespaceURI: namespaceURI qualifiedName: qualifiedName.
-			self scope leaveScope]
+				endElement: localName
+				namespace: namespace
+				qualifiedName: elementName
+				scope: self scoping currentScope.
+			self scoping leaveScope]
 		ifFalse: [
 			"call the handler"
 			self saxHandler
@@ -91,41 +100,42 @@ SAXDriver >> handleStartDocument [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleStartTag: elementName attributes: attributeList namespaces: namespaces [
-
 	| localName namespace namespaceURI |
 
 	(attributeList includesKey: 'xml:lang')
-		ifTrue: [languageEnvironment := LanguageEnvironment localeID: (LocaleID isoString: (attributeList at: 'xml:lang'))].
+		ifTrue: [self languageEnvironment: (attributeList at: 'xml:lang')].
 	self usesNamespaces
 		ifTrue: [
-			self scope enterScope.
+			self scoping enterScope.
 				"declare any namespaces"	
 				namespaces keysAndValuesDo: [:ns :uri |
-					self scope declareNamespace: ns uri: uri].
+					self scoping declareNamespace: ns uri: uri].
 
-			self splitName: elementName into: [:ns :ln |
+			elementName splitQualifiedNameInto: [:ns :ln |
 				namespace := ns.
 				localName := ln].
 
 			"ensure our namespace is defined"
-			namespace
-				ifNil: [namespace := self scope defaultNamespace]
-				ifNotNil: [
-					namespaceURI := self scope namespaceURIOf: namespace.
-					namespaceURI
-						ifNil: [self parseError: 'Start tag ' , elementName , ' refers to undefined namespace ' , namespace asString]].
-
+			(namespace isNil or: [self scoping isBoundNamespace: namespace])
+				ifFalse: [self errorBadNamespace: namespace inStartTag: elementName].
 			self validatesAttributes
-				ifTrue: [self scope validateAttributes: attributeList].
+				ifTrue: [self scoping validateAttributes: attributeList].
+
 			"call the handler"
 			self saxHandler
 				checkEOD; 
-				startElement: localName namespaceURI: namespaceURI namespace: namespace attributeList: attributeList]
+				startElement: localName
+				namespace: namespace
+				attributeList: attributeList
+				scope: self scoping currentScope]
 		ifFalse: [
 			"call the handler"
 			self saxHandler
 				checkEOD; 
-				startElement: elementName namespaceURI: nil namespace: nil attributeList: attributeList]
+				startElement: elementName
+				namespace: nil
+				namespaceURI: nil
+				attributeList: attributeList]
 ]
 
 { #category : #'handling tokens' }
@@ -136,14 +146,10 @@ SAXDriver >> handleWhitespace: aString [
 ]
 
 { #category : #'handling tokens' }
-SAXDriver >> handleXMLDecl: attributes namespaces: namespaces [
+SAXDriver >> handleXMLDecl: attributes [
 	self saxHandler
 		checkEOD; 
-		documentAttributes: attributes.
-	self usesNamespaces
-		ifTrue: [
-			namespaces keysAndValuesDo: [:ns :uri |
-				self scope declareNamespace: ns uri: uri]]
+		documentAttributes: attributes
 ]
 
 { #category : #initialization }
@@ -159,6 +165,11 @@ SAXDriver >> languageEnvironment [
 ]
 
 { #category : #accessing }
+SAXDriver >> languageEnvironment: anIsoString [
+	languageEnvironment := LanguageEnvironment localeID: (LocaleID isoString: anIsoString)
+]
+
+{ #category : #accessing }
 SAXDriver >> saxHandler [
 	^saxHandler
 ]
@@ -169,9 +180,8 @@ SAXDriver >> saxHandler: aHandler [
 ]
 
 { #category : #namespaces }
-SAXDriver >> scope [
-	scope ifNil: [scope := XMLNamespaceScope new].
-	^scope
+SAXDriver >> scoping [
+	^ scoping ifNil: [scoping := XMLNamespaceScopeStack new]
 ]
 
 { #category : #namespaces }

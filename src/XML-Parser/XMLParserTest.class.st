@@ -180,8 +180,10 @@ XMLParserTest >> testParsing [
 	self assert: (firstPerson attributeAt: #'employee-number') = 'A0000'.
 	self assert: (firstPerson attributeAt: #'family-name') = 'Gates'.
 	self assert: (firstPerson attributeAt: #'first-name') = 'Bob'.
-	self assert: (firstPerson allAttributes asSortedCollection asArray =  #(#'employee-number' #'family-name' #'first-name')).
-	self assert: (firstPerson allAttributeAssociations includesAll: {(#'first-name'->'Bob'). (#'employee-number'->'A0000'). (#'family-name'->'Gates')}).
+	self assert: firstPerson allAttributes asArray =
+		#(#'employee-number' #'family-name' #'first-name').
+	self assert: firstPerson allAttributeAssociations asArray =
+		{(#'employee-number'->'A0000'). (#'family-name'->'Gates'). (#'first-name'->'Bob').}.
 
 	self assert: (firstPerson @ #'employee-number') = (firstPerson attributeAt: #'employee-number').
 	self assert: (firstPerson @ #'employee-number') = (firstPerson @ 'employee-number').

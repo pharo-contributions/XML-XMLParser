@@ -4,8 +4,7 @@ Class {
 	#instVars : [
 		'stream',
 		'stack',
-		'scope',
-		'scanner',
+		'scoping',
 		'canonical',
 		'currentIndent',
 		'indentString',
@@ -83,18 +82,7 @@ XMLWriter >> cr [
 
 { #category : #namespaces }
 XMLWriter >> declareNamespace: ns uri: uri [
-	self scope declareNamespace: ns uri: uri
-]
-
-{ #category : #namespaces }
-XMLWriter >> defaultNamespace [
-	^self scope defaultNamespace
-]
-
-{ #category : #namespaces }
-XMLWriter >> defaultNamespace: ns [
-	"Declare the default namespace."
-	self scope defaultNamespace: ns
+	self scoping declareNamespace: ns uri: uri
 ]
 
 { #category : #'private tags' }
@@ -120,6 +108,12 @@ XMLWriter >> endDeclaration [
 		cr;
 		nextPut: $].
 	self endTag
+]
+
+{ #category : #'writing xml' }
+XMLWriter >> endElement: anElementName [
+	self scoping leaveScope.
+	self endTag: anElementName.
 ]
 
 { #category : #'writing xml' }
@@ -149,26 +143,17 @@ XMLWriter >> endTag [
 { #category : #'writing xml' }
 XMLWriter >> endTag: tagName [
 	self outdent.
-	self endTag: tagName xmlns: nil.
-]
-
-{ #category : #'writing xml' }
-XMLWriter >> endTag: tagName xmlns: xmlns [
 	self popTag: tagName.
-	self stream nextPutAll: '</'.
-	(xmlns notNil
-		and: [xmlns ~= self defaultNamespace])
-		ifTrue: [self stream
-			nextPutAll: xmlns;
-			nextPut: $:].
-	self stream nextPutAll: tagName.
+	self stream
+		nextPutAll: '</';
+		nextPutAll: tagName.
 	self endTag.
 
 ]
 
 { #category : #namespaces }
 XMLWriter >> enterScope [
-	self scope enterScope
+	self scoping enterScope
 ]
 
 { #category : #private }
@@ -202,13 +187,13 @@ XMLWriter >> indentTab [
 XMLWriter >> initialize [
 	stack := OrderedCollection new.
 	canonical := false.
-	scope := XMLNamespaceScope new.
+	scoping := XMLNamespaceScopeStack new.
 	newLinesAllowed := false
 ]
 
 { #category : #namespaces }
 XMLWriter >> leaveScope [
-	self scope leaveScope
+	self scoping leaveScope
 ]
 
 { #category : #accessing }
@@ -274,8 +259,8 @@ XMLWriter >> putAsXMLString: aValue [
 ]
 
 { #category : #private }
-XMLWriter >> scope [
-	^scope
+XMLWriter >> scoping [
+	^ scoping
 ]
 
 { #category : #private }
@@ -328,6 +313,22 @@ XMLWriter >> startElement: elementName attributeList: attributeList [
 		self attribute: key value: (attributeList at: key)]
 ]
 
+{ #category : #'writing xml' }
+XMLWriter >> startElement: elementName attributeList: attributeList scope: namespaceScope [
+	self startTag: elementName.
+	self scoping enterScope.
+
+	namespaceScope bindingsDo: [:namespace :uri |
+		(self scoping isNamespace: namespace boundTo: uri)
+			ifFalse: [self xmlns: namespace uri: uri]].
+
+	(namespaceScope defaultNamespace ~= self scoping defaultNamespace)
+		ifTrue: [self xmlns: nil uri: namespaceScope defaultNamespace].
+
+	attributeList keys asSortedCollection do: [:key |
+		self attribute: key value: (attributeList at: key)]
+]
+
 { #category : #'private tags' }
 XMLWriter >> startPI: identifier [
 	self stream
@@ -339,19 +340,8 @@ XMLWriter >> startPI: identifier [
 { #category : #'writing xml' }
 XMLWriter >> startTag: tagName [
 	self writeIndent.
-	self startTag: tagName xmlns: nil
-]
-
-{ #category : #'writing xml' }
-XMLWriter >> startTag: tagName xmlns: xmlns [
 	self stream
-		nextPut: $<.
-	(xmlns notNil
-		and: [xmlns ~= self scope defaultNamespace])
-		ifTrue: [self stream
-			nextPutAll: xmlns;
-			nextPut: $:].
-	self stream
+		nextPut: $<;
 		nextPutAll: tagName.
 	"self canonical
 		ifFalse: [self stream space]."
@@ -399,4 +389,13 @@ XMLWriter >> xmlDeclaration: versionString encoding: encodingString [
 				attribute: 'encoding' value: encodingString;
 				endPI.
 			self stream flush]
+]
+
+{ #category : #'writing xml' }
+XMLWriter >> xmlns: namespace uri: uri [
+	self declareNamespace: namespace uri: uri.
+
+	self
+		attribute: (namespace ifNil: ['xmlns'] ifNotNil: ['xmlns:', namespace])
+		value: uri
 ]

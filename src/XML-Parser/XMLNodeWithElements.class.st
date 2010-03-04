@@ -1,7 +1,5 @@
 "
-This class represents a node with child nodes. You will likely use its API through either XMLDocument or XMLElement.
-
-To retrieve child elements by name, you can send any of the #element- messages under ""accessing."" To search a node and its descendants using depth-first traversal, you can send any of the #firstTag: or #tagsNamed: messages under ""searching.""
+This class represents a node with child nodes. You will likely use its API through either XMLDocument or XMLElement. To retrieve child elements by name, you can send any of the #element- messages in ""accessing."" The #firstTag- messages search the receiver and its descendants using depth-first traversal for specific elements, and the #tagsNamed- messages perform some sort of iteration over descendent elements also using depth-first traversal.
 "
 Class {
 	#name : #XMLNodeWithElements,
@@ -9,9 +7,7 @@ Class {
 	#instVars : [
 		'nodes',
 		'elements',
-		'elementsByName',
-		'uri',
-		'namespace'
+		'elementsByName'
 	],
 	#category : #'XML-Parser-Nodes'
 }
@@ -93,7 +89,7 @@ XMLNodeWithElements >> elementCacheAdd: anElement [
 
 	self elementCacheAt: anElement localName add: anElement.
 	anElement hasPrefix
-		ifTrue: [self elementCacheAt: anElement tag add: anElement].
+		ifTrue: [self elementCacheAt: anElement qualifiedName add: anElement].
 ]
 
 { #category : #private }
@@ -105,21 +101,19 @@ XMLNodeWithElements >> elementCacheAt: aSymbol add: anElement [
 
 { #category : #private }
 XMLNodeWithElements >> elementCacheAt: aSymbol remove: anElement [
-	self
-		remove: anElement
-		from: (self elementsAt: aSymbol ifAbsent: [^ self]).
+	(self elementsByName at: aSymbol asSymbol) remove: anElement.
 
 	(self elementsAt: aSymbol)
-		ifEmpty: [self elementsByName removeKey: aSymbol].
+		ifEmpty: [self elementsByName removeKey: aSymbol asSymbol].
 ]
 
 { #category : #private }
 XMLNodeWithElements >> elementCacheRemove: anElement [
-	self remove: anElement from: self elements.
+	self elements remove: anElement.
 
 	self elementCacheAt: anElement localName remove: anElement.
 	anElement hasPrefix
-		ifTrue: [self elementCacheAt: anElement tag remove: anElement].
+		ifTrue: [self elementCacheAt: anElement qualifiedName remove: anElement].
 ]
 
 { #category : #accessing }
@@ -144,6 +138,11 @@ XMLNodeWithElements >> elements [
 { #category : #accessing }
 XMLNodeWithElements >> elementsAt: aSymbol [
 	^ self elementsAt: aSymbol ifAbsent: [self newElements]
+]
+
+{ #category : #enumerating }
+XMLNodeWithElements >> elementsAt: aSymbol do: aBlock [
+	(self elementsAt: aSymbol) do: aBlock
 ]
 
 { #category : #accessing }
@@ -206,7 +205,7 @@ XMLNodeWithElements >> hasElements [
 
 { #category : #testing }
 XMLNodeWithElements >> includesElement: aSymbol [
-	^ self elementsByName includesKey: aSymbol asSymbol
+	^ (self elementAt: aSymbol) notNil
 ]
 
 { #category : #testing }
@@ -217,22 +216,6 @@ XMLNodeWithElements >> includesNode: aNode [
 { #category : #testing }
 XMLNodeWithElements >> isEmpty [
 	^ self nodes isEmpty
-]
-
-{ #category : #namespace }
-XMLNodeWithElements >> namespace [
-	^ namespace
-]
-
-{ #category : #namespace }
-XMLNodeWithElements >> namespace: aPrefix uri: aUri [
-	namespace := aPrefix.
-	uri := aUri.
-]
-
-{ #category : #namespace }
-XMLNodeWithElements >> namespaceURI [
-	^ uri
 ]
 
 { #category : #private }
@@ -268,9 +251,9 @@ XMLNodeWithElements >> printXMLOn: writer [
 { #category : #private }
 XMLNodeWithElements >> rebuildElementCache [
 	"This method rebuilds the #elements and #elementsByName caches using #nodes. It is
-	sent by #with:add: when an element node is added to #nodes anywhere but to its end
-	and also changedChildElement: when the name or namespace informatin of a child
-	element is changed.
+	sent by #with:add: when an element node is added to #nodes anywhere except at the
+	end and also by changedChildElement: when the name or namespace information of a
+	child element is changed.
 	
 	See #with:add: and #with:remove:"
 
@@ -282,15 +265,16 @@ XMLNodeWithElements >> rebuildElementCache [
 
 { #category : #searching }
 XMLNodeWithElements >> recurse: aBlock [
-	"Descend down the tree visiting each element with aBlock."
+	"Descend depth-first visiting each element with aBlock."
 
 	self elementsDo: [:each | each recurse: aBlock]
 ]
 
 { #category : #searching }
 XMLNodeWithElements >> recurseUntilTrue: aBlock [
-	"Descend down the tree visiting each element with aBlock until one such evaluation
-	of aBlock with an element is true, then return that element. Otherwise, return nil."
+	"Descend depth-first visiting each element with aBlock until one such evaluation
+	of aBlock with an element is true, then return that element. If no evaluation is
+	true, then return nil."
 
 	| result |
 
@@ -298,14 +282,9 @@ XMLNodeWithElements >> recurseUntilTrue: aBlock [
 	^ nil.
 ]
 
-{ #category : #private }
-XMLNodeWithElements >> remove: aNode from: aCollection [
-	^ aCollection remove: aNode ifAbsent: [nil]
-]
-
 { #category : #accessing }
 XMLNodeWithElements >> removeNode: aNode [
-	^ self with: [self remove: aNode from: self nodes] remove: aNode
+	^ self with: [self nodes remove: aNode] remove: aNode
 ]
 
 { #category : #accessing }
@@ -323,7 +302,9 @@ XMLNodeWithElements >> removeNodes: aNodeCollection [
 XMLNodeWithElements >> tagsNamed: aSymbol childrenDo: aOneArgumentBlock [
 	"Evaluate aOneArgumentBlock for all children who match"
 
-	self elementsDo: [:each | each ifNamed: aSymbol do: aOneArgumentBlock]
+	self deprecated: 'use #elementsAt:do: instead'.
+
+	self elementsAt: aSymbol do: aOneArgumentBlock.
 ]
 
 { #category : #searching }
@@ -338,7 +319,7 @@ XMLNodeWithElements >> tagsNamed: aSymbol contentsDo: aBlock [
 	"Evaluate aBlock for all of the contents of the receiver.
 	The receiver has no tag, so pass the message on"
 
-	self recurse: [:each | each ifNamed: aSymbol do: [each contentsDo: aBlock]]
+	self tagsNamed: aSymbol do: [:each | each contentsDo: aBlock]
 ]
 
 { #category : #searching }
@@ -381,6 +362,9 @@ XMLNodeWithElements >> with: aBlock add: aNode [
 	self with: aBlock onError: [^ nil].
 	aNode parent: self.
 	aNode isTag ifTrue: [
+		self isTag
+			ifTrue: [aNode inheritBindingsFromScope: self namespaceScope].
+
 		(self nodes last = aNode)
 			ifTrue: [self elementCacheAdd: aNode]
 			ifFalse: [self rebuildElementCache]].

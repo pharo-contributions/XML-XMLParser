@@ -1,124 +1,137 @@
+"
+An XMLNamespaceScope is a set of bindings between namespaces prefixes and URIs, and also a default URI. Scopes can be created from other scopes by sending #enclosingScope: to XMLNamespaceScope with the other XMLNamespaceScope as the argument.
+"
 Class {
 	#name : #XMLNamespaceScope,
 	#superclass : #Object,
 	#instVars : [
-		'scope',
 		'currentBindings',
-		'useNamespaces',
-		'validateAttributes'
+		'defaultNamespace'
 	],
 	#category : #'XML-Parser'
 }
 
-{ #category : #private }
-XMLNamespaceScope >> currentScope [
-	^self scope last
+{ #category : #'instance creation' }
+XMLNamespaceScope class >> enclosingScope: aScope [
+	^ self new inheritBindingsFromScope: aScope
 ]
 
-{ #category : #scope }
-XMLNamespaceScope >> declareNamespace: ns uri: uri [
-	"Declare the given name space prefix with the given URL"
+{ #category : #accessing }
+XMLNamespaceScope >> aliasesFor: namespace [
+	"Locate all namespaces that are aliases of the given URI."
+	| uri |
 
-	ns = 'xmlns'
-		ifTrue: [^self defaultNamespace: uri].
-	self establishLocalBindings.
-	currentBindings removeKey: ns ifAbsent: [].
-	currentBindings at: ns put: uri
+	uri := self
+		namespaceURIOf: namespace
+		ifAbsent: [self errorUndefinedAttributeNamespace: namespace asString].
+
+	^ (self boundNamespaces select: [:ns |
+		(self isNamespace: ns boundTo: uri)
+			and: [ns ~= namespace]]) asSet
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> bindNamespace: aNamespace to: aUri [
+	((aNamespace = 'xmlns') or: [aNamespace isEmptyOrNil])
+		ifTrue: [self defaultNamespace: aUri]
+		ifFalse: [self currentBindings at: aNamespace put: aUri]
+]
+
+{ #category : #enumerating }
+XMLNamespaceScope >> bindingsDo: aTwoArgumentBlock [
+	self boundNamespaces do: [:namespace |
+		aTwoArgumentBlock
+			value: namespace
+			value: (self resolveNamespace: namespace)]
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> boundNamespaces [
+	^ self currentBindings keys asSortedCollection
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> currentBindings [
+	^ currentBindings ifNil: [currentBindings := Dictionary new]
 ]
 
 { #category : #accessing }
 XMLNamespaceScope >> defaultNamespace [
-	^self currentScope first
+	^ defaultNamespace
 ]
 
 { #category : #accessing }
-XMLNamespaceScope >> defaultNamespace: ns [
-	"Declare the default namespace."
-	self currentScope at: 1 put: ns
+XMLNamespaceScope >> defaultNamespace: aNamespaceUri [
+	defaultNamespace := aNamespaceUri
 ]
 
-{ #category : #scope }
-XMLNamespaceScope >> enterScope [
-	self scope addLast: { self defaultNamespace. nil. currentBindings. }
+{ #category : #errors }
+XMLNamespaceScope >> errorAttribute: anAttribute isAliasFor: anAlias withURI: aNamespaceUri [
+	self error: ('Attributes ', anAttribute, ' and ',
+		anAlias, ' are aliased to namespace ', aNamespaceUri)
 ]
 
-{ #category : #private }
-XMLNamespaceScope >> establishLocalBindings [
-	(self currentScope at: 2)
-		ifNil: [
-			currentBindings := currentBindings copy.
-			self currentScope at: 2 put: currentBindings]
+{ #category : #errors }
+XMLNamespaceScope >> errorUndefinedAttributeNamespace: aNamespace [
+	self error: 'Attribute refers to undefined namespace ', aNamespace
 ]
 
-{ #category : #private }
-XMLNamespaceScope >> initScope [
-	scope := OrderedCollection new: 20.
-	currentBindings := Dictionary new.
-	scope addLast: {'http://www.w3.org/TR/REC-xml-names'. currentBindings. nil. }.
+{ #category : #initializing }
+XMLNamespaceScope >> inheritBindingsFromScope: anEnclosingScope. [
+	self defaultNamespace
+		ifNil: [self defaultNamespace: anEnclosingScope defaultNamespace].
 
+	anEnclosingScope bindingsDo: [:prefix :uri |
+		(self isBoundNamespace: prefix)
+			ifFalse: [self bindNamespace: prefix to: uri]].
 ]
 
-{ #category : #scope }
-XMLNamespaceScope >> leaveScope [
-	| leftScope |
-	leftScope := self scope removeLast.
-	currentBindings := (self currentScope at: 2) ifNil: [leftScope at: 3]
+{ #category : #testing }
+XMLNamespaceScope >> isBoundNamespace: aNamespace [
+	^ self currentBindings includesKey: aNamespace
 ]
 
-{ #category : #private }
-XMLNamespaceScope >> namespaceAliases: namespace [
-	"Locate all namespaces that are aliases of the given URI."
-
-	| aliases uri |
-	aliases := Set new.
-	uri := self namespaceURIOf: namespace ifAbsent: [self parseError: 'Attribute refers to undefined namespace ' , namespace asString ].
-	currentBindings keysAndValuesDo: [:ns :u |
-		(u = uri
-			and: [ns ~= namespace])
-			ifTrue: [aliases add: ns]].
-	^ aliases
+{ #category : #testing }
+XMLNamespaceScope >> isNamespace: aNamespace boundTo: aUri [
+	^ ((self isBoundNamespace: aNamespace)
+		and: [(self resolveNamespace: aNamespace) = aUri])
 ]
 
 { #category : #accessing }
-XMLNamespaceScope >> namespaceURIOf: ns [
+XMLNamespaceScope >> resolveNamespace: aNamespace [
 	"Retrieve the URI of the given namespace prefix, if it is defined. A nil namespace
 	returns the global namespace"
 
-	^ self namespaceURIOf: ns ifAbsent: [ nil ]
+	^ self resolveNamespace: aNamespace ifUnbound: [nil]
 ]
 
 { #category : #accessing }
-XMLNamespaceScope >> namespaceURIOf: ns ifAbsent: aBlock [
+XMLNamespaceScope >> resolveNamespace: aNamespace ifUnbound: aBlock [
 	"Retrieve the URI of the given namespace prefix, if it is defined. 
 	A nil namespace returns the default namespace. 
 	If no namespace can be found the value of the block is returned"
 
-	^ns
-		ifNil: [self defaultNamespace]
-		ifNotNil: [currentBindings at: ns ifAbsent: aBlock]
-]
-
-{ #category : #accessing }
-XMLNamespaceScope >> namespaces [
-	^currentBindings
-]
-
-{ #category : #private }
-XMLNamespaceScope >> scope [
-	scope ifNil: [self initScope].
-	^scope
+	^ (aNamespace isEmptyOrNil or: [aNamespace = 'xmlns'])
+		ifTrue: [self defaultNamespace]
+		ifFalse: [self currentBindings at: aNamespace ifAbsent: aBlock]
 ]
 
 { #category : #validation }
 XMLNamespaceScope >> validateAttributes: attributeList [
 	"check all attribute namespaces are defined and not duplicated by aliasing"
-	| namespace localName |
+	| namespace localName qualifiedAlias |
+
 	attributeList keysDo: [:attrName |
-		self splitName: attrName into: [:ns :ln |
+		attrName splitQualifiedNameInto: [:ns :ln |
 			namespace := ns.
 			localName := ln].
 		namespace ifNotNil: [
-			(self namespaceAliases: namespace) do: [:alias |
-				(attributeList includesKey: alias , ':' , localName)
-					ifTrue: [self parseError: 'Attributes ' , attrName , ' and ' , alias , ':' , localName , ' are aliased to namespace ' , (self namespaceURIOf: namespace) ]]]]
+			(self currentScope aliasesFor: namespace) do: [:alias |
+				qualifiedAlias := alias , ':' , localName.
+				(attributeList includesKey: qualifiedAlias)
+					ifTrue: [
+						self
+							errorAttribute: attrName
+							isAliasFor: qualifiedAlias
+							withURI: (self resolveNamespace: namespace)]]]]
 ]

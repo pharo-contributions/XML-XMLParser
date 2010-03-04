@@ -35,7 +35,7 @@ SAXHandler class >> parseDTDFrom: aStream [
 
 { #category : #'instance creation' }
 SAXHandler class >> parseDocumentFrom: aStream [
-	^self parseDocumentFrom: aStream useNamespaces: false
+	^self parseDocumentFrom: aStream useNamespaces: true
 ]
 
 { #category : #'instance creation' }
@@ -149,6 +149,15 @@ SAXHandler >> endElement: elementName namespace: namespace namespaceURI: namespa
 	self endElement: elementName
 ]
 
+{ #category : #content }
+SAXHandler >> endElement: elementName namespace: namespace qualifiedName: qualifiedName scope: namespaceScope [
+	self
+		endElement: elementName
+		namespace: namespace
+		namespaceURI: (namespaceScope resolveNamespace: namespace)
+		qualifiedName: qualifiedName
+]
+
 { #category : #lexical }
 SAXHandler >> endEntity: entityName [
 	"This call corresponds to the Java SAX ext call
@@ -224,7 +233,16 @@ SAXHandler >> startElement: elementName attributeList: attributeList [
 ]
 
 { #category : #content }
-SAXHandler >> startElement: localName namespaceURI: namespaceUri namespace: namespace attributeList: attributeList [
+SAXHandler >> startElement: localName namespace: namespace attributeList: attributeList scope: namespaceScope [
+	self
+		startElement: localName
+		namespace: namespace
+		namespaceURI: (namespaceScope resolveNamespace: namespace)
+		attributeList: attributeList
+]
+
+{ #category : #content }
+SAXHandler >> startElement: localName namespace: namespace namespaceURI: namespaceUri attributeList: attributeList [
 	"This call corresonds to the Java SAX call
 	startElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName, Attributes atts).
 	By default this call is mapped to the following more convenient call:"
