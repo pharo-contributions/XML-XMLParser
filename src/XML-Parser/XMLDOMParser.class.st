@@ -13,13 +13,6 @@ Class {
 	#category : #'XML-Parser-Parser'
 }
 
-{ #category : #'instance creation' }
-XMLDOMParser class >> parseDocumentFrom: aStream useNamespaces: aBoolean [
-	^(super
-		parseDocumentFrom: aStream
-		useNamespaces: aBoolean) document
-]
-
 { #category : #content }
 XMLDOMParser >> characters: aString [
 	self top addContent: aString
@@ -28,7 +21,7 @@ XMLDOMParser >> characters: aString [
 
 { #category : #accessing }
 XMLDOMParser >> document [
-	^document
+	^ document
 ]
 
 { #category : #accessing }
@@ -84,7 +77,7 @@ XMLDOMParser >> errorExpectedEndTag: anExpectedEndTag butGot: aTag [
 
 { #category : #accessing }
 XMLDOMParser >> incremental [
-	^incremental
+	^ incremental
 ]
 
 { #category : #accessing }
@@ -113,6 +106,12 @@ XMLDOMParser >> nextToken [
 	[self driver nextToken isNil
 		or: [self top ~~ currentTop]] whileTrue.
 	^entity
+]
+
+{ #category : #parsing }
+XMLDOMParser >> parseDocument [
+	super parseDocument.
+	^ self document.
 ]
 
 { #category : #private }

@@ -17,8 +17,8 @@ Class {
 XMLNamespacedName >> expandedName [
 	"Returns a string containing the local name expanded with its namespace URI"
 	^ self namespaceURI
-		ifNil: [self localName asString]
-		ifNotNil: ['{', self namespaceURI, '}', self localName asString]
+		ifNil: [self localName]
+		ifNotNil: ['{', self namespaceURI, '}', self localName]
 ]
 
 { #category : #testing }

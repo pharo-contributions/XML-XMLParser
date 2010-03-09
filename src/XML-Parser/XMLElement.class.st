@@ -18,24 +18,24 @@ XMLElement class >> localName: aString prefix: ns attributes: attributeList scop
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> named: aString [
-	^ self new localName: aString
+XMLElement class >> named: aLocalName [
+	^ self new localName: aLocalName
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> named: aString attributes: aDictionary [
-	^ (self named: aString) setAttributes: aDictionary
+XMLElement class >> named: aLocalName attributes: aDictionary [
+	^ (self named: aLocalName) setAttributes: aDictionary
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> named: aString attributes: aDictionary content: aContentString [
-	^ (self named: aString attributes: aDictionary)
+XMLElement class >> named: aLocalName attributes: aDictionary content: aContentString [
+	^ (self named: aLocalName attributes: aDictionary)
 		contentString: aContentString
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> named: aString content: aContentString [
-	^ (self named: aString) contentString: aContentString
+XMLElement class >> named: aLocalName content: aContentString [
+	^ (self named: aLocalName) contentString: aContentString
 ]
 
 { #category : #'instance creation' }
@@ -53,7 +53,7 @@ XMLElement class >> named: aQualifiedName namespaceURI: aUri attributes: aDictio
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> named: aQualifiedName namespaceURI: aUri attributes: aDictionary contentString: aString [
+XMLElement class >> named: aQualifiedName namespaceURI: aUri attributes: aDictionary content: aString [
 	^ (self named: aQualifiedName namespaceURI: aUri attributes: aDictionary)
 		contentString: aString
 ]
