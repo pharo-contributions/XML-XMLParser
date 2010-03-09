@@ -77,7 +77,7 @@ DTDEntityDeclaration >> name [
 
 { #category : #accessing }
 DTDEntityDeclaration >> name: aString [
-	name := aString asSymbol
+	name := aString
 ]
 
 { #category : #accessing }

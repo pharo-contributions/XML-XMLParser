@@ -8,14 +8,14 @@ Class {
 }
 
 { #category : #callbacks }
-XMLParser >> attribute: aSymbol value: aString [
+XMLParser >> attribute: aName value: aValue [
 	"This method is called for each attribute/value pair in a start tag"
 
 	^self subclassResponsibility
 ]
 
 { #category : #callbacks }
-XMLParser >> beginStartTag: aSymbol asPI: aBoolean [
+XMLParser >> beginStartTag: aString asPI: aBoolean [
 	"This method is called for at the beginning of a start tag.
 	The asPI parameter defines whether or not the tag is a 'processing
 	instruction' rather than a 'normal' tag."
@@ -24,7 +24,7 @@ XMLParser >> beginStartTag: aSymbol asPI: aBoolean [
 ]
 
 { #category : #callbacks }
-XMLParser >> endStartTag: aSymbol [
+XMLParser >> endStartTag: aString [
 	"This method is called at the end of the start tag after all of the
 	attributes have been processed"
 
@@ -32,7 +32,7 @@ XMLParser >> endStartTag: aSymbol [
 ]
 
 { #category : #callbacks }
-XMLParser >> endTag: aSymbol [
+XMLParser >> endTag: aString [
 	"This method is called when the parser encounters either an
 	end tag or the end of a unary tag"
 

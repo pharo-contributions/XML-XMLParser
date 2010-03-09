@@ -1,12 +1,5 @@
 "
-A XMLNode is xxxxxxxxx.
-
-Instance Variables
-	parent:		<Object>
-
-parent
-	- xxxxx
-
+This is a base class for XML nodes. It contains testing messages and methods to set and access the parent node.
 "
 Class {
 	#name : #XMLNode,
@@ -28,6 +21,11 @@ XMLNode >> addContent: contentString [
 { #category : #testing }
 XMLNode >> hasParent [
 	^ self parent notNil
+]
+
+{ #category : #testing }
+XMLNode >> isAttribute [
+	^ false
 ]
 
 { #category : #testing }
@@ -73,6 +71,16 @@ XMLNode >> isText [
 { #category : #accessing }
 XMLNode >> nextNode [
 	^ self hasParent ifTrue: [self parent nodeAfter: self]
+]
+
+{ #category : #testing }
+XMLNode >> notEmpty [
+	^ self isEmpty not
+]
+
+{ #category : #private }
+XMLNode >> notifyParentOfChange [
+	self hasParent ifTrue: [self parent changedChildNode: self]
 ]
 
 { #category : #accessing }

@@ -22,8 +22,10 @@ Class {
 		'attributeBuffer'
 	],
 	#classVars : [
+		'CarriageReturn',
 		'CharEscapes',
 		'DigitTable',
+		'LineFeed',
 		'LiteralChars',
 		'NameDelimiters',
 		'SeparatorTable'
@@ -57,6 +59,8 @@ XMLTokenizer class >> initialize [
 	($a to: $f) do: [:each | DigitTable at: each asciiValue put: each digitValue].
 	($A to: $F) do: [:each | DigitTable at: each asciiValue put: each digitValue].
 
+	CarriageReturn := Character cr.
+	LineFeed := Character lf.
 ]
 
 { #category : #accessing }
@@ -67,7 +71,7 @@ XMLTokenizer class >> isCharEscape: entityValue [
 
 { #category : #'instance creation' }
 XMLTokenizer class >> on: aStream [
-	^self new parseStream: aStream
+	^self new stream: aStream
 ]
 
 { #category : #streaming }
@@ -84,14 +88,13 @@ XMLTokenizer >> atEnd [
 { #category : #streaming }
 XMLTokenizer >> basicNext [
 	"Returns next character in the stream after performing line endings normalization"
-	| char nextChar |
+	| char |
 	
-	char := stream next.
-	char == Character cr 
+	((char := stream next) == CarriageReturn)
 		ifTrue: [
-			char := Character lf.
-			nextChar := stream next.
-			(nextChar = Character lf or: [nextChar == nil]) ifFalse: [self pushBack: nextChar asString]].
+			char := LineFeed.
+			(stream peek == LineFeed)
+				ifTrue: [stream next]].
 	^ char
 ]
 
@@ -266,6 +269,11 @@ XMLTokenizer >> handleStartTag: tagName attributes: attributes [
 ]
 
 { #category : #'handling tokens' }
+XMLTokenizer >> handleStartTag: tagName attributes: attributes namespaces: namespaces [
+	self handleStartTag: tagName attributes: attributes
+]
+
+{ #category : #'handling tokens' }
 XMLTokenizer >> handleWhitespace: aString [
 	self log: 'Whitespace: ' , aString
 ]
@@ -346,12 +354,23 @@ XMLTokenizer >> next [
 	peekChar
 		ifNil: [
 			nestedStreams ifNotNil: [self checkNestedStream].
-			^nextChar := self basicNext]
+			^ self basicNext]
 		ifNotNil: [
 			nextChar := peekChar.
 			peekChar := nil.
-			^nextChar].
-	
+			^ nextChar].
+]
+
+{ #category : #reading }
+XMLTokenizer >> next: size [
+	| buffer i |
+
+	"Faster than creating a WriteStream and sending it #contents when finished"
+	buffer := String new: size.
+	i := 1.
+	[i <= size and: [self atEnd not]]
+		whileTrue: [buffer at: i put: self next. i := i + 1].
+	^ buffer copyFrom: 1 to: i - 1.
 ]
 
 { #category : #tokenizing }
@@ -366,7 +385,7 @@ XMLTokenizer >> nextAttributeInto: attributes namespaces: namespaces [
 	attrValue := self nextAttributeValue.
 
 	(self usesNamespaces
-		and: [(attrName findString: 'xmlns') = 1])
+		and: [attrName beginsWith: 'xmlns'])
 		ifTrue: [attrName size > 6
 			ifTrue: [namespaces at: (attrName copyFrom: 7 to: attrName size) put: attrValue]
 			ifFalse: [namespaces at: attrName put: attrValue]]
@@ -410,8 +429,7 @@ XMLTokenizer >> nextAttributeValue [
 	nextPeek == delimiterChar]
 		whileFalse: [
 			nextChar ifNotNil: [attributeValueStream nextPut: nextChar]].
-	^self fastStreamStringContents: attributeValueStream
-"	^attributeValueStream contents"
+	^self fastStreamStringContents: attributeValueStream.
 ]
 
 { #category : #tokenizing }
@@ -528,23 +546,6 @@ XMLTokenizer >> nextEndTag [
 	(self nextTrimmedBlanksUpTo: $>)
 		ifNotEmpty: [self parseError: 'XML invalid end tag ' , tagName].
 	self handleEndTag: tagName
-]
-
-{ #category : #tokenizing }
-XMLTokenizer >> nextEntity [
-	"return the next XMLnode, or nil if there are no more.
-	Fixed to retain leading whitespace when PCDATA is detected."
-
-	|whitespace|
-	"branch, depending on what the first character is"
-	whitespace := self nextWhitespace.
-	self atEnd ifTrue: [self handleEndDocument. ^ nil].
-	self checkAndExpandReference: (self parsingMarkup ifTrue: [#dtd] ifFalse: [#content]).
-	^self peek = $<
-		ifTrue: [self nextNode]
-		ifFalse: [whitespace isEmpty
-					ifFalse: [self pushBack: whitespace].
-				self nextPCData]
 ]
 
 { #category : #'tokenizing dtd' }
@@ -696,7 +697,7 @@ XMLTokenizer >> nextName [
 		ifNil: [self errorExpected: 'Character expected.'].
 	NameDelimiters includes: nextChar] whileFalse: [
 			nameBuffer nextPut: self next].
-	^ (self fastStreamStringContents: nameBuffer) 
+	^ self fastStreamStringContents: nameBuffer.
 ]
 
 { #category : #tokenizing }
@@ -715,7 +716,7 @@ XMLTokenizer >> nextNode [
 			ifTrue: [self nextMarkupDeclaration]
 			ifFalse: [self nextDocType]].
 	nextChar == $? ifTrue: [^self nextPI].
-	^self nextTag
+	self nextTag
 ]
 
 { #category : #tokenizing }
@@ -792,8 +793,8 @@ XMLTokenizer >> nextTag [
 		ifTrue: [^self nextEndTag].
 	tagName := self nextName.
 	self skipSeparators.
-	attributes := Dictionary new: 33.
-	namespaces := Dictionary new: 5.
+	attributes := XMLOrderPreservingDictionary new: 10.
+	namespaces := XMLOrderPreservingDictionary new: 5.
 	[(nextChar := self peek) == $> or: [nextChar == $/]] whileFalse: [
 		self checkAndExpandReference: #content.
 		self nextAttributeInto: attributes namespaces: namespaces.
@@ -804,6 +805,23 @@ XMLTokenizer >> nextTag [
 			self handleEndTag: tagName.
 			self next].
 	
+]
+
+{ #category : #tokenizing }
+XMLTokenizer >> nextToken [
+	"return the next XMLnode, or nil if there are no more.
+	Fixed to retain leading whitespace when PCDATA is detected."
+
+	|whitespace|
+	"branch, depending on what the first character is"
+	whitespace := self nextWhitespace.
+	self atEnd ifTrue: [self handleEndDocument. ^ nil].
+	self checkAndExpandReference: (self parsingMarkup ifTrue: [#dtd] ifFalse: [#content]).
+	^self peek = $<
+		ifTrue: [self nextNode]
+		ifFalse: [whitespace isEmpty
+					ifFalse: [self pushBack: whitespace].
+				self nextPCData]
 ]
 
 { #category : #streaming }
@@ -898,11 +916,6 @@ XMLTokenizer >> parseError: errorString [
 	SAXParseException signal: errorString
 ]
 
-{ #category : #accessing }
-XMLTokenizer >> parseStream: aStream [
-	self stream: aStream
-]
-
 { #category : #private }
 XMLTokenizer >> parsingMarkup [
 	^parsingMarkup
@@ -910,13 +923,16 @@ XMLTokenizer >> parsingMarkup [
 
 { #category : #streaming }
 XMLTokenizer >> peek [
-	"Return the next character from the current input stream. If the current stream poop to next nesting level if there is one.
-	Due to the potential nesting of original document, included documents and replacment texts the streams are held in a stack representing the nested streams. The current stream is the top one."
-	peekChar
+	"Return the next character from the current input stream.
+
+	Due to the potential nesting of original document, included
+	documents and replacment texts the streams are held in a stack
+	representing the nested streams. The current stream is the top one."
+
+	^ peekChar
 		ifNil: [
 			nestedStreams ifNotNil: [self checkNestedStream].
-			^peekChar := self basicNext]
-		ifNotNil: [^peekChar]
+			peekChar := self basicNext]
 ]
 
 { #category : #streaming }

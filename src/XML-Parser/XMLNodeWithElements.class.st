@@ -3,9 +3,8 @@ This class represents a node with child nodes. You will likely use its API throu
 "
 Class {
 	#name : #XMLNodeWithElements,
-	#superclass : #XMLNode,
+	#superclass : #XMLNodeWithChildren,
 	#instVars : [
-		'nodes',
 		'elements',
 		'elementsByName'
 	],
@@ -17,37 +16,9 @@ XMLNodeWithElements >> addElement: anElement [
 	self addNode: anElement
 ]
 
-{ #category : #accessing }
-XMLNodeWithElements >> addNode: aNode [
-	^ self with: [self nodes add: aNode] add: aNode.
-]
-
-{ #category : #accessing }
-XMLNodeWithElements >> addNode: aNode after: afterNode [
-	^ self with: [self nodes add: aNode after: afterNode] add: aNode
-]
-
-{ #category : #accessing }
-XMLNodeWithElements >> addNode: aNode before: beforeNode [
-	^ self with: [self nodes add: aNode before: beforeNode] add: aNode.
-]
-
-{ #category : #accessing }
-XMLNodeWithElements >> addNodeFirst: aNode [
-	^ self isEmpty
-		ifTrue: [self addNode: aNode]
-		ifFalse: [self addNode: aNode before: self topNode]
-]
-
-{ #category : #accessing }
-XMLNodeWithElements >> addNodes: aNodeCollection [
-	aNodeCollection do: [:each | self addNode: each].
-	^ aNodeCollection.
-]
-
 { #category : #private }
-XMLNodeWithElements >> changedChildElement: anElement [
-	self rebuildElementCache
+XMLNodeWithElements >> changedChildNode: aNode [
+	aNode isTag ifTrue: [self rebuildElementCache]
 ]
 
 { #category : #accessing }
@@ -56,25 +27,25 @@ XMLNodeWithElements >> elementAfter: anElement [
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementAt: aSymbol [
-	^ self elementAt: aSymbol ifAbsent: [nil]
+XMLNodeWithElements >> elementAt: aString [
+	^ self elementAt: aString ifAbsent: [nil]
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementAt: aSymbol ifAbsent: aBlock [
-	^ (self elementsAt: aSymbol ifAbsent: [^ aBlock value]) first
+XMLNodeWithElements >> elementAt: aString ifAbsent: aBlock [
+	^ (self elementsAt: aString ifAbsent: [^ aBlock value]) first
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementAtAny: aSymbolArray [
-	^ self elementAtAny: aSymbolArray ifAbsent: [nil]
+XMLNodeWithElements >> elementAtAny: aStringArray [
+	^ self elementAtAny: aStringArray ifAbsent: [nil]
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementAtAny: aSymbolArray ifAbsent: aBlock [
+XMLNodeWithElements >> elementAtAny: aStringArray ifAbsent: aBlock [
 	| answer |
 
-	aSymbolArray do: [:each | (answer := self elementAt: each) ifNotNil: [^ answer]].
+	aStringArray do: [:each | (answer := self elementAt: each) ifNotNil: [^ answer]].
 	^ aBlock value.
 ]
 
@@ -93,18 +64,18 @@ XMLNodeWithElements >> elementCacheAdd: anElement [
 ]
 
 { #category : #private }
-XMLNodeWithElements >> elementCacheAt: aSymbol add: anElement [
+XMLNodeWithElements >> elementCacheAt: aString add: anElement [
 	(self elementsByName
-		at: aSymbol asSymbol
+		at: aString
 		ifAbsentPut: [self newElements]) add: anElement
 ]
 
 { #category : #private }
-XMLNodeWithElements >> elementCacheAt: aSymbol remove: anElement [
-	(self elementsByName at: aSymbol asSymbol) remove: anElement.
+XMLNodeWithElements >> elementCacheAt: aString remove: anElement [
+	(self elementsByName at: aString) remove: anElement.
 
-	(self elementsAt: aSymbol)
-		ifEmpty: [self elementsByName removeKey: aSymbol asSymbol].
+	(self elementsAt: aString)
+		ifEmpty: [self elementsByName removeKey: aString].
 ]
 
 { #category : #private }
@@ -117,17 +88,17 @@ XMLNodeWithElements >> elementCacheRemove: anElement [
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementUnqualifiedAt: aSymbol [
+XMLNodeWithElements >> elementUnqualifiedAt: aString [
 	self deprecated: 'use #elementAt: with an unqualified name instead'.
 
-	^ self elementAt: aSymbol.
+	^ self elementAt: aString.
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementUnqualifiedAt: aSymbol ifAbsent: aBlock [
+XMLNodeWithElements >> elementUnqualifiedAt: aString ifAbsent: aBlock [
 	self deprecated: 'use #elementAt:ifAbsent: with an unqualified name instead'.
 
-	^ self elementAt: aSymbol ifAbsent: aBlock.
+	^ self elementAt: aString ifAbsent: aBlock.
 ]
 
 { #category : #accessing }
@@ -136,23 +107,23 @@ XMLNodeWithElements >> elements [
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementsAt: aSymbol [
-	^ self elementsAt: aSymbol ifAbsent: [self newElements]
+XMLNodeWithElements >> elementsAt: aString [
+	^ self elementsAt: aString ifAbsent: [self newElements]
 ]
 
 { #category : #enumerating }
-XMLNodeWithElements >> elementsAt: aSymbol do: aBlock [
-	(self elementsAt: aSymbol) do: aBlock
+XMLNodeWithElements >> elementsAt: aString do: aBlock [
+	(self elementsAt: aString) do: aBlock
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementsAt: aSymbol ifAbsent: aBlock [
-	^ self elementsByName at: aSymbol asSymbol ifAbsent: aBlock.
+XMLNodeWithElements >> elementsAt: aString ifAbsent: aBlock [
+	^ self elementsByName at: aString ifAbsent: aBlock.
 ]
 
 { #category : #private }
 XMLNodeWithElements >> elementsByName [ 
-	^ elementsByName ifNil: [elementsByName := IdentityDictionary new].
+	^ elementsByName ifNil: [elementsByName := Dictionary new].
 ]
 
 { #category : #enumerating }
@@ -160,42 +131,36 @@ XMLNodeWithElements >> elementsDo: aBlock [
 	self elements do: aBlock
 ]
 
-{ #category : #comparing }
-XMLNodeWithElements >> equalTo: aNodeWithElements [
-	^ (aNodeWithElements respondsTo: #asString)
-		and: [self asString = aNodeWithElements asString]
-]
-
 { #category : #searching }
-XMLNodeWithElements >> firstTagNamed: aSymbol [ 
+XMLNodeWithElements >> firstTagNamed: aString [ 
 	"Return the first encountered node with the specified tag. Pass the message on"
 
-	^ self recurseUntilTrue: [:each | each isNamed: aSymbol]
+	^ self recurseUntilTrue: [:each | each isNamed: aString]
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> firstTagNamed: aSymbol with: aBlock [
+XMLNodeWithElements >> firstTagNamed: aString with: aBlock [
 	"Return the first encountered node with the specified tag that
 	allows the block to evaluate to true. Pass the message on"
 
 	^ self recurseUntilTrue: [:each |
-		(each isNamed: aSymbol) and: [aBlock valueWithPossibleArgument: each]]
+		(each isNamed: aString) and: [aBlock valueWithPossibleArgument: each]]
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> firstTagNamedAny: aSymbolArray [
+XMLNodeWithElements >> firstTagNamedAny: aStringArray [
 	"Return the first encountered node with any of the specified tag names. Pass the message on"
 
-	^ self recurseUntilTrue: [:each | each isNamedAny: aSymbolArray]
+	^ self recurseUntilTrue: [:each | each isNamedAny: aStringArray]
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> firstTagNamedAny: aSymbolArray with: aBlock [
+XMLNodeWithElements >> firstTagNamedAny: aStringArray with: aBlock [
 	"Return the first encountered node with any of the specified tag names that
 	allows the block to evaluate to true. Pass the message on"
 
 	^ self recurseUntilTrue: [:each |
-		(each isNamedAny: aSymbolArray) and: [aBlock valueWithPossibleArgument: each]]
+		(each isNamedAny: aStringArray) and: [aBlock valueWithPossibleArgument: each]]
 ]
 
 { #category : #testing }
@@ -204,48 +169,18 @@ XMLNodeWithElements >> hasElements [
 ]
 
 { #category : #testing }
-XMLNodeWithElements >> includesElement: aSymbol [
-	^ (self elementAt: aSymbol) notNil
+XMLNodeWithElements >> includesElement: aString [
+	^ (self elementAt: aString) notNil
 ]
 
-{ #category : #testing }
-XMLNodeWithElements >> includesNode: aNode [
-	^ self nodes includes: aNode
-]
-
-{ #category : #testing }
-XMLNodeWithElements >> isEmpty [
-	^ self nodes isEmpty
+{ #category : #accessing }
+XMLNodeWithElements >> lastElement [
+	^ self elements at: self elements size ifAbsent: [nil]
 ]
 
 { #category : #private }
 XMLNodeWithElements >> newElements [
 	^ OrderedCollection new
-]
-
-{ #category : #accessing }
-XMLNodeWithElements >> nodeAfter: aNode [
-	^ self nodes after: aNode ifAbsent: [nil]
-]
-
-{ #category : #accessing }
-XMLNodeWithElements >> nodeBefore: aNode [
-	^ self nodes before: aNode ifAbsent: [nil]
-]
-
-{ #category : #accessing }
-XMLNodeWithElements >> nodes [
-	^ nodes ifNil: [nodes := OrderedCollection new]
-]
-
-{ #category : #enumerating }
-XMLNodeWithElements >> nodesDo: aBlock [
-	self nodes do: aBlock
-]
-
-{ #category : #printing }
-XMLNodeWithElements >> printXMLOn: writer [
-	self nodesDo: [:each | each printXMLOn: writer].
 ]
 
 { #category : #private }
@@ -282,68 +217,47 @@ XMLNodeWithElements >> recurseUntilTrue: aBlock [
 	^ nil.
 ]
 
-{ #category : #accessing }
-XMLNodeWithElements >> removeNode: aNode [
-	^ self with: [self nodes remove: aNode] remove: aNode
-]
-
-{ #category : #accessing }
-XMLNodeWithElements >> removeNodes [
-	^ self removeNodes: self nodes copy
-]
-
-{ #category : #accessing }
-XMLNodeWithElements >> removeNodes: aNodeCollection [
-	aNodeCollection do: [:each | self removeNode: each].
-	^ aNodeCollection.
-]
-
 { #category : #searching }
-XMLNodeWithElements >> tagsNamed: aSymbol childrenDo: aOneArgumentBlock [
+XMLNodeWithElements >> tagsNamed: aString childrenDo: aOneArgumentBlock [
 	"Evaluate aOneArgumentBlock for all children who match"
 
 	self deprecated: 'use #elementsAt:do: instead'.
 
-	self elementsAt: aSymbol do: aOneArgumentBlock.
+	self elementsAt: aString do: aOneArgumentBlock.
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> tagsNamed: aSymbol childrenDoAndRecurse: aOneArgumentBlock [
+XMLNodeWithElements >> tagsNamed: aString childrenDoAndRecurse: aOneArgumentBlock [
 	"Evaluate aOneArgumentBlock for all children who match and recurse"
 
-	self elementsDo: [:each | each tagsNamed: aSymbol do: aOneArgumentBlock]
+	self elementsDo: [:each | each tagsNamed: aString do: aOneArgumentBlock]
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> tagsNamed: aSymbol contentsDo: aBlock [
+XMLNodeWithElements >> tagsNamed: aString contentsDo: aBlock [
 	"Evaluate aBlock for all of the contents of the receiver.
 	The receiver has no tag, so pass the message on"
 
-	self tagsNamed: aSymbol do: [:each | each contentsDo: aBlock]
+	self tagsNamed: aString do: [:each | each contentsDo: aBlock]
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> tagsNamed: aSymbol do: aOneArgumentBlock [
-	"Search for nodes with tag aSymbol. When encountered evaluate aOneArgumentBlock"
+XMLNodeWithElements >> tagsNamed: aString do: aOneArgumentBlock [
+	"Search for nodes with tag aString. When encountered evaluate aOneArgumentBlock"
 
-	self recurse: [:each | each ifNamed: aSymbol do: aOneArgumentBlock]
+	self recurse: [:each | each ifNamed: aString do: aOneArgumentBlock]
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> tagsNamed: aSymbol ifReceiverDoAndRecurse: aOneArgumentBlock [
+XMLNodeWithElements >> tagsNamed: aString ifReceiverDoAndRecurse: aOneArgumentBlock [
 	self deprecated: 'use #tagsNamed:do: instead'.
 
-	self tagsNamed: aSymbol do: aOneArgumentBlock.
+	self tagsNamed: aString do: aOneArgumentBlock.
 ]
 
 { #category : #accessing }
 XMLNodeWithElements >> topElement [
 	^ self elements at: 1 ifAbsent: [nil]
-]
-
-{ #category : #accessing }
-XMLNodeWithElements >> topNode [
-	^ self nodes at: 1 ifAbsent: [nil]
 ]
 
 { #category : #private }
@@ -356,26 +270,13 @@ XMLNodeWithElements >> with: aBlock add: aNode [
 	Methods adding anything to #nodes should be implemented around this
 	message."
 
-	aNode hasParent
-		ifTrue: [self error: 'attempt to add node with parent'. ^ nil].
+	(super with: aBlock add: aNode) ifNil: [^ nil].
 
-	self with: aBlock onError: [^ nil].
-	aNode parent: self.
 	aNode isTag ifTrue: [
-		self isTag
-			ifTrue: [aNode inheritBindingsFromScope: self namespaceScope].
-
 		(self nodes last = aNode)
 			ifTrue: [self elementCacheAdd: aNode]
 			ifFalse: [self rebuildElementCache]].
 	^ aNode.
-]
-
-{ #category : #private }
-XMLNodeWithElements >> with: aBlock onError: errorBlock [
-	^ aBlock
-		on: Error
-		do: [:error | error signal. errorBlock valueWithPossibleArgument: error]
 ]
 
 { #category : #private }
@@ -387,8 +288,8 @@ XMLNodeWithElements >> with: aBlock remove: aNode [
 	Methods that remove anything from #nodes should be implemented around this
 	message."
 
-	self with: aBlock onError: [^ nil].
-	aNode parent: nil.
+	(super with: aBlock remove: aNode) ifNil: [^ nil].
+
 	aNode isTag ifTrue: [self elementCacheRemove: aNode].
 	^ aNode.
 ]

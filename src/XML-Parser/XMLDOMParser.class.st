@@ -5,6 +5,7 @@ Class {
 	#name : #XMLDOMParser,
 	#superclass : #SAXHandler,
 	#instVars : [
+		'document',
 		'entity',
 		'stack',
 		'incremental'
@@ -13,19 +14,9 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLDOMParser class >> parse: aStream [
-	^ self parseDocumentFrom: aStream
-]
-
-{ #category : #'instance creation' }
-XMLDOMParser class >> parseDocumentFrom: aStream [
-	^self parseDocumentFrom: aStream useNamespaces: true
-]
-
-{ #category : #'instance creation' }
 XMLDOMParser class >> parseDocumentFrom: aStream useNamespaces: aBoolean [
 	^(super
-		parseDocumentFrom: (aStream isStream ifTrue: [aStream] ifFalse: [aStream readStream])
+		parseDocumentFrom: aStream
 		useNamespaces: aBoolean) document
 ]
 
@@ -33,6 +24,16 @@ XMLDOMParser class >> parseDocumentFrom: aStream useNamespaces: aBoolean [
 XMLDOMParser >> characters: aString [
 	self top addContent: aString
 
+]
+
+{ #category : #accessing }
+XMLDOMParser >> document [
+	^document
+]
+
+{ #category : #accessing }
+XMLDOMParser >> document: aDocument [
+	document := aDocument
 ]
 
 { #category : #content }
@@ -45,9 +46,9 @@ XMLDOMParser >> documentAttributes: attributeList [
 
 { #category : #parsing }
 XMLDOMParser >> domDocument [
-	[self startDocument; parseDocument]
-		ensure: [self driver stream close].
-	^document
+	[self parseDocument] ensure: [self driver stream close].
+
+	^ document.
 ]
 
 { #category : #content }
@@ -60,46 +61,19 @@ XMLDOMParser >> endDocument [
 XMLDOMParser >> endElement: elementName [
 	| currentElement |
 	currentElement := self pop.
-	currentElement name = elementName
-		ifFalse: [self driver errorExpected: 'End tag "', elementName , '" doesn''t match "' , currentElement name , '".']
+	(currentElement name = elementName)
+		ifFalse: [self errorExpectedEndTag: currentElement name butGot: elementName]
 ]
 
 { #category : #content }
-XMLDOMParser >> endElement: localName namespace: namespace namespaceURI: uri qualifiedName: qualifiedName [
+XMLDOMParser >> endElement: localName qualifiedName: qualifiedName prefix: prefix uri: namespaceUri [
 	| currentElement |
 	currentElement := self pop.
-	(currentElement namespace isNil)
-		ifTrue: [
-			currentElement localName = localName asSymbol
-				ifFalse: [
-					self
-						errorExpectedEndTag: currentElement
-						localName butGot: localName]]
+	(currentElement qualifiedName = qualifiedName)
 		ifFalse: [
-			currentElement qualifiedName = qualifiedName asSymbol
-				ifFalse: [
-					self
-						errorExpectedEndTag: currentElement qualifiedName
-						butGot: qualifiedName]]
-]
-
-{ #category : #content }
-XMLDOMParser >> endElement: localName namespace: namespace qualifiedName: qualifiedName scope: namespaceScope [
-	| currentElement |
-	currentElement := self pop.
-	(currentElement namespace isNil)
-		ifTrue: [
-			currentElement localName = localName asSymbol
-				ifFalse: [
-					self
-						errorExpectedEndTag: currentElement
-						localName butGot: localName]]
-		ifFalse: [
-			currentElement qualifiedName = qualifiedName asSymbol
-				ifFalse: [
-					self
-						errorExpectedEndTag: currentElement qualifiedName
-						butGot: qualifiedName]]
+			self
+				errorExpectedEndTag: currentElement qualifiedName
+				butGot: qualifiedName]
 ]
 
 { #category : #errors }
@@ -126,18 +100,18 @@ XMLDOMParser >> initialize [
 ]
 
 { #category : #parsing }
-XMLDOMParser >> nextEntity [
-	| currentTop |
-	currentTop := self top.
-	[self driver nextEntity isNil
-		or: [self top ~~ currentTop]] whileTrue.
+XMLDOMParser >> nextEntityStart [
+	[self driver nextToken.
+	self stack isEmpty] whileTrue.
 	^entity
 ]
 
 { #category : #parsing }
-XMLDOMParser >> nextEntityStart [
-	[self driver nextEntity.
-	self stack isEmpty] whileTrue.
+XMLDOMParser >> nextToken [
+	| currentTop |
+	currentTop := self top.
+	[self driver nextToken isNil
+		or: [self top ~~ currentTop]] whileTrue.
 	^entity
 ]
 
@@ -158,7 +132,7 @@ XMLDOMParser >> processingInstruction: piName data: dataString [
 
 { #category : #private }
 XMLDOMParser >> push: anObject [
-	self stack add: anObject.
+	self stack addLast: anObject.
 	entity := anObject
 
 ]
@@ -174,7 +148,7 @@ XMLDOMParser >> pushElement: anElement [
 
 { #category : #private }
 XMLDOMParser >> stack [
-	^stack
+	^ stack
 ]
 
 { #category : #content }
@@ -184,19 +158,18 @@ XMLDOMParser >> startDocument [
 ]
 
 { #category : #content }
-XMLDOMParser >> startElement: elementName attributeList: attributeList [
-
+XMLDOMParser >> startElement: elementName attributes: attributeList [
 	self pushElement: (XMLElement named: elementName attributes: attributeList)
 ]
 
 { #category : #content }
-XMLDOMParser >> startElement: localName namespace: namespace attributeList: attributeList scope: namespaceScope [
+XMLDOMParser >> startElement: localName prefix: prefix uri: namespaceUri attributes: attributeList [
 	self pushElement:
 		(XMLElement
-			named: localName
-			namespace: namespace
+			localName: localName
+			prefix: prefix
 			attributes: attributeList
-			scope: namespaceScope)
+			scope: self currentScope)
 ]
 
 { #category : #private }

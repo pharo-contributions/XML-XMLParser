@@ -5,7 +5,6 @@ Class {
 	#name : #SAXHandler,
 	#superclass : #Object,
 	#instVars : [
-		'document',
 		'driver',
 		'eod'
 	],
@@ -14,11 +13,18 @@ Class {
 
 { #category : #'instance creation' }
 SAXHandler class >> on: aStream [
-	| driver parser |
-	driver := SAXDriver on: aStream.
+	| driver |
+	driver := SAXDriver on:
+		(aStream isStream
+			ifTrue: [aStream]
+			ifFalse: [aStream readStream]).
 	driver validating: true.
-	parser := self new driver: driver.
-	^parser
+	^ self new driver: driver.
+]
+
+{ #category : #'instance creation' }
+SAXHandler class >> parse: aStream [
+	^ self parseDocumentFrom: aStream
 ]
 
 { #category : #'instance creation' }
@@ -28,9 +34,7 @@ SAXHandler class >> parseDTDFrom: aStream [
 	driver validating: true.
 	driver startParsingMarkup.
 	parser := self new driver: driver.
-	parser startDocument.
-	parser parseDocument.
-	^parser
+	^ parser parseDocument.
 ]
 
 { #category : #'instance creation' }
@@ -43,9 +47,7 @@ SAXHandler class >> parseDocumentFrom: aStream useNamespaces: aBoolean [
 	|  parser |
 	parser := self on: aStream.
 	parser useNamespaces: aBoolean.
-	parser startDocument.
-	parser parseDocument.
-	^parser
+	^ parser parseDocument.
 ]
 
 { #category : #'instance creation' }
@@ -84,13 +86,6 @@ SAXHandler >> characters: aString [
 	characters(char[] ch, int start, int length)."
 ]
 
-{ #category : #content }
-SAXHandler >> checkEOD [
-	"Check if the document shouldn't be ended already"
-	self eod
-		ifTrue: [self driver errorExpected: 'No more data expected,']
-]
-
 { #category : #lexical }
 SAXHandler >> comment: commentString [
 	"This call corresponds to the Java SAX ext call
@@ -98,13 +93,8 @@ SAXHandler >> comment: commentString [
 ]
 
 { #category : #accessing }
-SAXHandler >> document [
-	^document
-]
-
-{ #category : #accessing }
-SAXHandler >> document: aDocument [
-	document := aDocument
+SAXHandler >> currentScope [
+	^ self driver currentScope
 ]
 
 { #category : #content }
@@ -141,21 +131,24 @@ SAXHandler >> endElement: elementName [
 ]
 
 { #category : #content }
-SAXHandler >> endElement: elementName namespace: namespace namespaceURI: namespaceURI qualifiedName: qualifiedName [
+SAXHandler >> endElement: localName prefix: prefix uri: namespaceURI [
 	"This call corresponds to the Java SAX call
 	endElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName).
 	By default this call is mapped to the following more convenient call:"
 
-	self endElement: elementName
+	self endElement: localName
 ]
 
 { #category : #content }
-SAXHandler >> endElement: elementName namespace: namespace qualifiedName: qualifiedName scope: namespaceScope [
+SAXHandler >> endElement: localName qualifiedName: qualifiedName prefix: prefix uri: namespaceURI [
+	"This call corresponds to the Java SAX call
+	endElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName).
+	By default this call is mapped to the following more convenient call:"
+
 	self
-		endElement: elementName
-		namespace: namespace
-		namespaceURI: (namespaceScope resolveNamespace: namespace)
-		qualifiedName: qualifiedName
+		forwardToDeprecatedHandler: #endElement:namespace:namespaceURI:qualifiedName:
+		withArgumentOrder: #(1 3 4 2)
+		orTo: #endElement:prefix:uri:
 ]
 
 { #category : #lexical }
@@ -175,6 +168,29 @@ SAXHandler >> eod [
 	^eod
 ]
 
+{ #category : #'error handling' }
+SAXHandler >> forwardToDeprecatedHandler: aDeprecatedSelector withArgumentOrder: aPositionArray orTo: aNewSelector [
+	| parentContext |
+
+	parentContext := thisContext sender.
+	(self class includesSelector: aDeprecatedSelector)
+		ifFalse: [
+			aNewSelector ifNil: [^ self].
+			^ self
+				perform: aNewSelector
+				withEnoughArguments: parentContext arguments].
+
+	(Deprecation
+		method: (self class lookupSelector: aDeprecatedSelector)
+		explanation: 'use ', parentContext selector, ' instead'
+		on: nil
+		in: nil) signal.
+
+	self
+		perform: aDeprecatedSelector
+		withArguments: (aPositionArray collect: [:pos | parentContext arguments at: pos]).
+]
+
 { #category : #content }
 SAXHandler >> ignorableWhitespace: aString [
 	"This call corresonds to the Java SAX call
@@ -188,7 +204,8 @@ SAXHandler >> initialize [
 
 { #category : #parsing }
 SAXHandler >> parseDocument [
-	[self driver nextEntity isNil or: [self eod]] whileFalse
+	self startDocument.
+	[self driver nextToken isNil or: [self eod]] whileFalse
 ]
 
 { #category : #content }
@@ -228,26 +245,36 @@ SAXHandler >> startDocument [
 ]
 
 { #category : #content }
-SAXHandler >> startElement: elementName attributeList: attributeList [
-
-]
-
-{ #category : #content }
-SAXHandler >> startElement: localName namespace: namespace attributeList: attributeList scope: namespaceScope [
+SAXHandler >> startElement: elementName attributes: attributes [
 	self
-		startElement: localName
-		namespace: namespace
-		namespaceURI: (namespaceScope resolveNamespace: namespace)
-		attributeList: attributeList
+		forwardToDeprecatedHandler: #startElement:attributeList:
+		withArgumentOrder: #(1 2)
+		orTo: nil
 ]
 
 { #category : #content }
-SAXHandler >> startElement: localName namespace: namespace namespaceURI: namespaceUri attributeList: attributeList [
+SAXHandler >> startElement: localName prefix: prefix uri: namespaceUri attributes: attributes [
 	"This call corresonds to the Java SAX call
 	startElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName, Attributes atts).
 	By default this call is mapped to the following more convenient call:"
 
-	self startElement: localName attributeList: attributeList
+	self
+		forwardToDeprecatedHandler: #startElement:namespaceURI:namespace:attributeList:
+		withArgumentOrder: #(1 3 2 4)
+		orTo: #startElement:attributes:
+]
+
+{ #category : #content }
+SAXHandler >> startElement: localName qualifiedName: qualifiedName prefix: prefix uri: namespaceUri attributes: attributes [
+	"This call corresonds to the Java SAX call
+	startElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName, Attributes atts).
+	By default this call is mapped to the following more convenient call:"
+
+	self
+		startElement: localName
+		prefix: prefix
+		uri: namespaceUri
+		attributes: attributes
 ]
 
 { #category : #lexical }
@@ -265,4 +292,19 @@ SAXHandler >> startPrefixMapping: prefix uri: uri [
 { #category : #accessing }
 SAXHandler >> useNamespaces: aBoolean [
 	self driver useNamespaces: aBoolean
+]
+
+{ #category : #testing }
+SAXHandler >> usesNamespaces [
+	^ self driver usesNamespaces
+]
+
+{ #category : #testing }
+SAXHandler >> validating [
+	self driver validating
+]
+
+{ #category : #accessing }
+SAXHandler >> validating: aBoolean [
+	self driver validating: aBoolean
 ]

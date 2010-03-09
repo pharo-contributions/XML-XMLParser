@@ -1,3 +1,7 @@
+"
+This class represents processing instructions.
+
+"
 Class {
 	#name : #XMLPI,
 	#superclass : #XMLNode,

@@ -4,11 +4,11 @@ Class {
 	#instVars : [
 		'stream',
 		'stack',
-		'scoping',
 		'canonical',
 		'currentIndent',
 		'indentString',
-		'newLinesAllowed'
+		'newLinesAllowed',
+		'nestedScopes'
 	],
 	#classVars : [
 		'XMLTranslation',
@@ -82,7 +82,7 @@ XMLWriter >> cr [
 
 { #category : #namespaces }
 XMLWriter >> declareNamespace: ns uri: uri [
-	self scoping declareNamespace: ns uri: uri
+	self nestedScopes declareNamespace: ns uri: uri
 ]
 
 { #category : #'private tags' }
@@ -112,7 +112,7 @@ XMLWriter >> endDeclaration [
 
 { #category : #'writing xml' }
 XMLWriter >> endElement: anElementName [
-	self scoping leaveScope.
+	self nestedScopes leaveScope.
 	self endTag: anElementName.
 ]
 
@@ -153,7 +153,7 @@ XMLWriter >> endTag: tagName [
 
 { #category : #namespaces }
 XMLWriter >> enterScope [
-	self scoping enterScope
+	self nestedScopes enterScope
 ]
 
 { #category : #private }
@@ -187,13 +187,18 @@ XMLWriter >> indentTab [
 XMLWriter >> initialize [
 	stack := OrderedCollection new.
 	canonical := false.
-	scoping := XMLNamespaceScopeStack new.
+	nestedScopes := XMLNestedNamespaceScopes new.
 	newLinesAllowed := false
 ]
 
 { #category : #namespaces }
 XMLWriter >> leaveScope [
-	self scoping leaveScope
+	self nestedScopes leaveScope
+]
+
+{ #category : #private }
+XMLWriter >> nestedScopes [
+	^ nestedScopes
 ]
 
 { #category : #accessing }
@@ -259,11 +264,6 @@ XMLWriter >> putAsXMLString: aValue [
 ]
 
 { #category : #private }
-XMLWriter >> scoping [
-	^ scoping
-]
-
-{ #category : #private }
 XMLWriter >> stack [
 	^stack
 ]
@@ -309,24 +309,22 @@ XMLWriter >> startElement: elementName attributeList: attributeList [
 	"self canonical
 		ifFalse: [self stream cr]."
 	self startTag: elementName.
-	attributeList keys asSortedCollection do: [:key |
-		self attribute: key value: (attributeList at: key)]
+	attributeList printXMLOn: self.
 ]
 
 { #category : #'writing xml' }
 XMLWriter >> startElement: elementName attributeList: attributeList scope: namespaceScope [
 	self startTag: elementName.
-	self scoping enterScope.
+	self nestedScopes enterScope.
 
-	namespaceScope bindingsDo: [:namespace :uri |
-		(self scoping isNamespace: namespace boundTo: uri)
-			ifFalse: [self xmlns: namespace uri: uri]].
+	namespaceScope prefixMappingsDo: [:prefix :uri |
+		(self nestedScopes isPrefix: prefix mappedTo: uri)
+			ifFalse: [self xmlns: prefix uri: uri]].
 
-	(namespaceScope defaultNamespace ~= self scoping defaultNamespace)
+	(namespaceScope defaultNamespace ~= self nestedScopes defaultNamespace)
 		ifTrue: [self xmlns: nil uri: namespaceScope defaultNamespace].
 
-	attributeList keys asSortedCollection do: [:key |
-		self attribute: key value: (attributeList at: key)]
+	attributeList printXMLOn: self.
 ]
 
 { #category : #'private tags' }

@@ -1,58 +1,32 @@
 "
-An XMLNamespaceScope is a set of bindings between namespaces prefixes and URIs, and also a default URI. Scopes can be created from other scopes by sending #enclosingScope: to XMLNamespaceScope with the other XMLNamespaceScope as the argument.
+An XMLNamespaceScope is a set of bindings between namespace prefixes and URIs, and also a default URI. Scopes can be created from other scopes by sending #enclosingScope: to XMLNamespaceScope with the other XMLNamespaceScope as the argument.
 "
 Class {
 	#name : #XMLNamespaceScope,
 	#superclass : #Object,
 	#instVars : [
-		'currentBindings',
-		'defaultNamespace'
+		'defaultNamespace',
+		'prefixMappings'
 	],
 	#category : #'XML-Parser'
 }
 
 { #category : #'instance creation' }
 XMLNamespaceScope class >> enclosingScope: aScope [
-	^ self new inheritBindingsFromScope: aScope
+	^ self new inheritMappingsFrom: aScope
 ]
 
 { #category : #accessing }
-XMLNamespaceScope >> aliasesFor: namespace [
-	"Locate all namespaces that are aliases of the given URI."
+XMLNamespaceScope >> aliasesOf: aPrefix [
+	"Locate all prefixes that alias the URI of the given prefix."
 	| uri |
 
 	uri := self
-		namespaceURIOf: namespace
-		ifAbsent: [self errorUndefinedAttributeNamespace: namespace asString].
+		resolvePrefix: aPrefix
+		ifUnmapped: [self errorUndefinedAttributePrefix: aPrefix asString].
 
-	^ (self boundNamespaces select: [:ns |
-		(self isNamespace: ns boundTo: uri)
-			and: [ns ~= namespace]]) asSet
-]
-
-{ #category : #accessing }
-XMLNamespaceScope >> bindNamespace: aNamespace to: aUri [
-	((aNamespace = 'xmlns') or: [aNamespace isEmptyOrNil])
-		ifTrue: [self defaultNamespace: aUri]
-		ifFalse: [self currentBindings at: aNamespace put: aUri]
-]
-
-{ #category : #enumerating }
-XMLNamespaceScope >> bindingsDo: aTwoArgumentBlock [
-	self boundNamespaces do: [:namespace |
-		aTwoArgumentBlock
-			value: namespace
-			value: (self resolveNamespace: namespace)]
-]
-
-{ #category : #accessing }
-XMLNamespaceScope >> boundNamespaces [
-	^ self currentBindings keys asSortedCollection
-]
-
-{ #category : #accessing }
-XMLNamespaceScope >> currentBindings [
-	^ currentBindings ifNil: [currentBindings := Dictionary new]
+	^ self mappedPrefixes keys select: [:each |
+		self isPrefix: each mappedTo: uri].
 ]
 
 { #category : #accessing }
@@ -66,72 +40,128 @@ XMLNamespaceScope >> defaultNamespace: aNamespaceUri [
 ]
 
 { #category : #errors }
-XMLNamespaceScope >> errorAttribute: anAttribute isAliasFor: anAlias withURI: aNamespaceUri [
-	self error: ('Attributes ', anAttribute, ' and ',
-		anAlias, ' are aliased to namespace ', aNamespaceUri)
+XMLNamespaceScope >> errorAttribute: anAttribute aliases: aPrefix with: aUri [
+	self error:
+		('Attributes ', anAttribute, ' and ',
+		aPrefix, ' are aliased to namespace ', aUri)
 ]
 
 { #category : #errors }
-XMLNamespaceScope >> errorUndefinedAttributeNamespace: aNamespace [
-	self error: 'Attribute refers to undefined namespace ', aNamespace
+XMLNamespaceScope >> errorUndefinedAttributePrefix: aPrefix [
+	self error: 'Attribute refers to undefined namespace ', aPrefix
+]
+
+{ #category : #errors }
+XMLNamespaceScope >> errorUnmappedPrefix: aPrefix [
+	self error: 'Unmapped namespace prefix "', aPrefix, '"'
 ]
 
 { #category : #initializing }
-XMLNamespaceScope >> inheritBindingsFromScope: anEnclosingScope. [
+XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope. [
 	self defaultNamespace
 		ifNil: [self defaultNamespace: anEnclosingScope defaultNamespace].
 
-	anEnclosingScope bindingsDo: [:prefix :uri |
-		(self isBoundNamespace: prefix)
-			ifFalse: [self bindNamespace: prefix to: uri]].
+	anEnclosingScope prefixMappingsDo: [:prefix :uri |
+		(self isMappedPrefix: prefix)
+			ifFalse: [self mapPrefix: prefix to: uri]].
 ]
 
 { #category : #testing }
-XMLNamespaceScope >> isBoundNamespace: aNamespace [
-	^ self currentBindings includesKey: aNamespace
+XMLNamespaceScope >> isMappedPrefix: aNamespace [
+	^ self prefixMappings includesKey: aNamespace
 ]
 
 { #category : #testing }
-XMLNamespaceScope >> isNamespace: aNamespace boundTo: aUri [
-	^ ((self isBoundNamespace: aNamespace)
-		and: [(self resolveNamespace: aNamespace) = aUri])
+XMLNamespaceScope >> isPrefix: aPrefix mappedTo: aUri [
+	^ ((self isMappedPrefix: aPrefix)
+		and: [(self resolvePrefix: aPrefix) = aUri])
 ]
 
 { #category : #accessing }
-XMLNamespaceScope >> resolveNamespace: aNamespace [
+XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
+	(aPrefix isEmptyOrNil or: [aPrefix = 'xmlns'])
+		ifTrue: [self defaultNamespace: aUri]
+		ifFalse: [self prefixMappings at: aPrefix put: aUri]
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> mappedPrefixes [
+	^ self prefixMappings keys
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> prefixMappedTo: aUri [
+	self prefixMappings keyAtValue: aUri
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> prefixMappings [
+	^ prefixMappings ifNil: [prefixMappings := XMLOrderPreservingDictionary new]
+]
+
+{ #category : #enumerating }
+XMLNamespaceScope >> prefixMappingsDo: aTwoArgumentBlock [
+	self mappedPrefixes do: [:namespace |
+		aTwoArgumentBlock
+			value: namespace
+			value: (self resolvePrefix: namespace)]
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> resolvePrefix: aPrefix [
 	"Retrieve the URI of the given namespace prefix, if it is defined. A nil namespace
 	returns the global namespace"
 
-	^ self resolveNamespace: aNamespace ifUnbound: [nil]
+	^ self resolvePrefix: aPrefix ifUnmapped: [nil]
 ]
 
 { #category : #accessing }
-XMLNamespaceScope >> resolveNamespace: aNamespace ifUnbound: aBlock [
+XMLNamespaceScope >> resolvePrefix: aPrefix ifUnmapped: aBlock [
 	"Retrieve the URI of the given namespace prefix, if it is defined. 
 	A nil namespace returns the default namespace. 
 	If no namespace can be found the value of the block is returned"
 
-	^ (aNamespace isEmptyOrNil or: [aNamespace = 'xmlns'])
+	^ (aPrefix isEmptyOrNil or: [aPrefix = 'xmlns'])
 		ifTrue: [self defaultNamespace]
-		ifFalse: [self currentBindings at: aNamespace ifAbsent: aBlock]
+		ifFalse: [self prefixMappings at: aPrefix ifAbsent: aBlock]
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> unmapPrefix: aPrefix [
+	self prefixMappings removeKey: aPrefix ifAbsent: [nil]
+]
+
+{ #category : #validation }
+XMLNamespaceScope >> validateAttribute: attrName in: attributeList [
+	| qualifiedAlias |
+	
+	attrName splitQualifiedNameInto: [:prefix :localName |
+		prefix ifNil: [^ self].
+
+		self validatePrefix: prefix.
+		(self aliasesOf: prefix) do: [:alias |
+			qualifiedAlias := alias qualifyName: localName.
+			(attributeList includesKey: qualifiedAlias)
+				ifTrue: [
+					self
+						errorAttribute: attrName
+						aliases: qualifiedAlias
+						with: (self resolvePrefix: prefix)]]].
 ]
 
 { #category : #validation }
 XMLNamespaceScope >> validateAttributes: attributeList [
 	"check all attribute namespaces are defined and not duplicated by aliasing"
-	| namespace localName qualifiedAlias |
+	| prefix localName qualifiedAlias |
 
 	attributeList keysDo: [:attrName |
-		attrName splitQualifiedNameInto: [:ns :ln |
-			namespace := ns.
-			localName := ln].
-		namespace ifNotNil: [
-			(self currentScope aliasesFor: namespace) do: [:alias |
-				qualifiedAlias := alias , ':' , localName.
-				(attributeList includesKey: qualifiedAlias)
-					ifTrue: [
-						self
-							errorAttribute: attrName
-							isAliasFor: qualifiedAlias
-							withURI: (self resolveNamespace: namespace)]]]]
+		self
+			validateAttribute: attrName
+			in: attributeList]
+]
+
+{ #category : #validation }
+XMLNamespaceScope >> validatePrefix: aPrefix [
+	(self isMappedPrefix: aPrefix)
+		ifFalse: [self errorUnmappedPrefix: aPrefix].
 ]
