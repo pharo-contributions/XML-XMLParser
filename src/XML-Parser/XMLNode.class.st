@@ -79,8 +79,8 @@ XMLNode >> notEmpty [
 ]
 
 { #category : #private }
-XMLNode >> notifyParentOfChange [
-	self hasParent ifTrue: [self parent changedChildNode: self]
+XMLNode >> notifyParentOfRenaming [
+	self hasParent ifTrue: [self parent renamedChildNode: self]
 ]
 
 { #category : #accessing }

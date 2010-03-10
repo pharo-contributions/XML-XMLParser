@@ -1,7 +1,7 @@
 "
-A SAXHandler is an XML parser that uses event handling. The acronym ""SAX"" refers to Java's ""Simple API for XML,"" on which SAXHandler's API is based. To use this class, create a subclass and override handlers in ""content"" and ""lexical"" as needed. To instantiate it you can send either #on: or one of the class-side #parse- messages. The former creates a new parser on the given input stream and returns it; the instance can then be sent #parseDocument to parse the input. The #parse- messages take some input source and parse it, returning the result of #parseDocument.
+A SAXHandler is an XML parser that uses event handling. The acronym ""SAX"" refers to Java's ""Simple API for XML,"" on which SAXHandler's API is based. To use this class, create a subclass and override handlers in ""content"" and ""lexical"" as needed. To instantiate it you can send #on: or any of the #parse- messages. The former creates a new parser on the given input stream and returns it; the instance can then be sent #parseDocument to parse the input. The #parse- messages take some input source and parse it, returning the result of #parseDocument.
 
-By default namespace support is enabled.
+By default, namespace support is enabled.
 "
 Class {
 	#name : #SAXHandler,

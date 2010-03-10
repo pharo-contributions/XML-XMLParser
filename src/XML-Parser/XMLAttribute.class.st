@@ -17,8 +17,7 @@ XMLAttribute class >> name: aName value: aValue [
 XMLAttribute class >> name: aName value: aValue scope: aScope [
 	^ self new
 		setScope: aScope;
-		name: aName;
-		value: aValue
+		name: aName value: aValue
 ]
 
 { #category : #testing }
@@ -44,6 +43,12 @@ XMLAttribute >> name [
 { #category : #accessing }
 XMLAttribute >> name: aQualifiedName [
 	self qualifiedName: aQualifiedName
+]
+
+{ #category : #accessing }
+XMLAttribute >> name: aName value: aValue [
+	self qualifiedName: aName.
+	value := aValue.
 ]
 
 { #category : #accessing }

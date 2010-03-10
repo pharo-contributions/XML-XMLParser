@@ -1,23 +1,24 @@
 Class {
 	#name : #XMLAttributeList,
-	#superclass : #XMLNodeWithChildren,
+	#superclass : #XMLNodeList,
 	#instVars : [
-		'attributesByName',
-		'scope'
+		'attributesByName'
 	],
 	#category : #'XML-Parser-Nodes'
 }
 
+{ #category : #adding }
+XMLAttributeList >> addName: aName value: aValue scope: aScope [
+	^ self addLast:
+			(XMLAttribute
+				name: aName
+				value: aValue
+				scope: aScope)
+]
+
 { #category : #accessing }
 XMLAttributeList >> attributesByName [
 	^ attributesByName ifNil: [attributesByName := Dictionary new: 10]
-]
-
-{ #category : #private }
-XMLAttributeList >> changedChildNode: aNode [
-	self attributesByName
-		removeKey: (self attributesByName keyAtValue: aNode);
-		at: aNode name put: aNode
 ]
 
 { #category : #private }
@@ -32,17 +33,17 @@ XMLAttributeList >> includesName: aString [
 
 { #category : #accessing }
 XMLAttributeList >> names [
-	^ self nodes collect: [:each | each name]
+	^ self collect: [:each | each name]
 ]
 
 { #category : #enumerating }
 XMLAttributeList >> namesAndValuesDo: aBlock [
-	self nodes do: [:each | aBlock value: each name value: each value]
+	self do: [:each | aBlock value: each name value: each value]
 ]
 
 { #category : #enumerating }
 XMLAttributeList >> namesDo: aBlock [
-	self nodes do: [:each | aBlock value: each name]
+	self do: [:each | aBlock value: each name]
 ]
 
 { #category : #accessing }
@@ -56,24 +57,25 @@ XMLAttributeList >> nodeNamed: aString ifAbsent: aBlock [
 ]
 
 { #category : #accessing }
-XMLAttributeList >> removeName: aString [
-	^ self removeName: aString ifAbsent: [nil]
+XMLAttributeList >> removeNodeNamed: aString [
+	^ self removeNodeNamed: aString ifAbsent: [nil]
 ]
 
 { #category : #accessing }
-XMLAttributeList >> removeName: aString ifAbsent: aBlock [
-	^ (self removeNode: (self nodeNamed: aString ifAbsent: [^ aBlock value])) value
+XMLAttributeList >> removeNodeNamed: aString ifAbsent: aBlock [
+	^ (self remove: (self nodeNamed: aString ifAbsent: [^ aBlock value])) value
+]
+
+{ #category : #private }
+XMLAttributeList >> renamedNode: aNode [
+	self attributesByName
+		removeKey: (self attributesByName keyAtValue: aNode);
+		at: aNode name put: aNode
 ]
 
 { #category : #accessing }
 XMLAttributeList >> scope [
-	^ scope
-]
-
-{ #category : #initialization }
-XMLAttributeList >> setScope: aScope [
-	scope := aScope.
-	self nodesDo: [:each | each setScope: aScope].
+	^ self parent ifNotNil: [self parent scope]
 ]
 
 { #category : #accessing }
@@ -99,12 +101,7 @@ XMLAttributeList >> valueAt: aName ifAbsentPut: aValue [
 XMLAttributeList >> valueAt: aName put: aValue [
 	(self includesName: aName)
 		ifTrue: [(self nodeNamed: aName) value: aValue]
-		ifFalse: [
-			self addNode:
-				(XMLAttribute
-					name: aName
-					value: aValue
-					scope: self scope)].
+		ifFalse: [self addName: aName value: aValue scope: self scope].
 	^ aValue.
 ]
 
@@ -117,7 +114,7 @@ XMLAttributeList >> with: aBlock add: aNode [
 
 	self attributesByName
 		at: aNode name
-		ifPresent: [self removeName: aNode name].
+		ifPresent: [self removeNodeNamed: aNode name].
 	self attributesByName at: aNode name put: aNode.
 	^ aNode.
 ]

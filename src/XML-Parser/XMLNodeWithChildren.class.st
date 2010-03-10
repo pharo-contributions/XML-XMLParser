@@ -9,24 +9,22 @@ Class {
 
 { #category : #accessing }
 XMLNodeWithChildren >> addNode: aNode [
-	^ self with: [self nodes add: aNode] add: aNode.
+	^ self nodes addLast: aNode
 ]
 
 { #category : #accessing }
 XMLNodeWithChildren >> addNode: aNode after: afterNode [
-	^ self with: [self nodes add: aNode after: afterNode] add: aNode
+	^ self nodes add: aNode after: afterNode
 ]
 
 { #category : #accessing }
 XMLNodeWithChildren >> addNode: aNode before: beforeNode [
-	^ self with: [self nodes add: aNode before: beforeNode] add: aNode.
+	^ self nodes add: aNode before: beforeNode
 ]
 
 { #category : #accessing }
 XMLNodeWithChildren >> addNodeFirst: aNode [
-	^ self isEmpty
-		ifTrue: [self addNode: aNode]
-		ifFalse: [self addNode: aNode before: self topNode]
+	^ self nodes addFirst: aNode
 ]
 
 { #category : #accessing }
@@ -36,7 +34,8 @@ XMLNodeWithChildren >> addNodes: aNodeCollection [
 ]
 
 { #category : #private }
-XMLNodeWithChildren >> changedChildNode: aNode [
+XMLNodeWithChildren >> addedNode: aNode toList: aCollection [
+
 ]
 
 { #category : #testing }
@@ -66,7 +65,7 @@ XMLNodeWithChildren >> nodeBefore: aNode [
 
 { #category : #accessing }
 XMLNodeWithChildren >> nodes [
-	^ nodes ifNil: [nodes := OrderedCollection new]
+	^ nodes ifNil: [nodes := XMLNodeList parent: self]
 ]
 
 { #category : #enumerating }
@@ -81,12 +80,12 @@ XMLNodeWithChildren >> printXMLOn: writer [
 
 { #category : #accessing }
 XMLNodeWithChildren >> removeNode: aNode [
-	^ self with: [self nodes remove: aNode] remove: aNode
+	^ self nodes remove: aNode
 ]
 
 { #category : #accessing }
 XMLNodeWithChildren >> removeNodes [
-	^ self removeNodes: self nodes copy
+	self nodes removeAll
 ]
 
 { #category : #accessing }
@@ -95,43 +94,16 @@ XMLNodeWithChildren >> removeNodes: aNodeCollection [
 	^ aNodeCollection.
 ]
 
+{ #category : #private }
+XMLNodeWithChildren >> removedNode: aNode fromList: aCollection [
+
+]
+
+{ #category : #private }
+XMLNodeWithChildren >> renamedChildNode: aNode [
+]
+
 { #category : #accessing }
 XMLNodeWithChildren >> topNode [
 	^ self nodes at: 1 ifAbsent: [nil]
-]
-
-{ #category : #private }
-XMLNodeWithChildren >> with: aBlock add: aNode [
-	"This is an execute-around method that takes a block purporting to add aNode
-	to #nodes. It evaluates the block, establishes a parent-child relationship.
-	
-	Methods adding anything to #nodes should be implemented around this
-	message."
-
-	aNode hasParent
-		ifTrue: [self error: 'attempt to add node with parent'. ^ nil].
-
-	self with: aBlock onError: [^ nil].
-	aNode parent: self.
-	^ aNode.
-]
-
-{ #category : #private }
-XMLNodeWithChildren >> with: aBlock onError: errorBlock [
-	^ aBlock
-		on: Error
-		do: [:error | error signal. errorBlock valueWithPossibleArgument: error]
-]
-
-{ #category : #private }
-XMLNodeWithChildren >> with: aBlock remove: aNode [
-	"This is an execute-around method that takes a block purporting to remove
-	aNode from #nodes, evaluates it, breaks the parent-child relationship.
-	
-	Methods that remove anything from #nodes should be implemented around this
-	message."
-
-	self with: aBlock onError: [^ nil].
-	aNode parent: nil.
-	^ aNode.
 ]

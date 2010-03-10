@@ -334,10 +334,8 @@ XMLNodeTest >> test043removingNodes [
 		removeNodes: (children copyFrom: 2 to: 3)
 		from: node.
 	self
-		should: [node removeNodes]
-		removeNodes: (children last: 2)
-		from: node.
-	self assert: node isEmpty.
+		assert: node removeNodes = node;
+		assert: node isEmpty.
 ]
 
 { #category : #tests }

@@ -17,8 +17,11 @@ XMLNodeWithElements >> addElement: anElement [
 ]
 
 { #category : #private }
-XMLNodeWithElements >> changedChildNode: aNode [
-	aNode isTag ifTrue: [self rebuildElementCache]
+XMLNodeWithElements >> addedNode: aNode toList: aCollection [
+	aNode isTag ifTrue: [
+		(self nodes last = aNode)
+			ifTrue: [self elementCacheAdd: aNode]
+			ifFalse: [self rebuildElementCache]].
 ]
 
 { #category : #accessing }
@@ -215,6 +218,16 @@ XMLNodeWithElements >> recurseUntilTrue: aBlock [
 
 	self elementsDo: [:each | (result := each recurseUntilTrue: aBlock) ifNotNil: [^ result]].
 	^ nil.
+]
+
+{ #category : #private }
+XMLNodeWithElements >> removedNode: aNode fromList: aCollection [
+	aNode isTag ifTrue: [self elementCacheRemove: aNode].
+]
+
+{ #category : #private }
+XMLNodeWithElements >> renamedChildNode: aNode [
+	aNode isTag ifTrue: [self rebuildElementCache]
 ]
 
 { #category : #searching }

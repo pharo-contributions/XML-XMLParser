@@ -123,7 +123,7 @@ XMLElement >> attributeAt: aString put: aValue [
 
 { #category : #accessing }
 XMLElement >> attributeList [
-	^ attributeList ifNil: [attributeList := XMLAttributeList new]
+	^ attributeList ifNil: [attributeList := XMLAttributeList parent: self]
 ]
 
 { #category : #accessing }
@@ -148,7 +148,7 @@ XMLElement >> attributeNodeAt: aName [
 
 { #category : #accessing }
 XMLElement >> attributeNodes [
-	^ self attributeList nodes
+	^ self attributeList
 ]
 
 { #category : #accessing }
@@ -291,7 +291,7 @@ XMLElement >> localName [
 { #category : #accessing }
 XMLElement >> localName: aLocalName [
 	self namespacedName localName: aLocalName.
-	self notifyParentOfChange.
+	self notifyParentOfRenaming.
 ]
 
 { #category : #private }
@@ -352,7 +352,7 @@ XMLElement >> prefix [
 { #category : #namespace }
 XMLElement >> prefix: aPrefix [
 	self namespacedName prefix: aPrefix.
-	self notifyParentOfChange.
+	self notifyParentOfRenaming.
 ]
 
 { #category : #namespace }
@@ -389,7 +389,7 @@ XMLElement >> qualifiedName [
 { #category : #accessing }
 XMLElement >> qualifiedName: aQualifiedName [
 	self namespacedName qualifiedName: aQualifiedName.
-	self notifyParentOfChange.
+	self notifyParentOfRenaming.
 ]
 
 { #category : #searching }
@@ -413,7 +413,13 @@ XMLElement >> recurseUntilTrue: aBlock [
 
 { #category : #accessing }
 XMLElement >> removeAttribute: aString [
-	^ self attributeList removeName: aString
+	^ self attributeList removeNodeNamed: aString
+]
+
+{ #category : #'as yet unclassified' }
+XMLElement >> renamedChildNode: aNode [
+	super renamedChildNode: aNode.
+	aNode isAttribute ifTrue: [self attributeList renamedNode: aNode]
 ]
 
 { #category : #private }
@@ -423,15 +429,13 @@ XMLElement >> scope [
 
 { #category : #initialization }
 XMLElement >> setAttributes: aDictionary [
-	self attributeList removeNodes.
+	self attributeList removeAll.
 	aDictionary isEmptyOrNil ifTrue: [^ self].
 	aDictionary keysAndValuesDo: [:key :value |
 		self attributeList
-			addNode:
-				(XMLAttribute
-					name: key
-					value: value
-					scope: self scope)].
+			addName: key
+			value: value
+			scope: self scope].
 ]
 
 { #category : #initialization }
@@ -443,7 +447,7 @@ XMLElement >> setPrefix: aPrefix localName: aLocalName [
 XMLElement >> setScope: aNamespaceScope [
 	scope := (XMLNamespaceScope enclosingScope: aNamespaceScope).
 	self namespacedName setScope: scope.
-	self attributeList setScope: scope.
+	self attributeList do: [:each | each setScope: scope]
 ]
 
 { #category : #accessing }
