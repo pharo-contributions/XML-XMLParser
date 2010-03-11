@@ -452,7 +452,7 @@ XMLElement >> setScope: aNamespaceScope [
 
 { #category : #accessing }
 XMLElement >> tag [
-	^ self name
+	^ self qualifiedName
 ]
 
 { #category : #private }

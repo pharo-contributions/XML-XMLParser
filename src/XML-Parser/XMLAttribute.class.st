@@ -10,7 +10,7 @@ Class {
 
 { #category : #'instance creation' }
 XMLAttribute class >> name: aName value: aValue [
-	^ self name: aName value: aValue scope: nil.
+	^ self new name: aName value: aValue
 ]
 
 { #category : #'instance creation' }

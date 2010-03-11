@@ -10,10 +10,10 @@ Class {
 { #category : #adding }
 XMLAttributeList >> addName: aName value: aValue scope: aScope [
 	^ self addLast:
-			(XMLAttribute
-				name: aName
-				value: aValue
-				scope: aScope)
+		(XMLAttribute
+			name: aName
+			value: aValue
+			scope: aScope)
 ]
 
 { #category : #accessing }
@@ -21,9 +21,9 @@ XMLAttributeList >> attributesByName [
 	^ attributesByName ifNil: [attributesByName := Dictionary new: 10]
 ]
 
-{ #category : #private }
+{ #category : #errors }
 XMLAttributeList >> errorNonAttributeNode [
-	self error: 'cannot contain non-attribute nodes'
+	self error: 'cannot contain non-attribute nodes'. ^ nil.
 ]
 
 { #category : #testing }

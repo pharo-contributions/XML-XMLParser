@@ -66,6 +66,11 @@ XMLNodeList >> copyEmpty [
 	^ self species new: self size
 ]
 
+{ #category : #errors }
+XMLNodeList >> errorNodeWithParent [
+	self error: 'cannot add node that is already the child of another node'. ^ nil.
+]
+
 { #category : #accessing }
 XMLNodeList >> parent [
 	^ parent
@@ -120,8 +125,7 @@ XMLNodeList >> species [
 { #category : #private }
 XMLNodeList >> with: aBlock add: aNode [
 
-	aNode hasParent
-		ifTrue: [self error: 'attempt to add node with parent'. ^ nil].
+	aNode hasParent ifTrue: [^ self errorNodeWithParent].
 
 	self with: aBlock onError: [^ nil].
 	self parent ifNotNil: [

@@ -1,5 +1,5 @@
 "
-An XMLNamespaceScope is a set of bindings between namespace prefixes and URIs, and also a default URI. Scopes can be created from other scopes by sending #enclosingScope: to XMLNamespaceScope with the other XMLNamespaceScope as the argument.
+An XMLNamespaceScope is a set of mappings from namespace prefixes to URIs, and also a default URI. Scopes can be created from other scopes by sending #enclosingScope: to XMLNamespaceScope with the other XMLNamespaceScope as the argument.
 "
 Class {
 	#name : #XMLNamespaceScope,
@@ -26,7 +26,7 @@ XMLNamespaceScope >> aliasesOf: aPrefix [
 		ifUnmapped: [self errorUndefinedAttributePrefix: aPrefix asString].
 
 	^ self mappedPrefixes keys select: [:each |
-		self isPrefix: each mappedTo: uri].
+		(each ~= aPrefix) and: [self isPrefix: each mappedTo: uri]].
 ]
 
 { #category : #accessing }
@@ -67,8 +67,8 @@ XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope. [
 ]
 
 { #category : #testing }
-XMLNamespaceScope >> isMappedPrefix: aNamespace [
-	^ self prefixMappings includesKey: aNamespace
+XMLNamespaceScope >> isMappedPrefix: aPrefix [
+	^ self prefixMappings includesKey: aPrefix
 ]
 
 { #category : #testing }
