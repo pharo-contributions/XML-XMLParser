@@ -67,8 +67,15 @@ XMLNodeList >> copyEmpty [
 ]
 
 { #category : #errors }
+XMLNodeList >> domError: anErrorMessage [
+	XMLDOMException signal: anErrorMessage.
+	^ nil.
+	
+]
+
+{ #category : #errors }
 XMLNodeList >> errorNodeWithParent [
-	self error: 'cannot add node that is already the child of another node'. ^ nil.
+	^ self domError: 'cannot add node that is already the child of another node'.
 ]
 
 { #category : #accessing }

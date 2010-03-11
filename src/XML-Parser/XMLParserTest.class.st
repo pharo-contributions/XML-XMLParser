@@ -133,14 +133,17 @@ XMLParserTest >> testExampleAddressBook [
 
 	tokenizer := XMLTokenizer on: self addressBookXML readStream.
 
-	"We enumerate the first characters of the addressbook example. The file being parsed begins with <addressbook"
-	self assert: tokenizer next = $<.
-	self assert: tokenizer next = $a.	
-	self assert: tokenizer next = $d.
-	self assert: tokenizer next = $d.
-	self assert: tokenizer next = $r.
+	"We enumerate the first characters of the addressbook example.
+	The file being parsed begins with <addressbook"
+	self assert: tokenizer streamReader next = $<.
+	self assert: tokenizer streamReader next = $a.	
+	self assert: tokenizer streamReader next = $d.
+	self assert: tokenizer streamReader next = $d.
+	self assert: tokenizer streamReader next = $r.
 
-	self shouldnt: ([tokenizer next notNil] whileTrue: []) raise: Error. 
+	self
+		shouldnt: [tokenizer streamReader next notNil] whileTrue
+		raise: Error. 
 ]
 
 { #category : #tests }
@@ -149,7 +152,9 @@ XMLParserTest >> testExampleAddressBookWithDTD [
 	"XMLTokenizer exampleAddressBookWithDTD"
 
 	tokenizer := XMLTokenizer on: self addressBookXMLWithDTD readStream.
-	self shouldnt: ([tokenizer next notNil] whileTrue: []) raise: Error
+	self
+		shouldnt: [tokenizer streamReader next notNil] whileTrue
+		raise: Error
 ]
 
 { #category : #tests }
@@ -180,6 +185,7 @@ XMLParserTest >> testParsing [
 
 	self assert: (root firstTagNamed: 'person') notNil.
 	self assert: (root firstTagNamed: 'addressbook') notNil.
+
 	self assert: (root firstTagNamed: 'addressbook') == root.
 
 	numberOfPersons := 0.
@@ -207,27 +213,25 @@ XMLParserTest >> testParsingCharacters [
 
 	parser := XMLParser on: self addressBookXML readStream.
 
-	self assert: parser next = $<.
-	self assert: parser next = $a.	
-	self assert: parser next = $d.
-	self assert: parser next = $d.
-	self assert: parser next = $r.
+	self assert: parser streamReader next = $<.
+	self assert: parser streamReader next = $a.
+	self assert: parser streamReader next = $d.
+	self assert: parser streamReader next = $d.
+	self assert: parser streamReader next = $r.
 ]
 
 { #category : #xmltokenizer }
 XMLParserTest >> testTokenizerAddressBook [
 	| tokenizer |
 	tokenizer := XMLTokenizer on: self addressBookXML readStream.
-	[tokenizer next notNil]
-		whileTrue: []
+	[tokenizer streamReader next notNil] whileTrue
 ]
 
 { #category : #xmltokenizer }
 XMLParserTest >> testTokenizerAddressBookWithDTD [
 	| tokenizer |
 	tokenizer := XMLTokenizer on: self addressBookXMLWithDTD readStream.
-	[tokenizer next notNil]
-		whileTrue: []
+	[tokenizer streamReader next notNil] whileTrue
 ]
 
 { #category : #'code test' }

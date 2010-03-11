@@ -1,5 +1,5 @@
 Class {
-	#name : #XMLMalformedException,
+	#name : #XMLDOMException,
 	#superclass : #XMLException,
 	#category : #'XML-Parser-Exception'
 }

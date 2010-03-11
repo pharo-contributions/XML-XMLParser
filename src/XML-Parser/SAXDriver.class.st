@@ -6,10 +6,10 @@ Class {
 	#superclass : #XMLTokenizer,
 	#instVars : [
 		'saxHandler',
+		'nestedScopes',
 		'useNamespaces',
 		'validateAttributes',
-		'languageEnvironment',
-		'nestedScopes'
+		'languageEnvironment'
 	],
 	#category : #'XML-Parser-Parser'
 }
@@ -23,10 +23,12 @@ SAXDriver >> activeSaxHandler [
 
 { #category : #accessing }
 SAXDriver >> currentScope [
-	^ self nestedScopes currentScope
+	^ self usesNamespaces
+		ifTrue: [self nestedScopes currentScope]
+		ifFalse: [XMLNamespaceScope isValidating: false]
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #namespaces }
 SAXDriver >> declareNamespaces: namespaces [
 	namespaces keysAndValuesDo: [:ns :uri |
 		self nestedScopes declareNamespace: ns uri: uri.
@@ -70,15 +72,15 @@ SAXDriver >> handleEndDocument [
 SAXDriver >> handleEndTag: elementName [
 	| prefix localName namespaceURI |
 
+	elementName splitQualifiedNameInto: [:prefixPart :localPart |
+		prefix := prefixPart.
+		localName := localPart].
 	self usesNamespaces
 		ifTrue: [
-			elementName splitQualifiedNameInto: [:prefixPart :localPart |
-				prefix := prefixPart.
-				localName := localPart.
-				namespaceURI := self nestedScopes resolvePrefix: prefix].
+			namespaceURI := self nestedScopes resolvePrefix: prefix.
 			self validateEndTag: localName prefix: prefix]
-		ifFalse: [localName := elementName].
-		
+		ifFalse: [namespaceURI := nil].
+
 	self activeSaxHandler 
 		endElement: localName
 		qualifiedName: elementName
@@ -87,8 +89,8 @@ SAXDriver >> handleEndTag: elementName [
 
 	self usesNamespaces
 		ifTrue: [
-			self nestedScopes leaveScope.
-			self activeSaxHandler endPrefixMapping: prefix].
+			self undeclareNamespaces: self currentScope prefixMappings.
+			self nestedScopes leaveScope.].
 ]
 
 { #category : #'handling tokens' }
@@ -114,18 +116,20 @@ SAXDriver >> handleStartDocument [
 SAXDriver >> handleStartTag: elementName attributes: attributes namespaces: namespaces [
 	| localName prefix namespaceURI |
 
-	(attributes includesKey: #xml:lang)
-		ifTrue: [self languageEnvironment: (attributes at: #xml:lang)].
+	(attributes includesKey: 'xml:lang')
+		ifTrue: [self languageEnvironment: (attributes at: 'xml:lang')].
+
+	elementName splitQualifiedNameInto: [:ns :ln |
+		prefix := ns.
+		localName := ln].
 	self usesNamespaces
 		ifTrue: [
 			self nestedScopes enterScope.
 			self declareNamespaces: namespaces.
-			elementName splitQualifiedNameInto: [:ns :ln |
-				prefix := ns.
-				localName := ln.
-				namespaceURI := self nestedScopes resolvePrefix: prefix].
+			namespaceURI := self nestedScopes resolvePrefix: prefix.
+
 			self validateStartTag: localName prefix: prefix attributes: attributes]
-		ifFalse: [localName := elementName].
+		ifFalse: [namespaceURI := nil].
 
 	self activeSaxHandler 
 		startElement: localName
@@ -156,7 +160,7 @@ SAXDriver >> initialize [
 
 { #category : #accessing }
 SAXDriver >> languageEnvironment [
-	^languageEnvironment
+	^ languageEnvironment
 ]
 
 { #category : #accessing }
@@ -179,23 +183,30 @@ SAXDriver >> saxHandler: aHandler [
 	saxHandler := aHandler
 ]
 
+{ #category : #namespaces }
+SAXDriver >> undeclareNamespaces: aDictionary [
+	aDictionary keysAndValuesDo: [:prefix :uri |
+		self activeSaxHandler startPrefixMapping: prefix uri: uri].
+]
+
 { #category : #accessing }
 SAXDriver >> useNamespaces: aBoolean [
-	useNamespaces := aBoolean
+	useNamespaces := aBoolean.
+	self nestedScopes isValidating: aBoolean.
 ]
 
 { #category : #testing }
 SAXDriver >> usesNamespaces [
-	^useNamespaces
+	^ useNamespaces
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #namespaces }
 SAXDriver >> validateEndTag: localName prefix: prefix [
 	(prefix isNil or: [self nestedScopes isMappedPrefix: prefix])
 		ifFalse: [self errorBadPrefix: prefix inEndTag: localName].
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #namespaces }
 SAXDriver >> validateStartTag: aLocalName prefix: aPrefix attributes: attributeList [
 	(aPrefix isNil or: [self nestedScopes isMappedPrefix: aPrefix])
 		ifFalse: [self errorBadPrefix: aPrefix inStartTag: aLocalName].

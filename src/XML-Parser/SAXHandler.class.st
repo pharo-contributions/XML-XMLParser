@@ -22,7 +22,7 @@ SAXHandler class >> on: aStream [
 			ifFalse: [aStream readStream]).
 	^ self new
 		driver: driver;
-		validating: true.
+		isValidating: true.
 ]
 
 { #category : #'instance creation' }
@@ -32,11 +32,10 @@ SAXHandler class >> parse: aStream [
 
 { #category : #'instance creation' }
 SAXHandler class >> parseDTDFrom: aStream [
-	| driver parser |
-	driver := SAXDriver on: aStream.
-	driver validating: true.
-	driver startParsingMarkup.
-	parser := self new driver: driver.
+	| parser |
+
+	parser := self on: aStream.
+	parser driver startParsingMarkup.
 	^ parser parseDocument.
 ]
 
@@ -205,6 +204,16 @@ SAXHandler >> initialize [
 	eod := false
 ]
 
+{ #category : #testing }
+SAXHandler >> isValidating [
+	self driver isValidating
+]
+
+{ #category : #accessing }
+SAXHandler >> isValidating: aBoolean [
+	self driver isValidating: aBoolean
+]
+
 { #category : #parsing }
 SAXHandler >> parseDocument [
 	self startDocument.
@@ -303,14 +312,4 @@ SAXHandler >> useNamespaces: aBoolean [
 { #category : #testing }
 SAXHandler >> usesNamespaces [
 	^ self driver usesNamespaces
-]
-
-{ #category : #testing }
-SAXHandler >> validating [
-	self driver validating
-]
-
-{ #category : #accessing }
-SAXHandler >> validating: aBoolean [
-	self driver validating: aBoolean
 ]

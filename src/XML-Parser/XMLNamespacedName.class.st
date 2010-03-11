@@ -83,7 +83,7 @@ XMLNamespacedName >> scope [
 { #category : #accessing }
 XMLNamespacedName >> setPrefix: aPrefix localName: aLocalName [
 	localName := aLocalName.
-	(aPrefix isEmptyOrNil or: [aPrefix = 'xmlns'])
+	aPrefix isEmptyOrNil
 		ifTrue: [
 			prefix := nil.
 			qualifiedName := localName]

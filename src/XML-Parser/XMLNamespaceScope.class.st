@@ -6,7 +6,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'defaultNamespace',
-		'prefixMappings'
+		'prefixMappings',
+		'isValidating'
 	],
 	#category : #'XML-Parser'
 }
@@ -14,6 +15,11 @@ Class {
 { #category : #'instance creation' }
 XMLNamespaceScope class >> enclosingScope: aScope [
 	^ self new inheritMappingsFrom: aScope
+]
+
+{ #category : #'instance creation' }
+XMLNamespaceScope class >> isValidating: aBoolean [
+	^ self new isValidating: aBoolean
 ]
 
 { #category : #accessing }
@@ -40,20 +46,20 @@ XMLNamespaceScope >> defaultNamespace: aNamespaceUri [
 ]
 
 { #category : #errors }
-XMLNamespaceScope >> errorAttribute: anAttribute aliases: aPrefix with: aUri [
-	self error:
-		('Attributes ', anAttribute, ' and ',
-		aPrefix, ' are aliased to namespace ', aUri)
+XMLNamespaceScope >> errorAttribute: anAttribute aliases: anAliasedAttribute with: aUri [
+	self namespaceError:
+		('attribute "{1}" aliases attribute "{2}"; both prefixes map to {3}'
+			format: (Array with: anAttribute with: anAliasedAttribute with: aUri))
 ]
 
 { #category : #errors }
 XMLNamespaceScope >> errorUndefinedAttributePrefix: aPrefix [
-	self error: 'Attribute refers to undefined namespace ', aPrefix
+	self namespaceError: 'Attribute refers to undefined namespace ', aPrefix
 ]
 
 { #category : #errors }
 XMLNamespaceScope >> errorUnmappedPrefix: aPrefix [
-	self error: 'Unmapped namespace prefix "', aPrefix, '"'
+	self namespaceError: 'Unmapped namespace prefix "', aPrefix, '"'
 ]
 
 { #category : #initializing }
@@ -77,16 +83,31 @@ XMLNamespaceScope >> isPrefix: aPrefix mappedTo: aUri [
 		and: [(self resolvePrefix: aPrefix) = aUri])
 ]
 
+{ #category : #testing }
+XMLNamespaceScope >> isValidating [
+	^ isValidating ifNil: [true]
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> isValidating: aBoolean [
+	isValidating := aBoolean
+]
+
 { #category : #accessing }
 XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
 	(aPrefix isEmptyOrNil or: [aPrefix = 'xmlns'])
 		ifTrue: [self defaultNamespace: aUri]
-		ifFalse: [self prefixMappings at: aPrefix put: aUri]
+		ifFalse: [self prefixMappings at: aPrefix put: (aUri ifNil: [''])]
 ]
 
 { #category : #accessing }
 XMLNamespaceScope >> mappedPrefixes [
 	^ self prefixMappings keys
+]
+
+{ #category : #errors }
+XMLNamespaceScope >> namespaceError: anErrorMessage [
+	^ XMLNamespaceException signal: anErrorMessage
 ]
 
 { #category : #accessing }
@@ -124,27 +145,23 @@ XMLNamespaceScope >> resolvePrefix: aPrefix ifUnmapped: aBlock [
 		ifFalse: [self prefixMappings at: aPrefix ifAbsent: aBlock]
 ]
 
-{ #category : #accessing }
-XMLNamespaceScope >> unmapPrefix: aPrefix [
-	self prefixMappings removeKey: aPrefix ifAbsent: [nil]
-]
-
 { #category : #validation }
-XMLNamespaceScope >> validateAttribute: attrName in: attributeList [
-	| qualifiedAlias |
+XMLNamespaceScope >> validateAttribute: anAttributeName in: aDictionary [
+	| namespaceUri aliasingAttributeName |
 	
-	attrName splitQualifiedNameInto: [:prefix :localName |
+	anAttributeName splitQualifiedNameInto: [:prefix :localName |
 		prefix ifNil: [^ self].
-
 		self validatePrefix: prefix.
-		(self aliasesOf: prefix) do: [:alias |
-			qualifiedAlias := alias qualifyName: localName.
-			(attributeList includesKey: qualifiedAlias)
+		namespaceUri := self resolvePrefix: prefix.
+
+		(self aliasesOf: prefix) do: [:aliasingPrefix |
+			aliasingAttributeName := aliasingPrefix qualifyName: localName.
+			(aDictionary includesKey: aliasingAttributeName)
 				ifTrue: [
 					self
-						errorAttribute: attrName
-						aliases: qualifiedAlias
-						with: (self resolvePrefix: prefix)]]].
+						errorAttribute: aliasingAttributeName
+						aliases: anAttributeName
+						with: namespaceUri]]].
 ]
 
 { #category : #validation }
@@ -152,6 +169,7 @@ XMLNamespaceScope >> validateAttributes: attributeList [
 	"check all attribute namespaces are defined and not duplicated by aliasing"
 	| prefix localName qualifiedAlias |
 
+	self isValidating ifFalse: [^ self].
 	attributeList keysDo: [:attrName |
 		self
 			validateAttribute: attrName
@@ -160,6 +178,8 @@ XMLNamespaceScope >> validateAttributes: attributeList [
 
 { #category : #validation }
 XMLNamespaceScope >> validatePrefix: aPrefix [
+	self isValidating ifFalse: [^ self].
+
 	(self isMappedPrefix: aPrefix)
 		ifFalse: [self errorUnmappedPrefix: aPrefix].
 ]

@@ -5,10 +5,16 @@ Class {
 	#name : #XMLNestedNamespaceScopes,
 	#superclass : #Object,
 	#instVars : [
-		'scopes'
+		'scopes',
+		'isValidating'
 	],
 	#category : #'XML-Parser'
 }
+
+{ #category : #accessing }
+XMLNestedNamespaceScopes class >> isValidating: aBoolean [
+	^ self new isValidating: aBoolean
+]
 
 { #category : #accessing }
 XMLNestedNamespaceScopes >> currentLevel [
@@ -36,7 +42,7 @@ XMLNestedNamespaceScopes >> defaultNamespace [
 
 { #category : #private }
 XMLNestedNamespaceScopes >> emptyScope [
-	^ XMLNamespaceScope new
+	^ XMLNamespaceScope isValidating: self isValidating
 ]
 
 { #category : #accessing }
@@ -61,6 +67,17 @@ XMLNestedNamespaceScopes >> isPrefix: aPrefix mappedTo: aUri [
 	^ self currentScope isPrefix: aPrefix mappedTo: aUri
 ]
 
+{ #category : #testing }
+XMLNestedNamespaceScopes >> isValidating [
+	^ isValidating ifNil: [true]
+]
+
+{ #category : #accessing }
+XMLNestedNamespaceScopes >> isValidating: aBoolean [
+	isValidating := aBoolean.
+	self scopes do: [:each | each isValidating: aBoolean]
+]
+
 { #category : #scope }
 XMLNestedNamespaceScopes >> leaveScope [
 	self popScope
@@ -73,7 +90,7 @@ XMLNestedNamespaceScopes >> popScope [
 
 { #category : #accessing }
 XMLNestedNamespaceScopes >> pushScope: aScope [
-	self scopes add: aScope
+	self scopes add: (aScope isValidating: self isValidating)
 ]
 
 { #category : #accessing }

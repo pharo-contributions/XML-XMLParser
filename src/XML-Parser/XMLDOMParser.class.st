@@ -51,14 +51,6 @@ XMLDOMParser >> endDocument [
 ]
 
 { #category : #content }
-XMLDOMParser >> endElement: elementName [
-	| currentElement |
-	currentElement := self pop.
-	(currentElement name = elementName)
-		ifFalse: [self errorExpectedEndTag: currentElement name butGot: elementName]
-]
-
-{ #category : #content }
 XMLDOMParser >> endElement: localName qualifiedName: qualifiedName prefix: prefix uri: namespaceUri [
 	| currentElement |
 	currentElement := self pop.
@@ -71,8 +63,7 @@ XMLDOMParser >> endElement: localName qualifiedName: qualifiedName prefix: prefi
 
 { #category : #errors }
 XMLDOMParser >> errorExpectedEndTag: anExpectedEndTag butGot: aTag [
-	self driver
-		errorExpected: 'End tag "', aTag, '" doesn''t match "', anExpectedEndTag, '".'
+	self driver parseError: 'expexted </', anExpectedEndTag, '> but got </', aTag, '>'
 ]
 
 { #category : #accessing }
@@ -157,17 +148,12 @@ XMLDOMParser >> startDocument [
 ]
 
 { #category : #content }
-XMLDOMParser >> startElement: elementName attributes: attributeList [
-	self pushElement: (XMLElement named: elementName attributes: attributeList)
-]
-
-{ #category : #content }
-XMLDOMParser >> startElement: localName prefix: prefix uri: namespaceUri attributes: attributeList [
+XMLDOMParser >> startElement: localName prefix: prefix uri: namespaceUri attributes: attributes [
 	self pushElement:
 		(XMLElement
 			localName: localName
 			prefix: prefix
-			attributes: attributeList
+			attributes: attributes
 			scope: self currentScope)
 ]
 

@@ -21,9 +21,9 @@ XMLAttributeList >> attributesByName [
 	^ attributesByName ifNil: [attributesByName := Dictionary new: 10]
 ]
 
-{ #category : #errors }
+{ #category : #private }
 XMLAttributeList >> errorNonAttributeNode [
-	self error: 'cannot contain non-attribute nodes'. ^ nil.
+	^ self domError: 'cannot contain non-attribute nodes'.
 ]
 
 { #category : #testing }

@@ -9,33 +9,26 @@ Class {
 	#category : #'XML-Parser-Nodes'
 }
 
-{ #category : #'instance creation' }
+{ #category : #private }
 XMLElement class >> localName: aString prefix: ns attributes: attributeList scope: namespaceScope [
-	^ self new
+	| element |
+	element := self new
 		setScope: namespaceScope;
-		setPrefix: ns localName: aString;
-		setAttributes: attributeList
+		setPrefix: ns localName: aString.
+	attributeList keysAndValuesDo: [:key :value |
+		element attributeList addName: key value: value scope: namespaceScope].
+	^ element.
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> named: aLocalName [
-	^ self new localName: aLocalName
+XMLElement class >> named: aQualifiedName [
+	^ self new qualifiedName: aQualifiedName
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> named: aLocalName attributes: aDictionary [
-	^ (self named: aLocalName) setAttributes: aDictionary
-]
-
-{ #category : #'instance creation' }
-XMLElement class >> named: aLocalName attributes: aDictionary content: aContentString [
-	^ (self named: aLocalName attributes: aDictionary)
-		contentString: aContentString
-]
-
-{ #category : #'instance creation' }
-XMLElement class >> named: aLocalName content: aContentString [
-	^ (self named: aLocalName) contentString: aContentString
+XMLElement class >> named: aQualifiedName attributes: aDictionaryOrArray [
+	^ (self named: aQualifiedName)
+		setAttributes: aDictionaryOrArray
 ]
 
 { #category : #'instance creation' }
@@ -47,21 +40,22 @@ XMLElement class >> named: aQualifiedName namespaceURI: aUri [
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> named: aQualifiedName namespaceURI: aUri attributes: aDictionary [
+XMLElement class >> named: aQualifiedName namespaceURI: aUri attributes: aDictionaryOrArray [
 	^ (self named: aQualifiedName namespaceURI: aUri)
-		setAttributes: aDictionary
+		setAttributes: aDictionaryOrArray
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> named: aQualifiedName namespaceURI: aUri attributes: aDictionary content: aString [
-	^ (self named: aQualifiedName namespaceURI: aUri attributes: aDictionary)
-		contentString: aString
+XMLElement class >> named: aQualifiedName namespaces: aNamespaceDictionary [
+	^ self new
+		declareNamespaces: aNamespaceDictionary;
+		qualifiedName: aQualifiedName
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> named: aQualifiedName namespaceURI: aUri content: aString [
-	^ (self named: aQualifiedName namespaceURI: aUri)
-		contentString: aString
+XMLElement class >> named: aQualifiedName namespaces: aNamespaceDictionary attributes: aDictionaryOrArray [
+	^ (self named: aQualifiedName namespaces: aNamespaceDictionary)
+		setAttributes: aDictionaryOrArray
 ]
 
 { #category : #accessing }
@@ -73,7 +67,7 @@ XMLElement >> @ aString [
 { #category : #accessing }
 XMLElement >> addContent: aString [
 	"Adds a string or string node. If the last child node is already a string node,
-	then the string gets concatenated to it."
+	the characters being added are concatenated to it."
 
 	(self hasContents and: [self nodes last isText])
 		ifTrue: [self nodes last addContent: aString]
@@ -199,6 +193,18 @@ XMLElement >> declareNamespace: aPrefix uri: aUri [
 		ifTrue: [^ self].
 
 	self mapPrefix: aPrefix to: aUri.
+]
+
+{ #category : #namespace }
+XMLElement >> declareNamespaces: aDictionaryOrArray [
+	(aDictionaryOrArray isDictionary
+		ifTrue: [aDictionaryOrArray associations]
+		ifFalse: [aDictionaryOrArray])
+			do: [:association |
+				association key splitQualifiedNameInto: [:xmlns :name |
+					(name = 'xmlns')
+						ifTrue: [self defaultNamespace: association value]
+						ifFalse: [self declareNamespace: name uri: association value]]]
 ]
 
 { #category : #namespace }
@@ -428,14 +434,16 @@ XMLElement >> scope [
 ]
 
 { #category : #initialization }
-XMLElement >> setAttributes: aDictionary [
+XMLElement >> setAttributes: aDictionaryOrArray [
 	self attributeList removeAll.
-	aDictionary isEmptyOrNil ifTrue: [^ self].
-	aDictionary keysAndValuesDo: [:key :value |
-		self attributeList
-			addName: key
-			value: value
-			scope: self scope].
+	aDictionaryOrArray isEmptyOrNil ifTrue: [^ self].
+	(aDictionaryOrArray isDictionary
+		ifTrue: [aDictionaryOrArray associations]
+		ifFalse: [aDictionaryOrArray]) do: [:association |
+			self attributeList
+				addName: association key
+				value: association value
+				scope: self scope].
 ]
 
 { #category : #initialization }
@@ -446,6 +454,7 @@ XMLElement >> setPrefix: aPrefix localName: aLocalName [
 { #category : #initialization }
 XMLElement >> setScope: aNamespaceScope [
 	scope := (XMLNamespaceScope enclosingScope: aNamespaceScope).
+	scope isValidating: aNamespaceScope isValidating.
 	self namespacedName setScope: scope.
 	self attributeList do: [:each | each setScope: scope]
 ]

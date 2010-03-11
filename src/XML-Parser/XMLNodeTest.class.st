@@ -220,8 +220,6 @@ XMLNodeTest >> test010node [
 	self
 		assert: node hasParent;
 		assert: node parent = parent.
-
-	self should: [node addContent: ''] raise: SAXParseException.
 ]
 
 { #category : #tests }
@@ -376,17 +374,17 @@ XMLNodeTest >> test051elementNaming [
 	element := XMLElement new.
 	self
 		assertElement: element name: '' localName: '';
-		assertElement: (element name: 'foo') name: #foo localName: #foo;
+		assertElement: (element name: 'foo') name: 'foo' localName: 'foo';
 		assertNode: element namespace: nil uri: nil.
 
 	element prefix: 'bar' uri: 'http://bar'.
 	self
-		assertElement: element name: #bar:foo localName: #foo;
+		assertElement: element name: 'bar:foo' localName: 'foo';
 		assertNode: element namespace: 'bar' uri: 'http://bar'.
 
 	element localName: 'baz'; prefix: 'foo' uri: 'http://foo'.
 	self
-		assertElement: element name: #foo:baz localName: #baz;
+		assertElement: element name: 'foo:baz' localName: 'baz';
 		assertNode: element namespace: 'foo' uri: 'http://foo'.
 ]
 
@@ -414,7 +412,7 @@ XMLNodeTest >> test052elementContentString [
 		contentString: str
 		contents: (Array with: str with: str, str).
 
-	element addElement: (XMLElement named: 'foo' content: 'test').
+	element addElement: ((XMLElement named: 'foo') addContent: 'test').
 	self assert: (element contentStringAt: 'foo') = 'test'.
 ]
 
@@ -478,15 +476,15 @@ XMLNodeTest >> test054elementConstructors [
 
 	str := self markupString.
 	self
-		assertElement: (XMLElement named: 'foo' content: str)
+		assertElement: (XMLElement named: 'foo')
 		name: 'foo'
 		attributes: noAttributes
-		contentString: str.
+		contentString: ''.
 	self
-		assertElement: (XMLElement named: 'foo' attributes: attributes content: str)
+		assertElement: (XMLElement named: 'foo' attributes: attributes)
 		name: 'foo'
 		attributes: attributes
-		contentString: str.
+		contentString: ''.
 
 	element := XMLElement
 		named: 'prefix:foo'

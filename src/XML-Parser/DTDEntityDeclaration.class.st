@@ -93,7 +93,7 @@ DTDEntityDeclaration >> ndata: aString [
 { #category : #behaviors }
 DTDEntityDeclaration >> reference [
 	"Return my reference as is."
-	^self class leadIn , self name , ';'
+	^self class leadIn, self name, ';'
 ]
 
 { #category : #invocation }

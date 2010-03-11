@@ -13,9 +13,9 @@ Class {
 	#category : #'XML-Parser-Nodes'
 }
 
-{ #category : #accessing }
-XMLNode >> addContent: contentString [
-	SAXParseException signal: 'Illegal string data.'
+{ #category : #errors }
+XMLNode >> domError: aMessage [
+	^ XMLDOMException signal: aMessage
 ]
 
 { #category : #testing }
