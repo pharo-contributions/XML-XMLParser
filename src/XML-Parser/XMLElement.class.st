@@ -10,33 +10,30 @@ Class {
 }
 
 { #category : #private }
-XMLElement class >> localName: aString prefix: ns attributes: attributeList scope: namespaceScope [
+XMLElement class >> localName: aString prefix: aPrefix attributes: attributeList scope: namespaceScope [
 	| element |
-	element := self new
-		setScope: namespaceScope;
-		setPrefix: ns localName: aString.
+	element := self new.
+	element setScope: namespaceScope.
+	element namespacedName setPrefix: aPrefix localName: aString.
 	attributeList keysAndValuesDo: [:key :value |
-		element attributeList addName: key value: value scope: namespaceScope].
+		element attributeNodes addName: key value: value].
 	^ element.
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> named: aQualifiedName [
-	^ self new qualifiedName: aQualifiedName
+XMLElement class >> named: aLocalName [
+	^ self new name: aLocalName
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> named: aQualifiedName attributes: aDictionaryOrArray [
-	^ (self named: aQualifiedName)
+XMLElement class >> named: aLocalName attributes: aDictionaryOrArray [
+	^ (self named: aLocalName)
 		setAttributes: aDictionaryOrArray
 ]
 
 { #category : #'instance creation' }
 XMLElement class >> named: aQualifiedName namespaceURI: aUri [
-	^ aQualifiedName splitQualifiedNameInto: [:prefixPart :localPart |
-		self new
-			declareNamespace: prefixPart uri: aUri;
-			setPrefix: prefixPart localName: localPart]
+	^ self new name: aQualifiedName namespaceURI: aUri
 ]
 
 { #category : #'instance creation' }
@@ -46,16 +43,18 @@ XMLElement class >> named: aQualifiedName namespaceURI: aUri attributes: aDictio
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> named: aQualifiedName namespaces: aNamespaceDictionary [
+XMLElement class >> named: aQualifiedName namespaces: aNamespaceDictionaryOrArray [
 	^ self new
-		declareNamespaces: aNamespaceDictionary;
-		qualifiedName: aQualifiedName
+		declareNamespaces: aNamespaceDictionaryOrArray;
+		named: aQualifiedName
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> named: aQualifiedName namespaces: aNamespaceDictionary attributes: aDictionaryOrArray [
-	^ (self named: aQualifiedName namespaces: aNamespaceDictionary)
-		setAttributes: aDictionaryOrArray
+XMLElement class >> named: aQualifiedName namespaces: aNamespaceDictionaryOrArray attributes: aDictionaryOrArray [
+	^ (self
+		named: aQualifiedName
+		namespaces: aNamespaceDictionaryOrArray)
+			setAttributes: aDictionaryOrArray
 ]
 
 { #category : #accessing }
@@ -102,47 +101,42 @@ XMLElement >> attributeAt: aString [
 
 { #category : #accessing }
 XMLElement >> attributeAt: aString ifAbsent: aBlock [
-	^ self attributeList valueAt: aString ifAbsent: aBlock
+	^ self attributeNodes valueAt: aString ifAbsent: aBlock
 ]
 
 { #category : #accessing }
 XMLElement >> attributeAt: aString ifAbsentPut: aBlock [
-	^ self attributeList valueAt: aString ifAbsentPut: aBlock
+	^ self attributeNodes valueAt: aString ifAbsentPut: aBlock
 ]
 
 { #category : #accessing }
 XMLElement >> attributeAt: aString put: aValue [
-	^ self attributeList valueAt: aString put: aValue
-]
-
-{ #category : #accessing }
-XMLElement >> attributeList [
-	^ attributeList ifNil: [attributeList := XMLAttributeList parent: self]
+	^ self attributeNodes valueAt: aString put: aValue
 ]
 
 { #category : #accessing }
 XMLElement >> attributeNames [
-	^ self attributeList names
+	^ self attributeNodes names
 ]
 
 { #category : #enumerating }
 XMLElement >> attributeNamesAndValuesDo: aTwoArgumentBlock [
-	self attributeList namesAndValuesDo: aTwoArgumentBlock
+	self attributeNodes namesAndValuesDo: aTwoArgumentBlock
 ]
 
 { #category : #enumerating }
 XMLElement >> attributeNamesDo: aBlock [
-	self attributeList namesDo: aBlock
+	self attributeNodes namesDo: aBlock
 ]
 
 { #category : #accessing }
 XMLElement >> attributeNodeAt: aName [
-	^ self attributeList nodeNamed: aName
+	^ self attributeNodes nodeNamed: aName
 ]
 
 { #category : #accessing }
 XMLElement >> attributeNodes [
-	^ self attributeList
+	^ attributeList ifNil: [attributeList := XMLAttributeList parent: self]
 ]
 
 { #category : #accessing }
@@ -197,14 +191,13 @@ XMLElement >> declareNamespace: aPrefix uri: aUri [
 
 { #category : #namespace }
 XMLElement >> declareNamespaces: aDictionaryOrArray [
-	(aDictionaryOrArray isDictionary
-		ifTrue: [aDictionaryOrArray associations]
-		ifFalse: [aDictionaryOrArray])
-			do: [:association |
-				association key splitQualifiedNameInto: [:xmlns :name |
-					(name = 'xmlns')
-						ifTrue: [self defaultNamespace: association value]
-						ifFalse: [self declareNamespace: name uri: association value]]]
+	self
+		from: aDictionaryOrArray 
+		keysAndValuesDo: [:prefix :uri |
+			prefix splitQualifiedNameInto: [:xmlns :name |
+				(name = 'xmlns')
+					ifTrue: [self defaultNamespace: uri]
+					ifFalse: [self declareNamespace: name uri: uri]]]
 ]
 
 { #category : #namespace }
@@ -239,9 +232,20 @@ XMLElement >> expandedName [
 	^ self namespacedName expandedName
 ]
 
+{ #category : #private }
+XMLElement >> from: aDictionaryOrArray keysAndValuesDo: aBlock [
+	(aDictionaryOrArray isDictionary
+		ifTrue: [aDictionaryOrArray associations]
+		ifFalse: [aDictionaryOrArray])
+			do: [:association |
+				aBlock
+					value: association key
+					value: association value]
+]
+
 { #category : #testing }
 XMLElement >> hasAttributes [
-	^ self attributeList notEmpty
+	^ self attributeNodes notEmpty
 ]
 
 { #category : #testing }
@@ -265,7 +269,7 @@ XMLElement >> ifNamed: aString do: aOneArgumentBlock [
 
 { #category : #testing }
 XMLElement >> includesAttribute: aString [
-	^ self attributeList includesName: aString
+	^ self attributeNodes includesName: aString
 ]
 
 { #category : #private }
@@ -294,12 +298,6 @@ XMLElement >> localName [
 	^ self namespacedName localName
 ]
 
-{ #category : #accessing }
-XMLElement >> localName: aLocalName [
-	self namespacedName localName: aLocalName.
-	self notifyParentOfRenaming.
-]
-
 { #category : #private }
 XMLElement >> mapPrefix: aPrefix to: aUri [
 	| oldMapping |
@@ -319,7 +317,16 @@ XMLElement >> name [
 
 { #category : #accessing }
 XMLElement >> name: aName [
-	self qualifiedName: aName
+	self namespacedName qualifiedName: aName.
+	self notifyParentOfRenaming.
+]
+
+{ #category : #namespace }
+XMLElement >> name: aQualifiedName namespaceURI: aUri [
+	aQualifiedName splitQualifiedNameInto: [:prefixPart :localPart |
+		self declareNamespace: prefixPart uri: aUri.
+		self namespacedName setPrefix: prefixPart localName: localPart].
+	self notifyParentOfRenaming.
 ]
 
 { #category : #namespace }
@@ -376,10 +383,10 @@ XMLElement >> previousElement [
 XMLElement >> printXMLOn: writer [
 	writer
 		startElement: self name
-		attributeList: self attributeList
+		attributeList: self attributeNodes
 		scope: self scope.
 	(writer canonical not
-		and: [self isEmpty and: [self attributeList notEmpty]])
+		and: [self isEmpty and: [self attributeNodes notEmpty]])
 		ifTrue: [writer endEmptyTag: self name]
 		ifFalse: [
 			writer endTag.
@@ -390,12 +397,6 @@ XMLElement >> printXMLOn: writer [
 { #category : #accessing }
 XMLElement >> qualifiedName [
 	^ self namespacedName qualifiedName
-]
-
-{ #category : #accessing }
-XMLElement >> qualifiedName: aQualifiedName [
-	self namespacedName qualifiedName: aQualifiedName.
-	self notifyParentOfRenaming.
 ]
 
 { #category : #searching }
@@ -419,13 +420,13 @@ XMLElement >> recurseUntilTrue: aBlock [
 
 { #category : #accessing }
 XMLElement >> removeAttribute: aString [
-	^ self attributeList removeNodeNamed: aString
+	^ self attributeNodes removeNodeNamed: aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 XMLElement >> renamedChildNode: aNode [
 	super renamedChildNode: aNode.
-	aNode isAttribute ifTrue: [self attributeList renamedNode: aNode]
+	aNode isAttribute ifTrue: [self attributeNodes renamedNode: aNode]
 ]
 
 { #category : #private }
@@ -435,20 +436,12 @@ XMLElement >> scope [
 
 { #category : #initialization }
 XMLElement >> setAttributes: aDictionaryOrArray [
-	self attributeList removeAll.
+	self attributeNodes removeAll.
 	aDictionaryOrArray isEmptyOrNil ifTrue: [^ self].
-	(aDictionaryOrArray isDictionary
-		ifTrue: [aDictionaryOrArray associations]
-		ifFalse: [aDictionaryOrArray]) do: [:association |
-			self attributeList
-				addName: association key
-				value: association value
-				scope: self scope].
-]
-
-{ #category : #initialization }
-XMLElement >> setPrefix: aPrefix localName: aLocalName [
-	self namespacedName setPrefix: aPrefix localName: aLocalName
+	self
+		from: aDictionaryOrArray
+		keysAndValuesDo: [:name :value |
+			self attributeNodes addName: name value: value].
 ]
 
 { #category : #initialization }
@@ -456,7 +449,7 @@ XMLElement >> setScope: aNamespaceScope [
 	scope := (XMLNamespaceScope enclosingScope: aNamespaceScope).
 	scope isValidating: aNamespaceScope isValidating.
 	self namespacedName setScope: scope.
-	self attributeList do: [:each | each setScope: scope]
+	self attributeNodes do: [:each | each setScope: scope]
 ]
 
 { #category : #accessing }

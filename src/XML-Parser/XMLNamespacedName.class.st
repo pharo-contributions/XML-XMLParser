@@ -32,11 +32,6 @@ XMLNamespacedName >> localName [
 ]
 
 { #category : #accessing }
-XMLNamespacedName >> localName: aString [
-	self setPrefix: self prefix localName: aString
-]
-
-{ #category : #accessing }
 XMLNamespacedName >> namespace [
 	^ (self hasPrefix
 		ifTrue: [self prefix]
@@ -56,11 +51,6 @@ XMLNamespacedName >> prefix [
 { #category : #accessing }
 XMLNamespacedName >> prefix: aPrefix [
 	self setPrefix: aPrefix localName: self localName
-]
-
-{ #category : #accessing }
-XMLNamespacedName >> prefix: aPrefix uri: aUri [
-	self setPrefix: aPrefix localName: self localName.
 ]
 
 { #category : #accessing }

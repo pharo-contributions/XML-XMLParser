@@ -10,14 +10,22 @@ Class {
 
 { #category : #'instance creation' }
 XMLAttribute class >> name: aName value: aValue [
-	^ self new name: aName value: aValue
+	^ self new
+		name: aName;
+		value: aValue
 ]
 
 { #category : #'instance creation' }
 XMLAttribute class >> name: aName value: aValue scope: aScope [
 	^ self new
 		setScope: aScope;
-		name: aName value: aValue
+		name: aName;
+		value: aValue
+]
+
+{ #category : #accessing }
+XMLAttribute >> expandedName [
+	^ self namespacedName expandedName
 ]
 
 { #category : #testing }
@@ -31,24 +39,14 @@ XMLAttribute >> localName [
 ]
 
 { #category : #accessing }
-XMLAttribute >> localName: aLocalName [
-	self namespacedName localName: aLocalName
-]
-
-{ #category : #accessing }
 XMLAttribute >> name [
 	^ self qualifiedName
 ]
 
 { #category : #accessing }
-XMLAttribute >> name: aQualifiedName [
-	self qualifiedName: aQualifiedName
-]
-
-{ #category : #accessing }
-XMLAttribute >> name: aName value: aValue [
-	self qualifiedName: aName.
-	value := aValue.
+XMLAttribute >> name: aName [
+	self namespacedName qualifiedName: aName.
+	self notifyParentOfRenaming.
 ]
 
 { #category : #accessing }
@@ -73,7 +71,8 @@ XMLAttribute >> prefix [
 
 { #category : #accessing }
 XMLAttribute >> prefix: aPrefix [
-	self namespacedName prefix: aPrefix
+	self namespacedName prefix: aPrefix.
+	self notifyParentOfRenaming.
 ]
 
 { #category : #printing }
@@ -85,11 +84,6 @@ XMLAttribute >> printXMLOn: aWriter [
 { #category : #accessing }
 XMLAttribute >> qualifiedName [
 	^ self namespacedName qualifiedName
-]
-
-{ #category : #accessing }
-XMLAttribute >> qualifiedName: aQualifiedName [
-	self namespacedName qualifiedName: aQualifiedName
 ]
 
 { #category : #private }
