@@ -1,3 +1,6 @@
+"
+This class represents a stream reader that implements pushBack: using nested streams, so that the underlying collections streamed-over need not be modified. It also normalizes line endings, meaning that a CRLF sequence or a CR character read from a stream will be returned as an LF character.
+"
 Class {
 	#name : #XMLStreamReader,
 	#superclass : #Object,

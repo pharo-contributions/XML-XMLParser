@@ -1,5 +1,7 @@
 "
-This class represents a node with elements. You will likely use its API through either XMLDocument or XMLElement. To retrieve child elements by name, you can send any of the #element- messages in ""accessing."" The #firstTag- messages search the receiver and its descendants using depth-first traversal for specific elements, and the #tagsNamed- messages iterate over descendent elements also using depth-first traversal.
+This class represents a node with elements. You will likely use its API through XMLDocument or XMLElement.
+
+To retrieve child elements by name, you can send any of the #element- messages in ""accessing."" The #firstTag- messages search the receiver and its descendants using depth-first traversal for specific elements, and the #tagsNamed- messages iterate over descendent elements also using depth-first traversal.
 "
 Class {
 	#name : #XMLNodeWithElements,
@@ -137,6 +139,20 @@ XMLNodeWithElements >> hasElements [
 { #category : #testing }
 XMLNodeWithElements >> includesElement: aString [
 	^ (self elementAt: aString) notNil
+]
+
+{ #category : #'as yet unclassified' }
+XMLNodeWithElements >> innerXML: aString [
+	| parsedDocument newNodes |
+
+	parsedDocument := XMLDOMParser
+		parseDocumentFrom: aString
+		useNamespaces: self usesNamespaces.
+	newNodes := parsedDocument nodes copy.
+	parsedDocument removeNodes.
+	self
+		removeNodes;
+		addNodes: newNodes.
 ]
 
 { #category : #accessing }

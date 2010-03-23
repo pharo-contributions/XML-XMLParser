@@ -1,16 +1,12 @@
 "
-XMLTokenizer
-
-bolot@cc.gatech.edu
-
-breaks the stream of characters into a stream of XMLnodes (aka token stream)
-token stream is used by XMLparser to generate XMLdocument tree
+This class reads XML tokens from a stream using an XMLStreamReader. To create a parser, subclass XMLTokenizer and override the #handle- messages to handle tokens as they are read. To cause a token to be read, send #nextToken to an instance.
 "
 Class {
 	#name : #XMLTokenizer,
 	#superclass : #Object,
 	#instVars : [
 		'streamReader',
+		'streamWriter',
 		'buffer',
 		'entities',
 		'externalEntities',
@@ -269,7 +265,7 @@ XMLTokenizer >> initEntities [
 { #category : #initialize }
 XMLTokenizer >> initialize [
 	streamReader := XMLStreamReader new.
-	buffer := WriteStream on: (String new: 256).
+	streamWriter := XMLStreamWriter new.
 	parsingMarkup := false.
 	isValidating := false.
 ]
@@ -312,11 +308,10 @@ XMLTokenizer >> nextAttributeValue [
 	| delimiterChar |
 
 	delimiterChar := self expectQuote.
-	buffer reset.
-	self nextPCDataDelimitedBy: delimiterChar putOn: buffer.
-	self expectNext: delimiterChar.
-
-	^ buffer stringContents.
+	^ streamWriter writeWith: [:writeStream |
+		self nextPCDataDelimitedBy: delimiterChar putOn: writeStream.
+		self expectNext: delimiterChar.
+		writeStream stringContents]
 ]
 
 { #category : #tokenizing }
@@ -522,20 +517,20 @@ XMLTokenizer >> nextLiteral [
 		or: [nextChar == $_])
 		ifFalse: [self errorExpected: 'name literal.'].
 
-	buffer reset.
-	[LiteralChars includes: nextChar]
-		whileTrue: [
-			nextChar == $&
-				ifTrue: [
-					nextChar := streamReader next.
-					buffer nextPut: (streamReader peek == $#
-						ifTrue: [self nextCharReference]
-						ifFalse: [^ buffer stringContents])]
-				ifFalse: [buffer nextPut: streamReader next].
-			nextChar := streamReader peek].
-	buffer position isZero
-		ifTrue: [self errorExpected: 'name literal'].
-	^ buffer stringContents.
+	^ streamWriter writeWith: [:writeStream |
+		[LiteralChars includes: nextChar]
+			whileTrue: [
+				nextChar == $&
+					ifTrue: [
+						nextChar := streamReader next.
+						writeStream nextPut: (streamReader peek == $#
+							ifTrue: [self nextCharReference]
+							ifFalse: [^ writeStream stringContents])]
+					ifFalse: [writeStream nextPut: streamReader next].
+				nextChar := streamReader peek].
+		writeStream position isZero
+			ifTrue: [self errorExpected: 'name literal'].
+		writeStream stringContents]
 ]
 
 { #category : #'tokenizing dtd' }
@@ -572,26 +567,26 @@ XMLTokenizer >> nextMarkupToken [
 XMLTokenizer >> nextName [
 	| nextChar |
 
-	buffer reset.
-	[(nextChar := streamReader peek) isNil
-		or: [NameDelimiters includes: nextChar]]
-			whileFalse: [buffer nextPut: streamReader next].
-	(buffer position isZero)
-		ifTrue: [self errorExpected: 'name'].
-	^ buffer stringContents.
+	^ streamWriter writeWith: [:writeStream |
+		[(nextChar := streamReader peek) isNil
+			or: [NameDelimiters includes: nextChar]]
+				whileFalse: [writeStream nextPut: streamReader next].
+		(writeStream position isZero)
+			ifTrue: [self errorExpected: 'name'].
+		writeStream stringContents]
 ]
 
 { #category : #tokenizing }
 XMLTokenizer >> nextPCData [
 
-	buffer reset.
-	self isValidating
-		ifTrue: [self nextPCDataDelimitedBy: $< putOn: buffer]
-		ifFalse: [
-			[streamReader peek == $<]
-				whileFalse: [buffer nextPut: streamReader next]].
+	streamWriter writeWith: [:writeStream |
+		self isValidating
+			ifTrue: [self nextPCDataDelimitedBy: $< putOn: writeStream]
+			ifFalse: [
+				[streamReader peek == $<]
+					whileFalse: [writeStream nextPut: streamReader next]].
 
-	self handlePCData: buffer stringContents.
+		self handlePCData: writeStream stringContents]
 ]
 
 { #category : #tokenizing }

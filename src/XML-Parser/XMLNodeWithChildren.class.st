@@ -1,3 +1,6 @@
+"
+This class represents a node that has child nodes. It provides a basic protocol to add/remove nodes and iterate over them. You will likely use its API through either XMLElement or XMLDocument.
+"
 Class {
 	#name : #XMLNodeWithChildren,
 	#superclass : #XMLNode,

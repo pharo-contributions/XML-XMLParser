@@ -59,9 +59,9 @@ XMLNodeTest >> assertElement: anElement name: aName localName: aLocalName [
 ]
 
 { #category : #assertions }
-XMLNodeTest >> assertNode: aNode namespace: aNamespace uri: aUri [
+XMLNodeTest >> assertNode: aNode prefix: aPrefix uri: aUri [
 	self
-		assert: aNode prefix = aNamespace;
+		assert: aNode prefix = aPrefix;
 		assert: aNode namespaceURI = aUri
 ]
 
@@ -260,6 +260,8 @@ XMLNodeTest >> test030stringNode [
 		assertString: (XMLString string: (XMLString string: raw))
 		is: raw
 		printed: escaped.
+
+	self assertString: raw asXMLNode is: raw printed: escaped.
 ]
 
 { #category : #tests }
@@ -284,8 +286,9 @@ XMLNodeTest >> test041namespaces [
 	ns := 'foo'.
 	uri := 'http://foo'.
 	self
-		assertNode: node namespace: nil uri: nil;
-		assertNode: (node prefix: ns uri: uri) namespace: ns uri: uri.
+		assertNode: node prefix: nil uri: nil;
+		assertNode: (node prefix: ns uri: uri) prefix: ns uri: uri.
+	self should: [node prefix: 'badprefix'] raise: XMLNamespaceException.
 ]
 
 { #category : #tests }
@@ -376,17 +379,17 @@ XMLNodeTest >> test051elementNaming [
 	self
 		assertElement: element name: '' localName: '';
 		assertElement: (element name: 'foo') name: 'foo' localName: 'foo';
-		assertNode: element namespace: nil uri: nil.
+		assertNode: element prefix: nil uri: nil.
 
 	element prefix: 'bar' uri: 'http://bar'.
 	self
 		assertElement: element name: 'bar:foo' localName: 'foo';
-		assertNode: element namespace: 'bar' uri: 'http://bar'.
+		assertNode: element prefix: 'bar' uri: 'http://bar'.
 
 	element name: 'foo:baz' namespaceURI: 'http://foo'.
 	self
 		assertElement: element name: 'foo:baz' localName: 'baz';
-		assertNode: element namespace: 'foo' uri: 'http://foo'.
+		assertNode: element prefix: 'foo' uri: 'http://foo'.
 ]
 
 { #category : #tests }
@@ -493,7 +496,7 @@ XMLNodeTest >> test054elementConstructors [
 		attributes: attributes.
 	self
 		assertElement: element name: 'prefix:foo' attributes: attributes contentString: '';
-		assertNode: element namespace: 'prefix' uri: 'http://foo'.
+		assertNode: element prefix: 'prefix' uri: 'http://foo'.
 ]
 
 { #category : #tests }

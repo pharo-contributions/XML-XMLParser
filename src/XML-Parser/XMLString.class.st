@@ -1,3 +1,6 @@
+"
+XMLString nodes can be created directly using the class-side #string: message or by sending a string #asXMLNode. When printing, they XML-escape their content.
+"
 Class {
 	#name : #XMLString,
 	#superclass : #XMLNode,

@@ -105,7 +105,7 @@ SAXHandler >> documentAttributes: aDictionary [
 
 { #category : #accessing }
 SAXHandler >> driver [
-	^driver
+	^ driver
 ]
 
 { #category : #accessing }

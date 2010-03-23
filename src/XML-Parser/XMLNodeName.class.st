@@ -1,5 +1,5 @@
 "
-The class represents a name for an element or attribute that can be associated with a namespace.
+The class represents a name for an element or attribute.
 "
 Class {
 	#name : #XMLNodeName,

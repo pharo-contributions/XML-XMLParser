@@ -1,3 +1,6 @@
+"
+The class represents a list of currently open tags. It ensures tags are opened and closed in the right order.
+"
 Class {
 	#name : #XMLOpenTags,
 	#superclass : #Object,
@@ -10,28 +13,28 @@ Class {
 { #category : #accessing }
 XMLOpenTags >> closeTag: aTagName [
 	(self enclosingTag = aTagName)
+		ifTrue: [^ self tags removeLast].
+
+	(self hasOpenTag: aTagName)
+		ifTrue: [
+			self error:
+				('<{1}> tag closed before enclosed tags {2}'
+					format: (Array with: aTagName with: (self enclosedTagsAsString: aTagName)))]
 		ifFalse: [
-			(self hasOpenTag: aTagName)
-				ifTrue: [
-					self error:
-						('<{1}> tag closed before enclosed tags {2}'
-							format: (Array with: aTagName with: (self enclosedTagsAsString: aTagName)))]
-				ifFalse: [
-					self error:
-						('Closing </{1}> tag without corresponding opening <{1}> tag'
-							format: (Array with: aTagName))]].
-	^ self tags removeLast.
+			self error:
+				('Closing </{1}> tag without corresponding opening <{1}> tag'
+					format: (Array with: aTagName))]
 ]
 
 { #category : #printing }
 XMLOpenTags >> enclosedTagsAsString: aTagName [
-	| stream |
+	| enclosedTags |
 
-	stream := String new writeStream..
+	enclosedTags := String new writeStream..
 	self
-		printOn: stream
+		printOn: enclosedTags
 		startingAt: (self tags lastIndexOf: aTagName) + 1.
-	^ stream contents.
+	^ enclosedTags contents.
 ]
 
 { #category : #accessing }
