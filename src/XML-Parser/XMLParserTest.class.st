@@ -99,31 +99,44 @@ XMLParserTest >> addressBookXMLWithDTD [
 XMLParserTest >> benchmark1 [
 	"
 	XMLParserTest new benchmark1
+	"
+	Smalltalk garbageCollect.
+	^ [600 timesRepeat: [SAXHandler parse: self addressBookXML]] timeToRun
+]
 
-	Results below are obtained on a MacBookPro, VM 4.2.1betaU1, 2Go RAM, 2.26 Ghz
-	2097 => Version 45 (Alexandre Bergel 3/4/2010 14:54)
+{ #category : #benchmark }
+XMLParserTest >> benchmark2 [
+	"
+	XMLParserTest new benchmark2
+	"
+	Smalltalk garbageCollect.
+	^ [600 timesRepeat: [XMLDOMParser parse: self addressBookXML]] timeToRun
+]
+
+{ #category : #benchmark }
+XMLParserTest >> benchmark3 [
+	"
+	XMLParserTest new benchmark3
 	"
 	Smalltalk garbageCollect.
 	^ [300 timesRepeat: [self testParsing]] timeToRun
 ]
 
-{ #category : #'code test' }
-XMLParserTest >> categoriesForClass: aClass [
-
- ^ aClass organization allMethodSelectors collect: 
-			[:each |  aClass organization categoryOfElement: each].
-
-]
-
-{ #category : #'code test' }
-XMLParserTest >> targetClass [
-	^ XMLParser
-]
-
-{ #category : #'code test' }
-XMLParserTest >> testClassComment [
-	"Check whether XMLParser has some comments"
-	self should: [self targetClass organization hasComment].
+{ #category : #benchmark }
+XMLParserTest >> benchmark4 [
+	| doc |
+	"
+	XMLParserTest new benchmark4
+	"
+	doc := XMLDOMParser
+		parseDocumentFrom: self addressBookXML readStream
+		useNamespaces: false.
+	^ [100000 timesRepeat: [
+		doc root topElement
+			elementAt: 'contact-info';
+			elementAt: 'address';
+			elementAt: 'job-info';
+			elementAt: 'manager']] timeToRun.
 ]
 
 { #category : #tests }
@@ -211,7 +224,7 @@ XMLParserTest >> testParsingCharacters [
 	"This test is actually not that useful. This is not the proper way of using the parser. This test is here just for specification purpose"
 	"self debug: #testParsingCharacters"
 
-	parser := XMLParser on: self addressBookXML readStream.
+	parser := SAXDriver on: self addressBookXML readStream.
 
 	self assert: parser streamReader next = $<.
 	self assert: parser streamReader next = $a.
@@ -232,12 +245,4 @@ XMLParserTest >> testTokenizerAddressBookWithDTD [
 	| tokenizer |
 	tokenizer := XMLTokenizer on: self addressBookXMLWithDTD readStream.
 	[tokenizer streamReader next notNil] whileTrue
-]
-
-{ #category : #'code test' }
-XMLParserTest >> testUnCategorizedMethods [
-	| categories slips  |
-	categories := self categoriesForClass: self targetClass.
-	slips := categories select: [:each | each = #'as yet unclassified'].
-	self should: [slips isEmpty].	
 ]

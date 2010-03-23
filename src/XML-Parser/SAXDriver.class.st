@@ -7,6 +7,7 @@ Class {
 	#instVars : [
 		'saxHandler',
 		'nestedScopes',
+		'openTags',
 		'useNamespaces',
 		'validateAttributes',
 		'languageEnvironment'
@@ -22,31 +23,30 @@ SAXDriver >> activeSaxHandler [
 ]
 
 { #category : #accessing }
+SAXDriver >> closeTag: anElementName [
+	^ [self openTags closeTag: anElementName]
+		on: Error
+		do: [:error | self notWellFormedError: error messageText]
+]
+
+{ #category : #accessing }
 SAXDriver >> currentScope [
 	^ self usesNamespaces
 		ifTrue: [self nestedScopes currentScope]
-		ifFalse: [XMLNamespaceScope isValidating: false]
+		ifFalse: [nil]
 ]
 
 { #category : #namespaces }
-SAXDriver >> declareNamespaces: namespaces [
-	namespaces keysAndValuesDo: [:ns :uri |
-		self nestedScopes declareNamespace: ns uri: uri.
-		self activeSaxHandler startPrefixMapping: ns uri: uri].
+SAXDriver >> declareNamespaces: aDictionary [
+	aDictionary keysAndValuesDo: [:prefix :uri |
+		self nestedScopes declareNamespace: prefix uri: uri.
+		self activeSaxHandler startPrefixMapping: prefix uri: uri]
 ]
 
 { #category : #errors }
-SAXDriver >> errorBadPrefix: aPrefix inEndTag: anElementName [
-	self parseError:
-		('End tag ', anElementName,
-		' refers to unmapped prefix ', aPrefix asString)
-]
-
-{ #category : #errors }
-SAXDriver >> errorBadPrefix: aPrefix inStartTag: anElementName [
-	self parseError:
-		('Start tag ', anElementName,
-		' refers to unmapped prefix ', aPrefix asString)
+SAXDriver >> errorBadPrefix: aPrefix inStartTag: aStartTag [
+	XMLNamespaceException signal:
+		'Start tag <', aStartTag, '> refers to unmapped prefix ', aPrefix
 ]
 
 { #category : #'handling tokens' }
@@ -65,31 +65,33 @@ SAXDriver >> handleComment: aString [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleEndDocument [
+	self openTags hasOpenTags
+		ifTrue: [self notWellFormedError: 'Unclosed tags: ', self openTags printString].
 	self saxHandler endDocument
 ]
 
 { #category : #'handling tokens' }
-SAXDriver >> handleEndTag: elementName [
+SAXDriver >> handleEndTag: anElementName [
 	| prefix localName namespaceURI |
 
-	elementName splitQualifiedNameInto: [:prefixPart :localPart |
+	self closeTag: anElementName.
+
+	anElementName splitQualifiedNameInto: [:prefixPart :localPart |
 		prefix := prefixPart.
 		localName := localPart].
 	self usesNamespaces
-		ifTrue: [
-			namespaceURI := self nestedScopes resolvePrefix: prefix.
-			self validateEndTag: localName prefix: prefix]
+		ifTrue: [namespaceURI := self nestedScopes resolvePrefix: prefix]
 		ifFalse: [namespaceURI := nil].
 
 	self activeSaxHandler 
 		endElement: localName
-		qualifiedName: elementName
+		qualifiedName: anElementName
 		prefix: prefix
 		uri: namespaceURI.
 
 	self usesNamespaces
 		ifTrue: [
-			self undeclareNamespaces: self currentScope prefixMappings.
+			self undeclareNamespaces.
 			self nestedScopes leaveScope.].
 ]
 
@@ -113,30 +115,34 @@ SAXDriver >> handleStartDocument [
 ]
 
 { #category : #'handling tokens' }
-SAXDriver >> handleStartTag: elementName attributes: attributes namespaces: namespaces [
+SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
 	| localName prefix namespaceURI |
 
-	(attributes includesKey: 'xml:lang')
-		ifTrue: [self languageEnvironment: (attributes at: 'xml:lang')].
+	self openTag: anElementName.
 
-	elementName splitQualifiedNameInto: [:ns :ln |
-		prefix := ns.
-		localName := ln].
+	(anAttributeDictionary includesKey: 'xml:lang')
+		ifTrue: [self languageEnvironment: (anAttributeDictionary at: 'xml:lang')].
+
+	anElementName splitQualifiedNameInto: [:prefixPart :localPart |
+		prefix := prefixPart.
+		localName := localPart].
 	self usesNamespaces
 		ifTrue: [
 			self nestedScopes enterScope.
-			self declareNamespaces: namespaces.
+			self declareNamespaces: aNamespaceDictionary.
 			namespaceURI := self nestedScopes resolvePrefix: prefix.
-
-			self validateStartTag: localName prefix: prefix attributes: attributes]
+			self
+				validateStartTag: anElementName
+				prefix: prefix
+				attributes: anAttributeDictionary]
 		ifFalse: [namespaceURI := nil].
 
 	self activeSaxHandler 
 		startElement: localName
-		qualifiedName: elementName
+		qualifiedName: anElementName
 		prefix: prefix
 		uri: namespaceURI
-		attributes: attributes
+		attributes: anAttributeDictionary.
 ]
 
 { #category : #'handling tokens' }
@@ -149,13 +155,6 @@ SAXDriver >> handleWhitespace: aString [
 SAXDriver >> handleXMLDecl: attributes [
 	self activeSaxHandler 
 		documentAttributes: attributes
-]
-
-{ #category : #initialization }
-SAXDriver >> initialize [
-	super initialize.
-	useNamespaces := false.
-	validateAttributes := false
 ]
 
 { #category : #accessing }
@@ -173,9 +172,24 @@ SAXDriver >> nestedScopes [
 	^ nestedScopes ifNil: [nestedScopes := XMLNestedNamespaceScopes new]
 ]
 
+{ #category : #errors }
+SAXDriver >> notWellFormedError: anErrorMessage [
+	SAXNotWellFormedException signal: anErrorMessage
+]
+
+{ #category : #accessing }
+SAXDriver >> openTag: anElementName [
+	^ self openTags openTag: anElementName
+]
+
+{ #category : #accessing }
+SAXDriver >> openTags [
+	^ openTags ifNil: [openTags := XMLOpenTags new]
+]
+
 { #category : #accessing }
 SAXDriver >> saxHandler [
-	^saxHandler
+	^ saxHandler
 ]
 
 { #category : #accessing }
@@ -184,32 +198,35 @@ SAXDriver >> saxHandler: aHandler [
 ]
 
 { #category : #namespaces }
-SAXDriver >> undeclareNamespaces: aDictionary [
-	aDictionary keysAndValuesDo: [:prefix :uri |
-		self activeSaxHandler startPrefixMapping: prefix uri: uri].
+SAXDriver >> undeclareNamespaces [
+	| currentScope enclosingScope |
+
+	currentScope := self nestedScopes currentScope.
+	enclosingScope := self nestedScopes enclosingScope.
+
+	currentScope prefixMappingsDo: [:prefix :uri |
+		(enclosingScope isPrefix: prefix mappedTo: uri)
+			ifFalse: [self activeSaxHandler endPrefixMapping: prefix]].
+
+	(currentScope defaultNamespace notNil
+		and: [currentScope defaultNamespace ~= enclosingScope defaultNamespace])
+		ifTrue: [self activeSaxHandler endPrefixMapping: 'xmlns']
 ]
 
 { #category : #accessing }
 SAXDriver >> useNamespaces: aBoolean [
-	useNamespaces := aBoolean.
-	self nestedScopes isValidating: aBoolean.
+	useNamespaces := aBoolean
 ]
 
 { #category : #testing }
 SAXDriver >> usesNamespaces [
-	^ useNamespaces
+	^ useNamespaces ifNil: [useNamespaces := false]
 ]
 
 { #category : #namespaces }
-SAXDriver >> validateEndTag: localName prefix: prefix [
-	(prefix isNil or: [self nestedScopes isMappedPrefix: prefix])
-		ifFalse: [self errorBadPrefix: prefix inEndTag: localName].
-]
-
-{ #category : #namespaces }
-SAXDriver >> validateStartTag: aLocalName prefix: aPrefix attributes: attributeList [
+SAXDriver >> validateStartTag: aStartTag prefix: aPrefix attributes: attributeList [
 	(aPrefix isNil or: [self nestedScopes isMappedPrefix: aPrefix])
-		ifFalse: [self errorBadPrefix: aPrefix inStartTag: aLocalName].
+		ifFalse: [self errorBadPrefix: aPrefix inStartTag: aStartTag].
 
 	self validatesAttributes
 		ifTrue: [self nestedScopes validateAttributes: attributeList].
@@ -217,5 +234,5 @@ SAXDriver >> validateStartTag: aLocalName prefix: aPrefix attributes: attributeL
 
 { #category : #testing }
 SAXDriver >> validatesAttributes [
-	^validateAttributes
+	^ validateAttributes ifNil: [validateAttributes := true]
 ]

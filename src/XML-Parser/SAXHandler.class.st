@@ -100,7 +100,7 @@ SAXHandler >> currentScope [
 ]
 
 { #category : #content }
-SAXHandler >> documentAttributes: attributeList [
+SAXHandler >> documentAttributes: aDictionary [
 ]
 
 { #category : #accessing }
@@ -167,7 +167,7 @@ SAXHandler >> endPrefixMapping: prefix [
 
 { #category : #accessing }
 SAXHandler >> eod [
-	^eod
+	^ eod ifNil: [eod := false]
 ]
 
 { #category : #'error handling' }
@@ -197,11 +197,6 @@ SAXHandler >> forwardToDeprecatedHandler: aDeprecatedSelector withArgumentOrder:
 SAXHandler >> ignorableWhitespace: aString [
 	"This call corresonds to the Java SAX call
 	ignorableWhitespace(char[] ch, int start, int length)."
-]
-
-{ #category : #initialize }
-SAXHandler >> initialize [
-	eod := false
 ]
 
 { #category : #testing }

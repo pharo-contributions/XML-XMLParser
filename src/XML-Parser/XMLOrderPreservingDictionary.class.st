@@ -112,7 +112,10 @@ XMLOrderPreservingDictionary >> printElementsOn: aStream [
 
 { #category : #printing }
 XMLOrderPreservingDictionary >> printNameOn: aStream [
-	aStream nextPutAll: 'an ', self class name
+	aStream
+		nextPutAll: 'an';
+		space;
+		nextPutAll: self class name
 ]
 
 { #category : #accessing }

@@ -1,6 +1,6 @@
 Class {
 	#name : #XMLNodeList,
-	#superclass : #OrderedCollection,
+	#superclass : #XMLOrderedList,
 	#instVars : [
 		'parent'
 	],
@@ -8,8 +8,8 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLNodeList class >> parent: aNodeWithChildren [
-	^ self new parent: aNodeWithChildren
+XMLNodeList class >> parent: aParentNode [
+	^ self new parent: aParentNode
 ]
 
 { #category : #adding }
@@ -51,31 +51,14 @@ XMLNodeList >> at: anIndex ifAbsentPut: aValue [
 
 { #category : #adding }
 XMLNodeList >> at: anIndex put: aNode [
-	(self at: anIndex ifAbsent: [nil])
+	(self at: anIndex)
 		ifNotNil: [self with: [super at: anIndex put: nil] remove: (self at: anIndex)].
 	^ self with: [super at: anIndex put: aNode] add: aNode.
 ]
 
-{ #category : #copying }
-XMLNodeList >> copy [
-	^ self species withAll: self
-]
-
-{ #category : #copying }
-XMLNodeList >> copyEmpty [
-	^ self species new: self size
-]
-
-{ #category : #errors }
-XMLNodeList >> domError: anErrorMessage [
-	XMLDOMException signal: anErrorMessage.
-	^ nil.
-	
-]
-
 { #category : #errors }
 XMLNodeList >> errorNodeWithParent [
-	^ self domError: 'cannot add node that is already the child of another node'.
+	^ self domError: 'Cannot add node that is already the child of another node'
 ]
 
 { #category : #accessing }
@@ -84,18 +67,8 @@ XMLNodeList >> parent [
 ]
 
 { #category : #accessing }
-XMLNodeList >> parent: aNodeWithChildren [
-	parent := aNodeWithChildren
-]
-
-{ #category : #printing }
-XMLNodeList >> printOn: aStream [
-	self printXMLOn: (XMLWriter on: aStream)
-]
-
-{ #category : #printing }
-XMLNodeList >> printXMLOn: writer [
-	self do: [:each | each printXMLOn: writer].
+XMLNodeList >> parent: aParent [
+	parent := aParent
 ]
 
 { #category : #removing }
@@ -124,20 +97,14 @@ XMLNodeList >> removeLast [
 	^ self removeAt: self size
 ]
 
-{ #category : #copying }
-XMLNodeList >> species [
-	^ OrderedCollection
-]
-
 { #category : #private }
 XMLNodeList >> with: aBlock add: aNode [
-
 	aNode hasParent ifTrue: [^ self errorNodeWithParent].
+	self
+		with: [aBlock value]
+		onError: [^ nil].
+	self parent ifNotNil: [self parent nodeAdded: aNode].
 
-	self with: aBlock onError: [^ nil].
-	self parent ifNotNil: [
-		aNode parent: self parent.
-		self parent addedNode: aNode toList: self].
 	^ aNode.
 ]
 
@@ -145,14 +112,18 @@ XMLNodeList >> with: aBlock add: aNode [
 XMLNodeList >> with: aBlock onError: errorBlock [
 	^ aBlock
 		on: Error
-		do: [:error | error signal. errorBlock valueWithPossibleArgument: error]
+		do: [:error |
+			errorBlock valueWithPossibleArgument: error.
+			error signal]
 ]
 
 { #category : #private }
 XMLNodeList >> with: aBlock remove: aNode [
 
-	self with: aBlock onError: [^ nil].
-	aNode parent: nil.
-	self parent ifNotNil: [self parent removedNode: aNode fromList: self].
+	self
+		with: [
+			aBlock value.
+			self parent ifNotNil: [self parent nodeRemoved: aNode]]
+		onError: [^ nil].
 	^ aNode.
 ]

@@ -6,8 +6,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'defaultNamespace',
-		'prefixMappings',
-		'isValidating'
+		'prefixMappings'
 	],
 	#category : #'XML-Parser'
 }
@@ -15,24 +14,6 @@ Class {
 { #category : #'instance creation' }
 XMLNamespaceScope class >> enclosingScope: aScope [
 	^ self new inheritMappingsFrom: aScope
-]
-
-{ #category : #'instance creation' }
-XMLNamespaceScope class >> isValidating: aBoolean [
-	^ self new isValidating: aBoolean
-]
-
-{ #category : #accessing }
-XMLNamespaceScope >> aliasesOf: aPrefix [
-	"Locate all prefixes that alias the URI of the given prefix."
-	| uri |
-
-	uri := self
-		resolvePrefix: aPrefix
-		ifUnmapped: [self errorUndefinedAttributePrefix: aPrefix asString].
-
-	^ self mappedPrefixes keys select: [:each |
-		(each ~= aPrefix) and: [self isPrefix: each mappedTo: uri]].
 ]
 
 { #category : #accessing }
@@ -48,13 +29,8 @@ XMLNamespaceScope >> defaultNamespace: aNamespaceUri [
 { #category : #errors }
 XMLNamespaceScope >> errorAttribute: anAttribute aliases: anAliasedAttribute with: aUri [
 	self namespaceError:
-		('attribute "{1}" aliases attribute "{2}"; both prefixes map to {3}'
+		('Attribute "{1}" aliases attribute "{2}"; both prefixes map to {3}'
 			format: (Array with: anAttribute with: anAliasedAttribute with: aUri))
-]
-
-{ #category : #errors }
-XMLNamespaceScope >> errorUndefinedAttributePrefix: aPrefix [
-	self namespaceError: 'Attribute refers to undefined namespace ', aPrefix
 ]
 
 { #category : #errors }
@@ -83,16 +59,6 @@ XMLNamespaceScope >> isPrefix: aPrefix mappedTo: aUri [
 		and: [(self resolvePrefix: aPrefix) = aUri])
 ]
 
-{ #category : #testing }
-XMLNamespaceScope >> isValidating [
-	^ isValidating ifNil: [true]
-]
-
-{ #category : #accessing }
-XMLNamespaceScope >> isValidating: aBoolean [
-	isValidating := aBoolean
-]
-
 { #category : #accessing }
 XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
 	(aPrefix isEmptyOrNil or: [aPrefix = 'xmlns'])
@@ -111,11 +77,6 @@ XMLNamespaceScope >> namespaceError: anErrorMessage [
 ]
 
 { #category : #accessing }
-XMLNamespaceScope >> prefixMappedTo: aUri [
-	self prefixMappings keyAtValue: aUri
-]
-
-{ #category : #accessing }
 XMLNamespaceScope >> prefixMappings [
 	^ prefixMappings ifNil: [prefixMappings := XMLOrderPreservingDictionary new]
 ]
@@ -124,6 +85,20 @@ XMLNamespaceScope >> prefixMappings [
 XMLNamespaceScope >> prefixMappingsDo: aTwoArgumentBlock [
 	self prefixMappings keysAndValuesDo: [:prefix :uri |
 		aTwoArgumentBlock value: prefix value: uri]
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> prefixesAliasing: aPrefix [
+	"Locate all prefixes that map to the same URI the given prefix does."
+	| uri |
+
+	uri := self
+		resolvePrefix: aPrefix
+		ifUnmapped: [self errorUnmappedPrefix: aPrefix].
+
+	^ self mappedPrefixes select: [:each |
+		(each ~= aPrefix)
+			and: [self isPrefix: each mappedTo: uri]].
 ]
 
 { #category : #accessing }
@@ -154,8 +129,8 @@ XMLNamespaceScope >> validateAttribute: anAttributeName in: aDictionary [
 		self validatePrefix: prefix.
 		namespaceUri := self resolvePrefix: prefix.
 
-		(self aliasesOf: prefix) do: [:aliasingPrefix |
-			aliasingAttributeName := aliasingPrefix qualifyName: localName.
+		(self prefixesAliasing: prefix) do: [:aliasingPrefix |
+			aliasingAttributeName := aliasingPrefix, ':', localName.
 			(aDictionary includesKey: aliasingAttributeName)
 				ifTrue: [
 					self
@@ -169,7 +144,6 @@ XMLNamespaceScope >> validateAttributes: attributeList [
 	"check all attribute namespaces are defined and not duplicated by aliasing"
 	| prefix localName qualifiedAlias |
 
-	self isValidating ifFalse: [^ self].
 	attributeList keysDo: [:attrName |
 		self
 			validateAttribute: attrName
@@ -178,8 +152,6 @@ XMLNamespaceScope >> validateAttributes: attributeList [
 
 { #category : #validation }
 XMLNamespaceScope >> validatePrefix: aPrefix [
-	self isValidating ifFalse: [^ self].
-
 	(self isMappedPrefix: aPrefix)
 		ifFalse: [self errorUnmappedPrefix: aPrefix].
 ]

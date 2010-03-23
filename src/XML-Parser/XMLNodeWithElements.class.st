@@ -1,12 +1,11 @@
 "
-This class represents a node with child nodes. You will likely use its API through either XMLDocument or XMLElement. To retrieve child elements by name, you can send any of the #element- messages in ""accessing."" The #firstTag- messages search the receiver and its descendants using depth-first traversal for specific elements, and the #tagsNamed- messages perform some sort of iteration over descendent elements also using depth-first traversal.
+This class represents a node with elements. You will likely use its API through either XMLDocument or XMLElement. To retrieve child elements by name, you can send any of the #element- messages in ""accessing."" The #firstTag- messages search the receiver and its descendants using depth-first traversal for specific elements, and the #tagsNamed- messages iterate over descendent elements also using depth-first traversal.
 "
 Class {
 	#name : #XMLNodeWithElements,
 	#superclass : #XMLNodeWithChildren,
 	#instVars : [
-		'elements',
-		'elementsByName'
+		'elementCache'
 	],
 	#category : #'XML-Parser-Nodes'
 }
@@ -16,27 +15,19 @@ XMLNodeWithElements >> addElement: anElement [
 	self addNode: anElement
 ]
 
-{ #category : #private }
-XMLNodeWithElements >> addedNode: aNode toList: aCollection [
-	aNode isTag ifTrue: [
-		(self nodes last = aNode)
-			ifTrue: [self elementCacheAdd: aNode]
-			ifFalse: [self rebuildElementCache]].
-]
-
 { #category : #accessing }
 XMLNodeWithElements >> elementAfter: anElement [
-	^ self elements after: anElement ifAbsent: [nil]
+	^ self elements after: anElement
 ]
 
 { #category : #accessing }
 XMLNodeWithElements >> elementAt: aString [
-	^ self elementAt: aString ifAbsent: [nil]
+	^ self elementCache firstElementNamed: aString
 ]
 
 { #category : #accessing }
 XMLNodeWithElements >> elementAt: aString ifAbsent: aBlock [
-	^ (self elementsAt: aString ifAbsent: [^ aBlock value]) first
+	^ (self elementCache firstElementNamed:  aString) ifNil: aBlock
 ]
 
 { #category : #accessing }
@@ -54,40 +45,12 @@ XMLNodeWithElements >> elementAtAny: aStringArray ifAbsent: aBlock [
 
 { #category : #accessing }
 XMLNodeWithElements >> elementBefore: anElement [
-	^ self elements before: anElement ifAbsent: [nil]
+	^ self elements before: anElement
 ]
 
-{ #category : #private }
-XMLNodeWithElements >> elementCacheAdd: anElement [
-	self elements add: anElement.
-
-	self elementCacheAt: anElement localName add: anElement.
-	anElement hasPrefix
-		ifTrue: [self elementCacheAt: anElement qualifiedName add: anElement].
-]
-
-{ #category : #private }
-XMLNodeWithElements >> elementCacheAt: aString add: anElement [
-	(self elementsByName
-		at: aString
-		ifAbsentPut: [self newElements]) add: anElement
-]
-
-{ #category : #private }
-XMLNodeWithElements >> elementCacheAt: aString remove: anElement [
-	(self elementsByName at: aString) remove: anElement.
-
-	(self elementsAt: aString)
-		ifEmpty: [self elementsByName removeKey: aString].
-]
-
-{ #category : #private }
-XMLNodeWithElements >> elementCacheRemove: anElement [
-	self elements remove: anElement.
-
-	self elementCacheAt: anElement localName remove: anElement.
-	anElement hasPrefix
-		ifTrue: [self elementCacheAt: anElement qualifiedName remove: anElement].
+{ #category : #accessing }
+XMLNodeWithElements >> elementCache [
+	^ elementCache ifNil: [elementCache := XMLElementCache new]
 ]
 
 { #category : #accessing }
@@ -106,12 +69,12 @@ XMLNodeWithElements >> elementUnqualifiedAt: aString ifAbsent: aBlock [
 
 { #category : #accessing }
 XMLNodeWithElements >> elements [
-	^ elements ifNil: [elements := self newElements]
+	^ self elementCache elements
 ]
 
 { #category : #accessing }
 XMLNodeWithElements >> elementsAt: aString [
-	^ self elementsAt: aString ifAbsent: [self newElements]
+	^ self elementCache elementsNamed: aString
 ]
 
 { #category : #enumerating }
@@ -121,17 +84,17 @@ XMLNodeWithElements >> elementsAt: aString do: aBlock [
 
 { #category : #accessing }
 XMLNodeWithElements >> elementsAt: aString ifAbsent: aBlock [
-	^ self elementsByName at: aString ifAbsent: aBlock.
-]
-
-{ #category : #private }
-XMLNodeWithElements >> elementsByName [ 
-	^ elementsByName ifNil: [elementsByName := Dictionary new].
+	^ (self elementCache elementsNamed: aString) ifEmpty: aBlock.
 ]
 
 { #category : #enumerating }
 XMLNodeWithElements >> elementsDo: aBlock [
 	self elements do: aBlock
+]
+
+{ #category : #accessing }
+XMLNodeWithElements >> firstElement [
+	^ self elements first
 ]
 
 { #category : #searching }
@@ -178,27 +141,29 @@ XMLNodeWithElements >> includesElement: aString [
 
 { #category : #accessing }
 XMLNodeWithElements >> lastElement [
-	^ self elements at: self elements size ifAbsent: [nil]
+	^ self elements last
 ]
 
-{ #category : #private }
-XMLNodeWithElements >> newElements [
-	^ OrderedCollection new
+{ #category : #announcements }
+XMLNodeWithElements >> nodeAdded: aNode [
+	super nodeAdded: aNode.
+
+	aNode isTag
+		ifTrue: [self elementCache cacheElement: aNode].
 ]
 
-{ #category : #private }
-XMLNodeWithElements >> rebuildElementCache [
-	"This method rebuilds the #elements and #elementsByName caches using #nodes. It is
-	sent by #with:add: when an element node is added to #nodes anywhere except at the
-	end and also by changedChildElement: when the name or namespace information of a
-	child element is changed.
-	
-	See #with:add: and #with:remove:"
+{ #category : #announcements }
+XMLNodeWithElements >> nodeRemoved: aNode [
+	super nodeRemoved: aNode.
 
-	self elements removeAll.
-	self elementsByName removeAll.
+	aNode isTag
+		ifTrue: [self elementCache uncacheElement: aNode].
+]
 
-	self nodesDo: [:each | each isTag ifTrue: [self elementCacheAdd: each]].
+{ #category : #announcements }
+XMLNodeWithElements >> nodeRenamed: aNode from: anOldName to: aNewName [
+	aNode isTag
+		ifTrue: [self elementCache rebuildCacheFrom: self nodes].
 ]
 
 { #category : #searching }
@@ -218,16 +183,6 @@ XMLNodeWithElements >> recurseUntilTrue: aBlock [
 
 	self elementsDo: [:each | (result := each recurseUntilTrue: aBlock) ifNotNil: [^ result]].
 	^ nil.
-]
-
-{ #category : #private }
-XMLNodeWithElements >> removedNode: aNode fromList: aCollection [
-	aNode isTag ifTrue: [self elementCacheRemove: aNode].
-]
-
-{ #category : #private }
-XMLNodeWithElements >> renamedChildNode: aNode [
-	aNode isTag ifTrue: [self rebuildElementCache]
 ]
 
 { #category : #searching }
@@ -270,39 +225,5 @@ XMLNodeWithElements >> tagsNamed: aString ifReceiverDoAndRecurse: aOneArgumentBl
 
 { #category : #accessing }
 XMLNodeWithElements >> topElement [
-	^ self elements at: 1 ifAbsent: [nil]
-]
-
-{ #category : #private }
-XMLNodeWithElements >> with: aBlock add: aNode [
-	"This is an execute-around method that takes a block purporting to add aNode
-	to #nodes. It evaluates the block, establishes a parent-child relationship,
-	and if the node is an XMLElement, adds it to the element cache or rebuilds
-	the cache if needed.
-	
-	Methods adding anything to #nodes should be implemented around this
-	message."
-
-	(super with: aBlock add: aNode) ifNil: [^ nil].
-
-	aNode isTag ifTrue: [
-		(self nodes last = aNode)
-			ifTrue: [self elementCacheAdd: aNode]
-			ifFalse: [self rebuildElementCache]].
-	^ aNode.
-]
-
-{ #category : #private }
-XMLNodeWithElements >> with: aBlock remove: aNode [
-	"This is an execute-around method that takes a block purporting to remove
-	aNode from #nodes, evaluates it, breaks the parent-child relationship,
-	and removes aNode from the element cache if it happens to be an XMLElement.
-	
-	Methods that remove anything from #nodes should be implemented around this
-	message."
-
-	(super with: aBlock remove: aNode) ifNil: [^ nil].
-
-	aNode isTag ifTrue: [self elementCacheRemove: aNode].
-	^ aNode.
+	^ self firstElement
 ]

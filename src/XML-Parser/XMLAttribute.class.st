@@ -1,3 +1,6 @@
+"
+The class represents an attribute node. You should seldom if ever need to interact with these objects directly; instead use XMLElement's various #attribute- messages.
+"
 Class {
 	#name : #XMLAttribute,
 	#superclass : #XMLNode,
@@ -10,22 +13,17 @@ Class {
 
 { #category : #'instance creation' }
 XMLAttribute class >> name: aName value: aValue [
-	^ self new
-		name: aName;
-		value: aValue
-]
-
-{ #category : #'instance creation' }
-XMLAttribute class >> name: aName value: aValue scope: aScope [
-	^ self new
-		setScope: aScope;
-		name: aName;
-		value: aValue
+	^ self new setName: aName value: aValue
 ]
 
 { #category : #accessing }
 XMLAttribute >> expandedName [
-	^ self namespacedName expandedName
+	^ self nodeName expandedWith: self namespaceURI
+]
+
+{ #category : #testing }
+XMLAttribute >> hasPrefix [
+	^ self nodeName hasPrefix
 ]
 
 { #category : #testing }
@@ -35,44 +33,37 @@ XMLAttribute >> isAttribute [
 
 { #category : #accessing }
 XMLAttribute >> localName [
-	^ self namespacedName localName
+	^ self nodeName localName
 ]
 
 { #category : #accessing }
 XMLAttribute >> name [
-	^ self qualifiedName
+	^ self nodeName asString
 ]
 
 { #category : #accessing }
 XMLAttribute >> name: aName [
-	self namespacedName qualifiedName: aName.
-	self notifyParentOfRenaming.
-]
-
-{ #category : #accessing }
-XMLAttribute >> namespace [
-	^ self namespacedName namespace
+	self notifyParentAfterRenamingWith: [self nodeName name: aName]
 ]
 
 { #category : #accessing }
 XMLAttribute >> namespaceURI [
-	^ self namespacedName namespaceURI
+	^ self hasParent ifTrue: [self parent resolvePrefix: self prefix]
 ]
 
 { #category : #private }
-XMLAttribute >> namespacedName [
-	^ name ifNil: [name := XMLNamespacedName new]
+XMLAttribute >> nodeName [
+	^ name ifNil: [name := XMLNodeName new]
 ]
 
 { #category : #accessing }
 XMLAttribute >> prefix [
-	^ self namespacedName prefix
+	^ self nodeName prefix
 ]
 
 { #category : #accessing }
 XMLAttribute >> prefix: aPrefix [
-	self namespacedName prefix: aPrefix.
-	self notifyParentOfRenaming.
+	self notifyParentAfterRenamingWith: [self nodeName prefix: aPrefix]
 ]
 
 { #category : #printing }
@@ -83,12 +74,13 @@ XMLAttribute >> printXMLOn: aWriter [
 
 { #category : #accessing }
 XMLAttribute >> qualifiedName [
-	^ self namespacedName qualifiedName
+	^ self nodeName qualifiedName
 ]
 
-{ #category : #private }
-XMLAttribute >> setScope: aScope [
-	self namespacedName setScope: aScope
+{ #category : #initialization }
+XMLAttribute >> setName: aName value: aValue [
+	self nodeName name: aName.
+	value := aValue.
 ]
 
 { #category : #accessing }

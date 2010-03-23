@@ -3,20 +3,25 @@ Class {
 	#superclass : #XMLNodeWithElements,
 	#instVars : [
 		'name',
-		'attributeList',
-		'scope'
+		'attributes',
+		'scope',
+		'usesNamespaces'
 	],
 	#category : #'XML-Parser-Nodes'
 }
 
 { #category : #private }
-XMLElement class >> localName: aString prefix: aPrefix attributes: attributeList scope: namespaceScope [
-	| element |
+XMLElement class >> localName: aString prefix: aPrefix attributes: anAttributeDictionary scope: aNamespaceScope [
+	| element attributeNodes |
+
 	element := self new.
-	element setScope: namespaceScope.
-	element namespacedName setPrefix: aPrefix localName: aString.
-	attributeList keysAndValuesDo: [:key :value |
-		element attributeNodes addName: key value: value].
+	element setScope: aNamespaceScope.
+	element nodeName setPrefix: aPrefix localName: aString.
+	attributeNodes := XMLAttributeList new.
+	anAttributeDictionary keysAndValuesDo: [:key :value |
+		attributeNodes addLast: (XMLAttribute name: key value: value)].
+	element setAttributeNodes: attributeNodes.
+
 	^ element.
 ]
 
@@ -68,9 +73,9 @@ XMLElement >> addContent: aString [
 	"Adds a string or string node. If the last child node is already a string node,
 	the characters being added are concatenated to it."
 
-	(self hasContents and: [self nodes last isText])
-		ifTrue: [self nodes last addContent: aString]
-		ifFalse: [self addNode: (XMLStringNode string: aString)]
+	(self hasContents and: [self lastNode isText])
+		ifTrue: [self lastNode addContent: aString]
+		ifFalse: [self addNode: (XMLString string: aString)]
 ]
 
 { #category : #accessing }
@@ -136,7 +141,7 @@ XMLElement >> attributeNodeAt: aName [
 
 { #category : #accessing }
 XMLElement >> attributeNodes [
-	^ attributeList ifNil: [attributeList := XMLAttributeList parent: self]
+	^ attributes ifNil: [self setAttributeNodes: XMLAttributeList new. attributes]
 ]
 
 { #category : #accessing }
@@ -153,8 +158,8 @@ XMLElement >> characterData [
 XMLElement >> contentString [
 	| firstContentNode |
 
-	firstContentNode := self elementsAndContents at: 1 ifAbsent: [^ ''].
-	^ firstContentNode isText
+	firstContentNode := self elementsAndContents first.
+	^ (firstContentNode notNil and:[firstContentNode isText])
 		ifTrue: [firstContentNode string]
 		ifFalse: ['']
 ]
@@ -181,7 +186,7 @@ XMLElement >> contentsDo: aBlock [
 	self nodesDo: [:each | each isText ifTrue: [aBlock value: each]]
 ]
 
-{ #category : #namespace }
+{ #category : #namespaces }
 XMLElement >> declareNamespace: aPrefix uri: aUri [
 	(self scope isPrefix: aPrefix mappedTo: aUri)
 		ifTrue: [^ self].
@@ -189,32 +194,39 @@ XMLElement >> declareNamespace: aPrefix uri: aUri [
 	self mapPrefix: aPrefix to: aUri.
 ]
 
-{ #category : #namespace }
+{ #category : #namespaces }
 XMLElement >> declareNamespaces: aDictionaryOrArray [
 	self
 		from: aDictionaryOrArray 
-		keysAndValuesDo: [:prefix :uri |
-			prefix splitQualifiedNameInto: [:xmlns :name |
-				(name = 'xmlns')
+		keysAndValuesDo: [:namespaceName :uri |
+			namespaceName splitQualifiedNameInto: [:xmlns :prefix |
+				(prefix = 'xmlns')
 					ifTrue: [self defaultNamespace: uri]
-					ifFalse: [self declareNamespace: name uri: uri]]]
+					ifFalse: [self declareNamespace: prefix uri: uri]]]
 ]
 
-{ #category : #namespace }
+{ #category : #namespaces }
+XMLElement >> declaredNamespaces [
+	| namespaces |
+	namespaces := self scope prefixMappings copy.
+	self defaultNamespace notNil
+		ifTrue: [namespaces at: 'xmlns' put: self defaultNamespace].
+	^ namespaces.
+]
+
+{ #category : #namespaces }
 XMLElement >> defaultNamespace [
 	^ self scope defaultNamespace
 ]
 
-{ #category : #namespace }
+{ #category : #namespaces }
 XMLElement >> defaultNamespace: aNamespaceUri [
 	| oldDefaultNamespace |
 
 	oldDefaultNamespace := self defaultNamespace.
 	self
-		updateEnclosedScopesWith: [:each |
-			each defaultNamespace: aNamespaceUri]
-		where: [:each |
-			each defaultNamespace = oldDefaultNamespace].
+		updateEnclosedScopesWith: [:each | each defaultNamespace: aNamespaceUri]
+		where: [:each | each defaultNamespace = oldDefaultNamespace].
 ]
 
 { #category : #accessing }
@@ -227,13 +239,15 @@ XMLElement >> elementsAndContentsDo: aBlock [
 	self nodesDo: [:each | each isTagOrText ifTrue: [aBlock value: each]]
 ]
 
-{ #category : #namespace }
+{ #category : #namespaces }
 XMLElement >> expandedName [
-	^ self namespacedName expandedName
+	^ self nodeName expandedWith: self namespaceURI
 ]
 
 { #category : #private }
 XMLElement >> from: aDictionaryOrArray keysAndValuesDo: aBlock [
+	aDictionaryOrArray isEmptyOrNil ifTrue: [^ self].
+
 	(aDictionaryOrArray isDictionary
 		ifTrue: [aDictionaryOrArray associations]
 		ifFalse: [aDictionaryOrArray])
@@ -255,7 +269,7 @@ XMLElement >> hasContents [
 
 { #category : #testing }
 XMLElement >> hasPrefix [
-	^ self namespacedName hasPrefix
+	^ self nodeName hasPrefix
 ]
 
 { #category : #searching }
@@ -295,7 +309,7 @@ XMLElement >> isTag [
 
 { #category : #accessing }
 XMLElement >> localName [
-	^ self namespacedName localName
+	^ self nodeName localName
 ]
 
 { #category : #private }
@@ -304,44 +318,33 @@ XMLElement >> mapPrefix: aPrefix to: aUri [
 
 	oldMapping := self scope resolvePrefix: aPrefix ifUnmapped: [nil].
 	self
-		updateEnclosedScopesWith: [:each |
-			each mapPrefix: aPrefix to: aUri]
+		updateEnclosedScopesWith: [:each | each mapPrefix: aPrefix to: aUri]
 		where: [:each |
-			(each resolvePrefix: aPrefix ifUnmapped: [nil]) = oldMapping]
+			(each isPrefix: aPrefix mappedTo: oldMapping)
+				or: [(each isMappedPrefix: aPrefix) not]]
 ]
 
 { #category : #accessing }
 XMLElement >> name [
-	^ self qualifiedName
+	^ self nodeName asString
 ]
 
 { #category : #accessing }
 XMLElement >> name: aName [
-	self namespacedName qualifiedName: aName.
-	self notifyParentOfRenaming.
+	self notifyParentAfterRenamingWith: [self nodeName name: aName].
+	self validateName.
 ]
 
-{ #category : #namespace }
+{ #category : #namespaces }
 XMLElement >> name: aQualifiedName namespaceURI: aUri [
 	aQualifiedName splitQualifiedNameInto: [:prefixPart :localPart |
-		self declareNamespace: prefixPart uri: aUri.
-		self namespacedName setPrefix: prefixPart localName: localPart].
-	self notifyParentOfRenaming.
+		self declareNamespace: prefixPart uri: aUri].
+	self name: aQualifiedName.
 ]
 
-{ #category : #namespace }
-XMLElement >> namespace [
-	^ self namespacedName namespace
-]
-
-{ #category : #namespace }
+{ #category : #namespaces }
 XMLElement >> namespaceURI [
-	^ self namespacedName namespaceURI
-]
-
-{ #category : #private }
-XMLElement >> namespacedName [
-	^ name ifNil: [name := XMLNamespacedName new]
+	^ self resolvePrefix: self prefix
 ]
 
 { #category : #accessing }
@@ -349,26 +352,48 @@ XMLElement >> nextElement [
 	^ self hasParent ifTrue: [self parent elementAfter: self]
 ]
 
-{ #category : #accessing }
-XMLElement >> parent: aNode [
-	super parent: aNode.
-
-	(aNode notNil and: [aNode isTag])
-		ifTrue: [self inheritMappingsFrom: aNode scope].
+{ #category : #announcements }
+XMLElement >> nodeAdded: aNode [
+	super nodeAdded: aNode.
+	
+	(aNode isTag and: [self usesNamespaces])
+		ifTrue: [aNode inheritMappingsFrom: self scope].
+	aNode isAttribute
+		ifTrue: [self validateAttribute: aNode name]
+		
 ]
 
-{ #category : #namespace }
+{ #category : #private }
+XMLElement >> nodeName [
+	^ name ifNil: [name := XMLNodeName new]
+]
+
+{ #category : #announcements }
+XMLElement >> nodeRemoved: anAnnoucement [
+	super nodeRemoved: anAnnoucement
+]
+
+{ #category : #announcements }
+XMLElement >> nodeRenamed: aNode from: anOldName to: aNewName [
+	super nodeRenamed: aNode from: aNode to: aNewName.
+	aNode isAttribute
+		ifTrue: [
+			self validateAttribute: aNewName.
+			self attributeNodes nodeRenamed: aNode from: anOldName to: aNewName]
+]
+
+{ #category : #namespaces }
 XMLElement >> prefix [
-	^ self namespacedName prefix
+	^ self nodeName prefix
 ]
 
-{ #category : #namespace }
+{ #category : #namespaces }
 XMLElement >> prefix: aPrefix [
-	self namespacedName prefix: aPrefix.
-	self notifyParentOfRenaming.
+	self notifyParentAfterRenamingWith: [self nodeName prefix: aPrefix].
+	self validateName.
 ]
 
-{ #category : #namespace }
+{ #category : #namespaces }
 XMLElement >> prefix: aPrefix uri: aUri [
 	self declareNamespace: aPrefix uri: aUri.
 	self prefix: aPrefix.
@@ -384,7 +409,7 @@ XMLElement >> printXMLOn: writer [
 	writer
 		startElement: self name
 		attributeList: self attributeNodes
-		scope: self scope.
+		namespaces: self declaredNamespaces.
 	(writer canonical not
 		and: [self isEmpty and: [self attributeNodes notEmpty]])
 		ifTrue: [writer endEmptyTag: self name]
@@ -396,7 +421,7 @@ XMLElement >> printXMLOn: writer [
 
 { #category : #accessing }
 XMLElement >> qualifiedName [
-	^ self namespacedName qualifiedName
+	^ self nodeName qualifiedName
 ]
 
 { #category : #searching }
@@ -423,10 +448,9 @@ XMLElement >> removeAttribute: aString [
 	^ self attributeNodes removeNodeNamed: aString
 ]
 
-{ #category : #private }
-XMLElement >> renamedChildNode: aNode [
-	super renamedChildNode: aNode.
-	aNode isAttribute ifTrue: [self attributeNodes renamedNode: aNode]
+{ #category : #namespaces }
+XMLElement >> resolvePrefix: aPrefix [
+	^ self scope resolvePrefix: aPrefix
 ]
 
 { #category : #private }
@@ -435,21 +459,26 @@ XMLElement >> scope [
 ]
 
 { #category : #initialization }
+XMLElement >> setAttributeNodes: anAttributeList [
+	(attributes := anAttributeList) parent: self.
+	attributes do: [:each | each parent: self]
+]
+
+{ #category : #initialization }
 XMLElement >> setAttributes: aDictionaryOrArray [
 	self attributeNodes removeAll.
-	aDictionaryOrArray isEmptyOrNil ifTrue: [^ self].
 	self
 		from: aDictionaryOrArray
-		keysAndValuesDo: [:name :value |
-			self attributeNodes addName: name value: value].
+		keysAndValuesDo: [:attributeName :attributevalue |
+			self attributeNodes
+				addName: attributeName
+				value: attributevalue].
 ]
 
 { #category : #initialization }
 XMLElement >> setScope: aNamespaceScope [
-	scope := (XMLNamespaceScope enclosingScope: aNamespaceScope).
-	scope isValidating: aNamespaceScope isValidating.
-	self namespacedName setScope: scope.
-	self attributeNodes do: [:each | each setScope: scope]
+	scope := aNamespaceScope.
+	self useNamespaces: aNamespaceScope notNil.
 ]
 
 { #category : #accessing }
@@ -469,6 +498,31 @@ XMLElement >> updateEnclosedScopesWith: aBlock where: aConditional [
 
 	self elementsDo: [:each |
 		each updateEnclosedScopesWith: aBlock where: aConditional]
+]
+
+{ #category : #accessing }
+XMLElement >> useNamespaces: aBoolean [
+	usesNamespaces := aBoolean
+]
+
+{ #category : #testing }
+XMLElement >> usesNamespaces [
+	^ usesNamespaces ifNil: [usesNamespaces := true]
+]
+
+{ #category : #namespaces }
+XMLElement >> validateAttribute: anAttributeName [
+	self usesNamespaces ifFalse: [^ self].
+
+	self scope
+		validateAttribute: anAttributeName
+		in: self attributes.
+]
+
+{ #category : #namespaces }
+XMLElement >> validateName [
+	(self usesNamespaces and: [self hasPrefix])
+		ifTrue: [self scope validatePrefix: self prefix]
 ]
 
 { #category : #accessing }

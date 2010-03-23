@@ -1,5 +1,5 @@
 Class {
-	#name : #XMLStringNode,
+	#name : #XMLString,
 	#superclass : #XMLNode,
 	#instVars : [
 		'string'
@@ -8,41 +8,41 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLStringNode class >> string: aString [
+XMLString class >> string: aString [
 	^ self new string: aString
 ]
 
 { #category : #accessing }
-XMLStringNode >> addContent: aString [
+XMLString >> addContent: aString [
 	self string: self string, (self toString: aString)
 ]
 
 { #category : #accessing }
-XMLStringNode >> characterData [
+XMLString >> characterData [
 	^ self string
 ]
 
 { #category : #testing }
-XMLStringNode >> isText [
+XMLString >> isText [
 	^ true
 ]
 
 { #category : #printing }
-XMLStringNode >> printXMLOn: writer [
+XMLString >> printXMLOn: writer [
 	writer pcData: self string
 ]
 
 { #category : #accessing }
-XMLStringNode >> string [
+XMLString >> string [
 	^ string ifNil: ['']
 ]
 
 { #category : #accessing }
-XMLStringNode >> string: aString [
+XMLString >> string: aString [
 	string := self toString: aString
 ]
 
 { #category : #private }
-XMLStringNode >> toString: aString [
+XMLString >> toString: aString [
 	^ (aString respondsTo: #string) ifTrue: [aString string] ifFalse: [aString]
 ]

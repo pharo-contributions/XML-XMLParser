@@ -3,7 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'stream',
-		'stack',
+		'openTags',
 		'canonical',
 		'currentIndent',
 		'indentString',
@@ -53,7 +53,7 @@ XMLWriter >> attribute: attributeName value: attributeValue [
 
 { #category : #accessing }
 XMLWriter >> canonical [
-	^canonical
+	^ canonical ifNil: [canonical := false]
 ]
 
 { #category : #accessing }
@@ -78,11 +78,6 @@ XMLWriter >> comment: aString [
 { #category : #private }
 XMLWriter >> cr [
 	self newLinesAllowed ifTrue: [self stream cr].
-]
-
-{ #category : #namespaces }
-XMLWriter >> declareNamespace: ns uri: uri [
-	self nestedScopes declareNamespace: ns uri: uri
 ]
 
 { #category : #'private tags' }
@@ -117,8 +112,8 @@ XMLWriter >> endElement: anElementName [
 ]
 
 { #category : #'writing xml' }
-XMLWriter >> endEmptyTag: tagName [
-	self popTag: tagName.
+XMLWriter >> endEmptyTag: aTagName [
+	self openTags closeTag: aTagName.
 	self stream nextPutAll: '/>'.
 	self canonical
 		ifFalse: [self stream space].
@@ -141,19 +136,14 @@ XMLWriter >> endTag [
 ]
 
 { #category : #'writing xml' }
-XMLWriter >> endTag: tagName [
+XMLWriter >> endTag: aTagName [
 	self outdent.
-	self popTag: tagName.
+	self openTags closeTag: aTagName.
 	self stream
 		nextPutAll: '</';
-		nextPutAll: tagName.
+		nextPutAll: aTagName.
 	self endTag.
 
-]
-
-{ #category : #namespaces }
-XMLWriter >> enterScope [
-	self nestedScopes enterScope
 ]
 
 { #category : #private }
@@ -183,32 +173,24 @@ XMLWriter >> indentTab [
 	self indentString: (String with: Character tab)
 ]
 
-{ #category : #initialize }
-XMLWriter >> initialize [
-	stack := OrderedCollection new.
-	canonical := false.
-	nestedScopes := XMLNestedNamespaceScopes new.
-	newLinesAllowed := false
-]
-
-{ #category : #namespaces }
-XMLWriter >> leaveScope [
-	self nestedScopes leaveScope
-]
-
 { #category : #private }
 XMLWriter >> nestedScopes [
-	^ nestedScopes
+	^ nestedScopes ifNil: [nestedScopes := XMLNestedNamespaceScopes new]
 ]
 
 { #category : #accessing }
 XMLWriter >> newLinesAllowed [
-	^ newLinesAllowed
+	^ newLinesAllowed ifNil: [newLinesAllowed := false]
 ]
 
 { #category : #accessing }
 XMLWriter >> newLinesAllowed: aBoolean [
 	newLinesAllowed := aBoolean
+]
+
+{ #category : #private }
+XMLWriter >> openTags [
+	^ openTags ifNil: [openTags := XMLOpenTags new]
 ]
 
 { #category : #private }
@@ -234,17 +216,6 @@ XMLWriter >> pi: piTarget data: piData [
 	self endPI
 ]
 
-{ #category : #private }
-XMLWriter >> popTag: tagName [
-	| stackTop |
-	stackTop := self stack isEmpty
-		ifTrue: ['<empty>']
-		ifFalse: [self stack last].
-	^stackTop = tagName
-		ifTrue: [self stack removeLast]
-		ifFalse: [self error: 'Closing tag "' , tagName , '" does not match "' , stackTop]
-]
-
 { #category : #accessing }
 XMLWriter >> prettyPrint [
 	self indentString: '    '.
@@ -252,20 +223,10 @@ XMLWriter >> prettyPrint [
 ]
 
 { #category : #private }
-XMLWriter >> pushTag: tagName [
-	self stack add: tagName
-]
-
-{ #category : #private }
 XMLWriter >> putAsXMLString: aValue [
 	self stream nextPut: $".
 	self writeXmlEncoded: aValue.
 	self stream nextPut: $"
-]
-
-{ #category : #private }
-XMLWriter >> stack [
-	^stack
 ]
 
 { #category : #'private tags' }
@@ -313,18 +274,21 @@ XMLWriter >> startElement: elementName attributeList: attributeList [
 ]
 
 { #category : #'writing xml' }
-XMLWriter >> startElement: elementName attributeList: attributeList scope: namespaceScope [
-	self startTag: elementName.
+XMLWriter >> startElement: anElementName attributeList: anAttributeList namespaces: aNamespaceDictionary [
+	self startTag: anElementName.
 	self nestedScopes enterScope.
 
-	namespaceScope prefixMappingsDo: [:prefix :uri |
-		(self nestedScopes isPrefix: prefix mappedTo: uri)
-			ifFalse: [self xmlns: prefix uri: uri]].
+	aNamespaceDictionary keysAndValuesDo: [:name :uri |
+		name splitQualifiedNameInto: [:xmlns :prefix |
+			(prefix = 'xmlns')
+				ifTrue: [
+					(self nestedScopes defaultNamespace = uri)
+						ifFalse: [self xmlns: 'xmlns' uri: uri]]
+				ifFalse: [
+					(self nestedScopes isPrefix: prefix mappedTo: uri)
+						ifFalse: [self xmlns: prefix uri: uri]]]].
 
-	(namespaceScope defaultNamespace ~= self nestedScopes defaultNamespace)
-		ifTrue: [self xmlns: nil uri: namespaceScope defaultNamespace].
-
-	attributeList printXMLOn: self.
+	anAttributeList printXMLOn: self.
 ]
 
 { #category : #'private tags' }
@@ -336,14 +300,14 @@ XMLWriter >> startPI: identifier [
 ]
 
 { #category : #'writing xml' }
-XMLWriter >> startTag: tagName [
+XMLWriter >> startTag: aTagName [
 	self writeIndent.
 	self stream
 		nextPut: $<;
-		nextPutAll: tagName.
+		nextPutAll: aTagName.
 	"self canonical
 		ifFalse: [self stream space]."
-	self pushTag: tagName
+	self openTags openTag: aTagName
 ]
 
 { #category : #accessing }
@@ -390,10 +354,13 @@ XMLWriter >> xmlDeclaration: versionString encoding: encodingString [
 ]
 
 { #category : #'writing xml' }
-XMLWriter >> xmlns: namespace uri: uri [
-	self declareNamespace: namespace uri: uri.
+XMLWriter >> xmlns: aNamespace uri: aUri [
+	self nestedScopes declareNamespace: aNamespace uri: aUri.
 
 	self
-		attribute: (namespace ifNil: ['xmlns'] ifNotNil: ['xmlns:', namespace])
-		value: uri
+		attribute:
+			(aNamespace = 'xmlns'
+				ifTrue: ['xmlns']
+				ifFalse: ['xmlns:', aNamespace])
+		value: aUri
 ]

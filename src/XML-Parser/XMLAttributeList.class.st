@@ -2,33 +2,24 @@ Class {
 	#name : #XMLAttributeList,
 	#superclass : #XMLNodeList,
 	#instVars : [
-		'attributesByName'
+		'nodesByName'
 	],
 	#category : #'XML-Parser-Nodes'
 }
 
 { #category : #adding }
 XMLAttributeList >> addName: aName value: aValue [
-	^ self addLast:
-		(XMLAttribute
-			name: aName
-			value: aValue
-			scope: self scope)
-]
-
-{ #category : #accessing }
-XMLAttributeList >> attributesByName [
-	^ attributesByName ifNil: [attributesByName := Dictionary new: 10]
+	^ self addLast: (XMLAttribute name: aName value: aValue)
 ]
 
 { #category : #private }
 XMLAttributeList >> errorNonAttributeNode [
-	^ self domError: 'cannot contain non-attribute nodes'.
+	^ self domError: 'Cannot contain non-attribute nodes'.
 ]
 
 { #category : #testing }
 XMLAttributeList >> includesName: aString [
-	^ self attributesByName includesKey: aString
+	^ self nodesByName includesKey: aString
 ]
 
 { #category : #accessing }
@@ -48,17 +39,29 @@ XMLAttributeList >> namesDo: aBlock [
 
 { #category : #accessing }
 XMLAttributeList >> nodeNamed: aString [
-	^ self nodeNamed: aString ifAbsent: [nil]
+	^ self nodeNamed: aString ifAbsent: [self defaultValue]
 ]
 
 { #category : #accessing }
 XMLAttributeList >> nodeNamed: aString ifAbsent: aBlock [
-	^ self attributesByName at: aString ifAbsent: aBlock
+	^ self nodesByName at: aString ifAbsent: aBlock
+]
+
+{ #category : #private }
+XMLAttributeList >> nodeRenamed: aNode from: anOldName to: aNewName [
+	self nodesByName
+		removeKey: anOldName;
+		at: aNewName put: aNode
+]
+
+{ #category : #accessing }
+XMLAttributeList >> nodesByName [
+	^ nodesByName ifNil: [nodesByName := Dictionary new: 10]
 ]
 
 { #category : #accessing }
 XMLAttributeList >> removeNodeNamed: aString [
-	^ self removeNodeNamed: aString ifAbsent: [nil]
+	^ self removeNodeNamed: aString ifAbsent: [self defaultValue]
 ]
 
 { #category : #accessing }
@@ -66,26 +69,14 @@ XMLAttributeList >> removeNodeNamed: aString ifAbsent: aBlock [
 	^ (self remove: (self nodeNamed: aString ifAbsent: [^ aBlock value])) value
 ]
 
-{ #category : #private }
-XMLAttributeList >> renamedNode: aNode [
-	self attributesByName
-		removeKey: (self attributesByName keyAtValue: aNode);
-		at: aNode name put: aNode
-]
-
-{ #category : #accessing }
-XMLAttributeList >> scope [
-	^ self parent ifNotNil: [self parent scope]
-]
-
 { #category : #accessing }
 XMLAttributeList >> valueAt: aName [
-	^ self valueAt: aName ifAbsent: [nil]
+	^ self valueAt: aName ifAbsent: [self defaultValue]
 ]
 
 { #category : #accessing }
 XMLAttributeList >> valueAt: aName ifAbsent: aBlock [
-	^ (self attributesByName
+	^ (self nodesByName
 		at: aName
 		ifAbsent: [^ aBlock value]) value
 ]
@@ -107,21 +98,20 @@ XMLAttributeList >> valueAt: aName put: aValue [
 
 { #category : #private }
 XMLAttributeList >> with: aBlock add: aNode [
-	aNode isAttribute
-		ifFalse: [^ self errorNonAttributeNode].
+	aNode isAttribute ifFalse: [^ self errorNonAttributeNode].
 
 	(super with: aBlock add: aNode) ifNil: [^ nil].
 
-	self attributesByName
+	self nodesByName
 		at: aNode name
 		ifPresent: [self removeNodeNamed: aNode name].
-	self attributesByName at: aNode name put: aNode.
+	self nodesByName at: aNode name put: aNode.
 	^ aNode.
 ]
 
 { #category : #private }
 XMLAttributeList >> with: aBlock remove: aNode [
 	(super with: aBlock remove: aNode) ifNil: [^ nil].
-	self attributesByName removeKey: aNode name.
+	self nodesByName removeKey: aNode name.
 	^ aNode.
 ]

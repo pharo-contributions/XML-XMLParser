@@ -97,7 +97,7 @@ XMLNodeTest >> escapedString [
 XMLNodeTest >> intersperse: aCollection with: aPaddingCollection [
 	| mixedCollection nodeStream paddingStream |
 
-	mixedCollection := aCollection species new.
+	mixedCollection := XMLOrderedList new.
 	nodeStream := aCollection readStream.
 	paddingStream := aPaddingCollection readStream.
 	[nodeStream atEnd and: [paddingStream atEnd]]
@@ -133,17 +133,18 @@ XMLNodeTest >> newElementsNamed: aNameArray [
 	| names qualifiedName element |
 
 	names := aNameArray asOrderedCollection.
-	^ self
-		createNodes: aNameArray size
-		with: [
-			((qualifiedName := names removeFirst) includes: $:)
-				ifTrue: [
-					qualifiedName splitQualifiedNameInto: [:prefix :localPart |
-						element := XMLElement
-							named: qualifiedName
-							namespaceURI: 'http://', prefix]]
-				ifFalse: [element := XMLElement named: qualifiedName].
-				element].
+	^ XMLElementList newFrom:
+		(self
+			createNodes: aNameArray size
+			with: [
+				((qualifiedName := names removeFirst) includes: $:)
+					ifTrue: [
+						qualifiedName splitQualifiedNameInto: [:prefix :localPart |
+							element := XMLElement
+								named: qualifiedName
+								namespaceURI: 'http://', prefix]]
+					ifFalse: [element := XMLElement named: qualifiedName].
+				element]).
 ]
 
 { #category : #accessing }
@@ -155,7 +156,7 @@ XMLNodeTest >> newNodes: aNumber [
 XMLNodeTest >> newStrings: aNumber [
 	^ self
 		createNodes: aNumber
-		with: [:i | XMLStringNode string: 'test', i asString]
+		with: [:i | XMLString string: 'test', i asString]
 ]
 
 { #category : #assertions }
@@ -212,8 +213,8 @@ XMLNodeTest >> test010node [
 	accessors := #(nextNode previousNode parent).
 	self
 		assert: node isEmpty;
-		deny: (testingMessages anySatisfy: [:each | node perform: each]);
-		deny: (accessors anySatisfy: [:each | (node perform: each) notNil]).
+		assert: (testingMessages noneSatisfy: [:each | node perform: each]);
+		assert: (accessors allSatisfy: [:each | (node perform: each) isNil]).
 
 	parent := XMLNode new.
 	node parent: parent.
@@ -241,7 +242,7 @@ XMLNodeTest >> test020processingInstruction [
 XMLNodeTest >> test030stringNode [
 	| node raw escaped |
 
-	node := XMLStringNode new.
+	node := XMLString new.
 	raw := self markupString.
 	escaped := self escapedString.
 	self
@@ -250,13 +251,13 @@ XMLNodeTest >> test030stringNode [
 		assertString: (node string: raw) is: raw printed: escaped;
 		assertString: (node addContent: raw) is: raw, raw printed: escaped, escaped.
 	self
-		assertString: (node addContent: (XMLStringNode string: raw))
+		assertString: (node addContent: (XMLString string: raw))
 		is: raw, raw, raw
 		printed: escaped, escaped, escaped.
 
-	self assertString: (XMLStringNode string: raw) is: raw printed: escaped.
+	self assertString: (XMLString string: raw) is: raw printed: escaped.
 	self
-		assertString: (XMLStringNode string: (XMLStringNode string: raw))
+		assertString: (XMLString string: (XMLString string: raw))
 		is: raw
 		printed: escaped.
 ]
@@ -312,7 +313,7 @@ XMLNodeTest >> test042addingNodes [
 	self
 		should: [node addNode: (XMLNode new parent: XMLNode new)] raise: Error;
 		should: [node addNode: children first] raise: Error;
-		assert: node nodes = children;
+		assert: node nodes asOrderedCollection = children;
 		assert: node topNode = children first.
 ]
 
@@ -408,7 +409,7 @@ XMLNodeTest >> test052elementContentString [
 
 	"addContent: should combine neighboring string nodes"
 	self
-		assertElement: (element addContent: (XMLStringNode string: str))
+		assertElement: (element addContent: (XMLString string: str))
 		contentString: str
 		contents: (Array with: str with: str, str).
 
@@ -534,7 +535,7 @@ XMLNodeTest >> test062elementPrinting [
 	element := (XMLElement named: 'foo').
 	attributes := XMLOrderPreservingDictionary with: 'b'->'two' with: 'a'->'one'.
 	self
-		assert: element asString = '<foo></foo>';
+		assert: element printString = '<foo></foo>';
 		assert: (element contentString: 'test') printString = '<foo>test</foo>';
 		assert: (element setAttributes: attributes) printString = '<foo b="two" a="one">test</foo>'
 ]
@@ -590,7 +591,7 @@ XMLNodeTest >> test080elementAccessing [
 		assert: (node elementAt: 'bar') = elements second;
 		assert: (node elementsAt: 'foo') = ((elements first: 3) copyWithout: elements second);
 		assert: (node elementAt: 'prefix:foo') = elements third;
-		assert: (node elementsAt: 'prefix:foo') = (OrderedCollection with: elements third);
+		assert: (node elementsAt: 'prefix:foo') = (XMLElementList with: elements third);
 		assert: (node elementAtAny: #('bar' 'prefix:foo')) = elements second;
 		assert: (node elementAtAny: #('absent' 'baz')) = elements last.
 ]
@@ -685,7 +686,7 @@ XMLNodeTest >> test083elementRemoving [
 		assert: (node removeNode: elements second) = elements second;
 		assert: node elements = (elements last: 2);
 		assert: (node elementAt: 'bar') = elements third;
-		assert: (node elementsAt: 'bar') = (OrderedCollection with: elements third);
+		assert: (node elementsAt: 'bar') = (XMLElementList with: elements third);
 		assert: (node removeNode: elements third) = elements third;
 		assert: node elements = (elements last: 1);
 		assert: (node elementAt: 'bar') isNil;

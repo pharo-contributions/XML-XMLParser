@@ -33,9 +33,9 @@ XMLNodeWithChildren >> addNodes: aNodeCollection [
 	^ aNodeCollection.
 ]
 
-{ #category : #private }
-XMLNodeWithChildren >> addedNode: aNode toList: aCollection [
-
+{ #category : #accessing }
+XMLNodeWithChildren >> firstNode [
+	^ self nodes first
 ]
 
 { #category : #testing }
@@ -50,17 +50,27 @@ XMLNodeWithChildren >> isEmpty [
 
 { #category : #accessing }
 XMLNodeWithChildren >> lastNode [
-	^ self nodes at: self nodes size ifAbsent: [nil]
+	^ self nodes last
+]
+
+{ #category : #announcements }
+XMLNodeWithChildren >> nodeAdded: aNode [
+	aNode parent: self
 ]
 
 { #category : #accessing }
 XMLNodeWithChildren >> nodeAfter: aNode [
-	^ self nodes after: aNode ifAbsent: [nil]
+	^ self nodes after: aNode
 ]
 
 { #category : #accessing }
 XMLNodeWithChildren >> nodeBefore: aNode [
-	^ self nodes before: aNode ifAbsent: [nil]
+	^ self nodes before: aNode
+]
+
+{ #category : #announcements }
+XMLNodeWithChildren >> nodeRemoved: aNode [
+	aNode parent: nil
 ]
 
 { #category : #accessing }
@@ -94,16 +104,14 @@ XMLNodeWithChildren >> removeNodes: aNodeCollection [
 	^ aNodeCollection.
 ]
 
-{ #category : #private }
-XMLNodeWithChildren >> removedNode: aNode fromList: aCollection [
-
-]
-
-{ #category : #private }
-XMLNodeWithChildren >> renamedChildNode: aNode [
+{ #category : #accessing }
+XMLNodeWithChildren >> replaceNode: aNode with: aReplacementNode [
+	^ self nodes
+		at: [self nodes indexOf: aNode]
+		put: aReplacementNode
 ]
 
 { #category : #accessing }
 XMLNodeWithChildren >> topNode [
-	^ self nodes at: 1 ifAbsent: [nil]
+	^ self firstNode
 ]

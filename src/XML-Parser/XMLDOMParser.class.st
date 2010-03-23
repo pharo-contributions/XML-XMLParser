@@ -6,16 +6,15 @@ Class {
 	#superclass : #SAXHandler,
 	#instVars : [
 		'document',
-		'entity',
-		'stack',
-		'incremental'
+		'incremental',
+		'nodeStack'
 	],
 	#category : #'XML-Parser-Parser'
 }
 
 { #category : #content }
 XMLDOMParser >> characters: aString [
-	self top addContent: aString
+	self topNode addContent: aString
 
 ]
 
@@ -31,9 +30,10 @@ XMLDOMParser >> document: aDocument [
 
 { #category : #content }
 XMLDOMParser >> documentAttributes: attributeList [
-	self document version: (attributeList at: 'version' ifAbsent: [nil]).
-	self document encoding: (attributeList at: 'encoding' ifAbsent: [nil]).
-	self document requiredMarkup: (attributeList at: 'requiredMarkup' ifAbsent: [nil]).
+	self document
+		version: (attributeList at: 'version' ifAbsent: [nil]);
+		encoding: (attributeList at: 'encoding' ifAbsent: [nil]);
+		requiredMarkup: (attributeList at: 'requiredMarkup' ifAbsent: [nil])
 
 ]
 
@@ -46,29 +46,18 @@ XMLDOMParser >> domDocument [
 
 { #category : #content }
 XMLDOMParser >> endDocument [
-	self pop.
+	self popNode.
 	super endDocument
 ]
 
 { #category : #content }
 XMLDOMParser >> endElement: localName qualifiedName: qualifiedName prefix: prefix uri: namespaceUri [
-	| currentElement |
-	currentElement := self pop.
-	(currentElement qualifiedName = qualifiedName)
-		ifFalse: [
-			self
-				errorExpectedEndTag: currentElement qualifiedName
-				butGot: qualifiedName]
-]
-
-{ #category : #errors }
-XMLDOMParser >> errorExpectedEndTag: anExpectedEndTag butGot: aTag [
-	self driver parseError: 'expexted </', anExpectedEndTag, '> but got </', aTag, '>'
+	self popNode
 ]
 
 { #category : #accessing }
 XMLDOMParser >> incremental [
-	^ incremental
+	^ incremental ifNil: [incremental := false]
 ]
 
 { #category : #accessing }
@@ -76,27 +65,9 @@ XMLDOMParser >> incremental: aBoolean [
 	incremental := aBoolean
 ]
 
-{ #category : #initialize }
-XMLDOMParser >> initialize [
-	super initialize.
-	stack := OrderedCollection new.
-	incremental := false
-]
-
-{ #category : #parsing }
-XMLDOMParser >> nextEntityStart [
-	[self driver nextToken.
-	self stack isEmpty] whileTrue.
-	^entity
-]
-
-{ #category : #parsing }
-XMLDOMParser >> nextToken [
-	| currentTop |
-	currentTop := self top.
-	[self driver nextToken isNil
-		or: [self top ~~ currentTop]] whileTrue.
-	^entity
+{ #category : #private }
+XMLDOMParser >> nodeStack [
+	^ nodeStack ifNil: [nodeStack := OrderedCollection new: 30]
 ]
 
 { #category : #parsing }
@@ -106,45 +77,34 @@ XMLDOMParser >> parseDocument [
 ]
 
 { #category : #private }
-XMLDOMParser >> pop [
-	| oldTop |
-	oldTop := self stack removeLast.
-	entity := oldTop.
-	^oldTop
+XMLDOMParser >> popNode [
+	^ self nodeStack removeLast
 ]
 
 { #category : #content }
 XMLDOMParser >> processingInstruction: piName data: dataString [
-	| piNode |
-	piNode := XMLPI target: piName data: dataString.
-	self top addNode: piNode
-]
-
-{ #category : #private }
-XMLDOMParser >> push: anObject [
-	self stack addLast: anObject.
-	entity := anObject
-
+	self topNode addNode: (XMLPI target: piName data: dataString)
 ]
 
 { #category : #private }
 XMLDOMParser >> pushElement: anElement [
 
-	(self incremental not and: [self stack notEmpty])
-			ifTrue: [self top addElement: anElement].
+	(self incremental not and: [self nodeStack notEmpty])
+			ifTrue: [self topNode addElement: anElement].
 
-	self push: anElement.
+	self pushNode: anElement.
 ]
 
 { #category : #private }
-XMLDOMParser >> stack [
-	^ stack
+XMLDOMParser >> pushNode: aNode [
+	^ self nodeStack addLast: aNode
+
 ]
 
 { #category : #content }
 XMLDOMParser >> startDocument [
 	self document: XMLDocument new.
-	self push: self document 
+	self pushNode: self document 
 ]
 
 { #category : #content }
@@ -158,8 +118,8 @@ XMLDOMParser >> startElement: localName prefix: prefix uri: namespaceUri attribu
 ]
 
 { #category : #private }
-XMLDOMParser >> top [
-	^self stack isEmpty
+XMLDOMParser >> topNode [
+	^ self nodeStack isEmpty
 		ifTrue: [nil]
-		ifFalse: [self stack last]
+		ifFalse: [self nodeStack last]
 ]
