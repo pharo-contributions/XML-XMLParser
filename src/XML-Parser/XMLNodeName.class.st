@@ -6,16 +6,11 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'qualifiedName',
-		'localName',
-		'prefix'
+		'prefix',
+		'localName'
 	],
 	#category : #'XML-Parser-Nodes'
 }
-
-{ #category : #'instance creation' }
-XMLNodeName class >> prefix: aPrefix localName: aLocalName [
-	^ self new setPrefix: aPrefix localName: aLocalName
-]
 
 { #category : #converting }
 XMLNodeName >> asString [
@@ -68,12 +63,22 @@ XMLNodeName >> qualifiedName [
 
 { #category : #private }
 XMLNodeName >> setPrefix: aPrefix localName: aLocalName [
-	localName := aLocalName.
 	aPrefix isEmptyOrNil
 		ifTrue: [
-			prefix := nil.
-			qualifiedName := localName]
+			self
+				setQualifiedName: aLocalName
+				prefix: nil
+				localName: aLocalName]
 		ifFalse: [
-			prefix := aPrefix.
-			qualifiedName := prefix, ':', localName].
+			self
+				setQualifiedName: aPrefix, ':', aLocalName
+				prefix: aPrefix
+				localName: aLocalName]
+]
+
+{ #category : #private }
+XMLNodeName >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocalName [
+	qualifiedName := aQualifiedName.
+	prefix := aPrefix.
+	localName := aLocalName.
 ]

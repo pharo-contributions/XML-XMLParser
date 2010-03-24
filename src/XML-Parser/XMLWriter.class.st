@@ -4,11 +4,11 @@ Class {
 	#instVars : [
 		'stream',
 		'openTags',
+		'nestedScopes',
 		'canonical',
 		'currentIndent',
 		'indentString',
-		'newLinesAllowed',
-		'nestedScopes'
+		'newLinesAllowed'
 	],
 	#classVars : [
 		'XMLTranslation',

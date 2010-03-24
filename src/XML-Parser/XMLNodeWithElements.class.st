@@ -141,7 +141,7 @@ XMLNodeWithElements >> includesElement: aString [
 	^ (self elementAt: aString) notNil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #parsing }
 XMLNodeWithElements >> innerXML: aString [
 	| parsedDocument newNodes |
 

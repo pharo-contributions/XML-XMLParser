@@ -6,8 +6,8 @@ Class {
 	#superclass : #XMLTokenizer,
 	#instVars : [
 		'saxHandler',
-		'nestedScopes',
 		'openTags',
+		'nestedScopes',
 		'useNamespaces',
 		'validateAttributes',
 		'languageEnvironment'
@@ -80,19 +80,18 @@ SAXDriver >> handleEndTag: anElementName [
 		prefix := prefixPart.
 		localName := localPart].
 	self usesNamespaces
-		ifTrue: [namespaceURI := self nestedScopes resolvePrefix: prefix]
-		ifFalse: [namespaceURI := nil].
+		ifTrue: [namespaceURI := self nestedScopes resolvePrefix: prefix].
 
 	self activeSaxHandler 
-		endElement: localName
-		qualifiedName: anElementName
+		endElement: anElementName
 		prefix: prefix
-		uri: namespaceURI.
+		uri: namespaceURI
+		localName: localName.
 
 	self usesNamespaces
 		ifTrue: [
 			self undeclareNamespaces.
-			self nestedScopes leaveScope.].
+			self nestedScopes leaveScope].
 ]
 
 { #category : #'handling tokens' }
@@ -116,33 +115,30 @@ SAXDriver >> handleStartDocument [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
-	| localName prefix namespaceURI |
+	| prefix localName namespaceURI |
 
 	self openTag: anElementName.
-
 	(anAttributeDictionary includesKey: 'xml:lang')
 		ifTrue: [self languageEnvironment: (anAttributeDictionary at: 'xml:lang')].
-
 	anElementName splitQualifiedNameInto: [:prefixPart :localPart |
 		prefix := prefixPart.
 		localName := localPart].
-	self usesNamespaces
-		ifTrue: [
-			self nestedScopes enterScope.
-			self declareNamespaces: aNamespaceDictionary.
-			namespaceURI := self nestedScopes resolvePrefix: prefix.
-			self
-				validateStartTag: anElementName
-				prefix: prefix
-				attributes: anAttributeDictionary]
-		ifFalse: [namespaceURI := nil].
+
+	self usesNamespaces ifTrue: [.
+		self nestedScopes enterScope.
+		self declareNamespaces: aNamespaceDictionary.
+		namespaceURI := self nestedScopes resolvePrefix: prefix.
+		self
+			validateStartTag: anElementName
+			prefix: prefix
+			attributes: anAttributeDictionary].
 
 	self activeSaxHandler 
-		startElement: localName
-		qualifiedName: anElementName
+		startElement: anElementName
 		prefix: prefix
 		uri: namespaceURI
-		attributes: anAttributeDictionary.
+		localName: localName
+		attributes: anAttributeDictionary
 ]
 
 { #category : #'handling tokens' }

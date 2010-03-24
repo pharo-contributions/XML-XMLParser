@@ -19,21 +19,6 @@ Class {
 	#category : #'XML-Parser-Nodes'
 }
 
-{ #category : #private }
-XMLElement class >> localName: aString prefix: aPrefix attributes: anAttributeDictionary scope: aNamespaceScope [
-	| element attributeNodes |
-
-	element := self new.
-	element setScope: aNamespaceScope.
-	element nodeName setPrefix: aPrefix localName: aString.
-	attributeNodes := XMLAttributeList new.
-	anAttributeDictionary keysAndValuesDo: [:key :value |
-		attributeNodes addLast: (XMLAttribute name: key value: value)].
-	element setAttributeNodes: attributeNodes.
-
-	^ element.
-]
-
 { #category : #'instance creation' }
 XMLElement class >> named: aLocalName [
 	^ self new name: aLocalName
@@ -69,6 +54,22 @@ XMLElement class >> named: aQualifiedName namespaces: aNamespaceDictionaryOrArra
 		named: aQualifiedName
 		namespaces: aNamespaceDictionaryOrArray)
 			setAttributes: aDictionaryOrArray
+]
+
+{ #category : #private }
+XMLElement class >> qualifiedName: aQualifiedName prefix: aPrefix localName: aLocalName attributes: anAttributeDictionary [
+	| element attributeNodes |
+
+	element := self new.
+	element nodeName
+		setQualifiedName: aQualifiedName
+		prefix: aPrefix
+		localName: aLocalName.
+	attributeNodes := XMLAttributeList new.
+	anAttributeDictionary keysAndValuesDo: [:key :value |
+		attributeNodes addLast: (XMLAttribute name: key value: value)].
+	element setAttributeNodes: attributeNodes.
+	^ element.
 ]
 
 { #category : #accessing }
@@ -375,11 +376,6 @@ XMLElement >> nodeAdded: aNode [
 { #category : #private }
 XMLElement >> nodeName [
 	^ name ifNil: [name := XMLNodeName new]
-]
-
-{ #category : #announcements }
-XMLElement >> nodeRemoved: anAnnoucement [
-	super nodeRemoved: anAnnoucement
 ]
 
 { #category : #announcements }

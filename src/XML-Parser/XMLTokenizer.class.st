@@ -7,7 +7,6 @@ Class {
 	#instVars : [
 		'streamReader',
 		'streamWriter',
-		'buffer',
 		'entities',
 		'externalEntities',
 		'parameterEntities',
@@ -528,8 +527,8 @@ XMLTokenizer >> nextLiteral [
 							ifFalse: [^ writeStream stringContents])]
 					ifFalse: [writeStream nextPut: streamReader next].
 				nextChar := streamReader peek].
-		writeStream position isZero
-			ifTrue: [self errorExpected: 'name literal'].
+		writeStream position > 0
+			ifFalse: [self errorExpected: 'name literal'].
 		writeStream stringContents]
 ]
 
@@ -571,8 +570,8 @@ XMLTokenizer >> nextName [
 		[(nextChar := streamReader peek) isNil
 			or: [NameDelimiters includes: nextChar]]
 				whileFalse: [writeStream nextPut: streamReader next].
-		(writeStream position isZero)
-			ifTrue: [self errorExpected: 'name'].
+		writeStream position > 0
+			ifFalse: [self errorExpected: 'name'].
 		writeStream stringContents]
 ]
 

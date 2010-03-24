@@ -1,5 +1,7 @@
 "
-This class represents a stream reader that implements pushBack: using nested streams, so that the underlying collections streamed-over need not be modified. It also normalizes line endings, meaning that a CRLF sequence or a CR character read from a stream will be returned as an LF character.
+This class represents a stream reader that implements pushBack: using nested streams. This enables subsitution/replacement to be performed without modifying the underlying collections streamed-over or copying them. It also performs line-ending normalization, returning CR and CRLF sequences read from the input stream as a single LF character.
+
+(The code in this class looks the way it does for performance reasons.)
 "
 Class {
 	#name : #XMLStreamReader,
@@ -48,7 +50,8 @@ XMLStreamReader >> atEnd [
 
 { #category : #accessing }
 XMLStreamReader >> basicNext [
-	"Returns next character in the stream after performing line endings normalization"
+	"Returns next character in the stream after performing line-endings normalization.
+	Normalization does not occur across nested streams."
 	| nextChar |
 	
 	((nextChar := stream next) == CarriageReturn)

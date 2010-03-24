@@ -51,7 +51,7 @@ XMLDOMParser >> endDocument [
 ]
 
 { #category : #content }
-XMLDOMParser >> endElement: localName qualifiedName: qualifiedName prefix: prefix uri: namespaceUri [
+XMLDOMParser >> endElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName [
 	self popNode
 ]
 
@@ -108,13 +108,14 @@ XMLDOMParser >> startDocument [
 ]
 
 { #category : #content }
-XMLDOMParser >> startElement: localName prefix: prefix uri: namespaceUri attributes: attributes [
+XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName attributes: aDictionary [
 	self pushElement:
-		(XMLElement
-			localName: localName
-			prefix: prefix
-			attributes: attributes
-			scope: self currentScope)
+		((XMLElement
+			qualifiedName: aQualifiedName
+			prefix: aPrefix
+			localName: aLocalName
+			attributes: aDictionary)
+				setScope: self currentScope)
 ]
 
 { #category : #private }

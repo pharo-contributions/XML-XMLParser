@@ -47,5 +47,7 @@ XMLString >> string: aString [
 
 { #category : #private }
 XMLString >> toString: aString [
-	^ (aString respondsTo: #string) ifTrue: [aString string] ifFalse: [aString]
+	^ (aString isKindOf: String)
+		ifTrue: [aString]
+		ifFalse: [aString string]
 ]

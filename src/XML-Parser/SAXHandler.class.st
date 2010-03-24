@@ -59,13 +59,11 @@ SAXHandler class >> parseDocumentFromFileNamed: fileName [
 
 { #category : #'instance creation' }
 SAXHandler class >> parseDocumentFromFileNamed: fileName readIntoMemory: readIntoMemory [
-	| stream xmlDoc |
+	| stream |
 	stream := FileDirectory default readOnlyFileNamed: fileName.
 	readIntoMemory
 		ifTrue: [stream := stream contentsOfEntireFile readStream].
-	[xmlDoc := self parseDocumentFrom: stream]
-		ensure: [stream close].
-	^xmlDoc
+	^ [self parseDocumentFrom: stream] ensure: [stream close].
 ]
 
 { #category : #'instance creation' }
@@ -133,24 +131,25 @@ SAXHandler >> endElement: elementName [
 ]
 
 { #category : #content }
-SAXHandler >> endElement: localName prefix: prefix uri: namespaceURI [
+SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aUri [
 	"This call corresponds to the Java SAX call
 	endElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName).
 	By default this call is mapped to the following more convenient call:"
 
-	self endElement: localName
+	self endElement: aQualifiedName
 ]
 
 { #category : #content }
-SAXHandler >> endElement: localName qualifiedName: qualifiedName prefix: prefix uri: namespaceURI [
+SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName [
 	"This call corresponds to the Java SAX call
 	endElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName).
 	By default this call is mapped to the following more convenient call:"
 
 	self
-		forwardToDeprecatedHandler: #endElement:namespace:namespaceURI:qualifiedName:
-		withArgumentOrder: #(1 3 4 2)
-		orTo: #endElement:prefix:uri:
+		invokeDeprecated: #endElement:namespace:namespaceURI:qualifiedName:
+		withArguments: (Array with: aLocalName with: aPrefix with: aUri with: aQualifiedName)
+		orForwardTo: #endElement:prefix:uri:
+		withArguments: (Array with: aQualifiedName with: aPrefix with: aUri)
 ]
 
 { #category : #lexical }
@@ -170,8 +169,14 @@ SAXHandler >> eod [
 	^ eod ifNil: [eod := false]
 ]
 
+{ #category : #content }
+SAXHandler >> ignorableWhitespace: aString [
+	"This call corresonds to the Java SAX call
+	ignorableWhitespace(char[] ch, int start, int length)."
+]
+
 { #category : #'error handling' }
-SAXHandler >> forwardToDeprecatedHandler: aDeprecatedSelector withArgumentOrder: aPositionArray orTo: aNewSelector [
+SAXHandler >> invokeDeprecated: aDeprecatedSelector withArguments: anOldArgumentArray orForwardTo: aNewSelector withArguments: aNewArgumentArray [
 	| parentContext |
 
 	parentContext := thisContext sender.
@@ -180,23 +185,16 @@ SAXHandler >> forwardToDeprecatedHandler: aDeprecatedSelector withArgumentOrder:
 			aNewSelector ifNil: [^ self].
 			^ self
 				perform: aNewSelector
-				withEnoughArguments: parentContext arguments].
+				withArguments: aNewArgumentArray].
 
 	(Deprecation
 		method: (self class lookupSelector: aDeprecatedSelector)
 		explanation: 'use ', parentContext selector, ' instead'
 		on: nil
 		in: nil) signal.
-
 	self
 		perform: aDeprecatedSelector
-		withArguments: (aPositionArray collect: [:pos | parentContext arguments at: pos]).
-]
-
-{ #category : #content }
-SAXHandler >> ignorableWhitespace: aString [
-	"This call corresonds to the Java SAX call
-	ignorableWhitespace(char[] ch, int start, int length)."
+		withArguments: anOldArgumentArray.
 ]
 
 { #category : #testing }
@@ -255,36 +253,30 @@ SAXHandler >> startDocument [
 ]
 
 { #category : #content }
-SAXHandler >> startElement: elementName attributes: attributes [
+SAXHandler >> startElement: aQualifiedName attributes: aDictionary [
 	self
-		forwardToDeprecatedHandler: #startElement:attributeList:
-		withArgumentOrder: #(1 2)
-		orTo: nil
+		invokeDeprecated: #startElement:attributeList:
+		withArguments: (Array with: aQualifiedName with: aDictionary)
+		orForwardTo: nil
+		withArguments: nil.
 ]
 
 { #category : #content }
-SAXHandler >> startElement: localName prefix: prefix uri: namespaceUri attributes: attributes [
-	"This call corresonds to the Java SAX call
-	startElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName, Attributes atts).
-	By default this call is mapped to the following more convenient call:"
-
-	self
-		forwardToDeprecatedHandler: #startElement:namespaceURI:namespace:attributeList:
-		withArgumentOrder: #(1 3 2 4)
-		orTo: #startElement:attributes:
+SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aUri attributes: aDictionary [
+	self startElement: aQualifiedName attributes: aDictionary
 ]
 
 { #category : #content }
-SAXHandler >> startElement: localName qualifiedName: qualifiedName prefix: prefix uri: namespaceUri attributes: attributes [
+SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName attributes: aDictionary [
 	"This call corresonds to the Java SAX call
-	startElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName, Attributes atts).
-	By default this call is mapped to the following more convenient call:"
+	startElement(java.lang.String namespaceURI, java.lang.String localName,
+		java.lang.String qName, Attributes atts)."
 
 	self
-		startElement: localName
-		prefix: prefix
-		uri: namespaceUri
-		attributes: attributes
+		invokeDeprecated: #startElement:namespaceURI:namespace:attributeList:
+		withArguments: (Array with: aLocalName with: aUri with: aPrefix with: aDictionary)
+		orForwardTo: #startElement:prefix:uri:attributes:
+		withArguments: (Array with: aQualifiedName with: aUri with: aPrefix with: aDictionary).
 ]
 
 { #category : #lexical }
