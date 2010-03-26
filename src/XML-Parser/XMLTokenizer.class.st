@@ -39,7 +39,7 @@ XMLTokenizer class >> initialize [
 		do: [:each | NameDelimiters add: each asCharacter].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 XMLTokenizer class >> isCharEscape: entityValue [
 	^entityValue size = 1
 		and: [CharEscapes includes: entityValue first]
