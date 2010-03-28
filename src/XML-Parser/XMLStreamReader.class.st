@@ -106,22 +106,28 @@ XMLStreamReader >> next [
 
 { #category : #testing }
 XMLStreamReader >> nextMatchAll: aString [
-	| i nextChar pushBackString |
+	| i oldStream oldPosition oldPeekChar nextChar pushBackString |
 
-	i := 1.
-	self peek == (aString at: 1)
+	(oldPeekChar := self peek) == (aString at: 1)
 		ifFalse: [^ false].
+	oldPosition := (oldStream := stream) position.
+	i := 1.
 	[(i <= aString size)
 		and: [(aString at: i) == (nextChar := self next)]]
 		whileTrue: [i := i + 1].
 	(i > aString size)
 		ifTrue: [^ true].
 
-	pushBackString := aString copyFrom: 1 to: i - 1.
-	self pushBack:
-		(nextChar
-			ifNotNil: [pushBackString copyWith: nextChar]
-			ifNil: [pushBackString]).
+	stream == oldStream
+		ifTrue: [
+			peekChar := oldPeekChar.
+			stream position: oldPosition]
+		ifFalse:[
+			pushBackString := aString copyFrom: 1 to: i - 1.
+			self pushBack:
+				(nextChar
+					ifNotNil: [pushBackString copyWith: nextChar]
+					ifNil: [pushBackString])].
 	^ false.
 ]
 
