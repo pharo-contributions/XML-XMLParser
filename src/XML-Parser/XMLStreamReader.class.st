@@ -106,26 +106,22 @@ XMLStreamReader >> next [
 
 { #category : #testing }
 XMLStreamReader >> nextMatchAll: aString [
-	| i currentStream nextChar pushBackString |
+	| i nextChar pushBackString |
 
 	i := 1.
-	currentStream := stream.
+	self peek == (aString at: 1)
+		ifFalse: [^ false].
 	[(i <= aString size)
 		and: [(aString at: i) == (nextChar := self next)]]
 		whileTrue: [i := i + 1].
 	(i > aString size)
 		ifTrue: [^ true].
 
-	(stream == currentStream)
-		ifTrue: [
-			nextChar ifNil: [i := i - 1].
-			stream position: stream position - i]
-		ifFalse: [
-			pushBackString := aString copyFrom: 1 to: i - 1.
-			self pushBack:
-				(nextChar
-					ifNotNil: [pushBackString copyWith: nextChar]
-					ifNil: [pushBackString])].
+	pushBackString := aString copyFrom: 1 to: i - 1.
+	self pushBack:
+		(nextChar
+			ifNotNil: [pushBackString copyWith: nextChar]
+			ifNil: [pushBackString]).
 	^ false.
 ]
 
@@ -165,21 +161,21 @@ XMLStreamReader >> popNestingLevel [
 { #category : #streaming }
 XMLStreamReader >> pushBack: aString [
 	"Fixed to push the string before the peek char (if any)."
-	
 	| pushBackString |
+
 	pushBackString := peekChar
 		ifNil: [aString]
-		ifNotNil: [aString, peekChar asString].
+		ifNotNil: [aString copyWith: peekChar].
 	peekChar := nil.
 	self pushStream: (ReadStream on: pushBackString).
 ]
 
 { #category : #streaming }
-XMLStreamReader >> pushStream: newStream [
+XMLStreamReader >> pushStream: aStream [
 	"Continue parsing from the new nested stream."
 	self unpeek.
 	self nestedStreams addLast: self stream.
-	self stream: newStream.
+	self stream: aStream.
 ]
 
 { #category : #private }

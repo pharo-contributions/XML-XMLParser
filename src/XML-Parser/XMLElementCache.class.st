@@ -50,7 +50,7 @@ XMLElementCache >> firstElementNamed: aName [
 
 { #category : #private }
 XMLElementCache >> newElementList [
-	^ XMLElementList new
+	^ XMLOrderedList new
 ]
 
 { #category : #accessing }

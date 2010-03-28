@@ -133,7 +133,7 @@ XMLNodeTest >> newElementsNamed: aNameArray [
 	| names qualifiedName element |
 
 	names := aNameArray asOrderedCollection.
-	^ XMLElementList newFrom:
+	^ XMLOrderedList newFrom:
 		(self
 			createNodes: aNameArray size
 			with: [
@@ -594,7 +594,7 @@ XMLNodeTest >> test080elementAccessing [
 		assert: (node elementAt: 'bar') = elements second;
 		assert: (node elementsAt: 'foo') = ((elements first: 3) copyWithout: elements second);
 		assert: (node elementAt: 'prefix:foo') = elements third;
-		assert: (node elementsAt: 'prefix:foo') = (XMLElementList with: elements third);
+		assert: (node elementsAt: 'prefix:foo') = (XMLOrderedList with: elements third);
 		assert: (node elementAtAny: #('bar' 'prefix:foo')) = elements second;
 		assert: (node elementAtAny: #('absent' 'baz')) = elements last.
 ]
@@ -689,7 +689,7 @@ XMLNodeTest >> test083elementRemoving [
 		assert: (node removeNode: elements second) = elements second;
 		assert: node elements = (elements last: 2);
 		assert: (node elementAt: 'bar') = elements third;
-		assert: (node elementsAt: 'bar') = (XMLElementList with: elements third);
+		assert: (node elementsAt: 'bar') = (XMLOrderedList with: elements third);
 		assert: (node removeNode: elements third) = elements third;
 		assert: node elements = (elements last: 1);
 		assert: (node elementAt: 'bar') isNil;
