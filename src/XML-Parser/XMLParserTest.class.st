@@ -140,6 +140,25 @@ XMLParserTest >> benchmark4 [
 			elementAt: 'manager']] timeToRun.
 ]
 
+{ #category : #source }
+XMLParserTest >> exampleEncodedXML [
+	^'<?xml version="1.0" encoding="UTF-8"?>
+<test-data>&#8230;</test-data>
+'
+]
+
+{ #category : #'tests-utf8' }
+XMLParserTest >> testDecodingCharacters [
+	| xmlDocument element |
+
+	xmlDocument := XMLDOMParser parseDocumentFrom: self exampleEncodedXML readStream.
+	element := xmlDocument firstTagNamed: #'test-data'.
+
+	self assert: element contentString first charCode = 8230.	
+	self assert: element contentString first leadingChar = 255.	
+	self assert: element contentString first codePoint = 1069555750
+]
+
 { #category : #tests }
 XMLParserTest >> testExampleAddressBook [
 	| tokenizer |
@@ -187,7 +206,7 @@ XMLParserTest >> testLineEndingsDoNotMatter [
 
 ]
 
-{ #category : #utf8 }
+{ #category : #'tests-utf8' }
 XMLParserTest >> testNonUTF8Characters [
 
 	self shouldnt: [XMLDOMParser parseDocumentFrom: 
@@ -245,14 +264,14 @@ XMLParserTest >> testParsingCharacters [
 	self assert: parser streamReader next = $r.
 ]
 
-{ #category : #xmltokenizer }
+{ #category : #'tests-xmltokenizer' }
 XMLParserTest >> testTokenizerAddressBook [
 	| tokenizer |
 	tokenizer := XMLTokenizer on: self addressBookXML readStream.
 	[tokenizer streamReader next notNil] whileTrue
 ]
 
-{ #category : #xmltokenizer }
+{ #category : #'tests-xmltokenizer' }
 XMLParserTest >> testTokenizerAddressBookWithDTD [
 	| tokenizer |
 	tokenizer := XMLTokenizer on: self addressBookXMLWithDTD readStream.
