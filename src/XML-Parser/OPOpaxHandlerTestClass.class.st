@@ -10,7 +10,7 @@ Class {
 		'cStartElement',
 		'cChar'
 	],
-	#category : #'XML-Parser-Opax'
+	#category : #'XML-Parser-Opax-Test'
 }
 
 { #category : #accessing }

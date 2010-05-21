@@ -1,7 +1,7 @@
 Class {
 	#name : #OPTest2Element,
 	#superclass : #OPGenericElement,
-	#category : #'XML-Parser-Opax'
+	#category : #'XML-Parser-Opax-Test'
 }
 
 { #category : #'instance creation' }
