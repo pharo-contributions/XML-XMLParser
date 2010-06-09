@@ -201,6 +201,13 @@ XMLNodeWithElements >> recurseUntilTrue: aBlock [
 	^ nil.
 ]
 
+{ #category : #accessing }
+XMLNodeWithElements >> removeElement: element [
+	"Used to purge certain elements from a document after parsing."
+
+	^ self elements remove: element ifAbsent: []
+]
+
 { #category : #searching }
 XMLNodeWithElements >> tagsNamed: aString childrenDo: aOneArgumentBlock [
 	"Evaluate aOneArgumentBlock for all children who match"
