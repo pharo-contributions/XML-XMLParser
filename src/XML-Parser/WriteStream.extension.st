@@ -5,7 +5,7 @@ WriteStream >> stringContents [
 	| newSize |
 
 	newSize := position.
-	^ (String new: newSize)	
+	^ (collection class new: newSize)	
 		replaceFrom: 1
 		to: newSize
 		with: collection

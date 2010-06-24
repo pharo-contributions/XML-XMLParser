@@ -534,7 +534,7 @@ XMLParserTest >> utf8Example [
       <likelySubtag from="und_CF" to="fr_Latn_CF"/> <!--{ ?; ?; Central African Republic } => { French; Latin; Central African Republic }-->
       <likelySubtag from="und_CG" to="fr_Latn_CG"/> <!--{ ?; ?; Congo - Brazzaville } => { French; Latin; Congo - Brazzaville }-->
       <likelySubtag from="und_CH" to="de_Latn_CH"/> <!--{ ?; ?; Switzerland } => { German; Latin; Switzerland }-->
-      <likelySubtag from="und_CI" to="fr_Latn_CI"/> <!--{ ?; ?; Côte d’Ivoire } => { French; Latin; Côte d’Ivoire }-->
+      <likelySubtag from="und_CI" to="fr_Latn_CI"/> <!--{ ?; ?; Côte d́Ivoire } => { French; Latin; Côte d́Ivoire }-->
       <likelySubtag from="und_CL" to="es_Latn_CL"/> <!--{ ?; ?; Chile } => { Spanish; Latin; Chile }-->
       <likelySubtag from="und_CM" to="fr_Latn_CM"/> <!--{ ?; ?; Cameroon } => { French; Latin; Cameroon }-->
       <likelySubtag from="und_CN" to="zh_Hans_CN"/> <!--{ ?; ?; China } => { Chinese; Simplified Han; China }-->
