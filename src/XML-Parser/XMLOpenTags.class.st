@@ -30,7 +30,7 @@ XMLOpenTags >> closeTag: aTagName [
 XMLOpenTags >> enclosedTagsAsString: aTagName [
 	| enclosedTags |
 
-	enclosedTags := String new writeStream..
+	enclosedTags := String new writeStream.
 	self
 		printOn: enclosedTags
 		startingAt: (self tags lastIndexOf: aTagName) + 1.

@@ -39,7 +39,7 @@ XMLNamespaceScope >> errorUnmappedPrefix: aPrefix [
 ]
 
 { #category : #initializing }
-XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope. [
+XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope [
 	self defaultNamespace
 		ifNil: [self defaultNamespace: anEnclosingScope defaultNamespace].
 
