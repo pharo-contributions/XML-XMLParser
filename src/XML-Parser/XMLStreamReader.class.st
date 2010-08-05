@@ -54,6 +54,7 @@ XMLStreamReader >> basicNext [
 	Normalization does not occur across nested streams."
 	| nextChar |
 	
+	stream atEnd ifTrue: [ ^ nil ].
 	((nextChar := stream next) == CarriageReturn)
 		ifTrue: [
 			nextChar := LineFeed.

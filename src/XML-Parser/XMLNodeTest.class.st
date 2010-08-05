@@ -464,14 +464,14 @@ XMLNodeTest >> test053elementAttributes [
 XMLNodeTest >> test054elementConstructors [
 	| noAttributes attributes str element |
 
-	noAttributes := Dictionary new.
+	noAttributes := XMLOrderPreservingDictionary new.
 	self
 		assertElement: (XMLElement named: 'foo')
 		name: 'foo'
 		attributes: noAttributes
 		contentString: ''.
 
-	attributes := Dictionary with: 'foo'->'test1' with: 'bar'->'test2'.
+	attributes := XMLOrderPreservingDictionary with: 'foo'->'test1' with: 'bar'->'test2'.
 	self
 		assertElement: (XMLElement named: 'foo' attributes: attributes)
 		name: 'foo'
