@@ -124,7 +124,7 @@ SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary nam
 		prefix := prefixPart.
 		localName := localPart].
 
-	self usesNamespaces ifTrue: [.
+	self usesNamespaces ifTrue: [
 		self nestedScopes enterScope.
 		self declareNamespaces: aNamespaceDictionary.
 		namespaceURI := self nestedScopes resolvePrefix: prefix.
