@@ -141,10 +141,34 @@ XMLParserTest >> benchmark4 [
 ]
 
 { #category : #source }
+XMLParserTest >> exampleCDATASectionXML [
+	^'<?xml version="1.0" encoding="UTF-8"?>
+<test-data><![CDATA[this is CDATA test content 1 < 2 & 5 > 3]]></test-data>'
+]
+
+{ #category : #source }
 XMLParserTest >> exampleEncodedXML [
 	^'<?xml version="1.0" encoding="UTF-8"?>
 <test-data>&#8230;</test-data>
 '
+]
+
+{ #category : #'tests-utf8' }
+XMLParserTest >> testCDATASection [
+	| xmlDocument element output |
+
+	xmlDocument :=
+		(XMLDOMParser on: self exampleCDATASectionXML readStream)
+			preservesCDataSections: true;
+			parseDocument.
+	element := xmlDocument firstTagNamed: #'test-data'.
+
+	self assert: element contentString = 'this is CDATA test content 1 < 2 & 5 > 3'.
+	
+	output := element printString.
+	self assert: '<test-data><![CDATA[this is CDATA test content 1 < 2 & 5 > 3]]></test-data>' = output
+	
+
 ]
 
 { #category : #'tests-utf8' }

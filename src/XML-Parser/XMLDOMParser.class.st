@@ -7,14 +7,18 @@ Class {
 	#instVars : [
 		'document',
 		'incremental',
-		'nodeStack'
+		'nodeStack',
+		'preservesCDataSections',
+		'isInCDataSection'
 	],
 	#category : #'XML-Parser-Parser'
 }
 
 { #category : #content }
 XMLDOMParser >> characters: aString [
-	self topNode addContent: aString
+	(self preservesCDataSections and: [self isInCDataSection])
+		ifTrue: [self topNode addNode: (XMLCData string: aString)]
+		ifFalse: [self topNode addContent: aString]
 
 ]
 
@@ -44,6 +48,11 @@ XMLDOMParser >> domDocument [
 	^ document.
 ]
 
+{ #category : #lexical }
+XMLDOMParser >> endCData [
+	isInCDataSection := false
+]
+
 { #category : #content }
 XMLDOMParser >> endDocument [
 	self popNode.
@@ -65,6 +74,11 @@ XMLDOMParser >> incremental: aBoolean [
 	incremental := aBoolean
 ]
 
+{ #category : #testing }
+XMLDOMParser >> isInCDataSection [
+	^ isInCDataSection ifNil: [isInCDataSection := false]
+]
+
 { #category : #private }
 XMLDOMParser >> nodeStack [
 	^ nodeStack ifNil: [nodeStack := OrderedCollection new: 30]
@@ -79,6 +93,20 @@ XMLDOMParser >> parseDocument [
 { #category : #private }
 XMLDOMParser >> popNode [
 	^ self nodeStack removeLast
+]
+
+{ #category : #accessing }
+XMLDOMParser >> preservesCDataSections [
+	^ preservesCDataSections ifNil: [preservesCDataSections := false]
+]
+
+{ #category : #accessing }
+XMLDOMParser >> preservesCDataSections: aBoolean [
+	"Specify whether the receiver shoud preserve CDATA sections.
+	If true XMLCDATASection nodes will be created. Otherwise plain
+	XMLString nodes will be used."
+
+	preservesCDataSections := aBoolean
 ]
 
 { #category : #content }
@@ -99,6 +127,11 @@ XMLDOMParser >> pushElement: anElement [
 XMLDOMParser >> pushNode: aNode [
 	^ self nodeStack addLast: aNode
 
+]
+
+{ #category : #lexical }
+XMLDOMParser >> startCData [
+	isInCDataSection := true
 ]
 
 { #category : #content }
