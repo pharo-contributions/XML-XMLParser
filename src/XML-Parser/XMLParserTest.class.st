@@ -179,8 +179,8 @@ XMLParserTest >> testDecodingCharacters [
 	element := xmlDocument firstTagNamed: #'test-data'.
 
 	self assert: element contentString first charCode = 8230.	
-	self assert: element contentString first leadingChar = 255.	
-	self assert: element contentString first codePoint = 1069555750
+
+
 ]
 
 { #category : #tests }
