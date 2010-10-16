@@ -1,28 +1,35 @@
+"
+This class represents a document node, which is often the root of an XMLNode tree.
+"
 Class {
 	#name : #XMLDocument,
 	#superclass : #XMLNodeWithElements,
 	#instVars : [
-		'dtd',
 		'version',
 		'encoding',
-		'requiredMarkup'
+		'doctypeDeclaration'
 	],
 	#category : #'XML-Parser-Nodes'
 }
 
 { #category : #accessing }
-XMLDocument >> dtd [
-	^ dtd
+XMLDocument >> doctypeDeclaration [
+	^ doctypeDeclaration
 ]
 
 { #category : #accessing }
-XMLDocument >> dtd: aDTD [
-	dtd := aDTD
+XMLDocument >> doctypeDeclaration: aDoctypeDeclaration [
+	doctypeDeclaration := aDoctypeDeclaration
+]
+
+{ #category : #accessing }
+XMLDocument >> document [
+	self
 ]
 
 { #category : #accessing }
 XMLDocument >> encoding [	
-	^ encoding ifNil: ['UTF-8']
+	^ encoding ifNil: [encoding := 'UTF-8']
 ]
 
 { #category : #accessing }
@@ -39,30 +46,25 @@ XMLDocument >> isDocument [
 XMLDocument >> printCanonicalOn: aStream [
 	| writer |
 	writer := XMLWriter on: aStream.
-	writer canonical: true.
+	writer isCanonical: true.
 	self printXMLOn: writer
 ]
 
 { #category : #printing }
-XMLDocument >> printXMLOn: writer [
-	version ifNotNil: [writer xmlDeclaration: self version encoding: self encoding].
-	super printXMLOn: writer
-]
-
-{ #category : #accessing }
-XMLDocument >> requiredMarkup [	
-	^ requiredMarkup
-]
-
-{ #category : #accessing }
-XMLDocument >> requiredMarkup: aString [	
-	requiredMarkup := aString
+XMLDocument >> printXMLOn: aWriter [
+	self version ifNotNil: [
+		aWriter xml
+			version: self version;
+			encoding: self encoding].
+	self doctypeDeclaration
+		ifNotNil: [self doctypeDeclaration printXMLOn: aWriter].
+	
+	super printXMLOn: aWriter
 ]
 
 { #category : #accessing }
 XMLDocument >> root [
-	"return my root element"
-	^ self topElement 
+	^ self firstElement 
 ]
 
 { #category : #accessing }
@@ -71,6 +73,6 @@ XMLDocument >> version [
 ]
 
 { #category : #accessing }
-XMLDocument >> version: aString [	
-	version := aString
+XMLDocument >> version: aVersionNumber [
+	version := aVersionNumber
 ]

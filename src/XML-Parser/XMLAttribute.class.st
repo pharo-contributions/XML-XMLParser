@@ -1,7 +1,5 @@
 "
-The class represents an attribute node, to be stored in an XMLAttributeList. You should seldom need to interact with these objects directly; XMLElement's various #attribute- messages will usually suffice.
-
-The name of an XMLAttribute can be namespaced using prefixes; however, the prefix must be mapped to a namespace in the parent XMLElement.
+The class represents an attribute node, to be stored in an XMLAttributeList. You generally won't need to interact with these objects directly; XMLElement's various #attribute- messages will normally suffice. The name of an XMLAttribute can be namespaced using prefixes; however, the prefix must be mapped to a namespace URI in the parent XMLElement. Unprefixed attributes have no namespace, not even the default one, per the XML namespaces standard.
 "
 Class {
 	#name : #XMLAttribute,
@@ -20,12 +18,12 @@ XMLAttribute class >> name: aName value: aValue [
 
 { #category : #accessing }
 XMLAttribute >> expandedName [
-	^ self nodeName expandedWith: self namespaceURI
+	^ self nodeName expandWith: self namespaceURI
 ]
 
 { #category : #testing }
 XMLAttribute >> hasPrefix [
-	^ self nodeName hasPrefix
+	^ self nodeName isPrefixed
 ]
 
 { #category : #testing }
@@ -33,29 +31,48 @@ XMLAttribute >> isAttribute [
 	^ true
 ]
 
+{ #category : #testing }
+XMLAttribute >> isNamed: aName [
+	^ self nodeName isSameAs: aName
+]
+
 { #category : #accessing }
 XMLAttribute >> localName [
-	^ self nodeName localName
+	^ self nodeName localPart
 ]
 
 { #category : #accessing }
 XMLAttribute >> name [
-	^ self nodeName asString
+	^ self nodeName qualified
 ]
 
 { #category : #accessing }
 XMLAttribute >> name: aName [
-	self notifyParentAfterRenamingWith: [self nodeName name: aName]
+	self nodeName qualified: aName
 ]
 
 { #category : #accessing }
 XMLAttribute >> namespaceURI [
-	^ self hasParent ifTrue: [self parent resolvePrefix: self prefix]
+	self hasParent ifFalse: [^ ''].
+
+	^ self parent resolvePrefix: self prefix.
 ]
 
 { #category : #private }
 XMLAttribute >> nodeName [
-	^ name ifNil: [name := XMLNodeName new]
+	^ name ifNil: [
+		(name := XMLNodeName new)
+			addObserver: self;
+			yourself]
+]
+
+{ #category : #notifications }
+XMLAttribute >> nodeNameChangedFrom: anOldName to: aNewName [
+	self
+		notifyOf: #renamedAttribute:from:to:
+		with: self
+		with: anOldName
+		with: aNewName
 ]
 
 { #category : #accessing }
@@ -65,29 +82,28 @@ XMLAttribute >> prefix [
 
 { #category : #accessing }
 XMLAttribute >> prefix: aPrefix [
-	self notifyParentAfterRenamingWith: [self nodeName prefix: aPrefix]
+	self nodeName prefix: aPrefix
 ]
 
 { #category : #printing }
 XMLAttribute >> printXMLOn: aWriter [
-	aWriter attribute: self name value: self value
-	
+	aWriter writeName: self name value: self value
 ]
 
 { #category : #accessing }
 XMLAttribute >> qualifiedName [
-	^ self nodeName qualifiedName
+	^ self nodeName qualified
 ]
 
 { #category : #initialization }
 XMLAttribute >> setName: aName value: aValue [
-	self nodeName name: aName.
+	self nodeName qualified: aName.
 	value := aValue.
 ]
 
 { #category : #accessing }
 XMLAttribute >> value [
-	^ value
+	^ value ifNil: [value := '']
 ]
 
 { #category : #accessing }

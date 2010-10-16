@@ -30,7 +30,7 @@ DTDParameterEntityDeclaration >> includePE [
 
 { #category : #behaviors }
 DTDParameterEntityDeclaration >> notRecognized [
-	SAXNotWellFormedException signal: 'Malformed entity.'
+	XMLWellFormednessException signal: 'Malformed entity.'
 ]
 
 { #category : #invocation }

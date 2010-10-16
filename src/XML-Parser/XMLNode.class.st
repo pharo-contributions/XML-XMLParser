@@ -4,15 +4,40 @@ This is a base class for XML nodes. It contains testing messages and methods to 
 Class {
 	#name : #XMLNode,
 	#superclass : #Object,
+	#traits : 'TXMLObservable + TXMLObserver',
+	#classTraits : 'TXMLObservable classTrait + TXMLObserver classTrait',
 	#instVars : [
-		'parent'
+		'parent',
+		'notifier'
 	],
 	#category : #'XML-Parser-Nodes'
 }
 
-{ #category : #errors }
-XMLNode >> domError: aMessage [
-	^ XMLDOMException signal: aMessage
+{ #category : #accessing }
+XMLNode >> addContent: aStringOrStringNode [
+	XMLDOMException signal: 'Node cannot contain content'
+]
+
+{ #category : #private }
+XMLNode >> beParentOf: aNode [
+	self startObserving: aNode.
+	aNode parent: self.
+]
+
+{ #category : #accessing }
+XMLNode >> characterData [
+	self deprecated: 'use #contentString instead'.
+
+	^ self contentString.
+]
+
+{ #category : #accessing }
+XMLNode >> contentString [
+	| stream |
+
+	stream := WriteStream on: (String new: 128).
+	self printContentOn: stream.
+	^ stream contents.
 ]
 
 { #category : #testing }
@@ -26,13 +51,28 @@ XMLNode >> isAttribute [
 ]
 
 { #category : #testing }
+XMLNode >> isCData [
+	^ false
+]
+
+{ #category : #testing }
+XMLNode >> isComment [
+	^ false
+]
+
+{ #category : #testing }
+XMLNode >> isContentNode [
+	^ false
+]
+
+{ #category : #testing }
 XMLNode >> isDocument [
 	^ false
 ]
 
 { #category : #testing }
 XMLNode >> isElement [
-	^ self isTag
+	^ false
 ]
 
 { #category : #testing }
@@ -42,27 +82,40 @@ XMLNode >> isEmpty [
 
 { #category : #testing }
 XMLNode >> isPI [
-	^ self isProcessingInstruction
+	^ false
 ]
 
 { #category : #testing }
 XMLNode >> isProcessingInstruction [
+	self deprecated: 'use #isPI instead'.
+
+	^ self isPI.
+]
+
+{ #category : #testing }
+XMLNode >> isStringNode [
 	^ false
 ]
 
 { #category : #testing }
 XMLNode >> isTag [
-	^ false
+	self deprecated: 'use #isElement instead'.
+
+	^ self isElement.
 ]
 
 { #category : #testing }
 XMLNode >> isTagOrText [
-	^ self isTag or: [self isText]
+	self deprecated: 'use #isContentNode instead'.
+
+	^ self isContentNode.
 ]
 
 { #category : #testing }
 XMLNode >> isText [
-	^ false
+	self deprecated: 'use #isStringNode instead'.
+
+	^ self isStringNode.
 ]
 
 { #category : #accessing }
@@ -75,15 +128,9 @@ XMLNode >> notEmpty [
 	^ self isEmpty not
 ]
 
-{ #category : #private }
-XMLNode >> notifyParentAfterRenamingWith: aBlock [
-	| oldName newName |
-
-	oldName := self name.
-	aBlock value.
-	newName := self name.
-	self hasParent
-		ifTrue: [self parent nodeRenamed: self from: oldName to: newName]
+{ #category : #accessing }
+XMLNode >> notifier [
+	^ notifier ifNil: [notifier := XMLNotifier new]
 ]
 
 { #category : #accessing }
@@ -102,11 +149,26 @@ XMLNode >> previousNode [
 ]
 
 { #category : #printing }
-XMLNode >> printOn: stream [
-	self printXMLOn: (XMLWriter on: stream)
+XMLNode >> printContentOn: aStream [
+	self shouldNotImplement
 ]
 
 { #category : #printing }
-XMLNode >> printXMLOn: writer [
+XMLNode >> printOn: aStream [
+	| writer |
+
+	writer := XMLWriter on: aStream.
+	self printXMLOn: writer.
+	writer flushMarkup.
+]
+
+{ #category : #printing }
+XMLNode >> printXMLOn: aWriter [
 	self subclassResponsibility
+]
+
+{ #category : #private }
+XMLNode >> stopBeingParentOf: aNode [
+	self stopObserving: aNode.
+	aNode parent: nil.
 ]

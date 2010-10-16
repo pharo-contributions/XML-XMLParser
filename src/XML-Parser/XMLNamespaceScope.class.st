@@ -8,7 +8,7 @@ Class {
 		'defaultNamespace',
 		'prefixMappings'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Namespaces'
 }
 
 { #category : #'instance creation' }
@@ -18,62 +18,84 @@ XMLNamespaceScope class >> enclosingScope: aScope [
 
 { #category : #accessing }
 XMLNamespaceScope >> defaultNamespace [
-	^ defaultNamespace
+	^ defaultNamespace ifNil: [defaultNamespace := '']
 ]
 
 { #category : #accessing }
-XMLNamespaceScope >> defaultNamespace: aNamespaceUri [
-	defaultNamespace := aNamespaceUri
+XMLNamespaceScope >> defaultNamespace: aUri [
+	defaultNamespace := aUri
+]
+
+{ #category : #validation }
+XMLNamespaceScope >> ensureAttributePrefix: aPrefix localName: aLocalName hasNoAliasesIn: aDictionary [
+	| namespaceUri aliasingAttributeName |
+
+	namespaceUri := self resolvePrefix: aPrefix.
+
+	(self prefixesAliasing: aPrefix) do: [:aliasingPrefix |
+		aliasingAttributeName := aliasingPrefix, ':', aLocalName.
+		(aDictionary includesKey: aliasingAttributeName)
+			ifTrue: [
+				self
+					errorAttribute: aliasingAttributeName
+					aliases: aPrefix, ':', aLocalName
+					with: namespaceUri]].
 ]
 
 { #category : #errors }
 XMLNamespaceScope >> errorAttribute: anAttribute aliases: anAliasedAttribute with: aUri [
-	self namespaceError:
+	XMLNamespaceException signal:
 		('Attribute "{1}" aliases attribute "{2}"; both prefixes map to {3}'
 			format: (Array with: anAttribute with: anAliasedAttribute with: aUri))
 ]
 
-{ #category : #errors }
-XMLNamespaceScope >> errorUnmappedPrefix: aPrefix [
-	self namespaceError: 'Unmapped namespace prefix "', aPrefix, '"'
-]
-
-{ #category : #initializing }
-XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope [
-	self defaultNamespace
-		ifNil: [self defaultNamespace: anEnclosingScope defaultNamespace].
-
-	anEnclosingScope prefixMappingsDo: [:prefix :uri |
-		(self isMappedPrefix: prefix)
-			ifFalse: [self mapPrefix: prefix to: uri]].
+{ #category : #testing }
+XMLNamespaceScope >> hasDefaultNamespace [
+	^ defaultNamespace notNil and: [defaultNamespace notEmpty]
 ]
 
 { #category : #testing }
-XMLNamespaceScope >> isMappedPrefix: aPrefix [
+XMLNamespaceScope >> hasNamespaces [
+	^ self hasDefaultNamespace or: [self hasPrefixMappings]
+]
+
+{ #category : #testing }
+XMLNamespaceScope >> hasPrefixMappings [
+	^ prefixMappings notNil and: [prefixMappings notEmpty]
+]
+
+{ #category : #testing }
+XMLNamespaceScope >> includesPrefix: aPrefix [
 	^ self prefixMappings includesKey: aPrefix
 ]
 
 { #category : #testing }
-XMLNamespaceScope >> isPrefix: aPrefix mappedTo: aUri [
-	^ ((self isMappedPrefix: aPrefix)
-		and: [(self resolvePrefix: aPrefix) = aUri])
+XMLNamespaceScope >> includesPrefix: aPrefix mappedTo: aUri [
+	^ (self includesPrefix: aPrefix)
+		and: [(self resolvePrefix: aPrefix) = aUri]
+]
+
+{ #category : #initializing }
+XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope [
+	anEnclosingScope hasNamespaces
+		ifFalse: [^ self].
+
+	self hasDefaultNamespace
+		ifFalse: [self defaultNamespace: anEnclosingScope defaultNamespace].
+
+	anEnclosingScope hasPrefixMappings
+		ifTrue: [
+			anEnclosingScope prefixesAndURIsDo: [:prefix :uri |
+				(self includesPrefix: prefix)
+					ifFalse: [self mapPrefix: prefix to: uri]]].
 ]
 
 { #category : #accessing }
 XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
 	(aPrefix isEmptyOrNil or: [aPrefix = 'xmlns'])
-		ifTrue: [self defaultNamespace: aUri]
-		ifFalse: [self prefixMappings at: aPrefix put: (aUri ifNil: [''])]
-]
-
-{ #category : #accessing }
-XMLNamespaceScope >> mappedPrefixes [
-	^ self prefixMappings keys
-]
-
-{ #category : #errors }
-XMLNamespaceScope >> namespaceError: anErrorMessage [
-	^ XMLNamespaceException signal: anErrorMessage
+		ifTrue: [^ self defaultNamespace: aUri].
+	
+	self prefixMappings at: aPrefix put: (aUri ifNil: [''])
 ]
 
 { #category : #accessing }
@@ -81,32 +103,38 @@ XMLNamespaceScope >> prefixMappings [
 	^ prefixMappings ifNil: [prefixMappings := XMLOrderPreservingDictionary new]
 ]
 
-{ #category : #enumerating }
-XMLNamespaceScope >> prefixMappingsDo: aTwoArgumentBlock [
-	self prefixMappings keysAndValuesDo: [:prefix :uri |
-		aTwoArgumentBlock value: prefix value: uri]
+{ #category : #accessing }
+XMLNamespaceScope >> prefixes [
+	^ self prefixMappings keys
 ]
 
 { #category : #accessing }
 XMLNamespaceScope >> prefixesAliasing: aPrefix [
 	"Locate all prefixes that map to the same URI the given prefix does."
 	| uri |
+	
+	uri := self resolvePrefix: aPrefix ifUnmapped: [^ #()].
 
-	uri := self
-		resolvePrefix: aPrefix
-		ifUnmapped: [self errorUnmappedPrefix: aPrefix].
+	^ (self prefixesMappedTo: uri) copyWithout: aPrefix
+]
 
-	^ self mappedPrefixes select: [:each |
-		(each ~= aPrefix)
-			and: [self isPrefix: each mappedTo: uri]].
+{ #category : #enumerating }
+XMLNamespaceScope >> prefixesAndURIsDo: aTwoArgumentBlock [
+	self prefixMappings keysAndValuesDo: aTwoArgumentBlock
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> prefixesMappedTo: aUri [
+	^ self prefixes select: [:each | self includesPrefix: each mappedTo: aUri]
 ]
 
 { #category : #accessing }
 XMLNamespaceScope >> resolvePrefix: aPrefix [
-	"Retrieve the URI of the given namespace prefix, if it is defined. A nil namespace
-	returns the global namespace"
+	"Retrieve the URI of the given namespace prefix, if it is defined.
 
-	^ self resolvePrefix: aPrefix ifUnmapped: [nil]
+	If prefix is empty, nil, or xmlns, the default namespace will be returned."
+
+	^ self resolvePrefix: aPrefix ifUnmapped: ['']
 ]
 
 { #category : #accessing }
@@ -120,38 +148,45 @@ XMLNamespaceScope >> resolvePrefix: aPrefix ifUnmapped: aBlock [
 		ifFalse: [self prefixMappings at: aPrefix ifAbsent: aBlock]
 ]
 
+{ #category : #private }
+XMLNamespaceScope >> validatePrefix: aPrefix of: aName [
+	(self includesPrefix: aPrefix)
+		ifFalse: [
+			XMLNamespaceException signal:
+				('Unmapped prefix "{1}" in {2}' format:
+					(Array with: aPrefix with: aName))].
+]
+
 { #category : #validation }
-XMLNamespaceScope >> validateAttribute: anAttributeName in: aDictionary [
-	| namespaceUri aliasingAttributeName |
-	
+XMLNamespaceScope >> validatePrefix: aPrefix ofAttributeName: anAttributeName [
+	aPrefix ifNil: [^ self].
+	self validatePrefix: aPrefix of: anAttributeName, ' attribute'
+]
+
+{ #category : #validation }
+XMLNamespaceScope >> validatePrefix: aPrefix ofElementName: anElementName [
+	aPrefix ifNil: [^ self].
+	self validatePrefix: aPrefix of: anElementName, ' element'
+]
+
+{ #category : #validation }
+XMLNamespaceScope >> validatePrefixedAttributeName: anAttributeName in: aDictionary [
 	anAttributeName splitQualifiedNameInto: [:prefix :localName |
-		prefix ifNil: [^ self].
-		self validatePrefix: prefix.
-		namespaceUri := self resolvePrefix: prefix.
+		prefix ifEmpty: [^ self].
 
-		(self prefixesAliasing: prefix) do: [:aliasingPrefix |
-			aliasingAttributeName := aliasingPrefix, ':', localName.
-			(aDictionary includesKey: aliasingAttributeName)
-				ifTrue: [
-					self
-						errorAttribute: aliasingAttributeName
-						aliases: anAttributeName
-						with: namespaceUri]]].
-]
-
-{ #category : #validation }
-XMLNamespaceScope >> validateAttributes: attributeList [
-	"check all attribute namespaces are defined and not duplicated by aliasing"
-	| prefix localName qualifiedAlias |
-
-	attributeList keysDo: [:attrName |
 		self
-			validateAttribute: attrName
-			in: attributeList]
+			validatePrefix: prefix
+			ofAttributeName: anAttributeName.
+		self
+			ensureAttributePrefix: prefix
+			localName: localName
+			hasNoAliasesIn: aDictionary]
 ]
 
 { #category : #validation }
-XMLNamespaceScope >> validatePrefix: aPrefix [
-	(self isMappedPrefix: aPrefix)
-		ifFalse: [self errorUnmappedPrefix: aPrefix].
+XMLNamespaceScope >> validatePrefixedAttributeNames: aDictionary [
+	aDictionary keysDo: [:attributeName |
+		self
+			validatePrefixedAttributeName: attributeName
+			in: aDictionary]
 ]

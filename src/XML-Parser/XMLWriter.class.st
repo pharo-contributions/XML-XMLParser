@@ -1,318 +1,330 @@
+"
+This class allows you to generate well-formed XML documents using an API similar to Seaside's canvas/tag brush API.
+
+Markup can be created by sending an instance any of the messages under ""writing markup."" The messages that take no arguments return an instance of an XMLMarkupWriter subclass. These objects can be configured with messages like #name: and #attributeAt:put:. Sending them #write or a specific writing message that accepts markup to embed within (#content: or #internalSubset: for example) causes the markup writer's configuration to be committed and its markup written to the output stream. For markup writers that can have embedded markup, the argument to the writing message can be a string, collection (of strings and blocks), a block, or nil. The block passed in can optionally take an argument, which will be the XMLWriter object that created the markup writer object. Within the block, you can generate additional, child markup that will be contained by the parent. Creating additional non-embedded markup will cause any unwritten markup from a previous markup writer to be written, as will sending an XMLWriter or XMLMarkupWriter #contents, #asString, #printOn:, or #write.
+
+Here is an example:
+
+	| writer |
+	(writer := XMLWriter new) enablePrettyPrinting.
+	writer xml.
+	writer tag
+			name: 'foo:bar';
+			xmlnsAt: 'foo' put: 'http://foo';
+			attributeAt: 'a' put: 'one';
+			attributeAt: 'b' put: 'two';
+			content: [
+				writer tag: 'bar' content: [
+					writer
+						string: 'test';
+						tag: 'baz';
+						tag: 'foobar' content: 'test']]
+"
 Class {
 	#name : #XMLWriter,
 	#superclass : #Object,
 	#instVars : [
 		'stream',
-		'openTags',
-		'nestedScopes',
-		'canonical',
-		'currentIndent',
+		'activeMarkupWriter',
+		'currentIndentLevel',
 		'indentString',
-		'newLinesAllowed'
+		'lineBreak',
+		'isCanonical',
+		'omitsLineBreaks'
 	],
 	#classVars : [
-		'XMLTranslation',
-		'XMLTranslationMap'
+		'CarriageReturn',
+		'CharacterEscapes',
+		'LineFeed',
+		'SpecialCharacters'
 	],
-	#category : #'XML-Parser-Parser'
+	#category : #'XML-Parser-Writers'
 }
 
 { #category : #'class initialization' }
 XMLWriter class >> initialize [
-	"XMLWriter initialize"
+	"self initialize"
 
-	XMLTranslation := Dictionary new.
-	XMLTranslation
-		at: Character cr put: '&#13;';
-		at: Character lf put: '&#10;';
-		at: Character tab put: '&#9;';
+	(CharacterEscapes := XMLCharacterMap new)
 		at: $& put: '&amp;';
+		at: $" put: '&quot;';
 		at: $< put: '&lt;';
-		at: $> put: '&gt;';
-"		at: $' put: '&apos;'; "
-		at: $" put: '&quot;'.
-	XMLTranslationMap := ByteArray new: 256.
-	XMLTranslation keysDo:[:ch| XMLTranslationMap at: ch asciiValue+1 put: 1].
+		at: $> put: '&gt;'.
 
+	CarriageReturn := Character cr.
+	LineFeed := Character lf.
+
+	(SpecialCharacters := CharacterSet new)
+		addAll: CharacterEscapes keys;
+		add: CarriageReturn;
+		add: LineFeed.
+]
+
+{ #category : #'instance creation' }
+XMLWriter class >> new [
+	^ self on: (String new: 512) writeStream
 ]
 
 { #category : #'instance creation' }
 XMLWriter class >> on: aStream [
-	^self basicNew initialize stream: aStream
+	^ self basicNew initialize
+		stream: aStream
 ]
 
-{ #category : #'writing xml' }
-XMLWriter >> attribute: attributeName value: attributeValue [
-	self stream
-		space;
-		nextPutAll: attributeName.
-	self
-		eq;
-		putAsXMLString: attributeValue
+{ #category : #'writing markup' }
+XMLWriter >> % aParameterEntityReference [
+	^ self paramEntityRef: aParameterEntityReference
 ]
 
-{ #category : #accessing }
-XMLWriter >> canonical [
-	^ canonical ifNil: [canonical := false]
+{ #category : #'writing markup' }
+XMLWriter >> & anEntityReference [
+	^ self entityRef: anEntityReference
 ]
 
 { #category : #accessing }
-XMLWriter >> canonical: aBoolean [
-	canonical := aBoolean
+XMLWriter >> activeMarkupWriter [
+	^ activeMarkupWriter
 ]
 
-{ #category : #'writing xml' }
+{ #category : #private }
+XMLWriter >> addNewMarkupWriter: aMarkupWriterClass [
+	| markupWriter |
+
+	markupWriter := aMarkupWriterClass writer: self.
+
+	self activeMarkupWriter
+		ifNotNil: [self activeMarkupWriter nextMarkupWriter: markupWriter].
+
+	^ activeMarkupWriter := markupWriter.
+]
+
+{ #category : #testing }
+XMLWriter >> atStart [
+	^ self stream position isZero
+]
+
+{ #category : #'writing markup' }
+XMLWriter >> attributeDeclaration [
+	^ self addNewMarkupWriter: XMLAttributeDeclarationWriter
+]
+
+{ #category : #'writing markup' }
+XMLWriter >> cdata [
+	^ self addNewMarkupWriter: XMLCDataWriter
+]
+
+{ #category : #'writing markup' }
 XMLWriter >> cdata: aString [
-	self startCData.
-	self stream nextPutAll: aString.
-	self endCData
+	self cdata with: aString
 ]
 
-{ #category : #'writing xml' }
+{ #category : #actions }
+XMLWriter >> close [
+	self flushMarkup.
+	self stream close.
+]
+
+{ #category : #'writing markup' }
+XMLWriter >> comment [
+	^ self addNewMarkupWriter: XMLCommentWriter
+]
+
+{ #category : #'writing markup' }
 XMLWriter >> comment: aString [
-	self startComment.
-	self stream nextPutAll: aString.
-	self endComment
+	self comment with: aString
+]
+
+{ #category : #accessing }
+XMLWriter >> contents [
+	self flushMarkup.
+	^ self stream contents.
 ]
 
 { #category : #private }
 XMLWriter >> cr [
-	self newLinesAllowed ifTrue: [self stream cr].
+	(self omitsLineBreaks or: [self atStart])
+		ifTrue: [^ self].
+
+	self nextPutAll: self lineBreak.
+	self isCanonical
+		ifFalse: [self writeIndent].
 ]
 
-{ #category : #'private tags' }
-XMLWriter >> endCData [
-	self stream nextPutAll: ']]>'.
-	self cr.
+{ #category : #private }
+XMLWriter >> currentIndentLevel [
+	^ currentIndentLevel ifNil: [currentIndentLevel := 0].
 ]
 
-{ #category : #'private tags' }
-XMLWriter >> endComment [
-	self stream nextPutAll: ' -->'.
-	self cr.
+{ #category : #'writing markup' }
+XMLWriter >> doctype [
+	^ self addNewMarkupWriter: XMLDoctypeDeclarationWriter
 ]
 
-{ #category : #'writing dtd' }
-XMLWriter >> endDecl: type [
-	self endTag
+{ #category : #'writing markup' }
+XMLWriter >> elementDeclaration [
+	^ self addNewMarkupWriter: XMLElementDeclarationWriter
 ]
 
-{ #category : #'writing dtd' }
-XMLWriter >> endDeclaration [
-	self stream
-		cr;
-		nextPut: $].
-	self endTag
+{ #category : #accessing }
+XMLWriter >> enablePrettyPrinting [
+	self indentString: '    '.
+	self omitsLineBreaks: false.
 ]
 
-{ #category : #'writing xml' }
-XMLWriter >> endElement: anElementName [
-	self nestedScopes leaveScope.
-	self endTag: anElementName.
+{ #category : #'writing markup' }
+XMLWriter >> entityDeclaration [
+	^ self addNewMarkupWriter: XMLEntityDeclarationWriter
 ]
 
-{ #category : #'writing xml' }
-XMLWriter >> endEmptyTag: aTagName [
-	self openTags closeTag: aTagName.
-	self stream nextPutAll: '/>'.
-	self canonical
-		ifFalse: [self stream space].
-	self cr.
-]
-
-{ #category : #'private tags' }
-XMLWriter >> endPI [
-	self stream nextPutAll: ' ?>'.
-	self cr.
-]
-
-{ #category : #'writing xml' }
-XMLWriter >> endTag [
-	self stream nextPutAll: '>'.
-	self cr.
-	self indent.
-	"self canonical
-		ifFalse: [self stream space]"
-]
-
-{ #category : #'writing xml' }
-XMLWriter >> endTag: aTagName [
-	self outdent.
-	self openTags closeTag: aTagName.
-	self stream
-		nextPutAll: '</';
-		nextPutAll: aTagName.
-	self endTag.
-
+{ #category : #'writing markup' }
+XMLWriter >> entityRef: aName [
+	self
+		flushMarkup;
+		nextPut: $&;
+		writeName: aName;
+		nextPut: $;
 ]
 
 { #category : #private }
 XMLWriter >> eq [
-	self stream nextPut: $=
+	self nextPut: $=
 ]
 
-{ #category : #'writing xml' }
-XMLWriter >> flush [
-	self stream flush
+{ #category : #private }
+XMLWriter >> flushMarkup [
+	self activeMarkupWriter
+		ifNotNil: [self activeMarkupWriter flushMarkup].
+]
+
+{ #category : #private }
+XMLWriter >> flushedMarkupWriter: aMarkupWriter [
+	activeMarkupWriter := aMarkupWriter parent
+]
+
+{ #category : #testing }
+XMLWriter >> hasTrailingWhitespace [
+	| lastChar |
+
+	^ (lastChar := self lastChar) notNil
+		and: [lastChar isSeparator]
 ]
 
 { #category : #private }
 XMLWriter >> indent [
-	currentIndent
-		ifNotNil: [currentIndent := currentIndent +1]
+	currentIndentLevel := self currentIndentLevel + 1
+]
+
+{ #category : #accessing }
+XMLWriter >> indentString [
+	^ indentString ifNil: [indentString := '']
 ]
 
 { #category : #accessing }
 XMLWriter >> indentString: aString [
-	currentIndent := 0.
-	indentString := aString
+	currentIndentLevel := 0.
+	indentString := aString.
+]
+
+{ #category : #testing }
+XMLWriter >> isCanonical [
+	^ isCanonical ifNil: [isCanonical := false]
 ]
 
 { #category : #accessing }
-XMLWriter >> indentTab [
-	self indentString: (String with: Character tab)
+XMLWriter >> isCanonical: aBoolean [
+	isCanonical := aBoolean
 ]
 
 { #category : #private }
-XMLWriter >> nestedScopes [
-	^ nestedScopes ifNil: [nestedScopes := XMLNestedNamespaceScopes new]
+XMLWriter >> lastChar [
+	^ self stream peekLast
 ]
 
 { #category : #accessing }
-XMLWriter >> newLinesAllowed [
-	^ newLinesAllowed ifNil: [newLinesAllowed := false]
+XMLWriter >> lineBreak [
+	^ lineBreak ifNil: [lineBreak := String cr]
 ]
 
 { #category : #accessing }
-XMLWriter >> newLinesAllowed: aBoolean [
-	newLinesAllowed := aBoolean
+XMLWriter >> lineBreak: aLineBreak [
+	lineBreak := aLineBreak asString
 ]
 
 { #category : #private }
-XMLWriter >> openTags [
-	^ openTags ifNil: [openTags := XMLOpenTags new]
+XMLWriter >> nextPut: aCharacter [
+	self stream nextPut: aCharacter
+]
+
+{ #category : #private }
+XMLWriter >> nextPutAll: aString [
+	self stream nextPutAll: aString
+]
+
+{ #category : #'writing markup' }
+XMLWriter >> notationDeclaration [
+	^ self addNewMarkupWriter: XMLNotationDeclarationWriter
+]
+
+{ #category : #testing }
+XMLWriter >> omitsLineBreaks [
+	^ omitsLineBreaks ifNil: [omitsLineBreaks := true]
+]
+
+{ #category : #accessing }
+XMLWriter >> omitsLineBreaks: aBoolean [
+	omitsLineBreaks := aBoolean
 ]
 
 { #category : #private }
 XMLWriter >> outdent [
-	currentIndent
-		ifNotNil: [
-			currentIndent := currentIndent-1.
-			self writeIndent.
-			currentIndent := currentIndent-1.]
+	currentIndentLevel := self currentIndentLevel - 1
 ]
 
-{ #category : #'writing xml' }
-XMLWriter >> pcData: aString [
-	self writeIndent.
-	self writeXmlEncoded: aString.
-	self cr.
+{ #category : #'writing markup' }
+XMLWriter >> paramEntityRef: aName [
+	self
+		flushMarkup;
+		nextPut: $%;
+		writeName: aName;
+		nextPut: $;
 ]
 
-{ #category : #'writing xml' }
-XMLWriter >> pi: piTarget data: piData [
-	self startPI: piTarget.
-	self stream nextPutAll: piData.
-	self endPI
+{ #category : #'writing markup' }
+XMLWriter >> pcdata: aString [
+	self string: aString
 ]
 
-{ #category : #accessing }
-XMLWriter >> prettyPrint [
-	self indentString: '    '.
-	self newLinesAllowed: true.
+{ #category : #'writing markup' }
+XMLWriter >> pi [
+	^ self addNewMarkupWriter: XMLPIWriter
+]
+
+{ #category : #printing }
+XMLWriter >> printOn: aStream [
+	self contents printOn: aStream.
 ]
 
 { #category : #private }
-XMLWriter >> putAsXMLString: aValue [
-	self stream nextPut: $".
-	self writeXmlEncoded: aValue.
-	self stream nextPut: $"
+XMLWriter >> quote [
+	self nextPut: $"
 ]
 
-{ #category : #'private tags' }
-XMLWriter >> startCData [
-	self stream nextPutAll: '<![CDATA['
+{ #category : #'writing markup' }
+XMLWriter >> raw: aString [
+	self
+		flushMarkup;
+		nextPutAll: aString
 ]
 
-{ #category : #'private tags' }
-XMLWriter >> startComment [
-	self stream nextPutAll: '<-- '
-]
-
-{ #category : #'writing dtd' }
-XMLWriter >> startDecl: type [
-	self stream
-		nextPutAll: '<!';
-		nextPutAll: type asUppercase;
-		space
-]
-
-{ #category : #'writing dtd' }
-XMLWriter >> startDecl: type named: aString [
-	self stream
-		nextPutAll: '<!';
-		nextPutAll: type asUppercase;
-		space;
-		nextPutAll: aString;
-		space
-]
-
-{ #category : #'writing dtd' }
-XMLWriter >> startDeclaration: dtdName [
-	self startDecl: 'DOCTYPE' named: dtdName.
-	self stream
-		nextPut: $[;
-		cr
-]
-
-{ #category : #'writing xml' }
-XMLWriter >> startElement: elementName attributeList: attributeList [
-	"self canonical
-		ifFalse: [self stream cr]."
-	self startTag: elementName.
-	attributeList printXMLOn: self.
-]
-
-{ #category : #'writing xml' }
-XMLWriter >> startElement: anElementName attributeList: anAttributeList namespaces: aNamespaceDictionary [
-	self startTag: anElementName.
-	self nestedScopes enterScope.
-
-	aNamespaceDictionary keysAndValuesDo: [:name :uri |
-		name splitQualifiedNameInto: [:xmlns :prefix |
-			(prefix = 'xmlns')
-				ifTrue: [
-					(self nestedScopes defaultNamespace = uri)
-						ifFalse: [self xmlns: 'xmlns' uri: uri]]
-				ifFalse: [
-					(self nestedScopes isPrefix: prefix mappedTo: uri)
-						ifFalse: [self xmlns: prefix uri: uri]]]].
-
-	anAttributeList printXMLOn: self.
-]
-
-{ #category : #'private tags' }
-XMLWriter >> startPI: identifier [
-	self stream
-		nextPutAll: '<?';
-		nextPutAll: identifier;
-		space
-]
-
-{ #category : #'writing xml' }
-XMLWriter >> startTag: aTagName [
-	self writeIndent.
-	self stream
-		nextPut: $<;
-		nextPutAll: aTagName.
-	"self canonical
-		ifFalse: [self stream space]."
-	self openTags openTag: aTagName
+{ #category : #private }
+XMLWriter >> space [
+	(self isCanonical and: [self hasTrailingWhitespace])
+		ifFalse: [self stream space]
 ]
 
 { #category : #accessing }
 XMLWriter >> stream [
-	^stream
+	^ stream
 ]
 
 { #category : #accessing }
@@ -320,47 +332,99 @@ XMLWriter >> stream: aStream [
 	stream := aStream
 ]
 
+{ #category : #'writing markup' }
+XMLWriter >> string: aString [
+	self
+		flushMarkup;
+		writeXmlEncoded: aString.
+]
+
+{ #category : #'writing markup' }
+XMLWriter >> tag [
+	^ self addNewMarkupWriter: XMLTagWriter
+]
+
+{ #category : #'writing markup' }
+XMLWriter >> tag: aName [
+	^ self tag name: aName
+]
+
+{ #category : #'writing markup' }
+XMLWriter >> tag: aName attributes: aDictionaryOrArray content: aStringOrCollectionOrBlock [
+	^ (self tag: aName)
+		attributes: aDictionaryOrArray;
+		content: aStringOrCollectionOrBlock
+]
+
+{ #category : #'writing markup' }
+XMLWriter >> tag: aName content: aStringOrCollectionOrBlock [
+	^ (self tag: aName) content: aStringOrCollectionOrBlock
+]
+
+{ #category : #'writing markup' }
+XMLWriter >> write [
+	self flushMarkup
+]
+
 { #category : #private }
 XMLWriter >> writeIndent [
-	currentIndent ifNotNil: [
-		currentIndent timesRepeat: [self stream nextPutAll: indentString]]
+	self currentIndentLevel timesRepeat: [self nextPutAll: self indentString]
+]
+
+{ #category : #private }
+XMLWriter >> writeName: aString [
+	self nextPutAll: aString
+]
+
+{ #category : #private }
+XMLWriter >> writeName: aName value: aValue [
+	self hasTrailingWhitespace
+		ifFalse: [self space].
+
+	self
+		writeName: aName;
+		eq;
+		writeXmlEncodedString: aValue.
 ]
 
 { #category : #private }
 XMLWriter >> writeXmlEncoded: aString [
 	| lastIndex nextIndex |
-	lastIndex := 1.
+	
 	"Unroll the first search to avoid copying"
-	nextIndex := String findFirstInString: aString inSet: XMLTranslationMap startingAt: lastIndex.
-	nextIndex = 0 ifTrue:[self stream nextPutAll: aString. ^ self].
-	[self stream nextPutAll: (aString copyFrom: lastIndex to: nextIndex-1).
-	self stream nextPutAll: (XMLTranslation at: (aString at: nextIndex)).
-	lastIndex := nextIndex + 1.
-	nextIndex := String findFirstInString: aString inSet: XMLTranslationMap startingAt: lastIndex.
-	nextIndex = 0] whileFalse.
-	self stream nextPutAll: (aString copyFrom: lastIndex to: aString size).
-]
+	lastIndex := 1.
+	nextIndex := String
+		findFirstInString: aString
+		inSet: SpecialCharacters byteArrayMap
+		startingAt: lastIndex.
+	nextIndex isZero
+		ifTrue: [^ self nextPutAll: aString].
 
-{ #category : #'writing xml' }
-XMLWriter >> xmlDeclaration: versionString encoding: encodingString [
-	self canonical
-		ifFalse: [
+	[nextIndex isZero]
+		whileFalse: [| char |
 			self
-				startPI: 'xml';
-				attribute: 'version' value: versionString;
-				attribute: 'encoding' value: encodingString;
-				endPI.
-			self stream flush]
+				nextPutAll: (aString copyFrom: lastIndex to: nextIndex - 1);
+				nextPutAll:
+					(((char := aString at: nextIndex) == LineFeed or: [char == CarriageReturn])
+						ifTrue: [self lineBreak]
+						ifFalse: [CharacterEscapes at: char]).
+			lastIndex := nextIndex + 1.
+			nextIndex := String
+				findFirstInString: aString
+				inSet: SpecialCharacters byteArrayMap
+				startingAt: lastIndex].
+	self nextPutAll: (aString copyFrom: lastIndex to: aString size).
 ]
 
-{ #category : #'writing xml' }
-XMLWriter >> xmlns: aNamespace uri: aUri [
-	self nestedScopes declareNamespace: aNamespace uri: aUri.
-
+{ #category : #private }
+XMLWriter >> writeXmlEncodedString: aString [
 	self
-		attribute:
-			(aNamespace = 'xmlns'
-				ifTrue: ['xmlns']
-				ifFalse: ['xmlns:', aNamespace])
-		value: aUri
+		quote;
+		writeXmlEncoded: aString;
+		quote
+]
+
+{ #category : #'writing markup' }
+XMLWriter >> xml [
+	^ self addNewMarkupWriter: XMLXmlDeclarationWriter
 ]

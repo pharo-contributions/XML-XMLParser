@@ -1,5 +1,5 @@
 "
-This class represents a node that has child nodes. It provides a basic protocol to add/remove nodes and iterate over them. You will likely use its API through either XMLElement or XMLDocument.
+This class represents a node that can contain child nodes. It provides message that allow you to add, remove, access, and enumerate child nodes. The nodes themselves are stored in some type of XMLObservableList, the exact type of which varies depending on the subclass, and can be accessed directly by sending #nodes.
 "
 Class {
 	#name : #XMLNodeWithChildren,
@@ -16,13 +16,13 @@ XMLNodeWithChildren >> addNode: aNode [
 ]
 
 { #category : #accessing }
-XMLNodeWithChildren >> addNode: aNode after: afterNode [
-	^ self nodes add: aNode after: afterNode
+XMLNodeWithChildren >> addNode: aNode after: aPriorNode [
+	^ self nodes add: aNode after: aPriorNode
 ]
 
 { #category : #accessing }
-XMLNodeWithChildren >> addNode: aNode before: beforeNode [
-	^ self nodes add: aNode before: beforeNode
+XMLNodeWithChildren >> addNode: aNode before: aSubsequentNode [
+	^ self nodes add: aNode before: aSubsequentNode
 ]
 
 { #category : #accessing }
@@ -32,8 +32,12 @@ XMLNodeWithChildren >> addNodeFirst: aNode [
 
 { #category : #accessing }
 XMLNodeWithChildren >> addNodes: aNodeCollection [
-	aNodeCollection do: [:each | self addNode: each].
-	^ aNodeCollection.
+	^ self nodes addAll: aNodeCollection
+]
+
+{ #category : #notifications }
+XMLNodeWithChildren >> addedNode: aNode [
+	self beParentOf: aNode
 ]
 
 { #category : #accessing }
@@ -48,17 +52,13 @@ XMLNodeWithChildren >> includesNode: aNode [
 
 { #category : #testing }
 XMLNodeWithChildren >> isEmpty [
-	^ self nodes isEmpty
+	"Used to avoid initializing #nodes unless necessary"
+	^ nodes isNil or: [nodes isEmpty]
 ]
 
 { #category : #accessing }
 XMLNodeWithChildren >> lastNode [
 	^ self nodes last
-]
-
-{ #category : #announcements }
-XMLNodeWithChildren >> nodeAdded: aNode [
-	aNode parent: self
 ]
 
 { #category : #accessing }
@@ -71,24 +71,22 @@ XMLNodeWithChildren >> nodeBefore: aNode [
 	^ self nodes before: aNode
 ]
 
-{ #category : #announcements }
-XMLNodeWithChildren >> nodeRemoved: aNode [
-	aNode parent: nil
-]
-
 { #category : #accessing }
 XMLNodeWithChildren >> nodes [
-	^ nodes ifNil: [nodes := XMLNodeList parent: self]
+	^ nodes ifNil: [
+		(nodes := self nodesClass new)
+			addObserver: self;
+			yourself]
+]
+
+{ #category : #private }
+XMLNodeWithChildren >> nodesClass [
+	self subclassResponsibility
 ]
 
 { #category : #enumerating }
 XMLNodeWithChildren >> nodesDo: aBlock [
 	self nodes do: aBlock
-]
-
-{ #category : #printing }
-XMLNodeWithChildren >> printXMLOn: writer [
-	self nodesDo: [:each | each printXMLOn: writer].
 ]
 
 { #category : #accessing }
@@ -103,8 +101,12 @@ XMLNodeWithChildren >> removeNodes [
 
 { #category : #accessing }
 XMLNodeWithChildren >> removeNodes: aNodeCollection [
-	aNodeCollection do: [:each | self removeNode: each].
-	^ aNodeCollection.
+	^ self nodes removeAll: aNodeCollection
+]
+
+{ #category : #notifications }
+XMLNodeWithChildren >> removedNode: aNode [
+	self stopBeingParentOf: aNode
 ]
 
 { #category : #accessing }
@@ -116,5 +118,7 @@ XMLNodeWithChildren >> replaceNode: aNode with: aReplacementNode [
 
 { #category : #accessing }
 XMLNodeWithChildren >> topNode [
-	^ self firstNode
+	self deprecated: 'use #firstNode instead'.
+
+	^ self firstNode.
 ]

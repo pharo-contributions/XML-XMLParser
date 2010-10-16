@@ -18,7 +18,7 @@ Class {
 		'LiteralChars',
 		'NameDelimiters'
 	],
-	#category : #'XML-Parser-Parser'
+	#category : #'XML-Parser'
 }
 
 { #category : #'class initialization' }
@@ -261,10 +261,10 @@ XMLTokenizer >> initEntities [
 	^ents
 ]
 
-{ #category : #initialize }
+{ #category : #initialization }
 XMLTokenizer >> initialize [
-	streamReader := XMLStreamReader new.
-	streamWriter := XMLStreamWriter new.
+	streamReader := XMLNestedStreamReader new.
+	streamWriter := XMLNestedStreamWriter new.
 	parsingMarkup := false.
 	isValidating := false.
 ]
@@ -356,7 +356,7 @@ XMLTokenizer >> nextCharReference [
 			base := 16]
 		ifFalse: [base := 10].
 
-	(charValue := streamReader readNumberBase: base)
+	(charValue := streamReader nextIntegerWithBase: base)
 		ifNil: [self errorExpected: 'number'].
 	self expectNext: $;.
 	^ Unicode value: charValue.
@@ -490,11 +490,11 @@ XMLTokenizer >> nextExternalId [
 		ifNil: [^nil].
 
 	"The rest of this method only applies if we're reading aFileStream"
-	(streamReader topStream isKindOf: FileStream)
+	(streamReader stream isKindOf: FileStream)
 		ifFalse: [^''].
-	dir := streamReader topStream directory.
+	dir := streamReader stream directory.
 	^(dir fileExists: systemId)
-		ifTrue: [(dir readOnlyFileNamed: systemId) stringContentsOfEntireFile]
+		ifTrue: [(dir readOnlyFileNamed: systemId) stringContents]
 		ifFalse: ['']
 ]
 
@@ -724,7 +724,7 @@ XMLTokenizer >> parameterEntity: refName put: aReference [
 
 { #category : #errors }
 XMLTokenizer >> parseError: errorString [
-	SAXParseException signal: errorString
+	XMLParseException signal: errorString
 ]
 
 { #category : #private }

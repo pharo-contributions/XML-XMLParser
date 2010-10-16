@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLParserTest,
 	#superclass : #TestCase,
-	#category : #'XML-Parser-Test'
+	#category : #'XML-Parser-Tests'
 }
 
 { #category : #source }
@@ -133,7 +133,7 @@ XMLParserTest >> benchmark4 [
 		parseDocumentFrom: self addressBookXML readStream
 		useNamespaces: false.
 	^ [100000 timesRepeat: [
-		doc root topElement
+		doc root firstElement
 			elementAt: 'contact-info';
 			elementAt: 'address';
 			elementAt: 'job-info';
@@ -153,7 +153,7 @@ XMLParserTest >> exampleEncodedXML [
 '
 ]
 
-{ #category : #'tests-utf8' }
+{ #category : #tests }
 XMLParserTest >> testCDATASection [
 	| xmlDocument element output |
 
@@ -161,7 +161,7 @@ XMLParserTest >> testCDATASection [
 		(XMLDOMParser on: self exampleCDATASectionXML readStream)
 			preservesCDataSections: true;
 			parseDocument.
-	element := xmlDocument firstTagNamed: #'test-data'.
+	element := xmlDocument firstTagNamed: 'test-data'.
 
 	self assert: element contentString = 'this is CDATA test content 1 < 2 & 5 > 3'.
 	
@@ -175,8 +175,8 @@ XMLParserTest >> testCDATASection [
 XMLParserTest >> testDecodingCharacters [
 	| xmlDocument element |
 
-	xmlDocument := XMLDOMParser parseDocumentFrom: self exampleEncodedXML readStream.
-	element := xmlDocument firstTagNamed: #'test-data'.
+	xmlDocument := XMLDOMParser parse: self exampleEncodedXML.
+	element := xmlDocument firstTagNamed: 'test-data'.
 
 	self assert: element contentString first charCode = 8230.	
 
@@ -216,16 +216,24 @@ XMLParserTest >> testExampleAddressBookWithDTD [
 
 { #category : #tests }
 XMLParserTest >> testLineEndingsDoNotMatter [
-   |text cr crlf|
-   text :=
- '<foo>
- bar
- baz
- </foo>'.
-	cr := XMLDOMParser parseDocumentFrom: text readStream.
-	crlf := XMLDOMParser parseDocumentFrom:
-		(text copyReplaceAll: String cr with: String crlf) readStream.
-	self assert: (cr root contentString) = (crlf root contentString).
+   | source docWithCrs docWithCrlfs |
+
+   (source := String new writeStream)
+		nextPutAll: '<foo>';
+		cr;
+		nextPutAll: 'bar';
+		cr;
+		nextPutAll: 'baz';
+		cr;
+		nextPutAll: '</foo>'.
+
+	docWithCrs := XMLDOMParser parse: source contents.
+	docWithCrlfs :=
+		XMLDOMParser parse:
+			(source contents
+				copyReplaceAll: String cr
+				with: String crlf).
+	self assert: (docWithCrs root contentString) = (docWithCrlfs root contentString).
 
 ]
 
@@ -234,7 +242,7 @@ XMLParserTest >> testParsing [
 	| xmlDocument root firstPerson numberOfPersons |
 	"self debug: #testParsing"
 
-	xmlDocument := XMLDOMParser parseDocumentFrom: self addressBookXML readStream.
+	xmlDocument := XMLDOMParser parse: self addressBookXML.
 	self assert: (xmlDocument isKindOf: XMLDocument).
 	root := xmlDocument root.
 	self assert: (root class == XMLElement).

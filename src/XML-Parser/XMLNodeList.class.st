@@ -1,129 +1,239 @@
+"
+This class represents an ordered list of child nodes for some kind of XMLNodeWithElements, either an XMLDocument or XMLElement object. It treats element nodes specially, keeping both an ordered list of child elements and a dictionary that allows for faster retrieval of element(s) by qualified name or local name only.
+"
 Class {
 	#name : #XMLNodeList,
-	#superclass : #XMLOrderedList,
+	#superclass : #XMLObservableList,
+	#traits : 'TXMLObserver',
+	#classTraits : 'TXMLObserver classTrait',
 	#instVars : [
-		'parent'
+		'elements',
+		'elementsByName'
 	],
 	#category : #'XML-Parser-Nodes'
 }
 
-{ #category : #'instance creation' }
-XMLNodeList class >> parent: aParentNode [
-	^ self new parent: aParentNode
+{ #category : #private }
+XMLNodeList >> added: aNode [
+	self startObserving: aNode.
+	aNode isElement
+		ifTrue: [
+			self last == aNode
+				ifTrue: [self elementAddedAtEnd: aNode]
+				ifFalse: [self elementInsertedBeforeEnd: aNode].
+			self notifyOf: #addedElement: with: aNode].
+	self notifyOf: #addedNode: with: aNode.
 ]
 
-{ #category : #adding }
-XMLNodeList >> add: newNode after: oldNode [
-	^ self with: [super add: newNode after: oldNode] add: newNode
+{ #category : #private }
+XMLNodeList >> adding: aNode [
+	aNode hasParent
+		ifTrue: [XMLDOMException signal: 'Cannot add child node that already has a parent']
 ]
 
-{ #category : #adding }
-XMLNodeList >> add: newNode afterIndex: oldNode [
-	^ self with: [super add: newNode afterIndex: oldNode] add: newNode
+{ #category : #private }
+XMLNodeList >> elementAddedAtEnd: anElement [
+	self elements add: anElement.
+	self
+		elementsByNameAt: anElement localName
+		addElement: anElement.
+	anElement hasPrefix
+		ifTrue: [
+			self
+				elementsByNameAt: anElement qualifiedName
+				addElement: anElement]
 ]
 
-{ #category : #adding }
-XMLNodeList >> add: newNode before: oldNode [
-	^ self with: [super add: newNode before: oldNode] add: newNode
-]
+{ #category : #private }
+XMLNodeList >> elementInsertedBeforeEnd: anElement [
+	| elementBefore |
 
-{ #category : #adding }
-XMLNodeList >> add: newNode beforeIndex: oldNode [
-	^ self with: [super add: newNode beforeIndex: oldNode] add: newNode
-]
+	(elementBefore := self findElementBefore: anElement)
+		ifNil: [self elements add: anElement]
+		ifNotNil: [self elements add: anElement after: elementBefore].
 
-{ #category : #adding }
-XMLNodeList >> addFirst: aNode [
-	^ self with: [super addFirst: aNode] add: aNode
-]
-
-{ #category : #adding }
-XMLNodeList >> addLast: aNode [
-	^ self with: [super addLast: aNode] add: aNode
-]
-
-{ #category : #adding }
-XMLNodeList >> at: anIndex ifAbsentPut: aValue [
-	^ self
-		at: anIndex
-		ifAbsent: [self at: anIndex put: aValue]
-]
-
-{ #category : #adding }
-XMLNodeList >> at: anIndex put: aNode [
-	(self at: anIndex)
-		ifNotNil: [self with: [super at: anIndex put: nil] remove: (self at: anIndex)].
-	^ self with: [super at: anIndex put: aNode] add: aNode.
-]
-
-{ #category : #errors }
-XMLNodeList >> errorNodeWithParent [
-	^ self domError: 'Cannot add node that is already the child of another node'
+	self elementsByNameAt: anElement localName insertElement: anElement.
+	anElement hasPrefix
+		ifTrue: [
+			self
+				elementsByNameAt: anElement qualifiedName
+				insertElement: anElement]
 ]
 
 { #category : #accessing }
-XMLNodeList >> parent [
-	^ parent
+XMLNodeList >> elementNamed: aName [
+	^ self elementNamed: aName ifAbsent: [self defaultValue]
 ]
 
 { #category : #accessing }
-XMLNodeList >> parent: aParent [
-	parent := aParent
+XMLNodeList >> elementNamed: aName ifAbsent: aBlock [
+	| elementsWithName |
+
+	elementsWithName := self elementsByName at: aName ifAbsent: [^ aBlock value].
+
+	^ elementsWithName isCollection
+		ifTrue: [elementsWithName first]
+		ifFalse: [elementsWithName]
 ]
 
-{ #category : #removing }
-XMLNodeList >> remove: aNode ifAbsent: aBlock [
-	^ self with: [super remove: aNode ifAbsent: [^ aBlock value]] remove: aNode
+{ #category : #accessing }
+XMLNodeList >> elementNamed: aName namespaceURI: aUri [
+	^ self elementNamed: aName namespaceURI: aUri ifAbsent: [self defaultValue]
 ]
 
-{ #category : #removing }
-XMLNodeList >> removeAll [
-	self ifEmpty: [^ self].
-	self copy do: [:each | self with: [self removeFirst] remove: each]
+{ #category : #accessing }
+XMLNodeList >> elementNamed: aName namespaceURI: aUri ifAbsent: aBlock [
+	^ (self elementsNamed: aName)
+		detect: [:each | each namespaceURI = aUri]
+		ifNone: aBlock
 ]
 
-{ #category : #removing }
-XMLNodeList >> removeAt: anIndex [
-	^ self with: [super removeAt: anIndex] remove: (self at: anIndex)
-]
-
-{ #category : #removing }
-XMLNodeList >> removeFirst [
-	^ self removeAt: 1
-]
-
-{ #category : #removing }
-XMLNodeList >> removeLast [
-	^ self removeAt: self size
+{ #category : #accessing }
+XMLNodeList >> elements [
+	^ elements ifNil: [elements := self species new]
 ]
 
 { #category : #private }
-XMLNodeList >> with: aBlock add: aNode [
-	aNode hasParent ifTrue: [^ self errorNodeWithParent].
-	self
-		with: [aBlock value]
-		onError: [^ nil].
-	self parent ifNotNil: [self parent nodeAdded: aNode].
-
-	^ aNode.
+XMLNodeList >> elementsByName [
+	^ elementsByName ifNil: [elementsByName := Dictionary new].
 ]
 
 { #category : #private }
-XMLNodeList >> with: aBlock onError: errorBlock [
-	^ aBlock
-		on: Error
-		do: [:error |
-			errorBlock valueWithPossibleArgument: error.
-			error signal]
+XMLNodeList >> elementsByNameAt: aName addElement: anElement [
+	| elementsWithName |
+
+	elementsWithName := 
+		self elementsByName
+			at: aName
+			ifAbsent: [
+				self elementsByName at: aName put: anElement.
+				^ self].
+
+	elementsWithName isCollection
+		ifTrue: [elementsWithName add: anElement]
+		ifFalse: [
+			self elementsByName
+				at: aName
+				put: (self species with: elementsWithName with: anElement)]
 ]
 
 { #category : #private }
-XMLNodeList >> with: aBlock remove: aNode [
+XMLNodeList >> elementsByNameAt: aName insertElement: anElement [
+	| elementsWithName elementBefore |
 
-	self
-		with: [
-			aBlock value.
-			self parent ifNotNil: [self parent nodeRemoved: aNode]]
-		onError: [^ nil].
-	^ aNode.
+	(elementBefore := self findElementBefore: anElement withName: aName)
+		ifNil: [^ self elementsByNameAt: aName addElement: anElement].
+
+	(elementsWithName := self elementsByName at: aName)
+		isCollection
+			ifTrue: [elementsWithName add: anElement after: elementBefore]
+			ifFalse: [
+				self elementsByName
+					at: aName
+					put: (self species with: elementBefore with: anElement)]
+]
+
+{ #category : #private }
+XMLNodeList >> elementsByNameAt: aName removeElement: anElement [
+	| elementsWithName |
+
+	(elementsWithName := self elementsByName at: aName)
+		isCollection
+			ifTrue: [
+				elementsWithName remove: anElement.
+				elementsWithName ifEmpty: [self elementsByName removeKey: aName]]
+			ifFalse: [self elementsByName removeKey: aName]
+]
+
+{ #category : #enumerating }
+XMLNodeList >> elementsDo: aBlock [
+	self elements do: aBlock
+]
+
+{ #category : #accessing }
+XMLNodeList >> elementsNamed: aName [
+	| elementsWithName |
+
+	elementsWithName :=
+		self elementsByName
+			at: aName
+			ifAbsent: [^ self species new].
+
+	^ elementsWithName isCollection
+		ifTrue: [elementsWithName]
+		ifFalse: [
+			self elementsByName
+				at: aName
+				put: (self species with: elementsWithName)]
+]
+
+{ #category : #accessing }
+XMLNodeList >> elementsNamed: aName namespaceURI: aUri [
+	^ (self elementsNamed: aName) select: [:each | each namespaceURI = aUri]
+]
+
+{ #category : #private }
+XMLNodeList >> findElementBefore: anElement [
+	| elementBefore |
+
+	elementBefore := nil.
+	self do: [:each |
+		each isElement
+			ifTrue: [
+				(each = anElement)
+					ifTrue: [^ elementBefore].
+				elementBefore := each]].
+	^ elementBefore.
+]
+
+{ #category : #private }
+XMLNodeList >> findElementBefore: anElement withName: aName [
+	| lastNamedElement |
+
+	lastNamedElement := nil.
+	self do: [:each |
+		(each isElement and: [each isNamed: aName])
+			ifTrue: [
+				(each = anElement)
+					ifTrue: [^ lastNamedElement].
+				lastNamedElement := each]].
+	^ lastNamedElement.
+]
+
+{ #category : #testing }
+XMLNodeList >> hasElements [
+	^ elements notNil and: [elements notEmpty]
+]
+
+{ #category : #testing }
+XMLNodeList >> includesElementNamed: aName [
+	^ self elementsByName includesKey: aName
+]
+
+{ #category : #private }
+XMLNodeList >> removed: aNode [
+	self stopObserving: aNode.
+	aNode isElement
+		ifTrue: [
+			self elements remove: aNode.
+			self elementsByNameAt: aNode localName removeElement: aNode.
+			aNode hasPrefix
+				ifTrue: [self elementsByNameAt: aNode qualifiedName removeElement: aNode].
+			self notifyOf: #removedElement: with: aNode].
+	self notifyOf: #removedNode: with: aNode.
+]
+
+{ #category : #notifications }
+XMLNodeList >> renamedElement: anElement from: anOldName to: aNewName [
+	anOldName splitQualifiedNameInto: [:oldPrefix :oldLocalName |
+		self elementsByNameAt: oldLocalName removeElement: anElement.
+		oldPrefix
+			ifNotEmpty: [self elementsByNameAt: anOldName removeElement: anElement]].
+
+	self elementsByNameAt: anElement localName insertElement: anElement.
+	anElement hasPrefix
+		ifTrue: [
+			self
+				elementsByNameAt: anElement qualifiedName
+				insertElement: anElement].
 ]

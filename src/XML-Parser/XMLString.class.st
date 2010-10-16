@@ -1,5 +1,5 @@
 "
-XMLString nodes can be created directly using the class-side #string: message or by sending a string #asXMLNode. When printing, they XML-escape their content.
+This class represents string nodes, or nodes that contain no markup. XMLString objects can be created directly using the class-side #string: message or by sending a String object #asXMLString. When printing, they XML-escape their content.
 "
 Class {
 	#name : #XMLString,
@@ -16,28 +16,47 @@ XMLString class >> string: aString [
 ]
 
 { #category : #accessing }
-XMLString >> addContent: aString [
-	self string: self string, (self toString: aString)
+XMLString >> addContent: aStringOrStringNode [
+	self string: self string, (self toString: aStringOrStringNode)
 ]
 
-{ #category : #accessing }
-XMLString >> characterData [
-	^ self string
+{ #category : #converting }
+XMLString >> asXMLString [
+	^ self
 ]
 
 { #category : #testing }
-XMLString >> isText [
+XMLString >> isContentNode [
+	^ true
+]
+
+{ #category : #testing }
+XMLString >> isStringNode [
 	^ true
 ]
 
 { #category : #printing }
-XMLString >> printXMLOn: writer [
-	writer pcData: self string
+XMLString >> printContentOn: aStream [
+	| lastChar |
+
+	self string ifEmpty: [^ self].
+
+	((lastChar := aStream peekLast) isNil
+		or: [lastChar isSeparator
+			or: [self string first isSeparator]])
+		ifFalse: [aStream space].
+
+	aStream nextPutAll: self string.
+]
+
+{ #category : #printing }
+XMLString >> printXMLOn: aWriter [
+	aWriter string: self string
 ]
 
 { #category : #accessing }
 XMLString >> string [
-	^ string ifNil: ['']
+	^ string ifNil: [string := '']
 ]
 
 { #category : #accessing }
@@ -46,8 +65,8 @@ XMLString >> string: aString [
 ]
 
 { #category : #private }
-XMLString >> toString: aString [
-	^ (aString isKindOf: String)
-		ifTrue: [aString]
-		ifFalse: [aString string]
+XMLString >> toString: aStringOrStringNode [
+	^ (aStringOrStringNode isKindOf: self class)
+		ifTrue: [aStringOrStringNode string]
+		ifFalse: [aStringOrStringNode]
 ]

@@ -11,7 +11,7 @@ Class {
 		'preservesCDataSections',
 		'isInCDataSection'
 	],
-	#category : #'XML-Parser-Parser'
+	#category : #'XML-Parser'
 }
 
 { #category : #content }
@@ -36,9 +36,7 @@ XMLDOMParser >> document: aDocument [
 XMLDOMParser >> documentAttributes: attributeList [
 	self document
 		version: (attributeList at: 'version' ifAbsent: [nil]);
-		encoding: (attributeList at: 'encoding' ifAbsent: [nil]);
-		requiredMarkup: (attributeList at: 'requiredMarkup' ifAbsent: [nil])
-
+		encoding: (attributeList at: 'encoding' ifAbsent: [nil])
 ]
 
 { #category : #parsing }
@@ -143,12 +141,12 @@ XMLDOMParser >> startDocument [
 { #category : #content }
 XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName attributes: aDictionary [
 	self pushElement:
-		((XMLElement
+		(XMLElement
 			qualifiedName: aQualifiedName
 			prefix: aPrefix
 			localName: aLocalName
-			attributes: aDictionary)
-				setScope: self currentScope)
+			attributes: aDictionary
+			namespaceScope: self currentScope)
 ]
 
 { #category : #private }

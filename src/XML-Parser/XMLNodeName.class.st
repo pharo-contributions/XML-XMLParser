@@ -1,84 +1,106 @@
 "
-The class represents a name for an element or attribute.
+The class represents a name for an element or attribute. It stores the prefix, local part and qualified name.
 "
 Class {
 	#name : #XMLNodeName,
 	#superclass : #Object,
+	#traits : 'TXMLObservable',
+	#classTraits : 'TXMLObservable classTrait',
 	#instVars : [
-		'qualifiedName',
 		'prefix',
-		'localName'
+		'notifier',
+		'localPart',
+		'qualified'
 	],
 	#category : #'XML-Parser-Nodes'
 }
 
-{ #category : #converting }
-XMLNodeName >> asString [
-	^ self qualifiedName
+{ #category : #private }
+XMLNodeName >> changeWith: aBlock [
+	| oldName newName |
+
+	oldName := self qualified.
+	aBlock value.
+	newName := self qualified.
+	self notifyOf: #nodeNameChangedFrom:to: with: oldName with: newName.
 ]
 
 { #category : #accessing }
-XMLNodeName >> expandedWith: aUri [
+XMLNodeName >> expandWith: aUri [
 	^ aUri
-		ifNil: [self localName]
-		ifNotNil: ['{', aUri, '}', self localName]
+		ifEmpty: [self localPart]
+		ifNotEmpty: ['{', aUri, '}', self localPart]
 ]
 
 { #category : #testing }
-XMLNodeName >> hasPrefix [
-	^ prefix notNil
+XMLNodeName >> isPrefixed [
+	^ self prefix notEmpty
+]
+
+{ #category : #testing }
+XMLNodeName >> isSameAs: aString [
+	^ self qualified = aString or: [self localPart = aString]
 ]
 
 { #category : #accessing }
-XMLNodeName >> localName [
-	^ localName ifNil: ['']
+XMLNodeName >> localPart [
+	^ localPart ifNil: [localPart := '']
 ]
 
 { #category : #accessing }
-XMLNodeName >> name: aQualifiedName [
-	aQualifiedName
-		splitQualifiedNameInto: [:prefixPart :localPart |
-			self setPrefix: prefixPart localName: localPart]
+XMLNodeName >> localPart: aString [
+	localPart := aString
+]
+
+{ #category : #accessing }
+XMLNodeName >> notifier [
+	^ notifier ifNil: [notifier := XMLNotifier new]
 ]
 
 { #category : #accessing }
 XMLNodeName >> prefix [
-	^ prefix
+	^ prefix ifNil: [prefix := '']
 ]
 
 { #category : #accessing }
 XMLNodeName >> prefix: aPrefix [
-	self setPrefix: aPrefix localName: self localName
+	self changeWith: [self setPrefix: aPrefix localPart: self localPart]
 ]
 
 { #category : #printing }
 XMLNodeName >> printOn: aStream [
-	aStream nextPutAll: self qualifiedName
+	aStream nextPutAll: self qualified
 ]
 
 { #category : #accessing }
-XMLNodeName >> qualifiedName [
-	^ qualifiedName ifNil: ['']
+XMLNodeName >> qualified [
+	^ qualified ifNil: [qualified := '']
+]
+
+{ #category : #accessing }
+XMLNodeName >> qualified: aQualifiedName [
+	aQualifiedName splitQualifiedNameInto: [:prefixPart :localName |
+		self changeWith: [self setPrefix: prefixPart localPart: localName]]
 ]
 
 { #category : #private }
-XMLNodeName >> setPrefix: aPrefix localName: aLocalName [
+XMLNodeName >> setPrefix: aPrefix localPart: aLocalPart [
 	aPrefix isEmptyOrNil
 		ifTrue: [
 			self
-				setQualifiedName: aLocalName
-				prefix: nil
-				localName: aLocalName]
+				setQualified: aLocalPart
+				prefix: ''
+				localPart: aLocalPart]
 		ifFalse: [
 			self
-				setQualifiedName: aPrefix, ':', aLocalName
+				setQualified: aPrefix, ':', aLocalPart
 				prefix: aPrefix
-				localName: aLocalName]
+				localPart: aLocalPart]
 ]
 
 { #category : #private }
-XMLNodeName >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocalName [
-	qualifiedName := aQualifiedName.
+XMLNodeName >> setQualified: aQualifiedName prefix: aPrefix localPart: aLocalPart [
+	qualified := aQualifiedName.
 	prefix := aPrefix.
-	localName := aLocalName.
+	localPart := aLocalPart.
 ]

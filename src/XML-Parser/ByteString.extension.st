@@ -1,6 +1,5 @@
 Extension { #name : #ByteString }
 
 { #category : #'*xml-parser' }
-ByteString >> applyLanguageInfomation: languageEnvironment [
-
+ByteString >> applyLanguageInfomation: aLanguageEnvironment [
 ]

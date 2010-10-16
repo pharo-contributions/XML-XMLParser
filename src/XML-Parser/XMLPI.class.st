@@ -1,5 +1,5 @@
 "
-This class represents processing instructions.
+This class represents a processing instruction.
 
 "
 Class {
@@ -21,7 +21,7 @@ XMLPI class >> target: targetName data: aString [
 
 { #category : #accessing }
 XMLPI >> data [
-	^ data ifNil: ['']
+	^ data ifNil: [data := '']
 ]
 
 { #category : #accessing }
@@ -30,18 +30,20 @@ XMLPI >> data: aString [
 ]
 
 { #category : #testing }
-XMLPI >> isProcessingInstruction [
+XMLPI >> isPI [
 	^ true
 ]
 
 { #category : #printing }
-XMLPI >> printXMLOn: writer [
-	writer pi: self target data: self data
+XMLPI >> printXMLOn: aWriter [
+	aWriter pi
+		target: self target;
+		data: self data
 ]
 
 { #category : #accessing }
 XMLPI >> target [
-	^ target ifNil: ['']
+	^ target ifNil: [target := '']
 ]
 
 { #category : #accessing }
