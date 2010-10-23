@@ -149,7 +149,7 @@ XMLNodeWithElements >> firstTagNamedAny: aStringArray with: aBlock [
 ]
 
 { #category : #testing }
-XMLNodeWithElements >> hasContent [
+XMLNodeWithElements >> hasContentNodes [
 	^ self nodes anySatisfy: [:each | each isContentNode]
 ]
 

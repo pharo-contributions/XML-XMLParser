@@ -1,13 +1,15 @@
 "
-This class generates XML tag pairs. You can specifiy the attributes of the start tag using the #attribute* messages, and you can add xmlns: namespace declarations using the #xmlns* messages. If you do not send #content:, or if you do but the argument is nil or a block that generates no markup, then only a single, empty tag in the form of ""<empty />"" will be generated, unless the XMLWriter object is configured to generate canonical XML, in which case it will be an empty start/end tag pair like ""<empty></empty>"".
+This class generates XML tags for elements. You can specifiy the attributes of the start tag using the #attribute* messages, and you can add xmlns: namespace declarations using the #xmlns* messages. If you do not send #content:, or if you do but the argument is nil or a block that generates no markup, then only a single, empty tag in the form of ""<empty />"" will be generated, unless the writer object that created the tag writer object is configured to generate canonical XML, in which case an empty start/end tag pair like ""<empty></empty>"" will be generated.
+
+You can supply child markup content using #content: or the generic #with: message. Namespace declarations will be ignored if a parent element has equivalent declarations (and they were thus already generated).
 "
 Class {
 	#name : #XMLTagWriter,
 	#superclass : #XMLEmbeddedMarkupWriter,
 	#instVars : [
 		'name',
-		'prefixMappings',
 		'defaultNamespace',
+		'prefixMappings',
 		'attributes'
 	],
 	#category : #'XML-Parser-Writers'
@@ -54,14 +56,14 @@ XMLTagWriter >> embedString: aString [
 ]
 
 { #category : #private }
-XMLTagWriter >> hasAlreadyWrittenDefaultNamespace: aDefaultNamespace [
+XMLTagWriter >> hasWrittenXmlns: aDefaultNamespace [
 	^ self parent notNil
 		and: [self parent isTagWriter
-			and: [self parent defaultNamespace = aDefaultNamespace]]
+			and: [self parent xmlns = aDefaultNamespace]]
 ]
 
 { #category : #private }
-XMLTagWriter >> hasAlreadyWrittenPrefix: aPrefix uri: aUri [
+XMLTagWriter >> hasWrittenXmlns: aPrefix uri: aUri [
 	^ self parent notNil
 		and: [self parent isTagWriter
 			and: [(self parent xmlnsAt: aPrefix ifAbsent: [^ false]) = aUri]]
@@ -105,7 +107,7 @@ XMLTagWriter >> writeBeforeEmbeddedMarkup [
 ]
 
 { #category : #private }
-XMLTagWriter >> writeClosingTag [
+XMLTagWriter >> writeEndTag [
 	self writer
 		nextPutAll: '</';
 		writeName: self name;
@@ -119,12 +121,12 @@ XMLTagWriter >> writeEpilogue [
 			self writer outdent.
 			self hasEmbeddedMarkupWriters
 				ifTrue: [self writer cr].
-			self writeClosingTag]
+			self writeEndTag]
 		ifFalse: [
 			self writer isCanonical
 				ifTrue: [
 					self writer nextPut: $>.
-					self writeClosingTag]
+					self writeEndTag]
 				ifFalse: [
 					self writer
 						space;
@@ -155,7 +157,7 @@ XMLTagWriter >> writePrologue [
 XMLTagWriter >> writeXmlnsDeclarations [
 	self xmlns
 		ifNotEmpty: [
-			(self hasAlreadyWrittenDefaultNamespace: self xmlns)
+			(self hasWrittenXmlns: self xmlns)
 				ifFalse: [self writer writeName: 'xmlns' value: self xmlns]].
 
 	self prefixMappings
@@ -163,7 +165,7 @@ XMLTagWriter >> writeXmlnsDeclarations [
 			self
 				writeKeysAndValuesFrom: self prefixMappings
 				with: [:prefix :uri |
-					(self hasAlreadyWrittenPrefix: prefix uri: uri)
+					(self hasWrittenXmlns: prefix uri: uri)
 						ifFalse: [self writer writeName: 'xmlns:', prefix value: uri]]].
 ]
 

@@ -6,5 +6,5 @@ Class {
 
 { #category : #printing }
 XMLMockNode >> printXMLOn: aWriter [
-	aWriter string: 'XMLMockNode(', self identityHash asString, ') '
+	aWriter string: self class asString, '(', self identityHash asString, ') '
 ]

@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #assertions }
-XMLNodeTest >> assertDocument: aDocument doctype: aDoctype version: aVersion encoding: anEncoding [
+XMLNodeTest >> assertDocument: aDocument hasDoctype: aDoctype version: aVersion encoding: anEncoding [
 	self
 		assert: aDocument doctypeDeclaration = aDoctype;
 		assert: aDocument version = aVersion;
@@ -13,58 +13,58 @@ XMLNodeTest >> assertDocument: aDocument doctype: aDoctype version: aVersion enc
 ]
 
 { #category : #assertions }
-XMLNodeTest >> assertElement: anElement attribute: aString is: aValue [
+XMLNodeTest >> assertElement: anElement hasAttribute: anAttributeName equalTo: anAttributeValue [
 	self
-		assert: (anElement includesAttribute: aString);
-		assert: (anElement attributeAt: aString) = aValue;
-		assert: (anElement @ aString) = aValue
+		assert: (anElement includesAttribute: anAttributeName);
+		assert: (anElement attributeAt: anAttributeName) = anAttributeValue;
+		assert: (anElement @ anAttributeName) = anAttributeValue;
+		assert: (anElement attributeNodeAt: anAttributeName) notNil;
+		assert: (anElement attributeNodeAt: anAttributeName) value = anAttributeValue
 ]
 
 { #category : #assertions }
-XMLNodeTest >> assertElement: anElement attributes: aDictionary [
+XMLNodeTest >> assertElement: anElement hasAttributes: aDictionary [
 	self assert:
 		((aDictionary isMemberOf: Dictionary)
-			ifTrue: [(Dictionary newFrom: anElement attributes)]
-			ifFalse: [anElement attributes]) = aDictionary
+			ifTrue: [(Dictionary newFrom: anElement attributes) = aDictionary]
+			ifFalse: [anElement attributes = aDictionary])
 ]
 
 { #category : #assertions }
-XMLNodeTest >> assertElement: anElement contentString: aContentString contents: aContentArray [
-	| strings |
+XMLNodeTest >> assertElement: anElement hasContentString: aContentString withStrings: aStringArray [
+	| combinedStrings |
 
 	self assert: anElement contentString = aContentString.
-	
-	strings := (anElement stringNodes collect: [:each | each string]).
-	self assert: strings asArray = aContentArray.
+	combinedStrings := anElement stringNodes collect: [:each | each string].
+	self assert: combinedStrings asArray = aStringArray asArray.
 ]
 
 { #category : #assertions }
-XMLNodeTest >> assertElement: anElement name: aName attributes: aDictionary contentString: aString [
+XMLNodeTest >> assertElement: anElement hasName: aName attributes: aDictionary contentString: aString [
 	self
 		assert: (anElement isNamed: aName);
-		assertElement: anElement attributes: aDictionary;
+		assertElement: anElement hasAttributes: aDictionary;
 		assert: anElement contentString = aString
 ]
 
 { #category : #assertions }
-XMLNodeTest >> assertElement: anElement name: aName localName: aLocalName [
+XMLNodeTest >> assertElement: anElement hasName: aName localName: aLocalName [
 	self
 		assert: anElement name = aName;
-		assert: anElement qualifiedName = aName;
 		assert: anElement localName = aLocalName;
 		assert: (anElement isNamed: aName);
 		assert: (anElement isNamed: aLocalName)
 ]
 
 { #category : #assertions }
-XMLNodeTest >> assertNode: aNode prefix: aPrefix uri: aUri [
+XMLNodeTest >> assertNode: aNode hasPrefix: aPrefix uri: aUri [
 	self
 		assert: aNode prefix = aPrefix;
 		assert: aNode namespaceURI = aUri
 ]
 
 { #category : #assertions }
-XMLNodeTest >> assertPI: aNode target: aTarget data: aData [
+XMLNodeTest >> assertPI: aNode hasTarget: aTarget data: aData [
 	self
 		assert: aNode target = aTarget;
 		assert: aNode data = aData;
@@ -72,11 +72,11 @@ XMLNodeTest >> assertPI: aNode target: aTarget data: aData [
 ]
 
 { #category : #assertions }
-XMLNodeTest >> assertString: aNode is: aString printed: aPrintString [
+XMLNodeTest >> assertStringNode: aStringNode equals: aString withPrintString: aPrintString [
 	self
-		assert: aNode string = aString;
-		assert: aNode contentString = aString;
-		assert: aNode printString = aPrintString
+		assert: aStringNode string = aString;
+		assert: aStringNode contentString = aString;
+		assert: aStringNode printString = aPrintString
 ]
 
 { #category : #accessing }
@@ -92,11 +92,11 @@ XMLNodeTest >> escapedString [
 ]
 
 { #category : #accessing }
-XMLNodeTest >> intersperse: aCollection with: aPaddingCollection [
+XMLNodeTest >> intersperse: aNodeCollection with: aPaddingCollection [
 	| mixedCollection nodeStream paddingStream |
 
 	mixedCollection := XMLOrderedList new.
-	nodeStream := aCollection readStream.
+	nodeStream := aNodeCollection readStream.
 	paddingStream := aPaddingCollection readStream.
 	[nodeStream atEnd and: [paddingStream atEnd]]
 		whileFalse: [
@@ -204,15 +204,20 @@ XMLNodeTest >> should: aBlock removeNodes: aNodeCollection from: aParent [
 
 { #category : #tests }
 XMLNodeTest >> test010node [
-	| node parent testingMessages accessors |
+	| node parent |
 
 	node := XMLMockNode new.
-	testingMessages := #(isAttribute isContentNode isDocument isElement isPI isStringNode).
-	accessors := #(nextNode previousNode parent).
 	self
 		assert: node isEmpty;
-		assert: (testingMessages noneSatisfy: [:each | node perform: each]);
-		assert: (accessors allSatisfy: [:each | (node perform: each) isNil]).
+		assert:
+			(#(isAttribute isCData isComment isContentNode isDocument
+				isElement isPI isStringNode hasParent notEmpty)
+					noneSatisfy: [:each | node perform: each]);
+		assert:
+			(#(nextNode previousNode parent)
+				allSatisfy: [:each | (node perform: each) isNil]);
+		assert: node asString = (node class asString, '(', node identityHash asString, ') ');
+		assert: node contentString isEmpty.
 
 	parent := XMLMockNode new.
 	node parent: parent.
@@ -230,10 +235,10 @@ XMLNodeTest >> test020processingInstruction [
 	d := 'data'.
 	self
 		assert: pi isPI;
-		assertPI: pi target: '' data: '';
-		assertPI: (pi target: t) target: t data: '';
-		assertPI: (pi data: d) target: t data: d;
-		assertPI: (XMLPI target: t data: d) target: t data: d.
+		assertPI: pi hasTarget: '' data: '';
+		assertPI: (pi target: t) hasTarget: t data: '';
+		assertPI: (pi data: d) hasTarget: t data: d;
+		assertPI: (XMLPI target: t data: d) hasTarget: t data: d.
 ]
 
 { #category : #tests }
@@ -245,21 +250,33 @@ XMLNodeTest >> test030stringNode [
 	escaped := self escapedString.
 	self
 		assert: node isStringNode & node isContentNode;
-		assertString: node is: '' printed: '';
-		assertString: (node string: raw) is: raw printed: escaped;
-		assertString: (node addContent: raw) is: raw, raw printed: escaped, escaped.
+		assertStringNode: node equals: '' withPrintString: '';
+		assertStringNode: (node string: raw) equals: raw withPrintString: escaped;
+		assertStringNode: (node addContent: raw) equals: raw, raw withPrintString: escaped, escaped.
 	self
-		assertString: (node addContent: (XMLString string: raw))
-		is: raw, raw, raw
-		printed: escaped, escaped, escaped.
+		assertStringNode: (node addContent: (XMLString string: raw))
+		equals: raw, raw, raw
+		withPrintString: escaped, escaped, escaped.
 
-	self assertString: (XMLString string: raw) is: raw printed: escaped.
+	self assertStringNode: (XMLString string: raw) equals: raw withPrintString: escaped.
 	self
-		assertString: (XMLString string: (XMLString string: raw))
-		is: raw
-		printed: escaped.
+		assertStringNode: (XMLString string: (XMLString string: raw))
+		equals: raw
+		withPrintString: escaped.
 
-	self assertString: raw asXMLString is: raw printed: escaped.
+	self assertStringNode: raw asXMLString equals: raw withPrintString: escaped.
+]
+
+{ #category : #tests }
+XMLNodeTest >> test035cdataNode [
+	| node raw |
+
+	node := XMLCData new.
+	raw := self markupString.
+	self
+		assert: node isCData & node isStringNode & node isContentNode;
+		assertStringNode: node equals: '' withPrintString: '<![CDATA[]]>';
+		assertStringNode: (node string: raw) equals: raw withPrintString: '<![CDATA[', raw, ']]>' 
 ]
 
 { #category : #tests }
@@ -269,11 +286,14 @@ XMLNodeTest >> test040emptyNodeWithElements [
 	node := XMLMockNodeWithElements new.
 	self
 		assert: node isEmpty;
+		deny: node notEmpty;
 		deny: node hasElements;
 		assert: node nodes isEmpty;
 		assert: node elements isEmpty;
 		assert: node firstNode isNil;
-		assert: node firstElement isNil.
+		assert: node firstElement isNil;
+		assert: node lastNode isNil;
+		assert: node lastElement isNil.
 ]
 
 { #category : #tests }
@@ -282,11 +302,11 @@ XMLNodeTest >> test041namespaces [
 
 	node := XMLElement new.
 	self
-		assertNode: node prefix: '' uri: '';
-		assertNode: (node name: 'foo:name' namespaceURI: 'http://foo') prefix: 'foo' uri: 'http://foo'.
+		assertNode: node hasPrefix: '' uri: '';
+		assertNode: (node name: 'foo:name' namespaceURI: 'http://foo') hasPrefix: 'foo' uri: 'http://foo'.
 
 	node declarePrefix: 'bar' uri: 'http://bar'.
-	self assertNode: (node prefix: 'bar') prefix: 'bar' uri: 'http://bar'.
+	self assertNode: (node prefix: 'bar') hasPrefix: 'bar' uri: 'http://bar'.
 
 	self should: [node prefix: 'badprefix'] raise: XMLNamespaceException.
 ]
@@ -366,7 +386,7 @@ XMLNodeTest >> test050emptyElement [
 	self
 		assert: element isElement & element isContentNode;
 		deny: element hasAttributes;
-		deny: element hasContent;
+		deny: element hasContentNodes;
 		assert: element contentNodes isEmpty;
 		assert: element stringNodes isEmpty.
 ]
@@ -377,14 +397,14 @@ XMLNodeTest >> test051elementNaming [
 
 	element := XMLElement new.
 	self
-		assertElement: element name: '' localName: '';
-		assertElement: (element name: 'foo') name: 'foo' localName: 'foo';
-		assertNode: element prefix: '' uri: ''.
+		assertElement: element hasName: '' localName: '';
+		assertElement: (element name: 'foo') hasName: 'foo' localName: 'foo';
+		assertNode: element hasPrefix: '' uri: ''.
 
 	element name: 'bar:foo' namespaceURI: 'http://bar'.
 	self
-		assertElement: element name: 'bar:foo' localName: 'foo';
-		assertNode: element prefix: 'bar' uri: 'http://bar'.
+		assertElement: element hasName: 'bar:foo' localName: 'foo';
+		assertNode: element hasPrefix: 'bar' uri: 'http://bar'.
 ]
 
 { #category : #tests }
@@ -395,21 +415,22 @@ XMLNodeTest >> test052elementContentString [
 	(element := XMLElement new) contentString: str.
 	self
 		deny: element isEmpty;
-		assert: element hasContent;
+		assert: element hasContentNodes;
+		assert: element hasStringNodes;
 		assert: element contentString = str.
 
 	"Intersperse between text"
 	element addNode: XMLMockNode new.
 	self
 		assertElement: (element addContent: str)
-		contentString: str, ' ', str
-		contents: (Array with: str with: str).
+		hasContentString: str, ' ', str
+		withStrings: (Array with: str with: str).
 
 	"addContent: should combine neighboring string nodes"
 	self
 		assertElement: (element addContent: (XMLString string: str))
-		contentString: str, ' ', str, str
-		contents: (Array with: str with: str, str).
+		hasContentString: str, ' ', str, str
+		withStrings: (Array with: str with: str, str).
 
 	element addElement: ((XMLElement named: 'foo') addContent: 'test').
 	self assert: (element contentStringAt: 'foo') = 'test'.
@@ -428,9 +449,9 @@ XMLNodeTest >> test053elementAttributes [
 	self
 		assert: (element attributeAt: 'foo' put: 'test') = 'test';
 		assert: element hasAttributes;
-		assertElement: element attribute: 'foo' is: 'test';
+		assertElement: element hasAttribute: 'foo' equalTo: 'test';
 		assert: (element attributeAt: 'bar' ifAbsentPut: ['test2']) = 'test2';
-		assertElement: element attribute: 'bar' is: 'test2';
+		assertElement: element hasAttribute: 'bar' equalTo: 'test2';
 		assert: element attributeNames asArray =  #('foo' 'bar').
 
 	self
@@ -438,7 +459,7 @@ XMLNodeTest >> test053elementAttributes [
 			(Array with: 'foo'->'test' with: 'bar'->'test2').
 	self
 		assertElement: element
-		attributes:
+		hasAttributes:
 			(XMLOrderPreservingDictionary
 				with: 'foo'->'test'
 				with: 'bar'->'test2').
@@ -456,26 +477,26 @@ XMLNodeTest >> test054elementConstructors [
 	noAttributes := XMLOrderPreservingDictionary new.
 	self
 		assertElement: (XMLElement named: 'foo')
-		name: 'foo'
+		hasName: 'foo'
 		attributes: noAttributes
 		contentString: ''.
 
 	attributes := XMLOrderPreservingDictionary with: 'foo'->'test1' with: 'bar'->'test2'.
 	self
 		assertElement: (XMLElement name: 'foo' attributes: attributes)
-		name: 'foo'
+		hasName: 'foo'
 		attributes: attributes
 		contentString: ''.
 
 	str := self markupString.
 	self
 		assertElement: (XMLElement named: 'foo')
-		name: 'foo'
+		hasName: 'foo'
 		attributes: noAttributes
 		contentString: ''.
 	self
 		assertElement: (XMLElement name: 'foo' attributes: attributes)
-		name: 'foo'
+		hasName: 'foo'
 		attributes: attributes
 		contentString: ''.
 
@@ -484,12 +505,12 @@ XMLNodeTest >> test054elementConstructors [
 		namespaceURI: 'http://foo'
 		attributes: attributes.
 	self
-		assertElement: element name: 'prefix:foo' attributes: attributes contentString: '';
-		assertNode: element prefix: 'prefix' uri: 'http://foo'.
+		assertElement: element hasName: 'prefix:foo' attributes: attributes contentString: '';
+		assertNode: element hasPrefix: 'prefix' uri: 'http://foo'.
 ]
 
 { #category : #tests }
-XMLNodeTest >> test055elementCDATASection [
+XMLNodeTest >> test055elementCDATANodes [
 	| element str |
 
 	str := self markupString.
@@ -537,12 +558,12 @@ XMLNodeTest >> test061accessingBeforeAfterElements [
 XMLNodeTest >> test062elementPrinting [
 	| element attributes |
 
-	element := (XMLElement named: 'foo').
+	element := (XMLElement named: 'element').
 	attributes := XMLOrderPreservingDictionary with: 'b'->'two' with: 'a'->'one'.
 	self
-		assert: element printString = '<foo />';
-		assert: (element contentString: 'test') printString = '<foo>test</foo>';
-		assert: (element setAttributes: attributes) printString = '<foo b="two" a="one">test</foo>'
+		assert: element printString = '<element />';
+		assert: (element contentString: 'test') printString = '<element>test</element>';
+		assert: (element setAttributes: attributes) printString = '<element b="two" a="one">test</element>'
 ]
 
 { #category : #tests }
@@ -726,21 +747,21 @@ XMLNodeTest >> test090documentTest [
 		assert: doc isDocument;
 		assert: doc root isNil;
 		assert: (doc addElement: root) root = root;
-		assertDocument: doc doctype: nil version: nil encoding: 'UTF-8'.
+		assertDocument: doc hasDoctype: nil version: nil encoding: 'UTF-8'.
 
 	self
 		assertDocument: (doc doctypeDeclaration: doctype)
-		doctype: doctype
+		hasDoctype: doctype
 		version: nil
 		encoding: 'UTF-8'.
 	self
 		assertDocument: (doc version: 1.0)
-		doctype: doctype
+		hasDoctype: doctype
 		version: 1.0
 		encoding: 'UTF-8'.
 	self
 		assertDocument: (doc encoding: 'ISO Latin-1')
-		doctype: doctype
+		hasDoctype: doctype
 		version: 1.0
 		encoding: 'ISO Latin-1'.
 ]

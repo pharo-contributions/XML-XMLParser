@@ -150,7 +150,6 @@ XMLNode >> previousNode [
 
 { #category : #printing }
 XMLNode >> printContentOn: aStream [
-	self shouldNotImplement
 ]
 
 { #category : #printing }

@@ -1,7 +1,7 @@
 "
-An XMLOrderedList functions as an OrderedCollection that will not raise exceptions when attempts are made to access absent objects. This means messages like #at:, #after:, and #first will return nil when the requested object cannot be retrieved.
+This class functions as an OrderedCollection that will not raise exceptions when attempts are made to access absent objects. This means messages like #at:, #after:, and #first will return nil when the requested object cannot be retrieved. Messages that modify the collection based on the presence or absence of other objects such as #add:after: or #at:put: will still raise exceptions as usual.
 
-Messages that modify the collection based on the presence or absence of other objects such as #add:after: or #at:put: will still raise exceptions as usual.
+
 "
 Class {
 	#name : #XMLOrderedList,
@@ -133,18 +133,18 @@ XMLOrderedList >> capacity [
 
 { #category : #enumerating }
 XMLOrderedList >> collect: aBlock [
-	^ self copyEmptyWithCollection: (collection collect: aBlock)
+	^ self copyThenSetCollection: (collection collect: aBlock)
 ]
 
 { #category : #enumerating }
 XMLOrderedList >> collect: aBlock from: aStartIndex to: anEndIndex [
-	^ self copyEmptyWithCollection:
+	^ self copyThenSetCollection:
 		(collection collect: aBlock from: aStartIndex to: anEndIndex)
 ]
 
 { #category : #enumerating }
 XMLOrderedList >> collect: aCollectBlock thenSelect: aSelectBlock [
-	^ self copyEmptyWithCollection:
+	^ self copyThenSetCollection:
 		(collection collect: aCollectBlock thenSelect: aSelectBlock)
 ]
 
@@ -158,15 +158,15 @@ XMLOrderedList >> copyEmpty [
 	^ self species new: self size
 ]
 
-{ #category : #private }
-XMLOrderedList >> copyEmptyWithCollection: aCollection [
-	^ self class basicNew setCollection: aCollection
-]
-
 { #category : #copying }
 XMLOrderedList >> copyFrom: aStart to: anEnd [
-	^ self copyEmptyWithCollection:
+	^ self copyThenSetCollection:
 		(collection copyFrom: (aStart max: 1) to: (self size min: anEnd))
+]
+
+{ #category : #private }
+XMLOrderedList >> copyThenSetCollection: aCollection [
+	^ self class basicNew setCollection: aCollection
 ]
 
 { #category : #defaults }
@@ -177,16 +177,6 @@ XMLOrderedList >> defaultValue [
 { #category : #enumerating }
 XMLOrderedList >> do: aBlock [
 	collection do: aBlock
-]
-
-{ #category : #testing }
-XMLOrderedList >> hasContentsInExplorer [
-	^ collection hasContentsInExplorer
-]
-
-{ #category : #initialization }
-XMLOrderedList >> initialize [
-	collection := OrderedCollection new
 ]
 
 { #category : #inspecting }
@@ -245,12 +235,12 @@ XMLOrderedList >> reverseDo: aBlock [
 
 { #category : #enumerating }
 XMLOrderedList >> select: aBlock [
-	^ self copyEmptyWithCollection: (collection select: aBlock)
+	^ self copyThenSetCollection: (collection select: aBlock)
 ]
 
 { #category : #enumerating }
 XMLOrderedList >> select: aSelectBlock thenCollect: aCollectBlock [
-	^ self copyEmptyWithCollection:
+	^ self copyThenSetCollection:
 		(collection select: aSelectBlock thenCollect: aCollectBlock)
 ]
 
@@ -281,10 +271,10 @@ XMLOrderedList >> species [
 
 { #category : #enumerating }
 XMLOrderedList >> with: aCollection collect: aBlock [
-	^ self copyEmptyWithCollection: (collection with: aCollection collect: aBlock)
+	^ self copyThenSetCollection: (collection with: aCollection collect: aBlock)
 ]
 
 { #category : #enumerating }
 XMLOrderedList >> withIndexCollect: aTwoArgumentBlock [
-	^ self copyEmptyWithCollection: (collection withIndexCollect: aTwoArgumentBlock)
+	^ self copyThenSetCollection: (collection withIndexCollect: aTwoArgumentBlock)
 ]

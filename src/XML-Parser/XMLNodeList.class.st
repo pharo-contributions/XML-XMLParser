@@ -1,5 +1,5 @@
 "
-This class represents an ordered list of child nodes for some kind of XMLNodeWithElements, either an XMLDocument or XMLElement object. It treats element nodes specially, keeping both an ordered list of child elements and a dictionary that allows for faster retrieval of element(s) by qualified name or local name only.
+This class represents an ordered list of child nodes for some kind of node with elements, probably either an XML document or element object. It treats element nodes specially, keeping both an ordered list of child elements and a dictionary that allows for faster retrieval of element(s) by qualified name or local name only.
 "
 Class {
 	#name : #XMLNodeList,
@@ -35,12 +35,12 @@ XMLNodeList >> adding: aNode [
 XMLNodeList >> elementAddedAtEnd: anElement [
 	self elements add: anElement.
 	self
-		elementsByNameAt: anElement localName
+		elementsByNameAt: anElement name
 		addElement: anElement.
 	anElement hasPrefix
 		ifTrue: [
 			self
-				elementsByNameAt: anElement qualifiedName
+				elementsByNameAt: anElement localName
 				addElement: anElement]
 ]
 
@@ -52,11 +52,11 @@ XMLNodeList >> elementInsertedBeforeEnd: anElement [
 		ifNil: [self elements add: anElement]
 		ifNotNil: [self elements add: anElement after: elementBefore].
 
-	self elementsByNameAt: anElement localName insertElement: anElement.
+	self elementsByNameAt: anElement name insertElement: anElement.
 	anElement hasPrefix
 		ifTrue: [
 			self
-				elementsByNameAt: anElement qualifiedName
+				elementsByNameAt: anElement localName
 				insertElement: anElement]
 ]
 
@@ -216,24 +216,26 @@ XMLNodeList >> removed: aNode [
 	aNode isElement
 		ifTrue: [
 			self elements remove: aNode.
-			self elementsByNameAt: aNode localName removeElement: aNode.
+			self elementsByNameAt: aNode name removeElement: aNode.
 			aNode hasPrefix
-				ifTrue: [self elementsByNameAt: aNode qualifiedName removeElement: aNode].
+				ifTrue: [self elementsByNameAt: aNode localName removeElement: aNode].
 			self notifyOf: #removedElement: with: aNode].
 	self notifyOf: #removedNode: with: aNode.
 ]
 
 { #category : #notifications }
 XMLNodeList >> renamedElement: anElement from: anOldName to: aNewName [
+	self elementsByNameAt: anOldName removeElement: anElement.
 	anOldName splitQualifiedNameInto: [:oldPrefix :oldLocalName |
-		self elementsByNameAt: oldLocalName removeElement: anElement.
-		oldPrefix
-			ifNotEmpty: [self elementsByNameAt: anOldName removeElement: anElement]].
+		oldPrefix ifNotEmpty: [
+			self
+				elementsByNameAt: oldLocalName
+				removeElement: anElement]].
 
-	self elementsByNameAt: anElement localName insertElement: anElement.
+	self elementsByNameAt: anElement name insertElement: anElement.
 	anElement hasPrefix
 		ifTrue: [
 			self
-				elementsByNameAt: anElement qualifiedName
+				elementsByNameAt: anElement localName
 				insertElement: anElement].
 ]

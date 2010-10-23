@@ -11,6 +11,7 @@ Class {
 	#instVars : [
 		'stream',
 		'nestedStreams',
+		'hasNestedStreams',
 		'buffer',
 		'peekChar',
 		'normalizedLineEndingChar',
@@ -35,7 +36,7 @@ XMLNestedStreamReader class >> initialize [
 	LineFeed := Character lf.
 
 	HexDigitCharacterMap :=
-		XMLCharacterMap newFrom:
+		CharacterMap newFrom:
 			(($0 to: $9), ($a to: $f), ($A to: $F)
 				collect: [:each | each -> each asUppercase digitValue]).
 ]
@@ -47,7 +48,7 @@ XMLNestedStreamReader class >> on: anInitialStream [
 
 { #category : #testing }
 XMLNestedStreamReader >> atEnd [
-	^ peekChar isNil and: [stream atEnd and: [nestedStreams isNil]]
+	^ peekChar isNil and: [hasNestedStreams not and: [stream atEnd]]
 ]
 
 { #category : #accessing }
@@ -57,17 +58,23 @@ XMLNestedStreamReader >> basicNext [
 
 	| nextChar |
 
+	stream atEnd
+		ifTrue: [
+			hasNestedStreams ifFalse: [^nil].
+			self popCurrentStream.
+			[hasNestedStreams and: [stream atEnd]]
+				whileTrue: [self popCurrentStream].
+			stream atEnd
+				ifTrue: [^ nil]].
+
 	(nextChar := stream next) == CarriageReturn
 		ifTrue: [
 			nextChar := normalizedLineEndingChar.
-			currentLineNumber := currentLineNumber + 1.
 			(stream peek == LineFeed)
 				ifTrue: [stream next]]
 		ifFalse: [
 			(nextChar == LineFeed)
-				ifTrue: [
-					nextChar := normalizedLineEndingChar.
-					currentLineNumber := currentLineNumber + 1]].
+				ifTrue: [nextChar := normalizedLineEndingChar]].
 
 	^ nextChar.
 ]
@@ -81,6 +88,7 @@ XMLNestedStreamReader >> currentLineNumber [
 XMLNestedStreamReader >> initialize [
 	stream := nil.
 	nestedStreams := nil.
+	hasNestedStreams := false.
 	peekChar := nil.
 	buffer := WriteStream on: (String new: 128).
 	currentLineNumber := 1.
@@ -95,20 +103,13 @@ XMLNestedStreamReader >> next [
 	| nextChar |
 
 	peekChar
-		ifNil: [
-			stream atEnd
-				ifTrue: [
-					nestedStreams ifNil: [^nil].
-					self popCurrentStream.
-					[stream atEnd and: [nestedStreams notNil]]
-						whileTrue: [self popCurrentStream].
-					stream atEnd
-						ifTrue: [^ nil]].
-			^ self basicNext]
+		ifNil: [nextChar := self basicNext]
 		ifNotNil: [
 			nextChar := peekChar.
-			peekChar := nil.
-			^ nextChar].
+			peekChar := nil].
+	nextChar == normalizedLineEndingChar
+		ifTrue: [currentLineNumber := currentLineNumber + 1].
+	^ nextChar.
 ]
 
 { #category : #accessing }
@@ -196,24 +197,14 @@ XMLNestedStreamReader >> nextWhitespace [
 XMLNestedStreamReader >> peek [
 	"Return the next character from the current input stream."
 
-	^ peekChar
-		ifNil: [
-			stream atEnd
-				ifTrue: [
-					nestedStreams ifNil: [^nil].
-					self popCurrentStream.
-					[stream atEnd and: [nestedStreams notNil]]
-						whileTrue: [self popCurrentStream].
-					stream atEnd
-						ifTrue: [^ nil]].
-			peekChar := self basicNext]
+	^ peekChar ifNil: [peekChar := self basicNext]
 ]
 
 { #category : #private }
 XMLNestedStreamReader >> popCurrentStream [
 	stream close.
 	stream := nestedStreams removeLast.
-	nestedStreams ifEmpty: [nestedStreams := nil].
+	nestedStreams ifEmpty: [hasNestedStreams := false].
 ]
 
 { #category : #streaming }
@@ -237,6 +228,7 @@ XMLNestedStreamReader >> pushStream: aStream [
 	nestedStreams
 		ifNil: [nestedStreams := OrderedCollection with: stream]
 		ifNotNil: [nestedStreams addLast: stream].
+	hasNestedStreams := true.
 
 	self stream: aStream.
 ]

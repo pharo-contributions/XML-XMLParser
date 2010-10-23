@@ -104,6 +104,7 @@ XMLElement >> addedAttribute: anAttribute [
 
 { #category : #notifications }
 XMLElement >> addedElement: anElement [
+	super addedElement: anElement.
 	self hasNamespaces
 		ifTrue: [anElement inheritMappingsFrom: self namespaceScope]
 ]
@@ -445,6 +446,8 @@ XMLElement >> printXMLOn: aWriter [
 
 { #category : #accessing }
 XMLElement >> qualifiedName [
+	self deprecated: 'use #name instead'.
+
 	^ self nodeName qualified
 ]
 
@@ -508,10 +511,10 @@ XMLElement >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocal
 		prefix: aPrefix
 		localPart: aLocalName.
 
-	"By not observing 'attributes' until after it is filled, we avoid
-	re-validating the attributes, which the parser should have already done"
 	anAttributeDictionary
 		ifNotEmpty: [
+			"By not observing 'attributes' until after it is filled, we avoid
+			re-validating the attributes, which the parser should have already done"
 			attributes := XMLAttributeList new: anAttributeDictionary size.
 			anAttributeDictionary keysAndValuesDo: [:key :value |
 				self beParentOf: (attributes addName: key value: value)].
@@ -542,9 +545,9 @@ XMLElement >> stringsDo: aBlock [
 
 { #category : #accessing }
 XMLElement >> tag [
-	self deprecated: 'use #name or #qualifiedName instead'.
+	self deprecated: 'use #name instead'.
 
-	^ self qualifiedName.
+	^ self name.
 ]
 
 { #category : #private }

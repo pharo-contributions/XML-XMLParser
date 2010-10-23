@@ -90,11 +90,6 @@ XMLAttribute >> printXMLOn: aWriter [
 	aWriter writeName: self name value: self value
 ]
 
-{ #category : #accessing }
-XMLAttribute >> qualifiedName [
-	^ self nodeName qualified
-]
-
 { #category : #initialization }
 XMLAttribute >> setName: aName value: aValue [
 	self nodeName qualified: aName.
