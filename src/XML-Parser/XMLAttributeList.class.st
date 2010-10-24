@@ -4,8 +4,6 @@ This class represents an ordered list of attribute nodes that also keeps a dicti
 Class {
 	#name : #XMLAttributeList,
 	#superclass : #XMLObservableList,
-	#traits : 'TXMLObserver',
-	#classTraits : 'TXMLObserver classTrait',
 	#instVars : [
 		'attributesByName'
 	],
@@ -22,7 +20,7 @@ XMLAttributeList >> addName: aName value: aValue [
 
 { #category : #private }
 XMLAttributeList >> added: anObject [
-	self startObserving: anObject.
+	anObject addObserver: self.
 	self attributesByName
 		at: anObject name ifPresent: [self removeAttributeNamed: anObject name];
 		at: anObject name put: anObject..
@@ -32,9 +30,8 @@ XMLAttributeList >> added: anObject [
 
 { #category : #private }
 XMLAttributeList >> adding: anObject [
-	anObject hasParent ifFalse: [^ self].
-
-	XMLDOMException signal: 'Cannot add attribute node that already has a parent'.
+	anObject element
+		ifNotNil: [XMLDOMException signal: 'Cannot add attribute node from other element']
 ]
 
 { #category : #converting }
@@ -128,7 +125,7 @@ XMLAttributeList >> removeAttributeNamed: aName [
 
 { #category : #private }
 XMLAttributeList >> removed: anAttribute [
-	self stopObserving: anAttribute.
+	anAttribute removeObserver: self.
 	self attributesByName removeKey: anAttribute name.
 	self notifyOf: #removedAttribute: with: anAttribute.
 ]

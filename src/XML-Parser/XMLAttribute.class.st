@@ -5,6 +5,7 @@ Class {
 	#name : #XMLAttribute,
 	#superclass : #XMLNode,
 	#instVars : [
+		'element',
 		'name',
 		'value'
 	],
@@ -13,7 +14,19 @@ Class {
 
 { #category : #'instance creation' }
 XMLAttribute class >> name: aName value: aValue [
-	^ self new setName: aName value: aValue
+	^ self new
+		name: aName;
+		value: aValue
+]
+
+{ #category : #accessing }
+XMLAttribute >> element [
+	^ element
+]
+
+{ #category : #accessing }
+XMLAttribute >> element: anElement [
+	element := anElement
 ]
 
 { #category : #accessing }
@@ -53,9 +66,9 @@ XMLAttribute >> name: aName [
 
 { #category : #accessing }
 XMLAttribute >> namespaceURI [
-	self hasParent ifFalse: [^ ''].
-
-	^ self parent resolvePrefix: self prefix.
+	^ self element
+		ifNil: ['']
+		ifNotNil: [self element resolvePrefix: self prefix]
 ]
 
 { #category : #private }
@@ -88,12 +101,6 @@ XMLAttribute >> prefix: aPrefix [
 { #category : #printing }
 XMLAttribute >> printXMLOn: aWriter [
 	aWriter writeName: self name value: self value
-]
-
-{ #category : #initialization }
-XMLAttribute >> setName: aName value: aValue [
-	self nodeName qualified: aName.
-	value := aValue.
 ]
 
 { #category : #accessing }

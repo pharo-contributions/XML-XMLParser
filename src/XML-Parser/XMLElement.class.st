@@ -55,10 +55,10 @@ XMLElement class >> named: aLocalName [
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> named: aString attributes: aDictionary [
+XMLElement class >> named: aName attributes: aDictionary [
 	self deprecated: 'use #name:attributes: instead'.
 
-	^ self name: aString attributes: aDictionary.
+	^ self name: aName attributes: aDictionary.
 ]
 
 { #category : #'instance creation' }
@@ -91,14 +91,16 @@ XMLElement >> addContent: aStringOrStringNode [
 	"Adds a string or string node. If the last child node is already a string node,
 	the characters being added are concatenated to it."
 
-	(self notEmpty and: [self lastNode isStringNode])
+	(self hasChildren and: [self lastNode isStringNode])
 		ifTrue: [self lastNode addContent: aStringOrStringNode]
 		ifFalse: [self addNode: aStringOrStringNode asXMLString]
 ]
 
 { #category : #notifications }
 XMLElement >> addedAttribute: anAttribute [
-	self beParentOf: anAttribute.
+	anAttribute
+		addObserver: self;
+		element: self.
 	self validateAttributeName: anAttribute name.
 ]
 
@@ -319,8 +321,8 @@ XMLElement >> hasStringNodes [
 ]
 
 { #category : #testing }
-XMLElement >> includesAttribute: aString [
-	^ self attributeNodes includesAttributeNamed: aString
+XMLElement >> includesAttribute: aName [
+	^ self attributeNodes includesAttributeNamed: aName
 ]
 
 { #category : #private }
@@ -334,13 +336,13 @@ XMLElement >> isElement [
 ]
 
 { #category : #testing }
-XMLElement >> isNamed: aString [
-	^ self nodeName isSameAs: aString
+XMLElement >> isNamed: aName [
+	^ self nodeName isSameAs: aName
 ]
 
 { #category : #testing }
-XMLElement >> isNamedAny: aStringArray [
-	^ aStringArray anySatisfy: [:each | self isNamed: each]
+XMLElement >> isNamedAny: aNameArray [
+	^ aNameArray anySatisfy: [:each | self isNamed: each]
 ]
 
 { #category : #accessing }
@@ -471,8 +473,8 @@ XMLElement >> recurseUntilTrue: aBlock [
 ]
 
 { #category : #accessing }
-XMLElement >> removeAttribute: aString [
-	^ (self attributeNodes removeAttributeNamed: aString) value
+XMLElement >> removeAttribute: aName [
+	^ (self attributeNodes removeAttributeNamed: aName) value
 ]
 
 { #category : #accessing }
@@ -482,7 +484,9 @@ XMLElement >> removeAttributeNode: aNode [
 
 { #category : #notifications }
 XMLElement >> removedAttribute: anAttribute [
-	self stopBeingParentOf: anAttribute
+	anAttribute
+		removeObserver: self;
+		element: nil
 ]
 
 { #category : #notifications }
@@ -517,8 +521,10 @@ XMLElement >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocal
 			re-validating the attributes, which the parser should have already done"
 			attributes := XMLAttributeList new: anAttributeDictionary size.
 			anAttributeDictionary keysAndValuesDo: [:key :value |
-				self beParentOf: (attributes addName: key value: value)].
-			self startObserving: attributes].
+				(attributes addName: key value: value)
+					addObserver: self;
+					element: self].
+			attributes addObserver: self].
 
 	namespaceScope := aNamespaceScope.
 ]

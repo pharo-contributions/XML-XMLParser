@@ -4,8 +4,8 @@ This is a base class for XML nodes. It contains testing messages and methods to 
 Class {
 	#name : #XMLNode,
 	#superclass : #Object,
-	#traits : 'TXMLObservable + TXMLObserver',
-	#classTraits : 'TXMLObservable classTrait + TXMLObserver classTrait',
+	#traits : 'TXMLObservable',
+	#classTraits : 'TXMLObservable classTrait',
 	#instVars : [
 		'parent',
 		'notifier'
@@ -16,12 +16,6 @@ Class {
 { #category : #accessing }
 XMLNode >> addContent: aStringOrStringNode [
 	XMLDOMException signal: 'Node cannot contain content'
-]
-
-{ #category : #private }
-XMLNode >> beParentOf: aNode [
-	self startObserving: aNode.
-	aNode parent: self.
 ]
 
 { #category : #accessing }
@@ -38,6 +32,11 @@ XMLNode >> contentString [
 	stream := WriteStream on: (String new: 128).
 	self printContentOn: stream.
 	^ stream contents.
+]
+
+{ #category : #testing }
+XMLNode >> hasChildren [
+	^ false
 ]
 
 { #category : #testing }
@@ -77,7 +76,9 @@ XMLNode >> isElement [
 
 { #category : #testing }
 XMLNode >> isEmpty [
-	^ true
+	self deprecated: 'use "hasChildren not" instead'.
+
+	^ self hasChildren not
 ]
 
 { #category : #testing }
@@ -125,7 +126,9 @@ XMLNode >> nextNode [
 
 { #category : #testing }
 XMLNode >> notEmpty [
-	^ self isEmpty not
+	self deprecated: 'use #hasChildren instead'.
+
+	^ self hasChildren.
 ]
 
 { #category : #accessing }
@@ -164,10 +167,4 @@ XMLNode >> printOn: aStream [
 { #category : #printing }
 XMLNode >> printXMLOn: aWriter [
 	self subclassResponsibility
-]
-
-{ #category : #private }
-XMLNode >> stopBeingParentOf: aNode [
-	self stopObserving: aNode.
-	aNode parent: nil.
 ]

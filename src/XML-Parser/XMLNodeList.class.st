@@ -4,8 +4,6 @@ This class represents an ordered list of child nodes for some kind of node with 
 Class {
 	#name : #XMLNodeList,
 	#superclass : #XMLObservableList,
-	#traits : 'TXMLObserver',
-	#classTraits : 'TXMLObserver classTrait',
 	#instVars : [
 		'elements',
 		'elementsByName'
@@ -15,7 +13,7 @@ Class {
 
 { #category : #private }
 XMLNodeList >> added: aNode [
-	self startObserving: aNode.
+	aNode addObserver: self.
 	aNode isElement
 		ifTrue: [
 			self last == aNode
@@ -212,7 +210,7 @@ XMLNodeList >> includesElementNamed: aName [
 
 { #category : #private }
 XMLNodeList >> removed: aNode [
-	self stopObserving: aNode.
+	aNode removeObserver: self.
 	aNode isElement
 		ifTrue: [
 			self elements remove: aNode.

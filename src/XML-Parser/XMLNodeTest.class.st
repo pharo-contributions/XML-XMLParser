@@ -208,10 +208,10 @@ XMLNodeTest >> test010node [
 
 	node := XMLMockNode new.
 	self
-		assert: node isEmpty;
+		deny: node hasChildren;
 		assert:
 			(#(isAttribute isCData isComment isContentNode isDocument
-				isElement isPI isStringNode hasParent notEmpty)
+				isElement isPI isStringNode hasParent)
 					noneSatisfy: [:each | node perform: each]);
 		assert:
 			(#(nextNode previousNode parent)
@@ -285,8 +285,7 @@ XMLNodeTest >> test040emptyNodeWithElements [
 
 	node := XMLMockNodeWithElements new.
 	self
-		assert: node isEmpty;
-		deny: node notEmpty;
+		deny: node hasChildren;
 		deny: node hasElements;
 		assert: node nodes isEmpty;
 		assert: node elements isEmpty;
@@ -357,7 +356,7 @@ XMLNodeTest >> test043removingNodes [
 		from: node.
 	self
 		assert: node removeNodes = node;
-		assert: node isEmpty.
+		deny: node hasChildren.
 ]
 
 { #category : #tests }
@@ -414,7 +413,7 @@ XMLNodeTest >> test052elementContentString [
 	str := self markupString.
 	(element := XMLElement new) contentString: str.
 	self
-		deny: element isEmpty;
+		assert: element hasChildren;
 		assert: element hasContentNodes;
 		assert: element hasStringNodes;
 		assert: element contentString = str.
@@ -516,7 +515,7 @@ XMLNodeTest >> test055elementCDATANodes [
 	str := self markupString.
 	(element := XMLElement new) addNode: (XMLCData string: str).
 	self
-		deny: element isEmpty;
+		assert: element hasChildren;
 		assert: element hasStringNodes;
 		assert: element contentString = str;
 		assert: (element firstNode isKindOf: XMLCData) 

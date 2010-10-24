@@ -38,8 +38,8 @@ XMLNodeName >> isPrefixed [
 ]
 
 { #category : #testing }
-XMLNodeName >> isSameAs: aString [
-	^ self qualified = aString or: [self localPart = aString]
+XMLNodeName >> isSameAs: aNameString [
+	^ self qualified = aNameString or: [self localPart = aNameString]
 ]
 
 { #category : #accessing }
@@ -48,8 +48,8 @@ XMLNodeName >> localPart [
 ]
 
 { #category : #accessing }
-XMLNodeName >> localPart: aString [
-	localPart := aString
+XMLNodeName >> localPart: aLocalPart [
+	localPart := aLocalPart
 ]
 
 { #category : #accessing }

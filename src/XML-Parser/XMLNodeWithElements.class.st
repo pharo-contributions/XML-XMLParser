@@ -30,8 +30,8 @@ XMLNodeWithElements >> contentNodesDo: aBlock [
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> contentStringAt: aString [
-	^ (self elementAt: aString ifAbsent: [^ '']) contentString
+XMLNodeWithElements >> contentStringAt: aName [
+	^ (self elementAt: aName ifAbsent: [^ '']) contentString
 ]
 
 { #category : #accessing }
@@ -45,13 +45,13 @@ XMLNodeWithElements >> elementAfter: anElement [
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementAt: aString [
-	^ self nodes elementNamed: aString
+XMLNodeWithElements >> elementAt: aName [
+	^ self nodes elementNamed: aName
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementAt: aString ifAbsent: aBlock [
-	^ self nodes elementNamed: aString ifAbsent: aBlock
+XMLNodeWithElements >> elementAt: aName ifAbsent: aBlock [
+	^ self nodes elementNamed: aName ifAbsent: aBlock
 ]
 
 { #category : #accessing }
@@ -65,15 +65,15 @@ XMLNodeWithElements >> elementAt: aName namespaceURI: aUri ifAbsent: aBlock [
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementAtAny: aStringArray [
-	^ self elementAtAny: aStringArray ifAbsent: [nil]
+XMLNodeWithElements >> elementAtAny: aNameArray [
+	^ self elementAtAny: aNameArray ifAbsent: [nil]
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementAtAny: aStringArray ifAbsent: aBlock [
+XMLNodeWithElements >> elementAtAny: aNameArray ifAbsent: aBlock [
 	| answer |
 
-	aStringArray do: [:each |
+	aNameArray do: [:each |
 		(answer := self elementAt: each)
 			ifNotNil: [^ answer]].
 	^ aBlock value.
@@ -90,13 +90,13 @@ XMLNodeWithElements >> elements [
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementsAt: aString [
-	^ self nodes elementsNamed: aString
+XMLNodeWithElements >> elementsAt: aName [
+	^ self nodes elementsNamed: aName
 ]
 
 { #category : #enumerating }
-XMLNodeWithElements >> elementsAt: aString do: aBlock [
-	(self nodes elementsNamed: aString) do: aBlock
+XMLNodeWithElements >> elementsAt: aName do: aBlock [
+	(self nodes elementsNamed: aName) do: aBlock
 ]
 
 { #category : #accessing }
@@ -115,36 +115,36 @@ XMLNodeWithElements >> firstElement [
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> firstTagNamed: aString [ 
+XMLNodeWithElements >> firstTagNamed: aName [ 
 	"Return the first encountered node with the specified tag. Pass the message on"
 
-	^ self recurseUntilTrue: [:each | each isNamed: aString]
+	^ self recurseUntilTrue: [:each | each isNamed: aName]
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> firstTagNamed: aString with: aBlock [
+XMLNodeWithElements >> firstTagNamed: aName with: aBlock [
 	"Return the first encountered node with the specified tag that
 	allows the block to evaluate to true. Pass the message on"
 
 	^ self recurseUntilTrue: [:each |
-		(each isNamed: aString)
+		(each isNamed: aName)
 			and: [aBlock valueWithPossibleArgument: each]]
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> firstTagNamedAny: aStringArray [
+XMLNodeWithElements >> firstTagNamedAny: aNameArray [
 	"Return the first encountered node with any of the specified tag names. Pass the message on"
 
-	^ self recurseUntilTrue: [:each | each isNamedAny: aStringArray]
+	^ self recurseUntilTrue: [:each | each isNamedAny: aNameArray]
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> firstTagNamedAny: aStringArray with: aBlock [
+XMLNodeWithElements >> firstTagNamedAny: aNameArray with: aBlock [
 	"Return the first encountered node with any of the specified tag names that
 	allows the block to evaluate to true. Pass the message on"
 
 	^ self recurseUntilTrue: [:each |
-		(each isNamedAny: aStringArray)
+		(each isNamedAny: aNameArray)
 			and: [aBlock valueWithPossibleArgument: each]]
 ]
 
@@ -160,8 +160,8 @@ XMLNodeWithElements >> hasElements [
 ]
 
 { #category : #testing }
-XMLNodeWithElements >> includesElement: aString [
-	^ self nodes includesElementNamed: aString
+XMLNodeWithElements >> includesElement: aName [
+	^ self nodes includesElementNamed: aName
 ]
 
 { #category : #parsing }
@@ -241,48 +241,48 @@ XMLNodeWithElements >> renamedElement: anElement from: anOldName to: aNewName [
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> tagsNamed: aString childrenDo: aOneArgumentBlock [
+XMLNodeWithElements >> tagsNamed: aName childrenDo: aOneArgumentBlock [
 	"Evaluate aOneArgumentBlock for all children who match"
 
 	self deprecated: 'use #elementsAt:do: instead'.
 
-	self elementsAt: aString do: aOneArgumentBlock.
+	self elementsAt: aName do: aOneArgumentBlock.
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> tagsNamed: aString childrenDoAndRecurse: aOneArgumentBlock [
+XMLNodeWithElements >> tagsNamed: aName childrenDoAndRecurse: aOneArgumentBlock [
 	"Evaluate aOneArgumentBlock for all children who match and recurse"
 
 	self deprecated: 'use "node elementsDo: [:each | each tagsNamed: aName do: [...]]" instead'.
 
-	self elementsDo: [:each | each tagsNamed: aString do: aOneArgumentBlock]
+	self elementsDo: [:each | each tagsNamed: aName do: aOneArgumentBlock]
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> tagsNamed: aString contentsDo: aBlock [
+XMLNodeWithElements >> tagsNamed: aName contentsDo: aBlock [
 	"Evaluate aBlock for all of the contents of the receiver.
 	The receiver has no tag, so pass the message on"
 
 	self deprecated: 'use "node tagsNamed: aName do: [:each | each stringNodes...]" instead'.
 
-	self tagsNamed: aString do: [:each | each stringNodesDo: aBlock]
+	self tagsNamed: aName do: [:each | each stringNodesDo: aBlock]
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> tagsNamed: aString do: aOneArgumentBlock [
-	"Search for nodes with tag aString. When encountered evaluate aOneArgumentBlock"
+XMLNodeWithElements >> tagsNamed: aName do: aOneArgumentBlock [
+	"Search for nodes with tag aName. When encountered evaluate aOneArgumentBlock"
 
 	self recurse: [:each |
-		(each isNamed: aString)
+		(each isNamed: aName)
 			ifTrue: [aOneArgumentBlock valueWithPossibleArgument: each]]
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> tagsNamedAny: aStringCollection do: aOneArgumentBlock [
-	"Search for nodes with tag aString. When encountered evaluate aOneArgumentBlock"
+XMLNodeWithElements >> tagsNamedAny: aNameCollection do: aOneArgumentBlock [
+	"Search for nodes with tag aName. When encountered evaluate aOneArgumentBlock"
 
 	self recurse: [:each |
-		(each isNamedAny: aStringCollection)
+		(each isNamedAny: aNameCollection)
 			ifTrue: [aOneArgumentBlock valueWithPossibleArgument: each]]
 ]
 

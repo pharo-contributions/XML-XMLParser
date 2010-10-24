@@ -37,7 +37,9 @@ XMLNodeWithChildren >> addNodes: aNodeCollection [
 
 { #category : #notifications }
 XMLNodeWithChildren >> addedNode: aNode [
-	self beParentOf: aNode
+	aNode
+		addObserver: self;
+		parent: self
 ]
 
 { #category : #accessing }
@@ -46,14 +48,15 @@ XMLNodeWithChildren >> firstNode [
 ]
 
 { #category : #testing }
-XMLNodeWithChildren >> includesNode: aNode [
-	^ self nodes includes: aNode
+XMLNodeWithChildren >> hasChildren [
+	"Direct variable access avoids possibly unnecessary lazy initialization of the node list"
+
+	^ nodes notNil and: [nodes notEmpty]
 ]
 
 { #category : #testing }
-XMLNodeWithChildren >> isEmpty [
-	"Used to avoid initializing #nodes unless necessary"
-	^ nodes isNil or: [nodes isEmpty]
+XMLNodeWithChildren >> includesNode: aNode [
+	^ self nodes includes: aNode
 ]
 
 { #category : #accessing }
@@ -106,7 +109,9 @@ XMLNodeWithChildren >> removeNodes: aNodeCollection [
 
 { #category : #notifications }
 XMLNodeWithChildren >> removedNode: aNode [
-	self stopBeingParentOf: aNode
+	aNode
+		removeObserver: self;
+		parent: nil.
 ]
 
 { #category : #accessing }

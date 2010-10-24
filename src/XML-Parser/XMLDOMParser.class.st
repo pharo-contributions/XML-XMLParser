@@ -116,7 +116,7 @@ XMLDOMParser >> processingInstruction: piName data: dataString [
 XMLDOMParser >> pushElement: anElement [
 
 	(self incremental not and: [self nodeStack notEmpty])
-			ifTrue: [self topNode addElement: anElement].
+		ifTrue: [self topNode addElement: anElement].
 
 	self pushNode: anElement.
 ]
