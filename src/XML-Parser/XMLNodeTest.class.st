@@ -4,6 +4,36 @@ Class {
 	#category : #'XML-Parser-Tests'
 }
 
+{ #category : #private }
+XMLNodeTest class >> reorderTests: aSelectorCollection [
+	"
+	self reorderTests:
+
+		((self selectors select: [:each | each asString beginsWith: 'test'])
+			sortBy: [:a : b | (a asString compare: b asString) < 3]) asArray
+	"
+
+	| oldSource newSource methodCategory |
+
+	aSelectorCollection doWithIndex: [:oldSelector :i |
+		oldSource := (self sourceCodeAt: oldSelector) asString readStream.
+		newSource := (String new: oldSource size) writeStream.
+		methodCategory := self whichCategoryIncludesSelector: oldSelector.
+
+		oldSource skip: 'test' size.
+		[oldSource peek isDigit]
+			whileTrue: [oldSource next].
+
+		newSource
+			nextPutAll: 'test';
+			nextPutAll: (i printPaddedWith: $0 to: 3);
+			nextPutAll: oldSource upToEnd.
+
+		self
+			removeSelector: oldSelector;
+			compile: newSource contents classified: methodCategory].
+]
+
 { #category : #assertions }
 XMLNodeTest >> assertDocument: aDocument hasDoctype: aDoctype version: aVersion encoding: anEncoding [
 	self
@@ -61,6 +91,19 @@ XMLNodeTest >> assertNode: aNode hasPrefix: aPrefix uri: aUri [
 	self
 		assert: aNode prefix = aPrefix;
 		assert: aNode namespaceURI = aUri
+]
+
+{ #category : #assertions }
+XMLNodeTest >> assertNode: aNode hasType: aType [
+	self assertNode: aNode hasTypes: (Array with: aType)
+]
+
+{ #category : #assertions }
+XMLNodeTest >> assertNode: aNode hasTypes: aTypeArray [
+	self deny:
+		((#(isAttribute isCData isComment isContentNode isDocument isElement isPI isStringNode)
+			copyWithoutAll: aTypeArray) anySatisfy: [:each | aNode perform: each]).
+	self assert: (aTypeArray allSatisfy: [:each | aNode perform: each]).
 ]
 
 { #category : #assertions }
@@ -203,7 +246,7 @@ XMLNodeTest >> should: aBlock removeNodes: aNodeCollection from: aParent [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test010node [
+XMLNodeTest >> test001node [
 	| node parent |
 
 	node := XMLMockNode new.
@@ -227,7 +270,7 @@ XMLNodeTest >> test010node [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test020processingInstruction [
+XMLNodeTest >> test002processingInstruction [
 	| pi t d |
 
 	pi := XMLPI new.
@@ -242,7 +285,7 @@ XMLNodeTest >> test020processingInstruction [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test030stringNode [
+XMLNodeTest >> test003stringNode [
 	| node raw escaped |
 
 	node := XMLString new.
@@ -268,7 +311,7 @@ XMLNodeTest >> test030stringNode [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test035cdataNode [
+XMLNodeTest >> test004cdataNode [
 	| node raw |
 
 	node := XMLCData new.
@@ -280,7 +323,7 @@ XMLNodeTest >> test035cdataNode [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test040emptyNodeWithElements [
+XMLNodeTest >> test005emptyNodeWithElements [
 	| node |
 
 	node := XMLMockNodeWithElements new.
@@ -296,7 +339,7 @@ XMLNodeTest >> test040emptyNodeWithElements [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test041namespaces [
+XMLNodeTest >> test006namespaces [
 	| node |
 
 	node := XMLElement new.
@@ -311,7 +354,7 @@ XMLNodeTest >> test041namespaces [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test042addingNodes [
+XMLNodeTest >> test007addingNodes [
 	| node children |
 
 	node := XMLMockNodeWithElements new.
@@ -340,7 +383,7 @@ XMLNodeTest >> test042addingNodes [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test043removingNodes [
+XMLNodeTest >> test008removingNodes [
 	| node children |
 
 	node := XMLMockNodeWithElements new.
@@ -360,7 +403,7 @@ XMLNodeTest >> test043removingNodes [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test044accessingBeforeAfterNodes [
+XMLNodeTest >> test009accessingBeforeAfterNodes [
 	| node children |
 
 	node := XMLMockNodeWithElements new.
@@ -378,7 +421,7 @@ XMLNodeTest >> test044accessingBeforeAfterNodes [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test050emptyElement [
+XMLNodeTest >> test010emptyElement [
 	| element |
 
 	element := XMLElement new.
@@ -391,7 +434,7 @@ XMLNodeTest >> test050emptyElement [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test051elementNaming [
+XMLNodeTest >> test011elementNaming [
 	| element |
 
 	element := XMLElement new.
@@ -407,7 +450,7 @@ XMLNodeTest >> test051elementNaming [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test052elementContentString [
+XMLNodeTest >> test012elementContentString [
 	| element str |
 
 	str := self markupString.
@@ -436,7 +479,7 @@ XMLNodeTest >> test052elementContentString [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test053elementAttributes [
+XMLNodeTest >> test013elementAttributes [
 	| element attrs |
 
 	element := XMLElement new.
@@ -470,7 +513,7 @@ XMLNodeTest >> test053elementAttributes [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test054elementConstructors [
+XMLNodeTest >> test014elementConstructors [
 	| noAttributes attributes str element |
 
 	noAttributes := XMLOrderPreservingDictionary new.
@@ -509,7 +552,7 @@ XMLNodeTest >> test054elementConstructors [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test055elementCDATANodes [
+XMLNodeTest >> test015elementCDATANodes [
 	| element str |
 
 	str := self markupString.
@@ -522,7 +565,7 @@ XMLNodeTest >> test055elementCDATANodes [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test060addingElements [
+XMLNodeTest >> test016addingElements [
 	| node elements children |
 
 	node := XMLMockNodeWithElements new.
@@ -536,7 +579,7 @@ XMLNodeTest >> test060addingElements [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test061accessingBeforeAfterElements [
+XMLNodeTest >> test017accessingBeforeAfterElements [
 	| node elements |
 
 	node := XMLMockNodeWithElements new.
@@ -554,7 +597,7 @@ XMLNodeTest >> test061accessingBeforeAfterElements [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test062elementPrinting [
+XMLNodeTest >> test018elementPrinting [
 	| element attributes |
 
 	element := (XMLElement named: 'element').
@@ -566,7 +609,7 @@ XMLNodeTest >> test062elementPrinting [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test070nodeAndElementEnumeration [
+XMLNodeTest >> test019nodeAndElementEnumeration [
 	| node nodes elements |
 
 	node := XMLMockNodeWithElements new.
@@ -583,7 +626,7 @@ XMLNodeTest >> test070nodeAndElementEnumeration [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test071contentNodeEnumeration [
+XMLNodeTest >> test020contentNodeEnumeration [
 	| node nodes elements stringNodes contentNodes |
 
 	node := XMLElement new.
@@ -599,7 +642,7 @@ XMLNodeTest >> test071contentNodeEnumeration [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test080elementAccessing [
+XMLNodeTest >> test021elementAccessing [
 	| node nodes elements |
 
 	node := XMLMockNodeWithElements new.
@@ -621,7 +664,7 @@ XMLNodeTest >> test080elementAccessing [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test081firstTagSearching [
+XMLNodeTest >> test022firstTagSearching [
 	| node elements |
 
 	node := XMLMockNodeWithElements new.
@@ -657,7 +700,7 @@ XMLNodeTest >> test081firstTagSearching [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test082tagsNamedSearching [
+XMLNodeTest >> test023tagsNamedSearching [
 	| node elements |
 
 	node := XMLMockNodeWithElements new.
@@ -685,7 +728,7 @@ XMLNodeTest >> test082tagsNamedSearching [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test083elementRemoving [
+XMLNodeTest >> test024elementRemoving [
 	| node nodes elements |
 
 	node := XMLMockNodeWithElements new.
@@ -711,7 +754,7 @@ XMLNodeTest >> test083elementRemoving [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test084elementRenaming [
+XMLNodeTest >> test025elementRenaming [
 	| node nodes elements |
 
 	node := XMLMockNodeWithElements new.
@@ -736,7 +779,7 @@ XMLNodeTest >> test084elementRenaming [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test090documentTest [
+XMLNodeTest >> test026documentTest [
 	| doc root doctype |
 
 	doc := XMLDocument new.

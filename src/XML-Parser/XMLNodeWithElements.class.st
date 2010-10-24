@@ -1,7 +1,7 @@
 "
 This class represents a node with elements. You will likely use its API through XMLDocument or XMLElement objects.
 
-To retrieve child elements by name, you can send any of the #element- messages under ""accessing."" The #firstTag- messages search the receiver and its descendants using depth-first traversal for specific elements, and the #tagsNamed- messages iterate over descendent elements also using depth-first traversal.
+To retrieve child elements by name, you can send any of the #element- messages under ""accessing."" These messages accept both qualified and unqualified names and have constant time complexity. The #firstTag- messages search the receiver and its descendants using depth-first traversal for specific elements, and the #tagsNamed- messages iterate over descendent elements also using depth-first traversal.
 "
 Class {
 	#name : #XMLNodeWithElements,

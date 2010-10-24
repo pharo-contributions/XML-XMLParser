@@ -66,9 +66,10 @@ XMLAttribute >> name: aName [
 
 { #category : #accessing }
 XMLAttribute >> namespaceURI [
-	^ self element
-		ifNil: ['']
-		ifNotNil: [self element resolvePrefix: self prefix]
+	(self element notNil and: [self hasPrefix])
+		ifFalse: [^ ''].
+	
+	^ self element resolvePrefix: self prefix.
 ]
 
 { #category : #private }

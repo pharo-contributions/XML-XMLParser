@@ -1,7 +1,7 @@
 "
 This class is used by objects using the TXMLObservable Trait to send notifications to objects that register themselves as observers. The notifications are selectors that observers are expected to implement, typically under the category ""notifications.""
 
-It uses an Array grown and shrunk with #copyWith: and #copyWithout: rather than an OrderedCollection for better memory usage and faster performance (because each node only has at most two observers).
+It stores observers in an Array grown and shrunk with #copyWith: and #copyWithout: rather than an OrderedCollection for better memory usage and faster performance (because each node only has at most two observers).
 "
 Class {
 	#name : #XMLNotifier,

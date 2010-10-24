@@ -1,5 +1,5 @@
 "
-This class generates <?xml ...?> declaration.
+This class generates <?xml ...?> declarations.
 "
 Class {
 	#name : #XMLXmlDeclarationWriter,
