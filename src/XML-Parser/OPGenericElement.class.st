@@ -1,3 +1,6 @@
+"
+This is the generic element produced by the OpaxHandler. If you want to produce another type of object as a node in the XML tree, you have to subclass this class and override the xmlTags class method.
+"
 Class {
 	#name : #OPGenericElement,
 	#superclass : #Object,
