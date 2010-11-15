@@ -7,11 +7,6 @@ Class {
 	#category : #'XML-Parser-Writers'
 }
 
-{ #category : #'embedding markup' }
-XMLCDataWriter >> cdata: aString [
-	^ self with: aString
-]
-
 { #category : #private }
 XMLCDataWriter >> embedString: aString [
 	self writer isCanonical

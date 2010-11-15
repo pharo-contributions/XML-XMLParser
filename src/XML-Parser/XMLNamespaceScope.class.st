@@ -23,11 +23,16 @@ XMLNamespaceScope >> defaultNamespace [
 
 { #category : #accessing }
 XMLNamespaceScope >> defaultNamespace: aUri [
-	defaultNamespace := aUri
+	aUri = self xmlNamespaceURI
+		ifTrue: [XMLNamespaceException signal: 'Cannot use "xml" namespace URI as default namespace'].
+	aUri = self xmlnsNamespaceURI
+		ifTrue: [XMLNamespaceException signal: 'Cannot use "xmlns" namespace URI as default namespace'].
+
+	defaultNamespace := aUri.
 ]
 
 { #category : #validation }
-XMLNamespaceScope >> ensureAttributePrefix: aPrefix localName: aLocalName hasNoAliasesIn: aDictionary [
+XMLNamespaceScope >> ensureAttributePrefix: aPrefix localName: aLocalName hasNoAliasIn: aDictionary [
 	| namespaceUri aliasingAttributeName |
 
 	namespaceUri := self resolvePrefix: aPrefix.
@@ -92,9 +97,21 @@ XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope [
 
 { #category : #accessing }
 XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
-	(aPrefix isEmptyOrNil or: [aPrefix = 'xmlns'])
+	aPrefix isEmptyOrNil
 		ifTrue: [^ self defaultNamespace: aUri].
-	
+
+	aPrefix = 'xml'
+		ifTrue: [
+			aUri = self xmlNamespaceURI
+				ifTrue: [^ self].
+			XMLNamespaceException signal:
+				'Cannot rebind the "xml" prefix to a different namespace URI'].
+	aPrefix = 'xmlns'
+		ifTrue: [XMLNamespaceException signal: 'Cannot bind "xmlns" prefix at all'].
+
+	(aUri = self xmlNamespaceURI or: [aUri = self xmlnsNamespaceURI])
+		ifTrue: [XMLNamespaceException signal: 'Cannot alias the "xml" or "xmlns" prefixes'].
+
 	self prefixMappings at: aPrefix put: (aUri ifNil: [''])
 ]
 
@@ -130,43 +147,49 @@ XMLNamespaceScope >> prefixesMappedTo: aUri [
 
 { #category : #accessing }
 XMLNamespaceScope >> resolvePrefix: aPrefix [
-	"Retrieve the URI of the given namespace prefix, if it is defined.
-
-	If prefix is empty, nil, or xmlns, the default namespace will be returned."
+	"Retrieve the URI of the given namespace prefix, if it is defined."
 
 	^ self resolvePrefix: aPrefix ifUnmapped: ['']
 ]
 
 { #category : #accessing }
 XMLNamespaceScope >> resolvePrefix: aPrefix ifUnmapped: aBlock [
-	"Retrieve the URI of the given namespace prefix, if it is defined. 
-	A nil namespace returns the default namespace. 
-	If no namespace can be found the value of the block is returned"
+	aPrefix isEmptyOrNil
+		ifTrue: [^ self defaultNamespace].
+	aPrefix = 'xml'
+		ifTrue: [^ self xmlNamespaceURI].
+	aPrefix = 'xmlns'
+		ifTrue: [^ self xmlnsNamespaceURI].
 
-	^ (aPrefix isEmptyOrNil or: [aPrefix = 'xmlns'])
-		ifTrue: [self defaultNamespace]
-		ifFalse: [self prefixMappings at: aPrefix ifAbsent: aBlock]
+	^ self prefixMappings at: aPrefix ifAbsent: aBlock
 ]
 
 { #category : #private }
-XMLNamespaceScope >> validatePrefix: aPrefix of: aName [
+XMLNamespaceScope >> validatePrefix: aPrefix of: aMarkupEntityType named: aName [
+	(aPrefix isEmptyOrNil or: [aPrefix = 'xml'])
+		ifTrue: [^ self].
+
+	aPrefix = 'xmlns'
+		ifTrue: [
+			XMLNamespaceException signal:
+				('Cannot use reserved "xmlns" prefix for {1} {2}' format:
+					(Array with: aMarkupEntityType with: aName))].
+
 	(self includesPrefix: aPrefix)
 		ifFalse: [
 			XMLNamespaceException signal:
-				('Unmapped prefix "{1}" in {2}' format:
-					(Array with: aPrefix with: aName))].
+				('Unmapped prefix "{1}" in {2} {3}' format:
+					(Array with: aPrefix with: aMarkupEntityType with: aName))].
 ]
 
 { #category : #validation }
 XMLNamespaceScope >> validatePrefix: aPrefix ofAttributeName: anAttributeName [
-	aPrefix ifNil: [^ self].
-	self validatePrefix: aPrefix of: anAttributeName, ' attribute'
+	self validatePrefix: aPrefix of: 'attribute' named: anAttributeName
 ]
 
 { #category : #validation }
 XMLNamespaceScope >> validatePrefix: aPrefix ofElementName: anElementName [
-	aPrefix ifNil: [^ self].
-	self validatePrefix: aPrefix of: anElementName, ' element'
+	self validatePrefix: aPrefix of: 'element' named: anElementName
 ]
 
 { #category : #validation }
@@ -180,7 +203,7 @@ XMLNamespaceScope >> validatePrefixedAttributeName: anAttributeName in: aDiction
 		self
 			ensureAttributePrefix: prefix
 			localName: localName
-			hasNoAliasesIn: aDictionary]
+			hasNoAliasIn: aDictionary]
 ]
 
 { #category : #validation }
@@ -189,4 +212,14 @@ XMLNamespaceScope >> validatePrefixedAttributeNames: aDictionary [
 		self
 			validatePrefixedAttributeName: attributeName
 			in: aDictionary]
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> xmlNamespaceURI [
+	^ 'http://www.w3.org/XML/1998/namespace'
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> xmlnsNamespaceURI [
+	^ 'http://www.w3.org/2000/xmlns/'
 ]

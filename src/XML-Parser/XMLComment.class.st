@@ -1,3 +1,6 @@
+"
+This class represents comments preserved as nodes. 
+"
 Class {
 	#name : #XMLComment,
 	#superclass : #XMLNode,

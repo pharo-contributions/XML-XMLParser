@@ -23,7 +23,7 @@ XMLNotationDeclarationNode >> printXMLOn: aWriter [
 
 { #category : #accessing }
 XMLNotationDeclarationNode >> publicID [
-	^ publicId
+	^ publicId ifNil: [publicId := '']
 ]
 
 { #category : #initialization }
@@ -35,5 +35,5 @@ XMLNotationDeclarationNode >> setName: aName publicID: aPublicId systemID: aSyst
 
 { #category : #accessing }
 XMLNotationDeclarationNode >> systemID [
-	^ systemId
+	^ systemId ifNil: [systemId := '']
 ]

@@ -41,15 +41,6 @@ XMLEmbeddedMarkupWriter >> embedValue: aValue [
 	self error: 'Value object must be a string, collection or block'.
 ]
 
-{ #category : #private }
-XMLEmbeddedMarkupWriter >> flushMarkup [
-	self isWritingBody
-		ifTrue: [
-			self hasEmbeddedMarkup
-				ifFalse: [self startWritingEmbeddedMarkup]]
-		ifFalse: [self with: nil]
-]
-
 { #category : #testing }
 XMLEmbeddedMarkupWriter >> hasEmbeddedMarkup [
 	^ hasEmbeddedMarkup ifNil: [hasEmbeddedMarkup := false]
@@ -73,7 +64,7 @@ XMLEmbeddedMarkupWriter >> nextMarkupWriter: aMarkupWriter [
 				ifFalse: [self startWritingEmbeddedMarkup].
 			aMarkupWriter parent: self.
 			hasEmbeddedMarkupWriters := true]
-		ifFalse: [self flushMarkup]
+		ifFalse: [self write]
 ]
 
 { #category : #private }
@@ -88,7 +79,16 @@ XMLEmbeddedMarkupWriter >> with: aStringOrCollectionOrBlock [
 		writePrologue;
 		writeBody: aStringOrCollectionOrBlock;
 		writeEpilogue;
-		flushed
+		beWritten
+]
+
+{ #category : #private }
+XMLEmbeddedMarkupWriter >> write [
+	self isWritingBody
+		ifTrue: [
+			self hasEmbeddedMarkup
+				ifFalse: [self startWritingEmbeddedMarkup]]
+		ifFalse: [self with: nil]
 ]
 
 { #category : #private }
@@ -101,7 +101,7 @@ XMLEmbeddedMarkupWriter >> writeBody: aStringOrCollectionOrBlock [
 
 	self embedValue: aStringOrCollectionOrBlock.
 	self isActiveMarkupWriter
-		ifFalse: [self writer flushMarkup].
+		ifFalse: [self writer write].
 
 	isWritingBody := false.
 ]

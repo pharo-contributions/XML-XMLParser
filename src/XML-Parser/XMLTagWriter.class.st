@@ -47,7 +47,9 @@ XMLTagWriter >> attributes: aDictionaryOrArray [
 
 { #category : #'embedding markup' }
 XMLTagWriter >> content: aStringOrBlockOrCollection [
-	^ self with: aStringOrBlockOrCollection
+	self deprecated: 'use #with: instead'.
+
+	^ self with: aStringOrBlockOrCollection.
 ]
 
 { #category : #private }

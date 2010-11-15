@@ -18,6 +18,18 @@ XMLNode >> addContent: aStringOrStringNode [
 	XMLDOMException signal: 'Node cannot contain content'
 ]
 
+{ #category : #printing }
+XMLNode >> canonicallyPrintOn: aStream [
+	(XMLWriter on: aStream)
+		isCanonical: true;
+		writeWith: [:writer | self printXMLOn: writer]
+]
+
+{ #category : #printing }
+XMLNode >> canonicallyPrinted [
+	^ String streamContents: [:stream | self printCanonicalOn: stream]
+]
+
 { #category : #accessing }
 XMLNode >> characterData [
 	self deprecated: 'use #contentString instead'.
@@ -27,11 +39,7 @@ XMLNode >> characterData [
 
 { #category : #accessing }
 XMLNode >> contentString [
-	| stream |
-
-	stream := WriteStream on: (String new: 128).
-	self printContentOn: stream.
-	^ stream contents.
+	^ String streamContents: [:stream | self printContentOn: stream]
 ]
 
 { #category : #testing }
@@ -121,7 +129,7 @@ XMLNode >> isText [
 
 { #category : #accessing }
 XMLNode >> nextNode [
-	^ self hasParent ifTrue: [self parent nodeAfter: self]
+	^ self parent ifNotNil: [self parent nodeAfter: self]
 ]
 
 { #category : #testing }
@@ -146,9 +154,28 @@ XMLNode >> parent: aParentNode [
 	parent := aParentNode
 ]
 
+{ #category : #printing }
+XMLNode >> prettyPrintOn: aStream [
+	(XMLWriter on: aStream)
+		enablePrettyPrinting;
+		printXMLOn: [:writer | self printXMLOn: writer]
+]
+
+{ #category : #printing }
+XMLNode >> prettyPrinted [
+	^ String streamContents: [:stream | self prettyPrintOn: stream]
+]
+
 { #category : #accessing }
 XMLNode >> previousNode [
-	^ self hasParent ifTrue: [self parent nodeBefore: self]
+	^ self parent ifNotNil: [self parent nodeBefore: self]
+]
+
+{ #category : #printing }
+XMLNode >> printCanonicalOn: aStream [
+	self deprecated: 'use #canonicallyPrintOn: instead'.
+
+	self canonicallyPrintOn: aStream.
 ]
 
 { #category : #printing }
@@ -157,11 +184,7 @@ XMLNode >> printContentOn: aStream [
 
 { #category : #printing }
 XMLNode >> printOn: aStream [
-	| writer |
-
-	writer := XMLWriter on: aStream.
-	self printXMLOn: writer.
-	writer flushMarkup.
+	(XMLWriter on: aStream) writeWith: [:writer | self printXMLOn: writer].
 ]
 
 { #category : #printing }

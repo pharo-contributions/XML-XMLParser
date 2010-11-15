@@ -20,12 +20,12 @@ XMLAttributeDeclarationNode class >> elementName: anElementName attributeName: a
 
 { #category : #accessing }
 XMLAttributeDeclarationNode >> attributeName [
-	^ attributeName
+	^ attributeName ifNil: [attributeName := '']
 ]
 
 { #category : #accessing }
 XMLAttributeDeclarationNode >> defaultDeclaration [
-	^ defaultDeclaration
+	^ defaultDeclaration ifNil: [defaultDeclaration := '']
 ]
 
 { #category : #accessing }
@@ -52,5 +52,5 @@ XMLAttributeDeclarationNode >> setElementName: anElementName attributeName: anAt
 
 { #category : #accessing }
 XMLAttributeDeclarationNode >> type [
-	^ type
+	^ type ifNil: [type := '']
 ]

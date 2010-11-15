@@ -12,5 +12,5 @@ Class {
 
 { #category : #accessing }
 XMLDeclarationNode >> name [
-	^ name
+	^ name ifNil: [name := '']
 ]

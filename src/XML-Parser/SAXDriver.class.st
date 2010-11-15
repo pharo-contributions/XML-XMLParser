@@ -114,7 +114,8 @@ SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary nam
 		ifTrue: [self languageEnvironment: (anAttributeDictionary at: 'xml:lang')].
 	anElementName splitQualifiedNameInto: [:prefixPart :localPart |
 		prefix := prefixPart.
-		localName := localPart].
+		localName := localPart.
+		namespaceURI := ''].
 
 	self usesNamespaces ifTrue: [
 		self scopeManager enterScope.
@@ -137,12 +138,6 @@ SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary nam
 SAXDriver >> handleWhitespace: aString [
 	self activeSaxHandler 
 		ignorableWhitespace: aString
-]
-
-{ #category : #'handling tokens' }
-SAXDriver >> handleXMLDecl: attributes [
-	self activeSaxHandler 
-		documentAttributes: attributes
 ]
 
 { #category : #accessing }
@@ -185,31 +180,27 @@ SAXDriver >> undeclareNamespaces [
 
 	(currentScope defaultNamespace notNil
 		and: [currentScope defaultNamespace ~= enclosingScope defaultNamespace])
-		ifTrue: [self activeSaxHandler endPrefixMapping: 'xmlns']
-]
-
-{ #category : #accessing }
-SAXDriver >> useNamespaces: aBoolean [
-	useNamespaces := aBoolean
+		ifTrue: [self activeSaxHandler endPrefixMapping: '']
 ]
 
 { #category : #testing }
 SAXDriver >> usesNamespaces [
-	^ useNamespaces ifNil: [useNamespaces := false]
+	^ useNamespaces ifNil: [useNamespaces := true]
+]
+
+{ #category : #accessing }
+SAXDriver >> usesNamespaces: aBoolean [
+	useNamespaces := aBoolean
 ]
 
 { #category : #namespaces }
-SAXDriver >> validateStartTag: aStartTag prefix: aPrefix attributes: attributeList [
-	(aPrefix isEmpty or: [self scopeManager includesPrefix: aPrefix])
-		ifFalse: [self errorBadPrefix: aPrefix inStartTag: aStartTag].
+SAXDriver >> validateStartTag: aStartTag prefix: aPrefix attributes: anAttributeDictionary [
+	aPrefix ifNotEmpty: [
+		self scopeManager
+			validatePrefix: aPrefix
+			ofElementName: aStartTag].
 
-	self validatesAttributes
-		ifTrue: [self scopeManager validatePrefixedAttributeNames: attributeList].
-]
-
-{ #category : #testing }
-SAXDriver >> validatesAttributes [
-	^ validateAttributes ifNil: [validateAttributes := true]
+	self scopeManager validatePrefixedAttributeNames: anAttributeDictionary.
 ]
 
 { #category : #accessing }

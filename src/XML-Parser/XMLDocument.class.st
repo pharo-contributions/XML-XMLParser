@@ -43,14 +43,6 @@ XMLDocument >> isDocument [
 ]
 
 { #category : #printing }
-XMLDocument >> printCanonicalOn: aStream [
-	| writer |
-	writer := XMLWriter on: aStream.
-	writer isCanonical: true.
-	self printXMLOn: writer
-]
-
-{ #category : #printing }
 XMLDocument >> printXMLOn: aWriter [
 	self version ifNotNil: [
 		aWriter xml

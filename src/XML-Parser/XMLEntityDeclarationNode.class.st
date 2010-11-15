@@ -42,7 +42,7 @@ XMLEntityDeclarationNode class >> name: aName replacement: aReplacement [
 
 { #category : #accessing }
 XMLEntityDeclarationNode >> ndata [
-	^ ndata
+	^ ndata ifNil: [ndata := '']
 ]
 
 { #category : #printing }
@@ -57,12 +57,12 @@ XMLEntityDeclarationNode >> printXMLOn: aWriter [
 
 { #category : #accessing }
 XMLEntityDeclarationNode >> publicID [
-	^ publicId
+	^ publicId ifNil: [publicId := '']
 ]
 
 { #category : #accessing }
 XMLEntityDeclarationNode >> replacement [
-	^ replacement
+	^ replacement ifNil: [replacement := '']
 ]
 
 { #category : #initialization }
@@ -76,5 +76,5 @@ XMLEntityDeclarationNode >> setName: aName replacement: aReplacement publicID: a
 
 { #category : #accessing }
 XMLEntityDeclarationNode >> systemID [
-	^ systemId
+	^ systemId ifNil: [systemId := '']
 ]

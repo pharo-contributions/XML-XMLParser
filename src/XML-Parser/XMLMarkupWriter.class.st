@@ -16,18 +16,9 @@ XMLMarkupWriter class >> writer: aWriter [
 	^ self new writer: aWriter
 ]
 
-{ #category : #'writing markup' }
-XMLMarkupWriter >> flushMarkup [
-	self
-		writePrologue;
-		writeBody;
-		writeEpilogue;
-		flushed
-]
-
 { #category : #private }
-XMLMarkupWriter >> flushed [
-	self writer flushedMarkupWriter: self.
+XMLMarkupWriter >> beWritten [
+	self writer writtenMarkupWriter: self.
 ]
 
 { #category : #testing }
@@ -47,7 +38,7 @@ XMLMarkupWriter >> isTagWriter [
 
 { #category : #private }
 XMLMarkupWriter >> nextMarkupWriter: aMarkupWriter [
-	self flushMarkup
+	self write
 ]
 
 { #category : #accessing }
@@ -67,8 +58,11 @@ XMLMarkupWriter >> printOn: aStream [
 
 { #category : #'writing markup' }
 XMLMarkupWriter >> write [
-	self flushMarkup.
-	^ self writer.
+	self
+		writePrologue;
+		writeBody;
+		writeEpilogue;
+		beWritten
 ]
 
 { #category : #private }

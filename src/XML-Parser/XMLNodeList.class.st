@@ -47,7 +47,7 @@ XMLNodeList >> elementInsertedBeforeEnd: anElement [
 	| elementBefore |
 
 	(elementBefore := self findElementBefore: anElement)
-		ifNil: [self elements add: anElement]
+		ifNil: [self elements addFirst: anElement]
 		ifNotNil: [self elements add: anElement after: elementBefore].
 
 	self elementsByNameAt: anElement name insertElement: anElement.
@@ -116,11 +116,30 @@ XMLNodeList >> elementsByNameAt: aName addElement: anElement [
 ]
 
 { #category : #private }
+XMLNodeList >> elementsByNameAt: aName addElementFirst: anElement [
+	| elementsWithName |
+
+	elementsWithName :=
+		self elementsByName
+			at: aName
+			ifAbsent: [
+				self elementsByName at: aName put: anElement.
+				^ self].
+
+	elementsWithName isCollection
+		ifTrue: [elementsWithName addFirst: anElement]
+		ifFalse: [
+			self elementsByName
+				at: aName
+				put: [self species with: anElement with: elementsWithName]].
+]
+
+{ #category : #private }
 XMLNodeList >> elementsByNameAt: aName insertElement: anElement [
 	| elementsWithName elementBefore |
 
 	(elementBefore := self findElementBefore: anElement withName: aName)
-		ifNil: [^ self elementsByNameAt: aName addElement: anElement].
+		ifNil: [^ self elementsByNameAt: aName addElementFirst: anElement].
 
 	(elementsWithName := self elementsByName at: aName)
 		isCollection

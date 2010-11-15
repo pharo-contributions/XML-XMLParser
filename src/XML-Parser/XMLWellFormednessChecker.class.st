@@ -1,5 +1,5 @@
 "
-The class ensures tags are nested properly and that all opening tags have corresponding closing tags.
+The class ensures tags are nested properly and that all start tags have corresponding end tags.
 "
 Class {
 	#name : #XMLWellFormednessChecker,

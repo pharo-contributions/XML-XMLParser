@@ -14,7 +14,7 @@ XMLElementDeclarationNode class >> name: aName contentModel: aContentModelString
 
 { #category : #accessing }
 XMLElementDeclarationNode >> contentModel [
-	^ contentModel
+	^ contentModel ifNil: [contentModel := '']
 ]
 
 { #category : #printing }

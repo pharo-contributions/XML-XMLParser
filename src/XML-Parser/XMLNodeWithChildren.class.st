@@ -92,6 +92,11 @@ XMLNodeWithChildren >> nodesDo: aBlock [
 	self nodes do: aBlock
 ]
 
+{ #category : #printing }
+XMLNodeWithChildren >> printXMLOn: writer [
+	self nodesDo: [:each | each printXMLOn: writer].
+]
+
 { #category : #accessing }
 XMLNodeWithChildren >> removeNode: aNode [
 	^ self nodes remove: aNode
@@ -117,7 +122,7 @@ XMLNodeWithChildren >> removedNode: aNode [
 { #category : #accessing }
 XMLNodeWithChildren >> replaceNode: aNode with: aReplacementNode [
 	^ self nodes
-		at: [self nodes indexOf: aNode]
+		at: (self nodes indexOf: aNode)
 		put: aReplacementNode
 ]
 

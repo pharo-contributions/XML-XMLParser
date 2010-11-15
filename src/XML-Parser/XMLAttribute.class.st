@@ -1,5 +1,7 @@
 "
-The class represents an attribute node, to be stored in an XMLAttributeList. You generally won't need to interact with these objects directly; XMLElement's various #attribute- messages will normally suffice. The name of an XMLAttribute can be namespaced using prefixes; however, the prefix must be mapped to a namespace URI in the parent XMLElement. Unprefixed attributes have no namespace, not even the default one, per the XML namespaces standard.
+The class represents an attribute node, to be stored in an XMLAttributeList. You generally won't need to interact with these objects directly; XMLElement's various #attribute- messages will normally suffice. The name of an attribute node can be namespaced using prefixes; however, the prefix must be mapped to a namespace URI in the containing element node. Unprefixed attributes have no namespace, not even the default one, per the XML namespaces standard.
+
+Note that attribute nodes are not children of the elements that contain them; rather, they are considered to be ""part"" of the element, and this relationship is modeled using a separate instance variable (""element"") with different accessor messages.
 "
 Class {
 	#name : #XMLAttribute,

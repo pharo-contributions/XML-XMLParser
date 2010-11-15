@@ -10,7 +10,7 @@ Trait {
 	#category : #'XML-Parser-Nodes'
 }
 
-{ #category : #accessing }
+{ #category : #utility }
 TXMLObservable classSide >> notifications [
 	| notifications parser parsedMethods methodNode firstArgument |
 
@@ -46,7 +46,7 @@ TXMLObservable >> addObserver: anObserver [
 { #category : #accessing }
 TXMLObservable >> notifier [
 	"Override to return an instance of XMLNotifier"
-	self subclassResponsibility
+	self explicitRequirement
 ]
 
 { #category : #notification }

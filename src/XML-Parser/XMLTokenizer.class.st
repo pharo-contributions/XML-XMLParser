@@ -1,5 +1,5 @@
 "
-This class reads XML tokens from a stream using an XMLStreamReader. To create a parser, subclass XMLTokenizer and override the #handle- messages to handle tokens as they are read. To cause a token to be read, send #nextToken to an instance.
+This class reads XML tokens from a stream using a nested stream reader. To create a parser, subclass this class and override the #handle- messages to handle tokens as they are read. To cause a token to be read, send #nextToken to an instance.
 "
 Class {
 	#name : #XMLTokenizer,
@@ -46,8 +46,11 @@ XMLTokenizer class >> isCharEscape: entityValue [
 ]
 
 { #category : #'instance creation' }
-XMLTokenizer class >> on: aStream [
-	^self new stream: aStream
+XMLTokenizer class >> on: aStringOrStream [
+	^self new stream:
+		(aStringOrStream isStream
+			ifTrue: [aStringOrStream]
+			ifFalse: [aStringOrStream readStream])
 ]
 
 { #category : #tokenizing }
@@ -248,6 +251,24 @@ XMLTokenizer >> handleXMLDecl: attributes [
 		self log: key , '->' , value]
 ]
 
+{ #category : #'handling tokens' }
+XMLTokenizer >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
+	| versionNumber standaloneBoolean |
+
+	aVersion
+		ifEmpty: [versionNumber := nil]
+		ifNotEmpty: [versionNumber := aVersion asNumber].
+
+	(aYesOrNo = 'yes' or: [aYesOrNo = 'no'])
+		ifTrue: [standaloneBoolean := aYesOrNo = 'yes']
+		ifFalse: [standaloneBoolean := nil].
+
+	self saxHandler
+		xmlVersion: versionNumber
+		encoding: anEncoding
+		standalone: standaloneBoolean
+]
+
 { #category : #entities }
 XMLTokenizer >> initEntities [
 	| ents |
@@ -266,7 +287,7 @@ XMLTokenizer >> initialize [
 	streamReader := XMLNestedStreamReader new.
 	streamWriter := XMLNestedStreamWriter new.
 	parsingMarkup := false.
-	isValidating := false.
+	isValidating := true.
 ]
 
 { #category : #testing }
@@ -298,7 +319,7 @@ XMLTokenizer >> nextAttributeInto: attributes namespaces: namespaces [
 		and: [attrName beginsWith: 'xmlns'])
 		ifTrue: [attrName size > 6
 			ifTrue: [namespaces at: (attrName copyFrom: 7 to: attrName size) put: attrValue]
-			ifFalse: [namespaces at: attrName put: attrValue]]
+			ifFalse: [namespaces at: '' put: attrValue]]
 		ifFalse: [attributes at: attrName put: attrValue].
 ]
 
@@ -701,7 +722,10 @@ XMLTokenizer >> nextXMLDecl [
 	self expectNext: $>.
 	(attributes includesKey: 'encoding')
 		ifTrue: [streamReader streamEncoding: (attributes at: 'encoding')].
-	self handleXMLDecl: attributes.
+	self
+		handleXMLVersion: (attributes at: 'version' ifAbsent: [''])
+		encoding: (attributes at: 'encoding' ifAbsent: [''])
+		standalone: (attributes at: 'standalone' ifAbsent: ['']).
 ]
 
 { #category : #entities }

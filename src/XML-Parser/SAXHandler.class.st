@@ -14,20 +14,25 @@ Class {
 }
 
 { #category : #'instance creation' }
-SAXHandler class >> on: aStream [
-	| driver |
-	driver := SAXDriver on:
-		(aStream isStream
-			ifTrue: [aStream]
-			ifFalse: [aStream readStream]).
-	^ self new
-		driver: driver;
-		isValidating: true.
+SAXHandler class >> on: aStringOrStream [
+	^ self new driver: (SAXDriver on: aStringOrStream)
 ]
 
 { #category : #'instance creation' }
-SAXHandler class >> parse: aStream [
-	^ self parseDocumentFrom: aStream
+SAXHandler class >> onFileNamed: aFileName [
+	^ self on: (FileStream readOnlyFileNamed: aFileName)
+]
+
+{ #category : #'instance creation' }
+SAXHandler class >> parse: aStringOrStream [
+	^ (self on: aStringOrStream) parseDocument
+]
+
+{ #category : #'instance creation' }
+SAXHandler class >> parse: aStringOrStream usingNamespaces: aBoolean [
+	^ (self on: aStringOrStream)
+		usesNamespaces: aBoolean;
+		parseDocument
 ]
 
 { #category : #'instance creation' }
@@ -40,44 +45,32 @@ SAXHandler class >> parseDTDFrom: aStream [
 ]
 
 { #category : #'instance creation' }
-SAXHandler class >> parseDocumentFrom: aStream [
-	^ self parseDocumentFrom: aStream useNamespaces: true
+SAXHandler class >> parseDocumentFrom: aStringOrStream [
+	^ self parse: aStringOrStream.
 ]
 
 { #category : #'instance creation' }
-SAXHandler class >> parseDocumentFrom: aStream useNamespaces: aBoolean [
-	|  parser |
-	parser := self on: aStream.
-	parser useNamespaces: aBoolean.
-	^ parser parseDocument.
+SAXHandler class >> parseDocumentFrom: aStringOrStream useNamespaces: aBoolean [
+	^ self parse: aStringOrStream usingNamespaces: aBoolean.
 ]
 
 { #category : #'instance creation' }
-SAXHandler class >> parseDocumentFromFileNamed: fileName [
-	^self parseDocumentFromFileNamed: fileName readIntoMemory: false
+SAXHandler class >> parseDocumentFromFileNamed: aFileName [
+	self deprecated: 'use #parseFileNamed: instead'.
+
+	^ self parseFileNamed: aFileName.
 ]
 
 { #category : #'instance creation' }
-SAXHandler class >> parseDocumentFromFileNamed: fileName readIntoMemory: readIntoMemory [
-	| stream |
-	stream := FileDirectory default readOnlyFileNamed: fileName.
-	readIntoMemory
-		ifTrue: [stream := stream contentsOfEntireFile readStream].
-	^ [self parseDocumentFrom: stream] ensure: [stream close].
+SAXHandler class >> parseFileNamed: aFileName [
+	^ (self onFileNamed: aFileName) parseDocument
 ]
 
 { #category : #'instance creation' }
-SAXHandler class >> parserOnFileNamed: fileName [
-	^self parserOnFileNamed: fileName readIntoMemory: false
-]
+SAXHandler class >> parserOnFileNamed: aFileName [
+	self deprecated: 'use #onFileNamed: instead'.
 
-{ #category : #'instance creation' }
-SAXHandler class >> parserOnFileNamed: fileName readIntoMemory: readIntoMemory [
-	| stream  |
-	stream := FileDirectory default readOnlyFileNamed: fileName.
-	readIntoMemory
-		ifTrue: [stream := stream contentsOfEntireFile readStream].
-	^self on: stream
+	^ self onFileNamed: aFileName.
 ]
 
 { #category : #content }
@@ -87,7 +80,7 @@ SAXHandler >> characters: aString [
 ]
 
 { #category : #lexical }
-SAXHandler >> comment: commentString [
+SAXHandler >> comment: aCommentString [
 	"This call corresponds to the Java SAX ext call
 	comment(char[] ch, int start, int length)."
 ]
@@ -95,10 +88,6 @@ SAXHandler >> comment: commentString [
 { #category : #accessing }
 SAXHandler >> currentScope [
 	^ self driver currentScope
-]
-
-{ #category : #content }
-SAXHandler >> documentAttributes: aDictionary [
 ]
 
 { #category : #accessing }
@@ -126,7 +115,7 @@ SAXHandler >> endDocument [
 ]
 
 { #category : #content }
-SAXHandler >> endElement: elementName [
+SAXHandler >> endElement: aQualifiedName [
 
 ]
 
@@ -153,7 +142,7 @@ SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aUri localName: aL
 ]
 
 { #category : #lexical }
-SAXHandler >> endEntity: entityName [
+SAXHandler >> endEntity: anEntityName [
 	"This call corresponds to the Java SAX ext call
 	endEntity(java.lang.String name)."
 ]
@@ -229,7 +218,7 @@ SAXHandler >> resolveEntity: publicID systemID: systemID [
 ]
 
 { #category : #content }
-SAXHandler >> skippedEntity: aString [
+SAXHandler >> skippedEntity: anEntityName [
 	"This call corresonds to the Java SAX call
 	skippedEntity(java.lang.String name)."
 ]
@@ -241,7 +230,7 @@ SAXHandler >> startCData [
 ]
 
 { #category : #lexical }
-SAXHandler >> startDTD: declName publicID: publicID systemID: systemID [
+SAXHandler >> startDTD: aRootElementName publicID: aPublicId systemID: aSystemId [
 	"This call corresponds to the Java SAX ext call
 	startDTD(java.lang.String name, java.lang.String publicId, java.lang.String systemId)."
 ]
@@ -280,23 +269,42 @@ SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName: 
 ]
 
 { #category : #lexical }
-SAXHandler >> startEntity: entityName [
+SAXHandler >> startEntity: anEntityName [
 	"This call corresponds to the Java SAX ext call
 	startEntity(java.lang.String name)."
 ]
 
 { #category : #content }
-SAXHandler >> startPrefixMapping: prefix uri: uri [
+SAXHandler >> startPrefixMapping: aPrefix uri: aUri [
 	"This call corresonds to the Java SAX call
 	startPrefixMapping(java.lang.String prefix, java.lang.String uri)."
 ]
 
 { #category : #accessing }
 SAXHandler >> useNamespaces: aBoolean [
-	self driver useNamespaces: aBoolean
+	self deprecated: 'use #usesNamespaces: instead'.
+
+	self driver usesNamespaces: aBoolean.
 ]
 
 { #category : #testing }
 SAXHandler >> usesNamespaces [
 	^ self driver usesNamespaces
+]
+
+{ #category : #accessing }
+SAXHandler >> usesNamespaces: aBoolean [
+	self driver usesNamespaces: aBoolean
+]
+
+{ #category : #content }
+SAXHandler >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
+	self
+		invokeDeprecated: #documentAttributes:
+		withArguments:
+			(Array with: (Dictionary
+				with: 'version' -> aVersionFloat asString
+				with: 'encoding' -> anEncoding))
+		orForwardTo: nil
+		withArguments: nil
 ]

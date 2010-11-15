@@ -18,6 +18,11 @@ Class {
 }
 
 { #category : #'instance creation' }
+XMLElement class >> name: aLocalName [
+	^ self new name: aLocalName
+]
+
+{ #category : #'instance creation' }
 XMLElement class >> name: aLocalName attributes: aDictionaryOrArray [
 	^ (self named: aLocalName)
 		setAttributes: aDictionaryOrArray
@@ -236,7 +241,7 @@ XMLElement >> contentsDo: aBlock [
 { #category : #namespaces }
 XMLElement >> declareNamespaces: aDictionaryOrArray [
 	aDictionaryOrArray associationsDo: [:each |
-		(each key isEmptyOrNil or: [each key = 'xmlns'])
+		each key isEmptyOrNil
 			ifTrue: [self defaultNamespace: each value]
 			ifFalse: [self declarePrefix: each key uri: each value]]
 ]
@@ -394,7 +399,7 @@ XMLElement >> namespaceURI [
 
 { #category : #accessing }
 XMLElement >> nextElement [
-	^ self hasParent ifTrue: [self parent elementAfter: self]
+	^ self parent ifNotNil: [self parent elementAfter: self]
 ]
 
 { #category : #private }
@@ -427,7 +432,7 @@ XMLElement >> prefix: aPrefix [
 
 { #category : #accessing }
 XMLElement >> previousElement [
-	^ self hasParent ifTrue: [self parent elementBefore: self]
+	^ self parent ifNotNil: [self parent elementBefore: self]
 ]
 
 { #category : #printing }
@@ -436,6 +441,7 @@ XMLElement >> printXMLOn: aWriter [
 
 	(tagWriter := aWriter tag)
 		name: self name.
+
 	self hasNamespaces
 		ifTrue: [
 			tagWriter
@@ -443,7 +449,7 @@ XMLElement >> printXMLOn: aWriter [
 				xmlnsDeclarations: self namespaceScope prefixMappings].
 	tagWriter
 		attributes: self attributes;
-		content: [super printXMLOn: aWriter]
+		with: [super printXMLOn: aWriter]
 ]
 
 { #category : #accessing }

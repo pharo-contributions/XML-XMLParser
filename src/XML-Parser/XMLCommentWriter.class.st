@@ -7,11 +7,6 @@ Class {
 	#category : #'XML-Parser-Writers'
 }
 
-{ #category : #'embedding markup' }
-XMLCommentWriter >> comment: aString [
-	^ self with: aString
-]
-
 { #category : #private }
 XMLCommentWriter >> writeEpilogue [
 	self writer nextPutAll: '-->'
@@ -19,5 +14,7 @@ XMLCommentWriter >> writeEpilogue [
 
 { #category : #private }
 XMLCommentWriter >> writePrologue [	
-	self writer nextPutAll: '<!--'
+	self writer
+		cr;
+		nextPutAll: '<!--'
 ]

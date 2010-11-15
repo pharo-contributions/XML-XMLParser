@@ -169,8 +169,8 @@ XMLNodeWithElements >> innerXML: aString [
 	| parsedDocument newNodes |
 
 	parsedDocument := XMLDOMParser
-		parseDocumentFrom: aString
-		useNamespaces: self usesNamespaces.
+		parse: aString
+		usingNamespaces: self usesNamespaces.
 	newNodes := parsedDocument nodes copy.
 	parsedDocument removeNodes.
 	self
@@ -201,11 +201,6 @@ XMLNodeWithElements >> nodesClass [
 { #category : #printing }
 XMLNodeWithElements >> printContentOn: aStream [
 	self contentNodesDo: [:each | each printContentOn: aStream]
-]
-
-{ #category : #printing }
-XMLNodeWithElements >> printXMLOn: writer [
-	self nodesDo: [:each | each printXMLOn: writer].
 ]
 
 { #category : #searching }

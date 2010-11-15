@@ -16,11 +16,6 @@ XMLDoctypeDeclarationWriter >> externalIDWriter [
 	^ externalIdWriter ifNil: [externalIdWriter := XMLExternalIDWriter writer: self writer]
 ]
 
-{ #category : #'embedding markup' }
-XMLDoctypeDeclarationWriter >> internalSubset: aStringOrCollectionOrBlock [
-	^ self with: aStringOrCollectionOrBlock
-]
-
 { #category : #accessing }
 XMLDoctypeDeclarationWriter >> publicID [
 	^ self externalIDWriter publicID
@@ -55,6 +50,11 @@ XMLDoctypeDeclarationWriter >> systemID: aSystemId [
 XMLDoctypeDeclarationWriter >> with: aStringOrCollectionOrBlock [
 	self writer isCanonical
 		ifFalse: [^ super with: aStringOrCollectionOrBlock]
+]
+
+{ #category : #'embedding markup' }
+XMLDoctypeDeclarationWriter >> withInternalSubset: aStringOrCollectionOrBlock [
+	^ self with: aStringOrCollectionOrBlock
 ]
 
 { #category : #private }
