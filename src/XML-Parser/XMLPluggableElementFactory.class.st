@@ -12,6 +12,7 @@ Class {
 	#name : #XMLPluggableElementFactory,
 	#superclass : #XMLNodeFactory,
 	#instVars : [
+		'elementClass',
 		'elementClassesByName'
 	],
 	#category : #'XML-Parser-Nodes'
@@ -28,7 +29,7 @@ XMLPluggableElementFactory >> classForElement: aName prefix: aPrefix uri: aUri l
 						ifNil: [self elementClass]]]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLPluggableElementFactory >> classForElement: aName uri: aUri [
 	| classesForElement |
 
@@ -46,6 +47,16 @@ XMLPluggableElementFactory >> classForElement: aName uri: aUri [
 ]
 
 { #category : #accessing }
+XMLPluggableElementFactory >> elementClass [
+	^ elementClass ifNil: [elementClass := super elementClass]
+]
+
+{ #category : #accessing }
+XMLPluggableElementFactory >> elementClass: anElementClass [
+	elementClass := anElementClass
+]
+
+{ #category : #private }
 XMLPluggableElementFactory >> elementClassesByName [
 	^ elementClassesByName ifNil: [elementClassesByName := Dictionary new]
 ]
@@ -64,4 +75,38 @@ XMLPluggableElementFactory >> handleElement: anElementName withClass: aClass [
 		handleElement: anElementName
 		namespaceURI: ''
 		withClass: aClass
+]
+
+{ #category : #accessing }
+XMLPluggableElementFactory >> handleElementsMatchingClass: aClass [
+	| className camelCaseName camelCaseStream hyphenatedStream |
+
+	(className := self removePrefixAndElementSuffixFrom: aClass name asString)
+		ifEmpty: [^ self].
+
+	camelCaseName := className allButFirst copyWithFirst: className first asLowercase.
+	self handleElement: camelCaseName withClass: aClass.
+
+	camelCaseStream := camelCaseName readStream.
+	hyphenatedStream := (String new: camelCaseName size) writeStream.
+	[camelCaseStream atEnd]
+		whileFalse: [
+			camelCaseStream peek isUppercase
+				ifTrue: [hyphenatedStream nextPut: $-].
+			hyphenatedStream nextPut: camelCaseStream next asLowercase].
+	self handleElement: hyphenatedStream contents withClass: aClass.
+]
+
+{ #category : #private }
+XMLPluggableElementFactory >> removePrefixAndElementSuffixFrom: aString [
+	| nameStream |
+
+	nameStream := aString readStream.
+	[nameStream atEnd not and: [nameStream peek isUppercase]]
+		whileTrue: [nameStream next].
+	nameStream atEnd
+		ifTrue: [^ ''].
+	nameStream back.
+
+	^ nameStream upToEnd copyReplaceAll: 'Element' with: ''.
 ]

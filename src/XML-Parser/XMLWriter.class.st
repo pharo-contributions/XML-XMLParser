@@ -248,8 +248,8 @@ XMLWriter >> lineBreak [
 ]
 
 { #category : #accessing }
-XMLWriter >> lineBreak: aLineBreak [
-	lineBreak := aLineBreak asString
+XMLWriter >> lineBreak: aLineBreakCharOrString [
+	lineBreak := aLineBreakCharOrString asString
 ]
 
 { #category : #private }

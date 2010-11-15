@@ -69,7 +69,7 @@ XMLNodesWithoutChildrenTest >> test1basicNodeProtocol [
 		assertNode: node hasType: nil;
 		deny: node hasChildren;
 		assert: (#(nextNode previousNode parent) allSatisfy: [:each | (node perform: each) isNil]);
-		assert: node printString = (node class printString, '(', node identityHash asString, ') ');
+		assert: node printString = (node class name asString, '(', node identityHash printString, ') ');
 		assert: node contentString isEmpty.
 
 	parent := XMLMockNode new.

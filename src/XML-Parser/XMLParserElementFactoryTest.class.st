@@ -9,7 +9,12 @@ Class {
 
 { #category : #accessing }
 XMLParserElementFactoryTest >> dateElementClass [
-	^ self elementClassAt: #XMLDateTestElement
+	^ self elementClassAt: #XMLTESTDateRegisteredElement
+]
+
+{ #category : #accessing }
+XMLParserElementFactoryTest >> defaultElementClass [
+	^ self elementClassAt: #XMLTESTDefaultElement
 ]
 
 { #category : #accessing }
@@ -19,23 +24,24 @@ XMLParserElementFactoryTest >> elementClassAt: aSymbol [
 
 { #category : #accessing }
 XMLParserElementFactoryTest >> elementClassNames [
-	^ #(XMLUserTestElement XMLOtherUsernameTestElement XMLDateTestElement
-		XMLOtherDateTestElement XMLTableTestElement XMLOtherTableTestElement)
+	^ #(XMLTESTDefaultElement
+		XMLTESTUserElement XMLTESTOtherUsernameElement XMLTESTDateRegisteredElement
+		XMLTESTOtherDateRegisteredElement XMLTESTTableNameElement XMLTESTOtherTableNameElement)
 ]
 
 { #category : #accessing }
 XMLParserElementFactoryTest >> otherDateElementClass [
-	^ self elementClassAt: #XMLOtherDateTestElement
+	^ self elementClassAt: #XMLTESTOtherDateRegisteredElement
 ]
 
 { #category : #accessing }
 XMLParserElementFactoryTest >> otherTableElementClass [
-	^ self elementClassAt: #XMLOtherTableTestElement
+	^ self elementClassAt: #XMLTESTOtherTableNameElement
 ]
 
 { #category : #accessing }
 XMLParserElementFactoryTest >> otherUsernameClass [
-	^ self elementClassAt: #XMLOtherUsernameTestElement
+	^ self elementClassAt: #XMLTESTOtherUsernameElement
 ]
 
 { #category : #running }
@@ -45,7 +51,7 @@ XMLParserElementFactoryTest >> setUp [
 
 { #category : #accessing }
 XMLParserElementFactoryTest >> tableElementClass [
-	^ self elementClassAt: #XMLTableTestElement
+	^ self elementClassAt: #XMLTESTTableNameElement
 ]
 
 { #category : #running }
@@ -58,13 +64,14 @@ XMLParserElementFactoryTest >> testElementFactory [
 	| factory document userClass dateClass tableClass |
 
 	(factory := XMLPluggableElementFactory new)
+		elementClass: self defaultElementClass;
 		handleElement: 'user:user' namespaceURI: 'urn:user' withClass: self userElementClass;
 		handleElement: 'username' namespaceURI: 'urn:notuser' withClass: self otherUsernameClass;
 		handleElement: 'date-registered' namespaceURI: 'urn:notuser' withClass: self otherDateElementClass;
 		handleElement: 'date-registered' withClass: self dateElementClass;
 		handleElement: 'notuser:table-name' namespaceURI: 'urn:user' withClass: self otherTableElementClass;
 		handleElement: 'table-name' namespaceURI: 'urn:user' withClass: self otherTableElementClass;
-		handleElement: 'table-name' withClass: self tableElementClass.
+		handleElementsMatchingClass: self tableElementClass.
 
 	document :=
 		(XMLDOMParser on: self userXML)
@@ -72,15 +79,16 @@ XMLParserElementFactoryTest >> testElementFactory [
 			parseDocument.
 	self
 		assert: (document root isMemberOf: self userElementClass);
-		assert: ((document root elementAt: 'username') isMemberOf: XMLElement);
-		assert: ((document root elementAt: 'real-name') isMemberOf: XMLElement);
+		assert: ((document root elementAt: 'username') isMemberOf: self defaultElementClass);
+		assert: ((document root elementAt: 'real-name') isMemberOf: self defaultElementClass);
 		assert: ((document root elementAt: 'date-registered') isMemberOf: self dateElementClass);
-		assert: ((document root elementAt: 'table-name') isMemberOf: self tableElementClass).
+		assert: ((document root elementAt: 'table-name') isMemberOf: self tableElementClass);
+		assert: ((document root elementAt: 'tableName') isMemberOf: self tableElementClass).
 ]
 
 { #category : #accessing }
 XMLParserElementFactoryTest >> userElementClass [
-	^ self elementClassAt: #XMLUserTestElement
+	^ self elementClassAt: #XMLTESTUserElement
 ]
 
 { #category : #source }
@@ -105,5 +113,6 @@ XMLParserElementFactoryTest >> userXML [
     <user:real-name>John Smith</user:real-name>
     <user:date-registered>2010-11-14T23:53:54-05:00</user:date-registered>
     <table-name>users</table-name>
+    <tableName>users</tableName>
 </user:user>'
 ]
