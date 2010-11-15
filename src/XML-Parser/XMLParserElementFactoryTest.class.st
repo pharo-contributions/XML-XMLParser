@@ -46,7 +46,13 @@ XMLParserElementFactoryTest >> otherUsernameClass [
 
 { #category : #running }
 XMLParserElementFactoryTest >> setUp [
-	self elementClassNames do: [:each | XMLElement subclass: each]
+	self elementClassNames do: [:each |
+		XMLElement
+			subclass: each
+			instanceVariableNames: ''
+			classVariableNames: ''
+			poolDictionaries: ''
+			category: self class category]
 ]
 
 { #category : #accessing }
@@ -56,7 +62,7 @@ XMLParserElementFactoryTest >> tableElementClass [
 
 { #category : #running }
 XMLParserElementFactoryTest >> tearDown [
-	self elementClassNames do: [:each | XMLElement removeSubclass: each]
+	self elementClassNames do: [:each | (self elementClassAt: each) removeFromSystem]
 ]
 
 { #category : #tests }
