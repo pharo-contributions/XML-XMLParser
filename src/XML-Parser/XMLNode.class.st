@@ -158,7 +158,7 @@ XMLNode >> parent: aParentNode [
 XMLNode >> prettyPrintOn: aStream [
 	(XMLWriter on: aStream)
 		enablePrettyPrinting;
-		printXMLOn: [:writer | self printXMLOn: writer]
+		writeWith: [:writer | self printXMLOn: writer]
 ]
 
 { #category : #printing }
