@@ -128,7 +128,7 @@ XMLElementTest >> test4elementAttributes [
 	self
 		assertElement: element
 		hasAttributes:
-			(XMLOrderPreservingDictionary
+			(OrderPreservingDictionary
 				with: 'foo'->'test'
 				with: 'bar'->'test2').
 
@@ -142,14 +142,14 @@ XMLElementTest >> test4elementAttributes [
 XMLElementTest >> test5elementConstructors [
 	| noAttributes attributes str element |
 
-	noAttributes := XMLOrderPreservingDictionary new.
+	noAttributes := OrderPreservingDictionary new.
 	self
 		assertElement: (XMLElement named: 'foo')
 		hasName: 'foo'
 		attributes: noAttributes
 		contentString: ''.
 
-	attributes := XMLOrderPreservingDictionary with: 'foo'->'test1' with: 'bar'->'test2'.
+	attributes := OrderPreservingDictionary with: 'foo'->'test1' with: 'bar'->'test2'.
 	self
 		assertElement: (XMLElement name: 'foo' attributes: attributes)
 		hasName: 'foo'
@@ -182,7 +182,7 @@ XMLElementTest >> test6elementPrinting [
 	| element attributes |
 
 	element := (XMLElement named: 'element').
-	attributes := XMLOrderPreservingDictionary with: 'b'->'two' with: 'a'->'one'.
+	attributes := OrderPreservingDictionary with: 'b'->'two' with: 'a'->'one'.
 	self
 		assert: element printString = '<element />';
 		assert: (element contentString: 'test') printString = '<element>test</element>';
