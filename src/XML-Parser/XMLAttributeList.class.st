@@ -36,7 +36,7 @@ XMLAttributeList >> adding: anObject [
 
 { #category : #converting }
 XMLAttributeList >> asDictionary [
-	^ XMLOrderPreservingDictionary newFrom: self asNameValueAssociations
+	^ OrderPreservingDictionary newFrom: self asNameValueAssociations
 ]
 
 { #category : #converting }

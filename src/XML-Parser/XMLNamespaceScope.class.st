@@ -117,7 +117,7 @@ XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
 
 { #category : #accessing }
 XMLNamespaceScope >> prefixMappings [
-	^ prefixMappings ifNil: [prefixMappings := XMLOrderPreservingDictionary new]
+	^ prefixMappings ifNil: [prefixMappings := OrderPreservingDictionary new]
 ]
 
 { #category : #accessing }

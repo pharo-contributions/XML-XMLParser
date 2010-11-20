@@ -666,9 +666,9 @@ XMLTokenizer >> nextTag [
 		ifTrue: [^ self nextEndTag].
 	tagName := self nextName.
 	streamReader skipSeparators.
-	attributes := XMLOrderPreservingDictionary new: 10.
+	attributes := OrderPreservingDictionary new: 10.
 	self usesNamespaces
-		ifTrue: [namespaces := XMLOrderPreservingDictionary new].
+		ifTrue: [namespaces := OrderPreservingDictionary new].
 	[(nextChar := streamReader peek) == $> or: [nextChar == $/]] whileFalse: [
 		self checkAndExpandReference: #content.
 		self nextAttributeInto: attributes namespaces: namespaces.
