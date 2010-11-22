@@ -103,9 +103,11 @@ XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
 	aPrefix = 'xml'
 		ifTrue: [
 			aUri = self xmlNamespaceURI
-				ifTrue: [^ self].
-			XMLNamespaceException signal:
-				'Cannot rebind the "xml" prefix to a different namespace URI'].
+				ifFalse: [
+					XMLNamespaceException signal:
+						'Cannot rebind the "xml" prefix to a different namespace URI'].
+			^ self].
+
 	aPrefix = 'xmlns'
 		ifTrue: [XMLNamespaceException signal: 'Cannot bind "xmlns" prefix at all'].
 

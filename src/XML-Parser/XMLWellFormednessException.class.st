@@ -1,5 +1,5 @@
 Class {
 	#name : #XMLWellFormednessException,
-	#superclass : #XMLException,
+	#superclass : #XMLParserException,
 	#category : #'XML-Parser-Exceptions'
 }

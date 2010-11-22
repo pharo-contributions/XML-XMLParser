@@ -1,5 +1,5 @@
 "
-The class represents a name for an element or attribute. It stores the prefix, local part and qualified name.
+The class represents a name for an element or attribute. It stores the prefix, local part and qualified name. It also notifies any observers whenever any part of the name it models changes.
 "
 Class {
 	#name : #XMLNodeName,
@@ -7,10 +7,10 @@ Class {
 	#traits : 'TXMLObservable',
 	#classTraits : 'TXMLObservable classTrait',
 	#instVars : [
+		'qualified',
 		'prefix',
-		'notifier',
 		'localPart',
-		'qualified'
+		'notifier'
 	],
 	#category : #'XML-Parser-Nodes'
 }
@@ -50,7 +50,7 @@ XMLNodeName >> localPart [
 
 { #category : #accessing }
 XMLNodeName >> localPart: aLocalPart [
-	localPart := aLocalPart
+	self changeWith: [self setPrefix: self prefix localPart: aLocalPart]
 ]
 
 { #category : #accessing }

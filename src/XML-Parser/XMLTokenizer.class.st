@@ -749,7 +749,7 @@ XMLTokenizer >> parameterEntity: refName put: aReference [
 
 { #category : #errors }
 XMLTokenizer >> parseError: errorString [
-	XMLParseException signal: errorString
+	XMLParsingException signal: errorString
 ]
 
 { #category : #private }

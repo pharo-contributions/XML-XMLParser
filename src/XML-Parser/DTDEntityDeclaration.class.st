@@ -61,7 +61,7 @@ DTDEntityDeclaration >> forbidden [
 { #category : #behaviors }
 DTDEntityDeclaration >> include [
 	"Return my expanded value."
-	^ value ifNil: [XMLWarning signal: 'XML undefined entity ' , name printString]
+	^ value ifNil: [XMLParserWarning signal: 'XML undefined entity ' , name printString]
 ]
 
 { #category : #behaviors }

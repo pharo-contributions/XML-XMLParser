@@ -1,11 +1,13 @@
 "
-This class is a pluggable factory that can map elements to different XMLElement subclasses based on the name and namespace information of those elements. You have to create an instance, configure it to handle certain named elements with certain classes, and then inject your instance into a DOM parser using #nodeFactory: before parsing. Here is an example of its use:
+This class is a pluggable factory that can map elements to different XMLElement subclasses based on the name and namespace information of those elements. You have to create an instance, configure it to handle certain elements with certain classes, and then inject your instance into a DOM parser using #nodeFactory: before parsing. Here is an example of its use:
 
-	doc := (XMLDOMParser on: aStringOrStream)
+	doc := (XMLDOMParser on: someXML)
 		nodeFactory:
 			(XMLPluggableElementFactory new
-				handleElement: 'user' withClass: MyUserElement;
-				handleElement: 'report' withClass: MyReportElement);
+				elementClass: GenericElement;
+				handleElement: 'user' withClass: UserElement;
+				handleElement: 'report' withClass: ReportElement;
+				handleElement: 'report' namespaceURI: 'http://specialreprot' withClass: SpecialReportElement)
 		parseDocument.
 "
 Class {
@@ -51,7 +53,7 @@ XMLPluggableElementFactory >> elementClass [
 	^ elementClass ifNil: [elementClass := super elementClass]
 ]
 
-{ #category : #accessing }
+{ #category : #'element handling' }
 XMLPluggableElementFactory >> elementClass: anElementClass [
 	elementClass := anElementClass
 ]
@@ -61,7 +63,7 @@ XMLPluggableElementFactory >> elementClassesByName [
 	^ elementClassesByName ifNil: [elementClassesByName := Dictionary new]
 ]
 
-{ #category : #accessing }
+{ #category : #'element handling' }
 XMLPluggableElementFactory >> handleElement: anElementName namespaceURI: aUri withClass: aClass [
 	(self elementClassesByName
 		at: anElementName
@@ -69,7 +71,7 @@ XMLPluggableElementFactory >> handleElement: anElementName namespaceURI: aUri wi
 			at: aUri put: aClass
 ]
 
-{ #category : #accessing }
+{ #category : #'element handling' }
 XMLPluggableElementFactory >> handleElement: anElementName withClass: aClass [
 	self
 		handleElement: anElementName
@@ -77,28 +79,63 @@ XMLPluggableElementFactory >> handleElement: anElementName withClass: aClass [
 		withClass: aClass
 ]
 
-{ #category : #accessing }
-XMLPluggableElementFactory >> handleElementsMatchingClass: aClass [
-	| className camelCaseName camelCaseStream hyphenatedStream |
+{ #category : #'element handling' }
+XMLPluggableElementFactory >> handleElements: anElementNameCollection namespaceURI: aNamespaceURI withClass: aClass [
+	anElementNameCollection do: [:each |
+		self
+			handleElement: each
+			namespaceURI: aNamespaceURI
+			withClass: aClass]
+]
 
-	(className := self removePrefixAndElementSuffixFrom: aClass name asString)
+{ #category : #'element handling' }
+XMLPluggableElementFactory >> handleElements: anElementNameCollection withClass: aClass [
+	anElementNameCollection do: [:each | self handleElement: each withClass: aClass]
+]
+
+{ #category : #'element handling' }
+XMLPluggableElementFactory >> handleElementsMatchingClass: aClass [
+	| className |
+
+	(className := self toNameWithoutPrefixAndElementSuffix: aClass name asString)
 		ifEmpty: [^ self].
 
-	camelCaseName := className allButFirst copyWithFirst: className first asLowercase.
-	self handleElement: camelCaseName withClass: aClass.
+	self
+		handleElement: (self toCamelCasedName: className)
+		withClass: aClass.
+	self
+		handleElement: (self toHyphenatedName: className)
+		withClass: aClass.
+]
 
-	camelCaseStream := camelCaseName readStream.
-	hyphenatedStream := (String new: camelCaseName size) writeStream.
-	[camelCaseStream atEnd]
-		whileFalse: [
-			camelCaseStream peek isUppercase
-				ifTrue: [hyphenatedStream nextPut: $-].
-			hyphenatedStream nextPut: camelCaseStream next asLowercase].
-	self handleElement: hyphenatedStream contents withClass: aClass.
+{ #category : #'element handling' }
+XMLPluggableElementFactory >> handleElementsMatchingClasses: aClassCollection [
+	aClassCollection do: [:each | self handleElementsMatchingClass: each]
 ]
 
 { #category : #private }
-XMLPluggableElementFactory >> removePrefixAndElementSuffixFrom: aString [
+XMLPluggableElementFactory >> toCamelCasedName: aString [
+	^ aString allButFirst copyWithFirst: aString first asLowercase
+]
+
+{ #category : #private }
+XMLPluggableElementFactory >> toHyphenatedName: aString [
+	| nameStream hyphenatedStream previousChar nextChar |
+
+	nameStream := aString readStream.
+	hyphenatedStream := (String new: nameStream size) writeStream.
+	[nameStream atEnd]
+		whileFalse: [
+			((nextChar := nameStream next) isUppercase
+				and: [previousChar notNil and: [previousChar isLowercase]])
+				ifTrue: [hyphenatedStream nextPut: $-].
+			hyphenatedStream nextPut: nextChar asLowercase.
+			previousChar := nextChar].
+	^ hyphenatedStream contents.
+]
+
+{ #category : #private }
+XMLPluggableElementFactory >> toNameWithoutPrefixAndElementSuffix: aString [
 	| nameStream |
 
 	nameStream := aString readStream.
