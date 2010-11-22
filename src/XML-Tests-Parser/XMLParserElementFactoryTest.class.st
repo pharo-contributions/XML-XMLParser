@@ -1,5 +1,7 @@
 "
-This class tests the pluggable element factory.
+This class tests the pluggable element factory. To do this it creates a number of dummy subclasses of XMLElement in its #setUp message that should be removed from the system by its #tearDown message. Since these classes only exist during testing, special accessor messages are used to reference them. These accessors are also generated automatically, whenever you send the class #createDummyElementAccessors. The names for the classes and accessors are taken from the class-side #dummyElementNames message and some supporting messages that specify a prefix and suffix (so the created classes don't collide with other, possibly pre-existing classes in the sytem).
+
+Browse the class side for more information.
 "
 Class {
 	#name : #XMLParserElementFactoryTest,
@@ -7,118 +9,265 @@ Class {
 	#category : #'XML-Tests-Parser'
 }
 
-{ #category : #accessing }
-XMLParserElementFactoryTest >> dateElementClass [
-	^ self elementClassAt: #XMLTESTDateRegisteredElement
-]
+{ #category : #utility }
+XMLParserElementFactoryTest class >> createDummyElementAccessors [
+	"self createDummyElementAccessors"
 
-{ #category : #accessing }
-XMLParserElementFactoryTest >> defaultElementClass [
-	^ self elementClassAt: #XMLTESTDefaultElement
-]
+	| sourceStream |
 
-{ #category : #accessing }
-XMLParserElementFactoryTest >> elementClassAt: aSymbol [
-	^ Smalltalk at: aSymbol
-]
+	self removeDummyElementAccessors.
+	self dummyElementNames
+		do: [:each |
+			(sourceStream := String new writeStream)
+				nextPut: each first asLowercase;
+				nextPutAll: each allButFirst, self dummyElementClassSuffix, 'Class';
+				cr;
+				tab;
+				nextPutAll: '^ Smalltalk at: #';
+				nextPutAll: (self toDummyElementClassName: each) asString.
 
-{ #category : #accessing }
-XMLParserElementFactoryTest >> elementClassNames [
-	^ #(XMLTESTDefaultElement
-		XMLTESTUserElement XMLTESTOtherUsernameElement XMLTESTDateRegisteredElement
-		XMLTESTOtherDateRegisteredElement XMLTESTTableNameElement XMLTESTOtherTableNameElement)
-]
-
-{ #category : #accessing }
-XMLParserElementFactoryTest >> otherDateElementClass [
-	^ self elementClassAt: #XMLTESTOtherDateRegisteredElement
-]
-
-{ #category : #accessing }
-XMLParserElementFactoryTest >> otherTableElementClass [
-	^ self elementClassAt: #XMLTESTOtherTableNameElement
-]
-
-{ #category : #accessing }
-XMLParserElementFactoryTest >> otherUsernameClass [
-	^ self elementClassAt: #XMLTESTOtherUsernameElement
+			self
+				compile: sourceStream contents
+				classified: self dummyElementAccessorCategory].
 ]
 
 { #category : #running }
-XMLParserElementFactoryTest >> setUp [
-	self elementClassNames do: [:each |
+XMLParserElementFactoryTest class >> createDummyElementClasses [
+	self dummyElementClassNames do: [:each |
 		XMLElement
 			subclass: each
 			instanceVariableNames: ''
 			classVariableNames: ''
 			poolDictionaries: ''
-			category: self class category]
+			category: self category]
 ]
 
 { #category : #accessing }
-XMLParserElementFactoryTest >> tableElementClass [
-	^ self elementClassAt: #XMLTESTTableNameElement
+XMLParserElementFactoryTest class >> dummyElementAccessorCategory [
+	^ #'dummy element classes'
+]
+
+{ #category : #accessing }
+XMLParserElementFactoryTest class >> dummyElementClassNames [
+	^ self dummyElementNames collect: [:each | self toDummyElementClassName: each]
+]
+
+{ #category : #accessing }
+XMLParserElementFactoryTest class >> dummyElementClassPrefix [
+	^ 'XMLTEST'
+]
+
+{ #category : #accessing }
+XMLParserElementFactoryTest class >> dummyElementClassSuffix [
+	^ 'Element'
+]
+
+{ #category : #accessing }
+XMLParserElementFactoryTest class >> dummyElementNames [
+	"Dummy element class names will be formed from the following base names plus a prefix and suffix.
+	
+	self createDummyElementAccessors."
+
+	^ #('Default' 'User' 'Username' 'RealName' 'Date' 'Table' 'SerializationFormat' 'Wrong')
+]
+
+{ #category : #utility }
+XMLParserElementFactoryTest class >> removeDummyElementAccessors [
+	(self methodsInCategory: self dummyElementAccessorCategory)
+		do: [:each | self removeSelector: each].
 ]
 
 { #category : #running }
-XMLParserElementFactoryTest >> tearDown [
-	self elementClassNames do: [:each | (self elementClassAt: each) removeFromSystem]
-]
-
-{ #category : #tests }
-XMLParserElementFactoryTest >> testElementFactory [
-	| factory document userClass dateClass tableClass |
-
-	(factory := XMLPluggableElementFactory new)
-		elementClass: self defaultElementClass;
-		handleElement: 'user:user' namespaceURI: 'urn:user' withClass: self userElementClass;
-		handleElement: 'username' namespaceURI: 'urn:notuser' withClass: self otherUsernameClass;
-		handleElement: 'date-registered' namespaceURI: 'urn:notuser' withClass: self otherDateElementClass;
-		handleElement: 'date-registered' withClass: self dateElementClass;
-		handleElement: 'notuser:table-name' namespaceURI: 'urn:user' withClass: self otherTableElementClass;
-		handleElement: 'table-name' namespaceURI: 'urn:user' withClass: self otherTableElementClass;
-		handleElementsMatchingClass: self tableElementClass.
-
-	document :=
-		(XMLDOMParser on: self userXML)
-			nodeFactory: factory;
-			parseDocument.
-	self
-		assert: (document root isMemberOf: self userElementClass);
-		assert: ((document root elementAt: 'username') isMemberOf: self defaultElementClass);
-		assert: ((document root elementAt: 'real-name') isMemberOf: self defaultElementClass);
-		assert: ((document root elementAt: 'date-registered') isMemberOf: self dateElementClass);
-		assert: ((document root elementAt: 'table-name') isMemberOf: self tableElementClass);
-		assert: ((document root elementAt: 'tableName') isMemberOf: self tableElementClass).
+XMLParserElementFactoryTest class >> removeDummyElementClasses [
+	self dummyElementClassNames do: [:each | (Smalltalk at: each) removeFromSystem]
 ]
 
 { #category : #accessing }
-XMLParserElementFactoryTest >> userElementClass [
-	^ self elementClassAt: #XMLTESTUserElement
+XMLParserElementFactoryTest class >> toDummyElementClassName: aName [
+	^ (self dummyElementClassPrefix,
+		aName,
+		self dummyElementClassSuffix) asSymbol
+]
+
+{ #category : #'dummy element classes' }
+XMLParserElementFactoryTest >> dateElementClass [
+	^ Smalltalk at: #XMLTESTDateElement
+]
+
+{ #category : #'dummy element classes' }
+XMLParserElementFactoryTest >> defaultElementClass [
+	^ Smalltalk at: #XMLTESTDefaultElement
+]
+
+{ #category : #'dummy element classes' }
+XMLParserElementFactoryTest >> realNameElementClass [
+	^ Smalltalk at: #XMLTESTRealNameElement
 ]
 
 { #category : #source }
-XMLParserElementFactoryTest >> userXML [
+XMLParserElementFactoryTest >> sampleUserXML [
 	"
 	XMLWriter new
-			enablePrettyPrinting;
-			writeWith: [:writer |
-				writer tag
-					name: 'user:user';
-					xmlnsAt: 'user' put: 'urn:user';
-					with: [
-						writer
-							tag: 'user:username' with: 'jsmith';
-							tag: 'user:real-name' with: 'John Smith';
-							tag: 'user:date-registered' with: DateAndTime now asString;
-							tag: 'table-name' with: 'users']]
+		enablePrettyPrinting;
+		writeWith: [:writer |
+			writer tag
+				name: 'user:user';
+				xmlnsAt: 'user' put: 'urn:user';
+				with: [
+					writer
+						tag: 'user:username' with: 'jsmith';
+						tag: 'user:real-name' with: 'John Smith';
+						tag: 'user:date-registered' with: (DateAndTime now - 1 week) printString;
+						tag: 'user:date-last-active' with: DateAndTime now printString;
+						tag: 'table-name' with: 'users';
+						tag: 'row-id' with: (Random new next * 100) asInteger printString;
+						tag: 'serializationFormat' with: 'XML']]
 	"
 
 	^ ' <user:user xmlns:user="urn:user">
     <user:username>jsmith</user:username>
     <user:real-name>John Smith</user:real-name>
-    <user:date-registered>2010-11-14T23:53:54-05:00</user:date-registered>
+    <user:date-registered>2010-11-13T14:35:57-05:00</user:date-registered>
+    <user:date-last-active>2010-11-20T14:35:57-05:00</user:date-last-active>
     <table-name>users</table-name>
-    <tableName>users</tableName>
+    <row-id>61</row-id>
+    <serializationFormat>XML</serializationFormat>
 </user:user>'
+]
+
+{ #category : #'dummy element classes' }
+XMLParserElementFactoryTest >> serializationFormatElementClass [
+	^ Smalltalk at: #XMLTESTSerializationFormatElement
+]
+
+{ #category : #running }
+XMLParserElementFactoryTest >> setUp [
+	self class createDummyElementClasses
+]
+
+{ #category : #'dummy element classes' }
+XMLParserElementFactoryTest >> tableElementClass [
+	^ Smalltalk at: #XMLTESTTableElement
+]
+
+{ #category : #running }
+XMLParserElementFactoryTest >> tearDown [
+	self class removeDummyElementClasses
+]
+
+{ #category : #tests }
+XMLParserElementFactoryTest >> testDefaultElementAccessor [
+	| document |
+
+	document :=
+		(XMLDOMParser on: self sampleUserXML)
+			nodeFactory: XMLPluggableElementFactory new;
+			parseDocument.
+	self assert: (document recurseUntilTrue: [:each | (each isMemberOf: XMLElement) not]) isNil.
+
+	document :=
+		(XMLDOMParser on: self sampleUserXML)
+			nodeFactory: (XMLPluggableElementFactory new elementClass: self defaultElementClass);
+			parseDocument.
+	self assert: (document recurseUntilTrue: [:each | (each isMemberOf: self defaultElementClass) not]) isNil.
+]
+
+{ #category : #tests }
+XMLParserElementFactoryTest >> testElementClassNameMatching [
+	| document |
+
+	document :=
+		(XMLDOMParser on: self sampleUserXML)
+			nodeFactory:
+				(XMLPluggableElementFactory new
+					handleElementsMatchingClass: self userElementClass;
+					handleElementsMatchingClasses:
+						(Array
+							with: self realNameElementClass
+							with: self serializationFormatElementClass));
+			parseDocument.
+
+	self
+		assert: ((document root) isMemberOf: self userElementClass);
+		assert: ((document root elementAt: 'real-name') isMemberOf: self realNameElementClass);
+		assert:
+			((document root elementAt: 'serializationFormat')
+				isMemberOf: self serializationFormatElementClass).
+]
+
+{ #category : #tests }
+XMLParserElementFactoryTest >> testElementNameAndNamespaceMatching [
+	| factory document root |
+
+	(factory := XMLPluggableElementFactory new)
+		elementClass: self defaultElementClass;
+		handleElement: 'user:user' namespaceURI: 'urn:user' withClass: self userElementClass;
+		handleElement: 'user:user' withClass: self wrongElementClass;
+		handleElement: 'user' namespaceURI: 'urn:user' withClass: self wrongElementClass;
+		handleElement: 'user' withClass: self wrongElementClass;
+		handleElement: 'user:username' withClass: self usernameElementClass;
+		handleElement: 'username' namespaceURI: 'urn:user' withClass: self wrongElementClass;
+		handleElement: 'username' withClass: self wrongElementClass;
+		handleElement: 'real-name' namespaceURI: 'urn:user' withClass: self realNameElementClass;
+		handleElement: 'real-name' withClass: self wrongElementClass;
+		handleElement: 'date-registered' withClass: self dateElementClass;
+		handleElement: 'user:date-last-active' namespaceURI: 'urn:notuser' withClass: self wrongElementClass;
+		handleElement: 'notuser:date-last-active' namespaceURI: 'urn:user' withClass: self wrongElementClass;
+		handleElement: 'date-last-active' namespaceURI: 'urn:notuser' withClass: self wrongElementClass;
+		handleElement: 'notuser:date-last-active' withClass: self wrongElementClass.
+
+	document :=
+		(XMLDOMParser on: self sampleUserXML)
+			nodeFactory: factory;
+			parseDocument.
+	self
+		assert: ((root := document root) isMemberOf: self userElementClass);
+		assert: ((root elementAt: 'username') isMemberOf: self usernameElementClass);
+		assert: ((root elementAt: 'real-name') isMemberOf: self realNameElementClass);
+		assert: ((root elementAt: 'date-registered') isMemberOf: self dateElementClass);
+		assert:
+			((root elements copyAfter: (root elementAt: 'date-registered'))
+				allSatisfy: [:each | each isMemberOf: self defaultElementClass]).
+]
+
+{ #category : #tests }
+XMLParserElementFactoryTest >> testElementsNameAndNamespaceMatching [
+	| factory document root |
+
+	factory := XMLPluggableElementFactory new.
+	factory
+		handleElements: #('date-registered' 'date-last-active')
+		namespaceURI: 'urn:user'
+		withClass: self dateElementClass.
+	factory
+		handleElements: #('date-registered' 'date-last-active')
+		withClass: self wrongElementClass.
+	factory
+		handleElements: #('table-name' 'not-table-name')
+		withClass: self tableElementClass.
+
+	document :=
+		(XMLDOMParser on: self sampleUserXML)
+			nodeFactory: factory;
+			parseDocument.
+	root := document root.
+	self
+		assert: ((root elementAt: 'date-registered') isMemberOf: self dateElementClass);
+		assert: ((root elementAt: 'date-last-active') isMemberOf: self dateElementClass);
+		assert: ((root elementAt: 'table-name') isMemberOf: self tableElementClass).
+]
+
+{ #category : #'dummy element classes' }
+XMLParserElementFactoryTest >> userElementClass [
+	^ Smalltalk at: #XMLTESTUserElement
+]
+
+{ #category : #'dummy element classes' }
+XMLParserElementFactoryTest >> usernameElementClass [
+	^ Smalltalk at: #XMLTESTUsernameElement
+]
+
+{ #category : #'dummy element classes' }
+XMLParserElementFactoryTest >> wrongElementClass [
+	^ Smalltalk at: #XMLTESTWrongElement
 ]

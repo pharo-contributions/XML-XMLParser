@@ -216,9 +216,9 @@ XMLParserTest >> testExampleAddressBookWithDTD [
 
 { #category : #tests }
 XMLParserTest >> testLineEndingsDoNotMatter [
-   | source docWithCrs docWithCrlfs |
+	| source docWithCrs docWithCrlfs |
 
-   (source := String new writeStream)
+	(source := String new writeStream)
 		nextPutAll: '<foo>';
 		cr;
 		nextPutAll: 'bar';
@@ -233,8 +233,7 @@ XMLParserTest >> testLineEndingsDoNotMatter [
 			(source contents
 				copyReplaceAll: String cr
 				with: String crlf).
-	self assert: (docWithCrs root contentString) = (docWithCrlfs root contentString).
-
+	self assert: (docWithCrs root contentString) = (docWithCrlfs root contentString)
 ]
 
 { #category : #tests }
