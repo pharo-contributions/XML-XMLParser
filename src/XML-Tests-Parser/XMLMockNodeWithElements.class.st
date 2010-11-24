@@ -8,3 +8,8 @@ Class {
 XMLMockNodeWithElements >> document [
 	^ nil
 ]
+
+{ #category : #accessing }
+XMLMockNodeWithElements >> document: aDocument [
+
+]

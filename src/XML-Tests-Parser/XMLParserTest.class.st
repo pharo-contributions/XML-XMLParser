@@ -159,7 +159,7 @@ XMLParserTest >> testCDATASection [
 
 	xmlDocument :=
 		(XMLDOMParser on: self exampleCDATASectionXML readStream)
-			preservesCDataSections: true;
+			preservesCDataNodes: true;
 			parseDocument.
 	element := xmlDocument firstTagNamed: 'test-data'.
 
