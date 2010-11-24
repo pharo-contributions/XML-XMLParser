@@ -8,14 +8,15 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'driver',
-		'eod'
+		'eod',
+		'configuration'
 	],
 	#category : #'XML-Parser'
 }
 
 { #category : #'instance creation' }
 SAXHandler class >> on: aStringOrStream [
-	^ self new driver: (SAXDriver on: aStringOrStream)
+	^ self new on: aStringOrStream
 ]
 
 { #category : #'instance creation' }
@@ -86,8 +87,28 @@ SAXHandler >> comment: aCommentString [
 ]
 
 { #category : #accessing }
+SAXHandler >> configuration [
+	^ configuration ifNil: [configuration := self configurationClass new]
+]
+
+{ #category : #accessing }
+SAXHandler >> configuration: aConfiguration [
+	configuration := aConfiguration
+]
+
+{ #category : #private }
+SAXHandler >> configurationClass [
+	^ XMLConfiguration
+]
+
+{ #category : #accessing }
 SAXHandler >> currentScope [
 	^ self driver currentScope
+]
+
+{ #category : #accessing }
+SAXHandler >> currentScope: aScope [
+	self driver currentScope: aScope
 ]
 
 { #category : #accessing }
@@ -188,12 +209,17 @@ SAXHandler >> invokeDeprecated: aDeprecatedSelector withArguments: anOldArgument
 
 { #category : #testing }
 SAXHandler >> isValidating [
-	self driver isValidating
+	^ self configuration isValidating
 ]
 
 { #category : #accessing }
 SAXHandler >> isValidating: aBoolean [
-	self driver isValidating: aBoolean
+	self configuration isValidating: aBoolean
+]
+
+{ #category : #private }
+SAXHandler >> on: aStringOrStream [
+	self driver: (SAXDriver on: aStringOrStream)
 ]
 
 { #category : #parsing }
@@ -284,17 +310,17 @@ SAXHandler >> startPrefixMapping: aPrefix uri: aUri [
 SAXHandler >> useNamespaces: aBoolean [
 	self deprecated: 'use #usesNamespaces: instead'.
 
-	self driver usesNamespaces: aBoolean.
+	self usesNamespaces: aBoolean.
 ]
 
 { #category : #testing }
 SAXHandler >> usesNamespaces [
-	^ self driver usesNamespaces
+	^ self configuration usesNamespaces
 ]
 
 { #category : #accessing }
 SAXHandler >> usesNamespaces: aBoolean [
-	self driver usesNamespaces: aBoolean
+	self configuration usesNamespaces: aBoolean
 ]
 
 { #category : #content }

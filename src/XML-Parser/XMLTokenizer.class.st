@@ -10,7 +10,6 @@ Class {
 		'entities',
 		'externalEntities',
 		'parameterEntities',
-		'isValidating',
 		'parsingMarkup'
 	],
 	#classVars : [
@@ -246,27 +245,7 @@ XMLTokenizer >> handleWhitespace: aString [
 ]
 
 { #category : #'handling tokens' }
-XMLTokenizer >> handleXMLDecl: attributes [
-	attributes keysAndValuesDo: [:key :value |
-		self log: key , '->' , value]
-]
-
-{ #category : #'handling tokens' }
 XMLTokenizer >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
-	| versionNumber standaloneBoolean |
-
-	aVersion
-		ifEmpty: [versionNumber := nil]
-		ifNotEmpty: [versionNumber := aVersion asNumber].
-
-	(aYesOrNo = 'yes' or: [aYesOrNo = 'no'])
-		ifTrue: [standaloneBoolean := aYesOrNo = 'yes']
-		ifFalse: [standaloneBoolean := nil].
-
-	self saxHandler
-		xmlVersion: versionNumber
-		encoding: anEncoding
-		standalone: standaloneBoolean
 ]
 
 { #category : #entities }
@@ -287,17 +266,11 @@ XMLTokenizer >> initialize [
 	streamReader := XMLNestedStreamReader new.
 	streamWriter := XMLNestedStreamWriter new.
 	parsingMarkup := false.
-	isValidating := true.
 ]
 
 { #category : #testing }
 XMLTokenizer >> isValidating [
-	^ isValidating
-]
-
-{ #category : #accessing }
-XMLTokenizer >> isValidating: aBoolean [
-	isValidating := aBoolean
+	self subclassResponsibility
 ]
 
 { #category : #private }
@@ -784,5 +757,5 @@ XMLTokenizer >> streamReader [
 
 { #category : #testing }
 XMLTokenizer >> usesNamespaces [
-	^ false
+	self subclassResponsibility
 ]

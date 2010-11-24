@@ -18,7 +18,11 @@ XMLNamespaceScope class >> enclosingScope: aScope [
 
 { #category : #accessing }
 XMLNamespaceScope >> defaultNamespace [
-	^ defaultNamespace ifNil: [defaultNamespace := '']
+	"Rather than lazily initializing this to an empty string, we leave it as nil, so we can
+	distinguish between no default namespace being set and an empty default namespace
+	intended to override a non-empty declaration in a parent."
+
+	^ defaultNamespace ifNil: ['']
 ]
 
 { #category : #accessing }
@@ -31,7 +35,7 @@ XMLNamespaceScope >> defaultNamespace: aUri [
 	defaultNamespace := aUri.
 ]
 
-{ #category : #validation }
+{ #category : #private }
 XMLNamespaceScope >> ensureAttributePrefix: aPrefix localName: aLocalName hasNoAliasIn: aDictionary [
 	| namespaceUri aliasingAttributeName |
 
@@ -47,7 +51,7 @@ XMLNamespaceScope >> ensureAttributePrefix: aPrefix localName: aLocalName hasNoA
 					with: namespaceUri]].
 ]
 
-{ #category : #errors }
+{ #category : #private }
 XMLNamespaceScope >> errorAttribute: anAttribute aliases: anAliasedAttribute with: aUri [
 	XMLNamespaceException signal:
 		('Attribute "{1}" aliases attribute "{2}"; both prefixes map to {3}'
@@ -56,7 +60,7 @@ XMLNamespaceScope >> errorAttribute: anAttribute aliases: anAliasedAttribute wit
 
 { #category : #testing }
 XMLNamespaceScope >> hasDefaultNamespace [
-	^ defaultNamespace notNil and: [defaultNamespace notEmpty]
+	^ defaultNamespace notNil
 ]
 
 { #category : #testing }
@@ -85,8 +89,8 @@ XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope [
 	anEnclosingScope hasNamespaces
 		ifFalse: [^ self].
 
-	self hasDefaultNamespace
-		ifFalse: [self defaultNamespace: anEnclosingScope defaultNamespace].
+	(anEnclosingScope defaultNamespace notEmpty and: [self hasDefaultNamespace not])
+		ifTrue: [self defaultNamespace: anEnclosingScope defaultNamespace].
 
 	anEnclosingScope hasPrefixMappings
 		ifTrue: [
@@ -99,6 +103,8 @@ XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope [
 XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
 	aPrefix isEmptyOrNil
 		ifTrue: [^ self defaultNamespace: aUri].
+	aUri isEmptyOrNil
+		ifTrue: [XMLNamespaceException signal: 'Cannot clear prefix by mapping it to nil or an empty string.'].
 
 	aPrefix = 'xml'
 		ifTrue: [
@@ -114,7 +120,7 @@ XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
 	(aUri = self xmlNamespaceURI or: [aUri = self xmlnsNamespaceURI])
 		ifTrue: [XMLNamespaceException signal: 'Cannot alias the "xml" or "xmlns" prefixes'].
 
-	self prefixMappings at: aPrefix put: (aUri ifNil: [''])
+	self prefixMappings at: aPrefix put: aUri.
 ]
 
 { #category : #accessing }
@@ -149,8 +155,6 @@ XMLNamespaceScope >> prefixesMappedTo: aUri [
 
 { #category : #accessing }
 XMLNamespaceScope >> resolvePrefix: aPrefix [
-	"Retrieve the URI of the given namespace prefix, if it is defined."
-
 	^ self resolvePrefix: aPrefix ifUnmapped: ['']
 ]
 
@@ -164,6 +168,14 @@ XMLNamespaceScope >> resolvePrefix: aPrefix ifUnmapped: aBlock [
 		ifTrue: [^ self xmlnsNamespaceURI].
 
 	^ self prefixMappings at: aPrefix ifAbsent: aBlock
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> unmapPrefix: aPrefix [
+	(self includesPrefix: aPrefix)
+		ifFalse: [XMLNamespaceException signal: 'Prefix ', aPrefix, ' cannot be unmapped'].
+
+	self prefixMappings removeKey: aPrefix.
 ]
 
 { #category : #private }
@@ -210,10 +222,7 @@ XMLNamespaceScope >> validatePrefixedAttributeName: anAttributeName in: aDiction
 
 { #category : #validation }
 XMLNamespaceScope >> validatePrefixedAttributeNames: aDictionary [
-	aDictionary keysDo: [:attributeName |
-		self
-			validatePrefixedAttributeName: attributeName
-			in: aDictionary]
+	aDictionary keysDo: [:each | self validatePrefixedAttributeName: each in: aDictionary]
 ]
 
 { #category : #accessing }

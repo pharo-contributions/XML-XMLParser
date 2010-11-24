@@ -8,15 +8,15 @@ Class {
 }
 
 { #category : #private }
-XMLInternalSubsetList >> added: aNode [
+XMLInternalSubsetList >> afterAdding: aNode [
 	self notifyOf: #addedNode: with: aNode.
 ]
 
 { #category : #private }
-XMLInternalSubsetList >> adding: aNode [
+XMLInternalSubsetList >> afterRemoving: aNode [
+	self notifyOf: #removedNode: with: aNode.
 ]
 
 { #category : #private }
-XMLInternalSubsetList >> removed: aNode [
-	self notifyOf: #removedNode: with: aNode.
+XMLInternalSubsetList >> beforeAdding: aNode [
 ]

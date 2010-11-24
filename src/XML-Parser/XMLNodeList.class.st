@@ -1,5 +1,7 @@
 "
 This class represents an ordered list of child nodes for some kind of node with elements, probably either an XML document or element object. It treats element nodes specially, keeping both an ordered list of child elements and a dictionary that allows for faster retrieval of element(s) by qualified name or local name only.
+
+Uniquely named elements are stored directly in the dictionary, while multiple elements sharing a common local or qualified name are stored together as an ordered list in the dictionary.
 "
 Class {
 	#name : #XMLNodeList,
@@ -12,11 +14,11 @@ Class {
 }
 
 { #category : #private }
-XMLNodeList >> added: aNode [
+XMLNodeList >> afterAdding: aNode [
 	aNode addObserver: self.
 	aNode isElement
 		ifTrue: [
-			self last == aNode
+			((self last == aNode) or: [(self findElementAfter: aNode) isNil])
 				ifTrue: [self elementAddedAtEnd: aNode]
 				ifFalse: [self elementInsertedBeforeEnd: aNode].
 			self notifyOf: #addedElement: with: aNode].
@@ -24,7 +26,20 @@ XMLNodeList >> added: aNode [
 ]
 
 { #category : #private }
-XMLNodeList >> adding: aNode [
+XMLNodeList >> afterRemoving: aNode [
+	aNode removeObserver: self.
+	aNode isElement
+		ifTrue: [
+			self elements remove: aNode.
+			self elementsByNameAt: aNode name removeElement: aNode.
+			aNode hasPrefix
+				ifTrue: [self elementsByNameAt: aNode localName removeElement: aNode].
+			self notifyOf: #removedElement: with: aNode].
+	self notifyOf: #removedNode: with: aNode.
+]
+
+{ #category : #private }
+XMLNodeList >> beforeAdding: aNode [
 	aNode hasParent
 		ifTrue: [XMLDOMException signal: 'Cannot add child node that already has a parent']
 ]
@@ -44,11 +59,10 @@ XMLNodeList >> elementAddedAtEnd: anElement [
 
 { #category : #private }
 XMLNodeList >> elementInsertedBeforeEnd: anElement [
-	| elementBefore |
+	| elementAfter |
 
-	(elementBefore := self findElementBefore: anElement)
-		ifNil: [self elements addFirst: anElement]
-		ifNotNil: [self elements add: anElement after: elementBefore].
+	elementAfter := self findElementAfter: anElement.
+	self elements add: anElement before: elementAfter.
 
 	self elementsByNameAt: anElement name insertElement: anElement.
 	anElement hasPrefix
@@ -116,38 +130,19 @@ XMLNodeList >> elementsByNameAt: aName addElement: anElement [
 ]
 
 { #category : #private }
-XMLNodeList >> elementsByNameAt: aName addElementFirst: anElement [
-	| elementsWithName |
-
-	elementsWithName :=
-		self elementsByName
-			at: aName
-			ifAbsent: [
-				self elementsByName at: aName put: anElement.
-				^ self].
-
-	elementsWithName isCollection
-		ifTrue: [elementsWithName addFirst: anElement]
-		ifFalse: [
-			self elementsByName
-				at: aName
-				put: [self species with: anElement with: elementsWithName]].
-]
-
-{ #category : #private }
 XMLNodeList >> elementsByNameAt: aName insertElement: anElement [
-	| elementsWithName elementBefore |
+	| elementsWithName elementAfter |
 
-	(elementBefore := self findElementBefore: anElement withName: aName)
-		ifNil: [^ self elementsByNameAt: aName addElementFirst: anElement].
+	(elementAfter := self findElementAfter: anElement withName: aName)
+		ifNil: [^ self elementsByNameAt: aName addElement: anElement].
 
 	(elementsWithName := self elementsByName at: aName)
 		isCollection
-			ifTrue: [elementsWithName add: anElement after: elementBefore]
+			ifTrue: [elementsWithName add: anElement before: elementAfter]
 			ifFalse: [
 				self elementsByName
 					at: aName
-					put: (self species with: elementBefore with: anElement)]
+					put: (self species with: anElement with: elementAfter)]
 ]
 
 { #category : #private }
@@ -190,31 +185,31 @@ XMLNodeList >> elementsNamed: aName namespaceURI: aUri [
 ]
 
 { #category : #private }
-XMLNodeList >> findElementBefore: anElement [
-	| elementBefore |
+XMLNodeList >> findElementAfter: anElement [
+	| previousElement |
 
-	elementBefore := nil.
+	previousElement := nil.
 	self do: [:each |
 		each isElement
 			ifTrue: [
-				(each = anElement)
-					ifTrue: [^ elementBefore].
-				elementBefore := each]].
-	^ elementBefore.
+				previousElement == anElement
+					ifTrue: [^ each].
+				previousElement := each]].
+	^ nil.
 ]
 
 { #category : #private }
-XMLNodeList >> findElementBefore: anElement withName: aName [
-	| lastNamedElement |
+XMLNodeList >> findElementAfter: anElement withName: aName [
+	| previousElementWithName |
 
-	lastNamedElement := nil.
+	previousElementWithName := nil.
 	self do: [:each |
 		(each isElement and: [each isNamed: aName])
 			ifTrue: [
-				(each = anElement)
-					ifTrue: [^ lastNamedElement].
-				lastNamedElement := each]].
-	^ lastNamedElement.
+				(previousElementWithName == anElement)
+					ifTrue: [^ each].
+				previousElementWithName := each]].
+	^ nil.
 ]
 
 { #category : #testing }
@@ -225,19 +220,6 @@ XMLNodeList >> hasElements [
 { #category : #testing }
 XMLNodeList >> includesElementNamed: aName [
 	^ self elementsByName includesKey: aName
-]
-
-{ #category : #private }
-XMLNodeList >> removed: aNode [
-	aNode removeObserver: self.
-	aNode isElement
-		ifTrue: [
-			self elements remove: aNode.
-			self elementsByNameAt: aNode name removeElement: aNode.
-			aNode hasPrefix
-				ifTrue: [self elementsByNameAt: aNode localName removeElement: aNode].
-			self notifyOf: #removedElement: with: aNode].
-	self notifyOf: #removedNode: with: aNode.
 ]
 
 { #category : #notifications }

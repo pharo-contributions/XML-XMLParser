@@ -68,7 +68,7 @@ XMLNamespaceScopeManager >> popScope [
 
 { #category : #accessing }
 XMLNamespaceScopeManager >> pushScope: aScope [
-	self scopes add: aScope
+	self scopes addLast: aScope
 ]
 
 { #category : #accessing }

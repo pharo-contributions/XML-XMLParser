@@ -217,7 +217,7 @@ XMLNestedStreamReader >> pushBack: aString [
 			ifNil: [aString]
 			ifNotNil: [aString copyWith: peekChar].
 	peekChar := nil.
-	self pushStream: (ReadStream on: aString)
+	self pushStream: (ReadStream on: pushBackString)
 ]
 
 { #category : #streaming }

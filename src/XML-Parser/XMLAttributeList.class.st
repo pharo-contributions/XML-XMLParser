@@ -1,5 +1,5 @@
 "
-This class represents an ordered list of attribute nodes that also keeps a dictionary mapping attribute names to nodes for faster lookups. You are unlikely to need to use this class directly.
+This class represents an ordered list of attribute nodes that also keeps a dictionary mapping attribute names to nodes for faster lookups. You usually shouldn't have to use this class directly.
 "
 Class {
 	#name : #XMLAttributeList,
@@ -19,7 +19,7 @@ XMLAttributeList >> addName: aName value: aValue [
 ]
 
 { #category : #private }
-XMLAttributeList >> added: anObject [
+XMLAttributeList >> afterAdding: anObject [
 	anObject addObserver: self.
 	self attributesByName
 		at: anObject name ifPresent: [self removeAttributeNamed: anObject name];
@@ -29,9 +29,10 @@ XMLAttributeList >> added: anObject [
 ]
 
 { #category : #private }
-XMLAttributeList >> adding: anObject [
-	anObject element
-		ifNotNil: [XMLDOMException signal: 'Cannot add attribute node from other element']
+XMLAttributeList >> afterRemoving: anAttribute [
+	anAttribute removeObserver: self.
+	self attributesByName removeKey: anAttribute name.
+	self notifyOf: #removedAttribute: with: anAttribute.
 ]
 
 { #category : #converting }
@@ -113,6 +114,12 @@ XMLAttributeList >> attributesByName [
 	^ attributesByName ifNil: [attributesByName := Dictionary new]
 ]
 
+{ #category : #private }
+XMLAttributeList >> beforeAdding: anObject [
+	anObject element
+		ifNotNil: [XMLDOMException signal: 'Cannot add attribute node from other element']
+]
+
 { #category : #testing }
 XMLAttributeList >> includesAttributeNamed: aName [
 	^ self attributesByName includesKey: aName
@@ -121,13 +128,6 @@ XMLAttributeList >> includesAttributeNamed: aName [
 { #category : #accessing }
 XMLAttributeList >> removeAttributeNamed: aName [
 	^ self remove: (self attributeNamed: aName).
-]
-
-{ #category : #private }
-XMLAttributeList >> removed: anAttribute [
-	anAttribute removeObserver: self.
-	self attributesByName removeKey: anAttribute name.
-	self notifyOf: #removedAttribute: with: anAttribute.
 ]
 
 { #category : #notifications }

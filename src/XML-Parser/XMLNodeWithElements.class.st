@@ -6,6 +6,9 @@ To retrieve child elements by name, you can send any of the #element- messages u
 Class {
 	#name : #XMLNodeWithElements,
 	#superclass : #XMLNodeWithChildren,
+	#instVars : [
+		'configuration'
+	],
 	#category : #'XML-Parser-Nodes'
 }
 
@@ -16,7 +19,23 @@ XMLNodeWithElements >> addElement: anElement [
 
 { #category : #notifications }
 XMLNodeWithElements >> addedElement: anElement [
-	anElement document: self document
+	anElement
+		configuration: self configuration;
+		document: self document
+]
+
+{ #category : #accessing }
+XMLNodeWithElements >> configuration [
+	^ configuration ifNil: [
+		self configuration: XMLDOMConfiguration new.
+		configuration]
+]
+
+{ #category : #accessing }
+XMLNodeWithElements >> configuration: aConfiguration [
+	configuration := aConfiguration.
+	self hasElements
+		ifTrue: [self elementsDo: [:each | each configuration: aConfiguration]]
 ]
 
 { #category : #accessing }
@@ -36,6 +55,11 @@ XMLNodeWithElements >> contentStringAt: aName [
 
 { #category : #accessing }
 XMLNodeWithElements >> document [
+	self subclassResponsibility
+]
+
+{ #category : #accessing }
+XMLNodeWithElements >> document: aDocument [ 
 	self subclassResponsibility
 ]
 
@@ -118,7 +142,7 @@ XMLNodeWithElements >> firstElement [
 XMLNodeWithElements >> firstTagNamed: aName [ 
 	"Return the first encountered node with the specified tag. Pass the message on"
 
-	^ self recurseUntilTrue: [:each | each isNamed: aName]
+	^ self searchWith: [:each | each isNamed: aName]
 ]
 
 { #category : #searching }
@@ -126,7 +150,7 @@ XMLNodeWithElements >> firstTagNamed: aName with: aBlock [
 	"Return the first encountered node with the specified tag that
 	allows the block to evaluate to true. Pass the message on"
 
-	^ self recurseUntilTrue: [:each |
+	^ self searchWith: [:each |
 		(each isNamed: aName)
 			and: [aBlock valueWithPossibleArgument: each]]
 ]
@@ -135,7 +159,7 @@ XMLNodeWithElements >> firstTagNamed: aName with: aBlock [
 XMLNodeWithElements >> firstTagNamedAny: aNameArray [
 	"Return the first encountered node with any of the specified tag names. Pass the message on"
 
-	^ self recurseUntilTrue: [:each | each isNamedAny: aNameArray]
+	^ self searchWith: [:each | each isNamedAny: aNameArray]
 ]
 
 { #category : #searching }
@@ -143,7 +167,7 @@ XMLNodeWithElements >> firstTagNamedAny: aNameArray with: aBlock [
 	"Return the first encountered node with any of the specified tag names that
 	allows the block to evaluate to true. Pass the message on"
 
-	^ self recurseUntilTrue: [:each |
+	^ self searchWith: [:each |
 		(each isNamedAny: aNameArray)
 			and: [aBlock valueWithPossibleArgument: each]]
 ]
@@ -155,7 +179,8 @@ XMLNodeWithElements >> hasContentNodes [
 
 { #category : #testing }
 XMLNodeWithElements >> hasElements [
-	"Faster version for #recurse*: methods to avoid initializing the node list in leaf elements"
+	"Faster version used when traversing to avoid initializing the node list
+	in leaf elements"
 	^ nodes notNil and: [nodes hasElements]
 ]
 
@@ -165,17 +190,13 @@ XMLNodeWithElements >> includesElement: aName [
 ]
 
 { #category : #parsing }
-XMLNodeWithElements >> innerXML: aString [
-	| parsedDocument newNodes |
+XMLNodeWithElements >> innerXML: aStringOrStream [
+	self removeNodes.
 
-	parsedDocument := XMLDOMParser
-		parse: aString
-		usingNamespaces: self usesNamespaces.
-	newNodes := parsedDocument nodes copy.
-	parsedDocument removeNodes.
-	self
-		removeNodes;
-		addNodes: newNodes.
+	(XMLDOMParser on: aStringOrStream withRootNode: self)
+		configuration: self configuration;
+		currentScope: self namespaceScope;
+		parseDocument.
 ]
 
 { #category : #testing }
@@ -203,16 +224,17 @@ XMLNodeWithElements >> printContentOn: aStream [
 	self contentNodesDo: [:each | each printContentOn: aStream]
 ]
 
-{ #category : #searching }
-XMLNodeWithElements >> recurse: aBlock [
-	"Descend depth-first visiting each element with aBlock."
+{ #category : #notifications }
+XMLNodeWithElements >> removedElement: anElement [
+	anElement document: nil
+]
 
-	self hasElements
-		ifTrue: [self elementsDo: [:each | each recurse: aBlock]]
+{ #category : #notifications }
+XMLNodeWithElements >> renamedElement: anElement from: anOldName to: aNewName [
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> recurseUntilTrue: aBlock [
+XMLNodeWithElements >> searchWith: aBlock [
 	"Descend depth-first visiting each element with aBlock until one such evaluation
 	of aBlock with an element is true, then return that element. If no evaluation is
 	true, then return nil."
@@ -221,18 +243,9 @@ XMLNodeWithElements >> recurseUntilTrue: aBlock [
 	self hasElements
 		ifTrue: [
 			self elementsDo: [:each |
-				(result := each recurseUntilTrue: aBlock)
+				(result := each searchWith: aBlock)
 					ifNotNil: [^ result]]].
 	^ nil.
-]
-
-{ #category : #notifications }
-XMLNodeWithElements >> removedElement: anElement [
-	anElement document: nil
-]
-
-{ #category : #notifications }
-XMLNodeWithElements >> renamedElement: anElement from: anOldName to: aNewName [
 ]
 
 { #category : #searching }
@@ -267,7 +280,7 @@ XMLNodeWithElements >> tagsNamed: aName contentsDo: aBlock [
 XMLNodeWithElements >> tagsNamed: aName do: aOneArgumentBlock [
 	"Search for nodes with tag aName. When encountered evaluate aOneArgumentBlock"
 
-	self recurse: [:each |
+	self traverseWith: [:each |
 		(each isNamed: aName)
 			ifTrue: [aOneArgumentBlock valueWithPossibleArgument: each]]
 ]
@@ -276,7 +289,7 @@ XMLNodeWithElements >> tagsNamed: aName do: aOneArgumentBlock [
 XMLNodeWithElements >> tagsNamedAny: aNameCollection do: aOneArgumentBlock [
 	"Search for nodes with tag aName. When encountered evaluate aOneArgumentBlock"
 
-	self recurse: [:each |
+	self traverseWith: [:each |
 		(each isNamedAny: aNameCollection)
 			ifTrue: [aOneArgumentBlock valueWithPossibleArgument: each]]
 ]
@@ -288,7 +301,21 @@ XMLNodeWithElements >> topElement [
 	^ self firstElement.
 ]
 
+{ #category : #searching }
+XMLNodeWithElements >> traverseWith: aBlock [
+	"Descend depth-first visiting each element with aBlock."
+
+	self hasElements
+		ifTrue: [self elementsDo: [:each | each traverseWith: aBlock]]
+]
+
 { #category : #testing }
 XMLNodeWithElements >> usesNamespaces [
-	^ true
+	"Uses direct access and isNil test for performance"
+	^ configuration isNil or: [configuration usesNamespaces]
+]
+
+{ #category : #accessing }
+XMLNodeWithElements >> usesNamespaces: aBoolean [
+	configuration usesNamespaces: aBoolean
 ]

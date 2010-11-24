@@ -43,13 +43,13 @@ XMLObservableList >> addLast: anObject [
 ]
 
 { #category : #private }
-XMLObservableList >> added: anObject [
+XMLObservableList >> afterAdding: anObject [
 	self notifyOf: #added:to: with: anObject with: self.
 ]
 
 { #category : #private }
-XMLObservableList >> adding: anObject [
-	self notifyOf: #adding:to: with: anObject with: self
+XMLObservableList >> afterRemoving: anObject [
+	self notifyOf: #removed:from: with: anObject with: self.
 ]
 
 { #category : #accessing }
@@ -63,6 +63,11 @@ XMLObservableList >> at: anIndex put: anObject [
 				remove: presentObject].
 
 	^ self with: [super at: anIndex put: anObject] add: anObject.
+]
+
+{ #category : #private }
+XMLObservableList >> beforeAdding: anObject [
+	self notifyOf: #adding:to: with: anObject with: self
 ]
 
 { #category : #accessing }
@@ -91,16 +96,11 @@ XMLObservableList >> removeLast [
 ]
 
 { #category : #private }
-XMLObservableList >> removed: anObject [
-	self notifyOf: #removed:from: with: anObject with: self.
-]
-
-{ #category : #private }
 XMLObservableList >> with: aBlock add: anObject [
 	self
-		adding: anObject;
+		beforeAdding: anObject;
 		with: [aBlock value] onError: [^ nil];
-		added: anObject.
+		afterAdding: anObject.
 	^ anObject.
 ]
 
@@ -117,6 +117,6 @@ XMLObservableList >> with: aBlock onError: errorBlock [
 XMLObservableList >> with: aBlock remove: anObject [
 	self
 		with: [aBlock value] onError: [^ nil];
-		removed: anObject.
+		afterRemoving: anObject.
 	^ anObject.
 ]

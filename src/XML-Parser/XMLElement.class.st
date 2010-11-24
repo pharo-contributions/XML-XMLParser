@@ -113,7 +113,7 @@ XMLElement >> addedAttribute: anAttribute [
 XMLElement >> addedElement: anElement [
 	super addedElement: anElement.
 	self hasNamespaces
-		ifTrue: [anElement inheritMappingsFrom: self namespaceScope]
+		ifTrue: [anElement inheritNamespacesFrom: self]
 ]
 
 { #category : #accessing }
@@ -248,10 +248,36 @@ XMLElement >> declareNamespaces: aDictionaryOrArray [
 
 { #category : #namespaces }
 XMLElement >> declarePrefix: aPrefix uri: aUri [
-	(self namespaceScope includesPrefix: aPrefix mappedTo: aUri)
+	| oldMapping |
+
+	oldMapping := self namespaceScope resolvePrefix: aPrefix.
+	oldMapping = aUri
 		ifTrue: [^ self].
 
-	self mapPrefix: aPrefix to: aUri.
+	self
+		updateEnclosedScopesWith: [:scope | scope mapPrefix: aPrefix to: aUri]
+		whileTrue: [:scope |
+			(scope includesPrefix: aPrefix) not
+				or: [scope includesPrefix: aPrefix mappedTo: oldMapping]].
+]
+
+{ #category : #namespaces }
+XMLElement >> declaresDefaultNamespace [
+	"Did the receiver declare a new default namespace rather than inheriting one?"
+
+	^ self namespaceScope hasDefaultNamespace
+		and: [self defaultNamespace isEmpty
+			or: [self isRoot
+				or: [self defaultNamespace ~= self parent defaultNamespace]]]
+]
+
+{ #category : #namespaces }
+XMLElement >> declaresPrefix: aPrefix uri: aUri [
+	"Did the receiver declare a new prefix/uri pair rather than inheriting one?"
+
+	^ (self isDeclaredPrefix: aPrefix uri: aUri)
+		and: [self isRoot
+			or: [(self parent resolvePrefix: aPrefix) ~= aUri]]
 ]
 
 { #category : #namespaces }
@@ -260,13 +286,19 @@ XMLElement >> defaultNamespace [
 ]
 
 { #category : #namespaces }
-XMLElement >> defaultNamespace: aNamespaceUri [
-	| oldDefaultNamespace |
+XMLElement >> defaultNamespace: aUri [
+	| oldNamespace |
 
-	oldDefaultNamespace := self defaultNamespace.
+	oldNamespace := self defaultNamespace.
 	self
-		updateEnclosedScopesWith: [:each | each defaultNamespace: aNamespaceUri]
-		where: [:each | each defaultNamespace = oldDefaultNamespace].
+		updateEnclosedScopesWith: [:scope |
+			scope defaultNamespace:
+				(aUri
+					ifEmpty: [scope == self namespaceScope ifTrue: [''] ifFalse: [nil]]
+					ifNotEmpty: [aUri])]
+		whileTrue: [:scope |
+			scope hasDefaultNamespace not
+				or: [scope defaultNamespace = oldNamespace]]
 ]
 
 { #category : #accessing }
@@ -276,7 +308,9 @@ XMLElement >> document [
 
 { #category : #accessing }
 XMLElement >> document: aDocument [
-	document := aDocument
+	document := aDocument.
+	self hasElements
+		ifTrue: [self elementsDo: [:each | each document: aDocument]]
 ]
 
 { #category : #accessing }
@@ -315,7 +349,7 @@ XMLElement >> hasNamespaces [
 	^ namespaceScope notNil and: [namespaceScope hasNamespaces]
 ]
 
-{ #category : #testing }
+{ #category : #namespaces }
 XMLElement >> hasPrefix [
 	^ self nodeName isPrefixed
 ]
@@ -331,8 +365,19 @@ XMLElement >> includesAttribute: aName [
 ]
 
 { #category : #private }
-XMLElement >> inheritMappingsFrom: aScope [
-	self recurse: [:each | each namespaceScope inheritMappingsFrom: aScope]
+XMLElement >> inheritNamespacesFrom: anElement [
+	self traverseWith: [:each |
+		each namespaceScope inheritMappingsFrom: anElement namespaceScope]
+]
+
+{ #category : #namespaces }
+XMLElement >> isDeclaredPrefix: aPrefix [
+	^ self namespaceScope includesPrefix: aPrefix
+]
+
+{ #category : #namespaces }
+XMLElement >> isDeclaredPrefix: aPrefix uri: aUri [
+	^ self namespaceScope includesPrefix: aPrefix mappedTo: aUri
 ]
 
 { #category : #testing }
@@ -350,24 +395,14 @@ XMLElement >> isNamedAny: aNameArray [
 	^ aNameArray anySatisfy: [:each | self isNamed: each]
 ]
 
+{ #category : #testing }
+XMLElement >> isRoot [
+	^ (self hasParent and: [self parent isElement]) not
+]
+
 { #category : #accessing }
 XMLElement >> localName [
 	^ self nodeName localPart
-]
-
-{ #category : #private }
-XMLElement >> mapPrefix: aPrefix to: aUri [
-	| oldMapping |
-
-	oldMapping :=
-		self namespaceScope
-			resolvePrefix: aPrefix
-			ifUnmapped: [nil].
-	self
-		updateEnclosedScopesWith: [:each | each mapPrefix: aPrefix to: aUri]
-		where: [:each |
-			(each includesPrefix: aPrefix mappedTo: oldMapping)
-				or: [(each includesPrefix: aPrefix) not]]
 ]
 
 { #category : #accessing }
@@ -382,8 +417,7 @@ XMLElement >> name: aName [
 
 { #category : #namespaces }
 XMLElement >> name: aQualifiedName namespaceURI: aUri [
-	aQualifiedName splitQualifiedNameInto: [:prefix :localPart |
-		self declarePrefix: prefix uri: aUri].
+	aQualifiedName splitQualifiedNameInto: [:prefix :localPart | self declarePrefix: prefix uri: aUri].
 	self name: aQualifiedName.
 ]
 
@@ -436,6 +470,17 @@ XMLElement >> previousElement [
 ]
 
 { #category : #printing }
+XMLElement >> printNamespaceDeclarationsOn: aTagWriter [
+	(self declaresDefaultNamespace
+		or: [self defaultNamespace notEmpty and: [aTagWriter isEmbedded not]])
+		ifTrue: [aTagWriter xmlns: self defaultNamespace].
+
+	self namespaceScope prefixesAndURIsDo: [:prefix :uri |
+		((self declaresPrefix: prefix uri: uri) or: [aTagWriter isEmbedded not])
+			ifTrue: [aTagWriter xmlnsAt: prefix put: uri]]
+]
+
+{ #category : #printing }
 XMLElement >> printXMLOn: aWriter [
 	| tagWriter |
 
@@ -443,13 +488,11 @@ XMLElement >> printXMLOn: aWriter [
 		name: self name.
 
 	self hasNamespaces
-		ifTrue: [
-			tagWriter
-				xmlns: self defaultNamespace;
-				xmlnsDeclarations: self namespaceScope prefixMappings].
+		ifTrue: [self printNamespaceDeclarationsOn: tagWriter].
+
 	tagWriter
 		attributes: self attributes;
-		with: [super printXMLOn: aWriter]
+		with: [super printXMLOn: aWriter].
 ]
 
 { #category : #accessing }
@@ -457,25 +500,6 @@ XMLElement >> qualifiedName [
 	self deprecated: 'use #name instead'.
 
 	^ self nodeName qualified
-]
-
-{ #category : #searching }
-XMLElement >> recurse: aBlock [
-	"See superclass version."
-
-	aBlock value: self.
-
-	super recurse: aBlock.
-]
-
-{ #category : #searching }
-XMLElement >> recurseUntilTrue: aBlock [
-	"See superclass version."
-
-	(aBlock value: self)
-		ifTrue: [^ self].
-
-	^ super recurseUntilTrue: aBlock.
 ]
 
 { #category : #accessing }
@@ -503,6 +527,16 @@ XMLElement >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 { #category : #namespaces }
 XMLElement >> resolvePrefix: aPrefix [
 	^ self namespaceScope resolvePrefix: aPrefix
+]
+
+{ #category : #searching }
+XMLElement >> searchWith: aBlock [
+	"See superclass version."
+
+	(aBlock value: self)
+		ifTrue: [^ self].
+
+	^ super searchWith: aBlock.
 ]
 
 { #category : #initialization }
@@ -562,23 +596,34 @@ XMLElement >> tag [
 	^ self name.
 ]
 
+{ #category : #searching }
+XMLElement >> traverseWith: aBlock [
+	"See superclass version."
+
+	aBlock value: self.
+
+	super traverseWith: aBlock.
+]
+
+{ #category : #namespaces }
+XMLElement >> undeclarePrefix: aPrefix [
+	self namespaceScope unmapPrefix: aPrefix
+]
+
 { #category : #private }
-XMLElement >> updateEnclosedScopesWith: aBlock where: aConditional [
+XMLElement >> updateEnclosedScopesWith: aBlock whileTrue: aConditionalBlock [
 	"Updates the receiver's scope and the scopes of all descendants with aBlock
 	where aConditional is true. It stops descending down a path of a subtree
 	as soon as aConditional is false, but continues down other paths."
 
-	(aConditional value: self namespaceScope)
+	(aConditionalBlock value: self namespaceScope)
 		ifTrue: [aBlock value: self namespaceScope]
 		ifFalse: [^ self].
 
 	self elementsDo: [:each |
-		each updateEnclosedScopesWith: aBlock where: aConditional]
-]
-
-{ #category : #testing }
-XMLElement >> usesNamespaces [
-	^ namespaceScope notNil
+		each
+			updateEnclosedScopesWith: aBlock
+			whileTrue: aConditionalBlock]
 ]
 
 { #category : #private }

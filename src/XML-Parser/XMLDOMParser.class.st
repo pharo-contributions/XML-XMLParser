@@ -7,19 +7,35 @@ Class {
 	#instVars : [
 		'document',
 		'nodeStack',
-		'nodeFactory',
-		'preservesCDataSections',
 		'isInCDataSection'
 	],
 	#category : #'XML-Parser'
 }
 
+{ #category : #'instance creation' }
+XMLDOMParser class >> on: aStringOrStream withRootNode: aRootNode [
+	^ (self on: aStringOrStream)
+		pushNode: aRootNode;
+		yourself
+]
+
 { #category : #content }
 XMLDOMParser >> characters: aString [
-	(self preservesCDataSections and: [self isInCDataSection])
+	(self preservesCDataNodes and: [self isInCDataSection])
 		ifTrue: [self topNode addNode: (self nodeFactory cdataClass string: aString)]
 		ifFalse: [self topNode addContent: (self nodeFactory stringClass string: aString)]
 
+]
+
+{ #category : #lexical }
+XMLDOMParser >> comment: aComment [
+	self preservesCommentNodes
+		ifTrue: [self topNode addNode: (self nodeFactory commentClass string: aComment)]
+]
+
+{ #category : #private }
+XMLDOMParser >> configurationClass [
+	^ XMLDOMConfiguration
 ]
 
 { #category : #accessing }
@@ -29,7 +45,7 @@ XMLDOMParser >> document [
 
 { #category : #accessing }
 XMLDOMParser >> document: aDocument [
-	document := aDocument
+	(document := aDocument) configuration: self configuration
 ]
 
 { #category : #parsing }
@@ -62,12 +78,12 @@ XMLDOMParser >> isInCDataSection [
 
 { #category : #accessing }
 XMLDOMParser >> nodeFactory [
-	^ nodeFactory ifNil: [nodeFactory := XMLNodeFactory new]
+	^ self configuration nodeFactory
 ]
 
 { #category : #accessing }
 XMLDOMParser >> nodeFactory: aNodeFactory [
-	nodeFactory := aNodeFactory
+	self configuration nodeFactory: aNodeFactory
 ]
 
 { #category : #private }
@@ -86,18 +102,38 @@ XMLDOMParser >> popNode [
 	^ self nodeStack removeLast
 ]
 
+{ #category : #testing }
+XMLDOMParser >> preservesCDataNodes [
+	^ self configuration preservesCDataNodes
+]
+
 { #category : #accessing }
+XMLDOMParser >> preservesCDataNodes: aBoolean [
+	self configuration preservesCDataNodes: aBoolean
+]
+
+{ #category : #testing }
 XMLDOMParser >> preservesCDataSections [
-	^ preservesCDataSections ifNil: [preservesCDataSections := false]
+	self deprecated: 'use #preservesCDataNodes instead'.
+
+	^ self preservesCDataNodes.
 ]
 
 { #category : #accessing }
 XMLDOMParser >> preservesCDataSections: aBoolean [
-	"Specify whether the receiver shoud preserve CDATA sections.
-	If true XMLCDATASection nodes will be created. Otherwise plain
-	XMLString nodes will be used."
+	self deprecated: 'use #preservesCDataNodes: instead'.
 
-	preservesCDataSections := aBoolean
+	self preservesCDataNodes: aBoolean.
+]
+
+{ #category : #testing }
+XMLDOMParser >> preservesCommentNodes [
+	^ self configuration preservesCommentNodes
+]
+
+{ #category : #accessing }
+XMLDOMParser >> preservesCommentNodes: aBoolean [
+	self configuration preservesCommentNodes: aBoolean
 ]
 
 { #category : #content }
@@ -108,9 +144,7 @@ XMLDOMParser >> processingInstruction: piName data: dataString [
 { #category : #private }
 XMLDOMParser >> pushElement: anElement [
 
-	self nodeStack notEmpty
-		ifTrue: [self topNode addElement: anElement].
-
+	self nodeStack ifNotEmpty: [self topNode addElement: anElement].
 	self pushNode: anElement.
 ]
 
@@ -127,6 +161,8 @@ XMLDOMParser >> startCData [
 
 { #category : #content }
 XMLDOMParser >> startDocument [
+	self topNode ifNotNil: [^ self].
+
 	self document: self nodeFactory documentClass new.
 	self pushNode: self document 
 ]

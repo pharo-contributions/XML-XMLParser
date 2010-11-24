@@ -24,7 +24,12 @@ XMLDocument >> doctypeDeclaration: aDoctypeDeclaration [
 
 { #category : #accessing }
 XMLDocument >> document [
-	self
+	^ self
+]
+
+{ #category : #accessing }
+XMLDocument >> document: aDocument [
+	self shouldNotImplement
 ]
 
 { #category : #accessing }
