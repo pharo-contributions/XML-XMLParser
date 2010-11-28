@@ -122,14 +122,14 @@ XMLDeclarationNodesTest >> printExternalIDFromPublicID: aPublicId systemID: aSys
 { #category : #tests }
 XMLDeclarationNodesTest >> test1attributeDeclarations [
 	self
-		assertAttributeDecl: XMLAttributeDeclarationNode new
+		assertAttributeDecl: XMLAttributeDeclaration new
 		hasElementName: ''
 		attributeName: ''
 		type: ''
 		defaultDecl: ''.
 	self
 		assertAttributeDecl:
-			(XMLAttributeDeclarationNode
+			(XMLAttributeDeclaration
 				elementName: 'testElement'
 				attributeName: 'testAttribute'
 				type: 'CDATA'
@@ -140,7 +140,7 @@ XMLDeclarationNodesTest >> test1attributeDeclarations [
 		defaultDecl: ''.
 	self
 		assertAttributeDecl:
-			(XMLAttributeDeclarationNode
+			(XMLAttributeDeclaration
 				elementName: 'testElement'
 				attributeName: 'testAttribute'
 				type: 'CDATA'
@@ -154,12 +154,12 @@ XMLDeclarationNodesTest >> test1attributeDeclarations [
 { #category : #tests }
 XMLDeclarationNodesTest >> test2elementDeclarations [
 	self
-		assertElementDecl: XMLElementDeclarationNode new
+		assertElementDecl: XMLElementDeclaration new
 		hasName: ''
 		contentModel: ''.
 	self
 		assertElementDecl:
-			(XMLElementDeclarationNode
+			(XMLElementDeclaration
 				name: 'testElement'
 				contentModel: '(one,two)')
 		hasName: 'testElement'
@@ -169,7 +169,7 @@ XMLDeclarationNodesTest >> test2elementDeclarations [
 { #category : #tests }
 XMLDeclarationNodesTest >> test3entityDeclarations [
 	self
-		assertEntityDecl: XMLEntityDeclarationNode new
+		assertEntityDecl: XMLEntityDeclaration new
 		hasName: ''
 		replacement: ''
 		publicID: ''
@@ -177,7 +177,7 @@ XMLDeclarationNodesTest >> test3entityDeclarations [
 		ndada: ''.
 	self
 		assertEntityDecl:
-			(XMLEntityDeclarationNode
+			(XMLEntityDeclaration
 				name: 'testEntity'
 				replacement: 'testReplacement')
 		hasName: 'testEntity'
@@ -187,7 +187,7 @@ XMLDeclarationNodesTest >> test3entityDeclarations [
 		ndada: ''.
 	self
 		assertEntityDecl:
-			(XMLEntityDeclarationNode
+			(XMLEntityDeclaration
 				name: 'testEntity'
 				publicID: '-//test//test-id//EN'
 				systemID: '')
@@ -198,7 +198,7 @@ XMLDeclarationNodesTest >> test3entityDeclarations [
 		ndada: ''.
 	self
 		assertEntityDecl:
-			(XMLEntityDeclarationNode
+			(XMLEntityDeclaration
 				name: 'testEntity'
 				publicID: '-//test//test-id//EN'
 				systemID: 'http://test')
@@ -209,7 +209,7 @@ XMLDeclarationNodesTest >> test3entityDeclarations [
 		ndada: ''.
 	self
 		assertEntityDecl:
-			(XMLEntityDeclarationNode
+			(XMLEntityDeclaration
 				name: 'testEntity'
 				publicID: ''
 				systemID: 'http://test')
@@ -220,7 +220,7 @@ XMLDeclarationNodesTest >> test3entityDeclarations [
 		ndada: ''.
 	self
 		assertEntityDecl:
-			(XMLEntityDeclarationNode
+			(XMLEntityDeclaration
 				name: 'testEntity'
 				publicID: '-//test//test-id//EN'
 				systemID: 'http://test'
@@ -235,13 +235,13 @@ XMLDeclarationNodesTest >> test3entityDeclarations [
 { #category : #tests }
 XMLDeclarationNodesTest >> test4notationDeclarations [
 	self
-		assertNotationDecl: XMLNotationDeclarationNode new
+		assertNotationDecl: XMLNotationDeclaration new
 		hasName: ''
 		publicID: ''
 		systemID: ''.
 	self
 		assertNotationDecl:
-			(XMLNotationDeclarationNode
+			(XMLNotationDeclaration
 				name: 'testNotation'
 				publicID: '//test//'
 				systemID: '')
@@ -250,7 +250,7 @@ XMLDeclarationNodesTest >> test4notationDeclarations [
 		systemID: ''.
 	self
 		assertNotationDecl:
-			(XMLNotationDeclarationNode
+			(XMLNotationDeclaration
 				name: 'testNotation'
 				publicID: '//test//'
 				systemID: 'http://test/')
@@ -259,7 +259,7 @@ XMLDeclarationNodesTest >> test4notationDeclarations [
 		systemID: 'http://test/'.
 	self
 		assertNotationDecl:
-			(XMLNotationDeclarationNode
+			(XMLNotationDeclaration
 				name: 'testNotation'
 				publicID: ''
 				systemID: 'http://test/')

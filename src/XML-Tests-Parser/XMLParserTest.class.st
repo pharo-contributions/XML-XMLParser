@@ -161,7 +161,7 @@ XMLParserTest >> testCDATASection [
 		(XMLDOMParser on: self exampleCDATASectionXML readStream)
 			preservesCDataNodes: true;
 			parseDocument.
-	element := xmlDocument firstTagNamed: 'test-data'.
+	element := xmlDocument findElementNamed: 'test-data'.
 
 	self assert: element contentString = 'this is CDATA test content 1 < 2 & 5 > 3'.
 	
@@ -176,7 +176,7 @@ XMLParserTest >> testDecodingCharacters [
 	| xmlDocument element |
 
 	xmlDocument := XMLDOMParser parse: self exampleEncodedXML.
-	element := xmlDocument firstTagNamed: 'test-data'.
+	element := xmlDocument findElementNamed: 'test-data'.
 
 	self assert: element contentString first charCode = 8230.	
 
@@ -188,7 +188,10 @@ XMLParserTest >> testExampleAddressBook [
 	| tokenizer |
 	"self debug: #testExampleAddressBook"
 
-	tokenizer := XMLTokenizer on: self addressBookXML readStream.
+	tokenizer :=
+		XMLTokenizer
+			driver: nil
+			on: self addressBookXML readStream.
 
 	"We enumerate the first characters of the addressbook example.
 	The file being parsed begins with <addressbook"
@@ -208,7 +211,10 @@ XMLParserTest >> testExampleAddressBookWithDTD [
 	| tokenizer |
 	"XMLTokenizer exampleAddressBookWithDTD"
 
-	tokenizer := XMLTokenizer on: self addressBookXMLWithDTD readStream.
+	tokenizer :=
+		XMLTokenizer
+			driver: nil
+			on: self addressBookXMLWithDTD readStream.
 	self
 		shouldnt: [tokenizer streamReader next notNil] whileTrue
 		raise: Error
@@ -246,16 +252,16 @@ XMLParserTest >> testParsing [
 	root := xmlDocument root.
 	self assert: (root class == XMLElement).
 
-	self assert: (root firstTagNamed: 'person') notNil.
-	self assert: (root firstTagNamed: 'addressbook') notNil.
+	self assert: (root findElementNamed: 'person') notNil.
+	self assert: (root findElementNamed: 'addressbook') notNil.
 
-	self assert: (root firstTagNamed: 'addressbook') == root.
+	self assert: (root findElementNamed: 'addressbook') == root.
 
 	numberOfPersons := 0.
-	root tagsNamed: 'person' do: [:p | numberOfPersons := numberOfPersons + 1].
+	root allElementsNamed: 'person' do: [:p | numberOfPersons := numberOfPersons + 1].
 	self assert: numberOfPersons = 4.
 
-	firstPerson := root firstTagNamed: 'person'.
+	firstPerson := root findElementNamed: 'person'.
 	self assert: (firstPerson attributeAt: 'employee-number') = 'A0000'.
 	self assert: (firstPerson attributeAt: 'family-name') = 'Gates'.
 	self assert: (firstPerson attributeAt: 'first-name') = 'Bob'.
@@ -264,35 +270,34 @@ XMLParserTest >> testParsing [
 	self assert: firstPerson attributeAssociations asArray =
 		{('employee-number'->'A0000'). ('family-name'->'Gates'). ('first-name'->'Bob').}.
 
-	self assert: (firstPerson @ 'employee-number') = (firstPerson attributeAt: 'employee-number').
-	self assert: (firstPerson @ 'employee-number') = (firstPerson @ 'employee-number').
 ]
 
 { #category : #tests }
 XMLParserTest >> testParsingCharacters [
-	| parser |
-	"This test is actually not that useful. This is not the proper way of using the parser. This test is here just for specification purpose"
+	| tokenizer |
+	"This test is actually not that useful. This is not the proper way of using the parser.
+	This test is here just for specification purpose"
 	"self debug: #testParsingCharacters"
 
-	parser := SAXDriver on: self addressBookXML readStream.
+	tokenizer := XMLTokenizer driver: nil on: self addressBookXML readStream.
 
-	self assert: parser streamReader next = $<.
-	self assert: parser streamReader next = $a.
-	self assert: parser streamReader next = $d.
-	self assert: parser streamReader next = $d.
-	self assert: parser streamReader next = $r.
+	self assert: tokenizer streamReader next = $<.
+	self assert: tokenizer streamReader next = $a.
+	self assert: tokenizer streamReader next = $d.
+	self assert: tokenizer streamReader next = $d.
+	self assert: tokenizer streamReader next = $r.
 ]
 
 { #category : #'tests-xmltokenizer' }
 XMLParserTest >> testTokenizerAddressBook [
 	| tokenizer |
-	tokenizer := XMLTokenizer on: self addressBookXML readStream.
+	tokenizer := XMLTokenizer driver: nil on: self addressBookXML readStream.
 	[tokenizer streamReader next notNil] whileTrue
 ]
 
 { #category : #'tests-xmltokenizer' }
 XMLParserTest >> testTokenizerAddressBookWithDTD [
 	| tokenizer |
-	tokenizer := XMLTokenizer on: self addressBookXMLWithDTD readStream.
+	tokenizer := XMLTokenizer driver: nil on: self addressBookXMLWithDTD readStream.
 	[tokenizer streamReader next notNil] whileTrue
 ]

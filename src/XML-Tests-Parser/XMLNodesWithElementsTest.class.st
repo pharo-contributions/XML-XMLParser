@@ -283,15 +283,11 @@ XMLNodesWithElementsTest >> test07elementAccessing [
 		assert: (node elementAt: 'absent') isNil;
 		assert: (node elementAt: 'absent' ifAbsent: ['absent']) = 'absent';
 		assert: (node elementsAt: 'absent') isEmpty;
-		assert: (node elementAtAny: #('absent')) isNil;
-		assert: (node elementAtAny: #('absent') ifAbsent: ['absent']) = 'absent';
 		assert: (node elementAt: 'testOne') == elements first;
 		assert: (node elementAt: 'testTwo') == elements second;
 		assert: (node elementsAt: 'testOne') = ((elements first: 3) copyWithout: elements second);
 		assert: (node elementAt: 'testPrefix:testOne') == elements third;
 		assert: (node elementsAt: 'testPrefix:testOne') = (XMLOrderedList with: elements third);
-		assert: (node elementAtAny: #('testTwo' 'testPrefix:testOne')) == elements second;
-		assert: (node elementAtAny: #('absent' 'testThree')) == elements fourth;
 		assert: (node elementAt: 'testOne' namespaceURI: 'absent') isNil;
 		assert: (node elementAt: 'absent' namespaceURI: 'http://testPrefix') isNil;
 		assert: (node elementAt: 'testOne' namespaceURI: 'absent' ifAbsent: ['absent']) = 'absent';
@@ -312,30 +308,19 @@ XMLNodesWithElementsTest >> test08firstTagSearching [
 	node nodes first addNodes: (elements copyFrom: 3 to: 4).
 	node nodes second addNodes: (elements copyFrom: 5 to: 6).
 	self
-		assert: (node firstTagNamed: 'absent') isNil;
-		assert: (node firstTagNamed: 'foo' with: [false]) isNil;
-		assert: (node firstTagNamedAny: #('absent')) isNil;
-		assert: (node firstTagNamedAny: #('foo') with: [false]) isNil.
+		assert: (node findElementNamed: 'absent') isNil;
+		assert: (node findElementNamed: 'foo' with: [:each | false]) isNil.
 
 	self
-		assert: (node firstTagNamed: 'foo') = elements first;
-		assert: (node firstTagNamed: 'prefix:bar') = elements fourth;
-		assert: (node firstTagNamedAny: #('prefix:foo' 'prefix:bar' 'absent')) = elements third;
-		assert: (node firstTagNamedAny: #('absent:bar' 'baz')) = elements last;
-		assert: (elements first firstTagNamed: 'foo') = elements first;
-		assert: (elements second firstTagNamedAny: #('foo' 'bar')) = elements second.
+		assert: (node findElementNamed: 'foo') = elements first;
+		assert: (node findElementNamed: 'prefix:bar') = elements fourth;
+		assert: (elements first findElementNamed: 'foo') = elements first.
 	self assert: (node
-		firstTagNamed: 'bar'
+		findElementNamed: 'bar'
 		with: [:each | each = elements fifth]) = elements fifth.
-	self assert: (node
-		firstTagNamedAny: #('bar' 'baz')
-		with: [:each | each = elements last]) = elements last.
 	self assert: (elements first
-		firstTagNamed: 'foo'
+		findElementNamed: 'foo'
 		with: [:each | each = elements third]) = elements third.
-	self assert: (elements second
-		firstTagNamedAny: #('bar')
-		with: [:each | each = elements fifth]) = elements fifth.
 ]
 
 { #category : #tests }
@@ -348,22 +333,18 @@ XMLNodesWithElementsTest >> test09tagsNamedSearching [
 	node nodes first addNodes: (elements copyFrom: 3 to: 4).
 	node nodes second addNodes: (elements copyFrom: 5 to: 6).
 	self
-		should: [:block | node tagsNamed: 'absent' do: block] enumerate: #();
-		should: [:block | node tagsNamedAny: #('absent') do: block] enumerate: #();
+		should: [:block | node allElementsNamed: 'absent' do: block] enumerate: #();
 		should: [:block | node elementsAt: 'absent' do: block] enumerate: #().
 
 	self
-		should: [:block | node tagsNamed: 'foo' do: block]
+		should: [:block | node allElementsNamed: 'foo' do: block]
 		enumerate: (Array with: elements first with: elements third).
 	self
-		should: [:block | node tagsNamed: 'prefix:foo' do: block]
+		should: [:block | node allElementsNamed: 'prefix:foo' do: block]
 		enumerate: (Array with: elements third).
 	self
 		should: [:block | node firstElement elementsAt: 'foo' do: block]
 		enumerate: (Array with: elements third).
-	self
-		should: [:block | node tagsNamedAny: #('foo' 'prefix:bar') do: block]
-		enumerate: (Array with: elements first with: elements third with: elements fifth)
 ]
 
 { #category : #tests }

@@ -9,7 +9,6 @@ XMLElementTest >> assertElement: anElement hasAttribute: anAttributeName equalTo
 	self
 		assert: (anElement includesAttribute: anAttributeName);
 		assert: (anElement attributeAt: anAttributeName) = anAttributeValue;
-		assert: (anElement @ anAttributeName) = anAttributeValue;
 		assert: (anElement attributeNodeAt: anAttributeName) notNil;
 		assert: (anElement attributeNodeAt: anAttributeName) value = anAttributeValue
 ]
