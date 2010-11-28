@@ -1,5 +1,5 @@
 "
-A SAXHandler is an XML parser that uses event handling. The acronym ""SAX"" refers to Java's ""Simple API for XML,"" on which SAXHandler's API is based. To use this class, create a subclass and override handlers in ""content"" and ""lexical"" as needed. To instantiate it you can send #on: or any of the #parse- messages. The former creates a new parser on the given input stream and returns it; the instance can then be sent #parseDocument to parse the input. The #parse- messages take some input source and parse it, returning the result of #parseDocument.
+A SAXHandler is an XML parser that uses event handling. The acronym ""SAX"" refers to Java's ""Simple API for XML,"" on which SAXHandler's API is based. To use this class, create a subclass and override handlers in ""content"" and ""lexical"" as needed. To instantiate it you can send #on: or any of the #parse- messages. The former creates a new parser on the given input stream and returns it; the instance can then be sent #parseDocument to parse the input. The class-side #parse- messages take some input source and parse it, returning the result of #parseDocument.
 
 By default, namespace support is enabled.
 "
@@ -7,16 +7,17 @@ Class {
 	#name : #SAXHandler,
 	#superclass : #Object,
 	#instVars : [
-		'driver',
-		'eod',
-		'configuration'
+		'input',
+		'configuration',
+		'elementNester',
+		'scopeAllocator'
 	],
 	#category : #'XML-Parser'
 }
 
 { #category : #'instance creation' }
 SAXHandler class >> on: aStringOrStream [
-	^ self new on: aStringOrStream
+	^ self new input: aStringOrStream
 ]
 
 { #category : #'instance creation' }
@@ -34,15 +35,6 @@ SAXHandler class >> parse: aStringOrStream usingNamespaces: aBoolean [
 	^ (self on: aStringOrStream)
 		usesNamespaces: aBoolean;
 		parseDocument
-]
-
-{ #category : #'instance creation' }
-SAXHandler class >> parseDTDFrom: aStream [
-	| parser |
-
-	parser := self on: aStream.
-	parser driver startParsingMarkup.
-	^ parser parseDocument.
 ]
 
 { #category : #'instance creation' }
@@ -102,24 +94,23 @@ SAXHandler >> configurationClass [
 ]
 
 { #category : #accessing }
+SAXHandler >> currentElement [
+	^ self elementNester currentElement
+]
+
+{ #category : #accessing }
 SAXHandler >> currentScope [
-	^ self driver currentScope
+	^ self scopeAllocator currentScope
 ]
 
 { #category : #accessing }
 SAXHandler >> currentScope: aScope [
-	self driver currentScope: aScope
+	self scopeAllocator currentScope: aScope
 ]
 
 { #category : #accessing }
-SAXHandler >> driver [
-	^ driver
-]
-
-{ #category : #accessing }
-SAXHandler >> driver: aDriver [
-	driver := aDriver.
-	driver saxHandler: self
+SAXHandler >> elementNester [
+	^ elementNester ifNil: [elementNester := XMLElementNester new]
 ]
 
 { #category : #lexical }
@@ -132,7 +123,6 @@ SAXHandler >> endCData [
 SAXHandler >> endDocument [
 	"This call corresponds to the Java SAX call
 	endDocument()."
-	eod := true
 ]
 
 { #category : #content }
@@ -174,15 +164,20 @@ SAXHandler >> endPrefixMapping: prefix [
 	endPrefixMapping(java.lang.String prefix)."
 ]
 
-{ #category : #accessing }
-SAXHandler >> eod [
-	^ eod ifNil: [eod := false]
-]
-
 { #category : #content }
 SAXHandler >> ignorableWhitespace: aString [
 	"This call corresonds to the Java SAX call
 	ignorableWhitespace(char[] ch, int start, int length)."
+]
+
+{ #category : #private }
+SAXHandler >> input [
+	^ input
+]
+
+{ #category : #private }
+SAXHandler >> input: aStringOrStream [
+	input := aStringOrStream.
 ]
 
 { #category : #'error handling' }
@@ -217,18 +212,21 @@ SAXHandler >> isValidating: aBoolean [
 	self configuration isValidating: aBoolean
 ]
 
-{ #category : #private }
-SAXHandler >> on: aStringOrStream [
-	self driver: (SAXDriver on: aStringOrStream)
-]
-
 { #category : #parsing }
 SAXHandler >> parseDocument [
-	self startDocument.
-	[self driver nextToken isNil or: [self eod]] whileFalse.
+	self parser parseDocument.
 
 	"Result of parsing"
 	^ self.
+]
+
+{ #category : #parsing }
+SAXHandler >> parser [
+	self configuration parserClass: self class.
+
+	^ XMLParser
+		driver: (SAXDriver saxHandler: self)
+		on: input.
 ]
 
 { #category : #content }
@@ -237,10 +235,9 @@ SAXHandler >> processingInstruction: piName data: dataString [
 	processingInstruction(java.lang.String target, java.lang.String data)."
 ]
 
-{ #category : #entity }
-SAXHandler >> resolveEntity: publicID systemID: systemID [
-	"This call corresonds to the Java SAX call
-	resolveEntity(java.lang.String publicId, java.lang.String systemId)."
+{ #category : #accessing }
+SAXHandler >> scopeAllocator [
+	^ scopeAllocator ifNil: [scopeAllocator := XMLNamespaceScopeAllocator new]
 ]
 
 { #category : #content }

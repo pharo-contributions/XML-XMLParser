@@ -1,5 +1,5 @@
 Class {
-	#name : #XMLEntityDeclarationNode,
+	#name : #XMLEntityDeclaration,
 	#superclass : #XMLDeclarationNode,
 	#instVars : [
 		'replacement',
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLEntityDeclarationNode class >> name: aName publicID: aPublicId systemID: aSystemId [
+XMLEntityDeclaration class >> name: aName publicID: aPublicId systemID: aSystemId [
 	^ self new
 		setName: aName
 		replacement: nil
@@ -21,7 +21,7 @@ XMLEntityDeclarationNode class >> name: aName publicID: aPublicId systemID: aSys
 ]
 
 { #category : #'instance creation' }
-XMLEntityDeclarationNode class >> name: aName publicID: aPublicId systemID: aSystemId ndata: aNotationName [
+XMLEntityDeclaration class >> name: aName publicID: aPublicId systemID: aSystemId ndata: aNotationName [
 	^ self new
 		setName: aName
 		replacement: nil
@@ -31,7 +31,7 @@ XMLEntityDeclarationNode class >> name: aName publicID: aPublicId systemID: aSys
 ]
 
 { #category : #'instance creation' }
-XMLEntityDeclarationNode class >> name: aName replacement: aReplacement [
+XMLEntityDeclaration class >> name: aName replacement: aReplacement [
 	^ self new
 		setName: aName
 		replacement: aReplacement
@@ -41,32 +41,22 @@ XMLEntityDeclarationNode class >> name: aName replacement: aReplacement [
 ]
 
 { #category : #accessing }
-XMLEntityDeclarationNode >> ndata [
+XMLEntityDeclaration >> ndata [
 	^ ndata ifNil: [ndata := '']
 ]
 
-{ #category : #printing }
-XMLEntityDeclarationNode >> printXMLOn: aWriter [
-	aWriter entityDeclaration
-		name: self name;
-		replacement: self replacement;
-		publicID: self publicID;
-		systemID: self systemID;
-		ndata: self ndata
-]
-
 { #category : #accessing }
-XMLEntityDeclarationNode >> publicID [
+XMLEntityDeclaration >> publicID [
 	^ publicId ifNil: [publicId := '']
 ]
 
 { #category : #accessing }
-XMLEntityDeclarationNode >> replacement [
+XMLEntityDeclaration >> replacement [
 	^ replacement ifNil: [replacement := '']
 ]
 
 { #category : #initialization }
-XMLEntityDeclarationNode >> setName: aName replacement: aReplacement publicID: aPublicId systemID: aSystemId ndata: aNotationName [
+XMLEntityDeclaration >> setName: aName replacement: aReplacement publicID: aPublicId systemID: aSystemId ndata: aNotationName [
 	name := aName.
 	replacement := aReplacement.
 	publicId := aPublicId.
@@ -75,6 +65,16 @@ XMLEntityDeclarationNode >> setName: aName replacement: aReplacement publicID: a
 ]
 
 { #category : #accessing }
-XMLEntityDeclarationNode >> systemID [
+XMLEntityDeclaration >> systemID [
 	^ systemId ifNil: [systemId := '']
+]
+
+{ #category : #printing }
+XMLEntityDeclaration >> writeXMLWith: aWriter [
+	aWriter entityDeclaration
+		name: self name;
+		replacement: self replacement;
+		publicID: self publicID;
+		systemID: self systemID;
+		ndata: self ndata
 ]

@@ -88,7 +88,9 @@ XMLElement class >> qualifiedName: aQualifiedName prefix: aPrefix localName: aLo
 
 { #category : #accessing }
 XMLElement >> @ aName [
-	^ self attributeAt: aName
+	self deprecated: 'use #attributeAt: instead'.
+
+	^ self attributeAt: aName.
 ]
 
 { #category : #accessing }
@@ -114,6 +116,15 @@ XMLElement >> addedElement: anElement [
 	super addedElement: anElement.
 	self hasNamespaces
 		ifTrue: [anElement inheritNamespacesFrom: self]
+]
+
+{ #category : #searching }
+XMLElement >> allElementsDo: aBlock [
+	"See superclass version."
+
+	aBlock value: self.
+
+	super allElementsDo: aBlock.
 ]
 
 { #category : #accessing }
@@ -186,22 +197,22 @@ XMLElement >> attributeNamesDo: aBlock [
 
 { #category : #accessing }
 XMLElement >> attributeNodeAt: aName [
-	^ self attributeNodes attributeNamed: aName
+	^ self attributeNodes attributeNodeAt: aName
 ]
 
 { #category : #accessing }
 XMLElement >> attributeNodeAt: aName ifAbsent: aBlock [
-	^ self attributeNodes attributeNamed: aName ifAbsent: aBlock
+	^ self attributeNodes attributeNodeAt: aName ifAbsent: aBlock
 ]
 
 { #category : #accessing }
 XMLElement >> attributeNodeAt: aLocalName namespaceURI: aUri [
-	^ self attributeNodes attributeNamed: aLocalName namespaceURI: aUri
+	^ self attributeNodes attributeNodeAt: aLocalName namespaceURI: aUri
 ]
 
 { #category : #accessing }
 XMLElement >> attributeNodeAt: aLocalName namespaceURI: aUri ifAbsent: aBlock [
-	^ self attributeNodes attributeNamed: aLocalName namespaceURI: aUri ifAbsent: aBlock
+	^ self attributeNodes attributeNodeAt: aLocalName namespaceURI: aUri ifAbsent: aBlock
 ]
 
 { #category : #accessing }
@@ -309,22 +320,9 @@ XMLElement >> document [
 { #category : #accessing }
 XMLElement >> document: aDocument [
 	document := aDocument.
+
 	self hasElements
 		ifTrue: [self elementsDo: [:each | each document: aDocument]]
-]
-
-{ #category : #accessing }
-XMLElement >> elementsAndContents [
-	self deprecated: 'use #contentNodes instead'.
-
-	^ self contentNodes.
-]
-
-{ #category : #enumerating }
-XMLElement >> elementsAndContentsDo: aBlock [
-	self deprecated: 'use contentNodesDo: instead'.
-
-	self contentNodesDo: aBlock.
 ]
 
 { #category : #namespaces }
@@ -366,8 +364,14 @@ XMLElement >> includesAttribute: aName [
 
 { #category : #private }
 XMLElement >> inheritNamespacesFrom: anElement [
-	self traverseWith: [:each |
+	self allElementsDo: [:each |
 		each namespaceScope inheritMappingsFrom: anElement namespaceScope]
+]
+
+{ #category : #private }
+XMLElement >> innerXMLParserOn: aStringOrStream [
+	^ (super innerXMLParserOn: aStringOrStream)
+		currentScope: self namespaceScope
 ]
 
 { #category : #namespaces }
@@ -387,16 +391,19 @@ XMLElement >> isElement [
 
 { #category : #testing }
 XMLElement >> isNamed: aName [
+	"Does the receiver's qualified or local name match the argument?'"
 	^ self nodeName isSameAs: aName
 ]
 
 { #category : #testing }
-XMLElement >> isNamedAny: aNameArray [
-	^ aNameArray anySatisfy: [:each | self isNamed: each]
+XMLElement >> isNamedAny: aNameCollection [
+	"Does the receiver's qualified or local name match any of the names supplied as the argument?'"
+	^ aNameCollection anySatisfy: [:each | self isNamed: each]
 ]
 
 { #category : #testing }
 XMLElement >> isRoot [
+	"Is the receiver the root element?"
 	^ (self hasParent and: [self parent isElement]) not
 ]
 
@@ -480,21 +487,6 @@ XMLElement >> printNamespaceDeclarationsOn: aTagWriter [
 			ifTrue: [aTagWriter xmlnsAt: prefix put: uri]]
 ]
 
-{ #category : #printing }
-XMLElement >> printXMLOn: aWriter [
-	| tagWriter |
-
-	(tagWriter := aWriter tag)
-		name: self name.
-
-	self hasNamespaces
-		ifTrue: [self printNamespaceDeclarationsOn: tagWriter].
-
-	tagWriter
-		attributes: self attributes;
-		with: [super printXMLOn: aWriter].
-]
-
 { #category : #accessing }
 XMLElement >> qualifiedName [
 	self deprecated: 'use #name instead'.
@@ -512,6 +504,11 @@ XMLElement >> removeAttributeNode: aNode [
 	^ self attributeNodes remove: aNode
 ]
 
+{ #category : #accessing }
+XMLElement >> removeAttributes [
+	^ self attributeNodes removeAll
+]
+
 { #category : #notifications }
 XMLElement >> removedAttribute: anAttribute [
 	anAttribute
@@ -527,16 +524,6 @@ XMLElement >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 { #category : #namespaces }
 XMLElement >> resolvePrefix: aPrefix [
 	^ self namespaceScope resolvePrefix: aPrefix
-]
-
-{ #category : #searching }
-XMLElement >> searchWith: aBlock [
-	"See superclass version."
-
-	(aBlock value: self)
-		ifTrue: [^ self].
-
-	^ super searchWith: aBlock.
 ]
 
 { #category : #initialization }
@@ -596,15 +583,6 @@ XMLElement >> tag [
 	^ self name.
 ]
 
-{ #category : #searching }
-XMLElement >> traverseWith: aBlock [
-	"See superclass version."
-
-	aBlock value: self.
-
-	super traverseWith: aBlock.
-]
-
 { #category : #namespaces }
 XMLElement >> undeclarePrefix: aPrefix [
 	self namespaceScope unmapPrefix: aPrefix
@@ -642,4 +620,19 @@ XMLElement >> validateName [
 			self namespaceScope
 				validatePrefix: self prefix
 				ofElementName: self name]
+]
+
+{ #category : #printing }
+XMLElement >> writeXMLWith: aWriter [
+	| tagWriter |
+
+	(tagWriter := aWriter tag)
+		name: self name.
+
+	self hasNamespaces
+		ifTrue: [self printNamespaceDeclarationsOn: tagWriter].
+
+	tagWriter
+		attributes: self attributes;
+		with: [self writeInnerXMLWith: aWriter].
 ]

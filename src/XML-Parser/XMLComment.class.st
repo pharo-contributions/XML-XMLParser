@@ -20,11 +20,6 @@ XMLComment >> isComment [
 	^ true
 ]
 
-{ #category : #printing }
-XMLComment >> printXMLOn: aWriter [
-	aWriter comment: self string
-]
-
 { #category : #accessing }
 XMLComment >> string [
 	^ string ifNil: [string := '']
@@ -33,4 +28,9 @@ XMLComment >> string [
 { #category : #accessing }
 XMLComment >> string: aString [
 	string := aString
+]
+
+{ #category : #printing }
+XMLComment >> writeXMLWith: aWriter [
+	aWriter comment: self string
 ]

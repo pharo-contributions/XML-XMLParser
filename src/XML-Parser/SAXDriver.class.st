@@ -3,46 +3,53 @@ SAXDriver together with SAXHandler provides a SAX-like API for XML parsing. A SA
 "
 Class {
 	#name : #SAXDriver,
-	#superclass : #XMLTokenizer,
+	#superclass : #XMLDriver,
 	#instVars : [
 		'saxHandler',
-		'languageEnvironment',
-		'scopeManager',
-		'wellFormednessChecker'
+		'configuration',
+		'elementNester',
+		'scopeAllocator',
+		'languageEnvironment'
 	],
 	#category : #'XML-Parser'
 }
 
-{ #category : #content }
-SAXDriver >> activeSaxHandler [
-	saxHandler eod
-		ifTrue: [self errorExpected: 'No more data expected.'].
-	^ saxHandler.
+{ #category : #'instance creation' }
+SAXDriver class >> saxHandler: aHandler [
+	^ self new
+		setSaxHandler: aHandler
+		configuration: aHandler configuration
+		elementNester: aHandler elementNester
+		scopeAllocator: aHandler scopeAllocator
+]
+
+{ #category : #accessing }
+SAXDriver >> configuration [
+	^ configuration
 ]
 
 { #category : #accessing }
 SAXDriver >> currentScope [
 	^ self usesNamespaces
-		ifTrue: [self scopeManager currentScope]
+		ifTrue: [self scopeAllocator currentScope]
 		ifFalse: [nil]
-]
-
-{ #category : #accessing }
-SAXDriver >> currentScope: aScope [
-	self usesNamespaces
-		ifTrue: [self scopeManager pushScope: aScope]
 ]
 
 { #category : #namespaces }
 SAXDriver >> declareNamespaces: aDictionary [
 	aDictionary keysAndValuesDo: [:prefix :uri |
-		self scopeManager declarePrefix: prefix uri: uri.
-		self activeSaxHandler startPrefixMapping: prefix uri: uri]
+		self scopeAllocator declarePrefix: prefix uri: uri.
+		self saxHandler startPrefixMapping: prefix uri: uri]
+]
+
+{ #category : #accessing }
+SAXDriver >> elementNester [
+	^ elementNester
 ]
 
 { #category : #'handling tokens' }
 SAXDriver >> handleCData: aString [
-	self activeSaxHandler
+	self saxHandler
 		startCData;
 		characters: aString;
 		endCData
@@ -50,13 +57,13 @@ SAXDriver >> handleCData: aString [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleComment: aString [
-	self activeSaxHandler 
+	self saxHandler 
 		comment: aString
 ]
 
 { #category : #'handling tokens' }
 SAXDriver >> handleEndDocument [
-	self wellFormednessChecker ensureNoElementsRemainOpen.
+	self elementNester ensureNoElementsRemainOpen.
 	self saxHandler endDocument
 ]
 
@@ -64,15 +71,15 @@ SAXDriver >> handleEndDocument [
 SAXDriver >> handleEndTag: anElementName [
 	| prefix localName namespaceUri |
 
-	self wellFormednessChecker endedElement: anElementName.
+	self elementNester endedElement: anElementName.
 
 	anElementName splitQualifiedNameInto: [:prefixPart :localPart |
 		prefix := prefixPart.
 		localName := localPart].
 	self usesNamespaces
-		ifTrue: [namespaceUri := self scopeManager resolvePrefix: prefix].
+		ifTrue: [namespaceUri := self scopeAllocator resolvePrefix: prefix].
 
-	self activeSaxHandler 
+	self saxHandler 
 		endElement: anElementName
 		prefix: prefix
 		uri: namespaceUri
@@ -81,20 +88,20 @@ SAXDriver >> handleEndTag: anElementName [
 	self usesNamespaces
 		ifTrue: [
 			self undeclareNamespaces.
-			self scopeManager exitScope].
+			self scopeAllocator exitScope].
 ]
 
 { #category : #'handling tokens' }
 SAXDriver >> handlePCData: aString [
 	self languageEnvironment
 		ifNotNil: [aString applyLanguageInfomation: self languageEnvironment].
-	self activeSaxHandler 
+	self saxHandler 
 		characters: aString
 ]
 
 { #category : #'handling tokens' }
 SAXDriver >> handlePI: piTarget data: piData [
-	self activeSaxHandler 
+	self saxHandler 
 		processingInstruction: piTarget data: piData
 ]
 
@@ -107,7 +114,7 @@ SAXDriver >> handleStartDocument [
 SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
 	| prefix localName namespaceUri |
 
-	self wellFormednessChecker startedElement: anElementName.
+	self elementNester startedElement: anElementName.
 	(anAttributeDictionary includesKey: 'xml:lang')
 		ifTrue: [self languageEnvironment: (anAttributeDictionary at: 'xml:lang')].
 	anElementName splitQualifiedNameInto: [:prefixPart :localPart |
@@ -116,15 +123,15 @@ SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary nam
 		namespaceUri := ''].
 
 	self usesNamespaces ifTrue: [
-		self scopeManager enterScope.
+		self scopeAllocator enterScope.
 		self declareNamespaces: aNamespaceDictionary.
-		namespaceUri := self scopeManager resolvePrefix: prefix.
+		namespaceUri := self scopeAllocator resolvePrefix: prefix.
 		self
 			validateStartTag: anElementName
 			prefix: prefix
 			attributes: anAttributeDictionary].
 
-	self activeSaxHandler 
+	self saxHandler 
 		startElement: anElementName
 		prefix: prefix
 		uri: namespaceUri
@@ -134,7 +141,7 @@ SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary nam
 
 { #category : #'handling tokens' }
 SAXDriver >> handleWhitespace: aString [
-	self activeSaxHandler 
+	self saxHandler 
 		ignorableWhitespace: aString
 ]
 
@@ -156,7 +163,7 @@ SAXDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrN
 
 { #category : #testing }
 SAXDriver >> isValidating [
-	^ saxHandler configuration isValidating
+	^ self configuration isValidating
 ]
 
 { #category : #accessing }
@@ -175,49 +182,47 @@ SAXDriver >> saxHandler [
 ]
 
 { #category : #accessing }
-SAXDriver >> saxHandler: aHandler [
-	saxHandler := aHandler
+SAXDriver >> scopeAllocator [
+	^ scopeAllocator
 ]
 
-{ #category : #namespaces }
-SAXDriver >> scopeManager [
-	^ scopeManager ifNil: [scopeManager := XMLNamespaceScopeManager new]
+{ #category : #initialization }
+SAXDriver >> setSaxHandler: aHandler configuration: aConfiguration elementNester: anElementNester scopeAllocator: aScopeAllocator [
+	saxHandler := aHandler.
+	configuration := aConfiguration.
+	elementNester := anElementNester.
+	scopeAllocator := aScopeAllocator.
 ]
 
 { #category : #namespaces }
 SAXDriver >> undeclareNamespaces [
 	| currentScope enclosingScope |
 
-	currentScope := self scopeManager currentScope.
+	currentScope := self scopeAllocator currentScope.
 	currentScope hasNamespaces
 		ifFalse: [^ self].
-	enclosingScope := self scopeManager enclosingScope.
+	enclosingScope := self scopeAllocator enclosingScope.
 
 	currentScope prefixesAndURIsDo: [:prefix :uri |
 		(enclosingScope includesPrefix: prefix mappedTo: uri)
-			ifFalse: [self activeSaxHandler endPrefixMapping: prefix]].
+			ifFalse: [self saxHandler endPrefixMapping: prefix]].
 
 	(currentScope defaultNamespace notNil
 		and: [currentScope defaultNamespace ~= enclosingScope defaultNamespace])
-		ifTrue: [self activeSaxHandler endPrefixMapping: '']
+		ifTrue: [self saxHandler endPrefixMapping: '']
 ]
 
 { #category : #testing }
 SAXDriver >> usesNamespaces [
-	^ saxHandler configuration usesNamespaces
+	^ self configuration usesNamespaces
 ]
 
 { #category : #namespaces }
 SAXDriver >> validateStartTag: aStartTag prefix: aPrefix attributes: anAttributeDictionary [
 	aPrefix ifNotEmpty: [
-		self scopeManager
+		self scopeAllocator
 			validatePrefix: aPrefix
 			ofElementName: aStartTag].
 
-	self scopeManager validatePrefixedAttributeNames: anAttributeDictionary.
-]
-
-{ #category : #accessing }
-SAXDriver >> wellFormednessChecker [
-	^ wellFormednessChecker ifNil: [wellFormednessChecker := XMLWellFormednessChecker new]
+	self scopeAllocator validatePrefixedAttributeNames: anAttributeDictionary.
 ]

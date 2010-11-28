@@ -23,6 +23,11 @@ XMLDOMConfiguration >> nodeFactory: aFactory [
 ]
 
 { #category : #accessing }
+XMLDOMConfiguration >> parserClass [
+	^ parserClass ifNil: [parserClass := XMLDOMParser]
+]
+
+{ #category : #accessing }
 XMLDOMConfiguration >> preservesCDataNodes [
 	^ preservesCDataNodes ifNil: [preservesCDataNodes := false]
 ]

@@ -1,5 +1,5 @@
 "
-XMLDOMParser parses XML into a tree of XML nodes representing the document structure. To see what kinds of nodes it produces and what can be done with them, browse XML-Parser-Nodes. 
+This class is an XML parser that produces tree of nodes representing the document structure. To see what kinds of nodes it produces and what can be done with them, browse XML-Parser-Nodes.
 "
 Class {
 	#name : #XMLDOMParser,
@@ -48,13 +48,6 @@ XMLDOMParser >> document: aDocument [
 	(document := aDocument) configuration: self configuration
 ]
 
-{ #category : #parsing }
-XMLDOMParser >> domDocument [
-	[self parseDocument] ensure: [self driver stream close].
-
-	^ document.
-]
-
 { #category : #lexical }
 XMLDOMParser >> endCData [
 	isInCDataSection := false
@@ -62,8 +55,7 @@ XMLDOMParser >> endCData [
 
 { #category : #content }
 XMLDOMParser >> endDocument [
-	self popNode.
-	super endDocument.
+	self popNode
 ]
 
 { #category : #content }
@@ -143,7 +135,6 @@ XMLDOMParser >> processingInstruction: piName data: dataString [
 
 { #category : #private }
 XMLDOMParser >> pushElement: anElement [
-
 	self nodeStack ifNotEmpty: [self topNode addElement: anElement].
 	self pushNode: anElement.
 ]
@@ -191,7 +182,8 @@ XMLDOMParser >> topNode [
 
 { #category : #content }
 XMLDOMParser >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
-	self document
-		version: aVersionFloat;
-		encoding: anEncoding
+	self document ifNotNil: [
+		self document
+			version: aVersionFloat;
+			encoding: anEncoding]
 ]

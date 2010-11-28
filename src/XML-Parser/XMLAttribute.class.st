@@ -42,11 +42,6 @@ XMLAttribute >> hasPrefix [
 ]
 
 { #category : #testing }
-XMLAttribute >> isAttribute [
-	^ true
-]
-
-{ #category : #testing }
 XMLAttribute >> isNamed: aName [
 	^ self nodeName isSameAs: aName
 ]
@@ -101,11 +96,6 @@ XMLAttribute >> prefix: aPrefix [
 	self nodeName prefix: aPrefix
 ]
 
-{ #category : #printing }
-XMLAttribute >> printXMLOn: aWriter [
-	aWriter writeName: self name value: self value
-]
-
 { #category : #accessing }
 XMLAttribute >> value [
 	^ value ifNil: [value := '']
@@ -114,4 +104,9 @@ XMLAttribute >> value [
 { #category : #accessing }
 XMLAttribute >> value: aString [
 	value := aString
+]
+
+{ #category : #printing }
+XMLAttribute >> writeXMLWith: aWriter [
+	aWriter writeName: self name value: self value
 ]

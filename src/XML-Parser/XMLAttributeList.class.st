@@ -46,28 +46,6 @@ XMLAttributeList >> asNameValueAssociations [
 ]
 
 { #category : #accessing }
-XMLAttributeList >> attributeNamed: aName [
-	^ self attributeNamed: aName ifAbsent: [self defaultValue]
-]
-
-{ #category : #accessing }
-XMLAttributeList >> attributeNamed: aName ifAbsent: aBlock [
-	^ self attributesByName at: aName ifAbsent: aBlock
-]
-
-{ #category : #accessing }
-XMLAttributeList >> attributeNamed: aLocalName namespaceURI: aUri [
-	^ self attributeNamed: aLocalName namespaceURI: aUri ifAbsent: [self defaultValue]
-]
-
-{ #category : #accessing }
-XMLAttributeList >> attributeNamed: aLocalName namespaceURI: aUri ifAbsent: aBlock [
-	^ self
-		detect: [:each | (each isNamed: aLocalName) and: [each namespaceURI = aUri]]
-		ifNone: aBlock
-]
-
-{ #category : #accessing }
 XMLAttributeList >> attributeNames [
 	^ self collect: [:each | each name]
 ]
@@ -80,6 +58,28 @@ XMLAttributeList >> attributeNamesAndValuesDo: aTwoArgumentBlock [
 { #category : #enumerating }
 XMLAttributeList >> attributeNamesDo: aBlock [
 	self do: [:each | aBlock value: each name]
+]
+
+{ #category : #accessing }
+XMLAttributeList >> attributeNodeAt: aName [
+	^ self attributeNodeAt: aName ifAbsent: [self defaultValue]
+]
+
+{ #category : #accessing }
+XMLAttributeList >> attributeNodeAt: aName ifAbsent: aBlock [
+	^ self attributesByName at: aName ifAbsent: aBlock
+]
+
+{ #category : #accessing }
+XMLAttributeList >> attributeNodeAt: aLocalName namespaceURI: aUri [
+	^ self attributeNodeAt: aLocalName namespaceURI: aUri ifAbsent: [self defaultValue]
+]
+
+{ #category : #accessing }
+XMLAttributeList >> attributeNodeAt: aLocalName namespaceURI: aUri ifAbsent: aBlock [
+	^ self
+		detect: [:each | (each isNamed: aLocalName) and: [each namespaceURI = aUri]]
+		ifNone: aBlock
 ]
 
 { #category : #accessing }
@@ -104,7 +104,7 @@ XMLAttributeList >> attributeValueAt: aName ifAbsentPut: aBlock [
 { #category : #accessing }
 XMLAttributeList >> attributeValueAt: aName put: aValue [
 	(self includesAttributeNamed: aName)
-		ifTrue: [(self attributeNamed: aName) value: aValue]
+		ifTrue: [(self attributeNodeAt: aName) value: aValue]
 		ifFalse: [self addName: aName value: aValue].
 	^ aValue.
 ]
@@ -127,7 +127,7 @@ XMLAttributeList >> includesAttributeNamed: aName [
 
 { #category : #accessing }
 XMLAttributeList >> removeAttributeNamed: aName [
-	^ self remove: (self attributeNamed: aName).
+	^ self remove: (self attributeNodeAt: aName).
 ]
 
 { #category : #notifications }

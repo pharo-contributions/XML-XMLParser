@@ -6,7 +6,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'isValidating',
-		'usesNamespaces'
+		'usesNamespaces',
+		'parserClass'
 	],
 	#category : #'XML-Parser'
 }
@@ -19,6 +20,16 @@ XMLConfiguration >> isValidating [
 { #category : #accessing }
 XMLConfiguration >> isValidating: aBoolean [
 	isValidating := aBoolean
+]
+
+{ #category : #accessing }
+XMLConfiguration >> parserClass [
+	^ parserClass ifNil: [parserClass := SAXHandler]
+]
+
+{ #category : #accessing }
+XMLConfiguration >> parserClass: aClass [
+	parserClass := aClass
 ]
 
 { #category : #accessing }

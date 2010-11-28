@@ -57,6 +57,34 @@ XMLNodeList >> elementAddedAtEnd: anElement [
 				addElement: anElement]
 ]
 
+{ #category : #accessing }
+XMLNodeList >> elementAt: aName [
+	^ self elementAt: aName ifAbsent: [self defaultValue]
+]
+
+{ #category : #accessing }
+XMLNodeList >> elementAt: aName ifAbsent: aBlock [
+	| elementsWithName |
+
+	elementsWithName := self elementsByName at: aName ifAbsent: [^ aBlock value].
+
+	^ elementsWithName isCollection
+		ifTrue: [elementsWithName first]
+		ifFalse: [elementsWithName]
+]
+
+{ #category : #accessing }
+XMLNodeList >> elementAt: aName namespaceURI: aUri [
+	^ self elementAt: aName namespaceURI: aUri ifAbsent: [self defaultValue]
+]
+
+{ #category : #accessing }
+XMLNodeList >> elementAt: aName namespaceURI: aUri ifAbsent: aBlock [
+	^ (self elementsAt: aName)
+		detect: [:each | each namespaceURI = aUri]
+		ifNone: aBlock
+]
+
 { #category : #private }
 XMLNodeList >> elementInsertedBeforeEnd: anElement [
 	| elementAfter |
@@ -73,36 +101,30 @@ XMLNodeList >> elementInsertedBeforeEnd: anElement [
 ]
 
 { #category : #accessing }
-XMLNodeList >> elementNamed: aName [
-	^ self elementNamed: aName ifAbsent: [self defaultValue]
-]
-
-{ #category : #accessing }
-XMLNodeList >> elementNamed: aName ifAbsent: aBlock [
-	| elementsWithName |
-
-	elementsWithName := self elementsByName at: aName ifAbsent: [^ aBlock value].
-
-	^ elementsWithName isCollection
-		ifTrue: [elementsWithName first]
-		ifFalse: [elementsWithName]
-]
-
-{ #category : #accessing }
-XMLNodeList >> elementNamed: aName namespaceURI: aUri [
-	^ self elementNamed: aName namespaceURI: aUri ifAbsent: [self defaultValue]
-]
-
-{ #category : #accessing }
-XMLNodeList >> elementNamed: aName namespaceURI: aUri ifAbsent: aBlock [
-	^ (self elementsNamed: aName)
-		detect: [:each | each namespaceURI = aUri]
-		ifNone: aBlock
-]
-
-{ #category : #accessing }
 XMLNodeList >> elements [
 	^ elements ifNil: [elements := self species new]
+]
+
+{ #category : #accessing }
+XMLNodeList >> elementsAt: aName [
+	| elementsWithName |
+
+	elementsWithName :=
+		self elementsByName
+			at: aName
+			ifAbsent: [^ self species new].
+
+	^ elementsWithName isCollection
+		ifTrue: [elementsWithName]
+		ifFalse: [
+			self elementsByName
+				at: aName
+				put: (self species with: elementsWithName)]
+]
+
+{ #category : #accessing }
+XMLNodeList >> elementsAt: aName namespaceURI: aUri [
+	^ (self elementsAt: aName) select: [:each | each namespaceURI = aUri]
 ]
 
 { #category : #private }
@@ -158,30 +180,28 @@ XMLNodeList >> elementsByNameAt: aName removeElement: anElement [
 ]
 
 { #category : #enumerating }
+XMLNodeList >> elementsCollect: aBlock [
+	^ self elements collect: aBlock
+]
+
+{ #category : #enumerating }
+XMLNodeList >> elementsDetect: aBlock [
+	^ self elementsDetect: aBlock ifNone: [self defaultValue]
+]
+
+{ #category : #enumerating }
+XMLNodeList >> elementsDetect: aBlock ifNone: anExceptionBlock [
+	^ self elements detect: aBlock ifNone: anExceptionBlock
+]
+
+{ #category : #enumerating }
 XMLNodeList >> elementsDo: aBlock [
 	self elements do: aBlock
 ]
 
-{ #category : #accessing }
-XMLNodeList >> elementsNamed: aName [
-	| elementsWithName |
-
-	elementsWithName :=
-		self elementsByName
-			at: aName
-			ifAbsent: [^ self species new].
-
-	^ elementsWithName isCollection
-		ifTrue: [elementsWithName]
-		ifFalse: [
-			self elementsByName
-				at: aName
-				put: (self species with: elementsWithName)]
-]
-
-{ #category : #accessing }
-XMLNodeList >> elementsNamed: aName namespaceURI: aUri [
-	^ (self elementsNamed: aName) select: [:each | each namespaceURI = aUri]
+{ #category : #enumerating }
+XMLNodeList >> elementsSelect: aBlock [
+	^ self elements select: aBlock
 ]
 
 { #category : #private }

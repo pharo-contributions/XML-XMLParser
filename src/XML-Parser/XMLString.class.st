@@ -49,11 +49,6 @@ XMLString >> printContentOn: aStream [
 	aStream nextPutAll: self string.
 ]
 
-{ #category : #printing }
-XMLString >> printXMLOn: aWriter [
-	aWriter string: self string
-]
-
 { #category : #accessing }
 XMLString >> string [
 	^ string ifNil: [string := '']
@@ -69,4 +64,9 @@ XMLString >> toString: aStringOrStringNode [
 	^ (aStringOrStringNode isKindOf: XMLString)
 		ifTrue: [aStringOrStringNode string]
 		ifFalse: [aStringOrStringNode]
+]
+
+{ #category : #printing }
+XMLString >> writeXMLWith: aWriter [
+	aWriter string: self string
 ]

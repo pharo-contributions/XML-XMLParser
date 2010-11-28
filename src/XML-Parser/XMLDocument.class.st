@@ -47,21 +47,16 @@ XMLDocument >> isDocument [
 	^ true
 ]
 
-{ #category : #printing }
-XMLDocument >> printXMLOn: aWriter [
-	self version ifNotNil: [
-		aWriter xml
-			version: self version;
-			encoding: self encoding].
-	self doctypeDeclaration
-		ifNotNil: [self doctypeDeclaration printXMLOn: aWriter].
-	
-	super printXMLOn: aWriter
+{ #category : #accessing }
+XMLDocument >> root [
+	^ self firstElement
 ]
 
 { #category : #accessing }
-XMLDocument >> root [
-	^ self firstElement 
+XMLDocument >> root: anElement [
+	self
+		removeNodes;
+		addNode: anElement
 ]
 
 { #category : #accessing }
@@ -72,4 +67,16 @@ XMLDocument >> version [
 { #category : #accessing }
 XMLDocument >> version: aVersionNumber [
 	version := aVersionNumber
+]
+
+{ #category : #printing }
+XMLDocument >> writeXMLWith: aWriter [
+	self version ifNotNil: [
+		aWriter xml
+			version: self version;
+			encoding: self encoding].
+	self doctypeDeclaration
+		ifNotNil: [self doctypeDeclaration writeXMLWith: aWriter].
+	
+	self writeInnerXMLWith: aWriter.
 ]

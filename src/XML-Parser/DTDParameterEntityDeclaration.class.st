@@ -22,17 +22,6 @@ DTDParameterEntityDeclaration class >> leadIn [
 	^'%'
 ]
 
-{ #category : #behaviors }
-DTDParameterEntityDeclaration >> includePE [
-	"Return my expanded value."
-	^self include
-]
-
-{ #category : #behaviors }
-DTDParameterEntityDeclaration >> notRecognized [
-	XMLWellFormednessException signal: 'Malformed entity.'
-]
-
 { #category : #invocation }
 DTDParameterEntityDeclaration >> registerIn: aParser [
 	aParser parameterEntity: self name put: self

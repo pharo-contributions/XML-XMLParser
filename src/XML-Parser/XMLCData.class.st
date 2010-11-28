@@ -13,6 +13,6 @@ XMLCData >> isCData [
 ]
 
 { #category : #printing }
-XMLCData >> printXMLOn: aWriter [
+XMLCData >> writeXMLWith: aWriter [
 	aWriter cdata: self string
 ]

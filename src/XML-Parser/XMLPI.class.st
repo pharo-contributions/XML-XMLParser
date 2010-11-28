@@ -34,13 +34,6 @@ XMLPI >> isPI [
 	^ true
 ]
 
-{ #category : #printing }
-XMLPI >> printXMLOn: aWriter [
-	aWriter pi
-		target: self target;
-		data: self data
-]
-
 { #category : #accessing }
 XMLPI >> target [
 	^ target ifNil: [target := '']
@@ -49,4 +42,11 @@ XMLPI >> target [
 { #category : #accessing }
 XMLPI >> target: aString [
 	target := aString
+]
+
+{ #category : #printing }
+XMLPI >> writeXMLWith: aWriter [
+	aWriter pi
+		target: self target;
+		data: self data
 ]

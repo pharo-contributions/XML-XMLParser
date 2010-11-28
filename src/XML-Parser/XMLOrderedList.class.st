@@ -133,18 +133,18 @@ XMLOrderedList >> capacity [
 
 { #category : #enumerating }
 XMLOrderedList >> collect: aBlock [
-	^ self copyThenSetCollection: (collection collect: aBlock)
+	^ self newWithCollection: (collection collect: aBlock)
 ]
 
 { #category : #enumerating }
 XMLOrderedList >> collect: aBlock from: aStartIndex to: anEndIndex [
-	^ self copyThenSetCollection:
+	^ self newWithCollection:
 		(collection collect: aBlock from: aStartIndex to: anEndIndex)
 ]
 
 { #category : #enumerating }
 XMLOrderedList >> collect: aCollectBlock thenSelect: aSelectBlock [
-	^ self copyThenSetCollection:
+	^ self newWithCollection:
 		(collection collect: aCollectBlock thenSelect: aSelectBlock)
 ]
 
@@ -160,13 +160,8 @@ XMLOrderedList >> copyEmpty [
 
 { #category : #copying }
 XMLOrderedList >> copyFrom: aStart to: anEnd [
-	^ self copyThenSetCollection:
+	^ self newWithCollection:
 		(collection copyFrom: (aStart max: 1) to: (self size min: anEnd))
-]
-
-{ #category : #private }
-XMLOrderedList >> copyThenSetCollection: aCollection [
-	^ self class basicNew setCollection: aCollection
 ]
 
 { #category : #defaults }
@@ -182,6 +177,11 @@ XMLOrderedList >> do: aBlock [
 { #category : #inspecting }
 XMLOrderedList >> inspectorClass [
 	^ OrderedCollectionInspector
+]
+
+{ #category : #private }
+XMLOrderedList >> newWithCollection: aCollection [
+	^ self species basicNew setCollection: aCollection
 ]
 
 { #category : #removing }
@@ -235,12 +235,12 @@ XMLOrderedList >> reverseDo: aBlock [
 
 { #category : #enumerating }
 XMLOrderedList >> select: aBlock [
-	^ self copyThenSetCollection: (collection select: aBlock)
+	^ self newWithCollection: (collection select: aBlock)
 ]
 
 { #category : #enumerating }
 XMLOrderedList >> select: aSelectBlock thenCollect: aCollectBlock [
-	^ self copyThenSetCollection:
+	^ self newWithCollection:
 		(collection select: aSelectBlock thenCollect: aCollectBlock)
 ]
 
@@ -271,10 +271,10 @@ XMLOrderedList >> species [
 
 { #category : #enumerating }
 XMLOrderedList >> with: aCollection collect: aBlock [
-	^ self copyThenSetCollection: (collection with: aCollection collect: aBlock)
+	^ self newWithCollection: (collection with: aCollection collect: aBlock)
 ]
 
 { #category : #enumerating }
 XMLOrderedList >> withIndexCollect: aTwoArgumentBlock [
-	^ self copyThenSetCollection: (collection withIndexCollect: aTwoArgumentBlock)
+	^ self newWithCollection: (collection withIndexCollect: aTwoArgumentBlock)
 ]

@@ -1,5 +1,5 @@
 Class {
-	#name : #XMLElementDeclarationNode,
+	#name : #XMLElementDeclaration,
 	#superclass : #XMLDeclarationNode,
 	#instVars : [
 		'contentModel'
@@ -8,24 +8,24 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLElementDeclarationNode class >> name: aName contentModel: aContentModelString [
+XMLElementDeclaration class >> name: aName contentModel: aContentModelString [
 	^ self new setName: aName contentModel: aContentModelString
 ]
 
 { #category : #accessing }
-XMLElementDeclarationNode >> contentModel [
+XMLElementDeclaration >> contentModel [
 	^ contentModel ifNil: [contentModel := '']
 ]
 
+{ #category : #initialization }
+XMLElementDeclaration >> setName: aName contentModel: aContentModelString [
+	name := aName.
+	contentModel := aContentModelString.
+]
+
 { #category : #printing }
-XMLElementDeclarationNode >> printXMLOn: aWriter [
+XMLElementDeclaration >> writeXMLWith: aWriter [
 	aWriter elementDeclaration
 		name: self name;
 		contentModel: self contentModel
-]
-
-{ #category : #initialization }
-XMLElementDeclarationNode >> setName: aName contentModel: aContentModelString [
-	name := aName.
-	contentModel := aContentModelString.
 ]

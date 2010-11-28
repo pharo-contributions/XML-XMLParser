@@ -1,8 +1,8 @@
 "
-The class ensures tags are nested properly and that all start tags have corresponding end tags.
+The class keeps track of elements as they are started and ended and ensures that they nest properly.
 "
 Class {
-	#name : #XMLWellFormednessChecker,
+	#name : #XMLElementNester,
 	#superclass : #Object,
 	#instVars : [
 		'openElements'
@@ -10,8 +10,15 @@ Class {
 	#category : #'XML-Parser'
 }
 
+{ #category : #accessing }
+XMLElementNester >> currentElement [
+	^ self openElements
+		at: self totalOpen
+		ifAbsent: ['']
+]
+
 { #category : #printing }
-XMLWellFormednessChecker >> enclosedElementsAsString: aTagName [
+XMLElementNester >> enclosedElementsAsString: aTagName [
 	| enclosedTags |
 
 	enclosedTags := String new writeStream.
@@ -21,16 +28,9 @@ XMLWellFormednessChecker >> enclosedElementsAsString: aTagName [
 	^ enclosedTags contents.
 ]
 
-{ #category : #accessing }
-XMLWellFormednessChecker >> enclosingElement [
-	^ self openElements
-		at: self totalOpen
-		ifAbsent: ['']
-]
-
 { #category : #checking }
-XMLWellFormednessChecker >> endedElement: anElementName [
-	(self enclosingElement = anElementName)
+XMLElementNester >> endedElement: anElementName [
+	(self currentElement = anElementName)
 		ifFalse: [
 			^ (self hasOpenElement: anElementName)
 				ifTrue: [self errorImproperlyNestedElements: anElementName]
@@ -40,52 +40,52 @@ XMLWellFormednessChecker >> endedElement: anElementName [
 ]
 
 { #category : #checking }
-XMLWellFormednessChecker >> ensureNoElementsRemainOpen [
+XMLElementNester >> ensureNoElementsRemainOpen [
 	self hasOpenElements
 		ifTrue: [XMLWellFormednessException signal: 'Unterminated elements: ', self printString]
 ]
 
 { #category : #errors }
-XMLWellFormednessChecker >> errorImproperlyNestedElements: anElementName [
+XMLElementNester >> errorImproperlyNestedElements: anElementName [
 	XMLWellFormednessException signal:
 		('<{1}> element ended before its child {2} element(s)'
 			format: (Array with: anElementName with: (self enclosedElementsAsString: anElementName)))
 ]
 
 { #category : #errors }
-XMLWellFormednessChecker >> errorUnmatchedEndTag: anElementName [
+XMLElementNester >> errorUnmatchedEndTag: anElementName [
 	XMLWellFormednessException signal:
 		('End </{1}> tag with no corresponding start <{1}> tag'
 			format: (Array with: anElementName))
 ]
 
 { #category : #testing }
-XMLWellFormednessChecker >> hasOpenElement: anElementName [
+XMLElementNester >> hasOpenElement: anElementName [
 	^ self openElements includes: anElementName
 ]
 
 { #category : #testing }
-XMLWellFormednessChecker >> hasOpenElements [
+XMLElementNester >> hasOpenElements [
 	^ self openElements notEmpty
 ]
 
 { #category : #accessing }
-XMLWellFormednessChecker >> openElements [
+XMLElementNester >> openElements [
 	^ openElements ifNil: [openElements := OrderedCollection new: 50]
 ]
 
 { #category : #private }
-XMLWellFormednessChecker >> printLimit [
+XMLElementNester >> printLimit [
 	^ 5
 ]
 
 { #category : #printing }
-XMLWellFormednessChecker >> printOn: aStream [
+XMLElementNester >> printOn: aStream [
 	self printOn: aStream startingAt: 1
 ]
 
 { #category : #printing }
-XMLWellFormednessChecker >> printOn: aStream startingAt: aPosition [
+XMLElementNester >> printOn: aStream startingAt: aPosition [
 	| endPosition |
 
 	endPosition :=  self totalOpen min: (aPosition + self printLimit - 1).
@@ -101,12 +101,12 @@ XMLWellFormednessChecker >> printOn: aStream startingAt: aPosition [
 ]
 
 { #category : #checking }
-XMLWellFormednessChecker >> startedElement: aTagName [
+XMLElementNester >> startedElement: aTagName [
 	^ self openElements addLast: aTagName
 ]
 
 { #category : #accessing }
-XMLWellFormednessChecker >> totalOpen [
+XMLElementNester >> totalOpen [
 	^ self openElements size
 	
 ]

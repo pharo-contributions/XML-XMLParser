@@ -42,6 +42,45 @@ XMLNodeWithChildren >> addedNode: aNode [
 		parent: self
 ]
 
+{ #category : #enumerating }
+XMLNodeWithChildren >> allNodesCollect: aBlock [
+	| collectedNodes |
+
+	collectedNodes := self nodes copyEmpty.
+	self allNodesDo: [:each | collectedNodes add: (aBlock value: each)].
+	^ collectedNodes.
+]
+
+{ #category : #enumerating }
+XMLNodeWithChildren >> allNodesDetect: aBlock [
+	^ self allNodesDetect: aBlock ifNone: [nil]
+]
+
+{ #category : #enumerating }
+XMLNodeWithChildren >> allNodesDetect: aBlock ifNone: anExceptionBlock [
+	self allNodesDo: [:each | (aBlock value: each) ifTrue: [^ each]].
+	^ anExceptionBlock value.
+]
+
+{ #category : #enumerating }
+XMLNodeWithChildren >> allNodesDo: aBlock [
+	super allNodesDo: aBlock.
+
+	self hasChildren
+		ifTrue: [self nodesDo: [:each | each allNodesDo: aBlock]]
+]
+
+{ #category : #enumerating }
+XMLNodeWithChildren >> allNodesSelect: aBlock [
+	| selectedNodes |
+
+	selectedNodes := self nodes copyEmpty.
+	self allNodesDo: [:each |
+		(aBlock value: each)
+			ifTrue: [selectedNodes add: each]].
+	^ selectedNodes.
+]
+
 { #category : #accessing }
 XMLNodeWithChildren >> firstNode [
 	^ self nodes first
@@ -57,6 +96,27 @@ XMLNodeWithChildren >> hasChildren [
 { #category : #testing }
 XMLNodeWithChildren >> includesNode: aNode [
 	^ self nodes includes: aNode
+]
+
+{ #category : #accessing }
+XMLNodeWithChildren >> innerXML [
+	| writer |
+
+	writer := XMLWriter new.
+	self writeInnerXMLWith: writer.
+	^ writer contents.
+]
+
+{ #category : #parsing }
+XMLNodeWithChildren >> innerXML: aStringOrStream [
+	self removeNodes.
+
+	(self innerXMLParserOn: aStringOrStream) parseDocument.
+]
+
+{ #category : #private }
+XMLNodeWithChildren >> innerXMLParserOn: aStringOrStream [
+	^ XMLDOMParser on: aStringOrStream withRootNode: self
 ]
 
 { #category : #accessing }
@@ -88,13 +148,28 @@ XMLNodeWithChildren >> nodesClass [
 ]
 
 { #category : #enumerating }
+XMLNodeWithChildren >> nodesCollect: aBlock [
+	^ self nodes collect: aBlock
+]
+
+{ #category : #enumerating }
+XMLNodeWithChildren >> nodesDetect: aBlock [
+	^ self nodesDetect: aBlock ifNone: [nil]
+]
+
+{ #category : #enumerating }
+XMLNodeWithChildren >> nodesDetect: aBlock ifNone: anExceptionBlock [
+	^ self nodes detect: aBlock ifNone: anExceptionBlock
+]
+
+{ #category : #enumerating }
 XMLNodeWithChildren >> nodesDo: aBlock [
 	self nodes do: aBlock
 ]
 
-{ #category : #printing }
-XMLNodeWithChildren >> printXMLOn: writer [
-	self nodesDo: [:each | each printXMLOn: writer].
+{ #category : #enumerating }
+XMLNodeWithChildren >> nodesSelect: aBlock [
+	^ self nodes select: aBlock
 ]
 
 { #category : #accessing }
@@ -131,4 +206,14 @@ XMLNodeWithChildren >> topNode [
 	self deprecated: 'use #firstNode instead'.
 
 	^ self firstNode.
+]
+
+{ #category : #printing }
+XMLNodeWithChildren >> writeInnerXMLWith: aWriter [
+	self nodesDo: [:each | each writeXMLWith: aWriter]
+]
+
+{ #category : #printing }
+XMLNodeWithChildren >> writeXMLWith: aWriter [
+	self writeInnerXMLWith: aWriter
 ]

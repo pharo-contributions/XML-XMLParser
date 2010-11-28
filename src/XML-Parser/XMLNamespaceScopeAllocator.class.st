@@ -2,7 +2,7 @@
 This class represents a stack of XMLNamespaceScopes. Sending #enterScope to an instance will cause it to push a new scope onto the stack that inherits all mappings from the previous, enclosing scope. Sending #leaveScop causes that scope to be removed.
 "
 Class {
-	#name : #XMLNamespaceScopeManager,
+	#name : #XMLNamespaceScopeAllocator,
 	#superclass : #Object,
 	#instVars : [
 		'scopes'
@@ -11,89 +11,94 @@ Class {
 }
 
 { #category : #accessing }
-XMLNamespaceScopeManager >> currentScope [
+XMLNamespaceScopeAllocator >> currentScope [
 	^ self scopes
 		at: self scopes size
 		ifAbsent: [self emptyScope]
 ]
 
+{ #category : #accessing }
+XMLNamespaceScopeAllocator >> currentScope: aScope [
+	^ self pushScope: aScope
+]
+
 { #category : #scope }
-XMLNamespaceScopeManager >> declarePrefix: aPrefix uri: aUri [
+XMLNamespaceScopeAllocator >> declarePrefix: aPrefix uri: aUri [
 	"Declare the given name space prefix with the given URL"
 
 	self currentScope mapPrefix: aPrefix to: aUri
 ]
 
 { #category : #accessing }
-XMLNamespaceScopeManager >> defaultNamespace [
+XMLNamespaceScopeAllocator >> defaultNamespace [
 	^ self currentScope defaultNamespace
 ]
 
 { #category : #private }
-XMLNamespaceScopeManager >> emptyScope [
+XMLNamespaceScopeAllocator >> emptyScope [
 	^ XMLNamespaceScope new
 ]
 
 { #category : #accessing }
-XMLNamespaceScopeManager >> enclosingScope [
+XMLNamespaceScopeAllocator >> enclosingScope [
 	^ self scopes
 		at: self scopes size - 1
 		ifAbsent: [self emptyScope]
 ]
 
 { #category : #scope }
-XMLNamespaceScopeManager >> enterScope [
+XMLNamespaceScopeAllocator >> enterScope [
 	self pushScope: (XMLNamespaceScope enclosingScope: self currentScope)
 ]
 
 { #category : #scope }
-XMLNamespaceScopeManager >> exitScope [
+XMLNamespaceScopeAllocator >> exitScope [
 	self popScope
 ]
 
 { #category : #testing }
-XMLNamespaceScopeManager >> includesPrefix: aPrefix [
+XMLNamespaceScopeAllocator >> includesPrefix: aPrefix [
 	^ self currentScope includesPrefix: aPrefix
 ]
 
 { #category : #testing }
-XMLNamespaceScopeManager >> includesPrefix: aPrefix mappedTo: aUri [
+XMLNamespaceScopeAllocator >> includesPrefix: aPrefix mappedTo: aUri [
 	^ self currentScope includesPrefix: aPrefix mappedTo: aUri
 ]
 
 { #category : #accessing }
-XMLNamespaceScopeManager >> popScope [
+XMLNamespaceScopeAllocator >> popScope [
 	self scopes removeLast
 ]
 
 { #category : #accessing }
-XMLNamespaceScopeManager >> pushScope: aScope [
+XMLNamespaceScopeAllocator >> pushScope: aScope [
 	self scopes addLast: aScope
 ]
 
 { #category : #accessing }
-XMLNamespaceScopeManager >> resolvePrefix: aPrefix [
+XMLNamespaceScopeAllocator >> resolvePrefix: aPrefix [
 	^ self currentScope resolvePrefix: aPrefix
 ]
 
 { #category : #accessing }
-XMLNamespaceScopeManager >> resolvePrefix: aPrefix ifUnmapped: aBlock [
+XMLNamespaceScopeAllocator >> resolvePrefix: aPrefix ifUnmapped: aBlock [
 	^ self currentScope resolvePrefix: aPrefix ifUnmapped: aBlock
 ]
 
 { #category : #accessing }
-XMLNamespaceScopeManager >> scopes [
+XMLNamespaceScopeAllocator >> scopes [
 	^ scopes ifNil: [scopes := OrderedCollection new: 20]
 ]
 
 { #category : #validation }
-XMLNamespaceScopeManager >> validatePrefix: aPrefix ofElementName: anElementName [
+XMLNamespaceScopeAllocator >> validatePrefix: aPrefix ofElementName: anElementName [
 	self currentScope
 		validatePrefix: aPrefix
 		ofElementName: anElementName
 ]
 
 { #category : #validation }
-XMLNamespaceScopeManager >> validatePrefixedAttributeNames: aDictionary [
+XMLNamespaceScopeAllocator >> validatePrefixedAttributeNames: aDictionary [
 	self currentScope validatePrefixedAttributeNames: aDictionary.
 ]

@@ -1,16 +1,16 @@
 "
-This class reads XML tokens from a stream using a nested stream reader. To create a parser, subclass this class and override the #handle- messages to handle tokens as they are read. To cause a token to be read, send #nextToken to an instance.
+This class reads XML tokens from a stream using a nested stream reader. To create a parser, subclass this class and override the #handle- messages to handle tokens as they are read. To cause it to read a token, send #nextToken to an instance.
 "
 Class {
 	#name : #XMLTokenizer,
 	#superclass : #Object,
 	#instVars : [
+		'driver',
+		'state',
 		'streamReader',
 		'streamWriter',
 		'entities',
-		'externalEntities',
-		'parameterEntities',
-		'parsingMarkup'
+		'parameterEntities'
 	],
 	#classVars : [
 		'CharEscapes',
@@ -19,6 +19,16 @@ Class {
 	],
 	#category : #'XML-Parser'
 }
+
+{ #category : #'instance creation' }
+XMLTokenizer class >> driver: aDriver on: aStringOrStream [
+	^self new
+		setDriver: aDriver
+		stream:
+			(aStringOrStream isStream
+				ifTrue: [aStringOrStream]
+				ifFalse: [aStringOrStream readStream])
+]
 
 { #category : #'class initialization' }
 XMLTokenizer class >> initialize [
@@ -44,19 +54,23 @@ XMLTokenizer class >> isCharEscape: entityValue [
 		and: [CharEscapes includes: entityValue first]
 ]
 
-{ #category : #'instance creation' }
-XMLTokenizer class >> on: aStringOrStream [
-	^self new stream:
-		(aStringOrStream isStream
-			ifTrue: [aStringOrStream]
-			ifFalse: [aStringOrStream readStream])
+{ #category : #testing }
+XMLTokenizer >> atEnd [
+	state == #atEnd
+		ifTrue: [^ true].
+	(state ~~ #atStart and: [streamReader atEnd])
+		ifTrue: [
+			state := #atEnd.
+			driver handleEndDocument.
+			^ true].
+	^ false.
 ]
 
 { #category : #tokenizing }
 XMLTokenizer >> checkAndExpandReference: parsingContext [
 	| referenceString nextChar |
 	nextChar := streamReader peek.
-	self isValidating
+	driver isValidating
 		ifFalse: [^ nil].
 
 	nextChar == $&
@@ -66,15 +80,15 @@ XMLTokenizer >> checkAndExpandReference: parsingContext [
 				ifTrue: [^ streamReader pushStream: (ReadStream on: self nextCharReference asString)].
 			referenceString := self nextLiteral.
 			self expectNext: $;.
-			self handleEntity: referenceString in: parsingContext ]
+			driver handleEntity: referenceString in: parsingContext ]
 		ifFalse: [
 			((nextChar == $%
-				and: [self parsingMarkup])
+				and: [self isParsingMarkup])
 				and: [parsingContext == #entityValue])
 				ifTrue: [
 					streamReader skipSeparators.
 					referenceString := self nextLiteral.
-					self handleEntity: referenceString in: parsingContext]].
+					driver handleEntity: referenceString in: parsingContext]].
 
 	self expectMore.
 	^ nextChar.
@@ -89,9 +103,14 @@ XMLTokenizer >> conditionalInclude: aKeyword [
 	^ self conditionalInclude: (self parameterEntity: aKeyword) value
 ]
 
+{ #category : #accessing }
+XMLTokenizer >> driver [
+	^ driver
+]
+
 { #category : #private }
 XMLTokenizer >> endParsingMarkup [
-	parsingMarkup := false
+	state := #parsing.
 ]
 
 { #category : #entities }
@@ -101,7 +120,7 @@ XMLTokenizer >> entities [
 
 { #category : #entities }
 XMLTokenizer >> entity: aReference [
-	self isValidating
+	driver isValidating
 		ifFalse: [^ DTDEntityDeclaration name: aReference value: ''].
 
 	^ self entities
@@ -160,7 +179,7 @@ XMLTokenizer >> expectNext: aCharacter [
 
 { #category : #tokenizing }
 XMLTokenizer >> expectQuote [
-	| nextChar expected |
+	| nextChar |
 
 	(((nextChar := streamReader next) == $")
 		or: [nextChar == $'])
@@ -172,33 +191,8 @@ XMLTokenizer >> expectQuote [
 ]
 
 { #category : #entities }
-XMLTokenizer >> externalEntities [
-	^ externalEntities ifNil: [externalEntities := Dictionary new]
-]
-
-{ #category : #entities }
 XMLTokenizer >> externalEntity: aReference [
 	^ self entities at: aReference ifAbsentPut: ['']
-]
-
-{ #category : #'handling tokens' }
-XMLTokenizer >> handleCData: aString [
-	self log: 'CData: ' , aString
-]
-
-{ #category : #'handling tokens' }
-XMLTokenizer >> handleComment: aString [
-	self log: 'Comment: ' , aString
-]
-
-{ #category : #'handling tokens' }
-XMLTokenizer >> handleEndDocument [
-	self log: 'End Doc '
-]
-
-{ #category : #'handling tokens' }
-XMLTokenizer >> handleEndTag: aString [
-	self log: 'End tag: ' , aString
 ]
 
 { #category : #entities }
@@ -210,42 +204,6 @@ XMLTokenizer >> handleEntity: referenceString in: parsingContext [
 	(self class isCharEscape: entityValue)
 		ifTrue: [entityValue := entity reference].
 	streamReader pushStream: (ReadStream on: entityValue asString)
-]
-
-{ #category : #'handling tokens' }
-XMLTokenizer >> handlePCData: aString [
-	self log: 'PCData: ' , aString
-]
-
-{ #category : #'handling tokens' }
-XMLTokenizer >> handlePI: piTarget data: piData [
-	self log: 'PI: ' , piTarget , ' data ' , piData
-]
-
-{ #category : #'handling tokens' }
-XMLTokenizer >> handleStartDocument [
-	self log: 'Start Doc'
-]
-
-{ #category : #'handling tokens' }
-XMLTokenizer >> handleStartTag: tagName attributes: attributes [
-	self log: 'Start tag: ' , tagName.
-	attributes keysAndValuesDo: [:key :value |
-		self log: key , '->' , value]
-]
-
-{ #category : #'handling tokens' }
-XMLTokenizer >> handleStartTag: tagName attributes: attributes namespaces: namespaces [
-	self handleStartTag: tagName attributes: attributes
-]
-
-{ #category : #'handling tokens' }
-XMLTokenizer >> handleWhitespace: aString [
-	self log: 'Whitespace: ' , aString
-]
-
-{ #category : #'handling tokens' }
-XMLTokenizer >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
 ]
 
 { #category : #entities }
@@ -265,17 +223,12 @@ XMLTokenizer >> initEntities [
 XMLTokenizer >> initialize [
 	streamReader := XMLNestedStreamReader new.
 	streamWriter := XMLNestedStreamWriter new.
-	parsingMarkup := false.
-]
-
-{ #category : #testing }
-XMLTokenizer >> isValidating [
-	self subclassResponsibility
+	state := #atStart.
 ]
 
 { #category : #private }
-XMLTokenizer >> log: aString [
-	"Transcript show: aString; cr"
+XMLTokenizer >> isParsingMarkup [
+	^ state == #isParsingMarkup
 ]
 
 { #category : #tokenizing }
@@ -288,7 +241,7 @@ XMLTokenizer >> nextAttributeInto: attributes namespaces: namespaces [
 	streamReader skipSeparators.
 	attrValue := self nextAttributeValue.
 
-	(self usesNamespaces
+	(driver usesNamespaces
 		and: [attrName beginsWith: 'xmlns'])
 		ifTrue: [attrName size > 6
 			ifTrue: [namespaces at: (attrName copyFrom: 7 to: attrName size) put: attrValue]
@@ -312,7 +265,7 @@ XMLTokenizer >> nextCDataContent [
 	| cdata |
 
 	cdata := streamReader upToAll: ']]>'.
-	self handleCData: cdata
+	driver handleCData: cdata
 
 ]
 
@@ -326,7 +279,7 @@ XMLTokenizer >> nextCDataOrConditional [
 	nextChar := streamReader peek.
 	nextChar == $%
 		ifTrue: [
-			self checkAndExpandReference: (self parsingMarkup ifTrue: [#dtd] ifFalse: [#content]).
+			self checkAndExpandReference: (self isParsingMarkup ifTrue: [#dtd] ifFalse: [#content]).
 			conditionalKeyword := self nextLiteral.
 			streamReader skipSeparators.
 			self expectNext: $[.
@@ -361,7 +314,7 @@ XMLTokenizer >> nextComment [
 	"Skip first -"
 	streamReader next.
 	self expectNext: $-.
-	self handleComment: (streamReader upToAll: '-->')
+	driver handleComment: (streamReader upToAll: '-->')
 ]
 
 { #category : #'tokenizing dtd' }
@@ -402,7 +355,7 @@ XMLTokenizer >> nextEndTag [
 	tagName := self nextName.
 	streamReader skipSeparators.
 	self expectNext: $>.
-	self handleEndTag: tagName
+	driver handleEndTag: tagName
 ]
 
 { #category : #'tokenizing dtd' }
@@ -453,7 +406,7 @@ XMLTokenizer >> nextEntityValue [
 				ifTrue: [
 					streamReader skipSeparators.
 					referenceString := self nextLiteral.
-					nextChar := self handleEntity: referenceString in: #entityValue.
+					nextChar := driver handleEntity: referenceString in: #entityValue.
 					nextPeek := nextChar := streamReader next]
 				ifFalse: [streamReader next]].
 	nextPeek == delimiterChar]
@@ -530,7 +483,7 @@ XMLTokenizer >> nextLiteral [
 XMLTokenizer >> nextMarkupDeclaration [
 	| declType |
 	declType := self nextLiteral.
-	self isValidating
+	driver isValidating
 		ifFalse: [^ self skipMarkupDeclaration].
 	declType = 'ENTITY'
 		ifTrue: [self nextEntityDeclaration]
@@ -549,7 +502,7 @@ XMLTokenizer >> nextMarkupToken [
 		nextChar := streamReader peek.
 		nextChar == $- ifTrue: [^ self nextComment].
 		nextChar == $[ ifTrue: [^ self nextCDataOrConditional].
-		^ self parsingMarkup
+		^ self isParsingMarkup
 			ifTrue: [self nextMarkupDeclaration]
 			ifFalse: [self nextDocType]].
 	nextChar == $? ifTrue: [^ self nextPI].
@@ -573,13 +526,13 @@ XMLTokenizer >> nextName [
 XMLTokenizer >> nextPCData [
 
 	streamWriter writeWith: [:writeStream |
-		self isValidating
+		driver isValidating
 			ifTrue: [self nextPCDataDelimitedBy: $< putOn: writeStream]
 			ifFalse: [
 				[streamReader peek == $<]
 					whileFalse: [writeStream nextPut: streamReader next]].
 
-		self handlePCData: writeStream stringContents]
+		driver handlePCData: writeStream stringContents]
 ]
 
 { #category : #tokenizing }
@@ -619,7 +572,7 @@ XMLTokenizer >> nextPI [
 		ifTrue: [^ self nextXMLDecl].
 	streamReader skipSeparators.
 	piData := streamReader upToAll: '?>'.
-	self handlePI: piTarget data: piData.
+	driver handlePI: piTarget data: piData.
 ]
 
 { #category : #tokenizing }
@@ -640,31 +593,33 @@ XMLTokenizer >> nextTag [
 	tagName := self nextName.
 	streamReader skipSeparators.
 	attributes := OrderPreservingDictionary new: 10.
-	self usesNamespaces
+	driver usesNamespaces
 		ifTrue: [namespaces := OrderPreservingDictionary new].
 	[(nextChar := streamReader peek) == $> or: [nextChar == $/]] whileFalse: [
 		self checkAndExpandReference: #content.
 		self nextAttributeInto: attributes namespaces: namespaces.
 		streamReader skipSeparators.].
-	self handleStartTag: tagName attributes: attributes namespaces: namespaces.
+	driver handleStartTag: tagName attributes: attributes namespaces: namespaces.
 	streamReader next == $/
 		ifTrue: [
-			self handleEndTag: tagName.
+			driver handleEndTag: tagName.
 			self expectNext: $>].
 ]
 
 { #category : #tokenizing }
 XMLTokenizer >> nextToken [
-	"return the next XMLnode, or nil if there are no more.
-	Fixed to retain leading whitespace when PCDATA is detected."
-
 	| whitespace |
-	"branch, depending on what the first character is"
-	whitespace := self nextWhitespace.
-	streamReader atEnd
-		ifTrue: [^ self handleEndDocument].
 
-	self checkAndExpandReference: (self parsingMarkup ifTrue: [#dtd] ifFalse: [#content]).
+	state == #atStart
+		ifTrue: [
+			driver handleStartDocument.
+			state := #started].
+
+	whitespace := self nextWhitespace.
+	self atEnd
+		ifTrue: [^ self].
+
+	self checkAndExpandReference: (self isParsingMarkup ifTrue: [#dtd] ifFalse: [#content]).
 	^ (streamReader peek = $<)
 		ifTrue: [self nextMarkupToken]
 		ifFalse: [
@@ -677,7 +632,7 @@ XMLTokenizer >> nextWhitespace [
 	| whitespace |
 
 	(whitespace := streamReader nextWhitespace)
-		ifNotEmpty: [self handleWhitespace: whitespace].
+		ifNotEmpty: [driver handleWhitespace: whitespace].
 	^ whitespace.
 ]
 
@@ -695,7 +650,7 @@ XMLTokenizer >> nextXMLDecl [
 	self expectNext: $>.
 	(attributes includesKey: 'encoding')
 		ifTrue: [streamReader streamEncoding: (attributes at: 'encoding')].
-	self
+	driver
 		handleXMLVersion: (attributes at: 'version' ifAbsent: [''])
 		encoding: (attributes at: 'encoding' ifAbsent: [''])
 		standalone: (attributes at: 'standalone' ifAbsent: ['']).
@@ -726,8 +681,9 @@ XMLTokenizer >> parseError: errorString [
 ]
 
 { #category : #private }
-XMLTokenizer >> parsingMarkup [
-	^ parsingMarkup
+XMLTokenizer >> setDriver: aDriver stream: aStream [
+	driver := aDriver.
+	streamReader stream: aStream.
 ]
 
 { #category : #'tokenizing dtd' }
@@ -737,7 +693,7 @@ XMLTokenizer >> skipMarkupDeclaration [
 
 { #category : #private }
 XMLTokenizer >> startParsingMarkup [
-	parsingMarkup := true
+	state := #isParsingMarkup
 ]
 
 { #category : #private }
@@ -745,17 +701,7 @@ XMLTokenizer >> stream [
 	^ streamReader stream
 ]
 
-{ #category : #private }
-XMLTokenizer >> stream: aStream [
-	streamReader stream: aStream
-]
-
 { #category : #accessing }
 XMLTokenizer >> streamReader [
 	^ streamReader
-]
-
-{ #category : #testing }
-XMLTokenizer >> usesNamespaces [
-	self subclassResponsibility
 ]

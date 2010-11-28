@@ -18,11 +18,16 @@ XMLNode >> addContent: aStringOrStringNode [
 	XMLDOMException signal: 'Node cannot contain content'
 ]
 
+{ #category : #enumerating }
+XMLNode >> allNodesDo: aBlock [
+	aBlock value: self
+]
+
 { #category : #printing }
 XMLNode >> canonicallyPrintOn: aStream [
 	(XMLWriter on: aStream)
 		isCanonical: true;
-		writeWith: [:writer | self printXMLOn: writer]
+		writeWith: [:writer | self writeXMLWith: writer]
 ]
 
 { #category : #printing }
@@ -39,6 +44,7 @@ XMLNode >> characterData [
 
 { #category : #accessing }
 XMLNode >> contentString [
+ 	"This returns the combined content string of all descendants with spaces inserted wher necessary."
 	^ String streamContents: [:stream | self printContentOn: stream]
 ]
 
@@ -50,11 +56,6 @@ XMLNode >> hasChildren [
 { #category : #testing }
 XMLNode >> hasParent [
 	^ self parent notNil
-]
-
-{ #category : #testing }
-XMLNode >> isAttribute [
-	^ false
 ]
 
 { #category : #testing }
@@ -158,7 +159,7 @@ XMLNode >> parent: aParentNode [
 XMLNode >> prettyPrintOn: aStream [
 	(XMLWriter on: aStream)
 		enablePrettyPrinting;
-		writeWith: [:writer | self printXMLOn: writer]
+		writeWith: [:writer | self writeXMLWith: writer]
 ]
 
 { #category : #printing }
@@ -184,10 +185,17 @@ XMLNode >> printContentOn: aStream [
 
 { #category : #printing }
 XMLNode >> printOn: aStream [
-	(XMLWriter on: aStream) writeWith: [:writer | self printXMLOn: writer].
+	(XMLWriter on: aStream) writeWith: [:writer | self writeXMLWith: writer].
 ]
 
 { #category : #printing }
 XMLNode >> printXMLOn: aWriter [
+	self deprecated: 'use #writeXMLWith: instead'.
+
+	self writeXMLWith: aWriter.
+]
+
+{ #category : #printing }
+XMLNode >> writeXMLWith: aWriter [
 	self subclassResponsibility
 ]

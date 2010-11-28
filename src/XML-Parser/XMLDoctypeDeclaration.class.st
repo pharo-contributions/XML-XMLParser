@@ -25,15 +25,6 @@ XMLDoctypeDeclaration >> nodesClass [
 	^ XMLInternalSubsetList
 ]
 
-{ #category : #printing }
-XMLDoctypeDeclaration >> printXMLOn: aWriter [
-	aWriter doctype
-		root: self root;
-		publicID: self publicID;
-		systemID: self systemID;
-		withInternalSubset: [super printXMLOn: aWriter]
-]
-
 { #category : #accessing }
 XMLDoctypeDeclaration >> publicID [
 	^ publicId
@@ -54,4 +45,13 @@ XMLDoctypeDeclaration >> setRoot: aRootElementName publicID: aPublicId systemID:
 { #category : #accessing }
 XMLDoctypeDeclaration >> systemID [
 	^ systemId
+]
+
+{ #category : #printing }
+XMLDoctypeDeclaration >> writeXMLWith: aWriter [
+	aWriter doctype
+		root: self root;
+		publicID: self publicID;
+		systemID: self systemID;
+		withInternalSubset: [self writeInnerXMLWith: aWriter]
 ]
