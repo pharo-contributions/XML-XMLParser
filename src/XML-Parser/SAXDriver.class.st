@@ -3,7 +3,7 @@ SAXDriver together with SAXHandler provides a SAX-like API for XML parsing. A SA
 "
 Class {
 	#name : #SAXDriver,
-	#superclass : #XMLDriver,
+	#superclass : #XMLParserDriver,
 	#instVars : [
 		'saxHandler',
 		'configuration',

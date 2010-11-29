@@ -1,5 +1,5 @@
 "
-This class reads XML tokens from a stream using a nested stream reader. To create a parser, subclass this class and override the #handle- messages to handle tokens as they are read. To cause it to read a token, send #nextToken to an instance.
+This class reads XML tokens from a stream using a nested stream reader. Sending it #nextToken causes a token to be read and one or more handler messages to be dispatched to a driver.
 "
 Class {
 	#name : #XMLTokenizer,
@@ -80,7 +80,7 @@ XMLTokenizer >> checkAndExpandReference: parsingContext [
 				ifTrue: [^ streamReader pushStream: (ReadStream on: self nextCharReference asString)].
 			referenceString := self nextLiteral.
 			self expectNext: $;.
-			driver handleEntity: referenceString in: parsingContext ]
+			self replaceEntity: referenceString in: parsingContext ]
 		ifFalse: [
 			((nextChar == $%
 				and: [self isParsingMarkup])
@@ -88,7 +88,7 @@ XMLTokenizer >> checkAndExpandReference: parsingContext [
 				ifTrue: [
 					streamReader skipSeparators.
 					referenceString := self nextLiteral.
-					driver handleEntity: referenceString in: parsingContext]].
+					self replaceEntity: referenceString in: parsingContext]].
 
 	self expectMore.
 	^ nextChar.
@@ -193,17 +193,6 @@ XMLTokenizer >> expectQuote [
 { #category : #entities }
 XMLTokenizer >> externalEntity: aReference [
 	^ self entities at: aReference ifAbsentPut: ['']
-]
-
-{ #category : #entities }
-XMLTokenizer >> handleEntity: referenceString in: parsingContext [ 
-
-	| entity entityValue |
-	entity := self entity: referenceString.
-	entityValue := entity valueForContext: parsingContext.
-	(self class isCharEscape: entityValue)
-		ifTrue: [entityValue := entity reference].
-	streamReader pushStream: (ReadStream on: entityValue asString)
 ]
 
 { #category : #entities }
@@ -406,7 +395,7 @@ XMLTokenizer >> nextEntityValue [
 				ifTrue: [
 					streamReader skipSeparators.
 					referenceString := self nextLiteral.
-					nextChar := driver handleEntity: referenceString in: #entityValue.
+					nextChar := self replaceEntity: referenceString in: #entityValue.
 					nextPeek := nextChar := streamReader next]
 				ifFalse: [streamReader next]].
 	nextPeek == delimiterChar]
@@ -678,6 +667,17 @@ XMLTokenizer >> parameterEntity: refName put: aReference [
 { #category : #errors }
 XMLTokenizer >> parseError: errorString [
 	XMLParsingException signal: errorString
+]
+
+{ #category : #entities }
+XMLTokenizer >> replaceEntity: referenceString in: parsingContext [ 
+
+	| entity entityValue |
+	entity := self entity: referenceString.
+	entityValue := entity valueForContext: parsingContext.
+	(self class isCharEscape: entityValue)
+		ifTrue: [entityValue := entity reference].
+	streamReader pushStream: (ReadStream on: entityValue asString)
 ]
 
 { #category : #private }

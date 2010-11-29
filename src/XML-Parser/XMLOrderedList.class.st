@@ -99,6 +99,11 @@ XMLOrderedList >> asArray [
 	^ collection asArray
 ]
 
+{ #category : #'NewInspector Compatibility' }
+XMLOrderedList >> asNINode [
+	^ collection asNINode
+]
+
 { #category : #accessing }
 XMLOrderedList >> at: anIndex [
 	^ collection at: anIndex ifAbsent: [self defaultValue]
@@ -134,6 +139,14 @@ XMLOrderedList >> capacity [
 { #category : #enumerating }
 XMLOrderedList >> collect: aBlock [
 	^ self newWithCollection: (collection collect: aBlock)
+]
+
+{ #category : #'NewInspector Compatibility' }
+XMLOrderedList >> collect: aBlock displayingProgress: aString [
+	^ self newWithCollection:
+		(collection
+			collect: aBlock
+			displayingProgress: aString)
 ]
 
 { #category : #enumerating }
@@ -277,4 +290,12 @@ XMLOrderedList >> with: aCollection collect: aBlock [
 { #category : #enumerating }
 XMLOrderedList >> withIndexCollect: aTwoArgumentBlock [
 	^ self newWithCollection: (collection withIndexCollect: aTwoArgumentBlock)
+]
+
+{ #category : #'NewInspector Compatibility' }
+XMLOrderedList >> withIndexCollect: aTwoArgumentBlock displayingProgress: aString [
+	^ self newWithCollection:
+		(collection
+			withIndexCollect: aTwoArgumentBlock
+			displayingProgress: aString)
 ]
