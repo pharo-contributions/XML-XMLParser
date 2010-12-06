@@ -47,7 +47,9 @@ XMLNestedStreamReader class >> on: anInitialStream [
 
 { #category : #testing }
 XMLNestedStreamReader >> atEnd [
-	^ peekChar isNil and: [hasNestedStreams not and: [stream atEnd]]
+	^ peekChar isNil
+		and: [basicNextChar isNil
+			and: [hasNestedStreams not and: [stream atEnd]]]
 ]
 
 { #category : #accessing }
@@ -271,15 +273,6 @@ XMLNestedStreamReader >> streamEncoding: aCharacterEncodingName [
 			aCharacterEncodingName asLowercase.
 	converterClass
 		ifNotNil: [stream converter: converterClass new].
-]
-
-{ #category : #streaming }
-XMLNestedStreamReader >> unpeek [
-	"Fixed to use nested stream since multi-byte streams
-	do not properly override pushBack: to deal with multi-byte
-	characters."
-	
-	peekChar ifNotNil: [self pushBack: '']
 ]
 
 { #category : #streaming }
