@@ -1,5 +1,5 @@
 "
-This class represents string nodes, or nodes that contain no markup. XMLString objects can be created directly using the class-side #string: message or by sending a String object #asXMLString. When printing, they XML-escape their content.
+This class represents string nodes, or nodes that contain no markup. String nodes can be created directly using the class-side #string: message or by sending a String object #asXMLString. When printing, they escape special characters in their contents.
 "
 Class {
 	#name : #XMLString,

@@ -238,7 +238,7 @@ XMLNodeList >> hasElements [
 ]
 
 { #category : #testing }
-XMLNodeList >> includesElementNamed: aName [
+XMLNodeList >> includesElementAt: aName [
 	^ self elementsByName includesKey: aName
 ]
 

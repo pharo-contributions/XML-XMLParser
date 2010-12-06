@@ -22,7 +22,7 @@ XMLAttributeList >> addName: aName value: aValue [
 XMLAttributeList >> afterAdding: anObject [
 	anObject addObserver: self.
 	self attributesByName
-		at: anObject name ifPresent: [self removeAttributeNamed: anObject name];
+		at: anObject name ifPresent: [self removeAttributeNodeAt: anObject name];
 		at: anObject name put: anObject.
 
 	self notifyOf: #addedAttribute: with: anObject.
@@ -37,7 +37,7 @@ XMLAttributeList >> afterRemoving: anAttribute [
 
 { #category : #converting }
 XMLAttributeList >> asDictionary [
-	^ OrderPreservingDictionary newFrom: self asNameValueAssociations
+	^ (OrderPreservingDictionary newFrom: self asNameValueAssociations) defaultValue: ''
 ]
 
 { #category : #converting }
@@ -103,7 +103,7 @@ XMLAttributeList >> attributeValueAt: aName ifAbsentPut: aBlock [
 
 { #category : #accessing }
 XMLAttributeList >> attributeValueAt: aName put: aValue [
-	(self includesAttributeNamed: aName)
+	(self includesAttribute: aName)
 		ifTrue: [(self attributeNodeAt: aName) value: aValue]
 		ifFalse: [self addName: aName value: aValue].
 	^ aValue.
@@ -121,12 +121,12 @@ XMLAttributeList >> beforeAdding: anObject [
 ]
 
 { #category : #testing }
-XMLAttributeList >> includesAttributeNamed: aName [
+XMLAttributeList >> includesAttribute: aName [
 	^ self attributesByName includesKey: aName
 ]
 
 { #category : #accessing }
-XMLAttributeList >> removeAttributeNamed: aName [
+XMLAttributeList >> removeAttributeNodeAt: aName [
 	^ self remove: (self attributeNodeAt: aName).
 ]
 

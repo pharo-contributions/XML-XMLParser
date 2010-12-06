@@ -1,5 +1,5 @@
 "
-An XMLNamespaceScope is a set of mappings from namespace prefixes to URIs, and also a default URI. Scopes can be created from other scopes by sending #enclosingScope: to XMLNamespaceScope with the other XMLNamespaceScope as the argument.
+A namespace scope is a possibly empty set of mappings from namespace prefixes to URIs and an optional default namespace URI to be used for unprefixed elements. Scopes can be created from other scopes by sending #enclosingScope: to the class with the other scope as the argument; the new scope will inherit the mappings from the parent.
 "
 Class {
 	#name : #XMLNamespaceScope,
@@ -125,7 +125,7 @@ XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
 
 { #category : #accessing }
 XMLNamespaceScope >> prefixMappings [
-	^ prefixMappings ifNil: [prefixMappings := OrderPreservingDictionary new]
+	^ prefixMappings ifNil: [prefixMappings := OrderPreservingDictionary defaultValue: '']
 ]
 
 { #category : #accessing }

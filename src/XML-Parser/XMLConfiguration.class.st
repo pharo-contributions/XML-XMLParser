@@ -1,5 +1,5 @@
 "
-This class stores the shared settings and components of a parser.
+This class stores the shared settings and components for a parser.
 "
 Class {
 	#name : #XMLConfiguration,

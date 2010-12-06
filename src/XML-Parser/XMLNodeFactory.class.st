@@ -1,5 +1,5 @@
 "
-This class is the default node factory. Its accessor messages return the class objects used by the DOM parser to build a node tree. You can override these messages to return different class objects and inject an instance of your factory using #nodeFactory:.
+This class is the default node factory. Its accessor messages return the class objects used by the DOM parser to build a node tree. You can override these messages to return different class objects and inject an instance of your factory using the DOM parser's #nodeFactory: accessor before parsing.
 "
 Class {
 	#name : #XMLNodeFactory,

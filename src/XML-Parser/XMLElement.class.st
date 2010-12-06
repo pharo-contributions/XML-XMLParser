@@ -1,7 +1,11 @@
 "
-The class represents an XML element node. It can have a name, attributes, associated namespace declarations and any number child nodes and elements.
+The class represents an element node. An element consists of a name and optionally attributes, namespace declarations and any number child nodes and elements.
 
-The #attribute- messages provide a Dictionary-like prototcol for manipulating attribute nodes. The underlying XMLAttributeList can be accessed using #attributeNodes, and an order-preserving dictionary of attribute names/values can be obtained using #attributes. Namespaces can be declared using #declareNamespace:uri: or simultaniously with changing the element's name using #name:namespaceURI:. The default namespace can be accessed through #defaultNamespace and #defaultNamespace:.
+The name can consist of a local name only or a qualified name, which is a namespace prefix and local name separated by a colon. If the name is qualfied and namespace support is enabled (the default), then the prefix must be mapped to a namespace URI in the element or its parent at the time the name is set. The class-side instance creation #name:namespaceURI:* messages and #name:namespaces:* messages allow you set both simulaniously, as does the instance-side #name:namespaceURI: message. If namespace support is disabled, prefixes are ignored (not validated). You can test the name of an element using #isNamed: and #isNamedAny:, which test the qualified and local names of an element for a match.
+
+Namespaces can be declared using #declareNamespace:uri:, using #declareNamespaces: with a collection of associations (where an empty prefix represents the default namespace) or simultaniously while changing the element's name using #name:namespaceURI:. The default namespace can be accessed through #defaultNamespace and #defaultNamespace:. When you print an element, the minimum number of xmlns declarations necessary for it to be valid will be printed. You can query an element's namespace information using #namespaceURI, #prefix, #expandedName and other messages under ""namespaces."""" For an element to be namespaced, it must have a qualified name with a valid prefix or have a default namespace declaration in scope for it.
+
+The #attribute- messages provide a Dictionary-like prototcol for manipulating attribute nodes. Attribute value accessors return empty strings when the specified value is not present. The underlying attribute node list can be accessed using #attributeNodes, and an order-preserving dictionary of attribute names/values can be obtained using #attributes.
 
 See the comment for the superclass for how to access child nodes and elements.
 "
@@ -359,7 +363,7 @@ XMLElement >> hasStringNodes [
 
 { #category : #testing }
 XMLElement >> includesAttribute: aName [
-	^ self attributeNodes includesAttributeNamed: aName
+	^ self attributeNodes includesAttribute: aName.
 ]
 
 { #category : #private }
@@ -496,7 +500,7 @@ XMLElement >> qualifiedName [
 
 { #category : #accessing }
 XMLElement >> removeAttribute: aName [
-	^ (self attributeNodes removeAttributeNamed: aName) value
+	^ (self attributeNodes removeAttributeNodeAt: aName) value.
 ]
 
 { #category : #accessing }

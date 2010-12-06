@@ -99,11 +99,6 @@ XMLOrderedList >> asArray [
 	^ collection asArray
 ]
 
-{ #category : #'NewInspector Compatibility' }
-XMLOrderedList >> asNINode [
-	^ collection asNINode
-]
-
 { #category : #accessing }
 XMLOrderedList >> at: anIndex [
 	^ collection at: anIndex ifAbsent: [self defaultValue]

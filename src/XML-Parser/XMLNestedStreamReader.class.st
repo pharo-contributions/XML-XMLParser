@@ -10,8 +10,9 @@ Class {
 		'stream',
 		'nestedStreams',
 		'hasNestedStreams',
-		'buffer',
 		'peekChar',
+		'basicNextChar',
+		'writeBuffer',
 		'normalizedLineEndingChar',
 		'currentLineNumber'
 	],
@@ -56,6 +57,12 @@ XMLNestedStreamReader >> basicNext [
 
 	| nextChar |
 
+	basicNextChar
+		ifNotNil: [
+			nextChar := basicNextChar.
+			basicNextChar := nil.
+			^ nextChar].
+
 	stream atEnd
 		ifTrue: [
 			hasNestedStreams ifFalse: [^nil].
@@ -68,8 +75,8 @@ XMLNestedStreamReader >> basicNext [
 	(nextChar := stream next) == CarriageReturn
 		ifTrue: [
 			nextChar := normalizedLineEndingChar.
-			(stream peek == LineFeed)
-				ifTrue: [stream next]]
+			(stream atEnd not and: [(basicNextChar := stream next) == LineFeed])
+				ifTrue: [basicNextChar := nil]]
 		ifFalse: [
 			(nextChar == LineFeed)
 				ifTrue: [nextChar := normalizedLineEndingChar]].
@@ -88,7 +95,8 @@ XMLNestedStreamReader >> initialize [
 	nestedStreams := nil.
 	hasNestedStreams := false.
 	peekChar := nil.
-	buffer := WriteStream on: (String new: 128).
+	basicNextChar := nil.
+	writeBuffer := WriteStream on: (String new: 128).
 	currentLineNumber := 1.
 	normalizedLineEndingChar := LineFeed.
 ]
@@ -114,32 +122,25 @@ XMLNestedStreamReader >> next [
 XMLNestedStreamReader >> nextDecimalInteger [
 	| digitChar |
 
-	buffer reset.
+	writeBuffer reset.
 	[self atEnd not and: [(digitChar := self peek) isDigit]]
-		whileTrue: [buffer nextPut: self next].
-	^ Integer readFrom: buffer contents readStream.
+		whileTrue: [writeBuffer nextPut: self next].
+	^ Integer readFrom: writeBuffer contents readStream.
 ]
 
 { #category : #accessing }
 XMLNestedStreamReader >> nextHexInteger [
-	| maxBaseValue value digitChar |
+	| value digitChar digitValue |
 
-	maxBaseValue := SmallInteger maxVal / 16.
 	value := HexDigitCharacterMap at: self peek ifAbsent: [^ 0].
 	self next.
 	[self atEnd not
 		and: [HexDigitCharacterMap includesKey: (digitChar := self peek)]]
-		whileTrue: [| baseValue digitValue |
+		whileTrue: [
 			self next.
-
-			value <= maxBaseValue
-				ifFalse: [^ value].
-			baseValue := value * 16.
-
-			digitValue := HexDigitCharacterMap at: digitChar.
-			((SmallInteger maxVal - digitValue) > baseValue)
-				ifFalse: [^ value].
-			value := baseValue + digitValue].
+			value := (value * 16) + (HexDigitCharacterMap at: digitChar).
+			value < SmallInteger maxVal
+				ifFalse: [^ Smalltalk maxVal].].
 	^ value.
 ]
 
@@ -155,28 +156,25 @@ XMLNestedStreamReader >> nextIntegerWithBase: aBase [
 
 { #category : #testing }
 XMLNestedStreamReader >> nextMatchAll: aString [
-	| i oldStream oldPosition oldPeekChar nextChar pushBackString |
+	| i nextChar pushBackString |
 
-	(oldPeekChar := self peek) == (aString at: 1)
+	self peek == (aString at: 1)
 		ifFalse: [^ false].
-	oldPosition := (oldStream := stream) position.
-	i := 1.
+
+	"we unrolled the first iteration with the above #peek"
+	i := 2.
+	self next.
 	[(i <= aString size)
 		and: [(aString at: i) == (nextChar := self next)]]
 		whileTrue: [i := i + 1].
 	(i > aString size)
 		ifTrue: [^ true].
 
-	stream == oldStream
-		ifTrue: [
-			peekChar := oldPeekChar.
-			stream position: oldPosition]
-		ifFalse:[
-			pushBackString := aString copyFrom: 1 to: i - 1.
-			self pushBack:
-				(nextChar
-					ifNotNil: [pushBackString copyWith: nextChar]
-					ifNil: [pushBackString])].
+	pushBackString := aString copyFrom: 1 to: i - 1.
+	self pushBack:
+		(nextChar
+			ifNotNil: [pushBackString copyWith: nextChar]
+			ifNil: [pushBackString]).
 	^ false.
 ]
 
@@ -184,11 +182,11 @@ XMLNestedStreamReader >> nextMatchAll: aString [
 XMLNestedStreamReader >> nextWhitespace [
 	| nextChar |
 
-	buffer reset.
+	writeBuffer reset.
 	[(nextChar := self peek) notNil
 		and: [SeparatorCharacters includes: nextChar]]
-		whileTrue: [buffer nextPut: self next].
-	^ buffer stringContents.
+		whileTrue: [writeBuffer nextPut: self next].
+	^ writeBuffer stringContents.
 ]
 
 { #category : #accessing }
@@ -210,18 +208,22 @@ XMLNestedStreamReader >> pushBack: aString [
 	"Fixed to push the string before the peek char (if any)."
 	| pushBackString |
 
-	pushBackString :=
-		peekChar
-			ifNil: [aString]
-			ifNotNil: [aString copyWith: peekChar].
+	pushBackString := aString.
+	peekChar
+		ifNotNil: [pushBackString := pushBackString copyWith: peekChar].
+	basicNextChar
+		ifNotNil: [pushBackString := pushBackString copyWith: basicNextChar].
 	peekChar := nil.
-	self pushStream: (ReadStream on: pushBackString)
+	basicNextChar := nil.
+
+	self pushStream: (ReadStream on: pushBackString).
 ]
 
 { #category : #streaming }
 XMLNestedStreamReader >> pushStream: aStream [
 	"Continue parsing from the new nested stream."
-	self unpeek.
+	(peekChar isNil and: [basicNextChar isNil])
+		ifFalse: [self pushBack: ''].
 
 	nestedStreams
 		ifNil: [nestedStreams := OrderedCollection with: stream]
@@ -284,11 +286,11 @@ XMLNestedStreamReader >> unpeek [
 XMLNestedStreamReader >> upTo: aDelimiter [
 	| nextChar |
 
-	buffer reset.
+	writeBuffer reset.
 	[self atEnd or: [(nextChar := self next) == aDelimiter]]
-		whileFalse: [buffer nextPut: nextChar].
+		whileFalse: [writeBuffer nextPut: nextChar].
 
-	^ buffer stringContents.
+	^ writeBuffer stringContents.
 ]
 
 { #category : #streaming }
@@ -297,8 +299,8 @@ XMLNestedStreamReader >> upToAll: aDelimitingString [
 	(if any, but not inclusive) of delimitingString. If delimitingString is not
 	in the stream, answer the entire rest of the stream."
 
-	buffer reset.
+	writeBuffer reset.
 	[self atEnd or: [self nextMatchAll: aDelimitingString]]
-		whileFalse: [buffer nextPut: self next].
-	^ buffer stringContents.
+		whileFalse: [writeBuffer nextPut: self next].
+	^ writeBuffer stringContents.
 ]

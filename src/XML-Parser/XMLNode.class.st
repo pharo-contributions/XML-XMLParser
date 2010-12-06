@@ -1,5 +1,5 @@
 "
-This is a base class for XML nodes. It contains testing messages and methods to set and access the parent node.
+This is a base class for XML nodes. It contains testing messages and methods to set and access the parent node and sibling nodes. It also provides a number messages to control printing.
 "
 Class {
 	#name : #XMLNode,
