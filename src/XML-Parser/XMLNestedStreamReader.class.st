@@ -11,7 +11,6 @@ Class {
 		'nestedStreams',
 		'hasNestedStreams',
 		'peekChar',
-		'basicNextChar',
 		'writeBuffer',
 		'normalizedLineEndingChar',
 		'currentLineNumber'
@@ -47,9 +46,7 @@ XMLNestedStreamReader class >> on: anInitialStream [
 
 { #category : #testing }
 XMLNestedStreamReader >> atEnd [
-	^ peekChar isNil
-		and: [basicNextChar isNil
-			and: [hasNestedStreams not and: [stream atEnd]]]
+	^ peekChar isNil and: [hasNestedStreams not and: [stream atEnd]]
 ]
 
 { #category : #accessing }
@@ -59,26 +56,19 @@ XMLNestedStreamReader >> basicNext [
 
 	| nextChar |
 
-	basicNextChar
-		ifNotNil: [
-			nextChar := basicNextChar.
-			basicNextChar := nil.
-			^ nextChar].
-
-	stream atEnd
-		ifTrue: [
+	(nextChar := stream next)
+		ifNil: [
 			hasNestedStreams ifFalse: [^nil].
 			self popCurrentStream.
 			[hasNestedStreams and: [stream atEnd]]
 				whileTrue: [self popCurrentStream].
-			stream atEnd
-				ifTrue: [^ nil]].
+			nextChar := stream next].
 
-	(nextChar := stream next) == CarriageReturn
+	nextChar == CarriageReturn
 		ifTrue: [
 			nextChar := normalizedLineEndingChar.
-			(stream atEnd not and: [(basicNextChar := stream next) == LineFeed])
-				ifTrue: [basicNextChar := nil]]
+			(stream peek == LineFeed)
+				ifTrue: [stream next]]
 		ifFalse: [
 			(nextChar == LineFeed)
 				ifTrue: [nextChar := normalizedLineEndingChar]].
@@ -97,7 +87,6 @@ XMLNestedStreamReader >> initialize [
 	nestedStreams := nil.
 	hasNestedStreams := false.
 	peekChar := nil.
-	basicNextChar := nil.
 	writeBuffer := WriteStream on: (String new: 128).
 	currentLineNumber := 1.
 	normalizedLineEndingChar := LineFeed.
@@ -115,8 +104,10 @@ XMLNestedStreamReader >> next [
 		ifNotNil: [
 			nextChar := peekChar.
 			peekChar := nil].
+
 	nextChar == normalizedLineEndingChar
 		ifTrue: [currentLineNumber := currentLineNumber + 1].
+
 	^ nextChar.
 ]
 
@@ -212,11 +203,9 @@ XMLNestedStreamReader >> pushBack: aString [
 
 	pushBackString := aString.
 	peekChar
-		ifNotNil: [pushBackString := pushBackString copyWith: peekChar].
-	basicNextChar
-		ifNotNil: [pushBackString := pushBackString copyWith: basicNextChar].
-	peekChar := nil.
-	basicNextChar := nil.
+		ifNotNil: [
+			pushBackString := pushBackString copyWith: peekChar.
+			peekChar := nil].
 
 	self pushStream: (ReadStream on: pushBackString).
 ]
@@ -224,8 +213,7 @@ XMLNestedStreamReader >> pushBack: aString [
 { #category : #streaming }
 XMLNestedStreamReader >> pushStream: aStream [
 	"Continue parsing from the new nested stream."
-	(peekChar isNil and: [basicNextChar isNil])
-		ifFalse: [self pushBack: ''].
+	peekChar ifNotNil: [self pushBack: ''].
 
 	nestedStreams
 		ifNil: [nestedStreams := OrderedCollection with: stream]
@@ -259,20 +247,7 @@ XMLNestedStreamReader >> stream [
 
 { #category : #accessing }
 XMLNestedStreamReader >> stream: aNewStream [
-	stream := aNewStream
-]
-
-{ #category : #streaming }
-XMLNestedStreamReader >> streamEncoding: aCharacterEncodingName [
-	| converterClass textConverterBase |
-
-	(stream respondsTo: #converter) ifFalse: [^ self].
-	textConverterBase := Smalltalk at: #TextConverter ifAbsent: [^ self].
-	converterClass :=
-		textConverterBase defaultConverterClassForEncoding:
-			aCharacterEncodingName asLowercase.
-	converterClass
-		ifNotNil: [stream converter: converterClass new].
+	stream := XMLPeekableStreamAdapter on: aNewStream
 ]
 
 { #category : #streaming }
@@ -296,4 +271,18 @@ XMLNestedStreamReader >> upToAll: aDelimitingString [
 	[self atEnd or: [self nextMatchAll: aDelimitingString]]
 		whileFalse: [writeBuffer nextPut: self next].
 	^ writeBuffer stringContents.
+]
+
+{ #category : #streaming }
+XMLNestedStreamReader >> useConverterForEncoding: anEncodingName [
+	| converterClass |
+
+	converterClass :=
+		(Smalltalk
+			at: #TextConverter
+			ifAbsent: [^ self])
+				defaultConverterClassForEncoding: anEncodingName asLowercase.
+		
+	converterClass
+		ifNotNil: [stream converter: converterClass new].
 ]

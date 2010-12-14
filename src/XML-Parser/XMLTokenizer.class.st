@@ -638,7 +638,7 @@ XMLTokenizer >> nextXMLDecl [
 	streamReader next.
 	self expectNext: $>.
 	(attributes includesKey: 'encoding')
-		ifTrue: [streamReader streamEncoding: (attributes at: 'encoding')].
+		ifTrue: [streamReader useConverterForEncoding: (attributes at: 'encoding')].
 	driver
 		handleXMLVersion: (attributes at: 'version' ifAbsent: [''])
 		encoding: (attributes at: 'encoding' ifAbsent: [''])
