@@ -13,9 +13,10 @@ Class {
 		'parameterEntities'
 	],
 	#classVars : [
+		'AdditionalNameChars',
 		'CharEscapes',
 		'LiteralChars',
-		'NameDelimiters'
+		'NameStartChars'
 	],
 	#category : #'XML-Parser'
 }
@@ -32,20 +33,50 @@ XMLTokenizer class >> driver: aDriver on: aStringOrStream [
 
 { #category : #'class initialization' }
 XMLTokenizer class >> initialize [
-	"XMLTokenizer initialize"
+	"self initialize"
 
 	CharEscapes := CharacterSet newFrom: #( $& $" $' $> $< ).
+	(LiteralChars := CharacterSet new)
+		addAll: #( $: $- $: $= $.);
+		addAll: ($a to: $z);
+		addAll: ($A to: $Z);
+		addAll: ($0 to: $9).
 
-	LiteralChars := CharacterSet newFrom: #( $: $- $: $= $.).
-	0 to: 255 do: [:i | 
-		| char |
-		char := i asCharacter.
-		(char isDigit or: [char isLetter])
-		ifTrue: [LiteralChars add: char]].
+	self
+		initializeNameStartChars;
+		initializeAdditionalNameChars.
+]
 
-	NameDelimiters := CharacterSet new.
-	#(9 10 12 13 32 61 "$= asInteger 61" 62 "$> asInteger" 47 "$/ asInteger")
-		do: [:each | NameDelimiters add: each asCharacter].
+{ #category : #'class initialization' }
+XMLTokenizer class >> initializeAdditionalNameChars [
+	(AdditionalNameChars := BitmapCharacterSet new: 16r2041)
+		add: $-;
+		add: $.;
+		addAll: ($0 to: $9);
+		add: (Character value: 16rB7).
+	16r0300 to: 16r036F do: [:each | AdditionalNameChars add: (Character value: each)].
+	16r203F to: 16r2040 do: [:each | AdditionalNameChars add: (Character value: each)].
+]
+
+{ #category : #'class initialization' }
+XMLTokenizer class >> initializeNameStartChars [
+	(NameStartChars := BitmapCharacterSet new: 16rF0000)
+		add: $:;
+		addAll: ($A to: $Z);
+		add: $_;
+		addAll: ($a to: $z).
+	16rC0 to: 16rD6 do: [:each | NameStartChars add: (Character value: each)].
+	16rD8 to: 16rF6 do: [:each | NameStartChars add: (Character value: each)].
+	16rF8 to: 16r2FF do: [:each | NameStartChars add: (Character value: each)].
+	16r370 to: 16r37D do: [:each | NameStartChars add: (Character value: each)].
+	16r37F to: 16r1FFF do: [:each | NameStartChars add: (Character value: each)].
+	16r200C to: 16r200D do: [:each | NameStartChars add: (Character value: each)].
+	16r2070 to: 16r218F do: [:each | NameStartChars add: (Character value: each)].
+	16r2C00 to: 16r2FEF do: [:each | NameStartChars add: (Character value: each)].
+	16r3001 to: 16rD7FF do: [:each | NameStartChars add: (Character value: each)].
+	16rF900 to: 16rFDCF do: [:each | NameStartChars add: (Character value: each)].
+	16rFDF0 to: 16rFFFD do: [:each | NameStartChars add: (Character value: each)].
+	16r10000 to: 16rEFFFF do: [:each | NameStartChars add: (Character value: each)].
 ]
 
 { #category : #accessing }
@@ -503,11 +534,14 @@ XMLTokenizer >> nextName [
 	| nextChar |
 
 	^ streamWriter writeWith: [:writeStream |
-		[(nextChar := streamReader peek) isNil
-			or: [NameDelimiters includes: nextChar]]
-				whileFalse: [writeStream nextPut: streamReader next].
-		writeStream position > 0
+		(NameStartChars includes: (nextChar := streamReader next))
 			ifFalse: [self errorExpected: 'name'].
+		writeStream nextPut: nextChar.
+
+		[streamReader atEnd not
+			and: [(NameStartChars includes: (nextChar := streamReader peek))
+				or: [AdditionalNameChars includes: nextChar]]]
+			whileTrue: [writeStream nextPut: streamReader next].
 		writeStream stringContents]
 ]
 
