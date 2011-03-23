@@ -1,5 +1,5 @@
 "
-A SAXHandler is an XML parser that uses event handling. The acronym ""SAX"" refers to Java's ""Simple API for XML,"" on which SAXHandler's API is based. To use this class, create a subclass and override handlers in ""content"" and ""lexical"" as needed. To instantiate it you can send #on: or any of the #parse- messages. The former creates a new parser on the given input string or stream and returns it; the instance can then be further configured and sent #parseDocument to parse the input. The class-side #parse- messages take some input source and parse it immediately, returning the result of #parseDocument.
+This class is an XML parser that uses event handling. The acronym ""SAX"" refers to Java's ""Simple API for XML,"" on which SAXHandler's API is based. To use this class, create a subclass and override handlers under the ""content"" and ""lexical"" categories as needed. To instantiate it, send #on: or any of the #parse- messages to the class. The #on: message creates a new parser on the given input string or stream and returns it; the instance can then be further configured and ultimately sent #parseDocument to parse the given input. The class-side #parse- messages take some input source and parse it immediately, returning the result of #parseDocument.
 
 By default, namespace support is enabled.
 "
@@ -64,6 +64,40 @@ SAXHandler class >> parserOnFileNamed: aFileName [
 	self deprecated: 'use #onFileNamed: instead'.
 
 	^ self onFileNamed: aFileName.
+]
+
+{ #category : #'subclass creation' }
+SAXHandler class >> parserSubclassNamed: aName category: aCategory [
+	^ self
+		parserSubclassNamed: aName
+		implementing: (self methodsInCategory: #content), (self methodsInCategory: #lexical)
+		category: aCategory
+]
+
+{ #category : #'subclass creation' }
+SAXHandler class >> parserSubclassNamed: aName implementing: aSelectorArray category: aCategory [
+	| newSubclass |
+
+	aSelectorArray do: [:each |
+		(self canUnderstand: each asSymbol)
+			ifFalse: [self error: 'Cannot create parser subclass implementing ', each asString, '; unrecognized handler']].
+
+	newSubclass :=
+		self
+			subclass: aName asSymbol
+			instanceVariableNames: ''
+			classVariableNames: ''
+			poolDictionaries: ''
+			category: aCategory asString.
+
+	aSelectorArray do: [:each |
+		newSubclass
+			compile:
+				(((self ultimateSourceCodeAt: each asSymbol ifAbsent: []) asString
+					copyUpTo: Character cr) copyUpTo: Character lf)
+			classified: (self whichCategoryIncludesSelector: each asSymbol)].
+	
+	^ newSubclass.
 ]
 
 { #category : #content }
@@ -159,7 +193,7 @@ SAXHandler >> endEntity: anEntityName [
 ]
 
 { #category : #content }
-SAXHandler >> endPrefixMapping: prefix [
+SAXHandler >> endPrefixMapping: aPrefix [
 	"This call corresonds to the Java SAX call
 	endPrefixMapping(java.lang.String prefix)."
 ]
@@ -230,7 +264,7 @@ SAXHandler >> parser [
 ]
 
 { #category : #content }
-SAXHandler >> processingInstruction: piName data: dataString [
+SAXHandler >> processingInstruction: aTarget data: aDataString [
 	"This call corresonds to the Java SAX call
 	processingInstruction(java.lang.String target, java.lang.String data)."
 ]

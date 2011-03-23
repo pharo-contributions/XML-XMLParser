@@ -31,7 +31,7 @@ XMLNotationDeclaration >> systemID [
 ]
 
 { #category : #printing }
-XMLNotationDeclaration >> writeXMLWith: aWriter [
+XMLNotationDeclaration >> writeXMLOn: aWriter [
 	aWriter notationDeclaration
 		name: self name;
 		publicID: self publicID;

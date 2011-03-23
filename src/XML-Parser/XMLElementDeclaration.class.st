@@ -24,7 +24,7 @@ XMLElementDeclaration >> setName: aName contentModel: aContentModelString [
 ]
 
 { #category : #printing }
-XMLElementDeclaration >> writeXMLWith: aWriter [
+XMLElementDeclaration >> writeXMLOn: aWriter [
 	aWriter elementDeclaration
 		name: self name;
 		contentModel: self contentModel

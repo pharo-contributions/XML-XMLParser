@@ -94,7 +94,7 @@ XMLNodeWithChildren >> allNodesSelect: aBlock [
 
 { #category : #accessing }
 XMLNodeWithChildren >> firstNode [
-	^ self nodes first
+	^ self nodes ifNotEmpty: [ self nodes first ] ifEmpty: [ nil ]
 ]
 
 { #category : #testing }
@@ -132,7 +132,7 @@ XMLNodeWithChildren >> innerXMLParserOn: aStringOrStream [
 
 { #category : #accessing }
 XMLNodeWithChildren >> lastNode [
-	^ self nodes last
+	^ self nodes ifNotEmpty: [ self nodes last ] ifEmpty: [ nil ]
 ]
 
 { #category : #accessing }
@@ -221,10 +221,10 @@ XMLNodeWithChildren >> topNode [
 
 { #category : #printing }
 XMLNodeWithChildren >> writeInnerXMLWith: aWriter [
-	self nodesDo: [:each | each writeXMLWith: aWriter]
+	self nodesDo: [:each | each writeXMLOn: aWriter]
 ]
 
 { #category : #printing }
-XMLNodeWithChildren >> writeXMLWith: aWriter [
+XMLNodeWithChildren >> writeXMLOn: aWriter [
 	self writeInnerXMLWith: aWriter
 ]

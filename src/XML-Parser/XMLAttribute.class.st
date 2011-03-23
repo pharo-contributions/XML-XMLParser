@@ -71,10 +71,11 @@ XMLAttribute >> namespaceURI [
 
 { #category : #private }
 XMLAttribute >> nodeName [
-	^ name ifNil: [
-		(name := XMLNodeName new)
-			addObserver: self;
-			yourself]
+	^ name
+		ifNil: [ 
+			(name := XMLNodeName new)
+				addObserver: self;
+				yourself ]
 ]
 
 { #category : #notifications }
@@ -107,6 +108,6 @@ XMLAttribute >> value: aString [
 ]
 
 { #category : #printing }
-XMLAttribute >> writeXMLWith: aWriter [
+XMLAttribute >> writeXMLOn: aWriter [
 	aWriter writeName: self name value: self value
 ]

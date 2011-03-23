@@ -31,6 +31,6 @@ XMLComment >> string: aString [
 ]
 
 { #category : #printing }
-XMLComment >> writeXMLWith: aWriter [
+XMLComment >> writeXMLOn: aWriter [
 	aWriter comment: self string
 ]

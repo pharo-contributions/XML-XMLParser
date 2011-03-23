@@ -67,6 +67,6 @@ XMLString >> toString: aStringOrStringNode [
 ]
 
 { #category : #printing }
-XMLString >> writeXMLWith: aWriter [
+XMLString >> writeXMLOn: aWriter [
 	aWriter string: self string
 ]

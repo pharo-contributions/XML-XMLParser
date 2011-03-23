@@ -49,6 +49,10 @@ XMLTokenizer class >> initialize [
 
 { #category : #'class initialization' }
 XMLTokenizer class >> initializeAdditionalNameChars [
+	"This creates a character set that contains all those defined in the XML spec for the
+	NameChar production rule minus those also defined for NameStartChar
+	(NameChar - NameStartChar)"
+
 	(AdditionalNameChars := BitmapCharacterSet new: 16r2041)
 		add: $-;
 		add: $.;
@@ -60,6 +64,9 @@ XMLTokenizer class >> initializeAdditionalNameChars [
 
 { #category : #'class initialization' }
 XMLTokenizer class >> initializeNameStartChars [
+	"This creates a character set that coveres the entire range of characters speicified for
+	the NameStartChar production rule in the XML spec."
+
 	(NameStartChars := BitmapCharacterSet new: 16rF0000)
 		add: $:;
 		addAll: ($A to: $Z);
@@ -277,7 +284,7 @@ XMLTokenizer >> nextAttributeValue [
 	^ streamWriter writeWith: [:writeStream |
 		self nextPCDataDelimitedBy: delimiterChar putOn: writeStream.
 		self expectNext: delimiterChar.
-		writeStream stringContents]
+		writeStream contents]
 ]
 
 { #category : #tokenizing }
@@ -432,7 +439,7 @@ XMLTokenizer >> nextEntityValue [
 	nextPeek == delimiterChar]
 		whileFalse: [
 			nextChar ifNotNil: [entityValueStream nextPut: nextChar]].
-	^ entityValueStream stringContents.
+	^ entityValueStream contents.
 ]
 
 { #category : #'tokenizing dtd' }
@@ -461,7 +468,7 @@ XMLTokenizer >> nextExternalId [
 		ifFalse: [^''].
 	dir := streamReader stream directory.
 	^(dir fileExists: systemId)
-		ifTrue: [(dir readOnlyFileNamed: systemId) stringContents]
+		ifTrue: [(dir readOnlyFileNamed: systemId) contents]
 		ifFalse: ['']
 ]
 
@@ -491,12 +498,12 @@ XMLTokenizer >> nextLiteral [
 						nextChar := streamReader next.
 						writeStream nextPut: (streamReader peek == $#
 							ifTrue: [self nextCharReference]
-							ifFalse: [^ writeStream stringContents])]
+							ifFalse: [^ writeStream contents])]
 					ifFalse: [writeStream nextPut: streamReader next].
 				nextChar := streamReader peek].
 		writeStream position > 0
 			ifFalse: [self errorExpected: 'name literal'].
-		writeStream stringContents]
+		writeStream contents]
 ]
 
 { #category : #'tokenizing dtd' }
@@ -542,7 +549,7 @@ XMLTokenizer >> nextName [
 			and: [(NameStartChars includes: (nextChar := streamReader peek))
 				or: [AdditionalNameChars includes: nextChar]]]
 			whileTrue: [writeStream nextPut: streamReader next].
-		writeStream stringContents]
+		writeStream contents]
 ]
 
 { #category : #tokenizing }
@@ -555,7 +562,7 @@ XMLTokenizer >> nextPCData [
 				[streamReader peek == $<]
 					whileFalse: [writeStream nextPut: streamReader next]].
 
-		driver handlePCData: writeStream stringContents]
+		driver handlePCData: writeStream contents]
 ]
 
 { #category : #tokenizing }

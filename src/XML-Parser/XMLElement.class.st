@@ -449,10 +449,11 @@ XMLElement >> nextElement [
 
 { #category : #private }
 XMLElement >> nodeName [
-	^ name ifNil: [
-		(name := XMLNodeName new)
-			addObserver: self;
-			yourself]
+	^ name
+		ifNil: [ 
+			(name := XMLNodeName new)
+				addObserver: self;
+				yourself ]
 ]
 
 { #category : #notifications }
@@ -627,7 +628,7 @@ XMLElement >> validateName [
 ]
 
 { #category : #printing }
-XMLElement >> writeXMLWith: aWriter [
+XMLElement >> writeXMLOn: aWriter [
 	| tagWriter |
 
 	(tagWriter := aWriter tag)

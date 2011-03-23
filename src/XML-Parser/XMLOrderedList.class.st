@@ -136,14 +136,6 @@ XMLOrderedList >> collect: aBlock [
 	^ self newWithCollection: (collection collect: aBlock)
 ]
 
-{ #category : #'NewInspector Compatibility' }
-XMLOrderedList >> collect: aBlock displayingProgress: aString [
-	^ self newWithCollection:
-		(collection
-			collect: aBlock
-			displayingProgress: aString)
-]
-
 { #category : #enumerating }
 XMLOrderedList >> collect: aBlock from: aStartIndex to: anEndIndex [
 	^ self newWithCollection:
@@ -277,6 +269,11 @@ XMLOrderedList >> species [
 	^ XMLOrderedList
 ]
 
+{ #category : #private }
+XMLOrderedList >> speciesForCollect [
+	^ self species
+]
+
 { #category : #enumerating }
 XMLOrderedList >> with: aCollection collect: aBlock [
 	^ self newWithCollection: (collection with: aCollection collect: aBlock)
@@ -285,12 +282,4 @@ XMLOrderedList >> with: aCollection collect: aBlock [
 { #category : #enumerating }
 XMLOrderedList >> withIndexCollect: aTwoArgumentBlock [
 	^ self newWithCollection: (collection withIndexCollect: aTwoArgumentBlock)
-]
-
-{ #category : #'NewInspector Compatibility' }
-XMLOrderedList >> withIndexCollect: aTwoArgumentBlock displayingProgress: aString [
-	^ self newWithCollection:
-		(collection
-			withIndexCollect: aTwoArgumentBlock
-			displayingProgress: aString)
 ]

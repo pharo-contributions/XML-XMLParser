@@ -4,8 +4,6 @@ This is a base class for XML nodes. It contains testing messages and methods to 
 Class {
 	#name : #XMLNode,
 	#superclass : #Object,
-	#traits : 'TXMLObservable',
-	#classTraits : 'TXMLObservable classTrait',
 	#instVars : [
 		'parent',
 		'notifier'
@@ -13,9 +11,37 @@ Class {
 	#category : #'XML-Parser-Nodes'
 }
 
+{ #category : #utility }
+XMLNode class >> notifications [
+	| notifications parser parsedMethods |
+	notifications := WriteStream on: (Array new: 10).
+	parser := Parser new.
+	parsedMethods := IdentityDictionary new.
+	(self allMethodsInCategory: #notification)
+		do: [ :notifierSelector | 
+			| methodNode |
+			(SystemNavigation default allSendersOf: notifierSelector inClass: self)
+				do: [ :methodReference | 
+					methodNode := parsedMethods
+						at: methodReference selector
+						ifAbsentPut: (parser parse: methodReference sourceCode class: self).
+					methodNode
+						nodesDo: [ :node | 
+							| firstArgument |
+							(node isMessage
+								and: [ node selector key asSymbol = notifierSelector and: [ (firstArgument := node arguments first) isLiteral ] ])
+								ifTrue: [ notifications nextPut: firstArgument key asSymbol ] ] ] ].
+	^ notifications contents
+]
+
 { #category : #accessing }
 XMLNode >> addContent: aStringOrStringNode [
 	XMLDOMException signal: 'Node cannot contain content'
+]
+
+{ #category : #observing }
+XMLNode >> addObserver: anObserver [
+	self notifier addObserver: anObserver
 ]
 
 { #category : #enumerating }
@@ -27,7 +53,7 @@ XMLNode >> allNodesDo: aBlock [
 XMLNode >> canonicallyPrintOn: aStream [
 	(XMLWriter on: aStream)
 		isCanonical: true;
-		writeWith: [:writer | self writeXMLWith: writer]
+		writeWith: [:writer | self writeXMLOn: writer]
 ]
 
 { #category : #printing }
@@ -145,6 +171,30 @@ XMLNode >> notifier [
 	^ notifier ifNil: [notifier := XMLNotifier new]
 ]
 
+{ #category : #notification }
+XMLNode >> notifyOf: aSelector with: anArgument [
+	self notifier notifyOf: aSelector with: anArgument
+]
+
+{ #category : #notification }
+XMLNode >> notifyOf: aSelector with: aFirstArgument with: aSecondArgument [
+	self notifier notifyOf: aSelector with: aFirstArgument with: aSecondArgument
+]
+
+{ #category : #notification }
+XMLNode >> notifyOf: aSelector with: aFirstArgument with: aSecondArgument with: aThirdArgument [
+	self notifier
+		notifyOf: aSelector
+		with: aFirstArgument
+		with: aSecondArgument
+		with: aThirdArgument
+]
+
+{ #category : #notification }
+XMLNode >> notifyOf: aSelector withArguments: anArray [
+	self notifier notifyOf: aSelector withArguments: anArray
+]
+
 { #category : #accessing }
 XMLNode >> parent [
 	^ parent
@@ -159,7 +209,7 @@ XMLNode >> parent: aParentNode [
 XMLNode >> prettyPrintOn: aStream [
 	(XMLWriter on: aStream)
 		enablePrettyPrinting;
-		writeWith: [:writer | self writeXMLWith: writer]
+		writeWith: [:writer | self writeXMLOn: writer]
 ]
 
 { #category : #printing }
@@ -185,17 +235,22 @@ XMLNode >> printContentOn: aStream [
 
 { #category : #printing }
 XMLNode >> printOn: aStream [
-	(XMLWriter on: aStream) writeWith: [:writer | self writeXMLWith: writer].
+	(XMLWriter on: aStream) writeWith: [:writer | self writeXMLOn: writer].
 ]
 
 { #category : #printing }
 XMLNode >> printXMLOn: aWriter [
 	self deprecated: 'use #writeXMLWith: instead'.
 
-	self writeXMLWith: aWriter.
+	self writeXMLOn: aWriter.
+]
+
+{ #category : #observing }
+XMLNode >> removeObserver: anObserver [
+	self notifier removeObserver: anObserver
 ]
 
 { #category : #printing }
-XMLNode >> writeXMLWith: aWriter [
+XMLNode >> writeXMLOn: aWriter [
 	self subclassResponsibility
 ]

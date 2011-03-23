@@ -179,7 +179,7 @@ XMLNestedStreamReader >> nextWhitespace [
 	[(nextChar := self peek) notNil
 		and: [SeparatorCharacters includes: nextChar]]
 		whileTrue: [writeBuffer nextPut: self next].
-	^ writeBuffer stringContents.
+	^ writeBuffer contents.
 ]
 
 { #category : #accessing }
@@ -258,7 +258,7 @@ XMLNestedStreamReader >> upTo: aDelimiter [
 	[self atEnd or: [(nextChar := self next) == aDelimiter]]
 		whileFalse: [writeBuffer nextPut: nextChar].
 
-	^ writeBuffer stringContents.
+	^ writeBuffer contents.
 ]
 
 { #category : #streaming }
@@ -270,7 +270,7 @@ XMLNestedStreamReader >> upToAll: aDelimitingString [
 	writeBuffer reset.
 	[self atEnd or: [self nextMatchAll: aDelimitingString]]
 		whileFalse: [writeBuffer nextPut: self next].
-	^ writeBuffer stringContents.
+	^ writeBuffer contents.
 ]
 
 { #category : #streaming }

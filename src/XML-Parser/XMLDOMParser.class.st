@@ -133,8 +133,8 @@ XMLDOMParser >> preservesCommentNodes: aBoolean [
 ]
 
 { #category : #content }
-XMLDOMParser >> processingInstruction: piName data: dataString [
-	self topNode addNode: (self nodeFactory piClass target: piName data: dataString)
+XMLDOMParser >> processingInstruction: aTarget data: aDataString [
+	self topNode addNode: (self nodeFactory piClass target: aTarget data: aDataString)
 ]
 
 { #category : #private }

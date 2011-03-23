@@ -70,7 +70,7 @@ XMLEntityDeclaration >> systemID [
 ]
 
 { #category : #printing }
-XMLEntityDeclaration >> writeXMLWith: aWriter [
+XMLEntityDeclaration >> writeXMLOn: aWriter [
 	aWriter entityDeclaration
 		name: self name;
 		replacement: self replacement;

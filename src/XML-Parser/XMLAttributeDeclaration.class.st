@@ -47,7 +47,7 @@ XMLAttributeDeclaration >> type [
 ]
 
 { #category : #printing }
-XMLAttributeDeclaration >> writeXMLWith: aWriter [
+XMLAttributeDeclaration >> writeXMLOn: aWriter [
 	aWriter attributeDeclaration
 		elementName: self elementName;
 		attributeName: self attributeName;

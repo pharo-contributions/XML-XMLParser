@@ -45,7 +45,7 @@ XMLPI >> target: aString [
 ]
 
 { #category : #printing }
-XMLPI >> writeXMLWith: aWriter [
+XMLPI >> writeXMLOn: aWriter [
 	aWriter pi
 		target: self target;
 		data: self data

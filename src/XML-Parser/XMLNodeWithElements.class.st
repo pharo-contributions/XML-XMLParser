@@ -253,7 +253,7 @@ XMLNodeWithElements >> findElementNamed: aName with: aBlock [
 
 { #category : #accessing }
 XMLNodeWithElements >> firstElement [
-	^ self elements first
+	^ self elements ifNotEmpty: [:elements | elements first] ifEmpty: [nil]
 ]
 
 { #category : #searching }
@@ -300,7 +300,7 @@ XMLNodeWithElements >> isContentNode [
 
 { #category : #accessing }
 XMLNodeWithElements >> lastElement [
-	^ self elements last
+	^ self elements ifNotEmpty: [:elements | elements last] ifEmpty: [nil]
 ]
 
 { #category : #private }

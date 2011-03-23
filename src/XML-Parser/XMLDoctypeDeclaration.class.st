@@ -48,7 +48,7 @@ XMLDoctypeDeclaration >> systemID [
 ]
 
 { #category : #printing }
-XMLDoctypeDeclaration >> writeXMLWith: aWriter [
+XMLDoctypeDeclaration >> writeXMLOn: aWriter [
 	aWriter doctype
 		root: self root;
 		publicID: self publicID;
