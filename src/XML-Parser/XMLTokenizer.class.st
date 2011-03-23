@@ -322,16 +322,11 @@ XMLTokenizer >> nextCDataOrConditional [
 { #category : #tokenizing }
 XMLTokenizer >> nextCharReference [
 	| base charValue |
+
 	streamReader next == $#
 		ifFalse: [self errorExpected: 'character reference'].
-	streamReader peek == $x
-		ifTrue: [
-			streamReader next.
-			base := 16]
-		ifFalse: [base := 10].
-
-	(charValue := streamReader nextIntegerWithBase: base)
-		ifNil: [self errorExpected: 'number'].
+	(charValue := streamReader nextInteger) > 0
+		ifFalse: [self errorExpected: 'integral character value'].
 	self expectNext: $;.
 	^ Unicode value: charValue.
 ]

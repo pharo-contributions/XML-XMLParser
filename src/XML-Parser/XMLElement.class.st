@@ -639,5 +639,5 @@ XMLElement >> writeXMLOn: aWriter [
 
 	tagWriter
 		attributes: self attributes;
-		with: [self writeInnerXMLWith: aWriter].
+		with: [self writeInnerXMLOn: aWriter].
 ]

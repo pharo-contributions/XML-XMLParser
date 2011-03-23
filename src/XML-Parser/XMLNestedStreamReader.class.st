@@ -33,10 +33,13 @@ XMLNestedStreamReader class >> initialize [
 	CarriageReturn := Character cr.
 	LineFeed := Character lf.
 
-	HexDigitCharacterMap :=
-		Dictionary newFrom:
-			(($0 to: $9), ($a to: $f), ($A to: $F)
-				collect: [:each | each -> each asUppercase digitValue]).
+	HexDigitCharacterMap := Dictionary new.
+	($0 to: $9) do: [:each | HexDigitCharacterMap at: each put: each asciiValue - $0 asciiValue].
+	($a to: $f) do: [:each | | digitValue |
+		digitValue := each asciiValue - $a asciiValue + 10.
+		HexDigitCharacterMap
+			at: each put: digitValue;
+			at: each asUppercase put: digitValue].
 ]
 
 { #category : #'instance creation' }
@@ -92,6 +95,12 @@ XMLNestedStreamReader >> initialize [
 	normalizedLineEndingChar := LineFeed.
 ]
 
+{ #category : #private }
+XMLNestedStreamReader >> maxIntegerValue [
+	"SmallInteger maxValue"
+	^ 1073741823
+]
+
 { #category : #accessing }
 XMLNestedStreamReader >> next [
 	"Return the next character from the current input stream. If the current
@@ -112,39 +121,53 @@ XMLNestedStreamReader >> next [
 ]
 
 { #category : #accessing }
-XMLNestedStreamReader >> nextDecimalInteger [
-	| digitChar |
+XMLNestedStreamReader >> nextDigitWithBase: aBase [
+	| digit |
 
-	writeBuffer reset.
-	[self atEnd not and: [(digitChar := self peek) isDigit]]
-		whileTrue: [writeBuffer nextPut: self next].
-	^ Integer readFrom: writeBuffer contents readStream.
+	aBase = 16
+		ifTrue: [digit := HexDigitCharacterMap at: self peek ifAbsent: [nil]]
+		ifFalse: [
+			digit := self peek asciiValue - $0 asciiValue.
+			(digit >= 0 and: [digit <= 10])
+				ifFalse: [digit := nil]].
+	digit ifNotNil: [self next].
+
+	^ digit.
 ]
 
 { #category : #accessing }
-XMLNestedStreamReader >> nextHexInteger [
-	| value digitChar digitValue |
+XMLNestedStreamReader >> nextInteger [
+	"We re-implement integer reading here because the impelmentation of Integer>>readFrom: expects
+	the underlying stream to be skip:able."
+	| base |
 
-	value := HexDigitCharacterMap at: self peek ifAbsent: [^ 0].
-	self next.
-	[self atEnd not
-		and: [HexDigitCharacterMap includesKey: (digitChar := self peek)]]
-		whileTrue: [
+	self peek == $x
+		ifTrue: [
 			self next.
-			value := (value * 16) + (HexDigitCharacterMap at: digitChar).
-			value < SmallInteger maxVal
-				ifFalse: [^ Smalltalk maxVal].].
-	^ value.
+			base := 16]
+		ifFalse: [base := 10].
+
+	^ self nextIntegerWithBase: base.
 ]
 
 { #category : #accessing }
 XMLNestedStreamReader >> nextIntegerWithBase: aBase [
-	aBase = 10
-		ifTrue: [^ self nextDecimalInteger].
-	aBase = 16
-		ifTrue: [^ self nextHexInteger].
+	| integer maxValue maxBaseValue digitValue |
 
-	self error: 'Only base 10 and 16 supported'.
+	integer := 0.
+	maxValue := self maxIntegerValue.
+	maxBaseValue := (maxValue / aBase) asInteger.
+	[self atEnd not
+		and: [(digitValue := self nextDigitWithBase: aBase) notNil]]
+		whileTrue: [
+			integer > maxBaseValue
+				ifTrue: [^ integer].
+			integer := integer * aBase.
+
+			integer > (maxValue - digitValue)
+				ifTrue: [^ integer].
+			integer := integer + digitValue].
+	^ integer.
 ]
 
 { #category : #testing }

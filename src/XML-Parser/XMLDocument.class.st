@@ -78,5 +78,5 @@ XMLDocument >> writeXMLOn: aWriter [
 	self doctypeDeclaration
 		ifNotNil: [self doctypeDeclaration writeXMLOn: aWriter].
 	
-	self writeInnerXMLWith: aWriter.
+	self writeInnerXMLOn: aWriter.
 ]

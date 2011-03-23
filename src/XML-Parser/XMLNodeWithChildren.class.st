@@ -114,7 +114,7 @@ XMLNodeWithChildren >> innerXML [
 	| writer |
 
 	writer := XMLWriter new.
-	self writeInnerXMLWith: writer.
+	self writeInnerXMLOn: writer.
 	^ writer contents.
 ]
 
@@ -220,11 +220,11 @@ XMLNodeWithChildren >> topNode [
 ]
 
 { #category : #printing }
-XMLNodeWithChildren >> writeInnerXMLWith: aWriter [
+XMLNodeWithChildren >> writeInnerXMLOn: aWriter [
 	self nodesDo: [:each | each writeXMLOn: aWriter]
 ]
 
 { #category : #printing }
 XMLNodeWithChildren >> writeXMLOn: aWriter [
-	self writeInnerXMLWith: aWriter
+	self writeInnerXMLOn: aWriter
 ]
