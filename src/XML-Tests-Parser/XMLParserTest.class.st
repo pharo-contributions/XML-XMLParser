@@ -102,7 +102,7 @@ XMLParserTest >> benchmark1 [
 	600 timesRepeat => 2131 (Alexandre Bergel 3/29/2010 09:09)
 	"
 	Smalltalk garbageCollect.
-	^ [1500 timesRepeat: [SAXHandler parse: self addressBookXML]] timeToRun
+	^ [4000 timesRepeat: [SAXHandler parse: self addressBookXML]] timeToRun
 ]
 
 { #category : #benchmark }
@@ -111,7 +111,7 @@ XMLParserTest >> benchmark2 [
 	XMLParserTest new benchmark2
 	"
 	Smalltalk garbageCollect.
-	^ [1500 timesRepeat: [XMLDOMParser parse: self addressBookXML]] timeToRun
+	^ [4000 timesRepeat: [XMLDOMParser parse: self addressBookXML]] timeToRun
 ]
 
 { #category : #benchmark }
@@ -120,7 +120,7 @@ XMLParserTest >> benchmark3 [
 	XMLParserTest new benchmark3
 	"
 	Smalltalk garbageCollect.
-	^ [1500 timesRepeat: [self testParsing]] timeToRun
+	^ [4000 timesRepeat: [self testParsing]] timeToRun
 ]
 
 { #category : #benchmark }
