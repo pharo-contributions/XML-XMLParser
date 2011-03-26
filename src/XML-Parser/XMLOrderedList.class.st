@@ -148,6 +148,11 @@ XMLOrderedList >> collect: aCollectBlock thenSelect: aSelectBlock [
 		(collection collect: aCollectBlock thenSelect: aSelectBlock)
 ]
 
+{ #category : #private }
+XMLOrderedList >> collection [
+	^ collection
+]
+
 { #category : #copying }
 XMLOrderedList >> copy [
 	^ self species basicNew setCollection: collection copy
@@ -162,6 +167,13 @@ XMLOrderedList >> copyEmpty [
 XMLOrderedList >> copyFrom: aStart to: anEnd [
 	^ self newWithCollection:
 		(collection copyFrom: (aStart max: 1) to: (self size min: anEnd))
+]
+
+{ #category : #copying }
+XMLOrderedList >> copyWith: anElement [ 
+	^ self copy
+	 	add: anElement;
+		yourself
 ]
 
 { #category : #defaults }
@@ -231,6 +243,16 @@ XMLOrderedList >> replaceFrom: aStartingIndex to: anEndingIndex with: aCollectio
 { #category : #enumerating }
 XMLOrderedList >> reverseDo: aBlock [
 	collection reverseDo: aBlock
+]
+
+{ #category : #converting }
+XMLOrderedList >> reversed [
+	| reversed |
+
+	reversed := self species new.
+	self reverseDo: [:each | reversed addLast: each].
+	^ reversed.
+
 ]
 
 { #category : #enumerating }
