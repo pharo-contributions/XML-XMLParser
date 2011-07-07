@@ -240,7 +240,7 @@ XMLNode >> printOn: aStream [
 
 { #category : #printing }
 XMLNode >> printXMLOn: aWriter [
-	self deprecated: 'use #writeXMLWith: instead'.
+	self deprecated: 'use #writeXMLOn: instead'.
 
 	self writeXMLOn: aWriter.
 ]
