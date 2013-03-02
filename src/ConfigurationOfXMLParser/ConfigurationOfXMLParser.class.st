@@ -103,8 +103,8 @@ ConfigurationOfXMLParser class >> unloadMetacello [
 ]
 
 { #category : #baselines }
-ConfigurationOfXMLParser >> baseline100: spec [
-	<version: '1.0.0-baseline'>
+ConfigurationOfXMLParser >> baseline10: spec [
+	<version: '1.0-baseline'>
 	spec
 		for: #common
 		do: [ 
@@ -157,20 +157,19 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.0.0'.
+	spec for: #'common' version: '1.0'.
 	
 ]
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version100: spec [
-	<version: '1.0.0' imports: #('1.0.0-baseline')>
+	<version: '1.0' imports: #('1.0-baseline')>
 	spec
 		for: #common
 		do: [ 
 			spec blessing: #release.
 			spec
 				package: 'XML-Parser' with: 'XML-Parser-NorbertHartl.141';
-	
 				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-JAA.14' 
 				].
 	
