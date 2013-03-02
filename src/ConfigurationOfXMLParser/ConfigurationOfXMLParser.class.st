@@ -1,6 +1,8 @@
 "
 (ConfigurationOfXMLParser project version: #stable) load
 
+(ConfigurationOfXMLParser project version: '1.0') load
+
 "
 Class {
 	#name : #ConfigurationOfXMLParser,
@@ -136,7 +138,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: #'1.0'.
+	spec for: #'common' version: '1.0'.
 	
 ]
 
