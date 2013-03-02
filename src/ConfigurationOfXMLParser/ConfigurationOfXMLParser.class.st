@@ -170,7 +170,7 @@ ConfigurationOfXMLParser >> version100: spec [
 			spec blessing: #release.
 			spec
 				package: 'XML-Parser' with: 'XML-Parser-NorbertHartl.141';
-				package: 'Collections-BitmapCharacterSet' with: 'Collections-BitmapCharacterSet-JAA.5';
+	
 				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-JAA.14' 
 				].
 	
