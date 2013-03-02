@@ -129,7 +129,11 @@ ConfigurationOfXMLParser >> baseline10: spec [
 								versionString: #stable;
 								repository: 'http://www.smalltalkhub.com/mc/PharoExtras/BitmapCharacterSet/main'.].
 			
-			spec package: 'XML-Parser'.	
+			spec 
+				package: 'XML-Parser' 
+				with: [spec 
+						requires: 'BitmapCharacterSet'; 
+						requires: 'XMLWriter'].	
 			spec package: 'XML-Tests-Parser'
 					with: [ spec requires: 'XML-Parser' ].
 			
