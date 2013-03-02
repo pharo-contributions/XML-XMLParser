@@ -1,5 +1,5 @@
 "
-(ConfigurationOfXMLSupport project version: #stable) load
+(ConfigurationOfXMLParser project version: #stable) load
 
 "
 Class {
