@@ -1,5 +1,5 @@
 "
-(ConfigurationOfXMLParser project version: #stable) load
+(ConfigurationOfXMLParser project version: #stable) load: 'Tests'
 
 (ConfigurationOfXMLParser project version: '1.0') load
 
@@ -116,6 +116,12 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				author: 'StephaneDucasse';
 				timestamp: '02/03/2013';
 				repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLParser/main'.
+
+			spec project: 'XMLWriter'
+					with: [ spec 
+								className: 'ConfigurationOfXMLWriter';
+								versionString: #stable;
+								repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLWriter/main'.].
 
 			spec project: 'BitmapCharacterSet'
 					with: [ spec 
