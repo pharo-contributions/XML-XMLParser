@@ -132,8 +132,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 			spec 
 				package: 'XML-Parser' 
 				with: [spec 
-						requires: 'BitmapCharacterSet'; 
-						requires: 'XMLWriter'].	
+						requires: #('BitmapCharacterSet' 'XMLWriter')].	
 			spec package: 'XML-Tests-Parser'
 					with: [ spec requires: 'XML-Parser' ].
 			
