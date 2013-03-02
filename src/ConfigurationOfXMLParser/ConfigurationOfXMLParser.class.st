@@ -136,7 +136,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: #'1.0.0'.
+	spec for: #'common' version: #'1.0'.
 	
 ]
 
