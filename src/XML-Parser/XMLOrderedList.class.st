@@ -188,7 +188,7 @@ XMLOrderedList >> do: aBlock [
 
 { #category : #inspecting }
 XMLOrderedList >> inspectorClass [
-	^ OrderedCollectionInspector
+	^ Smalltalk tools inspector
 ]
 
 { #category : #private }
@@ -233,6 +233,7 @@ XMLOrderedList >> removeLast: aNumber [
 
 { #category : #accessing }
 XMLOrderedList >> replaceFrom: aStartingIndex to: anEndingIndex with: aCollection startingAt: aReplacementStart [
+
 	collection
 		replaceFrom: aStartingIndex
 		to: anEndingIndex
