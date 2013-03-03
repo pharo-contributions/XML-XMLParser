@@ -147,7 +147,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.0'.
+	spec for: #'common' version: '1.1'.
 	
 ]
 
@@ -168,7 +168,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.0'.
+	spec for: #'common' version: '1.1'.
 	
 ]
 
@@ -182,6 +182,21 @@ ConfigurationOfXMLParser >> version100: spec [
 			spec
 				package: 'XML-Parser' with: 'XML-Parser-NorbertHartl.141';
 				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-JAA.14' 
+				].
+	
+	
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version101: spec [
+	<version: '1.1' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #release.
+			spec
+				package: 'XML-Parser' with: 'XML-Parser-StephaneDucasse.142';
+				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-StephaneDucasse.15' 
 				].
 	
 	
