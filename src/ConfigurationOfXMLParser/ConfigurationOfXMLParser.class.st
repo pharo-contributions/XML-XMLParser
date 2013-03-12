@@ -137,7 +137,8 @@ ConfigurationOfXMLParser >> baseline10: spec [
 					with: [ spec requires: 'XML-Parser' ].
 			
 			spec
-				group: 'default' with: #('Core');
+				group: 'default' with: #('Core' 'Tests');
+				"default by default is equivalent to loading 'ALL' the packages still we added explicitly Tests to be loaded"
 				group: 'Core' with: #('XML-Parser');
 				group: 'Tests' with: #('XML-Tests-Parser') ].
 
