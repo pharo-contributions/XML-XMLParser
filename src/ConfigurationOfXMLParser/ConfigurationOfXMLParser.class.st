@@ -128,11 +128,18 @@ ConfigurationOfXMLParser >> baseline10: spec [
 								className: 'ConfigurationOfBitmapCharacterSet';
 								versionString: #stable;
 								repository: 'http://www.smalltalkhub.com/mc/PharoExtras/BitmapCharacterSet/main'.].
-			
+
+		spec project: 'OrderPreservingDictionary' with: [
+			spec 
+				className: 'ConfigurationOfOrderPreservingDictionary';
+				versionString: #stable; 
+				loads: #('Core'); 
+				repository: 'http://smalltalkhub.com/mc/PharoExtras/OrderPreservingDictionary/main'].	
+
 			spec 
 				package: 'XML-Parser' 
 				with: [spec 
-						requires: #('BitmapCharacterSet')].	
+						requires: #('BitmapCharacterSet' 'OrderPreservingDictionary')].	
 			spec package: 'XML-Tests-Parser'
 					with: [ spec requires: #('XML-Parser' 'XMLWriter') ].
 			
