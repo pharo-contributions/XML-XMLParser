@@ -51,9 +51,11 @@ XMLNode >> allNodesDo: aBlock [
 
 { #category : #printing }
 XMLNode >> canonicallyPrintOn: aStream [
-	(XMLWriter on: aStream)
-		isCanonical: true;
-		writeWith: [:writer | self writeXMLOn: writer]
+	self
+		withNewXMLWriterOn: aStream
+		do: [ :writer | writer
+										isCanonical: true;
+										writeWith: [ :wr | self writeXMLOn: wr ] ]
 ]
 
 { #category : #printing }
@@ -207,9 +209,12 @@ XMLNode >> parent: aParentNode [
 
 { #category : #printing }
 XMLNode >> prettyPrintOn: aStream [
-	(XMLWriter on: aStream)
-		enablePrettyPrinting;
-		writeWith: [:writer | self writeXMLOn: writer]
+	self
+		withNewXMLWriterOn: aStream
+		do: [ :writer | writer
+									enablePrettyPrinting;
+									writeWith: [ :wr | self writeXMLOn: wr ] ]
+		whenAbsent: [ self printOn: aStream ]
 ]
 
 { #category : #printing }
@@ -235,7 +240,10 @@ XMLNode >> printContentOn: aStream [
 
 { #category : #printing }
 XMLNode >> printOn: aStream [
-	(XMLWriter on: aStream) writeWith: [:writer | self writeXMLOn: writer].
+	self
+		withNewXMLWriterOn: aStream
+		do: [ :writer | writer writeWith: [ :wr | self writeXMLOn: wr] ]
+		whenAbsent: [ super printOn: aStream ]
 ]
 
 { #category : #printing }
@@ -245,9 +253,46 @@ XMLNode >> printXMLOn: aWriter [
 	self writeXMLOn: aWriter.
 ]
 
+{ #category : #printing }
+XMLNode >> raiseXMLWriterRequired [
+	Error signal: 'The XMLWriter package is required to do that'
+]
+
 { #category : #observing }
 XMLNode >> removeObserver: anObserver [
 	self notifier removeObserver: anObserver
+]
+
+{ #category : #printing }
+XMLNode >> withNewXMLWriterDo: aOneArgBlock [
+	^ self withNewXMLWriterDo: aOneArgBlock whenAbsent: [ self raiseXMLWriterRequired ]
+	
+]
+
+{ #category : #printing }
+XMLNode >> withNewXMLWriterDo: aOneArgBlock whenAbsent: aZeroArgBlock [
+	^ self
+			withXMLWriterClassDo: [ :xmlWriterClass | aOneArgBlock value: xmlWriterClass new ]
+			whenAbsent: aZeroArgBlock
+]
+
+{ #category : #printing }
+XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock [
+	^ self withNewXMLWriterOn: aStream do: aOneArgBlock whenAbsent: [ self raiseXMLWriterRequired ]
+]
+
+{ #category : #printing }
+XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock whenAbsent: aZeroArgBlock [
+	^ self
+			withXMLWriterClassDo: [ :xmlWriterClass | aOneArgBlock value: (xmlWriterClass on: aStream) ]
+			whenAbsent: aZeroArgBlock
+]
+
+{ #category : #printing }
+XMLNode >> withXMLWriterClassDo: aOneArgBlock whenAbsent: aZeroArgBlock [
+	^ (self class environment hasClassNamed: #XMLWriter)
+			ifTrue: [ aOneArgBlock value: (self class environment classNamed: #XMLWriter) ]
+			ifFalse: [ aZeroArgBlock ]
 ]
 
 { #category : #printing }
