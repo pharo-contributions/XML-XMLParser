@@ -114,7 +114,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				blessing: #baseline;
 				description: 'Migrated to SmalltalkHub';
 				author: 'StephaneDucasse';
-				timestamp: '02/03/2013';
+				timestamp: '04/30/2013';
 				repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLParser/main'.
 
 			spec project: 'XMLWriter'
@@ -132,9 +132,9 @@ ConfigurationOfXMLParser >> baseline10: spec [
 			spec 
 				package: 'XML-Parser' 
 				with: [spec 
-						requires: #('BitmapCharacterSet' 'XMLWriter')].	
+						requires: #('BitmapCharacterSet')].	
 			spec package: 'XML-Tests-Parser'
-					with: [ spec requires: 'XML-Parser' ].
+					with: [ spec requires: #('XML-Parser' 'XMLWriter') ].
 			
 			spec
 				group: 'default' with: #('Core' 'Tests');
@@ -197,6 +197,21 @@ ConfigurationOfXMLParser >> version101: spec [
 			spec blessing: #release.
 			spec
 				package: 'XML-Parser' with: 'XML-Parser-StephaneDucasse.142';
+				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-StephaneDucasse.15' 
+				].
+	
+	
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version102: spec [
+	<version: '1.2' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #release.
+			spec
+				package: 'XML-Parser' with: 'XML-Parser-DamienCassou.143';
 				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-StephaneDucasse.15' 
 				].
 	
