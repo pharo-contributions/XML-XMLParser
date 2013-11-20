@@ -130,8 +130,8 @@ XMLParserTest >> benchmark4 [
 	XMLParserTest new benchmark4
 	"
 	doc := XMLDOMParser
-		parseDocumentFrom: self addressBookXML readStream
-		useNamespaces: false.
+		parse: self addressBookXML readStream
+		usingNamespaces: false.
 	^ [500000 timesRepeat: [
 		doc root firstElement
 			elementAt: 'contact-info';
@@ -154,6 +154,134 @@ XMLParserTest >> exampleEncodedXML [
 ]
 
 { #category : #tests }
+XMLParserTest >> testAttributeDefaultDeclaration [
+	| dtd document |
+
+	dtd := '<!DOCTYPE root [
+		<!ATTLIST root one #IMPLIED >
+		<!ATTLIST root two #REQUIRED >
+		<!ATTLIST root three #FIXED "fixedDefault" >
+		<!ATTLIST root three #FIXED "redundant" >
+		<!ATTLIST root four "default" >]>'.
+	document := XMLDOMParser parse: dtd, '<root two="required" three="nonDefault" />'.
+	self
+		assert: (document root attributeAt: 'two') = 'required';
+		assert: (document root includesAttribute: 'one');
+		assert: (document root attributeAt: 'three') = 'fixedDefault';
+		assert: (document root attributeAt: 'four') = 'default'.
+	self should: [XMLDOMParser parse: dtd, '<root />'] raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeEntityDeclaration [
+	| dtd |
+
+	dtd := '<!DOCTYPE root [
+		<!ENTITY firstEntity SYSTEM "first.txt" NDATA first>
+		<!ENTITY secondEntity SYSTEM "second.txt" NDATA second>
+		<!ATTLIST root unparsedEntity ENTITY #IMPLIED>
+		<!ATTLIST root unparsedEntities ENTITIES #IMPLIED>]>'.
+	XMLDOMParser parse: dtd, '<root unparsedEntity="firstEntity"  unparsedEntities="firstEntity  secondEntity"/> '.
+	self
+		should: [XMLDOMParser parse: dtd, '<root unparsedEntity="thirdEntity"/>']
+		raise: XMLValidationException.
+	self
+		should: [XMLDOMParser parse: dtd, '<root unparsedEntity="secondEntity thirdEntity"/>']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeEnumerationDeclaration [
+	| dtd |
+
+	dtd := '<!DOCTYPE root [
+		<!ATTLIST root number ( one | two | three) #IMPLIED >
+		<!NOTATION txtFile PUBLIC "//file.txt//">
+		<!NOTATION confFile PUBLIC "//file.conf//">
+		<!ATTLIST root note NOTATION (txtFile | confFile ) #IMPLIED>]>'.
+	XMLDOMParser parse: dtd, '<root number="two" note="txtFile"/>'.
+	self
+		should: [XMLDOMParser parse: dtd, '<root number="four"/>']
+		raise: XMLValidationException.
+	self
+		should: [XMLDOMParser parse: dtd, '<root note="htmlFile" />']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeIDDeclaration [
+	| dtd |
+
+	dtd := '<!DOCTYPE root [<!ATTLIST unique id ID #REQUIRED>]>'.
+	XMLDOMParser parse: dtd, '<root><unique id=" one "/><unique id="two"/></root> '.
+	self
+		should: [
+			XMLDOMParser parse:
+				dtd, '<root><unique id="one"/><unique id=" one "/></root> ']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeIDRefDeclaration [
+	| dtd |
+
+	dtd := '<!DOCTYPE root [
+		<!ATTLIST unique id ID #REQUIRED>
+		<!ATTLIST ref idref IDREF #REQUIRED>
+		<!ATTLIST refs idrefs IDREFS #REQUIRED>]>'.
+	XMLDOMParser parse:
+		dtd, '<root>
+		<unique id=" one "/><unique id=" two "/>
+		<ref idref="one"/><refs idrefs="  one  two"/>
+		</root> '.
+	self
+		should: [
+			XMLDOMParser parse:
+				dtd, '<root><unique id="one"/><ref idref="two"/></root> ']
+		raise: XMLValidationException.
+	self
+		should: [
+			XMLDOMParser parse:
+				dtd, '<root><unique id="one"/><refs idrefs="one two"/></root> ']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeNmtokenDeclaration [
+	| dtd |
+
+	dtd := '<!DOCTYPE root [
+		<!ATTLIST root name NMTOKEN #IMPLIED>
+		<!ATTLIST root names NMTOKENS #IMPLIED>]>'.
+	XMLDOMParser parse: dtd, '<root name="one" names="  one  two three"/> '.
+	self
+		should: [XMLDOMParser parse: dtd, '<root name="1"/> ']
+		raise: XMLValidationException.
+	self
+		should: [XMLDOMParser parse: dtd, '<root names="1 2 3" />']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeValueNormalization [
+	| separators unnormalized normalized document |
+
+	separators :=
+		String
+			with: Character space
+			with: Character tab
+			with: Character lf.
+	unnormalized := separators, 'nonspace', separators.
+	normalized := '   nonspace   '.
+	document :=
+		(XMLDOMParser parse:
+			'<root name="', unnormalized,'">', unnormalized, '</root>').
+	self
+		assert: (document root attributeAt: 'name') = normalized;
+		assert: (document root contentString) = unnormalized.
+]
+
+{ #category : #tests }
 XMLParserTest >> testCDATASection [
 	| xmlDocument element output |
 
@@ -171,6 +299,22 @@ XMLParserTest >> testCDATASection [
 
 ]
 
+{ #category : #tests }
+XMLParserTest >> testConditionalSection [
+	| tokenizer |
+
+	tokenizer :=
+		XMLTokenizer
+			driver: nil
+			on:
+			'<![INCLUDE [included',
+			'<![ IGNORE [ignored; <![INCLUDE[ignored;]]> ignored.]]>',
+			', included]]>, included.'.
+	tokenizer tokenContext enterInternalSubset.
+	tokenizer nextToken.
+	self assert: tokenizer streamReader upToEnd = 'included, included, included.'
+]
+
 { #category : #'tests-utf8' }
 XMLParserTest >> testDecodingCharacters [
 	| xmlDocument element |
@@ -181,6 +325,113 @@ XMLParserTest >> testDecodingCharacters [
 	self assert: element contentString first charCode = 8230.	
 
 
+]
+
+{ #category : #tests }
+XMLParserTest >> testDoctypeRoot [
+	| xml |
+
+	xml := '<!DOCTYPE root><invalidRoot/>'.
+	self
+		should: [XMLDOMParser parse: xml]
+		raise: XMLValidationException.
+	XMLDOMParser
+		parse: xml
+		usingNamespaces: false
+		validation: false.
+]
+
+{ #category : #tests }
+XMLParserTest >> testElementAnyAndEmptyDeclarations [
+	XMLDOMParser parse: 
+		'<!DOCTYPE addressbook [<!ELEMENT addressbook ANY>]>',
+		self addressBookXML.
+	self
+		should: [
+			XMLDOMParser parse: 
+				'<!DOCTYPE addressbook [<!ELEMENT addressbook EMPTY>]>',
+				self addressBookXML]
+		raise: XMLValidationException
+]
+
+{ #category : #tests }
+XMLParserTest >> testElementContentModels [
+	| dtd |
+
+	dtd := '<!DOCTYPE root [
+		<!ELEMENT numbers (one,two?,three)>
+		<!ELEMENT colors (red|blue|green)*>
+		<!ELEMENT days (mon+,tue*,wed)>]>'.
+
+	XMLDOMParser parse: dtd, '<root><numbers><one/><two/><three/></numbers></root>'.
+	XMLDOMParser parse: dtd, '<root><numbers><one/><three/></numbers></root>'.
+	self
+		should: [
+			XMLDOMParser parse:
+				dtd, '<root><numbers><one/><two/><two/><three/></root></numbers>']
+		raise: XMLValidationException.
+
+	XMLDOMParser parse: dtd, '<root><colors/></root>'.
+	XMLDOMParser parse: dtd, '<root><colors><red/><green/><blue/><red/></colors></root>'.
+	self
+		should: [XMLDOMParser parse: dtd, '<root><colors><orange/></colors></root>']
+		raise: XMLValidationException.
+
+	XMLDOMParser parse: dtd, '<root><days><mon/><mon/><tue/><wed/></days></root>'.
+	XMLDOMParser parse: dtd, '<root><days><mon/><wed/></days></root>'.
+	self
+		should: [XMLDOMParser parse: dtd, '<root><days><tue/></wed></root>']
+		raise: XMLValidationException.
+	self
+		should: [XMLDOMParser parse: dtd, '<root><days><mon/><tue/><fri/></root>']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testElementMixedContentDeclaration [
+	| dtd |
+
+	dtd := '<!DOCTYPE root [
+		<!ELEMENT root (#PCDATA | one | two | three)*>
+		<!ELEMENT two (#PCDATA)>]>'.
+	XMLDOMParser parse: dtd, '<root>text<one/><two>text</two></root>'.
+	self
+		should: [XMLDOMParser parse: dtd, '<root><five/></root>']
+		raise: XMLValidationException.
+	self
+		should: [XMLDOMParser parse: dtd, '<root><two><three/></two></root>']
+		raise: XMLValidationException.
+	'+*?,' do: [:each |
+		self
+			should: [
+				XMLDOMParser parse:
+					'<!DOCTYPE root [<!ELEMENT two (#PCDATA', each asString, ')>]><root/>']
+			raise: XMLValidationException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityReplacement [
+	| document |
+
+	document := XMLDOMParser parse: '
+		<!DOCTYPE root [
+			<!ENTITY % partialDeclaration "name1 &#39;replacement1&#39;">
+			<!ENTITY % name1Declaration "<!ENTITY %partialDeclaration;>">
+			%name1Declaration;
+			<!ENTITY name2 "replacement2 &name1;" >
+			<!ENTITY name3 "replacement3 &name2;" >
+			<!ENTITY predefined "&amp;&gt;&lt;&quot;&apos;" >
+			<!ENTITY quotes "&#34;&#39;">
+		]>
+		<root name="&quotes;">&name1; &name2; &name3; ',
+		'&predefined; &amp;&gt;&lt;&quot;&apos; %name1Declaration;</root>'.
+	self assert:
+		document root contentString =
+			('replacement1 ',
+			'replacement2 replacement1 ',
+			'replacement3 replacement2 replacement1 ',
+			'&><"'' &><"'' %name1Declaration;').
+	self assert: (document root attributeAt: 'name') = (String with: $" with: $').
 ]
 
 { #category : #tests }
@@ -218,6 +469,63 @@ XMLParserTest >> testExampleAddressBookWithDTD [
 	self
 		shouldnt: [tokenizer streamReader next notNil] whileTrue
 		raise: Error
+]
+
+{ #category : #tests }
+XMLParserTest >> testFileClientPaths [
+	| fileClient cwd |
+
+	fileClient := XMLFileClient defaultImplementation new.
+	cwd := fileClient currentWorkingDirectory.
+	self
+		assert: (fileClient combineRelative: '/nonrelative' withBase: cwd) = '/nonrelative';
+		assert: (fileClient combineRelative: 'relative' withBase: cwd) = (cwd, '/relative');
+		assert: (fileClient combineRelative: '../../relative' withBase: cwd) = (cwd, '/../../relative');
+		assert: (fileClient combineRelative: './relative' withBase: cwd) = (cwd, '/relative');
+		assert: (fileClient combineRelative: '.relative' withBase: cwd) = (cwd, '/.relative').
+]
+
+{ #category : #tests }
+XMLParserTest >> testHTTPClientPaths [
+	| httpClient domain directoryUrl documentUrl queryUrl |
+
+	httpClient := XMLHTTPClient defaultImplementation new.
+	domain := 'http://www.example.com'.
+	directoryUrl := domain, '/documents/'.
+	documentUrl := directoryUrl, 'document.xml'.
+	queryUrl := documentUrl, '?name=value'.
+	self
+		assert: (httpClient combineRelative: directoryUrl withBase: domain) = directoryUrl;
+		assert: (httpClient combineRelative: '/nonrelative' withBase: domain) = (domain, '/nonrelative');
+		assert: (httpClient combineRelative: '/nonrelative' withBase: directoryUrl) = (domain, '/nonrelative');
+		assert: (httpClient combineRelative: '/nonrelative' withBase: documentUrl) = (domain, '/nonrelative');
+		assert: (httpClient combineRelative: 'relative.xml' withBase: directoryUrl) = (directoryUrl, 'relative.xml');
+		assert: (httpClient combineRelative: 'relative.xml' withBase: documentUrl) = (directoryUrl, 'relative.xml');
+		assert: (httpClient combineRelative: 'relative.xml' withBase: queryUrl) = (directoryUrl, 'relative.xml').
+]
+
+{ #category : #tests }
+XMLParserTest >> testInnerXML [
+	| document contactInfo address1 address2 |
+
+	document := XMLDOMParser parse: self addressBookXML.
+	document allElementsNamed: 'person' do: [:person |
+		address1 := (person attributeAt: 'first-name'), '@example.com'.
+		address2 := (person attributeAt: 'first-name'), '@users.example.com'.
+		(contactInfo := person elementAt: 'contact-info')
+			innerXML: '<email>', address1, '</email><email2>', address2, '</email2>'.
+
+		self
+			assert: contactInfo elements size = 2;
+			assert: (contactInfo elements first isNamed: 'email');
+			assert: (contactInfo elements first contentString = address1);
+			assert: (contactInfo elements second isNamed: 'email2');
+			assert: (contactInfo elements second contentString = address2)].
+
+	self assert: ((document innerXML: '<new-root/>') root isNamed: 'new-root').
+	self
+		should: [document innerXML: '<root1/><root2/>']
+		raise: XMLWellFormednessException.
 ]
 
 { #category : #tests }
@@ -300,4 +608,50 @@ XMLParserTest >> testTokenizerAddressBookWithDTD [
 	| tokenizer |
 	tokenizer := XMLTokenizer driver: nil on: self addressBookXMLWithDTD readStream.
 	[tokenizer streamReader next notNil] whileTrue
+]
+
+{ #category : #tests }
+XMLParserTest >> testUndeclaredEntities [
+	| document dtd content |
+
+	dtd := '<!DOCTYPE root [%undeclared;]>'.
+	content := '<root>&undeclared;test&undeclared;</root>'.
+	document :=
+		XMLDOMParser
+			parse: dtd, content
+			usingNamespaces: false
+			validation: false.
+	self assert: document allNodes second contentString = 'test'.
+	self should: [XMLDOMParser parse: content] raise: XMLValidationException.
+	self should: [XMLDOMParser parse: dtd, '<root/>'] raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testUnparsedEntities [
+	| document |
+
+	document := XMLDOMParser parse: '
+		<!DOCTYPE root [
+			<!NOTATION note PUBLIC "-//ext//note//EN">
+			<!ENTITY unparsedEntity SYSTEM "note.txt" NDATA note>
+		]>
+		<root notation=&unparsedEntity; />'.
+	self assert: (document root attributeAt: 'notation') = 'note'.
+	self
+		should: [XMLDOMParser parse: '<root attr=&undeclaredUnparsedEntity;/>']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testWellFormedness [
+	| error |
+
+	error := XMLWellFormednessException.
+	self
+		should: [SAXHandler parse: '<root1>'] raise: error;
+		should: [SAXHandler parse: '</root1>'] raise: error;
+		should: [SAXHandler parse: '<root1/><root2/>'] raise: error;
+		should: [SAXHandler parse: '<root></unopened></root>'] raise: error;
+		should: [SAXHandler parse: '<root><unclosed></root>'] raise: error;
+		should: [SAXHandler parse: '<root><first><second></first></second></root>'] raise: error.
 ]
