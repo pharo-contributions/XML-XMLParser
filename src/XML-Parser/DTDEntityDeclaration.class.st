@@ -3,115 +3,91 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'name',
-		'value',
-		'ndata'
+		'replacement',
+		'uri'
 	],
-	#classInstVars : [
-		'contextBehavior'
+	#classVars : [
+		'LiteralEscapes'
 	],
 	#category : #'XML-Parser-DTD'
 }
 
-{ #category : #accessing }
-DTDEntityDeclaration class >> behaviorForContext: aContext [
-	^self contextBehavior at: aContext
-]
-
-{ #category : #accessing }
-DTDEntityDeclaration class >> contextBehavior [
-	^contextBehavior
-]
-
 { #category : #'class initialization' }
 DTDEntityDeclaration class >> initialize [
-	"DTDEntityDeclaration initialize"
+	"self initialize"
 
-	contextBehavior := Dictionary new.
-	contextBehavior
-		at: #content put: #include ;
-		at: #attributeValueContent put: #includedInLiteral ;
-		at: #attributeValue put: #forbidden ;
-		at: #entityValue put: #bypass ;
-		at: #dtd put: #forbidden 
-]
-
-{ #category : #accessing }
-DTDEntityDeclaration class >> leadIn [
-	^'&'
+	(LiteralEscapes := IdentityDictionary new)
+		at: $" put: '&#34;';
+		at: $' put: '&#39;'
 ]
 
 { #category : #'instance creation' }
-DTDEntityDeclaration class >> name: aString value: aValueString [
-	^self new
-		name: aString;
-		value: aValueString
+DTDEntityDeclaration class >> name: aString replacement: aValueString [
+	^ self new
+		setName: aString
+		replacement: aValueString
+		uri: nil
 ]
 
-{ #category : #behaviors }
-DTDEntityDeclaration >> bypass [
-	"Return my reference as is."
-	^self reference
+{ #category : #'instance creation' }
+DTDEntityDeclaration class >> name: aString replacement: aValueString uri: aUri [
+	^ self new
+		setName: aString
+		replacement: aValueString
+		uri: aUri
 ]
 
-{ #category : #behaviors }
-DTDEntityDeclaration >> forbidden [
-	self error: 'Forbidden reference usage'
+{ #category : #converting }
+DTDEntityDeclaration >> asReference [
+	^ self referenceSymbol asString, self name, ';'
 ]
 
-{ #category : #behaviors }
-DTDEntityDeclaration >> include [
-	"Return my expanded value."
-	^ value ifNil: [XMLParserWarning signal: 'XML undefined entity ' , name printString]
-]
-
-{ #category : #behaviors }
-DTDEntityDeclaration >> includedInLiteral [
-	"Return my expanded value."
-	^self include
+{ #category : #testing }
+DTDEntityDeclaration >> isExternal [
+	^ false
 ]
 
 { #category : #accessing }
 DTDEntityDeclaration >> name [
-	^name
+	^ name ifNil: [name := '']
+]
+
+{ #category : #printing }
+DTDEntityDeclaration >> printOn: aStream [
+	self asReference printOn: aStream
+	
 ]
 
 { #category : #accessing }
-DTDEntityDeclaration >> name: aString [
-	name := aString
+DTDEntityDeclaration >> referenceSymbol [
+	self subclassResponsibility
 ]
 
 { #category : #accessing }
-DTDEntityDeclaration >> ndata [
-	^ndata
+DTDEntityDeclaration >> replacement [
+	^ replacement ifNil: [replacement := '']
+]
+
+{ #category : #replacement }
+DTDEntityDeclaration >> replacementForLiteralContext [
+	| aReplacement |
+
+	aReplacement := (String new: self replacement size) writeStream.
+	self replacement do: [:each |
+		(LiteralEscapes includesKey: each)
+			ifTrue: [aReplacement nextPutAll: (LiteralEscapes at: each)]
+			ifFalse: [aReplacement nextPut: each]].
+	^ aReplacement contents.
 ]
 
 { #category : #accessing }
-DTDEntityDeclaration >> ndata: aString [
-	ndata := aString
-]
-
-{ #category : #behaviors }
-DTDEntityDeclaration >> reference [
-	"Return my reference as is."
-	^self class leadIn, self name, ';'
-]
-
-{ #category : #invocation }
-DTDEntityDeclaration >> registerIn: aParser [
-	aParser entity: self name put: self
+DTDEntityDeclaration >> setName: aName replacement: aReplacement uri: aUri [
+	name := aName.
+	replacement := aReplacement.
+	uri := aUri.
 ]
 
 { #category : #accessing }
-DTDEntityDeclaration >> value [
-	^value
-]
-
-{ #category : #accessing }
-DTDEntityDeclaration >> value: aString [
-	value := aString
-]
-
-{ #category : #invocation }
-DTDEntityDeclaration >> valueForContext: aContext [
-	^self perform: (self class behaviorForContext: aContext)
+DTDEntityDeclaration >> uri [
+	^ uri ifNil: [uri := '']
 ]

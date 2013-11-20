@@ -7,6 +7,8 @@ Class {
 	#instVars : [
 		'saxHandler',
 		'configuration',
+		'dtd',
+		'validator',
 		'elementNester',
 		'scopeAllocator',
 		'languageEnvironment'
@@ -43,8 +45,39 @@ SAXDriver >> declareNamespaces: aDictionary [
 ]
 
 { #category : #accessing }
+SAXDriver >> documentURI [
+	^ self saxHandler documentURI
+]
+
+{ #category : #accessing }
+SAXDriver >> dtd [
+	^ dtd ifNil: [dtd := DTDDoctypeDefinition new]
+]
+
+{ #category : #accessing }
 SAXDriver >> elementNester [
 	^ elementNester
+]
+
+{ #category : #accessing }
+SAXDriver >> externalEntityResolver [
+	^ self configuration externalEntityResolver
+]
+
+{ #category : #'handling tokens' }
+SAXDriver >> handleAttributeDeclaration: anElement name: aName type: aType default: aDefaultDeclaration [
+	self isValidating
+		ifTrue: [
+			self dtd
+				parseAttributeDefinition: anElement
+				name: aName
+				type: aType
+				default: aDefaultDeclaration].
+	self saxHandler
+		attributeDeclaration: anElement
+		name: aName
+		type: aType
+		defaultDeclaration: aDefaultDeclaration
 ]
 
 { #category : #'handling tokens' }
@@ -62,9 +95,35 @@ SAXDriver >> handleComment: aString [
 ]
 
 { #category : #'handling tokens' }
+SAXDriver >> handleElementDeclaration: aName contentModel: aContentModel [
+	self isValidating
+		ifTrue: [
+			self dtd
+				parseContentModel: aContentModel
+				for: aName].
+
+	self saxHandler
+		elementDeclaration: aName
+		contentModel: aContentModel
+]
+
+{ #category : #'handling tokens' }
+SAXDriver >> handleEndContentEntityReplacement: aName [
+	self saxHandler endEntity: aName
+]
+
+{ #category : #'handling tokens' }
+SAXDriver >> handleEndDTD [
+	self saxHandler endDTD
+]
+
+{ #category : #'handling tokens' }
 SAXDriver >> handleEndDocument [
 	self elementNester ensureNoElementsRemainOpen.
-	self saxHandler endDocument
+	self isValidating
+		ifTrue: [self validator validateIDsAndReferences].
+
+	self saxHandler endDocument.
 ]
 
 { #category : #'handling tokens' }
@@ -76,8 +135,10 @@ SAXDriver >> handleEndTag: anElementName [
 	anElementName splitQualifiedNameInto: [:prefixPart :localPart |
 		prefix := prefixPart.
 		localName := localPart].
-	self usesNamespaces
-		ifTrue: [namespaceUri := self scopeAllocator resolvePrefix: prefix].
+	namespaceUri :=
+		self usesNamespaces
+			ifTrue: [self scopeAllocator resolvePrefix: prefix]
+			ifFalse: [''].
 
 	self saxHandler 
 		endElement: anElementName
@@ -85,16 +146,76 @@ SAXDriver >> handleEndTag: anElementName [
 		uri: namespaceUri
 		localName: localName.
 
-	self usesNamespaces
-		ifTrue: [
-			self undeclareNamespaces.
-			self scopeAllocator exitScope].
+	self validateEndTag: anElementName.
+]
+
+{ #category : #'handling tokens' }
+SAXDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
+	aNotation
+		ifNotEmpty: [self dtd unparsedEntityAt: aName put: aNotation]
+		ifEmpty: [
+			self resolvesExternalEntities
+				ifTrue: [
+					self dtd
+						generalEntityAt: aName
+						put: (self externalEntityResolver
+							resolveGeneralEntity: aName
+							uri: aSystemId
+							from: self documentURI)]].
+
+	self saxHandler
+		generalEntityDeclaration: aName
+		publicID: aPublicId
+		systemID: aSystemId
+		ndata: aNotation.
+]
+
+{ #category : #'handling tokens' }
+SAXDriver >> handleGeneralEntityDeclaration: aName replacement: aReplacement [
+	self dtd
+		generalEntityAt: aName
+		put:
+			(DTDGeneralEntity
+				name: aName
+				replacement: aReplacement).
+
+	self saxHandler
+		generalEntityDeclaration: aName
+		replacement: aReplacement
+]
+
+{ #category : #'handling tokens' }
+SAXDriver >> handleGeneralEntityReference: aName [
+	| entity |
+
+	(entity := self dtd generalEntityAt: aName)
+		ifNil: [
+			self isValidating
+				ifTrue: [
+					XMLValidationException signal:
+						'Undeclared general entity reference &', aName, ';'].
+			self saxHandler skippedEntity: aName].
+	^ entity.
+]
+
+{ #category : #'handling tokens' }
+SAXDriver >> handleNotationDeclaration: aName publicID: aPublicId systemID: aSystemId [
+	self isValidating
+		ifTrue: [self dtd addNotation: aName].
+
+	self saxHandler
+		notationDeclaration: aName
+		publicID: aPublicId
+		systemID: aSystemId.
 ]
 
 { #category : #'handling tokens' }
 SAXDriver >> handlePCData: aString [
 	self languageEnvironment
 		ifNotNil: [aString applyLanguageInfomation: self languageEnvironment].
+	self isValidating
+		ifTrue: [self  validator validatePCData: aString].
+
 	self saxHandler 
 		characters: aString
 ]
@@ -103,6 +224,68 @@ SAXDriver >> handlePCData: aString [
 SAXDriver >> handlePI: piTarget data: piData [
 	self saxHandler 
 		processingInstruction: piTarget data: piData
+]
+
+{ #category : #'handling tokens' }
+SAXDriver >> handleParameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
+	self resolvesExternalEntities
+		ifTrue: [
+			self dtd
+				parameterAt: aName
+				put: (self externalEntityResolver
+					resolveParameterEntity: aName
+					uri: aSystemId
+					from: self documentURI)].
+
+	self saxHandler
+		parameterEntityDeclaration: aName
+		publicID: aPublicId
+		systemID: aSystemId
+]
+
+{ #category : #'handling tokens' }
+SAXDriver >> handleParameterEntityDeclaration: aName replacement: aReplacement [
+	self dtd
+		parameterEntityAt: aName
+		put:
+			(DTDParameterEntity
+				name: aName
+				replacement:aReplacement).
+
+	self saxHandler
+		parameterEntityDeclaration: aName
+		replacement: aReplacement
+]
+
+{ #category : #'handling tokens' }
+SAXDriver >> handleParameterEntityReference: aName [
+	| entity |
+
+	(entity := self dtd parameterEntityAt: aName)
+		ifNil: [
+			self isValidating
+				ifTrue: [
+					XMLValidationException signal:
+						'Undeclared parameter entity reference %', aName, ';'].
+			self saxHandler skippedEntity: aName].
+	^ entity.
+]
+
+{ #category : #'handling tokens' }
+SAXDriver >> handleStartContentEntityReplacement: aName [
+	^ self saxHandler startEntity: aName
+]
+
+{ #category : #'handling tokens' }
+SAXDriver >> handleStartDTD: aRoot publicID: aPublicId systemID: aSystemId [
+	self dtd rootElement: aRoot.
+	(self resolvesExternalEntities and: [aSystemId notEmpty])
+		ifTrue: [self parseExternalSubset: aSystemId].
+	
+	self saxHandler
+		startDTD: aRoot
+		publicID: aPublicId
+		systemID: aSystemId
 ]
 
 { #category : #'handling tokens' }
@@ -119,17 +302,17 @@ SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary nam
 		ifTrue: [self languageEnvironment: (anAttributeDictionary at: 'xml:lang')].
 	anElementName splitQualifiedNameInto: [:prefixPart :localPart |
 		prefix := prefixPart.
-		localName := localPart.
-		namespaceUri := ''].
+		localName := localPart].
 
-	self usesNamespaces ifTrue: [
-		self scopeAllocator enterScope.
-		self declareNamespaces: aNamespaceDictionary.
-		namespaceUri := self scopeAllocator resolvePrefix: prefix.
-		self
-			validateStartTag: anElementName
-			prefix: prefix
-			attributes: anAttributeDictionary].
+	self
+		validateStartTag: anElementName
+		prefix: prefix
+		attributes: anAttributeDictionary
+		namespaces: aNamespaceDictionary.
+	namespaceUri :=
+		self usesNamespaces
+			ifTrue: [self scopeAllocator resolvePrefix: prefix]
+			ifFalse: [''].
 
 	self saxHandler 
 		startElement: anElementName
@@ -137,6 +320,22 @@ SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary nam
 		uri: namespaceUri
 		localName: localName
 		attributes: anAttributeDictionary
+]
+
+{ #category : #'handling tokens' }
+SAXDriver >> handleUnparsedEntityReference: aName [
+	| notationName |
+
+	notationName := self dtd unparsedEntityAt: aName.
+	self isValidating
+		ifTrue: [
+			notationName
+				ifNil: [XMLValidationException signal: 'Undeclared unparsed entity reference &', aName, ';'].
+			(self dtd includesNotation: notationName)
+				ifFalse: [XMLValidationException signal: 'Undeclared notation "', notationName, '"']].
+	^ notationName.
+
+	
 ]
 
 { #category : #'handling tokens' }
@@ -152,8 +351,7 @@ SAXDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrN
 	aVersion
 		ifNotEmpty: [versionNumber := aVersion asNumber].
 
-	(#('yes' 'no') includes: aYesOrNo)
-		ifTrue: [standaloneBoolean := aYesOrNo = 'yes'].
+	standaloneBoolean := aYesOrNo asLowercase = 'yes'.
 
 	self saxHandler
 		xmlVersion: versionNumber
@@ -174,6 +372,29 @@ SAXDriver >> languageEnvironment [
 { #category : #accessing }
 SAXDriver >> languageEnvironment: anIsoString [
 	languageEnvironment := LanguageEnvironment localeID: (LocaleID isoString: anIsoString)
+]
+
+{ #category : #'handling tokens' }
+SAXDriver >> parseExternalSubset: aUri [
+	| absoluteUri parser |
+
+	absoluteUri :=
+		self externalEntityResolver
+			entityURIFromRelative: aUri
+			andBase: self documentURI.
+	parser :=
+		XMLParser
+			driver:
+				(DTDExternalSubsetDriver
+					saxDriver: self
+					documentURI: absoluteUri)
+			on: (self externalEntityResolver resolveEntity: absoluteUri).
+	parser parseDocument.
+]
+
+{ #category : #testing }
+SAXDriver >> resolvesExternalEntities [
+	^ self configuration resolvesExternalEntities
 ]
 
 { #category : #accessing }
@@ -217,12 +438,48 @@ SAXDriver >> usesNamespaces [
 	^ self configuration usesNamespaces
 ]
 
-{ #category : #namespaces }
-SAXDriver >> validateStartTag: aStartTag prefix: aPrefix attributes: anAttributeDictionary [
-	aPrefix ifNotEmpty: [
-		self scopeAllocator
-			validatePrefix: aPrefix
-			ofElementName: aStartTag].
+{ #category : #validation }
+SAXDriver >> validateEndTag: anEndTag [
+	self usesNamespaces
+		ifTrue: [
+			self undeclareNamespaces.
+			self scopeAllocator exitScope].
+	self isValidating
+		ifTrue: [self validator validateEndTag: anEndTag].
+]
 
-	self scopeAllocator validatePrefixedAttributeNames: anAttributeDictionary.
+{ #category : #validation }
+SAXDriver >> validateRootElement: aStartTag [
+	(self dtd rootElement isEmpty
+		or: [aStartTag = self dtd rootElement])
+		ifTrue: [^ self].
+
+	XMLValidationException signal: 'Element <', aStartTag, '> cannot be root'.
+]
+
+{ #category : #validation }
+SAXDriver >> validateStartTag: aStartTag prefix: aPrefix attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
+	self usesNamespaces
+		ifTrue: [
+			self scopeAllocator enterScope.
+			self declareNamespaces: aNamespaceDictionary.
+		aPrefix ifNotEmpty: [
+			self scopeAllocator
+				validatePrefix: aPrefix
+				ofElementName: aStartTag].
+		self scopeAllocator validatePrefixedAttributeNames: anAttributeDictionary].
+
+	self isValidating
+		ifTrue: [
+			self elementNester totalOpen > 1
+				ifFalse: [self validateRootElement: aStartTag].
+		
+			self validator
+				validateStartTag: aStartTag
+				attributes: anAttributeDictionary].
+]
+
+{ #category : #accessing }
+SAXDriver >> validator [
+	^ validator ifNil: [validator := DTDDocumentValidator dtd: self dtd]
 ]

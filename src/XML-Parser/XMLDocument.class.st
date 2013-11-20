@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'version',
 		'encoding',
-		'doctypeDeclaration'
+		'doctypeDeclaration',
+		'isStandalone'
 	],
 	#category : #'XML-Parser-Nodes'
 }
@@ -47,6 +48,16 @@ XMLDocument >> isDocument [
 	^ true
 ]
 
+{ #category : #testing }
+XMLDocument >> isStandalone [
+	^ isStandalone ifNil: [isStandalone := false]
+]
+
+{ #category : #accessing }
+XMLDocument >> isStandalone: aBoolean [
+	isStandalone := aBoolean
+]
+
 { #category : #accessing }
 XMLDocument >> root [
 	^ self firstElement
@@ -74,7 +85,8 @@ XMLDocument >> writeXMLOn: aWriter [
 	self version ifNotNil: [
 		aWriter xml
 			version: self version;
-			encoding: self encoding].
+			encoding: self encoding;
+			standalone: self isStandalone].
 	self doctypeDeclaration
 		ifNotNil: [self doctypeDeclaration writeXMLOn: aWriter].
 	

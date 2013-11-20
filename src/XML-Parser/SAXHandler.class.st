@@ -8,6 +8,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'input',
+		'documentUri',
 		'configuration',
 		'elementNester',
 		'scopeAllocator'
@@ -21,83 +22,81 @@ SAXHandler class >> on: aStringOrStream [
 ]
 
 { #category : #'instance creation' }
-SAXHandler class >> onFileNamed: aFileName [
-	^ self on: (FileStream readOnlyFileNamed: aFileName)
+SAXHandler class >> on: aStringOrStream documentURI: aUri [
+	^ self new
+		input: aStringOrStream
+		documentURI: aUri
 ]
 
 { #category : #'instance creation' }
+SAXHandler class >> onFileNamed: aFileName [
+	^ self
+		on: (XMLFileClient defaultImplementation get: aFileName)
+		documentURI: aFileName
+]
+
+{ #category : #'instance creation' }
+SAXHandler class >> onURL: aUrlString [
+	^ self
+		on: (XMLHTTPClient defaultImplementation get: aUrlString)
+		documentURI: aUrlString
+]
+
+{ #category : #parsing }
 SAXHandler class >> parse: aStringOrStream [
 	^ (self on: aStringOrStream) parseDocument
 ]
 
-{ #category : #'instance creation' }
+{ #category : #parsing }
 SAXHandler class >> parse: aStringOrStream usingNamespaces: aBoolean [
 	^ (self on: aStringOrStream)
 		usesNamespaces: aBoolean;
 		parseDocument
 ]
 
-{ #category : #'instance creation' }
+{ #category : #parsing }
+SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean validation: aValidationBoolean [
+	^ (self on: aStringOrStream)
+		usesNamespaces: aNamespaceBoolean;
+		isValidating: aValidationBoolean;
+		parseDocument
+]
+
+{ #category : #parsing }
+SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean validation: aValidationBoolean externalEntities: anEntityBoolean [
+	^ (self on: aStringOrStream)
+		usesNamespaces: aNamespaceBoolean;
+		isValidating: aValidationBoolean;
+		resolvesExternalEntities: anEntityBoolean;
+		parseDocument
+]
+
+{ #category : #parsing }
 SAXHandler class >> parseDocumentFrom: aStringOrStream [
+	self deprecated: 'use #parse: instead'.
+
 	^ self parse: aStringOrStream.
 ]
 
-{ #category : #'instance creation' }
+{ #category : #parsing }
 SAXHandler class >> parseDocumentFrom: aStringOrStream useNamespaces: aBoolean [
+	self deprecated: 'use #parse:usingNamespaces: instead'.
+
 	^ self parse: aStringOrStream usingNamespaces: aBoolean.
 ]
 
-{ #category : #'instance creation' }
-SAXHandler class >> parseDocumentFromFileNamed: aFileName [
-	self deprecated: 'use #parseFileNamed: instead'.
-
-	^ self parseFileNamed: aFileName.
-]
-
-{ #category : #'instance creation' }
+{ #category : #parsing }
 SAXHandler class >> parseFileNamed: aFileName [
 	^ (self onFileNamed: aFileName) parseDocument
 ]
 
-{ #category : #'instance creation' }
-SAXHandler class >> parserOnFileNamed: aFileName [
-	self deprecated: 'use #onFileNamed: instead'.
-
-	^ self onFileNamed: aFileName.
+{ #category : #parsing }
+SAXHandler class >> parseURL: aUrl [
+	^ (self onURL: aUrl) parseDocument
 ]
 
-{ #category : #'subclass creation' }
-SAXHandler class >> parserSubclassNamed: aName category: aCategory [
-	^ self
-		parserSubclassNamed: aName
-		implementing: (self methodsInCategory: #content), (self methodsInCategory: #lexical)
-		category: aCategory
-]
-
-{ #category : #'subclass creation' }
-SAXHandler class >> parserSubclassNamed: aName implementing: aSelectorArray category: aCategory [
-	| newSubclass |
-
-	aSelectorArray do: [:each |
-		(self canUnderstand: each asSymbol)
-			ifFalse: [self error: 'Cannot create parser subclass implementing ', each asString, '; unrecognized handler']].
-
-	newSubclass :=
-		self
-			subclass: aName asSymbol
-			instanceVariableNames: ''
-			classVariableNames: ''
-			poolDictionaries: ''
-			category: aCategory asString.
-
-	aSelectorArray do: [:each |
-		newSubclass
-			compile:
-				(((self ultimateSourceCodeAt: each asSymbol ifAbsent: []) asString
-					copyUpTo: Character cr) copyUpTo: Character lf)
-			classified: (self whichCategoryIncludesSelector: each asSymbol)].
-	
-	^ newSubclass.
+{ #category : #declaration }
+SAXHandler >> attributeDeclaration: anElement name: aName type: aType defaultDeclaration: aDefaultDeclaration [
 ]
 
 { #category : #content }
@@ -142,6 +141,28 @@ SAXHandler >> currentScope: aScope [
 	self scopeAllocator currentScope: aScope
 ]
 
+{ #category : #private }
+SAXHandler >> defaultDocumentURI [
+	| client |
+
+	(input respondsTo: #path)
+		ifTrue: [^ input path].
+
+	^ (client := self configuration fileClient)
+		combineRelative: self identityHash printString
+		withBase: client currentWorkingDirectory.
+]
+
+{ #category : #accessing }
+SAXHandler >> documentURI [
+	^ documentUri ifNil: [documentUri := self defaultDocumentURI]
+]
+
+{ #category : #declaration }
+SAXHandler >> elementDeclaration: aName contentModel: aContentModel [
+
+]
+
 { #category : #accessing }
 SAXHandler >> elementNester [
 	^ elementNester ifNil: [elementNester := XMLElementNester new]
@@ -151,6 +172,11 @@ SAXHandler >> elementNester [
 SAXHandler >> endCData [
 	"This call corresponds to the Java SAX ext call
 	endCData()."
+]
+
+{ #category : #declaration }
+SAXHandler >> endDTD [
+
 ]
 
 { #category : #content }
@@ -179,11 +205,7 @@ SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aUri localName: aL
 	endElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName).
 	By default this call is mapped to the following more convenient call:"
 
-	self
-		invokeDeprecated: #endElement:namespace:namespaceURI:qualifiedName:
-		withArguments: (Array with: aLocalName with: aPrefix with: aUri with: aQualifiedName)
-		orForwardTo: #endElement:prefix:uri:
-		withArguments: (Array with: aQualifiedName with: aPrefix with: aUri)
+	self endElement: aQualifiedName prefix: aPrefix uri:  aUri
 ]
 
 { #category : #lexical }
@@ -196,6 +218,14 @@ SAXHandler >> endEntity: anEntityName [
 SAXHandler >> endPrefixMapping: aPrefix [
 	"This call corresonds to the Java SAX call
 	endPrefixMapping(java.lang.String prefix)."
+]
+
+{ #category : #declaration }
+SAXHandler >> generalEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
+]
+
+{ #category : #declaration }
+SAXHandler >> generalEntityDeclaration: aName replacement: aReplacement [
 ]
 
 { #category : #content }
@@ -214,26 +244,10 @@ SAXHandler >> input: aStringOrStream [
 	input := aStringOrStream.
 ]
 
-{ #category : #'error handling' }
-SAXHandler >> invokeDeprecated: aDeprecatedSelector withArguments: anOldArgumentArray orForwardTo: aNewSelector withArguments: aNewArgumentArray [
-	| parentContext |
-
-	parentContext := thisContext sender.
-	(self class includesSelector: aDeprecatedSelector)
-		ifFalse: [
-			aNewSelector ifNil: [^ self].
-			^ self
-				perform: aNewSelector
-				withArguments: aNewArgumentArray].
-
-	(Deprecation
-		method: (self class lookupSelector: aDeprecatedSelector)
-		explanation: 'use ', parentContext selector, ' instead'
-		on: nil
-		in: nil) signal.
-	self
-		perform: aDeprecatedSelector
-		withArguments: anOldArgumentArray.
+{ #category : #private }
+SAXHandler >> input: aStringOrStream documentURI: aUri [
+	input := aStringOrStream.
+	documentUri := aUri.
 ]
 
 { #category : #testing }
@@ -246,6 +260,19 @@ SAXHandler >> isValidating: aBoolean [
 	self configuration isValidating: aBoolean
 ]
 
+{ #category : #declaration }
+SAXHandler >> notationDeclaration: aName publicID: aPublicId systemID: aSytemId [
+
+]
+
+{ #category : #declaration }
+SAXHandler >> parameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
+]
+
+{ #category : #declaration }
+SAXHandler >> parameterEntityDeclaration: aName replacement: aReplacement [
+]
+
 { #category : #parsing }
 SAXHandler >> parseDocument [
 	self parser parseDocument.
@@ -256,7 +283,7 @@ SAXHandler >> parseDocument [
 
 { #category : #parsing }
 SAXHandler >> parser [
-	self configuration parserClass: self class.
+	self configuration parserHandlerClass: self class.
 
 	^ XMLParser
 		driver: (SAXDriver saxHandler: self)
@@ -267,6 +294,21 @@ SAXHandler >> parser [
 SAXHandler >> processingInstruction: aTarget data: aDataString [
 	"This call corresonds to the Java SAX call
 	processingInstruction(java.lang.String target, java.lang.String data)."
+]
+
+{ #category : #testing }
+SAXHandler >> resolvesExternalEntities [
+	^ self configuration resolvesExternalEntities
+]
+
+{ #category : #accessing }
+SAXHandler >> resolvesExternalEntities: aBoolean [
+	self configuration resolvesExternalEntities: aBoolean
+]
+
+{ #category : #accessing }
+SAXHandler >> rootElement [
+	^ self elementNester rootElement
 ]
 
 { #category : #accessing }
@@ -286,7 +328,7 @@ SAXHandler >> startCData [
 	startCData()."
 ]
 
-{ #category : #lexical }
+{ #category : #declaration }
 SAXHandler >> startDTD: aRootElementName publicID: aPublicId systemID: aSystemId [
 	"This call corresponds to the Java SAX ext call
 	startDTD(java.lang.String name, java.lang.String publicId, java.lang.String systemId)."
@@ -300,11 +342,7 @@ SAXHandler >> startDocument [
 
 { #category : #content }
 SAXHandler >> startElement: aQualifiedName attributes: aDictionary [
-	self
-		invokeDeprecated: #startElement:attributeList:
-		withArguments: (Array with: aQualifiedName with: aDictionary)
-		orForwardTo: nil
-		withArguments: nil.
+
 ]
 
 { #category : #content }
@@ -319,10 +357,10 @@ SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName: 
 		java.lang.String qName, Attributes atts)."
 
 	self
-		invokeDeprecated: #startElement:namespaceURI:namespace:attributeList:
-		withArguments: (Array with: aLocalName with: aUri with: aPrefix with: aDictionary)
-		orForwardTo: #startElement:prefix:uri:attributes:
-		withArguments: (Array with: aQualifiedName with: aPrefix with: aUri with: aDictionary).
+		startElement: aQualifiedName
+		prefix: aPrefix
+		uri: aUri
+		attributes: aDictionary
 ]
 
 { #category : #lexical }
@@ -356,12 +394,5 @@ SAXHandler >> usesNamespaces: aBoolean [
 
 { #category : #content }
 SAXHandler >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
-	self
-		invokeDeprecated: #documentAttributes:
-		withArguments:
-			(Array with: (Dictionary
-				with: 'version' -> aVersionFloat asString
-				with: 'encoding' -> anEncoding))
-		orForwardTo: nil
-		withArguments: nil
+
 ]

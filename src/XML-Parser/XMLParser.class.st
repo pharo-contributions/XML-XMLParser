@@ -21,6 +21,11 @@ XMLParser >> atEnd [
 	^ self tokenizer atEnd
 ]
 
+{ #category : #parsing }
+XMLParser >> currentLineNumber [
+	^ self tokenizer currentLineNumber
+]
+
 { #category : #accessing }
 XMLParser >> driver [
 	^ driver
@@ -33,7 +38,12 @@ XMLParser >> parseDocument [
 
 { #category : #parsing }
 XMLParser >> parseToken [
-	^ self tokenizer nextToken
+	^ [self tokenizer nextToken]
+		on: XMLParserException
+		do: [:error |
+			error signal:
+				error messageText,
+				' (line ', self currentLineNumber printString, ')'].
 ]
 
 { #category : #accessing }

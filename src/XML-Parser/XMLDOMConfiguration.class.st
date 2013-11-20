@@ -23,8 +23,8 @@ XMLDOMConfiguration >> nodeFactory: aFactory [
 ]
 
 { #category : #accessing }
-XMLDOMConfiguration >> parserClass [
-	^ parserClass ifNil: [parserClass := XMLDOMParser]
+XMLDOMConfiguration >> parserHandlerClass [
+	^ parserHandlerClass ifNil: [parserHandlerClass := XMLDOMParser]
 ]
 
 { #category : #accessing }

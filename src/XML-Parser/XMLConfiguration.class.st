@@ -7,10 +7,42 @@ Class {
 	#instVars : [
 		'isValidating',
 		'usesNamespaces',
-		'parserClass'
+		'resolvesExternalEntities',
+		'externalEntityResolver',
+		'parserHandlerClass'
 	],
 	#category : #'XML-Parser'
 }
+
+{ #category : #accessing }
+XMLConfiguration >> externalEntityResolver [
+	^ externalEntityResolver ifNil: [externalEntityResolver := DTDExternalEntityResolver new]
+]
+
+{ #category : #accessing }
+XMLConfiguration >> externalEntityResolver: anExternalEntityResolver [
+	externalEntityResolver := anExternalEntityResolver
+]
+
+{ #category : #accessing }
+XMLConfiguration >> fileClient [
+	^ self externalEntityResolver fileClient
+]
+
+{ #category : #accessing }
+XMLConfiguration >> fileClient: aClient [
+	self externalEntityResolver fileClient: aClient
+]
+
+{ #category : #accessing }
+XMLConfiguration >> httpClient [
+	^ self externalEntityResolver httpClient
+]
+
+{ #category : #accessing }
+XMLConfiguration >> httpClient: aClient [
+	self externalEntityResolver httpClient: aClient
+]
 
 { #category : #accessing }
 XMLConfiguration >> isValidating [
@@ -23,13 +55,23 @@ XMLConfiguration >> isValidating: aBoolean [
 ]
 
 { #category : #accessing }
-XMLConfiguration >> parserClass [
-	^ parserClass ifNil: [parserClass := SAXHandler]
+XMLConfiguration >> parserHandlerClass [
+	^ parserHandlerClass ifNil: [parserHandlerClass := SAXHandler]
 ]
 
 { #category : #accessing }
-XMLConfiguration >> parserClass: aClass [
-	parserClass := aClass
+XMLConfiguration >> parserHandlerClass: aClass [
+	parserHandlerClass := aClass
+]
+
+{ #category : #accessing }
+XMLConfiguration >> resolvesExternalEntities [
+	^ resolvesExternalEntities ifNil: [resolvesExternalEntities := true]
+]
+
+{ #category : #accessing }
+XMLConfiguration >> resolvesExternalEntities: aBoolean [
+	resolvesExternalEntities := aBoolean
 ]
 
 { #category : #accessing }

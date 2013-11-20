@@ -18,9 +18,23 @@ Class {
 
 { #category : #'instance creation' }
 XMLDOMParser class >> on: aStringOrStream withRootNode: aRootNode [
-	^ (self on: aStringOrStream)
-		pushNode: aRootNode;
-		yourself
+	| parser |
+
+	(parser := self on: aStringOrStream)
+		pushNode: aRootNode.
+	aRootNode isElement
+		ifTrue: [parser elementNester rootElement: aRootNode name].
+	^ parser.
+]
+
+{ #category : #declaration }
+XMLDOMParser >> attributeDeclaration: anElement name: aName type: aType defaultDeclaration: aDefaultDeclaration [
+	self topNode addNode:
+		(XMLAttributeDeclaration
+			elementName: anElement
+			attributeName: aName
+			type: aType
+			defaultDeclaration: aDefaultDeclaration)
 ]
 
 { #category : #content }
@@ -52,9 +66,22 @@ XMLDOMParser >> document: aDocument [
 	(document := aDocument) configuration: self configuration
 ]
 
+{ #category : #declaration }
+XMLDOMParser >> elementDeclaration: aName contentModel: aContentModel [
+	self topNode addNode:
+		(XMLElementDeclaration
+			name: aName
+			contentModel: aContentModel)
+]
+
 { #category : #lexical }
 XMLDOMParser >> endCData [
 	isInCDataSection := false
+]
+
+{ #category : #declaration }
+XMLDOMParser >> endDTD [
+	self popNode
 ]
 
 { #category : #content }
@@ -65,6 +92,24 @@ XMLDOMParser >> endDocument [
 { #category : #content }
 XMLDOMParser >> endElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName [
 	self popNode
+]
+
+{ #category : #declaration }
+XMLDOMParser >> generalEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
+	self topNode addNode:
+		(XMLGeneralEntityDeclaration
+			name: aName
+			publicID: aPublicId
+			systemID: aSystemId
+			ndata: aNotation)
+]
+
+{ #category : #declaration }
+XMLDOMParser >> generalEntityDeclaration: aName replacement: aReplacement [
+	self topNode addNode:
+		(XMLGeneralEntityDeclaration
+			name: aName
+			replacement: aReplacement)
 ]
 
 { #category : #testing }
@@ -85,6 +130,32 @@ XMLDOMParser >> nodeFactory: aNodeFactory [
 { #category : #private }
 XMLDOMParser >> nodeStack [
 	^ nodeStack ifNil: [nodeStack := OrderedCollection new: 30]
+]
+
+{ #category : #declaration }
+XMLDOMParser >> notationDeclaration: aName publicID: aPublicId systemID: aSystemId [
+	self topNode addNode:
+		(XMLNotationDeclaration
+			name: aName
+			publicID: aPublicId
+			systemID: aSystemId)
+]
+
+{ #category : #declaration }
+XMLDOMParser >> parameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
+	self topNode addNode:
+		(XMLParameterEntityDeclaration
+			name: aName
+			publicID: aPublicId
+			systemID: aSystemId)
+]
+
+{ #category : #declaration }
+XMLDOMParser >> parameterEntityDeclaration: aName replacement: aReplacement [
+	self topNode addNode:
+		(XMLParameterEntityDeclaration
+			name: aName
+			replacement: aReplacement)
 ]
 
 { #category : #parsing }
@@ -154,6 +225,19 @@ XMLDOMParser >> startCData [
 	isInCDataSection := true
 ]
 
+{ #category : #declaration }
+XMLDOMParser >> startDTD: aRootElementName publicID: aPublicId systemID: aSystemId [
+	| doctypeDeclaration |
+
+	doctypeDeclaration := 
+		self nodeFactory doctypeDeclarationClass
+			root: aRootElementName
+			publicID: aPublicId
+			systemID: aSystemId.
+	self pushNode: doctypeDeclaration.
+	self document doctypeDeclaration: doctypeDeclaration.
+]
+
 { #category : #content }
 XMLDOMParser >> startDocument [
 	self topNode ifNotNil: [^ self].
@@ -189,5 +273,6 @@ XMLDOMParser >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBool
 	self document ifNotNil: [
 		self document
 			version: aVersionFloat;
-			encoding: anEncoding]
+			encoding: anEncoding;
+			isStandalone: aBoolean]
 ]

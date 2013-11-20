@@ -21,16 +21,6 @@ XMLEntityDeclaration class >> name: aName publicID: aPublicId systemID: aSystemI
 ]
 
 { #category : #'instance creation' }
-XMLEntityDeclaration class >> name: aName publicID: aPublicId systemID: aSystemId ndata: aNotationName [
-	^ self new
-		setName: aName
-		replacement: nil
-		publicID: aPublicId
-		systemID: aSystemId
-		ndata: aNotationName
-]
-
-{ #category : #'instance creation' }
 XMLEntityDeclaration class >> name: aName replacement: aReplacement [
 	^ self new
 		setName: aName
@@ -38,6 +28,11 @@ XMLEntityDeclaration class >> name: aName replacement: aReplacement [
 		publicID: nil
 		systemID: nil
 		ndata: nil
+]
+
+{ #category : #testing }
+XMLEntityDeclaration >> isParameter [
+	self subclassResponsibility
 ]
 
 { #category : #accessing }
@@ -73,6 +68,7 @@ XMLEntityDeclaration >> systemID [
 XMLEntityDeclaration >> writeXMLOn: aWriter [
 	aWriter entityDeclaration
 		name: self name;
+		isParameter: self isParameter;
 		replacement: self replacement;
 		publicID: self publicID;
 		systemID: self systemID;

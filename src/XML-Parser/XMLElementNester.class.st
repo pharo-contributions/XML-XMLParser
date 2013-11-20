@@ -5,7 +5,9 @@ Class {
 	#name : #XMLElementNester,
 	#superclass : #Object,
 	#instVars : [
-		'openElements'
+		'openElements',
+		'rootElement',
+		'hasExternalRoot'
 	],
 	#category : #'XML-Parser'
 }
@@ -60,6 +62,11 @@ XMLElementNester >> errorUnmatchedEndTag: anElementName [
 ]
 
 { #category : #testing }
+XMLElementNester >> hasExternalRoot [
+	^ hasExternalRoot ifNil: [hasExternalRoot := false]
+]
+
+{ #category : #testing }
 XMLElementNester >> hasOpenElement: anElementName [
 	^ self openElements includes: anElementName
 ]
@@ -100,9 +107,28 @@ XMLElementNester >> printOn: aStream startingAt: aPosition [
 		ifTrue: [aStream nextPutAll: '...'].
 ]
 
+{ #category : #accessing }
+XMLElementNester >> rootElement [
+	^ rootElement ifNil: ['']
+]
+
+{ #category : #accessing }
+XMLElementNester >> rootElement: anElement [
+	rootElement := anElement.
+	hasExternalRoot := true.
+]
+
 { #category : #checking }
 XMLElementNester >> startedElement: aTagName [
-	^ self openElements addLast: aTagName
+	rootElement
+		ifNil: [rootElement := aTagName]
+		ifNotNil: [
+			(self hasOpenElements or: [self hasExternalRoot])
+				ifFalse: [
+					XMLWellFormednessException signal:
+						'Document cannot have multiple root elements']].
+
+	self openElements addLast: aTagName
 ]
 
 { #category : #accessing }

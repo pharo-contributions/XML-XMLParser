@@ -10,6 +10,7 @@ Class {
 		'stream',
 		'nestedStreams',
 		'hasNestedStreams',
+		'maxNestedStreams',
 		'peekChar',
 		'writeBuffer',
 		'normalizedLineEndingChar',
@@ -43,8 +44,11 @@ XMLNestedStreamReader class >> initialize [
 ]
 
 { #category : #'instance creation' }
-XMLNestedStreamReader class >> on: anInitialStream [
-	^ self new stream: anInitialStream
+XMLNestedStreamReader class >> on: anInitialStream from: aSource onClose: aBlock [
+	^ self new
+		stream: anInitialStream
+		from: aSource
+		onClose: aBlock
 ]
 
 { #category : #testing }
@@ -54,15 +58,12 @@ XMLNestedStreamReader >> atEnd [
 
 { #category : #accessing }
 XMLNestedStreamReader >> basicNext [
-	"Returns next character in the stream after performing line-ending normalization.
-	Normalization does not occur across nested streams."
+	"Returns next character in the stream after performing line-ending normalization."
 
 	| nextChar |
 
 	(nextChar := stream next)
 		ifNil: [
-			hasNestedStreams ifFalse: [^nil].
-			self popCurrentStream.
 			[hasNestedStreams and: [stream atEnd]]
 				whileTrue: [self popCurrentStream].
 			nextChar := stream next].
@@ -70,6 +71,8 @@ XMLNestedStreamReader >> basicNext [
 	nextChar == CarriageReturn
 		ifTrue: [
 			nextChar := normalizedLineEndingChar.
+			[hasNestedStreams and: [stream atEnd]]
+				whileTrue: [self popCurrentStream].
 			(stream peek == LineFeed)
 				ifTrue: [stream next]]
 		ifFalse: [
@@ -89,6 +92,7 @@ XMLNestedStreamReader >> initialize [
 	stream := nil.
 	nestedStreams := nil.
 	hasNestedStreams := false.
+	maxNestedStreams := 5.
 	peekChar := nil.
 	writeBuffer := WriteStream on: (String new: 128).
 	currentLineNumber := 1.
@@ -195,17 +199,6 @@ XMLNestedStreamReader >> nextMatchAll: aString [
 ]
 
 { #category : #accessing }
-XMLNestedStreamReader >> nextWhitespace [
-	| nextChar |
-
-	writeBuffer reset.
-	[(nextChar := self peek) notNil
-		and: [SeparatorCharacters includes: nextChar]]
-		whileTrue: [writeBuffer nextPut: self next].
-	^ writeBuffer contents.
-]
-
-{ #category : #accessing }
 XMLNestedStreamReader >> peek [
 	"Return the next character from the current input stream."
 
@@ -221,7 +214,6 @@ XMLNestedStreamReader >> popCurrentStream [
 
 { #category : #streaming }
 XMLNestedStreamReader >> pushBack: aString [
-	"Fixed to push the string before the peek char (if any)."
 	| pushBackString |
 
 	pushBackString := aString.
@@ -230,20 +222,35 @@ XMLNestedStreamReader >> pushBack: aString [
 			pushBackString := pushBackString copyWith: peekChar.
 			peekChar := nil].
 
-	self pushStream: (ReadStream on: pushBackString).
+	self pushStream: (ReadStream on: pushBackString) from: nil onClose: nil.
 ]
 
 { #category : #streaming }
 XMLNestedStreamReader >> pushStream: aStream [
+	^ self
+		pushStream: aStream
+		from: nil
+		onClose: nil
+]
+
+{ #category : #streaming }
+XMLNestedStreamReader >> pushStream: aStream from: aSource onClose: aBlock [
 	"Continue parsing from the new nested stream."
 	peekChar ifNotNil: [self pushBack: ''].
 
 	nestedStreams
 		ifNil: [nestedStreams := OrderedCollection with: stream]
-		ifNotNil: [nestedStreams addLast: stream].
+		ifNotNil: [
+			"This stops unending recursive entity expansion"
+			(nestedStreams size >= maxNestedStreams)
+				ifTrue: [XMLParserException signal: 'cannot further nest input streams'].
+			nestedStreams addLast: stream].
 	hasNestedStreams := true.
 
-	self stream: aStream.
+	self
+		stream: aStream
+		from: aSource
+		onClose: aBlock
 ]
 
 { #category : #streaming }
@@ -255,22 +262,21 @@ XMLNestedStreamReader >> skipSeparators [
 		whileTrue: [self next].
 ]
 
-{ #category : #streaming }
-XMLNestedStreamReader >> skipUpTo: aDelimiter [
-	| nextChar |
-
-	[self atEnd or: [(nextChar := self next) == aDelimiter]] whileFalse.
-	^ nextChar == aDelimiter.
-]
-
 { #category : #accessing }
 XMLNestedStreamReader >> stream [
 	^ stream
 ]
 
 { #category : #accessing }
-XMLNestedStreamReader >> stream: aNewStream [
-	stream := XMLPeekableStreamAdapter on: aNewStream
+XMLNestedStreamReader >> stream: aNewStream from: aSource onClose: aBlock [
+	stream :=
+		XMLPeekableStreamAdapter
+			on: aNewStream
+			from:
+				(aSource isEmptyOrNil
+					ifTrue: [stream ifNotNil: [stream source]]
+					ifFalse: [aSource])
+			onClose: aBlock
 ]
 
 { #category : #streaming }
@@ -293,6 +299,13 @@ XMLNestedStreamReader >> upToAll: aDelimitingString [
 	writeBuffer reset.
 	[self atEnd or: [self nextMatchAll: aDelimitingString]]
 		whileFalse: [writeBuffer nextPut: self next].
+	^ writeBuffer contents.
+]
+
+{ #category : #streaming }
+XMLNestedStreamReader >> upToEnd [
+	writeBuffer reset.
+	[self atEnd] whileFalse: [writeBuffer nextPut: self next].
 	^ writeBuffer contents.
 ]
 

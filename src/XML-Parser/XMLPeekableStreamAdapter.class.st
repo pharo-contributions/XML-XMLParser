@@ -7,19 +7,26 @@ Class {
 	#instVars : [
 		'stream',
 		'peekChar',
-		'source'
+		'source',
+		'onClose'
 	],
 	#category : #'XML-Parser'
 }
 
 { #category : #'instance creation' }
 XMLPeekableStreamAdapter class >> on: aStream [
-	^ self on: aStream from: nil
+	^ self
+		on: aStream
+		from: nil
+		onClose: nil
 ]
 
 { #category : #'instance creation' }
-XMLPeekableStreamAdapter class >> on: aStream from: aSource [
-	^ self new setStream: aStream source: aSource
+XMLPeekableStreamAdapter class >> on: aStream from: aSource onClose: aBlock [
+	^ self new
+		setStream: aStream
+		source: aSource
+		onClose: aBlock
 ]
 
 { #category : #testing }
@@ -29,7 +36,8 @@ XMLPeekableStreamAdapter >> atEnd [
 
 { #category : #'file open/close' }
 XMLPeekableStreamAdapter >> close [
-	stream close
+	stream close.
+	onClose ifNotNil: [onClose value].
 ]
 
 { #category : #accessing }
@@ -63,10 +71,11 @@ XMLPeekableStreamAdapter >> peek [
 ]
 
 { #category : #initialization }
-XMLPeekableStreamAdapter >> setStream: aStream source: aSource [
+XMLPeekableStreamAdapter >> setStream: aStream source: aSource onClose: aBlock [
 	stream := aStream.
 	peekChar := nil.
 	source := aSource.
+	onClose := aBlock.
 ]
 
 { #category : #accessing }
