@@ -82,11 +82,11 @@ XMLTokenizer class >> initializeNameStartChars [
 { #category : #'class initialization' }
 XMLTokenizer class >> initializePredefinedEntities [
 	(PredefinedEntities := Dictionary new)
-		at: 'lt' put: '&#60;';
-		at: 'gt' put: '&#62;';
-		at: 'amp' put: '&#38;';
-		at: 'apos' put: '&#39;';
-		at: 'quot' put: '&#34;'
+		at: 'lt' put: $<;
+		at: 'gt' put: $>;
+		at: 'amp' put: $&;
+		at: 'apos' put: $';
+		at: 'quot' put: $"
 ]
 
 { #category : #'class initialization' }
@@ -223,6 +223,18 @@ XMLTokenizer >> expectQuote [
 ]
 
 { #category : #tokenizing }
+XMLTokenizer >> expectTerminator: aCharacter [
+	| nextChar |
+
+	(nextChar := streamReader next) == aCharacter
+		ifFalse: [
+			self
+				errorExpected: aCharacter asString, ' terminator'
+				butGot: nextChar].
+	^ nextChar.
+]
+
+{ #category : #tokenizing }
 XMLTokenizer >> expectUpToAll: aTerminator [
 	| value isTerminated |
 
@@ -259,7 +271,7 @@ XMLTokenizer >> nextAttlistDeclaration [
 				type: attributeType
 				default: defaultDeclaration].
 	self skipSeparatorsReplacingParameterEntities.
-	self expectNext: $>.
+	self expectTerminator: $>.
 ]
 
 { #category : #tokenizing }
@@ -313,7 +325,6 @@ XMLTokenizer >> nextAttributeValue [
 		value := self
 			nextDelimitedBy: quote and: $<
 			entityChar: $&
-			entitySelector: #nextGeneralEntityReference
 			normalizeWhitespace: true
 			ignorableWhitespace: false].
 	self expectNext: quote.
@@ -335,7 +346,7 @@ XMLTokenizer >> nextComment [
 	streamReader next.
 	self expectNext: $-.
 	comment := streamReader upToAll: '--'.
-	self expectNext: $>.
+	self expectTerminator: $>.
 	driver handleComment: comment.
 ]
 
@@ -350,9 +361,6 @@ XMLTokenizer >> nextConditionalSection [
 
 { #category : #tokenizing }
 XMLTokenizer >> nextContentMarkupToken [
-	"skip <"
-	streamReader next.
-
 	streamReader peek == $?
 		ifTrue: [^ self nextPIOrXMLDecl].
 	streamReader peek == $!
@@ -374,7 +382,6 @@ XMLTokenizer >> nextContentToken [
 	pcData := self
 		nextDelimitedBy: $< and: nil
 		entityChar: $&
-		entitySelector: #nextGeneralEntityReference
 		normalizeWhitespace: false
 		ignorableWhitespace: true.
 	pcData
@@ -383,7 +390,9 @@ XMLTokenizer >> nextContentToken [
 			^ self].
 
 	streamReader peek == $<
-		ifTrue: [self nextContentMarkupToken].
+		ifTrue: [
+			streamReader next.
+			self nextContentMarkupToken].
 ]
 
 { #category : #tokenizing }
@@ -415,13 +424,18 @@ XMLTokenizer >> nextDefaultDeclaration [
 									nextPutAll: (self expectNextAll: 'FIXED');
 									space.
 								self skipSeparatorsReplacingParameterEntities.
-								writeStream nextPutAll: self nextFixedValue]]]
-			ifFalse: [writeStream nextPutAll: self nextFixedValue].
+								writeStream nextPutAll: self nextDefaultValue]]]
+			ifFalse: [writeStream nextPutAll: self nextDefaultValue].
 		self removeTrailingSpacesFrom: writeStream contents].
 ]
 
+{ #category : #'tokenizing dtd' }
+XMLTokenizer >> nextDefaultValue [
+	^ $" asString, self nextAttributeValue, $" asString
+]
+
 { #category : #tokenizing }
-XMLTokenizer >> nextDelimitedBy: aDelimiter and: aSecondDelimiter entityChar: anEntityStartChar entitySelector: anEntitySelector normalizeWhitespace: shouldNormalize ignorableWhitespace: shouldSkip [
+XMLTokenizer >> nextDelimitedBy: aDelimiter and: aSecondDelimiter entityChar: anEntityStartChar normalizeWhitespace: shouldNormalize ignorableWhitespace: shouldSkip [
 	| isIgnorableWhitespace nextChar pcData |
 
 	isIgnorableWhitespace := true.
@@ -441,14 +455,16 @@ XMLTokenizer >> nextDelimitedBy: aDelimiter and: aSecondDelimiter entityChar: an
 								isIgnorableWhitespace := false]
 							ifFalse: [
 								anEntityStartChar == $&
-									ifTrue: [self perform: anEntitySelector]
+									ifTrue: [
+										(nextChar := self nextGeneralEntityReference)
+											ifNotNil: [writeStream nextPut: nextChar]]
 									ifFalse: [
 										writeStream nextPut: $&.
 										isIgnorableWhitespace := false]]]
 					ifFalse: [
 						streamReader next.
 						nextChar == anEntityStartChar
-							ifTrue: [self perform: anEntitySelector]
+							ifTrue: [self nextParameterEntityReference]
 							ifFalse: [
 								nextChar isSeparator
 									ifTrue: [
@@ -468,6 +484,7 @@ XMLTokenizer >> nextDelimitedBy: aDelimiter and: aSecondDelimiter entityChar: an
 XMLTokenizer >> nextDocTypeDecl [
 	|  root externalId |
 
+	context enterDoctype.
 	self expectNextAll: 'DOCTYPE'.
 	streamReader skipSeparators.
 
@@ -506,7 +523,7 @@ XMLTokenizer >> nextElementDeclaration [
 					ifTrue: [writeStream nextPut: streamReader next]].
 		writeStream contents].
 	self skipSeparatorsReplacingParameterEntities.
-	self expectNext: $>.
+	self expectTerminator: $>.
 
 	driver
 		handleElementDeclaration: name
@@ -516,7 +533,8 @@ XMLTokenizer >> nextElementDeclaration [
 { #category : #'tokenizing dtd' }
 XMLTokenizer >> nextEndDocTypeDecl [
 	streamReader skipSeparators.
-	self expectNext: $>.
+	self expectTerminator: $>.
+	context enterProlog.
 	driver handleEndDTD.
 ]
 
@@ -528,7 +546,7 @@ XMLTokenizer >> nextEndDocument [
 
 { #category : #'tokenizing dtd' }
 XMLTokenizer >> nextEndInternalSubset [
-	self expectNext: $].
+	self expectTerminator: $].
 	context enterProlog.
 	self nextEndDocTypeDecl.
 ]
@@ -540,7 +558,7 @@ XMLTokenizer >> nextEndTag [
 	streamReader next.
 	tagName := self nextName.
 	streamReader skipSeparators.
-	self expectNext: $>.
+	self expectTerminator: $>.
 	driver handleEndTag: tagName
 ]
 
@@ -585,7 +603,6 @@ XMLTokenizer >> nextEntityValue [
 		value := self
 			nextDelimitedBy: quote and: nil
 			entityChar: $%
-			entitySelector: #nextParameterEntityReference
 			normalizeWhitespace: false
 			ignorableWhitespace: false].
 	self expectNext: quote.
@@ -618,7 +635,7 @@ XMLTokenizer >> nextExternalEntityDeclaration: aName isParameterEntity: aBoolean
 				systemID: externalId value
 				ndata: notation].
 	self skipSeparatorsReplacingParameterEntities.
-	self expectNext: $>.
+	self expectTerminator: $>.
 ]
 
 { #category : #'tokenizing dtd' }
@@ -645,21 +662,14 @@ XMLTokenizer >> nextExternalIDSystemLiteralRequired: aBoolean [
 	^ publicId -> systemId.
 ]
 
-{ #category : #'tokenizing dtd' }
-XMLTokenizer >> nextFixedValue [
-	^ $" asString, self nextAttributeValue, $" asString
-]
-
 { #category : #tokenizing }
 XMLTokenizer >> nextGeneralEntityReference [
 	| name entity replacement |
 
 	name := self nextName.
 	self expectNext: $;.
-	(PredefinedEntities includesKey: name)
-		ifTrue: [
-			streamReader pushBack: (PredefinedEntities at: name).
-			^ self].
+	(self predefinedEntities includesKey: name)
+		ifTrue: [^ self predefinedEntities at: name].
 
 	replacement := ''.
 	(entity := driver handleGeneralEntityReference: name)
@@ -669,7 +679,7 @@ XMLTokenizer >> nextGeneralEntityReference [
 					ifTrue: [entity replacementForLiteralContext]
 					ifFalse: [entity replacementForContentContext])].
 	replacement
-		ifEmpty: [^ self].
+		ifEmpty: [^ nil].
 
 	context isInContent
 		ifTrue: [driver handleStartContentEntityReplacement: name].
@@ -681,6 +691,8 @@ XMLTokenizer >> nextGeneralEntityReference [
 				ifTrue: [driver handleEndContentEntityReplacement: name]
 				ifFalse: [nil]).
 	self checkForTextDeclarationInEntity: entity replacement: replacement.
+
+	^ nil.
 ]
 
 { #category : #'tokenizing dtd' }
@@ -737,7 +749,7 @@ XMLTokenizer >> nextInternalEntityDeclaration: aName isParameterEntity: aBoolean
 
 	value := self nextEntityValue.
 	self skipSeparatorsReplacingParameterEntities.
-	self expectNext: $>.
+	self expectTerminator: $>.
 
 	aBoolean
 		ifTrue: [driver handleParameterEntityDeclaration: aName replacement: value]
@@ -792,7 +804,7 @@ XMLTokenizer >> nextNotationDeclaration [
 	self skipSeparatorsReplacingParameterEntities.
 	externalId := self nextExternalIDSystemLiteralRequired: false.
 	self skipSeparatorsReplacingParameterEntities.
-	self expectNext: $>.
+	self expectTerminator: $>.
 
 	driver
 		handleNotationDeclaration: name
@@ -900,16 +912,7 @@ XMLTokenizer >> nextSubsetDeclaration [
 ]
 
 { #category : #'tokenizing dtd' }
-XMLTokenizer >> nextSubsetToken [
-	streamReader skipSeparators.
-	streamReader atEnd
-		ifTrue: [^ self].
-
-	streamReader peek == $%
-		ifTrue: [^ self replaceParameterEntityReference].
-	(context isInInternalSubset and: [streamReader peek == $]])
-		ifTrue: [^ self nextEndInternalSubset].
-
+XMLTokenizer >> nextSubsetMarkupToken [
 	self expectNext: $<.
 	streamReader peek == $?
 		ifTrue: [^ self nextPIOrXMLDecl]
@@ -927,6 +930,20 @@ XMLTokenizer >> nextSubsetToken [
 			^ self].
 
 	self nextSubsetDeclaration.
+]
+
+{ #category : #'tokenizing dtd' }
+XMLTokenizer >> nextSubsetToken [
+	streamReader skipSeparators.
+	streamReader atEnd
+		ifTrue: [^ self].
+
+	streamReader peek == $%
+		ifTrue: [^ self replaceParameterEntityReference].
+	(context isInInternalSubset and: [streamReader peek == $]])
+		ifTrue: [^ self nextEndInternalSubset].
+
+	self nextSubsetMarkupToken.
 ]
 
 { #category : #'tokenizing dtd' }
@@ -953,18 +970,20 @@ XMLTokenizer >> nextTag [
 	driver usesNamespaces
 		ifTrue: [namespaces := OrderPreservingDictionary defaultValue: ''].
 	[streamReader skipSeparators.
-	((nextChar := streamReader peek) == $>
-		or: [nextChar == $/])]
+	((nextChar := streamReader peek) isNil
+		or: [nextChar == $>
+			or: [nextChar == $/]])]
 		whileFalse: [self nextAttributeInto: attributes namespaces: namespaces].
 
 	driver
 		handleStartTag: tagName
 		attributes: attributes
 		namespaces: namespaces.
-	streamReader next == $/
+	streamReader peek == $/
 		ifTrue: [
-			self expectNext: $>.
+			streamReader next.
 			driver handleEndTag: tagName].
+	self expectTerminator: $>.
 ]
 
 { #category : #tokenizing }
@@ -1002,7 +1021,8 @@ XMLTokenizer >> nextXMLDecl [
 	context isInTextDeclaration
 		ifFalse: [standalone := self nextXMLDeclAttribute: 'standalone'].
 	streamReader skipSeparators.
-	self expectNextAll: '?>'.
+	self expectNext: $?.
+	self expectTerminator: $>.
 
 	encoding
 		ifNotEmpty: [streamReader useConverterForEncoding: encoding].
@@ -1040,6 +1060,11 @@ XMLTokenizer >> parseError: anErrorString [
 	driver handleParseError: anErrorString
 ]
 
+{ #category : #accessing }
+XMLTokenizer >> predefinedEntities [
+	^ PredefinedEntities
+]
+
 { #category : #tokenizing }
 XMLTokenizer >> removeTrailingSpacesFrom: aString [
 	| n |
@@ -1061,7 +1086,7 @@ XMLTokenizer >> replaceParameterEntityReference [
 { #category : #initialization }
 XMLTokenizer >> setDriver: aDriver stream: aStream [
 	driver := aDriver.
-	context := XMLTokenContext new.
+	context := self tokenContextClass new.
 	streamReader :=
 		(XMLNestedStreamReader
 			on: aStream
@@ -1088,4 +1113,9 @@ XMLTokenizer >> streamReader [
 { #category : #accessing }
 XMLTokenizer >> tokenContext [
 	^ context
+]
+
+{ #category : #accessing }
+XMLTokenizer >> tokenContextClass [
+	^ XMLTokenContext
 ]

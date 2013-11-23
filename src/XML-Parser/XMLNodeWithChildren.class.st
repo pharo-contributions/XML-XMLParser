@@ -211,13 +211,6 @@ XMLNodeWithChildren >> replaceNode: aNode with: aReplacementNode [
 		put: aReplacementNode
 ]
 
-{ #category : #accessing }
-XMLNodeWithChildren >> topNode [
-	self deprecated: 'use #firstNode instead'.
-
-	^ self firstNode.
-]
-
 { #category : #printing }
 XMLNodeWithChildren >> writeInnerXMLOn: aWriter [
 	self nodesDo: [:each | each writeXMLOn: aWriter]

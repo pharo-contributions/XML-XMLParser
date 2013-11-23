@@ -180,20 +180,6 @@ XMLDOMParser >> preservesCDataNodes: aBoolean [
 ]
 
 { #category : #testing }
-XMLDOMParser >> preservesCDataSections [
-	self deprecated: 'use #preservesCDataNodes instead'.
-
-	^ self preservesCDataNodes.
-]
-
-{ #category : #accessing }
-XMLDOMParser >> preservesCDataSections: aBoolean [
-	self deprecated: 'use #preservesCDataNodes: instead'.
-
-	self preservesCDataNodes: aBoolean.
-]
-
-{ #category : #testing }
 XMLDOMParser >> preservesCommentNodes [
 	^ self configuration preservesCommentNodes
 ]

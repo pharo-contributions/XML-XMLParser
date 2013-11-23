@@ -10,23 +10,29 @@ Class {
 
 { #category : #paths }
 XMLFileSystemClient >> combineRelative: aRelativePath withBase: aBasePath [
+	| basePath fullPathString |
 
-	^ (self isNonRelative: aRelativePath)
-		ifTrue: [aRelativePath]
+	(self isNonRelative: aRelativePath)
+		ifTrue: [^ aRelativePath].
+
+	(basePath := self pathClass from: aBasePath) asFileReference isDirectory
+		ifTrue: [
+			fullPathString :=
+				self systemPathFrom: (basePath / (self trimRelativePath: aRelativePath))]
 		ifFalse: [
-			(self pathClass from: aBasePath) asFileReference isDirectory
-				ifTrue: [
-					self systemPathFrom:
-						(self pathClass from: aBasePath) / (self trimRelativePath: aRelativePath)]
-				ifFalse: [
-					self systemPathFromSegments:
-						(self pathClass from: aBasePath) segments allButLast,
-							(self pathClass from: (self trimRelativePath: aRelativePath))]]
+			fullPathString :=
+				self pathSeparator join:
+					(basePath segments allButLast,
+						(self pathClass from: (self trimRelativePath: aRelativePath)))].
+	^ (self isNonRelative: aBasePath)
+		ifTrue: [fullPathString copyWithFirst: self pathSeparator]
+		ifFalse: [fullPathString].
 ]
 
 { #category : #paths }
 XMLFileSystemClient >> currentWorkingDirectory [
-	^ self systemPathFrom: (Smalltalk at: #FileSystem) workingDirectory path
+	^ (self systemPathFrom: (Smalltalk at: #FileSystem) workingDirectory path)
+		copyWithFirst: self pathSeparator
 ]
 
 { #category : #retrieving }
@@ -43,20 +49,5 @@ XMLFileSystemClient >> pathClass [
 
 { #category : #private }
 XMLFileSystemClient >> systemPathFrom: aFileSystemPath [
-	^ self systemPathFromSegments: aFileSystemPath segments
-]
-
-{ #category : #private }
-XMLFileSystemClient >> systemPathFromSegments: aFileSystemPathSegmentArray [
-	| pathStream |
-
-	pathStream := (String new: 32) writeStream.
-	aFileSystemPathSegmentArray
-		do: [:each |
-			pathStream
-				nextPut: self pathSeparator;
-				nextPutAll: each].
-	pathStream position > 0
-		ifFalse: [pathStream nextPut: self pathSeparator].
-	^ pathStream contents.
+	^ self pathSeparator join: aFileSystemPath segments
 ]

@@ -175,20 +175,6 @@ XMLNodeWithElements >> elements [
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementsAndContents [
-	self deprecated: 'use #contentNodes instead'.
-
-	^ self contentNodes.
-]
-
-{ #category : #enumerating }
-XMLNodeWithElements >> elementsAndContentsDo: aBlock [
-	self deprecated: 'use contentNodesDo: instead'.
-
-	self contentNodesDo: aBlock.
-]
-
-{ #category : #accessing }
 XMLNodeWithElements >> elementsAt: aName [
 	^ self nodes elementsAt: aName
 ]
@@ -256,20 +242,6 @@ XMLNodeWithElements >> firstElement [
 	^ self elements ifNotEmpty: [:elements | elements first] ifEmpty: [nil]
 ]
 
-{ #category : #searching }
-XMLNodeWithElements >> firstTagNamed: aName [
-	self deprecated: 'use #findElementNamed: instead'.
-
-	^ self findElementNamed: aName.
-]
-
-{ #category : #searching }
-XMLNodeWithElements >> firstTagNamed: aName with: aBlock [
-	self deprecated: 'use #findElementNamed:with: instead'.
-
-	^ self findElementNamed: aName with: aBlock.
-]
-
 { #category : #testing }
 XMLNodeWithElements >> hasContentNodes [
 	^ self nodes anySatisfy: [:each | each isContentNode]
@@ -327,41 +299,6 @@ XMLNodeWithElements >> removedElement: anElement [
 
 { #category : #notifications }
 XMLNodeWithElements >> renamedElement: anElement from: anOldName to: aNewName [
-]
-
-{ #category : #enumerating }
-XMLNodeWithElements >> tagsNamed: aName childrenDo: aOneArgumentBlock [
-	self deprecated: 'use #elementsAt:do: instead'.
-
-	self elementsAt: aName do: aOneArgumentBlock.
-]
-
-{ #category : #enumerating }
-XMLNodeWithElements >> tagsNamed: aName childrenDoAndRecurse: aOneArgumentBlock [
-	self deprecated: 'use "node elementsDo: [:each | each allElementsNamed: aName do: [...]]" instead'.
-
-	self elementsDo: [:each | each allElementsNamed: aName do: aOneArgumentBlock].
-]
-
-{ #category : #enumerating }
-XMLNodeWithElements >> tagsNamed: aName contentsDo: aBlock [
-	self deprecated: 'use "node allElementsNamed: aName do: [:each | each stringNodes...]" instead'.
-
-	self allElementsNamed: aName do: [:each | each stringNodesDo: aBlock].
-]
-
-{ #category : #enumerating }
-XMLNodeWithElements >> tagsNamed: aName do: aBlock [
-	self deprecated: 'use #allElementsNamed:do: instead'.
-
-	self allElementsNamed: aName do: aBlock.
-]
-
-{ #category : #accessing }
-XMLNodeWithElements >> topElement [
-	self deprecated: 'use #firstElement instead'.
-
-	^ self firstElement.
 ]
 
 { #category : #testing }

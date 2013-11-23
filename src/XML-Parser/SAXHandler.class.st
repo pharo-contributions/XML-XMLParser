@@ -158,6 +158,11 @@ SAXHandler >> documentURI [
 	^ documentUri ifNil: [documentUri := self defaultDocumentURI]
 ]
 
+{ #category : #private }
+SAXHandler >> driverClass [
+	^ SAXDriver
+]
+
 { #category : #declaration }
 SAXHandler >> elementDeclaration: aName contentModel: aContentModel [
 
@@ -165,7 +170,12 @@ SAXHandler >> elementDeclaration: aName contentModel: aContentModel [
 
 { #category : #accessing }
 SAXHandler >> elementNester [
-	^ elementNester ifNil: [elementNester := XMLElementNester new]
+	^ elementNester ifNil: [elementNester := self elementNesterClass new]
+]
+
+{ #category : #private }
+SAXHandler >> elementNesterClass [
+	^ XMLElementNester
 ]
 
 { #category : #lexical }
@@ -286,7 +296,7 @@ SAXHandler >> parser [
 	self configuration parserHandlerClass: self class.
 
 	^ XMLParser
-		driver: (SAXDriver saxHandler: self)
+		driver: (self driverClass saxHandler: self)
 		on: input.
 ]
 
@@ -373,13 +383,6 @@ SAXHandler >> startEntity: anEntityName [
 SAXHandler >> startPrefixMapping: aPrefix uri: aUri [
 	"This call corresonds to the Java SAX call
 	startPrefixMapping(java.lang.String prefix, java.lang.String uri)."
-]
-
-{ #category : #accessing }
-SAXHandler >> useNamespaces: aBoolean [
-	self deprecated: 'use #usesNamespaces: instead'.
-
-	self usesNamespaces: aBoolean.
 ]
 
 { #category : #testing }

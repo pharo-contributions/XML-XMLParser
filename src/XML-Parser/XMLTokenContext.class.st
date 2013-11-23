@@ -26,6 +26,11 @@ XMLTokenContext >> enterContent [
 ]
 
 { #category : #'changing context' }
+XMLTokenContext >> enterDoctype [
+	context := #inDoctype
+]
+
+{ #category : #'changing context' }
 XMLTokenContext >> enterExternalSubset [
 	context := #inExternalSubset
 ]
@@ -58,6 +63,11 @@ XMLTokenContext >> enterTextDeclaration [
 { #category : #testing }
 XMLTokenContext >> isInContent [
 	^ context == #inContent
+]
+
+{ #category : #testing }
+XMLTokenContext >> isInDoctype [
+	^ context == #inDoctype
 ]
 
 { #category : #testing }

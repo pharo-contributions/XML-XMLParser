@@ -91,13 +91,6 @@ XMLElement class >> qualifiedName: aQualifiedName prefix: aPrefix localName: aLo
 ]
 
 { #category : #accessing }
-XMLElement >> @ aName [
-	self deprecated: 'use #attributeAt: instead'.
-
-	^ self attributeAt: aName.
-]
-
-{ #category : #accessing }
 XMLElement >> addContent: aStringOrStringNode [
 	"Adds a string or string node. If the last child node is already a string node,
 	the characters being added are concatenated to it."
@@ -122,41 +115,13 @@ XMLElement >> addedElement: anElement [
 		ifTrue: [anElement inheritNamespacesFrom: self]
 ]
 
-{ #category : #searching }
+{ #category : #enumerating }
 XMLElement >> allElementsDo: aBlock [
 	"See superclass version."
 
 	aBlock value: self.
 
 	super allElementsDo: aBlock.
-]
-
-{ #category : #accessing }
-XMLElement >> at: aName [
-	self deprecated: 'use #attributeAt: or @ instead'.
-
-	^ self attributeAt: aName
-]
-
-{ #category : #accessing }
-XMLElement >> at: aName ifAbsent: aBlock [	
-	self deprecated: 'use #attributeAt:ifAbsent: instead'.
-
-	^ self attributeAt: aName ifAbsent: aBlock
-]
-
-{ #category : #accessing }
-XMLElement >> at: aName ifAbsentPut: aBlock [
-	self deprecated: 'use #attributeAt:ifAbsentPut: instead'.
-
-	^ self attributeAt: aName ifAbsentPut: aBlock
-]
-
-{ #category : #accessing }
-XMLElement >> at: aName put: aValue [
-	self deprecated: 'use #attributeAt:put: instead'.
-
-	^ self attributeAt: aName put: aValue
 ]
 
 { #category : #accessing }
@@ -237,20 +202,6 @@ XMLElement >> contentString: aString [
 	self
 		removeNodes;
 		addContent: aString
-]
-
-{ #category : #accessing }
-XMLElement >> contents [
-	self deprecated: 'use #stringNodes instead'.
-
-	^ self stringNodes.
-]
-
-{ #category : #enumerating }
-XMLElement >> contentsDo: aBlock [
-	self deprecated: 'use #stringNodesDo: instead'.
-
-	self stringNodesDo: aBlock.
 ]
 
 { #category : #namespaces }
@@ -337,13 +288,6 @@ XMLElement >> expandedName [
 { #category : #testing }
 XMLElement >> hasAttributes [
 	^ self attributeNodes notEmpty
-]
-
-{ #category : #testing }
-XMLElement >> hasContents [
-	self deprecated: 'use #hasStringNodes instead'.
-
-	^ self hasStringNodes.
 ]
 
 { #category : #private }
@@ -493,13 +437,6 @@ XMLElement >> printNamespaceDeclarationsOn: aTagWriter [
 ]
 
 { #category : #accessing }
-XMLElement >> qualifiedName [
-	self deprecated: 'use #name instead'.
-
-	^ self nodeName qualified
-]
-
-{ #category : #accessing }
 XMLElement >> removeAttribute: aName [
 	^ (self attributeNodes removeAttributeNodeAt: aName) value.
 ]
@@ -579,13 +516,6 @@ XMLElement >> strings [
 { #category : #enumerating }
 XMLElement >> stringsDo: aBlock [
 	self stringNodesDo: [:each | aBlock value: each string]
-]
-
-{ #category : #accessing }
-XMLElement >> tag [
-	self deprecated: 'use #name instead'.
-
-	^ self name.
 ]
 
 { #category : #namespaces }

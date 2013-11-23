@@ -279,7 +279,9 @@ SAXDriver >> handleStartContentEntityReplacement: aName [
 { #category : #'handling tokens' }
 SAXDriver >> handleStartDTD: aRoot publicID: aPublicId systemID: aSystemId [
 	self dtd rootElement: aRoot.
-	(self resolvesExternalEntities and: [aSystemId notEmpty])
+	(self resolvesExternalEntities
+		and: [aSystemId notEmpty
+			and: [self dtd isStandalone not]])
 		ifTrue: [self parseExternalSubset: aSystemId].
 	
 	self saxHandler
@@ -352,6 +354,7 @@ SAXDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrN
 		ifNotEmpty: [versionNumber := aVersion asNumber].
 
 	standaloneBoolean := aYesOrNo asLowercase = 'yes'.
+	self dtd isStandalone: standaloneBoolean.
 
 	self saxHandler
 		xmlVersion: versionNumber

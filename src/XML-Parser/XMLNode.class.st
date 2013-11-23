@@ -41,13 +41,6 @@ XMLNode >> canonicallyPrinted [
 ]
 
 { #category : #accessing }
-XMLNode >> characterData [
-	self deprecated: 'use #contentString instead'.
-
-	^ self contentString.
-]
-
-{ #category : #accessing }
 XMLNode >> contentString [
  	"This returns the combined content string of all descendants with spaces inserted wher necessary."
 	^ String streamContents: [:stream | self printContentOn: stream]
@@ -89,22 +82,8 @@ XMLNode >> isElement [
 ]
 
 { #category : #testing }
-XMLNode >> isEmpty [
-	self deprecated: 'use "hasChildren not" instead'.
-
-	^ self hasChildren not
-]
-
-{ #category : #testing }
 XMLNode >> isPI [
 	^ false
-]
-
-{ #category : #testing }
-XMLNode >> isProcessingInstruction [
-	self deprecated: 'use #isPI instead'.
-
-	^ self isPI.
 ]
 
 { #category : #testing }
@@ -112,37 +91,9 @@ XMLNode >> isStringNode [
 	^ false
 ]
 
-{ #category : #testing }
-XMLNode >> isTag [
-	self deprecated: 'use #isElement instead'.
-
-	^ self isElement.
-]
-
-{ #category : #testing }
-XMLNode >> isTagOrText [
-	self deprecated: 'use #isContentNode instead'.
-
-	^ self isContentNode.
-]
-
-{ #category : #testing }
-XMLNode >> isText [
-	self deprecated: 'use #isStringNode instead'.
-
-	^ self isStringNode.
-]
-
 { #category : #accessing }
 XMLNode >> nextNode [
 	^ self parent ifNotNil: [self parent nodeAfter: self]
-]
-
-{ #category : #testing }
-XMLNode >> notEmpty [
-	self deprecated: 'use #hasChildren instead'.
-
-	^ self hasChildren.
 ]
 
 { #category : #accessing }
@@ -205,13 +156,6 @@ XMLNode >> previousNode [
 ]
 
 { #category : #printing }
-XMLNode >> printCanonicalOn: aStream [
-	self deprecated: 'use #canonicallyPrintOn: instead'.
-
-	self canonicallyPrintOn: aStream.
-]
-
-{ #category : #printing }
 XMLNode >> printContentOn: aStream [
 ]
 
@@ -221,13 +165,6 @@ XMLNode >> printOn: aStream [
 		withNewXMLWriterOn: aStream
 		do: [ :writer | writer writeWith: [ :wr | self writeXMLOn: wr] ]
 		whenAbsent: [ super printOn: aStream ]
-]
-
-{ #category : #printing }
-XMLNode >> printXMLOn: aWriter [
-	self deprecated: 'use #writeXMLOn: instead'.
-
-	self writeXMLOn: aWriter.
 ]
 
 { #category : #printing }

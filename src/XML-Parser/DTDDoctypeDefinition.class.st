@@ -6,6 +6,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'rootElement',
+		'isStandalone',
 		'generalEntities',
 		'parameterEntities',
 		'unparsedEntities',
@@ -59,6 +60,16 @@ DTDDoctypeDefinition >> hasElementValidators [
 { #category : #testing }
 DTDDoctypeDefinition >> includesNotation: aName [
 	^ self notations includes: aName
+]
+
+{ #category : #testing }
+DTDDoctypeDefinition >> isStandalone [
+	^ isStandalone ifNil: [isStandalone := false]
+]
+
+{ #category : #accessing }
+DTDDoctypeDefinition >> isStandalone: aBoolean [
+	isStandalone := aBoolean
 ]
 
 { #category : #accessing }
