@@ -231,7 +231,7 @@ SAXDriver >> handleParameterEntityDeclaration: aName publicID: aPublicId systemI
 	self resolvesExternalEntities
 		ifTrue: [
 			self dtd
-				parameterAt: aName
+				parameterEntityAt: aName
 				put: (self externalEntityResolver
 					resolveParameterEntity: aName
 					uri: aSystemId
