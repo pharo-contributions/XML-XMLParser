@@ -1,7 +1,7 @@
 "
 (ConfigurationOfXMLParser project version: #stable) load: 'Tests'
 
-(ConfigurationOfXMLParser project version: '1.0') load
+(ConfigurationOfXMLParser project version: '1.3') load
 
 "
 Class {
@@ -29,6 +29,72 @@ ConfigurationOfXMLParser class >> bootstrapPackage: aString from: aPath [
 			version := reader version.
 			version load.
 			version workingCopy repositoryGroup addRepository: repository]
+]
+
+{ #category : #catalog }
+ConfigurationOfXMLParser class >> catalogChangeLog [
+
+^ '
+- next action is to remov deprecated methods
+
+[[[ 
+expiry := 1 year.
+(SystemNavigation default allClassesInPackageNamed: ''XML-Parser'')
+	do: [:class |
+	class selectors do: [:selector | | compiledMethod timeStamp |
+	compiledMethod := class compiledMethodAt: selector.
+	timeStamp := compiledMethod timeStamp copyAfter: Character space.
+	(compiledMethod isDeprecated
+		and: [(DateAndTime now - (DateAndTime fromString: timeStamp)) > expiry])
+			ifTrue: [class removeSelector: selector]]].
+]]]
+
+and may be separate the HTMLParser into its own package.
+
+
+
+- Version 1.3 - 2013-11-22 Monty''s Enhancements
+These updates add validation against internal and external DTDs, proper replacement of general and parameter entites, customizable resolution of external parsed entities using Zinc and FileSystem, awareness of notations and unparsed entities, preservation of the internal DTD subset by the DOM parser (so printing a parsed doc with a DTD will produce approximately what was input), line numbers reporting in error messages, and better well-formed and validity constraints.
+
+I had to largely rewrite the tokenizer to make everything work, but I followed the spec closely, and it is about the same speed as long as there is no DTD to validate against.
+
+[[[ 
+	(ConfigurationOfXMLParser project version: ''1.3'') load
+]]]
+
+
+- Version 1.2- 2013-04-30 Removing dependency on XMLWriter.
+
+[[[ 
+	(ConfigurationOfXMLParser project version: ''1.2'') load
+]]]
+
+
+'
+]
+
+{ #category : #catalog }
+ConfigurationOfXMLParser class >> catalogDescription [
+
+	^ 'XMLParser allows you to parse and validate well-formed XML documents. The package contains a SAX Driver and a XMLDOMParser. If you are interested by XML parsing we also suggest to have a look at the XMLPullParser package.'
+
+]
+
+{ #category : #catalog }
+ConfigurationOfXMLParser class >> catalogKeyClassesAndExample [
+
+^ 'The main entry point is the class ==XMLParser==. There is also the =XMLParserTest== which is a good starting point.
+
+- For validation have a look at ==DTDDocumentValidator==
+'
+]
+
+{ #category : #catalog }
+ConfigurationOfXMLParser class >> catalogKeywords [
+
+	^ #( XML parser validation DOM SAX )
+					
+
 ]
 
 { #category : #private }
@@ -155,7 +221,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.1'.
+	spec for: #'common' version: '1.3'.
 	
 ]
 
@@ -176,7 +242,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.2'.
+	spec for: #'common' version: '1.3'.
 	
 ]
 
@@ -220,6 +286,24 @@ ConfigurationOfXMLParser >> version102: spec [
 			spec
 				package: 'XML-Parser' with: 'XML-Parser-DamienCassou.143';
 				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-StephaneDucasse.15' 
+				].
+	
+	
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version130: spec [
+	<version: '1.3' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #release.
+			spec description: 'Enhancements made by Monty. These updates add validation against internal and external DTDs, proper replacement of general and parameter entites, customizable resolution of external parsed entities using Zinc and FileSystem, awareness of notations and unparsed entities, preservation of the internal DTD subset by the DOM parser (so printing a parsed doc with a DTD will produce approximately what was input), line numbers reporting in error messages, and better well-formed and validity constraints.
+
+I had to largely rewrite the tokenizer to make everything work, but I followed the spec closely, and it is about the same speed as long as there is no DTD to validate against.'.
+			spec
+				package: 'XML-Parser' with: 'XML-Parser-monty.184';
+				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.28' 
 				].
 	
 	
