@@ -85,14 +85,18 @@ ConfigurationOfXMLParser class >> catalogKeyClassesAndExample [
 
 ^ 'The main entry point is the class ==XMLParser==. There is also the =XMLParserTest== which is a good starting point.
 
-- For validation have a look at ==DTDDocumentValidator==
+- For validation have a look at ==DTDDocumentValidator==.
+
+- You can get a ==SAXDriver== for streaming nodes or ==XMLDOMParser== for getting the complete tree in memory.
+
+This package is large so have a look. There is also an ==HTMLParser==.
 '
 ]
 
 { #category : #catalog }
 ConfigurationOfXMLParser class >> catalogKeywords [
 
-	^ #( XML parser validation DOM SAX )
+	^ #( XML parser validation DOM SAX DTD HTML )
 					
 
 ]
