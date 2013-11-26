@@ -284,11 +284,13 @@ XMLTokenizer >> nextAttributeInto: attributes namespaces: namespaces [
 	streamReader skipSeparators.
 	attrValue := self nextAttributeValue.
 
-	(driver usesNamespaces
-		and: [attrName beginsWith: 'xmlns'])
-		ifTrue: [attrName size > 6
-			ifTrue: [namespaces at: (attrName copyFrom: 7 to: attrName size) put: attrValue]
-			ifFalse: [namespaces at: '' put: attrValue]]
+	((attrName at: 1) == $x
+		and: [namespaces notNil
+			and: [attrName beginsWith: 'xmlns']])
+		ifTrue: [
+			attrName size > 6
+				ifTrue: [namespaces at: (attrName copyFrom: 7 to: attrName size) put: attrValue]
+				ifFalse: [namespaces at: '' put: attrValue]]
 		ifFalse: [attributes at: attrName put: attrValue].
 ]
 
@@ -379,20 +381,19 @@ XMLTokenizer >> nextContentMarkupToken [
 XMLTokenizer >> nextContentToken [
 	| pcData |
 
+	streamReader peek == $<
+		ifTrue: [
+			streamReader next.
+			^ self nextContentMarkupToken].
 	pcData := self
 		nextDelimitedBy: $< and: nil
 		entityChar: $&
 		normalizeWhitespace: false
 		ignorableWhitespace: true.
 	pcData
-		ifNotEmpty: [
-			driver handlePCData: pcData.
-			^ self].
+		ifNotEmpty: [driver handlePCData: pcData].
 
-	streamReader peek == $<
-		ifTrue: [
-			streamReader next.
-			self nextContentMarkupToken].
+		
 ]
 
 { #category : #tokenizing }
@@ -970,7 +971,7 @@ XMLTokenizer >> nextTag [
 
 	attributes := OrderPreservingDictionary new: 10 withDefaultValue: ''.
 	driver usesNamespaces
-		ifTrue: [namespaces := OrderPreservingDictionary defaultValue: ''].
+		ifTrue: [namespaces := OrderPreservingDictionary new: 5 withDefaultValue: ''].
 	[streamReader skipSeparators.
 	((nextChar := streamReader peek) isNil
 		or: [nextChar == $>
@@ -990,15 +991,14 @@ XMLTokenizer >> nextTag [
 
 { #category : #tokenizing }
 XMLTokenizer >> nextToken [
-	context notInitialized 
-		ifTrue: [^ self nextStartDocument].
-
 	self atEnd
 		ifTrue: [^ self].
 	context isInContent
 		ifTrue: [^ self nextContentToken].
 	context isInSubset
 		ifTrue: [^ self nextSubsetToken].
+	context notInitialized 
+		ifTrue: [^ self nextStartDocument].
 
 	self nextPrologToken.
 ]
@@ -1094,7 +1094,7 @@ XMLTokenizer >> setDriver: aDriver stream: aStream [
 			on: aStream
 			from: (driver ifNotNil: [driver documentURI])
 			onClose: nil).
-	streamWriter := XMLNestedStreamWriter new.
+	streamWriter := XMLNestedStreamWriter new: 3.
 ]
 
 { #category : #'tokenizing dtd' }

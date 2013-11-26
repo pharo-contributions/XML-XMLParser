@@ -465,7 +465,8 @@ SAXDriver >> validateStartTag: aStartTag prefix: aPrefix attributes: anAttribute
 	self usesNamespaces
 		ifTrue: [
 			self scopeAllocator enterScope.
-			self declareNamespaces: aNamespaceDictionary.
+			aNamespaceDictionary
+				ifNotEmpty: [self declareNamespaces: aNamespaceDictionary].
 		aPrefix ifNotEmpty: [
 			self scopeAllocator
 				validatePrefix: aPrefix

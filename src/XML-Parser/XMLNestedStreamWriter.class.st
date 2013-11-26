@@ -23,21 +23,9 @@ XMLNestedStreamWriter class >> new: aNumberOfStreams [
 ]
 
 { #category : #private }
-XMLNestedStreamWriter >> acquireStream [
-	| stream |
-
-	(nextStreamIndex <= streams size)
-		 ifFalse: [self grow].
-
-	(stream := streams at: nextStreamIndex) reset.
-	nextStreamIndex := nextStreamIndex + 1.
-	^ stream.
-]
-
-{ #category : #private }
 XMLNestedStreamWriter >> grow [
 	streams :=
-		(Array new: ((streams size * 2) max: 10))
+		(Array new: streams size + 5)
 			replaceFrom: 1
 			to: streams size
 			with: streams
@@ -54,20 +42,20 @@ XMLNestedStreamWriter >> initialize: aNumberOfStreams [
 
 { #category : #private }
 XMLNestedStreamWriter >> newStream [
-	^ WriteStream on: (String new: 128)
-]
-
-{ #category : #private }
-XMLNestedStreamWriter >> releaseStream [
-	nextStreamIndex := nextStreamIndex - 1
+	^ WriteStream on: (String new: 64)
 ]
 
 { #category : #writing }
 XMLNestedStreamWriter >> writeWith: aBlock [
-	| result |
+	| result stream |
 
+	(nextStreamIndex <= streams size)
+		 ifFalse: [self grow].
+
+	(stream := streams at: nextStreamIndex) reset.
+	nextStreamIndex := nextStreamIndex + 1.
 	"Avoid ensure: for performance"
-	result := aBlock value: self acquireStream.
-	self releaseStream.
+	result := aBlock value: stream.
+	nextStreamIndex := nextStreamIndex - 1.
 	^ result.
 ]

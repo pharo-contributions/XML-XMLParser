@@ -63,23 +63,6 @@ XMLElement class >> named: aLocalName [
 	^ self new name: aLocalName
 ]
 
-{ #category : #'instance creation' }
-XMLElement class >> named: aName attributes: aDictionary [
-	self deprecated: 'use #name:attributes: instead'.
-
-	^ self name: aName attributes: aDictionary.
-]
-
-{ #category : #'instance creation' }
-XMLElement class >> named: aLocalName namespace: aPrefix uri: aUri attributes: aDictionary [
-	self deprecated: 'use #name:namespaceURI:attributes: with a qualified name instead'.
-
-	^ self
-		name: aPrefix, ':', aLocalName
-		namespaceURI: aUri
-		attributes: aDictionary.
-]
-
 { #category : #private }
 XMLElement class >> qualifiedName: aQualifiedName prefix: aPrefix localName: aLocalName attributes: anAttributeDictionary namespaceScope: aNamespaceScope [
 	^ self new
@@ -488,12 +471,9 @@ XMLElement >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocal
 		ifNotEmpty: [
 			"By not observing 'attributes' until after it is filled, we avoid
 			re-validating the attributes, which the parser should have already done"
-			attributes := XMLAttributeList new: anAttributeDictionary size.
-			anAttributeDictionary keysAndValuesDo: [:key :value |
-				(attributes addName: key value: value)
-					addObserver: self;
-					element: self].
-			attributes addObserver: self].
+			(attributes := XMLAttributeList new: anAttributeDictionary size)
+				setFromDictionary: anAttributeDictionary andElement: self;
+				addObserver: self].
 
 	namespaceScope := aNamespaceScope.
 ]

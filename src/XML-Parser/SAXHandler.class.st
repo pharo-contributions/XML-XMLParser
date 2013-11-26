@@ -143,14 +143,11 @@ SAXHandler >> currentScope: aScope [
 
 { #category : #private }
 SAXHandler >> defaultDocumentURI [
-	| client |
-
-	(input respondsTo: #path)
-		ifTrue: [^ input path].
-
-	^ (client := self configuration fileClient)
-		combineRelative: self identityHash printString
-		withBase: client currentWorkingDirectory.
+	^ (input respondsTo: #path)
+		ifTrue: [input path]
+		ifFalse: [
+			self configuration fileClient currentWorkingDirectory,
+				(self identityHash printString copyWithFirst: $/)]
 ]
 
 { #category : #accessing }

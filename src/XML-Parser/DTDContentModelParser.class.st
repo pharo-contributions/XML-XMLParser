@@ -19,13 +19,6 @@ DTDContentModelParser class >> name: aName contentModel: aContentModel [
 ]
 
 { #category : #parsing }
-DTDContentModelParser >> addElementMatchingState: aName [
-	aName = '#PCDATA'
-		ifTrue: [self errorUnexpectedPCData].
-	nfaBuilder pushMatcher: (DTDElementMatcher element: aName).
-]
-
-{ #category : #parsing }
 DTDContentModelParser >> applyBinaryOperatorOnStack [
 	operatorStack last == $|
 		ifTrue: [nfaBuilder applyAlternation]
@@ -46,11 +39,6 @@ DTDContentModelParser >> applyUnaryOperator: aCharacter [
 { #category : #errors }
 DTDContentModelParser >> errorMismatchedParens [
 	XMLValidationException signal: 'Mismatched parentheses in content model'
-]
-
-{ #category : #errors }
-DTDContentModelParser >> errorUnexpectedPCData [
-	XMLValidationException signal: 'Unexpected #PCDATA in content model'
 ]
 
 { #category : #testing }
@@ -179,7 +167,7 @@ DTDContentModelParser >> pushElementMatcher [
 
 	element := writeStream contents.
 	element = '#PCDATA'
-		ifTrue: [self errorUnexpectedPCData].
+		ifTrue: [XMLValidationException signal: 'Unexpected #PCDATA in content model'].
 
 	nfaBuilder pushMatcher: (DTDElementMatcher element: element).
 ]
