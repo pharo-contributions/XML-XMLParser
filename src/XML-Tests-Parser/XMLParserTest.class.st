@@ -299,7 +299,7 @@ XMLParserTest >> testCDATASection [
 
 ]
 
-{ #category : #tests }
+{ #category : #'tests-xmltokenizer' }
 XMLParserTest >> testConditionalSection [
 	| tokenizer |
 
@@ -333,22 +333,28 @@ XMLParserTest >> testDoctypeRoot [
 
 	xml := '<!DOCTYPE root><invalidRoot/>'.
 	self
-		should: [XMLDOMParser parse: xml]
+		should: [SAXHandler parse: xml]
 		raise: XMLValidationException.
-	XMLDOMParser
-		parse: xml
-		usingNamespaces: false
-		validation: false.
+	self
+		shouldnt: [
+			SAXHandler
+				parse: xml
+				usingNamespaces: false
+				validation: false]
+		raise: XMLValidationException 
 ]
 
 { #category : #tests }
 XMLParserTest >> testElementAnyAndEmptyDeclarations [
-	XMLDOMParser parse: 
-		'<!DOCTYPE addressbook [<!ELEMENT addressbook ANY>]>',
-		self addressBookXML.
+	self
+		shouldnt: [
+			SAXHandler parse: 
+				'<!DOCTYPE addressbook [<!ELEMENT addressbook ANY>]>',
+				self addressBookXML]
+		raise: XMLValidationException.
 	self
 		should: [
-			XMLDOMParser parse: 
+			SAXHandler parse: 
 				'<!DOCTYPE addressbook [<!ELEMENT addressbook EMPTY>]>',
 				self addressBookXML]
 		raise: XMLValidationException
@@ -600,19 +606,45 @@ XMLParserTest >> testParsingCharacters [
 ]
 
 { #category : #tests }
+XMLParserTest >> testRecursiveEntityReplacement [
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE root [
+					<!ENTITY first "&second;">
+					<!ENTITY second "&first;">]>
+				<root>&first;</root>']
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE root [
+					<!ENTITY % first "%second;">
+					<!ENTITY % second "%first;">
+					%first;]>
+				<root/>']
+		raise: XMLParserException.
+]
+
+{ #category : #tests }
 XMLParserTest >> testStandalone [
 	| dtdXml standaloneDecl |
 
 	dtdXml := self addressBookXMLWithDTD.
-	SAXHandler
-		parse: dtdXml
-		usingNamespaces: true
-		validation: true
-		externalEntities: false.
 	self should: [SAXHandler parse: dtdXml] raise: XMLFileIOException.
+	self
+		shouldnt: [
+			SAXHandler
+				parse: dtdXml
+				usingNamespaces: true
+				validation: true
+				externalEntities: false]
+		raise: XMLFileIOException.
 
 	standaloneDecl := (dtdXml copyUpTo: $>) allButLast, ' standalone="yes" ?>'.
-	SAXHandler parse: standaloneDecl, (dtdXml copyAfter: $>).
+	self
+		shouldnt: [SAXHandler parse: standaloneDecl, (dtdXml copyAfter: $>)]
+		raise: XMLFileIOException.
 ]
 
 { #category : #'tests-xmltokenizer' }

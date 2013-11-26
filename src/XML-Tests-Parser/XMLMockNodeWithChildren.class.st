@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #private }
-XMLMockNodeWithChildren >> nodesClass [
+XMLMockNodeWithChildren >> nodeListClass [
 	^ XMLNodeList
 ]
