@@ -239,7 +239,7 @@ XMLNodeWithElements >> findElementNamed: aName with: aBlock [
 
 { #category : #accessing }
 XMLNodeWithElements >> firstElement [
-	^ self elements ifNotEmpty: [:elements | elements first] ifEmpty: [nil]
+	^ self elements first
 ]
 
 { #category : #testing }
@@ -274,7 +274,7 @@ XMLNodeWithElements >> isContentNode [
 
 { #category : #accessing }
 XMLNodeWithElements >> lastElement [
-	^ self elements ifNotEmpty: [:elements | elements last] ifEmpty: [nil]
+	^ self elements last
 ]
 
 { #category : #private }
@@ -283,8 +283,8 @@ XMLNodeWithElements >> namespaceScope [
 ]
 
 { #category : #private }
-XMLNodeWithElements >> nodesClass [
-	^ XMLNodeList
+XMLNodeWithElements >> nodeListClass [
+	^ self configuration nodeListClass
 ]
 
 { #category : #printing }

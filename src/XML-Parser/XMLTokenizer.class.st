@@ -141,11 +141,8 @@ XMLTokenizer >> atQuote [
 		or: [streamReader peek == $']
 ]
 
-{ #category : #'tokenizing dtd' }
-XMLTokenizer >> checkForTextDeclarationInEntity: anEntity replacement: aReplacement [
-	(anEntity isExternal and: [aReplacement notEmpty])
-		ifFalse: [^ self].
-
+{ #category : #tokenizing }
+XMLTokenizer >> checkTextDeclarationInReplacement: aReplacement forEntity: anEntity [
 	(aReplacement beginsWith: '<?xml ')
 		ifTrue: [ 
 			streamReader next.
@@ -665,7 +662,7 @@ XMLTokenizer >> nextExternalIDSystemLiteralRequired: aBoolean [
 
 { #category : #tokenizing }
 XMLTokenizer >> nextGeneralEntityReference [
-	| name entity replacement |
+	| name entity replacement onClose |
 
 	name := self nextName.
 	self expectNext: $;.
@@ -680,19 +677,15 @@ XMLTokenizer >> nextGeneralEntityReference [
 					ifTrue: [entity replacementForLiteralContext]
 					ifFalse: [entity replacementForContentContext])].
 	replacement
-		ifEmpty: [^ nil].
-
-	context isInContent
-		ifTrue: [driver handleStartContentEntityReplacement: name].
-	streamReader
-		pushStream: replacement readStream
-		from: entity uri
-		onClose:
-			(context isInContent
-				ifTrue: [driver handleEndContentEntityReplacement: name]
-				ifFalse: [nil]).
-	self checkForTextDeclarationInEntity: entity replacement: replacement.
-
+		ifNotEmpty: [
+			context isInContent
+				ifTrue: [
+					driver handleStartContentEntityReplacement: name.
+					onClose := [driver handleEndContentEntityReplacement: name]].
+			self
+				pushBackReplacement: replacement
+				forEntity: entity
+				onClose: onClose].
 	^ nil.
 ]
 
@@ -848,12 +841,11 @@ XMLTokenizer >> nextParameterEntityReference [
 					ifTrue: [entity replacementForLiteralContext]
 					ifFalse: [entity replacementForDTDContext])].
 	replacement
-		ifEmpty: [^ self].
-	streamReader
-		pushStream: replacement readStream
-		from: entity uri
-		onClose: nil.
-	self checkForTextDeclarationInEntity: entity replacement: replacement.
+		ifNotEmpty: [
+			self
+				pushBackReplacement: replacement
+				forEntity: entity
+				onClose: nil].
 ]
 
 { #category : #tokenizing }
@@ -1065,6 +1057,20 @@ XMLTokenizer >> parseError: anErrorString [
 { #category : #accessing }
 XMLTokenizer >> predefinedEntities [
 	^ PredefinedEntities
+]
+
+{ #category : #tokenizing }
+XMLTokenizer >> pushBackReplacement: aReplacement forEntity: anEntity onClose: aBlock [
+	streamReader
+		pushStream: aReplacement readStream
+		from: anEntity uri
+		onClose: aBlock.
+
+	(anEntity isExternal and: [aReplacement notEmpty])
+		ifTrue: [
+			self
+				checkTextDeclarationInReplacement: aReplacement
+				forEntity: anEntity].
 ]
 
 { #category : #tokenizing }

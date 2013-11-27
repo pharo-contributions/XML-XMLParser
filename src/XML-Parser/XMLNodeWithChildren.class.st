@@ -94,7 +94,7 @@ XMLNodeWithChildren >> allNodesSelect: aBlock [
 
 { #category : #accessing }
 XMLNodeWithChildren >> firstNode [
-	^ self nodes ifNotEmpty: [ self nodes first ] ifEmpty: [ nil ]
+	^ self nodes first
 ]
 
 { #category : #testing }
@@ -131,7 +131,7 @@ XMLNodeWithChildren >> innerXMLParserOn: aStringOrStream [
 
 { #category : #accessing }
 XMLNodeWithChildren >> lastNode [
-	^ self nodes ifNotEmpty: [ self nodes last ] ifEmpty: [ nil ]
+	^ self nodes last
 ]
 
 { #category : #accessing }
@@ -144,17 +144,17 @@ XMLNodeWithChildren >> nodeBefore: aNode [
 	^ self nodes before: aNode
 ]
 
+{ #category : #private }
+XMLNodeWithChildren >> nodeListClass [
+	self subclassResponsibility
+]
+
 { #category : #accessing }
 XMLNodeWithChildren >> nodes [
 	^ nodes ifNil: [
-		(nodes := self nodesClass new)
+		(nodes := self nodeListClass new)
 			addObserver: self;
 			yourself]
-]
-
-{ #category : #private }
-XMLNodeWithChildren >> nodesClass [
-	self subclassResponsibility
 ]
 
 { #category : #enumerating }

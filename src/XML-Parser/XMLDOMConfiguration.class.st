@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'preservesCDataNodes',
 		'preservesCommentNodes',
-		'nodeFactory'
+		'nodeFactory',
+		'nodeListClass'
 	],
 	#category : #'XML-Parser'
 }
@@ -20,6 +21,16 @@ XMLDOMConfiguration >> nodeFactory [
 { #category : #accessing }
 XMLDOMConfiguration >> nodeFactory: aFactory [
 	nodeFactory := aFactory
+]
+
+{ #category : #accessing }
+XMLDOMConfiguration >> nodeListClass [
+	^ nodeListClass ifNil: [nodeListClass := XMLNodeList]
+]
+
+{ #category : #accessing }
+XMLDOMConfiguration >> nodeListClass: aClass [
+	nodeListClass := aClass
 ]
 
 { #category : #accessing }
