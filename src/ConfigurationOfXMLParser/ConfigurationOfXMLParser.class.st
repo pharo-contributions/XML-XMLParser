@@ -244,10 +244,9 @@ ConfigurationOfXMLParser >> project [
 
 { #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> stable: spec [
-	<symbolicVersion: #'stable'>
-
-	spec for: #'common' version: '1.3.1'.
-	
+	<symbolicVersion: #stable>
+	spec for: #common version: '1.3.1'.
+	spec for: #'pharo1.x' version: '1.2'
 ]
 
 { #category : #versions }
