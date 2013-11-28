@@ -1,3 +1,6 @@
+"
+This class parses a DTD content model from an element declaration and produces a validator object from it.
+"
 Class {
 	#name : #DTDContentModelParser,
 	#superclass : #Object,
@@ -20,6 +23,9 @@ DTDContentModelParser class >> name: aName contentModel: aContentModel [
 
 { #category : #parsing }
 DTDContentModelParser >> applyBinaryOperatorOnStack [
+	nfaBuilder fragmentStack size >= 2
+		ifFalse: [self errorMissingOperand].
+
 	operatorStack last == $|
 		ifTrue: [nfaBuilder applyAlternation]
 		ifFalse: [nfaBuilder applyConcatenation].
@@ -28,6 +34,9 @@ DTDContentModelParser >> applyBinaryOperatorOnStack [
 
 { #category : #parsing }
 DTDContentModelParser >> applyUnaryOperator: aCharacter [
+	nfaBuilder fragmentStack size >= 1
+		ifFalse: [self errorMissingOperand].
+
 	aCharacter == $+
 		ifTrue: [nfaBuilder applyPlus]
 		ifFalse: [
@@ -39,6 +48,11 @@ DTDContentModelParser >> applyUnaryOperator: aCharacter [
 { #category : #errors }
 DTDContentModelParser >> errorMismatchedParens [
 	XMLValidationException signal: 'Mismatched parentheses in content model'
+]
+
+{ #category : #errors }
+DTDContentModelParser >> errorMissingOperand [
+	XMLValidationException signal: 'Missing element name in content model'
 ]
 
 { #category : #testing }
@@ -119,13 +133,8 @@ DTDContentModelParser >> parseMixedContentModel [
 		(contentModel endsWith: '*')
 			ifTrue: [contentModel allButLast]
 			ifFalse: [contentModel].
-	list do: [:each |
-		(',?*+' includes: each)
-			ifTrue: [
-				XMLValidationException signal:
-					'Cannot use ', each asString, ' in mixed content declaration']].
 
-	allowedElements := (DTDEnumerationListParser on: list) parse.
+	allowedElements := (DTDMixedContentListParser on: list) parse.
 	allowedElements remove: '#PCDATA'.
 
 	^ XMLMixedElementValidator
@@ -151,7 +160,10 @@ DTDContentModelParser >> popRemainingOperators [
 		whileTrue: [
 			operatorStack last == $(
 				ifTrue: [self errorMismatchedParens].
-			self applyBinaryOperatorOnStack]
+			self applyBinaryOperatorOnStack].
+
+	nfaBuilder fragmentStack size = 1
+		ifFalse: [self errorMissingOperand].
 ]
 
 { #category : #parsing }

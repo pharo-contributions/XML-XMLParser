@@ -115,11 +115,10 @@ XMLTokenizer class >> isName: aString [
 
 { #category : #testing }
 XMLTokenizer class >> isNmtoken: aString [
-	aString ifEmpty: [^ false].
-
-	^ aString allSatisfy: [:each |
-		(NameStartChars includes: each)
-			or: [AdditionalNameChars includes: each]].
+	^ aString notEmpty
+		and: [aString allSatisfy: [:each |
+			(NameStartChars includes: each)
+				or: [AdditionalNameChars includes: each]]].
 ]
 
 { #category : #testing }
@@ -341,11 +340,13 @@ XMLTokenizer >> nextCDataSection [
 { #category : #tokenizing }
 XMLTokenizer >> nextComment [
 	| comment |
+
 	"Skip first -"
 	streamReader next.
 	self expectNext: $-.
 	comment := streamReader upToAll: '--'.
 	self expectTerminator: $>.
+
 	driver handleComment: comment.
 ]
 
@@ -552,11 +553,13 @@ XMLTokenizer >> nextEndInternalSubset [
 { #category : #tokenizing }
 XMLTokenizer >> nextEndTag [
 	| tagName |
+
 	"Skip /"
 	streamReader next.
 	tagName := self nextName.
 	streamReader skipSeparators.
 	self expectTerminator: $>.
+
 	driver handleEndTag: tagName
 ]
 
@@ -669,13 +672,9 @@ XMLTokenizer >> nextGeneralEntityReference [
 	(self predefinedEntities includesKey: name)
 		ifTrue: [^ self predefinedEntities at: name].
 
-	replacement := ''.
-	(entity := driver handleGeneralEntityReference: name)
-		ifNotNil: [
-			replacement :=
-				(context isInLiteralValue
-					ifTrue: [entity replacementForLiteralContext]
-					ifFalse: [entity replacementForContentContext])].
+	entity := driver handleGeneralEntityReference: name.
+	replacement := self replacementFromGeneralEntity: entity.
+
 	replacement
 		ifNotEmpty: [
 			context isInContent
@@ -833,13 +832,9 @@ XMLTokenizer >> nextParameterEntityReference [
 	name := self nextName.
 	self expectNext: $;.
 
-	replacement := ''.
-	(entity := driver handleParameterEntityReference: name)
-		ifNotNil: [
-			replacement :=
-				(context isInLiteralValue
-					ifTrue: [entity replacementForLiteralContext]
-					ifFalse: [entity replacementForDTDContext])].
+	entity := driver handleParameterEntityReference: name.
+	replacement := self replacementFromParameterEntity: entity.
+
 	replacement
 		ifNotEmpty: [
 			self
@@ -1011,9 +1006,14 @@ XMLTokenizer >> nextXMLDecl [
 	| version encoding standalone |
 
 	version := self nextXMLDeclAttribute: 'version'.
-	encoding := self nextXMLDeclAttribute: 'encoding'.
+	streamReader skipSeparators.
+	encoding := 
+		streamReader peek == $e
+			ifTrue: [self nextXMLDeclAttribute: 'encoding']
+			ifFalse: [''].
 	context isInTextDeclaration
 		ifFalse: [standalone := self nextXMLDeclAttribute: 'standalone'].
+
 	streamReader skipSeparators.
 	self expectNext: $?.
 	self expectTerminator: $>.
@@ -1091,6 +1091,27 @@ XMLTokenizer >> replaceParameterEntityReference [
 	self nextParameterEntityReference
 ]
 
+{ #category : #accessing }
+XMLTokenizer >> replacementFromGeneralEntity: anEntity [
+	anEntity ifNil: [^ ''].
+
+	^ context isInLiteralValue
+		ifTrue: [
+			anEntity isExternal
+				ifTrue: [self parseError: 'External general entity ', anEntity asReference, ' in literal context'].
+			anEntity replacementForLiteralContext]
+		ifFalse: [anEntity replacementForContentContext].
+]
+
+{ #category : #accessing }
+XMLTokenizer >> replacementFromParameterEntity: anEntity [
+	anEntity ifNil: [^ ''].
+
+	^ context isInLiteralValue
+		ifTrue: [anEntity replacementForLiteralContext]
+		ifFalse: [anEntity replacementForDTDContext]
+]
+
 { #category : #initialization }
 XMLTokenizer >> setDriver: aDriver stream: aStream [
 	driver := aDriver.
@@ -1106,11 +1127,13 @@ XMLTokenizer >> setDriver: aDriver stream: aStream [
 { #category : #'tokenizing dtd' }
 XMLTokenizer >> skipSeparatorsReplacingParameterEntities [
 	"this can be used to replace references within declarations"
-	[streamReader atEnd not and: [streamReader peek isSeparator]]
+	streamReader skipSeparators.
+	[streamReader atEnd not
+		and: [context isInExternalSubset
+			and: [streamReader peek == $%]]]
 		whileTrue: [
-			streamReader skipSeparators.
-			(context isInExternalSubset and: [streamReader peek == $%])
-				ifTrue: [self replaceParameterEntityReference]]
+			self replaceParameterEntityReference.
+			streamReader skipSeparators].
 ]
 
 { #category : #accessing }

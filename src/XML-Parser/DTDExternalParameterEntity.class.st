@@ -8,8 +8,3 @@ Class {
 DTDExternalParameterEntity >> isExternal [
 	^ true
 ]
-
-{ #category : #replacement }
-DTDExternalParameterEntity >> replacementForLiteralContext [
-	XMLValidationException signal: 'Cannot reference external parameter entity ', self asReference, ' in literal'
-]

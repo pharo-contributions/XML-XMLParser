@@ -8,8 +8,3 @@ Class {
 DTDExternalGeneralEntity >> isExternal [
 	^ true
 ]
-
-{ #category : #replacement }
-DTDExternalGeneralEntity >> replacementForLiteralContext [
-	XMLValidationException signal: 'Cannot reference external general entity ', self asReference, ' in literal'
-]

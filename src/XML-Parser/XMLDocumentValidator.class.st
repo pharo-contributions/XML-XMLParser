@@ -42,7 +42,7 @@ XMLDocumentValidator >> elementValidatorStack [
 
 { #category : #private }
 XMLDocumentValidator >> errorMissingContentFor: aName [
-	XMLValidationException signal: 'Element ', aName, ' terminated prematurely'
+	XMLValidationException signal: 'Element <', aName, '> terminated prematurely'
 ]
 
 { #category : #testing }
