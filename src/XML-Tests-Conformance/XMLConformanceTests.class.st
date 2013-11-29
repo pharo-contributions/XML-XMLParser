@@ -1,253 +1,261 @@
 "
-This class contains tests with source methods generated from the OASIS test suite, which can be obtained from this URL: http://www.oasis-open.org/committees/xml-conformance/xml-test-suite.shtml
+This class generates subclass TestCases from the W3C's XML test suite, which can be obtained from this URL: http://www.w3.org/XML/Test/
+
+To rebuild from source, unzip the archive in your image directory, then evaluate:
+
+self buildTestCases.
 "
 Class {
 	#name : #XMLConformanceTests,
 	#superclass : #TestCase,
-	#instVars : [
-		'testsToSkip'
-	],
 	#category : #'XML-Tests-Conformance'
 }
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests class >> addMethod: testMethodString classified: classificationString [ 
-
-	self compile: testMethodString classified: classificationString
+{ #category : #accessing }
+XMLConformanceTests class >> baseDirectory [
+	^ 'xmlconf'
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests class >> baseTestDirectory [
-	^ FileDirectory default directoryNamed: 'xmlconf'
+{ #category : #'building subclasses' }
+XMLConformanceTests class >> buildFailingTestMethodFor: aFileReference in: aClass [
+	self
+		buildTestMethodFor: aFileReference
+		in: aClass
+		usingTemplate: self failingTestMethodTemplate
+		classified: 'tests - exception raising' asSymbol
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests class >> filenameAt: partialPath [ 
-	| platformPartialPath methodOfFileName stream |
-	
-	methodOfFileName := (partialPath copyWithoutAll: '.-/\') asSymbol.
-	(self class includesSelector: methodOfFileName )
-		ifTrue: [ ^ self perform: methodOfFileName ].
-	
-	platformPartialPath := partialPath replaceAll: $/ with: FileDirectory pathNameDelimiter.
-	stream := CrLfFileStream
-		readOnlyFileNamed: (self baseTestDirectory directoryNamed: platformPartialPath) pathName.
-	self class compile: 'source', methodOfFileName asString, String cr, '	^ ', stream contents printString classified: 'source'.
-	^ stream contents.
+{ #category : #'building subclasses' }
+XMLConformanceTests class >> buildPassingTestMethodFor: aFileReference in: aClass [
+	self
+		buildTestMethodFor: aFileReference
+		in: aClass
+		usingTemplate: self passingTestMethodTemplate
+		classified: 'tests' asSymbol
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests class >> generateTestFrom: anVWXMLElement category: aString [
-	|type testName testFile reference description testCode answerFile arguments |
+{ #category : #'building subclasses' }
+XMLConformanceTests class >> buildSourceFileMethodFor: aFileReference class: aClass [
+	| sourceSelector pathString sourceStream |
 
-	type := anVWXMLElement valueOfAttribute: 'TYPE' ifAbsent: [self error: 'missing test information'].
-	testName := anVWXMLElement valueOfAttribute: 'ID' ifAbsent: [self error: 'missing test information'].
-	testFile := anVWXMLElement valueOfAttribute: 'URI' ifAbsent: [self error: 'missing test information'].
-	reference := anVWXMLElement valueOfAttribute: 'SECTIONS' ifAbsent: [self error: 'missing test information'].
-	answerFile := anVWXMLElement valueOfAttribute: 'OUTPUT' ifAbsent: [nil].
-	"Some test do not give correct answer. skip"
-	type = 'valid' & (answerFile isNil)
-		ifTrue:[^self]. 
-	description := anVWXMLElement characterData.
+	sourceSelector := (self sourceSelectorFrom: aFileReference).
+	pathString := self pathStringFrom: aFileReference.
 
-	"sun test files do not follow the same pattern as the others"
-	aString = 'sun' ifTrue:
-		[testFile := 'sun/' , testFile.
-		 answerFile notNil ifTrue:[ answerFile := 'sun/' , answerFile.]].
-
-	arguments := OrderedCollection new: 5.
-	arguments
-		add: aString ,  (self remove: $- from: testName );
-		add: testName;
-		add: (description replaceAll: $" with: $ );
-		add: (reference replaceAll: $" with: $ );
-		add: testFile;
-		add: answerFile.
-	testCode := (type = 'valid') 
-					ifTrue:[self validTestTemplate]
-					ifFalse:[ (type = 'not-wf')
-						ifTrue:[self notWellFormedTestTemplate]
-						ifFalse:[ (type = 'invalid' or:[type = 'error'])
-							ifTrue:[self invalidTestTemplate]
-							ifFalse:[self error: 'Invalid test type']]].
-	testCode := testCode expandMacrosWithArguments: arguments.
-	self addMethod: testCode classified: aString , ' ' , (type replaceAll: $- with: $ ).
+	sourceStream := (String new: aFileReference size) writeStream.
+	aFileReference readStreamDo: [:readStream |
+		[readStream atEnd not]
+			whileTrue: [
+				readStream peek == $'
+					ifTrue: [sourceStream nextPut: $'].
+				sourceStream nextPut: readStream next]].
+		
+	aClass class
+		compile:
+			(self sourceFileMethodTemplate format:
+				(Array
+					with: sourceSelector asString
+					with: pathString
+					with: sourceStream contents))
+		classified: 'xml source' asSymbol.
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests class >> generateTests [
-	"XMLParserTests generateTests"
+{ #category : #'building subclasses' }
+XMLConformanceTests class >> buildTestCaseForSuite: aSuite [
+	| testCaseClass fileVisitor badSourceFiles |
+
+	testCaseClass := self createSubclassForSuite: aSuite.
+	fileVisitor :=
+		XMLConformanceFileVisitor
+			suite: aSuite
+			skipFilesInBase: (self suitesWithSkippableBases includes: aSuite).
+	(PreorderGuide for: fileVisitor) show: (self directoryForSuite: aSuite).
+
+	badSourceFiles := OrderedCollection new.
+	(fileVisitor passingTestFiles,
+		fileVisitor failingTestFiles,
+		fileVisitor entityFiles) do: [:each |
+			[self
+				buildSourceFileMethodFor: each
+				class: testCaseClass]
+				on: ZnCharacterEncodingError
+				do: [:error | badSourceFiles add: each]].
+
+	(fileVisitor passingTestFiles copyWithoutAll: badSourceFiles)
+		do: [:each |
+			self
+				buildPassingTestMethodFor: each
+				in: testCaseClass].
+	(fileVisitor failingTestFiles copyWithoutAll: badSourceFiles)
+		do: [:each |
+			self
+				buildFailingTestMethodFor: each
+				in: testCaseClass].
+]
+
+{ #category : #'building subclasses' }
+XMLConformanceTests class >> buildTestCases [
+	"self buildTestCases"
+
+	self supportedTestSuites do: [:each | self buildTestCaseForSuite: each]
+]
+
+{ #category : #'building subclasses' }
+XMLConformanceTests class >> buildTestMethodFor: aFileReference in: aClass usingTemplate: aTemplate classified: aCategory [
+	| failingTestSelector sourceSelector pathString documentUri |
+
+	failingTestSelector := self testSelectorFrom: aFileReference.
+	sourceSelector := self sourceSelectorFrom: aFileReference.
+	pathString := self pathStringFrom: aFileReference.
+	documentUri := self documentURIFrom: aFileReference.
+	aClass
+		compile:
+			(aTemplate format:
+				(Array
+					with: failingTestSelector asString
+					with: pathString
+					with: sourceSelector asString
+					with: documentUri))
+		classified: aCategory
+]
+
+{ #category : #accessing }
+XMLConformanceTests class >> classNameForSuite: aSuite [
+	^ ('XMLConformance',
+		(self suiteClassNames
+			at: aSuite
+			ifAbsent: [aSuite]) capitalized,
+		'Tests') asSymbol
+]
+
+{ #category : #'building subclasses' }
+XMLConformanceTests class >> createSubclassForSuite: aSuite [
+	^ self
+		subclass: (self classNameForSuite: aSuite)
+		instanceVariableNames: ''
+		classVariableNames: ''
+		poolDictionaries: ''
+		category: self category
+]
+
+{ #category : #paths }
+XMLConformanceTests class >> directoryForSuite: aSuite [
+	^ FileSystem workingDirectory / self baseDirectory / aSuite
+]
+
+{ #category : #paths }
+XMLConformanceTests class >> documentURIFrom: aFileReference [
+	^ ($/ join: (self segmentsAfterSuite: aFileReference)) asString
+]
+
+{ #category : #'method templates' }
+XMLConformanceTests class >> failingTestMethodTemplate [
+	^ '{1}
+	"Source file: {2}"
 
 	self
-		removeTests: 'test_*';
-		generateTestsFrom: 'xmltest/xmltest.xml' category:  'clark';
-		generateTestsFrom: 'oasis/oasis.xml' category:  'oasis'.
-
-	#('sun/valid/sun-valid.xml' 'sun/invalid/sun-invalid.xml' 'sun/not-wf/sun-not-wf.xml' 'sun/error/sun-error.xml') do: 
-			[:each |  self generateTestsFrom: each category: 'sun']
+		should: [
+			self
+				parse: self class {3}
+				documentURI: ''{4}'']
+		raise: self exceptionClass'
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests class >> generateTestsFrom: xmlFile category: aString [
-	| tests  |
+{ #category : #'method templates' }
+XMLConformanceTests class >> passingTestMethodTemplate [
+	^ '{1}
+	"Source file: {2}"
 
-	tests := self xmlTestDriverIn: xmlFile .
-	tests do: [:element | self generateTestFrom: element category: aString.]
+	self
+		shouldnt: [
+			self
+				parse: self class {3}
+				documentURI: ''{4}'']
+		raise: self exceptionClass'
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests class >> haveParserValidate [
-	"Return true if you want the parser to validate the test XML files against the DTD
-	 It is not very useful to return false, as many tests will then fail. Should remove this
-	option"
-	^true
+{ #category : #paths }
+XMLConformanceTests class >> pathStringFrom: aFileReference [
+	^ ($/ join: (aFileReference pathSegments copyAfter: self baseDirectory)) asString
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests class >> invalidTestTemplate [
-	"<1s> = test name
-	 <2s> = test ID
-	 <3s> = description
-	 <4s> = XML spec reference
-	 <5s> = test path"
-	^'test<1s>
-	"<3s>
-	 See XML Spec. 1.0 section: <4s>"
-
-	(self class shouldSkipTests and: [testsToSkip includes: ''<2s>''])
-		ifTrue:[^nil].
-
-	self assert: [self runTest: ''<5s>'']
-		raises: self exceptionSet'
+{ #category : #selectors }
+XMLConformanceTests class >> sanitizedSelectorPartFromSegments: aSegmentArray [
+	^ aSegmentArray concatenation asString select: [:each | each isAlphaNumeric]
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests class >> notWellFormedTestTemplate [
-	"<1s> = test name
-	 <2s> = test ID
-	 <3s> = description
-	 <4s> = XML spec reference
-	 <5s> = test path"
-	^'test<1s>
-	"<3s>
-	 See XML Spec. 1.0 section: <4s>"
-
-	(self class shouldSkipTests and: [testsToSkip includes: ''<2s>''])
-		ifTrue:[^nil].
-
-	self assert: [self runTest: ''<5s>'' ]
-		raises: self exceptionsTest2'
+{ #category : #paths }
+XMLConformanceTests class >> segmentsAfterSuite: aFileReference [
+	^ (aFileReference pathSegments copyAfter: self baseDirectory) allButFirst
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests class >> remove: aCharacter from: aString [
-	^aString reject: [:each | each = aCharacter]
+{ #category : #'method templates' }
+XMLConformanceTests class >> sourceFileMethodTemplate [
+	^ '{1}
+	"Source file: {2}"
+
+	^ ''{3}'''
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests class >> removeTests: testMatchPattern [ 
-	self selectors 
-		do: [:selector | (testMatchPattern match: selector) ifTrue: [self removeSelector: selector]]
+{ #category : #selectors }
+XMLConformanceTests class >> sourceSelectorFrom: aFileReference [
+	^ self sourceSelelctorFromSegments: (self segmentsAfterSuite: aFileReference)
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests class >> shouldSkipTests [
-	"indicates if one wants to skip some tests"
-
-	^true
+{ #category : #selectors }
+XMLConformanceTests class >> sourceSelelctorFromSegments: aSegmentArray [
+	^ ('source', (self sanitizedSelectorPartFromSegments: aSegmentArray)) asSymbol
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests class >> validTestTemplate [
-	"Template used to create the test methods for valid tests
-	<1s> = test name
-	 <2s> = test ID
-	 <3s> = description
-	 <4s> = XML spec reference
-	 <5s> = test path
-	 <6s> = answer file path" 
-	^'test<1s>
-	"<3s>
-	 See XML Spec. 1.0 section: <4s>"
-	|  correctAnswer  result |
-
-	(self class shouldSkipTests and: [testsToSkip includes: ''<2s>''])
-		ifTrue:[^nil].
-	correctAnswer := (self class filenameAt:''<6s>'')  contentsOfEntireFile.
-
-	[result := self runTest: ''<5s>'' ]
-		on: VWXMLWarningSignal
-		do: [:warn | warn resume].
-
-	self assert: correctAnswer = result.'
-
-
-"	correctAnswer := ((self class filenameAt:''<6s>'') withEncoding: #UTF_8 ) readStream contents."
+{ #category : #accessing }
+XMLConformanceTests class >> suiteClassNames [
+	^ Dictionary with: 'xmltest' -> 'expat'
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests class >> xmlTestDriverIn: aTailPathString [
-	"Return an array of VWXMLElements containing the test"
-	| document driverText mainElement |
-
-	"Parser can not handle comments in files, but can handle them in strings
-	 The above problem has been fixed, so could have the parser open the file.
-	 Will keep this code for those that have not installed my fixes"
-	driverText := (self filenameAt: aTailPathString) contentsOfEntireFile.
-	document := self parserClass 
-		processDocumentString: driverText
-	 	beforeScanDo: [:parser | parser validate: false].
-
-	"filter out the comments. There is only one top level element in an XML document"
-	mainElement := (document selectNodes: [:each | each isElement] ) at: 1.
-	^mainElement elementsNamed: 'TEST'
+{ #category : #accessing }
+XMLConformanceTests class >> suitesWithSkippableBases [
+	^ self supportedTestSuites copyWithout: 'oasis'
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests >> canonicalVersion: aDocument [
-	|  aStream |
-	aStream := WriteStream on: (String new: 10).
-	aDocument
-		canonicallyPrintOn: aStream.
-
-	^aStream contents
+{ #category : #accessing }
+XMLConformanceTests class >> supportedTestSuites [
+	^ #('xmltest' 'sun' 'oasis')
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests >> exceptionSet [
-	^  XMLParserWarning , XMLParsingException, XMLWellFormednessException, Error  
-
+{ #category : #selectors }
+XMLConformanceTests class >> testSelectorFrom: aFileReference [
+	^ 'test',
+		(self sanitizedSelectorPartFromSegments:
+			(self segmentsAfterSuite: aFileReference)) asSymbol
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests >> exceptionSet2 [
-	^ XMLParserWarning, XMLParsingException, XMLWellFormednessException, Error
+{ #category : #accessing }
+XMLConformanceTests >> exceptionClass [
+	^ XMLParserException
 ]
 
-{ #category : #'as yet unclassified' }
-XMLConformanceTests >> initialize [
-	testsToSkip := self class allTestsToSkip.
+{ #category : #accessing }
+XMLConformanceTests >> fileClientClass [
+	^ XMLConformanceVirtualFileClient
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #parsing }
+XMLConformanceTests >> parse: aString documentURI: aUri [
+	| parser |
+
+	parser :=
+		self parserClass
+			on: aString
+			documentURI: aUri.
+	parser configuration fileClient:
+		(self fileClientClass testCaseClass: self class).
+	parser
+		usesNamespaces: true;
+		isValidating: true;
+		resolvesExternalEntities: true;
+		parseDocument.
+]
+
+{ #category : #accessing }
 XMLConformanceTests >> parserClass [
-	^Smalltalk at: self parserClassName
-]
-
-{ #category : #'as yet unclassified' }
-XMLConformanceTests >> parserClassName [
-	^#XMLDOMParser
-]
-
-{ #category : #'as yet unclassified' }
-XMLConformanceTests >> runTest: aString [ 
-	| test  |
-
-	test := self parserClass parseDocumentFrom: aString.
-	^self canonicalVersion: test.
-]
-
-{ #category : #'as yet unclassified' }
-XMLConformanceTests >> warningSignal [
-	^XMLWarning 
+	^ SAXHandler
 ]
