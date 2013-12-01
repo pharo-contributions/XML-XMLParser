@@ -11,6 +11,7 @@ Class {
 		'defaultDeclaration'
 	],
 	#classVars : [
+		'DefaultValueValidators',
 		'NonEnumerationValidators'
 	],
 	#category : #'XML-Parser-DTD'
@@ -28,6 +29,11 @@ DTDAttributeDefinitionParser class >> element: anElement name: aName type: aType
 { #category : #'class initialization' }
 DTDAttributeDefinitionParser class >> initialize [
 	"self initialize"
+
+	(DefaultValueValidators := Dictionary new)
+		at: 'FIXED' put: XMLFixedValueAttributeValidator;
+		at: 'IMPLIED' put: XMLImpliedValueAttributeValidator;
+		at: 'REQUIRED' put: XMLRequiredValueAttributeValidator.
 
 	(NonEnumerationValidators := Dictionary new)
 		at: 'CDATA' put: XMLCDataAttributeValidator;
@@ -47,29 +53,31 @@ DTDAttributeDefinitionParser >> isNotationEnumeration: aType [
 
 { #category : #parsing }
 DTDAttributeDefinitionParser >> parse [
-	| validator defaultPragma defaultValue |
+	| defaultValueValidator attributeValidator |
 
-	defaultPragma := self parseDefaultPragma.
-	defaultValue := self parseDefaultValue.
-	validator :=
+	defaultValueValidator :=
+		(DefaultValueValidators
+			at: self parseDefaultPragma
+			ifAbsent: [XMLDefaultValueAttributeValidator])
+				name: name
+				defaultValue: self parseDefaultValue.
+
+	attributeValidator :=
 		self validatorClassForType
 			element: element
 			name: name
-			defaultPragma: defaultPragma
-			defaultValue: defaultValue.
+			defaultValueValidator: defaultValueValidator.
 
-	validator isEnumerationValidator
-		ifTrue: [validator values: (self parseEnumerationType)].
+	attributeValidator isEnumerationValidator
+		ifTrue: [attributeValidator values: (self parseEnumerationType)].
 
-	^ validator.
+	^ attributeValidator.
 ]
 
 { #category : #parsing }
 DTDAttributeDefinitionParser >> parseDefaultPragma [
 	^ (defaultDeclaration beginsWith: '#')
-		ifTrue: [
-			(defaultDeclaration allButFirst
-				copyUpTo: Character space) asSymbol]
+		ifTrue: [defaultDeclaration allButFirst copyUpTo: Character space]
 		ifFalse: [nil].
 ]
 

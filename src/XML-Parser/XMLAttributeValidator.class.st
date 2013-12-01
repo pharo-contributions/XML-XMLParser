@@ -7,19 +7,17 @@ Class {
 	#instVars : [
 		'element',
 		'name',
-		'defaultValue',
-		'defaultPragma'
+		'defaultValueValidator'
 	],
 	#category : #'XML-Parser-Validation'
 }
 
 { #category : #'instance creation' }
-XMLAttributeValidator class >> element: anElement name: aName defaultPragma: aPragma defaultValue: aValue [
+XMLAttributeValidator class >> element: anElement name: aName defaultValueValidator: aDefaultValueValidator [
 	^ self new
 		setElement: anElement
 		name: aName
-		defaultPragma: aPragma
-		defaultValue: aValue
+		defaultValueValidator: aDefaultValueValidator
 ]
 
 { #category : #normalization }
@@ -53,11 +51,10 @@ XMLAttributeValidator >> isEnumerationValidator [
 ]
 
 { #category : #initialization }
-XMLAttributeValidator >> setElement: anElement name: aName defaultPragma: aPragma defaultValue: aValue [
+XMLAttributeValidator >> setElement: anElement name: aName defaultValueValidator: aDefaultValueValidator [
 	element := anElement.
 	name := aName.
-	defaultPragma := aPragma.
-	defaultValue := aValue.
+	defaultValueValidator := aDefaultValueValidator.
 ]
 
 { #category : #testing }
@@ -72,20 +69,7 @@ XMLAttributeValidator >> validateAttributes: anAttributeDictionary [
 
 { #category : #validation }
 XMLAttributeValidator >> validateDefaultValueIn: anAttributeDictionary [
-	defaultPragma == #REQUIRED
-		ifTrue: [
-			(anAttributeDictionary includesKey: name)
-				ifFalse: [XMLValidationException signal: 'Required attribute "', name, '" is missing']]
-		ifFalse: [
-			defaultPragma == #IMPLIED
-				ifTrue: [anAttributeDictionary at: name ifAbsentPut: ['']]
-				ifFalse: [
-					defaultPragma == #FIXED
-						ifTrue: [anAttributeDictionary at: name put: defaultValue]
-						ifFalse: [
-							((anAttributeDictionary at: name ifAbsent: ['']) isEmpty 
-								and: [defaultValue notEmpty])
-								ifTrue: [anAttributeDictionary at: name put: defaultValue]]]].
+	defaultValueValidator validateDefaultValueIn: anAttributeDictionary.
 
 	(self shouldFurtherNormalizeValue and: [anAttributeDictionary includesKey: name])
 		ifTrue: [self furtherNormalizeValueIn: anAttributeDictionary].
