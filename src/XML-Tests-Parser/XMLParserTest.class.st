@@ -199,7 +199,9 @@ XMLParserTest >> testAttributeEnumerationDeclaration [
 		<!NOTATION txtFile PUBLIC "//file.txt//">
 		<!NOTATION confFile PUBLIC "//file.conf//">
 		<!ATTLIST root note NOTATION (txtFile | confFile ) #IMPLIED>]>'.
-	XMLDOMParser parse: dtd, '<root number="two" note="txtFile"/>'.
+	self
+		shouldnt: [XMLDOMParser parse: dtd, '<root number="two" note="txtFile"/>']
+		raise: XMLValidationException.
 	self
 		should: [XMLDOMParser parse: dtd, '<root number="four"/>']
 		raise: XMLValidationException.
@@ -399,13 +401,26 @@ XMLParserTest >> testElementMixedContentDeclaration [
 
 	dtd := '<!DOCTYPE root [
 		<!ELEMENT root (#PCDATA | one | two | three)*>
-		<!ELEMENT two (#PCDATA)>]>'.
-	XMLDOMParser parse: dtd, '<root>text<one/><two>text</two></root>'.
+		<!ELEMENT two (#PCDATA)>
+		<!ELEMENT three (#PCDATA)*>]>'.
 	self
-		should: [XMLDOMParser parse: dtd, '<root><five/></root>']
+		shouldnt: [
+			XMLDOMParser parse:
+				dtd, '<root>text<one/><two><![CDATA[text]]></two></root>']
+		raise: XMLValidationException.
+	self
+		shouldnt: [XMLDOMParser parse: dtd, '<root><three>text<!--comment--></three></root>']
+		raise: XMLValidationException.
+	self
+		should: [XMLDOMParser parse: dtd, '<root><four/></root>']
 		raise: XMLValidationException.
 	self
 		should: [XMLDOMParser parse: dtd, '<root><two><three/></two></root>']
+		raise: XMLValidationException.
+	self
+		should: [
+			XMLDOMParser parse: "missing *"
+				'<!DOCTYPE root [<!ELEMENT root (#PCDATA|one)>]><root/>']
 		raise: XMLValidationException.
 	'+*?,' do: [:each |
 		self
@@ -421,13 +436,13 @@ XMLParserTest >> testEntityReplacement [
 
 	document := XMLDOMParser parse: '
 		<!DOCTYPE root [
-			<!ENTITY % partialDeclaration "name1 &#39;replacement1&#39;">
+			<!ENTITY % partialDeclaration "name1 &#39;replacement1&#x27;">
 			<!ENTITY % name1Declaration "<!ENTITY %partialDeclaration;>">
 			%name1Declaration;
 			<!ENTITY name2 "replacement2 &name1;" >
 			<!ENTITY name3 "replacement3 &name2;" >
 			<!ENTITY predefined "&amp;&gt;&lt;&quot;&apos;" >
-			<!ENTITY quotes "&#34;&#39;">
+			<!ENTITY quotes "&#x22;&#39;">
 		]>
 		<root name="&quotes;">&name1; &name2; &name3; ',
 		'&predefined; &amp;&gt;&lt;&quot;&apos; %name1Declaration;</root>'.
@@ -484,6 +499,8 @@ XMLParserTest >> testFileClientPaths [
 	fileClient := XMLFileClient defaultImplementation new.
 	cwd := fileClient currentWorkingDirectory.
 	self
+		assert: cwd first == $/;
+		deny: cwd last == $/;
 		assert: (fileClient combineRelative: 'relative' withBase: 'relative/path') = 'relative/relative';
 		assert: (fileClient combineRelative: 'relative/path' withBase: 'relative/path') = 'relative/relative/path';
 		assert: (fileClient combineRelative: 'relative' withBase: cwd) = (cwd, '/relative');
@@ -561,24 +578,35 @@ XMLParserTest >> testLineEndingsDoNotMatter [
 
 { #category : #tests }
 XMLParserTest >> testParsing [
-	| xmlDocument root firstPerson numberOfPersons |
+	| document root firstPerson persons |
 	"self debug: #testParsing"
 
-	xmlDocument := XMLDOMParser parse: self addressBookXML.
-	self assert: (xmlDocument isKindOf: XMLDocument).
-	root := xmlDocument root.
+	document := XMLDOMParser parse: self addressBookXML.
+	self assert: (document isKindOf: XMLDocument).
+	root := document root.
 	self assert: (root class == XMLElement).
 
-	self assert: (root findElementNamed: 'person') notNil.
-	self assert: (root findElementNamed: 'addressbook') notNil.
-
+	self assert:
+		(root allNodesDetect: [:each |
+			each isElement
+				and: [each isNamedAny: #('AddressBook' 'addressbook')]]) == root.
 	self assert: (root findElementNamed: 'addressbook') == root.
 
-	numberOfPersons := 0.
-	root allElementsNamed: 'person' do: [:p | numberOfPersons := numberOfPersons + 1].
-	self assert: numberOfPersons = 4.
+	persons := 	root allNodesSelect: [:each |
+			each isElement and: [each isNamedAny: #('Person' 'person')]].
+	self assert: persons size = 4.
+	root allElementsNamed: 'person' do: [:p |
+		self assert: (persons includes: p).
+		persons remove: p].
+	self assert: persons isEmpty.
 
 	firstPerson := root findElementNamed: 'person'.
+	self assert:
+		(firstPerson allElements collect: [:each | each name]) asArray =
+			#('person' 'contact-info' 'address' 'job-info' 'manager').
+	self assert:
+		(firstPerson nodesCollect: [:each | each name]) asArray =
+			#('contact-info' 'address' 'job-info' 'manager').
 	self assert: (firstPerson attributeAt: 'employee-number') = 'A0000'.
 	self assert: (firstPerson attributeAt: 'family-name') = 'Gates'.
 	self assert: (firstPerson attributeAt: 'first-name') = 'Bob'.
@@ -586,23 +614,78 @@ XMLParserTest >> testParsing [
 		#('employee-number' 'family-name' 'first-name').
 	self assert: firstPerson attributeAssociations asArray =
 		{('employee-number'->'A0000'). ('family-name'->'Gates'). ('first-name'->'Bob').}.
-
 ]
 
 { #category : #tests }
-XMLParserTest >> testParsingCharacters [
-	| tokenizer |
-	"This test is actually not that useful. This is not the proper way of using the parser.
-	This test is here just for specification purpose"
-	"self debug: #testParsingCharacters"
+XMLParserTest >> testParsingHTML [
+	| document |
+	
+	document := HTMLParser parse: 'text'.
+	self
+		assert: document allNodes size = 4;
+		assert: (document allElementsCollect: [:each | each name]) asArray = #('html' 'body');
+		assert: (document findElementNamed: 'body') contentString = 'text'.
 
-	tokenizer := XMLTokenizer driver: nil on: self addressBookXML readStream.
+	document := HTMLParser parse:
+		'<head><title><b>"title</b></title><script>',
+		'1 < 2; 3 > 2; document.write("</script>");</script>
+		<style>//"</style><head>'.
+	self
+		assert: (document findElementNamed: 'title') contentString = '<b>"title</b>';
+		assert: (document findElementNamed: 'script') contentString =
+			'1 < 2; 3 > 2; document.write("</script>");';
+		assert: (document findElementNamed: 'style') contentString = '//"'.
 
-	self assert: tokenizer streamReader next = $<.
-	self assert: tokenizer streamReader next = $a.
-	self assert: tokenizer streamReader next = $d.
-	self assert: tokenizer streamReader next = $d.
-	self assert: tokenizer streamReader next = $r.
+	document := HTMLParser parse: '<head><p>text<title>reopened'.
+	self
+		assert: (document root elementsCollect: [:each | each name]) asArray = #('head' 'body');
+		assert: (document findElementNamed: 'head') elements size = 1;
+		assert: ((document findElementNamed: 'head') elementAt: 'title') contentString = 'reopened';
+		assert: (document findElementNamed: 'body') elements size = 1;
+		assert: ((document findElementNamed: 'body') elementAt: 'p') contentString = 'text'.
+
+	document := HTMLParser parse: '<body>one<img>two</img><body>three'.
+	self
+		assert: (document allElementsCollect: [:each | each name]) asArray = #('html' 'body' 'img');
+		assert: (document findElementNamed: 'body') contentString = 'one twothree';
+		deny: (document findElementNamed: 'img') hasChildren.
+
+	self assert:
+		((HTMLParser parse: '<html><b></body></html><i>')
+			allElementsCollect: [:each | each name]) asArray = #('html' 'body' 'b' 'i').
+]
+
+{ #category : #tests }
+XMLParserTest >> testParsingNamespaces [
+	| document people person |
+
+	document :=
+		XMLDOMParser parse:
+			'<root xmlns="defaultNS" xmlns:ps="personNS">',
+			self addressBookXML,
+			'</root>'.
+
+	people := document allElementsNamed: 'person' namespaceURI: 'defaultNS'.
+	self assert: people size = 4.
+	self assert:
+		(document allElementsNamed: 'person' namespaceURI: 'undeclaredNS') isEmpty.
+
+	(person := people third) prefix: 'ps'.
+	self assert:
+		person == (document findElementNamed: 'person' namespaceURI: 'personNS').
+	self assert:
+		(people copyWithout: person) =
+			((document findElementNamed: 'addressbook') nodesSelect: [:each |
+				each isElement and: [each namespaceURI = 'defaultNS']]).
+	self assert:
+		people second ==
+			((document findElementNamed: 'addressbook') nodesDetect: [:each |
+				each isElement and: [(each attributeAt: 'family-name') = 'Brown']]).
+	self assert:
+		(document
+			findElementNamed: 'person'
+			namespaceURI: 'defaultNS'
+			with: [:each | (each attributeAt: 'employee-number') = 'A7987']) == people last.
 ]
 
 { #category : #tests }
@@ -659,6 +742,22 @@ XMLParserTest >> testTokenizerAddressBookWithDTD [
 	| tokenizer |
 	tokenizer := XMLTokenizer driver: nil on: self addressBookXMLWithDTD readStream.
 	[tokenizer streamReader next notNil] whileTrue
+]
+
+{ #category : #'tests-xmltokenizer' }
+XMLParserTest >> testTokenizerCharacters [
+	| tokenizer |
+	"This test is actually not that useful. This is not the proper way of using the parser.
+	This test is here just for specification purpose"
+	"self debug: #testParsingCharacters"
+
+	tokenizer := XMLTokenizer driver: nil on: self addressBookXML readStream.
+
+	self assert: tokenizer streamReader next = $<.
+	self assert: tokenizer streamReader next = $a.
+	self assert: tokenizer streamReader next = $d.
+	self assert: tokenizer streamReader next = $d.
+	self assert: tokenizer streamReader next = $r.
 ]
 
 { #category : #tests }
