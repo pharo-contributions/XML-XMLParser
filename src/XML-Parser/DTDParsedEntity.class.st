@@ -1,5 +1,5 @@
 Class {
-	#name : #DTDEntityDeclaration,
+	#name : #DTDParsedEntity,
 	#superclass : #Object,
 	#instVars : [
 		'name',
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : #'class initialization' }
-DTDEntityDeclaration class >> initialize [
+DTDParsedEntity class >> initialize [
 	"self initialize"
 
 	(LiteralEscapes := IdentityDictionary new)
@@ -22,7 +22,7 @@ DTDEntityDeclaration class >> initialize [
 ]
 
 { #category : #'instance creation' }
-DTDEntityDeclaration class >> name: aString replacement: aValueString [
+DTDParsedEntity class >> name: aString replacement: aValueString [
 	^ self new
 		setName: aString
 		replacement: aValueString
@@ -30,7 +30,7 @@ DTDEntityDeclaration class >> name: aString replacement: aValueString [
 ]
 
 { #category : #'instance creation' }
-DTDEntityDeclaration class >> name: aString replacement: aValueString uri: aUri [
+DTDParsedEntity class >> name: aString replacement: aValueString uri: aUri [
 	^ self new
 		setName: aString
 		replacement: aValueString
@@ -38,38 +38,38 @@ DTDEntityDeclaration class >> name: aString replacement: aValueString uri: aUri 
 ]
 
 { #category : #converting }
-DTDEntityDeclaration >> asReference [
+DTDParsedEntity >> asReference [
 	^ self referenceSymbol asString, self name, ';'
 ]
 
 { #category : #testing }
-DTDEntityDeclaration >> isExternal [
+DTDParsedEntity >> isExternal [
 	^ false
 ]
 
 { #category : #accessing }
-DTDEntityDeclaration >> name [
+DTDParsedEntity >> name [
 	^ name ifNil: [name := '']
 ]
 
 { #category : #printing }
-DTDEntityDeclaration >> printOn: aStream [
+DTDParsedEntity >> printOn: aStream [
 	self asReference printOn: aStream
 	
 ]
 
 { #category : #accessing }
-DTDEntityDeclaration >> referenceSymbol [
+DTDParsedEntity >> referenceSymbol [
 	self subclassResponsibility
 ]
 
 { #category : #accessing }
-DTDEntityDeclaration >> replacement [
+DTDParsedEntity >> replacement [
 	^ replacement ifNil: [replacement := '']
 ]
 
 { #category : #replacement }
-DTDEntityDeclaration >> replacementForLiteralContext [
+DTDParsedEntity >> replacementForLiteralContext [
 	| aReplacement |
 
 	aReplacement := (String new: self replacement size) writeStream.
@@ -81,13 +81,13 @@ DTDEntityDeclaration >> replacementForLiteralContext [
 ]
 
 { #category : #accessing }
-DTDEntityDeclaration >> setName: aName replacement: aReplacement uri: aUri [
+DTDParsedEntity >> setName: aName replacement: aReplacement uri: aUri [
 	name := aName.
 	replacement := aReplacement.
 	uri := aUri.
 ]
 
 { #category : #accessing }
-DTDEntityDeclaration >> uri [
+DTDParsedEntity >> uri [
 	^ uri ifNil: [uri := '']
 ]

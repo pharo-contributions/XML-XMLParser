@@ -1,6 +1,6 @@
 Class {
 	#name : #DTDParameterEntity,
-	#superclass : #DTDEntityDeclaration,
+	#superclass : #DTDParsedEntity,
 	#category : #'XML-Parser-DTD'
 }
 

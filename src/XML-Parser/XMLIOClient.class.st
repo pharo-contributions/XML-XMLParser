@@ -1,5 +1,5 @@
 "
-A base class for IO clients used to retrieve external entities.
+A base class for IO clients used to retrieve external entities. The get: methods return readable streams.
 "
 Class {
 	#name : #XMLIOClient,
@@ -25,14 +25,6 @@ XMLIOClient >> combineRelative: aRelativeResource withBase: aBaseResource [
 { #category : #retrieving }
 XMLIOClient >> get: aResource [
 	self subclassResponsibility
-]
-
-{ #category : #retrieving }
-XMLIOClient >> get: aRelativeResource relativeTo: aBaseResource [
-	^ self get:
-		(self
-			combineRelative: aRelativeResource
-			withBase: aBaseResource)
 ]
 
 { #category : #testing }

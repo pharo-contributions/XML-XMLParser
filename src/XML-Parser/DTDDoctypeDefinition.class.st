@@ -119,7 +119,7 @@ DTDDoctypeDefinition >> parseAttributeDefinition: anElement name: aName type: aT
 ]
 
 { #category : #validators }
-DTDDoctypeDefinition >> parseContentModel: aContentModel for: anElement [
+DTDDoctypeDefinition >> parseElement: anElement contentModel: aContentModel [
 	self elementValidators
 		at: anElement
 		ifAbsentPut: [

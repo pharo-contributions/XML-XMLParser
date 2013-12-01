@@ -10,19 +10,18 @@ Class {
 
 { #category : #paths }
 XMLFileSystemClient >> combineRelative: aRelativePath withBase: aBasePath [
-	| basePath fullPathString |
+	| basePathObject fullPathString |
 
 	(self isNonRelative: aRelativePath)
 		ifTrue: [^ aRelativePath].
 
-	(basePath := self pathClass from: aBasePath) asFileReference isDirectory
-		ifTrue: [
-			fullPathString :=
-				self systemPathFrom: (basePath / (self trimRelativePath: aRelativePath))]
-		ifFalse: [
-			fullPathString :=
+	basePathObject := self pathClass from: aBasePath.
+	fullPathString :=
+		basePathObject asFileReference isDirectory
+			ifTrue: [self systemPathFrom: (basePathObject / (self trimRelativePath: aRelativePath))]
+			ifFalse: [
 				self pathSeparator join:
-					(basePath segments allButLast,
+					(basePathObject segments allButLast,
 						(self pathClass from: (self trimRelativePath: aRelativePath)))].
 	^ (self isNonRelative: aBasePath)
 		ifTrue: [fullPathString copyWithFirst: self pathSeparator]

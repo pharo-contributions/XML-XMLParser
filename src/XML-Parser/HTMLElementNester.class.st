@@ -1,14 +1,21 @@
+"
+This class can handle the nesting of HTML elements missing closing tags or with opening and closing tags in the wrong order.
+"
 Class {
 	#name : #HTMLElementNester,
 	#superclass : #XMLElementNester,
 	#instVars : [
-		'openElementsByName'
+		'openElementsByName',
+		'elementsToStart',
+		'elementsToEnd'
 	],
 	#classVars : [
+		'BodySectionElements',
+		'HeadSectionElements',
 		'MutuallyExcludingTags',
 		'NestableTagGroups',
-		'NestableTags',
-		'SelfClosingTags'
+		'NonNestableElements',
+		'VoidElements'
 	],
 	#category : #'XML-Parser-HTML'
 }
@@ -18,16 +25,39 @@ HTMLElementNester class >> initialize [
 	"self initialize"
 
 	self
-		initializeSelfClosingTags;
-		initializeNestableTags;
+		initializeHeadSectionElements;
+		initializeBodySectionElements;
+		initializeNonNestableElements;
 		initializeNestableTagGroups;
-		initializeMutuallyExcludingTags
+		initializeMutuallyExcludingTags;
+		initializeVoidElements
+]
+
+{ #category : #'class initialization' }
+HTMLElementNester class >> initializeBodySectionElements [
+	BodySectionElements := Set withAll:
+		#('a' 'abbr' 'acronym' 'address' 'applet' 'area' 'article' 'aside' 'audio' 'b' 'basefont'
+			'bdi' 'bdo' 'big' 'blockquote' 'br' 'button' 'canvas' 'caption' 'center' 'cite' 'code'
+			'col' 'colgroup' 'command' 'data' 'datagrid' 'datalist' 'dd' 'del' 'details' 'dfn' 'dir'
+			'div' 'dl' 'dt' 'em' 'embed' 'eventsource' 'fieldset' 'figcaption' 'figure' 'font'
+			'footer' 'form' 'frame' 'frameset' 'h1' 'h2' 'h3' 'h4' 'h5' 'h6' 'header' 'hgroup' 'hr'
+			'i' 'iframe' 'img' 'input' 'ins' 'kbd' 'keygen' 'label' 'legend' 'li' 'map' 'mark' 'menu'
+			'meter' 'nav' 'noframes' 'noscript' 'object' 'ol' 'optgroup' 'option' 'output' 'p'
+			'param' 'pre' 'progress' 'q' 'rp' 'rt' 'ruby' 's' 'samp' 'script' 'section' 'select' 'small'
+			'source' 'span' 'strike' 'strong' 'style' 'sub' 'summary' 'sup' 'table' 'tbody' 'td'
+			'textarea' 'tfoot' 'th' 'thead' 'time' 'tr' 'track' 'tt' 'u' 'ul' 'var' 'video' 'wbr')
+]
+
+{ #category : #'class initialization' }
+HTMLElementNester class >> initializeHeadSectionElements [
+	HeadSectionElements :=  Set withAll:
+		#('base' 'isindex' 'link' 'meta' 'noscript' 'object' 'script' 'style' 'template' 'title')
 ]
 
 { #category : #'class initialization' }
 HTMLElementNester class >> initializeMutuallyExcludingTags [
 	MutuallyExcludingTags := Dictionary new.
-	#(#('dd' 'dt') #('thead' 'tbody') #('th' 'td'))
+	#(#('dd' 'dt') #('thead' 'tbody') #('th' 'td') #('rp' 'rt'))
 		do: [:tagList |
 			tagList do: [:tag |
 				tagList do: [:each |
@@ -40,73 +70,137 @@ HTMLElementNester class >> initializeMutuallyExcludingTags [
 HTMLElementNester class >> initializeNestableTagGroups [
 	NestableTagGroups := Dictionary new.
 
-	#('dt' 'dd') do: [:each |
+	#('dd' 'dt') do: [:each |
 		NestableTagGroups at: each put: #('dl')].
 	#('tr' 'th' 'td' 'thead' 'tfoot') do: [:each |
 		NestableTagGroups at: each put: #('table')].
 	#('li') do: [:each |
 		NestableTagGroups at: each put: #('ul' 'ol' 'menu' 'dir')].
+	#('rp' 'rt') do: [:each |
+		NestableTagGroups at: each put: #('ruby')].
 ]
 
 { #category : #'class initialization' }
-HTMLElementNester class >> initializeNestableTags [
-	NestableTags :=
-		Set withAll:
-			#('div' 'table' 'ul' 'ol' 'menu' 'dir' 'blockquote' 'a' 'b' 'big' 'code' 'em'
-			'font' 'i' 'nobr' 's' 'small' 'strike' 'strong' 'tt' 'u' 'h1' 'h2' 'h3' 'h4' 'h5' 'h6')
+HTMLElementNester class >> initializeNonNestableElements [
+	NonNestableElements := Set withAll:
+		#('a' 'applet' 'audio' 'button' 'footer' 'form' 'header' 'label' 'map'
+			'meter' 'optgroup' 'option' 'ruby' 'select' 'video')
 ]
 
 { #category : #'class initialization' }
-HTMLElementNester class >> initializeSelfClosingTags [
-	SelfClosingTags :=
+HTMLElementNester class >> initializeVoidElements [
+	VoidElements :=
 		Set withAll:
-			#('area' 'base' 'br' 'col' 'command' 'embed' 'hr' 'img'
-			'input' 'keygen' 'link' 'meta' 'param' 'source' 'track' 'wbr')
+			#('area' 'base' 'br' 'col' 'command' 'embed' 'hr' 'img' 'input' 'keygen'
+				'link' 'menuitem' 'meta' 'param' 'source' 'track' 'wbr')
 ]
 
 { #category : #testing }
 HTMLElementNester >> canNestWithinSelf: anElementName [
-	^ NestableTags includes: anElementName
+	^ (NonNestableElements includes: anElementName) not
 ]
 
-{ #category : #accessing }
-HTMLElementNester >> elementsToEndBeforeEnding: anElementName [
-	| toClose |
+{ #category : #private }
+HTMLElementNester >> elementsToEnd [
+	^ elementsToEnd ifNil: [elementsToEnd := OrderedCollection new]
+]
 
-	toClose := OrderedCollection new.
+{ #category : #checking }
+HTMLElementNester >> elementsToEndBeforeEnding: anElementName [
+	self elementsToEnd reset.
+
 	self openElements reverseDo: [:each |
 		each = anElementName
-			ifTrue: [^ toClose]
-			ifFalse: [toClose addLast: each]].
-	^ toClose.
+			ifTrue: [^ self elementsToEnd]
+			ifFalse: [self elementsToEnd addLast: each]].
+
+	^ self elementsToEnd.
 ]
 
-{ #category : #accessing }
-HTMLElementNester >> elementsToEndBeforeStarting: anElementName [
-	| toClose excludingElement |
+{ #category : #checking }
+HTMLElementNester >> elementsToEndBeforePCData [
+	(self hasOpenElement: 'head')
+		ifFalse: [^ #()].
 
+	^ (self elementsToEndBeforeEnding: 'head')
+		addLast: 'head';
+		yourself.
+]
+
+{ #category : #checking }
+HTMLElementNester >> elementsToEndBeforeStarting: anElementName [
+	| excludingElement |
+
+	((anElementName = 'body' or: [anElementName = 'head'])
+		or: [self headOrBodyCannotContain: anElementName])
+		ifTrue: [^ self elementsToEndBeforeEnding: 'html'].
+
+	self elementsToEnd reset.
 	(self canNestWithinSelf: anElementName)
-		ifTrue: [^ #()].
+		ifTrue: [^ self elementsToEnd].
 
 	excludingElement := self excludingElementFor: anElementName.
 	((self hasOpenElement: anElementName)
 		or: [excludingElement notEmpty
 			and: [self hasOpenElement: excludingElement]])
-		ifFalse: [^ #()].
+		ifFalse: [^ self elementsToEnd].
 
-	toClose := OrderedCollection new.
 	self openElements reverseDo: [:each |
 		((NestableTagGroups includesKey: anElementName)
 			and: [(NestableTagGroups at: anElementName) includes: each])
 			ifTrue: [^ #()].
-		toClose addLast: each.
+
+		self elementsToEnd addLast: each.
 		((each = anElementName)
 			or: [excludingElement notEmpty
 				and: [excludingElement = each]])
-			ifTrue: [^ toClose]].
-	^ toClose.
+			ifTrue: [^ self elementsToEnd]].
 
+	^ self elementsToEnd.
 	
+]
+
+{ #category : #private }
+HTMLElementNester >> elementsToStart [
+	^ elementsToStart ifNil: [elementsToStart := OrderedCollection new]
+]
+
+{ #category : #checking }
+HTMLElementNester >> elementsToStartBeforePCData [
+	self elementsToStart reset.
+
+	self hasOpenElements
+		ifFalse: [self elementsToStart addLast: 'html'].
+	(self hasOpenElement: 'body')
+		ifFalse: [self elementsToStart addLast: 'body'].
+
+	^ self elementsToStart.
+]
+
+{ #category : #checking }
+HTMLElementNester >> elementsToStartBeforeStarting: anElementName [
+	self elementsToStart reset.
+
+	self hasOpenElements
+		ifFalse: [
+			(anElementName = 'html')
+				ifTrue: [^ self elementsToStart].
+			self elementsToStart addLast: 'html'].
+
+	(anElementName = 'body' or: [anElementName = 'head'])
+		ifTrue: [^ self elementsToStart]. 
+
+	((self isHeadSectionOnlyElement: anElementName)
+		and: [(self hasOpenElement: 'head') not])
+			ifTrue: [self elementsToStart addLast: 'head']
+		ifFalse: [
+			((self isBodySectionOnlyElement: anElementName)
+				or: [(self hasOpenElement: 'head') not])
+				ifTrue: [
+					(self hasOpenElement: 'body')
+						ifFalse: [self elementsToStart addLast: 'body']]].
+
+	^ self elementsToStart.
 ]
 
 { #category : #checking }
@@ -122,6 +216,7 @@ HTMLElementNester >> endedElement: anElementName [
 
 { #category : #checking }
 HTMLElementNester >> ensureNoElementsRemainOpen [
+	self openElements copy reverseDo: [:each | self endedElement: each].
 ]
 
 { #category : #accessing }
@@ -137,11 +232,37 @@ HTMLElementNester >> hasOpenElement: anElementName [
 ]
 
 { #category : #testing }
-HTMLElementNester >> hasOpenSelfClosingTag [
-	^ SelfClosingTags includes: self currentElement
+HTMLElementNester >> headOrBodyCannotContain: anElementName [
+	^ ((self hasOpenElement: 'head')
+		and: [self isBodySectionOnlyElement: anElementName])
+			or: [(self hasOpenElement: 'body')
+				and: [self isHeadSectionOnlyElement: anElementName]]
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
+HTMLElementNester >> isBodySectionOnlyElement: anElementName [
+	^ (BodySectionElements includes: anElementName)
+		and: [(HeadSectionElements includes: anElementName) not]
+]
+
+{ #category : #testing }
+HTMLElementNester >> isHeadSectionOnlyElement: anElementName [
+	^ (HeadSectionElements includes: anElementName)
+		and: [(BodySectionElements includes: anElementName) not]
+]
+
+{ #category : #testing }
+HTMLElementNester >> isOpenUniqueElement: anElementName [
+	^ (#('html' 'head' 'body') includes: anElementName)
+		and: [self hasOpenElement: anElementName]
+]
+
+{ #category : #testing }
+HTMLElementNester >> isVoidElement: anElementName [
+	^ VoidElements includes: anElementName
+]
+
+{ #category : #private }
 HTMLElementNester >> openElementsByName [
 	^ openElementsByName ifNil: [openElementsByName := Dictionary new].
 ]

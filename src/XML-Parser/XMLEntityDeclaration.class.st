@@ -32,7 +32,7 @@ XMLEntityDeclaration class >> name: aName replacement: aReplacement [
 
 { #category : #testing }
 XMLEntityDeclaration >> isParameter [
-	self subclassResponsibility
+	^ false
 ]
 
 { #category : #accessing }

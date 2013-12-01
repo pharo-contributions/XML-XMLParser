@@ -13,8 +13,10 @@ Class {
 	#classVars : [
 		'AdditionalNameChars',
 		'NameStartChars',
-		'PredefinedEntities',
 		'PubidChars'
+	],
+	#classInstVars : [
+		'predefinedEntities'
 	],
 	#category : #'XML-Parser'
 }
@@ -81,7 +83,7 @@ XMLTokenizer class >> initializeNameStartChars [
 
 { #category : #'class initialization' }
 XMLTokenizer class >> initializePredefinedEntities [
-	(PredefinedEntities := Dictionary new)
+	(predefinedEntities := Dictionary new)
 		at: 'lt' put: $<;
 		at: 'gt' put: $>;
 		at: 'amp' put: $&;
@@ -119,6 +121,11 @@ XMLTokenizer class >> isNmtoken: aString [
 		and: [aString allSatisfy: [:each |
 			(NameStartChars includes: each)
 				or: [AdditionalNameChars includes: each]]].
+]
+
+{ #category : #accessing }
+XMLTokenizer class >> predefinedEntities [
+	^ predefinedEntities
 ]
 
 { #category : #testing }
@@ -534,6 +541,7 @@ XMLTokenizer >> nextEndDocTypeDecl [
 	streamReader skipSeparators.
 	self expectTerminator: $>.
 	context enterProlog.
+
 	driver handleEndDTD.
 ]
 
@@ -669,8 +677,8 @@ XMLTokenizer >> nextGeneralEntityReference [
 
 	name := self nextName.
 	self expectNext: $;.
-	(self predefinedEntities includesKey: name)
-		ifTrue: [^ self predefinedEntities at: name].
+	(self class predefinedEntities includesKey: name)
+		ifTrue: [^ self class predefinedEntities at: name].
 
 	entity := driver handleGeneralEntityReference: name.
 	replacement := self replacementFromGeneralEntity: entity.
@@ -1052,11 +1060,6 @@ XMLTokenizer >> nextXMLDeclAttribute: aName [
 { #category : #errors }
 XMLTokenizer >> parseError: anErrorString [
 	driver handleParseError: anErrorString
-]
-
-{ #category : #accessing }
-XMLTokenizer >> predefinedEntities [
-	^ PredefinedEntities
 ]
 
 { #category : #tokenizing }

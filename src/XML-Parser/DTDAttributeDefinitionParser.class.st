@@ -1,3 +1,6 @@
+"
+This class parses an attribute definition in an ATTLIST declaration and creates a validator for it.
+"
 Class {
 	#name : #DTDAttributeDefinitionParser,
 	#superclass : #Object,
@@ -96,7 +99,7 @@ DTDAttributeDefinitionParser >> parseEnumerationType [
 			ifFalse: [type])) parse
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 DTDAttributeDefinitionParser >> setElement: anElement name: aName type: aType default: aDefaultDeclaration [
 	element := anElement.
 	name := aName.

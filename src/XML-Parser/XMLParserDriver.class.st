@@ -12,6 +12,11 @@ XMLParserDriver >> documentURI [
 	^ nil
 ]
 
+{ #category : #accessing }
+XMLParserDriver >> dtd [
+	^ nil
+]
+
 { #category : #'handling tokens' }
 XMLParserDriver >> handleAttributeDeclaration: anElement name: anName type: aType default: aDefaultDeclaration [
 ]
@@ -119,6 +124,11 @@ XMLParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: a
 
 { #category : #testing }
 XMLParserDriver >> isValidating [
+	self subclassResponsibility
+]
+
+{ #category : #testing }
+XMLParserDriver >> resolvesExternalEntities [
 	self subclassResponsibility
 ]
 

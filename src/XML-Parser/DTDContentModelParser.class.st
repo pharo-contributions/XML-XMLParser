@@ -5,8 +5,8 @@ Class {
 	#name : #DTDContentModelParser,
 	#superclass : #Object,
 	#instVars : [
-		'contentModel',
 		'name',
+		'contentModel',
 		'contentModelStream',
 		'operatorStack',
 		'nfaBuilder'
@@ -34,8 +34,8 @@ DTDContentModelParser >> applyBinaryOperatorOnStack [
 
 { #category : #parsing }
 DTDContentModelParser >> applyUnaryOperator: aCharacter [
-	nfaBuilder fragmentStack size >= 1
-		ifFalse: [self errorMissingOperand].
+	nfaBuilder fragmentStack
+		ifEmpty: [self errorMissingOperand].
 
 	aCharacter == $+
 		ifTrue: [nfaBuilder applyPlus]
@@ -127,15 +127,18 @@ DTDContentModelParser >> parseDFAContentModel [
 
 { #category : #parsing }
 DTDContentModelParser >> parseMixedContentModel [
-	| list allowedElements  |
+	| mayContainElements mixedContentList allowedElements  |
 
-	list :=
-		(contentModel endsWith: '*')
+	mayContainElements := contentModel last == $*.
+	mixedContentList :=
+		mayContainElements
 			ifTrue: [contentModel allButLast]
 			ifFalse: [contentModel].
 
-	allowedElements := (DTDMixedContentListParser on: list) parse.
+	allowedElements := (DTDMixedContentListParser on: mixedContentList) parse.
 	allowedElements remove: '#PCDATA'.
+	(mayContainElements or: [allowedElements isEmpty])
+		ifFalse: [XMLValidationException signal: 'Missing * after mixed content list with elements'].
 
 	^ XMLMixedElementValidator
 		name: name

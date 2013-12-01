@@ -7,7 +7,7 @@ Class {
 	#category : #'XML-Parser-Validation-DFA'
 }
 
-{ #category : #initialization }
+{ #category : #accessing }
 XMLNFATransition >> nextState: aNewState [
 	super nextState: aNewState.
 	aNewState incomingTransition: self.

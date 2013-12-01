@@ -105,6 +105,6 @@ XMLNodeList >> includesElementAt: aName [
 	^ (self elementAt: aName) notNil
 ]
 
-{ #category : #private }
+{ #category : #notifications }
 XMLNodeList >> renamedElement: anElement from: anOldName to: aNewName [
 ]

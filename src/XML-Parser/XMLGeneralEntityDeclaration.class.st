@@ -13,8 +13,3 @@ XMLGeneralEntityDeclaration class >> name: aName publicID: aPublicId systemID: a
 		systemID: aSystemId
 		ndata: aNotationName
 ]
-
-{ #category : #testing }
-XMLGeneralEntityDeclaration >> isParameter [
-	^ false
-]

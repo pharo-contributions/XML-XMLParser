@@ -49,8 +49,8 @@ DTDExternalSubsetDriver >> handleElementDeclaration: aName contentModel: aConten
 	self isValidating
 		ifTrue: [
 			self dtd
-				parseContentModel: aContentModel
-				for: aName]
+				parseElement: aName
+				contentModel: aContentModel]
 ]
 
 { #category : #'handling tokens' }
@@ -124,6 +124,11 @@ DTDExternalSubsetDriver >> isValidating [
 	^ self saxDriver isValidating
 ]
 
+{ #category : #testing }
+DTDExternalSubsetDriver >> resolvesExternalEntities [
+	^ true
+]
+
 { #category : #accessing }
 DTDExternalSubsetDriver >> saxDriver [
 	^ saxDriver
@@ -143,4 +148,9 @@ DTDExternalSubsetDriver >> tokenizerOn: aStringOrStream [
 	tokenizer tokenContext enterExternalSubsetTextDeclaration.
 
 	^ tokenizer.
+]
+
+{ #category : #testing }
+DTDExternalSubsetDriver >> usesNamespaces [
+	^ self saxDriver usesNamespaces
 ]

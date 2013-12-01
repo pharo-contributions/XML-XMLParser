@@ -37,7 +37,7 @@ XMLNode >> canonicallyPrintOn: aStream [
 
 { #category : #printing }
 XMLNode >> canonicallyPrinted [
-	^ String streamContents: [:stream | self printCanonicalOn: stream]
+	^ String streamContents: [:stream | self canonicallyPrintOn: stream]
 ]
 
 { #category : #accessing }
