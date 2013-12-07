@@ -285,20 +285,44 @@ XMLParserTest >> testAttributeValueNormalization [
 
 { #category : #tests }
 XMLParserTest >> testCDATASection [
-	| xmlDocument element output |
+	| document element output escapedOutput |
 
-	xmlDocument :=
-		(XMLDOMParser on: self exampleCDATASectionXML readStream)
+	output := 'this is CDATA test content 1 < 2 & 5 > 3'.
+	escapedOutput := 'this is CDATA test content 1 &lt; 2 &amp; 5 &gt; 3'.
+
+	document := XMLDOMParser parse: self exampleCDATASectionXML.
+	element := document findElementNamed: 'test-data'.
+	self
+		assert: element nodes size = 1;
+		assert: element firstNode isStringNode;
+		assert: element firstNode printString = escapedOutput.
+
+	document :=
+		(XMLDOMParser on: self exampleCDATASectionXML)
 			preservesCDataNodes: true;
 			parseDocument.
-	element := xmlDocument findElementNamed: 'test-data'.
+	element := document findElementNamed: 'test-data'.
+	self
+		assert: element nodes size = 1;
+		assert: element firstNode isCData;
+		assert: element firstNode printString = ('<![CDATA[',output,']]>').
+]
 
-	self assert: element contentString = 'this is CDATA test content 1 < 2 & 5 > 3'.
-	
-	output := element printString.
-	self assert: '<test-data><![CDATA[this is CDATA test content 1 < 2 & 5 > 3]]></test-data>' = output
-	
+{ #category : #tests }
+XMLParserTest >> testComments [
+	| document comment|
 
+	document := XMLDOMParser parse: self addressBookXML.
+	self deny: (document findElementNamed: 'contact-info') hasChildren.
+
+	document :=
+		(XMLDOMParser on: self addressBookXML)
+			preservesCommentNodes: true;
+			parseDocument.
+	comment := (document findElementNamed: 'contact-info') firstNode.
+	self
+		assert: comment notNil;
+		assert: comment string = 'Confidential'.
 ]
 
 { #category : #'tests-xmltokenizer' }
@@ -317,6 +341,24 @@ XMLParserTest >> testConditionalSection [
 	self assert: tokenizer streamReader upToEnd = 'included, included, included.'
 ]
 
+{ #category : #tests }
+XMLParserTest >> testDeclaringNamespaces [
+	self
+		shouldnt: [SAXHandler parse: '<prefix:root prefix:name="test" xmlns:prefix="NS"/>']
+		raise: XMLNamespaceException.
+	self
+		shouldnt: [SAXHandler parse: '<root xmlns="defaultNS"/>']
+		raise: XMLNamespaceException.
+
+	"Cannot change xmlns or xml prefixes"
+	self
+		should: [SAXHandler parse: '<root xmlns:xmlns="newNS"/>']
+		raise: XMLNamespaceException.
+	self
+		should: [SAXHandler parse: '<root xmlns:xml="newNS" />']
+		raise: XMLNamespaceException.
+]
+
 { #category : #'tests-utf8' }
 XMLParserTest >> testDecodingCharacters [
 	| xmlDocument element |
@@ -327,6 +369,21 @@ XMLParserTest >> testDecodingCharacters [
 	self assert: element contentString first charCode = 8230.	
 
 
+]
+
+{ #category : #tests }
+XMLParserTest >> testDisabledNamespacesAttributes [
+	| document |
+
+	document :=
+		XMLDOMParser
+			parse: '<root xmlns:prefix="prefixNS" xmlns="defaultNS" name="value"/>'
+			usingNamespaces: false.
+	self
+		assert: document root attributeNames asArray = #('xmlns:prefix' 'xmlns' 'name');
+		assert: (document root attributeAt: 'xmlns:prefix') = 'prefixNS';
+		assert: (document root attributeAt: 'xmlns') = 'defaultNS';
+		assert: (document root attributeAt: 'name') = 'value'.
 ]
 
 { #category : #tests }
@@ -555,25 +612,39 @@ XMLParserTest >> testInnerXML [
 ]
 
 { #category : #tests }
+XMLParserTest >> testInvalidElementContentModels [
+	self
+		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root ()>]>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root (one,)>]>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root (one|)>]>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root (one)(two)>]>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root (one|,two)>]>']
+		raise: XMLValidationException.
+	'|,?*+' do: [:each |
+		self
+			should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root (', each asString, 'one)>]>']
+			raise: XMLValidationException].
+]
+
+{ #category : #tests }
 XMLParserTest >> testLineEndingsDoNotMatter [
-	| source docWithCrs docWithCrlfs |
+	| source docFromSourceWithCrs docFromSourceWithLfs docFromSourceWithCrlfs |
 
-	(source := String new writeStream)
-		nextPutAll: '<foo>';
-		cr;
-		nextPutAll: 'bar';
-		cr;
-		nextPutAll: 'baz';
-		cr;
-		nextPutAll: '</foo>'.
-
-	docWithCrs := XMLDOMParser parse: source contents.
-	docWithCrlfs :=
-		XMLDOMParser parse:
-			(source contents
-				copyReplaceAll: String cr
-				with: String crlf).
-	self assert: (docWithCrs root contentString) = (docWithCrlfs root contentString)
+	source := '<root>{1}one{1}two{1}</root>'.
+	docFromSourceWithCrs := XMLDOMParser parse: (source format: (Array with: String cr)).
+	docFromSourceWithLfs := XMLDOMParser parse: (source format: (Array with: String lf)).
+	docFromSourceWithCrlfs := XMLDOMParser parse: (source format: (Array with: String crlf)).
+	self
+		assert: (docFromSourceWithCrs root contentString) = (docFromSourceWithLfs root contentString);
+		assert: (docFromSourceWithLfs root contentString) = (docFromSourceWithCrlfs root contentString).
 ]
 
 { #category : #tests }
@@ -689,23 +760,184 @@ XMLParserTest >> testParsingNamespaces [
 ]
 
 { #category : #tests }
-XMLParserTest >> testRecursiveEntityReplacement [
+XMLParserTest >> testProcessingInstructions [
+	| document |
+
+	document :=
+		XMLDOMParser parse:
+			'<?xml version="1.1" standalone="yes"?><?firstTarget firstData?>',
+			'<root><?secondTarget secondData?></root> '.
+
 	self
-		should: [
+		assert: document version = 1.1;
+		assert: document nodes size = 2;
+		assert: document firstNode isPI;
+		assert: document firstNode target = 'firstTarget';
+		assert: document firstNode data = 'firstData';
+		assert: document root firstNode target = 'secondTarget';
+		assert: document root firstNode data = 'secondData'.
+]
+
+{ #category : #tests }
+XMLParserTest >> testRecursiveGeneralEntityReplacement [
+	self
+		shouldnt: [
 			SAXHandler parse:
 				'<!DOCTYPE root [
 					<!ENTITY first "&second;">
-					<!ENTITY second "&first;">]>
+					<!ENTITY second "&third;">
+					<!ENTITY third "last">]>
 				<root>&first;</root>']
 		raise: XMLParserException.
 	self
 		should: [
 			SAXHandler parse:
 				'<!DOCTYPE root [
-					<!ENTITY % first "%second;">
-					<!ENTITY % second "%first;">
+					<!ENTITY first "&second;">
+					<!ENTITY second "&third;">
+					<!ENTITY third "&fourth;">
+					<!ENTITY fourth "last">]>
+				<root>&first;</root>']
+		raise: XMLParserException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testRecursiveParameterEntityReplacement [
+	self
+		shouldnt: [
+			SAXHandler parse:
+				'<!DOCTYPE root [
+					<!ENTITY % first "&#37;second;">
+					<!ENTITY % second "&#37;third;">
+					<!ENTITY % third "<!--last-->">
 					%first;]>
 				<root/>']
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE root [
+					<!ENTITY % first "&#37;second;">
+					<!ENTITY % second "&#37;third;">
+					<!ENTITY % third "&#37;fourth;">
+					<!ENTITY % fourth "<!--last-->">
+					%first;]>
+				<root/>']
+		raise: XMLParserException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testSAXEntityHandlers [
+	| xml parser |
+
+	xml := '<!DOCTYPE root [
+		<!ENTITY first " &second; ">
+		<!ENTITY second " replacement ">]>
+	<root>&first;</root>'.
+	(parser :=SAXHandlerProxy saxHandler: (SAXHandler on: xml)) parseDocument.
+	self assert:
+		#(startDocument
+			startDTD:publicID:systemID:
+			generalEntityDeclaration:replacement: generalEntityDeclaration:replacement:
+			endDTD
+			startElement:prefix:uri:localName:attributes:
+			startEntity: startEntity: endEntity: endEntity: characters:
+			endElement:prefix:uri:localName:
+			endDocument) = parser sentHandlerSelectors.
+	self assert:
+		((parser sentHandlerMessages select: [:each | #(startEntity: endEntity:) includes: each selector])
+			collect: [:each | each arguments first]) asArray = #('first' 'second' 'second' 'first').
+]
+
+{ #category : #tests }
+XMLParserTest >> testSAXIgnorableWhitespace [
+	| xml parser |
+
+	xml := '
+	<root>
+		<child>
+			test
+		</child>
+	</root>
+	'.
+	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: xml)) parseDocument.
+	self assert:
+		#(startDocument
+			startElement:prefix:uri:localName:attributes:
+			ignorableWhitespace:
+			startElement:prefix:uri:localName:attributes: characters: endElement:prefix:uri:localName:
+			ignorableWhitespace:
+			endElement:prefix:uri:localName:
+			ignorableWhitespace:
+			endDocument) = parser sentHandlerSelectors.
+	self assert:
+		((parser sentHandlerMessages select: [:each | each selector == #ignorableWhitespace:])
+			allSatisfy: [:each | each arguments first notEmpty]).
+]
+
+{ #category : #tests }
+XMLParserTest >> testSAXPrefixMappingHandlers [
+	| xml parser |
+
+	xml := '<prefix:root xmlns:prefix="prefixNS" xmlns="defaultNS"></prefix:root>'.
+	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: xml)) parseDocument.
+	self assert:
+		#(startDocument
+			startPrefixMapping:uri: startPrefixMapping:uri:
+			startElement:prefix:uri:localName:attributes: endElement:prefix:uri:localName:
+			endPrefixMapping: endPrefixMapping:
+			endDocument) = parser sentHandlerSelectors.
+	self assert:
+		((parser sentHandlerMessages select: [:each |
+			#(startPrefixMapping:uri: endPrefixMapping:) includes: each selector])
+				collect: [:each | each arguments asArray]) asArray =
+					#(#('prefix' 'prefixNS') #('' 'defaultNS') #('prefix') #('')).
+]
+
+{ #category : #tests }
+XMLParserTest >> testSAXPrefixMappingHandlersDisabled [
+	| xml parser |
+
+	xml := '<prefix:root xmlns:prefix="prefixNS" xmlns="defaultNS"></prefix:root>'.
+	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: xml))
+		usesNamespaces: false;
+		parseDocument.
+	self assert:
+		#(startDocument
+			startElement:prefix:uri:localName:attributes: endElement:prefix:uri:localName:
+			endDocument) = parser sentHandlerSelectors.
+]
+
+{ #category : #tests }
+XMLParserTest >> testSAXSkippedEntityHandler [
+	| xml parser |
+
+	xml := '<root>&undeclared;</root>'.
+	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: xml))
+		isValidating: false;
+		parseDocument.
+	self assert:
+		#(startDocument
+			startElement:prefix:uri:localName:attributes:
+			skippedEntity:
+			endElement:prefix:uri:localName:
+			endDocument) = parser sentHandlerSelectors.
+	self assert:
+		(parser sentHandlerMessages detect: [:each | each selector == #skippedEntity:])
+			arguments first = 'undeclared'.
+]
+
+{ #category : #tests }
+XMLParserTest >> testSelfReferentialEntityReplacement [
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE root [<!ENTITY first "&first;">]><root>&first;</root>']
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE root [<!ENTITY % first "%first;">%first;]><root/>']
 		raise: XMLParserException.
 ]
 
@@ -728,6 +960,18 @@ XMLParserTest >> testStandalone [
 	self
 		shouldnt: [SAXHandler parse: standaloneDecl, (dtdXml copyAfter: $>)]
 		raise: XMLFileIOException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testSubsetEndingEntityReplacement [
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE root [
+					<!ENTITY % endOfSubset "]>">
+					%endOfSubset;
+					<root/>']
+		raise: XMLParserException
 ]
 
 { #category : #'tests-xmltokenizer' }
@@ -753,27 +997,61 @@ XMLParserTest >> testTokenizerCharacters [
 
 	tokenizer := XMLTokenizer driver: nil on: self addressBookXML readStream.
 
-	self assert: tokenizer streamReader next = $<.
-	self assert: tokenizer streamReader next = $a.
-	self assert: tokenizer streamReader next = $d.
-	self assert: tokenizer streamReader next = $d.
-	self assert: tokenizer streamReader next = $r.
+	self
+		assert: tokenizer streamReader next == $<;
+		assert: ('address' allSatisfy: [:each | tokenizer streamReader next == each]);
+		assert: tokenizer streamReader peek == $b.
+	tokenizer streamReader pushBack: 'test'.
+	self
+		assert: ('test' allSatisfy: [:each | tokenizer streamReader next == each]);
+		assert: tokenizer streamReader peek == $b;
+		assert: ('book' allSatisfy: [:each | tokenizer streamReader next == each]).
+	tokenizer streamReader
+		pushBack: 'book';
+		pushBack: 'test'.
+	self
+		assert: ('test' allSatisfy: [:each | tokenizer streamReader next == each]);
+		assert: ('book' allSatisfy: [:each | tokenizer streamReader next == each]).
 ]
 
 { #category : #tests }
 XMLParserTest >> testUndeclaredEntities [
 	| document dtd content |
 
-	dtd := '<!DOCTYPE root [%undeclared;]>'.
+	dtd := '<!DOCTYPE root [<!ENTITY declared "%undeclared;">]>'.
 	content := '<root>&undeclared;test&undeclared;</root>'.
-	document :=
-		XMLDOMParser
-			parse: dtd, content
-			usingNamespaces: false
-			validation: false.
-	self assert: document allNodes second contentString = 'test'.
 	self should: [XMLDOMParser parse: content] raise: XMLValidationException.
 	self should: [XMLDOMParser parse: dtd, '<root/>'] raise: XMLValidationException.
+	self
+		shouldnt: [
+			document :=
+				XMLDOMParser
+					parse: dtd, content
+					usingNamespaces: false
+					validation: false]
+		raise: XMLValidationException.
+	self assert: document allNodes second contentString = 'test'.
+]
+
+{ #category : #tests }
+XMLParserTest >> testUndeclaredNamespaces [
+	self
+		shouldnt: [SAXHandler parse: '<prefix:root prefix:name="test"/>' usingNamespaces: false]
+		raise: XMLNamespaceException.
+	self
+		should: [SAXHandler parse: '<prefix:root/>']
+		raise: XMLNamespaceException.
+	self
+		should: [SAXHandler parse: '<root prefix:name="test"/>']
+		raise: XMLNamespaceException.
+
+	"xml is OK as a prefix, xmlns is not"
+	self
+		shouldnt: [SAXHandler parse: '<xml:root xml:name="test"/>']
+		raise: XMLNamespaceException.
+	self
+		should: [SAXHandler parse: '<xmlns:root />']
+		raise: XMLNamespaceException.
 ]
 
 { #category : #tests }
