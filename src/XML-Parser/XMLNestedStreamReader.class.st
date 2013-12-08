@@ -10,7 +10,6 @@ Class {
 		'stream',
 		'nestedStreams',
 		'hasNestedStreams',
-		'maxNestedStreams',
 		'peekChar',
 		'writeBuffer',
 		'normalizedLineEndingChar',
@@ -56,6 +55,12 @@ XMLNestedStreamReader >> atEnd [
 	^ peekChar isNil and: [hasNestedStreams not and: [stream atEnd]]
 ]
 
+{ #category : #testing }
+XMLNestedStreamReader >> atQuote [
+	^ self peek == $"
+		or: [self peek == $']
+]
+
 { #category : #accessing }
 XMLNestedStreamReader >> basicNext [
 	"Returns next character in the stream after performing line-ending normalization."
@@ -92,7 +97,6 @@ XMLNestedStreamReader >> initialize [
 	stream := nil.
 	nestedStreams := nil.
 	hasNestedStreams := false.
-	maxNestedStreams := 5.
 	peekChar := nil.
 	writeBuffer := WriteStream on: (String new: 128).
 	currentLineNumber := 1.
@@ -103,6 +107,11 @@ XMLNestedStreamReader >> initialize [
 XMLNestedStreamReader >> maxIntegerValue [
 	"SmallInteger maxValue"
 	^ 1073741823
+]
+
+{ #category : #private }
+XMLNestedStreamReader >> maxNestedStreams [
+	^ 10
 ]
 
 { #category : #accessing }
@@ -214,20 +223,21 @@ XMLNestedStreamReader >> popCurrentStream [
 
 { #category : #streaming }
 XMLNestedStreamReader >> pushBack: aString [
-	| pushBackString |
+	self pushStream: (ReadStream on: aString)
+]
 
-	pushBackString := aString.
-	peekChar
-		ifNotNil: [
-			pushBackString := pushBackString copyWith: peekChar.
-			peekChar := nil].
+{ #category : #streaming }
+XMLNestedStreamReader >> pushBackPeekChar [
+	| peekCharString |
 
-	self pushStream: (ReadStream on: pushBackString) from: nil onClose: nil.
+	peekCharString := String with: peekChar.
+	peekChar := nil.
+	self pushBack: peekCharString.
 ]
 
 { #category : #streaming }
 XMLNestedStreamReader >> pushStream: aStream [
-	^ self
+	self
 		pushStream: aStream
 		from: nil
 		onClose: nil
@@ -235,14 +245,13 @@ XMLNestedStreamReader >> pushStream: aStream [
 
 { #category : #streaming }
 XMLNestedStreamReader >> pushStream: aStream from: aSource onClose: aBlock [
-	"Continue parsing from the new nested stream."
-	peekChar ifNotNil: [self pushBack: ''].
+	peekChar
+		ifNotNil: [self pushBackPeekChar].
 
 	nestedStreams
 		ifNil: [nestedStreams := OrderedCollection with: stream]
 		ifNotNil: [
-			"This stops unending recursive entity expansion"
-			(nestedStreams size >= maxNestedStreams)
+			(nestedStreams size >= self maxNestedStreams)
 				ifTrue: [XMLParserException signal: 'cannot further nest input streams'].
 			nestedStreams addLast: stream].
 	hasNestedStreams := true.

@@ -3,32 +3,9 @@ The class keeps track of elements as they start and end and ensures that they ne
 "
 Class {
 	#name : #XMLElementNester,
-	#superclass : #Object,
-	#instVars : [
-		'openElements',
-		'rootElement',
-		'hasExternalRoot'
-	],
+	#superclass : #XMLAbstractElementNester,
 	#category : #'XML-Parser'
 }
-
-{ #category : #accessing }
-XMLElementNester >> currentElement [
-	^ self openElements
-		at: self totalOpen
-		ifAbsent: ['']
-]
-
-{ #category : #printing }
-XMLElementNester >> enclosedElementsAsString: aTagName [
-	| enclosedTags |
-
-	enclosedTags := String new writeStream.
-	self
-		printOn: enclosedTags
-		startingAt: (self openElements lastIndexOf: aTagName) + 1.
-	^ enclosedTags contents.
-]
 
 { #category : #checking }
 XMLElementNester >> endedElement: anElementName [
@@ -38,7 +15,7 @@ XMLElementNester >> endedElement: anElementName [
 				ifTrue: [self errorImproperlyNestedElements: anElementName]
 				ifFalse: [self errorUnmatchedEndTag: anElementName]].
 
-	self openElements removeLast.
+	super endedElement: anElementName.
 ]
 
 { #category : #checking }
@@ -61,78 +38,15 @@ XMLElementNester >> errorUnmatchedEndTag: anElementName [
 			format: (Array with: anElementName))
 ]
 
-{ #category : #testing }
-XMLElementNester >> hasExternalRoot [
-	^ hasExternalRoot ifNil: [hasExternalRoot := false]
-]
-
-{ #category : #testing }
-XMLElementNester >> hasOpenElement: anElementName [
-	^ self openElements includes: anElementName
-]
-
-{ #category : #testing }
-XMLElementNester >> hasOpenElements [
-	^ self openElements notEmpty
-]
-
-{ #category : #accessing }
-XMLElementNester >> openElements [
-	^ openElements ifNil: [openElements := OrderedCollection new: 50]
-]
-
-{ #category : #private }
-XMLElementNester >> printLimit [
-	^ 5
-]
-
-{ #category : #printing }
-XMLElementNester >> printOn: aStream [
-	self printOn: aStream startingAt: 1
-]
-
-{ #category : #printing }
-XMLElementNester >> printOn: aStream startingAt: aPosition [
-	| endPosition |
-
-	endPosition :=  self totalOpen min: (aPosition + self printLimit - 1).
-	(self openElements copyFrom: aPosition to: endPosition)
-		do: [:each |
-			aStream
-				nextPut: $<;
-				nextPutAll: each;
-				nextPut: $>]
-		separatedBy: [aStream nextPutAll: ', '].
-	(endPosition < self totalOpen)
-		ifTrue: [aStream nextPutAll: '...'].
-]
-
-{ #category : #accessing }
-XMLElementNester >> rootElement [
-	^ rootElement ifNil: ['']
-]
-
-{ #category : #accessing }
-XMLElementNester >> rootElement: anElement [
-	rootElement := anElement.
-	hasExternalRoot := true.
-]
-
 { #category : #checking }
-XMLElementNester >> startedElement: aTagName [
+XMLElementNester >> startedElement: anElementName [
 	rootElement
-		ifNil: [rootElement := aTagName]
+		ifNil: [rootElement := anElementName]
 		ifNotNil: [
 			(self hasOpenElements or: [self hasExternalRoot])
 				ifFalse: [
 					XMLWellFormednessException signal:
 						'Document cannot have multiple root elements']].
 
-	self openElements addLast: aTagName
-]
-
-{ #category : #accessing }
-XMLElementNester >> totalOpen [
-	^ self openElements size
-	
+	super startedElement: anElementName.
 ]

@@ -5,14 +5,14 @@ Class {
 	#name : #XMLElementValidator,
 	#superclass : #Object,
 	#instVars : [
-		'name'
+		'element'
 	],
 	#category : #'XML-Parser-Validation'
 }
 
 { #category : #'instance creation' }
-XMLElementValidator class >> name: aName [
-	^ self new name: aName
+XMLElementValidator class >> element: aName [
+	^ self new element: aName
 ]
 
 { #category : #testing }
@@ -20,26 +20,26 @@ XMLElementValidator >> atEnd [
 	self subclassResponsibility
 ]
 
+{ #category : #accessing }
+XMLElementValidator >> element [
+	^ element
+]
+
+{ #category : #accessing }
+XMLElementValidator >> element: aName [
+	element := aName
+]
+
 { #category : #private }
 XMLElementValidator >> errorUnexpectedElement: aName [
 	XMLValidationException signal:
-		'Unexpected <', aName, '> element in <', self name, '> element'.
+		'Unexpected <', aName, '> element in <', self element, '> element'.
 ]
 
 { #category : #private }
 XMLElementValidator >> errorUnexpectedPCData: aString [
 	XMLValidationException signal:
-		'Unexpected PCDATA in <', self name, '> element'.
-]
-
-{ #category : #accessing }
-XMLElementValidator >> name [
-	^ name
-]
-
-{ #category : #accessing }
-XMLElementValidator >> name: aName [
-	name := aName
+		'Unexpected PCDATA in <', self element, '> element'.
 ]
 
 { #category : #validation }

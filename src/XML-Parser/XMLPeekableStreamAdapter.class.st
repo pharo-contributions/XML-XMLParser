@@ -61,7 +61,7 @@ XMLPeekableStreamAdapter >> next [
 	^ nextChar.
 ]
 
-{ #category : #reading }
+{ #category : #accessing }
 XMLPeekableStreamAdapter >> peek [
 	^ peekChar
 		ifNil: [

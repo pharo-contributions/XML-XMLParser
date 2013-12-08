@@ -32,7 +32,8 @@ DTDEnumerationListParser >> parse [
 		ifFalse: [XMLValidationException signal: 'Expected enumeration list'].
 
 	listValues := Set new.
-	($| split: (enumerationList copyFrom: 2 to: enumerationList size - 1))
+	$|
+		split: (enumerationList copyFrom: 2 to: enumerationList size - 1)
 		do: [:each |
 			value := each copyWithout: Character space.
 			(self isValidListValue: value)

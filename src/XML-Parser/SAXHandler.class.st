@@ -147,7 +147,7 @@ SAXHandler >> defaultDocumentURI [
 		ifTrue: [input path]
 		ifFalse: [
 			self configuration fileClient currentWorkingDirectory,
-				(self identityHash printString copyWithFirst: $/)]
+				self class name asString, '.xml'].
 ]
 
 { #category : #accessing }
@@ -227,6 +227,11 @@ SAXHandler >> endPrefixMapping: aPrefix [
 	endPrefixMapping(java.lang.String prefix)."
 ]
 
+{ #category : #accessing }
+SAXHandler >> externalEntityResolver [
+	^ self configuration externalEntityResolver
+]
+
 { #category : #declaration }
 SAXHandler >> generalEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
 ]
@@ -295,6 +300,16 @@ SAXHandler >> parser [
 	^ XMLParser
 		driver: (self driverClass saxHandler: self)
 		on: input.
+]
+
+{ #category : #testing }
+SAXHandler >> preservesUndeclaredEntityReferences [
+	^ self configuration preservesUndeclaredEntityReferences
+]
+
+{ #category : #accessing }
+SAXHandler >> preservesUndeclaredEntityReferences: aBoolean [
+	self configuration preservesUndeclaredEntityReferences: aBoolean
 ]
 
 { #category : #content }

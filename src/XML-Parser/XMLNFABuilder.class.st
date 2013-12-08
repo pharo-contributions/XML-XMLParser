@@ -86,6 +86,11 @@ XMLNFABuilder >> fragmentStack [
 	^ fragmentStack ifNil: [fragmentStack := OrderedCollection new]
 ]
 
+{ #category : #testing }
+XMLNFABuilder >> hasFragments [
+	^ self fragmentStack notEmpty
+]
+
 { #category : #accessing }
 XMLNFABuilder >> popFragment [
 	^ self fragmentStack removeLast

@@ -66,7 +66,7 @@ XMLDocument >> root [
 { #category : #accessing }
 XMLDocument >> root: anElement [
 	self
-		removeNodes;
+		removeNodes: self elements;
 		addNode: anElement
 ]
 

@@ -1,3 +1,6 @@
+"
+This class adds HTML-specific contexts.
+"
 Class {
 	#name : #HTMLTokenContext,
 	#superclass : #XMLTokenContext,

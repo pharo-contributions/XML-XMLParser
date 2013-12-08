@@ -55,7 +55,7 @@ XMLObservableList >> afterRemoving: anObject [
 	self notifyOf: #removed:from: with: anObject with: self.
 ]
 
-{ #category : #removing }
+{ #category : #accessing }
 XMLObservableList >> at: anIndex put: anObject [
 	| presentObject |
 

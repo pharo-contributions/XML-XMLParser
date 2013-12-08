@@ -5,11 +5,16 @@ Class {
 }
 
 { #category : #accessing }
+DTDParameterEntity >> escapedReferenceSymbol [
+	^ '&#37;'
+]
+
+{ #category : #accessing }
 DTDParameterEntity >> referenceSymbol [
 	^ $%
 ]
 
 { #category : #replacement }
 DTDParameterEntity >> replacementForDTDContext [
-	^ ' ', self replacement, ' '
+	^ (self replacement copyWithFirst: Character space) copyWith: Character space.
 ]

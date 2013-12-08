@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #accessing }
+DTDGeneralEntity >> escapedReferenceSymbol [
+	^ '&amp;'
+]
+
+{ #category : #accessing }
 DTDGeneralEntity >> referenceSymbol [
 	^ $&
 ]

@@ -19,7 +19,7 @@ XMLNamespaceScopeAllocator >> currentScope [
 
 { #category : #accessing }
 XMLNamespaceScopeAllocator >> currentScope: aScope [
-	^ self pushScope: aScope
+	self pushScope: aScope
 ]
 
 { #category : #scope }
@@ -88,7 +88,7 @@ XMLNamespaceScopeAllocator >> resolvePrefix: aPrefix ifUnmapped: aBlock [
 
 { #category : #accessing }
 XMLNamespaceScopeAllocator >> scopes [
-	^ scopes ifNil: [scopes := OrderedCollection new: 20]
+	^ scopes ifNil: [scopes := OrderedCollection new: 10]
 ]
 
 { #category : #validation }

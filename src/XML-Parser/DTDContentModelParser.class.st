@@ -23,7 +23,7 @@ DTDContentModelParser class >> name: aName contentModel: aContentModel [
 
 { #category : #parsing }
 DTDContentModelParser >> applyBinaryOperatorOnStack [
-	nfaBuilder fragmentStack size >= 2
+	nfaBuilder totalFragments > 1
 		ifFalse: [self errorMissingOperand].
 
 	operatorStack last == $|
@@ -34,8 +34,8 @@ DTDContentModelParser >> applyBinaryOperatorOnStack [
 
 { #category : #parsing }
 DTDContentModelParser >> applyUnaryOperator: aCharacter [
-	nfaBuilder fragmentStack
-		ifEmpty: [self errorMissingOperand].
+	nfaBuilder hasFragments
+		ifFalse: [self errorMissingOperand].
 
 	aCharacter == $+
 		ifTrue: [nfaBuilder applyPlus]
@@ -58,7 +58,7 @@ DTDContentModelParser >> errorMissingOperand [
 { #category : #testing }
 DTDContentModelParser >> hasOperatorOnStack [
 	^ operatorStack notEmpty
-		and: [operatorStack last == $| or: [operatorStack last == $,]]
+		and: [self isBinaryOperator: operatorStack last]
 ]
 
 { #category : #testing }
@@ -80,9 +80,9 @@ DTDContentModelParser >> isOperatorOrParen: aCharacter [
 DTDContentModelParser >> parse [
 	"the tokenizer removes all spaces from the content model"
 	(contentModel isEmpty or: [contentModel = 'ANY'])
-		ifTrue: [^ XMLAnyElementValidator name: name].
+		ifTrue: [^ XMLAnyElementValidator element: name].
 	(contentModel = 'EMPTY')
-		ifTrue: [^ XMLEmptyElementValidator name: name].
+		ifTrue: [^ XMLEmptyElementValidator element: name].
 
 	(contentModel beginsWith: '(#PCDATA')
 		ifTrue: [^ self parseMixedContentModel]
@@ -121,7 +121,7 @@ DTDContentModelParser >> parseDFAContentModel [
 
 	nfa := nfaBuilder buildNFAFromFragments.
 	^ XMLDFAElementValidator
-		name: name
+		element: name
 		dfa: (XMLDFABuilder nfa: nfa) buildDFA.
 ]
 
@@ -140,9 +140,9 @@ DTDContentModelParser >> parseMixedContentModel [
 	(mayContainElements or: [allowedElements isEmpty])
 		ifFalse: [XMLValidationException signal: 'Missing * after mixed content list with elements'].
 
-	^ XMLMixedElementValidator
-		name: name
-		elements: allowedElements.
+	^ XMLMixedContentElementValidator
+		element: name
+		allowedElements: allowedElements.
 ]
 
 { #category : #parsing }
@@ -165,7 +165,7 @@ DTDContentModelParser >> popRemainingOperators [
 				ifTrue: [self errorMismatchedParens].
 			self applyBinaryOperatorOnStack].
 
-	nfaBuilder fragmentStack size = 1
+	nfaBuilder totalFragments = 1
 		ifFalse: [self errorMissingOperand].
 ]
 

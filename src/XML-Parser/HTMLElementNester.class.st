@@ -3,7 +3,7 @@ This class can handle the nesting of HTML elements missing closing tags or with 
 "
 Class {
 	#name : #HTMLElementNester,
-	#superclass : #XMLElementNester,
+	#superclass : #XMLAbstractElementNester,
 	#instVars : [
 		'openElementsByName',
 		'elementsToStart',
@@ -205,13 +205,14 @@ HTMLElementNester >> elementsToStartBeforeStarting: anElementName [
 
 { #category : #checking }
 HTMLElementNester >> endedElement: anElementName [
-	self openElements removeLast.
 	self openElementsByName
 		at: anElementName
 		put:
 			((self openElementsByName
 				at: anElementName
 				ifAbsent: [1]) - 1 max: 0).
+
+	super endedElement: anElementName.
 ]
 
 { #category : #checking }
@@ -269,11 +270,12 @@ HTMLElementNester >> openElementsByName [
 
 { #category : #checking }
 HTMLElementNester >> startedElement: anElementName [
-	self openElements addLast: anElementName.
 	self openElementsByName
 		at: anElementName
 		put:
 			(self openElementsByName
 				at: anElementName
 				ifAbsent: [0]) + 1.
+
+	super startedElement: anElementName.
 ]

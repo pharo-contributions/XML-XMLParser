@@ -15,7 +15,7 @@ XMLEmptyElementValidator >> atEnd [
 
 { #category : #private }
 XMLEmptyElementValidator >> errorMustBeEmpty [
-	XMLValidationException signal: 'Element <', self name, '> must be empty'
+	XMLValidationException signal: 'Element <', self element, '> must be empty'
 ]
 
 { #category : #validation }

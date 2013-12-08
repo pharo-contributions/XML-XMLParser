@@ -1,6 +1,9 @@
+"
+This is the implementation of the tokenizer for the HTML driver.
+"
 Class {
 	#name : #HTMLTokenizer,
-	#superclass : #XMLTokenizer,
+	#superclass : #XMLAbstractTokenizer,
 	#instVars : [
 		'nonHtmlCommentStarter',
 		'nonHtmlElement'
@@ -50,8 +53,8 @@ HTMLTokenizer class >> generateHTMLEntityPage [
 	json :=
 		XMLHTTPClient defaultImplementation
 			get: 'http://www.w3.org/TR/html5/entities.json'.
-	[json atEnd not]
-		whileTrue: [
+	[json atEnd]
+		whileFalse: [
 			fields := $: split: (json upToAny: String crlf).
 			fields size > 1
 				ifTrue: [
@@ -2349,6 +2352,17 @@ HTMLTokenizer class >> isNonHTMLSectionTag: aTagName [
 ]
 
 { #category : #testing }
+HTMLTokenizer >> atEnd [
+	context atEnd
+		ifTrue: [^ true].
+	(context isInitialized and: [streamReader atEnd])
+		ifTrue: [
+			self nextEndDocument.
+			^ true].
+	^ false.
+]
+
+{ #category : #testing }
 HTMLTokenizer >> atNonHTMLSectionEndTag [
 	(streamReader nextMatchAll: '</')
 		ifFalse: [^ false].
@@ -2386,16 +2400,8 @@ HTMLTokenizer >> expectTerminator: aCharacter [
 ]
 
 { #category : #'tokenizing dtd' }
-HTMLTokenizer >> nextAttributeType [
-	| nextChar type |
-
-	type := streamWriter writeWith: [:writeStream |
-		[self skipSeparatorsReplacingParameterEntities.
-		(nextChar := streamReader peek) isNil
-			or: [(String with: $# with: $> with: $' with:  $") includes: nextChar]]
-			whileFalse: [writeStream nextPut: streamReader next].
-		writeStream contents].
-	^ self removeTrailingSpacesFrom: type.
+HTMLTokenizer >> nextAttlistDeclaration [
+	self skipDeclaration
 ]
 
 { #category : #tokenizing }
@@ -2405,7 +2411,7 @@ HTMLTokenizer >> nextAttributeValue [
 	streamReader peek == $&
 		ifTrue: [^ self nextUnparsedEntityReference].
 
-	self atQuote
+	streamReader atQuote
 		ifFalse: [^ self nextName].
 	quote := streamReader next.
 	context resetAfter: [
@@ -2443,17 +2449,7 @@ HTMLTokenizer >> nextContentToken [
 
 { #category : #'tokenizing dtd' }
 HTMLTokenizer >> nextElementDeclaration [
-	| name contentModel |
-
-	self expectNextAll: 'LEMENT'.
-	self skipSeparatorsReplacingParameterEntities.
-	name := self nextName.
-	self skipSeparatorsReplacingParameterEntities.
-	contentModel := self removeTrailingSpacesFrom: (streamReader upTo: $>).
-
-	driver
-		handleElementDeclaration: name
-		contentModel: contentModel.
+	self skipDeclaration
 ]
 
 { #category : #tokenizing }
@@ -2535,6 +2531,11 @@ HTMLTokenizer >> nextNonHTMLSectionToken [
 	driver handleNonHTMLSection: nonHtmlSection.
 ]
 
+{ #category : #'tokenizing dtd' }
+HTMLTokenizer >> nextNotationDeclaration [
+	self skipDeclaration
+]
+
 { #category : #tokenizing }
 HTMLTokenizer >> nextPCDataToken [
 	| isIgnorableWhitespace nextChar pcData |
@@ -2576,10 +2577,26 @@ HTMLTokenizer >> nextPCDataToken [
 HTMLTokenizer >> nextPrologToken [
 	streamReader skipSeparators.
 	streamReader peek == $<
-		ifTrue: [super nextPrologToken]
-		ifFalse: [
+		ifTrue: [
+			streamReader next.
+			streamReader peek == $?
+				ifTrue: [^ self nextPIOrXMLDecl].
+			streamReader peek == $!
+				ifTrue: [
+					streamReader next.
+					streamReader peek == $-
+						ifTrue: [^ self nextComment].
+				^ self nextDocTypeDecl].
+
 			context enterContent.
-			self nextContentToken].
+			^ (streamReader atEnd not and: [streamReader peek isSeparator])
+				ifTrue: [
+					streamReader pushBack: '<'.
+					self nextContentToken]
+				ifFalse: [self nextTag]].
+
+	context enterContent.
+	^ self nextContentToken.
 ]
 
 { #category : #'tokenizing dtd' }
@@ -2589,7 +2606,7 @@ HTMLTokenizer >> nextPubidLiteral [
 
 { #category : #tokenizing }
 HTMLTokenizer >> nextQuotedValue [
-	^ self atQuote
+	^ streamReader atQuote
 		ifTrue: [streamReader upTo: streamReader next]
 		ifFalse: [self nextName]
 ]
@@ -2644,9 +2661,27 @@ HTMLTokenizer >> nextTag [
 
 { #category : #tokenizing }
 HTMLTokenizer >> nextValue [
-	^ self atQuote
+	^ streamReader atQuote
 		ifTrue: [streamReader upTo: streamReader next]
 		ifFalse: [self nextName]
+]
+
+{ #category : #errors }
+HTMLTokenizer >> parseError: anErrorString [
+	
+]
+
+{ #category : #'tokenizing dtd' }
+HTMLTokenizer >> skipDeclaration [
+	[streamReader atEnd
+		or: [streamReader peek == $>]]
+		whileFalse: [
+			streamReader atQuote
+				ifTrue: [streamReader upTo: streamReader next]
+				ifFalse: [streamReader next]].
+
+	streamReader atEnd
+		ifFalse: [streamReader next].
 ]
 
 { #category : #'tokenizing dtd' }

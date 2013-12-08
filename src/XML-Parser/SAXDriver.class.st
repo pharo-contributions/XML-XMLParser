@@ -6,7 +6,6 @@ Class {
 	#superclass : #XMLParserDriver,
 	#instVars : [
 		'saxHandler',
-		'configuration',
 		'dtd',
 		'validator',
 		'elementNester',
@@ -18,16 +17,7 @@ Class {
 
 { #category : #'instance creation' }
 SAXDriver class >> saxHandler: aHandler [
-	^ self new
-		setSaxHandler: aHandler
-		configuration: aHandler configuration
-		elementNester: aHandler elementNester
-		scopeAllocator: aHandler scopeAllocator
-]
-
-{ #category : #accessing }
-SAXDriver >> configuration [
-	^ configuration
+	^ self new setSaxHandler: aHandler
 ]
 
 { #category : #accessing }
@@ -61,7 +51,7 @@ SAXDriver >> elementNester [
 
 { #category : #accessing }
 SAXDriver >> externalEntityResolver [
-	^ self configuration externalEntityResolver
+	^ saxHandler externalEntityResolver
 ]
 
 { #category : #'handling tokens' }
@@ -152,7 +142,6 @@ SAXDriver >> handleEndTag: anElementName [
 { #category : #'handling tokens' }
 SAXDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
 	aNotation
-		ifNotEmpty: [self dtd unparsedEntityAt: aName put: aNotation]
 		ifEmpty: [
 			self resolvesExternalEntities
 				ifTrue: [
@@ -161,7 +150,11 @@ SAXDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId systemID:
 						put: (self externalEntityResolver
 							resolveGeneralEntity: aName
 							uri: aSystemId
-							from: self documentURI)]].
+							from: self documentURI)]]
+		ifNotEmpty: [
+			self dtd
+				unparsedEntityAt: aName
+				put: aNotation].
 
 	self saxHandler
 		generalEntityDeclaration: aName
@@ -194,6 +187,8 @@ SAXDriver >> handleGeneralEntityReference: aName [
 				ifTrue: [
 					XMLValidationException signal:
 						'Undeclared general entity reference &', aName, ';'].
+			self preservesUndeclaredEntityReferences
+				ifTrue: [entity := DTDBypassedGeneralEntity named: aName].
 			self saxHandler skippedEntity: aName].
 	^ entity.
 ]
@@ -267,6 +262,8 @@ SAXDriver >> handleParameterEntityReference: aName [
 				ifTrue: [
 					XMLValidationException signal:
 						'Undeclared parameter entity reference %', aName, ';'].
+			self preservesUndeclaredEntityReferences
+				ifTrue: [entity := DTDBypassedParameterEntity named: aName].
 			self saxHandler skippedEntity: aName].
 	^ entity.
 ]
@@ -364,7 +361,7 @@ SAXDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrN
 
 { #category : #testing }
 SAXDriver >> isValidating [
-	^ self configuration isValidating
+	^ saxHandler isValidating
 ]
 
 { #category : #accessing }
@@ -396,8 +393,13 @@ SAXDriver >> parseExternalSubset: aUri [
 ]
 
 { #category : #testing }
+SAXDriver >> preservesUndeclaredEntityReferences [
+	^ saxHandler preservesUndeclaredEntityReferences
+]
+
+{ #category : #testing }
 SAXDriver >> resolvesExternalEntities [
-	^ self configuration resolvesExternalEntities
+	^ saxHandler resolvesExternalEntities
 ]
 
 { #category : #accessing }
@@ -411,11 +413,10 @@ SAXDriver >> scopeAllocator [
 ]
 
 { #category : #initialization }
-SAXDriver >> setSaxHandler: aHandler configuration: aConfiguration elementNester: anElementNester scopeAllocator: aScopeAllocator [
+SAXDriver >> setSaxHandler: aHandler [
 	saxHandler := aHandler.
-	configuration := aConfiguration.
-	elementNester := anElementNester.
-	scopeAllocator := aScopeAllocator.
+	elementNester := aHandler elementNester.
+	scopeAllocator := aHandler scopeAllocator.
 ]
 
 { #category : #namespaces }
@@ -438,7 +439,7 @@ SAXDriver >> undeclareNamespaces [
 
 { #category : #testing }
 SAXDriver >> usesNamespaces [
-	^ self configuration usesNamespaces
+	^ saxHandler usesNamespaces
 ]
 
 { #category : #validation }
@@ -466,7 +467,7 @@ SAXDriver >> validateStartTag: aStartTag prefix: aPrefix attributes: anAttribute
 		ifTrue: [
 			self scopeAllocator enterScope.
 			aNamespaceDictionary
-				ifNotEmpty: [self declareNamespaces: aNamespaceDictionary].
+				ifNotNil: [self declareNamespaces: aNamespaceDictionary].
 		aPrefix ifNotEmpty: [
 			self scopeAllocator
 				validatePrefix: aPrefix

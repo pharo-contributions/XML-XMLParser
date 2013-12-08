@@ -8,6 +8,7 @@ Class {
 		'isValidating',
 		'usesNamespaces',
 		'resolvesExternalEntities',
+		'preservesUndeclaredEntityReferences',
 		'externalEntityResolver',
 		'parserHandlerClass'
 	],
@@ -62,6 +63,16 @@ XMLConfiguration >> parserHandlerClass [
 { #category : #accessing }
 XMLConfiguration >> parserHandlerClass: aClass [
 	parserHandlerClass := aClass
+]
+
+{ #category : #accessing }
+XMLConfiguration >> preservesUndeclaredEntityReferences [
+	^ preservesUndeclaredEntityReferences ifNil: [preservesUndeclaredEntityReferences := false]
+]
+
+{ #category : #accessing }
+XMLConfiguration >> preservesUndeclaredEntityReferences: aBoolean [
+	preservesUndeclaredEntityReferences := aBoolean
 ]
 
 { #category : #accessing }

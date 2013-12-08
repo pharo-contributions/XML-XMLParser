@@ -27,7 +27,7 @@ XMLDocumentValidator >> currentElementValidator [
 
 { #category : #accessing }
 XMLDocumentValidator >> defaultElementValidatorFor: aName [
-	^ XMLAnyElementValidator name: aName
+	^ XMLAnyElementValidator element: aName
 ]
 
 { #category : #accessing }
@@ -59,7 +59,7 @@ XMLDocumentValidator >> hasElementValidators [
 XMLDocumentValidator >> validateEndTag: aName [
 	self hasElementValidators
 		ifTrue: [
-			(self currentElementValidator name = aName)
+			(self currentElementValidator element = aName)
 				ifTrue: [
 					self currentElementValidator atEnd
 						ifFalse: [self errorMissingContentFor: aName]].

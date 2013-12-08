@@ -13,9 +13,9 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLDFAElementValidator class >> name: aName dfa: aDfa [
+XMLDFAElementValidator class >> element: aName dfa: aDfa [
 	^ self new
-		setName: aName
+		setElement: aName
 		dfa: aDfa
 ]
 
@@ -30,8 +30,8 @@ XMLDFAElementValidator >> postCopy [
 ]
 
 { #category : #accessing }
-XMLDFAElementValidator >> setName: aName dfa: aDfa [
-	name := aName.
+XMLDFAElementValidator >> setElement: aName dfa: aDfa [
+	element := aName.
 	dfa := aDfa.
 	currentState := dfa.
 ]

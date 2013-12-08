@@ -1,3 +1,6 @@
+"
+This is a base class for internal and external parsed entities with replacements that can be inserted into an XML document.
+"
 Class {
 	#name : #DTDParsedEntity,
 	#superclass : #Object,
@@ -37,9 +40,31 @@ DTDParsedEntity class >> name: aString replacement: aValueString uri: aUri [
 		uri: aUri
 ]
 
+{ #category : #'instance creation' }
+DTDParsedEntity class >> named: aString [
+	^ self
+		name: aString
+		replacement: ''
+]
+
+{ #category : #converting }
+DTDParsedEntity >> asEscapedReference [
+	^ self asReferenceStartingWith: self escapedReferenceSymbol
+]
+
 { #category : #converting }
 DTDParsedEntity >> asReference [
-	^ self referenceSymbol asString, self name, ';'
+	^ self asReferenceStartingWith: self referenceSymbol asString
+]
+
+{ #category : #private }
+DTDParsedEntity >> asReferenceStartingWith: aString [
+	^ aString, (self name copyWith: $;)
+]
+
+{ #category : #accessing }
+DTDParsedEntity >> escapedReferenceSymbol [
+	self subclassResponsibility
 ]
 
 { #category : #testing }
