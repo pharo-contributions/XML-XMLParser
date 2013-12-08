@@ -308,23 +308,6 @@ XMLParserTest >> testCDATASection [
 		assert: element firstNode printString = ('<![CDATA[',output,']]>').
 ]
 
-{ #category : #tests }
-XMLParserTest >> testComments [
-	| document comment|
-
-	document := XMLDOMParser parse: self addressBookXML.
-	self deny: (document findElementNamed: 'contact-info') hasChildren.
-
-	document :=
-		(XMLDOMParser on: self addressBookXML)
-			preservesCommentNodes: true;
-			parseDocument.
-	comment := (document findElementNamed: 'contact-info') firstNode.
-	self
-		assert: comment notNil;
-		assert: comment string = 'Confidential'.
-]
-
 { #category : #'tests-xmltokenizer' }
 XMLParserTest >> testConditionalSection [
 	| tokenizer |
@@ -498,74 +481,38 @@ XMLParserTest >> testEntityReplacement [
 			%name1Declaration;
 			<!ENTITY name2 "replacement2 &name1;" >
 			<!ENTITY name3 "replacement3 &name2;" >
-			<!ENTITY predefined "&amp;&gt;&lt;&quot;&apos;" >
-			<!ENTITY quotes "&#x22;&#39;">
+			<!ENTITY quotes "&#x27;quoted &#x22;value&#34;&#39;">
 		]>
 		<root name="&quotes;">&name1; &name2; &name3; ',
-		'&predefined; &amp;&gt;&lt;&quot;&apos; %name1Declaration;</root>'.
+		'%name1Declaration;</root>'.
 	self assert:
 		document root contentString =
 			('replacement1 ',
 			'replacement2 replacement1 ',
 			'replacement3 replacement2 replacement1 ',
-			'&><"'' &><"'' %name1Declaration;').
-	self assert: (document root attributeAt: 'name') = (String with: $" with: $').
-]
-
-{ #category : #tests }
-XMLParserTest >> testExampleAddressBook [
-	| tokenizer |
-	"self debug: #testExampleAddressBook"
-
-	tokenizer :=
-		XMLTokenizer
-			driver: nil
-			on: self addressBookXML readStream.
-
-	"We enumerate the first characters of the addressbook example.
-	The file being parsed begins with <addressbook"
-	self assert: tokenizer streamReader next = $<.
-	self assert: tokenizer streamReader next = $a.	
-	self assert: tokenizer streamReader next = $d.
-	self assert: tokenizer streamReader next = $d.
-	self assert: tokenizer streamReader next = $r.
-
-	self
-		shouldnt: [tokenizer streamReader next notNil] whileTrue
-		raise: Error. 
-]
-
-{ #category : #tests }
-XMLParserTest >> testExampleAddressBookWithDTD [
-	| tokenizer |
-	"XMLTokenizer exampleAddressBookWithDTD"
-
-	tokenizer :=
-		XMLTokenizer
-			driver: nil
-			on: self addressBookXMLWithDTD readStream.
-	self
-		shouldnt: [tokenizer streamReader next notNil] whileTrue
-		raise: Error
+			'%name1Declaration;').
+	self assert:
+		(document root attributeAt: 'name') =
+			(('quoted "value"' copyWithFirst: $') copyWith: $').
 ]
 
 { #category : #tests }
 XMLParserTest >> testFileClientPaths [
-	| fileClient cwd |
+	| fileClient cwd cwdParent |
 
 	fileClient := XMLFileClient defaultImplementation new.
 	cwd := fileClient currentWorkingDirectory.
+	cwdParent := cwd copyUpToLast: $/.
 	self
 		assert: cwd first == $/;
 		deny: cwd last == $/;
 		assert: (fileClient combineRelative: 'relative' withBase: 'relative/path') = 'relative/relative';
 		assert: (fileClient combineRelative: 'relative/path' withBase: 'relative/path') = 'relative/relative/path';
-		assert: (fileClient combineRelative: 'relative' withBase: cwd) = (cwd, '/relative');
+		assert: (fileClient combineRelative: 'relative' withBase: cwd) = (cwdParent, '/relative');
 		assert: (fileClient combineRelative: '/nonrelative' withBase: cwd) = '/nonrelative';
-		assert: (fileClient combineRelative: 'relative' withBase: cwd) = (cwd, '/relative');
-		assert: (fileClient combineRelative: '../../relative' withBase: cwd) = (cwd, '/../../relative');
-		assert: (fileClient combineRelative: './relative' withBase: cwd) = (cwd, '/relative');
-		assert: (fileClient combineRelative: '.relative' withBase: cwd) = (cwd, '/.relative').
+		assert: (fileClient combineRelative: '../../relative' withBase: cwd) = (cwdParent, '/../../relative');
+		assert: (fileClient combineRelative: './relative' withBase: cwd) = (cwdParent, '/relative');
+		assert: (fileClient combineRelative: '.relative' withBase: cwd) = (cwdParent, '/.relative').
 ]
 
 { #category : #tests }
@@ -696,6 +643,10 @@ XMLParserTest >> testParsingHTML [
 		assert: document allNodes size = 4;
 		assert: (document allElementsCollect: [:each | each name]) asArray = #('html' 'body');
 		assert: (document findElementNamed: 'body') contentString = 'text'.
+	document := HTMLParser parse: '< text'.
+	self
+		assert: document allNodes size = 4;
+		assert: (document findElementNamed: 'body') contentString = '< text'.
 
 	document := HTMLParser parse:
 		'<head><title><b>"title</b></title><script>',
@@ -757,6 +708,53 @@ XMLParserTest >> testParsingNamespaces [
 			findElementNamed: 'person'
 			namespaceURI: 'defaultNS'
 			with: [:each | (each attributeAt: 'employee-number') = 'A7987']) == people last.
+]
+
+{ #category : #tests }
+XMLParserTest >> testPredefinedEntityReplacement [
+	| document references replacements |
+
+	references := String new writeStream.
+	replacements := String new writeStream.
+	XMLTokenizer predefinedEntities keysAndValuesDo: [:name :char |
+		references
+			nextPut: $&;
+			nextPutAll: name;
+			nextPut: $;.
+		replacements nextPut: char].
+
+	document :=
+		XMLDOMParser parse:
+			('<!DOCTYPE root [
+				<!ENTITY nonRecursive "&amp;notAReference;">]>
+			<root name=''{1}''>
+				<one>{1}</one>
+				<two>&nonRecursive;</two>
+			</root>' format: (Array with: references contents)).
+	self
+		assert: (document root attributeAt: 'name') = replacements contents;
+		assert: (document findElementNamed: 'one') contentString = replacements contents;
+		assert: (document findElementNamed: 'two') contentString = '&notAReference;'.
+]
+
+{ #category : #tests }
+XMLParserTest >> testPreservesUndeclaredEntityReferences [
+	| xml parser document |
+
+	xml := '<!DOCTYPE root [
+		<!ENTITY unreferenced "%undeclaredOne;">
+		%undeclaredOne;]>
+		<root name="&undeclaredTwo;">&undeclaredThree;</root>'.
+	(parser := XMLDOMParser on: xml)
+		isValidating: false;
+		preservesUndeclaredEntityReferences: true.
+	document := parser parseDocument.
+
+	self
+		assert: document doctypeDeclaration nodes size = 1;
+		assert: document doctypeDeclaration firstNode replacement = '%undeclaredOne;';
+		assert: (document root attributeAt: 'name') = '&undeclaredTwo;';
+		assert: (document root contentString) = '&undeclaredThree;'.
 ]
 
 { #category : #tests }
@@ -831,13 +829,15 @@ XMLParserTest >> testSAXEntityHandlers [
 	| xml parser |
 
 	xml := '<!DOCTYPE root [
-		<!ENTITY first " &second; ">
+		<!ENTITY % firstDeclaration "<!ENTITY first &#39; &second; &#39;>">
+		%firstDeclaration;
 		<!ENTITY second " replacement ">]>
-	<root>&first;</root>'.
+	<root name="&second;">&first;</root>'.
 	(parser :=SAXHandlerProxy saxHandler: (SAXHandler on: xml)) parseDocument.
 	self assert:
 		#(startDocument
 			startDTD:publicID:systemID:
+			parameterEntityDeclaration:replacement:
 			generalEntityDeclaration:replacement: generalEntityDeclaration:replacement:
 			endDTD
 			startElement:prefix:uri:localName:attributes:
@@ -1001,17 +1001,37 @@ XMLParserTest >> testTokenizerCharacters [
 		assert: tokenizer streamReader next == $<;
 		assert: ('address' allSatisfy: [:each | tokenizer streamReader next == each]);
 		assert: tokenizer streamReader peek == $b.
+
 	tokenizer streamReader pushBack: 'test'.
 	self
 		assert: ('test' allSatisfy: [:each | tokenizer streamReader next == each]);
 		assert: tokenizer streamReader peek == $b;
 		assert: ('book' allSatisfy: [:each | tokenizer streamReader next == each]).
+
 	tokenizer streamReader
 		pushBack: 'book';
 		pushBack: 'test'.
 	self
 		assert: ('test' allSatisfy: [:each | tokenizer streamReader next == each]);
 		assert: ('book' allSatisfy: [:each | tokenizer streamReader next == each]).
+]
+
+{ #category : #'tests-xmltokenizer' }
+XMLParserTest >> testTokenizerMaxPushBack [
+	| tokenizer |
+
+	tokenizer :=
+		XMLTokenizer
+			driver: nil
+			on: self addressBookXML readStream.
+	self
+		shouldnt: [
+			tokenizer streamReader maxNestedStreams
+				timesRepeat: [tokenizer streamReader pushBack: 'test']]
+		raise: XMLParserException.
+	self
+		should: [tokenizer streamReader pushBack: 'test']
+		raise: XMLParserException.
 ]
 
 { #category : #tests }
@@ -1082,4 +1102,21 @@ XMLParserTest >> testWellFormedness [
 		should: [SAXHandler parse: '<root></unopened></root>'] raise: error;
 		should: [SAXHandler parse: '<root><unclosed></root>'] raise: error;
 		should: [SAXHandler parse: '<root><first><second></first></second></root>'] raise: error.
+]
+
+{ #category : #tests }
+XMLParserTest >> testXMLComment [
+	| document comment|
+
+	document := XMLDOMParser parse: self addressBookXML.
+	self deny: (document findElementNamed: 'contact-info') hasChildren.
+
+	document :=
+		(XMLDOMParser on: self addressBookXML)
+			preservesCommentNodes: true;
+			parseDocument.
+	comment := (document findElementNamed: 'contact-info') firstNode.
+	self
+		assert: comment notNil;
+		assert: comment string = 'Confidential'.
 ]
