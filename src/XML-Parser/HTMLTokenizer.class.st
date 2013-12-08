@@ -2399,6 +2399,11 @@ HTMLTokenizer >> expectTerminator: aCharacter [
 	streamReader upTo: aCharacter
 ]
 
+{ #category : #tokenizing }
+HTMLTokenizer >> expectUpToAll: aString [
+	^ streamReader upToAll: aString
+]
+
 { #category : #'tokenizing dtd' }
 HTMLTokenizer >> nextAttlistDeclaration [
 	self skipDeclaration

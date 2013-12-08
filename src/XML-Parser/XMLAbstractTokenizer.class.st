@@ -103,31 +103,12 @@ XMLAbstractTokenizer >> errorExpected: anExpectedCharacterOrString butGot: aRece
 
 { #category : #tokenizing }
 XMLAbstractTokenizer >> expectNext: aCharacter [
-	| nextChar |
-
-	(nextChar := streamReader next) == aCharacter
-		ifFalse: [
-			self
-				errorExpected: aCharacter
-				butGot: nextChar].
-	^ nextChar.
+	self subclassResponsibility
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> expectNextAll: anExpectedLiteral [
-	| nextChar |
-
-	anExpectedLiteral doWithIndex: [:each :i |
-		(nextChar := streamReader next) == each
-			ifFalse: [
-				self
-					errorExpected: anExpectedLiteral
-					butGot:
-						(anExpectedLiteral
-							copyReplaceFrom: i
-							to: anExpectedLiteral size
-							with: (nextChar ifNil: ['']) asString)]].
-	^ anExpectedLiteral.
+XMLAbstractTokenizer >> expectNextAll: aString [
+	self subclassResponsibility
 ]
 
 { #category : #tokenizing }
@@ -145,32 +126,12 @@ XMLAbstractTokenizer >> expectQuote [
 
 { #category : #tokenizing }
 XMLAbstractTokenizer >> expectTerminator: aCharacter [
-	| nextChar |
-
-	(nextChar := streamReader next) == aCharacter
-		ifFalse: [
-			self
-				errorExpected: aCharacter asString, ' terminator'
-				butGot: nextChar].
-	^ nextChar.
+	self subclassResponsibility
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> expectUpToAll: aTerminator [
-	| value isTerminated |
-
-	"upToAll: can't distinguish between a missing terminator or terminator at the end of a string"
-	isTerminated := false.
-	value := streamWriter writeWith: [:writeStream |
-		[streamReader atEnd
-			or: [(isTerminated := streamReader nextMatchAll: aTerminator)]]
-			whileFalse: [writeStream nextPut: streamReader next].
-		writeStream contents].
-	isTerminated
-		ifFalse: [self errorExpected: 'terminating ', aTerminator asString].
-
-	^ value.
-
+XMLAbstractTokenizer >> expectUpToAll: aString [
+	self subclassResponsibility
 ]
 
 { #category : #testing }

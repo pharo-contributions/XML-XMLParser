@@ -117,6 +117,65 @@ XMLTokenizer >> atEnd [
 	^ false.
 ]
 
+{ #category : #tokenizing }
+XMLTokenizer >> expectNext: aCharacter [
+	| nextChar |
+
+	(nextChar := streamReader next) == aCharacter
+		ifFalse: [
+			self
+				errorExpected: aCharacter
+				butGot: nextChar].
+	^ nextChar.
+]
+
+{ #category : #tokenizing }
+XMLTokenizer >> expectNextAll: anExpectedLiteral [
+	| nextChar |
+
+	anExpectedLiteral doWithIndex: [:each :i |
+		(nextChar := streamReader next) == each
+			ifFalse: [
+				self
+					errorExpected: anExpectedLiteral
+					butGot:
+						(anExpectedLiteral
+							copyReplaceFrom: i
+							to: anExpectedLiteral size
+							with: (nextChar ifNil: ['']) asString)]].
+	^ anExpectedLiteral.
+]
+
+{ #category : #tokenizing }
+XMLTokenizer >> expectTerminator: aCharacter [
+	| nextChar |
+
+	(nextChar := streamReader next) == aCharacter
+		ifFalse: [
+			self
+				errorExpected: aCharacter asString, ' terminator'
+				butGot: nextChar].
+	^ nextChar.
+]
+
+{ #category : #tokenizing }
+XMLTokenizer >> expectUpToAll: aString [
+	| value isTerminated |
+
+	"upToAll: can't distinguish between a missing terminator or terminator at the end of a string"
+	isTerminated := false.
+	value := streamWriter writeWith: [:writeStream |
+		[streamReader atEnd
+			or: [(isTerminated := streamReader nextMatchAll: aString)]]
+			whileFalse: [writeStream nextPut: streamReader next].
+		writeStream contents].
+	isTerminated
+		ifFalse: [self errorExpected: 'terminating ', aString].
+
+	^ value.
+
+]
+
 { #category : #'tokenizing dtd' }
 XMLTokenizer >> nextAttlistDeclaration [
 	| element attribute attributeType defaultDeclaration  |
