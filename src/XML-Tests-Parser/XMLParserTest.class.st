@@ -146,13 +146,6 @@ XMLParserTest >> exampleCDATASectionXML [
 <test-data><![CDATA[this is CDATA test content 1 < 2 & 5 > 3]]></test-data>'
 ]
 
-{ #category : #source }
-XMLParserTest >> exampleEncodedXML [
-	^'<?xml version="1.0" encoding="UTF-8"?>
-<test-data>&#8230;</test-data>
-'
-]
-
 { #category : #tests }
 XMLParserTest >> testAttributeDefaultDeclaration [
 	| dtd document |
@@ -344,14 +337,23 @@ XMLParserTest >> testDeclaringNamespaces [
 
 { #category : #'tests-utf8' }
 XMLParserTest >> testDecodingCharacters [
-	| xmlDocument element |
+	| xml document  |
 
-	xmlDocument := XMLDOMParser parse: self exampleEncodedXML.
-	element := xmlDocument findElementNamed: 'test-data'.
+	xml := '<?xml version="1.0" encoding="UTF-8"?>
+			<test-data>&#{1};</test-data>'.
 
-	self assert: element contentString first charCode = 8230.	
+	document := XMLDOMParser parse: (xml format: (Array with: '8230')).
+	self assert: document root contentString first charCode = 8230.
 
-
+	self
+		should: [XMLDOMParser parse: (xml format: (Array with: 'xFFFFFFF'))]
+		raise: XMLParserException.
+	self
+		should: [XMLDOMParser parse: (xml format: (Array with: '0'))]
+		raise: XMLParserException.
+	self
+		should: [XMLDOMParser parse: (xml format: (Array with: '-1'))]
+		raise: XMLParserException.
 ]
 
 { #category : #tests }
@@ -536,16 +538,17 @@ XMLParserTest >> testHTTPClientPaths [
 
 { #category : #tests }
 XMLParserTest >> testInnerXML [
-	| document contactInfo address1 address2 |
+	| document contactInfo address1 address2 innerXml |
 
 	document := XMLDOMParser parse: self addressBookXML.
 	document allElementsNamed: 'person' do: [:person |
 		address1 := (person attributeAt: 'first-name'), '@example.com'.
 		address2 := (person attributeAt: 'first-name'), '@users.example.com'.
-		(contactInfo := person elementAt: 'contact-info')
-			innerXML: '<email>', address1, '</email><email2>', address2, '</email2>'.
+		innerXml := '<email>', address1, '</email><email2>', address2, '</email2>'.
+		(contactInfo := person elementAt: 'contact-info') innerXML: innerXml.
 
 		self
+			assert: contactInfo innerXML = innerXml;
 			assert: contactInfo elements size = 2;
 			assert: (contactInfo elements first isNamed: 'email');
 			assert: (contactInfo elements first contentString = address1);
@@ -592,6 +595,22 @@ XMLParserTest >> testLineEndingsDoNotMatter [
 	self
 		assert: (docFromSourceWithCrs root contentString) = (docFromSourceWithLfs root contentString);
 		assert: (docFromSourceWithLfs root contentString) = (docFromSourceWithCrlfs root contentString).
+]
+
+{ #category : #tests }
+XMLParserTest >> testNodeListClass [
+	| document parser listClass |
+
+	listClass := XMLCachingNodeList.
+	document :=
+		(parser := XMLDOMParser on: self addressBookXML)
+			nodeListClass: listClass;
+			parseDocument.
+
+	self
+		assert: parser nodeListClass == listClass;
+		assert: document nodes class == listClass;
+		assert: (document allElements allSatisfy: [:each | each nodes class == listClass]).
 ]
 
 { #category : #tests }
@@ -649,9 +668,9 @@ XMLParserTest >> testParsingHTML [
 		assert: (document findElementNamed: 'body') contentString = '< text'.
 
 	document := HTMLParser parse:
-		'<head><title><b>"title</b></title><script>',
+		'<head><title><b>"title</b></TITLE><SCRIPT>',
 		'1 < 2; 3 > 2; document.write("</script>");</script>
-		<style>//"</style><head>'.
+		<style>//"</style><HEAD>'.
 	self
 		assert: (document findElementNamed: 'title') contentString = '<b>"title</b>';
 		assert: (document findElementNamed: 'script') contentString =
@@ -673,7 +692,7 @@ XMLParserTest >> testParsingHTML [
 		deny: (document findElementNamed: 'img') hasChildren.
 
 	self assert:
-		((HTMLParser parse: '<html><b></body></html><i>')
+		((HTMLParser parse: '<html><B></body></html><I>')
 			allElementsCollect: [:each | each name]) asArray = #('html' 'body' 'b' 'i').
 ]
 
@@ -786,7 +805,7 @@ XMLParserTest >> testRecursiveGeneralEntityReplacement [
 					<!ENTITY second "&third;">
 					<!ENTITY third "last">]>
 				<root>&first;</root>']
-		raise: XMLParserException.
+		raise: XMLEntityDepthException.
 	self
 		should: [
 			SAXHandler parse:
@@ -796,7 +815,7 @@ XMLParserTest >> testRecursiveGeneralEntityReplacement [
 					<!ENTITY third "&fourth;">
 					<!ENTITY fourth "last">]>
 				<root>&first;</root>']
-		raise: XMLParserException.
+		raise: XMLEntityDepthException.
 ]
 
 { #category : #tests }
@@ -810,7 +829,7 @@ XMLParserTest >> testRecursiveParameterEntityReplacement [
 					<!ENTITY % third "<!--last-->">
 					%first;]>
 				<root/>']
-		raise: XMLParserException.
+		raise: XMLEntityDepthException.
 	self
 		should: [
 			SAXHandler parse:
@@ -821,7 +840,31 @@ XMLParserTest >> testRecursiveParameterEntityReplacement [
 					<!ENTITY % fourth "<!--last-->">
 					%first;]>
 				<root/>']
-		raise: XMLParserException.
+		raise: XMLEntityDepthException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testRenamingParsedNodes [
+	| document element attribute |
+
+	document := XMLDOMParser parse: '<root xmlns:prefix="ns" name="value"/>'.
+
+	element := document root.
+	element name: 'prefix:root'.
+	self assert: (document elementAt: 'prefix:root') == element.
+
+	attribute := element attributeNodeAt: 'name'.
+	attribute name: 'prefix:name'.
+	self
+		assert: (element attributeNodeAt: 'prefix:name') == attribute;
+		assert: (element attributeAt: 'prefix:name') = 'value'.
+
+	self
+		should: [attribute name: 'undeclared:name']
+		raise: XMLNamespaceException.
+	self
+		should: [element name: 'undeclared:root']
+		raise: XMLNamespaceException.
 ]
 
 { #category : #tests }
@@ -851,7 +894,7 @@ XMLParserTest >> testSAXEntityHandlers [
 
 { #category : #tests }
 XMLParserTest >> testSAXIgnorableWhitespace [
-	| xml parser |
+	| xml parser whitespace |
 
 	xml := '
 	<root>
@@ -872,7 +915,9 @@ XMLParserTest >> testSAXIgnorableWhitespace [
 			endDocument) = parser sentHandlerSelectors.
 	self assert:
 		((parser sentHandlerMessages select: [:each | each selector == #ignorableWhitespace:])
-			allSatisfy: [:each | each arguments first notEmpty]).
+			allSatisfy: [:each |
+				(whitespace := each arguments first) notEmpty
+					and: [whitespace allSatisfy: [:char | char isSeparator]]]).
 ]
 
 { #category : #tests }
@@ -933,12 +978,12 @@ XMLParserTest >> testSelfReferentialEntityReplacement [
 		should: [
 			SAXHandler parse:
 				'<!DOCTYPE root [<!ENTITY first "&first;">]><root>&first;</root>']
-		raise: XMLParserException.
+		raise: XMLEntityDepthException.
 	self
 		should: [
 			SAXHandler parse:
-				'<!DOCTYPE root [<!ENTITY % first "%first;">%first;]><root/>']
-		raise: XMLParserException.
+				'<!DOCTYPE root [<!ENTITY % first "&#37;first;">%first;]><root/>']
+		raise: XMLEntityDepthException.
 ]
 
 { #category : #tests }
