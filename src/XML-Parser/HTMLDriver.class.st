@@ -65,9 +65,9 @@ HTMLDriver >> handleStartTag: anElementName attributes: anAttributeDictionary na
 { #category : #'handling tokens' }
 HTMLDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
 	super
-		handleXMLVersion: '1.0'
-		encoding: anEncoding
-		standalone: ''
+		handleXMLVersion: (aVersion ifEmpty: '1.0')
+		encoding: (anEncoding ifEmpty: 'UTF-8')
+		standalone: 'no'
 ]
 
 { #category : #testing }

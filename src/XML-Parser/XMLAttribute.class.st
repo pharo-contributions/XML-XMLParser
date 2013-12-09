@@ -16,9 +16,7 @@ Class {
 
 { #category : #'instance creation' }
 XMLAttribute class >> name: aName value: aValue [
-	^ self new
-		name: aName;
-		value: aValue
+	^ self new setName: aName value: aValue
 ]
 
 { #category : #accessing }
@@ -75,7 +73,7 @@ XMLAttribute >> nodeName [
 		ifNil: [ 
 			(name := XMLNodeName new)
 				addObserver: self;
-				yourself ]
+				yourself]
 ]
 
 { #category : #notifications }
@@ -95,6 +93,15 @@ XMLAttribute >> prefix [
 { #category : #accessing }
 XMLAttribute >> prefix: aPrefix [
 	self nodeName prefix: aPrefix
+]
+
+{ #category : #initialization }
+XMLAttribute >> setName: aName value: aValue [
+	"This is used over 'self nodeName qualified:' to avoid sending a name-changed notification"
+	(name := XMLNodeName new)
+		setQualified: aName;
+		addObserver: self.
+	value := aValue.
 ]
 
 { #category : #accessing }

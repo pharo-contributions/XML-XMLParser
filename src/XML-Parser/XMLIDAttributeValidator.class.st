@@ -14,12 +14,10 @@ XMLIDAttributeValidator >> ids [
 ]
 
 { #category : #validation }
-XMLIDAttributeValidator >> validateAttributes: anAttributeDictionary [
-	| id |
+XMLIDAttributeValidator >> validateValue: aValue [
+	self validateID: aValue.
+	(self ids includes: aValue)
+		ifTrue: [XMLValidationException signal: 'ID ', aValue, ' used more than once for <', element. '>'].
 
-	id := anAttributeDictionary at: name ifAbsent: [^ self].
-	self validateID: id.
-	(self ids includes: id)
-		ifTrue: [XMLValidationException signal: 'ID ', id, ' used more than once for <', element. '>'].
-	self ids add: id.
+	self ids add: aValue.
 ]

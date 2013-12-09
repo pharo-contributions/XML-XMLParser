@@ -117,6 +117,32 @@ XMLTokenizer >> atEnd [
 	^ false.
 ]
 
+{ #category : #'entity replacement' }
+XMLTokenizer >> characterFromCodePoint: aCodePoint [
+	aCodePoint > 0
+		ifFalse: [self errorExpected: 'postive decimal or hex integer'].
+
+	^ [Unicode value: aCodePoint]
+		on: Error
+		do: [:error | self parseError: 'Invalid character code point ', aCodePoint printString]
+]
+
+{ #category : #errors }
+XMLTokenizer >> entityDepthError: anErrorString [
+	XMLEntityDepthException signal: anErrorString
+]
+
+{ #category : #errors }
+XMLTokenizer >> errorExpected: anExpectedCharacterOrString butGot: aReceivedCharacterOrString [
+	| expectedString receivedString |
+
+	expectedString := anExpectedCharacterOrString asString.	
+	(receivedString := (aReceivedCharacterOrString ifNil: ['']) asString)
+		ifEmpty: [receivedString := 'nothing'].
+
+	self errorExpected: expectedString, ' but got ', receivedString.
+]
+
 { #category : #tokenizing }
 XMLTokenizer >> expectNext: aCharacter [
 	| nextChar |
@@ -147,6 +173,19 @@ XMLTokenizer >> expectNextAll: anExpectedLiteral [
 ]
 
 { #category : #tokenizing }
+XMLTokenizer >> expectQuote [
+	| nextChar |
+
+	(((nextChar := streamReader next) == $")
+		or: [nextChar == $'])
+		ifFalse: [
+			self
+				errorExpected: 'quote character delimiter'
+				butGot: nextChar].
+	^ nextChar.
+]
+
+{ #category : #tokenizing }
 XMLTokenizer >> expectTerminator: aCharacter [
 	| nextChar |
 
@@ -168,7 +207,9 @@ XMLTokenizer >> expectUpToAll: aString [
 		[streamReader atEnd
 			or: [(isTerminated := streamReader nextMatchAll: aString)]]
 			whileFalse: [writeStream nextPut: streamReader next].
+
 		writeStream contents].
+
 	isTerminated
 		ifFalse: [self errorExpected: 'terminating ', aString].
 
@@ -180,22 +221,58 @@ XMLTokenizer >> expectUpToAll: aString [
 XMLTokenizer >> nextAttlistDeclaration [
 	| element attribute attributeType defaultDeclaration  |
 
-	self expectNextAll: 'ATTLIST'.
-	self skipSeparatorsReplacingParameterEntities.
+	self
+		expectNextAll: 'ATTLIST';
+		skipSeparatorsReplacingParameterEntities.
+
 	element := self nextName.
 	[self skipSeparatorsReplacingParameterEntities.
 	(streamReader atEnd or: [streamReader peek == $>])]
 		whileFalse: [
 			attribute := self nextName.
 			attributeType := self nextAttributeType.
-			defaultDeclaration := self nextDefaultDeclaration.
+			defaultDeclaration := self nextAttributeDefaultDeclaration.
 			driver
 				handleAttributeDeclaration: element
 				name: attribute
 				type: attributeType
 				default: defaultDeclaration].
+
+	self
+		skipSeparatorsReplacingParameterEntities;
+		expectTerminator: $>.
+]
+
+{ #category : #'tokenizing dtd' }
+XMLTokenizer >> nextAttributeDefaultDeclaration [
+	| defaultDeclaration |
+
 	self skipSeparatorsReplacingParameterEntities.
-	self expectTerminator: $>.
+	streamWriter writeWith: [:writeStream |
+		streamReader peek == $#
+			ifTrue: [
+				writeStream nextPut: streamReader next.
+				streamReader peek == $R
+					ifTrue: [writeStream nextPutAll: (self expectNextAll: 'REQUIRED')]
+					ifFalse: [
+						streamReader peek == $I
+							ifTrue: [writeStream nextPutAll: (self expectNextAll: 'IMPLIED')]
+							ifFalse: [
+								writeStream
+									nextPutAll: (self expectNextAll: 'FIXED');
+									space.
+								self skipSeparatorsReplacingParameterEntities.
+								writeStream nextPutAll: self nextAttributeDefaultValue]]]
+			ifFalse: [writeStream nextPutAll: self nextAttributeDefaultValue].
+
+		defaultDeclaration := self removeTrailingSpacesFrom: writeStream contents].
+
+	^ defaultDeclaration.
+]
+
+{ #category : #'tokenizing dtd' }
+XMLTokenizer >> nextAttributeDefaultValue [
+	^ (self nextAttributeValue copyWithFirst: $") copyWith: $"
 ]
 
 { #category : #'tokenizing dtd' }
@@ -258,38 +335,13 @@ XMLTokenizer >> nextContentToken [
 ]
 
 { #category : #'tokenizing dtd' }
-XMLTokenizer >> nextDefaultDeclaration [
-	self skipSeparatorsReplacingParameterEntities.
-	^ streamWriter writeWith: [:writeStream |
-		streamReader peek == $#
-			ifTrue: [
-				writeStream nextPut: streamReader next.
-				streamReader peek == $R
-					ifTrue: [writeStream nextPutAll: (self expectNextAll: 'REQUIRED')]
-					ifFalse: [
-						streamReader peek == $I
-							ifTrue: [writeStream nextPutAll: (self expectNextAll: 'IMPLIED')]
-							ifFalse: [
-								writeStream
-									nextPutAll: (self expectNextAll: 'FIXED');
-									space.
-								self skipSeparatorsReplacingParameterEntities.
-								writeStream nextPutAll: self nextDefaultValue]]]
-			ifFalse: [writeStream nextPutAll: self nextDefaultValue].
-		self removeTrailingSpacesFrom: writeStream contents].
-]
-
-{ #category : #'tokenizing dtd' }
-XMLTokenizer >> nextDefaultValue [
-	^ (self nextAttributeValue copyWithFirst: $") copyWith: $"
-]
-
-{ #category : #'tokenizing dtd' }
 XMLTokenizer >> nextElementDeclaration [
 	| name nextChar contentModel |
 
-	self expectNextAll: 'LEMENT'.
-	self skipSeparatorsReplacingParameterEntities.
+	self
+		expectNextAll: 'LEMENT';
+		skipSeparatorsReplacingParameterEntities.
+
 	name := self nextName.
 	contentModel := streamWriter writeWith: [:writeStream |
 		[self skipSeparatorsReplacingParameterEntities.
@@ -304,8 +356,10 @@ XMLTokenizer >> nextElementDeclaration [
 				('?*+' includes: streamReader peek)
 					ifTrue: [writeStream nextPut: streamReader next]].
 		writeStream contents].
-	self skipSeparatorsReplacingParameterEntities.
-	self expectTerminator: $>.
+
+	self
+		skipSeparatorsReplacingParameterEntities;
+		expectTerminator: $>.
 
 	driver
 		handleElementDeclaration: name
@@ -322,7 +376,7 @@ XMLTokenizer >> nextEndTag [
 	streamReader skipSeparators.
 	self expectTerminator: $>.
 
-	driver handleEndTag: tagName
+	driver handleEndTag: tagName.
 ]
 
 { #category : #tokenizing }
@@ -352,23 +406,28 @@ XMLTokenizer >> nextNmtoken [
 			and: [(NameStartChars includes: nextChar)
 				or: [AdditionalNameChars includes: nextChar]]]
 			whileTrue: [writeStream nextPut: streamReader next].
+
 		(writeStream position > 0)
 			ifFalse: [self errorExpected: 'name token'].
-		writeStream contents].
+
+		writeStream contents]
 ]
 
 { #category : #'tokenizing dtd' }
 XMLTokenizer >> nextNotationDeclaration [
 	| name externalId |
 
-	self expectNextAll: 'NOTATION'.
-	self skipSeparatorsReplacingParameterEntities.
+	self
+		expectNextAll: 'NOTATION';
+		skipSeparatorsReplacingParameterEntities.
 
 	name := self nextName.
 	self skipSeparatorsReplacingParameterEntities.
 	externalId := self nextExternalIDSystemLiteralRequired: false.
-	self skipSeparatorsReplacingParameterEntities.
-	self expectTerminator: $>.
+
+	self
+		skipSeparatorsReplacingParameterEntities;
+		expectTerminator: $>.
 
 	driver
 		handleNotationDeclaration: name
@@ -406,6 +465,7 @@ XMLTokenizer >> nextPubidLiteral [
 			and: [(PubidChars includes: nextChar)
 				and: [nextChar ~~ quote]]]
 			whileTrue: [writeStream nextPut: streamReader next].
+
 		writeStream contents].
 	self expectNext: quote.
 
@@ -469,9 +529,25 @@ XMLTokenizer >> nextTag [
 	self expectTerminator: $>.
 ]
 
+{ #category : #tokenizing }
+XMLTokenizer >> nextXMLDeclAttributeValue [
+	^ streamReader upTo: self expectQuote.
+]
+
 { #category : #errors }
 XMLTokenizer >> parseError: anErrorString [
 	driver handleParseError: anErrorString
+]
+
+{ #category : #'entity replacement' }
+XMLTokenizer >> pushBackReplacement: aReplacement forEntity: anEntity onClose: aBlock [
+	(self hasActiveEntityNamed: anEntity name)
+		ifTrue: [self entityDepthError: 'Illegal self-referential entity ', anEntity asReference].
+
+	(activeEntities size >= self maxEntityReplacementDepth)
+		ifTrue: [self entityDepthError: 'Cannot further nest entity replacements'].
+
+	super pushBackReplacement: aReplacement forEntity: anEntity onClose: aBlock.
 ]
 
 { #category : #tokenizing }

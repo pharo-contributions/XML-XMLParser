@@ -4,7 +4,7 @@ Class {
 	#category : #'XML-Parser-DTD'
 }
 
-{ #category : #accessing }
+{ #category : #replacement }
 DTDBypassedGeneralEntity >> replacement [
 	^ self asEscapedReference
 ]

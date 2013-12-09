@@ -4,12 +4,12 @@ Class {
 	#category : #'XML-Parser-DTD'
 }
 
-{ #category : #accessing }
+{ #category : #replacement }
 DTDBypassedParameterEntity >> replacement [
 	^ self asEscapedReference
 ]
 
-{ #category : #accessing }
+{ #category : #replacement }
 DTDBypassedParameterEntity >> replacementForDTDContext [
 	^ ''
 ]

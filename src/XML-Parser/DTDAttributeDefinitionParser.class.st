@@ -68,8 +68,8 @@ DTDAttributeDefinitionParser >> parse [
 			name: name
 			defaultValueValidator: defaultValueValidator.
 
-	attributeValidator isEnumerationValidator
-		ifTrue: [attributeValidator values: (self parseEnumerationType)].
+	attributeValidator isValueListValidator
+		ifTrue: [attributeValidator allowedValues: (self parseEnumerationType)].
 
 	^ attributeValidator.
 ]
@@ -101,10 +101,10 @@ DTDAttributeDefinitionParser >> parseDefaultValue [
 
 { #category : #parsing }
 DTDAttributeDefinitionParser >> parseEnumerationType [
-	^ (DTDEnumerationListParser on:
-		((self isNotationEnumeration: type)
-			ifTrue: [type copyAfter: Character space]
-			ifFalse: [type])) parse
+	^ (((self isNotationEnumeration: type)
+		ifTrue: [DTDNotationListParser]
+		ifFalse: [DTDEnumerationListParser])
+			on: type) parse
 ]
 
 { #category : #initialization }
@@ -119,5 +119,5 @@ DTDAttributeDefinitionParser >> setElement: anElement name: aName type: aType de
 DTDAttributeDefinitionParser >> validatorClassForType [
 	^ NonEnumerationValidators 
 		at: (type ifEmpty: ['CDATA'])
-		ifAbsent: [XMLEnumerationAttributeValidator]
+		ifAbsent: [XMLValueListAttributeValidator]
 ]

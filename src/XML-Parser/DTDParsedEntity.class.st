@@ -59,7 +59,7 @@ DTDParsedEntity >> asReference [
 
 { #category : #private }
 DTDParsedEntity >> asReferenceStartingWith: aString [
-	^ aString, (self name copyWith: $;)
+	^ (aString, self name) copyWith: $;
 ]
 
 { #category : #accessing }
@@ -88,7 +88,7 @@ DTDParsedEntity >> referenceSymbol [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : #replacement }
 DTDParsedEntity >> replacement [
 	^ replacement ifNil: [replacement := '']
 ]
@@ -105,7 +105,7 @@ DTDParsedEntity >> replacementForLiteralContext [
 	^ aReplacement contents.
 ]
 
-{ #category : #accessing }
+{ #category : #initializing }
 DTDParsedEntity >> setName: aName replacement: aReplacement uri: aUri [
 	name := aName.
 	replacement := aReplacement.

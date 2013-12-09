@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #validation }
-XMLNameAttributeValidator >> validateAttributes: anAttributeDictionary [
-	self validateName: (anAttributeDictionary at: name)
+XMLNameAttributeValidator >> validateValue: aValue [
+	self validateName: aValue
 ]

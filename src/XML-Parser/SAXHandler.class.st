@@ -145,9 +145,7 @@ SAXHandler >> currentScope: aScope [
 SAXHandler >> defaultDocumentURI [
 	^ (input respondsTo: #path)
 		ifTrue: [input path]
-		ifFalse: [
-			self configuration fileClient currentWorkingDirectory,
-				self class name asString, '.xml'].
+		ifFalse: [self externalEntityResolver defaultDocumentURI].
 ]
 
 { #category : #accessing }
@@ -165,7 +163,7 @@ SAXHandler >> elementDeclaration: aName contentModel: aContentModel [
 
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 SAXHandler >> elementNester [
 	^ elementNester ifNil: [elementNester := self elementNesterClass new]
 ]
@@ -230,6 +228,11 @@ SAXHandler >> endPrefixMapping: aPrefix [
 { #category : #accessing }
 SAXHandler >> externalEntityResolver [
 	^ self configuration externalEntityResolver
+]
+
+{ #category : #accessing }
+SAXHandler >> externalEntityResolver: anExternalEntityResolver [
+	self configuration externalEntityResolver: anExternalEntityResolver
 ]
 
 { #category : #declaration }
@@ -333,7 +336,7 @@ SAXHandler >> rootElement [
 	^ self elementNester rootElement
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 SAXHandler >> scopeAllocator [
 	^ scopeAllocator ifNil: [scopeAllocator := XMLNamespaceScopeAllocator new]
 ]

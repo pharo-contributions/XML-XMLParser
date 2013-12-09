@@ -39,7 +39,7 @@ XMLNodeWithElements >> allElements [
 XMLNodeWithElements >> allElementsCollect: aBlock [
 	| collectedElements |
 
-	collectedElements := self elements copyEmpty.
+	collectedElements := self nodes copyEmpty.
 	self allElementsDo: [:each | collectedElements add: (aBlock value: each)].
 	^ collectedElements.
 ]
@@ -92,7 +92,7 @@ XMLNodeWithElements >> allElementsNamed: aName namespaceURI: aUri [
 XMLNodeWithElements >> allElementsSelect: aBlock [
 	| selectedElements |
 
-	selectedElements := self elements copyEmpty.
+	selectedElements := self nodes copyEmpty.
 	self allElementsDo: [:each |
 		(aBlock value: each)
 			ifTrue: [selectedElements add: each]].

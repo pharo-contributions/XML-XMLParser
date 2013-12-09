@@ -5,9 +5,9 @@ Class {
 }
 
 { #category : #validation }
-XMLIDRefsAttributeValidator >> validateAttributes: anAttributeDictionary [
+XMLIDRefsAttributeValidator >> validateValue: aValue [
 	Character space
-		split: (anAttributeDictionary at: name ifAbsent: [^ self])
+		split: aValue
 		do: [:each |
 			self validateID: each.
 			self idrefs add: each].

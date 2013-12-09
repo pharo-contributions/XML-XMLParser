@@ -380,7 +380,7 @@ XMLElement >> nodeName [
 		ifNil: [ 
 			(name := XMLNodeName new)
 				addObserver: self;
-				yourself ]
+				yourself]
 ]
 
 { #category : #notifications }
@@ -462,10 +462,11 @@ XMLElement >> setAttributes: aDictionaryOrArray [
 
 { #category : #initialization }
 XMLElement >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocalName attributes: anAttributeDictionary namespaceScope: aNamespaceScope [
-	self nodeName
-		setQualified: aQualifiedName
-		prefix: aPrefix
-		localPart: aLocalName.
+	"This is used instead of using #nodeName's ifNil: initialization to avoid
+	sending a name-changed notification"
+	(name := XMLNodeName new)
+		setQualified: aQualifiedName prefix: aPrefix localPart: aLocalName;
+		addObserver: self.
 
 	anAttributeDictionary
 		ifNotEmpty: [

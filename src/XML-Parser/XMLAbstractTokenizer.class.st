@@ -48,6 +48,11 @@ XMLAbstractTokenizer >> atEnd [
 	self subclassResponsibility
 ]
 
+{ #category : #'entity replacement' }
+XMLAbstractTokenizer >> characterFromCodePoint: aCodePoint [
+	self subclassResponsibility
+]
+
 { #category : #tokenizing }
 XMLAbstractTokenizer >> checkTextDeclarationInReplacement: aReplacement forEntity: anEntity [
 	(aReplacement beginsWith: '<?xml ')
@@ -81,24 +86,8 @@ XMLAbstractTokenizer >> endReplacementForParameterEntity: anEntity [
 ]
 
 { #category : #errors }
-XMLAbstractTokenizer >> entityError: anErrorString [
-	XMLParserException signal: anErrorString
-]
-
-{ #category : #errors }
 XMLAbstractTokenizer >> errorExpected: expectedString [
 	self parseError: 'Expected ', expectedString
-]
-
-{ #category : #errors }
-XMLAbstractTokenizer >> errorExpected: anExpectedCharacterOrString butGot: aReceivedCharacterOrString [
-	| expectedString receivedString |
-
-	expectedString := anExpectedCharacterOrString asString.	
-	(receivedString := (aReceivedCharacterOrString ifNil: ['']) asString)
-			ifEmpty: [receivedString := 'nothing'].
-
-	self errorExpected: expectedString, ' but got ', receivedString.
 ]
 
 { #category : #tokenizing }
@@ -109,19 +98,6 @@ XMLAbstractTokenizer >> expectNext: aCharacter [
 { #category : #tokenizing }
 XMLAbstractTokenizer >> expectNextAll: aString [
 	self subclassResponsibility
-]
-
-{ #category : #tokenizing }
-XMLAbstractTokenizer >> expectQuote [
-	| nextChar |
-
-	(((nextChar := streamReader next) == $")
-		or: [nextChar == $'])
-		ifFalse: [
-			self
-				errorExpected: 'quote character delimiter'
-				butGot: nextChar].
-	^ nextChar.
 ]
 
 { #category : #tokenizing }
@@ -162,6 +138,7 @@ XMLAbstractTokenizer >> nextAttributeValue [
 { #category : #tokenizing }
 XMLAbstractTokenizer >> nextCDataSection [
 	self expectNextAll: '[CDATA['.
+
 	driver handleCData: (self expectUpToAll: ']]>').
 
 ]
@@ -173,6 +150,7 @@ XMLAbstractTokenizer >> nextComment [
 	"Skip first -"
 	streamReader next.
 	self expectNext: $-.
+
 	comment := streamReader upToAll: '--'.
 	self expectTerminator: $>.
 
@@ -181,8 +159,10 @@ XMLAbstractTokenizer >> nextComment [
 
 { #category : #'tokenizing dtd' }
 XMLAbstractTokenizer >> nextConditionalSection [
-	self skipSeparatorsReplacingParameterEntities.
-	self expectNext: $I.
+	self
+		skipSeparatorsReplacingParameterEntities;
+		expectNext: $I.
+
 	^ streamReader peek == $N
 		ifTrue: [self nextIncludeSection]
 		ifFalse: [self nextIgnoreSection].
@@ -211,14 +191,14 @@ XMLAbstractTokenizer >> nextContentToken [
 
 { #category : #tokenizing }
 XMLAbstractTokenizer >> nextDecodedCharReference [
-	| charValue |
+	| codePoint |
 
 	"skip #"
 	streamReader next.
-	(charValue := streamReader nextInteger) > 0
-		ifFalse: [self errorExpected: 'integral character value'].
+	codePoint := streamReader nextInteger.
 	self expectNext: $;.
-	^ Unicode value: charValue.
+
+	^ self characterFromCodePoint: codePoint.
 ]
 
 { #category : #tokenizing }
@@ -317,6 +297,7 @@ XMLAbstractTokenizer >> nextEndInternalSubset [
 
 	self hasActiveEntities
 		ifTrue: [self parseError: 'Parameter entity replacement cannot terminate internal subset'].
+
 	context enterProlog.
 	self nextEndDocTypeDecl.
 ]
@@ -331,8 +312,9 @@ XMLAbstractTokenizer >> nextEntityDeclaration [
 	| isParameterEntity name  |
 
 	self expectNextAll: 'NTITY'.
-	isParameterEntity := false.
+
 	"this is to distinguish a parameter reference from declaration"
+	isParameterEntity := false.
 	[streamReader skipSeparators.
 	streamReader peek == $%]
 		whileTrue: [
@@ -390,16 +372,18 @@ XMLAbstractTokenizer >> nextExternalEntityDeclaration: aName isParameterEntity: 
 			streamReader peek == $>
 				ifTrue: [notation := '']
 				ifFalse: [
-					self expectNextAll: 'NDATA'.
-					self skipSeparatorsReplacingParameterEntities.
+					self
+						expectNextAll: 'NDATA';
+						skipSeparatorsReplacingParameterEntities.
 					notation := self nextName].
 			driver
 				handleGeneralEntityDeclaration: aName
 				publicID: externalId key
 				systemID: externalId value
 				ndata: notation].
-	self skipSeparatorsReplacingParameterEntities.
-	self expectTerminator: $>.
+	self
+		skipSeparatorsReplacingParameterEntities;
+		expectTerminator: $>.
 ]
 
 { #category : #'tokenizing dtd' }
@@ -414,16 +398,19 @@ XMLAbstractTokenizer >> nextExternalIDSystemLiteralRequired: aBoolean [
 		ifTrue: [
 			streamReader peek == $P
 				ifTrue: [
-					self expectNextAll: 'PUBLIC'.
-					self skipSeparatorsReplacingParameterEntities.
+					self
+						expectNextAll: 'PUBLIC';
+						skipSeparatorsReplacingParameterEntities.
 					publicId := self nextPubidLiteral.
 
 					self skipSeparatorsReplacingParameterEntities.
 					systemId := self nextSystemLiteralRequired: aBoolean]
 				ifFalse: [
-					self expectNextAll: 'SYSTEM'.
-					self skipSeparatorsReplacingParameterEntities.
+					self
+						expectNextAll: 'SYSTEM';
+						skipSeparatorsReplacingParameterEntities.
 					systemId := self nextSystemLiteralRequired: true]].
+
 	^ publicId -> systemId.
 ]
 
@@ -471,6 +458,7 @@ XMLAbstractTokenizer >> nextIgnoreSection [
 					(streamReader nextMatchAll: '<![')
 						ifTrue: [openSections := openSections + 1]
 						ifFalse: [streamReader next]]].
+
 	openSections > 0
 		ifTrue: [self errorExpected: 'terminating ]]>'].
 
@@ -496,6 +484,7 @@ XMLAbstractTokenizer >> nextIncludeSection [
 							ifTrue: [isOpen := false]
 							ifFalse: [writeStream nextPut: streamReader next]]].
 		writeStream contents].
+
 	isOpen
 		ifTrue: [self errorExpected: 'terminating ]]>'].
 
@@ -507,8 +496,9 @@ XMLAbstractTokenizer >> nextInternalEntityDeclaration: aName isParameterEntity: 
 	| value |
 
 	value := self nextEntityValue.
-	self skipSeparatorsReplacingParameterEntities.
-	self expectTerminator: $>.
+	self
+		skipSeparatorsReplacingParameterEntities;
+		expectTerminator: $>.
 
 	aBoolean
 		ifTrue: [driver handleParameterEntityDeclaration: aName replacement: value]
@@ -684,8 +674,9 @@ XMLAbstractTokenizer >> nextXMLDecl [
 		ifFalse: [standalone := self nextXMLDeclAttribute: 'standalone'].
 
 	streamReader skipSeparators.
-	self expectNext: $?.
-	self expectTerminator: $>.
+	self
+		expectNext: $?;
+		expectTerminator: $>.
 
 	encoding
 		ifNotEmpty: [streamReader useConverterForEncoding: encoding].
@@ -703,8 +694,6 @@ XMLAbstractTokenizer >> nextXMLDecl [
 
 { #category : #tokenizing }
 XMLAbstractTokenizer >> nextXMLDeclAttribute: aName [
-	| quote |
-
 	streamReader skipSeparators.
 	streamReader peek == $?
 		ifTrue: [^ ''].
@@ -714,8 +703,13 @@ XMLAbstractTokenizer >> nextXMLDeclAttribute: aName [
 	self expectNext: $=.
 	streamReader skipSeparators.
 
-	quote := self expectQuote.
-	^ streamReader upTo: quote.
+	^ self nextXMLDeclAttributeValue.
+]
+
+{ #category : #tokenizing }
+XMLAbstractTokenizer >> nextXMLDeclAttributeValue [
+	self subclassResponsibility
+
 ]
 
 { #category : #errors }
@@ -725,11 +719,6 @@ XMLAbstractTokenizer >> parseError: anErrorString [
 
 { #category : #'entity replacement' }
 XMLAbstractTokenizer >> pushBackReplacement: aReplacement forEntity: anEntity onClose: aBlock [
-	(self hasActiveEntityNamed: anEntity name)
-		ifTrue: [self entityError: 'Illegal self-referential entity ', anEntity asReference].
-	(activeEntities size >= self maxEntityReplacementDepth)
-		ifTrue: [self entityError: 'Cannot further nest entity replacements'].
-
 	activeEntities addLast: anEntity.
 	streamReader
 		pushStream: aReplacement readStream
@@ -756,7 +745,7 @@ XMLAbstractTokenizer >> replacementFromGeneralEntity: anEntity [
 	^ context isInLiteralValue
 		ifTrue: [
 			anEntity isExternal
-				ifTrue: [self entityError: 'External general entity ', anEntity asReference, ' in literal context'].
+				ifTrue: [self parseError: 'External general entity ', anEntity asReference, ' in literal context'].
 			anEntity replacementForLiteralContext]
 		ifFalse: [anEntity replacementForContentContext].
 ]

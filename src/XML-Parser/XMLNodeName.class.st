@@ -132,6 +132,14 @@ XMLNodeName >> setPrefix: aPrefix localPart: aLocalPart [
 ]
 
 { #category : #private }
+XMLNodeName >> setQualified: aQualifiedName [
+	(qualified := aQualifiedName)
+		splitQualifiedNameInto: [:aPrefix :aLocalPart |
+			prefix := aPrefix.
+			localPart := aLocalPart].
+]
+
+{ #category : #private }
 XMLNodeName >> setQualified: aQualifiedName prefix: aPrefix localPart: aLocalPart [
 	qualified := aQualifiedName.
 	prefix := aPrefix.

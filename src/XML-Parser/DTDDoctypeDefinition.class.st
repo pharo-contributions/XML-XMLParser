@@ -104,9 +104,9 @@ DTDDoctypeDefinition >> parseAttributeDefinition: anElement name: aName type: aT
 			default: aDefaultDeclaration.
 	validator := parser parse.
 
-	(validator isEnumerationValidator and: [parser isNotationEnumeration: aType])
+	(validator isValueListValidator and: [parser isNotationEnumeration: aType])
 		ifTrue: [
-			(validator values allSatisfy: [:each | self includesNotation: each])
+			(validator allowedValues allSatisfy: [:each | self includesNotation: each])
 				ifFalse: [XMLValidationException signal: 'Undeclared notation in enumeration']].
 	validator isEntityValidator
 		ifTrue: [validator unparsedEntities: self unparsedEntities].

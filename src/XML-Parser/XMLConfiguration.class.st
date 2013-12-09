@@ -26,26 +26,6 @@ XMLConfiguration >> externalEntityResolver: anExternalEntityResolver [
 ]
 
 { #category : #accessing }
-XMLConfiguration >> fileClient [
-	^ self externalEntityResolver fileClient
-]
-
-{ #category : #accessing }
-XMLConfiguration >> fileClient: aClient [
-	self externalEntityResolver fileClient: aClient
-]
-
-{ #category : #accessing }
-XMLConfiguration >> httpClient [
-	^ self externalEntityResolver httpClient
-]
-
-{ #category : #accessing }
-XMLConfiguration >> httpClient: aClient [
-	self externalEntityResolver httpClient: aClient
-]
-
-{ #category : #accessing }
 XMLConfiguration >> isValidating [
 	^ isValidating ifNil: [isValidating := true]
 ]

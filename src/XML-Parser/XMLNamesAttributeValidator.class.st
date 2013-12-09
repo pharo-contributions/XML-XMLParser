@@ -5,8 +5,8 @@ Class {
 }
 
 { #category : #validation }
-XMLNamesAttributeValidator >> validateAttributes: anAttributeDictionary [
+XMLNamesAttributeValidator >> validateValue: aValue [
 	Character space
-		split: (anAttributeDictionary at: name ifAbsent: [^ self])
+		split: aValue
 		do: [:each | self validateName: each]
 ]

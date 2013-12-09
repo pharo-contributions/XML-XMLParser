@@ -1,6 +1,6 @@
 Class {
 	#name : #DTDMixedContentListParser,
-	#superclass : #DTDEnumerationListParser,
+	#superclass : #DTDValueListParser,
 	#category : #'XML-Parser-DTD'
 }
 

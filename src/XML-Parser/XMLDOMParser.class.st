@@ -127,6 +127,16 @@ XMLDOMParser >> nodeFactory: aNodeFactory [
 	self configuration nodeFactory: aNodeFactory
 ]
 
+{ #category : #accessing }
+XMLDOMParser >> nodeListClass [
+	^ self configuration nodeListClass
+]
+
+{ #category : #accessing }
+XMLDOMParser >> nodeListClass: aClass [
+	self configuration nodeListClass: aClass
+]
+
 { #category : #private }
 XMLDOMParser >> nodeStack [
 	^ nodeStack ifNil: [nodeStack := OrderedCollection new: 15]
@@ -196,7 +206,7 @@ XMLDOMParser >> processingInstruction: aTarget data: aDataString [
 
 { #category : #private }
 XMLDOMParser >> pushElement: anElement [
-	self nodeStack ifNotEmpty: [self topNode addElement: anElement].
+	self nodeStack ifNotEmpty: [self topNode addNode: anElement].
 	self pushNode: anElement.
 ]
 

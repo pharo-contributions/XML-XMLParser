@@ -46,7 +46,7 @@ XMLAttributeValidator >> isEntityValidator [
 ]
 
 { #category : #testing }
-XMLAttributeValidator >> isEnumerationValidator [
+XMLAttributeValidator >> isValueListValidator [
 	^ false
 ]
 
@@ -64,7 +64,10 @@ XMLAttributeValidator >> shouldFurtherNormalizeValue [
 
 { #category : #validation }
 XMLAttributeValidator >> validateAttributes: anAttributeDictionary [
-
+	self
+		validateDefaultValueIn: anAttributeDictionary;
+		validateValue: (anAttributeDictionary at: name ifAbsent: [^ self])
+						
 ]
 
 { #category : #validation }
@@ -85,4 +88,8 @@ XMLAttributeValidator >> validateID: anId [
 XMLAttributeValidator >> validateName: aName [
 	(XMLTokenizer isNmtoken: aName)
 		ifFalse: [XMLValidationException signal: 'Invalid name "', name, '" in attribute "', name, '"']
+]
+
+{ #category : #validation }
+XMLAttributeValidator >> validateValue: aValue [
 ]

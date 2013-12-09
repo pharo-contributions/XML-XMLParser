@@ -13,10 +13,7 @@ XMLIDRefAttributeValidator >> idrefs [
 ]
 
 { #category : #validation }
-XMLIDRefAttributeValidator >> validateAttributes: anAttributeDictionary [
-	| idref |
-
-	idref := anAttributeDictionary at: name ifAbsent: [^ self].
-	self validateID: idref.
-	self idrefs add: idref.
+XMLIDRefAttributeValidator >> validateValue: aValue [
+	self validateID: aValue.
+	self idrefs add: aValue.
 ]

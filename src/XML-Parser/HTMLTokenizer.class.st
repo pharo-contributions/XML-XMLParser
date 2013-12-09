@@ -2376,6 +2376,16 @@ HTMLTokenizer >> atNonHTMLSectionEndTag [
 	^ true.
 ]
 
+{ #category : #'entity replacement' }
+HTMLTokenizer >> characterFromCodePoint: aCodePoint [
+	^ aCodePoint > 0
+		ifTrue: [
+			[Unicode value: aCodePoint]
+				on: Error
+				do: [:error | Character space]]
+		ifFalse: [Character space]
+]
+
 { #category : #tokenizing }
 HTMLTokenizer >> expectNext: aCharacter [
 	(streamReader peek == aCharacter)
@@ -2418,6 +2428,7 @@ HTMLTokenizer >> nextAttributeValue [
 
 	streamReader atQuote
 		ifFalse: [^ self nextName].
+
 	quote := streamReader next.
 	context resetAfter: [
 		context enterLiteralValue.
@@ -2671,9 +2682,23 @@ HTMLTokenizer >> nextValue [
 		ifFalse: [self nextName]
 ]
 
+{ #category : #tokenizing }
+HTMLTokenizer >> nextXMLDeclAttributeValue [
+	^ self nextQuotedValue
+]
+
 { #category : #errors }
 HTMLTokenizer >> parseError: anErrorString [
 	
+]
+
+{ #category : #'entity replacement' }
+HTMLTokenizer >> pushBackReplacement: aReplacement forEntity: anEntity onClose: aBlock [
+	((self hasActiveEntityNamed: anEntity name)
+		or: [activeEntities size >= self maxEntityReplacementDepth])
+		ifTrue: [^ self].
+
+	super pushBackReplacement: aReplacement forEntity: anEntity onClose: aBlock.
 ]
 
 { #category : #'tokenizing dtd' }

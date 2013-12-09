@@ -11,6 +11,11 @@ Class {
 	#category : #'XML-Parser-DTD'
 }
 
+{ #category : #resolving }
+DTDExternalEntityResolver >> defaultDocumentURI [
+	^ self fileClient currentWorkingDirectory, 'default.xml'
+]
+
 { #category : #accessing }
 DTDExternalEntityResolver >> entityURIFromRelative: aRelativeUri andBase: aBaseUri [
 	^ ((self httpClient beginsWithSupportedURLProtocol: aRelativeUri)

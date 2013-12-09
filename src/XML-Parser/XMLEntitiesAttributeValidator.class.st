@@ -5,8 +5,8 @@ Class {
 }
 
 { #category : #validation }
-XMLEntitiesAttributeValidator >> validateAttributes: anAttributeDictionary [
+XMLEntitiesAttributeValidator >> validateValue: aValue [
 	Character space
-		split: (anAttributeDictionary at: name ifAbsent: [^ self])
+		split: aValue
 		do: [:each | self validateEntityReference: each]
 ]

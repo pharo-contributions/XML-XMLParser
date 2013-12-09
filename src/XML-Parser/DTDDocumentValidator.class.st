@@ -17,7 +17,7 @@ DTDDocumentValidator class >> dtd: aDtd [
 
 { #category : #enumerating }
 DTDDocumentValidator >> allAttributeValidatorsDo: aBlock [
-	^ self dtd attributeValidators do: [:each | each valuesDo: aBlock]
+	^ self dtd attributeValidators valuesDo: [:each | each valuesDo: aBlock]
 ]
 
 { #category : #accessing }
