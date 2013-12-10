@@ -426,7 +426,7 @@ ConfigurationOfXMLParser >> version138: spec [
 			spec blessing: #release.
 			spec
 				package: 'XML-Parser' with: 'XML-Parser-monty.195';
-				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.35'
+				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.36'
 				].
 	
 	
