@@ -4570,7 +4570,7 @@ XMLConformanceExpatTests >> testinvalid002xml [
 			self
 				parse: self class sourceinvalid002xml
 				documentURI: 'invalid/002.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4582,7 +4582,7 @@ XMLConformanceExpatTests >> testinvalid005xml [
 			self
 				parse: self class sourceinvalid005xml
 				documentURI: 'invalid/005.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4594,7 +4594,7 @@ XMLConformanceExpatTests >> testinvalid006xml [
 			self
 				parse: self class sourceinvalid006xml
 				documentURI: 'invalid/006.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4606,7 +4606,7 @@ XMLConformanceExpatTests >> testinvalidnotsa022xml [
 			self
 				parse: self class sourceinvalidnotsa022xml
 				documentURI: 'invalid/not-sa/022.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4618,7 +4618,7 @@ XMLConformanceExpatTests >> testnotwfextsa001xml [
 			self
 				parse: self class sourcenotwfextsa001xml
 				documentURI: 'not-wf/ext-sa/001.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4630,7 +4630,7 @@ XMLConformanceExpatTests >> testnotwfextsa002xml [
 			self
 				parse: self class sourcenotwfextsa002xml
 				documentURI: 'not-wf/ext-sa/002.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4642,7 +4642,7 @@ XMLConformanceExpatTests >> testnotwfextsa003xml [
 			self
 				parse: self class sourcenotwfextsa003xml
 				documentURI: 'not-wf/ext-sa/003.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4654,7 +4654,7 @@ XMLConformanceExpatTests >> testnotwfnotsa001xml [
 			self
 				parse: self class sourcenotwfnotsa001xml
 				documentURI: 'not-wf/not-sa/001.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4666,7 +4666,7 @@ XMLConformanceExpatTests >> testnotwfnotsa002xml [
 			self
 				parse: self class sourcenotwfnotsa002xml
 				documentURI: 'not-wf/not-sa/002.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4678,7 +4678,7 @@ XMLConformanceExpatTests >> testnotwfnotsa003xml [
 			self
 				parse: self class sourcenotwfnotsa003xml
 				documentURI: 'not-wf/not-sa/003.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4690,7 +4690,7 @@ XMLConformanceExpatTests >> testnotwfnotsa004xml [
 			self
 				parse: self class sourcenotwfnotsa004xml
 				documentURI: 'not-wf/not-sa/004.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4702,7 +4702,7 @@ XMLConformanceExpatTests >> testnotwfnotsa005xml [
 			self
 				parse: self class sourcenotwfnotsa005xml
 				documentURI: 'not-wf/not-sa/005.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4714,7 +4714,7 @@ XMLConformanceExpatTests >> testnotwfnotsa006xml [
 			self
 				parse: self class sourcenotwfnotsa006xml
 				documentURI: 'not-wf/not-sa/006.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4726,7 +4726,7 @@ XMLConformanceExpatTests >> testnotwfnotsa007xml [
 			self
 				parse: self class sourcenotwfnotsa007xml
 				documentURI: 'not-wf/not-sa/007.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4738,7 +4738,7 @@ XMLConformanceExpatTests >> testnotwfnotsa008xml [
 			self
 				parse: self class sourcenotwfnotsa008xml
 				documentURI: 'not-wf/not-sa/008.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4750,7 +4750,7 @@ XMLConformanceExpatTests >> testnotwfnotsa009xml [
 			self
 				parse: self class sourcenotwfnotsa009xml
 				documentURI: 'not-wf/not-sa/009.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4762,7 +4762,7 @@ XMLConformanceExpatTests >> testnotwfnotsa010xml [
 			self
 				parse: self class sourcenotwfnotsa010xml
 				documentURI: 'not-wf/not-sa/010.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4774,7 +4774,7 @@ XMLConformanceExpatTests >> testnotwfnotsa011xml [
 			self
 				parse: self class sourcenotwfnotsa011xml
 				documentURI: 'not-wf/not-sa/011.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4786,7 +4786,7 @@ XMLConformanceExpatTests >> testnotwfsa001xml [
 			self
 				parse: self class sourcenotwfsa001xml
 				documentURI: 'not-wf/sa/001.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4798,7 +4798,7 @@ XMLConformanceExpatTests >> testnotwfsa002xml [
 			self
 				parse: self class sourcenotwfsa002xml
 				documentURI: 'not-wf/sa/002.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4810,7 +4810,7 @@ XMLConformanceExpatTests >> testnotwfsa003xml [
 			self
 				parse: self class sourcenotwfsa003xml
 				documentURI: 'not-wf/sa/003.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4822,7 +4822,7 @@ XMLConformanceExpatTests >> testnotwfsa004xml [
 			self
 				parse: self class sourcenotwfsa004xml
 				documentURI: 'not-wf/sa/004.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4834,7 +4834,7 @@ XMLConformanceExpatTests >> testnotwfsa005xml [
 			self
 				parse: self class sourcenotwfsa005xml
 				documentURI: 'not-wf/sa/005.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4846,7 +4846,7 @@ XMLConformanceExpatTests >> testnotwfsa006xml [
 			self
 				parse: self class sourcenotwfsa006xml
 				documentURI: 'not-wf/sa/006.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4858,7 +4858,7 @@ XMLConformanceExpatTests >> testnotwfsa007xml [
 			self
 				parse: self class sourcenotwfsa007xml
 				documentURI: 'not-wf/sa/007.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4870,7 +4870,7 @@ XMLConformanceExpatTests >> testnotwfsa008xml [
 			self
 				parse: self class sourcenotwfsa008xml
 				documentURI: 'not-wf/sa/008.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4882,7 +4882,7 @@ XMLConformanceExpatTests >> testnotwfsa009xml [
 			self
 				parse: self class sourcenotwfsa009xml
 				documentURI: 'not-wf/sa/009.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4894,7 +4894,7 @@ XMLConformanceExpatTests >> testnotwfsa010xml [
 			self
 				parse: self class sourcenotwfsa010xml
 				documentURI: 'not-wf/sa/010.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4906,7 +4906,7 @@ XMLConformanceExpatTests >> testnotwfsa011xml [
 			self
 				parse: self class sourcenotwfsa011xml
 				documentURI: 'not-wf/sa/011.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4918,7 +4918,7 @@ XMLConformanceExpatTests >> testnotwfsa012xml [
 			self
 				parse: self class sourcenotwfsa012xml
 				documentURI: 'not-wf/sa/012.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4930,7 +4930,7 @@ XMLConformanceExpatTests >> testnotwfsa013xml [
 			self
 				parse: self class sourcenotwfsa013xml
 				documentURI: 'not-wf/sa/013.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4942,7 +4942,7 @@ XMLConformanceExpatTests >> testnotwfsa014xml [
 			self
 				parse: self class sourcenotwfsa014xml
 				documentURI: 'not-wf/sa/014.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4954,7 +4954,7 @@ XMLConformanceExpatTests >> testnotwfsa015xml [
 			self
 				parse: self class sourcenotwfsa015xml
 				documentURI: 'not-wf/sa/015.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4966,7 +4966,7 @@ XMLConformanceExpatTests >> testnotwfsa016xml [
 			self
 				parse: self class sourcenotwfsa016xml
 				documentURI: 'not-wf/sa/016.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4978,7 +4978,7 @@ XMLConformanceExpatTests >> testnotwfsa017xml [
 			self
 				parse: self class sourcenotwfsa017xml
 				documentURI: 'not-wf/sa/017.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4990,7 +4990,7 @@ XMLConformanceExpatTests >> testnotwfsa018xml [
 			self
 				parse: self class sourcenotwfsa018xml
 				documentURI: 'not-wf/sa/018.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5002,7 +5002,7 @@ XMLConformanceExpatTests >> testnotwfsa019xml [
 			self
 				parse: self class sourcenotwfsa019xml
 				documentURI: 'not-wf/sa/019.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5014,7 +5014,7 @@ XMLConformanceExpatTests >> testnotwfsa020xml [
 			self
 				parse: self class sourcenotwfsa020xml
 				documentURI: 'not-wf/sa/020.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5026,7 +5026,7 @@ XMLConformanceExpatTests >> testnotwfsa021xml [
 			self
 				parse: self class sourcenotwfsa021xml
 				documentURI: 'not-wf/sa/021.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5038,7 +5038,7 @@ XMLConformanceExpatTests >> testnotwfsa022xml [
 			self
 				parse: self class sourcenotwfsa022xml
 				documentURI: 'not-wf/sa/022.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5050,7 +5050,7 @@ XMLConformanceExpatTests >> testnotwfsa023xml [
 			self
 				parse: self class sourcenotwfsa023xml
 				documentURI: 'not-wf/sa/023.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5062,7 +5062,7 @@ XMLConformanceExpatTests >> testnotwfsa024xml [
 			self
 				parse: self class sourcenotwfsa024xml
 				documentURI: 'not-wf/sa/024.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5074,7 +5074,7 @@ XMLConformanceExpatTests >> testnotwfsa025xml [
 			self
 				parse: self class sourcenotwfsa025xml
 				documentURI: 'not-wf/sa/025.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5086,7 +5086,7 @@ XMLConformanceExpatTests >> testnotwfsa026xml [
 			self
 				parse: self class sourcenotwfsa026xml
 				documentURI: 'not-wf/sa/026.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5098,7 +5098,7 @@ XMLConformanceExpatTests >> testnotwfsa027xml [
 			self
 				parse: self class sourcenotwfsa027xml
 				documentURI: 'not-wf/sa/027.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5110,7 +5110,7 @@ XMLConformanceExpatTests >> testnotwfsa028xml [
 			self
 				parse: self class sourcenotwfsa028xml
 				documentURI: 'not-wf/sa/028.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5122,7 +5122,7 @@ XMLConformanceExpatTests >> testnotwfsa029xml [
 			self
 				parse: self class sourcenotwfsa029xml
 				documentURI: 'not-wf/sa/029.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5134,7 +5134,7 @@ XMLConformanceExpatTests >> testnotwfsa030xml [
 			self
 				parse: self class sourcenotwfsa030xml
 				documentURI: 'not-wf/sa/030.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5146,7 +5146,7 @@ XMLConformanceExpatTests >> testnotwfsa031xml [
 			self
 				parse: self class sourcenotwfsa031xml
 				documentURI: 'not-wf/sa/031.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5158,7 +5158,7 @@ XMLConformanceExpatTests >> testnotwfsa032xml [
 			self
 				parse: self class sourcenotwfsa032xml
 				documentURI: 'not-wf/sa/032.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5170,7 +5170,7 @@ XMLConformanceExpatTests >> testnotwfsa033xml [
 			self
 				parse: self class sourcenotwfsa033xml
 				documentURI: 'not-wf/sa/033.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5182,7 +5182,7 @@ XMLConformanceExpatTests >> testnotwfsa034xml [
 			self
 				parse: self class sourcenotwfsa034xml
 				documentURI: 'not-wf/sa/034.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5194,7 +5194,7 @@ XMLConformanceExpatTests >> testnotwfsa035xml [
 			self
 				parse: self class sourcenotwfsa035xml
 				documentURI: 'not-wf/sa/035.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5206,7 +5206,7 @@ XMLConformanceExpatTests >> testnotwfsa036xml [
 			self
 				parse: self class sourcenotwfsa036xml
 				documentURI: 'not-wf/sa/036.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5218,7 +5218,7 @@ XMLConformanceExpatTests >> testnotwfsa037xml [
 			self
 				parse: self class sourcenotwfsa037xml
 				documentURI: 'not-wf/sa/037.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5230,7 +5230,7 @@ XMLConformanceExpatTests >> testnotwfsa038xml [
 			self
 				parse: self class sourcenotwfsa038xml
 				documentURI: 'not-wf/sa/038.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5242,7 +5242,7 @@ XMLConformanceExpatTests >> testnotwfsa039xml [
 			self
 				parse: self class sourcenotwfsa039xml
 				documentURI: 'not-wf/sa/039.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5254,7 +5254,7 @@ XMLConformanceExpatTests >> testnotwfsa040xml [
 			self
 				parse: self class sourcenotwfsa040xml
 				documentURI: 'not-wf/sa/040.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5266,7 +5266,7 @@ XMLConformanceExpatTests >> testnotwfsa041xml [
 			self
 				parse: self class sourcenotwfsa041xml
 				documentURI: 'not-wf/sa/041.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5278,7 +5278,7 @@ XMLConformanceExpatTests >> testnotwfsa042xml [
 			self
 				parse: self class sourcenotwfsa042xml
 				documentURI: 'not-wf/sa/042.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5290,7 +5290,7 @@ XMLConformanceExpatTests >> testnotwfsa043xml [
 			self
 				parse: self class sourcenotwfsa043xml
 				documentURI: 'not-wf/sa/043.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5302,7 +5302,7 @@ XMLConformanceExpatTests >> testnotwfsa044xml [
 			self
 				parse: self class sourcenotwfsa044xml
 				documentURI: 'not-wf/sa/044.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5314,7 +5314,7 @@ XMLConformanceExpatTests >> testnotwfsa045xml [
 			self
 				parse: self class sourcenotwfsa045xml
 				documentURI: 'not-wf/sa/045.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5326,7 +5326,7 @@ XMLConformanceExpatTests >> testnotwfsa046xml [
 			self
 				parse: self class sourcenotwfsa046xml
 				documentURI: 'not-wf/sa/046.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5338,7 +5338,7 @@ XMLConformanceExpatTests >> testnotwfsa047xml [
 			self
 				parse: self class sourcenotwfsa047xml
 				documentURI: 'not-wf/sa/047.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5350,7 +5350,7 @@ XMLConformanceExpatTests >> testnotwfsa048xml [
 			self
 				parse: self class sourcenotwfsa048xml
 				documentURI: 'not-wf/sa/048.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5362,7 +5362,7 @@ XMLConformanceExpatTests >> testnotwfsa049xml [
 			self
 				parse: self class sourcenotwfsa049xml
 				documentURI: 'not-wf/sa/049.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5374,7 +5374,7 @@ XMLConformanceExpatTests >> testnotwfsa050xml [
 			self
 				parse: self class sourcenotwfsa050xml
 				documentURI: 'not-wf/sa/050.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5386,7 +5386,7 @@ XMLConformanceExpatTests >> testnotwfsa051xml [
 			self
 				parse: self class sourcenotwfsa051xml
 				documentURI: 'not-wf/sa/051.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5398,7 +5398,7 @@ XMLConformanceExpatTests >> testnotwfsa052xml [
 			self
 				parse: self class sourcenotwfsa052xml
 				documentURI: 'not-wf/sa/052.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5410,7 +5410,7 @@ XMLConformanceExpatTests >> testnotwfsa053xml [
 			self
 				parse: self class sourcenotwfsa053xml
 				documentURI: 'not-wf/sa/053.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5422,7 +5422,7 @@ XMLConformanceExpatTests >> testnotwfsa054xml [
 			self
 				parse: self class sourcenotwfsa054xml
 				documentURI: 'not-wf/sa/054.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5434,7 +5434,7 @@ XMLConformanceExpatTests >> testnotwfsa055xml [
 			self
 				parse: self class sourcenotwfsa055xml
 				documentURI: 'not-wf/sa/055.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5446,7 +5446,7 @@ XMLConformanceExpatTests >> testnotwfsa056xml [
 			self
 				parse: self class sourcenotwfsa056xml
 				documentURI: 'not-wf/sa/056.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5458,7 +5458,7 @@ XMLConformanceExpatTests >> testnotwfsa057xml [
 			self
 				parse: self class sourcenotwfsa057xml
 				documentURI: 'not-wf/sa/057.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5470,7 +5470,7 @@ XMLConformanceExpatTests >> testnotwfsa058xml [
 			self
 				parse: self class sourcenotwfsa058xml
 				documentURI: 'not-wf/sa/058.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5482,7 +5482,7 @@ XMLConformanceExpatTests >> testnotwfsa059xml [
 			self
 				parse: self class sourcenotwfsa059xml
 				documentURI: 'not-wf/sa/059.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5494,7 +5494,7 @@ XMLConformanceExpatTests >> testnotwfsa060xml [
 			self
 				parse: self class sourcenotwfsa060xml
 				documentURI: 'not-wf/sa/060.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5506,7 +5506,7 @@ XMLConformanceExpatTests >> testnotwfsa061xml [
 			self
 				parse: self class sourcenotwfsa061xml
 				documentURI: 'not-wf/sa/061.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5518,7 +5518,7 @@ XMLConformanceExpatTests >> testnotwfsa062xml [
 			self
 				parse: self class sourcenotwfsa062xml
 				documentURI: 'not-wf/sa/062.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5530,7 +5530,7 @@ XMLConformanceExpatTests >> testnotwfsa063xml [
 			self
 				parse: self class sourcenotwfsa063xml
 				documentURI: 'not-wf/sa/063.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5542,7 +5542,7 @@ XMLConformanceExpatTests >> testnotwfsa064xml [
 			self
 				parse: self class sourcenotwfsa064xml
 				documentURI: 'not-wf/sa/064.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5554,7 +5554,7 @@ XMLConformanceExpatTests >> testnotwfsa065xml [
 			self
 				parse: self class sourcenotwfsa065xml
 				documentURI: 'not-wf/sa/065.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5566,7 +5566,7 @@ XMLConformanceExpatTests >> testnotwfsa066xml [
 			self
 				parse: self class sourcenotwfsa066xml
 				documentURI: 'not-wf/sa/066.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5578,7 +5578,7 @@ XMLConformanceExpatTests >> testnotwfsa067xml [
 			self
 				parse: self class sourcenotwfsa067xml
 				documentURI: 'not-wf/sa/067.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5590,7 +5590,7 @@ XMLConformanceExpatTests >> testnotwfsa068xml [
 			self
 				parse: self class sourcenotwfsa068xml
 				documentURI: 'not-wf/sa/068.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5602,7 +5602,7 @@ XMLConformanceExpatTests >> testnotwfsa069xml [
 			self
 				parse: self class sourcenotwfsa069xml
 				documentURI: 'not-wf/sa/069.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5614,7 +5614,7 @@ XMLConformanceExpatTests >> testnotwfsa070xml [
 			self
 				parse: self class sourcenotwfsa070xml
 				documentURI: 'not-wf/sa/070.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5626,7 +5626,7 @@ XMLConformanceExpatTests >> testnotwfsa071xml [
 			self
 				parse: self class sourcenotwfsa071xml
 				documentURI: 'not-wf/sa/071.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5638,7 +5638,7 @@ XMLConformanceExpatTests >> testnotwfsa072xml [
 			self
 				parse: self class sourcenotwfsa072xml
 				documentURI: 'not-wf/sa/072.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5650,7 +5650,7 @@ XMLConformanceExpatTests >> testnotwfsa073xml [
 			self
 				parse: self class sourcenotwfsa073xml
 				documentURI: 'not-wf/sa/073.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5662,7 +5662,7 @@ XMLConformanceExpatTests >> testnotwfsa074xml [
 			self
 				parse: self class sourcenotwfsa074xml
 				documentURI: 'not-wf/sa/074.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5674,7 +5674,7 @@ XMLConformanceExpatTests >> testnotwfsa075xml [
 			self
 				parse: self class sourcenotwfsa075xml
 				documentURI: 'not-wf/sa/075.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5686,7 +5686,7 @@ XMLConformanceExpatTests >> testnotwfsa076xml [
 			self
 				parse: self class sourcenotwfsa076xml
 				documentURI: 'not-wf/sa/076.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5698,7 +5698,7 @@ XMLConformanceExpatTests >> testnotwfsa077xml [
 			self
 				parse: self class sourcenotwfsa077xml
 				documentURI: 'not-wf/sa/077.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5710,7 +5710,7 @@ XMLConformanceExpatTests >> testnotwfsa078xml [
 			self
 				parse: self class sourcenotwfsa078xml
 				documentURI: 'not-wf/sa/078.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5722,7 +5722,7 @@ XMLConformanceExpatTests >> testnotwfsa079xml [
 			self
 				parse: self class sourcenotwfsa079xml
 				documentURI: 'not-wf/sa/079.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5734,7 +5734,7 @@ XMLConformanceExpatTests >> testnotwfsa080xml [
 			self
 				parse: self class sourcenotwfsa080xml
 				documentURI: 'not-wf/sa/080.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5746,7 +5746,7 @@ XMLConformanceExpatTests >> testnotwfsa081xml [
 			self
 				parse: self class sourcenotwfsa081xml
 				documentURI: 'not-wf/sa/081.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5758,7 +5758,7 @@ XMLConformanceExpatTests >> testnotwfsa082xml [
 			self
 				parse: self class sourcenotwfsa082xml
 				documentURI: 'not-wf/sa/082.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5770,7 +5770,7 @@ XMLConformanceExpatTests >> testnotwfsa083xml [
 			self
 				parse: self class sourcenotwfsa083xml
 				documentURI: 'not-wf/sa/083.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5782,7 +5782,7 @@ XMLConformanceExpatTests >> testnotwfsa084xml [
 			self
 				parse: self class sourcenotwfsa084xml
 				documentURI: 'not-wf/sa/084.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5794,7 +5794,7 @@ XMLConformanceExpatTests >> testnotwfsa085xml [
 			self
 				parse: self class sourcenotwfsa085xml
 				documentURI: 'not-wf/sa/085.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5806,7 +5806,7 @@ XMLConformanceExpatTests >> testnotwfsa086xml [
 			self
 				parse: self class sourcenotwfsa086xml
 				documentURI: 'not-wf/sa/086.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5818,7 +5818,7 @@ XMLConformanceExpatTests >> testnotwfsa087xml [
 			self
 				parse: self class sourcenotwfsa087xml
 				documentURI: 'not-wf/sa/087.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5830,7 +5830,7 @@ XMLConformanceExpatTests >> testnotwfsa088xml [
 			self
 				parse: self class sourcenotwfsa088xml
 				documentURI: 'not-wf/sa/088.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5842,7 +5842,7 @@ XMLConformanceExpatTests >> testnotwfsa089xml [
 			self
 				parse: self class sourcenotwfsa089xml
 				documentURI: 'not-wf/sa/089.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5854,7 +5854,7 @@ XMLConformanceExpatTests >> testnotwfsa090xml [
 			self
 				parse: self class sourcenotwfsa090xml
 				documentURI: 'not-wf/sa/090.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5866,7 +5866,7 @@ XMLConformanceExpatTests >> testnotwfsa091xml [
 			self
 				parse: self class sourcenotwfsa091xml
 				documentURI: 'not-wf/sa/091.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5878,7 +5878,7 @@ XMLConformanceExpatTests >> testnotwfsa092xml [
 			self
 				parse: self class sourcenotwfsa092xml
 				documentURI: 'not-wf/sa/092.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5890,7 +5890,7 @@ XMLConformanceExpatTests >> testnotwfsa093xml [
 			self
 				parse: self class sourcenotwfsa093xml
 				documentURI: 'not-wf/sa/093.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5902,7 +5902,7 @@ XMLConformanceExpatTests >> testnotwfsa094xml [
 			self
 				parse: self class sourcenotwfsa094xml
 				documentURI: 'not-wf/sa/094.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5914,7 +5914,7 @@ XMLConformanceExpatTests >> testnotwfsa095xml [
 			self
 				parse: self class sourcenotwfsa095xml
 				documentURI: 'not-wf/sa/095.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5926,7 +5926,7 @@ XMLConformanceExpatTests >> testnotwfsa096xml [
 			self
 				parse: self class sourcenotwfsa096xml
 				documentURI: 'not-wf/sa/096.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5938,7 +5938,7 @@ XMLConformanceExpatTests >> testnotwfsa097xml [
 			self
 				parse: self class sourcenotwfsa097xml
 				documentURI: 'not-wf/sa/097.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5950,7 +5950,7 @@ XMLConformanceExpatTests >> testnotwfsa098xml [
 			self
 				parse: self class sourcenotwfsa098xml
 				documentURI: 'not-wf/sa/098.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5962,7 +5962,7 @@ XMLConformanceExpatTests >> testnotwfsa099xml [
 			self
 				parse: self class sourcenotwfsa099xml
 				documentURI: 'not-wf/sa/099.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5974,7 +5974,7 @@ XMLConformanceExpatTests >> testnotwfsa100xml [
 			self
 				parse: self class sourcenotwfsa100xml
 				documentURI: 'not-wf/sa/100.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5986,7 +5986,7 @@ XMLConformanceExpatTests >> testnotwfsa101xml [
 			self
 				parse: self class sourcenotwfsa101xml
 				documentURI: 'not-wf/sa/101.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5998,7 +5998,7 @@ XMLConformanceExpatTests >> testnotwfsa102xml [
 			self
 				parse: self class sourcenotwfsa102xml
 				documentURI: 'not-wf/sa/102.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6010,7 +6010,7 @@ XMLConformanceExpatTests >> testnotwfsa103xml [
 			self
 				parse: self class sourcenotwfsa103xml
 				documentURI: 'not-wf/sa/103.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6022,7 +6022,7 @@ XMLConformanceExpatTests >> testnotwfsa104xml [
 			self
 				parse: self class sourcenotwfsa104xml
 				documentURI: 'not-wf/sa/104.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6034,7 +6034,7 @@ XMLConformanceExpatTests >> testnotwfsa105xml [
 			self
 				parse: self class sourcenotwfsa105xml
 				documentURI: 'not-wf/sa/105.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6046,7 +6046,7 @@ XMLConformanceExpatTests >> testnotwfsa106xml [
 			self
 				parse: self class sourcenotwfsa106xml
 				documentURI: 'not-wf/sa/106.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6058,7 +6058,7 @@ XMLConformanceExpatTests >> testnotwfsa107xml [
 			self
 				parse: self class sourcenotwfsa107xml
 				documentURI: 'not-wf/sa/107.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6070,7 +6070,7 @@ XMLConformanceExpatTests >> testnotwfsa108xml [
 			self
 				parse: self class sourcenotwfsa108xml
 				documentURI: 'not-wf/sa/108.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6082,7 +6082,7 @@ XMLConformanceExpatTests >> testnotwfsa109xml [
 			self
 				parse: self class sourcenotwfsa109xml
 				documentURI: 'not-wf/sa/109.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6094,7 +6094,7 @@ XMLConformanceExpatTests >> testnotwfsa110xml [
 			self
 				parse: self class sourcenotwfsa110xml
 				documentURI: 'not-wf/sa/110.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6106,7 +6106,7 @@ XMLConformanceExpatTests >> testnotwfsa111xml [
 			self
 				parse: self class sourcenotwfsa111xml
 				documentURI: 'not-wf/sa/111.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6118,7 +6118,7 @@ XMLConformanceExpatTests >> testnotwfsa112xml [
 			self
 				parse: self class sourcenotwfsa112xml
 				documentURI: 'not-wf/sa/112.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6130,7 +6130,7 @@ XMLConformanceExpatTests >> testnotwfsa113xml [
 			self
 				parse: self class sourcenotwfsa113xml
 				documentURI: 'not-wf/sa/113.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6142,7 +6142,7 @@ XMLConformanceExpatTests >> testnotwfsa114xml [
 			self
 				parse: self class sourcenotwfsa114xml
 				documentURI: 'not-wf/sa/114.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6154,7 +6154,7 @@ XMLConformanceExpatTests >> testnotwfsa115xml [
 			self
 				parse: self class sourcenotwfsa115xml
 				documentURI: 'not-wf/sa/115.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6166,7 +6166,7 @@ XMLConformanceExpatTests >> testnotwfsa116xml [
 			self
 				parse: self class sourcenotwfsa116xml
 				documentURI: 'not-wf/sa/116.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6178,7 +6178,7 @@ XMLConformanceExpatTests >> testnotwfsa117xml [
 			self
 				parse: self class sourcenotwfsa117xml
 				documentURI: 'not-wf/sa/117.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6190,7 +6190,7 @@ XMLConformanceExpatTests >> testnotwfsa118xml [
 			self
 				parse: self class sourcenotwfsa118xml
 				documentURI: 'not-wf/sa/118.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6202,7 +6202,7 @@ XMLConformanceExpatTests >> testnotwfsa119xml [
 			self
 				parse: self class sourcenotwfsa119xml
 				documentURI: 'not-wf/sa/119.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6214,7 +6214,7 @@ XMLConformanceExpatTests >> testnotwfsa120xml [
 			self
 				parse: self class sourcenotwfsa120xml
 				documentURI: 'not-wf/sa/120.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6226,7 +6226,7 @@ XMLConformanceExpatTests >> testnotwfsa121xml [
 			self
 				parse: self class sourcenotwfsa121xml
 				documentURI: 'not-wf/sa/121.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6238,7 +6238,7 @@ XMLConformanceExpatTests >> testnotwfsa122xml [
 			self
 				parse: self class sourcenotwfsa122xml
 				documentURI: 'not-wf/sa/122.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6250,7 +6250,7 @@ XMLConformanceExpatTests >> testnotwfsa123xml [
 			self
 				parse: self class sourcenotwfsa123xml
 				documentURI: 'not-wf/sa/123.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6262,7 +6262,7 @@ XMLConformanceExpatTests >> testnotwfsa124xml [
 			self
 				parse: self class sourcenotwfsa124xml
 				documentURI: 'not-wf/sa/124.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6274,7 +6274,7 @@ XMLConformanceExpatTests >> testnotwfsa125xml [
 			self
 				parse: self class sourcenotwfsa125xml
 				documentURI: 'not-wf/sa/125.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6286,7 +6286,7 @@ XMLConformanceExpatTests >> testnotwfsa126xml [
 			self
 				parse: self class sourcenotwfsa126xml
 				documentURI: 'not-wf/sa/126.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6298,7 +6298,7 @@ XMLConformanceExpatTests >> testnotwfsa127xml [
 			self
 				parse: self class sourcenotwfsa127xml
 				documentURI: 'not-wf/sa/127.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6310,7 +6310,7 @@ XMLConformanceExpatTests >> testnotwfsa128xml [
 			self
 				parse: self class sourcenotwfsa128xml
 				documentURI: 'not-wf/sa/128.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6322,7 +6322,7 @@ XMLConformanceExpatTests >> testnotwfsa129xml [
 			self
 				parse: self class sourcenotwfsa129xml
 				documentURI: 'not-wf/sa/129.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6334,7 +6334,7 @@ XMLConformanceExpatTests >> testnotwfsa130xml [
 			self
 				parse: self class sourcenotwfsa130xml
 				documentURI: 'not-wf/sa/130.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6346,7 +6346,7 @@ XMLConformanceExpatTests >> testnotwfsa131xml [
 			self
 				parse: self class sourcenotwfsa131xml
 				documentURI: 'not-wf/sa/131.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6358,7 +6358,7 @@ XMLConformanceExpatTests >> testnotwfsa132xml [
 			self
 				parse: self class sourcenotwfsa132xml
 				documentURI: 'not-wf/sa/132.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6370,7 +6370,7 @@ XMLConformanceExpatTests >> testnotwfsa133xml [
 			self
 				parse: self class sourcenotwfsa133xml
 				documentURI: 'not-wf/sa/133.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6382,7 +6382,7 @@ XMLConformanceExpatTests >> testnotwfsa134xml [
 			self
 				parse: self class sourcenotwfsa134xml
 				documentURI: 'not-wf/sa/134.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6394,7 +6394,7 @@ XMLConformanceExpatTests >> testnotwfsa135xml [
 			self
 				parse: self class sourcenotwfsa135xml
 				documentURI: 'not-wf/sa/135.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6406,7 +6406,7 @@ XMLConformanceExpatTests >> testnotwfsa136xml [
 			self
 				parse: self class sourcenotwfsa136xml
 				documentURI: 'not-wf/sa/136.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6418,7 +6418,7 @@ XMLConformanceExpatTests >> testnotwfsa137xml [
 			self
 				parse: self class sourcenotwfsa137xml
 				documentURI: 'not-wf/sa/137.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6430,7 +6430,7 @@ XMLConformanceExpatTests >> testnotwfsa138xml [
 			self
 				parse: self class sourcenotwfsa138xml
 				documentURI: 'not-wf/sa/138.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6442,7 +6442,7 @@ XMLConformanceExpatTests >> testnotwfsa139xml [
 			self
 				parse: self class sourcenotwfsa139xml
 				documentURI: 'not-wf/sa/139.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6454,7 +6454,7 @@ XMLConformanceExpatTests >> testnotwfsa140xml [
 			self
 				parse: self class sourcenotwfsa140xml
 				documentURI: 'not-wf/sa/140.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6466,7 +6466,7 @@ XMLConformanceExpatTests >> testnotwfsa141xml [
 			self
 				parse: self class sourcenotwfsa141xml
 				documentURI: 'not-wf/sa/141.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6478,7 +6478,7 @@ XMLConformanceExpatTests >> testnotwfsa142xml [
 			self
 				parse: self class sourcenotwfsa142xml
 				documentURI: 'not-wf/sa/142.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6490,7 +6490,7 @@ XMLConformanceExpatTests >> testnotwfsa143xml [
 			self
 				parse: self class sourcenotwfsa143xml
 				documentURI: 'not-wf/sa/143.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6502,7 +6502,7 @@ XMLConformanceExpatTests >> testnotwfsa144xml [
 			self
 				parse: self class sourcenotwfsa144xml
 				documentURI: 'not-wf/sa/144.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6514,7 +6514,7 @@ XMLConformanceExpatTests >> testnotwfsa145xml [
 			self
 				parse: self class sourcenotwfsa145xml
 				documentURI: 'not-wf/sa/145.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6526,7 +6526,7 @@ XMLConformanceExpatTests >> testnotwfsa146xml [
 			self
 				parse: self class sourcenotwfsa146xml
 				documentURI: 'not-wf/sa/146.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6538,7 +6538,7 @@ XMLConformanceExpatTests >> testnotwfsa147xml [
 			self
 				parse: self class sourcenotwfsa147xml
 				documentURI: 'not-wf/sa/147.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6550,7 +6550,7 @@ XMLConformanceExpatTests >> testnotwfsa148xml [
 			self
 				parse: self class sourcenotwfsa148xml
 				documentURI: 'not-wf/sa/148.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6562,7 +6562,7 @@ XMLConformanceExpatTests >> testnotwfsa149xml [
 			self
 				parse: self class sourcenotwfsa149xml
 				documentURI: 'not-wf/sa/149.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6574,7 +6574,7 @@ XMLConformanceExpatTests >> testnotwfsa150xml [
 			self
 				parse: self class sourcenotwfsa150xml
 				documentURI: 'not-wf/sa/150.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6586,7 +6586,7 @@ XMLConformanceExpatTests >> testnotwfsa151xml [
 			self
 				parse: self class sourcenotwfsa151xml
 				documentURI: 'not-wf/sa/151.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6598,7 +6598,7 @@ XMLConformanceExpatTests >> testnotwfsa152xml [
 			self
 				parse: self class sourcenotwfsa152xml
 				documentURI: 'not-wf/sa/152.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6610,7 +6610,7 @@ XMLConformanceExpatTests >> testnotwfsa153xml [
 			self
 				parse: self class sourcenotwfsa153xml
 				documentURI: 'not-wf/sa/153.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6622,7 +6622,7 @@ XMLConformanceExpatTests >> testnotwfsa154xml [
 			self
 				parse: self class sourcenotwfsa154xml
 				documentURI: 'not-wf/sa/154.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6634,7 +6634,7 @@ XMLConformanceExpatTests >> testnotwfsa155xml [
 			self
 				parse: self class sourcenotwfsa155xml
 				documentURI: 'not-wf/sa/155.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6646,7 +6646,7 @@ XMLConformanceExpatTests >> testnotwfsa156xml [
 			self
 				parse: self class sourcenotwfsa156xml
 				documentURI: 'not-wf/sa/156.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6658,7 +6658,7 @@ XMLConformanceExpatTests >> testnotwfsa157xml [
 			self
 				parse: self class sourcenotwfsa157xml
 				documentURI: 'not-wf/sa/157.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6670,7 +6670,7 @@ XMLConformanceExpatTests >> testnotwfsa158xml [
 			self
 				parse: self class sourcenotwfsa158xml
 				documentURI: 'not-wf/sa/158.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6682,7 +6682,7 @@ XMLConformanceExpatTests >> testnotwfsa159xml [
 			self
 				parse: self class sourcenotwfsa159xml
 				documentURI: 'not-wf/sa/159.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6694,7 +6694,7 @@ XMLConformanceExpatTests >> testnotwfsa160xml [
 			self
 				parse: self class sourcenotwfsa160xml
 				documentURI: 'not-wf/sa/160.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6706,7 +6706,7 @@ XMLConformanceExpatTests >> testnotwfsa161xml [
 			self
 				parse: self class sourcenotwfsa161xml
 				documentURI: 'not-wf/sa/161.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6718,7 +6718,7 @@ XMLConformanceExpatTests >> testnotwfsa162xml [
 			self
 				parse: self class sourcenotwfsa162xml
 				documentURI: 'not-wf/sa/162.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6730,7 +6730,7 @@ XMLConformanceExpatTests >> testnotwfsa163xml [
 			self
 				parse: self class sourcenotwfsa163xml
 				documentURI: 'not-wf/sa/163.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6742,7 +6742,7 @@ XMLConformanceExpatTests >> testnotwfsa164xml [
 			self
 				parse: self class sourcenotwfsa164xml
 				documentURI: 'not-wf/sa/164.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6754,7 +6754,7 @@ XMLConformanceExpatTests >> testnotwfsa165xml [
 			self
 				parse: self class sourcenotwfsa165xml
 				documentURI: 'not-wf/sa/165.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6766,7 +6766,7 @@ XMLConformanceExpatTests >> testnotwfsa166xml [
 			self
 				parse: self class sourcenotwfsa166xml
 				documentURI: 'not-wf/sa/166.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6778,7 +6778,7 @@ XMLConformanceExpatTests >> testnotwfsa167xml [
 			self
 				parse: self class sourcenotwfsa167xml
 				documentURI: 'not-wf/sa/167.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6790,7 +6790,7 @@ XMLConformanceExpatTests >> testnotwfsa168xml [
 			self
 				parse: self class sourcenotwfsa168xml
 				documentURI: 'not-wf/sa/168.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6802,7 +6802,7 @@ XMLConformanceExpatTests >> testnotwfsa169xml [
 			self
 				parse: self class sourcenotwfsa169xml
 				documentURI: 'not-wf/sa/169.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6814,7 +6814,7 @@ XMLConformanceExpatTests >> testnotwfsa171xml [
 			self
 				parse: self class sourcenotwfsa171xml
 				documentURI: 'not-wf/sa/171.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6826,7 +6826,7 @@ XMLConformanceExpatTests >> testnotwfsa172xml [
 			self
 				parse: self class sourcenotwfsa172xml
 				documentURI: 'not-wf/sa/172.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6838,7 +6838,7 @@ XMLConformanceExpatTests >> testnotwfsa173xml [
 			self
 				parse: self class sourcenotwfsa173xml
 				documentURI: 'not-wf/sa/173.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6850,7 +6850,7 @@ XMLConformanceExpatTests >> testnotwfsa174xml [
 			self
 				parse: self class sourcenotwfsa174xml
 				documentURI: 'not-wf/sa/174.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6862,7 +6862,7 @@ XMLConformanceExpatTests >> testnotwfsa175xml [
 			self
 				parse: self class sourcenotwfsa175xml
 				documentURI: 'not-wf/sa/175.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6874,7 +6874,7 @@ XMLConformanceExpatTests >> testnotwfsa176xml [
 			self
 				parse: self class sourcenotwfsa176xml
 				documentURI: 'not-wf/sa/176.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6886,7 +6886,7 @@ XMLConformanceExpatTests >> testnotwfsa177xml [
 			self
 				parse: self class sourcenotwfsa177xml
 				documentURI: 'not-wf/sa/177.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6898,7 +6898,7 @@ XMLConformanceExpatTests >> testnotwfsa178xml [
 			self
 				parse: self class sourcenotwfsa178xml
 				documentURI: 'not-wf/sa/178.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6910,7 +6910,7 @@ XMLConformanceExpatTests >> testnotwfsa179xml [
 			self
 				parse: self class sourcenotwfsa179xml
 				documentURI: 'not-wf/sa/179.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6922,7 +6922,7 @@ XMLConformanceExpatTests >> testnotwfsa180xml [
 			self
 				parse: self class sourcenotwfsa180xml
 				documentURI: 'not-wf/sa/180.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6934,7 +6934,7 @@ XMLConformanceExpatTests >> testnotwfsa181xml [
 			self
 				parse: self class sourcenotwfsa181xml
 				documentURI: 'not-wf/sa/181.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6946,7 +6946,7 @@ XMLConformanceExpatTests >> testnotwfsa182xml [
 			self
 				parse: self class sourcenotwfsa182xml
 				documentURI: 'not-wf/sa/182.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6958,7 +6958,7 @@ XMLConformanceExpatTests >> testnotwfsa183xml [
 			self
 				parse: self class sourcenotwfsa183xml
 				documentURI: 'not-wf/sa/183.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6970,7 +6970,7 @@ XMLConformanceExpatTests >> testnotwfsa184xml [
 			self
 				parse: self class sourcenotwfsa184xml
 				documentURI: 'not-wf/sa/184.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6982,7 +6982,7 @@ XMLConformanceExpatTests >> testnotwfsa185xml [
 			self
 				parse: self class sourcenotwfsa185xml
 				documentURI: 'not-wf/sa/185.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6994,7 +6994,7 @@ XMLConformanceExpatTests >> testnotwfsa186xml [
 			self
 				parse: self class sourcenotwfsa186xml
 				documentURI: 'not-wf/sa/186.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7003,10 +7003,15 @@ XMLConformanceExpatTests >> testvalidextsa001xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidextsa001xml
 				documentURI: 'valid/ext-sa/001.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7015,10 +7020,15 @@ XMLConformanceExpatTests >> testvalidextsa002xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidextsa002xml
 				documentURI: 'valid/ext-sa/002.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7027,10 +7037,15 @@ XMLConformanceExpatTests >> testvalidextsa003xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidextsa003xml
 				documentURI: 'valid/ext-sa/003.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7039,10 +7054,15 @@ XMLConformanceExpatTests >> testvalidextsa004xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidextsa004xml
 				documentURI: 'valid/ext-sa/004.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7051,10 +7071,15 @@ XMLConformanceExpatTests >> testvalidextsa005xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidextsa005xml
 				documentURI: 'valid/ext-sa/005.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7063,10 +7088,15 @@ XMLConformanceExpatTests >> testvalidextsa006xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidextsa006xml
 				documentURI: 'valid/ext-sa/006.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7075,10 +7105,15 @@ XMLConformanceExpatTests >> testvalidextsa007xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidextsa007xml
 				documentURI: 'valid/ext-sa/007.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7087,10 +7122,15 @@ XMLConformanceExpatTests >> testvalidextsa008xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidextsa008xml
 				documentURI: 'valid/ext-sa/008.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7099,10 +7139,15 @@ XMLConformanceExpatTests >> testvalidextsa009xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidextsa009xml
 				documentURI: 'valid/ext-sa/009.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7111,10 +7156,15 @@ XMLConformanceExpatTests >> testvalidextsa010xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidextsa010xml
 				documentURI: 'valid/ext-sa/010.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7123,10 +7173,15 @@ XMLConformanceExpatTests >> testvalidextsa011xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidextsa011xml
 				documentURI: 'valid/ext-sa/011.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7135,10 +7190,15 @@ XMLConformanceExpatTests >> testvalidextsa012xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidextsa012xml
 				documentURI: 'valid/ext-sa/012.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7147,10 +7207,15 @@ XMLConformanceExpatTests >> testvalidextsa013xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidextsa013xml
 				documentURI: 'valid/ext-sa/013.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7159,10 +7224,15 @@ XMLConformanceExpatTests >> testvalidextsa014xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidextsa014xml
 				documentURI: 'valid/ext-sa/014.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7171,10 +7241,15 @@ XMLConformanceExpatTests >> testvalidnotsa001xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa001xml
 				documentURI: 'valid/not-sa/001.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7183,10 +7258,15 @@ XMLConformanceExpatTests >> testvalidnotsa002xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa002xml
 				documentURI: 'valid/not-sa/002.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7195,10 +7275,15 @@ XMLConformanceExpatTests >> testvalidnotsa003xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa003xml
 				documentURI: 'valid/not-sa/003.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7207,10 +7292,15 @@ XMLConformanceExpatTests >> testvalidnotsa004xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa004xml
 				documentURI: 'valid/not-sa/004.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7219,10 +7309,15 @@ XMLConformanceExpatTests >> testvalidnotsa005xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa005xml
 				documentURI: 'valid/not-sa/005.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7231,10 +7326,15 @@ XMLConformanceExpatTests >> testvalidnotsa006xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa006xml
 				documentURI: 'valid/not-sa/006.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7243,10 +7343,15 @@ XMLConformanceExpatTests >> testvalidnotsa007xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa007xml
 				documentURI: 'valid/not-sa/007.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7255,10 +7360,15 @@ XMLConformanceExpatTests >> testvalidnotsa008xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa008xml
 				documentURI: 'valid/not-sa/008.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7267,10 +7377,15 @@ XMLConformanceExpatTests >> testvalidnotsa009xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa009xml
 				documentURI: 'valid/not-sa/009.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7279,10 +7394,15 @@ XMLConformanceExpatTests >> testvalidnotsa010xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa010xml
 				documentURI: 'valid/not-sa/010.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7291,10 +7411,15 @@ XMLConformanceExpatTests >> testvalidnotsa011xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa011xml
 				documentURI: 'valid/not-sa/011.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7303,10 +7428,15 @@ XMLConformanceExpatTests >> testvalidnotsa012xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa012xml
 				documentURI: 'valid/not-sa/012.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7315,10 +7445,15 @@ XMLConformanceExpatTests >> testvalidnotsa013xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa013xml
 				documentURI: 'valid/not-sa/013.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7327,10 +7462,15 @@ XMLConformanceExpatTests >> testvalidnotsa014xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa014xml
 				documentURI: 'valid/not-sa/014.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7339,10 +7479,15 @@ XMLConformanceExpatTests >> testvalidnotsa015xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa015xml
 				documentURI: 'valid/not-sa/015.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7351,10 +7496,15 @@ XMLConformanceExpatTests >> testvalidnotsa016xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa016xml
 				documentURI: 'valid/not-sa/016.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7363,10 +7513,15 @@ XMLConformanceExpatTests >> testvalidnotsa017xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa017xml
 				documentURI: 'valid/not-sa/017.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7375,10 +7530,15 @@ XMLConformanceExpatTests >> testvalidnotsa018xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa018xml
 				documentURI: 'valid/not-sa/018.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7387,10 +7547,15 @@ XMLConformanceExpatTests >> testvalidnotsa019xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa019xml
 				documentURI: 'valid/not-sa/019.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7399,10 +7564,15 @@ XMLConformanceExpatTests >> testvalidnotsa020xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa020xml
 				documentURI: 'valid/not-sa/020.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7411,10 +7581,15 @@ XMLConformanceExpatTests >> testvalidnotsa021xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa021xml
 				documentURI: 'valid/not-sa/021.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7423,10 +7598,15 @@ XMLConformanceExpatTests >> testvalidnotsa023xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa023xml
 				documentURI: 'valid/not-sa/023.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7435,10 +7615,15 @@ XMLConformanceExpatTests >> testvalidnotsa024xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa024xml
 				documentURI: 'valid/not-sa/024.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7447,10 +7632,15 @@ XMLConformanceExpatTests >> testvalidnotsa025xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa025xml
 				documentURI: 'valid/not-sa/025.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7459,10 +7649,15 @@ XMLConformanceExpatTests >> testvalidnotsa026xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa026xml
 				documentURI: 'valid/not-sa/026.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7471,10 +7666,15 @@ XMLConformanceExpatTests >> testvalidnotsa027xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa027xml
 				documentURI: 'valid/not-sa/027.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7483,10 +7683,15 @@ XMLConformanceExpatTests >> testvalidnotsa028xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa028xml
 				documentURI: 'valid/not-sa/028.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7495,10 +7700,15 @@ XMLConformanceExpatTests >> testvalidnotsa029xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa029xml
 				documentURI: 'valid/not-sa/029.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7507,10 +7717,15 @@ XMLConformanceExpatTests >> testvalidnotsa030xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa030xml
 				documentURI: 'valid/not-sa/030.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7519,10 +7734,15 @@ XMLConformanceExpatTests >> testvalidnotsa031xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa031xml
 				documentURI: 'valid/not-sa/031.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7531,10 +7751,15 @@ XMLConformanceExpatTests >> testvalidsa001xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa001xml
 				documentURI: 'valid/sa/001.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7543,10 +7768,15 @@ XMLConformanceExpatTests >> testvalidsa002xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa002xml
 				documentURI: 'valid/sa/002.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7555,10 +7785,15 @@ XMLConformanceExpatTests >> testvalidsa003xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa003xml
 				documentURI: 'valid/sa/003.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7567,10 +7802,15 @@ XMLConformanceExpatTests >> testvalidsa004xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa004xml
 				documentURI: 'valid/sa/004.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7579,10 +7819,15 @@ XMLConformanceExpatTests >> testvalidsa005xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa005xml
 				documentURI: 'valid/sa/005.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7591,10 +7836,15 @@ XMLConformanceExpatTests >> testvalidsa006xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa006xml
 				documentURI: 'valid/sa/006.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7603,10 +7853,15 @@ XMLConformanceExpatTests >> testvalidsa007xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa007xml
 				documentURI: 'valid/sa/007.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7615,10 +7870,15 @@ XMLConformanceExpatTests >> testvalidsa008xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa008xml
 				documentURI: 'valid/sa/008.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7627,10 +7887,15 @@ XMLConformanceExpatTests >> testvalidsa009xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa009xml
 				documentURI: 'valid/sa/009.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7639,10 +7904,15 @@ XMLConformanceExpatTests >> testvalidsa010xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa010xml
 				documentURI: 'valid/sa/010.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7651,10 +7921,15 @@ XMLConformanceExpatTests >> testvalidsa011xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa011xml
 				documentURI: 'valid/sa/011.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7663,10 +7938,15 @@ XMLConformanceExpatTests >> testvalidsa012xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa012xml
 				documentURI: 'valid/sa/012.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7675,10 +7955,15 @@ XMLConformanceExpatTests >> testvalidsa013xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa013xml
 				documentURI: 'valid/sa/013.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7687,10 +7972,15 @@ XMLConformanceExpatTests >> testvalidsa014xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa014xml
 				documentURI: 'valid/sa/014.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7699,10 +7989,15 @@ XMLConformanceExpatTests >> testvalidsa015xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa015xml
 				documentURI: 'valid/sa/015.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7711,10 +8006,15 @@ XMLConformanceExpatTests >> testvalidsa016xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa016xml
 				documentURI: 'valid/sa/016.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7723,10 +8023,15 @@ XMLConformanceExpatTests >> testvalidsa017axml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa017axml
 				documentURI: 'valid/sa/017a.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7735,10 +8040,15 @@ XMLConformanceExpatTests >> testvalidsa017xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa017xml
 				documentURI: 'valid/sa/017.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7747,10 +8057,15 @@ XMLConformanceExpatTests >> testvalidsa018xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa018xml
 				documentURI: 'valid/sa/018.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7759,10 +8074,15 @@ XMLConformanceExpatTests >> testvalidsa019xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa019xml
 				documentURI: 'valid/sa/019.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7771,10 +8091,15 @@ XMLConformanceExpatTests >> testvalidsa020xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa020xml
 				documentURI: 'valid/sa/020.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7783,10 +8108,15 @@ XMLConformanceExpatTests >> testvalidsa021xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa021xml
 				documentURI: 'valid/sa/021.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7795,10 +8125,15 @@ XMLConformanceExpatTests >> testvalidsa022xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa022xml
 				documentURI: 'valid/sa/022.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7807,10 +8142,15 @@ XMLConformanceExpatTests >> testvalidsa023xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa023xml
 				documentURI: 'valid/sa/023.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7819,10 +8159,15 @@ XMLConformanceExpatTests >> testvalidsa024xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa024xml
 				documentURI: 'valid/sa/024.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7831,10 +8176,15 @@ XMLConformanceExpatTests >> testvalidsa025xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa025xml
 				documentURI: 'valid/sa/025.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7843,10 +8193,15 @@ XMLConformanceExpatTests >> testvalidsa026xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa026xml
 				documentURI: 'valid/sa/026.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7855,10 +8210,15 @@ XMLConformanceExpatTests >> testvalidsa027xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa027xml
 				documentURI: 'valid/sa/027.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7867,10 +8227,15 @@ XMLConformanceExpatTests >> testvalidsa028xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa028xml
 				documentURI: 'valid/sa/028.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7879,10 +8244,15 @@ XMLConformanceExpatTests >> testvalidsa029xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa029xml
 				documentURI: 'valid/sa/029.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7891,10 +8261,15 @@ XMLConformanceExpatTests >> testvalidsa030xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa030xml
 				documentURI: 'valid/sa/030.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7903,10 +8278,15 @@ XMLConformanceExpatTests >> testvalidsa031xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa031xml
 				documentURI: 'valid/sa/031.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7915,10 +8295,15 @@ XMLConformanceExpatTests >> testvalidsa032xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa032xml
 				documentURI: 'valid/sa/032.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7927,10 +8312,15 @@ XMLConformanceExpatTests >> testvalidsa033xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa033xml
 				documentURI: 'valid/sa/033.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7939,10 +8329,15 @@ XMLConformanceExpatTests >> testvalidsa034xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa034xml
 				documentURI: 'valid/sa/034.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7951,10 +8346,15 @@ XMLConformanceExpatTests >> testvalidsa035xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa035xml
 				documentURI: 'valid/sa/035.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7963,10 +8363,15 @@ XMLConformanceExpatTests >> testvalidsa036xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa036xml
 				documentURI: 'valid/sa/036.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7975,10 +8380,15 @@ XMLConformanceExpatTests >> testvalidsa037xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa037xml
 				documentURI: 'valid/sa/037.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7987,10 +8397,15 @@ XMLConformanceExpatTests >> testvalidsa038xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa038xml
 				documentURI: 'valid/sa/038.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7999,10 +8414,15 @@ XMLConformanceExpatTests >> testvalidsa039xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa039xml
 				documentURI: 'valid/sa/039.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8011,10 +8431,15 @@ XMLConformanceExpatTests >> testvalidsa040xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa040xml
 				documentURI: 'valid/sa/040.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8023,10 +8448,15 @@ XMLConformanceExpatTests >> testvalidsa041xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa041xml
 				documentURI: 'valid/sa/041.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8035,10 +8465,15 @@ XMLConformanceExpatTests >> testvalidsa042xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa042xml
 				documentURI: 'valid/sa/042.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8047,10 +8482,15 @@ XMLConformanceExpatTests >> testvalidsa043xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa043xml
 				documentURI: 'valid/sa/043.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8059,10 +8499,15 @@ XMLConformanceExpatTests >> testvalidsa044xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa044xml
 				documentURI: 'valid/sa/044.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8071,10 +8516,15 @@ XMLConformanceExpatTests >> testvalidsa045xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa045xml
 				documentURI: 'valid/sa/045.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8083,10 +8533,15 @@ XMLConformanceExpatTests >> testvalidsa046xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa046xml
 				documentURI: 'valid/sa/046.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8095,10 +8550,15 @@ XMLConformanceExpatTests >> testvalidsa047xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa047xml
 				documentURI: 'valid/sa/047.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8107,10 +8567,15 @@ XMLConformanceExpatTests >> testvalidsa048xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa048xml
 				documentURI: 'valid/sa/048.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8119,10 +8584,15 @@ XMLConformanceExpatTests >> testvalidsa052xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa052xml
 				documentURI: 'valid/sa/052.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8131,10 +8601,15 @@ XMLConformanceExpatTests >> testvalidsa053xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa053xml
 				documentURI: 'valid/sa/053.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8143,10 +8618,15 @@ XMLConformanceExpatTests >> testvalidsa054xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa054xml
 				documentURI: 'valid/sa/054.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8155,10 +8635,15 @@ XMLConformanceExpatTests >> testvalidsa055xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa055xml
 				documentURI: 'valid/sa/055.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8167,10 +8652,15 @@ XMLConformanceExpatTests >> testvalidsa056xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa056xml
 				documentURI: 'valid/sa/056.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8179,10 +8669,15 @@ XMLConformanceExpatTests >> testvalidsa057xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa057xml
 				documentURI: 'valid/sa/057.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8191,10 +8686,15 @@ XMLConformanceExpatTests >> testvalidsa058xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa058xml
 				documentURI: 'valid/sa/058.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8203,10 +8703,15 @@ XMLConformanceExpatTests >> testvalidsa059xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa059xml
 				documentURI: 'valid/sa/059.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8215,10 +8720,15 @@ XMLConformanceExpatTests >> testvalidsa060xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa060xml
 				documentURI: 'valid/sa/060.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8227,10 +8737,15 @@ XMLConformanceExpatTests >> testvalidsa061xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa061xml
 				documentURI: 'valid/sa/061.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8239,10 +8754,15 @@ XMLConformanceExpatTests >> testvalidsa062xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa062xml
 				documentURI: 'valid/sa/062.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8251,10 +8771,15 @@ XMLConformanceExpatTests >> testvalidsa063xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa063xml
 				documentURI: 'valid/sa/063.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8263,10 +8788,15 @@ XMLConformanceExpatTests >> testvalidsa064xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa064xml
 				documentURI: 'valid/sa/064.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8275,10 +8805,15 @@ XMLConformanceExpatTests >> testvalidsa065xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa065xml
 				documentURI: 'valid/sa/065.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8287,10 +8822,15 @@ XMLConformanceExpatTests >> testvalidsa066xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa066xml
 				documentURI: 'valid/sa/066.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8299,10 +8839,15 @@ XMLConformanceExpatTests >> testvalidsa067xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa067xml
 				documentURI: 'valid/sa/067.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8311,10 +8856,15 @@ XMLConformanceExpatTests >> testvalidsa068xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa068xml
 				documentURI: 'valid/sa/068.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8323,10 +8873,15 @@ XMLConformanceExpatTests >> testvalidsa069xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa069xml
 				documentURI: 'valid/sa/069.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8335,10 +8890,15 @@ XMLConformanceExpatTests >> testvalidsa070xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa070xml
 				documentURI: 'valid/sa/070.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8347,10 +8907,15 @@ XMLConformanceExpatTests >> testvalidsa071xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa071xml
 				documentURI: 'valid/sa/071.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8359,10 +8924,15 @@ XMLConformanceExpatTests >> testvalidsa072xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa072xml
 				documentURI: 'valid/sa/072.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8371,10 +8941,15 @@ XMLConformanceExpatTests >> testvalidsa073xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa073xml
 				documentURI: 'valid/sa/073.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8383,10 +8958,15 @@ XMLConformanceExpatTests >> testvalidsa074xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa074xml
 				documentURI: 'valid/sa/074.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8395,10 +8975,15 @@ XMLConformanceExpatTests >> testvalidsa075xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa075xml
 				documentURI: 'valid/sa/075.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8407,10 +8992,15 @@ XMLConformanceExpatTests >> testvalidsa076xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa076xml
 				documentURI: 'valid/sa/076.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8419,10 +9009,15 @@ XMLConformanceExpatTests >> testvalidsa077xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa077xml
 				documentURI: 'valid/sa/077.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8431,10 +9026,15 @@ XMLConformanceExpatTests >> testvalidsa078xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa078xml
 				documentURI: 'valid/sa/078.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8443,10 +9043,15 @@ XMLConformanceExpatTests >> testvalidsa079xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa079xml
 				documentURI: 'valid/sa/079.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8455,10 +9060,15 @@ XMLConformanceExpatTests >> testvalidsa080xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa080xml
 				documentURI: 'valid/sa/080.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8467,10 +9077,15 @@ XMLConformanceExpatTests >> testvalidsa081xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa081xml
 				documentURI: 'valid/sa/081.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8479,10 +9094,15 @@ XMLConformanceExpatTests >> testvalidsa082xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa082xml
 				documentURI: 'valid/sa/082.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8491,10 +9111,15 @@ XMLConformanceExpatTests >> testvalidsa083xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa083xml
 				documentURI: 'valid/sa/083.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8503,10 +9128,15 @@ XMLConformanceExpatTests >> testvalidsa084xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa084xml
 				documentURI: 'valid/sa/084.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8515,10 +9145,15 @@ XMLConformanceExpatTests >> testvalidsa085xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa085xml
 				documentURI: 'valid/sa/085.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8527,10 +9162,15 @@ XMLConformanceExpatTests >> testvalidsa086xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa086xml
 				documentURI: 'valid/sa/086.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8539,10 +9179,15 @@ XMLConformanceExpatTests >> testvalidsa087xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa087xml
 				documentURI: 'valid/sa/087.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8551,10 +9196,15 @@ XMLConformanceExpatTests >> testvalidsa088xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa088xml
 				documentURI: 'valid/sa/088.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8563,10 +9213,15 @@ XMLConformanceExpatTests >> testvalidsa089xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa089xml
 				documentURI: 'valid/sa/089.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8575,10 +9230,15 @@ XMLConformanceExpatTests >> testvalidsa090xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa090xml
 				documentURI: 'valid/sa/090.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8587,10 +9247,15 @@ XMLConformanceExpatTests >> testvalidsa091xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa091xml
 				documentURI: 'valid/sa/091.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8599,10 +9264,15 @@ XMLConformanceExpatTests >> testvalidsa092xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa092xml
 				documentURI: 'valid/sa/092.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8611,10 +9281,15 @@ XMLConformanceExpatTests >> testvalidsa093xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa093xml
 				documentURI: 'valid/sa/093.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8623,10 +9298,15 @@ XMLConformanceExpatTests >> testvalidsa094xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa094xml
 				documentURI: 'valid/sa/094.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8635,10 +9315,15 @@ XMLConformanceExpatTests >> testvalidsa095xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa095xml
 				documentURI: 'valid/sa/095.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8647,10 +9332,15 @@ XMLConformanceExpatTests >> testvalidsa096xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa096xml
 				documentURI: 'valid/sa/096.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8659,10 +9349,15 @@ XMLConformanceExpatTests >> testvalidsa097xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa097xml
 				documentURI: 'valid/sa/097.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8671,10 +9366,15 @@ XMLConformanceExpatTests >> testvalidsa098xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa098xml
 				documentURI: 'valid/sa/098.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8683,10 +9383,15 @@ XMLConformanceExpatTests >> testvalidsa099xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa099xml
 				documentURI: 'valid/sa/099.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8695,10 +9400,15 @@ XMLConformanceExpatTests >> testvalidsa100xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa100xml
 				documentURI: 'valid/sa/100.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8707,10 +9417,15 @@ XMLConformanceExpatTests >> testvalidsa101xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa101xml
 				documentURI: 'valid/sa/101.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8719,10 +9434,15 @@ XMLConformanceExpatTests >> testvalidsa102xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa102xml
 				documentURI: 'valid/sa/102.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8731,10 +9451,15 @@ XMLConformanceExpatTests >> testvalidsa103xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa103xml
 				documentURI: 'valid/sa/103.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8743,10 +9468,15 @@ XMLConformanceExpatTests >> testvalidsa104xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa104xml
 				documentURI: 'valid/sa/104.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8755,10 +9485,15 @@ XMLConformanceExpatTests >> testvalidsa105xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa105xml
 				documentURI: 'valid/sa/105.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8767,10 +9502,15 @@ XMLConformanceExpatTests >> testvalidsa106xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa106xml
 				documentURI: 'valid/sa/106.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8779,10 +9519,15 @@ XMLConformanceExpatTests >> testvalidsa107xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa107xml
 				documentURI: 'valid/sa/107.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8791,10 +9536,15 @@ XMLConformanceExpatTests >> testvalidsa108xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa108xml
 				documentURI: 'valid/sa/108.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8803,10 +9553,15 @@ XMLConformanceExpatTests >> testvalidsa109xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa109xml
 				documentURI: 'valid/sa/109.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8815,10 +9570,15 @@ XMLConformanceExpatTests >> testvalidsa110xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa110xml
 				documentURI: 'valid/sa/110.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8827,10 +9587,15 @@ XMLConformanceExpatTests >> testvalidsa111xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa111xml
 				documentURI: 'valid/sa/111.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8839,10 +9604,15 @@ XMLConformanceExpatTests >> testvalidsa112xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa112xml
 				documentURI: 'valid/sa/112.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8851,10 +9621,15 @@ XMLConformanceExpatTests >> testvalidsa113xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa113xml
 				documentURI: 'valid/sa/113.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8863,10 +9638,15 @@ XMLConformanceExpatTests >> testvalidsa114xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa114xml
 				documentURI: 'valid/sa/114.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8875,10 +9655,15 @@ XMLConformanceExpatTests >> testvalidsa115xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa115xml
 				documentURI: 'valid/sa/115.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8887,10 +9672,15 @@ XMLConformanceExpatTests >> testvalidsa116xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa116xml
 				documentURI: 'valid/sa/116.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8899,10 +9689,15 @@ XMLConformanceExpatTests >> testvalidsa117xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa117xml
 				documentURI: 'valid/sa/117.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8911,10 +9706,15 @@ XMLConformanceExpatTests >> testvalidsa118xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa118xml
 				documentURI: 'valid/sa/118.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -8923,8 +9723,13 @@ XMLConformanceExpatTests >> testvalidsa119xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa119xml
 				documentURI: 'valid/sa/119.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]

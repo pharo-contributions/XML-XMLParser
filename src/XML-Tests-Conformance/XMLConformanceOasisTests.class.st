@@ -3867,10 +3867,15 @@ XMLConformanceOasisTests >> teste2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcee2xml
 				documentURI: 'e2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3882,7 +3887,7 @@ XMLConformanceOasisTests >> testp01fail1xml [
 			self
 				parse: self class sourcep01fail1xml
 				documentURI: 'p01fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3894,7 +3899,7 @@ XMLConformanceOasisTests >> testp01fail2xml [
 			self
 				parse: self class sourcep01fail2xml
 				documentURI: 'p01fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3906,7 +3911,7 @@ XMLConformanceOasisTests >> testp01fail3xml [
 			self
 				parse: self class sourcep01fail3xml
 				documentURI: 'p01fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3918,7 +3923,7 @@ XMLConformanceOasisTests >> testp01fail4xml [
 			self
 				parse: self class sourcep01fail4xml
 				documentURI: 'p01fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -3927,10 +3932,15 @@ XMLConformanceOasisTests >> testp01pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep01pass1xml
 				documentURI: 'p01pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -3939,10 +3949,15 @@ XMLConformanceOasisTests >> testp01pass2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep01pass2xml
 				documentURI: 'p01pass2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -3951,10 +3966,15 @@ XMLConformanceOasisTests >> testp01pass3xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep01pass3xml
 				documentURI: 'p01pass3.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3966,7 +3986,7 @@ XMLConformanceOasisTests >> testp03fail10xml [
 			self
 				parse: self class sourcep03fail10xml
 				documentURI: 'p03fail10.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3978,7 +3998,7 @@ XMLConformanceOasisTests >> testp03fail11xml [
 			self
 				parse: self class sourcep03fail11xml
 				documentURI: 'p03fail11.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3990,7 +4010,7 @@ XMLConformanceOasisTests >> testp03fail12xml [
 			self
 				parse: self class sourcep03fail12xml
 				documentURI: 'p03fail12.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4002,7 +4022,7 @@ XMLConformanceOasisTests >> testp03fail13xml [
 			self
 				parse: self class sourcep03fail13xml
 				documentURI: 'p03fail13.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4014,7 +4034,7 @@ XMLConformanceOasisTests >> testp03fail14xml [
 			self
 				parse: self class sourcep03fail14xml
 				documentURI: 'p03fail14.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4026,7 +4046,7 @@ XMLConformanceOasisTests >> testp03fail15xml [
 			self
 				parse: self class sourcep03fail15xml
 				documentURI: 'p03fail15.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4038,7 +4058,7 @@ XMLConformanceOasisTests >> testp03fail16xml [
 			self
 				parse: self class sourcep03fail16xml
 				documentURI: 'p03fail16.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4050,7 +4070,7 @@ XMLConformanceOasisTests >> testp03fail17xml [
 			self
 				parse: self class sourcep03fail17xml
 				documentURI: 'p03fail17.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4062,7 +4082,7 @@ XMLConformanceOasisTests >> testp03fail18xml [
 			self
 				parse: self class sourcep03fail18xml
 				documentURI: 'p03fail18.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4074,7 +4094,7 @@ XMLConformanceOasisTests >> testp03fail19xml [
 			self
 				parse: self class sourcep03fail19xml
 				documentURI: 'p03fail19.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4086,7 +4106,7 @@ XMLConformanceOasisTests >> testp03fail1xml [
 			self
 				parse: self class sourcep03fail1xml
 				documentURI: 'p03fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4098,7 +4118,7 @@ XMLConformanceOasisTests >> testp03fail20xml [
 			self
 				parse: self class sourcep03fail20xml
 				documentURI: 'p03fail20.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4110,7 +4130,7 @@ XMLConformanceOasisTests >> testp03fail21xml [
 			self
 				parse: self class sourcep03fail21xml
 				documentURI: 'p03fail21.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4122,7 +4142,7 @@ XMLConformanceOasisTests >> testp03fail22xml [
 			self
 				parse: self class sourcep03fail22xml
 				documentURI: 'p03fail22.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4134,7 +4154,7 @@ XMLConformanceOasisTests >> testp03fail23xml [
 			self
 				parse: self class sourcep03fail23xml
 				documentURI: 'p03fail23.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4146,7 +4166,7 @@ XMLConformanceOasisTests >> testp03fail24xml [
 			self
 				parse: self class sourcep03fail24xml
 				documentURI: 'p03fail24.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4158,7 +4178,7 @@ XMLConformanceOasisTests >> testp03fail25xml [
 			self
 				parse: self class sourcep03fail25xml
 				documentURI: 'p03fail25.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4170,7 +4190,7 @@ XMLConformanceOasisTests >> testp03fail26xml [
 			self
 				parse: self class sourcep03fail26xml
 				documentURI: 'p03fail26.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4182,7 +4202,7 @@ XMLConformanceOasisTests >> testp03fail27xml [
 			self
 				parse: self class sourcep03fail27xml
 				documentURI: 'p03fail27.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4194,7 +4214,7 @@ XMLConformanceOasisTests >> testp03fail28xml [
 			self
 				parse: self class sourcep03fail28xml
 				documentURI: 'p03fail28.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4206,7 +4226,7 @@ XMLConformanceOasisTests >> testp03fail29xml [
 			self
 				parse: self class sourcep03fail29xml
 				documentURI: 'p03fail29.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4218,7 +4238,7 @@ XMLConformanceOasisTests >> testp03fail2xml [
 			self
 				parse: self class sourcep03fail2xml
 				documentURI: 'p03fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4230,7 +4250,7 @@ XMLConformanceOasisTests >> testp03fail3xml [
 			self
 				parse: self class sourcep03fail3xml
 				documentURI: 'p03fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4242,7 +4262,7 @@ XMLConformanceOasisTests >> testp03fail4xml [
 			self
 				parse: self class sourcep03fail4xml
 				documentURI: 'p03fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4254,7 +4274,7 @@ XMLConformanceOasisTests >> testp03fail5xml [
 			self
 				parse: self class sourcep03fail5xml
 				documentURI: 'p03fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4266,7 +4286,7 @@ XMLConformanceOasisTests >> testp03fail7xml [
 			self
 				parse: self class sourcep03fail7xml
 				documentURI: 'p03fail7.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4278,7 +4298,7 @@ XMLConformanceOasisTests >> testp03fail8xml [
 			self
 				parse: self class sourcep03fail8xml
 				documentURI: 'p03fail8.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4290,7 +4310,7 @@ XMLConformanceOasisTests >> testp03fail9xml [
 			self
 				parse: self class sourcep03fail9xml
 				documentURI: 'p03fail9.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4299,10 +4319,15 @@ XMLConformanceOasisTests >> testp03pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep03pass1xml
 				documentURI: 'p03pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4314,7 +4339,7 @@ XMLConformanceOasisTests >> testp04fail1xml [
 			self
 				parse: self class sourcep04fail1xml
 				documentURI: 'p04fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4326,7 +4351,7 @@ XMLConformanceOasisTests >> testp04fail2xml [
 			self
 				parse: self class sourcep04fail2xml
 				documentURI: 'p04fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4338,7 +4363,7 @@ XMLConformanceOasisTests >> testp04fail3xml [
 			self
 				parse: self class sourcep04fail3xml
 				documentURI: 'p04fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4347,10 +4372,15 @@ XMLConformanceOasisTests >> testp04pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep04pass1xml
 				documentURI: 'p04pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4362,7 +4392,7 @@ XMLConformanceOasisTests >> testp05fail1xml [
 			self
 				parse: self class sourcep05fail1xml
 				documentURI: 'p05fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4374,7 +4404,7 @@ XMLConformanceOasisTests >> testp05fail2xml [
 			self
 				parse: self class sourcep05fail2xml
 				documentURI: 'p05fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4386,7 +4416,7 @@ XMLConformanceOasisTests >> testp05fail3xml [
 			self
 				parse: self class sourcep05fail3xml
 				documentURI: 'p05fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4398,7 +4428,7 @@ XMLConformanceOasisTests >> testp05fail4xml [
 			self
 				parse: self class sourcep05fail4xml
 				documentURI: 'p05fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4410,7 +4440,7 @@ XMLConformanceOasisTests >> testp05fail5xml [
 			self
 				parse: self class sourcep05fail5xml
 				documentURI: 'p05fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4419,10 +4449,15 @@ XMLConformanceOasisTests >> testp05pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep05pass1xml
 				documentURI: 'p05pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4434,7 +4469,7 @@ XMLConformanceOasisTests >> testp06fail1xml [
 			self
 				parse: self class sourcep06fail1xml
 				documentURI: 'p06fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4443,10 +4478,15 @@ XMLConformanceOasisTests >> testp06pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep06pass1xml
 				documentURI: 'p06pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4455,10 +4495,15 @@ XMLConformanceOasisTests >> testp07pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep07pass1xml
 				documentURI: 'p07pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4470,7 +4515,7 @@ XMLConformanceOasisTests >> testp08fail1xml [
 			self
 				parse: self class sourcep08fail1xml
 				documentURI: 'p08fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4482,7 +4527,7 @@ XMLConformanceOasisTests >> testp08fail2xml [
 			self
 				parse: self class sourcep08fail2xml
 				documentURI: 'p08fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4491,10 +4536,15 @@ XMLConformanceOasisTests >> testp08pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep08pass1xml
 				documentURI: 'p08pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4506,7 +4556,7 @@ XMLConformanceOasisTests >> testp09fail1xml [
 			self
 				parse: self class sourcep09fail1xml
 				documentURI: 'p09fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4518,7 +4568,7 @@ XMLConformanceOasisTests >> testp09fail2xml [
 			self
 				parse: self class sourcep09fail2xml
 				documentURI: 'p09fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4530,7 +4580,7 @@ XMLConformanceOasisTests >> testp09fail3xml [
 			self
 				parse: self class sourcep09fail3xml
 				documentURI: 'p09fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4542,7 +4592,7 @@ XMLConformanceOasisTests >> testp09fail4xml [
 			self
 				parse: self class sourcep09fail4xml
 				documentURI: 'p09fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4554,7 +4604,7 @@ XMLConformanceOasisTests >> testp09fail5xml [
 			self
 				parse: self class sourcep09fail5xml
 				documentURI: 'p09fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4563,10 +4613,15 @@ XMLConformanceOasisTests >> testp09pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep09pass1xml
 				documentURI: 'p09pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4578,7 +4633,7 @@ XMLConformanceOasisTests >> testp10fail1xml [
 			self
 				parse: self class sourcep10fail1xml
 				documentURI: 'p10fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4590,7 +4645,7 @@ XMLConformanceOasisTests >> testp10fail2xml [
 			self
 				parse: self class sourcep10fail2xml
 				documentURI: 'p10fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4602,7 +4657,7 @@ XMLConformanceOasisTests >> testp10fail3xml [
 			self
 				parse: self class sourcep10fail3xml
 				documentURI: 'p10fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4611,10 +4666,15 @@ XMLConformanceOasisTests >> testp10pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep10pass1xml
 				documentURI: 'p10pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4626,7 +4686,7 @@ XMLConformanceOasisTests >> testp11fail1xml [
 			self
 				parse: self class sourcep11fail1xml
 				documentURI: 'p11fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4638,7 +4698,7 @@ XMLConformanceOasisTests >> testp11fail2xml [
 			self
 				parse: self class sourcep11fail2xml
 				documentURI: 'p11fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4647,10 +4707,15 @@ XMLConformanceOasisTests >> testp11pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep11pass1xml
 				documentURI: 'p11pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4662,7 +4727,7 @@ XMLConformanceOasisTests >> testp12fail1xml [
 			self
 				parse: self class sourcep12fail1xml
 				documentURI: 'p12fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4674,7 +4739,7 @@ XMLConformanceOasisTests >> testp12fail2xml [
 			self
 				parse: self class sourcep12fail2xml
 				documentURI: 'p12fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4686,7 +4751,7 @@ XMLConformanceOasisTests >> testp12fail3xml [
 			self
 				parse: self class sourcep12fail3xml
 				documentURI: 'p12fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4698,7 +4763,7 @@ XMLConformanceOasisTests >> testp12fail4xml [
 			self
 				parse: self class sourcep12fail4xml
 				documentURI: 'p12fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4710,7 +4775,7 @@ XMLConformanceOasisTests >> testp12fail5xml [
 			self
 				parse: self class sourcep12fail5xml
 				documentURI: 'p12fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4722,7 +4787,7 @@ XMLConformanceOasisTests >> testp12fail6xml [
 			self
 				parse: self class sourcep12fail6xml
 				documentURI: 'p12fail6.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4734,7 +4799,7 @@ XMLConformanceOasisTests >> testp12fail7xml [
 			self
 				parse: self class sourcep12fail7xml
 				documentURI: 'p12fail7.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4743,10 +4808,15 @@ XMLConformanceOasisTests >> testp12pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep12pass1xml
 				documentURI: 'p12pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4758,7 +4828,7 @@ XMLConformanceOasisTests >> testp14fail1xml [
 			self
 				parse: self class sourcep14fail1xml
 				documentURI: 'p14fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4770,7 +4840,7 @@ XMLConformanceOasisTests >> testp14fail2xml [
 			self
 				parse: self class sourcep14fail2xml
 				documentURI: 'p14fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4782,7 +4852,7 @@ XMLConformanceOasisTests >> testp14fail3xml [
 			self
 				parse: self class sourcep14fail3xml
 				documentURI: 'p14fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4791,10 +4861,15 @@ XMLConformanceOasisTests >> testp14pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep14pass1xml
 				documentURI: 'p14pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4806,7 +4881,7 @@ XMLConformanceOasisTests >> testp15fail1xml [
 			self
 				parse: self class sourcep15fail1xml
 				documentURI: 'p15fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4818,7 +4893,7 @@ XMLConformanceOasisTests >> testp15fail2xml [
 			self
 				parse: self class sourcep15fail2xml
 				documentURI: 'p15fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4830,7 +4905,7 @@ XMLConformanceOasisTests >> testp15fail3xml [
 			self
 				parse: self class sourcep15fail3xml
 				documentURI: 'p15fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4839,10 +4914,15 @@ XMLConformanceOasisTests >> testp15pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep15pass1xml
 				documentURI: 'p15pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4854,7 +4934,7 @@ XMLConformanceOasisTests >> testp16fail1xml [
 			self
 				parse: self class sourcep16fail1xml
 				documentURI: 'p16fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4866,7 +4946,7 @@ XMLConformanceOasisTests >> testp16fail2xml [
 			self
 				parse: self class sourcep16fail2xml
 				documentURI: 'p16fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4878,7 +4958,7 @@ XMLConformanceOasisTests >> testp16fail3xml [
 			self
 				parse: self class sourcep16fail3xml
 				documentURI: 'p16fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4887,10 +4967,15 @@ XMLConformanceOasisTests >> testp16pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep16pass1xml
 				documentURI: 'p16pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4899,10 +4984,15 @@ XMLConformanceOasisTests >> testp16pass2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep16pass2xml
 				documentURI: 'p16pass2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4911,10 +5001,15 @@ XMLConformanceOasisTests >> testp16pass3xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep16pass3xml
 				documentURI: 'p16pass3.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4926,7 +5021,7 @@ XMLConformanceOasisTests >> testp18fail1xml [
 			self
 				parse: self class sourcep18fail1xml
 				documentURI: 'p18fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4938,7 +5033,7 @@ XMLConformanceOasisTests >> testp18fail2xml [
 			self
 				parse: self class sourcep18fail2xml
 				documentURI: 'p18fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4950,7 +5045,7 @@ XMLConformanceOasisTests >> testp18fail3xml [
 			self
 				parse: self class sourcep18fail3xml
 				documentURI: 'p18fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4959,10 +5054,15 @@ XMLConformanceOasisTests >> testp18pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep18pass1xml
 				documentURI: 'p18pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4974,7 +5074,7 @@ XMLConformanceOasisTests >> testp22fail1xml [
 			self
 				parse: self class sourcep22fail1xml
 				documentURI: 'p22fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4986,7 +5086,7 @@ XMLConformanceOasisTests >> testp22fail2xml [
 			self
 				parse: self class sourcep22fail2xml
 				documentURI: 'p22fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4995,10 +5095,15 @@ XMLConformanceOasisTests >> testp22pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep22pass1xml
 				documentURI: 'p22pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5007,10 +5112,15 @@ XMLConformanceOasisTests >> testp22pass2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep22pass2xml
 				documentURI: 'p22pass2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5019,10 +5129,15 @@ XMLConformanceOasisTests >> testp22pass3xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep22pass3xml
 				documentURI: 'p22pass3.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5031,10 +5146,15 @@ XMLConformanceOasisTests >> testp22pass4xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep22pass4xml
 				documentURI: 'p22pass4.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5043,10 +5163,15 @@ XMLConformanceOasisTests >> testp22pass5xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep22pass5xml
 				documentURI: 'p22pass5.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5055,10 +5180,15 @@ XMLConformanceOasisTests >> testp22pass6xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep22pass6xml
 				documentURI: 'p22pass6.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5070,7 +5200,7 @@ XMLConformanceOasisTests >> testp23fail1xml [
 			self
 				parse: self class sourcep23fail1xml
 				documentURI: 'p23fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5082,7 +5212,7 @@ XMLConformanceOasisTests >> testp23fail2xml [
 			self
 				parse: self class sourcep23fail2xml
 				documentURI: 'p23fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5094,7 +5224,7 @@ XMLConformanceOasisTests >> testp23fail3xml [
 			self
 				parse: self class sourcep23fail3xml
 				documentURI: 'p23fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5106,7 +5236,7 @@ XMLConformanceOasisTests >> testp23fail4xml [
 			self
 				parse: self class sourcep23fail4xml
 				documentURI: 'p23fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5118,7 +5248,7 @@ XMLConformanceOasisTests >> testp23fail5xml [
 			self
 				parse: self class sourcep23fail5xml
 				documentURI: 'p23fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5127,10 +5257,15 @@ XMLConformanceOasisTests >> testp23pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep23pass1xml
 				documentURI: 'p23pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5139,10 +5274,15 @@ XMLConformanceOasisTests >> testp23pass2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep23pass2xml
 				documentURI: 'p23pass2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5151,10 +5291,15 @@ XMLConformanceOasisTests >> testp23pass3xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep23pass3xml
 				documentURI: 'p23pass3.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5163,10 +5308,15 @@ XMLConformanceOasisTests >> testp23pass4xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep23pass4xml
 				documentURI: 'p23pass4.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5178,7 +5328,7 @@ XMLConformanceOasisTests >> testp24fail1xml [
 			self
 				parse: self class sourcep24fail1xml
 				documentURI: 'p24fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5190,7 +5340,7 @@ XMLConformanceOasisTests >> testp24fail2xml [
 			self
 				parse: self class sourcep24fail2xml
 				documentURI: 'p24fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5199,10 +5349,15 @@ XMLConformanceOasisTests >> testp24pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep24pass1xml
 				documentURI: 'p24pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5211,10 +5366,15 @@ XMLConformanceOasisTests >> testp24pass2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep24pass2xml
 				documentURI: 'p24pass2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5223,10 +5383,15 @@ XMLConformanceOasisTests >> testp24pass3xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep24pass3xml
 				documentURI: 'p24pass3.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5235,10 +5400,15 @@ XMLConformanceOasisTests >> testp24pass4xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep24pass4xml
 				documentURI: 'p24pass4.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5250,7 +5420,7 @@ XMLConformanceOasisTests >> testp25fail1xml [
 			self
 				parse: self class sourcep25fail1xml
 				documentURI: 'p25fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5259,10 +5429,15 @@ XMLConformanceOasisTests >> testp25pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep25pass1xml
 				documentURI: 'p25pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5271,10 +5446,15 @@ XMLConformanceOasisTests >> testp25pass2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep25pass2xml
 				documentURI: 'p25pass2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5286,7 +5466,7 @@ XMLConformanceOasisTests >> testp26fail1xml [
 			self
 				parse: self class sourcep26fail1xml
 				documentURI: 'p26fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5298,7 +5478,7 @@ XMLConformanceOasisTests >> testp26fail2xml [
 			self
 				parse: self class sourcep26fail2xml
 				documentURI: 'p26fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5307,10 +5487,15 @@ XMLConformanceOasisTests >> testp26pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep26pass1xml
 				documentURI: 'p26pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5322,7 +5507,7 @@ XMLConformanceOasisTests >> testp27fail1xml [
 			self
 				parse: self class sourcep27fail1xml
 				documentURI: 'p27fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5331,10 +5516,15 @@ XMLConformanceOasisTests >> testp27pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep27pass1xml
 				documentURI: 'p27pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5343,10 +5533,15 @@ XMLConformanceOasisTests >> testp27pass2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep27pass2xml
 				documentURI: 'p27pass2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5355,10 +5550,15 @@ XMLConformanceOasisTests >> testp27pass3xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep27pass3xml
 				documentURI: 'p27pass3.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5367,10 +5567,15 @@ XMLConformanceOasisTests >> testp27pass4xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep27pass4xml
 				documentURI: 'p27pass4.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5382,7 +5587,7 @@ XMLConformanceOasisTests >> testp28fail1xml [
 			self
 				parse: self class sourcep28fail1xml
 				documentURI: 'p28fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5391,10 +5596,15 @@ XMLConformanceOasisTests >> testp28pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep28pass1xml
 				documentURI: 'p28pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5403,10 +5613,15 @@ XMLConformanceOasisTests >> testp28pass2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep28pass2xml
 				documentURI: 'p28pass2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5415,10 +5630,15 @@ XMLConformanceOasisTests >> testp28pass3xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep28pass3xml
 				documentURI: 'p28pass3.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5427,10 +5647,15 @@ XMLConformanceOasisTests >> testp28pass4xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep28pass4xml
 				documentURI: 'p28pass4.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5439,10 +5664,15 @@ XMLConformanceOasisTests >> testp28pass5xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep28pass5xml
 				documentURI: 'p28pass5.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5454,7 +5684,7 @@ XMLConformanceOasisTests >> testp29fail1xml [
 			self
 				parse: self class sourcep29fail1xml
 				documentURI: 'p29fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5463,10 +5693,15 @@ XMLConformanceOasisTests >> testp29pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep29pass1xml
 				documentURI: 'p29pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5478,7 +5713,7 @@ XMLConformanceOasisTests >> testp30fail1xml [
 			self
 				parse: self class sourcep30fail1xml
 				documentURI: 'p30fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5487,10 +5722,15 @@ XMLConformanceOasisTests >> testp30pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep30pass1xml
 				documentURI: 'p30pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5499,10 +5739,15 @@ XMLConformanceOasisTests >> testp30pass2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep30pass2xml
 				documentURI: 'p30pass2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5514,7 +5759,7 @@ XMLConformanceOasisTests >> testp31fail1xml [
 			self
 				parse: self class sourcep31fail1xml
 				documentURI: 'p31fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5523,10 +5768,15 @@ XMLConformanceOasisTests >> testp31pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep31pass1xml
 				documentURI: 'p31pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5535,10 +5785,15 @@ XMLConformanceOasisTests >> testp31pass2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep31pass2xml
 				documentURI: 'p31pass2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5550,7 +5805,7 @@ XMLConformanceOasisTests >> testp32fail1xml [
 			self
 				parse: self class sourcep32fail1xml
 				documentURI: 'p32fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5562,7 +5817,7 @@ XMLConformanceOasisTests >> testp32fail2xml [
 			self
 				parse: self class sourcep32fail2xml
 				documentURI: 'p32fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5574,7 +5829,7 @@ XMLConformanceOasisTests >> testp32fail3xml [
 			self
 				parse: self class sourcep32fail3xml
 				documentURI: 'p32fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5586,7 +5841,7 @@ XMLConformanceOasisTests >> testp32fail4xml [
 			self
 				parse: self class sourcep32fail4xml
 				documentURI: 'p32fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5598,7 +5853,7 @@ XMLConformanceOasisTests >> testp32fail5xml [
 			self
 				parse: self class sourcep32fail5xml
 				documentURI: 'p32fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5607,10 +5862,15 @@ XMLConformanceOasisTests >> testp32pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep32pass1xml
 				documentURI: 'p32pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5619,10 +5879,15 @@ XMLConformanceOasisTests >> testp32pass2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep32pass2xml
 				documentURI: 'p32pass2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5634,7 +5899,7 @@ XMLConformanceOasisTests >> testp39fail1xml [
 			self
 				parse: self class sourcep39fail1xml
 				documentURI: 'p39fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5646,7 +5911,7 @@ XMLConformanceOasisTests >> testp39fail2xml [
 			self
 				parse: self class sourcep39fail2xml
 				documentURI: 'p39fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5658,7 +5923,7 @@ XMLConformanceOasisTests >> testp39fail3xml [
 			self
 				parse: self class sourcep39fail3xml
 				documentURI: 'p39fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5670,7 +5935,7 @@ XMLConformanceOasisTests >> testp39fail4xml [
 			self
 				parse: self class sourcep39fail4xml
 				documentURI: 'p39fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5682,7 +5947,7 @@ XMLConformanceOasisTests >> testp39fail5xml [
 			self
 				parse: self class sourcep39fail5xml
 				documentURI: 'p39fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5691,10 +5956,15 @@ XMLConformanceOasisTests >> testp39pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep39pass1xml
 				documentURI: 'p39pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5703,10 +5973,15 @@ XMLConformanceOasisTests >> testp39pass2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep39pass2xml
 				documentURI: 'p39pass2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5718,7 +5993,7 @@ XMLConformanceOasisTests >> testp40fail1xml [
 			self
 				parse: self class sourcep40fail1xml
 				documentURI: 'p40fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5730,7 +6005,7 @@ XMLConformanceOasisTests >> testp40fail2xml [
 			self
 				parse: self class sourcep40fail2xml
 				documentURI: 'p40fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5742,7 +6017,7 @@ XMLConformanceOasisTests >> testp40fail3xml [
 			self
 				parse: self class sourcep40fail3xml
 				documentURI: 'p40fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5754,7 +6029,7 @@ XMLConformanceOasisTests >> testp40fail4xml [
 			self
 				parse: self class sourcep40fail4xml
 				documentURI: 'p40fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5763,10 +6038,15 @@ XMLConformanceOasisTests >> testp40pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep40pass1xml
 				documentURI: 'p40pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5775,10 +6055,15 @@ XMLConformanceOasisTests >> testp40pass2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep40pass2xml
 				documentURI: 'p40pass2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5787,10 +6072,15 @@ XMLConformanceOasisTests >> testp40pass3xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep40pass3xml
 				documentURI: 'p40pass3.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5799,10 +6089,15 @@ XMLConformanceOasisTests >> testp40pass4xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep40pass4xml
 				documentURI: 'p40pass4.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5814,7 +6109,7 @@ XMLConformanceOasisTests >> testp41fail1xml [
 			self
 				parse: self class sourcep41fail1xml
 				documentURI: 'p41fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5826,7 +6121,7 @@ XMLConformanceOasisTests >> testp41fail2xml [
 			self
 				parse: self class sourcep41fail2xml
 				documentURI: 'p41fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5838,7 +6133,7 @@ XMLConformanceOasisTests >> testp41fail3xml [
 			self
 				parse: self class sourcep41fail3xml
 				documentURI: 'p41fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5847,10 +6142,15 @@ XMLConformanceOasisTests >> testp41pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep41pass1xml
 				documentURI: 'p41pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5859,10 +6159,15 @@ XMLConformanceOasisTests >> testp41pass2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep41pass2xml
 				documentURI: 'p41pass2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5874,7 +6179,7 @@ XMLConformanceOasisTests >> testp42fail1xml [
 			self
 				parse: self class sourcep42fail1xml
 				documentURI: 'p42fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5886,7 +6191,7 @@ XMLConformanceOasisTests >> testp42fail2xml [
 			self
 				parse: self class sourcep42fail2xml
 				documentURI: 'p42fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5898,7 +6203,7 @@ XMLConformanceOasisTests >> testp42fail3xml [
 			self
 				parse: self class sourcep42fail3xml
 				documentURI: 'p42fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5907,10 +6212,15 @@ XMLConformanceOasisTests >> testp42pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep42pass1xml
 				documentURI: 'p42pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5919,10 +6229,15 @@ XMLConformanceOasisTests >> testp42pass2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep42pass2xml
 				documentURI: 'p42pass2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5934,7 +6249,7 @@ XMLConformanceOasisTests >> testp43fail1xml [
 			self
 				parse: self class sourcep43fail1xml
 				documentURI: 'p43fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5946,7 +6261,7 @@ XMLConformanceOasisTests >> testp43fail2xml [
 			self
 				parse: self class sourcep43fail2xml
 				documentURI: 'p43fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5958,7 +6273,7 @@ XMLConformanceOasisTests >> testp43fail3xml [
 			self
 				parse: self class sourcep43fail3xml
 				documentURI: 'p43fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -5967,10 +6282,15 @@ XMLConformanceOasisTests >> testp43pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep43pass1xml
 				documentURI: 'p43pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5982,7 +6302,7 @@ XMLConformanceOasisTests >> testp44fail1xml [
 			self
 				parse: self class sourcep44fail1xml
 				documentURI: 'p44fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -5994,7 +6314,7 @@ XMLConformanceOasisTests >> testp44fail2xml [
 			self
 				parse: self class sourcep44fail2xml
 				documentURI: 'p44fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6006,7 +6326,7 @@ XMLConformanceOasisTests >> testp44fail3xml [
 			self
 				parse: self class sourcep44fail3xml
 				documentURI: 'p44fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6018,7 +6338,7 @@ XMLConformanceOasisTests >> testp44fail4xml [
 			self
 				parse: self class sourcep44fail4xml
 				documentURI: 'p44fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6030,7 +6350,7 @@ XMLConformanceOasisTests >> testp44fail5xml [
 			self
 				parse: self class sourcep44fail5xml
 				documentURI: 'p44fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6039,10 +6359,15 @@ XMLConformanceOasisTests >> testp44pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep44pass1xml
 				documentURI: 'p44pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6051,10 +6376,15 @@ XMLConformanceOasisTests >> testp44pass2xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep44pass2xml
 				documentURI: 'p44pass2.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6063,10 +6393,15 @@ XMLConformanceOasisTests >> testp44pass3xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep44pass3xml
 				documentURI: 'p44pass3.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6075,10 +6410,15 @@ XMLConformanceOasisTests >> testp44pass4xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep44pass4xml
 				documentURI: 'p44pass4.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6087,10 +6427,15 @@ XMLConformanceOasisTests >> testp44pass5xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep44pass5xml
 				documentURI: 'p44pass5.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6102,7 +6447,7 @@ XMLConformanceOasisTests >> testp45fail1xml [
 			self
 				parse: self class sourcep45fail1xml
 				documentURI: 'p45fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6114,7 +6459,7 @@ XMLConformanceOasisTests >> testp45fail2xml [
 			self
 				parse: self class sourcep45fail2xml
 				documentURI: 'p45fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6126,7 +6471,7 @@ XMLConformanceOasisTests >> testp45fail3xml [
 			self
 				parse: self class sourcep45fail3xml
 				documentURI: 'p45fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6138,7 +6483,7 @@ XMLConformanceOasisTests >> testp45fail4xml [
 			self
 				parse: self class sourcep45fail4xml
 				documentURI: 'p45fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6147,10 +6492,15 @@ XMLConformanceOasisTests >> testp45pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep45pass1xml
 				documentURI: 'p45pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6162,7 +6512,7 @@ XMLConformanceOasisTests >> testp46fail1xml [
 			self
 				parse: self class sourcep46fail1xml
 				documentURI: 'p46fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6174,7 +6524,7 @@ XMLConformanceOasisTests >> testp46fail2xml [
 			self
 				parse: self class sourcep46fail2xml
 				documentURI: 'p46fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6186,7 +6536,7 @@ XMLConformanceOasisTests >> testp46fail3xml [
 			self
 				parse: self class sourcep46fail3xml
 				documentURI: 'p46fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6198,7 +6548,7 @@ XMLConformanceOasisTests >> testp46fail4xml [
 			self
 				parse: self class sourcep46fail4xml
 				documentURI: 'p46fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6210,7 +6560,7 @@ XMLConformanceOasisTests >> testp46fail5xml [
 			self
 				parse: self class sourcep46fail5xml
 				documentURI: 'p46fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6222,7 +6572,7 @@ XMLConformanceOasisTests >> testp46fail6xml [
 			self
 				parse: self class sourcep46fail6xml
 				documentURI: 'p46fail6.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6231,10 +6581,15 @@ XMLConformanceOasisTests >> testp46pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep46pass1xml
 				documentURI: 'p46pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6246,7 +6601,7 @@ XMLConformanceOasisTests >> testp47fail1xml [
 			self
 				parse: self class sourcep47fail1xml
 				documentURI: 'p47fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6258,7 +6613,7 @@ XMLConformanceOasisTests >> testp47fail2xml [
 			self
 				parse: self class sourcep47fail2xml
 				documentURI: 'p47fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6270,7 +6625,7 @@ XMLConformanceOasisTests >> testp47fail3xml [
 			self
 				parse: self class sourcep47fail3xml
 				documentURI: 'p47fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6282,7 +6637,7 @@ XMLConformanceOasisTests >> testp47fail4xml [
 			self
 				parse: self class sourcep47fail4xml
 				documentURI: 'p47fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6291,10 +6646,15 @@ XMLConformanceOasisTests >> testp47pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep47pass1xml
 				documentURI: 'p47pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6306,7 +6666,7 @@ XMLConformanceOasisTests >> testp48fail1xml [
 			self
 				parse: self class sourcep48fail1xml
 				documentURI: 'p48fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6318,7 +6678,7 @@ XMLConformanceOasisTests >> testp48fail2xml [
 			self
 				parse: self class sourcep48fail2xml
 				documentURI: 'p48fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6327,10 +6687,15 @@ XMLConformanceOasisTests >> testp48pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep48pass1xml
 				documentURI: 'p48pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6342,7 +6707,7 @@ XMLConformanceOasisTests >> testp49fail1xml [
 			self
 				parse: self class sourcep49fail1xml
 				documentURI: 'p49fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6351,10 +6716,15 @@ XMLConformanceOasisTests >> testp49pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep49pass1xml
 				documentURI: 'p49pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6366,7 +6736,7 @@ XMLConformanceOasisTests >> testp50fail1xml [
 			self
 				parse: self class sourcep50fail1xml
 				documentURI: 'p50fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6375,10 +6745,15 @@ XMLConformanceOasisTests >> testp50pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep50pass1xml
 				documentURI: 'p50pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6390,7 +6765,7 @@ XMLConformanceOasisTests >> testp51fail1xml [
 			self
 				parse: self class sourcep51fail1xml
 				documentURI: 'p51fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6402,7 +6777,7 @@ XMLConformanceOasisTests >> testp51fail2xml [
 			self
 				parse: self class sourcep51fail2xml
 				documentURI: 'p51fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6414,7 +6789,7 @@ XMLConformanceOasisTests >> testp51fail3xml [
 			self
 				parse: self class sourcep51fail3xml
 				documentURI: 'p51fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6426,7 +6801,7 @@ XMLConformanceOasisTests >> testp51fail4xml [
 			self
 				parse: self class sourcep51fail4xml
 				documentURI: 'p51fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6438,7 +6813,7 @@ XMLConformanceOasisTests >> testp51fail5xml [
 			self
 				parse: self class sourcep51fail5xml
 				documentURI: 'p51fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6450,7 +6825,7 @@ XMLConformanceOasisTests >> testp51fail6xml [
 			self
 				parse: self class sourcep51fail6xml
 				documentURI: 'p51fail6.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6462,7 +6837,7 @@ XMLConformanceOasisTests >> testp51fail7xml [
 			self
 				parse: self class sourcep51fail7xml
 				documentURI: 'p51fail7.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6471,10 +6846,15 @@ XMLConformanceOasisTests >> testp51pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep51pass1xml
 				documentURI: 'p51pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6486,7 +6866,7 @@ XMLConformanceOasisTests >> testp52fail1xml [
 			self
 				parse: self class sourcep52fail1xml
 				documentURI: 'p52fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6498,7 +6878,7 @@ XMLConformanceOasisTests >> testp52fail2xml [
 			self
 				parse: self class sourcep52fail2xml
 				documentURI: 'p52fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6507,10 +6887,15 @@ XMLConformanceOasisTests >> testp52pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep52pass1xml
 				documentURI: 'p52pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6522,7 +6907,7 @@ XMLConformanceOasisTests >> testp53fail1xml [
 			self
 				parse: self class sourcep53fail1xml
 				documentURI: 'p53fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6534,7 +6919,7 @@ XMLConformanceOasisTests >> testp53fail2xml [
 			self
 				parse: self class sourcep53fail2xml
 				documentURI: 'p53fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6546,7 +6931,7 @@ XMLConformanceOasisTests >> testp53fail3xml [
 			self
 				parse: self class sourcep53fail3xml
 				documentURI: 'p53fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6558,7 +6943,7 @@ XMLConformanceOasisTests >> testp53fail4xml [
 			self
 				parse: self class sourcep53fail4xml
 				documentURI: 'p53fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6570,7 +6955,7 @@ XMLConformanceOasisTests >> testp53fail5xml [
 			self
 				parse: self class sourcep53fail5xml
 				documentURI: 'p53fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6579,10 +6964,15 @@ XMLConformanceOasisTests >> testp53pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep53pass1xml
 				documentURI: 'p53pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6594,7 +6984,7 @@ XMLConformanceOasisTests >> testp54fail1xml [
 			self
 				parse: self class sourcep54fail1xml
 				documentURI: 'p54fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6603,10 +6993,15 @@ XMLConformanceOasisTests >> testp54pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep54pass1xml
 				documentURI: 'p54pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6618,7 +7013,7 @@ XMLConformanceOasisTests >> testp55fail1xml [
 			self
 				parse: self class sourcep55fail1xml
 				documentURI: 'p55fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6627,10 +7022,15 @@ XMLConformanceOasisTests >> testp55pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep55pass1xml
 				documentURI: 'p55pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6642,7 +7042,7 @@ XMLConformanceOasisTests >> testp56fail1xml [
 			self
 				parse: self class sourcep56fail1xml
 				documentURI: 'p56fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6654,7 +7054,7 @@ XMLConformanceOasisTests >> testp56fail2xml [
 			self
 				parse: self class sourcep56fail2xml
 				documentURI: 'p56fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6666,7 +7066,7 @@ XMLConformanceOasisTests >> testp56fail3xml [
 			self
 				parse: self class sourcep56fail3xml
 				documentURI: 'p56fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6678,7 +7078,7 @@ XMLConformanceOasisTests >> testp56fail4xml [
 			self
 				parse: self class sourcep56fail4xml
 				documentURI: 'p56fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6690,7 +7090,7 @@ XMLConformanceOasisTests >> testp56fail5xml [
 			self
 				parse: self class sourcep56fail5xml
 				documentURI: 'p56fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6699,10 +7099,15 @@ XMLConformanceOasisTests >> testp56pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep56pass1xml
 				documentURI: 'p56pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6714,7 +7119,7 @@ XMLConformanceOasisTests >> testp57fail1xml [
 			self
 				parse: self class sourcep57fail1xml
 				documentURI: 'p57fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6723,10 +7128,15 @@ XMLConformanceOasisTests >> testp57pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep57pass1xml
 				documentURI: 'p57pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6738,7 +7148,7 @@ XMLConformanceOasisTests >> testp58fail1xml [
 			self
 				parse: self class sourcep58fail1xml
 				documentURI: 'p58fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6750,7 +7160,7 @@ XMLConformanceOasisTests >> testp58fail2xml [
 			self
 				parse: self class sourcep58fail2xml
 				documentURI: 'p58fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6762,7 +7172,7 @@ XMLConformanceOasisTests >> testp58fail3xml [
 			self
 				parse: self class sourcep58fail3xml
 				documentURI: 'p58fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6774,7 +7184,7 @@ XMLConformanceOasisTests >> testp58fail4xml [
 			self
 				parse: self class sourcep58fail4xml
 				documentURI: 'p58fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6786,7 +7196,7 @@ XMLConformanceOasisTests >> testp58fail5xml [
 			self
 				parse: self class sourcep58fail5xml
 				documentURI: 'p58fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6798,7 +7208,7 @@ XMLConformanceOasisTests >> testp58fail6xml [
 			self
 				parse: self class sourcep58fail6xml
 				documentURI: 'p58fail6.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6810,7 +7220,7 @@ XMLConformanceOasisTests >> testp58fail7xml [
 			self
 				parse: self class sourcep58fail7xml
 				documentURI: 'p58fail7.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6822,7 +7232,7 @@ XMLConformanceOasisTests >> testp58fail8xml [
 			self
 				parse: self class sourcep58fail8xml
 				documentURI: 'p58fail8.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6831,10 +7241,15 @@ XMLConformanceOasisTests >> testp58pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep58pass1xml
 				documentURI: 'p58pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6846,7 +7261,7 @@ XMLConformanceOasisTests >> testp59fail1xml [
 			self
 				parse: self class sourcep59fail1xml
 				documentURI: 'p59fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6858,7 +7273,7 @@ XMLConformanceOasisTests >> testp59fail2xml [
 			self
 				parse: self class sourcep59fail2xml
 				documentURI: 'p59fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6870,7 +7285,7 @@ XMLConformanceOasisTests >> testp59fail3xml [
 			self
 				parse: self class sourcep59fail3xml
 				documentURI: 'p59fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6879,10 +7294,15 @@ XMLConformanceOasisTests >> testp59pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep59pass1xml
 				documentURI: 'p59pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6894,7 +7314,7 @@ XMLConformanceOasisTests >> testp60fail1xml [
 			self
 				parse: self class sourcep60fail1xml
 				documentURI: 'p60fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6906,7 +7326,7 @@ XMLConformanceOasisTests >> testp60fail2xml [
 			self
 				parse: self class sourcep60fail2xml
 				documentURI: 'p60fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6918,7 +7338,7 @@ XMLConformanceOasisTests >> testp60fail3xml [
 			self
 				parse: self class sourcep60fail3xml
 				documentURI: 'p60fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6930,7 +7350,7 @@ XMLConformanceOasisTests >> testp60fail4xml [
 			self
 				parse: self class sourcep60fail4xml
 				documentURI: 'p60fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6942,7 +7362,7 @@ XMLConformanceOasisTests >> testp60fail5xml [
 			self
 				parse: self class sourcep60fail5xml
 				documentURI: 'p60fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6951,10 +7371,15 @@ XMLConformanceOasisTests >> testp60pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep60pass1xml
 				documentURI: 'p60pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6966,7 +7391,7 @@ XMLConformanceOasisTests >> testp61fail1xml [
 			self
 				parse: self class sourcep61fail1xml
 				documentURI: 'p61fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -6975,10 +7400,15 @@ XMLConformanceOasisTests >> testp61pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep61pass1xml
 				documentURI: 'p61pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -6990,7 +7420,7 @@ XMLConformanceOasisTests >> testp62fail1xml [
 			self
 				parse: self class sourcep62fail1xml
 				documentURI: 'p62fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7002,7 +7432,7 @@ XMLConformanceOasisTests >> testp62fail2xml [
 			self
 				parse: self class sourcep62fail2xml
 				documentURI: 'p62fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7011,10 +7441,15 @@ XMLConformanceOasisTests >> testp62pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep62pass1xml
 				documentURI: 'p62pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7026,7 +7461,7 @@ XMLConformanceOasisTests >> testp63fail1xml [
 			self
 				parse: self class sourcep63fail1xml
 				documentURI: 'p63fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7038,7 +7473,7 @@ XMLConformanceOasisTests >> testp63fail2xml [
 			self
 				parse: self class sourcep63fail2xml
 				documentURI: 'p63fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7047,10 +7482,15 @@ XMLConformanceOasisTests >> testp63pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep63pass1xml
 				documentURI: 'p63pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7062,7 +7502,7 @@ XMLConformanceOasisTests >> testp64fail1xml [
 			self
 				parse: self class sourcep64fail1xml
 				documentURI: 'p64fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7074,7 +7514,7 @@ XMLConformanceOasisTests >> testp64fail2xml [
 			self
 				parse: self class sourcep64fail2xml
 				documentURI: 'p64fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7083,10 +7523,15 @@ XMLConformanceOasisTests >> testp64pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep64pass1xml
 				documentURI: 'p64pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7098,7 +7543,7 @@ XMLConformanceOasisTests >> testp66fail1xml [
 			self
 				parse: self class sourcep66fail1xml
 				documentURI: 'p66fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7110,7 +7555,7 @@ XMLConformanceOasisTests >> testp66fail2xml [
 			self
 				parse: self class sourcep66fail2xml
 				documentURI: 'p66fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7122,7 +7567,7 @@ XMLConformanceOasisTests >> testp66fail3xml [
 			self
 				parse: self class sourcep66fail3xml
 				documentURI: 'p66fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7134,7 +7579,7 @@ XMLConformanceOasisTests >> testp66fail4xml [
 			self
 				parse: self class sourcep66fail4xml
 				documentURI: 'p66fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7146,7 +7591,7 @@ XMLConformanceOasisTests >> testp66fail5xml [
 			self
 				parse: self class sourcep66fail5xml
 				documentURI: 'p66fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7158,7 +7603,7 @@ XMLConformanceOasisTests >> testp66fail6xml [
 			self
 				parse: self class sourcep66fail6xml
 				documentURI: 'p66fail6.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7167,10 +7612,15 @@ XMLConformanceOasisTests >> testp66pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep66pass1xml
 				documentURI: 'p66pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7182,7 +7632,7 @@ XMLConformanceOasisTests >> testp68fail1xml [
 			self
 				parse: self class sourcep68fail1xml
 				documentURI: 'p68fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7194,7 +7644,7 @@ XMLConformanceOasisTests >> testp68fail2xml [
 			self
 				parse: self class sourcep68fail2xml
 				documentURI: 'p68fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7206,7 +7656,7 @@ XMLConformanceOasisTests >> testp68fail3xml [
 			self
 				parse: self class sourcep68fail3xml
 				documentURI: 'p68fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7215,10 +7665,15 @@ XMLConformanceOasisTests >> testp68pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep68pass1xml
 				documentURI: 'p68pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7230,7 +7685,7 @@ XMLConformanceOasisTests >> testp69fail1xml [
 			self
 				parse: self class sourcep69fail1xml
 				documentURI: 'p69fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7242,7 +7697,7 @@ XMLConformanceOasisTests >> testp69fail2xml [
 			self
 				parse: self class sourcep69fail2xml
 				documentURI: 'p69fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7254,7 +7709,7 @@ XMLConformanceOasisTests >> testp69fail3xml [
 			self
 				parse: self class sourcep69fail3xml
 				documentURI: 'p69fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7263,10 +7718,15 @@ XMLConformanceOasisTests >> testp69pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep69pass1xml
 				documentURI: 'p69pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7278,7 +7738,7 @@ XMLConformanceOasisTests >> testp70fail1xml [
 			self
 				parse: self class sourcep70fail1xml
 				documentURI: 'p70fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7287,10 +7747,15 @@ XMLConformanceOasisTests >> testp70pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep70pass1xml
 				documentURI: 'p70pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7302,7 +7767,7 @@ XMLConformanceOasisTests >> testp71fail1xml [
 			self
 				parse: self class sourcep71fail1xml
 				documentURI: 'p71fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7314,7 +7779,7 @@ XMLConformanceOasisTests >> testp71fail2xml [
 			self
 				parse: self class sourcep71fail2xml
 				documentURI: 'p71fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7326,7 +7791,7 @@ XMLConformanceOasisTests >> testp71fail3xml [
 			self
 				parse: self class sourcep71fail3xml
 				documentURI: 'p71fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7338,7 +7803,7 @@ XMLConformanceOasisTests >> testp71fail4xml [
 			self
 				parse: self class sourcep71fail4xml
 				documentURI: 'p71fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7347,10 +7812,15 @@ XMLConformanceOasisTests >> testp71pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep71pass1xml
 				documentURI: 'p71pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7362,7 +7832,7 @@ XMLConformanceOasisTests >> testp72fail1xml [
 			self
 				parse: self class sourcep72fail1xml
 				documentURI: 'p72fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7374,7 +7844,7 @@ XMLConformanceOasisTests >> testp72fail2xml [
 			self
 				parse: self class sourcep72fail2xml
 				documentURI: 'p72fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7386,7 +7856,7 @@ XMLConformanceOasisTests >> testp72fail3xml [
 			self
 				parse: self class sourcep72fail3xml
 				documentURI: 'p72fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7398,7 +7868,7 @@ XMLConformanceOasisTests >> testp72fail4xml [
 			self
 				parse: self class sourcep72fail4xml
 				documentURI: 'p72fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7407,10 +7877,15 @@ XMLConformanceOasisTests >> testp72pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep72pass1xml
 				documentURI: 'p72pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7422,7 +7897,7 @@ XMLConformanceOasisTests >> testp73fail1xml [
 			self
 				parse: self class sourcep73fail1xml
 				documentURI: 'p73fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7434,7 +7909,7 @@ XMLConformanceOasisTests >> testp73fail2xml [
 			self
 				parse: self class sourcep73fail2xml
 				documentURI: 'p73fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7446,7 +7921,7 @@ XMLConformanceOasisTests >> testp73fail3xml [
 			self
 				parse: self class sourcep73fail3xml
 				documentURI: 'p73fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7458,7 +7933,7 @@ XMLConformanceOasisTests >> testp73fail4xml [
 			self
 				parse: self class sourcep73fail4xml
 				documentURI: 'p73fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7470,7 +7945,7 @@ XMLConformanceOasisTests >> testp73fail5xml [
 			self
 				parse: self class sourcep73fail5xml
 				documentURI: 'p73fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7479,10 +7954,15 @@ XMLConformanceOasisTests >> testp73pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep73pass1xml
 				documentURI: 'p73pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7494,7 +7974,7 @@ XMLConformanceOasisTests >> testp74fail1xml [
 			self
 				parse: self class sourcep74fail1xml
 				documentURI: 'p74fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7506,7 +7986,7 @@ XMLConformanceOasisTests >> testp74fail2xml [
 			self
 				parse: self class sourcep74fail2xml
 				documentURI: 'p74fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7518,7 +7998,7 @@ XMLConformanceOasisTests >> testp74fail3xml [
 			self
 				parse: self class sourcep74fail3xml
 				documentURI: 'p74fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7527,10 +8007,15 @@ XMLConformanceOasisTests >> testp74pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep74pass1xml
 				documentURI: 'p74pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7542,7 +8027,7 @@ XMLConformanceOasisTests >> testp75fail1xml [
 			self
 				parse: self class sourcep75fail1xml
 				documentURI: 'p75fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7554,7 +8039,7 @@ XMLConformanceOasisTests >> testp75fail2xml [
 			self
 				parse: self class sourcep75fail2xml
 				documentURI: 'p75fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7566,7 +8051,7 @@ XMLConformanceOasisTests >> testp75fail3xml [
 			self
 				parse: self class sourcep75fail3xml
 				documentURI: 'p75fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7578,7 +8063,7 @@ XMLConformanceOasisTests >> testp75fail4xml [
 			self
 				parse: self class sourcep75fail4xml
 				documentURI: 'p75fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7590,7 +8075,7 @@ XMLConformanceOasisTests >> testp75fail5xml [
 			self
 				parse: self class sourcep75fail5xml
 				documentURI: 'p75fail5.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7602,7 +8087,7 @@ XMLConformanceOasisTests >> testp75fail6xml [
 			self
 				parse: self class sourcep75fail6xml
 				documentURI: 'p75fail6.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7611,10 +8096,15 @@ XMLConformanceOasisTests >> testp75pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep75pass1xml
 				documentURI: 'p75pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7626,7 +8116,7 @@ XMLConformanceOasisTests >> testp76fail1xml [
 			self
 				parse: self class sourcep76fail1xml
 				documentURI: 'p76fail1.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7638,7 +8128,7 @@ XMLConformanceOasisTests >> testp76fail2xml [
 			self
 				parse: self class sourcep76fail2xml
 				documentURI: 'p76fail2.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7650,7 +8140,7 @@ XMLConformanceOasisTests >> testp76fail3xml [
 			self
 				parse: self class sourcep76fail3xml
 				documentURI: 'p76fail3.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -7662,7 +8152,7 @@ XMLConformanceOasisTests >> testp76fail4xml [
 			self
 				parse: self class sourcep76fail4xml
 				documentURI: 'p76fail4.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -7671,8 +8161,13 @@ XMLConformanceOasisTests >> testp76pass1xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcep76pass1xml
 				documentURI: 'p76pass1.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]

@@ -157,7 +157,7 @@ XMLConformanceTests class >> failingTestMethodTemplate [
 			self
 				parse: self class {3}
 				documentURI: ''{4}'']
-		raise: self exceptionClass'
+		raise: self parserExceptions'
 ]
 
 { #category : #'method templates' }
@@ -167,10 +167,15 @@ XMLConformanceTests class >> passingTestMethodTemplate [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class {3}
 				documentURI: ''{4}'']
-		raise: self exceptionClass'
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions'
 ]
 
 { #category : #paths }
@@ -180,7 +185,7 @@ XMLConformanceTests class >> pathStringFrom: aFileReference [
 
 { #category : #selectors }
 XMLConformanceTests class >> sanitizedSelectorPartFromSegments: aSegmentArray [
-	^ aSegmentArray concatenation asString select: [:each | each isAlphaNumeric]
+	^ ('' join: aSegmentArray) select: [:each | each isAlphaNumeric]
 ]
 
 { #category : #paths }
@@ -229,13 +234,13 @@ XMLConformanceTests class >> testSelectorFrom: aFileReference [
 ]
 
 { #category : #accessing }
-XMLConformanceTests >> exceptionClass [
-	^ XMLParserException
-]
-
-{ #category : #accessing }
 XMLConformanceTests >> fileClientClass [
 	^ XMLConformanceVirtualFileClient
+]
+
+{ #category : #testing }
+XMLConformanceTests >> isSkippableException: anError [
+	^ (XMLFileIOException, XMLHTTPException, XMLEntityDepthException) handles: anError
 ]
 
 { #category : #parsing }
@@ -246,7 +251,7 @@ XMLConformanceTests >> parse: aString documentURI: aUri [
 		self parserClass
 			on: aString
 			documentURI: aUri.
-	parser configuration fileClient:
+	parser externalEntityResolver fileClient:
 		(self fileClientClass testCaseClass: self class).
 	parser
 		usesNamespaces: true;
@@ -258,4 +263,9 @@ XMLConformanceTests >> parse: aString documentURI: aUri [
 { #category : #accessing }
 XMLConformanceTests >> parserClass [
 	^ SAXHandler
+]
+
+{ #category : #accessing }
+XMLConformanceTests >> parserExceptions [
+	^ XMLParserException
 ]

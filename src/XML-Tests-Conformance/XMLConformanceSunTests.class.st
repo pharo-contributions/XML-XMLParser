@@ -2913,7 +2913,7 @@ XMLConformanceSunTests >> testinvalidattr01xml [
 			self
 				parse: self class sourceinvalidattr01xml
 				documentURI: 'invalid/attr01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -2925,7 +2925,7 @@ XMLConformanceSunTests >> testinvalidattr02xml [
 			self
 				parse: self class sourceinvalidattr02xml
 				documentURI: 'invalid/attr02.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -2937,7 +2937,7 @@ XMLConformanceSunTests >> testinvalidattr03xml [
 			self
 				parse: self class sourceinvalidattr03xml
 				documentURI: 'invalid/attr03.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -2949,7 +2949,7 @@ XMLConformanceSunTests >> testinvalidattr04xml [
 			self
 				parse: self class sourceinvalidattr04xml
 				documentURI: 'invalid/attr04.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -2961,7 +2961,7 @@ XMLConformanceSunTests >> testinvalidattr05xml [
 			self
 				parse: self class sourceinvalidattr05xml
 				documentURI: 'invalid/attr05.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -2973,7 +2973,7 @@ XMLConformanceSunTests >> testinvalidattr06xml [
 			self
 				parse: self class sourceinvalidattr06xml
 				documentURI: 'invalid/attr06.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -2985,7 +2985,7 @@ XMLConformanceSunTests >> testinvalidattr07xml [
 			self
 				parse: self class sourceinvalidattr07xml
 				documentURI: 'invalid/attr07.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -2997,7 +2997,7 @@ XMLConformanceSunTests >> testinvalidattr08xml [
 			self
 				parse: self class sourceinvalidattr08xml
 				documentURI: 'invalid/attr08.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3009,7 +3009,7 @@ XMLConformanceSunTests >> testinvalidattr09xml [
 			self
 				parse: self class sourceinvalidattr09xml
 				documentURI: 'invalid/attr09.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3021,7 +3021,7 @@ XMLConformanceSunTests >> testinvalidattr10xml [
 			self
 				parse: self class sourceinvalidattr10xml
 				documentURI: 'invalid/attr10.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3033,7 +3033,7 @@ XMLConformanceSunTests >> testinvalidattr11xml [
 			self
 				parse: self class sourceinvalidattr11xml
 				documentURI: 'invalid/attr11.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3045,7 +3045,7 @@ XMLConformanceSunTests >> testinvalidattr12xml [
 			self
 				parse: self class sourceinvalidattr12xml
 				documentURI: 'invalid/attr12.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3057,7 +3057,7 @@ XMLConformanceSunTests >> testinvalidattr13xml [
 			self
 				parse: self class sourceinvalidattr13xml
 				documentURI: 'invalid/attr13.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3069,7 +3069,7 @@ XMLConformanceSunTests >> testinvalidattr14xml [
 			self
 				parse: self class sourceinvalidattr14xml
 				documentURI: 'invalid/attr14.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3081,7 +3081,7 @@ XMLConformanceSunTests >> testinvalidattr15xml [
 			self
 				parse: self class sourceinvalidattr15xml
 				documentURI: 'invalid/attr15.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3093,7 +3093,7 @@ XMLConformanceSunTests >> testinvalidattr16xml [
 			self
 				parse: self class sourceinvalidattr16xml
 				documentURI: 'invalid/attr16.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3105,7 +3105,7 @@ XMLConformanceSunTests >> testinvaliddtd01xml [
 			self
 				parse: self class sourceinvaliddtd01xml
 				documentURI: 'invalid/dtd01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3117,7 +3117,7 @@ XMLConformanceSunTests >> testinvaliddtd02xml [
 			self
 				parse: self class sourceinvaliddtd02xml
 				documentURI: 'invalid/dtd02.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3129,7 +3129,7 @@ XMLConformanceSunTests >> testinvaliddtd03xml [
 			self
 				parse: self class sourceinvaliddtd03xml
 				documentURI: 'invalid/dtd03.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3141,7 +3141,7 @@ XMLConformanceSunTests >> testinvaliddtd06xml [
 			self
 				parse: self class sourceinvaliddtd06xml
 				documentURI: 'invalid/dtd06.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3153,7 +3153,7 @@ XMLConformanceSunTests >> testinvalidel01xml [
 			self
 				parse: self class sourceinvalidel01xml
 				documentURI: 'invalid/el01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3165,7 +3165,7 @@ XMLConformanceSunTests >> testinvalidel02xml [
 			self
 				parse: self class sourceinvalidel02xml
 				documentURI: 'invalid/el02.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3177,7 +3177,7 @@ XMLConformanceSunTests >> testinvalidel03xml [
 			self
 				parse: self class sourceinvalidel03xml
 				documentURI: 'invalid/el03.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3189,7 +3189,7 @@ XMLConformanceSunTests >> testinvalidel04xml [
 			self
 				parse: self class sourceinvalidel04xml
 				documentURI: 'invalid/el04.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3201,7 +3201,7 @@ XMLConformanceSunTests >> testinvalidel05xml [
 			self
 				parse: self class sourceinvalidel05xml
 				documentURI: 'invalid/el05.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3213,7 +3213,7 @@ XMLConformanceSunTests >> testinvalidel06xml [
 			self
 				parse: self class sourceinvalidel06xml
 				documentURI: 'invalid/el06.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3225,7 +3225,7 @@ XMLConformanceSunTests >> testinvalidemptyxml [
 			self
 				parse: self class sourceinvalidemptyxml
 				documentURI: 'invalid/empty.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3237,7 +3237,7 @@ XMLConformanceSunTests >> testinvalidid01xml [
 			self
 				parse: self class sourceinvalidid01xml
 				documentURI: 'invalid/id01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3249,7 +3249,7 @@ XMLConformanceSunTests >> testinvalidid02xml [
 			self
 				parse: self class sourceinvalidid02xml
 				documentURI: 'invalid/id02.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3261,7 +3261,7 @@ XMLConformanceSunTests >> testinvalidid03xml [
 			self
 				parse: self class sourceinvalidid03xml
 				documentURI: 'invalid/id03.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3273,7 +3273,7 @@ XMLConformanceSunTests >> testinvalidid04xml [
 			self
 				parse: self class sourceinvalidid04xml
 				documentURI: 'invalid/id04.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3285,7 +3285,7 @@ XMLConformanceSunTests >> testinvalidid05xml [
 			self
 				parse: self class sourceinvalidid05xml
 				documentURI: 'invalid/id05.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3297,7 +3297,7 @@ XMLConformanceSunTests >> testinvalidid06xml [
 			self
 				parse: self class sourceinvalidid06xml
 				documentURI: 'invalid/id06.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3309,7 +3309,7 @@ XMLConformanceSunTests >> testinvalidid07xml [
 			self
 				parse: self class sourceinvalidid07xml
 				documentURI: 'invalid/id07.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3321,7 +3321,7 @@ XMLConformanceSunTests >> testinvalidid08xml [
 			self
 				parse: self class sourceinvalidid08xml
 				documentURI: 'invalid/id08.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3333,7 +3333,7 @@ XMLConformanceSunTests >> testinvalidid09xml [
 			self
 				parse: self class sourceinvalidid09xml
 				documentURI: 'invalid/id09.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3345,7 +3345,7 @@ XMLConformanceSunTests >> testinvalidnotsa01xml [
 			self
 				parse: self class sourceinvalidnotsa01xml
 				documentURI: 'invalid/not-sa01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3357,7 +3357,7 @@ XMLConformanceSunTests >> testinvalidnotsa02xml [
 			self
 				parse: self class sourceinvalidnotsa02xml
 				documentURI: 'invalid/not-sa02.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3369,7 +3369,7 @@ XMLConformanceSunTests >> testinvalidnotsa04xml [
 			self
 				parse: self class sourceinvalidnotsa04xml
 				documentURI: 'invalid/not-sa04.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3381,7 +3381,7 @@ XMLConformanceSunTests >> testinvalidnotsa05xml [
 			self
 				parse: self class sourceinvalidnotsa05xml
 				documentURI: 'invalid/not-sa05.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3393,7 +3393,7 @@ XMLConformanceSunTests >> testinvalidnotsa06xml [
 			self
 				parse: self class sourceinvalidnotsa06xml
 				documentURI: 'invalid/not-sa06.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3405,7 +3405,7 @@ XMLConformanceSunTests >> testinvalidnotsa07xml [
 			self
 				parse: self class sourceinvalidnotsa07xml
 				documentURI: 'invalid/not-sa07.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3417,7 +3417,7 @@ XMLConformanceSunTests >> testinvalidnotsa08xml [
 			self
 				parse: self class sourceinvalidnotsa08xml
 				documentURI: 'invalid/not-sa08.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3429,7 +3429,7 @@ XMLConformanceSunTests >> testinvalidnotsa09xml [
 			self
 				parse: self class sourceinvalidnotsa09xml
 				documentURI: 'invalid/not-sa09.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3441,7 +3441,7 @@ XMLConformanceSunTests >> testinvalidnotsa10xml [
 			self
 				parse: self class sourceinvalidnotsa10xml
 				documentURI: 'invalid/not-sa10.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3453,7 +3453,7 @@ XMLConformanceSunTests >> testinvalidnotsa11xml [
 			self
 				parse: self class sourceinvalidnotsa11xml
 				documentURI: 'invalid/not-sa11.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3465,7 +3465,7 @@ XMLConformanceSunTests >> testinvalidnotsa12xml [
 			self
 				parse: self class sourceinvalidnotsa12xml
 				documentURI: 'invalid/not-sa12.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3477,7 +3477,7 @@ XMLConformanceSunTests >> testinvalidnotsa13xml [
 			self
 				parse: self class sourceinvalidnotsa13xml
 				documentURI: 'invalid/not-sa13.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3489,7 +3489,7 @@ XMLConformanceSunTests >> testinvalidnotsa14xml [
 			self
 				parse: self class sourceinvalidnotsa14xml
 				documentURI: 'invalid/not-sa14.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3501,7 +3501,7 @@ XMLConformanceSunTests >> testinvalidoptional01xml [
 			self
 				parse: self class sourceinvalidoptional01xml
 				documentURI: 'invalid/optional01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3513,7 +3513,7 @@ XMLConformanceSunTests >> testinvalidoptional02xml [
 			self
 				parse: self class sourceinvalidoptional02xml
 				documentURI: 'invalid/optional02.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3525,7 +3525,7 @@ XMLConformanceSunTests >> testinvalidoptional03xml [
 			self
 				parse: self class sourceinvalidoptional03xml
 				documentURI: 'invalid/optional03.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3537,7 +3537,7 @@ XMLConformanceSunTests >> testinvalidoptional04xml [
 			self
 				parse: self class sourceinvalidoptional04xml
 				documentURI: 'invalid/optional04.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3549,7 +3549,7 @@ XMLConformanceSunTests >> testinvalidoptional05xml [
 			self
 				parse: self class sourceinvalidoptional05xml
 				documentURI: 'invalid/optional05.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3561,7 +3561,7 @@ XMLConformanceSunTests >> testinvalidoptional06xml [
 			self
 				parse: self class sourceinvalidoptional06xml
 				documentURI: 'invalid/optional06.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3573,7 +3573,7 @@ XMLConformanceSunTests >> testinvalidoptional07xml [
 			self
 				parse: self class sourceinvalidoptional07xml
 				documentURI: 'invalid/optional07.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3585,7 +3585,7 @@ XMLConformanceSunTests >> testinvalidoptional08xml [
 			self
 				parse: self class sourceinvalidoptional08xml
 				documentURI: 'invalid/optional08.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3597,7 +3597,7 @@ XMLConformanceSunTests >> testinvalidoptional09xml [
 			self
 				parse: self class sourceinvalidoptional09xml
 				documentURI: 'invalid/optional09.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3609,7 +3609,7 @@ XMLConformanceSunTests >> testinvalidoptional10xml [
 			self
 				parse: self class sourceinvalidoptional10xml
 				documentURI: 'invalid/optional10.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3621,7 +3621,7 @@ XMLConformanceSunTests >> testinvalidoptional11xml [
 			self
 				parse: self class sourceinvalidoptional11xml
 				documentURI: 'invalid/optional11.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3633,7 +3633,7 @@ XMLConformanceSunTests >> testinvalidoptional12xml [
 			self
 				parse: self class sourceinvalidoptional12xml
 				documentURI: 'invalid/optional12.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3645,7 +3645,7 @@ XMLConformanceSunTests >> testinvalidoptional13xml [
 			self
 				parse: self class sourceinvalidoptional13xml
 				documentURI: 'invalid/optional13.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3657,7 +3657,7 @@ XMLConformanceSunTests >> testinvalidoptional14xml [
 			self
 				parse: self class sourceinvalidoptional14xml
 				documentURI: 'invalid/optional14.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3669,7 +3669,7 @@ XMLConformanceSunTests >> testinvalidoptional20xml [
 			self
 				parse: self class sourceinvalidoptional20xml
 				documentURI: 'invalid/optional20.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3681,7 +3681,7 @@ XMLConformanceSunTests >> testinvalidoptional21xml [
 			self
 				parse: self class sourceinvalidoptional21xml
 				documentURI: 'invalid/optional21.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3693,7 +3693,7 @@ XMLConformanceSunTests >> testinvalidoptional22xml [
 			self
 				parse: self class sourceinvalidoptional22xml
 				documentURI: 'invalid/optional22.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3705,7 +3705,7 @@ XMLConformanceSunTests >> testinvalidoptional23xml [
 			self
 				parse: self class sourceinvalidoptional23xml
 				documentURI: 'invalid/optional23.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3717,7 +3717,7 @@ XMLConformanceSunTests >> testinvalidoptional24xml [
 			self
 				parse: self class sourceinvalidoptional24xml
 				documentURI: 'invalid/optional24.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3729,7 +3729,7 @@ XMLConformanceSunTests >> testinvalidoptional25xml [
 			self
 				parse: self class sourceinvalidoptional25xml
 				documentURI: 'invalid/optional25.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3741,7 +3741,7 @@ XMLConformanceSunTests >> testinvalidrequired00xml [
 			self
 				parse: self class sourceinvalidrequired00xml
 				documentURI: 'invalid/required00.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3753,7 +3753,7 @@ XMLConformanceSunTests >> testinvalidrequired01xml [
 			self
 				parse: self class sourceinvalidrequired01xml
 				documentURI: 'invalid/required01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3765,7 +3765,7 @@ XMLConformanceSunTests >> testinvalidrequired02xml [
 			self
 				parse: self class sourceinvalidrequired02xml
 				documentURI: 'invalid/required02.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3777,7 +3777,7 @@ XMLConformanceSunTests >> testinvalidrootxml [
 			self
 				parse: self class sourceinvalidrootxml
 				documentURI: 'invalid/root.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3789,7 +3789,7 @@ XMLConformanceSunTests >> testnotwfattlist01xml [
 			self
 				parse: self class sourcenotwfattlist01xml
 				documentURI: 'not-wf/attlist01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3801,7 +3801,7 @@ XMLConformanceSunTests >> testnotwfattlist02xml [
 			self
 				parse: self class sourcenotwfattlist02xml
 				documentURI: 'not-wf/attlist02.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3813,7 +3813,7 @@ XMLConformanceSunTests >> testnotwfattlist03xml [
 			self
 				parse: self class sourcenotwfattlist03xml
 				documentURI: 'not-wf/attlist03.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3825,7 +3825,7 @@ XMLConformanceSunTests >> testnotwfattlist04xml [
 			self
 				parse: self class sourcenotwfattlist04xml
 				documentURI: 'not-wf/attlist04.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3837,7 +3837,7 @@ XMLConformanceSunTests >> testnotwfattlist05xml [
 			self
 				parse: self class sourcenotwfattlist05xml
 				documentURI: 'not-wf/attlist05.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3849,7 +3849,7 @@ XMLConformanceSunTests >> testnotwfattlist06xml [
 			self
 				parse: self class sourcenotwfattlist06xml
 				documentURI: 'not-wf/attlist06.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3861,7 +3861,7 @@ XMLConformanceSunTests >> testnotwfattlist07xml [
 			self
 				parse: self class sourcenotwfattlist07xml
 				documentURI: 'not-wf/attlist07.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3873,7 +3873,7 @@ XMLConformanceSunTests >> testnotwfattlist08xml [
 			self
 				parse: self class sourcenotwfattlist08xml
 				documentURI: 'not-wf/attlist08.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3885,7 +3885,7 @@ XMLConformanceSunTests >> testnotwfattlist09xml [
 			self
 				parse: self class sourcenotwfattlist09xml
 				documentURI: 'not-wf/attlist09.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3897,7 +3897,7 @@ XMLConformanceSunTests >> testnotwfattlist10xml [
 			self
 				parse: self class sourcenotwfattlist10xml
 				documentURI: 'not-wf/attlist10.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3909,7 +3909,7 @@ XMLConformanceSunTests >> testnotwfattlist11xml [
 			self
 				parse: self class sourcenotwfattlist11xml
 				documentURI: 'not-wf/attlist11.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3921,7 +3921,7 @@ XMLConformanceSunTests >> testnotwfcond01xml [
 			self
 				parse: self class sourcenotwfcond01xml
 				documentURI: 'not-wf/cond01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3933,7 +3933,7 @@ XMLConformanceSunTests >> testnotwfcond02xml [
 			self
 				parse: self class sourcenotwfcond02xml
 				documentURI: 'not-wf/cond02.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3945,7 +3945,7 @@ XMLConformanceSunTests >> testnotwfcontent01xml [
 			self
 				parse: self class sourcenotwfcontent01xml
 				documentURI: 'not-wf/content01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3957,7 +3957,7 @@ XMLConformanceSunTests >> testnotwfcontent02xml [
 			self
 				parse: self class sourcenotwfcontent02xml
 				documentURI: 'not-wf/content02.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3969,7 +3969,7 @@ XMLConformanceSunTests >> testnotwfcontent03xml [
 			self
 				parse: self class sourcenotwfcontent03xml
 				documentURI: 'not-wf/content03.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3981,7 +3981,7 @@ XMLConformanceSunTests >> testnotwfdecl01xml [
 			self
 				parse: self class sourcenotwfdecl01xml
 				documentURI: 'not-wf/decl01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -3993,7 +3993,7 @@ XMLConformanceSunTests >> testnotwfdtd00xml [
 			self
 				parse: self class sourcenotwfdtd00xml
 				documentURI: 'not-wf/dtd00.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4005,7 +4005,7 @@ XMLConformanceSunTests >> testnotwfdtd01xml [
 			self
 				parse: self class sourcenotwfdtd01xml
 				documentURI: 'not-wf/dtd01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4017,7 +4017,7 @@ XMLConformanceSunTests >> testnotwfdtd02xml [
 			self
 				parse: self class sourcenotwfdtd02xml
 				documentURI: 'not-wf/dtd02.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4029,7 +4029,7 @@ XMLConformanceSunTests >> testnotwfdtd03xml [
 			self
 				parse: self class sourcenotwfdtd03xml
 				documentURI: 'not-wf/dtd03.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4041,7 +4041,7 @@ XMLConformanceSunTests >> testnotwfdtd04xml [
 			self
 				parse: self class sourcenotwfdtd04xml
 				documentURI: 'not-wf/dtd04.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4053,7 +4053,7 @@ XMLConformanceSunTests >> testnotwfdtd05xml [
 			self
 				parse: self class sourcenotwfdtd05xml
 				documentURI: 'not-wf/dtd05.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4065,7 +4065,7 @@ XMLConformanceSunTests >> testnotwfdtd07xml [
 			self
 				parse: self class sourcenotwfdtd07xml
 				documentURI: 'not-wf/dtd07.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4077,7 +4077,7 @@ XMLConformanceSunTests >> testnotwfelement00xml [
 			self
 				parse: self class sourcenotwfelement00xml
 				documentURI: 'not-wf/element00.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4089,7 +4089,7 @@ XMLConformanceSunTests >> testnotwfelement01xml [
 			self
 				parse: self class sourcenotwfelement01xml
 				documentURI: 'not-wf/element01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4101,7 +4101,7 @@ XMLConformanceSunTests >> testnotwfelement02xml [
 			self
 				parse: self class sourcenotwfelement02xml
 				documentURI: 'not-wf/element02.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4113,7 +4113,7 @@ XMLConformanceSunTests >> testnotwfelement03xml [
 			self
 				parse: self class sourcenotwfelement03xml
 				documentURI: 'not-wf/element03.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4125,7 +4125,7 @@ XMLConformanceSunTests >> testnotwfelement04xml [
 			self
 				parse: self class sourcenotwfelement04xml
 				documentURI: 'not-wf/element04.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4137,7 +4137,7 @@ XMLConformanceSunTests >> testnotwfencoding01xml [
 			self
 				parse: self class sourcenotwfencoding01xml
 				documentURI: 'not-wf/encoding01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4149,7 +4149,7 @@ XMLConformanceSunTests >> testnotwfencoding02xml [
 			self
 				parse: self class sourcenotwfencoding02xml
 				documentURI: 'not-wf/encoding02.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4161,7 +4161,7 @@ XMLConformanceSunTests >> testnotwfencoding03xml [
 			self
 				parse: self class sourcenotwfencoding03xml
 				documentURI: 'not-wf/encoding03.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4173,7 +4173,7 @@ XMLConformanceSunTests >> testnotwfencoding04xml [
 			self
 				parse: self class sourcenotwfencoding04xml
 				documentURI: 'not-wf/encoding04.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4185,7 +4185,7 @@ XMLConformanceSunTests >> testnotwfencoding05xml [
 			self
 				parse: self class sourcenotwfencoding05xml
 				documentURI: 'not-wf/encoding05.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4197,7 +4197,7 @@ XMLConformanceSunTests >> testnotwfencoding06xml [
 			self
 				parse: self class sourcenotwfencoding06xml
 				documentURI: 'not-wf/encoding06.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4209,7 +4209,7 @@ XMLConformanceSunTests >> testnotwfencoding07xml [
 			self
 				parse: self class sourcenotwfencoding07xml
 				documentURI: 'not-wf/encoding07.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4221,7 +4221,7 @@ XMLConformanceSunTests >> testnotwfnotsa03xml [
 			self
 				parse: self class sourcenotwfnotsa03xml
 				documentURI: 'not-wf/not-sa03.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4233,7 +4233,7 @@ XMLConformanceSunTests >> testnotwfpixml [
 			self
 				parse: self class sourcenotwfpixml
 				documentURI: 'not-wf/pi.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4245,7 +4245,7 @@ XMLConformanceSunTests >> testnotwfpubid01xml [
 			self
 				parse: self class sourcenotwfpubid01xml
 				documentURI: 'not-wf/pubid01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4257,7 +4257,7 @@ XMLConformanceSunTests >> testnotwfpubid02xml [
 			self
 				parse: self class sourcenotwfpubid02xml
 				documentURI: 'not-wf/pubid02.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4269,7 +4269,7 @@ XMLConformanceSunTests >> testnotwfpubid03xml [
 			self
 				parse: self class sourcenotwfpubid03xml
 				documentURI: 'not-wf/pubid03.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4281,7 +4281,7 @@ XMLConformanceSunTests >> testnotwfpubid04xml [
 			self
 				parse: self class sourcenotwfpubid04xml
 				documentURI: 'not-wf/pubid04.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4293,7 +4293,7 @@ XMLConformanceSunTests >> testnotwfpubid05xml [
 			self
 				parse: self class sourcenotwfpubid05xml
 				documentURI: 'not-wf/pubid05.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4305,7 +4305,7 @@ XMLConformanceSunTests >> testnotwfsgml01xml [
 			self
 				parse: self class sourcenotwfsgml01xml
 				documentURI: 'not-wf/sgml01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4317,7 +4317,7 @@ XMLConformanceSunTests >> testnotwfsgml02xml [
 			self
 				parse: self class sourcenotwfsgml02xml
 				documentURI: 'not-wf/sgml02.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4329,7 +4329,7 @@ XMLConformanceSunTests >> testnotwfsgml03xml [
 			self
 				parse: self class sourcenotwfsgml03xml
 				documentURI: 'not-wf/sgml03.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4341,7 +4341,7 @@ XMLConformanceSunTests >> testnotwfsgml04xml [
 			self
 				parse: self class sourcenotwfsgml04xml
 				documentURI: 'not-wf/sgml04.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4353,7 +4353,7 @@ XMLConformanceSunTests >> testnotwfsgml05xml [
 			self
 				parse: self class sourcenotwfsgml05xml
 				documentURI: 'not-wf/sgml05.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4365,7 +4365,7 @@ XMLConformanceSunTests >> testnotwfsgml06xml [
 			self
 				parse: self class sourcenotwfsgml06xml
 				documentURI: 'not-wf/sgml06.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4377,7 +4377,7 @@ XMLConformanceSunTests >> testnotwfsgml07xml [
 			self
 				parse: self class sourcenotwfsgml07xml
 				documentURI: 'not-wf/sgml07.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4389,7 +4389,7 @@ XMLConformanceSunTests >> testnotwfsgml08xml [
 			self
 				parse: self class sourcenotwfsgml08xml
 				documentURI: 'not-wf/sgml08.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4401,7 +4401,7 @@ XMLConformanceSunTests >> testnotwfsgml09xml [
 			self
 				parse: self class sourcenotwfsgml09xml
 				documentURI: 'not-wf/sgml09.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4413,7 +4413,7 @@ XMLConformanceSunTests >> testnotwfsgml10xml [
 			self
 				parse: self class sourcenotwfsgml10xml
 				documentURI: 'not-wf/sgml10.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4425,7 +4425,7 @@ XMLConformanceSunTests >> testnotwfsgml11xml [
 			self
 				parse: self class sourcenotwfsgml11xml
 				documentURI: 'not-wf/sgml11.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4437,7 +4437,7 @@ XMLConformanceSunTests >> testnotwfsgml12xml [
 			self
 				parse: self class sourcenotwfsgml12xml
 				documentURI: 'not-wf/sgml12.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4449,7 +4449,7 @@ XMLConformanceSunTests >> testnotwfsgml13xml [
 			self
 				parse: self class sourcenotwfsgml13xml
 				documentURI: 'not-wf/sgml13.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
@@ -4461,7 +4461,7 @@ XMLConformanceSunTests >> testnotwfuri01xml [
 			self
 				parse: self class sourcenotwfuri01xml
 				documentURI: 'not-wf/uri01.xml']
-		raise: self exceptionClass
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4470,10 +4470,15 @@ XMLConformanceSunTests >> testvaliddtd00xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevaliddtd00xml
 				documentURI: 'valid/dtd00.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4482,10 +4487,15 @@ XMLConformanceSunTests >> testvaliddtd01xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevaliddtd01xml
 				documentURI: 'valid/dtd01.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4494,10 +4504,15 @@ XMLConformanceSunTests >> testvalidelementxml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidelementxml
 				documentURI: 'valid/element.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4506,10 +4521,15 @@ XMLConformanceSunTests >> testvalidext01xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidext01xml
 				documentURI: 'valid/ext01.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4518,10 +4538,15 @@ XMLConformanceSunTests >> testvalidext02xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidext02xml
 				documentURI: 'valid/ext02.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4530,10 +4555,15 @@ XMLConformanceSunTests >> testvalidnotation01xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotation01xml
 				documentURI: 'valid/notation01.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4542,10 +4572,15 @@ XMLConformanceSunTests >> testvalidnotsa01xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa01xml
 				documentURI: 'valid/not-sa01.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4554,10 +4589,15 @@ XMLConformanceSunTests >> testvalidnotsa02xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa02xml
 				documentURI: 'valid/not-sa02.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4566,10 +4606,15 @@ XMLConformanceSunTests >> testvalidnotsa03xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa03xml
 				documentURI: 'valid/not-sa03.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4578,10 +4623,15 @@ XMLConformanceSunTests >> testvalidnotsa04xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidnotsa04xml
 				documentURI: 'valid/not-sa04.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4590,10 +4640,15 @@ XMLConformanceSunTests >> testvalidoptionalxml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidoptionalxml
 				documentURI: 'valid/optional.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4602,10 +4657,15 @@ XMLConformanceSunTests >> testvalidpe00xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidpe00xml
 				documentURI: 'valid/pe00.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4614,10 +4674,15 @@ XMLConformanceSunTests >> testvalidpe01xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidpe01xml
 				documentURI: 'valid/pe01.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4626,10 +4691,15 @@ XMLConformanceSunTests >> testvalidpe02xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidpe02xml
 				documentURI: 'valid/pe02.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4638,10 +4708,15 @@ XMLConformanceSunTests >> testvalidpe03xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidpe03xml
 				documentURI: 'valid/pe03.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4650,10 +4725,15 @@ XMLConformanceSunTests >> testvalidrequired00xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidrequired00xml
 				documentURI: 'valid/required00.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4662,10 +4742,15 @@ XMLConformanceSunTests >> testvalidsa01xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa01xml
 				documentURI: 'valid/sa01.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4674,10 +4759,15 @@ XMLConformanceSunTests >> testvalidsa02xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa02xml
 				documentURI: 'valid/sa02.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4686,10 +4776,15 @@ XMLConformanceSunTests >> testvalidsa03xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa03xml
 				documentURI: 'valid/sa03.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4698,10 +4793,15 @@ XMLConformanceSunTests >> testvalidsa04xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa04xml
 				documentURI: 'valid/sa04.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4710,10 +4810,15 @@ XMLConformanceSunTests >> testvalidsa05xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsa05xml
 				documentURI: 'valid/sa05.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4722,10 +4827,15 @@ XMLConformanceSunTests >> testvalidsgml01xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidsgml01xml
 				documentURI: 'valid/sgml01.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4734,10 +4844,15 @@ XMLConformanceSunTests >> testvalidvlang01xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidvlang01xml
 				documentURI: 'valid/v-lang01.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4746,10 +4861,15 @@ XMLConformanceSunTests >> testvalidvlang02xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidvlang02xml
 				documentURI: 'valid/v-lang02.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4758,10 +4878,15 @@ XMLConformanceSunTests >> testvalidvlang03xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidvlang03xml
 				documentURI: 'valid/v-lang03.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4770,10 +4895,15 @@ XMLConformanceSunTests >> testvalidvlang04xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidvlang04xml
 				documentURI: 'valid/v-lang04.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4782,10 +4912,15 @@ XMLConformanceSunTests >> testvalidvlang05xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidvlang05xml
 				documentURI: 'valid/v-lang05.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
 
 { #category : #tests }
@@ -4794,8 +4929,13 @@ XMLConformanceSunTests >> testvalidvlang06xml [
 
 	self
 		shouldnt: [
-			self
+			[self
 				parse: self class sourcevalidvlang06xml
 				documentURI: 'valid/v-lang06.xml']
-		raise: self exceptionClass
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skip]
+						ifFalse: [error signal]]]
+		raise: self parserExceptions
 ]
