@@ -59,8 +59,8 @@ SAXDriver >> handleAttributeDeclaration: anElement name: aName type: aType defau
 	self isValidating
 		ifTrue: [
 			self dtd
-				parseAttributeDefinition: anElement
-				name: aName
+				addValidatorForAttributeIn: anElement
+				named: aName
 				type: aType
 				default: aDefaultDeclaration].
 	self saxHandler
@@ -89,7 +89,7 @@ SAXDriver >> handleElementDeclaration: aName contentModel: aContentModel [
 	self isValidating
 		ifTrue: [
 			self dtd
-				parseElement: aName
+				addValidatorForElement: aName
 				contentModel: aContentModel].
 
 	self saxHandler

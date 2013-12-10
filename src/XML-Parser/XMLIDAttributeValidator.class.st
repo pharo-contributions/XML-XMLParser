@@ -13,6 +13,11 @@ XMLIDAttributeValidator >> ids [
 	
 ]
 
+{ #category : #testing }
+XMLIDAttributeValidator >> isIDValidator [
+	^ true
+]
+
 { #category : #validation }
 XMLIDAttributeValidator >> validateValue: aValue [
 	self validateID: aValue.

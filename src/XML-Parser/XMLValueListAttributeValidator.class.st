@@ -25,5 +25,5 @@ XMLValueListAttributeValidator >> isValueListValidator [
 { #category : #validation }
 XMLValueListAttributeValidator >> validateValue: aValue [
 	(self allowedValues includes: aValue)
-		ifFalse: [XMLValidationException signal: 'Invalid value "', aValue, '" for attribute "', name, '"']
+		ifFalse: [XMLValidationException signal: 'Invalid value "', aValue, '" for attribute "', attribute, '"']
 ]

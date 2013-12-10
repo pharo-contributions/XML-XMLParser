@@ -133,6 +133,11 @@ XMLTokenizer >> entityDepthError: anErrorString [
 ]
 
 { #category : #errors }
+XMLTokenizer >> errorExpected: anExpectedString [
+	self parseError: 'Expected ', anExpectedString
+]
+
+{ #category : #errors }
 XMLTokenizer >> errorExpected: anExpectedCharacterOrString butGot: aReceivedCharacterOrString [
 	| expectedString receivedString |
 
@@ -315,6 +320,33 @@ XMLTokenizer >> nextAttributeValue [
 	^ value.
 ]
 
+{ #category : #'tokenizing dtd' }
+XMLTokenizer >> nextConditionalSection [
+	self
+		skipSeparatorsReplacingParameterEntities;
+		expectNext: $I.
+
+	^ streamReader peek == $N
+		ifTrue: [self nextIncludeSection]
+		ifFalse: [self nextIgnoreSection].
+]
+
+{ #category : #tokenizing }
+XMLTokenizer >> nextContentMarkupToken [
+	streamReader peek == $?
+		ifTrue: [^ self nextPIOrXMLDecl].
+	streamReader peek == $!
+		ifTrue: [
+			streamReader next.
+			streamReader peek == $-
+				ifTrue: [^ self nextComment].
+			streamReader peek == $[
+				ifTrue: [^ self nextCDataSection].
+			self errorExpected: 'comment or CDATA section'].
+
+	self nextTag.
+]
+
 { #category : #tokenizing }
 XMLTokenizer >> nextContentToken [
 	| pcData |
@@ -366,6 +398,14 @@ XMLTokenizer >> nextElementDeclaration [
 		contentModel: contentModel
 ]
 
+{ #category : #'tokenizing dtd' }
+XMLTokenizer >> nextEndInternalSubset [
+	self hasActiveEntities
+		ifTrue: [self parseError: 'Parameter entity replacement cannot terminate internal subset'].
+
+	super nextEndInternalSubset.
+]
+
 { #category : #tokenizing }
 XMLTokenizer >> nextEndTag [
 	| tagName |
@@ -377,6 +417,56 @@ XMLTokenizer >> nextEndTag [
 	self expectTerminator: $>.
 
 	driver handleEndTag: tagName.
+]
+
+{ #category : #'tokenizing dtd' }
+XMLTokenizer >> nextIgnoreSection [
+	| openSections |
+
+	self expectNextAll: 'GNORE'.
+	streamReader skipSeparators.
+	self expectNext: $[.
+
+	openSections := 1.
+	[openSections > 0 and: [streamReader atEnd not]]
+		whileTrue: [
+			(streamReader nextMatchAll: ']]>')
+				ifTrue: [openSections := openSections - 1]
+				ifFalse: [
+					(streamReader nextMatchAll: '<![')
+						ifTrue: [openSections := openSections + 1]
+						ifFalse: [streamReader next]]].
+
+	openSections > 0
+		ifTrue: [self errorExpected: 'terminating ]]>'].
+
+	^ ''.
+]
+
+{ #category : #'tokenizing dtd' }
+XMLTokenizer >> nextIncludeSection [
+	| isOpen includedContents |
+
+	self expectNextAll: 'NCLUDE'.
+	streamReader skipSeparators.
+	self expectNext: $[.
+
+	isOpen := true.
+	includedContents := streamWriter writeWith: [:writeStream |
+		[isOpen and: [streamReader atEnd not]]
+			whileTrue: [
+				(streamReader nextMatchAll: '<![')
+					ifTrue: [writeStream nextPutAll: self nextConditionalSection]
+					ifFalse: [
+						(streamReader nextMatchAll: ']]>')
+							ifTrue: [isOpen := false]
+							ifFalse: [writeStream nextPut: streamReader next]]].
+		writeStream contents].
+
+	isOpen
+		ifTrue: [self errorExpected: 'terminating ]]>'].
+
+	^ includedContents.
 ]
 
 { #category : #tokenizing }
@@ -473,6 +563,48 @@ XMLTokenizer >> nextPubidLiteral [
 ]
 
 { #category : #'tokenizing dtd' }
+XMLTokenizer >> nextSubsetDeclaration [
+	streamReader peek == $E
+		ifTrue: [
+			streamReader next.
+			^ streamReader peek == $N
+				ifTrue: [self nextEntityDeclaration]
+				ifFalse: [self nextElementDeclaration]].
+	streamReader peek == $A
+		ifTrue: [^ self nextAttlistDeclaration].
+	streamReader peek == $N
+		ifTrue: [^ self nextNotationDeclaration].
+
+	self errorExpected: 'declaration'.
+]
+
+{ #category : #'tokenizing dtd' }
+XMLTokenizer >> nextSubsetMarkupToken [
+	self expectNext: $<.
+	streamReader peek == $?
+		ifTrue: [^ self nextPIOrXMLDecl]
+		ifFalse: [
+			context isInExternalSubsetTextDeclaration
+				ifTrue: [context enterExternalSubset]].
+
+	self expectNext: $!.
+	streamReader peek == $-
+		ifTrue: [^ self nextComment].
+
+	(streamReader peek == $[)
+		ifTrue: [
+			(context isInExternalSubset
+				or: [self hasActiveExternalEntity])
+				ifTrue: [
+					streamReader next.
+					streamReader pushBack: self nextConditionalSection.
+					^ self]
+				ifFalse: [self parseError: 'Cannot have INCLUDE/IGNORE sections in internal subset']].
+
+	self nextSubsetDeclaration.
+]
+
+{ #category : #'tokenizing dtd' }
 XMLTokenizer >> nextSystemLiteralRequired: aBoolean [	
 	| quote value |
 
@@ -560,6 +692,14 @@ XMLTokenizer >> removeTrailingSpacesFrom: aString [
 			ifTrue: [n := n + 1]
 			ifFalse: [^ aString allButLast: n]].
 	^ aString.
+]
+
+{ #category : #'entity replacement' }
+XMLTokenizer >> replacementFromGeneralEntity: anEntity [
+	(context isInLiteralValue and: [anEntity isExternal])
+		ifTrue: [self parseError: 'External general entity ', anEntity asReference, ' in literal context'].
+
+	^ super replacementFromGeneralEntity: anEntity.
 ]
 
 { #category : #accessing }

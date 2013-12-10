@@ -2414,11 +2414,6 @@ HTMLTokenizer >> expectUpToAll: aString [
 	^ streamReader upToAll: aString
 ]
 
-{ #category : #'tokenizing dtd' }
-HTMLTokenizer >> nextAttlistDeclaration [
-	self skipDeclaration
-]
-
 { #category : #tokenizing }
 HTMLTokenizer >> nextAttributeValue [
 	| quote value |
@@ -2443,6 +2438,20 @@ HTMLTokenizer >> nextAttributeValue [
 ]
 
 { #category : #tokenizing }
+HTMLTokenizer >> nextContentMarkupToken [
+	streamReader peek == $?
+		ifTrue: [^ self nextPIOrXMLDecl].
+	streamReader peek == $!
+		ifTrue: [
+			streamReader next.
+			streamReader peek == $-
+				ifTrue: [^ self nextComment].
+			streamReader peek == $[
+				ifTrue: [^ self nextCDataSection]].
+	self nextTag.
+]
+
+{ #category : #tokenizing }
 HTMLTokenizer >> nextContentToken [
 	| pcData |
 
@@ -2461,11 +2470,6 @@ HTMLTokenizer >> nextContentToken [
 							driver handlePCData: pcData.
 							^ self].
 			self nextContentMarkupToken]]
-]
-
-{ #category : #'tokenizing dtd' }
-HTMLTokenizer >> nextElementDeclaration [
-	self skipDeclaration
 ]
 
 { #category : #tokenizing }
@@ -2547,11 +2551,6 @@ HTMLTokenizer >> nextNonHTMLSectionToken [
 	driver handleNonHTMLSection: nonHtmlSection.
 ]
 
-{ #category : #'tokenizing dtd' }
-HTMLTokenizer >> nextNotationDeclaration [
-	self skipDeclaration
-]
-
 { #category : #tokenizing }
 HTMLTokenizer >> nextPCDataToken [
 	| isIgnorableWhitespace nextChar pcData |
@@ -2628,10 +2627,29 @@ HTMLTokenizer >> nextQuotedValue [
 ]
 
 { #category : #'tokenizing dtd' }
+HTMLTokenizer >> nextSubsetDeclaration [
+	streamReader peek == $E
+		ifTrue: [
+			streamReader next.
+			streamReader peek == $N
+				ifTrue: [^ self nextEntityDeclaration]].
+	self skipDeclaration.
+]
+
+{ #category : #'tokenizing dtd' }
 HTMLTokenizer >> nextSubsetMarkupToken [
 	streamReader peek == $<
 		ifFalse: [^ self skipNonDeclarationOrEntity].
-	super nextSubsetMarkupToken.
+
+	streamReader next.
+	streamReader peek == $?
+		ifTrue: [^ self nextPIOrXMLDecl].
+
+	self expectNext: $!.
+	streamReader peek == $-
+		ifTrue: [^ self nextComment].
+
+	self nextSubsetDeclaration.
 ]
 
 { #category : #'tokenizing dtd' }

@@ -85,11 +85,6 @@ XMLAbstractTokenizer >> endReplacementForParameterEntity: anEntity [
 	activeEntities remove: anEntity
 ]
 
-{ #category : #errors }
-XMLAbstractTokenizer >> errorExpected: expectedString [
-	self parseError: 'Expected ', expectedString
-]
-
 { #category : #tokenizing }
 XMLAbstractTokenizer >> expectNext: aCharacter [
 	self subclassResponsibility
@@ -120,14 +115,14 @@ XMLAbstractTokenizer >> hasActiveEntityNamed: aName [
 	^ activeEntities anySatisfy: [:each | each name = aName]
 ]
 
+{ #category : #testing }
+XMLAbstractTokenizer >> hasActiveExternalEntity [
+	^ activeEntities anySatisfy: [:each | each isExternal]
+]
+
 { #category : #accessing }
 XMLAbstractTokenizer >> maxEntityReplacementDepth [
 	^ 3
-]
-
-{ #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextAttlistDeclaration [
-	self subclassResponsibility
 ]
 
 { #category : #tokenizing }
@@ -157,31 +152,9 @@ XMLAbstractTokenizer >> nextComment [
 	driver handleComment: comment.
 ]
 
-{ #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextConditionalSection [
-	self
-		skipSeparatorsReplacingParameterEntities;
-		expectNext: $I.
-
-	^ streamReader peek == $N
-		ifTrue: [self nextIncludeSection]
-		ifFalse: [self nextIgnoreSection].
-]
-
 { #category : #tokenizing }
 XMLAbstractTokenizer >> nextContentMarkupToken [
-	streamReader peek == $?
-		ifTrue: [^ self nextPIOrXMLDecl].
-	streamReader peek == $!
-		ifTrue: [
-			streamReader next.
-			streamReader peek == $-
-				ifTrue: [^ self nextComment].
-			streamReader peek == $[
-				ifTrue: [^ self nextCDataSection].
-			self errorExpected: 'comment or CDATA section'].
-
-	self nextTag.
+	self subclassResponsibility
 ]
 
 { #category : #tokenizing }
@@ -272,11 +245,6 @@ XMLAbstractTokenizer >> nextDocTypeDecl [
 ]
 
 { #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextElementDeclaration [
-	self subclassResponsibility
-]
-
-{ #category : #'tokenizing dtd' }
 XMLAbstractTokenizer >> nextEndDocTypeDecl [
 	streamReader skipSeparators.
 	self expectTerminator: $>.
@@ -294,9 +262,6 @@ XMLAbstractTokenizer >> nextEndDocument [
 { #category : #'tokenizing dtd' }
 XMLAbstractTokenizer >> nextEndInternalSubset [
 	self expectTerminator: $].
-
-	self hasActiveEntities
-		ifTrue: [self parseError: 'Parameter entity replacement cannot terminate internal subset'].
 
 	context enterProlog.
 	self nextEndDocTypeDecl.
@@ -316,16 +281,16 @@ XMLAbstractTokenizer >> nextEntityDeclaration [
 	"this is to distinguish a parameter reference from declaration"
 	isParameterEntity := false.
 	[streamReader skipSeparators.
-	streamReader peek == $%]
+	streamReader peek == $% and: [isParameterEntity not]]
 		whileTrue: [
 			streamReader next.
-			(streamReader atEnd not and: [streamReader peek isSeparator])
-				ifTrue: [
-					isParameterEntity
-						ifTrue: [self errorExpected: 'parameter entity reference'].
-					isParameterEntity := true]
-				ifFalse: [self nextParameterEntityReference]].
+			(context isInExternalSubset
+				and: [streamReader atEnd not
+					and: [streamReader peek isSeparator not]])
+				ifTrue: [self nextParameterEntityReference]
+				ifFalse: [isParameterEntity := true]].
 
+	self skipSeparatorsReplacingParameterEntities.
 	name := self nextName.
 	self skipSeparatorsReplacingParameterEntities.
 	streamReader atQuote
@@ -442,56 +407,6 @@ XMLAbstractTokenizer >> nextGeneralEntityReference [
 ]
 
 { #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextIgnoreSection [
-	| openSections |
-
-	self expectNextAll: 'GNORE'.
-	streamReader skipSeparators.
-	self expectNext: $[.
-
-	openSections := 1.
-	[openSections > 0 and: [streamReader atEnd not]]
-		whileTrue: [
-			(streamReader nextMatchAll: ']]>')
-				ifTrue: [openSections := openSections - 1]
-				ifFalse: [
-					(streamReader nextMatchAll: '<![')
-						ifTrue: [openSections := openSections + 1]
-						ifFalse: [streamReader next]]].
-
-	openSections > 0
-		ifTrue: [self errorExpected: 'terminating ]]>'].
-
-	^ ''.
-]
-
-{ #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextIncludeSection [
-	| isOpen includedContents |
-
-	self expectNextAll: 'NCLUDE'.
-	streamReader skipSeparators.
-	self expectNext: $[.
-
-	isOpen := true.
-	includedContents := streamWriter writeWith: [:writeStream |
-		[isOpen and: [streamReader atEnd not]]
-			whileTrue: [
-				(streamReader nextMatchAll: '<![')
-					ifTrue: [writeStream nextPutAll: self nextConditionalSection]
-					ifFalse: [
-						(streamReader nextMatchAll: ']]>')
-							ifTrue: [isOpen := false]
-							ifFalse: [writeStream nextPut: streamReader next]]].
-		writeStream contents].
-
-	isOpen
-		ifTrue: [self errorExpected: 'terminating ]]>'].
-
-	^ includedContents.
-]
-
-{ #category : #'tokenizing dtd' }
 XMLAbstractTokenizer >> nextInternalEntityDeclaration: aName isParameterEntity: aBoolean [
 	| value |
 
@@ -517,14 +432,10 @@ XMLAbstractTokenizer >> nextName [
 	self subclassResponsibility
 ]
 
-{ #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextNotationDeclaration [
-	self subclassResponsibility
-]
-
 { #category : #tokenizing }
 XMLAbstractTokenizer >> nextPIOrXMLDecl [
 	| piTarget piData |
+
 	"Skip ?"
 	streamReader next.
 	piTarget := self nextName.
@@ -534,6 +445,7 @@ XMLAbstractTokenizer >> nextPIOrXMLDecl [
 		ifFalse: [
 			context isInExternalSubsetTextDeclaration
 				ifTrue: [context enterExternalSubset]].
+
 	streamReader skipSeparators.
 	piData := self expectUpToAll: '?>'.
 
@@ -575,40 +487,8 @@ XMLAbstractTokenizer >> nextStartDocument [
 ]
 
 { #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextSubsetDeclaration [
-	streamReader peek == $E
-		ifTrue: [
-			streamReader next.
-			^ streamReader peek == $N
-				ifTrue: [self nextEntityDeclaration]
-				ifFalse: [self nextElementDeclaration]].
-	streamReader peek == $A
-		ifTrue: [^ self nextAttlistDeclaration].
-	streamReader peek == $N
-		ifTrue: [^ self nextNotationDeclaration].
-
-	self errorExpected: 'declaration'.
-]
-
-{ #category : #'tokenizing dtd' }
 XMLAbstractTokenizer >> nextSubsetMarkupToken [
-	self expectNext: $<.
-	streamReader peek == $?
-		ifTrue: [^ self nextPIOrXMLDecl]
-		ifFalse: [
-			context isInExternalSubsetTextDeclaration
-				ifTrue: [context enterExternalSubset]].
-
-	self expectNext: $!.
-	streamReader peek == $-
-		ifTrue: [^ self nextComment].
-	streamReader peek == $[
-		ifTrue: [
-			streamReader next.
-			streamReader pushBack: self nextConditionalSection.
-			^ self].
-
-	self nextSubsetDeclaration.
+	self subclassResponsibility
 ]
 
 { #category : #'tokenizing dtd' }
@@ -743,10 +623,7 @@ XMLAbstractTokenizer >> replacementFromGeneralEntity: anEntity [
 	anEntity ifNil: [^ ''].
 
 	^ context isInLiteralValue
-		ifTrue: [
-			anEntity isExternal
-				ifTrue: [self parseError: 'External general entity ', anEntity asReference, ' in literal context'].
-			anEntity replacementForLiteralContext]
+		ifTrue: [anEntity replacementForLiteralContext]
 		ifFalse: [anEntity replacementForContentContext].
 ]
 
@@ -775,6 +652,7 @@ XMLAbstractTokenizer >> setDriver: aDriver stream: aStream [
 { #category : #'tokenizing dtd' }
 XMLAbstractTokenizer >> skipSeparatorsReplacingParameterEntities [
 	"this can be used to replace references within declarations"
+
 	streamReader skipSeparators.
 	[streamReader atEnd not
 		and: [context isInExternalSubset

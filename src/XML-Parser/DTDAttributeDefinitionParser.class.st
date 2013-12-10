@@ -6,9 +6,9 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'element',
-		'name',
 		'type',
-		'defaultDeclaration'
+		'defaultDeclaration',
+		'attribute'
 	],
 	#classVars : [
 		'DefaultValueValidators',
@@ -18,10 +18,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-DTDAttributeDefinitionParser class >> element: anElement name: aName type: aType default: aDefaultDeclaration [
+DTDAttributeDefinitionParser class >> element: anElement attribute: anAttribute type: aType default: aDefaultDeclaration [
 	^ self new
 		setElement: anElement
-		name: aName
+		attribute: anAttribute
 		type: aType
 		default: aDefaultDeclaration
 ]
@@ -59,13 +59,13 @@ DTDAttributeDefinitionParser >> parse [
 		(DefaultValueValidators
 			at: self parseDefaultPragma
 			ifAbsent: [XMLDefaultValueAttributeValidator])
-				name: name
+				attribute: attribute
 				defaultValue: self parseDefaultValue.
 
 	attributeValidator :=
 		self validatorClassForType
 			element: element
-			name: name
+			attribute: attribute
 			defaultValueValidator: defaultValueValidator.
 
 	attributeValidator isValueListValidator
@@ -108,9 +108,9 @@ DTDAttributeDefinitionParser >> parseEnumerationType [
 ]
 
 { #category : #initialization }
-DTDAttributeDefinitionParser >> setElement: anElement name: aName type: aType default: aDefaultDeclaration [
+DTDAttributeDefinitionParser >> setElement: anElement attribute: anAttribute type: aType default: aDefaultDeclaration [
 	element := anElement.
-	name := aName.
+	attribute := anAttribute.
 	type := aType.
 	defaultDeclaration := aDefaultDeclaration.
 ]

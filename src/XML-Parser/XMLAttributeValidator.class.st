@@ -6,25 +6,35 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'element',
-		'name',
+		'attribute',
 		'defaultValueValidator'
 	],
 	#category : #'XML-Parser-Validation'
 }
 
 { #category : #'instance creation' }
-XMLAttributeValidator class >> element: anElement name: aName defaultValueValidator: aDefaultValueValidator [
+XMLAttributeValidator class >> element: anElement attribute: anAttribute defaultValueValidator: aDefaultValueValidator [
 	^ self new
 		setElement: anElement
-		name: aName
+		attribute: anAttribute
 		defaultValueValidator: aDefaultValueValidator
+]
+
+{ #category : #accessing }
+XMLAttributeValidator >> attribute [
+	^ attribute
+]
+
+{ #category : #accessing }
+XMLAttributeValidator >> element [
+	^ element
 ]
 
 { #category : #normalization }
 XMLAttributeValidator >> furtherNormalizeValueIn: anAttributeDictionary [
 	| readStream writeStream |
 
-	readStream := (anAttributeDictionary at: name) readStream.
+	readStream := (anAttributeDictionary at: attribute) readStream.
 	writeStream := (String new: readStream size) writeStream.
 	readStream skipSeparators.
 	[readStream atEnd]
@@ -36,7 +46,7 @@ XMLAttributeValidator >> furtherNormalizeValueIn: anAttributeDictionary [
 						ifFalse: [writeStream nextPut: Character space]]
 				ifFalse: [writeStream nextPut: readStream next]].
 	anAttributeDictionary
-		at: name
+		at: attribute
 		put: writeStream contents.
 ]
 
@@ -46,14 +56,19 @@ XMLAttributeValidator >> isEntityValidator [
 ]
 
 { #category : #testing }
+XMLAttributeValidator >> isIDValidator [
+	^ false
+]
+
+{ #category : #testing }
 XMLAttributeValidator >> isValueListValidator [
 	^ false
 ]
 
 { #category : #initialization }
-XMLAttributeValidator >> setElement: anElement name: aName defaultValueValidator: aDefaultValueValidator [
+XMLAttributeValidator >> setElement: anElement attribute: anAttribute defaultValueValidator: aDefaultValueValidator [
 	element := anElement.
-	name := aName.
+	attribute := anAttribute.
 	defaultValueValidator := aDefaultValueValidator.
 ]
 
@@ -66,7 +81,7 @@ XMLAttributeValidator >> shouldFurtherNormalizeValue [
 XMLAttributeValidator >> validateAttributes: anAttributeDictionary [
 	self
 		validateDefaultValueIn: anAttributeDictionary;
-		validateValue: (anAttributeDictionary at: name ifAbsent: [^ self])
+		validateValue: (anAttributeDictionary at: attribute ifAbsent: [^ self])
 						
 ]
 
@@ -74,20 +89,20 @@ XMLAttributeValidator >> validateAttributes: anAttributeDictionary [
 XMLAttributeValidator >> validateDefaultValueIn: anAttributeDictionary [
 	defaultValueValidator validateDefaultValueIn: anAttributeDictionary.
 
-	(self shouldFurtherNormalizeValue and: [anAttributeDictionary includesKey: name])
+	(self shouldFurtherNormalizeValue and: [anAttributeDictionary includesKey: attribute])
 		ifTrue: [self furtherNormalizeValueIn: anAttributeDictionary].
 ]
 
 { #category : #validation }
 XMLAttributeValidator >> validateID: anId [
 	(XMLTokenizer isName: anId)
-		ifFalse: [XMLValidationException signal: 'Invalid ID ', anId, ' in attribute "', name, '"']
+		ifFalse: [XMLValidationException signal: 'Invalid ID ', anId, ' in attribute "', attribute, '"']
 ]
 
 { #category : #validation }
 XMLAttributeValidator >> validateName: aName [
 	(XMLTokenizer isNmtoken: aName)
-		ifFalse: [XMLValidationException signal: 'Invalid name "', name, '" in attribute "', name, '"']
+		ifFalse: [XMLValidationException signal: 'Invalid name "', aName, '" in attribute "', attribute, '"']
 ]
 
 { #category : #validation }

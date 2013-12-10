@@ -38,8 +38,8 @@ DTDExternalSubsetDriver >> handleAttributeDeclaration: anElement name: aName typ
 	self isValidating
 		ifTrue: [
 			self dtd
-				parseAttributeDefinition: anElement
-				name: aName
+				addValidatorForAttributeIn: anElement
+				named: aName
 				type: aType
 				default: aDefaultDeclaration]
 ]
@@ -49,7 +49,7 @@ DTDExternalSubsetDriver >> handleElementDeclaration: aName contentModel: aConten
 	self isValidating
 		ifTrue: [
 			self dtd
-				parseElement: aName
+				addValidatorForElement: aName
 				contentModel: aContentModel]
 ]
 

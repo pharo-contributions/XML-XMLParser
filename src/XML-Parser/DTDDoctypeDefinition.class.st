@@ -17,9 +17,67 @@ Class {
 	#category : #'XML-Parser-DTD'
 }
 
+{ #category : #validators }
+DTDDoctypeDefinition >> addAttributeValidator: aValidator [
+	| attributeValidatorsForElement |
+
+	attributeValidatorsForElement :=
+		self attributeValidators
+			at: aValidator element
+			ifAbsentPut: [Dictionary new].
+
+	"Subsequent declarations are ignored."
+	(attributeValidatorsForElement includesKey: aValidator attribute)
+		ifTrue: [^ self].
+
+	aValidator isIDValidator
+		ifTrue: [
+			attributeValidatorsForElement valuesDo: [:each |
+				each isIDValidator
+					ifTrue: [
+						XMLValidationException signal:
+							'Element <', aValidator element, '> has multiple ID elements']]].
+
+	attributeValidatorsForElement
+		at: aValidator attribute
+		put: aValidator.
+]
+
 { #category : #accessing }
 DTDDoctypeDefinition >> addNotation: aName [
 	self notations add: aName
+]
+
+{ #category : #validators }
+DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: aName type: aType default: aDefaultDeclaration [
+	| parser validator  |
+
+	parser :=
+		DTDAttributeDefinitionParser
+			element:  anElement
+			attribute: aName
+			type: aType
+			default: aDefaultDeclaration.
+	validator := parser parse.
+
+	(validator isValueListValidator and: [parser isNotationEnumeration: aType])
+		ifTrue: [
+			(validator allowedValues allSatisfy: [:each | self includesNotation: each])
+				ifFalse: [XMLValidationException signal: 'Undeclared notation in enumeration']].
+	validator isEntityValidator
+		ifTrue: [validator unparsedEntities: self unparsedEntities].
+
+	self addAttributeValidator: validator.
+]
+
+{ #category : #validators }
+DTDDoctypeDefinition >> addValidatorForElement: anElement contentModel: aContentModel [
+	self elementValidators
+		at: anElement
+		ifAbsentPut: [
+			(DTDContentModelParser
+				name: anElement
+				contentModel: aContentModel) parse]
 ]
 
 { #category : #accessing }
@@ -90,42 +148,6 @@ DTDDoctypeDefinition >> parameterEntityAt: aName [
 { #category : #accessing }
 DTDDoctypeDefinition >> parameterEntityAt: aName put: anEntity [
 	self parameterEntities at: aName put: anEntity
-]
-
-{ #category : #validators }
-DTDDoctypeDefinition >> parseAttributeDefinition: anElement name: aName type: aType default: aDefaultDeclaration [
-	| parser validator |
-
-	parser :=
-		DTDAttributeDefinitionParser
-			element:  anElement
-			name: aName
-			type: aType
-			default: aDefaultDeclaration.
-	validator := parser parse.
-
-	(validator isValueListValidator and: [parser isNotationEnumeration: aType])
-		ifTrue: [
-			(validator allowedValues allSatisfy: [:each | self includesNotation: each])
-				ifFalse: [XMLValidationException signal: 'Undeclared notation in enumeration']].
-	validator isEntityValidator
-		ifTrue: [validator unparsedEntities: self unparsedEntities].
-
-	(self attributeValidators
-		at: anElement
-		ifAbsentPut: [Dictionary new]) 
-			at: aName
-			ifAbsentPut: [validator].
-]
-
-{ #category : #validators }
-DTDDoctypeDefinition >> parseElement: anElement contentModel: aContentModel [
-	self elementValidators
-		at: anElement
-		ifAbsentPut: [
-			(DTDContentModelParser
-				name: anElement
-				contentModel: aContentModel) parse]
 ]
 
 { #category : #accessing }
