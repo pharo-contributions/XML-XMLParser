@@ -140,12 +140,6 @@ XMLParserTest >> benchmark4 [
 			elementAt: 'manager']] timeToRun.
 ]
 
-{ #category : #source }
-XMLParserTest >> exampleCDATASectionXML [
-	^'<?xml version="1.0" encoding="UTF-8"?>
-<test-data><![CDATA[this is CDATA test content 1 < 2 & 5 > 3]]></test-data>'
-]
-
 { #category : #tests }
 XMLParserTest >> testAttributeDefaultDeclaration [
 	| dtd document |
@@ -172,14 +166,19 @@ XMLParserTest >> testAttributeEntityDeclaration [
 	dtd := '<!DOCTYPE root [
 		<!ENTITY firstEntity SYSTEM "first.txt" NDATA first>
 		<!ENTITY secondEntity SYSTEM "second.txt" NDATA second>
-		<!ATTLIST root unparsedEntity ENTITY #IMPLIED>
-		<!ATTLIST root unparsedEntities ENTITIES #IMPLIED>]>'.
-	XMLDOMParser parse: dtd, '<root unparsedEntity="firstEntity"  unparsedEntities="firstEntity  secondEntity"/> '.
+		<!ATTLIST root
+			unparsedEntity ENTITY #IMPLIED
+			unparsedEntities ENTITIES #IMPLIED>]>'.
 	self
-		should: [XMLDOMParser parse: dtd, '<root unparsedEntity="thirdEntity"/>']
+		shouldnt: [
+			SAXHandler parse:
+				dtd, '<root unparsedEntity="firstEntity"  unparsedEntities="firstEntity  secondEntity"/> ']
 		raise: XMLValidationException.
 	self
-		should: [XMLDOMParser parse: dtd, '<root unparsedEntity="secondEntity thirdEntity"/>']
+		should: [SAXHandler parse: dtd, '<root unparsedEntity="thirdEntity"/>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root unparsedEntity="secondEntity thirdEntity"/>']
 		raise: XMLValidationException.
 ]
 
@@ -188,18 +187,19 @@ XMLParserTest >> testAttributeEnumerationDeclaration [
 	| dtd |
 
 	dtd := '<!DOCTYPE root [
-		<!ATTLIST root number ( one | two | three) #IMPLIED >
 		<!NOTATION txtFile PUBLIC "//file.txt//">
 		<!NOTATION confFile PUBLIC "//file.conf//">
-		<!ATTLIST root note NOTATION (txtFile | confFile ) #IMPLIED>]>'.
+		<!ATTLIST root
+			number ( one | two | three) #IMPLIED
+			note NOTATION (txtFile | confFile ) #IMPLIED>]>'.
 	self
-		shouldnt: [XMLDOMParser parse: dtd, '<root number="two" note="txtFile"/>']
+		shouldnt: [SAXHandler parse: dtd, '<root number="two" note="txtFile"/>']
 		raise: XMLValidationException.
 	self
-		should: [XMLDOMParser parse: dtd, '<root number="four"/>']
+		should: [SAXHandler parse: dtd, '<root number="four"/>']
 		raise: XMLValidationException.
 	self
-		should: [XMLDOMParser parse: dtd, '<root note="htmlFile" />']
+		should: [SAXHandler parse: dtd, '<root note="htmlFile" />']
 		raise: XMLValidationException.
 ]
 
@@ -207,12 +207,27 @@ XMLParserTest >> testAttributeEnumerationDeclaration [
 XMLParserTest >> testAttributeIDDeclaration [
 	| dtd |
 
-	dtd := '<!DOCTYPE root [<!ATTLIST unique id ID #REQUIRED>]>'.
-	XMLDOMParser parse: dtd, '<root><unique id=" one "/><unique id="two"/></root> '.
+	dtd := '<!DOCTYPE root [
+		<!ATTLIST unique id ID #REQUIRED>
+		<!ATTLIST unique2 id ID #REQUIRED>]>'.
+	self
+		shouldnt: [
+			SAXHandler parse:
+				dtd, '<root><unique id=" one "/><unique id="two"/><unique2 id="three"/></root> ']
+		raise:XMLValidationException.
 	self
 		should: [
-			XMLDOMParser parse:
+			SAXHandler parse:
 				dtd, '<root><unique id="one"/><unique id=" one "/></root> ']
+		raise: XMLValidationException.
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE root [
+					<!ATTLIST unique
+						id ID #REQUIRED
+						id2 ID #REQUIRED>]>
+					<root/>']
 		raise: XMLValidationException.
 ]
 
@@ -246,14 +261,17 @@ XMLParserTest >> testAttributeNmtokenDeclaration [
 	| dtd |
 
 	dtd := '<!DOCTYPE root [
-		<!ATTLIST root name NMTOKEN #IMPLIED>
-		<!ATTLIST root names NMTOKENS #IMPLIED>]>'.
-	XMLDOMParser parse: dtd, '<root name="one" names="  one  two three"/> '.
+		<!ATTLIST root
+			name NMTOKEN #IMPLIED
+			names NMTOKENS #IMPLIED>]>'.
 	self
-		should: [XMLDOMParser parse: dtd, '<root name="1"/> ']
+		shouldnt: [SAXHandler parse: dtd, '<root name="one" names="  one  two three"/> ']
 		raise: XMLValidationException.
 	self
-		should: [XMLDOMParser parse: dtd, '<root names="1 2 3" />']
+		should: [SAXHandler parse: dtd, '<root name="1"/> ']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root names="1 2 3" />']
 		raise: XMLValidationException.
 ]
 
@@ -278,27 +296,29 @@ XMLParserTest >> testAttributeValueNormalization [
 
 { #category : #tests }
 XMLParserTest >> testCDATASection [
-	| document element output escapedOutput |
+	| document element unescaped escaped xml |
 
-	output := 'this is CDATA test content 1 < 2 & 5 > 3'.
-	escapedOutput := 'this is CDATA test content 1 &lt; 2 &amp; 5 &gt; 3'.
-
-	document := XMLDOMParser parse: self exampleCDATASectionXML.
+	unescaped := 'this is CDATA test content 1 < 2 & 5 > 3'.
+	escaped := 'this is CDATA test content 1 &lt; 2 &amp; 5 &gt; 3'.
+	xml := 
+		'<?xml version="1.0" encoding="UTF-8"?>
+		<test-data><![CDATA[', unescaped, ']]></test-data>'.
+	document := XMLDOMParser parse: xml.
 	element := document findElementNamed: 'test-data'.
 	self
 		assert: element nodes size = 1;
 		assert: element firstNode isStringNode;
-		assert: element firstNode printString = escapedOutput.
+		assert: element firstNode printString = escaped.
 
 	document :=
-		(XMLDOMParser on: self exampleCDATASectionXML)
+		(XMLDOMParser on: xml)
 			preservesCDataNodes: true;
 			parseDocument.
 	element := document findElementNamed: 'test-data'.
 	self
 		assert: element nodes size = 1;
 		assert: element firstNode isCData;
-		assert: element firstNode printString = ('<![CDATA[',output,']]>').
+		assert: element firstNode printString = ('<![CDATA[', unescaped, ']]>').
 ]
 
 { #category : #'tests-xmltokenizer' }
@@ -312,9 +332,13 @@ XMLParserTest >> testConditionalSection [
 			'<![INCLUDE [included',
 			'<![ IGNORE [ignored; <![INCLUDE[ignored;]]> ignored.]]>',
 			', included]]>, included.'.
-	tokenizer tokenContext enterInternalSubset.
+	tokenizer tokenContext enterExternalSubset.
 	tokenizer nextToken.
-	self assert: tokenizer streamReader upToEnd = 'included, included, included.'
+	self assert: tokenizer streamReader upToEnd = 'included, included, included.'.
+
+	self
+		should: [SAXHandler parse: '<!DOCTYPE root [ <![IGNORE[<!--ignored-->]]> ]><root/>']
+		raise: XMLParserException.
 ]
 
 { #category : #tests }
