@@ -592,11 +592,6 @@ XMLAbstractTokenizer >> nextXMLDeclAttributeValue [
 
 ]
 
-{ #category : #errors }
-XMLAbstractTokenizer >> parseError: anErrorString [
-	self subclassResponsibility
-]
-
 { #category : #'entity replacement' }
 XMLAbstractTokenizer >> pushBackReplacement: aReplacement forEntity: anEntity onClose: aBlock [
 	activeEntities addLast: anEntity.

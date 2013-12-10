@@ -2705,11 +2705,6 @@ HTMLTokenizer >> nextXMLDeclAttributeValue [
 	^ self nextQuotedValue
 ]
 
-{ #category : #errors }
-HTMLTokenizer >> parseError: anErrorString [
-	
-]
-
 { #category : #'entity replacement' }
 HTMLTokenizer >> pushBackReplacement: aReplacement forEntity: anEntity onClose: aBlock [
 	((self hasActiveEntityNamed: anEntity name)

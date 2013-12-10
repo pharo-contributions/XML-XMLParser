@@ -277,12 +277,12 @@ XMLOrderedList >> size [
 	^ collection size
 ]
 
-{ #category : #enumerating }
+{ #category : #sorting }
 XMLOrderedList >> sort [
 	collection sort
 ]
 
-{ #category : #enumerating }
+{ #category : #sorting }
 XMLOrderedList >> sort: aSortBlock [
 	collection sort: aSortBlock
 ]
