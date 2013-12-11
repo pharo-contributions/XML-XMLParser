@@ -13,7 +13,7 @@ XMLIDRefAttributeValidator >> idrefs [
 ]
 
 { #category : #validation }
-XMLIDRefAttributeValidator >> validateValue: aValue [
+XMLIDRefAttributeValidator >> validateAttributeValue: aValue [
 	self validateID: aValue.
 	self idrefs add: aValue.
 ]

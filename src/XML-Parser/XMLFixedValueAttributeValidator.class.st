@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #validation }
-XMLFixedValueAttributeValidator >> validateDefaultValueIn: anAttributeDictionary [
+XMLFixedValueAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
 	anAttributeDictionary at: attribute put: defaultValue
 ]

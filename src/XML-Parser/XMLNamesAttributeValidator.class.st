@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #validation }
-XMLNamesAttributeValidator >> validateValue: aValue [
+XMLNamesAttributeValidator >> validateAttributeValue: aValue [
 	Character space
 		split: aValue
 		do: [:each | self validateName: each]

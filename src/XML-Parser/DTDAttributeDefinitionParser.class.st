@@ -47,7 +47,7 @@ DTDAttributeDefinitionParser class >> initialize [
 ]
 
 { #category : #testing }
-DTDAttributeDefinitionParser >> isNotationEnumeration: aType [
+DTDAttributeDefinitionParser >> isNotationList: aType [
 	^ aType beginsWith: 'NOTATION '
 ]
 
@@ -67,7 +67,6 @@ DTDAttributeDefinitionParser >> parse [
 			element: element
 			attribute: attribute
 			defaultValueValidator: defaultValueValidator.
-
 	attributeValidator isValueListValidator
 		ifTrue: [attributeValidator allowedValues: (self parseEnumerationType)].
 
@@ -101,10 +100,14 @@ DTDAttributeDefinitionParser >> parseDefaultValue [
 
 { #category : #parsing }
 DTDAttributeDefinitionParser >> parseEnumerationType [
-	^ (((self isNotationEnumeration: type)
-		ifTrue: [DTDNotationListParser]
-		ifFalse: [DTDEnumerationListParser])
-			on: type) parse
+	| listParserClass |
+
+	listParserClass :=
+		(self isNotationList: type)
+			ifTrue: [DTDNotationListParser]
+			ifFalse: [DTDEnumerationListParser].
+
+	^ (listParserClass on: type) parse.
 ]
 
 { #category : #initialization }

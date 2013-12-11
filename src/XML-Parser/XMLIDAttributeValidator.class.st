@@ -19,7 +19,7 @@ XMLIDAttributeValidator >> isIDValidator [
 ]
 
 { #category : #validation }
-XMLIDAttributeValidator >> validateValue: aValue [
+XMLIDAttributeValidator >> validateAttributeValue: aValue [
 	self validateID: aValue.
 	(self ids includes: aValue)
 		ifTrue: [XMLValidationException signal: 'ID ', aValue, ' used more than once for <', element. '>'].

@@ -127,11 +127,6 @@ XMLParserDriver >> isValidating [
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
-XMLParserDriver >> resolvesExternalEntities [
-	self subclassResponsibility
-]
-
 { #category : #private }
 XMLParserDriver >> tokenizerClass [
 	^ XMLTokenizer

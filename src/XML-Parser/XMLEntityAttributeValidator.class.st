@@ -23,13 +23,13 @@ XMLEntityAttributeValidator >> unparsedEntities: aDictionary [
 ]
 
 { #category : #validation }
+XMLEntityAttributeValidator >> validateAttributeValue: aValue [
+	self validateEntityReference: aValue
+]
+
+{ #category : #validation }
 XMLEntityAttributeValidator >> validateEntityReference: aName [
 	self validateName: aName.
 	(self unparsedEntities includesKey: aName)
 		ifFalse: [XMLValidationException signal: 'Unrecognized unpasred entity ', aName, ' in attribute "', attribute, '"']
-]
-
-{ #category : #validation }
-XMLEntityAttributeValidator >> validateValue: aValue [
-	self validateEntityReference: aValue
 ]

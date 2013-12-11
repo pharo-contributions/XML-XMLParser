@@ -4,6 +4,9 @@ This class reads XML tokens from a stream using a nested stream reader. Sending 
 Class {
 	#name : #XMLTokenizer,
 	#superclass : #XMLAbstractTokenizer,
+	#instVars : [
+		'activeEntities'
+	],
 	#classVars : [
 		'AdditionalNameChars',
 		'NameStartChars',
@@ -127,6 +130,28 @@ XMLTokenizer >> characterFromCodePoint: aCodePoint [
 		do: [:error | self parseError: 'Invalid character code point ', aCodePoint printString]
 ]
 
+{ #category : #tokenizing }
+XMLTokenizer >> checkTextDeclarationInReplacement: aReplacement forEntity: anEntity [
+	(aReplacement beginsWith: '<?xml ')
+		ifTrue: [ 
+			streamReader next.
+			context resetAfter: [
+				context enterTextDeclaration.
+				self nextPIOrXMLDecl]].
+]
+
+{ #category : #'entity replacement' }
+XMLTokenizer >> endReplacementForGeneralEntity: anEntity isInContent: aBoolean [
+	activeEntities remove: anEntity.
+	aBoolean
+		ifTrue: [driver handleEndContentEntityReplacement: anEntity name].
+]
+
+{ #category : #'entity replacement' }
+XMLTokenizer >> endReplacementForParameterEntity: anEntity [
+	activeEntities remove: anEntity
+]
+
 { #category : #errors }
 XMLTokenizer >> entityDepthError: anErrorString [
 	XMLEntityDepthException signal: anErrorString
@@ -220,6 +245,26 @@ XMLTokenizer >> expectUpToAll: aString [
 
 	^ value.
 
+]
+
+{ #category : #testing }
+XMLTokenizer >> hasActiveEntities [
+	^ activeEntities notEmpty
+]
+
+{ #category : #testing }
+XMLTokenizer >> hasActiveEntityNamed: aName [
+	^ activeEntities anySatisfy: [:each | each name = aName]
+]
+
+{ #category : #testing }
+XMLTokenizer >> hasActiveExternalEntity [
+	^ activeEntities anySatisfy: [:each | each isExternal]
+]
+
+{ #category : #accessing }
+XMLTokenizer >> maxEntityReplacementDepth [
+	^ 3
 ]
 
 { #category : #'tokenizing dtd' }
@@ -420,6 +465,112 @@ XMLTokenizer >> nextEndTag [
 ]
 
 { #category : #'tokenizing dtd' }
+XMLTokenizer >> nextEntityDeclaration [
+	| isParameterEntity name  |
+
+	self expectNextAll: 'NTITY'.
+
+	"this is to distinguish a parameter reference from declaration"
+	isParameterEntity := false.
+	[streamReader skipSeparators.
+	streamReader peek == $% and: [isParameterEntity not]]
+		whileTrue: [
+			streamReader next.
+			(context isInExternalSubset
+				and: [streamReader atEnd not
+					and: [streamReader peek isSeparator not]])
+				ifTrue: [self nextParameterEntityReference]
+				ifFalse: [isParameterEntity := true]].
+
+	self skipSeparatorsReplacingParameterEntities.
+	name := self nextName.
+	self skipSeparatorsReplacingParameterEntities.
+	streamReader atQuote
+		ifTrue: [
+			self
+				nextInternalEntityDeclaration: name
+				isParameterEntity: isParameterEntity]
+		ifFalse: [
+			self
+				nextExternalEntityDeclaration: name
+				isParameterEntity: isParameterEntity].
+]
+
+{ #category : #'tokenizing dtd' }
+XMLTokenizer >> nextEntityValue [
+	| quote value  |
+
+	quote := streamReader next.
+	context resetAfter: [
+		context enterLiteralValue.
+		value := self
+			nextDelimitedBy: quote and: nil
+			entityChar: $%
+			normalizeWhitespace: false
+			ignorableWhitespace: false].
+	self expectNext: quote.
+
+	^ value.
+]
+
+{ #category : #'tokenizing dtd' }
+XMLTokenizer >> nextExternalEntityDeclaration: aName isParameterEntity: aBoolean [
+	| externalId notation |
+
+	externalId := self nextExternalIDSystemLiteralRequired: true.
+	aBoolean
+		ifTrue: [
+			driver
+				handleParameterEntityDeclaration: aName
+				publicID: externalId key
+				systemID: externalId value]
+		ifFalse: [
+			self skipSeparatorsReplacingParameterEntities.
+			streamReader peek == $>
+				ifTrue: [notation := '']
+				ifFalse: [
+					self
+						expectNextAll: 'NDATA';
+						skipSeparatorsReplacingParameterEntities.
+					notation := self nextName].
+			driver
+				handleGeneralEntityDeclaration: aName
+				publicID: externalId key
+				systemID: externalId value
+				ndata: notation].
+	self
+		skipSeparatorsReplacingParameterEntities;
+		expectTerminator: $>.
+]
+
+{ #category : #tokenizing }
+XMLTokenizer >> nextGeneralEntityReference [
+	| name entity replacement startedInContent |
+
+	name := self nextName.
+	self expectNext: $;.
+	(self class predefinedEntities includesKey: name)
+		ifTrue: [^ self class predefinedEntities at: name].
+
+	entity := driver handleGeneralEntityReference: name.
+	replacement := self replacementFromGeneralEntity: entity.
+
+	replacement
+		ifNotEmpty: [
+			startedInContent := context isInContent.
+			self
+				pushBackReplacement: replacement
+				forEntity: entity
+				onClose: [
+					self
+						endReplacementForGeneralEntity: entity
+						isInContent: startedInContent].
+			startedInContent
+				ifTrue: [driver handleStartContentEntityReplacement: name]].
+	^ nil.
+]
+
+{ #category : #'tokenizing dtd' }
 XMLTokenizer >> nextIgnoreSection [
 	| openSections |
 
@@ -467,6 +618,20 @@ XMLTokenizer >> nextIncludeSection [
 		ifTrue: [self errorExpected: 'terminating ]]>'].
 
 	^ includedContents.
+]
+
+{ #category : #'tokenizing dtd' }
+XMLTokenizer >> nextInternalEntityDeclaration: aName isParameterEntity: aBoolean [
+	| value |
+
+	value := self nextEntityValue.
+	self
+		skipSeparatorsReplacingParameterEntities;
+		expectTerminator: $>.
+
+	aBoolean
+		ifTrue: [driver handleParameterEntityDeclaration: aName replacement: value]
+		ifFalse: [driver handleGeneralEntityDeclaration: aName replacement: value].
 ]
 
 { #category : #tokenizing }
@@ -523,6 +688,24 @@ XMLTokenizer >> nextNotationDeclaration [
 		handleNotationDeclaration: name
 		publicID: externalId key
 		systemID: externalId value.
+]
+
+{ #category : #'tokenizing dtd' }
+XMLTokenizer >> nextParameterEntityReference [
+	| name entity replacement |
+
+	name := self nextName.
+	self expectNext: $;.
+
+	entity := driver handleParameterEntityReference: name.
+	replacement := self replacementFromParameterEntity: entity.
+
+	replacement
+		ifNotEmpty: [
+			self
+				pushBackReplacement: replacement
+				forEntity: entity
+				onClose: [self endReplacementForParameterEntity: entity]].
 ]
 
 { #category : #tokenizing }
@@ -676,11 +859,20 @@ XMLTokenizer >> parseError: anErrorString [
 XMLTokenizer >> pushBackReplacement: aReplacement forEntity: anEntity onClose: aBlock [
 	(self hasActiveEntityNamed: anEntity name)
 		ifTrue: [self entityDepthError: 'Illegal self-referential entity ', anEntity asReference].
-
 	(activeEntities size >= self maxEntityReplacementDepth)
 		ifTrue: [self entityDepthError: 'Cannot further nest entity replacements'].
 
-	super pushBackReplacement: aReplacement forEntity: anEntity onClose: aBlock.
+	activeEntities addLast: anEntity.
+	streamReader
+		pushStream: aReplacement readStream
+		from: anEntity uri
+		onClose: aBlock.
+
+	anEntity isExternal
+		ifTrue: [
+			self
+				checkTextDeclarationInReplacement: aReplacement
+				forEntity: anEntity].
 ]
 
 { #category : #tokenizing }
@@ -697,10 +889,30 @@ XMLTokenizer >> removeTrailingSpacesFrom: aString [
 
 { #category : #'entity replacement' }
 XMLTokenizer >> replacementFromGeneralEntity: anEntity [
+	anEntity ifNil: [^ ''].
+
 	(context isInLiteralValue and: [anEntity isExternal])
 		ifTrue: [self parseError: 'External general entity ', anEntity asReference, ' in literal context'].
 
-	^ super replacementFromGeneralEntity: anEntity.
+	^ context isInLiteralValue
+		ifTrue: [anEntity replacementForLiteralContext]
+		ifFalse: [anEntity replacementForContentContext].
+]
+
+{ #category : #'entity replacement' }
+XMLTokenizer >> replacementFromParameterEntity: anEntity [
+	anEntity ifNil: [^ ''].
+
+	^ context isInLiteralValue
+		ifTrue: [anEntity replacementForLiteralContext]
+		ifFalse: [anEntity replacementForDTDContext]
+]
+
+{ #category : #'as yet unclassified' }
+XMLTokenizer >> setDriver: aDriver stream: aStream [
+	super setDriver: aDriver stream: aStream.
+
+	activeEntities := OrderedCollection new: self maxEntityReplacementDepth.
 ]
 
 { #category : #accessing }

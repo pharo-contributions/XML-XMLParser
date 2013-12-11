@@ -31,7 +31,7 @@ XMLAttributeValidator >> element [
 ]
 
 { #category : #normalization }
-XMLAttributeValidator >> furtherNormalizeValueIn: anAttributeDictionary [
+XMLAttributeValidator >> furtherNormalizeAttributeValueIn: anAttributeDictionary [
 	| readStream writeStream |
 
 	readStream := (anAttributeDictionary at: attribute) readStream.
@@ -73,24 +73,29 @@ XMLAttributeValidator >> setElement: anElement attribute: anAttribute defaultVal
 ]
 
 { #category : #testing }
-XMLAttributeValidator >> shouldFurtherNormalizeValue [
+XMLAttributeValidator >> shouldFurtherNormalizeAttributeValue [
 	^ true
+]
+
+{ #category : #validation }
+XMLAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
+	defaultValueValidator validateAttributeDefaultIn: anAttributeDictionary.
+
+	(self shouldFurtherNormalizeAttributeValue
+		and: [anAttributeDictionary includesKey: attribute])
+		ifTrue: [self furtherNormalizeAttributeValueIn: anAttributeDictionary].
+]
+
+{ #category : #validation }
+XMLAttributeValidator >> validateAttributeValue: aValue [
 ]
 
 { #category : #validation }
 XMLAttributeValidator >> validateAttributes: anAttributeDictionary [
 	self
-		validateDefaultValueIn: anAttributeDictionary;
-		validateValue: (anAttributeDictionary at: attribute ifAbsent: [^ self])
+		validateAttributeDefaultIn: anAttributeDictionary;
+		validateAttributeValue: (anAttributeDictionary at: attribute ifAbsent: [^ self])
 						
-]
-
-{ #category : #validation }
-XMLAttributeValidator >> validateDefaultValueIn: anAttributeDictionary [
-	defaultValueValidator validateDefaultValueIn: anAttributeDictionary.
-
-	(self shouldFurtherNormalizeValue and: [anAttributeDictionary includesKey: attribute])
-		ifTrue: [self furtherNormalizeValueIn: anAttributeDictionary].
 ]
 
 { #category : #validation }
@@ -103,8 +108,4 @@ XMLAttributeValidator >> validateID: anId [
 XMLAttributeValidator >> validateName: aName [
 	(XMLTokenizer isNmtoken: aName)
 		ifFalse: [XMLValidationException signal: 'Invalid name "', aName, '" in attribute "', attribute, '"']
-]
-
-{ #category : #validation }
-XMLAttributeValidator >> validateValue: aValue [
 ]

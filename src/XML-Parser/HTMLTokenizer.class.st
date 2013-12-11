@@ -2485,6 +2485,17 @@ HTMLTokenizer >> nextEndTag [
 ]
 
 { #category : #tokenizing }
+HTMLTokenizer >> nextGeneralEntityReference [
+	| name |
+
+	name := self nextName.
+	self expectNext: $;.
+	(self class predefinedEntities includesKey: name)
+		ifTrue: [^ self class predefinedEntities at: name]
+		ifFalse: [^ nil].
+]
+
+{ #category : #tokenizing }
 HTMLTokenizer >> nextName [
 	| nextChar |
 
@@ -2589,6 +2600,13 @@ HTMLTokenizer >> nextPCDataToken [
 ]
 
 { #category : #tokenizing }
+HTMLTokenizer >> nextParameterEntityReference [
+	self
+		nextName;
+		expectNext: $;
+]
+
+{ #category : #tokenizing }
 HTMLTokenizer >> nextPrologToken [
 	streamReader skipSeparators.
 	streamReader peek == $<
@@ -2627,29 +2645,16 @@ HTMLTokenizer >> nextQuotedValue [
 ]
 
 { #category : #'tokenizing dtd' }
-HTMLTokenizer >> nextSubsetDeclaration [
-	streamReader peek == $E
-		ifTrue: [
-			streamReader next.
-			streamReader peek == $N
-				ifTrue: [^ self nextEntityDeclaration]].
-	self skipDeclaration.
-]
-
-{ #category : #'tokenizing dtd' }
 HTMLTokenizer >> nextSubsetMarkupToken [
 	streamReader peek == $<
+		ifTrue: [streamReader next]
 		ifFalse: [^ self skipNonDeclarationOrEntity].
-
-	streamReader next.
-	streamReader peek == $?
-		ifTrue: [^ self nextPIOrXMLDecl].
 
 	self expectNext: $!.
 	streamReader peek == $-
 		ifTrue: [^ self nextComment].
 
-	self nextSubsetDeclaration.
+	self skipDeclaration.
 ]
 
 { #category : #'tokenizing dtd' }
@@ -2703,15 +2708,6 @@ HTMLTokenizer >> nextValue [
 { #category : #tokenizing }
 HTMLTokenizer >> nextXMLDeclAttributeValue [
 	^ self nextQuotedValue
-]
-
-{ #category : #'entity replacement' }
-HTMLTokenizer >> pushBackReplacement: aReplacement forEntity: anEntity onClose: aBlock [
-	((self hasActiveEntityNamed: anEntity name)
-		or: [activeEntities size >= self maxEntityReplacementDepth])
-		ifTrue: [^ self].
-
-	super pushBackReplacement: aReplacement forEntity: anEntity onClose: aBlock.
 ]
 
 { #category : #'tokenizing dtd' }

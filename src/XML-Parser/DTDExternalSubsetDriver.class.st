@@ -124,11 +124,6 @@ DTDExternalSubsetDriver >> isValidating [
 	^ self saxDriver isValidating
 ]
 
-{ #category : #testing }
-DTDExternalSubsetDriver >> resolvesExternalEntities [
-	^ true
-]
-
 { #category : #accessing }
 DTDExternalSubsetDriver >> saxDriver [
 	^ saxDriver
