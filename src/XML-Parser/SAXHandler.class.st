@@ -170,7 +170,7 @@ SAXHandler >> elementNester [
 
 { #category : #private }
 SAXHandler >> elementNesterClass [
-	^ XMLElementNester
+	^ XMLWellFormedElementNester
 ]
 
 { #category : #lexical }

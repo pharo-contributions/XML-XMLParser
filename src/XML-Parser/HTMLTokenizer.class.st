@@ -3,7 +3,7 @@ This is the implementation of the tokenizer for the HTML driver.
 "
 Class {
 	#name : #HTMLTokenizer,
-	#superclass : #XMLAbstractTokenizer,
+	#superclass : #XMLDriverTokenizer,
 	#instVars : [
 		'nonHtmlCommentStarter',
 		'nonHtmlElement'
@@ -2386,14 +2386,14 @@ HTMLTokenizer >> characterFromCodePoint: aCodePoint [
 		ifFalse: [Character space]
 ]
 
-{ #category : #tokenizing }
+{ #category : #'tokenizing - expecting' }
 HTMLTokenizer >> expectNext: aCharacter [
 	(streamReader peek == aCharacter)
 		ifTrue: [streamReader next].
 	^ aCharacter.
 ]
 
-{ #category : #tokenizing }
+{ #category : #'tokenizing - expecting' }
 HTMLTokenizer >> expectNextAll: aString [
 	aString doWithIndex: [:each :i |
 		each == streamReader peek
@@ -2404,12 +2404,12 @@ HTMLTokenizer >> expectNextAll: aString [
 	^ aString.
 ]
 
-{ #category : #tokenizing }
+{ #category : #'tokenizing - expecting' }
 HTMLTokenizer >> expectTerminator: aCharacter [
 	streamReader upTo: aCharacter
 ]
 
-{ #category : #tokenizing }
+{ #category : #'tokenizing - expecting' }
 HTMLTokenizer >> expectUpToAll: aString [
 	^ streamReader upToAll: aString
 ]
@@ -2599,7 +2599,7 @@ HTMLTokenizer >> nextPCDataToken [
 	^ pcData.
 ]
 
-{ #category : #tokenizing }
+{ #category : #'tokenizing - dtd' }
 HTMLTokenizer >> nextParameterEntityReference [
 	self
 		nextName;
@@ -2632,7 +2632,7 @@ HTMLTokenizer >> nextPrologToken [
 	^ self nextContentToken.
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 HTMLTokenizer >> nextPubidLiteral [
 	^ self nextQuotedValue
 ]
@@ -2644,7 +2644,7 @@ HTMLTokenizer >> nextQuotedValue [
 		ifFalse: [self nextName]
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 HTMLTokenizer >> nextSubsetMarkupToken [
 	streamReader peek == $<
 		ifTrue: [streamReader next]
@@ -2657,7 +2657,7 @@ HTMLTokenizer >> nextSubsetMarkupToken [
 	self skipDeclaration.
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 HTMLTokenizer >> nextSystemLiteralRequired: aBoolean [
 	^ self nextQuotedValue
 ]
@@ -2710,7 +2710,7 @@ HTMLTokenizer >> nextXMLDeclAttributeValue [
 	^ self nextQuotedValue
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 HTMLTokenizer >> skipDeclaration [
 	[streamReader atEnd
 		or: [streamReader peek == $>]]
@@ -2723,7 +2723,7 @@ HTMLTokenizer >> skipDeclaration [
 		ifFalse: [streamReader next].
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 HTMLTokenizer >> skipNonDeclarationOrEntity [
 	[streamReader atEnd
 		or: [(streamReader peek == $<)

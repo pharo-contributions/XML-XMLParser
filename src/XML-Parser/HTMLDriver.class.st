@@ -4,16 +4,8 @@ Class {
 	#category : #'XML-Parser-HTML'
 }
 
-{ #category : #'handling tokens' }
-HTMLDriver >> handleEndDocument [
-	self elementNester openElements
-		reverseDo: [:each | self handleEndTag: each].
-
-	super handleEndDocument.
-]
-
-{ #category : #'handling tokens' }
-HTMLDriver >> handleEndTag: anElementName [
+{ #category : #'element nesting' }
+HTMLDriver >> endNestingElement: anElementName [
 	((self elementNester isVoidElement: anElementName)
 		or: [(self elementNester hasOpenElement: anElementName) not])
 		ifTrue: [^ self].
@@ -21,7 +13,15 @@ HTMLDriver >> handleEndTag: anElementName [
 	self preEndElements:
 		(self elementNester elementsToEndBeforeEnding: anElementName).
 
-	super handleEndTag: anElementName
+	super endNestingElement: anElementName.
+]
+
+{ #category : #'handling tokens' }
+HTMLDriver >> handleEndDocument [
+	self elementNester openElements
+		reverseDo: [:each | self handleEndTag: each].
+
+	super handleEndDocument.
 ]
 
 { #category : #'handling tokens' }
@@ -44,14 +44,6 @@ HTMLDriver >> handleParseError: anError [
 
 { #category : #'handling tokens' }
 HTMLDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
-	(self elementNester isOpenUniqueElement: anElementName)
-		ifTrue: [^ self].
-
-	self preEndElements:
-		(self elementNester elementsToEndBeforeStarting: anElementName).
-	self preStartElements:
-		(self elementNester elementsToStartBeforeStarting: anElementName).
-
 	super
 		handleStartTag: anElementName
 		attributes: anAttributeDictionary
@@ -59,7 +51,6 @@ HTMLDriver >> handleStartTag: anElementName attributes: anAttributeDictionary na
 
 	(self elementNester isVoidElement: anElementName)
 		ifTrue: [self preEndElements: (Array with: anElementName)].
-
 ]
 
 { #category : #'handling tokens' }
@@ -75,27 +66,52 @@ HTMLDriver >> isValidating [
 	^ false
 ]
 
-{ #category : #private }
+{ #category : #'element nesting' }
 HTMLDriver >> preEndElements: anElementCollection [
 	anElementCollection do: [:each |
 		(self elementNester hasOpenElements)
 			ifFalse: [^ self].
 
-		super handleEndTag: each].
+		self elementNester endElement: each.
+	
+		each splitQualifiedNameInto: [:prefixPart :localPart |
+			self saxHandler 
+				endElement: each
+				prefix: prefixPart
+				uri: ''
+				localName: localPart]].
 ]
 
-{ #category : #private }
+{ #category : #'element nesting' }
 HTMLDriver >> preStartElements: anElementCollection [
 	anElementCollection do: [:each |
-		super
-			handleStartTag: each
-			attributes: Dictionary new
-			namespaces: nil].
+		self elementNester startElement: each.
+
+		each splitQualifiedNameInto: [:prefixPart :localPart |
+			self saxHandler 
+				startElement: each
+				prefix: prefixPart
+				uri: ''
+				localName: localPart
+				attributes: Dictionary new]].
 ]
 
 { #category : #testing }
 HTMLDriver >> resolvesExternalEntities [
 	^ false
+]
+
+{ #category : #'element nesting' }
+HTMLDriver >> startNestingElement: anElementName [
+	(self elementNester isOpenUniqueElement: anElementName)
+		ifTrue: [^ self].
+
+	self preEndElements:
+		(self elementNester elementsToEndBeforeStarting: anElementName).
+	self preStartElements:
+		(self elementNester elementsToStartBeforeStarting: anElementName).
+
+	super startNestingElement: anElementName.
 ]
 
 { #category : #private }

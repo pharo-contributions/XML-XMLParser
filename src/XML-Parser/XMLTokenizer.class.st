@@ -3,7 +3,7 @@ This class reads XML tokens from a stream using a nested stream reader. Sending 
 "
 Class {
 	#name : #XMLTokenizer,
-	#superclass : #XMLAbstractTokenizer,
+	#superclass : #XMLDriverTokenizer,
 	#instVars : [
 		'activeEntities'
 	],
@@ -130,7 +130,7 @@ XMLTokenizer >> characterFromCodePoint: aCodePoint [
 		do: [:error | self parseError: 'Invalid character code point ', aCodePoint printString]
 ]
 
-{ #category : #tokenizing }
+{ #category : #'entity replacement' }
 XMLTokenizer >> checkTextDeclarationInReplacement: aReplacement forEntity: anEntity [
 	(aReplacement beginsWith: '<?xml ')
 		ifTrue: [ 
@@ -173,7 +173,7 @@ XMLTokenizer >> errorExpected: anExpectedCharacterOrString butGot: aReceivedChar
 	self errorExpected: expectedString, ' but got ', receivedString.
 ]
 
-{ #category : #tokenizing }
+{ #category : #'tokenizing - expecting' }
 XMLTokenizer >> expectNext: aCharacter [
 	| nextChar |
 
@@ -185,7 +185,7 @@ XMLTokenizer >> expectNext: aCharacter [
 	^ nextChar.
 ]
 
-{ #category : #tokenizing }
+{ #category : #'tokenizing - expecting' }
 XMLTokenizer >> expectNextAll: anExpectedLiteral [
 	| nextChar |
 
@@ -202,7 +202,7 @@ XMLTokenizer >> expectNextAll: anExpectedLiteral [
 	^ anExpectedLiteral.
 ]
 
-{ #category : #tokenizing }
+{ #category : #'tokenizing - expecting' }
 XMLTokenizer >> expectQuote [
 	| nextChar |
 
@@ -215,7 +215,7 @@ XMLTokenizer >> expectQuote [
 	^ nextChar.
 ]
 
-{ #category : #tokenizing }
+{ #category : #'tokenizing - expecting' }
 XMLTokenizer >> expectTerminator: aCharacter [
 	| nextChar |
 
@@ -227,7 +227,7 @@ XMLTokenizer >> expectTerminator: aCharacter [
 	^ nextChar.
 ]
 
-{ #category : #tokenizing }
+{ #category : #'tokenizing - expecting' }
 XMLTokenizer >> expectUpToAll: aString [
 	| value isTerminated |
 
@@ -267,7 +267,7 @@ XMLTokenizer >> maxEntityReplacementDepth [
 	^ 3
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextAttlistDeclaration [
 	| element attribute attributeType defaultDeclaration  |
 
@@ -293,7 +293,7 @@ XMLTokenizer >> nextAttlistDeclaration [
 		expectTerminator: $>.
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextAttributeDefaultDeclaration [
 	| defaultDeclaration |
 
@@ -320,12 +320,12 @@ XMLTokenizer >> nextAttributeDefaultDeclaration [
 	^ defaultDeclaration.
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextAttributeDefaultValue [
 	^ (self nextAttributeValue copyWithFirst: $") copyWith: $"
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextAttributeType [
 	| nextChar type |
 
@@ -365,7 +365,7 @@ XMLTokenizer >> nextAttributeValue [
 	^ value.
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextConditionalSection [
 	self
 		skipSeparatorsReplacingParameterEntities;
@@ -411,7 +411,7 @@ XMLTokenizer >> nextContentToken [
 		
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextElementDeclaration [
 	| name nextChar contentModel |
 
@@ -443,7 +443,7 @@ XMLTokenizer >> nextElementDeclaration [
 		contentModel: contentModel
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextEndInternalSubset [
 	self hasActiveEntities
 		ifTrue: [self parseError: 'Parameter entity replacement cannot terminate internal subset'].
@@ -464,7 +464,7 @@ XMLTokenizer >> nextEndTag [
 	driver handleEndTag: tagName.
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextEntityDeclaration [
 	| isParameterEntity name  |
 
@@ -496,7 +496,7 @@ XMLTokenizer >> nextEntityDeclaration [
 				isParameterEntity: isParameterEntity].
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextEntityValue [
 	| quote value  |
 
@@ -513,7 +513,7 @@ XMLTokenizer >> nextEntityValue [
 	^ value.
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextExternalEntityDeclaration: aName isParameterEntity: aBoolean [
 	| externalId notation |
 
@@ -570,7 +570,7 @@ XMLTokenizer >> nextGeneralEntityReference [
 	^ nil.
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextIgnoreSection [
 	| openSections |
 
@@ -594,7 +594,7 @@ XMLTokenizer >> nextIgnoreSection [
 	^ ''.
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextIncludeSection [
 	| isOpen includedContents |
 
@@ -620,7 +620,7 @@ XMLTokenizer >> nextIncludeSection [
 	^ includedContents.
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextInternalEntityDeclaration: aName isParameterEntity: aBoolean [
 	| value |
 
@@ -651,7 +651,7 @@ XMLTokenizer >> nextName [
 		writeStream contents]
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextNmtoken [
 	"matches the nmtoken production"
 	|  nextChar |
@@ -668,7 +668,7 @@ XMLTokenizer >> nextNmtoken [
 		writeStream contents]
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextNotationDeclaration [
 	| name externalId |
 
@@ -678,8 +678,8 @@ XMLTokenizer >> nextNotationDeclaration [
 
 	name := self nextName.
 	self skipSeparatorsReplacingParameterEntities.
-	externalId := self nextExternalIDSystemLiteralRequired: false.
 
+	externalId := self nextExternalIDSystemLiteralRequired: false.
 	self
 		skipSeparatorsReplacingParameterEntities;
 		expectTerminator: $>.
@@ -690,7 +690,7 @@ XMLTokenizer >> nextNotationDeclaration [
 		systemID: externalId value.
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextParameterEntityReference [
 	| name entity replacement |
 
@@ -728,7 +728,7 @@ XMLTokenizer >> nextPrologToken [
 	self nextTag.
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextPubidLiteral [
 	| quote fpi nextChar |
 
@@ -745,7 +745,7 @@ XMLTokenizer >> nextPubidLiteral [
 	^ fpi.
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextSubsetDeclaration [
 	streamReader peek == $E
 		ifTrue: [
@@ -761,7 +761,7 @@ XMLTokenizer >> nextSubsetDeclaration [
 	self errorExpected: 'declaration'.
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextSubsetMarkupToken [
 	self expectNext: $<.
 	streamReader peek == $?
@@ -787,7 +787,7 @@ XMLTokenizer >> nextSubsetMarkupToken [
 	self nextSubsetDeclaration.
 ]
 
-{ #category : #'tokenizing dtd' }
+{ #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextSystemLiteralRequired: aBoolean [	
 	| quote value |
 
@@ -908,7 +908,7 @@ XMLTokenizer >> replacementFromParameterEntity: anEntity [
 		ifFalse: [anEntity replacementForDTDContext]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 XMLTokenizer >> setDriver: aDriver stream: aStream [
 	super setDriver: aDriver stream: aStream.
 

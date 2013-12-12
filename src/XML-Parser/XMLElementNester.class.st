@@ -1,52 +1,109 @@
 "
-The class keeps track of elements as they start and end and ensures that they nest properly.
+This is a base class for element nesters.
 "
 Class {
 	#name : #XMLElementNester,
-	#superclass : #XMLAbstractElementNester,
+	#superclass : #Object,
+	#instVars : [
+		'openElements',
+		'rootElement',
+		'hasExternalRoot'
+	],
 	#category : #'XML-Parser'
 }
 
-{ #category : #checking }
-XMLElementNester >> endedElement: anElementName [
-	(self currentElement = anElementName)
-		ifFalse: [
-			^ (self hasOpenElement: anElementName)
-				ifTrue: [self errorImproperlyNestedElements: anElementName]
-				ifFalse: [self errorUnmatchedEndTag: anElementName]].
+{ #category : #accessing }
+XMLElementNester >> currentElement [
+	^ self openElements
+		at: self totalOpen
+		ifAbsent: ['']
+]
 
-	super endedElement: anElementName.
+{ #category : #printing }
+XMLElementNester >> enclosedElementsAsString: aTagName [
+	| enclosedTags |
+
+	enclosedTags := String new writeStream.
+	self
+		printOn: enclosedTags
+		startingAt: (self openElements lastIndexOf: aTagName) + 1.
+	^ enclosedTags contents.
+]
+
+{ #category : #checking }
+XMLElementNester >> endElement: anElementName [
+	self openElements removeLast
 ]
 
 { #category : #checking }
 XMLElementNester >> ensureNoElementsRemainOpen [
-	self hasOpenElements
-		ifTrue: [XMLWellFormednessException signal: 'Unterminated elements: ', self printString]
+	self subclassResponsibility
 ]
 
-{ #category : #errors }
-XMLElementNester >> errorImproperlyNestedElements: anElementName [
-	XMLWellFormednessException signal:
-		('<{1}> element ended before its child {2} element(s)'
-			format: (Array with: anElementName with: (self enclosedElementsAsString: anElementName)))
+{ #category : #testing }
+XMLElementNester >> hasExternalRoot [
+	^ hasExternalRoot ifNil: [hasExternalRoot := false]
 ]
 
-{ #category : #errors }
-XMLElementNester >> errorUnmatchedEndTag: anElementName [
-	XMLWellFormednessException signal:
-		('End </{1}> tag with no corresponding start <{1}> tag'
-			format: (Array with: anElementName))
+{ #category : #testing }
+XMLElementNester >> hasOpenElement: anElementName [
+	^ self openElements includes: anElementName
+]
+
+{ #category : #testing }
+XMLElementNester >> hasOpenElements [
+	^ self openElements notEmpty
+]
+
+{ #category : #accessing }
+XMLElementNester >> openElements [
+	^ openElements ifNil: [openElements := OrderedCollection new: 15]
+]
+
+{ #category : #private }
+XMLElementNester >> printLimit [
+	^ 5
+]
+
+{ #category : #printing }
+XMLElementNester >> printOn: aStream [
+	self printOn: aStream startingAt: 1
+]
+
+{ #category : #printing }
+XMLElementNester >> printOn: aStream startingAt: aPosition [
+	| endPosition |
+
+	endPosition :=  self totalOpen min: (aPosition + self printLimit - 1).
+	(self openElements copyFrom: aPosition to: endPosition)
+		do: [:each |
+			aStream
+				nextPut: $<;
+				nextPutAll: each;
+				nextPut: $>]
+		separatedBy: [aStream nextPutAll: ', '].
+	(endPosition < self totalOpen)
+		ifTrue: [aStream nextPutAll: '...'].
+]
+
+{ #category : #accessing }
+XMLElementNester >> rootElement [
+	^ rootElement ifNil: ['']
+]
+
+{ #category : #accessing }
+XMLElementNester >> rootElement: anElement [
+	rootElement := anElement.
+	hasExternalRoot := true.
 ]
 
 { #category : #checking }
-XMLElementNester >> startedElement: anElementName [
-	rootElement
-		ifNil: [rootElement := anElementName]
-		ifNotNil: [
-			(self hasOpenElements or: [self hasExternalRoot])
-				ifFalse: [
-					XMLWellFormednessException signal:
-						'Document cannot have multiple root elements']].
+XMLElementNester >> startElement: anElementName [
+	self openElements addLast: anElementName
+]
 
-	super startedElement: anElementName.
+{ #category : #accessing }
+XMLElementNester >> totalOpen [
+	^ self openElements size
+	
 ]

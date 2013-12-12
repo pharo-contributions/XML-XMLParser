@@ -1,8 +1,8 @@
 "
-This is a base class for tokenizer. Be careful changing the code in this class or its subclases. It is heavily optimized.
+This is a base class for tokenizers. Be careful changing the code in this class or its subclases. It is heavily optimized.
 "
 Class {
-	#name : #XMLAbstractTokenizer,
+	#name : #XMLDriverTokenizer,
 	#superclass : #Object,
 	#instVars : [
 		'driver',
@@ -17,7 +17,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLAbstractTokenizer class >> driver: aDriver on: aStringOrStream [
+XMLDriverTokenizer class >> driver: aDriver on: aStringOrStream [
 	^self new
 		setDriver: aDriver
 		stream:
@@ -27,63 +27,63 @@ XMLAbstractTokenizer class >> driver: aDriver on: aStringOrStream [
 ]
 
 { #category : #'class initialization' }
-XMLAbstractTokenizer class >> initialize [
+XMLDriverTokenizer class >> initialize [
 	"self initialize"
 
 	self initializePredefinedEntities.
 ]
 
 { #category : #'class initialization' }
-XMLAbstractTokenizer class >> initializePredefinedEntities [
+XMLDriverTokenizer class >> initializePredefinedEntities [
 ]
 
 { #category : #accessing }
-XMLAbstractTokenizer class >> predefinedEntities [
+XMLDriverTokenizer class >> predefinedEntities [
 	^ predefinedEntities
 ]
 
 { #category : #testing }
-XMLAbstractTokenizer >> atEnd [
+XMLDriverTokenizer >> atEnd [
 	self subclassResponsibility
 ]
 
 { #category : #'entity replacement' }
-XMLAbstractTokenizer >> characterFromCodePoint: aCodePoint [
+XMLDriverTokenizer >> characterFromCodePoint: aCodePoint [
 	self subclassResponsibility
 ]
 
 { #category : #accessing }
-XMLAbstractTokenizer >> currentLineNumber [
+XMLDriverTokenizer >> currentLineNumber [
 	^ streamReader currentLineNumber
 ]
 
 { #category : #accessing }
-XMLAbstractTokenizer >> driver [
+XMLDriverTokenizer >> driver [
 	^ driver
 ]
 
-{ #category : #tokenizing }
-XMLAbstractTokenizer >> expectNext: aCharacter [
+{ #category : #'tokenizing - expecting' }
+XMLDriverTokenizer >> expectNext: aCharacter [
+	self subclassResponsibility
+]
+
+{ #category : #'tokenizing - expecting' }
+XMLDriverTokenizer >> expectNextAll: aString [
+	self subclassResponsibility
+]
+
+{ #category : #'tokenizing - expecting' }
+XMLDriverTokenizer >> expectTerminator: aCharacter [
+	self subclassResponsibility
+]
+
+{ #category : #'tokenizing - expecting' }
+XMLDriverTokenizer >> expectUpToAll: aString [
 	self subclassResponsibility
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> expectNextAll: aString [
-	self subclassResponsibility
-]
-
-{ #category : #tokenizing }
-XMLAbstractTokenizer >> expectTerminator: aCharacter [
-	self subclassResponsibility
-]
-
-{ #category : #tokenizing }
-XMLAbstractTokenizer >> expectUpToAll: aString [
-	self subclassResponsibility
-]
-
-{ #category : #tokenizing }
-XMLAbstractTokenizer >> nextCDataSection [
+XMLDriverTokenizer >> nextCDataSection [
 	self expectNextAll: '[CDATA['.
 
 	driver handleCData: (self expectUpToAll: ']]>').
@@ -91,7 +91,7 @@ XMLAbstractTokenizer >> nextCDataSection [
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> nextComment [
+XMLDriverTokenizer >> nextComment [
 	| comment |
 
 	"Skip first -"
@@ -105,12 +105,12 @@ XMLAbstractTokenizer >> nextComment [
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> nextContentToken [
+XMLDriverTokenizer >> nextContentToken [
 	self subclassResponsibility
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> nextDecodedCharReference [
+XMLDriverTokenizer >> nextDecodedCharReference [
 	| codePoint |
 
 	"skip #"
@@ -122,7 +122,7 @@ XMLAbstractTokenizer >> nextDecodedCharReference [
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> nextDelimitedBy: aDelimiter and: aSecondDelimiter entityChar: anEntityStartChar normalizeWhitespace: shouldNormalize ignorableWhitespace: shouldSkip [
+XMLDriverTokenizer >> nextDelimitedBy: aDelimiter and: aSecondDelimiter entityChar: anEntityStartChar normalizeWhitespace: shouldNormalize ignorableWhitespace: shouldSkip [
 	| isIgnorableWhitespace nextChar pcData |
 
 	isIgnorableWhitespace := true.
@@ -169,8 +169,8 @@ XMLAbstractTokenizer >> nextDelimitedBy: aDelimiter and: aSecondDelimiter entity
 	^ pcData.
 ]
 
-{ #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextDocTypeDecl [
+{ #category : #'tokenizing - dtd' }
+XMLDriverTokenizer >> nextDocTypeDecl [
 	|  root externalId |
 
 	context enterDoctype.
@@ -191,8 +191,8 @@ XMLAbstractTokenizer >> nextDocTypeDecl [
 		ifFalse: [self nextEndDocTypeDecl].
 ]
 
-{ #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextEndDocTypeDecl [
+{ #category : #'tokenizing - dtd' }
+XMLDriverTokenizer >> nextEndDocTypeDecl [
 	streamReader skipSeparators.
 	self expectTerminator: $>.
 	context enterProlog.
@@ -201,25 +201,23 @@ XMLAbstractTokenizer >> nextEndDocTypeDecl [
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> nextEndDocument [
+XMLDriverTokenizer >> nextEndDocument [
 	context enterAtEnd.
 	driver handleEndDocument.
 ]
 
-{ #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextEndInternalSubset [
+{ #category : #'tokenizing - dtd' }
+XMLDriverTokenizer >> nextEndInternalSubset [
 	self expectTerminator: $].
 
 	context enterProlog.
 	self nextEndDocTypeDecl.
 ]
 
-{ #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextExternalIDSystemLiteralRequired: aBoolean [
-	| publicId  systemId |
+{ #category : #'tokenizing - dtd' }
+XMLDriverTokenizer >> nextExternalIDSystemLiteralRequired: aBoolean [
+	| publicId systemId |
 
-	publicId := ''.
-	systemId := ''.
 	(streamReader atEnd not
 		and: [streamReader peek == $P
 			or: [streamReader peek == $S]])
@@ -239,28 +237,28 @@ XMLAbstractTokenizer >> nextExternalIDSystemLiteralRequired: aBoolean [
 						skipSeparatorsReplacingParameterEntities.
 					systemId := self nextSystemLiteralRequired: true]].
 
-	^ publicId -> systemId.
+	^ (publicId ifNil: ['']) -> (systemId ifNil: ['']).
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> nextGeneralEntityReference [
+XMLDriverTokenizer >> nextGeneralEntityReference [
 	self subclassResponsibility
 ]
 
-{ #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextInternalSubsetStart [
+{ #category : #'tokenizing - dtd' }
+XMLDriverTokenizer >> nextInternalSubsetStart [
 	"skip ["
 	streamReader next.
 	context enterInternalSubset.
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> nextName [
+XMLDriverTokenizer >> nextName [
 	self subclassResponsibility
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> nextPIOrXMLDecl [
+XMLDriverTokenizer >> nextPIOrXMLDecl [
 	| piTarget piData |
 
 	"Skip ?"
@@ -279,34 +277,34 @@ XMLAbstractTokenizer >> nextPIOrXMLDecl [
 	driver handlePI: piTarget data: piData.
 ]
 
-{ #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextParameterEntityReference [
+{ #category : #'tokenizing - dtd' }
+XMLDriverTokenizer >> nextParameterEntityReference [
 	self subclassResponsibility
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> nextPrologToken [
+XMLDriverTokenizer >> nextPrologToken [
 	self subclassResponsibility
 ]
 
-{ #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextPubidLiteral [
+{ #category : #'tokenizing - dtd' }
+XMLDriverTokenizer >> nextPubidLiteral [
 	self subclassResponsiblity
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> nextStartDocument [
+XMLDriverTokenizer >> nextStartDocument [
 	context enterProlog.
 	driver handleStartDocument.
 ]
 
-{ #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextSubsetMarkupToken [
+{ #category : #'tokenizing - dtd' }
+XMLDriverTokenizer >> nextSubsetMarkupToken [
 	self subclassResponsibility
 ]
 
-{ #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextSubsetToken [
+{ #category : #'tokenizing - dtd' }
+XMLDriverTokenizer >> nextSubsetToken [
 	streamReader skipSeparators.
 	streamReader atEnd
 		ifTrue: [^ self].
@@ -319,18 +317,18 @@ XMLAbstractTokenizer >> nextSubsetToken [
 	self nextSubsetMarkupToken.
 ]
 
-{ #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> nextSystemLiteralRequired: aBoolean [
+{ #category : #'tokenizing - dtd' }
+XMLDriverTokenizer >> nextSystemLiteralRequired: aBoolean [
 	self subclassResponsibility
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> nextTag [
+XMLDriverTokenizer >> nextTag [
 	self subclassResponsibility
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> nextToken [
+XMLDriverTokenizer >> nextToken [
 	self atEnd
 		ifTrue: [^ self].
 	context isInContent
@@ -344,7 +342,7 @@ XMLAbstractTokenizer >> nextToken [
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> nextUnparsedEntityReference [
+XMLDriverTokenizer >> nextUnparsedEntityReference [
 	| name |
 
 	streamReader next.
@@ -355,7 +353,7 @@ XMLAbstractTokenizer >> nextUnparsedEntityReference [
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> nextXMLDecl [
+XMLDriverTokenizer >> nextXMLDecl [
 	| version encoding standalone |
 
 	version := self nextXMLDeclAttribute: 'version'.
@@ -387,7 +385,7 @@ XMLAbstractTokenizer >> nextXMLDecl [
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> nextXMLDeclAttribute: aName [
+XMLDriverTokenizer >> nextXMLDeclAttribute: aName [
 	streamReader skipSeparators.
 	streamReader peek == $?
 		ifTrue: [^ ''].
@@ -401,19 +399,19 @@ XMLAbstractTokenizer >> nextXMLDeclAttribute: aName [
 ]
 
 { #category : #tokenizing }
-XMLAbstractTokenizer >> nextXMLDeclAttributeValue [
+XMLDriverTokenizer >> nextXMLDeclAttributeValue [
 	self subclassResponsibility
 
 ]
 
-{ #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> replaceParameterEntityReference [
+{ #category : #'tokenizing - dtd' }
+XMLDriverTokenizer >> replaceParameterEntityReference [
 	streamReader next.
 	self nextParameterEntityReference
 ]
 
 { #category : #initialization }
-XMLAbstractTokenizer >> setDriver: aDriver stream: aStream [
+XMLDriverTokenizer >> setDriver: aDriver stream: aStream [
 	driver := aDriver.
 	context := self tokenContextClass new.
 	streamReader :=
@@ -424,8 +422,8 @@ XMLAbstractTokenizer >> setDriver: aDriver stream: aStream [
 	streamWriter := XMLNestedStreamWriter new: 3.
 ]
 
-{ #category : #'tokenizing dtd' }
-XMLAbstractTokenizer >> skipSeparatorsReplacingParameterEntities [
+{ #category : #'tokenizing - dtd' }
+XMLDriverTokenizer >> skipSeparatorsReplacingParameterEntities [
 	"this can be used to replace references within declarations"
 
 	streamReader skipSeparators.
@@ -438,16 +436,16 @@ XMLAbstractTokenizer >> skipSeparatorsReplacingParameterEntities [
 ]
 
 { #category : #accessing }
-XMLAbstractTokenizer >> streamReader [
+XMLDriverTokenizer >> streamReader [
 	^ streamReader
 ]
 
 { #category : #accessing }
-XMLAbstractTokenizer >> tokenContext [
+XMLDriverTokenizer >> tokenContext [
 	^ context
 ]
 
 { #category : #accessing }
-XMLAbstractTokenizer >> tokenContextClass [
+XMLDriverTokenizer >> tokenContextClass [
 	self subclassResponsibility
 ]

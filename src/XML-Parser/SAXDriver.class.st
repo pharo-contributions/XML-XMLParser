@@ -8,8 +8,6 @@ Class {
 		'saxHandler',
 		'dtd',
 		'validator',
-		'elementNester',
-		'scopeAllocator',
 		'languageEnvironment'
 	],
 	#category : #'XML-Parser'
@@ -46,12 +44,28 @@ SAXDriver >> dtd [
 
 { #category : #accessing }
 SAXDriver >> elementNester [
-	^ elementNester
+	^ saxHandler elementNester
+]
+
+{ #category : #'element nesting' }
+SAXDriver >> endNestingElement: anElementName [
+	self elementNester endElement: anElementName
 ]
 
 { #category : #accessing }
 SAXDriver >> externalEntityResolver [
 	^ saxHandler externalEntityResolver
+]
+
+{ #category : #private }
+SAXDriver >> externalSubsetParserOnURI: aUri [
+	^ XMLParser
+		driver:
+			(DTDExternalSubsetDriver
+				saxDriver: self
+				documentURI: aUri)
+		on: (self externalEntityResolver resolveEntity: aUri)
+	
 ]
 
 { #category : #'handling tokens' }
@@ -80,8 +94,7 @@ SAXDriver >> handleCData: aString [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleComment: aString [
-	self saxHandler 
-		comment: aString
+	self saxHandler comment: aString
 ]
 
 { #category : #'handling tokens' }
@@ -118,25 +131,19 @@ SAXDriver >> handleEndDocument [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleEndTag: anElementName [
-	| prefix localName namespaceUri |
-
-	self elementNester endedElement: anElementName.
+	self endNestingElement: anElementName.
 
 	anElementName splitQualifiedNameInto: [:prefixPart :localPart |
-		prefix := prefixPart.
-		localName := localPart].
-	namespaceUri :=
-		self usesNamespaces
-			ifTrue: [self scopeAllocator resolvePrefix: prefix]
-			ifFalse: [''].
+		self saxHandler 
+			endElement: anElementName
+			prefix: prefixPart
+			uri:
+				(self usesNamespaces
+					ifTrue: [self scopeAllocator resolvePrefix: prefixPart]
+					ifFalse: [''])
+			localName: localPart.
 
-	self saxHandler 
-		endElement: anElementName
-		prefix: prefix
-		uri: namespaceUri
-		localName: localName.
-
-	self validateEndTag: anElementName.
+		self validateEndTag: anElementName].
 ]
 
 { #category : #'handling tokens' }
@@ -294,31 +301,27 @@ SAXDriver >> handleStartDocument [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
-	| prefix localName namespaceUri |
+	self startNestingElement: anElementName.
 
-	self elementNester startedElement: anElementName.
 	(anAttributeDictionary includesKey: 'xml:lang')
 		ifTrue: [self languageEnvironment: (anAttributeDictionary at: 'xml:lang')].
+
 	anElementName splitQualifiedNameInto: [:prefixPart :localPart |
-		prefix := prefixPart.
-		localName := localPart].
+		self
+			validateStartTag: anElementName
+			prefix: prefixPart
+			attributes: anAttributeDictionary
+			namespaces: aNamespaceDictionary.
 
-	self
-		validateStartTag: anElementName
-		prefix: prefix
-		attributes: anAttributeDictionary
-		namespaces: aNamespaceDictionary.
-	namespaceUri :=
-		self usesNamespaces
-			ifTrue: [self scopeAllocator resolvePrefix: prefix]
-			ifFalse: [''].
-
-	self saxHandler 
-		startElement: anElementName
-		prefix: prefix
-		uri: namespaceUri
-		localName: localName
-		attributes: anAttributeDictionary
+		self saxHandler 
+			startElement: anElementName
+			prefix: prefixPart
+			uri:
+				(self usesNamespaces
+					ifTrue: [self scopeAllocator resolvePrefix: prefixPart]
+					ifFalse: [''])
+			localName: localPart
+			attributes: anAttributeDictionary].
 ]
 
 { #category : #'handling tokens' }
@@ -339,8 +342,7 @@ SAXDriver >> handleUnparsedEntityReference: aName [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleWhitespace: aString [
-	self saxHandler 
-		ignorableWhitespace: aString
+	self saxHandler ignorableWhitespace: aString
 ]
 
 { #category : #'handling tokens' }
@@ -374,21 +376,15 @@ SAXDriver >> languageEnvironment: anIsoString [
 	languageEnvironment := LanguageEnvironment localeID: (LocaleID isoString: anIsoString)
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #private }
 SAXDriver >> parseExternalSubset: aUri [
-	| absoluteUri parser |
+	| parser |
 
-	absoluteUri :=
-		self externalEntityResolver
-			entityURIFromRelative: aUri
-			andBase: self documentURI.
 	parser :=
-		XMLParser
-			driver:
-				(DTDExternalSubsetDriver
-					saxDriver: self
-					documentURI: absoluteUri)
-			on: (self externalEntityResolver resolveEntity: absoluteUri).
+		self externalSubsetParserOnURI:
+			(self externalEntityResolver
+				entityURIFromRelative: aUri
+				andBase: self documentURI).
 	parser parseDocument.
 ]
 
@@ -409,14 +405,17 @@ SAXDriver >> saxHandler [
 
 { #category : #accessing }
 SAXDriver >> scopeAllocator [
-	^ scopeAllocator
+	^ saxHandler scopeAllocator
 ]
 
 { #category : #initialization }
 SAXDriver >> setSaxHandler: aHandler [
-	saxHandler := aHandler.
-	elementNester := aHandler elementNester.
-	scopeAllocator := aHandler scopeAllocator.
+	saxHandler := aHandler
+]
+
+{ #category : #'element nesting' }
+SAXDriver >> startNestingElement: anElementName [
+	self elementNester startElement: anElementName
 ]
 
 { #category : #namespaces }
