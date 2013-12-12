@@ -140,7 +140,7 @@ XMLParserTest >> benchmark4 [
 			elementAt: 'manager']] timeToRun.
 ]
 
-{ #category : #tests }
+{ #category : #private }
 XMLParserTest >> recursiveEntityDeclarationsNamed: aName depth: aLimit isParameter: aBoolean [
 	| entityDeclarations |
 
@@ -321,33 +321,6 @@ XMLParserTest >> testAttributeValueNormalization [
 	self
 		assert: (document root attributeAt: 'name') = normalized;
 		assert: (document root contentString) = unnormalized.
-]
-
-{ #category : #tests }
-XMLParserTest >> testCDATASection [
-	| document element unescaped escaped xml |
-
-	unescaped := 'this is CDATA test content 1 < 2 & 5 > 3'.
-	escaped := 'this is CDATA test content 1 &lt; 2 &amp; 5 &gt; 3'.
-	xml := 
-		'<?xml version="1.0" encoding="UTF-8"?>
-		<test-data><![CDATA[', unescaped, ']]></test-data>'.
-	document := XMLDOMParser parse: xml.
-	element := document findElementNamed: 'test-data'.
-	self
-		assert: element nodes size = 1;
-		assert: element firstNode isStringNode;
-		assert: element firstNode printString = escaped.
-
-	document :=
-		(XMLDOMParser on: xml)
-			preservesCDataNodes: true;
-			parseDocument.
-	element := document findElementNamed: 'test-data'.
-	self
-		assert: element nodes size = 1;
-		assert: element firstNode isCData;
-		assert: element firstNode printString = ('<![CDATA[', unescaped, ']]>').
 ]
 
 { #category : #'tests-xmltokenizer' }
@@ -590,31 +563,6 @@ XMLParserTest >> testHTTPClientPaths [
 ]
 
 { #category : #tests }
-XMLParserTest >> testInnerXML [
-	| document contactInfo address1 address2 innerXml |
-
-	document := XMLDOMParser parse: self addressBookXML.
-	document allElementsNamed: 'person' do: [:person |
-		address1 := (person attributeAt: 'first-name'), '@example.com'.
-		address2 := (person attributeAt: 'first-name'), '@users.example.com'.
-		innerXml := '<email>', address1, '</email><email2>', address2, '</email2>'.
-		(contactInfo := person elementAt: 'contact-info') innerXML: innerXml.
-
-		self
-			assert: contactInfo innerXML = innerXml;
-			assert: contactInfo elements size = 2;
-			assert: (contactInfo elements first isNamed: 'email');
-			assert: (contactInfo elements first contentString = address1);
-			assert: (contactInfo elements second isNamed: 'email2');
-			assert: (contactInfo elements second contentString = address2)].
-
-	self assert: ((document innerXML: '<new-root/>') root isNamed: 'new-root').
-	self
-		should: [document innerXML: '<root1/><root2/>']
-		raise: XMLWellFormednessException.
-]
-
-{ #category : #tests }
 XMLParserTest >> testInvalidElementContentModels [
 	self
 		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root ()>]>']
@@ -648,138 +596,6 @@ XMLParserTest >> testLineEndingsDoNotMatter [
 	self
 		assert: (docFromSourceWithCrs root contentString) = (docFromSourceWithLfs root contentString);
 		assert: (docFromSourceWithLfs root contentString) = (docFromSourceWithCrlfs root contentString).
-]
-
-{ #category : #tests }
-XMLParserTest >> testNodeListClass [
-	| document parser listClass |
-
-	listClass := XMLCachingNodeList.
-	document :=
-		(parser := XMLDOMParser on: self addressBookXML)
-			nodeListClass: listClass;
-			parseDocument.
-
-	self
-		assert: parser nodeListClass == listClass;
-		assert: document nodes class == listClass;
-		assert: (document allElements allSatisfy: [:each | each nodes class == listClass]).
-]
-
-{ #category : #tests }
-XMLParserTest >> testParsing [
-	| document root firstPerson persons |
-	"self debug: #testParsing"
-
-	document := XMLDOMParser parse: self addressBookXML.
-	self assert: (document isKindOf: XMLDocument).
-	root := document root.
-	self assert: (root class == XMLElement).
-
-	self assert:
-		(root allNodesDetect: [:each |
-			each isElement
-				and: [each isNamedAny: #('AddressBook' 'addressbook')]]) == root.
-	self assert: (root findElementNamed: 'addressbook') == root.
-
-	persons := 	root allNodesSelect: [:each |
-			each isElement and: [each isNamedAny: #('Person' 'person')]].
-	self assert: persons size = 4.
-	root allElementsNamed: 'person' do: [:p |
-		self assert: (persons includes: p).
-		persons remove: p].
-	self assert: persons isEmpty.
-
-	firstPerson := root findElementNamed: 'person'.
-	self assert:
-		(firstPerson allElements collect: [:each | each name]) asArray =
-			#('person' 'contact-info' 'address' 'job-info' 'manager').
-	self assert:
-		(firstPerson nodesCollect: [:each | each name]) asArray =
-			#('contact-info' 'address' 'job-info' 'manager').
-	self assert: (firstPerson attributeAt: 'employee-number') = 'A0000'.
-	self assert: (firstPerson attributeAt: 'family-name') = 'Gates'.
-	self assert: (firstPerson attributeAt: 'first-name') = 'Bob'.
-	self assert: firstPerson attributeNames asArray =
-		#('employee-number' 'family-name' 'first-name').
-	self assert: firstPerson attributeAssociations asArray =
-		{('employee-number'->'A0000'). ('family-name'->'Gates'). ('first-name'->'Bob').}.
-]
-
-{ #category : #tests }
-XMLParserTest >> testParsingHTML [
-	| document |
-	
-	document := HTMLParser parse: 'text'.
-	self
-		assert: document allNodes size = 4;
-		assert: (document allElementsCollect: [:each | each name]) asArray = #('html' 'body');
-		assert: (document findElementNamed: 'body') contentString = 'text'.
-	document := HTMLParser parse: '< text'.
-	self
-		assert: document allNodes size = 4;
-		assert: (document findElementNamed: 'body') contentString = '< text'.
-
-	document := HTMLParser parse:
-		'<head><title><b>"title</b></TITLE><SCRIPT>',
-		'1 < 2; 3 > 2; document.write("</script>");</script>
-		<style>//"</style><HEAD>'.
-	self
-		assert: (document findElementNamed: 'title') contentString = '<b>"title</b>';
-		assert: (document findElementNamed: 'script') contentString =
-			'1 < 2; 3 > 2; document.write("</script>");';
-		assert: (document findElementNamed: 'style') contentString = '//"'.
-
-	document := HTMLParser parse: '<head><p>text<title>reopened'.
-	self
-		assert: (document root elementsCollect: [:each | each name]) asArray = #('head' 'body');
-		assert: (document findElementNamed: 'head') elements size = 1;
-		assert: ((document findElementNamed: 'head') elementAt: 'title') contentString = 'reopened';
-		assert: (document findElementNamed: 'body') elements size = 1;
-		assert: ((document findElementNamed: 'body') elementAt: 'p') contentString = 'text'.
-
-	document := HTMLParser parse: '<body>one<img>two</img><body>three'.
-	self
-		assert: (document allElementsCollect: [:each | each name]) asArray = #('html' 'body' 'img');
-		assert: (document findElementNamed: 'body') contentString = 'one twothree';
-		deny: (document findElementNamed: 'img') hasChildren.
-
-	self assert:
-		((HTMLParser parse: '<html><B></body></html><I>')
-			allElementsCollect: [:each | each name]) asArray = #('html' 'body' 'b' 'i').
-]
-
-{ #category : #tests }
-XMLParserTest >> testParsingNamespaces [
-	| document people person |
-
-	document :=
-		XMLDOMParser parse:
-			'<root xmlns="defaultNS" xmlns:ps="personNS">',
-			self addressBookXML,
-			'</root>'.
-
-	people := document allElementsNamed: 'person' namespaceURI: 'defaultNS'.
-	self assert: people size = 4.
-	self assert:
-		(document allElementsNamed: 'person' namespaceURI: 'undeclaredNS') isEmpty.
-
-	(person := people third) prefix: 'ps'.
-	self assert:
-		person == (document findElementNamed: 'person' namespaceURI: 'personNS').
-	self assert:
-		(people copyWithout: person) =
-			((document findElementNamed: 'addressbook') nodesSelect: [:each |
-				each isElement and: [each namespaceURI = 'defaultNS']]).
-	self assert:
-		people second ==
-			((document findElementNamed: 'addressbook') nodesDetect: [:each |
-				each isElement and: [(each attributeAt: 'family-name') = 'Brown']]).
-	self assert:
-		(document
-			findElementNamed: 'person'
-			namespaceURI: 'defaultNS'
-			with: [:each | (each attributeAt: 'employee-number') = 'A7987']) == people last.
 ]
 
 { #category : #tests }
@@ -934,111 +750,6 @@ XMLParserTest >> testRenamingParsedNodes [
 	self
 		should: [element name: 'undeclared:root']
 		raise: XMLNamespaceException.
-]
-
-{ #category : #tests }
-XMLParserTest >> testSAXEntityHandlers [
-	| xml parser |
-
-	xml := '<!DOCTYPE root [
-		<!ENTITY % firstDeclaration "<!ENTITY first &#39; &second; &#39;>">
-		%firstDeclaration;
-		<!ENTITY second " replacement ">]>
-	<root name="&second;">&first;</root>'.
-	(parser :=SAXHandlerProxy saxHandler: (SAXHandler on: xml)) parseDocument.
-	self assert:
-		#(startDocument
-			startDTD:publicID:systemID:
-			parameterEntityDeclaration:replacement:
-			generalEntityDeclaration:replacement: generalEntityDeclaration:replacement:
-			endDTD
-			startElement:prefix:uri:localName:attributes:
-			startEntity: startEntity: endEntity: endEntity: characters:
-			endElement:prefix:uri:localName:
-			endDocument) = parser sentHandlerSelectors.
-	self assert:
-		((parser sentHandlerMessages select: [:each | #(startEntity: endEntity:) includes: each selector])
-			collect: [:each | each arguments first]) asArray = #('first' 'second' 'second' 'first').
-]
-
-{ #category : #tests }
-XMLParserTest >> testSAXIgnorableWhitespace [
-	| xml parser whitespace |
-
-	xml := '
-	<root>
-		<child>
-			test
-		</child>
-	</root>
-	'.
-	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: xml)) parseDocument.
-	self assert:
-		#(startDocument
-			startElement:prefix:uri:localName:attributes:
-			ignorableWhitespace:
-			startElement:prefix:uri:localName:attributes: characters: endElement:prefix:uri:localName:
-			ignorableWhitespace:
-			endElement:prefix:uri:localName:
-			ignorableWhitespace:
-			endDocument) = parser sentHandlerSelectors.
-	self assert:
-		((parser sentHandlerMessages select: [:each | each selector == #ignorableWhitespace:])
-			allSatisfy: [:each |
-				(whitespace := each arguments first) notEmpty
-					and: [whitespace allSatisfy: [:char | char isSeparator]]]).
-]
-
-{ #category : #tests }
-XMLParserTest >> testSAXPrefixMappingHandlers [
-	| xml parser |
-
-	xml := '<prefix:root xmlns:prefix="prefixNS" xmlns="defaultNS"></prefix:root>'.
-	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: xml)) parseDocument.
-	self assert:
-		#(startDocument
-			startPrefixMapping:uri: startPrefixMapping:uri:
-			startElement:prefix:uri:localName:attributes: endElement:prefix:uri:localName:
-			endPrefixMapping: endPrefixMapping:
-			endDocument) = parser sentHandlerSelectors.
-	self assert:
-		((parser sentHandlerMessages select: [:each |
-			#(startPrefixMapping:uri: endPrefixMapping:) includes: each selector])
-				collect: [:each | each arguments asArray]) asArray =
-					#(#('prefix' 'prefixNS') #('' 'defaultNS') #('prefix') #('')).
-]
-
-{ #category : #tests }
-XMLParserTest >> testSAXPrefixMappingHandlersDisabled [
-	| xml parser |
-
-	xml := '<prefix:root xmlns:prefix="prefixNS" xmlns="defaultNS"></prefix:root>'.
-	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: xml))
-		usesNamespaces: false;
-		parseDocument.
-	self assert:
-		#(startDocument
-			startElement:prefix:uri:localName:attributes: endElement:prefix:uri:localName:
-			endDocument) = parser sentHandlerSelectors.
-]
-
-{ #category : #tests }
-XMLParserTest >> testSAXSkippedEntityHandler [
-	| xml parser |
-
-	xml := '<root>&undeclared;</root>'.
-	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: xml))
-		isValidating: false;
-		parseDocument.
-	self assert:
-		#(startDocument
-			startElement:prefix:uri:localName:attributes:
-			skippedEntity:
-			endElement:prefix:uri:localName:
-			endDocument) = parser sentHandlerSelectors.
-	self assert:
-		(parser sentHandlerMessages detect: [:each | each selector == #skippedEntity:])
-			arguments first = 'undeclared'.
 ]
 
 { #category : #tests }
@@ -1216,21 +927,4 @@ XMLParserTest >> testWellFormedness [
 		should: [SAXHandler parse: '<root></unopened></root>'] raise: error;
 		should: [SAXHandler parse: '<root><unclosed></root>'] raise: error;
 		should: [SAXHandler parse: '<root><first><second></first></second></root>'] raise: error.
-]
-
-{ #category : #tests }
-XMLParserTest >> testXMLComment [
-	| document comment|
-
-	document := XMLDOMParser parse: self addressBookXML.
-	self deny: (document findElementNamed: 'contact-info') hasChildren.
-
-	document :=
-		(XMLDOMParser on: self addressBookXML)
-			preservesCommentNodes: true;
-			parseDocument.
-	comment := (document findElementNamed: 'contact-info') firstNode.
-	self
-		assert: comment notNil;
-		assert: comment string = 'Confidential'.
 ]
