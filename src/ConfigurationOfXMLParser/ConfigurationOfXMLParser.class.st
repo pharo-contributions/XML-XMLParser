@@ -35,23 +35,6 @@ ConfigurationOfXMLParser class >> bootstrapPackage: aString from: aPath [
 ConfigurationOfXMLParser class >> catalogChangeLog [
 
 ^ '
-- next action is to remov deprecated methods
-
-[[[ 
-expiry := 1 year.
-(SystemNavigation default allClassesInPackageNamed: ''XML-Parser'')
-	do: [:class |
-	class selectors do: [:selector | | compiledMethod timeStamp |
-	compiledMethod := class compiledMethodAt: selector.
-	timeStamp := compiledMethod timeStamp copyAfter: Character space.
-	(compiledMethod isDeprecated
-		and: [(DateAndTime now - (DateAndTime fromString: timeStamp)) > expiry])
-			ifTrue: [class removeSelector: selector]]].
-]]]
-
-and may be separate the HTMLParser into its own package.
-
-
 
 - Version 1.3 - 2013-11-22 Monty''s Enhancements
 These updates add validation against internal and external DTDs, proper replacement of general and parameter entites, customizable resolution of external parsed entities using Zinc and FileSystem, awareness of notations and unparsed entities, preservation of the internal DTD subset by the DOM parser (so printing a parsed doc with a DTD will produce approximately what was input), line numbers reporting in error messages, and better well-formed and validity constraints.
@@ -83,14 +66,11 @@ ConfigurationOfXMLParser class >> catalogDescription [
 { #category : #catalog }
 ConfigurationOfXMLParser class >> catalogKeyClassesAndExample [
 
-^ 'The main entry point is the class ==XMLParser==. There is also the =XMLParserTest== which is a good starting point.
+^ 'The main classes are ==SAXHandler== for streaming nodes or ==XMLDOMParser== for getting the complete tree in memory. There is also an ==HTMLHandler== and ==HTMLParser==, which provide the same interfaces but for HTML.
 
-- For validation have a look at ==DTDDocumentValidator==.
+==XMLNode== and its subclasses implement a DOM API.
 
-- You can get a ==SAXDriver== for streaming nodes or ==XMLDOMParser== for getting the complete tree in memory.
-
-This package is large so have a look. There is also an ==HTMLParser==.
-'
+Validation against internal and external DTD subsets, namespace support, and resolution of external entities is enabled by default.'
 ]
 
 { #category : #catalog }
@@ -225,7 +205,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.4.0'.
+	spec for: #'common' version: '1.4.1'.
 	
 ]
 
@@ -245,7 +225,7 @@ ConfigurationOfXMLParser >> project [
 { #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #stable>
-	spec for: #common version: '1.4.0'.
+	spec for: #common version: '1.4.1'.
 	spec for: #'pharo1.x' version: '1.2'
 ]
 
@@ -456,6 +436,20 @@ ConfigurationOfXMLParser >> version140: spec [
 			spec
 				package: 'XML-Parser' with: 'XML-Parser-monty.197';
 				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.37'
+				].
+	
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version141: spec [
+	<version: '1.4.1' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #release.
+			spec
+				package: 'XML-Parser' with: 'XML-Parser-monty.198';
+				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.38'
 				].
 	
 ]
