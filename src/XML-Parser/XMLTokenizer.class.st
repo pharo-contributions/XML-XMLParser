@@ -865,7 +865,6 @@ XMLTokenizer >> pushBackReplacement: aReplacement forEntity: anEntity onClose: a
 	activeEntities addLast: anEntity.
 	streamReader
 		pushStream: aReplacement readStream
-		from: anEntity uri
 		onClose: aBlock.
 
 	anEntity isExternal

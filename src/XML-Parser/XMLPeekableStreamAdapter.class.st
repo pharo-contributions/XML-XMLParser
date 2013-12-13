@@ -7,7 +7,6 @@ Class {
 	#instVars : [
 		'stream',
 		'peekChar',
-		'source',
 		'onClose'
 	],
 	#category : #'XML-Parser'
@@ -17,15 +16,13 @@ Class {
 XMLPeekableStreamAdapter class >> on: aStream [
 	^ self
 		on: aStream
-		from: nil
 		onClose: nil
 ]
 
 { #category : #'instance creation' }
-XMLPeekableStreamAdapter class >> on: aStream from: aSource onClose: aBlock [
+XMLPeekableStreamAdapter class >> on: aStream onClose: aBlock [
 	^ self new
 		setStream: aStream
-		source: aSource
 		onClose: aBlock
 ]
 
@@ -71,14 +68,8 @@ XMLPeekableStreamAdapter >> peek [
 ]
 
 { #category : #initialization }
-XMLPeekableStreamAdapter >> setStream: aStream source: aSource onClose: aBlock [
+XMLPeekableStreamAdapter >> setStream: aStream onClose: aBlock [
 	stream := aStream.
 	peekChar := nil.
-	source := aSource.
 	onClose := aBlock.
-]
-
-{ #category : #accessing }
-XMLPeekableStreamAdapter >> source [
-	^ source ifNil: [source := '']
 ]

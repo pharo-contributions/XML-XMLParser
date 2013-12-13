@@ -48,7 +48,7 @@ SAXDriver >> elementNester [
 ]
 
 { #category : #'element nesting' }
-SAXDriver >> endNestingElement: anElementName [
+SAXDriver >> endNestingOfElement: anElementName [
 	self elementNester endElement: anElementName
 ]
 
@@ -131,7 +131,7 @@ SAXDriver >> handleEndDocument [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleEndTag: anElementName [
-	self endNestingElement: anElementName.
+	self endNestingOfElement: anElementName.
 
 	anElementName splitQualifiedNameInto: [:prefixPart :localPart |
 		self saxHandler 
@@ -301,7 +301,7 @@ SAXDriver >> handleStartDocument [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
-	self startNestingElement: anElementName.
+	self startNestingOfElement: anElementName.
 
 	(anAttributeDictionary includesKey: 'xml:lang')
 		ifTrue: [self languageEnvironment: (anAttributeDictionary at: 'xml:lang')].
@@ -414,7 +414,7 @@ SAXDriver >> setSaxHandler: aHandler [
 ]
 
 { #category : #'element nesting' }
-SAXDriver >> startNestingElement: anElementName [
+SAXDriver >> startNestingOfElement: anElementName [
 	self elementNester startElement: anElementName
 ]
 

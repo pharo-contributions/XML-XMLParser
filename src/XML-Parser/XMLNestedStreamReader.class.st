@@ -43,10 +43,9 @@ XMLNestedStreamReader class >> initialize [
 ]
 
 { #category : #'instance creation' }
-XMLNestedStreamReader class >> on: anInitialStream from: aSource onClose: aBlock [
+XMLNestedStreamReader class >> on: anInitialStream onClose: aBlock [
 	^ self new
-		stream: anInitialStream
-		from: aSource
+		setStream: anInitialStream
 		onClose: aBlock
 ]
 
@@ -237,14 +236,11 @@ XMLNestedStreamReader >> pushBackPeekChar [
 
 { #category : #streaming }
 XMLNestedStreamReader >> pushStream: aStream [
-	self
-		pushStream: aStream
-		from: nil
-		onClose: nil
+	self pushStream: aStream onClose: nil
 ]
 
 { #category : #streaming }
-XMLNestedStreamReader >> pushStream: aStream from: aSource onClose: aBlock [
+XMLNestedStreamReader >> pushStream: aStream onClose: aBlock [
 	peekChar
 		ifNotNil: [self pushBackPeekChar].
 
@@ -256,10 +252,15 @@ XMLNestedStreamReader >> pushStream: aStream from: aSource onClose: aBlock [
 			nestedStreams addLast: stream].
 	hasNestedStreams := true.
 
-	self
-		stream: aStream
-		from: aSource
-		onClose: aBlock
+	self setStream: aStream onClose: aBlock
+]
+
+{ #category : #accessing }
+XMLNestedStreamReader >> setStream: aNewStream onClose: aBlock [
+	stream :=
+		XMLPeekableStreamAdapter
+			on: aNewStream
+			onClose: aBlock
 ]
 
 { #category : #streaming }
@@ -274,18 +275,6 @@ XMLNestedStreamReader >> skipSeparators [
 { #category : #accessing }
 XMLNestedStreamReader >> stream [
 	^ stream
-]
-
-{ #category : #accessing }
-XMLNestedStreamReader >> stream: aNewStream from: aSource onClose: aBlock [
-	stream :=
-		XMLPeekableStreamAdapter
-			on: aNewStream
-			from:
-				(aSource isEmptyOrNil
-					ifTrue: [stream ifNotNil: [stream source]]
-					ifFalse: [aSource])
-			onClose: aBlock
 ]
 
 { #category : #streaming }

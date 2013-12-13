@@ -29,3 +29,8 @@ XMLFileClient >> get: aFullPath [
 XMLFileClient >> get: aFullPath onError: aBlock [
 	self subclassResponsibility
 ]
+
+{ #category : #paths }
+XMLFileClient >> pathToFile: aFileName inDirectory: aDirectoryPath [
+	^ (aDirectoryPath copyWith: self pathSeparator), aFileName
+]

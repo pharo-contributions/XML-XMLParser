@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'element nesting' }
-HTMLDriver >> endNestingElement: anElementName [
+HTMLDriver >> endNestingOfElement: anElementName [
 	((self elementNester isVoidElement: anElementName)
 		or: [(self elementNester hasOpenElement: anElementName) not])
 		ifTrue: [^ self].
@@ -13,7 +13,7 @@ HTMLDriver >> endNestingElement: anElementName [
 	self preEndElements:
 		(self elementNester elementsToEndBeforeEnding: anElementName).
 
-	super endNestingElement: anElementName.
+	super endNestingOfElement: anElementName.
 ]
 
 { #category : #'handling tokens' }
@@ -102,7 +102,7 @@ HTMLDriver >> resolvesExternalEntities [
 ]
 
 { #category : #'element nesting' }
-HTMLDriver >> startNestingElement: anElementName [
+HTMLDriver >> startNestingOfElement: anElementName [
 	(self elementNester isOpenUniqueElement: anElementName)
 		ifTrue: [^ self].
 
@@ -111,7 +111,7 @@ HTMLDriver >> startNestingElement: anElementName [
 	self preStartElements:
 		(self elementNester elementsToStartBeforeStarting: anElementName).
 
-	super startNestingElement: anElementName.
+	super startNestingOfElement: anElementName.
 ]
 
 { #category : #private }
