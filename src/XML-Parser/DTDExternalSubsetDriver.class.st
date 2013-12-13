@@ -60,23 +60,18 @@ DTDExternalSubsetDriver >> handleGeneralEntityDeclaration: aName publicID: aPubl
 		^ self].
 
 	self dtd
-		generalEntityAt: aName
-		put:
-			(self externalEntityResolver
-				resolveGeneralEntity: aName
-				uri: aSystemId
-				from: self documentURI).
+		addExternalGeneralEntity: aName
+		resolver: self externalEntityResolver
+		uri: aSystemId
+		from: self currentURI.
 ]
 
 { #category : #'handling tokens' }
 DTDExternalSubsetDriver >> handleGeneralEntityDeclaration: aName replacement: aReplacement [
 	self dtd
-		generalEntityAt: aName
-		put:
-			(DTDGeneralEntity 
-				name: aName
-				replacement: aReplacement
-				uri: self documentURI).
+		addGeneralEntity: aName
+		replacement: aReplacement
+		from: self currentURI
 ]
 
 { #category : #'handling tokens' }
@@ -87,23 +82,18 @@ DTDExternalSubsetDriver >> handleNotationDeclaration: aName publicID: aPublicId 
 { #category : #'handling tokens' }
 DTDExternalSubsetDriver >> handleParameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
 	self dtd
-		parameterEntityAt: aName
-		put:
-			(self externalEntityResolver
-				resolveParameterEntity: aName
-				uri: aSystemId
-				from: self documentURI).
+		addExternalParameterEntity: aName
+		resolver: self externalEntityResolver
+		uri: aSystemId
+		from: self currentURI
 ]
 
 { #category : #'handling tokens' }
 DTDExternalSubsetDriver >> handleParameterEntityDeclaration: aName replacement: aReplacement [
 	self dtd
-		parameterEntityAt: aName
-		put:
-			(DTDParameterEntity
-				name: aName
-				replacement: aReplacement
-				uri: self documentURI).
+		addParameterEntity: aName
+		replacement:aReplacement
+		from: self currentURI
 ]
 
 { #category : #'handling tokens' }

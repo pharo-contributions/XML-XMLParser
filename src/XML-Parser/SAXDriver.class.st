@@ -149,19 +149,18 @@ SAXDriver >> handleEndTag: anElementName [
 { #category : #'handling tokens' }
 SAXDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
 	aNotation
+		ifNotEmpty: [
+			self dtd
+				unparsedEntityAt: aName
+				put: aNotation]
 		ifEmpty: [
 			self resolvesExternalEntities
 				ifTrue: [
 					self dtd
-						generalEntityAt: aName
-						put: (self externalEntityResolver
-							resolveGeneralEntity: aName
-							uri: aSystemId
-							from: self documentURI)]]
-		ifNotEmpty: [
-			self dtd
-				unparsedEntityAt: aName
-				put: aNotation].
+						addExternalGeneralEntity: aName
+						resolver: self externalEntityResolver
+						uri: aSystemId
+						from: self currentURI]].
 
 	self saxHandler
 		generalEntityDeclaration: aName
@@ -173,15 +172,13 @@ SAXDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId systemID:
 { #category : #'handling tokens' }
 SAXDriver >> handleGeneralEntityDeclaration: aName replacement: aReplacement [
 	self dtd
-		generalEntityAt: aName
-		put:
-			(DTDGeneralEntity
-				name: aName
-				replacement: aReplacement).
+		addGeneralEntity: aName
+		replacement: aReplacement
+		from: self currentURI.
 
 	self saxHandler
 		generalEntityDeclaration: aName
-		replacement: aReplacement
+		replacement: aReplacement.
 ]
 
 { #category : #'handling tokens' }
@@ -233,30 +230,27 @@ SAXDriver >> handleParameterEntityDeclaration: aName publicID: aPublicId systemI
 	self resolvesExternalEntities
 		ifTrue: [
 			self dtd
-				parameterEntityAt: aName
-				put: (self externalEntityResolver
-					resolveParameterEntity: aName
-					uri: aSystemId
-					from: self documentURI)].
+				addExternalParameterEntity: aName
+				resolver: self externalEntityResolver
+				uri: aSystemId
+				from: self currentURI].
 
 	self saxHandler
 		parameterEntityDeclaration: aName
 		publicID: aPublicId
-		systemID: aSystemId
+		systemID: aSystemId.
 ]
 
 { #category : #'handling tokens' }
 SAXDriver >> handleParameterEntityDeclaration: aName replacement: aReplacement [
 	self dtd
-		parameterEntityAt: aName
-		put:
-			(DTDParameterEntity
-				name: aName
-				replacement:aReplacement).
+		addParameterEntity: aName
+		replacement:aReplacement
+		from: self currentURI.
 
 	self saxHandler
 		parameterEntityDeclaration: aName
-		replacement: aReplacement
+		replacement: aReplacement.
 ]
 
 { #category : #'handling tokens' }

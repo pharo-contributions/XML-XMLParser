@@ -107,6 +107,19 @@ XMLTokenizer class >> isNmtoken: aString [
 				or: [AdditionalNameChars includes: each]]].
 ]
 
+{ #category : #accessing }
+XMLTokenizer >> activeEntities [
+	^ activeEntities
+		ifNil: [activeEntities := OrderedCollection new: self maxEntityReplacementDepth]
+]
+
+{ #category : #'entity replacement' }
+XMLTokenizer >> addActiveEntity: anEntity [
+	self activeEntities addLast: anEntity.
+
+	driver activeEntityURI: anEntity uri.
+]
+
 { #category : #testing }
 XMLTokenizer >> atEnd [
 	context atEnd
@@ -125,7 +138,7 @@ XMLTokenizer >> characterFromCodePoint: aCodePoint [
 	aCodePoint > 0
 		ifFalse: [self errorExpected: 'postive decimal or hex integer'].
 
-	^ [Unicode value: aCodePoint]
+	^ [self encodingClass value: aCodePoint]
 		on: Error
 		do: [:error | self parseError: 'Invalid character code point ', aCodePoint printString]
 ]
@@ -142,14 +155,14 @@ XMLTokenizer >> checkTextDeclarationInReplacement: aReplacement forEntity: anEnt
 
 { #category : #'entity replacement' }
 XMLTokenizer >> endReplacementForGeneralEntity: anEntity isInContent: aBoolean [
-	activeEntities remove: anEntity.
+	self removeActiveEntity: anEntity.
 	aBoolean
 		ifTrue: [driver handleEndContentEntityReplacement: anEntity name].
 ]
 
 { #category : #'entity replacement' }
 XMLTokenizer >> endReplacementForParameterEntity: anEntity [
-	activeEntities remove: anEntity
+	self removeActiveEntity: anEntity
 ]
 
 { #category : #errors }
@@ -249,17 +262,17 @@ XMLTokenizer >> expectUpToAll: aString [
 
 { #category : #testing }
 XMLTokenizer >> hasActiveEntities [
-	^ activeEntities notEmpty
+	^ activeEntities notNil and: [activeEntities notEmpty]
 ]
 
 { #category : #testing }
 XMLTokenizer >> hasActiveEntityNamed: aName [
-	^ activeEntities anySatisfy: [:each | each name = aName]
+	^ self activeEntities anySatisfy: [:each | each name = aName]
 ]
 
 { #category : #testing }
 XMLTokenizer >> hasActiveExternalEntity [
-	^ activeEntities anySatisfy: [:each | each isExternal]
+	^ self activeEntities anySatisfy: [:each | each isExternal]
 ]
 
 { #category : #accessing }
@@ -779,8 +792,9 @@ XMLTokenizer >> nextSubsetMarkupToken [
 			(context isInExternalSubset
 				or: [self hasActiveExternalEntity])
 				ifTrue: [
-					streamReader next.
-					streamReader pushBack: self nextConditionalSection.
+					streamReader
+						next;
+						pushBack: self nextConditionalSection.
 					^ self]
 				ifFalse: [self parseError: 'Cannot have INCLUDE/IGNORE sections in internal subset']].
 
@@ -859,10 +873,10 @@ XMLTokenizer >> parseError: anErrorString [
 XMLTokenizer >> pushBackReplacement: aReplacement forEntity: anEntity onClose: aBlock [
 	(self hasActiveEntityNamed: anEntity name)
 		ifTrue: [self entityDepthError: 'Illegal self-referential entity ', anEntity asReference].
-	(activeEntities size >= self maxEntityReplacementDepth)
+	(self activeEntities size >= self maxEntityReplacementDepth)
 		ifTrue: [self entityDepthError: 'Cannot further nest entity replacements'].
 
-	activeEntities addLast: anEntity.
+	self addActiveEntity: anEntity.
 	streamReader
 		pushStream: aReplacement readStream
 		onClose: aBlock.
@@ -872,6 +886,16 @@ XMLTokenizer >> pushBackReplacement: aReplacement forEntity: anEntity onClose: a
 			self
 				checkTextDeclarationInReplacement: aReplacement
 				forEntity: anEntity].
+]
+
+{ #category : #'entity replacement' }
+XMLTokenizer >> removeActiveEntity: anEntity [
+	self activeEntities remove: anEntity.
+
+	driver activeEntityURI:
+		(self activeEntities
+			ifNotEmpty: [self activeEntities last uri]
+			ifEmpty: [nil]).
 ]
 
 { #category : #tokenizing }
@@ -905,13 +929,6 @@ XMLTokenizer >> replacementFromParameterEntity: anEntity [
 	^ context isInLiteralValue
 		ifTrue: [anEntity replacementForLiteralContext]
 		ifFalse: [anEntity replacementForDTDContext]
-]
-
-{ #category : #initialization }
-XMLTokenizer >> setDriver: aDriver stream: aStream [
-	super setDriver: aDriver stream: aStream.
-
-	activeEntities := OrderedCollection new: self maxEntityReplacementDepth.
 ]
 
 { #category : #accessing }

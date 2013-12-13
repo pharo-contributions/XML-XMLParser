@@ -44,8 +44,50 @@ DTDDoctypeDefinition >> addAttributeValidator: aValidator [
 ]
 
 { #category : #accessing }
+DTDDoctypeDefinition >> addExternalGeneralEntity: aName resolver: aResolver uri: aSystemUri from: aDocumentOrEntityUri [
+	self 
+		generalEntityAt: aName
+		put: (aResolver
+			resolveGeneralEntity: aName
+			uri: aSystemUri
+			from: aDocumentOrEntityUri)
+]
+
+{ #category : #accessing }
+DTDDoctypeDefinition >> addExternalParameterEntity: aName resolver: aResolver uri: aSystemUri from: aDocumentOrEntityUri [
+	self 
+		parameterEntityAt: aName
+		put: (aResolver
+			resolveParameterEntity: aName
+			uri: aSystemUri
+			from: aDocumentOrEntityUri)
+]
+
+{ #category : #accessing }
+DTDDoctypeDefinition >> addGeneralEntity: aName replacement: aReplacement from: aDocumentOrEntityUri [
+	self
+		generalEntityAt: aName
+		put:
+			(DTDGeneralEntity 
+				name: aName
+				replacement: aReplacement
+				uri: aDocumentOrEntityUri)
+]
+
+{ #category : #accessing }
 DTDDoctypeDefinition >> addNotation: aName [
 	self notations add: aName
+]
+
+{ #category : #accessing }
+DTDDoctypeDefinition >> addParameterEntity: aName replacement: aReplacement from: aDocumentOrEntityUri [
+	self 
+		parameterEntityAt: aName
+		put:
+			(DTDParameterEntity
+				name: aName
+				replacement: aReplacement
+				uri: aDocumentOrEntityUri).
 ]
 
 { #category : #validators }

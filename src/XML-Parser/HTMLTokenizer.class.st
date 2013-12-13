@@ -2380,7 +2380,7 @@ HTMLTokenizer >> atNonHTMLSectionEndTag [
 HTMLTokenizer >> characterFromCodePoint: aCodePoint [
 	^ aCodePoint > 0
 		ifTrue: [
-			[Unicode value: aCodePoint]
+			[self encodingClass value: aCodePoint]
 				on: Error
 				do: [:error | Character space]]
 		ifFalse: [Character space]

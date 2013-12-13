@@ -62,6 +62,11 @@ XMLDriverTokenizer >> driver [
 	^ driver
 ]
 
+{ #category : #accessing }
+XMLDriverTokenizer >> encodingClass [
+	^ Unicode
+]
+
 { #category : #'tokenizing - expecting' }
 XMLDriverTokenizer >> expectNext: aCharacter [
 	self subclassResponsibility

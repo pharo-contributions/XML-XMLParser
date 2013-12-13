@@ -4,8 +4,26 @@ This is a base class for parser drivers. Drivers are sent messages by a tokenize
 Class {
 	#name : #XMLParserDriver,
 	#superclass : #Object,
+	#instVars : [
+		'activeEntityUri'
+	],
 	#category : #'XML-Parser'
 }
+
+{ #category : #accessing }
+XMLParserDriver >> activeEntityURI [
+	^ activeEntityUri
+]
+
+{ #category : #accessing }
+XMLParserDriver >> activeEntityURI: aUri [
+	activeEntityUri := aUri
+]
+
+{ #category : #accessing }
+XMLParserDriver >> currentURI [
+	^ self activeEntityURI ifNil: [self documentURI]
+]
 
 { #category : #accessing }
 XMLParserDriver >> documentURI [
