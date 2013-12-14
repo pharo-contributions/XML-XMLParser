@@ -462,7 +462,7 @@ ConfigurationOfXMLParser >> version142: spec [
 		do: [ 
 			spec blessing: #release.
 			spec
-				package: 'XML-Parser' with: 'XML-Parser-monty.199';
+				package: 'XML-Parser' with: 'XML-Parser-monty.200';
 				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.39'
 				].
 	
