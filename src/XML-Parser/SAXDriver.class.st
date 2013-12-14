@@ -151,8 +151,8 @@ SAXDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId systemID:
 	aNotation
 		ifNotEmpty: [
 			self dtd
-				unparsedEntityAt: aName
-				put: aNotation]
+				addUnparsedEntity: aName
+				ndata: aNotation]
 		ifEmpty: [
 			self resolvesExternalEntities
 				ifTrue: [
@@ -459,13 +459,16 @@ SAXDriver >> validateStartTag: aStartTag prefix: aPrefix attributes: anAttribute
 	self usesNamespaces
 		ifTrue: [
 			self scopeAllocator enterScope.
+
 			aNamespaceDictionary
 				ifNotNil: [self declareNamespaces: aNamespaceDictionary].
-		aPrefix ifNotEmpty: [
-			self scopeAllocator
-				validatePrefix: aPrefix
-				ofElementName: aStartTag].
-		self scopeAllocator validatePrefixedAttributeNames: anAttributeDictionary].
+
+			aPrefix
+				ifNotEmpty: [
+					self scopeAllocator
+						validatePrefix: aPrefix
+						ofElementName: aStartTag].
+			self scopeAllocator validatePrefixedAttributeNames: anAttributeDictionary].
 
 	self isValidating
 		ifTrue: [

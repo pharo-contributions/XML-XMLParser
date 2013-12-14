@@ -56,7 +56,9 @@ DTDExternalSubsetDriver >> handleElementDeclaration: aName contentModel: aConten
 { #category : #'handling tokens' }
 DTDExternalSubsetDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
 	aNotation ifNotEmpty: [
-		self dtd unparsedEntityAt: aName put: aNotation.
+		self dtd
+			addUnparsedEntity: aName
+			ndata: aNotation.
 		^ self].
 
 	self dtd

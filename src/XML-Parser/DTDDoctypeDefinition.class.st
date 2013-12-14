@@ -36,7 +36,7 @@ DTDDoctypeDefinition >> addAttributeValidator: aValidator [
 				each isIDValidator
 					ifTrue: [
 						XMLValidationException signal:
-							'Element <', aValidator element, '> has multiple ID elements']]].
+							'Element <', aValidator element, '> has multiple ID attributes']]].
 
 	attributeValidatorsForElement
 		at: aValidator attribute
@@ -88,6 +88,13 @@ DTDDoctypeDefinition >> addParameterEntity: aName replacement: aReplacement from
 				name: aName
 				replacement: aReplacement
 				uri: aDocumentOrEntityUri).
+]
+
+{ #category : #accessing }
+DTDDoctypeDefinition >> addUnparsedEntity: aName ndata: aNotation [
+	self 
+		unparsedEntityAt: aName
+		put: aNotation
 ]
 
 { #category : #validators }

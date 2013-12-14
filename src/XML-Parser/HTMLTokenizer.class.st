@@ -2490,9 +2490,9 @@ HTMLTokenizer >> nextGeneralEntityReference [
 
 	name := self nextName.
 	self expectNext: $;.
-	(self class predefinedEntities includesKey: name)
-		ifTrue: [^ self class predefinedEntities at: name]
-		ifFalse: [^ nil].
+	^ self class predefinedEntities
+		at: name
+		ifAbsent: [nil].
 ]
 
 { #category : #tokenizing }
@@ -2505,6 +2505,7 @@ HTMLTokenizer >> nextName [
 				or: [(context isInDoctype and: [nextChar == $[])
 					or: [context isInInternalSubset and: [nextChar == $]]]]]]
 			whileFalse: [writeStream nextPut: streamReader next].
+
 		writeStream contents].
 ]
 
