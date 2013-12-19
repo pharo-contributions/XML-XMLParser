@@ -895,6 +895,22 @@ XMLParserTest >> testRenamingParsedNodes [
 ]
 
 { #category : #tests }
+XMLParserTest >> testRequiredDTDDeclarations [
+	self
+		shouldnt: [
+			(SAXHandler on: '<!DOCTYPE root [<!ELEMENT root EMPTY>]><root/>')
+				requiresDTDDeclarations: true;
+				parseDocument]
+		raise: XMLValidationException.
+	self
+		should: [
+			(SAXHandler on: '<root/>')
+				requiresDTDDeclarations: true;
+				parseDocument]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
 XMLParserTest >> testSelfReferentialEntityReplacement [
 	self
 		should: [
@@ -1099,6 +1115,20 @@ XMLParserTest >> testUnparsedEntities [
 	self
 		should: [XMLDOMParser parse: '<root attr=&undeclaredUnparsedEntity;/>']
 		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testValidationAndDTDDeclarationsToggle [
+	self assert:
+		((SAXHandler on: '<root/>')
+			isValidating: false;
+			requiresDTDDeclarations: true;
+			isValidating).
+	self deny:
+		((SAXHandler on: '<root/>')
+			requiresDTDDeclarations: true;
+			isValidating: false;
+			requiresDTDDeclarations).
 ]
 
 { #category : #tests }
