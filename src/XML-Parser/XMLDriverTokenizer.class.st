@@ -35,6 +35,7 @@ XMLDriverTokenizer class >> encodingClass [
 XMLDriverTokenizer class >> initialize [
 	"self initialize"
 
+	super initialize.
 	self initializePredefinedEntities.
 ]
 

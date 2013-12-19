@@ -2306,7 +2306,6 @@ HTMLTokenizer class >> initialize [
 	"self initialize"
 
 	super initialize.
-
 	self initializeHTMLNameDelimiters.
 ]
 

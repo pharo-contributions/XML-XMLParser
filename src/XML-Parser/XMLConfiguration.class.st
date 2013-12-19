@@ -7,6 +7,7 @@ Class {
 	#instVars : [
 		'isValidating',
 		'usesNamespaces',
+		'requiresDtdDeclarations',
 		'resolvesExternalEntities',
 		'preservesUndeclaredEntityReferences',
 		'externalEntityResolver',
@@ -32,7 +33,8 @@ XMLConfiguration >> isValidating [
 
 { #category : #accessing }
 XMLConfiguration >> isValidating: aBoolean [
-	isValidating := aBoolean
+	(isValidating := aBoolean)
+		ifFalse: [self requiresDTDDeclarations: false]
 ]
 
 { #category : #accessing }
@@ -53,6 +55,17 @@ XMLConfiguration >> preservesUndeclaredEntityReferences [
 { #category : #accessing }
 XMLConfiguration >> preservesUndeclaredEntityReferences: aBoolean [
 	preservesUndeclaredEntityReferences := aBoolean
+]
+
+{ #category : #accessing }
+XMLConfiguration >> requiresDTDDeclarations [
+	^ requiresDtdDeclarations ifNil: [requiresDtdDeclarations := false]
+]
+
+{ #category : #accessing }
+XMLConfiguration >> requiresDTDDeclarations: aBoolean [
+	(requiresDtdDeclarations := aBoolean)
+		ifTrue: [self isValidating: true]
 ]
 
 { #category : #accessing }

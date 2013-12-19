@@ -30,6 +30,8 @@ DTDAttributeDefinitionParser class >> element: anElement attribute: anAttribute 
 DTDAttributeDefinitionParser class >> initialize [
 	"self initialize"
 
+	super initialize.
+
 	(DefaultValueValidators := Dictionary new)
 		at: 'FIXED' put: XMLFixedValueAttributeValidator;
 		at: 'IMPLIED' put: XMLImpliedValueAttributeValidator;
@@ -43,7 +45,7 @@ DTDAttributeDefinitionParser class >> initialize [
 		at: 'ENTITY' put: XMLEntityAttributeValidator;
 		at: 'ENTITIES' put: XMLEntitiesAttributeValidator;
 		at: 'NMTOKEN' put: XMLNameAttributeValidator;
-		at: 'NMTOKENS' put: XMLNamesAttributeValidator
+		at: 'NMTOKENS' put: XMLNamesAttributeValidator.
 ]
 
 { #category : #testing }

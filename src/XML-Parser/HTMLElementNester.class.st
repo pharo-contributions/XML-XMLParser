@@ -24,6 +24,7 @@ Class {
 HTMLElementNester class >> initialize [
 	"self initialize"
 
+	super initialize.
 	self
 		initializeHeadSectionElements;
 		initializeBodySectionElements;

@@ -1,7 +1,7 @@
 "
 This class is an XML parser that uses event handling. The acronym ""SAX"" refers to Java's ""Simple API for XML,"" on which SAXHandler's API is based. To use this class, create a subclass and override handlers under the ""content"" and ""lexical"" categories as needed. By default, namespace support, validation, and external entity resolution are enabled.
 
-To instantiate it, send any of the #on: or #parse- messages to the class.
+To instantiate a SAXHandler, send any of the #on: or #parse- messages to the class.
 
 The class-side #parse- messages take some input source and parse it immediately, returning the result of #parseDocument:
 	SAXHandlerSubclass parse: xml.
@@ -296,6 +296,10 @@ SAXHandler >> isValidating [
 
 { #category : #accessing }
 SAXHandler >> isValidating: aBoolean [
+	"If true and a DTD is present, the document will
+	be validated against it (default).
+	Disabling also disables requiresDTDDeclarations."
+
 	self configuration isValidating: aBoolean
 ]
 
@@ -321,11 +325,7 @@ SAXHandler >> parseDocument [
 
 { #category : #parsing }
 SAXHandler >> parseDocumentWhile: aBlock [
-	| parser |
-
-	parser := self parser.
-	[parser atEnd not and: [aBlock value]]
-		whileTrue: [parser parseToken].
+	self parser parseDocumentWhile: aBlock.
 
 	^ self parsingResult.
 ]
@@ -358,6 +358,20 @@ SAXHandler >> preservesUndeclaredEntityReferences: aBoolean [
 SAXHandler >> processingInstruction: aTarget data: aDataString [
 	"This call corresonds to the Java SAX call
 	processingInstruction(java.lang.String target, java.lang.String data)."
+]
+
+{ #category : #testing }
+SAXHandler >> requiresDTDDeclarations [
+	^ self configuration requiresDTDDeclarations
+]
+
+{ #category : #accessing }
+SAXHandler >> requiresDTDDeclarations: aBoolean [
+	"If true, a DTD with element and attribute declarations will be
+	required (not default).
+	Enabling also enables isValidating."
+
+	self configuration requiresDTDDeclarations: aBoolean
 ]
 
 { #category : #testing }

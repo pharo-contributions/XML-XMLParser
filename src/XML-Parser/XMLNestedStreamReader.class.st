@@ -28,8 +28,9 @@ Class {
 XMLNestedStreamReader class >> initialize [
 	"self initialize"
 
-	SeparatorCharacters := CharacterSet newFrom: Character separators.
+	super initialize.
 
+	SeparatorCharacters := CharacterSet newFrom: Character separators.
 	CarriageReturn := Character cr.
 	LineFeed := Character lf.
 
@@ -93,6 +94,8 @@ XMLNestedStreamReader >> currentLineNumber [
 
 { #category : #initialization }
 XMLNestedStreamReader >> initialize [
+	super initialize.
+
 	stream := nil.
 	nestedStreams := nil.
 	hasNestedStreams := false.

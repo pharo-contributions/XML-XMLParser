@@ -21,7 +21,7 @@ XMLParser >> atEnd [
 	^ self tokenizer atEnd
 ]
 
-{ #category : #parsing }
+{ #category : #accessing }
 XMLParser >> currentLineNumber [
 	^ self tokenizer currentLineNumber
 ]
@@ -34,6 +34,11 @@ XMLParser >> driver [
 { #category : #parsing }
 XMLParser >> parseDocument [
 	[self atEnd] whileFalse: [self parseToken]
+]
+
+{ #category : #parsing }
+XMLParser >> parseDocumentWhile: aBlock [
+	[self atEnd not and: [aBlock value]] whileTrue: [self parseToken]
 ]
 
 { #category : #parsing }
