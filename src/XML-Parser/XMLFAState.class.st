@@ -57,13 +57,8 @@ XMLFAState >> printOn: aStream [
 ]
 
 { #category : #accessing }
-XMLFAState >> transitionCollectionClass [
-	^ OrderedCollection
-]
-
-{ #category : #accessing }
 XMLFAState >> transitions [
-	^ transitions ifNil: [transitions := self transitionCollectionClass new]
+	^ transitions ifNil: [transitions := OrderedCollection new]
 ]
 
 { #category : #enumerating }

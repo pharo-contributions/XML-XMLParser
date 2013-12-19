@@ -207,6 +207,11 @@ XMLNestedStreamReader >> nextMatchAll: aString [
 ]
 
 { #category : #accessing }
+XMLNestedStreamReader >> normalizedLineEndingChar: aCharacter [
+	normalizedLineEndingChar := aCharacter
+]
+
+{ #category : #accessing }
 XMLNestedStreamReader >> peek [
 	"Return the next character from the current input stream."
 

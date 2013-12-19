@@ -169,9 +169,8 @@ XMLDOMParser >> parameterEntityDeclaration: aName replacement: aReplacement [
 ]
 
 { #category : #parsing }
-XMLDOMParser >> parseDocument [
-	super parseDocument.
-	^ self document.
+XMLDOMParser >> parsingResult [
+	^ self document
 ]
 
 { #category : #private }

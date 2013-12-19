@@ -1,19 +1,6 @@
 Extension { #name : #String }
 
 { #category : #'*xml-parser' }
-String >> applyLanguageInfomation: aLanguageEnvironment [
-	| leadingChar |
-
-	leadingChar := aLanguageEnvironment leadingChar.
-	self withIndexDo: [:each :i |
-		each asciiValue > 255
-			ifTrue: [
-				self
-					at: i
-					put: (Character leadingChar: leadingChar code: each asUnicode)]]
-]
-
-{ #category : #'*xml-parser' }
 String >> asXMLString [
 	^ XMLString string: self
 ]

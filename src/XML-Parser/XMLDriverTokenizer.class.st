@@ -26,6 +26,11 @@ XMLDriverTokenizer class >> driver: aDriver on: aStringOrStream [
 				ifFalse: [aStringOrStream readStream])
 ]
 
+{ #category : #accessing }
+XMLDriverTokenizer class >> encodingClass [
+	^ Unicode
+]
+
 { #category : #'class initialization' }
 XMLDriverTokenizer class >> initialize [
 	"self initialize"
@@ -60,11 +65,6 @@ XMLDriverTokenizer >> currentLineNumber [
 { #category : #accessing }
 XMLDriverTokenizer >> driver [
 	^ driver
-]
-
-{ #category : #accessing }
-XMLDriverTokenizer >> encodingClass [
-	^ Unicode
 ]
 
 { #category : #'tokenizing - expecting' }
@@ -407,6 +407,11 @@ XMLDriverTokenizer >> nextXMLDeclAttribute: aName [
 XMLDriverTokenizer >> nextXMLDeclAttributeValue [
 	self subclassResponsibility
 
+]
+
+{ #category : #accessing }
+XMLDriverTokenizer >> normalizedLineEndingChar: aCharacter [
+	streamReader normalizedLineEndingChar: aCharacter
 ]
 
 { #category : #'tokenizing - dtd' }

@@ -56,6 +56,23 @@ XMLDocumentValidator >> hasElementValidators [
 ]
 
 { #category : #validation }
+XMLDocumentValidator >> validateAttributes: anAttributeDictionary with: aValidatorDictionary [
+	| undeclaredAttributes |
+
+	undeclaredAttributes := anAttributeDictionary keys asSet.
+	aValidatorDictionary keysAndValuesDo: [:attribute :validator |
+		validator validateAttributes: anAttributeDictionary.
+		undeclaredAttributes
+			remove: attribute
+			ifAbsent: []].
+
+	undeclaredAttributes
+		ifNotEmpty: [
+			XMLValidationException signal:
+				'Undeclared attribute(s) ', (', ' join: undeclaredAttributes)].
+]
+
+{ #category : #validation }
 XMLDocumentValidator >> validateEndTag: aName [
 	self hasElementValidators
 		ifTrue: [
@@ -94,18 +111,22 @@ XMLDocumentValidator >> validatePCData: aString [
 ]
 
 { #category : #validation }
-XMLDocumentValidator >> validateStartTag: aName attributes: anAttributeDictionary [
-	self hasElementValidators
-		ifTrue: [
-			self elementValidatorStack
-				ifNotEmpty: [self currentElementValidator validateStartTag: aName].
-			self elementValidatorStack
-				addLast:
-					((self elementValidatorFor: aName)
-						ifNil: [self defaultElementValidatorFor: aName])].
+XMLDocumentValidator >> validateStartTag: aName [
+	self elementValidatorStack
+		ifNotEmpty: [self currentElementValidator validateStartTag: aName].
+	self elementValidatorStack
+		addLast:
+			((self elementValidatorFor: aName)
+				ifNil: [XMLValidationException signal: 'Undeclared element <', aName, '>']).
+]
 
-	self hasAttributeValidators
-		ifTrue: [
-			(self attributeValidatorsFor: aName) do: [:each |
-				each validateAttributes: anAttributeDictionary]].
+{ #category : #validation }
+XMLDocumentValidator >> validateStartTag: aName attributes: anAttributeDictionary [
+	(self hasElementValidators or: [self hasAttributeValidators])
+		ifFalse: [^ self].
+
+	self
+		validateStartTag: aName;
+		validateAttributes: anAttributeDictionary
+		with: (self attributeValidatorsFor: aName).
 ]

@@ -22,9 +22,9 @@ DTDDocumentValidator >> allAttributeValidatorsDo: aBlock [
 
 { #category : #accessing }
 DTDDocumentValidator >> attributeValidatorsFor: anElement [
-	^ (dtd attributeValidators
+	^ dtd attributeValidators
 		at: anElement
-		ifAbsent: [^ #()]) values
+		ifAbsent: [Dictionary new]
 ]
 
 { #category : #accessing }

@@ -14,6 +14,19 @@ XMLNFAState >> addTransition: aTransition [
 	
 ]
 
+{ #category : #converting }
+XMLNFAState >> asDFA [
+	| cachedDfaStates |
+
+	"each key is an IdentitySet of NFA states and each value is a DFA state"
+	cachedDfaStates := Dictionary new.
+
+	^ XMLDFAState
+		nfaStates: (Array with: self)
+		cachedDFAStates: cachedDfaStates
+		isAccepting: self isAccepting.
+]
+
 { #category : #transitions }
 XMLNFAState >> copyAndRedirectIncomingTransitionsTo: aState [
 	self previousStatesDo: [:each |
@@ -31,7 +44,7 @@ XMLNFAState >> incomingTransition: aTransition [
 
 { #category : #accessing }
 XMLNFAState >> incomingTransitions [
-	^ incomingTransitions ifNil: [incomingTransitions := self transitionCollectionClass new]
+	^ incomingTransitions ifNil: [incomingTransitions := OrderedCollection new]
 ]
 
 { #category : #transitions }

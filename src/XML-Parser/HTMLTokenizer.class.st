@@ -2338,7 +2338,7 @@ HTMLTokenizer class >> initializePredefinedEntities [
 				ifTrue: [
 					predefinedEntities
 						at: entityName
-						put: (Unicode value: codePoint asInteger)]].
+						put: (self encodingClass value: codePoint asInteger)]].
 ]
 
 { #category : #testing }
@@ -2380,7 +2380,7 @@ HTMLTokenizer >> atNonHTMLSectionEndTag [
 HTMLTokenizer >> characterFromCodePoint: aCodePoint [
 	^ aCodePoint > 0
 		ifTrue: [
-			[self encodingClass value: aCodePoint]
+			[self class encodingClass value: aCodePoint]
 				on: Error
 				do: [:error | Character space]]
 		ifFalse: [Character space]
@@ -2587,7 +2587,9 @@ HTMLTokenizer >> nextPCDataToken [
 										isIgnorableWhitespace := false]
 									ifFalse: [
 										(nextChar := self nextGeneralEntityReference)
-											ifNotNil: [writeStream nextPut: nextChar]]]]
+											ifNotNil: [
+												writeStream nextPut: nextChar.
+												isIgnorableWhitespace := false]]]]
 					ifFalse: [
 						nextChar isSeparator
 							ifFalse: [isIgnorableWhitespace := false].

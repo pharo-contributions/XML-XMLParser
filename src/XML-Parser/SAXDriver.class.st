@@ -7,8 +7,7 @@ Class {
 	#instVars : [
 		'saxHandler',
 		'dtd',
-		'validator',
-		'languageEnvironment'
+		'validator'
 	],
 	#category : #'XML-Parser'
 }
@@ -210,8 +209,6 @@ SAXDriver >> handleNotationDeclaration: aName publicID: aPublicId systemID: aSys
 
 { #category : #'handling tokens' }
 SAXDriver >> handlePCData: aString [
-	self languageEnvironment
-		ifNotNil: [aString applyLanguageInfomation: self languageEnvironment].
 	self isValidating
 		ifTrue: [self  validator validatePCData: aString].
 
@@ -271,7 +268,7 @@ SAXDriver >> handleParameterEntityReference: aName [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleStartContentEntityReplacement: aName [
-	^ self saxHandler startEntity: aName
+	self saxHandler startEntity: aName
 ]
 
 { #category : #'handling tokens' }
@@ -296,9 +293,6 @@ SAXDriver >> handleStartDocument [
 { #category : #'handling tokens' }
 SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
 	self startNestingOfElement: anElementName.
-
-	(anAttributeDictionary includesKey: 'xml:lang')
-		ifTrue: [self languageEnvironment: (anAttributeDictionary at: 'xml:lang')].
 
 	anElementName splitQualifiedNameInto: [:prefixPart :localPart |
 		self
@@ -358,16 +352,6 @@ SAXDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrN
 { #category : #testing }
 SAXDriver >> isValidating [
 	^ saxHandler isValidating
-]
-
-{ #category : #accessing }
-SAXDriver >> languageEnvironment [
-	^ languageEnvironment
-]
-
-{ #category : #accessing }
-SAXDriver >> languageEnvironment: anIsoString [
-	languageEnvironment := LanguageEnvironment localeID: (LocaleID isoString: anIsoString)
 ]
 
 { #category : #private }

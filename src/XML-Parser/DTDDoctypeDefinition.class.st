@@ -124,7 +124,7 @@ DTDDoctypeDefinition >> addValidatorForElement: anElement contentModel: aContent
 	self elementValidators
 		at: anElement
 		ifAbsentPut: [
-			(DTDContentModelParser
+			((DTDContentModelParser parserForContentModel: aContentModel)
 				name: anElement
 				contentModel: aContentModel) parse]
 ]
