@@ -141,6 +141,20 @@ XMLParserTest >> benchmark4 [
 ]
 
 { #category : #private }
+XMLParserTest >> elementDeclarationsNamed: aNameCollection [
+	| stream |
+
+	stream := String new writeStream.
+	aNameCollection do: [:each |
+		stream
+			nextPutAll: '<!ELEMENT ';
+			nextPutAll: each;
+			nextPutAll: ' EMPTY>';
+			cr].
+	^ stream contents.
+]
+
+{ #category : #private }
 XMLParserTest >> recursiveEntityDeclarationsNamed: aName depth: aLimit isParameter: aBoolean [
 	| entityDeclarations |
 
@@ -174,11 +188,12 @@ XMLParserTest >> testAttributeDefaultDeclaration [
 	| dtd document |
 
 	dtd := '<!DOCTYPE root [
-		<!ATTLIST root one #IMPLIED >
-		<!ATTLIST root two #REQUIRED >
-		<!ATTLIST root three #FIXED "fixedDefault" >
-		<!ATTLIST root three #FIXED "redundant" >
-		<!ATTLIST root four "default" >]>'.
+		<!ELEMENT root EMPTY>
+		<!ATTLIST root one #IMPLIED
+						two #REQUIRED
+						three #FIXED "fixedDefault"
+						three #FIXED "redundant"
+						four "default" >]>'.
 	document := XMLDOMParser parse: dtd, '<root two="required" three="nonDefault" />'.
 	self
 		assert: (document root attributeAt: 'two') = 'required';
@@ -195,6 +210,7 @@ XMLParserTest >> testAttributeEntityDeclaration [
 	dtd := '<!DOCTYPE root [
 		<!ENTITY firstEntity SYSTEM "first.txt" NDATA first>
 		<!ENTITY secondEntity SYSTEM "second.txt" NDATA second>
+		<!ELEMENT root EMPTY>
 		<!ATTLIST root
 			unparsedEntity ENTITY #IMPLIED
 			unparsedEntities ENTITIES #IMPLIED>]>'.
@@ -218,6 +234,7 @@ XMLParserTest >> testAttributeEnumerationDeclaration [
 	dtd := '<!DOCTYPE root [
 		<!NOTATION txtFile PUBLIC "//file.txt//">
 		<!NOTATION confFile PUBLIC "//file.conf//">
+		<!ELEMENT root EMPTY>
 		<!ATTLIST root
 			number ( one | two | three) #IMPLIED
 			note NOTATION (txtFile | confFile ) #IMPLIED>]>'.
@@ -237,6 +254,9 @@ XMLParserTest >> testAttributeIDDeclaration [
 	| dtd |
 
 	dtd := '<!DOCTYPE root [
+		<!ELEMENT root (unique|unique2)+>
+		<!ELEMENT unique EMPTY>
+		<!ELEMENT unique2 EMPTY>
 		<!ATTLIST unique id ID #REQUIRED>
 		<!ATTLIST unique2 id ID #REQUIRED>]>'.
 	self
@@ -265,6 +285,10 @@ XMLParserTest >> testAttributeIDRefDeclaration [
 	| dtd |
 
 	dtd := '<!DOCTYPE root [
+		<!ELEMENT root (unique|ref|refs)+>
+		<!ELEMENT unique EMPTY>
+		<!ELEMENT ref EMPTY>
+		<!ELEMENT refs EMPTY>
 		<!ATTLIST unique id ID #REQUIRED>
 		<!ATTLIST ref idref IDREF #REQUIRED>
 		<!ATTLIST refs idrefs IDREFS #REQUIRED>]>'.
@@ -290,9 +314,9 @@ XMLParserTest >> testAttributeNmtokenDeclaration [
 	| dtd |
 
 	dtd := '<!DOCTYPE root [
-		<!ATTLIST root
-			name NMTOKEN #IMPLIED
-			names NMTOKENS #IMPLIED>]>'.
+		<!ELEMENT root ANY>
+		<!ATTLIST root name NMTOKEN #IMPLIED>
+		<!ATTLIST root names NMTOKENS #IMPLIED>]>'.
 	self
 		shouldnt: [SAXHandler parse: dtd, '<root name="one" names="  one  two three"/> ']
 		raise: XMLValidationException.
@@ -321,6 +345,23 @@ XMLParserTest >> testAttributeValueNormalization [
 	self
 		assert: (document root attributeAt: 'name') = normalized;
 		assert: (document root contentString) = unnormalized.
+]
+
+{ #category : #'tests-xmltokenizer' }
+XMLParserTest >> testChangingNormalizedLineEnding [
+	| xml domParser parser |
+
+	xml :=
+		'<root>{1}one{2}two{3}three{1}</root>'
+			format: (Array with: String lf with: String cr with: String crlf).
+	domParser := XMLDOMParser on: xml.
+
+	parser := domParser parser.
+	parser tokenizer normalizedLineEndingChar: $N.
+	parser parseDocument.
+
+	self assert: domParser document root contentString = 'NoneNtwoNthreeN'.
+	
 ]
 
 { #category : #'tests-xmltokenizer' }
@@ -433,22 +474,33 @@ XMLParserTest >> testElementAnyAndEmptyDeclarations [
 	self
 		shouldnt: [
 			SAXHandler parse: 
-				'<!DOCTYPE addressbook [<!ELEMENT addressbook ANY>]>',
-				self addressBookXML]
+				'<!DOCTYPE root [
+					<!ELEMENT root ANY>
+					<!ELEMENT two ANY>]>
+				<root>one<two>three</two>four</root>']
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			SAXHandler parse: 
+				'<!DOCTYPE root [<!ELEMENT root EMPTY>]><root> <!--empty--> </root>']
 		raise: XMLValidationException.
 	self
 		should: [
 			SAXHandler parse: 
-				'<!DOCTYPE addressbook [<!ELEMENT addressbook EMPTY>]>',
-				self addressBookXML]
-		raise: XMLValidationException
+				'<!DOCTYPE root [<!ELEMENT root EMPTY>]><root><non-empty/></root>']
+		raise: XMLValidationException.
 ]
 
 { #category : #tests }
 XMLParserTest >> testElementContentModels [
-	| dtd |
+	| dtd declarations |
 
-	dtd := '<!DOCTYPE root [
+	declarations := 
+		self elementDeclarationsNamed:
+			#('one' 'two' 'three' 'four' 'red' 'blue' 'green' 'orange' 'mon' 'tue' 'wed' 'fri').
+	dtd := '<!DOCTYPE root [',
+		declarations,
+		'<!ELEMENT root (numbers|colors|days)>
 		<!ELEMENT numbers (one,two?,three)>
 		<!ELEMENT colors (red|blue|green)*>
 		<!ELEMENT days (mon+,tue*,wed)>]>'.
@@ -483,8 +535,10 @@ XMLParserTest >> testElementMixedContentDeclaration [
 
 	dtd := '<!DOCTYPE root [
 		<!ELEMENT root (#PCDATA | one | two | three)*>
+		<!ELEMENT one EMPTY>
 		<!ELEMENT two (#PCDATA)>
-		<!ELEMENT three (#PCDATA)*>]>'.
+		<!ELEMENT three (#PCDATA)*>
+		<!ELEMENT four EMPTY>]>'.
 	self
 		shouldnt: [
 			XMLDOMParser parse:
@@ -669,6 +723,48 @@ XMLParserTest >> testPredefinedEntityReplacement [
 		assert: (document root attributeAt: 'name') = replacements contents;
 		assert: (document findElementNamed: 'one') contentString = replacements contents;
 		assert: (document findElementNamed: 'two') contentString = '&notAReference;'.
+]
+
+{ #category : #tests }
+XMLParserTest >> testPrefixedAttributeDeclarations [
+	| dtd |
+
+	dtd := '<!DOCTYPE root [
+		<!ELEMENT root EMPTY>
+		<!ATTLIST root
+			prefix:name CDATA #IMPLIED
+			unprefixed CDATA #IMPLIED>]>'.
+	self
+		shouldnt: [
+			SAXHandler parse:
+				dtd, '<root xmlns:prefix="ns" prefix:name="value" unprefixed="value"/>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root name="value" unprefixed="value" />']
+		raise: XMLValidationException.
+	self
+		should: [
+			SAXHandler parse:
+				dtd, '<root xmlns:prefix="ns" prefix:name="value" prefix:unprefixed="value"/>']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testPrefixedElementDeclarations [
+	| dtd |
+
+	dtd := '<!DOCTYPE prefix:root [
+		<!ELEMENT prefix:root ANY>
+		<!ELEMENT unprefixed EMPTY>]>'.
+	self
+		shouldnt: [SAXHandler parse: dtd, '<prefix:root xmlns:prefix="ns"><unprefixed/></prefix:root>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root><unprefixed/></root>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<prefix:root xmlns:prefix="ns"><prefix:unprefixed/></prefix:root>']
+		raise: XMLValidationException.
 ]
 
 { #category : #tests }
@@ -903,6 +999,50 @@ XMLParserTest >> testTokenizerMaxPushBack [
 	self
 		should: [tokenizer streamReader pushBack: 'test']
 		raise: XMLParserException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testUndeclaredAttributes [
+	self
+		shouldnt: [
+			SAXHandler
+				parse: '<!DOCTYPE root [<!ENTITY ignored "ignored">]><root name="value"/>'
+				usingNamespaces:true
+				validation: true]
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			SAXHandler parse:
+				'<!DOCTYPE root [
+					<!ELEMENT root ANY>
+					<!ATTLIST root name CDATA #IMPLIED>]><root name="value"></root>']
+		raise: XMLValidationException.
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE root [<!ELEMENT root ANY>]><root name="value"></root>']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testUndeclaredElements [
+	self
+		shouldnt: [
+			SAXHandler
+				parse: '<!DOCTYPE root [<!ENTITY ignored "">]><root/>'
+				usingNamespaces:true
+				validation: true]
+		raise:XMLValidationException.
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE root [<!ELEMENT root ANY>]><root><undeclared/></root>']
+		raise: XMLValidationException.
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE root [<!ATTLIST root name CDATA #IMPLIED>]><root/>']
+		raise: XMLValidationException.
 ]
 
 { #category : #tests }
