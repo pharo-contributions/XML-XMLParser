@@ -187,7 +187,9 @@ XMLDOMParserTest >> testDoctypeDeclaration [
 	self
 		assert: doctype root = 'root';
 		assert: doctype publicID = 'pubid';
-		assert: doctype systemID = 'external.dtd'.
+		assert: doctype systemID = 'external.dtd';
+		assert: doctype nodes notEmpty;
+		assert: (doctype nodes allSatisfy: [:each | each isDeclaration]).
 ]
 
 { #category : #tests }
@@ -313,7 +315,7 @@ XMLDOMParserTest >> testInternalAttributeDeclarations [
 
 { #category : #'tests - internal subset' }
 XMLDOMParserTest >> testInternalElementDeclaration [
-	| doctype |
+	| doctype elementDeclaration |
 
 	doctype :=
 		(XMLDOMParser
@@ -321,9 +323,10 @@ XMLDOMParserTest >> testInternalElementDeclaration [
 			usingNamespaces: true
 			validation: true
 			externalEntities: false) doctypeDeclaration.
+	elementDeclaration := doctype nodes first.
 	self
-		assert: doctype nodes first element = 'root';
-		assert: doctype nodes first contentModel = '(#PCDATA|one|two)*'.
+		assert: elementDeclaration element = 'root';
+		assert: elementDeclaration contentModel = '(#PCDATA|one|two)*'.
 ]
 
 { #category : #'tests - internal subset' }
