@@ -8,6 +8,11 @@ Class {
 }
 
 { #category : #accessing }
+XMLNodeFactory >> attributeDeclarationClass [
+	^ XMLAttributeDeclaration
+]
+
+{ #category : #accessing }
 XMLNodeFactory >> cdataClass [
 	^ XMLCData
 ]
@@ -35,6 +40,26 @@ XMLNodeFactory >> documentClass [
 { #category : #accessing }
 XMLNodeFactory >> elementClass [
 	^ XMLElement
+]
+
+{ #category : #accessing }
+XMLNodeFactory >> elementDeclarationClass [
+	^ XMLElementDeclaration
+]
+
+{ #category : #accessing }
+XMLNodeFactory >> generalEntityDeclarationClass [
+	^ XMLGeneralEntityDeclaration
+]
+
+{ #category : #accessing }
+XMLNodeFactory >> notationDeclarationClass [
+	^ XMLNotationDeclaration
+]
+
+{ #category : #accessing }
+XMLNodeFactory >> parameterEntityDeclarationClass [
+	^ XMLParameterEntityDeclaration
 ]
 
 { #category : #accessing }

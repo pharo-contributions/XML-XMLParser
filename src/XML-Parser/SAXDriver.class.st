@@ -123,7 +123,7 @@ SAXDriver >> handleEndDTD [
 SAXDriver >> handleEndDocument [
 	self elementNester ensureNoElementsRemainOpen.
 	self isValidating
-		ifTrue: [self validator validateIDsAndReferences].
+		ifTrue: [self validator validateEndDocument].
 
 	self saxHandler endDocument.
 ]
@@ -431,17 +431,13 @@ SAXDriver >> validateEndTag: anEndTag [
 
 { #category : #validation }
 SAXDriver >> validateRootElement: aStartTag [
-	(self saxHandler requiresDTDDeclarations
+	(self saxHandler requiresDocumentConstraints
 		and: [self validator hasElementValidators not])
 		ifTrue: [
 			XMLValidationException signal:
-				'DTD with element and attribute declarations required'].
+				'Document validation constraints required'].
 
-	(self dtd rootElement isEmpty
-		or: [aStartTag = self dtd rootElement])
-		ifTrue: [^ self].
-
-	XMLValidationException signal: 'Element <', aStartTag, '> cannot be root'.
+	self validator validateRootElement: aStartTag.
 ]
 
 { #category : #validation }

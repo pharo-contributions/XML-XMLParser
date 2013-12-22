@@ -40,7 +40,7 @@ XMLDFAState >> initializeDFAStateTransitions [
 						cachedDFAStates: cachedDfaStates
 						isAccepting: (matchersWithAcceptingTransitionStates includes: matcher)].
 		self addTransition:
-			(XMLDFATransition
+			(XMLFATransition
 				matcher: matcher
 				nextState: dfaState)].
 ]
@@ -56,7 +56,7 @@ XMLDFAState >> setNFAStates: anNfaStateCollection cachedDFAStates: aDfaStateCach
 XMLDFAState >> transitions [
 	^ transitions
 		ifNil: [
-			transitions := Set new.
+			transitions := OrderedCollection new.
 			self initializeDFAStateTransitions.
 			transitions].
 ]

@@ -1,15 +1,15 @@
 Class {
-	#name : #DTDAnyOrEmptyContentModelParser,
+	#name : #DTDLiteralContentModelParser,
 	#superclass : #DTDContentModelParser,
 	#category : #'XML-Parser-DTD'
 }
 
 { #category : #parsing }
-DTDAnyOrEmptyContentModelParser >> parse [
+DTDLiteralContentModelParser >> parse [
 	contentModel = 'ANY'
-		ifTrue: [^ XMLAnyElementValidator element: name].
+		ifTrue: [^ XMLAnyElementValidator element: element].
 	contentModel = 'EMPTY'
-		ifTrue: [^ XMLEmptyElementValidator element: name].
+		ifTrue: [^ XMLEmptyElementValidator element: element].
 
 	XMLValidationException signal: 'Invalid content model "', contentModel, '"'.
 ]

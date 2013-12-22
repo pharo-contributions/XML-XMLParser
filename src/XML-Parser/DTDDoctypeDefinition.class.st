@@ -7,12 +7,12 @@ Class {
 	#instVars : [
 		'rootElement',
 		'isStandalone',
+		'elementValidators',
+		'attributeValidators',
 		'generalEntities',
 		'parameterEntities',
 		'unparsedEntities',
-		'notations',
-		'elementValidators',
-		'attributeValidators'
+		'notations'
 	],
 	#category : #'XML-Parser-DTD'
 }
@@ -125,7 +125,7 @@ DTDDoctypeDefinition >> addValidatorForElement: anElement contentModel: aContent
 		at: anElement
 		ifAbsentPut: [
 			((DTDContentModelParser parserForContentModel: aContentModel)
-				name: anElement
+				element: anElement
 				contentModel: aContentModel) parse]
 ]
 

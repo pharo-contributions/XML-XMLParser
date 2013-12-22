@@ -2,25 +2,26 @@ Class {
 	#name : #XMLAttributeDeclaration,
 	#superclass : #XMLDeclarationNode,
 	#instVars : [
-		'attributeName',
 		'type',
-		'defaultDeclaration'
+		'defaultDeclaration',
+		'attribute',
+		'element'
 	],
 	#category : #'XML-Parser-Nodes'
 }
 
 { #category : #'instance creation' }
-XMLAttributeDeclaration class >> elementName: anElementName attributeName: anAttributeName type: aType defaultDeclaration: aDefaultDeclaration [
+XMLAttributeDeclaration class >> element: anElementName attribute: anAttributeName type: aType defaultDeclaration: aDefaultDeclaration [
 	^ self new
-		setElementName: anElementName
-		attributeName: anAttributeName
+		setElement: anElementName
+		attribute: anAttributeName
 		type: aType
 		defaultDeclaration: aDefaultDeclaration
 ]
 
 { #category : #accessing }
-XMLAttributeDeclaration >> attributeName [
-	^ attributeName ifNil: [attributeName := '']
+XMLAttributeDeclaration >> attribute [
+	^ attribute ifNil: [attribute := '']
 ]
 
 { #category : #accessing }
@@ -29,14 +30,14 @@ XMLAttributeDeclaration >> defaultDeclaration [
 ]
 
 { #category : #accessing }
-XMLAttributeDeclaration >> elementName [
-	^ self name
+XMLAttributeDeclaration >> element [
+	^ element ifNil: [element := '']
 ]
 
 { #category : #initialization }
-XMLAttributeDeclaration >> setElementName: anElementName attributeName: anAttributeName type: aType defaultDeclaration: aDefaultDeclaration [
-	name := anElementName.
-	attributeName := anAttributeName.
+XMLAttributeDeclaration >> setElement: anElementName attribute: anAttributeName type: aType defaultDeclaration: aDefaultDeclaration [
+	element := anElementName.
+	attribute := anAttributeName.
 	type := aType.
 	defaultDeclaration := aDefaultDeclaration.
 ]
@@ -49,8 +50,8 @@ XMLAttributeDeclaration >> type [
 { #category : #printing }
 XMLAttributeDeclaration >> writeXMLOn: aWriter [
 	aWriter attributeDeclaration
-		elementName: self elementName;
-		attributeName: self attributeName;
+		element: self element;
+		attribute: self attribute;
 		type: self type;
 		defaultDeclaration: self defaultDeclaration
 ]

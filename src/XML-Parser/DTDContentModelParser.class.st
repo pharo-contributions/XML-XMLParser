@@ -1,48 +1,41 @@
 "
-This class parses a DTD content model from an element declaration and produces a validator object from it.
+This is a base class for DTD content model parsers that turn element declarations into validators.
 "
 Class {
 	#name : #DTDContentModelParser,
 	#superclass : #Object,
 	#instVars : [
-		'name',
-		'contentModel'
+		'contentModel',
+		'element'
 	],
 	#category : #'XML-Parser-DTD'
 }
 
 { #category : #'instance creation' }
-DTDContentModelParser class >> name: aName contentModel: aContentModel [
+DTDContentModelParser class >> element: aName contentModel: aContentModel [
 	^ self new
-		setName: aName
+		setElement: aName
 		contentModel: aContentModel
 ]
 
 { #category : #parsing }
 DTDContentModelParser class >> parserForContentModel: aContentModel [
+	"the tokenizer removes all spaces from the content model"
 	^ (aContentModel notEmpty and: [aContentModel first == $(])
 		ifTrue: [
 			(aContentModel size > 1 and: [aContentModel second == $#])
 				ifTrue: [DTDMixedContentModelParser]
 				ifFalse: [DTDDFAContentModelParser]]
-		ifFalse: [DTDAnyOrEmptyContentModelParser]
+		ifFalse: [DTDLiteralContentModelParser]
 ]
 
 { #category : #parsing }
 DTDContentModelParser >> parse [
-	"the tokenizer removes all spaces from the content model"
-	(contentModel isEmpty or: [contentModel = 'ANY'])
-		ifTrue: [^ XMLAnyElementValidator element: name].
-	(contentModel = 'EMPTY')
-		ifTrue: [^ XMLEmptyElementValidator element: name].
-
-	^ (contentModel beginsWith: '(#PCDATA')
-		ifTrue: [self parseMixedContentModel]
-		ifFalse: [self parseDFAContentModel].
+	self subclassResponsibility
 ]
 
 { #category : #'instance creation' }
-DTDContentModelParser >> setName: aName contentModel: aContentModel [
-	name := aName.
+DTDContentModelParser >> setElement: aName contentModel: aContentModel [
+	element := aName.
 	contentModel := aContentModel.
 ]

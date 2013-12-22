@@ -34,7 +34,7 @@ XMLConfiguration >> isValidating [
 { #category : #accessing }
 XMLConfiguration >> isValidating: aBoolean [
 	(isValidating := aBoolean)
-		ifFalse: [self requiresDTDDeclarations: false]
+		ifFalse: [self requiresDocumentConstraints: false]
 ]
 
 { #category : #accessing }
@@ -58,12 +58,12 @@ XMLConfiguration >> preservesUndeclaredEntityReferences: aBoolean [
 ]
 
 { #category : #accessing }
-XMLConfiguration >> requiresDTDDeclarations [
+XMLConfiguration >> requiresDocumentConstraints [
 	^ requiresDtdDeclarations ifNil: [requiresDtdDeclarations := false]
 ]
 
 { #category : #accessing }
-XMLConfiguration >> requiresDTDDeclarations: aBoolean [
+XMLConfiguration >> requiresDocumentConstraints: aBoolean [
 	(requiresDtdDeclarations := aBoolean)
 		ifTrue: [self isValidating: true]
 ]

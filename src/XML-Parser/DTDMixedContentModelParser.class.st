@@ -20,6 +20,6 @@ DTDMixedContentModelParser >> parse [
 		ifFalse: [XMLValidationException signal: 'Missing * after mixed content list with elements'].
 
 	^ XMLMixedContentElementValidator
-		element: name
+		element: element
 		allowedElements: allowedElements.
 ]

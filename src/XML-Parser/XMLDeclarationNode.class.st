@@ -4,13 +4,5 @@ This is a generic class to represent markup declarations in the internal subset.
 Class {
 	#name : #XMLDeclarationNode,
 	#superclass : #XMLNode,
-	#instVars : [
-		'name'
-	],
 	#category : #'XML-Parser-Nodes'
 }
-
-{ #category : #accessing }
-XMLDeclarationNode >> name [
-	^ name ifNil: [name := '']
-]

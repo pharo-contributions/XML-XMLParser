@@ -56,20 +56,31 @@ XMLDocumentValidator >> hasElementValidators [
 ]
 
 { #category : #validation }
-XMLDocumentValidator >> validateAttributes: anAttributeDictionary with: aValidatorDictionary [
-	| undeclaredAttributes |
+XMLDocumentValidator >> unvalidatedAttributes: anAttributeCollection [
+]
 
-	undeclaredAttributes := anAttributeDictionary keys asSet.
+{ #category : #validation }
+XMLDocumentValidator >> unvalidatedElement: aName [
+]
+
+{ #category : #validation }
+XMLDocumentValidator >> validateAttributes: anAttributeDictionary with: aValidatorDictionary [
+	| unvalidatedAttributes |
+
+	unvalidatedAttributes := anAttributeDictionary keys asSet.
 	aValidatorDictionary keysAndValuesDo: [:attribute :validator |
 		validator validateAttributes: anAttributeDictionary.
-		undeclaredAttributes
+		unvalidatedAttributes
 			remove: attribute
 			ifAbsent: []].
 
-	undeclaredAttributes
-		ifNotEmpty: [
-			XMLValidationException signal:
-				'Undeclared attribute(s) ', (', ' join: undeclaredAttributes)].
+	unvalidatedAttributes
+		ifNotEmpty: [self unvalidatedAttributes: unvalidatedAttributes].
+]
+
+{ #category : #validation }
+XMLDocumentValidator >> validateEndDocument [
+
 ]
 
 { #category : #validation }
@@ -84,40 +95,26 @@ XMLDocumentValidator >> validateEndTag: aName [
 ]
 
 { #category : #validation }
-XMLDocumentValidator >> validateIDsAndReferences [
-	| ids references |
-
-	self hasAttributeValidators
-		ifFalse: [^ self].
-
-	ids := Set new.
-	references := Set new.
-	self allAttributeValidatorsDo: [:each |
-		(each respondsTo: #ids)
-			ifTrue: [ids addAll: each ids]
-			ifFalse: [
-				(each respondsTo: #idrefs)
-					ifTrue: [references addAll: each idrefs]]].
-
-	references do: [:each |
-		(ids includes: each)
-			ifFalse: [XMLValidationException signal: 'Invalid ID reference ', each]].
-]
-
-{ #category : #validation }
 XMLDocumentValidator >> validatePCData: aString [
 	self hasElementValidators
 		ifTrue: [self currentElementValidator validatePCData: aString]
 ]
 
 { #category : #validation }
+XMLDocumentValidator >> validateRootElement: anElementName [
+]
+
+{ #category : #validation }
 XMLDocumentValidator >> validateStartTag: aName [
 	self elementValidatorStack
 		ifNotEmpty: [self currentElementValidator validateStartTag: aName].
-	self elementValidatorStack
-		addLast:
-			((self elementValidatorFor: aName)
-				ifNil: [XMLValidationException signal: 'Undeclared element <', aName, '>']).
+
+	self elementValidatorStack addLast:
+		((self elementValidatorFor: aName)
+			ifNil: [
+				self
+					unvalidatedElement: aName;
+					defaultElementValidatorFor: aName]).
 ]
 
 { #category : #validation }

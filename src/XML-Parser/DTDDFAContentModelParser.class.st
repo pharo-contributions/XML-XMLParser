@@ -66,7 +66,7 @@ DTDDFAContentModelParser >> isOperatorOrParen: aCharacter [
 
 { #category : #parsing }
 DTDDFAContentModelParser >> parse [
-	|  nextChar |
+	| nextChar |
 
 	contentModelStream := contentModel readStream.
 	nfaBuilder := XMLNFABuilder new.
@@ -95,7 +95,7 @@ DTDDFAContentModelParser >> parse [
 	self popRemainingOperators.
 
 	^ XMLDFAElementValidator
-		element: name
+		element: element
 		dfa: nfaBuilder buildNFAFromFragments asDFA.
 ]
 

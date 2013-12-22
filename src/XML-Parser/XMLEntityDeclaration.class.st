@@ -2,6 +2,7 @@ Class {
 	#name : #XMLEntityDeclaration,
 	#superclass : #XMLDeclarationNode,
 	#instVars : [
+		'name',
 		'replacement',
 		'publicId',
 		'systemId',
@@ -33,6 +34,11 @@ XMLEntityDeclaration class >> name: aName replacement: aReplacement [
 { #category : #testing }
 XMLEntityDeclaration >> isParameter [
 	^ false
+]
+
+{ #category : #accessing }
+XMLEntityDeclaration >> name [
+	^ name ifNil: [name := '']
 ]
 
 { #category : #accessing }

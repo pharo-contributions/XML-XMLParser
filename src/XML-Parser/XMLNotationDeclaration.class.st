@@ -2,6 +2,7 @@ Class {
 	#name : #XMLNotationDeclaration,
 	#superclass : #XMLDeclarationNode,
 	#instVars : [
+		'name',
 		'publicId',
 		'systemId'
 	],
@@ -11,6 +12,11 @@ Class {
 { #category : #'instance creation' }
 XMLNotationDeclaration class >> name: aName publicID: aPublicId systemID: aSystemId [
 	^ self new setName: aName publicID: aPublicId systemID: aSystemId
+]
+
+{ #category : #accessing }
+XMLNotationDeclaration >> name [
+	^ name ifNil: [name := '']
 ]
 
 { #category : #accessing }

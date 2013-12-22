@@ -273,7 +273,7 @@ XMLElement >> hasAttributes [
 	^ self attributeNodes notEmpty
 ]
 
-{ #category : #private }
+{ #category : #testing }
 XMLElement >> hasNamespaces [
 	^ namespaceScope notNil and: [namespaceScope hasNamespaces]
 ]

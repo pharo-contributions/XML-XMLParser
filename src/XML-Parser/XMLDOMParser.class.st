@@ -30,9 +30,9 @@ XMLDOMParser class >> on: aStringOrStream withRootNode: aRootNode [
 { #category : #declaration }
 XMLDOMParser >> attributeDeclaration: anElement name: aName type: aType defaultDeclaration: aDefaultDeclaration [
 	self topNode addNode:
-		(XMLAttributeDeclaration
-			elementName: anElement
-			attributeName: aName
+		(self nodeFactory attributeDeclarationClass
+			element: anElement
+			attribute: aName
 			type: aType
 			defaultDeclaration: aDefaultDeclaration)
 ]
@@ -69,8 +69,8 @@ XMLDOMParser >> document: aDocument [
 { #category : #declaration }
 XMLDOMParser >> elementDeclaration: aName contentModel: aContentModel [
 	self topNode addNode:
-		(XMLElementDeclaration
-			name: aName
+		(self nodeFactory elementDeclarationClass
+			element: aName
 			contentModel: aContentModel)
 ]
 
@@ -97,7 +97,7 @@ XMLDOMParser >> endElement: aQualifiedName prefix: aPrefix uri: aUri localName: 
 { #category : #declaration }
 XMLDOMParser >> generalEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
 	self topNode addNode:
-		(XMLGeneralEntityDeclaration
+		(self nodeFactory generalEntityDeclarationClass
 			name: aName
 			publicID: aPublicId
 			systemID: aSystemId
@@ -107,7 +107,7 @@ XMLDOMParser >> generalEntityDeclaration: aName publicID: aPublicId systemID: aS
 { #category : #declaration }
 XMLDOMParser >> generalEntityDeclaration: aName replacement: aReplacement [
 	self topNode addNode:
-		(XMLGeneralEntityDeclaration
+		(self nodeFactory generalEntityDeclarationClass
 			name: aName
 			replacement: aReplacement)
 ]
@@ -145,7 +145,7 @@ XMLDOMParser >> nodeStack [
 { #category : #declaration }
 XMLDOMParser >> notationDeclaration: aName publicID: aPublicId systemID: aSystemId [
 	self topNode addNode:
-		(XMLNotationDeclaration
+		(self nodeFactory notationDeclarationClass
 			name: aName
 			publicID: aPublicId
 			systemID: aSystemId)
@@ -154,7 +154,7 @@ XMLDOMParser >> notationDeclaration: aName publicID: aPublicId systemID: aSystem
 { #category : #declaration }
 XMLDOMParser >> parameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
 	self topNode addNode:
-		(XMLParameterEntityDeclaration
+		(self nodeFactory parameterEntityDeclarationClass
 			name: aName
 			publicID: aPublicId
 			systemID: aSystemId)
@@ -163,7 +163,7 @@ XMLDOMParser >> parameterEntityDeclaration: aName publicID: aPublicId systemID: 
 { #category : #declaration }
 XMLDOMParser >> parameterEntityDeclaration: aName replacement: aReplacement [
 	self topNode addNode:
-		(XMLParameterEntityDeclaration
+		(self nodeFactory parameterEntityDeclarationClass
 			name: aName
 			replacement: aReplacement)
 ]
