@@ -141,6 +141,13 @@ XMLParserTest >> benchmark4 [
 ]
 
 { #category : #private }
+XMLParserTest >> convertableStreamOn: aString [
+	^ (MultiByteBinaryOrTextStream on: aString from: 1 to: aString size)
+		text;
+		yourself
+]
+
+{ #category : #private }
 XMLParserTest >> elementDeclarationsNamed: aNameCollection [
 	| stream |
 
@@ -347,7 +354,7 @@ XMLParserTest >> testAttributeValueNormalization [
 		assert: (document root contentString) = unnormalized.
 ]
 
-{ #category : #'tests-xmltokenizer' }
+{ #category : #'tests - tokenizer' }
 XMLParserTest >> testChangingNormalizedLineEnding [
 	| xml domParser parser |
 
@@ -364,7 +371,7 @@ XMLParserTest >> testChangingNormalizedLineEnding [
 	
 ]
 
-{ #category : #'tests-xmltokenizer' }
+{ #category : #'tests - tokenizer' }
 XMLParserTest >> testConditionalSection [
 	| tokenizer |
 
@@ -402,7 +409,7 @@ XMLParserTest >> testDeclaringNamespaces [
 		raise: XMLNamespaceException.
 ]
 
-{ #category : #'tests-utf8' }
+{ #category : #'tests - encoding' }
 XMLParserTest >> testDecodingCharacters [
 	| xml document  |
 
@@ -564,6 +571,24 @@ XMLParserTest >> testElementMixedContentDeclaration [
 				XMLDOMParser parse:
 					'<!DOCTYPE root [<!ELEMENT two (#PCDATA', each asString, ')>]><root/>']
 			raise: XMLValidationException].
+]
+
+{ #category : #'tests - encoding' }
+XMLParserTest >> testEncodingDeclaration [
+	| xml utf8Xml latin1Xml |
+
+	xml :=
+		'<?xml version="1.0" encoding="{1}"?><root>',
+		(String with: (Character value: 153) with: (Character value: 79)),
+		'</root>'.
+	utf8Xml := xml format: (Array with: 'UTF-8').
+	latin1Xml := xml format: (Array with: 'ISO-8859-1').
+	self
+		should: [SAXHandler parse: (self convertableStreamOn: utf8Xml)]
+		raise: Error.
+	self
+		shouldnt: [SAXHandler parse: (self convertableStreamOn: latin1Xml)]
+		raise: Error.
 ]
 
 { #category : #tests }
@@ -899,13 +924,13 @@ XMLParserTest >> testRequiredDTDDeclarations [
 	self
 		shouldnt: [
 			(SAXHandler on: '<!DOCTYPE root [<!ELEMENT root EMPTY>]><root/>')
-				requiresDTDDeclarations: true;
+				requiresDocumentConstraints: true;
 				parseDocument]
 		raise: XMLValidationException.
 	self
 		should: [
 			(SAXHandler on: '<root/>')
-				requiresDTDDeclarations: true;
+				requiresDocumentConstraints: true;
 				parseDocument]
 		raise: XMLValidationException.
 ]
@@ -957,21 +982,21 @@ XMLParserTest >> testSubsetEndingEntityReplacement [
 		raise: XMLParserException
 ]
 
-{ #category : #'tests-xmltokenizer' }
+{ #category : #'tests - tokenizer' }
 XMLParserTest >> testTokenizerAddressBook [
 	| tokenizer |
 	tokenizer := XMLTokenizer driver: nil on: self addressBookXML readStream.
 	[tokenizer streamReader next notNil] whileTrue
 ]
 
-{ #category : #'tests-xmltokenizer' }
+{ #category : #'tests - tokenizer' }
 XMLParserTest >> testTokenizerAddressBookWithDTD [
 	| tokenizer |
 	tokenizer := XMLTokenizer driver: nil on: self addressBookXMLWithDTD readStream.
 	[tokenizer streamReader next notNil] whileTrue
 ]
 
-{ #category : #'tests-xmltokenizer' }
+{ #category : #'tests - tokenizer' }
 XMLParserTest >> testTokenizerCharacters [
 	| tokenizer |
 	"This test is actually not that useful. This is not the proper way of using the parser.
@@ -999,7 +1024,7 @@ XMLParserTest >> testTokenizerCharacters [
 		assert: ('book' allSatisfy: [:each | tokenizer streamReader next == each]).
 ]
 
-{ #category : #'tests-xmltokenizer' }
+{ #category : #'tests - tokenizer' }
 XMLParserTest >> testTokenizerMaxPushBack [
 	| tokenizer |
 
@@ -1118,17 +1143,17 @@ XMLParserTest >> testUnparsedEntities [
 ]
 
 { #category : #tests }
-XMLParserTest >> testValidationAndDTDDeclarationsToggle [
+XMLParserTest >> testValidationAndConstraintsToggle [
 	self assert:
 		((SAXHandler on: '<root/>')
 			isValidating: false;
-			requiresDTDDeclarations: true;
+			requiresDocumentConstraints: true;
 			isValidating).
 	self deny:
 		((SAXHandler on: '<root/>')
-			requiresDTDDeclarations: true;
+			requiresDocumentConstraints: true;
 			isValidating: false;
-			requiresDTDDeclarations).
+			requiresDocumentConstraints).
 ]
 
 { #category : #tests }

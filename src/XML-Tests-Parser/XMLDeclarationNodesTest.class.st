@@ -9,8 +9,8 @@ XMLDeclarationNodesTest >> assertAttributeDecl: anAttributeDeclaration hasElemen
 	| printString |
 
 	self
-		assert: anAttributeDeclaration elementName = anElementName;
-		assert: anAttributeDeclaration attributeName = anAttributeName;
+		assert: anAttributeDeclaration element = anElementName;
+		assert: anAttributeDeclaration attribute = anAttributeName;
 		assert: anAttributeDeclaration type = aType;
 		assert: anAttributeDeclaration defaultDeclaration = aDefaultDeclaration.
 
@@ -34,7 +34,7 @@ XMLDeclarationNodesTest >> assertAttributeDecl: anAttributeDeclaration hasElemen
 { #category : #assertions }
 XMLDeclarationNodesTest >> assertElementDecl: anElementDeclaration hasName: aName contentModel: aContentModel [
 	self
-		assert: anElementDeclaration name = aName;
+		assert: anElementDeclaration element = aName;
 		assert: anElementDeclaration contentModel = aContentModel;
 		assert: anElementDeclaration printString = ('<!ELEMENT ', aName, ' ', aContentModel, '>')
 ]
@@ -130,8 +130,8 @@ XMLDeclarationNodesTest >> test1attributeDeclarations [
 	self
 		assertAttributeDecl:
 			(XMLAttributeDeclaration
-				elementName: 'testElement'
-				attributeName: 'testAttribute'
+				element: 'testElement'
+				attribute: 'testAttribute'
 				type: 'CDATA'
 				defaultDeclaration: '')
 		hasElementName: 'testElement'
@@ -141,8 +141,8 @@ XMLDeclarationNodesTest >> test1attributeDeclarations [
 	self
 		assertAttributeDecl:
 			(XMLAttributeDeclaration
-				elementName: 'testElement'
-				attributeName: 'testAttribute'
+				element: 'testElement'
+				attribute: 'testAttribute'
 				type: 'CDATA'
 				defaultDeclaration: '(one|two|three)')
 		hasElementName: 'testElement'
@@ -160,7 +160,7 @@ XMLDeclarationNodesTest >> test2elementDeclarations [
 	self
 		assertElementDecl:
 			(XMLElementDeclaration
-				name: 'testElement'
+				element: 'testElement'
 				contentModel: '(one,two)')
 		hasName: 'testElement'
 		contentModel: '(one,two)'.

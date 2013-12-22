@@ -6,9 +6,113 @@ Class {
 
 { #category : #source }
 XMLDOMParserTest >> addressBookNamespacesXML [
-	^ '<root xmlns="defaultNS" xmlns:ps="personNS">',
-		self addressBookXML,
-		'</root>'
+	^ '<addressbook xmlns="defaultNS" xmlns:book="bookNS" xmlns:ps="personNS">',
+		(self addressBookXML copyAfter:  $>)
+]
+
+{ #category : #source }
+XMLDOMParserTest >> addressBookNamespacesXMLWithPrefixes [
+	| xmlWithPrefixes |
+
+	xmlWithPrefixes :=
+		'<book:',
+		((self addressBookNamespacesXML copyAfter: $<) copyUpToLast: $<),
+		'</book:addressbook>'.
+	^ ((xmlWithPrefixes
+		copyReplaceAll: '<person' with: '<ps:person')
+			copyReplaceAll: '</person' with: '</ps:person')
+				copyReplaceAll: 'family-name=' with: 'ps:family-name='.
+]
+
+{ #category : #source }
+XMLDOMParserTest >> internalSubsetWithDeclarations [
+	^ '<!DOCTYPE root PUBLIC "pubid" "external.dtd" [
+		<!ELEMENT root ( #PCDATA | one | two)* >
+		<!ATTLIST root
+					name CDATA #IMPLIED
+					number ( one | two | three ) "three">
+		<!ENTITY general "replacement">
+		<!ENTITY externalGeneral PUBLIC "pubid2" "external1.dtd">
+		<!ENTITY % parameter "replacement">
+		<!ENTITY % externalParameter SYSTEM "external2.dtd">
+		<!NOTATION notation SYSTEM "note.doc">]>'
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testAllElementsNamespaceURIs [
+	| document people |
+
+	document := XMLDOMParser parse: self addressBookNamespacesXML.
+
+	people :=
+		document
+			allElementsNamed: 'person'
+			namespaceURI: 'defaultNS'.
+	self
+		assert: people size = 4;
+		assert:
+			(document
+				allElementsNamed: 'person'
+				namespaceURI: 'undeclaredNS') isEmpty.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testAttributeNamespaces [
+	| document  people |
+
+	document := XMLDOMParser parse: self addressBookNamespacesXMLWithPrefixes.
+	people := document allElementsNamed: 'person' namespaceURI: 'personNS'.
+	self assert: people notEmpty.
+	
+	people do: [:each |
+		self
+			assert: each hasAttributes;
+			deny: each attributeNames isEmpty;
+			assert:
+				(each attributeNames allSatisfy: [:name |
+					(each attributeNodeAt: name namespaceURI: 'defaultNS') isNil]);
+			assert: (each attributeNodeAt: 'ps:family-name' namespaceURI: 'personNS') notNil].
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testAttributeNamespacesDisabled [
+	| document  people |
+
+	document :=
+		XMLDOMParser
+			parse: self addressBookNamespacesXMLWithPrefixes
+			usingNamespaces: false.
+	people := document allElementsNamed: 'person'.
+	self assert: people notEmpty.
+	people do: [:each |
+		self
+			assert: each hasAttributes;
+			deny: each attributeNames isEmpty;
+			assert: (each attributeNodeAt: 'ps:family-name' namespaceURI: 'personNS') isNil].
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testAttributesExcludingDeclarations [
+	| document   |
+
+	document := XMLDOMParser parse: self addressBookNamespacesXML.
+	self deny: document root hasAttributes.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testAttributesIncludingDeclarations [
+	| document  root |
+
+	document :=
+		XMLDOMParser
+			parse: self addressBookNamespacesXML
+			usingNamespaces: false.
+	root := document root.
+	self
+		assert: root hasAttributes;
+		assert: (root attributeAt: 'xmlns') = 'defaultNS';
+		assert: (root attributeAt: 'xmlns:book') = 'bookNS';
+		assert: (root attributeAt: 'xmlns:ps') = 'personNS'.
 ]
 
 { #category : #tests }
@@ -39,6 +143,124 @@ XMLDOMParserTest >> testCDATASection [
 ]
 
 { #category : #tests }
+XMLDOMParserTest >> testChangingNamespaces [
+	| document people person |
+
+	document := XMLDOMParser parse: self addressBookNamespacesXML.
+
+	people := document allElementsNamed: 'person' namespaceURI: 'defaultNS'.
+	(person := people third) prefix: 'ps'.
+	self assert:
+		person == (document findElementNamed: 'person' namespaceURI: 'personNS').
+	self assert:
+		(people copyWithout: person) =
+			((document findElementNamed: 'addressbook') nodesSelect: [:each |
+				each isElement and: [each namespaceURI = 'defaultNS']]).
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testCollectingParsedNodes [
+	| document firstPerson allNames |
+	"self debug: #testParsing"
+
+	document := XMLDOMParser parse: self addressBookXML.
+	firstPerson := document findElementNamed: 'person'.
+
+	allNames := #('person' 'contact-info' 'address' 'job-info' 'manager').
+	self
+		assert: (firstPerson allElementsCollect: [:each | each name]) asArray = allNames;
+		assert: (firstPerson allElements collect: [:each | each name]) asArray = allNames;
+		assert: (firstPerson nodesCollect: [:each | each name]) asArray = allNames allButFirst;
+		assert: (firstPerson nodes collect: [:each | each name]) asArray = allNames allButFirst.
+]
+
+{ #category : #'tests - internal subset' }
+XMLDOMParserTest >> testDoctypeDeclaration [
+	| doctype |
+
+	doctype :=
+		(XMLDOMParser
+			parse: self internalSubsetWithDeclarations
+			usingNamespaces: true
+			validation: true
+			externalEntities: false) doctypeDeclaration.
+	self
+		assert: doctype root = 'root';
+		assert: doctype publicID = 'pubid';
+		assert: doctype systemID = 'external.dtd'.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testElementNames [
+	| document root  persons |
+
+	document := XMLDOMParser parse: self addressBookXML.
+	root := document root.
+
+	persons := 	root allNodesSelect: [:each |
+			each isElement
+				and: [(each isNamedAny: #('notperson' 'person'))
+					and: [(each isNamed: 'person')
+						and: [(each name = 'person') and: [each localName = 'person']]]]].
+	self assert: persons size = 4.
+
+	root allElementsNamed: 'person' do: [:p |
+		self assert: (persons includes: p).
+		persons remove: p].
+	self assert: persons isEmpty.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testElementPrefixes [
+	| document  persons |
+
+	document := XMLDOMParser parse: self addressBookNamespacesXMLWithPrefixes.
+	persons := 	document allElementsSelect: [:each |
+		(each isNamedAny: #('notperson' 'ps:person'))
+			and: [(each isNamedAny: #('notperson' 'person'))
+				and: [(each isNamed: 'person')
+					and: [(each isNamed: 'ps:person')
+						and: [(each name = 'ps:person') and: [each localName = 'person']]]]]].
+	self assert: persons size = 4.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testElementPrefixesNamespacesDisabled [
+	| document  persons |
+
+	document :=
+		XMLDOMParser
+			parse: self addressBookNamespacesXMLWithPrefixes
+			usingNamespaces: false.
+	persons := 	document allElementsSelect: [:each |
+		(each isNamedAny: #('notperson' 'ps:person'))
+			and: [(each isNamedAny: #('notperson' 'person'))
+				and: [(each isNamed: 'person')
+					and: [(each isNamed: 'ps:person')
+						and: [(each name = 'ps:person') and: [each localName = 'person']]]]]].
+	self assert: persons size = 4.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testFindElementNamespaceURI [
+	| document people |
+
+	document := XMLDOMParser parse: self addressBookNamespacesXML.
+
+	people := document allElementsNamed: 'person' namespaceURI: 'defaultNS'.
+	self assert:
+		(document
+			findElementNamed: 'person'
+			namespaceURI: 'defaultNS'
+			with: [:each | (each attributeAt: 'employee-number') = 'A7987']) == people last.
+	self assert:
+		(document
+			findElementNamed: 'person'
+			namespaceURI: 'defaultNS'
+			with: [:each | (each attributeAt: 'family-name') = 'Brown']) == people second.
+]
+
+{ #category : #tests }
 XMLDOMParserTest >> testInnerXML [
 	| document contactInfo address1 address2 innerXml |
 
@@ -61,6 +283,263 @@ XMLDOMParserTest >> testInnerXML [
 	self
 		should: [document innerXML: '<root1/><root2/>']
 		raise: XMLWellFormednessException.
+]
+
+{ #category : #'tests - internal subset' }
+XMLDOMParserTest >> testInternalAttributeDeclarations [
+	| doctype firstAttribute secondAttribute |
+
+	doctype :=
+		(XMLDOMParser
+			parse: self internalSubsetWithDeclarations
+			usingNamespaces: true
+			validation: true
+			externalEntities: false) doctypeDeclaration.
+
+	firstAttribute := doctype nodes second.
+	self
+		assert: firstAttribute element = 'root';
+		assert: firstAttribute attribute = 'name';
+		assert: firstAttribute type = 'CDATA';
+		assert: firstAttribute defaultDeclaration = '#IMPLIED'.
+
+	secondAttribute := doctype nodes third.
+	self
+		assert: secondAttribute element = 'root';
+		assert: secondAttribute attribute = 'number';
+		assert: secondAttribute type = '(one |two |three )';
+		assert: secondAttribute defaultDeclaration = '"three"'.
+]
+
+{ #category : #'tests - internal subset' }
+XMLDOMParserTest >> testInternalElementDeclaration [
+	| doctype |
+
+	doctype :=
+		(XMLDOMParser
+			parse: self internalSubsetWithDeclarations
+			usingNamespaces: true
+			validation: true
+			externalEntities: false) doctypeDeclaration.
+	self
+		assert: doctype nodes first element = 'root';
+		assert: doctype nodes first contentModel = '(#PCDATA|one|two)*'.
+]
+
+{ #category : #'tests - internal subset' }
+XMLDOMParserTest >> testInternalGeneralEntityDeclarations [
+	| doctype firstEntity secondEntity |
+
+	doctype :=
+		(XMLDOMParser
+			parse: self internalSubsetWithDeclarations
+			usingNamespaces: true
+			validation: true
+			externalEntities: false) doctypeDeclaration.
+
+	firstEntity := doctype nodes fourth.
+	self
+		deny: firstEntity isParameter;
+		assert: firstEntity name = 'general';
+		assert: firstEntity replacement = 'replacement';
+		assert: firstEntity publicID isEmpty;
+		assert: firstEntity systemID isEmpty;
+		assert: firstEntity ndata isEmpty.
+
+	secondEntity := doctype nodes fifth.
+	self
+		deny: secondEntity isParameter;
+		assert: secondEntity name = 'externalGeneral';
+		assert: secondEntity replacement isEmpty;
+		assert: secondEntity publicID = 'pubid2';
+		assert: secondEntity systemID = 'external1.dtd';
+		assert: secondEntity ndata isEmpty.
+]
+
+{ #category : #'tests - internal subset' }
+XMLDOMParserTest >> testInternalNotationDeclarations [
+	| doctype notation |
+
+	doctype :=
+		(XMLDOMParser
+			parse: self internalSubsetWithDeclarations
+			usingNamespaces: true
+			validation: true
+			externalEntities: false) doctypeDeclaration.
+
+	notation := doctype nodes eighth.
+	self
+		assert: notation name = 'notation';
+		assert: notation publicID isEmpty;
+		assert: notation systemID = 'note.doc'.
+]
+
+{ #category : #'tests - internal subset' }
+XMLDOMParserTest >> testInternalParameterEntityDeclarations [
+	| doctype firstEntity secondEntity |
+
+	doctype :=
+		(XMLDOMParser
+			parse: self internalSubsetWithDeclarations
+			usingNamespaces: true
+			validation: true
+			externalEntities: false) doctypeDeclaration.
+
+	firstEntity := doctype nodes sixth.
+	self
+		assert: firstEntity isParameter;
+		assert: firstEntity name = 'parameter';
+		assert: firstEntity replacement = 'replacement';
+		assert: firstEntity publicID isEmpty;
+		assert: firstEntity systemID isEmpty.
+
+	secondEntity := doctype nodes seventh.
+	self
+		assert: secondEntity isParameter;
+		assert: secondEntity name = 'externalParameter';
+		assert: secondEntity replacement isEmpty;
+		assert: secondEntity publicID isEmpty;
+		assert: secondEntity systemID = 'external2.dtd'.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testNamespaces [
+	| document  |
+
+	document := XMLDOMParser parse: self addressBookNamespacesXMLWithPrefixes.
+	document allElementsDo: [:each |
+		(each == document root or: [each isNamed: 'person'])
+			ifTrue: [
+				self assert: each hasPrefix.
+				each == document root
+					ifTrue: [
+						self
+							assert: each prefix = 'book';
+							assert: each namespaceURI = 'bookNS']
+					ifFalse: [
+						self
+							assert: each prefix = 'ps';
+							assert: each namespaceURI = 'personNS']]
+			ifFalse: [
+				self
+					assert: each namespaceURI = 'defaultNS';
+					deny: each hasPrefix;
+					assert: each prefix isEmpty]].
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testNamespacesDeclaring [
+	| document |
+
+	document := XMLDOMParser parse: self addressBookNamespacesXML.
+	document allElementsDo: [:each |
+		self assert: each hasNamespaces.
+		each == document root
+			ifTrue: [
+				self
+					assert: each declaresDefaultNamespace;
+					assert: (each declaresPrefix: 'ps' uri: 'personNS')]
+			ifFalse: [ 
+				self
+					deny: each declaresDefaultNamespace;
+					deny: (each declaresPrefix: 'ps' uri: 'personNS')].
+		self
+			deny: (each declaresPrefix: 'undeclared' uri: 'undeclaredNS');
+			deny: (each isDeclaredPrefix: 'undeclared');
+			deny: (each isDeclaredPrefix: 'undeclared' uri: 'undeclaredNS');
+			assert: (each isDeclaredPrefix: 'ps');
+			assert: (each isDeclaredPrefix: 'ps' uri: 'personNS')].
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testNamespacesDeclaringDisabled [
+	| document |
+
+	document := XMLDOMParser parse: self addressBookNamespacesXML usingNamespaces: false.
+	document allElementsDo: [:each |
+		self
+			deny: each hasNamespaces;
+			deny: each declaresDefaultNamespace;
+			deny: (each declaresPrefix: 'ps' uri: 'personNS');
+			deny: (each isDeclaredPrefix: 'ps');
+			deny: (each isDeclaredPrefix: 'ps' uri: 'personNS')].
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testNamespacesDisabled [
+	| document |
+
+	document :=
+		XMLDOMParser
+			parse: self addressBookNamespacesXMLWithPrefixes
+			usingNamespaces: false.
+	document allElementsDo: [:each |
+		self assert: each namespaceURI isEmpty.
+		(each == document root or: [each isNamed: 'person'])
+			ifTrue: [
+				self
+					assert: each hasPrefix;
+					assert:
+						each prefix =
+							((each == document root) ifTrue: ['book'] ifFalse: ['ps'])]
+			ifFalse: [
+				self
+					deny: each hasPrefix;
+					assert: each prefix isEmpty]].
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testNamespacesResolving [
+	| document |
+
+	document := XMLDOMParser parse: self addressBookNamespacesXML.
+	document allElementsDo: [:each |
+		self
+			assert: each defaultNamespace = 'defaultNS';
+			assert: (each resolvePrefix: '') = 'defaultNS';
+			assert: (each resolvePrefix: 'book') = 'bookNS';
+			assert: (each resolvePrefix: 'ps') = 'personNS';
+			assert:
+				each namespaceURI =
+					(each hasPrefix
+						ifTrue: [each resolvePrefix: each prefix]
+						ifFalse: [each defaultNamespace])]
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testNamespacesResolvingDisabled [
+	| document |
+
+	document :=
+		XMLDOMParser
+			parse: self addressBookNamespacesXML
+			usingNamespaces: false.
+	document allElementsDo: [:each |
+		self
+			assert: each defaultNamespace isEmpty;
+			assert: (each resolvePrefix: '') isEmpty;
+			assert: (each resolvePrefix: 'book') isEmpty;
+			assert: (each resolvePrefix: 'ps') isEmpty;
+			assert:
+				each namespaceURI =
+					(each hasPrefix
+						ifTrue: [each resolvePrefix: each prefix]
+						ifFalse: [each defaultNamespace])]
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testNodeDetecting [
+	| document people |
+
+	document := XMLDOMParser parse: self addressBookXML.
+	people := document root elementsAt: 'person'.
+	self assert:
+		((document findElementNamed: 'addressbook') nodesDetect: [:each |
+			each isElement and: [(each attributeAt: 'family-name') = 'Brown']]) == people second.
+	self assert:
+		((document findElementNamed: 'addressbook')
+			nodesDetect: [:each | each isElement and: [(each attributeAt: 'unknown') = 'Brown']]
+			ifNone: ['not found']) = 'not found'.
 ]
 
 { #category : #tests }
@@ -104,24 +583,6 @@ XMLDOMParserTest >> testParseDocumentWhile [
 ]
 
 { #category : #tests }
-XMLDOMParserTest >> testParsingAllElementsNamespaceURIs [
-	| document people |
-
-	document := XMLDOMParser parse: self addressBookNamespacesXML.
-
-	people :=
-		document
-			allElementsNamed: 'person'
-			namespaceURI: 'defaultNS'.
-	self
-		assert: people size = 4;
-		assert:
-			(document
-				allElementsNamed: 'person'
-				namespaceURI: 'undeclaredNS') isEmpty.
-]
-
-{ #category : #tests }
 XMLDOMParserTest >> testParsingAttributes [
 	| document firstPerson  |
 
@@ -136,89 +597,6 @@ XMLDOMParserTest >> testParsingAttributes [
 				#('employee-number' 'family-name' 'first-name');
 		assert: firstPerson attributeAssociations asArray =
 			{('employee-number'->'A0000'). ('family-name'->'Gates'). ('first-name'->'Bob').}.
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testParsingChangingNamespaces [
-	| document people person |
-
-	document := XMLDOMParser parse: self addressBookNamespacesXML.
-
-	people := document allElementsNamed: 'person' namespaceURI: 'defaultNS'.
-	(person := people third) prefix: 'ps'.
-	self assert:
-		person == (document findElementNamed: 'person' namespaceURI: 'personNS').
-	self assert:
-		(people copyWithout: person) =
-			((document findElementNamed: 'addressbook') nodesSelect: [:each |
-				each isElement and: [each namespaceURI = 'defaultNS']]).
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testParsingCollecting [
-	| document firstPerson allNames |
-	"self debug: #testParsing"
-
-	document := XMLDOMParser parse: self addressBookXML.
-	firstPerson := document findElementNamed: 'person'.
-
-	allNames := #('person' 'contact-info' 'address' 'job-info' 'manager').
-	self
-		assert: (firstPerson allElementsCollect: [:each | each name]) asArray = allNames;
-		assert: (firstPerson allElements collect: [:each | each name]) asArray = allNames;
-		assert: (firstPerson nodesCollect: [:each | each name]) asArray = allNames allButFirst;
-		assert: (firstPerson nodes collect: [:each | each name]) asArray = allNames allButFirst.
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testParsingElementNames [
-	| document root  persons |
-
-	document := XMLDOMParser parse: self addressBookXML.
-	root := document root.
-
-	persons := 	root allNodesSelect: [:each |
-			each isElement and: [each isNamedAny: #('Person' 'person')]].
-	self assert: persons size = 4.
-
-	root allElementsNamed: 'person' do: [:p |
-		self assert: (persons includes: p).
-		persons remove: p].
-	self assert: persons isEmpty.
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testParsingFindElementNamespaceURI [
-	| document people |
-
-	document := XMLDOMParser parse: self addressBookNamespacesXML.
-
-	people := document allElementsNamed: 'person' namespaceURI: 'defaultNS'.
-	self assert:
-		(document
-			findElementNamed: 'person'
-			namespaceURI: 'defaultNS'
-			with: [:each | (each attributeAt: 'employee-number') = 'A7987']) == people last.
-	self assert:
-		(document
-			findElementNamed: 'person'
-			namespaceURI: 'defaultNS'
-			with: [:each | (each attributeAt: 'family-name') = 'Brown']) == people second.
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testParsingNodeDetecting [
-	| document people |
-
-	document := XMLDOMParser parse: self addressBookXML.
-	people := document root elementsAt: 'person'.
-	self assert:
-		((document findElementNamed: 'addressbook') nodesDetect: [:each |
-			each isElement and: [(each attributeAt: 'family-name') = 'Brown']]) == people second.
-	self assert:
-		((document findElementNamed: 'addressbook')
-			nodesDetect: [:each | each isElement and: [(each attributeAt: 'unknown') = 'Brown']]
-			ifNone: ['not found']) = 'not found'.
 ]
 
 { #category : #tests }
