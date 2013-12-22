@@ -139,9 +139,9 @@ XMLDriverTokenizer >> nextDelimitedBy: aDelimiter and: aSecondDelimiter entityCh
 			or: [nextChar == aDelimiter
 				or: [nextChar == aSecondDelimiter]]]
 			whileFalse: [
+				streamReader next.
 				nextChar == $&
 					ifTrue: [
-						streamReader next.
 						streamReader peek == $#
 							ifTrue: [
 								writeStream nextPut: self nextDecodedCharReference.
@@ -157,7 +157,6 @@ XMLDriverTokenizer >> nextDelimitedBy: aDelimiter and: aSecondDelimiter entityCh
 										writeStream nextPut: $&.
 										isIgnorableWhitespace := false]]]
 					ifFalse: [
-						streamReader next.
 						nextChar == anEntityStartChar
 							ifTrue: [self nextParameterEntityReference]
 							ifFalse: [

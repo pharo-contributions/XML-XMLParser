@@ -6,3 +6,8 @@ Class {
 	#superclass : #XMLNode,
 	#category : #'XML-Parser-Nodes'
 }
+
+{ #category : #testing }
+XMLDeclarationNode >> isDeclaration [
+	^ true
+]

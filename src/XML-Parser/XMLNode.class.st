@@ -72,6 +72,11 @@ XMLNode >> isContentNode [
 ]
 
 { #category : #testing }
+XMLNode >> isDeclaration [
+	^ false
+]
+
+{ #category : #testing }
 XMLNode >> isDocument [
 	^ false
 ]
