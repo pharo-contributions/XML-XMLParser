@@ -724,6 +724,40 @@ XMLParserTest >> testLineEndingsDoNotMatter [
 ]
 
 { #category : #tests }
+XMLParserTest >> testParserLittleDocument [
+
+	| doc |
+	doc := XMLDOMParser parse: 
+'<?xml version="1.0" encoding="UTF-8"?>
+<!--an example-->
+<example:user xmlns:example="urn://example">
+    <username>jsmith</username>
+    <real-name>John Smith</real-name>
+    <age>25</age>
+    <id>101</id>
+</example:user>' readStream.
+]
+
+{ #category : #tests }
+XMLParserTest >> testParserLittleDocumentShowingProblemWithAscii [
+	"self debug: #testParserLittleDocumentShowingProblemWithAscii"
+	| doc |
+	doc := XMLDOMParser parse: '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE score-partwise PUBLIC
+  "-//Recordare//DTD MusicXML 3.0 Partwise//EN"
+  "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="3.0">
+<part-list>
+  <score-part id="P1">
+    <part-name>Music</part-name>
+  </score-part>
+</part-list>
+</score-partwise>
+' readStream.
+	self assert: doc class = XMLDocument
+]
+
+{ #category : #tests }
 XMLParserTest >> testPredefinedEntityReplacement [
 	| document references replacements |
 
