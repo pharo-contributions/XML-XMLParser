@@ -205,7 +205,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.4.5'.
+	spec for: #'common' version: '1.4.6'.
 	
 ]
 
@@ -225,7 +225,7 @@ ConfigurationOfXMLParser >> project [
 { #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #stable>
-	spec for: #common version: '1.4.5'.
+	spec for: #common version: '1.4.6'.
 	spec for: #'pharo1.x' version: '1.2'
 ]
 
@@ -506,6 +506,20 @@ ConfigurationOfXMLParser >> version145: spec [
 			spec
 				package: 'XML-Parser' with: 'XML-Parser-monty.205';
 				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.43'
+				].
+	
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version146: spec [
+	<version: '1.4.6' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #release.
+			spec
+				package: 'XML-Parser' with: 'XML-Parser-monty.205';
+				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-StephaneDucasse.44'
 				].
 	
 ]
