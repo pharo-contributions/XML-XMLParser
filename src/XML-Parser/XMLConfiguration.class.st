@@ -34,6 +34,7 @@ XMLConfiguration >> isValidating [
 { #category : #accessing }
 XMLConfiguration >> isValidating: aBoolean [
 	(isValidating := aBoolean)
+		ifTrue: [self preservesUndeclaredEntityReferences: false]
 		ifFalse: [self requiresDocumentConstraints: false]
 ]
 
@@ -54,7 +55,8 @@ XMLConfiguration >> preservesUndeclaredEntityReferences [
 
 { #category : #accessing }
 XMLConfiguration >> preservesUndeclaredEntityReferences: aBoolean [
-	preservesUndeclaredEntityReferences := aBoolean
+	(preservesUndeclaredEntityReferences := aBoolean)
+		ifTrue: [self isValidating: false]
 ]
 
 { #category : #accessing }

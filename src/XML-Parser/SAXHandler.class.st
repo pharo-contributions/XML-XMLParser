@@ -233,6 +233,8 @@ SAXHandler >> externalEntityResolver [
 
 { #category : #configuration }
 SAXHandler >> externalEntityResolver: anExternalEntityResolver [
+	"See DTDExternalEntityResolver and subclasses"
+
 	self configuration externalEntityResolver: anExternalEntityResolver
 ]
 
@@ -273,9 +275,11 @@ SAXHandler >> isValidating [
 
 { #category : #configuration }
 SAXHandler >> isValidating: aBoolean [
-	"If true and a DTD is present, the document will
-	be validated against it (default).
-	Disabling also disables requiresDTDDeclarations."
+	"If true and document contstraints are present (in a DTD),
+	the document will be checked against them (default).
+
+	Enabling disables preservesUndeclaredEntityReferences.
+	Disabling disables requiresDocumentConstraints."
 
 	self configuration isValidating: aBoolean
 ]
@@ -328,6 +332,10 @@ SAXHandler >> preservesUndeclaredEntityReferences [
 
 { #category : #configuration }
 SAXHandler >> preservesUndeclaredEntityReferences: aBoolean [
+	"If true, references to undeclared entities in content are
+	preserved (not default).
+	Disables validation"
+
 	self configuration preservesUndeclaredEntityReferences: aBoolean
 ]
 
@@ -344,9 +352,9 @@ SAXHandler >> requiresDocumentConstraints [
 
 { #category : #configuration }
 SAXHandler >> requiresDocumentConstraints: aBoolean [
-	"If true, a DTD with element and attribute declarations will be
-	required (not default).
-	Enabling also enables isValidating."
+	"If true, constraints on elements and attributes (in a DTD)
+	will be required (not default).
+	Enables validation."
 
 	self configuration requiresDocumentConstraints: aBoolean
 ]
@@ -358,6 +366,9 @@ SAXHandler >> resolvesExternalEntities [
 
 { #category : #configuration }
 SAXHandler >> resolvesExternalEntities: aBoolean [
+	"When true, external DTDs and parsed entities will be
+	fetched (default)."
+
 	self configuration resolvesExternalEntities: aBoolean
 ]
 
@@ -425,8 +436,10 @@ SAXHandler >> usesNamespaces [
 	^ self configuration usesNamespaces
 ]
 
-{ #category : #accessing }
+{ #category : #configuration }
 SAXHandler >> usesNamespaces: aBoolean [
+	"Namespace checking when true (default)"
+
 	self configuration usesNamespaces: aBoolean
 ]
 
