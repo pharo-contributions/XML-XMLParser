@@ -1296,15 +1296,29 @@ XMLParserTest >> testUnparsedEntities [
 { #category : #tests }
 XMLParserTest >> testValidationAndConstraintsToggle [
 	self assert:
-		((SAXHandler on: '<root/>')
+		((SAXHandler on: '')
 			isValidating: false;
 			requiresDocumentConstraints: true;
 			isValidating).
 	self deny:
-		((SAXHandler on: '<root/>')
+		((SAXHandler on: '')
 			requiresDocumentConstraints: true;
 			isValidating: false;
 			requiresDocumentConstraints).
+]
+
+{ #category : #tests }
+XMLParserTest >> testValidationAndEntityReferenceToggle [
+	self deny:
+		((SAXHandler on: '')
+			isValidating: true;
+			preservesUndeclaredEntityReferences: true;
+			isValidating).
+	self deny:
+		((SAXHandler on: '')
+			preservesUndeclaredEntityReferences: true;
+			isValidating: true;
+			preservesUndeclaredEntityReferences).
 ]
 
 { #category : #tests }
