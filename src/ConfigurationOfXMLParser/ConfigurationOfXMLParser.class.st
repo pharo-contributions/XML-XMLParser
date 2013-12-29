@@ -533,7 +533,7 @@ ConfigurationOfXMLParser >> version147: spec [
 			spec blessing: #release.
 			spec
 				package: 'XML-Parser' with: 'XML-Parser-monty.207';
-				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-StephaneDucasse.45'
+				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.45'
 				].
 	
 ]
