@@ -88,6 +88,7 @@ XMLAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
 
 { #category : #validation }
 XMLAttributeValidator >> validateAttributeValue: aValue [
+	self subclassResponsibility
 ]
 
 { #category : #validation }

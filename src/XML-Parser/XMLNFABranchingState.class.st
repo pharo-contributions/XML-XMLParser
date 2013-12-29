@@ -1,0 +1,44 @@
+Class {
+	#name : #XMLNFABranchingState,
+	#superclass : #XMLNFAState,
+	#instVars : [
+		'leftBranch',
+		'rightBranch'
+	],
+	#category : #'XML-Parser-Validation-DFA'
+}
+
+{ #category : #'instance creation' }
+XMLNFABranchingState class >> branch: aLeftBranch [
+	^ self new
+		setLeftBranch: aLeftBranch
+		rightBranch: nil
+]
+
+{ #category : #'instance creation' }
+XMLNFABranchingState class >> leftBranch: aLeftBranch rightBranch: aRightBranch [
+	^ self new
+		setLeftBranch: aLeftBranch
+		rightBranch: aRightBranch
+]
+
+{ #category : #adding }
+XMLNFABranchingState >> addTo: aCollection [
+	lastAddedTo == aCollection
+		ifFalse: [
+			lastAddedTo := aCollection.
+			leftBranch addTo: aCollection.
+			rightBranch addTo: aCollection.]
+]
+
+{ #category : #connecting }
+XMLNFABranchingState >> connectToState: aState [
+	leftBranch ifNil: [leftBranch := aState].
+	rightBranch ifNil: [rightBranch := aState].
+]
+
+{ #category : #initialization }
+XMLNFABranchingState >> setLeftBranch: aLeftBranch rightBranch: aRightBranch [
+	leftBranch := aLeftBranch.
+	rightBranch := aRightBranch.
+]

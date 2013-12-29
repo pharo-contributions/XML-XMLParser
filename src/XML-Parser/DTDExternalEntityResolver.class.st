@@ -11,7 +11,20 @@ Class {
 	#category : #'XML-Parser-DTD'
 }
 
-{ #category : #resolving }
+{ #category : #private }
+DTDExternalEntityResolver >> clientForURI: aUri [
+	^ self clientForURIs: (Array with: aUri)
+]
+
+{ #category : #private }
+DTDExternalEntityResolver >> clientForURIs: aUriColleciton [
+	^ (aUriColleciton anySatisfy: [:each |
+		self httpClient beginsWithSupportedURLProtocol: each])
+		ifTrue: [self httpClient]
+		ifFalse: [self fileClient]
+]
+
+{ #category : #accessing }
 DTDExternalEntityResolver >> defaultDocumentURI [
 	^ self fileClient
 		pathToFile: 'default'
@@ -20,11 +33,9 @@ DTDExternalEntityResolver >> defaultDocumentURI [
 
 { #category : #accessing }
 DTDExternalEntityResolver >> entityURIFromRelative: aRelativeUri andBase: aBaseUri [
-	^ ((self httpClient beginsWithSupportedURLProtocol: aRelativeUri)
-		ifTrue: [self httpClient]
-		ifFalse: [self fileClient])
-			combineRelative: aRelativeUri
-			withBase: aBaseUri
+	^ (self clientForURIs: (Array with: aBaseUri with: aRelativeUri))
+		combineRelative: aRelativeUri
+		withBase: aBaseUri
 ]
 
 { #category : #accessing }
@@ -49,9 +60,7 @@ DTDExternalEntityResolver >> httpClient: aClient [
 
 { #category : #resolving }
 DTDExternalEntityResolver >> resolveEntity: aUri [
-	^ ((self httpClient beginsWithSupportedURLProtocol: aUri)
-		ifTrue: [self httpClient]
-		ifFalse: [self fileClient]) get: aUri
+	^ (self clientForURI: aUri) get: aUri
 ]
 
 { #category : #private }

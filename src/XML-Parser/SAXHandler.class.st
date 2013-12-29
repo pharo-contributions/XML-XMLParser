@@ -16,7 +16,7 @@ The #on: messages create new parsers on the given input string, stream, URL, or 
 
 There is also #parseDocumentWhile: to stop parsing before the end.
 	(SAXHandlerSubclass on: xml)
-		parseDocumentWhile: [self shouldStopParsing not].
+		parseDocumentWhile: [self shouldKeepParsing].
 
 To parse incrementally, send #parser to an instance to get the underlying XMLParser object and send it #parseToken repeatedly:
 	(handler := SAXHandlerSubclass on: xml)
@@ -33,9 +33,7 @@ Class {
 	#instVars : [
 		'input',
 		'documentUri',
-		'configuration',
-		'elementNester',
-		'scopeAllocator'
+		'configuration'
 	],
 	#category : #'XML-Parser'
 }
@@ -150,19 +148,8 @@ SAXHandler >> configurationClass [
 	^ XMLConfiguration
 ]
 
-{ #category : #accessing }
-SAXHandler >> currentElement [
-	^ self elementNester currentElement
-]
-
-{ #category : #accessing }
-SAXHandler >> currentScope [
-	^ self scopeAllocator currentScope
-]
-
-{ #category : #accessing }
-SAXHandler >> currentScope: aScope [
-	self scopeAllocator currentScope: aScope
+{ #category : #private }
+SAXHandler >> currentScope: aNamespaceScope [
 ]
 
 { #category : #private }
@@ -185,16 +172,6 @@ SAXHandler >> driverClass [
 { #category : #declaration }
 SAXHandler >> elementDeclaration: aName contentModel: aContentModel [
 
-]
-
-{ #category : #private }
-SAXHandler >> elementNester [
-	^ elementNester ifNil: [elementNester := self elementNesterClass new]
-]
-
-{ #category : #private }
-SAXHandler >> elementNesterClass [
-	^ XMLWellFormedElementNester
 ]
 
 { #category : #lexical }
@@ -249,12 +226,12 @@ SAXHandler >> endPrefixMapping: aPrefix [
 	endPrefixMapping(java.lang.String prefix)."
 ]
 
-{ #category : #accessing }
+{ #category : #configuration }
 SAXHandler >> externalEntityResolver [
 	^ self configuration externalEntityResolver
 ]
 
-{ #category : #accessing }
+{ #category : #configuration }
 SAXHandler >> externalEntityResolver: anExternalEntityResolver [
 	self configuration externalEntityResolver: anExternalEntityResolver
 ]
@@ -273,7 +250,7 @@ SAXHandler >> ignorableWhitespace: aString [
 	ignorableWhitespace(char[] ch, int start, int length)."
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 SAXHandler >> input [
 	^ input
 ]
@@ -289,12 +266,12 @@ SAXHandler >> input: aStringOrStream documentURI: aUri [
 	documentUri := aUri.
 ]
 
-{ #category : #testing }
+{ #category : #configuration }
 SAXHandler >> isValidating [
 	^ self configuration isValidating
 ]
 
-{ #category : #accessing }
+{ #category : #configuration }
 SAXHandler >> isValidating: aBoolean [
 	"If true and a DTD is present, the document will
 	be validated against it (default).
@@ -344,12 +321,12 @@ SAXHandler >> parsingResult [
 	^ self
 ]
 
-{ #category : #testing }
+{ #category : #configuration }
 SAXHandler >> preservesUndeclaredEntityReferences [
 	^ self configuration preservesUndeclaredEntityReferences
 ]
 
-{ #category : #accessing }
+{ #category : #configuration }
 SAXHandler >> preservesUndeclaredEntityReferences: aBoolean [
 	self configuration preservesUndeclaredEntityReferences: aBoolean
 ]
@@ -360,12 +337,12 @@ SAXHandler >> processingInstruction: aTarget data: aDataString [
 	processingInstruction(java.lang.String target, java.lang.String data)."
 ]
 
-{ #category : #testing }
+{ #category : #configuration }
 SAXHandler >> requiresDocumentConstraints [
 	^ self configuration requiresDocumentConstraints
 ]
 
-{ #category : #accessing }
+{ #category : #configuration }
 SAXHandler >> requiresDocumentConstraints: aBoolean [
 	"If true, a DTD with element and attribute declarations will be
 	required (not default).
@@ -374,24 +351,14 @@ SAXHandler >> requiresDocumentConstraints: aBoolean [
 	self configuration requiresDocumentConstraints: aBoolean
 ]
 
-{ #category : #testing }
+{ #category : #configuration }
 SAXHandler >> resolvesExternalEntities [
 	^ self configuration resolvesExternalEntities
 ]
 
-{ #category : #accessing }
+{ #category : #configuration }
 SAXHandler >> resolvesExternalEntities: aBoolean [
 	self configuration resolvesExternalEntities: aBoolean
-]
-
-{ #category : #accessing }
-SAXHandler >> rootElement [
-	^ self elementNester rootElement
-]
-
-{ #category : #private }
-SAXHandler >> scopeAllocator [
-	^ scopeAllocator ifNil: [scopeAllocator := XMLNamespaceScopeAllocator new]
 ]
 
 { #category : #content }
@@ -453,7 +420,7 @@ SAXHandler >> startPrefixMapping: aPrefix uri: aUri [
 	startPrefixMapping(java.lang.String prefix, java.lang.String uri)."
 ]
 
-{ #category : #testing }
+{ #category : #configuration }
 SAXHandler >> usesNamespaces [
 	^ self configuration usesNamespaces
 ]

@@ -18,13 +18,9 @@ Class {
 
 { #category : #'instance creation' }
 XMLDOMParser class >> on: aStringOrStream withRootNode: aRootNode [
-	| parser |
-
-	(parser := self on: aStringOrStream)
-		pushNode: aRootNode.
-	aRootNode isElement
-		ifTrue: [parser elementNester rootElement: aRootNode name].
-	^ parser.
+	^ (self on: aStringOrStream)
+		pushNode: aRootNode;
+		yourself
 ]
 
 { #category : #declaration }
@@ -54,6 +50,11 @@ XMLDOMParser >> comment: aComment [
 { #category : #private }
 XMLDOMParser >> configurationClass [
 	^ XMLDOMConfiguration
+]
+
+{ #category : #private }
+XMLDOMParser >> currentScope: aNamespaceScope [
+	self topNode setNamespaceScope: aNamespaceScope
 ]
 
 { #category : #accessing }
@@ -117,22 +118,22 @@ XMLDOMParser >> isInCDataSection [
 	^ isInCDataSection ifNil: [isInCDataSection := false]
 ]
 
-{ #category : #accessing }
+{ #category : #configuring }
 XMLDOMParser >> nodeFactory [
 	^ self configuration nodeFactory
 ]
 
-{ #category : #accessing }
+{ #category : #configuring }
 XMLDOMParser >> nodeFactory: aNodeFactory [
 	self configuration nodeFactory: aNodeFactory
 ]
 
-{ #category : #accessing }
+{ #category : #configuring }
 XMLDOMParser >> nodeListClass [
 	^ self configuration nodeListClass
 ]
 
-{ #category : #accessing }
+{ #category : #configuring }
 XMLDOMParser >> nodeListClass: aClass [
 	self configuration nodeListClass: aClass
 ]
@@ -169,6 +170,23 @@ XMLDOMParser >> parameterEntityDeclaration: aName replacement: aReplacement [
 ]
 
 { #category : #parsing }
+XMLDOMParser >> parser [
+	| parser |
+
+	parser := super parser.
+	(self nodeStack notEmpty and: [self topNode isElement])
+		ifTrue: [
+			self
+				configuration: self topNode configuration;
+				document: self topNode document.
+			parser driver
+				rootElement: self topNode name;
+				currentScope: self topNode namespaceScope].
+
+	^ parser.
+]
+
+{ #category : #parsing }
 XMLDOMParser >> parsingResult [
 	^ self document
 ]
@@ -178,22 +196,22 @@ XMLDOMParser >> popNode [
 	^ self nodeStack removeLast
 ]
 
-{ #category : #testing }
+{ #category : #configuring }
 XMLDOMParser >> preservesCDataNodes [
 	^ self configuration preservesCDataNodes
 ]
 
-{ #category : #accessing }
+{ #category : #configuring }
 XMLDOMParser >> preservesCDataNodes: aBoolean [
 	self configuration preservesCDataNodes: aBoolean
 ]
 
-{ #category : #testing }
+{ #category : #configuring }
 XMLDOMParser >> preservesCommentNodes [
 	^ self configuration preservesCommentNodes
 ]
 
-{ #category : #accessing }
+{ #category : #configuring }
 XMLDOMParser >> preservesCommentNodes: aBoolean [
 	self configuration preservesCommentNodes: aBoolean
 ]
@@ -252,8 +270,7 @@ XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName
 				qualifiedName: aQualifiedName
 				prefix: aPrefix
 				localName: aLocalName
-				attributes: aDictionary
-				namespaceScope: self currentScope)
+				attributes: aDictionary)
 ]
 
 { #category : #private }

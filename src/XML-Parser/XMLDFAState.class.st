@@ -1,62 +1,84 @@
+"
+This class is a DFA state made by grouping one or more NFA states.
+"
 Class {
 	#name : #XMLDFAState,
 	#superclass : #XMLFAState,
 	#instVars : [
 		'nfaStates',
-		'cachedDfaStates'
+		'cachedDfaStates',
+		'transitions'
 	],
 	#category : #'XML-Parser-Validation-DFA'
 }
 
 { #category : #'instance creation' }
-XMLDFAState class >> nfaStates: anNfaStateCollection cachedDFAStates: aDfaStateCache isAccepting: aBoolean [
+XMLDFAState class >> nfaStates: anNfaStateSet [
+	^ self
+		nfaStates: anNfaStateSet
+		cachedDFAStates: Dictionary new
+]
+
+{ #category : #'instance creation' }
+XMLDFAState class >> nfaStates: anNfaStateSet cachedDFAStates: aDfaStateCache [
 	^ self new
-		setNFAStates: anNfaStateCollection
+		setNFAStates: anNfaStateSet
 		cachedDFAStates: aDfaStateCache
-		isAccepting: aBoolean
+]
+
+{ #category : #private }
+XMLDFAState >> addToCache [
+	cachedDfaStates
+		at: nfaStates
+		ifAbsentPut: [self]
+]
+
+{ #category : #enumerating }
+XMLDFAState >> detectNextStateMatching: aMatcher [
+	^ self detectNextStateMatching: aMatcher ifNone: [nil]
+]
+
+{ #category : #enumerating }
+XMLDFAState >> detectNextStateMatching: aMatcher ifNone: aNoneBlock [
+	^ (self transitions
+		at: aMatcher
+		ifAbsentPut: [self dfaStateMatching: aMatcher])
+			ifNil: [aNoneBlock value]
 ]
 
 { #category : #accessing }
-XMLDFAState >> initializeDFAStateTransitions [
-	| matchersAndTransitionStates matchersWithAcceptingTransitionStates dfaState |
+XMLDFAState >> dfaStateMatching: aMatcher [
+	| matchingNfaStates |
 
-	matchersAndTransitionStates := Dictionary new.
-	matchersWithAcceptingTransitionStates := Set new.
+	matchingNfaStates := XMLNFAStateSet new.
 	nfaStates do: [:state |
-		state transitionsDo: [:transition |
-			(matchersAndTransitionStates
-				at: transition matcher
-				ifAbsentPut: [IdentitySet new: 3]) add: transition nextState.
-			transition nextState isAccepting
-				ifTrue: [matchersWithAcceptingTransitionStates add: transition matcher]]].
+		(state matches: aMatcher)
+			ifTrue: [state nextState addTo: matchingNfaStates]].
+	matchingNfaStates
+		ifEmpty: [ ^ nil].
 
-	matchersAndTransitionStates keysAndValuesDo: [:matcher :transitionStates |
-		dfaState :=
-			cachedDfaStates
-				at: transitionStates
-				ifAbsentPut: [
-					XMLDFAState
-						nfaStates: transitionStates
-						cachedDFAStates: cachedDfaStates
-						isAccepting: (matchersWithAcceptingTransitionStates includes: matcher)].
-		self addTransition:
-			(XMLFATransition
-				matcher: matcher
-				nextState: dfaState)].
+	^ cachedDfaStates
+		at: matchingNfaStates
+		ifAbsent: [
+			self class
+				nfaStates: matchingNfaStates
+				cachedDFAStates: cachedDfaStates].
+]
+
+{ #category : #testing }
+XMLDFAState >> isAccepting [
+	^ nfaStates isAccepting
 ]
 
 { #category : #initialization }
-XMLDFAState >> setNFAStates: anNfaStateCollection cachedDFAStates: aDfaStateCache isAccepting: aBoolean [
-	nfaStates := anNfaStateCollection.
+XMLDFAState >> setNFAStates: anNfaStateSet cachedDFAStates: aDfaStateCache [
+	nfaStates := anNfaStateSet.
 	cachedDfaStates := aDfaStateCache.
-	 isAccepting := aBoolean.
+
+	self addToCache.
 ]
 
 { #category : #accessing }
 XMLDFAState >> transitions [
-	^ transitions
-		ifNil: [
-			transitions := OrderedCollection new.
-			self initializeDFAStateTransitions.
-			transitions].
+	^ transitions ifNil: [transitions := Dictionary new]
 ]

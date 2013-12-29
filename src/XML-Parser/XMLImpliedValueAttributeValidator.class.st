@@ -6,5 +6,4 @@ Class {
 
 { #category : #validation }
 XMLImpliedValueAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
-	anAttributeDictionary at: attribute ifAbsentPut: ['']
 ]

@@ -24,7 +24,7 @@ Class {
 	#category : #'XML-Parser'
 }
 
-{ #category : #initialization }
+{ #category : #'class initialization' }
 XMLNestedStreamReader class >> initialize [
 	"self initialize"
 

@@ -6,6 +6,8 @@ Class {
 	#superclass : #XMLParserDriver,
 	#instVars : [
 		'saxHandler',
+		'elementNester',
+		'scopeAllocator',
 		'dtd',
 		'validator'
 	],
@@ -18,10 +20,21 @@ SAXDriver class >> saxHandler: aHandler [
 ]
 
 { #category : #accessing }
+SAXDriver >> currentElement [
+	^ self elementNester currentElement
+]
+
+{ #category : #accessing }
 SAXDriver >> currentScope [
 	^ self usesNamespaces
 		ifTrue: [self scopeAllocator currentScope]
 		ifFalse: [nil]
+]
+
+{ #category : #accessing }
+SAXDriver >> currentScope: aNamespaceScope [
+	self usesNamespaces
+		ifTrue: [self scopeAllocator currentScope: aNamespaceScope]
 ]
 
 { #category : #namespaces }
@@ -41,9 +54,14 @@ SAXDriver >> dtd [
 	^ dtd ifNil: [dtd := DTDDoctypeDefinition new]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 SAXDriver >> elementNester [
-	^ saxHandler elementNester
+	^ elementNester ifNil: [elementNester := self elementNesterClass new]
+]
+
+{ #category : #private }
+SAXDriver >> elementNesterClass [
+	^ XMLWellFormedElementNester
 ]
 
 { #category : #'element nesting' }
@@ -310,6 +328,9 @@ SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary nam
 					ifFalse: [''])
 			localName: localPart
 			attributes: anAttributeDictionary].
+
+	self usesNamespaces
+		ifTrue: [self saxHandler currentScope: self scopeAllocator currentScope].
 ]
 
 { #category : #'handling tokens' }
@@ -377,13 +398,23 @@ SAXDriver >> resolvesExternalEntities [
 ]
 
 { #category : #accessing }
+SAXDriver >> rootElement [
+	^ self elementNester rootElement
+]
+
+{ #category : #accessing }
+SAXDriver >> rootElement: anElementName [
+	self elementNester rootElement: anElementName
+]
+
+{ #category : #accessing }
 SAXDriver >> saxHandler [
 	^ saxHandler
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 SAXDriver >> scopeAllocator [
-	^ saxHandler scopeAllocator
+	^ scopeAllocator ifNil: [scopeAllocator := XMLNamespaceScopeAllocator new]
 ]
 
 { #category : #initialization }

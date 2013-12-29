@@ -5,8 +5,8 @@ Class {
 	#name : #DTDContentModelParser,
 	#superclass : #Object,
 	#instVars : [
-		'contentModel',
-		'element'
+		'element',
+		'contentModel'
 	],
 	#category : #'XML-Parser-DTD'
 }

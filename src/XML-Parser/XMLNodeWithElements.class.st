@@ -261,10 +261,9 @@ XMLNodeWithElements >> includesElement: aName [
 
 { #category : #private }
 XMLNodeWithElements >> innerXMLParserOn: aStringOrStream [
-	^ (self configuration parserHandlerClass
+	^ self configuration parserHandlerClass
 		on: aStringOrStream
-		withRootNode: self)
-		configuration: self configuration.
+		withRootNode: self
 ]
 
 { #category : #testing }

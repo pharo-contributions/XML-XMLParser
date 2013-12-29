@@ -4,6 +4,11 @@ Class {
 	#category : #'XML-Parser-HTML'
 }
 
+{ #category : #private }
+HTMLDriver >> elementNesterClass [
+	^ HTMLElementNester
+]
+
 { #category : #'element nesting' }
 HTMLDriver >> endNestingOfElement: anElementName [
 	((self elementNester isVoidElement: anElementName)

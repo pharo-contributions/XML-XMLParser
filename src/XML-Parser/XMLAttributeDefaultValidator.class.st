@@ -24,4 +24,5 @@ XMLAttributeDefaultValidator >> setAttribute: anAttribute defaultValue: aDefault
 
 { #category : #validation }
 XMLAttributeDefaultValidator >> validateAttributeDefaultIn: anAttributeDictionary [
+	self subclassResponsibility
 ]

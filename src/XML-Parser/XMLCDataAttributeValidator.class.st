@@ -8,3 +8,8 @@ Class {
 XMLCDataAttributeValidator >> shouldFurtherNormalizeAttributeValue [
 	^ false
 ]
+
+{ #category : #validation }
+XMLCDataAttributeValidator >> validateAttributeValue: aValue [
+	
+]

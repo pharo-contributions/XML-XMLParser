@@ -11,8 +11,3 @@ Class {
 HTMLHandler >> driverClass [
 	^ HTMLDriver
 ]
-
-{ #category : #private }
-HTMLHandler >> elementNesterClass [
-	^ HTMLElementNester
-]

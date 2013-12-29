@@ -64,13 +64,12 @@ XMLElement class >> named: aLocalName [
 ]
 
 { #category : #private }
-XMLElement class >> qualifiedName: aQualifiedName prefix: aPrefix localName: aLocalName attributes: anAttributeDictionary namespaceScope: aNamespaceScope [
+XMLElement class >> qualifiedName: aQualifiedName prefix: aPrefix localName: aLocalName attributes: anAttributeDictionary [
 	^ self new
 		setQualifiedName: aQualifiedName
 		prefix: aPrefix
 		localName: aLocalName
 		attributes: anAttributeDictionary
-		namespaceScope: aNamespaceScope
 ]
 
 { #category : #accessing }
@@ -299,12 +298,6 @@ XMLElement >> inheritNamespacesFrom: anElement [
 		each namespaceScope inheritMappingsFrom: anElement namespaceScope]
 ]
 
-{ #category : #private }
-XMLElement >> innerXMLParserOn: aStringOrStream [
-	^ (super innerXMLParserOn: aStringOrStream)
-		currentScope: self namespaceScope
-]
-
 { #category : #namespaces }
 XMLElement >> isDeclaredPrefix: aPrefix [
 	^ self namespaceScope includesPrefix: aPrefix
@@ -461,7 +454,12 @@ XMLElement >> setAttributes: aDictionaryOrArray [
 ]
 
 { #category : #initialization }
-XMLElement >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocalName attributes: anAttributeDictionary namespaceScope: aNamespaceScope [
+XMLElement >> setNamespaceScope: aNamespaceScope [
+	namespaceScope := aNamespaceScope
+]
+
+{ #category : #initialization }
+XMLElement >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocalName attributes: anAttributeDictionary [
 	"This is used instead of using #nodeName's ifNil: initialization to avoid
 	sending a name-changed notification"
 	(name := XMLNodeName new)
@@ -475,8 +473,6 @@ XMLElement >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocal
 			(attributes := XMLAttributeList new: anAttributeDictionary size)
 				setFromDictionary: anAttributeDictionary andElement: self;
 				addObserver: self].
-
-	namespaceScope := aNamespaceScope.
 ]
 
 { #category : #accessing }

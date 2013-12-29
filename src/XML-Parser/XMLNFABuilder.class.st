@@ -11,18 +11,20 @@ Class {
 }
 
 { #category : #building }
-XMLNFABuilder >> applyAlternation [
-	|  alternationFragment  branchFragment |
+XMLNFABuilder >> applyBranch [
+	| branchState leftFragment  rightFragment |
 
-	branchFragment := self popFragment.
-	alternationFragment := self topFragment.
+	leftFragment := self popFragment.
+	rightFragment := self popFragment.
+	branchState :=
+		XMLNFABranchingState
+			leftBranch: leftFragment firstState
+			rightBranch: rightFragment firstState.
 
-	branchFragment unconnectedTerminalState
-		redirectIncomingTransitionsTo: alternationFragment unconnectedTerminalState.
-	branchFragment firstState addTransitionsTo: alternationFragment firstState.
-	alternationFragment hasTerminalFirstState:
-		(alternationFragment hasTerminalFirstState
-			or: [branchFragment hasTerminalFirstState]).
+	self pushFragment:
+		(XMLNFAFragment
+			firstState: branchState
+			terminalStates: (leftFragment combinedTerminalStatesFrom: rightFragment)).
 ]
 
 { #category : #building }
@@ -32,51 +34,61 @@ XMLNFABuilder >> applyConcatenation [
 	secondFragment := self popFragment.
 	firstFragment := self popFragment.
 
-	secondFragment hasTerminalFirstState
-		ifTrue: [
-			firstFragment unconnectedTerminalState
-				copyAndRedirectIncomingTransitionsTo:
-					secondFragment unconnectedTerminalState].
-	firstFragment unconnectedTerminalState
-		redirectIncomingTransitionsTo: secondFragment firstState.
-	firstFragment unconnectedTerminalState:
-		secondFragment unconnectedTerminalState.
+	firstFragment
+		connectToFragment: secondFragment;
+		terminalStates: secondFragment terminalStates.
 
 	self pushFragment: firstFragment.
 ]
 
 { #category : #building }
 XMLNFABuilder >> applyOptional [
-	self topFragment hasTerminalFirstState: true
+	| optionalFragment branchingState |
+
+	optionalFragment := self popFragment.
+	branchingState :=
+		XMLNFABranchingState branch: optionalFragment firstState.
+
+	self pushFragment:
+		(XMLNFAFragment
+			firstState: branchingState
+			terminalStates: (optionalFragment terminalStatesWith: branchingState))
 ]
 
 { #category : #building }
 XMLNFABuilder >> applyPlus [
-	| plusFragment |
+	| plusFragment branchState |
 
 	plusFragment := self topFragment.
-	plusFragment unconnectedTerminalState
-		copyAndRedirectIncomingTransitionsTo: plusFragment firstState.
+	branchState := XMLNFABranchingState branch: plusFragment firstState.
+	plusFragment
+		connectToState: branchState;
+		terminalState: branchState.
 ]
 
 { #category : #building }
 XMLNFABuilder >> applyStar [
-	self
-		applyPlus;
-		applyOptional
+	| branchState starFragment |
+
+	starFragment := self popFragment.
+	branchState := XMLNFABranchingState branch: starFragment firstState.
+	starFragment connectToState: branchState.
+
+	self pushFragment:
+		(XMLNFAFragment
+			firstState: branchState
+			terminalState: branchState)
 ]
 
 { #category : #building }
-XMLNFABuilder >> buildNFAFromFragments [
+XMLNFABuilder >> firstStateOfAcceptingNFA [
 	| firstFragment |
 
 	[self totalFragments > 1]
 		whileTrue: [self applyConcatenation].
 
 	firstFragment := self popFragment.
-	firstFragment hasTerminalFirstState
-		ifTrue: [firstFragment firstState isAccepting: true].
-	firstFragment unconnectedTerminalState isAccepting: true.
+	firstFragment connectToState: XMLNFAAcceptingState new.
 
 	^ firstFragment firstState.
 ]
@@ -103,19 +115,13 @@ XMLNFABuilder >> pushFragment: aFragment [
 
 { #category : #building }
 XMLNFABuilder >> pushMatcher: aMatcher [
-	| firstState transition terminalState |
+	| firstState |
 
-	terminalState := XMLNFAState new.
-	transition :=
-		XMLNFATransition
-			matcher: aMatcher
-			nextState: terminalState.
-	firstState := XMLNFAState transition: transition.
-
+	firstState := XMLNFAMatchingState matcher: aMatcher.
 	self pushFragment:
 		(XMLNFAFragment
 			firstState: firstState
-			terminalState: terminalState).
+			terminalState: firstState).
 ]
 
 { #category : #building }

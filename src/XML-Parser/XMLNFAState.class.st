@@ -1,58 +1,38 @@
+"
+This is a base class for NFA states.
+"
 Class {
 	#name : #XMLNFAState,
 	#superclass : #XMLFAState,
 	#instVars : [
-		'incomingTransitions'
+		'lastAddedTo'
 	],
 	#category : #'XML-Parser-Validation-DFA'
 }
 
-{ #category : #transitions }
-XMLNFAState >> addTransition: aTransition [
-	super addTransition: aTransition.
-	aTransition previousState: self.
-	
+{ #category : #adding }
+XMLNFAState >> addTo: aCollection [
+	lastAddedTo == aCollection
+		ifFalse: [
+			lastAddedTo := aCollection.
+			aCollection add: self]
 ]
 
 { #category : #converting }
-XMLNFAState >> asDFA [
-	| cachedDfaStates |
+XMLNFAState >> asDFAState [
+	| nfaStates |
 
-	"each key is an IdentitySet of NFA states and each value is a DFA state"
-	cachedDfaStates := Dictionary new.
+	nfaStates := XMLNFAStateSet new.
+	self addTo: nfaStates.
 
-	^ XMLDFAState
-		nfaStates: (Array with: self)
-		cachedDFAStates: cachedDfaStates
-		isAccepting: self isAccepting.
+	^ XMLDFAState nfaStates: nfaStates.
 ]
 
-{ #category : #transitions }
-XMLNFAState >> copyAndRedirectIncomingTransitionsTo: aState [
-	self previousStatesDo: [:each |
-		each transitions copy do: [:transition |
-			each addTransition:
-				(transition class
-					matcher: transition matcher
-					nextState: aState)]]
+{ #category : #connecting }
+XMLNFAState >> connectToState: aState [
 ]
 
-{ #category : #transitions }
-XMLNFAState >> incomingTransition: aTransition [
-	self incomingTransitions addIfNotPresent: aTransition
-]
-
-{ #category : #accessing }
-XMLNFAState >> incomingTransitions [
-	^ incomingTransitions ifNil: [incomingTransitions := OrderedCollection new]
-]
-
-{ #category : #transitions }
-XMLNFAState >> previousStatesDo: aBlock [
-	self incomingTransitions do: [:each | aBlock value: each previousState]
-]
-
-{ #category : #transitions }
-XMLNFAState >> redirectIncomingTransitionsTo: aState [
-	self incomingTransitions copy do: [:each | each nextState: aState]
+{ #category : #testing }
+XMLNFAState >> matches: anObject [
+	^ false
 ]

@@ -1,26 +1,42 @@
+"
+This class parses a content model using postfix conversion and an NFABuilder to build a NFA, which it converts to a DFA.
+"
 Class {
 	#name : #DTDDFAContentModelParser,
 	#superclass : #DTDContentModelParser,
 	#instVars : [
 		'contentModelStream',
 		'operatorStack',
-		'nfaBuilder'
+		'nfaBuilder',
+		'nameStream'
+	],
+	#classVars : [
+		'SpecialCharacters'
 	],
 	#category : #'XML-Parser-DTD'
 }
 
-{ #category : #parsing }
+{ #category : #'class initialization' }
+DTDDFAContentModelParser class >> initialize [
+	"self initialize"
+
+	super initialize.
+
+	(SpecialCharacters := CharacterSet new) addAll: '|,?*+()'
+]
+
+{ #category : #evaluation }
 DTDDFAContentModelParser >> applyBinaryOperatorOnStack [
 	nfaBuilder totalFragments > 1
 		ifFalse: [self errorMissingOperand].
 
 	operatorStack last == $|
-		ifTrue: [nfaBuilder applyAlternation]
+		ifTrue: [nfaBuilder applyBranch]
 		ifFalse: [nfaBuilder applyConcatenation].
 	operatorStack removeLast.
 ]
 
-{ #category : #parsing }
+{ #category : #evaluation }
 DTDDFAContentModelParser >> applyUnaryOperator: aCharacter [
 	nfaBuilder hasFragments
 		ifFalse: [self errorMissingOperand].
@@ -61,45 +77,68 @@ DTDDFAContentModelParser >> isBinaryOperator: aFirstOperator higherPrecedenceTha
 
 { #category : #testing }
 DTDDFAContentModelParser >> isOperatorOrParen: aCharacter [
-	^ '|,?*+()' includes: aCharacter
+	^ SpecialCharacters includes: aCharacter
 ]
 
 { #category : #parsing }
 DTDDFAContentModelParser >> parse [
-	| nextChar |
-
 	contentModelStream := contentModel readStream.
+	nameStream := WriteStream on: (String new: 16).
 	nfaBuilder := XMLNFABuilder new.
 	operatorStack := OrderedCollection new.
+
 	[contentModelStream atEnd]
 		whileFalse: [
 			(self isOperatorOrParen: contentModelStream peek)
-				ifTrue: [ 
-					nextChar := contentModelStream next.
-					(self isBinaryOperator: nextChar)
-						ifTrue: [
-							self hasOperatorOnStack
-								ifTrue: [
-									(self isBinaryOperator: nextChar
-										higherPrecedenceThan: operatorStack last)
-									ifFalse: [self applyBinaryOperatorOnStack]].
-							operatorStack addLast: nextChar]
-					ifFalse: [
-						nextChar == $)
-							ifTrue: [self popParenthesizedOperators]
-							ifFalse: [
-								nextChar == $(
-									ifTrue: [operatorStack addLast: nextChar]
-									ifFalse: [self applyUnaryOperator: nextChar]]]]
-				ifFalse: [self pushElementMatcher]].
+				ifTrue: [self parseOperatorOrParen]
+				ifFalse: [self parseElementName]].
 	self popRemainingOperators.
 
 	^ XMLDFAElementValidator
 		element: element
-		dfa: nfaBuilder buildNFAFromFragments asDFA.
+		dfa: nfaBuilder firstStateOfAcceptingNFA asDFAState.
 ]
 
 { #category : #parsing }
+DTDDFAContentModelParser >> parseElementName [
+	| matcher nextChar |
+
+	nameStream reset.
+	[contentModelStream atEnd
+		or: [(nextChar := contentModelStream peek) isSeparator
+			or: [self isOperatorOrParen: nextChar]]]
+		whileFalse: [nameStream nextPut: contentModelStream next].
+	contentModelStream skipSeparators.
+
+	matcher := nameStream contents.
+	matcher = '#PCDATA'
+		ifTrue: [XMLValidationException signal: 'Unexpected #PCDATA in content model'].
+
+	nfaBuilder pushMatcher: matcher.
+]
+
+{ #category : #parsing }
+DTDDFAContentModelParser >> parseOperatorOrParen [ 
+	| nextChar |
+
+	nextChar := contentModelStream next.
+	nextChar == $)
+		ifTrue: [^ self popParenthesizedOperators].
+	nextChar == $(
+		ifTrue: [^ self startParenthesizedOperators].
+
+	(self isBinaryOperator: nextChar)
+		ifTrue: [
+			self hasOperatorOnStack
+				ifTrue: [
+					(self isBinaryOperator: nextChar
+						higherPrecedenceThan: operatorStack last)
+						ifFalse: [self applyBinaryOperatorOnStack]].
+			operatorStack addLast: nextChar]
+		ifFalse: [self applyUnaryOperator: nextChar].
+]
+
+{ #category : #evaluation }
 DTDDFAContentModelParser >> popParenthesizedOperators [
 	[operatorStack notEmpty]
 		whileTrue: [
@@ -108,10 +147,11 @@ DTDDFAContentModelParser >> popParenthesizedOperators [
 					operatorStack removeLast.
 					^ self]
 				ifFalse: [self applyBinaryOperatorOnStack]].
+
 	self errorMismatchedParens.
 ]
 
-{ #category : #parsing }
+{ #category : #evaluation }
 DTDDFAContentModelParser >> popRemainingOperators [
 	[operatorStack notEmpty]
 		whileTrue: [
@@ -123,20 +163,7 @@ DTDDFAContentModelParser >> popRemainingOperators [
 		ifFalse: [self errorMissingOperand].
 ]
 
-{ #category : #parsing }
-DTDDFAContentModelParser >> pushElementMatcher [
-	| element nextChar writeStream |
-
-	writeStream := (String new: 32) writeStream.
-	[contentModelStream atEnd
-		or: [(nextChar := contentModelStream peek) isSeparator
-			or: [self isOperatorOrParen: nextChar]]]
-		whileFalse: [writeStream nextPut: contentModelStream next].
-	contentModelStream skipSeparators.
-
-	element := writeStream contents.
-	element = '#PCDATA'
-		ifTrue: [XMLValidationException signal: 'Unexpected #PCDATA in content model'].
-
-	nfaBuilder pushMatcher: (DTDElementMatcher element: element).
+{ #category : #evaluation }
+DTDDFAContentModelParser >> startParenthesizedOperators [
+	operatorStack addLast: $(
 ]

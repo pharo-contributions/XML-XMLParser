@@ -38,14 +38,13 @@ XMLDFAElementValidator >> setElement: aName dfa: aDfa [
 
 { #category : #validation }
 XMLDFAElementValidator >> validatePCData: aString [
-	currentState := currentState
-		detectNextStateMatching: [:matcher | matcher matchesPCData: aString]
-		ifNone: [self errorUnexpectedPCData: aString]
+	self errorUnexpectedPCData: aString
 ]
 
 { #category : #validation }
 XMLDFAElementValidator >> validateStartTag: aName [
-	currentState := currentState
-		detectNextStateMatching: [:matcher | matcher matchesElement: aName]
-		ifNone: [self errorUnexpectedElement: aName]
+	currentState :=
+		currentState
+			detectNextStateMatching: aName
+			ifNone: [self errorUnexpectedElement: aName]
 ]

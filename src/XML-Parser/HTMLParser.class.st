@@ -14,11 +14,6 @@ HTMLParser >> driverClass [
 	^ HTMLDriver
 ]
 
-{ #category : #private }
-HTMLParser >> elementNesterClass [
-	^ HTMLElementNester
-]
-
 { #category : #content }
 HTMLParser >> endElement: anElementName prefix: aPrefix uri: aUri localName: aLocalName [
 	(self topNode isElement and: [self topNode isNamed: anElementName])
