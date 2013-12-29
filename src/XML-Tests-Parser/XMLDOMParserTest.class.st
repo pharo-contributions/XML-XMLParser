@@ -174,6 +174,19 @@ XMLDOMParserTest >> testCollectingParsedNodes [
 		assert: (firstPerson nodes collect: [:each | each name]) asArray = allNames allButFirst.
 ]
 
+{ #category : #tests }
+XMLDOMParserTest >> testConfiguration [
+	| document  |
+
+	document := XMLDOMParser parse: self addressBookXML.
+	document allElementsDo: [:each |
+		self assert: each configuration == document configuration].
+
+	document root innerXML: self addressBookXML.
+	document allElementsDo: [:each |
+		self assert: each configuration == document configuration].
+]
+
 { #category : #'tests - internal subset' }
 XMLDOMParserTest >> testDoctypeDeclaration [
 	| doctype |
@@ -190,6 +203,17 @@ XMLDOMParserTest >> testDoctypeDeclaration [
 		assert: doctype systemID = 'external.dtd';
 		assert: doctype nodes notEmpty;
 		assert: (doctype nodes allSatisfy: [:each | each isDeclaration]).
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testDocument [
+	| document  |
+
+	document := XMLDOMParser parse: self addressBookXML.
+	document allElementsDo: [:each | self assert: each document == document].
+
+	document root innerXML: self addressBookXML.
+	document allElementsDo: [:each | self assert: each document == document].
 ]
 
 { #category : #tests }
@@ -271,9 +295,9 @@ XMLDOMParserTest >> testInnerXML [
 		address1 := (person attributeAt: 'first-name'), '@example.com'.
 		address2 := (person attributeAt: 'first-name'), '@users.example.com'.
 		innerXml := '<email>', address1, '</email><email2>', address2, '</email2>'.
-		(contactInfo := person elementAt: 'contact-info') innerXML: innerXml.
-
+		contactInfo := person elementAt: 'contact-info'.
 		self
+			assert: (contactInfo innerXML: innerXml) == contactInfo;
 			assert: contactInfo innerXML = innerXml;
 			assert: contactInfo elements size = 2;
 			assert: (contactInfo elements first isNamed: 'email');
@@ -563,20 +587,19 @@ XMLDOMParserTest >> testNodeListClass [
 
 { #category : #tests }
 XMLDOMParserTest >> testParseDocumentWhile [
-	| i document |
+	| i document continue |
 
+	continue := true.
 	self
 		shouldnt: [
 			i := 0.
 			document :=
-				(XMLDOMParser on:
-					'<root><one>two<#malformed')
+				(XMLDOMParser on: '<root><one>two<#malformed')
 					parseDocumentWhile: [
-						i + 1 > 4	
-							ifTrue: [false]
-							ifFalse: [
-								i := i + 1.
-								true]]]
+						i + 1 > 4
+							ifTrue: [continue := false].
+						i := i + 1.
+						continue]]
 		raise: XMLParserException.
 
 	self

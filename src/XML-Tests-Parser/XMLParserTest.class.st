@@ -204,7 +204,7 @@ XMLParserTest >> testAttributeDefaultDeclaration [
 	document := XMLDOMParser parse: dtd, '<root two="required" three="nonDefault" />'.
 	self
 		assert: (document root attributeAt: 'two') = 'required';
-		assert: (document root includesAttribute: 'one');
+		deny: (document root includesAttribute: 'one');
 		assert: (document root attributeAt: 'three') = 'fixedDefault';
 		assert: (document root attributeAt: 'four') = 'default'.
 	self should: [XMLDOMParser parse: dtd, '<root />'] raise: XMLValidationException.
@@ -325,13 +325,13 @@ XMLParserTest >> testAttributeNmtokenDeclaration [
 		<!ATTLIST root name NMTOKEN #IMPLIED>
 		<!ATTLIST root names NMTOKENS #IMPLIED>]>'.
 	self
-		shouldnt: [SAXHandler parse: dtd, '<root name="one" names="  one  two three"/> ']
+		shouldnt: [SAXHandler parse: dtd, '<root name=" one " names="  one  two three "/> ']
 		raise: XMLValidationException.
 	self
-		should: [SAXHandler parse: dtd, '<root name="1"/> ']
+		should: [SAXHandler parse: dtd, '<root name="#" names="one two"/>']
 		raise: XMLValidationException.
 	self
-		should: [SAXHandler parse: dtd, '<root names="1 2 3" />']
+		should: [SAXHandler parse: dtd, '<root name="one" names="# #" />']
 		raise: XMLValidationException.
 ]
 
@@ -499,40 +499,214 @@ XMLParserTest >> testElementAnyAndEmptyDeclarations [
 ]
 
 { #category : #tests }
-XMLParserTest >> testElementContentModels [
-	| dtd declarations |
+XMLParserTest >> testElementContentModelsBranching [
+	| dtd |
 
-	declarations := 
-		self elementDeclarationsNamed:
-			#('one' 'two' 'three' 'four' 'red' 'blue' 'green' 'orange' 'mon' 'tue' 'wed' 'fri').
 	dtd := '<!DOCTYPE root [',
-		declarations,
-		'<!ELEMENT root (numbers|colors|days)>
-		<!ELEMENT numbers (one,two?,three)>
-		<!ELEMENT colors (red|blue|green)*>
-		<!ELEMENT days (mon+,tue*,wed)>]>'.
+		(self elementDeclarationsNamed: #('one' 'two' 'three' 'four' 'five')),
+		'<!ELEMENT root ((one|two),(three|four|five))>]>'.
 
-	XMLDOMParser parse: dtd, '<root><numbers><one/><two/><three/></numbers></root>'.
-	XMLDOMParser parse: dtd, '<root><numbers><one/><three/></numbers></root>'.
+	self
+		shouldnt: [
+			SAXHandler
+				parse: dtd, '<root><one/><three/></root>';
+				parse: dtd, '<root><one/><four/></root>';
+				parse: dtd, '<root><one/><five/></root>';
+				parse: dtd, '<root><two/><three/></root>';
+				parse: dtd, '<root><two/><four/></root>';
+				parse: dtd, '<root><two/><five/></root>']
+		raise: XMLValidationException.
+
+	self
+		should: [SAXHandler parse: dtd, '<root><one/><two/><three/></root>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root><one/><three/><four/><five/></root>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root><one/></root>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root><four/></root>']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testElementContentModelsManyBranches [
+	| dtd names |
+
+	names := (1 to: 25) collect: [:each | 'element', each printString].
+	dtd := '<!DOCTYPE root [',
+		(self elementDeclarationsNamed: names),
+		'<!ELEMENT root (', ($| join: names), ')>]>'.
+
+	names do: [:each |
+		self
+			shouldnt: [SAXHandler parse: dtd, '<root><', each, '/></root>']
+			raise: XMLValidationException].
 	self
 		should: [
-			XMLDOMParser parse:
-				dtd, '<root><numbers><one/><two/><two/><three/></root></numbers>']
+			SAXHandler parse:
+				dtd, '<root><element', (names size + 1) printString, '/></root>']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testElementContentModelsOptional [
+	| dtd |
+
+	dtd := '<!DOCTYPE root [',
+		(self elementDeclarationsNamed: #('one' 'two' 'three' 'four' 'five')),
+		'<!ELEMENT root (one?,two,three?,(four?, five)?)>]>'.
+
+	self
+		shouldnt: [
+			SAXHandler
+				parse: dtd, '<root><one/><two/><three/><four/><five/></root>';
+				parse: dtd, '<root><two/><three/></root>';
+				parse: dtd, '<root><one/><two/><three/><five/></root>';
+				parse: dtd, '<root><two/></root>';
+				parse: dtd, '<root><one/><two/></root>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root><one/><three/><four/><five/></root>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root><one/><two/><three/><four/></root>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root><one/><two/><three/><five/><four/></root>']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testElementContentModelsOptionalBranching [
+	| dtd |
+
+	dtd := '<!DOCTYPE root [',
+		(self elementDeclarationsNamed: #('one' 'two' 'three' 'four' 'five' 'six')),
+		'<!ELEMENT root (((one,two)|(three,four)),five?)>]>'.
+
+	self
+		shouldnt: [
+			SAXHandler
+				parse: dtd, '<root><one/><two/><five/></root>';
+				parse: dtd, '<root><three/><four/><five/></root>';
+				parse: dtd, '<root><one/><two/></root>';
+				parse: dtd, '<root><three/><four/></root>']
 		raise: XMLValidationException.
 
-	XMLDOMParser parse: dtd, '<root><colors/></root>'.
-	XMLDOMParser parse: dtd, '<root><colors><red/><green/><blue/><red/></colors></root>'.
 	self
-		should: [XMLDOMParser parse: dtd, '<root><colors><orange/></colors></root>']
+		should: [SAXHandler parse: dtd, '<root><three/><five/></root>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root><one/><five/></root>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root><five/></root>']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testElementContentModelsOptionalEmpty [
+	| dtd |
+
+	dtd := '<!DOCTYPE root [',
+		(self elementDeclarationsNamed: #('one' 'two' 'three')),
+		'<!ELEMENT root (one?,two)?>]>'.
+
+	self
+		shouldnt: [
+			SAXHandler
+				parse: dtd, '<root><one/><two/></root>';
+				parse: dtd, '<root><two/></root>';
+				parse: dtd, '<root></root>']
 		raise: XMLValidationException.
 
-	XMLDOMParser parse: dtd, '<root><days><mon/><mon/><tue/><wed/></days></root>'.
-	XMLDOMParser parse: dtd, '<root><days><mon/><wed/></days></root>'.
 	self
-		should: [XMLDOMParser parse: dtd, '<root><days><tue/></wed></root>']
+		should: [SAXHandler parse: dtd, '<root><one/></root>']
 		raise: XMLValidationException.
 	self
-		should: [XMLDOMParser parse: dtd, '<root><days><mon/><tue/><fri/></root>']
+		should: [SAXHandler parse: dtd, '<root><three/></root>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root><one/><one/></root>']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testElementContentModelsPlus [
+	| dtd |
+
+	dtd := '<!DOCTYPE root [',
+		(self elementDeclarationsNamed: #('one' 'two' 'three' 'four' 'five')),
+		'<!ELEMENT root ((one?,two)+,three,four+,five)>]>'.
+
+	self
+		shouldnt: [
+			SAXHandler
+				parse: dtd, '<root><one/><two/><three/><four/><five/></root>';
+				parse: dtd, '<root><two/><one/><two/><two/><three/><four/><five/></root>';
+				parse: dtd, '<root><two/><three/><four/><four/><five/></root>';
+				parse: dtd, '<root><two/><three/><four/><five/></root>']
+		raise: XMLValidationException.
+
+	self
+		should: [SAXHandler parse: dtd, '<root><three/><four/><five/></root>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root><one/><two/><four/><four/></root>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root><one/><two/><three/><five/></root>']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testElementContentModelsStar [
+	| dtd |
+
+	dtd := '<!DOCTYPE root [',
+		(self elementDeclarationsNamed: #('one' 'two' 'three' 'four' 'five')),
+		'<!ELEMENT root ((one?,two)*,(three)*,four,five*)>]>'.
+
+	self
+		shouldnt: [
+			SAXHandler
+				parse: dtd, '<root><one/><two/><three/><four/><five/></root>';
+				parse: dtd, '<root><two/><one/><two/><three/><four/><five/></root>';
+				parse: dtd, '<root><three/><three/><four/><five/></root>';
+				parse: dtd, '<root><four/><five/><five/></root>';
+				parse: dtd, '<root><four/></root>']
+		raise: XMLValidationException.
+
+	self
+		should: [SAXHandler parse: dtd, '<root><three/></root>']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testElementContentModelsStarEmpty [
+	| dtd |
+
+	dtd := '<!DOCTYPE root [',
+		(self elementDeclarationsNamed: #('one' 'two' 'three')),
+		'<!ELEMENT root (one*,two)*>]>'.
+
+	self
+		shouldnt: [
+			SAXHandler
+				parse: dtd, '<root><one/><one/><two/><two/></root>';
+				parse: dtd, '<root><two/><one/><two/></root>';
+				parse: dtd, '<root><two/><two/></root>';
+				parse: dtd, '<root></root>']
+		raise: XMLValidationException.
+
+	self
+		should: [SAXHandler parse: dtd, '<root><one/></root>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root><three/></root>']
 		raise: XMLValidationException.
 ]
 
@@ -650,44 +824,6 @@ XMLParserTest >> testEntityURIInheritance [
 ]
 
 { #category : #tests }
-XMLParserTest >> testFileClientPaths [
-	| fileClient cwd cwdParent |
-
-	fileClient := XMLFileClient defaultImplementation new.
-	cwd := fileClient currentWorkingDirectory.
-	cwdParent := cwd copyUpToLast: $/.
-	self
-		assert: cwd first == $/;
-		deny: cwd last == $/;
-		assert: (fileClient combineRelative: 'relative' withBase: 'relative/path') = 'relative/relative';
-		assert: (fileClient combineRelative: 'relative/path' withBase: 'relative/path') = 'relative/relative/path';
-		assert: (fileClient combineRelative: 'relative' withBase: cwd) = (cwdParent, '/relative');
-		assert: (fileClient combineRelative: '/nonrelative' withBase: cwd) = '/nonrelative';
-		assert: (fileClient combineRelative: '../../relative' withBase: cwd) = (cwdParent, '/../../relative');
-		assert: (fileClient combineRelative: './relative' withBase: cwd) = (cwdParent, '/relative');
-		assert: (fileClient combineRelative: '.relative' withBase: cwd) = (cwdParent, '/.relative').
-]
-
-{ #category : #tests }
-XMLParserTest >> testHTTPClientPaths [
-	| httpClient domain directoryUrl documentUrl queryUrl |
-
-	httpClient := XMLHTTPClient defaultImplementation new.
-	domain := 'http://www.example.com'.
-	directoryUrl := domain, '/documents/'.
-	documentUrl := directoryUrl, 'document.xml'.
-	queryUrl := documentUrl, '?name=value'.
-	self
-		assert: (httpClient combineRelative: directoryUrl withBase: domain) = directoryUrl;
-		assert: (httpClient combineRelative: '/nonrelative' withBase: domain) = (domain, '/nonrelative');
-		assert: (httpClient combineRelative: '/nonrelative' withBase: directoryUrl) = (domain, '/nonrelative');
-		assert: (httpClient combineRelative: '/nonrelative' withBase: documentUrl) = (domain, '/nonrelative');
-		assert: (httpClient combineRelative: 'relative.xml' withBase: directoryUrl) = (directoryUrl, 'relative.xml');
-		assert: (httpClient combineRelative: 'relative.xml' withBase: documentUrl) = (directoryUrl, 'relative.xml');
-		assert: (httpClient combineRelative: 'relative.xml' withBase: queryUrl) = (directoryUrl, 'relative.xml').
-]
-
-{ #category : #tests }
 XMLParserTest >> testInvalidElementContentModels [
 	self
 		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root ()>]>']
@@ -739,25 +875,6 @@ XMLParserTest >> testParserLittleDocument [
 ]
 
 { #category : #tests }
-XMLParserTest >> testParserLittleDocumentShowingProblemWithAscii [
-	"self debug: #testParserLittleDocumentShowingProblemWithAscii"
-	| doc |
-	doc := XMLDOMParser parse: '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE score-partwise PUBLIC
-  "-//Recordare//DTD MusicXML 3.0 Partwise//EN"
-  "http://www.musicxml.org/dtds/partwise.dtd">
-<score-partwise version="3.0">
-<part-list>
-  <score-part id="P1">
-    <part-name>Music</part-name>
-  </score-part>
-</part-list>
-</score-partwise>
-' readStream.
-	self assert: doc class = XMLDocument
-]
-
-{ #category : #tests }
 XMLParserTest >> testPredefinedEntityReplacement [
 	| document references replacements |
 
@@ -773,7 +890,7 @@ XMLParserTest >> testPredefinedEntityReplacement [
 	document :=
 		XMLDOMParser parse:
 			('<!DOCTYPE root [
-				<!ENTITY nonRecursive "&amp;notAReference;">]>
+				<!ENTITY nonRecursive "&amp;nonRecursive;">]>
 			<root name=''{1}''>
 				<one>{1}</one>
 				<two>&nonRecursive;</two>
@@ -781,7 +898,7 @@ XMLParserTest >> testPredefinedEntityReplacement [
 	self
 		assert: (document root attributeAt: 'name') = replacements contents;
 		assert: (document findElementNamed: 'one') contentString = replacements contents;
-		assert: (document findElementNamed: 'two') contentString = '&notAReference;'.
+		assert: (document findElementNamed: 'two') contentString = '&nonRecursive;'.
 ]
 
 { #category : #tests }
