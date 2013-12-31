@@ -9,8 +9,11 @@ Class {
 	],
 	#classVars : [
 		'AdditionalNameChars',
+		'AttributeTypeDelimiters',
 		'NameStartChars',
-		'PubidChars'
+		'PubidChars',
+		'UnaryOperatorChars',
+		'ValueListChars'
 	],
 	#category : #'XML-Parser'
 }
@@ -23,7 +26,10 @@ XMLTokenizer class >> initialize [
 	self
 		initializeNameStartChars;
 		initializeAdditionalNameChars;
-		initializePubidChars.
+		initializePubidChars;
+		initializeAttributeTypeDelimiters;
+		initializeValueListChars;
+		initializeUnaryOperatorChars.
 ]
 
 { #category : #'class initialization' }
@@ -39,6 +45,11 @@ XMLTokenizer class >> initializeAdditionalNameChars [
 		add: (Character value: 16rB7).
 	16r0300 to: 16r036F do: [:each | AdditionalNameChars add: (Character value: each)].
 	16r203F to: 16r2040 do: [:each | AdditionalNameChars add: (Character value: each)].
+]
+
+{ #category : #'class initialization' }
+XMLTokenizer class >> initializeAttributeTypeDelimiters [
+	AttributeTypeDelimiters := CharacterSet with: $# with: $' with: $" with: $>
 ]
 
 { #category : #'class initialization' }
@@ -87,6 +98,16 @@ XMLTokenizer class >> initializePubidChars [
 		addAll: '-''()+,./:=?;!*#@$_%'
 ]
 
+{ #category : #'class initialization' }
+XMLTokenizer class >> initializeUnaryOperatorChars [
+	UnaryOperatorChars := CharacterSet with: $? with: $* with: $+
+]
+
+{ #category : #'class initialization' }
+XMLTokenizer class >> initializeValueListChars [
+	ValueListChars := CharacterSet with: $( with: $| with: $)
+]
+
 { #category : #testing }
 XMLTokenizer class >> isName: aString [
 	aString ifEmpty: [^ false].
@@ -100,11 +121,19 @@ XMLTokenizer class >> isName: aString [
 ]
 
 { #category : #testing }
+XMLTokenizer class >> isNameStartChar: aCharacter [
+	^ NameStartChars includes: aCharacter
+]
+
+{ #category : #testing }
 XMLTokenizer class >> isNmtoken: aString [
-	^ aString notEmpty
-		and: [aString allSatisfy: [:each |
-			(NameStartChars includes: each)
-				or: [AdditionalNameChars includes: each]]].
+	^ aString notEmpty and: [aString allSatisfy: [:each | self isNmtokenChar: each]]
+]
+
+{ #category : #testing }
+XMLTokenizer class >> isNmtokenChar: aCharacter [
+	^ (NameStartChars includes: aCharacter)
+		or: [AdditionalNameChars includes: aCharacter]
 ]
 
 { #category : #accessing }
@@ -282,7 +311,7 @@ XMLTokenizer >> maxEntityReplacementDepth [
 
 { #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextAttlistDeclaration [
-	| element attribute attributeType defaultDeclaration  |
+	| element attribute attributeType defaultPragma defaultValue  |
 
 	self
 		expectNextAll: 'ATTLIST';
@@ -294,12 +323,14 @@ XMLTokenizer >> nextAttlistDeclaration [
 		whileFalse: [
 			attribute := self nextName.
 			attributeType := self nextAttributeType.
-			defaultDeclaration := self nextAttributeDefaultDeclaration.
+			defaultPragma := self nextAttributeDefaultPragma.
+			defaultValue := self nextAttributeDefaultValueForPragma: defaultPragma.
 			driver
 				handleAttributeDeclaration: element
 				name: attribute
 				type: attributeType
-				default: defaultDeclaration].
+				defaultPragma: defaultPragma
+				defaultValue: defaultValue].
 
 	self
 		skipSeparatorsReplacingParameterEntities;
@@ -307,55 +338,47 @@ XMLTokenizer >> nextAttlistDeclaration [
 ]
 
 { #category : #'tokenizing - dtd' }
-XMLTokenizer >> nextAttributeDefaultDeclaration [
-	| defaultDeclaration |
-
+XMLTokenizer >> nextAttributeDefaultPragma [
 	self skipSeparatorsReplacingParameterEntities.
-	streamWriter writeWith: [:writeStream |
-		streamReader peek == $#
-			ifTrue: [
-				writeStream nextPut: streamReader next.
-				streamReader peek == $R
-					ifTrue: [writeStream nextPutAll: (self expectNextAll: 'REQUIRED')]
-					ifFalse: [
-						streamReader peek == $I
-							ifTrue: [writeStream nextPutAll: (self expectNextAll: 'IMPLIED')]
-							ifFalse: [
-								writeStream
-									nextPutAll: (self expectNextAll: 'FIXED');
-									space.
-								self skipSeparatorsReplacingParameterEntities.
-								writeStream nextPutAll: self nextAttributeDefaultValue]]]
-			ifFalse: [writeStream nextPutAll: self nextAttributeDefaultValue].
-
-		defaultDeclaration := self removeTrailingSpacesFrom: writeStream contents].
-
-	^ defaultDeclaration.
+	streamReader peek == $#
+		ifFalse: [^ ''].
+	streamReader next.
+	^ streamWriter writeWith: [:writeStream |
+		streamReader peek == $R
+			ifTrue: [writeStream nextPutAll: (self expectNextAll: 'REQUIRED')]
+			ifFalse: [
+				streamReader peek == $I
+					ifTrue: [writeStream nextPutAll: (self expectNextAll: 'IMPLIED')]
+					ifFalse: [writeStream nextPutAll: (self expectNextAll: 'FIXED')]].
+		writeStream contents].
 ]
 
 { #category : #'tokenizing - dtd' }
-XMLTokenizer >> nextAttributeDefaultValue [
-	^ (self nextAttributeValue copyWithFirst: $") copyWith: $"
+XMLTokenizer >> nextAttributeDefaultValueForPragma: aPragma [
+	self skipSeparatorsReplacingParameterEntities.
+
+	^ (aPragma isEmpty or: [aPragma first == $F]) "FIXED"
+		ifTrue: [self nextAttributeValue]
+		ifFalse: [''].
+
 ]
 
 { #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextAttributeType [
-	| nextChar type |
+	| nextChar |
 
-	type := streamWriter writeWith: [:writeStream |
+	^ streamWriter writeWith: [:writeStream |
 		[self skipSeparatorsReplacingParameterEntities.
 		(nextChar := streamReader peek) isNil
-			or: [(String with: $# with: $> with: $' with:  $") includes: nextChar]]
+			or: [AttributeTypeDelimiters includes: nextChar]]
 			whileFalse: [
-				(')|(' includes: nextChar)
-					ifTrue: [writeStream nextPut: streamReader next]
-					ifFalse: [
-						writeStream
-							nextPutAll: self nextNmtoken;
-							nextPut: Character space]].
-		writeStream contents].
-
-	^ self removeTrailingSpacesFrom:  type.
+				(ValueListChars includes: nextChar)
+					ifTrue: [
+						writeStream position > 0
+							ifTrue: [writeStream space].
+						writeStream nextPut: streamReader next]
+					ifFalse: [self nextNmtokenOn: writeStream]].
+		writeStream contents]
 ]
 
 { #category : #tokenizing }
@@ -380,12 +403,22 @@ XMLTokenizer >> nextAttributeValue [
 
 { #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextConditionalSection [
+	"skip ["
+	streamReader next.
+
+	streamWriter writeWith: [:writeStream |
+		self nextConditionalSectionOn: writeStream.
+		streamReader pushBack: writeStream contents].
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLTokenizer >> nextConditionalSectionOn: aWriteStream [
 	self
 		skipSeparatorsReplacingParameterEntities;
 		expectNext: $I.
 
 	^ streamReader peek == $N
-		ifTrue: [self nextIncludeSection]
+		ifTrue: [self nextIncludeSectionOn: aWriteStream]
 		ifFalse: [self nextIgnoreSection].
 ]
 
@@ -440,10 +473,10 @@ XMLTokenizer >> nextElementDeclaration [
 				nextChar == $#
 					ifTrue: [writeStream nextPutAll: (self expectNextAll: '#PCDATA')]
 					ifFalse: [
-						('|,)(' includes: nextChar)
+						(nextChar == $, or: [ValueListChars includes: nextChar])
 							ifTrue: [writeStream nextPut: streamReader next]
-							ifFalse: [writeStream nextPutAll: self nextName]].
-				('?*+' includes: streamReader peek)
+							ifFalse: [self nextNameOn: writeStream]].
+				(UnaryOperatorChars includes: streamReader peek)
 					ifTrue: [writeStream nextPut: streamReader next]].
 		writeStream contents].
 
@@ -608,29 +641,25 @@ XMLTokenizer >> nextIgnoreSection [
 ]
 
 { #category : #'tokenizing - dtd' }
-XMLTokenizer >> nextIncludeSection [
-	| isOpen includedContents |
+XMLTokenizer >> nextIncludeSectionOn: aWriteStream [
+	| isOpen  |
 
 	self expectNextAll: 'NCLUDE'.
 	streamReader skipSeparators.
 	self expectNext: $[.
 
 	isOpen := true.
-	includedContents := streamWriter writeWith: [:writeStream |
-		[isOpen and: [streamReader atEnd not]]
-			whileTrue: [
-				(streamReader nextMatchAll: '<![')
-					ifTrue: [writeStream nextPutAll: self nextConditionalSection]
-					ifFalse: [
-						(streamReader nextMatchAll: ']]>')
-							ifTrue: [isOpen := false]
-							ifFalse: [writeStream nextPut: streamReader next]]].
-		writeStream contents].
+	[isOpen and: [streamReader atEnd not]]
+		whileTrue: [
+			(streamReader nextMatchAll: '<![')
+				ifTrue: [self nextConditionalSectionOn: aWriteStream]
+				ifFalse: [
+					(streamReader nextMatchAll: ']]>')
+						ifTrue: [isOpen := false]
+						ifFalse: [aWriteStream nextPut: streamReader next]]].
 
 	isOpen
 		ifTrue: [self errorExpected: 'terminating ]]>'].
-
-	^ includedContents.
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -649,36 +678,39 @@ XMLTokenizer >> nextInternalEntityDeclaration: aName isParameterEntity: aBoolean
 
 { #category : #tokenizing }
 XMLTokenizer >> nextName [
-	| nextChar |
-
 	^ streamWriter writeWith: [:writeStream |
-		((nextChar := streamReader next) notNil
-			and: [NameStartChars includes: nextChar])
-			ifFalse: [self errorExpected: 'name'].
-		writeStream nextPut: nextChar.
-
-		[(nextChar := streamReader peek) notNil
-			and: [(NameStartChars includes: nextChar)
-				or: [AdditionalNameChars includes: nextChar]]]
-			whileTrue: [writeStream nextPut: streamReader next].
+		self nextNameOn: writeStream.
 		writeStream contents]
 ]
 
+{ #category : #tokenizing }
+XMLTokenizer >> nextNameOn: aWriteStream [
+	| nextChar |
+
+	((nextChar := streamReader next) notNil
+		and: [NameStartChars includes: nextChar])
+		ifFalse: [self errorExpected: 'name'].
+	aWriteStream nextPut: nextChar.
+
+	[(nextChar := streamReader peek) notNil
+		and: [(NameStartChars includes: nextChar)
+			or: [AdditionalNameChars includes: nextChar]]]
+		whileTrue: [aWriteStream nextPut: streamReader next].
+]
+
 { #category : #'tokenizing - dtd' }
-XMLTokenizer >> nextNmtoken [
+XMLTokenizer >> nextNmtokenOn: aWriteStream [
 	"matches the nmtoken production"
-	|  nextChar |
+	|  nextChar oldPosition |
 
-	^ streamWriter writeWith: [:writeStream |
-		[(nextChar := streamReader peek) notNil
-			and: [(NameStartChars includes: nextChar)
-				or: [AdditionalNameChars includes: nextChar]]]
-			whileTrue: [writeStream nextPut: streamReader next].
+	oldPosition := aWriteStream position.
+	[(nextChar := streamReader peek) notNil
+		and: [(NameStartChars includes: nextChar)
+			or: [AdditionalNameChars includes: nextChar]]]
+		whileTrue: [aWriteStream nextPut: streamReader next].
 
-		(writeStream position > 0)
-			ifFalse: [self errorExpected: 'name token'].
-
-		writeStream contents]
+	(aWriteStream position > oldPosition)
+		ifFalse: [self errorExpected: 'name token'].
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -791,12 +823,8 @@ XMLTokenizer >> nextSubsetMarkupToken [
 		ifTrue: [
 			(context isInExternalSubset
 				or: [self hasActiveExternalEntity])
-				ifTrue: [
-					streamReader
-						next;
-						pushBack: self nextConditionalSection.
-					^ self]
-				ifFalse: [self parseError: 'Cannot have INCLUDE/IGNORE sections in internal subset']].
+				ifTrue: [^ self nextConditionalSection].
+			self parseError: 'Cannot have INCLUDE/IGNORE sections in internal subset'].
 
 	self nextSubsetDeclaration.
 ]
@@ -833,7 +861,7 @@ XMLTokenizer >> nextTag [
 			streamReader skipSeparators.
 			attributeValue := self nextAttributeValue.
 	
-			((attributeName at: 1) == $x
+			((attributeName at: 1) == $x "fast test to avoid the more expensive"
 				and: [driver usesNamespaces
 					and: [attributeName beginsWith: 'xmlns']])
 				ifTrue: [
@@ -896,18 +924,6 @@ XMLTokenizer >> removeActiveEntity: anEntity [
 		(self activeEntities
 			ifNotEmpty: [self activeEntities last uri]
 			ifEmpty: [nil]).
-]
-
-{ #category : #tokenizing }
-XMLTokenizer >> removeTrailingSpacesFrom: aString [
-	| n |
-
-	n := 0.
-	aString reverseDo: [:each |
-		each isSeparator
-			ifTrue: [n := n + 1]
-			ifFalse: [^ aString allButLast: n]].
-	^ aString.
 ]
 
 { #category : #'entity replacement' }

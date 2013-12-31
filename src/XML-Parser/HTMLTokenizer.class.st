@@ -2330,7 +2330,7 @@ HTMLTokenizer class >> initializePredefinedEntities [
 	entityPage := self htmlEntityPage readStream.
 	[entityPage atEnd]
 		whileFalse: [
-			entityPage upTo: $[.
+			entityPage skipTo: $[.
 			entityName := entityPage upTo: $=.
 			codePoint := entityPage upTo: $].
 			(entityName notEmpty and: [codePoint notEmpty])
@@ -2405,7 +2405,7 @@ HTMLTokenizer >> expectNextAll: aString [
 
 { #category : #'tokenizing - expecting' }
 HTMLTokenizer >> expectTerminator: aCharacter [
-	streamReader upTo: aCharacter
+	streamReader skipTo: aCharacter
 ]
 
 { #category : #'tokenizing - expecting' }
@@ -2718,7 +2718,7 @@ HTMLTokenizer >> skipDeclaration [
 		or: [streamReader peek == $>]]
 		whileFalse: [
 			streamReader atQuote
-				ifTrue: [streamReader upTo: streamReader next]
+				ifTrue: [streamReader skipTo: streamReader next]
 				ifFalse: [streamReader next]].
 
 	streamReader atEnd

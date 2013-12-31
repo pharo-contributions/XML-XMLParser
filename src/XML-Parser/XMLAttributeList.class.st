@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'attributesByName'
 	],
-	#category : #'XML-Parser-Nodes'
+	#category : #'XML-Parser-DOM'
 }
 
 { #category : #adding }

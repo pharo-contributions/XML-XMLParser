@@ -10,7 +10,7 @@ Class {
 		'doctypeDeclaration',
 		'isStandalone'
 	],
-	#category : #'XML-Parser-Nodes'
+	#category : #'XML-Parser-DOM'
 }
 
 { #category : #accessing }

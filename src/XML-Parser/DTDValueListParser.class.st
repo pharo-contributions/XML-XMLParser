@@ -5,10 +5,27 @@ Class {
 	#name : #DTDValueListParser,
 	#superclass : #Object,
 	#instVars : [
-		'valueList'
+		'valueListStream',
+		'valueStream',
+		'listValues'
+	],
+	#classVars : [
+		'ListValueDelimiters'
 	],
 	#category : #'XML-Parser-DTD'
 }
+
+{ #category : #'class initialization' }
+DTDValueListParser class >> initialize [
+	"self initialize"
+
+	super initialize.
+
+	(ListValueDelimiters := CharacterSet new)
+		add: $|;
+		add: $);
+		addAll: Character separators
+]
 
 { #category : #'instance creation' }
 DTDValueListParser class >> on: aString [
@@ -22,28 +39,60 @@ DTDValueListParser >> isValidListValue: aValue [
 
 { #category : #parsing }
 DTDValueListParser >> parse [
-	| listValues value |
-
-	(valueList notEmpty
-		and: [valueList first == $(
-			and: [valueList last == $)]])
+	(valueListStream atEnd not
+		and: [valueListStream next == $(])
 		ifFalse: [XMLValidationException signal: 'Expected value list'].
 
-	listValues := Set new.
-	$|
-		split: (valueList copyFrom: 2 to: valueList size - 1)
-		do: [:each |
-			value := each copyWithout: Character space.
-			(self isValidListValue: value)
-				ifFalse: [XMLValidationException signal: 'Invalid value "', value, '" in list'].
-			(listValues includes: value)
-				ifTrue: [XMLValidationException signal: 'Duplicate "', value, '" in list'].
-			listValues add: value].
+	[valueListStream atEnd
+		or: [valueListStream peek == $)]]
+		whileFalse: [
+			self parseListValue.
+			(valueListStream atEnd not
+				and: [valueListStream peek == $|])
+				ifTrue: [valueListStream next]].
+	self parseListTerminator.
 
 	^ listValues.
 ]
 
+{ #category : #parsing }
+DTDValueListParser >> parseAfterList [
+]
+
+{ #category : #parsing }
+DTDValueListParser >> parseListTerminator [
+	(valueListStream atEnd not
+		and: [valueListStream next == $)])
+		ifFalse: [XMLValidationException signal: 'Missing list terminator ")"'].
+
+	self parseAfterList.
+]
+
+{ #category : #parsing }
+DTDValueListParser >> parseListValue [
+	| value oldSize |
+
+	valueStream reset.
+	valueListStream skipSeparators.
+	[valueListStream atEnd
+		or: [ListValueDelimiters includes: valueListStream peek]]
+		whileFalse: [valueStream nextPut: valueListStream next].
+	valueListStream skipSeparators.
+
+	(value := valueStream contents)
+		ifEmpty: [XMLValidationException signal: 'Empty list value'].
+	(self isValidListValue: value)
+		ifFalse: [XMLValidationException signal: 'Invalid value "', value, '" in list value'].
+
+	oldSize := listValues size.
+	listValues add: value.
+	(listValues size > oldSize)
+		ifFalse: [XMLValidationException signal: 'Duplicate "', value, '" in list'].
+]
+
 { #category : #accessing }
 DTDValueListParser >> valueList: aString [
-	valueList := aString
+	valueListStream := ReadStream on: aString.
+	valueStream := WriteStream on: (String new: 16).
+	listValues := Set new.
 ]

@@ -6,10 +6,13 @@ Class {
 
 { #category : #'instance creation' }
 DTDNotationListParser class >> on: aString [
-	^ super on: (aString copyAfter: Character space)
+	^ super on:
+		(aString
+			copyFrom: (aString indexOf: $()
+			to: aString size)
 ]
 
 { #category : #testing }
 DTDNotationListParser >> isValidListValue: aValue [
-	^ XMLTokenizer isName: aValue	
+	^ XMLTokenizer isName: aValue
 ]

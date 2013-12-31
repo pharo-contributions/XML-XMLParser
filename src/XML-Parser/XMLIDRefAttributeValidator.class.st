@@ -7,13 +7,18 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
+{ #category : #testing }
+XMLIDRefAttributeValidator >> hasIDRefs [
+	^ self idRefs notEmpty
+]
+
 { #category : #accessing }
-XMLIDRefAttributeValidator >> idrefs [
+XMLIDRefAttributeValidator >> idRefs [
 	^ idrefs ifNil: [idrefs := Set new].
 ]
 
 { #category : #validation }
 XMLIDRefAttributeValidator >> validateAttributeValue: aValue [
 	self validateID: aValue.
-	self idrefs add: aValue.
+	self idRefs add: aValue.
 ]

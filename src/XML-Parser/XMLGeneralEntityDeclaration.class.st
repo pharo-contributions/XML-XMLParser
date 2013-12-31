@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLGeneralEntityDeclaration,
 	#superclass : #XMLEntityDeclaration,
-	#category : #'XML-Parser-Nodes'
+	#category : #'XML-Parser-DOM'
 }
 
 { #category : #'instance creation' }

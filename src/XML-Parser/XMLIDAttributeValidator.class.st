@@ -7,6 +7,11 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
+{ #category : #testing }
+XMLIDAttributeValidator >> hasIDs [
+	^ self ids notEmpty
+]
+
 { #category : #accessing }
 XMLIDAttributeValidator >> ids [
 	^ ids ifNil: [ids := Set new]

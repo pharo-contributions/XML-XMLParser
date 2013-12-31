@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLParameterEntityDeclaration,
 	#superclass : #XMLEntityDeclaration,
-	#category : #'XML-Parser-Nodes'
+	#category : #'XML-Parser-DOM'
 }
 
 { #category : #testing }

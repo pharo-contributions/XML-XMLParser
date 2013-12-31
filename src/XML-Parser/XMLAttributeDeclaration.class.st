@@ -2,21 +2,23 @@ Class {
 	#name : #XMLAttributeDeclaration,
 	#superclass : #XMLDeclarationNode,
 	#instVars : [
-		'type',
-		'defaultDeclaration',
+		'element',
 		'attribute',
-		'element'
+		'type',
+		'defaultPragma',
+		'defaultValue'
 	],
-	#category : #'XML-Parser-Nodes'
+	#category : #'XML-Parser-DOM'
 }
 
 { #category : #'instance creation' }
-XMLAttributeDeclaration class >> element: anElementName attribute: anAttributeName type: aType defaultDeclaration: aDefaultDeclaration [
+XMLAttributeDeclaration class >> element: anElementName attribute: anAttributeName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	^ self new
 		setElement: anElementName
 		attribute: anAttributeName
 		type: aType
-		defaultDeclaration: aDefaultDeclaration
+		defaultPragma: aDefaultPragma
+		defaultValue: aDefaultValue
 ]
 
 { #category : #accessing }
@@ -25,8 +27,13 @@ XMLAttributeDeclaration >> attribute [
 ]
 
 { #category : #accessing }
-XMLAttributeDeclaration >> defaultDeclaration [
-	^ defaultDeclaration ifNil: [defaultDeclaration := '']
+XMLAttributeDeclaration >> defaultPragma [
+	^ defaultPragma ifNil: [defaultPragma := '']
+]
+
+{ #category : #accessing }
+XMLAttributeDeclaration >> defaultValue [
+	^ defaultValue ifNil: [defaultValue := '']
 ]
 
 { #category : #accessing }
@@ -35,11 +42,12 @@ XMLAttributeDeclaration >> element [
 ]
 
 { #category : #initialization }
-XMLAttributeDeclaration >> setElement: anElementName attribute: anAttributeName type: aType defaultDeclaration: aDefaultDeclaration [
+XMLAttributeDeclaration >> setElement: anElementName attribute: anAttributeName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	element := anElementName.
 	attribute := anAttributeName.
 	type := aType.
-	defaultDeclaration := aDefaultDeclaration.
+	defaultPragma := aDefaultPragma.
+	defaultValue := aDefaultValue.
 ]
 
 { #category : #accessing }
@@ -53,5 +61,6 @@ XMLAttributeDeclaration >> writeXMLOn: aWriter [
 		element: self element;
 		attribute: self attribute;
 		type: self type;
-		defaultDeclaration: self defaultDeclaration
+		defaultPragma: self defaultPragma;
+		defaultValue: self defaultValue
 ]

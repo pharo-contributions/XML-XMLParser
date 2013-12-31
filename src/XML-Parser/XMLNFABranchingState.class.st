@@ -23,12 +23,14 @@ XMLNFABranchingState class >> leftBranch: aLeftBranch rightBranch: aRightBranch 
 ]
 
 { #category : #adding }
-XMLNFABranchingState >> addTo: aCollection [
-	lastAddedTo == aCollection
+XMLNFABranchingState >> addTo: aStateSet [
+	lastAddedTo == aStateSet
 		ifFalse: [
-			lastAddedTo := aCollection.
-			leftBranch addTo: aCollection.
-			rightBranch addTo: aCollection.]
+			"This avoids getting caught in a loop"
+			lastAddedTo := aStateSet.
+
+			leftBranch addTo: aStateSet.
+			rightBranch addTo: aStateSet]
 ]
 
 { #category : #connecting }

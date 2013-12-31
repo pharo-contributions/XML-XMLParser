@@ -280,6 +280,12 @@ XMLNestedStreamReader >> skipSeparators [
 		whileTrue: [self next].
 ]
 
+{ #category : #streaming }
+XMLNestedStreamReader >> skipTo: aDelimiter [
+	[self atEnd] whileFalse: [self next == aDelimiter ifTrue: [^ true]].
+	^ false.
+]
+
 { #category : #accessing }
 XMLNestedStreamReader >> stream [
 	^ stream

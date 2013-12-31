@@ -1,16 +1,18 @@
 "
-This class parses a content model using postfix conversion and an NFABuilder to build a NFA, which it converts to a DFA.
+This class parses a content model using postfix conversion and an NFABuilder to build a NFA before converting it to a DFA.
 "
 Class {
 	#name : #DTDDFAContentModelParser,
 	#superclass : #DTDContentModelParser,
 	#instVars : [
 		'contentModelStream',
+		'nameStream',
 		'operatorStack',
-		'nfaBuilder',
-		'nameStream'
+		'nfaBuilder'
 	],
 	#classVars : [
+		'OperatorApplicators',
+		'SpecialCharacterParsers',
 		'SpecialCharacters'
 	],
 	#category : #'XML-Parser-DTD'
@@ -21,8 +23,40 @@ DTDDFAContentModelParser class >> initialize [
 	"self initialize"
 
 	super initialize.
+	self
+		initializeOperatorApplicators;
+		initializeSpecialCharacterParsers;
+		initializeSpecialCharacters.
+]
 
-	(SpecialCharacters := CharacterSet new) addAll: '|,?*+()'
+{ #category : #'class initialization' }
+DTDDFAContentModelParser class >> initializeOperatorApplicators [
+	"use Array for faster lookup"
+	(OperatorApplicators := Array new: 128)
+		at: $, asciiValue put: #applyConcatenation;
+		at: $| asciiValue put: #applyBranch;
+		at: $? asciiValue put: #applyOptional;
+		at: $* asciiValue put: #applyStar;
+		at: $+ asciiValue put: #applyPlus
+]
+
+{ #category : #'class initialization' }
+DTDDFAContentModelParser class >> initializeSpecialCharacterParsers [
+	"use Array for faster lookup"
+	(SpecialCharacterParsers := Array new: 128)
+		at: $( asciiValue put: #parseParen:;
+		at: $) asciiValue put: #parseParen:;
+		at: $, asciiValue put: #parseBinaryOperator:;
+		at: $| asciiValue put: #parseBinaryOperator:;
+		at: $? asciiValue put: #parseUnaryOperator:;
+		at: $* asciiValue put: #parseUnaryOperator:;
+		at: $+ asciiValue put: #parseUnaryOperator:
+]
+
+{ #category : #'class initialization' }
+DTDDFAContentModelParser class >> initializeSpecialCharacters [
+	(SpecialCharacters := CharacterSet new)
+		addAll: '(),|?*+'
 ]
 
 { #category : #evaluation }
@@ -30,23 +64,12 @@ DTDDFAContentModelParser >> applyBinaryOperatorOnStack [
 	nfaBuilder totalFragments > 1
 		ifFalse: [self errorMissingOperand].
 
-	operatorStack last == $|
-		ifTrue: [nfaBuilder applyBranch]
-		ifFalse: [nfaBuilder applyConcatenation].
-	operatorStack removeLast.
+	self applyOperator: operatorStack removeLast.
 ]
 
 { #category : #evaluation }
-DTDDFAContentModelParser >> applyUnaryOperator: aCharacter [
-	nfaBuilder hasFragments
-		ifFalse: [self errorMissingOperand].
-
-	aCharacter == $+
-		ifTrue: [nfaBuilder applyPlus]
-		ifFalse: [
-			aCharacter == $*
-				ifTrue: [nfaBuilder applyStar]
-				ifFalse: [nfaBuilder applyOptional]].
+DTDDFAContentModelParser >> applyOperator: aCharacter [
+	nfaBuilder perform: (OperatorApplicators at: aCharacter asciiValue)
 ]
 
 { #category : #errors }
@@ -61,13 +84,7 @@ DTDDFAContentModelParser >> errorMissingOperand [
 
 { #category : #testing }
 DTDDFAContentModelParser >> hasOperatorOnStack [
-	^ operatorStack notEmpty
-		and: [self isBinaryOperator: operatorStack last]
-]
-
-{ #category : #testing }
-DTDDFAContentModelParser >> isBinaryOperator: aCharacter [
-	^ aCharacter == $| or: [aCharacter == $,]
+	^ operatorStack notEmpty and: [operatorStack last ~~ $(]
 ]
 
 { #category : #testing }
@@ -75,23 +92,21 @@ DTDDFAContentModelParser >> isBinaryOperator: aFirstOperator higherPrecedenceTha
 	^ aFirstOperator == $, and: [aSecondOperator == $|]
 ]
 
-{ #category : #testing }
-DTDDFAContentModelParser >> isOperatorOrParen: aCharacter [
-	^ SpecialCharacters includes: aCharacter
-]
-
 { #category : #parsing }
 DTDDFAContentModelParser >> parse [
 	contentModelStream := contentModel readStream.
 	nameStream := WriteStream on: (String new: 16).
-	nfaBuilder := XMLNFABuilder new.
 	operatorStack := OrderedCollection new.
+	nfaBuilder := XMLNFABuilder new.
 
 	[contentModelStream atEnd]
-		whileFalse: [
-			(self isOperatorOrParen: contentModelStream peek)
-				ifTrue: [self parseOperatorOrParen]
-				ifFalse: [self parseElementName]].
+		whileFalse: [ 
+			(self parserForSpecialCharacter: contentModelStream peek)
+				ifNotNil: [:selector |
+					self
+						perform: selector
+						with: contentModelStream next]
+				ifNil: [self parseElementName]].
 	self popRemainingOperators.
 
 	^ XMLDFAElementValidator
@@ -100,15 +115,25 @@ DTDDFAContentModelParser >> parse [
 ]
 
 { #category : #parsing }
+DTDDFAContentModelParser >> parseBinaryOperator: aCharacter [
+	self hasOperatorOnStack
+		ifTrue: [
+			(self
+				isBinaryOperator: aCharacter
+				higherPrecedenceThan: operatorStack last)
+					ifFalse: [self applyBinaryOperatorOnStack]].
+
+	operatorStack addLast: aCharacter.
+]
+
+{ #category : #parsing }
 DTDDFAContentModelParser >> parseElementName [
-	| matcher nextChar |
+	| matcher |
 
 	nameStream reset.
 	[contentModelStream atEnd
-		or: [(nextChar := contentModelStream peek) isSeparator
-			or: [self isOperatorOrParen: nextChar]]]
+		or: [SpecialCharacters includes: contentModelStream peek]]
 		whileFalse: [nameStream nextPut: contentModelStream next].
-	contentModelStream skipSeparators.
 
 	matcher := nameStream contents.
 	matcher = '#PCDATA'
@@ -118,24 +143,28 @@ DTDDFAContentModelParser >> parseElementName [
 ]
 
 { #category : #parsing }
-DTDDFAContentModelParser >> parseOperatorOrParen [ 
-	| nextChar |
+DTDDFAContentModelParser >> parseParen: aCharacter [
+	aCharacter == $)
+		ifTrue: [self popParenthesizedOperators]
+		ifFalse: [operatorStack addLast: $(].
+]
 
-	nextChar := contentModelStream next.
-	nextChar == $)
-		ifTrue: [^ self popParenthesizedOperators].
-	nextChar == $(
-		ifTrue: [^ self startParenthesizedOperators].
+{ #category : #parsing }
+DTDDFAContentModelParser >> parseUnaryOperator: aCharacter [
+	nfaBuilder hasFragments
+		ifFalse: [self errorMissingOperand].
 
-	(self isBinaryOperator: nextChar)
-		ifTrue: [
-			self hasOperatorOnStack
-				ifTrue: [
-					(self isBinaryOperator: nextChar
-						higherPrecedenceThan: operatorStack last)
-						ifFalse: [self applyBinaryOperatorOnStack]].
-			operatorStack addLast: nextChar]
-		ifFalse: [self applyUnaryOperator: nextChar].
+	self applyOperator: aCharacter.
+]
+
+{ #category : #parsing }
+DTDDFAContentModelParser >> parserForSpecialCharacter: aCharacter [
+	| i |
+
+	^ ((i := aCharacter asciiValue) > 0
+		and: [i <= SpecialCharacterParsers size])
+			ifTrue: [SpecialCharacterParsers at: i]
+			ifFalse: [nil]
 ]
 
 { #category : #evaluation }
@@ -161,9 +190,4 @@ DTDDFAContentModelParser >> popRemainingOperators [
 
 	nfaBuilder totalFragments = 1
 		ifFalse: [self errorMissingOperand].
-]
-
-{ #category : #evaluation }
-DTDDFAContentModelParser >> startParenthesizedOperators [
-	operatorStack addLast: $(
 ]

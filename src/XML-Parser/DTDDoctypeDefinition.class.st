@@ -98,7 +98,7 @@ DTDDoctypeDefinition >> addUnparsedEntity: aName ndata: aNotation [
 ]
 
 { #category : #validators }
-DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: aName type: aType default: aDefaultDeclaration [
+DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	| parser validator  |
 
 	parser :=
@@ -106,7 +106,8 @@ DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: aName type:
 			element:  anElement
 			attribute: aName
 			type: aType
-			default: aDefaultDeclaration.
+			defaultPragma: aDefaultPragma
+			defaultValue: aDefaultValue.
 	validator := parser parse.
 
 	(validator isValueListValidator and: [parser isNotationList: aType])

@@ -23,7 +23,7 @@ Class {
 		'elementClass',
 		'elementClassesByName'
 	],
-	#category : #'XML-Parser-Nodes'
+	#category : #'XML-Parser-DOM'
 }
 
 { #category : #accessing }

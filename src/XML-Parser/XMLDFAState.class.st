@@ -6,8 +6,8 @@ Class {
 	#superclass : #XMLFAState,
 	#instVars : [
 		'nfaStates',
-		'cachedDfaStates',
-		'transitions'
+		'transitions',
+		'dfaStateCache'
 	],
 	#category : #'XML-Parser-Validation-DFA'
 }
@@ -16,21 +16,14 @@ Class {
 XMLDFAState class >> nfaStates: anNfaStateSet [
 	^ self
 		nfaStates: anNfaStateSet
-		cachedDFAStates: Dictionary new
+		dfaStateCache: nil
 ]
 
 { #category : #'instance creation' }
-XMLDFAState class >> nfaStates: anNfaStateSet cachedDFAStates: aDfaStateCache [
+XMLDFAState class >> nfaStates: anNfaStateSet dfaStateCache: aDfaStateCache [
 	^ self new
 		setNFAStates: anNfaStateSet
-		cachedDFAStates: aDfaStateCache
-]
-
-{ #category : #private }
-XMLDFAState >> addToCache [
-	cachedDfaStates
-		at: nfaStates
-		ifAbsentPut: [self]
+		dfaStateCache: aDfaStateCache
 ]
 
 { #category : #enumerating }
@@ -54,15 +47,10 @@ XMLDFAState >> dfaStateMatching: aMatcher [
 	nfaStates do: [:state |
 		(state matches: aMatcher)
 			ifTrue: [state nextState addTo: matchingNfaStates]].
-	matchingNfaStates
-		ifEmpty: [ ^ nil].
 
-	^ cachedDfaStates
-		at: matchingNfaStates
-		ifAbsent: [
-			self class
-				nfaStates: matchingNfaStates
-				cachedDFAStates: cachedDfaStates].
+	^ matchingNfaStates
+		ifNotEmpty: [dfaStateCache dfaStateFor: matchingNfaStates]
+		ifEmpty: [nil].
 ]
 
 { #category : #testing }
@@ -70,12 +58,15 @@ XMLDFAState >> isAccepting [
 	^ nfaStates isAccepting
 ]
 
-{ #category : #initialization }
-XMLDFAState >> setNFAStates: anNfaStateSet cachedDFAStates: aDfaStateCache [
-	nfaStates := anNfaStateSet.
-	cachedDfaStates := aDfaStateCache.
+{ #category : #accessing }
+XMLDFAState >> nfaStates [
+	^ nfaStates
+]
 
-	self addToCache.
+{ #category : #initialization }
+XMLDFAState >> setNFAStates: anNfaStateSet dfaStateCache: aDfaStateCache [
+	nfaStates := anNfaStateSet.
+	dfaStateCache := (aDfaStateCache ifNil: [XMLDFAStateCache firstState: self]).
 ]
 
 { #category : #accessing }

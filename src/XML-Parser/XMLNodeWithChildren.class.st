@@ -13,7 +13,7 @@ Class {
 	#instVars : [
 		'nodes'
 	],
-	#category : #'XML-Parser-Nodes'
+	#category : #'XML-Parser-DOM'
 }
 
 { #category : #accessing }

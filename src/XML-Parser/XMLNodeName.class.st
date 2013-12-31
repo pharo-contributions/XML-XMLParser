@@ -10,7 +10,7 @@ Class {
 		'localPart',
 		'notifier'
 	],
-	#category : #'XML-Parser-Nodes'
+	#category : #'XML-Parser-DOM'
 }
 
 { #category : #observing }

@@ -10,26 +10,19 @@ Class {
 
 { #category : #parsing }
 DTDMixedContentModelParser >> parse [
-	| mayContainElements allowedElements |
-
-	(mayContainElements := contentModel last == $*)
-		ifTrue: [contentModel := contentModel allButLast].
-
-	allowedElements := self parseListAllowingElements: mayContainElements.
-
 	^ XMLMixedContentElementValidator
 		element: element
-		allowedElements: allowedElements.
+		allowedElements: self parseAllowedElements
 ]
 
 { #category : #parsing }
-DTDMixedContentModelParser >> parseListAllowingElements: aBoolean [
+DTDMixedContentModelParser >> parseAllowedElements [
 	| allowedElements |
 
 	allowedElements := (DTDMixedContentListParser on: contentModel) parse.
 	allowedElements remove: '#PCDATA'.
 
-	(aBoolean or: [allowedElements isEmpty])
+	(allowedElements isEmpty or: [contentModel last == $*])
 		ifFalse: [
 			XMLValidationException signal:
 				'Missing * after mixed content list with elements'].

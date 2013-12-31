@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'notifier'
 	],
-	#category : #'XML-Parser-Nodes'
+	#category : #'XML-Parser-DOM'
 }
 
 { #category : #adding }

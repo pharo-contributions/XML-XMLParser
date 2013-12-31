@@ -18,7 +18,7 @@ Class {
 		'namespaceScope',
 		'document'
 	],
-	#category : #'XML-Parser-Nodes'
+	#category : #'XML-Parser-DOM'
 }
 
 { #category : #'instance creation' }

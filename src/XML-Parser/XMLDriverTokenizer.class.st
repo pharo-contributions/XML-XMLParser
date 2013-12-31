@@ -98,14 +98,21 @@ XMLDriverTokenizer >> nextCDataSection [
 
 { #category : #tokenizing }
 XMLDriverTokenizer >> nextComment [
-	| comment |
+	| comment nextChar |
 
 	"Skip first -"
 	streamReader next.
 	self expectNext: $-.
 
-	comment := streamReader upToAll: '--'.
-	self expectTerminator: $>.
+	comment := streamWriter writeWith: [:writeStream |
+		[streamReader atEnd
+			or: [(nextChar := streamReader next) == $-
+				and: [(streamReader peek) == $-]]]
+			whileFalse: [writeStream nextPut: nextChar].
+		writeStream contents].
+	self
+		expectNext: $-;
+		expectTerminator: $>.
 
 	driver handleComment: comment.
 ]

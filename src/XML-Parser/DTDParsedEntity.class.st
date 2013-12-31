@@ -9,22 +9,8 @@ Class {
 		'replacement',
 		'uri'
 	],
-	#classVars : [
-		'LiteralEscapes'
-	],
 	#category : #'XML-Parser-DTD'
 }
-
-{ #category : #'class initialization' }
-DTDParsedEntity class >> initialize [
-	"self initialize"
-
-	super initialize.
-
-	(LiteralEscapes := IdentityDictionary new)
-		at: $" put: '&#34;';
-		at: $' put: '&#39;'
-]
 
 { #category : #'instance creation' }
 DTDParsedEntity class >> name: aString replacement: aValueString [
@@ -101,9 +87,12 @@ DTDParsedEntity >> replacementForLiteralContext [
 
 	aReplacement := (String new: self replacement size) writeStream.
 	self replacement do: [:each |
-		(LiteralEscapes includesKey: each)
-			ifTrue: [aReplacement nextPutAll: (LiteralEscapes at: each)]
-			ifFalse: [aReplacement nextPut: each]].
+		each ==  $"
+			ifTrue: [aReplacement nextPutAll: '&#34;']
+			ifFalse: [
+				each == $'
+					ifTrue: [aReplacement nextPutAll: '&#39;']
+					ifFalse: [aReplacement nextPut: each]]].
 	^ aReplacement contents.
 ]
 

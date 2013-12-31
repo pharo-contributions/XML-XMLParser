@@ -11,11 +11,13 @@ Class {
 }
 
 { #category : #adding }
-XMLNFAState >> addTo: aCollection [
-	lastAddedTo == aCollection
+XMLNFAState >> addTo: aStateSet [
+	lastAddedTo == aStateSet
 		ifFalse: [
-			lastAddedTo := aCollection.
-			aCollection add: self]
+			"This avoids getting caught in a loop"
+			lastAddedTo := aStateSet.
+
+			aStateSet add: self]
 ]
 
 { #category : #converting }

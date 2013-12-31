@@ -118,7 +118,7 @@ SAXHandler class >> parseURL: aUrl [
 ]
 
 { #category : #declaration }
-SAXHandler >> attributeDeclaration: anElement name: aName type: aType defaultDeclaration: aDefaultDeclaration [
+SAXHandler >> attributeDeclaration: anElement name: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 ]
 
 { #category : #content }
@@ -233,7 +233,7 @@ SAXHandler >> externalEntityResolver [
 
 { #category : #configuration }
 SAXHandler >> externalEntityResolver: anExternalEntityResolver [
-	"See DTDExternalEntityResolver and subclasses"
+	"This can be used to set a different DTDExternalEntityResolver"
 
 	self configuration externalEntityResolver: anExternalEntityResolver
 ]

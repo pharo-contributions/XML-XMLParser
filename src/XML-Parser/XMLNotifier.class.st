@@ -11,7 +11,7 @@ Class {
 	#instVars : [
 		'observers'
 	],
-	#category : #'XML-Parser-Nodes'
+	#category : #'XML-Parser-DOM'
 }
 
 { #category : #observing }

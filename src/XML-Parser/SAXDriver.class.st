@@ -86,19 +86,21 @@ SAXDriver >> externalSubsetParserOnURI: aUri [
 ]
 
 { #category : #'handling tokens' }
-SAXDriver >> handleAttributeDeclaration: anElement name: aName type: aType default: aDefaultDeclaration [
+SAXDriver >> handleAttributeDeclaration: anElement name: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	self isValidating
 		ifTrue: [
 			self dtd
 				addValidatorForAttributeIn: anElement
 				named: aName
 				type: aType
-				default: aDefaultDeclaration].
+				defaultPragma: aDefaultPragma
+				defaultValue: aDefaultValue].
 	self saxHandler
 		attributeDeclaration: anElement
 		name: aName
 		type: aType
-		defaultDeclaration: aDefaultDeclaration
+		defaultPragma: aDefaultPragma
+		defaultValue: aDefaultValue
 ]
 
 { #category : #'handling tokens' }

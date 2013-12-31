@@ -6,9 +6,10 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'element',
+		'attribute',
 		'type',
-		'defaultDeclaration',
-		'attribute'
+		'defaultPragma',
+		'defaultValue'
 	],
 	#classVars : [
 		'DefaultValueValidators',
@@ -18,12 +19,13 @@ Class {
 }
 
 { #category : #'instance creation' }
-DTDAttributeDefinitionParser class >> element: anElement attribute: anAttribute type: aType default: aDefaultDeclaration [
+DTDAttributeDefinitionParser class >> element: anElement attribute: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	^ self new
 		setElement: anElement
 		attribute: anAttribute
 		type: aType
-		default: aDefaultDeclaration
+		defaultPragma: aDefaultPragma
+		defaultValue: aDefaultValue
 ]
 
 { #category : #'class initialization' }
@@ -31,12 +33,21 @@ DTDAttributeDefinitionParser class >> initialize [
 	"self initialize"
 
 	super initialize.
+	self
+		initializeDefaultValueValidators;
+		initializeNonEnumerationValidators.
+]
 
+{ #category : #'class initialization' }
+DTDAttributeDefinitionParser class >> initializeDefaultValueValidators [
 	(DefaultValueValidators := Dictionary new)
 		at: 'FIXED' put: XMLFixedValueAttributeValidator;
 		at: 'IMPLIED' put: XMLImpliedValueAttributeValidator;
-		at: 'REQUIRED' put: XMLRequiredValueAttributeValidator.
+		at: 'REQUIRED' put: XMLRequiredValueAttributeValidator
+]
 
+{ #category : #'class initialization' }
+DTDAttributeDefinitionParser class >> initializeNonEnumerationValidators [
 	(NonEnumerationValidators := Dictionary new)
 		at: 'CDATA' put: XMLCDataAttributeValidator;
 		at: 'ID' put: XMLIDAttributeValidator;
@@ -45,7 +56,7 @@ DTDAttributeDefinitionParser class >> initialize [
 		at: 'ENTITY' put: XMLEntityAttributeValidator;
 		at: 'ENTITIES' put: XMLEntitiesAttributeValidator;
 		at: 'NMTOKEN' put: XMLNameAttributeValidator;
-		at: 'NMTOKENS' put: XMLNamesAttributeValidator.
+		at: 'NMTOKENS' put: XMLNamesAttributeValidator
 ]
 
 { #category : #testing }
@@ -59,10 +70,10 @@ DTDAttributeDefinitionParser >> parse [
 
 	defaultValueValidator :=
 		(DefaultValueValidators
-			at: self parseDefaultPragma
+			at: defaultPragma
 			ifAbsent: [XMLDefaultValueAttributeValidator])
 				attribute: attribute
-				defaultValue: self parseDefaultValue.
+				defaultValue: defaultValue.
 
 	attributeValidator :=
 		self validatorClassForType
@@ -70,38 +81,13 @@ DTDAttributeDefinitionParser >> parse [
 			attribute: attribute
 			defaultValueValidator: defaultValueValidator.
 	attributeValidator isValueListValidator
-		ifTrue: [attributeValidator allowedValues: (self parseEnumerationType)].
+		ifTrue: [attributeValidator allowedValues: (self parseValueListType)].
 
 	^ attributeValidator.
 ]
 
 { #category : #parsing }
-DTDAttributeDefinitionParser >> parseDefaultPragma [
-	^ (defaultDeclaration beginsWith: '#')
-		ifTrue: [defaultDeclaration allButFirst copyUpTo: Character space]
-		ifFalse: [nil].
-]
-
-{ #category : #parsing }
-DTDAttributeDefinitionParser >> parseDefaultValue [
-	| quote start end |
-
-	quote := nil.
-	defaultDeclaration
-		doWithIndex: [:each :i |
-			(quote isNil and: [each == $" or: [each == $']])
-				ifTrue: [
-					quote := each.
-					start := i].
-			(quote notNil and: [each == quote])
-				ifTrue: [end := i]].
-	^ (start notNil and: [end notNil])
-		ifTrue: [defaultDeclaration copyFrom: start + 1 to: end - 1]
-		ifFalse: ['']
-]
-
-{ #category : #parsing }
-DTDAttributeDefinitionParser >> parseEnumerationType [
+DTDAttributeDefinitionParser >> parseValueListType [
 	| listParserClass |
 
 	listParserClass :=
@@ -113,11 +99,12 @@ DTDAttributeDefinitionParser >> parseEnumerationType [
 ]
 
 { #category : #initialization }
-DTDAttributeDefinitionParser >> setElement: anElement attribute: anAttribute type: aType default: aDefaultDeclaration [
+DTDAttributeDefinitionParser >> setElement: anElement attribute: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	element := anElement.
 	attribute := anAttribute.
 	type := aType.
-	defaultDeclaration := aDefaultDeclaration.
+	defaultPragma := aDefaultPragma.
+	defaultValue := aDefaultValue.
 ]
 
 { #category : #parsing }

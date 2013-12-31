@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'string'
 	],
-	#category : #'XML-Parser-Nodes'
+	#category : #'XML-Parser-DOM'
 }
 
 { #category : #'instance creation' }

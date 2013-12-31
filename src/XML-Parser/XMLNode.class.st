@@ -8,7 +8,7 @@ Class {
 		'parent',
 		'notifier'
 	],
-	#category : #'XML-Parser-Nodes'
+	#category : #'XML-Parser-DOM'
 }
 
 { #category : #accessing }

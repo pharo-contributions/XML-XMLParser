@@ -6,7 +6,7 @@ Class {
 		'publicId',
 		'systemId'
 	],
-	#category : #'XML-Parser-Nodes'
+	#category : #'XML-Parser-DOM'
 }
 
 { #category : #'instance creation' }

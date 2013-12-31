@@ -36,7 +36,7 @@ XMLParserDriver >> dtd [
 ]
 
 { #category : #'handling tokens' }
-XMLParserDriver >> handleAttributeDeclaration: anElement name: anName type: aType default: aDefaultDeclaration [
+XMLParserDriver >> handleAttributeDeclaration: anElement name: anName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 ]
 
 { #category : #'handling tokens' }

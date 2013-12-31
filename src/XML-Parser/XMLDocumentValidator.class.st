@@ -68,11 +68,13 @@ XMLDocumentValidator >> validateAttributes: anAttributeDictionary with: aValidat
 	| unvalidatedAttributes |
 
 	unvalidatedAttributes := anAttributeDictionary keys asSet.
-	aValidatorDictionary keysAndValuesDo: [:attribute :validator |
-		validator validateAttributes: anAttributeDictionary.
-		unvalidatedAttributes
-			remove: attribute
-			ifAbsent: []].
+	aValidatorDictionary
+		ifNotNil: [
+			aValidatorDictionary keysAndValuesDo: [:attribute :validator |
+				validator validateAttributes: anAttributeDictionary.
+				unvalidatedAttributes
+					remove: attribute
+				ifAbsent: []]].
 
 	unvalidatedAttributes
 		ifNotEmpty: [self unvalidatedAttributes: unvalidatedAttributes].
@@ -122,8 +124,8 @@ XMLDocumentValidator >> validateStartTag: aName attributes: anAttributeDictionar
 	(self hasElementValidators or: [self hasAttributeValidators])
 		ifFalse: [^ self].
 
+	self validateStartTag: aName.
 	self
-		validateStartTag: aName;
 		validateAttributes: anAttributeDictionary
 		with: (self attributeValidatorsFor: aName).
 ]

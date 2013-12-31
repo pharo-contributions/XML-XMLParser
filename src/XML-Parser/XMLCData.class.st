@@ -4,7 +4,7 @@ This class represents a preserved CDATA section from a parsed document. It behav
 Class {
 	#name : #XMLCData,
 	#superclass : #XMLString,
-	#category : #'XML-Parser-Nodes'
+	#category : #'XML-Parser-DOM'
 }
 
 { #category : #testing }
