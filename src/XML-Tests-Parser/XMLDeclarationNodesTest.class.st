@@ -1,18 +1,19 @@
 Class {
 	#name : #XMLDeclarationNodesTest,
 	#superclass : #XMLNodesWithChildrenTest,
-	#category : #'XML-Tests-Parser-Nodes'
+	#category : #'XML-Tests-Parser-DOM'
 }
 
 { #category : #assertions }
-XMLDeclarationNodesTest >> assertAttributeDecl: anAttributeDeclaration hasElementName: anElementName attributeName: anAttributeName type: aType defaultDecl: aDefaultDeclaration [
+XMLDeclarationNodesTest >> assertAttributeDecl: anAttributeDeclaration hasElementName: anElementName attributeName: anAttributeName type: aType default: aDefaultPragma value: aDefaultValue [
 	| printString |
 
 	self
 		assert: anAttributeDeclaration element = anElementName;
 		assert: anAttributeDeclaration attribute = anAttributeName;
 		assert: anAttributeDeclaration type = aType;
-		assert: anAttributeDeclaration defaultDeclaration = aDefaultDeclaration.
+		assert: anAttributeDeclaration defaultPragma = aDefaultPragma;
+		assert: anAttributeDeclaration defaultValue = aDefaultValue.
 
 	(printString := String new writeStream)
 		nextPutAll: '<!ATTLIST';
@@ -22,10 +23,19 @@ XMLDeclarationNodesTest >> assertAttributeDecl: anAttributeDeclaration hasElemen
 		nextPutAll: anAttributeName;
 		space;
 		nextPutAll: aType.
-	aDefaultDeclaration ifNotEmpty: [
+
+	aDefaultPragma ifNotEmpty: [
 		printString
 			space;
-			nextPutAll: aDefaultDeclaration].
+			nextPutAll: (aDefaultPragma copyWithFirst: $#)].
+
+	aDefaultValue ifNotEmpty: [
+		printString
+			space;
+			nextPut: $";
+			nextPutAll: aDefaultValue;
+			nextPut: $"].
+
 	printString nextPut: $>.
 		
 	self assert: anAttributeDeclaration printString = printString contents.
@@ -126,29 +136,34 @@ XMLDeclarationNodesTest >> test1attributeDeclarations [
 		hasElementName: ''
 		attributeName: ''
 		type: ''
-		defaultDecl: ''.
+		default: ''
+		value: ''.
 	self
 		assertAttributeDecl:
 			(XMLAttributeDeclaration
 				element: 'testElement'
 				attribute: 'testAttribute'
 				type: 'CDATA'
-				defaultDeclaration: '')
+				defaultPragma: 'IMPLIED'
+				defaultValue: '')
 		hasElementName: 'testElement'
 		attributeName: 'testAttribute'
 		type: 'CDATA'
-		defaultDecl: ''.
+		default: 'IMPLIED'
+		value: ''.
 	self
 		assertAttributeDecl:
 			(XMLAttributeDeclaration
 				element: 'testElement'
 				attribute: 'testAttribute'
 				type: 'CDATA'
-				defaultDeclaration: '(one|two|three)')
+				defaultPragma: ''
+				defaultValue:  'one')
 		hasElementName: 'testElement'
 		attributeName: 'testAttribute'
 		type: 'CDATA'
-		defaultDecl: '(one|two|three)'.
+		default: ''
+		value: 'one'.
 ]
 
 { #category : #tests }

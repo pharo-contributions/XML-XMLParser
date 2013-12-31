@@ -4,7 +4,7 @@ This is a base class for node tests.
 Class {
 	#name : #XMLNodeTest,
 	#superclass : #TestCase,
-	#category : #'XML-Tests-Parser-Nodes'
+	#category : #'XML-Tests-Parser-DOM'
 }
 
 { #category : #utility }

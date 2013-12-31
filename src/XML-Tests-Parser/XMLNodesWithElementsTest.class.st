@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLNodesWithElementsTest,
 	#superclass : #XMLNodesWithChildrenTest,
-	#category : #'XML-Tests-Parser-Nodes'
+	#category : #'XML-Tests-Parser-DOM'
 }
 
 { #category : #assertions }
