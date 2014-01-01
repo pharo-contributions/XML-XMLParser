@@ -17,7 +17,15 @@ XMLString class >> string: aString [
 
 { #category : #accessing }
 XMLString >> addContent: aStringOrStringNode [
-	self string: self string, (self toString: aStringOrStringNode)
+	string :=
+		string
+			ifNil: [aStringOrStringNode asString]
+			ifNotNil: [string, aStringOrStringNode asString]
+]
+
+{ #category : #private }
+XMLString >> asString [
+	^ self string
 ]
 
 { #category : #converting }
@@ -56,14 +64,7 @@ XMLString >> string [
 
 { #category : #accessing }
 XMLString >> string: aString [
-	string := self toString: aString
-]
-
-{ #category : #private }
-XMLString >> toString: aStringOrStringNode [
-	^ (aStringOrStringNode isKindOf: XMLString)
-		ifTrue: [aStringOrStringNode string]
-		ifFalse: [aStringOrStringNode]
+	string := aString asString
 ]
 
 { #category : #printing }
