@@ -275,9 +275,7 @@ XMLDriverTokenizer >> nextPIOrXMLDecl [
 
 	"Skip ?"
 	streamReader next.
-	piTarget := self nextName.
-	((context isInProlog or: [context isInTextDeclaration])
-		and: [piTarget asUppercase = 'XML'])
+	(piTarget := self nextPITarget) = 'xml'
 		ifTrue: [^ self nextXMLDecl]
 		ifFalse: [
 			context isInExternalSubsetTextDeclaration
@@ -287,6 +285,11 @@ XMLDriverTokenizer >> nextPIOrXMLDecl [
 	piData := self expectUpToAll: '?>'.
 
 	driver handlePI: piTarget data: piData.
+]
+
+{ #category : #tokenizing }
+XMLDriverTokenizer >> nextPITarget [
+	self subclassResponsibility
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -365,14 +368,23 @@ XMLDriverTokenizer >> nextUnparsedEntityReference [
 ]
 
 { #category : #tokenizing }
+XMLDriverTokenizer >> nextXMLAttributeName: aName [
+	self expectNextAll: aName.
+	streamReader skipSeparators.
+	self expectNext: $=.
+	streamReader skipSeparators.
+]
+
+{ #category : #tokenizing }
 XMLDriverTokenizer >> nextXMLDecl [
 	| version encoding standalone isTextDeclaration |
 
 	isTextDeclaration  := context isInTextDeclaration.
-	version := self nextXMLDeclAttribute: 'version' isOptional: isTextDeclaration.
-	(encoding := self nextXMLDeclAttribute: 'encoding' isOptional: isTextDeclaration not)
+	version := self nextXMLVersionAttributeRequired: isTextDeclaration not.
+	(encoding := self nextXMLEncodingAttributeRequired: isTextDeclaration)
 		ifNotEmpty: [streamReader useConverterForEncoding: encoding].
-	standalone := self nextXMLDeclAttribute: 'standalone' isOptional: true.
+	isTextDeclaration
+		ifFalse: [standalone := self nextXMLStandaloneAttribute].
 
 	streamReader skipSeparators.
 	self
@@ -391,23 +403,51 @@ XMLDriverTokenizer >> nextXMLDecl [
 ]
 
 { #category : #tokenizing }
-XMLDriverTokenizer >> nextXMLDeclAttribute: aName isOptional: aBoolean [
+XMLDriverTokenizer >> nextXMLEncodingAttributeRequired: aBoolean [
 	streamReader skipSeparators.
-	(aBoolean and: [streamReader peek ~~ aName first])
-		ifTrue: [^ ''].
+	(aBoolean or: [streamReader peek == $e])
+		ifFalse: [^ ''].
 
-	self expectNextAll: aName.
-	streamReader skipSeparators.
-	self expectNext: $=.
-	streamReader skipSeparators.
-
-	^ self nextXMLDeclAttributeValue.
+	^ self
+		nextXMLAttributeName: 'encoding';
+		nextXMLEncodingAttributeValue.
 ]
 
 { #category : #tokenizing }
-XMLDriverTokenizer >> nextXMLDeclAttributeValue [
+XMLDriverTokenizer >> nextXMLEncodingAttributeValue [
 	self subclassResponsibility
+]
 
+{ #category : #tokenizing }
+XMLDriverTokenizer >> nextXMLStandaloneAttribute [
+	streamReader skipSeparators.
+	(streamReader peek == $s)
+		ifFalse: [^ ''].
+
+	^ self
+		nextXMLAttributeName: 'standalone';
+		nextXMLStandaloneAttributeValue.
+]
+
+{ #category : #tokenizing }
+XMLDriverTokenizer >> nextXMLStandaloneAttributeValue [
+	self subclassResponsibility
+]
+
+{ #category : #tokenizing }
+XMLDriverTokenizer >> nextXMLVersionAttributeRequired: aBoolean [
+	streamReader skipSeparators.
+	(aBoolean or: [streamReader peek == $v])
+		ifFalse: [^ ''].
+
+	^ self
+		nextXMLAttributeName: 'version';
+		nextXMLVersionAttributeValue.
+]
+
+{ #category : #tokenizing }
+XMLDriverTokenizer >> nextXMLVersionAttributeValue [
+	self subclassResponsibility
 ]
 
 { #category : #accessing }

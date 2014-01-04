@@ -19,19 +19,6 @@ Class {
 }
 
 { #category : #adding }
-DTDDoctypeDefinition >> addAttributeValidator: aValidator to: anAttributeValidatorDictionary [
-	(aValidator isValueListValidator and: [aValidator hasNotationValues])
-		ifTrue: [
-			(aValidator allowedValues allSatisfy: [:each | self includesNotation: each])
-				ifFalse: [XMLValidationException signal: 'Undeclared notation in enumeration']]
-		ifFalse: [
-			aValidator isEntityValidator
-				ifTrue: [aValidator unparsedEntities: self unparsedEntities]].
-
-	aValidator validateAndAddTo: anAttributeValidatorDictionary.
-]
-
-{ #category : #adding }
 DTDDoctypeDefinition >> addExternalGeneralEntity: aName resolver: aResolver uri: aSystemUri from: aDocumentOrEntityUri [
 	self generalEntities
 		at: aName
@@ -89,7 +76,7 @@ DTDDoctypeDefinition >> addUnparsedEntity: aName ndata: aNotation [
 
 { #category : #adding }
 DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
-	| parser attributeValidatorsForElement |
+	| attributeValidatorsForElement validator |
 
 	attributeValidatorsForElement :=
 		self attributeValidators
@@ -98,17 +85,17 @@ DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: aName type:
 	(attributeValidatorsForElement includesKey: aName)
 		ifTrue: [^ nil].
 
-	parser :=
-		DTDAttributeDefinitionParser
+	validator :=
+		(DTDAttributeDefinitionParser
 			element:  anElement
 			attribute: aName
 			type: aType
 			defaultPragma: aDefaultPragma
-			defaultValue: aDefaultValue.
+			defaultValue: aDefaultValue) parse.
 
-	self
-		addAttributeValidator: parser parse
-		to: attributeValidatorsForElement.
+	validator
+		validateAndAddTo: attributeValidatorsForElement
+		usingDeclarationsFrom: self.
 ]
 
 { #category : #adding }

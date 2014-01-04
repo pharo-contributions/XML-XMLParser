@@ -10,6 +10,7 @@ Class {
 	#classVars : [
 		'AdditionalNameChars',
 		'AttributeTypeDelimiters',
+		'EncodingNameChars',
 		'NameStartChars',
 		'PubidChars',
 		'UnaryOperatorChars',
@@ -29,7 +30,8 @@ XMLTokenizer class >> initialize [
 		initializePubidChars;
 		initializeAttributeTypeDelimiters;
 		initializeValueListChars;
-		initializeUnaryOperatorChars.
+		initializeUnaryOperatorChars;
+		initializeEncodingNameChars.
 ]
 
 { #category : #'class initialization' }
@@ -50,6 +52,17 @@ XMLTokenizer class >> initializeAdditionalNameChars [
 { #category : #'class initialization' }
 XMLTokenizer class >> initializeAttributeTypeDelimiters [
 	AttributeTypeDelimiters := CharacterSet with: $# with: $' with: $" with: $>
+]
+
+{ #category : #'class initialization' }
+XMLTokenizer class >> initializeEncodingNameChars [
+	(EncodingNameChars := CharacterSet new)
+		addAll: ($a to: $z);
+		addAll: ($A to: $Z);
+		addAll: ($0 to: $9);
+		add: $-;
+		add: $_;
+		add: $.
 ]
 
 { #category : #'class initialization' }
@@ -213,6 +226,32 @@ XMLTokenizer >> errorExpected: anExpectedCharacterOrString butGot: aReceivedChar
 		ifEmpty: [receivedString := 'nothing'].
 
 	self errorExpected: expectedString, ' but got ', receivedString.
+]
+
+{ #category : #'tokenizing - expecting' }
+XMLTokenizer >> expectDigit [
+	| nextChar |
+
+	((nextChar := streamReader next) notNil
+		and: [nextChar isDigit])
+		ifFalse: [
+			self
+				errorExpected: 'digit'
+				butGot: nextChar].
+	^ nextChar.
+]
+
+{ #category : #'tokenizing - expecting' }
+XMLTokenizer >> expectLetter [
+	| nextChar |
+
+	((nextChar := streamReader next) notNil
+		and: [nextChar isLetter])
+		ifFalse: [
+			self
+				errorExpected: 'letter'
+				butGot: nextChar].
+	^ nextChar.
 ]
 
 { #category : #'tokenizing - expecting' }
@@ -735,6 +774,22 @@ XMLTokenizer >> nextNotationDeclaration [
 		systemID: externalId value.
 ]
 
+{ #category : #tokenizing }
+XMLTokenizer >> nextPITarget [
+	| target |
+
+	target := self nextName.
+	target asLowercase = 'xml'
+		ifTrue: [
+			(target ~= 'xml')
+				ifTrue: [self parseError: 'The "xml" target must be lowercase'].
+			(context isInProlog or: [context isInTextDeclaration])
+				ifFalse: [
+					self parseError:
+						'XML declaration outside of prolog or text declaration']].
+	^ target.
+]
+
 { #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextParameterEntityReference [
 	| name entity replacement |
@@ -888,8 +943,53 @@ XMLTokenizer >> nextTag [
 ]
 
 { #category : #tokenizing }
-XMLTokenizer >> nextXMLDeclAttributeValue [
-	^ streamReader upTo: self expectQuote.
+XMLTokenizer >> nextXMLEncodingAttributeValue [
+	| quote |
+
+	^ streamWriter writeWith: [:writeStream |
+		quote := self expectQuote.
+
+		writeStream nextPut: self expectLetter.
+		[streamReader atEnd not
+			and: [EncodingNameChars includes: streamReader peek]]
+			whileTrue: [writeStream nextPut: streamReader next].
+
+		self expectNext: quote.
+		writeStream contents]
+]
+
+{ #category : #tokenizing }
+XMLTokenizer >> nextXMLStandaloneAttributeValue [
+	| quote yesOrNo |
+
+	quote := self expectQuote.
+	yesOrNo := 
+		streamReader peek == $y
+			ifTrue: [self expectNextAll: 'yes']
+			ifFalse: [self expectNextAll: 'no'].
+	self expectNext: quote.
+
+	^ yesOrNo.
+]
+
+{ #category : #tokenizing }
+XMLTokenizer >> nextXMLVersionAttributeValue [
+	| quote |
+
+	^ streamWriter writeWith: [:writeStream |
+		quote := self expectQuote.
+
+		writeStream
+			nextPut: (self expectNext: $1);
+			nextPut: (self expectNext: $.);
+			nextPut: self expectDigit.
+
+		[streamReader atEnd
+			or: [streamReader peek == quote]]
+			whileFalse: [writeStream nextPut: self expectDigit].
+
+		self expectNext: quote.
+		writeStream contents]
 ]
 
 { #category : #errors }

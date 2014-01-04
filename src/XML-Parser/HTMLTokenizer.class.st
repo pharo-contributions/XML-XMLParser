@@ -2601,6 +2601,11 @@ HTMLTokenizer >> nextPCDataToken [
 	^ pcData.
 ]
 
+{ #category : #tokenizing }
+HTMLTokenizer >> nextPITarget [
+	^ self nextName
+]
+
 { #category : #'tokenizing - dtd' }
 HTMLTokenizer >> nextParameterEntityReference [
 	self
@@ -2708,7 +2713,17 @@ HTMLTokenizer >> nextValue [
 ]
 
 { #category : #tokenizing }
-HTMLTokenizer >> nextXMLDeclAttributeValue [
+HTMLTokenizer >> nextXMLEncodingAttributeValue [
+	^ self nextQuotedValue
+]
+
+{ #category : #tokenizing }
+HTMLTokenizer >> nextXMLStandaloneAttributeValue [
+	^ self nextQuotedValue
+]
+
+{ #category : #tokenizing }
+HTMLTokenizer >> nextXMLVersionAttributeValue [
 	^ self nextQuotedValue
 ]
 

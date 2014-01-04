@@ -61,6 +61,11 @@ XMLAttributeValidator >> hasIDs [
 ]
 
 { #category : #testing }
+XMLAttributeValidator >> hasNotationValues [
+	^ false
+]
+
+{ #category : #testing }
 XMLAttributeValidator >> isEntityValidator [
 	^ false
 ]
@@ -88,7 +93,7 @@ XMLAttributeValidator >> shouldFurtherNormalizeAttributeValue [
 ]
 
 { #category : #validation }
-XMLAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary [
+XMLAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationContainer [
 	anAttributeValidatorDictionary
 		at: attribute
 		put: self

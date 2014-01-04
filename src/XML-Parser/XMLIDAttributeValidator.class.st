@@ -24,14 +24,16 @@ XMLIDAttributeValidator >> isIDValidator [
 ]
 
 { #category : #validation }
-XMLIDAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary [
+XMLIDAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationContainer [
 	anAttributeValidatorDictionary valuesDo: [:each |
 		each isIDValidator
 			ifTrue: [
 				XMLValidationException signal:
 					'Element <', element, '> has multiple ID attributes']].
 	
-	super validateAndAddTo: anAttributeValidatorDictionary.
+	super
+		validateAndAddTo: anAttributeValidatorDictionary
+		usingDeclarationsFrom: aDeclarationContainer
 ]
 
 { #category : #validation }

@@ -17,9 +17,12 @@ XMLEntityAttributeValidator >> unparsedEntities [
 	^ unparsedEntities ifNil: [unparsedEntities := Dictionary new]
 ]
 
-{ #category : #accessing }
-XMLEntityAttributeValidator >> unparsedEntities: aDictionary [
-	unparsedEntities := aDictionary
+{ #category : #validation }
+XMLEntityAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationContainer [
+	unparsedEntities := aDeclarationContainer unparsedEntities.
+	super
+		validateAndAddTo: anAttributeValidatorDictionary
+		usingDeclarationsFrom: aDeclarationContainer.
 ]
 
 { #category : #validation }
