@@ -161,46 +161,17 @@ XMLParserTest >> elementDeclarationsNamed: aNameCollection [
 	^ stream contents.
 ]
 
-{ #category : #private }
-XMLParserTest >> recursiveEntityDeclarationsNamed: aName depth: aLimit isParameter: aBoolean [
-	| entityDeclarations |
-
-	entityDeclarations := String new writeStream.
-	1 to: aLimit do: [:i |
-		entityDeclarations
-			cr;
-			nextPutAll: '<!ENTITY '.
-		aBoolean
-			ifTrue: [entityDeclarations nextPutAll: '% '].
-
-		entityDeclarations
-			nextPutAll: aName, i printString;
-			nextPutAll: ' "'.
-			(i = aLimit)
-				ifTrue: [entityDeclarations nextPutAll: '<!--last-->']
-				ifFalse: [
-					aBoolean
-						ifTrue: [entityDeclarations nextPutAll: '&#37;']
-						ifFalse: [entityDeclarations nextPut: $&].
-					entityDeclarations
-						nextPutAll: aName, (i + 1) printString;
-						nextPut: $;].
-		entityDeclarations nextPutAll: '">'].
-
-	^ entityDeclarations contents.
-]
-
 { #category : #tests }
 XMLParserTest >> testAttributeDefaultDeclaration [
 	| dtd document |
 
 	dtd := '<!DOCTYPE root [
 		<!ELEMENT root EMPTY>
-		<!ATTLIST root one #IMPLIED
-						two #REQUIRED
-						three #FIXED "fixedDefault"
-						three #FIXED "redundant"
-						four "default" >]>'.
+		<!ATTLIST root one CDATA #IMPLIED
+						two CDATA #REQUIRED
+						three CDATA #FIXED "fixedDefault"
+						three CDATA #FIXED "redundant"
+						four CDATA "default" >]>'.
 	document := XMLDOMParser parse: dtd, '<root two="required" three="nonDefault" />'.
 	self
 		assert: (document root attributeAt: 'two') = 'required';
@@ -983,70 +954,6 @@ XMLParserTest >> testProcessingInstructions [
 ]
 
 { #category : #tests }
-XMLParserTest >> testRecursiveGeneralEntityReplacement [
-	| limit entityDeclarations |
-
-	limit := XMLTokenizer new maxEntityReplacementDepth.
-	entityDeclarations :=
-		self
-			recursiveEntityDeclarationsNamed: 'entity'
-			depth: limit
-			isParameter: false.
-	self
-		shouldnt: [
-			SAXHandler parse:
-				'<!DOCTYPE root [', entityDeclarations, ']>
-				<root>&entity1;</root>']
-		raise: XMLEntityDepthException.
-
-	entityDeclarations :=
-		self
-			recursiveEntityDeclarationsNamed: 'entity'
-			depth: limit + 1
-			isParameter: false.
-	self
-		should: [
-			SAXHandler parse:
-				'<!DOCTYPE root [', entityDeclarations, ']>
-				<root>&entity1;</root>']
-		raise: XMLEntityDepthException.
-]
-
-{ #category : #tests }
-XMLParserTest >> testRecursiveParameterEntityReplacement [
-	| limit entityDeclarations |
-
-	limit := XMLTokenizer new maxEntityReplacementDepth.
-	entityDeclarations :=
-		self
-			recursiveEntityDeclarationsNamed: 'entity'
-			depth: limit
-			isParameter: true.
-	self
-		shouldnt: [
-			SAXHandler parse:
-				'<!DOCTYPE root [',
-					entityDeclarations, '
-					%entity1;]>
-				<root/>']
-		raise: XMLEntityDepthException.
-
-	entityDeclarations :=
-		self
-			recursiveEntityDeclarationsNamed: 'entity'
-			depth: limit + 1
-			isParameter: true.
-	self
-		should: [
-			SAXHandler parse:
-				'<!DOCTYPE root [',
-					entityDeclarations,'
-					%entity1;]>
-				<root/>']
-		raise: XMLEntityDepthException.
-]
-
-{ #category : #tests }
 XMLParserTest >> testRenamingParsedNodes [
 	| document element attribute |
 
@@ -1092,12 +999,12 @@ XMLParserTest >> testSelfReferentialEntityReplacement [
 		should: [
 			SAXHandler parse:
 				'<!DOCTYPE root [<!ENTITY first "&first;">]><root>&first;</root>']
-		raise: XMLEntityDepthException.
+		raise: XMLWellFormednessException.
 	self
 		should: [
 			SAXHandler parse:
 				'<!DOCTYPE root [<!ENTITY % first "&#37;first;">%first;]><root/>']
-		raise: XMLEntityDepthException.
+		raise: XMLWellFormednessException.
 ]
 
 { #category : #tests }
