@@ -108,7 +108,7 @@ XMLParserDriver >> handleParameterEntityReference: aName [
 
 { #category : #'handling tokens' }
 XMLParserDriver >> handleParseError: anErrorString [
-	XMLParsingException signal: anErrorString
+	XMLWellFormednessException signal: anErrorString
 ]
 
 { #category : #'handling tokens' }

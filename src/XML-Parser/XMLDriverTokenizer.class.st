@@ -366,26 +366,20 @@ XMLDriverTokenizer >> nextUnparsedEntityReference [
 
 { #category : #tokenizing }
 XMLDriverTokenizer >> nextXMLDecl [
-	| version encoding standalone |
+	| version encoding standalone isTextDeclaration |
 
-	version := self nextXMLDeclAttribute: 'version'.
-	streamReader skipSeparators.
-	encoding := 
-		streamReader peek == $e
-			ifTrue: [self nextXMLDeclAttribute: 'encoding']
-			ifFalse: [''].
-	context isInTextDeclaration
-		ifFalse: [standalone := self nextXMLDeclAttribute: 'standalone'].
+	isTextDeclaration  := context isInTextDeclaration.
+	version := self nextXMLDeclAttribute: 'version' isOptional: isTextDeclaration.
+	(encoding := self nextXMLDeclAttribute: 'encoding' isOptional: isTextDeclaration not)
+		ifNotEmpty: [streamReader useConverterForEncoding: encoding].
+	standalone := self nextXMLDeclAttribute: 'standalone' isOptional: true.
 
 	streamReader skipSeparators.
 	self
 		expectNext: $?;
 		expectTerminator: $>.
 
-	encoding
-		ifNotEmpty: [streamReader useConverterForEncoding: encoding].
-
-	context isInTextDeclaration
+	isTextDeclaration
 		ifTrue: [
 			context isInExternalSubsetTextDeclaration
 				ifTrue: [context enterExternalSubset]]
@@ -397,9 +391,9 @@ XMLDriverTokenizer >> nextXMLDecl [
 ]
 
 { #category : #tokenizing }
-XMLDriverTokenizer >> nextXMLDeclAttribute: aName [
+XMLDriverTokenizer >> nextXMLDeclAttribute: aName isOptional: aBoolean [
 	streamReader skipSeparators.
-	streamReader peek == $?
+	(aBoolean and: [streamReader peek ~~ aName first])
 		ifTrue: [^ ''].
 
 	self expectNextAll: aName.
@@ -434,7 +428,7 @@ XMLDriverTokenizer >> setDriver: aDriver stream: aStream [
 	streamReader :=
 		(XMLNestedStreamReader
 			on: aStream
-			onClose: nil).
+			readLimit: nil).
 	streamWriter := XMLNestedStreamWriter new: 3.
 ]
 

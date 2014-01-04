@@ -4,15 +4,15 @@ Class {
 	#category : #'XML-Parser-DTD'
 }
 
-{ #category : #'instance creation' }
-DTDNotationListParser class >> on: aString [
-	^ super on:
-		(aString
-			copyFrom: (aString indexOf: $()
-			to: aString size)
-]
-
 { #category : #testing }
 DTDNotationListParser >> isValidListValue: aValue [
 	^ XMLTokenizer isName: aValue
+]
+
+{ #category : #accessing }
+DTDNotationListParser >> valueList: aString [
+	super valueList:
+		(aString
+			copyFrom: (aString indexOf: $()
+			to: aString size)
 ]

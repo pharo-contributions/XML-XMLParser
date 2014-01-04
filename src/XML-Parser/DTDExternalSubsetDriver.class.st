@@ -25,6 +25,7 @@ DTDExternalSubsetDriver >> documentURI [
 
 { #category : #accessing }
 DTDExternalSubsetDriver >> dtd [
+	"direct acceess for speed"
 	^ saxDriver dtd
 ]
 
@@ -114,7 +115,8 @@ DTDExternalSubsetDriver >> handleParameterEntityReference: aName [
 
 { #category : #testing }
 DTDExternalSubsetDriver >> isValidating [
-	^ self saxDriver isValidating
+	"direct acceess for speed"
+	^ saxDriver isValidating
 ]
 
 { #category : #accessing }

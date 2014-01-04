@@ -2,7 +2,8 @@ Class {
 	#name : #XMLValueListAttributeValidator,
 	#superclass : #XMLAttributeValidator,
 	#instVars : [
-		'allowedValues'
+		'allowedValues',
+		'hasNotationValues'
 	],
 	#category : #'XML-Parser-Validation'
 }
@@ -18,8 +19,31 @@ XMLValueListAttributeValidator >> allowedValues: aValueCollection [
 ]
 
 { #category : #testing }
+XMLValueListAttributeValidator >> hasNotationValues [
+	^ hasNotationValues ifNil: [hasNotationValues := false]
+]
+
+{ #category : #accessing }
+XMLValueListAttributeValidator >> hasNotationValues: aBoolean [
+	hasNotationValues := aBoolean
+]
+
+{ #category : #testing }
 XMLValueListAttributeValidator >> isValueListValidator [
 	^ true
+]
+
+{ #category : #validation }
+XMLValueListAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary [
+	self hasNotationValues
+		ifTrue: [
+			anAttributeValidatorDictionary valuesDo: [:each |
+				(each isValueListValidator and: [each hasNotationValues])
+					ifTrue: [
+						XMLValidationException signal:
+							'Element <', element, '> has multiple NOTATION list attributes']]].
+
+	super validateAndAddTo: anAttributeValidatorDictionary.
 ]
 
 { #category : #validation }

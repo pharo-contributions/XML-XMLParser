@@ -6,6 +6,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'rootElement',
+		'externalSubsetUri',
 		'isStandalone',
 		'elementValidators',
 		'attributeValidators',
@@ -17,89 +18,85 @@ Class {
 	#category : #'XML-Parser-DTD'
 }
 
-{ #category : #validators }
-DTDDoctypeDefinition >> addAttributeValidator: aValidator [
-	| attributeValidatorsForElement |
-
-	attributeValidatorsForElement :=
-		self attributeValidators
-			at: aValidator element
-			ifAbsentPut: [Dictionary new].
-
-	"Subsequent declarations are ignored."
-	(attributeValidatorsForElement includesKey: aValidator attribute)
-		ifTrue: [^ self].
-
-	aValidator isIDValidator
+{ #category : #adding }
+DTDDoctypeDefinition >> addAttributeValidator: aValidator to: anAttributeValidatorDictionary [
+	(aValidator isValueListValidator and: [aValidator hasNotationValues])
 		ifTrue: [
-			attributeValidatorsForElement valuesDo: [:each |
-				each isIDValidator
-					ifTrue: [
-						XMLValidationException signal:
-							'Element <', aValidator element, '> has multiple ID attributes']]].
+			(aValidator allowedValues allSatisfy: [:each | self includesNotation: each])
+				ifFalse: [XMLValidationException signal: 'Undeclared notation in enumeration']]
+		ifFalse: [
+			aValidator isEntityValidator
+				ifTrue: [aValidator unparsedEntities: self unparsedEntities]].
 
-	attributeValidatorsForElement
-		at: aValidator attribute
-		put: aValidator.
+	aValidator validateAndAddTo: anAttributeValidatorDictionary.
 ]
 
-{ #category : #accessing }
+{ #category : #adding }
 DTDDoctypeDefinition >> addExternalGeneralEntity: aName resolver: aResolver uri: aSystemUri from: aDocumentOrEntityUri [
-	self 
-		generalEntityAt: aName
-		put: (aResolver
-			resolveGeneralEntity: aName
-			uri: aSystemUri
-			from: aDocumentOrEntityUri)
+	self generalEntities
+		at: aName
+		ifAbsentPut: [
+			aResolver
+				resolveGeneralEntity: aName
+				uri: aSystemUri
+				from: aDocumentOrEntityUri]
 ]
 
-{ #category : #accessing }
+{ #category : #adding }
 DTDDoctypeDefinition >> addExternalParameterEntity: aName resolver: aResolver uri: aSystemUri from: aDocumentOrEntityUri [
-	self 
-		parameterEntityAt: aName
-		put: (aResolver
-			resolveParameterEntity: aName
-			uri: aSystemUri
-			from: aDocumentOrEntityUri)
+	self parameterEntities
+		at: aName
+		ifAbsentPut: [
+			aResolver
+				resolveParameterEntity: aName
+				uri: aSystemUri
+				from: aDocumentOrEntityUri]
 ]
 
-{ #category : #accessing }
+{ #category : #adding }
 DTDDoctypeDefinition >> addGeneralEntity: aName replacement: aReplacement from: aDocumentOrEntityUri [
-	self
-		generalEntityAt: aName
-		put:
-			(DTDGeneralEntity 
+	self generalEntities
+		at: aName
+		ifAbsentPut: [
+			DTDGeneralEntity 
 				name: aName
 				replacement: aReplacement
-				uri: aDocumentOrEntityUri)
+				uri: aDocumentOrEntityUri]
 ]
 
-{ #category : #accessing }
+{ #category : #adding }
 DTDDoctypeDefinition >> addNotation: aName [
 	self notations add: aName
 ]
 
-{ #category : #accessing }
+{ #category : #adding }
 DTDDoctypeDefinition >> addParameterEntity: aName replacement: aReplacement from: aDocumentOrEntityUri [
-	self 
-		parameterEntityAt: aName
-		put:
-			(DTDParameterEntity
+	self parameterEntities
+		at: aName
+		ifAbsentPut: [
+			DTDParameterEntity
 				name: aName
 				replacement: aReplacement
-				uri: aDocumentOrEntityUri).
+				uri: aDocumentOrEntityUri]
 ]
 
-{ #category : #accessing }
+{ #category : #adding }
 DTDDoctypeDefinition >> addUnparsedEntity: aName ndata: aNotation [
-	self 
-		unparsedEntityAt: aName
-		put: aNotation
+	self unparsedEntities
+		at: aName
+		ifAbsentPut: [aNotation]
 ]
 
-{ #category : #validators }
+{ #category : #adding }
 DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
-	| parser validator  |
+	| parser attributeValidatorsForElement |
+
+	attributeValidatorsForElement :=
+		self attributeValidators
+			at: anElement
+			ifAbsentPut: [Dictionary new].
+	(attributeValidatorsForElement includesKey: aName)
+		ifTrue: [^ nil].
 
 	parser :=
 		DTDAttributeDefinitionParser
@@ -108,19 +105,13 @@ DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: aName type:
 			type: aType
 			defaultPragma: aDefaultPragma
 			defaultValue: aDefaultValue.
-	validator := parser parse.
 
-	(validator isValueListValidator and: [parser isNotationList: aType])
-		ifTrue: [
-			(validator allowedValues allSatisfy: [:each | self includesNotation: each])
-				ifFalse: [XMLValidationException signal: 'Undeclared notation in enumeration']].
-	validator isEntityValidator
-		ifTrue: [validator unparsedEntities: self unparsedEntities].
-
-	self addAttributeValidator: validator.
+	self
+		addAttributeValidator: parser parse
+		to: attributeValidatorsForElement.
 ]
 
-{ #category : #validators }
+{ #category : #adding }
 DTDDoctypeDefinition >> addValidatorForElement: anElement contentModel: aContentModel [
 	self elementValidators
 		at: anElement
@@ -130,17 +121,22 @@ DTDDoctypeDefinition >> addValidatorForElement: anElement contentModel: aContent
 				contentModel: aContentModel) parse]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 DTDDoctypeDefinition >> attributeValidators [
 	^ attributeValidators ifNil: [attributeValidators := Dictionary new]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 DTDDoctypeDefinition >> elementValidators [
 	^ elementValidators ifNil: [elementValidators := Dictionary new]
 ]
 
 { #category : #accessing }
+DTDDoctypeDefinition >> externalSubsetURI [
+	^ externalSubsetUri ifNil: [externalSubsetUri := '']
+]
+
+{ #category : #private }
 DTDDoctypeDefinition >> generalEntities [
 	^ generalEntities ifNil: [generalEntities := Dictionary new]
 ]
@@ -148,11 +144,6 @@ DTDDoctypeDefinition >> generalEntities [
 { #category : #accessing }
 DTDDoctypeDefinition >> generalEntityAt: aName [
 	^ self generalEntities at: aName ifAbsent: [nil]
-]
-
-{ #category : #accessing }
-DTDDoctypeDefinition >> generalEntityAt: aName put: anEntity [
-	self generalEntities at: aName put: anEntity
 ]
 
 { #category : #testing }
@@ -163,6 +154,11 @@ DTDDoctypeDefinition >> hasAttributeValidators [
 { #category : #testing }
 DTDDoctypeDefinition >> hasElementValidators [
 	^ elementValidators notNil and: [elementValidators notEmpty]
+]
+
+{ #category : #testing }
+DTDDoctypeDefinition >> hasExternalSubset [
+	^ self isStandalone not and: [self externalSubsetURI notEmpty]
 ]
 
 { #category : #testing }
@@ -180,12 +176,12 @@ DTDDoctypeDefinition >> isStandalone: aBoolean [
 	isStandalone := aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 DTDDoctypeDefinition >> notations [
 	^ notations ifNil: [notations := Set new]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 DTDDoctypeDefinition >> parameterEntities [
 	^ parameterEntities ifNil: [parameterEntities := Dictionary new]
 ]
@@ -196,21 +192,17 @@ DTDDoctypeDefinition >> parameterEntityAt: aName [
 ]
 
 { #category : #accessing }
-DTDDoctypeDefinition >> parameterEntityAt: aName put: anEntity [
-	self parameterEntities at: aName put: anEntity
-]
-
-{ #category : #accessing }
 DTDDoctypeDefinition >> rootElement [
 	^ rootElement ifNil: ['']
 ]
 
 { #category : #accessing }
-DTDDoctypeDefinition >> rootElement: aRootElement [
-	rootElement := aRootElement
+DTDDoctypeDefinition >> rootElement: aRootElement externalSubsetURI: aUri [
+	rootElement := aRootElement.
+	externalSubsetUri := aUri.
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 DTDDoctypeDefinition >> unparsedEntities [
 	^ unparsedEntities ifNil: [unparsedEntities := Dictionary new]
 ]
@@ -218,9 +210,4 @@ DTDDoctypeDefinition >> unparsedEntities [
 { #category : #accessing }
 DTDDoctypeDefinition >> unparsedEntityAt: aName [
 	^ self unparsedEntities at: aName ifAbsent: [nil]
-]
-
-{ #category : #accessing }
-DTDDoctypeDefinition >> unparsedEntityAt: aName put: aNotation [
-	self unparsedEntities at: aName put: aNotation
 ]

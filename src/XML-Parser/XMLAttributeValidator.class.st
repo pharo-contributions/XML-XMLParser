@@ -88,6 +88,13 @@ XMLAttributeValidator >> shouldFurtherNormalizeAttributeValue [
 ]
 
 { #category : #validation }
+XMLAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary [
+	anAttributeValidatorDictionary
+		at: attribute
+		put: self
+]
+
+{ #category : #validation }
 XMLAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
 	defaultValueValidator validateAttributeDefaultIn: anAttributeDictionary.
 

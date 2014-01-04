@@ -196,7 +196,7 @@ XMLTokenizer >> endReplacementForParameterEntity: anEntity [
 
 { #category : #errors }
 XMLTokenizer >> entityDepthError: anErrorString [
-	XMLEntityDepthException signal: anErrorString
+	XMLLimitException signal: anErrorString
 ]
 
 { #category : #errors }
@@ -900,7 +900,7 @@ XMLTokenizer >> parseError: anErrorString [
 { #category : #'entity replacement' }
 XMLTokenizer >> pushBackReplacement: aReplacement forEntity: anEntity onClose: aBlock [
 	(self hasActiveEntityNamed: anEntity name)
-		ifTrue: [self entityDepthError: 'Illegal self-referential entity ', anEntity asReference].
+		ifTrue: [self parseError: 'Illegal self-referential entity ', anEntity asReference].
 	(self activeEntities size >= self maxEntityReplacementDepth)
 		ifTrue: [self entityDepthError: 'Cannot further nest entity replacements'].
 

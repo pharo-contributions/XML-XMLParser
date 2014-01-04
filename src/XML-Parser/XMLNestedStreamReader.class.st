@@ -9,11 +9,11 @@ Class {
 	#instVars : [
 		'stream',
 		'nestedStreams',
-		'hasNestedStreams',
 		'peekChar',
 		'writeBuffer',
 		'normalizedLineEndingChar',
-		'currentLineNumber'
+		'currentLineNumber',
+		'readLimit'
 	],
 	#classVars : [
 		'CarriageReturn',
@@ -44,15 +44,17 @@ XMLNestedStreamReader class >> initialize [
 ]
 
 { #category : #'instance creation' }
-XMLNestedStreamReader class >> on: anInitialStream onClose: aBlock [
+XMLNestedStreamReader class >> on: anInitialStream readLimit: aReadLimit [
 	^ self new
 		setStream: anInitialStream
-		onClose: aBlock
+		readLimit: aReadLimit
 ]
 
 { #category : #testing }
 XMLNestedStreamReader >> atEnd [
-	^ peekChar isNil and: [hasNestedStreams not and: [stream atEnd]]
+	^ peekChar isNil
+		and: [stream atEnd
+			and: [self hasNestedStreams not]]
 ]
 
 { #category : #testing }
@@ -69,14 +71,14 @@ XMLNestedStreamReader >> basicNext [
 
 	(nextChar := stream next)
 		ifNil: [
-			[hasNestedStreams and: [stream atEnd]]
+			[self hasNestedStreams and: [stream atEnd]]
 				whileTrue: [self popCurrentStream].
 			nextChar := stream next].
 
 	nextChar == CarriageReturn
 		ifTrue: [
 			nextChar := normalizedLineEndingChar.
-			[hasNestedStreams and: [stream atEnd]]
+			[self hasNestedStreams and: [stream atEnd]]
 				whileTrue: [self popCurrentStream].
 			(stream peek == LineFeed)
 				ifTrue: [stream next]]
@@ -92,13 +94,16 @@ XMLNestedStreamReader >> currentLineNumber [
 	^ currentLineNumber
 ]
 
+{ #category : #testing }
+XMLNestedStreamReader >> hasNestedStreams [
+	^ nestedStreams notNil and: [nestedStreams notEmpty]
+]
+
 { #category : #initialization }
 XMLNestedStreamReader >> initialize [
 	super initialize.
 
-	stream := nil.
 	nestedStreams := nil.
-	hasNestedStreams := false.
 	peekChar := nil.
 	writeBuffer := WriteStream on: (String new: 128).
 	currentLineNumber := 1.
@@ -131,6 +136,9 @@ XMLNestedStreamReader >> next [
 
 	nextChar == normalizedLineEndingChar
 		ifTrue: [currentLineNumber := currentLineNumber + 1].
+	readLimit ifNotNil: [
+		(readLimit := readLimit - 1) > 0
+			ifFalse: [XMLLimitException signal: 'Read limit on input exceeded']].
 
 	^ nextChar.
 ]
@@ -225,7 +233,6 @@ XMLNestedStreamReader >> peek [
 XMLNestedStreamReader >> popCurrentStream [
 	stream close.
 	stream := nestedStreams removeLast.
-	nestedStreams ifEmpty: [hasNestedStreams := false].
 ]
 
 { #category : #streaming }
@@ -258,17 +265,25 @@ XMLNestedStreamReader >> pushStream: aStream onClose: aBlock [
 			(nestedStreams size >= self maxNestedStreams)
 				ifTrue: [XMLParserException signal: 'cannot further nest input streams'].
 			nestedStreams addLast: stream].
-	hasNestedStreams := true.
 
 	self setStream: aStream onClose: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLNestedStreamReader >> setStream: aNewStream onClose: aBlock [
 	stream :=
 		XMLPeekableStreamAdapter
 			on: aNewStream
 			onClose: aBlock
+]
+
+{ #category : #initialization }
+XMLNestedStreamReader >> setStream: anInitialStream readLimit: aReadLimit [
+	self
+		setStream: anInitialStream
+		onClose: nil.
+
+	readLimit := aReadLimit.
 ]
 
 { #category : #streaming }
@@ -282,7 +297,9 @@ XMLNestedStreamReader >> skipSeparators [
 
 { #category : #streaming }
 XMLNestedStreamReader >> skipTo: aDelimiter [
-	[self atEnd] whileFalse: [self next == aDelimiter ifTrue: [^ true]].
+	[self atEnd] whileFalse: [
+		self next == aDelimiter
+			ifTrue: [^ true]].
 	^ false.
 ]
 

@@ -136,7 +136,10 @@ SAXDriver >> handleEndContentEntityReplacement: aName [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleEndDTD [
-	self saxHandler endDTD
+	(self resolvesExternalEntities and: [self dtd hasExternalSubset])
+		ifTrue: [self parseExternalSubset: self dtd externalSubsetURI].
+
+	self saxHandler endDTD.
 ]
 
 { #category : #'handling tokens' }
@@ -293,16 +296,14 @@ SAXDriver >> handleStartContentEntityReplacement: aName [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleStartDTD: aRoot publicID: aPublicId systemID: aSystemId [
-	self dtd rootElement: aRoot.
-	(self resolvesExternalEntities
-		and: [aSystemId notEmpty
-			and: [self dtd isStandalone not]])
-		ifTrue: [self parseExternalSubset: aSystemId].
+	self dtd
+		rootElement: aRoot
+		externalSubsetURI: aSystemId.
 	
 	self saxHandler
 		startDTD: aRoot
 		publicID: aPublicId
-		systemID: aSystemId
+		systemID: aSystemId.
 ]
 
 { #category : #'handling tokens' }
@@ -374,6 +375,7 @@ SAXDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrN
 
 { #category : #testing }
 SAXDriver >> isValidating [
+	"direct acceess for speed"
 	^ saxHandler isValidating
 ]
 
@@ -391,12 +393,12 @@ SAXDriver >> parseExternalSubset: aUri [
 
 { #category : #testing }
 SAXDriver >> preservesUndeclaredEntityReferences [
-	^ saxHandler preservesUndeclaredEntityReferences
+	^ self saxHandler preservesUndeclaredEntityReferences
 ]
 
 { #category : #testing }
 SAXDriver >> resolvesExternalEntities [
-	^ saxHandler resolvesExternalEntities
+	^ self saxHandler resolvesExternalEntities
 ]
 
 { #category : #accessing }
@@ -449,6 +451,7 @@ SAXDriver >> undeclareNamespaces [
 
 { #category : #testing }
 SAXDriver >> usesNamespaces [
+	"direct acceess for speed"
 	^ saxHandler usesNamespaces
 ]
 

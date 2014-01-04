@@ -81,21 +81,24 @@ DTDAttributeDefinitionParser >> parse [
 			attribute: attribute
 			defaultValueValidator: defaultValueValidator.
 	attributeValidator isValueListValidator
-		ifTrue: [attributeValidator allowedValues: (self parseValueListType)].
+		ifTrue: [self parseValueListTypeFor: attributeValidator].
 
 	^ attributeValidator.
 ]
 
 { #category : #parsing }
-DTDAttributeDefinitionParser >> parseValueListType [
-	| listParserClass |
+DTDAttributeDefinitionParser >> parseValueListTypeFor: anAttributeValidator [
+	| listParserClass isNotationList |
 
+	isNotationList := self isNotationList: type.
 	listParserClass :=
-		(self isNotationList: type)
+		isNotationList
 			ifTrue: [DTDNotationListParser]
 			ifFalse: [DTDEnumerationListParser].
 
-	^ (listParserClass on: type) parse.
+	anAttributeValidator
+		allowedValues: (listParserClass on: type) parse;
+		hasNotationValues: isNotationList.
 ]
 
 { #category : #initialization }
@@ -109,7 +112,9 @@ DTDAttributeDefinitionParser >> setElement: anElement attribute: anAttribute typ
 
 { #category : #parsing }
 DTDAttributeDefinitionParser >> validatorClassForType [
+	type ifEmpty: [XMLValidationException signal: 'Missing attribute type'].
+
 	^ NonEnumerationValidators 
-		at: (type ifEmpty: ['CDATA'])
+		at: type
 		ifAbsent: [XMLValueListAttributeValidator]
 ]
