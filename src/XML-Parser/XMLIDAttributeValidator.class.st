@@ -24,7 +24,7 @@ XMLIDAttributeValidator >> isIDValidator [
 ]
 
 { #category : #validation }
-XMLIDAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationContainer [
+XMLIDAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
 	anAttributeValidatorDictionary valuesDo: [:each |
 		each isIDValidator
 			ifTrue: [
@@ -33,7 +33,7 @@ XMLIDAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usin
 	
 	super
 		validateAndAddTo: anAttributeValidatorDictionary
-		usingDeclarationsFrom: aDeclarationContainer
+		usingDeclarationsFrom: aDeclarationDelegate
 ]
 
 { #category : #validation }

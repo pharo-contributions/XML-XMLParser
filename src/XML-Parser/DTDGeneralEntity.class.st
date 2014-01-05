@@ -1,3 +1,7 @@
+"
+This class is for general parsed entities with replacements.
+
+"
 Class {
 	#name : #DTDGeneralEntity,
 	#superclass : #DTDParsedEntity,

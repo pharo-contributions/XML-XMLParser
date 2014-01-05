@@ -93,7 +93,7 @@ XMLAttributeValidator >> shouldFurtherNormalizeAttributeValue [
 ]
 
 { #category : #validation }
-XMLAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationContainer [
+XMLAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
 	anAttributeValidatorDictionary
 		at: attribute
 		put: self

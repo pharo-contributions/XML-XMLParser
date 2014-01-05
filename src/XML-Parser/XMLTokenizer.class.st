@@ -134,11 +134,6 @@ XMLTokenizer class >> isName: aString [
 ]
 
 { #category : #testing }
-XMLTokenizer class >> isNameStartChar: aCharacter [
-	^ NameStartChars includes: aCharacter
-]
-
-{ #category : #testing }
 XMLTokenizer class >> isNmtoken: aString [
 	^ aString notEmpty and: [aString allSatisfy: [:each | self isNmtokenChar: each]]
 ]
@@ -744,8 +739,7 @@ XMLTokenizer >> nextNmtokenOn: aWriteStream [
 
 	oldPosition := aWriteStream position.
 	[(nextChar := streamReader peek) notNil
-		and: [(NameStartChars includes: nextChar)
-			or: [AdditionalNameChars includes: nextChar]]]
+		and: [self isNmtokenChar: nextChar]]
 		whileTrue: [aWriteStream nextPut: streamReader next].
 
 	(aWriteStream position > oldPosition)
@@ -778,11 +772,10 @@ XMLTokenizer >> nextNotationDeclaration [
 XMLTokenizer >> nextPITarget [
 	| target |
 
-	target := self nextName.
-	target asLowercase = 'xml'
+	((target := self nextName) sameAs: 'xml')
 		ifTrue: [
-			(target ~= 'xml')
-				ifTrue: [self parseError: 'The "xml" target must be lowercase'].
+			target = 'xml'
+				ifFalse: [self parseError: 'The "xml" target must be lowercase'].
 			(context isInProlog or: [context isInTextDeclaration])
 				ifFalse: [
 					self parseError:
@@ -916,7 +909,7 @@ XMLTokenizer >> nextTag [
 			streamReader skipSeparators.
 			attributeValue := self nextAttributeValue.
 	
-			((attributeName at: 1) == $x "fast test to avoid the more expensive"
+			((attributeName at: 1) == $x "fast test to skip the others"
 				and: [driver usesNamespaces
 					and: [attributeName beginsWith: 'xmlns']])
 				ifTrue: [

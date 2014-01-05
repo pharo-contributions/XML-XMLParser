@@ -18,11 +18,11 @@ XMLEntityAttributeValidator >> unparsedEntities [
 ]
 
 { #category : #validation }
-XMLEntityAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationContainer [
-	unparsedEntities := aDeclarationContainer unparsedEntities.
+XMLEntityAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
+	unparsedEntities := aDeclarationDelegate unparsedEntities.
 	super
 		validateAndAddTo: anAttributeValidatorDictionary
-		usingDeclarationsFrom: aDeclarationContainer.
+		usingDeclarationsFrom: aDeclarationDelegate.
 ]
 
 { #category : #validation }

@@ -1,3 +1,6 @@
+"
+This class is for paramter entities with replacements.
+"
 Class {
 	#name : #DTDParameterEntity,
 	#superclass : #DTDParsedEntity,

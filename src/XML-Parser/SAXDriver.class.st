@@ -361,10 +361,9 @@ SAXDriver >> handleWhitespace: aString [
 SAXDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
 	| versionNumber standaloneBoolean |
 
-	aVersion
-		ifNotEmpty: [versionNumber := aVersion asNumber].
+	aVersion ifNotEmpty: [versionNumber := aVersion asNumber].
+	standaloneBoolean := aYesOrNo = 'yes'.
 
-	standaloneBoolean := aYesOrNo asLowercase = 'yes'.
 	self dtd isStandalone: standaloneBoolean.
 
 	self saxHandler
