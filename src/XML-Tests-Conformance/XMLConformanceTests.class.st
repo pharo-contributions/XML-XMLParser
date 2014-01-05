@@ -240,7 +240,7 @@ XMLConformanceTests >> fileClientClass [
 
 { #category : #testing }
 XMLConformanceTests >> isSkippableException: anError [
-	^ (XMLFileIOException, XMLHTTPException, XMLEntityDepthException) handles: anError
+	^ (XMLFileIOException, XMLHTTPException, XMLLimitException) handles: anError
 ]
 
 { #category : #parsing }
@@ -254,7 +254,7 @@ XMLConformanceTests >> parse: aString documentURI: aUri [
 	parser externalEntityResolver fileClient:
 		(self fileClientClass testCaseClass: self class).
 	parser
-		usesNamespaces: true;
+		usesNamespaces: false;
 		isValidating: true;
 		resolvesExternalEntities: true;
 		parseDocument.
