@@ -233,14 +233,14 @@ XMLConformanceTests class >> testSelectorFrom: aFileReference [
 			(self segmentsAfterSuite: aFileReference)) asSymbol
 ]
 
-{ #category : #accessing }
-XMLConformanceTests >> fileClientClass [
-	^ XMLConformanceVirtualFileClient
-]
-
 { #category : #testing }
 XMLConformanceTests >> isSkippableException: anError [
-	^ (XMLFileIOException, XMLHTTPException, XMLLimitException) handles: anError
+	^ (XMLFileException, XMLHTTPException, XMLLimitException) handles: anError
+]
+
+{ #category : #accessing }
+XMLConformanceTests >> newVirtualFileResolver [
+	^ XMLConformanceVirtualFileResolver virtualFileClass: self class
 ]
 
 { #category : #parsing }
@@ -251,12 +251,11 @@ XMLConformanceTests >> parse: aString documentURI: aUri [
 		self parserClass
 			on: aString
 			documentURI: aUri.
-	parser externalEntityResolver fileClient:
-		(self fileClientClass testCaseClass: self class).
 	parser
 		usesNamespaces: false;
 		isValidating: true;
 		resolvesExternalEntities: true;
+		externalEntityResolver: self newVirtualFileResolver;
 		parseDocument.
 ]
 
