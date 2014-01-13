@@ -4,77 +4,43 @@ This class resolves external entity references using HTTP and file clients.
 Class {
 	#name : #DTDExternalEntityResolver,
 	#superclass : #Object,
-	#instVars : [
-		'httpClient',
-		'fileClient'
-	],
 	#category : #'XML-Parser-DTD'
 }
 
-{ #category : #private }
-DTDExternalEntityResolver >> clientForURI: aUri [
-	^ self clientForURIs: (Array with: aUri)
-]
+{ #category : #combining }
+DTDExternalEntityResolver >> combineURI: aBaseUri with: aRelativeUri [
+	| baseUri combinedUri |
 
-{ #category : #private }
-DTDExternalEntityResolver >> clientForURIs: aUriColleciton [
-	^ (aUriColleciton anySatisfy: [:each |
-		self httpClient beginsWithSupportedURLProtocol: each])
-		ifTrue: [self httpClient]
-		ifFalse: [self fileClient]
+	baseUri := XMLURI fromString: aBaseUri.
+	combinedUri := baseUri / aRelativeUri.
+	(combinedUri isLocalURI and: [baseUri isLocalURI not])
+		ifTrue: [XMLLimitException signal: 'Local URI referenced from non-local URI'].
+
+	^ combinedUri.
 ]
 
 { #category : #accessing }
 DTDExternalEntityResolver >> defaultDocumentURI [
-	^ self fileClient
-		pathToFile: 'default'
-		inDirectory: self fileClient currentWorkingDirectory
-]
-
-{ #category : #accessing }
-DTDExternalEntityResolver >> entityURIFromRelative: aRelativeUri andBase: aBaseUri [
-	^ (self clientForURIs: (Array with: aBaseUri with: aRelativeUri))
-		combineRelative: aRelativeUri
-		withBase: aBaseUri
-]
-
-{ #category : #accessing }
-DTDExternalEntityResolver >> fileClient [
-	^ fileClient ifNil: [fileClient := XMLFileClient defaultImplementation new]
-]
-
-{ #category : #accessing }
-DTDExternalEntityResolver >> fileClient: aClient [
-	fileClient := aClient
-]
-
-{ #category : #accessing }
-DTDExternalEntityResolver >> httpClient [
-	^ httpClient ifNil: [httpClient := XMLHTTPClient defaultImplementation new]
-]
-
-{ #category : #accessing }
-DTDExternalEntityResolver >> httpClient: aClient [
-	httpClient := aClient
+	^ XMLFileHandle defaultImplementation currentWorkingDirectoryPath, '/default'
 ]
 
 { #category : #resolving }
 DTDExternalEntityResolver >> resolveEntity: aUri [
-	^ (self clientForURI: aUri) get: aUri
+	^ aUri asXMLURI get
 ]
 
 { #category : #private }
 DTDExternalEntityResolver >> resolveEntity: aName uri: anEntityUri from: aSourceUri class: aClass [
-	| absoluteUri |
+	| combinedUri |
 
-	absoluteUri :=
+	combinedUri :=
 		self
-			entityURIFromRelative: anEntityUri
-			andBase: aSourceUri.
+			combineURI: aSourceUri
+			with: anEntityUri.
 	^ aClass
 		name: aName
-		replacement: (self resolveEntity: absoluteUri) contents
-		uri: absoluteUri.
+		replacement: (self resolveEntity: combinedUri) contents
+		uri: combinedUri asString.
 ]
 
 { #category : #resolving }

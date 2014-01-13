@@ -80,7 +80,7 @@ SAXDriver >> externalSubsetParserOnURI: aUri [
 		driver:
 			(DTDExternalSubsetDriver
 				saxDriver: self
-				documentURI: aUri)
+				documentURI: aUri asString)
 		on: (self externalEntityResolver resolveEntity: aUri)
 	
 ]
@@ -385,8 +385,8 @@ SAXDriver >> parseExternalSubset: aUri [
 	parser :=
 		self externalSubsetParserOnURI:
 			(self externalEntityResolver
-				entityURIFromRelative: aUri
-				andBase: self documentURI).
+				combineURI: self documentURI
+				with: aUri).
 	parser parseDocument.
 ]
 

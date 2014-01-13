@@ -53,14 +53,14 @@ SAXHandler class >> on: aStringOrStream documentURI: aUri [
 { #category : #'instance creation' }
 SAXHandler class >> onFileNamed: aFileName [
 	^ self
-		on: (XMLFileClient defaultImplementation get: aFileName)
+		on: (XMLFileHandle defaultImplementation path: aFileName) readStream
 		documentURI: aFileName
 ]
 
 { #category : #'instance creation' }
 SAXHandler class >> onURL: aUrlString [
 	^ self
-		on: (XMLHTTPClient defaultImplementation get: aUrlString)
+		on: (XMLHTTPRequest defaultImplementation url: aUrlString) get
 		documentURI: aUrlString
 ]
 
@@ -154,9 +154,7 @@ SAXHandler >> currentScope: aNamespaceScope [
 
 { #category : #private }
 SAXHandler >> defaultDocumentURI [
-	^ (input respondsTo: #path)
-		ifTrue: [input path]
-		ifFalse: [self externalEntityResolver defaultDocumentURI].
+	^ self externalEntityResolver defaultDocumentURI
 ]
 
 { #category : #accessing }

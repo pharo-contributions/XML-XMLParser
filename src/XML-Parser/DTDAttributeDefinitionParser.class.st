@@ -108,7 +108,7 @@ DTDAttributeDefinitionParser >> setElement: anElement attribute: anAttribute typ
 	defaultValue := aDefaultValue.
 ]
 
-{ #category : #parsing }
+{ #category : #'private ' }
 DTDAttributeDefinitionParser >> validatorClassForType [
 	type ifEmpty: [XMLValidationException signal: 'Missing attribute type'].
 

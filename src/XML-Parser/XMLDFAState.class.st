@@ -3,7 +3,7 @@ This class is a DFA state made by grouping one or more NFA states.
 "
 Class {
 	#name : #XMLDFAState,
-	#superclass : #XMLFAState,
+	#superclass : #Object,
 	#instVars : [
 		'nfaStates',
 		'transitions',

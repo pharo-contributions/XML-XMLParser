@@ -18,7 +18,7 @@ Class {
 
 { #category : #accessing }
 XMLConfiguration >> externalEntityResolver [
-	^ externalEntityResolver ifNil: [externalEntityResolver := DTDExternalEntityResolver new]
+	^ externalEntityResolver ifNil: [externalEntityResolver := DTDCachingEntityResolver new]
 ]
 
 { #category : #accessing }

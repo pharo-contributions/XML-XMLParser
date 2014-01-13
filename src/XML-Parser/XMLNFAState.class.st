@@ -3,7 +3,7 @@ This is a base class for NFA states.
 "
 Class {
 	#name : #XMLNFAState,
-	#superclass : #XMLFAState,
+	#superclass : #Object,
 	#instVars : [
 		'lastAddedTo'
 	],
@@ -32,6 +32,11 @@ XMLNFAState >> asDFAState [
 
 { #category : #connecting }
 XMLNFAState >> connectToState: aState [
+]
+
+{ #category : #testing }
+XMLNFAState >> isAccepting [
+	^ false
 ]
 
 { #category : #testing }

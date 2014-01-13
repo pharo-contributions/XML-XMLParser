@@ -1,11 +1,16 @@
 Extension { #name : #String }
 
-{ #category : #'*xml-parser' }
+{ #category : #'*XML-Parser' }
 String >> asXMLString [
 	^ XMLString string: self
 ]
 
-{ #category : #'*xml-parser' }
+{ #category : #'*XML-Parser' }
+String >> asXMLURI [
+	^ XMLURI fromString: self
+]
+
+{ #category : #'*XML-Parser' }
 String >> splitQualifiedNameInto: aTwoArgumentBlock [
 	"Split the name into namespace prefix and local name (the block arguments).
 	(Optimized code; profile when modifying.)"

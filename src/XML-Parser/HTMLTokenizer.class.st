@@ -50,9 +50,7 @@ HTMLTokenizer class >> generateHTMLEntityPage [
 	| namedEntities json fields entityName codepoint |
 
 	namedEntities := OrderedCollection new.
-	json :=
-		XMLHTTPClient defaultImplementation
-			get: 'http://www.w3.org/TR/html5/entities.json'.
+	json := 'http://www.w3.org/TR/html5/entities.json' asXMLURI get.
 	[json atEnd]
 		whileFalse: [
 			fields := $: split: (json upToAny: String crlf).

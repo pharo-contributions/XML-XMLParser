@@ -3,7 +3,7 @@ This class uses a dictionary with NFAStateSet keys to cache DFA states.
 "
 Class {
 	#name : #XMLDFAStateCache,
-	#superclass : #XMLFAState,
+	#superclass : #Object,
 	#instVars : [
 		'firstState',
 		'cachedStates'

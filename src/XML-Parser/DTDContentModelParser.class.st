@@ -34,7 +34,7 @@ DTDContentModelParser >> parse [
 	self subclassResponsibility
 ]
 
-{ #category : #'instance creation' }
+{ #category : #initialization }
 DTDContentModelParser >> setElement: aName contentModel: aContentModel [
 	element := aName.
 	contentModel := aContentModel.

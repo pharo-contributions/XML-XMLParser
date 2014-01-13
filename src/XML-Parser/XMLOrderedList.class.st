@@ -213,32 +213,43 @@ XMLOrderedList >> removeAt: anIndex [
 
 { #category : #removing }
 XMLOrderedList >> removeFirst [
-	^ collection removeFirst
+	^ self removeAt: 1
 ]
 
 { #category : #removing }
 XMLOrderedList >> removeFirst: aNumber [
-	^ collection removeFirst: aNumber
+	| removed |
+
+	removed := self copyFrom: 1 to: aNumber.
+	aNumber timesRepeat: [self removeFirst].
+	^ removed.
 ]
 
 { #category : #removing }
 XMLOrderedList >> removeLast [
-	^ collection removeLast
+	^ self removeAt: self size
 ]
 
 { #category : #removing }
 XMLOrderedList >> removeLast: aNumber [
-	^ collection removeLast: aNumber
+	| removed |
+
+	removed := self copyFrom: self size - (aNumber - 1) to: self size.
+	aNumber timesRepeat: [self removeLast].
+	^ removed.
 ]
 
 { #category : #accessing }
-XMLOrderedList >> replaceFrom: aStartingIndex to: anEndingIndex with: aCollection startingAt: aReplacementStart [
+XMLOrderedList >> replaceFrom: aStartingIndex to: anEndingIndex with: aReplacementCollection startingAt: aReplacementIndex [
+	| offset |
 
-	collection
-		replaceFrom: aStartingIndex
-		to: anEndingIndex
-		with: aCollection
-		startingAt: aReplacementStart
+	offset := 0.
+	[aStartingIndex + offset <= anEndingIndex]
+		whileTrue: [
+			self
+				at: aStartingIndex + offset
+				put: (aReplacementCollection at: aReplacementIndex + offset).
+			offset := offset + 1].
 ]
 
 { #category : #enumerating }

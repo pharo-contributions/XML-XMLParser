@@ -112,16 +112,6 @@ XMLObservableList >> removeAt: anIndex [
 	^ self with: [super removeAt: anIndex] remove: (self at: anIndex)
 ]
 
-{ #category : #removing }
-XMLObservableList >> removeFirst [
-	^ self removeAt: 1
-]
-
-{ #category : #removing }
-XMLObservableList >> removeLast [
-	^ self removeAt: self size
-]
-
 { #category : #observing }
 XMLObservableList >> removeObserver: anObserver [
 	self notifier removeObserver: anObserver

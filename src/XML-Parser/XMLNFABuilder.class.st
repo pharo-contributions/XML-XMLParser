@@ -1,5 +1,5 @@
 "
-This class builds an NFA using a stack machine.
+This class builds an NFA using a stack of NFAFragments.
 "
 Class {
 	#name : #XMLNFABuilder,

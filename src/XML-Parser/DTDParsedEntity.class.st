@@ -96,7 +96,7 @@ DTDParsedEntity >> replacementForLiteralContext [
 	^ aReplacement contents.
 ]
 
-{ #category : #initializing }
+{ #category : #initialization }
 DTDParsedEntity >> setName: aName replacement: aReplacement uri: aUri [
 	name := aName.
 	replacement := aReplacement.

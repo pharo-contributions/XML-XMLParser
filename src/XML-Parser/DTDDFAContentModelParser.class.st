@@ -72,12 +72,12 @@ DTDDFAContentModelParser >> applyOperator: aCharacter [
 	nfaBuilder perform: (OperatorApplicators at: aCharacter asciiValue)
 ]
 
-{ #category : #errors }
+{ #category : #private }
 DTDDFAContentModelParser >> errorMismatchedParens [
 	XMLValidationException signal: 'Mismatched parentheses in content model'
 ]
 
-{ #category : #errors }
+{ #category : #private }
 DTDDFAContentModelParser >> errorMissingOperand [
 	XMLValidationException signal: 'Missing element name in content model'
 ]
@@ -159,11 +159,11 @@ DTDDFAContentModelParser >> parseUnaryOperator: aCharacter [
 
 { #category : #parsing }
 DTDDFAContentModelParser >> parserForSpecialCharacter: aCharacter [
-	| i |
+	| asciiValue |
 
-	^ ((i := aCharacter asciiValue) > 0
-		and: [i <= SpecialCharacterParsers size])
-			ifTrue: [SpecialCharacterParsers at: i]
+	^ ((asciiValue := aCharacter asciiValue) > 0
+		and: [asciiValue <= SpecialCharacterParsers size])
+			ifTrue: [SpecialCharacterParsers at: asciiValue]
 			ifFalse: [nil]
 ]
 
