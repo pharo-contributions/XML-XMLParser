@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #source }
-XMLParserTest >> addressBookXML [
+XMLParserTest class >> addressBookXML [
 	^'<addressbook>
   <person employee-number="A0000" family-name="Gates" first-name="Bob">
     <contact-info><!--Confidential--></contact-info>
@@ -49,7 +49,7 @@ XMLParserTest >> addressBookXML [
 ]
 
 { #category : #source }
-XMLParserTest >> addressBookXMLWithDTD [
+XMLParserTest class >> addressBookXMLWithDTD [
 	^'<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE addressbook SYSTEM "addressbook.dtd">
 <?xml-stylesheet type="text/xsl" href="demo.xsl"?>
@@ -93,6 +93,16 @@ XMLParserTest >> addressBookXMLWithDTD [
   </person>
 </addressbook>
 '
+]
+
+{ #category : #source }
+XMLParserTest >> addressBookXML [
+	^ self class addressBookXML
+]
+
+{ #category : #source }
+XMLParserTest >> addressBookXMLWithDTD [
+	^ self class addressBookXMLWithDTD
 ]
 
 { #category : #benchmark }
@@ -140,14 +150,7 @@ XMLParserTest >> benchmark4 [
 			elementAt: 'manager']] timeToRun.
 ]
 
-{ #category : #private }
-XMLParserTest >> convertableStreamOn: aString [
-	^ (MultiByteBinaryOrTextStream on: aString from: 1 to: aString size)
-		text;
-		yourself
-]
-
-{ #category : #private }
+{ #category : #source }
 XMLParserTest >> elementDeclarationsNamed: aNameCollection [
 	| stream |
 
@@ -325,43 +328,6 @@ XMLParserTest >> testAttributeValueNormalization [
 		assert: (document root contentString) = unnormalized.
 ]
 
-{ #category : #'tests - tokenizer' }
-XMLParserTest >> testChangingNormalizedLineEnding [
-	| xml domParser parser |
-
-	xml :=
-		'<root>{1}one{2}two{3}three{1}</root>'
-			format: (Array with: String lf with: String cr with: String crlf).
-	domParser := XMLDOMParser on: xml.
-
-	parser := domParser parser.
-	parser tokenizer normalizedLineEndingChar: $N.
-	parser parseDocument.
-
-	self assert: domParser document root contentString = 'NoneNtwoNthreeN'.
-	
-]
-
-{ #category : #'tests - tokenizer' }
-XMLParserTest >> testConditionalSection [
-	| tokenizer |
-
-	tokenizer :=
-		XMLTokenizer
-			driver: nil
-			on:
-			'<![INCLUDE [included',
-			'<![ IGNORE [ignored; <![INCLUDE[ignored;]]> ignored.]]>',
-			', included]]>, included.'.
-	tokenizer tokenContext enterExternalSubset.
-	tokenizer nextToken.
-	self assert: tokenizer streamReader upToEnd = 'included, included, included.'.
-
-	self
-		should: [SAXHandler parse: '<!DOCTYPE root [ <![IGNORE[<!--ignored-->]]> ]><root/>']
-		raise: XMLParserException.
-]
-
 { #category : #tests }
 XMLParserTest >> testDeclaringNamespaces [
 	self
@@ -380,27 +346,6 @@ XMLParserTest >> testDeclaringNamespaces [
 		raise: XMLNamespaceException.
 ]
 
-{ #category : #'tests - encoding' }
-XMLParserTest >> testDecodingCharacters [
-	| xml document  |
-
-	xml := '<?xml version="1.0" encoding="UTF-8"?>
-			<test-data>&#{1};</test-data>'.
-
-	document := XMLDOMParser parse: (xml format: (Array with: '8230')).
-	self assert: document root contentString first charCode = 8230.
-
-	self
-		should: [XMLDOMParser parse: (xml format: (Array with: 'xFFFFFFF'))]
-		raise: XMLParserException.
-	self
-		should: [XMLDOMParser parse: (xml format: (Array with: '0'))]
-		raise: XMLParserException.
-	self
-		should: [XMLDOMParser parse: (xml format: (Array with: '-1'))]
-		raise: XMLParserException.
-]
-
 { #category : #tests }
 XMLParserTest >> testDefaultDocumentURI [
 	| cwd documentUri |
@@ -408,7 +353,7 @@ XMLParserTest >> testDefaultDocumentURI [
 	documentUri := (SAXHandler on: '' documentURI: 'test/test.xml') documentURI.
 	self assert: documentUri = 'test/test.xml'.
 
-	cwd := XMLFileClient defaultImplementation new currentWorkingDirectory.
+	cwd := XMLFileHandle defaultImplementation currentWorkingDirectoryPath.
 	documentUri := (SAXHandler on: '') documentURI.
 	self
 		assert: documentUri size > (cwd size + 1);
@@ -718,22 +663,18 @@ XMLParserTest >> testElementMixedContentDeclaration [
 			raise: XMLValidationException].
 ]
 
-{ #category : #'tests - encoding' }
-XMLParserTest >> testEncodingDeclaration [
-	| xml utf8Xml latin1Xml |
+{ #category : #tests }
+XMLParserTest >> testElementWellFormedness [
+	| error |
 
-	xml :=
-		'<?xml version="1.0" encoding="{1}"?><root>',
-		(String with: (Character value: 153) with: (Character value: 79)),
-		'</root>'.
-	utf8Xml := xml format: (Array with: 'UTF-8').
-	latin1Xml := xml format: (Array with: 'ISO-8859-1').
+	error := XMLWellFormednessException.
 	self
-		should: [SAXHandler parse: (self convertableStreamOn: utf8Xml)]
-		raise: Error.
-	self
-		shouldnt: [SAXHandler parse: (self convertableStreamOn: latin1Xml)]
-		raise: Error.
+		should: [SAXHandler parse: '<root1>'] raise: error;
+		should: [SAXHandler parse: '</root1>'] raise: error;
+		should: [SAXHandler parse: '<root1/><root2/>'] raise: error;
+		should: [SAXHandler parse: '<root></unopened></root>'] raise: error;
+		should: [SAXHandler parse: '<root><unclosed></root>'] raise: error;
+		should: [SAXHandler parse: '<root><first><second></first></second></root>'] raise: error.
 ]
 
 { #category : #tests }
@@ -1012,7 +953,6 @@ XMLParserTest >> testStandalone [
 	| dtdXml standaloneDecl |
 
 	dtdXml := self addressBookXMLWithDTD.
-	self should: [SAXHandler parse: dtdXml] raise: XMLFileIOException.
 	self
 		shouldnt: [
 			SAXHandler
@@ -1020,12 +960,12 @@ XMLParserTest >> testStandalone [
 				usingNamespaces: true
 				validation: true
 				externalEntities: false]
-		raise: XMLFileIOException.
+		raise: XMLFileException.
 
 	standaloneDecl := (dtdXml copyUpTo: $>) allButLast, ' standalone="yes" ?>'.
 	self
 		shouldnt: [SAXHandler parse: standaloneDecl, (dtdXml copyAfter: $>)]
-		raise: XMLFileIOException.
+		raise: XMLFileException.
 ]
 
 { #category : #tests }
@@ -1037,67 +977,7 @@ XMLParserTest >> testSubsetEndingEntityReplacement [
 					<!ENTITY % endOfSubset "]>">
 					%endOfSubset;
 					<root/>']
-		raise: XMLParserException
-]
-
-{ #category : #'tests - tokenizer' }
-XMLParserTest >> testTokenizerAddressBook [
-	| tokenizer |
-	tokenizer := XMLTokenizer driver: nil on: self addressBookXML readStream.
-	[tokenizer streamReader next notNil] whileTrue
-]
-
-{ #category : #'tests - tokenizer' }
-XMLParserTest >> testTokenizerAddressBookWithDTD [
-	| tokenizer |
-	tokenizer := XMLTokenizer driver: nil on: self addressBookXMLWithDTD readStream.
-	[tokenizer streamReader next notNil] whileTrue
-]
-
-{ #category : #'tests - tokenizer' }
-XMLParserTest >> testTokenizerCharacters [
-	| tokenizer |
-	"This test is actually not that useful. This is not the proper way of using the parser.
-	This test is here just for specification purpose"
-	"self debug: #testParsingCharacters"
-
-	tokenizer := XMLTokenizer driver: nil on: self addressBookXML readStream.
-
-	self
-		assert: tokenizer streamReader next == $<;
-		assert: ('address' allSatisfy: [:each | tokenizer streamReader next == each]);
-		assert: tokenizer streamReader peek == $b.
-
-	tokenizer streamReader pushBack: 'test'.
-	self
-		assert: ('test' allSatisfy: [:each | tokenizer streamReader next == each]);
-		assert: tokenizer streamReader peek == $b;
-		assert: ('book' allSatisfy: [:each | tokenizer streamReader next == each]).
-
-	tokenizer streamReader
-		pushBack: 'book';
-		pushBack: 'test'.
-	self
-		assert: ('test' allSatisfy: [:each | tokenizer streamReader next == each]);
-		assert: ('book' allSatisfy: [:each | tokenizer streamReader next == each]).
-]
-
-{ #category : #'tests - tokenizer' }
-XMLParserTest >> testTokenizerMaxPushBack [
-	| tokenizer |
-
-	tokenizer :=
-		XMLTokenizer
-			driver: nil
-			on: self addressBookXML readStream.
-	self
-		shouldnt: [
-			tokenizer streamReader maxNestedStreams
-				timesRepeat: [tokenizer streamReader pushBack: 'test']]
-		raise: XMLParserException.
-	self
-		should: [tokenizer streamReader pushBack: 'test']
-		raise: XMLParserException.
+		raise: XMLWellFormednessException
 ]
 
 { #category : #tests }
@@ -1226,18 +1106,4 @@ XMLParserTest >> testValidationAndEntityReferenceToggle [
 			preservesUndeclaredEntityReferences: true;
 			isValidating: true;
 			preservesUndeclaredEntityReferences).
-]
-
-{ #category : #tests }
-XMLParserTest >> testWellFormedness [
-	| error |
-
-	error := XMLWellFormednessException.
-	self
-		should: [SAXHandler parse: '<root1>'] raise: error;
-		should: [SAXHandler parse: '</root1>'] raise: error;
-		should: [SAXHandler parse: '<root1/><root2/>'] raise: error;
-		should: [SAXHandler parse: '<root></unopened></root>'] raise: error;
-		should: [SAXHandler parse: '<root><unclosed></root>'] raise: error;
-		should: [SAXHandler parse: '<root><first><second></first></second></root>'] raise: error.
 ]

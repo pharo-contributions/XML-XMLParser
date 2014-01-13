@@ -405,7 +405,7 @@ XMLOrderedListTest >> testRemoveAll [
 
 	list := self listWithElements.
 	self
-		assert: (list removeAll) = list;
+		assert: (list removeAll) == list;
 		assert: list isEmpty.
 ]
 
@@ -433,16 +433,14 @@ XMLOrderedListTest >> testRemoveFirst [
 ]
 
 { #category : #tests }
-XMLOrderedListTest >> testRemoveFirstElements [
+XMLOrderedListTest >> testRemoveFirstFew [
 	| list removedElements |
 
-	"The return value of #removeFirst: is an Array"
 	list := self listWithElements.
-	removedElements := list removeFirst: list size // 2.
+	removedElements := list removeFirst: 2.
 	self
-		assert: removedElements = (self listElements copyUpTo: list first);
-		assert: list = (self listWithElements copyAfter: removedElements last);
-		deny: list asArray = removedElements asArray;
+		assert: removedElements asArray = (self listElements copyFrom: 1 to: 2);
+		assert: list = (self listWithElements allButFirst: 2);
 		assert: (list removeFirst: 0) isEmpty;
 		should: [list removeFirst: list size + 1] raise: Error.
 ]
@@ -470,16 +468,14 @@ XMLOrderedListTest >> testRemoveLast [
 ]
 
 { #category : #tests }
-XMLOrderedListTest >> testRemoveLastElements [
+XMLOrderedListTest >> testRemoveLastFew [
 	| list removedElements |
 
-	"The return value of #removeLast: is an Array"
 	list := self listWithElements.
-	removedElements := list removeLast: list size // 2.
+	removedElements := list removeLast: 2.
 	self
-		assert: removedElements = (self listElements copyAfter: list last);
-		assert: list = (self listWithElements copyUpTo: removedElements first);
-		deny: list asArray = removedElements asArray;
+		assert: removedElements asArray = (self listElements last: 2);
+		assert: list = (self listWithElements allButLast: 2);
 		assert: (list removeLast: 0) isEmpty;
 		should: [list removeLast: list size + 1] raise: Error.
 ]
@@ -490,9 +486,9 @@ XMLOrderedListTest >> testReplaceFromToWithStartingAt [
 	| list |
 	list := self listClass new: 5 withAll: 'zzz'.
 	self
-		assert: (list replaceFrom: 1 to: self listElements size with: self listElements startingAt: 1) = list;
+		assert: (list replaceFrom: 1 to: self listElements size with: self listElements startingAt: 1) == list;
 		assert: list = self listWithElements;
-		assert: (list replaceFrom: 1 to: self listElements size with: self listElements reversed startingAt: 1) = list;
+		assert: (list replaceFrom: 1 to: self listElements size with: self listElements reversed startingAt: 1) == list;
 		assert: list = self listWithElements reversed;
 		should: [list replaceFrom: 1 to: self listElements size + 1 with: self listElements startingAt: 1] raise: Error.
 ]

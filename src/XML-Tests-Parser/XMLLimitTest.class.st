@@ -34,6 +34,17 @@ XMLLimitTest >> recursiveEntityDeclarationsNamed: aName depth: aLimit isParamete
 ]
 
 { #category : #tests }
+XMLLimitTest >> testLocalURIFromNonLocalURI [
+	self
+		should: [
+			(SAXHandler
+				on: '<!DOCTYPE root SYSTEM "file://local/uri">'
+				documentURI: 'http://www.example.com')
+				parseDocument]
+		raise: XMLLimitException.
+]
+
+{ #category : #tests }
 XMLLimitTest >> testRecursiveGeneralEntityReplacement [
 	| limit entityDeclarations xml |
 
@@ -98,5 +109,23 @@ XMLLimitTest >> testRecursiveParameterEntityReplacementPastLimit [
 
 	self
 		should: [SAXHandler parse: xml]
+		raise: XMLLimitException.
+]
+
+{ #category : #tests }
+XMLLimitTest >> testTokenizerMaxPushBack [
+	| tokenizer |
+
+	tokenizer :=
+		XMLTokenizer
+			driver: nil
+			on: '' readStream.
+	self
+		shouldnt: [
+			tokenizer streamReader maxNestedStreams
+				timesRepeat: [tokenizer streamReader pushBack: 'test']]
+		raise: XMLLimitException.
+	self
+		should: [tokenizer streamReader pushBack: 'test']
 		raise: XMLLimitException.
 ]

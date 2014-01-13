@@ -21,18 +21,25 @@ XMLObservableListTest >> afterRemovingFromNotification [
 
 { #category : #assertions }
 XMLObservableListTest >> assertObserver: anObserver receivedNotificationOfAdding: anElement to: aList [
+	| firstNotification secondNotification |
+
+	firstNotification := anObserver notifications removeFirst.
+	secondNotification := anObserver notifications removeFirst.
 	self
-		assert: anObserver notifications first selector = self beforeAddingToNotification;
-		assert: anObserver notifications first arguments = (Array with: anElement with: aList);
-		assert: anObserver notifications second selector = self afterAddingToNotification;
-		assert: anObserver notifications second arguments = (Array with: anElement with: aList)
+		assert:firstNotification selector = self beforeAddingToNotification;
+		assert: firstNotification arguments = (Array with: anElement with: aList);
+		assert: secondNotification selector = self afterAddingToNotification;
+		assert: secondNotification arguments = (Array with: anElement with: aList)
 ]
 
 { #category : #assertions }
 XMLObservableListTest >> assertObserver: anObserver receivedNotificationOfRemoving: anElement from: aList [
+	| notification |
+
+	notification := anObserver notifications removeFirst.
 	self
-		assert: anObserver notifications first selector = self afterRemovingFromNotification;
-		assert: anObserver notifications first arguments = (Array with: anElement with: aList)
+		assert: notification selector = self afterRemovingFromNotification;
+		assert: notification arguments = (Array with: anElement with: aList)
 ]
 
 { #category : #accessing }
@@ -47,26 +54,48 @@ XMLObservableListTest >> listClass [
 
 { #category : #assertions }
 XMLObservableListTest >> should: aBlock add: anElement toAndNotifyOf: aList [
+	self
+		should: aBlock
+		addAll: (Array with: anElement)
+		toAndNotifyOf: aList
+]
+
+{ #category : #assertions }
+XMLObservableListTest >> should: aBlock addAll: anElementCollection toAndNotifyOf: aList [
 	| observer |
 
 	observer := XMLStubListObserver new.
 	aList addObserver: observer.
 	aBlock value.
-	self
-		assert: (aList includes: anElement);
-		assertObserver: observer receivedNotificationOfAdding: anElement to: aList.
+	anElementCollection do: [:each |
+		self assert: (aList includes: each).
+		self 
+			assertObserver: observer
+			receivedNotificationOfAdding: each
+			to: aList].
 ]
 
 { #category : #assertions }
 XMLObservableListTest >> should: aBlock remove: anElement fromAndNotifyOf: aList [
+	self
+		should: aBlock
+		removeAll: (Array with: anElement)
+		fromAndNotifyOf: aList
+]
+
+{ #category : #assertions }
+XMLObservableListTest >> should: aBlock removeAll: anElementCollection fromAndNotifyOf: aList [
 	| observer |
 
 	observer := XMLStubListObserver new.
 	aList addObserver: observer.
 	aBlock value.
-	self
-		deny: (aList includes: anElement);
-		assertObserver: observer receivedNotificationOfRemoving: anElement from: aList.
+	anElementCollection do: [:each |
+		self deny: (aList includes: each).
+		self
+			assertObserver: observer
+			receivedNotificationOfRemoving: each
+			from: aList].
 ]
 
 { #category : #tests }
@@ -105,6 +134,42 @@ XMLObservableListTest >> testAddAfterIndex [
 	self
 		should: [list add: self absentElement afterIndex: (list indexOf: self singleElement)]
 		add: self absentElement 
+		toAndNotifyOf: list.
+]
+
+{ #category : #tests }
+XMLObservableListTest >> testAddAll [
+	| list |
+
+	super testAddAll.
+	list := self emptyList.
+	self
+		should: [list addAll: self listElements]
+		addAll: self listElements
+		toAndNotifyOf: list.
+]
+
+{ #category : #tests }
+XMLObservableListTest >> testAddAllFirst [
+	| list |
+
+	super testAddAllFirst.
+	list := self emptyList.
+	self
+		should: [list addAllFirst: self listElements]
+		addAll: self listElements reversed
+		toAndNotifyOf: list.
+]
+
+{ #category : #tests }
+XMLObservableListTest >> testAddAllLast [
+	| list |
+
+	super testAddAllLast.
+	list := self emptyList.
+	self
+		should: [list addAllLast: self listElements]
+		addAll: self listElements
 		toAndNotifyOf: list.
 ]
 
@@ -174,11 +239,22 @@ XMLObservableListTest >> testAtPut [
 		assertObserver: observer
 		receivedNotificationOfRemoving: self singleElement
 		from: list.
-	observer notifications removeFirst.
 	self
 		assertObserver: observer
 		receivedNotificationOfAdding: self absentElement
 		to: list.
+]
+
+{ #category : #tests }
+XMLObservableListTest >> testRemoveAll [
+	| list |
+
+	super testRemoveAll.
+	list := self listWithElements.
+	self
+		should: [list removeAll]
+		removeAll: self listElements reversed
+		fromAndNotifyOf: list.
 ]
 
 { #category : #tests }
@@ -222,6 +298,19 @@ XMLObservableListTest >> testRemoveFirst [
 ]
 
 { #category : #tests }
+XMLObservableListTest >> testRemoveFirstFew [
+	| list  |
+
+	super testRemoveFirstFew.
+	
+	list := self listWithElements.
+	self
+		should: [list removeFirst: 2]
+		removeAll: (self listElements first: 2)
+		fromAndNotifyOf: list.
+]
+
+{ #category : #tests }
 XMLObservableListTest >> testRemoveIfAbsent [
 	| list observer |
 
@@ -259,4 +348,50 @@ XMLObservableListTest >> testRemoveLast [
 		should: [list removeLast] raise: Error;
 		assert: observer notifications isEmpty.
 	
+]
+
+{ #category : #tests }
+XMLObservableListTest >> testRemoveLastFew [
+	| list  |
+
+	super testRemoveLastFew.
+	
+	list := self listWithElements.
+	self
+		should: [list removeLast: 2]
+		removeAll: (self listElements last: 2) reversed
+		fromAndNotifyOf: list.
+]
+
+{ #category : #tests }
+XMLObservableListTest >> testReplaceFromToWithStartingAt [
+	| list observer |
+
+	super testReplaceFromToWithStartingAt.
+
+	list := self listWithElements.
+	observer := XMLStubListObserver new.
+	list addObserver: observer.
+	list
+		replaceFrom: 2
+		to: 3
+		with: #('new1' 'new2' 'new3')
+		startingAt: 2.
+	
+	self
+		assertObserver: observer
+		receivedNotificationOfRemoving: (self listElements at: 2)
+		from: list.
+	self
+		assertObserver: observer
+		receivedNotificationOfAdding: 'new2'
+		to: list.
+	self
+		assertObserver: observer
+		receivedNotificationOfRemoving: (self listElements at: 3)
+		from: list.
+	self
+		assertObserver: observer
+		receivedNotificationOfAdding: 'new3'
+		to: list.
 ]

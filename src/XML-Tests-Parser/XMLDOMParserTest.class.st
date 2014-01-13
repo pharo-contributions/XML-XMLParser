@@ -602,7 +602,7 @@ XMLDOMParserTest >> testParseDocumentWhile [
 							ifTrue: [continue := false].
 						i := i + 1.
 						continue]]
-		raise: XMLParserException.
+		raise: XMLWellFormednessException.
 
 	self
 		assert: document allNodes size = 4;
