@@ -12,7 +12,20 @@ XMLExternalEntityTest class >> isSkipping: aBoolean [
 	^ self new isSkipping: aBoolean
 ]
 
+{ #category : #files }
+XMLExternalEntityTest >> deleteFileNamed: aFileName [
+	(XMLFileHandle path: aFileName) delete
+]
+
 { #category : #source }
+XMLExternalEntityTest >> doctypeWithDeclarationsForEntityURIs: aUrlCollection [
+	^  '<!DOCTYPE test [',
+		('' join: (aUrlCollection collectWithIndex: [:each :i |
+			'<!ENTITY entity', i printString, ' SYSTEM "', each, '">'])),
+		']>'
+]
+
+{ #category : #urls }
 XMLExternalEntityTest >> externalEntityURLs [
 	^  #('http://www.musicxml.org/dtds/note.mod'
 		'http://www.musicxml.org/dtds/isolat1.ent'
@@ -28,7 +41,14 @@ XMLExternalEntityTest >> externalEntityURLs [
 		'http://www.musicxml.org/dtds/common.mod')
 ]
 
-{ #category : #testing }
+{ #category : #files }
+XMLExternalEntityTest >> fileNamed: aFileName write: aString [
+	(XMLFileHandle path: aFileName) writeStream
+		nextPutAll: aString;
+		close.
+]
+
+{ #category : #accessing }
 XMLExternalEntityTest >> isSkipping [
 	^ isSkipping ifNil: [isSkipping := true]
 ]
@@ -36,6 +56,11 @@ XMLExternalEntityTest >> isSkipping [
 { #category : #accessing }
 XMLExternalEntityTest >> isSkipping: aBoolean [
 	isSkipping := aBoolean
+]
+
+{ #category : #urls }
+XMLExternalEntityTest >> rssURL [
+	^ 'http://www.pharo-project.org/news?rss'
 ]
 
 { #category : #source }
@@ -81,9 +106,49 @@ XMLExternalEntityTest >> sourceXML [
 ]
 
 { #category : #tests }
+XMLExternalEntityTest >> testOnFileNamed [
+	"
+	(self isSkipping: false) testOnFileNamed
+	"
+	| parser fileName |
+
+	self isSkipping
+		ifTrue: [self skip].
+
+	fileName := 'testOnFileNamed.xml'.
+	self fileNamed: fileName write: ''.
+
+	self
+		shouldnt: [parser := SAXHandler onFileNamed: fileName]
+		raise: XMLHTTPException.
+	self
+		assert: parser documentURI = fileName;
+		assert: parser documentURI asXMLURI isLocalURI.
+
+	self deleteFileNamed: fileName.
+]
+
+{ #category : #tests }
+XMLExternalEntityTest >> testOnURL [
+	"
+	(self isSkipping: false) testOnURL
+	"
+	| parser |
+
+	self isSkipping
+		ifTrue: [self skip].
+
+	self
+		shouldnt: [parser := SAXHandler onURL: self rssURL]
+		raise: XMLHTTPException.
+	self
+		assert: parser documentURI = self rssURL;
+		deny: parser documentURI asXMLURI isLocalURI.
+]
+
+{ #category : #tests }
 XMLExternalEntityTest >> testParsingExternalEntities [
 	"This test uses HTTP and takes time to run so it is skipped by default.
-
 	(self isSkipping: false) testParsingExternalEntities
 	"
 	| entityCache entityCacheCopy |
@@ -113,7 +178,6 @@ XMLExternalEntityTest >> testParsingExternalEntities [
 { #category : #tests }
 XMLExternalEntityTest >> testParsingFile [
 	"This test creates/deletes a file so is skipped by default
-
 	(self isSkipping: false) testParsingFile
 	"
 	| fileName doc |
@@ -125,32 +189,29 @@ XMLExternalEntityTest >> testParsingFile [
 	self
 		should: [XMLDOMParser parseFileNamed: fileName]
 		raise: XMLFileException.
-
-	(fileName asFileReference writeStream)
-		nextPutAll: self sourceXML;
-		close.
+	self
+		fileNamed: fileName
+		write: self sourceXML.
 	self
 		shouldnt: [doc := XMLDOMParser parseFileNamed: fileName]
-		raise: [XMLFileException].
+		raise: XMLFileException.
 	self assert: (doc root isNamed: 'score-partwise').
 
-	fileName asFileReference delete.
+	self deleteFileNamed: fileName.
 ]
 
 { #category : #tests }
 XMLExternalEntityTest >> testParsingURL [
 	"This uses HTTP so is skipped by default
-
 	(self isSkipping: false) testParsingURL
 	"
-	| url doc |
+	| doc |
 
 	self isSkipping
 		ifTrue: [self skip].
 
-	url := 'http://www.pharo-project.org/news?rss'.
 	self
-		shouldnt: [doc := XMLDOMParser parseURL: url]
-		raise: [XMLFileException].
+		shouldnt: [doc := XMLDOMParser parseURL: self rssURL]
+		raise: XMLHTTPException.
 	self assert: (doc root isNamed: 'rss').
 ]

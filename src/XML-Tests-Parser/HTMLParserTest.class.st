@@ -23,7 +23,7 @@ HTMLParserTest >> testHTMLEntities [
 	string := ((HTMLParser parse: '<p>&', entity, ';</p>') findElementNamed: 'p') contentString.
 	self
 		assert: string size = 1;
-		assert: string first == (HTMLTokenizer predefinedEntities at: entity).
+		assert: string first == (HTMLParserTokenizer predefinedEntities at: entity).
 		
 
 	self assert:
@@ -36,13 +36,13 @@ HTMLParserTest >> testParsingNonHTMLSections [
 	| document |
 
 	document := HTMLParser parse:
-		'<head><title><b>"title</b></TITLE><SCRIPT>',
-		'1 < 2; 3 > 2; document.write("</script>");</script>
-		<style>//"</style><HEAD>'.
+		'<head><Title><b>"title</b></TITLE><SCRIPT>',
+		'1 < 2; 3 > 2; document.write("</Script>");</Script>
+		<Style>//"</STYLE><HEAD>'.
 	self
 		assert: (document findElementNamed: 'title') contentString = '<b>"title</b>';
 		assert: (document findElementNamed: 'script') contentString =
-			'1 < 2; 3 > 2; document.write("</script>");';
+			'1 < 2; 3 > 2; document.write("</Script>");';
 		assert: (document findElementNamed: 'style') contentString = '//"'.
 ]
 
@@ -88,7 +88,7 @@ HTMLParserTest >> testReopeningHTML [
 HTMLParserTest >> testReopeningHeadSection [
 	| document |
 
-	document := HTMLParser parse: '<head><p>text<title>reopened'.
+	document := HTMLParser parse: '<head><p>text<Title>reopened'.
 	self
 		assert: (document root elementsCollect: [:each | each name]) asArray = #('head' 'body');
 		assert: (document findElementNamed: 'head') elements size = 1;

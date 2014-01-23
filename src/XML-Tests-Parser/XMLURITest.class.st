@@ -30,6 +30,11 @@ XMLURITest >> domain [
 ]
 
 { #category : #strings }
+XMLURITest >> escaped [
+	^ '%20%22%3c%3E%25'
+]
+
+{ #category : #strings }
 XMLURITest >> fileHostURIString [
 	^ 'file://', self host, self absolute
 ]
@@ -92,6 +97,25 @@ XMLURITest >> testCombiningAbsoluteURIs [
 ]
 
 { #category : #tests }
+XMLURITest >> testCombiningDotPathURIs [
+	| absolutePathUri absoluteDirPathUri absoluteRelativeCombinedUri absoluteDirRelativeCombinedUri |
+
+	absolutePathUri := self absolute asXMLURI.
+	absoluteDirPathUri := self absoluteDir asXMLURI.
+	absoluteRelativeCombinedUri := self absoluteRelativeCombined asXMLURI.
+	absoluteDirRelativeCombinedUri := self absoluteDirRelativeCombined asXMLURI.
+	self
+		assert: (absolutePathUri / './path') = absolutePathUri;
+		assert: (absolutePathUri / ('..', self absolute)) = absolutePathUri;
+		assert: (absolutePathUri / ('./', self relative)) = absoluteRelativeCombinedUri;
+		assert: (absolutePathUri / ('../absolute/', self relative)) = absoluteRelativeCombinedUri;
+		assert: (absoluteDirPathUri / ('./', self relative)) = absoluteDirRelativeCombinedUri;
+		assert: (absoluteDirPathUri / ('../path/', self relative)) = absoluteDirRelativeCombinedUri;
+		assert: (absoluteDirRelativeCombinedUri / '../../path') = absolutePathUri;
+		assert: (absoluteDirRelativeCombinedUri / ('../../..', self absolute)) = absolutePathUri.
+]
+
+{ #category : #tests }
 XMLURITest >> testCombiningRelativeURIs [
 	| domainUri absolutePathUri absoluteDirPathUri |
 
@@ -99,6 +123,7 @@ XMLURITest >> testCombiningRelativeURIs [
 	absolutePathUri := (self domain, self absolute) asXMLURI.
 	absoluteDirPathUri := (self domain, self absoluteDir) asXMLURI.
 	self
+		assert: (domainUri / self relative) = (self domain, '/', self relative) asXMLURI;
 		assert: (domainUri / self absolute) = (self domain, self absolute) asXMLURI;
 		assert: (domainUri / self absoluteDir) = (self domain, self absoluteDir) asXMLURI;
 		assert: (absolutePathUri / self relative) = (self domain, self absoluteRelativeCombined) asXMLURI;
@@ -232,6 +257,17 @@ XMLURITest >> testParsingURIWithoutScheme [
 ]
 
 { #category : #tests }
+XMLURITest >> testPathUnescaping [
+	| uri |
+
+	uri := (self escaped, self relative, self escaped) asXMLURI.
+	self
+		assert: uri path = (self escaped, self relative, self escaped);
+		assert: uri unescapedPath = (self unescaped, self relative, self unescaped);
+		assert: '%' asXMLURI unescapedPath = '%'
+]
+
+{ #category : #tests }
 XMLURITest >> testSchemeAndHostCaseSensitivity [
 	| uri uppercaseUri |
 
@@ -273,4 +309,9 @@ XMLURITest >> testURIPrinting [
 		assert: self fileHostURIString asXMLURI printString = self fileHostURIString;
 		assert: '/' asXMLURI printString = '/';
 		assert: '' asXMLURI printString isEmpty.
+]
+
+{ #category : #strings }
+XMLURITest >> unescaped [
+	^ ' "<>%'
 ]

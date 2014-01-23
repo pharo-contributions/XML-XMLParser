@@ -14,14 +14,12 @@ XMLDOMParserTest >> addressBookNamespacesXML [
 XMLDOMParserTest >> addressBookNamespacesXMLWithPrefixes [
 	| xmlWithPrefixes |
 
-	xmlWithPrefixes :=
-		'<book:',
-		((self addressBookNamespacesXML copyAfter: $<) copyUpToLast: $<),
-		'</book:addressbook>'.
-	^ ((xmlWithPrefixes
-		copyReplaceAll: '<person' with: '<ps:person')
-			copyReplaceAll: '</person' with: '</ps:person')
-				copyReplaceAll: 'family-name=' with: 'ps:family-name='.
+	xmlWithPrefixes := self addressBookNamespacesXML.
+	#('<addressbook' '</addressbook' '<person' '</person' 'family-name=')
+		with: #('<book:addressbook' '</book:addressbook' '<ps:person' '</ps:person' 'ps:family-name=')
+		do: [:source :replacement |
+			xmlWithPrefixes := xmlWithPrefixes copyReplaceAll: source with: replacement].
+	^ xmlWithPrefixes.
 ]
 
 { #category : #source }

@@ -16,7 +16,7 @@ XMLTokenizerTest >> addressBookXMLWithDTD [
 
 { #category : #tests }
 XMLTokenizerTest >> testChangingNormalizedLineEnding [
-	| xml domParser parser |
+	| xml domParser parser tokenizer |
 
 	xml :=
 		'<root>{1}one{2}two{3}three{1}</root>'
@@ -24,11 +24,14 @@ XMLTokenizerTest >> testChangingNormalizedLineEnding [
 	domParser := XMLDOMParser on: xml.
 
 	parser := domParser parser.
-	parser tokenizer normalizedLineEndingChar: $N.
-	parser parseDocument.
-
-	self assert: domParser document root contentString = 'NoneNtwoNthreeN'.
+	tokenizer := parser tokenizer.
+	self assert: tokenizer normalizedLineEndingChar == Character lf.
 	
+	tokenizer normalizedLineEndingChar: $N.
+	self assert: tokenizer normalizedLineEndingChar == $N.
+
+	parser parseDocument.
+	self assert: domParser document root contentString = 'NoneNtwoNthreeN'.
 ]
 
 { #category : #tests }

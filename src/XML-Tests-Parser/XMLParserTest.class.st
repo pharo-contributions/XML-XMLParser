@@ -353,7 +353,7 @@ XMLParserTest >> testDefaultDocumentURI [
 	documentUri := (SAXHandler on: '' documentURI: 'test/test.xml') documentURI.
 	self assert: documentUri = 'test/test.xml'.
 
-	cwd := XMLFileHandle defaultImplementation currentWorkingDirectoryPath.
+	cwd := XMLFileHandle currentWorkingDirectory.
 	documentUri := (SAXHandler on: '') documentURI.
 	self
 		assert: documentUri size > (cwd size + 1);
@@ -707,16 +707,19 @@ XMLParserTest >> testEntityReplacement [
 XMLParserTest >> testEntityURIInheritance [
 	| xml parser driver |
 
-	xml := '<!DOCTYPE root [%first;]><root>&second;</root>'.
+	xml := '<!DOCTYPE root [%first;]><root xml:base="/new/xml">&second;</root>'.
 	parser :=
 		(SAXHandler
 			on: xml
 			documentURI: 'test.xml') parser.
 	(driver := parser driver)
-		dtd
-			addParameterEntity: 'first'
-			replacement: '<!ENTITY second "<!--comment-->">'
-			from: 'test.ent'.
+		dtd parameterEntities
+			at: 'first'
+			put:
+				(DTDExternalParameterEntity
+					name: 'first'
+					replacement: '<!ENTITY second "<!--comment-->">'
+					uri: 'test.ent').
 
 	self assert: driver currentURI = 'test.xml'.
 
@@ -727,12 +730,88 @@ XMLParserTest >> testEntityURIInheritance [
 	self assert: driver currentURI = 'test.xml'.
 
 	2 timesRepeat: [parser parseToken].
-	self assert: driver currentURI = 'test.ent'.
+	self assert: driver currentURI = '/new/xml'.
 
 	2 timesRepeat: [parser parseToken].
 	self
 		assert: driver currentURI = 'test.xml';
 		assert: parser atEnd.
+]
+
+{ #category : #tests }
+XMLParserTest >> testIncompleteCDataTokens [
+	#('<test><![' '<test><![CDATA[' '<test><![CDATA[ test'
+		'<test><![CDATA[ test ]' '<test><![CDATA[ test ]]')
+		do: [:each | 
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
+XMLParserTest >> testIncompleteCommentTokens [
+	#('<!--' '<!-- comment' '<!-- comment -' '<!-- comment --')
+		do: [:each | 
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
+XMLParserTest >> testIncompleteDoctypeTokens [
+	#('<!DOCTYPE' '<!DOCTYPE >'
+		'<!DOCTYPE test' '<!DOCTYPE test PUBLIC' '<!DOCTYPE test PUBLIC "pubid'
+		'<!DOCTYPE test PUBLIC "pubid" "sysid' '<!DOCTYPE test PUBLIC "pubid" "sysid"'
+		'<!DOCTYPE test SYSTEM' '<!DOCTYPE test SYSTEM "sysid' '<!DOCTYPE test SYSTEM "sysid"'
+		'<!DOCTYPE test [' '<!DOCTYPE test []')
+		do: [:each | 
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
+XMLParserTest >> testIncompleteEndTagTokens [
+	#('<test></' '<test></test')
+		do: [:each | 
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
+XMLParserTest >> testIncompletePITokens [
+	#('<?name' '<?name value' '<?name value?' '<?name value>')
+		do: [:each | 
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
+XMLParserTest >> testIncompleteStartTagTokens [
+	#('<' '<test' '<test name'
+		'<test name=' '<test name="value' '<test name="value"'
+		'<test name="value" /')
+		do: [:each | 
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
+XMLParserTest >> testIncompleteXMLDeclarationTokens [
+	#('<?xml' '<?xml ?' '<?xml ?>'
+		'<?xml version' '<?xml version=' '<?xml version="1.0'
+		'<?xml version="1.0" encoding' '<?xml version="1.0" encoding="UTF-8'
+		'<?xml version="1.0" encoding="UTF-8" standalone'
+		'<?xml version="1.0" encoding="UTF-8" standalone="yes'
+		'<?xml version="1.0" encoding="UTF-8" standalone="yes"'
+		'<?xml version="1.0" encoding="UTF-8" standalone="yes"?')
+		do: [:each | 
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException]
 ]
 
 { #category : #tests }
@@ -1106,4 +1185,51 @@ XMLParserTest >> testValidationAndEntityReferenceToggle [
 			preservesUndeclaredEntityReferences: true;
 			isValidating: true;
 			preservesUndeclaredEntityReferences).
+]
+
+{ #category : #tests }
+XMLParserTest >> testWhitespacePreservation [
+	| xml root notPreserved preserved |
+
+	xml :=
+		'<root xml:space="preserve">
+			<not-preserved xml:space="default">
+				<preserved xml:space="preserve">
+				</preserved>
+			</not-preserved>
+		</root>'.
+	root := (XMLDOMParser parse: xml) root.
+	self
+		assert: root nodes size = 3;
+		assert: root stringNodes size = 2.
+	root stringsDo: [:each |
+		self assert: (each notEmpty and: [each allSatisfy: [:c | c isSeparator ]])].
+
+	notPreserved := root nodes second.
+	self assert: notPreserved nodes size = 1.
+
+	preserved := notPreserved firstNode.
+	self
+		assert: preserved contentString notEmpty;
+		assert: (preserved contentString allSatisfy: [:each | each isSeparator]).
+]
+
+{ #category : #tests }
+XMLParserTest >> testXMLIDAttribute [
+	| xml xmlWithDuplicateId |
+
+	xml := '<a xml:id="one"><b xml:id="two"/></a>'.
+	xmlWithDuplicateId := '<a xml:id="one"><b xml:id="one"/></a>'.
+	self
+		shouldnt: [SAXHandler parse: xml]
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: xmlWithDuplicateId]
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			(SAXHandler on: xmlWithDuplicateId)
+				isValidating: false;
+				parseDocument]
+		raise: XMLValidationException.
 ]

@@ -22,7 +22,7 @@ XMLEncodingTest >> testDecodingCharacters [
 	self assert: document root contentString first charCode = 8230.
 
 	self
-		should: [XMLDOMParser parse: (xml format: (Array with: 'xFFFFFFF'))]
+		should: [XMLDOMParser parse: (xml format: (Array with: ''))]
 		raise: XMLWellFormednessException.
 	self
 		should: [XMLDOMParser parse: (xml format: (Array with: '0'))]
