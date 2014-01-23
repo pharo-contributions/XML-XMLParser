@@ -13,8 +13,9 @@ XMLConformanceVirtualFileResolver class >> virtualFileClass: aClass [
 ]
 
 { #category : #resolving }
-XMLConformanceVirtualFileResolver >> resolveEntity: aUri [
-	^ (XMLConformanceVirtualFileHandle path: aUri asXMLURI path) getFromClass: virtualFileClass
+XMLConformanceVirtualFileResolver >> resolveEntityURI: aUri [
+	^ (XMLConformanceVirtualFileHandle path: aUri asXMLURI unescapedPath)
+		getFromClass: virtualFileClass
 ]
 
 { #category : #accessing }
