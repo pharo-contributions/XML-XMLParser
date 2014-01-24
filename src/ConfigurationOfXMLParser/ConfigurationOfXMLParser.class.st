@@ -616,8 +616,8 @@ ConfigurationOfXMLParser >> version153: spec [
 		do: [ 
 			spec blessing: #release.
 			spec
-				package: 'XML-Parser' with: 'XML-Parser-monty.217';
-				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.50'
+				package: 'XML-Parser' with: 'XML-Parser-monty.218';
+				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.51'
 				].
 	
 ]
