@@ -3,14 +3,17 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'maxExternalEntities',
-		'maxExternalEntitySize'
+		'maxExternalEntitySize',
+		'resolvesLocalFromNonLocal'
 	],
 	#category : #'XML-Parser-DTD'
 }
 
 { #category : #initialization }
 DTDExternalEntityLimits >> initialize [
-	super initialize
+	super initialize.
+
+	resolvesLocalFromNonLocal := false.
 ]
 
 { #category : #accessing }
@@ -37,4 +40,15 @@ DTDExternalEntityLimits >> maxExternalEntitySize: aLimit [
 DTDExternalEntityLimits >> removeAll [
 	maxExternalEntities := nil.
 	maxExternalEntitySize := nil.
+	resolvesLocalFromNonLocal := nil.
+]
+
+{ #category : #accessing }
+DTDExternalEntityLimits >> resolvesLocalFromNonLocal [
+	^ resolvesLocalFromNonLocal
+]
+
+{ #category : #accessing }
+DTDExternalEntityLimits >> resolvesLocalFromNonLocal: aBoolean [
+	resolvesLocalFromNonLocal := aBoolean
 ]

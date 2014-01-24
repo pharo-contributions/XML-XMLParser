@@ -228,9 +228,7 @@ SAXDriver >> handleGeneralEntityReference: aName [
 	(entity := self dtd generalEntityAt: aName)
 		ifNil: [
 			self isValidating
-				ifTrue: [
-					XMLValidationException signal:
-						'Undeclared general entity reference &', aName, ';'].
+				ifTrue: [(XMLValidationException undeclaredGeneralEntity: aName) signal].
 			self preservesUndeclaredEntityReferences
 				ifTrue: [entity := DTDBypassedGeneralEntity named: aName].
 			self saxHandler skippedEntity: aName].
@@ -298,12 +296,9 @@ SAXDriver >> handleParameterEntityReference: aName [
 	(entity := self dtd parameterEntityAt: aName)
 		ifNil: [
 			self isValidating
-				ifTrue: [
-					XMLValidationException signal:
-						'Undeclared parameter entity reference %', aName, ';'].
+				ifTrue: [(XMLValidationException undeclaredParameterEntity: aName) signal].
 			self preservesUndeclaredEntityReferences
-				ifTrue: [entity := DTDBypassedParameterEntity named: aName].
-			self saxHandler skippedEntity: aName].
+				ifTrue: [entity := DTDBypassedParameterEntity named: aName]].
 	^ entity.
 ]
 
@@ -362,7 +357,7 @@ SAXDriver >> handleUnparsedEntityReference: aName [
 	self isValidating
 		ifTrue: [
 			notationName
-				ifNil: [XMLValidationException signal: 'Undeclared unparsed entity reference &', aName, ';'].
+				ifNil: [(XMLValidationException undeclaredUnparsedEntity: aName) signal].
 			(self dtd includesNotation: notationName)
 				ifFalse: [XMLValidationException signal: 'Undeclared notation "', notationName, '"']].
 	^ notationName.
