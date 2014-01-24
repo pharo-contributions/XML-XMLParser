@@ -56,6 +56,11 @@ DTDParsedEntity >> escapedReferenceSymbol [
 ]
 
 { #category : #testing }
+DTDParsedEntity >> hasTextDeclaration [
+	^ self replacement beginsWith: '<?xml '
+]
+
+{ #category : #testing }
 DTDParsedEntity >> isExternal [
 	^ false
 ]

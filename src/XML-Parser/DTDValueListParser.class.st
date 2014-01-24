@@ -21,7 +21,7 @@ DTDValueListParser class >> initialize [
 
 	super initialize.
 
-	(ListValueDelimiters := CharacterSet new)
+	(ListValueDelimiters := BitmapCharacterSet new)
 		add: $|;
 		add: $);
 		addAll: Character separators
@@ -46,7 +46,10 @@ DTDValueListParser >> parse [
 	[valueListStream atEnd
 		or: [valueListStream peek == $)]]
 		whileFalse: [
+			valueListStream skipSeparators.
 			self parseListValue.
+			valueListStream skipSeparators.
+
 			(valueListStream atEnd not
 				and: [valueListStream peek == $|])
 				ifTrue: [valueListStream next]].
@@ -73,11 +76,9 @@ DTDValueListParser >> parseListValue [
 	| value oldSize |
 
 	valueStream reset.
-	valueListStream skipSeparators.
 	[valueListStream atEnd
 		or: [ListValueDelimiters includes: valueListStream peek]]
 		whileFalse: [valueStream nextPut: valueListStream next].
-	valueListStream skipSeparators.
 
 	(value := valueStream contents)
 		ifEmpty: [XMLValidationException signal: 'Empty list value'].

@@ -9,7 +9,7 @@ Class {
 		'streams',
 		'nextStreamIndex'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Streams'
 }
 
 { #category : #'instance creation' }

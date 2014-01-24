@@ -24,7 +24,7 @@ DTDDoctypeDefinition >> addExternalGeneralEntity: aName resolver: aResolver uri:
 		at: aName
 		ifAbsentPut: [
 			aResolver
-				resolveGeneralEntity: aName
+				resolveExternalGeneralEntity: aName
 				uri: aSystemUri
 				from: aDocumentOrEntityUri]
 ]
@@ -35,7 +35,7 @@ DTDDoctypeDefinition >> addExternalParameterEntity: aName resolver: aResolver ur
 		at: aName
 		ifAbsentPut: [
 			aResolver
-				resolveParameterEntity: aName
+				resolveExternalParameterEntity: aName
 				uri: aSystemUri
 				from: aDocumentOrEntityUri]
 ]

@@ -2,12 +2,8 @@
 This is the implementation of the tokenizer for the HTML driver.
 "
 Class {
-	#name : #HTMLTokenizer,
-	#superclass : #XMLDriverTokenizer,
-	#instVars : [
-		'nonHtmlCommentStarter',
-		'nonHtmlElement'
-	],
+	#name : #HTMLParserTokenizer,
+	#superclass : #XMLParserTokenizer,
 	#classVars : [
 		'HtmlNameDelimiters'
 	],
@@ -15,7 +11,7 @@ Class {
 }
 
 { #category : #'class initialization' }
-HTMLTokenizer class >> compileHTMLEntityPageWithNamedEntities: anAssociationCollection [
+HTMLParserTokenizer class >> compileHTMLEntityPageWithNamedEntities: anAssociationCollection [
 	"There are too many entities to represent literally in a single method,
 	so they're put in a big string and parsed at initialization."
 	| source |
@@ -45,7 +41,7 @@ HTMLTokenizer class >> compileHTMLEntityPageWithNamedEntities: anAssociationColl
 ]
 
 { #category : #'class initialization' }
-HTMLTokenizer class >> generateHTMLEntityPage [
+HTMLParserTokenizer class >> generateHTMLEntityPage [
 	"self generateHTMLEntityPage"
 	| namedEntities json fields entityName codepoint |
 
@@ -64,7 +60,7 @@ HTMLTokenizer class >> generateHTMLEntityPage [
 ]
 
 { #category : #'class initialization' }
-HTMLTokenizer class >> htmlEntityPage [
+HTMLParserTokenizer class >> htmlEntityPage [
 	^ '
 	[Aacute=193]
 	[Aacute=193]
@@ -2300,7 +2296,7 @@ HTMLTokenizer class >> htmlEntityPage [
 ]
 
 { #category : #'class initialization' }
-HTMLTokenizer class >> initialize [
+HTMLParserTokenizer class >> initialize [
 	"self initialize"
 
 	super initialize.
@@ -2308,8 +2304,8 @@ HTMLTokenizer class >> initialize [
 ]
 
 { #category : #'class initialization' }
-HTMLTokenizer class >> initializeHTMLNameDelimiters [
-	(HtmlNameDelimiters := CharacterSet new)
+HTMLParserTokenizer class >> initializeHTMLNameDelimiters [
+	(HtmlNameDelimiters := BitmapCharacterSet new)
 		addAll: Character separators;
 		add: $>;
 		add: $/;
@@ -2321,7 +2317,7 @@ HTMLTokenizer class >> initializeHTMLNameDelimiters [
 ]
 
 { #category : #'class initialization' }
-HTMLTokenizer class >> initializePredefinedEntities [
+HTMLParserTokenizer class >> initializePredefinedEntities [
 	| entityPage entityName codePoint |
 
 	predefinedEntities := Dictionary new.
@@ -2335,63 +2331,51 @@ HTMLTokenizer class >> initializePredefinedEntities [
 				ifTrue: [
 					predefinedEntities
 						at: entityName
-						put: (self encodingClass value: codePoint asInteger)]].
+						put: codePoint asInteger asCharacter]].
 ]
 
 { #category : #testing }
-HTMLTokenizer class >> isNonHTMLCodeSectionTag: aTagName [
-	^ #('script' 'style') includes: aTagName
-]
-
-{ #category : #testing }
-HTMLTokenizer class >> isNonHTMLSectionTag: aTagName [
-	^ #('title' 'script' 'style') includes: aTagName
-]
-
-{ #category : #testing }
-HTMLTokenizer >> atEnd [
+HTMLParserTokenizer >> atEnd [
+	(streamReader atEnd and: [context isInitialized])
+		ifFalse: [^ false].
 	context atEnd
-		ifTrue: [^ true].
-	(context isInitialized and: [streamReader atEnd])
-		ifTrue: [
-			self nextEndDocument.
-			^ true].
-	^ false.
+		ifFalse: [self nextEndDocument].
+	^ true.
 ]
 
 { #category : #testing }
-HTMLTokenizer >> atNonHTMLSectionEndTag [
+HTMLParserTokenizer >> atNonHTMLSectionEndTag [
 	(streamReader nextMatchAll: '</')
 		ifFalse: [^ false].
-	nonHtmlElement doWithIndex: [:each :i |
+	context nonHtmlElement doWithIndex: [:each :i |
 		(streamReader peek asLowercase == each)
 			ifTrue: [streamReader next]
 			ifFalse: [
-				streamReader pushBack: '</', (nonHtmlElement copyFrom: 1to: i - 1).
+				streamReader pushBack: '</', (context nonHtmlElement copyFrom: 1to: i - 1).
 				^ false]].
-	streamReader pushBack: '</', nonHtmlElement.
+	streamReader pushBack: '</', context nonHtmlElement.
 	^ true.
 ]
 
 { #category : #'entity replacement' }
-HTMLTokenizer >> characterFromCodePoint: aCodePoint [
-	^ aCodePoint > 0
+HTMLParserTokenizer >> characterFromCodePoint: aCodePoint [
+	^ (aCodePoint notNil and: [aCodePoint > 0])
 		ifTrue: [
-			[self class encodingClass value: aCodePoint]
+			[aCodePoint asCharacter]
 				on: Error
 				do: [:error | Character space]]
 		ifFalse: [Character space]
 ]
 
 { #category : #'tokenizing - expecting' }
-HTMLTokenizer >> expectNext: aCharacter [
+HTMLParserTokenizer >> expectNext: aCharacter [
 	(streamReader peek == aCharacter)
 		ifTrue: [streamReader next].
 	^ aCharacter.
 ]
 
 { #category : #'tokenizing - expecting' }
-HTMLTokenizer >> expectNextAll: aString [
+HTMLParserTokenizer >> expectNextAll: aString [
 	aString doWithIndex: [:each :i |
 		each == streamReader peek
 			ifTrue: [streamReader next]
@@ -2402,24 +2386,28 @@ HTMLTokenizer >> expectNextAll: aString [
 ]
 
 { #category : #'tokenizing - expecting' }
-HTMLTokenizer >> expectTerminator: aCharacter [
+HTMLParserTokenizer >> expectTerminator: aCharacter [
 	streamReader skipTo: aCharacter
 ]
 
 { #category : #'tokenizing - expecting' }
-HTMLTokenizer >> expectUpToAll: aString [
+HTMLParserTokenizer >> expectUpToAll: aString [
 	^ streamReader upToAll: aString
 ]
 
+{ #category : #testing }
+HTMLParserTokenizer >> isNonHTMLCodeSectionTag: aTagName [
+	^ #('script' 'style') includes: aTagName
+]
+
+{ #category : #testing }
+HTMLParserTokenizer >> isNonHTMLSectionTag: aTagName [
+	^ #('title' 'script' 'style') includes: aTagName
+]
+
 { #category : #tokenizing }
-HTMLTokenizer >> nextAttributeValue [
+HTMLParserTokenizer >> nextAttributeValue [
 	| quote value |
-
-	streamReader peek == $&
-		ifTrue: [^ self nextUnparsedEntityReference].
-
-	streamReader atQuote
-		ifFalse: [^ self nextName].
 
 	quote := streamReader next.
 	context resetAfter: [
@@ -2435,25 +2423,11 @@ HTMLTokenizer >> nextAttributeValue [
 ]
 
 { #category : #tokenizing }
-HTMLTokenizer >> nextContentMarkupToken [
-	streamReader peek == $?
-		ifTrue: [^ self nextPIOrXMLDecl].
-	streamReader peek == $!
-		ifTrue: [
-			streamReader next.
-			streamReader peek == $-
-				ifTrue: [^ self nextComment].
-			streamReader peek == $[
-				ifTrue: [^ self nextCDataSection]].
-	self nextTag.
-]
-
-{ #category : #tokenizing }
-HTMLTokenizer >> nextContentToken [
+HTMLParserTokenizer >> nextContentToken [
 	| pcData |
 
 	context isInNonHTMLSection
-		ifTrue: [^ self nextNonHTMLSectionToken].
+		ifTrue: [^ self nextNonHTMLToken].
 
 	(pcData := self nextPCDataToken)
 		ifNotEmpty: [driver handlePCData: pcData]
@@ -2470,7 +2444,7 @@ HTMLTokenizer >> nextContentToken [
 ]
 
 { #category : #tokenizing }
-HTMLTokenizer >> nextEndTag [
+HTMLParserTokenizer >> nextEndTag [
 	| tagName |
 
 	streamReader next.
@@ -2482,7 +2456,7 @@ HTMLTokenizer >> nextEndTag [
 ]
 
 { #category : #tokenizing }
-HTMLTokenizer >> nextGeneralEntityReference [
+HTMLParserTokenizer >> nextGeneralEntityReference [
 	| name |
 
 	name := self nextName.
@@ -2493,7 +2467,7 @@ HTMLTokenizer >> nextGeneralEntityReference [
 ]
 
 { #category : #tokenizing }
-HTMLTokenizer >> nextName [
+HTMLParserTokenizer >> nextName [
 	| nextChar |
 
 	^ streamWriter writeWith: [:writeStream |
@@ -2507,61 +2481,63 @@ HTMLTokenizer >> nextName [
 ]
 
 { #category : #tokenizing }
-HTMLTokenizer >> nextNonHTMLCodeSectionOn: aWriteStream [
-	| nextChar quote |
+HTMLParserTokenizer >> nextNonHTMLCodeSectionOn: aWriteStream [
+	| nextChar commentStartChar isInComment |
 
-	nextChar := streamReader next.
-	context isInNonHTMLComment
-		ifTrue: [
-			(nonHtmlCommentStarter = '//' and: [nextChar == Character lf])
-				ifTrue: [context enterNonHTMLSection].
-			(nonHtmlCommentStarter = '/*'
-				and: [nextChar == $*
-					and: [streamReader peek == $/]])
+	isInComment := false.
+	[streamReader atEnd or: [self atNonHTMLSectionEndTag]]
+		whileFalse: [
+			isInComment
 				ifTrue: [
-					aWriteStream nextPut: nextChar.
 					nextChar := streamReader next.
-					context enterNonHTMLSection]]
-		ifFalse: [
-			(nextChar == $" or: [nextChar == $'])
-				ifTrue: [
-					aWriteStream
-						nextPut: (quote := nextChar);
-						nextPutAll: (streamReader upTo: quote)]
-				ifFalse: [
-					((nextChar == $/)
-						and: [streamReader peek == $*
-							or: [streamReader peek == $/]])
+					((commentStartChar == $/
+						and: [nextChar == streamReader normalizedLineEndingChar])
+							or: [(commentStartChar == $* and: [nextChar == $*])
+								and: [streamReader peek == $/]])
 						ifTrue: [
-							context enterNonHTMLComment.
-							aWriteStream nextPut: $/.
-							nextChar := streamReader next.
-							nonHtmlCommentStarter := '/'  copyWith: nextChar]]].
-	aWriteStream nextPut: nextChar.
+							commentStartChar == $*
+								ifTrue: [
+									aWriteStream nextPut: $*.
+									nextChar := streamReader next].
+							isInComment := false].
+					aWriteStream nextPut: nextChar]
+				ifFalse: [
+					streamReader atQuote
+						ifTrue: [self nextQuotedStringOn: aWriteStream]
+						ifFalse: [
+							(((nextChar := streamReader next) == $/)
+								and: [streamReader peek == $*
+									or: [streamReader peek == $/]])
+								ifTrue: [
+									isInComment := true.
+									aWriteStream
+										nextPut: $/;
+										nextPut: (commentStartChar := streamReader next)]
+								ifFalse: [aWriteStream nextPut: nextChar]]]].
 ]
 
 { #category : #tokenizing }
-HTMLTokenizer >> nextNonHTMLSectionToken [
-	| nonHtmlSection nextChar  |
+HTMLParserTokenizer >> nextNonHTMLSectionOn: aWriteStream [
+	[streamReader atEnd or: [self atNonHTMLSectionEndTag]]
+		whileFalse: [aWriteStream nextPut: streamReader next]
+]
+
+{ #category : #tokenizing }
+HTMLParserTokenizer >> nextNonHTMLToken [
+	| nonHtmlSection |
 
 	streamWriter writeWith: [:writeStream |
-		[streamReader atEnd
-			or: [self atNonHTMLSectionEndTag]]
-			whileFalse: [
-				(self class isNonHTMLCodeSectionTag: nonHtmlElement)
-					ifTrue: [self nextNonHTMLCodeSectionOn: writeStream]
-					ifFalse: [
-						nextChar := streamReader next.			
-						writeStream nextPut: nextChar]].
+		(self isNonHTMLCodeSectionTag: context nonHtmlElement)
+			ifTrue: [self nextNonHTMLCodeSectionOn: writeStream] 
+			ifFalse: [self nextNonHTMLSectionOn: writeStream].
 		nonHtmlSection := writeStream contents].
-	nonHtmlElement := nil.
 	context enterContent.
 
 	driver handleNonHTMLSection: nonHtmlSection.
 ]
 
 { #category : #tokenizing }
-HTMLTokenizer >> nextPCDataToken [
+HTMLParserTokenizer >> nextPCDataToken [
 	| isIgnorableWhitespace nextChar pcData |
 
 	isIgnorableWhitespace := true.
@@ -2600,19 +2576,19 @@ HTMLTokenizer >> nextPCDataToken [
 ]
 
 { #category : #tokenizing }
-HTMLTokenizer >> nextPITarget [
+HTMLParserTokenizer >> nextPITarget [
 	^ self nextName
 ]
 
 { #category : #'tokenizing - dtd' }
-HTMLTokenizer >> nextParameterEntityReference [
+HTMLParserTokenizer >> nextParameterEntityReference [
 	self
 		nextName;
 		expectNext: $;
 ]
 
 { #category : #tokenizing }
-HTMLTokenizer >> nextPrologToken [
+HTMLParserTokenizer >> nextPrologToken [
 	streamReader skipSeparators.
 	streamReader peek == $<
 		ifTrue: [
@@ -2638,19 +2614,31 @@ HTMLTokenizer >> nextPrologToken [
 ]
 
 { #category : #'tokenizing - dtd' }
-HTMLTokenizer >> nextPubidLiteral [
+HTMLParserTokenizer >> nextPubidLiteral [
 	^ self nextQuotedValue
 ]
 
 { #category : #tokenizing }
-HTMLTokenizer >> nextQuotedValue [
+HTMLParserTokenizer >> nextQuotedStringOn: aWriteStream [
+	| quote |
+
+	quote := streamReader next.
+	aWriteStream nextPut: quote.
+	[streamReader atEnd or: [streamReader peek == quote]]
+		whileFalse: [aWriteStream nextPut: streamReader next].
+	streamReader next.
+	aWriteStream nextPut: quote.
+]
+
+{ #category : #tokenizing }
+HTMLParserTokenizer >> nextQuotedValue [
 	^ streamReader atQuote
 		ifTrue: [streamReader upTo: streamReader next]
 		ifFalse: [self nextName]
 ]
 
 { #category : #'tokenizing - dtd' }
-HTMLTokenizer >> nextSubsetMarkupToken [
+HTMLParserTokenizer >> nextSubsetMarkupToken [
 	streamReader peek == $<
 		ifTrue: [streamReader next]
 		ifFalse: [^ self skipNonDeclarationOrEntity].
@@ -2663,12 +2651,12 @@ HTMLTokenizer >> nextSubsetMarkupToken [
 ]
 
 { #category : #'tokenizing - dtd' }
-HTMLTokenizer >> nextSystemLiteralRequired: aBoolean [
+HTMLParserTokenizer >> nextSystemLiteralRequired: aBoolean [
 	^ self nextQuotedValue
 ]
 
 { #category : #tokenizing }
-HTMLTokenizer >> nextTag [
+HTMLParserTokenizer >> nextTag [
 	| tagName attributes attributeName  nextChar |
 
 	(streamReader peek = $/)
@@ -2696,37 +2684,35 @@ HTMLTokenizer >> nextTag [
 			streamReader next.
 			driver handleEndTag: tagName]
 		ifFalse: [
-			(self class isNonHTMLSectionTag: tagName)
-				ifTrue: [
-					nonHtmlElement := tagName.
-					context enterNonHTMLSection]].
+			(self isNonHTMLSectionTag: tagName)
+				ifTrue: [context enterNonHTMLSection: tagName]].
 	self expectTerminator: $>.
 ]
 
 { #category : #tokenizing }
-HTMLTokenizer >> nextValue [
+HTMLParserTokenizer >> nextValue [
 	^ streamReader atQuote
 		ifTrue: [streamReader upTo: streamReader next]
 		ifFalse: [self nextName]
 ]
 
 { #category : #tokenizing }
-HTMLTokenizer >> nextXMLEncodingAttributeValue [
+HTMLParserTokenizer >> nextXMLEncodingAttributeValue [
 	^ self nextQuotedValue
 ]
 
 { #category : #tokenizing }
-HTMLTokenizer >> nextXMLStandaloneAttributeValue [
+HTMLParserTokenizer >> nextXMLStandaloneAttributeValue [
 	^ self nextQuotedValue
 ]
 
 { #category : #tokenizing }
-HTMLTokenizer >> nextXMLVersionAttributeValue [
+HTMLParserTokenizer >> nextXMLVersionAttributeValue [
 	^ self nextQuotedValue
 ]
 
 { #category : #'tokenizing - dtd' }
-HTMLTokenizer >> skipDeclaration [
+HTMLParserTokenizer >> skipDeclaration [
 	[streamReader atEnd
 		or: [streamReader peek == $>]]
 		whileFalse: [
@@ -2739,7 +2725,7 @@ HTMLTokenizer >> skipDeclaration [
 ]
 
 { #category : #'tokenizing - dtd' }
-HTMLTokenizer >> skipNonDeclarationOrEntity [
+HTMLParserTokenizer >> skipNonDeclarationOrEntity [
 	[streamReader atEnd
 		or: [(streamReader peek == $<)
 			or: [(streamReader peek == $%)
@@ -2749,6 +2735,6 @@ HTMLTokenizer >> skipNonDeclarationOrEntity [
 ]
 
 { #category : #accessing }
-HTMLTokenizer >> tokenContextClass [
+HTMLParserTokenizer >> tokenContextClass [
 	^ HTMLTokenContext
 ]

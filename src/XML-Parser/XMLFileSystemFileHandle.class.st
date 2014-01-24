@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #private }
-XMLFileSystemFileHandle class >> currentWorkingDirectoryPath [
+XMLFileSystemFileHandle class >> currentWorkingDirectoryPathString [
 	| fileSystemPath |
 
 	fileSystemPath := (Smalltalk at: #FileSystem) workingDirectory path.
@@ -19,8 +19,25 @@ XMLFileSystemFileHandle class >> currentWorkingDirectoryPath [
 ]
 
 { #category : #private }
+XMLFileSystemFileHandle >> deleteFileOrDo: aBlock [
+	[self fileReference delete]
+		on: self fileSystemError 
+		do: aBlock
+]
+
+{ #category : #private }
 XMLFileSystemFileHandle >> fileReference [
 	^ fileReference ifNil: [fileReference := path asFileReference]
+]
+
+{ #category : #accessing }
+XMLFileSystemFileHandle >> fileSize [
+	^ self fileReference size
+]
+
+{ #category : #private }
+XMLFileSystemFileHandle >> fileSystemError [
+	^ Smalltalk at: #FileSystemError
 ]
 
 { #category : #testing }
@@ -31,11 +48,13 @@ XMLFileSystemFileHandle >> isFile [
 { #category : #private }
 XMLFileSystemFileHandle >> readStreamOnFileOrDo: aBlock [
 	^ [self fileReference readStream]
-		on: (Smalltalk at: #FileSystemError)
+		on: self fileSystemError
 		do: aBlock
 ]
 
-{ #category : #accessing }
-XMLFileSystemFileHandle >> sizeOnDisk [
-	^ self fileReference size
+{ #category : #private }
+XMLFileSystemFileHandle >> writeStreamOnFileOrDo: aBlock [
+	^ [self fileReference writeStream]
+		on: self fileSystemError
+		do: aBlock
 ]

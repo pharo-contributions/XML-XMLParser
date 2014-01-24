@@ -224,7 +224,7 @@ XMLDOMParser >> processingInstruction: aTarget data: aDataString [
 
 { #category : #private }
 XMLDOMParser >> pushElement: anElement [
-	self nodeStack ifNotEmpty: [self topNode addNode: anElement].
+	self topNode addNode: anElement.
 	self pushNode: anElement.
 ]
 
@@ -276,9 +276,10 @@ XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName
 
 { #category : #private }
 XMLDOMParser >> topNode [
+	"For performance"
 	^ self nodeStack isEmpty
 		ifTrue: [nil]
-		ifFalse: [self nodeStack last]
+		ifFalse: [nodeStack at: nodeStack size]
 ]
 
 { #category : #content }

@@ -44,24 +44,40 @@ XMLURI >> = anObject [
 ]
 
 { #category : #private }
-XMLURI >> addPathSegmentsFrom: aResource [
-	aResource pathSegments
+XMLURI >> addPathSegment: aSegment [
+	(aSegment = '.' or: [aSegment = '..'])
+		ifTrue: [
+			(aSegment = '..' and: [pathSegments notEmpty])
+				ifTrue: [pathSegments removeLast].
+			^ self].
+
+	(aSegment notEmpty
+		and: [pathSegments isEmpty
+			and: [self hasHost]])
+		ifTrue: [pathSegments addFirst: ''].
+
+	pathSegments addLast: aSegment.
+]
+
+{ #category : #private }
+XMLURI >> addPathSegmentsFrom: aUri [
+	aUri pathSegments
 		ifEmpty: [^ self].
 
-	aResource hasAbsolutePath
+	aUri hasAbsolutePath
 		ifTrue: [pathSegments removeAll]
 		ifFalse: [
 			pathSegments
 				ifNotEmpty: [pathSegments removeLast]].
 
-	pathSegments addAll: aResource pathSegments.
+	aUri pathSegments do: [:each | self addPathSegment: each].
 ]
 
 { #category : #converting }
 XMLURI >> asRetrievableResource [
 	^ self isLocalURI
-		ifTrue: [XMLFileHandle defaultImplementation path: self path]
-		ifFalse: [XMLHTTPRequest defaultImplementation url: self asString]
+		ifTrue: [XMLFileHandle path: self unescapedPath]
+		ifFalse: [XMLHTTPRequest url: self asString]
 ]
 
 { #category : #converting }
@@ -77,8 +93,8 @@ XMLURI >> asXMLURI [
 
 { #category : #private }
 XMLURI >> combineWithURI: aUri [
-	aUri host
-		ifNotEmpty: [host := aUri host].
+	aUri hasHost
+		ifTrue: [host := aUri host].
 
 	self addPathSegmentsFrom: aUri.
 	queryString := aUri queryString.
@@ -119,6 +135,11 @@ XMLURI >> hasAbsolutePath [
 		and: [pathSegments first isEmpty]
 ]
 
+{ #category : #testing }
+XMLURI >> hasHost [
+	^ host notEmpty
+]
+
 { #category : #comparing }
 XMLURI >> hash [
 	^ host hash bitXor: pathSegments hash
@@ -148,10 +169,20 @@ XMLURI >> isRelative [
 
 { #category : #accessing }
 XMLURI >> path [
+	^ self pathPrintStringUnescaped: false
+]
+
+{ #category : #printing }
+XMLURI >> pathPrintStringUnescaped: aBoolean [
 	| pathStream |
 
+	pathSegments
+		ifEmpty: [^ ''].
+
 	pathStream := (String new: 16) writeStream.
-	self printPathSegmentsOn: pathStream.
+	self
+		printPathSegmentsOn: pathStream
+		unescaped: aBoolean.
 	^ pathStream contents.
 ]
 
@@ -190,16 +221,19 @@ XMLURI >> printOn: aStream [
 	self
 		printSchemeOn: aStream;
 		printHostOn: aStream;
-		printPathSegmentsOn: aStream;
+		printPathSegmentsOn: aStream unescaped: false;
 		printQueryStringOn: aStream;
 		printFragmentOn: aStream
 		
 ]
 
 { #category : #printing }
-XMLURI >> printPathSegmentsOn: aStream [
+XMLURI >> printPathSegmentsOn: aStream unescaped: aBoolean [
 	pathSegments
-		do: [:each | aStream nextPutAll: each]
+		do: [:each |
+			aBoolean
+				ifTrue: [self printUnescaped: each on: aStream]
+				ifFalse: [aStream nextPutAll: each]]
 		separatedBy: [aStream nextPut: $/]
 ]
 
@@ -217,6 +251,24 @@ XMLURI >> printSchemeOn: aStream [
 		aStream
 			nextPutAll: scheme;
 			nextPutAll: '://']
+]
+
+{ #category : #printing }
+XMLURI >> printUnescaped: aString on: aStream [
+	| readStream nextChar charCode |
+
+	readStream := aString readStream.
+	[readStream atEnd]
+		whileFalse: [
+			(nextChar := readStream next) == $%
+				ifTrue: [
+					charCode := 
+						XMLIntegerReader
+							readFrom: readStream
+							withBase: 16
+							upTo: 2.
+					nextChar := (charCode ifNil: [$%]) asCharacter].
+			aStream nextPut: nextChar].
 ]
 
 { #category : #accessing }
@@ -245,4 +297,9 @@ XMLURI >> setScheme: aScheme host: aHost path: aPath queryString: aQueryString f
 	self setPathSegmentsFromString: aPath.
 	queryString := aQueryString.
 	fragment := aFragment.
+]
+
+{ #category : #accessing }
+XMLURI >> unescapedPath [
+	^ self pathPrintStringUnescaped: true
 ]

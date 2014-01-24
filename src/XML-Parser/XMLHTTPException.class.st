@@ -1,3 +1,6 @@
+"
+Invoked for HTTP errors.
+"
 Class {
 	#name : #XMLHTTPException,
 	#superclass : #XMLParserException,

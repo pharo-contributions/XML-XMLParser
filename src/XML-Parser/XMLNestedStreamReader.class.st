@@ -17,11 +17,10 @@ Class {
 	],
 	#classVars : [
 		'CarriageReturn',
-		'HexDigitCharacterMap',
 		'LineFeed',
 		'SeparatorCharacters'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Streams'
 }
 
 { #category : #'class initialization' }
@@ -30,17 +29,10 @@ XMLNestedStreamReader class >> initialize [
 
 	super initialize.
 
-	SeparatorCharacters := CharacterSet newFrom: Character separators.
+	(SeparatorCharacters := BitmapCharacterSet new)
+		addAll: Character separators.
 	CarriageReturn := Character cr.
 	LineFeed := Character lf.
-
-	HexDigitCharacterMap := Dictionary new.
-	($0 to: $9) do: [:each | HexDigitCharacterMap at: each put: each asciiValue - $0 asciiValue].
-	($a to: $f) do: [:each | | digitValue |
-		digitValue := each asciiValue - $a asciiValue + 10.
-		HexDigitCharacterMap
-			at: each put: digitValue;
-			at: each asUppercase put: digitValue].
 ]
 
 { #category : #'instance creation' }
@@ -54,7 +46,8 @@ XMLNestedStreamReader class >> on: anInitialStream readLimit: aReadLimit [
 XMLNestedStreamReader >> atEnd [
 	^ peekChar isNil
 		and: [stream atEnd
-			and: [self hasNestedStreams not]]
+			and: [self hasNestedStreams not
+				or: [nestedStreams allSatisfy: [:each | each atEnd]]]]
 ]
 
 { #category : #testing }
@@ -71,14 +64,14 @@ XMLNestedStreamReader >> basicNext [
 
 	(nextChar := stream next)
 		ifNil: [
-			[self hasNestedStreams and: [stream atEnd]]
+			[stream atEnd and: [self hasNestedStreams]]
 				whileTrue: [self popCurrentStream].
 			nextChar := stream next].
 
 	nextChar == CarriageReturn
 		ifTrue: [
 			nextChar := normalizedLineEndingChar.
-			[self hasNestedStreams and: [stream atEnd]]
+			[stream atEnd and: [self hasNestedStreams]]
 				whileTrue: [self popCurrentStream].
 			(stream peek == LineFeed)
 				ifTrue: [stream next]]
@@ -111,12 +104,6 @@ XMLNestedStreamReader >> initialize [
 ]
 
 { #category : #private }
-XMLNestedStreamReader >> maxIntegerValue [
-	"SmallInteger maxValue"
-	^ 1073741823
-]
-
-{ #category : #private }
 XMLNestedStreamReader >> maxNestedStreams [
 	^ 10
 ]
@@ -137,25 +124,10 @@ XMLNestedStreamReader >> next [
 	nextChar == normalizedLineEndingChar
 		ifTrue: [currentLineNumber := currentLineNumber + 1].
 	readLimit ifNotNil: [
-		(readLimit := readLimit - 1) > 0
+		(readLimit := readLimit - 1) >= 0
 			ifFalse: [XMLLimitException signal: 'Read limit on input exceeded']].
 
 	^ nextChar.
-]
-
-{ #category : #accessing }
-XMLNestedStreamReader >> nextDigitWithBase: aBase [
-	| digit |
-
-	aBase = 16
-		ifTrue: [digit := HexDigitCharacterMap at: self peek ifAbsent: [nil]]
-		ifFalse: [
-			digit := self peek asciiValue - $0 asciiValue.
-			(digit >= 0 and: [digit <= 10])
-				ifFalse: [digit := nil]].
-	digit ifNotNil: [self next].
-
-	^ digit.
 ]
 
 { #category : #accessing }
@@ -170,32 +142,14 @@ XMLNestedStreamReader >> nextInteger [
 			base := 16]
 		ifFalse: [base := 10].
 
-	^ self nextIntegerWithBase: base.
-]
-
-{ #category : #accessing }
-XMLNestedStreamReader >> nextIntegerWithBase: aBase [
-	| integer maxValue maxBaseValue digitValue |
-
-	integer := 0.
-	maxValue := self maxIntegerValue.
-	maxBaseValue := (maxValue / aBase) asInteger.
-	[self atEnd not
-		and: [(digitValue := self nextDigitWithBase: aBase) notNil]]
-		whileTrue: [
-			integer > maxBaseValue
-				ifTrue: [^ integer].
-			integer := integer * aBase.
-
-			integer > (maxValue - digitValue)
-				ifTrue: [^ integer].
-			integer := integer + digitValue].
-	^ integer.
+	^ XMLIntegerReader
+		readFrom: self
+		withBase: base.
 ]
 
 { #category : #testing }
 XMLNestedStreamReader >> nextMatchAll: aString [
-	| i nextChar pushBackString |
+	| i nextChar |
 
 	self peek == (aString at: 1)
 		ifFalse: [^ false].
@@ -209,12 +163,19 @@ XMLNestedStreamReader >> nextMatchAll: aString [
 	(i > aString size)
 		ifTrue: [^ true].
 
-	pushBackString := aString copyFrom: 1 to: i - 1.
 	self pushBack:
 		(nextChar
-			ifNotNil: [pushBackString copyWith: nextChar]
-			ifNil: [pushBackString]).
+			ifNotNil: [
+				(aString copyFrom: 1 to: i)
+					at: i put: nextChar;
+					yourself]
+			ifNil: [aString copyFrom: 1 to: i - 1]).
 	^ false.
+]
+
+{ #category : #accessing }
+XMLNestedStreamReader >> normalizedLineEndingChar [
+	^ normalizedLineEndingChar
 ]
 
 { #category : #accessing }

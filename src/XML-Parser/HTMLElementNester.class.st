@@ -120,12 +120,12 @@ HTMLElementNester >> elementsToEndBeforeEnding: anElementName [
 
 { #category : #checking }
 HTMLElementNester >> elementsToEndBeforePCData [
-	(self hasOpenElement: 'head')
-		ifFalse: [^ #()].
-
-	^ (self elementsToEndBeforeEnding: 'head')
-		addLast: 'head';
-		yourself.
+	^ (self hasOpenElement: 'head')
+		ifTrue: [
+			(self elementsToEndBeforeEnding: 'head')
+				addLast: 'head';
+				yourself]
+		ifFalse: [#()]
 ]
 
 { #category : #checking }
@@ -191,15 +191,11 @@ HTMLElementNester >> elementsToStartBeforeStarting: anElementName [
 	(anElementName = 'body' or: [anElementName = 'head'])
 		ifTrue: [^ self elementsToStart]. 
 
-	((self isHeadSectionOnlyElement: anElementName)
-		and: [(self hasOpenElement: 'head') not])
-			ifTrue: [self elementsToStart addLast: 'head']
+	(self mustStartHeadSectionFor: anElementName)
+		ifTrue: [self elementsToStart addLast: 'head']
 		ifFalse: [
-			((self isBodySectionOnlyElement: anElementName)
-				or: [(self hasOpenElement: 'head') not])
-				ifTrue: [
-					(self hasOpenElement: 'body')
-						ifFalse: [self elementsToStart addLast: 'body']]].
+			(self mustStartBodySectionFor: anElementName)
+				ifTrue: [self elementsToStart addLast: 'body']].
 
 	^ self elementsToStart.
 ]
@@ -262,6 +258,19 @@ HTMLElementNester >> isOpenUniqueElement: anElementName [
 { #category : #testing }
 HTMLElementNester >> isVoidElement: anElementName [
 	^ VoidElements includes: anElementName
+]
+
+{ #category : #testing }
+HTMLElementNester >> mustStartBodySectionFor: anElementName [
+	^ ((self isBodySectionOnlyElement: anElementName)
+		or: [(self hasOpenElement: 'head') not])
+			and: [(self hasOpenElement: 'body') not]
+]
+
+{ #category : #testing }
+HTMLElementNester >> mustStartHeadSectionFor: anElementName [
+	^ (self isHeadSectionOnlyElement: anElementName)
+		and: [(self hasOpenElement: 'head') not]
 ]
 
 { #category : #private }

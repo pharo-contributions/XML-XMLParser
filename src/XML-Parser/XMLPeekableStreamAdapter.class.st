@@ -9,7 +9,7 @@ Class {
 		'peekChar',
 		'onClose'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Streams'
 }
 
 { #category : #'instance creation' }

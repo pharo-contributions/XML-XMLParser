@@ -11,7 +11,8 @@ Class {
 		'resolvesExternalEntities',
 		'preservesUndeclaredEntityReferences',
 		'externalEntityResolver',
-		'parserHandlerClass'
+		'parserHandlerClass',
+		'parserLimits'
 	],
 	#category : #'XML-Parser'
 }
@@ -46,6 +47,11 @@ XMLConfiguration >> parserHandlerClass [
 { #category : #accessing }
 XMLConfiguration >> parserHandlerClass: aClass [
 	parserHandlerClass := aClass
+]
+
+{ #category : #accessing }
+XMLConfiguration >> parserLimits [
+	^ parserLimits ifNil: [parserLimits := XMLParserLimits new]
 ]
 
 { #category : #accessing }

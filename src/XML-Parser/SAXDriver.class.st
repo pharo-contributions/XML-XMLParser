@@ -1,5 +1,5 @@
 "
-SAXDriver together with SAXHandler provides a SAX-like API for XML parsing. A SAXDriver processes XML tokens and signals SAX events to a SAXHandler. To use it, create a subclass of SAXHandler and override messages to handle SAX events of interest. See ""instance creation"" on the class-side of SAXHandler for ways to instantiate such a parser.
+SAXDriver together with SAXHandler provides a SAX-like API for XML parsing. The driver processes XML tokens and signals SAX events to a SAXHandler. To use it, create a subclass of SAXHandler and override messages to handle SAX events of interest. See ""instance creation"" on the class-side of SAXHandler for ways to instantiate such a parser.
 "
 Class {
 	#name : #SAXDriver,
@@ -45,6 +45,11 @@ SAXDriver >> declareNamespaces: aDictionary [
 ]
 
 { #category : #accessing }
+SAXDriver >> documentReadLimit [
+	^ self saxHandler documentReadLimit
+]
+
+{ #category : #accessing }
 SAXDriver >> documentURI [
 	^ self saxHandler documentURI
 ]
@@ -66,7 +71,15 @@ SAXDriver >> elementNesterClass [
 
 { #category : #'element nesting' }
 SAXDriver >> endNestingOfElement: anElementName [
-	self elementNester endElement: anElementName
+	| base |
+
+	(self elementNester hasScopedAttributes
+		and: [(base := self elementNester scopedAttributeAt: 'xml:base' ifAbsent: [nil]) notNil])
+		ifTrue: [
+			self elementNester endElement: anElementName.
+			(self elementNester scopedAttributeAt: 'xml:base') = base
+				ifFalse: [self removeURI: base]]
+		ifFalse: [self elementNester endElement: anElementName]
 ]
 
 { #category : #accessing }
@@ -78,11 +91,16 @@ SAXDriver >> externalEntityResolver [
 SAXDriver >> externalSubsetParserOnURI: aUri [
 	^ XMLParser
 		driver:
-			(DTDExternalSubsetDriver
+			(DTDExternalSubsetParserDriver
 				saxDriver: self
 				documentURI: aUri asString)
-		on: (self externalEntityResolver resolveEntity: aUri)
+		on: (self externalEntityResolver resolveEntityURI: aUri)
 	
+]
+
+{ #category : #accessing }
+SAXDriver >> externalSubsetReadLimit [
+	^ self saxHandler externalSubsetReadLimit
 ]
 
 { #category : #'handling tokens' }
@@ -354,7 +372,10 @@ SAXDriver >> handleUnparsedEntityReference: aName [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleWhitespace: aString [
-	self saxHandler ignorableWhitespace: aString
+	(self elementNester hasScopedAttributes
+		and: [(self elementNester scopedAttributeAt: 'xml:space') = 'preserve'])
+		ifTrue: [self saxHandler characters: aString]
+		ifFalse: [self saxHandler ignorableWhitespace: aString]
 ]
 
 { #category : #'handling tokens' }
@@ -378,6 +399,11 @@ SAXDriver >> isValidating [
 	^ saxHandler isValidating
 ]
 
+{ #category : #accessing }
+SAXDriver >> maxEntityReplacementDepth [
+	^ self saxHandler maxEntityReplacementDepth
+]
+
 { #category : #private }
 SAXDriver >> parseExternalSubset: aUri [
 	| parser |
@@ -393,6 +419,23 @@ SAXDriver >> parseExternalSubset: aUri [
 { #category : #testing }
 SAXDriver >> preservesUndeclaredEntityReferences [
 	^ self saxHandler preservesUndeclaredEntityReferences
+]
+
+{ #category : #accessing }
+SAXDriver >> readLimit [
+	^ self documentReadLimit
+]
+
+{ #category : #private }
+SAXDriver >> reservedAttributes: aDictionary [
+	(aDictionary includesKey: 'xml:base')
+		ifTrue: [self currentURI: (aDictionary at: 'xml:base')].
+	self isValidating
+		ifTrue: [self validator validateXMLIDAttributeIn: aDictionary].
+
+	self elementNester
+		addScopedAttributes: #('xml:space' 'xml:base' 'xml:lang')
+		from: aDictionary.
 ]
 
 { #category : #testing }

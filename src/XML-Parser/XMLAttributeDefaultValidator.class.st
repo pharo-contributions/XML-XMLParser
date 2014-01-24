@@ -12,6 +12,11 @@ Class {
 }
 
 { #category : #'instance creation' }
+XMLAttributeDefaultValidator class >> attribute: anAttribute [
+	^ self attribute: anAttribute defaultValue: ''
+]
+
+{ #category : #'instance creation' }
 XMLAttributeDefaultValidator class >> attribute: anAttribute defaultValue: aDefaultValue [
 	^ self new setAttribute: anAttribute defaultValue: aDefaultValue
 ]

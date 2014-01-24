@@ -2,7 +2,7 @@
 This class is a driver for parsing the external subset of a DTD.
 "
 Class {
-	#name : #DTDExternalSubsetDriver,
+	#name : #DTDExternalSubsetParserDriver,
 	#superclass : #XMLParserDriver,
 	#instVars : [
 		'saxDriver',
@@ -12,30 +12,30 @@ Class {
 }
 
 { #category : #'instance creation' }
-DTDExternalSubsetDriver class >> saxDriver: aSaxDriver documentURI: anExternalSubsetUri [
+DTDExternalSubsetParserDriver class >> saxDriver: aSaxDriver documentURI: anExternalSubsetUri [
 	^ self new
 		setSAXDriver: aSaxDriver
 		documentURI: anExternalSubsetUri 
 ]
 
 { #category : #accessing }
-DTDExternalSubsetDriver >> documentURI [
+DTDExternalSubsetParserDriver >> documentURI [
 	^ documentUri
 ]
 
 { #category : #accessing }
-DTDExternalSubsetDriver >> dtd [
+DTDExternalSubsetParserDriver >> dtd [
 	"direct acceess for speed"
 	^ saxDriver dtd
 ]
 
 { #category : #accessing }
-DTDExternalSubsetDriver >> externalEntityResolver [
+DTDExternalSubsetParserDriver >> externalEntityResolver [
 	^ self saxDriver externalEntityResolver
 ]
 
 { #category : #'handling tokens' }
-DTDExternalSubsetDriver >> handleAttributeDeclaration: anElement name: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
+DTDExternalSubsetParserDriver >> handleAttributeDeclaration: anElement name: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	self isValidating
 		ifTrue: [
 			self dtd
@@ -47,7 +47,7 @@ DTDExternalSubsetDriver >> handleAttributeDeclaration: anElement name: aName typ
 ]
 
 { #category : #'handling tokens' }
-DTDExternalSubsetDriver >> handleElementDeclaration: aName contentModel: aContentModel [
+DTDExternalSubsetParserDriver >> handleElementDeclaration: aName contentModel: aContentModel [
 	self isValidating
 		ifTrue: [
 			self dtd
@@ -56,7 +56,7 @@ DTDExternalSubsetDriver >> handleElementDeclaration: aName contentModel: aConten
 ]
 
 { #category : #'handling tokens' }
-DTDExternalSubsetDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
+DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
 	aNotation ifNotEmpty: [
 		self dtd
 			addUnparsedEntity: aName
@@ -71,7 +71,7 @@ DTDExternalSubsetDriver >> handleGeneralEntityDeclaration: aName publicID: aPubl
 ]
 
 { #category : #'handling tokens' }
-DTDExternalSubsetDriver >> handleGeneralEntityDeclaration: aName replacement: aReplacement [
+DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplacement [
 	self dtd
 		addGeneralEntity: aName
 		replacement: aReplacement
@@ -79,12 +79,12 @@ DTDExternalSubsetDriver >> handleGeneralEntityDeclaration: aName replacement: aR
 ]
 
 { #category : #'handling tokens' }
-DTDExternalSubsetDriver >> handleNotationDeclaration: aName publicID: aPublicId systemID: aSystemId [
+DTDExternalSubsetParserDriver >> handleNotationDeclaration: aName publicID: aPublicId systemID: aSystemId [
 	self dtd addNotation: aName
 ]
 
 { #category : #'handling tokens' }
-DTDExternalSubsetDriver >> handleParameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
+DTDExternalSubsetParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
 	self dtd
 		addExternalParameterEntity: aName
 		resolver: self externalEntityResolver
@@ -93,7 +93,7 @@ DTDExternalSubsetDriver >> handleParameterEntityDeclaration: aName publicID: aPu
 ]
 
 { #category : #'handling tokens' }
-DTDExternalSubsetDriver >> handleParameterEntityDeclaration: aName replacement: aReplacement [
+DTDExternalSubsetParserDriver >> handleParameterEntityDeclaration: aName replacement: aReplacement [
 	self dtd
 		addParameterEntity: aName
 		replacement:aReplacement
@@ -101,46 +101,53 @@ DTDExternalSubsetDriver >> handleParameterEntityDeclaration: aName replacement: 
 ]
 
 { #category : #'handling tokens' }
-DTDExternalSubsetDriver >> handleParameterEntityReference: aName [
+DTDExternalSubsetParserDriver >> handleParameterEntityReference: aName [
 	| entity |
 
-	(entity := self dtd parameterEntityAt: aName)
-		ifNil: [
-			self isValidating
-				ifTrue: [
-					XMLValidationException signal:
-						'Undeclared parameter entity reference %', aName, ';']].
+	entity := self dtd parameterEntityAt: aName.
+	(entity isNil and: [self isValidating])
+		ifTrue: [
+			XMLValidationException signal:
+				'Undeclared parameter entity reference %', aName, ';'].
+
 	^ entity.
 ]
 
 { #category : #testing }
-DTDExternalSubsetDriver >> isValidating [
+DTDExternalSubsetParserDriver >> isValidating [
 	"direct acceess for speed"
 	^ saxDriver isValidating
 ]
 
 { #category : #accessing }
-DTDExternalSubsetDriver >> saxDriver [
+DTDExternalSubsetParserDriver >> maxEntityReplacementDepth [
+	^ self saxDriver maxEntityReplacementDepth
+]
+
+{ #category : #accessing }
+DTDExternalSubsetParserDriver >> readLimit [
+	^ self saxDriver externalSubsetReadLimit
+]
+
+{ #category : #accessing }
+DTDExternalSubsetParserDriver >> saxDriver [
 	^ saxDriver
 ]
 
 { #category : #initialization }
-DTDExternalSubsetDriver >> setSAXDriver: aSaxdriver documentURI: aUri [
+DTDExternalSubsetParserDriver >> setSAXDriver: aSaxdriver documentURI: aUri [
 	saxDriver := aSaxdriver.
 	documentUri := aUri.
 ]
 
 { #category : #initialization }
-DTDExternalSubsetDriver >> tokenizerOn: aStringOrStream [
-	| tokenizer |
-
-	tokenizer := super tokenizerOn: aStringOrStream.
-	tokenizer tokenContext enterExternalSubsetTextDeclaration.
-
-	^ tokenizer.
+DTDExternalSubsetParserDriver >> tokenizerOn: aStringOrStream [
+	^ (super tokenizerOn: aStringOrStream)
+		nextStartExternalSubset;
+		yourself
 ]
 
 { #category : #testing }
-DTDExternalSubsetDriver >> usesNamespaces [
+DTDExternalSubsetParserDriver >> usesNamespaces [
 	^ self saxDriver usesNamespaces
 ]

@@ -12,8 +12,7 @@ Class {
 	],
 	#classVars : [
 		'OperatorApplicators',
-		'SpecialCharacterParsers',
-		'SpecialCharacters'
+		'SpecialCharacterParsers'
 	],
 	#category : #'XML-Parser-DTD'
 }
@@ -25,8 +24,7 @@ DTDDFAContentModelParser class >> initialize [
 	super initialize.
 	self
 		initializeOperatorApplicators;
-		initializeSpecialCharacterParsers;
-		initializeSpecialCharacters.
+		initializeSpecialCharacterParsers.
 ]
 
 { #category : #'class initialization' }
@@ -51,12 +49,6 @@ DTDDFAContentModelParser class >> initializeSpecialCharacterParsers [
 		at: $? asciiValue put: #parseUnaryOperator:;
 		at: $* asciiValue put: #parseUnaryOperator:;
 		at: $+ asciiValue put: #parseUnaryOperator:
-]
-
-{ #category : #'class initialization' }
-DTDDFAContentModelParser class >> initializeSpecialCharacters [
-	(SpecialCharacters := CharacterSet new)
-		addAll: '(),|?*+'
 ]
 
 { #category : #evaluation }
@@ -90,6 +82,11 @@ DTDDFAContentModelParser >> hasOperatorOnStack [
 { #category : #testing }
 DTDDFAContentModelParser >> isBinaryOperator: aFirstOperator higherPrecedenceThan: aSecondOperator [
 	^ aFirstOperator == $, and: [aSecondOperator == $|]
+]
+
+{ #category : #testing }
+DTDDFAContentModelParser >> isSpecialCharacter: aCharacter [
+	^ (self parserForSpecialCharacter: aCharacter) notNil
 ]
 
 { #category : #parsing }
@@ -132,7 +129,7 @@ DTDDFAContentModelParser >> parseElementName [
 
 	nameStream reset.
 	[contentModelStream atEnd
-		or: [SpecialCharacters includes: contentModelStream peek]]
+		or: [self isSpecialCharacter: contentModelStream peek]]
 		whileFalse: [nameStream nextPut: contentModelStream next].
 
 	matcher := nameStream contents.

@@ -68,14 +68,14 @@ DTDCachingEntityResolver >> maxCachedEntities: anInteger [
 ]
 
 { #category : #resolving }
-DTDCachingEntityResolver >> resolveEntity: aUri [
+DTDCachingEntityResolver >> resolveEntityURI: aUri [
 	| uri |
 
 	^ (uri := aUri asXMLURI) isLocalURI
-		ifTrue: [super resolveEntity: uri]
+		ifTrue: [super resolveEntityURI: uri]
 		ifFalse: [
 			ReadStream on:
 				(self class
 					entityCacheAt: uri
-					ifAbsentPut: [(super resolveEntity: uri) contents])]
+					ifAbsentPut: [(super resolveEntityURI: uri) contents])]
 ]

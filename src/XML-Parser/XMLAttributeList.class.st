@@ -138,16 +138,13 @@ XMLAttributeList >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 ]
 
 { #category : #private }
-XMLAttributeList >> setFromDictionary: aDictionary andElement: anElement [
+XMLAttributeList >> setFromDictionary: anOrderPreservingDictionary andElement: anElement [
 	| attributeAssoc attributeNode |
 
 	"Hack to reuse a dictionary for speed"
-	attributesByName :=
-		aDictionary class == OrderPreservingDictionary
-			ifTrue: [aDictionary dictionary]
-			ifFalse: [aDictionary].
+	attributesByName := anOrderPreservingDictionary dictionary.
 
-	aDictionary keysDo: [:each |
+	anOrderPreservingDictionary keysDo: [:each |
 		attributeAssoc :=
 			attributesByName
 				associationAt: each

@@ -6,6 +6,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'openElements',
+		'scopedAttributes',
 		'rootElement',
 		'hasExternalRoot'
 	],
@@ -13,10 +14,34 @@ Class {
 }
 
 { #category : #accessing }
+XMLElementNester >> addScopedAttributes: anAttributeNameCollection from: aDictionary [
+	| attributes |
+
+	attributes :=
+		self hasScopedAttributes
+			ifTrue: [self currentScopedAttributes copy]
+			ifFalse: [Dictionary new].
+	aDictionary keysAndValuesDo: [:key :value |
+		(anAttributeNameCollection includes: key)
+			ifTrue: [attributes at: key put: value]].
+
+	self hasScopedAttributes
+		ifTrue: [self scopedAttributes removeLast].
+	self scopedAttributes addLast: attributes.
+]
+
+{ #category : #accessing }
 XMLElementNester >> currentElement [
-	^ self openElements
-		at: self totalOpen
-		ifAbsent: ['']
+	^ self openElements isEmpty
+		ifTrue: ['']
+		ifFalse: [openElements at: openElements size]
+]
+
+{ #category : #accessing }
+XMLElementNester >> currentScopedAttributes [
+	^ self scopedAttributes
+		ifEmpty: [nil]
+		ifNotEmpty: [:attributes | attributes last]
 ]
 
 { #category : #printing }
@@ -32,7 +57,9 @@ XMLElementNester >> enclosedElementsAsString: aTagName [
 
 { #category : #checking }
 XMLElementNester >> endElement: anElementName [
-	self openElements removeLast
+	self openElements removeLast.
+	self hasScopedAttributes
+		ifTrue: [scopedAttributes removeLast].
 ]
 
 { #category : #checking }
@@ -53,6 +80,11 @@ XMLElementNester >> hasOpenElement: anElementName [
 { #category : #testing }
 XMLElementNester >> hasOpenElements [
 	^ self openElements notEmpty
+]
+
+{ #category : #testing }
+XMLElementNester >> hasScopedAttributes [
+	^ scopedAttributes notNil and: [scopedAttributes notEmpty]
 ]
 
 { #category : #accessing }
@@ -97,9 +129,33 @@ XMLElementNester >> rootElement: anElement [
 	hasExternalRoot := true.
 ]
 
+{ #category : #accessing }
+XMLElementNester >> scopedAttributeAt: aName [
+	^ self
+		scopedAttributeAt: aName
+		ifAbsent: ['']
+]
+
+{ #category : #accessing }
+XMLElementNester >> scopedAttributeAt: aName ifAbsent: aBlock [
+	^ self currentScopedAttributes
+		ifNil: [aBlock value]
+		ifNotNil: [:attributes |
+			attributes
+				at: aName
+				ifAbsent: aBlock]
+]
+
+{ #category : #private }
+XMLElementNester >> scopedAttributes [
+	^ scopedAttributes ifNil: [scopedAttributes := OrderedCollection new]
+]
+
 { #category : #checking }
 XMLElementNester >> startElement: anElementName [
-	self openElements addLast: anElementName
+	self openElements addLast: anElementName.
+	self hasScopedAttributes
+		ifTrue: [scopedAttributes addLast: self currentScopedAttributes].
 ]
 
 { #category : #accessing }

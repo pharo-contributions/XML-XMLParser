@@ -1,16 +1,20 @@
+"
+This is the driver for the HTMLHandler. It uses the HTMLElementNester to build a DOM tree from possibly bad markup.
+
+"
 Class {
-	#name : #HTMLDriver,
+	#name : #HTMLParserDriver,
 	#superclass : #SAXDriver,
 	#category : #'XML-Parser-HTML'
 }
 
 { #category : #private }
-HTMLDriver >> elementNesterClass [
+HTMLParserDriver >> elementNesterClass [
 	^ HTMLElementNester
 ]
 
 { #category : #'element nesting' }
-HTMLDriver >> endNestingOfElement: anElementName [
+HTMLParserDriver >> endNestingOfElement: anElementName [
 	((self elementNester isVoidElement: anElementName)
 		or: [(self elementNester hasOpenElement: anElementName) not])
 		ifTrue: [^ self].
@@ -22,7 +26,7 @@ HTMLDriver >> endNestingOfElement: anElementName [
 ]
 
 { #category : #'handling tokens' }
-HTMLDriver >> handleEndDocument [
+HTMLParserDriver >> handleEndDocument [
 	self elementNester openElements
 		reverseDo: [:each | self handleEndTag: each].
 
@@ -30,12 +34,12 @@ HTMLDriver >> handleEndDocument [
 ]
 
 { #category : #'handling tokens' }
-HTMLDriver >> handleNonHTMLSection: aString [
+HTMLParserDriver >> handleNonHTMLSection: aString [
 	self saxHandler characters: aString
 ]
 
 { #category : #'handling tokens' }
-HTMLDriver >> handlePCData: aString [
+HTMLParserDriver >> handlePCData: aString [
 	self
 		preEndElements: self elementNester elementsToEndBeforePCData;
 		preStartElements: self elementNester elementsToStartBeforePCData.
@@ -44,11 +48,11 @@ HTMLDriver >> handlePCData: aString [
 ]
 
 { #category : #'handling tokens' }
-HTMLDriver >> handleParseError: anError [
+HTMLParserDriver >> handleParseError: anError [
 ]
 
 { #category : #'handling tokens' }
-HTMLDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
+HTMLParserDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
 	super
 		handleStartTag: anElementName
 		attributes: anAttributeDictionary
@@ -59,7 +63,7 @@ HTMLDriver >> handleStartTag: anElementName attributes: anAttributeDictionary na
 ]
 
 { #category : #'handling tokens' }
-HTMLDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
+HTMLParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
 	super
 		handleXMLVersion: (aVersion ifEmpty: '1.0')
 		encoding: (anEncoding ifEmpty: 'UTF-8')
@@ -67,12 +71,12 @@ HTMLDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOr
 ]
 
 { #category : #testing }
-HTMLDriver >> isValidating [
+HTMLParserDriver >> isValidating [
 	^ false
 ]
 
 { #category : #'element nesting' }
-HTMLDriver >> preEndElements: anElementCollection [
+HTMLParserDriver >> preEndElements: anElementCollection [
 	anElementCollection do: [:each |
 		(self elementNester hasOpenElements)
 			ifFalse: [^ self].
@@ -88,7 +92,7 @@ HTMLDriver >> preEndElements: anElementCollection [
 ]
 
 { #category : #'element nesting' }
-HTMLDriver >> preStartElements: anElementCollection [
+HTMLParserDriver >> preStartElements: anElementCollection [
 	anElementCollection do: [:each |
 		self elementNester startElement: each.
 
@@ -102,12 +106,12 @@ HTMLDriver >> preStartElements: anElementCollection [
 ]
 
 { #category : #testing }
-HTMLDriver >> resolvesExternalEntities [
+HTMLParserDriver >> resolvesExternalEntities [
 	^ false
 ]
 
 { #category : #'element nesting' }
-HTMLDriver >> startNestingOfElement: anElementName [
+HTMLParserDriver >> startNestingOfElement: anElementName [
 	(self elementNester isOpenUniqueElement: anElementName)
 		ifTrue: [^ self].
 
@@ -120,11 +124,11 @@ HTMLDriver >> startNestingOfElement: anElementName [
 ]
 
 { #category : #private }
-HTMLDriver >> tokenizerClass [
-	^ HTMLTokenizer
+HTMLParserDriver >> tokenizerClass [
+	^ HTMLParserTokenizer
 ]
 
 { #category : #testing }
-HTMLDriver >> usesNamespaces [
+HTMLParserDriver >> usesNamespaces [
 	^ false
 ]

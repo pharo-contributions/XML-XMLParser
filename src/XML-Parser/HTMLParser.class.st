@@ -11,7 +11,7 @@ Class {
 
 { #category : #private }
 HTMLParser >> driverClass [
-	^ HTMLDriver
+	^ HTMLParserDriver
 ]
 
 { #category : #content }

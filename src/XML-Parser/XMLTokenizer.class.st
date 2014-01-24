@@ -1,9 +1,9 @@
 "
-This class reads XML tokens from a stream using a nested stream reader. Sending it #nextToken causes a token to be read and one or more handler messages to be dispatched to a driver.
+This is tokenizer for well-formed XML that supports DTD subsets and entity replacement.
 "
 Class {
 	#name : #XMLTokenizer,
-	#superclass : #XMLDriverTokenizer,
+	#superclass : #XMLParserTokenizer,
 	#instVars : [
 		'activeEntities'
 	],
@@ -51,12 +51,12 @@ XMLTokenizer class >> initializeAdditionalNameChars [
 
 { #category : #'class initialization' }
 XMLTokenizer class >> initializeAttributeTypeDelimiters [
-	AttributeTypeDelimiters := CharacterSet with: $# with: $' with: $" with: $>
+	AttributeTypeDelimiters := BitmapCharacterSet with: $# with: $' with: $" with: $>
 ]
 
 { #category : #'class initialization' }
 XMLTokenizer class >> initializeEncodingNameChars [
-	(EncodingNameChars := CharacterSet new)
+	(EncodingNameChars := BitmapCharacterSet new)
 		addAll: ($a to: $z);
 		addAll: ($A to: $Z);
 		addAll: ($0 to: $9);
@@ -113,12 +113,12 @@ XMLTokenizer class >> initializePubidChars [
 
 { #category : #'class initialization' }
 XMLTokenizer class >> initializeUnaryOperatorChars [
-	UnaryOperatorChars := CharacterSet with: $? with: $* with: $+
+	UnaryOperatorChars := BitmapCharacterSet with: $? with: $* with: $+
 ]
 
 { #category : #'class initialization' }
 XMLTokenizer class >> initializeValueListChars [
-	ValueListChars := CharacterSet with: $( with: $| with: $)
+	ValueListChars := BitmapCharacterSet with: $( with: $| with: $)
 ]
 
 { #category : #testing }
@@ -146,48 +146,44 @@ XMLTokenizer class >> isNmtokenChar: aCharacter [
 
 { #category : #accessing }
 XMLTokenizer >> activeEntities [
-	^ activeEntities
-		ifNil: [activeEntities := OrderedCollection new: self maxEntityReplacementDepth]
+	^ activeEntities ifNil: [activeEntities := OrderedCollection new]
 ]
 
 { #category : #'entity replacement' }
 XMLTokenizer >> addActiveEntity: anEntity [
+	(self hasActiveEntityNamed: anEntity name)
+		ifTrue: [self parseError: 'Illegal self-referential entity ', anEntity asReference].
+	self maxEntityReplacementDepth
+		ifNotNil: [:maxDepth |
+			(self activeEntities size + 1> maxDepth)
+				ifTrue: [self entityDepthError: 'Cannot further nest entity replacements']].
+	
 	self activeEntities addLast: anEntity.
-
-	driver activeEntityURI: anEntity uri.
+	anEntity isExternal
+		ifTrue: [driver currentURI: anEntity uri].
 ]
 
 { #category : #testing }
 XMLTokenizer >> atEnd [
+	(streamReader atEnd and: [context isInitialized])
+		ifFalse: [^ false].
+
 	context atEnd
-		ifTrue: [^ true].
-	(context isInitialized and: [streamReader atEnd])
-		ifTrue: [
+		ifFalse: [
 			context isInInternalSubset
 				ifTrue: [self errorExpected: 'end of internal subset'].
-			self nextEndDocument.
-			^ true].
-	^ false.
+			self nextEndDocument].
+	^ true.
 ]
 
 { #category : #'entity replacement' }
 XMLTokenizer >> characterFromCodePoint: aCodePoint [
-	aCodePoint > 0
+	(aCodePoint notNil and: [aCodePoint > 0])
 		ifFalse: [self errorExpected: 'postive decimal or hex integer'].
 
-	^ [self class encodingClass value: aCodePoint]
+	^ [aCodePoint asCharacter]
 		on: Error
 		do: [:error | self parseError: 'Invalid character code point ', aCodePoint printString]
-]
-
-{ #category : #'entity replacement' }
-XMLTokenizer >> checkTextDeclarationInReplacement: aReplacement forEntity: anEntity [
-	(aReplacement beginsWith: '<?xml ')
-		ifTrue: [ 
-			streamReader next.
-			context resetAfter: [
-				context enterTextDeclaration.
-				self nextPIOrXMLDecl]].
 ]
 
 { #category : #'entity replacement' }
@@ -340,7 +336,7 @@ XMLTokenizer >> hasActiveExternalEntity [
 
 { #category : #accessing }
 XMLTokenizer >> maxEntityReplacementDepth [
-	^ 3
+	^ driver maxEntityReplacementDepth
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -454,22 +450,6 @@ XMLTokenizer >> nextConditionalSectionOn: aWriteStream [
 	^ streamReader peek == $N
 		ifTrue: [self nextIncludeSectionOn: aWriteStream]
 		ifFalse: [self nextIgnoreSection].
-]
-
-{ #category : #tokenizing }
-XMLTokenizer >> nextContentMarkupToken [
-	streamReader peek == $?
-		ifTrue: [^ self nextPIOrXMLDecl].
-	streamReader peek == $!
-		ifTrue: [
-			streamReader next.
-			streamReader peek == $-
-				ifTrue: [^ self nextComment].
-			streamReader peek == $[
-				ifTrue: [^ self nextCDataSection].
-			self errorExpected: 'comment or CDATA section'].
-
-	self nextTag.
 ]
 
 { #category : #tokenizing }
@@ -773,14 +753,12 @@ XMLTokenizer >> nextNotationDeclaration [
 XMLTokenizer >> nextPITarget [
 	| target |
 
-	((target := self nextName) sameAs: 'xml')
-		ifTrue: [
-			target = 'xml'
-				ifFalse: [self parseError: 'The "xml" target must be lowercase'].
-			(context isInProlog or: [context isInTextDeclaration])
-				ifFalse: [
-					self parseError:
-						'XML declaration outside of prolog or text declaration']].
+	target := self nextName.
+	(target = 'xml'
+		and: [context isInProlog not
+			and: [context isInTextDeclaration not]])
+		ifTrue: [self parseError: 'XML declaration outside of prolog or text declaration'].
+
 	^ target.
 ]
 
@@ -892,7 +870,7 @@ XMLTokenizer >> nextSystemLiteralRequired: aBoolean [
 
 { #category : #tokenizing }
 XMLTokenizer >> nextTag [
-	| tagName attributes namespaces nextChar attributeName attributeValue |
+	| tagName attributes reservedAttributes namespaces nextChar attributeName attributeValue |
 
 	(streamReader peek = $/)
 		ifTrue: [^ self nextEndTag].
@@ -911,29 +889,53 @@ XMLTokenizer >> nextTag [
 			attributeValue := self nextAttributeValue.
 	
 			((attributeName at: 1) == $x "fast test to skip the others"
-				and: [driver usesNamespaces
-					and: [attributeName beginsWith: 'xmlns']])
+				and: [(attributeName beginsWith: 'xml')
+					and: [attributeName size >= 5]])
 				ifTrue: [
-					namespaces
-						ifNil: [namespaces := OrderPreservingDictionary new: 5 withDefaultValue: ''].
-					attributeName size > 6
+					(driver usesNamespaces
+						and: [(attributeName at: 4) == $n
+							and: [(attributeName at: 5) == $s]])
 						ifTrue: [
 							namespaces
-								at: (attributeName copyFrom: 7 to: attributeName size)
-								put: attributeValue]
-						ifFalse: [namespaces at: '' put: attributeValue]]
+								ifNil: [namespaces := OrderPreservingDictionary new: 5 withDefaultValue: ''].
+							attributeName size > 6
+								ifTrue: [
+									namespaces
+										at: (attributeName copyFrom: 7 to: attributeName size)
+										put: attributeValue]
+								ifFalse: [namespaces at: '' put: attributeValue]]
+						ifFalse: [
+							(attributeName at: 4) == $:
+								ifTrue: [
+									(reservedAttributes ifNil: [reservedAttributes := Dictionary new])
+										at: attributeName put: attributeValue].
+								attributes at: attributeName put: attributeValue]]
 				ifFalse: [attributes at: attributeName put: attributeValue]].
 
 	driver
 		handleStartTag: tagName
 		attributes: attributes
 		namespaces: namespaces.
+	reservedAttributes
+		ifNotNil: [driver reservedAttributes: reservedAttributes].
 
 	streamReader peek == $/
 		ifTrue: [
 			streamReader next.
 			driver handleEndTag: tagName].
 	self expectTerminator: $>.
+]
+
+{ #category : #tokenizing }
+XMLTokenizer >> nextTextDeclaration [
+	"skip <"
+	streamReader
+		skipSeparators;
+		next.
+
+	context resetAfter: [
+		context enterTextDeclaration.
+		self nextPIOrXMLDecl].
 ]
 
 { #category : #tokenizing }
@@ -993,31 +995,21 @@ XMLTokenizer >> parseError: anErrorString [
 
 { #category : #'entity replacement' }
 XMLTokenizer >> pushBackReplacement: aReplacement forEntity: anEntity onClose: aBlock [
-	(self hasActiveEntityNamed: anEntity name)
-		ifTrue: [self parseError: 'Illegal self-referential entity ', anEntity asReference].
-	(self activeEntities size >= self maxEntityReplacementDepth)
-		ifTrue: [self entityDepthError: 'Cannot further nest entity replacements'].
-
 	self addActiveEntity: anEntity.
+
 	streamReader
 		pushStream: aReplacement readStream
 		onClose: aBlock.
 
-	anEntity isExternal
-		ifTrue: [
-			self
-				checkTextDeclarationInReplacement: aReplacement
-				forEntity: anEntity].
+	(anEntity isExternal and: [anEntity hasTextDeclaration])
+		ifTrue: [self nextTextDeclaration].
 ]
 
 { #category : #'entity replacement' }
 XMLTokenizer >> removeActiveEntity: anEntity [
 	self activeEntities remove: anEntity.
-
-	driver activeEntityURI:
-		(self activeEntities
-			ifNotEmpty: [self activeEntities last uri]
-			ifEmpty: [nil]).
+	anEntity isExternal
+		ifTrue: [driver removeURI: anEntity uri].
 ]
 
 { #category : #'entity replacement' }

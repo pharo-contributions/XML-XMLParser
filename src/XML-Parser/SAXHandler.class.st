@@ -53,14 +53,14 @@ SAXHandler class >> on: aStringOrStream documentURI: aUri [
 { #category : #'instance creation' }
 SAXHandler class >> onFileNamed: aFileName [
 	^ self
-		on: (XMLFileHandle defaultImplementation path: aFileName) readStream
+		on: (XMLFileHandle path: aFileName) readStream
 		documentURI: aFileName
 ]
 
 { #category : #'instance creation' }
 SAXHandler class >> onURL: aUrlString [
 	^ self
-		on: (XMLHTTPRequest defaultImplementation url: aUrlString) get
+		on: (XMLHTTPRequest url: aUrlString) get
 		documentURI: aUrlString
 ]
 
@@ -157,6 +157,16 @@ SAXHandler >> defaultDocumentURI [
 	^ self externalEntityResolver defaultDocumentURI
 ]
 
+{ #category : #configuration }
+SAXHandler >> documentReadLimit [
+	^ self parserLimits documentReadLimit
+]
+
+{ #category : #configuration }
+SAXHandler >> documentReadLimit: aLimit [
+	self parserLimits documentReadLimit: aLimit
+]
+
 { #category : #accessing }
 SAXHandler >> documentURI [
 	^ documentUri ifNil: [documentUri := self defaultDocumentURI]
@@ -236,6 +246,16 @@ SAXHandler >> externalEntityResolver: anExternalEntityResolver [
 	self configuration externalEntityResolver: anExternalEntityResolver
 ]
 
+{ #category : #configuration }
+SAXHandler >> externalSubsetReadLimit [
+	^ self parserLimits externalSubsetReadLimit
+]
+
+{ #category : #configuration }
+SAXHandler >> externalSubsetReadLimit: aLimit [
+	self parserLimits externalSubsetReadLimit: aLimit
+]
+
 { #category : #declaration }
 SAXHandler >> generalEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
 ]
@@ -282,6 +302,16 @@ SAXHandler >> isValidating: aBoolean [
 	self configuration isValidating: aBoolean
 ]
 
+{ #category : #configuration }
+SAXHandler >> maxEntityReplacementDepth [
+	^ self parserLimits maxEntityReplacementDepth
+]
+
+{ #category : #configuration }
+SAXHandler >> maxEntityReplacementDepth: aLimit [
+	self parserLimits maxEntityReplacementDepth: aLimit
+]
+
 { #category : #declaration }
 SAXHandler >> notationDeclaration: aName publicID: aPublicId systemID: aSytemId [
 
@@ -318,6 +348,11 @@ SAXHandler >> parser [
 		on: input.
 ]
 
+{ #category : #configuration }
+SAXHandler >> parserLimits [
+	^ self configuration parserLimits
+]
+
 { #category : #parsing }
 SAXHandler >> parsingResult [
 	^ self
@@ -341,6 +376,12 @@ SAXHandler >> preservesUndeclaredEntityReferences: aBoolean [
 SAXHandler >> processingInstruction: aTarget data: aDataString [
 	"This call corresonds to the Java SAX call
 	processingInstruction(java.lang.String target, java.lang.String data)."
+]
+
+{ #category : #configuration }
+SAXHandler >> removeLimits [
+	self parserLimits removeAll.
+	self externalEntityResolver removeLimits.
 ]
 
 { #category : #configuration }

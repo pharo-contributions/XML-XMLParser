@@ -1,5 +1,5 @@
 "
-A base class for HTTP requests. Subclasses need to implement the abstract requesting method to return a ReadStream on the respone or raise an exception if it is too large or an HTTP error happens.
+A base class for HTTP requests. Subclasses need to implement the abstract requesting method to return a ReadStream on the respone or raise an exception if it is too large or an HTTP error happens. The class defaultImplementation method should return the subclass to use for this platform.
 "
 Class {
 	#name : #XMLHTTPRequest,
@@ -15,9 +15,16 @@ XMLHTTPRequest class >> defaultImplementation [
 	^ XMLZincHTTPRequest
 ]
 
+{ #category : #accessing }
+XMLHTTPRequest class >> implementation [
+	^ self == XMLHTTPRequest
+		ifTrue: [self defaultImplementation]
+		ifFalse: [self]
+]
+
 { #category : #'instance creation' }
 XMLHTTPRequest class >> url: aUrl [
-	^ self new url: aUrl
+	^ self implementation new url: aUrl
 ]
 
 { #category : #private }
@@ -42,8 +49,11 @@ XMLHTTPRequest >> getUpToLimit: aMaxSize [
 		withTimeout: self defaultTimeout
 		onError: [:error |
 			(error isKindOf: XMLLimitException)
-				ifTrue: [XMLLimitException signal: 'HTTP reponse limit exceeded']
-				ifFalse: [XMLHTTPException signal: error messageText]]
+				ifTrue: [
+					error
+						messageText: 'HTTP reponse limit exceeded';
+						pass]
+				ifFalse: [error resignalAs: XMLHTTPException]]
 ]
 
 { #category : #accessing }

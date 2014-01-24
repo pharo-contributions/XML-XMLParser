@@ -121,24 +121,24 @@ XMLObservableList >> removeObserver: anObserver [
 XMLObservableList >> with: aBlock add: anObject [
 	self
 		beforeAdding: anObject;
-		with: [aBlock value] onError: [^ nil];
+		with: aBlock ifResumingAfterError: [^ nil];
 		afterAdding: anObject.
 	^ anObject.
 ]
 
 { #category : #private }
-XMLObservableList >> with: aBlock onError: errorBlock [
+XMLObservableList >> with: aBlock ifResumingAfterError: errorBlock [
 	^ aBlock
 		on: Error
 		do: [:error |
-			error signal.
-			errorBlock valueWithPossibleArgument: error]
+			error pass.
+			errorBlock value]
 ]
 
 { #category : #private }
 XMLObservableList >> with: aBlock remove: anObject [
 	self
-		with: [aBlock value] onError: [^ nil];
+		with: aBlock ifResumingAfterError: [^ nil];
 		afterRemoving: anObject.
 	^ anObject.
 ]

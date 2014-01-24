@@ -5,24 +5,21 @@ Class {
 	#name : #XMLParserDriver,
 	#superclass : #Object,
 	#instVars : [
-		'activeEntityUri'
+		'uris'
 	],
 	#category : #'XML-Parser'
 }
 
 { #category : #accessing }
-XMLParserDriver >> activeEntityURI [
-	^ activeEntityUri
-]
-
-{ #category : #accessing }
-XMLParserDriver >> activeEntityURI: aUri [
-	activeEntityUri := aUri
-]
-
-{ #category : #accessing }
 XMLParserDriver >> currentURI [
-	^ self activeEntityURI ifNil: [self documentURI]
+	^ self uris
+		ifEmpty: [self documentURI]
+		ifNotEmpty: [self uris last]
+]
+
+{ #category : #accessing }
+XMLParserDriver >> currentURI: aUri [
+	self uris addLast: aUri
 ]
 
 { #category : #accessing }
@@ -145,6 +142,19 @@ XMLParserDriver >> isValidating [
 	self subclassResponsibility
 ]
 
+{ #category : #accessing }
+XMLParserDriver >> readLimit [
+	^ nil
+]
+
+{ #category : #accessing }
+XMLParserDriver >> removeURI: aUri [
+	self uris removeAt:
+		(self uris
+			lastIndexOf: aUri
+			ifAbsent: [^ self])
+]
+
 { #category : #private }
 XMLParserDriver >> tokenizerClass [
 	^ XMLTokenizer
@@ -152,7 +162,15 @@ XMLParserDriver >> tokenizerClass [
 
 { #category : #initialization }
 XMLParserDriver >> tokenizerOn: aStringOrStream [
-	^ self tokenizerClass driver: self on: aStringOrStream
+	^ self tokenizerClass
+		driver: self
+		on: aStringOrStream
+		readLimit: self readLimit
+]
+
+{ #category : #private }
+XMLParserDriver >> uris [
+	^ uris ifNil: [uris := OrderedCollection new]
 ]
 
 { #category : #testing }

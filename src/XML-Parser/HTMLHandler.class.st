@@ -9,5 +9,5 @@ Class {
 
 { #category : #private }
 HTMLHandler >> driverClass [
-	^ HTMLDriver
+	^ HTMLParserDriver
 ]

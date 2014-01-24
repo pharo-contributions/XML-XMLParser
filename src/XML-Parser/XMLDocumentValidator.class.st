@@ -5,7 +5,8 @@ Class {
 	#name : #XMLDocumentValidator,
 	#superclass : #Object,
 	#instVars : [
-		'elementValidatorStack'
+		'elementValidatorStack',
+		'xmlIdValidator'
 	],
 	#category : #'XML-Parser-Validation'
 }
@@ -74,7 +75,7 @@ XMLDocumentValidator >> validateAttributes: anAttributeDictionary with: aValidat
 				validator validateAttributes: anAttributeDictionary.
 				unvalidatedAttributes
 					remove: attribute
-				ifAbsent: []]].
+					ifAbsent: []]].
 
 	unvalidatedAttributes
 		ifNotEmpty: [self unvalidatedAttributes: unvalidatedAttributes].
@@ -128,4 +129,20 @@ XMLDocumentValidator >> validateStartTag: aName attributes: anAttributeDictionar
 	self
 		validateAttributes: anAttributeDictionary
 		with: (self attributeValidatorsFor: aName).
+]
+
+{ #category : #validation }
+XMLDocumentValidator >> validateXMLIDAttributeIn: aDictionary [
+	self xmlIDValidator validateAttributes: aDictionary
+]
+
+{ #category : #private }
+XMLDocumentValidator >> xmlIDValidator [
+	^ xmlIdValidator ifNil: [
+		xmlIdValidator :=
+			XMLIDAttributeValidator
+				element: ''
+				attribute: 'xml:id'
+				defaultValueValidator:
+					(XMLImpliedValueAttributeValidator attribute: 'xml:id')]
 ]
