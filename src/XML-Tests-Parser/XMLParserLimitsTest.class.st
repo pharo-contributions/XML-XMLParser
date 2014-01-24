@@ -32,17 +32,6 @@ XMLParserLimitsTest >> recursiveEntitiesNamed: aName depth: aLimit isParameter: 
 ]
 
 { #category : #tests }
-XMLParserLimitsTest >> testLocalURIFromNonLocalURI [
-	self
-		should: [
-			(SAXHandler
-				on: '<!DOCTYPE root SYSTEM "file://local/uri">'
-				documentURI: 'http://www.example.com')
-				parseDocument]
-		raise: XMLLimitException.
-]
-
-{ #category : #tests }
 XMLParserLimitsTest >> testParserReadLimitTest [
 	| xml |
 
