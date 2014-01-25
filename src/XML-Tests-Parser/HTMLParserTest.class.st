@@ -32,6 +32,18 @@ HTMLParserTest >> testHTMLEntities [
 ]
 
 { #category : #tests }
+HTMLParserTest >> testHTMLHandler [
+	self
+		shouldnt: [
+			HTMLHandler
+				parse: XMLParserTest addressBookXML;
+				parse: XMLParserTest addressBookXMLWithDTD;
+				parse: XMLDOMParserTest addressBookNamespacedXML;
+				parse: XMLDOMParserTest addressBookNamespacePrefixedXML]
+		raise: XMLParserException
+]
+
+{ #category : #tests }
 HTMLParserTest >> testParsingNonHTMLSections [
 	| document |
 

@@ -9,7 +9,10 @@ XMLExternalEntityLimitsTest >> testDefaultLimits [
 	| resolver |
 
 	resolver := (SAXHandler on: '') externalEntityResolver.
-	self assert: (resolver resolvesLocalFromNonLocal isKindOf: Boolean).
+	self
+		assert: resolver maxExternalEntities > 0;
+		assert: resolver maxExternalEntitySize > 0;
+		assert: (resolver resolvesLocalFromNonLocal isKindOf: Boolean).
 ]
 
 { #category : #tests }
@@ -29,15 +32,21 @@ XMLExternalEntityLimitsTest >> testExternalEntitiesLimit [
 		clearEntityCache;
 		maxExternalEntities: entityLimit.
 	self
-		shouldnt: [parser parseDocument]
+		shouldnt: [
+			parser
+				resolvesExternalEntities: true;
+				parseDocument]
 		raise: XMLLimitException.
 
 	parser := SAXHandler on: xml.
 	parser externalEntityResolver
 		clearEntityCache;
-		maxExternalEntities: entityLimit - 1.
+		maxExternalEntities: 0.
 	self
-		should: [parser parseDocument]
+		should: [
+			parser
+				resolvesExternalEntities: true;
+				parseDocument]
 		raise: XMLLimitException.
 ]
 

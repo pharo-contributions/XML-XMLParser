@@ -32,20 +32,32 @@ XMLParserLimitsTest >> recursiveEntitiesNamed: aName depth: aLimit isParameter: 
 ]
 
 { #category : #tests }
-XMLParserLimitsTest >> testParserReadLimitTest [
-	| xml |
+XMLParserLimitsTest >> testDefaultLimits [
+	| parser |
 
-	xml := '<test/>'.
+	parser := SAXHandler on: ''.
+	self
+		assert: parser documentReadLimit > 0;
+		assert: parser externalSubsetReadLimit > 0;
+		assert: parser maxEntityReplacementDepth > 0.
+]
+
+{ #category : #tests }
+XMLParserLimitsTest >> testParserReadLimitTest [
+	| xml replacement |
+
+	replacement := 'entity replacement'.
+	xml := '<!DOCTYPE test [<!ENTITY entity "', replacement, '">]><test>&entity;</test>'.
 	self
 		shouldnt: [
 			(SAXHandler on: xml)
-				documentReadLimit: xml size;
+				documentReadLimit: xml size + replacement size;
 				parseDocument]
 		raise: XMLLimitException.
 	self
 		should: [
 			(SAXHandler on: xml)
-				documentReadLimit: xml size - 1;
+				documentReadLimit: xml size + replacement size - 1;
 				parseDocument]
 		raise: XMLLimitException.
 	self

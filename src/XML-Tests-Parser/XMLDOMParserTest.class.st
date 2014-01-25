@@ -5,21 +5,31 @@ Class {
 }
 
 { #category : #source }
-XMLDOMParserTest >> addressBookNamespacesXML [
-	^ '<addressbook xmlns="defaultNS" xmlns:book="bookNS" xmlns:ps="personNS">',
-		(self addressBookXML copyAfter:  $>)
-]
-
-{ #category : #source }
-XMLDOMParserTest >> addressBookNamespacesXMLWithPrefixes [
+XMLDOMParserTest class >> addressBookNamespacePrefixedXML [
 	| xmlWithPrefixes |
 
-	xmlWithPrefixes := self addressBookNamespacesXML.
+	xmlWithPrefixes := self addressBookNamespacedXML.
 	#('<addressbook' '</addressbook' '<person' '</person' 'family-name=')
 		with: #('<book:addressbook' '</book:addressbook' '<ps:person' '</ps:person' 'ps:family-name=')
 		do: [:source :replacement |
 			xmlWithPrefixes := xmlWithPrefixes copyReplaceAll: source with: replacement].
 	^ xmlWithPrefixes.
+]
+
+{ #category : #source }
+XMLDOMParserTest class >> addressBookNamespacedXML [
+	^ '<addressbook xmlns="defaultNS" xmlns:book="bookNS" xmlns:ps="personNS">',
+		(self addressBookXML copyAfter:  $>)
+]
+
+{ #category : #source }
+XMLDOMParserTest >> addressBookNamespacePrefixedXML [
+	^ self class addressBookNamespacePrefixedXML
+]
+
+{ #category : #source }
+XMLDOMParserTest >> addressBookNamespacedXML [
+	^ self class addressBookNamespacedXML
 ]
 
 { #category : #source }
@@ -40,7 +50,7 @@ XMLDOMParserTest >> internalSubsetWithDeclarations [
 XMLDOMParserTest >> testAllElementsNamespaceURIs [
 	| document people |
 
-	document := XMLDOMParser parse: self addressBookNamespacesXML.
+	document := XMLDOMParser parse: self addressBookNamespacedXML.
 
 	people :=
 		document
@@ -58,7 +68,7 @@ XMLDOMParserTest >> testAllElementsNamespaceURIs [
 XMLDOMParserTest >> testAttributeNamespaces [
 	| document  people |
 
-	document := XMLDOMParser parse: self addressBookNamespacesXMLWithPrefixes.
+	document := XMLDOMParser parse: self addressBookNamespacePrefixedXML.
 	people := document allElementsNamed: 'person' namespaceURI: 'personNS'.
 	self assert: people notEmpty.
 	
@@ -78,7 +88,7 @@ XMLDOMParserTest >> testAttributeNamespacesDisabled [
 
 	document :=
 		XMLDOMParser
-			parse: self addressBookNamespacesXMLWithPrefixes
+			parse: self addressBookNamespacePrefixedXML
 			usingNamespaces: false.
 	people := document allElementsNamed: 'person'.
 	self assert: people notEmpty.
@@ -93,7 +103,7 @@ XMLDOMParserTest >> testAttributeNamespacesDisabled [
 XMLDOMParserTest >> testAttributesExcludingDeclarations [
 	| document   |
 
-	document := XMLDOMParser parse: self addressBookNamespacesXML.
+	document := XMLDOMParser parse: self addressBookNamespacedXML.
 	self deny: document root hasAttributes.
 ]
 
@@ -103,7 +113,7 @@ XMLDOMParserTest >> testAttributesIncludingDeclarations [
 
 	document :=
 		XMLDOMParser
-			parse: self addressBookNamespacesXML
+			parse: self addressBookNamespacedXML
 			usingNamespaces: false.
 	root := document root.
 	self
@@ -144,7 +154,7 @@ XMLDOMParserTest >> testCDATASection [
 XMLDOMParserTest >> testChangingNamespaces [
 	| document people person |
 
-	document := XMLDOMParser parse: self addressBookNamespacesXML.
+	document := XMLDOMParser parse: self addressBookNamespacedXML.
 
 	people := document allElementsNamed: 'person' namespaceURI: 'defaultNS'.
 	(person := people third) prefix: 'ps'.
@@ -238,7 +248,7 @@ XMLDOMParserTest >> testElementNames [
 XMLDOMParserTest >> testElementPrefixes [
 	| document  persons |
 
-	document := XMLDOMParser parse: self addressBookNamespacesXMLWithPrefixes.
+	document := XMLDOMParser parse: self addressBookNamespacePrefixedXML.
 	persons := 	document allElementsSelect: [:each |
 		(each isNamedAny: #('notperson' 'ps:person'))
 			and: [(each isNamedAny: #('notperson' 'person'))
@@ -254,7 +264,7 @@ XMLDOMParserTest >> testElementPrefixesNamespacesDisabled [
 
 	document :=
 		XMLDOMParser
-			parse: self addressBookNamespacesXMLWithPrefixes
+			parse: self addressBookNamespacePrefixedXML
 			usingNamespaces: false.
 	persons := 	document allElementsSelect: [:each |
 		(each isNamedAny: #('notperson' 'ps:person'))
@@ -269,7 +279,7 @@ XMLDOMParserTest >> testElementPrefixesNamespacesDisabled [
 XMLDOMParserTest >> testFindElementNamespaceURI [
 	| document people |
 
-	document := XMLDOMParser parse: self addressBookNamespacesXML.
+	document := XMLDOMParser parse: self addressBookNamespacedXML.
 
 	people := document allElementsNamed: 'person' namespaceURI: 'defaultNS'.
 	self assert:
@@ -433,7 +443,7 @@ XMLDOMParserTest >> testInternalParameterEntityDeclarations [
 XMLDOMParserTest >> testNamespaces [
 	| document  |
 
-	document := XMLDOMParser parse: self addressBookNamespacesXMLWithPrefixes.
+	document := XMLDOMParser parse: self addressBookNamespacePrefixedXML.
 	document allElementsDo: [:each |
 		(each == document root or: [each isNamed: 'person'])
 			ifTrue: [
@@ -458,7 +468,7 @@ XMLDOMParserTest >> testNamespaces [
 XMLDOMParserTest >> testNamespacesDeclaring [
 	| document |
 
-	document := XMLDOMParser parse: self addressBookNamespacesXML.
+	document := XMLDOMParser parse: self addressBookNamespacedXML.
 	document allElementsDo: [:each |
 		self assert: each hasNamespaces.
 		each == document root
@@ -482,7 +492,7 @@ XMLDOMParserTest >> testNamespacesDeclaring [
 XMLDOMParserTest >> testNamespacesDeclaringDisabled [
 	| document |
 
-	document := XMLDOMParser parse: self addressBookNamespacesXML usingNamespaces: false.
+	document := XMLDOMParser parse: self addressBookNamespacedXML usingNamespaces: false.
 	document allElementsDo: [:each |
 		self
 			deny: each hasNamespaces;
@@ -498,7 +508,7 @@ XMLDOMParserTest >> testNamespacesDisabled [
 
 	document :=
 		XMLDOMParser
-			parse: self addressBookNamespacesXMLWithPrefixes
+			parse: self addressBookNamespacePrefixedXML
 			usingNamespaces: false.
 	document allElementsDo: [:each |
 		self assert: each namespaceURI isEmpty.
@@ -519,7 +529,7 @@ XMLDOMParserTest >> testNamespacesDisabled [
 XMLDOMParserTest >> testNamespacesResolving [
 	| document |
 
-	document := XMLDOMParser parse: self addressBookNamespacesXML.
+	document := XMLDOMParser parse: self addressBookNamespacedXML.
 	document allElementsDo: [:each |
 		self
 			assert: each defaultNamespace = 'defaultNS';
@@ -539,7 +549,7 @@ XMLDOMParserTest >> testNamespacesResolvingDisabled [
 
 	document :=
 		XMLDOMParser
-			parse: self addressBookNamespacesXML
+			parse: self addressBookNamespacedXML
 			usingNamespaces: false.
 	document allElementsDo: [:each |
 		self
