@@ -1,5 +1,5 @@
 "
-This class is an XML parser that uses event handling. The acronym ""SAX"" refers to Java's ""Simple API for XML,"" on which SAXHandler's API is based. To use this class, create a subclass and override handlers under the ""content"" and ""lexical"" categories as needed. By default, namespace support, validation, and external entity resolution are enabled.
+This class is an XML parser that uses event handling. The acronym ""SAX"" refers to Java's ""Simple API for XML,"" on which SAXHandler's API is based. To use this class, create a subclass and override handlers under the ""content"" and ""lexical"" categories as needed. By default, namespace support and validation are enabled (but not external entity resolution).
 
 To instantiate a SAXHandler, send any of the #on: or #parse- messages to the class.
 
@@ -406,7 +406,7 @@ SAXHandler >> resolvesExternalEntities [
 { #category : #configuration }
 SAXHandler >> resolvesExternalEntities: aBoolean [
 	"When true, external DTDs and parsed entities will be
-	fetched (default)."
+	fetched (not default)."
 
 	self configuration resolvesExternalEntities: aBoolean
 ]

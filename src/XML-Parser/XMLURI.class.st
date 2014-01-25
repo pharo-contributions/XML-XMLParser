@@ -191,11 +191,6 @@ XMLURI >> pathSegments [
 	^ pathSegments
 ]
 
-{ #category : #private }
-XMLURI >> pathSegments: aSegmentCollection [
-	pathSegments := aSegmentCollection asOrderedCollection
-]
-
 { #category : #copying }
 XMLURI >> postCopy [
 	pathSegments := pathSegments copy

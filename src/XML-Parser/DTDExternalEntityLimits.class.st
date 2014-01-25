@@ -1,3 +1,6 @@
+"
+This class places security limits on the number and size of external parsed entities. You can set these using the configuration messages in DTDExternalEntityResolver or remove them using removeLimits.
+"
 Class {
 	#name : #DTDExternalEntityLimits,
 	#superclass : #Object,
@@ -13,6 +16,8 @@ Class {
 DTDExternalEntityLimits >> initialize [
 	super initialize.
 
+	maxExternalEntities := 12.
+	maxExternalEntitySize := 250000.
 	resolvesLocalFromNonLocal := false.
 ]
 

@@ -1,3 +1,6 @@
+"
+This class parses notation attribute value lists.
+"
 Class {
 	#name : #DTDNotationListParser,
 	#superclass : #DTDValueListParser,

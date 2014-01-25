@@ -59,14 +59,14 @@ DTDAttributeDefinitionParser class >> initializeNonEnumerationValidators [
 		at: 'NMTOKENS' put: XMLNamesAttributeValidator
 ]
 
-{ #category : #testing }
-DTDAttributeDefinitionParser >> isNotationList: aType [
-	^ aType beginsWith: 'NOTATION '
+{ #category : #'private ' }
+DTDAttributeDefinitionParser >> hasNotationType [
+	^ type beginsWith: 'NOTATION '
 ]
 
 { #category : #parsing }
 DTDAttributeDefinitionParser >> parse [
-	| defaultValueValidator attributeValidator |
+	| defaultValueValidator |
 
 	defaultValueValidator :=
 		(DefaultValueValidators
@@ -75,28 +75,7 @@ DTDAttributeDefinitionParser >> parse [
 				attribute: attribute
 				defaultValue: defaultValue.
 
-	attributeValidator :=
-		self validatorClassForType
-			element: element
-			attribute: attribute
-			defaultValueValidator: defaultValueValidator.
-	attributeValidator isValueListValidator
-		ifTrue: [self parseValueListTypeFor: attributeValidator].
-
-	^ attributeValidator.
-]
-
-{ #category : #parsing }
-DTDAttributeDefinitionParser >> parseValueListTypeFor: anAttributeValidator [
-	| listParserClass isNotationList |
-
-	isNotationList := self isNotationList: type.
-	listParserClass :=
-		isNotationList
-			ifTrue: [DTDNotationListParser]
-			ifFalse: [DTDEnumerationListParser].
-
-	anAttributeValidator allowedValues: (listParserClass on: type) parse.
+	^ self validatorForTypeWithDefaultValueValidator: defaultValueValidator.
 ]
 
 { #category : #initialization }
@@ -114,5 +93,23 @@ DTDAttributeDefinitionParser >> validatorClassForType [
 
 	^ NonEnumerationValidators 
 		at: type
-		ifAbsent: [XMLValueListAttributeValidator]
+		ifAbsent: [
+			(self hasNotationType)
+				ifTrue: [XMLNotationListAttributeValidator]
+				ifFalse: [XMLValueListAttributeValidator]]
+]
+
+{ #category : #'private ' }
+DTDAttributeDefinitionParser >> validatorForTypeWithDefaultValueValidator: aDefaultValueValidator [
+	| attributeValidator |
+
+	attributeValidator :=
+		self validatorClassForType
+			element: element
+			attribute: attribute
+			defaultValueValidator: aDefaultValueValidator.
+	attributeValidator isValueListValidator
+		ifTrue: [attributeValidator setAllowedValuesFromString: type].
+
+	^ attributeValidator.
 ]

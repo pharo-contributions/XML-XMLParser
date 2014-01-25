@@ -66,11 +66,6 @@ XMLAttributeValidator >> hasNotationValues [
 ]
 
 { #category : #testing }
-XMLAttributeValidator >> isEntityValidator [
-	^ false
-]
-
-{ #category : #testing }
 XMLAttributeValidator >> isIDValidator [
 	^ false
 ]

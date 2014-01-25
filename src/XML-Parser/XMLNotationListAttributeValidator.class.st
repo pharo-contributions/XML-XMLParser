@@ -40,3 +40,8 @@ XMLNotationListAttributeValidator >> validateAttributeValue: aValue [
 			XMLValidationException signal:
 				'Undeclared NOTATION "', aValue, '" in attribute "', attribute, '"'].
 ]
+
+{ #category : #'private ' }
+XMLNotationListAttributeValidator >> valueListParserClass [
+	^ DTDNotationListParser
+]

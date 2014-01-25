@@ -1,3 +1,6 @@
+"
+This parses element mixed content  (#PCDATA| ... ) lists.
+"
 Class {
 	#name : #DTDMixedContentListParser,
 	#superclass : #DTDValueListParser,

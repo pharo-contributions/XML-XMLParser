@@ -78,7 +78,7 @@ XMLConfiguration >> requiresDocumentConstraints: aBoolean [
 
 { #category : #accessing }
 XMLConfiguration >> resolvesExternalEntities [
-	^ resolvesExternalEntities ifNil: [resolvesExternalEntities := true]
+	^ resolvesExternalEntities ifNil: [resolvesExternalEntities := false]
 ]
 
 { #category : #accessing }

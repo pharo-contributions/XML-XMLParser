@@ -1,3 +1,6 @@
+"
+This parses attribute value enumeration lists.
+"
 Class {
 	#name : #DTDEnumerationListParser,
 	#superclass : #DTDValueListParser,
@@ -6,5 +9,5 @@ Class {
 
 { #category : #testing }
 DTDEnumerationListParser >> isValidListValue: aValue [
-	^ XMLTokenizer isNmtoken: aValue
+	^ true
 ]
