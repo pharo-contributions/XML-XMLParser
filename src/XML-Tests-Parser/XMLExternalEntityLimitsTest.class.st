@@ -11,7 +11,7 @@ XMLExternalEntityLimitsTest >> testDefaultLimits [
 	resolver := (SAXHandler on: '') externalEntityResolver.
 	self
 		assert: resolver maxExternalEntities > 0;
-		assert: resolver maxExternalEntitySize > 0;
+		assert: resolver maxExternalEntitySize = DTDExternalEntityLimits defaultMaxExternalEntitySize;
 		assert: (resolver resolvesLocalFromNonLocal isKindOf: Boolean).
 ]
 
@@ -107,6 +107,35 @@ XMLExternalEntityLimitsTest >> testExternalSubsetReadLimit [
 				parseDocument]
 		raise: XMLLimitException.
 	self deleteFileNamed: fileName.
+]
+
+{ #category : #tests }
+XMLExternalEntityLimitsTest >> testOnURLUpToLimit [
+	"
+	(self isSkipping: false) testOnURLUpToLimit
+	"
+	| parser size |
+
+	self isSkipping
+		ifTrue: [self skip].
+
+	size := (self rssURL asXMLURI get) contents size.
+	self
+		shouldnt: [
+			parser :=
+				SAXHandler
+					onURL: self rssURL
+					upToLimit: size]
+		raise: XMLLimitException.
+	self assert: parser documentReadLimit = size.
+
+	self
+		should: [
+			(SAXHandler
+				onURL: self rssURL
+				upToLimit: size - 1)
+				parseDocument]
+		raise: XMLLimitException.
 ]
 
 { #category : #tests }
