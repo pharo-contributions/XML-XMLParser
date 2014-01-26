@@ -12,12 +12,17 @@ Class {
 	#category : #'XML-Parser-DTD'
 }
 
+{ #category : #accessing }
+DTDExternalEntityLimits class >> defaultMaxExternalEntitySize [
+	^ 250000
+]
+
 { #category : #initialization }
 DTDExternalEntityLimits >> initialize [
 	super initialize.
 
 	maxExternalEntities := 12.
-	maxExternalEntitySize := 250000.
+	maxExternalEntitySize := self class defaultMaxExternalEntitySize.
 	resolvesLocalFromNonLocal := false.
 ]
 

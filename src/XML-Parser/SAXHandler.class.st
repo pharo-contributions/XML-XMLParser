@@ -60,8 +60,16 @@ SAXHandler class >> onFileNamed: aFileName [
 { #category : #'instance creation' }
 SAXHandler class >> onURL: aUrlString [
 	^ self
-		on: (XMLHTTPRequest url: aUrlString) get
-		documentURI: aUrlString
+		onURL: aUrlString
+		upToLimit: XMLParserLimits defaultDocumentReadLimit
+]
+
+{ #category : #'instance creation' }
+SAXHandler class >> onURL: aUrlString upToLimit: aLimit [
+	^ (self
+		on: ((XMLHTTPRequest url: aUrlString) getUpToLimit: aLimit)
+		documentURI: aUrlString)
+		documentReadLimit: aLimit
 ]
 
 { #category : #parsing }

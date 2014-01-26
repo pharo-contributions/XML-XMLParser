@@ -7,12 +7,12 @@ Class {
 	#instVars : [
 		'isValidating',
 		'usesNamespaces',
-		'requiresDtdDeclarations',
 		'resolvesExternalEntities',
 		'preservesUndeclaredEntityReferences',
 		'externalEntityResolver',
 		'parserHandlerClass',
-		'parserLimits'
+		'parserLimits',
+		'requiresDocumentConstraints'
 	],
 	#category : #'XML-Parser'
 }
@@ -67,12 +67,12 @@ XMLConfiguration >> preservesUndeclaredEntityReferences: aBoolean [
 
 { #category : #accessing }
 XMLConfiguration >> requiresDocumentConstraints [
-	^ requiresDtdDeclarations ifNil: [requiresDtdDeclarations := false]
+	^ requiresDocumentConstraints ifNil: [requiresDocumentConstraints := false]
 ]
 
 { #category : #accessing }
 XMLConfiguration >> requiresDocumentConstraints: aBoolean [
-	(requiresDtdDeclarations := aBoolean)
+	(requiresDocumentConstraints := aBoolean)
 		ifTrue: [self isValidating: true]
 ]
 

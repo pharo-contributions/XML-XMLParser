@@ -13,21 +13,17 @@ Class {
 	#category : #'XML-Parser'
 }
 
-{ #category : #accessing }
-XMLElementNester >> addScopedAttributes: anAttributeNameCollection from: aDictionary [
-	| attributes |
+{ #category : #private }
+XMLElementNester >> copiedScopedAttributes [
+	| copiedAttributes |
 
-	attributes :=
+	copiedAttributes :=
 		self hasScopedAttributes
-			ifTrue: [self currentScopedAttributes copy]
+			ifTrue: [self scopedAttributes removeLast copy]
 			ifFalse: [Dictionary new].
-	aDictionary keysAndValuesDo: [:key :value |
-		(anAttributeNameCollection includes: key)
-			ifTrue: [attributes at: key put: value]].
+	self scopedAttributes addLast: copiedAttributes.
 
-	self hasScopedAttributes
-		ifTrue: [self scopedAttributes removeLast].
-	self scopedAttributes addLast: attributes.
+	^ copiedAttributes.
 ]
 
 { #category : #accessing }
@@ -149,6 +145,18 @@ XMLElementNester >> scopedAttributeAt: aName ifAbsent: aBlock [
 { #category : #private }
 XMLElementNester >> scopedAttributes [
 	^ scopedAttributes ifNil: [scopedAttributes := OrderedCollection new]
+]
+
+{ #category : #accessing }
+XMLElementNester >> setScopedAttributesNamed: aNameCollection from: aDictionary [
+	| attributes |
+
+	aNameCollection do: [:each |
+		(aDictionary at: each ifAbsent: [nil])
+			ifNotNil: [:value |
+				(attributes ifNil: [attributes := self copiedScopedAttributes])
+					at: each
+					put: value]].
 ]
 
 { #category : #checking }

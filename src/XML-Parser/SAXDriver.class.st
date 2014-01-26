@@ -249,10 +249,9 @@ SAXDriver >> handleNotationDeclaration: aName publicID: aPublicId systemID: aSys
 { #category : #'handling tokens' }
 SAXDriver >> handlePCData: aString [
 	self isValidating
-		ifTrue: [self  validator validatePCData: aString].
+		ifTrue: [self validator validatePCData: aString].
 
-	self saxHandler 
-		characters: aString
+	self saxHandler characters: aString
 ]
 
 { #category : #'handling tokens' }
@@ -300,6 +299,18 @@ SAXDriver >> handleParameterEntityReference: aName [
 			self preservesUndeclaredEntityReferences
 				ifTrue: [entity := DTDBypassedParameterEntity named: aName]].
 	^ entity.
+]
+
+{ #category : #private }
+SAXDriver >> handleReservedAttributes: anAttributeDictionary [
+	(anAttributeDictionary at: 'xml:base' ifAbsent: [nil])
+		ifNotNil: [:uri | self currentURI: uri].
+	self isValidating
+		ifTrue: [self validator validateXMLIDAttributeIn: anAttributeDictionary].
+
+	self elementNester
+		setScopedAttributesNamed: #('xml:space' 'xml:base' 'xml:lang')
+		from: anAttributeDictionary.
 ]
 
 { #category : #'handling tokens' }
@@ -419,18 +430,6 @@ SAXDriver >> preservesUndeclaredEntityReferences [
 { #category : #accessing }
 SAXDriver >> readLimit [
 	^ self documentReadLimit
-]
-
-{ #category : #private }
-SAXDriver >> reservedAttributes: aDictionary [
-	(aDictionary includesKey: 'xml:base')
-		ifTrue: [self currentURI: (aDictionary at: 'xml:base')].
-	self isValidating
-		ifTrue: [self validator validateXMLIDAttributeIn: aDictionary].
-
-	self elementNester
-		addScopedAttributes: #('xml:space' 'xml:base' 'xml:lang')
-		from: aDictionary.
 ]
 
 { #category : #testing }
