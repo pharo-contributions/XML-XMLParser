@@ -1,3 +1,6 @@
+"
+This class validates attributes with lists of ID ref values separated by spaces.
+"
 Class {
 	#name : #XMLIDRefsAttributeValidator,
 	#superclass : #XMLIDRefAttributeValidator,
@@ -6,8 +9,8 @@ Class {
 
 { #category : #validation }
 XMLIDRefsAttributeValidator >> validateAttributeValue: aValue [
-	Character space
-		split: aValue
+	self
+		spaceSeparatedValuesIn: aValue
 		do: [:each |
 			self validateID: each.
 			self idRefs add: each].

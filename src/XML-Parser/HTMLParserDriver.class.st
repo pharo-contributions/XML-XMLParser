@@ -13,24 +13,47 @@ HTMLParserDriver >> elementNesterClass [
 	^ HTMLElementNester
 ]
 
-{ #category : #'element nesting' }
-HTMLParserDriver >> endNestingOfElement: anElementName [
-	((self elementNester isVoidElement: anElementName)
-		or: [(self elementNester hasOpenElement: anElementName) not])
-		ifTrue: [^ self].
+{ #category : #private }
+HTMLParserDriver >> endElement: anElementName [
+	| prefix |
 
-	self preEndElements:
-		(self elementNester elementsToEndBeforeEnding: anElementName).
+	self elementNester endElement: anElementName.
 
-	super endNestingOfElement: anElementName.
+	prefix := anElementName qualifiedNamePrefix.	
+	self saxHandler 
+		endElement: anElementName
+		prefix: prefix
+		uri: ''
+		localName: (anElementName qualifiedNameLocalPart: prefix)
+]
+
+{ #category : #private }
+HTMLParserDriver >> endElements: anElementCollection [
+	anElementCollection do: [:each |
+		(self elementNester hasOpenElements)
+			ifFalse: [^ self].
+
+		self endElement: each].
 ]
 
 { #category : #'handling tokens' }
 HTMLParserDriver >> handleEndDocument [
-	self elementNester openElements
-		reverseDo: [:each | self handleEndTag: each].
+	self elementNester
+		openElementsReverseDo: [:each | self endElement: each];
+		endNesting.
 
-	super handleEndDocument.
+	self saxHandler endDocument.
+]
+
+{ #category : #'handling tokens' }
+HTMLParserDriver >> handleEndTag: anElementName [ 
+	((self elementNester isVoidElement: anElementName)
+		or: [(self elementNester hasOpenElement: anElementName) not])
+		ifTrue: [^ self].
+
+	self
+		endElements: (self elementNester elementsToEndBeforeEnding: anElementName);
+		endElement: anElementName.
 ]
 
 { #category : #'handling tokens' }
@@ -41,10 +64,10 @@ HTMLParserDriver >> handleNonHTMLSection: aString [
 { #category : #'handling tokens' }
 HTMLParserDriver >> handlePCData: aString [
 	self
-		preEndElements: self elementNester elementsToEndBeforePCData;
-		preStartElements: self elementNester elementsToStartBeforePCData.
+		endElements: self elementNester elementsToEndBeforePCData;
+		startElements: self elementNester elementsToStartBeforePCData.
 
-	super handlePCData: aString.
+	self saxHandler characters: aString.
 ]
 
 { #category : #'handling tokens' }
@@ -53,21 +76,24 @@ HTMLParserDriver >> handleParseError: anError [
 
 { #category : #'handling tokens' }
 HTMLParserDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
-	super
-		handleStartTag: anElementName
-		attributes: anAttributeDictionary
-		namespaces: aNamespaceDictionary.
+	(self elementNester isOpenUniqueElement: anElementName)
+		ifTrue: [^ self].
+
+	self
+		endElements: (self elementNester elementsToEndBeforeStarting: anElementName);
+		startElements: (self elementNester elementsToStartBeforeStarting: anElementName);
+		startElement: anElementName attributes: anAttributeDictionary.
 
 	(self elementNester isVoidElement: anElementName)
-		ifTrue: [self preEndElements: (Array with: anElementName)].
+		ifTrue: [self endElement: anElementName].
 ]
 
 { #category : #'handling tokens' }
 HTMLParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
-	super
-		handleXMLVersion: (aVersion ifEmpty: '1.0')
+	self saxHandler
+		xmlVersion: (aVersion ifEmpty: '1.0')
 		encoding: (anEncoding ifEmpty: 'UTF-8')
-		standalone: 'no'
+		standalone: false
 ]
 
 { #category : #testing }
@@ -75,52 +101,32 @@ HTMLParserDriver >> isValidating [
 	^ false
 ]
 
-{ #category : #'element nesting' }
-HTMLParserDriver >> preEndElements: anElementCollection [
-	anElementCollection do: [:each |
-		(self elementNester hasOpenElements)
-			ifFalse: [^ self].
-
-		self elementNester endElement: each.
-	
-		each splitQualifiedNameInto: [:prefixPart :localPart |
-			self saxHandler 
-				endElement: each
-				prefix: prefixPart
-				uri: ''
-				localName: localPart]].
-]
-
-{ #category : #'element nesting' }
-HTMLParserDriver >> preStartElements: anElementCollection [
-	anElementCollection do: [:each |
-		self elementNester startElement: each.
-
-		each splitQualifiedNameInto: [:prefixPart :localPart |
-			self saxHandler 
-				startElement: each
-				prefix: prefixPart
-				uri: ''
-				localName: localPart
-				attributes: Dictionary new]].
-]
-
 { #category : #testing }
 HTMLParserDriver >> resolvesExternalEntities [
 	^ false
 ]
 
-{ #category : #'element nesting' }
-HTMLParserDriver >> startNestingOfElement: anElementName [
-	(self elementNester isOpenUniqueElement: anElementName)
-		ifTrue: [^ self].
+{ #category : #private }
+HTMLParserDriver >> startElement: anElementName attributes: anAttributeDictionary [
+	| prefix |
 
-	self preEndElements:
-		(self elementNester elementsToEndBeforeStarting: anElementName).
-	self preStartElements:
-		(self elementNester elementsToStartBeforeStarting: anElementName).
+	self elementNester startElement: anElementName.
 
-	super startNestingOfElement: anElementName.
+	prefix := anElementName qualifiedNamePrefix.
+	self saxHandler 
+		startElement: anElementName
+		prefix: prefix
+		uri: ''
+		localName: (anElementName qualifiedNameLocalPart: prefix)
+		attributes: anAttributeDictionary
+]
+
+{ #category : #private }
+HTMLParserDriver >> startElements: anElementCollection [
+	anElementCollection do: [:each |
+		self
+			startElement: each
+			attributes: (OrderPreservingDictionary new: 5 withDefaultValue: '')].
 ]
 
 { #category : #private }

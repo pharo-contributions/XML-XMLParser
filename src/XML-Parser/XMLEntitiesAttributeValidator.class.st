@@ -1,3 +1,6 @@
+"
+This class validates attributes with lists of unparsed entity name values separated by spaces.
+"
 Class {
 	#name : #XMLEntitiesAttributeValidator,
 	#superclass : #XMLEntityAttributeValidator,
@@ -6,7 +9,7 @@ Class {
 
 { #category : #validation }
 XMLEntitiesAttributeValidator >> validateAttributeValue: aValue [
-	Character space
-		split: aValue
+	self
+		spaceSeparatedValuesIn: aValue
 		do: [:each | self validateEntityReference: each]
 ]

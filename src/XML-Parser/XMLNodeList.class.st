@@ -9,18 +9,16 @@ Class {
 
 { #category : #private }
 XMLNodeList >> afterAdding: aNode [
-	aNode addObserver: self.
 	aNode isElement
-		ifTrue: [self notifyOf: #addedElement: with: aNode].
-	self notifyOf: #addedNode: with: aNode.
+		ifTrue: [self notifyOf: #addedElement: with: aNode]
+		ifFalse: [self notifyOf: #addedNode: with: aNode].
 ]
 
 { #category : #private }
 XMLNodeList >> afterRemoving: aNode [
-	aNode removeObserver: self.
 	aNode isElement
-		ifTrue: [self notifyOf: #removedElement: with: aNode].
-	self notifyOf: #removedNode: with: aNode.
+		ifTrue: [self notifyOf: #removedElement: with: aNode]
+		ifFalse: [self notifyOf: #removedNode: with: aNode].
 ]
 
 { #category : #private }
@@ -103,8 +101,4 @@ XMLNodeList >> hasElements [
 { #category : #testing }
 XMLNodeList >> includesElementAt: aName [
 	^ (self elementAt: aName) notNil
-]
-
-{ #category : #notifications }
-XMLNodeList >> renamedElement: anElement from: anOldName to: aNewName [
 ]

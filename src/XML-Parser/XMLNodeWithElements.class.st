@@ -25,9 +25,10 @@ XMLNodeWithElements >> addElement: anElement [
 
 { #category : #notifications }
 XMLNodeWithElements >> addedElement: anElement [
+	self addedNode: anElement.
 	anElement
 		configuration: self configuration;
-		document: self document
+		document: self document.
 ]
 
 { #category : #accessing }
@@ -293,11 +294,8 @@ XMLNodeWithElements >> printContentOn: aStream [
 
 { #category : #notifications }
 XMLNodeWithElements >> removedElement: anElement [
-	anElement document: nil
-]
-
-{ #category : #notifications }
-XMLNodeWithElements >> renamedElement: anElement from: anOldName to: aNewName [
+	self removedNode: anElement.
+	anElement document: nil.
 ]
 
 { #category : #testing }

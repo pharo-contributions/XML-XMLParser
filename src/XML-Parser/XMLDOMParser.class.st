@@ -141,7 +141,7 @@ XMLDOMParser >> nodeListClass: aClass [
 
 { #category : #private }
 XMLDOMParser >> nodeStack [
-	^ nodeStack ifNil: [nodeStack := OrderedCollection new: 15]
+	^ nodeStack ifNil: [nodeStack := OrderedCollection new: 10]
 ]
 
 { #category : #declaration }
@@ -175,8 +175,8 @@ XMLDOMParser >> parser [
 	| parser |
 
 	parser := super parser.
-	(self nodeStack notEmpty and: [self topNode isElement])
-		ifTrue: [
+	(self nodeStack isEmpty or: [self topNode isElement not])
+		ifFalse: [
 			self
 				configuration: self topNode configuration;
 				document: self topNode document.
@@ -276,10 +276,10 @@ XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName
 
 { #category : #private }
 XMLDOMParser >> topNode [
-	"For performance"
-	^ self nodeStack isEmpty
-		ifTrue: [nil]
-		ifFalse: [nodeStack at: nodeStack size]
+	"for speed"
+	^ self nodeStack size > 0
+		ifTrue: [nodeStack at: nodeStack size]
+		ifFalse: [nil]
 ]
 
 { #category : #content }

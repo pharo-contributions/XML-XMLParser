@@ -19,6 +19,7 @@ Class {
 XMLCachingNodeList >> afterAdding: aNode [
 	aNode isElement
 		ifTrue: [
+			aNode addObserver: self.
 			((self last == aNode) or: [(self findElementAfter: aNode) isNil])
 				ifTrue: [self elementAddedAtEnd: aNode]
 				ifFalse: [self elementInsertedBeforeEnd: aNode]].
@@ -30,6 +31,7 @@ XMLCachingNodeList >> afterAdding: aNode [
 XMLCachingNodeList >> afterRemoving: aNode [
 	aNode isElement
 		ifTrue: [
+			aNode removeObserver: self.
 			self elements remove: aNode.
 			self elementsByNameAt: aNode name removeElement: aNode.
 			aNode hasPrefix
@@ -205,12 +207,14 @@ XMLCachingNodeList >> includesElementAt: aName [
 
 { #category : #notifications }
 XMLCachingNodeList >> renamedElement: anElement from: anOldName to: aNewName [
+	| oldPrefix |
+
 	self elementsByNameAt: anOldName removeElement: anElement.
-	anOldName splitQualifiedNameInto: [:oldPrefix :oldLocalName |
-		oldPrefix ifNotEmpty: [
+	(oldPrefix := anOldName qualifiedNamePrefix)
+		ifNotEmpty: [
 			self
-				elementsByNameAt: oldLocalName
-				removeElement: anElement]].
+				elementsByNameAt: (anOldName qualifiedNameLocalPart: oldPrefix)
+				removeElement: anElement].
 
 	self elementsByNameAt: anElement name insertElement: anElement.
 	anElement hasPrefix

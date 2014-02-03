@@ -1,3 +1,6 @@
+"
+This class validates name attributes.
+"
 Class {
 	#name : #XMLNameAttributeValidator,
 	#superclass : #XMLAttributeValidator,

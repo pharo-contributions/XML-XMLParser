@@ -18,43 +18,69 @@ Class {
 XMLNotifier >> addObserver: anObject [
 	observers :=
 		observers
-			ifNil: [Array with: anObject]
-			ifNotNil: [observers copyWith: anObject]
+			ifNil: [anObject]
+			ifNotNil: [
+				observers isArray
+					ifTrue: [observers copyWith: anObject]
+					ifFalse: [Array with: observers with: anObject]]
 ]
 
 { #category : #notification }
 XMLNotifier >> notifyOf: aSelector with: anArgument [
-	observers ifNotNil: [
-		observers do: [:each |
-			each perform: aSelector with: anArgument]]
+	observers isArray
+		ifTrue: [
+			observers do: [:each |
+				each perform: aSelector with: anArgument]]
+		ifFalse: [
+			observers ifNotNil: [
+				observers perform: aSelector with: anArgument]]
 ]
 
 { #category : #notification }
 XMLNotifier >> notifyOf: aSelector with: aFirstArgument with: aSecondArgument [
-	observers ifNotNil: [
-		observers do: [:each |
-			each
-				perform: aSelector
-				with: aFirstArgument
-				with: aSecondArgument]]
+	observers isArray
+		ifTrue: [ 
+			observers do: [:each |
+				each
+					perform: aSelector
+					with: aFirstArgument
+					with: aSecondArgument]]
+		ifFalse: [
+			observers ifNotNil: [
+				observers
+					perform: aSelector
+					with: aFirstArgument
+					with: aSecondArgument]]
 ]
 
 { #category : #notification }
 XMLNotifier >> notifyOf: aSelector with: aFirstArgument with: aSecondArgument with: aThirdArgument [
-	observers ifNotNil: [
-		observers do: [:each |
-			each
-				perform: aSelector
-				with: aFirstArgument
-				with: aSecondArgument
-				with: aThirdArgument]]
+	observers isArray
+		ifTrue: [
+			observers do: [:each |
+				each
+					perform: aSelector
+					with: aFirstArgument
+					with: aSecondArgument
+					with: aThirdArgument]]
+		ifFalse: [
+			observers ifNotNil: [
+				observers
+					perform: aSelector
+					with: aFirstArgument
+					with: aSecondArgument
+					with: aThirdArgument]]
 ]
 
 { #category : #notification }
 XMLNotifier >> notifyOf: aSelector withArguments: anArray [
-	observers ifNotNil: [
-		observers do: [:each |
-			each perform: aSelector withArguments: anArray]]
+	observers isArray
+		ifTrue: [
+			observers do: [:each |
+				each perform: aSelector withArguments: anArray]]
+		ifFalse: [
+			observers ifNotNil: [
+				observers perform: aSelector withArguments: anArray]]
 ]
 
 { #category : #accessing }
@@ -64,6 +90,11 @@ XMLNotifier >> observers [
 
 { #category : #observing }
 XMLNotifier >> removeObserver: anObject [
-	(observers := observers copyWithout: anObject)
-		ifEmpty: [observers := nil]
+	observers isArray
+		ifTrue: [
+			(observers := observers copyWithout: anObject) size = 1
+				ifTrue: [observers := observers first]]
+		ifFalse: [
+			observers == anObject
+				ifTrue: [observers := nil]]
 ]

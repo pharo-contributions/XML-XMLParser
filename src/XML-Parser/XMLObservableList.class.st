@@ -37,7 +37,11 @@ XMLObservableList >> addFirst: anObject [
 
 { #category : #adding }
 XMLObservableList >> addLast: anObject [
-	^ self with: [super addLast: anObject] add: anObject
+	"inlined for speed"
+	self beforeAdding: anObject.
+	collection addLast: anObject.
+	self afterAdding: anObject.
+	^ anObject
 ]
 
 { #category : #observing }
@@ -73,7 +77,7 @@ XMLObservableList >> beforeAdding: anObject [
 	self notifyOf: #adding:to: with: anObject with: self
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLObservableList >> notifier [
 	^ notifier ifNil: [notifier := XMLNotifier new]
 ]
@@ -119,26 +123,15 @@ XMLObservableList >> removeObserver: anObserver [
 
 { #category : #private }
 XMLObservableList >> with: aBlock add: anObject [
-	self
-		beforeAdding: anObject;
-		with: aBlock ifResumingAfterError: [^ nil];
-		afterAdding: anObject.
+	self beforeAdding: anObject.
+	aBlock value.
+	self afterAdding: anObject.
 	^ anObject.
 ]
 
 { #category : #private }
-XMLObservableList >> with: aBlock ifResumingAfterError: errorBlock [
-	^ aBlock
-		on: Error
-		do: [:error |
-			error pass.
-			errorBlock value]
-]
-
-{ #category : #private }
 XMLObservableList >> with: aBlock remove: anObject [
-	self
-		with: aBlock ifResumingAfterError: [^ nil];
-		afterRemoving: anObject.
+	aBlock value.
+	self afterRemoving: anObject.
 	^ anObject.
 ]

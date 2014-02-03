@@ -9,8 +9,18 @@ Class {
 
 { #category : #'instance creation' }
 XMLValidationException class >> undeclaredGeneralEntity: aName [
+	^ self
+		undeclaredGeneralEntity: aName
+		isParsed: true
+]
+
+{ #category : #'instance creation' }
+XMLValidationException class >> undeclaredGeneralEntity: aName isParsed: aBoolean [
 	^ self new
-		messageText: 'Undeclared general entity reference &', aName, ';';
+		messageText:
+			'Undeclared ',
+			(aBoolean ifTrue: ['general'] ifFalse: ['unparsed']),
+			' entity reference &', aName, ';';
 		yourself
 ]
 
@@ -23,7 +33,7 @@ XMLValidationException class >> undeclaredParameterEntity: aName [
 
 { #category : #'instance creation' }
 XMLValidationException class >> undeclaredUnparsedEntity: aName [
-	^ self new
-		messageText: 'Undeclared unparsed entity reference &', aName, ';';
-		yourself
+	^ self
+		undeclaredGeneralEntity: aName
+		isParsed: false
 ]

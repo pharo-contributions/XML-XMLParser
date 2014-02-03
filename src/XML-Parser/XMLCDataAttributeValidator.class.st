@@ -1,3 +1,6 @@
+"
+CDATA attribute values are left alone (whitespace is not normalized further).
+"
 Class {
 	#name : #XMLCDataAttributeValidator,
 	#superclass : #XMLAttributeValidator,

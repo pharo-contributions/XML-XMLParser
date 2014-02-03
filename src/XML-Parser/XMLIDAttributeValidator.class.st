@@ -1,3 +1,6 @@
+"
+This class validates ID attributes that must be unique in each element of the type.
+"
 Class {
 	#name : #XMLIDAttributeValidator,
 	#superclass : #XMLAttributeValidator,

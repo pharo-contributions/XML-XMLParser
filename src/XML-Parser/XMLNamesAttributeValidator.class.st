@@ -1,3 +1,6 @@
+"
+This class validates attributes with lists of name values separated by spaces.
+"
 Class {
 	#name : #XMLNamesAttributeValidator,
 	#superclass : #XMLNameAttributeValidator,
@@ -6,7 +9,7 @@ Class {
 
 { #category : #validation }
 XMLNamesAttributeValidator >> validateAttributeValue: aValue [
-	Character space
-		split: aValue
+	self
+		spaceSeparatedValuesIn: aValue
 		do: [:each | self validateName: each]
 ]

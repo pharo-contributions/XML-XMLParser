@@ -5,7 +5,8 @@ Class {
 	#name : #XMLTokenContext,
 	#superclass : #Object,
 	#instVars : [
-		'context'
+		'context',
+		'previousContext'
 	],
 	#category : #'XML-Parser'
 }
@@ -118,10 +119,11 @@ XMLTokenContext >> notInitialized [
 ]
 
 { #category : #'changing context' }
-XMLTokenContext >> resetAfter: aBlock [
-	| oldContext |
+XMLTokenContext >> resetPrevious [
+	context := previousContext
+]
 
-	oldContext := context.
-	aBlock value.
-	context := oldContext.
+{ #category : #'changing context' }
+XMLTokenContext >> saveCurrent [
+	previousContext := context
 ]

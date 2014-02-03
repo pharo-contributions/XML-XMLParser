@@ -16,7 +16,8 @@ Class {
 		'name',
 		'attributes',
 		'namespaceScope',
-		'document'
+		'document',
+		'notifier'
 	],
 	#category : #'XML-Parser-DOM'
 }
@@ -87,13 +88,14 @@ XMLElement >> addedAttribute: anAttribute [
 	anAttribute
 		addObserver: self;
 		element: self.
-	self validateAttributeName: anAttribute name.
+	self validateAttributes.
 ]
 
 { #category : #notifications }
 XMLElement >> addedElement: anElement [
 	super addedElement: anElement.
-	self hasNamespaces
+	(self hasNamespaces
+		and: [self namespaceScope ~= anElement namespaceScope])
 		ifTrue: [anElement inheritNamespacesFrom: self]
 ]
 
@@ -348,8 +350,9 @@ XMLElement >> name: aName [
 
 { #category : #namespaces }
 XMLElement >> name: aQualifiedName namespaceURI: aUri [
-	aQualifiedName splitQualifiedNameInto: [:prefix :localPart | self declarePrefix: prefix uri: aUri].
-	self name: aQualifiedName.
+	self
+		declarePrefix: (aQualifiedName qualifiedNamePrefix) uri: aUri;
+		name: aQualifiedName.
 ]
 
 { #category : #private }
@@ -384,6 +387,11 @@ XMLElement >> nodeNameChangedFrom: anOldName to: aNewName [
 		with: self
 		with: anOldName
 		with: aNewName
+]
+
+{ #category : #private }
+XMLElement >> notifier [
+	^ notifier ifNil: [notifier := XMLNotifier new]
 ]
 
 { #category : #namespaces }
@@ -437,7 +445,7 @@ XMLElement >> removedAttribute: anAttribute [
 
 { #category : #notifications }
 XMLElement >> renamedAttribute: anAttribute from: anOldName to: aNewName [
-	self validateAttributeName: aNewName
+	self validateAttributes
 ]
 
 { #category : #namespaces }
@@ -467,10 +475,10 @@ XMLElement >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocal
 		setQualified: aQualifiedName prefix: aPrefix localPart: aLocalName;
 		addObserver: self.
 
-	anAttributeDictionary
-		ifNotEmpty: [
-			"By not observing 'attributes' until after it is filled, we avoid
-			re-validating the attributes, which the parser should have already done"
+	anAttributeDictionary isEmpty
+		ifFalse: [
+			"The setFrom method is used to avoid revalidating the
+			attributes when adding them to the list"
 			(attributes := XMLAttributeList new: anAttributeDictionary size)
 				setFromDictionary: anAttributeDictionary andElement: self;
 				addObserver: self].
@@ -518,12 +526,11 @@ XMLElement >> updateEnclosedScopesWith: aBlock whileTrue: aConditionalBlock [
 ]
 
 { #category : #private }
-XMLElement >> validateAttributeName: anAttributeName [
-	self usesNamespaces ifFalse: [^ self].
+XMLElement >> validateAttributes [
+	self usesNamespaces
+		ifFalse: [^ self].
 
-	self namespaceScope
-		validatePrefixedAttributeName: anAttributeName
-		in: self attributeNodes attributesByName.
+	self namespaceScope validateAttributePrefixes: self attributeNodes attributesByName.
 ]
 
 { #category : #private }
@@ -531,8 +538,8 @@ XMLElement >> validateName [
 	(self usesNamespaces and: [self hasPrefix])
 		ifTrue: [
 			self namespaceScope
-				validatePrefix: self prefix
-				ofElementName: self name]
+				validateAndResolvePrefix: self prefix
+				ofName: self name]
 ]
 
 { #category : #printing }

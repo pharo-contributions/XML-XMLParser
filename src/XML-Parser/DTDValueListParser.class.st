@@ -85,6 +85,7 @@ DTDValueListParser >> parseListValue [
 	(self isValidListValue: value)
 		ifFalse: [XMLValidationException signal: 'Invalid value "', value, '" in list value'].
 
+	"checking the size avoids includes: hash lookup"
 	oldSize := listValues size.
 	listValues add: value.
 	(listValues size > oldSize)

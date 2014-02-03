@@ -1,3 +1,6 @@
+"
+This class validates attributes that can have any value taken from a list like ""(one|two|thee)"".
+"
 Class {
 	#name : #XMLValueListAttributeValidator,
 	#superclass : #XMLAttributeValidator,

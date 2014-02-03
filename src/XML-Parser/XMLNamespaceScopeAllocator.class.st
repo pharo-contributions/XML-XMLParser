@@ -12,14 +12,15 @@ Class {
 
 { #category : #accessing }
 XMLNamespaceScopeAllocator >> currentScope [
-	^ self scopes isEmpty
-		ifTrue: [self emptyScope]
-		ifFalse: [scopes at: scopes size]
+	"for speed"
+	^ self scopes size > 0
+		ifTrue: [scopes at: scopes size]
+		ifFalse: [self emptyScope]
 ]
 
 { #category : #accessing }
 XMLNamespaceScopeAllocator >> currentScope: aScope [
-	self pushScope: aScope
+	self scopes addLast: aScope
 ]
 
 { #category : #scope }
@@ -48,42 +49,17 @@ XMLNamespaceScopeAllocator >> enclosingScope [
 
 { #category : #scope }
 XMLNamespaceScopeAllocator >> enterScope [
-	self pushScope: (XMLNamespaceScope enclosingScope: self currentScope)
+	self scopes addLast: self currentScope copy
 ]
 
 { #category : #scope }
 XMLNamespaceScopeAllocator >> exitScope [
-	self popScope
-]
-
-{ #category : #testing }
-XMLNamespaceScopeAllocator >> includesPrefix: aPrefix [
-	^ self currentScope includesPrefix: aPrefix
-]
-
-{ #category : #testing }
-XMLNamespaceScopeAllocator >> includesPrefix: aPrefix mappedTo: aUri [
-	^ self currentScope includesPrefix: aPrefix mappedTo: aUri
-]
-
-{ #category : #accessing }
-XMLNamespaceScopeAllocator >> popScope [
 	self scopes removeLast
 ]
 
 { #category : #accessing }
-XMLNamespaceScopeAllocator >> pushScope: aScope [
-	self scopes addLast: aScope
-]
-
-{ #category : #accessing }
 XMLNamespaceScopeAllocator >> resolvePrefix: aPrefix [
-	^ self currentScope resolvePrefix: aPrefix
-]
-
-{ #category : #accessing }
-XMLNamespaceScopeAllocator >> resolvePrefix: aPrefix ifUnmapped: aBlock [
-	^ self currentScope resolvePrefix: aPrefix ifUnmapped: aBlock
+	^ self currentScope resolvePrefix: aPrefix ifUnmapped: ['']
 ]
 
 { #category : #accessing }
@@ -92,13 +68,13 @@ XMLNamespaceScopeAllocator >> scopes [
 ]
 
 { #category : #validation }
-XMLNamespaceScopeAllocator >> validatePrefix: aPrefix ofElementName: anElementName [
-	self currentScope
-		validatePrefix: aPrefix
-		ofElementName: anElementName
+XMLNamespaceScopeAllocator >> validateAndResolvePrefix: aPrefix ofName: anElementName [
+	^ self currentScope
+		validateAndResolvePrefix: aPrefix
+		ofName: anElementName
 ]
 
 { #category : #validation }
-XMLNamespaceScopeAllocator >> validatePrefixedAttributeNames: aDictionary [
-	self currentScope validatePrefixedAttributeNames: aDictionary.
+XMLNamespaceScopeAllocator >> validateAttributePrefixes: aDictionary [
+	self currentScope validateAttributePrefixes: aDictionary
 ]

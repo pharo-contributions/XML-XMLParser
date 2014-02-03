@@ -28,9 +28,10 @@ XMLElementNester >> copiedScopedAttributes [
 
 { #category : #accessing }
 XMLElementNester >> currentElement [
-	^ self openElements isEmpty
-		ifTrue: ['']
-		ifFalse: [openElements at: openElements size]
+	"for speed"
+	^ self openElements size > 0
+		ifTrue: [openElements at: openElements size]
+		ifFalse: ['']
 ]
 
 { #category : #accessing }
@@ -59,8 +60,7 @@ XMLElementNester >> endElement: anElementName [
 ]
 
 { #category : #checking }
-XMLElementNester >> ensureNoElementsRemainOpen [
-	self subclassResponsibility
+XMLElementNester >> endNesting [
 ]
 
 { #category : #testing }
@@ -85,7 +85,12 @@ XMLElementNester >> hasScopedAttributes [
 
 { #category : #accessing }
 XMLElementNester >> openElements [
-	^ openElements ifNil: [openElements := OrderedCollection new: 15]
+	^ openElements ifNil: [openElements := OrderedCollection new: 10]
+]
+
+{ #category : #enumerating }
+XMLElementNester >> openElementsReverseDo: aBlock [
+	self openElements reverseDo: aBlock
 ]
 
 { #category : #private }

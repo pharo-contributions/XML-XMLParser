@@ -43,12 +43,16 @@ XMLNodeName >> isPrefixed [
 
 { #category : #testing }
 XMLNodeName >> isSameAs: aNameString [
-	^ self qualified = aNameString or: [self localPart = aNameString]
+	^ self qualified = aNameString
+		or: [self prefix size > 0
+			and: [self localPart = aNameString]]
 ]
 
 { #category : #accessing }
 XMLNodeName >> localPart [
-	^ localPart ifNil: [localPart := '']
+	^ localPart ifNil: [
+		self setFromQualified.
+		localPart]
 ]
 
 { #category : #accessing }
@@ -56,7 +60,7 @@ XMLNodeName >> localPart: aLocalPart [
 	self changeWith: [self setPrefix: self prefix localPart: aLocalPart]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLNodeName >> notifier [
 	^ notifier ifNil: [notifier := XMLNotifier new]
 ]
@@ -87,7 +91,9 @@ XMLNodeName >> notifyOf: aSelector withArguments: anArray [
 
 { #category : #accessing }
 XMLNodeName >> prefix [
-	^ prefix ifNil: [prefix := '']
+	^ prefix ifNil: [
+		self setFromQualified.
+		prefix]
 ]
 
 { #category : #accessing }
@@ -107,13 +113,20 @@ XMLNodeName >> qualified [
 
 { #category : #accessing }
 XMLNodeName >> qualified: aQualifiedName [
-	aQualifiedName splitQualifiedNameInto: [:prefixPart :localName |
-		self changeWith: [self setPrefix: prefixPart localPart: localName]]
+	self changeWith: [
+		qualified := aQualifiedName.
+		self setFromQualified]
 ]
 
 { #category : #observing }
 XMLNodeName >> removeObserver: anObserver [
 	self notifier removeObserver: anObserver
+]
+
+{ #category : #private }
+XMLNodeName >> setFromQualified [
+	prefix := self qualified qualifiedNamePrefix.
+	localPart := self qualified qualifiedNameLocalPart: prefix.
 ]
 
 { #category : #private }
@@ -133,10 +146,7 @@ XMLNodeName >> setPrefix: aPrefix localPart: aLocalPart [
 
 { #category : #private }
 XMLNodeName >> setQualified: aQualifiedName [
-	(qualified := aQualifiedName)
-		splitQualifiedNameInto: [:aPrefix :aLocalPart |
-			prefix := aPrefix.
-			localPart := aLocalPart].
+	qualified := aQualifiedName
 ]
 
 { #category : #private }

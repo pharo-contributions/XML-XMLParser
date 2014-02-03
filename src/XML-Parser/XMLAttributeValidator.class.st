@@ -87,6 +87,13 @@ XMLAttributeValidator >> shouldFurtherNormalizeAttributeValue [
 	^ true
 ]
 
+{ #category : #private }
+XMLAttributeValidator >> spaceSeparatedValuesIn: aSpaceSeparatedList do: aBlock [
+	Character space
+		split: aSpaceSeparatedList
+		do: aBlock
+]
+
 { #category : #validation }
 XMLAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
 	anAttributeValidatorDictionary

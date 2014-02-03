@@ -83,7 +83,7 @@ DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: aName type:
 			at: anElement
 			ifAbsentPut: [Dictionary new].
 	(attributeValidatorsForElement includesKey: aName)
-		ifTrue: [^ nil].
+		ifTrue: [^ self].
 
 	validator :=
 		(DTDAttributeDefinitionParser

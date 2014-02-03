@@ -1,3 +1,6 @@
+"
+This is a class for <!ELEMENT> declarations.
+"
 Class {
 	#name : #XMLElementDeclaration,
 	#superclass : #XMLDeclarationNode,

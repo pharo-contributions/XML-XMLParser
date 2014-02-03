@@ -1,3 +1,6 @@
+"
+This class will put a default value for an attribute if it has none.
+"
 Class {
 	#name : #XMLDefaultValueAttributeValidator,
 	#superclass : #XMLAttributeDefaultValidator,

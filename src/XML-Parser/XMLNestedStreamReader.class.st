@@ -44,7 +44,7 @@ XMLNestedStreamReader class >> on: anInitialStream readLimit: aReadLimit [
 
 { #category : #testing }
 XMLNestedStreamReader >> atEnd [
-	^ peekChar isNil
+	^ peekChar == nil
 		and: [stream atEnd
 			and: [self hasNestedStreams not
 				or: [nestedStreams allSatisfy: [:each | each atEnd]]]]
@@ -110,9 +110,6 @@ XMLNestedStreamReader >> maxNestedStreams [
 
 { #category : #accessing }
 XMLNestedStreamReader >> next [
-	"Return the next character from the current input stream. If the current
-	stream is at end, pop to the next nesting level if there is one."
-
 	| nextChar |
 
 	peekChar
@@ -151,7 +148,8 @@ XMLNestedStreamReader >> nextInteger [
 XMLNestedStreamReader >> nextMatchAll: aString [
 	| i nextChar |
 
-	self peek == (aString at: 1)
+	"inlined peek"
+	(peekChar ifNil: [peekChar := self basicNext]) == (aString at: 1)
 		ifFalse: [^ false].
 
 	"we unrolled the first iteration with the above #peek"
@@ -185,8 +183,6 @@ XMLNestedStreamReader >> normalizedLineEndingChar: aCharacter [
 
 { #category : #accessing }
 XMLNestedStreamReader >> peek [
-	"Return the next character from the current input stream."
-
 	^ peekChar ifNil: [peekChar := self basicNext]
 ]
 
@@ -249,10 +245,9 @@ XMLNestedStreamReader >> setStream: anInitialStream readLimit: aReadLimit [
 
 { #category : #streaming }
 XMLNestedStreamReader >> skipSeparators [
-	| nextChar |
-
-	[(nextChar := self peek) notNil
-		and: [SeparatorCharacters includes: nextChar]]
+	"inlined peek"
+	[(peekChar ifNil: [peekChar := self basicNext]) notNil
+		and: [SeparatorCharacters includes: peekChar]]
 		whileTrue: [self next].
 ]
 

@@ -28,7 +28,7 @@ XMLPeekableStreamAdapter class >> on: aStream onClose: aBlock [
 
 { #category : #testing }
 XMLPeekableStreamAdapter >> atEnd [
-	^ peekChar isNil and: [stream atEnd]
+	^ peekChar == nil and: [stream atEnd]
 ]
 
 { #category : #'file open/close' }

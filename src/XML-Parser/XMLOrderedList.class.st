@@ -12,24 +12,29 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
+{ #category : #private }
+XMLOrderedList class >> collectionClass [
+	^ OrderedCollection
+]
+
 { #category : #'instance creation' }
 XMLOrderedList class >> new [
-	^ self new: 10
+	^ self new: 5
 ]
 
 { #category : #'instance creation' }
 XMLOrderedList class >> new: aSize [
-	^ self basicNew setCollection: (OrderedCollection new: aSize)
+	^ self basicNew setCollection: (self collectionClass new: aSize)
 ]
 
 { #category : #'instance creation' }
 XMLOrderedList class >> new: aSize withAll: anObject [
-	^ self basicNew setCollection: (OrderedCollection new: aSize withAll: anObject)
+	^ self basicNew setCollection: (self collectionClass new: aSize withAll: anObject)
 ]
 
 { #category : #'instance creation' }
 XMLOrderedList class >> newFrom: aCollection [
-	^ self basicNew setCollection: (OrderedCollection newFrom: aCollection)
+	^ self basicNew setCollection: (self collectionClass newFrom: aCollection)
 ]
 
 { #category : #'instance creation' }

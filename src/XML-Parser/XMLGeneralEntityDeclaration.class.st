@@ -1,3 +1,6 @@
+"
+This is a class for internal/external parsed/unparsed general <!ENTITY> declarations.
+"
 Class {
 	#name : #XMLGeneralEntityDeclaration,
 	#superclass : #XMLEntityDeclaration,

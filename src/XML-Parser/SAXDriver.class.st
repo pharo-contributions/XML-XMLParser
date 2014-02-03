@@ -69,17 +69,17 @@ SAXDriver >> elementNesterClass [
 	^ XMLWellFormedElementNester
 ]
 
-{ #category : #'element nesting' }
-SAXDriver >> endNestingOfElement: anElementName [
+{ #category : #private }
+SAXDriver >> endNestingOfElement: anElementName withScopedAttributes: anAttributeDictionary [
 	| base |
 
-	(self elementNester hasScopedAttributes
-		and: [(base := self elementNester scopedAttributeAt: 'xml:base' ifAbsent: [nil]) notNil])
-		ifTrue: [
-			self elementNester endElement: anElementName.
-			(self elementNester scopedAttributeAt: 'xml:base') = base
+	(base := anAttributeDictionary at: 'xml:base' ifAbsent: [nil])
+		ifNotNil: [
+			(self elementNester
+				endElement: anElementName;
+				scopedAttributeAt: 'xml:base') = base
 				ifFalse: [self removeURI: base]]
-		ifFalse: [self elementNester endElement: anElementName]
+		ifNil: [self elementNester endElement: anElementName]
 ]
 
 { #category : #accessing }
@@ -162,7 +162,7 @@ SAXDriver >> handleEndDTD [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleEndDocument [
-	self elementNester ensureNoElementsRemainOpen.
+	self elementNester endNesting.
 	self isValidating
 		ifTrue: [self validator validateEndDocument].
 
@@ -171,19 +171,31 @@ SAXDriver >> handleEndDocument [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleEndTag: anElementName [
-	self endNestingOfElement: anElementName.
+	| prefix |
 
-	anElementName splitQualifiedNameInto: [:prefixPart :localPart |
-		self saxHandler 
-			endElement: anElementName
-			prefix: prefixPart
-			uri:
-				(self usesNamespaces
-					ifTrue: [self scopeAllocator resolvePrefix: prefixPart]
-					ifFalse: [''])
-			localName: localPart.
+	self elementNester hasScopedAttributes
+		ifTrue: [
+			self
+				endNestingOfElement: anElementName
+				withScopedAttributes: self elementNester currentScopedAttributes]
+		ifFalse: [self elementNester endElement: anElementName].
 
-		self validateEndTag: anElementName].
+	prefix := anElementName qualifiedNamePrefix.
+	saxHandler 
+		endElement: anElementName
+		prefix: prefix
+		uri:
+			(self usesNamespaces
+				ifTrue: [self scopeAllocator resolvePrefix: prefix]
+				ifFalse: [''])
+		localName: (anElementName qualifiedNameLocalPart: prefix).
+
+	self usesNamespaces
+		ifTrue: [
+			self undeclareNamespaces.
+			self scopeAllocator exitScope].
+	self isValidating
+		ifTrue: [self validator validateEndTag: anElementName].
 ]
 
 { #category : #'handling tokens' }
@@ -251,13 +263,14 @@ SAXDriver >> handlePCData: aString [
 	self isValidating
 		ifTrue: [self validator validatePCData: aString].
 
-	self saxHandler characters: aString
+	saxHandler characters: aString.
 ]
 
 { #category : #'handling tokens' }
 SAXDriver >> handlePI: piTarget data: piData [
 	self saxHandler 
-		processingInstruction: piTarget data: piData
+		processingInstruction: piTarget
+		data: piData
 ]
 
 { #category : #'handling tokens' }
@@ -301,7 +314,7 @@ SAXDriver >> handleParameterEntityReference: aName [
 	^ entity.
 ]
 
-{ #category : #private }
+{ #category : #'handling tokens' }
 SAXDriver >> handleReservedAttributes: anAttributeDictionary [
 	(anAttributeDictionary at: 'xml:base' ifAbsent: [nil])
 		ifNotNil: [:uri | self currentURI: uri].
@@ -337,27 +350,34 @@ SAXDriver >> handleStartDocument [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
-	self startNestingOfElement: anElementName.
+	"performance critical method"
+	| prefix namespaceUri |
 
-	anElementName splitQualifiedNameInto: [:prefixPart :localPart |
-		self
-			validateStartTag: anElementName
-			prefix: prefixPart
-			attributes: anAttributeDictionary
-			namespaces: aNamespaceDictionary.
+	self elementNester startElement: anElementName.
 
-		self saxHandler 
-			startElement: anElementName
-			prefix: prefixPart
-			uri:
-				(self usesNamespaces
-					ifTrue: [self scopeAllocator resolvePrefix: prefixPart]
-					ifFalse: [''])
-			localName: localPart
-			attributes: anAttributeDictionary].
-
+	prefix := anElementName qualifiedNamePrefix.
 	self usesNamespaces
-		ifTrue: [self saxHandler currentScope: self scopeAllocator currentScope].
+		ifTrue: [
+			self scopeAllocator enterScope.
+			aNamespaceDictionary
+				ifNotNil: [self declareNamespaces: aNamespaceDictionary].
+			namespaceUri :=
+				self scopeAllocator
+					validateAndResolvePrefix: prefix
+					ofName: anElementName.
+			anAttributeDictionary isEmpty
+				ifFalse: [self scopeAllocator validateAttributePrefixes: anAttributeDictionary]].
+	self isValidating
+		ifTrue: [self validateStartTag: anElementName attributes: anAttributeDictionary].
+
+	saxHandler
+		startElement: anElementName
+		prefix: prefix
+		uri: (namespaceUri ifNil: [''])
+		localName: (anElementName qualifiedNameLocalPart: prefix)
+		attributes: anAttributeDictionary.
+	self usesNamespaces
+		ifTrue: [saxHandler currentScope: self scopeAllocator currentScope].
 ]
 
 { #category : #'handling tokens' }
@@ -462,11 +482,6 @@ SAXDriver >> setSaxHandler: aHandler [
 	saxHandler := aHandler
 ]
 
-{ #category : #'element nesting' }
-SAXDriver >> startNestingOfElement: anElementName [
-	self elementNester startElement: anElementName
-]
-
 { #category : #namespaces }
 SAXDriver >> undeclareNamespaces [
 	| currentScope enclosingScope |
@@ -491,17 +506,7 @@ SAXDriver >> usesNamespaces [
 	^ saxHandler usesNamespaces
 ]
 
-{ #category : #validation }
-SAXDriver >> validateEndTag: anEndTag [
-	self usesNamespaces
-		ifTrue: [
-			self undeclareNamespaces.
-			self scopeAllocator exitScope].
-	self isValidating
-		ifTrue: [self validator validateEndTag: anEndTag].
-]
-
-{ #category : #validation }
+{ #category : #private }
 SAXDriver >> validateRootElement: aStartTag [
 	(self saxHandler requiresDocumentConstraints
 		and: [self validator hasElementValidators not])
@@ -512,30 +517,14 @@ SAXDriver >> validateRootElement: aStartTag [
 	self validator validateRootElement: aStartTag.
 ]
 
-{ #category : #validation }
-SAXDriver >> validateStartTag: aStartTag prefix: aPrefix attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
-	self usesNamespaces
-		ifTrue: [
-			self scopeAllocator enterScope.
+{ #category : #private }
+SAXDriver >> validateStartTag: aStartTag attributes: anAttributeDictionary [
+	self elementNester totalOpen > 1
+		ifFalse: [self validateRootElement: aStartTag].
 
-			aNamespaceDictionary
-				ifNotNil: [self declareNamespaces: aNamespaceDictionary].
-
-			aPrefix
-				ifNotEmpty: [
-					self scopeAllocator
-						validatePrefix: aPrefix
-						ofElementName: aStartTag].
-			self scopeAllocator validatePrefixedAttributeNames: anAttributeDictionary].
-
-	self isValidating
-		ifTrue: [
-			self elementNester totalOpen > 1
-				ifFalse: [self validateRootElement: aStartTag].
-		
-			self validator
-				validateStartTag: aStartTag
-				attributes: anAttributeDictionary].
+	self validator
+		validateStartTag: aStartTag
+		attributes: anAttributeDictionary.
 ]
 
 { #category : #accessing }

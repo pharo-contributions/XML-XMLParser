@@ -9,7 +9,8 @@ Class {
 	#instVars : [
 		'element',
 		'name',
-		'value'
+		'value',
+		'notifier'
 	],
 	#category : #'XML-Parser-DOM'
 }
@@ -83,6 +84,11 @@ XMLAttribute >> nodeNameChangedFrom: anOldName to: aNewName [
 		with: self
 		with: anOldName
 		with: aNewName
+]
+
+{ #category : #private }
+XMLAttribute >> notifier [
+	^ notifier ifNil: [notifier := XMLNotifier new]
 ]
 
 { #category : #accessing }

@@ -43,9 +43,7 @@ XMLNodeWithChildren >> addNodes: aNodeCollection [
 
 { #category : #notifications }
 XMLNodeWithChildren >> addedNode: aNode [
-	aNode
-		addObserver: self;
-		parent: self
+	aNode parent: self
 ]
 
 { #category : #accessing }
@@ -199,9 +197,7 @@ XMLNodeWithChildren >> removeNodes: aNodeCollection [
 
 { #category : #notifications }
 XMLNodeWithChildren >> removedNode: aNode [
-	aNode
-		removeObserver: self;
-		parent: nil.
+	aNode parent: nil
 ]
 
 { #category : #accessing }

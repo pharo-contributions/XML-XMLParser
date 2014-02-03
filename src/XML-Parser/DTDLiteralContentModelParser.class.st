@@ -1,3 +1,6 @@
+"
+Parser for ANY and EMPTY elements.
+"
 Class {
 	#name : #DTDLiteralContentModelParser,
 	#superclass : #DTDContentModelParser,

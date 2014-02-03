@@ -5,8 +5,7 @@ Class {
 	#name : #XMLNode,
 	#superclass : #Object,
 	#instVars : [
-		'parent',
-		'notifier'
+		'parent'
 	],
 	#category : #'XML-Parser-DOM'
 }
@@ -101,9 +100,11 @@ XMLNode >> nextNode [
 	^ self parent ifNotNil: [self parent nodeAfter: self]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLNode >> notifier [
-	^ notifier ifNil: [notifier := XMLNotifier new]
+	"observable subclasses override to return an XMLNotifier.
+	This saves memory so only classes that need it have a notifier slot"
+	XMLDOMException signal: 'Node is not observable'
 ]
 
 { #category : #notification }

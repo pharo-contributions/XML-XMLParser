@@ -1,6 +1,5 @@
 "
-This class parses mixed content declarations like ""(#PCDATA|one|two)""
-
+This class parses mixed content declarations like ""(#PCDATA|one|two)"" using a DTDMixedContentListParser.
 "
 Class {
 	#name : #DTDMixedContentModelParser,

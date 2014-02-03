@@ -1,3 +1,7 @@
+"
+Attributes declared #IMPLIED are optional.
+
+"
 Class {
 	#name : #XMLImpliedValueAttributeValidator,
 	#superclass : #XMLAttributeDefaultValidator,

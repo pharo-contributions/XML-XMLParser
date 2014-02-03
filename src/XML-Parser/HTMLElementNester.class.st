@@ -110,7 +110,7 @@ HTMLElementNester >> elementsToEnd [
 HTMLElementNester >> elementsToEndBeforeEnding: anElementName [
 	self elementsToEnd reset.
 
-	self openElements reverseDo: [:each |
+	self openElementsReverseDo: [:each |
 		each = anElementName
 			ifTrue: [^ self elementsToEnd]
 			ifFalse: [self elementsToEnd addLast: each]].
@@ -132,8 +132,9 @@ HTMLElementNester >> elementsToEndBeforePCData [
 HTMLElementNester >> elementsToEndBeforeStarting: anElementName [
 	| excludingElement |
 
-	((anElementName = 'body' or: [anElementName = 'head'])
-		or: [self headOrBodyCannotContain: anElementName])
+	(anElementName = 'body'
+		or: [anElementName = 'head'
+			or: [self headOrBodyCannotContain: anElementName]])
 		ifTrue: [^ self elementsToEndBeforeEnding: 'html'].
 
 	self elementsToEnd reset.
@@ -146,7 +147,7 @@ HTMLElementNester >> elementsToEndBeforeStarting: anElementName [
 			and: [self hasOpenElement: excludingElement]])
 		ifFalse: [^ self elementsToEnd].
 
-	self openElements reverseDo: [:each |
+	self openElementsReverseDo: [:each |
 		((NestableTagGroups includesKey: anElementName)
 			and: [(NestableTagGroups at: anElementName) includes: each])
 			ifTrue: [^ #()].
@@ -210,11 +211,6 @@ HTMLElementNester >> endElement: anElementName [
 				ifAbsent: [1]) - 1 max: 0).
 
 	super endElement: anElementName.
-]
-
-{ #category : #checking }
-HTMLElementNester >> ensureNoElementsRemainOpen [
-	self openElements copy reverseDo: [:each | self endElement: each].
 ]
 
 { #category : #accessing }

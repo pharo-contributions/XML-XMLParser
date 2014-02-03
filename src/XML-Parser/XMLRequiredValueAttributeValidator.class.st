@@ -1,3 +1,6 @@
+"
+Attributes declared #REQUIRED require values.
+"
 Class {
 	#name : #XMLRequiredValueAttributeValidator,
 	#superclass : #XMLAttributeDefaultValidator,
