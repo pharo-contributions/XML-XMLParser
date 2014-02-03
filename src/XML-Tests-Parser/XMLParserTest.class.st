@@ -361,21 +361,6 @@ XMLParserTest >> testDefaultDocumentURI [
 ]
 
 { #category : #tests }
-XMLParserTest >> testDisabledNamespacesAttributes [
-	| document |
-
-	document :=
-		XMLDOMParser
-			parse: '<root xmlns:prefix="prefixNS" xmlns="defaultNS" name="value"/>'
-			usingNamespaces: false.
-	self
-		assert: document root attributeNames asArray = #('xmlns:prefix' 'xmlns' 'name');
-		assert: (document root attributeAt: 'xmlns:prefix') = 'prefixNS';
-		assert: (document root attributeAt: 'xmlns') = 'defaultNS';
-		assert: (document root attributeAt: 'name') = 'value'.
-]
-
-{ #category : #tests }
 XMLParserTest >> testDoctypeRoot [
 	| xml |
 
@@ -732,7 +717,7 @@ XMLParserTest >> testEntityURIInheritance [
 	2 timesRepeat: [parser parseToken].
 	self assert: driver currentURI = '/new/xml'.
 
-	2 timesRepeat: [parser parseToken].
+	3 timesRepeat: [parser parseToken].
 	self
 		assert: driver currentURI = 'test.xml';
 		assert: parser atEnd.
@@ -848,6 +833,50 @@ XMLParserTest >> testLineEndingsDoNotMatter [
 	self
 		assert: (docFromSourceWithCrs root contentString) = (docFromSourceWithLfs root contentString);
 		assert: (docFromSourceWithLfs root contentString) = (docFromSourceWithCrlfs root contentString).
+]
+
+{ #category : #tests }
+XMLParserTest >> testNamespacePrefixAliasing [
+	| declarations |
+
+	declarations := '<test xmlns:alias1="ns" xmlns:alias2="ns" '.
+	self
+		shouldnt: [
+			SAXHandler
+				parse: declarations, ' alias1:name="value" />'
+				usingNamespaces: true]
+		raise: XMLNamespaceException.
+	self
+		should: [
+			SAXHandler
+				parse: declarations, ' alias1:name="value" alias2:name="value"/>'
+				usingNamespaces: true]
+		raise: XMLNamespaceException.
+	self
+		shouldnt: [
+			SAXHandler
+				parse: declarations, ' alias1:name="value" alias2:name2="value"/>'
+				usingNamespaces: true]
+		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testNamespacePrefixInheritance [
+	self
+		shouldnt: [
+			SAXHandler
+				parse: '<one xmlns:prefix1="ns"><prefix1:two /></one>'
+				usingNamespaces: true]
+		raise: XMLNamespaceException.
+	self
+		should: [
+			SAXHandler
+				parse:
+					'<one xmlns:prefix1="ns">
+						<prefix2:two><three xmlns:prefix2="ns2"/></prefix2:two>
+					</one>'
+				usingNamespaces: true]
+		raise: XMLNamespaceException.
 ]
 
 { #category : #tests }
@@ -971,30 +1000,6 @@ XMLParserTest >> testProcessingInstructions [
 		assert: document firstNode data = 'firstData';
 		assert: document root firstNode target = 'secondTarget';
 		assert: document root firstNode data = 'secondData'.
-]
-
-{ #category : #tests }
-XMLParserTest >> testRenamingParsedNodes [
-	| document element attribute |
-
-	document := XMLDOMParser parse: '<root xmlns:prefix="ns" name="value"/>'.
-
-	element := document root.
-	element name: 'prefix:root'.
-	self assert: (document elementAt: 'prefix:root') == element.
-
-	attribute := element attributeNodeAt: 'name'.
-	attribute name: 'prefix:name'.
-	self
-		assert: (element attributeNodeAt: 'prefix:name') == attribute;
-		assert: (element attributeAt: 'prefix:name') = 'value'.
-
-	self
-		should: [attribute name: 'undeclared:name']
-		raise: XMLNamespaceException.
-	self
-		should: [element name: 'undeclared:root']
-		raise: XMLNamespaceException.
 ]
 
 { #category : #tests }

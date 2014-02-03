@@ -100,6 +100,23 @@ XMLDOMParserTest >> testAttributeNamespacesDisabled [
 ]
 
 { #category : #tests }
+XMLDOMParserTest >> testAttributeRenaming [
+	| doc person |
+
+	doc := XMLDOMParser parse: self addressBookXML.
+	person := doc findElementNamed: 'person'.
+	(person attributeNodeAt: 'employee-number') name: 'first-name'.
+	self
+		assert: person attributeNodes size = 2;
+		assert: (person attributeAt: 'first-name') = 'A0000';
+		assert: (person attributeAt: 'family-name') = 'Gates'.
+	self
+		should: [(person attributeNodeAt: 'family-name') name: 'undeclared:family-name']
+		raise: XMLNamespaceException.
+	
+]
+
+{ #category : #tests }
 XMLDOMParserTest >> testAttributesExcludingDeclarations [
 	| document   |
 
@@ -195,6 +212,21 @@ XMLDOMParserTest >> testConfiguration [
 		self assert: each configuration == document configuration].
 ]
 
+{ #category : #tests }
+XMLDOMParserTest >> testDisabledNamespacesAttributes [
+	| document |
+
+	document :=
+		XMLDOMParser
+			parse: '<root xmlns:prefix="prefixNS" xmlns="defaultNS" name="value"/>'
+			usingNamespaces: false.
+	self
+		assert: document root attributeNames asArray = #('xmlns:prefix' 'xmlns' 'name');
+		assert: (document root attributeAt: 'xmlns:prefix') = 'prefixNS';
+		assert: (document root attributeAt: 'xmlns') = 'defaultNS';
+		assert: (document root attributeAt: 'name') = 'value'.
+]
+
 { #category : #'tests - internal subset' }
 XMLDOMParserTest >> testDoctypeDeclaration [
 	| doctype |
@@ -273,6 +305,20 @@ XMLDOMParserTest >> testElementPrefixesNamespacesDisabled [
 					and: [(each isNamed: 'ps:person')
 						and: [(each name = 'ps:person') and: [each localName = 'person']]]]]].
 	self assert: persons size = 4.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testElementRenaming [
+	| document element |
+
+	document := XMLDOMParser parse: self addressBookNamespacedXML.
+
+	element := document root.
+	element name: 'book:addressbook'.
+	self assert: (document elementAt: 'book:addressbook') == element.
+	self
+		should: [element name: 'undeclared:root']
+		raise: XMLNamespaceException.
 ]
 
 { #category : #tests }
@@ -597,19 +643,14 @@ XMLDOMParserTest >> testNodeListClass [
 
 { #category : #tests }
 XMLDOMParserTest >> testParseDocumentWhile [
-	| i document continue |
+	| i document |
 
-	continue := true.
 	self
 		shouldnt: [
 			i := 0.
 			document :=
 				(XMLDOMParser on: '<root><one>two<#malformed')
-					parseDocumentWhile: [
-						i + 1 > 4
-							ifTrue: [continue := false].
-						i := i + 1.
-						continue]]
+					parseDocumentWhile: [(i := i + 1) <= 4]]
 		raise: XMLWellFormednessException.
 
 	self

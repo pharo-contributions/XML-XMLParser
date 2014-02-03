@@ -4,6 +4,11 @@ Class {
 	#category : #'XML-Tests-Parser'
 }
 
+{ #category : #source }
+SAXHandlerTest >> prefixedXMLSource [
+	^ '<prefix:test xmlns:prefix="prefixNS" xmlns="defaultNS" name="value">test</prefix:test>'
+]
+
 { #category : #tests }
 SAXHandlerTest >> testSAXEntityHandlers [
 	| xml parser |
@@ -34,11 +39,11 @@ SAXHandlerTest >> testSAXIgnorableWhitespace [
 	| xml parser whitespace |
 
 	xml := '
-	<root>
-		<child>
+	<one>
+		<two>
 			test
-		</child>
-	</root>
+		</two>
+	</one>
 	'.
 	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: xml)) parseDocument.
 	self assert:
@@ -59,14 +64,15 @@ SAXHandlerTest >> testSAXIgnorableWhitespace [
 
 { #category : #tests }
 SAXHandlerTest >> testSAXPrefixMappingHandlers [
-	| xml parser |
+	| parser |
 
-	xml := '<prefix:root xmlns:prefix="prefixNS" xmlns="defaultNS"></prefix:root>'.
-	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: xml)) parseDocument.
+	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: self prefixedXMLSource)) parseDocument.
 	self assert:
 		#(startDocument
 			startPrefixMapping:uri: startPrefixMapping:uri:
-			startElement:prefix:uri:localName:attributes: endElement:prefix:uri:localName:
+			startElement:prefix:uri:localName:attributes:
+			characters:
+			endElement:prefix:uri:localName:
 			endPrefixMapping: endPrefixMapping:
 			endDocument) = parser sentHandlerSelectors.
 	self assert:
@@ -77,16 +83,17 @@ SAXHandlerTest >> testSAXPrefixMappingHandlers [
 ]
 
 { #category : #tests }
-SAXHandlerTest >> testSAXPrefixMappingHandlersDisabled [
-	| xml parser |
+SAXHandlerTest >> testSAXPrefixMappingHandlersNamespacesDisabled [
+	| parser |
 
-	xml := '<prefix:root xmlns:prefix="prefixNS" xmlns="defaultNS"></prefix:root>'.
-	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: xml))
+	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: self prefixedXMLSource))
 		usesNamespaces: false;
 		parseDocument.
 	self assert:
 		#(startDocument
-			startElement:prefix:uri:localName:attributes: endElement:prefix:uri:localName:
+			startElement:prefix:uri:localName:attributes:
+			characters:
+			endElement:prefix:uri:localName:
 			endDocument) = parser sentHandlerSelectors.
 ]
 
@@ -107,4 +114,53 @@ SAXHandlerTest >> testSAXSkippedEntityHandler [
 	self assert:
 		(parser sentHandlerMessages detect: [:each | each selector == #skippedEntity:])
 			arguments first = 'undeclared'.
+]
+
+{ #category : #tests }
+SAXHandlerTest >> testSAXStartElementEndElement [
+	| parser startElementMessage endElementMessage |
+
+	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: self prefixedXMLSource))
+		parseDocument.
+	startElementMessage :=
+		(parser sentHandlerMessages detect: [:each |
+			each selector == #startElement:prefix:uri:localName:attributes:]).
+	self assert:
+		startElementMessage arguments asArray =
+			((Array with: 'prefix:test' with: 'prefix' with: 'prefixNS' with: 'test')
+				copyWith: (Dictionary with: 'name' -> 'value')).
+
+	endElementMessage := 
+		(parser sentHandlerMessages detect: [:each |
+			each selector == #endElement:prefix:uri:localName:]).
+	self assert:
+		endElementMessage arguments asArray =
+			(Array with: 'prefix:test' with: 'prefix' with: 'prefixNS' with: 'test').
+]
+
+{ #category : #tests }
+SAXHandlerTest >> testSAXStartElementEndElementNamespacesDisabled [
+	| parser startElementMessage endElementMessage |
+
+	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: self prefixedXMLSource))
+		usesNamespaces: false;
+		parseDocument.
+	startElementMessage :=
+		(parser sentHandlerMessages detect: [:each |
+			each selector == #startElement:prefix:uri:localName:attributes:]).
+	self assert:
+		startElementMessage arguments asArray =
+			((Array with: 'prefix:test' with: 'prefix' with: '' with: 'test')
+				copyWith:
+					(Dictionary
+						with: 'xmlns:prefix' -> 'prefixNS'
+						with: 'xmlns' -> 'defaultNS'
+						with: 'name' -> 'value')).
+
+	endElementMessage := 
+		(parser sentHandlerMessages detect: [:each |
+			each selector == #endElement:prefix:uri:localName:]).
+	self assert:
+		endElementMessage arguments asArray =
+			(Array with: 'prefix:test' with: 'prefix' with: '' with: 'test').
 ]

@@ -59,10 +59,9 @@ XMLNodesWithElementsTest >> newElementsNamed: aNameArray [
 			with: [
 				((qualifiedName := names removeFirst) includes: $:)
 					ifTrue: [
-						qualifiedName splitQualifiedNameInto: [:prefix :localPart |
-							element := XMLElement
-								name: qualifiedName
-								namespaceURI: 'http://', prefix]]
+						element := XMLElement
+							name: qualifiedName
+							namespaceURI: 'http://', (qualifiedName qualifiedNamePrefix)]
 					ifFalse: [element := XMLElement named: qualifiedName].
 				element]).
 ]
