@@ -16,24 +16,19 @@ HTMLParser >> driverClass [
 
 { #category : #content }
 HTMLParser >> endElement: anElementName prefix: aPrefix uri: aUri localName: aLocalName [
-	(self topNode isElement and: [self topNode isNamed: anElementName])
+	(self topNode isElement
+		and: [self topNode isNamed: anElementName])
 		ifTrue: [self popNode]
 
-]
-
-{ #category : #private }
-HTMLParser >> findUniqueElementFor: anElementName [
-	^ (#('html' 'head' 'body') includes: anElementName)
-		ifTrue: [self document findElementNamed: anElementName]
-		ifFalse: [nil]
 ]
 
 { #category : #content }
 HTMLParser >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName attributes: aDictionary [
 	| element |
 
-	(element := self findUniqueElementFor: aQualifiedName)
-		ifNotNil: [
+	(self document root notNil
+		and: [(element := self uniqueElementNamed: aQualifiedName) notNil])
+		ifTrue: [
 			self pushNode: element.
 			^ self].
 
@@ -43,4 +38,14 @@ HTMLParser >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName: 
 		uri: aUri
 		localName: aLocalName
 		attributes: aDictionary.
+]
+
+{ #category : #private }
+HTMLParser >> uniqueElementNamed: anElementName [
+	^ anElementName = 'html'
+		ifTrue: [self document root]
+		ifFalse: [
+			(anElementName = 'head' or: [anElementName = 'body'])
+				ifTrue: [self document root elementAt: anElementName]
+				ifFalse: [nil]]
 ]

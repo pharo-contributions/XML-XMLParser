@@ -129,19 +129,7 @@ XMLNestedStreamReader >> next [
 
 { #category : #accessing }
 XMLNestedStreamReader >> nextInteger [
-	"We re-implement integer reading here because the impelmentation of Integer>>readFrom: expects
-	the underlying stream to be skip:able."
-	| base |
-
-	self peek == $x
-		ifTrue: [
-			self next.
-			base := 16]
-		ifFalse: [base := 10].
-
-	^ XMLIntegerReader
-		readFrom: self
-		withBase: base.
+	^ XMLIntegerReader readFrom: self.
 ]
 
 { #category : #testing }
@@ -194,7 +182,8 @@ XMLNestedStreamReader >> popCurrentStream [
 
 { #category : #streaming }
 XMLNestedStreamReader >> pushBack: aString [
-	self pushStream: (ReadStream on: aString)
+	aString size > 0
+		ifTrue: [self pushStream: (ReadStream on: aString)]
 ]
 
 { #category : #streaming }

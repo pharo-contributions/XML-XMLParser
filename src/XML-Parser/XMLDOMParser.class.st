@@ -225,7 +225,7 @@ XMLDOMParser >> processingInstruction: aTarget data: aDataString [
 { #category : #private }
 XMLDOMParser >> pushElement: anElement [
 	self topNode addNode: anElement.
-	self pushNode: anElement.
+	^ self pushNode: anElement.
 ]
 
 { #category : #private }

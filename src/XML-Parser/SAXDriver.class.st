@@ -16,7 +16,7 @@ Class {
 
 { #category : #'instance creation' }
 SAXDriver class >> saxHandler: aHandler [
-	^ self new setSaxHandler: aHandler
+	^ self new saxHandler: aHandler
 ]
 
 { #category : #accessing }
@@ -84,7 +84,7 @@ SAXDriver >> endNestingOfElement: anElementName withScopedAttributes: anAttribut
 
 { #category : #accessing }
 SAXDriver >> externalEntityResolver [
-	^ saxHandler externalEntityResolver
+	^ self saxHandler externalEntityResolver
 ]
 
 { #category : #private }
@@ -181,7 +181,7 @@ SAXDriver >> handleEndTag: anElementName [
 		ifFalse: [self elementNester endElement: anElementName].
 
 	prefix := anElementName qualifiedNamePrefix.
-	saxHandler 
+	self saxHandler 
 		endElement: anElementName
 		prefix: prefix
 		uri:
@@ -263,7 +263,7 @@ SAXDriver >> handlePCData: aString [
 	self isValidating
 		ifTrue: [self validator validatePCData: aString].
 
-	saxHandler characters: aString.
+	self saxHandler characters: aString.
 ]
 
 { #category : #'handling tokens' }
@@ -370,14 +370,14 @@ SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary nam
 	self isValidating
 		ifTrue: [self validateStartTag: anElementName attributes: anAttributeDictionary].
 
-	saxHandler
+	self saxHandler
 		startElement: anElementName
 		prefix: prefix
 		uri: (namespaceUri ifNil: [''])
 		localName: (anElementName qualifiedNameLocalPart: prefix)
 		attributes: anAttributeDictionary.
 	self usesNamespaces
-		ifTrue: [saxHandler currentScope: self scopeAllocator currentScope].
+		ifTrue: [self saxHandler currentScope: self scopeAllocator currentScope].
 ]
 
 { #category : #'handling tokens' }
@@ -421,8 +421,7 @@ SAXDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrN
 
 { #category : #testing }
 SAXDriver >> isValidating [
-	"direct acceess for speed"
-	^ saxHandler isValidating
+	^ self saxHandler isValidating
 ]
 
 { #category : #accessing }
@@ -472,14 +471,14 @@ SAXDriver >> saxHandler [
 	^ saxHandler
 ]
 
+{ #category : #accessing }
+SAXDriver >> saxHandler: aHandler [
+	saxHandler := aHandler
+]
+
 { #category : #private }
 SAXDriver >> scopeAllocator [
 	^ scopeAllocator ifNil: [scopeAllocator := XMLNamespaceScopeAllocator new]
-]
-
-{ #category : #initialization }
-SAXDriver >> setSaxHandler: aHandler [
-	saxHandler := aHandler
 ]
 
 { #category : #namespaces }
@@ -502,8 +501,7 @@ SAXDriver >> undeclareNamespaces [
 
 { #category : #testing }
 SAXDriver >> usesNamespaces [
-	"direct acceess for speed"
-	^ saxHandler usesNamespaces
+	^ self saxHandler usesNamespaces
 ]
 
 { #category : #private }

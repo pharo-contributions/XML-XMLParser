@@ -37,6 +37,16 @@ XMLIntegerReader class >> on: aStream [
 	^ self new stream: aStream
 ]
 
+{ #category : #'instance creation' }
+XMLIntegerReader class >> readFrom: aStream [
+	^ (aStream atEnd not
+		and: [aStream peek == $x])
+		ifTrue: [
+			aStream next.
+			self readFrom: aStream withBase: 16]
+		ifFalse: [self readFrom: aStream withBase: 10]
+]
+
 { #category : #reading }
 XMLIntegerReader class >> readFrom: aStream withBase: aBase [
 	^ self

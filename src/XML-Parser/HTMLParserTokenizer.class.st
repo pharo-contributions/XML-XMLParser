@@ -2376,11 +2376,6 @@ HTMLParserTokenizer >> expectUpToAll: aString [
 	^ streamReader upToAll: aString
 ]
 
-{ #category : #'entity replacement' }
-HTMLParserTokenizer >> invalidCodePoint: aCodePoint [
-	^ Character space
-]
-
 { #category : #testing }
 HTMLParserTokenizer >> isNonHTMLCodeSectionTag: aTagName [
 	^ #('script' 'style') includes: aTagName
@@ -2445,6 +2440,28 @@ HTMLParserTokenizer >> nextContentToken [
 ]
 
 { #category : #tokenizing }
+HTMLParserTokenizer >> nextDecodedCharReference [
+	| codePoint codePointStream character |
+
+	"skip $#"
+	streamReader next.
+	((codePoint := self nextName) notEmpty
+		and: [streamReader peek == $;])
+		ifFalse: [
+			streamReader pushBack: (codePoint copyWithFirst: $#).
+			^ $&].
+	streamReader next.
+
+	codePointStream := codePoint readStream.
+	character := self characterFromCodePoint: (XMLIntegerReader readFrom: codePointStream).
+	^ (character notNil and: [codePointStream atEnd])
+		ifTrue: [character]
+		ifFalse: [
+			streamReader pushBack: ((codePoint copyWithFirst: $#) copyWith: $;).
+			$&].
+]
+
+{ #category : #tokenizing }
 HTMLParserTokenizer >> nextEndTag [
 	| tagName |
 
@@ -2460,11 +2477,18 @@ HTMLParserTokenizer >> nextEndTag [
 HTMLParserTokenizer >> nextGeneralEntityReference [
 	| name |
 
-	name := self nextName.
-	self expectNext: $;.
+	((name := self nextName) notEmpty
+		and: [streamReader peek == $;])
+		ifFalse: [
+			streamReader pushBack: name.
+			^ $&].
+	streamReader next.
+
 	^ self class predefinedEntities
 		at: name
-		ifAbsent: [nil].
+		ifAbsent: [
+			streamReader pushBack: name, ';'.
+			$&].
 ]
 
 { #category : #tokenizing }

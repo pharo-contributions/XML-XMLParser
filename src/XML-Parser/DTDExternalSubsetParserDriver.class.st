@@ -6,6 +6,7 @@ Class {
 	#superclass : #XMLParserDriver,
 	#instVars : [
 		'saxDriver',
+		'dtd',
 		'documentUri'
 	],
 	#category : #'XML-Parser'
@@ -25,8 +26,7 @@ DTDExternalSubsetParserDriver >> documentURI [
 
 { #category : #accessing }
 DTDExternalSubsetParserDriver >> dtd [
-	"direct acceess for speed"
-	^ saxDriver dtd
+	^ dtd
 ]
 
 { #category : #accessing }
@@ -113,8 +113,7 @@ DTDExternalSubsetParserDriver >> handleParameterEntityReference: aName [
 
 { #category : #testing }
 DTDExternalSubsetParserDriver >> isValidating [
-	"direct acceess for speed"
-	^ saxDriver isValidating
+	^ self saxDriver isValidating
 ]
 
 { #category : #accessing }
@@ -135,6 +134,7 @@ DTDExternalSubsetParserDriver >> saxDriver [
 { #category : #initialization }
 DTDExternalSubsetParserDriver >> setSAXDriver: aSaxdriver documentURI: aUri [
 	saxDriver := aSaxdriver.
+	dtd := saxDriver dtd.
 	documentUri := aUri.
 ]
 

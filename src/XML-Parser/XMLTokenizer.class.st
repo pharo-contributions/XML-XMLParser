@@ -309,11 +309,6 @@ XMLTokenizer >> hasActiveExternalEntity [
 	^ self activeEntities anySatisfy: [:each | each isExternal]
 ]
 
-{ #category : #'entity replacement' }
-XMLTokenizer >> invalidCodePoint: aCodePoint [
-	self parseError: 'Invalid character code point ', aCodePoint printString
-]
-
 { #category : #accessing }
 XMLTokenizer >> maxEntityReplacementDepth [
 	^ driver maxEntityReplacementDepth
@@ -459,6 +454,19 @@ XMLTokenizer >> nextContentToken [
 			streamReader next.
 			^ self nextContentMarkupToken].
 	self nextPCDataToken.
+]
+
+{ #category : #tokenizing }
+XMLTokenizer >> nextDecodedCharReference [
+	| codePoint |
+
+	"skip #"
+	streamReader next.
+	codePoint := streamReader nextInteger.
+	self expectNext: $;.
+
+	^ (self characterFromCodePoint: codePoint)
+		ifNil: [self parseError: 'Invalid character code point ', codePoint printString].
 ]
 
 { #category : #'tokenizing - dtd' }

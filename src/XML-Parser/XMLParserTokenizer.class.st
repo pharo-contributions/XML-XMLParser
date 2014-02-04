@@ -67,8 +67,8 @@ XMLParserTokenizer >> characterFromCodePoint: aCodePoint [
 		ifTrue: [
 			[aCodePoint asCharacter]
 				on: Error
-				do: [:error | self invalidCodePoint: aCodePoint]]
-		ifFalse: [self invalidCodePoint: aCodePoint]
+				do: [:error | nil]]
+		ifFalse: [nil]
 ]
 
 { #category : #accessing }
@@ -98,11 +98,6 @@ XMLParserTokenizer >> expectTerminator: aCharacter [
 
 { #category : #'tokenizing - expecting' }
 XMLParserTokenizer >> expectUpToAll: aString [
-	self subclassResponsibility
-]
-
-{ #category : #'entity replacement' }
-XMLParserTokenizer >> invalidCodePoint: aCodePoint [
 	self subclassResponsibility
 ]
 
@@ -167,14 +162,7 @@ XMLParserTokenizer >> nextContentToken [
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextDecodedCharReference [
-	| codePoint |
-
-	"skip #"
-	streamReader next.
-	codePoint := streamReader nextInteger.
-	self expectNext: $;.
-
-	^ self characterFromCodePoint: codePoint.
+	self subclassResponsibility
 ]
 
 { #category : #'tokenizing - dtd' }
