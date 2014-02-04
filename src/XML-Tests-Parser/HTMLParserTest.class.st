@@ -5,14 +5,10 @@ Class {
 }
 
 { #category : #tests }
-HTMLParserTest >> testAcceptingInvalidPCData [
-	| document |
-
-	#('< one & two >' '& three < four >') do: [:each |
-		document := HTMLParser parse: each.
-		self
-			assert: document allNodes size = 4;
-			assert: (document findElementNamed: 'body') contentString = each].
+HTMLParserTest >> testDecodingCharacters [
+	self assert:
+		(HTMLParser parse: '&#60; &#x3C; &#0; &#-1; &#invalid; &#invalid &#')
+			contentString = '< < &#0; &#-1; &#invalid; &#invalid &#'.
 ]
 
 { #category : #tests }
@@ -25,22 +21,20 @@ HTMLParserTest >> testHTMLEntities [
 		assert: string size = 1;
 		assert: string first == (HTMLParserTokenizer predefinedEntities at: entity).
 		
-
 	self assert:
-		((HTMLParser parse: '<body>&undeclared;</body>') findElementNamed: 'body')
-			contentString isEmpty.
+		((HTMLParser parse: '<body>&undeclared; &undeclared &;')
+			findElementNamed: 'body') contentString = '&undeclared; &undeclared &;'.
 ]
 
 { #category : #tests }
-HTMLParserTest >> testHTMLHandler [
-	self
-		shouldnt: [
-			HTMLHandler
-				parse: XMLParserTest addressBookXML;
-				parse: XMLParserTest addressBookXMLWithDTD;
-				parse: XMLDOMParserTest addressBookNamespacedXML;
-				parse: XMLDOMParserTest addressBookNamespacePrefixedXML]
-		raise: XMLParserException
+HTMLParserTest >> testParsingInvalidPCData [
+	| document |
+
+	#('< one & two >' '& three < four >') do: [:each |
+		document := HTMLParser parse: each.
+		self
+			assert: document allNodes size = 4;
+			assert: (document findElementNamed: 'body') contentString = each].
 ]
 
 { #category : #tests }
@@ -78,6 +72,18 @@ HTMLParserTest >> testParsingVoidElements [
 		assert: (document allElementsCollect: [:each | each name]) asArray = #('html' 'body' 'img');
 		assert: (document findElementNamed: 'body') contentString = 'one twothree';
 		deny: (document findElementNamed: 'img') hasChildren.
+]
+
+{ #category : #tests }
+HTMLParserTest >> testParsingXML [
+	self
+		shouldnt: [
+			HTMLHandler
+				parse: XMLParserTest addressBookXML;
+				parse: XMLParserTest addressBookXMLWithDTD;
+				parse: XMLDOMParserTest addressBookNamespacedXML;
+				parse: XMLDOMParserTest addressBookNamespacePrefixedXML]
+		raise: XMLParserException
 ]
 
 { #category : #tests }
