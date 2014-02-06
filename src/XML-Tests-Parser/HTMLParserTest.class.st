@@ -4,6 +4,24 @@ Class {
 	#category : #'XML-Tests-Parser'
 }
 
+{ #category : #benchmarking }
+HTMLParserTest >> benchmark1 [
+	"
+	HTMLParserTest new benchmark1
+	"
+	Smalltalk garbageCollect.
+	^ [4000 timesRepeat: [HTMLHandler parse: XMLParserTest addressBookXML]] timeToRun
+]
+
+{ #category : #benchmarking }
+HTMLParserTest >> benchmark2 [
+	"
+	HTMLParserTest new benchmark2
+	"
+	Smalltalk garbageCollect.
+	^ [4000 timesRepeat: [HTMLParser parse: XMLParserTest addressBookXML]] timeToRun
+]
+
 { #category : #tests }
 HTMLParserTest >> testDecodingCharacters [
 	self assert:
@@ -24,6 +42,37 @@ HTMLParserTest >> testHTMLEntities [
 	self assert:
 		((HTMLParser parse: '<body>&undeclared; &undeclared &;')
 			findElementNamed: 'body') contentString = '&undeclared; &undeclared &;'.
+]
+
+{ #category : #tests }
+HTMLParserTest >> testParsingAttributes [
+	| document element |
+
+	document := HTMLParser parse: '<test one="quoted" two=''subQuoted'' three=unquoted four'.
+	element := document findElementNamed: 'test'.
+	self
+		assert: (element attributeAt: 'one') = 'quoted';
+		assert: (element attributeAt: 'two') = 'subQuoted';
+		assert: (element attributeAt: 'three') = 'unquoted';
+		assert: (element attributeAt: 'four') isEmpty.
+]
+
+{ #category : #tests }
+HTMLParserTest >> testParsingForms [
+	| document |
+
+	document := HTMLParser parse: '<form><input><form><input>'.
+
+	self assert:
+		(document allElements asArray collect: [:each | each name]) =
+			#('html' 'body' 'form' 'input' 'form' 'input').
+
+	document allElementsNamed: 'form' do: [:each |
+		self
+			assert: each elements size = 1;
+			assert: (each firstElement isNamed: 'input')].
+	document allElementsNamed: 'input' do: [:each |
+		self deny: each hasChildren].
 ]
 
 { #category : #tests }
@@ -50,6 +99,36 @@ HTMLParserTest >> testParsingNonHTMLSections [
 		assert: (document findElementNamed: 'script') contentString =
 			'1 < 2; 3 > 2; document.write("</Script>");';
 		assert: (document findElementNamed: 'style') contentString = '//"'.
+]
+
+{ #category : #tests }
+HTMLParserTest >> testParsingTables [
+	| document tables trs tds |
+
+	document := HTMLParser parse: '<table><tr><td>one<td>two<tr><td>three<table><tr><td>four'.
+	self assert:
+		(document allElements asArray collect: [:each | each name]) =
+			#('html' 'body' 'table' 'tr' 'td' 'td' 'tr' 'td' 'table' 'tr' 'td').
+
+	tables := document allElementsNamed: 'table'.
+	self
+		assert: tables first elements size = 2;
+		assert: tables second elements size = 1.
+	tables do: [:each | self assert: (each elements allSatisfy: [:element | element isNamed: 'tr'])].
+
+	trs := document allElementsNamed: 'tr'.
+	self
+		assert: trs first elements size = 2;
+		assert: trs second elements size = 1;
+		assert: trs third elements size = 1.
+	trs do: [:each | self assert: (each elements allSatisfy: [:element | element isNamed: 'td'])].
+
+	tds := document allElementsNamed: 'td'.
+	self
+		assert: tds first contentString = 'one';
+		assert: tds second contentString = 'two';
+		assert: tds third contentString = 'three four';
+		assert: (tds third nodes second isNamed: 'table').
 ]
 
 { #category : #tests }

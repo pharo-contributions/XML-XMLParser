@@ -130,7 +130,7 @@ XMLParserTest >> benchmark3 [
 	XMLParserTest new benchmark3
 	"
 	Smalltalk garbageCollect.
-	^ [4000 timesRepeat: [self testParsing]] timeToRun
+	^ [4000 timesRepeat: [XMLDOMParser parse: self addressBookXMLWithDTD]] timeToRun
 ]
 
 { #category : #benchmark }
@@ -175,7 +175,7 @@ XMLParserTest >> testAttributeDefaultDeclaration [
 						three CDATA #FIXED "fixedDefault"
 						three CDATA #FIXED "redundant"
 						four CDATA "default" >]>'.
-	document := XMLDOMParser parse: dtd, '<root two="required" three="nonDefault" />'.
+	document := XMLDOMParser parse: dtd, '<root two=''required'' three="nonDefault" />'.
 	self
 		assert: (document root attributeAt: 'two') = 'required';
 		deny: (document root includesAttribute: 'one');
