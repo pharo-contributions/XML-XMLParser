@@ -27,15 +27,6 @@ HTMLParserDriver >> endElement: anElementName [
 		localName: (anElementName qualifiedNameLocalPart: prefix)
 ]
 
-{ #category : #private }
-HTMLParserDriver >> endElements: anElementCollection [
-	anElementCollection do: [:each |
-		(self elementNester hasOpenElements)
-			ifFalse: [^ self].
-
-		self endElement: each].
-]
-
 { #category : #'handling tokens' }
 HTMLParserDriver >> handleEndDocument [
 	self elementNester
@@ -51,9 +42,10 @@ HTMLParserDriver >> handleEndTag: anElementName [
 		or: [(self elementNester hasOpenElement: anElementName) not])
 		ifTrue: [^ self].
 
-	self
-		endElements: (self elementNester elementsToEndBeforeEnding: anElementName);
-		endElement: anElementName.
+	self elementNester
+		elementsToEndBeforeEnding: anElementName
+		do: [:each | self endElement: each].
+	self endElement: anElementName.
 ]
 
 { #category : #'handling tokens' }
@@ -63,9 +55,9 @@ HTMLParserDriver >> handleNonHTMLSection: aString [
 
 { #category : #'handling tokens' }
 HTMLParserDriver >> handlePCData: aString [
-	self
-		endElements: self elementNester elementsToEndBeforePCData;
-		startElements: self elementNester elementsToStartBeforePCData.
+	self elementNester
+		elementsToEndBeforePCDataDo: [:each | self endElement: each ];
+		elementsToStartBeforePCDataDo: [:each | self startElement: each].
 
 	self saxHandler characters: aString.
 ]
@@ -79,10 +71,12 @@ HTMLParserDriver >> handleStartTag: anElementName attributes: anAttributeDiction
 	(self elementNester isOpenUniqueElement: anElementName)
 		ifTrue: [^ self].
 
-	self
-		endElements: (self elementNester elementsToEndBeforeStarting: anElementName);
-		startElements: (self elementNester elementsToStartBeforeStarting: anElementName);
-		startElement: anElementName attributes: anAttributeDictionary.
+	self elementNester
+		elementsToEndBeforeStarting: anElementName
+		do: [:each | self endElement: each];
+		elementsToStartBeforeStarting: anElementName
+		do: [:each | self startElement: each].
+	self startElement: anElementName attributes: anAttributeDictionary.
 
 	(self elementNester isVoidElement: anElementName)
 		ifTrue: [self endElement: anElementName].
@@ -107,6 +101,13 @@ HTMLParserDriver >> resolvesExternalEntities [
 ]
 
 { #category : #private }
+HTMLParserDriver >> startElement: anElementName [
+	self
+		startElement: anElementName
+		attributes: (OrderPreservingDictionary new: 5 withDefaultValue: '')
+]
+
+{ #category : #private }
 HTMLParserDriver >> startElement: anElementName attributes: anAttributeDictionary [
 	| prefix |
 
@@ -119,14 +120,6 @@ HTMLParserDriver >> startElement: anElementName attributes: anAttributeDictionar
 		uri: ''
 		localName: (anElementName qualifiedNameLocalPart: prefix)
 		attributes: anAttributeDictionary
-]
-
-{ #category : #private }
-HTMLParserDriver >> startElements: anElementCollection [
-	anElementCollection do: [:each |
-		self
-			startElement: each
-			attributes: (OrderPreservingDictionary new: 5 withDefaultValue: '')].
 ]
 
 { #category : #private }

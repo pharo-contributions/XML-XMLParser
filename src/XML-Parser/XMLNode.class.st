@@ -25,6 +25,12 @@ XMLNode >> allNodesDo: aBlock [
 	aBlock value: self
 ]
 
+{ #category : #converting }
+XMLNode >> asString [
+	"for compatibility if Object>>asString isn't defined"
+	^ self printString
+]
+
 { #category : #printing }
 XMLNode >> canonicallyPrintOn: aStream [
 	self

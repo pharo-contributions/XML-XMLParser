@@ -53,7 +53,7 @@ XMLNestedStreamReader >> atEnd [
 { #category : #testing }
 XMLNestedStreamReader >> atQuote [
 	^ self peek == $"
-		or: [self peek == $']
+		or: [peekChar == $']
 ]
 
 { #category : #accessing }

@@ -316,7 +316,7 @@ XMLTokenizer >> maxEntityReplacementDepth [
 
 { #category : #'tokenizing - dtd' }
 XMLTokenizer >> nextAttlistDeclaration [
-	| element  defaultPragma |
+	| element defaultPragma |
 
 	self
 		expectNextAll: 'ATTLIST';
@@ -397,6 +397,7 @@ XMLTokenizer >> nextAttributeValue [
 		enterLiteralValue.
 	value := self nextAttributeValueDelimitedBy: quote.
 	context resetPrevious.
+
 	(streamReader next == quote)
 		ifFalse: [self errorExpected: 'end of quoted attribute value'].
 
@@ -408,9 +409,9 @@ XMLTokenizer >> nextAttributeValueDelimitedBy: aQuote [
 	| nextChar |
 
 	writeStream reset.
-	[(nextChar := streamReader peek) == nil
-		or: [nextChar == aQuote
-			or: [nextChar == $<]]]
+	[(nextChar := streamReader peek) == aQuote
+		or: [nextChar == $<
+			or: [nextChar == nil]]]
 		whileFalse: [
 			(streamReader next) == $&
 				ifTrue: [
@@ -581,8 +582,8 @@ XMLTokenizer >> nextEntityValueDelimitedBy: aQuote [
 	| nextChar |
 
 	writeStream reset.
-	[(nextChar := streamReader peek) == nil
-		or: [nextChar == aQuote]]
+	[(nextChar := streamReader peek) == aQuote
+		or: [nextChar == nil]]
 		whileFalse: [
 			(streamReader next) == $&
 				ifTrue: [
@@ -789,8 +790,8 @@ XMLTokenizer >> nextPCDataToken [
 
 	isIgnorableWhitespace := true.
 	writeStream reset.
-	[(nextChar := streamReader peek) == nil
-		or: [nextChar == $<]]
+	[(nextChar := streamReader peek) == $<
+		or: [nextChar == nil]]
 		whileFalse: [
 			(streamReader next) == $&
 				ifTrue: [
@@ -940,9 +941,9 @@ XMLTokenizer >> nextTag [
 
 	attributes := OrderPreservingDictionary new: 10 withDefaultValue: ''.
 	[streamReader skipSeparators.
-	((nextChar := streamReader peek) == nil
-		or: [nextChar == $>
-			or: [nextChar == $/]])]
+	((nextChar := streamReader peek) == $>
+		or: [nextChar == $/
+			or: [nextChar == nil]])]
 		whileFalse: [
 			attributeName := self nextName.
 			streamReader skipSeparators.

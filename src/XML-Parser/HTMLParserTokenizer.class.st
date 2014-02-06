@@ -2393,6 +2393,7 @@ HTMLParserTokenizer >> nextAttributeValue [
 	streamReader atQuote
 		ifFalse: [^ self nextName].
 	quote := streamReader next.
+
 	context
 		saveCurrent;
 		enterLiteralValue.
@@ -2409,8 +2410,8 @@ HTMLParserTokenizer >> nextAttributeValueDelimitedBy: aQuote [
 	| nextChar |
 
 	writeStream reset.
-	[(nextChar := streamReader peek) == nil
-		or: [nextChar == aQuote]]
+	[(nextChar := streamReader peek) == aQuote
+		or: [nextChar == nil]]
 		whileFalse: [
 			(streamReader next) == $&
 				ifTrue: [
@@ -2496,7 +2497,7 @@ HTMLParserTokenizer >> nextName [
 	| nextChar |
 
 	nameStream reset.
-	 [(nextChar := streamReader peek) isNil
+	 [(nextChar := streamReader peek) == nil
 		or: [(HtmlNameDelimiters includes: nextChar)
 			or: [(context isInDoctype and: [nextChar == $[])
 				or: [context isInInternalSubset and: [nextChar == $]]]]]]
@@ -2567,8 +2568,8 @@ HTMLParserTokenizer >> nextPCDataToken [
 
 	isIgnorableWhitespace := true.
 	writeStream reset.
-	[(nextChar := streamReader peek) == nil
-		or: [nextChar == $<]]
+	[(nextChar := streamReader peek) == $<
+		or: [nextChar == nil]]
 		whileFalse: [
 			streamReader next.
 			nextChar == $&
@@ -2687,7 +2688,7 @@ HTMLParserTokenizer >> nextTag [
 
 	attributes := OrderPreservingDictionary new: 10 withDefaultValue: ''.
 	[streamReader skipSeparators.
-	((nextChar := streamReader peek) isNil
+	((nextChar := streamReader peek) == nil
 		or: [nextChar == $>
 			or: [nextChar == $/
 				or: [(attributeName := self nextName asLowercase) isEmpty]]])]

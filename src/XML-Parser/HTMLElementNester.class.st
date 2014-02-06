@@ -5,9 +5,7 @@ Class {
 	#name : #HTMLElementNester,
 	#superclass : #XMLElementNester,
 	#instVars : [
-		'openElementsByName',
-		'elementsToStart',
-		'elementsToEnd'
+		'openElementsByName'
 	],
 	#classVars : [
 		'BodySectionElements',
@@ -28,10 +26,10 @@ HTMLElementNester class >> initialize [
 	self
 		initializeHeadSectionElements;
 		initializeBodySectionElements;
-		initializeNonNestableElements;
 		initializeNestableTagGroups;
+		initializeNonNestableElements;
 		initializeMutuallyExcludingTags;
-		initializeVoidElements
+		initializeVoidElements.
 ]
 
 { #category : #'class initialization' }
@@ -75,17 +73,19 @@ HTMLElementNester class >> initializeNestableTagGroups [
 		NestableTagGroups at: each put: #('dl')].
 	#('tr' 'th' 'td' 'thead' 'tfoot') do: [:each |
 		NestableTagGroups at: each put: #('table')].
-	#('li') do: [:each |
-		NestableTagGroups at: each put: #('ul' 'ol' 'menu' 'dir')].
 	#('rp' 'rt') do: [:each |
 		NestableTagGroups at: each put: #('ruby')].
+
+	NestableTagGroups at: 'li' put: #('ul' 'ol' 'menu' 'dir') asSet.
 ]
 
 { #category : #'class initialization' }
 HTMLElementNester class >> initializeNonNestableElements [
-	NonNestableElements := Set withAll:
-		#('a' 'applet' 'audio' 'button' 'footer' 'form' 'header' 'label' 'map'
-			'meter' 'optgroup' 'option' 'ruby' 'select' 'video')
+	(NonNestableElements := Set new)
+		addAll:
+			#('a' 'applet' 'audio' 'button' 'footer' 'form' 'header' 'label' 'map'
+				'meter' 'optgroup' 'option' 'ruby' 'select' 'video');
+		addAll: NestableTagGroups keys
 ]
 
 { #category : #'class initialization' }
@@ -97,108 +97,100 @@ HTMLElementNester class >> initializeVoidElements [
 ]
 
 { #category : #testing }
-HTMLElementNester >> canNestWithinSelf: anElementName [
-	^ (NonNestableElements includes: anElementName) not
-]
+HTMLElementNester >> cannotNestWithinSelf: anElementName [
+	| tagGroup |
 
-{ #category : #private }
-HTMLElementNester >> elementsToEnd [
-	^ elementsToEnd ifNil: [elementsToEnd := OrderedCollection new]
-]
-
-{ #category : #checking }
-HTMLElementNester >> elementsToEndBeforeEnding: anElementName [
-	self elementsToEnd reset.
+	(NonNestableElements includes: anElementName)
+		ifFalse: [^ false].
+		
+	"tags like <td> can nest in each other if there is a <table> between
+	them like <td><table><tr><td>...."
+	((tagGroup := NestableTagGroups at: anElementName ifAbsent: [#()])
+		anySatisfy: [:each | self hasOpenElement: each])
+		ifFalse: [^ true].
 
 	self openElementsReverseDo: [:each |
 		each = anElementName
-			ifTrue: [^ self elementsToEnd]
-			ifFalse: [self elementsToEnd addLast: each]].
+			ifTrue: [^ true].
+		(tagGroup includes: each)
+			ifTrue: [^ false]].
+]
 
-	^ self elementsToEnd.
+{ #category : #testing }
+HTMLElementNester >> currentSectionCannotContain: anElementName [
+	^ ((self hasOpenElement: 'head')
+		and: [self isBodySectionOnlyElement: anElementName])
+			or: [(self hasOpenElement: 'body')
+				and: [self isHeadSectionOnlyElement: anElementName]]
 ]
 
 { #category : #checking }
-HTMLElementNester >> elementsToEndBeforePCData [
-	^ (self hasOpenElement: 'head')
+HTMLElementNester >> elementsToEndBeforeEnding: anElementName do: aBlock [
+	self openElementsReverseDo: [:each |
+		each = anElementName
+			ifTrue: [^ self].
+		aBlock value: each].
+]
+
+{ #category : #checking }
+HTMLElementNester >> elementsToEndBeforePCDataDo: aBlock [
+	(self hasOpenElement: 'head')
 		ifTrue: [
-			(self elementsToEndBeforeEnding: 'head')
-				addLast: 'head';
-				yourself]
-		ifFalse: [#()]
+			self
+				elementsToEndBeforeEnding: 'head'
+				do: aBlock.
+			aBlock value: 'head']
 ]
 
 { #category : #checking }
-HTMLElementNester >> elementsToEndBeforeStarting: anElementName [
+HTMLElementNester >> elementsToEndBeforeStarting: anElementName do: aBlock [
 	| excludingElement |
+
+	self hasOpenElements
+		ifFalse: [^ self].
 
 	(anElementName = 'body'
 		or: [anElementName = 'head'
-			or: [self headOrBodyCannotContain: anElementName]])
-		ifTrue: [^ self elementsToEndBeforeEnding: 'html'].
+			or: [self currentSectionCannotContain: anElementName]])
+		ifTrue: [^ self elementsToEndBeforeEnding: 'html' do: aBlock].
 
-	self elementsToEnd reset.
-	(self canNestWithinSelf: anElementName)
-		ifTrue: [^ self elementsToEnd].
-
-	excludingElement := self excludingElementFor: anElementName.
-	((self hasOpenElement: anElementName)
-		or: [excludingElement notEmpty
+	(((self hasOpenElement: anElementName)
+		and: [self cannotNestWithinSelf: anElementName])
+		or: [(excludingElement := MutuallyExcludingTags at: anElementName ifAbsent: [nil]) notNil
 			and: [self hasOpenElement: excludingElement]])
-		ifFalse: [^ self elementsToEnd].
+		ifFalse: [^ self].
 
 	self openElementsReverseDo: [:each |
-		((NestableTagGroups includesKey: anElementName)
-			and: [(NestableTagGroups at: anElementName) includes: each])
-			ifTrue: [^ #()].
-
-		self elementsToEnd addLast: each.
+		aBlock value: each.
 		((each = anElementName)
-			or: [excludingElement notEmpty
-				and: [excludingElement = each]])
-			ifTrue: [^ self elementsToEnd]].
-
-	^ self elementsToEnd.
-	
-]
-
-{ #category : #private }
-HTMLElementNester >> elementsToStart [
-	^ elementsToStart ifNil: [elementsToStart := OrderedCollection new]
+			or: [each = excludingElement])
+			ifTrue: [^ self]].
 ]
 
 { #category : #checking }
-HTMLElementNester >> elementsToStartBeforePCData [
-	self elementsToStart reset.
-
+HTMLElementNester >> elementsToStartBeforePCDataDo: aBlock [
 	self hasOpenElements
-		ifFalse: [self elementsToStart addLast: 'html'].
+		ifFalse: [aBlock value: 'html'].
 	(self hasOpenElement: 'body')
-		ifFalse: [self elementsToStart addLast: 'body'].
-
-	^ self elementsToStart.
+		ifFalse: [aBlock value: 'body'].
 ]
 
 { #category : #checking }
-HTMLElementNester >> elementsToStartBeforeStarting: anElementName [
-	self elementsToStart reset.
+HTMLElementNester >> elementsToStartBeforeStarting: anElementName do: aBlock [
+	(anElementName = 'html')
+		ifTrue: [^ self].
 
 	self hasOpenElements
-		ifFalse: [
-			(anElementName = 'html')
-				ifTrue: [^ self elementsToStart].
-			self elementsToStart addLast: 'html'].
-
+		ifFalse: [aBlock value: 'html'].
+	
 	(anElementName = 'body' or: [anElementName = 'head'])
-		ifTrue: [^ self elementsToStart]. 
+		ifTrue: [^ self]. 
 
 	(self mustStartHeadSectionFor: anElementName)
-		ifTrue: [self elementsToStart addLast: 'head']
+		ifTrue: [aBlock value: 'head']
 		ifFalse: [
 			(self mustStartBodySectionFor: anElementName)
-				ifTrue: [self elementsToStart addLast: 'body']].
-
-	^ self elementsToStart.
+				ifTrue: [aBlock value: 'body']].
 ]
 
 { #category : #checking }
@@ -213,24 +205,9 @@ HTMLElementNester >> endElement: anElementName [
 	super endElement: anElementName.
 ]
 
-{ #category : #accessing }
-HTMLElementNester >> excludingElementFor: anElementName [
-	^ MutuallyExcludingTags at: anElementName ifAbsent: ['']
-
-	
-]
-
 { #category : #testing }
 HTMLElementNester >> hasOpenElement: anElementName [
 	^ (self openElementsByName at: anElementName ifAbsent: [0]) > 0
-]
-
-{ #category : #testing }
-HTMLElementNester >> headOrBodyCannotContain: anElementName [
-	^ ((self hasOpenElement: 'head')
-		and: [self isBodySectionOnlyElement: anElementName])
-			or: [(self hasOpenElement: 'body')
-				and: [self isHeadSectionOnlyElement: anElementName]]
 ]
 
 { #category : #testing }

@@ -59,7 +59,7 @@ XMLNamespaceScopeAllocator >> exitScope [
 
 { #category : #accessing }
 XMLNamespaceScopeAllocator >> resolvePrefix: aPrefix [
-	^ self currentScope resolvePrefix: aPrefix ifUnmapped: ['']
+	^ self currentScope resolvePrefix: aPrefix ifUnmapped: ''
 ]
 
 { #category : #accessing }

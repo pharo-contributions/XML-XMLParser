@@ -191,11 +191,6 @@ XMLOrderedList >> do: aBlock [
 	collection do: aBlock
 ]
 
-{ #category : #inspecting }
-XMLOrderedList >> inspectorClass [
-	^ Smalltalk tools inspector
-]
-
 { #category : #private }
 XMLOrderedList >> newWithCollection: aCollection [
 	^ self species basicNew setCollection: aCollection

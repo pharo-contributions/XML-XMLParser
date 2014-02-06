@@ -55,11 +55,6 @@ XMLNodeName >> localPart [
 		localPart]
 ]
 
-{ #category : #accessing }
-XMLNodeName >> localPart: aLocalPart [
-	self changeWith: [self setPrefix: self prefix localPart: aLocalPart]
-]
-
 { #category : #private }
 XMLNodeName >> notifier [
 	^ notifier ifNil: [notifier := XMLNotifier new]
