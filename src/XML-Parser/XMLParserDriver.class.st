@@ -138,6 +138,11 @@ XMLParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: a
 ]
 
 { #category : #testing }
+XMLParserDriver >> isParsingExternalSubset [
+	^ false
+]
+
+{ #category : #testing }
 XMLParserDriver >> isValidating [
 	self subclassResponsibility
 ]

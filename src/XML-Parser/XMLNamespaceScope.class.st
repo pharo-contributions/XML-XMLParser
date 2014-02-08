@@ -176,7 +176,7 @@ XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
 	| namespacedAttributes |
 
 	aDictionary keysDo: [:each | | prefix |
-		(prefix := each qualifiedNamePrefix) isEmpty
+		(prefix := each qualifiedNamePrefix) isEmpty "avoid ifNotEmpty: closure overhead"
 			ifFalse: [ | namespace oldSize |
 				"not initialized unless needed"
 				namespacedAttributes
@@ -189,7 +189,7 @@ XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
 				namespacedAttributes size > oldSize
 					ifFalse: [
 						XMLNamespaceException signal:
-							'Attribute "', each, '" has alias for namespace "', namespace. '"']]].
+							'Attribute "', each, '" has alias for namespace "', namespace, '"']]].
 ]
 
 { #category : #accessing }

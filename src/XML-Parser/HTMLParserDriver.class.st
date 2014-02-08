@@ -95,11 +95,6 @@ HTMLParserDriver >> isValidating [
 	^ false
 ]
 
-{ #category : #testing }
-HTMLParserDriver >> resolvesExternalEntities [
-	^ false
-]
-
 { #category : #private }
 HTMLParserDriver >> startElement: anElementName [
 	self

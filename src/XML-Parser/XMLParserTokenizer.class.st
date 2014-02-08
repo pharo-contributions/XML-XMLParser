@@ -300,13 +300,9 @@ XMLParserTokenizer >> nextPubidLiteral [
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextStartDocument [
-	context enterProlog.
-	driver handleStartDocument.
-]
-
-{ #category : #tokenizing }
-XMLParserTokenizer >> nextStartExternalSubset [
-	context enterExternalSubsetTextDeclaration.
+	driver isParsingExternalSubset
+		ifTrue: [context enterExternalSubsetTextDeclaration]
+		ifFalse: [context enterProlog].
 	driver handleStartDocument.
 ]
 

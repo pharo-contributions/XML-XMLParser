@@ -38,9 +38,9 @@ SAXDriver >> currentScope: aNamespaceScope [
 ]
 
 { #category : #namespaces }
-SAXDriver >> declareNamespaces: aDictionary [
+SAXDriver >> declareNamespaces: aDictionary inScope: aScope [
 	aDictionary keysAndValuesDo: [:prefix :uri |
-		self scopeAllocator declarePrefix: prefix uri: uri.
+		aScope mapPrefix: prefix to: uri.
 		self saxHandler startPrefixMapping: prefix uri: uri]
 ]
 
@@ -154,7 +154,8 @@ SAXDriver >> handleEndContentEntityReplacement: aName [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleEndDTD [
-	(self resolvesExternalEntities and: [self dtd hasExternalSubset])
+	(self saxHandler resolvesExternalEntities
+		and: [self dtd hasExternalSubset])
 		ifTrue: [self parseExternalSubset: self dtd externalSubsetURI].
 
 	self saxHandler endDTD.
@@ -171,7 +172,8 @@ SAXDriver >> handleEndDocument [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleEndTag: anElementName [
-	| prefix |
+	"performance critical method"
+	| prefix currentScope |
 
 	self elementNester hasScopedAttributes
 		ifTrue: [
@@ -186,14 +188,14 @@ SAXDriver >> handleEndTag: anElementName [
 		prefix: prefix
 		uri:
 			(self usesNamespaces
-				ifTrue: [self scopeAllocator resolvePrefix: prefix]
+				ifTrue: [
+					currentScope := self scopeAllocator exitScope.
+					currentScope resolvePrefix: prefix]
 				ifFalse: [''])
 		localName: (anElementName qualifiedNameLocalPart: prefix).
 
-	self usesNamespaces
-		ifTrue: [
-			self undeclareNamespaces.
-			self scopeAllocator exitScope].
+	(currentScope notNil and: [currentScope hasNamespaces])
+		ifTrue: [self undeclareNamespacesInScope: currentScope].
 	self isValidating
 		ifTrue: [self validator validateEndTag: anElementName].
 ]
@@ -206,7 +208,7 @@ SAXDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId systemID:
 				addUnparsedEntity: aName
 				ndata: aNotation]
 		ifEmpty: [
-			self resolvesExternalEntities
+			self saxHandler resolvesExternalEntities
 				ifTrue: [
 					self dtd
 						addExternalGeneralEntity: aName
@@ -241,7 +243,7 @@ SAXDriver >> handleGeneralEntityReference: aName [
 		ifNil: [
 			self isValidating
 				ifTrue: [(XMLValidationException undeclaredGeneralEntity: aName) signal].
-			self preservesUndeclaredEntityReferences
+			self saxHandler preservesUndeclaredEntityReferences
 				ifTrue: [entity := DTDBypassedGeneralEntity named: aName].
 			self saxHandler skippedEntity: aName].
 	^ entity.
@@ -275,7 +277,7 @@ SAXDriver >> handlePI: piTarget data: piData [
 
 { #category : #'handling tokens' }
 SAXDriver >> handleParameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
-	self resolvesExternalEntities
+	self saxHandler resolvesExternalEntities
 		ifTrue: [
 			self dtd
 				addExternalParameterEntity: aName
@@ -309,7 +311,7 @@ SAXDriver >> handleParameterEntityReference: aName [
 		ifNil: [
 			self isValidating
 				ifTrue: [(XMLValidationException undeclaredParameterEntity: aName) signal].
-			self preservesUndeclaredEntityReferences
+			self saxHandler preservesUndeclaredEntityReferences
 				ifTrue: [entity := DTDBypassedParameterEntity named: aName]].
 	^ entity.
 ]
@@ -351,22 +353,22 @@ SAXDriver >> handleStartDocument [
 { #category : #'handling tokens' }
 SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
 	"performance critical method"
-	| prefix namespaceUri |
+	| prefix namespaceUri currentScope |
 
 	self elementNester startElement: anElementName.
 
 	prefix := anElementName qualifiedNamePrefix.
 	self usesNamespaces
 		ifTrue: [
-			self scopeAllocator enterScope.
+			currentScope := self scopeAllocator enterScope.
 			aNamespaceDictionary
-				ifNotNil: [self declareNamespaces: aNamespaceDictionary].
+				ifNotNil: [self declareNamespaces: aNamespaceDictionary inScope: currentScope].
 			namespaceUri :=
-				self scopeAllocator
+				currentScope
 					validateAndResolvePrefix: prefix
 					ofName: anElementName.
-			anAttributeDictionary isEmpty
-				ifFalse: [self scopeAllocator validateAttributePrefixes: anAttributeDictionary]].
+			anAttributeDictionary isEmpty "avoid ifNotEmpty: closure overhead"
+				ifFalse: [currentScope validateAttributePrefixes: anAttributeDictionary]].
 	self isValidating
 		ifTrue: [self validateStartTag: anElementName attributes: anAttributeDictionary].
 
@@ -376,8 +378,8 @@ SAXDriver >> handleStartTag: anElementName attributes: anAttributeDictionary nam
 		uri: (namespaceUri ifNil: [''])
 		localName: (anElementName qualifiedNameLocalPart: prefix)
 		attributes: anAttributeDictionary.
-	self usesNamespaces
-		ifTrue: [self saxHandler currentScope: self scopeAllocator currentScope].
+	currentScope
+		ifNotNil: [self saxHandler currentScope: currentScope].
 ]
 
 { #category : #'handling tokens' }
@@ -441,19 +443,9 @@ SAXDriver >> parseExternalSubset: aUri [
 	parser parseDocument.
 ]
 
-{ #category : #testing }
-SAXDriver >> preservesUndeclaredEntityReferences [
-	^ self saxHandler preservesUndeclaredEntityReferences
-]
-
 { #category : #accessing }
 SAXDriver >> readLimit [
 	^ self documentReadLimit
-]
-
-{ #category : #testing }
-SAXDriver >> resolvesExternalEntities [
-	^ self saxHandler resolvesExternalEntities
 ]
 
 { #category : #accessing }
@@ -482,21 +474,16 @@ SAXDriver >> scopeAllocator [
 ]
 
 { #category : #namespaces }
-SAXDriver >> undeclareNamespaces [
-	| currentScope enclosingScope |
+SAXDriver >> undeclareNamespacesInScope: aScope [
+	| currentScope |
 
 	currentScope := self scopeAllocator currentScope.
-	currentScope hasNamespaces
-		ifFalse: [^ self].
-	enclosingScope := self scopeAllocator enclosingScope.
-
-	currentScope prefixesAndURIsDo: [:prefix :uri |
-		(enclosingScope includesPrefix: prefix mappedTo: uri)
+	aScope prefixesAndURIsDo: [:prefix :uri |
+		(currentScope includesPrefix: prefix mappedTo: uri)
 			ifFalse: [self saxHandler endPrefixMapping: prefix]].
 
-	(currentScope defaultNamespace notNil
-		and: [currentScope defaultNamespace ~= enclosingScope defaultNamespace])
-		ifTrue: [self saxHandler endPrefixMapping: '']
+	(aScope defaultNamespace ~= currentScope defaultNamespace)
+		ifTrue: [self saxHandler endPrefixMapping: ''].
 ]
 
 { #category : #testing }
@@ -508,9 +495,7 @@ SAXDriver >> usesNamespaces [
 SAXDriver >> validateRootElement: aStartTag [
 	(self saxHandler requiresDocumentConstraints
 		and: [self validator hasElementValidators not])
-		ifTrue: [
-			XMLValidationException signal:
-				'Document validation constraints required'].
+		ifTrue: [XMLValidationException signal: 'Document validation constraints required'].
 
 	self validator validateRootElement: aStartTag.
 ]

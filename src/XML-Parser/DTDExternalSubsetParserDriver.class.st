@@ -112,6 +112,11 @@ DTDExternalSubsetParserDriver >> handleParameterEntityReference: aName [
 ]
 
 { #category : #testing }
+DTDExternalSubsetParserDriver >> isParsingExternalSubset [
+	^ true
+]
+
+{ #category : #testing }
 DTDExternalSubsetParserDriver >> isValidating [
 	^ self saxDriver isValidating
 ]
@@ -136,13 +141,6 @@ DTDExternalSubsetParserDriver >> setSAXDriver: aSaxdriver documentURI: aUri [
 	saxDriver := aSaxdriver.
 	dtd := saxDriver dtd.
 	documentUri := aUri.
-]
-
-{ #category : #initialization }
-DTDExternalSubsetParserDriver >> tokenizerOn: aStringOrStream [
-	^ (super tokenizerOn: aStringOrStream)
-		nextStartExternalSubset;
-		yourself
 ]
 
 { #category : #testing }

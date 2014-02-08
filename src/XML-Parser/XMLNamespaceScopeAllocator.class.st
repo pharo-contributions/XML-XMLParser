@@ -23,58 +23,22 @@ XMLNamespaceScopeAllocator >> currentScope: aScope [
 	self scopes addLast: aScope
 ]
 
-{ #category : #scope }
-XMLNamespaceScopeAllocator >> declarePrefix: aPrefix uri: aUri [
-	"Declare the given name space prefix with the given URL"
-
-	self currentScope mapPrefix: aPrefix to: aUri
-]
-
-{ #category : #accessing }
-XMLNamespaceScopeAllocator >> defaultNamespace [
-	^ self currentScope defaultNamespace
-]
-
 { #category : #private }
 XMLNamespaceScopeAllocator >> emptyScope [
 	^ XMLNamespaceScope new
 ]
 
-{ #category : #accessing }
-XMLNamespaceScopeAllocator >> enclosingScope [
-	^ self scopes
-		at: self scopes size - 1
-		ifAbsent: [self emptyScope]
-]
-
 { #category : #scope }
 XMLNamespaceScopeAllocator >> enterScope [
-	self scopes addLast: self currentScope copy
+	^ self scopes addLast: self currentScope copy
 ]
 
 { #category : #scope }
 XMLNamespaceScopeAllocator >> exitScope [
-	self scopes removeLast
-]
-
-{ #category : #accessing }
-XMLNamespaceScopeAllocator >> resolvePrefix: aPrefix [
-	^ self currentScope resolvePrefix: aPrefix ifUnmapped: ''
+	^ self scopes removeLast
 ]
 
 { #category : #accessing }
 XMLNamespaceScopeAllocator >> scopes [
 	^ scopes ifNil: [scopes := OrderedCollection new: 10]
-]
-
-{ #category : #validation }
-XMLNamespaceScopeAllocator >> validateAndResolvePrefix: aPrefix ofName: anElementName [
-	^ self currentScope
-		validateAndResolvePrefix: aPrefix
-		ofName: anElementName
-]
-
-{ #category : #validation }
-XMLNamespaceScopeAllocator >> validateAttributePrefixes: aDictionary [
-	self currentScope validateAttributePrefixes: aDictionary
 ]
