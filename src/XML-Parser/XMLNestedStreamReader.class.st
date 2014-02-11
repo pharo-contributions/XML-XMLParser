@@ -17,8 +17,7 @@ Class {
 	],
 	#classVars : [
 		'CarriageReturn',
-		'LineFeed',
-		'SeparatorCharacters'
+		'LineFeed'
 	],
 	#category : #'XML-Parser-Streams'
 }
@@ -29,8 +28,6 @@ XMLNestedStreamReader class >> initialize [
 
 	super initialize.
 
-	(SeparatorCharacters := BitmapCharacterSet new)
-		addAll: Character separators.
 	CarriageReturn := Character cr.
 	LineFeed := Character lf.
 ]
@@ -186,7 +183,7 @@ XMLNestedStreamReader >> pushBack: aString [
 		ifTrue: [self pushStream: (ReadStream on: aString)]
 ]
 
-{ #category : #streaming }
+{ #category : #private }
 XMLNestedStreamReader >> pushBackPeekChar [
 	| peekCharString |
 
@@ -236,7 +233,7 @@ XMLNestedStreamReader >> setStream: anInitialStream readLimit: aReadLimit [
 XMLNestedStreamReader >> skipSeparators [
 	"inlined peek"
 	[(peekChar ifNil: [peekChar := self basicNext]) notNil
-		and: [SeparatorCharacters includes: peekChar]]
+		and: [peekChar isSeparator]]
 		whileTrue: [self next].
 ]
 

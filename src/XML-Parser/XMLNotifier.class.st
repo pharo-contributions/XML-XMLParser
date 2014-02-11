@@ -16,10 +16,10 @@ Class {
 
 { #category : #observing }
 XMLNotifier >> addObserver: anObject [
-	observers :=
-		observers
-			ifNil: [anObject]
-			ifNotNil: [
+	observers
+		ifNil: [observers := anObject]
+		ifNotNil: [
+			observers :=
 				observers isArray
 					ifTrue: [observers copyWith: anObject]
 					ifFalse: [Array with: observers with: anObject]]

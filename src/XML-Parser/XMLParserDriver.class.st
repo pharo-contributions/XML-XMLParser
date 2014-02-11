@@ -144,7 +144,7 @@ XMLParserDriver >> isParsingExternalSubset [
 
 { #category : #testing }
 XMLParserDriver >> isValidating [
-	self subclassResponsibility
+	^ false
 ]
 
 { #category : #accessing }
@@ -163,7 +163,7 @@ XMLParserDriver >> removeURI: aUri [
 
 { #category : #private }
 XMLParserDriver >> tokenizerClass [
-	^ XMLTokenizer
+	^ XMLWellFormedParserTokenizer
 ]
 
 { #category : #initialization }
@@ -181,5 +181,5 @@ XMLParserDriver >> uris [
 
 { #category : #testing }
 XMLParserDriver >> usesNamespaces [
-	self subclassResponsibility
+	^ true
 ]

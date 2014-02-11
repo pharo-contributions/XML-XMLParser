@@ -93,6 +93,13 @@ XMLNodeList >> elementsSelect: aBlock [
 	^ self select: [:each | each isElement and: [aBlock value: each]]
 ]
 
+{ #category : #accessing }
+XMLNodeList >> firstElement [
+	^ self
+		detect: [:each | each isElement]
+		ifNone: [nil]
+]
+
 { #category : #testing }
 XMLNodeList >> hasElements [
 	^ self anySatisfy: [:each | each isElement]
@@ -101,4 +108,12 @@ XMLNodeList >> hasElements [
 { #category : #testing }
 XMLNodeList >> includesElementAt: aName [
 	^ (self elementAt: aName) notNil
+]
+
+{ #category : #accessing }
+XMLNodeList >> lastElement [
+	self reverseDo: [:each |
+		each isElement
+			ifTrue: [^ each]].
+	^ nil.
 ]

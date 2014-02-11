@@ -10,6 +10,6 @@ Class {
 { #category : #validation }
 XMLEntitiesAttributeValidator >> validateAttributeValue: aValue [
 	self
-		spaceSeparatedValuesIn: aValue
+		listValuesIn: aValue
 		do: [:each | self validateEntityReference: each]
 ]

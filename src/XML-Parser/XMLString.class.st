@@ -15,6 +15,11 @@ XMLString class >> string: aString [
 	^ self new string: aString
 ]
 
+{ #category : #private }
+XMLString >> acceptsContent [
+	^ true
+]
+
 { #category : #accessing }
 XMLString >> addContent: aStringOrStringNode [
 	string :=
@@ -23,7 +28,7 @@ XMLString >> addContent: aStringOrStringNode [
 			ifNotNil: [string, aStringOrStringNode asString]
 ]
 
-{ #category : #private }
+{ #category : #converting }
 XMLString >> asString [
 	^ self string
 ]

@@ -9,7 +9,7 @@ Class {
 
 { #category : #testing }
 DTDNotationListParser >> isValidListValue: aValue [
-	^ XMLTokenizer isName: aValue
+	^ XMLWellFormedParserTokenizer isName: aValue
 ]
 
 { #category : #accessing }

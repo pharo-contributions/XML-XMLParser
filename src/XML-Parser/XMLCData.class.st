@@ -7,6 +7,16 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
+{ #category : #private }
+XMLCData >> acceptsContent [
+	^ false
+]
+
+{ #category : #converting }
+XMLCData >> asXMLString [
+	^ XMLString string: self string
+]
+
 { #category : #testing }
 XMLCData >> isCData [
 	^ true

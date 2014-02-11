@@ -56,7 +56,7 @@ XMLNodeWithChildren >> allNodesCollect: aBlock [
 	| collectedNodes |
 
 	collectedNodes := self nodes copyEmpty.
-	self allNodesDo: [:each | collectedNodes add: (aBlock value: each)].
+	self allNodesDo: [:each | collectedNodes addLast: (aBlock value: each)].
 	^ collectedNodes.
 ]
 
@@ -86,7 +86,7 @@ XMLNodeWithChildren >> allNodesSelect: aBlock [
 	selectedNodes := self nodes copyEmpty.
 	self allNodesDo: [:each |
 		(aBlock value: each)
-			ifTrue: [selectedNodes add: each]].
+			ifTrue: [selectedNodes addLast: each]].
 	^ selectedNodes.
 ]
 

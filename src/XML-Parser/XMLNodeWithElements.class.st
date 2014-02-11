@@ -41,7 +41,7 @@ XMLNodeWithElements >> allElementsCollect: aBlock [
 	| collectedElements |
 
 	collectedElements := self nodes copyEmpty.
-	self allElementsDo: [:each | collectedElements add: (aBlock value: each)].
+	self allElementsDo: [:each | collectedElements addLast: (aBlock value: each)].
 	^ collectedElements.
 ]
 
@@ -96,7 +96,7 @@ XMLNodeWithElements >> allElementsSelect: aBlock [
 	selectedElements := self nodes copyEmpty.
 	self allElementsDo: [:each |
 		(aBlock value: each)
-			ifTrue: [selectedElements add: each]].
+			ifTrue: [selectedElements addLast: each]].
 	^ selectedElements.
 ]
 
@@ -240,7 +240,7 @@ XMLNodeWithElements >> findElementNamed: aName with: aBlock [
 
 { #category : #accessing }
 XMLNodeWithElements >> firstElement [
-	^ self elements first
+	^ self nodes firstElement
 ]
 
 { #category : #testing }
@@ -274,7 +274,7 @@ XMLNodeWithElements >> isContentNode [
 
 { #category : #accessing }
 XMLNodeWithElements >> lastElement [
-	^ self elements last
+	^ self nodes lastElement
 ]
 
 { #category : #private }

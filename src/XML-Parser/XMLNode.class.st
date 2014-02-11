@@ -10,6 +10,11 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
+{ #category : #private }
+XMLNode >> acceptsContent [
+	^ false
+]
+
 { #category : #accessing }
 XMLNode >> addContent: aStringOrStringNode [
 	XMLDOMException signal: 'Node cannot contain content'

@@ -5,7 +5,9 @@ Class {
 	#name : #HTMLParserTokenizer,
 	#superclass : #XMLParserTokenizer,
 	#classVars : [
-		'HtmlNameDelimiters'
+		'HtmlNameDelimiters',
+		'NonHtmlCodeSectionTags',
+		'NonHtmlSectionTags'
 	],
 	#category : #'XML-Parser-HTML'
 }
@@ -2300,7 +2302,10 @@ HTMLParserTokenizer class >> initialize [
 	"self initialize"
 
 	super initialize.
-	self initializeHTMLNameDelimiters.
+	self
+		initializeHTMLNameDelimiters;
+		initializeNonHTMLSectionTags;
+		initializeNonHTMLCodeSectionTags
 ]
 
 { #category : #'class initialization' }
@@ -2314,6 +2319,16 @@ HTMLParserTokenizer class >> initializeHTMLNameDelimiters [
 		add: $";
 		add: $';
 		add: $;
+]
+
+{ #category : #'class initialization' }
+HTMLParserTokenizer class >> initializeNonHTMLCodeSectionTags [
+	NonHtmlCodeSectionTags := Set with: 'script' with: 'style'
+]
+
+{ #category : #'class initialization' }
+HTMLParserTokenizer class >> initializeNonHTMLSectionTags [
+	NonHtmlSectionTags := Set with: 'script' with: 'style' with: 'title' with: 'textarea'
 ]
 
 { #category : #'class initialization' }
@@ -2376,16 +2391,6 @@ HTMLParserTokenizer >> expectUpToAll: aString [
 	^ streamReader upToAll: aString
 ]
 
-{ #category : #testing }
-HTMLParserTokenizer >> isNonHTMLCodeSectionTag: aTagName [
-	^ #('script' 'style') includes: aTagName
-]
-
-{ #category : #testing }
-HTMLParserTokenizer >> isNonHTMLSectionTag: aTagName [
-	^ #('title' 'script' 'style') includes: aTagName
-]
-
 { #category : #tokenizing }
 HTMLParserTokenizer >> nextAttributeValue [
 	| quote value |
@@ -2446,20 +2451,18 @@ HTMLParserTokenizer >> nextDecodedCharReference [
 
 	"skip $#"
 	streamReader next.
-	((codePoint := self nextName) notEmpty
-		and: [streamReader peek == $;])
+
+	codePoint := self nextName.
+	codePointStream := codePoint readStream.
+	character := self characterFromCodePoint: (XMLIntegerReader readFrom: codePointStream).
+	(character notNil and: [codePointStream atEnd])
+		ifTrue: [
+			streamReader peek == $;
+				ifTrue: [streamReader next].
+			^ character]
 		ifFalse: [
 			streamReader pushBack: (codePoint copyWithFirst: $#).
 			^ $&].
-	streamReader next.
-
-	codePointStream := codePoint readStream.
-	character := self characterFromCodePoint: (XMLIntegerReader readFrom: codePointStream).
-	^ (character notNil and: [codePointStream atEnd])
-		ifTrue: [character]
-		ifFalse: [
-			streamReader pushBack: ((codePoint copyWithFirst: $#) copyWith: $;).
-			$&].
 ]
 
 { #category : #tokenizing }
@@ -2476,20 +2479,17 @@ HTMLParserTokenizer >> nextEndTag [
 
 { #category : #tokenizing }
 HTMLParserTokenizer >> nextGeneralEntityReference [
-	| name |
+	| name character |
 
-	((name := self nextName) notEmpty
-		and: [streamReader peek == $;])
-		ifFalse: [
-			streamReader pushBack: name.
-			^ $&].
-	streamReader next.
-
-	^ self class predefinedEntities
-		at: name
-		ifAbsent: [
-			streamReader pushBack: name, ';'.
-			$&].
+	character :=
+		self class predefinedEntities
+			at: (name := self nextName)
+			ifAbsent: [
+				streamReader pushBack: name.
+				^ $&].
+	streamReader peek == $;
+		ifTrue: [streamReader next].
+	^ character.
 ]
 
 { #category : #tokenizing }
@@ -2553,7 +2553,7 @@ HTMLParserTokenizer >> nextNonHTMLToken [
 	| nonHtmlSection |
 
 	writeStream reset.
-	(self isNonHTMLCodeSectionTag: context nonHtmlElement)
+	(NonHtmlCodeSectionTags includes: context nonHtmlElement)
 		ifTrue: [self nextNonHTMLCodeSectionOn: writeStream] 
 		ifFalse: [self nextNonHTMLSectionOn: writeStream].
 	nonHtmlSection := writeStream contents.
@@ -2688,9 +2688,9 @@ HTMLParserTokenizer >> nextTag [
 
 	attributes := OrderPreservingDictionary new: 10 withDefaultValue: ''.
 	[streamReader skipSeparators.
-	((nextChar := streamReader peek) == nil
-		or: [nextChar == $>
-			or: [nextChar == $/
+	((nextChar := streamReader peek) == $>
+		or: [nextChar == $/
+			or: [nextChar == nil
 				or: [(attributeName := self nextName asLowercase) isEmpty]]])]
 		whileFalse: [
 			streamReader skipSeparators.
@@ -2707,7 +2707,7 @@ HTMLParserTokenizer >> nextTag [
 			streamReader next.
 			driver handleEndTag: tagName]
 		ifFalse: [
-			(self isNonHTMLSectionTag: tagName)
+			(NonHtmlSectionTags includes: tagName)
 				ifTrue: [context enterNonHTMLSection: tagName]].
 	self expectTerminator: $>.
 ]

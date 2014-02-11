@@ -1,7 +1,7 @@
 "
 This is a base class for tokenizers. It reads tokens from a stream using a NestedStreamReader. Sending it #nextToken causes a token to be read and one or more handler messages to be dispatched to a driver.
 
-Be careful changing the code in this class or subclases because it is carefully optimized.
+Be careful changing the code in this class or subclass because it is optimized.
 "
 Class {
 	#name : #XMLParserTokenizer,
@@ -11,8 +11,7 @@ Class {
 		'context',
 		'streamReader',
 		'writeStream',
-		'nameStream',
-		'normalizedSpaceChar'
+		'nameStream'
 	],
 	#classInstVars : [
 		'predefinedEntities'
@@ -471,7 +470,6 @@ XMLParserTokenizer >> setDriver: aDriver stream: aStream readLimit: aReadLimit [
 	writeStream := WriteStream on: (String new: 128).
 	nameStream := WriteStream on: (String new: 16).
 	context := self tokenContextClass new.
-	normalizedSpaceChar := Character space.
 ]
 
 { #category : #'tokenizing - dtd' }

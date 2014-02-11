@@ -182,7 +182,7 @@ SAXHandler >> documentURI [
 
 { #category : #private }
 SAXHandler >> driverClass [
-	^ SAXDriver
+	^ SAXParserDriver
 ]
 
 { #category : #declaration }

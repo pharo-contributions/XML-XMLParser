@@ -119,5 +119,7 @@ XMLAttribute >> value: aString [
 
 { #category : #printing }
 XMLAttribute >> writeXMLOn: aWriter [
-	aWriter writeName: self name value: self value
+	aWriter
+		writeName: self name
+		escapedContentValue: self value
 ]

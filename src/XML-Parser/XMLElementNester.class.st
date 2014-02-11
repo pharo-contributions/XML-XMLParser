@@ -83,6 +83,11 @@ XMLElementNester >> hasScopedAttributes [
 	^ scopedAttributes notNil and: [scopedAttributes notEmpty]
 ]
 
+{ #category : #testing }
+XMLElementNester >> isCurrentElementRoot [
+	^ self openElements size = 1
+]
+
 { #category : #accessing }
 XMLElementNester >> openElements [
 	^ openElements ifNil: [openElements := OrderedCollection new: 10]
@@ -107,7 +112,7 @@ XMLElementNester >> printOn: aStream [
 XMLElementNester >> printOn: aStream startingAt: aPosition [
 	| endPosition |
 
-	endPosition :=  self totalOpen min: (aPosition + self printLimit - 1).
+	endPosition :=  self openElements size min: (aPosition + self printLimit - 1).
 	(self openElements copyFrom: aPosition to: endPosition)
 		do: [:each |
 			aStream
@@ -115,7 +120,7 @@ XMLElementNester >> printOn: aStream startingAt: aPosition [
 				nextPutAll: each;
 				nextPut: $>]
 		separatedBy: [aStream nextPutAll: ', '].
-	(endPosition < self totalOpen)
+	(endPosition < self openElements size)
 		ifTrue: [aStream nextPutAll: '...'].
 ]
 
@@ -169,10 +174,4 @@ XMLElementNester >> startElement: anElementName [
 	self openElements addLast: anElementName.
 	self hasScopedAttributes
 		ifTrue: [scopedAttributes addLast: self currentScopedAttributes].
-]
-
-{ #category : #accessing }
-XMLElementNester >> totalOpen [
-	^ self openElements size
-	
 ]

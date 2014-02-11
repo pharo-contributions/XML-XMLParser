@@ -1,10 +1,9 @@
 "
-This is the driver for the HTMLHandler. It uses the HTMLElementNester to build a DOM tree from possibly bad markup.
-
+This is the driver for the HTMLHandler. It uses the HTMLElementNester to make bad HTML nest correctly.
 "
 Class {
 	#name : #HTMLParserDriver,
-	#superclass : #SAXDriver,
+	#superclass : #SAXParserDriver,
 	#category : #'XML-Parser-HTML'
 }
 
@@ -25,6 +24,15 @@ HTMLParserDriver >> endElement: anElementName [
 		prefix: prefix
 		uri: ''
 		localName: (anElementName qualifiedNameLocalPart: prefix)
+]
+
+{ #category : #'handling tokens' }
+HTMLParserDriver >> handleCData: aString [
+]
+
+{ #category : #'handling tokens' }
+HTMLParserDriver >> handleEndDTD [
+	self saxHandler endDTD
 ]
 
 { #category : #'handling tokens' }
@@ -63,7 +71,19 @@ HTMLParserDriver >> handlePCData: aString [
 ]
 
 { #category : #'handling tokens' }
+HTMLParserDriver >> handlePI: piTarget data: piData [
+]
+
+{ #category : #'handling tokens' }
 HTMLParserDriver >> handleParseError: anError [
+]
+
+{ #category : #'handling tokens' }
+HTMLParserDriver >> handleStartDTD: aRoot publicID: aPublicId systemID: aSystemId [
+	self saxHandler
+		startDTD: aRoot
+		publicID: aPublicId
+		systemID: aSystemId
 ]
 
 { #category : #'handling tokens' }
@@ -83,16 +103,16 @@ HTMLParserDriver >> handleStartTag: anElementName attributes: anAttributeDiction
 ]
 
 { #category : #'handling tokens' }
-HTMLParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
-	self saxHandler
-		xmlVersion: (aVersion ifEmpty: '1.0')
-		encoding: (anEncoding ifEmpty: 'UTF-8')
-		standalone: false
+HTMLParserDriver >> handleWhitespace: aString [
+	self saxHandler ignorableWhitespace: aString
 ]
 
-{ #category : #testing }
-HTMLParserDriver >> isValidating [
-	^ false
+{ #category : #'handling tokens' }
+HTMLParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
+	self saxHandler
+		xmlVersion: ([aVersion asNumber] on: Error do: [:error | 1.0])
+		encoding: (anEncoding ifEmpty: 'UTF-8')
+		standalone: false
 ]
 
 { #category : #private }
@@ -120,9 +140,4 @@ HTMLParserDriver >> startElement: anElementName attributes: anAttributeDictionar
 { #category : #private }
 HTMLParserDriver >> tokenizerClass [
 	^ HTMLParserTokenizer
-]
-
-{ #category : #testing }
-HTMLParserDriver >> usesNamespaces [
-	^ false
 ]

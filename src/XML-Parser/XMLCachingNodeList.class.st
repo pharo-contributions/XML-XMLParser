@@ -195,6 +195,11 @@ XMLCachingNodeList >> findElementAfter: anElement withName: aName [
 	^ nil.
 ]
 
+{ #category : #accessing }
+XMLCachingNodeList >> firstElement [
+	^ self elements first
+]
+
 { #category : #testing }
 XMLCachingNodeList >> hasElements [
 	^ elements notNil and: [elements notEmpty]
@@ -203,6 +208,11 @@ XMLCachingNodeList >> hasElements [
 { #category : #testing }
 XMLCachingNodeList >> includesElementAt: aName [
 	^ self elementsByName includesKey: aName
+]
+
+{ #category : #accessing }
+XMLCachingNodeList >> lastElement [
+	^ self elements last
 ]
 
 { #category : #notifications }

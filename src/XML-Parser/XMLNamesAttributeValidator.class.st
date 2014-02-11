@@ -10,6 +10,6 @@ Class {
 { #category : #validation }
 XMLNamesAttributeValidator >> validateAttributeValue: aValue [
 	self
-		spaceSeparatedValuesIn: aValue
+		listValuesIn: aValue
 		do: [:each | self validateName: each]
 ]

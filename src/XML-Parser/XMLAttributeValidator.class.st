@@ -34,7 +34,7 @@ XMLAttributeValidator >> element [
 XMLAttributeValidator >> furtherNormalizeAttributeValueIn: anAttributeDictionary [
 	| readStream writeStream |
 
-	readStream := (anAttributeDictionary at: attribute) readStream.
+	readStream := (anAttributeDictionary at: attribute ifAbsent: [^ self]) readStream.
 	writeStream := (String new: readStream size) writeStream.
 	readStream skipSeparators.
 	[readStream atEnd]
@@ -75,6 +75,13 @@ XMLAttributeValidator >> isValueListValidator [
 	^ false
 ]
 
+{ #category : #private }
+XMLAttributeValidator >> listValuesIn: aSpaceSeparatedList do: aBlock [
+	Character space
+		split: aSpaceSeparatedList
+		do: aBlock
+]
+
 { #category : #initialization }
 XMLAttributeValidator >> setElement: anElement attribute: anAttribute defaultValueValidator: aDefaultValueValidator [
 	element := anElement.
@@ -85,13 +92,6 @@ XMLAttributeValidator >> setElement: anElement attribute: anAttribute defaultVal
 { #category : #testing }
 XMLAttributeValidator >> shouldFurtherNormalizeAttributeValue [
 	^ true
-]
-
-{ #category : #private }
-XMLAttributeValidator >> spaceSeparatedValuesIn: aSpaceSeparatedList do: aBlock [
-	Character space
-		split: aSpaceSeparatedList
-		do: aBlock
 ]
 
 { #category : #validation }
@@ -105,8 +105,7 @@ XMLAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingD
 XMLAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
 	defaultValueValidator validateAttributeDefaultIn: anAttributeDictionary.
 
-	(self shouldFurtherNormalizeAttributeValue
-		and: [anAttributeDictionary includesKey: attribute])
+	self shouldFurtherNormalizeAttributeValue
 		ifTrue: [self furtherNormalizeAttributeValueIn: anAttributeDictionary].
 ]
 
@@ -124,12 +123,12 @@ XMLAttributeValidator >> validateAttributes: anAttributeDictionary [
 
 { #category : #validation }
 XMLAttributeValidator >> validateID: anId [
-	(XMLTokenizer isName: anId)
+	(XMLWellFormedParserTokenizer isName: anId)
 		ifFalse: [XMLValidationException signal: 'Invalid ID ', anId, ' in attribute "', attribute, '"']
 ]
 
 { #category : #validation }
 XMLAttributeValidator >> validateName: aName [
-	(XMLTokenizer isNmtoken: aName)
+	(XMLWellFormedParserTokenizer isNmtoken: aName)
 		ifFalse: [XMLValidationException signal: 'Invalid name "', aName, '" in attribute "', attribute, '"']
 ]

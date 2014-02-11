@@ -78,7 +78,7 @@ XMLElement >> addContent: aStringOrStringNode [
 	"Adds a string or string node. If the last child node is already a string node,
 	the characters being added are concatenated to it."
 
-	(self hasChildren and: [self lastNode isStringNode])
+	(self hasChildren and: [self lastNode acceptsContent])
 		ifTrue: [self lastNode addContent: aStringOrStringNode]
 		ifFalse: [self addNode: aStringOrStringNode asXMLString]
 ]
@@ -324,7 +324,9 @@ XMLElement >> isNamed: aName [
 { #category : #testing }
 XMLElement >> isNamedAny: aNameCollection [
 	"Does the receiver's qualified or local name match any of the names supplied as the argument?'"
-	^ aNameCollection anySatisfy: [:each | self isNamed: each]
+	^ aNameCollection anySatisfy: [:each |
+		"inline isNamed:"
+		self nodeName isSameAs: each]
 ]
 
 { #category : #testing }
