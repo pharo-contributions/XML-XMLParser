@@ -17,9 +17,6 @@ XMLExternalEntityLimitsTest >> testDefaultLimits [
 
 { #category : #tests }
 XMLExternalEntityLimitsTest >> testExternalEntitiesLimit [
-	"
-	(self isSkipping: false) testExternalEntitiesLimit
-	"
 	| parser xml entityLimit |
 
 	self isSkipping
@@ -27,34 +24,27 @@ XMLExternalEntityLimitsTest >> testExternalEntitiesLimit [
 
 	entityLimit := 2.
 	xml := self doctypeWithDeclarationsForEntityURIs: (self externalEntityURLs first: entityLimit).
-	parser := SAXHandler on: xml.
-	parser externalEntityResolver
-		clearEntityCache;
-		maxExternalEntities: entityLimit.
+	((parser := SAXHandler on: xml)
+		resolvesExternalEntities: true;
+		externalEntityResolver)
+			clearEntityCache;
+			maxExternalEntities: entityLimit.
 	self
-		shouldnt: [
-			parser
-				resolvesExternalEntities: true;
-				parseDocument]
+		shouldnt: [parser parseDocument]
 		raise: XMLLimitException.
 
-	parser := SAXHandler on: xml.
-	parser externalEntityResolver
-		clearEntityCache;
-		maxExternalEntities: 0.
+	((parser := SAXHandler on: xml)
+		resolvesExternalEntities: true;
+		externalEntityResolver)
+			clearEntityCache;
+			maxExternalEntities: entityLimit - 1.
 	self
-		should: [
-			parser
-				resolvesExternalEntities: true;
-				parseDocument]
+		should: [parser parseDocument]
 		raise: XMLLimitException.
 ]
 
 { #category : #tests }
 XMLExternalEntityLimitsTest >> testExternalEntitySizeLimit [
-	"
-	(self isSkipping: false) testExternalEntitySizeLimit
-	"
 	| parser url xml size |
 
 	self isSkipping
@@ -63,18 +53,20 @@ XMLExternalEntityLimitsTest >> testExternalEntitySizeLimit [
 	url := self externalEntityURLs first asXMLURI.
 	xml := self doctypeWithDeclarationsForEntityURIs: (Array with: url asString).
 	size := url get contents size.
-	parser := SAXHandler on: xml.
-	parser externalEntityResolver
-		clearEntityCache;
-		maxExternalEntitySize: size.
+	((parser := SAXHandler on: xml)
+		resolvesExternalEntities: true;
+		externalEntityResolver)
+			clearEntityCache;
+			maxExternalEntitySize: size.
 	self
 		shouldnt: [parser parseDocument]
 		raise: XMLLimitException.
 
-	parser := SAXHandler on: xml.
-	parser externalEntityResolver
-		clearEntityCache;
-		maxExternalEntitySize: size - 1.
+	((parser := SAXHandler on: xml)
+		resolvesExternalEntities: true;
+		externalEntityResolver)
+			clearEntityCache;
+			maxExternalEntitySize: size - 1.
 	self
 		should: [parser parseDocument]
 		raise: XMLLimitException.
@@ -82,9 +74,6 @@ XMLExternalEntityLimitsTest >> testExternalEntitySizeLimit [
 
 { #category : #tests }
 XMLExternalEntityLimitsTest >> testExternalSubsetReadLimit [
-	"
-	(self isSkipping: false) testExternalSubsetReadLimit
-	"
 	| xml externalSubset fileName parser |
 
 	self isSkipping
@@ -98,12 +87,14 @@ XMLExternalEntityLimitsTest >> testExternalSubsetReadLimit [
 		shouldnt: [
 			(parser := SAXHandler on: xml)
 				externalSubsetReadLimit: externalSubset size;
+				resolvesExternalEntities: true;
 				parseDocument]
 		raise: XMLLimitException.
 	self
 		should: [
 			(parser := SAXHandler on: xml)
 				externalSubsetReadLimit: externalSubset size - 1;
+				resolvesExternalEntities: true;
 				parseDocument]
 		raise: XMLLimitException.
 	self deleteFileNamed: fileName.
@@ -111,9 +102,6 @@ XMLExternalEntityLimitsTest >> testExternalSubsetReadLimit [
 
 { #category : #tests }
 XMLExternalEntityLimitsTest >> testOnURLUpToLimit [
-	"
-	(self isSkipping: false) testOnURLUpToLimit
-	"
 	| parser size |
 
 	self isSkipping

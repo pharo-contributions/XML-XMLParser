@@ -900,7 +900,7 @@ XMLParserTest >> testPredefinedEntityReplacement [
 
 	references := String new writeStream.
 	replacements := String new writeStream.
-	XMLTokenizer predefinedEntities keysAndValuesDo: [:name :char |
+	XMLWellFormedParserTokenizer predefinedEntities keysAndValuesDo: [:name :char |
 		references
 			nextPut: $&;
 			nextPutAll: name;

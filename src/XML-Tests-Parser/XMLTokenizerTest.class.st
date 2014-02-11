@@ -39,12 +39,12 @@ XMLTokenizerTest >> testConditionalSection [
 	| tokenizer |
 
 	tokenizer :=
-		XMLTokenizer
+		XMLWellFormedParserTokenizer
 			driver: nil
 			on:
-			'<![INCLUDE [included',
-			'<![ IGNORE [ignored; <![INCLUDE[ignored;]]> ignored.]]>',
-			', included]]>, included.'.
+				'<![INCLUDE [included',
+				'<![ IGNORE [ignored; <![INCLUDE[ignored;]]> ignored.]]>',
+				', included]]>, included.'.
 	tokenizer tokenContext enterExternalSubset.
 	tokenizer nextToken.
 	self assert: tokenizer streamReader upToEnd = 'included, included, included.'.
@@ -57,15 +57,21 @@ XMLTokenizerTest >> testConditionalSection [
 { #category : #tests }
 XMLTokenizerTest >> testTokenizerAddressBook [
 	| tokenizer |
-	tokenizer := XMLTokenizer driver: nil on: self addressBookXML readStream.
-	[tokenizer streamReader next notNil] whileTrue
+	tokenizer :=
+		XMLWellFormedParserTokenizer
+			driver: nil
+			on: self addressBookXML readStream.
+	[tokenizer streamReader next notNil] whileTrue.
 ]
 
 { #category : #tests }
 XMLTokenizerTest >> testTokenizerAddressBookWithDTD [
 	| tokenizer |
-	tokenizer := XMLTokenizer driver: nil on: self addressBookXMLWithDTD readStream.
-	[tokenizer streamReader next notNil] whileTrue
+	tokenizer :=
+		XMLWellFormedParserTokenizer
+			driver: nil
+			on: self addressBookXMLWithDTD readStream.
+	[tokenizer streamReader next notNil] whileTrue.
 ]
 
 { #category : #tests }
@@ -75,7 +81,7 @@ XMLTokenizerTest >> testTokenizerCharacters [
 	This test is here just for specification purpose"
 	"self debug: #testParsingCharacters"
 
-	tokenizer := XMLTokenizer driver: nil on: self addressBookXML readStream.
+	tokenizer := XMLWellFormedParserTokenizer driver: nil on: self addressBookXML readStream.
 
 	self
 		assert: tokenizer streamReader next == $<;

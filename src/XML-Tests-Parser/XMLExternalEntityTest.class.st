@@ -4,12 +4,25 @@ Class {
 	#instVars : [
 		'isSkipping'
 	],
+	#classVars : [
+		'IsSkipping'
+	],
 	#category : #'XML-Tests-Parser'
 }
 
-{ #category : #'instance creation' }
+{ #category : #testing }
+XMLExternalEntityTest class >> isSkipping [
+	"HTTP/file tests are skipped by default"
+	^ IsSkipping ifNil: [IsSkipping := true]
+]
+
+{ #category : #testing }
 XMLExternalEntityTest class >> isSkipping: aBoolean [
-	^ self new isSkipping: aBoolean
+	"
+	XMLExternalEntityTest isSkipping: false.
+	XMLExternalEntityTest isSkipping: true.
+	"
+	IsSkipping := aBoolean
 ]
 
 { #category : #files }
@@ -50,12 +63,7 @@ XMLExternalEntityTest >> fileNamed: aFileName write: aString [
 
 { #category : #accessing }
 XMLExternalEntityTest >> isSkipping [
-	^ isSkipping ifNil: [isSkipping := true]
-]
-
-{ #category : #accessing }
-XMLExternalEntityTest >> isSkipping: aBoolean [
-	isSkipping := aBoolean
+	^ self class isSkipping
 ]
 
 { #category : #urls }
@@ -107,9 +115,6 @@ XMLExternalEntityTest >> sourceXML [
 
 { #category : #tests }
 XMLExternalEntityTest >> testOnFileNamed [
-	"
-	(self isSkipping: false) testOnFileNamed
-	"
 	| parser fileName |
 
 	self isSkipping
@@ -129,9 +134,6 @@ XMLExternalEntityTest >> testOnFileNamed [
 
 { #category : #tests }
 XMLExternalEntityTest >> testOnURL [
-	"
-	(self isSkipping: false) testOnURL
-	"
 	| parser |
 
 	self isSkipping
@@ -147,9 +149,7 @@ XMLExternalEntityTest >> testOnURL [
 
 { #category : #tests }
 XMLExternalEntityTest >> testParsingExternalEntities [
-	"This test uses HTTP and takes time to run so it is skipped by default.
-	(self isSkipping: false) testParsingExternalEntities
-	"
+	"This test uses HTTP so is skipped by default."
 	| entityCache entityCacheCopy |
 
 	self isSkipping
@@ -181,9 +181,7 @@ XMLExternalEntityTest >> testParsingExternalEntities [
 
 { #category : #tests }
 XMLExternalEntityTest >> testParsingFile [
-	"This test creates/deletes a file so is skipped by default
-	(self isSkipping: false) testParsingFile
-	"
+	"This test creates/deletes a file so is skipped by default"
 	| fileName doc |
 
 	self isSkipping
@@ -206,9 +204,7 @@ XMLExternalEntityTest >> testParsingFile [
 
 { #category : #tests }
 XMLExternalEntityTest >> testParsingURL [
-	"This uses HTTP so is skipped by default
-	(self isSkipping: false) testParsingURL
-	"
+	"This uses HTTP so is skipped by default"
 	| doc |
 
 	self isSkipping

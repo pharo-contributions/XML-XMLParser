@@ -148,13 +148,13 @@ XMLDOMParserTest >> testCDATASection [
 	escaped := 'this is CDATA test content 1 &lt; 2 &amp; 5 &gt; 3'.
 	xml := 
 		'<?xml version="1.0" encoding="UTF-8"?>
-		<test-data><![CDATA[', unescaped, ']]></test-data>'.
+		<test-data>test<![CDATA[', unescaped, ']]>test</test-data>'.
 	document := XMLDOMParser parse: xml.
 	element := document findElementNamed: 'test-data'.
 	self
 		assert: element nodes size = 1;
 		assert: element firstNode isStringNode;
-		assert: element firstNode printString = escaped.
+		assert: element firstNode printString = ('test', escaped, 'test').
 
 	document :=
 		(XMLDOMParser on: xml)
@@ -162,9 +162,10 @@ XMLDOMParserTest >> testCDATASection [
 			parseDocument.
 	element := document findElementNamed: 'test-data'.
 	self
-		assert: element nodes size = 1;
-		assert: element firstNode isCData;
-		assert: element firstNode printString = ('<![CDATA[', unescaped, ']]>').
+		assert: element nodes size = 3;
+		assert: element nodes second isCData;
+		assert: element nodes second printString = ('<![CDATA[', unescaped, ']]>');
+		assert: element strings asArray = (Array with: 'test' with: unescaped with: 'test').
 ]
 
 { #category : #tests }
@@ -707,4 +708,21 @@ XMLDOMParserTest >> testXMLComment [
 	self
 		assert: comment notNil;
 		assert: comment string = 'Confidential'.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testXMLDeclaration [
+	| document |
+
+	document := XMLDOMParser parse: '<?xml version="1.0" encoding="UTF-8"?>'.
+	self
+		assert: document version = 1.0;
+		assert: document encoding = 'UTF-8';
+		deny: document isStandalone.
+
+	document := XMLDOMParser parse: '<?xml version="1.1" encoding="UTF-16" standalone="yes"?>'.
+	self
+		assert: document version = 1.1;
+		assert: document encoding = 'UTF-16';
+		assert: document isStandalone.
 ]

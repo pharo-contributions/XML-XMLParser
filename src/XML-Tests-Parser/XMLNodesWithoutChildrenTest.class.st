@@ -168,7 +168,8 @@ XMLNodesWithoutChildrenTest >> test5cdataNode [
 		assertCData: (node string: raw) hasString: raw;
 		assertCData: (node addContent: raw) hasString: raw, raw;
 		assertCData: (node addContent: raw asXMLString) hasString: raw, raw, raw;
-		assert: node asXMLString == node
+		assert: node asXMLString class == XMLString;
+		assert: node asXMLString string = node string.
 ]
 
 { #category : #tests }

@@ -25,19 +25,23 @@ HTMLParserTest >> benchmark2 [
 { #category : #tests }
 HTMLParserTest >> testDecodingCharacters [
 	self assert:
-		(HTMLParser parse: '&#60; &#x3C; &#0; &#-1; &#invalid; &#invalid &#')
-			contentString = '< < &#0; &#-1; &#invalid; &#invalid &#'.
+		(HTMLParser parse: '&#60; &#x3C &#0; &#-1 &#invalid; &#invalid &#')
+			contentString = '< < &#0; &#-1 &#invalid; &#invalid &#'.
 ]
 
 { #category : #tests }
 HTMLParserTest >> testHTMLEntities [
-	| entity string |
+	| entity character string |
 
 	entity := 'nbsp'.
-	string := ((HTMLParser parse: '<p>&', entity, ';</p>') findElementNamed: 'p') contentString.
+	character := HTMLParserTokenizer predefinedEntities at: entity.
+	string :=
+		((HTMLParser parse: '<p>&', entity, ';&', entity, '</p>')
+			findElementNamed: 'p') contentString.
 	self
-		assert: string size = 1;
-		assert: string first == (HTMLParserTokenizer predefinedEntities at: entity).
+		assert: string size = 2;
+		assert: string first == character;
+		assert: string second == character.
 		
 	self assert:
 		((HTMLParser parse: '<body>&undeclared; &undeclared &;')
@@ -55,6 +59,14 @@ HTMLParserTest >> testParsingAttributes [
 		assert: (element attributeAt: 'two') = 'subQuoted';
 		assert: (element attributeAt: 'three') = 'unquoted';
 		assert: (element attributeAt: 'four') isEmpty.
+]
+
+{ #category : #tests }
+HTMLParserTest >> testParsingCDATA [
+	| document |
+
+	document := HTMLParser parse: '<body><![CDATA[ignored]]></body>'.
+	self deny: (document findElementNamed: 'body') hasChildren.
 ]
 
 { #category : #tests }
@@ -166,6 +178,14 @@ HTMLParserTest >> testParsingXML [
 ]
 
 { #category : #tests }
+HTMLParserTest >> testProcessingInstructions [
+	| document |
+
+	document := HTMLParser parse: '<body><?ignored data?></body>'.
+	self deny: (document findElementNamed: 'body') hasChildren.
+]
+
+{ #category : #tests }
 HTMLParserTest >> testReopeningHTML [
 	| document |
 
@@ -192,4 +212,21 @@ HTMLParserTest >> testReopeningHeadSection [
 		assert: ((document findElementNamed: 'head') elementAt: 'title') contentString = 'reopened';
 		assert: (document findElementNamed: 'body') elements size = 1;
 		assert: ((document findElementNamed: 'body') elementAt: 'p') contentString = 'text'.
+]
+
+{ #category : #tests }
+HTMLParserTest >> testXMLDeclaration [
+	| document |
+
+	document := HTMLParser parse: '<?xml ?>'.
+	self
+		assert: document version = 1.0;
+		assert: document encoding = 'UTF-8';
+		deny: document isStandalone.
+
+	document := HTMLParser parse: '<?xml version="onePointZero" encoding="UTF-16" standalone="yes"?>'.
+	self
+		assert: document version = 1.0;
+		assert: document encoding = 'UTF-16';
+		deny: document isStandalone.
 ]
