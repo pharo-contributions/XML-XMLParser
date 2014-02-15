@@ -64,15 +64,6 @@ XMLElement class >> named: aLocalName [
 	^ self new name: aLocalName
 ]
 
-{ #category : #private }
-XMLElement class >> qualifiedName: aQualifiedName prefix: aPrefix localName: aLocalName attributes: anAttributeDictionary [
-	^ self new
-		setQualifiedName: aQualifiedName
-		prefix: aPrefix
-		localName: aLocalName
-		attributes: anAttributeDictionary
-]
-
 { #category : #accessing }
 XMLElement >> addContent: aStringOrStringNode [
 	"Adds a string or string node. If the last child node is already a string node,

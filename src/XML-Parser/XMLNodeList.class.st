@@ -28,6 +28,17 @@ XMLNodeList >> beforeAdding: aNode [
 ]
 
 { #category : #accessing }
+XMLNodeList >> elementAfter: anElement [
+	| last |
+
+	self elementsDo: [:each |
+		last == anElement
+			ifTrue: [^ each].
+		last := each].
+	^ nil.
+]
+
+{ #category : #accessing }
 XMLNodeList >> elementAt: aName [
 	^ self elementAt: aName ifAbsent: [self defaultValue]
 ]
@@ -49,6 +60,17 @@ XMLNodeList >> elementAt: aName namespaceURI: aUri ifAbsent: aBlock [
 	^ (self elementsAt: aName)
 		detect: [:each | each namespaceURI = aUri]
 		ifNone: aBlock
+]
+
+{ #category : #accessing }
+XMLNodeList >> elementBefore: anElement [
+	| last |
+	
+	self elementsDo: [:each |
+		each == anElement
+			ifTrue: [^ last].
+		last := each].
+	^ nil.
 ]
 
 { #category : #accessing }

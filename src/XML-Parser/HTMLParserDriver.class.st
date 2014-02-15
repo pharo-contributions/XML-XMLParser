@@ -46,13 +46,14 @@ HTMLParserDriver >> handleEndDocument [
 
 { #category : #'handling tokens' }
 HTMLParserDriver >> handleEndTag: anElementName [ 
-	((self elementNester isVoidElement: anElementName)
-		or: [(self elementNester hasOpenElement: anElementName) not])
+	(self elementNester isVoidElement: anElementName)
 		ifTrue: [^ self].
-
+	(self elementNester hasOpenElement: anElementName)
+		ifFalse: [self startElement: anElementName].
+		
 	self elementNester
-		elementsToEndBeforeEnding: anElementName
-		do: [:each | self endElement: each].
+		beforeEnding: anElementName
+		elementsToEndDo: [:each | self endElement: each].
 	self endElement: anElementName.
 ]
 
@@ -64,8 +65,8 @@ HTMLParserDriver >> handleNonHTMLSection: aString [
 { #category : #'handling tokens' }
 HTMLParserDriver >> handlePCData: aString [
 	self elementNester
-		elementsToEndBeforePCDataDo: [:each | self endElement: each ];
-		elementsToStartBeforePCDataDo: [:each | self startElement: each].
+		beforePCDataElementsToEndDo: [:each | self endElement: each]
+		elementsToStartDo: [:each | self startElement: each].
 
 	self saxHandler characters: aString.
 ]
@@ -92,10 +93,9 @@ HTMLParserDriver >> handleStartTag: anElementName attributes: anAttributeDiction
 		ifTrue: [^ self].
 
 	self elementNester
-		elementsToEndBeforeStarting: anElementName
-		do: [:each | self endElement: each];
-		elementsToStartBeforeStarting: anElementName
-		do: [:each | self startElement: each].
+		beforeStarting: anElementName
+		elementsToEndDo: [:each | self endElement: each]
+		elementsToStartDo: [:each | self startElement: each].
 	self startElement: anElementName attributes: anAttributeDictionary.
 
 	(self elementNester isVoidElement: anElementName)

@@ -142,7 +142,7 @@ XMLNodeWithElements >> document: aDocument [
 
 { #category : #accessing }
 XMLNodeWithElements >> elementAfter: anElement [
-	^ self elements after: anElement
+	^ self nodes elementAfter: anElement
 ]
 
 { #category : #accessing }
@@ -167,7 +167,7 @@ XMLNodeWithElements >> elementAt: aName namespaceURI: aUri ifAbsent: aBlock [
 
 { #category : #accessing }
 XMLNodeWithElements >> elementBefore: anElement [
-	^ self elements before: anElement
+	^ self nodes elementBefore: anElement
 ]
 
 { #category : #accessing }
