@@ -79,6 +79,12 @@ XMLNestedStreamReader >> basicNext [
 	^ nextChar.
 ]
 
+{ #category : #'file open/close' }
+XMLNestedStreamReader >> close [
+	stream close.
+	nestedStreams ifNotNil: [nestedStreams do: [:each | each close]].
+]
+
 { #category : #accessing }
 XMLNestedStreamReader >> currentLineNumber [
 	^ currentLineNumber
@@ -177,7 +183,7 @@ XMLNestedStreamReader >> popCurrentStream [
 	stream := nestedStreams removeLast.
 ]
 
-{ #category : #streaming }
+{ #category : #positioning }
 XMLNestedStreamReader >> pushBack: aString [
 	aString size > 0
 		ifTrue: [self pushStream: (ReadStream on: aString)]
@@ -192,12 +198,12 @@ XMLNestedStreamReader >> pushBackPeekChar [
 	self pushBack: peekCharString.
 ]
 
-{ #category : #streaming }
+{ #category : #positioning }
 XMLNestedStreamReader >> pushStream: aStream [
 	self pushStream: aStream onClose: nil
 ]
 
-{ #category : #streaming }
+{ #category : #positioning }
 XMLNestedStreamReader >> pushStream: aStream onClose: aBlock [
 	peekChar
 		ifNotNil: [self pushBackPeekChar].
@@ -237,7 +243,7 @@ XMLNestedStreamReader >> skipSeparators [
 		whileTrue: [self next].
 ]
 
-{ #category : #streaming }
+{ #category : #positioning }
 XMLNestedStreamReader >> skipTo: aDelimiter [
 	[self atEnd] whileFalse: [
 		self next == aDelimiter
@@ -250,7 +256,7 @@ XMLNestedStreamReader >> stream [
 	^ stream
 ]
 
-{ #category : #streaming }
+{ #category : #accessing }
 XMLNestedStreamReader >> upTo: aDelimiter [
 	| nextChar |
 
@@ -261,7 +267,7 @@ XMLNestedStreamReader >> upTo: aDelimiter [
 	^ writeBuffer contents.
 ]
 
-{ #category : #streaming }
+{ #category : #accessing }
 XMLNestedStreamReader >> upToAll: aDelimitingString [
 	"Answer a subcollection from the current access position to the occurrence
 	(if any, but not inclusive) of delimitingString. If delimitingString is not
@@ -273,7 +279,7 @@ XMLNestedStreamReader >> upToAll: aDelimitingString [
 	^ writeBuffer contents.
 ]
 
-{ #category : #streaming }
+{ #category : #accessing }
 XMLNestedStreamReader >> upToEnd [
 	writeBuffer reset.
 	[self atEnd] whileFalse: [writeBuffer nextPut: self next].

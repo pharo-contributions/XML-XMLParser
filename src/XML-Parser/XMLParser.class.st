@@ -36,10 +36,7 @@ XMLParser >> parseDocument [
 	[[self tokenizer atEnd]
 		whileFalse: [self tokenizer nextToken]]
 		on: XMLParserException
-		do: [:error |
-			error
-				appendLineNumber: self currentLineNumber;
-				pass].
+		do: [:error | self passParserException: error]
 ]
 
 { #category : #parsing }
@@ -47,23 +44,25 @@ XMLParser >> parseDocumentWhile: aBlock [
 	[[self tokenizer atEnd or: [aBlock value not]]
 		whileFalse: [self tokenizer nextToken]]
 		on: XMLParserException
-		do: [:error |
-			error
-				appendLineNumber: self currentLineNumber;
-				pass].
+		do: [:error | self passParserException: error]
 ]
 
 { #category : #parsing }
 XMLParser >> parseToken [
 	^ [self tokenizer nextToken]
 		on: XMLParserException
-		do: [:error |
-			error
-				appendLineNumber: self currentLineNumber;
-				pass].
+		do: [:error | self passParserException: error]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
+XMLParser >> passParserException: anError [
+	self tokenizer streamReader close.
+	anError
+		appendLineNumber: self currentLineNumber;
+		pass.
+]
+
+{ #category : #initialization }
 XMLParser >> setDriver: aDriver tokenizer: aTokenizer [
 	driver := aDriver.
 	tokenizer := aTokenizer.

@@ -109,6 +109,10 @@ XMLParserDriver >> handleParseError: anErrorString [
 ]
 
 { #category : #'handling tokens' }
+XMLParserDriver >> handleReservedAttributes: anAttributeDictionary [
+]
+
+{ #category : #'handling tokens' }
 XMLParserDriver >> handleStartContentEntityReplacement: aName [
 ]
 
