@@ -402,18 +402,6 @@ XMLElement >> previousElement [
 	^ self parent ifNotNil: [self parent elementBefore: self]
 ]
 
-{ #category : #printing }
-XMLElement >> printNamespaceDeclarationsOn: aTagWriter [
-	(self declaresDefaultNamespace
-		or: [self defaultNamespace notEmpty
-			and: [aTagWriter isEmbedded not]])
-		ifTrue: [aTagWriter xmlns: self defaultNamespace].
-
-	self namespaceScope prefixesAndURIsDo: [:prefix :uri |
-		((self declaresPrefix: prefix uri: uri) or: [aTagWriter isEmbedded not])
-			ifTrue: [aTagWriter xmlnsAt: prefix put: uri]]
-]
-
 { #category : #accessing }
 XMLElement >> removeAttribute: aName [
 	^ (self attributeNodes removeAttributeNodeAt: aName) value.
@@ -536,16 +524,29 @@ XMLElement >> validateName [
 ]
 
 { #category : #printing }
+XMLElement >> writeNamespaceDeclarationsOn: aTagWriter [
+	(self declaresDefaultNamespace
+		or: [self defaultNamespace notEmpty
+			and: [aTagWriter isEmbedded not]])
+		ifTrue: [aTagWriter xmlns: self defaultNamespace].
+
+	self namespaceScope prefixesAndURIsDo: [:prefix :uri |
+		((self declaresPrefix: prefix uri: uri) or: [aTagWriter isEmbedded not])
+			ifTrue: [aTagWriter xmlnsAt: prefix put: uri]]
+]
+
+{ #category : #printing }
 XMLElement >> writeXMLOn: aWriter [
 	| tagWriter |
 
-	(tagWriter := aWriter tag)
-		name: self name.
+	tagWriter := aWriter tag: self name.
 
 	self hasNamespaces
-		ifTrue: [self printNamespaceDeclarationsOn: tagWriter].
+		ifTrue: [self writeNamespaceDeclarationsOn: tagWriter].
+	self hasAttributes 
+		ifTrue: [
+			self attributeNodes do: [:each |
+				tagWriter attributeAt: each name put: each value]].
 
-	tagWriter
-		attributes: self attributes;
-		with: [self writeInnerXMLOn: aWriter].
+	tagWriter with: [self writeInnerXMLOn: aWriter].
 ]
