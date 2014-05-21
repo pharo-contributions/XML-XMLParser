@@ -198,7 +198,12 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				"default by default is equivalent to loading 'ALL' the packages still we added explicitly Tests to be loaded"
 				group: 'Core' with: #('XML-Parser');
 				group: 'Tests' with: #('XML-Tests-Parser') ].
-
+			
+		spec for: #'pharo2.x'
+		do: [ 
+			spec package: 'XML-Parser' with: [ 
+				spec requires: #( 'XML-Pharo2-Parser' ) ] ]
+	
 ]
 
 { #category : #'symbolic versions' }
