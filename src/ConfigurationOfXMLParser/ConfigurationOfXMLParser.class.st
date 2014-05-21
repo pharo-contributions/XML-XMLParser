@@ -205,7 +205,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.6.3'.
+	spec for: #'common' version: '1.6.4'.
 	
 ]
 
@@ -225,7 +225,7 @@ ConfigurationOfXMLParser >> project [
 { #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #stable>
-	spec for: #common version: '1.6.3'.
+	spec for: #common version: '1.6.4'.
 	spec for: #'pharo1.x' version: '1.2'
 ]
 
@@ -759,5 +759,23 @@ ConfigurationOfXMLParser >> version163: spec [
 				package: 'XML-Parser' with: 'XML-Parser-monty.228';
 				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.58'
 				].
+	
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version164: spec [
+	<version: '1.6.4' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec
+				blessing: #release;
+				description: 'Added a pharo2 specific method to fix tests'.
+			spec
+				package: 'XML-Parser' with: 'XML-Parser-monty.228';
+				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.58' ].
+	spec for: #'pharo2.x'
+		do: [ 
+			spec package: 'XML-Pharo2-Parser' with: 'XML-Pharo2-Parser.1' ]
 	
 ]
