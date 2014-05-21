@@ -776,6 +776,6 @@ ConfigurationOfXMLParser >> version164: spec [
 				package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.58' ].
 	spec for: #'pharo2.x'
 		do: [ 
-			spec package: 'XML-Pharo2-Parser' with: 'XML-Pharo2-Parser.1' ]
+			spec package: 'XML-Pharo2-Parser' with: 'XML-Pharo2-Parser-DiegoLont.1' ]
 	
 ]
