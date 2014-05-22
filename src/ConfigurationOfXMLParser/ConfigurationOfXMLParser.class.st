@@ -201,8 +201,10 @@ ConfigurationOfXMLParser >> baseline10: spec [
 			
 		spec for: #'pharo2.x'
 		do: [ 
-			spec package: 'XML-Parser' with: [ 
-				spec requires: #( 'XML-Pharo2-Parser' ) ] ]
+			spec 
+				package: 'XML-Pharo2-Parser';
+				package: 'XML-Parser' with: [ 
+					spec requires: #( 'XML-Pharo2-Parser' ) ] ]
 	
 ]
 
