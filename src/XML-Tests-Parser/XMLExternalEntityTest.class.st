@@ -54,6 +54,11 @@ XMLExternalEntityTest >> externalEntityURLs [
 		'http://www.musicxml.org/dtds/common.mod')
 ]
 
+{ #category : #urls }
+XMLExternalEntityTest >> feedURL [
+	^ 'http://pharo.org/news/atom.xml'
+]
+
 { #category : #files }
 XMLExternalEntityTest >> fileNamed: aFileName write: aString [
 	(XMLFileHandle path: aFileName) writeStream
@@ -64,11 +69,6 @@ XMLExternalEntityTest >> fileNamed: aFileName write: aString [
 { #category : #accessing }
 XMLExternalEntityTest >> isSkipping [
 	^ self class isSkipping
-]
-
-{ #category : #urls }
-XMLExternalEntityTest >> rssURL [
-	^ 'http://www.pharo-project.org/news?rss'
 ]
 
 { #category : #source }
@@ -140,10 +140,10 @@ XMLExternalEntityTest >> testOnURL [
 		ifTrue: [self skip].
 
 	self
-		shouldnt: [parser := SAXHandler onURL: self rssURL]
+		shouldnt: [parser := SAXHandler onURL: self feedURL]
 		raise: XMLHTTPException.
 	self
-		assert: parser documentURI = self rssURL;
+		assert: parser documentURI = self feedURL;
 		deny: parser documentURI asXMLURI isLocalURI.
 ]
 
@@ -211,7 +211,7 @@ XMLExternalEntityTest >> testParsingURL [
 		ifTrue: [self skip].
 
 	self
-		shouldnt: [doc := XMLDOMParser parseURL: self rssURL]
+		shouldnt: [doc := XMLDOMParser parseURL: self feedURL]
 		raise: XMLHTTPException.
-	self assert: (doc root isNamed: 'rss').
+	self assert: (doc root isNamed: 'feed').
 ]

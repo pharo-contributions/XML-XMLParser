@@ -107,12 +107,12 @@ XMLExternalEntityLimitsTest >> testOnURLUpToLimit [
 	self isSkipping
 		ifTrue: [self skip].
 
-	size := (self rssURL asXMLURI get) contents size.
+	size := (self feedURL asXMLURI get) contents size.
 	self
 		shouldnt: [
 			parser :=
 				SAXHandler
-					onURL: self rssURL
+					onURL: self feedURL
 					upToLimit: size]
 		raise: XMLLimitException.
 	self assert: parser documentReadLimit = size.
@@ -120,7 +120,7 @@ XMLExternalEntityLimitsTest >> testOnURLUpToLimit [
 	self
 		should: [
 			(SAXHandler
-				onURL: self rssURL
+				onURL: self feedURL
 				upToLimit: size - 1)
 				parseDocument]
 		raise: XMLLimitException.
