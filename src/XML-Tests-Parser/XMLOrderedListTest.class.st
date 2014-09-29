@@ -10,26 +10,19 @@ XMLOrderedListTest >> absentElement [
 ]
 
 { #category : #assertions }
+XMLOrderedListTest >> assertList: aList copiedFrom: aSecondList equals: aThirdList [
+	self
+		assert: aList = aThirdList;
+		deny: aList == aSecondList;
+		deny: aList collection == aSecondList collection
+]
+
+{ #category : #assertions }
 XMLOrderedListTest >> assertList: aList isCopyOf: aSecondList [
 	self
 		assert: aList = aSecondList;
-		assertList: aList isNotIdentityEqualTo: aSecondList
-]
-
-{ #category : #assertions }
-XMLOrderedListTest >> assertList: aList isNotIdentityEqualTo: aSecondList [
-	self
 		deny: aList == aSecondList;
-		deny: aSecondList == aList;
-		deny: aList collection == aSecondList collection;
-		deny: aSecondList collection == aList collection
-]
-
-{ #category : #assertions }
-XMLOrderedListTest >> assertList: aList isPartialCopyOf: aSecondList equalTo: aThirdList [
-	self
-		assert: aList = aThirdList;
-		assertList: aList isNotIdentityEqualTo: aSecondList
+		deny: aList collection == aSecondList collection
 ]
 
 { #category : #accessing }
@@ -305,6 +298,17 @@ XMLOrderedListTest >> testCollectThenSelect [
 ]
 
 { #category : #tests }
+XMLOrderedListTest >> testConcatenation [
+	self
+		assert: (self emptyList, self emptyList) = self emptyList;
+		assert: (self listWithElements, self emptyList) = self listWithElements;
+		assert: (self emptyList, self listWithElements) = self listWithElements;
+		assert:
+			(self listWithElements, self listWithElements) =
+				(self listClass newFrom: (self listElements, self listElements)).
+]
+
+{ #category : #tests }
 XMLOrderedListTest >> testCopy [
 	| list |
 
@@ -323,13 +327,13 @@ XMLOrderedListTest >> testCopyEmpty [
 	| list |
 
 	list := self emptyList.
-	self assertList: list copyEmpty isPartialCopyOf: list equalTo: self emptyList.
+	self assertList: list copyEmpty copiedFrom: list equals: self emptyList.
 
 	list := self listWithSingleElement.
-	self assertList: list copyEmpty isPartialCopyOf: list equalTo: self emptyList.
+	self assertList: list copyEmpty copiedFrom: list equals: self emptyList.
 
 	list := self listWithElements.
-	self assertList: list copyEmpty isPartialCopyOf: list equalTo: self emptyList.
+	self assertList: list copyEmpty copiedFrom: list equals: self emptyList.
 ]
 
 { #category : #tests }
@@ -339,22 +343,47 @@ XMLOrderedListTest >> testCopyFromTo [
 	list := self emptyList.
 	self
 		assertList: (list copyFrom: 1 to: 10)
-		isPartialCopyOf: list
-		equalTo: self emptyList.
+		copiedFrom: list
+		equals: self emptyList.
 
 	list := self listWithElements.
 	self
 		assertList: (list copyFrom: 1 to: list size)
-		isPartialCopyOf: list
-		equalTo: self listWithElements.
+		copiedFrom: list
+		equals: self listWithElements.
 	self
 		assertList: (list copyFrom: 1 to: (list size / 2) asInteger)
-		isPartialCopyOf: list
-		equalTo: (self listClass newFrom: (self listElements copyFrom: 1 to: (list size / 2) asInteger)).
+		copiedFrom: list
+		equals: (self listClass newFrom: (self listElements copyFrom: 1 to: (list size / 2) asInteger)).
 	self
 		assertList: (list copyFrom: 1 to: (list size * 2) asInteger)
-		isPartialCopyOf: list
-		equalTo: self listWithElements.
+		copiedFrom: list
+		equals: self listWithElements.
+]
+
+{ #category : #tests }
+XMLOrderedListTest >> testCopyReplaceFromToWith [
+	| list |
+
+	list := self emptyList.
+	self
+		assertList: (list copyReplaceFrom: 1 to: 1 with: self emptyList)
+		copiedFrom: list
+		equals: self emptyList.
+
+	list := self listWithElements.
+	self
+		assertList: (list copyReplaceFrom: 1 to: list size with: self listElements reversed)
+		copiedFrom: list
+		equals: (self listClass newFrom: self listElements reversed).
+	self
+		assertList: (list copyReplaceFrom: 0 to: 1 with: self listWithElements)
+		copiedFrom: list
+		equals: (self listClass newFrom: self listElements, self listElements).
+	self
+		assertList: (list copyReplaceFrom: list size + 1 to: list size * 2 with: self listWithElements)
+		copiedFrom: list
+		equals: (self listClass newFrom: self listElements, self listElements).
 ]
 
 { #category : #tests }
