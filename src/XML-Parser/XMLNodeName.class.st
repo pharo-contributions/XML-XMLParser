@@ -13,6 +13,19 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
+{ #category : #'instance creation' }
+XMLNodeName class >> qualified: aQualifiedName [
+	^ self new setQualified: aQualifiedName
+]
+
+{ #category : #'instance creation' }
+XMLNodeName class >> qualified: aQualifiedName prefix: aPrefix localPart: aLocalPart [
+	^ self new
+		setQualified: aQualifiedName
+		prefix: aPrefix
+		localPart: aLocalPart
+]
+
 { #category : #observing }
 XMLNodeName >> addObserver: anObserver [
 	self notifier addObserver: anObserver
@@ -93,7 +106,18 @@ XMLNodeName >> prefix [
 
 { #category : #accessing }
 XMLNodeName >> prefix: aPrefix [
-	self changeWith: [self setPrefix: aPrefix localPart: self localPart]
+	self changeWith: [
+		aPrefix isEmptyOrNil
+			ifTrue: [
+				self
+					setQualified: self localPart
+					prefix: ''
+					localPart: self localPart]
+			ifFalse: [
+				self
+					setQualified: aPrefix, ':', self localPart
+					prefix: aPrefix
+					localPart: self localPart]]
 ]
 
 { #category : #printing }
@@ -124,27 +148,12 @@ XMLNodeName >> setFromQualified [
 	localPart := self qualified qualifiedNameLocalPart: prefix.
 ]
 
-{ #category : #private }
-XMLNodeName >> setPrefix: aPrefix localPart: aLocalPart [
-	aPrefix isEmptyOrNil
-		ifTrue: [
-			self
-				setQualified: aLocalPart
-				prefix: ''
-				localPart: aLocalPart]
-		ifFalse: [
-			self
-				setQualified: aPrefix, ':', aLocalPart
-				prefix: aPrefix
-				localPart: aLocalPart]
-]
-
-{ #category : #private }
+{ #category : #initialization }
 XMLNodeName >> setQualified: aQualifiedName [
 	qualified := aQualifiedName
 ]
 
-{ #category : #private }
+{ #category : #initialization }
 XMLNodeName >> setQualified: aQualifiedName prefix: aPrefix localPart: aLocalPart [
 	qualified := aQualifiedName.
 	prefix := aPrefix.
