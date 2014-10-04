@@ -23,7 +23,7 @@ HTMLParserDriver >> endElement: anElementName [
 		endElement: anElementName
 		prefix: prefix
 		uri: ''
-		localName: (anElementName qualifiedNameLocalPart: prefix)
+		localName: (anElementName qualifiedNameLocalPartFromPrefix: prefix)
 ]
 
 { #category : #'handling tokens' }
@@ -133,7 +133,7 @@ HTMLParserDriver >> startElement: anElementName attributes: anAttributeDictionar
 		startElement: anElementName
 		prefix: prefix
 		uri: ''
-		localName: (anElementName qualifiedNameLocalPart: prefix)
+		localName: (anElementName qualifiedNameLocalPartFromPrefix: prefix)
 		attributes: anAttributeDictionary
 ]
 

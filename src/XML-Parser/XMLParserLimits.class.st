@@ -14,7 +14,12 @@ Class {
 
 { #category : #accessing }
 XMLParserLimits class >> defaultDocumentReadLimit [
-	^ 1000000
+	^ 10000000
+]
+
+{ #category : #accessing }
+XMLParserLimits class >> defaultExternalSubsetReadLimit [
+	^ (self defaultDocumentReadLimit / 4) asInteger
 ]
 
 { #category : #accessing }
@@ -42,7 +47,7 @@ XMLParserLimits >> initialize [
 	super initialize.
 
 	documentReadLimit := self class defaultDocumentReadLimit.
-	externalSubsetReadLimit := (documentReadLimit / 4) asInteger.
+	externalSubsetReadLimit := self class defaultExternalSubsetReadLimit.
 	maxEntityReplacementDepth := 3.
 ]
 

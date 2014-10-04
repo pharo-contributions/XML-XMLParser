@@ -1,12 +1,11 @@
 "
-The class represents a name for an element or attribute. It stores the prefix, local part and qualified name. It also notifies any observers whenever any part of the name it models changes using #nodeNameChangedFrom:to:. You should not need to use this class directly.
+The class represents a name for an element or attribute. It stores the local part and qualified name. It also notifies any observers whenever any part of the name it models changes using #nodeNameChangedFrom:to:. You should not need to use this class directly.
 "
 Class {
 	#name : #XMLNodeName,
 	#superclass : #Object,
 	#instVars : [
 		'qualified',
-		'prefix',
 		'localPart',
 		'notifier'
 	],
@@ -19,10 +18,9 @@ XMLNodeName class >> qualified: aQualifiedName [
 ]
 
 { #category : #'instance creation' }
-XMLNodeName class >> qualified: aQualifiedName prefix: aPrefix localPart: aLocalPart [
+XMLNodeName class >> qualified: aQualifiedName localPart: aLocalPart [
 	^ self new
 		setQualified: aQualifiedName
-		prefix: aPrefix
 		localPart: aLocalPart
 ]
 
@@ -51,21 +49,19 @@ XMLNodeName >> expandWith: aUri [
 
 { #category : #testing }
 XMLNodeName >> isPrefixed [
-	^ self prefix notEmpty
+	^ self qualified size > self localPart size
 ]
 
 { #category : #testing }
 XMLNodeName >> isSameAs: aNameString [
 	^ self qualified = aNameString
-		or: [self prefix size > 0
-			and: [self localPart = aNameString]]
+		or: [qualified size > self localPart size "partial direct access for speed"
+			and: [localPart = aNameString]]
 ]
 
 { #category : #accessing }
 XMLNodeName >> localPart [
-	^ localPart ifNil: [
-		self setFromQualified.
-		localPart]
+	^ localPart ifNil: [localPart := self qualified qualifiedNameLocalPart]
 ]
 
 { #category : #private }
@@ -99,25 +95,20 @@ XMLNodeName >> notifyOf: aSelector withArguments: anArray [
 
 { #category : #accessing }
 XMLNodeName >> prefix [
-	^ prefix ifNil: [
-		self setFromQualified.
-		prefix]
+	| prefixSize |
+
+	"faster than qualifiedNamePrefix if we already have the localPart"
+	(prefixSize := self qualified size - self localPart size - 1) > 0
+		ifTrue: [^ qualified copyFrom: 1 to: prefixSize]
+		ifFalse: [^ '']
 ]
 
 { #category : #accessing }
 XMLNodeName >> prefix: aPrefix [
 	self changeWith: [
 		aPrefix isEmptyOrNil
-			ifTrue: [
-				self
-					setQualified: self localPart
-					prefix: ''
-					localPart: self localPart]
-			ifFalse: [
-				self
-					setQualified: aPrefix, ':', self localPart
-					prefix: aPrefix
-					localPart: self localPart]]
+			ifTrue: [qualified := self localPart]
+			ifFalse: [qualified := aPrefix, ':', self localPart]]
 ]
 
 { #category : #printing }
@@ -134,18 +125,12 @@ XMLNodeName >> qualified [
 XMLNodeName >> qualified: aQualifiedName [
 	self changeWith: [
 		qualified := aQualifiedName.
-		self setFromQualified]
+		localPart := aQualifiedName qualifiedNameLocalPart]
 ]
 
 { #category : #observing }
 XMLNodeName >> removeObserver: anObserver [
 	self notifier removeObserver: anObserver
-]
-
-{ #category : #private }
-XMLNodeName >> setFromQualified [
-	prefix := self qualified qualifiedNamePrefix.
-	localPart := self qualified qualifiedNameLocalPart: prefix.
 ]
 
 { #category : #initialization }
@@ -154,8 +139,7 @@ XMLNodeName >> setQualified: aQualifiedName [
 ]
 
 { #category : #initialization }
-XMLNodeName >> setQualified: aQualifiedName prefix: aPrefix localPart: aLocalPart [
+XMLNodeName >> setQualified: aQualifiedName localPart: aLocalPart [
 	qualified := aQualifiedName.
-	prefix := aPrefix.
 	localPart := aLocalPart.
 ]

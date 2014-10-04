@@ -11,12 +11,16 @@ String >> asXMLURI [
 ]
 
 { #category : #'*XML-Parser' }
-String >> qualifiedNameLocalPart: aPrefix [
+String >> qualifiedNameLocalPart [
+	^ self qualifiedNameLocalPartFromPrefix: self qualifiedNamePrefix
+]
+
+{ #category : #'*XML-Parser' }
+String >> qualifiedNameLocalPartFromPrefix: aPrefix [
 	"optimized"
 	aPrefix size > 0
 		ifTrue: [^ self copyFrom: aPrefix size + 2 to: self size]
 		ifFalse: [^ self]
-		
 ]
 
 { #category : #'*XML-Parser' }

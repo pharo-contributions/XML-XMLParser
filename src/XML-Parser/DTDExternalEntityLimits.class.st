@@ -14,7 +14,7 @@ Class {
 
 { #category : #accessing }
 DTDExternalEntityLimits class >> defaultMaxExternalEntitySize [
-	^ 250000
+	^ XMLParserLimits defaultExternalSubsetReadLimit
 ]
 
 { #category : #initialization }

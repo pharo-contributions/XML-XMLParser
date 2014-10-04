@@ -92,7 +92,7 @@ SAXParserDriver >> externalEntityResolver [
 
 { #category : #private }
 SAXParserDriver >> externalSubsetParserOnURI: aUri [
-	^ XMLParser
+	^ self saxHandler parserClass
 		driver:
 			(DTDExternalSubsetParserDriver
 				saxDriver: self
@@ -195,7 +195,7 @@ SAXParserDriver >> handleEndTag: anElementName [
 					currentScope := self scopeAllocator exitScope.
 					currentScope resolvePrefix: prefix]
 				ifFalse: [''])
-		localName: (anElementName qualifiedNameLocalPart: prefix).
+		localName: (anElementName qualifiedNameLocalPartFromPrefix: prefix).
 
 	currentScope ifNotNil: [
 		currentScope hasNamespaces
@@ -385,7 +385,7 @@ SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 		startElement: anElementName
 		prefix: prefix
 		uri: (namespaceUri ifNil: [''])
-		localName: (anElementName qualifiedNameLocalPart: prefix)
+		localName: (anElementName qualifiedNameLocalPartFromPrefix: prefix)
 		attributes: anAttributeDictionary.
 	currentScope
 		ifNotNil: [self saxHandler currentScope: currentScope].
