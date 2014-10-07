@@ -32,7 +32,9 @@ HTMLParserDriver >> handleCData: aString [
 
 { #category : #'handling tokens' }
 HTMLParserDriver >> handleEndDTD [
-	self saxHandler endDTD
+	self saxHandler
+		endDTD;
+		isInDTD: false.
 ]
 
 { #category : #'handling tokens' }
@@ -82,6 +84,7 @@ HTMLParserDriver >> handleParseError: anError [
 { #category : #'handling tokens' }
 HTMLParserDriver >> handleStartDTD: aRoot publicID: aPublicId systemID: aSystemId [
 	self saxHandler
+		isInDTD: true;
 		startDTD: aRoot
 		publicID: aPublicId
 		systemID: aSystemId

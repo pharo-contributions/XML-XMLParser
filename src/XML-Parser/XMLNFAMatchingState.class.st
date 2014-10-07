@@ -1,3 +1,6 @@
+"
+This state can lead to a next state if the input matches against an object.
+"
 Class {
 	#name : #XMLNFAMatchingState,
 	#superclass : #XMLNFAState,

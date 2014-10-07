@@ -1,3 +1,6 @@
+"
+A general entity with an external replacement.
+"
 Class {
 	#name : #DTDExternalGeneralEntity,
 	#superclass : #DTDGeneralEntity,

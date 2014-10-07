@@ -1,3 +1,6 @@
+"
+A parameter entity with an external replacement.
+"
 Class {
 	#name : #DTDExternalParameterEntity,
 	#superclass : #DTDParameterEntity,

@@ -127,9 +127,11 @@ SAXParserDriver >> handleAttributeDeclaration: anElement name: aName type: aType
 { #category : #'handling tokens' }
 SAXParserDriver >> handleCData: aString [
 	self saxHandler
+		isInCDataSection: true;
 		startCData;
 		characters: aString;
-		endCData
+		endCData;
+		isInCDataSection: false
 ]
 
 { #category : #'handling tokens' }
@@ -161,7 +163,9 @@ SAXParserDriver >> handleEndDTD [
 		and: [self dtd hasExternalSubset])
 		ifTrue: [self parseExternalSubset: self dtd externalSubsetURI].
 
-	self saxHandler endDTD.
+	self saxHandler
+		endDTD;
+		isInDTD: false.
 ]
 
 { #category : #'handling tokens' }
@@ -344,6 +348,7 @@ SAXParserDriver >> handleStartDTD: aRoot publicID: aPublicId systemID: aSystemId
 		externalSubsetURI: aSystemId.
 	
 	self saxHandler
+		isInDTD: true;
 		startDTD: aRoot
 		publicID: aPublicId
 		systemID: aSystemId.

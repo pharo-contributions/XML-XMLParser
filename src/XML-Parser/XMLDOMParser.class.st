@@ -10,8 +10,7 @@ Class {
 	#superclass : #SAXHandler,
 	#instVars : [
 		'document',
-		'nodeStack',
-		'isInCDataSection'
+		'nodeStack'
 	],
 	#category : #'XML-Parser'
 }
@@ -76,11 +75,6 @@ XMLDOMParser >> elementDeclaration: aName contentModel: aContentModel [
 			contentModel: aContentModel)
 ]
 
-{ #category : #lexical }
-XMLDOMParser >> endCData [
-	isInCDataSection := false
-]
-
 { #category : #declaration }
 XMLDOMParser >> endDTD [
 	self popNode
@@ -112,11 +106,6 @@ XMLDOMParser >> generalEntityDeclaration: aName replacement: aReplacement [
 		(self nodeFactory generalEntityDeclarationClass
 			name: aName
 			replacement: aReplacement)
-]
-
-{ #category : #testing }
-XMLDOMParser >> isInCDataSection [
-	^ isInCDataSection ifNil: [isInCDataSection := false]
 ]
 
 { #category : #configuring }
@@ -234,11 +223,6 @@ XMLDOMParser >> pushNode: aNode [
 
 ]
 
-{ #category : #lexical }
-XMLDOMParser >> startCData [
-	isInCDataSection := true
-]
-
 { #category : #declaration }
 XMLDOMParser >> startDTD: aRootElementName publicID: aPublicId systemID: aSystemId [
 	| doctypeDeclaration |
@@ -276,10 +260,7 @@ XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName
 
 { #category : #private }
 XMLDOMParser >> topNode [
-	"for speed"
-	^ self nodeStack size > 0
-		ifTrue: [nodeStack at: nodeStack size]
-		ifFalse: [nil]
+	^ self nodeStack lastOrNil
 ]
 
 { #category : #content }

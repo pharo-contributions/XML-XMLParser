@@ -28,10 +28,7 @@ XMLElementNester >> copiedScopedAttributes [
 
 { #category : #accessing }
 XMLElementNester >> currentElement [
-	"for speed"
-	^ self openElements size > 0
-		ifTrue: [openElements at: openElements size]
-		ifFalse: ['']
+	^ self openElements lastOrNil
 ]
 
 { #category : #accessing }

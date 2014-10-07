@@ -40,7 +40,9 @@ Class {
 	#instVars : [
 		'input',
 		'documentUri',
-		'configuration'
+		'configuration',
+		'isInDtd',
+		'isInCDataSection'
 	],
 	#category : #'XML-Parser'
 }
@@ -106,20 +108,6 @@ SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean va
 		isValidating: aValidationBoolean;
 		resolvesExternalEntities: anEntityBoolean;
 		parseDocument
-]
-
-{ #category : #parsing }
-SAXHandler class >> parseDocumentFrom: aStringOrStream [
-	self deprecated: 'use #parse: instead'.
-
-	^ self parse: aStringOrStream.
-]
-
-{ #category : #parsing }
-SAXHandler class >> parseDocumentFrom: aStringOrStream useNamespaces: aBoolean [
-	self deprecated: 'use #parse:usingNamespaces: instead'.
-
-	^ self parse: aStringOrStream usingNamespaces: aBoolean.
 ]
 
 { #category : #parsing }
@@ -305,6 +293,26 @@ SAXHandler >> input: aStringOrStream documentURI: aUri [
 	documentUri := aUri.
 ]
 
+{ #category : #private }
+SAXHandler >> isInCDataSection [
+	^ isInCDataSection ifNil: [isInCDataSection := false]
+]
+
+{ #category : #private }
+SAXHandler >> isInCDataSection: aBoolean [
+	isInCDataSection := aBoolean
+]
+
+{ #category : #private }
+SAXHandler >> isInDTD [
+	^ isInDtd ifNil: [isInDtd := false]
+]
+
+{ #category : #private }
+SAXHandler >> isInDTD: aBoolean [
+	isInDtd := aBoolean
+]
+
 { #category : #configuration }
 SAXHandler >> isValidating [
 	^ self configuration isValidating
@@ -334,7 +342,7 @@ SAXHandler >> maxEntityReplacementDepth: aLimit [
 ]
 
 { #category : #declaration }
-SAXHandler >> notationDeclaration: aName publicID: aPublicId systemID: aSytemId [
+SAXHandler >> notationDeclaration: aName publicID: aPublicId systemID: aSystemId [
 
 ]
 

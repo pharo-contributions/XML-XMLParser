@@ -1,3 +1,6 @@
+"
+An NFA in this state is considered to accept the input.
+"
 Class {
 	#name : #XMLNFAAcceptingState,
 	#superclass : #XMLNFAState,
