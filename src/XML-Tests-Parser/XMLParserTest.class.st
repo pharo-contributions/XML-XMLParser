@@ -344,19 +344,25 @@ XMLParserTest >> testDeclaringNamespaces [
 { #category : #tests }
 XMLParserTest >> testDeclaringNamespacesBadPrefixes [
 	self
-		should: [SAXHandler parse: '<root xmlns:colon:prefix="colonNS"/>']
+		should: [SAXHandler parse: '<root xmlns:invalid:prefix="invalidNS"/>']
 		raise: XMLNamespaceException.
 	self
-		should: [SAXHandler parse: '<root xmlns::colonprefix="colonNS"/>']
+		should: [SAXHandler parse: '<root xmlns::invalidprefix="invalidNS"/>']
 		raise: XMLNamespaceException.
 	self
-		should: [SAXHandler parse: '<root xmlns:colonprefix:="colonNS"/>']
+		should: [SAXHandler parse: '<root xmlns:invalidprefix:="invalidNS"/>']
 		raise: XMLNamespaceException.
 	self
-		should: [SAXHandler parse: '<colonprefix: />']
+		should: [SAXHandler parse: '<:invalidname />']
 		raise: XMLNamespaceException.
 	self
-		should: [SAXHandler parse: '<root colonprefix:="test" />']
+		should: [SAXHandler parse: '<invalidname: />']
+		raise: XMLNamespaceException.
+	self
+		should: [SAXHandler parse: '<root :invalidname="test" />']
+		raise: XMLNamespaceException.
+	self
+		should: [SAXHandler parse: '<root invalidname:="test" />']
 		raise: XMLNamespaceException.
 ]
 

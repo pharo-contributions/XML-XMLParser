@@ -694,6 +694,65 @@ XMLDOMParserTest >> testParsingRoot [
 ]
 
 { #category : #tests }
+XMLDOMParserTest >> testUndeclaringAttributePrefixes [
+	| document person |
+
+	document := XMLDOMParser parse: self addressBookNamespacePrefixedXML.
+	document root attributeAt: 'ps:name' put: 'value'.
+	self
+		should: [document root undeclarePrefix: 'ps']
+		raise: XMLNamespaceException.
+
+	person := document findElementNamed: 'person'.
+	self
+		shouldnt: [
+			person prefix: ''.
+			person attributeNodes do: [:each | each prefix: ''].
+			person undeclarePrefix: 'ps']
+		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testUndeclaringElementPrefixes [
+	| document person |
+
+	document := XMLDOMParser parse: self addressBookNamespacePrefixedXML.
+	self
+		shouldnt: [document root undeclarePrefix: 'ps']
+		raise: XMLNamespaceException.
+	self
+		should: [document root undeclarePrefix: 'book']
+		raise: XMLNamespaceException.
+
+	person := document findElementNamed: 'person'.
+	self
+		shouldnt: [person undeclarePrefix: 'book']
+		raise: XMLNamespaceException.
+	self
+		should: [person undeclarePrefix: 'ps']
+		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testUndeclaringPrefixes [
+	| document |
+
+	document := XMLDOMParser parse: self addressBookNamespacedXML.
+	self
+		shouldnt: [document root undeclarePrefix: 'book']
+		raise: XMLNamespaceException.
+	self
+		should: [document root undeclarePrefix: 'undeclared']
+		raise: XMLNamespaceException.
+	self
+		should: [document root undeclarePrefix: 'xml']
+		raise: XMLNamespaceException.
+	self
+		should: [document root undeclarePrefix: 'xmlns']
+		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
 XMLDOMParserTest >> testXMLComment [
 	| document comment|
 
