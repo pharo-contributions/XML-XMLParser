@@ -191,7 +191,7 @@ XMLElement >> declareNamespaces: aDictionaryOrArray [
 XMLElement >> declarePrefix: aPrefix uri: aUri [
 	| oldMapping |
 
-	(oldMapping := self namespaceScope resolvePrefix: aPrefix) = aUri
+	(oldMapping := self namespaceScope resolvePrefix: aPrefix ifUnmapped: [nil]) = aUri
 		ifTrue: [^ self].
 
 	self
@@ -483,7 +483,10 @@ XMLElement >> stringsDo: aBlock [
 
 { #category : #namespaces }
 XMLElement >> undeclarePrefix: aPrefix [
-	self namespaceScope unmapPrefix: aPrefix
+	self namespaceScope unmapPrefix: aPrefix.
+	self
+		validateName;
+		validateAttributes.
 ]
 
 { #category : #private }
@@ -505,18 +508,18 @@ XMLElement >> updateEnclosedScopesWith: aBlock whileTrue: aConditionalBlock [
 { #category : #private }
 XMLElement >> validateAttributes [
 	self usesNamespaces
-		ifFalse: [^ self].
-
-	self namespaceScope validateAttributePrefixes: self attributeNodes attributesByName.
+		ifTrue: [
+			self namespaceScope
+				validateAttributePrefixes: self attributeNodes attributesByName]
 ]
 
 { #category : #private }
 XMLElement >> validateName [
-	(self usesNamespaces and: [self hasPrefix])
+	self usesNamespaces
 		ifTrue: [
 			self namespaceScope
 				validateAndResolvePrefix: self prefix
-				ofName: self name]
+				ofElement: self name]
 ]
 
 { #category : #printing }

@@ -372,10 +372,7 @@ SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 			currentScope := self scopeAllocator enterScope.
 			aNamespaceDictionary
 				ifNotNil: [self declareNamespaces: aNamespaceDictionary inScope: currentScope].
-			namespaceUri :=
-				currentScope
-					validateAndResolvePrefix: prefix
-					ofName: anElementName.
+			namespaceUri := currentScope validateAndResolvePrefix: prefix ofElement: anElementName.
 			anAttributeDictionary isEmpty "avoid ifNotEmpty: closure overhead"
 				ifFalse: [currentScope validateAttributePrefixes: anAttributeDictionary]].
 	self isValidating

@@ -162,22 +162,40 @@ XMLNamespaceScope >> resolvePrefix: aPrefix ifUnmapped: aBlock [
 
 { #category : #accessing }
 XMLNamespaceScope >> unmapPrefix: aPrefix [
+	(aPrefix = 'xml' or: [aPrefix = 'xmlns'])
+		ifTrue: [XMLNamespaceException signal: 'Cannot unmap "xmlns" or "xml" prefixes'].
+
 	self prefixMappings
 		removeKey: aPrefix
-		ifAbsent: [XMLNamespaceException signal: 'Prefix ', aPrefix, ' cannot be unmapped']
+		ifAbsent: [
+			XMLNamespaceException signal:
+				'Prefix "', aPrefix, '" was not mapped and cannot be unmapped']
 ]
 
 { #category : #private }
-XMLNamespaceScope >> validateAndResolvePrefix: aPrefix ofName: aName [
-	aPrefix = 'xmlns'
+XMLNamespaceScope >> validateAndResolvePrefix: aPrefix [
+	^ self prefixMappings
+		at: aPrefix
+		ifAbsent: [
+			aPrefix = 'xml'
+				ifTrue: [self class xmlNamespaceURI]
+				ifFalse: [
+					aPrefix isEmpty
+						ifTrue: [self defaultNamespace]
+						ifFalse: [
+							XMLNamespaceException signal:
+								((aPrefix = 'xmlns')
+									ifTrue: ['Cannot use reserved "xmlns" prefix for elements or attributes']
+									ifFalse: ['Unmapped namespace prefix "', aPrefix, '" in name'])]]]
+]
+
+{ #category : #validation }
+XMLNamespaceScope >> validateAndResolvePrefix: aPrefix ofElement: aName [
+	aPrefix isEmpty
 		ifTrue: [
-			XMLNamespaceException signal:
-				'Cannot use reserved "xmlns" prefix in "', aName, '"'].
-	^ self
-		resolvePrefix:  aPrefix
-		ifUnmapped: [
-			XMLNamespaceException signal:
-				'Unmapped prefix "', aPrefix, '" in "', aName, '"'].
+			self validateUnprefixedName: aName.
+			^ self defaultNamespace]
+		ifFalse: [^ self validateAndResolvePrefix: aPrefix]
 ]
 
 { #category : #validation }
@@ -187,11 +205,12 @@ XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
 
 	aDictionary keysDo: [:each | | prefix |
 		(prefix := each qualifiedNamePrefix) isEmpty "avoid ifNotEmpty: closure overhead"
+			ifTrue: [self validateUnprefixedName: each]
 			ifFalse: [ | namespace oldSize |
 				"not initialized unless needed"
 				namespacedAttributes
 					ifNil: [namespacedAttributes := Set new: aDictionary size].
-				namespace := self validateAndResolvePrefix: prefix ofName: each.
+				namespace := self validateAndResolvePrefix: prefix.
 
 				"checking size after is faster than includes:"
 				oldSize := namespacedAttributes size.
@@ -200,4 +219,12 @@ XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
 					ifFalse: [
 						XMLNamespaceException signal:
 							'Attribute "', each, '" has alias for namespace "', namespace, '"']]].
+]
+
+{ #category : #private }
+XMLNamespaceScope >> validateUnprefixedName: aName [
+	"catch names like ':name' with an empty prefix"
+	(aName size > 0
+		and: [(aName at: 1) == $:])
+		ifTrue: [XMLNamespaceException signal: 'Name "', aName, '" contains ":" character'].
 ]
