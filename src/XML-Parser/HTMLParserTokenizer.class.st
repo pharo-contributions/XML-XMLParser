@@ -2682,7 +2682,7 @@ HTMLParserTokenizer >> nextSystemLiteralRequired: aBoolean [
 HTMLParserTokenizer >> nextTag [
 	| tagName attributes attributeName  nextChar |
 
-	(streamReader peek = $/)
+	(streamReader peek == $/)
 		ifTrue: [^ self nextEndTag].
 	tagName := self nextName asLowercase.
 

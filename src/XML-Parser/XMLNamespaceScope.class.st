@@ -11,6 +11,16 @@ Class {
 	#category : #'XML-Parser-Namespaces'
 }
 
+{ #category : #'predefined namespaces' }
+XMLNamespaceScope class >> xmlNamespaceURI [
+	^ 'http://www.w3.org/XML/1998/namespace'
+]
+
+{ #category : #'predefined namespaces' }
+XMLNamespaceScope class >> xmlnsNamespaceURI [
+	^ 'http://www.w3.org/2000/xmlns/'
+]
+
 { #category : #comparing }
 XMLNamespaceScope >> = anObject [
 	^ self == anObject
@@ -30,9 +40,9 @@ XMLNamespaceScope >> defaultNamespace [
 
 { #category : #accessing }
 XMLNamespaceScope >> defaultNamespace: aUri [
-	aUri = self xmlNamespaceURI
+	aUri = self class xmlNamespaceURI
 		ifTrue: [XMLNamespaceException signal: 'Cannot use "xml" namespace URI as default namespace'].
-	aUri = self xmlnsNamespaceURI
+	aUri = self class xmlnsNamespaceURI
 		ifTrue: [XMLNamespaceException signal: 'Cannot use "xmlns" namespace URI as default namespace'].
 
 	defaultNamespace := aUri.
@@ -74,9 +84,8 @@ XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope [
 	anEnclosingScope hasNamespaces
 		ifFalse: [^ self].
 
-	(anEnclosingScope defaultNamespace notEmpty and: [self hasDefaultNamespace not])
-		ifTrue: [self defaultNamespace: anEnclosingScope defaultNamespace].
-
+	(anEnclosingScope hasDefaultNamespace and: [self hasDefaultNamespace not])
+		ifFalse: [self defaultNamespace: anEnclosingScope defaultNamespace].
 	anEnclosingScope hasPrefixMappings
 		ifTrue: [
 			anEnclosingScope prefixesAndURIsDo: [:prefix :uri |
@@ -86,23 +95,24 @@ XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope [
 
 { #category : #accessing }
 XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
-	aPrefix isEmptyOrNil
+	aPrefix isEmpty
 		ifTrue: [^ self defaultNamespace: aUri].
-	aUri isEmptyOrNil
-		ifTrue: [XMLNamespaceException signal: 'Cannot clear prefix by mapping it to nil or an empty string.'].
-
-	aPrefix = 'xml'
+	(aPrefix at: 1) == $x "skip comparisons below"
 		ifTrue: [
-			aUri = self xmlNamespaceURI
-				ifFalse: [
+			aPrefix = 'xml'
+				ifTrue: [
+					aUri = self class xmlNamespaceURI
+						ifTrue: [^ self].
 					XMLNamespaceException signal:
 						'Cannot rebind the "xml" prefix to a different namespace URI'].
-			^ self].
+			aPrefix = 'xmlns'
+				ifTrue: [XMLNamespaceException signal: 'Cannot bind "xmlns" prefix at all']].
+	(aPrefix indexOf: $:) > 0 
+		ifTrue: [XMLNamespaceException signal: 'Prefix "', aPrefix, '" contains ":" character'].
 
-	aPrefix = 'xmlns'
-		ifTrue: [XMLNamespaceException signal: 'Cannot bind "xmlns" prefix at all'].
-
-	(aUri = self xmlNamespaceURI or: [aUri = self xmlnsNamespaceURI])
+	aUri isEmpty
+		ifTrue: [XMLNamespaceException signal: 'Empty URIs cannot be mapped to prefixes'].
+	(aUri = self class xmlNamespaceURI or: [aUri = self class xmlnsNamespaceURI])
 		ifTrue: [XMLNamespaceException signal: 'Cannot alias the "xml" or "xmlns" prefixes'].
 
 	self prefixMappings at: aPrefix put: aUri.
@@ -136,17 +146,17 @@ XMLNamespaceScope >> resolvePrefix: aPrefix [
 
 { #category : #accessing }
 XMLNamespaceScope >> resolvePrefix: aPrefix ifUnmapped: aBlock [
-	(aPrefix isNil or: [aPrefix isEmpty])
+	aPrefix isEmpty
 		ifTrue: [^ self defaultNamespace].
 
 	^ self prefixMappings
 		at: aPrefix
 		ifAbsent: [
 			aPrefix = 'xml'
-				ifTrue: [self xmlNamespaceURI]
+				ifTrue: [self class xmlNamespaceURI]
 				ifFalse: [
 					aPrefix = 'xmlns'
-						ifTrue: [self xmlnsNamespaceURI]
+						ifTrue: [self class xmlnsNamespaceURI]
 						ifFalse: [aBlock value]]]
 ]
 
@@ -190,14 +200,4 @@ XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
 					ifFalse: [
 						XMLNamespaceException signal:
 							'Attribute "', each, '" has alias for namespace "', namespace, '"']]].
-]
-
-{ #category : #accessing }
-XMLNamespaceScope >> xmlNamespaceURI [
-	^ 'http://www.w3.org/XML/1998/namespace'
-]
-
-{ #category : #accessing }
-XMLNamespaceScope >> xmlnsNamespaceURI [
-	^ 'http://www.w3.org/2000/xmlns/'
 ]

@@ -11,6 +11,13 @@ String >> asXMLURI [
 ]
 
 { #category : #'*XML-Parser' }
+String >> isQualifiedName: aQualifiedName orLocalName: isLocalName [
+	^ self = aQualifiedName
+		or: [(aQualifiedName size > isLocalName size)
+			and: [self = isLocalName]]
+]
+
+{ #category : #'*XML-Parser' }
 String >> qualifiedNameLocalPart [
 	^ self qualifiedNameLocalPartFromPrefix: self qualifiedNamePrefix
 ]
@@ -18,8 +25,10 @@ String >> qualifiedNameLocalPart [
 { #category : #'*XML-Parser' }
 String >> qualifiedNameLocalPartFromPrefix: aPrefix [
 	"optimized"
-	aPrefix size > 0
-		ifTrue: [^ self copyFrom: aPrefix size + 2 to: self size]
+	| prefixSize |
+
+	(prefixSize := aPrefix size) > 0
+		ifTrue: [^ self copyFrom: prefixSize + 2 to: self size]
 		ifFalse: [^ self]
 ]
 
@@ -29,7 +38,7 @@ String >> qualifiedNamePrefix [
 	(Optimized code)"
 	| i |
 
-	i := self size - 1.
+	i := self size.
 	[i > 1]
 		whileTrue: [
 			((self at: i) == $:)
