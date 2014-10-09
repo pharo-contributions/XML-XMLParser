@@ -336,13 +336,56 @@ XMLParserTest >> testDeclaringNamespaces [
 	self
 		shouldnt: [SAXHandler parse: '<root xmlns="defaultNS"/>']
 		raise: XMLNamespaceException.
+	self
+		shouldnt: [SAXHandler parse: '<root xmlns=""/>' usingNamespaces: true]
+		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testDeclaringNamespacesBadPrefixes [
+	self
+		should: [SAXHandler parse: '<root xmlns:colon:prefix="colonNS"/>']
+		raise: XMLNamespaceException.
+	self
+		should: [SAXHandler parse: '<root xmlns::colonprefix="colonNS"/>']
+		raise: XMLNamespaceException.
+	self
+		should: [SAXHandler parse: '<root xmlns:colonprefix:="colonNS"/>']
+		raise: XMLNamespaceException.
+	self
+		should: [SAXHandler parse: '<colonprefix: />']
+		raise: XMLNamespaceException.
+	self
+		should: [SAXHandler parse: '<root colonprefix:="test" />']
+		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testDeclaringNamespacesBadURIs [
+	self
+		should: [SAXHandler parse: '<root xmlns:empty=""/>' usingNamespaces: true]
+		raise: XMLNamespaceException.
 
 	"Cannot change xmlns or xml prefixes"
 	self
-		should: [SAXHandler parse: '<root xmlns:xmlns="newNS"/>']
+		should: [SAXHandler parse: '<root xmlns:xmlns="newNS"/>' usingNamespaces: true]
 		raise: XMLNamespaceException.
 	self
-		should: [SAXHandler parse: '<root xmlns:xml="newNS" />']
+		should: [SAXHandler parse: '<root xmlns:xml="newNS" />' usingNamespaces: true]
+		raise: XMLNamespaceException.
+
+	"Redundant xml prefix mapping is ok, but xmlns is not"
+	self
+		shouldnt: [
+			SAXHandler
+				parse: '<root xmlns:xml="', XMLNamespaceScope xmlNamespaceURI, '"/>'
+				usingNamespaces: true]
+		raise: XMLNamespaceException.
+	self
+		should: [
+			SAXHandler
+				parse: '<root xmlns:xmlns="', XMLNamespaceScope xmlnsNamespaceURI, '"/>'
+				usingNamespaces: true]
 		raise: XMLNamespaceException.
 ]
 
