@@ -66,11 +66,11 @@ ConfigurationOfXMLParser class >> catalogDescription [
 { #category : #catalog }
 ConfigurationOfXMLParser class >> catalogKeyClassesAndExample [
 
-^ 'The main classes are ==SAXHandler== for streaming nodes or ==XMLDOMParser== for getting the complete tree in memory. There is also an ==HTMLHandler== and ==HTMLParser==, which provide the same interfaces but for HTML.
+^ 'The main classes are ==SAXHandler== for streaming nodes or ==XMLDOMParser== for getting the complete tree in memory.
 
 ==XMLNode== and its subclasses implement a DOM API. Read the class comments for more information.
 
-Validation against internal and external DTD subsets, namespace checking, and resolution of external entities is enabled by default.'
+Validation and namespace checking are enabled by default, but not resolution of external entities.'
 ]
 
 { #category : #catalog }
@@ -233,7 +233,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.6.8'.
+	spec for: #'common' version: '1.6.9'.
 	spec for: #'pharo1.x' version: '1.2'
 
 ]
@@ -871,6 +871,27 @@ ConfigurationOfXMLParser >> version168: spec [
 		spec 
 			package: 'XML-Parser' with: 'XML-Parser-monty.231';
 			package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.60'. ].
+
+	spec for: #'pharo2.x'
+		do: [ 
+			spec package: 'XML-Pharo2-Parser' with: 'XML-Pharo2-Parser-DiegoLont.1' ]
+	
+
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version169: spec [
+	<version: '1.6.9' imports: #('1.0-baseline' )>
+
+	spec for: #'common' do: [
+		spec blessing: #'stable'.
+		spec 
+			project: 'XMLWriter' with: '2.3.10';
+			project: 'BitmapCharacterSet' with: '1.1';
+			project: 'OrderPreservingDictionary' with: '1.2'.
+		spec 
+			package: 'XML-Parser' with: 'XML-Parser-monty.234';
+			package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.62'.].
 
 	spec for: #'pharo2.x'
 		do: [ 
