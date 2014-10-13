@@ -109,10 +109,14 @@ XMLNodeWithChildren >> includesNode: aNode [
 
 { #category : #accessing }
 XMLNodeWithChildren >> innerXML [
-	^ self
-			withNewXMLWriterDo: [ :writer | self writeInnerXMLOn: writer.
-																writer contents ]
-			
+	self hasChildren
+		ifTrue: [
+			self
+				withNewXMLWriterOn: (String new: self nodes size * 100) writeStream
+				do: [ :writer |
+					self writeInnerXMLOn: writer.
+					^ writer contents]]
+		ifFalse: [^ '']
 ]
 
 { #category : #parsing }

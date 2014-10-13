@@ -43,6 +43,7 @@ XMLNode >> canonicallyPrintOn: aStream [
 		do: [ :writer | writer
 										isCanonical: true;
 										writeWith: [ :wr | self writeXMLOn: wr ] ]
+		whenAbsent: [self printOn: aStream]
 ]
 
 { #category : #printing }
@@ -185,8 +186,19 @@ XMLNode >> printOn: aStream [
 ]
 
 { #category : #printing }
-XMLNode >> raiseXMLWriterRequired [
-	Error signal: 'The XMLWriter package is required to do that'
+XMLNode >> printWithoutSelfClosingTagsOn: aStream [
+	self
+		withNewXMLWriterOn: aStream
+		do: [ :writer |
+			writer
+				outputsSelfClosingTags: false;
+				writeWith: [ :wr | self writeXMLOn: wr ]]
+		whenAbsent: [ self printOn: aStream ]
+]
+
+{ #category : #printing }
+XMLNode >> printedWithoutSelfClosingTags [
+	^ String streamContents: [:stream | self printWithoutSelfClosingTagsOn: stream]
 ]
 
 { #category : #observing }
@@ -195,35 +207,18 @@ XMLNode >> removeObserver: anObserver [
 ]
 
 { #category : #printing }
-XMLNode >> withNewXMLWriterDo: aOneArgBlock [
-	^ self withNewXMLWriterDo: aOneArgBlock whenAbsent: [ self raiseXMLWriterRequired ]
-	
-]
-
-{ #category : #printing }
-XMLNode >> withNewXMLWriterDo: aOneArgBlock whenAbsent: aZeroArgBlock [
-	^ self
-			withXMLWriterClassDo: [ :xmlWriterClass | aOneArgBlock value: xmlWriterClass new ]
-			whenAbsent: aZeroArgBlock
-]
-
-{ #category : #printing }
 XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock [
-	^ self withNewXMLWriterOn: aStream do: aOneArgBlock whenAbsent: [ self raiseXMLWriterRequired ]
+	^ self
+		withNewXMLWriterOn: aStream
+		do: aOneArgBlock
+		whenAbsent: [ Error signal: 'The XMLWriter package is required for that' ]
 ]
 
 { #category : #printing }
 XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock whenAbsent: aZeroArgBlock [
-	^ self
-			withXMLWriterClassDo: [ :xmlWriterClass | aOneArgBlock value: (xmlWriterClass on: aStream) ]
-			whenAbsent: aZeroArgBlock
-]
-
-{ #category : #printing }
-XMLNode >> withXMLWriterClassDo: aOneArgBlock whenAbsent: aZeroArgBlock [
 	^ (self class environment hasClassNamed: #XMLWriter)
-			ifTrue: [ aOneArgBlock value: (self class environment classNamed: #XMLWriter) ]
-			ifFalse: [ aZeroArgBlock ]
+		ifTrue: [ aOneArgBlock value: ((self class environment classNamed: #XMLWriter) on: aStream)]
+		ifFalse: [ aZeroArgBlock value ]
 ]
 
 { #category : #printing }

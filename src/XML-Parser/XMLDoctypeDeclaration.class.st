@@ -27,12 +27,12 @@ XMLDoctypeDeclaration >> nodeListClass [
 
 { #category : #accessing }
 XMLDoctypeDeclaration >> publicID [
-	^ publicId
+	^ publicId ifNil: [publicId := '']
 ]
 
 { #category : #accessing }
 XMLDoctypeDeclaration >> root [
-	^ root
+	^ root ifNil: [root := '']
 ]
 
 { #category : #initialization }
@@ -44,7 +44,7 @@ XMLDoctypeDeclaration >> setRoot: aRootElementName publicID: aPublicId systemID:
 
 { #category : #accessing }
 XMLDoctypeDeclaration >> systemID [
-	^ systemId
+	^ systemId ifNil: [systemId := '']
 ]
 
 { #category : #printing }

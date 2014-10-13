@@ -86,7 +86,7 @@ DTDDocumentValidator >> validateIDsAndReferences [
 
 	references do: [:each |
 		(ids includes: each)
-			ifFalse: [XMLValidationException signal: 'Invalid ID reference ', each]].
+			ifFalse: [XMLValidationException signal: 'Invalid ID reference "', each, '"']].
 ]
 
 { #category : #validation }

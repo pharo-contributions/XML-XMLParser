@@ -5,7 +5,6 @@ Class {
 	#name : #XMLNamespaceScope,
 	#superclass : #Object,
 	#instVars : [
-		'defaultNamespace',
 		'prefixMappings'
 	],
 	#category : #'XML-Parser-Namespaces'
@@ -23,74 +22,71 @@ XMLNamespaceScope class >> xmlnsNamespaceURI [
 
 { #category : #comparing }
 XMLNamespaceScope >> = anObject [
-	^ self == anObject
-		or: [self class == anObject class
-			and: [self defaultNamespace = anObject defaultNamespace
-				and: [self prefixMappings = anObject prefixMappings]]]
+	self == anObject
+		ifTrue: [^ true].
+	self class == anObject class
+		ifFalse: [^ false].
+
+	^ self hasNamespaces
+		ifTrue: [anObject hasNamespaces and: [prefixMappings = anObject prefixMappings]]
+		ifFalse: [anObject hasNamespaces not].
 ]
 
 { #category : #accessing }
 XMLNamespaceScope >> defaultNamespace [
-	"Rather than lazily initializing this to an empty string, we leave it as nil, so we can
-	distinguish between no default namespace being set and an empty default namespace
-	intended to override a non-empty declaration in a parent."
-
-	^ defaultNamespace ifNil: ['']
+	^ prefixMappings
+		ifNil: ['']
+		ifNotNil: [prefixMappings at: '' ifAbsent: ['']]
 ]
 
 { #category : #accessing }
 XMLNamespaceScope >> defaultNamespace: aUri [
-	aUri = self class xmlNamespaceURI
-		ifTrue: [XMLNamespaceException signal: 'Cannot use "xml" namespace URI as default namespace'].
-	aUri = self class xmlnsNamespaceURI
-		ifTrue: [XMLNamespaceException signal: 'Cannot use "xmlns" namespace URI as default namespace'].
+	(aUri = self class xmlNamespaceURI
+		or: [aUri = self class xmlnsNamespaceURI])
+		ifTrue: [
+			XMLNamespaceException signal:
+				'Cannot use "xml" or  "xmlns" namespace URI as default namespace'].
 
-	defaultNamespace := aUri.
+	self prefixMappings at: '' put: aUri.
 ]
 
 { #category : #testing }
 XMLNamespaceScope >> hasDefaultNamespace [
-	^ defaultNamespace notNil
+	^ self includesPrefix: ''
 ]
 
 { #category : #testing }
 XMLNamespaceScope >> hasNamespaces [
-	^ defaultNamespace notNil or: [prefixMappings notNil and: [prefixMappings notEmpty]]
-]
-
-{ #category : #testing }
-XMLNamespaceScope >> hasPrefixMappings [
 	^ prefixMappings notNil and: [prefixMappings notEmpty]
 ]
 
 { #category : #comparing }
 XMLNamespaceScope >> hash [
-	^ self defaultNamespace hash bitXor: self prefixMappings hash
+	| hash |
+
+	hash := self class hash.
+	self prefixesAndURIsDo: [:prefix :uri | hash := hash bitXor: uri].
+	^ hash.
 ]
 
 { #category : #testing }
 XMLNamespaceScope >> includesPrefix: aPrefix [
-	^ self prefixMappings includesKey: aPrefix
+	self prefixMappingsAt: aPrefix ifAbsent: [^ false].
+	^ true.
 ]
 
 { #category : #testing }
 XMLNamespaceScope >> includesPrefix: aPrefix mappedTo: aUri [
-	^ (self includesPrefix: aPrefix)
-		and: [(self resolvePrefix: aPrefix) = aUri]
+	^ (self prefixMappingsAt: aPrefix ifAbsent: [^ false]) = aUri
 ]
 
 { #category : #initializing }
 XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope [
 	anEnclosingScope hasNamespaces
-		ifFalse: [^ self].
-
-	(anEnclosingScope hasDefaultNamespace and: [self hasDefaultNamespace not])
-		ifFalse: [self defaultNamespace: anEnclosingScope defaultNamespace].
-	anEnclosingScope hasPrefixMappings
 		ifTrue: [
 			anEnclosingScope prefixesAndURIsDo: [:prefix :uri |
 				(self includesPrefix: prefix)
-					ifFalse: [self mapPrefix: prefix to: uri]]].
+					ifFalse: [self mapPrefix: prefix to: uri]]]
 ]
 
 { #category : #accessing }
@@ -102,9 +98,11 @@ XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
 			aPrefix = 'xml'
 				ifTrue: [
 					aUri = self class xmlNamespaceURI
-						ifTrue: [^ self].
-					XMLNamespaceException signal:
-						'Cannot rebind the "xml" prefix to a different namespace URI'].
+						ifFalse: [
+							XMLNamespaceException signal:
+								'Cannot map the "xml" prefix to a new namespace URI'].
+					self prefixMappings at: 'xml' put: aUri.
+					^ self].
 			aPrefix = 'xmlns'
 				ifTrue: [XMLNamespaceException signal: 'Cannot bind "xmlns" prefix at all']].
 	(aPrefix indexOf: $:) > 0 
@@ -120,37 +118,35 @@ XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
 
 { #category : #copying }
 XMLNamespaceScope >> postCopy [
-	defaultNamespace ifNotNil: [defaultNamespace := defaultNamespace copy].
 	prefixMappings ifNotNil: [prefixMappings := prefixMappings copy].
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLNamespaceScope >> prefixMappings [
 	^ prefixMappings ifNil: [prefixMappings := OrderPreservingDictionary new: 5 withDefaultValue: '']
 ]
 
 { #category : #accessing }
-XMLNamespaceScope >> prefixes [
-	^ self prefixMappings keys
+XMLNamespaceScope >> prefixMappingsAt: aPrefix ifAbsent: aBlock [
+	^ prefixMappings
+		ifNil: [aBlock value]
+		ifNotNil: [prefixMappings at: aPrefix ifAbsent: aBlock]
 ]
 
 { #category : #enumerating }
 XMLNamespaceScope >> prefixesAndURIsDo: aTwoArgumentBlock [
-	self prefixMappings keysAndValuesDo: aTwoArgumentBlock
+	prefixMappings ifNotNil: [prefixMappings keysAndValuesDo: aTwoArgumentBlock]
 ]
 
-{ #category : #accessing }
+{ #category : #resolving }
 XMLNamespaceScope >> resolvePrefix: aPrefix [
-	^ self resolvePrefix: aPrefix ifUnmapped: ['']
+	^ self resolvePrefix: aPrefix ifUnresolvable: ['']
 ]
 
-{ #category : #accessing }
-XMLNamespaceScope >> resolvePrefix: aPrefix ifUnmapped: aBlock [
-	aPrefix isEmpty
-		ifTrue: [^ self defaultNamespace].
-
-	^ self prefixMappings
-		at: aPrefix
+{ #category : #resolving }
+XMLNamespaceScope >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
+	^ self
+		prefixMappingsAt: aPrefix
 		ifAbsent: [
 			aPrefix = 'xml'
 				ifTrue: [self class xmlNamespaceURI]
@@ -162,9 +158,6 @@ XMLNamespaceScope >> resolvePrefix: aPrefix ifUnmapped: aBlock [
 
 { #category : #accessing }
 XMLNamespaceScope >> unmapPrefix: aPrefix [
-	(aPrefix = 'xml' or: [aPrefix = 'xmlns'])
-		ifTrue: [XMLNamespaceException signal: 'Cannot unmap "xmlns" or "xml" prefixes'].
-
 	self prefixMappings
 		removeKey: aPrefix
 		ifAbsent: [
@@ -174,19 +167,16 @@ XMLNamespaceScope >> unmapPrefix: aPrefix [
 
 { #category : #private }
 XMLNamespaceScope >> validateAndResolvePrefix: aPrefix [
-	^ self prefixMappings
-		at: aPrefix
+	^ self
+		prefixMappingsAt: aPrefix
 		ifAbsent: [
 			aPrefix = 'xml'
 				ifTrue: [self class xmlNamespaceURI]
 				ifFalse: [
-					aPrefix isEmpty
-						ifTrue: [self defaultNamespace]
-						ifFalse: [
-							XMLNamespaceException signal:
-								((aPrefix = 'xmlns')
-									ifTrue: ['Cannot use reserved "xmlns" prefix for elements or attributes']
-									ifFalse: ['Unmapped namespace prefix "', aPrefix, '" in name'])]]]
+					XMLNamespaceException signal:
+						(aPrefix = 'xmlns'
+							ifTrue: ['Cannot use reserved "xmlns" prefix for elements or attributes']
+							ifFalse: ['Unmapped namespace prefix "', aPrefix, '" in name'])]]
 ]
 
 { #category : #validation }

@@ -182,23 +182,22 @@ XMLElement >> contentString: aString [
 { #category : #namespaces }
 XMLElement >> declareNamespaces: aDictionaryOrArray [
 	aDictionaryOrArray associationsDo: [:each |
-		each key isEmptyOrNil
-			ifTrue: [self defaultNamespace: each value]
-			ifFalse: [self declarePrefix: each key uri: each value]]
+		self
+			declarePrefix: each key
+			uri: each value]
 ]
 
 { #category : #namespaces }
 XMLElement >> declarePrefix: aPrefix uri: aUri [
 	| oldMapping |
 
-	(oldMapping := self namespaceScope resolvePrefix: aPrefix ifUnmapped: [nil]) = aUri
-		ifTrue: [^ self].
-
-	self
-		updateEnclosedScopesWith: [:scope | scope mapPrefix: aPrefix to: aUri]
-		whileTrue: [:scope |
-			(scope includesPrefix: aPrefix) not
-				or: [scope includesPrefix: aPrefix mappedTo: oldMapping]].
+	(oldMapping := self namespaceScope prefixMappingsAt: aPrefix ifAbsent: [nil]) = aUri
+		ifFalse: [
+			self
+				updateEnclosedScopesWith: [:scope | scope mapPrefix: aPrefix to: aUri]
+				whileTrue: [:scope |
+					(scope includesPrefix: aPrefix) not
+						or: [scope includesPrefix: aPrefix mappedTo: oldMapping]]]
 ]
 
 { #category : #namespaces }
@@ -206,9 +205,7 @@ XMLElement >> declaresDefaultNamespace [
 	"Did the receiver declare a new default namespace rather than inheriting one?"
 
 	^ self namespaceScope hasDefaultNamespace
-		and: [self defaultNamespace isEmpty
-			or: [self isRoot
-				or: [self defaultNamespace ~= self parent defaultNamespace]]]
+		and: [self isRoot or: [self defaultNamespace ~= self parent defaultNamespace]]
 ]
 
 { #category : #namespaces }
@@ -216,8 +213,7 @@ XMLElement >> declaresPrefix: aPrefix uri: aUri [
 	"Did the receiver declare a new prefix/uri pair rather than inheriting one?"
 
 	^ (self isDeclaredPrefix: aPrefix uri: aUri)
-		and: [self isRoot
-			or: [(self parent resolvePrefix: aPrefix) ~= aUri]]
+		and: [self isRoot or: [(self parent isDeclaredPrefix: aPrefix uri: aUri) not]]
 ]
 
 { #category : #namespaces }
@@ -231,14 +227,8 @@ XMLElement >> defaultNamespace: aUri [
 
 	oldNamespace := self defaultNamespace.
 	self
-		updateEnclosedScopesWith: [:scope |
-			scope defaultNamespace:
-				(aUri
-					ifEmpty: [scope == self namespaceScope ifTrue: [''] ifFalse: [nil]]
-					ifNotEmpty: [aUri])]
-		whileTrue: [:scope |
-			scope hasDefaultNamespace not
-				or: [scope defaultNamespace = oldNamespace]]
+		updateEnclosedScopesWith: [:scope | scope defaultNamespace: aUri]
+		whileTrue: [:scope | scope defaultNamespace = oldNamespace]
 ]
 
 { #category : #accessing }
@@ -287,7 +277,8 @@ XMLElement >> includesAttribute: aName [
 { #category : #private }
 XMLElement >> inheritNamespacesFrom: anElement [
 	self allElementsDo: [:each |
-		each namespaceScope inheritMappingsFrom: anElement namespaceScope]
+		each namespaceScope inheritMappingsFrom:
+			anElement namespaceScope]
 ]
 
 { #category : #namespaces }
@@ -522,16 +513,23 @@ XMLElement >> validateName [
 				ofElement: self name]
 ]
 
-{ #category : #printing }
-XMLElement >> writeNamespaceDeclarationsOn: aTagWriter [
-	(self declaresDefaultNamespace
-		or: [self defaultNamespace notEmpty
-			and: [aTagWriter isEmbedded not]])
-		ifTrue: [aTagWriter xmlns: self defaultNamespace].
+{ #category : #private }
+XMLElement >> writeAttributesOn: aTagWriter [
+	self attributeNodes do: [:each |
+		aTagWriter
+			attributeAt: each name
+			put: each value]
+]
 
+{ #category : #private }
+XMLElement >> writeNamespaceDeclarationsOn: aTagWriter [
 	self namespaceScope prefixesAndURIsDo: [:prefix :uri |
-		((self declaresPrefix: prefix uri: uri) or: [aTagWriter isEmbedded not])
-			ifTrue: [aTagWriter xmlnsAt: prefix put: uri]]
+		((self declaresPrefix: prefix uri: uri)
+			or: [aTagWriter isEmbedded not])
+			ifTrue: [
+				aTagWriter
+					xmlnsAt: prefix
+					put: uri]]
 ]
 
 { #category : #printing }
@@ -543,9 +541,7 @@ XMLElement >> writeXMLOn: aWriter [
 	self hasNamespaces
 		ifTrue: [self writeNamespaceDeclarationsOn: tagWriter].
 	self hasAttributes 
-		ifTrue: [
-			self attributeNodes do: [:each |
-				tagWriter attributeAt: each name put: each value]].
+		ifTrue: [self writeAttributesOn: tagWriter].
 
 	tagWriter with: [self writeInnerXMLOn: aWriter].
 ]
