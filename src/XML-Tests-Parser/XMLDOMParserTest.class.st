@@ -214,6 +214,22 @@ XMLDOMParserTest >> testConfiguration [
 ]
 
 { #category : #tests }
+XMLDOMParserTest >> testDeclaringXMLNamespace [
+	| xmlNamespace |
+
+	xmlNamespace :=XMLNamespaceScope xmlNamespaceURI.
+	self deny:
+		((XMLDOMParser parse: self addressBookNamespacedXML) root
+			declaresPrefix: 'xml'
+			uri: xmlNamespace).
+
+	self assert:
+		((XMLDOMParser parse: '<test xmlns:xml="', xmlNamespace, '"/>') root
+			declaresPrefix: 'xml'
+			uri: xmlNamespace).
+]
+
+{ #category : #tests }
 XMLDOMParserTest >> testDisabledNamespacesAttributes [
 	| document |
 
@@ -347,6 +363,9 @@ XMLDOMParserTest >> testInnerXML [
 
 	document := XMLDOMParser parse: self addressBookXML.
 	document allElementsNamed: 'person' do: [:person |
+		#('address' 'job-info' 'manager') do: [:each |
+			self assert: (person elementAt: each) innerXML isEmpty].
+
 		address1 := (person attributeAt: 'first-name'), '@example.com'.
 		address2 := (person attributeAt: 'first-name'), '@users.example.com'.
 		innerXml := '<email>', address1, '</email><email2>', address2, '</email2>'.
@@ -643,6 +662,18 @@ XMLDOMParserTest >> testNodeListClass [
 ]
 
 { #category : #tests }
+XMLDOMParserTest >> testOverridingDefaultNamespace [
+	| document |
+
+	document := XMLDOMParser parse: '<outer xmlns="default"><inner xmlns=""/></outer>'.
+	self
+		assert: document root namespaceURI = 'default';
+		assert: document root defaultNamespace = 'default';
+		assert: document root firstNode namespaceURI isEmpty;
+		assert: document root firstNode defaultNamespace isEmpty.
+]
+
+{ #category : #tests }
 XMLDOMParserTest >> testParseDocumentWhile [
 	| i document |
 
@@ -691,65 +722,6 @@ XMLDOMParserTest >> testParsingRoot [
 			each isElement
 				and: [each isNamedAny: #('AddressBook' 'addressbook')]]) == root.
 	self assert: (root findElementNamed: 'addressbook') == root.
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testUndeclaringAttributePrefixes [
-	| document person |
-
-	document := XMLDOMParser parse: self addressBookNamespacePrefixedXML.
-	document root attributeAt: 'ps:name' put: 'value'.
-	self
-		should: [document root undeclarePrefix: 'ps']
-		raise: XMLNamespaceException.
-
-	person := document findElementNamed: 'person'.
-	self
-		shouldnt: [
-			person prefix: ''.
-			person attributeNodes do: [:each | each prefix: ''].
-			person undeclarePrefix: 'ps']
-		raise: XMLNamespaceException.
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testUndeclaringElementPrefixes [
-	| document person |
-
-	document := XMLDOMParser parse: self addressBookNamespacePrefixedXML.
-	self
-		shouldnt: [document root undeclarePrefix: 'ps']
-		raise: XMLNamespaceException.
-	self
-		should: [document root undeclarePrefix: 'book']
-		raise: XMLNamespaceException.
-
-	person := document findElementNamed: 'person'.
-	self
-		shouldnt: [person undeclarePrefix: 'book']
-		raise: XMLNamespaceException.
-	self
-		should: [person undeclarePrefix: 'ps']
-		raise: XMLNamespaceException.
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testUndeclaringPrefixes [
-	| document |
-
-	document := XMLDOMParser parse: self addressBookNamespacedXML.
-	self
-		shouldnt: [document root undeclarePrefix: 'book']
-		raise: XMLNamespaceException.
-	self
-		should: [document root undeclarePrefix: 'undeclared']
-		raise: XMLNamespaceException.
-	self
-		should: [document root undeclarePrefix: 'xml']
-		raise: XMLNamespaceException.
-	self
-		should: [document root undeclarePrefix: 'xmlns']
-		raise: XMLNamespaceException.
 ]
 
 { #category : #tests }

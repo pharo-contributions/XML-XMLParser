@@ -203,3 +203,140 @@ XMLElementTest >> test7contentNodeEnumeration [
 		should: [:block | node contentNodesDo: block] enumerate: contentNodes;
 		should: [:block | node stringNodesDo: block] enumerate: stringNodes.
 ]
+
+{ #category : #tests }
+XMLElementTest >> testCanonicalPrinting [
+	| element |
+
+	element :=
+		XMLElement
+			name: 'test'
+			namespaces: (Array with: 'b' -> 'ns2' with: 'a' -> 'ns1' with: '' -> 'default')
+			attributes: (Array with: 'c' -> '3' with: 'b' -> '2' with: 'a' -> '1').
+
+	self assert:
+		element printString =
+			'<test xmlns:b="ns2" xmlns:a="ns1" xmlns="default" c="3" b="2" a="1" />'.
+	self assert:
+		element canonicallyPrinted =
+			'<test xmlns="default" xmlns:a="ns1" xmlns:b="ns2" a="1" b="2" c="3"></test>'.
+]
+
+{ #category : #tests }
+XMLElementTest >> testPrintingDefaultNamespaces [
+	| element |
+
+	element :=
+		XMLElement
+			name: 'element'
+			namespaceURI: 'default'.
+	element addElement:
+		((XMLElement
+			name: 'element'
+			namespaceURI: '')
+			addElement: (XMLElement name: 'empty');
+			yourself).
+
+	self assert:
+		element printString =
+			('<element xmlns="default">',
+			'<element xmlns=""><empty /></element>',
+			'</element>').
+]
+
+{ #category : #tests }
+XMLElementTest >> testPrintingNonRootNamespaces [
+	| element |
+
+	element :=
+		XMLElement
+			name: 'element'.
+	element addElement:
+		(XMLElement
+			name: 'used:empty'
+			namespaces: (Array with: '' -> 'defaultNS' with: 'used' -> 'usedNS')).
+
+	self assert:
+		element printString =
+			('<element>',
+			'<used:empty xmlns="defaultNS" xmlns:used="usedNS" />',
+			'</element>').
+]
+
+{ #category : #tests }
+XMLElementTest >> testPrintingRootNamespaces [
+	| element |
+
+	element :=
+		XMLElement
+			name: 'used:element'
+			namespaces: (Array with: '' -> 'defaultNS' with: 'used' -> 'usedNS').
+	element addElement: (XMLElement name: 'empty').
+
+	self assert:
+		element printString =
+			('<used:element xmlns="defaultNS" xmlns:used="usedNS">',
+			'<empty />',
+			'</used:element>').
+]
+
+{ #category : #tests }
+XMLElementTest >> testUndeclaringAttributePrefixes [
+	| element |
+
+	element :=
+		XMLElement
+			name: 'element'
+			namespaces: (Array with: '' -> 'defaultNS' with: 'unused' -> 'unusedNS' with: 'used' -> 'usedNS')
+			attributes: (Array with: 'name' -> 'value' with: 'used:name' -> 'value').
+
+	self
+		shouldnt: [element undeclarePrefix: '']
+		raise: XMLNamespaceException.
+	self
+		shouldnt: [element undeclarePrefix: 'unused']
+		raise: XMLNamespaceException.
+	self
+		should: [element undeclarePrefix: 'used']
+		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
+XMLElementTest >> testUndeclaringElementPrefixes [
+	| element |
+
+	element :=
+		XMLElement
+			name: 'used:element'
+			namespaces: (Array with: '' -> 'defaultNS' with: 'unused' -> 'unusedNS' with: 'used' -> 'usedNS').
+
+	self
+		shouldnt: [element undeclarePrefix: '']
+		raise: XMLNamespaceException.
+	self
+		shouldnt: [element undeclarePrefix: 'unused']
+		raise: XMLNamespaceException.
+	self
+		should: [element undeclarePrefix: 'used']
+		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
+XMLElementTest >> testUndeclaringReservedPrefixes [
+	| element |
+
+	element :=
+		XMLElement
+			name: 'element'
+			namespaces: (Array with: 'xml' -> XMLNamespaceScope xmlNamespaceURI).
+
+	self
+		shouldnt: [element undeclarePrefix: 'xml']
+		raise: XMLNamespaceException.
+	self
+		should: [element undeclarePrefix: 'xml']
+		raise: XMLNamespaceException.
+	self
+		should: [element undeclarePrefix: 'xmlns']
+		raise: XMLNamespaceException.
+]
