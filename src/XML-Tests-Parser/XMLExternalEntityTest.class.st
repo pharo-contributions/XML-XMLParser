@@ -1,3 +1,8 @@
+"
+These tests use HTTP and the file system and are skipped by default. This enables them:
+
+self isSkipping: false.
+"
 Class {
 	#name : #XMLExternalEntityTest,
 	#superclass : #TestCase,
@@ -19,8 +24,8 @@ XMLExternalEntityTest class >> isSkipping [
 { #category : #testing }
 XMLExternalEntityTest class >> isSkipping: aBoolean [
 	"
-	XMLExternalEntityTest isSkipping: false.
-	XMLExternalEntityTest isSkipping: true.
+	self isSkipping: false.
+	self isSkipping: true.
 	"
 	IsSkipping := aBoolean
 ]

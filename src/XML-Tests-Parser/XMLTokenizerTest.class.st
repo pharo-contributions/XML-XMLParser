@@ -55,23 +55,48 @@ XMLTokenizerTest >> testConditionalSection [
 ]
 
 { #category : #tests }
+XMLTokenizerTest >> testStreamReadingPortability [
+	| tokenizer stream |
+
+	tokenizer :=
+		XMLWellFormedParserTokenizer
+			driver: nil
+			on: (stream := XMLExceptionRaisingReadStream on: self addressBookXML).
+	self
+		shouldnt: [
+			[tokenizer streamReader
+				peek;
+				next]
+				doWhileFalse: [tokenizer streamReader atEnd]]
+		raise: Error.
+	self should: [stream peek] raise: Error.
+	self should: [stream next] raise: Error.
+]
+
+{ #category : #tests }
 XMLTokenizerTest >> testTokenizerAddressBook [
 	| tokenizer |
+
 	tokenizer :=
 		XMLWellFormedParserTokenizer
 			driver: nil
 			on: self addressBookXML readStream.
-	[tokenizer streamReader next notNil] whileTrue.
+	self
+		shouldnt: [[tokenizer streamReader next notNil] whileTrue]
+		raise: XMLParserException.
 ]
 
 { #category : #tests }
 XMLTokenizerTest >> testTokenizerAddressBookWithDTD [
 	| tokenizer |
+
 	tokenizer :=
 		XMLWellFormedParserTokenizer
 			driver: nil
 			on: self addressBookXMLWithDTD readStream.
-	[tokenizer streamReader next notNil] whileTrue.
+	self
+		shouldnt: [[tokenizer streamReader next notNil] whileTrue]
+		raise: XMLParserException.
 ]
 
 { #category : #tests }
