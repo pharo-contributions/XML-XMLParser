@@ -138,6 +138,22 @@ XMLNamespaceScope >> prefixesAndURIsDo: aTwoArgumentBlock [
 	prefixMappings ifNotNil: [prefixMappings keysAndValuesDo: aTwoArgumentBlock]
 ]
 
+{ #category : #printing }
+XMLNamespaceScope >> printOn: aStream [
+	self prefixesAndURIsDo: [:prefix :uri |
+		aStream nextPutAll: 'xmlns'.
+		prefix ifNotEmpty: [
+			aStream
+				nextPut: $:;
+				nextPutAll: prefix].
+		aStream
+			nextPut: $=;
+			nextPut: $";
+			nextPutAll: uri;
+			nextPut: $";
+			space]
+]
+
 { #category : #resolving }
 XMLNamespaceScope >> resolvePrefix: aPrefix [
 	^ self resolvePrefix: aPrefix ifUnresolvable: ['']

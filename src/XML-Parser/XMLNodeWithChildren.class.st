@@ -55,7 +55,7 @@ XMLNodeWithChildren >> allNodes [
 XMLNodeWithChildren >> allNodesCollect: aBlock [
 	| collectedNodes |
 
-	collectedNodes := self nodes copyEmpty.
+	collectedNodes := self newNodeListForCollect.
 	self allNodesDo: [:each | collectedNodes addLast: (aBlock value: each)].
 	^ collectedNodes.
 ]
@@ -83,7 +83,7 @@ XMLNodeWithChildren >> allNodesDo: aBlock [
 XMLNodeWithChildren >> allNodesSelect: aBlock [
 	| selectedNodes |
 
-	selectedNodes := self nodes copyEmpty.
+	selectedNodes := self newNodeListForSelect.
 	self allNodesDo: [:each |
 		(aBlock value: each)
 			ifTrue: [selectedNodes addLast: each]].
@@ -134,6 +134,16 @@ XMLNodeWithChildren >> innerXMLParserOn: aStringOrStream [
 { #category : #accessing }
 XMLNodeWithChildren >> lastNode [
 	^ self nodes last
+]
+
+{ #category : #private }
+XMLNodeWithChildren >> newNodeListForCollect [
+	^ XMLOrderedList new
+]
+
+{ #category : #private }
+XMLNodeWithChildren >> newNodeListForSelect [
+	^ XMLOrderedList new
 ]
 
 { #category : #accessing }

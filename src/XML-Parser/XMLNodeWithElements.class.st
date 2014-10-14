@@ -40,7 +40,7 @@ XMLNodeWithElements >> allElements [
 XMLNodeWithElements >> allElementsCollect: aBlock [
 	| collectedElements |
 
-	collectedElements := self nodes copyEmpty.
+	collectedElements := self newNodeListForCollect.
 	self allElementsDo: [:each | collectedElements addLast: (aBlock value: each)].
 	^ collectedElements.
 ]
@@ -68,7 +68,7 @@ XMLNodeWithElements >> allElementsDetect: aBlock ifNone: anExceptionBlock [
 XMLNodeWithElements >> allElementsDo: aBlock [
 	"Descend depth-first visiting each element with aBlock."
 
-	self hasElements
+	self hasChildren
 		ifTrue: [self elementsDo: [:each | each allElementsDo: aBlock]]
 ]
 
@@ -93,7 +93,7 @@ XMLNodeWithElements >> allElementsNamed: aName namespaceURI: aUri [
 XMLNodeWithElements >> allElementsSelect: aBlock [
 	| selectedElements |
 
-	selectedElements := self nodes copyEmpty.
+	selectedElements := self newNodeListForSelect.
 	self allElementsDo: [:each |
 		(aBlock value: each)
 			ifTrue: [selectedElements addLast: each]].
@@ -111,7 +111,7 @@ XMLNodeWithElements >> configuration [
 XMLNodeWithElements >> configuration: aConfiguration [
 	configuration := aConfiguration.
 
-	self hasElements
+	self hasChildren
 		ifTrue: [self elementsDo: [:each | each configuration: aConfiguration]]
 ]
 

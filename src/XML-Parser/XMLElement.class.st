@@ -240,7 +240,7 @@ XMLElement >> document [
 XMLElement >> document: aDocument [
 	document := aDocument.
 
-	self hasElements
+	self hasChildren
 		ifTrue: [self elementsDo: [:each | each document: aDocument]]
 ]
 
@@ -251,7 +251,7 @@ XMLElement >> expandedName [
 
 { #category : #testing }
 XMLElement >> hasAttributes [
-	^ self attributeNodes notEmpty
+	^ attributes notNil and: [attributes notEmpty]
 ]
 
 { #category : #testing }
@@ -305,9 +305,11 @@ XMLElement >> isNamed: aName [
 { #category : #testing }
 XMLElement >> isNamedAny: aNameCollection [
 	"Does the receiver's qualified or local name match any of the names supplied as the argument?'"
-	^ aNameCollection anySatisfy: [:each |
+	aNameCollection do: [:each |
 		"inline isNamed:"
-		self nodeName isSameAs: each]
+		(self nodeName isSameAs: each)
+			ifTrue: [^ true]].
+	^ false.
 ]
 
 { #category : #testing }
@@ -328,7 +330,7 @@ XMLElement >> name [
 
 { #category : #accessing }
 XMLElement >> name: aName [
-	self nodeName qualified: aName
+	self renameWith: [self nodeName qualified: aName]
 ]
 
 { #category : #namespaces }
@@ -355,21 +357,7 @@ XMLElement >> nextElement [
 
 { #category : #private }
 XMLElement >> nodeName [
-	^ name
-		ifNil: [ 
-			(name := XMLNodeName new)
-				addObserver: self;
-				yourself]
-]
-
-{ #category : #notifications }
-XMLElement >> nodeNameChangedFrom: anOldName to: aNewName [
-	self validateName.
-	self
-		notifyOf: #renamedElement:from:to:
-		with: self
-		with: anOldName
-		with: aNewName
+	^ name ifNil: [name := XMLNodeName new]
 ]
 
 { #category : #private }
@@ -384,7 +372,7 @@ XMLElement >> prefix [
 
 { #category : #namespaces }
 XMLElement >> prefix: aPrefix [
-	self nodeName prefix: aPrefix
+	self renameWith: [self nodeName prefix: aPrefix]
 ]
 
 { #category : #accessing }
@@ -414,6 +402,21 @@ XMLElement >> removedAttribute: anAttribute [
 		element: nil
 ]
 
+{ #category : #private }
+XMLElement >> renameWith: aBlock [
+	| oldName newName |
+
+	oldName := self name.
+	aBlock value.
+	(newName := self name) = oldName
+		ifFalse: [
+			self validateName.
+			self
+				notifyOf: #renamedElement:from:to:
+				with: oldName
+				with: newName].
+]
+
 { #category : #notifications }
 XMLElement >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 	self validateAttributes
@@ -440,8 +443,7 @@ XMLElement >> setNamespaceScope: aNamespaceScope [
 
 { #category : #initialization }
 XMLElement >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocalName attributes: anAttributeDictionary [
-	(name := XMLNodeName qualified: aQualifiedName localPart: aLocalName)
-		addObserver: self.
+	name := XMLNodeName qualified: aQualifiedName localPart: aLocalName.
 
 	anAttributeDictionary isEmpty "avoid ifNotEmpty: closure overhead"
 		ifFalse: [
@@ -543,5 +545,7 @@ XMLElement >> writeXMLOn: aWriter [
 	self hasAttributes 
 		ifTrue: [self writeAttributesOn: tagWriter].
 
-	tagWriter with: [self writeInnerXMLOn: aWriter].
+	tagWriter with: [
+		self hasChildren
+			ifTrue: [self writeInnerXMLOn: aWriter]].
 ]

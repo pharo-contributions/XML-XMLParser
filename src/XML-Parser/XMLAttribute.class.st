@@ -54,7 +54,7 @@ XMLAttribute >> name [
 
 { #category : #accessing }
 XMLAttribute >> name: aName [
-	self nodeName qualified: aName
+	self renameWith: [self nodeName qualified: aName]
 ]
 
 { #category : #accessing }
@@ -67,20 +67,7 @@ XMLAttribute >> namespaceURI [
 
 { #category : #private }
 XMLAttribute >> nodeName [
-	^ name
-		ifNil: [ 
-			(name := XMLNodeName new)
-				addObserver: self;
-				yourself]
-]
-
-{ #category : #notifications }
-XMLAttribute >> nodeNameChangedFrom: anOldName to: aNewName [
-	self
-		notifyOf: #renamedAttribute:from:to:
-		with: self
-		with: anOldName
-		with: aNewName
+	^ name ifNil: [name := XMLNodeName new]
 ]
 
 { #category : #private }
@@ -95,13 +82,27 @@ XMLAttribute >> prefix [
 
 { #category : #accessing }
 XMLAttribute >> prefix: aPrefix [
-	self nodeName prefix: aPrefix
+	self renameWith: [self nodeName prefix: aPrefix]
+]
+
+{ #category : #private }
+XMLAttribute >> renameWith: aBlock [
+	| oldName newName |
+
+	oldName := self name.
+	aBlock value.
+	(newName := self name) = oldName
+		ifFalse: [
+			self
+				notifyOf: #renamedAttribute:from:to:
+				with: self
+				with: oldName
+				with: newName].
 ]
 
 { #category : #initialization }
 XMLAttribute >> setName: aName value: aValue [
-	(name := XMLNodeName qualified: aName)
-		addObserver: self.
+	name := XMLNodeName qualified: aName.
 	value := aValue.
 ]
 
