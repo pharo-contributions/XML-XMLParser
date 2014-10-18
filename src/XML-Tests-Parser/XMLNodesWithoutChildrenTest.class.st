@@ -29,22 +29,6 @@ XMLNodesWithoutChildrenTest >> assertComment: aComment hasString: aString [
 ]
 
 { #category : #assertions }
-XMLNodesWithoutChildrenTest >> assertNode: anObservedNode canNotifyNodes: anObserverArray [
-	anObservedNode notifyOf: #mockNotifyWith: with: #one.
-	self assert: (anObserverArray allSatisfy: [:each | each lastNotificationArguments = #(one)]).
-
-	anObservedNode notifyOf: #mockNotifyWith:with: with: #one with: #two.
-	self assert: (anObserverArray allSatisfy: [:each | each lastNotificationArguments = #(one two)]).
-
-	anObservedNode notifyOf: #mockNotifyWith:with:with: with: #one with: #two with: #three.
-	self assert: (anObserverArray allSatisfy: [:each | each lastNotificationArguments = #(one two three)]).
-
-	anObserverArray do: [:each | each lastNotificationArguments: nil].
-	anObservedNode notifyOf: #mockNotifyWith:with:with: withArguments: #(one two three).
-	self assert: (anObserverArray allSatisfy: [:each | each lastNotificationArguments = #(one two three)]). 
-]
-
-{ #category : #assertions }
 XMLNodesWithoutChildrenTest >> assertPI: aNode hasTarget: aTarget data: aData [
 	self
 		assert: aNode target = aTarget;
@@ -77,37 +61,6 @@ XMLNodesWithoutChildrenTest >> test1basicNodeProtocol [
 	self
 		assert: node hasParent;
 		assert: node parent == parent.
-]
-
-{ #category : #tests }
-XMLNodesWithoutChildrenTest >> test2nodeNotification [
-	| observedNode firstObserverNode secondObserverNode |
-
-	observedNode := XMLMockNode new.
-	self
-		shouldnt: [observedNode notifyOf: #invalid: with: #one] raise: Error;
-		shouldnt: [observedNode notifyOf: #invalid:invalid: with: #one with: #two] raise: Error;
-		shouldnt: [observedNode notifyOf: #invalid:invalid:invalid: with: #one with: #two with: #three] raise: Error;
-		shouldnt: [observedNode notifyOf: #invalid:invalid:invalid: withArguments: #(one two three)] raise: Error.
-
-	firstObserverNode := XMLMockObserverNode new.
-	observedNode addObserver: firstObserverNode.
-	self assertNode: observedNode canNotifyNodes: (Array with: firstObserverNode).
-
-	secondObserverNode := XMLMockObserverNode new.
-	observedNode addObserver: secondObserverNode.
-	self
-		assertNode: observedNode
-		canNotifyNodes: (Array with: firstObserverNode with: secondObserverNode).
-
-	observedNode removeObserver: firstObserverNode.
-	self assertNode: observedNode canNotifyNodes: (Array with: secondObserverNode).
-
-	self
-		should: [observedNode notifyOf: #invalid: with: #one] raise: Error;
-		should: [observedNode notifyOf: #invalid:invalid: with: #one with: #two] raise: Error;
-		should: [observedNode notifyOf: #invalid:invalid:invalid: with: #one with: #two with: #three] raise: Error;
-		should: [observedNode notifyOf: #invalid:invalid:invalid: withArguments: #(one two three)] raise: Error.
 ]
 
 { #category : #tests }

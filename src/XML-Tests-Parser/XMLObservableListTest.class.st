@@ -65,7 +65,7 @@ XMLObservableListTest >> should: aBlock addAll: anElementCollection toAndNotifyO
 	| observer |
 
 	observer := XMLStubListObserver new.
-	aList addObserver: observer.
+	aList observer: observer.
 	aBlock value.
 	anElementCollection do: [:each |
 		self assert: (aList includes: each).
@@ -88,7 +88,7 @@ XMLObservableListTest >> should: aBlock removeAll: anElementCollection fromAndNo
 	| observer |
 
 	observer := XMLStubListObserver new.
-	aList addObserver: observer.
+	aList observer: observer.
 	aBlock value.
 	anElementCollection do: [:each |
 		self deny: (aList includes: each).
@@ -233,7 +233,7 @@ XMLObservableListTest >> testAtPut [
 
 	list := self listWithSingleElement.
 	observer := XMLStubListObserver new.
-	list addObserver: observer.
+	list observer: observer.
 	list at: 1 put: self absentElement.
 	self
 		assertObserver: observer
@@ -270,7 +270,7 @@ XMLObservableListTest >> testRemoveAt [
 		fromAndNotifyOf: list.
 
 	observer := XMLStubListObserver new.
-	list addObserver: observer.
+	list observer: observer.
 	self
 		should: [list removeAt: 1] raise: Error;
 		assert: observer notifications isEmpty.
@@ -290,7 +290,7 @@ XMLObservableListTest >> testRemoveFirst [
 		fromAndNotifyOf: list.
 
 	observer := XMLStubListObserver new.
-	list addObserver: observer.
+	list observer: observer.
 	self
 		should: [list removeFirst] raise: Error;
 		assert: observer notifications isEmpty.
@@ -323,7 +323,7 @@ XMLObservableListTest >> testRemoveIfAbsent [
 		fromAndNotifyOf: list.
 
 	observer := XMLStubListObserver new.
-	list addObserver: observer.
+	list observer: observer.
 	self
 		assert: (list remove: self singleElement ifAbsent: [nil]) isNil;
 		assert: observer notifications isEmpty.
@@ -343,7 +343,7 @@ XMLObservableListTest >> testRemoveLast [
 		fromAndNotifyOf: list.
 
 	observer := XMLStubListObserver new.
-	list addObserver: observer.
+	list observer: observer.
 	self
 		should: [list removeLast] raise: Error;
 		assert: observer notifications isEmpty.
@@ -371,7 +371,7 @@ XMLObservableListTest >> testReplaceFromToWithStartingAt [
 
 	list := self listWithElements.
 	observer := XMLStubListObserver new.
-	list addObserver: observer.
+	list observer: observer.
 	list
 		replaceFrom: 2
 		to: 3
