@@ -6,15 +6,17 @@ Class {
 	#superclass : #XMLNode,
 	#instVars : [
 		'name',
-		'value',
-		'notifier'
+		'value'
 	],
 	#category : #'XML-Parser-DOM'
 }
 
 { #category : #'instance creation' }
 XMLAttribute class >> name: aName value: aValue [
-	^ self new setName: aName value: aValue
+	^ self new	
+		setName: aName
+		value: aValue
+		element: nil
 ]
 
 { #category : #accessing }
@@ -70,11 +72,6 @@ XMLAttribute >> nodeName [
 	^ name ifNil: [name := XMLNodeName new]
 ]
 
-{ #category : #private }
-XMLAttribute >> notifier [
-	^ notifier ifNil: [notifier := XMLNotifier new]
-]
-
 { #category : #accessing }
 XMLAttribute >> prefix [
 	^ self nodeName prefix
@@ -87,23 +84,24 @@ XMLAttribute >> prefix: aPrefix [
 
 { #category : #private }
 XMLAttribute >> renameWith: aBlock [
-	| oldName newName |
+	| oldName |
 
 	oldName := self name.
 	aBlock value.
-	(newName := self name) = oldName
-		ifFalse: [
-			self
-				notifyOf: #renamedAttribute:from:to:
-				with: self
-				with: oldName
-				with: newName].
+	(self name ~= oldName
+		and: [self hasParent])
+			ifTrue: [
+				self parent
+					renamedAttribute: self
+					from: oldName
+					to: self name].
 ]
 
 { #category : #initialization }
-XMLAttribute >> setName: aName value: aValue [
+XMLAttribute >> setName: aName value: aValue element: anElement [
 	name := XMLNodeName qualified: aName.
 	value := aValue.
+	parent := anElement.
 ]
 
 { #category : #accessing }

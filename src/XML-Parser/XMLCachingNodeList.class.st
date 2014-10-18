@@ -19,7 +19,6 @@ Class {
 XMLCachingNodeList >> afterAdding: aNode [
 	aNode isElement
 		ifTrue: [
-			aNode addObserver: self.
 			((self last == aNode) or: [(self findElementAfter: aNode) isNil])
 				ifTrue: [self elementAddedAtEnd: aNode]
 				ifFalse: [self elementInsertedBeforeEnd: aNode]].
@@ -31,7 +30,6 @@ XMLCachingNodeList >> afterAdding: aNode [
 XMLCachingNodeList >> afterRemoving: aNode [
 	aNode isElement
 		ifTrue: [
-			aNode removeObserver: self.
 			self elements remove: aNode.
 			self elementsByNameAt: aNode name removeElement: aNode.
 			aNode hasPrefix

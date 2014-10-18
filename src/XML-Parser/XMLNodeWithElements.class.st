@@ -86,7 +86,9 @@ XMLNodeWithElements >> allElementsNamed: aName do: aBlock [
 
 { #category : #accessing }
 XMLNodeWithElements >> allElementsNamed: aName namespaceURI: aUri [
-	^ (self allElementsNamed: aName) select: [:each | each namespaceURI = aUri]
+	^ self allElementsSelect: [:each |
+		(each isNamed: aName)
+			and: [each namespaceURI = aUri]]
 ]
 
 { #category : #enumerating }
@@ -222,15 +224,17 @@ XMLNodeWithElements >> findElementNamed: aName [
 
 { #category : #searching }
 XMLNodeWithElements >> findElementNamed: aName namespaceURI: aUri [
-	^ self allElementsDetect: [:each | (each isNamed: aName) and: [each namespaceURI = aUri]]
+	^ self allElementsDetect: [:each |
+		(each isNamed: aName)
+			and: [each namespaceURI = aUri]]
 ]
 
 { #category : #searching }
 XMLNodeWithElements >> findElementNamed: aName namespaceURI: aUri with: aBlock [
 	^ self allElementsDetect: [:each |
-			(each isNamed: aName)
-				and: [each namespaceURI = aUri
-					and: [aBlock value: each]]]
+		(each isNamed: aName)
+			and: [each namespaceURI = aUri
+				and: [aBlock value: each]]]
 ]
 
 { #category : #searching }
@@ -296,6 +300,14 @@ XMLNodeWithElements >> printContentOn: aStream [
 XMLNodeWithElements >> removedElement: anElement [
 	self removedNode: anElement.
 	anElement document: nil.
+]
+
+{ #category : #notifications }
+XMLNodeWithElements >> renamedElement: anElement from: anOldName to: aNewName [
+	self nodes
+		renamedElement: anElement
+		from: anOldName
+		to: aNewName
 ]
 
 { #category : #testing }

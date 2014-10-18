@@ -20,19 +20,17 @@ XMLAttributeList >> addName: aName value: aValue [
 
 { #category : #private }
 XMLAttributeList >> afterAdding: anObject [
-	anObject addObserver: self.
 	self attributesByName
 		at: anObject name ifPresent: [self removeAttributeNodeAt: anObject name];
 		at: anObject name put: anObject.
 
-	self notifyOf: #addedAttribute: with: anObject.
+	observer ifNotNil: [observer addedAttribute: anObject].
 ]
 
 { #category : #private }
 XMLAttributeList >> afterRemoving: anAttribute [
-	anAttribute removeObserver: self.
 	self attributesByName removeKey: anAttribute name.
-	self notifyOf: #removedAttribute: with: anAttribute.
+	observer ifNotNil: [observer removedAttribute: anAttribute].
 ]
 
 { #category : #converting }
@@ -143,7 +141,7 @@ XMLAttributeList >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 ]
 
 { #category : #private }
-XMLAttributeList >> setFromDictionary: anOrderPreservingDictionary andElement: anElement [
+XMLAttributeList >> setFromDictionary: anOrderPreservingDictionary [
 	| association |
 
 	"hack to reuse a dictionary for speed"
@@ -157,8 +155,7 @@ XMLAttributeList >> setFromDictionary: anOrderPreservingDictionary andElement: a
 			value:
 				(collection addLast: 
 					(XMLAttribute new
-						setName: each value: association value;
-						addObserver: self;
-						addObserver: anElement;
-						element: anElement))].
+						setName: each
+						value: association value
+						element: observer))].
 ]

@@ -16,8 +16,7 @@ Class {
 		'name',
 		'attributes',
 		'namespaceScope',
-		'document',
-		'notifier'
+		'document'
 	],
 	#category : #'XML-Parser-DOM'
 }
@@ -76,9 +75,7 @@ XMLElement >> addContent: aStringOrStringNode [
 
 { #category : #notifications }
 XMLElement >> addedAttribute: anAttribute [
-	anAttribute
-		addObserver: self;
-		element: self.
+	anAttribute element: self.
 	self validateAttributes.
 ]
 
@@ -161,10 +158,7 @@ XMLElement >> attributeNodeAt: aLocalName namespaceURI: aUri ifAbsent: aBlock [
 
 { #category : #accessing }
 XMLElement >> attributeNodes [
-	^ attributes ifNil: [
-		(attributes := XMLAttributeList new)
-			addObserver: self;
-			yourself]
+	^ attributes ifNil: [attributes := XMLAttributeList observer: self]
 ]
 
 { #category : #accessing }
@@ -360,11 +354,6 @@ XMLElement >> nodeName [
 	^ name ifNil: [name := XMLNodeName new]
 ]
 
-{ #category : #private }
-XMLElement >> notifier [
-	^ notifier ifNil: [notifier := XMLNotifier new]
-]
-
 { #category : #namespaces }
 XMLElement >> prefix [
 	^ self nodeName prefix
@@ -397,29 +386,33 @@ XMLElement >> removeAttributes [
 
 { #category : #notifications }
 XMLElement >> removedAttribute: anAttribute [
-	anAttribute
-		removeObserver: self;
-		element: nil
+	anAttribute element: nil
 ]
 
 { #category : #private }
 XMLElement >> renameWith: aBlock [
-	| oldName newName |
+	| oldName |
 
 	oldName := self name.
 	aBlock value.
-	(newName := self name) = oldName
+	self name = oldName
 		ifFalse: [
 			self validateName.
-			self
-				notifyOf: #renamedElement:from:to:
-				with: oldName
-				with: newName].
+			self hasParent
+				ifTrue: [
+					self parent
+						renamedElement: self
+						from: oldName
+						to: self name]].
 ]
 
 { #category : #notifications }
 XMLElement >> renamedAttribute: anAttribute from: anOldName to: aNewName [
-	self validateAttributes
+	self attributeNodes	
+		renamedAttribute: anAttribute
+		from: anOldName
+		to: aNewName.
+	self validateAttributes.
 ]
 
 { #category : #namespaces }
@@ -449,9 +442,10 @@ XMLElement >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocal
 		ifFalse: [
 			"The setFrom method is used to avoid revalidating the
 			attributes when adding them to the list"
-			(attributes := XMLAttributeList new: anAttributeDictionary size)
-				setFromDictionary: anAttributeDictionary andElement: self;
-				addObserver: self].
+			(attributes :=
+				(XMLAttributeList new: anAttributeDictionary size)
+					observer: self)
+				setFromDictionary: anAttributeDictionary].
 ]
 
 { #category : #accessing }

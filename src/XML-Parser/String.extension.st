@@ -18,6 +18,11 @@ String >> isQualifiedName: aQualifiedName orLocalName: isLocalName [
 ]
 
 { #category : #'*XML-Parser' }
+String >> parseXML [
+	^ XMLDOMParser parse: self
+]
+
+{ #category : #'*XML-Parser' }
 String >> qualifiedNameLocalPart [
 	^ self qualifiedNameLocalPartFromPrefix: self qualifiedNamePrefix
 ]

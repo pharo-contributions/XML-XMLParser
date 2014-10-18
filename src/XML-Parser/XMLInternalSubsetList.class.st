@@ -9,12 +9,12 @@ Class {
 
 { #category : #private }
 XMLInternalSubsetList >> afterAdding: aNode [
-	self notifyOf: #addedNode: with: aNode.
+	observer ifNotNil: [observer addedNode: aNode]
 ]
 
 { #category : #private }
 XMLInternalSubsetList >> afterRemoving: aNode [
-	self notifyOf: #removedNode: with: aNode.
+	observer ifNotNil: [observer removedNode: aNode]
 ]
 
 { #category : #private }

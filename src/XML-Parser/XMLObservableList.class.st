@@ -5,10 +5,15 @@ Class {
 	#name : #XMLObservableList,
 	#superclass : #XMLOrderedList,
 	#instVars : [
-		'notifier'
+		'observer'
 	],
 	#category : #'XML-Parser-DOM'
 }
+
+{ #category : #'instance creation' }
+XMLObservableList class >> observer: anObject [
+	^ self new observer: anObject
+]
 
 { #category : #adding }
 XMLObservableList >> add: anObject after: aPriorObject [
@@ -44,19 +49,14 @@ XMLObservableList >> addLast: anObject [
 	^ anObject.
 ]
 
-{ #category : #observing }
-XMLObservableList >> addObserver: anObserver [
-	self notifier addObserver: anObserver
-]
-
 { #category : #private }
 XMLObservableList >> afterAdding: anObject [
-	self notifyOf: #added:to: with: anObject with: self.
+	observer ifNotNil: [observer added: anObject to: self]
 ]
 
 { #category : #private }
 XMLObservableList >> afterRemoving: anObject [
-	self notifyOf: #removed:from: with: anObject with: self.
+	observer ifNotNil: [observer removed: anObject from: self]
 ]
 
 { #category : #accessing }
@@ -74,36 +74,17 @@ XMLObservableList >> at: anIndex put: anObject [
 
 { #category : #private }
 XMLObservableList >> beforeAdding: anObject [
-	self notifyOf: #adding:to: with: anObject with: self
+	observer ifNotNil: [observer adding: anObject to: self]
 ]
 
-{ #category : #private }
-XMLObservableList >> notifier [
-	^ notifier ifNil: [notifier := XMLNotifier new]
+{ #category : #observing }
+XMLObservableList >> observer [
+	^ observer
 ]
 
-{ #category : #notification }
-XMLObservableList >> notifyOf: aSelector with: anArgument [
-	self notifier notifyOf: aSelector with: anArgument
-]
-
-{ #category : #notification }
-XMLObservableList >> notifyOf: aSelector with: aFirstArgument with: aSecondArgument [
-	self notifier notifyOf: aSelector with: aFirstArgument with: aSecondArgument
-]
-
-{ #category : #notification }
-XMLObservableList >> notifyOf: aSelector with: aFirstArgument with: aSecondArgument with: aThirdArgument [
-	self notifier
-		notifyOf: aSelector
-		with: aFirstArgument
-		with: aSecondArgument
-		with: aThirdArgument
-]
-
-{ #category : #notification }
-XMLObservableList >> notifyOf: aSelector withArguments: anArray [
-	self notifier notifyOf: aSelector withArguments: anArray
+{ #category : #observing }
+XMLObservableList >> observer: anObserver [
+	observer := anObserver
 ]
 
 { #category : #removing }
@@ -114,11 +95,6 @@ XMLObservableList >> remove: anObject ifAbsent: aBlock [
 { #category : #removing }
 XMLObservableList >> removeAt: anIndex [
 	^ self with: [super removeAt: anIndex] remove: (self at: anIndex)
-]
-
-{ #category : #observing }
-XMLObservableList >> removeObserver: anObserver [
-	self notifier removeObserver: anObserver
 ]
 
 { #category : #private }

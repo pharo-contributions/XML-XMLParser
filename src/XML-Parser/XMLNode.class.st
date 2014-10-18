@@ -20,11 +20,6 @@ XMLNode >> addContent: aStringOrStringNode [
 	XMLDOMException signal: 'Node cannot contain content'
 ]
 
-{ #category : #observing }
-XMLNode >> addObserver: anObserver [
-	self notifier addObserver: anObserver
-]
-
 { #category : #enumerating }
 XMLNode >> allNodesDo: aBlock [
 	aBlock value: self
@@ -112,37 +107,6 @@ XMLNode >> nextNode [
 	^ self parent ifNotNil: [self parent nodeAfter: self]
 ]
 
-{ #category : #private }
-XMLNode >> notifier [
-	"observable subclasses override to return an XMLNotifier.
-	This saves memory so only classes that need it have a notifier slot"
-	XMLDOMException signal: 'Node is not observable'
-]
-
-{ #category : #notification }
-XMLNode >> notifyOf: aSelector with: anArgument [
-	self notifier notifyOf: aSelector with: anArgument
-]
-
-{ #category : #notification }
-XMLNode >> notifyOf: aSelector with: aFirstArgument with: aSecondArgument [
-	self notifier notifyOf: aSelector with: aFirstArgument with: aSecondArgument
-]
-
-{ #category : #notification }
-XMLNode >> notifyOf: aSelector with: aFirstArgument with: aSecondArgument with: aThirdArgument [
-	self notifier
-		notifyOf: aSelector
-		with: aFirstArgument
-		with: aSecondArgument
-		with: aThirdArgument
-]
-
-{ #category : #notification }
-XMLNode >> notifyOf: aSelector withArguments: anArray [
-	self notifier notifyOf: aSelector withArguments: anArray
-]
-
 { #category : #accessing }
 XMLNode >> parent [
 	^ parent
@@ -199,11 +163,6 @@ XMLNode >> printWithoutSelfClosingTagsOn: aStream [
 { #category : #printing }
 XMLNode >> printedWithoutSelfClosingTags [
 	^ String streamContents: [:stream | self printWithoutSelfClosingTagsOn: stream]
-]
-
-{ #category : #observing }
-XMLNode >> removeObserver: anObserver [
-	self notifier removeObserver: anObserver
 ]
 
 { #category : #printing }
