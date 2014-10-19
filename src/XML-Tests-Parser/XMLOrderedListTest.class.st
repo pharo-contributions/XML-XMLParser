@@ -429,6 +429,27 @@ XMLOrderedListTest >> testOfSize [
 ]
 
 { #category : #tests }
+XMLOrderedListTest >> testReject [
+	| list |
+
+	list := self listWithElements.
+	self assert:
+		(list reject: [:each | each = self singleElement]) =
+			((self listClass newFrom: self listWithElements) copyWithout: self singleElement).
+]
+
+{ #category : #tests }
+XMLOrderedListTest >> testRejectThenCollect [
+	| list |
+
+	list := self listWithElements.
+	self assert:
+		(list reject: [:each | each = self singleElement] thenCollect: [:each | each asUppercase]) =
+			(self listClass newFrom:
+				((self listElements copyWithout: self singleElement) collect: [:each | each asUppercase])).
+]
+
+{ #category : #tests }
 XMLOrderedListTest >> testRemoveAll [
 	| list |
 
@@ -561,8 +582,7 @@ XMLOrderedListTest >> testSize [
 { #category : #tests }
 XMLOrderedListTest >> testSpecies [
 	self
-		assert: self emptyList species = self listSpecies;
-		assert: self emptyList speciesForCollect = self listSpecies
+		assert: self emptyList species = self listSpecies
 ]
 
 { #category : #tests }
