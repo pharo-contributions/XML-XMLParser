@@ -138,18 +138,18 @@ XMLOrderedList >> capacity [
 
 { #category : #enumerating }
 XMLOrderedList >> collect: aBlock [
-	^ self newWithCollection: (collection collect: aBlock)
+	^ self speciesNewWithCollection: (collection collect: aBlock)
 ]
 
 { #category : #enumerating }
 XMLOrderedList >> collect: aBlock from: aStartIndex to: anEndIndex [
-	^ self newWithCollection:
+	^ self speciesNewWithCollection:
 		(collection collect: aBlock from: aStartIndex to: anEndIndex)
 ]
 
 { #category : #enumerating }
 XMLOrderedList >> collect: aCollectBlock thenSelect: aSelectBlock [
-	^ self newWithCollection:
+	^ self speciesNewWithCollection:
 		(collection collect: aCollectBlock thenSelect: aSelectBlock)
 ]
 
@@ -165,12 +165,12 @@ XMLOrderedList >> copy [
 
 { #category : #copying }
 XMLOrderedList >> copyEmpty [
-	^ self species new: self size
+	^ self species new
 ]
 
 { #category : #copying }
 XMLOrderedList >> copyFrom: aStart to: anEnd [
-	^ self newWithCollection:
+	^ self speciesNewWithCollection:
 		(collection copyFrom: (aStart max: 1) to: (self size min: anEnd))
 ]
 
@@ -219,9 +219,17 @@ XMLOrderedList >> do: aBlock [
 	collection do: aBlock
 ]
 
-{ #category : #private }
-XMLOrderedList >> newWithCollection: aCollection [
-	^ self species basicNew setCollection: aCollection
+{ #category : #enumerating }
+XMLOrderedList >> reject: aBlock [
+	^ self speciesNewWithCollection: (collection reject: aBlock)
+]
+
+{ #category : #enumerating }
+XMLOrderedList >> reject: aRejectBlock thenCollect: aCollectBlock [
+	^ self speciesNewWithCollection:
+		(collection
+			reject: aRejectBlock
+			thenCollect: aCollectBlock)
 ]
 
 { #category : #removing }
@@ -280,6 +288,11 @@ XMLOrderedList >> replaceFrom: aStartingIndex to: anEndingIndex with: aReplaceme
 			offset := offset + 1].
 ]
 
+{ #category : #removing }
+XMLOrderedList >> reset [
+	collection reset
+]
+
 { #category : #enumerating }
 XMLOrderedList >> reverseDo: aBlock [
 	collection reverseDo: aBlock
@@ -297,12 +310,12 @@ XMLOrderedList >> reversed [
 
 { #category : #enumerating }
 XMLOrderedList >> select: aBlock [
-	^ self newWithCollection: (collection select: aBlock)
+	^ self speciesNewWithCollection: (collection select: aBlock)
 ]
 
 { #category : #enumerating }
 XMLOrderedList >> select: aSelectBlock thenCollect: aCollectBlock [
-	^ self newWithCollection:
+	^ self speciesNewWithCollection:
 		(collection select: aSelectBlock thenCollect: aCollectBlock)
 ]
 
@@ -326,22 +339,32 @@ XMLOrderedList >> sort: aSortBlock [
 	collection sort: aSortBlock
 ]
 
+{ #category : #sorting }
+XMLOrderedList >> sorted [
+	self copy sort
+]
+
+{ #category : #sorting }
+XMLOrderedList >> sorted: aSortBlock [
+	^ self copy sort: aSortBlock
+]
+
 { #category : #private }
 XMLOrderedList >> species [
 	^ XMLOrderedList
 ]
 
 { #category : #private }
-XMLOrderedList >> speciesForCollect [
-	^ self species
+XMLOrderedList >> speciesNewWithCollection: aCollection [
+	^ self species basicNew setCollection: aCollection
 ]
 
 { #category : #enumerating }
 XMLOrderedList >> with: aCollection collect: aBlock [
-	^ self newWithCollection: (collection with: aCollection collect: aBlock)
+	^ self speciesNewWithCollection: (collection with: aCollection collect: aBlock)
 ]
 
 { #category : #enumerating }
 XMLOrderedList >> withIndexCollect: aTwoArgumentBlock [
-	^ self newWithCollection: (collection withIndexCollect: aTwoArgumentBlock)
+	^ self speciesNewWithCollection: (collection withIndexCollect: aTwoArgumentBlock)
 ]

@@ -147,3 +147,17 @@ XMLNodeList >> lastElement [
 { #category : #notifications }
 XMLNodeList >> renamedElement: anElement from: anOldName to: aNewName [
 ]
+
+{ #category : #sorting }
+XMLNodeList >> sort [
+	self sort: [:a :b |
+		(a isElement & b isElement) not
+			or: [a name <= b name]]
+]
+
+{ #category : #sorting }
+XMLNodeList >> sorted [
+	^ self sorted: [:a :b |
+		(a isElement & b isElement) not
+			or: [a name <= b name]]
+]

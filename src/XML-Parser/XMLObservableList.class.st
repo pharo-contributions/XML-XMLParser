@@ -97,6 +97,11 @@ XMLObservableList >> removeAt: anIndex [
 	^ self with: [super removeAt: anIndex] remove: (self at: anIndex)
 ]
 
+{ #category : #removing }
+XMLObservableList >> reset [
+	self removeAll
+]
+
 { #category : #private }
 XMLObservableList >> with: aBlock add: anObject [
 	self beforeAdding: anObject.

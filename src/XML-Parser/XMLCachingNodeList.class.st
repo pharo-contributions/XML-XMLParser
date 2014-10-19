@@ -231,3 +231,12 @@ XMLCachingNodeList >> renamedElement: anElement from: anOldName to: aNewName [
 				elementsByNameAt: anElement localName
 				insertElement: anElement].
 ]
+
+{ #category : #'as yet unclassified' }
+XMLCachingNodeList >> sort: aSortBlock [
+	super sort: aSortBlock.
+	self elements sort: aSortBlock.
+	self elementsByName valuesDo: [:each |
+		each isCollection
+			ifTrue: [each sort: aSortBlock]].
+]

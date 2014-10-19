@@ -577,7 +577,7 @@ XMLWellFormedParserTokenizer >> nextEntityValue [
 	context
 		saveCurrent;
 		enterLiteralValue.
-		value := self nextEntityValueDelimitedBy: quote.
+	value := self nextEntityValueDelimitedBy: quote.
 	context resetPrevious.
 	self expectNext: quote.
 

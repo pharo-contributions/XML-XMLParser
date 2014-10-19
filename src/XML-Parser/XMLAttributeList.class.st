@@ -159,3 +159,13 @@ XMLAttributeList >> setFromDictionary: anOrderPreservingDictionary [
 						value: association value
 						element: observer))].
 ]
+
+{ #category : #sorting }
+XMLAttributeList >> sort [
+	self sort: [:a :b | a name <= b name]
+]
+
+{ #category : #sorting }
+XMLAttributeList >> sorted [
+	^ self sorted: [:a :b | a name <= b name]
+]
