@@ -233,7 +233,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.7.3'.
+	spec for: #'common' version: '1.7.4'.
 	spec for: #'pharo1.x' version: '1.2'
 
 ]
@@ -976,6 +976,27 @@ ConfigurationOfXMLParser >> version173: spec [
 		spec 
 			package: 'XML-Parser' with: 'XML-Parser-monty.238';
 			package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.66'.].
+
+	spec for: #'pharo2.x'
+		do: [ 
+			spec package: 'XML-Pharo2-Parser' with: 'XML-Pharo2-Parser-DiegoLont.1' ]
+	
+
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version174: spec [
+	<version: '1.7.4' imports: #('1.0-baseline' )>
+
+	spec for: #'common' do: [
+		spec blessing: #'stable'.
+		spec 
+			project: 'XMLWriter' with: '2.4.1';
+			project: 'BitmapCharacterSet' with: '1.1';
+			project: 'OrderPreservingDictionary' with: '1.2.3'.
+		spec 
+			package: 'XML-Parser' with: 'XML-Parser-monty.240';
+			package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.68'.].
 
 	spec for: #'pharo2.x'
 		do: [ 
