@@ -77,7 +77,7 @@ XMLIntegerReader >> nextDigitWithBase: aBase [
 		ifTrue: [digit := HexDigitCharacterMap at: nextChar ifAbsent: [^ nil]]
 		ifFalse: [
 			digit := nextChar asciiValue - $0 asciiValue.
-			(digit >= 0 and: [digit <= 10])
+			(digit >= 0 and: [digit <= 9])
 				ifFalse: [^ nil]].
 	stream next.
 

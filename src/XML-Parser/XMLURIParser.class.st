@@ -39,13 +39,27 @@ XMLURIParser >> parseFragment [
 XMLURIParser >> parseHost [
 	^ (uriStream position > 0
 		or: [self parseDoubleSlashOrReset])
-		ifTrue: [(self parseUpToAnyNotSkipping: '/?#') asLowercase]
+		ifTrue: [(self parseUpToAnyNotSkipping: ':/?#') asLowercase]
 		ifFalse: [''].
 ]
 
 { #category : #parsing }
 XMLURIParser >> parsePath [
 	^ self parseUpToAnyNotSkipping: '?#'
+]
+
+{ #category : #parsing }
+XMLURIParser >> parsePort [
+	(uriStream atEnd not
+		and: [uriStream peek == $:])
+		ifFalse: [^ nil].
+
+	^ XMLIntegerReader
+		readFrom:
+			(self
+				parseUpToAnyNotSkipping: '/?#'
+				startingAfter: $:) readStream
+		withBase: 10.
 ]
 
 { #category : #parsing }

@@ -22,7 +22,9 @@ XMLFileHandle class >> currentWorkingDirectoryPathString [
 
 { #category : #accessing }
 XMLFileHandle class >> defaultImplementation [
-	^ XMLFileSystemFileHandle
+	^ (Smalltalk includesKey: #FileSystem)
+		ifTrue: [XMLFileSystemFileHandle]
+		ifFalse: [XMLFileDirectoryFileHandle]
 ]
 
 { #category : #accessing }

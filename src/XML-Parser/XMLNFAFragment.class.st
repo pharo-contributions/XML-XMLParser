@@ -27,25 +27,38 @@ XMLNFAFragment class >> firstState: aFirstState terminalStates: aTerminalStateCo
 
 { #category : #converting }
 XMLNFAFragment >> combinedTerminalStatesFrom: aFragment [
-	^ terminalStates isArray
-		ifTrue: [
-			aFragment terminalStates asOrderedCollection
-				addAll: terminalStates;
-				yourself]
+	^ terminalStates isCollection
+		ifTrue: [aFragment terminalStatesAddedTo: terminalStates]
 		ifFalse: [
+			aFragment terminalStates isCollection
+				ifTrue: [self terminalStatesAddedTo: aFragment terminalStates]
+				ifFalse: [
+					self
+						terminalStateCollectionWith: terminalStates
+						and: aFragment terminalStates]]
+]
+
+{ #category : #converting }
+XMLNFAFragment >> combinedTerminalStatesWith: aState [
+	^ terminalStates isCollection
+		ifTrue: [
 			terminalStates
-				addAll: aFragment terminalStates;
+				addLast: aState;
 				yourself]
+		ifFalse: [self terminalStateCollectionWith: terminalStates and: aState]
 ]
 
 { #category : #connecting }
 XMLNFAFragment >> connectToFragment: aFragment [
-	self connectToState: aFragment firstState
+	self connectToState: aFragment firstState.
+	terminalStates := aFragment terminalStates.
 ]
 
 { #category : #connecting }
 XMLNFAFragment >> connectToState: aState [
-	self terminalStates do: [:each | each connectToState: aState]
+	terminalStates isCollection
+		ifTrue: [terminalStates do: [:each | each connectToState: aState]]
+		ifFalse: [terminalStates connectToState: aState]
 ]
 
 { #category : #accessing }
@@ -60,10 +73,18 @@ XMLNFAFragment >> firstState: aState [
 
 { #category : #accessing }
 XMLNFAFragment >> terminalState: aTerminalState [
-	terminalStates := Array with: aTerminalState
+	terminalStates := aTerminalState
 ]
 
-{ #category : #accessing }
+{ #category : #private }
+XMLNFAFragment >> terminalStateCollectionWith: aFirstState and: aSecondState [
+	^ (OrderedCollection new: 4)
+		addLast: aFirstState;
+		addLast: aSecondState;
+		yourself
+]
+
+{ #category : #private }
 XMLNFAFragment >> terminalStates [
 	^ terminalStates
 ]
@@ -73,12 +94,10 @@ XMLNFAFragment >> terminalStates: aTerminalStateCollection [
 	terminalStates := aTerminalStateCollection
 ]
 
-{ #category : #converting }
-XMLNFAFragment >> terminalStatesWith: aState [
-	^ terminalStates isArray
-		ifTrue: [OrderedCollection with: terminalStates first with: aState]
-		ifFalse: [
-			terminalStates
-				add: aState;
-				yourself]
+{ #category : #private }
+XMLNFAFragment >> terminalStatesAddedTo: aCollection [
+	terminalStates isCollection
+		ifTrue: [aCollection addAll: terminalStates]
+		ifFalse: [aCollection addLast: terminalStates].
+	^ aCollection.
 ]

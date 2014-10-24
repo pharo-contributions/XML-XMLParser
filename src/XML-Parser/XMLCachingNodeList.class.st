@@ -232,7 +232,7 @@ XMLCachingNodeList >> renamedElement: anElement from: anOldName to: aNewName [
 				insertElement: anElement].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #sorting }
 XMLCachingNodeList >> sort: aSortBlock [
 	super sort: aSortBlock.
 	self elements sort: aSortBlock.

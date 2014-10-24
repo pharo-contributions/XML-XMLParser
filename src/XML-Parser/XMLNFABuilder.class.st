@@ -34,9 +34,7 @@ XMLNFABuilder >> applyConcatenation [
 	secondFragment := self popFragment.
 	firstFragment := self popFragment.
 
-	firstFragment
-		connectToFragment: secondFragment;
-		terminalStates: secondFragment terminalStates.
+	firstFragment connectToFragment: secondFragment.
 
 	self pushFragment: firstFragment.
 ]
@@ -52,7 +50,7 @@ XMLNFABuilder >> applyOptional [
 	self pushFragment:
 		(XMLNFAFragment
 			firstState: branchingState
-			terminalStates: (optionalFragment terminalStatesWith: branchingState))
+			terminalStates: (optionalFragment combinedTerminalStatesWith: branchingState))
 ]
 
 { #category : #building }

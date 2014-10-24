@@ -7,6 +7,7 @@ Class {
 	#instVars : [
 		'scheme',
 		'host',
+		'port',
 		'pathSegments',
 		'queryString',
 		'fragment'
@@ -34,9 +35,12 @@ XMLURI >> = anObject [
 	self == anObject
 		ifTrue: [^ true].
 
-	^ self class == anObject class
-		and: [scheme = anObject scheme
-			and: [host = anObject host
+	self class == anObject class
+		ifFalse: [^ false].
+
+	^ scheme = anObject scheme
+		and: [host = anObject host
+			and: [port = anObject port
 				and: [pathSegments = anObject pathSegments
 					and: [queryString = anObject queryString
 						and: [fragment = anObject fragment]]]]].
@@ -94,6 +98,8 @@ XMLURI >> asXMLURI [
 XMLURI >> combineWithURI: aUri [
 	aUri hasHost
 		ifTrue: [host := aUri host].
+	aUri hasPort
+		ifTrue: [port := aUri port].
 
 	self addPathSegmentsFrom: aUri.
 	queryString := aUri queryString.
@@ -110,12 +116,13 @@ XMLURI >> fromString: aString [
 	| parser  |
 
 	parser := XMLURIParser on: aString.
-	self
-		setScheme: parser parseScheme
-		host: parser parseHost
-		path: parser parsePath
-		queryString: parser parseQueryString
-		fragment: parser parseFragment.
+
+	scheme := parser parseScheme.
+	host := parser parseHost.
+	port := parser parsePort.
+	self setPathSegmentsFromString: parser parsePath.
+	queryString := parser parseQueryString.
+	fragment := parser parseFragment.
 ]
 
 { #category : #retrieving }
@@ -135,8 +142,28 @@ XMLURI >> hasAbsolutePath [
 ]
 
 { #category : #testing }
+XMLURI >> hasFragment [
+	^ fragment notEmpty
+]
+
+{ #category : #testing }
 XMLURI >> hasHost [
 	^ host notEmpty
+]
+
+{ #category : #testing }
+XMLURI >> hasPort [
+	^ port notNil
+]
+
+{ #category : #testing }
+XMLURI >> hasQueryString [
+	^ queryString notEmpty
+]
+
+{ #category : #testing }
+XMLURI >> hasScheme [
+	^ scheme notEmpty
 ]
 
 { #category : #comparing }
@@ -178,7 +205,7 @@ XMLURI >> pathPrintStringUnescaped: aBoolean [
 	pathSegments
 		ifEmpty: [^ ''].
 
-	pathStream := (String new: 16) writeStream.
+	pathStream := (String new: pathSegments size * 10) writeStream.
 	self
 		printPathSegmentsOn: pathStream
 		unescaped: aBoolean.
@@ -190,6 +217,11 @@ XMLURI >> pathSegments [
 	^ pathSegments
 ]
 
+{ #category : #accessing }
+XMLURI >> port [
+	^ port
+]
+
 { #category : #copying }
 XMLURI >> postCopy [
 	pathSegments := pathSegments copy
@@ -197,17 +229,20 @@ XMLURI >> postCopy [
 
 { #category : #printing }
 XMLURI >> printFragmentOn: aStream [
-	fragment ifNotEmpty: [
-		aStream
-			nextPut: $#;
-			nextPutAll: fragment]
+	self hasFragment
+		ifTrue: [
+			aStream
+				nextPut: $#;
+				nextPutAll: fragment]
 ]
 
 { #category : #printing }
 XMLURI >> printHostOn: aStream [
-	host ifNotEmpty: [
-		scheme ifEmpty: [aStream nextPutAll: '//'].
-		aStream nextPutAll: host]
+	self hasHost
+		ifTrue: [
+			self hasScheme
+				ifFalse: [aStream nextPutAll: '//'].
+			aStream nextPutAll: host]
 ]
 
 { #category : #printing }
@@ -215,6 +250,7 @@ XMLURI >> printOn: aStream [
 	self
 		printSchemeOn: aStream;
 		printHostOn: aStream;
+		printPortOn: aStream;
 		printPathSegmentsOn: aStream unescaped: false;
 		printQueryStringOn: aStream;
 		printFragmentOn: aStream
@@ -232,19 +268,30 @@ XMLURI >> printPathSegmentsOn: aStream unescaped: aBoolean [
 ]
 
 { #category : #printing }
+XMLURI >> printPortOn: aStream [
+	self hasPort
+		ifTrue: [
+			aStream
+				nextPut: $:;
+				nextPutAll: port asString]
+]
+
+{ #category : #printing }
 XMLURI >> printQueryStringOn: aStream [
-	queryString ifNotEmpty: [
-		aStream
-			nextPut: $?;
-			nextPutAll: queryString]
+	self hasQueryString
+		ifTrue: [
+			aStream
+				nextPut: $?;
+				nextPutAll: queryString]
 ]
 
 { #category : #printing }
 XMLURI >> printSchemeOn: aStream [
-	scheme ifNotEmpty: [
-		aStream
-			nextPutAll: scheme;
-			nextPutAll: '://']
+	self hasScheme
+		ifTrue: [
+			aStream
+				nextPutAll: scheme;
+				nextPutAll: '://']
 ]
 
 { #category : #printing }
@@ -279,18 +326,10 @@ XMLURI >> scheme [
 XMLURI >> setPathSegmentsFromString: aString [
 	pathSegments := OrderedCollection new.
 
-	aString ifEmpty: [^ self].
-
-	$/ split: aString do: [:segment | pathSegments addLast: segment].
-]
-
-{ #category : #initialization }
-XMLURI >> setScheme: aScheme host: aHost path: aPath queryString: aQueryString fragment: aFragment [
-	scheme := aScheme.
-	host := aHost.
-	self setPathSegmentsFromString: aPath.
-	queryString := aQueryString.
-	fragment := aFragment.
+	aString ifNotEmpty: [
+		$/
+			xmlSplit: aString
+			do: [:segment | pathSegments addLast: segment]]
 ]
 
 { #category : #accessing }

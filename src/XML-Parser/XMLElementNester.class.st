@@ -39,14 +39,11 @@ XMLElementNester >> currentScopedAttributes [
 ]
 
 { #category : #printing }
-XMLElementNester >> enclosedElementsAsString: aTagName [
-	| enclosedTags |
-
-	enclosedTags := String new writeStream.
-	self
-		printOn: enclosedTags
-		startingAt: (self openElements lastIndexOf: aTagName) + 1.
-	^ enclosedTags contents.
+XMLElementNester >> enclosedElementsAsString: anElement [
+	^ String streamContents: [:stream |
+		self
+			printFrom: (self openElements lastIndexOf: anElement) + 1
+			on: stream]
 ]
 
 { #category : #checking }
@@ -102,6 +99,31 @@ XMLElementNester >> openElementsReverseDo: aBlock [
 			i := i - 1].
 ]
 
+{ #category : #printing }
+XMLElementNester >> printFrom: aStart on: aStream [
+	self
+		printFrom: aStart
+		to: aStart + self printLimit - 1
+		on: aStream
+]
+
+{ #category : #printing }
+XMLElementNester >> printFrom: aStart to: aStop on: aStream [
+	aStart to: aStop do: [:i |
+		i > self openElements size
+			ifTrue: [^ self].
+		i > aStart
+			ifTrue: [aStream nextPutAll: ', '].
+
+		aStream
+			nextPut: $<;
+			nextPutAll: (self openElements at: i);
+			nextPut: $>].
+
+	(aStop < self openElements size)
+		ifTrue: [aStream nextPutAll: '...'].
+]
+
 { #category : #private }
 XMLElementNester >> printLimit [
 	^ 5
@@ -109,23 +131,9 @@ XMLElementNester >> printLimit [
 
 { #category : #printing }
 XMLElementNester >> printOn: aStream [
-	self printOn: aStream startingAt: 1
-]
-
-{ #category : #printing }
-XMLElementNester >> printOn: aStream startingAt: aPosition [
-	| endPosition |
-
-	endPosition :=  self openElements size min: (aPosition + self printLimit - 1).
-	(self openElements copyFrom: aPosition to: endPosition)
-		do: [:each |
-			aStream
-				nextPut: $<;
-				nextPutAll: each;
-				nextPut: $>]
-		separatedBy: [aStream nextPutAll: ', '].
-	(endPosition < self openElements size)
-		ifTrue: [aStream nextPutAll: '...'].
+	self
+		printFrom: 1
+		on: aStream
 ]
 
 { #category : #accessing }

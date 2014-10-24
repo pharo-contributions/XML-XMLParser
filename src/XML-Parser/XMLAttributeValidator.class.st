@@ -78,7 +78,7 @@ XMLAttributeValidator >> isValueListValidator [
 { #category : #private }
 XMLAttributeValidator >> listValuesIn: aSpaceSeparatedList do: aBlock [
 	Character space
-		split: aSpaceSeparatedList
+		xmlSplit: aSpaceSeparatedList
 		do: aBlock
 ]
 

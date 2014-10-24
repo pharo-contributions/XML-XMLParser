@@ -63,16 +63,6 @@ XMLElement class >> named: aLocalName [
 	^ self new name: aLocalName
 ]
 
-{ #category : #accessing }
-XMLElement >> addContent: aStringOrStringNode [
-	"Adds a string or string node. If the last child node is already a string node,
-	the characters being added are concatenated to it."
-
-	(self hasChildren and: [self lastNode acceptsContent])
-		ifTrue: [self lastNode addContent: aStringOrStringNode]
-		ifFalse: [self addNode: aStringOrStringNode asXMLString]
-]
-
 { #category : #notifications }
 XMLElement >> addedAttribute: anAttribute [
 	anAttribute element: self.

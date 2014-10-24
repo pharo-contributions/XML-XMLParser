@@ -49,13 +49,15 @@ Class {
 
 { #category : #'instance creation' }
 SAXHandler class >> on: aStringOrStream [
-	^ self new input: aStringOrStream
+	^ self
+		on: aStringOrStream
+		documentURI: nil
 ]
 
 { #category : #'instance creation' }
 SAXHandler class >> on: aStringOrStream documentURI: aUri [
 	^ self new
-		input: aStringOrStream
+		setInput: aStringOrStream
 		documentURI: aUri
 ]
 
@@ -277,20 +279,9 @@ SAXHandler >> ignorableWhitespace: aString [
 	ignorableWhitespace(char[] ch, int start, int length)."
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 SAXHandler >> input [
 	^ input
-]
-
-{ #category : #private }
-SAXHandler >> input: aStringOrStream [
-	input := aStringOrStream.
-]
-
-{ #category : #private }
-SAXHandler >> input: aStringOrStream documentURI: aUri [
-	input := aStringOrStream.
-	documentUri := aUri.
 ]
 
 { #category : #private }
@@ -374,7 +365,7 @@ SAXHandler >> parser [
 
 	^ self parserClass
 		driver: (self driverClass saxHandler: self)
-		on: input.
+		on: self input.
 ]
 
 { #category : #private }
@@ -445,6 +436,12 @@ SAXHandler >> resolvesExternalEntities: aBoolean [
 	fetched (not default)."
 
 	self configuration resolvesExternalEntities: aBoolean
+]
+
+{ #category : #initialization }
+SAXHandler >> setInput: aStringOrStream documentURI: aUri [
+	input := aStringOrStream.
+	documentUri := aUri.
 ]
 
 { #category : #content }

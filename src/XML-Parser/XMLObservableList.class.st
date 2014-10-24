@@ -99,7 +99,8 @@ XMLObservableList >> removeAt: anIndex [
 
 { #category : #removing }
 XMLObservableList >> reset [
-	self removeAll
+	collection do: [:each | self with: [] remove: each].
+	collection reset.
 ]
 
 { #category : #private }

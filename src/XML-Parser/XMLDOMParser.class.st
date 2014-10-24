@@ -81,11 +81,6 @@ XMLDOMParser >> endDTD [
 ]
 
 { #category : #content }
-XMLDOMParser >> endDocument [
-	self popNode
-]
-
-{ #category : #content }
 XMLDOMParser >> endElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName [
 	self popNode
 ]

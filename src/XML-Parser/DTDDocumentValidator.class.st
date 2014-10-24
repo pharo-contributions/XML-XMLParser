@@ -56,8 +56,7 @@ DTDDocumentValidator >> hasElementValidators [
 
 { #category : #validation }
 DTDDocumentValidator >> unvalidatedAttributes: anAttributeCollection [
-	XMLValidationException signal:
-		'Undeclared attribute(s) ', (', ' join: anAttributeCollection)
+	XMLValidationException signal: 'Undeclared attribute ', anAttributeCollection anyOne
 ]
 
 { #category : #validation }
