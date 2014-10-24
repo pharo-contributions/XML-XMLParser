@@ -6,11 +6,14 @@ Class {
 
 { #category : #source }
 XMLDOMParserTest class >> addressBookNamespacePrefixedXML [
+	"
+	self addressBookNamespacePrefixedXML
+	"
 	| xmlWithPrefixes |
 
 	xmlWithPrefixes := self addressBookNamespacedXML.
-	#('<addressbook' '</addressbook' '<person' '</person' 'family-name=')
-		with: #('<book:addressbook' '</book:addressbook' '<ps:person' '</ps:person' 'ps:family-name=')
+	#('<addressbook' '</addressbook' '<person' '</person' 'family-name=' 'first-name=')
+		with: #('<book:addressbook' '</book:addressbook' '<ps:person' '</ps:person' 'ps:family-name=' 'ps:first-name=')
 		do: [:source :replacement |
 			xmlWithPrefixes := xmlWithPrefixes copyReplaceAll: source with: replacement].
 	^ xmlWithPrefixes.
@@ -18,6 +21,9 @@ XMLDOMParserTest class >> addressBookNamespacePrefixedXML [
 
 { #category : #source }
 XMLDOMParserTest class >> addressBookNamespacedXML [
+	"
+	self addressBookNamespacedXML
+	"
 	^ '<addressbook xmlns="defaultNS" xmlns:book="bookNS" xmlns:ps="personNS">',
 		(self addressBookXML copyAfter:  $>)
 ]
@@ -79,7 +85,8 @@ XMLDOMParserTest >> testAttributeNamespaces [
 			assert:
 				(each attributeNames allSatisfy: [:name |
 					(each attributeNodeAt: name namespaceURI: 'defaultNS') isNil]);
-			assert: (each attributeNodeAt: 'ps:family-name' namespaceURI: 'personNS') notNil].
+			assert: (each attributeNodeAt: 'ps:family-name' namespaceURI: 'personNS') notNil;
+			assert: (each attributeNodeAt: 'ps:first-name' namespaceURI: 'personNS') notNil].
 ]
 
 { #category : #tests }
@@ -96,7 +103,8 @@ XMLDOMParserTest >> testAttributeNamespacesDisabled [
 		self
 			assert: each hasAttributes;
 			deny: each attributeNames isEmpty;
-			assert: (each attributeNodeAt: 'ps:family-name' namespaceURI: 'personNS') isNil].
+			assert: (each attributeNodeAt: 'ps:family-name' namespaceURI: 'personNS') isNil;
+			assert: (each attributeNodeAt: 'ps:first-name' namespaceURI: 'personNS') isNil].
 ]
 
 { #category : #tests }
@@ -176,8 +184,7 @@ XMLDOMParserTest >> testChangingNamespaces [
 
 	people := document allElementsNamed: 'person' namespaceURI: 'defaultNS'.
 	(person := people third) prefix: 'ps'.
-	self assert:
-		person == (document findElementNamed: 'person' namespaceURI: 'personNS').
+	self assert: person == (document findElementNamed: 'person' namespaceURI: 'personNS').
 	self assert:
 		(people copyWithout: person) =
 			((document findElementNamed: 'addressbook') nodesSelect: [:each |
@@ -727,17 +734,6 @@ XMLDOMParserTest >> testParsingRoot [
 			each isElement
 				and: [each isNamedAny: #('AddressBook' 'addressbook')]]) == root.
 	self assert: (root findElementNamed: 'addressbook') == root.
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testStringParseXML [
-	self assert:
-		self addressBookXML parseXML printString =
-			(XMLDOMParser parse: self addressBookXML) printString.
-
-	self assert:
-		self addressBookXMLWithDTD parseXML printString =
-			(XMLDOMParser parse: self addressBookXMLWithDTD) printString.
 ]
 
 { #category : #tests }

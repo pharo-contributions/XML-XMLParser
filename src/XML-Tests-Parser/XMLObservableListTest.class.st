@@ -23,8 +23,8 @@ XMLObservableListTest >> afterRemovingFromNotification [
 XMLObservableListTest >> assertObserver: anObserver receivedNotificationOfAdding: anElement to: aList [
 	| firstNotification secondNotification |
 
-	firstNotification := anObserver notifications removeFirst.
-	secondNotification := anObserver notifications removeFirst.
+	firstNotification := anObserver nextNotification.
+	secondNotification := anObserver nextNotification.
 	self
 		assert:firstNotification selector = self beforeAddingToNotification;
 		assert: firstNotification arguments = (Array with: anElement with: aList);
@@ -36,7 +36,7 @@ XMLObservableListTest >> assertObserver: anObserver receivedNotificationOfAdding
 XMLObservableListTest >> assertObserver: anObserver receivedNotificationOfRemoving: anElement from: aList [
 	| notification |
 
-	notification := anObserver notifications removeFirst.
+	notification := anObserver nextNotification.
 	self
 		assert: notification selector = self afterRemovingFromNotification;
 		assert: notification arguments = (Array with: anElement with: aList)
@@ -64,7 +64,7 @@ XMLObservableListTest >> should: aBlock add: anElement toAndNotifyOf: aList [
 XMLObservableListTest >> should: aBlock addAll: anElementCollection toAndNotifyOf: aList [
 	| observer |
 
-	observer := XMLStubListObserver new.
+	observer := XMLRecordingListObserver new.
 	aList observer: observer.
 	aBlock value.
 	anElementCollection do: [:each |
@@ -87,7 +87,7 @@ XMLObservableListTest >> should: aBlock remove: anElement fromAndNotifyOf: aList
 XMLObservableListTest >> should: aBlock removeAll: anElementCollection fromAndNotifyOf: aList [
 	| observer |
 
-	observer := XMLStubListObserver new.
+	observer := XMLRecordingListObserver new.
 	aList observer: observer.
 	aBlock value.
 	anElementCollection do: [:each |
@@ -232,16 +232,16 @@ XMLObservableListTest >> testAtPut [
 	super testAtPut.
 
 	list := self listWithSingleElement.
-	observer := XMLStubListObserver new.
+	observer := XMLRecordingListObserver new.
 	list observer: observer.
-	list at: 1 put: self absentElement.
+	list at: 1 put: self newElement.
 	self
 		assertObserver: observer
 		receivedNotificationOfRemoving: self singleElement
 		from: list.
 	self
 		assertObserver: observer
-		receivedNotificationOfAdding: self absentElement
+		receivedNotificationOfAdding: self newElement
 		to: list.
 ]
 
@@ -269,12 +269,11 @@ XMLObservableListTest >> testRemoveAt [
 		remove: self singleElement
 		fromAndNotifyOf: list.
 
-	observer := XMLStubListObserver new.
+	observer := XMLRecordingListObserver new.
 	list observer: observer.
 	self
 		should: [list removeAt: 1] raise: Error;
-		assert: observer notifications isEmpty.
-	
+		deny: observer hasNotifications.
 ]
 
 { #category : #tests }
@@ -289,11 +288,11 @@ XMLObservableListTest >> testRemoveFirst [
 		remove: self singleElement
 		fromAndNotifyOf: list.
 
-	observer := XMLStubListObserver new.
+	observer := XMLRecordingListObserver new.
 	list observer: observer.
 	self
 		should: [list removeFirst] raise: Error;
-		assert: observer notifications isEmpty.
+		deny: observer hasNotifications.
 	
 ]
 
@@ -322,12 +321,11 @@ XMLObservableListTest >> testRemoveIfAbsent [
 		remove: self singleElement
 		fromAndNotifyOf: list.
 
-	observer := XMLStubListObserver new.
+	observer := XMLRecordingListObserver new.
 	list observer: observer.
 	self
 		assert: (list remove: self singleElement ifAbsent: [nil]) isNil;
-		assert: observer notifications isEmpty.
-	
+		deny: observer hasNotifications.
 ]
 
 { #category : #tests }
@@ -342,12 +340,11 @@ XMLObservableListTest >> testRemoveLast [
 		remove: self singleElement
 		fromAndNotifyOf: list.
 
-	observer := XMLStubListObserver new.
+	observer := XMLRecordingListObserver new.
 	list observer: observer.
 	self
 		should: [list removeLast] raise: Error;
-		assert: observer notifications isEmpty.
-	
+		deny: observer hasNotifications.
 ]
 
 { #category : #tests }
@@ -370,7 +367,7 @@ XMLObservableListTest >> testReplaceFromToWithStartingAt [
 	super testReplaceFromToWithStartingAt.
 
 	list := self listWithElements.
-	observer := XMLStubListObserver new.
+	observer := XMLRecordingListObserver new.
 	list observer: observer.
 	list
 		replaceFrom: 2
@@ -394,4 +391,16 @@ XMLObservableListTest >> testReplaceFromToWithStartingAt [
 		assertObserver: observer
 		receivedNotificationOfAdding: 'new3'
 		to: list.
+]
+
+{ #category : #tests }
+XMLObservableListTest >> testReset [
+	| list |
+
+	super testReset.
+	list := self listWithElements.
+	self
+		should: [list reset]
+		removeAll: self listElements
+		fromAndNotifyOf: list.
 ]

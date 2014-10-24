@@ -30,6 +30,11 @@ XMLURITest >> domain [
 ]
 
 { #category : #strings }
+XMLURITest >> domainWithPort [
+	^ self domain, ':80'
+]
+
+{ #category : #strings }
 XMLURITest >> escaped [
 	^ '%20%22%3c%3E%25'
 ]
@@ -55,8 +60,18 @@ XMLURITest >> fullURIString [
 ]
 
 { #category : #strings }
+XMLURITest >> fullURIWithPortString [
+	^ self domainWithPort, self absolute, self queryString, self fragment
+]
+
+{ #category : #strings }
 XMLURITest >> host [
 	^ self domain copyAfterLast: $/
+]
+
+{ #category : #accessing }
+XMLURITest >> port [
+	^ 80
 ]
 
 { #category : #strings }
@@ -77,6 +92,11 @@ XMLURITest >> scheme [
 { #category : #strings }
 XMLURITest >> schemelessURIString [
 	^ (self domain copyAfter: $:), self absolute, self queryString, self fragment
+]
+
+{ #category : #strings }
+XMLURITest >> schemelessURIWithPortString [
+	^ (self domainWithPort copyAfter: $:), self absolute, self queryString, self fragment
 ]
 
 { #category : #tests }
@@ -117,15 +137,19 @@ XMLURITest >> testCombiningDotPathURIs [
 
 { #category : #tests }
 XMLURITest >> testCombiningRelativeURIs [
-	| domainUri absolutePathUri absoluteDirPathUri |
+	| domainUri domainUriWithPort absolutePathUri absoluteDirPathUri |
 
 	domainUri := self domain asXMLURI.
+	domainUriWithPort := self domainWithPort asXMLURI.
 	absolutePathUri := (self domain, self absolute) asXMLURI.
 	absoluteDirPathUri := (self domain, self absoluteDir) asXMLURI.
 	self
 		assert: (domainUri / self relative) = (self domain, '/', self relative) asXMLURI;
 		assert: (domainUri / self absolute) = (self domain, self absolute) asXMLURI;
 		assert: (domainUri / self absoluteDir) = (self domain, self absoluteDir) asXMLURI;
+		assert: (domainUriWithPort / self relative) = (self domainWithPort, '/', self relative) asXMLURI;
+		assert: (domainUriWithPort / self absolute) = (self domainWithPort, self absolute) asXMLURI;
+		assert: (domainUriWithPort / self absoluteDir) = (self domainWithPort, self absoluteDir) asXMLURI;
 		assert: (absolutePathUri / self relative) = (self domain, self absoluteRelativeCombined) asXMLURI;
 		assert: (absoluteDirPathUri / self relative) = (self domain, self absoluteDirRelativeCombined) asXMLURI;
 		assert: (absolutePathUri / self queryString) = (self domain, self absolute, self queryString) asXMLURI;
@@ -155,6 +179,7 @@ XMLURITest >> testParsingAbsolutePathURI [
 		assert: uri isLocalURI;
 		assert: uri scheme isEmpty;
 		assert: uri host isEmpty;
+		assert: uri port isNil;
 		assert: uri path = self absolute;
 		assert: uri queryString isEmpty;
 		assert: uri fragment isEmpty.
@@ -171,6 +196,24 @@ XMLURITest >> testParsingDomainURI [
 		deny: uri isLocalURI;
 		assert: uri scheme = self scheme;
 		assert: uri host = self host;
+		assert: uri port isNil;
+		assert: uri path isEmpty;
+		assert: uri queryString isEmpty;
+		assert: uri fragment isEmpty.
+]
+
+{ #category : #tests }
+XMLURITest >> testParsingDomainURIWithPort [
+	| uri |
+
+	uri := self domainWithPort asXMLURI.
+	self
+		deny: uri isFileURI;
+		deny: uri isRelative;
+		deny: uri isLocalURI;
+		assert: uri scheme = self scheme;
+		assert: uri host = self host;
+		assert: uri port = self port;
 		assert: uri path isEmpty;
 		assert: uri queryString isEmpty;
 		assert: uri fragment isEmpty.
@@ -187,6 +230,7 @@ XMLURITest >> testParsingFileHostURI [
 		assert: uri isLocalURI;
 		assert: uri scheme = 'file';
 		assert: uri host = self host;
+		assert: uri port isNil;
 		assert: uri path = self absolute;
 		assert: uri queryString isEmpty;
 		assert: uri fragment isEmpty.
@@ -203,6 +247,7 @@ XMLURITest >> testParsingFileURI [
 		assert: uri isLocalURI;
 		assert: uri scheme = 'file';
 		assert: uri host isEmpty;
+		assert: uri port isNil;
 		assert: uri path = self absolute;
 		assert: uri queryString isEmpty;
 		assert: uri fragment isEmpty.
@@ -219,6 +264,24 @@ XMLURITest >> testParsingFullURI [
 		deny: uri isLocalURI;
 		assert: uri scheme = self scheme;
 		assert: uri host = self host;
+		assert: uri port isNil;
+		assert: uri path = self absolute;
+		assert: uri queryString = self queryString allButFirst;
+		assert: uri fragment = self fragment allButFirst.
+]
+
+{ #category : #tests }
+XMLURITest >> testParsingFullURIWithPort [
+	| uri |
+
+	uri := self fullURIWithPortString asXMLURI.
+	self
+		deny: uri isFileURI;
+		deny: uri isRelative;
+		deny: uri isLocalURI;
+		assert: uri scheme = self scheme;
+		assert: uri host = self host;
+		assert: uri port = self port;
 		assert: uri path = self absolute;
 		assert: uri queryString = self queryString allButFirst;
 		assert: uri fragment = self fragment allButFirst.
@@ -235,13 +298,14 @@ XMLURITest >> testParsingRelativePathURI [
 		assert: uri isLocalURI;
 		assert: uri scheme isEmpty;
 		assert: uri host isEmpty;
+		assert: uri port isNil;
 		assert: uri path = self relative;
 		assert: uri queryString isEmpty;
 		assert: uri fragment isEmpty.
 ]
 
 { #category : #tests }
-XMLURITest >> testParsingURIWithoutScheme [
+XMLURITest >> testParsingSchemelessURI [
 	| uri |
 
 	uri := self schemelessURIString asXMLURI.
@@ -251,6 +315,24 @@ XMLURITest >> testParsingURIWithoutScheme [
 		assert: uri isLocalURI;
 		assert: uri scheme isEmpty;
 		assert: uri host = self host;
+		assert: uri port isNil;
+		assert: uri path = self absolute;
+		assert: uri queryString = self queryString allButFirst;
+		assert: uri fragment = self fragment allButFirst.
+]
+
+{ #category : #tests }
+XMLURITest >> testParsingSchemelessURIWithPort [
+	| uri |
+
+	uri := self schemelessURIWithPortString asXMLURI.
+	self
+		deny: uri isFileURI;
+		assert: uri isRelative;
+		assert: uri isLocalURI;
+		assert: uri scheme isEmpty;
+		assert: uri host = self host;
+		assert: uri port = self port;
 		assert: uri path = self absolute;
 		assert: uri queryString = self queryString allButFirst;
 		assert: uri fragment = self fragment allButFirst.
@@ -301,7 +383,10 @@ XMLURITest >> testURIEquality [
 XMLURITest >> testURIPrinting [
 	self
 		assert: self fullURIString asXMLURI printString = self fullURIString;
+		assert: self fullURIWithPortString asXMLURI printString = self fullURIWithPortString;
 		assert: self schemelessURIString asXMLURI printString = self schemelessURIString;
+		assert: self domain asXMLURI printString = self domain;
+		assert: self domainWithPort asXMLURI printString = self domainWithPort;
 		assert: self absolute asXMLURI printString = self absolute;
 		assert: self relative asXMLURI printString = self relative;
 		assert: self absoluteDir asXMLURI printString = self absoluteDir;

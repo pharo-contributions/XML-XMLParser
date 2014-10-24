@@ -16,9 +16,8 @@ XMLElementTest >> assertElement: anElement hasAttribute: anAttributeName equalTo
 { #category : #assertions }
 XMLElementTest >> assertElement: anElement hasAttributes: aDictionary [
 	self assert:
-		((aDictionary isMemberOf: Dictionary)
-			ifTrue: [(Dictionary newFrom: anElement attributes) = aDictionary]
-			ifFalse: [anElement attributes = aDictionary])
+		(Dictionary newFrom: anElement attributes) =
+			(Dictionary newFrom: aDictionary)
 ]
 
 { #category : #assertions }

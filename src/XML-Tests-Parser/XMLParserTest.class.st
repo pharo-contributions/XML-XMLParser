@@ -485,10 +485,16 @@ XMLParserTest >> testElementContentModelsBranching [
 XMLParserTest >> testElementContentModelsManyBranches [
 	| dtd names |
 
-	names := (1 to: 25) collect: [:each | 'element', each printString].
-	dtd := '<!DOCTYPE root [',
-		(self elementDeclarationsNamed: names),
-		'<!ELEMENT root (', ($| join: names), ')>]>'.
+	names := (1 to: 50) collect: [:each | 'element', each printString].
+	dtd := String streamContents: [:stream |
+		stream
+			nextPutAll: '<!DOCTYPE root [';
+			nextPutAll: (self elementDeclarationsNamed: names);
+			nextPutAll: '<!ELEMENT root ('.
+		names
+			do: [:each | stream nextPutAll: each]
+			separatedBy: [stream nextPut: $|].
+		stream nextPutAll: ')>]>'].
 
 	names do: [:each |
 		self

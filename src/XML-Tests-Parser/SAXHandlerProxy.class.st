@@ -1,3 +1,6 @@
+"
+A SAXHandler that records events.
+"
 Class {
 	#name : #SAXHandlerProxy,
 	#superclass : #Object,
@@ -13,13 +16,24 @@ SAXHandlerProxy class >> saxHandler: aSaxHandler [
 	^ self new saxHandler: aSaxHandler
 ]
 
+{ #category : #accessing }
+SAXHandlerProxy >> allSentMessagesNamed: aName [
+	^ self sentHandlerMessages select: [:each | each selector = aName asSymbol]
+]
+
+{ #category : #accessing }
+SAXHandlerProxy >> argumentsSentWith: aSelector [
+	^ (self sentHandlerMessages
+		detect: [:each | each selector = aSelector]
+		ifNone: [^ #()]) arguments
+]
+
 { #category : #'reflective operations' }
 SAXHandlerProxy >> doesNotUnderstand: aMessage [
 	| result |
 
-	(self handlerCategories anySatisfy: [:each |
-		(saxHandler class selectorsInCategory: each)
-			includes: aMessage selector])
+	(self handlerCategories includes:
+		(saxHandler class whichCategoryIncludesSelector: aMessage selector))
 		ifTrue: [self sentHandlerMessages addLast: aMessage].
 
 	^ (result := aMessage sendTo: saxHandler) == saxHandler
@@ -57,4 +71,9 @@ SAXHandlerProxy >> sentHandlerMessages [
 { #category : #accessing }
 SAXHandlerProxy >> sentHandlerSelectors [
 	^ (self sentHandlerMessages collect: [:each | each selector]) asArray.
+]
+
+{ #category : #testing }
+SAXHandlerProxy >> wasSentSelectors: aSelectorArray [
+	^ self sentHandlerSelectors asArray = aSelectorArray asArray
 ]

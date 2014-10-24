@@ -30,6 +30,12 @@ XMLEncodingTest >> testDecodingCharacters [
 	self
 		should: [XMLDOMParser parse: (xml format: (Array with: '-1'))]
 		raise: XMLWellFormednessException.
+	self
+		should: [XMLDOMParser parse: (xml format: (Array with: '9:'))]
+		raise: XMLWellFormednessException.
+	self
+		should: [XMLDOMParser parse: (xml format: (Array with: 'xFG'))]
+		raise: XMLWellFormednessException.
 ]
 
 { #category : #tests }
