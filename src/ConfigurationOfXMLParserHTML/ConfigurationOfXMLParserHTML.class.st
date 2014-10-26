@@ -191,7 +191,7 @@ ConfigurationOfXMLParserHTML >> version101: spec [
 
         spec for: #common do: [
                 spec blessing: #release.
-			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.3'.
-			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.1'.
+			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.4'.
+			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.2'.
                 ].
 ]
