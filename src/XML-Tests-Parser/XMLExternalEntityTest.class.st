@@ -77,6 +77,15 @@ XMLExternalEntityTest >> isSkipping [
 	^ self class isSkipping
 ]
 
+{ #category : #private }
+XMLExternalEntityTest >> skipOrReturnWith: aBlock [
+	self isSkipping
+		ifTrue: [
+			(self respondsTo: #skip)
+				ifTrue: [self skip]
+				ifFalse: [aBlock value]]
+]
+
 { #category : #source }
 XMLExternalEntityTest >> sourceXML [
 ^ '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -123,8 +132,7 @@ XMLExternalEntityTest >> sourceXML [
 XMLExternalEntityTest >> testOnFileNamed [
 	| parser fileName |
 
-	self isSkipping
-		ifTrue: [self skip].
+	self skipOrReturnWith: [^ self].
 
 	fileName := 'testOnFileNamed.xml'.
 	self fileNamed: fileName write: ''.
@@ -142,8 +150,7 @@ XMLExternalEntityTest >> testOnFileNamed [
 XMLExternalEntityTest >> testOnURL [
 	| parser |
 
-	self isSkipping
-		ifTrue: [self skip].
+	self skipOrReturnWith: [^ self].
 
 	self
 		shouldnt: [parser := SAXHandler onURL: self feedURL]
@@ -158,8 +165,7 @@ XMLExternalEntityTest >> testParsingExternalEntities [
 	"This test uses HTTP so is skipped by default."
 	| entityCache entityCacheCopy |
 
-	self isSkipping
-		ifTrue: [self skip].
+	self skipOrReturnWith: [^ self].
 
 	DTDCachingEntityResolver clearEntityCache.
 	entityCache := DTDCachingEntityResolver entityCache.
@@ -190,8 +196,7 @@ XMLExternalEntityTest >> testParsingFile [
 	"This test creates/deletes a file so is skipped by default"
 	| fileName doc |
 
-	self isSkipping
-		ifTrue: [self skip].
+	self skipOrReturnWith: [^ self].
 
 	fileName := 'testParsingFile.xml'.
 	self
@@ -213,8 +218,7 @@ XMLExternalEntityTest >> testParsingURL [
 	"This uses HTTP so is skipped by default"
 	| doc |
 
-	self isSkipping
-		ifTrue: [self skip].
+	self skipOrReturnWith: [^ self].
 
 	self
 		shouldnt: [doc := XMLDOMParser parseURL: self feedURL]

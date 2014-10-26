@@ -204,6 +204,22 @@ XMLElementTest >> test7contentNodeEnumeration [
 ]
 
 { #category : #tests }
+XMLElementTest >> testAddElement [
+	| element |
+
+	element := XMLElement name: 'test' namespaces: (Array with: 'prefix' -> 'ns').
+	element
+		addElement: 'first';
+		addElement: 'prefix:second';
+		addElement: (XMLElement name: 'newprefix:third' namespaceURI: 'newNS').
+	self assert: (element elementNames) asArray = #('first' 'prefix:second' 'newprefix:third').
+
+	self
+		should: [element addElement: 'undeclared:fourth']
+		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
 XMLElementTest >> testCanonicalPrinting [
 	| element |
 
@@ -226,9 +242,9 @@ XMLElementTest >> testElementSorting [
 	| element |
 
 	(element := XMLElement name: 'sorted')
-		addElement: (XMLElement name: 'c');
-		addElement: (XMLElement name: 'b');
-		addElement: (XMLElement name: 'a').
+		addElement: 'c';
+		addElement: 'b';
+		addElement: 'a'.
 
 	self assert: (element nodes sorted collect: [:each | each name]) asArray = #('a' 'b' 'c').
 	self assert:
@@ -250,11 +266,11 @@ XMLElementTest >> testPrintingDefaultNamespaces [
 		XMLElement
 			name: 'element'
 			namespaceURI: 'default'.
-	element addElement:
+	element addNode:
 		((XMLElement
 			name: 'element'
 			namespaceURI: '')
-			addElement: (XMLElement name: 'empty');
+			addElement: 'empty';
 			yourself).
 
 	self assert:
@@ -271,7 +287,7 @@ XMLElementTest >> testPrintingNonRootNamespaces [
 	element :=
 		XMLElement
 			name: 'element'.
-	element addElement:
+	element addNode:
 		(XMLElement
 			name: 'used:empty'
 			namespaces: (Array with: '' -> 'defaultNS' with: 'used' -> 'usedNS')).
@@ -291,7 +307,7 @@ XMLElementTest >> testPrintingRootNamespaces [
 		XMLElement
 			name: 'used:element'
 			namespaces: (Array with: '' -> 'defaultNS' with: 'used' -> 'usedNS').
-	element addElement: (XMLElement name: 'empty').
+	element addElement: 'empty'.
 
 	self assert:
 		element printString =

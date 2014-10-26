@@ -558,9 +558,10 @@ XMLOrderedListTest >> testCopyEmpty [
 
 { #category : #tests }
 XMLOrderedListTest >> testCopyFromTo [
-	| list |
+	| list emptyList |
 
 	list := self listWithElements.
+	emptyList  := self emptyList.
 	-1 to: list size + 1 do: [:start |
 		start to: list size + 1 do: [:stop |
 			self
@@ -571,7 +572,14 @@ XMLOrderedListTest >> testCopyFromTo [
 				assertList: (list copyFrom: start to: start - 1)
 				copiedFrom: list
 				equals: self emptyList.
-			self assert: (self emptyList copyFrom: start to: stop) = self emptyList]].
+			self
+				assertList: (list copyFrom: start to: start - 2)
+				copiedFrom: list
+				equals: self emptyList.
+			self
+				assertList: (emptyList copyFrom: start to: stop)
+				copiedFrom: list
+				equals: self emptyList]].
 ]
 
 { #category : #tests }
@@ -591,17 +599,29 @@ XMLOrderedListTest >> testCopyReplaceAllWith [
 					((self listElements, self listElements) 
 						copyReplaceAll: (self listElements last: i)
 						with: ((self listElements last: i) collect: [:each | each asUppercase]))).
-		self assert:
-			(self emptyList
-				copyReplaceAll: (self listElements last: i)
-				with: (self listElements last: i)) = self emptyList].
+		self
+			assertList:
+				(list
+					copyReplaceAll: (Array with: self absentElement)
+					with: (Array with: self newElement))
+			copiedFrom: list
+			equals: list.	
+		self
+			assertList: (list copyReplaceAll: #() with: (Array with: self newElement))
+			copiedFrom: list
+			equals: list.
+		self
+			assertList: (list copyReplaceAll: (self listElements copyWith: self absentElement) with: #())
+			copiedFrom: list
+			equals: list].
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testCopyReplaceFromToWith [
-	| list |
+	| list emptyList |
 
 	list := self listWithElements.
+	emptyList := self emptyList.
 	-1 to: list size + 1 do: [:start |
 		start to: list size + 1 do: [:stop |
 			self
@@ -614,9 +634,10 @@ XMLOrderedListTest >> testCopyReplaceFromToWith [
 						(start < 1
 							ifTrue: [self listElements]
 							ifFalse: [self listElements last: (list size - stop max: 0)])).
-			self assert:
-				(self emptyList copyReplaceFrom: start to: stop with: self listElements reversed) =
-					(self listClass newFrom: self listElements reversed)]].
+			self
+				assertList: (emptyList copyReplaceFrom: start to: stop with: self listElements)
+				copiedFrom: emptyList
+				equals: self listWithElements]].
 ]
 
 { #category : #tests }
@@ -628,8 +649,11 @@ XMLOrderedListTest >> testCopyUpTo [
 		self
 			assertList: (list copyUpTo: each)
 			copiedFrom: list
-			equals: (self listClass newFrom: (self listElements copyUpTo: each)).
-		self assert: (self emptyList copyUpTo: each) = self emptyList].
+			equals: (self listClass newFrom: (self listElements copyUpTo: each))].
+	self
+		assertList: (list copyUpTo: self absentElement)
+		copiedFrom: list
+		equals: self listWithElements.
 ]
 
 { #category : #tests }
@@ -643,8 +667,11 @@ XMLOrderedListTest >> testCopyUpToLast [
 			copiedFrom: list
 			equals:
 				(self listClass newFrom:
-					(self listElements, self listElements copyUpToLast: each)).
-		self assert: (self emptyList copyUpToLast: each) = self emptyList].
+					(self listElements, self listElements copyUpToLast: each))].
+	self
+		assertList: (list copyUpToLast: self absentElement)
+		copiedFrom: list
+		equals: (self listClass newFrom: self listElements, self listElements).
 ]
 
 { #category : #tests }

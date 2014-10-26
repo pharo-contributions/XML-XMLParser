@@ -172,7 +172,7 @@ SAXHandlerTest >> testSAXStartElemenNamespacesDisabled [
 		assert: arguments fourth = 'test'.
 	self assert:
 		arguments fifth =
-			(Dictionary
+			(OrderPreservingDictionary
 				with: 'xmlns:prefix' -> 'prefixNS'
 				with: 'xmlns' -> 'defaultNS'
 				with: 'name' -> 'value').
@@ -192,7 +192,7 @@ SAXHandlerTest >> testSAXStartElement [
 		assert: arguments second = 'prefix';
 		assert: arguments third =  'prefixNS';
 		assert: arguments fourth = 'test';
-		assert: arguments fifth = (Dictionary with: 'name' -> 'value').
+		assert: arguments fifth = (OrderPreservingDictionary with: 'name' -> 'value').
 ]
 
 { #category : #tests }
