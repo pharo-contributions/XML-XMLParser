@@ -20,6 +20,11 @@ XMLFileSystemFileHandle class >> currentWorkingDirectoryPathString [
 					nextPutAll: each]].
 ]
 
+{ #category : #testing }
+XMLFileSystemFileHandle class >> isSupported [
+	^ Smalltalk includesKey: #FileSystem
+]
+
 { #category : #private }
 XMLFileSystemFileHandle >> deleteFileOrDo: aBlock [
 	[self fileReference delete]

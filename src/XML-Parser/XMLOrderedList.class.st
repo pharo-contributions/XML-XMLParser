@@ -19,7 +19,7 @@ XMLOrderedList class >> collectionClass [
 
 { #category : #private }
 XMLOrderedList class >> inspectorClass [
-	^ SequenceableCollection inspectorClass
+	^ self collectionClass inspectorClass
 ]
 
 { #category : #'instance creation' }
@@ -262,10 +262,16 @@ XMLOrderedList >> copyFrom: aStart to: anEnd [
 
 { #category : #copying }
 XMLOrderedList >> copyReplaceAll: anOldCollection with: aNewCollection [
+	| copy |
+
+	"workaround so the interal collection is always copied"
 	^ self speciesNewWithCollection:
-		(collection
-			copyReplaceAll: anOldCollection
-			with: aNewCollection)
+		((copy :=
+			collection
+				copyReplaceAll: anOldCollection
+				with: aNewCollection) == collection
+			ifTrue: [collection copy]
+			ifFalse: [copy])
 ]
 
 { #category : #copying }
@@ -399,7 +405,7 @@ XMLOrderedList >> indexOf: anObject startingAt: anIndex ifAbsent: aBlock [
 		ifAbsent: aBlock
 ]
 
-{ #category : #converting }
+{ #category : #testing }
 XMLOrderedList >> isSequenceable [
 	^ true
 ]
@@ -446,10 +452,9 @@ XMLOrderedList >> reject: aBlock [
 
 { #category : #enumerating }
 XMLOrderedList >> reject: aRejectBlock thenCollect: aCollectBlock [
-	^ self speciesNewWithCollection:
-		(collection
-			reject: aRejectBlock
-			thenCollect: aCollectBlock)
+	^ self "squeak doesnt have reject:thenCollect:"
+		select: [:each | (aRejectBlock value: each) not]
+		thenCollect: aCollectBlock
 ]
 
 { #category : #removing }

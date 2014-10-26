@@ -15,6 +15,11 @@ XMLFileDirectoryFileHandle class >> currentWorkingDirectoryPathString [
 	^ (Smalltalk at: #FileDirectory) default pathName
 ]
 
+{ #category : #testing }
+XMLFileDirectoryFileHandle class >> isSupported [
+	^ Smalltalk includesKey: #FileDirectory
+]
+
 { #category : #private }
 XMLFileDirectoryFileHandle >> deleteFileOrDo: aBlock [
 	[(self directoryEntry ifNil: [^ aBlock value]) delete]

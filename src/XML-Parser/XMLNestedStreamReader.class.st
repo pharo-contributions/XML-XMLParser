@@ -132,7 +132,11 @@ XMLNestedStreamReader >> next [
 
 { #category : #accessing }
 XMLNestedStreamReader >> nextInteger [
-	^ XMLIntegerReader readFrom: self.
+	^ XMLIntegerReader
+		readFrom: self
+		withBase: 16
+		startingWithAny: 'x'
+		orBase: 10
 ]
 
 { #category : #testing }

@@ -20,23 +20,41 @@ XMLFileHandle class >> currentWorkingDirectoryPathString [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
-XMLFileHandle class >> defaultImplementation [
-	^ (Smalltalk includesKey: #FileSystem)
-		ifTrue: [XMLFileSystemFileHandle]
-		ifFalse: [XMLFileDirectoryFileHandle]
-]
-
-{ #category : #accessing }
+{ #category : #private }
 XMLFileHandle class >> implementation [
 	^ self == XMLFileHandle
-		ifTrue: [self defaultImplementation]
+		ifTrue: [self selectImplementation]
 		ifFalse: [self]
+]
+
+{ #category : #testing }
+XMLFileHandle class >> isSupported [
+	^ false
+]
+
+{ #category : #'instance creation' }
+XMLFileHandle class >> new [
+	^ self implementation basicNew initialize
 ]
 
 { #category : #'instance creation' }
 XMLFileHandle class >> path: aSystemPath [
-	^ self implementation new path: aSystemPath
+	^ self new path: aSystemPath
+]
+
+{ #category : #private }
+XMLFileHandle class >> preferredImplementation [
+	^ XMLFileSystemFileHandle
+]
+
+{ #category : #private }
+XMLFileHandle class >> selectImplementation [
+	self preferredImplementation isSupported
+		ifTrue: [^ self preferredImplementation].
+	self allSubclassesDo: [:each |
+		each isSupported
+			ifTrue: [^ each]].
+	XMLFileException signal: 'File IO unsupported'.
 ]
 
 { #category : #deleting }

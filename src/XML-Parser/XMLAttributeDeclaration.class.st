@@ -17,10 +17,10 @@ Class {
 { #category : #'instance creation' }
 XMLAttributeDeclaration class >> element: anElementName attribute: anAttributeName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	^ self new
-		setElement: anElementName
-		attribute: anAttributeName
-		type: aType
-		defaultPragma: aDefaultPragma
+		element: anElementName;
+		attribute: anAttributeName;
+		type: aType;
+		defaultPragma: aDefaultPragma;
 		defaultValue: aDefaultValue
 ]
 
@@ -30,8 +30,18 @@ XMLAttributeDeclaration >> attribute [
 ]
 
 { #category : #accessing }
+XMLAttributeDeclaration >> attribute: anAttributeName [
+	attribute := anAttributeName
+]
+
+{ #category : #accessing }
 XMLAttributeDeclaration >> defaultPragma [
 	^ defaultPragma ifNil: [defaultPragma := '']
+]
+
+{ #category : #accessing }
+XMLAttributeDeclaration >> defaultPragma: aDefaultPragma [
+	defaultPragma := aDefaultPragma
 ]
 
 { #category : #accessing }
@@ -40,22 +50,28 @@ XMLAttributeDeclaration >> defaultValue [
 ]
 
 { #category : #accessing }
+XMLAttributeDeclaration >> defaultValue: aDefaultValue [
+	defaultValue := aDefaultValue
+]
+
+{ #category : #accessing }
 XMLAttributeDeclaration >> element [
 	^ element ifNil: [element := '']
 ]
 
-{ #category : #initialization }
-XMLAttributeDeclaration >> setElement: anElementName attribute: anAttributeName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
-	element := anElementName.
-	attribute := anAttributeName.
-	type := aType.
-	defaultPragma := aDefaultPragma.
-	defaultValue := aDefaultValue.
+{ #category : #accessing }
+XMLAttributeDeclaration >> element: anElementName [
+	element := anElementName
 ]
 
 { #category : #accessing }
 XMLAttributeDeclaration >> type [
 	^ type ifNil: [type := '']
+]
+
+{ #category : #accessing }
+XMLAttributeDeclaration >> type: aType [ 
+	type := aType
 ]
 
 { #category : #printing }

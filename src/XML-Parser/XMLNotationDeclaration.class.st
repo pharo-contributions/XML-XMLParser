@@ -15,7 +15,10 @@ Class {
 
 { #category : #'instance creation' }
 XMLNotationDeclaration class >> name: aName publicID: aPublicId systemID: aSystemId [
-	^ self new setName: aName publicID: aPublicId systemID: aSystemId
+	^ self new
+		name: aName;
+		publicID: aPublicId;
+		systemID: aSystemId
 ]
 
 { #category : #accessing }
@@ -24,20 +27,28 @@ XMLNotationDeclaration >> name [
 ]
 
 { #category : #accessing }
+XMLNotationDeclaration >> name: aName [
+	name := aName
+]
+
+{ #category : #accessing }
 XMLNotationDeclaration >> publicID [
 	^ publicId ifNil: [publicId := '']
 ]
 
-{ #category : #initialization }
-XMLNotationDeclaration >> setName: aName publicID: aPublicId systemID: aSystemId [
-	name := aName.
-	publicId := aPublicId.
-	systemId := aSystemId.
+{ #category : #accessing }
+XMLNotationDeclaration >> publicID: aPublicId [
+	publicId := aPublicId
 ]
 
 { #category : #accessing }
 XMLNotationDeclaration >> systemID [
 	^ systemId ifNil: [systemId := '']
+]
+
+{ #category : #accessing }
+XMLNotationDeclaration >> systemID: aSystemId [
+	systemId := aSystemId
 ]
 
 { #category : #printing }

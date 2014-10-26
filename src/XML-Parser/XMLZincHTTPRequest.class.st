@@ -7,9 +7,14 @@ Class {
 	#category : #'XML-Parser-HTTP'
 }
 
+{ #category : #testing }
+XMLZincHTTPRequest class >> isSupported [
+	^ Smalltalk includesKey: #ZnClient
+]
+
 { #category : #private }
 XMLZincHTTPRequest >> getResponseUpToLimit: aMaxSize withTimeout: aTimeout onError: aBlock [
-	^ (Smalltalk at: #ZnMaximumEntitySize)
+	^ [(Smalltalk at: #ZnMaximumEntitySize)
 		value: aMaxSize
 		during: [
 			((Smalltalk at: #ZnClient) new
@@ -19,5 +24,7 @@ XMLZincHTTPRequest >> getResponseUpToLimit: aMaxSize withTimeout: aTimeout onErr
 						ifTrue: [error resignalAs: XMLLimitException]
 						ifFalse: [error pass]];
 				url: url;
-				get) readStream]
+				get) readStream]]
+		on: Error
+		do: aBlock
 ]

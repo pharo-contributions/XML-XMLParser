@@ -79,8 +79,6 @@ XMLElement >> addedElement: anElement [
 
 { #category : #enumerating }
 XMLElement >> allElementsDo: aBlock [
-	"See superclass version."
-
 	aBlock value: self.
 	self hasChildren
 		ifTrue: [self elementsDo: [:each | each allElementsDo: aBlock]]
@@ -246,11 +244,6 @@ XMLElement >> hasNamespaces [
 { #category : #namespaces }
 XMLElement >> hasPrefix [
 	^ self nodeName isPrefixed
-]
-
-{ #category : #testing }
-XMLElement >> hasStringNodes [
-	^ self nodes anySatisfy: [:each | each isStringNode]
 ]
 
 { #category : #testing }
@@ -436,26 +429,6 @@ XMLElement >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocal
 				(XMLAttributeList new: anAttributeDictionary size)
 					observer: self)
 				setFromDictionary: anAttributeDictionary].
-]
-
-{ #category : #accessing }
-XMLElement >> stringNodes [
-	^ self nodes select: [:each | each isStringNode]
-]
-
-{ #category : #enumerating }
-XMLElement >> stringNodesDo: aBlock [
-	self nodes do: [:each | each isStringNode ifTrue: [aBlock value: each]]
-]
-
-{ #category : #accessing }
-XMLElement >> strings [
-	^ self stringNodes collect: [:each | each string]
-]
-
-{ #category : #enumerating }
-XMLElement >> stringsDo: aBlock [
-	self stringNodesDo: [:each | aBlock value: each string]
 ]
 
 { #category : #namespaces }

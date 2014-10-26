@@ -17,21 +17,16 @@ Class {
 { #category : #'instance creation' }
 XMLEntityDeclaration class >> name: aName publicID: aPublicId systemID: aSystemId [
 	^ self new
-		setName: aName
-		replacement: nil
-		publicID: aPublicId
+		name: aName;
+		publicID: aPublicId;
 		systemID: aSystemId
-		ndata: nil
 ]
 
 { #category : #'instance creation' }
 XMLEntityDeclaration class >> name: aName replacement: aReplacement [
 	^ self new
-		setName: aName
+		name: aName;
 		replacement: aReplacement
-		publicID: nil
-		systemID: nil
-		ndata: nil
 ]
 
 { #category : #testing }
@@ -45,8 +40,18 @@ XMLEntityDeclaration >> name [
 ]
 
 { #category : #accessing }
+XMLEntityDeclaration >> name: aName [
+	name := aName
+]
+
+{ #category : #accessing }
 XMLEntityDeclaration >> ndata [
 	^ ndata ifNil: [ndata := '']
+]
+
+{ #category : #accessing }
+XMLEntityDeclaration >> ndata: anNdata [
+	ndata := anNdata
 ]
 
 { #category : #accessing }
@@ -55,22 +60,28 @@ XMLEntityDeclaration >> publicID [
 ]
 
 { #category : #accessing }
+XMLEntityDeclaration >> publicID: aPublicId [
+	publicId := aPublicId
+]
+
+{ #category : #accessing }
 XMLEntityDeclaration >> replacement [
 	^ replacement ifNil: [replacement := '']
 ]
 
-{ #category : #initialization }
-XMLEntityDeclaration >> setName: aName replacement: aReplacement publicID: aPublicId systemID: aSystemId ndata: aNotationName [
-	name := aName.
-	replacement := aReplacement.
-	publicId := aPublicId.
-	systemId := aSystemId.
-	ndata := aNotationName.
+{ #category : #accessing }
+XMLEntityDeclaration >> replacement: aReplacement [
+	replacement := aReplacement
 ]
 
 { #category : #accessing }
 XMLEntityDeclaration >> systemID [
 	^ systemId ifNil: [systemId := '']
+]
+
+{ #category : #accessing }
+XMLEntityDeclaration >> systemID: aSystemId [
+	systemId := aSystemId
 ]
 
 { #category : #printing }

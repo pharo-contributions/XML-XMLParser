@@ -10,26 +10,46 @@ Class {
 	#category : #'XML-Parser-HTTP'
 }
 
-{ #category : #accessing }
-XMLHTTPRequest class >> defaultImplementation [
+{ #category : #private }
+XMLHTTPRequest class >> implementation [
+	^ self == XMLHTTPRequest
+		ifTrue: [self selectImplementation]
+		ifFalse: [self]
+]
+
+{ #category : #testing }
+XMLHTTPRequest class >> isSupported [
+	^ false
+]
+
+{ #category : #'instance creation' }
+XMLHTTPRequest class >> new [
+	^ self implementation basicNew initialize
+]
+
+{ #category : #private }
+XMLHTTPRequest class >> preferredImplementation [
 	^ XMLZincHTTPRequest
 ]
 
-{ #category : #accessing }
-XMLHTTPRequest class >> implementation [
-	^ self == XMLHTTPRequest
-		ifTrue: [self defaultImplementation]
-		ifFalse: [self]
+{ #category : #private }
+XMLHTTPRequest class >> selectImplementation [
+	self preferredImplementation isSupported
+		ifTrue: [^ self preferredImplementation].
+	self allSubclassesDo: [:each |
+		each isSupported
+			ifTrue: [^ each]].
+	XMLHTTPException signal: 'HTTP unsupported'.
 ]
 
 { #category : #'instance creation' }
 XMLHTTPRequest class >> url: aUrl [
-	^ self implementation new url: aUrl
+	^ self new url: aUrl
 ]
 
 { #category : #private }
 XMLHTTPRequest >> defaultTimeout [
-	^ 10
+	^ 30
 ]
 
 { #category : #requesting }

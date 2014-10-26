@@ -12,8 +12,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLElementDeclaration class >> element: aName contentModel: aContentModelString [
-	^ self new setElement: aName contentModel: aContentModelString
+XMLElementDeclaration class >> element: aName contentModel: aContentModel [
+	^ self new
+		element: aName;
+		contentModel: aContentModel
 ]
 
 { #category : #accessing }
@@ -22,14 +24,18 @@ XMLElementDeclaration >> contentModel [
 ]
 
 { #category : #accessing }
+XMLElementDeclaration >> contentModel: aContentModel [
+	contentModel := aContentModel
+]
+
+{ #category : #accessing }
 XMLElementDeclaration >> element [
 	^ element ifNil: [element := '']
 ]
 
-{ #category : #initialization }
-XMLElementDeclaration >> setElement: aName contentModel: aContentModelString [
-	element := aName.
-	contentModel := aContentModelString.
+{ #category : #accessing }
+XMLElementDeclaration >> element: aName [
+	element := aName
 ]
 
 { #category : #printing }

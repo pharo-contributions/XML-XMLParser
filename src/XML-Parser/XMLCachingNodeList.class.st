@@ -100,7 +100,7 @@ XMLCachingNodeList >> elementsAt: aName [
 
 { #category : #private }
 XMLCachingNodeList >> elementsByName [
-	^ elementsByName ifNil: [elementsByName := Dictionary new].
+	^ elementsByName ifNil: [elementsByName := Dictionary new]
 ]
 
 { #category : #private }
@@ -204,7 +204,7 @@ XMLCachingNodeList >> hasElements [
 ]
 
 { #category : #testing }
-XMLCachingNodeList >> includesElementAt: aName [
+XMLCachingNodeList >> includesElement: aName [
 	^ self elementsByName includesKey: aName
 ]
 

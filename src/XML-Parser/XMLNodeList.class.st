@@ -32,6 +32,21 @@ XMLNodeList >> beforeAdding: aNode [
 ]
 
 { #category : #accessing }
+XMLNodeList >> contentNodes [
+	^ self select: [:each | each isContentNode]
+]
+
+{ #category : #enumerating }
+XMLNodeList >> contentNodesDo: aBlock [
+	self do: [:each | each isContentNode ifTrue: [aBlock value: each]]
+]
+
+{ #category : #accessing }
+XMLNodeList >> contentStringAt: aName [
+	^ (self elementAt: aName ifAbsent: [^ '']) contentString
+]
+
+{ #category : #accessing }
 XMLNodeList >> elementAfter: anElement [
 	| last |
 
@@ -78,6 +93,11 @@ XMLNodeList >> elementBefore: anElement [
 ]
 
 { #category : #accessing }
+XMLNodeList >> elementNames [
+	^ self elementsCollect: [:each | each name]
+]
+
+{ #category : #accessing }
 XMLNodeList >> elements [
 	^ self select: [:each | each isElement]
 ]
@@ -85,6 +105,11 @@ XMLNodeList >> elements [
 { #category : #accessing }
 XMLNodeList >> elementsAt: aName [
 	^ self elementsSelect: [:each | each isNamed: aName]
+]
+
+{ #category : #enumerating }
+XMLNodeList >> elementsAt: aName do: aBlock [
+	(self elementsAt: aName) do: aBlock
 ]
 
 { #category : #accessing }
@@ -127,13 +152,24 @@ XMLNodeList >> firstElement [
 ]
 
 { #category : #testing }
+XMLNodeList >> hasContentNodes [
+	^ self anySatisfy: [:each | each isContentNode]
+]
+
+{ #category : #testing }
 XMLNodeList >> hasElements [
 	^ self anySatisfy: [:each | each isElement]
 ]
 
 { #category : #testing }
-XMLNodeList >> includesElementAt: aName [
-	^ (self elementAt: aName) notNil
+XMLNodeList >> hasStringNodes [
+	^ self anySatisfy: [:each | each isStringNode]
+]
+
+{ #category : #testing }
+XMLNodeList >> includesElement: aName [
+	self elementAt: aName ifAbsent: [^ false].
+	^ true.
 ]
 
 { #category : #accessing }
@@ -160,4 +196,26 @@ XMLNodeList >> sorted [
 	^ self sorted: [:a :b |
 		(a isElement & b isElement) not
 			or: [a name <= b name]]
+]
+
+{ #category : #enumerating }
+XMLNodeList >> stringNodes [
+	^ self select: [:each | each isStringNode]
+]
+
+{ #category : #enumerating }
+XMLNodeList >> stringNodesDo: aBlock [
+	self do: [:each | each isStringNode ifTrue: [aBlock value: each]]
+]
+
+{ #category : #enumerating }
+XMLNodeList >> strings [
+	^ self
+		select: [:each | each isStringNode]
+		thenCollect: [:each | each string]
+]
+
+{ #category : #enumerating }
+XMLNodeList >> stringsDo: aBlock [
+	self stringNodesDo: [:each | aBlock value: each string]
 ]

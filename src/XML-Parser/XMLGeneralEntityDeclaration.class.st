@@ -10,9 +10,8 @@ Class {
 { #category : #'instance creation' }
 XMLGeneralEntityDeclaration class >> name: aName publicID: aPublicId systemID: aSystemId ndata: aNotationName [
 	^ self new
-		setName: aName
-		replacement: nil
-		publicID: aPublicId
-		systemID: aSystemId
+		name: aName;
+		publicID: aPublicId;
+		systemID: aSystemId;
 		ndata: aNotationName
 ]

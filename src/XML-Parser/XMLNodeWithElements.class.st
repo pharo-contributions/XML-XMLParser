@@ -30,7 +30,10 @@ XMLNodeWithElements >> addContent: aStringOrStringNode [
 
 { #category : #accessing }
 XMLNodeWithElements >> addElement: anElement [
-	self addNode: anElement
+	"accepts element name or XMLElement as argument"
+	anElement isString
+		ifTrue: [(self addNode: XMLElement new) name: anElement]
+		ifFalse: [self addNode: anElement]
 ]
 
 { #category : #notifications }
@@ -129,17 +132,17 @@ XMLNodeWithElements >> configuration: aConfiguration [
 
 { #category : #accessing }
 XMLNodeWithElements >> contentNodes [
-	^ self nodes select: [:each | each isContentNode]
+	^ self nodes contentNodes
 ]
 
 { #category : #enumerating }
 XMLNodeWithElements >> contentNodesDo: aBlock [
-	self nodes do: [:each | each isContentNode ifTrue: [aBlock value: each]]
+	self nodes contentNodesDo: aBlock
 ]
 
 { #category : #accessing }
 XMLNodeWithElements >> contentStringAt: aName [
-	^ (self elementAt: aName ifAbsent: [^ '']) contentString
+	^ self nodes contentStringAt: aName
 ]
 
 { #category : #accessing }
@@ -183,6 +186,11 @@ XMLNodeWithElements >> elementBefore: anElement [
 ]
 
 { #category : #accessing }
+XMLNodeWithElements >> elementNames [
+	^ self nodes elementNames
+]
+
+{ #category : #accessing }
 XMLNodeWithElements >> elements [
 	^ self nodes elements
 ]
@@ -194,7 +202,7 @@ XMLNodeWithElements >> elementsAt: aName [
 
 { #category : #enumerating }
 XMLNodeWithElements >> elementsAt: aName do: aBlock [
-	(self nodes elementsAt: aName) do: aBlock
+	self nodes elementsAt: aName do: aBlock
 ]
 
 { #category : #accessing }
@@ -259,7 +267,7 @@ XMLNodeWithElements >> firstElement [
 
 { #category : #testing }
 XMLNodeWithElements >> hasContentNodes [
-	^ self nodes anySatisfy: [:each | each isContentNode]
+	^ self nodes hasContentNodes
 ]
 
 { #category : #testing }
@@ -270,8 +278,13 @@ XMLNodeWithElements >> hasElements [
 ]
 
 { #category : #testing }
+XMLNodeWithElements >> hasStringNodes [
+	^ self nodes hasStringNodes
+]
+
+{ #category : #testing }
 XMLNodeWithElements >> includesElement: aName [
-	^ self nodes includesElementAt: aName
+	^ self nodes includesElement: aName
 ]
 
 { #category : #private }
@@ -318,6 +331,26 @@ XMLNodeWithElements >> renamedElement: anElement from: anOldName to: aNewName [
 		renamedElement: anElement
 		from: anOldName
 		to: aNewName
+]
+
+{ #category : #accessing }
+XMLNodeWithElements >> stringNodes [
+	^ self nodes stringNodes
+]
+
+{ #category : #enumerating }
+XMLNodeWithElements >> stringNodesDo: aBlock [
+	self nodes stringNodesDo: aBlock
+]
+
+{ #category : #accessing }
+XMLNodeWithElements >> strings [
+	^ self nodes strings
+]
+
+{ #category : #enumerating }
+XMLNodeWithElements >> stringsDo: aBlock [
+	self nodes stringsDo: aBlock
 ]
 
 { #category : #testing }
