@@ -242,6 +242,13 @@ XMLConformanceTests class >> testSelectorForPath: aPathString [
 	^ ('test', (aPathString select: [:each | each isAlphaNumeric])) asSymbol
 ]
 
+{ #category : #'reflective operations' }
+XMLConformanceTests >> doesNotUnderstand: aMessage [
+	"for squeak"
+	aMessage selector == #skip
+		ifFalse: [super doesNotUnderstand: aMessage]
+]
+
 { #category : #testing }
 XMLConformanceTests >> isSkippableException: anError [
 	^ (XMLFileException, XMLHTTPException, XMLLimitException) handles: anError
@@ -276,11 +283,4 @@ XMLConformanceTests >> parserClass [
 { #category : #accessing }
 XMLConformanceTests >> parserExceptions [
 	^ XMLParserException
-]
-
-{ #category : #'as yet unclassified' }
-XMLConformanceTests >> skip [
-	"for squeak"
-	(super respondsTo: #skip)
-		ifTrue: [super skip]
 ]
