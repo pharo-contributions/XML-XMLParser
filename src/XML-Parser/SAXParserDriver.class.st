@@ -16,25 +16,12 @@ Class {
 
 { #category : #'instance creation' }
 SAXParserDriver class >> saxHandler: aHandler [
-	^ self new saxHandler: aHandler
+	^ self new setSAXHandler: aHandler
 ]
 
 { #category : #accessing }
 SAXParserDriver >> currentElement [
 	^ self elementNester currentElement
-]
-
-{ #category : #accessing }
-SAXParserDriver >> currentScope [
-	^ self usesNamespaces
-		ifTrue: [self scopeAllocator currentScope]
-		ifFalse: [nil]
-]
-
-{ #category : #accessing }
-SAXParserDriver >> currentScope: aNamespaceScope [
-	self usesNamespaces
-		ifTrue: [self scopeAllocator currentScope: aNamespaceScope]
 ]
 
 { #category : #namespaces }
@@ -59,9 +46,9 @@ SAXParserDriver >> dtd [
 	^ dtd ifNil: [dtd := DTDDoctypeDefinition new]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 SAXParserDriver >> elementNester [
-	^ elementNester ifNil: [elementNester := self elementNesterClass new]
+	^ elementNester
 ]
 
 { #category : #private }
@@ -127,11 +114,11 @@ SAXParserDriver >> handleAttributeDeclaration: anElement name: aName type: aType
 { #category : #'handling tokens' }
 SAXParserDriver >> handleCData: aString [
 	self saxHandler
-		isInCDataSection: true;
 		startCData;
+		startCDataSection;
 		characters: aString;
-		endCData;
-		isInCDataSection: false
+		endCDataSection;
+		endCData
 ]
 
 { #category : #'handling tokens' }
@@ -164,8 +151,8 @@ SAXParserDriver >> handleEndDTD [
 		ifTrue: [self parseExternalSubset: self dtd externalSubsetURI].
 
 	self saxHandler
-		endDTD;
-		isInDTD: false.
+		endInternalSubset;
+		endDTD.
 ]
 
 { #category : #'handling tokens' }
@@ -348,10 +335,10 @@ SAXParserDriver >> handleStartDTD: aRoot publicID: aPublicId systemID: aSystemId
 		externalSubsetURI: aSystemId.
 	
 	self saxHandler
-		isInDTD: true;
 		startDTD: aRoot
 		publicID: aPublicId
-		systemID: aSystemId.
+		systemID: aSystemId;
+		startInternalSubset.
 ]
 
 { #category : #'handling tokens' }
@@ -470,28 +457,26 @@ SAXParserDriver >> resolvesExternalEntities [
 ]
 
 { #category : #accessing }
-SAXParserDriver >> rootElement [
-	^ self elementNester rootElement
-]
-
-{ #category : #accessing }
-SAXParserDriver >> rootElement: anElementName [
-	self elementNester rootElement: anElementName
-]
-
-{ #category : #accessing }
 SAXParserDriver >> saxHandler [
 	^ saxHandler
 ]
 
 { #category : #accessing }
-SAXParserDriver >> saxHandler: aHandler [
-	saxHandler := aHandler
-]
-
-{ #category : #private }
 SAXParserDriver >> scopeAllocator [
 	^ scopeAllocator ifNil: [scopeAllocator := XMLNamespaceScopeAllocator new]
+]
+
+{ #category : #accessing }
+SAXParserDriver >> setRootElement: anElementName currentScope: aNamespaceScope [
+	self elementNester setExternalRootElement: anElementName.
+	self usesNamespaces
+		ifTrue: [self scopeAllocator currentScope: aNamespaceScope].
+]
+
+{ #category : #initialization }
+SAXParserDriver >> setSAXHandler: aHandler [
+	saxHandler := aHandler.
+	elementNester := self elementNesterClass new.
 ]
 
 { #category : #namespaces }

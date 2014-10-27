@@ -135,16 +135,6 @@ XMLNodeWithChildren >> lastNode [
 	^ self nodes last
 ]
 
-{ #category : #private }
-XMLNodeWithChildren >> newNodeListForCollect [
-	^ XMLOrderedList new
-]
-
-{ #category : #private }
-XMLNodeWithChildren >> newNodeListForSelect [
-	^ XMLOrderedList new
-]
-
 { #category : #accessing }
 XMLNodeWithChildren >> nodeAfter: aNode [
 	^ self nodes after: aNode

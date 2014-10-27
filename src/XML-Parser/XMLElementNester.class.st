@@ -33,9 +33,7 @@ XMLElementNester >> currentElement [
 
 { #category : #accessing }
 XMLElementNester >> currentScopedAttributes [
-	^ self scopedAttributes
-		ifEmpty: [nil]
-		ifNotEmpty: [:attributes | attributes last]
+	^ self scopedAttributes lastOrNil
 ]
 
 { #category : #printing }
@@ -59,7 +57,7 @@ XMLElementNester >> endNesting [
 
 { #category : #testing }
 XMLElementNester >> hasExternalRoot [
-	^ hasExternalRoot ifNil: [hasExternalRoot := false]
+	^ hasExternalRoot
 ]
 
 { #category : #testing }
@@ -77,6 +75,14 @@ XMLElementNester >> hasScopedAttributes [
 	^ scopedAttributes notNil and: [scopedAttributes notEmpty]
 ]
 
+{ #category : #initialization }
+XMLElementNester >> initialize [
+	super initialize.
+
+	openElements := OrderedCollection new: 10.
+	hasExternalRoot := false.
+]
+
 { #category : #testing }
 XMLElementNester >> isCurrentElementRoot [
 	^ self openElements size = 1
@@ -84,7 +90,7 @@ XMLElementNester >> isCurrentElementRoot [
 
 { #category : #accessing }
 XMLElementNester >> openElements [
-	^ openElements ifNil: [openElements := OrderedCollection new: 10]
+	^ openElements
 ]
 
 { #category : #enumerating }
@@ -137,17 +143,6 @@ XMLElementNester >> printOn: aStream [
 ]
 
 { #category : #accessing }
-XMLElementNester >> rootElement [
-	^ rootElement ifNil: ['']
-]
-
-{ #category : #accessing }
-XMLElementNester >> rootElement: anElement [
-	rootElement := anElement.
-	hasExternalRoot := true.
-]
-
-{ #category : #accessing }
 XMLElementNester >> scopedAttributeAt: aName [
 	^ self
 		scopedAttributeAt: aName
@@ -167,6 +162,12 @@ XMLElementNester >> scopedAttributeAt: aName ifAbsent: aBlock [
 { #category : #private }
 XMLElementNester >> scopedAttributes [
 	^ scopedAttributes ifNil: [scopedAttributes := OrderedCollection new]
+]
+
+{ #category : #accessing }
+XMLElementNester >> setExternalRootElement: anElement [
+	rootElement := anElement.
+	hasExternalRoot := true.
 ]
 
 { #category : #accessing }

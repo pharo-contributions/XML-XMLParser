@@ -106,11 +106,6 @@ XMLParserTokenizer >> nextAttributeValue [
 ]
 
 { #category : #tokenizing }
-XMLParserTokenizer >> nextAttributeValueDelimitedBy: aQuote [
-	self subclassResponsibility
-]
-
-{ #category : #tokenizing }
 XMLParserTokenizer >> nextCDataSection [
 	self expectNextAll: '[CDATA['.
 

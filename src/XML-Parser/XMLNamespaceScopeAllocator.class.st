@@ -12,12 +12,12 @@ Class {
 
 { #category : #accessing }
 XMLNamespaceScopeAllocator >> currentScope [
-	^ self scopes lastOrNil ifNil: [self emptyScope]
+	^ scopes lastOrNil ifNil: [self emptyScope]
 ]
 
 { #category : #accessing }
 XMLNamespaceScopeAllocator >> currentScope: aScope [
-	self scopes addLast: aScope
+	scopes addLast: aScope
 ]
 
 { #category : #private }
@@ -27,15 +27,16 @@ XMLNamespaceScopeAllocator >> emptyScope [
 
 { #category : #scope }
 XMLNamespaceScopeAllocator >> enterScope [
-	^ self scopes addLast: self currentScope copy
+	^ scopes addLast: self currentScope copy
 ]
 
 { #category : #scope }
 XMLNamespaceScopeAllocator >> exitScope [
-	^ self scopes removeLast
+	^ scopes removeLast
 ]
 
-{ #category : #accessing }
-XMLNamespaceScopeAllocator >> scopes [
-	^ scopes ifNil: [scopes := OrderedCollection new: 10]
+{ #category : #initialization }
+XMLNamespaceScopeAllocator >> initialize [
+	super initialize.
+	scopes := OrderedCollection new: 10.
 ]

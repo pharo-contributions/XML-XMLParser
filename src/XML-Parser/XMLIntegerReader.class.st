@@ -53,24 +53,20 @@ XMLIntegerReader class >> on: aStream [
 
 { #category : #'instance creation' }
 XMLIntegerReader class >> readFrom: aStream [
-	^ self readFrom: aStream withBase: 10
+	^ (self on: aStream) nextInteger
 ]
 
 { #category : #reading }
 XMLIntegerReader class >> readFrom: aStream withBase: aBase [
-	^ self
-		readFrom: aStream
-		withBase: aBase
-		upTo: nil
+	^ (self on: aStream) nextIntegerWithBase: aBase
 ]
 
 { #category : #reading }
 XMLIntegerReader class >> readFrom: aStream withBase: aFirstBase startingWithAny: aCharacterCollection orBase: aSecondBase [
-	^ (aCharacterCollection anySatisfy: [:each | aStream peek == each])
-		ifTrue: [
-			aStream next.
-			self readFrom: aStream withBase: aFirstBase]
-		ifFalse: [self readFrom: aStream withBase: aSecondBase]
+	^ (self on: aStream)
+		nextIntegerWithBase: aFirstBase
+		startingWithAny: aCharacterCollection
+		orBase: aSecondBase
 ]
 
 { #category : #reading }
@@ -80,18 +76,47 @@ XMLIntegerReader class >> readFrom: aStream withBase: aBase upTo: anInteger [
 		upTo: anInteger
 ]
 
+{ #category : #testing }
+XMLIntegerReader >> atEnd [
+	^ stream atEnd
+]
+
+{ #category : #accessing }
+XMLIntegerReader >> next [
+	^ stream next
+]
+
 { #category : #private }
 XMLIntegerReader >> nextDigitWithBase: aBase [
 	| digit |
 	
 	digit :=
 		CharacterDigitValues
-			at: stream peek asciiValue
+			at: self peek asciiValue
 			ifAbsent: [^ nil].
 	(digit >= 0 and: [digit < aBase])
 		ifFalse: [^ nil].
-	stream next.
+	self next.
 	^ digit.
+]
+
+{ #category : #reading }
+XMLIntegerReader >> nextInteger [
+	^ self nextIntegerWithBase: 10
+]
+
+{ #category : #reading }
+XMLIntegerReader >> nextIntegerWithBase: aBase [
+	^ self nextIntegerWithBase: aBase upTo: nil
+]
+
+{ #category : #reading }
+XMLIntegerReader >> nextIntegerWithBase: aFirstBase startingWithAny: aCharacterCollection orBase: aSecondBase [
+	(aCharacterCollection includes: self peek)
+		ifTrue: [
+			self next.
+			^ self nextIntegerWithBase: aFirstBase]
+		ifFalse: [^ self nextIntegerWithBase: aSecondBase]
 ]
 
 { #category : #reading }
@@ -104,7 +129,7 @@ XMLIntegerReader >> nextIntegerWithBase: aBase upTo: aReadLimit [
 	maxValue := self class maxIntegerValue.
 	maxBaseValue := (maxValue / aBase) asInteger.
 	readLimit := aReadLimit.
-	[stream atEnd
+	[self atEnd
 		or: [(readLimit notNil and: [readLimit <= 0])
 			or: [(digitValue := self nextDigitWithBase: aBase) isNil]]]
 		whileFalse: [
@@ -121,7 +146,12 @@ XMLIntegerReader >> nextIntegerWithBase: aBase upTo: aReadLimit [
 	^ integer.
 ]
 
-{ #category : #reading }
+{ #category : #accessing }
+XMLIntegerReader >> peek [
+	^ stream peek
+]
+
+{ #category : #accessing }
 XMLIntegerReader >> stream: aStream [
 	stream := aStream
 ]

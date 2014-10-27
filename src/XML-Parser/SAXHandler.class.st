@@ -41,7 +41,7 @@ Class {
 		'input',
 		'documentUri',
 		'configuration',
-		'isInDtd',
+		'isInInternalSubset',
 		'isInCDataSection'
 	],
 	#category : #'XML-Parser'
@@ -112,6 +112,13 @@ SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean va
 		parseDocument
 ]
 
+{ #category : #deprecated }
+SAXHandler class >> parseDocumentFrom: aStringOrStream [
+	self deprecated: 'use #parse: instead'.
+
+	^ self parse: aStringOrStream.
+]
+
 { #category : #parsing }
 SAXHandler class >> parseFileNamed: aFileName [
 	^ (self onFileNamed: aFileName) parseDocument
@@ -140,7 +147,7 @@ SAXHandler >> comment: aCommentString [
 
 { #category : #accessing }
 SAXHandler >> configuration [
-	^ configuration ifNil: [configuration := self configurationClass new]
+	^ configuration
 ]
 
 { #category : #accessing }
@@ -195,6 +202,11 @@ SAXHandler >> endCData [
 	endCData()."
 ]
 
+{ #category : #private }
+SAXHandler >> endCDataSection [
+	isInCDataSection := false
+]
+
 { #category : #declaration }
 SAXHandler >> endDTD [
 
@@ -233,6 +245,11 @@ SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aUri localName: aL
 SAXHandler >> endEntity: anEntityName [
 	"This call corresponds to the Java SAX ext call
 	endEntity(java.lang.String name)."
+]
+
+{ #category : #private }
+SAXHandler >> endInternalSubset [
+	isInInternalSubset := false
 ]
 
 { #category : #content }
@@ -284,24 +301,14 @@ SAXHandler >> input [
 	^ input
 ]
 
-{ #category : #private }
+{ #category : #testing }
 SAXHandler >> isInCDataSection [
-	^ isInCDataSection ifNil: [isInCDataSection := false]
+	^ isInCDataSection
 ]
 
-{ #category : #private }
-SAXHandler >> isInCDataSection: aBoolean [
-	isInCDataSection := aBoolean
-]
-
-{ #category : #private }
-SAXHandler >> isInDTD [
-	^ isInDtd ifNil: [isInDtd := false]
-]
-
-{ #category : #private }
-SAXHandler >> isInDTD: aBoolean [
-	isInDtd := aBoolean
+{ #category : #testing }
+SAXHandler >> isInInternalSubset [
+	^ isInInternalSubset
 ]
 
 { #category : #configuration }
@@ -442,6 +449,9 @@ SAXHandler >> resolvesExternalEntities: aBoolean [
 SAXHandler >> setInput: aStringOrStream documentURI: aUri [
 	input := aStringOrStream.
 	documentUri := aUri.
+	configuration := self configurationClass new.
+	isInInternalSubset := false.
+	isInCDataSection := false.
 ]
 
 { #category : #content }
@@ -454,6 +464,11 @@ SAXHandler >> skippedEntity: anEntityName [
 SAXHandler >> startCData [
 	"This call corresponds to the Java SAX ext call
 	startCData()."
+]
+
+{ #category : #private }
+SAXHandler >> startCDataSection [
+	isInCDataSection := true
 ]
 
 { #category : #declaration }
@@ -495,6 +510,11 @@ SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName: 
 SAXHandler >> startEntity: anEntityName [
 	"This call corresponds to the Java SAX ext call
 	startEntity(java.lang.String name)."
+]
+
+{ #category : #private }
+SAXHandler >> startInternalSubset [
+	isInInternalSubset := true
 ]
 
 { #category : #content }

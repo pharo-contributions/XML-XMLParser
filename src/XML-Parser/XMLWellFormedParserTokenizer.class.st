@@ -389,7 +389,7 @@ XMLWellFormedParserTokenizer >> nextAttributeType [
 
 { #category : #tokenizing }
 XMLWellFormedParserTokenizer >> nextAttributeValue [
-	| quote value |
+	| quote nextChar |
 
 	((quote := streamReader next) == $"
 		or: [quote == $'])
@@ -401,21 +401,8 @@ XMLWellFormedParserTokenizer >> nextAttributeValue [
 	context
 		saveCurrent;
 		enterLiteralValue.
-	value := self nextAttributeValueDelimitedBy: quote.
-	context resetPrevious.
-
-	(streamReader next == quote)
-		ifFalse: [self errorExpected: 'end of quoted attribute value'].
-
-	^ value.
-]
-
-{ #category : #tokenizing }
-XMLWellFormedParserTokenizer >> nextAttributeValueDelimitedBy: aQuote [
-	| nextChar |
-
 	writeStream reset.
-	[(nextChar := streamReader peek) == aQuote
+	[(nextChar := streamReader peek) == quote
 		or: [nextChar == $<
 			or: [nextChar == nil]]]
 		whileFalse: [
@@ -430,6 +417,11 @@ XMLWellFormedParserTokenizer >> nextAttributeValueDelimitedBy: aQuote [
 					nextChar isSeparator
 						ifTrue: [nextChar := NormalizedSpace].
 					writeStream nextPut: nextChar]].
+	context resetPrevious.
+
+	(streamReader next == quote)
+		ifFalse: [self errorExpected: 'end of quoted attribute value'].
+
 	^ writeStream contents.
 ]
 

@@ -125,7 +125,7 @@ XMLDOMParser >> nodeListClass: aClass [
 
 { #category : #private }
 XMLDOMParser >> nodeStack [
-	^ nodeStack ifNil: [nodeStack := OrderedCollection new: 10]
+	^ nodeStack
 ]
 
 { #category : #declaration }
@@ -165,7 +165,7 @@ XMLDOMParser >> parser [
 				configuration: self topNode configuration;
 				document: self topNode document.
 			parser driver
-				rootElement: self topNode name;
+				setRootElement: self topNode name
 				currentScope: self topNode namespaceScope].
 
 	^ parser.
@@ -216,6 +216,15 @@ XMLDOMParser >> pushElement: anElement [
 XMLDOMParser >> pushNode: aNode [
 	^ self nodeStack addLast: aNode
 
+]
+
+{ #category : #initialization }
+XMLDOMParser >> setInput: aStringOrStream documentURI: aUri [
+	super
+		setInput: aStringOrStream
+		documentURI: aUri.
+
+	nodeStack := OrderedCollection new: 10.
 ]
 
 { #category : #declaration }

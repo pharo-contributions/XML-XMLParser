@@ -25,6 +25,23 @@ XMLNode >> allNodesDo: aBlock [
 	aBlock value: self
 ]
 
+{ #category : #accessing }
+XMLNode >> ancestors [
+	| ancestors |
+
+	ancestors := self newNodeListForSelect.
+	self ancestorsDo: [:each | ancestors addLast: each].
+	^ ancestors.
+]
+
+{ #category : #enumerating }
+XMLNode >> ancestorsDo: aBlock [
+	self hasParent
+		ifTrue: [
+			aBlock value: self parent.
+			self parent ancestorsDo: aBlock]
+]
+
 { #category : #converting }
 XMLNode >> asString [
 	"for compatibility if Object>>asString isn't defined"
@@ -100,6 +117,16 @@ XMLNode >> isPI [
 { #category : #testing }
 XMLNode >> isStringNode [
 	^ false
+]
+
+{ #category : #private }
+XMLNode >> newNodeListForCollect [
+	^ XMLOrderedList new
+]
+
+{ #category : #private }
+XMLNode >> newNodeListForSelect [
+	^ XMLOrderedList new
 ]
 
 { #category : #accessing }
