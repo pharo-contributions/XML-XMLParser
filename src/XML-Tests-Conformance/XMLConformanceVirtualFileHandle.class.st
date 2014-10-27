@@ -3,17 +3,34 @@ This class handles file requests by converting paths into XML source selectors.
 "
 Class {
 	#name : #XMLConformanceVirtualFileHandle,
-	#superclass : #XMLFileHandle,
+	#superclass : #Object,
+	#instVars : [
+		'virtualPath',
+		'sourceClass'
+	],
 	#category : #'XML-Tests-Conformance'
 }
 
+{ #category : #'instance creation' }
+XMLConformanceVirtualFileHandle class >> virtualPath: aPath sourceClass: aClass [
+	^ self new
+		setVirtualPath: aPath
+		sourceClass: aClass
+]
+
 { #category : #retrieving }
-XMLConformanceVirtualFileHandle >> getFromClass: aVirtualFileClass [
+XMLConformanceVirtualFileHandle >> get [
 	| sourceSelector |
 
-	sourceSelector := aVirtualFileClass sourceSelelctorFromSegments: ($/ split: path).
-	(aVirtualFileClass respondsTo: sourceSelector)
-		ifFalse: [XMLFileException signal: 'Cannot retrieve ', self path].
+	sourceSelector := sourceClass sourceSelectorForPath: virtualPath.
+	(sourceClass respondsTo: sourceSelector)
+		ifFalse: [XMLFileException signal: 'Cannot retrieve ', virtualPath].
 
-	^ (aVirtualFileClass perform: sourceSelector) readStream.
+	^ (sourceClass perform: sourceSelector) readStream.
+]
+
+{ #category : #initialization }
+XMLConformanceVirtualFileHandle >> setVirtualPath: aPath sourceClass: aClass [
+	virtualPath := aPath.
+	sourceClass := aClass.
 ]

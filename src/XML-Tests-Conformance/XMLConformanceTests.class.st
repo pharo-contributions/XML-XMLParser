@@ -38,8 +38,8 @@ XMLConformanceTests class >> buildPassingTestMethodFor: aFileReference in: aClas
 XMLConformanceTests class >> buildSourceFileMethodFor: aFileReference class: aClass [
 	| sourceSelector pathString sourceStream |
 
-	sourceSelector := (self sourceSelectorFrom: aFileReference).
-	pathString := self pathStringFrom: aFileReference.
+	sourceSelector := (self sourceSelectorFor: aFileReference).
+	pathString := self relativePathStringFor: aFileReference.
 
 	sourceStream := (String new: aFileReference size) writeStream.
 	aFileReference readStreamDo: [:readStream |
@@ -68,7 +68,7 @@ XMLConformanceTests class >> buildTestCaseForSuite: aSuite [
 		XMLConformanceFileVisitor
 			suite: aSuite
 			skipFilesInBase: (self suitesWithSkippableBases includes: aSuite).
-	(PreorderGuide for: fileVisitor) show: (self directoryForSuite: aSuite).
+	(PreorderGuide for: fileVisitor) show: (self fileReferenceForSuite: aSuite).
 
 	badSourceFiles := OrderedCollection new.
 	(fileVisitor passingTestFiles,
@@ -103,10 +103,10 @@ XMLConformanceTests class >> buildTestCases [
 XMLConformanceTests class >> buildTestMethodFor: aFileReference in: aClass usingTemplate: aTemplate classified: aCategory [
 	| failingTestSelector sourceSelector pathString documentUri |
 
-	failingTestSelector := self testSelectorFrom: aFileReference.
-	sourceSelector := self sourceSelectorFrom: aFileReference.
-	pathString := self pathStringFrom: aFileReference.
-	documentUri := self documentURIFrom: aFileReference.
+	failingTestSelector := self testSelectorFor: aFileReference.
+	sourceSelector := self sourceSelectorFor: aFileReference.
+	pathString := self relativePathStringFor: aFileReference.
+	documentUri := self documentURIFor: aFileReference.
 	aClass
 		compile:
 			(aTemplate format:
@@ -138,13 +138,8 @@ XMLConformanceTests class >> createSubclassForSuite: aSuite [
 ]
 
 { #category : #paths }
-XMLConformanceTests class >> directoryForSuite: aSuite [
-	^ FileSystem workingDirectory / self baseDirectory / aSuite
-]
-
-{ #category : #paths }
-XMLConformanceTests class >> documentURIFrom: aFileReference [
-	^ ($/ join: (self segmentsAfterSuite: aFileReference)) asString
+XMLConformanceTests class >> documentURIFor: aFileReference [
+	^ self pathStringRelativeToSuiteFor: aFileReference
 ]
 
 { #category : #'method templates' }
@@ -158,6 +153,11 @@ XMLConformanceTests class >> failingTestMethodTemplate [
 				parse: self class {3}
 				documentURI: ''{4}'']
 		raise: self parserExceptions'
+]
+
+{ #category : #accessing }
+XMLConformanceTests class >> fileReferenceForSuite: aSuite [
+	^ FileSystem workingDirectory / self baseDirectory / aSuite
 ]
 
 { #category : #'method templates' }
@@ -179,18 +179,24 @@ XMLConformanceTests class >> passingTestMethodTemplate [
 ]
 
 { #category : #paths }
-XMLConformanceTests class >> pathStringFrom: aFileReference [
-	^ ($/ join: (aFileReference pathSegments copyAfter: self baseDirectory)) asString
-]
-
-{ #category : #selectors }
-XMLConformanceTests class >> sanitizedSelectorPartFromSegments: aSegmentArray [
-	^ ('' join: aSegmentArray) select: [:each | each isAlphaNumeric]
+XMLConformanceTests class >> pathStringRelativeToSuiteFor: aFileReference [
+	^ self relativePathStringFromSegments:
+		(aFileReference pathSegments copyAfter: self baseDirectory) allButFirst
 ]
 
 { #category : #paths }
-XMLConformanceTests class >> segmentsAfterSuite: aFileReference [
-	^ (aFileReference pathSegments copyAfter: self baseDirectory) allButFirst
+XMLConformanceTests class >> relativePathStringFor: aFileReference [
+	^ self relativePathStringFromSegments:
+		(aFileReference pathSegments copyAfter: self baseDirectory)
+]
+
+{ #category : #paths }
+XMLConformanceTests class >> relativePathStringFromSegments: aSegmentArray [
+	^ String streamContents: [:stream |
+		aSegmentArray withIndexDo: [:each :i |
+			i > 1
+				ifTrue: [stream nextPut: $/].
+			stream nextPutAll: each]]
 ]
 
 { #category : #'method templates' }
@@ -202,13 +208,13 @@ XMLConformanceTests class >> sourceFileMethodTemplate [
 ]
 
 { #category : #selectors }
-XMLConformanceTests class >> sourceSelectorFrom: aFileReference [
-	^ self sourceSelelctorFromSegments: (self segmentsAfterSuite: aFileReference)
+XMLConformanceTests class >> sourceSelectorFor: aFileReference [
+	^ self sourceSelectorForPath: (self pathStringRelativeToSuiteFor: aFileReference)
 ]
 
 { #category : #selectors }
-XMLConformanceTests class >> sourceSelelctorFromSegments: aSegmentArray [
-	^ ('source', (self sanitizedSelectorPartFromSegments: aSegmentArray)) asSymbol
+XMLConformanceTests class >> sourceSelectorForPath: aPathString [
+	^ ('source', (aPathString select: [:each | each isAlphaNumeric])) asSymbol
 ]
 
 { #category : #accessing }
@@ -227,10 +233,13 @@ XMLConformanceTests class >> supportedTestSuites [
 ]
 
 { #category : #selectors }
-XMLConformanceTests class >> testSelectorFrom: aFileReference [
-	^ 'test',
-		(self sanitizedSelectorPartFromSegments:
-			(self segmentsAfterSuite: aFileReference)) asSymbol
+XMLConformanceTests class >> testSelectorFor: aFileReference [
+	^ self testSelectorForPath: (self pathStringRelativeToSuiteFor: aFileReference)
+]
+
+{ #category : #selectors }
+XMLConformanceTests class >> testSelectorForPath: aPathString [
+	^ ('test', (aPathString select: [:each | each isAlphaNumeric])) asSymbol
 ]
 
 { #category : #testing }
@@ -267,4 +276,11 @@ XMLConformanceTests >> parserClass [
 { #category : #accessing }
 XMLConformanceTests >> parserExceptions [
 	^ XMLParserException
+]
+
+{ #category : #'as yet unclassified' }
+XMLConformanceTests >> skip [
+	"for squeak"
+	(super respondsTo: #skip)
+		ifTrue: [super skip]
 ]
