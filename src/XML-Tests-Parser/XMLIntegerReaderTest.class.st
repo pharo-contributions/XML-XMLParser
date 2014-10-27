@@ -10,6 +10,31 @@ XMLIntegerReaderTest >> maxBase [
 ]
 
 { #category : #tests }
+XMLIntegerReaderTest >> testBaseMarker [
+	2 to: self maxBase do: [:base | | stream defaultBase |
+		defaultBase := (base - 1) max: 2.
+		stream := ((base printStringBase: base) copyWithFirst: $#) readStream.
+		self
+			assert:
+				(XMLIntegerReader
+					readFrom: stream
+					withBase: base
+					startingWithAny: '@#$'
+					orBase: defaultBase) = base;
+			assert: stream atEnd.
+
+		stream := (base printStringBase: defaultBase) readStream.
+		self
+			assert:
+				(XMLIntegerReader
+					readFrom: stream
+					withBase: base
+					startingWithAny: '@#$'
+					orBase: defaultBase) = base;
+			assert: stream atEnd].
+]
+
+{ #category : #tests }
 XMLIntegerReaderTest >> testBases [
 	2 to: self maxBase do: [:base | | stream |
 		(0 to: base), (base + 1 to: base * 10 by: base) do: [:i |
@@ -62,6 +87,20 @@ XMLIntegerReaderTest >> testNonDigit [
 			assert: (XMLIntegerReader readFrom: stream withBase: base) isNil;
 			deny: stream atEnd;
 			assert: stream next = baseCharacter].
+]
+
+{ #category : #tests }
+XMLIntegerReaderTest >> testPositioning [
+	| reader string |
+
+	string := 'test'.
+	reader := XMLIntegerReader on: string readStream.
+	string do: [:each |
+		self
+			deny: reader atEnd;
+			assert: reader peek = each;
+			assert: reader next = each].
+	self assert: reader atEnd.
 ]
 
 { #category : #tests }
