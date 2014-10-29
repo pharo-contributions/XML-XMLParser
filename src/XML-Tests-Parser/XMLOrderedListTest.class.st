@@ -10,9 +10,19 @@ XMLOrderedListTest >> absentElement [
 ]
 
 { #category : #assertions }
+XMLOrderedListTest >> assertList: aList collectedFrom: aSecondList equals: aThirdList [
+	self
+		assert: aList = aThirdList;
+		assert: aList class = aSecondList species;
+		deny: aList == aSecondList;
+		deny: aList collection == aSecondList collection
+]
+
+{ #category : #assertions }
 XMLOrderedListTest >> assertList: aList copiedFrom: aSecondList equals: aThirdList [
 	self
 		assert: aList = aThirdList;
+		assert: aList class = aSecondList class;
 		deny: aList == aSecondList;
 		deny: aList collection == aSecondList collection
 ]
@@ -21,6 +31,7 @@ XMLOrderedListTest >> assertList: aList copiedFrom: aSecondList equals: aThirdLi
 XMLOrderedListTest >> assertList: aList isCopyOf: aSecondList [
 	self
 		assert: aList = aSecondList;
+		assert: aList class = aSecondList class;
 		deny: aList == aSecondList;
 		deny: aList collection == aSecondList collection
 ]
@@ -463,8 +474,8 @@ XMLOrderedListTest >> testCollect [
 	list := self listWithElements.
 	self
 		assertList: (list collect: [:each | each asUppercase])
-		copiedFrom: list
-		equals: (self listClass newFrom: (self listElements collect: [:each | each asUppercase])).
+		collectedFrom: list
+		equals: (self listSpecies newFrom: (self listElements collect: [:each | each asUppercase])).
 ]
 
 { #category : #tests }
@@ -477,9 +488,9 @@ XMLOrderedListTest >> testCollectThenSelect [
 			(list
 				collect: [:each | each asUppercase]
 				thenSelect: [:each | each ~= self singleElement asUppercase])
-		copiedFrom: list
+		collectedFrom: list
 		equals:
-			(self listClass newFrom:
+			(self listSpecies newFrom:
 				(self listElements
 					collect: [:each | each asUppercase]
 					thenSelect: [:each | each ~= self singleElement asUppercase])).
@@ -956,6 +967,20 @@ XMLOrderedListTest >> testOfSize [
 ]
 
 { #category : #tests }
+XMLOrderedListTest >> testPairsDo [
+	| pairs |
+
+	0 to: self listElements size do: [:i |
+		pairs := OrderedCollection new.
+		(self listClass newFrom: (self listElements allButLast: i))
+			pairsDo: [:a :b | pairs addLast: a -> b].
+		
+		(self listElements allButLast: i) pairsDo: [:a :b |
+			self assert: pairs removeFirst = (a -> b)].
+		self assert: pairs isEmpty].
+]
+
+{ #category : #tests }
 XMLOrderedListTest >> testReadStream [
 	| list stream elements |
 
@@ -992,9 +1017,9 @@ XMLOrderedListTest >> testRejectThenCollect [
 			(list
 				reject: [:each | each = self singleElement]
 				thenCollect: [:each | each asUppercase])
-		copiedFrom: list
+		collectedFrom: list
 		equals:
-			(self listClass newFrom:
+			(self listSpecies newFrom:
 				((self listElements copyWithout: self singleElement)
 					collect: [:each | each asUppercase])).
 ]
@@ -1201,9 +1226,9 @@ XMLOrderedListTest >> testSelectThenCollect [
 			(list
 				select: [:each | each ~= self singleElement]
 				thenCollect: [:each | each asUppercase])
-		copiedFrom: list
+		collectedFrom: list
 		equals:
-			(self listClass newFrom:
+			(self listSpecies newFrom:
 				((self listElements copyWithout: self singleElement)
 					collect: [:each | each asUppercase])).
 ]
@@ -1277,15 +1302,15 @@ XMLOrderedListTest >> testWithCollect [
 	list := self listWithElements.
 	self
 		assertList: (list with: (1 to: list size + 1) collect: [:each :i | each -> i])
-		copiedFrom: list
+		collectedFrom: list
 		equals:
-			(self listClass newFrom:
+			(self listSpecies newFrom:
 				(self listElements with: (1 to: list size) collect: [:each :i | each -> i])).
 	self
 		assertList: (list with: (1 to: list size - 1) collect: [:each :i | each -> i])
-		copiedFrom: list
+		collectedFrom: list
 		equals:
-			(self listClass newFrom:
+			(self listSpecies newFrom:
 				(self listElements allButLast
 					with: (1 to: list size - 1) collect: [:each :i | each -> i])).
 ]
@@ -1318,9 +1343,9 @@ XMLOrderedListTest >> testWithIndexCollect [
 	list := self listWithElements.
 	self
 		assertList: (list withIndexCollect: [:each :i | each -> i])
-		copiedFrom: list
+		collectedFrom: list
 		equals:
-			(self listClass newFrom:
+			(self listSpecies newFrom:
 				(self listElements with: (1 to: list size) collect: [:each :i | each -> i])).
 ]
 

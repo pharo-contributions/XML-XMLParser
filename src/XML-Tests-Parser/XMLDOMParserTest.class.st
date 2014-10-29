@@ -38,6 +38,40 @@ XMLDOMParserTest >> addressBookNamespacedXML [
 	^ self class addressBookNamespacedXML
 ]
 
+{ #category : #assertions }
+XMLDOMParserTest >> assertDocument: aDocumentCopy isCopyOf: aDocument [
+	| unvisitedPairs visitedPairs searchedClasses |
+
+	self
+		deny: aDocument == aDocumentCopy;
+		assert: aDocument printString = aDocumentCopy printString;
+		assert: aDocument allNodes size = aDocumentCopy allNodes size.
+
+	unvisitedPairs := Set new.
+	aDocument allNodes
+		with: aDocumentCopy allNodes
+		do: [:node :nodeCopy | unvisitedPairs add: node -> nodeCopy].
+
+	visitedPairs := Set new.
+	searchedClasses :=
+		#(OrderedCollection Dictionary OrderPreservingDictionary
+			XMLNode XMLNodeName XMLNamespaceScope XMLOrderedList)
+			collect: [:each | Smalltalk at: each].
+	[unvisitedPairs isEmpty]
+		whileFalse: [ | pair originalObject copyObject |
+			pair := unvisitedPairs remove: unvisitedPairs anyOne.
+			originalObject := pair key.
+			copyObject := pair value.
+
+			self deny: originalObject == copyObject.
+			visitedPairs add: pair.
+			1 to: originalObject class instSize do: [:i | | newPair |
+				newPair := (originalObject instVarAt: i) -> (copyObject instVarAt: i).
+				((visitedPairs includes: newPair)
+					or: [searchedClasses noneSatisfy: [:each | newPair key isKindOf: each]])
+					ifFalse: [unvisitedPairs add: newPair]]].
+]
+
 { #category : #source }
 XMLDOMParserTest >> internalSubsetWithDeclarations [
 	^ '<!DOCTYPE root PUBLIC "pubid" "external.dtd" [
@@ -244,6 +278,23 @@ XMLDOMParserTest >> testConfiguration [
 ]
 
 { #category : #tests }
+XMLDOMParserTest >> testCopyingNodes [
+	| document |
+
+	document := XMLDOMParser parse: self addressBookXML.
+	self assertDocument: document copy isCopyOf: document.
+
+	document := XMLDOMParser parse: self addressBookXMLWithDTD.
+	self assertDocument: document copy isCopyOf: document.
+
+	document := XMLDOMParser parse: self addressBookNamespacePrefixedXML.
+	self assertDocument: document copy isCopyOf: document.
+
+	document := XMLDOMParser parse: self internalSubsetWithDeclarations.
+	self assertDocument: document copy isCopyOf: document.
+]
+
+{ #category : #tests }
 XMLDOMParserTest >> testDeclaringXMLNamespace [
 	| xmlNamespace |
 
@@ -294,13 +345,16 @@ XMLDOMParserTest >> testDoctypeDeclaration [
 
 { #category : #tests }
 XMLDOMParserTest >> testDocument [
-	| document  |
+	| document |
 
 	document := XMLDOMParser parse: self addressBookXML.
-	document allElementsDo: [:each | self assert: each document == document].
+	document allNodesDo: [:each | self assert: each document == document].
 
 	document root innerXML: self addressBookXML.
-	document allElementsDo: [:each | self assert: each document == document].
+	document allNodesDo: [:each | self assert: each document == document].
+
+	(document removeNode: (document root))
+		allNodesDo: [:each | self assert: each document isNil].
 ]
 
 { #category : #tests }
@@ -724,6 +778,21 @@ XMLDOMParserTest >> testParseDocumentWhile [
 			(XMLDOMParser on: '<root><one>two<#malformed')
 				parseDocumentWhile: [(i := i + 1) <= 5]]
 		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testParsedElementNames [
+	| document |
+
+	document := XMLDOMParser parse: self addressBookNamespacePrefixedXML.
+	self assert:
+		document elementNames =
+			(document elements collect: [:each | each name ]).
+
+	document allElementsDo: [:element |
+		self assert:
+			element elementNames =
+				(element elements collect: [:each | each name])].
 ]
 
 { #category : #tests }
