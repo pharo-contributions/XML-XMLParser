@@ -32,21 +32,23 @@ XMLNodeWithElements >> addContent: aStringOrStringNode [
 XMLNodeWithElements >> addElement: anElement [
 	"accepts element name or XMLElement as argument"
 	anElement isString
-		ifTrue: [(self addNode: XMLElement new) name: anElement]
+		ifTrue: [(self addNode: self configuration nodeFactory elementClass new) name: anElement]
 		ifFalse: [self addNode: anElement]
 ]
 
 { #category : #notifications }
 XMLNodeWithElements >> addedElement: anElement [
 	self addedNode: anElement.
-	anElement
-		configuration: self configuration;
-		document: self document.
+	anElement configuration: self configuration.
 ]
 
 { #category : #accessing }
 XMLNodeWithElements >> allElements [
-	^ self allElementsCollect: [:each | each]
+	| allElements |
+
+	allElements := self newNodeListForSelect.
+	self allElementsDo: [:each | allElements addLast: each].
+	^ allElements.
 ]
 
 { #category : #enumerating }
@@ -143,11 +145,6 @@ XMLNodeWithElements >> contentNodesDo: aBlock [
 { #category : #accessing }
 XMLNodeWithElements >> contentStringAt: aName [
 	^ self nodes contentStringAt: aName
-]
-
-{ #category : #accessing }
-XMLNodeWithElements >> document [
-	self subclassResponsibility
 ]
 
 { #category : #accessing }
@@ -262,6 +259,7 @@ XMLNodeWithElements >> findElementNamed: aName with: aBlock [
 
 { #category : #accessing }
 XMLNodeWithElements >> firstElement [
+	"returns nil if no elements"
 	^ self nodes firstElement
 ]
 
@@ -301,6 +299,7 @@ XMLNodeWithElements >> isContentNode [
 
 { #category : #accessing }
 XMLNodeWithElements >> lastElement [
+	"returns nil if no elements"
 	^ self nodes lastElement
 ]
 
@@ -321,8 +320,7 @@ XMLNodeWithElements >> printContentOn: aStream [
 
 { #category : #notifications }
 XMLNodeWithElements >> removedElement: anElement [
-	self removedNode: anElement.
-	anElement document: nil.
+	self removedNode: anElement
 ]
 
 { #category : #notifications }

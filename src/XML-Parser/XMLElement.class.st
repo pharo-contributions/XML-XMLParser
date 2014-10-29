@@ -15,8 +15,7 @@ Class {
 	#instVars : [
 		'name',
 		'attributes',
-		'namespaceScope',
-		'document'
+		'namespaceScope'
 	],
 	#category : #'XML-Parser-DOM'
 }
@@ -77,6 +76,12 @@ XMLElement >> addedElement: anElement [
 		ifTrue: [anElement inheritNamespacesFrom: self]
 ]
 
+{ #category : #notifications }
+XMLElement >> addingAttribute: anAttribute [
+	anAttribute element
+		ifNotNil: [XMLDOMException signal: 'Cannot add attribute node from other element']
+]
+
 { #category : #enumerating }
 XMLElement >> allElementsDo: aBlock [
 	aBlock value: self.
@@ -91,7 +96,8 @@ XMLElement >> attributeAssociations [
 
 { #category : #accessing }
 XMLElement >> attributeAt: aName [
-	^ self attributeAt: aName ifAbsent: ['']
+	"returns empty string when absent"
+	^ self attributeNodes attributeValueAt: aName
 ]
 
 { #category : #accessing }
@@ -107,6 +113,11 @@ XMLElement >> attributeAt: aName ifAbsentPut: aBlock [
 { #category : #accessing }
 XMLElement >> attributeAt: aName put: aValue [
 	^ self attributeNodes attributeValueAt: aName put: aValue
+]
+
+{ #category : #private }
+XMLElement >> attributeListClass [
+	^ XMLAttributeList
 ]
 
 { #category : #accessing }
@@ -146,7 +157,7 @@ XMLElement >> attributeNodeAt: aLocalName namespaceURI: aUri ifAbsent: aBlock [
 
 { #category : #accessing }
 XMLElement >> attributeNodes [
-	^ attributes ifNil: [attributes := XMLAttributeList observer: self]
+	^ attributes ifNil: [attributes := self attributeListClass observer: self]
 ]
 
 { #category : #accessing }
@@ -211,19 +222,6 @@ XMLElement >> defaultNamespace: aUri [
 	self
 		updateEnclosedScopesWith: [:scope | scope defaultNamespace: aUri]
 		whileTrue: [:scope | scope defaultNamespace = oldNamespace]
-]
-
-{ #category : #accessing }
-XMLElement >> document [
-	^ document
-]
-
-{ #category : #accessing }
-XMLElement >> document: aDocument [
-	document := aDocument.
-
-	self hasChildren
-		ifTrue: [self elementsDo: [:each | each document: aDocument]]
 ]
 
 { #category : #namespaces }
@@ -329,12 +327,22 @@ XMLElement >> namespaceURI [
 
 { #category : #accessing }
 XMLElement >> nextElement [
-	^ self parent ifNotNil: [self parent elementAfter: self]
+	^ self parent ifNotNil: [:node | node elementAfter: self]
 ]
 
 { #category : #private }
 XMLElement >> nodeName [
 	^ name ifNil: [name := XMLNodeName new]
+]
+
+{ #category : #copying }
+XMLElement >> postCopy [
+	super postCopy.
+
+	name := name copy.
+	namespaceScope := namespaceScope copy.
+	attributes
+		ifNotNil: [attributes := attributes deepCopyWithObserver: self].
 ]
 
 { #category : #namespaces }
@@ -349,7 +357,7 @@ XMLElement >> prefix: aPrefix [
 
 { #category : #accessing }
 XMLElement >> previousElement [
-	^ self parent ifNotNil: [self parent elementBefore: self]
+	^ self parent ifNotNil: [:node | node elementBefore: self]
 ]
 
 { #category : #accessing }
@@ -426,9 +434,9 @@ XMLElement >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocal
 			"The setFrom method is used to avoid revalidating the
 			attributes when adding them to the list"
 			(attributes :=
-				(XMLAttributeList new: anAttributeDictionary size)
-					observer: self)
-				setFromDictionary: anAttributeDictionary].
+				(self attributeListClass new: anAttributeDictionary size)
+					observer: self;
+					setFromDictionary: anAttributeDictionary)].
 ]
 
 { #category : #namespaces }

@@ -213,6 +213,12 @@ XMLCachingNodeList >> lastElement [
 	^ self elements last
 ]
 
+{ #category : #private }
+XMLCachingNodeList >> newWithCollection: aCollection [
+	"copies as superclass for performance"
+	^ XMLNodeList basicNew setCollection: aCollection
+]
+
 { #category : #notifications }
 XMLCachingNodeList >> renamedElement: anElement from: anOldName to: aNewName [
 	| oldPrefix |

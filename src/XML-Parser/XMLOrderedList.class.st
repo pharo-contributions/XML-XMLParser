@@ -234,27 +234,27 @@ XMLOrderedList >> collection [
 
 { #category : #copying }
 XMLOrderedList >> copy [
-	^ self speciesNewWithCollection: collection copy
+	^ self newWithCollection: collection copy
 ]
 
 { #category : #copying }
 XMLOrderedList >> copyAfter: anObject [
-	^ self speciesNewWithCollection: (collection copyAfter: anObject)
+	^ self newWithCollection: (collection copyAfter: anObject)
 ]
 
 { #category : #copying }
 XMLOrderedList >> copyAfterLast: anObject [
-	^ self speciesNewWithCollection: (collection copyAfterLast: anObject)
+	^ self newWithCollection: (collection copyAfterLast: anObject)
 ]
 
 { #category : #copying }
 XMLOrderedList >> copyEmpty [
-	^ self species new
+	^ self newWithCollection: collection copyEmpty
 ]
 
 { #category : #copying }
 XMLOrderedList >> copyFrom: aStart to: anEnd [
-	^ self speciesNewWithCollection:
+	^ self newWithCollection:
 		(collection
 			copyFrom: (aStart max: 1)
 			to: (anEnd min: self size))
@@ -265,7 +265,7 @@ XMLOrderedList >> copyReplaceAll: anOldCollection with: aNewCollection [
 	| copy |
 
 	"workaround so the interal collection is always copied"
-	^ self speciesNewWithCollection:
+	^ self newWithCollection:
 		((copy :=
 			collection
 				copyReplaceAll: anOldCollection
@@ -276,45 +276,31 @@ XMLOrderedList >> copyReplaceAll: anOldCollection with: aNewCollection [
 
 { #category : #copying }
 XMLOrderedList >> copyReplaceFrom: aStart to: aStop with: aReplacementCollection [
-	| newList startIndex stopIndex overlap |
-
-	overlap := 0.
-	aStart < 1
-		ifTrue: [startIndex := stopIndex := 0]
-		ifFalse: [
-			aStart > self size
-				ifTrue: [startIndex := stopIndex := self size + 1]
-				ifFalse: [
-					startIndex := aStart.
-					stopIndex := (aStop max: aStart) min: self size.
-					overlap := stopIndex - startIndex + 1]].
-
-	newList := self species new: self size + aReplacementCollection size - overlap.
-	1 to: startIndex - 1 do: [:i | newList addLast: (self at: i)].
-	aReplacementCollection do: [:each | newList addLast: each].
-	stopIndex + 1 to: self size do: [:i | newList addLast: (self at: i)].
-
-	^ newList.
+	^ self newWithCollection:
+		(collection
+			copyReplaceFrom: aStart
+			to: ((aStop max: aStart - 1) min: collection size)
+			with: aReplacementCollection)
 ]
 
 { #category : #copying }
 XMLOrderedList >> copyUpTo: anObject [
-	^ self speciesNewWithCollection: (collection copyUpTo: anObject)
+	^ self newWithCollection: (collection copyUpTo: anObject)
 ]
 
 { #category : #copying }
 XMLOrderedList >> copyUpToLast: anObject [
-	^ self speciesNewWithCollection: (collection copyUpToLast: anObject)
+	^ self newWithCollection: (collection copyUpToLast: anObject)
 ]
 
 { #category : #copying }
 XMLOrderedList >> copyWith: anElement [ 
-	^ self speciesNewWithCollection: (collection copyWith: anElement)
+	^ self newWithCollection: (collection copyWith: anElement)
 ]
 
 { #category : #copying }
 XMLOrderedList >> copyWithFirst: anObject [
-	^ self speciesNewWithCollection: (collection copyWithFirst: anObject)
+	^ self newWithCollection: (collection copyWithFirst: anObject)
 ]
 
 { #category : #private }
@@ -364,7 +350,7 @@ XMLOrderedList >> fourth [
 
 { #category : #copying }
 XMLOrderedList >> grownBy: aSize [
-	^ self speciesNewWithCollection: (collection grownBy: aSize)
+	^ self newWithCollection: (collection grownBy: aSize)
 ]
 
 { #category : #comparing }
@@ -430,6 +416,11 @@ XMLOrderedList >> lastIndexOf: anObject ifAbsent: aBlock [
 	^ collection lastIndexOf: anObject ifAbsent: aBlock
 ]
 
+{ #category : #private }
+XMLOrderedList >> newWithCollection: aCollection [
+	^ self class basicNew setCollection: aCollection
+]
+
 { #category : #accessing }
 XMLOrderedList >> ninth [
 	^ self at: 9
@@ -447,7 +438,7 @@ XMLOrderedList >> readStream [
 
 { #category : #enumerating }
 XMLOrderedList >> reject: aBlock [
-	^ self speciesNewWithCollection: (collection reject: aBlock)
+	^ self newWithCollection: (collection reject: aBlock)
 ]
 
 { #category : #enumerating }
@@ -539,12 +530,7 @@ XMLOrderedList >> reverseDo: aBlock [
 
 { #category : #converting }
 XMLOrderedList >> reversed [
-	| reversed |
-
-	reversed := self species new: self size.
-	self reverseDo: [:each | reversed addLast: each].
-	^ reversed.
-
+	^ self newWithCollection: collection reversed
 ]
 
 { #category : #accessing }
@@ -554,7 +540,7 @@ XMLOrderedList >> second [
 
 { #category : #enumerating }
 XMLOrderedList >> select: aBlock [
-	^ self speciesNewWithCollection: (collection select: aBlock)
+	^ self newWithCollection: (collection select: aBlock)
 ]
 
 { #category : #enumerating }

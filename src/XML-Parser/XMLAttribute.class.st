@@ -21,11 +21,13 @@ XMLAttribute class >> name: aName value: aValue [
 
 { #category : #accessing }
 XMLAttribute >> element [
+	"reuse instance variable to save memory"
 	^ parent
 ]
 
 { #category : #accessing }
 XMLAttribute >> element: anElement [
+	"reuse instance variable to save memory"
 	parent := anElement
 ]
 
@@ -73,6 +75,25 @@ XMLAttribute >> nodeName [
 ]
 
 { #category : #accessing }
+XMLAttribute >> parent [
+	"attributes have no parents and aren't part of the DOM tree"
+	self shouldNotImplement
+]
+
+{ #category : #accessing }
+XMLAttribute >> parent: anObject [
+	"attributes have no parents and aren't part of the DOM tree"
+	self shouldNotImplement
+]
+
+{ #category : #copying }
+XMLAttribute >> postCopy [
+	super postCopy.
+
+	name := name copy.
+]
+
+{ #category : #accessing }
 XMLAttribute >> prefix [
 	^ self nodeName prefix
 ]
@@ -89,9 +110,9 @@ XMLAttribute >> renameWith: aBlock [
 	oldName := self name.
 	aBlock value.
 	(self name ~= oldName
-		and: [self hasParent])
+		and: [self element notNil])
 			ifTrue: [
-				self parent
+				self element
 					renamedAttribute: self
 					from: oldName
 					to: self name].

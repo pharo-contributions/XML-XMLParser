@@ -69,6 +69,13 @@ XMLNode >> contentString [
 	^ String streamContents: [:stream | self printContentOn: stream]
 ]
 
+{ #category : #accessing }
+XMLNode >> document [
+	^ self hasParent
+		ifTrue: [self parent document]
+		ifFalse: [nil]
+]
+
 { #category : #testing }
 XMLNode >> hasChildren [
 	^ false
@@ -76,7 +83,7 @@ XMLNode >> hasChildren [
 
 { #category : #testing }
 XMLNode >> hasParent [
-	^ self parent notNil
+	^ parent notNil
 ]
 
 { #category : #testing }
@@ -126,12 +133,12 @@ XMLNode >> newNodeListForCollect [
 
 { #category : #private }
 XMLNode >> newNodeListForSelect [
-	^ XMLOrderedList new
+	^ XMLNodeList new
 ]
 
 { #category : #accessing }
 XMLNode >> nextNode [
-	^ self parent ifNotNil: [self parent nodeAfter: self]
+	^ self parent ifNotNil: [:node | node nodeAfter: self]
 ]
 
 { #category : #accessing }
@@ -142,6 +149,11 @@ XMLNode >> parent [
 { #category : #accessing }
 XMLNode >> parent: aParentNode [
 	parent := aParentNode
+]
+
+{ #category : #copying }
+XMLNode >> postCopy [
+	parent := nil
 ]
 
 { #category : #printing }
@@ -161,7 +173,7 @@ XMLNode >> prettyPrinted [
 
 { #category : #accessing }
 XMLNode >> previousNode [
-	^ self parent ifNotNil: [self parent nodeBefore: self]
+	^ self parent ifNotNil: [:node | node nodeBefore: self]
 ]
 
 { #category : #printing }

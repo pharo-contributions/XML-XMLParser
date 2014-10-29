@@ -9,26 +9,23 @@ Class {
 
 { #category : #private }
 XMLNodeList >> afterAdding: aNode [
-	observer ifNil: [^ self].
-
-	aNode isElement
-		ifTrue: [observer addedElement: aNode]
-		ifFalse: [observer addedNode: aNode].
+	observer ifNotNil: [
+		aNode isElement
+			ifTrue: [observer addedElement: aNode]
+			ifFalse: [observer addedNode: aNode]]
 ]
 
 { #category : #private }
 XMLNodeList >> afterRemoving: aNode [
-	observer ifNil: [^ self].
-
-	aNode isElement
-		ifTrue: [observer removedElement: aNode]
-		ifFalse: [observer removedNode: aNode].
+	observer ifNotNil: [
+		aNode isElement
+			ifTrue: [observer removedElement: aNode]
+			ifFalse: [observer removedNode: aNode]]
 ]
 
 { #category : #private }
 XMLNodeList >> beforeAdding: aNode [
-	aNode hasParent
-		ifTrue: [XMLDOMException signal: 'Cannot add child node that already has a parent']
+	observer ifNotNil: [observer addingNode: aNode]
 ]
 
 { #category : #accessing }
@@ -51,10 +48,10 @@ XMLNodeList >> elementAfter: anElement [
 	| last |
 
 	self elementsDo: [:each |
-		last == anElement
+		last = anElement
 			ifTrue: [^ each].
 		last := each].
-	^ nil.
+	^ self defaultValue.
 ]
 
 { #category : #accessing }
@@ -71,7 +68,10 @@ XMLNodeList >> elementAt: aName ifAbsent: aBlock [
 
 { #category : #accessing }
 XMLNodeList >> elementAt: aName namespaceURI: aUri [
-	^ self elementAt: aName namespaceURI: aUri ifAbsent: [self defaultValue]
+	^ self
+		elementAt: aName
+		namespaceURI: aUri
+		ifAbsent: [self defaultValue]
 ]
 
 { #category : #accessing }
@@ -84,12 +84,13 @@ XMLNodeList >> elementAt: aName namespaceURI: aUri ifAbsent: aBlock [
 { #category : #accessing }
 XMLNodeList >> elementBefore: anElement [
 	| last |
-	
+
+	last := self defaultValue.
 	self elementsDo: [:each |
-		each == anElement
+		each = anElement
 			ifTrue: [^ last].
 		last := each].
-	^ nil.
+	^ self defaultValue.
 ]
 
 { #category : #accessing }
@@ -148,7 +149,7 @@ XMLNodeList >> elementsSelect: aBlock [
 XMLNodeList >> firstElement [
 	^ self
 		detect: [:each | each isElement]
-		ifNone: [nil]
+		ifNone: [self defaultValue]
 ]
 
 { #category : #testing }
@@ -177,7 +178,7 @@ XMLNodeList >> lastElement [
 	self reverseDo: [:each |
 		each isElement
 			ifTrue: [^ each]].
-	^ nil.
+	^ self defaultValue.
 ]
 
 { #category : #notifications }

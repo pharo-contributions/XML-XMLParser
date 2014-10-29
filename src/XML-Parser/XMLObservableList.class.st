@@ -77,6 +77,15 @@ XMLObservableList >> beforeAdding: anObject [
 	observer ifNotNil: [observer adding: anObject to: self]
 ]
 
+{ #category : #copying }
+XMLObservableList >> deepCopyWithObserver: anObserver [
+	| newList |
+
+	newList := (self class new: self size) observer: anObserver.
+	self do: [:each | newList addLast: each copy].
+	^ newList.
+]
+
 { #category : #observing }
 XMLObservableList >> observer [
 	^ observer

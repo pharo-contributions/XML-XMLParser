@@ -19,4 +19,5 @@ XMLInternalSubsetList >> afterRemoving: aNode [
 
 { #category : #private }
 XMLInternalSubsetList >> beforeAdding: aNode [
+	observer ifNotNil: [observer addingNode: aNode]
 ]

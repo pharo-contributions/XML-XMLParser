@@ -13,18 +13,18 @@ Class {
 { #category : #adding }
 XMLAttributeList >> addName: aName value: aValue [
 	^ self addLast:
-		(XMLAttribute
+		(self attributeClass
 			name: aName
 			value: aValue)
 ]
 
 { #category : #private }
-XMLAttributeList >> afterAdding: anObject [
+XMLAttributeList >> afterAdding: anAttribute [
 	self attributesByName
-		at: anObject name ifPresent: [self removeAttributeNodeAt: anObject name];
-		at: anObject name put: anObject.
+		at: anAttribute name ifPresent: [self removeAttributeNodeAt: anAttribute name];
+		at: anAttribute name put: anAttribute.
 
-	observer ifNotNil: [observer addedAttribute: anObject].
+	observer ifNotNil: [observer addedAttribute: anAttribute].
 ]
 
 { #category : #private }
@@ -37,7 +37,10 @@ XMLAttributeList >> afterRemoving: anAttribute [
 XMLAttributeList >> asDictionary [
 	| dictionary |
 
-	dictionary := OrderPreservingDictionary new: self size withDefaultValue: ''.
+	dictionary :=
+		OrderPreservingDictionary
+			new: self size
+			withDefaultValue: ''.
 	self do: [:each | dictionary at: each name put: each value].
 	^ dictionary.
 ]
@@ -45,6 +48,12 @@ XMLAttributeList >> asDictionary [
 { #category : #converting }
 XMLAttributeList >> asNameValueAssociations [
 	^ self collect: [:each | each name -> each value]
+]
+
+{ #category : #private }
+XMLAttributeList >> attributeClass [
+	^ XMLAttribute
+
 ]
 
 { #category : #accessing }
@@ -74,19 +83,24 @@ XMLAttributeList >> attributeNodeAt: aName ifAbsent: aBlock [
 
 { #category : #accessing }
 XMLAttributeList >> attributeNodeAt: aLocalName namespaceURI: aUri [
-	^ self attributeNodeAt: aLocalName namespaceURI: aUri ifAbsent: [self defaultValue]
+	^ self
+		attributeNodeAt: aLocalName
+		namespaceURI: aUri
+		ifAbsent: [self defaultValue]
 ]
 
 { #category : #accessing }
 XMLAttributeList >> attributeNodeAt: aLocalName namespaceURI: aUri ifAbsent: aBlock [
 	^ self
-		detect: [:each | (each isNamed: aLocalName) and: [each namespaceURI = aUri]]
+		detect: [:each |
+			each name = aLocalName
+				and: [each namespaceURI = aUri]]
 		ifNone: aBlock
 ]
 
 { #category : #accessing }
 XMLAttributeList >> attributeValueAt: aName [
-	^ self attributeValueAt: aName ifAbsent: [self defaultValue]
+	^ self attributeValueAt: aName ifAbsent: ['']
 ]
 
 { #category : #accessing }
@@ -117,14 +131,20 @@ XMLAttributeList >> attributesByName [
 ]
 
 { #category : #private }
-XMLAttributeList >> beforeAdding: anObject [
-	anObject element
-		ifNotNil: [XMLDOMException signal: 'Cannot add attribute node from other element']
+XMLAttributeList >> beforeAdding: anAttribute [
+	observer ifNotNil: [observer addingAttribute: anAttribute]
 ]
 
 { #category : #testing }
 XMLAttributeList >> includesAttribute: aName [
 	^ self attributesByName includesKey: aName
+]
+
+{ #category : #private }
+XMLAttributeList >> newWithCollection: aCollection [
+	^ self class basicNew
+		setCollection: aCollection;
+		resetDictionaryFromCollection
 ]
 
 { #category : #accessing }
@@ -141,6 +161,15 @@ XMLAttributeList >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 ]
 
 { #category : #private }
+XMLAttributeList >> resetDictionaryFromCollection [
+	self attributesByName removeAll.
+	collection do: [:each |
+		self attributesByName
+			at: each name
+			put: each].
+]
+
+{ #category : #private }
 XMLAttributeList >> setFromDictionary: anOrderPreservingDictionary [
 	| association |
 
@@ -154,7 +183,7 @@ XMLAttributeList >> setFromDictionary: anOrderPreservingDictionary [
 		(association := attributesByName associationAt: each ifAbsent: nil)
 			value:
 				(collection addLast: 
-					(XMLAttribute new
+					(self attributeClass new
 						setName: each
 						value: association value
 						element: observer))].

@@ -29,11 +29,6 @@ XMLDocument >> document [
 ]
 
 { #category : #accessing }
-XMLDocument >> document: aDocument [
-	self shouldNotImplement
-]
-
-{ #category : #accessing }
 XMLDocument >> encoding [	
 	^ encoding ifNil: [encoding := 'UTF-8']
 ]
@@ -56,6 +51,13 @@ XMLDocument >> isStandalone [
 { #category : #accessing }
 XMLDocument >> isStandalone: aBoolean [
 	isStandalone := aBoolean
+]
+
+{ #category : #copying }
+XMLDocument >> postCopy [
+	super postCopy.
+
+	doctypeDeclaration := doctypeDeclaration copy.
 ]
 
 { #category : #accessing }

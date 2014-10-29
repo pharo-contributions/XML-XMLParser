@@ -34,6 +34,11 @@ XMLDOMConfiguration >> nodeListClass: aClass [
 ]
 
 { #category : #accessing }
+XMLDOMConfiguration >> parserHandlerClass [
+	^ parserHandlerClass ifNil: [parserHandlerClass := XMLDOMParser]
+]
+
+{ #category : #accessing }
 XMLDOMConfiguration >> preservesCDataNodes [
 	^ preservesCDataNodes ifNil: [preservesCDataNodes := false]
 ]

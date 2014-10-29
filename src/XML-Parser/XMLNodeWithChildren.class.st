@@ -46,9 +46,19 @@ XMLNodeWithChildren >> addedNode: aNode [
 	aNode parent: self
 ]
 
+{ #category : #notifications }
+XMLNodeWithChildren >> addingNode: aNode [
+	aNode hasParent
+		ifTrue: [XMLDOMException signal: 'Cannot add child node that already has a parent']
+]
+
 { #category : #accessing }
 XMLNodeWithChildren >> allNodes [
-	^ self allNodesCollect: [:each | each]
+	| allNodes |
+
+	allNodes := self newNodeListForSelect.
+	self allNodesDo: [:each | allNodes addLast: each].
+	^ allNodes.
 ]
 
 { #category : #enumerating }
@@ -91,6 +101,7 @@ XMLNodeWithChildren >> allNodesSelect: aBlock [
 
 { #category : #accessing }
 XMLNodeWithChildren >> firstNode [
+	"returns nil when empty"
 	^ self nodes first
 ]
 
@@ -109,13 +120,12 @@ XMLNodeWithChildren >> includesNode: aNode [
 { #category : #accessing }
 XMLNodeWithChildren >> innerXML [
 	self hasChildren
-		ifTrue: [
-			self
-				withNewXMLWriterOn: (String new: self nodes size * 10) writeStream
-				do: [ :writer |
-					self writeInnerXMLOn: writer.
-					^ writer contents]]
-		ifFalse: [^ '']
+		ifFalse: [^ ''].
+	self
+		withNewXMLWriterOn: (String new: self nodes size * 10) writeStream
+		do: [ :writer |
+			self writeInnerXMLOn: writer.
+			^ writer contents].
 ]
 
 { #category : #parsing }
@@ -132,6 +142,7 @@ XMLNodeWithChildren >> innerXMLParserOn: aStringOrStream [
 
 { #category : #accessing }
 XMLNodeWithChildren >> lastNode [
+	"returns nil when empty"
 	^ self nodes last
 ]
 
@@ -162,7 +173,7 @@ XMLNodeWithChildren >> nodesCollect: aBlock [
 
 { #category : #enumerating }
 XMLNodeWithChildren >> nodesDetect: aBlock [
-	^ self nodesDetect: aBlock ifNone: [nil]
+	^ self nodes detect: aBlock
 ]
 
 { #category : #enumerating }
@@ -178,6 +189,14 @@ XMLNodeWithChildren >> nodesDo: aBlock [
 { #category : #enumerating }
 XMLNodeWithChildren >> nodesSelect: aBlock [
 	^ self nodes select: aBlock
+]
+
+{ #category : #copying }
+XMLNodeWithChildren >> postCopy [
+	super postCopy.
+
+	nodes
+		ifNotNil: [nodes := nodes deepCopyWithObserver: self].
 ]
 
 { #category : #accessing }
