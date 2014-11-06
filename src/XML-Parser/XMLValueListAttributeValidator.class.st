@@ -15,6 +15,14 @@ XMLValueListAttributeValidator >> allowedValues [
 	^ allowedValues ifNil: [allowedValues := Set new]
 ]
 
+{ #category : #'private ' }
+XMLValueListAttributeValidator >> errorInvalidValue: aValue [
+	XMLValidationException
+		formatSignal: 'Invalid value "{1}" for attribute "{2}"'
+		with: aValue
+		with: self attribute
+]
+
 { #category : #testing }
 XMLValueListAttributeValidator >> isValueListValidator [
 	^ true
@@ -28,7 +36,7 @@ XMLValueListAttributeValidator >> setAllowedValuesFromString: aString [
 { #category : #validation }
 XMLValueListAttributeValidator >> validateAttributeValue: aValue [
 	(self allowedValues includes: aValue)
-		ifFalse: [XMLValidationException signal: 'Invalid value "', aValue, '" for attribute "', attribute, '"']
+		ifFalse: [self errorInvalidValue: aValue]
 ]
 
 { #category : #'private ' }

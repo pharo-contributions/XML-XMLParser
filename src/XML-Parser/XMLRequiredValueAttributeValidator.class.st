@@ -7,8 +7,15 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
+{ #category : #private }
+XMLRequiredValueAttributeValidator >> errorRequiredAttributeMissing [
+	XMLValidationException
+		formatSignal: 'Required attribute "{1}" is missing'
+		with: self attribute
+]
+
 { #category : #validation }
 XMLRequiredValueAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
-	(anAttributeDictionary includesKey: attribute)
-		ifFalse: [XMLValidationException signal: 'Required attribute "', attribute, '" is missing']
+	(anAttributeDictionary includesKey: self attribute)
+		ifFalse: [self errorRequiredAttributeMissing]
 ]

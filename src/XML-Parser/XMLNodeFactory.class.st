@@ -18,6 +18,24 @@ XMLNodeFactory >> cdataClass [
 ]
 
 { #category : #accessing }
+XMLNodeFactory >> classForElement: aQualifiedName [
+	^ self
+		classForElement: aQualifiedName
+		namespaceURI: ''
+]
+
+{ #category : #accessing }
+XMLNodeFactory >> classForElement: aQualifiedName namespaceURI: aUri [
+	| prefix |
+
+	^ self
+		classForElement: aQualifiedName
+		prefix: (prefix := aQualifiedName qualifiedNamePrefix)
+		uri: aUri
+		localName: (aQualifiedName qualifiedNameLocalPartFromPrefix: prefix)
+]
+
+{ #category : #accessing }
 XMLNodeFactory >> classForElement: aQualifiedName prefix: aPrefix uri: aNamespaceUri localName: aLocalName [
 	^ self elementClass
 ]
@@ -50,6 +68,52 @@ XMLNodeFactory >> elementDeclarationClass [
 { #category : #accessing }
 XMLNodeFactory >> generalEntityDeclarationClass [
 	^ XMLGeneralEntityDeclaration
+]
+
+{ #category : #'instance creation' }
+XMLNodeFactory >> newCData: aString [
+	^ self cdataClass string: aString
+]
+
+{ #category : #'instance creation' }
+XMLNodeFactory >> newComment: aString [
+	^ self commentClass string: aString
+]
+
+{ #category : #'instance creation' }
+XMLNodeFactory >> newDocument [
+	^ self documentClass new
+		nodeFactory: self
+]
+
+{ #category : #'instance creation' }
+XMLNodeFactory >> newElement [
+	^ self elementClass new
+		nodeFactory: self
+]
+
+{ #category : #'instance creation' }
+XMLNodeFactory >> newElementNamed: aName [
+	^ (self classForElement: aName) new
+		name: aName;
+		nodeFactory: self
+]
+
+{ #category : #'instance creation' }
+XMLNodeFactory >> newElementNamed: aName namespaceURI: aUri [
+	^ (self classForElement: aName namespaceURI: aUri) new
+		name: aName namespaceURI: aUri;
+		nodeFactory: self
+]
+
+{ #category : #'instance creation' }
+XMLNodeFactory >> newPI [
+	^ self piClass new
+]
+
+{ #category : #'instance creation' }
+XMLNodeFactory >> newString: aString [
+	^ self stringClass string: aString
 ]
 
 { #category : #accessing }

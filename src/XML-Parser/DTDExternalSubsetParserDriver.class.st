@@ -106,9 +106,14 @@ DTDExternalSubsetParserDriver >> handleParameterEntityReference: aName [
 
 	entity := self dtd parameterEntityAt: aName.
 	(entity isNil and: [self isValidating])
-		ifTrue: [(XMLValidationException undeclaredParameterEntity: aName) signal].
+		ifTrue: [self saxDriver errorUndeclaredParameterEntity: aName].
 
 	^ entity.
+]
+
+{ #category : #initialization }
+DTDExternalSubsetParserDriver >> initialContext [
+	^ #inExternalSubsetTextDeclaration
 ]
 
 { #category : #testing }

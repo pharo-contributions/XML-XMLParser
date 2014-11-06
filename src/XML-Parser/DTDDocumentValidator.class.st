@@ -22,7 +22,7 @@ DTDDocumentValidator >> allAttributeValidatorsDo: aBlock [
 
 { #category : #accessing }
 DTDDocumentValidator >> attributeValidatorsFor: anElement [
-	^ dtd attributeValidators
+	^ self dtd attributeValidators
 		at: anElement
 		ifAbsent: [nil]
 ]
@@ -39,29 +39,52 @@ DTDDocumentValidator >> dtd: aDtd [
 
 { #category : #accessing }
 DTDDocumentValidator >> elementValidatorFor: aName [
-	^ (dtd elementValidators
+	^ (self dtd elementValidators
 		at: aName
 		ifAbsent: [nil]) copy
 ]
 
+{ #category : #private }
+DTDDocumentValidator >> errorInvalidIDReference: anId [
+	XMLValidationException
+		formatSignal: 'Invalid ID reference "{1}"'
+		with: anId
+]
+
+{ #category : #private }
+DTDDocumentValidator >> errorInvalidRoot: anElementName [
+	XMLValidationException
+		formatSignal: 'Element <{1}> cannot be root'
+		with: anElementName
+]
+
 { #category : #testing }
 DTDDocumentValidator >> hasAttributeValidators [
-	^ dtd hasAttributeValidators
+	^ self dtd hasAttributeValidators
 ]
 
 { #category : #testing }
 DTDDocumentValidator >> hasElementValidators [
-	^ dtd hasElementValidators
+	^ self dtd hasElementValidators
+]
+
+{ #category : #testing }
+DTDDocumentValidator >> hasValidators [
+	^ self dtd hasValidators
 ]
 
 { #category : #validation }
 DTDDocumentValidator >> unvalidatedAttributes: anAttributeCollection [
-	XMLValidationException signal: 'Undeclared attribute ', anAttributeCollection anyOne
+	XMLValidationException
+		formatSignal: 'Undeclared attribute "{1}"'
+		with: anAttributeCollection anyOne
 ]
 
 { #category : #validation }
 DTDDocumentValidator >> unvalidatedElement: aName [
-	XMLValidationException signal: 'Undeclared element <', aName, '>'
+	XMLValidationException
+		formatSignal: 'Undeclared element <{1}>'
+		with: aName
 ]
 
 { #category : #validation }
@@ -85,14 +108,12 @@ DTDDocumentValidator >> validateIDsAndReferences [
 
 	references do: [:each |
 		(ids includes: each)
-			ifFalse: [XMLValidationException signal: 'Invalid ID reference "', each, '"']].
+			ifFalse: [self errorInvalidIDReference: each]].
 ]
 
 { #category : #validation }
 DTDDocumentValidator >> validateRootElement: anElementName [
-	(dtd rootElement notEmpty
-		and: [dtd rootElement ~= anElementName])
-		ifTrue: [
-			XMLValidationException signal:
-				'Element <', anElementName, '> cannot be root']
+	(self dtd rootElement notEmpty
+		and: [self dtd rootElement ~= anElementName])
+		ifTrue: [self errorInvalidRoot: anElementName]
 ]

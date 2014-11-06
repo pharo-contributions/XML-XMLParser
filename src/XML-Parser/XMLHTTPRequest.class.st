@@ -11,6 +11,11 @@ Class {
 }
 
 { #category : #private }
+XMLHTTPRequest class >> errorUnsupported [
+	XMLHTTPException signal: 'HTTP unsupported'.
+]
+
+{ #category : #private }
 XMLHTTPRequest class >> implementation [
 	^ self == XMLHTTPRequest
 		ifTrue: [self selectImplementation]
@@ -39,7 +44,7 @@ XMLHTTPRequest class >> selectImplementation [
 	self allSubclassesDo: [:each |
 		each isSupported
 			ifTrue: [^ each]].
-	XMLHTTPException signal: 'HTTP unsupported'.
+	self errorUnsupported.
 ]
 
 { #category : #'instance creation' }

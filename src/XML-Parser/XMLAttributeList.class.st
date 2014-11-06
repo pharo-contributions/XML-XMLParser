@@ -45,8 +45,8 @@ XMLAttributeList >> asDictionary [
 	^ dictionary.
 ]
 
-{ #category : #converting }
-XMLAttributeList >> asNameValueAssociations [
+{ #category : #accessing }
+XMLAttributeList >> attributeAssociations [
 	^ self collect: [:each | each name -> each value]
 ]
 
@@ -147,7 +147,7 @@ XMLAttributeList >> newWithCollection: aCollection [
 		resetDictionaryFromCollection
 ]
 
-{ #category : #accessing }
+{ #category : #removing }
 XMLAttributeList >> removeAttributeNodeAt: aName [
 	^ self remove: (self attributeNodeAt: aName).
 ]

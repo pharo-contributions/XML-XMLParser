@@ -100,6 +100,11 @@ XMLParserTokenizer >> expectUpToAll: aString [
 	self subclassResponsibility
 ]
 
+{ #category : #accessing }
+XMLParserTokenizer >> initialContext: aContext [
+	context setContext: aContext
+]
+
 { #category : #tokenizing }
 XMLParserTokenizer >> nextAttributeValue [
 	self subclassResponsibility
@@ -142,10 +147,9 @@ XMLParserTokenizer >> nextContentMarkupToken [
 	streamReader peek == $!
 		ifTrue: [
 			streamReader next.
-			^ streamReader peek == $-
-				ifTrue: [self nextComment]
-				ifFalse: [self nextCDataSection]].
-
+			streamReader peek == $-
+				ifTrue: [^self nextComment].
+			^ self nextCDataSection].
 	self nextTag.
 ]
 
@@ -297,9 +301,7 @@ XMLParserTokenizer >> nextPubidLiteral [
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextStartDocument [
-	driver isParsingExternalSubset
-		ifTrue: [context enterExternalSubsetTextDeclaration]
-		ifFalse: [context enterProlog].
+	context setContext: (driver initialContext ifNil: [#inProlog]).
 	driver handleStartDocument.
 ]
 

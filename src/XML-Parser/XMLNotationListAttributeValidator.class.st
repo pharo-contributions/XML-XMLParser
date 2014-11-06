@@ -10,6 +10,21 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
+{ #category : #'private ' }
+XMLNotationListAttributeValidator >> errorMultipleNotationAttributes [
+	XMLValidationException
+		formatSignal: 'Element <{1}> has multiple NOTATION list attributes'
+		with: self element
+]
+
+{ #category : #'private ' }
+XMLNotationListAttributeValidator >> errorUndeclaredNotation: aNotation [
+	XMLValidationException
+		formatSignal: 'Undeclared NOTATION "{1}" in attribute "{2}"'
+		with: aNotation
+		with: self attribute
+]
+
 { #category : #testing }
 XMLNotationListAttributeValidator >> hasNotationValues [
 	^ true
@@ -24,9 +39,7 @@ XMLNotationListAttributeValidator >> notations [
 XMLNotationListAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
 	anAttributeValidatorDictionary valuesDo: [:each |
 		each hasNotationValues
-			ifTrue: [
-				XMLValidationException signal:
-					'Element <', element, '> has multiple NOTATION list attributes']].
+			ifTrue: [self errorMultipleNotationAttributes]].
 
 	notations := aDeclarationDelegate notations.
 	super
@@ -39,9 +52,7 @@ XMLNotationListAttributeValidator >> validateAttributeValue: aValue [
 	super validateAttributeValue: aValue.
 
 	(self notations includes: aValue)
-		ifFalse: [
-			XMLValidationException signal:
-				'Undeclared NOTATION "', aValue, '" in attribute "', attribute, '"'].
+		ifFalse: [self errorUndeclaredNotation: aValue]. 
 ]
 
 { #category : #'private ' }

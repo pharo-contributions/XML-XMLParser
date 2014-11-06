@@ -43,7 +43,9 @@ XMLDocumentValidator >> elementValidatorStack [
 
 { #category : #private }
 XMLDocumentValidator >> errorMissingContentFor: aName [
-	XMLValidationException signal: 'Element <', aName, '> terminated prematurely'
+	XMLValidationException
+		formatSignal: 'Element <{1}> terminated prematurely'
+		with: aName
 ]
 
 { #category : #testing }
@@ -54,6 +56,11 @@ XMLDocumentValidator >> hasAttributeValidators [
 { #category : #testing }
 XMLDocumentValidator >> hasElementValidators [
 	self subclassResponsibility
+]
+
+{ #category : #testing }
+XMLDocumentValidator >> hasValidators [
+	^ self hasElementValidators or: [self hasAttributeValidators]
 ]
 
 { #category : #validation }
@@ -68,14 +75,15 @@ XMLDocumentValidator >> unvalidatedElement: aName [
 XMLDocumentValidator >> validateAttributes: anAttributeDictionary with: aValidatorDictionary [
 	| unvalidatedAttributes |
 
-	unvalidatedAttributes := anAttributeDictionary keys asSet.
+	unvalidatedAttributes := Set new: anAttributeDictionary size.
+	anAttributeDictionary keysDo: [:each | unvalidatedAttributes add: each].
 	aValidatorDictionary
 		ifNotNil: [
 			aValidatorDictionary keysAndValuesDo: [:attribute :validator |
 				validator validateAttributes: anAttributeDictionary.
 				unvalidatedAttributes
 					remove: attribute
-					ifAbsent: []]].
+					ifAbsent: nil]].
 
 	unvalidatedAttributes
 		ifNotEmpty: [self unvalidatedAttributes: unvalidatedAttributes].
@@ -101,6 +109,10 @@ XMLDocumentValidator >> validateEndTag: aName [
 XMLDocumentValidator >> validatePCData: aString [
 	self hasElementValidators
 		ifTrue: [self currentElementValidator validatePCData: aString]
+]
+
+{ #category : #validation }
+XMLDocumentValidator >> validateReservedAttributes: aDictionary for: aStartTag [
 ]
 
 { #category : #validation }
@@ -131,9 +143,9 @@ XMLDocumentValidator >> validateStartTag: aName attributes: anAttributeDictionar
 		with: (self attributeValidatorsFor: aName).
 ]
 
-{ #category : #validation }
-XMLDocumentValidator >> validateXMLIDAttributeIn: aDictionary [
-	self xmlIDValidator validateAttributes: aDictionary
+{ #category : #private }
+XMLDocumentValidator >> validateXMLIDAttributeIn: anAttributeDictionary [
+	self xmlIDValidator validateAttributes: anAttributeDictionary
 ]
 
 { #category : #private }

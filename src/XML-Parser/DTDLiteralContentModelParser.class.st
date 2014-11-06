@@ -7,6 +7,14 @@ Class {
 	#category : #'XML-Parser-DTD'
 }
 
+{ #category : #private }
+DTDLiteralContentModelParser >> errorInvalidContentModel [
+	XMLValidationException
+		formatSignal: 'Invalid content model "{1}" for element <{2}>'
+		with: contentModel
+		with: element.
+]
+
 { #category : #parsing }
 DTDLiteralContentModelParser >> parse [
 	contentModel = 'ANY'
@@ -14,5 +22,5 @@ DTDLiteralContentModelParser >> parse [
 	contentModel = 'EMPTY'
 		ifTrue: [^ XMLEmptyElementValidator element: element].
 
-	XMLValidationException signal: 'Invalid content model "', contentModel, '"'.
+	self errorInvalidContentModel.
 ]

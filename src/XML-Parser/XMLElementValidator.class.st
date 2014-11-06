@@ -32,14 +32,17 @@ XMLElementValidator >> element: aName [
 
 { #category : #private }
 XMLElementValidator >> errorUnexpectedElement: aName [
-	XMLValidationException signal:
-		'Unexpected <', aName, '> element in <', self element, '> element'.
+	XMLValidationException
+		formatSignal: 'Unexpected <{1}> element in <{2}> element'
+		with: aName
+		with: self element
 ]
 
 { #category : #private }
 XMLElementValidator >> errorUnexpectedPCData: aString [
-	XMLValidationException signal:
-		'Unexpected PCDATA in <', self element, '> element'.
+	XMLValidationException
+		formatSignal: 'Unexpected PCDATA in <{1}> element'
+		with: self element
 ]
 
 { #category : #validation }

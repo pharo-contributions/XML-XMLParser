@@ -20,12 +20,17 @@ XMLString >> acceptsContent [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : #adding }
 XMLString >> addContent: aStringOrStringNode [
 	string :=
 		string
 			ifNil: [aStringOrStringNode asString]
 			ifNotNil: [string, aStringOrStringNode asString]
+]
+
+{ #category : #adding }
+XMLString >> append: aStringOrStringNode [
+	self addContent: aStringOrStringNode
 ]
 
 { #category : #converting }
@@ -34,8 +39,38 @@ XMLString >> asString [
 ]
 
 { #category : #converting }
+XMLString >> asXMLEscapedString [
+	^ self string asXMLEscapedString
+]
+
+{ #category : #converting }
 XMLString >> asXMLString [
 	^ self
+]
+
+{ #category : #testing }
+XMLString >> beginsWith: aStringOrStringNode [
+	^ self string beginsWith: aStringOrStringNode asString
+]
+
+{ #category : #accessing }
+XMLString >> contentString: aString [
+	self string: aString
+]
+
+{ #category : #replacing }
+XMLString >> deleteFrom: aStart to: anEnd [
+	self replaceFrom: aStart to: anEnd with: ''
+]
+
+{ #category : #testing }
+XMLString >> endsWith: aStringOrStringNode [
+	^ self string endsWith: aStringOrStringNode asString
+]
+
+{ #category : #testing }
+XMLString >> includesString: aStringOrStringNode [
+	^ self string includesSubstring: aStringOrStringNode asString
 ]
 
 { #category : #testing }
@@ -44,8 +79,57 @@ XMLString >> isContentNode [
 ]
 
 { #category : #testing }
+XMLString >> isEmpty [
+	^ self string isEmpty
+]
+
+{ #category : #testing }
+XMLString >> isString: aStringOrStringNode [
+	^ self string = aStringOrStringNode asString
+]
+
+{ #category : #testing }
 XMLString >> isStringNode [
 	^ true
+]
+
+{ #category : #testing }
+XMLString >> isStringNode: aStringOrStringNode [
+	^ self isString: aStringOrStringNode
+]
+
+{ #category : #testing }
+XMLString >> isWhitespace [
+	^ self isEmpty not
+		and: [self string allSatisfy: [:each | each isSeparator]]
+]
+
+{ #category : #'split and merge' }
+XMLString >> mergeAdjacent [
+	| parentNodes selfIndex adjacentNode |
+
+	self hasParent
+		ifFalse: [^ self].
+
+	parentNodes := self parent nodes.
+	selfIndex := parentNodes indexOf: self.
+	[(adjacentNode := parentNodes at: selfIndex + 1) notNil
+		and: [adjacentNode isStringNode]]
+		whileTrue: [
+			self append: adjacentNode.
+			parentNodes removeAt: selfIndex + 1].
+
+	[(adjacentNode := parentNodes at: selfIndex - 1) notNil
+		and: [adjacentNode isStringNode]]
+		whileTrue: [
+			self prepend: adjacentNode.
+			parentNodes removeAt: selfIndex - 1.
+			selfIndex := selfIndex - 1].
+]
+
+{ #category : #adding }
+XMLString >> prepend: aStringOrStringNode [
+	self string: aStringOrStringNode asString, self string
 ]
 
 { #category : #printing }
@@ -60,6 +144,49 @@ XMLString >> printContentOn: aStream [
 		ifFalse: [aStream space].
 
 	aStream nextPutAll: self string.
+]
+
+{ #category : #replacing }
+XMLString >> replaceAll: aSource with: aReplacement [
+	"works like copyReplaceAll:with:"
+	self string:
+		(self string
+			copyReplaceAll: aSource asString
+			with: aReplacement asString)
+]
+
+{ #category : #replacing }
+XMLString >> replaceFrom: aStart to: aStop with: aReplacement [
+	"works like copyReplaceFrom:to:with: and
+	can be used to insert, delete, and replace"
+	| start stop |
+
+	start := (aStart max: 1) min: self size + 1.
+	stop := (aStop max: start - 1) min: self size.
+	self string:
+		(self string
+			copyReplaceFrom: start
+			to: stop
+			with: aReplacement asString)
+]
+
+{ #category : #accessing }
+XMLString >> size [
+	^ self string size
+]
+
+{ #category : #'split and merge' }
+XMLString >> splitAt: anOffset [
+	| newNode |
+
+	newNode := self copy.
+	self replaceFrom: anOffset to: self size with: ''.
+	newNode replaceFrom: 1 to: anOffset - 1 with: ''.
+
+	self hasParent
+		ifTrue: [self parent addNode: newNode after: self].
+
+	^ newNode.
 ]
 
 { #category : #accessing }

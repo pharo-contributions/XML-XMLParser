@@ -18,22 +18,38 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
-{ #category : #accessing }
+{ #category : #adding }
 XMLNodeWithElements >> addContent: aStringOrStringNode [
 	"Adds a string or string node. If the last child node is already a string node,
 	the characters being added are concatenated to it."
 
 	(self hasChildren and: [self lastNode acceptsContent])
 		ifTrue: [self lastNode addContent: aStringOrStringNode]
-		ifFalse: [self addNode: aStringOrStringNode asXMLString]
+		ifFalse: [self addNode:
+			(aStringOrStringNode isString
+				ifTrue: [self nodeFactory newString: aStringOrStringNode]
+				ifFalse: [aStringOrStringNode])]
 ]
 
-{ #category : #accessing }
+{ #category : #adding }
 XMLNodeWithElements >> addElement: anElement [
-	"accepts element name or XMLElement as argument"
-	anElement isString
-		ifTrue: [(self addNode: self configuration nodeFactory elementClass new) name: anElement]
-		ifFalse: [self addNode: anElement]
+	self deprecated: 'use #addNode: or #addElementNamed: instead'.
+	self addNode: anElement.
+]
+
+{ #category : #adding }
+XMLNodeWithElements >> addElementNamed: aName [
+	"element is added first before naming so it inherits namespaces from self"
+	^ (self addNode: (self nodeFactory classForElement: aName) new)
+		name: aName
+]
+
+{ #category : #adding }
+XMLNodeWithElements >> addElementNamed: aName namespaceURI: aUri [
+	^ self addNode:
+		(self nodeFactory
+			newElementNamed: aName
+			namespaceURI: aUri)
 ]
 
 { #category : #notifications }
@@ -120,7 +136,7 @@ XMLNodeWithElements >> allElementsSelect: aBlock [
 { #category : #accessing }
 XMLNodeWithElements >> configuration [
 	^ configuration ifNil: [
-		self configuration: XMLDOMConfiguration new.
+		self configuration: self configurationClass new.
 		configuration]
 ]
 
@@ -130,6 +146,11 @@ XMLNodeWithElements >> configuration: aConfiguration [
 
 	self hasChildren
 		ifTrue: [self elementsDo: [:each | each configuration: aConfiguration]]
+]
+
+{ #category : #private }
+XMLNodeWithElements >> configurationClass [
+	^ XMLDOMConfiguration
 ]
 
 { #category : #accessing }
@@ -143,13 +164,15 @@ XMLNodeWithElements >> contentNodesDo: aBlock [
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> contentStringAt: aName [
-	^ self nodes contentStringAt: aName
+XMLNodeWithElements >> contentString: aString [
+	self
+		removeNodes;
+		addContent: aString
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> document: aDocument [ 
-	self subclassResponsibility
+XMLNodeWithElements >> contentStringAt: aName [
+	^ self nodes contentStringAt: aName
 ]
 
 { #category : #accessing }
@@ -285,11 +308,25 @@ XMLNodeWithElements >> includesElement: aName [
 	^ self nodes includesElement: aName
 ]
 
+{ #category : #parsing }
+XMLNodeWithElements >> innerXML: aStringOrStream [
+	self
+		innerXML: aStringOrStream
+		parsedWith: (self parserHandlerClass on: aStringOrStream)
+]
+
+{ #category : #parsing }
+XMLNodeWithElements >> innerXML: aStringOrStream parsedWith: aParser [
+	self removeNodes.
+
+	aParser
+		pushNode: self;
+		parseDocument.
+]
+
 { #category : #private }
-XMLNodeWithElements >> innerXMLParserOn: aStringOrStream [
-	^ self configuration parserHandlerClass
-		on: aStringOrStream
-		withRootNode: self
+XMLNodeWithElements >> innerXMLContext [
+	self subclassResponsibility
 ]
 
 { #category : #testing }
@@ -308,9 +345,70 @@ XMLNodeWithElements >> namespaceScope [
 	^ XMLNamespaceScope new
 ]
 
+{ #category : #'instance creation' }
+XMLNodeWithElements >> newCData: aString [
+	^ self nodeFactory newCData: aString
+]
+
+{ #category : #'instance creation' }
+XMLNodeWithElements >> newComment: aString [
+	^ self nodeFactory newComment: aString
+]
+
+{ #category : #'instance creation' }
+XMLNodeWithElements >> newDocument [
+	^ self nodeFactory newDocument
+		configuration: self configuration
+]
+
+{ #category : #'instance creation' }
+XMLNodeWithElements >> newElement [
+	^ self nodeFactory newElement
+		configuration: self configuration
+]
+
+{ #category : #'instance creation' }
+XMLNodeWithElements >> newElementNamed: aName [
+	^ (self nodeFactory newElementNamed: aName)
+		configuration: self configuration
+]
+
+{ #category : #'instance creation' }
+XMLNodeWithElements >> newElementNamed: aName namespaceURI: aUri [
+	^ (self nodeFactory
+		newElementNamed: aName
+		namespaceURI: aUri)
+		configuration: self configuration
+]
+
+{ #category : #'instance creation' }
+XMLNodeWithElements >> newPI [
+	^ self nodeFactory newPI
+]
+
+{ #category : #'instance creation' }
+XMLNodeWithElements >> newString: aString [
+	^ self nodeFactory newString: aString
+]
+
+{ #category : #accessing }
+XMLNodeWithElements >> nodeFactory [
+	^ self configuration nodeFactory
+]
+
+{ #category : #accessing }
+XMLNodeWithElements >> nodeFactory: aNodeFactory [
+	self configuration nodeFactory: aNodeFactory
+]
+
 { #category : #private }
 XMLNodeWithElements >> nodeListClass [
 	^ self configuration nodeListClass
+]
+
+{ #category : #private }
+XMLNodeWithElements >> parserHandlerClass [
+	^ self configuration parserHandlerClass
 ]
 
 { #category : #printing }

@@ -21,6 +21,11 @@ XMLFileHandle class >> currentWorkingDirectoryPathString [
 ]
 
 { #category : #private }
+XMLFileHandle class >> errorUnsupported [
+	XMLFileException signal: 'File IO unsupported'.
+]
+
+{ #category : #private }
 XMLFileHandle class >> implementation [
 	^ self == XMLFileHandle
 		ifTrue: [self selectImplementation]
@@ -54,7 +59,7 @@ XMLFileHandle class >> selectImplementation [
 	self allSubclassesDo: [:each |
 		each isSupported
 			ifTrue: [^ each]].
-	XMLFileException signal: 'File IO unsupported'.
+	self errorUnsupported.
 ]
 
 { #category : #deleting }
@@ -65,6 +70,22 @@ XMLFileHandle >> delete [
 { #category : #private }
 XMLFileHandle >> deleteFileOrDo: aBlock [
 	self subclassResponsibility
+]
+
+{ #category : #private }
+XMLFileHandle >> errorFileSize: aFileSize exceedsMaxSize: aMaxSize [
+	XMLLimitException
+		formatSignal: 'File of size {1} exceeds max size limit of {2}: {3}'
+		with: aFileSize
+		with: aMaxSize
+		with: path
+]
+
+{ #category : #private }
+XMLFileHandle >> errorNotAFile [
+	XMLFileException
+		formatSignal: 'Not a file: {1}'
+		with: path
 ]
 
 { #category : #accessing }
@@ -112,12 +133,12 @@ XMLFileHandle >> readStreamUpToLimit: aMaxSize [
 	| fileSize |
 
 	self isFile
-		ifFalse: [XMLFileException signal: 'Not a file'].
+		ifFalse: [self errorNotAFile].
 	
 	(fileSize := self fileSize) > 0
 		ifFalse: [ ^ '' readStream].
 	(aMaxSize notNil and: [fileSize > aMaxSize])
-		ifTrue: [XMLLimitException signal: 'File size limit exceeded'].
+		ifTrue: [self errorFileSize: fileSize exceedsMaxSize: aMaxSize].
 
 	^ self readStreamOnFileOrDo: [:error | error resignalAs: XMLFileException]
 ]

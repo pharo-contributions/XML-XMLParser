@@ -67,14 +67,13 @@ XMLNestedStreamReader >> basicNext [
 
 	nextChar == CarriageReturn
 		ifTrue: [
-			nextChar := normalizedLineEndingChar.
 			[stream atEnd and: [self hasNestedStreams]]
 				whileTrue: [self popCurrentStream].
 			(stream peek == LineFeed)
-				ifTrue: [stream next]]
-		ifFalse: [
-			(nextChar == LineFeed)
-				ifTrue: [nextChar := normalizedLineEndingChar]].
+				ifTrue: [stream next].
+			^ normalizedLineEndingChar].
+	(nextChar == LineFeed)
+		ifTrue: [^ normalizedLineEndingChar].
 
 	^ nextChar.
 ]
@@ -90,20 +89,22 @@ XMLNestedStreamReader >> currentLineNumber [
 	^ currentLineNumber
 ]
 
+{ #category : #private }
+XMLNestedStreamReader >> errorNestingLimitExceeded [
+	XMLLimitException signal: 'Cannot further nest input streams'
+]
+
+{ #category : #private }
+XMLNestedStreamReader >> errorReadLimitExceeded [
+	XMLLimitException signal:
+		'Security read limit on input exceeded; ',
+		'use #documentReadLimit: or #externalSubsetReadLimit: ',
+		'to change or disable'
+]
+
 { #category : #testing }
 XMLNestedStreamReader >> hasNestedStreams [
 	^ nestedStreams notNil and: [nestedStreams notEmpty]
-]
-
-{ #category : #initialization }
-XMLNestedStreamReader >> initialize [
-	super initialize.
-
-	nestedStreams := nil.
-	peekChar := nil.
-	writeBuffer := WriteStream on: (String new: 128).
-	currentLineNumber := 1.
-	normalizedLineEndingChar := LineFeed.
 ]
 
 { #category : #private }
@@ -125,7 +126,7 @@ XMLNestedStreamReader >> next [
 		ifTrue: [currentLineNumber := currentLineNumber + 1].
 	readLimit ifNotNil: [
 		(readLimit := readLimit - 1) >= 0
-			ifFalse: [XMLLimitException signal: 'Security read limit on input exceeded']].
+			ifFalse: [self errorReadLimitExceeded]].
 
 	^ nextChar.
 ]
@@ -216,7 +217,7 @@ XMLNestedStreamReader >> pushStream: aStream onClose: aBlock [
 		ifNil: [nestedStreams := OrderedCollection with: stream]
 		ifNotNil: [
 			(nestedStreams size >= self maxNestedStreams)
-				ifTrue: [XMLLimitException signal: 'Cannot further nest input streams'].
+				ifTrue: [self errorNestingLimitExceeded].
 			nestedStreams addLast: stream].
 
 	self setStream: aStream onClose: aBlock
@@ -232,10 +233,13 @@ XMLNestedStreamReader >> setStream: aNewStream onClose: aBlock [
 
 { #category : #initialization }
 XMLNestedStreamReader >> setStream: anInitialStream readLimit: aReadLimit [
+	writeBuffer := WriteStream on: (String new: 128).
+	currentLineNumber := 1.
+	normalizedLineEndingChar := LineFeed.
+
 	self
 		setStream: anInitialStream
 		onClose: nil.
-
 	readLimit := aReadLimit.
 ]
 

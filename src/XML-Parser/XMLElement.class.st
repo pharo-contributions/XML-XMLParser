@@ -79,7 +79,7 @@ XMLElement >> addedElement: anElement [
 { #category : #notifications }
 XMLElement >> addingAttribute: anAttribute [
 	anAttribute element
-		ifNotNil: [XMLDOMException signal: 'Cannot add attribute node from other element']
+		ifNotNil: [self errorAddingAttributeWithElement]
 ]
 
 { #category : #enumerating }
@@ -91,7 +91,7 @@ XMLElement >> allElementsDo: aBlock [
 
 { #category : #accessing }
 XMLElement >> attributeAssociations [
-	^ self attributeNodes asNameValueAssociations
+	^ self attributeNodes attributeAssociations
 ]
 
 { #category : #accessing }
@@ -165,13 +165,6 @@ XMLElement >> attributes [
 	^ self attributeNodes asDictionary
 ]
 
-{ #category : #accessing }
-XMLElement >> contentString: aString [
-	self
-		removeNodes;
-		addContent: aString
-]
-
 { #category : #namespaces }
 XMLElement >> declareNamespaces: aDictionaryOrArray [
 	aDictionaryOrArray associationsDo: [:each |
@@ -190,7 +183,8 @@ XMLElement >> declarePrefix: aPrefix uri: aUri [
 				updateEnclosedScopesWith: [:scope | scope mapPrefix: aPrefix to: aUri]
 				whileTrue: [:scope |
 					(scope includesPrefix: aPrefix) not
-						or: [scope includesPrefix: aPrefix mappedTo: oldMapping]]]
+						or: [scope includesPrefix: aPrefix mappedTo: oldMapping]]
+				validateAfter: false]
 ]
 
 { #category : #namespaces }
@@ -222,6 +216,12 @@ XMLElement >> defaultNamespace: aUri [
 	self
 		updateEnclosedScopesWith: [:scope | scope defaultNamespace: aUri]
 		whileTrue: [:scope | scope defaultNamespace = oldNamespace]
+		validateAfter: false.
+]
+
+{ #category : #private }
+XMLElement >> errorAddingAttributeWithElement [
+	XMLDOMException signal: 'Cannot add attribute node from other element'
 ]
 
 { #category : #namespaces }
@@ -256,6 +256,11 @@ XMLElement >> inheritNamespacesFrom: anElement [
 			anElement namespaceScope]
 ]
 
+{ #category : #private }
+XMLElement >> innerXMLContext [
+	^ #inContent
+]
+
 { #category : #namespaces }
 XMLElement >> isDeclaredPrefix: aPrefix [
 	^ self namespaceScope includesPrefix: aPrefix
@@ -269,6 +274,16 @@ XMLElement >> isDeclaredPrefix: aPrefix uri: aUri [
 { #category : #testing }
 XMLElement >> isElement [
 	^ true
+]
+
+{ #category : #testing }
+XMLElement >> isElementNamed: aName [
+	^ self isNamed: aName
+]
+
+{ #category : #testing }
+XMLElement >> isElementNamedAny: aNameCollection [
+	^ self isNamedAny: aNameCollection
 ]
 
 { #category : #testing }
@@ -360,17 +375,17 @@ XMLElement >> previousElement [
 	^ self parent ifNotNil: [:node | node elementBefore: self]
 ]
 
-{ #category : #accessing }
+{ #category : #removing }
 XMLElement >> removeAttribute: aName [
 	^ (self attributeNodes removeAttributeNodeAt: aName) value.
 ]
 
-{ #category : #accessing }
+{ #category : #removing }
 XMLElement >> removeAttributeNode: aNode [
 	^ self attributeNodes remove: aNode
 ]
 
-{ #category : #accessing }
+{ #category : #removing }
 XMLElement >> removeAttributes [
 	^ self attributeNodes removeAll
 ]
@@ -441,26 +456,35 @@ XMLElement >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocal
 
 { #category : #namespaces }
 XMLElement >> undeclarePrefix: aPrefix [
-	self namespaceScope unmapPrefix: aPrefix.
+	| currentMapping |
+
+	currentMapping := self namespaceScope prefixMappingsAt: aPrefix ifAbsent: [^ self].
 	self
-		validateName;
-		validateAttributes.
+		updateEnclosedScopesWith: [:scope | scope unmapPrefix: aPrefix]
+		whileTrue: [:scope | scope includesPrefix: aPrefix mappedTo: currentMapping]
+		validateAfter: true.
 ]
 
 { #category : #private }
-XMLElement >> updateEnclosedScopesWith: aBlock whileTrue: aConditionalBlock [
+XMLElement >> updateEnclosedScopesWith: aBlock whileTrue: aConditionalBlock validateAfter: aBoolean [
 	"Updates the receiver's scope and the scopes of all descendants with aBlock
 	where aConditional is true. It stops descending down a path of a subtree
 	as soon as aConditional is false, but continues down other paths."
 
 	(aConditionalBlock value: self namespaceScope)
-		ifTrue: [aBlock value: self namespaceScope]
 		ifFalse: [^ self].
 
+	aBlock value: self namespaceScope.
+	aBoolean
+		ifTrue: [
+			self
+				validateName;
+				validateAttributes].
 	self elementsDo: [:each |
 		each
 			updateEnclosedScopesWith: aBlock
-			whileTrue: aConditionalBlock]
+			whileTrue: aConditionalBlock
+			validateAfter: aBoolean]
 ]
 
 { #category : #private }

@@ -159,11 +159,11 @@ XMLWellFormedParserTokenizer >> activeEntities [
 { #category : #'entity replacement' }
 XMLWellFormedParserTokenizer >> addActiveEntity: anEntity [
 	(self hasActiveEntityNamed: anEntity name)
-		ifTrue: [self parseError: 'Illegal self-referential entity ', anEntity asReference].
+		ifTrue: [self errorSelfReferentialEntity: anEntity].
 	self maxEntityReplacementDepth
 		ifNotNil: [:maxDepth |
 			(self activeEntities size + 1> maxDepth)
-				ifTrue: [self entityDepthError: 'Cannot further nest entity replacements']].
+				ifTrue: [self errorEntityDepthLimitExceeded]].
 	
 	self activeEntities addLast: anEntity.
 	anEntity isExternal
@@ -183,8 +183,10 @@ XMLWellFormedParserTokenizer >> endReplacementForParameterEntity: anEntity [
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> entityDepthError: anErrorString [
-	XMLLimitException signal: anErrorString
+XMLWellFormedParserTokenizer >> errorEntityDepthLimitExceeded [
+	XMLLimitException signal: 
+		'Cannot further nest entity replacements; ',
+		'use #maxEntityReplacementDepth: to change or disable'
 ]
 
 { #category : #errors }
@@ -194,13 +196,93 @@ XMLWellFormedParserTokenizer >> errorExpected: anExpectedString [
 
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorExpected: anExpectedCharacterOrString butGot: aReceivedCharacterOrString [
-	| expectedString receivedString |
+	self errorExpected:
+		('{1} but got "{2}"' format:
+			(Array
+				with: anExpectedCharacterOrString asString
+				with: (aReceivedCharacterOrString ifNil: ['']) asString))
+]
 
-	expectedString := anExpectedCharacterOrString asString.	
-	(receivedString := (aReceivedCharacterOrString ifNil: ['']) asString)
-		ifEmpty: [receivedString := 'nothing'].
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedAttributeValueEnd [
+	self errorExpected: 'end of quoted attribute value '
+]
 
-	self errorExpected: expectedString, ' but got ', receivedString.
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedAttributeValueStart [
+	self errorExpected: 'start of quoted attribute value'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedLiteral: aCharacterOrString [
+	self
+		errorExpectedLiteral: aCharacterOrString
+		butGot: nil
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedLiteral: anExpectedLiteral butGot: aCharacter [
+	self
+		errorExpectedLiteral: anExpectedLiteral
+		butGot: aCharacter
+		at: 1
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedLiteral: anExpectedLiteral butGot: aCharacter at: aPosition [
+	| literal replacement |
+
+	literal := anExpectedLiteral asString.
+	replacement := (aCharacter ifNil: ['']) asString.
+	self errorExpected:
+		('"{1}" but got "{2}"' format:
+			(Array
+				with: literal
+				with:
+					(literal
+						copyReplaceFrom: aPosition
+						to: literal size
+						with: replacement)))
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedName [
+	self errorExpected: 'a name'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedSectionTerminator [
+	self errorExpectedLiteral: ']]>'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorInternalSubsetIncludeOrIgnoreSection [
+	self parseError: 'Cannot have <![INCLUDE[...]> or <![IGNORE[...]> sections in internal subset'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorInvalidCodePoint: aCodePoint [
+	self parseError: 'Invalid character code point ', aCodePoint printString
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorLiteralContextExternalEntity: anEntity [
+	self parseError: 'External general entity ', anEntity asReference, ' in literal context'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorParameterEntityTerminatingSubset [
+	self parseError: 'Parameter entity replacement cannot terminate internal subset'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorSelfReferentialEntity: anEntity [
+	self parseError: 'Illegal self-referential entity ', anEntity asReference
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorXMLDeclarationInContent [
+	self parseError: 'XML declaration outside of prolog or text declaration'
 ]
 
 { #category : #'tokenizing - expecting' }
@@ -236,25 +318,20 @@ XMLWellFormedParserTokenizer >> expectNext: aCharacter [
 	(nextChar := streamReader next) == aCharacter
 		ifFalse: [
 			self
-				errorExpected: aCharacter
+				errorExpectedLiteral: aCharacter
 				butGot: nextChar].
 	^ nextChar.
 ]
 
 { #category : #'tokenizing - expecting' }
 XMLWellFormedParserTokenizer >> expectNextAll: anExpectedLiteral [
-	| nextChar |
-
-	anExpectedLiteral doWithIndex: [:each :i |
-		(nextChar := streamReader next) == each
+	1 to: anExpectedLiteral size do: [:i | | nextChar |
+		(nextChar := streamReader next) == (anExpectedLiteral at: i)
 			ifFalse: [
 				self
-					errorExpected: anExpectedLiteral
-					butGot:
-						(anExpectedLiteral
-							copyReplaceFrom: i
-							to: anExpectedLiteral size
-							with: (nextChar ifNil: ['']) asString)]].
+					errorExpectedLiteral: anExpectedLiteral
+					butGot: nextChar
+					at: i]].
 	^ anExpectedLiteral.
 ]
 
@@ -278,7 +355,7 @@ XMLWellFormedParserTokenizer >> expectTerminator: aCharacter [
 	(nextChar := streamReader next) == aCharacter
 		ifFalse: [
 			self
-				errorExpected: aCharacter asString, ' terminator'
+				errorExpectedLiteral: aCharacter
 				butGot: nextChar].
 	^ nextChar.
 ]
@@ -295,7 +372,7 @@ XMLWellFormedParserTokenizer >> expectUpToAll: aString [
 		whileFalse: [writeStream nextPut: streamReader next].
 
 	isTerminated
-		ifFalse: [self errorExpected: 'terminating ', aString].
+		ifFalse: [self errorExpectedLiteral: aString].
 
 	^ writeStream contents.
 ]
@@ -396,7 +473,7 @@ XMLWellFormedParserTokenizer >> nextAttributeValue [
 		ifFalse: [
 			quote == $&
 				ifTrue: [^ self nextUnparsedEntityReference]
-				ifFalse: [self errorExpected: 'start of quoted attribute value']].
+				ifFalse: [self errorExpectedAttributeValueStart]].
 	
 	context
 		saveCurrent;
@@ -420,7 +497,7 @@ XMLWellFormedParserTokenizer >> nextAttributeValue [
 	context resetPrevious.
 
 	(streamReader next == quote)
-		ifFalse: [self errorExpected: 'end of quoted attribute value'].
+		ifFalse: [self errorExpectedAttributeValueEnd].
 
 	^ writeStream contents.
 ]
@@ -441,7 +518,7 @@ XMLWellFormedParserTokenizer >> nextConditionalSectionOn: aWriteStream [
 		skipSeparatorsReplacingParameterEntities;
 		expectNext: $I.
 
-	^ streamReader peek == $N
+	streamReader peek == $N
 		ifTrue: [self nextIncludeSectionOn: aWriteStream]
 		ifFalse: [self nextIgnoreSection].
 ]
@@ -466,7 +543,7 @@ XMLWellFormedParserTokenizer >> nextDecodedCharReference [
 	self expectNext: $;.
 
 	^ (self characterFromCodePoint: codePoint)
-		ifNil: [self parseError: 'Invalid character code point ', codePoint printString].
+		ifNil: [self errorInvalidCodePoint: codePoint].
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -511,7 +588,7 @@ XMLWellFormedParserTokenizer >> nextEndDocument [
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextEndInternalSubset [
 	self hasActiveEntities
-		ifTrue: [self parseError: 'Parameter entity replacement cannot terminate internal subset'].
+		ifTrue: [self errorParameterEntityTerminatingSubset].
 
 	super nextEndInternalSubset.
 ]
@@ -672,9 +749,7 @@ XMLWellFormedParserTokenizer >> nextIgnoreSection [
 						ifFalse: [streamReader next]]].
 
 	openSections > 0
-		ifTrue: [self errorExpected: 'terminating ]]>'].
-
-	^ ''.
+		ifTrue: [self errorExpectedSectionTerminator].
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -696,7 +771,7 @@ XMLWellFormedParserTokenizer >> nextIncludeSectionOn: aWriteStream [
 						ifFalse: [aWriteStream nextPut: streamReader next]]].
 
 	isOpen
-		ifTrue: [self errorExpected: 'terminating ]]>'].
+		ifTrue: [self errorExpectedSectionTerminator].
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -722,7 +797,7 @@ XMLWellFormedParserTokenizer >> nextName [
 	((nextChar := streamReader next) notNil
 		and: [(NameChars includes: nextChar)
 			and: [(AdditionalNameChars includes: nextChar) not]])
-		ifFalse: [self errorExpected: 'name'].
+		ifFalse: [self errorExpectedName].
 	nameStream nextPut: nextChar.
 
 	[(nextChar := streamReader peek) notNil
@@ -738,7 +813,7 @@ XMLWellFormedParserTokenizer >> nextNameOn: aWriteStream [
 	((nextChar := streamReader next) notNil
 		and: [(NameChars includes: nextChar)
 			and: [(AdditionalNameChars includes: nextChar) not]])
-		ifFalse: [self errorExpected: 'name'].
+		ifFalse: [self errorExpectedName].
 	aWriteStream nextPut: nextChar.
 
 	[(nextChar := streamReader peek) notNil
@@ -792,7 +867,7 @@ XMLWellFormedParserTokenizer >> nextPCDataToken [
 	[(nextChar := streamReader peek) == $<
 		or: [nextChar == nil]]
 		whileFalse: [
-			(streamReader next) == $&
+			streamReader next == $&
 				ifTrue: [
 					(nextChar :=
 						streamReader peek == $#
@@ -820,7 +895,7 @@ XMLWellFormedParserTokenizer >> nextPITarget [
 	(target = 'xml'
 		and: [context isInProlog not
 			and: [context isInTextDeclaration not]])
-		ifTrue: [self parseError: 'XML declaration outside of prolog or text declaration'].
+		ifTrue: [self errorXMLDeclarationInContent].
 
 	^ target.
 ]
@@ -867,10 +942,10 @@ XMLWellFormedParserTokenizer >> nextPubidLiteral [
 
 	quote := self expectQuote.
 	writeStream reset.
-	[(nextChar := streamReader peek) notNil
-		and: [(PubidChars includes: nextChar)
-			and: [nextChar ~~ quote]]]
-		whileTrue: [writeStream nextPut: streamReader next].
+	[(nextChar := streamReader peek) == nil
+		or: [nextChar == quote
+			or: [(PubidChars includes: nextChar) not]]]
+		whileFalse: [writeStream nextPut: streamReader next].
 	self expectNext: quote.
 
 	^ writeStream contents.
@@ -910,7 +985,7 @@ XMLWellFormedParserTokenizer >> nextSubsetMarkupToken [
 			(context isInExternalSubset
 				or: [self hasActiveExternalEntity])
 				ifTrue: [^ self nextConditionalSection].
-			self parseError: 'Cannot have INCLUDE/IGNORE sections in internal subset'].
+			self errorInternalSubsetIncludeOrIgnoreSection].
 
 	self nextSubsetDeclaration.
 ]
@@ -930,7 +1005,7 @@ XMLWellFormedParserTokenizer >> nextSystemLiteralRequired: aBoolean [
 { #category : #tokenizing }
 XMLWellFormedParserTokenizer >> nextTag [
 	"performance critical method"
-	| tagName attributes reservedAttributes namespaces nextChar attributeName attributeValue |
+	| tagName attributes namespaces nextChar |
 
 	(streamReader peek == $/)
 		ifTrue: [^ self nextEndTag].
@@ -941,47 +1016,36 @@ XMLWellFormedParserTokenizer >> nextTag [
 	((nextChar := streamReader peek) == $>
 		or: [nextChar == $/
 			or: [nextChar == nil]])]
-		whileFalse: [
+		whileFalse: [ | attributeName attributeValue |
 			attributeName := self nextName.
 			streamReader skipSeparators.
 			self expectNext: $=.
 			streamReader skipSeparators.
 			attributeValue := self nextAttributeValue.
 	
-			((attributeName at: 1) == $x "fast test to skip the others"
-				and: [(attributeName beginsWith: 'xml')
-					and: [attributeName size >= 5]])
+			(attributeName at: 1) == $x
 				ifTrue: [
-					(driver usesNamespaces
-						and: [(attributeName at: 4) == $n
-							and: [(attributeName at: 5) == $s]])
+					(attributeName isXmlnsAttributeName
+						and: [driver usesNamespaces])
 						ifTrue: [
 							"initialize only if needed"
-							namespaces
-								ifNil: [namespaces := OrderPreservingDictionary new: 5 withDefaultValue: ''].
-							attributeName size > 6
-								ifTrue: [
-									namespaces
-										at: (attributeName copyFrom: 7 to: attributeName size)
-										put: attributeValue]
-								ifFalse: [namespaces at: '' put: attributeValue]]
-						ifFalse: [
-							(attributeName at: 4) == $:
-								ifTrue: [
-									"the xml: attributes require special processing so are copied
-									to a separate dictionary to not be affected by changes to the
-									regular dictionary and quick nil test if any are present"
-									(reservedAttributes ifNil: [reservedAttributes := Dictionary new])
-										at: attributeName put: attributeValue].
-								attributes at: attributeName put: attributeValue]]
+							(namespaces
+								ifNil: [namespaces := OrderPreservingDictionary new: 5 withDefaultValue: ''])
+								at:
+									((attributeName size > 6)
+										ifTrue: [attributeName copyFrom: 7 to: attributeName size]
+										ifFalse: [''])
+								put: attributeValue]
+						ifFalse: [							
+							attributeName isReservedAttributeName
+								ifTrue: [driver haveUnhandledReservedAttributes].
+							attributes at: attributeName put: attributeValue]]
 				ifFalse: [attributes at: attributeName put: attributeValue]].
 
 	driver
 		handleStartTag: tagName
 		attributes: attributes
 		namespaces: namespaces.
-	reservedAttributes
-		ifNotNil: [driver handleReservedAttributes: reservedAttributes].
 
 	streamReader peek == $/
 		ifTrue: [
@@ -1084,7 +1148,7 @@ XMLWellFormedParserTokenizer >> replacementFromGeneralEntity: anEntity [
 	anEntity ifNil: [^ ''].
 
 	(context isInLiteralValue and: [anEntity isExternal])
-		ifTrue: [self parseError: 'External general entity ', anEntity asReference, ' in literal context'].
+		ifTrue: [self errorLiteralContextExternalEntity: anEntity].
 
 	^ context isInLiteralValue
 		ifTrue: [anEntity replacementForLiteralContext]

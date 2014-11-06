@@ -10,6 +10,14 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
+{ #category : #private }
+XMLEntityAttributeValidator >> errorInvalidUnparsedEntityReference: aName [
+	XMLValidationException
+		formatSignal: 'Unrecognized unparsed entity "{1}" in "{2}" attribute'
+		with: aName
+		with: self attribute
+]
+
 { #category : #testing }
 XMLEntityAttributeValidator >> isEntityValidator [
 	^ true
@@ -37,5 +45,5 @@ XMLEntityAttributeValidator >> validateAttributeValue: aValue [
 XMLEntityAttributeValidator >> validateEntityReference: aName [
 	self validateName: aName.
 	(self unparsedEntities includesKey: aName)
-		ifFalse: [XMLValidationException signal: 'Unrecognized unpasred entity ', aName, ' in attribute "', attribute, '"']
+		ifFalse: [self errorInvalidUnparsedEntityReference: aName]
 ]

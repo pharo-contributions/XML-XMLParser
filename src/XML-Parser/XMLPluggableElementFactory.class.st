@@ -18,9 +18,8 @@ will handle 'rootUser' and 'root-user' elements with the MYRootUserElement class
 "
 Class {
 	#name : #XMLPluggableElementFactory,
-	#superclass : #XMLNodeFactory,
+	#superclass : #XMLPluggableNodeFactory,
 	#instVars : [
-		'elementClass',
 		'elementClassesByName'
 	],
 	#category : #'XML-Parser-DOM'
@@ -52,16 +51,6 @@ XMLPluggableElementFactory >> classForElement: aName uri: aUri [
 			classesForElement
 				at: ''
 				ifAbsent: [nil]].
-]
-
-{ #category : #accessing }
-XMLPluggableElementFactory >> elementClass [
-	^ elementClass ifNil: [elementClass := super elementClass]
-]
-
-{ #category : #accessing }
-XMLPluggableElementFactory >> elementClass: anElementClass [
-	elementClass := anElementClass
 ]
 
 { #category : #private }

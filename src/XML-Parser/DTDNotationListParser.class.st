@@ -12,9 +12,9 @@ DTDNotationListParser >> isValidListValue: aValue [
 	^ XMLWellFormedParserTokenizer isName: aValue
 ]
 
-{ #category : #accessing }
-DTDNotationListParser >> valueList: aString [
-	super valueList:
+{ #category : #initialization }
+DTDNotationListParser >> on: aString [
+	super on:
 		(aString
 			copyFrom: (aString indexOf: $()
 			to: aString size)

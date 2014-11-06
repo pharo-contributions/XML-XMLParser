@@ -43,11 +43,70 @@ XMLNamespaceScope >> defaultNamespace [
 XMLNamespaceScope >> defaultNamespace: aUri [
 	(aUri = self class xmlNamespaceURI
 		or: [aUri = self class xmlnsNamespaceURI])
-		ifTrue: [
-			XMLNamespaceException signal:
-				'Cannot use "xml" or  "xmlns" namespace URI as default namespace'].
+		ifTrue: [self errorCannotUseXmlOrXmlnsURIAsDefault].
 
 	self prefixMappings at: '' put: aUri.
+]
+
+{ #category : #private }
+XMLNamespaceScope >> errorAttribute: anAttribute aliasesNamespace: aNamespace [
+	XMLNamespaceException
+		formatSignal: 'Attribute "{1}" has alias for namespace "{2}"'
+		with: anAttribute
+		with: aNamespace
+]
+
+{ #category : #private }
+XMLNamespaceScope >> errorCannotAliasXmlOrXmlnsURI [
+	XMLNamespaceException signal: 'Cannot alias the "xml" or "xmlns" prefixes'
+]
+
+{ #category : #private }
+XMLNamespaceScope >> errorCannotMapPrefixToEmptyURI [
+	XMLNamespaceException signal: 'Cannot map namespace prefixes to empty URIs'
+]
+
+{ #category : #private }
+XMLNamespaceScope >> errorCannotMapXmlnsPrefix [
+	XMLNamespaceException signal:
+		'Cannot map "xmlns" prefix to any namespace, even the current "xmlns" namespace'
+]
+
+{ #category : #private }
+XMLNamespaceScope >> errorCannotRemapXmlPrefix [
+	XMLNamespaceException signal: 'Cannot map the "xml" prefix to a new namespace URI'
+]
+
+{ #category : #private }
+XMLNamespaceScope >> errorCannotUseXmlOrXmlnsURIAsDefault [
+	XMLNamespaceException signal:
+		'Cannot use "xml" or  "xmlns" namespace URI as default namespace'
+]
+
+{ #category : #private }
+XMLNamespaceScope >> errorCannotUseXmlnsPrefix [	
+	XMLNamespaceException signal: 'Cannot use reserved "xmlns" prefix for elements or attributes'
+]
+
+{ #category : #private }
+XMLNamespaceScope >> errorInvalidPrefix: aPrefix [	
+	XMLNamespaceException
+		formatSignal: 'Prefix "{1}" contains ":" character'
+		with: aPrefix
+]
+
+{ #category : #private }
+XMLNamespaceScope >> errorInvalidUnprefixedName: aName [
+	XMLNamespaceException
+		formatSignal: 'Name "{1}" contains ":" character'
+		with: aName
+]
+
+{ #category : #private }
+XMLNamespaceScope >> errorUnmappedPrefix: aPrefix [
+	XMLNamespaceException
+		formatSignal: 'Unmapped namespace prefix "{1}" in name'
+		with: aPrefix
 ]
 
 { #category : #testing }
@@ -98,21 +157,18 @@ XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
 			aPrefix = 'xml'
 				ifTrue: [
 					aUri = self class xmlNamespaceURI
-						ifFalse: [
-							XMLNamespaceException signal:
-								'Cannot map the "xml" prefix to a new namespace URI'].
+						ifFalse: [self errorCannotRemapXmlPrefix].
 					self prefixMappings at: 'xml' put: aUri.
 					^ self].
 			aPrefix = 'xmlns'
-				ifTrue: [XMLNamespaceException signal: 'Cannot bind "xmlns" prefix at all']].
+				ifTrue: [self errorCannotMapXmlnsPrefix]].
 	(aPrefix indexOf: $:) > 0 
-		ifTrue: [XMLNamespaceException signal: 'Prefix "', aPrefix, '" contains ":" character'].
+		ifTrue: [self errorInvalidPrefix: aPrefix].
 
 	aUri isEmpty
-		ifTrue: [XMLNamespaceException signal: 'Empty URIs cannot be mapped to prefixes'].
+		ifTrue: [self errorCannotMapPrefixToEmptyURI].
 	(aUri = self class xmlNamespaceURI or: [aUri = self class xmlnsNamespaceURI])
-		ifTrue: [XMLNamespaceException signal: 'Cannot alias the "xml" or "xmlns" prefixes'].
-
+		ifTrue: [self errorCannotAliasXmlOrXmlnsURI].
 	self prefixMappings at: aPrefix put: aUri.
 ]
 
@@ -177,8 +233,9 @@ XMLNamespaceScope >> unmapPrefix: aPrefix [
 	self prefixMappings
 		removeKey: aPrefix
 		ifAbsent: [
-			XMLNamespaceException signal:
-				'Prefix "', aPrefix, '" was not mapped and cannot be unmapped']
+			XMLNamespaceException
+				formatSignal: 'Prefix "{1}" was not mapped and cannot be unmapped'
+				with: aPrefix]
 ]
 
 { #category : #private }
@@ -188,11 +245,10 @@ XMLNamespaceScope >> validateAndResolvePrefix: aPrefix [
 		ifAbsent: [
 			aPrefix = 'xml'
 				ifTrue: [self class xmlNamespaceURI]
-				ifFalse: [
-					XMLNamespaceException signal:
-						(aPrefix = 'xmlns'
-							ifTrue: ['Cannot use reserved "xmlns" prefix for elements or attributes']
-							ifFalse: ['Unmapped namespace prefix "', aPrefix, '" in name'])]]
+				ifFalse: [					
+					(aPrefix = 'xmlns'
+						ifTrue: [self errorCannotUseXmlnsPrefix]
+						ifFalse: [self errorUnmappedPrefix: aPrefix])]]
 ]
 
 { #category : #validation }
@@ -222,9 +278,7 @@ XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
 				oldSize := namespacedAttributes size.
 				namespacedAttributes add: namespace, (each qualifiedNameLocalPartFromPrefix: prefix).
 				namespacedAttributes size > oldSize
-					ifFalse: [
-						XMLNamespaceException signal:
-							'Attribute "', each, '" has alias for namespace "', namespace, '"']]].
+					ifFalse: [self errorAttribute: each aliasesNamespace: namespace]]]
 ]
 
 { #category : #private }
@@ -232,5 +286,5 @@ XMLNamespaceScope >> validateUnprefixedName: aName [
 	"catch names like ':name' with an empty prefix"
 	(aName size > 0
 		and: [(aName at: 1) == $:])
-		ifTrue: [XMLNamespaceException signal: 'Name "', aName, '" contains ":" character'].
+		ifTrue: [self errorInvalidUnprefixedName: aName]
 ]

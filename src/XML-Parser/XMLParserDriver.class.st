@@ -109,10 +109,6 @@ XMLParserDriver >> handleParseError: anErrorString [
 ]
 
 { #category : #'handling tokens' }
-XMLParserDriver >> handleReservedAttributes: anAttributeDictionary [
-]
-
-{ #category : #'handling tokens' }
 XMLParserDriver >> handleStartContentEntityReplacement: aName [
 ]
 
@@ -139,6 +135,11 @@ XMLParserDriver >> handleWhitespace: aString [
 
 { #category : #'handling tokens' }
 XMLParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
+]
+
+{ #category : #initialization }
+XMLParserDriver >> initialContext [
+	^ nil
 ]
 
 { #category : #testing }

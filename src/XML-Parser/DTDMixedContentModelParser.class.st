@@ -7,6 +7,11 @@ Class {
 	#category : #'XML-Parser-DTD'
 }
 
+{ #category : #private }
+DTDMixedContentModelParser >> errorInvalidMixedContentList [
+	XMLValidationException signal: 'Missing * after mixed content list with elements'
+]
+
 { #category : #parsing }
 DTDMixedContentModelParser >> parse [
 	^ XMLMixedContentElementValidator
@@ -14,7 +19,7 @@ DTDMixedContentModelParser >> parse [
 		allowedElements: self parseAllowedElements
 ]
 
-{ #category : #parsing }
+{ #category : #private }
 DTDMixedContentModelParser >> parseAllowedElements [
 	| allowedElements |
 
@@ -22,9 +27,7 @@ DTDMixedContentModelParser >> parseAllowedElements [
 	allowedElements remove: '#PCDATA'.
 
 	(allowedElements isEmpty or: [contentModel last == $*])
-		ifFalse: [
-			XMLValidationException signal:
-				'Missing * after mixed content list with elements'].
+		ifFalse: [self errorInvalidMixedContentList].
 
 	^ allowedElements.
 ]

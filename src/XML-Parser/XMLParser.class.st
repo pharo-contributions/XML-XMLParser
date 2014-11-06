@@ -31,6 +31,11 @@ XMLParser >> driver [
 	^ driver
 ]
 
+{ #category : #accessing }
+XMLParser >> initialContext: aContext [
+	self tokenizer initialContext: aContext
+]
+
 { #category : #parsing }
 XMLParser >> parseDocument [
 	[[self tokenizer atEnd]

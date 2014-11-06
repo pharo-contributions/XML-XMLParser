@@ -7,17 +7,20 @@ Class {
 	#category : #'XML-Parser-DTD'
 }
 
+{ #category : #private }
+DTDMixedContentListParser >> errorInvalidMixedContentList [
+	XMLValidationException signal: 'Mixed content list can only be followed by "*"'
+]
+
 { #category : #testing }
 DTDMixedContentListParser >> isValidListValue: aValue [
 	^ aValue = '#PCDATA' or: [XMLWellFormedParserTokenizer isName: aValue]
 ]
 
-{ #category : #parsing }
+{ #category : #private }
 DTDMixedContentListParser >> parseAfterList [
 	(valueListStream atEnd
 		or: [valueListStream next == $*
 			and: [valueListStream atEnd]])
-		ifFalse: [
-			XMLValidationException signal:
-				'Mixed content list can only be followed by "*"'].
+		ifFalse: [self errorInvalidMixedContentList].
 ]

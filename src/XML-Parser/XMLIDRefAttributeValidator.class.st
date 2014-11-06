@@ -5,7 +5,7 @@ Class {
 	#name : #XMLIDRefAttributeValidator,
 	#superclass : #XMLAttributeValidator,
 	#instVars : [
-		'idrefs'
+		'idRefs'
 	],
 	#category : #'XML-Parser-Validation'
 }
@@ -17,7 +17,12 @@ XMLIDRefAttributeValidator >> hasIDRefs [
 
 { #category : #accessing }
 XMLIDRefAttributeValidator >> idRefs [
-	^ idrefs ifNil: [idrefs := Set new].
+	^ idRefs ifNil: [idRefs := Set new].
+]
+
+{ #category : #accessing }
+XMLIDRefAttributeValidator >> idRefs: anObject [
+	^ idRefs := anObject
 ]
 
 { #category : #validation }

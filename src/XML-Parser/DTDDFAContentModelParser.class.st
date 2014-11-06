@@ -74,17 +74,22 @@ DTDDFAContentModelParser >> errorMissingOperand [
 	XMLValidationException signal: 'Missing element name in content model'
 ]
 
-{ #category : #testing }
-DTDDFAContentModelParser >> hasOperatorOnStack [
-	^ operatorStack notEmpty and: [operatorStack last ~~ $(]
+{ #category : #private }
+DTDDFAContentModelParser >> errorUnexpectedPCDATA [
+	XMLValidationException signal: 'Unexpected #PCDATA in content model'
 ]
 
-{ #category : #testing }
+{ #category : #private }
+DTDDFAContentModelParser >> hasOperatorOnStack [
+	^ (operatorStack isEmpty or: [operatorStack last == $(]) not
+]
+
+{ #category : #private }
 DTDDFAContentModelParser >> isBinaryOperator: aFirstOperator higherPrecedenceThan: aSecondOperator [
 	^ aFirstOperator == $, and: [aSecondOperator == $|]
 ]
 
-{ #category : #testing }
+{ #category : #private }
 DTDDFAContentModelParser >> isSpecialCharacter: aCharacter [
 	^ (self parserForSpecialCharacter: aCharacter) notNil
 ]
@@ -111,7 +116,7 @@ DTDDFAContentModelParser >> parse [
 		dfa: nfaBuilder firstStateOfAcceptingNFA asDFAState.
 ]
 
-{ #category : #parsing }
+{ #category : #private }
 DTDDFAContentModelParser >> parseBinaryOperator: aCharacter [
 	self hasOperatorOnStack
 		ifTrue: [
@@ -123,7 +128,7 @@ DTDDFAContentModelParser >> parseBinaryOperator: aCharacter [
 	operatorStack addLast: aCharacter.
 ]
 
-{ #category : #parsing }
+{ #category : #private }
 DTDDFAContentModelParser >> parseElementName [
 	| matcher |
 
@@ -134,19 +139,19 @@ DTDDFAContentModelParser >> parseElementName [
 
 	matcher := nameStream contents.
 	matcher = '#PCDATA'
-		ifTrue: [XMLValidationException signal: 'Unexpected #PCDATA in content model'].
+		ifTrue: [self errorUnexpectedPCDATA].
 
 	nfaBuilder pushMatcher: matcher.
 ]
 
-{ #category : #parsing }
+{ #category : #private }
 DTDDFAContentModelParser >> parseParen: aCharacter [
 	aCharacter == $)
 		ifTrue: [self popParenthesizedOperators]
 		ifFalse: [operatorStack addLast: $(].
 ]
 
-{ #category : #parsing }
+{ #category : #private }
 DTDDFAContentModelParser >> parseUnaryOperator: aCharacter [
 	nfaBuilder hasFragments
 		ifFalse: [self errorMissingOperand].
@@ -154,7 +159,7 @@ DTDDFAContentModelParser >> parseUnaryOperator: aCharacter [
 	self applyOperator: aCharacter.
 ]
 
-{ #category : #parsing }
+{ #category : #private }
 DTDDFAContentModelParser >> parserForSpecialCharacter: aCharacter [
 	| asciiValue |
 

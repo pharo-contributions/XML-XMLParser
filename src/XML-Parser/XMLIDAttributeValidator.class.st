@@ -10,6 +10,21 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
+{ #category : #private }
+XMLIDAttributeValidator >> errorDuplicateID: anId [
+	XMLValidationException
+		formatSignal: 'ID "{1}" used more than once for attribute "{2}"'
+		with: anId
+		with: self attribute
+]
+
+{ #category : #private }
+XMLIDAttributeValidator >> errorElementWithMultipleIDAttributes [
+	XMLValidationException
+		formatSignal: 'Element <{1}> has multiple ID attributes'
+		with: self element
+]
+
 { #category : #testing }
 XMLIDAttributeValidator >> hasIDs [
 	^ self ids notEmpty
@@ -30,10 +45,8 @@ XMLIDAttributeValidator >> isIDValidator [
 XMLIDAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
 	anAttributeValidatorDictionary valuesDo: [:each |
 		each isIDValidator
-			ifTrue: [
-				XMLValidationException signal:
-					'Element <', element, '> has multiple ID attributes']].
-	
+			ifTrue: [self errorElementWithMultipleIDAttributes]].
+
 	super
 		validateAndAddTo: anAttributeValidatorDictionary
 		usingDeclarationsFrom: aDeclarationDelegate
@@ -43,9 +56,7 @@ XMLIDAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usin
 XMLIDAttributeValidator >> validateAttributeValue: aValue [
 	self validateID: aValue.
 	(self ids includes: aValue)
-		ifTrue: [
-			XMLValidationException signal:
-				'ID "', aValue, '" used more than once for attribute "', attribute, '"'].
+		ifTrue: [self errorDuplicateID: aValue].
 
 	self ids add: aValue.
 ]

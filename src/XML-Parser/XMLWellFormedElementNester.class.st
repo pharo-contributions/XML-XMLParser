@@ -21,21 +21,32 @@ XMLWellFormedElementNester >> endElement: anElementName [
 { #category : #checking }
 XMLWellFormedElementNester >> endNesting [
 	self hasOpenElements
-		ifTrue: [XMLWellFormednessException signal: 'Unterminated elements: ', self printString]
+		ifTrue: [self errorUnterminatedElements]
 ]
 
-{ #category : #errors }
+{ #category : #private }
 XMLWellFormedElementNester >> errorImproperlyNestedElements: anElementName [
-	XMLWellFormednessException signal:
-		('<{1}> element ended before its child {2} element(s)'
-			format: (Array with: anElementName with: (self enclosedElementsAsString: anElementName)))
+	XMLWellFormednessException
+		formatSignal: '<{1}> element ended before its child element(s) {2}'
+		with: anElementName
+		with: (self enclosedElementsAsString: anElementName)
 ]
 
-{ #category : #errors }
+{ #category : #private }
+XMLWellFormedElementNester >> errorMultipleRoots [
+	XMLWellFormednessException signal: 'Document cannot have multiple root elements'
+]
+
+{ #category : #private }
 XMLWellFormedElementNester >> errorUnmatchedEndTag: anElementName [
-	XMLWellFormednessException signal:
-		('End </{1}> tag with no corresponding start <{1}> tag'
-			format: (Array with: anElementName))
+	XMLWellFormednessException
+		formatSignal: 'End </{1}> tag with no corresponding start <{1}> tag'
+		with: anElementName
+]
+
+{ #category : #private }
+XMLWellFormedElementNester >> errorUnterminatedElements [
+	XMLWellFormednessException signal: 'Unterminated elements: ', self printString
 ]
 
 { #category : #checking }
@@ -43,10 +54,9 @@ XMLWellFormedElementNester >> startElement: anElementName [
 	rootElement
 		ifNil: [rootElement := anElementName]
 		ifNotNil: [
-			(self hasOpenElements or: [self hasExternalRoot])
-				ifFalse: [
-					XMLWellFormednessException signal:
-						'Document cannot have multiple root elements']].
+			(self openElements isEmpty
+				and: [self hasExternalRootElement not])
+				ifTrue: [self errorMultipleRoots]].
 
 	super startElement: anElementName.
 ]

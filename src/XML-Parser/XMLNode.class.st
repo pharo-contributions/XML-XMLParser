@@ -15,7 +15,7 @@ XMLNode >> acceptsContent [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : #adding }
 XMLNode >> addContent: aStringOrStringNode [
 	XMLDOMException signal: 'Node cannot contain content'
 ]
@@ -26,20 +26,20 @@ XMLNode >> allNodesDo: aBlock [
 ]
 
 { #category : #accessing }
-XMLNode >> ancestors [
+XMLNode >> ancestorNodes [
 	| ancestors |
 
 	ancestors := self newNodeListForSelect.
-	self ancestorsDo: [:each | ancestors addLast: each].
+	self ancestorNodesDo: [:each | ancestors addLast: each].
 	^ ancestors.
 ]
 
 { #category : #enumerating }
-XMLNode >> ancestorsDo: aBlock [
-	self hasParent
-		ifTrue: [
-			aBlock value: self parent.
-			self parent ancestorsDo: aBlock]
+XMLNode >> ancestorNodesDo: aBlock [
+	self parent
+		ifNotNil: [:node |
+			aBlock value: node.
+			node ancestorNodesDo: aBlock]
 ]
 
 { #category : #converting }
@@ -64,16 +64,24 @@ XMLNode >> canonicallyPrinted [
 ]
 
 { #category : #accessing }
+XMLNode >> configuration [
+	^ self document ifNotNil: [:node | node configuration]
+]
+
+{ #category : #accessing }
 XMLNode >> contentString [
- 	"This returns the combined content string of all descendants with spaces inserted wher necessary."
+ 	"This returns the combined content string of all descendants with spaces inserted where necessary."
 	^ String streamContents: [:stream | self printContentOn: stream]
 ]
 
 { #category : #accessing }
 XMLNode >> document [
-	^ self hasParent
-		ifTrue: [self parent document]
-		ifFalse: [nil]
+	^ self parent ifNotNil: [:node | node document]
+]
+
+{ #category : #private }
+XMLNode >> errorXMLWritingUnsupported [
+	XMLDOMException signal: 'The XMLWriter package is required for writng DOM objects'
 ]
 
 { #category : #testing }
@@ -117,12 +125,27 @@ XMLNode >> isElement [
 ]
 
 { #category : #testing }
+XMLNode >> isElementNamed: aName [
+	^ false
+]
+
+{ #category : #testing }
+XMLNode >> isElementNamedAny: aNameCollection [
+	^ false
+]
+
+{ #category : #testing }
 XMLNode >> isPI [
 	^ false
 ]
 
 { #category : #testing }
 XMLNode >> isStringNode [
+	^ false
+]
+
+{ #category : #testing }
+XMLNode >> isStringNode: aStringOrStringNode [
 	^ false
 ]
 
@@ -209,14 +232,15 @@ XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock [
 	^ self
 		withNewXMLWriterOn: aStream
 		do: aOneArgBlock
-		whenAbsent: [ Error signal: 'The XMLWriter package is required for that' ]
+		whenAbsent: [self errorXMLWritingUnsupported]
 ]
 
 { #category : #printing }
 XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock whenAbsent: aZeroArgBlock [
-	^ (self class environment hasClassNamed: #XMLWriter)
-		ifTrue: [ aOneArgBlock value: ((self class environment classNamed: #XMLWriter) on: aStream)]
-		ifFalse: [ aZeroArgBlock value ]
+	^ aOneArgBlock value:
+		((Smalltalk
+			at: #XMLWriter
+			ifAbsent: [^ aZeroArgBlock value]) on: aStream)
 ]
 
 { #category : #printing }

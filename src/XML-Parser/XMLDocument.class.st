@@ -38,6 +38,11 @@ XMLDocument >> encoding: aString [
 	encoding := aString
 ]
 
+{ #category : #private }
+XMLDocument >> innerXMLContext [
+	^ #inProlog
+]
+
 { #category : #testing }
 XMLDocument >> isDocument [
 	^ true

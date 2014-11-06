@@ -9,7 +9,8 @@ Class {
 		'elementNester',
 		'scopeAllocator',
 		'dtd',
-		'validator'
+		'validator',
+		'hasUnhandledReservedAttributes'
 	],
 	#category : #'XML-Parser'
 }
@@ -19,12 +20,24 @@ SAXParserDriver class >> saxHandler: aHandler [
 	^ self new setSAXHandler: aHandler
 ]
 
+{ #category : #private }
+SAXParserDriver >> checkForReservedAttributesIn: anAttributeDictionary after: anIndex [
+	"validation may add attributes"
+	self hasUnhandledReservedAttributes
+		ifFalse: [
+			anIndex + 1
+				to: anAttributeDictionary size
+				do: [:i |
+					(anAttributeDictionary keyAtIndex: i) isReservedAttributeName
+						ifTrue: [^ self haveUnhandledReservedAttributes]]]
+]
+
 { #category : #accessing }
 SAXParserDriver >> currentElement [
 	^ self elementNester currentElement
 ]
 
-{ #category : #namespaces }
+{ #category : #private }
 SAXParserDriver >> declareNamespaces: aDictionary inScope: aScope [
 	aDictionary keysAndValuesDo: [:prefix :uri |
 		aScope mapPrefix: prefix to: uri.
@@ -72,6 +85,45 @@ SAXParserDriver >> endNestingOfElement: anElementName withScopedAttributes: anAt
 			ifFalse: [self removeURI: base].
 ]
 
+{ #category : #private }
+SAXParserDriver >> errorCharacterDataOutsideElement [
+	XMLWellFormednessException signal: 'Character data outside of element'
+]
+
+{ #category : #private }
+SAXParserDriver >> errorDocumentConstraintsRequired [
+	XMLValidationException signal: 'Document validation constraints required'
+]
+
+{ #category : #private }
+SAXParserDriver >> errorUndeclaredGeneralEntity: aName [
+	XMLValidationException
+		formatSignal: 'Undeclared general entity reference &{1};'
+		with: aName
+]
+
+{ #category : #private }
+SAXParserDriver >> errorUndeclaredNotation: aNotation referencedBy: anEntity [
+	XMLValidationException
+		formatSignal: 'Undeclared notation "{1}" referenced by &{2}; entity'
+		with: aNotation
+		with: anEntity
+]
+
+{ #category : #private }
+SAXParserDriver >> errorUndeclaredParameterEntity: aName [
+	XMLValidationException
+		formatSignal: 'Undeclared parameter entity reference %{1};'
+		with: aName
+]
+
+{ #category : #private }
+SAXParserDriver >> errorUndeclaredUnparsedEntity: aName [
+	XMLValidationException
+		formatSignal: 'Undeclared unparsed entity reference &{1}; as attribute value'
+		with: aName
+]
+
 { #category : #accessing }
 SAXParserDriver >> externalEntityResolver [
 	^ self saxHandler externalEntityResolver
@@ -113,12 +165,17 @@ SAXParserDriver >> handleAttributeDeclaration: anElement name: aName type: aType
 
 { #category : #'handling tokens' }
 SAXParserDriver >> handleCData: aString [
+	self elementNester isInElement
+		ifFalse: [self errorCharacterDataOutsideElement].
+	self isValidating
+		ifTrue: [self validator validatePCData: aString].
+
 	self saxHandler
 		startCData;
 		startCDataSection;
 		characters: aString;
 		endCDataSection;
-		endCData
+		endCData.
 ]
 
 { #category : #'handling tokens' }
@@ -237,7 +294,7 @@ SAXParserDriver >> handleGeneralEntityReference: aName [
 	(entity := self dtd generalEntityAt: aName)
 		ifNil: [
 			self isValidating
-				ifTrue: [(XMLValidationException undeclaredGeneralEntity: aName) signal].
+				ifTrue: [self errorUndeclaredGeneralEntity: aName].
 			self preservesUndeclaredEntityReferences
 				ifTrue: [entity := DTDBypassedGeneralEntity named: aName].
 			self saxHandler skippedEntity: aName].
@@ -257,6 +314,8 @@ SAXParserDriver >> handleNotationDeclaration: aName publicID: aPublicId systemID
 
 { #category : #'handling tokens' }
 SAXParserDriver >> handlePCData: aString [
+	self elementNester isInElement
+		ifFalse: [self errorCharacterDataOutsideElement].
 	self isValidating
 		ifTrue: [self validator validatePCData: aString].
 
@@ -305,22 +364,25 @@ SAXParserDriver >> handleParameterEntityReference: aName [
 	(entity := self dtd parameterEntityAt: aName)
 		ifNil: [
 			self isValidating
-				ifTrue: [(XMLValidationException undeclaredParameterEntity: aName) signal].
+				ifTrue: [self errorUndeclaredParameterEntity: aName].
 			self preservesUndeclaredEntityReferences
 				ifTrue: [entity := DTDBypassedParameterEntity named: aName]].
 	^ entity.
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #private }
 SAXParserDriver >> handleReservedAttributes: anAttributeDictionary [
-	(anAttributeDictionary at: 'xml:base' ifAbsent: [nil])
-		ifNotNil: [:uri | self currentURI: uri].
+	anAttributeDictionary
+		at: 'xml:base'
+		ifPresent: [:uri | self currentURI: uri].
 	self isValidating
 		ifTrue: [self validator validateXMLIDAttributeIn: anAttributeDictionary].
 
 	self elementNester
-		setScopedAttributesNamed: #('xml:space' 'xml:base' 'xml:lang')
+		setScopedAttributesNamed: self scopedAttributeNames
 		from: anAttributeDictionary.
+
+	hasUnhandledReservedAttributes := false.
 ]
 
 { #category : #'handling tokens' }
@@ -349,26 +411,31 @@ SAXParserDriver >> handleStartDocument [
 { #category : #'handling tokens' }
 SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
 	"performance critical method"
-	| prefix namespaceUri currentScope |
+	| prefix totalAttributes namespaceUri currentScope |
 
 	self elementNester startElement: anElementName.
 
 	prefix := anElementName qualifiedNamePrefix.
+	totalAttributes := anAttributeDictionary size.
 	self usesNamespaces
 		ifTrue: [
 			currentScope := self scopeAllocator enterScope.
 			aNamespaceDictionary
 				ifNotNil: [self declareNamespaces: aNamespaceDictionary inScope: currentScope].
 			namespaceUri := currentScope validateAndResolvePrefix: prefix ofElement: anElementName.
-			anAttributeDictionary isEmpty "avoid ifNotEmpty: closure overhead"
-				ifFalse: [currentScope validateAttributePrefixes: anAttributeDictionary]].
+			totalAttributes > 0
+				ifTrue: [currentScope validateAttributePrefixes: anAttributeDictionary]].
 	self isValidating
 		ifTrue: [
 			self elementNester isCurrentElementRoot
 				ifTrue: [self validateRootElement: anElementName].
 			self validator
 				validateStartTag: anElementName
-				attributes: anAttributeDictionary].
+				attributes: anAttributeDictionary.
+			anAttributeDictionary size > totalAttributes
+				ifTrue: [self checkForReservedAttributesIn: anAttributeDictionary after: totalAttributes]].
+	self hasUnhandledReservedAttributes
+		ifTrue: [self handleReservedAttributes: anAttributeDictionary].
 
 	self saxHandler
 		startElement: anElementName
@@ -388,19 +455,17 @@ SAXParserDriver >> handleUnparsedEntityReference: aName [
 	self isValidating
 		ifTrue: [
 			notationName
-				ifNil: [(XMLValidationException undeclaredUnparsedEntity: aName) signal].
+				ifNil: [self errorUndeclaredUnparsedEntity: aName].
 			(self dtd includesNotation: notationName)
-				ifFalse: [XMLValidationException signal: 'Undeclared notation "', notationName, '"']].
+				ifFalse: [self errorUndeclaredNotation: notationName referencedBy: aName]].
 	^ notationName.
-
-	
 ]
 
 { #category : #'handling tokens' }
 SAXParserDriver >> handleWhitespace: aString [
 	(self elementNester hasScopedAttributes
 		and: [(self elementNester scopedAttributeAt: 'xml:space') = 'preserve'])
-		ifTrue: [self saxHandler characters: aString]
+		ifTrue: [self handlePCData: aString]
 		ifFalse: [self saxHandler ignorableWhitespace: aString]
 ]
 
@@ -417,6 +482,16 @@ SAXParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: a
 		xmlVersion: versionNumber
 		encoding: anEncoding
 		standalone: standaloneBoolean
+]
+
+{ #category : #private }
+SAXParserDriver >> hasUnhandledReservedAttributes [
+	^ hasUnhandledReservedAttributes
+]
+
+{ #category : #private }
+SAXParserDriver >> haveUnhandledReservedAttributes [
+	hasUnhandledReservedAttributes := true
 ]
 
 { #category : #testing }
@@ -466,6 +541,11 @@ SAXParserDriver >> scopeAllocator [
 	^ scopeAllocator ifNil: [scopeAllocator := XMLNamespaceScopeAllocator new]
 ]
 
+{ #category : #private }
+SAXParserDriver >> scopedAttributeNames [
+	^ #('xml:space' 'xml:base' 'xml:lang')
+]
+
 { #category : #accessing }
 SAXParserDriver >> setRootElement: anElementName currentScope: aNamespaceScope [
 	self elementNester setExternalRootElement: anElementName.
@@ -477,9 +557,10 @@ SAXParserDriver >> setRootElement: anElementName currentScope: aNamespaceScope [
 SAXParserDriver >> setSAXHandler: aHandler [
 	saxHandler := aHandler.
 	elementNester := self elementNesterClass new.
+	hasUnhandledReservedAttributes := false.
 ]
 
-{ #category : #namespaces }
+{ #category : #private }
 SAXParserDriver >> undeclareNamespacesInScope: aScope [
 	| currentScope |
 
@@ -498,7 +579,7 @@ SAXParserDriver >> usesNamespaces [
 SAXParserDriver >> validateRootElement: aStartTag [
 	(self saxHandler requiresDocumentConstraints
 		and: [self validator hasElementValidators not])
-		ifTrue: [XMLValidationException signal: 'Document validation constraints required'].
+		ifTrue: [self errorDocumentConstraintsRequired].
 
 	self validator validateRootElement: aStartTag.
 ]

@@ -16,27 +16,27 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
-{ #category : #accessing }
+{ #category : #adding }
 XMLNodeWithChildren >> addNode: aNode [
 	^ self nodes addLast: aNode
 ]
 
-{ #category : #accessing }
+{ #category : #adding }
 XMLNodeWithChildren >> addNode: aNode after: aPriorNode [
 	^ self nodes add: aNode after: aPriorNode
 ]
 
-{ #category : #accessing }
+{ #category : #adding }
 XMLNodeWithChildren >> addNode: aNode before: aSubsequentNode [
 	^ self nodes add: aNode before: aSubsequentNode
 ]
 
-{ #category : #accessing }
+{ #category : #adding }
 XMLNodeWithChildren >> addNodeFirst: aNode [
 	^ self nodes addFirst: aNode
 ]
 
-{ #category : #accessing }
+{ #category : #adding }
 XMLNodeWithChildren >> addNodes: aNodeCollection [
 	^ self nodes addAll: aNodeCollection
 ]
@@ -49,7 +49,7 @@ XMLNodeWithChildren >> addedNode: aNode [
 { #category : #notifications }
 XMLNodeWithChildren >> addingNode: aNode [
 	aNode hasParent
-		ifTrue: [XMLDOMException signal: 'Cannot add child node that already has a parent']
+		ifTrue: [self errorAddingNodeWithParent]
 ]
 
 { #category : #accessing }
@@ -99,6 +99,11 @@ XMLNodeWithChildren >> allNodesSelect: aBlock [
 	^ selectedNodes.
 ]
 
+{ #category : #private }
+XMLNodeWithChildren >> errorAddingNodeWithParent [
+	XMLDOMException signal: 'Cannot add child node that already has a parent'
+]
+
 { #category : #accessing }
 XMLNodeWithChildren >> firstNode [
 	"returns nil when empty"
@@ -128,18 +133,6 @@ XMLNodeWithChildren >> innerXML [
 			^ writer contents].
 ]
 
-{ #category : #parsing }
-XMLNodeWithChildren >> innerXML: aStringOrStream [
-	self removeNodes.
-
-	(self innerXMLParserOn: aStringOrStream) parseDocument.
-]
-
-{ #category : #private }
-XMLNodeWithChildren >> innerXMLParserOn: aStringOrStream [
-	^ XMLDOMParser on: aStringOrStream withRootNode: self
-]
-
 { #category : #accessing }
 XMLNodeWithChildren >> lastNode [
 	"returns nil when empty"
@@ -158,7 +151,7 @@ XMLNodeWithChildren >> nodeBefore: aNode [
 
 { #category : #private }
 XMLNodeWithChildren >> nodeListClass [
-	self subclassResponsibility
+	^ XMLNodeList
 ]
 
 { #category : #accessing }
@@ -191,6 +184,11 @@ XMLNodeWithChildren >> nodesSelect: aBlock [
 	^ self nodes select: aBlock
 ]
 
+{ #category : #private }
+XMLNodeWithChildren >> parserHandlerClass [
+	^ XMLDOMParser
+]
+
 { #category : #copying }
 XMLNodeWithChildren >> postCopy [
 	super postCopy.
@@ -199,17 +197,17 @@ XMLNodeWithChildren >> postCopy [
 		ifNotNil: [nodes := nodes deepCopyWithObserver: self].
 ]
 
-{ #category : #accessing }
+{ #category : #removing }
 XMLNodeWithChildren >> removeNode: aNode [
 	^ self nodes remove: aNode
 ]
 
-{ #category : #accessing }
+{ #category : #removing }
 XMLNodeWithChildren >> removeNodes [
 	self nodes removeAll
 ]
 
-{ #category : #accessing }
+{ #category : #removing }
 XMLNodeWithChildren >> removeNodes: aNodeCollection [
 	^ self nodes removeAll: aNodeCollection
 ]

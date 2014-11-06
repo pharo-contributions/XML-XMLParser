@@ -1,7 +1,7 @@
 "
 This class is an XML parser that produces a tree of nodes representing the parsed document's structure. The root of this tree will typically be a document node, and it will have a single child element node as its root. The root element can have any number of additional elements as its children, as well as non-element child nodes. Those elements can themselves have an arbitrary number of children, and so on. To see what type of node objects a node tree created by this parser will contain and for how to manipulate them browse the XML-Parser-DOM category.
 
-By default, CDATA sections are treated as regular string nodes and comments are ignored entirely. To suppress this behavior, enable #preservesCDataNodes: or #preservesCommentNodes: before parsing. 
+By default, CDATA sections are treated as regular string nodes and comments are ignored entirely. To suppress this behavior, enable #preservesCDataNodes: or #preservesCommentNodes: before parsing.
 
 Lastly. you can control what node classes the DOM parser uses to create node objects by injecting a custom node factory with #nodeFactory: prior to parsing. See XMLNodeFactory for more information.
 "
@@ -14,13 +14,6 @@ Class {
 	],
 	#category : #'XML-Parser'
 }
-
-{ #category : #'instance creation' }
-XMLDOMParser class >> on: aStringOrStream withRootNode: aRootNode [
-	^ (self on: aStringOrStream)
-		pushNode: aRootNode;
-		yourself
-]
 
 { #category : #declaration }
 XMLDOMParser >> attributeDeclaration: anElement name: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
@@ -36,15 +29,15 @@ XMLDOMParser >> attributeDeclaration: anElement name: aName type: aType defaultP
 { #category : #content }
 XMLDOMParser >> characters: aString [
 	(self isInCDataSection and: [self preservesCDataNodes])
-		ifTrue: [self topNode addNode: (self nodeFactory cdataClass string: aString)]
-		ifFalse: [self topNode addContent: (self nodeFactory stringClass string: aString)]
+		ifTrue: [self topNode addNode: (self nodeFactory newCData: aString)]
+		ifFalse: [self topNode addContent: (self nodeFactory newString: aString)]
 
 ]
 
 { #category : #lexical }
 XMLDOMParser >> comment: aComment [
 	self preservesCommentNodes
-		ifTrue: [self topNode addNode: (self nodeFactory commentClass string: aComment)]
+		ifTrue: [self topNode addNode: (self nodeFactory newComment: aComment)]
 ]
 
 { #category : #private }
@@ -64,7 +57,7 @@ XMLDOMParser >> document [
 
 { #category : #accessing }
 XMLDOMParser >> document: aDocument [
-	(document := aDocument) configuration: self configuration
+	document := aDocument
 ]
 
 { #category : #declaration }
@@ -159,14 +152,18 @@ XMLDOMParser >> parser [
 	| parser |
 
 	parser := super parser.
-	(self nodeStack notEmpty and: [self topNode isElement])
-		ifTrue: [
-			self configuration: self topNode configuration.
-			self topNode document
-				ifNotNil: [:node | self document: node].
-			parser driver
-				setRootElement: self topNode name
-				currentScope: self topNode namespaceScope].
+	self nodeStack notEmpty
+		ifTrue: [| root |
+			root := self topNode.
+			self
+				configuration: root configuration;
+				document: root document.
+			parser initialContext: root innerXMLContext.
+			root isElement
+				ifTrue: [
+					parser driver
+						setRootElement: root name
+						currentScope: root namespaceScope]].
 
 	^ parser.
 ]
@@ -203,7 +200,10 @@ XMLDOMParser >> preservesCommentNodes: aBoolean [
 
 { #category : #content }
 XMLDOMParser >> processingInstruction: aTarget data: aDataString [
-	self topNode addNode: (self nodeFactory piClass target: aTarget data: aDataString)
+	self topNode addNode:
+		(self nodeFactory newPI
+			target: aTarget;
+			data: aDataString)
 ]
 
 { #category : #private }
@@ -244,8 +244,11 @@ XMLDOMParser >> startDTD: aRootElementName publicID: aPublicId systemID: aSystem
 XMLDOMParser >> startDocument [
 	self topNode ifNotNil: [^ self].
 
-	self document: self nodeFactory documentClass new.
-	self pushNode: self document 
+	self
+		document: self nodeFactory newDocument;
+		pushNode: self document.
+
+	self document configuration: self configuration.
 ]
 
 { #category : #content }

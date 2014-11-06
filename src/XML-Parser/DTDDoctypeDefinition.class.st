@@ -149,6 +149,14 @@ DTDDoctypeDefinition >> hasExternalSubset [
 ]
 
 { #category : #testing }
+DTDDoctypeDefinition >> hasValidators [
+	^ (attributeValidators notNil
+		and: [attributeValidators notEmpty])
+			or: [elementValidators notNil
+				and: [elementValidators isEmpty]]
+]
+
+{ #category : #testing }
 DTDDoctypeDefinition >> includesNotation: aName [
 	^ self notations includes: aName
 ]

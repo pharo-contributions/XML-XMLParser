@@ -127,3 +127,8 @@ XMLTokenContext >> resetPrevious [
 XMLTokenContext >> saveCurrent [
 	previousContext := context
 ]
+
+{ #category : #'changing context' }
+XMLTokenContext >> setContext: aContext [
+	context := aContext
+]

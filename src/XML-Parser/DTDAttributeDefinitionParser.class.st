@@ -60,6 +60,11 @@ DTDAttributeDefinitionParser class >> initializeNonEnumerationValidators [
 ]
 
 { #category : #'private ' }
+DTDAttributeDefinitionParser >> errorMissingAttributeType [
+	XMLValidationException signal: 'Missing attribute type'
+]
+
+{ #category : #'private ' }
 DTDAttributeDefinitionParser >> hasNotationType [
 	^ type beginsWith: 'NOTATION '
 ]
@@ -89,11 +94,11 @@ DTDAttributeDefinitionParser >> setElement: anElement attribute: anAttribute typ
 
 { #category : #'private ' }
 DTDAttributeDefinitionParser >> validatorClassForType [
-	type ifEmpty: [XMLValidationException signal: 'Missing attribute type'].
-
-	^ NonEnumerationValidators 
+	^ NonEnumerationValidators
 		at: type
 		ifAbsent: [
+			type isEmpty
+				ifTrue: [self errorMissingAttributeType].
 			(self hasNotationType)
 				ifTrue: [XMLNotationListAttributeValidator]
 				ifFalse: [XMLValueListAttributeValidator]]

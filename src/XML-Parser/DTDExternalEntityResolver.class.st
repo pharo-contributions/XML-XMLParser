@@ -15,7 +15,7 @@ Class {
 DTDExternalEntityResolver >> checkExternalEntityLimit [
 	(self maxExternalEntities notNil
 		and: [self totalResolvedEntities + 1 > self maxExternalEntities])
-		ifTrue: [XMLLimitException signal: 'External entity limit exceeded'].
+		ifTrue: [self erorrExternalEntityLimitExceeded]
 ]
 
 { #category : #combining }
@@ -28,7 +28,7 @@ DTDExternalEntityResolver >> combineURI: aBaseUri with: aRelativeUri [
 		and: [baseUri isLocalURI not
 			and: [self resolvesLocalFromNonLocal notNil
 				and: [self resolvesLocalFromNonLocal not]]])
-		ifTrue: [XMLLimitException signal: 'Local URI referenced from non-local URI'].
+		ifTrue: [self errorLocalFromNonLocal].
 
 	^ combinedUri.
 ]
@@ -36,6 +36,17 @@ DTDExternalEntityResolver >> combineURI: aBaseUri with: aRelativeUri [
 { #category : #accessing }
 DTDExternalEntityResolver >> defaultDocumentURI [
 	^ XMLFileHandle currentWorkingDirectory, '/default'
+]
+
+{ #category : #private }
+DTDExternalEntityResolver >> erorrExternalEntityLimitExceeded [
+	XMLLimitException signal: 'External entity limit exceeded; use #maxExternalEntities: to change'
+]
+
+{ #category : #private }
+DTDExternalEntityResolver >> errorLocalFromNonLocal [
+	XMLLimitException signal:
+		'Local URI referenced from non-local URI; use #resolvesLocalFromNonLocal: to change'
 ]
 
 { #category : #private }

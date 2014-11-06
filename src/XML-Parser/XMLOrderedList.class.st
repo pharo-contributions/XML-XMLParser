@@ -276,10 +276,15 @@ XMLOrderedList >> copyReplaceAll: anOldCollection with: aNewCollection [
 
 { #category : #copying }
 XMLOrderedList >> copyReplaceFrom: aStart to: aStop with: aReplacementCollection [
+	| start stop |
+
+	"bound the start and stop so they are always in range"
+	start := (aStart max: 1) min: self size + 1.
+	stop := (aStop max: start - 1) min: self size.
 	^ self newWithCollection:
 		(collection
-			copyReplaceFrom: aStart
-			to: ((aStop max: aStart - 1) min: collection size)
+			copyReplaceFrom: start
+			to: stop
 			with: aReplacementCollection)
 ]
 

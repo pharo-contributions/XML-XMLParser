@@ -21,6 +21,16 @@ XMLAttributeDefaultValidator class >> attribute: anAttribute defaultValue: aDefa
 	^ self new setAttribute: anAttribute defaultValue: aDefaultValue
 ]
 
+{ #category : #accessing }
+XMLAttributeDefaultValidator >> attribute [
+	^ attribute
+]
+
+{ #category : #accessing }
+XMLAttributeDefaultValidator >> defaultValue [
+	^ defaultValue
+]
+
 { #category : #initialization }
 XMLAttributeDefaultValidator >> setAttribute: anAttribute defaultValue: aDefaultValue [
 	attribute := anAttribute.

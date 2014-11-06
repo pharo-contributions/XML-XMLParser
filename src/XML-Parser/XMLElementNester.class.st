@@ -6,9 +6,9 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'openElements',
-		'scopedAttributes',
 		'rootElement',
-		'hasExternalRoot'
+		'hasExternalRootElement',
+		'scopedAttributes'
 	],
 	#category : #'XML-Parser'
 }
@@ -56,8 +56,8 @@ XMLElementNester >> endNesting [
 ]
 
 { #category : #testing }
-XMLElementNester >> hasExternalRoot [
-	^ hasExternalRoot
+XMLElementNester >> hasExternalRootElement [
+	^ hasExternalRootElement
 ]
 
 { #category : #testing }
@@ -67,7 +67,7 @@ XMLElementNester >> hasOpenElement: anElementName [
 
 { #category : #testing }
 XMLElementNester >> hasOpenElements [
-	^ self openElements notEmpty
+	^ self openElements size > 0
 ]
 
 { #category : #testing }
@@ -80,12 +80,17 @@ XMLElementNester >> initialize [
 	super initialize.
 
 	openElements := OrderedCollection new: 10.
-	hasExternalRoot := false.
+	hasExternalRootElement := false.
 ]
 
 { #category : #testing }
 XMLElementNester >> isCurrentElementRoot [
 	^ self openElements size = 1
+]
+
+{ #category : #testing }
+XMLElementNester >> isInElement [
+	^ self openElements size > 0 or: [self hasExternalRootElement]
 ]
 
 { #category : #accessing }
@@ -167,7 +172,7 @@ XMLElementNester >> scopedAttributes [
 { #category : #accessing }
 XMLElementNester >> setExternalRootElement: anElement [
 	rootElement := anElement.
-	hasExternalRoot := true.
+	hasExternalRootElement := true.
 ]
 
 { #category : #accessing }

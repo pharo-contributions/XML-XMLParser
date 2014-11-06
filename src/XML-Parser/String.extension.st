@@ -1,6 +1,21 @@
 Extension { #name : #String }
 
 { #category : #'*XML-Parser' }
+String >> asXMLEscapedString [
+	| stream |
+
+	stream := (self class new: self size) writeStream.
+	self do: [:each |
+		each == $<
+			ifTrue: [stream nextPutAll: '&lt;']
+			ifFalse: [
+				each == $&
+					ifTrue: [stream nextPutAll: '&amp;']
+					ifFalse: [stream nextPut: each]]].
+	^ stream contents.
+]
+
+{ #category : #'*XML-Parser' }
 String >> asXMLString [
 	^ XMLString string: self
 ]
@@ -11,10 +26,23 @@ String >> asXMLURI [
 ]
 
 { #category : #'*XML-Parser' }
-String >> isQualifiedName: aQualifiedName orLocalName: isLocalName [
+String >> isQualifiedName: aQualifiedName orLocalName: aLocalName [
 	^ self = aQualifiedName
-		or: [(aQualifiedName size > isLocalName size)
-			and: [self = isLocalName]]
+		or: [(aQualifiedName size > aLocalName size)
+			and: [self = aLocalName]]
+]
+
+{ #category : #'*XML-Parser' }
+String >> isReservedAttributeName [
+	^ self size > 4
+		and: [self beginsWith: 'xml:']
+]
+
+{ #category : #'*XML-Parser' }
+String >> isXmlnsAttributeName [
+	^ (self beginsWith: 'xmlns')
+		and: [self size = 5
+			or: [(self at: 6) == $:]]
 ]
 
 { #category : #'*XML-Parser' }

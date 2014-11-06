@@ -81,7 +81,7 @@ XMLAttribute >> parent [
 ]
 
 { #category : #accessing }
-XMLAttribute >> parent: anObject [
+XMLAttribute >> parent: aParentNode [
 	"attributes have no parents and aren't part of the DOM tree"
 	self shouldNotImplement
 ]
