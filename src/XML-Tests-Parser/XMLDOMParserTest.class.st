@@ -121,10 +121,10 @@ XMLDOMParserTest >> testAncestors [
 
 	nodesAndAncestors keysAndValuesDo: [:node :ancestors | | enumerated |
 		enumerated := OrderedCollection new.
-		node ancestorsDo: [:each | enumerated add: each].
+		node ancestorNodesDo: [:each | enumerated add: each].
 		self
 			assert: enumerated = ancestors;
-			assert: node ancestors asOrderedCollection = ancestors].
+			assert: node ancestorNodes asOrderedCollection = ancestors].
 ]
 
 { #category : #tests }
@@ -210,7 +210,7 @@ XMLDOMParserTest >> testCDATASection [
 	| document element unescaped escaped xml |
 
 	unescaped := 'this is CDATA test content 1 < 2 & 5 > 3'.
-	escaped := 'this is CDATA test content 1 &lt; 2 &amp; 5 &gt; 3'.
+	escaped := 'this is CDATA test content 1 &lt; 2 &amp; 5 > 3'.
 	xml := 
 		'<?xml version="1.0" encoding="UTF-8"?>
 		<test-data>test<![CDATA[', unescaped, ']]>test</test-data>'.
@@ -443,27 +443,41 @@ XMLDOMParserTest >> testFindElementNamespaceURI [
 
 { #category : #tests }
 XMLDOMParserTest >> testInnerXML [
-	| document contactInfo address1 address2 innerXml |
+	| document |
 
 	document := XMLDOMParser parse: self addressBookXML.
-	document allElementsNamed: 'person' do: [:person |
+	document allElementsNamed: 'person' do: [:person | | contactInfo address1 address2 |
 		#('address' 'job-info' 'manager') do: [:each |
 			self assert: (person elementAt: each) innerXML isEmpty].
-
+.
+		contactInfo := person elementAt: 'contact-info'.
 		address1 := (person attributeAt: 'first-name'), '@example.com'.
 		address2 := (person attributeAt: 'first-name'), '@users.example.com'.
-		innerXml := '<email>', address1, '</email><email2>', address2, '</email2>'.
-		contactInfo := person elementAt: 'contact-info'.
 		self
-			assert: (contactInfo innerXML: innerXml) == contactInfo;
-			assert: contactInfo innerXML = innerXml;
+			assert: (contactInfo innerXML: '<email></email><email2/>') innerXML = '<email /><email2 />';
 			assert: contactInfo elements size = 2;
 			assert: (contactInfo elements first isNamed: 'email');
-			assert: (contactInfo elements first contentString = address1);
 			assert: (contactInfo elements second isNamed: 'email2');
-			assert: (contactInfo elements second contentString = address2)].
+			assert: (contactInfo firstElement innerXML: address1, '<!--ignored-->') innerXML = address1;
+			assert: (contactInfo elements second innerXML: '<![CDATA[', address2, ']]>') innerXML = address2.
+		self assert:
+			contactInfo innerXML = 
+				('<email>', address1, '</email><email2>', address2, '</email2>')].
+]
 
-	self assert: ((document innerXML: '<new-root/>') root isNamed: 'new-root').
+{ #category : #tests }
+XMLDOMParserTest >> testInnerXMLDocument [
+	| document |
+
+	document := XMLDOMParser parse: self addressBookXMLWithDTD.
+	self
+		assert: ((document innerXML: '<new-root/>') root isNamed: 'new-root');
+		assert: document innerXML = '<new-root />';
+		assert: ((document root innerXML: 'test') contentString = 'test');
+		assert: document root innerXML = 'test';
+		assert:
+			(document innerXML: self addressBookXMLWithDTD) printString =
+				(XMLDOMParser parse: self addressBookXMLWithDTD) printString.
 	self
 		should: [document innerXML: '<root1/><root2/>']
 		raise: XMLWellFormednessException.

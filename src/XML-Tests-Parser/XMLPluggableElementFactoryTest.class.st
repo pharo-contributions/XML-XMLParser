@@ -4,149 +4,84 @@ This class tests the pluggable element factory. To do this it creates a number o
 Browse the class side for more information.
 "
 Class {
-	#name : #XMLParserElementFactoryTest,
-	#superclass : #TestCase,
-	#category : #'XML-Tests-Parser'
+	#name : #XMLPluggableElementFactoryTest,
+	#superclass : #XMLPluggableNodeFactoryTest,
+	#category : #'XML-Tests-Parser-Factories'
 }
 
-{ #category : #utility }
-XMLParserElementFactoryTest class >> createDummyElementAccessors [
-	"self createDummyElementAccessors"
+{ #category : #running }
+XMLPluggableElementFactoryTest class >> createDummyClasses [
+	super createDummyClasses.
 
-	| sourceStream |
-
-	self removeDummyElementAccessors.
-	self dummyElementNames
-		do: [:each |
-			(sourceStream := String new writeStream)
-				nextPut: each first asLowercase;
-				nextPutAll: each allButFirst, self dummyElementClassSuffix, 'Class';
-				cr;
-				tab;
-				nextPutAll: '^ Smalltalk at: #';
-				nextPutAll: (self toDummyElementClassName: each) asString.
-
-			self
-				compile: sourceStream contents
-				classified: self dummyElementAccessorCategory].
+	self createDummyElementClasses.
 ]
 
 { #category : #running }
-XMLParserElementFactoryTest class >> createDummyElementClasses [
+XMLPluggableElementFactoryTest class >> createDummyElementClasses [
 	self dummyElementClassNames do: [:each |
-		XMLElement
-			subclass: each
-			instanceVariableNames: ''
-			classVariableNames: ''
-			poolDictionaries: ''
-			category: self category]
+		self
+			createDummySubclassOf: XMLElement
+			named: each]
 ]
 
 { #category : #accessing }
-XMLParserElementFactoryTest class >> dummyElementAccessorCategory [
-	^ #'dummy element classes'
+XMLPluggableElementFactoryTest class >> dummyElementClassNames [
+	^ self dummyElementNames collect: [:each |
+		(self dummyClassPrefix,
+			each,
+			'Element') asSymbol]
 ]
 
 { #category : #accessing }
-XMLParserElementFactoryTest class >> dummyElementClassNames [
-	^ self dummyElementNames collect: [:each | self toDummyElementClassName: each]
-]
-
-{ #category : #accessing }
-XMLParserElementFactoryTest class >> dummyElementClassPrefix [
-	^ 'XMLTEST'
-]
-
-{ #category : #accessing }
-XMLParserElementFactoryTest class >> dummyElementClassSuffix [
-	^ 'Element'
-]
-
-{ #category : #accessing }
-XMLParserElementFactoryTest class >> dummyElementNames [
-	"Dummy element class names will be formed from the following base names plus a prefix and suffix.
-	
-	self createDummyElementAccessors."
-
-	^ #('Default' 'User' 'Username' 'RealName' 'Date' 'Table' 'SerializationFormat' 'Wrong')
-]
-
-{ #category : #utility }
-XMLParserElementFactoryTest class >> removeDummyElementAccessors [
-	(self methodsInCategory: self dummyElementAccessorCategory)
-		do: [:each | self removeSelector: each].
+XMLPluggableElementFactoryTest class >> dummyElementNames [
+	^ #('User' 'Username' 'RealName' 'Date' 'Table' 'SerializationFormat' 'Wrong')
 ]
 
 { #category : #running }
-XMLParserElementFactoryTest class >> removeDummyElementClasses [
-	self dummyElementClassNames do: [:each | (Smalltalk at: each) removeFromSystem]
+XMLPluggableElementFactoryTest class >> removeDummyClasses [
+	super removeDummyClasses.
+
+	self removeDummyElementClasses.
+]
+
+{ #category : #running }
+XMLPluggableElementFactoryTest class >> removeDummyElementClasses [
+	self dummyElementClassNames do: [:each |
+		self removeDummySubclassNamed: each]
 ]
 
 { #category : #accessing }
-XMLParserElementFactoryTest class >> toDummyElementClassName: aName [
-	^ (self dummyElementClassPrefix,
-		aName,
-		self dummyElementClassSuffix) asSymbol
+XMLPluggableElementFactoryTest >> dateElementClass [
+	^ XMLFDateElement
 ]
 
-{ #category : #'dummy element classes' }
-XMLParserElementFactoryTest >> dateElementClass [
-	^ Smalltalk at: #XMLTESTDateElement
+{ #category : #accessing }
+XMLPluggableElementFactoryTest >> defaultElementClass [
+	^ self elementClass
 ]
 
-{ #category : #'dummy element classes' }
-XMLParserElementFactoryTest >> defaultElementClass [
-	^ Smalltalk at: #XMLTESTDefaultElement
+{ #category : #accessing }
+XMLPluggableElementFactoryTest >> factoryClass [
+	^ XMLPluggableElementFactory
 ]
 
-{ #category : #'dummy element classes' }
-XMLParserElementFactoryTest >> realNameElementClass [
-	^ Smalltalk at: #XMLTESTRealNameElement
+{ #category : #accessing }
+XMLPluggableElementFactoryTest >> realNameElementClass [
+	^ XMLFRealNameElement
 ]
 
-{ #category : #'source XML' }
-XMLParserElementFactoryTest >> sampleUserXML [
-	^
-	XMLWriter new
-		enablePrettyPrinting;
-		writeWith: [:writer |
-			writer tag
-				name: 'user:user';
-				xmlnsAt: 'user' put: 'urn:user';
-				with: [
-					writer
-						tag: 'user:username' with: 'jsmith';
-						tag: 'user:real-name' with: 'John Smith';
-						tag: 'user:date-registered' with: (DateAndTime now - 1 week) printString;
-						tag: 'user:date-last-active' with: DateAndTime now printString;
-						tag: 'table-name' with: 'users';
-						tag: 'row-id' with: (Random new next * 100) asInteger printString;
-						tag: 'serializationFormat' with: 'XML']];
-		contents
+{ #category : #accessing }
+XMLPluggableElementFactoryTest >> serializationFormatElementClass [
+	^ XMLFSerializationFormatElement
 ]
 
-{ #category : #'dummy element classes' }
-XMLParserElementFactoryTest >> serializationFormatElementClass [
-	^ Smalltalk at: #XMLTESTSerializationFormatElement
-]
-
-{ #category : #running }
-XMLParserElementFactoryTest >> setUp [
-	self class createDummyElementClasses
-]
-
-{ #category : #'dummy element classes' }
-XMLParserElementFactoryTest >> tableElementClass [
-	^ Smalltalk at: #XMLTESTTableElement
-]
-
-{ #category : #running }
-XMLParserElementFactoryTest >> tearDown [
-	self class removeDummyElementClasses
+{ #category : #accessing }
+XMLPluggableElementFactoryTest >> tableElementClass [
+	^ XMLFTableElement
 ]
 
 { #category : #tests }
-XMLParserElementFactoryTest >> testElementClassAccessor [
+XMLPluggableElementFactoryTest >> testElementClassAccessor [
 	| document |
 
 	document :=
@@ -163,13 +98,13 @@ XMLParserElementFactoryTest >> testElementClassAccessor [
 ]
 
 { #category : #tests }
-XMLParserElementFactoryTest >> testElementClassNameMatching [
+XMLPluggableElementFactoryTest >> testElementClassNameMatching [
 	| document |
 
 	document :=
 		(XMLDOMParser on: self sampleUserXML)
 			nodeFactory:
-				(XMLPluggableElementFactory new
+				(self newFactory
 					handleElementsMatchingClass: self userElementClass;
 					handleElementsMatchingClasses:
 						(Array
@@ -186,10 +121,10 @@ XMLParserElementFactoryTest >> testElementClassNameMatching [
 ]
 
 { #category : #tests }
-XMLParserElementFactoryTest >> testElementNameAndNamespaceMatching [
+XMLPluggableElementFactoryTest >> testElementNameAndNamespaceMatching [
 	| factory document root |
 
-	(factory := XMLPluggableElementFactory new)
+	(factory := self newFactory)
 		elementClass: self defaultElementClass;
 		handleElement: 'user:user' namespaceURI: 'urn:user' withClass: self userElementClass;
 		handleElement: 'user:user' withClass: self wrongElementClass;
@@ -221,10 +156,10 @@ XMLParserElementFactoryTest >> testElementNameAndNamespaceMatching [
 ]
 
 { #category : #tests }
-XMLParserElementFactoryTest >> testElementsNameAndNamespaceMatching [
+XMLPluggableElementFactoryTest >> testElementsNameAndNamespaceMatching [
 	| factory document root |
 
-	factory := XMLPluggableElementFactory new.
+	factory := self newFactory.
 	factory
 		handleElements: #('date-registered' 'date-last-active')
 		namespaceURI: 'urn:user'
@@ -247,17 +182,17 @@ XMLParserElementFactoryTest >> testElementsNameAndNamespaceMatching [
 		assert: ((root elementAt: 'table-name') isMemberOf: self tableElementClass).
 ]
 
-{ #category : #'dummy element classes' }
-XMLParserElementFactoryTest >> userElementClass [
-	^ Smalltalk at: #XMLTESTUserElement
+{ #category : #accessing }
+XMLPluggableElementFactoryTest >> userElementClass [
+	^ XMLFUserElement
 ]
 
-{ #category : #'dummy element classes' }
-XMLParserElementFactoryTest >> usernameElementClass [
-	^ Smalltalk at: #XMLTESTUsernameElement
+{ #category : #accessing }
+XMLPluggableElementFactoryTest >> usernameElementClass [
+	^ XMLFUsernameElement
 ]
 
-{ #category : #'dummy element classes' }
-XMLParserElementFactoryTest >> wrongElementClass [
-	^ Smalltalk at: #XMLTESTWrongElement
+{ #category : #accessing }
+XMLPluggableElementFactoryTest >> wrongElementClass [
+	^ XMLFWrongElement
 ]

@@ -1,6 +1,6 @@
 Class {
 	#name : #XMLDeclarationNodesTest,
-	#superclass : #XMLNodesWithChildrenTest,
+	#superclass : #XMLNodeTest,
 	#category : #'XML-Tests-Parser-DOM'
 }
 

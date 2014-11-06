@@ -175,13 +175,15 @@ XMLParserTest >> testAttributeDefaultDeclaration [
 						three CDATA #FIXED "fixedDefault"
 						three CDATA #FIXED "redundant"
 						four CDATA "default" >]>'.
-	document := XMLDOMParser parse: dtd, '<root two=''required'' three="nonDefault" />'.
+	document := XMLDOMParser parse: dtd, '<root two=''required'' />'.
 	self
 		assert: (document root attributeAt: 'two') = 'required';
 		deny: (document root includesAttribute: 'one');
 		assert: (document root attributeAt: 'three') = 'fixedDefault';
 		assert: (document root attributeAt: 'four') = 'default'.
-	self should: [XMLDOMParser parse: dtd, '<root />'] raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root />'] raise: XMLValidationException;
+		should: [SAXHandler parse: dtd, '<root three="nonDefault"/>'] raise: XMLValidationException.
 ]
 
 { #category : #tests }
@@ -427,24 +429,22 @@ XMLParserTest >> testDoctypeRoot [
 ]
 
 { #category : #tests }
-XMLParserTest >> testElementAnyAndEmptyDeclarations [
+XMLParserTest >> testElementAnyDeclarations [
+	self
+		shouldnt: [
+			SAXHandler parse: 
+				'<!DOCTYPE one [
+					<!ELEMENT one ANY>
+					<!ELEMENT two ANY>]>
+				<one>one<two><![CDATA[two]]><two/></two>three</one>']
+		raise: XMLValidationException.
 	self
 		shouldnt: [
 			SAXHandler parse: 
 				'<!DOCTYPE root [
 					<!ELEMENT root ANY>
 					<!ELEMENT two ANY>]>
-				<root>one<two>three</two>four</root>']
-		raise: XMLValidationException.
-	self
-		shouldnt: [
-			SAXHandler parse: 
-				'<!DOCTYPE root [<!ELEMENT root EMPTY>]><root> <!--empty--> </root>']
-		raise: XMLValidationException.
-	self
-		should: [
-			SAXHandler parse: 
-				'<!DOCTYPE root [<!ELEMENT root EMPTY>]><root><non-empty/></root>']
+				<root><two></two></root>']
 		raise: XMLValidationException.
 ]
 
@@ -663,6 +663,38 @@ XMLParserTest >> testElementContentModelsStarEmpty [
 		raise: XMLValidationException.
 	self
 		should: [SAXHandler parse: dtd, '<root><three/></root>']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testElementEmptyDeclarations [
+	self
+		shouldnt: [
+			SAXHandler parse: 
+				'<!DOCTYPE root [<!ELEMENT root EMPTY>]>',
+				'<root> <!--empty--> <?pi data?> </root>']
+		raise: XMLValidationException.
+	self
+		should: [
+			SAXHandler parse: 
+				'<!DOCTYPE root [
+					<!ELEMENT root EMPTY>
+					<!ELEMENT non-empty ANY>]><root><non-empty/></root>']
+		raise: XMLValidationException.
+	self
+		should: [
+			SAXHandler parse: 
+				'<!DOCTYPE root [<!ELEMENT root EMPTY>]><root>non-empty</root>']
+		raise: XMLValidationException.
+	self
+		should: [
+			SAXHandler parse: 
+				'<!DOCTYPE root [<!ELEMENT root EMPTY>]><root>&#32;</root>']
+		raise: XMLValidationException.
+	self
+		should: [
+			SAXHandler parse: 
+				'<!DOCTYPE root [<!ELEMENT root EMPTY>]><root><![CDATA[non-empty]]></root>']
 		raise: XMLValidationException.
 ]
 
@@ -1275,6 +1307,24 @@ XMLParserTest >> testWhitespacePreservation [
 ]
 
 { #category : #tests }
+XMLParserTest >> testWhitespacePreservationValidation [
+	| dtd |
+
+	dtd := '<!DOCTYPE whitespace [
+			<!ELEMENT whitespace EMPTY>
+			<!ATTLIST whitespace xml:space (default|preserve) ''preserve''>]>'.
+	self
+		shouldnt: [SAXHandler parse: dtd, '<whitespace></whitespace>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<whitespace> </whitespace>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<whitespace><![CDATA[ ]]></whitespace>']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
 XMLParserTest >> testXMLIDAttribute [
 	| xml xmlWithDuplicateId |
 
@@ -1292,4 +1342,18 @@ XMLParserTest >> testXMLIDAttribute [
 				isValidating: false;
 				parseDocument]
 		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testXMLPrefixedAttributes [
+	| xml document |
+
+	xml := '<a xml="one" xmll="two" xml:="three" xmlnss="four"></a>'.
+	document := XMLDOMParser parse: xml usingNamespaces: true.
+
+	self
+		assert: (document root attributeAt: 'xml') = 'one';
+		assert: (document root attributeAt: 'xmll') = 'two';
+		assert: (document root attributeAt: 'xml:') = 'three';
+		assert: (document root attributeAt: 'xmlnss') = 'four'.
 ]

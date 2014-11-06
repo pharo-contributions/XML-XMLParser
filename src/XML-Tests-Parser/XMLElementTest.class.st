@@ -4,6 +4,11 @@ Class {
 	#category : #'XML-Tests-Parser-DOM'
 }
 
+{ #category : #testing }
+XMLElementTest class >> isAbstract [
+	^ false
+]
+
 { #category : #assertions }
 XMLElementTest >> assertElement: anElement hasAttribute: anAttributeName equalTo: anAttributeValue [
 	self
@@ -37,26 +42,19 @@ XMLElementTest >> assertElement: anElement hasName: aName attributes: aDictionar
 		assert: anElement contentString = aString
 ]
 
-{ #category : #assertions }
-XMLElementTest >> assertNodeHasNoContentNodes: aNode [
-	super assertNodeHasNoContentNodes: aNode.
-	self assertNodeHasNoStringNodes: aNode.
+{ #category : #accessing }
+XMLElementTest >> nodeClass [
+	^ XMLElement
 ]
 
-{ #category : #assertions }
-XMLElementTest >> assertNodeHasNoStringNodes: aNode [
-	self
-		deny: aNode hasStringNodes;
-		assert: aNode stringNodes isEmpty;
-		assert: aNode strings isEmpty
-	
+{ #category : #accessing }
+XMLElementTest >> nodeTypes [
+	^ #(isElement isContentNode)
 ]
 
 { #category : #tests }
 XMLElementTest >> test1emptyElement [
-	self
-		assertNode: XMLElement new hasTypes: #(isElement isContentNode);
-		assertNodeHasNoChildren: XMLElement new
+	self assertNodeHasNoChildren: XMLElement new
 ]
 
 { #category : #tests }
@@ -86,7 +84,7 @@ XMLElementTest >> test3elementContentString [
 		assert: element contentString = str.
 
 	"Intersperse between text"
-	element addNode: XMLMockNode new.
+	element addNode: self nodeClass new.
 	self
 		assertElement: (element addContent: str)
 		hasContentString: str, ' ', str
@@ -98,7 +96,7 @@ XMLElementTest >> test3elementContentString [
 		hasContentString: str, ' ', str, str
 		withStrings: (Array with: str with: str, str).
 
-	element addElement: ((XMLElement named: 'childElementWithContent') addContent: 'test content').
+	element addNode: ((XMLElement named: 'childElementWithContent') addContent: 'test content').
 	self assert: (element contentStringAt: 'childElementWithContent') = 'test content'.
 ]
 
@@ -189,34 +187,18 @@ XMLElementTest >> test6elementPrinting [
 
 { #category : #tests }
 XMLElementTest >> test7contentNodeEnumeration [
-	| node nodes elements stringNodes contentNodes |
+	| node elements stringNodes contentNodes |
 
 	node := XMLElement new.
 	elements := self newElements: 3.
 	stringNodes := self newStrings: 3.
 	contentNodes := self intersperse: elements with: stringNodes.
-	node addNodes: (self intersperseWithNodes: contentNodes).
+	node addNodes: (self intersperse: contentNodes with: (Array with: XMLComment new with: XMLPI new)).
 
 	self
 		assert: node contentNodes = contentNodes;
 		should: [:block | node contentNodesDo: block] enumerate: contentNodes;
 		should: [:block | node stringNodesDo: block] enumerate: stringNodes.
-]
-
-{ #category : #tests }
-XMLElementTest >> testAddElement [
-	| element |
-
-	element := XMLElement name: 'test' namespaces: (Array with: 'prefix' -> 'ns').
-	element
-		addElement: 'first';
-		addElement: 'prefix:second';
-		addElement: (XMLElement name: 'newprefix:third' namespaceURI: 'newNS').
-	self assert: (element elementNames) asArray = #('first' 'prefix:second' 'newprefix:third').
-
-	self
-		should: [element addElement: 'undeclared:fourth']
-		raise: XMLNamespaceException.
 ]
 
 { #category : #tests }
@@ -242,9 +224,9 @@ XMLElementTest >> testElementSorting [
 	| element |
 
 	(element := XMLElement name: 'sorted')
-		addElement: 'c';
-		addElement: 'b';
-		addElement: 'a'.
+		addElementNamed: 'c';
+		addElementNamed: 'b';
+		addElementNamed: 'a'.
 
 	self assert: (element nodes sorted collect: [:each | each name]) asArray = #('a' 'b' 'c').
 	self assert:
@@ -263,12 +245,27 @@ XMLElementTest >> testInnerXML [
 	| element |
 
 	element := XMLElement name: 'test' namespaces: (Array with: 'prefix'-> 'ns').
-	element innerXML: '<prefix:inner>test</prefix:inner>'.
+	element innerXML: '<prefix:inner></prefix:inner>'.
+	element firstNode innerXML: 'test<!--comment-->'.
 
 	self
 		assert: element nodes size = 1;
 		assert: (element firstNode isNamed: 'prefix:inner');
 		assert: (element firstNode contentString = 'test').
+]
+
+{ #category : #tests }
+XMLElementTest >> testIsElementNamed [
+	self
+		assert: ((self nodeClass named: 'one') isElementNamed: 'one');
+		deny: ((self nodeClass named: 'two') isElementNamed: 'one')
+]
+
+{ #category : #tests }
+XMLElementTest >> testIsElementNamedAny [
+	self
+		assert: ((self nodeClass named: 'one') isElementNamedAny: #('two' 'one' 'three'));
+		deny: ((self nodeClass named: 'two') isElementNamedAny: #('three' 'four' 'five'))
 ]
 
 { #category : #tests }
@@ -283,7 +280,7 @@ XMLElementTest >> testPrintingDefaultNamespaces [
 		((XMLElement
 			name: 'element'
 			namespaceURI: '')
-			addElement: 'empty';
+			addElementNamed: 'empty';
 			yourself).
 
 	self assert:
@@ -320,7 +317,7 @@ XMLElementTest >> testPrintingRootNamespaces [
 		XMLElement
 			name: 'used:element'
 			namespaces: (Array with: '' -> 'defaultNS' with: 'used' -> 'usedNS').
-	element addElement: 'empty'.
+	element addElementNamed: 'empty'.
 
 	self assert:
 		element printString =
@@ -378,8 +375,9 @@ XMLElementTest >> testUndeclaringElementPrefixes [
 
 	element :=
 		XMLElement
-			name: 'used:element'
+			name: 'outer'
 			namespaces: (Array with: '' -> 'defaultNS' with: 'unused' -> 'unusedNS' with: 'used' -> 'usedNS').
+	element addElementNamed: 'used:inner'.
 
 	self
 		shouldnt: [element undeclarePrefix: '']
@@ -387,27 +385,11 @@ XMLElementTest >> testUndeclaringElementPrefixes [
 	self
 		shouldnt: [element undeclarePrefix: 'unused']
 		raise: XMLNamespaceException.
+	element allElementsDo: [:each |
+		self
+			deny: (each isDeclaredPrefix: '');
+			deny: (each isDeclaredPrefix: 'unused')].
 	self
 		should: [element undeclarePrefix: 'used']
-		raise: XMLNamespaceException.
-]
-
-{ #category : #tests }
-XMLElementTest >> testUndeclaringReservedPrefixes [
-	| element |
-
-	element :=
-		XMLElement
-			name: 'element'
-			namespaces: (Array with: 'xml' -> XMLNamespaceScope xmlNamespaceURI).
-
-	self
-		shouldnt: [element undeclarePrefix: 'xml']
-		raise: XMLNamespaceException.
-	self
-		should: [element undeclarePrefix: 'xml']
-		raise: XMLNamespaceException.
-	self
-		should: [element undeclarePrefix: 'xmlns']
 		raise: XMLNamespaceException.
 ]

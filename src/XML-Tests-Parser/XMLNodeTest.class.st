@@ -7,6 +7,11 @@ Class {
 	#category : #'XML-Tests-Parser-DOM'
 }
 
+{ #category : #'as yet unclassified' }
+XMLNodeTest class >> shouldInheritSelectors [
+	^ true
+]
+
 { #category : #tests }
 XMLNodeTest >> assertNode: aNode hasName: aQualifiedName namespaceURI: aUri [
 	| prefix localName |
@@ -62,11 +67,6 @@ XMLNodeTest >> createNodes: aNumber with: aBlock [
 ]
 
 { #category : #accessing }
-XMLNodeTest >> escapedString [
-	^ 'test&lt;&gt;&amp;&quot;'
-]
-
-{ #category : #accessing }
 XMLNodeTest >> intersperse: aNodeCollection with: aPaddingCollection [
 	| mixedCollection nodeStream paddingStream |
 
@@ -86,17 +86,17 @@ XMLNodeTest >> intersperse: aNodeCollection with: aPaddingCollection [
 XMLNodeTest >> intersperseWithNodes: aNodeCollection [
 	^ self
 		intersperse: aNodeCollection
-		with: (self newNodes: aNodeCollection size)
+		with: (self newStrings: aNodeCollection size)
 ]
 
 { #category : #accessing }
 XMLNodeTest >> markupString [
-	^ 'test<>&"'
+	^ '<test name="&value;"/>'
 ]
 
 { #category : #accessing }
 XMLNodeTest >> newNodes: aNumber [
-	^ self createNodes: aNumber with: [XMLMockNode new]
+	^ self createNodes: aNumber with: [self nodeClass new]
 ]
 
 { #category : #accessing }
@@ -106,6 +106,16 @@ XMLNodeTest >> newStrings: aNumber [
 		with: [:i | XMLString string: 'test', i printString]
 ]
 
+{ #category : #accessing }
+XMLNodeTest >> nodeClass [
+	^ XMLNode
+]
+
+{ #category : #accessing }
+XMLNodeTest >> nodeTypes [
+	^ #()
+]
+
 { #category : #assertions }
 XMLNodeTest >> should: aBlock enumerate: aCollection [
 	| enumerated |
@@ -113,4 +123,24 @@ XMLNodeTest >> should: aBlock enumerate: aCollection [
 	enumerated := OrderedCollection new.
 	aBlock value: [:each | enumerated add: each].
 	self assert: enumerated = aCollection asOrderedCollection.
+]
+
+{ #category : #tests }
+XMLNodeTest >> test1basicNodeProtocol [
+	| node parent |
+
+	node := self nodeClass new.
+	self
+		assertNode: node hasTypes: self nodeTypes;
+		deny: node hasChildren;
+		deny: node hasParent;
+		assert: node nextNode isNil;
+		assert: node previousNode isNil;
+		assert: node contentString isEmpty.
+
+	parent := self nodeClass new.
+	node parent: parent.
+	self
+		assert: node hasParent;
+		assert: node parent == parent.
 ]

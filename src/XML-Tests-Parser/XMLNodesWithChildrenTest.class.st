@@ -1,8 +1,16 @@
+"
+Abstract, do not run.
+"
 Class {
 	#name : #XMLNodesWithChildrenTest,
 	#superclass : #XMLNodeTest,
 	#category : #'XML-Tests-Parser-DOM'
 }
+
+{ #category : #testing }
+XMLNodesWithChildrenTest class >> isAbstract [
+	^ true
+]
 
 { #category : #assertions }
 XMLNodesWithChildrenTest >> assertNode: aNode hasChildren: aNodeCollection [
@@ -16,6 +24,11 @@ XMLNodesWithChildrenTest >> assertNodeHasNoChildren: aNode [
 		assert: aNode nodes isEmpty;
 		assert: aNode firstNode isNil;
 		assert: aNode lastNode isNil
+]
+
+{ #category : #'as yet unclassified' }
+XMLNodesWithChildrenTest >> nodeClass [
+	^ XMLNodeWithChildren
 ]
 
 { #category : #assertions }
@@ -57,14 +70,14 @@ XMLNodesWithChildrenTest >> should: aBlock removeNodes: aNodeCollection from: aP
 
 { #category : #tests }
 XMLNodesWithChildrenTest >> test1emptyNodeWithChildren [
-	self assertNodeHasNoChildren: XMLMockNodeWithChildren new
+	self assertNodeHasNoChildren: self nodeClass new
 ]
 
 { #category : #tests }
 XMLNodesWithChildrenTest >> test2addingNodes [
 	| node children |
 
-	node := XMLMockNodeWithChildren new.
+	node := self nodeClass new.
 	children := self newNodes: 6.
 	self
 		should: [node addNode: children second] addNode: children second to: node;
@@ -84,7 +97,7 @@ XMLNodesWithChildrenTest >> test2addingNodes [
 	self assertNode: node hasChildren: children.
 
 	self
-		should: [node addNode: (XMLMockNode new parent: XMLMockNode new)] raise: Error;
+		should: [node addNode: (self nodeClass new parent: self nodeClass new)] raise: Error;
 		should: [node addNode: children first] raise: Error.
 ]
 
@@ -92,7 +105,7 @@ XMLNodesWithChildrenTest >> test2addingNodes [
 XMLNodesWithChildrenTest >> test3removingNodes [
 	| node children |
 
-	node := XMLMockNodeWithElements new.
+	node := self nodeClass new.
 	children := self newNodes: 5.
 	node addNodes: children.
 	self
@@ -111,7 +124,7 @@ XMLNodesWithChildrenTest >> test3removingNodes [
 { #category : #tests }
 XMLNodesWithChildrenTest >> test4accessingAdjacentNodes [
 	| node children |
-	node := XMLMockNodeWithElements new.
+	node := self nodeClass new.
 	children := self newNodes: 5.
 	node addNodes: children.
 	children
@@ -133,7 +146,7 @@ XMLNodesWithChildrenTest >> test4accessingAdjacentNodes [
 XMLNodesWithChildrenTest >> test5accessingFirstAndLastNodes [
 	| node children |
 
-	node := XMLMockNodeWithElements new.
+	node := self nodeClass new.
 	self
 		assert: node firstNode isNil;
 		assert: node lastNode isNil.
@@ -159,7 +172,7 @@ XMLNodesWithChildrenTest >> test5accessingFirstAndLastNodes [
 XMLNodesWithChildrenTest >> test6replacingNodes [
 	| node children newChildren |
 
-	node := XMLMockNodeWithChildren new.
+	node := self nodeClass new.
 	children := self newNodes: 3.
 	newChildren := self newNodes: 3.
 	node addNodes: children.
@@ -183,7 +196,7 @@ XMLNodesWithChildrenTest >> test6replacingNodes [
 XMLNodesWithChildrenTest >> test7childNodeEnumeration [
 	| node nodes |
 
-	node := XMLMockNodeWithElements new.
+	node := self nodeClass new..
 	self should: [:block | node nodesDo: block] enumerate: #().
 
 	nodes := self newNodes: 5.
