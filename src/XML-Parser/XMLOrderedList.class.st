@@ -171,7 +171,9 @@ XMLOrderedList >> asOrderedCollection [
 
 { #category : #accessing }
 XMLOrderedList >> at: anIndex [
-	^ self at: anIndex ifAbsent: [self defaultValue]
+	(anIndex > 0 and: [anIndex <= collection size])
+		ifTrue: [^ collection at: anIndex]
+		ifFalse: [^ self defaultValue]
 ]
 
 { #category : #accessing }

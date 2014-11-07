@@ -19,7 +19,7 @@ DTDCachingEntityResolver class >> clearEntityCache [
 
 { #category : #private }
 DTDCachingEntityResolver class >> entityCache [
-	^ entityCache ifNil: [entityCache := Dictionary new]
+	^ entityCache ifNil: [entityCache := Dictionary new: self maxCachedEntities]
 ]
 
 { #category : #private }

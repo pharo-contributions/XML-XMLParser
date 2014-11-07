@@ -39,7 +39,8 @@ XMLPeekableStreamAdapter >> close [
 
 { #category : #accessing }
 XMLPeekableStreamAdapter >> converter: aConverter [
-	(stream respondsTo: #converter:)
+	(aConverter notNil
+		and: [stream respondsTo: #converter:])
 		ifTrue: [stream converter: aConverter]
 ]
 

@@ -296,14 +296,5 @@ XMLNestedStreamReader >> upToEnd [
 
 { #category : #streaming }
 XMLNestedStreamReader >> useConverterForEncoding: anEncodingName [
-	| converterClass |
-
-	converterClass :=
-		(Smalltalk
-			at: #TextConverter
-			ifAbsent: [^ self])
-				defaultConverterClassForEncoding: anEncodingName asLowercase.
-		
-	converterClass
-		ifNotNil: [stream converter: converterClass new].
+	stream converter: (XMLTextConverterFactory newForEncoding: anEncodingName)
 ]
