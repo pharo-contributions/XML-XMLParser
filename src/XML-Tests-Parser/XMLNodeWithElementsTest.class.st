@@ -2,43 +2,29 @@
 Abstract, do not run.
 "
 Class {
-	#name : #XMLNodesWithElementsTest,
-	#superclass : #XMLNodesWithChildrenTest,
+	#name : #XMLNodeWithElementsTest,
+	#superclass : #XMLNodeWithChildrenTest,
 	#category : #'XML-Tests-Parser-DOM'
 }
 
 { #category : #testing }
-XMLNodesWithElementsTest class >> isAbstract [
+XMLNodeWithElementsTest class >> isAbstract [
 	^ true
 ]
 
 { #category : #assertions }
-XMLNodesWithElementsTest >> assertList: aList collects: aSecondList [
-	self
-		assert: aList = aSecondList;
-		assert: aList class == self collectNodeListClass.
-]
-
-{ #category : #assertions }
-XMLNodesWithElementsTest >> assertList: aList selects: aSecondList [
-	self
-		assert: aList = aSecondList;
-		assert: aList class == self selectNodeListClass.
-]
-
-{ #category : #assertions }
-XMLNodesWithElementsTest >> assertNode: aNode hasElements: anElementCollection [
+XMLNodeWithElementsTest >> assertNode: aNode hasElements: anElementCollection [
 	self assert: aNode elements asArray = anElementCollection asArray
 ]
 
 { #category : #assertions }
-XMLNodesWithElementsTest >> assertNodeHasNoChildren: aNode [
+XMLNodeWithElementsTest >> assertNodeHasNoChildren: aNode [
 	super assertNodeHasNoChildren: aNode.
 	self assertNodeHasNoContentNodes: aNode
 ]
 
 { #category : #assertions }
-XMLNodesWithElementsTest >> assertNodeHasNoContentNodes: aNode [
+XMLNodeWithElementsTest >> assertNodeHasNoContentNodes: aNode [
 	self
 		deny: aNode hasContentNodes;
 		assert: aNode contentNodes isEmpty;
@@ -48,7 +34,7 @@ XMLNodesWithElementsTest >> assertNodeHasNoContentNodes: aNode [
 ]
 
 { #category : #assertions }
-XMLNodesWithElementsTest >> assertNodeHasNoElements: aNode [
+XMLNodeWithElementsTest >> assertNodeHasNoElements: aNode [
 	self
 		deny: aNode hasElements;
 		assert: aNode elements isEmpty;
@@ -57,7 +43,7 @@ XMLNodesWithElementsTest >> assertNodeHasNoElements: aNode [
 ]
 
 { #category : #assertions }
-XMLNodesWithElementsTest >> assertNodeHasNoStringNodes: aNode [
+XMLNodeWithElementsTest >> assertNodeHasNoStringNodes: aNode [
 	self
 		deny: aNode hasStringNodes;
 		assert: aNode stringNodes isEmpty;
@@ -66,19 +52,14 @@ XMLNodesWithElementsTest >> assertNodeHasNoStringNodes: aNode [
 ]
 
 { #category : #accessing }
-XMLNodesWithElementsTest >> collectNodeListClass [
-	^ XMLOrderedList
-]
-
-{ #category : #accessing }
-XMLNodesWithElementsTest >> newElements: aNumber [
+XMLNodeWithElementsTest >> newElements: aNumber [
 	^ self
 		createNodes: aNumber
 		with: [:i | XMLElement named: 'testElement', i printString]
 ]
 
 { #category : #accessing }
-XMLNodesWithElementsTest >> newElementsNamed: aNameArray [
+XMLNodeWithElementsTest >> newElementsNamed: aNameArray [
 	| names qualifiedName element |
 
 	names := aNameArray asOrderedCollection.
@@ -96,50 +77,49 @@ XMLNodesWithElementsTest >> newElementsNamed: aNameArray [
 ]
 
 { #category : #accessing }
-XMLNodesWithElementsTest >> newNodesWithElements [
-	| node |
-
-	(node := self nodeClass new)
-		addNode: (XMLComment string: 'comment');
+XMLNodeWithElementsTest >> newNodeWithElements [
+	^ self nodeClass new
+		addNode: (XMLComment string: 'before');
 		addNode:
 			((XMLElement name: 'root')
 				addNode:
-					((XMLElement named: 'a1')
-						addNode: (XMLString string: 'test1');
-						addNode: (XMLElement named: 'a2');
-						addNode: (XMLPI target: 'a3' data: 'data');
+					((XMLElement named: 'one')
+						addNode: (XMLString string: 'testing one');
+						addNode: (XMLElement named: 'two');
+						addNode: (XMLPI target: 'target' data: 'data');
 						yourself);
 				addNode:
-					((XMLElement name: 'b1' namespaceURI: 'testNS')
-						addNode: (XMLElement name: 'b2');
-						addNode: (XMLCData string: 'test2');
+					((XMLElement name: 'three' namespaceURI: 'testNS')
+						addNode: (XMLElement name: 'four');
+						addNode: (XMLCData string: 'testing two');
 						yourself);
 				addNode:
-					((XMLElement name: 'prefix:c1' namespaceURI: 'testNS')
-						addNode: (XMLElement name: 'prefix:c2' namespaceURI: 'testNS');
+					((XMLElement name: 'prefix:four' namespaceURI: 'testNS')
+						addNode: (XMLElement name: 'prefix:five' namespaceURI: 'testNS');
 						yourself);
-				addNode: (XMLElement name: 'c1');
-				yourself).
-	^ node.
+				addNode: (XMLElement name: 'four');
+				yourself);
+		addNode: (XMLComment string: 'after');
+		yourself.
 ]
 
 { #category : #accessing }
-XMLNodesWithElementsTest >> nodeClass [
+XMLNodeWithElementsTest >> newNodeWithNodes [
+	^ self newNodeWithElements
+]
+
+{ #category : #accessing }
+XMLNodeWithElementsTest >> nodeClass [
 	^ XMLNodeWithElements
 ]
 
-{ #category : #accessing }
-XMLNodesWithElementsTest >> selectNodeListClass [
-	^ XMLNodeList
-]
-
 { #category : #assertions }
-XMLNodesWithElementsTest >> should: aBlock addElement: anElement to: aParent [
+XMLNodeWithElementsTest >> should: aBlock addElement: anElement to: aParent [
 	self should: aBlock addElements: (Array with: anElement) to: aParent
 ]
 
 { #category : #assertions }
-XMLNodesWithElementsTest >> should: aBlock addElements: anElementCollection to: aParent [
+XMLNodeWithElementsTest >> should: aBlock addElements: anElementCollection to: aParent [
 	| elementsAdded |
 
 	self deny: (anElementCollection anySatisfy: [:each | aParent elements includes: each]).
@@ -155,12 +135,12 @@ XMLNodesWithElementsTest >> should: aBlock addElements: anElementCollection to: 
 ]
 
 { #category : #assertions }
-XMLNodesWithElementsTest >> should: aBlock removeElement: anElement from: aParent [
+XMLNodeWithElementsTest >> should: aBlock removeElement: anElement from: aParent [
 	self should: aBlock removeElements: (Array with: anElement) from: aParent
 ]
 
 { #category : #assertions }
-XMLNodesWithElementsTest >> should: aBlock removeElements: anElementCollection from: aParent [
+XMLNodeWithElementsTest >> should: aBlock removeElements: anElementCollection from: aParent [
 	| elementsRemoved |
 
 	self assert: (anElementCollection allSatisfy: [:each | aParent elements includes: each]).
@@ -176,12 +156,12 @@ XMLNodesWithElementsTest >> should: aBlock removeElements: anElementCollection f
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> test01emptyNodeWithElements [
+XMLNodeWithElementsTest >> test01emptyNodeWithElements [
 	self assertNodeHasNoChildren: self nodeClass new
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> test02addingElements [
+XMLNodeWithElementsTest >> test02addingElements [
 	| node nodes elements children |
 
 	node := self nodeClass new.
@@ -240,7 +220,7 @@ XMLNodesWithElementsTest >> test02addingElements [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> test03removingElements [
+XMLNodeWithElementsTest >> test03removingElements [
 	| node elements |
 
 	node := self nodeClass new.
@@ -268,7 +248,7 @@ XMLNodesWithElementsTest >> test03removingElements [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> test04accessingAdjacentElements [
+XMLNodeWithElementsTest >> test04accessingAdjacentElements [
 	| node elements |
 
 	node := self nodeClass new.
@@ -290,7 +270,7 @@ XMLNodesWithElementsTest >> test04accessingAdjacentElements [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> test05accessingFirstAndLastElements [
+XMLNodeWithElementsTest >> test05accessingFirstAndLastElements [
 	| node elements |
 
 	node := self nodeClass new.
@@ -322,7 +302,7 @@ XMLNodesWithElementsTest >> test05accessingFirstAndLastElements [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> test06chlidNodeAndElementEnumeration [
+XMLNodeWithElementsTest >> test06chlidNodeAndElementEnumeration [
 	| node nodes elements |
 
 	node := self nodeClass new.
@@ -339,7 +319,7 @@ XMLNodesWithElementsTest >> test06chlidNodeAndElementEnumeration [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> test07elementAccessing [
+XMLNodeWithElementsTest >> test07elementAccessing [
 	| node elements |
 
 	node := self nodeClass new.
@@ -365,7 +345,7 @@ XMLNodesWithElementsTest >> test07elementAccessing [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> test08firstTagSearching [
+XMLNodeWithElementsTest >> test08firstTagSearching [
 	| node elements |
 
 	node := self nodeClass new.
@@ -390,7 +370,7 @@ XMLNodesWithElementsTest >> test08firstTagSearching [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> test09tagsNamedSearching [
+XMLNodeWithElementsTest >> test09tagsNamedSearching [
 	| node elements |
 
 	node := self nodeClass new.
@@ -414,7 +394,7 @@ XMLNodesWithElementsTest >> test09tagsNamedSearching [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> test10elementRenaming [
+XMLNodeWithElementsTest >> test10elementRenaming [
 	| node elements |
 
 	node := self nodeClass new.
@@ -439,27 +419,41 @@ XMLNodesWithElementsTest >> test10elementRenaming [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testAddElement [
+XMLNodeWithElementsTest >> testAddElementNamed [
 	| node element |
 
 	node := self nodeClass new.
 	(element := node addElementNamed: 'test')
 		addElementNamed: 'first';
 		declarePrefix: 'prefix' uri: 'ns';
-		addElementNamed: 'prefix:second';
-		addElementNamed: 'newprefix:third' namespaceURI: 'newNS'.
-	self assert: (element elementNames) asArray = #('first' 'prefix:second' 'newprefix:third').
-
+		addElementNamed: 'prefix:second'.
+	self assert: element elementNames asArray = #('first' 'prefix:second').
 	self
 		should: [element addElementNamed: 'undeclared:fourth']
 		raise: XMLNamespaceException.
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testAllElements [
+XMLNodeWithElementsTest >> testAddElementNamedNamespaceURI [
+	| node element |
+
+	node := self nodeClass new.
+	(element := node addElementNamed: 'test' namespaceURI: 'defaultNS')
+		addElementNamed: 'prefix:first' namespaceURI: 'firstNS';
+		addElementNamed: 'second' namespaceURI: 'secondNS'.
+	self
+		assert: element namespaceURI = 'defaultNS';
+		assert: element nodes first name = 'prefix:first';
+		assert: element nodes first namespaceURI = 'firstNS';
+		assert: element nodes second name = 'second';
+		assert: element nodes second namespaceURI = 'secondNS'.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testAllElements [
 	| nodeWithElements allElements |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	allElements := nodeWithElements allElements.
 	nodeWithElements isElement
 		ifTrue: [
@@ -467,7 +461,7 @@ XMLNodesWithElementsTest >> testAllElements [
 			allElements removeFirst].
 	self assert:
 		allElements elementNames asArray =
-			#('root' 'a1' 'a2' 'b1' 'b2' 'prefix:c1' 'prefix:c2' 'c1').
+			#('root' 'one' 'two' 'three' 'four' 'prefix:four' 'prefix:five' 'four').
 	self
 		assertList: allElements first allElements selects: (allElements copyFrom: 1 to: 8);
 		assertList: allElements second allElements selects: (allElements copyFrom: 2 to: 3);
@@ -480,10 +474,10 @@ XMLNodesWithElementsTest >> testAllElements [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testAllElementsCollect [
+XMLNodeWithElementsTest >> testAllElementsCollect [
 	| nodeWithElements allElements |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	allElements := nodeWithElements allElements.
 	self
 		assertList: (nodeWithElements allElementsCollect: [:each | each identityHash])
@@ -496,48 +490,48 @@ XMLNodesWithElementsTest >> testAllElementsCollect [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testAllElementsDetect [
+XMLNodeWithElementsTest >> testAllElementsDetect [
 	| nodeWithElements allElements detectedElement |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	allElements := nodeWithElements allElements.
-	detectedElement := nodeWithElements allElementsDetect: [:each | each isNamed: 'prefix:c1'].
+	detectedElement := nodeWithElements allElementsDetect: [:each | each isNamed: 'prefix:four'].
 	self
 		assert: detectedElement notNil;
-		assert: (detectedElement isNamed: 'prefix:c1');
-		assert: detectedElement == (allElements detect: [:each | each isNamed: 'prefix:c1']);
+		assert: (detectedElement isNamed: 'prefix:four');
+		assert: detectedElement == (allElements detect: [:each | each isNamed: 'prefix:four']);
 		assert: (nodeWithElements allElementsDetect: [:each | each isNamed: 'absent']) isNil.
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testAllElementsDetectIfNone [
+XMLNodeWithElementsTest >> testAllElementsDetectIfNone [
 	| nodeWithElements allElements detectedElement |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	allElements := nodeWithElements allElements.
 	detectedElement :=
 		nodeWithElements
-			allElementsDetect: [:each | each isNamed: 'prefix:c1']
-			ifNone: ['absent'].
+			allElementsDetect: [:each | each isNamed: 'prefix:four']
+			ifNone: [#absent].
 	self
-		deny: detectedElement = 'absent';
-		assert: (detectedElement isNamed: 'prefix:c1').
+		deny: detectedElement = #absent;
+		assert: (detectedElement isNamed: 'prefix:four').
 	self assert:	
 		detectedElement ==
 			(allElements
-				detect: [:each | each isNamed: 'prefix:c1']
-				ifNone: ['absent']).
+				detect: [:each | each isNamed: 'prefix:four']
+				ifNone: [#absent]).
 	self assert:
 		(nodeWithElements
 			allElementsDetect: [:each | each isNamed: 'absent']
-			ifNone: ['absent']) = 'absent'.
+			ifNone: [#absent]) = #absent.
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testAllElementsDo [
+XMLNodeWithElementsTest >> testAllElementsDo [
 	| nodeWithElements allElements |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	allElements := nodeWithElements allElements.
 	self
 		should: [:block | nodeWithElements allElementsDo: block]
@@ -550,50 +544,50 @@ XMLNodesWithElementsTest >> testAllElementsDo [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testAllElementsNamed [
+XMLNodeWithElementsTest >> testAllElementsNamed [
 	| nodeWithElements allElements namedElements |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	allElements := nodeWithElements allElements.
-	namedElements := nodeWithElements allElementsNamed: 'c1'. 
+	namedElements := nodeWithElements allElementsNamed: 'four'. 
 	self
-		assert: namedElements size = 2;
-		assertList: namedElements selects: (allElements select: [:each | each isNamed: 'c1']).
+		assert: namedElements size = 3;
+		assertList: namedElements selects: (allElements select: [:each | each isNamed: 'four']).
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testAllElementsNamedDo [
+XMLNodeWithElementsTest >> testAllElementsNamedDo [
 	| nodeWithElements allElements namedElements |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	allElements := nodeWithElements allElements.
-	namedElements := nodeWithElements allElementsNamed: 'c1'. 
+	namedElements := nodeWithElements allElementsNamed: 'four'. 
 	self
-		should: [:block | nodeWithElements allElementsNamed: 'c1' do: block]
+		should: [:block | nodeWithElements allElementsNamed: 'four' do: block]
 		enumerate: namedElements.
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testAllElementsNamedNamespaceURI [
+XMLNodeWithElementsTest >> testAllElementsNamedNamespaceURI [
 	| nodeWithElements allElements namedElements |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	allElements := nodeWithElements allElements.
-	namedElements := nodeWithElements allElementsNamed: 'c1' namespaceURI: 'testNS'. 
+	namedElements := nodeWithElements allElementsNamed: 'four' namespaceURI: 'testNS'. 
 	self
-		assert: namedElements size = 1;
+		assert: namedElements size = 2;
 		assertList: namedElements
 		selects:
 			(allElements select: [:each |
-				(each isNamed: 'c1')
+				(each isNamed: 'four')
 					and: [each namespaceURI = 'testNS']]).
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testAllElementsSelect [
+XMLNodeWithElementsTest >> testAllElementsSelect [
 	| nodeWithElements allElements |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	allElements := nodeWithElements allElements.
 	self
 		assertList: (nodeWithElements allElementsSelect: [:each | each hasChildren])
@@ -606,26 +600,27 @@ XMLNodesWithElementsTest >> testAllElementsSelect [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testAllNodes [
+XMLNodeWithElementsTest >> testAllNodes [
 	| nodeWithElements allNodes |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	allNodes := nodeWithElements allNodes.
 	self
-		assert: allNodes size = 13;
+		assert: allNodes size = 14;
 		assert: (allNodes at: 1) == nodeWithElements;
 		assert: (allNodes at: 2) isComment;
 		assert: ((allNodes at: 3) isElementNamed: 'root');
-		assert: ((allNodes at: 4) isElementNamed: 'a1');
-		assert: ((allNodes at: 5) isStringNode: 'test1');
-		assert: ((allNodes at: 6) isElementNamed: 'a2');
+		assert: ((allNodes at: 4) isElementNamed: 'one');
+		assert: ((allNodes at: 5) isStringNode: 'testing one');
+		assert: ((allNodes at: 6) isElementNamed: 'two');
 		assert: (allNodes at: 7) isPI;
-		assert: ((allNodes at: 8) isElementNamed: 'b1');
-		assert: ((allNodes at: 9) isElementNamed: 'b2');
-		assert: ((allNodes at: 10) isStringNode: 'test2');
-		assert: ((allNodes at: 11) isElementNamed: 'prefix:c1');
-		assert: ((allNodes at: 12) isElementNamed: 'prefix:c2');
-		assert: ((allNodes at: 13) isElementNamed: 'c1').
+		assert: ((allNodes at: 8) isElementNamed: 'three');
+		assert: ((allNodes at: 9) isElementNamed: 'four');
+		assert: ((allNodes at: 10) isStringNode: 'testing two');
+		assert: ((allNodes at: 11) isElementNamed: 'prefix:four');
+		assert: ((allNodes at: 12) isElementNamed: 'prefix:five');
+		assert: ((allNodes at: 13) isElementNamed: 'four');
+		assert: (allNodes at: 14) isComment.
 	self
 		assertList: (allNodes at: 3) allNodes selects: (allNodes copyFrom: 3 to: 13);
 		assertList: (allNodes at: 4) allNodes selects: (allNodes copyFrom: 4 to: 7);
@@ -638,102 +633,14 @@ XMLNodesWithElementsTest >> testAllNodes [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testAllNodesCollect [
-	| nodeWithElements allNodes |
-
-	nodeWithElements := self newNodesWithElements.
-	allNodes := nodeWithElements allNodes.
-	self
-		assertList: (nodeWithElements allNodesCollect: [:each | each identityHash])
-		collects: (allNodes collect: [:each | each identityHash]).
-
-	allNodes do: [:node |
-		node isElement
-			ifTrue: [
-				self
-					assertList: (node allNodesCollect: [:each | each identityHash])
-					collects: (node allNodes collect: [:each | each identityHash])]].
-]
-
-{ #category : #tests }
-XMLNodesWithElementsTest >> testAllNodesDetect [
-	| nodeWithElements allNodes detectedNode |
-
-	nodeWithElements := self newNodesWithElements.
-	allNodes := nodeWithElements allNodes.
-	detectedNode := nodeWithElements allNodesDetect: [:each | each isCData].
-	self
-		assert: detectedNode notNil;
-		assert: detectedNode isCData;
-		assert: detectedNode == (allNodes detect: [:each | each isCData]);
-		assert: (nodeWithElements allNodesDetect: [:each | each isDeclaration]) isNil.
-]
-
-{ #category : #tests }
-XMLNodesWithElementsTest >> testAllNodesDetectIfNone [
-	| nodeWithElements allNodes detectedNode |
-
-	nodeWithElements := self newNodesWithElements.
-	allNodes := nodeWithElements allNodes.
-	detectedNode :=
-		nodeWithElements
-			allNodesDetect: [:each | each isCData]
-			ifNone: ['absent'].
-	self
-		deny: detectedNode = 'absent';
-		assert: detectedNode isCData;
-		assert: detectedNode == (allNodes detect: [:each | each isCData] ifNone: ['absent']);
-		assert:
-			(nodeWithElements
-				allNodesDetect: [:each | each isDeclaration]
-				ifNone: ['absent']) = 'absent'.
-]
-
-{ #category : #tests }
-XMLNodesWithElementsTest >> testAllNodesDo [
-	| nodeWithElements allNodes |
-
-	nodeWithElements := self newNodesWithElements.
-	allNodes := nodeWithElements allNodes.
-	self
-		should: [:block | nodeWithElements allNodesDo: block]
-		enumerate: allNodes.
-
-	allNodes do: [:node |
-		node isElement
-			ifTrue: [
-				self
-					should: [:block | node allNodesDo: block]
-					enumerate: node allNodes]].
-]
-
-{ #category : #tests }
-XMLNodesWithElementsTest >> testAllNodesSelect [
-	| nodeWithElements allNodes |
-
-	nodeWithElements := self newNodesWithElements.
-	allNodes := nodeWithElements allNodes.
-	self
-		assertList: (nodeWithElements allNodesSelect: [:each | each isElement])
-		selects: (allNodes select: [:each | each isElement]).
-
-	allNodes do: [:node |
-		node isElement
-			ifTrue: [
-				self
-					assertList: (node allNodesSelect: [:each | each isElement])
-					selects: (node allNodes select: [:each | each isElement])]].
-]
-
-{ #category : #tests }
-XMLNodesWithElementsTest >> testDescendentElements [
+XMLNodeWithElementsTest >> testDescendentElements [
 	| nodeWithElements descendentElements |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	descendentElements := nodeWithElements descendentElements.
 	self assert:
 		descendentElements elementNames asArray =
-			#('root' 'a1' 'a2' 'b1' 'b2' 'prefix:c1' 'prefix:c2' 'c1').
+			#('root' 'one' 'two' 'three' 'four' 'prefix:four' 'prefix:five' 'four').
 	self
 		assertList: descendentElements first descendentElements selects: (descendentElements copyFrom: 2 to: 8);
 		assertList: descendentElements second descendentElements selects: (descendentElements copyFrom: 3 to: 3);
@@ -746,10 +653,10 @@ XMLNodesWithElementsTest >> testDescendentElements [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testDescendentElementsCollect [
+XMLNodeWithElementsTest >> testDescendentElementsCollect [
 	| nodeWithElements descendentElements |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	descendentElements := nodeWithElements descendentElements.
 	self
 		assertList: (nodeWithElements descendentElementsCollect: [:each | each identityHash])
@@ -762,48 +669,48 @@ XMLNodesWithElementsTest >> testDescendentElementsCollect [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testDescendentElementsDetect [
+XMLNodeWithElementsTest >> testDescendentElementsDetect [
 	| nodeWithElements descendentElements detectedElement |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	descendentElements := nodeWithElements descendentElements.
-	detectedElement := nodeWithElements descendentElementsDetect: [:each | each isNamed: 'prefix:c1'].
+	detectedElement := nodeWithElements descendentElementsDetect: [:each | each isNamed: 'prefix:four'].
 	self
 		assert: detectedElement notNil;
-		assert: (detectedElement isNamed: 'prefix:c1');
-		assert: detectedElement == (descendentElements detect: [:each | each isNamed: 'prefix:c1']);
-		assert: (detectedElement descendentElementsDetect: [:each | each isNamed: 'prefix:c1']) isNil.
+		assert: (detectedElement isNamed: 'prefix:four');
+		assert: detectedElement == (descendentElements detect: [:each | each isNamed: 'prefix:four']);
+		assert: (detectedElement descendentElementsDetect: [:each | each isNamed: 'prefix:four']) isNil.
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testDescendentElementsDetectIfNone [
+XMLNodeWithElementsTest >> testDescendentElementsDetectIfNone [
 	| nodeWithElements descendentElements detectedElement |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	descendentElements := nodeWithElements descendentElements.
 	detectedElement :=
 		nodeWithElements
-			descendentElementsDetect: [:each | each isNamed: 'prefix:c1']
-			ifNone: ['absent'].
+			descendentElementsDetect: [:each | each isNamed: 'prefix:four']
+			ifNone: [#absent].
 	self
-		deny: detectedElement = 'absent';
-		assert: (detectedElement isNamed: 'prefix:c1').
+		deny: detectedElement = #absent;
+		assert: (detectedElement isNamed: 'prefix:four').
 	self assert:	
 		detectedElement ==
 			(descendentElements
-				detect: [:each | each isNamed: 'prefix:c1'] 
-				ifNone: ['absent']).
+				detect: [:each | each isNamed: 'prefix:four'] 
+				ifNone: [#absent]).
 	self assert:
 		(detectedElement
-			descendentElementsDetect: [:each | each isNamed: 'prefix:c1']
-			ifNone: ['absent']) = 'absent'.
+			descendentElementsDetect: [:each | each isNamed: 'prefix:four']
+			ifNone: [#absent]) = #absent.
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testDescendentElementsDo [
+XMLNodeWithElementsTest >> testDescendentElementsDo [
 	| nodeWithElements descendentElements |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	descendentElements := nodeWithElements descendentElements.
 	self
 		should: [:block | nodeWithElements descendentElementsDo: block]
@@ -816,54 +723,57 @@ XMLNodesWithElementsTest >> testDescendentElementsDo [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testDescendentElementsNamed [
+XMLNodeWithElementsTest >> testDescendentElementsNamed [
 	| nodeWithElements descendentElements namedElements |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	descendentElements := nodeWithElements descendentElements.
-	namedElements := nodeWithElements descendentElementsNamed: 'c1'. 
+	namedElements := nodeWithElements descendentElementsNamed: 'four'. 
 	self
-		assert: namedElements size = 2;
+		assert: namedElements size = 3;
 		assertList: namedElements selects: (descendentElements
-		select: [:each | each isNamed: 'c1']).
+		select: [:each | each isNamed: 'four']).
 
 	namedElements do: [:each |
-		self assert: (each descendentElementsNamed: 'c1') isEmpty]
+		self assert: (each descendentElementsNamed: 'four') isEmpty]
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testDescendentElementsNamedDo [
+XMLNodeWithElementsTest >> testDescendentElementsNamedDo [
 	| nodeWithElements descendentElements namedElements |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	descendentElements := nodeWithElements descendentElements.
-	namedElements := nodeWithElements descendentElementsNamed: 'c1'. 
+	namedElements := nodeWithElements descendentElementsNamed: 'four'. 
 	self
-		should: [:block | nodeWithElements descendentElementsNamed: 'c1' do: block]
+		should: [:block | nodeWithElements descendentElementsNamed: 'four' do: block]
 		enumerate: namedElements.
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testDescendentElementsNamedNamespaceURI [
+XMLNodeWithElementsTest >> testDescendentElementsNamedNamespaceURI [
 	| nodeWithElements descendentElements namedElements |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	descendentElements := nodeWithElements descendentElements.
-	namedElements := nodeWithElements descendentElementsNamed: 'c1' namespaceURI: 'testNS'. 
+	namedElements :=
+		nodeWithElements
+			descendentElementsNamed: 'four'
+			namespaceURI: 'testNS'. 
 	self
-		assert: namedElements size = 1;
+		assert: namedElements size = 2;
 		assertList: namedElements
 		selects:
 			(descendentElements select: [:each |
-				(each isNamed: 'c1')
+				(each isNamed: 'four')
 					and: [each namespaceURI = 'testNS']]).
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testDescendentElementsSelect [
+XMLNodeWithElementsTest >> testDescendentElementsSelect [
 	| nodeWithElements descendentElements |
 
-	nodeWithElements := self newNodesWithElements.
+	nodeWithElements := self newNodeWithElements.
 	descendentElements := nodeWithElements descendentElements.
 	self
 		assertList: (nodeWithElements descendentElementsSelect: [:each | each hasChildren])
@@ -876,107 +786,20 @@ XMLNodesWithElementsTest >> testDescendentElementsSelect [
 ]
 
 { #category : #tests }
-XMLNodesWithElementsTest >> testDescendentNodes [
-	| nodeWithElements descendentNodes |
+XMLNodeWithElementsTest >> testInnerXML [
+	| node element |
 
-	nodeWithElements := self newNodesWithElements.
-	descendentNodes := nodeWithElements descendentNodes.
+	node := self nodeClass new.
+	element :=
+		node addNode:
+			(XMLElement name: 'test' namespaces: (Array with: 'prefix'-> 'ns')).
+	element innerXML: '<prefix:inner></prefix:inner>'.
+	element firstNode innerXML: 'test<!--comment-->'.
 	self
-		assertList: descendentNodes
-		selects: nodeWithElements allNodes allButFirst.
-
-	descendentNodes do: [:node |
-		node isElement
-			ifTrue: [
-				self
-					assertList: node descendentNodes
-					selects: node allNodes allButFirst]].
-]
-
-{ #category : #tests }
-XMLNodesWithElementsTest >> testDescendentNodesCollect [
-	| nodeWithElements descendentNodes |
-
-	nodeWithElements := self newNodesWithElements.
-	descendentNodes := nodeWithElements descendentNodes.
-	self
-		assertList: (nodeWithElements descendentNodesCollect: [:each | each identityHash])
-		collects: (descendentNodes collect: [:each | each identityHash]).
-
-	descendentNodes do: [:node |
-		node isElement
-			ifTrue: [
-				self
-					assertList: (node descendentNodesCollect: [:each | each identityHash])
-					collects: (node descendentNodes collect: [:each | each identityHash])]].
-]
-
-{ #category : #tests }
-XMLNodesWithElementsTest >> testDescendentNodesDetect [
-	| nodeWithElements descendentNodes detectedNode |
-
-	nodeWithElements := self newNodesWithElements.
-	descendentNodes := nodeWithElements descendentNodes.
-	detectedNode := nodeWithElements descendentNodesDetect: [:each | each isPI].
-	self
-		assert: detectedNode notNil;
-		assert: detectedNode isPI;
-		assert: detectedNode == (descendentNodes detect: [:each | each isPI]);
-		assert: (nodeWithElements descendentNodesDetect: [:each | each isDeclaration]) isNil.
-]
-
-{ #category : #tests }
-XMLNodesWithElementsTest >> testDescendentNodesDetectIfNone [
-	| nodeWithElements descendentNodes detectedNode |
-
-	nodeWithElements := self newNodesWithElements.
-	descendentNodes := nodeWithElements descendentNodes.
-	detectedNode :=
-		nodeWithElements
-			descendentNodesDetect: [:each | each isPI]
-			ifNone: ['absent'].
-	self
-		deny: detectedNode = 'absent';
-		assert: detectedNode isPI;
-		assert: detectedNode == (descendentNodes detect: [:each | each isPI] ifNone: ['absent']);
-		assert:
-			(nodeWithElements
-				descendentNodesDetect: [:each | each isDeclaration]
-				ifNone: ['absent']) = 'absent'.
-]
-
-{ #category : #tests }
-XMLNodesWithElementsTest >> testDescendentNodesDo [
-	| nodeWithElements descendentNodes |
-
-	nodeWithElements := self newNodesWithElements.
-	descendentNodes := nodeWithElements descendentNodes.
-	self
-		should: [:block | nodeWithElements descendentNodesDo: block]
-		enumerate: descendentNodes.
-
-	descendentNodes do: [:node |
-		node isElement
-			ifTrue: [
-				self
-					should: [:block | node descendentNodesDo: block]
-					enumerate: node descendentNodes]].
-]
-
-{ #category : #tests }
-XMLNodesWithElementsTest >> testDescendentNodesSelect [
-	| nodeWithElements descendentNodes |
-
-	nodeWithElements := self newNodesWithElements.
-	descendentNodes := nodeWithElements descendentNodes.
-	self
-		assertList: (nodeWithElements descendentNodesSelect: [:each | each isElement])
-		selects: (descendentNodes select: [:each | each isElement]).
-
-	descendentNodes do: [:node |
-		node isElement
-			ifTrue: [
-				self
-					assertList: (node descendentNodesSelect: [:each | each isElement])
-					selects: (node descendentNodes select: [:each | each isElement])]].
+		assert: element nodes size = 1;
+		assert: (element firstNode isNamed: 'prefix:inner');
+		assert: (element firstNode contentString = 'test');
+		assert: node innerXML = '<test xmlns:prefix="ns"><prefix:inner>test</prefix:inner></test>';
+		assert: element innerXML = '<prefix:inner xmlns:prefix="ns">test</prefix:inner>';
+		assert: element firstNode innerXML = 'test'.
 ]

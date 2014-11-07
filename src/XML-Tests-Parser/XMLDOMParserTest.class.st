@@ -368,16 +368,17 @@ XMLDOMParserTest >> testDoctypeDeclaration [
 
 { #category : #tests }
 XMLDOMParserTest >> testDocument [
-	| document |
+	| document root |
 
 	document := XMLDOMParser parse: self addressBookXML.
 	document allNodesDo: [:each | self assert: each document == document].
 
-	document root innerXML: self addressBookXML.
+	root := document root.
+	root innerXML: self addressBookXML.
 	document allNodesDo: [:each | self assert: each document == document].
 
-	(document removeNode: (document root))
-		allNodesDo: [:each | self assert: each document isNil].
+	document removeNode: root.
+	root allNodesDo: [:each | self assert: each document isNil].
 ]
 
 { #category : #tests }

@@ -12,6 +12,20 @@ XMLNodeTest class >> shouldInheritSelectors [
 	^ true
 ]
 
+{ #category : #assertions }
+XMLNodeTest >> assertList: aList collects: aSecondList [
+	self
+		assert: aList = aSecondList;
+		assert: aList class == self collectListClass.
+]
+
+{ #category : #assertions }
+XMLNodeTest >> assertList: aList selects: aSecondList [
+	self
+		assert: aList = aSecondList;
+		assert: aList class == self selectNodeListClass.
+]
+
 { #category : #tests }
 XMLNodeTest >> assertNode: aNode hasName: aQualifiedName namespaceURI: aUri [
 	| prefix localName |
@@ -60,6 +74,11 @@ XMLNodeTest >> assertNode: aNode hasTypes: aTypeArray [
 ]
 
 { #category : #accessing }
+XMLNodeTest >> collectListClass [
+	^ XMLOrderedList
+]
+
+{ #category : #accessing }
 XMLNodeTest >> createNodes: aNumber with: aBlock [
 	^ ((1 to: aNumber)
 		collect: [:i | aBlock valueWithPossibleArgument: i])
@@ -91,7 +110,7 @@ XMLNodeTest >> intersperseWithNodes: aNodeCollection [
 
 { #category : #accessing }
 XMLNodeTest >> markupString [
-	^ '<test name="&value;"/>'
+	^ '<test name="&name;">''&value;''</test>'
 ]
 
 { #category : #accessing }
@@ -114,6 +133,11 @@ XMLNodeTest >> nodeClass [
 { #category : #accessing }
 XMLNodeTest >> nodeTypes [
 	^ #()
+]
+
+{ #category : #accessing }
+XMLNodeTest >> selectNodeListClass [
+	^ XMLNodeList
 ]
 
 { #category : #assertions }
