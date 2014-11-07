@@ -120,33 +120,55 @@ XMLStringTest >> testEndsWith [
 ]
 
 { #category : #tests }
-XMLStringTest >> testIncludesString [
+XMLStringTest >> testIncludesSubstring [
 	| node |
 
 	node := self nodeClass new.
 	self
-		deny: (node includesString: 'one');
-		deny: (node includesString: (self nodeClass string: 'one')).
+		deny: (node includesSubstring: 'one');
+		deny: (node includesSubstring: (self nodeClass string: 'one')).
 	node prepend: 'one'.
 	self
-		assert: (node includesString: 'one');
-		assert: (node includesString: (self nodeClass string: 'one')).
+		assert: (node includesSubstring: 'one');
+		assert: (node includesSubstring: (self nodeClass string: 'one')).
 
 	self
-		deny: (node includesString: 'three');
-		deny: (node includesString: (self nodeClass string: 'three')).
+		deny: (node includesSubstring: 'three');
+		deny: (node includesSubstring: (self nodeClass string: 'three')).
 	node append: 'three'.
 	self
-		assert: (node includesString: 'three');
-		assert: (node includesString: (self nodeClass string: 'three')).
+		assert: (node includesSubstring: 'three');
+		assert: (node includesSubstring: (self nodeClass string: 'three')).
 
 	self
-		deny: (node includesString: 'onetwothree');
-		deny: (node includesString: (self nodeClass string: 'onetwothree')).
+		deny: (node includesSubstring: 'onetwothree');
+		deny: (node includesSubstring: (self nodeClass string: 'onetwothree')).
 	node replaceFrom: 4 to: 3 with: 'two'.
 	self
-		assert: (node includesString: 'onetwothree');
-		assert: (node includesString: (self nodeClass string: 'onetwothree')).
+		assert: (node includesSubstring: 'onetwothree');
+		assert: (node includesSubstring: (self nodeClass string: 'onetwothree')).
+]
+
+{ #category : #tests }
+XMLStringTest >> testIndexOfSubstring [
+	| node |
+
+	node := self nodeClass new.
+	self
+		assert: (node indexOfSubstring: 'one') isZero;
+		assert: (node indexOfSubstring: (self nodeClass string: 'one')) isZero.
+	node prepend: 'one'.
+	self
+		assert: (node indexOfSubstring: 'one') = 1;
+		assert: (node indexOfSubstring: (self nodeClass string: 'one')) = 1.
+
+	self
+		assert: (node indexOfSubstring: 'two') isZero;
+		assert: (node indexOfSubstring: (self nodeClass string: 'two')) isZero.
+	node append: 'two'.
+	self
+		assert: (node indexOfSubstring: 'two') = 4;
+		assert: (node indexOfSubstring: (self nodeClass string: 'two')) = 4.
 ]
 
 { #category : #tests }

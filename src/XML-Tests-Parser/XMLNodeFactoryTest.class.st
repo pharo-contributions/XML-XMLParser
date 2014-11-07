@@ -79,7 +79,8 @@ XMLNodeFactoryTest >> testCDataCreation [
 	| factory document cdata |
 
 	factory := self newFactory.
-	document := factory newDocument.
+	(document := factory newDocument)
+		nodeFactory: factory.
 	cdata := document newCData: 'test'.
 	self
 		assert: cdata class == self cdataClass;
@@ -91,7 +92,8 @@ XMLNodeFactoryTest >> testCommentCreation [
 	| factory document comment |
 
 	factory := self newFactory.
-	document := factory newDocument.
+	(document := factory newDocument)
+		nodeFactory: factory.
 	comment := document newComment: 'test'.
 	self
 		assert: comment class == self commentClass;
@@ -103,7 +105,8 @@ XMLNodeFactoryTest >> testDocumentCreation [
 	| factory document newDocument |
 
 	factory := self newFactory.
-	document := factory newDocument.
+	(document := factory newDocument)
+		nodeFactory: factory.
 	newDocument := document newDocument.
 	self
 		assert: newDocument class == self documentClass;
@@ -116,7 +119,8 @@ XMLNodeFactoryTest >> testElementCreation [
 	| factory document element |
 
 	factory := self newFactory.
-	document := factory newDocument.
+	(document := factory newDocument)
+		nodeFactory: factory.
 	element := document newElement.
 	self
 		assert: element class == self elementClass;
@@ -141,12 +145,12 @@ XMLNodeFactoryTest >> testElementCreation [
 
 { #category : #tests }
 XMLNodeFactoryTest >> testPICreation [
-	| factory document pi |
+	| factory document |
 
 	factory := self newFactory.
-	document := factory newDocument.
-	pi := document newPI.
-	self assert: pi class == self piClass.
+	(document := factory newDocument)
+		nodeFactory: factory.
+	self assert: document newPI class == self piClass.
 ]
 
 { #category : #tests }
@@ -188,7 +192,8 @@ XMLNodeFactoryTest >> testStringCreation [
 	| factory document string |
 
 	factory := self newFactory.
-	document := factory newDocument.
+	(document := factory newDocument)
+		nodeFactory: factory.
 	string := document newString: 'test'.
 	self
 		assert: string class == self stringClass;

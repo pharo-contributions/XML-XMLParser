@@ -727,6 +727,32 @@ XMLOrderedListTest >> testDefaultValue [
 ]
 
 { #category : #tests }
+XMLOrderedListTest >> testDetect [
+	| list |
+
+	list := self listWithElements.
+	self listElements do: [:element |
+		self assert: (list detect: [:each | each = element]) = element].
+	self assert: (list detect: [:each | each = self absentElement]) = self defaultValue.
+]
+
+{ #category : #tests }
+XMLOrderedListTest >> testDetectIfNone [
+	| list |
+
+	list := self listWithElements.
+	self listElements do: [:element |
+		self assert:
+			(list
+				detect: [:each | each = element]
+				ifNone: [self newElement]) = element].
+	self assert:
+		(list
+			detect: [:each | each = self absentElement]
+			ifNone: [self newElement]) = self newElement.
+]
+
+{ #category : #tests }
 XMLOrderedListTest >> testDo [
 	self
 		should: [:block | self emptyList do: block] enumerate: #();
