@@ -63,11 +63,11 @@ XMLNodeWithChildren >> allNodes [
 
 { #category : #enumerating }
 XMLNodeWithChildren >> allNodesCollect: aBlock [
-	| collectedNodes |
+	| collectedObjects |
 
-	collectedNodes := self newNodeListForCollect.
-	self allNodesDo: [:each | collectedNodes addLast: (aBlock value: each)].
-	^ collectedNodes.
+	collectedObjects := self newListForCollect.
+	self allNodesDo: [:each | collectedObjects addLast: (aBlock value: each)].
+	^ collectedObjects.
 ]
 
 { #category : #enumerating }
@@ -77,7 +77,9 @@ XMLNodeWithChildren >> allNodesDetect: aBlock [
 
 { #category : #enumerating }
 XMLNodeWithChildren >> allNodesDetect: aBlock ifNone: anExceptionBlock [
-	self allNodesDo: [:each | (aBlock value: each) ifTrue: [^ each]].
+	self allNodesDo: [:each |
+		(aBlock value: each)
+			ifTrue: [^ each]].
 	^ anExceptionBlock value.
 ]
 
@@ -94,6 +96,54 @@ XMLNodeWithChildren >> allNodesSelect: aBlock [
 
 	selectedNodes := self newNodeListForSelect.
 	self allNodesDo: [:each |
+		(aBlock value: each)
+			ifTrue: [selectedNodes addLast: each]].
+	^ selectedNodes.
+]
+
+{ #category : #accessing }
+XMLNodeWithChildren >> descendentNodes [
+	| descendentNodes |
+
+	descendentNodes := self newNodeListForSelect.
+	self descendentNodesDo: [:each | descendentNodes addLast: each].
+	^ descendentNodes.
+]
+
+{ #category : #enumerating }
+XMLNodeWithChildren >> descendentNodesCollect: aBlock [
+	| collectedObjects |
+
+	collectedObjects := self newListForCollect.
+	self descendentNodesDo: [:each | collectedObjects addLast: (aBlock value: each)].
+	^ collectedObjects.
+]
+
+{ #category : #enumerating }
+XMLNodeWithChildren >> descendentNodesDetect: aBlock [
+	^ self descendentNodesDetect: aBlock ifNone: [nil]
+]
+
+{ #category : #enumerating }
+XMLNodeWithChildren >> descendentNodesDetect: aBlock ifNone: anExceptionBlock [
+	self descendentNodesDo: [:each |
+		(aBlock value: each)
+			ifTrue: [^ each]].
+	^ anExceptionBlock value.
+]
+
+{ #category : #enumerating }
+XMLNodeWithChildren >> descendentNodesDo: aBlock [
+	self hasChildren
+		ifTrue: [self nodesDo: [:each | each allNodesDo: aBlock]]
+]
+
+{ #category : #enumerating }
+XMLNodeWithChildren >> descendentNodesSelect: aBlock [
+	| selectedNodes |
+
+	selectedNodes := self newNodeListForSelect.
+	self descendentNodesDo: [:each |
 		(aBlock value: each)
 			ifTrue: [selectedNodes addLast: each]].
 	^ selectedNodes.

@@ -69,11 +69,11 @@ XMLNodeWithElements >> allElements [
 
 { #category : #enumerating }
 XMLNodeWithElements >> allElementsCollect: aBlock [
-	| collectedElements |
+	| collectedObjects |
 
-	collectedElements := self newNodeListForCollect.
-	self allElementsDo: [:each | collectedElements addLast: (aBlock value: each)].
-	^ collectedElements.
+	collectedObjects := self newListForCollect.
+	self allElementsDo: [:each | collectedObjects addLast: (aBlock value: each)].
+	^ collectedObjects.
 ]
 
 { #category : #enumerating }
@@ -91,7 +91,9 @@ XMLNodeWithElements >> allElementsDetect: aBlock ifNone: anExceptionBlock [
 	of aBlock with an element is true, then return that element. If no evaluation is
 	true, then return nil."
 
-	self allElementsDo: [:each | (aBlock value: each) ifTrue: [^ each]].
+	self allElementsDo: [:each |
+		(aBlock value: each)
+			ifTrue: [^ each]].
 	^ anExceptionBlock value.
 ]
 
@@ -173,6 +175,73 @@ XMLNodeWithElements >> contentString: aString [
 { #category : #accessing }
 XMLNodeWithElements >> contentStringAt: aName [
 	^ self nodes contentStringAt: aName
+]
+
+{ #category : #accessing }
+XMLNodeWithElements >> descendentElements [
+	| descendentElements |
+
+	descendentElements := self newNodeListForSelect.
+	self descendentElementsDo: [:each | descendentElements addLast: each].
+	^ descendentElements.
+]
+
+{ #category : #enumerating }
+XMLNodeWithElements >> descendentElementsCollect: aBlock [
+	| collectedObjects |
+
+	collectedObjects := self newListForCollect.
+	self descendentElementsDo: [:each | collectedObjects addLast: (aBlock value: each)].
+	^ collectedObjects.
+]
+
+{ #category : #enumerating }
+XMLNodeWithElements >> descendentElementsDetect: aBlock [
+	^ self descendentElementsDetect: aBlock ifNone: [nil]
+]
+
+{ #category : #enumerating }
+XMLNodeWithElements >> descendentElementsDetect: aBlock ifNone: anExceptionBlock [
+	self descendentElementsDo: [:each |
+		(aBlock value: each)
+			ifTrue: [^ each]].
+	^ anExceptionBlock value.
+]
+
+{ #category : #enumerating }
+XMLNodeWithElements >> descendentElementsDo: aBlock [
+	self hasChildren
+		ifTrue: [self elementsDo: [:each | each allElementsDo: aBlock]]
+]
+
+{ #category : #accessing }
+XMLNodeWithElements >> descendentElementsNamed: aName [
+	^ self descendentElementsSelect: [:each | each isNamed: aName]
+]
+
+{ #category : #enumerating }
+XMLNodeWithElements >> descendentElementsNamed: aName do: aBlock [
+	self descendentElementsDo: [:each |
+		(each isNamed: aName)
+			ifTrue: [aBlock value: each]]
+]
+
+{ #category : #accessing }
+XMLNodeWithElements >> descendentElementsNamed: aName namespaceURI: aUri [
+	^ self descendentElementsSelect: [:each |
+		(each isNamed: aName)
+			and: [each namespaceURI = aUri]]
+]
+
+{ #category : #enumerating }
+XMLNodeWithElements >> descendentElementsSelect: aBlock [
+	| selectedElements |
+
+	selectedElements := self newNodeListForSelect.
+	self descendentElementsDo: [:each |
+		(aBlock value: each)
+			ifTrue: [selectedElements addLast: each]].
+	^ selectedElements.
 ]
 
 { #category : #accessing }

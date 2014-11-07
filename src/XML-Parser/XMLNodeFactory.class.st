@@ -83,27 +83,24 @@ XMLNodeFactory >> newComment: aString [
 { #category : #'instance creation' }
 XMLNodeFactory >> newDocument [
 	^ self documentClass new
-		nodeFactory: self
 ]
 
 { #category : #'instance creation' }
 XMLNodeFactory >> newElement [
 	^ self elementClass new
-		nodeFactory: self
 ]
 
 { #category : #'instance creation' }
 XMLNodeFactory >> newElementNamed: aName [
-	^ (self classForElement: aName) new
-		name: aName;
-		nodeFactory: self
+	^ (self classForElement: aName)
+		named: aName
 ]
 
 { #category : #'instance creation' }
 XMLNodeFactory >> newElementNamed: aName namespaceURI: aUri [
-	^ (self classForElement: aName namespaceURI: aUri) new
-		name: aName namespaceURI: aUri;
-		nodeFactory: self
+	^ (self classForElement: aName namespaceURI: aUri)
+		name: aName
+		namespaceURI: aUri
 ]
 
 { #category : #'instance creation' }

@@ -314,6 +314,16 @@ XMLOrderedList >> defaultValue [
 ]
 
 { #category : #enumerating }
+XMLOrderedList >> detect: aBlock [
+	^ self detect: aBlock ifNone: [self defaultValue]
+]
+
+{ #category : #enumerating }
+XMLOrderedList >> detect: aBlock ifNone: anExceptionBlock [
+	^ collection detect: aBlock ifNone: anExceptionBlock
+]
+
+{ #category : #enumerating }
 XMLOrderedList >> do: aBlock [
 	collection do: aBlock
 ]

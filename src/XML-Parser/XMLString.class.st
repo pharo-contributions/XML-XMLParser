@@ -69,8 +69,13 @@ XMLString >> endsWith: aStringOrStringNode [
 ]
 
 { #category : #testing }
-XMLString >> includesString: aStringOrStringNode [
-	^ self string includesSubstring: aStringOrStringNode asString
+XMLString >> includesSubstring: aStringOrStringNode [
+	^ (self indexOfSubstring: aStringOrStringNode) > 0
+]
+
+{ #category : #accessing }
+XMLString >> indexOfSubstring: aStringOrStringNode [
+	^ self string findString: aStringOrStringNode asString startingAt: 1
 ]
 
 { #category : #testing }

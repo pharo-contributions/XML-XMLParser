@@ -26,6 +26,24 @@ XMLNode >> allNodesDo: aBlock [
 ]
 
 { #category : #accessing }
+XMLNode >> ancestorElements [
+	| ancestorElements |
+
+	ancestorElements := self newNodeListForSelect.
+	self ancestorElementsDo: [:each | ancestorElements addLast: each].
+	^ ancestorElements.
+]
+
+{ #category : #enumerating }
+XMLNode >> ancestorElementsDo: aBlock [
+	self parent
+		ifNotNil: [:node |
+			node isElement
+				ifTrue: [aBlock value: node].
+			node ancestorElementsDo: aBlock]
+]
+
+{ #category : #accessing }
 XMLNode >> ancestorNodes [
 	| ancestors |
 
@@ -72,6 +90,10 @@ XMLNode >> configuration [
 XMLNode >> contentString [
  	"This returns the combined content string of all descendants with spaces inserted where necessary."
 	^ String streamContents: [:stream | self printContentOn: stream]
+]
+
+{ #category : #enumerating }
+XMLNode >> descendentNodesDo: aBlock [
 ]
 
 { #category : #accessing }
@@ -150,7 +172,7 @@ XMLNode >> isStringNode: aStringOrStringNode [
 ]
 
 { #category : #private }
-XMLNode >> newNodeListForCollect [
+XMLNode >> newListForCollect [
 	^ XMLOrderedList new
 ]
 
@@ -227,7 +249,7 @@ XMLNode >> printedWithoutSelfClosingTags [
 	^ String streamContents: [:stream | self printWithoutSelfClosingTagsOn: stream]
 ]
 
-{ #category : #printing }
+{ #category : #private }
 XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock [
 	^ self
 		withNewXMLWriterOn: aStream
@@ -235,7 +257,7 @@ XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock [
 		whenAbsent: [self errorXMLWritingUnsupported]
 ]
 
-{ #category : #printing }
+{ #category : #private }
 XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock whenAbsent: aZeroArgBlock [
 	^ aOneArgBlock value:
 		((Smalltalk
