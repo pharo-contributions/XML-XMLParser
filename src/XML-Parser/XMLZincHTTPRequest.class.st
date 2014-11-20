@@ -21,7 +21,7 @@ XMLZincHTTPRequest >> getResponseUpToLimit: aMaxSize withTimeout: aTimeout onErr
 				timeout: aTimeout;
 				ifFail: [:error |
 					(error isKindOf: (Smalltalk at: #ZnEntityTooLarge))
-						ifTrue: [error resignalAs: XMLLimitException]
+						ifTrue: [XMLLimitException signalMessageFrom: error]
 						ifFalse: [error pass]];
 				url: url;
 				get) readStream]]

@@ -21,7 +21,6 @@ Class {
 DTDDFAContentModelParser class >> initialize [
 	"self initialize"
 
-	super initialize.
 	self
 		initializeOperatorApplicators;
 		initializeSpecialCharacterParsers.

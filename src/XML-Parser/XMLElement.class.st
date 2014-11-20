@@ -14,6 +14,7 @@ Class {
 	#superclass : #XMLNodeWithElements,
 	#instVars : [
 		'name',
+		'localName',
 		'attributes',
 		'namespaceScope'
 	],
@@ -86,7 +87,7 @@ XMLElement >> addingAttribute: anAttribute [
 XMLElement >> allElementsDo: aBlock [
 	aBlock value: self.
 	self hasChildren
-		ifTrue: [self elementsDo: [:each | each allElementsDo: aBlock]]
+		ifTrue: [self elementsDo: [:each | each allElementsDo: aBlock]].
 ]
 
 { #category : #accessing }
@@ -177,7 +178,7 @@ XMLElement >> declareNamespaces: aDictionaryOrArray [
 XMLElement >> declarePrefix: aPrefix uri: aUri [
 	| oldMapping |
 
-	(oldMapping := self namespaceScope prefixMappingsAt: aPrefix ifAbsent: [nil]) = aUri
+	(oldMapping := self namespaceScope prefixMappingAt: aPrefix ifAbsent: [nil]) = aUri
 		ifFalse: [
 			self
 				updateEnclosedScopesWith: [:scope | scope mapPrefix: aPrefix to: aUri]
@@ -226,7 +227,7 @@ XMLElement >> errorAddingAttributeWithElement [
 
 { #category : #namespaces }
 XMLElement >> expandedName [
-	^ self nodeName expandWith: self namespaceURI
+	^ self localName expandWithNamespaceURI: self namespaceURI
 ]
 
 { #category : #testing }
@@ -241,7 +242,7 @@ XMLElement >> hasNamespaces [
 
 { #category : #namespaces }
 XMLElement >> hasPrefix [
-	^ self nodeName isPrefixed
+	^ self name size > self localName size
 ]
 
 { #category : #testing }
@@ -258,7 +259,7 @@ XMLElement >> inheritNamespacesFrom: anElement [
 
 { #category : #private }
 XMLElement >> innerXMLContext [
-	^ #inContent
+	^ XMLContentContext new
 ]
 
 { #category : #namespaces }
@@ -289,17 +290,17 @@ XMLElement >> isElementNamedAny: aNameCollection [
 { #category : #testing }
 XMLElement >> isNamed: aName [
 	"Does the receiver's qualified or local name match the argument?'"
-	^ self nodeName isSameAs: aName
+	^ aName
+		isQualifiedName: self name
+		orLocalName: self localName
 ]
 
 { #category : #testing }
 XMLElement >> isNamedAny: aNameCollection [
 	"Does the receiver's qualified or local name match any of the names supplied as the argument?'"
-	aNameCollection do: [:each |
-		"inline isNamed:"
-		(self nodeName isSameAs: each)
-			ifTrue: [^ true]].
-	^ false.
+	^ aNameCollection
+		includesQualifiedName: self name
+		orLocalName: self localName
 ]
 
 { #category : #testing }
@@ -310,23 +311,25 @@ XMLElement >> isRoot [
 
 { #category : #accessing }
 XMLElement >> localName [
-	^ self nodeName localPart
+	^ localName ifNil: [localName := self name localNameAfterPrefix]
 ]
 
 { #category : #accessing }
 XMLElement >> name [
-	^ self nodeName qualified
+	^ name ifNil: [name := '']
 ]
 
 { #category : #accessing }
 XMLElement >> name: aName [
-	self renameWith: [self nodeName qualified: aName]
+	self renameWith: [
+		name := aName.
+		localName := aName localNameAfterPrefix]
 ]
 
 { #category : #namespaces }
 XMLElement >> name: aQualifiedName namespaceURI: aUri [
 	self
-		declarePrefix: (aQualifiedName qualifiedNamePrefix) uri: aUri;
+		declarePrefix: (aQualifiedName prefixBeforeLocalName) uri: aUri;
 		name: aQualifiedName.
 ]
 
@@ -345,11 +348,6 @@ XMLElement >> nextElement [
 	^ self parent ifNotNil: [:node | node elementAfter: self]
 ]
 
-{ #category : #private }
-XMLElement >> nodeName [
-	^ name ifNil: [name := XMLNodeName new]
-]
-
 { #category : #copying }
 XMLElement >> postCopy [
 	super postCopy.
@@ -362,12 +360,12 @@ XMLElement >> postCopy [
 
 { #category : #namespaces }
 XMLElement >> prefix [
-	^ self nodeName prefix
+	^ self name prefixBeforeLocalName: self localName
 ]
 
 { #category : #namespaces }
 XMLElement >> prefix: aPrefix [
-	self renameWith: [self nodeName prefix: aPrefix]
+	self renameWith: [name := self localName qualifyWithPrefix:  aPrefix]
 ]
 
 { #category : #accessing }
@@ -441,8 +439,9 @@ XMLElement >> setNamespaceScope: aNamespaceScope [
 ]
 
 { #category : #initialization }
-XMLElement >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocalName attributes: anAttributeDictionary [
-	name := XMLNodeName qualified: aQualifiedName localPart: aLocalName.
+XMLElement >> setQualifiedName: aQualifiedName localName: aLocalName attributes: anAttributeDictionary [
+	name := aQualifiedName.
+	localName := aLocalName.
 
 	anAttributeDictionary isEmpty "avoid ifNotEmpty: closure overhead"
 		ifFalse: [
@@ -458,7 +457,7 @@ XMLElement >> setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocal
 XMLElement >> undeclarePrefix: aPrefix [
 	| currentMapping |
 
-	currentMapping := self namespaceScope prefixMappingsAt: aPrefix ifAbsent: [^ self].
+	currentMapping := self namespaceScope prefixMappingAt: aPrefix ifAbsent: [^ self].
 	self
 		updateEnclosedScopesWith: [:scope | scope unmapPrefix: aPrefix]
 		whileTrue: [:scope | scope includesPrefix: aPrefix mappedTo: currentMapping]

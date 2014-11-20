@@ -10,14 +10,12 @@ Class {
 	#classVars : [
 		'CharacterDigitValues'
 	],
-	#category : #'XML-Parser-Streams'
+	#category : #'XML-Parser-Util'
 }
 
 { #category : #'class initialization' }
 XMLIntegerReader class >> initialize [
 	"self initialize"
-
-	super initialize.
 
 	"array instead of dictionary for speed"
 	CharacterDigitValues := Array new: 256 withAll: -1.
@@ -48,7 +46,7 @@ XMLIntegerReader class >> maxIntegerValue [
 
 { #category : #'instance creation' }
 XMLIntegerReader class >> on: aStream [
-	^ self new stream: aStream
+	^ self new on: aStream
 ]
 
 { #category : #'instance creation' }
@@ -127,7 +125,7 @@ XMLIntegerReader >> nextIntegerWithBase: aBase upTo: aReadLimit [
 		ifFalse: [Error signal: 'Unsupported base ', aBase printString].
 
 	maxValue := self class maxIntegerValue.
-	maxBaseValue := (maxValue / aBase) asInteger.
+	maxBaseValue := (maxValue / aBase) floor.
 	readLimit := aReadLimit.
 	[self atEnd
 		or: [(readLimit notNil and: [readLimit <= 0])
@@ -146,12 +144,12 @@ XMLIntegerReader >> nextIntegerWithBase: aBase upTo: aReadLimit [
 	^ integer.
 ]
 
-{ #category : #accessing }
-XMLIntegerReader >> peek [
-	^ stream peek
+{ #category : #initialization }
+XMLIntegerReader >> on: aStream [
+	stream := aStream
 ]
 
 { #category : #accessing }
-XMLIntegerReader >> stream: aStream [
-	stream := aStream
+XMLIntegerReader >> peek [
+	^ stream peek
 ]

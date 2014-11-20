@@ -33,32 +33,41 @@ XMLAttribute >> element: anElement [
 
 { #category : #accessing }
 XMLAttribute >> expandedName [
-	^ self nodeName expandWith: self namespaceURI
+	^ self localName expandWithNamespaceURI: self namespaceURI
 ]
 
 { #category : #testing }
 XMLAttribute >> hasPrefix [
-	^ self nodeName isPrefixed
+	^ self name size > self localName size
 ]
 
 { #category : #testing }
 XMLAttribute >> isNamed: aName [
-	^ self nodeName isSameAs: aName
+	^ aName
+		isQualifiedName: self name
+		orLocalName: self localName
+]
+
+{ #category : #testing }
+XMLAttribute >> isNamedAny: aNameCollection [
+	^ aNameCollection
+		includesQualifiedName: self name
+		orLocalName: self localName
 ]
 
 { #category : #accessing }
 XMLAttribute >> localName [
-	^ self nodeName localPart
+	^ self name localNameAfterPrefix
 ]
 
 { #category : #accessing }
 XMLAttribute >> name [
-	^ self nodeName qualified
+	^ name ifNil: [name := '']
 ]
 
 { #category : #accessing }
 XMLAttribute >> name: aName [
-	self renameWith: [self nodeName qualified: aName]
+	self renameWith: [name := aName]
 ]
 
 { #category : #accessing }
@@ -67,11 +76,6 @@ XMLAttribute >> namespaceURI [
 		ifFalse: [^ ''].
 	
 	^ self element resolvePrefix: self prefix.
-]
-
-{ #category : #private }
-XMLAttribute >> nodeName [
-	^ name ifNil: [name := XMLNodeName new]
 ]
 
 { #category : #accessing }
@@ -95,12 +99,12 @@ XMLAttribute >> postCopy [
 
 { #category : #accessing }
 XMLAttribute >> prefix [
-	^ self nodeName prefix
+	^ self name prefixBeforeLocalName: self localName
 ]
 
 { #category : #accessing }
 XMLAttribute >> prefix: aPrefix [
-	self renameWith: [self nodeName prefix: aPrefix]
+	self renameWith: [name := self localName qualifyWithPrefix:  aPrefix]
 ]
 
 { #category : #private }
@@ -120,7 +124,7 @@ XMLAttribute >> renameWith: aBlock [
 
 { #category : #initialization }
 XMLAttribute >> setName: aName value: aValue element: anElement [
-	name := XMLNodeName qualified: aName.
+	name := aName.
 	value := aValue.
 	parent := anElement.
 ]

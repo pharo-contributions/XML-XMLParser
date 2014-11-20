@@ -5,130 +5,107 @@ Class {
 	#name : #XMLTokenContext,
 	#superclass : #Object,
 	#instVars : [
-		'context',
-		'previousContext'
+		'isLiteralValueContext'
 	],
 	#category : #'XML-Parser'
 }
 
-{ #category : #testing }
-XMLTokenContext >> atEnd [
-	^ context == #atEnd
+{ #category : #changing }
+XMLTokenContext >> contentContext [
+	^ XMLContentContext new
 ]
 
-{ #category : #'changing context' }
-XMLTokenContext >> enterAtEnd [
-	context := #atEnd
+{ #category : #changing }
+XMLTokenContext >> doctypeContext [
+	^ XMLDoctypeContext new
 ]
 
-{ #category : #'changing context' }
-XMLTokenContext >> enterContent [
-	context := #inContent
-]
-
-{ #category : #'changing context' }
-XMLTokenContext >> enterDoctype [
-	context := #inDoctype
-]
-
-{ #category : #'changing context' }
-XMLTokenContext >> enterExternalSubset [
-	context := #inExternalSubset
-]
-
-{ #category : #'changing context' }
-XMLTokenContext >> enterExternalSubsetTextDeclaration [
-	context := #inExternalSubsetTextDeclaration
-]
-
-{ #category : #'changing context' }
-XMLTokenContext >> enterInternalSubset [
-	context := #inInternalSubset
-]
-
-{ #category : #'changing context' }
+{ #category : #changing }
 XMLTokenContext >> enterLiteralValue [
-	context := #inLiteralValue
+	isLiteralValueContext := true
 ]
 
-{ #category : #'changing context' }
-XMLTokenContext >> enterProlog [
-	context := #inProlog
+{ #category : #changing }
+XMLTokenContext >> exitLiteralValue [
+	isLiteralValueContext := false
 ]
 
-{ #category : #'changing context' }
-XMLTokenContext >> enterTextDeclaration [
-	context := #inTextDeclaration
+{ #category : #changing }
+XMLTokenContext >> externalSubsetContext [
+	^ XMLExternalSubsetContext new
 ]
 
-{ #category : #testing }
-XMLTokenContext >> isInContent [
-	^ context == #inContent
-]
-
-{ #category : #testing }
-XMLTokenContext >> isInDoctype [
-	^ context == #inDoctype
+{ #category : #changing }
+XMLTokenContext >> internalSubsetContext [
+	^ XMLInternalSubetContext new
 ]
 
 { #category : #testing }
-XMLTokenContext >> isInExternalSubset [
-	^ context == #inExternalSubset
-		or: [self isInExternalSubsetTextDeclaration]
+XMLTokenContext >> isContextContext [
+	^ false
 ]
 
 { #category : #testing }
-XMLTokenContext >> isInExternalSubsetTextDeclaration [
-	^ context == #inExternalSubsetTextDeclaration
+XMLTokenContext >> isDoctypeContext [
+	^ false
 ]
 
 { #category : #testing }
-XMLTokenContext >> isInInternalSubset [
-	^ context == #inInternalSubset
+XMLTokenContext >> isExternalSubsetContext [
+	^ false
 ]
 
 { #category : #testing }
-XMLTokenContext >> isInLiteralValue [
-	^ context == #inLiteralValue
+XMLTokenContext >> isInitializedContext [
+	^ true
 ]
 
 { #category : #testing }
-XMLTokenContext >> isInProlog [
-	^ context == #inProlog
+XMLTokenContext >> isInternalSubsetContext [
+	^ false
 ]
 
 { #category : #testing }
-XMLTokenContext >> isInSubset [
-	^ self isInInternalSubset or: [self isInExternalSubset]
+XMLTokenContext >> isLiteralValueContext [
+	^ isLiteralValueContext ifNil: [isLiteralValueContext := false]
 ]
 
 { #category : #testing }
-XMLTokenContext >> isInTextDeclaration [
-	^ context == #inTextDeclaration
-		or: [self isInExternalSubsetTextDeclaration]
+XMLTokenContext >> isPrologContext [
+	^ false
 ]
 
 { #category : #testing }
-XMLTokenContext >> isInitialized [
-	^ context notNil
+XMLTokenContext >> isSubsetContext [
+	^ false
 ]
 
 { #category : #testing }
-XMLTokenContext >> notInitialized [
-	^ context isNil
+XMLTokenContext >> isTerminatedContext [
+	^ false
 ]
 
-{ #category : #'changing context' }
-XMLTokenContext >> resetPrevious [
-	context := previousContext
+{ #category : #testing }
+XMLTokenContext >> isTextDeclarationContext [
+	^ false
 ]
 
-{ #category : #'changing context' }
-XMLTokenContext >> saveCurrent [
-	previousContext := context
+{ #category : #tokenizing }
+XMLTokenContext >> nextTokenFrom: aTokenizer [
+	self subclassResponsibility
 ]
 
-{ #category : #'changing context' }
-XMLTokenContext >> setContext: aContext [
-	context := aContext
+{ #category : #changing }
+XMLTokenContext >> prologContext [
+	^ XMLPrologContext new
+]
+
+{ #category : #changing }
+XMLTokenContext >> terminatedContext [
+	^ XMLTerminatedContext new
+]
+
+{ #category : #changing }
+XMLTokenContext >> textDeclarationContext [
+	^ XMLTextDeclarationContext previousContext: self
 ]

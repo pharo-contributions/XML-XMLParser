@@ -8,11 +8,11 @@ Class {
 }
 
 { #category : #replacement }
-DTDBypassedParameterEntity >> replacement [
-	^ self asEscapedReference
+DTDBypassedParameterEntity >> constructReplacementOn: aTokenizer [
+	aTokenizer constructReplacementForBypassedParameterEntity: self
 ]
 
 { #category : #replacement }
-DTDBypassedParameterEntity >> replacementForDTDContext [
-	^ ''
+DTDBypassedParameterEntity >> replacement [
+	^ self asEscapedReference
 ]

@@ -224,10 +224,10 @@ XMLCachingNodeList >> renamedElement: anElement from: anOldName to: aNewName [
 	| oldPrefix |
 
 	self elementsByNameAt: anOldName removeElement: anElement.
-	(oldPrefix := anOldName qualifiedNamePrefix)
+	(oldPrefix := anOldName prefixBeforeLocalName)
 		ifNotEmpty: [
 			self
-				elementsByNameAt: (anOldName qualifiedNameLocalPartFromPrefix: oldPrefix)
+				elementsByNameAt: (anOldName localNameAfterPrefix: oldPrefix)
 				removeElement: anElement].
 
 	self elementsByNameAt: anElement name insertElement: anElement.

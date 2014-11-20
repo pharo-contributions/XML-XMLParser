@@ -32,7 +32,6 @@ DTDAttributeDefinitionParser class >> element: anElement attribute: anAttribute 
 DTDAttributeDefinitionParser class >> initialize [
 	"self initialize"
 
-	super initialize.
 	self
 		initializeDefaultValueValidators;
 		initializeNonEnumerationValidators.

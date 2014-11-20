@@ -49,15 +49,13 @@ Class {
 
 { #category : #'instance creation' }
 SAXHandler class >> on: aStringOrStream [
-	^ self
-		on: aStringOrStream
-		documentURI: nil
+	^ self new on: aStringOrStream
 ]
 
 { #category : #'instance creation' }
 SAXHandler class >> on: aStringOrStream documentURI: aUri [
 	^ self new
-		setInput: aStringOrStream
+		on: aStringOrStream
 		documentURI: aUri
 ]
 
@@ -344,6 +342,23 @@ SAXHandler >> notationDeclaration: aName publicID: aPublicId systemID: aSystemId
 
 ]
 
+{ #category : #initialization }
+SAXHandler >> on: aStringOrStream [
+	self
+		on: aStringOrStream
+		documentURI: nil
+]
+
+{ #category : #initialization }
+SAXHandler >> on: aStringOrStream documentURI: aUri [
+	input := aStringOrStream.
+	documentUri := aUri.
+	configuration
+		ifNil: [configuration := self configurationClass new].
+	isInInternalSubset := false.
+	isInCDataSection := false.
+]
+
 { #category : #declaration }
 SAXHandler >> parameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
 ]
@@ -443,15 +458,6 @@ SAXHandler >> resolvesExternalEntities: aBoolean [
 	fetched (not default)."
 
 	self configuration resolvesExternalEntities: aBoolean
-]
-
-{ #category : #initialization }
-SAXHandler >> setInput: aStringOrStream documentURI: aUri [
-	input := aStringOrStream.
-	documentUri := aUri.
-	configuration := self configurationClass new.
-	isInInternalSubset := false.
-	isInCDataSection := false.
 ]
 
 { #category : #content }

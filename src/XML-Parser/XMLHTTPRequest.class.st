@@ -1,9 +1,9 @@
 "
-A base class for HTTP requests. Subclasses need to implement the abstract requesting method to return a ReadStream on the respone or raise an exception if it is too large or an HTTP error happens. The class defaultImplementation method should return the subclass to use for this platform.
+A base class for HTTP requests. Subclasses need to implement the abstract requesting method to return a ReadStream on the respone or raise an exception if it is too large or an HTTP error happens.
 "
 Class {
 	#name : #XMLHTTPRequest,
-	#superclass : #Object,
+	#superclass : #XMLAbstractImplementation,
 	#instVars : [
 		'url'
 	],
@@ -16,35 +16,8 @@ XMLHTTPRequest class >> errorUnsupported [
 ]
 
 { #category : #private }
-XMLHTTPRequest class >> implementation [
-	^ self == XMLHTTPRequest
-		ifTrue: [self selectImplementation]
-		ifFalse: [self]
-]
-
-{ #category : #testing }
-XMLHTTPRequest class >> isSupported [
-	^ false
-]
-
-{ #category : #'instance creation' }
-XMLHTTPRequest class >> new [
-	^ self implementation basicNew initialize
-]
-
-{ #category : #private }
 XMLHTTPRequest class >> preferredImplementation [
 	^ XMLZincHTTPRequest
-]
-
-{ #category : #private }
-XMLHTTPRequest class >> selectImplementation [
-	self preferredImplementation isSupported
-		ifTrue: [^ self preferredImplementation].
-	self allSubclassesDo: [:each |
-		each isSupported
-			ifTrue: [^ each]].
-	self errorUnsupported.
 ]
 
 { #category : #'instance creation' }
@@ -78,7 +51,7 @@ XMLHTTPRequest >> getUpToLimit: aMaxSize [
 					error
 						messageText: 'HTTP reponse limit exceeded';
 						pass]
-				ifFalse: [error resignalAs: XMLHTTPException]]
+				ifFalse: [XMLHTTPException signalMessageFrom: error]]
 ]
 
 { #category : #accessing }

@@ -150,11 +150,5 @@ XMLDocumentValidator >> validateXMLIDAttributeIn: anAttributeDictionary [
 
 { #category : #private }
 XMLDocumentValidator >> xmlIDValidator [
-	^ xmlIdValidator ifNil: [
-		xmlIdValidator :=
-			XMLIDAttributeValidator
-				element: ''
-				attribute: 'xml:id'
-				defaultValueValidator:
-					(XMLImpliedValueAttributeValidator attribute: 'xml:id')]
+	^ xmlIdValidator ifNil: [xmlIdValidator := XMLReservedIDAttributeValidator new]
 ]

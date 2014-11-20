@@ -19,8 +19,6 @@ Class {
 DTDValueListParser class >> initialize [
 	"self initialize"
 
-	super initialize.
-
 	(ListValueDelimiters := BitmapCharacterSet new)
 		add: $|;
 		add: $);

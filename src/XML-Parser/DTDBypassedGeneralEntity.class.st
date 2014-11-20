@@ -8,6 +8,6 @@ Class {
 }
 
 { #category : #replacement }
-DTDBypassedGeneralEntity >> replacement [
-	^ self asEscapedReference
+DTDBypassedGeneralEntity >> constructReplacementOn: aTokenizer [
+	aTokenizer constructReplacementForBypassedGeneralEntity: self
 ]

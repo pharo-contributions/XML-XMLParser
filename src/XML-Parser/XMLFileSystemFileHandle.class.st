@@ -51,17 +51,3 @@ XMLFileSystemFileHandle >> fileSystemError [
 XMLFileSystemFileHandle >> isFile [
 	^ self fileReference isFile
 ]
-
-{ #category : #private }
-XMLFileSystemFileHandle >> readStreamOnFileOrDo: aBlock [
-	^ [self fileReference readStream]
-		on: self fileSystemError
-		do: aBlock
-]
-
-{ #category : #private }
-XMLFileSystemFileHandle >> writeStreamOnFileOrDo: aBlock [
-	^ [self fileReference writeStream]
-		on: self fileSystemError
-		do: aBlock
-]

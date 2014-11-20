@@ -195,6 +195,22 @@ XMLNodeWithChildren >> nodeAfter: aNode [
 ]
 
 { #category : #accessing }
+XMLNodeWithChildren >> nodeAt: anIndex [
+	"returns nil if absent"
+	^ self nodes at: anIndex
+]
+
+{ #category : #accessing }
+XMLNodeWithChildren >> nodeAt: anIndex ifAbsent: aBlock [
+	^ self nodes at: anIndex ifAbsent: aBlock
+]
+
+{ #category : #accessing }
+XMLNodeWithChildren >> nodeAt: anIndex put: aNode [
+	^ self nodes at: anIndex put: aNode
+]
+
+{ #category : #accessing }
 XMLNodeWithChildren >> nodeBefore: aNode [
 	^ self nodes before: aNode
 ]
@@ -250,6 +266,11 @@ XMLNodeWithChildren >> postCopy [
 { #category : #removing }
 XMLNodeWithChildren >> removeNode: aNode [
 	^ self nodes remove: aNode
+]
+
+{ #category : #removing }
+XMLNodeWithChildren >> removeNode: aNode ifAbsent: aBlock [
+	^ self nodes remove: aNode ifAbsent: aBlock
 ]
 
 { #category : #removing }

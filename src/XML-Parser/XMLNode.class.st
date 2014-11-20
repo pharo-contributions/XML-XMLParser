@@ -68,6 +68,7 @@ XMLNode >> asString [
 
 { #category : #printing }
 XMLNode >> canonicallyPrintOn: aStream [
+ 	"Prints on aStream as canonical XML"
 	self
 		withNewXMLWriterOn: aStream
 		do: [ :writer | writer
@@ -78,6 +79,7 @@ XMLNode >> canonicallyPrintOn: aStream [
 
 { #category : #printing }
 XMLNode >> canonicallyPrinted [
+ 	"Prints as canonical XML"
 	^ String streamContents: [:stream | self canonicallyPrintOn: stream]
 ]
 
@@ -223,6 +225,8 @@ XMLNode >> previousNode [
 
 { #category : #printing }
 XMLNode >> printContentOn: aStream [
+ 	"Prints on aStream the content strings of all descendants with spaces inserted where necessary."
+	self printRawContentOn: (XMLNodeContentWriteStream on: aStream)
 ]
 
 { #category : #printing }
@@ -231,6 +235,11 @@ XMLNode >> printOn: aStream [
 		withNewXMLWriterOn: aStream
 		do: [ :writer | writer writeWith: [ :wr | self writeXMLOn: wr] ]
 		whenAbsent: [ super printOn: aStream ]
+]
+
+{ #category : #printing }
+XMLNode >> printRawContentOn: aStream [ 
+ 	"Prints on aStream the content strings of all descendants without spaces inserted."
 ]
 
 { #category : #printing }
@@ -247,6 +256,12 @@ XMLNode >> printWithoutSelfClosingTagsOn: aStream [
 { #category : #printing }
 XMLNode >> printedWithoutSelfClosingTags [
 	^ String streamContents: [:stream | self printWithoutSelfClosingTagsOn: stream]
+]
+
+{ #category : #accessing }
+XMLNode >> rawContentString [
+ 	"This returns the combined content string of all descendants without spaces inserted."
+	^ String streamContents: [:stream | self printRawContentOn: stream].
 ]
 
 { #category : #private }

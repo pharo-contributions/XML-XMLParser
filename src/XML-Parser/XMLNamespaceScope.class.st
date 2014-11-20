@@ -130,13 +130,13 @@ XMLNamespaceScope >> hash [
 
 { #category : #testing }
 XMLNamespaceScope >> includesPrefix: aPrefix [
-	self prefixMappingsAt: aPrefix ifAbsent: [^ false].
+	self prefixMappingAt: aPrefix ifAbsent: [^ false].
 	^ true.
 ]
 
 { #category : #testing }
 XMLNamespaceScope >> includesPrefix: aPrefix mappedTo: aUri [
-	^ (self prefixMappingsAt: aPrefix ifAbsent: [^ false]) = aUri
+	^ (self prefixMappingAt: aPrefix ifAbsent: [^ false]) = aUri
 ]
 
 { #category : #initializing }
@@ -177,16 +177,16 @@ XMLNamespaceScope >> postCopy [
 	prefixMappings ifNotNil: [prefixMappings := prefixMappings copy].
 ]
 
-{ #category : #private }
-XMLNamespaceScope >> prefixMappings [
-	^ prefixMappings ifNil: [prefixMappings := OrderPreservingDictionary new: 5 withDefaultValue: '']
-]
-
 { #category : #accessing }
-XMLNamespaceScope >> prefixMappingsAt: aPrefix ifAbsent: aBlock [
+XMLNamespaceScope >> prefixMappingAt: aPrefix ifAbsent: aBlock [
 	^ prefixMappings
 		ifNil: [aBlock value]
 		ifNotNil: [prefixMappings at: aPrefix ifAbsent: aBlock]
+]
+
+{ #category : #private }
+XMLNamespaceScope >> prefixMappings [
+	^ prefixMappings ifNil: [prefixMappings := OrderPreservingDictionary new: 5 withDefaultValue: '']
 ]
 
 { #category : #enumerating }
@@ -218,7 +218,7 @@ XMLNamespaceScope >> resolvePrefix: aPrefix [
 { #category : #resolving }
 XMLNamespaceScope >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 	^ self
-		prefixMappingsAt: aPrefix
+		prefixMappingAt: aPrefix
 		ifAbsent: [
 			aPrefix = 'xml'
 				ifTrue: [self class xmlNamespaceURI]
@@ -241,7 +241,7 @@ XMLNamespaceScope >> unmapPrefix: aPrefix [
 { #category : #private }
 XMLNamespaceScope >> validateAndResolvePrefix: aPrefix [
 	^ self
-		prefixMappingsAt: aPrefix
+		prefixMappingAt: aPrefix
 		ifAbsent: [
 			aPrefix = 'xml'
 				ifTrue: [self class xmlNamespaceURI]
@@ -266,7 +266,7 @@ XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
 	| namespacedAttributes |
 
 	aDictionary keysDo: [:each | | prefix |
-		(prefix := each qualifiedNamePrefix) isEmpty "avoid ifNotEmpty: closure overhead"
+		(prefix := each prefixBeforeLocalName) isEmpty "avoid ifNotEmpty: closure overhead"
 			ifTrue: [self validateUnprefixedName: each]
 			ifFalse: [ | namespace oldSize |
 				"not initialized unless needed"
@@ -276,7 +276,7 @@ XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
 
 				"checking size after is faster than includes:"
 				oldSize := namespacedAttributes size.
-				namespacedAttributes add: namespace, (each qualifiedNameLocalPartFromPrefix: prefix).
+				namespacedAttributes add: namespace, (each localNameAfterPrefix: prefix).
 				namespacedAttributes size > oldSize
 					ifFalse: [self errorAttribute: each aliasesNamespace: namespace]]]
 ]

@@ -50,14 +50,14 @@ DTDParsedEntity >> asReferenceStartingWith: aString [
 	^ (aString, self name) copyWith: $;
 ]
 
-{ #category : #accessing }
-DTDParsedEntity >> escapedReferenceSymbol [
+{ #category : #replacement }
+DTDParsedEntity >> constructReplacementOn: aTokenizer [
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
-DTDParsedEntity >> hasTextDeclaration [
-	^ self replacement beginsWith: '<?xml '
+{ #category : #accessing }
+DTDParsedEntity >> escapedReferenceSymbol [
+	self subclassResponsibility
 ]
 
 { #category : #testing }
@@ -84,21 +84,6 @@ DTDParsedEntity >> referenceSymbol [
 { #category : #replacement }
 DTDParsedEntity >> replacement [
 	^ replacement ifNil: [replacement := '']
-]
-
-{ #category : #replacement }
-DTDParsedEntity >> replacementForLiteralContext [
-	| aReplacement |
-
-	aReplacement := (String new: self replacement size) writeStream.
-	self replacement do: [:each |
-		each ==  $"
-			ifTrue: [aReplacement nextPutAll: '&#34;']
-			ifFalse: [
-				each == $'
-					ifTrue: [aReplacement nextPutAll: '&#39;']
-					ifFalse: [aReplacement nextPut: each]]].
-	^ aReplacement contents.
 ]
 
 { #category : #initialization }

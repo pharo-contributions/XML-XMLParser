@@ -33,7 +33,7 @@ XMLParser >> driver [
 
 { #category : #accessing }
 XMLParser >> initialContext: aContext [
-	self tokenizer initialContext: aContext
+	self tokenizer tokenContext: aContext
 ]
 
 { #category : #parsing }

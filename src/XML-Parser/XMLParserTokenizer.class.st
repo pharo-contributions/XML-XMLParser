@@ -13,8 +13,8 @@ Class {
 		'writeStream',
 		'nameStream'
 	],
-	#classInstVars : [
-		'predefinedEntities'
+	#classVars : [
+		'PredefinedEntities'
 	],
 	#category : #'XML-Parser'
 }
@@ -42,22 +42,22 @@ XMLParserTokenizer class >> driver: aDriver on: aStringOrStream readLimit: aRead
 XMLParserTokenizer class >> initialize [
 	"self initialize"
 
-	super initialize.
-	self initializePredefinedEntities.
-]
-
-{ #category : #'class initialization' }
-XMLParserTokenizer class >> initializePredefinedEntities [
+	(PredefinedEntities := Dictionary new)
+		at: 'lt' put: $<;
+		at: 'gt' put: $>;
+		at: 'amp' put: $&;
+		at: 'apos' put: $';
+		at: 'quot' put: $"
 ]
 
 { #category : #accessing }
 XMLParserTokenizer class >> predefinedEntities [
-	^ predefinedEntities
+	^ PredefinedEntities
 ]
 
 { #category : #testing }
 XMLParserTokenizer >> atEnd [
-	^ context atEnd
+	^ context isTerminatedContext
 ]
 
 { #category : #'entity replacement' }
@@ -68,6 +68,22 @@ XMLParserTokenizer >> characterFromCodePoint: aCodePoint [
 				on: Error
 				do: [:error | nil]]
 		ifFalse: [nil]
+]
+
+{ #category : #'entity replacement' }
+XMLParserTokenizer >> constructReplacementForBypassedGeneralEntity: anEntity [
+]
+
+{ #category : #'entity replacement' }
+XMLParserTokenizer >> constructReplacementForBypassedParameterEntity: anEntity [
+]
+
+{ #category : #'entity replacement' }
+XMLParserTokenizer >> constructReplacementForGeneralEntity: anEntity [
+]
+
+{ #category : #'entity replacement' }
+XMLParserTokenizer >> constructReplacementForParameterEntity: anEntity [
 ]
 
 { #category : #accessing }
@@ -100,11 +116,6 @@ XMLParserTokenizer >> expectUpToAll: aString [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
-XMLParserTokenizer >> initialContext: aContext [
-	context setContext: aContext
-]
-
 { #category : #tokenizing }
 XMLParserTokenizer >> nextAttributeValue [
 	self subclassResponsibility
@@ -120,7 +131,7 @@ XMLParserTokenizer >> nextCDataSection [
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextComment [
-	| comment nextChar |
+	| nextChar |
 
 	"Skip first -"
 	streamReader next.
@@ -131,19 +142,17 @@ XMLParserTokenizer >> nextComment [
 		or: [nextChar == $-
 			and: [(streamReader peek) == $-]]]
 		whileFalse: [writeStream nextPut: nextChar].
-	comment := writeStream contents.
-
 	self
 		expectNext: $-;
 		expectTerminator: $>.
 
-	driver handleComment: comment.
+	driver handleComment: writeStream contents.
 ]
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextContentMarkupToken [
 	streamReader peek == $?
-		ifTrue: [^ self nextPIOrXMLDecl].
+		ifTrue: [^ self nextPIOrXMLDeclaration].
 	streamReader peek == $!
 		ifTrue: [
 			streamReader next.
@@ -164,10 +173,10 @@ XMLParserTokenizer >> nextDecodedCharReference [
 ]
 
 { #category : #'tokenizing - dtd' }
-XMLParserTokenizer >> nextDocTypeDecl [
+XMLParserTokenizer >> nextDoctypeDeclaration [
 	|  root externalId |
 
-	context enterDoctype.
+	context := context doctypeContext.
 	self expectNextAll: 'DOCTYPE'.
 	streamReader skipSeparators.
 
@@ -182,33 +191,32 @@ XMLParserTokenizer >> nextDocTypeDecl [
 	streamReader skipSeparators.
 	streamReader peek == $[
 		ifTrue: [self nextInternalSubsetStart]
-		ifFalse: [self nextEndDocTypeDecl].
+		ifFalse: [self nextEndDoctypeDeclaration].
 ]
 
 { #category : #'tokenizing - dtd' }
-XMLParserTokenizer >> nextEndDocTypeDecl [
+XMLParserTokenizer >> nextEndDoctypeDeclaration [
 	streamReader skipSeparators.
 	self expectTerminator: $>.
-	context enterProlog.
+	context := context prologContext.
 
 	driver handleEndDTD.
 ]
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextEndDocument [
-	context atEnd
+	context isTerminatedContext
 		ifFalse: [
 			streamReader close.
-			context enterAtEnd.
+			context := context terminatedContext.
 			driver handleEndDocument]
 ]
 
 { #category : #'tokenizing - dtd' }
 XMLParserTokenizer >> nextEndInternalSubset [
-	self expectTerminator: $].
-
-	context enterProlog.
-	self nextEndDocTypeDecl.
+	self
+		expectTerminator: $];
+		nextEndDoctypeDeclaration
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -246,7 +254,7 @@ XMLParserTokenizer >> nextGeneralEntityReference [
 XMLParserTokenizer >> nextInternalSubsetStart [
 	"skip ["
 	streamReader next.
-	context enterInternalSubset.
+	context := context internalSubsetContext.
 ]
 
 { #category : #tokenizing }
@@ -260,19 +268,15 @@ XMLParserTokenizer >> nextPCDataToken [
 ]
 
 { #category : #tokenizing }
-XMLParserTokenizer >> nextPIOrXMLDecl [
+XMLParserTokenizer >> nextPIOrXMLDeclaration [
 	| piTarget piData |
 
 	"Skip ?"
 	streamReader next.
 	piTarget := self nextPITarget.
 	(piTarget = 'xml'
-		and: [context isInProlog
-			or: [context isInTextDeclaration]])
-		ifTrue: [^ self nextXMLDecl]
-		ifFalse: [
-			context isInExternalSubsetTextDeclaration
-				ifTrue: [context enterExternalSubset]].
+		and: [context isPrologContext])
+		ifTrue: [^ self nextXMLDeclaration].
 	streamReader skipSeparators.
 	piData := self expectUpToAll: '?>'.
 
@@ -301,7 +305,9 @@ XMLParserTokenizer >> nextPubidLiteral [
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextStartDocument [
-	context setContext: (driver initialContext ifNil: [#inProlog]).
+	context := driver initialContext ifNil: [XMLPrologContext new].
+	context isPrologContext
+		ifTrue: [streamReader detectCurrentEncoding].
 	driver handleStartDocument.
 ]
 
@@ -318,7 +324,7 @@ XMLParserTokenizer >> nextSubsetToken [
 
 	streamReader peek == $%
 		ifTrue: [^ self replaceParameterEntityReference].
-	(context isInInternalSubset and: [streamReader peek == $]])
+	(context isInternalSubsetContext and: [streamReader peek == $]])
 		ifTrue: [^ self nextEndInternalSubset].
 
 	self nextSubsetMarkupToken.
@@ -336,29 +342,10 @@ XMLParserTokenizer >> nextTag [
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextToken [
-	(streamReader atEnd and: [context isInitialized])
+	(context isInitializedContext
+		and: [streamReader atEnd])
 		ifTrue: [^ self nextEndDocument].
-
-	context isInContent
-		ifTrue: [^ self nextContentToken].
-	context isInSubset
-		ifTrue: [^ self nextSubsetToken].
-	context isInProlog
-		ifTrue: [^ self nextPrologToken].
-	context notInitialized 
-		ifTrue: [^ self nextStartDocument].
-
-	self nextEndDocument.
-]
-
-{ #category : #tokenizing }
-XMLParserTokenizer >> nextUnparsedEntityReference [
-	| name |
-
-	name := self nextName.
-	self expectNext: $;.
-
-	^ (driver handleUnparsedEntityReference: name) ifNil: [''].
+	context nextTokenFrom: self.
 ]
 
 { #category : #tokenizing }
@@ -370,30 +357,23 @@ XMLParserTokenizer >> nextXMLAttributeName: aName [
 ]
 
 { #category : #tokenizing }
-XMLParserTokenizer >> nextXMLDecl [
-	| version encoding standalone isTextDeclaration |
+XMLParserTokenizer >> nextXMLDeclaration [
+	| version encoding standalone |
 
-	isTextDeclaration  := context isInTextDeclaration.
-	version := self nextXMLVersionAttributeRequired: isTextDeclaration not.
-	(encoding := self nextXMLEncodingAttributeRequired: isTextDeclaration)
-		ifNotEmpty: [streamReader useConverterForEncoding: encoding].
-	isTextDeclaration
-		ifFalse: [standalone := self nextXMLStandaloneAttribute].
+	version := self nextXMLVersionAttributeRequired: true.
+	(encoding := self nextXMLEncodingAttributeRequired: false)
+		ifNotEmpty: [streamReader convertFromEncoding: encoding].
+	standalone := self nextXMLStandaloneAttribute.
 
 	streamReader skipSeparators.
 	self
 		expectNext: $?;
 		expectTerminator: $>.
 
-	isTextDeclaration
-		ifTrue: [
-			context isInExternalSubsetTextDeclaration
-				ifTrue: [context enterExternalSubset]]
-		ifFalse: [
-			driver
-				handleXMLVersion: version
-				encoding: encoding
-				standalone: standalone].
+	driver
+		handleXMLVersion: version
+		encoding: encoding
+		standalone: standalone.
 ]
 
 { #category : #tokenizing }
@@ -469,7 +449,7 @@ XMLParserTokenizer >> setDriver: aDriver stream: aStream readLimit: aReadLimit [
 			readLimit: aReadLimit).
 	writeStream := WriteStream on: (String new: 128).
 	nameStream := WriteStream on: (String new: 16).
-	context := self tokenContextClass new.
+	context := XMLUnitializedContext new.
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -477,7 +457,7 @@ XMLParserTokenizer >> skipSeparatorsReplacingParameterEntities [
 	"this can be used to replace references within declarations"
 
 	streamReader skipSeparators.
-	context isInExternalSubset
+	context isExternalSubsetContext
 		ifFalse: [^ self].
 	[streamReader peek == $%]
 		whileTrue: [
@@ -496,6 +476,6 @@ XMLParserTokenizer >> tokenContext [
 ]
 
 { #category : #accessing }
-XMLParserTokenizer >> tokenContextClass [
-	self subclassResponsibility
+XMLParserTokenizer >> tokenContext: aTokenContext [
+	context := aTokenContext
 ]

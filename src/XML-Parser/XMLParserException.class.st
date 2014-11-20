@@ -33,6 +33,11 @@ XMLParserException class >> formatSignal: aString withAll: anArray [
 	^ self signal: (aString format: anArray)
 ]
 
+{ #category : #signalling }
+XMLParserException class >> signalMessageFrom: anException [
+	^ self signal: anException messageText
+]
+
 { #category : #appending }
 XMLParserException >> appendLineNumber: aLineNumber [
 	self messageText: self messageText, ' (line ', aLineNumber printString, ')'

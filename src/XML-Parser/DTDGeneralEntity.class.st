@@ -8,6 +8,11 @@ Class {
 	#category : #'XML-Parser-DTD'
 }
 
+{ #category : #replacement }
+DTDGeneralEntity >> constructReplacementOn: aTokenizer [
+	aTokenizer constructReplacementForGeneralEntity: self
+]
+
 { #category : #accessing }
 DTDGeneralEntity >> escapedReferenceSymbol [
 	^ '&amp;'
@@ -16,9 +21,4 @@ DTDGeneralEntity >> escapedReferenceSymbol [
 { #category : #accessing }
 DTDGeneralEntity >> referenceSymbol [
 	^ $&
-]
-
-{ #category : #replacement }
-DTDGeneralEntity >> replacementForContentContext [
-	^ self replacement
 ]

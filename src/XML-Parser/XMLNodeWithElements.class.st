@@ -389,7 +389,7 @@ XMLNodeWithElements >> innerXML: aStringOrStream parsedWith: aParser [
 	self removeNodes.
 
 	aParser
-		pushNode: self;
+		pushInnerXMLRootNode: self;
 		parseDocument.
 ]
 
@@ -481,8 +481,8 @@ XMLNodeWithElements >> parserHandlerClass [
 ]
 
 { #category : #printing }
-XMLNodeWithElements >> printContentOn: aStream [
-	self contentNodesDo: [:each | each printContentOn: aStream]
+XMLNodeWithElements >> printRawContentOn: aStream [
+	self contentNodesDo: [:each | each printRawContentOn: aStream]
 ]
 
 { #category : #notifications }

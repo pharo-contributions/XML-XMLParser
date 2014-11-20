@@ -130,6 +130,15 @@ XMLDOMParser >> notationDeclaration: aName publicID: aPublicId systemID: aSystem
 			systemID: aSystemId)
 ]
 
+{ #category : #initialization }
+XMLDOMParser >> on: aStringOrStream documentURI: aUri [
+	super
+		on: aStringOrStream
+		documentURI: aUri.
+
+	nodeStack := OrderedCollection new: 10.
+]
+
 { #category : #declaration }
 XMLDOMParser >> parameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
 	self topNode addNode:
@@ -152,18 +161,16 @@ XMLDOMParser >> parser [
 	| parser |
 
 	parser := super parser.
-	self nodeStack notEmpty
-		ifTrue: [| root |
-			root := self topNode.
-			self
-				configuration: root configuration;
-				document: root document.
+	self topNode
+		ifNotNil: [:root |
 			parser initialContext: root innerXMLContext.
-			root isElement
-				ifTrue: [
-					parser driver
-						setRootElement: root name
-						currentScope: root namespaceScope]].
+
+			self nodeStack do: [:each |
+				each isElement
+					ifTrue: [
+						self
+							startInnerXMLElement: each
+							forParser: parser]]].
 
 	^ parser.
 ]
@@ -213,18 +220,17 @@ XMLDOMParser >> pushElement: anElement [
 ]
 
 { #category : #private }
+XMLDOMParser >> pushInnerXMLRootNode: aRootNode [
+	self
+		configuration: aRootNode configuration;
+		document: aRootNode document;
+		pushNode: aRootNode.
+]
+
+{ #category : #private }
 XMLDOMParser >> pushNode: aNode [
 	^ self nodeStack addLast: aNode
 
-]
-
-{ #category : #initialization }
-XMLDOMParser >> setInput: aStringOrStream documentURI: aUri [
-	super
-		setInput: aStringOrStream
-		documentURI: aUri.
-
-	nodeStack := OrderedCollection new: 10.
 ]
 
 { #category : #declaration }
@@ -260,9 +266,15 @@ XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName
 			uri: aUri
 			localName: aLocalName) new
 				setQualifiedName: aQualifiedName
-				prefix: aPrefix
 				localName: aLocalName
 				attributes: aDictionary)
+]
+
+{ #category : #private }
+XMLDOMParser >> startInnerXMLElement: anElement forParser: aParser [
+	aParser driver
+		setRootElement: anElement name
+		currentScope: anElement namespaceScope
 ]
 
 { #category : #private }

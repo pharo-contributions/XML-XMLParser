@@ -40,7 +40,7 @@ XMLDocument >> encoding: aString [
 
 { #category : #private }
 XMLDocument >> innerXMLContext [
-	^ #inProlog
+	^ XMLPrologContext new
 ]
 
 { #category : #testing }

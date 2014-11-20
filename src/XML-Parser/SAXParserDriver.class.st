@@ -233,7 +233,7 @@ SAXParserDriver >> handleEndTag: anElementName [
 				withScopedAttributes: self elementNester currentScopedAttributes]
 		ifFalse: [self elementNester endElement: anElementName].
 
-	prefix := anElementName qualifiedNamePrefix.
+	prefix := anElementName prefixBeforeLocalName.
 	self saxHandler 
 		endElement: anElementName
 		prefix: prefix
@@ -243,7 +243,7 @@ SAXParserDriver >> handleEndTag: anElementName [
 					currentScope := self scopeAllocator exitScope.
 					currentScope resolvePrefix: prefix]
 				ifFalse: [''])
-		localName: (anElementName qualifiedNameLocalPartFromPrefix: prefix).
+		localName: (anElementName localNameAfterPrefix: prefix).
 
 	currentScope ifNotNil: [
 		currentScope hasNamespaces
@@ -415,7 +415,7 @@ SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 
 	self elementNester startElement: anElementName.
 
-	prefix := anElementName qualifiedNamePrefix.
+	prefix := anElementName prefixBeforeLocalName.
 	totalAttributes := anAttributeDictionary size.
 	self usesNamespaces
 		ifTrue: [
@@ -441,24 +441,10 @@ SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 		startElement: anElementName
 		prefix: prefix
 		uri: (namespaceUri ifNil: [''])
-		localName: (anElementName qualifiedNameLocalPartFromPrefix: prefix)
+		localName: (anElementName localNameAfterPrefix: prefix)
 		attributes: anAttributeDictionary.
 	currentScope
 		ifNotNil: [self saxHandler currentScope: currentScope].
-]
-
-{ #category : #'handling tokens' }
-SAXParserDriver >> handleUnparsedEntityReference: aName [
-	| notationName |
-
-	notationName := self dtd unparsedEntityAt: aName.
-	self isValidating
-		ifTrue: [
-			notationName
-				ifNil: [self errorUndeclaredUnparsedEntity: aName].
-			(self dtd includesNotation: notationName)
-				ifFalse: [self errorUndeclaredNotation: notationName referencedBy: aName]].
-	^ notationName.
 ]
 
 { #category : #'handling tokens' }
@@ -471,17 +457,17 @@ SAXParserDriver >> handleWhitespace: aString [
 
 { #category : #'handling tokens' }
 SAXParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
-	| versionNumber standaloneBoolean |
+	| versionNumber isStandalone |
 
-	aVersion ifNotEmpty: [versionNumber := aVersion asNumber].
-	standaloneBoolean := aYesOrNo = 'yes'.
+	versionNumber := Float readFrom: aVersion readStream.
+	isStandalone := aYesOrNo = 'yes'.
 
-	self dtd isStandalone: standaloneBoolean.
+	self dtd isStandalone: isStandalone.
 
 	self saxHandler
 		xmlVersion: versionNumber
 		encoding: anEncoding
-		standalone: standaloneBoolean
+		standalone: isStandalone.
 ]
 
 { #category : #private }

@@ -1,11 +1,16 @@
 "
-This class is for paramter entities with replacements.
+This class is for parameter entities with replacements.
 "
 Class {
 	#name : #DTDParameterEntity,
 	#superclass : #DTDParsedEntity,
 	#category : #'XML-Parser-DTD'
 }
+
+{ #category : #replacement }
+DTDParameterEntity >> constructReplacementOn: aTokenizer [
+	aTokenizer constructReplacementForParameterEntity: self
+]
 
 { #category : #accessing }
 DTDParameterEntity >> escapedReferenceSymbol [
@@ -15,9 +20,4 @@ DTDParameterEntity >> escapedReferenceSymbol [
 { #category : #accessing }
 DTDParameterEntity >> referenceSymbol [
 	^ $%
-]
-
-{ #category : #replacement }
-DTDParameterEntity >> replacementForDTDContext [
-	^ (self replacement copyWithFirst: Character space) copyWith: Character space.
 ]

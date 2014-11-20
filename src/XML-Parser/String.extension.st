@@ -26,6 +26,20 @@ String >> asXMLURI [
 ]
 
 { #category : #'*XML-Parser' }
+String >> expandWithNamespaceURI: aNamespaceUri [
+	^ aNamespaceUri
+		ifEmpty: [self]
+		ifNotEmpty: [((aNamespaceUri copyWithFirst: ${) copyWith: $}), self]
+]
+
+{ #category : #'*XML-Parser' }
+String >> isNamespaceAttributeName [
+	^ (self beginsWith: 'xmlns')
+		and: [self size = 5
+			or: [(self at: 6) == $:]]
+]
+
+{ #category : #'*XML-Parser' }
 String >> isQualifiedName: aQualifiedName orLocalName: aLocalName [
 	^ self = aQualifiedName
 		or: [(aQualifiedName size > aLocalName size)
@@ -39,24 +53,12 @@ String >> isReservedAttributeName [
 ]
 
 { #category : #'*XML-Parser' }
-String >> isXmlnsAttributeName [
-	^ (self beginsWith: 'xmlns')
-		and: [self size = 5
-			or: [(self at: 6) == $:]]
+String >> localNameAfterPrefix [
+	^ self localNameAfterPrefix: self prefixBeforeLocalName
 ]
 
 { #category : #'*XML-Parser' }
-String >> parseXML [
-	^ XMLDOMParser parse: self
-]
-
-{ #category : #'*XML-Parser' }
-String >> qualifiedNameLocalPart [
-	^ self qualifiedNameLocalPartFromPrefix: self qualifiedNamePrefix
-]
-
-{ #category : #'*XML-Parser' }
-String >> qualifiedNameLocalPartFromPrefix: aPrefix [
+String >> localNameAfterPrefix: aPrefix [
 	"optimized"
 	| prefixSize |
 
@@ -66,7 +68,12 @@ String >> qualifiedNameLocalPartFromPrefix: aPrefix [
 ]
 
 { #category : #'*XML-Parser' }
-String >> qualifiedNamePrefix [
+String >> parseXML [
+	^ XMLDOMParser parse: self
+]
+
+{ #category : #'*XML-Parser' }
+String >> prefixBeforeLocalName [
 	"Split the name into namespace prefix
 	(Optimized code)"
 	| i |
@@ -78,4 +85,20 @@ String >> qualifiedNamePrefix [
 				ifTrue: [^ (self copyFrom: 1 to: i - 1)].
 			i := i - 1].
 	^ ''.
+]
+
+{ #category : #'*XML-Parser' }
+String >> prefixBeforeLocalName: aLocalName [
+	| prefixSize |
+
+	(prefixSize := self size - aLocalName size - 1) > 0
+		ifTrue: [^ self copyFrom: 1 to: prefixSize]
+		ifFalse: [^ '']
+]
+
+{ #category : #'*XML-Parser' }
+String >> qualifyWithPrefix: aPrefix [
+	aPrefix size > 0
+		ifTrue: [^ (aPrefix copyWith: $:), self]
+		ifFalse: [^ self]
 ]

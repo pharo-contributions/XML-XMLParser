@@ -118,7 +118,7 @@ XMLAttributeValidator >> shouldFurtherNormalizeAttributeValue [
 { #category : #validation }
 XMLAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
 	anAttributeValidatorDictionary
-		at: attribute
+		at: self attribute
 		put: self
 ]
 
@@ -139,7 +139,10 @@ XMLAttributeValidator >> validateAttributeValue: aValue [
 XMLAttributeValidator >> validateAttributes: anAttributeDictionary [
 	self
 		validateAttributeDefaultIn: anAttributeDictionary;
-		validateAttributeValue: (anAttributeDictionary at: attribute ifAbsent: [^ self])
+		validateAttributeValue:
+			(anAttributeDictionary
+				at: self attribute
+				ifAbsent: [^ self])
 ]
 
 { #category : #validation }

@@ -5,8 +5,7 @@ Class {
 	#name : #DTDCachingEntityResolver,
 	#superclass : #DTDExternalEntityResolver,
 	#classInstVars : [
-		'entityCache',
-		'maxCachedEntities'
+		'entityCache'
 	],
 	#category : #'XML-Parser-DTD'
 }
@@ -14,29 +13,23 @@ Class {
 { #category : #clearing }
 DTDCachingEntityResolver class >> clearEntityCache [
 	"self clearEntityCache"
-	self entityCache removeAll
+	self entityCache clear
 ]
 
 { #category : #private }
 DTDCachingEntityResolver class >> entityCache [
-	^ entityCache ifNil: [entityCache := Dictionary new: self maxCachedEntities]
+	^ entityCache ifNil: [entityCache := XMLKeyValueCache maxSize: 64]
 ]
 
 { #category : #private }
 DTDCachingEntityResolver class >> entityCacheAt: aUri ifAbsentPut: aBlock [
 	^ self entityCache
 		at: aUri
-		ifAbsent: [
-			self
-				entityCacheAt: aUri
-				put: aBlock value]
+		ifAbsentPut: aBlock
 ]
 
 { #category : #private }
 DTDCachingEntityResolver class >> entityCacheAt: aUri put: anEntity [
-	self entityCache size >= self maxCachedEntities
-		ifTrue: [self clearEntityCache].
-
 	^ self entityCache
 		at: aUri
 		put: anEntity.
@@ -44,12 +37,12 @@ DTDCachingEntityResolver class >> entityCacheAt: aUri put: anEntity [
 
 { #category : #accessing }
 DTDCachingEntityResolver class >> maxCachedEntities [
-	^ maxCachedEntities ifNil: [maxCachedEntities := 64]
+	^ self entityCache maxSize
 ]
 
 { #category : #accessing }
 DTDCachingEntityResolver class >> maxCachedEntities: anInteger [
-	maxCachedEntities := anInteger
+	self entityCache maxSize: anInteger
 ]
 
 { #category : #clearing }

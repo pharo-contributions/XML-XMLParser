@@ -125,11 +125,6 @@ XMLParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 ]
 
 { #category : #'handling tokens' }
-XMLParserDriver >> handleUnparsedEntityReference: aName [
-	^ nil
-]
-
-{ #category : #'handling tokens' }
 XMLParserDriver >> handleWhitespace: aString [
 ]
 

@@ -1,9 +1,9 @@
 "
-This is an abstract class for file handles to read/write/delete files. Subclasses need to implement the abstract methods. The class defaultImplementation method should return the subclass to use for this platform.
+This is an abstract class for file handles to read/write/delete files. Subclasses need to implement the abstract methods.
 "
 Class {
 	#name : #XMLFileHandle,
-	#superclass : #Object,
+	#superclass : #XMLAbstractImplementation,
 	#instVars : [
 		'path'
 	],
@@ -25,23 +25,6 @@ XMLFileHandle class >> errorUnsupported [
 	XMLFileException signal: 'File IO unsupported'.
 ]
 
-{ #category : #private }
-XMLFileHandle class >> implementation [
-	^ self == XMLFileHandle
-		ifTrue: [self selectImplementation]
-		ifFalse: [self]
-]
-
-{ #category : #testing }
-XMLFileHandle class >> isSupported [
-	^ false
-]
-
-{ #category : #'instance creation' }
-XMLFileHandle class >> new [
-	^ self implementation basicNew initialize
-]
-
 { #category : #'instance creation' }
 XMLFileHandle class >> path: aSystemPath [
 	^ self new path: aSystemPath
@@ -52,19 +35,9 @@ XMLFileHandle class >> preferredImplementation [
 	^ XMLFileSystemFileHandle
 ]
 
-{ #category : #private }
-XMLFileHandle class >> selectImplementation [
-	self preferredImplementation isSupported
-		ifTrue: [^ self preferredImplementation].
-	self allSubclassesDo: [:each |
-		each isSupported
-			ifTrue: [^ each]].
-	self errorUnsupported.
-]
-
 { #category : #deleting }
 XMLFileHandle >> delete [
-	self deleteFileOrDo: [:error | error resignalAs: XMLFileException]
+	self deleteFileOrDo: [:error | XMLFileException signalMessageFrom: error]
 ]
 
 { #category : #private }
@@ -125,7 +98,9 @@ XMLFileHandle >> readStream [
 
 { #category : #private }
 XMLFileHandle >> readStreamOnFileOrDo: aBlock [
-	self subclassResponsibility
+	^ [XMLFileReadStreamFactory on: path]
+		on: Error
+		do: aBlock
 ]
 
 { #category : #reading }
@@ -140,15 +115,17 @@ XMLFileHandle >> readStreamUpToLimit: aMaxSize [
 	(aMaxSize notNil and: [fileSize > aMaxSize])
 		ifTrue: [self errorFileSize: fileSize exceedsMaxSize: aMaxSize].
 
-	^ self readStreamOnFileOrDo: [:error | error resignalAs: XMLFileException]
+	^ self readStreamOnFileOrDo: [:error | XMLFileException signalMessageFrom: error]
 ]
 
 { #category : #writing }
 XMLFileHandle >> writeStream [
-	^ self writeStreamOnFileOrDo: [:error | error resignalAs: XMLFileException]
+	^ self writeStreamOnFileOrDo: [:error | XMLFileException signalMessageFrom: error]
 ]
 
 { #category : #private }
 XMLFileHandle >> writeStreamOnFileOrDo: aBlock [
-	self subclassResponsibility
+	^ [XMLFileWriteStreamFactory on: path]
+		on: Error
+		do: aBlock
 ]

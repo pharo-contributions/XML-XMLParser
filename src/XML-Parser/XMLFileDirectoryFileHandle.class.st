@@ -43,17 +43,3 @@ XMLFileDirectoryFileHandle >> isFile [
 	^ self directoryEntry notNil
 		and: [self directoryEntry isDirectory not]
 ]
-
-{ #category : #private }
-XMLFileDirectoryFileHandle >> readStreamOnFileOrDo: aBlock [
-	^ [((Smalltalk at: #FileStream) readOnlyFileNamed: path)]
-		on: Error
-		do: aBlock
-]
-
-{ #category : #private }
-XMLFileDirectoryFileHandle >> writeStreamOnFileOrDo: aBlock [
-	^ [((Smalltalk at: #FileStream) newFileNamed: path)]
-		on: Error
-		do: aBlock
-]
