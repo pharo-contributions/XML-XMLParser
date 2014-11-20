@@ -14,11 +14,6 @@ XMLStringTest >> nodeClass [
 	^ XMLString
 ]
 
-{ #category : #accessing }
-XMLStringTest >> nodeTypes [
-	^ #(isStringNode isContentNode)
-]
-
 { #category : #tests }
 XMLStringTest >> testAddContent [
 	| node |
@@ -47,6 +42,13 @@ XMLStringTest >> testAppend [
 
 	node append: 'three'.
 	self assert: node string = 'onetwothree'.
+]
+
+{ #category : #tests }
+XMLStringTest >> testAsString [
+	self
+		assert: self nodeClass new asString isEmpty;
+		assert: (self nodeClass string: 'test') asString = 'test'
 ]
 
 { #category : #tests }
@@ -80,6 +82,14 @@ XMLStringTest >> testBeginsWith [
 			assert: (node beginsWith: (self nodeClass string: prefix));
 			deny: (node beginsWith: (prefix copyWith: $.));
 			deny: (node beginsWith: (self nodeClass string: (prefix copyWith: $.)))].
+]
+
+{ #category : #tests }
+XMLStringTest >> testContentString [
+	super testContentString.
+	self
+		assert: (self nodeClass string: 'test') contentString = 'test';
+		assert: ((self nodeClass new) contentString: 'test') contentString = 'test'.
 ]
 
 { #category : #tests }
@@ -172,6 +182,11 @@ XMLStringTest >> testIndexOfSubstring [
 ]
 
 { #category : #tests }
+XMLStringTest >> testIsContentNode [
+	self assert: self nodeClass new isContentNode
+]
+
+{ #category : #tests }
 XMLStringTest >> testIsEmpty [
 	self
 		assert: self nodeClass new isEmpty;
@@ -199,6 +214,8 @@ XMLStringTest >> testIsString [
 { #category : #tests }
 XMLStringTest >> testIsStringNode [
 	| node |
+
+	self assert: self nodeClass new isStringNode.
 
 	node := self nodeClass new.
 	self

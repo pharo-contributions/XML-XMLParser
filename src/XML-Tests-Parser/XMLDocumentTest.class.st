@@ -22,11 +22,6 @@ XMLDocumentTest >> nodeClass [
 	^ XMLDocument
 ]
 
-{ #category : #accessing }
-XMLDocumentTest >> nodeTypes [
-	^ #(isDocument isContentNode)
-]
-
 { #category : #tests }
 XMLDocumentTest >> test11documentTest [
 	| doc root doctype |
@@ -55,4 +50,9 @@ XMLDocumentTest >> test11documentTest [
 		hasDoctype: doctype
 		version: 1.0
 		encoding: 'ISO Latin-1'.
+]
+
+{ #category : #tests }
+XMLDocumentTest >> testIsDocument [
+	self assert: self nodeClass new isDocument
 ]

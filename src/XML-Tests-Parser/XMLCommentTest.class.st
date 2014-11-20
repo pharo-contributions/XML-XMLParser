@@ -16,11 +16,6 @@ XMLCommentTest >> nodeClass [
 	^ XMLComment
 ]
 
-{ #category : #accessing }
-XMLCommentTest >> nodeTypes [
-	^ #(isComment)
-]
-
 { #category : #tests }
 XMLCommentTest >> test6commentNodes [
 	| comment  |
@@ -30,4 +25,9 @@ XMLCommentTest >> test6commentNodes [
 		assertComment: comment hasString: '';
 		assertComment: (comment string: 'test') hasString: 'test';
 		assertComment: (XMLComment string: 'test') hasString: 'test'.
+]
+
+{ #category : #tests }
+XMLCommentTest >> testIsComment [
+	self assert: self nodeClass new isComment
 ]

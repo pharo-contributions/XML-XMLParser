@@ -9,9 +9,9 @@ XMLCDataTest >> nodeClass [
 	^ XMLCData
 ]
 
-{ #category : #accessing }
-XMLCDataTest >> nodeTypes [
-	^ super nodeTypes copyWith: #isCData
+{ #category : #tests }
+XMLCDataTest >> testIsCData [
+	self assert: self nodeClass new isCData
 ]
 
 { #category : #tests }

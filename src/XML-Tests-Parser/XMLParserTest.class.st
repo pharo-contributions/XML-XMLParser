@@ -168,7 +168,8 @@ XMLParserTest >> elementDeclarationsNamed: aNameCollection [
 XMLParserTest >> testAttributeDefaultDeclaration [
 	| dtd document |
 
-	dtd := '<!DOCTYPE root [
+	dtd := '
+		<!DOCTYPE root [
 		<!ELEMENT root EMPTY>
 		<!ATTLIST root one CDATA #IMPLIED
 						two CDATA #REQUIRED
@@ -702,12 +703,13 @@ XMLParserTest >> testElementEmptyDeclarations [
 XMLParserTest >> testElementMixedContentDeclaration [
 	| dtd |
 
-	dtd := '<!DOCTYPE root [
-		<!ELEMENT root (#PCDATA | one | two | three)*>
-		<!ELEMENT one EMPTY>
-		<!ELEMENT two (#PCDATA)>
-		<!ELEMENT three (#PCDATA)*>
-		<!ELEMENT four EMPTY>]>'.
+	dtd := '
+		<!DOCTYPE root [
+			<!ELEMENT root (#PCDATA | one | two | three)*>
+			<!ELEMENT one EMPTY>
+			<!ELEMENT two (#PCDATA)>
+			<!ELEMENT three (#PCDATA)*>
+			<!ELEMENT four EMPTY>]>'.
 	self
 		shouldnt: [
 			XMLDOMParser parse:
@@ -1106,6 +1108,17 @@ XMLParserTest >> testRequiredDTDDeclarations [
 ]
 
 { #category : #tests }
+XMLParserTest >> testReusingParser [
+	| parser oldConfiguraiton |
+
+	parser := SAXHandler on: self addressBookXML.
+	oldConfiguraiton := parser configuration.
+	parser parseDocument.
+	parser on: self addressBookXMLWithDTD.
+	self assert: parser configuration == oldConfiguraiton.
+]
+
+{ #category : #tests }
 XMLParserTest >> testSelfReferentialEntityReplacement [
 	self
 		should: [
@@ -1237,17 +1250,19 @@ XMLParserTest >> testUndeclaredNamespaces [
 
 { #category : #tests }
 XMLParserTest >> testUnparsedEntities [
-	| document |
-
-	document := XMLDOMParser parse: '
+	| dtd |
+	dtd := '
 		<!DOCTYPE root [
 			<!NOTATION note PUBLIC "-//ext//note//EN">
 			<!ENTITY unparsedEntity SYSTEM "note.txt" NDATA note>
-		]>
-		<root notation=&unparsedEntity; />'.
-	self assert: (document root attributeAt: 'notation') = 'note'.
+			<!ELEMENT root EMPTY>
+			<!ATTLIST root notation ENTITY #REQUIRED>
+		]>'.
 	self
-		should: [XMLDOMParser parse: '<root attr=&undeclaredUnparsedEntity;/>']
+		shouldnt: [SAXHandler parse: dtd, '<root notation="unparsedEntity" />']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<root notation="undeclaredUnparsedEntity" />']
 		raise: XMLValidationException.
 ]
 
@@ -1283,8 +1298,8 @@ XMLParserTest >> testValidationAndEntityReferenceToggle [
 XMLParserTest >> testWhitespacePreservation [
 	| xml root notPreserved preserved |
 
-	xml :=
-		'<root xml:space="preserve">
+	xml := '
+		<root xml:space="preserve">
 			<not-preserved xml:space="default">
 				<preserved xml:space="preserve">
 				</preserved>
@@ -1310,17 +1325,24 @@ XMLParserTest >> testWhitespacePreservation [
 XMLParserTest >> testWhitespacePreservationValidation [
 	| dtd |
 
-	dtd := '<!DOCTYPE whitespace [
+	dtd := '
+		<!DOCTYPE whitespace [
 			<!ELEMENT whitespace EMPTY>
 			<!ATTLIST whitespace xml:space (default|preserve) ''preserve''>]>'.
 	self
 		shouldnt: [SAXHandler parse: dtd, '<whitespace></whitespace>']
 		raise: XMLValidationException.
 	self
+		shouldnt: [SAXHandler parse: dtd, '<whitespace xml:space="default"> </whitespace>']
+		raise: XMLValidationException.
+	self
 		should: [SAXHandler parse: dtd, '<whitespace> </whitespace>']
 		raise: XMLValidationException.
 	self
 		should: [SAXHandler parse: dtd, '<whitespace><![CDATA[ ]]></whitespace>']
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: dtd, '<whitespace xml:space="default"><![CDATA[ ]]></whitespace>']
 		raise: XMLValidationException.
 ]
 

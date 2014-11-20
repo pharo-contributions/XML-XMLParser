@@ -19,21 +19,6 @@ XMLAttributeTest >> nodeClass [
 ]
 
 { #category : #tests }
-XMLAttributeTest >> test1basicNodeProtocol [
-	| node element |
-
-	node := self nodeClass new.
-	self
-		deny: node hasChildren;
-		assert: node element isNil;
-		assert: node contentString isEmpty.
-
-	element := XMLElement new.
-	node element: element.
-	self assert: node element == element.
-]
-
-{ #category : #tests }
 XMLAttributeTest >> test7attributeNodes [
 	| attribute |
 
@@ -47,4 +32,59 @@ XMLAttributeTest >> test7attributeNodes [
 		assertAttribute: (XMLAttribute name: 'name' value: 'value') hasName: 'name' value: 'value';
 		assertNode: (attribute prefix: 'prefix') hasName: 'prefix:name' namespaceURI: '';
 		assertNode: (XMLAttribute name: 'prefix:name' value: 'value') hasName: 'prefix:name' namespaceURI: ''.
+]
+
+{ #category : #tests }
+XMLAttributeTest >> testAncestorElements [
+	self should: [super testAncestorElements] raise: Error
+]
+
+{ #category : #tests }
+XMLAttributeTest >> testAncestorElementsDo [
+	self should: [super testAncestorElementsDo] raise: Error
+]
+
+{ #category : #tests }
+XMLAttributeTest >> testAncestorNodes [
+	self should: [super testAncestorNodes] raise: Error
+]
+
+{ #category : #tests }
+XMLAttributeTest >> testAncestorNodesDo [
+	self should: [super testAncestorNodesDo] raise: Error
+]
+
+{ #category : #tests }
+XMLAttributeTest >> testElement [
+	| node element |
+
+	node := self nodeClass new.
+	element := XMLElement new.
+	node element: element.
+	self assert: node element == element.
+]
+
+{ #category : #tests }
+XMLAttributeTest >> testHasParent [
+	self should: [super testHasParent] raise: Error
+]
+
+{ #category : #tests }
+XMLAttributeTest >> testNextNode [
+	self should: [super testNextNode] raise: Error
+]
+
+{ #category : #tests }
+XMLAttributeTest >> testParent [
+	| node |
+
+	node := self nodeClass new.
+	self
+		should: [node parent] raise: Error;
+		should: [node parent: self nodeClass new] raise: Error.
+]
+
+{ #category : #tests }
+XMLAttributeTest >> testPreviousNode [
+	self should: [super testPreviousNode] raise: Error
 ]

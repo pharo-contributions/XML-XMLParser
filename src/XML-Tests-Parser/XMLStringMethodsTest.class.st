@@ -16,6 +16,18 @@ XMLStringMethodsTest >> testIsQualifiedNameOrLocalName [
 ]
 
 { #category : #tests }
+XMLStringMethodsTest >> testLocalNameAfterPrefix [
+	self
+		assert: 'name' localNameAfterPrefix = 'name';
+		assert: ':name' localNameAfterPrefix = ':name';
+		assert: 'prefix:name' localNameAfterPrefix = 'name';
+		assert: '::name' localNameAfterPrefix = 'name';
+		assert: 'invalid:prefix:name' localNameAfterPrefix = 'name';
+		assert: ':::name' localNameAfterPrefix = 'name';
+		assert: ':invalid:prefix:name' localNameAfterPrefix = 'name'.
+]
+
+{ #category : #tests }
 XMLStringMethodsTest >> testParseXML [
 	| xml |
 
@@ -25,27 +37,15 @@ XMLStringMethodsTest >> testParseXML [
 ]
 
 { #category : #tests }
-XMLStringMethodsTest >> testQualifiedNameLocalPart [
+XMLStringMethodsTest >> testPrefixBeforeLocalName [
 	self
-		assert: 'name' qualifiedNameLocalPart = 'name';
-		assert: ':name' qualifiedNameLocalPart = ':name';
-		assert: 'prefix:name' qualifiedNameLocalPart = 'name';
-		assert: '::name' qualifiedNameLocalPart = 'name';
-		assert: 'invalid:prefix:name' qualifiedNameLocalPart = 'name';
-		assert: ':::name' qualifiedNameLocalPart = 'name';
-		assert: ':invalid:prefix:name' qualifiedNameLocalPart = 'name'.
-]
-
-{ #category : #tests }
-XMLStringMethodsTest >> testQualifiedNamePrefix [
-	self
-		assert: 'name' qualifiedNamePrefix = '';
-		assert: ':name' qualifiedNamePrefix = '';
-		assert: 'prefix:name' qualifiedNamePrefix = 'prefix';
-		assert: '::name' qualifiedNamePrefix = ':';
-		assert: 'invalid:prefix:name' qualifiedNamePrefix = 'invalid:prefix';
-		assert: ':::name' qualifiedNamePrefix = '::';
-		assert: ':invalid:prefix:name' qualifiedNamePrefix = ':invalid:prefix'.
+		assert: 'name' prefixBeforeLocalName = '';
+		assert: ':name' prefixBeforeLocalName = '';
+		assert: 'prefix:name' prefixBeforeLocalName = 'prefix';
+		assert: '::name' prefixBeforeLocalName = ':';
+		assert: 'invalid:prefix:name' prefixBeforeLocalName = 'invalid:prefix';
+		assert: ':::name' prefixBeforeLocalName = '::';
+		assert: ':invalid:prefix:name' prefixBeforeLocalName = ':invalid:prefix'.
 ]
 
 { #category : #tests }

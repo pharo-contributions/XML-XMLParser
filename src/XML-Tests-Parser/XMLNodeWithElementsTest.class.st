@@ -12,45 +12,6 @@ XMLNodeWithElementsTest class >> isAbstract [
 	^ true
 ]
 
-{ #category : #assertions }
-XMLNodeWithElementsTest >> assertNode: aNode hasElements: anElementCollection [
-	self assert: aNode elements asArray = anElementCollection asArray
-]
-
-{ #category : #assertions }
-XMLNodeWithElementsTest >> assertNodeHasNoChildren: aNode [
-	super assertNodeHasNoChildren: aNode.
-	self assertNodeHasNoContentNodes: aNode
-]
-
-{ #category : #assertions }
-XMLNodeWithElementsTest >> assertNodeHasNoContentNodes: aNode [
-	self
-		deny: aNode hasContentNodes;
-		assert: aNode contentNodes isEmpty;
-		assert: aNode contentString isEmpty;
-		assertNodeHasNoElements: aNode;
-		assertNodeHasNoStringNodes: aNode.
-]
-
-{ #category : #assertions }
-XMLNodeWithElementsTest >> assertNodeHasNoElements: aNode [
-	self
-		deny: aNode hasElements;
-		assert: aNode elements isEmpty;
-		assert: aNode firstElement isNil;
-		assert: aNode lastElement isNil
-]
-
-{ #category : #assertions }
-XMLNodeWithElementsTest >> assertNodeHasNoStringNodes: aNode [
-	self
-		deny: aNode hasStringNodes;
-		assert: aNode stringNodes isEmpty;
-		assert: aNode strings isEmpty
-	
-]
-
 { #category : #accessing }
 XMLNodeWithElementsTest >> newElements: aNumber [
 	^ self
@@ -71,7 +32,7 @@ XMLNodeWithElementsTest >> newElementsNamed: aNameArray [
 					ifTrue: [
 						element := XMLElement
 							name: qualifiedName
-							namespaceURI: 'http://', (qualifiedName qualifiedNamePrefix)]
+							namespaceURI: 'http://', (qualifiedName prefixBeforeLocalName)]
 					ifFalse: [element := XMLElement named: qualifiedName].
 				element]).
 ]
@@ -82,16 +43,18 @@ XMLNodeWithElementsTest >> newNodeWithElements [
 		addNode: (XMLComment string: 'before');
 		addNode:
 			((XMLElement name: 'root')
+				addNode: (XMLComment string: 'before');
 				addNode:
 					((XMLElement named: 'one')
 						addNode: (XMLString string: 'testing one');
 						addNode: (XMLElement named: 'two');
 						addNode: (XMLPI target: 'target' data: 'data');
 						yourself);
+				addNode: (XMLString string: 'testing two');
 				addNode:
 					((XMLElement name: 'three' namespaceURI: 'testNS')
 						addNode: (XMLElement name: 'four');
-						addNode: (XMLCData string: 'testing two');
+						addNode: (XMLCData string: 'testing three');
 						yourself);
 				addNode:
 					((XMLElement name: 'prefix:four' namespaceURI: 'testNS')
@@ -111,112 +74,6 @@ XMLNodeWithElementsTest >> newNodeWithNodes [
 { #category : #accessing }
 XMLNodeWithElementsTest >> nodeClass [
 	^ XMLNodeWithElements
-]
-
-{ #category : #assertions }
-XMLNodeWithElementsTest >> should: aBlock addElement: anElement to: aParent [
-	self should: aBlock addElements: (Array with: anElement) to: aParent
-]
-
-{ #category : #assertions }
-XMLNodeWithElementsTest >> should: aBlock addElements: anElementCollection to: aParent [
-	| elementsAdded |
-
-	self deny: (anElementCollection anySatisfy: [:each | aParent elements includes: each]).
-	self
-		should: [elementsAdded := aBlock value]
-		addNodes: anElementCollection
-		to: aParent.
-	elementsAdded isCollection
-		ifFalse: [elementsAdded := Array with: elementsAdded].
-	self
-		assert: elementsAdded asArray = anElementCollection asArray;
-		assert: (elementsAdded allSatisfy: [:each | aParent elements includes: each]).
-]
-
-{ #category : #assertions }
-XMLNodeWithElementsTest >> should: aBlock removeElement: anElement from: aParent [
-	self should: aBlock removeElements: (Array with: anElement) from: aParent
-]
-
-{ #category : #assertions }
-XMLNodeWithElementsTest >> should: aBlock removeElements: anElementCollection from: aParent [
-	| elementsRemoved |
-
-	self assert: (anElementCollection allSatisfy: [:each | aParent elements includes: each]).
-	self
-		should: [elementsRemoved := aBlock value]
-		removeNodes: anElementCollection
-		from: aParent.
-	elementsRemoved isCollection
-		ifFalse: [elementsRemoved := Array with: elementsRemoved].
-	self
-		assert: elementsRemoved asArray = anElementCollection asArray;
-		deny: (elementsRemoved anySatisfy: [:each | aParent elements includes: each]).
-]
-
-{ #category : #tests }
-XMLNodeWithElementsTest >> test01emptyNodeWithElements [
-	self assertNodeHasNoChildren: self nodeClass new
-]
-
-{ #category : #tests }
-XMLNodeWithElementsTest >> test02addingElements [
-	| node nodes elements children |
-
-	node := self nodeClass new.
-	elements := self newElements: 6.
-	nodes := self newStrings: 6.
-	children := self intersperse: elements with: nodes.
-
-	self
-		should: [node addNodes: (elements copyFrom: 2 to: 3)]
-		addElements: (elements copyFrom: 2 to: 3)
-		to: node.
-	self
-		should: [node addNode: nodes second after: elements second]
-		addNode: nodes second
-		to: node.
-	self
-		should: [node addNode: nodes third after: elements third]
-		addNode: nodes third
-		to: node.
-	self
-		should: [node addNodeFirst: elements first]
-		addElement: elements first
-		to: node.
-	self
-		should: [node addNode: nodes first before: elements second]
-		addNode: nodes first
-		to: node.
-	self
-		should: [node nodes add: elements fourth]
-		addElement: elements fourth
-		to: node.
-	self
-		should: [node addNode: nodes fourth after: elements fourth]
-		addNode: nodes fourth
-		to: node.
-	self
-		should: [node addNode: elements fifth after: nodes fourth]
-		addElement: elements fifth
-		to: node.
-	self
-		should: [node addNodes: (nodes allButFirst: 4)]
-		addNodes: (nodes allButFirst: 4)
-		to: node.
-	self
-		should: [node addNode: (elements sixth) before: nodes sixth]
-		addElement: elements sixth
-		to: node.
-
-	self
-		assertNode: node hasChildren: children;
-		assertNode: node hasElements: elements.
-
-	self
-		should: [node addNode: (XMLElement new parent: self nodeClass new)] raise: Error;
-		should: [node addNode: elements first] raise: Error.
 ]
 
 { #category : #tests }
@@ -245,60 +102,6 @@ XMLNodeWithElementsTest >> test03removingElements [
 		assert: (node removeNode: elements last) = elements last;
 		deny: node hasElements;
 		assert: node firstElement isNil.
-]
-
-{ #category : #tests }
-XMLNodeWithElementsTest >> test04accessingAdjacentElements [
-	| node elements |
-
-	node := self nodeClass new.
-	elements := self newElements: 3.
-	node addNodes: (self intersperseWithNodes: elements).
-	elements do: [:each | | next previous |
-		next := elements after: each ifAbsent: [nil].
-		previous := elements before: each ifAbsent: [nil].
-		
-		self
-			assert: each nextElement == next;
-			assert: each previousElement == previous;
-			assert: (node elementAfter: each) == next;
-			assert: (node elementBefore: each) == previous].
-
-	self
-		assert: (node elementAfter: XMLElement new) isNil;
-		assert: (node elementBefore: XMLElement new) isNil.
-]
-
-{ #category : #tests }
-XMLNodeWithElementsTest >> test05accessingFirstAndLastElements [
-	| node elements |
-
-	node := self nodeClass new.
-	self
-		assert: node firstElement isNil;
-		assert: node lastElement isNil.
-
-	elements := self newElements: 3.
-	node addNode: elements first.
-	self
-		assert: node firstElement == elements first;
-		assert: node lastElement == elements first.
-
-	node addNodes: elements allButFirst.
-	self
-		assert: node firstElement == elements first;
-		assert: node lastElement == elements last.
-
-	node removeNode: elements first.
-	self
-		assert: node firstElement == elements second;
-		assert: node lastElement == elements last.
-
-	node removeNodes.
-	node addNodes: (self intersperseWithNodes: elements).
-	self
-		assert: node firstElement == elements first;
-		assert: node lastElement == elements last.
 ]
 
 { #category : #tests }
@@ -606,30 +409,65 @@ XMLNodeWithElementsTest >> testAllNodes [
 	nodeWithElements := self newNodeWithElements.
 	allNodes := nodeWithElements allNodes.
 	self
-		assert: allNodes size = 14;
+		assert: allNodes size = 16;
 		assert: (allNodes at: 1) == nodeWithElements;
 		assert: (allNodes at: 2) isComment;
 		assert: ((allNodes at: 3) isElementNamed: 'root');
-		assert: ((allNodes at: 4) isElementNamed: 'one');
-		assert: ((allNodes at: 5) isStringNode: 'testing one');
-		assert: ((allNodes at: 6) isElementNamed: 'two');
-		assert: (allNodes at: 7) isPI;
-		assert: ((allNodes at: 8) isElementNamed: 'three');
-		assert: ((allNodes at: 9) isElementNamed: 'four');
-		assert: ((allNodes at: 10) isStringNode: 'testing two');
-		assert: ((allNodes at: 11) isElementNamed: 'prefix:four');
-		assert: ((allNodes at: 12) isElementNamed: 'prefix:five');
-		assert: ((allNodes at: 13) isElementNamed: 'four');
-		assert: (allNodes at: 14) isComment.
+		assert: (allNodes at: 4) isComment;
+		assert: ((allNodes at: 5) isElementNamed: 'one');
+		assert: ((allNodes at: 6) isStringNode: 'testing one');
+		assert: ((allNodes at: 7) isElementNamed: 'two');
+		assert: (allNodes at: 8) isPI;
+		assert: ((allNodes at: 9) isStringNode: 'testing two');
+		assert: ((allNodes at: 10) isElementNamed: 'three');
+		assert: ((allNodes at: 11) isElementNamed: 'four');
+		assert: ((allNodes at: 12) isStringNode: 'testing three');
+		assert: ((allNodes at: 13) isElementNamed: 'prefix:four');
+		assert: ((allNodes at: 14) isElementNamed: 'prefix:five');
+		assert: ((allNodes at: 15) isElementNamed: 'four');
+		assert: (allNodes at: 16) isComment.
 	self
-		assertList: (allNodes at: 3) allNodes selects: (allNodes copyFrom: 3 to: 13);
-		assertList: (allNodes at: 4) allNodes selects: (allNodes copyFrom: 4 to: 7);
-		assertList: (allNodes at: 6) allNodes selects: (allNodes copyFrom: 6 to: 6);
-		assertList: (allNodes at: 8) allNodes selects: (allNodes copyFrom: 8 to: 10);
-		assertList: (allNodes at: 9) allNodes selects: (allNodes copyFrom: 9 to: 9);
-		assertList: (allNodes at: 11) allNodes selects: (allNodes copyFrom: 11 to: 12);
-		assertList: (allNodes at: 12) allNodes selects: (allNodes copyFrom: 12 to: 12);
-		assertList: (allNodes at: 13) allNodes selects: (allNodes copyFrom: 13 to: 13).
+		assertList: (allNodes at: 3) allNodes selects: (allNodes copyFrom: 3 to: 15);
+		assertList: (allNodes at: 5) allNodes selects: (allNodes copyFrom: 5 to: 8);
+		assertList: (allNodes at: 7) allNodes selects: (allNodes copyFrom: 7 to: 7);
+		assertList: (allNodes at: 10) allNodes selects: (allNodes copyFrom: 10 to: 12);
+		assertList: (allNodes at: 11) allNodes selects: (allNodes copyFrom: 11 to: 11);
+		assertList: (allNodes at: 13) allNodes selects: (allNodes copyFrom: 13 to: 14);
+		assertList: (allNodes at: 14) allNodes selects: (allNodes copyFrom: 14 to: 14);
+		assertList: (allNodes at: 15) allNodes selects: (allNodes copyFrom: 15 to: 15).
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testAncestorElements [
+	| nodeWithElements ancestorStack |
+
+	nodeWithElements := self newNodeWithElements.
+	ancestorStack := OrderedCollection new.
+	nodeWithElements allNodesDo: [:each |
+		[ancestorStack isEmpty
+			or: [ancestorStack last == each parent]]
+			whileFalse: [ancestorStack removeLast].
+		self assert:
+			each ancestorElements asOrderedCollection =
+				ancestorStack reversed.
+		each isElement
+			ifTrue: [ancestorStack addLast: each]].
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testAncestorElementsDo [
+	| nodeWithElements |
+
+	nodeWithElements := self newNodeWithElements.
+	nodeWithElements allNodesDo: [:each |
+		self
+			should: [:block | each ancestorElementsDo: block]
+			enumerate: each ancestorElements].
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testContentString [
+	self assert: self newNodeWithNodes contentString = 'testing one testing two testing three'
 ]
 
 { #category : #tests }
@@ -786,6 +624,37 @@ XMLNodeWithElementsTest >> testDescendentElementsSelect [
 ]
 
 { #category : #tests }
+XMLNodeWithElementsTest >> testElementAfter [
+	| root after |
+
+	root := self newNodeWithElements nodeAt: 2.
+	root elements reversed do: [:each |
+		self assert: (root elementAfter: each) == after.
+		after := each].
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testElementBefore [
+	| root before |
+
+	root := self newNodeWithElements nodeAt: 2.
+	root elements do: [:each |
+		self assert: (root elementBefore: each) == before.
+		before := each].
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testFirstElement [
+	| root |
+
+	root := self newNodeWithElements nodeAt: 2.
+	root elements copy do: [:each |
+		self  assert: root firstElement == each.
+		root removeNode: each].
+	self assert: root firstElement isNil.
+]
+
+{ #category : #tests }
 XMLNodeWithElementsTest >> testInnerXML [
 	| node element |
 
@@ -802,4 +671,25 @@ XMLNodeWithElementsTest >> testInnerXML [
 		assert: node innerXML = '<test xmlns:prefix="ns"><prefix:inner>test</prefix:inner></test>';
 		assert: element innerXML = '<prefix:inner xmlns:prefix="ns">test</prefix:inner>';
 		assert: element firstNode innerXML = 'test'.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testIsContentNode [
+	self assert: self nodeClass new isContentNode
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testLastElement [
+	| root |
+
+	root := self newNodeWithElements nodeAt: 2.
+	root elements reversed do: [:each |
+		self  assert: root lastElement == each.
+		root removeNode: each].
+	self assert: root lastElement isNil.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testRawContentString [
+	self assert: self newNodeWithNodes rawContentString = 'testing onetesting twotesting three'
 ]

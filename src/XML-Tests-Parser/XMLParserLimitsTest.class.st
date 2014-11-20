@@ -43,7 +43,7 @@ XMLParserLimitsTest >> testDefaultLimits [
 ]
 
 { #category : #tests }
-XMLParserLimitsTest >> testParserReadLimitTest [
+XMLParserLimitsTest >> testDocumentReadLimit [
 	| xml replacement |
 
 	replacement := 'entity replacement'.
@@ -153,7 +153,7 @@ XMLParserLimitsTest >> testRecursiveParameterEntityReplacementPastLimit [
 ]
 
 { #category : #tests }
-XMLParserLimitsTest >> testRemovingLimits [
+XMLParserLimitsTest >> testRemoveLimits [
 	| parser readLimit depthLimit |
 
 	readLimit := 100.

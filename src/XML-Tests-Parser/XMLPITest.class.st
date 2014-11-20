@@ -17,11 +17,6 @@ XMLPITest >> nodeClass [
 	^ XMLPI
 ]
 
-{ #category : #accessing }
-XMLPITest >> nodeTypes [
-	^ #(isPI)
-]
-
 { #category : #tests }
 XMLPITest >> test3processingInstructionNodes [
 	| pi t d |
@@ -34,4 +29,9 @@ XMLPITest >> test3processingInstructionNodes [
 		assertPI: (pi target: t) hasTarget: t data: '';
 		assertPI: (pi data: d) hasTarget: t data: d;
 		assertPI: (XMLPI target: t data: d) hasTarget: t data: d.
+]
+
+{ #category : #tests }
+XMLPITest >> testIsPI [
+	self assert: self nodeClass new isPI
 ]

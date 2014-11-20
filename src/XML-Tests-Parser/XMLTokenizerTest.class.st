@@ -4,12 +4,12 @@ Class {
 	#category : #'XML-Tests-Parser'
 }
 
-{ #category : #sources }
+{ #category : #source }
 XMLTokenizerTest >> addressBookXML [
 	^ XMLParserTest addressBookXML
 ]
 
-{ #category : #sources }
+{ #category : #source }
 XMLTokenizerTest >> addressBookXMLWithDTD [
 	^ XMLParserTest addressBookXMLWithDTD
 ]
@@ -45,7 +45,7 @@ XMLTokenizerTest >> testConditionalSection [
 				'<![INCLUDE [included',
 				'<![ IGNORE [ignored; <![INCLUDE[ignored;]]> ignored.]]>',
 				', included]]>, included.'.
-	tokenizer tokenContext enterExternalSubset.
+	tokenizer tokenContext: XMLExternalSubsetContext new.
 	tokenizer nextToken.
 	self assert: tokenizer streamReader upToEnd = 'included, included, included.'.
 

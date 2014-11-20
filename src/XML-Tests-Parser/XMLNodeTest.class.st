@@ -131,11 +131,6 @@ XMLNodeTest >> nodeClass [
 ]
 
 { #category : #accessing }
-XMLNodeTest >> nodeTypes [
-	^ #()
-]
-
-{ #category : #accessing }
 XMLNodeTest >> selectNodeListClass [
 	^ XMLNodeList
 ]
@@ -150,21 +145,127 @@ XMLNodeTest >> should: aBlock enumerate: aCollection [
 ]
 
 { #category : #tests }
-XMLNodeTest >> test1basicNodeProtocol [
+XMLNodeTest >> testAncestorElements [
+	self assert: self nodeClass new ancestorElements isEmpty
+]
+
+{ #category : #tests }
+XMLNodeTest >> testAncestorElementsDo [
+	| node |
+
+	node := self nodeClass new.
+	self should: [:block |  node ancestorElementsDo: block] enumerate: #().
+]
+
+{ #category : #tests }
+XMLNodeTest >> testAncestorNodes [
+	self assert: self nodeClass new ancestorNodes isEmpty
+]
+
+{ #category : #tests }
+XMLNodeTest >> testAncestorNodesDo [
+	| node |
+
+	node := self nodeClass new.
+	self should: [:block |  node ancestorNodesDo: block] enumerate: #().
+]
+
+{ #category : #tests }
+XMLNodeTest >> testContentString [
+	self assert: self nodeClass new contentString isEmpty
+]
+
+{ #category : #tests }
+XMLNodeTest >> testHasChildren [
+	self deny: self nodeClass new hasChildren
+]
+
+{ #category : #tests }
+XMLNodeTest >> testHasParent [
+	| node |
+
+	node := self nodeClass new.
+	self deny: node hasParent.
+
+	node parent: self nodeClass new.
+	self assert: node hasParent.
+]
+
+{ #category : #tests }
+XMLNodeTest >> testIsCData [
+	self deny: self nodeClass new isCData
+]
+
+{ #category : #tests }
+XMLNodeTest >> testIsComment [
+	self deny: self nodeClass new isComment
+]
+
+{ #category : #tests }
+XMLNodeTest >> testIsContentNode [
+	self deny: self nodeClass new isContentNode
+]
+
+{ #category : #tests }
+XMLNodeTest >> testIsDeclaration [
+	self deny: self nodeClass new isDeclaration
+]
+
+{ #category : #tests }
+XMLNodeTest >> testIsDocument [
+	self deny: self nodeClass new isDocument
+]
+
+{ #category : #tests }
+XMLNodeTest >> testIsElement [
+	self deny: self nodeClass new isElement
+]
+
+{ #category : #tests }
+XMLNodeTest >> testIsElementNamed [
+	self deny: (self nodeClass new isElementNamed: '')
+]
+
+{ #category : #tests }
+XMLNodeTest >> testIsElementNamedAny [
+	self deny: (self nodeClass new isElementNamedAny: #())
+]
+
+{ #category : #tests }
+XMLNodeTest >> testIsPI [
+	self deny: self nodeClass new isPI
+]
+
+{ #category : #tests }
+XMLNodeTest >> testIsStringNode [
+	self
+		deny: self nodeClass new isStringNode;
+		deny: (self nodeClass new isStringNode: '').
+]
+
+{ #category : #tests }
+XMLNodeTest >> testNextNode [
+	self assert: self nodeClass new nextNode isNil
+]
+
+{ #category : #tests }
+XMLNodeTest >> testParent [
 	| node parent |
 
 	node := self nodeClass new.
-	self
-		assertNode: node hasTypes: self nodeTypes;
-		deny: node hasChildren;
-		deny: node hasParent;
-		assert: node nextNode isNil;
-		assert: node previousNode isNil;
-		assert: node contentString isEmpty.
+	self assert: node parent isNil.
 
 	parent := self nodeClass new.
 	node parent: parent.
-	self
-		assert: node hasParent;
-		assert: node parent == parent.
+	self assert: node parent == parent.
+]
+
+{ #category : #tests }
+XMLNodeTest >> testPreviousNode [
+	self assert: self nodeClass new previousNode isNil
+]
+
+{ #category : #tests }
+XMLNodeTest >> testRawContentString [
+	self assert: self nodeClass new rawContentString isEmpty
 ]

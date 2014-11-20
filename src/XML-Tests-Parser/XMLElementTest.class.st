@@ -47,16 +47,6 @@ XMLElementTest >> nodeClass [
 	^ XMLElement
 ]
 
-{ #category : #accessing }
-XMLElementTest >> nodeTypes [
-	^ #(isElement isContentNode)
-]
-
-{ #category : #tests }
-XMLElementTest >> test1emptyElement [
-	self assertNodeHasNoChildren: XMLElement new
-]
-
 { #category : #tests }
 XMLElementTest >> test2elementNaming [
 	| element |
@@ -241,6 +231,11 @@ XMLElementTest >> testElementSorting [
 ]
 
 { #category : #tests }
+XMLElementTest >> testIsElement [
+	self assert: self nodeClass new isElement
+]
+
+{ #category : #tests }
 XMLElementTest >> testIsElementNamed [
 	self
 		assert: ((self nodeClass named: 'one') isElementNamed: 'one');
@@ -252,6 +247,26 @@ XMLElementTest >> testIsElementNamedAny [
 	self
 		assert: ((self nodeClass named: 'one') isElementNamedAny: #('two' 'one' 'three'));
 		deny: ((self nodeClass named: 'two') isElementNamedAny: #('three' 'four' 'five'))
+]
+
+{ #category : #tests }
+XMLElementTest >> testNextElement [ 
+	| root nextElement |
+
+	root := self newNodeWithElements nodeAt: 2.
+	root elements reverseDo: [:each |
+		self assert: each nextElement == nextElement.
+		nextElement := each].
+]
+
+{ #category : #tests }
+XMLElementTest >> testPreviousElement [ 
+	| root previousElement |
+
+	root := self newNodeWithElements nodeAt: 2.
+	root elements do: [:each |
+		self assert: each previousElement == previousElement.
+		previousElement := each].
 ]
 
 { #category : #tests }

@@ -55,7 +55,7 @@ XMLDOMParserTest >> assertDocument: aDocumentCopy isCopyOf: aDocument [
 	visitedPairs := Set new.
 	searchedClasses :=
 		#(OrderedCollection Dictionary OrderPreservingDictionary
-			XMLNode XMLNodeName XMLNamespaceScope XMLOrderedList)
+			XMLNode XMLNamespaceScope XMLOrderedList)
 			collect: [:each | Smalltalk at: each].
 	[unvisitedPairs isEmpty]
 		whileFalse: [ | pair originalObject copyObject |
@@ -102,52 +102,6 @@ XMLDOMParserTest >> testAllElementsNamespaceURIs [
 			(document
 				allElementsNamed: 'person'
 				namespaceURI: 'undeclaredNS') isEmpty.
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testAncestorElements [
-	| document nodesAndAncestors ancestorStack |
-
-	document := XMLDOMParser parse: self addressBookXML.
-
-	nodesAndAncestors := IdentityDictionary new.
-	ancestorStack := OrderedCollection new.
-	document allNodesDo: [:each |
-		[ancestorStack isEmpty
-			or: [ancestorStack last == each parent]]
-			whileFalse: [ancestorStack removeLast].
-		nodesAndAncestors at: each put: ancestorStack reversed.
-		ancestorStack addLast: each].
-
-	nodesAndAncestors keysAndValuesDo: [:node :ancestors | | enumerated |
-		enumerated := OrderedCollection new.
-		node ancestorElementsDo: [:each | enumerated add: each].
-		self
-			assert: enumerated = (ancestors select: [:each | each isElement]);
-			assert: node ancestorElements asOrderedCollection = (ancestors select: [:each | each isElement])].
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testAncestorNodes [
-	| document nodesAndAncestors ancestorStack |
-
-	document := XMLDOMParser parse: self addressBookXML.
-
-	nodesAndAncestors := IdentityDictionary new.
-	ancestorStack := OrderedCollection new.
-	document allNodesDo: [:each |
-		[ancestorStack isEmpty
-			or: [ancestorStack last == each parent]]
-			whileFalse: [ancestorStack removeLast].
-		nodesAndAncestors at: each put: ancestorStack reversed.
-		ancestorStack addLast: each].
-
-	nodesAndAncestors keysAndValuesDo: [:node :ancestors | | enumerated |
-		enumerated := OrderedCollection new.
-		node ancestorNodesDo: [:each | enumerated add: each].
-		self
-			assert: enumerated = ancestors;
-			assert: node ancestorNodes asOrderedCollection = ancestors].
 ]
 
 { #category : #tests }
@@ -893,9 +847,9 @@ XMLDOMParserTest >> testXMLDeclaration [
 		assert: document encoding = 'UTF-8';
 		deny: document isStandalone.
 
-	document := XMLDOMParser parse: '<?xml version="1.1" encoding="UTF-16" standalone="yes"?>'.
+	document := XMLDOMParser parse: '<?xml version="1.1" encoding="utf-8" standalone="yes"?>'.
 	self
 		assert: document version = 1.1;
-		assert: document encoding = 'UTF-16';
+		assert: document encoding = 'utf-8';
 		assert: document isStandalone.
 ]

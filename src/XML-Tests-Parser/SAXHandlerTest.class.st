@@ -212,13 +212,13 @@ SAXHandlerTest >> testSAXXMLDeclaration [
 		deny: arguments third.
 
 	(parser := SAXHandlerProxy saxHandler:
-		(SAXHandler on: '<?xml version="1.1" encoding="UTF-16" standalone="yes"?>'))
+		(SAXHandler on: '<?xml version="1.1" encoding="utf-8" standalone="yes"?>'))
 		parseDocument.
 	self assert: (parser wasSentSelectors: selectors).
 
 	arguments := (parser argumentsSentWith: #xmlVersion:encoding:standalone:).
 	self
 		assert: arguments first = 1.1;
-		assert: arguments second = 'UTF-16';
+		assert: arguments second = 'utf-8';
 		assert: arguments third.
 ]

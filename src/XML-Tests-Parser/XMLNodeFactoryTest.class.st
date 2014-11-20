@@ -75,7 +75,7 @@ XMLNodeFactoryTest >> stringClass [
 ]
 
 { #category : #tests }
-XMLNodeFactoryTest >> testCDataCreation [
+XMLNodeFactoryTest >> testNewCData [
 	| factory document cdata |
 
 	factory := self newFactory.
@@ -88,7 +88,7 @@ XMLNodeFactoryTest >> testCDataCreation [
 ]
 
 { #category : #tests }
-XMLNodeFactoryTest >> testCommentCreation [
+XMLNodeFactoryTest >> testNewComment [
 	| factory document comment |
 
 	factory := self newFactory.
@@ -101,7 +101,7 @@ XMLNodeFactoryTest >> testCommentCreation [
 ]
 
 { #category : #tests }
-XMLNodeFactoryTest >> testDocumentCreation [
+XMLNodeFactoryTest >> testNewDocument [
 	| factory document newDocument |
 
 	factory := self newFactory.
@@ -115,7 +115,7 @@ XMLNodeFactoryTest >> testDocumentCreation [
 ]
 
 { #category : #tests }
-XMLNodeFactoryTest >> testElementCreation [
+XMLNodeFactoryTest >> testNewElement [
 	| factory document element |
 
 	factory := self newFactory.
@@ -126,31 +126,60 @@ XMLNodeFactoryTest >> testElementCreation [
 		assert: element class == self elementClass;
 		assert: element configuration == document configuration;
 		assert: element nodeFactory == factory.
-
-	element := element newElementNamed: 'test'.
-	self
-		assert: element class == self elementClass;
-		assert: element configuration == document configuration;
-		assert: element name = 'test';
-		assert: element nodeFactory == factory.
-
-	element := element newElementNamed: 'prefix:test' namespaceURI: 'prefixNS'.
-	self
-		assert: element class == self elementClass;
-		assert: element configuration == document configuration;
-		assert: element name = 'prefix:test';
-		assert: element namespaceURI = 'prefixNS';
-		assert: element nodeFactory == factory.
 ]
 
 { #category : #tests }
-XMLNodeFactoryTest >> testPICreation [
+XMLNodeFactoryTest >> testNewElementNamed [
+	| factory document element |
+
+	factory := self newFactory.
+	(document := factory newDocument)
+		nodeFactory: factory.
+	element := document newElementNamed: 'test'.
+	self
+		assert: element class == self elementClass;
+		assert: element configuration == document configuration;
+		assert: element nodeFactory == factory;
+		assert: element name = 'test'.
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testNewElementNamedNamespaceURI [
+	| factory document element |
+
+	factory := self newFactory.
+	(document := factory newDocument)
+		nodeFactory: factory.
+	element := document newElementNamed: 'prefix:test' namespaceURI: 'prefixNS'.
+	self
+		assert: element class == self elementClass;
+		assert: element configuration == document configuration;
+		assert: element nodeFactory == factory;
+		assert: element name = 'prefix:test';
+		assert: element namespaceURI = 'prefixNS'.
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testNewPI [
 	| factory document |
 
 	factory := self newFactory.
 	(document := factory newDocument)
 		nodeFactory: factory.
 	self assert: document newPI class == self piClass.
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testNewString [
+	| factory document string |
+
+	factory := self newFactory.
+	(document := factory newDocument)
+		nodeFactory: factory.
+	string := document newString: 'test'.
+	self
+		assert: string class == self stringClass;
+		assert: string string = 'test'.
 ]
 
 { #category : #tests }
@@ -185,17 +214,4 @@ XMLNodeFactoryTest >> testParsingSample [
 			ifTrue: [self assert: each class == self commentClass].
 		each isPI
 			ifTrue: [self assert: each class == self piClass]].
-]
-
-{ #category : #tests }
-XMLNodeFactoryTest >> testStringCreation [
-	| factory document string |
-
-	factory := self newFactory.
-	(document := factory newDocument)
-		nodeFactory: factory.
-	string := document newString: 'test'.
-	self
-		assert: string class == self stringClass;
-		assert: string string = 'test'.
 ]
