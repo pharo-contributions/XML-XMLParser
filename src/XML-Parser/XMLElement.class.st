@@ -530,7 +530,7 @@ XMLElement >> writeXMLOn: aWriter [
 
 	self hasNamespaces
 		ifTrue: [self writeNamespaceDeclarationsOn: tagWriter].
-	self hasAttributes 
+	self hasAttributes
 		ifTrue: [self writeAttributesOn: tagWriter].
 
 	tagWriter with: [

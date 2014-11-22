@@ -1032,7 +1032,7 @@ XMLWellFormedParserTokenizer >> nextTag [
 		ifTrue: [^ self nextEndTag].
 	tagName := self nextName.
 
-	attributes := OrderPreservingDictionary new: 10 withDefaultValue: ''.
+	attributes := OrderPreservingStringDictionary new: 10.
 	[streamReader skipSeparators.
 	((nextChar := streamReader peek) == $>
 		or: [nextChar == $/
@@ -1051,7 +1051,7 @@ XMLWellFormedParserTokenizer >> nextTag [
 						ifTrue: [
 							"initialize only if needed"
 							(namespaces
-								ifNil: [namespaces := OrderPreservingDictionary new: 5 withDefaultValue: ''])
+								ifNil: [namespaces := OrderPreservingStringDictionary new: 5])
 								at:
 									((attributeName size > 6)
 										ifTrue: [attributeName copyFrom: 7 to: attributeName size]

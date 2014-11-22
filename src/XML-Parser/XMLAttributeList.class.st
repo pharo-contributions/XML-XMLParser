@@ -37,10 +37,7 @@ XMLAttributeList >> afterRemoving: anAttribute [
 XMLAttributeList >> asDictionary [
 	| dictionary |
 
-	dictionary :=
-		OrderPreservingDictionary
-			new: self size
-			withDefaultValue: ''.
+	dictionary := OrderPreservingStringDictionary new: self size.
 	self do: [:each | dictionary at: each name put: each value].
 	^ dictionary.
 ]
