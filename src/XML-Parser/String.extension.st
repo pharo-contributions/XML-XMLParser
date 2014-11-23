@@ -33,6 +33,13 @@ String >> expandWithNamespaceURI: aNamespaceUri [
 ]
 
 { #category : #'*XML-Parser' }
+String >> hasPrefixBeforeLocalName [
+	^ (self
+		indexOf: $:
+		startingAt: 2) > 0
+]
+
+{ #category : #'*XML-Parser' }
 String >> isNamespaceAttributeName [
 	^ (self beginsWith: 'xmlns')
 		and: [self size = 5

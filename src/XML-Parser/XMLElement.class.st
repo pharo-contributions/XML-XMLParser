@@ -352,8 +352,8 @@ XMLElement >> nextElement [
 XMLElement >> postCopy [
 	super postCopy.
 
-	name := name copy.
-	namespaceScope := namespaceScope copy.
+	namespaceScope
+		ifNotNil: [namespaceScope := namespaceScope copy].
 	attributes
 		ifNotNil: [attributes := attributes deepCopyWithObserver: self].
 ]
@@ -379,13 +379,25 @@ XMLElement >> removeAttribute: aName [
 ]
 
 { #category : #removing }
+XMLElement >> removeAttribute: aName ifAbsent: aBlock [
+	^ (self attributeNodes
+		removeAttributeNodeAt: aName
+		ifAbsent: [^ aBlock value]) value.
+]
+
+{ #category : #removing }
 XMLElement >> removeAttributeNode: aNode [
 	^ self attributeNodes remove: aNode
 ]
 
 { #category : #removing }
+XMLElement >> removeAttributeNode: aNode ifAbsent: aBlock [
+	^ self attributeNodes remove: aNode ifAbsent: aBlock
+]
+
+{ #category : #removing }
 XMLElement >> removeAttributes [
-	^ self attributeNodes removeAll
+	self attributeNodes removeAll
 ]
 
 { #category : #notifications }

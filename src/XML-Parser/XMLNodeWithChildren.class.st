@@ -164,7 +164,7 @@ XMLNodeWithChildren >> firstNode [
 XMLNodeWithChildren >> hasChildren [
 	"Direct variable access avoids possibly unnecessary lazy initialization of the node list"
 
-	^ nodes notNil and: [nodes notEmpty]
+	^ nodes notNil and: [nodes size > 0]
 ]
 
 { #category : #testing }

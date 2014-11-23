@@ -62,7 +62,8 @@ XMLDocument >> isStandalone: aBoolean [
 XMLDocument >> postCopy [
 	super postCopy.
 
-	doctypeDeclaration := doctypeDeclaration copy.
+	doctypeDeclaration
+		ifNotNil: [doctypeDeclaration := doctypeDeclaration copy].
 ]
 
 { #category : #accessing }

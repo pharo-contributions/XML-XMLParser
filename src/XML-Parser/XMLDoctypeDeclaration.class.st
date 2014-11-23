@@ -15,8 +15,8 @@ Class {
 { #category : #'instance creation' }
 XMLDoctypeDeclaration class >> root: aRootElementName publicID: aPublicId systemID: aSystemId [
 	^ self new
-		setRoot: aRootElementName
-		publicID: aPublicId
+		root: aRootElementName;
+		publicID: aPublicId;
 		systemID: aSystemId
 ]
 
@@ -31,20 +31,28 @@ XMLDoctypeDeclaration >> publicID [
 ]
 
 { #category : #accessing }
+XMLDoctypeDeclaration >> publicID: aPublicId [
+	publicId := aPublicId
+]
+
+{ #category : #accessing }
 XMLDoctypeDeclaration >> root [
 	^ root ifNil: [root := '']
 ]
 
-{ #category : #initialization }
-XMLDoctypeDeclaration >> setRoot: aRootElementName publicID: aPublicId systemID: aSystemId [
-	root := aRootElementName.
-	publicId := aPublicId.
-	systemId := aSystemId.
+{ #category : #accessing }
+XMLDoctypeDeclaration >> root: aRootElementName [
+	root := aRootElementName
 ]
 
 { #category : #accessing }
 XMLDoctypeDeclaration >> systemID [
 	^ systemId ifNil: [systemId := '']
+]
+
+{ #category : #accessing }
+XMLDoctypeDeclaration >> systemID: aSystemId [
+	systemId := aSystemId
 ]
 
 { #category : #printing }

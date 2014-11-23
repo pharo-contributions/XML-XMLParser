@@ -111,24 +111,24 @@ XMLString >> isWhitespace [
 
 { #category : #'split and merge' }
 XMLString >> mergeAdjacent [
-	| parentNodes selfIndex adjacentNode |
+	| siblingNodes selfIndex adjacentNode |
 
 	self hasParent
 		ifFalse: [^ self].
 
-	parentNodes := self parent nodes.
-	selfIndex := parentNodes indexOf: self.
-	[(adjacentNode := parentNodes at: selfIndex + 1) notNil
+	siblingNodes := self parent nodes.
+	selfIndex := siblingNodes indexOf: self.
+	[(adjacentNode := siblingNodes at: selfIndex + 1) notNil
 		and: [adjacentNode isStringNode]]
 		whileTrue: [
 			self append: adjacentNode.
-			parentNodes removeAt: selfIndex + 1].
+			siblingNodes removeAt: selfIndex + 1].
 
-	[(adjacentNode := parentNodes at: selfIndex - 1) notNil
+	[(adjacentNode := siblingNodes at: selfIndex - 1) notNil
 		and: [adjacentNode isStringNode]]
 		whileTrue: [
 			self prepend: adjacentNode.
-			parentNodes removeAt: selfIndex - 1.
+			siblingNodes removeAt: selfIndex - 1.
 			selfIndex := selfIndex - 1].
 ]
 

@@ -38,7 +38,7 @@ XMLAttribute >> expandedName [
 
 { #category : #testing }
 XMLAttribute >> hasPrefix [
-	^ self name size > self localName size
+	^ self name hasPrefixBeforeLocalName
 ]
 
 { #category : #testing }
@@ -72,10 +72,14 @@ XMLAttribute >> name: aName [
 
 { #category : #accessing }
 XMLAttribute >> namespaceURI [
-	(self element notNil and: [self hasPrefix])
+	| prefix |
+
+	"attributes must have prefixes to be namespaced"
+	(self element notNil
+		and: [(prefix := self prefix) notEmpty])
 		ifFalse: [^ ''].
 	
-	^ self element resolvePrefix: self prefix.
+	^ self element resolvePrefix: prefix.
 ]
 
 { #category : #accessing }
@@ -88,13 +92,6 @@ XMLAttribute >> parent [
 XMLAttribute >> parent: aParentNode [
 	"attributes have no parents and aren't part of the DOM tree"
 	self shouldNotImplement
-]
-
-{ #category : #copying }
-XMLAttribute >> postCopy [
-	super postCopy.
-
-	name := name copy.
 ]
 
 { #category : #accessing }

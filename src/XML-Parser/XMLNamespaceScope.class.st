@@ -174,7 +174,8 @@ XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
 
 { #category : #copying }
 XMLNamespaceScope >> postCopy [
-	prefixMappings ifNotNil: [prefixMappings := prefixMappings copy].
+	prefixMappings
+		ifNotNil: [prefixMappings := prefixMappings copy]
 ]
 
 { #category : #accessing }
