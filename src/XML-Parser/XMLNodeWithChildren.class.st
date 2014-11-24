@@ -101,6 +101,11 @@ XMLNodeWithChildren >> allNodesSelect: aBlock [
 	^ selectedNodes.
 ]
 
+{ #category : #testing }
+XMLNodeWithChildren >> canHaveChildren [
+	^ true
+]
+
 { #category : #accessing }
 XMLNodeWithChildren >> descendentNodes [
 	| descendentNodes |

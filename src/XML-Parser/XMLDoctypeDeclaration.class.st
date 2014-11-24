@@ -21,6 +21,11 @@ XMLDoctypeDeclaration class >> root: aRootElementName publicID: aPublicId system
 ]
 
 { #category : #private }
+XMLDoctypeDeclaration >> newNodeListForSelect [
+	^ XMLInternalSubsetList new
+]
+
+{ #category : #private }
 XMLDoctypeDeclaration >> nodeListClass [
 	^ XMLInternalSubsetList
 ]

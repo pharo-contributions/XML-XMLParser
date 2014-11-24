@@ -8,8 +8,7 @@ Class {
 		'name',
 		'replacement',
 		'publicId',
-		'systemId',
-		'ndata'
+		'systemId'
 	],
 	#category : #'XML-Parser-DOM'
 }
@@ -42,16 +41,6 @@ XMLEntityDeclaration >> name [
 { #category : #accessing }
 XMLEntityDeclaration >> name: aName [
 	name := aName
-]
-
-{ #category : #accessing }
-XMLEntityDeclaration >> ndata [
-	^ ndata ifNil: [ndata := '']
-]
-
-{ #category : #accessing }
-XMLEntityDeclaration >> ndata: anNdata [
-	ndata := anNdata
 ]
 
 { #category : #accessing }

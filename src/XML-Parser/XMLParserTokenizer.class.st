@@ -70,6 +70,11 @@ XMLParserTokenizer >> characterFromCodePoint: aCodePoint [
 		ifFalse: [nil]
 ]
 
+{ #category : #'file open/close' }
+XMLParserTokenizer >> closeStreams [
+	streamReader closeStreams
+]
+
 { #category : #'entity replacement' }
 XMLParserTokenizer >> constructReplacementForBypassedGeneralEntity: anEntity [
 ]
@@ -207,7 +212,7 @@ XMLParserTokenizer >> nextEndDoctypeDeclaration [
 XMLParserTokenizer >> nextEndDocument [
 	context isTerminatedContext
 		ifFalse: [
-			streamReader close.
+			self closeStreams.
 			context := context terminatedContext.
 			driver handleEndDocument]
 ]

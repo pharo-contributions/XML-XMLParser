@@ -4,6 +4,9 @@ This is a class for internal/external parsed/unparsed general <!ENTITY> declarat
 Class {
 	#name : #XMLGeneralEntityDeclaration,
 	#superclass : #XMLEntityDeclaration,
+	#instVars : [
+		'ndata'
+	],
 	#category : #'XML-Parser-DOM'
 }
 
@@ -14,4 +17,25 @@ XMLGeneralEntityDeclaration class >> name: aName publicID: aPublicId systemID: a
 		publicID: aPublicId;
 		systemID: aSystemId;
 		ndata: aNotationName
+]
+
+{ #category : #accessing }
+XMLGeneralEntityDeclaration >> ndata [
+	^ ndata ifNil: [ndata := '']
+]
+
+{ #category : #accessing }
+XMLGeneralEntityDeclaration >> ndata: anNdata [
+	ndata := anNdata
+]
+
+{ #category : #printing }
+XMLGeneralEntityDeclaration >> writeXMLOn: aWriter [
+	aWriter entityDeclaration
+		name: self name;
+		isParameter: false;
+		replacement: self replacement;
+		publicID: self publicID;
+		systemID: self systemID;
+		ndata: self ndata
 ]

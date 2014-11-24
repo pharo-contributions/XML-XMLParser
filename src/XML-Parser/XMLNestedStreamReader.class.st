@@ -95,18 +95,18 @@ XMLNestedStreamReader >> basicNext [
 	^ nextChar.
 ]
 
-{ #category : #'file open/close' }
-XMLNestedStreamReader >> close [
-	[self hasNestedStreams]
-		whileTrue: [self popCurrentStream].
-	self closeCurrentStream.
-]
-
 { #category : #private }
 XMLNestedStreamReader >> closeCurrentStream [
 	(stream respondsTo: #close)
 		ifTrue: [stream close].
 	onClose ifNotNil: [onClose value].
+]
+
+{ #category : #'file open/close' }
+XMLNestedStreamReader >> closeStreams [
+	[self hasNestedStreams]
+		whileTrue: [self popCurrentStream].
+	self closeCurrentStream.
 ]
 
 { #category : #encodings }

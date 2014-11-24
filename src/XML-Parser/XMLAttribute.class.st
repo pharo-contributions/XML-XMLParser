@@ -20,6 +20,16 @@ XMLAttribute class >> name: aName value: aValue [
 ]
 
 { #category : #accessing }
+XMLAttribute >> configuration [
+	^ self element ifNotNil: [:element | element configuration]
+]
+
+{ #category : #accessing }
+XMLAttribute >> document [
+	^ self element ifNotNil: [:element | element document]
+]
+
+{ #category : #accessing }
 XMLAttribute >> element [
 	"reuse instance variable to save memory"
 	^ parent
@@ -83,6 +93,11 @@ XMLAttribute >> namespaceURI [
 ]
 
 { #category : #accessing }
+XMLAttribute >> nextNode [
+	^ self element ifNotNil: [:element | element attributeNodes after: self]
+]
+
+{ #category : #accessing }
 XMLAttribute >> parent [
 	"attributes have no parents and aren't part of the DOM tree"
 	self shouldNotImplement
@@ -102,6 +117,11 @@ XMLAttribute >> prefix [
 { #category : #accessing }
 XMLAttribute >> prefix: aPrefix [
 	self renameWith: [name := self localName qualifyWithPrefix:  aPrefix]
+]
+
+{ #category : #accessing }
+XMLAttribute >> previousNode [
+	^ self element ifNotNil: [:element | element attributeNodes before: self]
 ]
 
 { #category : #private }

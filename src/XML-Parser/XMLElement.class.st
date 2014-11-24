@@ -466,6 +466,11 @@ XMLElement >> setQualifiedName: aQualifiedName localName: aLocalName attributes:
 ]
 
 { #category : #namespaces }
+XMLElement >> undeclareDefaultNamespace [
+	self undeclarePrefix: ''
+]
+
+{ #category : #namespaces }
 XMLElement >> undeclarePrefix: aPrefix [
 	| currentMapping |
 

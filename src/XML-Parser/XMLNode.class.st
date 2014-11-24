@@ -66,6 +66,11 @@ XMLNode >> asString [
 	^ self printString
 ]
 
+{ #category : #testing }
+XMLNode >> canHaveChildren [
+	^ false
+]
+
 { #category : #printing }
 XMLNode >> canonicallyPrintOn: aStream [
  	"Prints on aStream as canonical XML"

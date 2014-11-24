@@ -192,7 +192,8 @@ XMLNamespaceScope >> prefixMappings [
 
 { #category : #enumerating }
 XMLNamespaceScope >> prefixesAndURIsDo: aTwoArgumentBlock [
-	prefixMappings ifNotNil: [prefixMappings keysAndValuesDo: aTwoArgumentBlock]
+	prefixMappings
+		ifNotNil: [prefixMappings keysAndValuesDo: aTwoArgumentBlock]
 ]
 
 { #category : #printing }
