@@ -83,7 +83,7 @@ XMLEncodingTest >> testEncodingDeclarationLatin1 [
 		shouldnt: [
 			SAXHandler parse:
 				(self convertableStreamOn:
-					self utf8BOM, (self encodingDeclaration: 'ISO-8859-1'), xml)]
+					self utf8BOM, (self encodingDeclaration: 'latin-1'), xml)]
 		raise: XMLEncodingException.
 ]
 

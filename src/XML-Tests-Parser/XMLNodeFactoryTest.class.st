@@ -4,11 +4,6 @@ Class {
 	#category : #'XML-Tests-Parser-Factories'
 }
 
-{ #category : #testing }
-XMLNodeFactoryTest class >> shouldInheritSelectors [
-	^ true
-]
-
 { #category : #accessing }
 XMLNodeFactoryTest >> cdataClass [
 	^ XMLCData
@@ -76,12 +71,9 @@ XMLNodeFactoryTest >> stringClass [
 
 { #category : #tests }
 XMLNodeFactoryTest >> testNewCData [
-	| factory document cdata |
+	| cdata |
 
-	factory := self newFactory.
-	(document := factory newDocument)
-		nodeFactory: factory.
-	cdata := document newCData: 'test'.
+	cdata := self newFactory newCData: 'test'.
 	self
 		assert: cdata class == self cdataClass;
 		assert: cdata string = 'test'.
@@ -89,12 +81,9 @@ XMLNodeFactoryTest >> testNewCData [
 
 { #category : #tests }
 XMLNodeFactoryTest >> testNewComment [
-	| factory document comment |
+	| comment |
 
-	factory := self newFactory.
-	(document := factory newDocument)
-		nodeFactory: factory.
-	comment := document newComment: 'test'.
+	comment := self newFactory newComment: 'test'.
 	self
 		assert: comment class == self commentClass;
 		assert: comment string = 'test'.
@@ -102,81 +91,51 @@ XMLNodeFactoryTest >> testNewComment [
 
 { #category : #tests }
 XMLNodeFactoryTest >> testNewDocument [
-	| factory document newDocument |
+	| newDocument |
 
-	factory := self newFactory.
-	(document := factory newDocument)
-		nodeFactory: factory.
-	newDocument := document newDocument.
-	self
-		assert: newDocument class == self documentClass;
-		assert: newDocument configuration == document configuration;
-		assert: newDocument nodeFactory == factory.
+	newDocument := self newFactory newDocument.
+	self assert: newDocument class == self documentClass.
 ]
 
 { #category : #tests }
 XMLNodeFactoryTest >> testNewElement [
-	| factory document element |
+	| element |
 
-	factory := self newFactory.
-	(document := factory newDocument)
-		nodeFactory: factory.
-	element := document newElement.
-	self
-		assert: element class == self elementClass;
-		assert: element configuration == document configuration;
-		assert: element nodeFactory == factory.
+	element := self newFactory newElement.
+	self assert: element class == self elementClass.
 ]
 
 { #category : #tests }
 XMLNodeFactoryTest >> testNewElementNamed [
-	| factory document element |
+	| element |
 
-	factory := self newFactory.
-	(document := factory newDocument)
-		nodeFactory: factory.
-	element := document newElementNamed: 'test'.
+	element := self newFactory newElementNamed: 'test'.
 	self
 		assert: element class == self elementClass;
-		assert: element configuration == document configuration;
-		assert: element nodeFactory == factory;
 		assert: element name = 'test'.
 ]
 
 { #category : #tests }
 XMLNodeFactoryTest >> testNewElementNamedNamespaceURI [
-	| factory document element |
+	| element |
 
-	factory := self newFactory.
-	(document := factory newDocument)
-		nodeFactory: factory.
-	element := document newElementNamed: 'prefix:test' namespaceURI: 'prefixNS'.
+	element := self newFactory newElementNamed: 'prefix:test' namespaceURI: 'prefixNS'.
 	self
 		assert: element class == self elementClass;
-		assert: element configuration == document configuration;
-		assert: element nodeFactory == factory;
 		assert: element name = 'prefix:test';
 		assert: element namespaceURI = 'prefixNS'.
 ]
 
 { #category : #tests }
 XMLNodeFactoryTest >> testNewPI [
-	| factory document |
-
-	factory := self newFactory.
-	(document := factory newDocument)
-		nodeFactory: factory.
-	self assert: document newPI class == self piClass.
+	self assert: self newFactory newPI class == self piClass
 ]
 
 { #category : #tests }
 XMLNodeFactoryTest >> testNewString [
-	| factory document string |
+	| string |
 
-	factory := self newFactory.
-	(document := factory newDocument)
-		nodeFactory: factory.
-	string := document newString: 'test'.
+	string := self newFactory newString: 'test'.
 	self
 		assert: string class == self stringClass;
 		assert: string string = 'test'.

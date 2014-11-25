@@ -5,11 +5,6 @@ Class {
 }
 
 { #category : #accessing }
-XMLStringTest >> escapedString [
-	^ '&lt;test name="&amp;name;">''&amp;value;''&lt;/test>'
-]
-
-{ #category : #accessing }
 XMLStringTest >> nodeClass [
 	^ XMLString
 ]
@@ -75,8 +70,8 @@ XMLStringTest >> testBeginsWith [
 	| node |
 
 	node := self nodeClass string: 'test'.
-	1 to: 4 do: [:i | | prefix |
-		prefix := 'test' first: i.
+	0 to: node string size - 1 do: [:i | | prefix |
+		prefix := node string allButLast: i.
 		self
 			assert: (node beginsWith: prefix);
 			assert: (node beginsWith: (self nodeClass string: prefix));
@@ -120,8 +115,8 @@ XMLStringTest >> testEndsWith [
 	| node |
 
 	node := self nodeClass string: 'test'.
-	1 to: 4 do: [:i | | suffix |
-		suffix := 'test' last: i.
+	0 to: node string size - 1 do: [:i | | suffix |
+		suffix := node string allButFirst: i.
 		self
 			assert: (node endsWith: suffix);
 			assert: (node endsWith: (self nodeClass string: suffix));
@@ -297,13 +292,6 @@ XMLStringTest >> testPrepend [
 ]
 
 { #category : #tests }
-XMLStringTest >> testPrinting [
-	self
-		assert: self nodeClass new printString isEmpty;
-		assert: (self nodeClass string: self markupString) printString = self escapedString.
-]
-
-{ #category : #tests }
 XMLStringTest >> testReplaceAllWith [
 	| node |
 
@@ -381,4 +369,11 @@ XMLStringTest >> testString [
 
 	node string: ''.
 	self assert: node string isEmpty.
+]
+
+{ #category : #tests }
+XMLStringTest >> testWriteXMLOn [
+	self
+		assert: self nodeClass new printString isEmpty;
+		assert: (self nodeClass string: self markupString) printString = self escapedString.
 ]

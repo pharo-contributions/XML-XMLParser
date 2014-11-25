@@ -23,7 +23,8 @@ XMLExternalEntityTest class >> isSkipping [
 
 { #category : #testing }
 XMLExternalEntityTest class >> isSkipping: aBoolean [
-	"
+	"HTTP/file tests are skipped by default.
+
 	self isSkipping: false.
 	self isSkipping: true.
 	"

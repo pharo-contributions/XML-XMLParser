@@ -246,6 +246,17 @@ XMLObservableListTest >> testAtPut [
 ]
 
 { #category : #tests }
+XMLObservableListTest >> testCopy [
+	| list copy |
+
+	super testCopy.
+	list := self listWithElements.
+	list observer: XMLRecordingListObserver new.
+	copy := list copy.
+	self deny: list observer == copy observer.
+]
+
+{ #category : #tests }
 XMLObservableListTest >> testRemoveAll [
 	| list |
 
@@ -305,7 +316,7 @@ XMLObservableListTest >> testRemoveFirstFew [
 	list := self listWithElements.
 	self
 		should: [list removeFirst: 2]
-		removeAll: (self listElements first: 2)
+		removeAll: (self listElementsFirst: 2)
 		fromAndNotifyOf: list.
 ]
 
@@ -356,7 +367,7 @@ XMLObservableListTest >> testRemoveLastFew [
 	list := self listWithElements.
 	self
 		should: [list removeLast: 2]
-		removeAll: (self listElements last: 2) reversed
+		removeAll: (self listElementsLast: 2) reversed
 		fromAndNotifyOf: list.
 ]
 

@@ -9,12 +9,11 @@ XMLDocumentTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #assertions }
-XMLDocumentTest >> assertDocument: aDocument hasDoctype: aDoctype version: aVersion encoding: anEncoding [
-	self
-		assert: aDocument doctypeDeclaration = aDoctype;
-		assert: aDocument version = aVersion;
-		assert: aDocument encoding = anEncoding
+{ #category : #'instance creation' }
+XMLDocumentTest >> newNodeWithElements [
+	^ super newNodeWithElements
+		doctypeDeclaration: XMLDoctypeDeclaration new;
+		yourself
 ]
 
 { #category : #accessing }
@@ -23,36 +22,65 @@ XMLDocumentTest >> nodeClass [
 ]
 
 { #category : #tests }
-XMLDocumentTest >> test11documentTest [
-	| doc root doctype |
+XMLDocumentTest >> testDoctypeDeclaration [
+	| document doctype |
 
-	doc := XMLDocument new.
-	root := XMLElement new.
-	doctype := XMLDoctypeDeclaration root: 'root' publicID: 'public' systemID: 'system'.
+	document := self nodeClass new.
+	self assert: document doctypeDeclaration isNil.
+	doctype := XMLDoctypeDeclaration new.
 	self
-		assert: doc isDocument;
-		assert: doc root isNil;
-		assert: (doc addNode: root; root) = root;
-		assertDocument: doc hasDoctype: nil version: nil encoding: 'UTF-8'.
+		assert: (document doctypeDeclaration: doctype) == document;
+		assert: document doctypeDeclaration == doctype.
+]
 
+{ #category : #tests }
+XMLDocumentTest >> testDocument [
+	| document |
+
+	super testDocument.
+
+	document := self nodeClass new.
+	self assert: document document == document.
+
+	document := self newNodeWithElements.
+	self assert: document document == document.
+]
+
+{ #category : #tests }
+XMLDocumentTest >> testEncoding [
 	self
-		assertDocument: (doc doctypeDeclaration: doctype)
-		hasDoctype: doctype
-		version: nil
-		encoding: 'UTF-8'.
-	self
-		assertDocument: (doc version: 1.0)
-		hasDoctype: doctype
-		version: 1.0
-		encoding: 'UTF-8'.
-	self
-		assertDocument: (doc encoding: 'ISO Latin-1')
-		hasDoctype: doctype
-		version: 1.0
-		encoding: 'ISO Latin-1'.
+		assert: self nodeClass new encoding = 'UTF-8';
+		assert: ((self nodeClass new encoding: 'UTF-16') encoding) = 'UTF-16'.
 ]
 
 { #category : #tests }
 XMLDocumentTest >> testIsDocument [
 	self assert: self nodeClass new isDocument
+]
+
+{ #category : #tests }
+XMLDocumentTest >> testIsStandalone [
+	self
+		deny: self nodeClass new isStandalone;
+		assert: (self nodeClass new isStandalone: true) isStandalone
+]
+
+{ #category : #tests }
+XMLDocumentTest >> testRoot [
+	| nodeWithElements |
+
+	self assert: self nodeClass new root isNil.
+	nodeWithElements := self newNodeWithElements.
+	self assert: (nodeWithElements root isElementNamed: 'root').
+	nodeWithElements removeNodes.
+	self assert: nodeWithElements root isNil.
+	nodeWithElements addNode: (XMLElement named: 'new-root').
+	self assert: (nodeWithElements root isElementNamed: 'new-root').
+]
+
+{ #category : #tests }
+XMLDocumentTest >> testVersion [
+	self
+		assert: self nodeClass new version isNil;
+		assert: (self nodeClass new version: 1.0) version = 1.0
 ]

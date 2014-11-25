@@ -12,12 +12,7 @@ XMLNodeWithChildrenTest class >> isAbstract [
 	^ true
 ]
 
-{ #category : #assertions }
-XMLNodeWithChildrenTest >> assertNode: aNode hasChildren: aNodeCollection [
-	self assert: aNode nodes asArray = aNodeCollection asArray
-]
-
-{ #category : #accessing }
+{ #category : #'instance creation' }
 XMLNodeWithChildrenTest >> newNodeWithNodes [
 	^ self nodeClass new
 		addNode: (XMLComment string: 'one');
@@ -30,43 +25,6 @@ XMLNodeWithChildrenTest >> newNodeWithNodes [
 { #category : #accessing }
 XMLNodeWithChildrenTest >> nodeClass [
 	^ XMLNodeWithChildren
-]
-
-{ #category : #assertions }
-XMLNodeWithChildrenTest >> should: aBlock addNode: aNode to: aParent [
-	self should: aBlock addNodes: (Array with: aNode) to: aParent
-]
-
-{ #category : #assertions }
-XMLNodeWithChildrenTest >> should: aBlock addNodes: aNodeCollection to: aParent [
-	| nodesAdded |
-
-	self deny: (aNodeCollection anySatisfy: [:each | aParent includesNode: each]).
-	(nodesAdded := aBlock value) isCollection
-		ifFalse: [nodesAdded := Array with: nodesAdded].
-	self
-		assert: nodesAdded asArray = aNodeCollection asArray;
-		assert:
-			(nodesAdded allSatisfy: [:each |
-				(aParent includesNode: each) and: [each parent == aParent]])
-]
-
-{ #category : #assertions }
-XMLNodeWithChildrenTest >> should: aBlock removeNode: aNode from: aParent [
-	self should: aBlock removeNodes: (Array with: aNode) from: aParent
-]
-
-{ #category : #assertions }
-XMLNodeWithChildrenTest >> should: aBlock removeNodes: aNodeCollection from: aParent [
-	| nodesRemoved |
-
-	self assert: (aNodeCollection allSatisfy: [:each | aParent includesNode: each]).
-	(nodesRemoved := aBlock value) isCollection
-		ifFalse: [nodesRemoved := Array with: nodesRemoved].
-
-	self
-		assert: nodesRemoved asArray = aNodeCollection asArray;
-		deny: (nodesRemoved anySatisfy: [:each | aParent includesNode: each])
 ]
 
 { #category : #tests }
@@ -201,7 +159,7 @@ XMLNodeWithChildrenTest >> testAllNodesCollect [
 		collects: (allNodes collect: [:each | each identityHash]).
 
 	allNodes do: [:node |
-		(node respondsTo: #allNodesCollect:)
+		node canHaveChildren
 			ifTrue: [
 				self
 					assertList: (node allNodesCollect: [:each | each identityHash])
@@ -219,7 +177,7 @@ XMLNodeWithChildrenTest >> testAllNodesDetect [
 		assert: detectedNode notNil;
 		assert: detectedNode isPI;
 		assert: detectedNode == (allNodes detect: [:each | each isPI]);
-		assert: (nodeWithNodes allNodesDetect: [:each | each isDeclaration]) isNil.
+		assert: (nodeWithNodes allNodesDetect: [:each | each isElementNamed: 'absent']) isNil.
 ]
 
 { #category : #tests }
@@ -238,7 +196,7 @@ XMLNodeWithChildrenTest >> testAllNodesDetectIfNone [
 		assert: detectedNode == (allNodes detect: [:each | each isPI] ifNone: [#absent]);
 		assert:
 			(nodeWithNodes
-				allNodesDetect: [:each | each isDeclaration]
+				allNodesDetect: [:each | each isElementNamed: 'absent']
 				ifNone: [#absent]) = #absent.
 ]
 
@@ -253,7 +211,7 @@ XMLNodeWithChildrenTest >> testAllNodesDo [
 		enumerate: allNodes.
 
 	allNodes do: [:node |
-		node isElement
+		node canHaveChildren
 			ifTrue: [
 				self
 					should: [:block | node allNodesDo: block]
@@ -271,7 +229,7 @@ XMLNodeWithChildrenTest >> testAllNodesSelect [
 		selects: (allNodes select: [:each | each isComment]).
 
 	allNodes do: [:node |
-		(node respondsTo: #allNodesSelect:)
+		node canHaveChildren
 			ifTrue: [
 				self
 					assertList: (node allNodesSelect: [:each | each isComment])
@@ -306,6 +264,47 @@ XMLNodeWithChildrenTest >> testAncestorNodesDo [
 ]
 
 { #category : #tests }
+XMLNodeWithChildrenTest >> testCanHaveChildren [
+	self assert: self nodeClass new canHaveChildren
+]
+
+{ #category : #tests }
+XMLNodeWithChildrenTest >> testCopy [
+	| nodeWithNodes nodeWithNodesCopy unvisitedPairs visitedPairs copiedTypes |
+
+	super testCopy.
+	nodeWithNodes := self newNodeWithNodes.
+	nodeWithNodesCopy := nodeWithNodes copy.
+	self
+		assert: nodeWithNodes printString = nodeWithNodesCopy printString;
+		assert: nodeWithNodes allNodes size = nodeWithNodesCopy allNodes size.
+
+	unvisitedPairs := Set new.
+	nodeWithNodes allNodes
+		with: nodeWithNodesCopy allNodes
+		do: [:node :nodeCopy | unvisitedPairs add: node -> nodeCopy].
+
+	visitedPairs := Set new.
+	copiedTypes :=
+		#(OrderedCollection Dictionary OrderPreservingStringDictionary
+			XMLNode XMLNamespaceScope XMLOrderedList)
+			collect: [:each | Smalltalk at: each].
+	[unvisitedPairs isEmpty]
+		whileFalse: [ | pair originalObject copyObject |
+			pair := unvisitedPairs remove: unvisitedPairs anyOne.
+			originalObject := pair key.
+			copyObject := pair value.
+
+			self deny: originalObject == copyObject.
+			visitedPairs add: pair.
+			1 to: originalObject class instSize do: [:i | | newPair |
+				newPair := (originalObject instVarAt: i) -> (copyObject instVarAt: i).
+				((visitedPairs includes: newPair)
+					or: [copiedTypes noneSatisfy: [:each | newPair key isKindOf: each]])
+					ifFalse: [unvisitedPairs add: newPair]]].
+]
+
+{ #category : #tests }
 XMLNodeWithChildrenTest >> testDescendentNodes [
 	| nodeWithNodes descendentNodes |
 
@@ -316,7 +315,7 @@ XMLNodeWithChildrenTest >> testDescendentNodes [
 		selects: nodeWithNodes allNodes allButFirst.
 
 	descendentNodes do: [:node |
-		node isElement
+		node canHaveChildren
 			ifTrue: [
 				self
 					assertList: node descendentNodes
@@ -334,7 +333,7 @@ XMLNodeWithChildrenTest >> testDescendentNodesCollect [
 		collects: (descendentNodes collect: [:each | each identityHash]).
 
 	descendentNodes do: [:node |
-		(node respondsTo: #descendentNodesCollect:)
+		node canHaveChildren
 			ifTrue: [
 				self
 					assertList: (node descendentNodesCollect: [:each | each identityHash])
@@ -352,7 +351,7 @@ XMLNodeWithChildrenTest >> testDescendentNodesDetect [
 		assert: detectedNode notNil;
 		assert: detectedNode isPI;
 		assert: detectedNode == (descendentNodes detect: [:each | each isPI]);
-		assert: (nodeWithNodes descendentNodesDetect: [:each | each isDeclaration]) isNil.
+		assert: (nodeWithNodes descendentNodesDetect: [:each | each isElementNamed: 'absent']) isNil.
 ]
 
 { #category : #tests }
@@ -371,7 +370,7 @@ XMLNodeWithChildrenTest >> testDescendentNodesDetectIfNone [
 		assert: detectedNode == (descendentNodes detect: [:each | each isPI] ifNone: [#absent]);
 		assert:
 			(nodeWithNodes
-				descendentNodesDetect: [:each | each isDeclaration]
+				descendentNodesDetect: [:each | each isElementNamed: 'absent']
 				ifNone: [#absent]) = #absent.
 ]
 
@@ -386,7 +385,7 @@ XMLNodeWithChildrenTest >> testDescendentNodesDo [
 		enumerate: descendentNodes.
 
 	descendentNodes do: [:node |
-		node isElement
+		node canHaveChildren
 			ifTrue: [
 				self
 					should: [:block | node descendentNodesDo: block]
@@ -404,11 +403,28 @@ XMLNodeWithChildrenTest >> testDescendentNodesSelect [
 		selects: (descendentNodes select: [:each | each isComment]).
 
 	descendentNodes do: [:node |
-		(node respondsTo: #descendentNodesSelect:)
+		node canHaveChildren
 			ifTrue: [
 				self
 					assertList: (node descendentNodesSelect: [:each | each isComment])
 					selects: (node descendentNodes select: [:each | each isComment])]].
+]
+
+{ #category : #tests }
+XMLNodeWithChildrenTest >> testDocument [
+	| nodeWithNodes document |
+
+	nodeWithNodes := self newNodeWithNodes.
+	document := nodeWithNodes document.
+	nodeWithNodes allNodesDo: [:each |
+		self assert: each document == document].
+
+	document
+		ifNotNil: [ | root |
+			root := document root.
+			document removeNodes.
+			root allNodesDo: [:each |
+				self assert: each document isNil]].
 ]
 
 { #category : #tests }
@@ -457,6 +473,7 @@ XMLNodeWithChildrenTest >> testNextNode [
 
 	super testNextNode.
 	nodeWithNodes := self newNodeWithNodes.
+	nextNode := nil.
 	nodeWithNodes nodes reverseDo: [:each |
 		self assert: each nextNode == nextNode.
 		nextNode := each].
@@ -467,6 +484,7 @@ XMLNodeWithChildrenTest >> testNodeAfter [
 	| nodeWithNodes nodeAfter |
 
 	nodeWithNodes := self newNodeWithNodes.
+	nodeAfter := nil.
 	nodeWithNodes nodes reverseDo: [:each |
 		self assert: (nodeWithNodes nodeAfter: each) == nodeAfter.
 		nodeAfter := each].
@@ -526,10 +544,70 @@ XMLNodeWithChildrenTest >> testNodeBefore [
 	| nodeWithNodes nodeBefore |
 
 	nodeWithNodes := self newNodeWithNodes.
+	nodeBefore := nil.
 	nodeWithNodes nodes do: [:each |
 		self assert: (nodeWithNodes nodeBefore: each) == nodeBefore.
 		nodeBefore := each].
 	self assert: (nodeWithNodes nodeBefore: self nodeClass new) isNil.
+]
+
+{ #category : #tests }
+XMLNodeWithChildrenTest >> testNodeListCopying [
+	| nodeWithNodes nodeListCopy |
+
+	nodeWithNodes := self newNodeWithNodes.
+	nodeListCopy := nodeWithNodes nodes copy.
+	self
+		assert: nodeListCopy = nodeWithNodes nodes;
+		deny: nodeListCopy == nodeWithNodes nodes;
+		assert: nodeWithNodes nodes observer == nodeWithNodes;
+		assert: nodeListCopy observer isNil.
+]
+
+{ #category : #tests }
+XMLNodeWithChildrenTest >> testNodes [
+	self assert: (self nodeClass new nodes isKindOf: XMLNodeList)
+]
+
+{ #category : #tests }
+XMLNodeWithChildrenTest >> testNodesCollect [
+	| node |
+
+	node := self newNodeWithNodes.
+	self
+		assertList: (node nodesCollect: [:each | each identityHash])
+		collects: (node nodes collect: [:each | each identityHash]).
+]
+
+{ #category : #tests }
+XMLNodeWithChildrenTest >> testNodesDetect [
+	| node detectedNode |
+
+	node := self newNodeWithNodes.
+	detectedNode := node nodesDetect: [:each | each isComment].
+	self
+		assert: detectedNode notNil;
+		assert: detectedNode == (node nodes detect: [:each | each isComment]);
+		assert: (node nodesDetect: [:each | each isElementNamed: 'absent']) isNil.
+]
+
+{ #category : #tests }
+XMLNodeWithChildrenTest >> testNodesDetectIfNone [
+	| node detectedNode |
+
+	node := self newNodeWithNodes.
+	detectedNode :=
+		node
+			nodesDetect: [:each | each isComment]
+			ifNone: [#absent].
+	self deny: detectedNode = #absent.
+	self assert:
+		detectedNode ==
+			(node nodes detect: [:each | each isComment] ifNone: [#absent]).
+	self assert:
+		(node
+			nodesDetect: [:each | each isElementNamed: 'absent']
+			ifNone: [#absent]) = #absent.
 ]
 
 { #category : #tests }
@@ -544,11 +622,22 @@ XMLNodeWithChildrenTest >> testNodesDo [
 ]
 
 { #category : #tests }
+XMLNodeWithChildrenTest >> testNodesSelect [
+	| node |
+
+	node := self newNodeWithNodes.
+	self
+		assertList: (node nodesSelect: [:each | each hasChildren])
+		selects: (node nodes select: [:each | each hasChildren]).
+]
+
+{ #category : #tests }
 XMLNodeWithChildrenTest >> testPreviousNode [
 	| nodeWithNodes previousNode |
 
 	super testPreviousNode.
 	nodeWithNodes := self newNodeWithNodes.
+	previousNode := nil.
 	nodeWithNodes nodes do: [:each |
 		self assert: each previousNode == previousNode.
 		previousNode := each].

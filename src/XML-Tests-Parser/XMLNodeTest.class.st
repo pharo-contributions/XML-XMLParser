@@ -7,7 +7,7 @@ Class {
 	#category : #'XML-Tests-Parser-DOM'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 XMLNodeTest class >> shouldInheritSelectors [
 	^ true
 ]
@@ -26,86 +26,14 @@ XMLNodeTest >> assertList: aList selects: aSecondList [
 		assert: aList class == self selectNodeListClass.
 ]
 
-{ #category : #tests }
-XMLNodeTest >> assertNode: aNode hasName: aQualifiedName namespaceURI: aUri [
-	| prefix localName |
-
-	prefix := aQualifiedName copyUpTo: $:.
-	prefix = aQualifiedName
-		ifTrue: [
-			prefix := ''.
-			localName := aQualifiedName]
-		ifFalse: [localName := aQualifiedName copyAfter: $:].
-	self
-		assert: aNode name = aQualifiedName;
-		assert: aNode prefix = prefix;
-		assert: aNode localName = localName;
-		assert: (aNode isNamed: aQualifiedName);
-		assert: (aNode isNamed: localName);
-		assert: aNode namespaceURI = aUri;
-		assert:
-			aNode expandedName =
-				(aUri
-					ifEmpty: [localName]
-					ifNotEmpty: ['{', aUri, '}', localName]);
-		assert: (prefix ifEmpty: [aNode hasPrefix not] ifNotEmpty: [aNode hasPrefix])
-
-
-]
-
-{ #category : #assertions }
-XMLNodeTest >> assertNode: aNode hasPrefix: aPrefix uri: aUri [
-	self
-		assert: aNode prefix = aPrefix;
-		assert: aNode namespaceURI = aUri
-]
-
-{ #category : #assertions }
-XMLNodeTest >> assertNode: aNode hasType: aType [
-	self assertNode: aNode hasTypes: (aType ifNotNil: [Array with: aType] ifNil: [#()])
-]
-
-{ #category : #assertions }
-XMLNodeTest >> assertNode: aNode hasTypes: aTypeArray [
-	self deny:
-		((#(isCData isComment isContentNode isDocument isElement isPI isStringNode)
-			copyWithoutAll: aTypeArray) anySatisfy: [:each | aNode perform: each]).
-	self assert: (aTypeArray allSatisfy: [:each | aNode perform: each]).
-]
-
 { #category : #accessing }
 XMLNodeTest >> collectListClass [
 	^ XMLOrderedList
 ]
 
 { #category : #accessing }
-XMLNodeTest >> createNodes: aNumber with: aBlock [
-	^ ((1 to: aNumber)
-		collect: [:i | aBlock valueWithPossibleArgument: i])
-			asOrderedCollection
-]
-
-{ #category : #accessing }
-XMLNodeTest >> intersperse: aNodeCollection with: aPaddingCollection [
-	| mixedCollection nodeStream paddingStream |
-
-	mixedCollection := XMLOrderedList new.
-	nodeStream := aNodeCollection readStream.
-	paddingStream := aPaddingCollection readStream.
-	[nodeStream atEnd and: [paddingStream atEnd]]
-		whileFalse: [
-			nodeStream atEnd
-				ifFalse: [mixedCollection add: nodeStream next].
-			paddingStream atEnd
-				ifFalse: [mixedCollection add: paddingStream next]].
-	^ mixedCollection.
-]
-
-{ #category : #accessing }
-XMLNodeTest >> intersperseWithNodes: aNodeCollection [
-	^ self
-		intersperse: aNodeCollection
-		with: (self newStrings: aNodeCollection size)
+XMLNodeTest >> escapedString [
+	^ '&lt;test name="&amp;name;">''&amp;value;''&lt;/test>'
 ]
 
 { #category : #accessing }
@@ -113,16 +41,20 @@ XMLNodeTest >> markupString [
 	^ '<test name="&name;">''&value;''</test>'
 ]
 
-{ #category : #accessing }
-XMLNodeTest >> newNodes: aNumber [
-	^ self createNodes: aNumber with: [self nodeClass new]
-]
+{ #category : #'instance creation' }
+XMLNodeTest >> newElementWithAttributes [
+	| element |
 
-{ #category : #accessing }
-XMLNodeTest >> newStrings: aNumber [
-	^ self
-		createNodes: aNumber
-		with: [:i | XMLString string: 'test', i printString]
+	element :=
+		XMLElement
+			name: 'test'
+			namespaces: (Array with: '' -> 'defaultNS' with: 'prefix' -> 'testNS').
+	element attributeNodes
+		add: (XMLAttribute name: 'one' value: 'two');
+		add: (XMLAttribute name: 'three' value: 'four');
+		add: (XMLAttribute name: 'prefix:three' value: 'five');
+		add: (XMLAttribute name: 'prefix:six' value: 'seven').
+	^ element.
 ]
 
 { #category : #accessing }
@@ -142,6 +74,11 @@ XMLNodeTest >> should: aBlock enumerate: aCollection [
 	enumerated := OrderedCollection new.
 	aBlock value: [:each | enumerated add: each].
 	self assert: enumerated = aCollection asOrderedCollection.
+]
+
+{ #category : #tests }
+XMLNodeTest >> testAddContent [
+	self should: [self nodeClass new addContent: 'test'] raise: Error
 ]
 
 { #category : #tests }
@@ -171,8 +108,35 @@ XMLNodeTest >> testAncestorNodesDo [
 ]
 
 { #category : #tests }
+XMLNodeTest >> testCanHaveChildren [
+	self deny: self nodeClass new canHaveChildren
+]
+
+{ #category : #tests }
+XMLNodeTest >> testConfiguration [
+	self assert: self nodeClass new configuration isNil
+]
+
+{ #category : #tests }
 XMLNodeTest >> testContentString [
 	self assert: self nodeClass new contentString isEmpty
+]
+
+{ #category : #tests }
+XMLNodeTest >> testCopy [
+	| node copy |
+
+	(node := self nodeClass new)
+		parent: self nodeClass new.
+	copy := node copy.
+	self
+		deny: copy == node;
+		deny: copy hasParent. 
+]
+
+{ #category : #tests }
+XMLNodeTest >> testDocument [
+	self assert: self nodeClass new document isNil
 ]
 
 { #category : #tests }

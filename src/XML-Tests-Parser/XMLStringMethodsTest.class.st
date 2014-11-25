@@ -5,6 +5,18 @@ Class {
 }
 
 { #category : #tests }
+XMLStringMethodsTest >> testHasPrefixBeforeLocalName [
+	self
+		deny: 'name' hasPrefixBeforeLocalName;
+		deny: ':name' hasPrefixBeforeLocalName;
+		assert: 'prefix:name' hasPrefixBeforeLocalName;
+		assert: '::name' hasPrefixBeforeLocalName;
+		assert: 'invalid:prefix:name' hasPrefixBeforeLocalName;
+		assert: ':::name' hasPrefixBeforeLocalName;
+		assert: ':invalid:prefix:name' hasPrefixBeforeLocalName.
+]
+
+{ #category : #tests }
 XMLStringMethodsTest >> testIsQualifiedNameOrLocalName [
 	self
 		assert: ('name' isQualifiedName: 'name' orLocalName: 'name');

@@ -54,6 +54,11 @@ XMLPluggableNodeFactoryTest class >> removeDummySubclassNamed: aName [
 	(Smalltalk at: aName asSymbol) removeFromSystem
 ]
 
+{ #category : #testing }
+XMLPluggableNodeFactoryTest class >> shouldInheritSelectors [
+	^ true
+]
+
 { #category : #accessing }
 XMLPluggableNodeFactoryTest >> cdataClass [
 	^ XMLFCData

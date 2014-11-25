@@ -38,40 +38,6 @@ XMLDOMParserTest >> addressBookNamespacedXML [
 	^ self class addressBookNamespacedXML
 ]
 
-{ #category : #assertions }
-XMLDOMParserTest >> assertDocument: aDocumentCopy isCopyOf: aDocument [
-	| unvisitedPairs visitedPairs searchedClasses |
-
-	self
-		deny: aDocument == aDocumentCopy;
-		assert: aDocument printString = aDocumentCopy printString;
-		assert: aDocument allNodes size = aDocumentCopy allNodes size.
-
-	unvisitedPairs := Set new.
-	aDocument allNodes
-		with: aDocumentCopy allNodes
-		do: [:node :nodeCopy | unvisitedPairs add: node -> nodeCopy].
-
-	visitedPairs := Set new.
-	searchedClasses :=
-		#(OrderedCollection Dictionary OrderPreservingStringDictionary
-			XMLNode XMLNamespaceScope XMLOrderedList)
-			collect: [:each | Smalltalk at: each].
-	[unvisitedPairs isEmpty]
-		whileFalse: [ | pair originalObject copyObject |
-			pair := unvisitedPairs remove: unvisitedPairs anyOne.
-			originalObject := pair key.
-			copyObject := pair value.
-
-			self deny: originalObject == copyObject.
-			visitedPairs add: pair.
-			1 to: originalObject class instSize do: [:i | | newPair |
-				newPair := (originalObject instVarAt: i) -> (copyObject instVarAt: i).
-				((visitedPairs includes: newPair)
-					or: [searchedClasses noneSatisfy: [:each | newPair key isKindOf: each]])
-					ifFalse: [unvisitedPairs add: newPair]]].
-]
-
 { #category : #source }
 XMLDOMParserTest >> internalSubsetWithDeclarations [
 	^ '<!DOCTYPE root PUBLIC "pubid" "external.dtd" [
@@ -139,23 +105,6 @@ XMLDOMParserTest >> testAttributeNamespacesDisabled [
 			deny: each attributeNames isEmpty;
 			assert: (each attributeNodeAt: 'ps:family-name' namespaceURI: 'personNS') isNil;
 			assert: (each attributeNodeAt: 'ps:first-name' namespaceURI: 'personNS') isNil].
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testAttributeRenaming [
-	| doc person |
-
-	doc := XMLDOMParser parse: self addressBookXML.
-	person := doc findElementNamed: 'person'.
-	(person attributeNodeAt: 'employee-number') name: 'first-name'.
-	self
-		assert: person attributeNodes size = 2;
-		assert: (person attributeAt: 'first-name') = 'A0000';
-		assert: (person attributeAt: 'family-name') = 'Gates'.
-	self
-		should: [(person attributeNodeAt: 'family-name') name: 'undeclared:family-name']
-		raise: XMLNamespaceException.
-	
 ]
 
 { #category : #tests }
@@ -239,36 +188,6 @@ XMLDOMParserTest >> testCollectingParsedNodes [
 		assert: (firstPerson allElements collect: [:each | each name]) asArray = allNames;
 		assert: (firstPerson nodesCollect: [:each | each name]) asArray = allNames allButFirst;
 		assert: (firstPerson nodes collect: [:each | each name]) asArray = allNames allButFirst.
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testConfiguration [
-	| document  |
-
-	document := XMLDOMParser parse: self addressBookXML.
-	document allElementsDo: [:each |
-		self assert: each configuration == document configuration].
-
-	document root innerXML: self addressBookXML.
-	document allElementsDo: [:each |
-		self assert: each configuration == document configuration].
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testCopyingNodes [
-	| document |
-
-	document := XMLDOMParser parse: self addressBookXML.
-	self assertDocument: document copy isCopyOf: document.
-
-	document := XMLDOMParser parse: self addressBookXMLWithDTD.
-	self assertDocument: document copy isCopyOf: document.
-
-	document := XMLDOMParser parse: self addressBookNamespacePrefixedXML.
-	self assertDocument: document copy isCopyOf: document.
-
-	document := XMLDOMParser parse: self internalSubsetWithDeclarations.
-	self assertDocument: document copy isCopyOf: document.
 ]
 
 { #category : #tests }
@@ -384,20 +303,6 @@ XMLDOMParserTest >> testElementPrefixesNamespacesDisabled [
 					and: [(each isNamed: 'ps:person')
 						and: [(each name = 'ps:person') and: [each localName = 'person']]]]]].
 	self assert: persons size = 4.
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testElementRenaming [
-	| document element |
-
-	document := XMLDOMParser parse: self addressBookNamespacedXML.
-
-	element := document root.
-	element name: 'book:addressbook'.
-	self assert: (document elementAt: 'book:addressbook') == element.
-	self
-		should: [element name: 'undeclared:root']
-		raise: XMLNamespaceException.
 ]
 
 { #category : #tests }

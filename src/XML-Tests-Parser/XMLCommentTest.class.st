@@ -4,30 +4,31 @@ Class {
 	#category : #'XML-Tests-Parser-DOM'
 }
 
-{ #category : #assertions }
-XMLCommentTest >> assertComment: aComment hasString: aString [
-	self
-		assert: aComment string = aString;
-		assert: aComment printString = ('<!--', aString, '-->')
-]
-
 { #category : #accessing }
 XMLCommentTest >> nodeClass [
 	^ XMLComment
 ]
 
 { #category : #tests }
-XMLCommentTest >> test6commentNodes [
-	| comment  |
-
-	comment := XMLComment new.
-	self
-		assertComment: comment hasString: '';
-		assertComment: (comment string: 'test') hasString: 'test';
-		assertComment: (XMLComment string: 'test') hasString: 'test'.
+XMLCommentTest >> testIsComment [
+	self assert: self nodeClass new isComment
 ]
 
 { #category : #tests }
-XMLCommentTest >> testIsComment [
-	self assert: self nodeClass new isComment
+XMLCommentTest >> testString [
+	| comment |
+
+	comment := self nodeClass new.
+	self assert: comment string isEmpty.
+	comment string: self markupString.
+	self assert: comment string = self markupString.
+
+	self assert: (self nodeClass string: self markupString) string = self markupString.
+]
+
+{ #category : #tests }
+XMLCommentTest >> testWriteXMLOn [
+	self
+		assert: self nodeClass new printString = '<!---->';
+		assert: (self nodeClass string: self markupString) printString = ('<!--', self markupString, '-->')
 ]
