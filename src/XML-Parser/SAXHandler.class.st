@@ -299,6 +299,14 @@ SAXHandler >> input [
 	^ input
 ]
 
+{ #category : #parsing }
+SAXHandler >> interruptParsing [
+	"Can be sent within a handler to stop parsing;
+	will be silently caught within parseDocument/parseDocumentWhile:"
+
+	XMLParsingInterruptException signal
+]
+
 { #category : #testing }
 SAXHandler >> isInCDataSection [
 	^ isInCDataSection
@@ -357,6 +365,14 @@ SAXHandler >> on: aStringOrStream documentURI: aUri [
 		ifNil: [configuration := self configurationClass new].
 	isInInternalSubset := false.
 	isInCDataSection := false.
+]
+
+{ #category : #configuration }
+SAXHandler >> optimizeForLargeDocuments [
+	self
+		isValidating: false;
+		usesNamespaces: false;
+		documentReadLimit: nil.
 ]
 
 { #category : #declaration }

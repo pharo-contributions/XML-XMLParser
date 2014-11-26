@@ -35,9 +35,12 @@ XMLParser >> driver [
 XMLParser >> handleParserError: anError [
 	self tokenizer closeStreams.
 
-	(anError respondsTo: #appendLineNumber:)
-		ifTrue: [anError appendLineNumber: self currentLineNumber].
-	anError pass.
+	(anError isKindOf: XMLParserException)
+		ifTrue: [
+			anError appendLineNumber: self currentLineNumber.
+			anError shouldPassOnWhenCaught
+				ifTrue: [anError pass]]
+		ifFalse: [anError pass].
 ]
 
 { #category : #accessing }

@@ -42,3 +42,8 @@ XMLParserException class >> signalMessageFrom: anException [
 XMLParserException >> appendLineNumber: aLineNumber [
 	self messageText: self messageText, ' (line ', aLineNumber printString, ')'
 ]
+
+{ #category : #testing }
+XMLParserException >> shouldPassOnWhenCaught [
+	^ true
+]
