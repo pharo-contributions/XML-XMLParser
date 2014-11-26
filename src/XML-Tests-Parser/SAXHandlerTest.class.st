@@ -31,7 +31,7 @@ SAXHandlerTest >> prefixedXMLSourceSelectorsNamespacesDisabled [
 SAXHandlerTest >> testSAXEndElemenNamespacesDisabled [
 	| parser arguments |
 
-	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: self prefixedXMLSource))
+	(parser := SAXHandlerProxy on: self prefixedXMLSource)
 		usesNamespaces: false;
 		parseDocument.
 	self assert: (parser wasSentSelectors: self prefixedXMLSourceSelectorsNamespacesDisabled).
@@ -48,7 +48,7 @@ SAXHandlerTest >> testSAXEndElemenNamespacesDisabled [
 SAXHandlerTest >> testSAXEndElement [
 	| parser arguments |
 
-	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: self prefixedXMLSource))
+	(parser := SAXHandlerProxy on: self prefixedXMLSource)
 		parseDocument.
 	self assert: (parser wasSentSelectors: self prefixedXMLSourceSelectors).
 
@@ -69,7 +69,7 @@ SAXHandlerTest >> testSAXEntityHandlers [
 		%firstDeclaration;
 		<!ENTITY second " replacement ">]>
 	<root name="&second;">&first;</root>'.
-	(parser :=SAXHandlerProxy saxHandler: (SAXHandler on: xml)) parseDocument.
+	(parser :=SAXHandlerProxy on: xml) parseDocument.
 	self assert:
 		(parser wasSentSelectors: 
 			#(startDocument
@@ -102,7 +102,7 @@ SAXHandlerTest >> testSAXIgnorableWhitespace [
 		</two>
 	</one>
 	'.
-	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: xml)) parseDocument.
+	(parser := SAXHandlerProxy on: xml) parseDocument.
 	self assert:
 		(parser wasSentSelectors: 
 			#(startDocument
@@ -120,10 +120,29 @@ SAXHandlerTest >> testSAXIgnorableWhitespace [
 ]
 
 { #category : #tests }
+SAXHandlerTest >> testSAXParsingInterrupt [
+	| uniqueSelectors parser |
+
+	uniqueSelectors := OrderedCollection new.
+	self prefixedXMLSourceSelectors do: [:each |
+		(uniqueSelectors includes: each)
+			ifFalse: [uniqueSelectors addLast: each]].
+	uniqueSelectors do: [:each |
+		(parser := SAXHandlerPluggableProxy on: self prefixedXMLSource)
+			handle: each with: [:message | parser interruptParsing];
+			parseDocument.
+		self assert:
+			(parser wasSentSelectors:
+				((self prefixedXMLSourceSelectors copyUpTo: each) copyWith: each))].
+		
+	
+]
+
+{ #category : #tests }
 SAXHandlerTest >> testSAXPrefixMappingHandlers [
 	| parser messages |
 
-	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: self prefixedXMLSource)) parseDocument.
+	(parser := SAXHandlerProxy on: self prefixedXMLSource) parseDocument.
 	self assert: (parser wasSentSelectors: self prefixedXMLSourceSelectors).
 
 	messages := parser allSentMessagesNamed: #startPrefixMapping:uri:.
@@ -142,7 +161,7 @@ SAXHandlerTest >> testSAXSkippedEntityHandler [
 	| xml parser |
 
 	xml := '<root>&undeclared;</root>'.
-	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: xml))
+	(parser := SAXHandlerProxy on: xml)
 		isValidating: false;
 		parseDocument.
 	self assert:
@@ -159,7 +178,7 @@ SAXHandlerTest >> testSAXSkippedEntityHandler [
 SAXHandlerTest >> testSAXStartElemenNamespacesDisabled [
 	| parser arguments |
 
-	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: self prefixedXMLSource))
+	(parser := SAXHandlerProxy on: self prefixedXMLSource)
 		usesNamespaces: false;
 		parseDocument.
 	self assert: (parser wasSentSelectors: self prefixedXMLSourceSelectorsNamespacesDisabled).
@@ -182,7 +201,7 @@ SAXHandlerTest >> testSAXStartElemenNamespacesDisabled [
 SAXHandlerTest >> testSAXStartElement [
 	| parser arguments |
 
-	(parser := SAXHandlerProxy saxHandler: (SAXHandler on: self prefixedXMLSource))
+	(parser := SAXHandlerProxy on: self prefixedXMLSource)
 		parseDocument.
 	self assert: (parser wasSentSelectors: self prefixedXMLSourceSelectors).
 
@@ -199,8 +218,7 @@ SAXHandlerTest >> testSAXStartElement [
 SAXHandlerTest >> testSAXXMLDeclaration [
 	| parser selectors arguments |
 
-	(parser := SAXHandlerProxy saxHandler:
-		(SAXHandler on: '<?xml version="1.0" encoding="UTF-8"?>'))
+	(parser := SAXHandlerProxy on: '<?xml version="1.0" encoding="UTF-8"?>')
 		parseDocument.
 	selectors := #(startDocument xmlVersion:encoding:standalone: endDocument).
 	self assert: (parser wasSentSelectors: selectors).
@@ -211,8 +229,9 @@ SAXHandlerTest >> testSAXXMLDeclaration [
 		assert: arguments second = 'UTF-8';
 		deny: arguments third.
 
-	(parser := SAXHandlerProxy saxHandler:
-		(SAXHandler on: '<?xml version="1.1" encoding="utf-8" standalone="yes"?>'))
+	(parser :=
+		SAXHandlerProxy on:
+			'<?xml version="1.1" encoding="utf-8" standalone="yes"?>')
 		parseDocument.
 	self assert: (parser wasSentSelectors: selectors).
 

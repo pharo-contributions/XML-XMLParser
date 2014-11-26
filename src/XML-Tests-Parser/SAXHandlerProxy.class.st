@@ -12,6 +12,11 @@ Class {
 }
 
 { #category : #'instance creation' }
+SAXHandlerProxy class >> on: aStringOrStream [
+	^ self saxHandler: (SAXHandler on: aStringOrStream)
+]
+
+{ #category : #'instance creation' }
 SAXHandlerProxy class >> saxHandler: aSaxHandler [
 	^ self new saxHandler: aSaxHandler
 ]
