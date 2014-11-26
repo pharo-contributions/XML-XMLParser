@@ -167,31 +167,39 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				timestamp: '04/30/2013';
 				repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLParser/main'.
 
-			spec project: 'XMLWriter'
-					with: [ spec 
-								className: 'ConfigurationOfXMLWriter';
-								versionString: #stable;
-								repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLWriter/main'.].
+			spec
+				project: 'XMLWriter'
+				with: [
+					spec 
+						className: 'ConfigurationOfXMLWriter';
+						versionString: #stable;
+						loads: #('default'); 
+						repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLWriter/main'.].
 
-			spec project: 'BitmapCharacterSet'
-					with: [ spec 
-								className: 'ConfigurationOfBitmapCharacterSet';
-								versionString: #stable;
-								repository: 'http://www.smalltalkhub.com/mc/PharoExtras/BitmapCharacterSet/main'.].
+			spec
+				project: 'BitmapCharacterSet'
+				with: [
+					spec 
+						className: 'ConfigurationOfBitmapCharacterSet';
+						versionString: #stable;
+						loads: #('Core'); 
+						repository: 'http://www.smalltalkhub.com/mc/PharoExtras/BitmapCharacterSet/main'.].
 
-		spec project: 'OrderPreservingDictionary' with: [
-			spec 
-				className: 'ConfigurationOfOrderPreservingDictionary';
-				versionString: #stable; 
-				loads: #('Core'); 
-				repository: 'http://smalltalkhub.com/mc/PharoExtras/OrderPreservingDictionary/main'].	
+			spec
+				project: 'OrderPreservingDictionary'
+				with: [
+					spec 
+						className: 'ConfigurationOfOrderPreservingDictionary';
+						versionString: #stable; 
+						loads: #('Core'); 
+						repository: 'http://smalltalkhub.com/mc/PharoExtras/OrderPreservingDictionary/main'].	
 
 			spec 
 				package: 'XML-Parser' 
-				with: [spec 
-						requires: #('BitmapCharacterSet' 'OrderPreservingDictionary')].	
-			spec package: 'XML-Tests-Parser'
-					with: [ spec requires: #('XML-Parser' 'XMLWriter') ].
+				with: [spec requires: #('BitmapCharacterSet' 'OrderPreservingDictionary')].	
+			spec
+				package: 'XML-Tests-Parser'
+				with: [ spec requires: #('XML-Parser' 'XMLWriter') ].
 			
 			spec
 				group: 'default' with: #('Core' 'Tests');
@@ -199,13 +207,23 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				group: 'Core' with: #('XML-Parser');
 				group: 'Tests' with: #('XML-Tests-Parser') ].
 			
-		spec for: #'pharo2.x'
+	spec
+		for: #'pharo2.x'
 		do: [ 
 			spec 
 				package: 'XML-Pharo2-Parser';
 				package: 'XML-Parser' with: [ 
 					spec requires: #( 'XML-Pharo2-Parser' ) ] ]
-	
+
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline183: spec [ 
+        <version: '1.8.3-baseline' imports: #('1.0-baseline')>
+        
+        spec for: #common do: [
+                spec blessing: #baseline.
+                spec project: 'XMLWriter' with: '2.4.6'. ].
 ]
 
 { #category : #'symbolic versions' }
@@ -1115,11 +1133,10 @@ ConfigurationOfXMLParser >> version182: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version183: spec [ 
-        <version: '1.8.3' imports: #('1.0-baseline')>
+        <version: '1.8.3' imports: #('1.8.3-baseline')>
 
         spec for: #common do: [
                 spec blessing: #release.
-			spec project: 'XMLWriter' with: '2.4.6'.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.250'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.77'.
                 ].
@@ -1127,12 +1144,22 @@ ConfigurationOfXMLParser >> version183: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version184: spec [ 
-        <version: '1.8.4' imports: #('1.0-baseline')>
+        <version: '1.8.4' imports: #('1.8.3-baseline')>
 
         spec for: #common do: [
                 spec blessing: #release.
-			spec project: 'XMLWriter' with: '2.4.6'.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.251'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.78'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version185: spec [ 
+        <version: '1.8.5' imports: #('1.8.3-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.252'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.79'.
                 ].
 ]
