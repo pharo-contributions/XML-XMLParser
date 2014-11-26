@@ -225,6 +225,19 @@ XMLElementTest >> testAttributeNodes [
 ]
 
 { #category : #tests }
+XMLElementTest >> testAttributeNodesDo [
+	| element |
+
+	element := self nodeClass new.
+	self should: [:block | element attributeNodesDo: block] enumerate: #().
+
+	element := self newElementWithAttributes.
+	self
+		should: [:block | element attributeNodesDo: block]
+		enumerate: element attributeNodes.
+]
+
+{ #category : #tests }
 XMLElementTest >> testAttributeRenaming [
 	| elementWithAttributes attributeNodes attributeNode oldSize oldNames oldName |
 
