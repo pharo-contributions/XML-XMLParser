@@ -161,6 +161,11 @@ XMLElement >> attributeNodes [
 	^ attributes ifNil: [attributes := self attributeListClass observer: self]
 ]
 
+{ #category : #enumerating }
+XMLElement >> attributeNodesDo: aBlock [
+	self attributeNodes do: aBlock
+]
+
 { #category : #accessing }
 XMLElement >> attributes [
 	^ self attributeNodes asDictionary

@@ -391,6 +391,13 @@ SAXHandler >> parseDocument [
 ]
 
 { #category : #parsing }
+SAXHandler >> parseDocumentUntil: aBlock [
+	self parser parseDocumentUntil: aBlock.
+
+	^ self parsingResult.
+]
+
+{ #category : #parsing }
 SAXHandler >> parseDocumentWhile: aBlock [
 	self parser parseDocumentWhile: aBlock.
 

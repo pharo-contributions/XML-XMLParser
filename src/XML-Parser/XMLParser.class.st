@@ -57,6 +57,14 @@ XMLParser >> parseDocument [
 ]
 
 { #category : #parsing }
+XMLParser >> parseDocumentUntil: aBlock [
+	[[self tokenizer atEnd or: [aBlock value]]
+		whileFalse: [self tokenizer nextToken]]
+		on: Error
+		do: [:error | self handleParserError: error]
+]
+
+{ #category : #parsing }
 XMLParser >> parseDocumentWhile: aBlock [
 	[[self tokenizer atEnd not and: [aBlock value]]
 		whileTrue: [self tokenizer nextToken]]

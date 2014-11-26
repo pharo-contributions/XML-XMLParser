@@ -41,7 +41,7 @@ XMLAttribute >> element: anElement [
 	parent := anElement
 ]
 
-{ #category : #accessing }
+{ #category : #namespaces }
 XMLAttribute >> expandedName [
 	^ self localName expandWithNamespaceURI: self namespaceURI
 ]
@@ -80,7 +80,7 @@ XMLAttribute >> name: aName [
 	self renameWith: [name := aName]
 ]
 
-{ #category : #accessing }
+{ #category : #namespaces }
 XMLAttribute >> namespaceURI [
 	| prefix |
 
@@ -109,12 +109,12 @@ XMLAttribute >> parent: aParentNode [
 	self shouldNotImplement
 ]
 
-{ #category : #accessing }
+{ #category : #namespaces }
 XMLAttribute >> prefix [
-	^ self name prefixBeforeLocalName: self localName
+	^ self name prefixBeforeLocalName
 ]
 
-{ #category : #accessing }
+{ #category : #namespaces }
 XMLAttribute >> prefix: aPrefix [
 	self renameWith: [name := self localName qualifyWithPrefix:  aPrefix]
 ]
