@@ -184,34 +184,27 @@ XMLWellFormedParserTokenizer >> constructReplacementForGeneralEntity: anEntity [
 				ifTrue: [self errorLiteralContextExternalEntity: anEntity].
 			^ self constructReplacementForLiteralContextEntity: anEntity].
 
-	self addActiveEntity: anEntity.
 	driver handleStartContentEntityReplacement: anEntity name.
 	self
 		pushBackEntity: anEntity
-		onClose: [
-			driver handleEndContentEntityReplacement: anEntity name.
-			self removeActiveEntity: anEntity].
+		onClose: [driver handleEndContentEntityReplacement: anEntity name].
 ]
 
 { #category : #'entity replacement' }
 XMLWellFormedParserTokenizer >> constructReplacementForLiteralContextEntity: anEntity [
-	anEntity replacement
-		ifEmpty: [^ self].
+	| previousEscaper |
 
-	self addActiveEntity: anEntity.
-	streamReader
-		pushStream: (ReadStream on: anEntity replacement)
-		onClose: [
-			streamReader isEscapingQuotes: false.
-			self removeActiveEntity: anEntity].
-	anEntity isExternal
+	previousEscaper := streamReader characterEscaper.
+	self
+		pushBackEntity: anEntity
+		onClose: [streamReader characterEscaper: previousEscaper].
+
+	"wait till after the text declaration was read to start escaping"
+	(self currentActiveEntity == anEntity
+		and: [previousEscaper isNil])
 		ifTrue: [
-			streamReader detectCurrentEncoding.
-			(context := context textDeclarationContext)
-				nextTokenFrom: self].
-
-	self currentActiveEntity == anEntity
-		ifTrue: [streamReader isEscapingQuotes: true].
+			streamReader characterEscaper:
+				(XMLQuoteCharacterEscaper for: streamReader)].
 ]
 
 { #category : #'entity replacement' }
@@ -220,10 +213,9 @@ XMLWellFormedParserTokenizer >> constructReplacementForParameterEntity: anEntity
 		ifTrue: [^ self constructReplacementForLiteralContextEntity: anEntity].
 
 	streamReader pushBackCharacter: NormalizedSpace.
-	self addActiveEntity: anEntity.
 	self
 		pushBackEntity: anEntity
-		onClose: [self removeActiveEntity: anEntity].
+		onClose: nil.
 	streamReader pushBackCharacter: NormalizedSpace.
 ]
 
@@ -412,19 +404,13 @@ XMLWellFormedParserTokenizer >> expectTerminator: aCharacter [
 
 { #category : #'tokenizing - expecting' }
 XMLWellFormedParserTokenizer >> expectUpToAll: aString [
-	| isTerminated |
-
-	"upToAll: can't distinguish between a missing terminator or terminator at the end of a string"
-	isTerminated := false.
 	writeStream reset.
-	[streamReader atEnd
-		or: [(isTerminated := streamReader nextMatchAll: aString)]]
-		whileFalse: [writeStream nextPut: streamReader next].
-
-	isTerminated
-		ifFalse: [self errorExpectedLiteral: aString].
-
-	^ writeStream contents.
+	[streamReader atEnd]
+		whileFalse: [
+			(streamReader nextMatchAll: aString)
+				ifTrue: [^ writeStream contents].
+			writeStream nextPut: streamReader next].
+	self errorExpectedLiteral: aString.
 ]
 
 { #category : #testing }
@@ -1154,11 +1140,17 @@ XMLWellFormedParserTokenizer >> parseError: anErrorString [
 { #category : #'entity replacement' }
 XMLWellFormedParserTokenizer >> pushBackEntity: anEntity onClose: aBlock [
 	anEntity replacement
-		ifEmpty: [^ aBlock value].
+		ifEmpty: [
+			aBlock ifNotNil: [aBlock value].
+			^ self].
 
+	self addActiveEntity: anEntity.
 	streamReader
 		pushStream: (ReadStream on: anEntity replacement)
-		onClose: aBlock.
+		onClose: [
+			self removeActiveEntity: anEntity.
+			aBlock ifNotNil: [aBlock value]].
+
 	anEntity isExternal
 		ifTrue: [
 			streamReader detectCurrentEncoding.

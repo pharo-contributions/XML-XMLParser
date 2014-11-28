@@ -11,15 +11,13 @@ Class {
 		'onClose',
 		'nestedStreams',
 		'peekChar',
-		'writeBuffer',
 		'normalizedLineEndingChar',
 		'currentLineNumber',
 		'readLimit',
-		'isEscapingQuotes'
+		'characterEscaper'
 	],
 	#classVars : [
 		'CarriageReturn',
-		'EncodingHandlerTable',
 		'LineFeed'
 	],
 	#category : #'XML-Parser-Streams'
@@ -31,12 +29,6 @@ XMLNestedStreamReader class >> initialize [
 
 	CarriageReturn := Character cr.
 	LineFeed := Character lf.
-
-	EncodingHandlerTable := Array new: 256.
-	0 to: 255 do: [:each |
-		EncodingHandlerTable
-			at: each + 1
-			put: (XMLEncodingDetector handlerForLeadByte: each)]
 ]
 
 { #category : #'instance creation' }
@@ -55,10 +47,16 @@ XMLNestedStreamReader class >> on: anInitialStream readLimit: aReadLimit [
 
 { #category : #testing }
 XMLNestedStreamReader >> atEnd [
-	^ peekChar == nil
-		and: [stream atEnd
-			and: [self hasNestedStreams not
-				or: [nestedStreams allSatisfy: [:each | each key atEnd]]]]
+	peekChar == nil
+		ifFalse: [^ false].
+	stream atEnd
+		ifFalse: [^ false].
+
+	nestedStreams ifNotNil: [
+		nestedStreams do: [:each |
+			each key atEnd
+				ifFalse: [^ false]]].
+	^ true.
 ]
 
 { #category : #testing }
@@ -74,25 +72,33 @@ XMLNestedStreamReader >> basicNext [
 
 	stream atEnd
 		ifTrue: [
-			[self hasNestedStreams and: [stream atEnd]]
-				whileTrue: [self popCurrentStream].
+			self popNestedStreamWhileAtEnd.
 			stream atEnd
 				ifTrue: [^ nil]].
 	(nextChar := stream next) == CarriageReturn
 		ifTrue: [
-			[stream atEnd and: [self hasNestedStreams]]
-				whileTrue: [self popCurrentStream].
+			self popNestedStreamWhileAtEnd.
 			stream atEnd
 				ifFalse: [
-					(stream peek == LineFeed)
+					stream peek == LineFeed
 						ifTrue: [stream next]].
-			^ normalizedLineEndingChar].
-	(nextChar == LineFeed)
-		ifTrue: [^ normalizedLineEndingChar].
-	isEscapingQuotes
-		ifTrue: [^ self escapeQuote: nextChar].
+			nextChar := normalizedLineEndingChar]
+		ifFalse: [
+			nextChar == LineFeed
+				ifTrue: [nextChar := normalizedLineEndingChar]].
+	characterEscaper
+		ifNil: [^ nextChar]
+		ifNotNil: [^ characterEscaper nextCharacter: nextChar].
+]
 
-	^ nextChar.
+{ #category : #accessing }
+XMLNestedStreamReader >> characterEscaper [
+	^ characterEscaper
+]
+
+{ #category : #accessing }
+XMLNestedStreamReader >> characterEscaper: aCharacterEscaper [
+	characterEscaper := aCharacterEscaper
 ]
 
 { #category : #private }
@@ -104,8 +110,9 @@ XMLNestedStreamReader >> closeCurrentStream [
 
 { #category : #'file open/close' }
 XMLNestedStreamReader >> closeStreams [
-	[self hasNestedStreams]
-		whileTrue: [self popCurrentStream].
+	nestedStreams ifNotNil: [
+		[nestedStreams notEmpty]
+			whileTrue: [self popNestedStream]].
 	self closeCurrentStream.
 ]
 
@@ -140,29 +147,7 @@ XMLNestedStreamReader >> decodeStreamWithDecoder: aStreamDecoder [
 
 { #category : #encodings }
 XMLNestedStreamReader >> detectCurrentEncoding [
-	| firstChar characterCode selector encodingDetector |
-
-	stream atEnd
-		ifTrue: [^ self].
-	firstChar := stream peek.
-	((characterCode := firstChar asciiValue) < 256
-		and: [(selector := EncodingHandlerTable at: characterCode + 1) notNil])
-		ifTrue: [
-			(encodingDetector := XMLEncodingDetector on: stream)
-				perform: selector]
-		ifFalse: [
-			firstChar == $<
-				ifFalse: [^ self].
-			peekChar := stream next.
-			(stream atEnd
-				or: [stream peek asciiValue > 0])
-				ifTrue: [^ self].
-			(encodingDetector := XMLEncodingDetector on: stream)
-				detectLittleEndianImplicitEncoding].
-	encodingDetector streamDecoder
-		ifNotNil: [:decoder | self decodeStreamWithDecoder: decoder].
-	encodingDetector remainder
-		ifNotNil: [:remainder | self pushBack: remainder].
+	(XMLStreamEncodingDetector for: self) detectCurrentEncoding
 ]
 
 { #category : #private }
@@ -189,16 +174,6 @@ XMLNestedStreamReader >> escapeQuote: aCharacter [
 			self pushBack: '#39;'.
 			^ $&].
 	^ aCharacter.
-]
-
-{ #category : #testing }
-XMLNestedStreamReader >> hasNestedStreams [
-	^ nestedStreams notNil and: [nestedStreams notEmpty]
-]
-
-{ #category : #accessing }
-XMLNestedStreamReader >> isEscapingQuotes: aBoolean [
-	isEscapingQuotes := aBoolean
 ]
 
 { #category : #private }
@@ -269,13 +244,21 @@ XMLNestedStreamReader >> peek [
 ]
 
 { #category : #private }
-XMLNestedStreamReader >> popCurrentStream [
+XMLNestedStreamReader >> popNestedStream [
 	| nextStreamAndCallback |
 
 	self closeCurrentStream.
 	nextStreamAndCallback := nestedStreams removeLast.
 	stream := nextStreamAndCallback key.
 	onClose := nextStreamAndCallback value.
+]
+
+{ #category : #private }
+XMLNestedStreamReader >> popNestedStreamWhileAtEnd [
+	nestedStreams ifNotNil: [
+		[stream atEnd
+			and: [nestedStreams notEmpty]]
+			whileTrue: [self popNestedStream]]
 ]
 
 { #category : #positioning }
@@ -288,9 +271,12 @@ XMLNestedStreamReader >> pushBack: aString [
 
 { #category : #positioning }
 XMLNestedStreamReader >> pushBackCharacter: aCharacter [
-	self
-		pushStream: (XMLSingleCharacterReadStream on: aCharacter)
-		onClose: nil
+	peekChar
+		ifNil: [peekChar := aCharacter]
+		ifNotNil: [
+			self
+				pushStream: (XMLSingleCharacterReadStream on: aCharacter)
+				onClose: nil]
 ]
 
 { #category : #positioning }
@@ -319,12 +305,10 @@ XMLNestedStreamReader >> pushStream: aStream onClose: aBlock [
 
 { #category : #initialization }
 XMLNestedStreamReader >> setStream: anInitialStream readLimit: aReadLimit [
-	writeBuffer := WriteStream on: (String new: 64).
 	currentLineNumber := 1.
 	normalizedLineEndingChar := LineFeed.
 	stream := anInitialStream.
 	readLimit := aReadLimit.
-	isEscapingQuotes := false.
 ]
 
 { #category : #streaming }
@@ -353,34 +337,4 @@ XMLNestedStreamReader >> skipTo: aDelimiter [
 { #category : #accessing }
 XMLNestedStreamReader >> stream [
 	^ stream
-]
-
-{ #category : #accessing }
-XMLNestedStreamReader >> upTo: aDelimiter [
-	| nextChar |
-
-	writeBuffer reset.
-	[self atEnd or: [(nextChar := self next) == aDelimiter]]
-		whileFalse: [writeBuffer nextPut: nextChar].
-
-	^ writeBuffer contents.
-]
-
-{ #category : #accessing }
-XMLNestedStreamReader >> upToAll: aDelimitingString [
-	"Answer a subcollection from the current access position to the occurrence
-	(if any, but not inclusive) of delimitingString. If delimitingString is not
-	in the stream, answer the entire rest of the stream."
-
-	writeBuffer reset.
-	[self atEnd or: [self nextMatchAll: aDelimitingString]]
-		whileFalse: [writeBuffer nextPut: self next].
-	^ writeBuffer contents.
-]
-
-{ #category : #accessing }
-XMLNestedStreamReader >> upToEnd [
-	writeBuffer reset.
-	[self atEnd] whileFalse: [writeBuffer nextPut: self next].
-	^ writeBuffer contents.
 ]
