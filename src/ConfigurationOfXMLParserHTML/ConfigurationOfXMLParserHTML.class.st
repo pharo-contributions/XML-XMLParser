@@ -120,7 +120,7 @@ ConfigurationOfXMLParserHTML >> baseline100: spec [
 		do: [ 
 			spec
 				blessing: #baseline;
-				description: 'XMLParser HTML parser';
+				description: 'XML-Parser-HTML baseline';
 				repository: 'http://smalltalkhub.com/mc/PharoExtras/XMLParser/main'.
 			spec
 				project: 'XMLParser'
@@ -170,7 +170,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.0.4'.
+	spec for: #'common' version: '1.0.5'.
 
 ]
 
@@ -225,6 +225,17 @@ ConfigurationOfXMLParserHTML >> version104: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.12'.
+			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.4'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version105: spec [ 
+        <version: '1.0.5' imports: #('1.0.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.13'.
 			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.4'.
                 ].
 ]
