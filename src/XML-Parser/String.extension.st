@@ -9,9 +9,12 @@ String >> asXMLEscapedString [
 		each == $<
 			ifTrue: [stream nextPutAll: '&lt;']
 			ifFalse: [
-				each == $&
-					ifTrue: [stream nextPutAll: '&amp;']
-					ifFalse: [stream nextPut: each]]].
+				each == $> "needed to escape ]]> in PCDATA"
+					ifTrue: [stream nextPutAll: '&gt;']
+					ifFalse: [
+						each == $&
+							ifTrue: [stream nextPutAll: '&amp;']
+							ifFalse: [stream nextPut: each]]]].
 	^ stream contents.
 ]
 

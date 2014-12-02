@@ -1,5 +1,5 @@
 "
-A stream decoder for UTF-8 streams.
+A stream decoder for UTF-8 streams. (accepts overlong encodings)
 "
 Class {
 	#name : #XMLUTF8StreamDecoder,

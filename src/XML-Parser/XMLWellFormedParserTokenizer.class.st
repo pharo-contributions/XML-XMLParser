@@ -1059,7 +1059,7 @@ XMLWellFormedParserTokenizer >> nextTag [
 		attributes: attributes
 		namespaces: namespaces.
 
-	streamReader peek == $/
+	nextChar == $/
 		ifTrue: [
 			streamReader next.
 			driver handleEndTag: tagName].
