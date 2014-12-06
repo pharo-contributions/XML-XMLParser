@@ -196,10 +196,10 @@ XMLAttributeList >> setFromDictionary: anOrderPreservingDictionary [
 
 { #category : #sorting }
 XMLAttributeList >> sort [
-	self sort: [:a :b | a name <= b name]
+	self sort: [:a :b | a sortKey <= b sortKey]
 ]
 
 { #category : #sorting }
 XMLAttributeList >> sorted [
-	^ self sorted: [:a :b | a name <= b name]
+	^ self sorted: [:a :b | a sortKey <= b sortKey]
 ]

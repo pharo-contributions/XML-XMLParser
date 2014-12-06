@@ -20,6 +20,11 @@ XMLComment >> isComment [
 	^ true
 ]
 
+{ #category : #private }
+XMLComment >> sortKey [
+	^ self string
+]
+
 { #category : #accessing }
 XMLComment >> string [
 	^ string ifNil: [string := '']

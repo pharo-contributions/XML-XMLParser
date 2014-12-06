@@ -34,6 +34,11 @@ XMLPI >> isPI [
 	^ true
 ]
 
+{ #category : #printing }
+XMLPI >> sortKey [
+	^ self target
+]
+
 { #category : #accessing }
 XMLPI >> target [
 	^ target ifNil: [target := '']

@@ -470,6 +470,11 @@ XMLElement >> setQualifiedName: aQualifiedName localName: aLocalName attributes:
 					setFromDictionary: anAttributeDictionary)].
 ]
 
+{ #category : #private }
+XMLElement >> sortKey [
+	^ self name
+]
+
 { #category : #namespaces }
 XMLElement >> undeclareDefaultNamespace [
 	self undeclarePrefix: ''
@@ -525,35 +530,15 @@ XMLElement >> validateName [
 				ofElement: self name]
 ]
 
-{ #category : #private }
-XMLElement >> writeAttributesOn: aTagWriter [
-	self attributeNodes do: [:each |
-		aTagWriter
-			attributeAt: each name
-			put: each value]
-]
-
-{ #category : #private }
-XMLElement >> writeNamespaceDeclarationsOn: aTagWriter [
-	self namespaceScope prefixesAndURIsDo: [:prefix :uri |
-		((self declaresPrefix: prefix uri: uri)
-			or: [aTagWriter isEmbedded not])
-			ifTrue: [
-				aTagWriter
-					xmlnsAt: prefix
-					put: uri]]
-]
-
 { #category : #printing }
 XMLElement >> writeXMLOn: aWriter [
 	| tagWriter |
 
 	tagWriter := aWriter tag: self name.
-
 	self hasNamespaces
-		ifTrue: [self writeNamespaceDeclarationsOn: tagWriter].
+		ifTrue: [tagWriter setXmlnsDeclarations: self namespaceScope prefixMappings].
 	self hasAttributes
-		ifTrue: [self writeAttributesOn: tagWriter].
+		ifTrue: [tagWriter setAttributes: self attributeNodes asDictionary].
 
 	tagWriter with: [
 		self hasChildren

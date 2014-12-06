@@ -71,6 +71,11 @@ XMLNode >> canHaveChildren [
 	^ false
 ]
 
+{ #category : #testing }
+XMLNode >> canonicallyEquals: aNode [
+	^ self canonicallyPrinted = aNode canonicallyPrinted
+]
+
 { #category : #printing }
 XMLNode >> canonicallyPrintOn: aStream [
  	"Prints on aStream as canonical XML"
@@ -270,6 +275,13 @@ XMLNode >> rawContentString [
 ]
 
 { #category : #private }
+XMLNode >> sortKey [
+	"used to compare nodes when sorting"
+
+	^ self class name asString
+]
+
+{ #category : #private }
 XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock [
 	^ self
 		withNewXMLWriterOn: aStream
@@ -287,5 +299,4 @@ XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock whenAbsent: aZeroArgBloc
 
 { #category : #printing }
 XMLNode >> writeXMLOn: aWriter [
-	self subclassResponsibility
 ]

@@ -26,7 +26,7 @@ XMLTextConverterStreamDecoder class >> canDecodeEncoding: anEncoding [
 XMLTextConverterStreamDecoder class >> initialize [
 	"self initialize"
 
-	TextConverterCache := XMLKeyValueCache maxSize: 32.
+	TextConverterCache := XMLKeyValueCache maxSize: 32
 ]
 
 { #category : #'instance creation' }

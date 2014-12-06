@@ -625,15 +625,15 @@ XMLOrderedList >> third [
 
 { #category : #enumerating }
 XMLOrderedList >> with: aCollection collect: aBlock [
-	| newCollection |
+	| newList |
 
-	newCollection := self species new: self size.
+	newList := self species new: self size.
 	1 to: (self size min: aCollection size) do: [:i |
-		newCollection addLast:
+		newList addLast:
 			(aBlock
 				value: (self at: i)
 				value: (aCollection at: i))].
-	^ newCollection.
+	^ newList.
 ]
 
 { #category : #enumerating }

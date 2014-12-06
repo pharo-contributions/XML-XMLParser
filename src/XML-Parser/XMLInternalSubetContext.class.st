@@ -3,14 +3,9 @@ A context for internal subset tokens.
 "
 Class {
 	#name : #XMLInternalSubetContext,
-	#superclass : #XMLSubsetContext,
+	#superclass : #XMLDoctypeContext,
 	#category : #'XML-Parser'
 }
-
-{ #category : #testing }
-XMLInternalSubetContext >> isDoctypeContext [
-	^ true
-]
 
 { #category : #testing }
 XMLInternalSubetContext >> isInternalSubsetContext [
@@ -18,6 +13,11 @@ XMLInternalSubetContext >> isInternalSubsetContext [
 ]
 
 { #category : #testing }
-XMLInternalSubetContext >> isPrologContext [
+XMLInternalSubetContext >> isSubsetContext [
 	^ true
+]
+
+{ #category : #testing }
+XMLInternalSubetContext >> nextTokenFrom: aTokenizer [
+	aTokenizer nextSubsetToken
 ]

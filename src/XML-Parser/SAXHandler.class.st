@@ -53,10 +53,12 @@ SAXHandler class >> on: aStringOrStream [
 ]
 
 { #category : #'instance creation' }
-SAXHandler class >> on: aStringOrStream documentURI: aUri [
+SAXHandler class >> on: aStringOrStream documentURI: aUriString [
+	"Returns a new instance with associated base URI"
+
 	^ self new
 		on: aStringOrStream
-		documentURI: aUri
+		documentURI: aUriString
 ]
 
 { #category : #'instance creation' }
@@ -68,6 +70,8 @@ SAXHandler class >> onFileNamed: aFileName [
 
 { #category : #'instance creation' }
 SAXHandler class >> onURL: aUrlString [
+	"Fetches the URL and returns a new instance on the response"
+
 	^ self
 		onURL: aUrlString
 		upToLimit: XMLParserLimits defaultDocumentReadLimit
@@ -75,8 +79,11 @@ SAXHandler class >> onURL: aUrlString [
 
 { #category : #'instance creation' }
 SAXHandler class >> onURL: aUrlString upToLimit: aLimit [
+	"Fetches the URL and returns a new instance on the response up
+	to the input limit (use nil to disable)."
+
 	^ (self
-		on: ((XMLHTTPRequest url: aUrlString) getUpToLimit: aLimit)
+		on: (aUrlString asXMLURI getUpToLimit: aLimit)
 		documentURI: aUrlString)
 		documentReadLimit: aLimit
 ]
@@ -150,7 +157,7 @@ SAXHandler >> configuration [
 
 { #category : #accessing }
 SAXHandler >> configuration: aConfiguration [
-	configuration := aConfiguration
+	(configuration := aConfiguration) parserHandlerClass: self class
 ]
 
 { #category : #private }
@@ -302,7 +309,7 @@ SAXHandler >> input [
 { #category : #parsing }
 SAXHandler >> interruptParsing [
 	"Can be sent within a handler to stop parsing;
-	will be silently caught within parseDocument/parseDocumentWhile:"
+	will be silently caught within parseDocument or other parsing methods"
 
 	XMLParsingInterruptException signal
 ]
@@ -362,7 +369,7 @@ SAXHandler >> on: aStringOrStream documentURI: aUri [
 	input := aStringOrStream.
 	documentUri := aUri.
 	configuration
-		ifNil: [configuration := self configurationClass new].
+		ifNil: [self configuration: self configurationClass new].
 	isInInternalSubset := false.
 	isInCDataSection := false.
 ]
@@ -385,6 +392,8 @@ SAXHandler >> parameterEntityDeclaration: aName replacement: aReplacement [
 
 { #category : #parsing }
 SAXHandler >> parseDocument [
+	"parser the entire input document"
+
 	self parser parseDocument.
 
 	^ self parsingResult.
@@ -392,6 +401,8 @@ SAXHandler >> parseDocument [
 
 { #category : #parsing }
 SAXHandler >> parseDocumentUntil: aBlock [
+	"parse the input document until aBlock is true"
+
 	self parser parseDocumentUntil: aBlock.
 
 	^ self parsingResult.
@@ -399,6 +410,8 @@ SAXHandler >> parseDocumentUntil: aBlock [
 
 { #category : #parsing }
 SAXHandler >> parseDocumentWhile: aBlock [
+	"parse the input document while aBlock is true"
+
 	self parser parseDocumentWhile: aBlock.
 
 	^ self parsingResult.
@@ -406,11 +419,11 @@ SAXHandler >> parseDocumentWhile: aBlock [
 
 { #category : #parsing }
 SAXHandler >> parser [
-	self configuration parserHandlerClass: self class.
+	"returns a new XMLParser object for this handler"
 
 	^ self parserClass
 		driver: (self driverClass saxHandler: self)
-		on: self input.
+		on: self input
 ]
 
 { #category : #private }
@@ -425,6 +438,8 @@ SAXHandler >> parserLimits [
 
 { #category : #parsing }
 SAXHandler >> parsingResult [
+	"value returned by parseDocument and other parsing methods"
+
 	^ self
 ]
 

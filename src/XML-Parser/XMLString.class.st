@@ -171,6 +171,11 @@ XMLString >> size [
 	^ self string size
 ]
 
+{ #category : #private }
+XMLString >> sortKey [
+	^ self string
+]
+
 { #category : #'split and merge' }
 XMLString >> splitAt: anOffset [
 	| newNode |
