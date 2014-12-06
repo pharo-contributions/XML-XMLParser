@@ -6,9 +6,6 @@ self isSkipping: false.
 Class {
 	#name : #XMLExternalEntityTest,
 	#superclass : #TestCase,
-	#instVars : [
-		'isSkipping'
-	],
 	#classVars : [
 		'IsSkipping'
 	],

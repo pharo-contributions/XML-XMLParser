@@ -113,6 +113,11 @@ XMLNodeTest >> testCanHaveChildren [
 ]
 
 { #category : #tests }
+XMLNodeTest >> testCanonicallyEquals [
+	self assert: (self nodeClass new canonicallyEquals: self nodeClass new)
+]
+
+{ #category : #tests }
 XMLNodeTest >> testConfiguration [
 	self assert: self nodeClass new configuration isNil
 ]
@@ -232,4 +237,9 @@ XMLNodeTest >> testPreviousNode [
 { #category : #tests }
 XMLNodeTest >> testRawContentString [
 	self assert: self nodeClass new rawContentString isEmpty
+]
+
+{ #category : #tests }
+XMLNodeTest >> testSortKey [
+	self assert: self nodeClass new sortKey = self nodeClass name asString
 ]

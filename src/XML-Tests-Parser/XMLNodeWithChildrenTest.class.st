@@ -269,6 +269,14 @@ XMLNodeWithChildrenTest >> testCanHaveChildren [
 ]
 
 { #category : #tests }
+XMLNodeWithChildrenTest >> testCanonicallyEquals [
+	super testCanonicallyEquals.
+	self
+		assert: (self newNodeWithNodes canonicallyEquals: self newNodeWithNodes);
+		deny: (self newNodeWithNodes canonicallyEquals: self nodeClass new).
+]
+
+{ #category : #tests }
 XMLNodeWithChildrenTest >> testCopy [
 	| nodeWithNodes nodeWithNodesCopy unvisitedPairs visitedPairs copiedTypes |
 

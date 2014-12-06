@@ -35,6 +35,15 @@ XMLAttributeTest >> testAncestorNodesDo [
 ]
 
 { #category : #tests }
+XMLAttributeTest >> testCanonicallyEquals [
+	super testCanonicallyEquals.
+	self assert:
+		((self nodeClass name: 'one' value: 'two') canonicallyEquals:
+			(self nodeClass name: 'one' value: 'two')).
+	self deny: ((self nodeClass name: 'one' value: 'two') canonicallyEquals: self nodeClass new).
+]
+
+{ #category : #tests }
 XMLAttributeTest >> testCopy [
 	| node copy |
 
@@ -238,6 +247,11 @@ XMLAttributeTest >> testPreviousNode [
 	elementWithAttributes attributeNodes do: [:each |
 		self assert: each previousNode == previousNode.
 		previousNode := each].
+]
+
+{ #category : #tests }
+XMLAttributeTest >> testSortKey [
+	self assert: (self nodeClass new name: 'test') sortKey = 'test'
 ]
 
 { #category : #tests }

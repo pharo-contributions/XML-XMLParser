@@ -80,6 +80,14 @@ XMLStringTest >> testBeginsWith [
 ]
 
 { #category : #tests }
+XMLStringTest >> testCanonicallyEquals [
+	super testCanonicallyEquals.
+	self
+		assert: ((self nodeClass string: 'test') canonicallyEquals: (self nodeClass string: 'test'));
+		deny: ((self nodeClass string: 'test') canonicallyEquals: self nodeClass new).
+]
+
+{ #category : #tests }
 XMLStringTest >> testContentString [
 	super testContentString.
 	self
@@ -328,6 +336,11 @@ XMLStringTest >> testSize [
 	self
 		assert: self nodeClass new size = 0;
 		assert: (self nodeClass string: 'test') size = 4
+]
+
+{ #category : #tests }
+XMLStringTest >> testSortKey [
+	self assert: (self nodeClass string: 'test') sortKey = 'test'
 ]
 
 { #category : #tests }

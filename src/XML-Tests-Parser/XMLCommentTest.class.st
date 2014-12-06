@@ -10,8 +10,21 @@ XMLCommentTest >> nodeClass [
 ]
 
 { #category : #tests }
+XMLCommentTest >> testCanonicallyEquals [
+	super testCanonicallyEquals.
+	self
+		assert: ((self nodeClass string: 'test') canonicallyEquals: (self nodeClass string: 'test'));
+		deny: ((self nodeClass string: 'test') canonicallyEquals: self nodeClass new).
+]
+
+{ #category : #tests }
 XMLCommentTest >> testIsComment [
 	self assert: self nodeClass new isComment
+]
+
+{ #category : #tests }
+XMLCommentTest >> testSortKey [
+	self assert: (self nodeClass string: 'test') sortKey = 'test'
 ]
 
 { #category : #tests }

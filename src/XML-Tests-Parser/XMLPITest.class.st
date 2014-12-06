@@ -10,6 +10,15 @@ XMLPITest >> nodeClass [
 ]
 
 { #category : #tests }
+XMLPITest >> testCanonicallyEquals [
+	super testCanonicallyEquals.
+	self assert:
+		((self nodeClass target: 'one' data: 'two')
+			canonicallyEquals: (self nodeClass target: 'one' data: 'two')).
+	self deny: ((self nodeClass target: 'one' data: 'two') canonicallyEquals: self nodeClass new).
+]
+
+{ #category : #tests }
 XMLPITest >> testData [
 	| pi |
 
@@ -22,6 +31,11 @@ XMLPITest >> testData [
 { #category : #tests }
 XMLPITest >> testIsPI [
 	self assert: self nodeClass new isPI
+]
+
+{ #category : #tests }
+XMLPITest >> testSortKey [
+	self assert: (self nodeClass new target: 'test') sortKey = 'test'
 ]
 
 { #category : #tests }
