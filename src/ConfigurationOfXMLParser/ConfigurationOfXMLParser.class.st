@@ -241,7 +241,7 @@ ConfigurationOfXMLParser >> baseline188: spec [
         
         spec for: #common do: [
                 spec blessing: #baseline.
-                spec project: 'XMLWriter' with: '2.4.8'. ].
+                spec project: 'XMLWriter' with: #stable. ].
 ]
 
 { #category : #'symbolic versions' }
