@@ -37,7 +37,7 @@ XMLExternalEntityTest >> deleteFileNamed: aFileName [
 XMLExternalEntityTest >> doctypeWithDeclarationsForEntityURIs: aUrlCollection [
 	^  String streamContents: [:stream |
 		stream nextPutAll: '<!DOCTYPE test ['.
-		aUrlCollection doWithIndex: [:each :i |
+		aUrlCollection withIndexDo: [:each :i |
 			stream nextPutAll: '<!ENTITY entity', i printString, ' SYSTEM "', each, '">'].
 		stream nextPutAll: ']>']
 ]

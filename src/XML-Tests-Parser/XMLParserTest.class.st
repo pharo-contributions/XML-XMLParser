@@ -728,13 +728,13 @@ XMLParserTest >> testElementMixedContentDeclaration [
 		should: [
 			XMLDOMParser parse: "missing *"
 				'<!DOCTYPE root [<!ELEMENT root (#PCDATA|one)>]><root/>']
-		raise: XMLValidationException.
+		raise: XMLWellFormednessException.
 	'+*?,' do: [:each |
 		self
 			should: [
 				XMLDOMParser parse:
 					'<!DOCTYPE root [<!ELEMENT two (#PCDATA', each asString, ')>]><root/>']
-			raise: XMLValidationException].
+			raise: XMLWellFormednessException].
 ]
 
 { #category : #tests }
@@ -944,23 +944,23 @@ XMLParserTest >> testIncompleteXMLDeclarationTokens [
 XMLParserTest >> testInvalidElementContentModels [
 	self
 		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root ()>]>']
-		raise: XMLValidationException.
+		raise: XMLWellFormednessException.
 	self
 		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root (one,)>]>']
-		raise: XMLValidationException.
+		raise: XMLWellFormednessException.
 	self
 		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root (one|)>]>']
-		raise: XMLValidationException.
+		raise: XMLWellFormednessException.
 	self
 		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root (one)(two)>]>']
-		raise: XMLValidationException.
+		raise: XMLWellFormednessException.
 	self
 		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root (one|,two)>]>']
-		raise: XMLValidationException.
+		raise: XMLWellFormednessException.
 	'|,?*+' do: [:each |
 		self
 			should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root (', each asString, 'one)>]>']
-			raise: XMLValidationException].
+			raise: XMLWellFormednessException].
 ]
 
 { #category : #tests }
