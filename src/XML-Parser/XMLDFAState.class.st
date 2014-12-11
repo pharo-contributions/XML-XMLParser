@@ -32,11 +32,11 @@ XMLDFAState >> detectNextStateMatching: aMatcher [
 ]
 
 { #category : #enumerating }
-XMLDFAState >> detectNextStateMatching: aMatcher ifNone: aNoneBlock [
+XMLDFAState >> detectNextStateMatching: aMatcher ifNone: aBlock [
 	^ (self transitions
 		at: aMatcher
 		ifAbsentPut: [self dfaStateMatching: aMatcher])
-			ifNil: [aNoneBlock value]
+			ifNil: [aBlock value]
 ]
 
 { #category : #accessing }
@@ -47,10 +47,9 @@ XMLDFAState >> dfaStateMatching: aMatcher [
 	nfaStates do: [:state |
 		(state matches: aMatcher)
 			ifTrue: [state nextState addTo: matchingNfaStates]].
-
-	^ matchingNfaStates
-		ifNotEmpty: [dfaStateCache dfaStateFor: matchingNfaStates]
-		ifEmpty: [nil].
+	matchingNfaStates isEmpty
+		ifTrue: [^ nil].
+	^ dfaStateCache dfaStateFor: matchingNfaStates.
 ]
 
 { #category : #testing }

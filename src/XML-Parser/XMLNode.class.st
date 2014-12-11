@@ -185,12 +185,12 @@ XMLNode >> isStringNode: aStringOrStringNode [
 
 { #category : #private }
 XMLNode >> newListForCollect [
-	^ XMLOrderedList new
+	^ XMLOrderedList new: 10
 ]
 
 { #category : #private }
 XMLNode >> newNodeListForSelect [
-	^ XMLNodeList new
+	^ XMLNodeList new: 10
 ]
 
 { #category : #accessing }
@@ -236,7 +236,7 @@ XMLNode >> previousNode [
 { #category : #printing }
 XMLNode >> printContentOn: aStream [
  	"Prints on aStream the content strings of all descendants with spaces inserted where necessary."
-	self printRawContentOn: (XMLNodeContentWriteStream on: aStream)
+	self printRawContentOn: (XMLNodeContentWriteStreamAdapter on: aStream)
 ]
 
 { #category : #printing }

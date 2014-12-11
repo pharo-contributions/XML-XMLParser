@@ -106,7 +106,7 @@ XMLElementNester >> openElementsReverseDo: aBlock [
 	i := self openElements size.
 	[i > 0]
 		whileTrue: [
-			aBlock value: (openElements at: i).
+			aBlock value: (self openElements at: i).
 			i := i - 1].
 ]
 

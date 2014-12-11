@@ -23,7 +23,7 @@ XMLDocumentValidator >> attributeValidatorsFor: anElement [
 
 { #category : #accessing }
 XMLDocumentValidator >> currentElementValidator [
-	^ self elementValidatorStack last
+	^ self elementValidatorStack lastOrNil
 ]
 
 { #category : #accessing }
@@ -85,8 +85,8 @@ XMLDocumentValidator >> validateAttributes: anAttributeDictionary with: aValidat
 					remove: attribute
 					ifAbsent: nil]].
 
-	unvalidatedAttributes
-		ifNotEmpty: [self unvalidatedAttributes: unvalidatedAttributes].
+	unvalidatedAttributes isEmpty
+		ifFalse: [self unvalidatedAttributes: unvalidatedAttributes].
 ]
 
 { #category : #validation }
@@ -121,8 +121,8 @@ XMLDocumentValidator >> validateRootElement: anElementName [
 
 { #category : #validation }
 XMLDocumentValidator >> validateStartTag: aName [
-	self elementValidatorStack
-		ifNotEmpty: [self currentElementValidator validateStartTag: aName].
+	self currentElementValidator
+		ifNotNil: [:currentValidator | currentValidator validateStartTag: aName].
 
 	self elementValidatorStack addLast:
 		((self elementValidatorFor: aName)

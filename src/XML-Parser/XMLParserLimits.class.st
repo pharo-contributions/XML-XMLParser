@@ -9,17 +9,38 @@ Class {
 		'externalSubsetReadLimit',
 		'maxEntityReplacementDepth'
 	],
+	#classInstVars : [
+		'defaultReadLimit'
+	],
 	#category : #'XML-Parser'
 }
 
 { #category : #accessing }
 XMLParserLimits class >> defaultDocumentReadLimit [
-	^ 10000000
+	^ self defaultReadLimit
 ]
 
 { #category : #accessing }
 XMLParserLimits class >> defaultExternalSubsetReadLimit [
-	^ (self defaultDocumentReadLimit / 4) asInteger
+	^ self defaultReadLimit
+		ifNotNil: [:limit | (limit / 4) asInteger]
+]
+
+{ #category : #accessing }
+XMLParserLimits class >> defaultReadLimit [
+	^ defaultReadLimit
+]
+
+{ #category : #accessing }
+XMLParserLimits class >> defaultReadLimit: aReadLimit [
+	defaultReadLimit := aReadLimit
+]
+
+{ #category : #'class initialization' }
+XMLParserLimits class >> initialize [
+	"self initialize"
+
+	defaultReadLimit := 10000000
 ]
 
 { #category : #accessing }
@@ -48,7 +69,7 @@ XMLParserLimits >> initialize [
 
 	documentReadLimit := self class defaultDocumentReadLimit.
 	externalSubsetReadLimit := self class defaultExternalSubsetReadLimit.
-	maxEntityReplacementDepth := 3.
+	maxEntityReplacementDepth := 8.
 ]
 
 { #category : #accessing }

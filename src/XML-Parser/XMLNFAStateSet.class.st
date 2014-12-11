@@ -11,6 +11,16 @@ Class {
 	#category : #'XML-Parser-Validation-DFA'
 }
 
+{ #category : #'instance creation' }
+XMLNFAStateSet class >> new [
+	^ self new: 5
+]
+
+{ #category : #'instance creation' }
+XMLNFAStateSet class >> new: aCapacity [
+	^ self basicNew initialize: aCapacity
+]
+
 { #category : #comparing }
 XMLNFAStateSet >> = anObject [
 	^ self == anObject
@@ -42,10 +52,8 @@ XMLNFAStateSet >> includes: aState [
 ]
 
 { #category : #initialization }
-XMLNFAStateSet >> initialize [
-	super initialize.
-
-	set := IdentitySet new.
+XMLNFAStateSet >> initialize: aCapacity [
+	set := IdentitySet new: aCapacity.
 	isAccepting := false.
 ]
 

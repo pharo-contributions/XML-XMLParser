@@ -17,7 +17,7 @@ XMLInternalSubetContext >> isSubsetContext [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : #tokenizing }
 XMLInternalSubetContext >> nextTokenFrom: aTokenizer [
 	aTokenizer nextSubsetToken
 ]

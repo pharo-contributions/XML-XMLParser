@@ -1,5 +1,5 @@
 "
-An automatic encoding detector for stream reader streams.
+An automatic encoding detector for stream reader streams that infers encodings from byte order marks or implicitly from null bytes before or after the first non-null byte.
 "
 Class {
 	#name : #XMLStreamEncodingDetector,

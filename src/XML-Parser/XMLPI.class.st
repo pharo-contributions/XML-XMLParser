@@ -34,7 +34,7 @@ XMLPI >> isPI [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : #private }
 XMLPI >> sortKey [
 	^ self target
 ]

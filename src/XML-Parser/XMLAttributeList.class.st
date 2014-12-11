@@ -124,7 +124,7 @@ XMLAttributeList >> attributeValueAt: aName put: aValue [
 
 { #category : #private }
 XMLAttributeList >> attributesByName [
-	^ attributesByName ifNil: [attributesByName := Dictionary new]
+	^ attributesByName ifNil: [attributesByName := Dictionary new: 5]
 ]
 
 { #category : #private }

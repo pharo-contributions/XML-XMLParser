@@ -8,8 +8,7 @@ Class {
 		'element',
 		'attribute',
 		'type',
-		'defaultPragma',
-		'defaultValue'
+		'defaultValueValidator'
 	],
 	#classVars : [
 		'DefaultValueValidators',
@@ -24,8 +23,12 @@ DTDAttributeDefinitionParser class >> element: anElement attribute: anAttribute 
 		setElement: anElement
 		attribute: anAttribute
 		type: aType
-		defaultPragma: aDefaultPragma
-		defaultValue: aDefaultValue
+		defaultValueValidator:
+			((DefaultValueValidators
+				at: aDefaultPragma
+				ifAbsent: [XMLDefaultValueAttributeValidator])
+					attribute: anAttribute
+					defaultValue: aDefaultValue).
 ]
 
 { #category : #'class initialization' }
@@ -58,37 +61,27 @@ DTDAttributeDefinitionParser class >> initializeNonEnumerationValidators [
 		at: 'NMTOKENS' put: XMLNamesAttributeValidator
 ]
 
-{ #category : #'private ' }
-DTDAttributeDefinitionParser >> errorMissingAttributeType [
-	XMLValidationException signal: 'Missing attribute type'
-]
-
-{ #category : #'private ' }
-DTDAttributeDefinitionParser >> hasNotationType [
-	^ type beginsWith: 'NOTATION '
-]
-
 { #category : #parsing }
 DTDAttributeDefinitionParser >> parse [
-	| defaultValueValidator |
+	| attributeValidator |
 
-	defaultValueValidator :=
-		(DefaultValueValidators
-			at: defaultPragma
-			ifAbsent: [XMLDefaultValueAttributeValidator])
-				attribute: attribute
-				defaultValue: defaultValue.
+	attributeValidator :=
+		self validatorClassForType
+			element: element
+			attribute: attribute
+			defaultValueValidator: defaultValueValidator.
+	attributeValidator isEnumerationValidator
+		ifTrue: [attributeValidator setAllowedValuesFromString: type].
 
-	^ self validatorForTypeWithDefaultValueValidator: defaultValueValidator.
+	^ attributeValidator.
 ]
 
 { #category : #initialization }
-DTDAttributeDefinitionParser >> setElement: anElement attribute: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
+DTDAttributeDefinitionParser >> setElement: anElement attribute: anAttribute type: aType defaultValueValidator: aDefaultValueValidator [
 	element := anElement.
 	attribute := anAttribute.
 	type := aType.
-	defaultPragma := aDefaultPragma.
-	defaultValue := aDefaultValue.
+	defaultValueValidator := aDefaultValueValidator.
 ]
 
 { #category : #'private ' }
@@ -96,24 +89,7 @@ DTDAttributeDefinitionParser >> validatorClassForType [
 	^ NonEnumerationValidators
 		at: type
 		ifAbsent: [
-			type isEmpty
-				ifTrue: [self errorMissingAttributeType].
-			(self hasNotationType)
-				ifTrue: [XMLNotationListAttributeValidator]
-				ifFalse: [XMLValueListAttributeValidator]]
-]
-
-{ #category : #'private ' }
-DTDAttributeDefinitionParser >> validatorForTypeWithDefaultValueValidator: aDefaultValueValidator [
-	| attributeValidator |
-
-	attributeValidator :=
-		self validatorClassForType
-			element: element
-			attribute: attribute
-			defaultValueValidator: aDefaultValueValidator.
-	attributeValidator isValueListValidator
-		ifTrue: [attributeValidator setAllowedValuesFromString: type].
-
-	^ attributeValidator.
+			type first == $N
+				ifTrue: [XMLNotationEnumerationAttributeValidator]
+				ifFalse: [XMLEnumerationAttributeValidator]]
 ]

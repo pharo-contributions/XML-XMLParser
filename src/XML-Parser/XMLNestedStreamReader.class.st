@@ -39,9 +39,9 @@ XMLNestedStreamReader class >> on: aStream [
 ]
 
 { #category : #'instance creation' }
-XMLNestedStreamReader class >> on: anInitialStream readLimit: aReadLimit [
+XMLNestedStreamReader class >> on: aStream readLimit: aReadLimit [
 	^ self new
-		setStream: anInitialStream
+		setStream: aStream
 		readLimit: aReadLimit
 ]
 
@@ -264,7 +264,7 @@ XMLNestedStreamReader >> popNestedStreamWhileAtEnd [
 { #category : #positioning }
 XMLNestedStreamReader >> pushBack: aString [
 	aString size > 1
-		ifTrue: [^ self pushStream: (ReadStream on: aString)].
+		ifTrue: [^ self pushBackStream: (ReadStream on: aString)].
 	aString size = 1
 		ifTrue: [self pushBackCharacter: (aString at: 1)]
 ]
@@ -275,19 +275,19 @@ XMLNestedStreamReader >> pushBackCharacter: aCharacter [
 		ifNil: [peekChar := aCharacter]
 		ifNotNil: [
 			self
-				pushStream: (XMLSingleCharacterReadStream on: aCharacter)
+				pushBackStream: (XMLSingleCharacterReadStream on: aCharacter)
 				onClose: nil]
 ]
 
 { #category : #positioning }
-XMLNestedStreamReader >> pushStream: aStream [
+XMLNestedStreamReader >> pushBackStream: aStream [
 	self
-		pushStream: aStream
+		pushBackStream: aStream
 		onClose: nil
 ]
 
 { #category : #positioning }
-XMLNestedStreamReader >> pushStream: aStream onClose: aBlock [
+XMLNestedStreamReader >> pushBackStream: aStream onClose: aBlock [
 	nestedStreams
 		ifNil: [(nestedStreams := OrderedCollection new: self maxNestedStreams)].
 	(nestedStreams size >= self maxNestedStreams)
@@ -299,16 +299,16 @@ XMLNestedStreamReader >> pushStream: aStream onClose: aBlock [
 			nestedStreams addLast: (XMLSingleCharacterReadStream on: peekChar) -> nil.
 			peekChar := nil].
 
-	stream := aStream.
+	self stream: aStream.
 	onClose := aBlock.
 ]
 
 { #category : #initialization }
-XMLNestedStreamReader >> setStream: anInitialStream readLimit: aReadLimit [
+XMLNestedStreamReader >> setStream: aStream readLimit: aReadLimit [
 	currentLineNumber := 1.
 	normalizedLineEndingChar := LineFeed.
-	stream := anInitialStream.
 	readLimit := aReadLimit.
+	self stream: aStream.
 ]
 
 { #category : #streaming }
@@ -337,4 +337,13 @@ XMLNestedStreamReader >> skipTo: aDelimiter [
 { #category : #accessing }
 XMLNestedStreamReader >> stream [
 	^ stream
+]
+
+{ #category : #accessing }
+XMLNestedStreamReader >> stream: aStream [
+	stream := 
+		(aStream atEnd
+			or: [aStream peek isCharacter])
+			ifTrue: [aStream]
+			ifFalse: [XMLBinaryReadStreamAdapter on: aStream]
 ]

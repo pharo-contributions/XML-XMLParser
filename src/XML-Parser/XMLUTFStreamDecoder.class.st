@@ -33,9 +33,12 @@ XMLUTFStreamDecoder class >> canDecodeEncoding: anEncoding [
 { #category : #accessing }
 XMLUTFStreamDecoder class >> encodingNames [
 	^ encodingNames ifNil: [
-		(encodingNames := self basicEncodingNames asSet)
-			addAll: (self basicEncodingNames collect: [:each | each asUppercase]);
-			yourself]
+		encodingNames := self basicEncodingNames asSet.
+		self basicEncodingNames do: [:each |
+			encodingNames
+				add: each asLowercase;
+				add: each asUppercase].
+		encodingNames]
 ]
 
 { #category : #'instance creation' }

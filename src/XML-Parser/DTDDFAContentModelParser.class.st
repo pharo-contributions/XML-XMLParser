@@ -5,8 +5,6 @@ Class {
 	#name : #DTDDFAContentModelParser,
 	#superclass : #DTDContentModelParser,
 	#instVars : [
-		'contentModelStream',
-		'nameStream',
 		'operatorStack',
 		'nfaBuilder'
 	],
@@ -23,13 +21,13 @@ DTDDFAContentModelParser class >> initialize [
 
 	self
 		initializeOperatorApplicators;
-		initializeSpecialCharacterParsers.
+		initializeSpecialCharacterParsers
 ]
 
 { #category : #'class initialization' }
 DTDDFAContentModelParser class >> initializeOperatorApplicators [
 	"use Array for faster lookup"
-	(OperatorApplicators := Array new: 128)
+	(OperatorApplicators := Array new: 256)
 		at: $, asciiValue put: #applyConcatenation;
 		at: $| asciiValue put: #applyBranch;
 		at: $? asciiValue put: #applyOptional;
@@ -40,7 +38,7 @@ DTDDFAContentModelParser class >> initializeOperatorApplicators [
 { #category : #'class initialization' }
 DTDDFAContentModelParser class >> initializeSpecialCharacterParsers [
 	"use Array for faster lookup"
-	(SpecialCharacterParsers := Array new: 128)
+	(SpecialCharacterParsers := Array new: 256)
 		at: $( asciiValue put: #parseParen:;
 		at: $) asciiValue put: #parseParen:;
 		at: $, asciiValue put: #parseBinaryOperator:;
@@ -74,11 +72,6 @@ DTDDFAContentModelParser >> errorMissingOperand [
 ]
 
 { #category : #private }
-DTDDFAContentModelParser >> errorUnexpectedPCDATA [
-	XMLValidationException signal: 'Unexpected #PCDATA in content model'
-]
-
-{ #category : #private }
 DTDDFAContentModelParser >> hasOperatorOnStack [
 	^ (operatorStack isEmpty or: [operatorStack last == $(]) not
 ]
@@ -95,19 +88,25 @@ DTDDFAContentModelParser >> isSpecialCharacter: aCharacter [
 
 { #category : #parsing }
 DTDDFAContentModelParser >> parse [
-	contentModelStream := contentModel readStream.
-	nameStream := WriteStream on: (String new: 16).
+	"the tokenizer removes all spaces from the content model"
+	| nameStart |
+
 	operatorStack := OrderedCollection new.
 	nfaBuilder := XMLNFABuilder new.
-
-	[contentModelStream atEnd]
-		whileFalse: [ 
-			(self parserForSpecialCharacter: contentModelStream peek)
+	1 to: contentModel size do: [:i |
+		(self parserForSpecialCharacter: (contentModel at: i))
+				ifNil: [
+					nameStart
+						ifNil: [nameStart := i]]
 				ifNotNil: [:selector |
+					nameStart
+						ifNotNil: [
+							nfaBuilder pushMatcher:
+								(contentModel copyFrom: nameStart to: i - 1).
+							nameStart := nil].
 					self
 						perform: selector
-						with: contentModelStream next]
-				ifNil: [self parseElementName]].
+						with: (contentModel at: i)]].
 	self popRemainingOperators.
 
 	^ XMLDFAElementValidator
@@ -125,22 +124,6 @@ DTDDFAContentModelParser >> parseBinaryOperator: aCharacter [
 					ifFalse: [self applyBinaryOperatorOnStack]].
 
 	operatorStack addLast: aCharacter.
-]
-
-{ #category : #private }
-DTDDFAContentModelParser >> parseElementName [
-	| matcher |
-
-	nameStream reset.
-	[contentModelStream atEnd
-		or: [self isSpecialCharacter: contentModelStream peek]]
-		whileFalse: [nameStream nextPut: contentModelStream next].
-
-	matcher := nameStream contents.
-	matcher = '#PCDATA'
-		ifTrue: [self errorUnexpectedPCDATA].
-
-	nfaBuilder pushMatcher: matcher.
 ]
 
 { #category : #private }
@@ -162,10 +145,10 @@ DTDDFAContentModelParser >> parseUnaryOperator: aCharacter [
 DTDDFAContentModelParser >> parserForSpecialCharacter: aCharacter [
 	| asciiValue |
 
-	^ ((asciiValue := aCharacter asciiValue) > 0
+	((asciiValue := aCharacter asciiValue) > 0
 		and: [asciiValue <= SpecialCharacterParsers size])
-			ifTrue: [SpecialCharacterParsers at: asciiValue]
-			ifFalse: [nil]
+			ifTrue: [^ SpecialCharacterParsers at: asciiValue]
+			ifFalse: [^ nil]
 ]
 
 { #category : #evaluation }

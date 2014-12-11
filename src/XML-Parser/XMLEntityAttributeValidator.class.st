@@ -43,7 +43,6 @@ XMLEntityAttributeValidator >> validateAttributeValue: aValue [
 
 { #category : #validation }
 XMLEntityAttributeValidator >> validateEntityReference: aName [
-	self validateName: aName.
 	(self unparsedEntities includesKey: aName)
 		ifFalse: [self errorInvalidUnparsedEntityReference: aName]
 ]

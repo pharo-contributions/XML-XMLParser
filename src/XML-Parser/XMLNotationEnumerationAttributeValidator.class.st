@@ -2,8 +2,8 @@
 This class validates attributes that can have NOTATION names from a list as values.
 "
 Class {
-	#name : #XMLNotationListAttributeValidator,
-	#superclass : #XMLValueListAttributeValidator,
+	#name : #XMLNotationEnumerationAttributeValidator,
+	#superclass : #XMLEnumerationAttributeValidator,
 	#instVars : [
 		'notations'
 	],
@@ -11,14 +11,19 @@ Class {
 }
 
 { #category : #'private ' }
-XMLNotationListAttributeValidator >> errorMultipleNotationAttributes [
+XMLNotationEnumerationAttributeValidator >> enumerationListParserClass [
+	^ DTDNotationEnumerationListParser
+]
+
+{ #category : #'private ' }
+XMLNotationEnumerationAttributeValidator >> errorMultipleNotationAttributes [
 	XMLValidationException
 		formatSignal: 'Element <{1}> has multiple NOTATION list attributes'
 		with: self element
 ]
 
 { #category : #'private ' }
-XMLNotationListAttributeValidator >> errorUndeclaredNotation: aNotation [
+XMLNotationEnumerationAttributeValidator >> errorUndeclaredNotation: aNotation [
 	XMLValidationException
 		formatSignal: 'Undeclared NOTATION "{1}" in attribute "{2}"'
 		with: aNotation
@@ -26,17 +31,17 @@ XMLNotationListAttributeValidator >> errorUndeclaredNotation: aNotation [
 ]
 
 { #category : #testing }
-XMLNotationListAttributeValidator >> hasNotationValues [
+XMLNotationEnumerationAttributeValidator >> hasNotationValues [
 	^ true
 ]
 
 { #category : #accessing }
-XMLNotationListAttributeValidator >> notations [
+XMLNotationEnumerationAttributeValidator >> notations [
 	^ notations ifNil: [notations := Set new]
 ]
 
 { #category : #validation }
-XMLNotationListAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
+XMLNotationEnumerationAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
 	anAttributeValidatorDictionary valuesDo: [:each |
 		each hasNotationValues
 			ifTrue: [self errorMultipleNotationAttributes]].
@@ -48,14 +53,9 @@ XMLNotationListAttributeValidator >> validateAndAddTo: anAttributeValidatorDicti
 ]
 
 { #category : #validation }
-XMLNotationListAttributeValidator >> validateAttributeValue: aValue [
+XMLNotationEnumerationAttributeValidator >> validateAttributeValue: aValue [
 	super validateAttributeValue: aValue.
 
 	(self notations includes: aValue)
 		ifFalse: [self errorUndeclaredNotation: aValue]. 
-]
-
-{ #category : #'private ' }
-XMLNotationListAttributeValidator >> valueListParserClass [
-	^ DTDNotationListParser
 ]

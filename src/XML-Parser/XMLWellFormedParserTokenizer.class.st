@@ -9,13 +9,11 @@ Class {
 	],
 	#classVars : [
 		'AdditionalNameChars',
-		'AttributeTypeDelimiters',
 		'EncodingNameChars',
 		'NameChars',
 		'NormalizedSpace',
 		'PubidChars',
-		'UnaryOperatorChars',
-		'ValueListChars'
+		'UnaryOperatorChars'
 	],
 	#category : #'XML-Parser'
 }
@@ -25,14 +23,12 @@ XMLWellFormedParserTokenizer class >> initialize [
 	"self initialize"
 
 	self
+		initializeNormalizedSpace;
 		initializeAdditionalNameChars;
 		initializeNameChars;
 		initializePubidChars;
-		initializeAttributeTypeDelimiters;
-		initializeValueListChars;
-		initializeUnaryOperatorChars;
 		initializeEncodingNameChars;
-		initializeNormalizedSpace
+		initializeUnaryOperatorChars
 ]
 
 { #category : #'class initialization' }
@@ -48,11 +44,6 @@ XMLWellFormedParserTokenizer class >> initializeAdditionalNameChars [
 		add: (Character value: 16rB7).
 	16r0300 to: 16r036F do: [:each | AdditionalNameChars add: (Character value: each)].
 	16r203F to: 16r2040 do: [:each | AdditionalNameChars add: (Character value: each)].
-]
-
-{ #category : #'class initialization' }
-XMLWellFormedParserTokenizer class >> initializeAttributeTypeDelimiters [
-	AttributeTypeDelimiters := BitmapCharacterSet with: $# with: $' with: $" with: $>
 ]
 
 { #category : #'class initialization' }
@@ -114,31 +105,24 @@ XMLWellFormedParserTokenizer class >> initializeUnaryOperatorChars [
 	UnaryOperatorChars := BitmapCharacterSet with: $? with: $* with: $+
 ]
 
-{ #category : #'class initialization' }
-XMLWellFormedParserTokenizer class >> initializeValueListChars [
-	ValueListChars := BitmapCharacterSet with: $( with: $| with: $)
-]
-
 { #category : #testing }
 XMLWellFormedParserTokenizer class >> isName: aString [
-	aString ifEmpty: [^ false].
-
-	aString doWithIndex: [:each :i | 
-		((NameChars includes: each)
-			and: [i > 1 or: [(AdditionalNameChars includes: each) not]])
+	"optimized"
+	1 to: aString size do: [:i | 
+		((NameChars includes: (aString at: i))
+			and: [i > 1
+				or: [(AdditionalNameChars includes: (aString at: i)) not]])
 			ifFalse: [^ false]].
-	^ true.
+	^ aString size > 0.
 ]
 
 { #category : #testing }
 XMLWellFormedParserTokenizer class >> isNmtoken: aString [
-	^ aString notEmpty
-		and: [aString allSatisfy: [:each | self isNmtokenChar: each]]
-]
-
-{ #category : #testing }
-XMLWellFormedParserTokenizer class >> isNmtokenChar: aCharacter [
-	^ NameChars includes: aCharacter
+	"optimized"
+	1 to: aString size do: [:i |
+		(NameChars includes: (aString at: i))
+			ifFalse: [^ false]].
+	^ aString size > 0.
 ]
 
 { #category : #accessing }
@@ -464,12 +448,11 @@ XMLWellFormedParserTokenizer >> nextAttributeDefaultPragma [
 		ifFalse: [^ ''].
 	streamReader next.
 
-	^ streamReader peek == $R
-		ifTrue: [self expectNextAll: 'REQUIRED']
-		ifFalse: [
-			streamReader peek == $I
-				ifTrue: [self expectNextAll: 'IMPLIED']
-				ifFalse: [self expectNextAll: 'FIXED']].
+	streamReader peek == $R
+		ifTrue: [^ self expectNextAll: 'REQUIRED'].
+	streamReader peek == $I
+		ifTrue: [^ self expectNextAll: 'IMPLIED'].
+	^ self expectNextAll: 'FIXED'.
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -488,21 +471,98 @@ XMLWellFormedParserTokenizer >> nextAttributeDefaultValueForPragma: aPragma [
 ]
 
 { #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> nextAttributeEntityType [
+	streamReader next.
+	self expectNextAll: 'NTIT'.
+	streamReader peek == $Y
+		ifTrue: [
+			streamReader next.
+			^ 'ENTITY'].
+	self expectNextAll: 'IES'.
+	^ 'ENTITIES'.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> nextAttributeEnumerationType [
+	writeStream
+		reset;
+		nextPut: (self expectNext: $().
+	self
+		skipSeparatorsReplacingParameterEntities;
+		nextNmtokenOn: writeStream;
+		skipSeparatorsReplacingParameterEntities.
+	[streamReader peek == $)]
+		whileFalse: [
+			writeStream nextPut: (self expectNext: $|).
+			self
+				skipSeparatorsReplacingParameterEntities;
+				nextNmtokenOn: writeStream;
+				skipSeparatorsReplacingParameterEntities].
+	writeStream nextPut: streamReader next.
+
+	^ writeStream contents.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> nextAttributeIDOrIDRefType [
+	streamReader next.
+	self expectNext: $D.
+	streamReader peek == $R
+		ifFalse: [^ 'ID'].	
+	self expectNextAll: 'REF'.
+	streamReader peek == $S
+		ifTrue: [
+			streamReader next.
+			^ 'IDREFS'].
+	^ 'IDREF'.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> nextAttributeNotationEnumerationOrNmtokenType [
+	streamReader next.
+	streamReader peek == $O
+		ifTrue: [
+			self expectNextAll: 'OTATION'.
+			^ self nextAttributeNotationEnumerationType].
+	self expectNextAll: 'MTOKEN'.
+	streamReader peek == $S
+		ifTrue: [
+			streamReader next.
+			^ 'NMTOKENS'].
+	^ 'NMTOKEN'.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> nextAttributeNotationEnumerationType [
+	writeStream
+		reset;
+		nextPutAll: 'NOTATION '.
+	self skipSeparatorsReplacingParameterEntities.
+	writeStream nextPut: (self expectNext: $().
+
+	self
+		skipSeparatorsReplacingParameterEntities;
+		nextNameOn: writeStream;
+		skipSeparatorsReplacingParameterEntities;
+		nextNameListValuesOn: writeStream.
+
+	^ writeStream contents.
+]
+
+{ #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextAttributeType [
 	| nextChar |
 
-	writeStream reset.
-	[self skipSeparatorsReplacingParameterEntities.
-	(nextChar := streamReader peek) == nil
-		or: [AttributeTypeDelimiters includes: nextChar]]
-		whileFalse: [
-			(ValueListChars includes: nextChar)
-				ifTrue: [
-					writeStream position > 0
-						ifTrue: [writeStream space].
-					writeStream nextPut: streamReader next]
-				ifFalse: [self nextNmtokenOn: writeStream]].
-	^ writeStream contents.
+	self skipSeparatorsReplacingParameterEntities.
+	(nextChar := streamReader peek) == $C
+		ifTrue: [^ self expectNextAll: 'CDATA'].
+	nextChar == $I
+		ifTrue: [^ self nextAttributeIDOrIDRefType].
+	nextChar == $E
+		ifTrue: [^ self nextAttributeEntityType].
+	nextChar == $N
+		ifTrue: [^ self nextAttributeNotationEnumerationOrNmtokenType].
+	^ self nextAttributeEnumerationType.
 ]
 
 { #category : #tokenizing }
@@ -538,6 +598,27 @@ XMLWellFormedParserTokenizer >> nextAttributeValue [
 	^ writeStream contents.
 ]
 
+{ #category : #tokenizing }
+XMLWellFormedParserTokenizer >> nextComment [
+	| nextChar |
+
+	"Skip first -"
+	streamReader next.
+	self expectNext: $-.
+
+	"xml comments cannot contain -- sequences not followed by terminating >"
+	writeStream reset.
+	[(nextChar := streamReader next) == nil
+		or: [nextChar == $-
+			and: [(streamReader peek) == $-]]]
+		whileFalse: [writeStream nextPut: nextChar].
+	self
+		expectNext: $-;
+		expectTerminator: $>.
+
+	driver handleComment: writeStream contents.
+]
+
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextConditionalSection [
 	"skip ["
@@ -557,6 +638,79 @@ XMLWellFormedParserTokenizer >> nextConditionalSectionOn: aWriteStream [
 	streamReader peek == $N
 		ifTrue: [self nextIncludeSectionOn: aWriteStream]
 		ifFalse: [self nextIgnoreSection].
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> nextContentModel [
+	self skipSeparatorsReplacingParameterEntities.
+	streamReader peek == $A
+		ifTrue: [^ self expectNextAll: 'ANY'].
+	streamReader peek == $E
+		ifTrue: [^ self expectNextAll: 'EMPTY'].
+	
+	writeStream
+		reset;
+		nextPut: (self expectNext: $().
+	self skipSeparatorsReplacingParameterEntities.
+	streamReader peek == $#
+		ifTrue: [self nextMixedContentListValuesOn: writeStream]
+		ifFalse: [self nextContentModelChoiceOrSequenceListValuesOn: writeStream].
+
+	^ writeStream contents.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> nextContentModelChoiceListValuesOn: aStream [
+	[streamReader peek == $)]
+		whileFalse: [
+			aStream nextPut: (self expectNext: $|).
+			self
+				nextContentModelParticleOn: aStream;
+				skipSeparatorsReplacingParameterEntities].
+	aStream nextPut: streamReader next.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> nextContentModelChoiceOrSequenceListValuesOn: aStream [
+	self
+		nextContentModelParticleOn: aStream;
+		skipSeparatorsReplacingParameterEntities.
+	streamReader peek == $|
+		ifTrue: [self nextContentModelChoiceListValuesOn: aStream]
+		ifFalse: [self nextContentModelSequenceListValuesOn: aStream].
+	self nextContentModelUnaryOperatorOn: aStream.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> nextContentModelParticleOn: aStream [
+	self skipSeparatorsReplacingParameterEntities.
+	streamReader peek == $(
+		ifTrue: [
+			aStream nextPut: streamReader next.
+			self nextContentModelChoiceOrSequenceListValuesOn: aStream]
+		ifFalse: [
+			aStream nextPutAll: self nextName.
+			self nextContentModelUnaryOperatorOn: aStream]
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> nextContentModelSequenceListValuesOn: aStream [
+	[streamReader peek == $)]
+		whileFalse: [
+			aStream nextPut: (self expectNext: $,).
+			self
+				nextContentModelParticleOn: aStream;
+				skipSeparatorsReplacingParameterEntities].
+	aStream nextPut: streamReader next.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> nextContentModelUnaryOperatorOn: aStream [
+	| nextChar |
+
+	((nextChar := streamReader peek) notNil
+		and: [UnaryOperatorChars includes: nextChar])
+		ifTrue: [aStream nextPut: streamReader next]
 ]
 
 { #category : #tokenizing }
@@ -584,27 +738,13 @@ XMLWellFormedParserTokenizer >> nextDecodedCharReference [
 
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextElementDeclaration [
-	| name nextChar contentModel |
+	| name contentModel |
 
 	self
 		expectNextAll: 'LEMENT';
 		skipSeparatorsReplacingParameterEntities.
-
 	name := self nextName.
-	writeStream reset.
-	[self skipSeparatorsReplacingParameterEntities.
-	(streamReader atEnd or: [(nextChar := streamReader peek) == $>])]
-		whileFalse: [
-			nextChar == $#
-				ifTrue: [writeStream nextPutAll: (self expectNextAll: '#PCDATA')]
-				ifFalse: [
-					(nextChar == $, or: [ValueListChars includes: nextChar])
-						ifTrue: [writeStream nextPut: streamReader next]
-						ifFalse: [self nextNameOn: writeStream]].
-			(UnaryOperatorChars includes: streamReader peek)
-				ifTrue: [writeStream nextPut: streamReader next]].
-	contentModel := writeStream contents.
-
+	contentModel := self nextContentModel.
 	self
 		skipSeparatorsReplacingParameterEntities;
 		expectTerminator: $>.
@@ -804,6 +944,23 @@ XMLWellFormedParserTokenizer >> nextInternalEntityDeclaration: aName isParameter
 		ifFalse: [driver handleGeneralEntityDeclaration: aName replacement: value].
 ]
 
+{ #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> nextMixedContentListValuesOn: aStream [
+	| hasElements |
+
+	aStream nextPutAll: (self expectNextAll: '#PCDATA').
+
+	self skipSeparatorsReplacingParameterEntities.
+	hasElements := streamReader peek == $|.
+
+	self nextNameListValuesOn: aStream.
+	streamReader peek == $*
+		ifTrue: [aStream nextPut: streamReader next]
+		ifFalse: [
+			hasElements
+				ifTrue: [self errorExpectedLiteral: $*]].
+]
+
 { #category : #tokenizing }
 XMLWellFormedParserTokenizer >> nextName [
 	| nextChar |
@@ -820,6 +977,18 @@ XMLWellFormedParserTokenizer >> nextName [
 		and: [NameChars includes: nextChar]]
 		whileTrue: [nameStream nextPut: streamReader next].
 	^ nameStream contents.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> nextNameListValuesOn: aStream [
+	[streamReader peek == $)]
+		whileFalse: [
+			aStream nextPut: (self expectNext: $|).
+			self
+				skipSeparatorsReplacingParameterEntities;
+				nextNameOn: aStream;
+				skipSeparatorsReplacingParameterEntities].
+	aStream nextPut: streamReader next.
 ]
 
 { #category : #tokenizing }
@@ -1146,7 +1315,7 @@ XMLWellFormedParserTokenizer >> pushBackEntity: anEntity onClose: aBlock [
 
 	self addActiveEntity: anEntity.
 	streamReader
-		pushStream: (ReadStream on: anEntity replacement)
+		pushBackStream: (ReadStream on: anEntity replacement)
 		onClose: [
 			self removeActiveEntity: anEntity.
 			aBlock ifNotNil: [aBlock value]].

@@ -14,14 +14,14 @@ Class {
 
 { #category : #accessing }
 DTDExternalEntityLimits class >> defaultMaxExternalEntitySize [
-	^ XMLParserLimits defaultExternalSubsetReadLimit
+	^ 2500000
 ]
 
 { #category : #initialization }
 DTDExternalEntityLimits >> initialize [
 	super initialize.
 
-	maxExternalEntities := 12.
+	maxExternalEntities := 16.
 	maxExternalEntitySize := self class defaultMaxExternalEntitySize.
 	resolvesLocalFromNonLocal := false.
 ]

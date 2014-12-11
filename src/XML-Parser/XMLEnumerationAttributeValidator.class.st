@@ -2,7 +2,7 @@
 This class validates attributes that can have any value taken from a list like ""(one|two|thee)"".
 "
 Class {
-	#name : #XMLValueListAttributeValidator,
+	#name : #XMLEnumerationAttributeValidator,
 	#superclass : #XMLAttributeValidator,
 	#instVars : [
 		'allowedValues'
@@ -11,12 +11,17 @@ Class {
 }
 
 { #category : #accessing }
-XMLValueListAttributeValidator >> allowedValues [
+XMLEnumerationAttributeValidator >> allowedValues [
 	^ allowedValues ifNil: [allowedValues := Set new]
 ]
 
 { #category : #'private ' }
-XMLValueListAttributeValidator >> errorInvalidValue: aValue [
+XMLEnumerationAttributeValidator >> enumerationListParserClass [
+	^ DTDEnumerationListParser
+]
+
+{ #category : #'private ' }
+XMLEnumerationAttributeValidator >> errorInvalidValue: aValue [
 	XMLValidationException
 		formatSignal: 'Invalid value "{1}" for attribute "{2}"'
 		with: aValue
@@ -24,22 +29,17 @@ XMLValueListAttributeValidator >> errorInvalidValue: aValue [
 ]
 
 { #category : #testing }
-XMLValueListAttributeValidator >> isValueListValidator [
+XMLEnumerationAttributeValidator >> isEnumerationValidator [
 	^ true
 ]
 
 { #category : #accessing }
-XMLValueListAttributeValidator >> setAllowedValuesFromString: aString [
-	allowedValues := (self valueListParserClass on: aString) parse
+XMLEnumerationAttributeValidator >> setAllowedValuesFromString: aString [
+	allowedValues := (self enumerationListParserClass on: aString) parse
 ]
 
 { #category : #validation }
-XMLValueListAttributeValidator >> validateAttributeValue: aValue [
+XMLEnumerationAttributeValidator >> validateAttributeValue: aValue [
 	(self allowedValues includes: aValue)
 		ifFalse: [self errorInvalidValue: aValue]
-]
-
-{ #category : #'private ' }
-XMLValueListAttributeValidator >> valueListParserClass [
-	^ DTDEnumerationListParser
 ]
