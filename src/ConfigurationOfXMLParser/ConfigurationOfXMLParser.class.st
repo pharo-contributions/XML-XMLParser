@@ -241,14 +241,14 @@ ConfigurationOfXMLParser >> baseline188: spec [
         
         spec for: #common do: [
                 spec blessing: #baseline.
-                spec project: 'XMLWriter' with: #stable. ].
+                spec project: 'XMLWriter' with: '2.4.8'. ].
 ]
 
 { #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.8.3-baseline'.
+	spec for: #'common' version: '1.8.8-baseline'.
 
 ]
 
@@ -269,7 +269,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.8.8'.
+	spec for: #'common' version: '1.8.9'.
 	spec for: #'pharo1.x' version: '1.2'
 
 ]
@@ -830,7 +830,7 @@ ConfigurationOfXMLParser >> version165: spec [
 	<version: '1.6.5' imports: #('1.0-baseline' )>
 
 	spec for: #'common' do: [
-		spec blessing: #'stable'.
+		spec blessing: #release.
 		spec description: 'version 1.6.5'.
 		spec author: 'GuillaumeLarcheveque'.
 		spec timestamp: '6/27/2014 16:14'.
@@ -854,7 +854,7 @@ ConfigurationOfXMLParser >> version166: spec [
 	<version: '1.6.6' imports: #('1.0-baseline' )>
 
 	spec for: #'common' do: [
-		spec blessing: #'stable'.
+		spec blessing: #release.
 		spec description: 'version 1.6.6'.
 		spec 
 			project: 'XMLWriter' with: '2.3.10';
@@ -876,7 +876,7 @@ ConfigurationOfXMLParser >> version167: spec [
 	<version: '1.6.7' imports: #('1.0-baseline' )>
 
 	spec for: #'common' do: [
-		spec blessing: #'stable'.
+		spec blessing: #release.
 		spec description: 'version 1.6.7'.
 		spec 
 			project: 'XMLWriter' with: '2.3.10';
@@ -898,7 +898,7 @@ ConfigurationOfXMLParser >> version168: spec [
 	<version: '1.6.8' imports: #('1.0-baseline' )>
 
 	spec for: #'common' do: [
-		spec blessing: #'stable'.
+		spec blessing: #release.
 		spec description: 'version 1.6.8'.
 		spec 
 			project: 'XMLWriter' with: '2.3.10';
@@ -920,7 +920,7 @@ ConfigurationOfXMLParser >> version169: spec [
 	<version: '1.6.9' imports: #('1.0-baseline' )>
 
 	spec for: #'common' do: [
-		spec blessing: #'stable'.
+		spec blessing: #release.
 		spec 
 			project: 'XMLWriter' with: '2.3.10';
 			project: 'BitmapCharacterSet' with: '1.1';
@@ -941,7 +941,7 @@ ConfigurationOfXMLParser >> version170: spec [
 	<version: '1.7.0' imports: #('1.0-baseline' )>
 
 	spec for: #'common' do: [
-		spec blessing: #'stable'.
+		spec blessing: #release.
 		spec 
 			project: 'XMLWriter' with: '2.4.1';
 			project: 'BitmapCharacterSet' with: '1.1';
@@ -962,7 +962,7 @@ ConfigurationOfXMLParser >> version171: spec [
 	<version: '1.7.1' imports: #('1.0-baseline' )>
 
 	spec for: #'common' do: [
-		spec blessing: #'stable'.
+		spec blessing: #release.
 		spec 
 			project: 'XMLWriter' with: '2.4.1';
 			project: 'BitmapCharacterSet' with: '1.1';
@@ -983,7 +983,7 @@ ConfigurationOfXMLParser >> version172: spec [
 	<version: '1.7.2' imports: #('1.0-baseline' )>
 
 	spec for: #'common' do: [
-		spec blessing: #'stable'.
+		spec blessing: #release.
 		spec 
 			project: 'XMLWriter' with: '2.4.1';
 			project: 'BitmapCharacterSet' with: '1.1';
@@ -1004,7 +1004,7 @@ ConfigurationOfXMLParser >> version173: spec [
 	<version: '1.7.3' imports: #('1.0-baseline' )>
 
 	spec for: #'common' do: [
-		spec blessing: #'stable'.
+		spec blessing: #release.
 		spec 
 			project: 'XMLWriter' with: '2.4.1';
 			project: 'BitmapCharacterSet' with: '1.1';
@@ -1025,7 +1025,7 @@ ConfigurationOfXMLParser >> version174: spec [
 	<version: '1.7.4' imports: #('1.0-baseline' )>
 
 	spec for: #'common' do: [
-		spec blessing: #'stable'.
+		spec blessing: #release.
 		spec 
 			project: 'XMLWriter' with: '2.4.1';
 			project: 'BitmapCharacterSet' with: '1.1';
@@ -1046,7 +1046,7 @@ ConfigurationOfXMLParser >> version175: spec [
 	<version: '1.7.5' imports: #('1.0-baseline' )>
 
 	spec for: #'common' do: [
-		spec blessing: #'stable'.
+		spec blessing: #release.
 		spec 
 			project: 'XMLWriter' with: '2.4.2';
 			package: 'XML-Parser' with: 'XML-Parser-monty.241';
@@ -1064,7 +1064,7 @@ ConfigurationOfXMLParser >> version176: spec [
 	<version: '1.7.6' imports: #('1.0-baseline' )>
 
 	spec for: #'common' do: [
-		spec blessing: #'stable'.
+		spec blessing: #release.
 		spec 
 			project: 'XMLWriter' with: '2.4.3';
 			package: 'XML-Parser' with: 'XML-Parser-monty.242';
@@ -1082,7 +1082,7 @@ ConfigurationOfXMLParser >> version177: spec [
 	<version: '1.7.7' imports: #('1.0-baseline' )>
 
 	spec for: #'common' do: [
-		spec blessing: #'stable'.
+		spec blessing: #release.
 		spec 
 			project: 'XMLWriter' with: '2.4.3';
 			package: 'XML-Parser' with: 'XML-Parser-monty.243';
@@ -1212,5 +1212,16 @@ ConfigurationOfXMLParser >> version188: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.255'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.82'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version189: spec [ 
+        <version: '1.8.9' imports: #('1.8.8-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.256'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.83'.
                 ].
 ]
