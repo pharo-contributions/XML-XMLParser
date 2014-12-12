@@ -62,12 +62,11 @@ XMLParserTokenizer >> atEnd [
 
 { #category : #'entity replacement' }
 XMLParserTokenizer >> characterFromCodePoint: aCodePoint [
-	^ (aCodePoint notNil and: [aCodePoint > 0])
-		ifTrue: [
-			[aCodePoint asCharacter]
-				on: Error
-				do: [:error | nil]]
-		ifFalse: [nil]
+	(aCodePoint notNil and: [aCodePoint > 0])
+		ifFalse: [^ nil].
+	^ [aCodePoint asCharacter]
+		on: Error
+		do: [:error | nil].
 ]
 
 { #category : #'file open/close' }
@@ -122,11 +121,6 @@ XMLParserTokenizer >> expectUpToAll: aString [
 ]
 
 { #category : #tokenizing }
-XMLParserTokenizer >> nextAttributeValue [
-	self subclassResponsibility
-]
-
-{ #category : #tokenizing }
 XMLParserTokenizer >> nextCDataSection [
 	self expectNextAll: '[CDATA['.
 
@@ -135,34 +129,17 @@ XMLParserTokenizer >> nextCDataSection [
 ]
 
 { #category : #tokenizing }
-XMLParserTokenizer >> nextComment [
-	"Skip first -"
-	streamReader next.
-	self expectNext: $-.
-	driver handleComment: (self expectUpToAll: '-->').
-]
-
-{ #category : #tokenizing }
 XMLParserTokenizer >> nextContentMarkupToken [
-	streamReader peek == $?
-		ifTrue: [^ self nextPIOrXMLDeclaration].
-	streamReader peek == $!
-		ifTrue: [
-			streamReader next.
-			streamReader peek == $-
-				ifTrue: [^self nextComment].
-			^ self nextCDataSection].
-	self nextTag.
+	self subclassResponsibility
 ]
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextContentToken [
-	self subclassResponsibility
-]
-
-{ #category : #tokenizing }
-XMLParserTokenizer >> nextDecodedCharReference [
-	self subclassResponsibility
+	streamReader peek == $<
+		ifTrue: [
+			streamReader next.
+			^ self nextContentMarkupToken].
+	self nextPCDataToken.
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -238,11 +215,6 @@ XMLParserTokenizer >> nextExternalIDSystemLiteralRequired: aBoolean [
 	^ (publicId ifNil: ['']) -> (systemId ifNil: ['']).
 ]
 
-{ #category : #tokenizing }
-XMLParserTokenizer >> nextGeneralEntityReference [
-	self subclassResponsibility
-]
-
 { #category : #'tokenizing - dtd' }
 XMLParserTokenizer >> nextInternalSubsetStart [
 	"skip ["
@@ -316,7 +288,9 @@ XMLParserTokenizer >> nextSubsetToken [
 		ifTrue: [^ self].
 
 	streamReader peek == $%
-		ifTrue: [^ self replaceParameterEntityReference].
+		ifTrue: [
+			streamReader next.
+			^ self nextParameterEntityReference].
 	(context isInternalSubsetContext and: [streamReader peek == $]])
 		ifTrue: [^ self nextEndInternalSubset].
 
@@ -325,11 +299,6 @@ XMLParserTokenizer >> nextSubsetToken [
 
 { #category : #'tokenizing - dtd' }
 XMLParserTokenizer >> nextSystemLiteralRequired: aBoolean [
-	self subclassResponsibility
-]
-
-{ #category : #tokenizing }
-XMLParserTokenizer >> nextTag [
 	self subclassResponsibility
 ]
 
@@ -402,6 +371,21 @@ XMLParserTokenizer >> nextXMLStandaloneAttributeValue [
 ]
 
 { #category : #tokenizing }
+XMLParserTokenizer >> nextXMLTextDeclaration [
+	(streamReader nextMatchAll: '<?xml')
+		ifTrue: [
+			self nextXMLVersionAttributeRequired: false.
+			(self nextXMLEncodingAttributeRequired: true)
+				ifNotEmpty: [:encoding | streamReader convertFromEncoding: encoding].
+
+			streamReader skipSeparators.
+			self
+				expectNext: $?;
+				expectTerminator: $>].
+	context := context previousContext.
+]
+
+{ #category : #tokenizing }
 XMLParserTokenizer >> nextXMLVersionAttributeRequired: aBoolean [
 	streamReader skipSeparators.
 	(aBoolean or: [streamReader peek == $v])
@@ -427,12 +411,6 @@ XMLParserTokenizer >> normalizedLineEndingChar: aCharacter [
 	streamReader normalizedLineEndingChar: aCharacter
 ]
 
-{ #category : #'tokenizing - dtd' }
-XMLParserTokenizer >> replaceParameterEntityReference [
-	streamReader next.
-	self nextParameterEntityReference
-]
-
 { #category : #initialization }
 XMLParserTokenizer >> setDriver: aDriver stream: aStream readLimit: aReadLimit [
 	driver := aDriver.
@@ -454,7 +432,8 @@ XMLParserTokenizer >> skipSeparatorsReplacingParameterEntities [
 		ifFalse: [^ self].
 	[streamReader peek == $%]
 		whileTrue: [
-			self replaceParameterEntityReference.
+			streamReader next.
+			self nextParameterEntityReference.
 			streamReader skipSeparators].
 ]
 

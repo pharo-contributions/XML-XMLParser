@@ -640,6 +640,19 @@ XMLWellFormedParserTokenizer >> nextConditionalSectionOn: aWriteStream [
 		ifFalse: [self nextIgnoreSection].
 ]
 
+{ #category : #tokenizing }
+XMLWellFormedParserTokenizer >> nextContentMarkupToken [
+	streamReader peek == $?
+		ifTrue: [^ self nextPIOrXMLDeclaration].
+	streamReader peek == $!
+		ifTrue: [
+			streamReader next.
+			streamReader peek == $-
+				ifTrue: [^self nextComment].
+			^ self nextCDataSection].
+	self nextTag.
+]
+
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextContentModel [
 	self skipSeparatorsReplacingParameterEntities.
@@ -711,15 +724,6 @@ XMLWellFormedParserTokenizer >> nextContentModelUnaryOperatorOn: aStream [
 	((nextChar := streamReader peek) notNil
 		and: [UnaryOperatorChars includes: nextChar])
 		ifTrue: [aStream nextPut: streamReader next]
-]
-
-{ #category : #tokenizing }
-XMLWellFormedParserTokenizer >> nextContentToken [
-	streamReader peek == $<
-		ifTrue: [
-			streamReader next.
-			^ self nextContentMarkupToken].
-	self nextPCDataToken.
 ]
 
 { #category : #tokenizing }
@@ -1264,21 +1268,6 @@ XMLWellFormedParserTokenizer >> nextXMLStandaloneAttributeValue [
 	self expectNext: quote.
 
 	^ yesOrNo.
-]
-
-{ #category : #tokenizing }
-XMLWellFormedParserTokenizer >> nextXMLTextDeclaration [
-	(streamReader nextMatchAll: '<?xml')
-		ifTrue: [
-			self nextXMLVersionAttributeRequired: false.
-			(self nextXMLEncodingAttributeRequired: true)
-				ifNotEmpty: [:encoding | streamReader convertFromEncoding: encoding].
-
-			streamReader skipSeparators.
-			self
-				expectNext: $?;
-				expectTerminator: $>].
-	context := context previousContext.
 ]
 
 { #category : #tokenizing }
