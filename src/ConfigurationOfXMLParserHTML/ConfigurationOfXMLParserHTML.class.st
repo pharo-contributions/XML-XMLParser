@@ -170,7 +170,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.0.6'.
+	spec for: #'common' version: '1.0.7'.
 
 ]
 
@@ -248,5 +248,16 @@ ConfigurationOfXMLParserHTML >> version106: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.14'.
 			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.4'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version107: spec [ 
+        <version: '1.0.7' imports: #('1.0.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.15'.
+			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.5'.
                 ].
 ]
