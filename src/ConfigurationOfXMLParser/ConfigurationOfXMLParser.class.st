@@ -206,15 +206,25 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				"default by default is equivalent to loading 'ALL' the packages still we added explicitly Tests to be loaded"
 				group: 'Core' with: #('XML-Parser');
 				group: 'Tests' with: #('XML-Tests-Parser') ].
-			
+	
 	spec
 		for: #'pharo2.x'
 		do: [ 
 			spec 
 				package: 'XML-Pharo2-Parser';
 				package: 'XML-Parser' with: [ 
-					spec requires: #( 'XML-Pharo2-Parser' ) ] ]
+					spec requires: #( 'XML-Pharo2-Parser' ) ]. ].
 
+	"load gemstone methods"
+	spec
+		for: #'gemstone'
+		do: [
+			spec
+				package: 'XML-Parser'
+				with: [ spec includes: 'XML-Parser-GemstoneCompatibility' ].
+			spec
+				package: 'XML-Parser-GemstoneCompatibility'
+				with: [ spec requires: 'XML-Parser' ]. ].
 ]
 
 { #category : #baselines }
@@ -244,11 +254,25 @@ ConfigurationOfXMLParser >> baseline188: spec [
                 spec project: 'XMLWriter' with: '2.4.8'. ].
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline191: spec [ 
+        <version: '1.9.1-baseline' imports: #('1.0-baseline')>
+        
+        spec for: #common do: [
+                spec blessing: #baseline.
+                spec project: 'XMLWriter' with: '2.4.8'. ].
+
+        spec for: #gemstone do: [
+                spec
+                    project: 'XML-Parser-GemstoneCompatibility'
+                    with: 'XML-Parser-GemstoneCompatibility-monty.1'. ].
+]
+
 { #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.8.8-baseline'.
+	spec for: #'common' version: '1.9.1-baseline'.
 
 ]
 
@@ -269,7 +293,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.9.0'.
+	spec for: #'common' version: '1.9.1'.
 	spec for: #'pharo1.x' version: '1.2'
 
 ]
@@ -1234,5 +1258,16 @@ ConfigurationOfXMLParser >> version190: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.258'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.83'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version191: spec [ 
+        <version: '1.9.1' imports: #('1.9.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.259'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.84'.
                 ].
 ]
