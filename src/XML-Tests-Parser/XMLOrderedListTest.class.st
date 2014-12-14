@@ -1,6 +1,9 @@
 Class {
 	#name : #XMLOrderedListTest,
 	#superclass : #TestCase,
+	#instVars : [
+		'supportsAtPutOnePastEnd'
+	],
 	#category : #'XML-Tests-Parser-DOM'
 }
 
@@ -44,6 +47,12 @@ XMLOrderedListTest >> defaultValue [
 { #category : #accessing }
 XMLOrderedListTest >> emptyList [
 	^ self listClass new
+]
+
+{ #category : #compatibility }
+XMLOrderedListTest >> hasCapacity [
+	"for portability"
+	^ self listClass collectionClass includesSelector: #capacity
 ]
 
 { #category : #accessing }
@@ -104,6 +113,16 @@ XMLOrderedListTest >> should: aBlock enumerate: aCollection [
 { #category : #accessing }
 XMLOrderedListTest >> singleElement [
 	^ self listElements first
+]
+
+{ #category : #compatibility }
+XMLOrderedListTest >> supportsAtPutOnePastEnd [
+	^ supportsAtPutOnePastEnd ifNil: [
+		supportsAtPutOnePastEnd := true.
+		[self listClass collectionClass new at: 1 put: nil]
+			on: Error
+			do: [:error | supportsAtPutOnePastEnd := false].
+		supportsAtPutOnePastEnd]
 ]
 
 { #category : #tests }
@@ -431,8 +450,16 @@ XMLOrderedListTest >> testAtPut [
 				replacement := self listElements reversed at: i.
 				(list at: i put: replacement) == replacement]);
 		assert: list = (self listClass newFrom: self listElements reversed);
-		should: [list at: 0 put: self absentElement] raise: Error;
-		should: [list at: list size + 1 put: self absentElement] raise: Error.
+		should: [list at: 0 put: self absentElement] raise: Error.
+	self supportsAtPutOnePastEnd
+		ifTrue: [
+			self
+				shouldnt: [list at: list size + 1 put: self absentElement]
+				raise: Error]
+		ifFalse: [
+			self
+				should: [list at: list size + 1 put: self absentElement]
+				raise: Error].
 ]
 
 { #category : #tests }
@@ -473,10 +500,12 @@ XMLOrderedListTest >> testBeginsWith [
 
 { #category : #tests }
 XMLOrderedListTest >> testCapacity [
-	self
-		assert: self emptyList capacity >= 0;
-		assert: self listWithSingleElement capacity >= 1;
-		assert: self listWithElements capacity >= self listElements size
+	self hasCapacity
+		ifTrue: [
+			self
+				assert: self emptyList capacity >= 0;
+				assert: self listWithSingleElement capacity >= 1;
+				assert: self listWithElements capacity >= self listElements size]
 ]
 
 { #category : #tests }
@@ -781,7 +810,7 @@ XMLOrderedListTest >> testDoWithIndex [
 	list withIndexDo: [:each :i | enumerated addLast: each -> i].
 	self assert:
 		enumerated =
-			(self listElements with: (1 to: list size) collect: [:each : i | each -> i ])
+			(self listElements withIndexCollect: [:each : i | each -> i ])
 				asOrderedCollection.
 ]
 
@@ -789,7 +818,7 @@ XMLOrderedListTest >> testDoWithIndex [
 XMLOrderedListTest >> testEighth [
 	self
 		assert: self emptyList eighth = self defaultValue;
-		assert: self listWithElements eighth = self listElements eighth.
+		assert: self listWithElements eighth = (self listElements at: 8).
 ]
 
 { #category : #tests }
@@ -809,14 +838,14 @@ XMLOrderedListTest >> testEndsWith [
 XMLOrderedListTest >> testFifth [
 	self
 		assert: self emptyList fifth = self defaultValue;
-		assert: self listWithElements fifth = self listElements fifth.
+		assert: self listWithElements fifth = (self listElements at: 5).
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testFirst [
 	self
 		assert: self emptyList first = self defaultValue;
-		assert: self listWithElements first = self listElements first.
+		assert: self listWithElements first = (self listElements at: 1).
 ]
 
 { #category : #tests }
@@ -847,7 +876,7 @@ XMLOrderedListTest >> testFirstFew [
 XMLOrderedListTest >> testFourth [
 	self
 		assert: self emptyList fourth = self defaultValue;
-		assert: self listWithElements fourth = self listElements fourth.
+		assert: self listWithElements fourth = (self listElements at: 4).
 ]
 
 { #category : #tests }
@@ -975,7 +1004,12 @@ XMLOrderedListTest >> testLastIndexOfIfAbsent [
 
 { #category : #tests }
 XMLOrderedListTest >> testNew [
-	self assert: (self listClass new: 20) capacity >= 20
+	| list |
+
+	list := self listClass new: 20.
+	self assert: list = self emptyList.
+	self hasCapacity
+		ifTrue: [self assert: list capacity >= 20].
 ]
 
 { #category : #tests }
@@ -997,7 +1031,7 @@ XMLOrderedListTest >> testNewWithAll [
 XMLOrderedListTest >> testNinth [
 	self
 		assert: self emptyList ninth = self defaultValue;
-		assert: self listWithElements ninth = self listElements ninth.
+		assert: self listWithElements ninth = (self listElements at: 9).
 ]
 
 { #category : #tests }
@@ -1166,10 +1200,16 @@ XMLOrderedListTest >> testReplaceFromToWith [
 			1 to: start - 1 do: [:i | self assert: (list at: i) = self absentElement].
 			start to: stop do: [:i | self assert: (list at: i) = (self listWithElements at: i)].
 			stop + 1 to: list size do: [:i | self assert: (list at: i) = self absentElement].
-	
-			self
-				should: [self emptyList replaceFrom: start to: stop with: self listElements]
-				raise: Error]].
+
+			self supportsAtPutOnePastEnd
+				ifFalse: [
+					self
+						should: [
+							self emptyList
+								replaceFrom: start
+								to: stop
+								with: self listElements]
+						raise: Error]]].
 ]
 
 { #category : #tests }
@@ -1190,15 +1230,17 @@ XMLOrderedListTest >> testReplaceFromToWithStartingAt [
 			1 to: start - 1 do: [:i | self assert: (list at: i) = self absentElement].
 			start to: stop do: [:i | self assert: (list at: i) = (self listWithElements at: i)].
 			stop + 1 to: list size do: [:i | self assert: (list at: i) = self absentElement].
-	
-			self
-				should: [
-					self emptyList
-						replaceFrom: start
-						to: stop
-						with: self listElements
-						startingAt: start]
-				raise: Error]].
+
+			self supportsAtPutOnePastEnd
+				ifFalse: [
+					self
+						should: [
+							self emptyList
+								replaceFrom: start
+								to: stop
+								with: self listElements
+								startingAt: start]
+						raise: Error]]].
 ]
 
 { #category : #tests }
@@ -1206,11 +1248,12 @@ XMLOrderedListTest >> testReset [
 	| list oldCapacity |
 
 	list := self listWithElements.
-	oldCapacity := list capacity.
+	self hasCapacity
+		ifTrue: [oldCapacity := list capacity].
 	list reset.
-	self
-		assert: list isEmpty;
-		assert: list capacity >= oldCapacity.
+	self assert: list isEmpty.
+	oldCapacity
+		ifNotNil: [self assert: list capacity >= oldCapacity].
 ]
 
 { #category : #tests }
@@ -1246,7 +1289,7 @@ XMLOrderedListTest >> testReversed [
 XMLOrderedListTest >> testSecond [
 	self
 		assert: self emptyList second = self defaultValue;
-		assert: self listWithElements second = self listElements second.
+		assert: self listWithElements second = (self listElements at: 2).
 ]
 
 { #category : #tests }
@@ -1283,14 +1326,14 @@ XMLOrderedListTest >> testSelectThenCollect [
 XMLOrderedListTest >> testSeventh [
 	self
 		assert: self emptyList seventh = self defaultValue;
-		assert: self listWithElements seventh = self listElements seventh.
+		assert: self listWithElements seventh = (self listElements at: 7).
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testSixth [
 	self
 		assert: self emptyList sixth = self defaultValue;
-		assert: self listWithElements sixth = self listElements sixth.
+		assert: self listWithElements sixth = (self listElements at: 6).
 ]
 
 { #category : #tests }
@@ -1338,7 +1381,7 @@ XMLOrderedListTest >> testSpecies [
 XMLOrderedListTest >> testThird [
 	self
 		assert: self emptyList third = self defaultValue;
-		assert: self listWithElements third = self listElements third.
+		assert: self listWithElements third = (self listElements at: 3).
 ]
 
 { #category : #tests }
@@ -1351,14 +1394,14 @@ XMLOrderedListTest >> testWithCollect [
 		collectedFrom: list
 		equals:
 			(self listSpecies newFrom:
-				(self listElements with: (1 to: list size) collect: [:each :i | each -> i])).
+				(self listElements withIndexCollect: [:each :i | each -> i])).
 	self
 		assertList: (list with: (1 to: list size - 1) collect: [:each :i | each -> i])
 		collectedFrom: list
 		equals:
 			(self listSpecies newFrom:
 				(self listElements allButLast
-					with: (1 to: list size - 1) collect: [:each :i | each -> i])).
+					withIndexCollect: [:each :i | each -> i])).
 ]
 
 { #category : #tests }
@@ -1370,7 +1413,7 @@ XMLOrderedListTest >> testWithDo [
 	list with: (1 to: list size + 1) do: [:each :i | enumerated addLast: each -> i].
 	self assert:
 		enumerated =
-			(self listElements with: (1 to: list size) collect: [:each : i | each -> i ])
+			(self listElements withIndexCollect: [:each : i | each -> i ])
 				asOrderedCollection.
 
 	enumerated removeAll.
@@ -1378,7 +1421,7 @@ XMLOrderedListTest >> testWithDo [
 	self assert:
 		enumerated =
 			(self listElements allButLast
-				with: (1 to: list size - 1) collect: [:each : i | each -> i ])
+				withIndexCollect: [:each : i | each -> i ])
 					asOrderedCollection.
 ]
 
@@ -1392,19 +1435,18 @@ XMLOrderedListTest >> testWithIndexCollect [
 		collectedFrom: list
 		equals:
 			(self listSpecies newFrom:
-				(self listElements with: (1 to: list size) collect: [:each :i | each -> i])).
+				(self listElements withIndexCollect: [:each :i | each -> i])).
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testWithIndexDo [
-	| interval enumerated |
+	| enumerated |
 
-	interval := 1 to: self listElements size.
 	enumerated := OrderedCollection new.
 	self listWithElements withIndexDo: [:each :i | enumerated addLast: each -> i].
 	self assert:
 		enumerated =
-			(self listElements with: interval collect: [:each : i | each -> i ]) asOrderedCollection.
+			(self listElements withIndexCollect: [:each : i | each -> i ]) asOrderedCollection.
 ]
 
 { #category : #tests }

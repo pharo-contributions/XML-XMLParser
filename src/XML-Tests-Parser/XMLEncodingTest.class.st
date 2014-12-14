@@ -6,7 +6,7 @@ Class {
 
 { #category : #private }
 XMLEncodingTest >> convertableStreamOn: aString [
-	^ ReadStream on: aString
+	^ aString readStream
 ]
 
 { #category : #source }
@@ -38,7 +38,8 @@ XMLEncodingTest >> sourceXMLWith: aCharacterOrString [
 
 { #category : #private }
 XMLEncodingTest >> stringFromValues: aCollection [
-	^ String newFrom: (aCollection collect: [:each | Character value: each])
+	"avoid asString for portability"
+	^ String withAll: (aCollection collect: [:each | Character value: each])
 ]
 
 { #category : #tests }
@@ -83,7 +84,8 @@ XMLEncodingTest >> testDecodingCharacters [
 XMLEncodingTest >> testEncodingDeclarationLatin1 [
 	| xml |
 
-	xml := self sourceXMLWith: (String newFrom: (#(126 127 128) collect: [:each | each asCharacter])).
+	"avoid asString for portability"
+	xml := self sourceXMLWith: (String withAll: (#(126 127 128) collect: [:each | each asCharacter])).
 	self
 		should: [
 			SAXHandler parse:
@@ -345,9 +347,9 @@ XMLEncodingTest >> testUTF32Characters [
 	source :=
 		self stringFromValues:
 			#(16r000000FE
-				16r0000DCFE
+				16r0000D7FE
 				16r0010FFFF).
-	decoded := self stringFromValues: #(16rFE 16rDCFE 16r10FFFF).
+	decoded := self stringFromValues: #(16rFE 16rD7FE 16r10FFFF).
 
 	document :=
 		XMLDOMParser parse:

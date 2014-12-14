@@ -61,16 +61,16 @@ XMLStringMethodsTest >> testPrefixBeforeLocalName [
 ]
 
 { #category : #tests }
-XMLStringMethodsTest >> testXMLSplit [
+XMLStringMethodsTest >> testSplit [
 
 	self
-		assert: ($: xmlSplit: '') = (OrderedCollection with: '');
-		assert: ($: xmlSplit: 'abc') = (OrderedCollection with: 'abc');
-		assert: ($: xmlSplit: ':') = #('' '') asOrderedCollection;
-		assert: ($: xmlSplit: '::') = #('' '' '') asOrderedCollection;
-		assert: ($: xmlSplit: 'a:bc:') = #('a' 'bc' '') asOrderedCollection;
-		assert: ($: xmlSplit: ':ab:c:') = #('' 'ab' 'c' '') asOrderedCollection;
-		assert: ($: xmlSplit: 'a:bc:') = #('a' 'bc' '') asOrderedCollection;
-		assert: ($: xmlSplit: 'ab::cd::ef') = #('ab'  '' 'cd' '' 'ef') asOrderedCollection;
-		assert: ($: xmlSplit: '::ab:::cd:::ef::') = #('' '' 'ab'  '' '' 'cd' '' '' 'ef' '' '') asOrderedCollection.
+		assert: ($: xmlParserSplit: '') = (OrderedCollection with: '');
+		assert: ($: xmlParserSplit: 'abc') = (OrderedCollection with: 'abc');
+		assert: ($: xmlParserSplit: ':') = #('' '') asOrderedCollection;
+		assert: ($: xmlParserSplit: '::') = #('' '' '') asOrderedCollection;
+		assert: ($: xmlParserSplit: 'a:bc:') = #('a' 'bc' '') asOrderedCollection;
+		assert: ($: xmlParserSplit: ':ab:c:') = #('' 'ab' 'c' '') asOrderedCollection;
+		assert: ($: xmlParserSplit: 'a:bc:') = #('a' 'bc' '') asOrderedCollection;
+		assert: ($: xmlParserSplit: 'ab::cd::ef') = #('ab'  '' 'cd' '' 'ef') asOrderedCollection;
+		assert: ($: xmlParserSplit: '::ab:::cd:::ef::') = #('' '' 'ab'  '' '' 'cd' '' '' 'ef' '' '') asOrderedCollection.
 ]
