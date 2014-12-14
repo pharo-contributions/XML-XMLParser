@@ -4,21 +4,43 @@ An abstract class for stream decoders.
 Class {
 	#name : #XMLStreamDecoder,
 	#superclass : #Object,
+	#instVars : [
+		'encodingName'
+	],
 	#classVars : [
 		'PreferredStreamDecoders',
 		'StreamDecoderCache'
 	],
+	#classInstVars : [
+		'encodingNames'
+	],
 	#category : #'XML-Parser-Streams'
 }
 
+{ #category : #private }
+XMLStreamDecoder class >> basicEncodingNames [
+	^ #()
+]
+
 { #category : #testing }
 XMLStreamDecoder class >> canDecodeEncoding: anEncoding [
-	^ false
+	^ self encodingNames includes: anEncoding
 ]
 
 { #category : #accessing }
 XMLStreamDecoder class >> defaultStreamDecoder [
 	^ XMLUTF8StreamDecoder
+]
+
+{ #category : #accessing }
+XMLStreamDecoder class >> encodingNames [
+	^ encodingNames ifNil: [
+		encodingNames := self basicEncodingNames asSet.
+		self basicEncodingNames do: [:each |
+			encodingNames
+				add: each asLowercase;
+				add: each asUppercase].
+		encodingNames]
 ]
 
 { #category : #private }
@@ -40,7 +62,9 @@ XMLStreamDecoder class >> initialize [
 	"self initialize"
 
 	StreamDecoderCache := XMLKeyValueCache maxSize: 128.
-	PreferredStreamDecoders := IdentitySet newFrom: XMLUTFStreamDecoder allSubclasses.
+	(PreferredStreamDecoders := IdentitySet new)
+		addAll: XMLUTFStreamDecoder allSubclasses;
+		add: XMLLatin1StreamDecoder
 ]
 
 { #category : #testing }
@@ -53,12 +77,20 @@ XMLStreamDecoder class >> newForEncoding: anEncoding [
 	^ (StreamDecoderCache
 		at: anEncoding
 		ifAbsentPut: [self findStreamDecoderForEncoding: anEncoding])
-			ifNotNil: [:decoderClass | decoderClass newForEncoding: anEncoding]
+			ifNotNil: [:decoderClass |
+				decoderClass new
+					setEncodingName: anEncoding]
 ]
 
 { #category : #accessing }
 XMLStreamDecoder class >> preferredStreamDecoders [
 	^ PreferredStreamDecoders
+]
+
+{ #category : #accessing }
+XMLStreamDecoder >> encodingName [
+	^ encodingName
+		ifNil: [encodingName := self class encodingName anyOne]
 ]
 
 { #category : #testing }
@@ -69,4 +101,9 @@ XMLStreamDecoder >> isDefaultStreamDecoder [
 { #category : #decoding }
 XMLStreamDecoder >> nextFromStream: aStream [
 	self subclassResponsibility
+]
+
+{ #category : #initialization }
+XMLStreamDecoder >> setEncodingName: anEncodingName [
+	encodingName := anEncodingName
 ]

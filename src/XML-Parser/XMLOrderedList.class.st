@@ -34,12 +34,18 @@ XMLOrderedList class >> new: aSize [
 
 { #category : #'instance creation' }
 XMLOrderedList class >> new: aSize withAll: anObject [
-	^ self basicNew setCollection: (self collectionClass new: aSize withAll: anObject)
+	| newList |
+
+	"reimplement for portability"
+	newList := self basicNew setCollection: (self collectionClass new: aSize).
+	1 to: aSize do: [:i | newList addLast: anObject].
+	^ newList.
 ]
 
 { #category : #'instance creation' }
 XMLOrderedList class >> newFrom: aCollection [
-	^ self basicNew setCollection: (self collectionClass newFrom: aCollection)
+	"use withAll: for portability"
+	^ self basicNew setCollection: (self collectionClass withAll: aCollection)
 ]
 
 { #category : #'instance creation' }
@@ -136,7 +142,8 @@ XMLOrderedList >> allButFirst: anInteger [
 
 { #category : #enumerating }
 XMLOrderedList >> allButFirstDo: aBlock [
-	collection allButFirstDo: aBlock
+	"reimplemented for portability"
+	2 to: self size do: [:i | aBlock value: (self at: i)]
 ]
 
 { #category : #accessing }
@@ -151,7 +158,8 @@ XMLOrderedList >> allButLast: anInteger [
 
 { #category : #enumerating }
 XMLOrderedList >> allButLastDo: aBlock [
-	collection allButLastDo: aBlock
+	"reimplemented for portability"
+	1 to: self size - 1 do: [:i | aBlock value: (self at: i)]
 ]
 
 { #category : #accessing }
@@ -161,12 +169,12 @@ XMLOrderedList >> anyOne [
 
 { #category : #converting }
 XMLOrderedList >> asArray [
-	^ Array newFrom: collection
+	^ Array withAll: collection
 ]
 
 { #category : #converting }
 XMLOrderedList >> asOrderedCollection [
-	^ OrderedCollection newFrom: collection
+	^ OrderedCollection withAll: collection
 ]
 
 { #category : #accessing }

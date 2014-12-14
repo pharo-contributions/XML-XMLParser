@@ -418,8 +418,8 @@ XMLParserTokenizer >> setDriver: aDriver stream: aStream readLimit: aReadLimit [
 		(XMLNestedStreamReader
 			on: aStream
 			readLimit: aReadLimit).
-	writeStream := WriteStream on: (String new: 128).
-	nameStream := WriteStream on: (String new: 16).
+	writeStream := (String new: 128) writeStream.
+	nameStream := (String new: 16) writeStream.
 	context := XMLUnitializedContext new.
 ]
 

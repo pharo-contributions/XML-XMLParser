@@ -1,17 +1,17 @@
 Extension { #name : #Character }
 
 { #category : #'*XML-Parser' }
-Character >> xmlSplit: aCollection [
+Character >> xmlParserSplit: aCollection [
 	"faster, portable version"
 	| parts |
 
 	parts := OrderedCollection new.
-	self xmlSplit: aCollection do: [:each | parts addLast: each].
+	self xmlParserSplit: aCollection do: [:each | parts addLast: each].
 	^ parts.
 ]
 
 { #category : #'*XML-Parser' }
-Character >> xmlSplit: aCollection do: aBlock [
+Character >> xmlParserSplit: aCollection do: aBlock [
 	"faster, portable version"
 	| start |
 

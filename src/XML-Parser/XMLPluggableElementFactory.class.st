@@ -138,7 +138,7 @@ XMLPluggableElementFactory >> toNameWithoutPrefixAndElementSuffix: aString [
 		whileTrue: [nameStream next].
 	nameStream atEnd
 		ifTrue: [^ ''].
-	nameStream back.
+	nameStream position: nameStream position - 1.
 
 	^ nameStream upToEnd copyReplaceAll: 'Element' with: ''.
 ]

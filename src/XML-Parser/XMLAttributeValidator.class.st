@@ -60,7 +60,7 @@ XMLAttributeValidator >> furtherNormalizeAttributeValueIn: anAttributeDictionary
 			associationAt: self attribute
 			ifAbsent: [^ self].
 	semiNormalizedValue := attributeAssociation value.
-	writeStream := WriteStream on: (String new: semiNormalizedValue size).
+	writeStream := (String new: semiNormalizedValue size) writeStream.
 	isInWhitespace := false.
 	semiNormalizedValue do: [:each |
 		each == NormalizedSpace
@@ -70,8 +70,8 @@ XMLAttributeValidator >> furtherNormalizeAttributeValueIn: anAttributeDictionary
 			ifFalse: [
 				isInWhitespace
 					ifTrue: [
-						writeStream position > 0
-							ifTrue: [writeStream nextPut: NormalizedSpace].
+						writeStream xmlParserAtBeginning
+							ifFalse: [writeStream nextPut: NormalizedSpace].
 						isInWhitespace := false].
 				writeStream nextPut: each]].
 	attributeAssociation value: writeStream contents.
@@ -105,7 +105,7 @@ XMLAttributeValidator >> isIDValidator [
 { #category : #private }
 XMLAttributeValidator >> listValuesIn: aSpaceSeparatedList do: aBlock [
 	NormalizedSpace
-		xmlSplit: aSpaceSeparatedList
+		xmlParserSplit: aSpaceSeparatedList
 		do: aBlock
 ]
 

@@ -29,12 +29,7 @@ XMLTextConverterStreamDecoder class >> initialize [
 	TextConverterCache := XMLKeyValueCache maxSize: 32
 ]
 
-{ #category : #'instance creation' }
-XMLTextConverterStreamDecoder class >> newForEncoding: anEncoding [
-	^ self new textConverter: (self textConverterForEncoding: anEncoding) new
-]
-
-{ #category : #'instance creation' }
+{ #category : #private }
 XMLTextConverterStreamDecoder class >> textConverterForEncoding: anEncoding [
 	^ TextConverterCache
 		at: anEncoding
@@ -46,6 +41,13 @@ XMLTextConverterStreamDecoder class >> textConverterForEncoding: anEncoding [
 { #category : #decoding }
 XMLTextConverterStreamDecoder >> nextFromStream: aStream [
 	^ textConverter nextFromStream: aStream
+]
+
+{ #category : #initialization }
+XMLTextConverterStreamDecoder >> setEncodingName: anEncodingName [
+	super setEncodingName: anEncodingName.
+	self textConverter:
+		(self class textConverterForEncoding: anEncodingName) new.
 ]
 
 { #category : #accessing }

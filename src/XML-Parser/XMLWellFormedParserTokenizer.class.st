@@ -1071,8 +1071,8 @@ XMLWellFormedParserTokenizer >> nextPCDataToken [
 					writeStream nextPut: nextChar]].
 	isIgnorableWhitespace
 		ifTrue: [
-			writeStream position > 0
-				ifTrue: [driver handleWhitespace: writeStream contents]]
+			writeStream xmlParserAtBeginning
+				ifFalse: [driver handleWhitespace: writeStream contents]]
 		ifFalse: [driver handlePCData: writeStream contents].
 ]
 
@@ -1304,7 +1304,7 @@ XMLWellFormedParserTokenizer >> pushBackEntity: anEntity onClose: aBlock [
 
 	self addActiveEntity: anEntity.
 	streamReader
-		pushBackStream: (ReadStream on: anEntity replacement)
+		pushBackStream: anEntity replacement readStream
 		onClose: [
 			self removeActiveEntity: anEntity.
 			aBlock ifNotNil: [aBlock value]].

@@ -67,8 +67,8 @@ DTDCachingEntityResolver >> resolveEntityURI: aUri [
 	^ (uri := aUri asXMLURI) isLocalURI
 		ifTrue: [super resolveEntityURI: uri]
 		ifFalse: [
-			ReadStream on:
-				(self class
-					entityCacheAt: uri
-					ifAbsentPut: [(super resolveEntityURI: uri) contents])]
+			(self class
+				entityCacheAt: uri
+				ifAbsentPut: [(super resolveEntityURI: uri) contents])
+					readStream]
 ]

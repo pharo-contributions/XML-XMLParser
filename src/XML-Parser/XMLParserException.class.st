@@ -40,7 +40,9 @@ XMLParserException class >> signalMessageFrom: anException [
 
 { #category : #appending }
 XMLParserException >> appendLineNumber: aLineNumber [
-	self messageText: self messageText, ' (line ', aLineNumber printString, ')'
+	self messageText:
+		(self messageText ifNil: ['']),
+			' (line ', aLineNumber printString, ')'
 ]
 
 { #category : #testing }
