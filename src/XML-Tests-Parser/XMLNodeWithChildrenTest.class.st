@@ -27,6 +27,15 @@ XMLNodeWithChildrenTest >> nodeClass [
 	^ XMLNodeWithChildren
 ]
 
+{ #category : #testing }
+XMLNodeWithChildrenTest >> supportsAtPutOnePastEnd [
+	"for portability"
+	[OrderedCollection new at: 1 put: nil]
+		on: Error
+		do: [:error | ^ false].
+	^ true.
+]
+
 { #category : #tests }
 XMLNodeWithChildrenTest >> testAddNode [
 	| node nodeWithNodes added |
@@ -539,12 +548,22 @@ XMLNodeWithChildrenTest >> testNodeAtPut [
 	1 to: nodeWithNodes nodes size do: [:i | | newNode |
 		newNode := newNodeClass new.
 		self assert: (nodeWithNodes nodeAt: i put: newNode) == newNode].
-	self
-		should: [
-			nodeWithNodes
-				nodeAt: nodeWithNodes nodes size + 1
-				put: newNodeClass new]
-		raise: Error.
+
+	self supportsAtPutOnePastEnd
+		ifTrue: [
+			self
+				shouldnt: [
+					nodeWithNodes
+						nodeAt: nodeWithNodes nodes size + 1
+						put: newNodeClass new]
+				raise: Error]
+		ifFalse: [
+			self
+				should: [
+					nodeWithNodes
+						nodeAt: nodeWithNodes nodes size + 1
+						put: newNodeClass new]
+				raise: Error].
 ]
 
 { #category : #tests }
