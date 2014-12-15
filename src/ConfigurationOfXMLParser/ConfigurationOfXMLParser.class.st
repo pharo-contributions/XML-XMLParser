@@ -264,7 +264,7 @@ ConfigurationOfXMLParser >> baseline191: spec [
 
         spec for: #gemstone do: [
                 spec
-                    project: 'XML-Parser-GemstoneCompatibility'
+                    package: 'XML-Parser-GemstoneCompatibility'
                     with: 'XML-Parser-GemstoneCompatibility-monty.1'. ].
 ]
 
@@ -1269,5 +1269,16 @@ ConfigurationOfXMLParser >> version191: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.259'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.84'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version192: spec [ 
+        <version: '1.9.2' imports: #('1.9.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.259'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.85'.
                 ].
 ]
