@@ -1,8 +1,5 @@
 "
-(ConfigurationOfXMLParser project version: #stable) load: 'Tests'
-
-(ConfigurationOfXMLParser project version: '1.3') load
-
+(ConfigurationOfXMLParser project version: #stable) load: 'default'
 "
 Class {
 	#name : #ConfigurationOfXMLParser,
@@ -280,6 +277,20 @@ ConfigurationOfXMLParser >> baseline193: spec [
                 spec
                     package: 'XML-Parser-GemstoneCompatibility'
                     with: 'XML-Parser-GemstoneCompatibility-monty.2'. ].
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline194: spec [ 
+        <version: '1.9.4-baseline' imports: #('1.0-baseline')>
+        
+        spec for: #common do: [
+                spec blessing: #baseline.
+                spec project: 'XMLWriter' with: '2.4.8'. ].
+
+        spec for: #gemstone do: [
+                spec
+                    package: 'XML-Parser-GemstoneCompatibility'
+                    with: 'XML-Parser-GemstoneCompatibility-monty.3'. ].
 ]
 
 { #category : #'symbolic versions' }
@@ -1304,6 +1315,17 @@ ConfigurationOfXMLParser >> version193: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.260'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.86'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version194: spec [ 
+        <version: '1.9.4' imports: #('1.9.4-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.261'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.86'.
                 ].
 ]
