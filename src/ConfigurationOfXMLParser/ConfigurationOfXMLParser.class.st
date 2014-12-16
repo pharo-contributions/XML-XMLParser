@@ -285,7 +285,7 @@ ConfigurationOfXMLParser >> baseline194: spec [
         
         spec for: #common do: [
                 spec blessing: #baseline.
-                spec project: 'XMLWriter' with: '2.4.8'. ].
+                spec project: 'XMLWriter' with: '2.5.1'. ].
 
         spec for: #gemstone do: [
                 spec
