@@ -297,7 +297,7 @@ ConfigurationOfXMLParser >> baseline194: spec [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.9.3-baseline'.
+	spec for: #'common' version: '1.9.4-baseline'.
 
 ]
 
@@ -318,7 +318,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.9.3'.
+	spec for: #'common' version: '1.9.4'.
 	spec for: #'pharo1.x' version: '1.2'
 
 ]
