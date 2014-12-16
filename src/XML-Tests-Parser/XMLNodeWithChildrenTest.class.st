@@ -27,15 +27,6 @@ XMLNodeWithChildrenTest >> nodeClass [
 	^ XMLNodeWithChildren
 ]
 
-{ #category : #testing }
-XMLNodeWithChildrenTest >> supportsAtPutOnePastEnd [
-	"for portability"
-	[OrderedCollection new at: 1 put: nil]
-		on: Error
-		do: [:error | ^ false].
-	^ true.
-]
-
 { #category : #tests }
 XMLNodeWithChildrenTest >> testAddNode [
 	| node nodeWithNodes added |
@@ -538,32 +529,31 @@ XMLNodeWithChildrenTest >> testNodeAtIfAbsent [
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testNodeAtPut [
-	| nodeWithNodes newNodeClass |
+	| nodeWithNodes newNodeClass newNode |
 
 	nodeWithNodes := self newNodeWithNodes.
 	newNodeClass := nodeWithNodes firstNode class.
 	self
 		should: [nodeWithNodes nodeAt: 0 put: newNodeClass new]
 		raise: Error.
-	1 to: nodeWithNodes nodes size do: [:i | | newNode |
+	1 to: nodeWithNodes nodes size do: [:i |
 		newNode := newNodeClass new.
-		self assert: (nodeWithNodes nodeAt: i put: newNode) == newNode].
+		self
+			assert: (nodeWithNodes nodeAt: i put: newNode) == newNode;
+			assert: (nodeWithNodes nodeAt: i) == newNode].
 
-	self supportsAtPutOnePastEnd
-		ifTrue: [
-			self
-				shouldnt: [
-					nodeWithNodes
-						nodeAt: nodeWithNodes nodes size + 1
-						put: newNodeClass new]
-				raise: Error]
-		ifFalse: [
-			self
-				should: [
-					nodeWithNodes
-						nodeAt: nodeWithNodes nodes size + 1
-						put: newNodeClass new]
-				raise: Error].
+	newNode := newNodeClass new.
+	self assert:
+		(nodeWithNodes
+			nodeAt: nodeWithNodes nodes size + 1
+			put: newNode) == newNode.
+	self assert: (nodeWithNodes nodeAt: nodeWithNodes nodes size) == newNode.
+	self
+		should: [
+			nodeWithNodes
+				nodeAt: nodeWithNodes nodes size + 2
+				put: newNodeClass new]
+		raise: Error.
 ]
 
 { #category : #tests }

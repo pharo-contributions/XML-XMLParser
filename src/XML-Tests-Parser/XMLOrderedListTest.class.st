@@ -1,9 +1,6 @@
 Class {
 	#name : #XMLOrderedListTest,
 	#superclass : #TestCase,
-	#instVars : [
-		'supportsAtPutOnePastEnd'
-	],
 	#category : #'XML-Tests-Parser-DOM'
 }
 
@@ -113,16 +110,6 @@ XMLOrderedListTest >> should: aBlock enumerate: aCollection [
 { #category : #accessing }
 XMLOrderedListTest >> singleElement [
 	^ self listElements first
-]
-
-{ #category : #compatibility }
-XMLOrderedListTest >> supportsAtPutOnePastEnd [
-	^ supportsAtPutOnePastEnd ifNil: [
-		supportsAtPutOnePastEnd := true.
-		[self listClass collectionClass new at: 1 put: nil]
-			on: Error
-			do: [:error | supportsAtPutOnePastEnd := false].
-		supportsAtPutOnePastEnd]
 ]
 
 { #category : #tests }
@@ -451,15 +438,12 @@ XMLOrderedListTest >> testAtPut [
 				(list at: i put: replacement) == replacement]);
 		assert: list = (self listClass newFrom: self listElements reversed);
 		should: [list at: 0 put: self absentElement] raise: Error.
-	self supportsAtPutOnePastEnd
-		ifTrue: [
-			self
-				shouldnt: [list at: list size + 1 put: self absentElement]
-				raise: Error]
-		ifFalse: [
-			self
-				should: [list at: list size + 1 put: self absentElement]
-				raise: Error].
+	self
+		assert: (list at: list size + 1 put: self newElement) = self newElement;
+		assert: (list at: list size) = self newElement.
+	self
+		should: [list at: list size + 2 put: self absentElement]
+		raise: Error.
 ]
 
 { #category : #tests }
@@ -1191,7 +1175,7 @@ XMLOrderedListTest >> testReplaceFromToWith [
 	1 to: self listElements size do: [:start |
 		start to: self listElements size do: [:stop |
 			list := self listClass new: self listElements size withAll: self absentElement.
-			self	 assert:
+			self assert:
 				(list
 					replaceFrom: start
 					to: stop
@@ -1201,26 +1185,33 @@ XMLOrderedListTest >> testReplaceFromToWith [
 			start to: stop do: [:i | self assert: (list at: i) = (self listWithElements at: i)].
 			stop + 1 to: list size do: [:i | self assert: (list at: i) = self absentElement].
 
-			self supportsAtPutOnePastEnd
-				ifFalse: [
+			start > 1
+				ifTrue: [
 					self
 						should: [
 							self emptyList
 								replaceFrom: start
 								to: stop
 								with: self listElements]
-						raise: Error]]].
+						raise: Error]
+				ifFalse: [
+					self assert:
+						(self emptyList
+							replaceFrom: start
+							to: stop
+							with: self listElements) =
+								(self listClass newFrom:
+									(self listElementsFirst: (stop - start) + 1))]]].
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testReplaceFromToWithStartingAt [
-	"self debug: #testReplaceFromToWithStartingAt"
 	| list |
 
 	1 to: self listElements size do: [:start |
 		start to: self listElements size do: [:stop |
 			list := self listClass new: self listElements size withAll: self absentElement.
-			self	 assert:
+			self assert:
 				(list
 					replaceFrom: start
 					to: stop
@@ -1231,8 +1222,8 @@ XMLOrderedListTest >> testReplaceFromToWithStartingAt [
 			start to: stop do: [:i | self assert: (list at: i) = (self listWithElements at: i)].
 			stop + 1 to: list size do: [:i | self assert: (list at: i) = self absentElement].
 
-			self supportsAtPutOnePastEnd
-				ifFalse: [
+			start > 1
+				ifTrue: [
 					self
 						should: [
 							self emptyList
@@ -1240,7 +1231,16 @@ XMLOrderedListTest >> testReplaceFromToWithStartingAt [
 								to: stop
 								with: self listElements
 								startingAt: start]
-						raise: Error]]].
+						raise: Error]
+				ifFalse: [
+					self assert:
+						(self emptyList
+							replaceFrom: start
+							to: stop
+							with: self listElements
+							startingAt: start) =
+								(self listClass newFrom:
+									(self listElementsFirst: (stop - start) + 1))]]].
 ]
 
 { #category : #tests }
