@@ -7,12 +7,12 @@ Class {
 	#category : #'XML-Parser-File'
 }
 
+{ #category : #'instance creation' }
+XMLGsFileReadStreamFactory class >> fileReadStreamOn: aPath [
+	^ (Smalltalk at: #GsFile) openRead: aPath
+]
+
 { #category : #testing }
 XMLGsFileReadStreamFactory class >> isSupported [
 	^ (Smalltalk includesKey: #GsFile)
-]
-
-{ #category : #'instance creation' }
-XMLGsFileReadStreamFactory class >> on: aPath [
-	^ (Smalltalk at: #GsFile) openRead: aPath
 ]

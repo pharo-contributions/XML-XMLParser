@@ -5,7 +5,7 @@ Class {
 	#name : #XMLFileDirectoryFileHandle,
 	#superclass : #XMLFileHandle,
 	#instVars : [
-		'directoryEntry'
+		'fileDirectory'
 	],
 	#category : #'XML-Parser-File'
 }
@@ -29,8 +29,12 @@ XMLFileDirectoryFileHandle >> deleteFileOrDo: aBlock [
 
 { #category : #private }
 XMLFileDirectoryFileHandle >> directoryEntry [
-	^ directoryEntry
-		ifNil: [directoryEntry := (Smalltalk at: #FileDirectory) directoryEntryFor: path]
+	^ self fileDirectory directoryEntryFor: path
+]
+
+{ #category : #private }
+XMLFileDirectoryFileHandle >> fileDirectory [
+	^ fileDirectory ifNil: [fileDirectory := (Smalltalk at: #FileDirectory) default]
 ]
 
 { #category : #accessing }
