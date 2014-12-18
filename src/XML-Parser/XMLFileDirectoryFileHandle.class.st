@@ -22,7 +22,9 @@ XMLFileDirectoryFileHandle class >> isSupported [
 
 { #category : #private }
 XMLFileDirectoryFileHandle >> deleteFileOrDo: aBlock [
-	[(self directoryEntry ifNil: [^ aBlock value]) delete]
+	[self fileDirectory
+		deleteFileNamed: path
+		ifAbsent: [^ aBlock value]]
 		on: Error
 		do: aBlock
 ]
@@ -39,7 +41,7 @@ XMLFileDirectoryFileHandle >> fileDirectory [
 
 { #category : #accessing }
 XMLFileDirectoryFileHandle >> fileSize [
-	^ (self directoryEntry ifNil: [^ 0]) size
+	^ (self directoryEntry ifNil: [^ 0]) fileSize
 ]
 
 { #category : #testing }

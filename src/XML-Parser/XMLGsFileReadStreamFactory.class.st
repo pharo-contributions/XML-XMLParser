@@ -9,7 +9,7 @@ Class {
 
 { #category : #'instance creation' }
 XMLGsFileReadStreamFactory class >> fileReadStreamOn: aPath [
-	^ (Smalltalk at: #GsFile) openRead: aPath
+	^ (Smalltalk at: #GsFile) openReadOnServer: aPath
 ]
 
 { #category : #testing }

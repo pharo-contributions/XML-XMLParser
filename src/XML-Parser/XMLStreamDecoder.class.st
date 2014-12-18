@@ -64,7 +64,7 @@ XMLStreamDecoder class >> initialize [
 	StreamDecoderCache := XMLKeyValueCache maxSize: 128.
 	(PreferredStreamDecoders := IdentitySet new)
 		addAll: XMLUTFStreamDecoder allSubclasses;
-		add: XMLLatin1StreamDecoder
+		add: XMLByteStreamDecoder
 ]
 
 { #category : #testing }

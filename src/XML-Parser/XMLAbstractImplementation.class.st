@@ -24,6 +24,19 @@ XMLAbstractImplementation class >> implementation [
 				ifFalse: [implementation := self selectImplementation]]
 ]
 
+{ #category : #private }
+XMLAbstractImplementation class >> implementation: aClass [
+	implementation := aClass
+]
+
+{ #category : #'class initialization' }
+XMLAbstractImplementation class >> initialize [
+	"self initialize"
+
+	"clear cached implementations"
+	self allSubclassesDo: [:each | each implementation: nil]
+]
+
 { #category : #testing }
 XMLAbstractImplementation class >> isSupported [
 	^ false
