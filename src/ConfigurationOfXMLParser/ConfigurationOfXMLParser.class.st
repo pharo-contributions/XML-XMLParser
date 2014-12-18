@@ -203,14 +203,6 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				"default by default is equivalent to loading 'ALL' the packages still we added explicitly Tests to be loaded"
 				group: 'Core' with: #('XML-Parser');
 				group: 'Tests' with: #('XML-Tests-Parser') ].
-	
-	spec
-		for: #'pharo2.x'
-		do: [ 
-			spec 
-				package: 'XML-Pharo2-Parser';
-				package: 'XML-Parser' with: [ 
-					spec requires: #( 'XML-Pharo2-Parser' ) ]. ].
 
 	"load gemstone methods"
 	spec
@@ -293,11 +285,25 @@ ConfigurationOfXMLParser >> baseline194: spec [
                     with: 'XML-Parser-GemstoneCompatibility-monty.3'. ].
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline196: spec [ 
+        <version: '1.9.6-baseline' imports: #('1.0-baseline')>
+        
+        spec for: #common do: [
+                spec blessing: #baseline.
+                spec project: 'XMLWriter' with: '2.5.2'. ].
+
+        spec for: #gemstone do: [
+                spec
+                    package: 'XML-Parser-GemstoneCompatibility'
+                    with: 'XML-Parser-GemstoneCompatibility-monty.4'. ].
+]
+
 { #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.9.4-baseline'.
+	spec for: #'common' version: '1.9.6-baseline'.
 
 ]
 
@@ -318,7 +324,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.9.5'.
+	spec for: #'common' version: '1.9.6'.
 	spec for: #'pharo1.x' version: '1.2'
 
 ]
@@ -1337,6 +1343,17 @@ ConfigurationOfXMLParser >> version195: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.262'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.86'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version196: spec [ 
+        <version: '1.9.6' imports: #('1.9.6-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.263'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.86'.
                 ].
 ]
