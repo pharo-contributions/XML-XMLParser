@@ -1,6 +1,11 @@
 Extension { #name : #XMLOrderedList }
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
+XMLOrderedList >> capacity [
+	^ collection size
+]
+
+{ #category : #'*XML-Parser-GemstoneCompatibility' }
 XMLOrderedList >> copyReplaceFrom: aStart to: aStop with: aReplacementCollection [
 	| start stop |
 
