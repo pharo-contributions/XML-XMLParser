@@ -106,6 +106,19 @@ XMLWellFormedParserTokenizer class >> initializeUnaryOperatorChars [
 ]
 
 { #category : #testing }
+XMLWellFormedParserTokenizer class >> isNCName: aString [
+	"optimized"
+	1 to: aString size do: [:i | | nextChar |
+		(nextChar := aString at: i) == $:
+			ifTrue: [^ false].
+		((NameChars includes: nextChar)
+			and: [i > 1
+				or: [(AdditionalNameChars includes: nextChar) not]])
+			ifFalse: [^ false]].
+	^ aString size > 0.
+]
+
+{ #category : #testing }
 XMLWellFormedParserTokenizer class >> isName: aString [
 	"optimized"
 	1 to: aString size do: [:i | 
@@ -123,6 +136,20 @@ XMLWellFormedParserTokenizer class >> isNmtoken: aString [
 		(NameChars includes: (aString at: i))
 			ifFalse: [^ false]].
 	^ aString size > 0.
+]
+
+{ #category : #streaming }
+XMLWellFormedParserTokenizer class >> nextNameFrom: aReadStream on: aWriteStream [
+	(aReadStream atEnd
+		or: [(NameChars includes: aReadStream peek) not
+			or: [AdditionalNameChars includes: aReadStream peek]])
+		ifTrue: [^ false].
+	aWriteStream nextPut: aReadStream next.
+
+	[aReadStream atEnd not
+		and: [NameChars includes: aReadStream peek]]
+		whileTrue: [aWriteStream nextPut: aReadStream next].
+	^ true.
 ]
 
 { #category : #accessing }

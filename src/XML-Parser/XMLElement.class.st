@@ -293,6 +293,16 @@ XMLElement >> isElementNamedAny: aNameCollection [
 ]
 
 { #category : #testing }
+XMLElement >> isInLanguage: aLanguage [
+	^ (self
+		attributeNodeAt: 'xml:lang'
+		ifAbsent: [
+			^ self hasParent
+				and: [self parent isInLanguage: aLanguage]])
+			hasLanguage: aLanguage
+]
+
+{ #category : #testing }
 XMLElement >> isNamed: aName [
 	"Does the receiver's qualified or local name match the argument?'"
 	^ aName

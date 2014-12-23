@@ -36,8 +36,8 @@ XMLURIParser >> parseFragment [
 ]
 
 { #category : #parsing }
-XMLURIParser >> parseHost [
-	^ (uriStream xmlParserAtBeginning not
+XMLURIParser >> parseHostAfterScheme: aScheme [
+	^ (aScheme notEmpty
 		or: [self parseDoubleSlashOrReset])
 		ifTrue: [(self parseUpToAnyNotSkipping: ':/?#') asLowercase]
 		ifFalse: [''].

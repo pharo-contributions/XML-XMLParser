@@ -6,7 +6,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'elementValidatorStack',
-		'xmlIdValidator'
+		'defaultXmlIdValidator'
 	],
 	#category : #'XML-Parser-Validation'
 }
@@ -29,6 +29,19 @@ XMLDocumentValidator >> currentElementValidator [
 { #category : #accessing }
 XMLDocumentValidator >> defaultElementValidatorFor: aName [
 	^ XMLAnyElementValidator element: aName
+]
+
+{ #category : #private }
+XMLDocumentValidator >> defaultXMLIDValidator [
+	"used to validate xml:id attributes in the absence of DTD or other validators"
+	^ defaultXmlIdValidator
+		ifNil: [
+			defaultXmlIdValidator :=
+				XMLXMLIDIDAttributeValidator
+					element: ''
+					attribute: 'xml:id'
+					defaultValueValidator:
+						(XMLImpliedValueAttributeValidator attribute: 'xml:id')]
 ]
 
 { #category : #accessing }
@@ -143,12 +156,8 @@ XMLDocumentValidator >> validateStartTag: aName attributes: anAttributeDictionar
 		with: (self attributeValidatorsFor: aName).
 ]
 
-{ #category : #private }
+{ #category : #validation }
 XMLDocumentValidator >> validateXMLIDAttributeIn: anAttributeDictionary [
-	self xmlIDValidator validateAttributes: anAttributeDictionary
-]
-
-{ #category : #private }
-XMLDocumentValidator >> xmlIDValidator [
-	^ xmlIdValidator ifNil: [xmlIdValidator := XMLReservedIDAttributeValidator new]
+	self hasValidators
+		ifFalse: [self defaultXMLIDValidator validateAttributes: anAttributeDictionary]
 ]

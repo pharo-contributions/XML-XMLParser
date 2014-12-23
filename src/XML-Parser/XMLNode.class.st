@@ -169,6 +169,12 @@ XMLNode >> isElementNamedAny: aNameCollection [
 ]
 
 { #category : #testing }
+XMLNode >> isInLanguage: aLanguage [
+	^ self hasParent
+		and: [self parent isInLanguage: aLanguage]
+]
+
+{ #category : #testing }
 XMLNode >> isPI [
 	^ false
 ]

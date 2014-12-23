@@ -47,8 +47,25 @@ XMLAttribute >> expandedName [
 ]
 
 { #category : #testing }
+XMLAttribute >> hasLanguage: aLanguage [
+	| language xmlLang |
+
+	language := aLanguage asLowercase.
+	^ (xmlLang := self value asLowercase) = language
+		or: [(xmlLang copyUpTo: $-) = language].
+]
+
+{ #category : #testing }
 XMLAttribute >> hasPrefix [
 	^ self name hasPrefixBeforeLocalName
+]
+
+{ #category : #testing }
+XMLAttribute >> isInLanguage: aLanguage [
+	self name = 'xml:lang'
+		ifTrue: [^ self hasLanguage: aLanguage].
+	^ self element notNil
+		and: [self element isInLanguage: aLanguage]
 ]
 
 { #category : #testing }

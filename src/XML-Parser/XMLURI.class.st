@@ -118,7 +118,7 @@ XMLURI >> fromString: aString [
 	parser := XMLURIParser on: aString.
 
 	scheme := parser parseScheme.
-	host := parser parseHost.
+	host := parser parseHostAfterScheme: scheme.
 	port := parser parsePort.
 	self setPathSegmentsFromString: parser parsePath.
 	queryString := parser parseQueryString.

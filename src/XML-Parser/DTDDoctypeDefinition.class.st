@@ -13,7 +13,8 @@ Class {
 		'generalEntities',
 		'parameterEntities',
 		'unparsedEntities',
-		'notations'
+		'notations',
+		'elementIds'
 	],
 	#category : #'XML-Parser-DTD'
 }
@@ -76,7 +77,7 @@ DTDDoctypeDefinition >> addUnparsedEntity: aName ndata: aNotation [
 
 { #category : #adding }
 DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
-	| attributeValidatorsForElement validator |
+	| attributeValidatorsForElement |
 
 	attributeValidatorsForElement :=
 		self attributeValidators
@@ -85,17 +86,17 @@ DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: aName type:
 	(attributeValidatorsForElement includesKey: aName)
 		ifTrue: [^ self].
 
-	validator :=
-		(DTDAttributeDefinitionParser
-			element:  anElement
-			attribute: aName
-			type: aType
-			defaultPragma: aDefaultPragma
-			defaultValue: aDefaultValue) parse.
-
-	validator
-		validateAndAddTo: attributeValidatorsForElement
-		usingDeclarationsFrom: self.
+	attributeValidatorsForElement
+		at: aName
+		put: 
+			((DTDAttributeDefinitionParser
+				element:  anElement
+				attribute: aName
+				type: aType
+				defaultPragma: aDefaultPragma
+				defaultValue: aDefaultValue) parse
+					validateBeforeAddingTo: attributeValidatorsForElement
+					usingDeclarationsFrom: self).
 ]
 
 { #category : #adding }
@@ -111,6 +112,11 @@ DTDDoctypeDefinition >> addValidatorForElement: anElement contentModel: aContent
 { #category : #private }
 DTDDoctypeDefinition >> attributeValidators [
 	^ attributeValidators ifNil: [attributeValidators := Dictionary new]
+]
+
+{ #category : #private }
+DTDDoctypeDefinition >> elementIDs [
+	^ elementIds ifNil: [elementIds := Set new]
 ]
 
 { #category : #private }

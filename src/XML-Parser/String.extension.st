@@ -18,12 +18,12 @@ String >> asXMLEscapedString [
 	^ stream contents.
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : #'*XML-Parser-DOM' }
 String >> asXMLString [
 	^ XMLString string: self
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : #'*XML-Parser-URI' }
 String >> asXMLURI [
 	^ XMLURI fromString: self
 ]

@@ -11,6 +11,21 @@ Class {
 }
 
 { #category : #private }
+XMLIDAttributeValidator class >> classForAttribute: anAttribute [
+	anAttribute = 'xml:id'
+		ifTrue: [^ XMLXMLIDIDAttributeValidator]
+		ifFalse: [^ XMLIDAttributeValidator]
+]
+
+{ #category : #'instance creation' }
+XMLIDAttributeValidator class >> element: anElement attribute: anAttribute defaultValueValidator: aDefaultValueValidator [
+	^ (self classForAttribute: anAttribute) new
+		setElement: anElement
+		attribute: anAttribute
+		defaultValueValidator: aDefaultValueValidator
+]
+
+{ #category : #private }
 XMLIDAttributeValidator >> errorDuplicateID: anId [
 	XMLValidationException
 		formatSignal: 'ID "{1}" used more than once for attribute "{2}"'
@@ -42,21 +57,19 @@ XMLIDAttributeValidator >> isIDValidator [
 ]
 
 { #category : #validation }
-XMLIDAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
-	anAttributeValidatorDictionary valuesDo: [:each |
-		each isIDValidator
-			ifTrue: [self errorElementWithMultipleIDAttributes]].
-
-	super
-		validateAndAddTo: anAttributeValidatorDictionary
-		usingDeclarationsFrom: aDeclarationDelegate
-]
-
-{ #category : #validation }
 XMLIDAttributeValidator >> validateAttributeValue: aValue [
 	self validateID: aValue.
 	(self ids includes: aValue)
 		ifTrue: [self errorDuplicateID: aValue].
 
 	self ids add: aValue.
+]
+
+{ #category : #validation }
+XMLIDAttributeValidator >> validateBeforeAddingTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
+	anAttributeValidatorDictionary valuesDo: [:each |
+		each isIDValidator
+			ifTrue: [self errorElementWithMultipleIDAttributes]].
+	ids := aDeclarationDelegate elementIDs.
+	self validateReservedAttributeValidator.
 ]

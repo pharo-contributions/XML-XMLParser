@@ -49,6 +49,18 @@ XMLAttributeValidator >> errorInvalidID: anId [
 ]
 
 { #category : #private }
+XMLAttributeValidator >> errorInvalidXMLIDAttributeValidator [
+	XMLValidationException signal: 'Attribute "xml:id" must have ID type'
+]
+
+{ #category : #private }
+XMLAttributeValidator >> errorInvalidXMLSpaceAttributeValidator [
+	XMLValidationException signal:
+		'Attribute "xml:space" must be declared as ',
+		'enumeration "(default|preserve)" type'
+]
+
+{ #category : #private }
 XMLAttributeValidator >> furtherNormalizeAttributeValueIn: anAttributeDictionary [
 	"The tokenizer normalizes all whitespace in attribute values to spaces
 	and this step normalizes again by removing leading and trailing spaces
@@ -122,13 +134,6 @@ XMLAttributeValidator >> shouldFurtherNormalizeAttributeValue [
 ]
 
 { #category : #validation }
-XMLAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
-	anAttributeValidatorDictionary
-		at: self attribute
-		put: self
-]
-
-{ #category : #validation }
 XMLAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
 	defaultValueValidator validateAttributeDefaultIn: anAttributeDictionary.
 
@@ -152,7 +157,36 @@ XMLAttributeValidator >> validateAttributes: anAttributeDictionary [
 ]
 
 { #category : #validation }
+XMLAttributeValidator >> validateBeforeAddingTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
+	self validateReservedAttributeValidator
+]
+
+{ #category : #validation }
 XMLAttributeValidator >> validateID: anId [
 	(XMLWellFormedParserTokenizer isName: anId)
 		ifFalse: [self errorInvalidID: anId]
+]
+
+{ #category : #validation }
+XMLAttributeValidator >> validateReservedAttributeValidator [
+	(self attribute at: 1) == $x
+		ifTrue: [
+			(self attribute = 'xml:id')
+				ifTrue: [^ self validateXMLIDAttributeValidator].
+			(self attribute = 'xml:space')
+				ifTrue: [^ self validateXMLSpaceAttributeValidator]]
+]
+
+{ #category : #validation }
+XMLAttributeValidator >> validateXMLIDAttributeValidator [
+	self isIDValidator
+		ifFalse: [self errorInvalidXMLIDAttributeValidator]
+]
+
+{ #category : #validation }
+XMLAttributeValidator >> validateXMLSpaceAttributeValidator [
+	(self isEnumerationValidator
+		and: [self allowedValues size = 2
+			and: [#('preserve' 'default') allSatisfy: [:each | self allowedValues includes: each]]])
+		ifFalse: [self errorInvalidXMLSpaceAttributeValidator]
 ]

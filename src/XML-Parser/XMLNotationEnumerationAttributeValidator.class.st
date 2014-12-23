@@ -41,21 +41,18 @@ XMLNotationEnumerationAttributeValidator >> notations [
 ]
 
 { #category : #validation }
-XMLNotationEnumerationAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
-	anAttributeValidatorDictionary valuesDo: [:each |
-		each hasNotationValues
-			ifTrue: [self errorMultipleNotationAttributes]].
-
-	notations := aDeclarationDelegate notations.
-	super
-		validateAndAddTo: anAttributeValidatorDictionary
-		usingDeclarationsFrom: aDeclarationDelegate.
-]
-
-{ #category : #validation }
 XMLNotationEnumerationAttributeValidator >> validateAttributeValue: aValue [
 	super validateAttributeValue: aValue.
 
 	(self notations includes: aValue)
 		ifFalse: [self errorUndeclaredNotation: aValue]. 
+]
+
+{ #category : #validation }
+XMLNotationEnumerationAttributeValidator >> validateBeforeAddingTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
+	anAttributeValidatorDictionary valuesDo: [:each |
+		each hasNotationValues
+			ifTrue: [self errorMultipleNotationAttributes]].
+	notations := aDeclarationDelegate notations.
+	self validateReservedAttributeValidator.
 ]

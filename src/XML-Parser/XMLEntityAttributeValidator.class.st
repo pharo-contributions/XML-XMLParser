@@ -29,16 +29,14 @@ XMLEntityAttributeValidator >> unparsedEntities [
 ]
 
 { #category : #validation }
-XMLEntityAttributeValidator >> validateAndAddTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
-	unparsedEntities := aDeclarationDelegate unparsedEntities.
-	super
-		validateAndAddTo: anAttributeValidatorDictionary
-		usingDeclarationsFrom: aDeclarationDelegate.
+XMLEntityAttributeValidator >> validateAttributeValue: aValue [
+	self validateEntityReference: aValue
 ]
 
 { #category : #validation }
-XMLEntityAttributeValidator >> validateAttributeValue: aValue [
-	self validateEntityReference: aValue
+XMLEntityAttributeValidator >> validateBeforeAddingTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
+	unparsedEntities := aDeclarationDelegate unparsedEntities.
+	self validateReservedAttributeValidator.
 ]
 
 { #category : #validation }
