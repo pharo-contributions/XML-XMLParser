@@ -1388,6 +1388,11 @@ XMLParserTest >> testWhitespacePreservationValidation [
 		shouldnt: [SAXHandler parse: dtd, '<whitespace xml:space="default"> </whitespace>']
 		raise: XMLValidationException.
 	self
+		shouldnt: [
+			SAXHandler parse:
+				(dtd copyReplaceAll: '(default|preserve)' with: '(preserve|default)')]
+		raise: XMLValidationException.
+	self
 		should: [SAXHandler parse: dtd, '<whitespace> </whitespace>']
 		raise: XMLValidationException.
 	self
@@ -1396,10 +1401,16 @@ XMLParserTest >> testWhitespacePreservationValidation [
 	self
 		should: [SAXHandler parse: dtd, '<whitespace xml:space="default"><![CDATA[ ]]></whitespace>']
 		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: (dtd copyReplaceAll: '(default|preserve)' with: '(not|valid)')]
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: (dtd copyReplaceAll: '(default|preserve)' with: 'CDATA')]
+		raise: XMLValidationException.
 ]
 
 { #category : #tests }
-XMLParserTest >> testXMLIDAttribute [
+XMLParserTest >> testXMLIDAttributeValidation [
 	| xml xmlWithDuplicateId |
 
 	xml := '<a xml:id="one"><b xml:id="two"/></a>'.
@@ -1415,6 +1426,58 @@ XMLParserTest >> testXMLIDAttribute [
 			(SAXHandler on: xmlWithDuplicateId)
 				isValidating: false;
 				parseDocument]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testXMLIDAttributeValidationDTD [
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE one [
+					<!ELEMENT one ANY>
+					<!ATTLIST one xml:id CDATA #IMPLIED>]>']
+		raise: XMLValidationException.
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE one [
+					<!ELEMENT one ANY>
+					<!ATTLIST one xml:id ID #IMPLIED>]>
+				<one xml:id="invalid:id"/>']
+		raise: XMLValidationException.
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE one [
+					<!ELEMENT one ANY>
+					<!ELEMENT two ANY>
+					<!ATTLIST one xml:id ID #IMPLIED>
+					<!ATTLIST two xml:id ID #IMPLIED>]>
+				<one xml:id="valid"><two xml:id="valid"/></one>']
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			SAXHandler parse:
+				'<!DOCTYPE one [
+					<!ELEMENT one ANY>
+					<!ELEMENT two ANY>
+					<!ATTLIST one xml:id ID #IMPLIED>
+					<!ATTLIST two xml:id ID #IMPLIED>]>
+				<one xml:id="valid1"><two xml:id="valid2"/></one>']
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			SAXHandler
+				parse:
+					'<!DOCTYPE one [
+						<!ELEMENT one ANY>
+						<!ELEMENT two ANY>
+						<!ATTLIST one xml:id CDATA #IMPLIED>
+						<!ATTLIST two xml:id ID #IMPLIED>]>
+					<one xml:id="invalid:id"><two xml:id="invalid:id"/></one>'
+				usingNamespaces: true
+				validation: false]
 		raise: XMLValidationException.
 ]
 

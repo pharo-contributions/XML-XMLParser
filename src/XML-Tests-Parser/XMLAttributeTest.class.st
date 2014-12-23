@@ -83,6 +83,30 @@ XMLAttributeTest >> testExpandedName [
 ]
 
 { #category : #tests }
+XMLAttributeTest >> testHasLanguage [
+	| attribute |
+
+	attribute := self nodeClass new.
+	attribute name: 'xml:lang'.
+	self
+		deny: (attribute hasLanguage: 'en-us');
+		deny: (attribute hasLanguage: 'EN-US');
+		deny: (attribute hasLanguage: 'En');
+		deny: (attribute hasLanguage: 'de-de');
+		deny: (attribute hasLanguage: 'DE-DE');
+		deny: (attribute hasLanguage: 'De').
+
+	attribute value: 'En-Us'.
+	self
+		assert: (attribute hasLanguage: 'en-us');
+		assert: (attribute hasLanguage: 'EN-US');
+		assert: (attribute hasLanguage: 'En');
+		deny: (attribute hasLanguage: 'de-de');
+		deny: (attribute hasLanguage: 'DE-DE');
+		deny: (attribute hasLanguage: 'De').
+]
+
+{ #category : #tests }
 XMLAttributeTest >> testHasParent [
 	self should: [super testHasParent] raise: Error
 ]
@@ -102,6 +126,32 @@ XMLAttributeTest >> testHasPrefix [
 
 	attribute name: 'three'.
 	self deny: attribute hasPrefix.
+]
+
+{ #category : #tests }
+XMLAttributeTest >> testIsInLanguage [
+	| element |
+
+	super testIsInLanguage.
+	element := self newElementWithAttributes.	
+	element attributeNodesDo: [:each |
+		self
+			deny: (each isInLanguage: 'en');
+			deny: (each isInLanguage: 'EN');
+			deny: (each isInLanguage: 'En');
+			deny: (each isInLanguage: 'en-us');
+			deny: (each isInLanguage: 'EN-US');
+			deny: (each isInLanguage: 'En-Us')].
+
+	element attributeAt: 'xml:lang' put: 'En'.
+	element attributeNodesDo: [:each |
+		self
+			assert: (each isInLanguage: 'en');
+			assert: (each isInLanguage: 'EN');
+			assert: (each isInLanguage: 'En');
+			deny: (each isInLanguage: 'en-us');
+			deny: (each isInLanguage: 'EN-US');
+			deny: (each isInLanguage: 'En-Us')].
 ]
 
 { #category : #tests }

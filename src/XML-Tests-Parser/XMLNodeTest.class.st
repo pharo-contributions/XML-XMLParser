@@ -201,6 +201,11 @@ XMLNodeTest >> testIsElementNamedAny [
 ]
 
 { #category : #tests }
+XMLNodeTest >> testIsInLanguage [
+	self deny: (self nodeClass new isInLanguage: 'test')
+]
+
+{ #category : #tests }
 XMLNodeTest >> testIsPI [
 	self deny: self nodeClass new isPI
 ]
