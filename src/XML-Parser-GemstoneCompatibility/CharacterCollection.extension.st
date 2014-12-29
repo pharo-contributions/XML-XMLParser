@@ -5,16 +5,17 @@ CharacterCollection >> asXMLEscapedString [
 	| stream |
 
 	stream := (self class new: self size) writeStream.
-	self do: [:each |
-		each == $<
+	"to:do: for performance"
+	1 to: self size do: [:i | | nextChar |
+		(nextChar := self at: i) == $<
 			ifTrue: [stream nextPutAll: '&lt;']
 			ifFalse: [
-				each == $> "needed to escape ]]> in PCDATA"
+				nextChar == $> "needed to escape ]]> in PCDATA"
 					ifTrue: [stream nextPutAll: '&gt;']
 					ifFalse: [
-						each == $&
+						nextChar == $&
 							ifTrue: [stream nextPutAll: '&amp;']
-							ifFalse: [stream nextPut: each]]]].
+							ifFalse: [stream nextPut: nextChar]]]].
 	^ stream contents.
 ]
 
@@ -30,9 +31,10 @@ CharacterCollection >> asXMLURI [
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
 CharacterCollection >> expandWithNamespaceURI: aNamespaceUri [
-	^ aNamespaceUri
-		ifEmpty: [self]
-		ifNotEmpty: [((aNamespaceUri copyWithFirst: ${) copyWith: $}), self]
+	"optimized"
+	aNamespaceUri size > 0
+		ifTrue: [^ ((aNamespaceUri copyWithFirst: ${) copyWith: $}), self]
+		ifFalse: [^ self]
 ]
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
@@ -51,6 +53,7 @@ CharacterCollection >> isNamespaceAttributeName [
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
 CharacterCollection >> isQualifiedName: aQualifiedName orLocalName: aLocalName [
+	"optimized"
 	^ self = aQualifiedName
 		or: [(aQualifiedName size > aLocalName size)
 			and: [self = aLocalName]]
@@ -99,6 +102,7 @@ CharacterCollection >> prefixBeforeLocalName [
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
 CharacterCollection >> prefixBeforeLocalName: aLocalName [
+	"optimized"
 	| prefixSize |
 
 	(prefixSize := self size - aLocalName size - 1) > 0
@@ -108,6 +112,7 @@ CharacterCollection >> prefixBeforeLocalName: aLocalName [
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
 CharacterCollection >> qualifyWithPrefix: aPrefix [
+	"optimized"
 	aPrefix size > 0
 		ifTrue: [^ (aPrefix copyWith: $:), self]
 		ifFalse: [^ self]
