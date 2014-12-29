@@ -1,5 +1,5 @@
 "
-This class uses a dictionary with NFAStateSet keys to cache DFA states.
+This class uses a dictionary with NFAStateSet keys to cache DFA states. (Does not use the regular XML key/value  cache for performance)
 "
 Class {
 	#name : #XMLDFAStateCache,
@@ -34,7 +34,7 @@ XMLDFAStateCache >> dfaStateFor: aStateSet [
 
 			cachedStates
 				at: aStateSet
-				put: (self newDFAStateFor: aStateSet)].
+				put: (self newDFAStateFor: aStateSet)]
 ]
 
 { #category : #accessing }

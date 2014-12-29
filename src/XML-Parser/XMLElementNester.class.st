@@ -1,5 +1,5 @@
 "
-This is a base class for element nesters.
+This is a base class for element nesters that are used by parser drivers to keep track of which elements are open while parsing.
 "
 Class {
 	#name : #XMLElementNester,

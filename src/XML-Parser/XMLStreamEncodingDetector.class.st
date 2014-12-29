@@ -28,13 +28,13 @@ XMLStreamEncodingDetector class >> for: aStreamReader [
 { #category : #private }
 XMLStreamEncodingDetector class >> handlerForLeadByte: aByte [
 	aByte = 0
-		ifTrue: [^ #detectBigEndianUTF32OrImplicitEncdoing].
+		ifTrue: [^ #detectBigEndianUTF32BOMOrImplicitEncoding].
 	aByte = XMLUTF16BigEndianStreamDecoder byteOrderMarkBytes first
-		ifTrue: [^ #detectBigEndianUTF16ByteOrderMark].
+		ifTrue: [^ #detectBigEndianUTF16BOM].
 	aByte = XMLUTF8StreamDecoder byteOrderMarkBytes first
 		ifTrue: [^ #detectUTF8ByteOrderMark].
 	aByte = XMLUTF16LittleEndianStreamDecoder byteOrderMarkBytes first
-		ifTrue: [^ #detectLittleEndianUTF16OrUTF32ByteOrderMark].
+		ifTrue: [^ #detectLittleEndianUTF16BOMOrUTF32BOM].
 	aByte = $< asciiValue
 		ifTrue: [^ #detectLittleEndianImplicitEncoding].
 	^ nil.
@@ -70,7 +70,7 @@ XMLStreamEncodingDetector class >> initializeEncodingHandlerTable [
 ]
 
 { #category : #private }
-XMLStreamEncodingDetector >> detectBigEndianUTF16ByteOrderMark [
+XMLStreamEncodingDetector >> detectBigEndianUTF16BOM [
 	(self
 		detectByteOrderMark: UTF16BigEndianByteOrderMark
 		forDecoderClass: XMLUTF16BigEndianStreamDecoder)
@@ -78,7 +78,7 @@ XMLStreamEncodingDetector >> detectBigEndianUTF16ByteOrderMark [
 ]
 
 { #category : #private }
-XMLStreamEncodingDetector >> detectBigEndianUTF32OrImplicitEncdoing [
+XMLStreamEncodingDetector >> detectBigEndianUTF32BOMOrImplicitEncoding [
 	| remainder |
 
 	(remainder :=
@@ -143,8 +143,7 @@ XMLStreamEncodingDetector >> detectCurrentEncoding [
 
 { #category : #private }
 XMLStreamEncodingDetector >> detectLittleEndianImplicitEncoding [
-	stream peek == $<
-		ifFalse: [^ self].
+	"skip <"
 	stream next.
 	(stream atEnd
 		or: [stream peek asciiValue > 0])
@@ -165,11 +164,16 @@ XMLStreamEncodingDetector >> detectLittleEndianImplicitEncoding [
 ]
 
 { #category : #private }
-XMLStreamEncodingDetector >> detectLittleEndianUTF16OrUTF32ByteOrderMark [
+XMLStreamEncodingDetector >> detectLittleEndianUTF16BOMOrUTF32BOM [
 	(self
 		detectByteOrderMark: UTF32LittleEndianByteOrderMark
-		forDecoderClass: XMLUTF32LittleEndianStreamDecoder) = UTF16LittleEndianByteOrderMark
-		ifTrue: [streamReader decodeStreamWithDecoder: XMLUTF16LittleEndianStreamDecoder new]
+		forDecoderClass: XMLUTF32LittleEndianStreamDecoder)
+		ifNotNil: [:remainder |
+			remainder = UTF16LittleEndianByteOrderMark
+				ifTrue: [
+					streamReader decodeStreamWithDecoder:
+						XMLUTF16LittleEndianStreamDecoder new]
+				ifFalse: [streamReader pushBack: remainder]]
 ]
 
 { #category : #private }

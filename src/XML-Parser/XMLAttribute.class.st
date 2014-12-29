@@ -20,16 +20,6 @@ XMLAttribute class >> name: aName value: aValue [
 ]
 
 { #category : #accessing }
-XMLAttribute >> configuration [
-	^ self element ifNotNil: [:element | element configuration]
-]
-
-{ #category : #accessing }
-XMLAttribute >> document [
-	^ self element ifNotNil: [:element | element document]
-]
-
-{ #category : #accessing }
 XMLAttribute >> element [
 	"reuse instance variable to save memory"
 	^ parent
@@ -63,9 +53,8 @@ XMLAttribute >> hasPrefix [
 { #category : #testing }
 XMLAttribute >> isInLanguage: aLanguage [
 	self name = 'xml:lang'
-		ifTrue: [^ self hasLanguage: aLanguage].
-	^ self element notNil
-		and: [self element isInLanguage: aLanguage]
+		ifTrue: [^ self hasLanguage: aLanguage]
+		ifFalse: [^ super isInLanguage: aLanguage]
 ]
 
 { #category : #testing }
@@ -112,18 +101,6 @@ XMLAttribute >> namespaceURI [
 { #category : #accessing }
 XMLAttribute >> nextNode [
 	^ self element ifNotNil: [:element | element attributeNodes after: self]
-]
-
-{ #category : #accessing }
-XMLAttribute >> parent [
-	"attributes have no parents and aren't part of the DOM tree"
-	self shouldNotImplement
-]
-
-{ #category : #accessing }
-XMLAttribute >> parent: aParentNode [
-	"attributes have no parents and aren't part of the DOM tree"
-	self shouldNotImplement
 ]
 
 { #category : #namespaces }

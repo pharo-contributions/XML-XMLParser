@@ -39,9 +39,9 @@ SAXParserDriver >> currentElement [
 
 { #category : #private }
 SAXParserDriver >> declareNamespaces: aDictionary inScope: aScope [
+	aScope setPrefixMappingsFrom: aDictionary.
 	aDictionary keysAndValuesDo: [:prefix :uri |
-		aScope mapPrefix: prefix to: uri.
-		self saxHandler startPrefixMapping: prefix uri: uri]
+		self saxHandler startPrefixMapping: prefix uri: uri].
 ]
 
 { #category : #accessing }
