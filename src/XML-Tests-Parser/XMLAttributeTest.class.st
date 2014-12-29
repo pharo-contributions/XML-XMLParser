@@ -15,26 +15,6 @@ XMLAttributeTest >> nodeClass [
 ]
 
 { #category : #tests }
-XMLAttributeTest >> testAncestorElements [
-	self should: [super testAncestorElements] raise: Error
-]
-
-{ #category : #tests }
-XMLAttributeTest >> testAncestorElementsDo [
-	self should: [super testAncestorElementsDo] raise: Error
-]
-
-{ #category : #tests }
-XMLAttributeTest >> testAncestorNodes [
-	self should: [super testAncestorNodes] raise: Error
-]
-
-{ #category : #tests }
-XMLAttributeTest >> testAncestorNodesDo [
-	self should: [super testAncestorNodesDo] raise: Error
-]
-
-{ #category : #tests }
 XMLAttributeTest >> testCanonicallyEquals [
 	super testCanonicallyEquals.
 	self assert:
@@ -104,11 +84,6 @@ XMLAttributeTest >> testHasLanguage [
 		deny: (attribute hasLanguage: 'de-de');
 		deny: (attribute hasLanguage: 'DE-DE');
 		deny: (attribute hasLanguage: 'De').
-]
-
-{ #category : #tests }
-XMLAttributeTest >> testHasParent [
-	self should: [super testHasParent] raise: Error
 ]
 
 { #category : #tests }
@@ -258,16 +233,6 @@ XMLAttributeTest >> testNextNode [
 	elementWithAttributes attributeNodes reverseDo: [:each |
 		self assert: each nextNode == nextNode.
 		nextNode := each].
-]
-
-{ #category : #tests }
-XMLAttributeTest >> testParent [
-	| node |
-
-	node := self nodeClass new.
-	self
-		should: [node parent] raise: Error;
-		should: [node parent: self nodeClass new] raise: Error.
 ]
 
 { #category : #tests }

@@ -1006,7 +1006,12 @@ XMLParserTest >> testNamespacePrefixInheritance [
 	self
 		shouldnt: [
 			SAXHandler
-				parse: '<one xmlns:prefix1="ns"><prefix1:two /></one>'
+				parse:
+					'<one xmlns:prefix1="ns">
+						<prefix1:two xmlns:prefix2="ns2">
+							<prefix2:three><prefix1:four /></prefix2:three>
+						</prefix1:two>
+					</one>'
 				usingNamespaces: true]
 		raise: XMLNamespaceException.
 	self
@@ -1014,9 +1019,35 @@ XMLParserTest >> testNamespacePrefixInheritance [
 			SAXHandler
 				parse:
 					'<one xmlns:prefix1="ns">
-						<prefix2:two><three xmlns:prefix2="ns2"/></prefix2:two>
+						<prefix1:two xmlns:prefix2="ns2" />
+						<prefix2:three />
 					</one>'
 				usingNamespaces: true]
+		raise: XMLNamespaceException.
+	self
+		should: [
+			SAXHandler
+				parse:
+					'<one xmlns:prefix1="ns">
+						<prefix1:two xmlns:prefix2="ns2">
+							<prefix2:three xmlns:prefix3="ns3" />
+						</prefix1:two>
+						<prefix3:four />
+					</one>'
+				usingNamespaces: true]
+		raise: XMLNamespaceException.
+	self
+		shouldnt: [
+			SAXHandler
+				parse:
+					'<one xmlns:prefix1="ns">
+						<prefix1:two xmlns:prefix2="ns2">
+							<prefix2:three xmlns:prefix3="ns3" />
+						</prefix1:two>
+						<prefix2:four />
+						<prefix3:five />
+					</one>'
+				usingNamespaces: false]
 		raise: XMLNamespaceException.
 ]
 
