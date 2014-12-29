@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 XMLNamespaceScopeTest >> namespaces [
-	^ Dictionary new
+	^ OrderPreservingStringDictionary new
 		at: 'prefix1' put: 'ns1';
 		at: 'prefix2' put: 'ns2';
 		at: '' put: 'defaultNS';
@@ -85,19 +85,24 @@ XMLNamespaceScopeTest >> testMapPrefixTo [
 ]
 
 { #category : #tests }
-XMLNamespaceScopeTest >> testSetPrefixMappingsFrom [
-	| outerScope innerScope |
+XMLNamespaceScopeTest >> testSetFromDictionary [
+	| outerScope innerScope namespaces |
 
+	namespaces := self namespaces.
 	(outerScope := self newNamespaceScope)
-		setPrefixMappingsFrom: self namespaces.
-	self assert: outerScope = self newNamespaceScopeWithNamespaces.
+		setFromDictionary: namespaces.
+	self
+		assert: outerScope = self newNamespaceScopeWithNamespaces;
+		deny: outerScope prefixMappings == namespaces.
 
 	innerScope := outerScope copy.
-	self assert: innerScope prefixMappings == outerScope prefixMappings.
-
-	innerScope setPrefixMappingsFrom: self namespaces.
 	self
-		assert: innerScope prefixMappings = outerScope prefixMappings;
+		assert: innerScope = outerScope;
+		assert: innerScope prefixMappings == outerScope prefixMappings.
+
+	innerScope setFromDictionary: namespaces.
+	self
+		assert: innerScope = outerScope;
 		deny: innerScope prefixMappings == outerScope prefixMappings.
 ]
 
