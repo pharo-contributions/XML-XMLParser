@@ -3874,7 +3874,7 @@ XMLConformanceOasisTests >> teste2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -3939,7 +3939,7 @@ XMLConformanceOasisTests >> testp01pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -3956,7 +3956,7 @@ XMLConformanceOasisTests >> testp01pass2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -3973,7 +3973,7 @@ XMLConformanceOasisTests >> testp01pass3xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4326,7 +4326,7 @@ XMLConformanceOasisTests >> testp03pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4379,7 +4379,7 @@ XMLConformanceOasisTests >> testp04pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4456,7 +4456,7 @@ XMLConformanceOasisTests >> testp05pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4485,7 +4485,7 @@ XMLConformanceOasisTests >> testp06pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4502,7 +4502,7 @@ XMLConformanceOasisTests >> testp07pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4543,7 +4543,7 @@ XMLConformanceOasisTests >> testp08pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4620,7 +4620,7 @@ XMLConformanceOasisTests >> testp09pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4673,7 +4673,7 @@ XMLConformanceOasisTests >> testp10pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4714,7 +4714,7 @@ XMLConformanceOasisTests >> testp11pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4815,7 +4815,7 @@ XMLConformanceOasisTests >> testp12pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4868,7 +4868,7 @@ XMLConformanceOasisTests >> testp14pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4921,7 +4921,7 @@ XMLConformanceOasisTests >> testp15pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4974,7 +4974,7 @@ XMLConformanceOasisTests >> testp16pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4991,7 +4991,7 @@ XMLConformanceOasisTests >> testp16pass2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5008,7 +5008,7 @@ XMLConformanceOasisTests >> testp16pass3xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5061,7 +5061,7 @@ XMLConformanceOasisTests >> testp18pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5102,7 +5102,7 @@ XMLConformanceOasisTests >> testp22pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5119,7 +5119,7 @@ XMLConformanceOasisTests >> testp22pass2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5136,7 +5136,7 @@ XMLConformanceOasisTests >> testp22pass3xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5153,7 +5153,7 @@ XMLConformanceOasisTests >> testp22pass4xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5170,7 +5170,7 @@ XMLConformanceOasisTests >> testp22pass5xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5187,7 +5187,7 @@ XMLConformanceOasisTests >> testp22pass6xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5264,7 +5264,7 @@ XMLConformanceOasisTests >> testp23pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5281,7 +5281,7 @@ XMLConformanceOasisTests >> testp23pass2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5298,7 +5298,7 @@ XMLConformanceOasisTests >> testp23pass3xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5315,7 +5315,7 @@ XMLConformanceOasisTests >> testp23pass4xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5356,7 +5356,7 @@ XMLConformanceOasisTests >> testp24pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5373,7 +5373,7 @@ XMLConformanceOasisTests >> testp24pass2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5390,7 +5390,7 @@ XMLConformanceOasisTests >> testp24pass3xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5407,7 +5407,7 @@ XMLConformanceOasisTests >> testp24pass4xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5436,7 +5436,7 @@ XMLConformanceOasisTests >> testp25pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5453,7 +5453,7 @@ XMLConformanceOasisTests >> testp25pass2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5494,7 +5494,7 @@ XMLConformanceOasisTests >> testp26pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5523,7 +5523,7 @@ XMLConformanceOasisTests >> testp27pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5540,7 +5540,7 @@ XMLConformanceOasisTests >> testp27pass2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5557,7 +5557,7 @@ XMLConformanceOasisTests >> testp27pass3xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5574,7 +5574,7 @@ XMLConformanceOasisTests >> testp27pass4xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5603,7 +5603,7 @@ XMLConformanceOasisTests >> testp28pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5620,7 +5620,7 @@ XMLConformanceOasisTests >> testp28pass2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5637,7 +5637,7 @@ XMLConformanceOasisTests >> testp28pass3xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5654,7 +5654,7 @@ XMLConformanceOasisTests >> testp28pass4xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5671,7 +5671,7 @@ XMLConformanceOasisTests >> testp28pass5xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5700,7 +5700,7 @@ XMLConformanceOasisTests >> testp29pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5729,7 +5729,7 @@ XMLConformanceOasisTests >> testp30pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5746,7 +5746,7 @@ XMLConformanceOasisTests >> testp30pass2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5775,7 +5775,7 @@ XMLConformanceOasisTests >> testp31pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5792,7 +5792,7 @@ XMLConformanceOasisTests >> testp31pass2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5869,7 +5869,7 @@ XMLConformanceOasisTests >> testp32pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5886,7 +5886,7 @@ XMLConformanceOasisTests >> testp32pass2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5963,7 +5963,7 @@ XMLConformanceOasisTests >> testp39pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -5980,7 +5980,7 @@ XMLConformanceOasisTests >> testp39pass2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6045,7 +6045,7 @@ XMLConformanceOasisTests >> testp40pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6062,7 +6062,7 @@ XMLConformanceOasisTests >> testp40pass2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6079,7 +6079,7 @@ XMLConformanceOasisTests >> testp40pass3xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6096,7 +6096,7 @@ XMLConformanceOasisTests >> testp40pass4xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6149,7 +6149,7 @@ XMLConformanceOasisTests >> testp41pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6166,7 +6166,7 @@ XMLConformanceOasisTests >> testp41pass2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6219,7 +6219,7 @@ XMLConformanceOasisTests >> testp42pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6236,7 +6236,7 @@ XMLConformanceOasisTests >> testp42pass2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6289,7 +6289,7 @@ XMLConformanceOasisTests >> testp43pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6366,7 +6366,7 @@ XMLConformanceOasisTests >> testp44pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6383,7 +6383,7 @@ XMLConformanceOasisTests >> testp44pass2xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6400,7 +6400,7 @@ XMLConformanceOasisTests >> testp44pass3xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6417,7 +6417,7 @@ XMLConformanceOasisTests >> testp44pass4xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6434,7 +6434,7 @@ XMLConformanceOasisTests >> testp44pass5xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6499,7 +6499,7 @@ XMLConformanceOasisTests >> testp45pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6588,7 +6588,7 @@ XMLConformanceOasisTests >> testp46pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6653,7 +6653,7 @@ XMLConformanceOasisTests >> testp47pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6694,7 +6694,7 @@ XMLConformanceOasisTests >> testp48pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6723,7 +6723,7 @@ XMLConformanceOasisTests >> testp49pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6752,7 +6752,7 @@ XMLConformanceOasisTests >> testp50pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6853,7 +6853,7 @@ XMLConformanceOasisTests >> testp51pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6894,7 +6894,7 @@ XMLConformanceOasisTests >> testp52pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -6971,7 +6971,7 @@ XMLConformanceOasisTests >> testp53pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7000,7 +7000,7 @@ XMLConformanceOasisTests >> testp54pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7029,7 +7029,7 @@ XMLConformanceOasisTests >> testp55pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7106,7 +7106,7 @@ XMLConformanceOasisTests >> testp56pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7135,7 +7135,7 @@ XMLConformanceOasisTests >> testp57pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7248,7 +7248,7 @@ XMLConformanceOasisTests >> testp58pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7301,7 +7301,7 @@ XMLConformanceOasisTests >> testp59pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7378,7 +7378,7 @@ XMLConformanceOasisTests >> testp60pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7407,7 +7407,7 @@ XMLConformanceOasisTests >> testp61pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7448,7 +7448,7 @@ XMLConformanceOasisTests >> testp62pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7489,7 +7489,7 @@ XMLConformanceOasisTests >> testp63pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7530,7 +7530,7 @@ XMLConformanceOasisTests >> testp64pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7619,7 +7619,7 @@ XMLConformanceOasisTests >> testp66pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7672,7 +7672,7 @@ XMLConformanceOasisTests >> testp68pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7725,7 +7725,7 @@ XMLConformanceOasisTests >> testp69pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7754,7 +7754,7 @@ XMLConformanceOasisTests >> testp70pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7819,7 +7819,7 @@ XMLConformanceOasisTests >> testp71pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7884,7 +7884,7 @@ XMLConformanceOasisTests >> testp72pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7961,7 +7961,7 @@ XMLConformanceOasisTests >> testp73pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8014,7 +8014,7 @@ XMLConformanceOasisTests >> testp74pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8103,7 +8103,7 @@ XMLConformanceOasisTests >> testp75pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8168,6 +8168,6 @@ XMLConformanceOasisTests >> testp76pass1xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]

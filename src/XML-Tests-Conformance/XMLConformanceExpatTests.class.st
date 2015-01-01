@@ -7010,7 +7010,7 @@ XMLConformanceExpatTests >> testvalidextsa001xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7027,7 +7027,7 @@ XMLConformanceExpatTests >> testvalidextsa002xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7044,7 +7044,7 @@ XMLConformanceExpatTests >> testvalidextsa003xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7061,7 +7061,7 @@ XMLConformanceExpatTests >> testvalidextsa004xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7078,7 +7078,7 @@ XMLConformanceExpatTests >> testvalidextsa005xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7095,7 +7095,7 @@ XMLConformanceExpatTests >> testvalidextsa006xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7112,7 +7112,7 @@ XMLConformanceExpatTests >> testvalidextsa007xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7129,7 +7129,7 @@ XMLConformanceExpatTests >> testvalidextsa008xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7146,7 +7146,7 @@ XMLConformanceExpatTests >> testvalidextsa009xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7163,7 +7163,7 @@ XMLConformanceExpatTests >> testvalidextsa010xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7180,7 +7180,7 @@ XMLConformanceExpatTests >> testvalidextsa011xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7197,7 +7197,7 @@ XMLConformanceExpatTests >> testvalidextsa012xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7214,7 +7214,7 @@ XMLConformanceExpatTests >> testvalidextsa013xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7231,7 +7231,7 @@ XMLConformanceExpatTests >> testvalidextsa014xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7248,7 +7248,7 @@ XMLConformanceExpatTests >> testvalidnotsa001xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7265,7 +7265,7 @@ XMLConformanceExpatTests >> testvalidnotsa002xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7282,7 +7282,7 @@ XMLConformanceExpatTests >> testvalidnotsa003xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7299,7 +7299,7 @@ XMLConformanceExpatTests >> testvalidnotsa004xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7316,7 +7316,7 @@ XMLConformanceExpatTests >> testvalidnotsa005xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7333,7 +7333,7 @@ XMLConformanceExpatTests >> testvalidnotsa006xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7350,7 +7350,7 @@ XMLConformanceExpatTests >> testvalidnotsa007xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7367,7 +7367,7 @@ XMLConformanceExpatTests >> testvalidnotsa008xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7384,7 +7384,7 @@ XMLConformanceExpatTests >> testvalidnotsa009xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7401,7 +7401,7 @@ XMLConformanceExpatTests >> testvalidnotsa010xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7418,7 +7418,7 @@ XMLConformanceExpatTests >> testvalidnotsa011xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7435,7 +7435,7 @@ XMLConformanceExpatTests >> testvalidnotsa012xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7452,7 +7452,7 @@ XMLConformanceExpatTests >> testvalidnotsa013xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7469,7 +7469,7 @@ XMLConformanceExpatTests >> testvalidnotsa014xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7486,7 +7486,7 @@ XMLConformanceExpatTests >> testvalidnotsa015xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7503,7 +7503,7 @@ XMLConformanceExpatTests >> testvalidnotsa016xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7520,7 +7520,7 @@ XMLConformanceExpatTests >> testvalidnotsa017xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7537,7 +7537,7 @@ XMLConformanceExpatTests >> testvalidnotsa018xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7554,7 +7554,7 @@ XMLConformanceExpatTests >> testvalidnotsa019xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7571,7 +7571,7 @@ XMLConformanceExpatTests >> testvalidnotsa020xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7588,7 +7588,7 @@ XMLConformanceExpatTests >> testvalidnotsa021xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7605,7 +7605,7 @@ XMLConformanceExpatTests >> testvalidnotsa023xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7622,7 +7622,7 @@ XMLConformanceExpatTests >> testvalidnotsa024xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7639,7 +7639,7 @@ XMLConformanceExpatTests >> testvalidnotsa025xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7656,7 +7656,7 @@ XMLConformanceExpatTests >> testvalidnotsa026xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7673,7 +7673,7 @@ XMLConformanceExpatTests >> testvalidnotsa027xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7690,7 +7690,7 @@ XMLConformanceExpatTests >> testvalidnotsa028xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7707,7 +7707,7 @@ XMLConformanceExpatTests >> testvalidnotsa029xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7724,7 +7724,7 @@ XMLConformanceExpatTests >> testvalidnotsa030xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7741,7 +7741,7 @@ XMLConformanceExpatTests >> testvalidnotsa031xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7758,7 +7758,7 @@ XMLConformanceExpatTests >> testvalidsa001xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7775,7 +7775,7 @@ XMLConformanceExpatTests >> testvalidsa002xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7792,7 +7792,7 @@ XMLConformanceExpatTests >> testvalidsa003xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7809,7 +7809,7 @@ XMLConformanceExpatTests >> testvalidsa004xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7826,7 +7826,7 @@ XMLConformanceExpatTests >> testvalidsa005xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7843,7 +7843,7 @@ XMLConformanceExpatTests >> testvalidsa006xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7860,7 +7860,7 @@ XMLConformanceExpatTests >> testvalidsa007xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7877,7 +7877,7 @@ XMLConformanceExpatTests >> testvalidsa008xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7894,7 +7894,7 @@ XMLConformanceExpatTests >> testvalidsa009xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7911,7 +7911,7 @@ XMLConformanceExpatTests >> testvalidsa010xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7928,7 +7928,7 @@ XMLConformanceExpatTests >> testvalidsa011xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7945,7 +7945,7 @@ XMLConformanceExpatTests >> testvalidsa012xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7962,7 +7962,7 @@ XMLConformanceExpatTests >> testvalidsa013xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7979,7 +7979,7 @@ XMLConformanceExpatTests >> testvalidsa014xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -7996,7 +7996,7 @@ XMLConformanceExpatTests >> testvalidsa015xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8013,7 +8013,7 @@ XMLConformanceExpatTests >> testvalidsa016xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8030,7 +8030,7 @@ XMLConformanceExpatTests >> testvalidsa017axml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8047,7 +8047,7 @@ XMLConformanceExpatTests >> testvalidsa017xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8064,7 +8064,7 @@ XMLConformanceExpatTests >> testvalidsa018xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8081,7 +8081,7 @@ XMLConformanceExpatTests >> testvalidsa019xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8098,7 +8098,7 @@ XMLConformanceExpatTests >> testvalidsa020xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8115,7 +8115,7 @@ XMLConformanceExpatTests >> testvalidsa021xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8132,7 +8132,7 @@ XMLConformanceExpatTests >> testvalidsa022xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8149,7 +8149,7 @@ XMLConformanceExpatTests >> testvalidsa023xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8166,7 +8166,7 @@ XMLConformanceExpatTests >> testvalidsa024xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8183,7 +8183,7 @@ XMLConformanceExpatTests >> testvalidsa025xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8200,7 +8200,7 @@ XMLConformanceExpatTests >> testvalidsa026xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8217,7 +8217,7 @@ XMLConformanceExpatTests >> testvalidsa027xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8234,7 +8234,7 @@ XMLConformanceExpatTests >> testvalidsa028xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8251,7 +8251,7 @@ XMLConformanceExpatTests >> testvalidsa029xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8268,7 +8268,7 @@ XMLConformanceExpatTests >> testvalidsa030xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8285,7 +8285,7 @@ XMLConformanceExpatTests >> testvalidsa031xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8302,7 +8302,7 @@ XMLConformanceExpatTests >> testvalidsa032xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8319,7 +8319,7 @@ XMLConformanceExpatTests >> testvalidsa033xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8336,7 +8336,7 @@ XMLConformanceExpatTests >> testvalidsa034xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8353,7 +8353,7 @@ XMLConformanceExpatTests >> testvalidsa035xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8370,7 +8370,7 @@ XMLConformanceExpatTests >> testvalidsa036xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8387,7 +8387,7 @@ XMLConformanceExpatTests >> testvalidsa037xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8404,7 +8404,7 @@ XMLConformanceExpatTests >> testvalidsa038xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8421,7 +8421,7 @@ XMLConformanceExpatTests >> testvalidsa039xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8438,7 +8438,7 @@ XMLConformanceExpatTests >> testvalidsa040xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8455,7 +8455,7 @@ XMLConformanceExpatTests >> testvalidsa041xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8472,7 +8472,7 @@ XMLConformanceExpatTests >> testvalidsa042xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8489,7 +8489,7 @@ XMLConformanceExpatTests >> testvalidsa043xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8506,7 +8506,7 @@ XMLConformanceExpatTests >> testvalidsa044xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8523,7 +8523,7 @@ XMLConformanceExpatTests >> testvalidsa045xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8540,7 +8540,7 @@ XMLConformanceExpatTests >> testvalidsa046xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8557,7 +8557,7 @@ XMLConformanceExpatTests >> testvalidsa047xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8574,7 +8574,7 @@ XMLConformanceExpatTests >> testvalidsa048xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8591,7 +8591,7 @@ XMLConformanceExpatTests >> testvalidsa052xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8608,7 +8608,7 @@ XMLConformanceExpatTests >> testvalidsa053xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8625,7 +8625,7 @@ XMLConformanceExpatTests >> testvalidsa054xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8642,7 +8642,7 @@ XMLConformanceExpatTests >> testvalidsa055xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8659,7 +8659,7 @@ XMLConformanceExpatTests >> testvalidsa056xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8676,7 +8676,7 @@ XMLConformanceExpatTests >> testvalidsa057xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8693,7 +8693,7 @@ XMLConformanceExpatTests >> testvalidsa058xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8710,7 +8710,7 @@ XMLConformanceExpatTests >> testvalidsa059xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8727,7 +8727,7 @@ XMLConformanceExpatTests >> testvalidsa060xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8744,7 +8744,7 @@ XMLConformanceExpatTests >> testvalidsa061xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8761,7 +8761,7 @@ XMLConformanceExpatTests >> testvalidsa062xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8778,7 +8778,7 @@ XMLConformanceExpatTests >> testvalidsa063xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8795,7 +8795,7 @@ XMLConformanceExpatTests >> testvalidsa064xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8812,7 +8812,7 @@ XMLConformanceExpatTests >> testvalidsa065xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8829,7 +8829,7 @@ XMLConformanceExpatTests >> testvalidsa066xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8846,7 +8846,7 @@ XMLConformanceExpatTests >> testvalidsa067xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8863,7 +8863,7 @@ XMLConformanceExpatTests >> testvalidsa068xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8880,7 +8880,7 @@ XMLConformanceExpatTests >> testvalidsa069xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8897,7 +8897,7 @@ XMLConformanceExpatTests >> testvalidsa070xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8914,7 +8914,7 @@ XMLConformanceExpatTests >> testvalidsa071xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8931,7 +8931,7 @@ XMLConformanceExpatTests >> testvalidsa072xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8948,7 +8948,7 @@ XMLConformanceExpatTests >> testvalidsa073xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8965,7 +8965,7 @@ XMLConformanceExpatTests >> testvalidsa074xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8982,7 +8982,7 @@ XMLConformanceExpatTests >> testvalidsa075xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -8999,7 +8999,7 @@ XMLConformanceExpatTests >> testvalidsa076xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9016,7 +9016,7 @@ XMLConformanceExpatTests >> testvalidsa077xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9033,7 +9033,7 @@ XMLConformanceExpatTests >> testvalidsa078xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9050,7 +9050,7 @@ XMLConformanceExpatTests >> testvalidsa079xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9067,7 +9067,7 @@ XMLConformanceExpatTests >> testvalidsa080xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9084,7 +9084,7 @@ XMLConformanceExpatTests >> testvalidsa081xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9101,7 +9101,7 @@ XMLConformanceExpatTests >> testvalidsa082xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9118,7 +9118,7 @@ XMLConformanceExpatTests >> testvalidsa083xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9135,7 +9135,7 @@ XMLConformanceExpatTests >> testvalidsa084xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9152,7 +9152,7 @@ XMLConformanceExpatTests >> testvalidsa085xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9169,7 +9169,7 @@ XMLConformanceExpatTests >> testvalidsa086xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9186,7 +9186,7 @@ XMLConformanceExpatTests >> testvalidsa087xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9203,7 +9203,7 @@ XMLConformanceExpatTests >> testvalidsa088xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9220,7 +9220,7 @@ XMLConformanceExpatTests >> testvalidsa089xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9237,7 +9237,7 @@ XMLConformanceExpatTests >> testvalidsa090xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9254,7 +9254,7 @@ XMLConformanceExpatTests >> testvalidsa091xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9271,7 +9271,7 @@ XMLConformanceExpatTests >> testvalidsa092xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9288,7 +9288,7 @@ XMLConformanceExpatTests >> testvalidsa093xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9305,7 +9305,7 @@ XMLConformanceExpatTests >> testvalidsa094xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9322,7 +9322,7 @@ XMLConformanceExpatTests >> testvalidsa095xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9339,7 +9339,7 @@ XMLConformanceExpatTests >> testvalidsa096xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9356,7 +9356,7 @@ XMLConformanceExpatTests >> testvalidsa097xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9373,7 +9373,7 @@ XMLConformanceExpatTests >> testvalidsa098xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9390,7 +9390,7 @@ XMLConformanceExpatTests >> testvalidsa099xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9407,7 +9407,7 @@ XMLConformanceExpatTests >> testvalidsa100xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9424,7 +9424,7 @@ XMLConformanceExpatTests >> testvalidsa101xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9441,7 +9441,7 @@ XMLConformanceExpatTests >> testvalidsa102xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9458,7 +9458,7 @@ XMLConformanceExpatTests >> testvalidsa103xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9475,7 +9475,7 @@ XMLConformanceExpatTests >> testvalidsa104xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9492,7 +9492,7 @@ XMLConformanceExpatTests >> testvalidsa105xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9509,7 +9509,7 @@ XMLConformanceExpatTests >> testvalidsa106xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9526,7 +9526,7 @@ XMLConformanceExpatTests >> testvalidsa107xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9543,7 +9543,7 @@ XMLConformanceExpatTests >> testvalidsa108xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9560,7 +9560,7 @@ XMLConformanceExpatTests >> testvalidsa109xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9577,7 +9577,7 @@ XMLConformanceExpatTests >> testvalidsa110xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9594,7 +9594,7 @@ XMLConformanceExpatTests >> testvalidsa111xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9611,7 +9611,7 @@ XMLConformanceExpatTests >> testvalidsa112xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9628,7 +9628,7 @@ XMLConformanceExpatTests >> testvalidsa113xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9645,7 +9645,7 @@ XMLConformanceExpatTests >> testvalidsa114xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9662,7 +9662,7 @@ XMLConformanceExpatTests >> testvalidsa115xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9679,7 +9679,7 @@ XMLConformanceExpatTests >> testvalidsa116xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9696,7 +9696,7 @@ XMLConformanceExpatTests >> testvalidsa117xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9713,7 +9713,7 @@ XMLConformanceExpatTests >> testvalidsa118xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -9730,6 +9730,6 @@ XMLConformanceExpatTests >> testvalidsa119xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]

@@ -35,7 +35,7 @@ XMLConformanceTests class >> buildPassingTestMethodFor: aFileReference in: aClas
 ]
 
 { #category : #'building subclasses' }
-XMLConformanceTests class >> buildSourceFileMethodFor: aFileReference class: aClass [
+XMLConformanceTests class >> buildSourceFileClassMethodFor: aFileReference in: aClass [
 	| sourceSelector pathString sourceStream |
 
 	sourceSelector := (self sourceSelectorFor: aFileReference).
@@ -75,8 +75,8 @@ XMLConformanceTests class >> buildTestCaseForSuite: aSuite [
 		fileVisitor failingTestFiles,
 		fileVisitor entityFiles) do: [:each |
 			[self
-				buildSourceFileMethodFor: each
-				class: testCaseClass]
+				buildSourceFileClassMethodFor: each
+				in: testCaseClass]
 				on: ZnCharacterEncodingError
 				do: [:error | badSourceFiles add: each]].
 
@@ -174,7 +174,7 @@ XMLConformanceTests class >> passingTestMethodTemplate [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions'
 ]
 

@@ -4477,7 +4477,7 @@ XMLConformanceSunTests >> testvaliddtd00xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4494,7 +4494,7 @@ XMLConformanceSunTests >> testvaliddtd01xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4511,7 +4511,7 @@ XMLConformanceSunTests >> testvalidelementxml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4528,7 +4528,7 @@ XMLConformanceSunTests >> testvalidext01xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4545,7 +4545,7 @@ XMLConformanceSunTests >> testvalidext02xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4562,7 +4562,7 @@ XMLConformanceSunTests >> testvalidnotation01xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4579,7 +4579,7 @@ XMLConformanceSunTests >> testvalidnotsa01xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4596,7 +4596,7 @@ XMLConformanceSunTests >> testvalidnotsa02xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4613,7 +4613,7 @@ XMLConformanceSunTests >> testvalidnotsa03xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4630,7 +4630,7 @@ XMLConformanceSunTests >> testvalidnotsa04xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4647,7 +4647,7 @@ XMLConformanceSunTests >> testvalidoptionalxml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4664,7 +4664,7 @@ XMLConformanceSunTests >> testvalidpe00xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4681,7 +4681,7 @@ XMLConformanceSunTests >> testvalidpe01xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4698,7 +4698,7 @@ XMLConformanceSunTests >> testvalidpe02xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4715,7 +4715,7 @@ XMLConformanceSunTests >> testvalidpe03xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4732,7 +4732,7 @@ XMLConformanceSunTests >> testvalidrequired00xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4749,7 +4749,7 @@ XMLConformanceSunTests >> testvalidsa01xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4766,7 +4766,7 @@ XMLConformanceSunTests >> testvalidsa02xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4783,7 +4783,7 @@ XMLConformanceSunTests >> testvalidsa03xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4800,7 +4800,7 @@ XMLConformanceSunTests >> testvalidsa04xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4817,7 +4817,7 @@ XMLConformanceSunTests >> testvalidsa05xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4834,7 +4834,7 @@ XMLConformanceSunTests >> testvalidsgml01xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4851,7 +4851,7 @@ XMLConformanceSunTests >> testvalidvlang01xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4868,7 +4868,7 @@ XMLConformanceSunTests >> testvalidvlang02xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4885,7 +4885,7 @@ XMLConformanceSunTests >> testvalidvlang03xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4902,7 +4902,7 @@ XMLConformanceSunTests >> testvalidvlang04xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4919,7 +4919,7 @@ XMLConformanceSunTests >> testvalidvlang05xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
@@ -4936,6 +4936,6 @@ XMLConformanceSunTests >> testvalidvlang06xml [
 				do: [:error |
 					(self isSkippableException: error)
 						ifTrue: [self skip]
-						ifFalse: [error signal]]]
+						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
