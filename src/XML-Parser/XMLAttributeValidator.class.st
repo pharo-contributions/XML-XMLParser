@@ -96,13 +96,13 @@ XMLAttributeValidator >> hasIDRefs [
 ]
 
 { #category : #testing }
-XMLAttributeValidator >> hasIDs [
+XMLAttributeValidator >> hasNotationValues [
 	^ false
 ]
 
-{ #category : #testing }
-XMLAttributeValidator >> hasNotationValues [
-	^ false
+{ #category : #initialization }
+XMLAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
+	self validateReservedAttributeValidator
 ]
 
 { #category : #testing }
@@ -155,17 +155,6 @@ XMLAttributeValidator >> validateAttributes: anAttributeDictionary [
 			(anAttributeDictionary
 				at: self attribute
 				ifAbsent: [^ self])
-]
-
-{ #category : #validation }
-XMLAttributeValidator >> validateBeforeAddingTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
-	self validateReservedAttributeValidator
-]
-
-{ #category : #validation }
-XMLAttributeValidator >> validateID: anId [
-	(XMLWellFormedParserTokenizer isName: anId)
-		ifFalse: [self errorInvalidID: anId]
 ]
 
 { #category : #validation }

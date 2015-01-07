@@ -7,24 +7,27 @@ Class {
 	#instVars : [
 		'isValidating',
 		'usesNamespaces',
-		'resolvesExternalEntities',
-		'preservesUndeclaredEntityReferences',
-		'externalEntityResolver',
+		'requiresDocumentConstraints',
 		'parserHandlerClass',
 		'parserLimits',
-		'requiresDocumentConstraints'
+		'entityConfiguration'
 	],
 	#category : #'XML-Parser'
 }
 
 { #category : #accessing }
+XMLConfiguration >> entityConfiguration [
+	^ entityConfiguration ifNil: [entityConfiguration := DTDEntityConfiguration new]
+]
+
+{ #category : #accessing }
 XMLConfiguration >> externalEntityResolver [
-	^ externalEntityResolver ifNil: [externalEntityResolver := DTDCachingEntityResolver new]
+	^ self entityConfiguration externalEntityResolver
 ]
 
 { #category : #accessing }
 XMLConfiguration >> externalEntityResolver: anExternalEntityResolver [
-	externalEntityResolver := anExternalEntityResolver
+	self entityConfiguration externalEntityResolver: anExternalEntityResolver
 ]
 
 { #category : #accessing }
@@ -56,13 +59,24 @@ XMLConfiguration >> parserLimits [
 
 { #category : #accessing }
 XMLConfiguration >> preservesUndeclaredEntityReferences [
-	^ preservesUndeclaredEntityReferences ifNil: [preservesUndeclaredEntityReferences := false]
+	^ self entityConfiguration preservesUndeclaredEntityReferences
 ]
 
 { #category : #accessing }
 XMLConfiguration >> preservesUndeclaredEntityReferences: aBoolean [
-	(preservesUndeclaredEntityReferences := aBoolean)
-		ifTrue: [self isValidating: false]
+	self entityConfiguration preservesUndeclaredEntityReferences: aBoolean.
+	aBoolean
+		ifTrue: [self isValidating: false].
+]
+
+{ #category : #accessing }
+XMLConfiguration >> replacesContentEntityReferences [
+	^ self entityConfiguration replacesContentEntityReferences
+]
+
+{ #category : #accessing }
+XMLConfiguration >> replacesContentEntityReferences: aBoolean [
+	self entityConfiguration replacesContentEntityReferences: aBoolean
 ]
 
 { #category : #accessing }
@@ -78,12 +92,12 @@ XMLConfiguration >> requiresDocumentConstraints: aBoolean [
 
 { #category : #accessing }
 XMLConfiguration >> resolvesExternalEntities [
-	^ resolvesExternalEntities ifNil: [resolvesExternalEntities := false]
+	^ self entityConfiguration resolvesExternalEntities
 ]
 
 { #category : #accessing }
 XMLConfiguration >> resolvesExternalEntities: aBoolean [
-	resolvesExternalEntities := aBoolean
+	self entityConfiguration resolvesExternalEntities: aBoolean
 ]
 
 { #category : #accessing }

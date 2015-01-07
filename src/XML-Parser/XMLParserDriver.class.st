@@ -125,6 +125,10 @@ XMLParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 ]
 
 { #category : #'handling tokens' }
+XMLParserDriver >> handleUnreplacedGeneralEntityReference: aName [
+]
+
+{ #category : #'handling tokens' }
 XMLParserDriver >> handleWhitespace: aString [
 ]
 
@@ -147,6 +151,11 @@ XMLParserDriver >> isValidating [
 	^ false
 ]
 
+{ #category : #testing }
+XMLParserDriver >> preservesUndeclaredEntityReferences [
+	^ false
+]
+
 { #category : #accessing }
 XMLParserDriver >> readLimit [
 	^ nil
@@ -159,6 +168,16 @@ XMLParserDriver >> removeURI: aUri [
 		(self uris
 			lastIndexOf: aUri
 			ifAbsent: [^ self])
+]
+
+{ #category : #testing }
+XMLParserDriver >> replacesContentEntityReferences [
+	^ true
+]
+
+{ #category : #testing }
+XMLParserDriver >> resolvesExternalEntities [
+	^ false
 ]
 
 { #category : #private }

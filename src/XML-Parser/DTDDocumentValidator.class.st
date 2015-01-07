@@ -15,11 +15,6 @@ DTDDocumentValidator class >> dtd: aDtd [
 	^ self new dtd: aDtd
 ]
 
-{ #category : #enumerating }
-DTDDocumentValidator >> allAttributeValidatorsDo: aBlock [
-	^ self dtd attributeValidators valuesDo: [:each | each valuesDo: aBlock]
-]
-
 { #category : #accessing }
 DTDDocumentValidator >> attributeValidatorsFor: anElement [
 	^ self dtd attributeValidators
@@ -38,17 +33,15 @@ DTDDocumentValidator >> dtd: aDtd [
 ]
 
 { #category : #accessing }
+DTDDocumentValidator >> elementIDValidator [
+	self dtd elementIDValidator
+]
+
+{ #category : #accessing }
 DTDDocumentValidator >> elementValidatorFor: aName [
 	^ (self dtd elementValidators
 		at: aName
 		ifAbsent: [nil]) copy
-]
-
-{ #category : #private }
-DTDDocumentValidator >> errorInvalidIDReference: anId [
-	XMLValidationException
-		formatSignal: 'Invalid ID reference "{1}"'
-		with: anId
 ]
 
 { #category : #private }
@@ -68,11 +61,6 @@ DTDDocumentValidator >> hasElementValidators [
 	^ self dtd hasElementValidators
 ]
 
-{ #category : #testing }
-DTDDocumentValidator >> hasValidators [
-	^ self dtd hasValidators
-]
-
 { #category : #validation }
 DTDDocumentValidator >> unvalidatedAttributes: anAttributeCollection [
 	XMLValidationException
@@ -88,27 +76,9 @@ DTDDocumentValidator >> unvalidatedElement: aName [
 ]
 
 { #category : #validation }
-DTDDocumentValidator >> validateEndDocument [
-	self hasAttributeValidators
-		ifTrue: [self validateIDsAndReferences]	
-]
-
-{ #category : #validation }
-DTDDocumentValidator >> validateIDsAndReferences [
-	| ids references |
-
-	ids := Set new.
-	references := Set new.
-	self allAttributeValidatorsDo: [:each |
-		each hasIDs
-			ifTrue: [ids addAll: each ids]
-			ifFalse: [
-				each hasIDRefs
-					ifTrue: [references addAll: each idRefs]]].
-
-	references do: [:each |
-		(ids includes: each)
-			ifFalse: [self errorInvalidIDReference: each]].
+DTDDocumentValidator >> validateIDReferences [
+	self dtd hasElementIDValidator
+		ifTrue: [self dtd elementIDValidator validateIDReferences]
 ]
 
 { #category : #validation }

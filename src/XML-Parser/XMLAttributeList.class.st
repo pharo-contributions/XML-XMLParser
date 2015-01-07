@@ -203,3 +203,19 @@ XMLAttributeList >> sort [
 XMLAttributeList >> sorted [
 	^ self sorted: [:a :b | a sortKey <= b sortKey]
 ]
+
+{ #category : #private }
+XMLAttributeList >> writeAttributesOn: aTagWriter [
+	self do: [:each |
+		aTagWriter
+			writeAttributeName: each name
+			value: each value]
+]
+
+{ #category : #private }
+XMLAttributeList >> writeSortedAttributesOn: aTagWriter [
+	self sorted do: [:each |
+		aTagWriter
+			writeAttributeName: each name
+			value: each value]
+]

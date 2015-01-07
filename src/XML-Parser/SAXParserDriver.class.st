@@ -39,7 +39,7 @@ SAXParserDriver >> currentElement [
 
 { #category : #private }
 SAXParserDriver >> declareNamespaces: aDictionary inScope: aScope [
-	aScope setFromDictionary: aDictionary.
+	aScope mapPrefixesAndURIs: aDictionary.
 	aDictionary keysAndValuesDo: [:prefix :uri |
 		self saxHandler startPrefixMapping: prefix uri: uri].
 ]
@@ -100,14 +100,6 @@ SAXParserDriver >> errorUndeclaredGeneralEntity: aName [
 	XMLValidationException
 		formatSignal: 'Undeclared general entity reference &{1};'
 		with: aName
-]
-
-{ #category : #private }
-SAXParserDriver >> errorUndeclaredNotation: aNotation referencedBy: anEntity [
-	XMLValidationException
-		formatSignal: 'Undeclared notation "{1}" referenced by &{2}; entity'
-		with: aNotation
-		with: anEntity
 ]
 
 { #category : #private }
@@ -256,6 +248,11 @@ SAXParserDriver >> handleEndTag: anElementName [
 SAXParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
 	aNotation
 		ifNotEmpty: [
+			self isValidating
+				ifTrue: [
+					self dtd unparsedEntityValidator
+						validateUnparsedEntity: aName
+						withNotation: aNotation].
 			self dtd
 				addUnparsedEntity: aName
 				ndata: aNotation]
@@ -289,16 +286,12 @@ SAXParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplaceme
 
 { #category : #'handling tokens' }
 SAXParserDriver >> handleGeneralEntityReference: aName [
-	| entity |
-
-	(entity := self dtd generalEntityAt: aName)
-		ifNil: [
+	^ self dtd
+		generalEntityAt: aName
+		ifAbsent: [
 			self isValidating
 				ifTrue: [self errorUndeclaredGeneralEntity: aName].
-			self preservesUndeclaredEntityReferences
-				ifTrue: [entity := DTDBypassedGeneralEntity named: aName].
-			self saxHandler skippedEntity: aName].
-	^ entity.
+			nil]
 ]
 
 { #category : #'handling tokens' }
@@ -359,15 +352,12 @@ SAXParserDriver >> handleParameterEntityDeclaration: aName replacement: aReplace
 
 { #category : #'handling tokens' }
 SAXParserDriver >> handleParameterEntityReference: aName [
-	| entity |
-
-	(entity := self dtd parameterEntityAt: aName)
-		ifNil: [
+	^ self dtd
+		parameterEntityAt: aName
+		ifAbsent: [
 			self isValidating
 				ifTrue: [self errorUndeclaredParameterEntity: aName].
-			self preservesUndeclaredEntityReferences
-				ifTrue: [entity := DTDBypassedParameterEntity named: aName]].
-	^ entity.
+			nil]
 ]
 
 { #category : #private }
@@ -448,6 +438,11 @@ SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 ]
 
 { #category : #'handling tokens' }
+SAXParserDriver >> handleUnreplacedGeneralEntityReference: aName [
+	self saxHandler skippedEntity: aName
+]
+
+{ #category : #'handling tokens' }
 SAXParserDriver >> handleWhitespace: aString [
 	(self elementNester hasScopedAttributes
 		and: [(self elementNester scopedAttributeAt: 'xml:space') = 'preserve'])
@@ -510,6 +505,11 @@ SAXParserDriver >> preservesUndeclaredEntityReferences [
 { #category : #accessing }
 SAXParserDriver >> readLimit [
 	^ self documentReadLimit
+]
+
+{ #category : #testing }
+SAXParserDriver >> replacesContentEntityReferences [
+	^ self saxHandler replacesContentEntityReferences
 ]
 
 { #category : #testing }

@@ -14,7 +14,8 @@ Class {
 		'parameterEntities',
 		'unparsedEntities',
 		'notations',
-		'elementIds'
+		'elementIdValidator',
+		'unparsedEntityValidator'
 	],
 	#category : #'XML-Parser-DTD'
 }
@@ -95,8 +96,7 @@ DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: aName type:
 				type: aType
 				defaultPragma: aDefaultPragma
 				defaultValue: aDefaultValue) parse
-					validateBeforeAddingTo: attributeValidatorsForElement
-					usingDeclarationsFrom: self).
+					initializeWithValidatorsFrom: self).
 ]
 
 { #category : #adding }
@@ -115,8 +115,8 @@ DTDDoctypeDefinition >> attributeValidators [
 ]
 
 { #category : #private }
-DTDDoctypeDefinition >> elementIDs [
-	^ elementIds ifNil: [elementIds := Set new]
+DTDDoctypeDefinition >> elementIDValidator [
+	^ elementIdValidator ifNil: [elementIdValidator := XMLElementIDValidator new]
 ]
 
 { #category : #private }
@@ -136,12 +136,26 @@ DTDDoctypeDefinition >> generalEntities [
 
 { #category : #accessing }
 DTDDoctypeDefinition >> generalEntityAt: aName [
-	^ self generalEntities at: aName ifAbsent: [nil]
+	^ self
+		generalEntityAt: aName
+		ifAbsent: [nil]
+]
+
+{ #category : #accessing }
+DTDDoctypeDefinition >> generalEntityAt: aName ifAbsent: aBlock [
+	^ self generalEntities
+		at: aName
+		ifAbsent: aBlock
 ]
 
 { #category : #testing }
 DTDDoctypeDefinition >> hasAttributeValidators [
 	^ attributeValidators notNil and: [attributeValidators notEmpty]
+]
+
+{ #category : #testing }
+DTDDoctypeDefinition >> hasElementIDValidator [
+	^ elementIdValidator notNil
 ]
 
 { #category : #testing }
@@ -189,7 +203,16 @@ DTDDoctypeDefinition >> parameterEntities [
 
 { #category : #accessing }
 DTDDoctypeDefinition >> parameterEntityAt: aName [
-	^ self parameterEntities at: aName ifAbsent: [nil]
+	^ self
+		parameterEntityAt: aName
+		ifAbsent: [nil]
+]
+
+{ #category : #accessing }
+DTDDoctypeDefinition >> parameterEntityAt: aName ifAbsent: aBlock [
+	^ self parameterEntities
+		at: aName
+		ifAbsent: aBlock
 ]
 
 { #category : #accessing }
@@ -209,6 +232,11 @@ DTDDoctypeDefinition >> unparsedEntities [
 ]
 
 { #category : #accessing }
-DTDDoctypeDefinition >> unparsedEntityAt: aName [
-	^ self unparsedEntities at: aName ifAbsent: [nil]
+DTDDoctypeDefinition >> unparsedEntityValidator [
+	^ unparsedEntityValidator
+		ifNil: [
+			unparsedEntityValidator :=
+				XMLUnparsedEntityValidator
+					unparsedEntities: self unparsedEntities
+					notations: self notations]
 ]

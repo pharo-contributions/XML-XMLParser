@@ -376,6 +376,7 @@ SAXHandler >> on: aStringOrStream documentURI: aUri [
 
 { #category : #configuration }
 SAXHandler >> optimizeForLargeDocuments [
+	"faster parsing and less memory use for large documents"
 	self
 		isValidating: false;
 		usesNamespaces: false;
@@ -469,6 +470,19 @@ SAXHandler >> removeLimits [
 
 	self parserLimits removeAll.
 	self externalEntityResolver removeLimits.
+]
+
+{ #category : #configuration }
+SAXHandler >> replacesContentEntityReferences [
+	^ self configuration replacesContentEntityReferences
+]
+
+{ #category : #configuration }
+SAXHandler >> replacesContentEntityReferences: aBoolean [
+	"Replace general parsed entity and character references
+	in content (default)"
+
+	self configuration replacesContentEntityReferences: aBoolean
 ]
 
 { #category : #configuration }

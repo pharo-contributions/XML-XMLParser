@@ -11,11 +11,6 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
-{ #category : #enumerating }
-XMLDocumentValidator >> allAttributeValidatorsDo: aBlock [
-	self subclassResponsibility
-]
-
 { #category : #accessing }
 XMLDocumentValidator >> attributeValidatorsFor: anElement [
 	self subclassResponsibility
@@ -41,7 +36,10 @@ XMLDocumentValidator >> defaultXMLIDValidator [
 					element: ''
 					attribute: 'xml:id'
 					defaultValueValidator:
-						(XMLImpliedValueAttributeValidator attribute: 'xml:id')]
+						(XMLImpliedValueAttributeValidator attribute: 'xml:id').
+			defaultXmlIdValidator
+				elementIDValidator: XMLElementIDValidator new;
+				yourself]
 ]
 
 { #category : #accessing }
@@ -104,7 +102,7 @@ XMLDocumentValidator >> validateAttributes: anAttributeDictionary with: aValidat
 
 { #category : #validation }
 XMLDocumentValidator >> validateEndDocument [
-
+	self validateIDReferences
 ]
 
 { #category : #validation }
@@ -116,6 +114,11 @@ XMLDocumentValidator >> validateEndTag: aName [
 					self currentElementValidator atEnd
 						ifFalse: [self errorMissingContentFor: aName]].
 			self elementValidatorStack removeLast]
+]
+
+{ #category : #validation }
+XMLDocumentValidator >> validateIDReferences [
+	self subclassResponsibility
 ]
 
 { #category : #validation }
@@ -158,6 +161,6 @@ XMLDocumentValidator >> validateStartTag: aName attributes: anAttributeDictionar
 
 { #category : #validation }
 XMLDocumentValidator >> validateXMLIDAttributeIn: anAttributeDictionary [
-	self hasValidators
+	self hasAttributeValidators
 		ifFalse: [self defaultXMLIDValidator validateAttributes: anAttributeDictionary]
 ]

@@ -7,11 +7,11 @@ Class {
 	#name : #XMLParserTokenizer,
 	#superclass : #Object,
 	#instVars : [
-		'driver',
 		'context',
+		'driver',
+		'nameStream',
 		'streamReader',
-		'writeStream',
-		'nameStream'
+		'writeStream'
 	],
 	#classVars : [
 		'PredefinedEntities'
@@ -61,10 +61,10 @@ XMLParserTokenizer >> atEnd [
 ]
 
 { #category : #'entity replacement' }
-XMLParserTokenizer >> characterFromCodePoint: aCodePoint [
-	(aCodePoint notNil and: [aCodePoint > 0])
+XMLParserTokenizer >> characterFromCodePoint: anInteger [
+	(anInteger notNil and: [anInteger > 0])
 		ifFalse: [^ nil].
-	^ [aCodePoint asCharacter]
+	^ [anInteger asCharacter]
 		on: Error
 		do: [:error | nil].
 ]
@@ -72,14 +72,6 @@ XMLParserTokenizer >> characterFromCodePoint: aCodePoint [
 { #category : #'file open/close' }
 XMLParserTokenizer >> closeStreams [
 	streamReader closeStreams
-]
-
-{ #category : #'entity replacement' }
-XMLParserTokenizer >> constructReplacementForBypassedGeneralEntity: anEntity [
-]
-
-{ #category : #'entity replacement' }
-XMLParserTokenizer >> constructReplacementForBypassedParameterEntity: anEntity [
 ]
 
 { #category : #'entity replacement' }

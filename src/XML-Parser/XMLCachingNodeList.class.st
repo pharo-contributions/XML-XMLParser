@@ -173,7 +173,7 @@ XMLCachingNodeList >> findElementAfter: anElement [
 	self do: [:each |
 		each isElement
 			ifTrue: [
-				previousElement == anElement
+				previousElement = anElement
 					ifTrue: [^ each].
 				previousElement := each]].
 	^ nil.
@@ -187,7 +187,7 @@ XMLCachingNodeList >> findElementAfter: anElement withName: aName [
 	self do: [:each |
 		(each isElement and: [each isNamed: aName])
 			ifTrue: [
-				(previousElementWithName == anElement)
+				(previousElementWithName = anElement)
 					ifTrue: [^ each].
 				previousElementWithName := each]].
 	^ nil.

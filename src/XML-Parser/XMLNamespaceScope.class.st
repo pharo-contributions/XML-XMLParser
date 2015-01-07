@@ -183,6 +183,20 @@ XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
 		put: aUri.
 ]
 
+{ #category : #private }
+XMLNamespaceScope >> mapPrefixesAndURIs: anAssociationCollection [
+	| copiedPrefixMappings |
+
+	anAssociationCollection associationsDo: [:each |
+		self
+			validatePrefix: each key
+			beforeMappingTo: each value.
+		(copiedPrefixMappings "used so we only copy once"
+			ifNil: [copiedPrefixMappings := self copiedPrefixMappings])
+			at: each key
+			put: each value]
+]
+
 { #category : #accessing }
 XMLNamespaceScope >> prefixMappingAt: aPrefix ifAbsent: aBlock [
 	^ prefixMappings
@@ -233,21 +247,6 @@ XMLNamespaceScope >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 					aPrefix = 'xmlns'
 						ifTrue: [self class xmlnsNamespaceURI]
 						ifFalse: [aBlock value]]]
-]
-
-{ #category : #private }
-XMLNamespaceScope >> setFromDictionary: aDictionary [
-	| copiedPrefixMappings |
-
-	aDictionary keysAndValuesDo: [:prefix :uri |
-		self
-			validatePrefix: prefix
-			beforeMappingTo: uri.
-
-		(copiedPrefixMappings "used so we only copy once"
-			ifNil: [copiedPrefixMappings := self copiedPrefixMappings])
-			at: prefix
-			put: uri]
 ]
 
 { #category : #accessing }

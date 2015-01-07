@@ -3,7 +3,7 @@ An abstract factory for file read streams used by XMLFileHandle.
 "
 Class {
 	#name : #XMLFileReadStreamFactory,
-	#superclass : #XMLAbstractImplementation,
+	#superclass : #XMLAbstractFactory,
 	#category : #'XML-Parser-File'
 }
 

@@ -13,11 +13,6 @@ DTDParameterEntity >> constructReplacementOn: aTokenizer [
 ]
 
 { #category : #accessing }
-DTDParameterEntity >> escapedReferenceSymbol [
-	^ '&#37;'
-]
-
-{ #category : #accessing }
-DTDParameterEntity >> referenceSymbol [
-	^ $%
+DTDParameterEntity >> referencePrefix [
+	^ '%'
 ]

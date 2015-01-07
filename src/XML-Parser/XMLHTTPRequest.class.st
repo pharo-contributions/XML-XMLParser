@@ -3,7 +3,7 @@ A base class for HTTP requests. Subclasses need to implement the abstract reques
 "
 Class {
 	#name : #XMLHTTPRequest,
-	#superclass : #XMLAbstractImplementation,
+	#superclass : #XMLAbstractFactory,
 	#instVars : [
 		'url'
 	],

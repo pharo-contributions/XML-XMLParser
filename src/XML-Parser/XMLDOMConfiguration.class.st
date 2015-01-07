@@ -7,6 +7,7 @@ Class {
 	#instVars : [
 		'preservesCDataNodes',
 		'preservesCommentNodes',
+		'preservesIgnorableWhitespace',
 		'nodeFactory',
 		'nodeListClass'
 	],
@@ -56,4 +57,14 @@ XMLDOMConfiguration >> preservesCommentNodes [
 { #category : #accessing }
 XMLDOMConfiguration >> preservesCommentNodes: aBoolean [
 	preservesCommentNodes := aBoolean
+]
+
+{ #category : #accessing }
+XMLDOMConfiguration >> preservesIgnorableWhitespace [
+	^ preservesIgnorableWhitespace ifNil: [preservesIgnorableWhitespace := false]
+]
+
+{ #category : #accessing }
+XMLDOMConfiguration >> preservesIgnorableWhitespace: aBoolean [
+	preservesIgnorableWhitespace := aBoolean
 ]

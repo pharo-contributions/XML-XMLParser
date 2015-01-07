@@ -5,17 +5,15 @@ Class {
 	#name : #XMLEntityAttributeValidator,
 	#superclass : #XMLAttributeValidator,
 	#instVars : [
-		'unparsedEntities'
+		'unparsedEntityValidator'
 	],
 	#category : #'XML-Parser-Validation'
 }
 
-{ #category : #private }
-XMLEntityAttributeValidator >> errorInvalidUnparsedEntityReference: aName [
-	XMLValidationException
-		formatSignal: 'Unrecognized unparsed entity "{1}" in "{2}" attribute'
-		with: aName
-		with: self attribute
+{ #category : #initialization }
+XMLEntityAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
+	unparsedEntityValidator := aValidatorContainer unparsedEntityValidator.
+	self validateReservedAttributeValidator.
 ]
 
 { #category : #testing }
@@ -23,24 +21,14 @@ XMLEntityAttributeValidator >> isEntityValidator [
 	^ true
 ]
 
-{ #category : #accessing }
-XMLEntityAttributeValidator >> unparsedEntities [
-	^ unparsedEntities ifNil: [unparsedEntities := Dictionary new]
+{ #category : #validation }
+XMLEntityAttributeValidator >> unparsedEntityValidator [
+	^ unparsedEntityValidator
 ]
 
 { #category : #validation }
 XMLEntityAttributeValidator >> validateAttributeValue: aValue [
-	self validateEntityReference: aValue
-]
-
-{ #category : #validation }
-XMLEntityAttributeValidator >> validateBeforeAddingTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
-	unparsedEntities := aDeclarationDelegate unparsedEntities.
-	self validateReservedAttributeValidator.
-]
-
-{ #category : #validation }
-XMLEntityAttributeValidator >> validateEntityReference: aName [
-	(self unparsedEntities includesKey: aName)
-		ifFalse: [self errorInvalidUnparsedEntityReference: aName]
+	self unparsedEntityValidator
+		validateEntityReference: aValue
+		inAttribute: self attribute
 ]

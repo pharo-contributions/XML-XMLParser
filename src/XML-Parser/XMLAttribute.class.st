@@ -98,11 +98,6 @@ XMLAttribute >> namespaceURI [
 	^ self element resolvePrefix: prefix.
 ]
 
-{ #category : #accessing }
-XMLAttribute >> nextNode [
-	^ self element ifNotNil: [:element | element attributeNodes after: self]
-]
-
 { #category : #namespaces }
 XMLAttribute >> prefix [
 	^ self name prefixBeforeLocalName
@@ -111,11 +106,6 @@ XMLAttribute >> prefix [
 { #category : #namespaces }
 XMLAttribute >> prefix: aPrefix [
 	self renameWith: [name := self localName qualifyWithPrefix:  aPrefix]
-]
-
-{ #category : #accessing }
-XMLAttribute >> previousNode [
-	^ self element ifNotNil: [:element | element attributeNodes before: self]
 ]
 
 { #category : #private }

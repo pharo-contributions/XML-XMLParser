@@ -14,11 +14,6 @@ DTDGeneralEntity >> constructReplacementOn: aTokenizer [
 ]
 
 { #category : #accessing }
-DTDGeneralEntity >> escapedReferenceSymbol [
-	^ '&amp;'
-]
-
-{ #category : #accessing }
-DTDGeneralEntity >> referenceSymbol [
-	^ $&
+DTDGeneralEntity >> referencePrefix [
+	^ '&'
 ]

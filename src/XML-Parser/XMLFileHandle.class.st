@@ -3,7 +3,7 @@ This is an abstract class for file handles to read/write/delete files. Subclasse
 "
 Class {
 	#name : #XMLFileHandle,
-	#superclass : #XMLAbstractImplementation,
+	#superclass : #XMLAbstractFactory,
 	#instVars : [
 		'path'
 	],

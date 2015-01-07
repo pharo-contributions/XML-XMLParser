@@ -8,7 +8,6 @@ Class {
 }
 
 { #category : #validation }
-XMLXMLIDIDAttributeValidator >> validateID: anId [
-	(XMLWellFormedParserTokenizer isNCName: anId)
-		ifFalse: [self errorInvalidID: anId]
+XMLXMLIDIDAttributeValidator >> validateAttributeValue: aValue [
+	self elementIDValidator validateXMLID: aValue
 ]

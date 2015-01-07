@@ -58,6 +58,11 @@ DTDExternalSubsetParserDriver >> handleElementDeclaration: aName contentModel: a
 { #category : #'handling tokens' }
 DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
 	aNotation ifNotEmpty: [
+		self isValidating
+			ifTrue: [
+				self dtd unparsedEntityValidator
+					validateUnparsedEntity: aName
+					withNotation: aNotation].
 		self dtd
 			addUnparsedEntity: aName
 			ndata: aNotation.
@@ -102,13 +107,7 @@ DTDExternalSubsetParserDriver >> handleParameterEntityDeclaration: aName replace
 
 { #category : #'handling tokens' }
 DTDExternalSubsetParserDriver >> handleParameterEntityReference: aName [
-	| entity |
-
-	entity := self dtd parameterEntityAt: aName.
-	(entity isNil and: [self isValidating])
-		ifTrue: [self saxDriver errorUndeclaredParameterEntity: aName].
-
-	^ entity.
+	^ self saxDriver handleParameterEntityReference: aName
 ]
 
 { #category : #initialization }
@@ -131,9 +130,24 @@ DTDExternalSubsetParserDriver >> maxEntityReplacementDepth [
 	^ self saxDriver maxEntityReplacementDepth
 ]
 
+{ #category : #testing }
+DTDExternalSubsetParserDriver >> preservesUndeclaredEntityReferences [
+	^ self saxDriver preservesUndeclaredEntityReferences
+]
+
 { #category : #accessing }
 DTDExternalSubsetParserDriver >> readLimit [
 	^ self saxDriver externalSubsetReadLimit
+]
+
+{ #category : #testing }
+DTDExternalSubsetParserDriver >> replacesContentEntityReferences [
+	^ self saxDriver replacesContentEntityReferences
+]
+
+{ #category : #testing }
+DTDExternalSubsetParserDriver >> resolvesExternalEntities [
+	^ self saxDriver resolvesExternalEntities
 ]
 
 { #category : #accessing }

@@ -36,27 +36,12 @@ DTDParsedEntity class >> named: aString [
 ]
 
 { #category : #converting }
-DTDParsedEntity >> asEscapedReference [
-	^ self asReferenceStartingWith: self escapedReferenceSymbol
-]
-
-{ #category : #converting }
 DTDParsedEntity >> asReference [
-	^ self asReferenceStartingWith: self referenceSymbol asString
-]
-
-{ #category : #private }
-DTDParsedEntity >> asReferenceStartingWith: aString [
-	^ (aString, self name) copyWith: $;
+	^ self printString
 ]
 
 { #category : #replacement }
 DTDParsedEntity >> constructReplacementOn: aTokenizer [
-	self subclassResponsibility
-]
-
-{ #category : #accessing }
-DTDParsedEntity >> escapedReferenceSymbol [
 	self subclassResponsibility
 ]
 
@@ -72,12 +57,14 @@ DTDParsedEntity >> name [
 
 { #category : #printing }
 DTDParsedEntity >> printOn: aStream [
-	self asReference printOn: aStream
-	
+	aStream
+		nextPutAll: self referencePrefix;
+		nextPutAll: self name;
+		nextPut: $;
 ]
 
 { #category : #accessing }
-DTDParsedEntity >> referenceSymbol [
+DTDParsedEntity >> referencePrefix [
 	self subclassResponsibility
 ]
 

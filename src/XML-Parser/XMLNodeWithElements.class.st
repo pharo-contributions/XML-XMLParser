@@ -326,6 +326,13 @@ XMLNodeWithElements >> elementsSelect: aBlock [
 	^ self nodes elementsSelect: aBlock
 ]
 
+{ #category : #private }
+XMLNodeWithElements >> escapesContentEntitiesWhenWriting [
+	"avoid initializing config; defualt to true"
+	^ configuration isNil
+		or: [configuration replacesContentEntityReferences]
+]
+
 { #category : #searching }
 XMLNodeWithElements >> findElementNamed: aName [
 	^ self allElementsDetect: [:each | each isNamed: aName]

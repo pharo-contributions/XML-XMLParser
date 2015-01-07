@@ -31,9 +31,8 @@ String >> asXMLURI [
 
 { #category : #'*XML-Parser' }
 String >> expandWithNamespaceURI: aNamespaceUri [
-	"optimized"
 	aNamespaceUri size > 0
-		ifTrue: [^ ((aNamespaceUri copyWithFirst: ${) copyWith: $}), self]
+		ifTrue: [^ 'Q{', aNamespaceUri, '}', self]
 		ifFalse: [^ self]
 ]
 

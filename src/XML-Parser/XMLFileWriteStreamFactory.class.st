@@ -3,7 +3,7 @@ An abstract factory for file write streams used by XMLFileHandle.
 "
 Class {
 	#name : #XMLFileWriteStreamFactory,
-	#superclass : #XMLAbstractImplementation,
+	#superclass : #XMLAbstractFactory,
 	#category : #'XML-Parser-File'
 }
 

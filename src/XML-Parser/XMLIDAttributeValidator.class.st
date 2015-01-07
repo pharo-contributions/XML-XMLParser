@@ -5,7 +5,7 @@ Class {
 	#name : #XMLIDAttributeValidator,
 	#superclass : #XMLAttributeValidator,
 	#instVars : [
-		'ids'
+		'elementIdValidator'
 	],
 	#category : #'XML-Parser-Validation'
 }
@@ -25,30 +25,22 @@ XMLIDAttributeValidator class >> element: anElement attribute: anAttribute defau
 		defaultValueValidator: aDefaultValueValidator
 ]
 
-{ #category : #private }
-XMLIDAttributeValidator >> errorDuplicateID: anId [
-	XMLValidationException
-		formatSignal: 'ID "{1}" used more than once for attribute "{2}"'
-		with: anId
-		with: self attribute
-]
-
-{ #category : #private }
-XMLIDAttributeValidator >> errorElementWithMultipleIDAttributes [
-	XMLValidationException
-		formatSignal: 'Element <{1}> has multiple ID attributes'
-		with: self element
-]
-
-{ #category : #testing }
-XMLIDAttributeValidator >> hasIDs [
-	^ self ids notEmpty
+{ #category : #accessing }
+XMLIDAttributeValidator >> elementIDValidator [
+	^ elementIdValidator
 ]
 
 { #category : #accessing }
-XMLIDAttributeValidator >> ids [
-	^ ids ifNil: [ids := Set new]
-	
+XMLIDAttributeValidator >> elementIDValidator: anElementIdValidator [
+	elementIdValidator := anElementIdValidator
+]
+
+{ #category : #initialization }
+XMLIDAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
+	(elementIdValidator := aValidatorContainer elementIDValidator)
+		validateIDAttribute: self attribute
+		forElement: self element.
+	self validateReservedAttributeValidator.
 ]
 
 { #category : #testing }
@@ -58,18 +50,7 @@ XMLIDAttributeValidator >> isIDValidator [
 
 { #category : #validation }
 XMLIDAttributeValidator >> validateAttributeValue: aValue [
-	self validateID: aValue.
-	(self ids includes: aValue)
-		ifTrue: [self errorDuplicateID: aValue].
-
-	self ids add: aValue.
-]
-
-{ #category : #validation }
-XMLIDAttributeValidator >> validateBeforeAddingTo: anAttributeValidatorDictionary usingDeclarationsFrom: aDeclarationDelegate [
-	anAttributeValidatorDictionary valuesDo: [:each |
-		each isIDValidator
-			ifTrue: [self errorElementWithMultipleIDAttributes]].
-	ids := aDeclarationDelegate elementIDs.
-	self validateReservedAttributeValidator.
+	self elementIDValidator
+		validateID: aValue
+		inAttribute: self attribute
 ]

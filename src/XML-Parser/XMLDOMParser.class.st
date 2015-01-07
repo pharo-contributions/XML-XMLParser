@@ -96,6 +96,12 @@ XMLDOMParser >> generalEntityDeclaration: aName replacement: aReplacement [
 			replacement: aReplacement)
 ]
 
+{ #category : #content }
+XMLDOMParser >> ignorableWhitespace: aString [
+	self preservesIgnorableWhitespace
+		ifTrue: [self characters: aString]
+]
+
 { #category : #configuring }
 XMLDOMParser >> nodeFactory [
 	^ self configuration nodeFactory
@@ -203,6 +209,16 @@ XMLDOMParser >> preservesCommentNodes [
 { #category : #configuring }
 XMLDOMParser >> preservesCommentNodes: aBoolean [
 	self configuration preservesCommentNodes: aBoolean
+]
+
+{ #category : #configuring }
+XMLDOMParser >> preservesIgnorableWhitespace [
+	^ self configuration preservesIgnorableWhitespace
+]
+
+{ #category : #configuring }
+XMLDOMParser >> preservesIgnorableWhitespace: aBoolean [
+	self configuration preservesIgnorableWhitespace: aBoolean
 ]
 
 { #category : #content }

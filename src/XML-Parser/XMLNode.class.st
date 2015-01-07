@@ -118,6 +118,13 @@ XMLNode >> errorXMLWritingUnsupported [
 	XMLDOMException signal: 'The XMLWriter package is required for writng DOM objects'
 ]
 
+{ #category : #private }
+XMLNode >> escapesContentEntitiesWhenWriting [
+	self hasParent
+		ifTrue: [^ self parent escapesContentEntitiesWhenWriting]
+		ifFalse: [^ true] "default to escaping"
+]
+
 { #category : #testing }
 XMLNode >> hasChildren [
 	^ false
@@ -297,10 +304,15 @@ XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock [
 
 { #category : #private }
 XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock whenAbsent: aZeroArgBlock [
-	^ aOneArgBlock value:
-		((Smalltalk
+	| writer |
+
+	writer :=
+		(Smalltalk
 			at: #XMLWriter
-			ifAbsent: [^ aZeroArgBlock value]) on: aStream)
+			ifAbsent: [^ aZeroArgBlock value]) on: aStream.
+	self escapesContentEntitiesWhenWriting
+		ifFalse: [writer escapesContentEntityReferences: false].
+	^ aOneArgBlock value: writer.
 ]
 
 { #category : #printing }

@@ -41,7 +41,7 @@ XMLTokenContext >> internalSubsetContext [
 ]
 
 { #category : #testing }
-XMLTokenContext >> isContextContext [
+XMLTokenContext >> isContentContext [
 	^ false
 ]
 

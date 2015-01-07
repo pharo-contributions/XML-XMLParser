@@ -1,8 +1,8 @@
 "
-An abstract class for dynamically choosing supported concrete implementations.
+An abstract class for dynamically choosing supported concrete implementations for different platforms.
 "
 Class {
-	#name : #XMLAbstractImplementation,
+	#name : #XMLAbstractFactory,
 	#superclass : #Object,
 	#classInstVars : [
 		'implementation'
@@ -11,12 +11,12 @@ Class {
 }
 
 { #category : #private }
-XMLAbstractImplementation class >> errorUnsupported [
+XMLAbstractFactory class >> errorUnsupported [
 	self subclassResponsibility
 ]
 
 { #category : #private }
-XMLAbstractImplementation class >> implementation [
+XMLAbstractFactory class >> implementation [
 	^ implementation
 		ifNil: [
 			self isSupported
@@ -25,12 +25,12 @@ XMLAbstractImplementation class >> implementation [
 ]
 
 { #category : #private }
-XMLAbstractImplementation class >> implementation: aClass [
+XMLAbstractFactory class >> implementation: aClass [
 	implementation := aClass
 ]
 
 { #category : #'class initialization' }
-XMLAbstractImplementation class >> initialize [
+XMLAbstractFactory class >> initialize [
 	"self initialize"
 
 	"clear cached implementations"
@@ -38,22 +38,22 @@ XMLAbstractImplementation class >> initialize [
 ]
 
 { #category : #testing }
-XMLAbstractImplementation class >> isSupported [
+XMLAbstractFactory class >> isSupported [
 	^ false
 ]
 
 { #category : #'instance creation' }
-XMLAbstractImplementation class >> new [
+XMLAbstractFactory class >> new [
 	^ self implementation basicNew initialize
 ]
 
 { #category : #private }
-XMLAbstractImplementation class >> preferredImplementation [
+XMLAbstractFactory class >> preferredImplementation [
 	self subclassResponsibility
 ]
 
 { #category : #private }
-XMLAbstractImplementation class >> selectImplementation [
+XMLAbstractFactory class >> selectImplementation [
 	self preferredImplementation isSupported
 		ifTrue: [^ self preferredImplementation].
 

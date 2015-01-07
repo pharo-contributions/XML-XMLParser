@@ -9,9 +9,9 @@ Class {
 
 { #category : #appending }
 XMLParserException >> appendLineNumber: aLineNumber [
-	self messageText:
-		(self messageText ifNil: ['']),
-			' (line ', aLineNumber printString, ')'
+	self
+		append: aLineNumber
+		withDescription: 'line'
 ]
 
 { #category : #testing }

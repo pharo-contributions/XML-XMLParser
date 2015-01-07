@@ -11,5 +11,8 @@ Class {
 XMLEntitiesAttributeValidator >> validateAttributeValue: aValue [
 	self
 		listValuesIn: aValue
-		do: [:each | self validateEntityReference: each]
+		do: [:each |
+			self unparsedEntityValidator
+				validateEntityReference: each
+				inAttribute: self attribute]
 ]
