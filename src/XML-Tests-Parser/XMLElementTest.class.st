@@ -285,8 +285,9 @@ XMLElementTest >> testAttributeSorting [
 	self assert:
 		((element attributeNodes sorted: [:a :b | a name <= b name])
 			collect: [:each | each name]) asArray = #('a' 'b' 'c').
-
+	"sorted/sorted: should sort copies"
 	self assert: element attributeNames asArray = #('c' 'b' 'a').
+
 	element attributeNodes sort.
 	self assert: element attributeNames asArray = #('a' 'b' 'c').
 	element attributeNodes sort: [:a :b | a name > b name].
@@ -472,10 +473,10 @@ XMLElementTest >> testExpandedName [
 	self assert: (element expandedName = 'test').
 
 	element defaultNamespace: 'defaultNS'.
-	self assert: (element expandedName = '{defaultNS}test').
+	self assert: (element expandedName = 'Q{defaultNS}test').
 
 	element name: 'prefix:test' namespaceURI: 'prefixNS'.
-	self assert: (element expandedName = '{prefixNS}test').
+	self assert: (element expandedName = 'Q{prefixNS}test').
 
 	element
 		defaultNamespace: '';

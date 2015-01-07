@@ -59,7 +59,7 @@ XMLAttributeTest >> testExpandedName [
 
 	element declarePrefix: 'prefix' uri: 'prefixNS'.
 	attribute name: 'prefix:two'.
-	self assert: (attribute expandedName = '{prefixNS}two').
+	self assert: (attribute expandedName = 'Q{prefixNS}two').
 ]
 
 { #category : #tests }
@@ -224,18 +224,6 @@ XMLAttributeTest >> testNamespaceURI [
 ]
 
 { #category : #tests }
-XMLAttributeTest >> testNextNode [
-	| elementWithAttributes nextNode |
-
-	super testNextNode.
-	elementWithAttributes := self newElementWithAttributes.
-	nextNode := nil.
-	elementWithAttributes attributeNodes reverseDo: [:each |
-		self assert: each nextNode == nextNode.
-		nextNode := each].
-]
-
-{ #category : #tests }
 XMLAttributeTest >> testPrefix [
 	| attribute |
 
@@ -250,18 +238,6 @@ XMLAttributeTest >> testPrefix [
 
 	attribute name: 'three'.
 	self assert: attribute prefix isEmpty.
-]
-
-{ #category : #tests }
-XMLAttributeTest >> testPreviousNode [
-	| elementWithAttributes previousNode |
-
-	super testPreviousNode.
-	elementWithAttributes := self newElementWithAttributes.
-	previousNode := nil.
-	elementWithAttributes attributeNodes do: [:each |
-		self assert: each previousNode == previousNode.
-		previousNode := each].
 ]
 
 { #category : #tests }

@@ -157,7 +157,7 @@ SAXHandlerTest >> testSAXPrefixMappingHandlers [
 ]
 
 { #category : #tests }
-SAXHandlerTest >> testSAXSkippedEntityHandler [
+SAXHandlerTest >> testSAXSkippedEntityUndeclared [
 	| xml parser |
 
 	xml := '<root>&undeclared;</root>'.
@@ -171,7 +171,54 @@ SAXHandlerTest >> testSAXSkippedEntityHandler [
 				skippedEntity:
 				endElement:prefix:uri:localName:
 				endDocument)).
-	self assert: (parser argumentsSentWith: #skippedEntity:) first =  'undeclared'.
+	self assert: (parser argumentsSentWith: #skippedEntity:) first = 'undeclared'.
+]
+
+{ #category : #tests }
+SAXHandlerTest >> testSAXSkippedEntityUndeclaredPreserved [
+	| xml parser |
+
+	xml := '<root>&undeclared;</root>'.
+	(parser := SAXHandlerProxy on: xml)
+		isValidating: false;
+		preservesUndeclaredEntityReferences: true;
+		parseDocument.
+	self assert:
+		(parser wasSentSelectors:
+			#(startDocument
+				startElement:prefix:uri:localName:attributes:
+				skippedEntity:
+				characters:
+				endElement:prefix:uri:localName:
+				endDocument)).
+	self
+		assert: (parser argumentsSentWith: #skippedEntity:) first = 'undeclared';
+		assert: (parser argumentsSentWith: #characters:) first = '&undeclared;'.
+]
+
+{ #category : #tests }
+SAXHandlerTest >> testSAXSkippedEntityUnreplaced [
+	| xml parser |
+
+	xml := '<!DOCTYPE root [<!ENTITY declared "replacement">]><root>&declared;</root>'.
+	(parser := SAXHandlerProxy on: xml)
+		isValidating: true;
+		replacesContentEntityReferences: false;
+		parseDocument.
+	self assert:
+		(parser wasSentSelectors:
+			#(startDocument
+				startDTD:publicID:systemID:
+				generalEntityDeclaration:replacement:
+				endDTD
+				startElement:prefix:uri:localName:attributes:
+				skippedEntity:
+				characters:
+				endElement:prefix:uri:localName:
+				endDocument)).
+	self
+		assert: (parser argumentsSentWith: #skippedEntity:) first = 'declared';
+		assert: (parser argumentsSentWith: #characters:) first = '&declared;'.
 ]
 
 { #category : #tests }

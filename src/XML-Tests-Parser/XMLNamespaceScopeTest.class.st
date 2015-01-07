@@ -85,12 +85,12 @@ XMLNamespaceScopeTest >> testMapPrefixTo [
 ]
 
 { #category : #tests }
-XMLNamespaceScopeTest >> testSetFromDictionary [
+XMLNamespaceScopeTest >> testMapPrefixesAndURIs [
 	| outerScope innerScope namespaces |
 
 	namespaces := self namespaces.
 	(outerScope := self newNamespaceScope)
-		setFromDictionary: namespaces.
+		mapPrefixesAndURIs: namespaces.
 	self
 		assert: outerScope = self newNamespaceScopeWithNamespaces;
 		deny: outerScope prefixMappings == namespaces.
@@ -100,7 +100,7 @@ XMLNamespaceScopeTest >> testSetFromDictionary [
 		assert: innerScope = outerScope;
 		assert: innerScope prefixMappings == outerScope prefixMappings.
 
-	innerScope setFromDictionary: namespaces.
+	innerScope mapPrefixesAndURIs: namespaces.
 	self
 		assert: innerScope = outerScope;
 		deny: innerScope prefixMappings == outerScope prefixMappings.

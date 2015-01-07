@@ -192,6 +192,8 @@ XMLParserTest >> testAttributeEntityDeclaration [
 	| dtd |
 
 	dtd := '<!DOCTYPE root [
+		<!NOTATION first SYSTEM "first.txt">
+		<!NOTATION second SYSTEM "second.txt">
 		<!ENTITY firstEntity SYSTEM "first.txt" NDATA first>
 		<!ENTITY secondEntity SYSTEM "second.txt" NDATA second>
 		<!ELEMENT root EMPTY>
@@ -1136,26 +1138,6 @@ XMLParserTest >> testPrefixedElementDeclarations [
 ]
 
 { #category : #tests }
-XMLParserTest >> testPreservesUndeclaredEntityReferences [
-	| xml parser document |
-
-	xml := '<!DOCTYPE root [
-		<!ENTITY unreferenced "%undeclaredOne;">
-		%undeclaredOne;]>
-		<root name="&undeclaredTwo;">&undeclaredThree;</root>'.
-	(parser := XMLDOMParser on: xml)
-		isValidating: false;
-		preservesUndeclaredEntityReferences: true.
-	document := parser parseDocument.
-
-	self
-		assert: document doctypeDeclaration nodes size = 1;
-		assert: document doctypeDeclaration firstNode replacement = '%undeclaredOne;';
-		assert: (document root attributeAt: 'name') = '&undeclaredTwo;';
-		assert: (document root contentString) = '&undeclaredThree;'.
-]
-
-{ #category : #tests }
 XMLParserTest >> testProcessingInstructions [
 	| document |
 
@@ -1311,6 +1293,26 @@ XMLParserTest >> testUndeclaredEntities [
 ]
 
 { #category : #tests }
+XMLParserTest >> testUndeclaredEntitiesPreserved [
+	| xml parser document |
+
+	xml := '<!DOCTYPE root [
+		<!ENTITY unreferenced "%undeclaredOne;">
+		%undeclaredOne;]>
+		<root name="&#34;&undeclaredTwo;&#34;">&lt;&undeclaredThree;&gt;</root>'.
+	(parser := XMLDOMParser on: xml)
+		isValidating: false;
+		preservesUndeclaredEntityReferences: true.
+	document := parser parseDocument.
+
+	self
+		assert: document doctypeDeclaration nodes size = 1;
+		assert: document doctypeDeclaration firstNode replacement = '%undeclaredOne;';
+		assert: (document root attributeAt: 'name') = '"&undeclaredTwo;"';
+		assert: (document root contentString) = '<&undeclaredThree;>'.
+]
+
+{ #category : #tests }
 XMLParserTest >> testUndeclaredNamespaces [
 	self
 		shouldnt: [SAXHandler parse: '<prefix:root prefix:name="test"/>' usingNamespaces: false]
@@ -1347,6 +1349,91 @@ XMLParserTest >> testUnparsedEntities [
 	self
 		should: [SAXHandler parse: dtd, '<root notation="undeclaredUnparsedEntity" />']
 		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testUnparsedEntitiesUndeclaredNotations [
+	| xml |
+
+	xml := '
+		<!DOCTYPE root [
+			<!ENTITY unparsedEntity SYSTEM "note.txt" NDATA note>
+		]><root/>'.
+	self
+		should: [SAXHandler parse: xml]
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			SAXHandler
+				parse: xml
+				usingNamespaces: true
+				validation: false]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testUnreplacedContentEntities [
+	| xml document |
+
+	xml := '
+		<!DOCTYPE one [<!ENTITY declared "replacement">]>
+		<one two="&quot;&declared;&quot;">&#60;&declared;&#62;</one>'.
+	document :=
+		(XMLDOMParser on: xml)
+			replacesContentEntityReferences: false;
+			parseDocument.
+	self
+		assert: (document root attributeAt: 'two') = '&quot;&declared;&quot;';
+		assert: document root contentString = '&#60;&declared;&#62;'.
+]
+
+{ #category : #tests }
+XMLParserTest >> testUnreplacedContentEntitiesParameterEntities [
+	| beforeSubset subset afterSubset xml document |
+
+	beforeSubset := '<?xml version="1.1"?> <!DOCTYPE entity ['.
+	subset :=
+		'<!ENTITY % first "<!ENTITY second &#34;replacement&#34;>">
+		%first;'.
+	afterSubset := ']><entity>&second;</entity>'.
+	xml := beforeSubset, subset, afterSubset.
+	self assert: (XMLDOMParser parse: xml) root contentString = 'replacement'.
+	
+	document :=
+		(XMLDOMParser on: xml)
+			replacesContentEntityReferences: false;
+			parseDocument.
+	self assert: document root contentString = '&second;'.
+	self
+		should: [
+			(SAXHandler on: (beforeSubset, '%first;]>'))
+				replacesContentEntityReferences: false;
+				parseDocument]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testUnreplacedContentEntitiesUndeclared [
+	| xml document |
+
+	xml := '<one two="&quot;&undeclared;&quot;">&#60;&undeclared;&#62;</one>'.
+	self
+		should: [
+			(SAXHandler on: xml)
+				replacesContentEntityReferences: false;
+				parseDocument]
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			document :=
+				(XMLDOMParser on: xml)
+					isValidating: false;
+					replacesContentEntityReferences: false;
+					parseDocument]
+		raise: XMLValidationException.
+	self
+		assert: (document root attributeAt: 'two') = '&quot;&undeclared;&quot;';
+		assert: document root contentString = '&#60;&undeclared;&#62;'.
 ]
 
 { #category : #tests }
@@ -1392,16 +1479,15 @@ XMLParserTest >> testWhitespacePreservation [
 	self
 		assert: root nodes size = 3;
 		assert: root stringNodes size = 2.
-	root stringsDo: [:each |
-		self assert: (each notEmpty and: [each allSatisfy: [:c | c isSeparator ]])].
+	root stringNodesDo: [:each | self assert: each isWhitespace].
 
 	notPreserved := root nodes second.
 	self assert: notPreserved nodes size = 1.
 
-	preserved := notPreserved firstNode.
+	preserved := notPreserved firstElement.
 	self
-		assert: preserved contentString notEmpty;
-		assert: (preserved contentString allSatisfy: [:each | each isSeparator]).
+		assert: preserved firstNode isStringNode;
+		assert: preserved firstNode isWhitespace.
 ]
 
 { #category : #tests }
@@ -1438,6 +1524,37 @@ XMLParserTest >> testWhitespacePreservationValidation [
 	self
 		should: [SAXHandler parse: (dtd copyReplaceAll: '(default|preserve)' with: 'CDATA')]
 		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testWideCharacterNames [
+	| wideNames document |
+
+	(wideNames := OrderedCollection new)
+		addLast: (self wideStringFrom: #(16rC0 16rD6 16rD8 16rF6 16rF8 16r2FF $- $.));
+		addLast: (self wideStringFrom: #(16r370 16r37D 16r37F 16r1FFF 16r200C $0 $9));
+		addLast: (self wideStringFrom: #(16r200D 16r2070 16r218F 16r2C00 16r2FEF 16rB7));
+		addLast: (self wideStringFrom: #(16r3001 16rD7FF 16rF900 16rFDCF 16rFDF0 16r0300));
+		addLast: (self wideStringFrom: #(16rFFFD 16r10000 16rEFFFF 16r036F 16r203F 16r2040)).
+	self
+		shouldnt: [
+			document :=
+				XMLDOMParser parse:
+					('<!DOCTYPE {1} [
+						<!ELEMENT {1} ({2}, {3}, {4})>
+						<!ELEMENT {2} EMPTY>
+						<!ELEMENT {3} EMPTY>
+						<!ELEMENT {4} EMPTY>
+						<!ATTLIST {1} {5} ({3} | {4} | {5}) #IMPLIED>
+					]>
+					<{1} {5}="{4}">
+						<{2}/><{3}/><{4}/>
+					</{1}>' format: wideNames)]
+		raise: XMLParserException.
+	self
+		assert: document root name = wideNames first;
+		assert: (document root attributeAt: wideNames fifth) = wideNames fourth;
+		assert: (document root elementNames) asOrderedCollection = (wideNames copyFrom: 2 to: 4).
 ]
 
 { #category : #tests }
@@ -1524,4 +1641,9 @@ XMLParserTest >> testXMLPrefixedAttributes [
 		assert: (document root attributeAt: 'xmll') = 'two';
 		assert: (document root attributeAt: 'xml:') = 'three';
 		assert: (document root attributeAt: 'xmlnss') = 'four'.
+]
+
+{ #category : #private }
+XMLParserTest >> wideStringFrom: aCollection [
+	^ String withAll: (aCollection collect: [:each | each asCharacter])
 ]
