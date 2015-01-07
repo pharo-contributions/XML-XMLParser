@@ -313,11 +313,25 @@ ConfigurationOfXMLParser >> baseline198: spec [
                     with: 'XML-Parser-GemstoneCompatibility-monty.5'. ].
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline200: spec [ 
+        <version: '2.0.0-baseline' imports: #('1.0-baseline')>
+        
+        spec for: #common do: [
+                spec blessing: #baseline.
+                spec project: 'XMLWriter' with: '2.5.3'. ].
+
+        spec for: #gemstone do: [
+                spec
+                    package: 'XML-Parser-GemstoneCompatibility'
+                    with: 'XML-Parser-GemstoneCompatibility-monty.6'. ].
+]
+
 { #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.9.8-baseline'.
+	spec for: #'common' version: '2.0.0-baseline'.
 
 ]
 
@@ -338,7 +352,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.9.9'.
+	spec for: #'common' version: '2.0.0'.
 	spec for: #'pharo1.x' version: '1.2'
 
 ]
@@ -1402,5 +1416,16 @@ ConfigurationOfXMLParser >> version199: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.266'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.89'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version200: spec [ 
+        <version: '2.0.0' imports: #('2.0.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.268'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.91'.
                 ].
 ]
