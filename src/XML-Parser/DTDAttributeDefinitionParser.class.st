@@ -37,7 +37,7 @@ DTDAttributeDefinitionParser class >> initialize [
 
 	self
 		initializeDefaultValueValidators;
-		initializeNonEnumerationValidators.
+		initializeNonEnumerationValidators
 ]
 
 { #category : #'class initialization' }

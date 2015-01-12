@@ -7,9 +7,6 @@ Class {
 	#instVars : [
 		'textConverter'
 	],
-	#classVars : [
-		'TextConverterCache'
-	],
 	#classInstVars : [
 		'textConverterCache'
 	],
@@ -22,16 +19,15 @@ XMLTextConverterStreamDecoder class >> canDecodeEncoding: anEncoding [
 		and: [(self textConverterForEncoding: anEncoding) notNil]
 ]
 
-{ #category : #'class initialization' }
-XMLTextConverterStreamDecoder class >> initialize [
-	"self initialize"
-
-	TextConverterCache := XMLKeyValueCache maxSize: 32
+{ #category : #private }
+XMLTextConverterStreamDecoder class >> textConverterCache [
+	^ textConverterCache
+		ifNil: [textConverterCache := XMLKeyValueCache maxSize: 32]
 ]
 
 { #category : #private }
 XMLTextConverterStreamDecoder class >> textConverterForEncoding: anEncoding [
-	^ TextConverterCache
+	^ self textConverterCache
 		at: anEncoding
 		ifAbsentPut: [
 			(Smalltalk at: #TextConverter)

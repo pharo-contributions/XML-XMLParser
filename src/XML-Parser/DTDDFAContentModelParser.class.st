@@ -20,8 +20,8 @@ DTDDFAContentModelParser class >> initialize [
 	"self initialize"
 
 	self
-		initializeOperatorApplicators;
-		initializeSpecialCharacterParsers
+		initializeSpecialCharacterParsers;
+		initializeOperatorApplicators
 ]
 
 { #category : #'class initialization' }

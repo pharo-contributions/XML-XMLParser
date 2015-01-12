@@ -45,6 +45,7 @@ XMLStreamEncodingDetector class >> initialize [
 	"self initialize"
 
 	NullCharacter := Character value: 0.
+
 	self
 		initializeByteOrderMarks;
 		initializeEncodingHandlerTable.

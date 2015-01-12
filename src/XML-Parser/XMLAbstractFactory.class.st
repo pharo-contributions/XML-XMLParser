@@ -32,7 +32,6 @@ XMLAbstractFactory class >> implementation: aClass [
 { #category : #'class initialization' }
 XMLAbstractFactory class >> initialize [
 	"self initialize"
-
 	"clear cached implementations"
 	self allSubclassesDo: [:each | each implementation: nil]
 ]
