@@ -193,7 +193,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 
 			spec 
 				package: 'XML-Parser' 
-				with: [spec requires: #('BitmapCharacterSet' 'OrderPreservingDictionary')].	
+				with: [spec requires: #('BitmapCharacterSet' 'OrderPreservingDictionary')].
 			spec
 				package: 'XML-Tests-Parser'
 				with: [ spec requires: #('XML-Parser' 'XMLWriter') ].
@@ -327,11 +327,25 @@ ConfigurationOfXMLParser >> baseline200: spec [
                     with: 'XML-Parser-GemstoneCompatibility-monty.6'. ].
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline201: spec [ 
+        <version: '2.0.1-baseline' imports: #('1.0-baseline')>
+        
+        spec for: #common do: [
+                spec blessing: #baseline.
+                spec project: 'XMLWriter' with: '2.5.4'. ].
+
+        spec for: #gemstone do: [
+                spec
+                    package: 'XML-Parser-GemstoneCompatibility'
+                    with: 'XML-Parser-GemstoneCompatibility-monty.6'. ].
+]
+
 { #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.0.0-baseline'.
+	spec for: #'common' version: '2.0.1-baseline'.
 
 ]
 
@@ -352,7 +366,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '2.0.0'.
+	spec for: #'common' version: '2.0.1'.
 	spec for: #'pharo1.x' version: '1.2'
 
 ]
@@ -1426,6 +1440,17 @@ ConfigurationOfXMLParser >> version200: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.268'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.91'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version201: spec [ 
+        <version: '2.0.1' imports: #('2.0.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.269'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.91'.
                 ].
 ]
