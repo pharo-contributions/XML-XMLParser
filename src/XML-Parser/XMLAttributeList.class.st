@@ -21,9 +21,8 @@ XMLAttributeList >> addName: aName value: aValue [
 { #category : #private }
 XMLAttributeList >> afterAdding: anAttribute [
 	self attributesByName
-		at: anAttribute name ifPresent: [self removeAttributeNodeAt: anAttribute name];
-		at: anAttribute name put: anAttribute.
-
+		at: anAttribute name
+		put: anAttribute.
 	observer ifNotNil: [observer addedAttribute: anAttribute].
 ]
 
@@ -129,19 +128,15 @@ XMLAttributeList >> attributesByName [
 
 { #category : #private }
 XMLAttributeList >> beforeAdding: anAttribute [
+	self attributesByName
+		at: anAttribute name
+		ifPresent: [:node | self remove: node].
 	observer ifNotNil: [observer addingAttribute: anAttribute]
 ]
 
 { #category : #testing }
 XMLAttributeList >> includesAttribute: aName [
 	^ self attributesByName includesKey: aName
-]
-
-{ #category : #private }
-XMLAttributeList >> newWithCollection: aCollection [
-	^ self class basicNew
-		setCollection: aCollection;
-		resetDictionaryFromCollection
 ]
 
 { #category : #removing }
@@ -163,15 +158,6 @@ XMLAttributeList >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 		removeKey: anOldName;
 		at: aNewName ifPresent: [:attribute | self remove: attribute];
 		at: aNewName put: anAttribute
-]
-
-{ #category : #private }
-XMLAttributeList >> resetDictionaryFromCollection [
-	self attributesByName removeAll.
-	collection do: [:each |
-		self attributesByName
-			at: each name
-			put: each].
 ]
 
 { #category : #private }
@@ -197,11 +183,6 @@ XMLAttributeList >> setFromDictionary: anOrderPreservingDictionary [
 { #category : #sorting }
 XMLAttributeList >> sort [
 	self sort: [:a :b | a sortKey <= b sortKey]
-]
-
-{ #category : #sorting }
-XMLAttributeList >> sorted [
-	^ self sorted: [:a :b | a sortKey <= b sortKey]
 ]
 
 { #category : #private }

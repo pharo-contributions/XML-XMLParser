@@ -190,11 +190,6 @@ XMLNodeList >> sort [
 	self sort: [:a :b | a sortKey <= b sortKey]
 ]
 
-{ #category : #sorting }
-XMLNodeList >> sorted [
-	^ self sorted: [:a :b | a sortKey <= b sortKey]
-]
-
 { #category : #enumerating }
 XMLNodeList >> stringNodes [
 	^ self select: [:each | each isStringNode]

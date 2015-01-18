@@ -21,7 +21,7 @@ XMLEntityAttributeValidator >> isEntityValidator [
 	^ true
 ]
 
-{ #category : #validation }
+{ #category : #accessing }
 XMLEntityAttributeValidator >> unparsedEntityValidator [
 	^ unparsedEntityValidator
 ]

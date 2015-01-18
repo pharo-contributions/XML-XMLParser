@@ -15,6 +15,11 @@ XMLObservableList class >> observer: anObject [
 	^ self new observer: anObject
 ]
 
+{ #category : #'as yet unclassified' }
+XMLObservableList class >> ofSize: aSize [
+	self shouldNotImplement
+]
+
 { #category : #adding }
 XMLObservableList >> add: anObject after: aPriorObject [
 	^ self with: [super add: anObject after: aPriorObject] add: anObject
@@ -61,13 +66,11 @@ XMLObservableList >> afterRemoving: anObject [
 
 { #category : #accessing }
 XMLObservableList >> at: anIndex put: anObject [
-	| presentObject |
-
-	(presentObject := self at: anIndex)
-		ifNotNil: [
+	(self at: anIndex ifAbsent: nil)
+		ifNotNil: [:oldObject |
 			self
 				with: [super at: anIndex put: nil]
-				remove: presentObject].
+				remove: oldObject].
 
 	^ self with: [super at: anIndex put: anObject] add: anObject.
 ]
@@ -81,7 +84,7 @@ XMLObservableList >> beforeAdding: anObject [
 XMLObservableList >> deepCopyWithObserver: anObserver [
 	| newList |
 
-	newList := (self class new: self size) observer: anObserver.
+	newList := self copyEmpty observer: anObserver.
 	self do: [:each | newList addLast: each copy].
 	^ newList.
 ]

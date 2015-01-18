@@ -21,3 +21,8 @@ XMLInternalSubsetList >> afterRemoving: aNode [
 XMLInternalSubsetList >> beforeAdding: aNode [
 	observer ifNotNil: [observer addingNode: aNode]
 ]
+
+{ #category : #sorting }
+XMLInternalSubsetList >> sort [
+	self sort: [:a :b | a sortKey <= b sortKey]
+]
