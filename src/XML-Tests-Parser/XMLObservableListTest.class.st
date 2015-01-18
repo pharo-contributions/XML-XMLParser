@@ -10,41 +10,83 @@ XMLObservableListTest class >> shouldInheritSelectors [
 ]
 
 { #category : #accessing }
-XMLObservableListTest >> afterAddingToNotification [
-	^ #added:to:
+XMLObservableListTest >> afterAddingToNotifications [
+	^ #(added:to:)
 ]
 
 { #category : #accessing }
-XMLObservableListTest >> afterRemovingFromNotification [
-	^ #removed:from:
+XMLObservableListTest >> afterRemovingFromNotifications [
+	^ #(removed:from:)
 ]
 
 { #category : #assertions }
-XMLObservableListTest >> assertObserver: anObserver receivedNotificationOfAdding: anElement to: aList [
-	| firstNotification secondNotification |
-
-	firstNotification := anObserver nextNotification.
-	secondNotification := anObserver nextNotification.
-	self
-		assert:firstNotification selector = self beforeAddingToNotification;
-		assert: firstNotification arguments = (Array with: anElement with: aList);
-		assert: secondNotification selector = self afterAddingToNotification;
-		assert: secondNotification arguments = (Array with: anElement with: aList)
+XMLObservableListTest >> assertList: aList copiedFrom: aSecondList equals: aThirdList [
+	super
+		assertList: aList
+		copiedFrom: aSecondList
+		equals: aThirdList.
+	self denyList: aList sharesObserverWith: aSecondList.
 ]
 
 { #category : #assertions }
-XMLObservableListTest >> assertObserver: anObserver receivedNotificationOfRemoving: anElement from: aList [
-	| notification |
+XMLObservableListTest >> assertList: aList isCopyOf: aSecondList [
+	super assertList: aList isCopyOf: aSecondList.
+	self denyList: aList sharesObserverWith: aSecondList.
+]
 
-	notification := anObserver nextNotification.
+{ #category : #assertions }
+XMLObservableListTest >> assertList: aList receivedNotificationOfAdding: anElement [
 	self
-		assert: notification selector = self afterRemovingFromNotification;
-		assert: notification arguments = (Array with: anElement with: aList)
+		assertNotification: aList observer nextNotification
+		forElement: anElement
+		andList: aList
+		hasType: self beforeAddingToNotifications.
+	self
+		assertNotification: aList observer nextNotification
+		forElement: anElement
+		andList: aList
+		hasType: self afterAddingToNotifications.
+]
+
+{ #category : #assertions }
+XMLObservableListTest >> assertList: aList receivedNotificationOfRemoving: anElement [
+	self
+		assertNotification: aList observer nextNotification
+		forElement: anElement
+		andList: aList
+		hasType: self afterRemovingFromNotifications
+]
+
+{ #category : #assertions }
+XMLObservableListTest >> assertNotification: aNotification forElement: anElement andList: aList hasType: aSelectorColleciton [
+	self assert: (aSelectorColleciton includes: aNotification selector).
+	self assert:
+		aNotification arguments =
+			((Array with: anElement with: aList)
+				copyFrom: 1
+				to: (aNotification selector asString occurrencesOf: $:)).
 ]
 
 { #category : #accessing }
-XMLObservableListTest >> beforeAddingToNotification [
-	^ #adding:to:
+XMLObservableListTest >> beforeAddingToNotifications [
+	^ #(adding:to:)
+]
+
+{ #category : #assertions }
+XMLObservableListTest >> denyList: aList sharesObserverWith: aSecondList [
+	self deny:
+		(aList observer notNil
+			and: [aSecondList observer notNil
+				and: [aList observer == aSecondList observer]])
+]
+
+{ #category : #accessing }
+XMLObservableListTest >> emptyList [
+	| list |
+
+	list := super emptyList.
+	self observerOnList: list.
+	^ list.
 ]
 
 { #category : #accessing }
@@ -52,50 +94,74 @@ XMLObservableListTest >> listClass [
 	^ XMLObservableList
 ]
 
-{ #category : #assertions }
-XMLObservableListTest >> should: aBlock add: anElement toAndNotifyOf: aList [
-	self
-		should: aBlock
-		addAll: (Array with: anElement)
-		toAndNotifyOf: aList
+{ #category : #accessing }
+XMLObservableListTest >> listWithElements [
+	| list |
+
+	list := super listWithElements.
+	self observerOnList: list.
+	^ list.
+]
+
+{ #category : #accessing }
+XMLObservableListTest >> listWithSingleElement [
+	| list |
+
+	list := super listWithSingleElement.
+	self observerOnList: list.
+	^ list.
+]
+
+{ #category : #accessing }
+XMLObservableListTest >> observerClass [
+	^ XMLRecordingListObserver
+]
+
+{ #category : #accessing }
+XMLObservableListTest >> observerOnList: aList [
+	| observer |
+
+	observer := self observerClass new.
+	aList observer: observer.
+	^ observer.
 ]
 
 { #category : #assertions }
-XMLObservableListTest >> should: aBlock addAll: anElementCollection toAndNotifyOf: aList [
-	| observer |
+XMLObservableListTest >> should: aBlock add: anElement toAndNotify: aList [
+	self
+		should: aBlock
+		addAll: (Array with: anElement)
+		toAndNotify: aList
+]
 
-	observer := XMLRecordingListObserver new.
-	aList observer: observer.
+{ #category : #assertions }
+XMLObservableListTest >> should: aBlock addAll: anElementCollection toAndNotify: aList [
+	aList observer clearNotifications.
 	aBlock value.
 	anElementCollection do: [:each |
 		self assert: (aList includes: each).
 		self 
-			assertObserver: observer
-			receivedNotificationOfAdding: each
-			to: aList].
+			assertList: aList
+			receivedNotificationOfAdding: each].
 ]
 
 { #category : #assertions }
-XMLObservableListTest >> should: aBlock remove: anElement fromAndNotifyOf: aList [
+XMLObservableListTest >> should: aBlock remove: anElement fromAndNotify: aList [
 	self
 		should: aBlock
 		removeAll: (Array with: anElement)
-		fromAndNotifyOf: aList
+		fromAndNotify: aList
 ]
 
 { #category : #assertions }
-XMLObservableListTest >> should: aBlock removeAll: anElementCollection fromAndNotifyOf: aList [
-	| observer |
-
-	observer := XMLRecordingListObserver new.
-	aList observer: observer.
+XMLObservableListTest >> should: aBlock removeAll: anElementCollection fromAndNotify: aList [
+	aList observer clearNotifications.
 	aBlock value.
 	anElementCollection do: [:each |
 		self deny: (aList includes: each).
 		self
-			assertObserver: observer
-			receivedNotificationOfRemoving: each
-			from: aList].
+			assertList: aList
+			receivedNotificationOfRemoving: each].
 ]
 
 { #category : #tests }
@@ -105,10 +171,11 @@ XMLObservableListTest >> testAdd [
 	super testAdd.
 
 	list := self emptyList.
-	self
-		should: [list add: self singleElement]
-		add: self singleElement
-		toAndNotifyOf: list.
+	self listElements do: [:each |
+		self
+			should: [list add: each]
+			add: each
+			toAndNotify: list].
 ]
 
 { #category : #tests }
@@ -118,10 +185,11 @@ XMLObservableListTest >> testAddAfter [
 	super testAddAfter.
 
 	list := self listWithSingleElement.
-	self
-		should: [list add: self absentElement after: self singleElement]
-		add: self absentElement
-		toAndNotifyOf: list.
+	self listElements allButFirst reverseDo: [:each |
+		self
+			should: [list add: each after: self singleElement]
+			add: each
+			toAndNotify: list].
 ]
 
 { #category : #tests }
@@ -131,10 +199,11 @@ XMLObservableListTest >> testAddAfterIndex [
 	super testAddAfterIndex.
 
 	list := self listWithSingleElement.
-	self
-		should: [list add: self absentElement afterIndex: (list indexOf: self singleElement)]
-		add: self absentElement 
-		toAndNotifyOf: list.
+	self listElements allButFirst reverseDo: [:each |
+		self
+			should: [list add: each afterIndex: 1]
+			add: each
+			toAndNotify: list].
 ]
 
 { #category : #tests }
@@ -142,11 +211,16 @@ XMLObservableListTest >> testAddAll [
 	| list |
 
 	super testAddAll.
+
 	list := self emptyList.
 	self
 		should: [list addAll: self listElements]
 		addAll: self listElements
-		toAndNotifyOf: list.
+		toAndNotify: list.
+	self
+		should: [list addAll: self changedListElements]
+		addAll: self changedListElements
+		toAndNotify: list.
 ]
 
 { #category : #tests }
@@ -154,11 +228,16 @@ XMLObservableListTest >> testAddAllFirst [
 	| list |
 
 	super testAddAllFirst.
+
 	list := self emptyList.
 	self
 		should: [list addAllFirst: self listElements]
 		addAll: self listElements reversed
-		toAndNotifyOf: list.
+		toAndNotify: list.
+	self
+		should: [list addAllFirst: self changedListElements]
+		addAll: self changedListElements reversed
+		toAndNotify: list.
 ]
 
 { #category : #tests }
@@ -166,24 +245,32 @@ XMLObservableListTest >> testAddAllLast [
 	| list |
 
 	super testAddAllLast.
+
 	list := self emptyList.
 	self
 		should: [list addAllLast: self listElements]
 		addAll: self listElements
-		toAndNotifyOf: list.
+		toAndNotify: list.
+	self
+		should: [list addAllLast: self changedListElements]
+		addAll: self changedListElements
+		toAndNotify: list.
 ]
 
 { #category : #tests }
 XMLObservableListTest >> testAddBefore [
-	| list |
+	| list last |
 
 	super testAddBefore.
 
-	list := self listWithSingleElement.
-	self
-		should: [list add: self absentElement before: self singleElement]
-		add: self absentElement 
-		toAndNotifyOf: list.
+	last := self listElements last.
+	(list := self emptyList) add: last.
+	"allButLastDo: is not portable"
+	self listElements allButLast do: [:each |
+		self
+			should: [list add: each before: last]
+			add: each
+			toAndNotify: list].
 ]
 
 { #category : #tests }
@@ -192,11 +279,12 @@ XMLObservableListTest >> testAddBeforeIndex [
 
 	super testAddBeforeIndex.
 
-	list := self listWithSingleElement.
-	self
-		should: [list add: self absentElement beforeIndex: (list indexOf: self singleElement)]
-		add: self absentElement 
-		toAndNotifyOf: list.
+	(list := self emptyList) add: self listElements last.
+	self listElements allButLast withIndexDo: [:each :i |
+		self
+			should: [list add: each beforeIndex: i]
+			add: each
+			toAndNotify: list].
 ]
 
 { #category : #tests }
@@ -205,11 +293,12 @@ XMLObservableListTest >> testAddFirst [
 
 	super testAddFirst.
 
-	list := self listWithSingleElement.
-	self
-		should: [list addFirst: self absentElement]
-		add: self absentElement
-		toAndNotifyOf: list.
+	list := self emptyList.
+	self listElements reverseDo: [:each |
+		self
+			should: [list addFirst: each]
+			add: each
+			toAndNotify: list].
 ]
 
 { #category : #tests }
@@ -218,42 +307,47 @@ XMLObservableListTest >> testAddLast [
 
 	super testAddLast.
 
-	list := self listWithSingleElement.
-	self
-		should: [list addLast: self absentElement]
-		add: self absentElement
-		toAndNotifyOf: list.
+	list := self emptyList.
+	self listElements do: [:each |
+		self
+			should: [list addLast: each]
+			add: each
+			toAndNotify: list].
 ]
 
 { #category : #tests }
 XMLObservableListTest >> testAtPut [
-	| list observer |
+	| list |
 
 	super testAtPut.
 
-	list := self listWithSingleElement.
-	observer := XMLRecordingListObserver new.
-	list observer: observer.
-	list at: 1 put: self newElement.
+	list := self listWithElements.
+	1 to: list size do: [:i | | old new |
+		old := list at: i.
+		new := self changedListElements at: i.
+		list at: i put: new.
+		self
+			assertList: list
+			receivedNotificationOfRemoving: old.
+		self
+			assertList: list
+			receivedNotificationOfAdding: new].
 	self
-		assertObserver: observer
-		receivedNotificationOfRemoving: self singleElement
-		from: list.
+		should: [list at: list size + 2 put: self newElement]
+		raise: Error.
 	self
-		assertObserver: observer
-		receivedNotificationOfAdding: self newElement
-		to: list.
+		assert: list observer hasNotifications;
+		assert:
+			(self beforeAddingToNotifications includes:
+				list observer nextNotification selector);
+		deny: list observer hasNotifications.
 ]
 
 { #category : #tests }
-XMLObservableListTest >> testCopy [
-	| list copy |
-
-	super testCopy.
-	list := self listWithElements.
-	list observer: XMLRecordingListObserver new.
-	copy := list copy.
-	self deny: list observer == copy observer.
+XMLObservableListTest >> testOfSize [
+	self
+		should: [self listClass ofSize: 10]
+		raise: Error
 ]
 
 { #category : #tests }
@@ -261,147 +355,161 @@ XMLObservableListTest >> testRemoveAll [
 	| list |
 
 	super testRemoveAll.
+
 	list := self listWithElements.
 	self
 		should: [list removeAll]
 		removeAll: self listElements reversed
-		fromAndNotifyOf: list.
+		fromAndNotify: list.
 ]
 
 { #category : #tests }
 XMLObservableListTest >> testRemoveAt [
-	| list observer |
-
 	super testRemoveAt.
 
-	list := self listWithSingleElement.
-	self
-		should: [list removeAt: 1]
-		remove: self singleElement
-		fromAndNotifyOf: list.
-
-	observer := XMLRecordingListObserver new.
-	list observer: observer.
-	self
-		should: [list removeAt: 1] raise: Error;
-		deny: observer hasNotifications.
+	self listElements withIndexDo: [:each :i | | list |
+		list := self listWithElements.
+		self
+			should: [list removeAt: i]
+			remove: each
+			fromAndNotify: list.
+		self
+			should: [list removeAt: 0] raise: Error;
+			should: [list removeAt: list size + 1] raise: Error;
+			deny: list observer hasNotifications].
 ]
 
 { #category : #tests }
 XMLObservableListTest >> testRemoveFirst [
-	| list observer |
+	| list |
 
 	super testRemoveFirst.
 
-	list := self listWithSingleElement.
-	self
-		should: [list removeFirst]
-		remove: self singleElement
-		fromAndNotifyOf: list.
-
-	observer := XMLRecordingListObserver new.
-	list observer: observer.
+	list := self listWithElements.
+	self listElements do: [:each |
+		self
+			should: [list removeFirst]
+			remove: each
+			fromAndNotify: list].
 	self
 		should: [list removeFirst] raise: Error;
-		deny: observer hasNotifications.
-	
+		deny: list observer hasNotifications.
 ]
 
 { #category : #tests }
 XMLObservableListTest >> testRemoveFirstFew [
-	| list  |
+	| list |
 
 	super testRemoveFirstFew.
-	
-	list := self listWithElements.
+
+	1 to: self listElements size do: [:i |
+		list := self listWithElements.
+		self
+			should: [list removeFirst: i]
+			removeAll: (self listElementsFirst: i)
+			fromAndNotify: list].
+	list := self emptyList.
 	self
-		should: [list removeFirst: 2]
-		removeAll: (self listElementsFirst: 2)
-		fromAndNotifyOf: list.
+		should: [list removeFirst: list size + 1] raise: Error;
+		deny: list observer hasNotifications.
 ]
 
 { #category : #tests }
 XMLObservableListTest >> testRemoveIfAbsent [
-	| list observer |
+	| list |
 
 	super testRemoveIfAbsent.
 
-	list := self listWithSingleElement.
+	list := self listWithElements.
 	self
 		should: [list remove: self singleElement ifAbsent: [nil]]
 		remove: self singleElement
-		fromAndNotifyOf: list.
-
-	observer := XMLRecordingListObserver new.
-	list observer: observer.
+		fromAndNotify: list.
 	self
 		assert: (list remove: self singleElement ifAbsent: [nil]) isNil;
-		deny: observer hasNotifications.
+		deny: list observer hasNotifications.
 ]
 
 { #category : #tests }
 XMLObservableListTest >> testRemoveLast [
-	| list observer |
+	| list |
 
 	super testRemoveLast.
 
-	list := self listWithSingleElement.
+	list := self listWithElements.
+	self listElements reverseDo: [:each |
+		self
+			should: [list removeLast]
+			remove: each
+			fromAndNotify: list].
 	self
-		should: [list removeLast]
-		remove: self singleElement
-		fromAndNotifyOf: list.
-
-	observer := XMLRecordingListObserver new.
-	list observer: observer.
-	self
-		should: [list removeLast] raise: Error;
-		deny: observer hasNotifications.
+		should: [list removeFirst] raise: Error;
+		deny: list observer hasNotifications.
 ]
 
 { #category : #tests }
 XMLObservableListTest >> testRemoveLastFew [
-	| list  |
-
-	super testRemoveLastFew.
+	| list |
 	
-	list := self listWithElements.
+	super testRemoveLastFew.
+
+	1 to: self listElements size do: [:i |
+		list := self listWithElements.
+		self
+			should: [list removeLast: i]
+			removeAll: (self listElementsLast: i) reversed
+			fromAndNotify: list].
+	list := self emptyList.
 	self
-		should: [list removeLast: 2]
-		removeAll: (self listElementsLast: 2) reversed
-		fromAndNotifyOf: list.
+		should: [list removeFirst: list size + 1] raise: Error;
+		deny: list observer hasNotifications.
+]
+
+{ #category : #tests }
+XMLObservableListTest >> testReplaceFromToWith [
+	super testReplaceFromToWith.
+
+	1 to: self listElements size do: [:start |
+		start to: self listElements size do: [:stop | | list old new |
+			list := self listWithElements.
+			old := self listElements copyFrom: start to: stop.
+			new := self changedListElements copyFrom: 1 to: stop - start + 1.
+			list
+				replaceFrom: start
+				to: stop
+				with: self changedListElements.
+			old with: new do: [:oldElement :newElement |
+				self
+					assertList: list
+					receivedNotificationOfRemoving: oldElement.
+				self
+					assertList: list
+					receivedNotificationOfAdding: newElement].
+			self deny: list observer hasNotifications]].
 ]
 
 { #category : #tests }
 XMLObservableListTest >> testReplaceFromToWithStartingAt [
-	| list observer |
-
 	super testReplaceFromToWithStartingAt.
 
-	list := self listWithElements.
-	observer := XMLRecordingListObserver new.
-	list observer: observer.
-	list
-		replaceFrom: 2
-		to: 3
-		with: #('new1' 'new2' 'new3')
-		startingAt: 2.
-	
-	self
-		assertObserver: observer
-		receivedNotificationOfRemoving: (self listElements at: 2)
-		from: list.
-	self
-		assertObserver: observer
-		receivedNotificationOfAdding: 'new2'
-		to: list.
-	self
-		assertObserver: observer
-		receivedNotificationOfRemoving: (self listElements at: 3)
-		from: list.
-	self
-		assertObserver: observer
-		receivedNotificationOfAdding: 'new3'
-		to: list.
+	1 to: self listElements size do: [:start |
+		start to: self listElements size do: [:stop | | list old new |
+			list := self listWithElements.
+			old := self listElements copyFrom: start to: stop.
+			new := self changedListElements copyFrom: start to: stop.
+			list
+				replaceFrom: start
+				to: stop
+				with: self changedListElements
+				startingAt: start.
+			old with: new do: [:oldElement :newElement |
+				self
+					assertList: list
+					receivedNotificationOfRemoving: oldElement.
+				self
+					assertList: list
+					receivedNotificationOfAdding: newElement].
+			self deny: list observer hasNotifications]].
 ]
 
 { #category : #tests }
@@ -413,5 +521,5 @@ XMLObservableListTest >> testReset [
 	self
 		should: [list reset]
 		removeAll: self listElements
-		fromAndNotifyOf: list.
+		fromAndNotify: list.
 ]

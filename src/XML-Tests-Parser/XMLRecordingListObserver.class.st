@@ -28,6 +28,11 @@ XMLRecordingListObserver >> adding: anObject to: aList [
 			arguments: (Array with: anObject with: aList))
 ]
 
+{ #category : #accesing }
+XMLRecordingListObserver >> clearNotifications [
+	self notificationsQueue removeAll
+]
+
 { #category : #testing }
 XMLRecordingListObserver >> hasNotifications [
 	^ self notificationsQueue notEmpty
