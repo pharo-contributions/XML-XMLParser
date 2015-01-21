@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #private }
-XMLInternalSubsetList >> afterAdding: aNode [
+XMLInternalSubsetList >> afterAdding: aNode at: anIndex [
 	observer ifNotNil: [observer addedNode: aNode]
 ]
 

@@ -19,8 +19,10 @@ XMLAttributeList >> addName: aName value: aValue [
 ]
 
 { #category : #private }
-XMLAttributeList >> afterAdding: anAttribute [
+XMLAttributeList >> afterAdding: anAttribute at: anIndex [
 	self attributesByName
+		at: anAttribute name
+		ifPresent: [:oldAttribute | self remove: oldAttribute exceptAt: anIndex];
 		at: anAttribute name
 		put: anAttribute.
 	observer ifNotNil: [observer addedAttribute: anAttribute].
@@ -128,9 +130,6 @@ XMLAttributeList >> attributesByName [
 
 { #category : #private }
 XMLAttributeList >> beforeAdding: anAttribute [
-	self attributesByName
-		at: anAttribute name
-		ifPresent: [:node | self remove: node].
 	observer ifNotNil: [observer addingAttribute: anAttribute]
 ]
 

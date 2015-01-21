@@ -8,7 +8,15 @@ Class {
 }
 
 { #category : #private }
-XMLNodeList >> afterAdding: aNode [
+XMLNodeList >> afterAdding: aNode at: anIndex [
+	observer ifNotNil: [
+		aNode isElement
+			ifTrue: [observer addedElement: aNode]
+			ifFalse: [observer addedNode: aNode]]
+]
+
+{ #category : #private }
+XMLNodeList >> afterAddingLast: aNode [
 	observer ifNotNil: [
 		aNode isElement
 			ifTrue: [observer addedElement: aNode]

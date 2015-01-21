@@ -21,42 +21,75 @@ XMLObservableList class >> ofSize: aSize [
 ]
 
 { #category : #adding }
-XMLObservableList >> add: anObject after: aPriorObject [
-	^ self with: [super add: anObject after: aPriorObject] add: anObject
+XMLObservableList >> add: anObject after: aPreviousObject [
+	^ self
+		add: anObject
+		afterIndex:
+			(collection
+				indexOf: aPreviousObject
+				ifAbsent: [-1])
 ]
 
 { #category : #adding }
 XMLObservableList >> add: anObject afterIndex: anIndex [
-	^ self with: [super add: anObject afterIndex: anIndex] add: anObject
+	self beforeAdding: anObject.
+	collection
+		add: anObject
+		afterIndex: anIndex.
+	self
+		afterAdding: anObject
+		at: anIndex + 1.
+	^ anObject.
 ]
 
 { #category : #adding }
-XMLObservableList >> add: anObject before: aSubsequentObject [
-	^ self with: [super add: anObject before: aSubsequentObject] add: anObject
+XMLObservableList >> add: anObject before: aNextObject [
+	^ self
+		add: anObject
+		beforeIndex:
+			(collection
+				indexOf: aNextObject
+				ifAbsent: [-1])
 ]
 
 { #category : #adding }
 XMLObservableList >> add: anObject beforeIndex: anIndex [
-	^ self with: [super add: anObject beforeIndex: anIndex] add: anObject
+	self beforeAdding: anObject.
+	collection
+		add: anObject
+		beforeIndex: anIndex.
+	self
+		afterAdding: anObject
+		at: anIndex - 1.
+	^ anObject.
 ]
 
 { #category : #adding }
 XMLObservableList >> addFirst: anObject [
-	^ self with: [super addFirst: anObject] add: anObject
+	self beforeAdding: anObject.
+	collection addFirst: anObject.
+	self afterAdding: anObject at: 1.
+	^ anObject.
 ]
 
 { #category : #adding }
 XMLObservableList >> addLast: anObject [
-	"inlined for speed"
 	self beforeAdding: anObject.
 	collection addLast: anObject.
-	self afterAdding: anObject.
+	self afterAddingLast: anObject.
 	^ anObject.
 ]
 
 { #category : #private }
-XMLObservableList >> afterAdding: anObject [
+XMLObservableList >> afterAdding: anObject at: anIndex [
 	observer ifNotNil: [observer added: anObject to: self]
+]
+
+{ #category : #private }
+XMLObservableList >> afterAddingLast: anObject [
+	self
+		afterAdding: anObject
+		at: self size
 ]
 
 { #category : #private }
@@ -66,13 +99,24 @@ XMLObservableList >> afterRemoving: anObject [
 
 { #category : #accessing }
 XMLObservableList >> at: anIndex put: anObject [
-	(self at: anIndex ifAbsent: nil)
-		ifNotNil: [:oldObject |
-			self
-				with: [super at: anIndex put: nil]
-				remove: oldObject].
+	| oldObject |
 
-	^ self with: [super at: anIndex put: anObject] add: anObject.
+	"gemstone behavior"
+	anIndex = (self size + 1)
+		ifTrue: [^ self addLast: anObject].
+
+	self beforeAdding: anObject.
+
+	oldObject := collection at: anIndex.
+	collection at: anIndex put: nil.
+	oldObject
+		ifNotNil: [self afterRemoving: oldObject].
+	
+	collection at: anIndex put: anObject.
+	self
+		afterAdding: anObject
+		at: anIndex.
+	^ anObject.
 ]
 
 { #category : #private }
@@ -99,33 +143,38 @@ XMLObservableList >> observer: anObserver [
 	observer := anObserver
 ]
 
+{ #category : #private }
+XMLObservableList >> remove: anObject exceptAt: anIndex [
+	"used by subclasse to remove duplicates"
+	1 to: anIndex - 1 do: [:i |
+		(collection at: i) = anObject
+			ifTrue: [^ self removeAt: i]].
+	anIndex + 1 to: collection size do: [:i |
+		(collection at: i) = anObject
+			ifTrue: [^ self removeAt: i]]
+]
+
 { #category : #removing }
 XMLObservableList >> remove: anObject ifAbsent: aBlock [
-	^ self with: [super remove: anObject ifAbsent: [^ aBlock value]] remove: anObject
+	collection remove: anObject ifAbsent: [^ aBlock value].
+	self afterRemoving: anObject.
+	^ anObject.
 ]
 
 { #category : #removing }
 XMLObservableList >> removeAt: anIndex [
-	^ self with: [super removeAt: anIndex] remove: (self at: anIndex)
+	| removed |
+
+	removed := collection removeAt: anIndex.
+	self afterRemoving: removed.
+	^ removed.
 ]
 
 { #category : #removing }
 XMLObservableList >> reset [
-	collection do: [:each | self with: [] remove: each].
+	| removed |
+
+	removed := collection copy.
 	collection reset.
-]
-
-{ #category : #private }
-XMLObservableList >> with: aBlock add: anObject [
-	self beforeAdding: anObject.
-	aBlock value.
-	self afterAdding: anObject.
-	^ anObject.
-]
-
-{ #category : #private }
-XMLObservableList >> with: aBlock remove: anObject [
-	aBlock value.
-	self afterRemoving: anObject.
-	^ anObject.
+	removed do: [:each | self afterRemoving: each].
 ]
