@@ -37,15 +37,28 @@ XMLObservableListTest >> assertList: aList isCopyOf: aSecondList [
 { #category : #assertions }
 XMLObservableListTest >> assertList: aList receivedNotificationOfAdding: anElement [
 	self
-		assertNotification: aList observer nextNotification
-		forElement: anElement
-		andList: aList
-		hasType: self beforeAddingToNotifications.
+		assertList: aList
+		receivedNotificationOfBeforeAdding: anElement;
+		assertList: aList
+		receivedNotificationOfAfterAdding: anElement
+]
+
+{ #category : #assertions }
+XMLObservableListTest >> assertList: aList receivedNotificationOfAfterAdding: anElement [
 	self
 		assertNotification: aList observer nextNotification
 		forElement: anElement
 		andList: aList
-		hasType: self afterAddingToNotifications.
+		hasType: self afterAddingToNotifications
+]
+
+{ #category : #assertions }
+XMLObservableListTest >> assertList: aList receivedNotificationOfBeforeAdding: anElement [
+	self
+		assertNotification: aList observer nextNotification
+		forElement: anElement
+		andList: aList
+		hasType: self beforeAddingToNotifications
 ]
 
 { #category : #assertions }
@@ -55,6 +68,19 @@ XMLObservableListTest >> assertList: aList receivedNotificationOfRemoving: anEle
 		forElement: anElement
 		andList: aList
 		hasType: self afterRemovingFromNotifications
+]
+
+{ #category : #assertions }
+XMLObservableListTest >> assertList: aList receivedNotificationOfReplacing: anOldElement with: aNewElement [
+	self
+		assertList: aList
+		receivedNotificationOfBeforeAdding: aNewElement.
+	self
+		assertList: aList
+		receivedNotificationOfRemoving: anOldElement.
+	self
+		assertList: aList
+		receivedNotificationOfAfterAdding: aNewElement.
 ]
 
 { #category : #assertions }
@@ -328,19 +354,15 @@ XMLObservableListTest >> testAtPut [
 		list at: i put: new.
 		self
 			assertList: list
-			receivedNotificationOfRemoving: old.
-		self
-			assertList: list
-			receivedNotificationOfAdding: new].
+			receivedNotificationOfReplacing: old
+			with: new].
 	self
 		should: [list at: list size + 2 put: self newElement]
 		raise: Error.
 	self
-		assert: list observer hasNotifications;
-		assert:
-			(self beforeAddingToNotifications includes:
-				list observer nextNotification selector);
-		deny: list observer hasNotifications.
+		assertList: list
+		receivedNotificationOfBeforeAdding: self newElement.
+	self deny: list observer hasNotifications.
 ]
 
 { #category : #tests }
@@ -481,10 +503,8 @@ XMLObservableListTest >> testReplaceFromToWith [
 			old with: new do: [:oldElement :newElement |
 				self
 					assertList: list
-					receivedNotificationOfRemoving: oldElement.
-				self
-					assertList: list
-					receivedNotificationOfAdding: newElement].
+					receivedNotificationOfReplacing: oldElement
+					with: newElement].
 			self deny: list observer hasNotifications]].
 ]
 
@@ -505,10 +525,8 @@ XMLObservableListTest >> testReplaceFromToWithStartingAt [
 			old with: new do: [:oldElement :newElement |
 				self
 					assertList: list
-					receivedNotificationOfRemoving: oldElement.
-				self
-					assertList: list
-					receivedNotificationOfAdding: newElement].
+					receivedNotificationOfReplacing: oldElement
+					with: newElement].
 			self deny: list observer hasNotifications]].
 ]
 
