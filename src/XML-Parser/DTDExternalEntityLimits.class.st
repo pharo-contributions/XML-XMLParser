@@ -5,6 +5,7 @@ Class {
 	#name : #DTDExternalEntityLimits,
 	#superclass : #Object,
 	#instVars : [
+		'externalSubsetReadLimit',
 		'maxExternalEntities',
 		'maxExternalEntitySize',
 		'resolvesLocalFromNonLocal'
@@ -13,14 +14,31 @@ Class {
 }
 
 { #category : #accessing }
+DTDExternalEntityLimits class >> defaultExternalSubsetReadLimit [
+	^ XMLParserLimits defaultReadLimit
+		ifNotNil: [:limit | (limit / 4) asInteger]
+]
+
+{ #category : #accessing }
 DTDExternalEntityLimits class >> defaultMaxExternalEntitySize [
 	^ 2500000
+]
+
+{ #category : #accessing }
+DTDExternalEntityLimits >> externalSubsetReadLimit [
+	^ externalSubsetReadLimit
+]
+
+{ #category : #accessing }
+DTDExternalEntityLimits >> externalSubsetReadLimit: aLimit [
+	externalSubsetReadLimit := aLimit
 ]
 
 { #category : #initialization }
 DTDExternalEntityLimits >> initialize [
 	super initialize.
 
+	externalSubsetReadLimit := self class defaultExternalSubsetReadLimit.
 	maxExternalEntities := 16.
 	maxExternalEntitySize := self class defaultMaxExternalEntitySize.
 	resolvesLocalFromNonLocal := false.
@@ -48,6 +66,7 @@ DTDExternalEntityLimits >> maxExternalEntitySize: aLimit [
 
 { #category : #removing }
 DTDExternalEntityLimits >> removeAll [
+	externalSubsetReadLimit := nil.
 	maxExternalEntities := nil.
 	maxExternalEntitySize := nil.
 	resolvesLocalFromNonLocal := nil.

@@ -1,5 +1,5 @@
 "
-This adapter converts the byte contents of a binary stream to character objects. It is needed because most Pharo/Squeak streams don't support binary-text conversion.
+This adapter converts the byte contents of a binary stream to character objects. It is needed because most Pharo/Squeak streams don't support binary to text conversion.
 "
 Class {
 	#name : #XMLBinaryReadStreamAdapter,

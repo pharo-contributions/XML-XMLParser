@@ -277,14 +277,14 @@ SAXHandler >> externalEntityResolver: anExternalEntityResolver [
 
 { #category : #configuration }
 SAXHandler >> externalSubsetReadLimit [
-	^ self parserLimits externalSubsetReadLimit
+	^ self externalEntityResolver externalSubsetReadLimit
 ]
 
 { #category : #configuration }
 SAXHandler >> externalSubsetReadLimit: aLimit [
 	"change the external subset read limit or nil to disable"
 
-	self parserLimits externalSubsetReadLimit: aLimit
+	self externalEntityResolver externalSubsetReadLimit: aLimit
 ]
 
 { #category : #declaration }

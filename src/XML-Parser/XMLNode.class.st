@@ -136,6 +136,11 @@ XMLNode >> hasParent [
 ]
 
 { #category : #testing }
+XMLNode >> isAttribute [
+	^ false
+]
+
+{ #category : #testing }
 XMLNode >> isCData [
 	^ false
 ]

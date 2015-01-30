@@ -51,6 +51,11 @@ XMLAttribute >> hasPrefix [
 ]
 
 { #category : #testing }
+XMLAttribute >> isAttribute [
+	^ true
+]
+
+{ #category : #testing }
 XMLAttribute >> isInLanguage: aLanguage [
 	self name = 'xml:lang'
 		ifTrue: [^ self hasLanguage: aLanguage]
@@ -91,11 +96,10 @@ XMLAttribute >> namespaceURI [
 	| prefix |
 
 	"attributes must have prefixes to be namespaced"
-	(self element notNil
+	(self hasParent
 		and: [(prefix := self prefix) notEmpty])
-		ifFalse: [^ ''].
-	
-	^ self element resolvePrefix: prefix.
+		ifTrue: [^ self parent resolvePrefix: prefix]
+		ifFalse: [^ '']
 ]
 
 { #category : #namespaces }
@@ -115,9 +119,9 @@ XMLAttribute >> renameWith: aBlock [
 	oldName := self name.
 	aBlock value.
 	(self name ~= oldName
-		and: [self element notNil])
+		and: [self hasParent])
 			ifTrue: [
-				self element
+				self parent
 					renamedAttribute: self
 					from: oldName
 					to: self name].

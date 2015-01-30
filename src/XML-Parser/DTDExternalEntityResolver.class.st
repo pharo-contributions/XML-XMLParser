@@ -49,9 +49,19 @@ DTDExternalEntityResolver >> errorLocalFromNonLocal [
 		'Local URI referenced from non-local URI; use #resolvesLocalFromNonLocal: to change'
 ]
 
-{ #category : #private }
+{ #category : #configuration }
 DTDExternalEntityResolver >> externalEntityLimits [
 	^ externalEntityLimits ifNil: [externalEntityLimits := DTDExternalEntityLimits new]
+]
+
+{ #category : #configuration }
+DTDExternalEntityResolver >> externalSubsetReadLimit [
+	^ self externalEntityLimits externalSubsetReadLimit
+]
+
+{ #category : #configuration }
+DTDExternalEntityResolver >> externalSubsetReadLimit: aLimit [
+	self externalEntityLimits externalSubsetReadLimit: aLimit
 ]
 
 { #category : #private }

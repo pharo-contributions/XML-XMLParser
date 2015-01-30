@@ -6,7 +6,6 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'documentReadLimit',
-		'externalSubsetReadLimit',
 		'maxEntityReplacementDepth'
 	],
 	#classInstVars : [
@@ -18,12 +17,6 @@ Class {
 { #category : #accessing }
 XMLParserLimits class >> defaultDocumentReadLimit [
 	^ self defaultReadLimit
-]
-
-{ #category : #accessing }
-XMLParserLimits class >> defaultExternalSubsetReadLimit [
-	^ self defaultReadLimit
-		ifNotNil: [:limit | (limit / 4) asInteger]
 ]
 
 { #category : #accessing }
@@ -53,22 +46,11 @@ XMLParserLimits >> documentReadLimit: aLimit [
 	documentReadLimit := aLimit
 ]
 
-{ #category : #accessing }
-XMLParserLimits >> externalSubsetReadLimit [
-	^ externalSubsetReadLimit
-]
-
-{ #category : #accessing }
-XMLParserLimits >> externalSubsetReadLimit: aLimit [
-	externalSubsetReadLimit := aLimit
-]
-
 { #category : #initialization }
 XMLParserLimits >> initialize [
 	super initialize.
 
 	documentReadLimit := self class defaultDocumentReadLimit.
-	externalSubsetReadLimit := self class defaultExternalSubsetReadLimit.
 	maxEntityReplacementDepth := 8.
 ]
 
@@ -85,6 +67,5 @@ XMLParserLimits >> maxEntityReplacementDepth: aLimit [
 { #category : #removing }
 XMLParserLimits >> removeAll [
 	documentReadLimit := nil.
-	externalSubsetReadLimit := nil.
 	maxEntityReplacementDepth := nil.
 ]

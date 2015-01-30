@@ -11,6 +11,13 @@ Class {
 }
 
 { #category : #private }
+XMLAbstractFactory class >> clearImplementations [
+	"self clearImplementations"
+
+	self allSubclassesDo: [:each | each implementation: nil]
+]
+
+{ #category : #private }
 XMLAbstractFactory class >> errorUnsupported [
 	self subclassResponsibility
 ]
@@ -27,13 +34,6 @@ XMLAbstractFactory class >> implementation [
 { #category : #private }
 XMLAbstractFactory class >> implementation: aClass [
 	implementation := aClass
-]
-
-{ #category : #'class initialization' }
-XMLAbstractFactory class >> initialize [
-	"self initialize"
-	"clear cached implementations"
-	self allSubclassesDo: [:each | each implementation: nil]
 ]
 
 { #category : #testing }

@@ -703,7 +703,7 @@ XMLWellFormedParserTokenizer >> nextContentMarkupToken [
 		ifTrue: [
 			streamReader next.
 			streamReader peek == $-
-				ifTrue: [^self nextComment].
+				ifTrue: [^ self nextComment].
 			^ self nextCDataSection].
 	self nextTag.
 ]
@@ -817,15 +817,11 @@ XMLWellFormedParserTokenizer >> nextEndInternalSubset [
 
 { #category : #tokenizing }
 XMLWellFormedParserTokenizer >> nextEndTag [
-	| tagName |
-
 	"Skip /"
 	streamReader next.
-	tagName := self nextName.
+	driver handleEndTag: self nextName.
 	streamReader skipSeparators.
 	self expectTerminator: $>.
-
-	driver handleEndTag: tagName.
 ]
 
 { #category : #'tokenizing - dtd' }

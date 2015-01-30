@@ -137,7 +137,7 @@ DTDExternalSubsetParserDriver >> preservesUndeclaredEntityReferences [
 
 { #category : #accessing }
 DTDExternalSubsetParserDriver >> readLimit [
-	^ self saxDriver externalSubsetReadLimit
+	^ self externalEntityResolver externalSubsetReadLimit
 ]
 
 { #category : #testing }

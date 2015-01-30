@@ -1,5 +1,5 @@
 "
-A class for XML URIs. It uses the XMLURIParser to parse URIs and can combine URIs using /, can decode URI paths, and can retrieve contents using XMLHTTPRequest and XMLFileHandle.
+A class for XML URIs. It uses the XMLURIParser to parse URIs and can combine URIs using /, can decode URI paths, and can retrieve contents of http:// and file:// URLs using XMLHTTPRequest and XMLFileHandle.
 "
 Class {
 	#name : #XMLURI,
@@ -152,6 +152,11 @@ XMLURI >> hasHost [
 ]
 
 { #category : #testing }
+XMLURI >> hasPathSegments [
+	^ pathSegments notEmpty
+]
+
+{ #category : #testing }
 XMLURI >> hasPort [
 	^ port notNil
 ]
@@ -195,21 +200,21 @@ XMLURI >> isRelative [
 
 { #category : #accessing }
 XMLURI >> path [
-	^ self pathPrintStringUnescaped: false
+	^ self pathPrintedUnescaped: false
 ]
 
 { #category : #printing }
-XMLURI >> pathPrintStringUnescaped: aBoolean [
-	| pathStream |
+XMLURI >> pathPrintedUnescaped: aBoolean [
+	| writeStream |
 
-	pathSegments
-		ifEmpty: [^ ''].
+	self hasPathSegments
+		ifFalse: [^ ''].
 
-	pathStream := (String new: pathSegments size * 10) writeStream.
+	writeStream := (String new: pathSegments size * 10) writeStream.
 	self
-		printPathSegmentsOn: pathStream
+		printPathSegmentsOn: writeStream
 		unescaped: aBoolean.
-	^ pathStream contents.
+	^ writeStream contents.
 ]
 
 { #category : #private }
@@ -262,7 +267,7 @@ XMLURI >> printPathSegmentsOn: aStream unescaped: aBoolean [
 	pathSegments
 		do: [:each |
 			aBoolean
-				ifTrue: [self printUnescaped: each on: aStream]
+				ifTrue: [self printUnescapedPathSegment: each on: aStream]
 				ifFalse: [aStream nextPutAll: each]]
 		separatedBy: [aStream nextPut: $/]
 ]
@@ -295,7 +300,7 @@ XMLURI >> printSchemeOn: aStream [
 ]
 
 { #category : #printing }
-XMLURI >> printUnescaped: aString on: aStream [
+XMLURI >> printUnescapedPathSegment: aString on: aStream [
 	| readStream nextChar charCode |
 
 	readStream := aString readStream.
@@ -308,8 +313,8 @@ XMLURI >> printUnescaped: aString on: aStream [
 							readFrom: readStream
 							withBase: 16
 							upTo: 2.
-					nextChar := (charCode ifNil: [$%]) asCharacter].
-			aStream nextPut: nextChar].
+					aStream nextPut: (charCode ifNil: [$%]) asCharacter]
+				ifFalse: [aStream nextPut: nextChar]].
 ]
 
 { #category : #accessing }
@@ -334,5 +339,5 @@ XMLURI >> setPathSegmentsFromString: aString [
 
 { #category : #accessing }
 XMLURI >> unescapedPath [
-	^ self pathPrintStringUnescaped: true
+	^ self pathPrintedUnescaped: true
 ]

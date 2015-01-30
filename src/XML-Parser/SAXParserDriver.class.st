@@ -132,11 +132,6 @@ SAXParserDriver >> externalSubsetParserOnURI: aUri [
 	
 ]
 
-{ #category : #accessing }
-SAXParserDriver >> externalSubsetReadLimit [
-	^ self saxHandler externalSubsetReadLimit
-]
-
 { #category : #'handling tokens' }
 SAXParserDriver >> handleAttributeDeclaration: anElement name: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	self isValidating
