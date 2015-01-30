@@ -77,6 +77,7 @@ XMLExternalEntityTest >> isSkipping [
 
 { #category : #private }
 XMLExternalEntityTest >> skipOrReturnWith: aBlock [
+	"skip is not portable to squeak"
 	self isSkipping
 		ifTrue: [
 			(self respondsTo: #skip)

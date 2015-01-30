@@ -36,7 +36,7 @@ XMLURITest >> domainWithPort [
 
 { #category : #strings }
 XMLURITest >> escaped [
-	^ '%20%22%3c%3E%25'
+	^ '%20%22%3c%3E%25+'
 ]
 
 { #category : #strings }
@@ -398,5 +398,6 @@ XMLURITest >> testURIPrinting [
 
 { #category : #strings }
 XMLURITest >> unescaped [
-	^ ' "<>%'
+	"the + is not an escape in paths, only in query strings"
+	^ ' "<>%+'
 ]

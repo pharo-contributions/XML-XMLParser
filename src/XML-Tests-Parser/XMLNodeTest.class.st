@@ -161,6 +161,11 @@ XMLNodeTest >> testHasParent [
 ]
 
 { #category : #tests }
+XMLNodeTest >> testIsAttribute [
+	self deny: self nodeClass new isAttribute
+]
+
+{ #category : #tests }
 XMLNodeTest >> testIsCData [
 	self deny: self nodeClass new isCData
 ]

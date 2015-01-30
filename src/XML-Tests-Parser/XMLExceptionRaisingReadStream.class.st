@@ -1,5 +1,5 @@
 "
-This is a read stream that raises errors when sent peek or next when atEnd.
+This is a read stream that raises errors when sent peek or next when atEnd like streams on other platforms  do and is used to test portability of stream use by the parser.
 "
 Class {
 	#name : #XMLExceptionRaisingReadStream,

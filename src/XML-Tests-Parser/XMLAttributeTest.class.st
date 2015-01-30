@@ -104,6 +104,11 @@ XMLAttributeTest >> testHasPrefix [
 ]
 
 { #category : #tests }
+XMLAttributeTest >> testIsAttribute [
+	self assert: self nodeClass new isAttribute
+]
+
+{ #category : #tests }
 XMLAttributeTest >> testIsInLanguage [
 	| element |
 
