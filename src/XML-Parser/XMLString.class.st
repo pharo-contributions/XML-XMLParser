@@ -75,7 +75,9 @@ XMLString >> includesSubstring: aStringOrStringNode [
 
 { #category : #accessing }
 XMLString >> indexOfSubstring: aStringOrStringNode [
-	^ self string findString: aStringOrStringNode asString startingAt: 1
+	^ self string
+		findString: aStringOrStringNode asString
+		startingAt: 1
 ]
 
 { #category : #testing }
@@ -109,8 +111,9 @@ XMLString >> isWhitespace [
 		and: [self string allSatisfy: [:each | each isSeparator]]
 ]
 
-{ #category : #'split and merge' }
+{ #category : #'splitting/merging' }
 XMLString >> mergeAdjacent [
+	"merges a string node with adjacent string nodes in parent"
 	| siblingNodes selfIndex adjacentNode |
 
 	self hasParent
@@ -176,7 +179,7 @@ XMLString >> sortKey [
 	^ self string
 ]
 
-{ #category : #'split and merge' }
+{ #category : #'splitting/merging' }
 XMLString >> splitAt: anOffset [
 	| newNode |
 

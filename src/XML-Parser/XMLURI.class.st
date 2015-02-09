@@ -6,6 +6,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'scheme',
+		'hasAuthorityPrefix',
+		'userInfo',
 		'host',
 		'port',
 		'pathSegments',
@@ -17,17 +19,23 @@ Class {
 
 { #category : #'instance creation' }
 XMLURI class >> fromString: aString [
-	^ self new fromString: aString
+	^ self basicNew initialize fromString: aString
+]
+
+{ #category : #'instance creation' }
+XMLURI class >> new [
+	^ self fromString: ''
 ]
 
 { #category : #combining }
 XMLURI >> / aUriOrString [
 	| uriToCombineWith |
 
-	uriToCombineWith := aUriOrString asXMLURI.
-	^ (uriToCombineWith isRelative)
-		ifTrue: [self copy combineWithURI: uriToCombineWith]
-		ifFalse: [uriToCombineWith].
+	(uriToCombineWith := aUriOrString asXMLURI) isEmpty
+		ifFalse: [
+			(uriToCombineWith isRelative)
+				ifTrue: [^ self copy combineWithRelativeURI: uriToCombineWith]
+				ifFalse: [^ uriToCombineWith]]
 ]
 
 { #category : #comparing }
@@ -39,39 +47,72 @@ XMLURI >> = anObject [
 		ifFalse: [^ false].
 
 	^ scheme = anObject scheme
-		and: [host = anObject host
-			and: [port = anObject port
-				and: [pathSegments = anObject pathSegments
-					and: [queryString = anObject queryString
-						and: [fragment = anObject fragment]]]]].
+		and: [hasAuthorityPrefix = anObject hasAuthorityPrefix
+			and: [userInfo = anObject userInfo
+				and: [host = anObject host
+					and: [port = anObject port
+						and: [pathSegments = anObject pathSegments
+							and: [queryString = anObject queryString
+								and: [fragment = anObject fragment]]]]]]].
+]
+
+{ #category : #private }
+XMLURI >> addDotPathSegment [
+	self hasNonDirectoryPath
+		ifTrue: [self haveDirectoryPath]
+]
+
+{ #category : #private }
+XMLURI >> addDoubleDotPathSegment [
+	self hasPath
+		ifFalse: [^ self].
+
+	self hasRootPath
+		ifTrue: [pathSegments removeAll]
+		ifFalse: [| hadAbsolutePath |
+			hadAbsolutePath := self hasAbsolutePath.
+			self hasDirectoryPath
+				ifTrue: [pathSegments removeLast].
+			self hasPath
+				ifTrue: [
+					pathSegments removeLast.
+					(self hasPath
+						or: [hadAbsolutePath])
+						ifTrue: [self haveDirectoryPath]]].
 ]
 
 { #category : #private }
 XMLURI >> addPathSegment: aSegment [
-	(aSegment = '.' or: [aSegment = '..'])
-		ifTrue: [
-			(aSegment = '..' and: [pathSegments notEmpty])
-				ifTrue: [pathSegments removeLast].
-			^ self].
+	aSegment = '.'
+		ifTrue: [^ self addDotPathSegment].
+	aSegment = '..'
+		ifTrue: [^ self addDoubleDotPathSegment].
 
-	(aSegment notEmpty
-		and: [pathSegments isEmpty
-			and: [self hasHost]])
-		ifTrue: [pathSegments addFirst: ''].
+	self hasPath
+		ifTrue: [
+			(self hasDirectoryPath
+				and: [pathSegments size > 1])
+				ifTrue: [pathSegments removeLast]]
+		ifFalse: [
+			self hasHost
+				ifTrue: [pathSegments addLast: '']].
 
 	pathSegments addLast: aSegment.
 ]
 
 { #category : #private }
 XMLURI >> addPathSegmentsFrom: aUri [
-	aUri pathSegments
-		ifEmpty: [^ self].
+	aUri hasPath
+		ifFalse: [^ self].
 
 	aUri hasAbsolutePath
 		ifTrue: [pathSegments removeAll]
 		ifFalse: [
-			pathSegments
-				ifNotEmpty: [pathSegments removeLast]].
+			self hasNonDirectoryPath
+				ifTrue: [
+					pathSegments removeLast.
+					self hasPath
+						ifTrue: [self haveDirectoryPath]]].
 
 	aUri pathSegments do: [:each | self addPathSegment: each].
 ]
@@ -95,15 +136,24 @@ XMLURI >> asXMLURI [
 ]
 
 { #category : #private }
-XMLURI >> combineWithURI: aUri [
-	aUri hasHost
-		ifTrue: [host := aUri host].
-	aUri hasPort
-		ifTrue: [port := aUri port].
-
-	self addPathSegmentsFrom: aUri.
-	queryString := aUri queryString.
-	fragment := aUri fragment.
+XMLURI >> combineWithRelativeURI: aRelativeUri [
+	(aRelativeUri hasHost
+		or: [aRelativeUri hasPath])
+		ifTrue: [
+			queryString := ''.
+			fragment := ''].
+	aRelativeUri hasHost
+		ifTrue: [
+			host := aRelativeUri host.
+			pathSegments removeAll].
+	aRelativeUri hasPort
+		ifTrue: [port := aRelativeUri port].
+	aRelativeUri hasPath
+		ifTrue: [self addPathSegmentsFrom: aRelativeUri].
+	aRelativeUri hasQueryString
+		ifTrue: [queryString := aRelativeUri queryString].
+	aRelativeUri hasFragment
+		ifTrue: [fragment := aRelativeUri fragment].
 ]
 
 { #category : #accessing }
@@ -118,8 +168,16 @@ XMLURI >> fromString: aString [
 	parser := XMLURIParser on: aString.
 
 	scheme := parser parseScheme.
-	host := parser parseHostAfterScheme: scheme.
-	port := parser parsePort.
+	hasAuthorityPrefix := parser parseAuthorityPrefix.
+	(hasAuthorityPrefix
+		or: [scheme notEmpty])
+		ifTrue: [
+			userInfo := parser parseUserInfo.
+			host := parser parseHost.
+			port := parser parsePort]
+		ifFalse: [
+			userInfo := ''.
+			host := ''].
 	self setPathSegmentsFromString: parser parsePath.
 	queryString := parser parseQueryString.
 	fragment := parser parseFragment.
@@ -142,6 +200,24 @@ XMLURI >> hasAbsolutePath [
 ]
 
 { #category : #testing }
+XMLURI >> hasAuthority [
+	^ self hasUserInfo
+		or: [self hasHost
+			or: [self hasPort]]
+]
+
+{ #category : #testing }
+XMLURI >> hasAuthorityPrefix [
+	^ hasAuthorityPrefix
+]
+
+{ #category : #testing }
+XMLURI >> hasDirectoryPath [
+	^ pathSegments notEmpty
+		and: [pathSegments last isEmpty]
+]
+
+{ #category : #testing }
 XMLURI >> hasFragment [
 	^ fragment notEmpty
 ]
@@ -152,7 +228,12 @@ XMLURI >> hasHost [
 ]
 
 { #category : #testing }
-XMLURI >> hasPathSegments [
+XMLURI >> hasNonDirectoryPath [
+	^ self hasPath and: [self hasDirectoryPath not]
+]
+
+{ #category : #testing }
+XMLURI >> hasPath [
 	^ pathSegments notEmpty
 ]
 
@@ -167,8 +248,19 @@ XMLURI >> hasQueryString [
 ]
 
 { #category : #testing }
+XMLURI >> hasRootPath [
+	^ pathSegments size = 2
+		and: [pathSegments allSatisfy: [:each | each isEmpty]]
+]
+
+{ #category : #testing }
 XMLURI >> hasScheme [
 	^ scheme notEmpty
+]
+
+{ #category : #testing }
+XMLURI >> hasUserInfo [
+	^ userInfo notEmpty
 ]
 
 { #category : #comparing }
@@ -176,9 +268,25 @@ XMLURI >> hash [
 	^ host hash bitXor: pathSegments hash
 ]
 
+{ #category : #private }
+XMLURI >> haveDirectoryPath [
+	self hasPath
+		ifFalse: [pathSegments addLast: ''].
+	pathSegments addLast: ''.
+]
+
 { #category : #accessing }
 XMLURI >> host [
 	^ host
+]
+
+{ #category : #testing }
+XMLURI >> isEmpty [
+	^ (self hasScheme
+		or: [self hasAuthority
+			or: [self hasPath
+				or: [self hasQueryString
+					or: [self hasFragment]]]]) not
 ]
 
 { #category : #testing }
@@ -207,7 +315,7 @@ XMLURI >> path [
 XMLURI >> pathPrintedUnescaped: aBoolean [
 	| writeStream |
 
-	self hasPathSegments
+	self hasPath
 		ifFalse: [^ ''].
 
 	writeStream := (String new: pathSegments size * 10) writeStream.
@@ -233,6 +341,19 @@ XMLURI >> postCopy [
 ]
 
 { #category : #printing }
+XMLURI >> printAuthorityOn: aStream [
+	self hasAuthority
+		ifTrue: [
+			(self hasScheme not
+				and: [self hasAuthorityPrefix])
+				ifTrue: [aStream nextPutAll: '//'].
+			self
+				printUserInfoOn: aStream;
+				printHostOn: aStream;
+				printPortOn: aStream]
+]
+
+{ #category : #printing }
 XMLURI >> printFragmentOn: aStream [
 	self hasFragment
 		ifTrue: [
@@ -244,18 +365,14 @@ XMLURI >> printFragmentOn: aStream [
 { #category : #printing }
 XMLURI >> printHostOn: aStream [
 	self hasHost
-		ifTrue: [
-			self hasScheme
-				ifFalse: [aStream nextPutAll: '//'].
-			aStream nextPutAll: host]
+		ifTrue: [aStream nextPutAll: host]
 ]
 
 { #category : #printing }
 XMLURI >> printOn: aStream [
 	self
 		printSchemeOn: aStream;
-		printHostOn: aStream;
-		printPortOn: aStream;
+		printAuthorityOn: aStream;
 		printPathSegmentsOn: aStream unescaped: false;
 		printQueryStringOn: aStream;
 		printFragmentOn: aStream
@@ -294,9 +411,11 @@ XMLURI >> printQueryStringOn: aStream [
 XMLURI >> printSchemeOn: aStream [
 	self hasScheme
 		ifTrue: [
-			aStream
+			aStream 
 				nextPutAll: scheme;
-				nextPutAll: '://']
+				nextPut: $:.
+			self hasAuthorityPrefix
+				ifTrue: [aStream nextPutAll: '//']]
 ]
 
 { #category : #printing }
@@ -315,6 +434,15 @@ XMLURI >> printUnescapedPathSegment: aString on: aStream [
 							upTo: 2.
 					aStream nextPut: (charCode ifNil: [$%]) asCharacter]
 				ifFalse: [aStream nextPut: nextChar]].
+]
+
+{ #category : #printing }
+XMLURI >> printUserInfoOn: aStream [
+	self hasUserInfo
+		ifTrue: [
+			aStream
+				nextPutAll: userInfo;
+				nextPut: $@]
 ]
 
 { #category : #accessing }
@@ -340,4 +468,9 @@ XMLURI >> setPathSegmentsFromString: aString [
 { #category : #accessing }
 XMLURI >> unescapedPath [
 	^ self pathPrintedUnescaped: true
+]
+
+{ #category : #accessing }
+XMLURI >> userInfo [
+	^ userInfo
 ]

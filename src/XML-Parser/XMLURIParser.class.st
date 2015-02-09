@@ -5,42 +5,54 @@ Class {
 	#name : #XMLURIParser,
 	#superclass : #Object,
 	#instVars : [
-		'uriStream',
-		'writeStream'
+		'writeStream',
+		'readStream'
 	],
 	#category : #'XML-Parser-URI'
 }
 
 { #category : #'instance creation' }
 XMLURIParser class >> on: aString [
-	^ self new uri: aString
+	^ self new on: aString
 ]
 
-{ #category : #private }
-XMLURIParser >> parseDoubleSlashOrReset [
-	2 timesRepeat: [
-		(uriStream atEnd not
-			and: [uriStream peek == $/])
-				ifTrue: [uriStream next]
-				ifFalse: [
-					uriStream reset.
-					^ false]].
-	^ true.
+{ #category : #initialization }
+XMLURIParser >> on: aString [
+	readStream := aString readStream.
+	writeStream := (String new: aString size) writeStream.
+]
+
+{ #category : #parsing }
+XMLURIParser >> parseAuthorityPrefix [
+	| oldPosition |
+
+	oldPosition := readStream position.
+	((self parseNext: $/)
+		and: [self parseNext: $/])
+		ifTrue: [^ true]
+		ifFalse: [
+			readStream position: oldPosition.
+			^ false].
 ]
 
 { #category : #parsing }
 XMLURIParser >> parseFragment [
-	^ self
-		parseUpToAnyNotSkipping: ''
-		startingAfter: $#
+	^ self parseUpToEndAfterNext: $#
 ]
 
 { #category : #parsing }
-XMLURIParser >> parseHostAfterScheme: aScheme [
-	^ (aScheme notEmpty
-		or: [self parseDoubleSlashOrReset])
-		ifTrue: [(self parseUpToAnyNotSkipping: ':/?#') asLowercase]
-		ifFalse: [''].
+XMLURIParser >> parseHost [
+	^ (self parseUpToAnyNotSkipping: ':/?#') asLowercase
+]
+
+{ #category : #private }
+XMLURIParser >> parseNext: aCharacter [
+	(readStream atEnd not
+		and: [readStream peek == aCharacter])
+		ifTrue: [
+			readStream next.
+			^ true]
+		ifFalse: [^ false]
 ]
 
 { #category : #parsing }
@@ -50,66 +62,70 @@ XMLURIParser >> parsePath [
 
 { #category : #parsing }
 XMLURIParser >> parsePort [
-	(uriStream atEnd not
-		and: [uriStream peek == $:])
-		ifFalse: [^ nil].
-
-	^ XMLIntegerReader
-		readFrom:
-			(self
-				parseUpToAnyNotSkipping: '/?#'
-				startingAfter: $:) readStream
-		withBase: 10.
+	(self parseNext: $:)
+		ifTrue: [
+			^ XMLIntegerReader
+				readFrom: (self parseUpToAnyNotSkipping: '/?#') readStream
+				withBase: 10]
+		ifFalse: [^ nil]
 ]
 
 { #category : #parsing }
 XMLURIParser >> parseQueryString [
 	^ self
 		parseUpToAnyNotSkipping: '#'
-		startingAfter: $?
+		afterNext: $?
 ]
 
 { #category : #parsing }
 XMLURIParser >> parseScheme [
 	| scheme |
 
-	scheme := uriStream upTo: $:.
-	^ self parseDoubleSlashOrReset
-		ifTrue: [scheme asLowercase]
-		ifFalse: [''].
-
-	
-	
-		
+	scheme := self parseUpToAnyNotSkipping: ':/@?#'.
+	(self parseNext: $:)
+		ifTrue: [^ scheme asLowercase]
+		ifFalse: [
+			readStream reset.
+			^ ''].
 ]
 
 { #category : #private }
 XMLURIParser >> parseUpToAnyNotSkipping: aCollection [
 	^ self
 		parseUpToAnyNotSkipping: aCollection
-		startingAfter: nil
+		afterNext: nil
 ]
 
 { #category : #private }
-XMLURIParser >> parseUpToAnyNotSkipping: aCollection startingAfter: aCharacter [
-	aCharacter ifNotNil: [
-		(uriStream atEnd not
-			and: [uriStream peek == aCharacter])
-			ifFalse: [^ ''].
-		uriStream next].
+XMLURIParser >> parseUpToAnyNotSkipping: aCollection afterNext: aCharacter [
+	aCharacter
+		ifNotNil: [
+			(self parseNext: aCharacter)
+				ifFalse: [^ '']].
 
-	^ aCollection
-		ifEmpty: [uriStream upToEnd]
-		ifNotEmpty: [
-			writeStream reset.
-			[uriStream atEnd
-				or: [aCollection includes: uriStream peek]]
-				whileFalse: [writeStream nextPut: uriStream next].
-			writeStream contents].
+	writeStream reset.
+	[readStream atEnd
+		or: [aCollection includes: readStream peek]]
+		whileFalse: [writeStream nextPut: readStream next].
+	^ writeStream contents.
 ]
 
-{ #category : #accessing }
-XMLURIParser >> uri: aString [
-	uriStream := aString readStream.
-	writeStream := (String new: aString size) writeStream.
+{ #category : #private }
+XMLURIParser >> parseUpToEndAfterNext: aCharacter [
+	(self parseNext: aCharacter)
+		ifTrue: [^ readStream upToEnd]
+		ifFalse: [^ '']
+]
+
+{ #category : #parsing }
+XMLURIParser >> parseUserInfo [
+	| userInfo oldPosition |
+
+	oldPosition := readStream position.
+	userInfo := self parseUpToAnyNotSkipping: ':/@?#'.
+	(self parseNext: $@)
+		ifTrue: [^ userInfo]
+		ifFalse: [
+			readStream position: oldPosition.
+			^ ''].
 ]

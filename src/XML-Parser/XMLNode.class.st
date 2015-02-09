@@ -81,9 +81,10 @@ XMLNode >> canonicallyPrintOn: aStream [
  	"Prints on aStream as canonical XML"
 	self
 		withNewXMLWriterOn: aStream
-		do: [ :writer | writer
-										isCanonical: true;
-										writeWith: [ :wr | self writeXMLOn: wr ] ]
+		do: [:writer |
+			writer
+				isCanonical: true;
+				writeWith: [self writeXMLOn: writer]]
 		whenAbsent: [self printOn: aStream]
 ]
 
@@ -235,10 +236,11 @@ XMLNode >> postCopy [
 XMLNode >> prettyPrintOn: aStream [
 	self
 		withNewXMLWriterOn: aStream
-		do: [ :writer | writer
-									enablePrettyPrinting;
-									writeWith: [ :wr | self writeXMLOn: wr ] ]
-		whenAbsent: [ self printOn: aStream ]
+		do: [:writer |
+			writer
+				enablePrettyPrinting;
+				writeWith: [self writeXMLOn: writer]]
+		whenAbsent: [self printOn: aStream]
 ]
 
 { #category : #printing }
@@ -261,8 +263,8 @@ XMLNode >> printContentOn: aStream [
 XMLNode >> printOn: aStream [
 	self
 		withNewXMLWriterOn: aStream
-		do: [ :writer | writer writeWith: [ :wr | self writeXMLOn: wr] ]
-		whenAbsent: [ super printOn: aStream ]
+		do: [:writer | writer writeWith: [self writeXMLOn: writer]]
+		whenAbsent: [super printOn: aStream]
 ]
 
 { #category : #printing }
@@ -274,11 +276,11 @@ XMLNode >> printRawContentOn: aStream [
 XMLNode >> printWithoutSelfClosingTagsOn: aStream [
 	self
 		withNewXMLWriterOn: aStream
-		do: [ :writer |
+		do: [:writer |
 			writer
 				outputsSelfClosingTags: false;
-				writeWith: [ :wr | self writeXMLOn: wr ]]
-		whenAbsent: [ self printOn: aStream ]
+				writeWith: [self writeXMLOn: writer]]
+		whenAbsent: [self printOn: aStream]
 ]
 
 { #category : #printing }

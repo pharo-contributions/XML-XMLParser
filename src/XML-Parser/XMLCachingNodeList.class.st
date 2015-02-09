@@ -19,10 +19,12 @@ Class {
 XMLCachingNodeList >> afterAdding: aNode at: anIndex [
 	aNode isElement
 		ifTrue: [
-			(anIndex = self size
-				or: [(self findElementAfter: aNode) isNil])
-				ifTrue: [self elementAddedAtEnd: aNode]
-				ifFalse: [self elementInsertedBeforeEnd: aNode]].
+			anIndex = self size
+				ifTrue: [self cacheElementAddedLast: aNode]
+				ifFalse: [
+					self
+						cacheElement: aNode
+						addedAt: anIndex]].
 	super
 		afterAdding: aNode
 		at: anIndex.
@@ -31,24 +33,48 @@ XMLCachingNodeList >> afterAdding: aNode at: anIndex [
 { #category : #private }
 XMLCachingNodeList >> afterAddingLast: aNode [
 	aNode isElement
-		ifTrue: [self elementAddedAtEnd: aNode].
+		ifTrue: [self cacheElementAddedLast: aNode].
 	super afterAddingLast: aNode.
 ]
 
 { #category : #private }
 XMLCachingNodeList >> afterRemoving: aNode [
 	aNode isElement
-		ifTrue: [
-			self cachedElements remove: aNode.
-			self
-				cachedElementsByNameAt: aNode name
-				removeElement: aNode.
-			aNode hasPrefix
-				ifTrue: [
-					self
-						cachedElementsByNameAt: aNode localName
-						removeElement: aNode]].
+		ifTrue: [self uncacheElement: aNode].
 	super afterRemoving: aNode.
+]
+
+{ #category : #private }
+XMLCachingNodeList >> cacheElement: anElement addedAt: anIndex [
+	(self findElementAfterIndex: anIndex)
+		ifNil: [self cachedElements addLast: anElement]
+		ifNotNil: [:elementAfter |
+			self cachedElements
+				add: anElement
+				before: elementAfter].
+	self
+		cachedElementsByNameAt: anElement name
+		add: anElement
+		beforeNextAfterIndex: anIndex.
+	anElement hasPrefix
+		ifTrue: [
+			self
+				cachedElementsByNameAt: anElement localName
+				add: anElement
+				beforeNextAfterIndex: anIndex].
+]
+
+{ #category : #private }
+XMLCachingNodeList >> cacheElementAddedLast: anElement [
+	self cachedElements addLast: anElement.
+	self
+		cachedElementsByNameAt: anElement name
+		addLast: anElement.
+	anElement hasPrefix
+		ifTrue: [
+			self
+				cachedElementsByNameAt: anElement localName
+				addLast: anElement].
 ]
 
 { #category : #private }
@@ -62,29 +88,17 @@ XMLCachingNodeList >> cachedElementsByName [
 ]
 
 { #category : #private }
-XMLCachingNodeList >> cachedElementsByNameAt: aName addElement: anElement [
-	| elementsWithName |
+XMLCachingNodeList >> cachedElementsByNameAt: aName add: anElement beforeNextAfterIndex: anIndex [
+	| elementAfter elementsWithName |
 
-	elementsWithName :=
-		self cachedElementsByName
-			at: aName
-			ifAbsent: [
-				self cachedElementsByName at: aName put: anElement.
-				^ self].
-	 elementsWithName isCollection
-		ifTrue: [elementsWithName add: anElement]
-		ifFalse: [
-			self cachedElementsByName
-				at: aName
-				put: (OrderedCollection with: elementsWithName with: anElement)].
-]
-
-{ #category : #private }
-XMLCachingNodeList >> cachedElementsByNameAt: aName insertElement: anElement [
-	| elementsWithName elementAfter |
-
-	(elementAfter := self findElementAfter: anElement withName: aName)
-		ifNil: [^ self cachedElementsByNameAt: aName addElement: anElement].
+	(elementAfter :=
+		self
+			findElementAfterIndex: anIndex
+			named: aName)
+		ifNil: [
+			^ self
+				cachedElementsByNameAt: aName
+				addLast: anElement].
 
 	(elementsWithName := self cachedElementsByName at: aName) isCollection
 		ifTrue: [elementsWithName add: anElement before: elementAfter]
@@ -95,14 +109,33 @@ XMLCachingNodeList >> cachedElementsByNameAt: aName insertElement: anElement [
 ]
 
 { #category : #private }
-XMLCachingNodeList >> cachedElementsByNameAt: aName removeElement: anElement [
+XMLCachingNodeList >> cachedElementsByNameAt: aName addLast: anElement [
+	| elementsWithName |
+
+	elementsWithName :=
+		self cachedElementsByName
+			at: aName
+			ifAbsent: [
+				self cachedElementsByName at: aName put: anElement.
+				^ self].
+
+	 elementsWithName isCollection
+		ifTrue: [elementsWithName addLast: anElement]
+		ifFalse: [
+			self cachedElementsByName
+				at: aName
+				put: (OrderedCollection with: elementsWithName with: anElement)].
+]
+
+{ #category : #private }
+XMLCachingNodeList >> cachedElementsByNameAt: aName remove: anElement [
 	| elementsWithName |
 
 	(elementsWithName := self cachedElementsByName at: aName) isCollection
 		ifTrue: [
 			elementsWithName remove: anElement.
-			elementsWithName
-				ifEmpty: [self cachedElementsByName removeKey: aName]]
+			elementsWithName isEmpty
+				ifTrue: [self cachedElementsByName removeKey: aName]]
 		ifFalse: [self cachedElementsByName removeKey: aName]
 ]
 
@@ -110,19 +143,6 @@ XMLCachingNodeList >> cachedElementsByNameAt: aName removeElement: anElement [
 XMLCachingNodeList >> copyClass [
 	"use superclass for copies for performance"
 	^ XMLNodeList
-]
-
-{ #category : #private }
-XMLCachingNodeList >> elementAddedAtEnd: anElement [
-	self cachedElements addLast: anElement.
-	self
-		cachedElementsByNameAt: anElement name
-		addElement: anElement.
-	anElement hasPrefix
-		ifTrue: [
-			self
-				cachedElementsByNameAt: anElement localName
-				addElement: anElement]
 ]
 
 { #category : #accessing }
@@ -135,21 +155,6 @@ XMLCachingNodeList >> elementAt: aName ifAbsent: aBlock [
 			ifAbsent: [^ aBlock value]) isCollection
 		ifTrue: [^ elementsWithName first]
 		ifFalse: [^ elementsWithName]
-]
-
-{ #category : #private }
-XMLCachingNodeList >> elementInsertedBeforeEnd: anElement [
-	self cachedElements
-		add: anElement
-		before: (self findElementAfter: anElement).
-	self
-		cachedElementsByNameAt: anElement name
-		insertElement: anElement.
-	anElement hasPrefix
-		ifTrue: [
-			self
-				cachedElementsByNameAt: anElement localName
-				insertElement: anElement].
 ]
 
 { #category : #accessing }
@@ -197,30 +202,21 @@ XMLCachingNodeList >> elementsSelect: aBlock [
 ]
 
 { #category : #private }
-XMLCachingNodeList >> findElementAfter: anElement [
-	| previousElement |
-
-	previousElement := nil.
-	self do: [:each |
-		each isElement
-			ifTrue: [
-				previousElement = anElement
-					ifTrue: [^ each].
-				previousElement := each]].
+XMLCachingNodeList >> findElementAfterIndex: anIndex [
+	anIndex + 1 to: self size do: [:i | | node |
+		node := self at: i.
+		node isElement
+			ifTrue: [^ node]].
 	^ nil.
 ]
 
 { #category : #private }
-XMLCachingNodeList >> findElementAfter: anElement withName: aName [
-	| previousElementWithName |
-
-	previousElementWithName := nil.
-	self do: [:each |
-		(each isElement and: [each isNamed: aName])
-			ifTrue: [
-				(previousElementWithName = anElement)
-					ifTrue: [^ each].
-				previousElementWithName := each]].
+XMLCachingNodeList >> findElementAfterIndex: anIndex named: aName [
+	anIndex + 1 to: self size do: [:i | | node |
+		node := self at: i.
+		(node isElement
+			and: [node isNamed: aName])
+			ifTrue: [^ node]].
 	^ nil.
 ]
 
@@ -248,33 +244,68 @@ XMLCachingNodeList >> lastElement [
 		ifAbsent: [self defaultValue]
 ]
 
+{ #category : #private }
+XMLCachingNodeList >> rebuildCachedElements [
+	self cachedElements removeAll.
+	self cachedElementsByName removeAll.
+	self do: [:each |
+		each isElement
+			ifTrue: [self cacheElementAddedLast: each]].
+]
+
 { #category : #notifications }
 XMLCachingNodeList >> renamedElement: anElement from: anOldName to: aNewName [
-	| oldPrefix |
+	| oldPrefix index |
 
 	self
 		cachedElementsByNameAt: anOldName
-		removeElement: anElement.
+		remove: anElement.
 	(oldPrefix := anOldName prefixBeforeLocalName)
 		ifNotEmpty: [
 			self
 				cachedElementsByNameAt: (anOldName localNameAfterPrefix: oldPrefix)
-				removeElement: anElement].
+				remove: anElement].
+	index := self indexOf: anElement.
 	self
 		cachedElementsByNameAt: anElement name
-		insertElement: anElement.
+		add: anElement
+		beforeNextAfterIndex: index.
 	anElement hasPrefix
 		ifTrue: [
 			self
 				cachedElementsByNameAt: anElement localName
-				insertElement: anElement].
+				add: anElement
+				beforeNextAfterIndex: index].
 ]
 
 { #category : #sorting }
 XMLCachingNodeList >> sort: aSortBlock [
 	super sort: aSortBlock.
+
 	self cachedElements sort: aSortBlock.
 	self cachedElementsByName valuesDo: [:each |
 		each isCollection
 			ifTrue: [each sort: aSortBlock]].
+]
+
+{ #category : #accessing }
+XMLCachingNodeList >> swap: aFirstIndex with: aSecondIndex [
+	super swap: aFirstIndex with: aSecondIndex.
+
+	((self at: aFirstIndex) isElement
+		or: [(self at: aSecondIndex) isElement])
+		ifTrue: [self rebuildCachedElements].
+]
+
+{ #category : #private }
+XMLCachingNodeList >> uncacheElement: anElement [
+	self cachedElements remove: anElement.
+	self
+		cachedElementsByNameAt: anElement name
+		remove: anElement.
+	anElement hasPrefix
+		ifTrue: [
+			self
+				cachedElementsByNameAt: anElement localName
+				remove: anElement].
 ]

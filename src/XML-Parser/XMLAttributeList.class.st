@@ -22,7 +22,23 @@ XMLAttributeList >> addName: aName value: aValue [
 XMLAttributeList >> afterAdding: anAttribute at: anIndex [
 	self attributesByName
 		at: anAttribute name
-		ifPresent: [:oldAttribute | self remove: oldAttribute exceptAt: anIndex];
+		ifPresent: [:oldAttribute |
+			self
+				replacedAttribute: oldAttribute
+				withAttributeAt: anIndex];
+		at: anAttribute name
+		put: anAttribute.
+	observer ifNotNil: [observer addedAttribute: anAttribute].
+]
+
+{ #category : #private }
+XMLAttributeList >> afterAddingLast: anAttribute [
+	self attributesByName
+		at: anAttribute name
+		ifPresent: [:oldAttribute |
+			self
+				replacedAttribute: oldAttribute
+				withAttributeAt: self size];
 		at: anAttribute name
 		put: anAttribute.
 	observer ifNotNil: [observer addedAttribute: anAttribute].
@@ -157,6 +173,17 @@ XMLAttributeList >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 		removeKey: anOldName;
 		at: aNewName ifPresent: [:attribute | self remove: attribute];
 		at: aNewName put: anAttribute
+]
+
+{ #category : #private }
+XMLAttributeList >> replacedAttribute: anAttribute withAttributeAt: anIndex [
+	| i |
+
+	(i :=
+		self
+			indexOf: anAttribute
+			otherThan: anIndex) > 0
+		ifTrue: [self removeAt: i]
 ]
 
 { #category : #private }

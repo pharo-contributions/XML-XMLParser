@@ -735,8 +735,6 @@ XMLOrderedList >> sort [
 
 { #category : #sorting }
 XMLOrderedList >> sort: aSortBlock [
-	"sorting a collection modifies but does not add or remove,
-	so observerable subclasses will not be affected."
 	collection sort: aSortBlock
 ]
 
@@ -753,6 +751,19 @@ XMLOrderedList >> sorted: aSortBlock [
 { #category : #private }
 XMLOrderedList >> species [
 	^ XMLOrderedList
+]
+
+{ #category : #accessing }
+XMLOrderedList >> swap: aFirstIndex with: aSecondIndex [
+	| temp |
+
+	temp := collection at: aFirstIndex.
+	collection
+		at: aFirstIndex
+		put: (collection at: aSecondIndex).
+	collection
+		at: aSecondIndex
+		put: temp.
 ]
 
 { #category : #accessing }
