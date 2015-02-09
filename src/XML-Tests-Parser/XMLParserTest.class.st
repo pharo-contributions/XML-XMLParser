@@ -1527,37 +1527,6 @@ XMLParserTest >> testWhitespacePreservationValidation [
 ]
 
 { #category : #tests }
-XMLParserTest >> testWideCharacterNames [
-	| wideNames document |
-
-	(wideNames := OrderedCollection new)
-		addLast: (self wideStringFrom: #(16rC0 16rD6 16rD8 16rF6 16rF8 16r2FF $- $.));
-		addLast: (self wideStringFrom: #(16r370 16r37D 16r37F 16r1FFF 16r200C $0 $9));
-		addLast: (self wideStringFrom: #(16r200D 16r2070 16r218F 16r2C00 16r2FEF 16rB7));
-		addLast: (self wideStringFrom: #(16r3001 16rD7FF 16rF900 16rFDCF 16rFDF0 16r0300));
-		addLast: (self wideStringFrom: #(16rFFFD 16r10000 16rEFFFF 16r036F 16r203F 16r2040)).
-	self
-		shouldnt: [
-			document :=
-				XMLDOMParser parse:
-					('<!DOCTYPE {1} [
-						<!ELEMENT {1} ({2}, {3}, {4})>
-						<!ELEMENT {2} EMPTY>
-						<!ELEMENT {3} EMPTY>
-						<!ELEMENT {4} EMPTY>
-						<!ATTLIST {1} {5} ({3} | {4} | {5}) #IMPLIED>
-					]>
-					<{1} {5}="{4}">
-						<{2}/><{3}/><{4}/>
-					</{1}>' format: wideNames)]
-		raise: XMLParserException.
-	self
-		assert: document root name = wideNames first;
-		assert: (document root attributeAt: wideNames fifth) = wideNames fourth;
-		assert: (document root elementNames) asOrderedCollection = (wideNames copyFrom: 2 to: 4).
-]
-
-{ #category : #tests }
 XMLParserTest >> testXMLIDAttributeValidation [
 	| xml xmlWithDuplicateId |
 
@@ -1641,9 +1610,4 @@ XMLParserTest >> testXMLPrefixedAttributes [
 		assert: (document root attributeAt: 'xmll') = 'two';
 		assert: (document root attributeAt: 'xml:') = 'three';
 		assert: (document root attributeAt: 'xmlnss') = 'four'.
-]
-
-{ #category : #private }
-XMLParserTest >> wideStringFrom: aCollection [
-	^ String withAll: (aCollection collect: [:each | each asCharacter])
 ]

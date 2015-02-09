@@ -386,15 +386,15 @@ XMLNodeWithElementsTest >> testContentNodesDo [
 { #category : #tests }
 XMLNodeWithElementsTest >> testContentString [
 	self
-		assert: self newNodeWithNodes contentString = 'testing one testing two testing three';
-		assert: (self newNodeWithNodes contentString: 'new') contentString = 'new'
+		assert: self newNodeWithElements contentString = 'testing one testing two testing three';
+		assert: (self newNodeWithElements contentString: 'new') contentString = 'new'
 ]
 
 { #category : #tests }
 XMLNodeWithElementsTest >> testContentStringAt [
 	| root |
 
-	root := self newNodeWithNodes firstElement.
+	root := self newNodeWithElements firstElement.
 	root elementsDo: [:each |
 		self assert: (root contentStringAt: each name) = each contentString].
 ]
@@ -1158,8 +1158,26 @@ XMLNodeWithElementsTest >> testNodeFactory [
 ]
 
 { #category : #tests }
+XMLNodeWithElementsTest >> testPrintedWithoutSelfClosingTags [
+	| nodeWithElements printString |
+
+	nodeWithElements := self newNodeWithElements.
+	printString := nodeWithElements printString.
+	self deny: printString = nodeWithElements printedWithoutSelfClosingTags.
+
+	nodeWithElements allElementsDo: [:each |
+		each hasChildren
+			ifFalse: [
+				printString :=
+					printString
+						copyReplaceAll: '<', each name, ' />'
+						with: '<', each name, '></', each name, '>']].
+	self assert: printString = nodeWithElements printedWithoutSelfClosingTags.
+]
+
+{ #category : #tests }
 XMLNodeWithElementsTest >> testRawContentString [
-	self assert: self newNodeWithNodes rawContentString = 'testing onetesting twotesting three'
+	self assert: self newNodeWithElements rawContentString = 'testing onetesting twotesting three'
 ]
 
 { #category : #tests }
