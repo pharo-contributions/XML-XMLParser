@@ -341,11 +341,25 @@ ConfigurationOfXMLParser >> baseline201: spec [
                     with: 'XML-Parser-GemstoneCompatibility-monty.6'. ].
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline205: spec [ 
+        <version: '2.0.5-baseline' imports: #('1.0-baseline')>
+        
+        spec for: #common do: [
+                spec blessing: #baseline.
+                spec project: 'XMLWriter' with: '2.5.4'. ].
+
+        spec for: #gemstone do: [
+                spec
+                    package: 'XML-Parser-GemstoneCompatibility'
+                    with: 'XML-Parser-GemstoneCompatibility-monty.7'. ].
+]
+
 { #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.0.1-baseline'.
+	spec for: #'common' version: '2.0.5-baseline'.
 
 ]
 
@@ -1490,7 +1504,7 @@ ConfigurationOfXMLParser >> version204: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version205: spec [ 
-        <version: '2.0.5' imports: #('2.0.1-baseline')>
+        <version: '2.0.5' imports: #('2.0.5-baseline')>
 
         spec for: #common do: [
                 spec blessing: #release.
