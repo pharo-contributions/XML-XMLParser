@@ -87,6 +87,27 @@ XMLAttributeTest >> testHasLanguage [
 ]
 
 { #category : #tests }
+XMLAttributeTest >> testHasNamespaceURI [
+	| element attribute |
+
+	attribute := self nodeClass name: 'test' value: ''.
+	self deny: attribute hasNamespaceURI.
+
+	element := XMLElement name: 'test' namespaceURI: 'defaultNS'.
+	element attributeNodes add: attribute.
+	self deny: attribute hasNamespaceURI.
+
+	element
+		declarePrefix: 'prefix'
+		uri: 'prefixNS'.
+	attribute name: 'prefix:test'.
+	self assert: attribute hasNamespaceURI.
+
+	attribute name: 'test'.
+	self deny: attribute hasNamespaceURI.
+]
+
+{ #category : #tests }
 XMLAttributeTest >> testHasPrefix [
 	| attribute |
 

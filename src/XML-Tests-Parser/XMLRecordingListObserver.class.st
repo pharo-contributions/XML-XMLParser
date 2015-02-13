@@ -10,7 +10,7 @@ Class {
 	#category : #'XML-Tests-Parser-DOM'
 }
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLRecordingListObserver >> added: anObject to: aList [
 	self recordNotification:
 		(MessageSend
@@ -19,7 +19,7 @@ XMLRecordingListObserver >> added: anObject to: aList [
 			arguments: (Array with: anObject with: aList))
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLRecordingListObserver >> adding: anObject to: aList [
 	self recordNotification:
 		(MessageSend
@@ -53,7 +53,7 @@ XMLRecordingListObserver >> recordNotification: aMessageSend [
 	self notificationsQueue addLast: aMessageSend 
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLRecordingListObserver >> removed: anObject from: aList [
 	self recordNotification:
 		(MessageSend

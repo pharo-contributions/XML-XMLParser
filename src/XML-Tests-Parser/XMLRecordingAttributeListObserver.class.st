@@ -7,7 +7,7 @@ Class {
 	#category : #'XML-Tests-Parser-DOM'
 }
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLRecordingAttributeListObserver >> addedAttribute: anAttribute [
 	self recordNotification:
 		(MessageSend
@@ -16,7 +16,7 @@ XMLRecordingAttributeListObserver >> addedAttribute: anAttribute [
 			arguments: (Array with: anAttribute))
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLRecordingAttributeListObserver >> addingAttribute: anAttribute [
 	self recordNotification:
 		(MessageSend
@@ -25,7 +25,7 @@ XMLRecordingAttributeListObserver >> addingAttribute: anAttribute [
 			arguments: (Array with: anAttribute))
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLRecordingAttributeListObserver >> removedAttribute: anAttribute [
 	self recordNotification:
 		(MessageSend
