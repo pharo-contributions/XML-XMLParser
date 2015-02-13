@@ -39,12 +39,12 @@ XMLNodeWithChildren >> addNodes: aNodeCollection [
 	^ self nodes addAll: aNodeCollection
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLNodeWithChildren >> addedNode: aNode [
 	aNode parent: self
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLNodeWithChildren >> addingNode: aNode [
 	aNode hasParent
 		ifTrue: [self errorAddingNodeWithParent]
@@ -286,7 +286,7 @@ XMLNodeWithChildren >> removeNodes: aNodeCollection [
 	^ self nodes removeAll: aNodeCollection
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLNodeWithChildren >> removedNode: aNode [
 	aNode parent: nil
 ]

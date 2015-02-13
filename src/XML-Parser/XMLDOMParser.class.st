@@ -15,7 +15,7 @@ Class {
 	#category : #'XML-Parser'
 }
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 XMLDOMParser >> attributeDeclaration: anElement name: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	self topNode addNode:
 		(self nodeFactory attributeDeclarationClass
@@ -26,7 +26,7 @@ XMLDOMParser >> attributeDeclaration: anElement name: aName type: aType defaultP
 			defaultValue: aDefaultValue)
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 XMLDOMParser >> characters: aString [
 	(self isInCDataSection and: [self preservesCDataNodes])
 		ifTrue: [self topNode addNode: (self nodeFactory newCData: aString)]
@@ -34,7 +34,7 @@ XMLDOMParser >> characters: aString [
 
 ]
 
-{ #category : #lexical }
+{ #category : #'handling - lexical' }
 XMLDOMParser >> comment: aComment [
 	self preservesCommentNodes
 		ifTrue: [self topNode addNode: (self nodeFactory newComment: aComment)]
@@ -60,7 +60,7 @@ XMLDOMParser >> document: aDocument [
 	document := aDocument
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 XMLDOMParser >> elementDeclaration: aName contentModel: aContentModel [
 	self topNode addNode:
 		(self nodeFactory elementDeclarationClass
@@ -68,17 +68,17 @@ XMLDOMParser >> elementDeclaration: aName contentModel: aContentModel [
 			contentModel: aContentModel)
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 XMLDOMParser >> endDTD [
 	self popNode
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 XMLDOMParser >> endElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName [
 	self popNode
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 XMLDOMParser >> generalEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
 	self topNode addNode:
 		(self nodeFactory generalEntityDeclarationClass
@@ -88,7 +88,7 @@ XMLDOMParser >> generalEntityDeclaration: aName publicID: aPublicId systemID: aS
 			ndata: aNotation)
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 XMLDOMParser >> generalEntityDeclaration: aName replacement: aReplacement [
 	self topNode addNode:
 		(self nodeFactory generalEntityDeclarationClass
@@ -96,7 +96,7 @@ XMLDOMParser >> generalEntityDeclaration: aName replacement: aReplacement [
 			replacement: aReplacement)
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 XMLDOMParser >> ignorableWhitespace: aString [
 	self preservesIgnorableWhitespace
 		ifTrue: [self characters: aString]
@@ -127,7 +127,7 @@ XMLDOMParser >> nodeStack [
 	^ nodeStack
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 XMLDOMParser >> notationDeclaration: aName publicID: aPublicId systemID: aSystemId [
 	self topNode addNode:
 		(self nodeFactory notationDeclarationClass
@@ -145,7 +145,7 @@ XMLDOMParser >> on: aStringOrStream documentURI: aUri [
 	nodeStack := OrderedCollection new: 10.
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 XMLDOMParser >> parameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
 	self topNode addNode:
 		(self nodeFactory parameterEntityDeclarationClass
@@ -154,7 +154,7 @@ XMLDOMParser >> parameterEntityDeclaration: aName publicID: aPublicId systemID: 
 			systemID: aSystemId)
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 XMLDOMParser >> parameterEntityDeclaration: aName replacement: aReplacement [
 	self topNode addNode:
 		(self nodeFactory parameterEntityDeclarationClass
@@ -221,7 +221,7 @@ XMLDOMParser >> preservesIgnorableWhitespace: aBoolean [
 	self configuration preservesIgnorableWhitespace: aBoolean
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 XMLDOMParser >> processingInstruction: aTarget data: aDataString [
 	self topNode addNode:
 		(self nodeFactory newPI
@@ -249,7 +249,7 @@ XMLDOMParser >> pushNode: aNode [
 
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 XMLDOMParser >> startDTD: aRootElementName publicID: aPublicId systemID: aSystemId [
 	| doctypeDeclaration |
 
@@ -262,7 +262,7 @@ XMLDOMParser >> startDTD: aRootElementName publicID: aPublicId systemID: aSystem
 	self document doctypeDeclaration: doctypeDeclaration.
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 XMLDOMParser >> startDocument [
 	self topNode ifNotNil: [^ self].
 
@@ -273,7 +273,7 @@ XMLDOMParser >> startDocument [
 	self document configuration: self configuration.
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName attributes: aDictionary [
 	self pushElement:
 		((self nodeFactory
@@ -298,7 +298,7 @@ XMLDOMParser >> topNode [
 	^ self nodeStack lastOrNil
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 XMLDOMParser >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
 	self document ifNotNil: [
 		self document

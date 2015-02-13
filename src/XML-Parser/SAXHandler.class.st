@@ -1,5 +1,5 @@
 "
-This class is an XML parser that uses event handling. The acronym ""SAX"" refers to Java's ""Simple API for XML,"" on which SAXHandler's API is based. To use this class, create a subclass and override handlers under the ""content"" and ""lexical"" categories as needed. By default, namespace support and validation are enabled (but not external entity resolution).
+This class is an XML parser that uses event handling. The acronym ""SAX"" refers to Java's ""Simple API for XML,"" on which SAXHandler's API is based. To use this class, create a subclass and override handlers under the handling ""content"" and ""lexical"" categories as needed. By default, namespace support and validation are enabled (but not external entity resolution).
 
 To instantiate a SAXHandler, send any of the #on: or #parse- messages to a subclass.
 
@@ -134,17 +134,17 @@ SAXHandler class >> parseURL: aUrl [
 	^ (self onURL: aUrl) parseDocument
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 SAXHandler >> attributeDeclaration: anElement name: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 SAXHandler >> characters: aString [
 	"This call corresponds to the Java SAX call
 	characters(char[] ch, int start, int length)."
 ]
 
-{ #category : #lexical }
+{ #category : #'handling - lexical' }
 SAXHandler >> comment: aCommentString [
 	"This call corresponds to the Java SAX ext call
 	comment(char[] ch, int start, int length)."
@@ -174,12 +174,12 @@ SAXHandler >> defaultDocumentURI [
 	^ self externalEntityResolver defaultDocumentURI
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> documentReadLimit [
 	^ self parserLimits documentReadLimit
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> documentReadLimit: aLimit [
 	"change the document read limit or nil to disable"
 
@@ -196,12 +196,12 @@ SAXHandler >> driverClass [
 	^ SAXParserDriver
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 SAXHandler >> elementDeclaration: aName contentModel: aContentModel [
 
 ]
 
-{ #category : #lexical }
+{ #category : #'handling - lexical' }
 SAXHandler >> endCData [
 	"This call corresponds to the Java SAX ext call
 	endCData()."
@@ -212,23 +212,23 @@ SAXHandler >> endCDataSection [
 	isInCDataSection := false
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 SAXHandler >> endDTD [
 
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 SAXHandler >> endDocument [
 	"This call corresponds to the Java SAX call
 	endDocument()."
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 SAXHandler >> endElement: aQualifiedName [
 
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aUri [
 	"This call corresponds to the Java SAX call
 	endElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName).
@@ -237,7 +237,7 @@ SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aUri [
 	self endElement: aQualifiedName
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName [
 	"This call corresponds to the Java SAX call
 	endElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName).
@@ -246,7 +246,7 @@ SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aUri localName: aL
 	self endElement: aQualifiedName prefix: aPrefix uri:  aUri
 ]
 
-{ #category : #lexical }
+{ #category : #'handling - lexical' }
 SAXHandler >> endEntity: anEntityName [
 	"This call corresponds to the Java SAX ext call
 	endEntity(java.lang.String name)."
@@ -257,45 +257,45 @@ SAXHandler >> endInternalSubset [
 	isInInternalSubset := false
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 SAXHandler >> endPrefixMapping: aPrefix [
 	"This call corresonds to the Java SAX call
 	endPrefixMapping(java.lang.String prefix)."
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> externalEntityResolver [
 	^ self configuration externalEntityResolver
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> externalEntityResolver: anExternalEntityResolver [
 	"This can be used to set a different DTDExternalEntityResolver"
 
 	self configuration externalEntityResolver: anExternalEntityResolver
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> externalSubsetReadLimit [
 	^ self externalEntityResolver externalSubsetReadLimit
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> externalSubsetReadLimit: aLimit [
 	"change the external subset read limit or nil to disable"
 
 	self externalEntityResolver externalSubsetReadLimit: aLimit
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 SAXHandler >> generalEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 SAXHandler >> generalEntityDeclaration: aName replacement: aReplacement [
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 SAXHandler >> ignorableWhitespace: aString [
 	"This call corresonds to the Java SAX call
 	ignorableWhitespace(char[] ch, int start, int length)."
@@ -324,12 +324,12 @@ SAXHandler >> isInInternalSubset [
 	^ isInInternalSubset
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> isValidating [
 	^ self configuration isValidating
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> isValidating: aBoolean [
 	"If true and document contstraints are present (in a DTD),
 	the document will be checked against them (default).
@@ -340,19 +340,19 @@ SAXHandler >> isValidating: aBoolean [
 	self configuration isValidating: aBoolean
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> maxEntityReplacementDepth [
 	^ self parserLimits maxEntityReplacementDepth
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> maxEntityReplacementDepth: aLimit [
 	"change the max replacement depth or nil to disable"
 
 	self parserLimits maxEntityReplacementDepth: aLimit
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 SAXHandler >> notationDeclaration: aName publicID: aPublicId systemID: aSystemId [
 
 ]
@@ -374,7 +374,7 @@ SAXHandler >> on: aStringOrStream documentURI: aUri [
 	isInCDataSection := false.
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> optimizeForLargeDocuments [
 	"faster parsing and less memory use for large documents"
 	self
@@ -383,11 +383,11 @@ SAXHandler >> optimizeForLargeDocuments [
 		documentReadLimit: nil.
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 SAXHandler >> parameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 SAXHandler >> parameterEntityDeclaration: aName replacement: aReplacement [
 ]
 
@@ -432,7 +432,7 @@ SAXHandler >> parserClass [
 	^ XMLParser
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> parserLimits [
 	^ self configuration parserLimits
 ]
@@ -444,12 +444,12 @@ SAXHandler >> parsingResult [
 	^ self
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> preservesUndeclaredEntityReferences [
 	^ self configuration preservesUndeclaredEntityReferences
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> preservesUndeclaredEntityReferences: aBoolean [
 	"If true, references to undeclared entities in content are
 	preserved (not default).
@@ -458,13 +458,13 @@ SAXHandler >> preservesUndeclaredEntityReferences: aBoolean [
 	self configuration preservesUndeclaredEntityReferences: aBoolean
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 SAXHandler >> processingInstruction: aTarget data: aDataString [
 	"This call corresonds to the Java SAX call
 	processingInstruction(java.lang.String target, java.lang.String data)."
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> removeLimits [
 	"remove all input security limits (unsafe)"
 
@@ -472,12 +472,12 @@ SAXHandler >> removeLimits [
 	self externalEntityResolver removeLimits.
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> replacesContentEntityReferences [
 	^ self configuration replacesContentEntityReferences
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> replacesContentEntityReferences: aBoolean [
 	"Replace general parsed entity and character references
 	in content (default)"
@@ -485,12 +485,12 @@ SAXHandler >> replacesContentEntityReferences: aBoolean [
 	self configuration replacesContentEntityReferences: aBoolean
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> requiresDocumentConstraints [
 	^ self configuration requiresDocumentConstraints
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> requiresDocumentConstraints: aBoolean [
 	"If true, constraints on elements and attributes (in a DTD)
 	will be required (not default).
@@ -499,12 +499,12 @@ SAXHandler >> requiresDocumentConstraints: aBoolean [
 	self configuration requiresDocumentConstraints: aBoolean
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> resolvesExternalEntities [
 	^ self configuration resolvesExternalEntities
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> resolvesExternalEntities: aBoolean [
 	"When true, external DTDs and parsed entities will be
 	fetched (not default)."
@@ -512,13 +512,13 @@ SAXHandler >> resolvesExternalEntities: aBoolean [
 	self configuration resolvesExternalEntities: aBoolean
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 SAXHandler >> skippedEntity: anEntityName [
 	"This call corresonds to the Java SAX call
 	skippedEntity(java.lang.String name)."
 ]
 
-{ #category : #lexical }
+{ #category : #'handling - lexical' }
 SAXHandler >> startCData [
 	"This call corresponds to the Java SAX ext call
 	startCData()."
@@ -529,29 +529,29 @@ SAXHandler >> startCDataSection [
 	isInCDataSection := true
 ]
 
-{ #category : #declaration }
+{ #category : #'handling - declarations' }
 SAXHandler >> startDTD: aRootElementName publicID: aPublicId systemID: aSystemId [
 	"This call corresponds to the Java SAX ext call
 	startDTD(java.lang.String name, java.lang.String publicId, java.lang.String systemId)."
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 SAXHandler >> startDocument [
 	"This call corresonds to the Java SAX call
 	startDocument()."
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 SAXHandler >> startElement: aQualifiedName attributes: aDictionary [
 
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aUri attributes: aDictionary [
 	self startElement: aQualifiedName attributes: aDictionary
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName attributes: aDictionary [
 	"This call corresonds to the Java SAX call
 	startElement(java.lang.String namespaceURI, java.lang.String localName,
@@ -564,7 +564,7 @@ SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName: 
 		attributes: aDictionary
 ]
 
-{ #category : #lexical }
+{ #category : #'handling - lexical' }
 SAXHandler >> startEntity: anEntityName [
 	"This call corresponds to the Java SAX ext call
 	startEntity(java.lang.String name)."
@@ -575,25 +575,25 @@ SAXHandler >> startInternalSubset [
 	isInInternalSubset := true
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 SAXHandler >> startPrefixMapping: aPrefix uri: aUri [
 	"This call corresonds to the Java SAX call
 	startPrefixMapping(java.lang.String prefix, java.lang.String uri)."
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> usesNamespaces [
 	^ self configuration usesNamespaces
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 SAXHandler >> usesNamespaces: aBoolean [
 	"Namespace checking when true (default)"
 
 	self configuration usesNamespaces: aBoolean
 ]
 
-{ #category : #content }
+{ #category : #'handling - content' }
 SAXHandler >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
 
 ]

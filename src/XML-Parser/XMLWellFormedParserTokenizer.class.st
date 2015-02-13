@@ -175,7 +175,7 @@ XMLWellFormedParserTokenizer >> activeEntities [
 	^ activeEntities ifNil: [activeEntities := OrderedCollection new]
 ]
 
-{ #category : #'entity replacement' }
+{ #category : #'entity replacing' }
 XMLWellFormedParserTokenizer >> addActiveEntity: anEntity [
 	(self hasActiveEntityNamed: anEntity name)
 		ifTrue: [self errorSelfReferentialEntity: anEntity].
@@ -189,7 +189,7 @@ XMLWellFormedParserTokenizer >> addActiveEntity: anEntity [
 		ifTrue: [driver currentURI: anEntity uri].
 ]
 
-{ #category : #'entity replacement' }
+{ #category : #'entity replacing' }
 XMLWellFormedParserTokenizer >> constructReplacementForGeneralEntity: anEntity [
 	context isLiteralValueContext
 		ifTrue: [
@@ -203,7 +203,7 @@ XMLWellFormedParserTokenizer >> constructReplacementForGeneralEntity: anEntity [
 		onClose: [driver handleEndContentEntityReplacement: anEntity name].
 ]
 
-{ #category : #'entity replacement' }
+{ #category : #'entity replacing' }
 XMLWellFormedParserTokenizer >> constructReplacementForLiteralContextEntity: anEntity [
 	| previousEscaper |
 
@@ -220,7 +220,7 @@ XMLWellFormedParserTokenizer >> constructReplacementForLiteralContextEntity: anE
 				(XMLQuoteCharacterEscaper for: streamReader)].
 ]
 
-{ #category : #'entity replacement' }
+{ #category : #'entity replacing' }
 XMLWellFormedParserTokenizer >> constructReplacementForParameterEntity: anEntity [
 	context isLiteralValueContext
 		ifTrue: [^ self constructReplacementForLiteralContextEntity: anEntity].
@@ -1302,7 +1302,7 @@ XMLWellFormedParserTokenizer >> nextTag [
 	self expectTerminator: $>.
 ]
 
-{ #category : #'entity replacement' }
+{ #category : #'entity replacing' }
 XMLWellFormedParserTokenizer >> nextUnreplacedGeneralEntityOnWriteStreamNamed: aName [
 	driver handleUnreplacedGeneralEntityReference: aName.
 	writeStream
@@ -1368,7 +1368,7 @@ XMLWellFormedParserTokenizer >> parseError: anErrorString [
 	driver handleParseError: anErrorString
 ]
 
-{ #category : #'entity replacement' }
+{ #category : #'entity replacing' }
 XMLWellFormedParserTokenizer >> pushBackEntity: anEntity onClose: aBlock [
 	anEntity replacement
 		ifEmpty: [
@@ -1389,7 +1389,7 @@ XMLWellFormedParserTokenizer >> pushBackEntity: anEntity onClose: aBlock [
 				nextTokenFrom: self].
 ]
 
-{ #category : #'entity replacement' }
+{ #category : #'entity replacing' }
 XMLWellFormedParserTokenizer >> removeActiveEntity: anEntity [
 	self activeEntities remove: anEntity.
 	anEntity isExternal

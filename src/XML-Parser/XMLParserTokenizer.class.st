@@ -60,7 +60,7 @@ XMLParserTokenizer >> atEnd [
 	^ context isTerminatedContext
 ]
 
-{ #category : #'entity replacement' }
+{ #category : #'entity replacing' }
 XMLParserTokenizer >> characterFromCodePoint: anInteger [
 	(anInteger notNil and: [anInteger > 0])
 		ifFalse: [^ nil].
@@ -74,11 +74,11 @@ XMLParserTokenizer >> closeStreams [
 	streamReader closeStreams
 ]
 
-{ #category : #'entity replacement' }
+{ #category : #'entity replacing' }
 XMLParserTokenizer >> constructReplacementForGeneralEntity: anEntity [
 ]
 
-{ #category : #'entity replacement' }
+{ #category : #'entity replacing' }
 XMLParserTokenizer >> constructReplacementForParameterEntity: anEntity [
 ]
 

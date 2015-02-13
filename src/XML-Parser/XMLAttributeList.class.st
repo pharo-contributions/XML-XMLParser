@@ -167,7 +167,7 @@ XMLAttributeList >> removeAttributeNodeAt: aName ifAbsent: aBlock [
 			ifAbsent: [^ aBlock value]).
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLAttributeList >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 	self attributesByName
 		removeKey: anOldName;

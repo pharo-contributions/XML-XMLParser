@@ -40,7 +40,7 @@ DTDParsedEntity >> asReference [
 	^ self printString
 ]
 
-{ #category : #replacement }
+{ #category : #replacing }
 DTDParsedEntity >> constructReplacementOn: aTokenizer [
 	self subclassResponsibility
 ]
@@ -68,7 +68,7 @@ DTDParsedEntity >> referencePrefix [
 	self subclassResponsibility
 ]
 
-{ #category : #replacement }
+{ #category : #replacing }
 DTDParsedEntity >> replacement [
 	^ replacement ifNil: [replacement := '']
 ]

@@ -54,7 +54,7 @@ XMLNodeWithElements >> addElementNamed: aName namespaceURI: aUri [
 			namespaceURI: aUri)
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLNodeWithElements >> addedElement: anElement [
 	self addedNode: anElement.
 	anElement configuration: self configuration.
@@ -494,12 +494,12 @@ XMLNodeWithElements >> printRawContentOn: aStream [
 	self contentNodesDo: [:each | each printRawContentOn: aStream]
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLNodeWithElements >> removedElement: anElement [
 	self removedNode: anElement
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLNodeWithElements >> renamedElement: anElement from: anOldName to: aNewName [
 	self nodes
 		renamedElement: anElement

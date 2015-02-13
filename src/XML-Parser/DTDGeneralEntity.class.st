@@ -8,7 +8,7 @@ Class {
 	#category : #'XML-Parser-DTD'
 }
 
-{ #category : #replacement }
+{ #category : #replacing }
 DTDGeneralEntity >> constructReplacementOn: aTokenizer [
 	aTokenizer constructReplacementForGeneralEntity: self
 ]

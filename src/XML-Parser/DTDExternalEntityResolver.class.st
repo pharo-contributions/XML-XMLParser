@@ -49,17 +49,17 @@ DTDExternalEntityResolver >> errorLocalFromNonLocal [
 		'Local URI referenced from non-local URI; use #resolvesLocalFromNonLocal: to change'
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 DTDExternalEntityResolver >> externalEntityLimits [
 	^ externalEntityLimits ifNil: [externalEntityLimits := DTDExternalEntityLimits new]
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 DTDExternalEntityResolver >> externalSubsetReadLimit [
 	^ self externalEntityLimits externalSubsetReadLimit
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 DTDExternalEntityResolver >> externalSubsetReadLimit: aLimit [
 	self externalEntityLimits externalSubsetReadLimit: aLimit
 ]
@@ -69,27 +69,27 @@ DTDExternalEntityResolver >> incrementEntityTotal [
 	totalResolvedEntities := (totalResolvedEntities ifNil: [0]) + 1
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 DTDExternalEntityResolver >> maxExternalEntities [
 	^ self externalEntityLimits maxExternalEntities
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 DTDExternalEntityResolver >> maxExternalEntities: aLimit [
 	self externalEntityLimits maxExternalEntities: aLimit
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 DTDExternalEntityResolver >> maxExternalEntitySize [
 	^ self externalEntityLimits maxExternalEntitySize
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 DTDExternalEntityResolver >> maxExternalEntitySize: aLimit [
 	self externalEntityLimits maxExternalEntitySize: aLimit
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 DTDExternalEntityResolver >> removeLimits [
 	self externalEntityLimits removeAll
 ]
@@ -139,12 +139,12 @@ DTDExternalEntityResolver >> resolveExternalParameterEntity: aName uri: anEntity
 		class: DTDExternalParameterEntity
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 DTDExternalEntityResolver >> resolvesLocalFromNonLocal [
 	^ self externalEntityLimits resolvesLocalFromNonLocal
 ]
 
-{ #category : #configuration }
+{ #category : #configuring }
 DTDExternalEntityResolver >> resolvesLocalFromNonLocal: aBoolean [
 	self externalEntityLimits resolvesLocalFromNonLocal: aBoolean
 ]

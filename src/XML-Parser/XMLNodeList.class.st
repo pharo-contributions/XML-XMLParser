@@ -189,7 +189,7 @@ XMLNodeList >> lastElement [
 	^ self defaultValue.
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLNodeList >> renamedElement: anElement from: anOldName to: aNewName [
 ]
 

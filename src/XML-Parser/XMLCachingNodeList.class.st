@@ -253,7 +253,7 @@ XMLCachingNodeList >> rebuildCachedElements [
 			ifTrue: [self cacheElementAddedLast: each]].
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLCachingNodeList >> renamedElement: anElement from: anOldName to: aNewName [
 	| oldPrefix index |
 

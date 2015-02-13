@@ -31,7 +31,7 @@ XMLAttribute >> element: anElement [
 	parent := anElement
 ]
 
-{ #category : #namespaces }
+{ #category : #accessing }
 XMLAttribute >> expandedName [
 	^ self localName expandWithNamespaceURI: self namespaceURI
 ]
@@ -43,6 +43,11 @@ XMLAttribute >> hasLanguage: aLanguage [
 	language := aLanguage asLowercase.
 	^ (xmlLang := self value asLowercase) = language
 		or: [(xmlLang copyUpTo: $-) = language].
+]
+
+{ #category : #testing }
+XMLAttribute >> hasNamespaceURI [
+	^ self namespaceURI notEmpty
 ]
 
 { #category : #testing }
@@ -91,7 +96,7 @@ XMLAttribute >> name: aName [
 	self renameWith: [name := aName]
 ]
 
-{ #category : #namespaces }
+{ #category : #accessing }
 XMLAttribute >> namespaceURI [
 	| prefix |
 
@@ -102,12 +107,12 @@ XMLAttribute >> namespaceURI [
 		ifFalse: [^ '']
 ]
 
-{ #category : #namespaces }
+{ #category : #accessing }
 XMLAttribute >> prefix [
 	^ self name prefixBeforeLocalName
 ]
 
-{ #category : #namespaces }
+{ #category : #accessing }
 XMLAttribute >> prefix: aPrefix [
 	self renameWith: [name := self localName qualifyWithPrefix:  aPrefix]
 ]

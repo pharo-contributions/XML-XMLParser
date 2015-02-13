@@ -3,7 +3,7 @@ The class represents an element node. An element consists of a name and optional
 
 The name can consist of a local name only or a qualified name, which is a namespace prefix and local name separated by a colon. If the name is qualfied and namespace support is enabled (the default), then the prefix must be mapped to a namespace URI in the element or its parent at the time the name is set. The class-side instance creation #name:namespaceURI:* messages and #name:namespaces:* messages allow you set both simulaniously, as does the instance-side #name:namespaceURI: message. If namespace support is disabled, prefixes are ignored (not validated). You can test the name of an element using #isNamed: and #isNamedAny:, which test the qualified and local names of an element for a match.
 
-Namespaces can be declared using #declareNamespace:uri:, using #declareNamespaces: with a collection of associations (where an empty prefix represents the default namespace) or simultaniously while changing the element's name using #name:namespaceURI:. The default namespace can be accessed through #defaultNamespace and #defaultNamespace:. When you print an element, the minimum number of xmlns declarations necessary for it to be valid will be printed. You can query an element's namespace information using #namespaceURI, #prefix, #expandedName and other messages under ""namespaces."""" For an element to be namespaced, it must have a qualified name with a valid prefix or have a default namespace declaration in scope for it.
+Namespaces can be declared using #declareNamespace:uri:, using #declareNamespaces: with a collection of associations (where an empty prefix represents the default namespace) or simultaniously while changing the element's name using #name:namespaceURI:. The default namespace can be accessed through #defaultNamespace and #defaultNamespace:. When you print an element, the minimum number of xmlns declarations necessary for it to be valid will be printed. You can query an element's namespace information using #namespaceURI, #prefix, #expandedName. For an element to be namespaced, it must have a qualified name with a valid prefix or have a default namespace declaration in scope for it.
 
 The #attribute- messages provide a Dictionary-like prototcol for manipulating attribute nodes. Attribute value accessors return empty strings when the specified value is not present. The underlying attribute node list can be accessed using #attributeNodes, and an order-preserving dictionary of attribute names/values can be obtained using #attributes.
 
@@ -63,13 +63,13 @@ XMLElement class >> named: aLocalName [
 	^ self new name: aLocalName
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLElement >> addedAttribute: anAttribute [
 	anAttribute element: self.
 	self validateAttributes.
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLElement >> addedElement: anElement [
 	super addedElement: anElement.
 	(self hasNamespaces
@@ -77,7 +77,7 @@ XMLElement >> addedElement: anElement [
 		ifTrue: [anElement inheritNamespacesFrom: self]
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLElement >> addingAttribute: anAttribute [
 	anAttribute element
 		ifNotNil: [self errorAddingAttributeWithElement]
@@ -171,7 +171,7 @@ XMLElement >> attributes [
 	^ self attributeNodes asDictionary
 ]
 
-{ #category : #namespaces }
+{ #category : #namespacing }
 XMLElement >> declareNamespaces: aDictionaryOrArray [
 	aDictionaryOrArray associationsDo: [:each |
 		self
@@ -179,7 +179,7 @@ XMLElement >> declareNamespaces: aDictionaryOrArray [
 			uri: each value]
 ]
 
-{ #category : #namespaces }
+{ #category : #namespacing }
 XMLElement >> declarePrefix: aPrefix uri: aUri [
 	| oldMapping |
 
@@ -193,7 +193,7 @@ XMLElement >> declarePrefix: aPrefix uri: aUri [
 				validateAfter: false]
 ]
 
-{ #category : #namespaces }
+{ #category : #testing }
 XMLElement >> declaresDefaultNamespace [
 	"Did the receiver declare a new default namespace rather than inheriting one?"
 
@@ -201,7 +201,7 @@ XMLElement >> declaresDefaultNamespace [
 		and: [self isRoot or: [self defaultNamespace ~= self parent defaultNamespace]]
 ]
 
-{ #category : #namespaces }
+{ #category : #testing }
 XMLElement >> declaresPrefix: aPrefix uri: aUri [
 	"Did the receiver declare a new prefix/uri pair rather than inheriting one?"
 
@@ -209,12 +209,12 @@ XMLElement >> declaresPrefix: aPrefix uri: aUri [
 		and: [self isRoot or: [(self parent isDeclaredPrefix: aPrefix uri: aUri) not]]
 ]
 
-{ #category : #namespaces }
+{ #category : #namespacing }
 XMLElement >> defaultNamespace [
 	^ self namespaceScope defaultNamespace
 ]
 
-{ #category : #namespaces }
+{ #category : #namespacing }
 XMLElement >> defaultNamespace: aUri [
 	| oldNamespace |
 
@@ -230,7 +230,7 @@ XMLElement >> errorAddingAttributeWithElement [
 	XMLDOMException signal: 'Cannot add attribute node from other element'
 ]
 
-{ #category : #namespaces }
+{ #category : #accessing }
 XMLElement >> expandedName [
 	^ self localName expandWithNamespaceURI: self namespaceURI
 ]
@@ -241,11 +241,16 @@ XMLElement >> hasAttributes [
 ]
 
 { #category : #testing }
+XMLElement >> hasNamespaceURI [
+	^ self namespaceURI notEmpty
+]
+
+{ #category : #testing }
 XMLElement >> hasNamespaces [
 	^ namespaceScope notNil and: [namespaceScope hasNamespaces]
 ]
 
-{ #category : #namespaces }
+{ #category : #testing }
 XMLElement >> hasPrefix [
 	^ self name size > self localName size
 ]
@@ -267,14 +272,18 @@ XMLElement >> innerXMLContext [
 	^ XMLContentContext new
 ]
 
-{ #category : #namespaces }
+{ #category : #testing }
 XMLElement >> isDeclaredPrefix: aPrefix [
+	"is namespace prefix in scope for use by receiver and descendants"
 	^ self namespaceScope includesPrefix: aPrefix
 ]
 
-{ #category : #namespaces }
+{ #category : #testing }
 XMLElement >> isDeclaredPrefix: aPrefix uri: aUri [
-	^ self namespaceScope includesPrefix: aPrefix mappedTo: aUri
+	"is namespace prefix mapped to uri in scope for use by receiver and descendants"
+	^ self namespaceScope
+		includesPrefix: aPrefix
+		mappedTo: aUri
 ]
 
 { #category : #testing }
@@ -341,7 +350,7 @@ XMLElement >> name: aName [
 		localName := aName localNameAfterPrefix]
 ]
 
-{ #category : #namespaces }
+{ #category : #accessing }
 XMLElement >> name: aQualifiedName namespaceURI: aUri [
 	self
 		declarePrefix: (aQualifiedName prefixBeforeLocalName) uri: aUri;
@@ -353,7 +362,7 @@ XMLElement >> namespaceScope [
 	^ namespaceScope ifNil: [namespaceScope := XMLNamespaceScope new]
 ]
 
-{ #category : #namespaces }
+{ #category : #accessing }
 XMLElement >> namespaceURI [
 	^ self resolvePrefix: self prefix
 ]
@@ -373,12 +382,12 @@ XMLElement >> postCopy [
 		ifNotNil: [attributes := attributes deepCopyWithObserver: self].
 ]
 
-{ #category : #namespaces }
+{ #category : #accessing }
 XMLElement >> prefix [
 	^ self name prefixBeforeLocalName: self localName
 ]
 
-{ #category : #namespaces }
+{ #category : #accessing }
 XMLElement >> prefix: aPrefix [
 	self renameWith: [name := self localName qualifyWithPrefix:  aPrefix]
 ]
@@ -415,7 +424,7 @@ XMLElement >> removeAttributes [
 	self attributeNodes removeAll
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLElement >> removedAttribute: anAttribute [
 	anAttribute element: nil
 ]
@@ -437,7 +446,7 @@ XMLElement >> renameWith: aBlock [
 						to: self name]].
 ]
 
-{ #category : #notifications }
+{ #category : #notifying }
 XMLElement >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 	self attributeNodes	
 		renamedAttribute: anAttribute
@@ -446,7 +455,7 @@ XMLElement >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 	self validateAttributes.
 ]
 
-{ #category : #namespaces }
+{ #category : #namespacing }
 XMLElement >> resolvePrefix: aPrefix [
 	^ self namespaceScope resolvePrefix: aPrefix
 ]
@@ -485,12 +494,12 @@ XMLElement >> sortKey [
 	^ self name
 ]
 
-{ #category : #namespaces }
+{ #category : #namespacing }
 XMLElement >> undeclareDefaultNamespace [
 	self undeclarePrefix: ''
 ]
 
-{ #category : #namespaces }
+{ #category : #namespacing }
 XMLElement >> undeclarePrefix: aPrefix [
 	| currentMapping |
 
