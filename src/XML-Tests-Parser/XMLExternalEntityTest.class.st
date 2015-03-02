@@ -166,8 +166,8 @@ XMLExternalEntityTest >> testParsingExternalEntities [
 
 	self skipOrReturnWith: [^ self].
 
-	DTDCachingEntityResolver clearEntityCache.
-	entityCache := DTDCachingEntityResolver entityCache.
+	DTDCachingExternalEntityResolver clearEntityCache.
+	entityCache := DTDCachingExternalEntityResolver entityCache.
 	self externalEntityURLs do: [:each |
 		self deny: (entityCache includesKey: each asXMLURI)].
 
