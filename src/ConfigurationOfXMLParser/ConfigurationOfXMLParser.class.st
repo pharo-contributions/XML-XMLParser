@@ -380,7 +380,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '2.0.6'.
+	spec for: #'common' version: '2.0.7'.
 	spec for: #'pharo1.x' version: '1.2'
 
 ]
@@ -1521,5 +1521,16 @@ ConfigurationOfXMLParser >> version206: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.274'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.96'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version207: spec [ 
+        <version: '2.0.7' imports: #('2.0.5-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.275'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.97'.
                 ].
 ]
