@@ -15,7 +15,7 @@ XMLFixedValueAttributeValidator >> errorNonDefaultValue [
 		with: self defaultValue
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLFixedValueAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
 	(anAttributeDictionary
 		at: self attribute

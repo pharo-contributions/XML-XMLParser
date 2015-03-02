@@ -23,12 +23,12 @@ XMLParserDriver >> currentURI: aUri [
 ]
 
 { #category : #accessing }
-XMLParserDriver >> documentURI [
+XMLParserDriver >> doctypeDefinition [
 	^ nil
 ]
 
 { #category : #accessing }
-XMLParserDriver >> dtd [
+XMLParserDriver >> documentURI [
 	^ nil
 ]
 

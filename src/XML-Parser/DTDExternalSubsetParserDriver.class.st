@@ -6,7 +6,7 @@ Class {
 	#superclass : #XMLParserDriver,
 	#instVars : [
 		'saxDriver',
-		'dtd',
+		'doctypeDefinition',
 		'documentUri'
 	],
 	#category : #'XML-Parser'
@@ -20,13 +20,13 @@ DTDExternalSubsetParserDriver class >> saxDriver: aSaxDriver documentURI: anExte
 ]
 
 { #category : #accessing }
-DTDExternalSubsetParserDriver >> documentURI [
-	^ documentUri
+DTDExternalSubsetParserDriver >> doctypeDefinition [
+	^ doctypeDefinition
 ]
 
 { #category : #accessing }
-DTDExternalSubsetParserDriver >> dtd [
-	^ dtd
+DTDExternalSubsetParserDriver >> documentURI [
+	^ documentUri
 ]
 
 { #category : #accessing }
@@ -38,7 +38,7 @@ DTDExternalSubsetParserDriver >> externalEntityResolver [
 DTDExternalSubsetParserDriver >> handleAttributeDeclaration: anElement name: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	self isValidating
 		ifTrue: [
-			self dtd
+			self doctypeDefinition
 				addValidatorForAttributeIn: anElement
 				named: aName
 				type: aType
@@ -50,7 +50,7 @@ DTDExternalSubsetParserDriver >> handleAttributeDeclaration: anElement name: aNa
 DTDExternalSubsetParserDriver >> handleElementDeclaration: aName contentModel: aContentModel [
 	self isValidating
 		ifTrue: [
-			self dtd
+			self doctypeDefinition
 				addValidatorForElement: aName
 				contentModel: aContentModel]
 ]
@@ -60,15 +60,15 @@ DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName publicID:
 	aNotation ifNotEmpty: [
 		self isValidating
 			ifTrue: [
-				self dtd unparsedEntityValidator
+				self doctypeDefinition unparsedEntityValidator
 					validateUnparsedEntity: aName
 					withNotation: aNotation].
-		self dtd
+		self doctypeDefinition
 			addUnparsedEntity: aName
 			ndata: aNotation.
 		^ self].
 
-	self dtd
+	self doctypeDefinition
 		addExternalGeneralEntity: aName
 		resolver: self externalEntityResolver
 		uri: aSystemId
@@ -77,7 +77,7 @@ DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName publicID:
 
 { #category : #'handling tokens' }
 DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplacement [
-	self dtd
+	self doctypeDefinition
 		addGeneralEntity: aName
 		replacement: aReplacement
 		from: self currentURI
@@ -85,12 +85,12 @@ DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName replaceme
 
 { #category : #'handling tokens' }
 DTDExternalSubsetParserDriver >> handleNotationDeclaration: aName publicID: aPublicId systemID: aSystemId [
-	self dtd addNotation: aName
+	self doctypeDefinition addNotation: aName
 ]
 
 { #category : #'handling tokens' }
 DTDExternalSubsetParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
-	self dtd
+	self doctypeDefinition
 		addExternalParameterEntity: aName
 		resolver: self externalEntityResolver
 		uri: aSystemId
@@ -99,7 +99,7 @@ DTDExternalSubsetParserDriver >> handleParameterEntityDeclaration: aName publicI
 
 { #category : #'handling tokens' }
 DTDExternalSubsetParserDriver >> handleParameterEntityDeclaration: aName replacement: aReplacement [
-	self dtd
+	self doctypeDefinition
 		addParameterEntity: aName
 		replacement:aReplacement
 		from: self currentURI
@@ -158,7 +158,7 @@ DTDExternalSubsetParserDriver >> saxDriver [
 { #category : #initialization }
 DTDExternalSubsetParserDriver >> setSAXDriver: aSaxdriver documentURI: aUri [
 	saxDriver := aSaxdriver.
-	dtd := saxDriver dtd.
+	doctypeDefinition := aSaxdriver doctypeDefinition.
 	documentUri := aUri.
 ]
 

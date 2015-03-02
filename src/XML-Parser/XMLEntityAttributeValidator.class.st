@@ -26,7 +26,7 @@ XMLEntityAttributeValidator >> unparsedEntityValidator [
 	^ unparsedEntityValidator
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLEntityAttributeValidator >> validateAttributeValue: aValue [
 	self unparsedEntityValidator
 		validateEntityReference: aValue

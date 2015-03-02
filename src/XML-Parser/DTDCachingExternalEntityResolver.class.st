@@ -2,7 +2,7 @@
 This resolver can cache entities so they don't have to be retrieved again (like over HTTP). (The default resolver)
 "
 Class {
-	#name : #DTDCachingEntityResolver,
+	#name : #DTDCachingExternalEntityResolver,
 	#superclass : #DTDExternalEntityResolver,
 	#classInstVars : [
 		'entityCache'
@@ -11,57 +11,57 @@ Class {
 }
 
 { #category : #clearing }
-DTDCachingEntityResolver class >> clearEntityCache [
+DTDCachingExternalEntityResolver class >> clearEntityCache [
 	"self clearEntityCache"
 	self entityCache clear
 ]
 
 { #category : #private }
-DTDCachingEntityResolver class >> entityCache [
+DTDCachingExternalEntityResolver class >> entityCache [
 	^ entityCache ifNil: [entityCache := XMLKeyValueCache maxSize: 64]
 ]
 
 { #category : #private }
-DTDCachingEntityResolver class >> entityCacheAt: aUri ifAbsentPut: aBlock [
+DTDCachingExternalEntityResolver class >> entityCacheAt: aUri ifAbsentPut: aBlock [
 	^ self entityCache
 		at: aUri
 		ifAbsentPut: aBlock
 ]
 
 { #category : #private }
-DTDCachingEntityResolver class >> entityCacheAt: aUri put: anEntity [
+DTDCachingExternalEntityResolver class >> entityCacheAt: aUri put: anEntity [
 	^ self entityCache
 		at: aUri
 		put: anEntity.
 ]
 
 { #category : #accessing }
-DTDCachingEntityResolver class >> maxCachedEntities [
+DTDCachingExternalEntityResolver class >> maxCachedEntities [
 	^ self entityCache maxSize
 ]
 
 { #category : #accessing }
-DTDCachingEntityResolver class >> maxCachedEntities: anInteger [
+DTDCachingExternalEntityResolver class >> maxCachedEntities: anInteger [
 	self entityCache maxSize: anInteger
 ]
 
 { #category : #clearing }
-DTDCachingEntityResolver >> clearEntityCache [
+DTDCachingExternalEntityResolver >> clearEntityCache [
 	self class clearEntityCache
 ]
 
 { #category : #accessing }
-DTDCachingEntityResolver >> maxCachedEntities [
+DTDCachingExternalEntityResolver >> maxCachedEntities [
 	^ self class maxCachedEntities
 ]
 
 { #category : #accessing }
-DTDCachingEntityResolver >> maxCachedEntities: anInteger [
+DTDCachingExternalEntityResolver >> maxCachedEntities: anInteger [
 	self class maxCachedEntities: anInteger
 ]
 
 { #category : #resolving }
-DTDCachingEntityResolver >> resolveEntityURI: aUri [
+DTDCachingExternalEntityResolver >> resolveEntityURI: aUri [
 	| uri |
 
 	^ (uri := aUri asXMLURI) isLocalURI

@@ -38,7 +38,7 @@ XMLEnumerationAttributeValidator >> setAllowedValuesFromString: aString [
 	allowedValues := (self enumerationListParserClass on: aString) parse
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLEnumerationAttributeValidator >> validateAttributeValue: aValue [
 	(self allowedValues includes: aValue)
 		ifFalse: [self errorInvalidValue: aValue]

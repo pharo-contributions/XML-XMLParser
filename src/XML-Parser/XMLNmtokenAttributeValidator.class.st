@@ -15,12 +15,12 @@ XMLNmtokenAttributeValidator >> errorInvalidNmtoken: aName [
 		with: self attribute
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLNmtokenAttributeValidator >> validateAttributeValue: aValue [
 	self validateNmtoken: aValue
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLNmtokenAttributeValidator >> validateNmtoken: aName [
 	(XMLWellFormedParserTokenizer isNmtoken: aName)
 		ifFalse: [self errorInvalidNmtoken: aName]

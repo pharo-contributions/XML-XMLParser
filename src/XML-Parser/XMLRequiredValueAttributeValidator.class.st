@@ -14,7 +14,7 @@ XMLRequiredValueAttributeValidator >> errorRequiredAttributeMissing [
 		with: self attribute
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLRequiredValueAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
 	(anAttributeDictionary includesKey: self attribute)
 		ifFalse: [self errorRequiredAttributeMissing]

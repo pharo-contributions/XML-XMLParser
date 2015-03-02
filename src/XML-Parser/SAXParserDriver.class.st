@@ -8,7 +8,7 @@ Class {
 		'saxHandler',
 		'elementNester',
 		'scopeAllocator',
-		'dtd',
+		'doctypeDefinition',
 		'validator',
 		'hasUnhandledReservedAttributes'
 	],
@@ -45,6 +45,11 @@ SAXParserDriver >> declareNamespaces: aDictionary inScope: aScope [
 ]
 
 { #category : #accessing }
+SAXParserDriver >> doctypeDefinition [
+	^ doctypeDefinition ifNil: [doctypeDefinition := DTDDoctypeDefinition new]
+]
+
+{ #category : #accessing }
 SAXParserDriver >> documentReadLimit [
 	^ self saxHandler documentReadLimit
 ]
@@ -52,11 +57,6 @@ SAXParserDriver >> documentReadLimit [
 { #category : #accessing }
 SAXParserDriver >> documentURI [
 	^ self saxHandler documentURI
-]
-
-{ #category : #accessing }
-SAXParserDriver >> dtd [
-	^ dtd ifNil: [dtd := DTDDoctypeDefinition new]
 ]
 
 { #category : #accessing }
@@ -136,7 +136,7 @@ SAXParserDriver >> externalSubsetParserOnURI: aUri [
 SAXParserDriver >> handleAttributeDeclaration: anElement name: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	self isValidating
 		ifTrue: [
-			self dtd
+			self doctypeDefinition
 				addValidatorForAttributeIn: anElement
 				named: aName
 				type: aType
@@ -174,7 +174,7 @@ SAXParserDriver >> handleComment: aString [
 SAXParserDriver >> handleElementDeclaration: aName contentModel: aContentModel [
 	self isValidating
 		ifTrue: [
-			self dtd
+			self doctypeDefinition
 				addValidatorForElement: aName
 				contentModel: aContentModel].
 
@@ -191,8 +191,8 @@ SAXParserDriver >> handleEndContentEntityReplacement: aName [
 { #category : #'handling tokens' }
 SAXParserDriver >> handleEndDTD [
 	(self resolvesExternalEntities
-		and: [self dtd hasExternalSubset])
-		ifTrue: [self parseExternalSubset: self dtd externalSubsetURI].
+		and: [self doctypeDefinition hasExternalSubset])
+		ifTrue: [self parseExternalSubset: self doctypeDefinition externalSubsetURI].
 
 	self saxHandler
 		endInternalSubset;
@@ -245,16 +245,16 @@ SAXParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId sys
 		ifNotEmpty: [
 			self isValidating
 				ifTrue: [
-					self dtd unparsedEntityValidator
+					self doctypeDefinition unparsedEntityValidator
 						validateUnparsedEntity: aName
 						withNotation: aNotation].
-			self dtd
+			self doctypeDefinition
 				addUnparsedEntity: aName
 				ndata: aNotation]
 		ifEmpty: [
 			self resolvesExternalEntities
 				ifTrue: [
-					self dtd
+					self doctypeDefinition
 						addExternalGeneralEntity: aName
 						resolver: self externalEntityResolver
 						uri: aSystemId
@@ -269,7 +269,7 @@ SAXParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId sys
 
 { #category : #'handling tokens' }
 SAXParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplacement [
-	self dtd
+	self doctypeDefinition
 		addGeneralEntity: aName
 		replacement: aReplacement
 		from: self currentURI.
@@ -281,7 +281,7 @@ SAXParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplaceme
 
 { #category : #'handling tokens' }
 SAXParserDriver >> handleGeneralEntityReference: aName [
-	^ self dtd
+	^ self doctypeDefinition
 		generalEntityAt: aName
 		ifAbsent: [
 			self isValidating
@@ -292,7 +292,7 @@ SAXParserDriver >> handleGeneralEntityReference: aName [
 { #category : #'handling tokens' }
 SAXParserDriver >> handleNotationDeclaration: aName publicID: aPublicId systemID: aSystemId [
 	self isValidating
-		ifTrue: [self dtd addNotation: aName].
+		ifTrue: [self doctypeDefinition addNotation: aName].
 
 	self saxHandler
 		notationDeclaration: aName
@@ -321,7 +321,7 @@ SAXParserDriver >> handlePI: piTarget data: piData [
 SAXParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
 	self resolvesExternalEntities
 		ifTrue: [
-			self dtd
+			self doctypeDefinition
 				addExternalParameterEntity: aName
 				resolver: self externalEntityResolver
 				uri: aSystemId
@@ -335,7 +335,7 @@ SAXParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicId s
 
 { #category : #'handling tokens' }
 SAXParserDriver >> handleParameterEntityDeclaration: aName replacement: aReplacement [
-	self dtd
+	self doctypeDefinition
 		addParameterEntity: aName
 		replacement:aReplacement
 		from: self currentURI.
@@ -347,7 +347,7 @@ SAXParserDriver >> handleParameterEntityDeclaration: aName replacement: aReplace
 
 { #category : #'handling tokens' }
 SAXParserDriver >> handleParameterEntityReference: aName [
-	^ self dtd
+	^ self doctypeDefinition
 		parameterEntityAt: aName
 		ifAbsent: [
 			self isValidating
@@ -377,8 +377,8 @@ SAXParserDriver >> handleStartContentEntityReplacement: aName [
 
 { #category : #'handling tokens' }
 SAXParserDriver >> handleStartDTD: aRoot publicID: aPublicId systemID: aSystemId [
-	self dtd
-		rootElement: aRoot
+	self doctypeDefinition
+		root: aRoot
 		externalSubsetURI: aSystemId.
 	
 	self saxHandler
@@ -452,7 +452,7 @@ SAXParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: a
 	versionNumber := Float readFrom: aVersion readStream.
 	isStandalone := aYesOrNo = 'yes'.
 
-	self dtd isStandalone: isStandalone.
+	self doctypeDefinition isStandalone: isStandalone.
 
 	self saxHandler
 		xmlVersion: versionNumber
@@ -567,5 +567,5 @@ SAXParserDriver >> validateRootElement: aStartTag [
 
 { #category : #accessing }
 SAXParserDriver >> validator [
-	^ validator ifNil: [validator := DTDDocumentValidator dtd: self dtd]
+	^ validator ifNil: [validator := DTDDocumentValidator doctypeDefinition: self doctypeDefinition]
 ]

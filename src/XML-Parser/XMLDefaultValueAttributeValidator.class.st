@@ -7,7 +7,7 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
-{ #category : #validation }
+{ #category : #validating }
 XMLDefaultValueAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
 	((anAttributeDictionary at: self attribute ifAbsent: ['']) isEmpty 
 		and: [self defaultValue notEmpty])

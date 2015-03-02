@@ -134,7 +134,7 @@ XMLAttributeValidator >> shouldFurtherNormalizeAttributeValue [
 	^ true
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
 	defaultValueValidator validateAttributeDefaultIn: anAttributeDictionary.
 
@@ -142,12 +142,12 @@ XMLAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
 		ifTrue: [self furtherNormalizeAttributeValueIn: anAttributeDictionary].
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLAttributeValidator >> validateAttributeValue: aValue [
 	self subclassResponsibility
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLAttributeValidator >> validateAttributes: anAttributeDictionary [
 	self
 		validateAttributeDefaultIn: anAttributeDictionary;
@@ -157,7 +157,7 @@ XMLAttributeValidator >> validateAttributes: anAttributeDictionary [
 				ifAbsent: [^ self])
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLAttributeValidator >> validateReservedAttributeValidator [
 	(self attribute at: 1) == $x
 		ifTrue: [
@@ -167,13 +167,13 @@ XMLAttributeValidator >> validateReservedAttributeValidator [
 				ifTrue: [^ self validateXMLSpaceAttributeValidator]]
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLAttributeValidator >> validateXMLIDAttributeValidator [
 	self isIDValidator
 		ifFalse: [self errorInvalidXMLIDAttributeValidator]
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLAttributeValidator >> validateXMLSpaceAttributeValidator [
 	(self isEnumerationValidator
 		and: [self allowedValues size = 2

@@ -5,41 +5,41 @@ Class {
 	#name : #DTDDocumentValidator,
 	#superclass : #XMLDocumentValidator,
 	#instVars : [
-		'dtd'
+		'doctypeDefinition'
 	],
 	#category : #'XML-Parser-DTD'
 }
 
 { #category : #'instance creation' }
-DTDDocumentValidator class >> dtd: aDtd [
-	^ self new dtd: aDtd
+DTDDocumentValidator class >> doctypeDefinition: aDoctypeDefinition [
+	^ self new doctypeDefinition: aDoctypeDefinition
 ]
 
 { #category : #accessing }
 DTDDocumentValidator >> attributeValidatorsFor: anElement [
-	^ self dtd attributeValidators
+	^ self doctypeDefinition attributeValidators
 		at: anElement
 		ifAbsent: [nil]
 ]
 
 { #category : #accessing }
-DTDDocumentValidator >> dtd [
-	^ dtd
+DTDDocumentValidator >> doctypeDefinition [
+	^ doctypeDefinition
 ]
 
 { #category : #accessing }
-DTDDocumentValidator >> dtd: aDtd [
-	dtd := aDtd
+DTDDocumentValidator >> doctypeDefinition: aDoctypeDefinition [
+	doctypeDefinition := aDoctypeDefinition
 ]
 
 { #category : #accessing }
 DTDDocumentValidator >> elementIDValidator [
-	self dtd elementIDValidator
+	self doctypeDefinition elementIDValidator
 ]
 
 { #category : #accessing }
 DTDDocumentValidator >> elementValidatorFor: aName [
-	^ (self dtd elementValidators
+	^ (self doctypeDefinition elementValidators
 		at: aName
 		ifAbsent: [nil]) copy
 ]
@@ -53,37 +53,37 @@ DTDDocumentValidator >> errorInvalidRoot: anElementName [
 
 { #category : #testing }
 DTDDocumentValidator >> hasAttributeValidators [
-	^ self dtd hasAttributeValidators
+	^ self doctypeDefinition hasAttributeValidators
 ]
 
 { #category : #testing }
 DTDDocumentValidator >> hasElementValidators [
-	^ self dtd hasElementValidators
+	^ self doctypeDefinition hasElementValidators
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 DTDDocumentValidator >> unvalidatedAttributes: anAttributeCollection [
 	XMLValidationException
 		formatSignal: 'Undeclared attribute "{1}"'
 		with: anAttributeCollection anyOne
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 DTDDocumentValidator >> unvalidatedElement: aName [
 	XMLValidationException
 		formatSignal: 'Undeclared element <{1}>'
 		with: aName
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 DTDDocumentValidator >> validateIDReferences [
-	self dtd hasElementIDValidator
-		ifTrue: [self dtd elementIDValidator validateIDReferences]
+	self doctypeDefinition hasElementIDValidator
+		ifTrue: [self doctypeDefinition elementIDValidator validateIDReferences]
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 DTDDocumentValidator >> validateRootElement: anElementName [
-	(self dtd rootElement notEmpty
-		and: [self dtd rootElement ~= anElementName])
+	(self doctypeDefinition root notEmpty
+		and: [self doctypeDefinition root ~= anElementName])
 		ifTrue: [self errorInvalidRoot: anElementName]
 ]

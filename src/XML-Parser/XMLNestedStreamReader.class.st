@@ -14,7 +14,7 @@ Class {
 		'normalizedLineEndingChar',
 		'currentLineNumber',
 		'readLimit',
-		'characterEscaper'
+		'isEscapingQuotes'
 	],
 	#classVars : [
 		'CarriageReturn',
@@ -86,19 +86,9 @@ XMLNestedStreamReader >> basicNext [
 		ifFalse: [
 			nextChar == LineFeed
 				ifTrue: [nextChar := normalizedLineEndingChar]].
-	characterEscaper
-		ifNil: [^ nextChar]
-		ifNotNil: [^ characterEscaper nextCharacter: nextChar].
-]
-
-{ #category : #accessing }
-XMLNestedStreamReader >> characterEscaper [
-	^ characterEscaper
-]
-
-{ #category : #accessing }
-XMLNestedStreamReader >> characterEscaper: aCharacterEscaper [
-	characterEscaper := aCharacterEscaper
+	isEscapingQuotes
+		ifTrue: [^ self escapeNextQuoteCharacter: nextChar]
+		ifFalse: [^ nextChar].
 ]
 
 { #category : #private }
@@ -164,7 +154,7 @@ XMLNestedStreamReader >> errorReadLimitExceeded [
 ]
 
 { #category : #private }
-XMLNestedStreamReader >> escapeQuote: aCharacter [
+XMLNestedStreamReader >> escapeNextQuoteCharacter: aCharacter [
 	aCharacter ==  $"
 		ifTrue: [
 			self pushBack: '#34;'.
@@ -174,6 +164,16 @@ XMLNestedStreamReader >> escapeQuote: aCharacter [
 			self pushBack: '#39;'.
 			^ $&].
 	^ aCharacter.
+]
+
+{ #category : #testing }
+XMLNestedStreamReader >> isEscapingQuotes [
+	^ isEscapingQuotes
+]
+
+{ #category : #accessing }
+XMLNestedStreamReader >> isEscapingQuotes: aBoolean [
+	isEscapingQuotes := aBoolean
 ]
 
 { #category : #private }
@@ -308,6 +308,7 @@ XMLNestedStreamReader >> setStream: aStream readLimit: aReadLimit [
 	currentLineNumber := 1.
 	normalizedLineEndingChar := LineFeed.
 	readLimit := aReadLimit.
+	isEscapingQuotes := false.
 	self stream: aStream.
 ]
 

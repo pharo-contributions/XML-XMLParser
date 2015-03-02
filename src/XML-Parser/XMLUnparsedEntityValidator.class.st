@@ -5,9 +5,9 @@ Class {
 	#name : #XMLUnparsedEntityValidator,
 	#superclass : #Object,
 	#instVars : [
+		'elementsAndNotationAttributes',
 		'unparsedEntities',
-		'notations',
-		'notationAttributes'
+		'notations'
 	],
 	#category : #'XML-Parser-Validation'
 }
@@ -17,6 +17,11 @@ XMLUnparsedEntityValidator class >> unparsedEntities: anUnparsedEntityDictionary
 	^ self new
 		setUnparsedEntities: anUnparsedEntityDictionary
 		notations: aNotationSet
+]
+
+{ #category : #accessing }
+XMLUnparsedEntityValidator >> elementsAndNotationAttributes [
+	^ elementsAndNotationAttributes ifNil: [elementsAndNotationAttributes := Dictionary new]
 ]
 
 { #category : #private }
@@ -51,11 +56,6 @@ XMLUnparsedEntityValidator >> errorUndeclaredUnparsedEntityReference: aName inAt
 ]
 
 { #category : #accessing }
-XMLUnparsedEntityValidator >> notationAttributes [
-	^ notationAttributes ifNil: [notationAttributes := Dictionary new]
-]
-
-{ #category : #accessing }
 XMLUnparsedEntityValidator >> notations [
 	^ notations
 ]
@@ -71,7 +71,7 @@ XMLUnparsedEntityValidator >> unparsedEntities [
 	^ unparsedEntities
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLUnparsedEntityValidator >> validateEntityReference: aName inAttribute: anAttribute [
 	(self unparsedEntities includesKey: aName)
 		ifFalse: [
@@ -80,20 +80,20 @@ XMLUnparsedEntityValidator >> validateEntityReference: aName inAttribute: anAttr
 				inAttribute: anAttribute]
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLUnparsedEntityValidator >> validateNotationAttribute: anAttribute forElement: anElement [
 	| oldSize |
 
 	"checking size after is faster than includes"
-	oldSize := self notationAttributes size.
-	(self notationAttributes
+	oldSize := self elementsAndNotationAttributes size.
+	(self elementsAndNotationAttributes
 		at: anElement
 		put: anAttribute;
 		size) > oldSize
 		ifFalse: [self errorMultipleNotationAttributesForElement: anElement].
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLUnparsedEntityValidator >> validateNotationReference: aNotation inAttribute: anAttribute [
 	(self notations includes: aNotation)
 		ifFalse: [
@@ -102,7 +102,7 @@ XMLUnparsedEntityValidator >> validateNotationReference: aNotation inAttribute: 
 				inAttribute: anAttribute]
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLUnparsedEntityValidator >> validateUnparsedEntity: anEntity withNotation: aNotation [
 	(self notations includes: aNotation)
 		ifFalse: [

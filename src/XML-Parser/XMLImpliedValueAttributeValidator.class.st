@@ -8,6 +8,6 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
-{ #category : #validation }
+{ #category : #validating }
 XMLImpliedValueAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
 ]

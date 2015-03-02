@@ -7,7 +7,7 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
-{ #category : #validation }
+{ #category : #validating }
 XMLEntitiesAttributeValidator >> validateAttributeValue: aValue [
 	self
 		listValuesIn: aValue

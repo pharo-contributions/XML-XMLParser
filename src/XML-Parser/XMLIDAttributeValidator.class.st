@@ -48,7 +48,7 @@ XMLIDAttributeValidator >> isIDValidator [
 	^ true
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLIDAttributeValidator >> validateAttributeValue: aValue [
 	self elementIDValidator
 		validateID: aValue

@@ -15,7 +15,7 @@ Class {
 
 { #category : #accessing }
 DTDEntityConfiguration >> externalEntityResolver [
-	^ externalEntityResolver ifNil: [externalEntityResolver := DTDCachingEntityResolver new]
+	^ externalEntityResolver ifNil: [externalEntityResolver := DTDCachingExternalEntityResolver new]
 ]
 
 { #category : #accessing }

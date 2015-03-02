@@ -36,12 +36,12 @@ XMLDFAElementValidator >> setElement: aName dfa: aDfa [
 	currentState := dfa.
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLDFAElementValidator >> validatePCData: aString [
 	self errorUnexpectedPCData: aString
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLDFAElementValidator >> validateStartTag: aName [
 	currentState :=
 		currentState

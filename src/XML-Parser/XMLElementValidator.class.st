@@ -45,10 +45,10 @@ XMLElementValidator >> errorUnexpectedPCData: aString [
 		with: self element
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLElementValidator >> validatePCData: aString [
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLElementValidator >> validateStartTag: aName [
 ]

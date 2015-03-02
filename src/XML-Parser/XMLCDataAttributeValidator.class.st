@@ -12,7 +12,7 @@ XMLCDataAttributeValidator >> shouldFurtherNormalizeAttributeValue [
 	^ false
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLCDataAttributeValidator >> validateAttributeValue: aValue [
 	
 ]

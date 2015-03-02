@@ -33,7 +33,7 @@ XMLMixedContentElementValidator >> setElement: aName allowedElements: aNameColle
 	allowedElements := aNameCollection.
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLMixedContentElementValidator >> validateStartTag: aName [
 	(self allowedElements includes: aName)
 		ifFalse: [self errorUnexpectedElement: aName]

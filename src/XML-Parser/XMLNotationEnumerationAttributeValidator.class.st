@@ -33,7 +33,7 @@ XMLNotationEnumerationAttributeValidator >> unparsedEntityValidator [
 	^ unparsedEntityValidator
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLNotationEnumerationAttributeValidator >> validateAttributeValue: aValue [
 	super validateAttributeValue: aValue.
 	self unparsedEntityValidator

@@ -20,12 +20,12 @@ XMLEmptyElementValidator >> errorMustBeEmpty [
 		with: self element
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLEmptyElementValidator >> validatePCData: aString [
 	self errorMustBeEmpty
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLEmptyElementValidator >> validateStartTag: aName [
 	self errorMustBeEmpty
 ]

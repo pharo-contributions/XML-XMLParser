@@ -5,12 +5,17 @@ Class {
 	#name : #XMLElementIDValidator,
 	#superclass : #Object,
 	#instVars : [
-		'idAttributes',
-		'ids',
-		'idReferences'
+		'elementsAndIdAttributes',
+		'idReferences',
+		'ids'
 	],
 	#category : #'XML-Parser-Validation'
 }
+
+{ #category : #accessing }
+XMLElementIDValidator >> elementsAndIDAttributes [
+	^ elementsAndIdAttributes ifNil: [elementsAndIdAttributes := Dictionary new]
+]
 
 { #category : #private }
 XMLElementIDValidator >> errorDuplicateID: anId inAttribute: anAttribute [
@@ -43,11 +48,6 @@ XMLElementIDValidator >> errorUnknownIDReference: anId [
 ]
 
 { #category : #accessing }
-XMLElementIDValidator >> idAttributes [
-	^ idAttributes ifNil: [idAttributes := Dictionary new]
-]
-
-{ #category : #accessing }
 XMLElementIDValidator >> idReferences [
 	^ idReferences ifNil: [idReferences := Set new]
 ]
@@ -57,7 +57,7 @@ XMLElementIDValidator >> ids [
 	^ ids ifNil: [ids := Set new]
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLElementIDValidator >> validateID: anId inAttribute: anAttribute [
 	(XMLWellFormedParserTokenizer isName: anId)
 		ifFalse: [
@@ -69,20 +69,20 @@ XMLElementIDValidator >> validateID: anId inAttribute: anAttribute [
 		inAttribute: anAttribute.
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLElementIDValidator >> validateIDAttribute: anAttribute forElement: anElement [
 	| oldSize |
 
 	"checking size after is faster than includes test"
-	oldSize := self idAttributes size.
-	(self idAttributes
+	oldSize := self elementsAndIDAttributes size.
+	(self elementsAndIDAttributes
 		at: anElement
 		put: anAttribute;
 		size) > oldSize
 		ifFalse: [self errorMultipleIDAttributesForElement: anElement].
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLElementIDValidator >> validateIDReference: anId inAttribute: anAttribute [
 	(XMLWellFormedParserTokenizer isName: anId)
 		ifFalse: [
@@ -92,7 +92,7 @@ XMLElementIDValidator >> validateIDReference: anId inAttribute: anAttribute [
 	self idReferences add: anId.
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLElementIDValidator >> validateIDReferences [
 	self idReferences do: [:each |
 		(self ids includes: each)
@@ -114,7 +114,7 @@ XMLElementIDValidator >> validateUniquenessOfID: anId inAttribute: anAttribute [
 				inAttribute: anAttribute].
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLElementIDValidator >> validateXMLID: anId [
 	(XMLWellFormedParserTokenizer isNCName: anId)
 		ifFalse: [

@@ -37,7 +37,7 @@ XMLTokenContext >> externalSubsetContext [
 
 { #category : #changing }
 XMLTokenContext >> internalSubsetContext [
-	^ XMLInternalSubetContext new
+	^ XMLInternalSubsetContext new
 ]
 
 { #category : #testing }

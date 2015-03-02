@@ -280,7 +280,7 @@ XMLNamespaceScope >> validateAndResolvePrefix: aPrefix [
 						ifFalse: [self errorUnmappedPrefix: aPrefix])]]
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLNamespaceScope >> validateAndResolvePrefix: aPrefix ofElement: aName [
 	aPrefix isEmpty "avoid ifEmpty: closure overhead"
 		ifTrue: [
@@ -289,7 +289,7 @@ XMLNamespaceScope >> validateAndResolvePrefix: aPrefix ofElement: aName [
 		ifFalse: [^ self validateAndResolvePrefix: aPrefix]
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
 	"performance critical method"
 	| namespacedAttributes |

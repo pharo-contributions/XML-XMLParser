@@ -5,7 +5,7 @@ Class {
 	#name : #DTDDoctypeDefinition,
 	#superclass : #Object,
 	#instVars : [
-		'rootElement',
+		'root',
 		'externalSubsetUri',
 		'isStandalone',
 		'elementValidators',
@@ -216,13 +216,13 @@ DTDDoctypeDefinition >> parameterEntityAt: aName ifAbsent: aBlock [
 ]
 
 { #category : #accessing }
-DTDDoctypeDefinition >> rootElement [
-	^ rootElement ifNil: ['']
+DTDDoctypeDefinition >> root [
+	^ root ifNil: ['']
 ]
 
 { #category : #accessing }
-DTDDoctypeDefinition >> rootElement: aRootElement externalSubsetURI: aUri [
-	rootElement := aRootElement.
+DTDDoctypeDefinition >> root: aRootElement externalSubsetURI: aUri [
+	root := aRootElement.
 	externalSubsetUri := aUri.
 ]
 

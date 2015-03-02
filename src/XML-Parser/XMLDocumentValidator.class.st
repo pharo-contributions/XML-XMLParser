@@ -74,15 +74,15 @@ XMLDocumentValidator >> hasValidators [
 	^ self hasElementValidators or: [self hasAttributeValidators]
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLDocumentValidator >> unvalidatedAttributes: anAttributeCollection [
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLDocumentValidator >> unvalidatedElement: aName [
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLDocumentValidator >> validateAttributes: anAttributeDictionary with: aValidatorDictionary [
 	| unvalidatedAttributes |
 
@@ -100,12 +100,12 @@ XMLDocumentValidator >> validateAttributes: anAttributeDictionary with: aValidat
 		ifFalse: [self unvalidatedAttributes: unvalidatedAttributes].
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLDocumentValidator >> validateEndDocument [
 	self validateIDReferences
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLDocumentValidator >> validateEndTag: aName [
 	self hasElementValidators
 		ifTrue: [
@@ -116,26 +116,26 @@ XMLDocumentValidator >> validateEndTag: aName [
 			self elementValidatorStack removeLast]
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLDocumentValidator >> validateIDReferences [
 	self subclassResponsibility
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLDocumentValidator >> validatePCData: aString [
 	self hasElementValidators
 		ifTrue: [self currentElementValidator validatePCData: aString]
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLDocumentValidator >> validateReservedAttributes: aDictionary for: aStartTag [
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLDocumentValidator >> validateRootElement: anElementName [
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLDocumentValidator >> validateStartTag: aName [
 	self currentElementValidator
 		ifNotNil: [:currentValidator | currentValidator validateStartTag: aName].
@@ -148,7 +148,7 @@ XMLDocumentValidator >> validateStartTag: aName [
 					defaultElementValidatorFor: aName]).
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLDocumentValidator >> validateStartTag: aName attributes: anAttributeDictionary [
 	(self hasElementValidators or: [self hasAttributeValidators])
 		ifFalse: [^ self].
@@ -159,7 +159,7 @@ XMLDocumentValidator >> validateStartTag: aName attributes: anAttributeDictionar
 		with: (self attributeValidatorsFor: aName).
 ]
 
-{ #category : #validation }
+{ #category : #validating }
 XMLDocumentValidator >> validateXMLIDAttributeIn: anAttributeDictionary [
 	self hasAttributeValidators
 		ifFalse: [self defaultXMLIDValidator validateAttributes: anAttributeDictionary]

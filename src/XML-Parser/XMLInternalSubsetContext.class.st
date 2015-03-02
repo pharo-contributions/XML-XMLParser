@@ -2,22 +2,22 @@
 A context for internal subset tokens.
 "
 Class {
-	#name : #XMLInternalSubetContext,
+	#name : #XMLInternalSubsetContext,
 	#superclass : #XMLDoctypeContext,
 	#category : #'XML-Parser'
 }
 
 { #category : #testing }
-XMLInternalSubetContext >> isInternalSubsetContext [
+XMLInternalSubsetContext >> isInternalSubsetContext [
 	^ true
 ]
 
 { #category : #testing }
-XMLInternalSubetContext >> isSubsetContext [
+XMLInternalSubsetContext >> isSubsetContext [
 	^ true
 ]
 
 { #category : #tokenizing }
-XMLInternalSubetContext >> nextTokenFrom: aTokenizer [
+XMLInternalSubsetContext >> nextTokenFrom: aTokenizer [
 	aTokenizer nextSubsetToken
 ]

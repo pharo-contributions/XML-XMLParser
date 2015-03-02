@@ -7,7 +7,7 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
-{ #category : #validation }
+{ #category : #validating }
 XMLXMLIDIDAttributeValidator >> validateAttributeValue: aValue [
 	self elementIDValidator validateXMLID: aValue
 ]
