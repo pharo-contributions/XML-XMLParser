@@ -49,9 +49,9 @@ SAXHandlerProxy >> doesNotUnderstand: aMessage [
 { #category : #accessing }
 SAXHandlerProxy >> handlerCategories [
 	^ #(
-		'handling - content'
-		'handling - lexical'
-		'handling - declarations'
+		#'handling - content'
+		#'handling - lexical'
+		#'handling - declarations'
 		)
 ]
 
