@@ -50,6 +50,11 @@ XMLDOMParser >> currentScope: aNamespaceScope [
 	self topNode setNamespaceScope: aNamespaceScope
 ]
 
+{ #category : #private }
+XMLDOMParser >> doctypeDefinition: aDoctypeDefinition [
+	self document doctypeDefinition: aDoctypeDefinition
+]
+
 { #category : #accessing }
 XMLDOMParser >> document [
 	^ document

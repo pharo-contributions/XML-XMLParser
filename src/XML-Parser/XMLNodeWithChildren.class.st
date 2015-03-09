@@ -54,7 +54,7 @@ XMLNodeWithChildren >> addingNode: aNode [
 XMLNodeWithChildren >> allNodes [
 	| allNodes |
 
-	allNodes := self newNodeListForSelect.
+	allNodes := self newListForSelect.
 	self allNodesDo: [:each | allNodes addLast: each].
 	^ allNodes.
 ]
@@ -92,7 +92,7 @@ XMLNodeWithChildren >> allNodesDo: aBlock [
 XMLNodeWithChildren >> allNodesSelect: aBlock [
 	| selectedNodes |
 
-	selectedNodes := self newNodeListForSelect.
+	selectedNodes := self newListForSelect.
 	self allNodesDo: [:each |
 		(aBlock value: each)
 			ifTrue: [selectedNodes addLast: each]].
@@ -108,7 +108,7 @@ XMLNodeWithChildren >> canHaveChildren [
 XMLNodeWithChildren >> descendentNodes [
 	| descendentNodes |
 
-	descendentNodes := self newNodeListForSelect.
+	descendentNodes := self newListForSelect.
 	self descendentNodesDo: [:each | descendentNodes addLast: each].
 	^ descendentNodes.
 ]
@@ -145,7 +145,7 @@ XMLNodeWithChildren >> descendentNodesDo: aBlock [
 XMLNodeWithChildren >> descendentNodesSelect: aBlock [
 	| selectedNodes |
 
-	selectedNodes := self newNodeListForSelect.
+	selectedNodes := self newListForSelect.
 	self descendentNodesDo: [:each |
 		(aBlock value: each)
 			ifTrue: [selectedNodes addLast: each]].

@@ -7,8 +7,9 @@ Class {
 	#instVars : [
 		'version',
 		'encoding',
+		'isStandalone',
 		'doctypeDeclaration',
-		'isStandalone'
+		'doctypeDefinition'
 	],
 	#category : #'XML-Parser-DOM'
 }
@@ -21,6 +22,16 @@ XMLDocument >> doctypeDeclaration [
 { #category : #accessing }
 XMLDocument >> doctypeDeclaration: aDoctypeDeclaration [
 	doctypeDeclaration := aDoctypeDeclaration
+]
+
+{ #category : #accessing }
+XMLDocument >> doctypeDefinition [
+	^ doctypeDefinition
+]
+
+{ #category : #accessing }
+XMLDocument >> doctypeDefinition: aDoctypeDefinition [
+	doctypeDefinition := aDoctypeDefinition
 ]
 
 { #category : #accessing }

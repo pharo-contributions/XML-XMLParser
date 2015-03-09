@@ -10,6 +10,8 @@ Class {
 		'scopeAllocator',
 		'doctypeDefinition',
 		'validator',
+		'isStandalone',
+		'externalSubsetUri',
 		'hasUnhandledReservedAttributes'
 	],
 	#category : #'XML-Parser'
@@ -132,6 +134,11 @@ SAXParserDriver >> externalSubsetParserOnURI: aUri [
 	
 ]
 
+{ #category : #accessing }
+SAXParserDriver >> externalSubsetURI [
+	^ externalSubsetUri ifNil: [externalSubsetUri := '']
+]
+
 { #category : #'handling tokens' }
 SAXParserDriver >> handleAttributeDeclaration: anElement name: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	self isValidating
@@ -191,11 +198,13 @@ SAXParserDriver >> handleEndContentEntityReplacement: aName [
 { #category : #'handling tokens' }
 SAXParserDriver >> handleEndDTD [
 	(self resolvesExternalEntities
-		and: [self doctypeDefinition hasExternalSubset])
-		ifTrue: [self parseExternalSubset: self doctypeDefinition externalSubsetURI].
+		and: [self externalSubsetURI notEmpty
+			and: [self isValidating or: [self isStandalone not]]])
+		ifTrue: [self parseExternalSubset: self externalSubsetURI].
 
 	self saxHandler
 		endInternalSubset;
+		doctypeDefinition: self doctypeDefinition;
 		endDTD.
 ]
 
@@ -377,10 +386,9 @@ SAXParserDriver >> handleStartContentEntityReplacement: aName [
 
 { #category : #'handling tokens' }
 SAXParserDriver >> handleStartDTD: aRoot publicID: aPublicId systemID: aSystemId [
-	self doctypeDefinition
-		root: aRoot
-		externalSubsetURI: aSystemId.
-	
+	externalSubsetUri := aSystemId.
+
+	self doctypeDefinition root: aRoot.
 	self saxHandler
 		startDTD: aRoot
 		publicID: aPublicId
@@ -447,15 +455,10 @@ SAXParserDriver >> handleWhitespace: aString [
 
 { #category : #'handling tokens' }
 SAXParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
-	| versionNumber isStandalone |
-
-	versionNumber := Float readFrom: aVersion readStream.
 	isStandalone := aYesOrNo = 'yes'.
 
-	self doctypeDefinition isStandalone: isStandalone.
-
 	self saxHandler
-		xmlVersion: versionNumber
+		xmlVersion: (Float readFrom: aVersion readStream)
 		encoding: anEncoding
 		standalone: isStandalone.
 ]
@@ -468,6 +471,11 @@ SAXParserDriver >> hasUnhandledReservedAttributes [
 { #category : #private }
 SAXParserDriver >> haveUnhandledReservedAttributes [
 	hasUnhandledReservedAttributes := true
+]
+
+{ #category : #testing }
+SAXParserDriver >> isStandalone [
+	^ isStandalone ifNil: [isStandalone := false]
 ]
 
 { #category : #testing }

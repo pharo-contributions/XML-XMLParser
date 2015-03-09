@@ -29,35 +29,49 @@ XMLNode >> allNodesDo: aBlock [
 XMLNode >> ancestorElements [
 	| ancestorElements |
 
-	ancestorElements := self newNodeListForSelect.
+	ancestorElements := self newListForSelect.
 	self ancestorElementsDo: [:each | ancestorElements addLast: each].
 	^ ancestorElements.
 ]
 
 { #category : #enumerating }
 XMLNode >> ancestorElementsDo: aBlock [
-	self parent
-		ifNotNil: [:node |
-			node isElement
-				ifTrue: [aBlock value: node].
-			node ancestorElementsDo: aBlock]
+	| ancestor |
+
+	ancestor := self parent.
+	[ancestor notNil
+		and: [ancestor isElement]]
+		whileTrue: [
+			aBlock value: ancestor.
+			ancestor := ancestor parent].
 ]
 
 { #category : #accessing }
 XMLNode >> ancestorNodes [
 	| ancestors |
 
-	ancestors := self newNodeListForSelect.
+	ancestors := self newListForSelect.
 	self ancestorNodesDo: [:each | ancestors addLast: each].
 	^ ancestors.
 ]
 
 { #category : #enumerating }
+XMLNode >> ancestorNodesDetect: aBlock ifNone: anExceptionBlock [
+	self ancestorNodesDo: [:each |
+		(aBlock value: each)
+			ifTrue: [^ each]].
+	^ anExceptionBlock value.
+]
+
+{ #category : #enumerating }
 XMLNode >> ancestorNodesDo: aBlock [
-	self parent
-		ifNotNil: [:node |
-			aBlock value: node.
-			node ancestorNodesDo: aBlock]
+	| ancestor |
+
+	ancestor := self parent.
+	[ancestor notNil]
+		whileTrue: [
+			aBlock value: ancestor.
+			ancestor := ancestor parent].
 ]
 
 { #category : #converting }
@@ -204,11 +218,13 @@ XMLNode >> isStringNode: aStringOrStringNode [
 
 { #category : #private }
 XMLNode >> newListForCollect [
+	"collect can return non-nodes, so a basic ordered list is used"
 	^ XMLOrderedList new: 10
 ]
 
 { #category : #private }
-XMLNode >> newNodeListForSelect [
+XMLNode >> newListForSelect [
+	"select returns only nodes, so a node list is used"
 	^ XMLNodeList new: 10
 ]
 

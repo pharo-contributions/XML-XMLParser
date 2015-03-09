@@ -174,6 +174,10 @@ SAXHandler >> defaultDocumentURI [
 	^ self externalEntityResolver defaultDocumentURI
 ]
 
+{ #category : #private }
+SAXHandler >> doctypeDefinition: aDoctypeDefinition [
+]
+
 { #category : #configuring }
 SAXHandler >> documentReadLimit [
 	^ self parserLimits documentReadLimit

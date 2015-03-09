@@ -64,7 +64,7 @@ XMLNodeWithElements >> addedElement: anElement [
 XMLNodeWithElements >> allElements [
 	| allElements |
 
-	allElements := self newNodeListForSelect.
+	allElements := self newListForSelect.
 	self allElementsDo: [:each | allElements addLast: each].
 	^ allElements.
 ]
@@ -130,7 +130,7 @@ XMLNodeWithElements >> allElementsNamed: aName namespaceURI: aUri [
 XMLNodeWithElements >> allElementsSelect: aBlock [
 	| selectedElements |
 
-	selectedElements := self newNodeListForSelect.
+	selectedElements := self newListForSelect.
 	self allElementsDo: [:each |
 		(aBlock value: each)
 			ifTrue: [selectedElements addLast: each]].
@@ -183,7 +183,7 @@ XMLNodeWithElements >> contentStringAt: aName [
 XMLNodeWithElements >> descendentElements [
 	| descendentElements |
 
-	descendentElements := self newNodeListForSelect.
+	descendentElements := self newListForSelect.
 	self descendentElementsDo: [:each | descendentElements addLast: each].
 	^ descendentElements.
 ]
@@ -239,7 +239,7 @@ XMLNodeWithElements >> descendentElementsNamed: aName namespaceURI: aUri [
 XMLNodeWithElements >> descendentElementsSelect: aBlock [
 	| selectedElements |
 
-	selectedElements := self newNodeListForSelect.
+	selectedElements := self newListForSelect.
 	self descendentElementsDo: [:each |
 		(aBlock value: each)
 			ifTrue: [selectedElements addLast: each]].

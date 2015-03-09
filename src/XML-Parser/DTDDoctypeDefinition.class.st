@@ -6,8 +6,6 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'root',
-		'externalSubsetUri',
-		'isStandalone',
 		'elementValidators',
 		'attributeValidators',
 		'generalEntities',
@@ -124,11 +122,6 @@ DTDDoctypeDefinition >> elementValidators [
 	^ elementValidators ifNil: [elementValidators := Dictionary new]
 ]
 
-{ #category : #accessing }
-DTDDoctypeDefinition >> externalSubsetURI [
-	^ externalSubsetUri ifNil: [externalSubsetUri := '']
-]
-
 { #category : #private }
 DTDDoctypeDefinition >> generalEntities [
 	^ generalEntities ifNil: [generalEntities := Dictionary new]
@@ -164,8 +157,30 @@ DTDDoctypeDefinition >> hasElementValidators [
 ]
 
 { #category : #testing }
-DTDDoctypeDefinition >> hasExternalSubset [
-	^ self isStandalone not and: [self externalSubsetURI notEmpty]
+DTDDoctypeDefinition >> hasEntities [
+	^ self hasGeneralEntities
+		or: [self hasParameterEntities
+			or: [self hasUnparsedEntities]]
+]
+
+{ #category : #testing }
+DTDDoctypeDefinition >> hasGeneralEntities [
+	^ generalEntities notNil and: [generalEntities notEmpty]
+]
+
+{ #category : #testing }
+DTDDoctypeDefinition >> hasNotations [
+	^ notations notNil and: [notations notEmpty]
+]
+
+{ #category : #testing }
+DTDDoctypeDefinition >> hasParameterEntities [
+	^ parameterEntities notNil and: [parameterEntities notEmpty]
+]
+
+{ #category : #testing }
+DTDDoctypeDefinition >> hasUnparsedEntities [
+	^ unparsedEntities notNil and: [unparsedEntities notEmpty]
 ]
 
 { #category : #testing }
@@ -173,22 +188,12 @@ DTDDoctypeDefinition >> hasValidators [
 	^ (attributeValidators notNil
 		and: [attributeValidators notEmpty])
 			or: [elementValidators notNil
-				and: [elementValidators isEmpty]]
+				and: [elementValidators notEmpty]]
 ]
 
 { #category : #testing }
 DTDDoctypeDefinition >> includesNotation: aName [
 	^ self notations includes: aName
-]
-
-{ #category : #testing }
-DTDDoctypeDefinition >> isStandalone [
-	^ isStandalone ifNil: [isStandalone := false]
-]
-
-{ #category : #accessing }
-DTDDoctypeDefinition >> isStandalone: aBoolean [
-	isStandalone := aBoolean
 ]
 
 { #category : #private }
@@ -221,9 +226,8 @@ DTDDoctypeDefinition >> root [
 ]
 
 { #category : #accessing }
-DTDDoctypeDefinition >> root: aRootElement externalSubsetURI: aUri [
-	root := aRootElement.
-	externalSubsetUri := aUri.
+DTDDoctypeDefinition >> root: aRootElement [
+	root := aRootElement
 ]
 
 { #category : #private }
