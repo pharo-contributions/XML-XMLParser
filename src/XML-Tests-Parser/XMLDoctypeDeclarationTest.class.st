@@ -39,7 +39,7 @@ XMLDoctypeDeclarationTest >> nodeClass [
 ]
 
 { #category : #accessing }
-XMLDoctypeDeclarationTest >> selectNodeListClass [
+XMLDoctypeDeclarationTest >> selectListClass [
 	^ XMLInternalSubsetList
 ]
 

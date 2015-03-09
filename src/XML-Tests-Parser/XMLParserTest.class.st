@@ -1199,7 +1199,7 @@ XMLParserTest >> testSelfReferentialEntityReplacement [
 
 { #category : #tests }
 XMLParserTest >> testStandalone [
-	| dtdXml standaloneDecl |
+	| dtdXml standaloneDeclXml |
 
 	dtdXml := self addressBookXMLWithDTD.
 	self
@@ -1211,9 +1211,23 @@ XMLParserTest >> testStandalone [
 				externalEntities: false]
 		raise: XMLFileException.
 
-	standaloneDecl := (dtdXml copyUpTo: $>) allButLast, ' standalone="yes" ?>'.
+	standaloneDeclXml :=
+		(dtdXml copyUpTo: $>) allButLast, ' standalone="yes" ?>', (dtdXml copyAfter: $>).
 	self
-		shouldnt: [SAXHandler parse: standaloneDecl, (dtdXml copyAfter: $>)]
+		shouldnt: [
+			SAXHandler
+				parse: standaloneDeclXml
+				usingNamespaces: true
+				validation: false
+				externalEntities: true]
+		raise: XMLFileException.
+	self
+		shouldnt: [
+			SAXHandler
+				parse: standaloneDeclXml
+				usingNamespaces: true
+				validation: true
+				externalEntities: false]
 		raise: XMLFileException.
 ]
 

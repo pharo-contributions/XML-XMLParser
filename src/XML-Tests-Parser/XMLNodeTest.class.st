@@ -23,7 +23,7 @@ XMLNodeTest >> assertList: aList collects: aSecondList [
 XMLNodeTest >> assertList: aList selects: aSecondList [
 	self
 		assert: aList = aSecondList;
-		assert: aList class == self selectNodeListClass.
+		assert: aList class == self selectListClass.
 ]
 
 { #category : #accessing }
@@ -63,7 +63,7 @@ XMLNodeTest >> nodeClass [
 ]
 
 { #category : #accessing }
-XMLNodeTest >> selectNodeListClass [
+XMLNodeTest >> selectListClass [
 	^ XMLNodeList
 ]
 

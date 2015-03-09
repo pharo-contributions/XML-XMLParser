@@ -310,6 +310,8 @@ XMLNodeWithElementsTest >> testAllNodes [
 XMLNodeWithElementsTest >> testAncestorElements [
 	| nodeWithElements ancestorStack |
 
+	super testAncestorElements.
+
 	nodeWithElements := self newNodeWithElements.
 	ancestorStack := OrderedCollection new.
 	nodeWithElements allNodesDo: [:each |
@@ -326,6 +328,8 @@ XMLNodeWithElementsTest >> testAncestorElements [
 { #category : #tests }
 XMLNodeWithElementsTest >> testAncestorElementsDo [
 	| nodeWithElements |
+
+	super testAncestorElementsDo.
 
 	nodeWithElements := self newNodeWithElements.
 	nodeWithElements allNodesDo: [:each |

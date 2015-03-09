@@ -23,14 +23,26 @@ XMLDocumentTest >> nodeClass [
 
 { #category : #tests }
 XMLDocumentTest >> testDoctypeDeclaration [
-	| document doctype |
+	| document doctypeDeclaration |
 
 	document := self nodeClass new.
 	self assert: document doctypeDeclaration isNil.
-	doctype := XMLDoctypeDeclaration new.
+	doctypeDeclaration := XMLDoctypeDeclaration new.
 	self
-		assert: (document doctypeDeclaration: doctype) == document;
-		assert: document doctypeDeclaration == doctype.
+		assert: (document doctypeDeclaration: doctypeDeclaration) == document;
+		assert: document doctypeDeclaration == doctypeDeclaration.
+]
+
+{ #category : #tests }
+XMLDocumentTest >> testDoctypeDefinition [
+	| document doctypeDefinition |
+
+	document := self nodeClass new.
+	self assert: document doctypeDefinition isNil.
+	doctypeDefinition := DTDDoctypeDefinition new.
+	self
+		assert: (document doctypeDefinition: doctypeDefinition) == document;
+		assert: document doctypeDefinition == doctypeDefinition.
 ]
 
 { #category : #tests }

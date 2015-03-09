@@ -247,6 +247,8 @@ XMLNodeWithChildrenTest >> testAllNodesSelect [
 XMLNodeWithChildrenTest >> testAncestorNodes [
 	| nodeWithNodes ancestorStack |
 
+	super testAncestorNodes.
+
 	nodeWithNodes := self newNodeWithNodes.
 	ancestorStack := OrderedCollection new.
 	nodeWithNodes allNodesDo: [:each |
@@ -262,6 +264,8 @@ XMLNodeWithChildrenTest >> testAncestorNodes [
 { #category : #tests }
 XMLNodeWithChildrenTest >> testAncestorNodesDo [
 	| nodeWithNodes |
+
+	super testAncestorNodesDo.
 
 	nodeWithNodes := self newNodeWithNodes.
 	nodeWithNodes allNodesDo: [:each |
