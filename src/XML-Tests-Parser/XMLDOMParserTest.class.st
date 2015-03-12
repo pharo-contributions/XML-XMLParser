@@ -192,7 +192,7 @@ XMLDOMParserTest >> testCollectingParsedNodes [
 
 { #category : #tests }
 XMLDOMParserTest >> testDeclaringXMLNamespace [
-	| xmlNamespace |
+	| xmlNamespace elements |
 
 	xmlNamespace :=XMLNamespaceScope xmlNamespaceURI.
 	self deny:
@@ -200,10 +200,13 @@ XMLDOMParserTest >> testDeclaringXMLNamespace [
 			declaresPrefix: 'xml'
 			uri: xmlNamespace).
 
-	self assert:
-		((XMLDOMParser parse: '<test xmlns:xml="', xmlNamespace, '"/>') root
-			declaresPrefix: 'xml'
-			uri: xmlNamespace).
+	elements :=
+		(XMLDOMParser parse:
+			'<one><two xmlns:xml="', xmlNamespace, '"/><xml:three/></one>') allElements.
+	self
+		deny: (elements first declaresPrefix: 'xml' uri: xmlNamespace);
+		assert: (elements second declaresPrefix: 'xml' uri: xmlNamespace);
+		deny: (elements third declaresPrefix: 'xml' uri: xmlNamespace).
 ]
 
 { #category : #tests }

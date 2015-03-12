@@ -334,6 +334,16 @@ XMLParserTest >> testAttributeValueNormalization [
 ]
 
 { #category : #tests }
+XMLParserTest >> testAttributeValueWithAngleBrackets [
+	self
+		should: [SAXHandler parse: '<test name="<value/>"/>']
+		raise: XMLWellFormednessException.
+	self
+		shouldnt: [SAXHandler parse: '<test name="&lt;value/>"/>']
+		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
 XMLParserTest >> testDeclaringNamespaces [
 	self
 		shouldnt: [SAXHandler parse: '<prefix:root prefix:name="test" xmlns:prefix="NS"/>']
