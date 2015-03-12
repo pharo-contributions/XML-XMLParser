@@ -10,8 +10,8 @@ Class {
 		'scopeAllocator',
 		'doctypeDefinition',
 		'validator',
-		'isStandalone',
 		'externalSubsetUri',
+		'isStandalone',
 		'hasUnhandledReservedAttributes'
 	],
 	#category : #'XML-Parser'
@@ -136,7 +136,7 @@ SAXParserDriver >> externalSubsetParserOnURI: aUri [
 
 { #category : #accessing }
 SAXParserDriver >> externalSubsetURI [
-	^ externalSubsetUri ifNil: [externalSubsetUri := '']
+	^ externalSubsetUri
 ]
 
 { #category : #'handling tokens' }
@@ -475,7 +475,7 @@ SAXParserDriver >> haveUnhandledReservedAttributes [
 
 { #category : #testing }
 SAXParserDriver >> isStandalone [
-	^ isStandalone ifNil: [isStandalone := false]
+	^ isStandalone
 ]
 
 { #category : #testing }
@@ -546,6 +546,8 @@ SAXParserDriver >> setRootElement: anElementName currentScope: aNamespaceScope [
 SAXParserDriver >> setSAXHandler: aHandler [
 	saxHandler := aHandler.
 	elementNester := self elementNesterClass new.
+	externalSubsetUri := ''.
+	isStandalone := false.
 	hasUnhandledReservedAttributes := false.
 ]
 

@@ -222,7 +222,7 @@ DTDDoctypeDefinition >> parameterEntityAt: aName ifAbsent: aBlock [
 
 { #category : #accessing }
 DTDDoctypeDefinition >> root [
-	^ root ifNil: ['']
+	^ root ifNil: [root := '']
 ]
 
 { #category : #accessing }

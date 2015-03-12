@@ -198,6 +198,13 @@ XMLNamespaceScope >> mapPrefixesAndURIs: anAssociationCollection [
 ]
 
 { #category : #accessing }
+XMLNamespaceScope >> prefixMappingAt: aPrefix [
+	^ self
+		prefixMappingAt: aPrefix
+		ifAbsent: ['']
+]
+
+{ #category : #accessing }
 XMLNamespaceScope >> prefixMappingAt: aPrefix ifAbsent: aBlock [
 	^ prefixMappings
 		ifNil: [aBlock value]
@@ -213,6 +220,23 @@ XMLNamespaceScope >> prefixMappings [
 XMLNamespaceScope >> prefixesAndURIsDo: aTwoArgumentBlock [
 	prefixMappings
 		ifNotNil: [prefixMappings keysAndValuesDo: aTwoArgumentBlock]
+]
+
+{ #category : #resolving }
+XMLNamespaceScope >> prefixesOfNamespaceURI: aNamespaceUri [
+	| prefixes |
+
+	prefixes := Set new.
+	aNamespaceUri = self class xmlNamespaceURI
+		ifTrue: [prefixes add: 'xml']
+		ifFalse: [
+			aNamespaceUri = self class xmlnsNamespaceURI
+				ifTrue: [prefixes add: 'xmlns']
+				ifFalse: [
+					self prefixesAndURIsDo: [:prefix :uri |
+						uri = aNamespaceUri
+							ifTrue: [prefixes add: prefix]]]].
+	^ prefixes.
 ]
 
 { #category : #printing }
@@ -233,11 +257,15 @@ XMLNamespaceScope >> printOn: aStream [
 
 { #category : #resolving }
 XMLNamespaceScope >> resolvePrefix: aPrefix [
-	^ self resolvePrefix: aPrefix ifUnresolvable: ['']
+	"resolve namespace from prefix"
+	^ self
+		resolvePrefix: aPrefix
+		ifUnresolvable: ['']
 ]
 
 { #category : #resolving }
 XMLNamespaceScope >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
+	"resolve namespace from prefix"
 	^ self
 		prefixMappingAt: aPrefix
 		ifAbsent: [

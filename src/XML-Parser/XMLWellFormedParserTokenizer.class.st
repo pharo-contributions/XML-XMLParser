@@ -257,8 +257,10 @@ XMLWellFormedParserTokenizer >> errorExpected: anExpectedCharacterOrString butGo
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpectedAttributeValueEnd [
-	self errorExpected: 'end of quoted attribute value '
+XMLWellFormedParserTokenizer >> errorExpectedAttributeValueEndButGot: aCharacter [
+	aCharacter == $<
+		ifTrue: [self parseError: 'Attribute value contains "<" character']
+		ifFalse: [self errorExpected: 'end of quoted attribute value']
 ]
 
 { #category : #errors }
@@ -619,7 +621,7 @@ XMLWellFormedParserTokenizer >> nextAttributeValue [
 	context exitLiteralValue.
 
 	nextChar == quote
-		ifFalse: [self errorExpectedAttributeValueEnd].
+		ifFalse: [self errorExpectedAttributeValueEndButGot: nextChar].
 
 	^ writeStream contents.
 ]

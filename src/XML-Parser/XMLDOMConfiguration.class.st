@@ -14,9 +14,21 @@ Class {
 	#category : #'XML-Parser'
 }
 
+{ #category : #initialization }
+XMLDOMConfiguration >> initialize [
+	super initialize.
+
+	"always used, so explicitly initialized"
+	preservesCDataNodes := false.
+	preservesCommentNodes := false.
+	preservesIgnorableWhitespace := false.
+	nodeFactory := XMLNodeFactory new.
+	nodeListClass := XMLNodeList.
+]
+
 { #category : #accessing }
 XMLDOMConfiguration >> nodeFactory [
-	^ nodeFactory ifNil: [nodeFactory := XMLNodeFactory new]
+	^ nodeFactory
 ]
 
 { #category : #accessing }
@@ -26,7 +38,7 @@ XMLDOMConfiguration >> nodeFactory: aFactory [
 
 { #category : #accessing }
 XMLDOMConfiguration >> nodeListClass [
-	^ nodeListClass ifNil: [nodeListClass := XMLNodeList]
+	^ nodeListClass
 ]
 
 { #category : #accessing }
@@ -41,7 +53,7 @@ XMLDOMConfiguration >> parserHandlerClass [
 
 { #category : #accessing }
 XMLDOMConfiguration >> preservesCDataNodes [
-	^ preservesCDataNodes ifNil: [preservesCDataNodes := false]
+	^ preservesCDataNodes
 ]
 
 { #category : #accessing }
@@ -51,7 +63,7 @@ XMLDOMConfiguration >> preservesCDataNodes: aBoolean [
 
 { #category : #accessing }
 XMLDOMConfiguration >> preservesCommentNodes [
-	^ preservesCommentNodes ifNil: [preservesCommentNodes := false]
+	^ preservesCommentNodes
 ]
 
 { #category : #accessing }
@@ -61,7 +73,7 @@ XMLDOMConfiguration >> preservesCommentNodes: aBoolean [
 
 { #category : #accessing }
 XMLDOMConfiguration >> preservesIgnorableWhitespace [
-	^ preservesIgnorableWhitespace ifNil: [preservesIgnorableWhitespace := false]
+	^ preservesIgnorableWhitespace
 ]
 
 { #category : #accessing }

@@ -30,9 +30,20 @@ XMLConfiguration >> externalEntityResolver: anExternalEntityResolver [
 	self entityConfiguration externalEntityResolver: anExternalEntityResolver
 ]
 
+{ #category : #initialization }
+XMLConfiguration >> initialize [
+	super initialize.
+
+	"always used, so explicitly initialized"
+	isValidating := true.
+	usesNamespaces := true.
+	requiresDocumentConstraints := false.
+	parserLimits := XMLParserLimits new.
+]
+
 { #category : #accessing }
 XMLConfiguration >> isValidating [
-	^ isValidating ifNil: [isValidating := true]
+	^ isValidating
 ]
 
 { #category : #accessing }
@@ -54,7 +65,7 @@ XMLConfiguration >> parserHandlerClass: aClass [
 
 { #category : #accessing }
 XMLConfiguration >> parserLimits [
-	^ parserLimits ifNil: [parserLimits := XMLParserLimits new]
+	^ parserLimits
 ]
 
 { #category : #accessing }
@@ -81,7 +92,7 @@ XMLConfiguration >> replacesContentEntityReferences: aBoolean [
 
 { #category : #accessing }
 XMLConfiguration >> requiresDocumentConstraints [
-	^ requiresDocumentConstraints ifNil: [requiresDocumentConstraints := false]
+	^ requiresDocumentConstraints
 ]
 
 { #category : #accessing }
@@ -102,7 +113,7 @@ XMLConfiguration >> resolvesExternalEntities: aBoolean [
 
 { #category : #accessing }
 XMLConfiguration >> usesNamespaces [
-	^ usesNamespaces ifNil: [usesNamespaces := true]
+	^ usesNamespaces
 ]
 
 { #category : #accessing }
