@@ -56,8 +56,7 @@ I had to largely rewrite the tokenizer to make everything work, but I followed t
 { #category : #catalog }
 ConfigurationOfXMLParser class >> catalogDescription [
 
-	^ 'XMLParser allows you to parse and validate well-formed XML documents. The package contains a SAX Driver and a XMLDOMParser. If you are interested by XML parsing we also suggest to have a look at the XMLPullParser package.'
-
+	^ 'XMLParser provides validating SAX and DOM parsers for well-formed XML documents on Pharo, Squeak, and Gemstone. It also provides a DOM API for manipulating documents, namespace support, and an optional XMLWriter for writing documents. Validation and namespace checking are enabled by default, but not resolution of external entities.'
 ]
 
 { #category : #catalog }
@@ -67,7 +66,22 @@ ConfigurationOfXMLParser class >> catalogKeyClassesAndExample [
 
 ==XMLNode== and its subclasses implement a DOM API. Read the class comments for more information.
 
-Validation and namespace checking are enabled by default, but not resolution of external entities.'
+Validation and namespace checking are enabled by default, but not resolution of external entities.
+
+Examples
+[[[
+	"Get all article titles from the content of the <title> child of each <entry>:"
+	((doc := (XMLDOMParser parseURL: ''http://pharo.org/news/atom.xml''))
+		allElementsNamed: ''entry'')
+			collect: [:each | (each elementAt: ''title'') contentString].
+
+	"Get feed title from first <title> anywhere in the doc:"
+	(doc findElementNamed: ''title'') contentString.
+	
+	"Get all article links:"
+	(doc allElementsNamed: ''entry'') collect: [:each |
+		(each elementAt: ''link'') attributeAt: ''href'' ].
+]]]'
 ]
 
 { #category : #catalog }
@@ -380,7 +394,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '2.1.0'.
+	spec for: #'common' version: '2.1.1'.
 	spec for: #'pharo1.x' version: '1.2'
 
 ]
@@ -1564,6 +1578,17 @@ ConfigurationOfXMLParser >> version210: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.277'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.100'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version211: spec [ 
+        <version: '2.1.1' imports: #('2.0.5-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.278'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.100'.
                 ].
 ]
