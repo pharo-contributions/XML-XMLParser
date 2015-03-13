@@ -10,12 +10,12 @@ Class {
 	#category : #'XML-Parser-Namespaces'
 }
 
-{ #category : #'predefined namespaces' }
+{ #category : #accessing }
 XMLNamespaceScope class >> xmlNamespaceURI [
 	^ 'http://www.w3.org/XML/1998/namespace'
 ]
 
-{ #category : #'predefined namespaces' }
+{ #category : #accessing }
 XMLNamespaceScope class >> xmlnsNamespaceURI [
 	^ 'http://www.w3.org/2000/xmlns/'
 ]
@@ -183,7 +183,7 @@ XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
 		put: aUri.
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLNamespaceScope >> mapPrefixesAndURIs: anAssociationCollection [
 	| copiedPrefixMappings |
 
@@ -211,7 +211,7 @@ XMLNamespaceScope >> prefixMappingAt: aPrefix ifAbsent: aBlock [
 		ifNotNil: [prefixMappings at: aPrefix ifAbsent: aBlock]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLNamespaceScope >> prefixMappings [
 	^ prefixMappings ifNil: [prefixMappings := OrderPreservingStringDictionary new: 5]
 ]
@@ -222,7 +222,7 @@ XMLNamespaceScope >> prefixesAndURIsDo: aTwoArgumentBlock [
 		ifNotNil: [prefixMappings keysAndValuesDo: aTwoArgumentBlock]
 ]
 
-{ #category : #resolving }
+{ #category : #accessing }
 XMLNamespaceScope >> prefixesOfNamespaceURI: aNamespaceUri [
 	| prefixes |
 

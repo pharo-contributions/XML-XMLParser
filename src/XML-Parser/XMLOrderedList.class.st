@@ -448,8 +448,7 @@ XMLOrderedList >> detect: aBlock ifNone: anExceptionBlock [
 
 { #category : #enumerating }
 XMLOrderedList >> do: aBlock [
-	"reimplemented for performance"
-	1 to: collection size do: [:i | aBlock value: (collection at: i)]
+	collection do: aBlock
 ]
 
 { #category : #enumerating }

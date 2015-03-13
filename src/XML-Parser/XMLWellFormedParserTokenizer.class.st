@@ -257,6 +257,11 @@ XMLWellFormedParserTokenizer >> errorExpected: anExpectedCharacterOrString butGo
 ]
 
 { #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedAttributeNameValueSeparator [
+	self errorExpected: 'attribute name-value "=" separator'
+]
+
+{ #category : #errors }
 XMLWellFormedParserTokenizer >> errorExpectedAttributeValueEndButGot: aCharacter [
 	aCharacter == $<
 		ifTrue: [self parseError: 'Attribute value contains "<" character']
@@ -1267,7 +1272,8 @@ XMLWellFormedParserTokenizer >> nextTag [
 		whileFalse: [ | attributeName attributeValue |
 			attributeName := self nextName.
 			streamReader skipSeparators.
-			self expectNext: $=.
+			streamReader next == $=
+				ifFalse: [self errorExpectedAttributeNameValueSeparator].
 			streamReader skipSeparators.
 			attributeValue := self nextAttributeValue.
 	
