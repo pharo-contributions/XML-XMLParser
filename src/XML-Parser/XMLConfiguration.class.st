@@ -1,5 +1,5 @@
 "
-This class stores the shared settings and components for a parser. The configuration values are stored in separate inst vars instead of using a dictionary for speed.
+This class stores the shared settings and components for a parser. The configuration values are stored in separate inst vars instead of using a dictionary for speed, and some sub-configurations are lazy initialized only if needed.
 "
 Class {
 	#name : #XMLConfiguration,
@@ -16,8 +16,28 @@ Class {
 }
 
 { #category : #accessing }
+XMLConfiguration >> defaultParserHandlerClass [
+	^ SAXHandler
+]
+
+{ #category : #accessing }
+XMLConfiguration >> documentReadLimit [
+	^ self parserLimits documentReadLimit
+]
+
+{ #category : #accessing }
+XMLConfiguration >> documentReadLimit: aLimit [
+	self parserLimits documentReadLimit: aLimit
+]
+
+{ #category : #accessing }
 XMLConfiguration >> entityConfiguration [
 	^ entityConfiguration ifNil: [entityConfiguration := DTDEntityConfiguration new]
+]
+
+{ #category : #accessing }
+XMLConfiguration >> entityConfiguration: anEntityConfiguration [
+	entityConfiguration := anEntityConfiguration
 ]
 
 { #category : #accessing }
@@ -54,8 +74,18 @@ XMLConfiguration >> isValidating: aBoolean [
 ]
 
 { #category : #accessing }
+XMLConfiguration >> maxEntityReplacementDepth [
+	^ self parserLimits maxEntityReplacementDepth
+]
+
+{ #category : #accessing }
+XMLConfiguration >> maxEntityReplacementDepth: aLimit [
+	self parserLimits maxEntityReplacementDepth: aLimit
+]
+
+{ #category : #accessing }
 XMLConfiguration >> parserHandlerClass [
-	^ parserHandlerClass ifNil: [parserHandlerClass := SAXHandler]
+	^ parserHandlerClass ifNil: [parserHandlerClass := self defaultParserHandlerClass]
 ]
 
 { #category : #accessing }
@@ -69,6 +99,11 @@ XMLConfiguration >> parserLimits [
 ]
 
 { #category : #accessing }
+XMLConfiguration >> parserLimits: aParserLimits [
+	parserLimits := aParserLimits
+]
+
+{ #category : #accessing }
 XMLConfiguration >> preservesUndeclaredEntityReferences [
 	^ self entityConfiguration preservesUndeclaredEntityReferences
 ]
@@ -78,6 +113,12 @@ XMLConfiguration >> preservesUndeclaredEntityReferences: aBoolean [
 	self entityConfiguration preservesUndeclaredEntityReferences: aBoolean.
 	aBoolean
 		ifTrue: [self isValidating: false].
+]
+
+{ #category : #accessing }
+XMLConfiguration >> removeLimits [
+	self parserLimits removeAll.
+	self externalEntityResolver removeLimits.
 ]
 
 { #category : #accessing }

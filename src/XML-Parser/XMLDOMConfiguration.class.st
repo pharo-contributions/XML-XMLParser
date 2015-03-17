@@ -14,6 +14,11 @@ Class {
 	#category : #'XML-Parser'
 }
 
+{ #category : #accessing }
+XMLDOMConfiguration >> defaultParserHandlerClass [
+	^ XMLDOMParser
+]
+
 { #category : #initialization }
 XMLDOMConfiguration >> initialize [
 	super initialize.
@@ -44,11 +49,6 @@ XMLDOMConfiguration >> nodeListClass [
 { #category : #accessing }
 XMLDOMConfiguration >> nodeListClass: aClass [
 	nodeListClass := aClass
-]
-
-{ #category : #accessing }
-XMLDOMConfiguration >> parserHandlerClass [
-	^ parserHandlerClass ifNil: [parserHandlerClass := XMLDOMParser]
 ]
 
 { #category : #accessing }

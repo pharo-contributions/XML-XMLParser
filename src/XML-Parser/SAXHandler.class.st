@@ -180,14 +180,14 @@ SAXHandler >> doctypeDefinition: aDoctypeDefinition [
 
 { #category : #configuring }
 SAXHandler >> documentReadLimit [
-	^ self parserLimits documentReadLimit
+	^ self configuration documentReadLimit
 ]
 
 { #category : #configuring }
 SAXHandler >> documentReadLimit: aLimit [
 	"change the document read limit or nil to disable"
 
-	self parserLimits documentReadLimit: aLimit
+	self configuration documentReadLimit: aLimit
 ]
 
 { #category : #accessing }
@@ -279,18 +279,6 @@ SAXHandler >> externalEntityResolver: anExternalEntityResolver [
 	self configuration externalEntityResolver: anExternalEntityResolver
 ]
 
-{ #category : #configuring }
-SAXHandler >> externalSubsetReadLimit [
-	^ self externalEntityResolver externalSubsetReadLimit
-]
-
-{ #category : #configuring }
-SAXHandler >> externalSubsetReadLimit: aLimit [
-	"change the external subset read limit or nil to disable"
-
-	self externalEntityResolver externalSubsetReadLimit: aLimit
-]
-
 { #category : #'handling - declarations' }
 SAXHandler >> generalEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
 ]
@@ -346,14 +334,14 @@ SAXHandler >> isValidating: aBoolean [
 
 { #category : #configuring }
 SAXHandler >> maxEntityReplacementDepth [
-	^ self parserLimits maxEntityReplacementDepth
+	^ self configuration maxEntityReplacementDepth
 ]
 
 { #category : #configuring }
 SAXHandler >> maxEntityReplacementDepth: aLimit [
 	"change the max replacement depth or nil to disable"
 
-	self parserLimits maxEntityReplacementDepth: aLimit
+	self configuration maxEntityReplacementDepth: aLimit
 ]
 
 { #category : #'handling - declarations' }
@@ -436,11 +424,6 @@ SAXHandler >> parserClass [
 	^ XMLParser
 ]
 
-{ #category : #configuring }
-SAXHandler >> parserLimits [
-	^ self configuration parserLimits
-]
-
 { #category : #parsing }
 SAXHandler >> parsingResult [
 	"value returned by parseDocument and other parsing methods"
@@ -472,8 +455,7 @@ SAXHandler >> processingInstruction: aTarget data: aDataString [
 SAXHandler >> removeLimits [
 	"remove all input security limits (unsafe)"
 
-	self parserLimits removeAll.
-	self externalEntityResolver removeLimits.
+	self configuration removeLimits
 ]
 
 { #category : #configuring }
