@@ -69,7 +69,8 @@ ConfigurationOfXMLParser class >> catalogKeyClassesAndExample [
 Validation and namespace checking are enabled by default, but not resolution of external entities.
 
 Examples
-[[[
+[[[ 
+	| doc |
 	"Get all article titles from the content of the <title> child of each <entry>:"
 	((doc := (XMLDOMParser parseURL: ''http://pharo.org/news/atom.xml''))
 		allElementsNamed: ''entry'')
@@ -81,7 +82,8 @@ Examples
 	"Get all article links:"
 	(doc allElementsNamed: ''entry'') collect: [:each |
 		(each elementAt: ''link'') attributeAt: ''href'' ].
-]]]'
+]]]
+'
 ]
 
 { #category : #catalog }
@@ -394,7 +396,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '2.1.1'.
+	spec for: #'common' version: '2.1.2'.
 	spec for: #'pharo1.x' version: '1.2'
 
 ]
@@ -1589,6 +1591,17 @@ ConfigurationOfXMLParser >> version211: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.278'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.100'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version212: spec [ 
+        <version: '2.1.2' imports: #('2.0.5-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.279'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.100'.
                 ].
 ]
