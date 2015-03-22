@@ -15,15 +15,15 @@ XMLEncodingTest >> encodingDeclaration: anEncoding [
 ]
 
 { #category : #source }
-XMLEncodingTest >> encodingDeclaration: anEncoding withUTF16XML: anXml littleEndian: aBoolean [
+XMLEncodingTest >> encodingDeclaration: anEncoding withUTF16XML: aSourceString littleEndian: aBoolean [
 	^ ((self encodingDeclaration: anEncoding) allButLast: 2),
-		(self toUTF16: '?>', anXml littleEndian: aBoolean)
+		(self toUTF16: '?>', aSourceString littleEndian: aBoolean)
 ]
 
 { #category : #source }
-XMLEncodingTest >> encodingDeclaration: anEncoding withUTF32XML: anXml littleEndian: aBoolean [
+XMLEncodingTest >> encodingDeclaration: anEncoding withUTF32XML: aSourceString littleEndian: aBoolean [
 	^ ((self encodingDeclaration: anEncoding) allButLast: 2),
-		(self toUTF32: '?>', anXml littleEndian: aBoolean)
+		(self toUTF32: '?>', aSourceString littleEndian: aBoolean)
 ]
 
 { #category : #source }

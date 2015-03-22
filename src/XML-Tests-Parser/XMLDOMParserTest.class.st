@@ -1,6 +1,10 @@
 Class {
 	#name : #XMLDOMParserTest,
 	#superclass : #XMLParserTest,
+	#instVars : [
+		'addressBookNamespacePrefixedXML',
+		'addressBookNamespacedXML'
+	],
 	#category : #'XML-Tests-Parser'
 }
 
@@ -30,12 +34,14 @@ XMLDOMParserTest class >> addressBookNamespacedXML [
 
 { #category : #source }
 XMLDOMParserTest >> addressBookNamespacePrefixedXML [
-	^ self class addressBookNamespacePrefixedXML
+	^ addressBookNamespacePrefixedXML
+		ifNil: [addressBookNamespacePrefixedXML := self class addressBookNamespacePrefixedXML]
 ]
 
 { #category : #source }
 XMLDOMParserTest >> addressBookNamespacedXML [
-	^ self class addressBookNamespacedXML
+	^ addressBookNamespacedXML
+		ifNil: [addressBookNamespacedXML := self class addressBookNamespacedXML]
 ]
 
 { #category : #source }

@@ -160,7 +160,7 @@ XMLElementTest >> testAttributeNamesDo [
 
 { #category : #tests }
 XMLElementTest >> testAttributeNodeAt [
-	| element  |
+	| element |
 
 	element := self newElementWithAttributes.
 	element attributeNodes do: [:each |
@@ -183,7 +183,7 @@ XMLElementTest >> testAttributeNodeAtIfAbsent [
 
 { #category : #tests }
 XMLElementTest >> testAttributeNodeAtNamespaceURI [
-	| element  |
+	| element |
 
 	element := self newElementWithAttributes.
 	self assert:
@@ -195,7 +195,7 @@ XMLElementTest >> testAttributeNodeAtNamespaceURI [
 
 { #category : #tests }
 XMLElementTest >> testAttributeNodeAtNamespaceURIIfAbsent [
-	| element  |
+	| element |
 
 	element := self newElementWithAttributes.
 	self assert:
@@ -494,7 +494,7 @@ XMLElementTest >> testHasAttributes [
 
 { #category : #tests }
 XMLElementTest >> testHasNamespaceURI [
-	| element  |
+	| element |
 
 	element := self nodeClass named: 'test'.
 	self deny: element hasNamespaceURI.
@@ -586,12 +586,12 @@ XMLElementTest >> testIsDeclaredPrefix [
 
 { #category : #tests }
 XMLElementTest >> testIsDeclaredPrefixURI [
-	| element elementsWithDeclaredPrefix oldNs |
+	| element elementsWithDeclaredPrefix oldNamespace |
 
 	element := self newNodeWithElements.
 	elementsWithDeclaredPrefix :=
 		element allElementsSelect: [:each | each isDeclaredPrefix: 'prefix'].
-	oldNs := elementsWithDeclaredPrefix anyOne resolvePrefix: 'prefix'.
+	oldNamespace := elementsWithDeclaredPrefix anyOne resolvePrefix: 'prefix'.
 	self assert: elementsWithDeclaredPrefix size = 2.
 
 	element allElementsDo: [:each |
@@ -600,13 +600,13 @@ XMLElementTest >> testIsDeclaredPrefixURI [
 	element declarePrefix: 'prefix' uri: 'newPrefixNS'.
 	element allElementsDo: [:each |
 		(elementsWithDeclaredPrefix includes: each )
-			ifTrue: [self assert: (each isDeclaredPrefix: 'prefix' uri: oldNs)]
+			ifTrue: [self assert: (each isDeclaredPrefix: 'prefix' uri: oldNamespace)]
 			ifFalse: [self assert: (each isDeclaredPrefix: 'prefix' uri: 'newPrefixNS')]].
 
 	element undeclarePrefix: 'prefix'.
 	element allElementsDo: [:each |
 		(elementsWithDeclaredPrefix includes: each )
-			ifTrue: [self assert: (each isDeclaredPrefix: 'prefix' uri: oldNs)]
+			ifTrue: [self assert: (each isDeclaredPrefix: 'prefix' uri: oldNamespace)]
 			ifFalse: [self deny: (each isDeclaredPrefix: 'prefix')]].
 ]
 

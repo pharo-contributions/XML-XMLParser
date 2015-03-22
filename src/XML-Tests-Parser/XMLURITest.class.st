@@ -14,9 +14,9 @@ XMLURITest class >> generateStandardURICombiningTest [
 	source :=
 		String streamContents: [:writeStream |
 			writeStream nextPutAll: 'testStandardURICombining
-	| baseUri |
+	| baseURI |
 
-	baseUri := ''', self standardURICombiningTestBaseURI, ''' asXMLURI.
+	baseURI := ''', self standardURICombiningTestBaseURI, ''' asXMLURI.
 	self'.
 			[readStream atEnd]
 				whileFalse: [| argument result |
@@ -30,7 +30,7 @@ XMLURITest class >> generateStandardURICombiningTest [
 								ifTrue: [isFirstTest := false]
 								ifFalse: [writeStream nextPut: $;].
 							writeStream nextPutAll: '
-		assert: (baseUri / ''', argument, ''' asXMLURI) = ''', result, ''' asXMLURI']]].
+		assert: (baseURI / ''', argument, ''' asXMLURI) = ''', result, ''' asXMLURI']]].
 
 	self
 		compile: source
@@ -203,112 +203,111 @@ XMLURITest >> schemelessURIWithPortString [
 
 { #category : #tests }
 XMLURITest >> testCombiningAbsoluteURIs [
-	| domainUri fullUri fileUri |
+	| domainURI fullURI fileURI |
 
-	domainUri := self domain asXMLURI.
-	fullUri := self fullURIString asXMLURI.
-	fileUri := self fileURIString asXMLURI.
+	domainURI := self domain asXMLURI.
+	fullURI := self fullURIString asXMLURI.
+	fileURI := self fileURIString asXMLURI.
 	self
-		assert: (domainUri / self fullURIString) = fullUri;
-		assert: (domainUri / self domain) = domainUri;
-		assert: (domainUri / self fileURIString) = fileUri;
-		assert: (fullUri / self fullURIString) = fullUri;
-		assert: (fullUri / self domain) = domainUri;
-		assert: (fullUri / self fileURIString) = fileUri;
-		assert: (fileUri / self fullURIString) = fullUri;
-		assert: (fileUri / self domain) = domainUri;
-		assert: (fileUri / self fileURIString) = fileUri.
+		assert: domainURI / self fullURIString = fullURI;
+		assert: domainURI / self domain = domainURI;
+		assert: domainURI / self fileURIString = fileURI;
+		assert: fullURI / self fullURIString = fullURI;
+		assert: fullURI / self domain = domainURI;
+		assert: fullURI / self fileURIString = fileURI;
+		assert: fileURI / self fullURIString = fullURI;
+		assert: fileURI / self domain = domainURI;
+		assert: fileURI / self fileURIString = fileURI.
 ]
 
 { #category : #tests }
 XMLURITest >> testCombiningDotPathURIs [
-	| relativePathUri absolutePathUri fullUri |
+	| relativePathURI absolutePathURI fullURI |
 
-	relativePathUri := self relative asXMLURI.
+	relativePathURI := self relative asXMLURI.
 	self
-		assert: (relativePathUri / '.') = 'relative/' asXMLURI;
-		assert: (relativePathUri / './.') = 'relative/' asXMLURI;
-		assert: (relativePathUri / './path') = relativePathUri;
-		assert: (relativePathUri / ('.', self absolute)) = self relativeAbsoluteCombined asXMLURI.
+		assert: relativePathURI / '.' = 'relative/' asXMLURI;
+		assert: relativePathURI / './.' = 'relative/' asXMLURI;
+		assert: relativePathURI / './path' = relativePathURI;
+		assert: relativePathURI / ('.' , self absolute) = self relativeAbsoluteCombined asXMLURI.
 
-	absolutePathUri := self absolute asXMLURI.
+	absolutePathURI := self absolute asXMLURI.
 	self
-		assert: (absolutePathUri / '.') = '/absolute/' asXMLURI;
-		assert: (absolutePathUri / './.') = '/absolute/' asXMLURI;
-		assert: (absolutePathUri / './path') = absolutePathUri;
-		assert: (absolutePathUri / ('./', self relative)) = self absoluteRelativeCombined asXMLURI.
+		assert: absolutePathURI / '.' = '/absolute/' asXMLURI;
+		assert: absolutePathURI / './.' = '/absolute/' asXMLURI;
+		assert: absolutePathURI / './path' = absolutePathURI;
+		assert: absolutePathURI / ('./' , self relative) = self absoluteRelativeCombined asXMLURI.
 
-	fullUri := self fullURIString asXMLURI.
+	fullURI := self fullURIString asXMLURI.
 	self
-		assert: (fullUri / '.') = (self domain, '/absolute/') asXMLURI;
-		assert: (fullUri / './.') = (self domain, '/absolute/') asXMLURI;
-		assert: (fullUri / './path') = (self domain, self absolute) asXMLURI;
-		assert: (fullUri / ('./', self relative)) = (self domain, self absoluteRelativeCombined) asXMLURI.
+		assert: fullURI / '.' = (self domain , '/absolute/') asXMLURI;
+		assert: fullURI / './.' = (self domain , '/absolute/') asXMLURI;
+		assert: fullURI / './path' = (self domain , self absolute) asXMLURI;
+		assert: fullURI / ('./' , self relative) = (self domain , self absoluteRelativeCombined) asXMLURI.
 ]
 
 { #category : #tests }
 XMLURITest >> testCombiningDoubleDotPathURIs [
-	| relativePathUri absolutePathUri fullUri |
+	| relativePathURI absolutePathURI fullURI |
 
-	relativePathUri := self relative asXMLURI.
+	relativePathURI := self relative asXMLURI.
 	self
-		assert: (relativePathUri / '..') isEmpty;
-		assert: (relativePathUri / '../..') isEmpty;
-		assert: (relativePathUri / ('..', self absolute)) = 'absolute/path' asXMLURI;
-		assert: (relativePathUri / ('../..', self absolute)) = 'absolute/path' asXMLURI;
-		assert: (relativePathUri / ('../..', self absolute, '/..')) = 'absolute/' asXMLURI;
-		assert: (relativePathUri / ('../..', self absolute, '/../..')) isEmpty.
+		assert: (relativePathURI / '..') isEmpty;
+		assert: (relativePathURI / '../..') isEmpty;
+		assert: relativePathURI / ('..' , self absolute) = 'absolute/path' asXMLURI;
+		assert: relativePathURI / ('../..' , self absolute) = 'absolute/path' asXMLURI;
+		assert: relativePathURI / ('../..' , self absolute , '/..') = 'absolute/' asXMLURI;
+		assert: (relativePathURI / ('../..' , self absolute , '/../..')) isEmpty.
 
-	absolutePathUri := self absolute asXMLURI.
+	absolutePathURI := self absolute asXMLURI.
 	self
-		assert: (absolutePathUri / '..') hasRootPath;
-		assert: (absolutePathUri / '../..') isEmpty;
-		assert: (absolutePathUri / ('..', self absolute)) = absolutePathUri;
-		assert: (absolutePathUri / ('../..', self absolute)) = 'absolute/path' asXMLURI;
-		assert: (absolutePathUri / ('../..', self absolute, '/..')) = 'absolute/' asXMLURI;
-		assert: (absolutePathUri / ('../..', self absolute, '/../..')) isEmpty.
+		assert: (absolutePathURI / '..') hasRootPath;
+		assert: (absolutePathURI / '../..') isEmpty;
+		assert: absolutePathURI / ('..' , self absolute) = absolutePathURI;
+		assert: absolutePathURI / ('../..' , self absolute) = 'absolute/path' asXMLURI;
+		assert: absolutePathURI / ('../..' , self absolute , '/..') = 'absolute/' asXMLURI;
+		assert: (absolutePathURI / ('../..' , self absolute , '/../..')) isEmpty.
 
-	fullUri := self fullURIString asXMLURI.
+	fullURI := self fullURIString asXMLURI.
 	self
-		assert: (fullUri / '..') hasRootPath;
-		deny: (fullUri / '../..') hasPath;
-		assert: (fullUri / ('..', self absolute)) = (self domain, self absolute) asXMLURI;
-		assert: (fullUri / ('../..', self absolute)) = (self domain, self absolute) asXMLURI;
-		assert: (fullUri / ('../..', self absolute, '/..')) = (self domain, '/absolute/') asXMLURI;
-		assert: (fullUri / ('../..', self absolute, '/../')) = (self domain, '/absolute/') asXMLURI.
+		assert: (fullURI / '..') hasRootPath;
+		deny: (fullURI / '../..') hasPath;
+		assert: fullURI / ('..' , self absolute) = (self domain , self absolute) asXMLURI;
+		assert: fullURI / ('../..' , self absolute) = (self domain , self absolute) asXMLURI;
+		assert: fullURI / ('../..' , self absolute , '/..') = (self domain , '/absolute/') asXMLURI;
+		assert: fullURI / ('../..' , self absolute , '/../') = (self domain , '/absolute/') asXMLURI.
 ]
 
 { #category : #tests }
 XMLURITest >> testCombiningRelativeURIs [
-	| domainUri domainUriWithPort absolutePathUri absoluteDirPathUri |
+	| domainURI domainURIWithPort absolutePathURI absoluteDirPathURI |
 
-	domainUri := self domain asXMLURI.
-	domainUriWithPort := self domainWithPort asXMLURI.
-	absolutePathUri := (self domain, self absolute) asXMLURI.
-	absoluteDirPathUri := (self domain, self absoluteDir) asXMLURI.
+	domainURI := self domain asXMLURI.
+	domainURIWithPort := self domainWithPort asXMLURI.
+	absolutePathURI := (self domain , self absolute) asXMLURI.
+	absoluteDirPathURI := (self domain , self absoluteDir) asXMLURI.
 	self
-		assert: (domainUri / self relative) = (self domain, '/', self relative) asXMLURI;
-		assert: (domainUri / self absolute) = (self domain, self absolute) asXMLURI;
-		assert: (domainUri / self absoluteDir) = (self domain, self absoluteDir) asXMLURI;
-		assert: (domainUriWithPort / self relative) = (self domainWithPort, '/', self relative) asXMLURI;
-		assert: (domainUriWithPort / self absolute) = (self domainWithPort, self absolute) asXMLURI;
-		assert: (domainUriWithPort / self absoluteDir) = (self domainWithPort, self absoluteDir) asXMLURI;
-		assert: (absolutePathUri / self relative) = (self domain, self absoluteRelativeCombined) asXMLURI;
-		assert: (absoluteDirPathUri / self relative) = (self domain, self absoluteDirRelativeCombined) asXMLURI;
-		assert: (absolutePathUri / self queryString) = (self domain, self absolute, self queryString) asXMLURI;
-		assert: (absolutePathUri / self fragment) = (self domain, self absolute, self fragment) asXMLURI;
-		assert: (domainUri / self schemelessURIString) = self fullURIString asXMLURI.
+		assert: domainURI / self relative = (self domain , '/' , self relative) asXMLURI;
+		assert: domainURI / self absolute = (self domain , self absolute) asXMLURI;
+		assert: domainURI / self absoluteDir = (self domain , self absoluteDir) asXMLURI;
+		assert: domainURIWithPort / self relative = (self domainWithPort , '/' , self relative) asXMLURI;
+		assert: domainURIWithPort / self absolute = (self domainWithPort , self absolute) asXMLURI;
+		assert: domainURIWithPort / self absoluteDir = (self domainWithPort , self absoluteDir) asXMLURI;
+		assert: absolutePathURI / self relative = (self domain , self absoluteRelativeCombined) asXMLURI;
+		assert: absoluteDirPathURI / self relative = (self domain , self absoluteDirRelativeCombined) asXMLURI;
+		assert: absolutePathURI / self queryString = (self domain , self absolute , self queryString) asXMLURI;
+		assert: absolutePathURI / self fragment = (self domain , self absolute , self fragment) asXMLURI;
+		assert: domainURI / self schemelessURIString = self fullURIString asXMLURI.
 ]
 
 { #category : #tests }
 XMLURITest >> testConverting [
-	| fullUri |
+	| fullURI |
 
-	fullUri := XMLURI fromString: self fullURIString.
-
+	fullURI := XMLURI fromString: self fullURIString.
 	self
-		assert: self fullURIString asXMLURI = fullUri;
-		assert: fullUri asXMLURI == fullUri.
+		assert: self fullURIString asXMLURI = fullURI;
+		assert: fullURI asXMLURI == fullURI.
 ]
 
 { #category : #tests }
@@ -534,90 +533,90 @@ XMLURITest >> testPathUnescaping [
 
 { #category : #tests }
 XMLURITest >> testSchemeAndHostCaseSensitivity [
-	| uri uppercaseUri |
+	| uri uppercaseURI |
 
 	uri := self fullURIString asXMLURI.
-	uppercaseUri := self fullURIString asUppercase asXMLURI.
+	uppercaseURI := self fullURIString asUppercase asXMLURI.
 	self
-		assert: uri scheme = uppercaseUri scheme;
-		assert: uri host = uppercaseUri host;
-		deny: uri path = uppercaseUri path;
-		deny: uri queryString = uppercaseUri queryString;
-		deny: uri fragment = uppercaseUri fragment.
+		assert: uri scheme = uppercaseURI scheme;
+		assert: uri host = uppercaseURI host;
+		deny: uri path = uppercaseURI path;
+		deny: uri queryString = uppercaseURI queryString;
+		deny: uri fragment = uppercaseURI fragment.
 ]
 
 { #category : #tests }
 XMLURITest >> testStandardURICombining [
-	| baseUri |
+	| baseURI |
 
-	baseUri := 'http://a/b/c/d;p?q' asXMLURI.
+	baseURI := 'http://a/b/c/d;p?q' asXMLURI.
 	self
-		assert: (baseUri / 'g:h' asXMLURI) = 'g:h' asXMLURI;
-		assert: (baseUri / 'g' asXMLURI) = 'http://a/b/c/g' asXMLURI;
-		assert: (baseUri / './g' asXMLURI) = 'http://a/b/c/g' asXMLURI;
-		assert: (baseUri / 'g/' asXMLURI) = 'http://a/b/c/g/' asXMLURI;
-		assert: (baseUri / '/g' asXMLURI) = 'http://a/g' asXMLURI;
-		assert: (baseUri / '//g' asXMLURI) = 'http://g' asXMLURI;
-		assert: (baseUri / '?y' asXMLURI) = 'http://a/b/c/d;p?y' asXMLURI;
-		assert: (baseUri / 'g?y' asXMLURI) = 'http://a/b/c/g?y' asXMLURI;
-		assert: (baseUri / '#s' asXMLURI) = 'http://a/b/c/d;p?q#s' asXMLURI;
-		assert: (baseUri / 'g#s' asXMLURI) = 'http://a/b/c/g#s' asXMLURI;
-		assert: (baseUri / 'g?y#s' asXMLURI) = 'http://a/b/c/g?y#s' asXMLURI;
-		assert: (baseUri / ';x' asXMLURI) = 'http://a/b/c/;x' asXMLURI;
-		assert: (baseUri / 'g;x' asXMLURI) = 'http://a/b/c/g;x' asXMLURI;
-		assert: (baseUri / 'g;x?y#s' asXMLURI) = 'http://a/b/c/g;x?y#s' asXMLURI;
-		assert: (baseUri / '' asXMLURI) = 'http://a/b/c/d;p?q' asXMLURI;
-		assert: (baseUri / '.' asXMLURI) = 'http://a/b/c/' asXMLURI;
-		assert: (baseUri / './' asXMLURI) = 'http://a/b/c/' asXMLURI;
-		assert: (baseUri / '..' asXMLURI) = 'http://a/b/' asXMLURI;
-		assert: (baseUri / '../' asXMLURI) = 'http://a/b/' asXMLURI;
-		assert: (baseUri / '../g' asXMLURI) = 'http://a/b/g' asXMLURI;
-		assert: (baseUri / '../..' asXMLURI) = 'http://a/' asXMLURI;
-		assert: (baseUri / '../../' asXMLURI) = 'http://a/' asXMLURI;
-		assert: (baseUri / '../../g' asXMLURI) = 'http://a/g' asXMLURI;
-		assert: (baseUri / '../../../g' asXMLURI) = 'http://a/g' asXMLURI;
-		assert: (baseUri / '../../../../g' asXMLURI) = 'http://a/g' asXMLURI;
-		assert: (baseUri / '/./g' asXMLURI) = 'http://a/g' asXMLURI;
-		assert: (baseUri / '/../g' asXMLURI) = 'http://a/g' asXMLURI;
-		assert: (baseUri / 'g.' asXMLURI) = 'http://a/b/c/g.' asXMLURI;
-		assert: (baseUri / '.g' asXMLURI) = 'http://a/b/c/.g' asXMLURI;
-		assert: (baseUri / 'g..' asXMLURI) = 'http://a/b/c/g..' asXMLURI;
-		assert: (baseUri / '..g' asXMLURI) = 'http://a/b/c/..g' asXMLURI;
-		assert: (baseUri / './../g' asXMLURI) = 'http://a/b/g' asXMLURI;
-		assert: (baseUri / './g/.' asXMLURI) = 'http://a/b/c/g/' asXMLURI;
-		assert: (baseUri / 'g/./h' asXMLURI) = 'http://a/b/c/g/h' asXMLURI;
-		assert: (baseUri / 'g/../h' asXMLURI) = 'http://a/b/c/h' asXMLURI;
-		assert: (baseUri / 'g;x=1/./y' asXMLURI) = 'http://a/b/c/g;x=1/y' asXMLURI;
-		assert: (baseUri / 'g;x=1/../y' asXMLURI) = 'http://a/b/c/y' asXMLURI;
-		assert: (baseUri / 'g?y/./x' asXMLURI) = 'http://a/b/c/g?y/./x' asXMLURI;
-		assert: (baseUri / 'g?y/../x' asXMLURI) = 'http://a/b/c/g?y/../x' asXMLURI;
-		assert: (baseUri / 'g#s/./x' asXMLURI) = 'http://a/b/c/g#s/./x' asXMLURI;
-		assert: (baseUri / 'g#s/../x' asXMLURI) = 'http://a/b/c/g#s/../x' asXMLURI;
-		assert: (baseUri / 'http:g' asXMLURI) = 'http:g' asXMLURI
+		assert: (baseURI / 'g:h' asXMLURI) = 'g:h' asXMLURI;
+		assert: (baseURI / 'g' asXMLURI) = 'http://a/b/c/g' asXMLURI;
+		assert: (baseURI / './g' asXMLURI) = 'http://a/b/c/g' asXMLURI;
+		assert: (baseURI / 'g/' asXMLURI) = 'http://a/b/c/g/' asXMLURI;
+		assert: (baseURI / '/g' asXMLURI) = 'http://a/g' asXMLURI;
+		assert: (baseURI / '//g' asXMLURI) = 'http://g' asXMLURI;
+		assert: (baseURI / '?y' asXMLURI) = 'http://a/b/c/d;p?y' asXMLURI;
+		assert: (baseURI / 'g?y' asXMLURI) = 'http://a/b/c/g?y' asXMLURI;
+		assert: (baseURI / '#s' asXMLURI) = 'http://a/b/c/d;p?q#s' asXMLURI;
+		assert: (baseURI / 'g#s' asXMLURI) = 'http://a/b/c/g#s' asXMLURI;
+		assert: (baseURI / 'g?y#s' asXMLURI) = 'http://a/b/c/g?y#s' asXMLURI;
+		assert: (baseURI / ';x' asXMLURI) = 'http://a/b/c/;x' asXMLURI;
+		assert: (baseURI / 'g;x' asXMLURI) = 'http://a/b/c/g;x' asXMLURI;
+		assert: (baseURI / 'g;x?y#s' asXMLURI) = 'http://a/b/c/g;x?y#s' asXMLURI;
+		assert: (baseURI / '' asXMLURI) = 'http://a/b/c/d;p?q' asXMLURI;
+		assert: (baseURI / '.' asXMLURI) = 'http://a/b/c/' asXMLURI;
+		assert: (baseURI / './' asXMLURI) = 'http://a/b/c/' asXMLURI;
+		assert: (baseURI / '..' asXMLURI) = 'http://a/b/' asXMLURI;
+		assert: (baseURI / '../' asXMLURI) = 'http://a/b/' asXMLURI;
+		assert: (baseURI / '../g' asXMLURI) = 'http://a/b/g' asXMLURI;
+		assert: (baseURI / '../..' asXMLURI) = 'http://a/' asXMLURI;
+		assert: (baseURI / '../../' asXMLURI) = 'http://a/' asXMLURI;
+		assert: (baseURI / '../../g' asXMLURI) = 'http://a/g' asXMLURI;
+		assert: (baseURI / '../../../g' asXMLURI) = 'http://a/g' asXMLURI;
+		assert: (baseURI / '../../../../g' asXMLURI) = 'http://a/g' asXMLURI;
+		assert: (baseURI / '/./g' asXMLURI) = 'http://a/g' asXMLURI;
+		assert: (baseURI / '/../g' asXMLURI) = 'http://a/g' asXMLURI;
+		assert: (baseURI / 'g.' asXMLURI) = 'http://a/b/c/g.' asXMLURI;
+		assert: (baseURI / '.g' asXMLURI) = 'http://a/b/c/.g' asXMLURI;
+		assert: (baseURI / 'g..' asXMLURI) = 'http://a/b/c/g..' asXMLURI;
+		assert: (baseURI / '..g' asXMLURI) = 'http://a/b/c/..g' asXMLURI;
+		assert: (baseURI / './../g' asXMLURI) = 'http://a/b/g' asXMLURI;
+		assert: (baseURI / './g/.' asXMLURI) = 'http://a/b/c/g/' asXMLURI;
+		assert: (baseURI / 'g/./h' asXMLURI) = 'http://a/b/c/g/h' asXMLURI;
+		assert: (baseURI / 'g/../h' asXMLURI) = 'http://a/b/c/h' asXMLURI;
+		assert: (baseURI / 'g;x=1/./y' asXMLURI) = 'http://a/b/c/g;x=1/y' asXMLURI;
+		assert: (baseURI / 'g;x=1/../y' asXMLURI) = 'http://a/b/c/y' asXMLURI;
+		assert: (baseURI / 'g?y/./x' asXMLURI) = 'http://a/b/c/g?y/./x' asXMLURI;
+		assert: (baseURI / 'g?y/../x' asXMLURI) = 'http://a/b/c/g?y/../x' asXMLURI;
+		assert: (baseURI / 'g#s/./x' asXMLURI) = 'http://a/b/c/g#s/./x' asXMLURI;
+		assert: (baseURI / 'g#s/../x' asXMLURI) = 'http://a/b/c/g#s/../x' asXMLURI;
+		assert: (baseURI / 'http:g' asXMLURI) = 'http:g' asXMLURI
 ]
 
 { #category : #tests }
 XMLURITest >> testURIEquality [
-	| fullUri string emailUri |
+	| fullURI string emailURI |
 
 	string := self fullURIString.
-	fullUri := string asXMLURI.
+	fullURI := string asXMLURI.
 	self
-		assert: fullUri = fullUri;
-		assert: fullUri = string asXMLURI;
-		deny: fullUri = (string copyReplaceAll: self scheme with: 'new') asXMLURI;
-		deny: fullUri = (string copyReplaceAll: '://' with: ':') asXMLURI;
-		deny: fullUri = (string copyReplaceAll: self host with: 'new') asXMLURI;
-		deny: fullUri = (string copyReplaceAll: self absolute with: 'new') asXMLURI;
-		deny: fullUri = (string copyReplaceAll: self queryString with: 'new') asXMLURI;
-		deny: fullUri = (string copyReplaceAll: self fragment with: 'new') asXMLURI.
+		assert: fullURI = fullURI;
+		assert: fullURI = string asXMLURI;
+		deny: fullURI = (string copyReplaceAll: self scheme with: 'new') asXMLURI;
+		deny: fullURI = (string copyReplaceAll: '://' with: ':') asXMLURI;
+		deny: fullURI = (string copyReplaceAll: self host with: 'new') asXMLURI;
+		deny: fullURI = (string copyReplaceAll: self absolute with: 'new') asXMLURI;
+		deny: fullURI = (string copyReplaceAll: self queryString with: 'new') asXMLURI;
+		deny: fullURI = (string copyReplaceAll: self fragment with: 'new') asXMLURI.
 
 	string := self emailURIString.
-	emailUri := string asXMLURI.
+	emailURI := string asXMLURI.
 	self
-		assert: emailUri = emailUri;
-		assert: emailUri = string asXMLURI;
-		deny: fullUri = (string copyReplaceAll: self userInfo with: 'new') asXMLURI.
+		assert: emailURI = emailURI;
+		assert: emailURI = string asXMLURI;
+		deny: fullURI = (string copyReplaceAll: self userInfo with: 'new') asXMLURI.
 ]
 
 { #category : #tests }
@@ -635,7 +634,7 @@ XMLURITest >> testURIPrinting [
 		assert: self fileHostURIString asXMLURI printString = self fileHostURIString;
 		assert: self emailURIString asXMLURI printString = self emailURIString;
 		assert: '/' asXMLURI printString = '/';
-		assert: '' asXMLURI printString isEmpty.
+		assert: '' asXMLURI printString isEmpty
 ]
 
 { #category : #accessing }

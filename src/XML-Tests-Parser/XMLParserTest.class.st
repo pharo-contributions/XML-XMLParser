@@ -412,16 +412,16 @@ XMLParserTest >> testDeclaringNamespacesBadURIs [
 
 { #category : #tests }
 XMLParserTest >> testDefaultDocumentURI [
-	| cwd documentUri |
+	| cwd documentURI |
 
-	documentUri := (SAXHandler on: '' documentURI: 'test/test.xml') documentURI.
-	self assert: documentUri = 'test/test.xml'.
+	documentURI := (SAXHandler on: '' documentURI: 'test/test.xml') documentURI.
+	self assert: documentURI = 'test/test.xml'.
 
 	cwd := XMLFileHandle currentWorkingDirectory.
-	documentUri := (SAXHandler on: '') documentURI.
+	documentURI := (SAXHandler on: '') documentURI.
 	self
-		assert: documentUri size > (cwd size + 1);
-		assert: (documentUri copyUpToLast: $/) = cwd.
+		assert: documentURI size > (cwd size + 1);
+		assert: (documentURI copyUpToLast: $/) = cwd
 ]
 
 { #category : #tests }
@@ -977,15 +977,15 @@ XMLParserTest >> testInvalidElementContentModels [
 
 { #category : #tests }
 XMLParserTest >> testLineEndingsDoNotMatter [
-	| source docFromSourceWithCrs docFromSourceWithLfs docFromSourceWithCrlfs |
+	| source docFromSourceWithCRs docFromSourceWithLFs docFromSourceWithCRLFs |
 
 	source := '<root>{1}one{1}two{1}</root>'.
-	docFromSourceWithCrs := XMLDOMParser parse: (source format: (Array with: String cr)).
-	docFromSourceWithLfs := XMLDOMParser parse: (source format: (Array with: String lf)).
-	docFromSourceWithCrlfs := XMLDOMParser parse: (source format: (Array with: String crlf)).
+	docFromSourceWithCRs := XMLDOMParser parse: (source format: (Array with: String cr)).
+	docFromSourceWithLFs := XMLDOMParser parse: (source format: (Array with: String lf)).
+	docFromSourceWithCRLFs := XMLDOMParser parse: (source format: (Array with: String crlf)).
 	self
-		assert: (docFromSourceWithCrs root contentString) = (docFromSourceWithLfs root contentString);
-		assert: (docFromSourceWithLfs root contentString) = (docFromSourceWithCrlfs root contentString).
+		assert: (docFromSourceWithCRs root contentString) = (docFromSourceWithLFs root contentString);
+		assert: (docFromSourceWithLFs root contentString) = (docFromSourceWithCRLFs root contentString).
 ]
 
 { #category : #tests }
@@ -1209,24 +1209,24 @@ XMLParserTest >> testSelfReferentialEntityReplacement [
 
 { #category : #tests }
 XMLParserTest >> testStandalone [
-	| dtdXml standaloneDeclXml |
+	| dtdXML standaloneDeclXML |
 
-	dtdXml := self addressBookXMLWithDTD.
+	dtdXML := self addressBookXMLWithDTD.
 	self
 		shouldnt: [
 			SAXHandler
-				parse: dtdXml
+				parse: dtdXML
 				usingNamespaces: true
 				validation: true
 				externalEntities: false]
 		raise: XMLFileException.
 
-	standaloneDeclXml :=
-		(dtdXml copyUpTo: $>) allButLast, ' standalone="yes" ?>', (dtdXml copyAfter: $>).
+	standaloneDeclXML :=
+		(dtdXML copyUpTo: $>) allButLast, ' standalone="yes" ?>', (dtdXML copyAfter: $>).
 	self
 		shouldnt: [
 			SAXHandler
-				parse: standaloneDeclXml
+				parse: standaloneDeclXML
 				usingNamespaces: true
 				validation: false
 				externalEntities: true]
@@ -1234,7 +1234,7 @@ XMLParserTest >> testStandalone [
 	self
 		shouldnt: [
 			SAXHandler
-				parse: standaloneDeclXml
+				parse: standaloneDeclXML
 				usingNamespaces: true
 				validation: true
 				externalEntities: false]
@@ -1360,6 +1360,7 @@ XMLParserTest >> testUndeclaredNamespaces [
 { #category : #tests }
 XMLParserTest >> testUnparsedEntities [
 	| dtd |
+
 	dtd := '
 		<!DOCTYPE root [
 			<!NOTATION note PUBLIC "-//ext//note//EN">
@@ -1552,19 +1553,19 @@ XMLParserTest >> testWhitespacePreservationValidation [
 
 { #category : #tests }
 XMLParserTest >> testXMLIDAttributeValidation [
-	| xml xmlWithDuplicateId |
+	| xml xmlWithDuplicateID |
 
 	xml := '<a xml:id="one"><b xml:id="two"/></a>'.
-	xmlWithDuplicateId := '<a xml:id="one"><b xml:id="one"/></a>'.
+	xmlWithDuplicateID := '<a xml:id="one"><b xml:id="one"/></a>'.
 	self
 		shouldnt: [SAXHandler parse: xml]
 		raise: XMLValidationException.
 	self
-		should: [SAXHandler parse: xmlWithDuplicateId]
+		should: [SAXHandler parse: xmlWithDuplicateID]
 		raise: XMLValidationException.
 	self
 		shouldnt: [
-			(SAXHandler on: xmlWithDuplicateId)
+			(SAXHandler on: xmlWithDuplicateID)
 				isValidating: false;
 				parseDocument]
 		raise: XMLValidationException.
