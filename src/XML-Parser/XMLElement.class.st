@@ -33,13 +33,13 @@ XMLElement class >> name: aLocalName attributes: aDictionaryOrArray [
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> name: aQualifiedName namespaceURI: aUri [
-	^ self new name: aQualifiedName namespaceURI: aUri
+XMLElement class >> name: aQualifiedName namespaceURI: aURI [
+	^ self new name: aQualifiedName namespaceURI: aURI
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> name: aQualifiedName namespaceURI: aUri attributes: aDictionaryOrArray [
-	^ (self name: aQualifiedName namespaceURI: aUri)
+XMLElement class >> name: aQualifiedName namespaceURI: aURI attributes: aDictionaryOrArray [
+	^ (self name: aQualifiedName namespaceURI: aURI)
 		setAttributes: aDictionaryOrArray
 ]
 
@@ -147,13 +147,13 @@ XMLElement >> attributeNodeAt: aName ifAbsent: aBlock [
 ]
 
 { #category : #accessing }
-XMLElement >> attributeNodeAt: aLocalName namespaceURI: aUri [
-	^ self attributeNodes attributeNodeAt: aLocalName namespaceURI: aUri
+XMLElement >> attributeNodeAt: aLocalName namespaceURI: aURI [
+	^ self attributeNodes attributeNodeAt: aLocalName namespaceURI: aURI
 ]
 
 { #category : #accessing }
-XMLElement >> attributeNodeAt: aLocalName namespaceURI: aUri ifAbsent: aBlock [
-	^ self attributeNodes attributeNodeAt: aLocalName namespaceURI: aUri ifAbsent: aBlock
+XMLElement >> attributeNodeAt: aLocalName namespaceURI: aURI ifAbsent: aBlock [
+	^ self attributeNodes attributeNodeAt: aLocalName namespaceURI: aURI ifAbsent: aBlock
 ]
 
 { #category : #accessing }
@@ -180,13 +180,13 @@ XMLElement >> declareNamespaces: aDictionaryOrArray [
 ]
 
 { #category : #namespacing }
-XMLElement >> declarePrefix: aPrefix uri: aUri [
+XMLElement >> declarePrefix: aPrefix uri: aURI [
 	| oldMapping |
 
-	(oldMapping := self namespaceScope prefixMappingAt: aPrefix ifAbsent: [nil]) = aUri
+	(oldMapping := self namespaceScope prefixMappingAt: aPrefix ifAbsent: [nil]) = aURI
 		ifFalse: [
 			self
-				updateEnclosedScopesWith: [:scope | scope mapPrefix: aPrefix to: aUri]
+				updateEnclosedScopesWith: [:scope | scope mapPrefix: aPrefix to: aURI]
 				whileTrue: [:scope |
 					(scope includesPrefix: aPrefix) not
 						or: [scope includesPrefix: aPrefix mappedTo: oldMapping]]
@@ -202,11 +202,11 @@ XMLElement >> declaresDefaultNamespace [
 ]
 
 { #category : #testing }
-XMLElement >> declaresPrefix: aPrefix uri: aUri [
+XMLElement >> declaresPrefix: aPrefix uri: aURI [
 	"Did the receiver declare a new prefix/uri pair rather than inheriting one?"
 
-	^ (self isDeclaredPrefix: aPrefix uri: aUri)
-		and: [self isRoot or: [(self parent isDeclaredPrefix: aPrefix uri: aUri) not]]
+	^ (self isDeclaredPrefix: aPrefix uri: aURI)
+		and: [self isRoot or: [(self parent isDeclaredPrefix: aPrefix uri: aURI) not]]
 ]
 
 { #category : #namespacing }
@@ -215,12 +215,12 @@ XMLElement >> defaultNamespace [
 ]
 
 { #category : #namespacing }
-XMLElement >> defaultNamespace: aUri [
+XMLElement >> defaultNamespace: aURI [
 	| oldNamespace |
 
 	oldNamespace := self defaultNamespace.
 	self
-		updateEnclosedScopesWith: [:scope | scope defaultNamespace: aUri]
+		updateEnclosedScopesWith: [:scope | scope defaultNamespace: aURI]
 		whileTrue: [:scope | scope defaultNamespace = oldNamespace]
 		validateAfter: false.
 ]
@@ -279,11 +279,11 @@ XMLElement >> isDeclaredPrefix: aPrefix [
 ]
 
 { #category : #testing }
-XMLElement >> isDeclaredPrefix: aPrefix uri: aUri [
+XMLElement >> isDeclaredPrefix: aPrefix uri: aURI [
 	"is namespace prefix mapped to uri in scope for use by receiver and descendants"
 	^ self namespaceScope
 		includesPrefix: aPrefix
-		mappedTo: aUri
+		mappedTo: aURI
 ]
 
 { #category : #testing }
@@ -351,9 +351,9 @@ XMLElement >> name: aName [
 ]
 
 { #category : #accessing }
-XMLElement >> name: aQualifiedName namespaceURI: aUri [
+XMLElement >> name: aQualifiedName namespaceURI: aURI [
 	self
-		declarePrefix: (aQualifiedName prefixBeforeLocalName) uri: aUri;
+		declarePrefix: (aQualifiedName prefixBeforeLocalName) uri: aURI;
 		name: aQualifiedName.
 ]
 

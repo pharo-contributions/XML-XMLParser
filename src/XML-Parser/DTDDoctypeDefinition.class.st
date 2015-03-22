@@ -12,7 +12,7 @@ Class {
 		'parameterEntities',
 		'unparsedEntities',
 		'notations',
-		'elementIdValidator',
+		'elementIDValidator',
 		'unparsedEntityValidator'
 	],
 	#category : #'XML-Parser-DTD'
@@ -114,7 +114,7 @@ DTDDoctypeDefinition >> attributeValidators [
 
 { #category : #private }
 DTDDoctypeDefinition >> elementIDValidator [
-	^ elementIdValidator ifNil: [elementIdValidator := XMLElementIDValidator new]
+	^ elementIDValidator ifNil: [elementIDValidator := XMLElementIDValidator new]
 ]
 
 { #category : #private }
@@ -148,7 +148,7 @@ DTDDoctypeDefinition >> hasAttributeValidators [
 
 { #category : #testing }
 DTDDoctypeDefinition >> hasElementIDValidator [
-	^ elementIdValidator notNil
+	^ elementIDValidator notNil
 ]
 
 { #category : #testing }

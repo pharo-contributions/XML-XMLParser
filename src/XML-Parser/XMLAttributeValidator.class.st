@@ -41,10 +41,10 @@ XMLAttributeValidator >> element [
 ]
 
 { #category : #private }
-XMLAttributeValidator >> errorInvalidID: anId [
+XMLAttributeValidator >> errorInvalidID: anID [
 	XMLValidationException
 		formatSignal: 'Invalid ID "{1}" in attribute "{2}"'
-		with: anId
+		with: anID
 		with: self attribute
 ]
 
@@ -56,8 +56,8 @@ XMLAttributeValidator >> errorInvalidXMLIDAttributeValidator [
 { #category : #private }
 XMLAttributeValidator >> errorInvalidXMLSpaceAttributeValidator [
 	XMLValidationException signal:
-		'Attribute "xml:space" must be declared as ',
-		'enumeration "(default|preserve)" type'
+		'Attribute "xml:space" must be declared as enumeration type
+		with only "default" and "preserver" as values'
 ]
 
 { #category : #private }
@@ -169,15 +169,10 @@ XMLAttributeValidator >> validateReservedAttributeValidator [
 
 { #category : #validating }
 XMLAttributeValidator >> validateXMLIDAttributeValidator [
-	self isIDValidator
-		ifFalse: [self errorInvalidXMLIDAttributeValidator]
+	self errorInvalidXMLIDAttributeValidator
 ]
 
 { #category : #validating }
 XMLAttributeValidator >> validateXMLSpaceAttributeValidator [
-	(self isEnumerationValidator
-		and: [self allowedValues size = 2
-			and: [(self allowedValues includes: 'preserve')
-				and: [self allowedValues includes: 'default']]])
-		ifFalse: [self errorInvalidXMLSpaceAttributeValidator]
+	self errorInvalidXMLSpaceAttributeValidator
 ]

@@ -26,18 +26,18 @@ Class {
 }
 
 { #category : #accessing }
-XMLPluggableElementFactory >> classForElement: aName prefix: aPrefix uri: aUri localName: aLocalName [
-	^ (self classForElement: aName uri: aUri)
+XMLPluggableElementFactory >> classForElement: aName prefix: aPrefix uri: aURI localName: aLocalName [
+	^ (self classForElement: aName uri: aURI)
 		ifNil: [
 			aPrefix isEmpty
 				ifTrue: [self elementClass]
 				ifFalse: [
-					(self classForElement: aLocalName uri: aUri)
+					(self classForElement: aLocalName uri: aURI)
 						ifNil: [self elementClass]]]
 ]
 
 { #category : #private }
-XMLPluggableElementFactory >> classForElement: aName uri: aUri [
+XMLPluggableElementFactory >> classForElement: aName uri: aURI [
 	| classesForElement |
 
 	classesForElement :=
@@ -46,7 +46,7 @@ XMLPluggableElementFactory >> classForElement: aName uri: aUri [
 			ifAbsent: [^ nil].
 
 	^ classesForElement
-		at: aUri
+		at: aURI
 		ifAbsent: [
 			classesForElement
 				at: ''
@@ -59,11 +59,11 @@ XMLPluggableElementFactory >> elementClassesByName [
 ]
 
 { #category : #'element handling' }
-XMLPluggableElementFactory >> handleElement: anElementName namespaceURI: aUri withClass: aClass [
+XMLPluggableElementFactory >> handleElement: anElementName namespaceURI: aURI withClass: aClass [
 	(self elementClassesByName
 		at: anElementName
 		ifAbsentPut: [Dictionary new])
-			at: aUri put: aClass
+			at: aURI put: aClass
 ]
 
 { #category : #'element handling' }

@@ -10,7 +10,7 @@ Class {
 		'scopeAllocator',
 		'doctypeDefinition',
 		'validator',
-		'externalSubsetUri',
+		'externalSubsetURI',
 		'isStandalone',
 		'hasUnhandledReservedAttributes'
 	],
@@ -124,22 +124,22 @@ SAXParserDriver >> externalEntityResolver [
 ]
 
 { #category : #private }
-SAXParserDriver >> externalSubsetParserOnURI: aUri [
+SAXParserDriver >> externalSubsetParserOnURI: aURI [
 	^ self saxHandler parserClass
 		driver:
 			(DTDExternalSubsetParserDriver
 				saxDriver: self
-				documentURI: aUri asString)
-		on: (self externalEntityResolver resolveEntityURI: aUri)
+				documentURI: aURI asString)
+		on: (self externalEntityResolver resolveEntityURI: aURI)
 	
 ]
 
 { #category : #accessing }
 SAXParserDriver >> externalSubsetURI [
-	^ externalSubsetUri
+	^ externalSubsetURI
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #'handling - dtd' }
 SAXParserDriver >> handleAttributeDeclaration: anElement name: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	self isValidating
 		ifTrue: [
@@ -157,7 +157,7 @@ SAXParserDriver >> handleAttributeDeclaration: anElement name: aName type: aType
 		defaultValue: aDefaultValue
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 SAXParserDriver >> handleCData: aString [
 	self elementNester isInElement
 		ifFalse: [self errorCharacterDataOutsideElement].
@@ -172,12 +172,12 @@ SAXParserDriver >> handleCData: aString [
 		endCData.
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 SAXParserDriver >> handleComment: aString [
 	self saxHandler comment: aString
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #'handling - dtd' }
 SAXParserDriver >> handleElementDeclaration: aName contentModel: aContentModel [
 	self isValidating
 		ifTrue: [
@@ -190,12 +190,12 @@ SAXParserDriver >> handleElementDeclaration: aName contentModel: aContentModel [
 		contentModel: aContentModel
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 SAXParserDriver >> handleEndContentEntityReplacement: aName [
 	self saxHandler endEntity: aName
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #'handling - dtd' }
 SAXParserDriver >> handleEndDTD [
 	(self resolvesExternalEntities
 		and: [self externalSubsetURI notEmpty
@@ -208,7 +208,7 @@ SAXParserDriver >> handleEndDTD [
 		endDTD.
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 SAXParserDriver >> handleEndDocument [
 	self elementNester endNesting.
 	self isValidating
@@ -217,7 +217,7 @@ SAXParserDriver >> handleEndDocument [
 	self saxHandler endDocument.
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 SAXParserDriver >> handleEndTag: anElementName [
 	"performance critical method"
 	| prefix currentScope |
@@ -248,8 +248,8 @@ SAXParserDriver >> handleEndTag: anElementName [
 		ifTrue: [self validator validateEndTag: anElementName].
 ]
 
-{ #category : #'handling tokens' }
-SAXParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
+{ #category : #'handling - dtd' }
+SAXParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotation [
 	aNotation
 		ifNotEmpty: [
 			self isValidating
@@ -266,17 +266,17 @@ SAXParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId sys
 					self doctypeDefinition
 						addExternalGeneralEntity: aName
 						resolver: self externalEntityResolver
-						uri: aSystemId
+						uri: aSystemID
 						from: self currentURI]].
 
 	self saxHandler
 		generalEntityDeclaration: aName
-		publicID: aPublicId
-		systemID: aSystemId
+		publicID: aPublicID
+		systemID: aSystemID
 		ndata: aNotation.
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #'handling - dtd' }
 SAXParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplacement [
 	self doctypeDefinition
 		addGeneralEntity: aName
@@ -288,7 +288,7 @@ SAXParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplaceme
 		replacement: aReplacement.
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 SAXParserDriver >> handleGeneralEntityReference: aName [
 	^ self doctypeDefinition
 		generalEntityAt: aName
@@ -298,18 +298,18 @@ SAXParserDriver >> handleGeneralEntityReference: aName [
 			nil]
 ]
 
-{ #category : #'handling tokens' }
-SAXParserDriver >> handleNotationDeclaration: aName publicID: aPublicId systemID: aSystemId [
+{ #category : #'handling - dtd' }
+SAXParserDriver >> handleNotationDeclaration: aName publicID: aPublicID systemID: aSystemID [
 	self isValidating
 		ifTrue: [self doctypeDefinition addNotation: aName].
 
 	self saxHandler
 		notationDeclaration: aName
-		publicID: aPublicId
-		systemID: aSystemId.
+		publicID: aPublicID
+		systemID: aSystemID.
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 SAXParserDriver >> handlePCData: aString [
 	self elementNester isInElement
 		ifFalse: [self errorCharacterDataOutsideElement].
@@ -319,30 +319,30 @@ SAXParserDriver >> handlePCData: aString [
 	self saxHandler characters: aString.
 ]
 
-{ #category : #'handling tokens' }
-SAXParserDriver >> handlePI: piTarget data: piData [
+{ #category : #handling }
+SAXParserDriver >> handlePI: aTargetString data: aDataString [
 	self saxHandler 
-		processingInstruction: piTarget
-		data: piData
+		processingInstruction: aTargetString
+		data: aDataString
 ]
 
-{ #category : #'handling tokens' }
-SAXParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
+{ #category : #'handling - dtd' }
+SAXParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
 	self resolvesExternalEntities
 		ifTrue: [
 			self doctypeDefinition
 				addExternalParameterEntity: aName
 				resolver: self externalEntityResolver
-				uri: aSystemId
+				uri: aSystemID
 				from: self currentURI].
 
 	self saxHandler
 		parameterEntityDeclaration: aName
-		publicID: aPublicId
-		systemID: aSystemId.
+		publicID: aPublicID
+		systemID: aSystemID.
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #'handling - dtd' }
 SAXParserDriver >> handleParameterEntityDeclaration: aName replacement: aReplacement [
 	self doctypeDefinition
 		addParameterEntity: aName
@@ -354,7 +354,7 @@ SAXParserDriver >> handleParameterEntityDeclaration: aName replacement: aReplace
 		replacement: aReplacement.
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #'handling - dtd' }
 SAXParserDriver >> handleParameterEntityReference: aName [
 	^ self doctypeDefinition
 		parameterEntityAt: aName
@@ -379,29 +379,29 @@ SAXParserDriver >> handleReservedAttributes: anAttributeDictionary [
 	hasUnhandledReservedAttributes := false.
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 SAXParserDriver >> handleStartContentEntityReplacement: aName [
 	self saxHandler startEntity: aName
 ]
 
-{ #category : #'handling tokens' }
-SAXParserDriver >> handleStartDTD: aRoot publicID: aPublicId systemID: aSystemId [
-	externalSubsetUri := aSystemId.
+{ #category : #'handling - dtd' }
+SAXParserDriver >> handleStartDTD: aRoot publicID: aPublicID systemID: aSystemID [
+	externalSubsetURI := aSystemID.
 
 	self doctypeDefinition root: aRoot.
 	self saxHandler
 		startDTD: aRoot
-		publicID: aPublicId
-		systemID: aSystemId;
+		publicID: aPublicID
+		systemID: aSystemID;
 		startInternalSubset.
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 SAXParserDriver >> handleStartDocument [
 	self saxHandler startDocument
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
 	"performance critical method"
 	| prefix totalAttributes namespaceUri currentScope |
@@ -440,12 +440,12 @@ SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 		ifNotNil: [self saxHandler currentScope: currentScope].
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 SAXParserDriver >> handleUnreplacedGeneralEntityReference: aName [
 	self saxHandler skippedEntity: aName
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 SAXParserDriver >> handleWhitespace: aString [
 	(self elementNester hasScopedAttributes
 		and: [(self elementNester scopedAttributeAt: 'xml:space') = 'preserve'])
@@ -453,7 +453,7 @@ SAXParserDriver >> handleWhitespace: aString [
 		ifFalse: [self saxHandler ignorableWhitespace: aString]
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 SAXParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
 	isStandalone := aYesOrNo = 'yes'.
 
@@ -489,14 +489,14 @@ SAXParserDriver >> maxEntityReplacementDepth [
 ]
 
 { #category : #private }
-SAXParserDriver >> parseExternalSubset: aUri [
+SAXParserDriver >> parseExternalSubset: aURI [
 	| parser |
 
 	parser :=
 		self externalSubsetParserOnURI:
 			(self externalEntityResolver
 				combineURI: self documentURI
-				with: aUri).
+				with: aURI).
 	parser parseDocument.
 ]
 
@@ -546,7 +546,7 @@ SAXParserDriver >> setRootElement: anElementName currentScope: aNamespaceScope [
 SAXParserDriver >> setSAXHandler: aHandler [
 	saxHandler := aHandler.
 	elementNester := self elementNesterClass new.
-	externalSubsetUri := ''.
+	externalSubsetURI := ''.
 	isStandalone := false.
 	hasUnhandledReservedAttributes := false.
 ]

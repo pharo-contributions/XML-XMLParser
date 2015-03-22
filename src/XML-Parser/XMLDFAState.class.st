@@ -13,17 +13,17 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLDFAState class >> nfaStates: anNfaStateSet [
+XMLDFAState class >> nfaStates: anNFAStateSet [
 	^ self
-		nfaStates: anNfaStateSet
+		nfaStates: anNFAStateSet
 		dfaStateCache: nil
 ]
 
 { #category : #'instance creation' }
-XMLDFAState class >> nfaStates: anNfaStateSet dfaStateCache: aDfaStateCache [
+XMLDFAState class >> nfaStates: anNFAStateSet dfaStateCache: aDFAStateCache [
 	^ self new
-		setNFAStates: anNfaStateSet
-		dfaStateCache: aDfaStateCache
+		setNFAStates: anNFAStateSet
+		dfaStateCache: aDFAStateCache
 ]
 
 { #category : #enumerating }
@@ -63,9 +63,9 @@ XMLDFAState >> nfaStates [
 ]
 
 { #category : #initialization }
-XMLDFAState >> setNFAStates: anNfaStateSet dfaStateCache: aDfaStateCache [
-	nfaStates := anNfaStateSet.
-	dfaStateCache := (aDfaStateCache ifNil: [XMLDFAStateCache firstState: self]).
+XMLDFAState >> setNFAStates: anNFAStateSet dfaStateCache: aDFAStateCache [
+	nfaStates := anNFAStateSet.
+	dfaStateCache := (aDFAStateCache ifNil: [XMLDFAStateCache firstState: self]).
 ]
 
 { #category : #accessing }

@@ -18,8 +18,8 @@ XMLParserDriver >> currentURI [
 ]
 
 { #category : #accessing }
-XMLParserDriver >> currentURI: aUri [
-	self uris addLast: aUri
+XMLParserDriver >> currentURI: aURI [
+	self uris addLast: aURI
 ]
 
 { #category : #accessing }
@@ -32,107 +32,107 @@ XMLParserDriver >> documentURI [
 	^ nil
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #'handling - dtd' }
 XMLParserDriver >> handleAttributeDeclaration: anElement name: anName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 XMLParserDriver >> handleCData: aString [
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 XMLParserDriver >> handleComment: aString [
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #'handling - dtd' }
 XMLParserDriver >> handleElementDeclaration: aName contentModel: aContentModel [
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 XMLParserDriver >> handleEndContentEntityReplacement: aName [
 
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #'handling - dtd' }
 XMLParserDriver >> handleEndDTD [
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 XMLParserDriver >> handleEndDocument [
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 XMLParserDriver >> handleEndTag: anElementName [
 ]
 
-{ #category : #'handling tokens' }
-XMLParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
+{ #category : #'handling - dtd' }
+XMLParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotation [
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #'handling - dtd' }
 XMLParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplacement [
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 XMLParserDriver >> handleGeneralEntityReference: aName [
 	^ nil
 ]
 
-{ #category : #'handling tokens' }
-XMLParserDriver >> handleNotationDeclaration: aName publicID: aPublicId systemID: aSystemId [
+{ #category : #'handling - dtd' }
+XMLParserDriver >> handleNotationDeclaration: aName publicID: aPublicID systemID: aSystemID [
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 XMLParserDriver >> handlePCData: aString [
 ]
 
-{ #category : #'handling tokens' }
-XMLParserDriver >> handlePI: piTarget data: piData [
+{ #category : #handling }
+XMLParserDriver >> handlePI: aTargetString data: aDataString [
 ]
 
-{ #category : #'handling tokens' }
-XMLParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
+{ #category : #'handling - dtd' }
+XMLParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #'handling - dtd' }
 XMLParserDriver >> handleParameterEntityDeclaration: aName replacement: aReplacement [
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #'handling - dtd' }
 XMLParserDriver >> handleParameterEntityReference: aName [
 	^ nil
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 XMLParserDriver >> handleParseError: anErrorString [
 	XMLWellFormednessException signal: anErrorString
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 XMLParserDriver >> handleStartContentEntityReplacement: aName [
 ]
 
-{ #category : #'handling tokens' }
-XMLParserDriver >> handleStartDTD: aRoot publicID: aPublicId systemID: aSystemId [
+{ #category : #'handling - dtd' }
+XMLParserDriver >> handleStartDTD: aRoot publicID: aPublicID systemID: aSystemID [
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 XMLParserDriver >> handleStartDocument [
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 XMLParserDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 XMLParserDriver >> handleUnreplacedGeneralEntityReference: aName [
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 XMLParserDriver >> handleWhitespace: aString [
 ]
 
-{ #category : #'handling tokens' }
+{ #category : #handling }
 XMLParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
 ]
 
@@ -162,11 +162,11 @@ XMLParserDriver >> readLimit [
 ]
 
 { #category : #accessing }
-XMLParserDriver >> removeURI: aUri [
+XMLParserDriver >> removeURI: aURI [
 	"remove: removes the first match"
 	self uris removeAt:
 		(self uris
-			lastIndexOf: aUri
+			lastIndexOf: aURI
 			ifAbsent: [^ self])
 ]
 

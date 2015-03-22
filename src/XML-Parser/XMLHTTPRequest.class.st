@@ -21,8 +21,8 @@ XMLHTTPRequest class >> preferredImplementation [
 ]
 
 { #category : #'instance creation' }
-XMLHTTPRequest class >> url: aUrl [
-	^ self new url: aUrl
+XMLHTTPRequest class >> url: aURL [
+	^ self new url: aURL
 ]
 
 { #category : #private }
@@ -62,6 +62,6 @@ XMLHTTPRequest >> url [
 ]
 
 { #category : #accessing }
-XMLHTTPRequest >> url: aUrl [
-	url := aUrl
+XMLHTTPRequest >> url: aURL [
+	url := aURL
 ]

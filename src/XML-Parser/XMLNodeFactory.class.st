@@ -25,18 +25,18 @@ XMLNodeFactory >> classForElement: aQualifiedName [
 ]
 
 { #category : #accessing }
-XMLNodeFactory >> classForElement: aQualifiedName namespaceURI: aUri [
+XMLNodeFactory >> classForElement: aQualifiedName namespaceURI: aURI [
 	| prefix |
 
 	^ self
 		classForElement: aQualifiedName
 		prefix: (prefix := aQualifiedName prefixBeforeLocalName)
-		uri: aUri
+		uri: aURI
 		localName: (aQualifiedName localNameAfterPrefix: prefix)
 ]
 
 { #category : #accessing }
-XMLNodeFactory >> classForElement: aQualifiedName prefix: aPrefix uri: aNamespaceUri localName: aLocalName [
+XMLNodeFactory >> classForElement: aQualifiedName prefix: aPrefix uri: aNamespaceURI localName: aLocalName [
 	^ self elementClass
 ]
 
@@ -97,10 +97,10 @@ XMLNodeFactory >> newElementNamed: aName [
 ]
 
 { #category : #'instance creation' }
-XMLNodeFactory >> newElementNamed: aName namespaceURI: aUri [
-	^ (self classForElement: aName namespaceURI: aUri)
+XMLNodeFactory >> newElementNamed: aName namespaceURI: aURI [
+	^ (self classForElement: aName namespaceURI: aURI)
 		name: aName
-		namespaceURI: aUri
+		namespaceURI: aURI
 ]
 
 { #category : #'instance creation' }

@@ -11,11 +11,11 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLGeneralEntityDeclaration class >> name: aName publicID: aPublicId systemID: aSystemId ndata: aNotationName [
+XMLGeneralEntityDeclaration class >> name: aName publicID: aPublicID systemID: aSystemID ndata: aNotationName [
 	^ self new
 		name: aName;
-		publicID: aPublicId;
-		systemID: aSystemId;
+		publicID: aPublicID;
+		systemID: aSystemID;
 		ndata: aNotationName
 ]
 

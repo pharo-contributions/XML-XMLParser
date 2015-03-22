@@ -28,10 +28,10 @@ XMLURI class >> new [
 ]
 
 { #category : #combining }
-XMLURI >> / aUriOrString [
+XMLURI >> / aURIOrString [
 	| uriToCombineWith |
 
-	(uriToCombineWith := aUriOrString asXMLURI) isEmpty
+	(uriToCombineWith := aURIOrString asXMLURI) isEmpty
 		ifFalse: [
 			(uriToCombineWith isRelative)
 				ifTrue: [^ self copy combineWithRelativeURI: uriToCombineWith]
@@ -101,11 +101,11 @@ XMLURI >> addPathSegment: aSegment [
 ]
 
 { #category : #private }
-XMLURI >> addPathSegmentsFrom: aUri [
-	aUri hasPath
+XMLURI >> addPathSegmentsFrom: aURI [
+	aURI hasPath
 		ifFalse: [^ self].
 
-	aUri hasAbsolutePath
+	aURI hasAbsolutePath
 		ifTrue: [pathSegments removeAll]
 		ifFalse: [
 			self hasNonDirectoryPath
@@ -114,7 +114,7 @@ XMLURI >> addPathSegmentsFrom: aUri [
 					self hasPath
 						ifTrue: [self haveDirectoryPath]]].
 
-	aUri pathSegments do: [:each | self addPathSegment: each].
+	aURI pathSegments do: [:each | self addPathSegment: each].
 ]
 
 { #category : #converting }
@@ -136,24 +136,24 @@ XMLURI >> asXMLURI [
 ]
 
 { #category : #private }
-XMLURI >> combineWithRelativeURI: aRelativeUri [
-	(aRelativeUri hasHost
-		or: [aRelativeUri hasPath])
+XMLURI >> combineWithRelativeURI: aRelativeURI [
+	(aRelativeURI hasHost
+		or: [aRelativeURI hasPath])
 		ifTrue: [
 			queryString := ''.
 			fragment := ''].
-	aRelativeUri hasHost
+	aRelativeURI hasHost
 		ifTrue: [
-			host := aRelativeUri host.
+			host := aRelativeURI host.
 			pathSegments removeAll].
-	aRelativeUri hasPort
-		ifTrue: [port := aRelativeUri port].
-	aRelativeUri hasPath
-		ifTrue: [self addPathSegmentsFrom: aRelativeUri].
-	aRelativeUri hasQueryString
-		ifTrue: [queryString := aRelativeUri queryString].
-	aRelativeUri hasFragment
-		ifTrue: [fragment := aRelativeUri fragment].
+	aRelativeURI hasPort
+		ifTrue: [port := aRelativeURI port].
+	aRelativeURI hasPath
+		ifTrue: [self addPathSegmentsFrom: aRelativeURI].
+	aRelativeURI hasQueryString
+		ifTrue: [queryString := aRelativeURI queryString].
+	aRelativeURI hasFragment
+		ifTrue: [fragment := aRelativeURI fragment].
 ]
 
 { #category : #accessing }

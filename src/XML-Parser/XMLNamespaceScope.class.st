@@ -48,15 +48,15 @@ XMLNamespaceScope >> defaultNamespace [
 ]
 
 { #category : #accessing }
-XMLNamespaceScope >> defaultNamespace: aUri [
+XMLNamespaceScope >> defaultNamespace: aURI [
 	self
 		validatePrefix: ''
-		beforeMappingTo: aUri.
+		beforeMappingTo: aURI.
 
 	"copy-on-write"
 	self copiedPrefixMappings
 		at: ''
-		put: aUri.
+		put: aURI.
 ]
 
 { #category : #private }
@@ -149,8 +149,8 @@ XMLNamespaceScope >> includesPrefix: aPrefix [
 ]
 
 { #category : #testing }
-XMLNamespaceScope >> includesPrefix: aPrefix mappedTo: aUri [
-	^ (self prefixMappingAt: aPrefix ifAbsent: [^ false]) = aUri
+XMLNamespaceScope >> includesPrefix: aPrefix mappedTo: aURI [
+	^ (self prefixMappingAt: aPrefix ifAbsent: [^ false]) = aURI
 ]
 
 { #category : #accessing }
@@ -172,15 +172,15 @@ XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope [
 ]
 
 { #category : #accessing }
-XMLNamespaceScope >> mapPrefix: aPrefix to: aUri [
+XMLNamespaceScope >> mapPrefix: aPrefix to: aURI [
 	self
 		validatePrefix: aPrefix
-		beforeMappingTo: aUri.
+		beforeMappingTo: aURI.
 
 	"copy-on-write"
 	self copiedPrefixMappings
 		at: aPrefix
-		put: aUri.
+		put: aURI.
 ]
 
 { #category : #accessing }
@@ -223,18 +223,18 @@ XMLNamespaceScope >> prefixesAndURIsDo: aTwoArgumentBlock [
 ]
 
 { #category : #accessing }
-XMLNamespaceScope >> prefixesOfNamespaceURI: aNamespaceUri [
+XMLNamespaceScope >> prefixesOfNamespaceURI: aURI [
 	| prefixes |
 
 	prefixes := Set new.
-	aNamespaceUri = self class xmlNamespaceURI
+	aURI = self class xmlNamespaceURI
 		ifTrue: [prefixes add: 'xml']
 		ifFalse: [
-			aNamespaceUri = self class xmlnsNamespaceURI
+			aURI = self class xmlnsNamespaceURI
 				ifTrue: [prefixes add: 'xmlns']
 				ifFalse: [
 					self prefixesAndURIsDo: [:prefix :uri |
-						uri = aNamespaceUri
+						uri = aURI
 							ifTrue: [prefixes add: prefix]]]].
 	^ prefixes.
 ]
@@ -339,10 +339,10 @@ XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
 ]
 
 { #category : #private }
-XMLNamespaceScope >> validatePrefix: aPrefix beforeMappingTo: aUri [
+XMLNamespaceScope >> validatePrefix: aPrefix beforeMappingTo: aURI [
 	aPrefix = 'xml'
 		ifTrue: [
-			aUri = self class xmlNamespaceURI
+			aURI = self class xmlNamespaceURI
 				ifFalse: [self errorCannotRemapXmlPrefix]]
 		ifFalse: [
 			aPrefix isEmpty "avoid ifEmpty: overhead"
@@ -351,10 +351,10 @@ XMLNamespaceScope >> validatePrefix: aPrefix beforeMappingTo: aUri [
 						ifTrue: [self errorCannotMapXmlnsPrefix].
 					(aPrefix indexOf: $:) > 0 
 						ifTrue: [self errorInvalidPrefix: aPrefix].
-					aUri isEmpty
+					aURI isEmpty
 						ifTrue: [self errorCannotMapPrefixToEmptyURI]].
-			(aUri = self class xmlNamespaceURI
-				or: [aUri = self class xmlnsNamespaceURI])
+			(aURI = self class xmlNamespaceURI
+				or: [aURI = self class xmlnsNamespaceURI])
 				ifTrue: [self errorCannotAliasXmlOrXmlnsURIWithPrefix: aPrefix]]
 ]
 

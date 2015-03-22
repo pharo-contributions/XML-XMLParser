@@ -11,3 +11,8 @@ Class {
 XMLXMLIDIDAttributeValidator >> validateAttributeValue: aValue [
 	self elementIDValidator validateXMLID: aValue
 ]
+
+{ #category : #validating }
+XMLXMLIDIDAttributeValidator >> validateXMLIDAttributeValidator [
+
+]

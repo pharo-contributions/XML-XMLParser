@@ -31,8 +31,8 @@ XMLIDAttributeValidator >> elementIDValidator [
 ]
 
 { #category : #accessing }
-XMLIDAttributeValidator >> elementIDValidator: anElementIdValidator [
-	elementIdValidator := anElementIdValidator
+XMLIDAttributeValidator >> elementIDValidator: anElementIDValidator [
+	elementIdValidator := anElementIDValidator
 ]
 
 { #category : #initialization }

@@ -30,9 +30,9 @@ String >> asXMLURI [
 ]
 
 { #category : #'*XML-Parser' }
-String >> expandWithNamespaceURI: aNamespaceUri [
-	aNamespaceUri size > 0
-		ifTrue: [^ 'Q{', aNamespaceUri, '}', self]
+String >> expandWithNamespaceURI: aURI [
+	aURI size > 0
+		ifTrue: [^ 'Q{', aURI, '}', self]
 		ifFalse: [^ self]
 ]
 

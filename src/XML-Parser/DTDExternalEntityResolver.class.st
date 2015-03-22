@@ -19,18 +19,18 @@ DTDExternalEntityResolver >> checkExternalEntityLimit [
 ]
 
 { #category : #combining }
-DTDExternalEntityResolver >> combineURI: aBaseUri with: aRelativeUri [
-	| baseUri combinedUri |
+DTDExternalEntityResolver >> combineURI: aBaseURI with: aRelativeURI [
+	| baseURI combinedURI |
 
-	baseUri := XMLURI fromString: aBaseUri.
-	combinedUri := baseUri / aRelativeUri.
-	(combinedUri isLocalURI
-		and: [baseUri isLocalURI not
+	baseURI := XMLURI fromString: aBaseURI.
+	combinedURI := baseURI / aRelativeURI.
+	(combinedURI isLocalURI
+		and: [baseURI isLocalURI not
 			and: [self resolvesLocalFromNonLocal notNil
 				and: [self resolvesLocalFromNonLocal not]]])
 		ifTrue: [self errorLocalFromNonLocal].
 
-	^ combinedUri.
+	^ combinedURI.
 ]
 
 { #category : #accessing }
@@ -97,47 +97,47 @@ DTDExternalEntityResolver >> removeLimits [
 ]
 
 { #category : #resolving }
-DTDExternalEntityResolver >> resolveEntityURI: aUri [
+DTDExternalEntityResolver >> resolveEntityURI: aURI [
 	| readStream |
 
 	self checkExternalEntityLimit.
-	readStream := aUri asXMLURI getUpToLimit: self maxExternalEntitySize.
+	readStream := aURI asXMLURI getUpToLimit: self maxExternalEntitySize.
 	self incrementEntityTotal.
 
 	^ readStream.
 ]
 
 { #category : #private }
-DTDExternalEntityResolver >> resolveExternalEntity: aName uri: anEntityUri from: aSourceUri class: aClass [
-	| combinedUri replacement replacementStream |
+DTDExternalEntityResolver >> resolveExternalEntity: aName uri: anEntityURI from: aSourceURI class: aClass [
+	| combinedURI replacement replacementStream |
 
-	combinedUri := self combineURI: aSourceUri with: anEntityUri.
+	combinedURI := self combineURI: aSourceURI with: anEntityURI.
 
-	replacementStream := self resolveEntityURI: combinedUri.
+	replacementStream := self resolveEntityURI: combinedURI.
 	replacement  := replacementStream contents.
 	replacementStream close.
 
 	^ aClass
 		name: aName
 		replacement: replacement
-		uri: combinedUri asString.
+		uri: combinedURI asString.
 ]
 
 { #category : #resolving }
-DTDExternalEntityResolver >> resolveExternalGeneralEntity: aName uri: anEntityUri from: aSourceUri [
+DTDExternalEntityResolver >> resolveExternalGeneralEntity: aName uri: anEntityURI from: aSourceURI [
 	^ self
 		resolveExternalEntity: aName
-		uri: anEntityUri
-		from: aSourceUri
+		uri: anEntityURI
+		from: aSourceURI
 		class: DTDExternalGeneralEntity
 ]
 
 { #category : #resolving }
-DTDExternalEntityResolver >> resolveExternalParameterEntity: aName uri: anEntityUri from: aSourceUri [
+DTDExternalEntityResolver >> resolveExternalParameterEntity: aName uri: anEntityURI from: aSourceURI [
 	^ self
 		resolveExternalEntity: aName
-		uri: anEntityUri
-		from: aSourceUri
+		uri: anEntityURI
+		from: aSourceURI
 		class: DTDExternalParameterEntity
 ]
 

@@ -39,7 +39,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'input',
-		'documentUri',
+		'documentURI',
 		'configuration',
 		'isInInternalSubset',
 		'isInCDataSection'
@@ -53,12 +53,12 @@ SAXHandler class >> on: aStringOrStream [
 ]
 
 { #category : #'instance creation' }
-SAXHandler class >> on: aStringOrStream documentURI: aUriString [
+SAXHandler class >> on: aStringOrStream documentURI: aURIString [
 	"Returns a new instance with associated base URI"
 
 	^ self new
 		on: aStringOrStream
-		documentURI: aUriString
+		documentURI: aURIString
 ]
 
 { #category : #'instance creation' }
@@ -69,22 +69,22 @@ SAXHandler class >> onFileNamed: aFileName [
 ]
 
 { #category : #'instance creation' }
-SAXHandler class >> onURL: aUrlString [
+SAXHandler class >> onURL: aURLString [
 	"Fetches the URL and returns a new instance on the response"
 
 	^ self
-		onURL: aUrlString
+		onURL: aURLString
 		upToLimit: XMLParserLimits defaultDocumentReadLimit
 ]
 
 { #category : #'instance creation' }
-SAXHandler class >> onURL: aUrlString upToLimit: aLimit [
+SAXHandler class >> onURL: aURLString upToLimit: aLimit [
 	"Fetches the URL and returns a new instance on the response up
 	to the input limit (use nil to disable)."
 
 	^ (self
-		on: (aUrlString asXMLURI getUpToLimit: aLimit)
-		documentURI: aUrlString)
+		on: (aURLString asXMLURI getUpToLimit: aLimit)
+		documentURI: aURLString)
 		documentReadLimit: aLimit
 ]
 
@@ -130,8 +130,8 @@ SAXHandler class >> parseFileNamed: aFileName [
 ]
 
 { #category : #parsing }
-SAXHandler class >> parseURL: aUrl [
-	^ (self onURL: aUrl) parseDocument
+SAXHandler class >> parseURL: aURLString [
+	^ (self onURL: aURLString) parseDocument
 ]
 
 { #category : #'handling - declarations' }
@@ -192,7 +192,7 @@ SAXHandler >> documentReadLimit: aLimit [
 
 { #category : #accessing }
 SAXHandler >> documentURI [
-	^ documentUri ifNil: [documentUri := self defaultDocumentURI]
+	^ documentURI ifNil: [documentURI := self defaultDocumentURI]
 ]
 
 { #category : #private }
@@ -216,7 +216,7 @@ SAXHandler >> endCDataSection [
 	isInCDataSection := false
 ]
 
-{ #category : #'handling - declarations' }
+{ #category : #'handling - lexical' }
 SAXHandler >> endDTD [
 
 ]
@@ -233,7 +233,7 @@ SAXHandler >> endElement: aQualifiedName [
 ]
 
 { #category : #'handling - content' }
-SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aUri [
+SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI [
 	"This call corresponds to the Java SAX call
 	endElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName).
 	By default this call is mapped to the following more convenient call:"
@@ -242,12 +242,12 @@ SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aUri [
 ]
 
 { #category : #'handling - content' }
-SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName [
+SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName [
 	"This call corresponds to the Java SAX call
 	endElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName).
 	By default this call is mapped to the following more convenient call:"
 
-	self endElement: aQualifiedName prefix: aPrefix uri:  aUri
+	self endElement: aQualifiedName prefix: aPrefix uri:  aURI
 ]
 
 { #category : #'handling - lexical' }
@@ -280,7 +280,7 @@ SAXHandler >> externalEntityResolver: anExternalEntityResolver [
 ]
 
 { #category : #'handling - declarations' }
-SAXHandler >> generalEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
+SAXHandler >> generalEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotation [
 ]
 
 { #category : #'handling - declarations' }
@@ -345,7 +345,7 @@ SAXHandler >> maxEntityReplacementDepth: aLimit [
 ]
 
 { #category : #'handling - declarations' }
-SAXHandler >> notationDeclaration: aName publicID: aPublicId systemID: aSystemId [
+SAXHandler >> notationDeclaration: aName publicID: aPublicID systemID: aSystemID [
 
 ]
 
@@ -357,9 +357,9 @@ SAXHandler >> on: aStringOrStream [
 ]
 
 { #category : #initialization }
-SAXHandler >> on: aStringOrStream documentURI: aUri [
+SAXHandler >> on: aStringOrStream documentURI: aURI [
 	input := aStringOrStream.
-	documentUri := aUri.
+	documentURI := aURI.
 	configuration
 		ifNil: [self configuration: self configurationClass new].
 	isInInternalSubset := false.
@@ -376,7 +376,7 @@ SAXHandler >> optimizeForLargeDocuments [
 ]
 
 { #category : #'handling - declarations' }
-SAXHandler >> parameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
+SAXHandler >> parameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
 ]
 
 { #category : #'handling - declarations' }
@@ -446,7 +446,7 @@ SAXHandler >> preservesUndeclaredEntityReferences: aBoolean [
 ]
 
 { #category : #'handling - content' }
-SAXHandler >> processingInstruction: aTarget data: aDataString [
+SAXHandler >> processingInstruction: aTargetString data: aDataString [
 	"This call corresonds to the Java SAX call
 	processingInstruction(java.lang.String target, java.lang.String data)."
 ]
@@ -515,8 +515,8 @@ SAXHandler >> startCDataSection [
 	isInCDataSection := true
 ]
 
-{ #category : #'handling - declarations' }
-SAXHandler >> startDTD: aRootElementName publicID: aPublicId systemID: aSystemId [
+{ #category : #'handling - lexical' }
+SAXHandler >> startDTD: aRootElementName publicID: aPublicID systemID: aSystemID [
 	"This call corresponds to the Java SAX ext call
 	startDTD(java.lang.String name, java.lang.String publicId, java.lang.String systemId)."
 ]
@@ -533,12 +533,12 @@ SAXHandler >> startElement: aQualifiedName attributes: aDictionary [
 ]
 
 { #category : #'handling - content' }
-SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aUri attributes: aDictionary [
+SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes: aDictionary [
 	self startElement: aQualifiedName attributes: aDictionary
 ]
 
 { #category : #'handling - content' }
-SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName attributes: aDictionary [
+SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: aDictionary [
 	"This call corresonds to the Java SAX call
 	startElement(java.lang.String namespaceURI, java.lang.String localName,
 		java.lang.String qName, Attributes atts)."
@@ -546,7 +546,7 @@ SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName: 
 	self
 		startElement: aQualifiedName
 		prefix: aPrefix
-		uri: aUri
+		uri: aURI
 		attributes: aDictionary
 ]
 
@@ -562,7 +562,7 @@ SAXHandler >> startInternalSubset [
 ]
 
 { #category : #'handling - content' }
-SAXHandler >> startPrefixMapping: aPrefix uri: aUri [
+SAXHandler >> startPrefixMapping: aPrefix uri: aURI [
 	"This call corresonds to the Java SAX call
 	startPrefixMapping(java.lang.String prefix, java.lang.String uri)."
 ]

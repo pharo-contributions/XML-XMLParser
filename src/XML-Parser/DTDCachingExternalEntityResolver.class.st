@@ -22,16 +22,16 @@ DTDCachingExternalEntityResolver class >> entityCache [
 ]
 
 { #category : #private }
-DTDCachingExternalEntityResolver class >> entityCacheAt: aUri ifAbsentPut: aBlock [
+DTDCachingExternalEntityResolver class >> entityCacheAt: aURI ifAbsentPut: aBlock [
 	^ self entityCache
-		at: aUri
+		at: aURI
 		ifAbsentPut: aBlock
 ]
 
 { #category : #private }
-DTDCachingExternalEntityResolver class >> entityCacheAt: aUri put: anEntity [
+DTDCachingExternalEntityResolver class >> entityCacheAt: aURI put: anEntity [
 	^ self entityCache
-		at: aUri
+		at: aURI
 		put: anEntity.
 ]
 
@@ -61,10 +61,10 @@ DTDCachingExternalEntityResolver >> maxCachedEntities: anInteger [
 ]
 
 { #category : #resolving }
-DTDCachingExternalEntityResolver >> resolveEntityURI: aUri [
+DTDCachingExternalEntityResolver >> resolveEntityURI: aURI [
 	| uri |
 
-	^ (uri := aUri asXMLURI) isLocalURI
+	^ (uri := aURI asXMLURI) isLocalURI
 		ifTrue: [super resolveEntityURI: uri]
 		ifFalse: [
 			(self class

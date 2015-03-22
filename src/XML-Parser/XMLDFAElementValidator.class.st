@@ -13,10 +13,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLDFAElementValidator class >> element: aName dfa: aDfa [
+XMLDFAElementValidator class >> element: aName dfa: aDFA [
 	^ self new
 		setElement: aName
-		dfa: aDfa
+		dfa: aDFA
 ]
 
 { #category : #testing }
@@ -30,9 +30,9 @@ XMLDFAElementValidator >> postCopy [
 ]
 
 { #category : #accessing }
-XMLDFAElementValidator >> setElement: aName dfa: aDfa [
+XMLDFAElementValidator >> setElement: aName dfa: aDFA [
 	element := aName.
-	dfa := aDfa.
+	dfa := aDFA.
 	currentState := dfa.
 ]
 

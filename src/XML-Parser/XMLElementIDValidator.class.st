@@ -18,18 +18,18 @@ XMLElementIDValidator >> elementsAndIDAttributes [
 ]
 
 { #category : #private }
-XMLElementIDValidator >> errorDuplicateID: anId inAttribute: anAttribute [
+XMLElementIDValidator >> errorDuplicateID: anID inAttribute: anAttribute [
 	XMLValidationException
 		formatSignal: 'Duplicate element ID "{1}" used in attribute "{2}"'
-		with: anId
+		with: anID
 		with: anAttribute
 ]
 
 { #category : #private }
-XMLElementIDValidator >> errorInvalidID: anId inAttribute: anAttribute [
+XMLElementIDValidator >> errorInvalidID: anID inAttribute: anAttribute [
 	XMLValidationException
 		formatSignal: 'Invalid element ID value "{1}" in attribute "{2}"'
-		with: anId
+		with: anID
 		with: anAttribute
 ]
 
@@ -41,10 +41,10 @@ XMLElementIDValidator >> errorMultipleIDAttributesForElement: anElement [
 ]
 
 { #category : #private }
-XMLElementIDValidator >> errorUnknownIDReference: anId [
+XMLElementIDValidator >> errorUnknownIDReference: anID [
 	XMLValidationException
 		formatSignal: 'Reference to unknown element ID "{1}"'
-		with: anId
+		with: anID
 ]
 
 { #category : #accessing }
@@ -58,14 +58,14 @@ XMLElementIDValidator >> ids [
 ]
 
 { #category : #validating }
-XMLElementIDValidator >> validateID: anId inAttribute: anAttribute [
-	(XMLWellFormedParserTokenizer isName: anId)
+XMLElementIDValidator >> validateID: anID inAttribute: anAttribute [
+	(XMLWellFormedParserTokenizer isName: anID)
 		ifFalse: [
 			self
-				errorInvalidID: anId
+				errorInvalidID: anID
 				inAttribute: anAttribute].
 	self
-		validateUniquenessOfID: anId
+		validateUniquenessOfID: anID
 		inAttribute: anAttribute.
 ]
 
@@ -83,13 +83,13 @@ XMLElementIDValidator >> validateIDAttribute: anAttribute forElement: anElement 
 ]
 
 { #category : #validating }
-XMLElementIDValidator >> validateIDReference: anId inAttribute: anAttribute [
-	(XMLWellFormedParserTokenizer isName: anId)
+XMLElementIDValidator >> validateIDReference: anID inAttribute: anAttribute [
+	(XMLWellFormedParserTokenizer isName: anID)
 		ifFalse: [
 			self
-				errorInvalidID: anId
+				errorInvalidID: anID
 				inAttribute: anAttribute].
-	self idReferences add: anId.
+	self idReferences add: anID.
 ]
 
 { #category : #validating }
@@ -100,28 +100,28 @@ XMLElementIDValidator >> validateIDReferences [
 ]
 
 { #category : #private }
-XMLElementIDValidator >> validateUniquenessOfID: anId inAttribute: anAttribute [
+XMLElementIDValidator >> validateUniquenessOfID: anID inAttribute: anAttribute [
 	| oldSize |
 
 	"checking size after is faster than includes test"
 	oldSize := self ids size.
 	(self ids
-		add: anId;
+		add: anID;
 		size) > oldSize
 		ifFalse: [
 			self
-				errorDuplicateID: anId
+				errorDuplicateID: anID
 				inAttribute: anAttribute].
 ]
 
 { #category : #validating }
-XMLElementIDValidator >> validateXMLID: anId [
-	(XMLWellFormedParserTokenizer isNCName: anId)
+XMLElementIDValidator >> validateXMLID: anID [
+	(XMLWellFormedParserTokenizer isNCName: anID)
 		ifFalse: [
 			self
-				errorInvalidID: anId
+				errorInvalidID: anID
 				inAttribute: 'xml:id'].
 	self
-		validateUniquenessOfID: anId
+		validateUniquenessOfID: anID
 		inAttribute: 'xml:id'.
 ]

@@ -21,11 +21,11 @@ DTDParsedEntity class >> name: aString replacement: aValueString [
 ]
 
 { #category : #'instance creation' }
-DTDParsedEntity class >> name: aString replacement: aValueString uri: aUri [
+DTDParsedEntity class >> name: aString replacement: aValueString uri: aURI [
 	^ self new
 		setName: aString
 		replacement: aValueString
-		uri: aUri
+		uri: aURI
 ]
 
 { #category : #'instance creation' }
@@ -74,10 +74,10 @@ DTDParsedEntity >> replacement [
 ]
 
 { #category : #initialization }
-DTDParsedEntity >> setName: aName replacement: aReplacement uri: aUri [
+DTDParsedEntity >> setName: aName replacement: aReplacement uri: aURI [
 	name := aName.
 	replacement := aReplacement.
-	uri := aUri.
+	uri := aURI.
 ]
 
 { #category : #accessing }

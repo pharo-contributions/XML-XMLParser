@@ -40,3 +40,8 @@ XMLNotationEnumerationAttributeValidator >> validateAttributeValue: aValue [
 		validateNotationReference: aValue
 		inAttribute: self attribute.
 ]
+
+{ #category : #validating }
+XMLNotationEnumerationAttributeValidator >> validateXMLSpaceAttributeValidator [
+	self errorInvalidXMLSpaceAttributeValidator
+]

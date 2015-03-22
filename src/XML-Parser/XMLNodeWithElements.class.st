@@ -47,11 +47,11 @@ XMLNodeWithElements >> addElementNamed: aName [
 ]
 
 { #category : #adding }
-XMLNodeWithElements >> addElementNamed: aName namespaceURI: aUri [
+XMLNodeWithElements >> addElementNamed: aName namespaceURI: aURI [
 	^ self addNode:
 		(self nodeFactory
 			newElementNamed: aName
-			namespaceURI: aUri)
+			namespaceURI: aURI)
 ]
 
 { #category : #notifying }
@@ -120,10 +120,10 @@ XMLNodeWithElements >> allElementsNamed: aName do: aBlock [
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> allElementsNamed: aName namespaceURI: aUri [
+XMLNodeWithElements >> allElementsNamed: aName namespaceURI: aURI [
 	^ self allElementsSelect: [:each |
 		(each isNamed: aName)
-			and: [each namespaceURI = aUri]]
+			and: [each namespaceURI = aURI]]
 ]
 
 { #category : #enumerating }
@@ -229,10 +229,10 @@ XMLNodeWithElements >> descendentElementsNamed: aName do: aBlock [
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> descendentElementsNamed: aName namespaceURI: aUri [
+XMLNodeWithElements >> descendentElementsNamed: aName namespaceURI: aURI [
 	^ self descendentElementsSelect: [:each |
 		(each isNamed: aName)
-			and: [each namespaceURI = aUri]]
+			and: [each namespaceURI = aURI]]
 ]
 
 { #category : #enumerating }
@@ -262,13 +262,13 @@ XMLNodeWithElements >> elementAt: aName ifAbsent: aBlock [
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementAt: aName namespaceURI: aUri [
-	^ self nodes elementAt: aName namespaceURI: aUri
+XMLNodeWithElements >> elementAt: aName namespaceURI: aURI [
+	^ self nodes elementAt: aName namespaceURI: aURI
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementAt: aName namespaceURI: aUri ifAbsent: aBlock [
-	^ self nodes elementAt: aName namespaceURI: aUri ifAbsent: aBlock
+XMLNodeWithElements >> elementAt: aName namespaceURI: aURI ifAbsent: aBlock [
+	^ self nodes elementAt: aName namespaceURI: aURI ifAbsent: aBlock
 ]
 
 { #category : #accessing }
@@ -297,8 +297,8 @@ XMLNodeWithElements >> elementsAt: aName do: aBlock [
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> elementsAt: aName namespaceURI: aUri [
-	^ self nodes elementsAt: aName namespaceURI: aUri
+XMLNodeWithElements >> elementsAt: aName namespaceURI: aURI [
+	^ self nodes elementsAt: aName namespaceURI: aURI
 ]
 
 { #category : #enumerating }
@@ -339,17 +339,17 @@ XMLNodeWithElements >> findElementNamed: aName [
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> findElementNamed: aName namespaceURI: aUri [
+XMLNodeWithElements >> findElementNamed: aName namespaceURI: aURI [
 	^ self allElementsDetect: [:each |
 		(each isNamed: aName)
-			and: [each namespaceURI = aUri]]
+			and: [each namespaceURI = aURI]]
 ]
 
 { #category : #searching }
-XMLNodeWithElements >> findElementNamed: aName namespaceURI: aUri with: aBlock [
+XMLNodeWithElements >> findElementNamed: aName namespaceURI: aURI with: aBlock [
 	^ self allElementsDetect: [:each |
 		(each isNamed: aName)
-			and: [each namespaceURI = aUri
+			and: [each namespaceURI = aURI
 				and: [aBlock value: each]]]
 ]
 
@@ -452,10 +452,10 @@ XMLNodeWithElements >> newElementNamed: aName [
 ]
 
 { #category : #'instance creation' }
-XMLNodeWithElements >> newElementNamed: aName namespaceURI: aUri [
+XMLNodeWithElements >> newElementNamed: aName namespaceURI: aURI [
 	^ (self nodeFactory
 		newElementNamed: aName
-		namespaceURI: aUri)
+		namespaceURI: aURI)
 		configuration: self configuration
 ]
 

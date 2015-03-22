@@ -14,11 +14,11 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLEntityDeclaration class >> name: aName publicID: aPublicId systemID: aSystemId [
+XMLEntityDeclaration class >> name: aName publicID: aPublicID systemID: aSystemID [
 	^ self new
 		name: aName;
-		publicID: aPublicId;
-		systemID: aSystemId
+		publicID: aPublicID;
+		systemID: aSystemID
 ]
 
 { #category : #'instance creation' }
@@ -49,8 +49,8 @@ XMLEntityDeclaration >> publicID [
 ]
 
 { #category : #accessing }
-XMLEntityDeclaration >> publicID: aPublicId [
-	publicId := aPublicId
+XMLEntityDeclaration >> publicID: aPublicID [
+	publicId := aPublicID
 ]
 
 { #category : #accessing }
@@ -69,6 +69,6 @@ XMLEntityDeclaration >> systemID [
 ]
 
 { #category : #accessing }
-XMLEntityDeclaration >> systemID: aSystemId [
-	systemId := aSystemId
+XMLEntityDeclaration >> systemID: aSystemID [
+	systemId := aSystemID
 ]

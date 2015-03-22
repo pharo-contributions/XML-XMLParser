@@ -96,19 +96,19 @@ XMLAttributeList >> attributeNodeAt: aName ifAbsent: aBlock [
 ]
 
 { #category : #accessing }
-XMLAttributeList >> attributeNodeAt: aLocalName namespaceURI: aUri [
+XMLAttributeList >> attributeNodeAt: aLocalName namespaceURI: aURI [
 	^ self
 		attributeNodeAt: aLocalName
-		namespaceURI: aUri
+		namespaceURI: aURI
 		ifAbsent: [self defaultValue]
 ]
 
 { #category : #accessing }
-XMLAttributeList >> attributeNodeAt: aLocalName namespaceURI: aUri ifAbsent: aBlock [
+XMLAttributeList >> attributeNodeAt: aLocalName namespaceURI: aURI ifAbsent: aBlock [
 	^ self
 		detect: [:each |
 			each name = aLocalName
-				and: [each namespaceURI = aUri]]
+				and: [each namespaceURI = aURI]]
 		ifNone: aBlock
 ]
 

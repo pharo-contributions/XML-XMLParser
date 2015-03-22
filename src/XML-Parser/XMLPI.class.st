@@ -13,10 +13,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLPI class >> target: targetName data: aString [
+XMLPI class >> target: aTargetString data: aDataString [
 	^ self new
-		target: targetName;
-		data: aString
+		target: aTargetString;
+		data: aDataString
 ]
 
 { #category : #accessing }

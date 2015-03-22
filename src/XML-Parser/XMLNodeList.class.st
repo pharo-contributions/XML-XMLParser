@@ -75,17 +75,17 @@ XMLNodeList >> elementAt: aName ifAbsent: aBlock [
 ]
 
 { #category : #accessing }
-XMLNodeList >> elementAt: aName namespaceURI: aUri [
+XMLNodeList >> elementAt: aName namespaceURI: aURI [
 	^ self
 		elementAt: aName
-		namespaceURI: aUri
+		namespaceURI: aURI
 		ifAbsent: [self defaultValue]
 ]
 
 { #category : #accessing }
-XMLNodeList >> elementAt: aName namespaceURI: aUri ifAbsent: aBlock [
+XMLNodeList >> elementAt: aName namespaceURI: aURI ifAbsent: aBlock [
 	^ (self elementsAt: aName)
-		detect: [:each | each namespaceURI = aUri]
+		detect: [:each | each namespaceURI = aURI]
 		ifNone: aBlock
 ]
 
@@ -122,8 +122,8 @@ XMLNodeList >> elementsAt: aName do: aBlock [
 ]
 
 { #category : #accessing }
-XMLNodeList >> elementsAt: aName namespaceURI: aUri [
-	^ (self elementsAt: aName) select: [:each | each namespaceURI = aUri]
+XMLNodeList >> elementsAt: aName namespaceURI: aURI [
+	^ (self elementsAt: aName) select: [:each | each namespaceURI = aURI]
 ]
 
 { #category : #enumerating }

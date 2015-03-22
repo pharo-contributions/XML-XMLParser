@@ -73,23 +73,23 @@ XMLDOMParser >> elementDeclaration: aName contentModel: aContentModel [
 			contentModel: aContentModel)
 ]
 
-{ #category : #'handling - declarations' }
+{ #category : #'handling - lexical' }
 XMLDOMParser >> endDTD [
 	self popNode
 ]
 
 { #category : #'handling - content' }
-XMLDOMParser >> endElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName [
+XMLDOMParser >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName [
 	self popNode
 ]
 
 { #category : #'handling - declarations' }
-XMLDOMParser >> generalEntityDeclaration: aName publicID: aPublicId systemID: aSystemId ndata: aNotation [
+XMLDOMParser >> generalEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotation [
 	self topNode addNode:
 		(self nodeFactory generalEntityDeclarationClass
 			name: aName
-			publicID: aPublicId
-			systemID: aSystemId
+			publicID: aPublicID
+			systemID: aSystemID
 			ndata: aNotation)
 ]
 
@@ -133,30 +133,30 @@ XMLDOMParser >> nodeStack [
 ]
 
 { #category : #'handling - declarations' }
-XMLDOMParser >> notationDeclaration: aName publicID: aPublicId systemID: aSystemId [
+XMLDOMParser >> notationDeclaration: aName publicID: aPublicID systemID: aSystemID [
 	self topNode addNode:
 		(self nodeFactory notationDeclarationClass
 			name: aName
-			publicID: aPublicId
-			systemID: aSystemId)
+			publicID: aPublicID
+			systemID: aSystemID)
 ]
 
 { #category : #initialization }
-XMLDOMParser >> on: aStringOrStream documentURI: aUri [
+XMLDOMParser >> on: aStringOrStream documentURI: aURI [
 	super
 		on: aStringOrStream
-		documentURI: aUri.
+		documentURI: aURI.
 
 	nodeStack := OrderedCollection new: 10.
 ]
 
 { #category : #'handling - declarations' }
-XMLDOMParser >> parameterEntityDeclaration: aName publicID: aPublicId systemID: aSystemId [
+XMLDOMParser >> parameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
 	self topNode addNode:
 		(self nodeFactory parameterEntityDeclarationClass
 			name: aName
-			publicID: aPublicId
-			systemID: aSystemId)
+			publicID: aPublicID
+			systemID: aSystemID)
 ]
 
 { #category : #'handling - declarations' }
@@ -227,10 +227,10 @@ XMLDOMParser >> preservesIgnorableWhitespace: aBoolean [
 ]
 
 { #category : #'handling - content' }
-XMLDOMParser >> processingInstruction: aTarget data: aDataString [
+XMLDOMParser >> processingInstruction: aTargetString data: aDataString [
 	self topNode addNode:
 		(self nodeFactory newPI
-			target: aTarget;
+			target: aTargetString;
 			data: aDataString)
 ]
 
@@ -254,15 +254,15 @@ XMLDOMParser >> pushNode: aNode [
 
 ]
 
-{ #category : #'handling - declarations' }
-XMLDOMParser >> startDTD: aRootElementName publicID: aPublicId systemID: aSystemId [
+{ #category : #'handling - lexical' }
+XMLDOMParser >> startDTD: aRootElementName publicID: aPublicID systemID: aSystemID [
 	| doctypeDeclaration |
 
 	doctypeDeclaration := 
 		self nodeFactory doctypeDeclarationClass
 			root: aRootElementName
-			publicID: aPublicId
-			systemID: aSystemId.
+			publicID: aPublicID
+			systemID: aSystemID.
 	self pushNode: doctypeDeclaration.
 	self document doctypeDeclaration: doctypeDeclaration.
 ]
@@ -279,12 +279,12 @@ XMLDOMParser >> startDocument [
 ]
 
 { #category : #'handling - content' }
-XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName attributes: aDictionary [
+XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: aDictionary [
 	self pushElement:
 		((self nodeFactory
 			classForElement: aQualifiedName
 			prefix: aPrefix
-			uri: aUri
+			uri: aURI
 			localName: aLocalName) new
 				setQualifiedName: aQualifiedName
 				localName: aLocalName
