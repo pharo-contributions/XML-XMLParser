@@ -344,6 +344,16 @@ XMLParserTest >> testAttributeValueWithAngleBrackets [
 ]
 
 { #category : #tests }
+XMLParserTest >> testComments [
+	self
+		shouldnt: [SAXHandler parse: '<test><!-- <comment/> --></test>']
+		raise: XMLWellFormednessException.
+	self
+		should: [SAXHandler parse: '<test><!-- <comment/> -- --></test>']
+		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
 XMLParserTest >> testDeclaringNamespaces [
 	self
 		shouldnt: [SAXHandler parse: '<prefix:root prefix:name="test" xmlns:prefix="NS"/>']

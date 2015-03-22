@@ -44,12 +44,12 @@ XMLEncodingTest >> stringFromValues: aCollection [
 
 { #category : #tests }
 XMLEncodingTest >> testBinaryDecoding [
-	| xml binaryXml |
+	| xml xmlInBinary |
 	
 	xml := XMLParserTest addressBookXML.
-	binaryXml := xml asArray collect: [:each | each asciiValue].
+	xmlInBinary := xml asArray collect: [:each | each asciiValue].
 	self assert:
-		(XMLDOMParser parse: binaryXml) printString =
+		(XMLDOMParser parse: xmlInBinary) printString =
 			(XMLDOMParser parse: xml) printString.
 ]
 
