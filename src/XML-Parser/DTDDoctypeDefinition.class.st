@@ -19,36 +19,36 @@ Class {
 }
 
 { #category : #adding }
-DTDDoctypeDefinition >> addExternalGeneralEntity: aName resolver: aResolver uri: aSystemUri from: aDocumentOrEntityUri [
+DTDDoctypeDefinition >> addExternalGeneralEntity: aName resolver: aResolver uri: aSystemURI from: aDocumentOrEntityURI [
 	self generalEntities
 		at: aName
 		ifAbsentPut: [
 			aResolver
 				resolveExternalGeneralEntity: aName
-				uri: aSystemUri
-				from: aDocumentOrEntityUri]
+				uri: aSystemURI
+				from: aDocumentOrEntityURI]
 ]
 
 { #category : #adding }
-DTDDoctypeDefinition >> addExternalParameterEntity: aName resolver: aResolver uri: aSystemUri from: aDocumentOrEntityUri [
+DTDDoctypeDefinition >> addExternalParameterEntity: aName resolver: aResolver uri: aSystemURI from: aDocumentOrEntityURI [
 	self parameterEntities
 		at: aName
 		ifAbsentPut: [
 			aResolver
 				resolveExternalParameterEntity: aName
-				uri: aSystemUri
-				from: aDocumentOrEntityUri]
+				uri: aSystemURI
+				from: aDocumentOrEntityURI]
 ]
 
 { #category : #adding }
-DTDDoctypeDefinition >> addGeneralEntity: aName replacement: aReplacement from: aDocumentOrEntityUri [
+DTDDoctypeDefinition >> addGeneralEntity: aName replacement: aReplacement from: aDocumentOrEntityURI [
 	self generalEntities
 		at: aName
 		ifAbsentPut: [
 			DTDGeneralEntity 
 				name: aName
 				replacement: aReplacement
-				uri: aDocumentOrEntityUri]
+				uri: aDocumentOrEntityURI]
 ]
 
 { #category : #adding }
@@ -57,14 +57,14 @@ DTDDoctypeDefinition >> addNotation: aName [
 ]
 
 { #category : #adding }
-DTDDoctypeDefinition >> addParameterEntity: aName replacement: aReplacement from: aDocumentOrEntityUri [
+DTDDoctypeDefinition >> addParameterEntity: aName replacement: aReplacement from: aDocumentOrEntityURI [
 	self parameterEntities
 		at: aName
 		ifAbsentPut: [
 			DTDParameterEntity
 				name: aName
 				replacement: aReplacement
-				uri: aDocumentOrEntityUri]
+				uri: aDocumentOrEntityURI]
 ]
 
 { #category : #adding }
