@@ -84,14 +84,16 @@ XMLExternalEntityLimitsTest >> testExternalSubsetReadLimit [
 	self
 		shouldnt: [
 			(parser := SAXHandler on: xml)
-				externalSubsetReadLimit: externalSubset size;
+				externalEntityResolver externalSubsetReadLimit: externalSubset size.
+			parser
 				resolvesExternalEntities: true;
 				parseDocument]
 		raise: XMLLimitException.
 	self
 		should: [
 			(parser := SAXHandler on: xml)
-				externalSubsetReadLimit: externalSubset size - 1;
+				externalEntityResolver externalSubsetReadLimit: externalSubset size - 1.
+			parser
 				resolvesExternalEntities: true;
 				parseDocument]
 		raise: XMLLimitException.
