@@ -203,7 +203,6 @@ SAXParserDriver >> handleEndDTD [
 		ifTrue: [self parseExternalSubset: self externalSubsetURI].
 
 	self saxHandler
-		endInternalSubset;
 		doctypeDefinition: self doctypeDefinition;
 		endDTD.
 ]
@@ -380,6 +379,11 @@ SAXParserDriver >> handleReservedAttributes: anAttributeDictionary [
 ]
 
 { #category : #handling }
+SAXParserDriver >> handleStartContent [
+	self saxHandler startContent
+]
+
+{ #category : #handling }
 SAXParserDriver >> handleStartContentEntityReplacement: aName [
 	self saxHandler startEntity: aName
 ]
@@ -392,8 +396,7 @@ SAXParserDriver >> handleStartDTD: aRoot publicID: aPublicID systemID: aSystemID
 	self saxHandler
 		startDTD: aRoot
 		publicID: aPublicID
-		systemID: aSystemID;
-		startInternalSubset.
+		systemID: aSystemID.
 ]
 
 { #category : #handling }

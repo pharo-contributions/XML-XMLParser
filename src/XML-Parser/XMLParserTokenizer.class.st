@@ -261,6 +261,12 @@ XMLParserTokenizer >> nextPubidLiteral [
 ]
 
 { #category : #tokenizing }
+XMLParserTokenizer >> nextStartContent [
+	context := context contentContext.
+	driver handleStartContent.
+]
+
+{ #category : #tokenizing }
 XMLParserTokenizer >> nextStartDocument [
 	context := driver initialContext ifNil: [XMLPrologContext new].
 	context isPrologContext

@@ -109,6 +109,10 @@ XMLParserDriver >> handleParseError: anErrorString [
 ]
 
 { #category : #handling }
+XMLParserDriver >> handleStartContent [
+]
+
+{ #category : #handling }
 XMLParserDriver >> handleStartContentEntityReplacement: aName [
 ]
 

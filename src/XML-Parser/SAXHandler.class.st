@@ -41,7 +41,7 @@ Class {
 		'input',
 		'documentURI',
 		'configuration',
-		'isInInternalSubset',
+		'isInContent',
 		'isInCDataSection'
 	],
 	#category : #'XML-Parser'
@@ -256,11 +256,6 @@ SAXHandler >> endEntity: anEntityName [
 	endEntity(java.lang.String name)."
 ]
 
-{ #category : #private }
-SAXHandler >> endInternalSubset [
-	isInInternalSubset := false
-]
-
 { #category : #'handling - content' }
 SAXHandler >> endPrefixMapping: aPrefix [
 	"This call corresonds to the Java SAX call
@@ -312,8 +307,8 @@ SAXHandler >> isInCDataSection [
 ]
 
 { #category : #testing }
-SAXHandler >> isInInternalSubset [
-	^ isInInternalSubset
+SAXHandler >> isInContent [
+	^ isInContent
 ]
 
 { #category : #configuring }
@@ -362,7 +357,7 @@ SAXHandler >> on: aStringOrStream documentURI: aURI [
 	documentURI := aURI.
 	configuration
 		ifNil: [self configuration: self configurationClass new].
-	isInInternalSubset := false.
+	isInContent := false.
 	isInCDataSection := false.
 ]
 
@@ -515,6 +510,11 @@ SAXHandler >> startCDataSection [
 	isInCDataSection := true
 ]
 
+{ #category : #private }
+SAXHandler >> startContent [
+	isInContent := true
+]
+
 { #category : #'handling - lexical' }
 SAXHandler >> startDTD: aRootElementName publicID: aPublicID systemID: aSystemID [
 	"This call corresponds to the Java SAX ext call
@@ -554,11 +554,6 @@ SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: 
 SAXHandler >> startEntity: anEntityName [
 	"This call corresponds to the Java SAX ext call
 	startEntity(java.lang.String name)."
-]
-
-{ #category : #private }
-SAXHandler >> startInternalSubset [
-	isInInternalSubset := true
 ]
 
 { #category : #'handling - content' }
