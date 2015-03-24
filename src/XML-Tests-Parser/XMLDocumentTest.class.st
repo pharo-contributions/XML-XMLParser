@@ -61,8 +61,8 @@ XMLDocumentTest >> testDocument [
 { #category : #tests }
 XMLDocumentTest >> testEncoding [
 	self
-		assert: self nodeClass new encoding = 'UTF-8';
-		assert: ((self nodeClass new encoding: 'UTF-16') encoding) = 'UTF-16'.
+		assert: self nodeClass new encoding isEmpty;
+		assert: ((self nodeClass new encoding: 'UTF-8') encoding) = 'UTF-8'.
 ]
 
 { #category : #tests }
@@ -79,15 +79,26 @@ XMLDocumentTest >> testIsStandalone [
 
 { #category : #tests }
 XMLDocumentTest >> testRoot [
-	| nodeWithElements |
+	| nodeWithElements firstNode newRoot |
 
 	self assert: self nodeClass new root isNil.
+
 	nodeWithElements := self newNodeWithElements.
+	firstNode := XMLComment string: 'first'.
+	nodeWithElements addNodeFirst: firstNode.
 	self assert: (nodeWithElements root isElementNamed: 'root').
+
+	newRoot := XMLElement named: 'new-root'.
+	nodeWithElements root: newRoot.
+	self
+		assert: nodeWithElements firstNode == firstNode;
+		assert: nodeWithElements root == newRoot.
+
 	nodeWithElements removeNodes.
 	self assert: nodeWithElements root isNil.
-	nodeWithElements addNode: (XMLElement named: 'new-root').
-	self assert: (nodeWithElements root isElementNamed: 'new-root').
+
+	newRoot := XMLElement named: 'root'.
+	self assert: (self nodeClass root: newRoot) root == newRoot.
 ]
 
 { #category : #tests }
