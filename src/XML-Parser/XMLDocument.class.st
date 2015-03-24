@@ -14,6 +14,11 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
+{ #category : #'instance creation' }
+XMLDocument class >> root: aRoot [
+	^ self new root: aRoot
+]
+
 { #category : #accessing }
 XMLDocument >> doctypeDeclaration [
 	^ doctypeDeclaration
@@ -41,7 +46,7 @@ XMLDocument >> document [
 
 { #category : #accessing }
 XMLDocument >> encoding [	
-	^ encoding ifNil: [encoding := 'UTF-8']
+	^ encoding ifNil: [encoding := '']
 ]
 
 { #category : #accessing }
@@ -79,14 +84,16 @@ XMLDocument >> postCopy [
 
 { #category : #accessing }
 XMLDocument >> root [
+	"returns root element or nil"
 	^ self firstElement
 ]
 
 { #category : #accessing }
 XMLDocument >> root: anElement [
-	self
-		removeNodes: self elements;
-		addNode: anElement
+	"replaces root element with new element"
+	self hasChildren
+		ifTrue: [self removeNodes: self elements].
+	self addNode: anElement.
 ]
 
 { #category : #accessing }
@@ -101,11 +108,12 @@ XMLDocument >> version: aVersionNumber [
 
 { #category : #printing }
 XMLDocument >> writeXMLOn: aWriter [
-	self version ifNotNil: [
-		aWriter xml
-			version: self version;
-			encoding: self encoding;
-			standalone: self isStandalone].
+	self version
+		ifNotNil: [
+			aWriter xml
+				version: self version;
+				encoding: self encoding;
+				standalone: self isStandalone].
 	self doctypeDeclaration
 		ifNotNil: [self doctypeDeclaration writeXMLOn: aWriter].
 	
