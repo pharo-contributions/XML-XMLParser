@@ -5,8 +5,8 @@ Class {
 	#name : #XMLElementDeclaration,
 	#superclass : #XMLDeclarationNode,
 	#instVars : [
-		'contentModel',
-		'element'
+		'element',
+		'contentModel'
 	],
 	#category : #'XML-Parser-DOM'
 }

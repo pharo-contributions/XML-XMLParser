@@ -7,8 +7,8 @@ Class {
 	#instVars : [
 		'name',
 		'replacement',
-		'publicId',
-		'systemId'
+		'publicID',
+		'systemID'
 	],
 	#category : #'XML-Parser-DOM'
 }
@@ -45,12 +45,12 @@ XMLEntityDeclaration >> name: aName [
 
 { #category : #accessing }
 XMLEntityDeclaration >> publicID [
-	^ publicId ifNil: [publicId := '']
+	^ publicID ifNil: [publicID := '']
 ]
 
 { #category : #accessing }
 XMLEntityDeclaration >> publicID: aPublicID [
-	publicId := aPublicID
+	publicID := aPublicID
 ]
 
 { #category : #accessing }
@@ -65,10 +65,10 @@ XMLEntityDeclaration >> replacement: aReplacement [
 
 { #category : #accessing }
 XMLEntityDeclaration >> systemID [
-	^ systemId ifNil: [systemId := '']
+	^ systemID ifNil: [systemID := '']
 ]
 
 { #category : #accessing }
 XMLEntityDeclaration >> systemID: aSystemID [
-	systemId := aSystemID
+	systemID := aSystemID
 ]

@@ -6,8 +6,8 @@ Class {
 	#superclass : #XMLNodeWithChildren,
 	#instVars : [
 		'root',
-		'publicId',
-		'systemId'
+		'publicID',
+		'systemID'
 	],
 	#category : #'XML-Parser-DOM'
 }
@@ -32,12 +32,12 @@ XMLDoctypeDeclaration >> nodeListClass [
 
 { #category : #accessing }
 XMLDoctypeDeclaration >> publicID [
-	^ publicId ifNil: [publicId := '']
+	^ publicID ifNil: [publicID := '']
 ]
 
 { #category : #accessing }
 XMLDoctypeDeclaration >> publicID: aPublicID [
-	publicId := aPublicID
+	publicID := aPublicID
 ]
 
 { #category : #accessing }
@@ -52,12 +52,12 @@ XMLDoctypeDeclaration >> root: aRootElementName [
 
 { #category : #accessing }
 XMLDoctypeDeclaration >> systemID [
-	^ systemId ifNil: [systemId := '']
+	^ systemID ifNil: [systemID := '']
 ]
 
 { #category : #accessing }
 XMLDoctypeDeclaration >> systemID: aSystemID [
-	systemId := aSystemID
+	systemID := aSystemID
 ]
 
 { #category : #printing }

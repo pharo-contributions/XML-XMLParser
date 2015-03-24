@@ -7,8 +7,8 @@ Class {
 	#superclass : #XMLDeclarationNode,
 	#instVars : [
 		'name',
-		'publicId',
-		'systemId'
+		'publicID',
+		'systemID'
 	],
 	#category : #'XML-Parser-DOM'
 }
@@ -33,22 +33,22 @@ XMLNotationDeclaration >> name: aName [
 
 { #category : #accessing }
 XMLNotationDeclaration >> publicID [
-	^ publicId ifNil: [publicId := '']
+	^ publicID ifNil: [publicID := '']
 ]
 
 { #category : #accessing }
 XMLNotationDeclaration >> publicID: aPublicID [
-	publicId := aPublicID
+	publicID := aPublicID
 ]
 
 { #category : #accessing }
 XMLNotationDeclaration >> systemID [
-	^ systemId ifNil: [systemId := '']
+	^ systemID ifNil: [systemID := '']
 ]
 
 { #category : #accessing }
 XMLNotationDeclaration >> systemID: aSystemID [
-	systemId := aSystemID
+	systemID := aSystemID
 ]
 
 { #category : #printing }

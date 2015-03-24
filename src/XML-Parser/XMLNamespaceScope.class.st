@@ -68,7 +68,7 @@ XMLNamespaceScope >> errorAttribute: anAttribute aliasesNamespace: aNamespace [
 ]
 
 { #category : #private }
-XMLNamespaceScope >> errorCannotAliasXmlOrXmlnsURIWithPrefix: aPrefix [
+XMLNamespaceScope >> errorCannotAliasXMLOrXMLNSWithPrefix: aPrefix [
 	aPrefix
 		ifEmpty: [
 			XMLNamespaceException signal:
@@ -86,18 +86,18 @@ XMLNamespaceScope >> errorCannotMapPrefixToEmptyURI [
 ]
 
 { #category : #private }
-XMLNamespaceScope >> errorCannotMapXmlnsPrefix [
+XMLNamespaceScope >> errorCannotMapXMLNSPrefix [
 	XMLNamespaceException signal:
 		'Cannot map "xmlns" prefix to any namespace, even the current "xmlns" namespace'
 ]
 
 { #category : #private }
-XMLNamespaceScope >> errorCannotRemapXmlPrefix [
+XMLNamespaceScope >> errorCannotRemapXMLPrefix [
 	XMLNamespaceException signal: 'Cannot map the "xml" prefix to a new namespace URI'
 ]
 
 { #category : #private }
-XMLNamespaceScope >> errorCannotUseXmlnsPrefix [	
+XMLNamespaceScope >> errorCannotUseXMLNSPrefix [	
 	XMLNamespaceException signal: 'Cannot use reserved "xmlns" prefix for elements or attributes'
 ]
 
@@ -304,7 +304,7 @@ XMLNamespaceScope >> validateAndResolvePrefix: aPrefix [
 				ifTrue: [self class xmlNamespaceURI]
 				ifFalse: [					
 					(aPrefix = 'xmlns'
-						ifTrue: [self errorCannotUseXmlnsPrefix]
+						ifTrue: [self errorCannotUseXMLNSPrefix]
 						ifFalse: [self errorUnmappedPrefix: aPrefix])]]
 ]
 
@@ -343,19 +343,19 @@ XMLNamespaceScope >> validatePrefix: aPrefix beforeMappingTo: aURI [
 	aPrefix = 'xml'
 		ifTrue: [
 			aURI = self class xmlNamespaceURI
-				ifFalse: [self errorCannotRemapXmlPrefix]]
+				ifFalse: [self errorCannotRemapXMLPrefix]]
 		ifFalse: [
 			aPrefix isEmpty "avoid ifEmpty: overhead"
 				ifFalse: [
 					aPrefix = 'xmlns'
-						ifTrue: [self errorCannotMapXmlnsPrefix].
+						ifTrue: [self errorCannotMapXMLNSPrefix].
 					(aPrefix indexOf: $:) > 0 
 						ifTrue: [self errorInvalidPrefix: aPrefix].
 					aURI isEmpty
 						ifTrue: [self errorCannotMapPrefixToEmptyURI]].
 			(aURI = self class xmlNamespaceURI
 				or: [aURI = self class xmlnsNamespaceURI])
-				ifTrue: [self errorCannotAliasXmlOrXmlnsURIWithPrefix: aPrefix]]
+				ifTrue: [self errorCannotAliasXMLOrXMLNSWithPrefix: aPrefix]]
 ]
 
 { #category : #private }
