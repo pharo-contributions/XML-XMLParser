@@ -62,9 +62,7 @@ ConfigurationOfXMLParser class >> catalogDescription [
 { #category : #catalog }
 ConfigurationOfXMLParser class >> catalogKeyClassesAndExample [
 
-^ 'The main classes are ==SAXHandler== for streaming nodes or ==XMLDOMParser== for getting the complete tree in memory.
-
-==XMLNode== and its subclasses implement a DOM API. Read the class comments for more information.
+^ 'The main classes are ==SAXHandler==, =XMLDOMParser==, and ==XMLNode== and its subclasses. Read the class comments for more information.
 
 Validation and namespace checking are enabled by default, but not resolution of external entities.
 
@@ -385,6 +383,20 @@ ConfigurationOfXMLParser >> baseline213: spec [
                     with: 'XML-Parser-GemstoneCompatibility-monty.7'. ].
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline216: spec [ 
+        <version: '2.1.6-baseline' imports: #('1.0-baseline')>
+        
+        spec for: #common do: [
+                spec blessing: #baseline.
+                spec project: 'XMLWriter' with: '2.5.6'. ].
+
+        spec for: #gemstone do: [
+                spec
+                    package: 'XML-Parser-GemstoneCompatibility'
+                    with: 'XML-Parser-GemstoneCompatibility-monty.8'. ].
+]
+
 { #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
@@ -410,7 +422,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '2.1.5'.
+	spec for: #'common' version: '2.1.6'.
 	spec for: #'pharo1.x' version: '1.2'
 
 ]
@@ -1649,6 +1661,17 @@ ConfigurationOfXMLParser >> version215: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.282'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.105'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version216: spec [ 
+        <version: '2.1.6' imports: #('2.1.6-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.283'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.105'.
                 ].
 ]
