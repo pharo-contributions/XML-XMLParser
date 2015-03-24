@@ -30,9 +30,9 @@ CharacterCollection >> asXMLURI [
 ]
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
-CharacterCollection >> expandWithNamespaceURI: aNamespaceUri [
-	aNamespaceUri size > 0
-		ifTrue: [^ 'Q{', aNamespaceUri, '}', self]
+CharacterCollection >> expandWithNamespaceURI: aURI [
+	aURI size > 0
+		ifTrue: [^ 'Q{', aURI, '}', self]
 		ifFalse: [^ self]
 ]
 
