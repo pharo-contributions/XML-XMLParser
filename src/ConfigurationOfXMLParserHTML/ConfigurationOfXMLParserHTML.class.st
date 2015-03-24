@@ -33,6 +33,32 @@ ConfigurationOfXMLParserHTML class >> baseConfigurationClassIfAbsent: aBlock [
 
 ]
 
+{ #category : #catalog }
+ConfigurationOfXMLParserHTML class >> catalogDescription [
+
+	^ 'XMLParserHTML provides SAX and DOM parsers for HTML that convert possibly malformed HTML into well-formed XML.'
+
+]
+
+{ #category : #catalog }
+ConfigurationOfXMLParserHTML class >> catalogKeyClassesAndExample [
+
+	^ 'The main classes are ==SAXHTMLHandler== and ==XMLHTMLParser== (DOM).
+	
+	Here is an example:
+[[[ 
+	"get all links from the Pharo homepage"
+	((XMLHTMLParser parseURL: ''http://pharo.org'') allElementsNamed: ''a'')
+		collect: [:each | each attributeAt: ''href''].
+]]]'
+]
+
+{ #category : #catalog }
+ConfigurationOfXMLParserHTML class >> catalogKeywords [
+
+	^ #( XML SAX DOM HTML parser web )
+]
+
 { #category : #private }
 ConfigurationOfXMLParserHTML class >> ensureMetacello [
 
@@ -170,7 +196,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.1.2'.
+	spec for: #'common' version: '1.1.3'.
 
 ]
 
@@ -314,5 +340,16 @@ ConfigurationOfXMLParserHTML >> version112: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.20'.
 			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.8'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version113: spec [ 
+        <version: '1.1.3' imports: #('1.0.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.21'.
+			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.9'.
                 ].
 ]
