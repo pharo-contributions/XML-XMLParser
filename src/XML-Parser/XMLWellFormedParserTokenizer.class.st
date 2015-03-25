@@ -316,6 +316,13 @@ XMLWellFormedParserTokenizer >> errorExpectedSectionTerminator [
 ]
 
 { #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedTerminator: aTerminatorCharacter butGot: aReceivedCharacer [
+	self
+		errorExpected: '"', aTerminatorCharacter asString, '" terminator'
+		butGot: aReceivedCharacer
+]
+
+{ #category : #errors }
 XMLWellFormedParserTokenizer >> errorInternalSubsetIncludeOrIgnoreSection [
 	self parseError: 'Cannot have <![INCLUDE[...]> or <![IGNORE[...]> sections in internal subset'
 ]
@@ -415,7 +422,7 @@ XMLWellFormedParserTokenizer >> expectTerminator: aCharacter [
 	(nextChar := streamReader next) == aCharacter
 		ifFalse: [
 			self
-				errorExpectedLiteral: aCharacter
+				errorExpectedTerminator: aCharacter
 				butGot: nextChar].
 	^ nextChar.
 ]
