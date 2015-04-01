@@ -110,7 +110,7 @@ XMLNode >> canonicallyPrinted [
 
 { #category : #accessing }
 XMLNode >> configuration [
-	^ self document ifNotNil: [:node | node configuration]
+	^ self parent ifNotNil: [:node | node configuration]
 ]
 
 { #category : #accessing }
