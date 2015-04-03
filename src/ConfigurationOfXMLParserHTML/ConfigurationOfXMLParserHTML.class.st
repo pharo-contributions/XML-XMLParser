@@ -56,7 +56,7 @@ ConfigurationOfXMLParserHTML class >> catalogKeyClassesAndExample [
 { #category : #catalog }
 ConfigurationOfXMLParserHTML class >> catalogKeywords [
 
-	^ #( XML SAX DOM HTML parser web )
+	^ #( HTML SAX DOM parser web )
 ]
 
 { #category : #private }
@@ -161,7 +161,29 @@ ConfigurationOfXMLParserHTML >> baseline100: spec [
 			spec
 				group: 'default' with: #('Core' 'Tests');
 				group: 'Core' with: #('XML-Parser-HTML-Core');
-				group: 'Tests' with: #('XML-Parser-HTML-Tests')]
+				group: 'Tests' with: #('XML-Parser-HTML-Tests')].
+
+	"load gemstone methods"
+	spec
+		for: #'gemstone'
+		do: [
+			spec
+				package: 'XML-Parser-HTML-Core'
+				with: [ spec includes: 'XML-Parser-HTML-GemstoneCompatibility' ].
+			spec
+				package: 'XML-Parser-HTML-GemstoneCompatibility'
+				with: [ spec requires: 'XML-Parser-HTML-Core' ]. ].
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline114: spec [
+	<version: '1.1.4-baseline' imports: #('1.0.0-baseline')>
+
+		spec for: #gemstone do: [
+			spec blessing: #baseline.
+			spec
+				package: 'XML-Parser-HTML-GemstoneCompatibility'
+				with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'. ].
 ]
 
 { #category : #accessing }
@@ -176,7 +198,7 @@ ConfigurationOfXMLParserHTML >> customProjectAttributes [
 ConfigurationOfXMLParserHTML >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.0.0-baseline'.
+	spec for: #'common' version: '1.1.4-baseline'.
 ]
 
 { #category : #accessing }
@@ -196,7 +218,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.1.3'.
+	spec for: #'common' version: '1.1.4'.
 
 ]
 
@@ -351,5 +373,16 @@ ConfigurationOfXMLParserHTML >> version113: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.21'.
 			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.9'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version114: spec [ 
+        <version: '1.1.4' imports: #('1.1.4-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.22'.
+			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.10'.
                 ].
 ]
