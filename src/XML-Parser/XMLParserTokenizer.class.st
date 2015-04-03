@@ -103,7 +103,7 @@ XMLParserTokenizer >> expectNextAll: aString [
 ]
 
 { #category : #'tokenizing - expecting' }
-XMLParserTokenizer >> expectTerminator: aCharacter [
+XMLParserTokenizer >> expectTerminator [
 	self subclassResponsibility
 ]
 
@@ -159,7 +159,7 @@ XMLParserTokenizer >> nextDoctypeDeclaration [
 { #category : #'tokenizing - dtd' }
 XMLParserTokenizer >> nextEndDoctypeDeclaration [
 	streamReader skipSeparators.
-	self expectTerminator: $>.
+	self expectTerminator.
 	context := context prologContext.
 
 	driver handleEndDTD.
@@ -176,9 +176,9 @@ XMLParserTokenizer >> nextEndDocument [
 
 { #category : #'tokenizing - dtd' }
 XMLParserTokenizer >> nextEndInternalSubset [
-	self
-		expectTerminator: $];
-		nextEndDoctypeDeclaration
+	"skip ]"
+	streamReader next.
+	self nextEndDoctypeDeclaration.
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -289,7 +289,8 @@ XMLParserTokenizer >> nextSubsetToken [
 		ifTrue: [
 			streamReader next.
 			^ self nextParameterEntityReference].
-	(context isInternalSubsetContext and: [streamReader peek == $]])
+	(context isInternalSubsetContext
+		and: [streamReader peek == $]])
 		ifTrue: [^ self nextEndInternalSubset].
 
 	self nextSubsetMarkupToken.
@@ -328,7 +329,7 @@ XMLParserTokenizer >> nextXMLDeclaration [
 	streamReader skipSeparators.
 	self
 		expectNext: $?;
-		expectTerminator: $>.
+		expectTerminator.
 
 	driver
 		handleXMLVersion: version
@@ -379,7 +380,7 @@ XMLParserTokenizer >> nextXMLTextDeclaration [
 			streamReader skipSeparators.
 			self
 				expectNext: $?;
-				expectTerminator: $>].
+				expectTerminator].
 	context := context previousContext.
 ]
 

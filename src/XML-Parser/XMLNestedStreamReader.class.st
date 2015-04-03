@@ -211,20 +211,24 @@ XMLNestedStreamReader >> nextInteger [
 
 { #category : #accessing }
 XMLNestedStreamReader >> nextMatchAll: aString [
-	| nextChar  |
+	| nextChar oldCurrentLineNumber oldReadLimit |
 
 	"inlined peek"
 	(peekChar ifNil: [peekChar := self basicNext]) == (aString at: 1)
 		ifFalse: [^ false].
-	self next.
 
-	"we unrolled the first iteration with the above #peek"
+	oldCurrentLineNumber := currentLineNumber.
+	oldReadLimit := readLimit.
+	self next.
+	"we unrolled the first iteration with the above inlined peek"
 	2 to: aString size do: [:i |
 		(nextChar := self peek) == (aString at: i)
+			ifTrue: [self next]
 			ifFalse: [
 				self pushBack: (aString copyFrom: 1 to: i -1).
-				^ false].
-			self next].
+				currentLineNumber := oldCurrentLineNumber.
+				readLimit := oldReadLimit.
+				^ false]].
 	^ true.
 ]
 
@@ -301,6 +305,11 @@ XMLNestedStreamReader >> pushBackStream: aStream onClose: aBlock [
 
 	self stream: aStream.
 	onClose := aBlock.
+]
+
+{ #category : #accessing }
+XMLNestedStreamReader >> readLimit [
+	^ readLimit
 ]
 
 { #category : #initialization }

@@ -316,9 +316,9 @@ XMLWellFormedParserTokenizer >> errorExpectedSectionTerminator [
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpectedTerminator: aTerminatorCharacter butGot: aReceivedCharacer [
+XMLWellFormedParserTokenizer >> errorExpectedTerminatorButGot: aReceivedCharacer [
 	self
-		errorExpected: '"', aTerminatorCharacter asString, '" terminator'
+		errorExpected: '">" terminator'
 		butGot: aReceivedCharacer
 ]
 
@@ -416,15 +416,11 @@ XMLWellFormedParserTokenizer >> expectQuote [
 ]
 
 { #category : #'tokenizing - expecting' }
-XMLWellFormedParserTokenizer >> expectTerminator: aCharacter [
+XMLWellFormedParserTokenizer >> expectTerminator [
 	| nextChar |
 
-	(nextChar := streamReader next) == aCharacter
-		ifFalse: [
-			self
-				errorExpectedTerminator: aCharacter
-				butGot: nextChar].
-	^ nextChar.
+	(nextChar := streamReader next) == $>
+		ifFalse: [self errorExpectedTerminatorButGot: nextChar]
 ]
 
 { #category : #'tokenizing - expecting' }
@@ -479,7 +475,7 @@ XMLWellFormedParserTokenizer >> nextAttlistDeclaration [
 
 	self
 		skipSeparatorsReplacingParameterEntities;
-		expectTerminator: $>.
+		expectTerminator.
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -681,7 +677,7 @@ XMLWellFormedParserTokenizer >> nextComment [
 		whileFalse: [writeStream nextPut: nextChar].
 	self
 		expectNext: $-;
-		expectTerminator: $>.
+		expectTerminator.
 
 	driver handleComment: writeStream contents.
 ]
@@ -805,7 +801,7 @@ XMLWellFormedParserTokenizer >> nextElementDeclaration [
 	contentModel := self nextContentModel.
 	self
 		skipSeparatorsReplacingParameterEntities;
-		expectTerminator: $>.
+		expectTerminator.
 
 	driver
 		handleElementDeclaration: name
@@ -833,7 +829,7 @@ XMLWellFormedParserTokenizer >> nextEndTag [
 	streamReader next.
 	driver handleEndTag: self nextName.
 	streamReader skipSeparators.
-	self expectTerminator: $>.
+	self expectTerminator.
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -921,7 +917,7 @@ XMLWellFormedParserTokenizer >> nextExternalEntityDeclaration: aName isParameter
 				ndata: notation].
 	self
 		skipSeparatorsReplacingParameterEntities;
-		expectTerminator: $>.
+		expectTerminator.
 ]
 
 { #category : #tokenizing }
@@ -1002,7 +998,7 @@ XMLWellFormedParserTokenizer >> nextInternalEntityDeclaration: aName isParameter
 	value := self nextEntityValue.
 	self
 		skipSeparatorsReplacingParameterEntities;
-		expectTerminator: $>.
+		expectTerminator.
 
 	aBoolean
 		ifTrue: [driver handleParameterEntityDeclaration: aName replacement: value]
@@ -1099,7 +1095,7 @@ XMLWellFormedParserTokenizer >> nextNotationDeclaration [
 	externalId := self nextExternalIDSystemLiteralRequired: false.
 	self
 		skipSeparatorsReplacingParameterEntities;
-		expectTerminator: $>.
+		expectTerminator.
 
 	driver
 		handleNotationDeclaration: name
@@ -1265,18 +1261,22 @@ XMLWellFormedParserTokenizer >> nextSystemLiteralRequired: aBoolean [
 { #category : #tokenizing }
 XMLWellFormedParserTokenizer >> nextTag [
 	"performance critical method"
-	| tagName attributes namespaces nextChar |
+	| tagName attributes nextChar namespaces |
 
 	(streamReader peek == $/)
 		ifTrue: [^ self nextEndTag].
 	tagName := self nextName.
 
 	attributes := OrderPreservingStringDictionary new: 10.
-	[streamReader skipSeparators.
-	((nextChar := streamReader peek) == $>
-		or: [nextChar == $/
-			or: [nextChar == nil]])]
-		whileFalse: [ | attributeName attributeValue |
+	[(nextChar := streamReader peek) notNil
+		and: [nextChar isSeparator
+			and: [
+				streamReader
+					next;
+					skipSeparators.
+				((nextChar := streamReader peek) == $>
+					or: [nextChar == $/]) not]]]
+		whileTrue: [ | attributeName attributeValue |
 			attributeName := self nextName.
 			streamReader skipSeparators.
 			streamReader next == $=
@@ -1312,7 +1312,7 @@ XMLWellFormedParserTokenizer >> nextTag [
 		ifTrue: [
 			streamReader next.
 			driver handleEndTag: tagName].
-	self expectTerminator: $>.
+	self expectTerminator.
 ]
 
 { #category : #'entity replacing' }
