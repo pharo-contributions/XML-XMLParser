@@ -4,6 +4,11 @@ Class {
 	#category : #'XML-Tests-Conformance'
 }
 
+{ #category : #accessing }
+XMLConformanceExpatTests class >> skippableTests [
+	^ #( testnotwfsa032xml testinvalid002xml testnotwfsa145xml testnotwfsa025xml testnotwfsa113xml testnotwfsa033xml testnotwfsa146xml testnotwfsa154xml testnotwfsa026xml testnotwfsa074xml testnotwfsa162xml testnotwfsa114xml testnotwfsa147xml testnotwfsa050xml testnotwfsa155xml testnotwfsa148xml testnotwfsa171xml testinvalid005xml testnotwfsa156xml testnotwfsa116xml testnotwfsa172xml testinvalid006xml testnotwfsa157xml testnotwfsa140xml testnotwfsa149xml testnotwfsa029xml testnotwfsa173xml testnotwfsa117xml testnotwfsa181xml testnotwfsa141xml testnotwfnotsa009xml testnotwfsa038xml testnotwfsa174xml testnotwfsa182xml testnotwfsa166xml testnotwfsa159xml testinvalidnotsa022xml testnotwfsa167xml testnotwfsa119xml testnotwfsa110xml testnotwfsa175xml testnotwfsa030xml testnotwfsa143xml testnotwfsa168xml testnotwfnotsa002xml testnotwfnotsa010xml testnotwfsa031xml testnotwfsa169xml testnotwfsa104xml testnotwfsa144xml testnotwfsa177xml testnotwfsa160xml testnotwfnotsa011xml )
+]
+
 { #category : #'xml source' }
 XMLConformanceExpatTests class >> sourceinvalid002ent [
 	"Source file: xmltest/invalid/002.ent"
@@ -3318,23 +3323,13 @@ XMLConformanceExpatTests class >> sourcevalidsa016xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceExpatTests class >> sourcevalidsa017axml [
-	"Source file: xmltest/valid/sa/017a.xml"
-
-	^ '<!DOCTYPE doc [
-<!ELEMENT doc (#PCDATA)>
-]>
-<doc><?pi some data ? > <??></doc>'
-]
-
-{ #category : #'xml source' }
 XMLConformanceExpatTests class >> sourcevalidsa017xml [
 	"Source file: xmltest/valid/sa/017.xml"
 
 	^ '<!DOCTYPE doc [
 <!ELEMENT doc (#PCDATA)>
 ]>
-<doc><?pi some data ?><?x?></doc>
+<doc><?pi some data ? > <??></doc>
 '
 ]
 
@@ -4565,6 +4560,8 @@ XMLConformanceExpatTests class >> sourcevalidsa119xml [
 XMLConformanceExpatTests >> testinvalid002xml [
 	"Source file: xmltest/invalid/002.xml"
 
+	(self isSkippableTest: #testinvalid002xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4577,6 +4574,8 @@ XMLConformanceExpatTests >> testinvalid002xml [
 XMLConformanceExpatTests >> testinvalid005xml [
 	"Source file: xmltest/invalid/005.xml"
 
+	(self isSkippableTest: #testinvalid005xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4589,6 +4588,8 @@ XMLConformanceExpatTests >> testinvalid005xml [
 XMLConformanceExpatTests >> testinvalid006xml [
 	"Source file: xmltest/invalid/006.xml"
 
+	(self isSkippableTest: #testinvalid006xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4601,6 +4602,8 @@ XMLConformanceExpatTests >> testinvalid006xml [
 XMLConformanceExpatTests >> testinvalidnotsa022xml [
 	"Source file: xmltest/invalid/not-sa/022.xml"
 
+	(self isSkippableTest: #testinvalidnotsa022xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4613,6 +4616,8 @@ XMLConformanceExpatTests >> testinvalidnotsa022xml [
 XMLConformanceExpatTests >> testnotwfextsa001xml [
 	"Source file: xmltest/not-wf/ext-sa/001.xml"
 
+	(self isSkippableTest: #testnotwfextsa001xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4625,6 +4630,8 @@ XMLConformanceExpatTests >> testnotwfextsa001xml [
 XMLConformanceExpatTests >> testnotwfextsa002xml [
 	"Source file: xmltest/not-wf/ext-sa/002.xml"
 
+	(self isSkippableTest: #testnotwfextsa002xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4637,6 +4644,8 @@ XMLConformanceExpatTests >> testnotwfextsa002xml [
 XMLConformanceExpatTests >> testnotwfextsa003xml [
 	"Source file: xmltest/not-wf/ext-sa/003.xml"
 
+	(self isSkippableTest: #testnotwfextsa003xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4649,6 +4658,8 @@ XMLConformanceExpatTests >> testnotwfextsa003xml [
 XMLConformanceExpatTests >> testnotwfnotsa001xml [
 	"Source file: xmltest/not-wf/not-sa/001.xml"
 
+	(self isSkippableTest: #testnotwfnotsa001xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4661,6 +4672,8 @@ XMLConformanceExpatTests >> testnotwfnotsa001xml [
 XMLConformanceExpatTests >> testnotwfnotsa002xml [
 	"Source file: xmltest/not-wf/not-sa/002.xml"
 
+	(self isSkippableTest: #testnotwfnotsa002xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4673,6 +4686,8 @@ XMLConformanceExpatTests >> testnotwfnotsa002xml [
 XMLConformanceExpatTests >> testnotwfnotsa003xml [
 	"Source file: xmltest/not-wf/not-sa/003.xml"
 
+	(self isSkippableTest: #testnotwfnotsa003xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4685,6 +4700,8 @@ XMLConformanceExpatTests >> testnotwfnotsa003xml [
 XMLConformanceExpatTests >> testnotwfnotsa004xml [
 	"Source file: xmltest/not-wf/not-sa/004.xml"
 
+	(self isSkippableTest: #testnotwfnotsa004xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4697,6 +4714,8 @@ XMLConformanceExpatTests >> testnotwfnotsa004xml [
 XMLConformanceExpatTests >> testnotwfnotsa005xml [
 	"Source file: xmltest/not-wf/not-sa/005.xml"
 
+	(self isSkippableTest: #testnotwfnotsa005xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4709,6 +4728,8 @@ XMLConformanceExpatTests >> testnotwfnotsa005xml [
 XMLConformanceExpatTests >> testnotwfnotsa006xml [
 	"Source file: xmltest/not-wf/not-sa/006.xml"
 
+	(self isSkippableTest: #testnotwfnotsa006xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4721,6 +4742,8 @@ XMLConformanceExpatTests >> testnotwfnotsa006xml [
 XMLConformanceExpatTests >> testnotwfnotsa007xml [
 	"Source file: xmltest/not-wf/not-sa/007.xml"
 
+	(self isSkippableTest: #testnotwfnotsa007xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4733,6 +4756,8 @@ XMLConformanceExpatTests >> testnotwfnotsa007xml [
 XMLConformanceExpatTests >> testnotwfnotsa008xml [
 	"Source file: xmltest/not-wf/not-sa/008.xml"
 
+	(self isSkippableTest: #testnotwfnotsa008xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4745,6 +4770,8 @@ XMLConformanceExpatTests >> testnotwfnotsa008xml [
 XMLConformanceExpatTests >> testnotwfnotsa009xml [
 	"Source file: xmltest/not-wf/not-sa/009.xml"
 
+	(self isSkippableTest: #testnotwfnotsa009xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4757,6 +4784,8 @@ XMLConformanceExpatTests >> testnotwfnotsa009xml [
 XMLConformanceExpatTests >> testnotwfnotsa010xml [
 	"Source file: xmltest/not-wf/not-sa/010.xml"
 
+	(self isSkippableTest: #testnotwfnotsa010xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4769,6 +4798,8 @@ XMLConformanceExpatTests >> testnotwfnotsa010xml [
 XMLConformanceExpatTests >> testnotwfnotsa011xml [
 	"Source file: xmltest/not-wf/not-sa/011.xml"
 
+	(self isSkippableTest: #testnotwfnotsa011xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4781,6 +4812,8 @@ XMLConformanceExpatTests >> testnotwfnotsa011xml [
 XMLConformanceExpatTests >> testnotwfsa001xml [
 	"Source file: xmltest/not-wf/sa/001.xml"
 
+	(self isSkippableTest: #testnotwfsa001xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4793,6 +4826,8 @@ XMLConformanceExpatTests >> testnotwfsa001xml [
 XMLConformanceExpatTests >> testnotwfsa002xml [
 	"Source file: xmltest/not-wf/sa/002.xml"
 
+	(self isSkippableTest: #testnotwfsa002xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4805,6 +4840,8 @@ XMLConformanceExpatTests >> testnotwfsa002xml [
 XMLConformanceExpatTests >> testnotwfsa003xml [
 	"Source file: xmltest/not-wf/sa/003.xml"
 
+	(self isSkippableTest: #testnotwfsa003xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4817,6 +4854,8 @@ XMLConformanceExpatTests >> testnotwfsa003xml [
 XMLConformanceExpatTests >> testnotwfsa004xml [
 	"Source file: xmltest/not-wf/sa/004.xml"
 
+	(self isSkippableTest: #testnotwfsa004xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4829,6 +4868,8 @@ XMLConformanceExpatTests >> testnotwfsa004xml [
 XMLConformanceExpatTests >> testnotwfsa005xml [
 	"Source file: xmltest/not-wf/sa/005.xml"
 
+	(self isSkippableTest: #testnotwfsa005xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4841,6 +4882,8 @@ XMLConformanceExpatTests >> testnotwfsa005xml [
 XMLConformanceExpatTests >> testnotwfsa006xml [
 	"Source file: xmltest/not-wf/sa/006.xml"
 
+	(self isSkippableTest: #testnotwfsa006xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4853,6 +4896,8 @@ XMLConformanceExpatTests >> testnotwfsa006xml [
 XMLConformanceExpatTests >> testnotwfsa007xml [
 	"Source file: xmltest/not-wf/sa/007.xml"
 
+	(self isSkippableTest: #testnotwfsa007xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4865,6 +4910,8 @@ XMLConformanceExpatTests >> testnotwfsa007xml [
 XMLConformanceExpatTests >> testnotwfsa008xml [
 	"Source file: xmltest/not-wf/sa/008.xml"
 
+	(self isSkippableTest: #testnotwfsa008xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4877,6 +4924,8 @@ XMLConformanceExpatTests >> testnotwfsa008xml [
 XMLConformanceExpatTests >> testnotwfsa009xml [
 	"Source file: xmltest/not-wf/sa/009.xml"
 
+	(self isSkippableTest: #testnotwfsa009xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4889,6 +4938,8 @@ XMLConformanceExpatTests >> testnotwfsa009xml [
 XMLConformanceExpatTests >> testnotwfsa010xml [
 	"Source file: xmltest/not-wf/sa/010.xml"
 
+	(self isSkippableTest: #testnotwfsa010xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4901,6 +4952,8 @@ XMLConformanceExpatTests >> testnotwfsa010xml [
 XMLConformanceExpatTests >> testnotwfsa011xml [
 	"Source file: xmltest/not-wf/sa/011.xml"
 
+	(self isSkippableTest: #testnotwfsa011xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4913,6 +4966,8 @@ XMLConformanceExpatTests >> testnotwfsa011xml [
 XMLConformanceExpatTests >> testnotwfsa012xml [
 	"Source file: xmltest/not-wf/sa/012.xml"
 
+	(self isSkippableTest: #testnotwfsa012xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4925,6 +4980,8 @@ XMLConformanceExpatTests >> testnotwfsa012xml [
 XMLConformanceExpatTests >> testnotwfsa013xml [
 	"Source file: xmltest/not-wf/sa/013.xml"
 
+	(self isSkippableTest: #testnotwfsa013xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4937,6 +4994,8 @@ XMLConformanceExpatTests >> testnotwfsa013xml [
 XMLConformanceExpatTests >> testnotwfsa014xml [
 	"Source file: xmltest/not-wf/sa/014.xml"
 
+	(self isSkippableTest: #testnotwfsa014xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4949,6 +5008,8 @@ XMLConformanceExpatTests >> testnotwfsa014xml [
 XMLConformanceExpatTests >> testnotwfsa015xml [
 	"Source file: xmltest/not-wf/sa/015.xml"
 
+	(self isSkippableTest: #testnotwfsa015xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4961,6 +5022,8 @@ XMLConformanceExpatTests >> testnotwfsa015xml [
 XMLConformanceExpatTests >> testnotwfsa016xml [
 	"Source file: xmltest/not-wf/sa/016.xml"
 
+	(self isSkippableTest: #testnotwfsa016xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4973,6 +5036,8 @@ XMLConformanceExpatTests >> testnotwfsa016xml [
 XMLConformanceExpatTests >> testnotwfsa017xml [
 	"Source file: xmltest/not-wf/sa/017.xml"
 
+	(self isSkippableTest: #testnotwfsa017xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4985,6 +5050,8 @@ XMLConformanceExpatTests >> testnotwfsa017xml [
 XMLConformanceExpatTests >> testnotwfsa018xml [
 	"Source file: xmltest/not-wf/sa/018.xml"
 
+	(self isSkippableTest: #testnotwfsa018xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4997,6 +5064,8 @@ XMLConformanceExpatTests >> testnotwfsa018xml [
 XMLConformanceExpatTests >> testnotwfsa019xml [
 	"Source file: xmltest/not-wf/sa/019.xml"
 
+	(self isSkippableTest: #testnotwfsa019xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5009,6 +5078,8 @@ XMLConformanceExpatTests >> testnotwfsa019xml [
 XMLConformanceExpatTests >> testnotwfsa020xml [
 	"Source file: xmltest/not-wf/sa/020.xml"
 
+	(self isSkippableTest: #testnotwfsa020xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5021,6 +5092,8 @@ XMLConformanceExpatTests >> testnotwfsa020xml [
 XMLConformanceExpatTests >> testnotwfsa021xml [
 	"Source file: xmltest/not-wf/sa/021.xml"
 
+	(self isSkippableTest: #testnotwfsa021xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5033,6 +5106,8 @@ XMLConformanceExpatTests >> testnotwfsa021xml [
 XMLConformanceExpatTests >> testnotwfsa022xml [
 	"Source file: xmltest/not-wf/sa/022.xml"
 
+	(self isSkippableTest: #testnotwfsa022xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5045,6 +5120,8 @@ XMLConformanceExpatTests >> testnotwfsa022xml [
 XMLConformanceExpatTests >> testnotwfsa023xml [
 	"Source file: xmltest/not-wf/sa/023.xml"
 
+	(self isSkippableTest: #testnotwfsa023xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5057,6 +5134,8 @@ XMLConformanceExpatTests >> testnotwfsa023xml [
 XMLConformanceExpatTests >> testnotwfsa024xml [
 	"Source file: xmltest/not-wf/sa/024.xml"
 
+	(self isSkippableTest: #testnotwfsa024xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5069,6 +5148,8 @@ XMLConformanceExpatTests >> testnotwfsa024xml [
 XMLConformanceExpatTests >> testnotwfsa025xml [
 	"Source file: xmltest/not-wf/sa/025.xml"
 
+	(self isSkippableTest: #testnotwfsa025xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5081,6 +5162,8 @@ XMLConformanceExpatTests >> testnotwfsa025xml [
 XMLConformanceExpatTests >> testnotwfsa026xml [
 	"Source file: xmltest/not-wf/sa/026.xml"
 
+	(self isSkippableTest: #testnotwfsa026xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5093,6 +5176,8 @@ XMLConformanceExpatTests >> testnotwfsa026xml [
 XMLConformanceExpatTests >> testnotwfsa027xml [
 	"Source file: xmltest/not-wf/sa/027.xml"
 
+	(self isSkippableTest: #testnotwfsa027xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5105,6 +5190,8 @@ XMLConformanceExpatTests >> testnotwfsa027xml [
 XMLConformanceExpatTests >> testnotwfsa028xml [
 	"Source file: xmltest/not-wf/sa/028.xml"
 
+	(self isSkippableTest: #testnotwfsa028xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5117,6 +5204,8 @@ XMLConformanceExpatTests >> testnotwfsa028xml [
 XMLConformanceExpatTests >> testnotwfsa029xml [
 	"Source file: xmltest/not-wf/sa/029.xml"
 
+	(self isSkippableTest: #testnotwfsa029xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5129,6 +5218,8 @@ XMLConformanceExpatTests >> testnotwfsa029xml [
 XMLConformanceExpatTests >> testnotwfsa030xml [
 	"Source file: xmltest/not-wf/sa/030.xml"
 
+	(self isSkippableTest: #testnotwfsa030xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5141,6 +5232,8 @@ XMLConformanceExpatTests >> testnotwfsa030xml [
 XMLConformanceExpatTests >> testnotwfsa031xml [
 	"Source file: xmltest/not-wf/sa/031.xml"
 
+	(self isSkippableTest: #testnotwfsa031xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5153,6 +5246,8 @@ XMLConformanceExpatTests >> testnotwfsa031xml [
 XMLConformanceExpatTests >> testnotwfsa032xml [
 	"Source file: xmltest/not-wf/sa/032.xml"
 
+	(self isSkippableTest: #testnotwfsa032xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5165,6 +5260,8 @@ XMLConformanceExpatTests >> testnotwfsa032xml [
 XMLConformanceExpatTests >> testnotwfsa033xml [
 	"Source file: xmltest/not-wf/sa/033.xml"
 
+	(self isSkippableTest: #testnotwfsa033xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5177,6 +5274,8 @@ XMLConformanceExpatTests >> testnotwfsa033xml [
 XMLConformanceExpatTests >> testnotwfsa034xml [
 	"Source file: xmltest/not-wf/sa/034.xml"
 
+	(self isSkippableTest: #testnotwfsa034xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5189,6 +5288,8 @@ XMLConformanceExpatTests >> testnotwfsa034xml [
 XMLConformanceExpatTests >> testnotwfsa035xml [
 	"Source file: xmltest/not-wf/sa/035.xml"
 
+	(self isSkippableTest: #testnotwfsa035xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5201,6 +5302,8 @@ XMLConformanceExpatTests >> testnotwfsa035xml [
 XMLConformanceExpatTests >> testnotwfsa036xml [
 	"Source file: xmltest/not-wf/sa/036.xml"
 
+	(self isSkippableTest: #testnotwfsa036xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5213,6 +5316,8 @@ XMLConformanceExpatTests >> testnotwfsa036xml [
 XMLConformanceExpatTests >> testnotwfsa037xml [
 	"Source file: xmltest/not-wf/sa/037.xml"
 
+	(self isSkippableTest: #testnotwfsa037xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5225,6 +5330,8 @@ XMLConformanceExpatTests >> testnotwfsa037xml [
 XMLConformanceExpatTests >> testnotwfsa038xml [
 	"Source file: xmltest/not-wf/sa/038.xml"
 
+	(self isSkippableTest: #testnotwfsa038xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5237,6 +5344,8 @@ XMLConformanceExpatTests >> testnotwfsa038xml [
 XMLConformanceExpatTests >> testnotwfsa039xml [
 	"Source file: xmltest/not-wf/sa/039.xml"
 
+	(self isSkippableTest: #testnotwfsa039xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5249,6 +5358,8 @@ XMLConformanceExpatTests >> testnotwfsa039xml [
 XMLConformanceExpatTests >> testnotwfsa040xml [
 	"Source file: xmltest/not-wf/sa/040.xml"
 
+	(self isSkippableTest: #testnotwfsa040xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5261,6 +5372,8 @@ XMLConformanceExpatTests >> testnotwfsa040xml [
 XMLConformanceExpatTests >> testnotwfsa041xml [
 	"Source file: xmltest/not-wf/sa/041.xml"
 
+	(self isSkippableTest: #testnotwfsa041xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5273,6 +5386,8 @@ XMLConformanceExpatTests >> testnotwfsa041xml [
 XMLConformanceExpatTests >> testnotwfsa042xml [
 	"Source file: xmltest/not-wf/sa/042.xml"
 
+	(self isSkippableTest: #testnotwfsa042xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5285,6 +5400,8 @@ XMLConformanceExpatTests >> testnotwfsa042xml [
 XMLConformanceExpatTests >> testnotwfsa043xml [
 	"Source file: xmltest/not-wf/sa/043.xml"
 
+	(self isSkippableTest: #testnotwfsa043xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5297,6 +5414,8 @@ XMLConformanceExpatTests >> testnotwfsa043xml [
 XMLConformanceExpatTests >> testnotwfsa044xml [
 	"Source file: xmltest/not-wf/sa/044.xml"
 
+	(self isSkippableTest: #testnotwfsa044xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5309,6 +5428,8 @@ XMLConformanceExpatTests >> testnotwfsa044xml [
 XMLConformanceExpatTests >> testnotwfsa045xml [
 	"Source file: xmltest/not-wf/sa/045.xml"
 
+	(self isSkippableTest: #testnotwfsa045xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5321,6 +5442,8 @@ XMLConformanceExpatTests >> testnotwfsa045xml [
 XMLConformanceExpatTests >> testnotwfsa046xml [
 	"Source file: xmltest/not-wf/sa/046.xml"
 
+	(self isSkippableTest: #testnotwfsa046xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5333,6 +5456,8 @@ XMLConformanceExpatTests >> testnotwfsa046xml [
 XMLConformanceExpatTests >> testnotwfsa047xml [
 	"Source file: xmltest/not-wf/sa/047.xml"
 
+	(self isSkippableTest: #testnotwfsa047xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5345,6 +5470,8 @@ XMLConformanceExpatTests >> testnotwfsa047xml [
 XMLConformanceExpatTests >> testnotwfsa048xml [
 	"Source file: xmltest/not-wf/sa/048.xml"
 
+	(self isSkippableTest: #testnotwfsa048xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5357,6 +5484,8 @@ XMLConformanceExpatTests >> testnotwfsa048xml [
 XMLConformanceExpatTests >> testnotwfsa049xml [
 	"Source file: xmltest/not-wf/sa/049.xml"
 
+	(self isSkippableTest: #testnotwfsa049xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5369,6 +5498,8 @@ XMLConformanceExpatTests >> testnotwfsa049xml [
 XMLConformanceExpatTests >> testnotwfsa050xml [
 	"Source file: xmltest/not-wf/sa/050.xml"
 
+	(self isSkippableTest: #testnotwfsa050xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5381,6 +5512,8 @@ XMLConformanceExpatTests >> testnotwfsa050xml [
 XMLConformanceExpatTests >> testnotwfsa051xml [
 	"Source file: xmltest/not-wf/sa/051.xml"
 
+	(self isSkippableTest: #testnotwfsa051xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5393,6 +5526,8 @@ XMLConformanceExpatTests >> testnotwfsa051xml [
 XMLConformanceExpatTests >> testnotwfsa052xml [
 	"Source file: xmltest/not-wf/sa/052.xml"
 
+	(self isSkippableTest: #testnotwfsa052xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5405,6 +5540,8 @@ XMLConformanceExpatTests >> testnotwfsa052xml [
 XMLConformanceExpatTests >> testnotwfsa053xml [
 	"Source file: xmltest/not-wf/sa/053.xml"
 
+	(self isSkippableTest: #testnotwfsa053xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5417,6 +5554,8 @@ XMLConformanceExpatTests >> testnotwfsa053xml [
 XMLConformanceExpatTests >> testnotwfsa054xml [
 	"Source file: xmltest/not-wf/sa/054.xml"
 
+	(self isSkippableTest: #testnotwfsa054xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5429,6 +5568,8 @@ XMLConformanceExpatTests >> testnotwfsa054xml [
 XMLConformanceExpatTests >> testnotwfsa055xml [
 	"Source file: xmltest/not-wf/sa/055.xml"
 
+	(self isSkippableTest: #testnotwfsa055xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5441,6 +5582,8 @@ XMLConformanceExpatTests >> testnotwfsa055xml [
 XMLConformanceExpatTests >> testnotwfsa056xml [
 	"Source file: xmltest/not-wf/sa/056.xml"
 
+	(self isSkippableTest: #testnotwfsa056xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5453,6 +5596,8 @@ XMLConformanceExpatTests >> testnotwfsa056xml [
 XMLConformanceExpatTests >> testnotwfsa057xml [
 	"Source file: xmltest/not-wf/sa/057.xml"
 
+	(self isSkippableTest: #testnotwfsa057xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5465,6 +5610,8 @@ XMLConformanceExpatTests >> testnotwfsa057xml [
 XMLConformanceExpatTests >> testnotwfsa058xml [
 	"Source file: xmltest/not-wf/sa/058.xml"
 
+	(self isSkippableTest: #testnotwfsa058xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5477,6 +5624,8 @@ XMLConformanceExpatTests >> testnotwfsa058xml [
 XMLConformanceExpatTests >> testnotwfsa059xml [
 	"Source file: xmltest/not-wf/sa/059.xml"
 
+	(self isSkippableTest: #testnotwfsa059xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5489,6 +5638,8 @@ XMLConformanceExpatTests >> testnotwfsa059xml [
 XMLConformanceExpatTests >> testnotwfsa060xml [
 	"Source file: xmltest/not-wf/sa/060.xml"
 
+	(self isSkippableTest: #testnotwfsa060xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5501,6 +5652,8 @@ XMLConformanceExpatTests >> testnotwfsa060xml [
 XMLConformanceExpatTests >> testnotwfsa061xml [
 	"Source file: xmltest/not-wf/sa/061.xml"
 
+	(self isSkippableTest: #testnotwfsa061xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5513,6 +5666,8 @@ XMLConformanceExpatTests >> testnotwfsa061xml [
 XMLConformanceExpatTests >> testnotwfsa062xml [
 	"Source file: xmltest/not-wf/sa/062.xml"
 
+	(self isSkippableTest: #testnotwfsa062xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5525,6 +5680,8 @@ XMLConformanceExpatTests >> testnotwfsa062xml [
 XMLConformanceExpatTests >> testnotwfsa063xml [
 	"Source file: xmltest/not-wf/sa/063.xml"
 
+	(self isSkippableTest: #testnotwfsa063xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5537,6 +5694,8 @@ XMLConformanceExpatTests >> testnotwfsa063xml [
 XMLConformanceExpatTests >> testnotwfsa064xml [
 	"Source file: xmltest/not-wf/sa/064.xml"
 
+	(self isSkippableTest: #testnotwfsa064xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5549,6 +5708,8 @@ XMLConformanceExpatTests >> testnotwfsa064xml [
 XMLConformanceExpatTests >> testnotwfsa065xml [
 	"Source file: xmltest/not-wf/sa/065.xml"
 
+	(self isSkippableTest: #testnotwfsa065xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5561,6 +5722,8 @@ XMLConformanceExpatTests >> testnotwfsa065xml [
 XMLConformanceExpatTests >> testnotwfsa066xml [
 	"Source file: xmltest/not-wf/sa/066.xml"
 
+	(self isSkippableTest: #testnotwfsa066xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5573,6 +5736,8 @@ XMLConformanceExpatTests >> testnotwfsa066xml [
 XMLConformanceExpatTests >> testnotwfsa067xml [
 	"Source file: xmltest/not-wf/sa/067.xml"
 
+	(self isSkippableTest: #testnotwfsa067xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5585,6 +5750,8 @@ XMLConformanceExpatTests >> testnotwfsa067xml [
 XMLConformanceExpatTests >> testnotwfsa068xml [
 	"Source file: xmltest/not-wf/sa/068.xml"
 
+	(self isSkippableTest: #testnotwfsa068xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5597,6 +5764,8 @@ XMLConformanceExpatTests >> testnotwfsa068xml [
 XMLConformanceExpatTests >> testnotwfsa069xml [
 	"Source file: xmltest/not-wf/sa/069.xml"
 
+	(self isSkippableTest: #testnotwfsa069xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5609,6 +5778,8 @@ XMLConformanceExpatTests >> testnotwfsa069xml [
 XMLConformanceExpatTests >> testnotwfsa070xml [
 	"Source file: xmltest/not-wf/sa/070.xml"
 
+	(self isSkippableTest: #testnotwfsa070xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5621,6 +5792,8 @@ XMLConformanceExpatTests >> testnotwfsa070xml [
 XMLConformanceExpatTests >> testnotwfsa071xml [
 	"Source file: xmltest/not-wf/sa/071.xml"
 
+	(self isSkippableTest: #testnotwfsa071xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5633,6 +5806,8 @@ XMLConformanceExpatTests >> testnotwfsa071xml [
 XMLConformanceExpatTests >> testnotwfsa072xml [
 	"Source file: xmltest/not-wf/sa/072.xml"
 
+	(self isSkippableTest: #testnotwfsa072xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5645,6 +5820,8 @@ XMLConformanceExpatTests >> testnotwfsa072xml [
 XMLConformanceExpatTests >> testnotwfsa073xml [
 	"Source file: xmltest/not-wf/sa/073.xml"
 
+	(self isSkippableTest: #testnotwfsa073xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5657,6 +5834,8 @@ XMLConformanceExpatTests >> testnotwfsa073xml [
 XMLConformanceExpatTests >> testnotwfsa074xml [
 	"Source file: xmltest/not-wf/sa/074.xml"
 
+	(self isSkippableTest: #testnotwfsa074xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5669,6 +5848,8 @@ XMLConformanceExpatTests >> testnotwfsa074xml [
 XMLConformanceExpatTests >> testnotwfsa075xml [
 	"Source file: xmltest/not-wf/sa/075.xml"
 
+	(self isSkippableTest: #testnotwfsa075xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5681,6 +5862,8 @@ XMLConformanceExpatTests >> testnotwfsa075xml [
 XMLConformanceExpatTests >> testnotwfsa076xml [
 	"Source file: xmltest/not-wf/sa/076.xml"
 
+	(self isSkippableTest: #testnotwfsa076xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5693,6 +5876,8 @@ XMLConformanceExpatTests >> testnotwfsa076xml [
 XMLConformanceExpatTests >> testnotwfsa077xml [
 	"Source file: xmltest/not-wf/sa/077.xml"
 
+	(self isSkippableTest: #testnotwfsa077xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5705,6 +5890,8 @@ XMLConformanceExpatTests >> testnotwfsa077xml [
 XMLConformanceExpatTests >> testnotwfsa078xml [
 	"Source file: xmltest/not-wf/sa/078.xml"
 
+	(self isSkippableTest: #testnotwfsa078xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5717,6 +5904,8 @@ XMLConformanceExpatTests >> testnotwfsa078xml [
 XMLConformanceExpatTests >> testnotwfsa079xml [
 	"Source file: xmltest/not-wf/sa/079.xml"
 
+	(self isSkippableTest: #testnotwfsa079xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5729,6 +5918,8 @@ XMLConformanceExpatTests >> testnotwfsa079xml [
 XMLConformanceExpatTests >> testnotwfsa080xml [
 	"Source file: xmltest/not-wf/sa/080.xml"
 
+	(self isSkippableTest: #testnotwfsa080xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5741,6 +5932,8 @@ XMLConformanceExpatTests >> testnotwfsa080xml [
 XMLConformanceExpatTests >> testnotwfsa081xml [
 	"Source file: xmltest/not-wf/sa/081.xml"
 
+	(self isSkippableTest: #testnotwfsa081xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5753,6 +5946,8 @@ XMLConformanceExpatTests >> testnotwfsa081xml [
 XMLConformanceExpatTests >> testnotwfsa082xml [
 	"Source file: xmltest/not-wf/sa/082.xml"
 
+	(self isSkippableTest: #testnotwfsa082xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5765,6 +5960,8 @@ XMLConformanceExpatTests >> testnotwfsa082xml [
 XMLConformanceExpatTests >> testnotwfsa083xml [
 	"Source file: xmltest/not-wf/sa/083.xml"
 
+	(self isSkippableTest: #testnotwfsa083xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5777,6 +5974,8 @@ XMLConformanceExpatTests >> testnotwfsa083xml [
 XMLConformanceExpatTests >> testnotwfsa084xml [
 	"Source file: xmltest/not-wf/sa/084.xml"
 
+	(self isSkippableTest: #testnotwfsa084xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5789,6 +5988,8 @@ XMLConformanceExpatTests >> testnotwfsa084xml [
 XMLConformanceExpatTests >> testnotwfsa085xml [
 	"Source file: xmltest/not-wf/sa/085.xml"
 
+	(self isSkippableTest: #testnotwfsa085xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5801,6 +6002,8 @@ XMLConformanceExpatTests >> testnotwfsa085xml [
 XMLConformanceExpatTests >> testnotwfsa086xml [
 	"Source file: xmltest/not-wf/sa/086.xml"
 
+	(self isSkippableTest: #testnotwfsa086xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5813,6 +6016,8 @@ XMLConformanceExpatTests >> testnotwfsa086xml [
 XMLConformanceExpatTests >> testnotwfsa087xml [
 	"Source file: xmltest/not-wf/sa/087.xml"
 
+	(self isSkippableTest: #testnotwfsa087xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5825,6 +6030,8 @@ XMLConformanceExpatTests >> testnotwfsa087xml [
 XMLConformanceExpatTests >> testnotwfsa088xml [
 	"Source file: xmltest/not-wf/sa/088.xml"
 
+	(self isSkippableTest: #testnotwfsa088xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5837,6 +6044,8 @@ XMLConformanceExpatTests >> testnotwfsa088xml [
 XMLConformanceExpatTests >> testnotwfsa089xml [
 	"Source file: xmltest/not-wf/sa/089.xml"
 
+	(self isSkippableTest: #testnotwfsa089xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5849,6 +6058,8 @@ XMLConformanceExpatTests >> testnotwfsa089xml [
 XMLConformanceExpatTests >> testnotwfsa090xml [
 	"Source file: xmltest/not-wf/sa/090.xml"
 
+	(self isSkippableTest: #testnotwfsa090xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5861,6 +6072,8 @@ XMLConformanceExpatTests >> testnotwfsa090xml [
 XMLConformanceExpatTests >> testnotwfsa091xml [
 	"Source file: xmltest/not-wf/sa/091.xml"
 
+	(self isSkippableTest: #testnotwfsa091xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5873,6 +6086,8 @@ XMLConformanceExpatTests >> testnotwfsa091xml [
 XMLConformanceExpatTests >> testnotwfsa092xml [
 	"Source file: xmltest/not-wf/sa/092.xml"
 
+	(self isSkippableTest: #testnotwfsa092xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5885,6 +6100,8 @@ XMLConformanceExpatTests >> testnotwfsa092xml [
 XMLConformanceExpatTests >> testnotwfsa093xml [
 	"Source file: xmltest/not-wf/sa/093.xml"
 
+	(self isSkippableTest: #testnotwfsa093xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5897,6 +6114,8 @@ XMLConformanceExpatTests >> testnotwfsa093xml [
 XMLConformanceExpatTests >> testnotwfsa094xml [
 	"Source file: xmltest/not-wf/sa/094.xml"
 
+	(self isSkippableTest: #testnotwfsa094xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5909,6 +6128,8 @@ XMLConformanceExpatTests >> testnotwfsa094xml [
 XMLConformanceExpatTests >> testnotwfsa095xml [
 	"Source file: xmltest/not-wf/sa/095.xml"
 
+	(self isSkippableTest: #testnotwfsa095xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5921,6 +6142,8 @@ XMLConformanceExpatTests >> testnotwfsa095xml [
 XMLConformanceExpatTests >> testnotwfsa096xml [
 	"Source file: xmltest/not-wf/sa/096.xml"
 
+	(self isSkippableTest: #testnotwfsa096xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5933,6 +6156,8 @@ XMLConformanceExpatTests >> testnotwfsa096xml [
 XMLConformanceExpatTests >> testnotwfsa097xml [
 	"Source file: xmltest/not-wf/sa/097.xml"
 
+	(self isSkippableTest: #testnotwfsa097xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5945,6 +6170,8 @@ XMLConformanceExpatTests >> testnotwfsa097xml [
 XMLConformanceExpatTests >> testnotwfsa098xml [
 	"Source file: xmltest/not-wf/sa/098.xml"
 
+	(self isSkippableTest: #testnotwfsa098xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5957,6 +6184,8 @@ XMLConformanceExpatTests >> testnotwfsa098xml [
 XMLConformanceExpatTests >> testnotwfsa099xml [
 	"Source file: xmltest/not-wf/sa/099.xml"
 
+	(self isSkippableTest: #testnotwfsa099xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5969,6 +6198,8 @@ XMLConformanceExpatTests >> testnotwfsa099xml [
 XMLConformanceExpatTests >> testnotwfsa100xml [
 	"Source file: xmltest/not-wf/sa/100.xml"
 
+	(self isSkippableTest: #testnotwfsa100xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5981,6 +6212,8 @@ XMLConformanceExpatTests >> testnotwfsa100xml [
 XMLConformanceExpatTests >> testnotwfsa101xml [
 	"Source file: xmltest/not-wf/sa/101.xml"
 
+	(self isSkippableTest: #testnotwfsa101xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -5993,6 +6226,8 @@ XMLConformanceExpatTests >> testnotwfsa101xml [
 XMLConformanceExpatTests >> testnotwfsa102xml [
 	"Source file: xmltest/not-wf/sa/102.xml"
 
+	(self isSkippableTest: #testnotwfsa102xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6005,6 +6240,8 @@ XMLConformanceExpatTests >> testnotwfsa102xml [
 XMLConformanceExpatTests >> testnotwfsa103xml [
 	"Source file: xmltest/not-wf/sa/103.xml"
 
+	(self isSkippableTest: #testnotwfsa103xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6017,6 +6254,8 @@ XMLConformanceExpatTests >> testnotwfsa103xml [
 XMLConformanceExpatTests >> testnotwfsa104xml [
 	"Source file: xmltest/not-wf/sa/104.xml"
 
+	(self isSkippableTest: #testnotwfsa104xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6029,6 +6268,8 @@ XMLConformanceExpatTests >> testnotwfsa104xml [
 XMLConformanceExpatTests >> testnotwfsa105xml [
 	"Source file: xmltest/not-wf/sa/105.xml"
 
+	(self isSkippableTest: #testnotwfsa105xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6041,6 +6282,8 @@ XMLConformanceExpatTests >> testnotwfsa105xml [
 XMLConformanceExpatTests >> testnotwfsa106xml [
 	"Source file: xmltest/not-wf/sa/106.xml"
 
+	(self isSkippableTest: #testnotwfsa106xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6053,6 +6296,8 @@ XMLConformanceExpatTests >> testnotwfsa106xml [
 XMLConformanceExpatTests >> testnotwfsa107xml [
 	"Source file: xmltest/not-wf/sa/107.xml"
 
+	(self isSkippableTest: #testnotwfsa107xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6065,6 +6310,8 @@ XMLConformanceExpatTests >> testnotwfsa107xml [
 XMLConformanceExpatTests >> testnotwfsa108xml [
 	"Source file: xmltest/not-wf/sa/108.xml"
 
+	(self isSkippableTest: #testnotwfsa108xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6077,6 +6324,8 @@ XMLConformanceExpatTests >> testnotwfsa108xml [
 XMLConformanceExpatTests >> testnotwfsa109xml [
 	"Source file: xmltest/not-wf/sa/109.xml"
 
+	(self isSkippableTest: #testnotwfsa109xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6089,6 +6338,8 @@ XMLConformanceExpatTests >> testnotwfsa109xml [
 XMLConformanceExpatTests >> testnotwfsa110xml [
 	"Source file: xmltest/not-wf/sa/110.xml"
 
+	(self isSkippableTest: #testnotwfsa110xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6101,6 +6352,8 @@ XMLConformanceExpatTests >> testnotwfsa110xml [
 XMLConformanceExpatTests >> testnotwfsa111xml [
 	"Source file: xmltest/not-wf/sa/111.xml"
 
+	(self isSkippableTest: #testnotwfsa111xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6113,6 +6366,8 @@ XMLConformanceExpatTests >> testnotwfsa111xml [
 XMLConformanceExpatTests >> testnotwfsa112xml [
 	"Source file: xmltest/not-wf/sa/112.xml"
 
+	(self isSkippableTest: #testnotwfsa112xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6125,6 +6380,8 @@ XMLConformanceExpatTests >> testnotwfsa112xml [
 XMLConformanceExpatTests >> testnotwfsa113xml [
 	"Source file: xmltest/not-wf/sa/113.xml"
 
+	(self isSkippableTest: #testnotwfsa113xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6137,6 +6394,8 @@ XMLConformanceExpatTests >> testnotwfsa113xml [
 XMLConformanceExpatTests >> testnotwfsa114xml [
 	"Source file: xmltest/not-wf/sa/114.xml"
 
+	(self isSkippableTest: #testnotwfsa114xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6149,6 +6408,8 @@ XMLConformanceExpatTests >> testnotwfsa114xml [
 XMLConformanceExpatTests >> testnotwfsa115xml [
 	"Source file: xmltest/not-wf/sa/115.xml"
 
+	(self isSkippableTest: #testnotwfsa115xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6161,6 +6422,8 @@ XMLConformanceExpatTests >> testnotwfsa115xml [
 XMLConformanceExpatTests >> testnotwfsa116xml [
 	"Source file: xmltest/not-wf/sa/116.xml"
 
+	(self isSkippableTest: #testnotwfsa116xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6173,6 +6436,8 @@ XMLConformanceExpatTests >> testnotwfsa116xml [
 XMLConformanceExpatTests >> testnotwfsa117xml [
 	"Source file: xmltest/not-wf/sa/117.xml"
 
+	(self isSkippableTest: #testnotwfsa117xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6185,6 +6450,8 @@ XMLConformanceExpatTests >> testnotwfsa117xml [
 XMLConformanceExpatTests >> testnotwfsa118xml [
 	"Source file: xmltest/not-wf/sa/118.xml"
 
+	(self isSkippableTest: #testnotwfsa118xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6197,6 +6464,8 @@ XMLConformanceExpatTests >> testnotwfsa118xml [
 XMLConformanceExpatTests >> testnotwfsa119xml [
 	"Source file: xmltest/not-wf/sa/119.xml"
 
+	(self isSkippableTest: #testnotwfsa119xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6209,6 +6478,8 @@ XMLConformanceExpatTests >> testnotwfsa119xml [
 XMLConformanceExpatTests >> testnotwfsa120xml [
 	"Source file: xmltest/not-wf/sa/120.xml"
 
+	(self isSkippableTest: #testnotwfsa120xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6221,6 +6492,8 @@ XMLConformanceExpatTests >> testnotwfsa120xml [
 XMLConformanceExpatTests >> testnotwfsa121xml [
 	"Source file: xmltest/not-wf/sa/121.xml"
 
+	(self isSkippableTest: #testnotwfsa121xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6233,6 +6506,8 @@ XMLConformanceExpatTests >> testnotwfsa121xml [
 XMLConformanceExpatTests >> testnotwfsa122xml [
 	"Source file: xmltest/not-wf/sa/122.xml"
 
+	(self isSkippableTest: #testnotwfsa122xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6245,6 +6520,8 @@ XMLConformanceExpatTests >> testnotwfsa122xml [
 XMLConformanceExpatTests >> testnotwfsa123xml [
 	"Source file: xmltest/not-wf/sa/123.xml"
 
+	(self isSkippableTest: #testnotwfsa123xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6257,6 +6534,8 @@ XMLConformanceExpatTests >> testnotwfsa123xml [
 XMLConformanceExpatTests >> testnotwfsa124xml [
 	"Source file: xmltest/not-wf/sa/124.xml"
 
+	(self isSkippableTest: #testnotwfsa124xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6269,6 +6548,8 @@ XMLConformanceExpatTests >> testnotwfsa124xml [
 XMLConformanceExpatTests >> testnotwfsa125xml [
 	"Source file: xmltest/not-wf/sa/125.xml"
 
+	(self isSkippableTest: #testnotwfsa125xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6281,6 +6562,8 @@ XMLConformanceExpatTests >> testnotwfsa125xml [
 XMLConformanceExpatTests >> testnotwfsa126xml [
 	"Source file: xmltest/not-wf/sa/126.xml"
 
+	(self isSkippableTest: #testnotwfsa126xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6293,6 +6576,8 @@ XMLConformanceExpatTests >> testnotwfsa126xml [
 XMLConformanceExpatTests >> testnotwfsa127xml [
 	"Source file: xmltest/not-wf/sa/127.xml"
 
+	(self isSkippableTest: #testnotwfsa127xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6305,6 +6590,8 @@ XMLConformanceExpatTests >> testnotwfsa127xml [
 XMLConformanceExpatTests >> testnotwfsa128xml [
 	"Source file: xmltest/not-wf/sa/128.xml"
 
+	(self isSkippableTest: #testnotwfsa128xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6317,6 +6604,8 @@ XMLConformanceExpatTests >> testnotwfsa128xml [
 XMLConformanceExpatTests >> testnotwfsa129xml [
 	"Source file: xmltest/not-wf/sa/129.xml"
 
+	(self isSkippableTest: #testnotwfsa129xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6329,6 +6618,8 @@ XMLConformanceExpatTests >> testnotwfsa129xml [
 XMLConformanceExpatTests >> testnotwfsa130xml [
 	"Source file: xmltest/not-wf/sa/130.xml"
 
+	(self isSkippableTest: #testnotwfsa130xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6341,6 +6632,8 @@ XMLConformanceExpatTests >> testnotwfsa130xml [
 XMLConformanceExpatTests >> testnotwfsa131xml [
 	"Source file: xmltest/not-wf/sa/131.xml"
 
+	(self isSkippableTest: #testnotwfsa131xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6353,6 +6646,8 @@ XMLConformanceExpatTests >> testnotwfsa131xml [
 XMLConformanceExpatTests >> testnotwfsa132xml [
 	"Source file: xmltest/not-wf/sa/132.xml"
 
+	(self isSkippableTest: #testnotwfsa132xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6365,6 +6660,8 @@ XMLConformanceExpatTests >> testnotwfsa132xml [
 XMLConformanceExpatTests >> testnotwfsa133xml [
 	"Source file: xmltest/not-wf/sa/133.xml"
 
+	(self isSkippableTest: #testnotwfsa133xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6377,6 +6674,8 @@ XMLConformanceExpatTests >> testnotwfsa133xml [
 XMLConformanceExpatTests >> testnotwfsa134xml [
 	"Source file: xmltest/not-wf/sa/134.xml"
 
+	(self isSkippableTest: #testnotwfsa134xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6389,6 +6688,8 @@ XMLConformanceExpatTests >> testnotwfsa134xml [
 XMLConformanceExpatTests >> testnotwfsa135xml [
 	"Source file: xmltest/not-wf/sa/135.xml"
 
+	(self isSkippableTest: #testnotwfsa135xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6401,6 +6702,8 @@ XMLConformanceExpatTests >> testnotwfsa135xml [
 XMLConformanceExpatTests >> testnotwfsa136xml [
 	"Source file: xmltest/not-wf/sa/136.xml"
 
+	(self isSkippableTest: #testnotwfsa136xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6413,6 +6716,8 @@ XMLConformanceExpatTests >> testnotwfsa136xml [
 XMLConformanceExpatTests >> testnotwfsa137xml [
 	"Source file: xmltest/not-wf/sa/137.xml"
 
+	(self isSkippableTest: #testnotwfsa137xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6425,6 +6730,8 @@ XMLConformanceExpatTests >> testnotwfsa137xml [
 XMLConformanceExpatTests >> testnotwfsa138xml [
 	"Source file: xmltest/not-wf/sa/138.xml"
 
+	(self isSkippableTest: #testnotwfsa138xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6437,6 +6744,8 @@ XMLConformanceExpatTests >> testnotwfsa138xml [
 XMLConformanceExpatTests >> testnotwfsa139xml [
 	"Source file: xmltest/not-wf/sa/139.xml"
 
+	(self isSkippableTest: #testnotwfsa139xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6449,6 +6758,8 @@ XMLConformanceExpatTests >> testnotwfsa139xml [
 XMLConformanceExpatTests >> testnotwfsa140xml [
 	"Source file: xmltest/not-wf/sa/140.xml"
 
+	(self isSkippableTest: #testnotwfsa140xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6461,6 +6772,8 @@ XMLConformanceExpatTests >> testnotwfsa140xml [
 XMLConformanceExpatTests >> testnotwfsa141xml [
 	"Source file: xmltest/not-wf/sa/141.xml"
 
+	(self isSkippableTest: #testnotwfsa141xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6473,6 +6786,8 @@ XMLConformanceExpatTests >> testnotwfsa141xml [
 XMLConformanceExpatTests >> testnotwfsa142xml [
 	"Source file: xmltest/not-wf/sa/142.xml"
 
+	(self isSkippableTest: #testnotwfsa142xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6485,6 +6800,8 @@ XMLConformanceExpatTests >> testnotwfsa142xml [
 XMLConformanceExpatTests >> testnotwfsa143xml [
 	"Source file: xmltest/not-wf/sa/143.xml"
 
+	(self isSkippableTest: #testnotwfsa143xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6497,6 +6814,8 @@ XMLConformanceExpatTests >> testnotwfsa143xml [
 XMLConformanceExpatTests >> testnotwfsa144xml [
 	"Source file: xmltest/not-wf/sa/144.xml"
 
+	(self isSkippableTest: #testnotwfsa144xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6509,6 +6828,8 @@ XMLConformanceExpatTests >> testnotwfsa144xml [
 XMLConformanceExpatTests >> testnotwfsa145xml [
 	"Source file: xmltest/not-wf/sa/145.xml"
 
+	(self isSkippableTest: #testnotwfsa145xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6521,6 +6842,8 @@ XMLConformanceExpatTests >> testnotwfsa145xml [
 XMLConformanceExpatTests >> testnotwfsa146xml [
 	"Source file: xmltest/not-wf/sa/146.xml"
 
+	(self isSkippableTest: #testnotwfsa146xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6533,6 +6856,8 @@ XMLConformanceExpatTests >> testnotwfsa146xml [
 XMLConformanceExpatTests >> testnotwfsa147xml [
 	"Source file: xmltest/not-wf/sa/147.xml"
 
+	(self isSkippableTest: #testnotwfsa147xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6545,6 +6870,8 @@ XMLConformanceExpatTests >> testnotwfsa147xml [
 XMLConformanceExpatTests >> testnotwfsa148xml [
 	"Source file: xmltest/not-wf/sa/148.xml"
 
+	(self isSkippableTest: #testnotwfsa148xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6557,6 +6884,8 @@ XMLConformanceExpatTests >> testnotwfsa148xml [
 XMLConformanceExpatTests >> testnotwfsa149xml [
 	"Source file: xmltest/not-wf/sa/149.xml"
 
+	(self isSkippableTest: #testnotwfsa149xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6569,6 +6898,8 @@ XMLConformanceExpatTests >> testnotwfsa149xml [
 XMLConformanceExpatTests >> testnotwfsa150xml [
 	"Source file: xmltest/not-wf/sa/150.xml"
 
+	(self isSkippableTest: #testnotwfsa150xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6581,6 +6912,8 @@ XMLConformanceExpatTests >> testnotwfsa150xml [
 XMLConformanceExpatTests >> testnotwfsa151xml [
 	"Source file: xmltest/not-wf/sa/151.xml"
 
+	(self isSkippableTest: #testnotwfsa151xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6593,6 +6926,8 @@ XMLConformanceExpatTests >> testnotwfsa151xml [
 XMLConformanceExpatTests >> testnotwfsa152xml [
 	"Source file: xmltest/not-wf/sa/152.xml"
 
+	(self isSkippableTest: #testnotwfsa152xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6605,6 +6940,8 @@ XMLConformanceExpatTests >> testnotwfsa152xml [
 XMLConformanceExpatTests >> testnotwfsa153xml [
 	"Source file: xmltest/not-wf/sa/153.xml"
 
+	(self isSkippableTest: #testnotwfsa153xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6617,6 +6954,8 @@ XMLConformanceExpatTests >> testnotwfsa153xml [
 XMLConformanceExpatTests >> testnotwfsa154xml [
 	"Source file: xmltest/not-wf/sa/154.xml"
 
+	(self isSkippableTest: #testnotwfsa154xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6629,6 +6968,8 @@ XMLConformanceExpatTests >> testnotwfsa154xml [
 XMLConformanceExpatTests >> testnotwfsa155xml [
 	"Source file: xmltest/not-wf/sa/155.xml"
 
+	(self isSkippableTest: #testnotwfsa155xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6641,6 +6982,8 @@ XMLConformanceExpatTests >> testnotwfsa155xml [
 XMLConformanceExpatTests >> testnotwfsa156xml [
 	"Source file: xmltest/not-wf/sa/156.xml"
 
+	(self isSkippableTest: #testnotwfsa156xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6653,6 +6996,8 @@ XMLConformanceExpatTests >> testnotwfsa156xml [
 XMLConformanceExpatTests >> testnotwfsa157xml [
 	"Source file: xmltest/not-wf/sa/157.xml"
 
+	(self isSkippableTest: #testnotwfsa157xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6665,6 +7010,8 @@ XMLConformanceExpatTests >> testnotwfsa157xml [
 XMLConformanceExpatTests >> testnotwfsa158xml [
 	"Source file: xmltest/not-wf/sa/158.xml"
 
+	(self isSkippableTest: #testnotwfsa158xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6677,6 +7024,8 @@ XMLConformanceExpatTests >> testnotwfsa158xml [
 XMLConformanceExpatTests >> testnotwfsa159xml [
 	"Source file: xmltest/not-wf/sa/159.xml"
 
+	(self isSkippableTest: #testnotwfsa159xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6689,6 +7038,8 @@ XMLConformanceExpatTests >> testnotwfsa159xml [
 XMLConformanceExpatTests >> testnotwfsa160xml [
 	"Source file: xmltest/not-wf/sa/160.xml"
 
+	(self isSkippableTest: #testnotwfsa160xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6701,6 +7052,8 @@ XMLConformanceExpatTests >> testnotwfsa160xml [
 XMLConformanceExpatTests >> testnotwfsa161xml [
 	"Source file: xmltest/not-wf/sa/161.xml"
 
+	(self isSkippableTest: #testnotwfsa161xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6713,6 +7066,8 @@ XMLConformanceExpatTests >> testnotwfsa161xml [
 XMLConformanceExpatTests >> testnotwfsa162xml [
 	"Source file: xmltest/not-wf/sa/162.xml"
 
+	(self isSkippableTest: #testnotwfsa162xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6725,6 +7080,8 @@ XMLConformanceExpatTests >> testnotwfsa162xml [
 XMLConformanceExpatTests >> testnotwfsa163xml [
 	"Source file: xmltest/not-wf/sa/163.xml"
 
+	(self isSkippableTest: #testnotwfsa163xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6737,6 +7094,8 @@ XMLConformanceExpatTests >> testnotwfsa163xml [
 XMLConformanceExpatTests >> testnotwfsa164xml [
 	"Source file: xmltest/not-wf/sa/164.xml"
 
+	(self isSkippableTest: #testnotwfsa164xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6749,6 +7108,8 @@ XMLConformanceExpatTests >> testnotwfsa164xml [
 XMLConformanceExpatTests >> testnotwfsa165xml [
 	"Source file: xmltest/not-wf/sa/165.xml"
 
+	(self isSkippableTest: #testnotwfsa165xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6761,6 +7122,8 @@ XMLConformanceExpatTests >> testnotwfsa165xml [
 XMLConformanceExpatTests >> testnotwfsa166xml [
 	"Source file: xmltest/not-wf/sa/166.xml"
 
+	(self isSkippableTest: #testnotwfsa166xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6773,6 +7136,8 @@ XMLConformanceExpatTests >> testnotwfsa166xml [
 XMLConformanceExpatTests >> testnotwfsa167xml [
 	"Source file: xmltest/not-wf/sa/167.xml"
 
+	(self isSkippableTest: #testnotwfsa167xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6785,6 +7150,8 @@ XMLConformanceExpatTests >> testnotwfsa167xml [
 XMLConformanceExpatTests >> testnotwfsa168xml [
 	"Source file: xmltest/not-wf/sa/168.xml"
 
+	(self isSkippableTest: #testnotwfsa168xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6797,6 +7164,8 @@ XMLConformanceExpatTests >> testnotwfsa168xml [
 XMLConformanceExpatTests >> testnotwfsa169xml [
 	"Source file: xmltest/not-wf/sa/169.xml"
 
+	(self isSkippableTest: #testnotwfsa169xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6809,6 +7178,8 @@ XMLConformanceExpatTests >> testnotwfsa169xml [
 XMLConformanceExpatTests >> testnotwfsa171xml [
 	"Source file: xmltest/not-wf/sa/171.xml"
 
+	(self isSkippableTest: #testnotwfsa171xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6821,6 +7192,8 @@ XMLConformanceExpatTests >> testnotwfsa171xml [
 XMLConformanceExpatTests >> testnotwfsa172xml [
 	"Source file: xmltest/not-wf/sa/172.xml"
 
+	(self isSkippableTest: #testnotwfsa172xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6833,6 +7206,8 @@ XMLConformanceExpatTests >> testnotwfsa172xml [
 XMLConformanceExpatTests >> testnotwfsa173xml [
 	"Source file: xmltest/not-wf/sa/173.xml"
 
+	(self isSkippableTest: #testnotwfsa173xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6845,6 +7220,8 @@ XMLConformanceExpatTests >> testnotwfsa173xml [
 XMLConformanceExpatTests >> testnotwfsa174xml [
 	"Source file: xmltest/not-wf/sa/174.xml"
 
+	(self isSkippableTest: #testnotwfsa174xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6857,6 +7234,8 @@ XMLConformanceExpatTests >> testnotwfsa174xml [
 XMLConformanceExpatTests >> testnotwfsa175xml [
 	"Source file: xmltest/not-wf/sa/175.xml"
 
+	(self isSkippableTest: #testnotwfsa175xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6869,6 +7248,8 @@ XMLConformanceExpatTests >> testnotwfsa175xml [
 XMLConformanceExpatTests >> testnotwfsa176xml [
 	"Source file: xmltest/not-wf/sa/176.xml"
 
+	(self isSkippableTest: #testnotwfsa176xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6881,6 +7262,8 @@ XMLConformanceExpatTests >> testnotwfsa176xml [
 XMLConformanceExpatTests >> testnotwfsa177xml [
 	"Source file: xmltest/not-wf/sa/177.xml"
 
+	(self isSkippableTest: #testnotwfsa177xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6893,6 +7276,8 @@ XMLConformanceExpatTests >> testnotwfsa177xml [
 XMLConformanceExpatTests >> testnotwfsa178xml [
 	"Source file: xmltest/not-wf/sa/178.xml"
 
+	(self isSkippableTest: #testnotwfsa178xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6905,6 +7290,8 @@ XMLConformanceExpatTests >> testnotwfsa178xml [
 XMLConformanceExpatTests >> testnotwfsa179xml [
 	"Source file: xmltest/not-wf/sa/179.xml"
 
+	(self isSkippableTest: #testnotwfsa179xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6917,6 +7304,8 @@ XMLConformanceExpatTests >> testnotwfsa179xml [
 XMLConformanceExpatTests >> testnotwfsa180xml [
 	"Source file: xmltest/not-wf/sa/180.xml"
 
+	(self isSkippableTest: #testnotwfsa180xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6929,6 +7318,8 @@ XMLConformanceExpatTests >> testnotwfsa180xml [
 XMLConformanceExpatTests >> testnotwfsa181xml [
 	"Source file: xmltest/not-wf/sa/181.xml"
 
+	(self isSkippableTest: #testnotwfsa181xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6941,6 +7332,8 @@ XMLConformanceExpatTests >> testnotwfsa181xml [
 XMLConformanceExpatTests >> testnotwfsa182xml [
 	"Source file: xmltest/not-wf/sa/182.xml"
 
+	(self isSkippableTest: #testnotwfsa182xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6953,6 +7346,8 @@ XMLConformanceExpatTests >> testnotwfsa182xml [
 XMLConformanceExpatTests >> testnotwfsa183xml [
 	"Source file: xmltest/not-wf/sa/183.xml"
 
+	(self isSkippableTest: #testnotwfsa183xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6965,6 +7360,8 @@ XMLConformanceExpatTests >> testnotwfsa183xml [
 XMLConformanceExpatTests >> testnotwfsa184xml [
 	"Source file: xmltest/not-wf/sa/184.xml"
 
+	(self isSkippableTest: #testnotwfsa184xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6977,6 +7374,8 @@ XMLConformanceExpatTests >> testnotwfsa184xml [
 XMLConformanceExpatTests >> testnotwfsa185xml [
 	"Source file: xmltest/not-wf/sa/185.xml"
 
+	(self isSkippableTest: #testnotwfsa185xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -6989,6 +7388,8 @@ XMLConformanceExpatTests >> testnotwfsa185xml [
 XMLConformanceExpatTests >> testnotwfsa186xml [
 	"Source file: xmltest/not-wf/sa/186.xml"
 
+	(self isSkippableTest: #testnotwfsa186xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -7001,6 +7402,8 @@ XMLConformanceExpatTests >> testnotwfsa186xml [
 XMLConformanceExpatTests >> testvalidextsa001xml [
 	"Source file: xmltest/valid/ext-sa/001.xml"
 
+	(self isSkippableTest: #testvalidextsa001xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7009,7 +7412,7 @@ XMLConformanceExpatTests >> testvalidextsa001xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7018,6 +7421,8 @@ XMLConformanceExpatTests >> testvalidextsa001xml [
 XMLConformanceExpatTests >> testvalidextsa002xml [
 	"Source file: xmltest/valid/ext-sa/002.xml"
 
+	(self isSkippableTest: #testvalidextsa002xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7026,7 +7431,7 @@ XMLConformanceExpatTests >> testvalidextsa002xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7035,6 +7440,8 @@ XMLConformanceExpatTests >> testvalidextsa002xml [
 XMLConformanceExpatTests >> testvalidextsa003xml [
 	"Source file: xmltest/valid/ext-sa/003.xml"
 
+	(self isSkippableTest: #testvalidextsa003xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7043,7 +7450,7 @@ XMLConformanceExpatTests >> testvalidextsa003xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7052,6 +7459,8 @@ XMLConformanceExpatTests >> testvalidextsa003xml [
 XMLConformanceExpatTests >> testvalidextsa004xml [
 	"Source file: xmltest/valid/ext-sa/004.xml"
 
+	(self isSkippableTest: #testvalidextsa004xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7060,7 +7469,7 @@ XMLConformanceExpatTests >> testvalidextsa004xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7069,6 +7478,8 @@ XMLConformanceExpatTests >> testvalidextsa004xml [
 XMLConformanceExpatTests >> testvalidextsa005xml [
 	"Source file: xmltest/valid/ext-sa/005.xml"
 
+	(self isSkippableTest: #testvalidextsa005xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7077,7 +7488,7 @@ XMLConformanceExpatTests >> testvalidextsa005xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7086,6 +7497,8 @@ XMLConformanceExpatTests >> testvalidextsa005xml [
 XMLConformanceExpatTests >> testvalidextsa006xml [
 	"Source file: xmltest/valid/ext-sa/006.xml"
 
+	(self isSkippableTest: #testvalidextsa006xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7094,7 +7507,7 @@ XMLConformanceExpatTests >> testvalidextsa006xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7103,6 +7516,8 @@ XMLConformanceExpatTests >> testvalidextsa006xml [
 XMLConformanceExpatTests >> testvalidextsa007xml [
 	"Source file: xmltest/valid/ext-sa/007.xml"
 
+	(self isSkippableTest: #testvalidextsa007xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7111,7 +7526,7 @@ XMLConformanceExpatTests >> testvalidextsa007xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7120,6 +7535,8 @@ XMLConformanceExpatTests >> testvalidextsa007xml [
 XMLConformanceExpatTests >> testvalidextsa008xml [
 	"Source file: xmltest/valid/ext-sa/008.xml"
 
+	(self isSkippableTest: #testvalidextsa008xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7128,7 +7545,7 @@ XMLConformanceExpatTests >> testvalidextsa008xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7137,6 +7554,8 @@ XMLConformanceExpatTests >> testvalidextsa008xml [
 XMLConformanceExpatTests >> testvalidextsa009xml [
 	"Source file: xmltest/valid/ext-sa/009.xml"
 
+	(self isSkippableTest: #testvalidextsa009xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7145,7 +7564,7 @@ XMLConformanceExpatTests >> testvalidextsa009xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7154,6 +7573,8 @@ XMLConformanceExpatTests >> testvalidextsa009xml [
 XMLConformanceExpatTests >> testvalidextsa010xml [
 	"Source file: xmltest/valid/ext-sa/010.xml"
 
+	(self isSkippableTest: #testvalidextsa010xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7162,7 +7583,7 @@ XMLConformanceExpatTests >> testvalidextsa010xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7171,6 +7592,8 @@ XMLConformanceExpatTests >> testvalidextsa010xml [
 XMLConformanceExpatTests >> testvalidextsa011xml [
 	"Source file: xmltest/valid/ext-sa/011.xml"
 
+	(self isSkippableTest: #testvalidextsa011xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7179,7 +7602,7 @@ XMLConformanceExpatTests >> testvalidextsa011xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7188,6 +7611,8 @@ XMLConformanceExpatTests >> testvalidextsa011xml [
 XMLConformanceExpatTests >> testvalidextsa012xml [
 	"Source file: xmltest/valid/ext-sa/012.xml"
 
+	(self isSkippableTest: #testvalidextsa012xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7196,7 +7621,7 @@ XMLConformanceExpatTests >> testvalidextsa012xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7205,6 +7630,8 @@ XMLConformanceExpatTests >> testvalidextsa012xml [
 XMLConformanceExpatTests >> testvalidextsa013xml [
 	"Source file: xmltest/valid/ext-sa/013.xml"
 
+	(self isSkippableTest: #testvalidextsa013xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7213,7 +7640,7 @@ XMLConformanceExpatTests >> testvalidextsa013xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7222,6 +7649,8 @@ XMLConformanceExpatTests >> testvalidextsa013xml [
 XMLConformanceExpatTests >> testvalidextsa014xml [
 	"Source file: xmltest/valid/ext-sa/014.xml"
 
+	(self isSkippableTest: #testvalidextsa014xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7230,7 +7659,7 @@ XMLConformanceExpatTests >> testvalidextsa014xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7239,6 +7668,8 @@ XMLConformanceExpatTests >> testvalidextsa014xml [
 XMLConformanceExpatTests >> testvalidnotsa001xml [
 	"Source file: xmltest/valid/not-sa/001.xml"
 
+	(self isSkippableTest: #testvalidnotsa001xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7247,7 +7678,7 @@ XMLConformanceExpatTests >> testvalidnotsa001xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7256,6 +7687,8 @@ XMLConformanceExpatTests >> testvalidnotsa001xml [
 XMLConformanceExpatTests >> testvalidnotsa002xml [
 	"Source file: xmltest/valid/not-sa/002.xml"
 
+	(self isSkippableTest: #testvalidnotsa002xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7264,7 +7697,7 @@ XMLConformanceExpatTests >> testvalidnotsa002xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7273,6 +7706,8 @@ XMLConformanceExpatTests >> testvalidnotsa002xml [
 XMLConformanceExpatTests >> testvalidnotsa003xml [
 	"Source file: xmltest/valid/not-sa/003.xml"
 
+	(self isSkippableTest: #testvalidnotsa003xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7281,7 +7716,7 @@ XMLConformanceExpatTests >> testvalidnotsa003xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7290,6 +7725,8 @@ XMLConformanceExpatTests >> testvalidnotsa003xml [
 XMLConformanceExpatTests >> testvalidnotsa004xml [
 	"Source file: xmltest/valid/not-sa/004.xml"
 
+	(self isSkippableTest: #testvalidnotsa004xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7298,7 +7735,7 @@ XMLConformanceExpatTests >> testvalidnotsa004xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7307,6 +7744,8 @@ XMLConformanceExpatTests >> testvalidnotsa004xml [
 XMLConformanceExpatTests >> testvalidnotsa005xml [
 	"Source file: xmltest/valid/not-sa/005.xml"
 
+	(self isSkippableTest: #testvalidnotsa005xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7315,7 +7754,7 @@ XMLConformanceExpatTests >> testvalidnotsa005xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7324,6 +7763,8 @@ XMLConformanceExpatTests >> testvalidnotsa005xml [
 XMLConformanceExpatTests >> testvalidnotsa006xml [
 	"Source file: xmltest/valid/not-sa/006.xml"
 
+	(self isSkippableTest: #testvalidnotsa006xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7332,7 +7773,7 @@ XMLConformanceExpatTests >> testvalidnotsa006xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7341,6 +7782,8 @@ XMLConformanceExpatTests >> testvalidnotsa006xml [
 XMLConformanceExpatTests >> testvalidnotsa007xml [
 	"Source file: xmltest/valid/not-sa/007.xml"
 
+	(self isSkippableTest: #testvalidnotsa007xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7349,7 +7792,7 @@ XMLConformanceExpatTests >> testvalidnotsa007xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7358,6 +7801,8 @@ XMLConformanceExpatTests >> testvalidnotsa007xml [
 XMLConformanceExpatTests >> testvalidnotsa008xml [
 	"Source file: xmltest/valid/not-sa/008.xml"
 
+	(self isSkippableTest: #testvalidnotsa008xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7366,7 +7811,7 @@ XMLConformanceExpatTests >> testvalidnotsa008xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7375,6 +7820,8 @@ XMLConformanceExpatTests >> testvalidnotsa008xml [
 XMLConformanceExpatTests >> testvalidnotsa009xml [
 	"Source file: xmltest/valid/not-sa/009.xml"
 
+	(self isSkippableTest: #testvalidnotsa009xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7383,7 +7830,7 @@ XMLConformanceExpatTests >> testvalidnotsa009xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7392,6 +7839,8 @@ XMLConformanceExpatTests >> testvalidnotsa009xml [
 XMLConformanceExpatTests >> testvalidnotsa010xml [
 	"Source file: xmltest/valid/not-sa/010.xml"
 
+	(self isSkippableTest: #testvalidnotsa010xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7400,7 +7849,7 @@ XMLConformanceExpatTests >> testvalidnotsa010xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7409,6 +7858,8 @@ XMLConformanceExpatTests >> testvalidnotsa010xml [
 XMLConformanceExpatTests >> testvalidnotsa011xml [
 	"Source file: xmltest/valid/not-sa/011.xml"
 
+	(self isSkippableTest: #testvalidnotsa011xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7417,7 +7868,7 @@ XMLConformanceExpatTests >> testvalidnotsa011xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7426,6 +7877,8 @@ XMLConformanceExpatTests >> testvalidnotsa011xml [
 XMLConformanceExpatTests >> testvalidnotsa012xml [
 	"Source file: xmltest/valid/not-sa/012.xml"
 
+	(self isSkippableTest: #testvalidnotsa012xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7434,7 +7887,7 @@ XMLConformanceExpatTests >> testvalidnotsa012xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7443,6 +7896,8 @@ XMLConformanceExpatTests >> testvalidnotsa012xml [
 XMLConformanceExpatTests >> testvalidnotsa013xml [
 	"Source file: xmltest/valid/not-sa/013.xml"
 
+	(self isSkippableTest: #testvalidnotsa013xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7451,7 +7906,7 @@ XMLConformanceExpatTests >> testvalidnotsa013xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7460,6 +7915,8 @@ XMLConformanceExpatTests >> testvalidnotsa013xml [
 XMLConformanceExpatTests >> testvalidnotsa014xml [
 	"Source file: xmltest/valid/not-sa/014.xml"
 
+	(self isSkippableTest: #testvalidnotsa014xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7468,7 +7925,7 @@ XMLConformanceExpatTests >> testvalidnotsa014xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7477,6 +7934,8 @@ XMLConformanceExpatTests >> testvalidnotsa014xml [
 XMLConformanceExpatTests >> testvalidnotsa015xml [
 	"Source file: xmltest/valid/not-sa/015.xml"
 
+	(self isSkippableTest: #testvalidnotsa015xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7485,7 +7944,7 @@ XMLConformanceExpatTests >> testvalidnotsa015xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7494,6 +7953,8 @@ XMLConformanceExpatTests >> testvalidnotsa015xml [
 XMLConformanceExpatTests >> testvalidnotsa016xml [
 	"Source file: xmltest/valid/not-sa/016.xml"
 
+	(self isSkippableTest: #testvalidnotsa016xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7502,7 +7963,7 @@ XMLConformanceExpatTests >> testvalidnotsa016xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7511,6 +7972,8 @@ XMLConformanceExpatTests >> testvalidnotsa016xml [
 XMLConformanceExpatTests >> testvalidnotsa017xml [
 	"Source file: xmltest/valid/not-sa/017.xml"
 
+	(self isSkippableTest: #testvalidnotsa017xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7519,7 +7982,7 @@ XMLConformanceExpatTests >> testvalidnotsa017xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7528,6 +7991,8 @@ XMLConformanceExpatTests >> testvalidnotsa017xml [
 XMLConformanceExpatTests >> testvalidnotsa018xml [
 	"Source file: xmltest/valid/not-sa/018.xml"
 
+	(self isSkippableTest: #testvalidnotsa018xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7536,7 +8001,7 @@ XMLConformanceExpatTests >> testvalidnotsa018xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7545,6 +8010,8 @@ XMLConformanceExpatTests >> testvalidnotsa018xml [
 XMLConformanceExpatTests >> testvalidnotsa019xml [
 	"Source file: xmltest/valid/not-sa/019.xml"
 
+	(self isSkippableTest: #testvalidnotsa019xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7553,7 +8020,7 @@ XMLConformanceExpatTests >> testvalidnotsa019xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7562,6 +8029,8 @@ XMLConformanceExpatTests >> testvalidnotsa019xml [
 XMLConformanceExpatTests >> testvalidnotsa020xml [
 	"Source file: xmltest/valid/not-sa/020.xml"
 
+	(self isSkippableTest: #testvalidnotsa020xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7570,7 +8039,7 @@ XMLConformanceExpatTests >> testvalidnotsa020xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7579,6 +8048,8 @@ XMLConformanceExpatTests >> testvalidnotsa020xml [
 XMLConformanceExpatTests >> testvalidnotsa021xml [
 	"Source file: xmltest/valid/not-sa/021.xml"
 
+	(self isSkippableTest: #testvalidnotsa021xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7587,7 +8058,7 @@ XMLConformanceExpatTests >> testvalidnotsa021xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7596,6 +8067,8 @@ XMLConformanceExpatTests >> testvalidnotsa021xml [
 XMLConformanceExpatTests >> testvalidnotsa023xml [
 	"Source file: xmltest/valid/not-sa/023.xml"
 
+	(self isSkippableTest: #testvalidnotsa023xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7604,7 +8077,7 @@ XMLConformanceExpatTests >> testvalidnotsa023xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7613,6 +8086,8 @@ XMLConformanceExpatTests >> testvalidnotsa023xml [
 XMLConformanceExpatTests >> testvalidnotsa024xml [
 	"Source file: xmltest/valid/not-sa/024.xml"
 
+	(self isSkippableTest: #testvalidnotsa024xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7621,7 +8096,7 @@ XMLConformanceExpatTests >> testvalidnotsa024xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7630,6 +8105,8 @@ XMLConformanceExpatTests >> testvalidnotsa024xml [
 XMLConformanceExpatTests >> testvalidnotsa025xml [
 	"Source file: xmltest/valid/not-sa/025.xml"
 
+	(self isSkippableTest: #testvalidnotsa025xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7638,7 +8115,7 @@ XMLConformanceExpatTests >> testvalidnotsa025xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7647,6 +8124,8 @@ XMLConformanceExpatTests >> testvalidnotsa025xml [
 XMLConformanceExpatTests >> testvalidnotsa026xml [
 	"Source file: xmltest/valid/not-sa/026.xml"
 
+	(self isSkippableTest: #testvalidnotsa026xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7655,7 +8134,7 @@ XMLConformanceExpatTests >> testvalidnotsa026xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7664,6 +8143,8 @@ XMLConformanceExpatTests >> testvalidnotsa026xml [
 XMLConformanceExpatTests >> testvalidnotsa027xml [
 	"Source file: xmltest/valid/not-sa/027.xml"
 
+	(self isSkippableTest: #testvalidnotsa027xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7672,7 +8153,7 @@ XMLConformanceExpatTests >> testvalidnotsa027xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7681,6 +8162,8 @@ XMLConformanceExpatTests >> testvalidnotsa027xml [
 XMLConformanceExpatTests >> testvalidnotsa028xml [
 	"Source file: xmltest/valid/not-sa/028.xml"
 
+	(self isSkippableTest: #testvalidnotsa028xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7689,7 +8172,7 @@ XMLConformanceExpatTests >> testvalidnotsa028xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7698,6 +8181,8 @@ XMLConformanceExpatTests >> testvalidnotsa028xml [
 XMLConformanceExpatTests >> testvalidnotsa029xml [
 	"Source file: xmltest/valid/not-sa/029.xml"
 
+	(self isSkippableTest: #testvalidnotsa029xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7706,7 +8191,7 @@ XMLConformanceExpatTests >> testvalidnotsa029xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7715,6 +8200,8 @@ XMLConformanceExpatTests >> testvalidnotsa029xml [
 XMLConformanceExpatTests >> testvalidnotsa030xml [
 	"Source file: xmltest/valid/not-sa/030.xml"
 
+	(self isSkippableTest: #testvalidnotsa030xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7723,7 +8210,7 @@ XMLConformanceExpatTests >> testvalidnotsa030xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7732,6 +8219,8 @@ XMLConformanceExpatTests >> testvalidnotsa030xml [
 XMLConformanceExpatTests >> testvalidnotsa031xml [
 	"Source file: xmltest/valid/not-sa/031.xml"
 
+	(self isSkippableTest: #testvalidnotsa031xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7740,7 +8229,7 @@ XMLConformanceExpatTests >> testvalidnotsa031xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7749,6 +8238,8 @@ XMLConformanceExpatTests >> testvalidnotsa031xml [
 XMLConformanceExpatTests >> testvalidsa001xml [
 	"Source file: xmltest/valid/sa/001.xml"
 
+	(self isSkippableTest: #testvalidsa001xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7757,7 +8248,7 @@ XMLConformanceExpatTests >> testvalidsa001xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7766,6 +8257,8 @@ XMLConformanceExpatTests >> testvalidsa001xml [
 XMLConformanceExpatTests >> testvalidsa002xml [
 	"Source file: xmltest/valid/sa/002.xml"
 
+	(self isSkippableTest: #testvalidsa002xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7774,7 +8267,7 @@ XMLConformanceExpatTests >> testvalidsa002xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7783,6 +8276,8 @@ XMLConformanceExpatTests >> testvalidsa002xml [
 XMLConformanceExpatTests >> testvalidsa003xml [
 	"Source file: xmltest/valid/sa/003.xml"
 
+	(self isSkippableTest: #testvalidsa003xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7791,7 +8286,7 @@ XMLConformanceExpatTests >> testvalidsa003xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7800,6 +8295,8 @@ XMLConformanceExpatTests >> testvalidsa003xml [
 XMLConformanceExpatTests >> testvalidsa004xml [
 	"Source file: xmltest/valid/sa/004.xml"
 
+	(self isSkippableTest: #testvalidsa004xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7808,7 +8305,7 @@ XMLConformanceExpatTests >> testvalidsa004xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7817,6 +8314,8 @@ XMLConformanceExpatTests >> testvalidsa004xml [
 XMLConformanceExpatTests >> testvalidsa005xml [
 	"Source file: xmltest/valid/sa/005.xml"
 
+	(self isSkippableTest: #testvalidsa005xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7825,7 +8324,7 @@ XMLConformanceExpatTests >> testvalidsa005xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7834,6 +8333,8 @@ XMLConformanceExpatTests >> testvalidsa005xml [
 XMLConformanceExpatTests >> testvalidsa006xml [
 	"Source file: xmltest/valid/sa/006.xml"
 
+	(self isSkippableTest: #testvalidsa006xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7842,7 +8343,7 @@ XMLConformanceExpatTests >> testvalidsa006xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7851,6 +8352,8 @@ XMLConformanceExpatTests >> testvalidsa006xml [
 XMLConformanceExpatTests >> testvalidsa007xml [
 	"Source file: xmltest/valid/sa/007.xml"
 
+	(self isSkippableTest: #testvalidsa007xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7859,7 +8362,7 @@ XMLConformanceExpatTests >> testvalidsa007xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7868,6 +8371,8 @@ XMLConformanceExpatTests >> testvalidsa007xml [
 XMLConformanceExpatTests >> testvalidsa008xml [
 	"Source file: xmltest/valid/sa/008.xml"
 
+	(self isSkippableTest: #testvalidsa008xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7876,7 +8381,7 @@ XMLConformanceExpatTests >> testvalidsa008xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7885,6 +8390,8 @@ XMLConformanceExpatTests >> testvalidsa008xml [
 XMLConformanceExpatTests >> testvalidsa009xml [
 	"Source file: xmltest/valid/sa/009.xml"
 
+	(self isSkippableTest: #testvalidsa009xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7893,7 +8400,7 @@ XMLConformanceExpatTests >> testvalidsa009xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7902,6 +8409,8 @@ XMLConformanceExpatTests >> testvalidsa009xml [
 XMLConformanceExpatTests >> testvalidsa010xml [
 	"Source file: xmltest/valid/sa/010.xml"
 
+	(self isSkippableTest: #testvalidsa010xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7910,7 +8419,7 @@ XMLConformanceExpatTests >> testvalidsa010xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7919,6 +8428,8 @@ XMLConformanceExpatTests >> testvalidsa010xml [
 XMLConformanceExpatTests >> testvalidsa011xml [
 	"Source file: xmltest/valid/sa/011.xml"
 
+	(self isSkippableTest: #testvalidsa011xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7927,7 +8438,7 @@ XMLConformanceExpatTests >> testvalidsa011xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7936,6 +8447,8 @@ XMLConformanceExpatTests >> testvalidsa011xml [
 XMLConformanceExpatTests >> testvalidsa012xml [
 	"Source file: xmltest/valid/sa/012.xml"
 
+	(self isSkippableTest: #testvalidsa012xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7944,7 +8457,7 @@ XMLConformanceExpatTests >> testvalidsa012xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7953,6 +8466,8 @@ XMLConformanceExpatTests >> testvalidsa012xml [
 XMLConformanceExpatTests >> testvalidsa013xml [
 	"Source file: xmltest/valid/sa/013.xml"
 
+	(self isSkippableTest: #testvalidsa013xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7961,7 +8476,7 @@ XMLConformanceExpatTests >> testvalidsa013xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7970,6 +8485,8 @@ XMLConformanceExpatTests >> testvalidsa013xml [
 XMLConformanceExpatTests >> testvalidsa014xml [
 	"Source file: xmltest/valid/sa/014.xml"
 
+	(self isSkippableTest: #testvalidsa014xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7978,7 +8495,7 @@ XMLConformanceExpatTests >> testvalidsa014xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -7987,6 +8504,8 @@ XMLConformanceExpatTests >> testvalidsa014xml [
 XMLConformanceExpatTests >> testvalidsa015xml [
 	"Source file: xmltest/valid/sa/015.xml"
 
+	(self isSkippableTest: #testvalidsa015xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -7995,7 +8514,7 @@ XMLConformanceExpatTests >> testvalidsa015xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8004,6 +8523,8 @@ XMLConformanceExpatTests >> testvalidsa015xml [
 XMLConformanceExpatTests >> testvalidsa016xml [
 	"Source file: xmltest/valid/sa/016.xml"
 
+	(self isSkippableTest: #testvalidsa016xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8012,24 +8533,7 @@ XMLConformanceExpatTests >> testvalidsa016xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
-						ifFalse: [error pass]]]
-		raise: self parserExceptions
-]
-
-{ #category : #tests }
-XMLConformanceExpatTests >> testvalidsa017axml [
-	"Source file: xmltest/valid/sa/017a.xml"
-
-	self
-		shouldnt: [
-			[self
-				parse: self class sourcevalidsa017axml
-				documentURI: 'valid/sa/017a.xml']
-				on: self parserExceptions
-				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8038,6 +8542,8 @@ XMLConformanceExpatTests >> testvalidsa017axml [
 XMLConformanceExpatTests >> testvalidsa017xml [
 	"Source file: xmltest/valid/sa/017.xml"
 
+	(self isSkippableTest: #testvalidsa017xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8046,7 +8552,7 @@ XMLConformanceExpatTests >> testvalidsa017xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8055,6 +8561,8 @@ XMLConformanceExpatTests >> testvalidsa017xml [
 XMLConformanceExpatTests >> testvalidsa018xml [
 	"Source file: xmltest/valid/sa/018.xml"
 
+	(self isSkippableTest: #testvalidsa018xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8063,7 +8571,7 @@ XMLConformanceExpatTests >> testvalidsa018xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8072,6 +8580,8 @@ XMLConformanceExpatTests >> testvalidsa018xml [
 XMLConformanceExpatTests >> testvalidsa019xml [
 	"Source file: xmltest/valid/sa/019.xml"
 
+	(self isSkippableTest: #testvalidsa019xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8080,7 +8590,7 @@ XMLConformanceExpatTests >> testvalidsa019xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8089,6 +8599,8 @@ XMLConformanceExpatTests >> testvalidsa019xml [
 XMLConformanceExpatTests >> testvalidsa020xml [
 	"Source file: xmltest/valid/sa/020.xml"
 
+	(self isSkippableTest: #testvalidsa020xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8097,7 +8609,7 @@ XMLConformanceExpatTests >> testvalidsa020xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8106,6 +8618,8 @@ XMLConformanceExpatTests >> testvalidsa020xml [
 XMLConformanceExpatTests >> testvalidsa021xml [
 	"Source file: xmltest/valid/sa/021.xml"
 
+	(self isSkippableTest: #testvalidsa021xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8114,7 +8628,7 @@ XMLConformanceExpatTests >> testvalidsa021xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8123,6 +8637,8 @@ XMLConformanceExpatTests >> testvalidsa021xml [
 XMLConformanceExpatTests >> testvalidsa022xml [
 	"Source file: xmltest/valid/sa/022.xml"
 
+	(self isSkippableTest: #testvalidsa022xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8131,7 +8647,7 @@ XMLConformanceExpatTests >> testvalidsa022xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8140,6 +8656,8 @@ XMLConformanceExpatTests >> testvalidsa022xml [
 XMLConformanceExpatTests >> testvalidsa023xml [
 	"Source file: xmltest/valid/sa/023.xml"
 
+	(self isSkippableTest: #testvalidsa023xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8148,7 +8666,7 @@ XMLConformanceExpatTests >> testvalidsa023xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8157,6 +8675,8 @@ XMLConformanceExpatTests >> testvalidsa023xml [
 XMLConformanceExpatTests >> testvalidsa024xml [
 	"Source file: xmltest/valid/sa/024.xml"
 
+	(self isSkippableTest: #testvalidsa024xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8165,7 +8685,7 @@ XMLConformanceExpatTests >> testvalidsa024xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8174,6 +8694,8 @@ XMLConformanceExpatTests >> testvalidsa024xml [
 XMLConformanceExpatTests >> testvalidsa025xml [
 	"Source file: xmltest/valid/sa/025.xml"
 
+	(self isSkippableTest: #testvalidsa025xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8182,7 +8704,7 @@ XMLConformanceExpatTests >> testvalidsa025xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8191,6 +8713,8 @@ XMLConformanceExpatTests >> testvalidsa025xml [
 XMLConformanceExpatTests >> testvalidsa026xml [
 	"Source file: xmltest/valid/sa/026.xml"
 
+	(self isSkippableTest: #testvalidsa026xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8199,7 +8723,7 @@ XMLConformanceExpatTests >> testvalidsa026xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8208,6 +8732,8 @@ XMLConformanceExpatTests >> testvalidsa026xml [
 XMLConformanceExpatTests >> testvalidsa027xml [
 	"Source file: xmltest/valid/sa/027.xml"
 
+	(self isSkippableTest: #testvalidsa027xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8216,7 +8742,7 @@ XMLConformanceExpatTests >> testvalidsa027xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8225,6 +8751,8 @@ XMLConformanceExpatTests >> testvalidsa027xml [
 XMLConformanceExpatTests >> testvalidsa028xml [
 	"Source file: xmltest/valid/sa/028.xml"
 
+	(self isSkippableTest: #testvalidsa028xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8233,7 +8761,7 @@ XMLConformanceExpatTests >> testvalidsa028xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8242,6 +8770,8 @@ XMLConformanceExpatTests >> testvalidsa028xml [
 XMLConformanceExpatTests >> testvalidsa029xml [
 	"Source file: xmltest/valid/sa/029.xml"
 
+	(self isSkippableTest: #testvalidsa029xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8250,7 +8780,7 @@ XMLConformanceExpatTests >> testvalidsa029xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8259,6 +8789,8 @@ XMLConformanceExpatTests >> testvalidsa029xml [
 XMLConformanceExpatTests >> testvalidsa030xml [
 	"Source file: xmltest/valid/sa/030.xml"
 
+	(self isSkippableTest: #testvalidsa030xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8267,7 +8799,7 @@ XMLConformanceExpatTests >> testvalidsa030xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8276,6 +8808,8 @@ XMLConformanceExpatTests >> testvalidsa030xml [
 XMLConformanceExpatTests >> testvalidsa031xml [
 	"Source file: xmltest/valid/sa/031.xml"
 
+	(self isSkippableTest: #testvalidsa031xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8284,7 +8818,7 @@ XMLConformanceExpatTests >> testvalidsa031xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8293,6 +8827,8 @@ XMLConformanceExpatTests >> testvalidsa031xml [
 XMLConformanceExpatTests >> testvalidsa032xml [
 	"Source file: xmltest/valid/sa/032.xml"
 
+	(self isSkippableTest: #testvalidsa032xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8301,7 +8837,7 @@ XMLConformanceExpatTests >> testvalidsa032xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8310,6 +8846,8 @@ XMLConformanceExpatTests >> testvalidsa032xml [
 XMLConformanceExpatTests >> testvalidsa033xml [
 	"Source file: xmltest/valid/sa/033.xml"
 
+	(self isSkippableTest: #testvalidsa033xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8318,7 +8856,7 @@ XMLConformanceExpatTests >> testvalidsa033xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8327,6 +8865,8 @@ XMLConformanceExpatTests >> testvalidsa033xml [
 XMLConformanceExpatTests >> testvalidsa034xml [
 	"Source file: xmltest/valid/sa/034.xml"
 
+	(self isSkippableTest: #testvalidsa034xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8335,7 +8875,7 @@ XMLConformanceExpatTests >> testvalidsa034xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8344,6 +8884,8 @@ XMLConformanceExpatTests >> testvalidsa034xml [
 XMLConformanceExpatTests >> testvalidsa035xml [
 	"Source file: xmltest/valid/sa/035.xml"
 
+	(self isSkippableTest: #testvalidsa035xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8352,7 +8894,7 @@ XMLConformanceExpatTests >> testvalidsa035xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8361,6 +8903,8 @@ XMLConformanceExpatTests >> testvalidsa035xml [
 XMLConformanceExpatTests >> testvalidsa036xml [
 	"Source file: xmltest/valid/sa/036.xml"
 
+	(self isSkippableTest: #testvalidsa036xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8369,7 +8913,7 @@ XMLConformanceExpatTests >> testvalidsa036xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8378,6 +8922,8 @@ XMLConformanceExpatTests >> testvalidsa036xml [
 XMLConformanceExpatTests >> testvalidsa037xml [
 	"Source file: xmltest/valid/sa/037.xml"
 
+	(self isSkippableTest: #testvalidsa037xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8386,7 +8932,7 @@ XMLConformanceExpatTests >> testvalidsa037xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8395,6 +8941,8 @@ XMLConformanceExpatTests >> testvalidsa037xml [
 XMLConformanceExpatTests >> testvalidsa038xml [
 	"Source file: xmltest/valid/sa/038.xml"
 
+	(self isSkippableTest: #testvalidsa038xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8403,7 +8951,7 @@ XMLConformanceExpatTests >> testvalidsa038xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8412,6 +8960,8 @@ XMLConformanceExpatTests >> testvalidsa038xml [
 XMLConformanceExpatTests >> testvalidsa039xml [
 	"Source file: xmltest/valid/sa/039.xml"
 
+	(self isSkippableTest: #testvalidsa039xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8420,7 +8970,7 @@ XMLConformanceExpatTests >> testvalidsa039xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8429,6 +8979,8 @@ XMLConformanceExpatTests >> testvalidsa039xml [
 XMLConformanceExpatTests >> testvalidsa040xml [
 	"Source file: xmltest/valid/sa/040.xml"
 
+	(self isSkippableTest: #testvalidsa040xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8437,7 +8989,7 @@ XMLConformanceExpatTests >> testvalidsa040xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8446,6 +8998,8 @@ XMLConformanceExpatTests >> testvalidsa040xml [
 XMLConformanceExpatTests >> testvalidsa041xml [
 	"Source file: xmltest/valid/sa/041.xml"
 
+	(self isSkippableTest: #testvalidsa041xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8454,7 +9008,7 @@ XMLConformanceExpatTests >> testvalidsa041xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8463,6 +9017,8 @@ XMLConformanceExpatTests >> testvalidsa041xml [
 XMLConformanceExpatTests >> testvalidsa042xml [
 	"Source file: xmltest/valid/sa/042.xml"
 
+	(self isSkippableTest: #testvalidsa042xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8471,7 +9027,7 @@ XMLConformanceExpatTests >> testvalidsa042xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8480,6 +9036,8 @@ XMLConformanceExpatTests >> testvalidsa042xml [
 XMLConformanceExpatTests >> testvalidsa043xml [
 	"Source file: xmltest/valid/sa/043.xml"
 
+	(self isSkippableTest: #testvalidsa043xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8488,7 +9046,7 @@ XMLConformanceExpatTests >> testvalidsa043xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8497,6 +9055,8 @@ XMLConformanceExpatTests >> testvalidsa043xml [
 XMLConformanceExpatTests >> testvalidsa044xml [
 	"Source file: xmltest/valid/sa/044.xml"
 
+	(self isSkippableTest: #testvalidsa044xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8505,7 +9065,7 @@ XMLConformanceExpatTests >> testvalidsa044xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8514,6 +9074,8 @@ XMLConformanceExpatTests >> testvalidsa044xml [
 XMLConformanceExpatTests >> testvalidsa045xml [
 	"Source file: xmltest/valid/sa/045.xml"
 
+	(self isSkippableTest: #testvalidsa045xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8522,7 +9084,7 @@ XMLConformanceExpatTests >> testvalidsa045xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8531,6 +9093,8 @@ XMLConformanceExpatTests >> testvalidsa045xml [
 XMLConformanceExpatTests >> testvalidsa046xml [
 	"Source file: xmltest/valid/sa/046.xml"
 
+	(self isSkippableTest: #testvalidsa046xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8539,7 +9103,7 @@ XMLConformanceExpatTests >> testvalidsa046xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8548,6 +9112,8 @@ XMLConformanceExpatTests >> testvalidsa046xml [
 XMLConformanceExpatTests >> testvalidsa047xml [
 	"Source file: xmltest/valid/sa/047.xml"
 
+	(self isSkippableTest: #testvalidsa047xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8556,7 +9122,7 @@ XMLConformanceExpatTests >> testvalidsa047xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8565,6 +9131,8 @@ XMLConformanceExpatTests >> testvalidsa047xml [
 XMLConformanceExpatTests >> testvalidsa048xml [
 	"Source file: xmltest/valid/sa/048.xml"
 
+	(self isSkippableTest: #testvalidsa048xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8573,7 +9141,7 @@ XMLConformanceExpatTests >> testvalidsa048xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8582,6 +9150,8 @@ XMLConformanceExpatTests >> testvalidsa048xml [
 XMLConformanceExpatTests >> testvalidsa052xml [
 	"Source file: xmltest/valid/sa/052.xml"
 
+	(self isSkippableTest: #testvalidsa052xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8590,7 +9160,7 @@ XMLConformanceExpatTests >> testvalidsa052xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8599,6 +9169,8 @@ XMLConformanceExpatTests >> testvalidsa052xml [
 XMLConformanceExpatTests >> testvalidsa053xml [
 	"Source file: xmltest/valid/sa/053.xml"
 
+	(self isSkippableTest: #testvalidsa053xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8607,7 +9179,7 @@ XMLConformanceExpatTests >> testvalidsa053xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8616,6 +9188,8 @@ XMLConformanceExpatTests >> testvalidsa053xml [
 XMLConformanceExpatTests >> testvalidsa054xml [
 	"Source file: xmltest/valid/sa/054.xml"
 
+	(self isSkippableTest: #testvalidsa054xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8624,7 +9198,7 @@ XMLConformanceExpatTests >> testvalidsa054xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8633,6 +9207,8 @@ XMLConformanceExpatTests >> testvalidsa054xml [
 XMLConformanceExpatTests >> testvalidsa055xml [
 	"Source file: xmltest/valid/sa/055.xml"
 
+	(self isSkippableTest: #testvalidsa055xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8641,7 +9217,7 @@ XMLConformanceExpatTests >> testvalidsa055xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8650,6 +9226,8 @@ XMLConformanceExpatTests >> testvalidsa055xml [
 XMLConformanceExpatTests >> testvalidsa056xml [
 	"Source file: xmltest/valid/sa/056.xml"
 
+	(self isSkippableTest: #testvalidsa056xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8658,7 +9236,7 @@ XMLConformanceExpatTests >> testvalidsa056xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8667,6 +9245,8 @@ XMLConformanceExpatTests >> testvalidsa056xml [
 XMLConformanceExpatTests >> testvalidsa057xml [
 	"Source file: xmltest/valid/sa/057.xml"
 
+	(self isSkippableTest: #testvalidsa057xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8675,7 +9255,7 @@ XMLConformanceExpatTests >> testvalidsa057xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8684,6 +9264,8 @@ XMLConformanceExpatTests >> testvalidsa057xml [
 XMLConformanceExpatTests >> testvalidsa058xml [
 	"Source file: xmltest/valid/sa/058.xml"
 
+	(self isSkippableTest: #testvalidsa058xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8692,7 +9274,7 @@ XMLConformanceExpatTests >> testvalidsa058xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8701,6 +9283,8 @@ XMLConformanceExpatTests >> testvalidsa058xml [
 XMLConformanceExpatTests >> testvalidsa059xml [
 	"Source file: xmltest/valid/sa/059.xml"
 
+	(self isSkippableTest: #testvalidsa059xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8709,7 +9293,7 @@ XMLConformanceExpatTests >> testvalidsa059xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8718,6 +9302,8 @@ XMLConformanceExpatTests >> testvalidsa059xml [
 XMLConformanceExpatTests >> testvalidsa060xml [
 	"Source file: xmltest/valid/sa/060.xml"
 
+	(self isSkippableTest: #testvalidsa060xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8726,7 +9312,7 @@ XMLConformanceExpatTests >> testvalidsa060xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8735,6 +9321,8 @@ XMLConformanceExpatTests >> testvalidsa060xml [
 XMLConformanceExpatTests >> testvalidsa061xml [
 	"Source file: xmltest/valid/sa/061.xml"
 
+	(self isSkippableTest: #testvalidsa061xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8743,7 +9331,7 @@ XMLConformanceExpatTests >> testvalidsa061xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8752,6 +9340,8 @@ XMLConformanceExpatTests >> testvalidsa061xml [
 XMLConformanceExpatTests >> testvalidsa062xml [
 	"Source file: xmltest/valid/sa/062.xml"
 
+	(self isSkippableTest: #testvalidsa062xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8760,7 +9350,7 @@ XMLConformanceExpatTests >> testvalidsa062xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8769,6 +9359,8 @@ XMLConformanceExpatTests >> testvalidsa062xml [
 XMLConformanceExpatTests >> testvalidsa063xml [
 	"Source file: xmltest/valid/sa/063.xml"
 
+	(self isSkippableTest: #testvalidsa063xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8777,7 +9369,7 @@ XMLConformanceExpatTests >> testvalidsa063xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8786,6 +9378,8 @@ XMLConformanceExpatTests >> testvalidsa063xml [
 XMLConformanceExpatTests >> testvalidsa064xml [
 	"Source file: xmltest/valid/sa/064.xml"
 
+	(self isSkippableTest: #testvalidsa064xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8794,7 +9388,7 @@ XMLConformanceExpatTests >> testvalidsa064xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8803,6 +9397,8 @@ XMLConformanceExpatTests >> testvalidsa064xml [
 XMLConformanceExpatTests >> testvalidsa065xml [
 	"Source file: xmltest/valid/sa/065.xml"
 
+	(self isSkippableTest: #testvalidsa065xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8811,7 +9407,7 @@ XMLConformanceExpatTests >> testvalidsa065xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8820,6 +9416,8 @@ XMLConformanceExpatTests >> testvalidsa065xml [
 XMLConformanceExpatTests >> testvalidsa066xml [
 	"Source file: xmltest/valid/sa/066.xml"
 
+	(self isSkippableTest: #testvalidsa066xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8828,7 +9426,7 @@ XMLConformanceExpatTests >> testvalidsa066xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8837,6 +9435,8 @@ XMLConformanceExpatTests >> testvalidsa066xml [
 XMLConformanceExpatTests >> testvalidsa067xml [
 	"Source file: xmltest/valid/sa/067.xml"
 
+	(self isSkippableTest: #testvalidsa067xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8845,7 +9445,7 @@ XMLConformanceExpatTests >> testvalidsa067xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8854,6 +9454,8 @@ XMLConformanceExpatTests >> testvalidsa067xml [
 XMLConformanceExpatTests >> testvalidsa068xml [
 	"Source file: xmltest/valid/sa/068.xml"
 
+	(self isSkippableTest: #testvalidsa068xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8862,7 +9464,7 @@ XMLConformanceExpatTests >> testvalidsa068xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8871,6 +9473,8 @@ XMLConformanceExpatTests >> testvalidsa068xml [
 XMLConformanceExpatTests >> testvalidsa069xml [
 	"Source file: xmltest/valid/sa/069.xml"
 
+	(self isSkippableTest: #testvalidsa069xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8879,7 +9483,7 @@ XMLConformanceExpatTests >> testvalidsa069xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8888,6 +9492,8 @@ XMLConformanceExpatTests >> testvalidsa069xml [
 XMLConformanceExpatTests >> testvalidsa070xml [
 	"Source file: xmltest/valid/sa/070.xml"
 
+	(self isSkippableTest: #testvalidsa070xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8896,7 +9502,7 @@ XMLConformanceExpatTests >> testvalidsa070xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8905,6 +9511,8 @@ XMLConformanceExpatTests >> testvalidsa070xml [
 XMLConformanceExpatTests >> testvalidsa071xml [
 	"Source file: xmltest/valid/sa/071.xml"
 
+	(self isSkippableTest: #testvalidsa071xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8913,7 +9521,7 @@ XMLConformanceExpatTests >> testvalidsa071xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8922,6 +9530,8 @@ XMLConformanceExpatTests >> testvalidsa071xml [
 XMLConformanceExpatTests >> testvalidsa072xml [
 	"Source file: xmltest/valid/sa/072.xml"
 
+	(self isSkippableTest: #testvalidsa072xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8930,7 +9540,7 @@ XMLConformanceExpatTests >> testvalidsa072xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8939,6 +9549,8 @@ XMLConformanceExpatTests >> testvalidsa072xml [
 XMLConformanceExpatTests >> testvalidsa073xml [
 	"Source file: xmltest/valid/sa/073.xml"
 
+	(self isSkippableTest: #testvalidsa073xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8947,7 +9559,7 @@ XMLConformanceExpatTests >> testvalidsa073xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8956,6 +9568,8 @@ XMLConformanceExpatTests >> testvalidsa073xml [
 XMLConformanceExpatTests >> testvalidsa074xml [
 	"Source file: xmltest/valid/sa/074.xml"
 
+	(self isSkippableTest: #testvalidsa074xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8964,7 +9578,7 @@ XMLConformanceExpatTests >> testvalidsa074xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8973,6 +9587,8 @@ XMLConformanceExpatTests >> testvalidsa074xml [
 XMLConformanceExpatTests >> testvalidsa075xml [
 	"Source file: xmltest/valid/sa/075.xml"
 
+	(self isSkippableTest: #testvalidsa075xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8981,7 +9597,7 @@ XMLConformanceExpatTests >> testvalidsa075xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -8990,6 +9606,8 @@ XMLConformanceExpatTests >> testvalidsa075xml [
 XMLConformanceExpatTests >> testvalidsa076xml [
 	"Source file: xmltest/valid/sa/076.xml"
 
+	(self isSkippableTest: #testvalidsa076xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -8998,7 +9616,7 @@ XMLConformanceExpatTests >> testvalidsa076xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9007,6 +9625,8 @@ XMLConformanceExpatTests >> testvalidsa076xml [
 XMLConformanceExpatTests >> testvalidsa077xml [
 	"Source file: xmltest/valid/sa/077.xml"
 
+	(self isSkippableTest: #testvalidsa077xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9015,7 +9635,7 @@ XMLConformanceExpatTests >> testvalidsa077xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9024,6 +9644,8 @@ XMLConformanceExpatTests >> testvalidsa077xml [
 XMLConformanceExpatTests >> testvalidsa078xml [
 	"Source file: xmltest/valid/sa/078.xml"
 
+	(self isSkippableTest: #testvalidsa078xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9032,7 +9654,7 @@ XMLConformanceExpatTests >> testvalidsa078xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9041,6 +9663,8 @@ XMLConformanceExpatTests >> testvalidsa078xml [
 XMLConformanceExpatTests >> testvalidsa079xml [
 	"Source file: xmltest/valid/sa/079.xml"
 
+	(self isSkippableTest: #testvalidsa079xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9049,7 +9673,7 @@ XMLConformanceExpatTests >> testvalidsa079xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9058,6 +9682,8 @@ XMLConformanceExpatTests >> testvalidsa079xml [
 XMLConformanceExpatTests >> testvalidsa080xml [
 	"Source file: xmltest/valid/sa/080.xml"
 
+	(self isSkippableTest: #testvalidsa080xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9066,7 +9692,7 @@ XMLConformanceExpatTests >> testvalidsa080xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9075,6 +9701,8 @@ XMLConformanceExpatTests >> testvalidsa080xml [
 XMLConformanceExpatTests >> testvalidsa081xml [
 	"Source file: xmltest/valid/sa/081.xml"
 
+	(self isSkippableTest: #testvalidsa081xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9083,7 +9711,7 @@ XMLConformanceExpatTests >> testvalidsa081xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9092,6 +9720,8 @@ XMLConformanceExpatTests >> testvalidsa081xml [
 XMLConformanceExpatTests >> testvalidsa082xml [
 	"Source file: xmltest/valid/sa/082.xml"
 
+	(self isSkippableTest: #testvalidsa082xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9100,7 +9730,7 @@ XMLConformanceExpatTests >> testvalidsa082xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9109,6 +9739,8 @@ XMLConformanceExpatTests >> testvalidsa082xml [
 XMLConformanceExpatTests >> testvalidsa083xml [
 	"Source file: xmltest/valid/sa/083.xml"
 
+	(self isSkippableTest: #testvalidsa083xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9117,7 +9749,7 @@ XMLConformanceExpatTests >> testvalidsa083xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9126,6 +9758,8 @@ XMLConformanceExpatTests >> testvalidsa083xml [
 XMLConformanceExpatTests >> testvalidsa084xml [
 	"Source file: xmltest/valid/sa/084.xml"
 
+	(self isSkippableTest: #testvalidsa084xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9134,7 +9768,7 @@ XMLConformanceExpatTests >> testvalidsa084xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9143,6 +9777,8 @@ XMLConformanceExpatTests >> testvalidsa084xml [
 XMLConformanceExpatTests >> testvalidsa085xml [
 	"Source file: xmltest/valid/sa/085.xml"
 
+	(self isSkippableTest: #testvalidsa085xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9151,7 +9787,7 @@ XMLConformanceExpatTests >> testvalidsa085xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9160,6 +9796,8 @@ XMLConformanceExpatTests >> testvalidsa085xml [
 XMLConformanceExpatTests >> testvalidsa086xml [
 	"Source file: xmltest/valid/sa/086.xml"
 
+	(self isSkippableTest: #testvalidsa086xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9168,7 +9806,7 @@ XMLConformanceExpatTests >> testvalidsa086xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9177,6 +9815,8 @@ XMLConformanceExpatTests >> testvalidsa086xml [
 XMLConformanceExpatTests >> testvalidsa087xml [
 	"Source file: xmltest/valid/sa/087.xml"
 
+	(self isSkippableTest: #testvalidsa087xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9185,7 +9825,7 @@ XMLConformanceExpatTests >> testvalidsa087xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9194,6 +9834,8 @@ XMLConformanceExpatTests >> testvalidsa087xml [
 XMLConformanceExpatTests >> testvalidsa088xml [
 	"Source file: xmltest/valid/sa/088.xml"
 
+	(self isSkippableTest: #testvalidsa088xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9202,7 +9844,7 @@ XMLConformanceExpatTests >> testvalidsa088xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9211,6 +9853,8 @@ XMLConformanceExpatTests >> testvalidsa088xml [
 XMLConformanceExpatTests >> testvalidsa089xml [
 	"Source file: xmltest/valid/sa/089.xml"
 
+	(self isSkippableTest: #testvalidsa089xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9219,7 +9863,7 @@ XMLConformanceExpatTests >> testvalidsa089xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9228,6 +9872,8 @@ XMLConformanceExpatTests >> testvalidsa089xml [
 XMLConformanceExpatTests >> testvalidsa090xml [
 	"Source file: xmltest/valid/sa/090.xml"
 
+	(self isSkippableTest: #testvalidsa090xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9236,7 +9882,7 @@ XMLConformanceExpatTests >> testvalidsa090xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9245,6 +9891,8 @@ XMLConformanceExpatTests >> testvalidsa090xml [
 XMLConformanceExpatTests >> testvalidsa091xml [
 	"Source file: xmltest/valid/sa/091.xml"
 
+	(self isSkippableTest: #testvalidsa091xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9253,7 +9901,7 @@ XMLConformanceExpatTests >> testvalidsa091xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9262,6 +9910,8 @@ XMLConformanceExpatTests >> testvalidsa091xml [
 XMLConformanceExpatTests >> testvalidsa092xml [
 	"Source file: xmltest/valid/sa/092.xml"
 
+	(self isSkippableTest: #testvalidsa092xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9270,7 +9920,7 @@ XMLConformanceExpatTests >> testvalidsa092xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9279,6 +9929,8 @@ XMLConformanceExpatTests >> testvalidsa092xml [
 XMLConformanceExpatTests >> testvalidsa093xml [
 	"Source file: xmltest/valid/sa/093.xml"
 
+	(self isSkippableTest: #testvalidsa093xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9287,7 +9939,7 @@ XMLConformanceExpatTests >> testvalidsa093xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9296,6 +9948,8 @@ XMLConformanceExpatTests >> testvalidsa093xml [
 XMLConformanceExpatTests >> testvalidsa094xml [
 	"Source file: xmltest/valid/sa/094.xml"
 
+	(self isSkippableTest: #testvalidsa094xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9304,7 +9958,7 @@ XMLConformanceExpatTests >> testvalidsa094xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9313,6 +9967,8 @@ XMLConformanceExpatTests >> testvalidsa094xml [
 XMLConformanceExpatTests >> testvalidsa095xml [
 	"Source file: xmltest/valid/sa/095.xml"
 
+	(self isSkippableTest: #testvalidsa095xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9321,7 +9977,7 @@ XMLConformanceExpatTests >> testvalidsa095xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9330,6 +9986,8 @@ XMLConformanceExpatTests >> testvalidsa095xml [
 XMLConformanceExpatTests >> testvalidsa096xml [
 	"Source file: xmltest/valid/sa/096.xml"
 
+	(self isSkippableTest: #testvalidsa096xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9338,7 +9996,7 @@ XMLConformanceExpatTests >> testvalidsa096xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9347,6 +10005,8 @@ XMLConformanceExpatTests >> testvalidsa096xml [
 XMLConformanceExpatTests >> testvalidsa097xml [
 	"Source file: xmltest/valid/sa/097.xml"
 
+	(self isSkippableTest: #testvalidsa097xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9355,7 +10015,7 @@ XMLConformanceExpatTests >> testvalidsa097xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9364,6 +10024,8 @@ XMLConformanceExpatTests >> testvalidsa097xml [
 XMLConformanceExpatTests >> testvalidsa098xml [
 	"Source file: xmltest/valid/sa/098.xml"
 
+	(self isSkippableTest: #testvalidsa098xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9372,7 +10034,7 @@ XMLConformanceExpatTests >> testvalidsa098xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9381,6 +10043,8 @@ XMLConformanceExpatTests >> testvalidsa098xml [
 XMLConformanceExpatTests >> testvalidsa099xml [
 	"Source file: xmltest/valid/sa/099.xml"
 
+	(self isSkippableTest: #testvalidsa099xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9389,7 +10053,7 @@ XMLConformanceExpatTests >> testvalidsa099xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9398,6 +10062,8 @@ XMLConformanceExpatTests >> testvalidsa099xml [
 XMLConformanceExpatTests >> testvalidsa100xml [
 	"Source file: xmltest/valid/sa/100.xml"
 
+	(self isSkippableTest: #testvalidsa100xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9406,7 +10072,7 @@ XMLConformanceExpatTests >> testvalidsa100xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9415,6 +10081,8 @@ XMLConformanceExpatTests >> testvalidsa100xml [
 XMLConformanceExpatTests >> testvalidsa101xml [
 	"Source file: xmltest/valid/sa/101.xml"
 
+	(self isSkippableTest: #testvalidsa101xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9423,7 +10091,7 @@ XMLConformanceExpatTests >> testvalidsa101xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9432,6 +10100,8 @@ XMLConformanceExpatTests >> testvalidsa101xml [
 XMLConformanceExpatTests >> testvalidsa102xml [
 	"Source file: xmltest/valid/sa/102.xml"
 
+	(self isSkippableTest: #testvalidsa102xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9440,7 +10110,7 @@ XMLConformanceExpatTests >> testvalidsa102xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9449,6 +10119,8 @@ XMLConformanceExpatTests >> testvalidsa102xml [
 XMLConformanceExpatTests >> testvalidsa103xml [
 	"Source file: xmltest/valid/sa/103.xml"
 
+	(self isSkippableTest: #testvalidsa103xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9457,7 +10129,7 @@ XMLConformanceExpatTests >> testvalidsa103xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9466,6 +10138,8 @@ XMLConformanceExpatTests >> testvalidsa103xml [
 XMLConformanceExpatTests >> testvalidsa104xml [
 	"Source file: xmltest/valid/sa/104.xml"
 
+	(self isSkippableTest: #testvalidsa104xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9474,7 +10148,7 @@ XMLConformanceExpatTests >> testvalidsa104xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9483,6 +10157,8 @@ XMLConformanceExpatTests >> testvalidsa104xml [
 XMLConformanceExpatTests >> testvalidsa105xml [
 	"Source file: xmltest/valid/sa/105.xml"
 
+	(self isSkippableTest: #testvalidsa105xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9491,7 +10167,7 @@ XMLConformanceExpatTests >> testvalidsa105xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9500,6 +10176,8 @@ XMLConformanceExpatTests >> testvalidsa105xml [
 XMLConformanceExpatTests >> testvalidsa106xml [
 	"Source file: xmltest/valid/sa/106.xml"
 
+	(self isSkippableTest: #testvalidsa106xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9508,7 +10186,7 @@ XMLConformanceExpatTests >> testvalidsa106xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9517,6 +10195,8 @@ XMLConformanceExpatTests >> testvalidsa106xml [
 XMLConformanceExpatTests >> testvalidsa107xml [
 	"Source file: xmltest/valid/sa/107.xml"
 
+	(self isSkippableTest: #testvalidsa107xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9525,7 +10205,7 @@ XMLConformanceExpatTests >> testvalidsa107xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9534,6 +10214,8 @@ XMLConformanceExpatTests >> testvalidsa107xml [
 XMLConformanceExpatTests >> testvalidsa108xml [
 	"Source file: xmltest/valid/sa/108.xml"
 
+	(self isSkippableTest: #testvalidsa108xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9542,7 +10224,7 @@ XMLConformanceExpatTests >> testvalidsa108xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9551,6 +10233,8 @@ XMLConformanceExpatTests >> testvalidsa108xml [
 XMLConformanceExpatTests >> testvalidsa109xml [
 	"Source file: xmltest/valid/sa/109.xml"
 
+	(self isSkippableTest: #testvalidsa109xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9559,7 +10243,7 @@ XMLConformanceExpatTests >> testvalidsa109xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9568,6 +10252,8 @@ XMLConformanceExpatTests >> testvalidsa109xml [
 XMLConformanceExpatTests >> testvalidsa110xml [
 	"Source file: xmltest/valid/sa/110.xml"
 
+	(self isSkippableTest: #testvalidsa110xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9576,7 +10262,7 @@ XMLConformanceExpatTests >> testvalidsa110xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9585,6 +10271,8 @@ XMLConformanceExpatTests >> testvalidsa110xml [
 XMLConformanceExpatTests >> testvalidsa111xml [
 	"Source file: xmltest/valid/sa/111.xml"
 
+	(self isSkippableTest: #testvalidsa111xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9593,7 +10281,7 @@ XMLConformanceExpatTests >> testvalidsa111xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9602,6 +10290,8 @@ XMLConformanceExpatTests >> testvalidsa111xml [
 XMLConformanceExpatTests >> testvalidsa112xml [
 	"Source file: xmltest/valid/sa/112.xml"
 
+	(self isSkippableTest: #testvalidsa112xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9610,7 +10300,7 @@ XMLConformanceExpatTests >> testvalidsa112xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9619,6 +10309,8 @@ XMLConformanceExpatTests >> testvalidsa112xml [
 XMLConformanceExpatTests >> testvalidsa113xml [
 	"Source file: xmltest/valid/sa/113.xml"
 
+	(self isSkippableTest: #testvalidsa113xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9627,7 +10319,7 @@ XMLConformanceExpatTests >> testvalidsa113xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9636,6 +10328,8 @@ XMLConformanceExpatTests >> testvalidsa113xml [
 XMLConformanceExpatTests >> testvalidsa114xml [
 	"Source file: xmltest/valid/sa/114.xml"
 
+	(self isSkippableTest: #testvalidsa114xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9644,7 +10338,7 @@ XMLConformanceExpatTests >> testvalidsa114xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9653,6 +10347,8 @@ XMLConformanceExpatTests >> testvalidsa114xml [
 XMLConformanceExpatTests >> testvalidsa115xml [
 	"Source file: xmltest/valid/sa/115.xml"
 
+	(self isSkippableTest: #testvalidsa115xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9661,7 +10357,7 @@ XMLConformanceExpatTests >> testvalidsa115xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9670,6 +10366,8 @@ XMLConformanceExpatTests >> testvalidsa115xml [
 XMLConformanceExpatTests >> testvalidsa116xml [
 	"Source file: xmltest/valid/sa/116.xml"
 
+	(self isSkippableTest: #testvalidsa116xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9678,7 +10376,7 @@ XMLConformanceExpatTests >> testvalidsa116xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9687,6 +10385,8 @@ XMLConformanceExpatTests >> testvalidsa116xml [
 XMLConformanceExpatTests >> testvalidsa117xml [
 	"Source file: xmltest/valid/sa/117.xml"
 
+	(self isSkippableTest: #testvalidsa117xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9695,7 +10395,7 @@ XMLConformanceExpatTests >> testvalidsa117xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9704,6 +10404,8 @@ XMLConformanceExpatTests >> testvalidsa117xml [
 XMLConformanceExpatTests >> testvalidsa118xml [
 	"Source file: xmltest/valid/sa/118.xml"
 
+	(self isSkippableTest: #testvalidsa118xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9712,7 +10414,7 @@ XMLConformanceExpatTests >> testvalidsa118xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -9721,6 +10423,8 @@ XMLConformanceExpatTests >> testvalidsa118xml [
 XMLConformanceExpatTests >> testvalidsa119xml [
 	"Source file: xmltest/valid/sa/119.xml"
 
+	(self isSkippableTest: #testvalidsa119xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -9729,7 +10433,7 @@ XMLConformanceExpatTests >> testvalidsa119xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]

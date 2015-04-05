@@ -4,6 +4,11 @@ Class {
 	#category : #'XML-Tests-Conformance'
 }
 
+{ #category : #accessing }
+XMLConformanceSunTests class >> skippableTests [
+	^ #( testinvalidnotsa01xml testnotwfsgml02xml testinvalidattr15xml testinvalidnotsa07xml testinvalidnotsa13xml testinvalidnotsa09xml testinvalidnotsa10xml testinvalidattr04xml testinvalidnotsa06xml testinvalidattr14xml testinvalidid05xml testinvalidnotsa12xml testinvalidnotsa05xml testinvalidattr16xml testinvalidel04xml testinvalidattr13xml testnotwfnotsa03xml testvalidnotation01xml testinvalidnotsa11xml testinvalidnotsa04xml )
+]
+
 { #category : #'xml source' }
 XMLConformanceSunTests class >> sourceinvalidattr01xml [
 	"Source file: sun/invalid/attr01.xml"
@@ -2908,6 +2913,8 @@ XMLConformanceSunTests class >> sourcevalidvlang06xml [
 XMLConformanceSunTests >> testinvalidattr01xml [
 	"Source file: sun/invalid/attr01.xml"
 
+	(self isSkippableTest: #testinvalidattr01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -2920,6 +2927,8 @@ XMLConformanceSunTests >> testinvalidattr01xml [
 XMLConformanceSunTests >> testinvalidattr02xml [
 	"Source file: sun/invalid/attr02.xml"
 
+	(self isSkippableTest: #testinvalidattr02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -2932,6 +2941,8 @@ XMLConformanceSunTests >> testinvalidattr02xml [
 XMLConformanceSunTests >> testinvalidattr03xml [
 	"Source file: sun/invalid/attr03.xml"
 
+	(self isSkippableTest: #testinvalidattr03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -2944,6 +2955,8 @@ XMLConformanceSunTests >> testinvalidattr03xml [
 XMLConformanceSunTests >> testinvalidattr04xml [
 	"Source file: sun/invalid/attr04.xml"
 
+	(self isSkippableTest: #testinvalidattr04xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -2956,6 +2969,8 @@ XMLConformanceSunTests >> testinvalidattr04xml [
 XMLConformanceSunTests >> testinvalidattr05xml [
 	"Source file: sun/invalid/attr05.xml"
 
+	(self isSkippableTest: #testinvalidattr05xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -2968,6 +2983,8 @@ XMLConformanceSunTests >> testinvalidattr05xml [
 XMLConformanceSunTests >> testinvalidattr06xml [
 	"Source file: sun/invalid/attr06.xml"
 
+	(self isSkippableTest: #testinvalidattr06xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -2980,6 +2997,8 @@ XMLConformanceSunTests >> testinvalidattr06xml [
 XMLConformanceSunTests >> testinvalidattr07xml [
 	"Source file: sun/invalid/attr07.xml"
 
+	(self isSkippableTest: #testinvalidattr07xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -2992,6 +3011,8 @@ XMLConformanceSunTests >> testinvalidattr07xml [
 XMLConformanceSunTests >> testinvalidattr08xml [
 	"Source file: sun/invalid/attr08.xml"
 
+	(self isSkippableTest: #testinvalidattr08xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3004,6 +3025,8 @@ XMLConformanceSunTests >> testinvalidattr08xml [
 XMLConformanceSunTests >> testinvalidattr09xml [
 	"Source file: sun/invalid/attr09.xml"
 
+	(self isSkippableTest: #testinvalidattr09xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3016,6 +3039,8 @@ XMLConformanceSunTests >> testinvalidattr09xml [
 XMLConformanceSunTests >> testinvalidattr10xml [
 	"Source file: sun/invalid/attr10.xml"
 
+	(self isSkippableTest: #testinvalidattr10xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3028,6 +3053,8 @@ XMLConformanceSunTests >> testinvalidattr10xml [
 XMLConformanceSunTests >> testinvalidattr11xml [
 	"Source file: sun/invalid/attr11.xml"
 
+	(self isSkippableTest: #testinvalidattr11xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3040,6 +3067,8 @@ XMLConformanceSunTests >> testinvalidattr11xml [
 XMLConformanceSunTests >> testinvalidattr12xml [
 	"Source file: sun/invalid/attr12.xml"
 
+	(self isSkippableTest: #testinvalidattr12xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3052,6 +3081,8 @@ XMLConformanceSunTests >> testinvalidattr12xml [
 XMLConformanceSunTests >> testinvalidattr13xml [
 	"Source file: sun/invalid/attr13.xml"
 
+	(self isSkippableTest: #testinvalidattr13xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3064,6 +3095,8 @@ XMLConformanceSunTests >> testinvalidattr13xml [
 XMLConformanceSunTests >> testinvalidattr14xml [
 	"Source file: sun/invalid/attr14.xml"
 
+	(self isSkippableTest: #testinvalidattr14xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3076,6 +3109,8 @@ XMLConformanceSunTests >> testinvalidattr14xml [
 XMLConformanceSunTests >> testinvalidattr15xml [
 	"Source file: sun/invalid/attr15.xml"
 
+	(self isSkippableTest: #testinvalidattr15xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3088,6 +3123,8 @@ XMLConformanceSunTests >> testinvalidattr15xml [
 XMLConformanceSunTests >> testinvalidattr16xml [
 	"Source file: sun/invalid/attr16.xml"
 
+	(self isSkippableTest: #testinvalidattr16xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3100,6 +3137,8 @@ XMLConformanceSunTests >> testinvalidattr16xml [
 XMLConformanceSunTests >> testinvaliddtd01xml [
 	"Source file: sun/invalid/dtd01.xml"
 
+	(self isSkippableTest: #testinvaliddtd01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3112,6 +3151,8 @@ XMLConformanceSunTests >> testinvaliddtd01xml [
 XMLConformanceSunTests >> testinvaliddtd02xml [
 	"Source file: sun/invalid/dtd02.xml"
 
+	(self isSkippableTest: #testinvaliddtd02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3124,6 +3165,8 @@ XMLConformanceSunTests >> testinvaliddtd02xml [
 XMLConformanceSunTests >> testinvaliddtd03xml [
 	"Source file: sun/invalid/dtd03.xml"
 
+	(self isSkippableTest: #testinvaliddtd03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3136,6 +3179,8 @@ XMLConformanceSunTests >> testinvaliddtd03xml [
 XMLConformanceSunTests >> testinvaliddtd06xml [
 	"Source file: sun/invalid/dtd06.xml"
 
+	(self isSkippableTest: #testinvaliddtd06xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3148,6 +3193,8 @@ XMLConformanceSunTests >> testinvaliddtd06xml [
 XMLConformanceSunTests >> testinvalidel01xml [
 	"Source file: sun/invalid/el01.xml"
 
+	(self isSkippableTest: #testinvalidel01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3160,6 +3207,8 @@ XMLConformanceSunTests >> testinvalidel01xml [
 XMLConformanceSunTests >> testinvalidel02xml [
 	"Source file: sun/invalid/el02.xml"
 
+	(self isSkippableTest: #testinvalidel02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3172,6 +3221,8 @@ XMLConformanceSunTests >> testinvalidel02xml [
 XMLConformanceSunTests >> testinvalidel03xml [
 	"Source file: sun/invalid/el03.xml"
 
+	(self isSkippableTest: #testinvalidel03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3184,6 +3235,8 @@ XMLConformanceSunTests >> testinvalidel03xml [
 XMLConformanceSunTests >> testinvalidel04xml [
 	"Source file: sun/invalid/el04.xml"
 
+	(self isSkippableTest: #testinvalidel04xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3196,6 +3249,8 @@ XMLConformanceSunTests >> testinvalidel04xml [
 XMLConformanceSunTests >> testinvalidel05xml [
 	"Source file: sun/invalid/el05.xml"
 
+	(self isSkippableTest: #testinvalidel05xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3208,6 +3263,8 @@ XMLConformanceSunTests >> testinvalidel05xml [
 XMLConformanceSunTests >> testinvalidel06xml [
 	"Source file: sun/invalid/el06.xml"
 
+	(self isSkippableTest: #testinvalidel06xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3220,6 +3277,8 @@ XMLConformanceSunTests >> testinvalidel06xml [
 XMLConformanceSunTests >> testinvalidemptyxml [
 	"Source file: sun/invalid/empty.xml"
 
+	(self isSkippableTest: #testinvalidemptyxml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3232,6 +3291,8 @@ XMLConformanceSunTests >> testinvalidemptyxml [
 XMLConformanceSunTests >> testinvalidid01xml [
 	"Source file: sun/invalid/id01.xml"
 
+	(self isSkippableTest: #testinvalidid01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3244,6 +3305,8 @@ XMLConformanceSunTests >> testinvalidid01xml [
 XMLConformanceSunTests >> testinvalidid02xml [
 	"Source file: sun/invalid/id02.xml"
 
+	(self isSkippableTest: #testinvalidid02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3256,6 +3319,8 @@ XMLConformanceSunTests >> testinvalidid02xml [
 XMLConformanceSunTests >> testinvalidid03xml [
 	"Source file: sun/invalid/id03.xml"
 
+	(self isSkippableTest: #testinvalidid03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3268,6 +3333,8 @@ XMLConformanceSunTests >> testinvalidid03xml [
 XMLConformanceSunTests >> testinvalidid04xml [
 	"Source file: sun/invalid/id04.xml"
 
+	(self isSkippableTest: #testinvalidid04xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3280,6 +3347,8 @@ XMLConformanceSunTests >> testinvalidid04xml [
 XMLConformanceSunTests >> testinvalidid05xml [
 	"Source file: sun/invalid/id05.xml"
 
+	(self isSkippableTest: #testinvalidid05xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3292,6 +3361,8 @@ XMLConformanceSunTests >> testinvalidid05xml [
 XMLConformanceSunTests >> testinvalidid06xml [
 	"Source file: sun/invalid/id06.xml"
 
+	(self isSkippableTest: #testinvalidid06xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3304,6 +3375,8 @@ XMLConformanceSunTests >> testinvalidid06xml [
 XMLConformanceSunTests >> testinvalidid07xml [
 	"Source file: sun/invalid/id07.xml"
 
+	(self isSkippableTest: #testinvalidid07xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3316,6 +3389,8 @@ XMLConformanceSunTests >> testinvalidid07xml [
 XMLConformanceSunTests >> testinvalidid08xml [
 	"Source file: sun/invalid/id08.xml"
 
+	(self isSkippableTest: #testinvalidid08xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3328,6 +3403,8 @@ XMLConformanceSunTests >> testinvalidid08xml [
 XMLConformanceSunTests >> testinvalidid09xml [
 	"Source file: sun/invalid/id09.xml"
 
+	(self isSkippableTest: #testinvalidid09xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3340,6 +3417,8 @@ XMLConformanceSunTests >> testinvalidid09xml [
 XMLConformanceSunTests >> testinvalidnotsa01xml [
 	"Source file: sun/invalid/not-sa01.xml"
 
+	(self isSkippableTest: #testinvalidnotsa01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3352,6 +3431,8 @@ XMLConformanceSunTests >> testinvalidnotsa01xml [
 XMLConformanceSunTests >> testinvalidnotsa02xml [
 	"Source file: sun/invalid/not-sa02.xml"
 
+	(self isSkippableTest: #testinvalidnotsa02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3364,6 +3445,8 @@ XMLConformanceSunTests >> testinvalidnotsa02xml [
 XMLConformanceSunTests >> testinvalidnotsa04xml [
 	"Source file: sun/invalid/not-sa04.xml"
 
+	(self isSkippableTest: #testinvalidnotsa04xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3376,6 +3459,8 @@ XMLConformanceSunTests >> testinvalidnotsa04xml [
 XMLConformanceSunTests >> testinvalidnotsa05xml [
 	"Source file: sun/invalid/not-sa05.xml"
 
+	(self isSkippableTest: #testinvalidnotsa05xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3388,6 +3473,8 @@ XMLConformanceSunTests >> testinvalidnotsa05xml [
 XMLConformanceSunTests >> testinvalidnotsa06xml [
 	"Source file: sun/invalid/not-sa06.xml"
 
+	(self isSkippableTest: #testinvalidnotsa06xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3400,6 +3487,8 @@ XMLConformanceSunTests >> testinvalidnotsa06xml [
 XMLConformanceSunTests >> testinvalidnotsa07xml [
 	"Source file: sun/invalid/not-sa07.xml"
 
+	(self isSkippableTest: #testinvalidnotsa07xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3412,6 +3501,8 @@ XMLConformanceSunTests >> testinvalidnotsa07xml [
 XMLConformanceSunTests >> testinvalidnotsa08xml [
 	"Source file: sun/invalid/not-sa08.xml"
 
+	(self isSkippableTest: #testinvalidnotsa08xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3424,6 +3515,8 @@ XMLConformanceSunTests >> testinvalidnotsa08xml [
 XMLConformanceSunTests >> testinvalidnotsa09xml [
 	"Source file: sun/invalid/not-sa09.xml"
 
+	(self isSkippableTest: #testinvalidnotsa09xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3436,6 +3529,8 @@ XMLConformanceSunTests >> testinvalidnotsa09xml [
 XMLConformanceSunTests >> testinvalidnotsa10xml [
 	"Source file: sun/invalid/not-sa10.xml"
 
+	(self isSkippableTest: #testinvalidnotsa10xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3448,6 +3543,8 @@ XMLConformanceSunTests >> testinvalidnotsa10xml [
 XMLConformanceSunTests >> testinvalidnotsa11xml [
 	"Source file: sun/invalid/not-sa11.xml"
 
+	(self isSkippableTest: #testinvalidnotsa11xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3460,6 +3557,8 @@ XMLConformanceSunTests >> testinvalidnotsa11xml [
 XMLConformanceSunTests >> testinvalidnotsa12xml [
 	"Source file: sun/invalid/not-sa12.xml"
 
+	(self isSkippableTest: #testinvalidnotsa12xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3472,6 +3571,8 @@ XMLConformanceSunTests >> testinvalidnotsa12xml [
 XMLConformanceSunTests >> testinvalidnotsa13xml [
 	"Source file: sun/invalid/not-sa13.xml"
 
+	(self isSkippableTest: #testinvalidnotsa13xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3484,6 +3585,8 @@ XMLConformanceSunTests >> testinvalidnotsa13xml [
 XMLConformanceSunTests >> testinvalidnotsa14xml [
 	"Source file: sun/invalid/not-sa14.xml"
 
+	(self isSkippableTest: #testinvalidnotsa14xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3496,6 +3599,8 @@ XMLConformanceSunTests >> testinvalidnotsa14xml [
 XMLConformanceSunTests >> testinvalidoptional01xml [
 	"Source file: sun/invalid/optional01.xml"
 
+	(self isSkippableTest: #testinvalidoptional01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3508,6 +3613,8 @@ XMLConformanceSunTests >> testinvalidoptional01xml [
 XMLConformanceSunTests >> testinvalidoptional02xml [
 	"Source file: sun/invalid/optional02.xml"
 
+	(self isSkippableTest: #testinvalidoptional02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3520,6 +3627,8 @@ XMLConformanceSunTests >> testinvalidoptional02xml [
 XMLConformanceSunTests >> testinvalidoptional03xml [
 	"Source file: sun/invalid/optional03.xml"
 
+	(self isSkippableTest: #testinvalidoptional03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3532,6 +3641,8 @@ XMLConformanceSunTests >> testinvalidoptional03xml [
 XMLConformanceSunTests >> testinvalidoptional04xml [
 	"Source file: sun/invalid/optional04.xml"
 
+	(self isSkippableTest: #testinvalidoptional04xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3544,6 +3655,8 @@ XMLConformanceSunTests >> testinvalidoptional04xml [
 XMLConformanceSunTests >> testinvalidoptional05xml [
 	"Source file: sun/invalid/optional05.xml"
 
+	(self isSkippableTest: #testinvalidoptional05xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3556,6 +3669,8 @@ XMLConformanceSunTests >> testinvalidoptional05xml [
 XMLConformanceSunTests >> testinvalidoptional06xml [
 	"Source file: sun/invalid/optional06.xml"
 
+	(self isSkippableTest: #testinvalidoptional06xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3568,6 +3683,8 @@ XMLConformanceSunTests >> testinvalidoptional06xml [
 XMLConformanceSunTests >> testinvalidoptional07xml [
 	"Source file: sun/invalid/optional07.xml"
 
+	(self isSkippableTest: #testinvalidoptional07xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3580,6 +3697,8 @@ XMLConformanceSunTests >> testinvalidoptional07xml [
 XMLConformanceSunTests >> testinvalidoptional08xml [
 	"Source file: sun/invalid/optional08.xml"
 
+	(self isSkippableTest: #testinvalidoptional08xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3592,6 +3711,8 @@ XMLConformanceSunTests >> testinvalidoptional08xml [
 XMLConformanceSunTests >> testinvalidoptional09xml [
 	"Source file: sun/invalid/optional09.xml"
 
+	(self isSkippableTest: #testinvalidoptional09xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3604,6 +3725,8 @@ XMLConformanceSunTests >> testinvalidoptional09xml [
 XMLConformanceSunTests >> testinvalidoptional10xml [
 	"Source file: sun/invalid/optional10.xml"
 
+	(self isSkippableTest: #testinvalidoptional10xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3616,6 +3739,8 @@ XMLConformanceSunTests >> testinvalidoptional10xml [
 XMLConformanceSunTests >> testinvalidoptional11xml [
 	"Source file: sun/invalid/optional11.xml"
 
+	(self isSkippableTest: #testinvalidoptional11xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3628,6 +3753,8 @@ XMLConformanceSunTests >> testinvalidoptional11xml [
 XMLConformanceSunTests >> testinvalidoptional12xml [
 	"Source file: sun/invalid/optional12.xml"
 
+	(self isSkippableTest: #testinvalidoptional12xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3640,6 +3767,8 @@ XMLConformanceSunTests >> testinvalidoptional12xml [
 XMLConformanceSunTests >> testinvalidoptional13xml [
 	"Source file: sun/invalid/optional13.xml"
 
+	(self isSkippableTest: #testinvalidoptional13xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3652,6 +3781,8 @@ XMLConformanceSunTests >> testinvalidoptional13xml [
 XMLConformanceSunTests >> testinvalidoptional14xml [
 	"Source file: sun/invalid/optional14.xml"
 
+	(self isSkippableTest: #testinvalidoptional14xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3664,6 +3795,8 @@ XMLConformanceSunTests >> testinvalidoptional14xml [
 XMLConformanceSunTests >> testinvalidoptional20xml [
 	"Source file: sun/invalid/optional20.xml"
 
+	(self isSkippableTest: #testinvalidoptional20xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3676,6 +3809,8 @@ XMLConformanceSunTests >> testinvalidoptional20xml [
 XMLConformanceSunTests >> testinvalidoptional21xml [
 	"Source file: sun/invalid/optional21.xml"
 
+	(self isSkippableTest: #testinvalidoptional21xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3688,6 +3823,8 @@ XMLConformanceSunTests >> testinvalidoptional21xml [
 XMLConformanceSunTests >> testinvalidoptional22xml [
 	"Source file: sun/invalid/optional22.xml"
 
+	(self isSkippableTest: #testinvalidoptional22xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3700,6 +3837,8 @@ XMLConformanceSunTests >> testinvalidoptional22xml [
 XMLConformanceSunTests >> testinvalidoptional23xml [
 	"Source file: sun/invalid/optional23.xml"
 
+	(self isSkippableTest: #testinvalidoptional23xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3712,6 +3851,8 @@ XMLConformanceSunTests >> testinvalidoptional23xml [
 XMLConformanceSunTests >> testinvalidoptional24xml [
 	"Source file: sun/invalid/optional24.xml"
 
+	(self isSkippableTest: #testinvalidoptional24xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3724,6 +3865,8 @@ XMLConformanceSunTests >> testinvalidoptional24xml [
 XMLConformanceSunTests >> testinvalidoptional25xml [
 	"Source file: sun/invalid/optional25.xml"
 
+	(self isSkippableTest: #testinvalidoptional25xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3736,6 +3879,8 @@ XMLConformanceSunTests >> testinvalidoptional25xml [
 XMLConformanceSunTests >> testinvalidrequired00xml [
 	"Source file: sun/invalid/required00.xml"
 
+	(self isSkippableTest: #testinvalidrequired00xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3748,6 +3893,8 @@ XMLConformanceSunTests >> testinvalidrequired00xml [
 XMLConformanceSunTests >> testinvalidrequired01xml [
 	"Source file: sun/invalid/required01.xml"
 
+	(self isSkippableTest: #testinvalidrequired01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3760,6 +3907,8 @@ XMLConformanceSunTests >> testinvalidrequired01xml [
 XMLConformanceSunTests >> testinvalidrequired02xml [
 	"Source file: sun/invalid/required02.xml"
 
+	(self isSkippableTest: #testinvalidrequired02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3772,6 +3921,8 @@ XMLConformanceSunTests >> testinvalidrequired02xml [
 XMLConformanceSunTests >> testinvalidrootxml [
 	"Source file: sun/invalid/root.xml"
 
+	(self isSkippableTest: #testinvalidrootxml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3784,6 +3935,8 @@ XMLConformanceSunTests >> testinvalidrootxml [
 XMLConformanceSunTests >> testnotwfattlist01xml [
 	"Source file: sun/not-wf/attlist01.xml"
 
+	(self isSkippableTest: #testnotwfattlist01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3796,6 +3949,8 @@ XMLConformanceSunTests >> testnotwfattlist01xml [
 XMLConformanceSunTests >> testnotwfattlist02xml [
 	"Source file: sun/not-wf/attlist02.xml"
 
+	(self isSkippableTest: #testnotwfattlist02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3808,6 +3963,8 @@ XMLConformanceSunTests >> testnotwfattlist02xml [
 XMLConformanceSunTests >> testnotwfattlist03xml [
 	"Source file: sun/not-wf/attlist03.xml"
 
+	(self isSkippableTest: #testnotwfattlist03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3820,6 +3977,8 @@ XMLConformanceSunTests >> testnotwfattlist03xml [
 XMLConformanceSunTests >> testnotwfattlist04xml [
 	"Source file: sun/not-wf/attlist04.xml"
 
+	(self isSkippableTest: #testnotwfattlist04xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3832,6 +3991,8 @@ XMLConformanceSunTests >> testnotwfattlist04xml [
 XMLConformanceSunTests >> testnotwfattlist05xml [
 	"Source file: sun/not-wf/attlist05.xml"
 
+	(self isSkippableTest: #testnotwfattlist05xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3844,6 +4005,8 @@ XMLConformanceSunTests >> testnotwfattlist05xml [
 XMLConformanceSunTests >> testnotwfattlist06xml [
 	"Source file: sun/not-wf/attlist06.xml"
 
+	(self isSkippableTest: #testnotwfattlist06xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3856,6 +4019,8 @@ XMLConformanceSunTests >> testnotwfattlist06xml [
 XMLConformanceSunTests >> testnotwfattlist07xml [
 	"Source file: sun/not-wf/attlist07.xml"
 
+	(self isSkippableTest: #testnotwfattlist07xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3868,6 +4033,8 @@ XMLConformanceSunTests >> testnotwfattlist07xml [
 XMLConformanceSunTests >> testnotwfattlist08xml [
 	"Source file: sun/not-wf/attlist08.xml"
 
+	(self isSkippableTest: #testnotwfattlist08xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3880,6 +4047,8 @@ XMLConformanceSunTests >> testnotwfattlist08xml [
 XMLConformanceSunTests >> testnotwfattlist09xml [
 	"Source file: sun/not-wf/attlist09.xml"
 
+	(self isSkippableTest: #testnotwfattlist09xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3892,6 +4061,8 @@ XMLConformanceSunTests >> testnotwfattlist09xml [
 XMLConformanceSunTests >> testnotwfattlist10xml [
 	"Source file: sun/not-wf/attlist10.xml"
 
+	(self isSkippableTest: #testnotwfattlist10xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3904,6 +4075,8 @@ XMLConformanceSunTests >> testnotwfattlist10xml [
 XMLConformanceSunTests >> testnotwfattlist11xml [
 	"Source file: sun/not-wf/attlist11.xml"
 
+	(self isSkippableTest: #testnotwfattlist11xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3916,6 +4089,8 @@ XMLConformanceSunTests >> testnotwfattlist11xml [
 XMLConformanceSunTests >> testnotwfcond01xml [
 	"Source file: sun/not-wf/cond01.xml"
 
+	(self isSkippableTest: #testnotwfcond01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3928,6 +4103,8 @@ XMLConformanceSunTests >> testnotwfcond01xml [
 XMLConformanceSunTests >> testnotwfcond02xml [
 	"Source file: sun/not-wf/cond02.xml"
 
+	(self isSkippableTest: #testnotwfcond02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3940,6 +4117,8 @@ XMLConformanceSunTests >> testnotwfcond02xml [
 XMLConformanceSunTests >> testnotwfcontent01xml [
 	"Source file: sun/not-wf/content01.xml"
 
+	(self isSkippableTest: #testnotwfcontent01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3952,6 +4131,8 @@ XMLConformanceSunTests >> testnotwfcontent01xml [
 XMLConformanceSunTests >> testnotwfcontent02xml [
 	"Source file: sun/not-wf/content02.xml"
 
+	(self isSkippableTest: #testnotwfcontent02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3964,6 +4145,8 @@ XMLConformanceSunTests >> testnotwfcontent02xml [
 XMLConformanceSunTests >> testnotwfcontent03xml [
 	"Source file: sun/not-wf/content03.xml"
 
+	(self isSkippableTest: #testnotwfcontent03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3976,6 +4159,8 @@ XMLConformanceSunTests >> testnotwfcontent03xml [
 XMLConformanceSunTests >> testnotwfdecl01xml [
 	"Source file: sun/not-wf/decl01.xml"
 
+	(self isSkippableTest: #testnotwfdecl01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -3988,6 +4173,8 @@ XMLConformanceSunTests >> testnotwfdecl01xml [
 XMLConformanceSunTests >> testnotwfdtd00xml [
 	"Source file: sun/not-wf/dtd00.xml"
 
+	(self isSkippableTest: #testnotwfdtd00xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4000,6 +4187,8 @@ XMLConformanceSunTests >> testnotwfdtd00xml [
 XMLConformanceSunTests >> testnotwfdtd01xml [
 	"Source file: sun/not-wf/dtd01.xml"
 
+	(self isSkippableTest: #testnotwfdtd01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4012,6 +4201,8 @@ XMLConformanceSunTests >> testnotwfdtd01xml [
 XMLConformanceSunTests >> testnotwfdtd02xml [
 	"Source file: sun/not-wf/dtd02.xml"
 
+	(self isSkippableTest: #testnotwfdtd02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4024,6 +4215,8 @@ XMLConformanceSunTests >> testnotwfdtd02xml [
 XMLConformanceSunTests >> testnotwfdtd03xml [
 	"Source file: sun/not-wf/dtd03.xml"
 
+	(self isSkippableTest: #testnotwfdtd03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4036,6 +4229,8 @@ XMLConformanceSunTests >> testnotwfdtd03xml [
 XMLConformanceSunTests >> testnotwfdtd04xml [
 	"Source file: sun/not-wf/dtd04.xml"
 
+	(self isSkippableTest: #testnotwfdtd04xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4048,6 +4243,8 @@ XMLConformanceSunTests >> testnotwfdtd04xml [
 XMLConformanceSunTests >> testnotwfdtd05xml [
 	"Source file: sun/not-wf/dtd05.xml"
 
+	(self isSkippableTest: #testnotwfdtd05xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4060,6 +4257,8 @@ XMLConformanceSunTests >> testnotwfdtd05xml [
 XMLConformanceSunTests >> testnotwfdtd07xml [
 	"Source file: sun/not-wf/dtd07.xml"
 
+	(self isSkippableTest: #testnotwfdtd07xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4072,6 +4271,8 @@ XMLConformanceSunTests >> testnotwfdtd07xml [
 XMLConformanceSunTests >> testnotwfelement00xml [
 	"Source file: sun/not-wf/element00.xml"
 
+	(self isSkippableTest: #testnotwfelement00xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4084,6 +4285,8 @@ XMLConformanceSunTests >> testnotwfelement00xml [
 XMLConformanceSunTests >> testnotwfelement01xml [
 	"Source file: sun/not-wf/element01.xml"
 
+	(self isSkippableTest: #testnotwfelement01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4096,6 +4299,8 @@ XMLConformanceSunTests >> testnotwfelement01xml [
 XMLConformanceSunTests >> testnotwfelement02xml [
 	"Source file: sun/not-wf/element02.xml"
 
+	(self isSkippableTest: #testnotwfelement02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4108,6 +4313,8 @@ XMLConformanceSunTests >> testnotwfelement02xml [
 XMLConformanceSunTests >> testnotwfelement03xml [
 	"Source file: sun/not-wf/element03.xml"
 
+	(self isSkippableTest: #testnotwfelement03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4120,6 +4327,8 @@ XMLConformanceSunTests >> testnotwfelement03xml [
 XMLConformanceSunTests >> testnotwfelement04xml [
 	"Source file: sun/not-wf/element04.xml"
 
+	(self isSkippableTest: #testnotwfelement04xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4132,6 +4341,8 @@ XMLConformanceSunTests >> testnotwfelement04xml [
 XMLConformanceSunTests >> testnotwfencoding01xml [
 	"Source file: sun/not-wf/encoding01.xml"
 
+	(self isSkippableTest: #testnotwfencoding01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4144,6 +4355,8 @@ XMLConformanceSunTests >> testnotwfencoding01xml [
 XMLConformanceSunTests >> testnotwfencoding02xml [
 	"Source file: sun/not-wf/encoding02.xml"
 
+	(self isSkippableTest: #testnotwfencoding02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4156,6 +4369,8 @@ XMLConformanceSunTests >> testnotwfencoding02xml [
 XMLConformanceSunTests >> testnotwfencoding03xml [
 	"Source file: sun/not-wf/encoding03.xml"
 
+	(self isSkippableTest: #testnotwfencoding03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4168,6 +4383,8 @@ XMLConformanceSunTests >> testnotwfencoding03xml [
 XMLConformanceSunTests >> testnotwfencoding04xml [
 	"Source file: sun/not-wf/encoding04.xml"
 
+	(self isSkippableTest: #testnotwfencoding04xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4180,6 +4397,8 @@ XMLConformanceSunTests >> testnotwfencoding04xml [
 XMLConformanceSunTests >> testnotwfencoding05xml [
 	"Source file: sun/not-wf/encoding05.xml"
 
+	(self isSkippableTest: #testnotwfencoding05xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4192,6 +4411,8 @@ XMLConformanceSunTests >> testnotwfencoding05xml [
 XMLConformanceSunTests >> testnotwfencoding06xml [
 	"Source file: sun/not-wf/encoding06.xml"
 
+	(self isSkippableTest: #testnotwfencoding06xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4204,6 +4425,8 @@ XMLConformanceSunTests >> testnotwfencoding06xml [
 XMLConformanceSunTests >> testnotwfencoding07xml [
 	"Source file: sun/not-wf/encoding07.xml"
 
+	(self isSkippableTest: #testnotwfencoding07xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4216,6 +4439,8 @@ XMLConformanceSunTests >> testnotwfencoding07xml [
 XMLConformanceSunTests >> testnotwfnotsa03xml [
 	"Source file: sun/not-wf/not-sa03.xml"
 
+	(self isSkippableTest: #testnotwfnotsa03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4228,6 +4453,8 @@ XMLConformanceSunTests >> testnotwfnotsa03xml [
 XMLConformanceSunTests >> testnotwfpixml [
 	"Source file: sun/not-wf/pi.xml"
 
+	(self isSkippableTest: #testnotwfpixml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4240,6 +4467,8 @@ XMLConformanceSunTests >> testnotwfpixml [
 XMLConformanceSunTests >> testnotwfpubid01xml [
 	"Source file: sun/not-wf/pubid01.xml"
 
+	(self isSkippableTest: #testnotwfpubid01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4252,6 +4481,8 @@ XMLConformanceSunTests >> testnotwfpubid01xml [
 XMLConformanceSunTests >> testnotwfpubid02xml [
 	"Source file: sun/not-wf/pubid02.xml"
 
+	(self isSkippableTest: #testnotwfpubid02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4264,6 +4495,8 @@ XMLConformanceSunTests >> testnotwfpubid02xml [
 XMLConformanceSunTests >> testnotwfpubid03xml [
 	"Source file: sun/not-wf/pubid03.xml"
 
+	(self isSkippableTest: #testnotwfpubid03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4276,6 +4509,8 @@ XMLConformanceSunTests >> testnotwfpubid03xml [
 XMLConformanceSunTests >> testnotwfpubid04xml [
 	"Source file: sun/not-wf/pubid04.xml"
 
+	(self isSkippableTest: #testnotwfpubid04xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4288,6 +4523,8 @@ XMLConformanceSunTests >> testnotwfpubid04xml [
 XMLConformanceSunTests >> testnotwfpubid05xml [
 	"Source file: sun/not-wf/pubid05.xml"
 
+	(self isSkippableTest: #testnotwfpubid05xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4300,6 +4537,8 @@ XMLConformanceSunTests >> testnotwfpubid05xml [
 XMLConformanceSunTests >> testnotwfsgml01xml [
 	"Source file: sun/not-wf/sgml01.xml"
 
+	(self isSkippableTest: #testnotwfsgml01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4312,6 +4551,8 @@ XMLConformanceSunTests >> testnotwfsgml01xml [
 XMLConformanceSunTests >> testnotwfsgml02xml [
 	"Source file: sun/not-wf/sgml02.xml"
 
+	(self isSkippableTest: #testnotwfsgml02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4324,6 +4565,8 @@ XMLConformanceSunTests >> testnotwfsgml02xml [
 XMLConformanceSunTests >> testnotwfsgml03xml [
 	"Source file: sun/not-wf/sgml03.xml"
 
+	(self isSkippableTest: #testnotwfsgml03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4336,6 +4579,8 @@ XMLConformanceSunTests >> testnotwfsgml03xml [
 XMLConformanceSunTests >> testnotwfsgml04xml [
 	"Source file: sun/not-wf/sgml04.xml"
 
+	(self isSkippableTest: #testnotwfsgml04xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4348,6 +4593,8 @@ XMLConformanceSunTests >> testnotwfsgml04xml [
 XMLConformanceSunTests >> testnotwfsgml05xml [
 	"Source file: sun/not-wf/sgml05.xml"
 
+	(self isSkippableTest: #testnotwfsgml05xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4360,6 +4607,8 @@ XMLConformanceSunTests >> testnotwfsgml05xml [
 XMLConformanceSunTests >> testnotwfsgml06xml [
 	"Source file: sun/not-wf/sgml06.xml"
 
+	(self isSkippableTest: #testnotwfsgml06xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4372,6 +4621,8 @@ XMLConformanceSunTests >> testnotwfsgml06xml [
 XMLConformanceSunTests >> testnotwfsgml07xml [
 	"Source file: sun/not-wf/sgml07.xml"
 
+	(self isSkippableTest: #testnotwfsgml07xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4384,6 +4635,8 @@ XMLConformanceSunTests >> testnotwfsgml07xml [
 XMLConformanceSunTests >> testnotwfsgml08xml [
 	"Source file: sun/not-wf/sgml08.xml"
 
+	(self isSkippableTest: #testnotwfsgml08xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4396,6 +4649,8 @@ XMLConformanceSunTests >> testnotwfsgml08xml [
 XMLConformanceSunTests >> testnotwfsgml09xml [
 	"Source file: sun/not-wf/sgml09.xml"
 
+	(self isSkippableTest: #testnotwfsgml09xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4408,6 +4663,8 @@ XMLConformanceSunTests >> testnotwfsgml09xml [
 XMLConformanceSunTests >> testnotwfsgml10xml [
 	"Source file: sun/not-wf/sgml10.xml"
 
+	(self isSkippableTest: #testnotwfsgml10xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4420,6 +4677,8 @@ XMLConformanceSunTests >> testnotwfsgml10xml [
 XMLConformanceSunTests >> testnotwfsgml11xml [
 	"Source file: sun/not-wf/sgml11.xml"
 
+	(self isSkippableTest: #testnotwfsgml11xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4432,6 +4691,8 @@ XMLConformanceSunTests >> testnotwfsgml11xml [
 XMLConformanceSunTests >> testnotwfsgml12xml [
 	"Source file: sun/not-wf/sgml12.xml"
 
+	(self isSkippableTest: #testnotwfsgml12xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4444,6 +4705,8 @@ XMLConformanceSunTests >> testnotwfsgml12xml [
 XMLConformanceSunTests >> testnotwfsgml13xml [
 	"Source file: sun/not-wf/sgml13.xml"
 
+	(self isSkippableTest: #testnotwfsgml13xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4456,6 +4719,8 @@ XMLConformanceSunTests >> testnotwfsgml13xml [
 XMLConformanceSunTests >> testnotwfuri01xml [
 	"Source file: sun/not-wf/uri01.xml"
 
+	(self isSkippableTest: #testnotwfuri01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -4468,6 +4733,8 @@ XMLConformanceSunTests >> testnotwfuri01xml [
 XMLConformanceSunTests >> testvaliddtd00xml [
 	"Source file: sun/valid/dtd00.xml"
 
+	(self isSkippableTest: #testvaliddtd00xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4476,7 +4743,7 @@ XMLConformanceSunTests >> testvaliddtd00xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4485,6 +4752,8 @@ XMLConformanceSunTests >> testvaliddtd00xml [
 XMLConformanceSunTests >> testvaliddtd01xml [
 	"Source file: sun/valid/dtd01.xml"
 
+	(self isSkippableTest: #testvaliddtd01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4493,7 +4762,7 @@ XMLConformanceSunTests >> testvaliddtd01xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4502,6 +4771,8 @@ XMLConformanceSunTests >> testvaliddtd01xml [
 XMLConformanceSunTests >> testvalidelementxml [
 	"Source file: sun/valid/element.xml"
 
+	(self isSkippableTest: #testvalidelementxml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4510,7 +4781,7 @@ XMLConformanceSunTests >> testvalidelementxml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4519,6 +4790,8 @@ XMLConformanceSunTests >> testvalidelementxml [
 XMLConformanceSunTests >> testvalidext01xml [
 	"Source file: sun/valid/ext01.xml"
 
+	(self isSkippableTest: #testvalidext01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4527,7 +4800,7 @@ XMLConformanceSunTests >> testvalidext01xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4536,6 +4809,8 @@ XMLConformanceSunTests >> testvalidext01xml [
 XMLConformanceSunTests >> testvalidext02xml [
 	"Source file: sun/valid/ext02.xml"
 
+	(self isSkippableTest: #testvalidext02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4544,7 +4819,7 @@ XMLConformanceSunTests >> testvalidext02xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4553,6 +4828,8 @@ XMLConformanceSunTests >> testvalidext02xml [
 XMLConformanceSunTests >> testvalidnotation01xml [
 	"Source file: sun/valid/notation01.xml"
 
+	(self isSkippableTest: #testvalidnotation01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4561,7 +4838,7 @@ XMLConformanceSunTests >> testvalidnotation01xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4570,6 +4847,8 @@ XMLConformanceSunTests >> testvalidnotation01xml [
 XMLConformanceSunTests >> testvalidnotsa01xml [
 	"Source file: sun/valid/not-sa01.xml"
 
+	(self isSkippableTest: #testvalidnotsa01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4578,7 +4857,7 @@ XMLConformanceSunTests >> testvalidnotsa01xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4587,6 +4866,8 @@ XMLConformanceSunTests >> testvalidnotsa01xml [
 XMLConformanceSunTests >> testvalidnotsa02xml [
 	"Source file: sun/valid/not-sa02.xml"
 
+	(self isSkippableTest: #testvalidnotsa02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4595,7 +4876,7 @@ XMLConformanceSunTests >> testvalidnotsa02xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4604,6 +4885,8 @@ XMLConformanceSunTests >> testvalidnotsa02xml [
 XMLConformanceSunTests >> testvalidnotsa03xml [
 	"Source file: sun/valid/not-sa03.xml"
 
+	(self isSkippableTest: #testvalidnotsa03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4612,7 +4895,7 @@ XMLConformanceSunTests >> testvalidnotsa03xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4621,6 +4904,8 @@ XMLConformanceSunTests >> testvalidnotsa03xml [
 XMLConformanceSunTests >> testvalidnotsa04xml [
 	"Source file: sun/valid/not-sa04.xml"
 
+	(self isSkippableTest: #testvalidnotsa04xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4629,7 +4914,7 @@ XMLConformanceSunTests >> testvalidnotsa04xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4638,6 +4923,8 @@ XMLConformanceSunTests >> testvalidnotsa04xml [
 XMLConformanceSunTests >> testvalidoptionalxml [
 	"Source file: sun/valid/optional.xml"
 
+	(self isSkippableTest: #testvalidoptionalxml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4646,7 +4933,7 @@ XMLConformanceSunTests >> testvalidoptionalxml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4655,6 +4942,8 @@ XMLConformanceSunTests >> testvalidoptionalxml [
 XMLConformanceSunTests >> testvalidpe00xml [
 	"Source file: sun/valid/pe00.xml"
 
+	(self isSkippableTest: #testvalidpe00xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4663,7 +4952,7 @@ XMLConformanceSunTests >> testvalidpe00xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4672,6 +4961,8 @@ XMLConformanceSunTests >> testvalidpe00xml [
 XMLConformanceSunTests >> testvalidpe01xml [
 	"Source file: sun/valid/pe01.xml"
 
+	(self isSkippableTest: #testvalidpe01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4680,7 +4971,7 @@ XMLConformanceSunTests >> testvalidpe01xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4689,6 +4980,8 @@ XMLConformanceSunTests >> testvalidpe01xml [
 XMLConformanceSunTests >> testvalidpe02xml [
 	"Source file: sun/valid/pe02.xml"
 
+	(self isSkippableTest: #testvalidpe02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4697,7 +4990,7 @@ XMLConformanceSunTests >> testvalidpe02xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4706,6 +4999,8 @@ XMLConformanceSunTests >> testvalidpe02xml [
 XMLConformanceSunTests >> testvalidpe03xml [
 	"Source file: sun/valid/pe03.xml"
 
+	(self isSkippableTest: #testvalidpe03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4714,7 +5009,7 @@ XMLConformanceSunTests >> testvalidpe03xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4723,6 +5018,8 @@ XMLConformanceSunTests >> testvalidpe03xml [
 XMLConformanceSunTests >> testvalidrequired00xml [
 	"Source file: sun/valid/required00.xml"
 
+	(self isSkippableTest: #testvalidrequired00xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4731,7 +5028,7 @@ XMLConformanceSunTests >> testvalidrequired00xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4740,6 +5037,8 @@ XMLConformanceSunTests >> testvalidrequired00xml [
 XMLConformanceSunTests >> testvalidsa01xml [
 	"Source file: sun/valid/sa01.xml"
 
+	(self isSkippableTest: #testvalidsa01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4748,7 +5047,7 @@ XMLConformanceSunTests >> testvalidsa01xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4757,6 +5056,8 @@ XMLConformanceSunTests >> testvalidsa01xml [
 XMLConformanceSunTests >> testvalidsa02xml [
 	"Source file: sun/valid/sa02.xml"
 
+	(self isSkippableTest: #testvalidsa02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4765,7 +5066,7 @@ XMLConformanceSunTests >> testvalidsa02xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4774,6 +5075,8 @@ XMLConformanceSunTests >> testvalidsa02xml [
 XMLConformanceSunTests >> testvalidsa03xml [
 	"Source file: sun/valid/sa03.xml"
 
+	(self isSkippableTest: #testvalidsa03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4782,7 +5085,7 @@ XMLConformanceSunTests >> testvalidsa03xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4791,6 +5094,8 @@ XMLConformanceSunTests >> testvalidsa03xml [
 XMLConformanceSunTests >> testvalidsa04xml [
 	"Source file: sun/valid/sa04.xml"
 
+	(self isSkippableTest: #testvalidsa04xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4799,7 +5104,7 @@ XMLConformanceSunTests >> testvalidsa04xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4808,6 +5113,8 @@ XMLConformanceSunTests >> testvalidsa04xml [
 XMLConformanceSunTests >> testvalidsa05xml [
 	"Source file: sun/valid/sa05.xml"
 
+	(self isSkippableTest: #testvalidsa05xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4816,7 +5123,7 @@ XMLConformanceSunTests >> testvalidsa05xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4825,6 +5132,8 @@ XMLConformanceSunTests >> testvalidsa05xml [
 XMLConformanceSunTests >> testvalidsgml01xml [
 	"Source file: sun/valid/sgml01.xml"
 
+	(self isSkippableTest: #testvalidsgml01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4833,7 +5142,7 @@ XMLConformanceSunTests >> testvalidsgml01xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4842,6 +5151,8 @@ XMLConformanceSunTests >> testvalidsgml01xml [
 XMLConformanceSunTests >> testvalidvlang01xml [
 	"Source file: sun/valid/v-lang01.xml"
 
+	(self isSkippableTest: #testvalidvlang01xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4850,7 +5161,7 @@ XMLConformanceSunTests >> testvalidvlang01xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4859,6 +5170,8 @@ XMLConformanceSunTests >> testvalidvlang01xml [
 XMLConformanceSunTests >> testvalidvlang02xml [
 	"Source file: sun/valid/v-lang02.xml"
 
+	(self isSkippableTest: #testvalidvlang02xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4867,7 +5180,7 @@ XMLConformanceSunTests >> testvalidvlang02xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4876,6 +5189,8 @@ XMLConformanceSunTests >> testvalidvlang02xml [
 XMLConformanceSunTests >> testvalidvlang03xml [
 	"Source file: sun/valid/v-lang03.xml"
 
+	(self isSkippableTest: #testvalidvlang03xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4884,7 +5199,7 @@ XMLConformanceSunTests >> testvalidvlang03xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4893,6 +5208,8 @@ XMLConformanceSunTests >> testvalidvlang03xml [
 XMLConformanceSunTests >> testvalidvlang04xml [
 	"Source file: sun/valid/v-lang04.xml"
 
+	(self isSkippableTest: #testvalidvlang04xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4901,7 +5218,7 @@ XMLConformanceSunTests >> testvalidvlang04xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4910,6 +5227,8 @@ XMLConformanceSunTests >> testvalidvlang04xml [
 XMLConformanceSunTests >> testvalidvlang05xml [
 	"Source file: sun/valid/v-lang05.xml"
 
+	(self isSkippableTest: #testvalidvlang05xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4918,7 +5237,7 @@ XMLConformanceSunTests >> testvalidvlang05xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
@@ -4927,6 +5246,8 @@ XMLConformanceSunTests >> testvalidvlang05xml [
 XMLConformanceSunTests >> testvalidvlang06xml [
 	"Source file: sun/valid/v-lang06.xml"
 
+	(self isSkippableTest: #testvalidvlang06xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -4935,7 +5256,7 @@ XMLConformanceSunTests >> testvalidvlang06xml [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]

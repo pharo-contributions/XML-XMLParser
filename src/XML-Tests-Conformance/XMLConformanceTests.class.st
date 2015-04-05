@@ -2,18 +2,37 @@
 This class generates subclass TestCases from the W3C's XML test suite, which can be obtained from this URL: http://www.w3.org/XML/Test/
 
 To rebuild from source, unzip the archive in your image directory, then evaluate:
+	self buildTestCases.
 
-self buildTestCases.
+To  make failing tests skippable or update the lists of skippable tests in subcalsses (if a skipped test has possibly been fixed so it will pass), evaluate:
+	self buildSkippableTestsMethodsFromFailures.
 "
 Class {
 	#name : #XMLConformanceTests,
 	#superclass : #TestCase,
+	#instVars : [
+		'skippableTests',
+		'skippableExceptions'
+	],
+	#classVars : [
+		'IsSkipping'
+	],
 	#category : #'XML-Tests-Conformance'
 }
 
 { #category : #accessing }
 XMLConformanceTests class >> baseDirectory [
 	^ 'xmlconf'
+]
+
+{ #category : #'building subclasses' }
+XMLConformanceTests class >> buildDefaultSkippableTestsMethods [
+	"self buildDefaultSkippableTestsMethods"
+	self allSubclassesDo: [:each |
+		each class
+			compile: 'skippableTests
+	^ #()'
+			classified: #accessing].
 ]
 
 { #category : #'building subclasses' }
@@ -32,6 +51,32 @@ XMLConformanceTests class >> buildPassingTestMethodFor: aFileReference in: aClas
 		in: aClass
 		usingTemplate: self passingTestMethodTemplate
 		classified: 'tests' asSymbol
+]
+
+{ #category : #'building subclasses' }
+XMLConformanceTests class >> buildSkippableTestsMethodsFromFailures [
+	"Run this after possibly fixing a failing skipped test.
+	If fixed, it will be excluded form the list of skippable tests.
+
+	self buildSkippableTestsMethodsFromFailures"
+
+	self buildDefaultSkippableTestsMethods.
+	self allSubclassesDo: [:testCaseClass | | result failures methodSource |
+		result := testCaseClass buildSuite run.
+		failures := result failures collect: [:each | each selector asString].
+		methodSource :=
+			(String streamContents: [:stream |
+				stream nextPutAll: 'skippableTests
+	^ #('.
+				failures do: [:each |
+					stream
+						space;
+						nextPutAll: each].
+				stream nextPutAll: ' )']).
+
+		testCaseClass class
+			compile: methodSource
+			classified: #accessing]
 ]
 
 { #category : #'building subclasses' }
@@ -101,12 +146,12 @@ XMLConformanceTests class >> buildTestCases [
 
 { #category : #'building subclasses' }
 XMLConformanceTests class >> buildTestMethodFor: aFileReference in: aClass usingTemplate: aTemplate classified: aCategory [
-	| failingTestSelector sourceSelector pathString documentUri |
+	| failingTestSelector sourceSelector pathString documentURI |
 
 	failingTestSelector := self testSelectorFor: aFileReference.
 	sourceSelector := self sourceSelectorFor: aFileReference.
 	pathString := self relativePathStringFor: aFileReference.
-	documentUri := self documentURIFor: aFileReference.
+	documentURI := self documentURIFor: aFileReference.
 	aClass
 		compile:
 			(aTemplate format:
@@ -114,7 +159,7 @@ XMLConformanceTests class >> buildTestMethodFor: aFileReference in: aClass using
 					with: failingTestSelector asString
 					with: pathString
 					with: sourceSelector asString
-					with: documentUri))
+					with: documentURI))
 		classified: aCategory
 ]
 
@@ -147,6 +192,8 @@ XMLConformanceTests class >> failingTestMethodTemplate [
 	^ '{1}
 	"Source file: {2}"
 
+	(self isSkippableTest: #{1})
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		should: [
 			self
@@ -160,11 +207,29 @@ XMLConformanceTests class >> fileReferenceForSuite: aSuite [
 	^ FileSystem workingDirectory / self baseDirectory / aSuite
 ]
 
+{ #category : #testing }
+XMLConformanceTests class >> isSkipping [
+	"allow skipping of certain tests by default"
+	^ IsSkipping ifNil: [IsSkipping := true]
+]
+
+{ #category : #accessing }
+XMLConformanceTests class >> isSkipping: aBoolean [
+	"certain tests are skipped by default
+
+	self isSkipping: false.
+	self isSkipping: true.
+	"
+	IsSkipping := aBoolean
+]
+
 { #category : #'method templates' }
 XMLConformanceTests class >> passingTestMethodTemplate [
 	^ '{1}
 	"Source file: {2}"
 
+	(self isSkippableTest: #{1})
+		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
 		shouldnt: [
 			[self
@@ -173,7 +238,7 @@ XMLConformanceTests class >> passingTestMethodTemplate [
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)
-						ifTrue: [self skip]
+						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
 		raise: self parserExceptions'
 ]
@@ -197,6 +262,11 @@ XMLConformanceTests class >> relativePathStringFromSegments: aSegmentArray [
 			i > 1
 				ifTrue: [stream nextPut: $/].
 			stream nextPutAll: each]]
+]
+
+{ #category : #accessing }
+XMLConformanceTests class >> skippableTests [
+	^ #()
 ]
 
 { #category : #'method templates' }
@@ -251,7 +321,14 @@ XMLConformanceTests >> doesNotUnderstand: aMessage [
 
 { #category : #testing }
 XMLConformanceTests >> isSkippableException: anError [
-	^ (XMLFileException, XMLHTTPException, XMLLimitException) handles: anError
+	^ self class isSkipping
+		and: [self skippableExceptions handles: anError]
+]
+
+{ #category : #testing }
+XMLConformanceTests >> isSkippableTest: aSelector [
+	^ self class isSkipping
+		and: [self skippableTests includes: aSelector]
 ]
 
 { #category : #accessing }
@@ -283,4 +360,23 @@ XMLConformanceTests >> parserClass [
 { #category : #accessing }
 XMLConformanceTests >> parserExceptions [
 	^ XMLParserException
+]
+
+{ #category : #private }
+XMLConformanceTests >> skipOrReturnWith: aBlock [
+	"skip is not portable to squeak"
+	(self respondsTo: #skip)
+		ifTrue: [self skip]
+		ifFalse: [aBlock value]
+]
+
+{ #category : #accessing }
+XMLConformanceTests >> skippableExceptions [
+	^ skippableExceptions
+		ifNil: [skippableExceptions := XMLFileException, XMLHTTPException, XMLLimitException]
+]
+
+{ #category : #accessing }
+XMLConformanceTests >> skippableTests [
+	^ skippableTests ifNil: [skippableTests := self class skippableTests asSet]
 ]
