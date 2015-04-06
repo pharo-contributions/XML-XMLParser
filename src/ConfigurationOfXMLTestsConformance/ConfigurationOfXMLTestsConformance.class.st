@@ -32,6 +32,12 @@ ConfigurationOfXMLTestsConformance class >> baseConfigurationClassIfAbsent: aBlo
 
 ]
 
+{ #category : #catalog }
+ConfigurationOfXMLTestsConformance class >> catalogDescription [
+
+	^ 'XMLTestsConformance is an extra test suite for XMLParser generated from the W3C conformance test suite: http://www.w3.org/XML/Test/'
+]
+
 { #category : #private }
 ConfigurationOfXMLTestsConformance class >> ensureMetacello [
 
@@ -130,7 +136,8 @@ ConfigurationOfXMLTestsConformance >> baseline100: spec [
 						loads: #('default');
 						repository: 'http://smalltalkhub.com/mc/PharoExtras/XMLParser/main' ].
 			spec package: 'XML-Tests-Conformance' with: [ spec requires: 'XMLParser' ].
-			spec group: 'default' with: #('XML-Tests-Conformance')].
+			spec group: 'Tests' with: #('XML-Tests-Conformance').
+			spec group: 'default' with: #('Tests')].
 ]
 
 { #category : #accessing }
