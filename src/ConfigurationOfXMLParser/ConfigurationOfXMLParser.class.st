@@ -87,7 +87,7 @@ Examples
 { #category : #catalog }
 ConfigurationOfXMLParser class >> catalogKeywords [
 
-	^ #( XML parser validation DOM SAX DTD HTML )
+	^ #( XML DOM SAX DTD HTML parser validation web markup )
 					
 
 ]
@@ -168,6 +168,8 @@ ConfigurationOfXMLParser class >> unloadMetacello [
 { #category : #baselines }
 ConfigurationOfXMLParser >> baseline10: spec [
 	<version: '1.0-baseline'>
+
+	"default baseline inherited by others"
 	spec
 		for: #common
 		do: [ 
@@ -214,7 +216,6 @@ ConfigurationOfXMLParser >> baseline10: spec [
 			
 			spec
 				group: 'default' with: #('Core' 'Tests');
-				"default by default is equivalent to loading 'ALL' the packages still we added explicitly Tests to be loaded"
 				group: 'Core' with: #('XML-Parser');
 				group: 'Tests' with: #('XML-Tests-Parser') ].
 
@@ -397,11 +398,25 @@ ConfigurationOfXMLParser >> baseline216: spec [
                     with: 'XML-Parser-GemstoneCompatibility-monty.8'. ].
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline221: spec [ 
+        <version: '2.2.1-baseline' imports: #('1.0-baseline')>
+        
+        spec for: #common do: [
+                spec blessing: #baseline.
+                spec project: 'XMLWriter' with: '2.5.6'. ].
+
+        spec for: #gemstone do: [
+                spec
+                    package: 'XML-Parser-GemstoneCompatibility'
+                    with: 'XML-Parser-GemstoneCompatibility-monty.9'. ].
+]
+
 { #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.1.6-baseline'.
+	spec for: #'common' version: '2.2.1-baseline'.
 
 ]
 
@@ -422,7 +437,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '2.2.0'.
+	spec for: #'common' version: '2.2.1'.
 	spec for: #'pharo1.x' version: '1.2'
 
 ]
@@ -1717,5 +1732,16 @@ ConfigurationOfXMLParser >> version220: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.287'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.108'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version221: spec [ 
+        <version: '2.2.1' imports: #('2.2.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.288'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.109'.
                 ].
 ]
