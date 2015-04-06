@@ -2,6 +2,7 @@ Extension { #name : #Character }
 
 { #category : #'*XML-Parser' }
 Character >> xmlParserIsSeparator [
+	"Overridden in Gemstone version"
 	value = 32 "space"
 		ifTrue: [^ true].
 	value = 10 "lf"
@@ -16,6 +17,7 @@ Character >> xmlParserIsSeparator [
 
 { #category : #'*XML-Parser' }
 Character >> xmlParserIsWhitespace [
+	"Overridden in Gemstone version"
 	value = 32 "space"
 		ifTrue: [^ true].
 	value = 10 "lf"
