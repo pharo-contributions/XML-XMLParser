@@ -1259,3 +1259,11 @@ XMLNodeWithElementsTest >> testUsesNamespaces [
 			shouldnt: [each prefix: 'undeclared']
 			raise: XMLNamespaceException].
 ]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testValidate [
+	super testValidate.
+	self
+		shouldnt: [self newNodeWithNodes validate]
+		raise: XMLValidationException.
+]

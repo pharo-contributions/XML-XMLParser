@@ -253,3 +253,10 @@ XMLNodeTest >> testRawContentString [
 XMLNodeTest >> testSortKey [
 	self assert: self nodeClass new sortKey = self nodeClass name asString
 ]
+
+{ #category : #tests }
+XMLNodeTest >> testValidate [
+	self
+		shouldnt: [self nodeClass new validate]
+		raise: XMLValidationException
+]

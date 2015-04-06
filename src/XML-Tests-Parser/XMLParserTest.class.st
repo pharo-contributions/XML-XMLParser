@@ -165,6 +165,30 @@ XMLParserTest >> elementDeclarationsNamed: aNameCollection [
 ]
 
 { #category : #tests }
+XMLParserTest >> testAttributeDeclarationWhitespace [
+	#('<!DOCTYPE test [<!ATTLISTtest name (value) #FIXED "value">]>'
+		'<!DOCTYPE test [<!ATTLIST test name(value) #FIXED "value">]>'
+		'<!DOCTYPE test [<!ATTLIST test name (value)#FIXED "value">]>'
+		'<!DOCTYPE test [<!ATTLIST test name (value) #FIXED"value">]>'
+		'<!DOCTYPE test [<!ATTLIST test name (value) #FIXED "value"name2
+			(value) #FIXED "value">]>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+	#('<!DOCTYPE test [<!ATTLIST   test   name  ( value )  #FIXED  "value">]>'
+		'<!DOCTYPE test [
+			<!ATTLIST test
+				name (value) #FIXED "value"
+				name2 (value) #FIXED "value">]>'
+		'<!DOCTYPE test [<!ATTLIST   test   >]>')
+		do: [:each |
+			self
+				shouldnt: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+]
+
+{ #category : #tests }
 XMLParserTest >> testAttributeDefaultDeclaration [
 	| dtd document |
 
@@ -435,20 +459,52 @@ XMLParserTest >> testDefaultDocumentURI [
 ]
 
 { #category : #tests }
-XMLParserTest >> testDoctypeRoot [
-	| xml |
-
-	xml := '<!DOCTYPE root><invalidRoot/>'.
+XMLParserTest >> testDoctypeDeclarationInContent [
 	self
-		should: [SAXHandler parse: xml]
+		should: [SAXHandler parse: '<test><!DOCTYPE test></test>']
+		raise: XMLWellFormednessException.
+	self
+		shouldnt: [SAXHandler parse: '<!DOCTYPE test><test></test>']
+		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testDoctypeDeclarationRoot [
+	| xmlWithInvalidRoot xmlWithValidRoot |
+
+	xmlWithInvalidRoot := '<!DOCTYPE root><invalidRoot/>'.
+	xmlWithValidRoot := '<!DOCTYPE root><root/>'.
+	self
+		should: [SAXHandler parse: xmlWithInvalidRoot]
 		raise: XMLValidationException.
 	self
 		shouldnt: [
 			SAXHandler
-				parse: xml
+				parse: xmlWithInvalidRoot
 				usingNamespaces: false
 				validation: false]
-		raise: XMLValidationException 
+		raise: XMLValidationException.
+	self
+		shouldnt: [SAXHandler parse: xmlWithValidRoot]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testDoctypeDeclarationWhitespace [
+	#('<!DOCTYPEtest>'
+		'<!DOCTYPE test PUBLIC"publicid">'
+		'<!DOCTYPE test PUBLIC "publicid""systemid">'
+		'<!DOCTYPE test SYSTEM"systemid">')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+	#('<!DOCTYPE test PUBLIC "publicid" "systemid"	 >'
+		'<!DOCTYPE test SYSTEM "systemid"	>')
+		do: [:each |
+			self
+				shouldnt: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
 ]
 
 { #category : #tests }
@@ -690,6 +746,19 @@ XMLParserTest >> testElementContentModelsStarEmpty [
 ]
 
 { #category : #tests }
+XMLParserTest >> testElementDeclarationWhitespace [
+	self
+		should: [SAXHandler parse: '<!DOCTYPE test [<!ELEMENTname (#PCDATA)>]>']
+		raise: XMLWellFormednessException.
+	self
+		should: [SAXHandler parse: '<!DOCTYPE test [<!ELEMENT name(#PCDATA)>]>']
+		raise: XMLWellFormednessException.
+	self
+		shouldnt: [SAXHandler parse: '<!DOCTYPE test [<!ELEMENT name (	#PCDATA	)   >]>']
+		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
 XMLParserTest >> testElementEmptyDeclarations [
 	self
 		shouldnt: [
@@ -774,7 +843,7 @@ XMLParserTest >> testElementWellFormedness [
 ]
 
 { #category : #tests }
-XMLParserTest >> testElementWhitespaceWellFormedness [
+XMLParserTest >> testElementWhitespace [
 	self
 		should: [SAXHandler parse: '<root name1="value1"name2="value2"/>']
 		raise: XMLWellFormednessException.
@@ -787,6 +856,31 @@ XMLParserTest >> testElementWhitespaceWellFormedness [
 	self
 		shouldnt: [SAXHandler parse: '<root name1   =   "value1"    name2   =   "value2"    />']
 		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityDeclarationWhitespace [
+	#('<!DOCTYPE test [<!ENTITYname "value">]>'
+		'<!DOCTYPE test [<!ENTITY name"value">]>'
+		'<!DOCTYPE test [<!ENTITY name PUBLIC"publicid" "systemid">]>'
+		'<!DOCTYPE test [<!ENTITY name PUBLIC "publicid""systemid">]>'
+		'<!DOCTYPE test [<!ENTITY name SYSTEM"systemid">]>'
+		'<!DOCTYPE test [<!ENTITY name PUBLIC "publicid" "systemid"NDATA GIF>]>'
+		'<!DOCTYPE test [<!ENTITY name SYSTEM "systemid"NDATA GIF>]>'
+		'<!DOCTYPE test [<!ENTITY% name "value">]>'
+		'<!DOCTYPE test [<!ENTITY %name "value">]>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+	#('<!DOCTYPE test [<!ENTITY  name 	"value"   >]>'
+		'<!DOCTYPE test [<!ENTITY   % 	 name "value"	>]>'
+		'<!DOCTYPE test [<!ENTITY   name   PUBLIC   "publicid"    "systemid"   >]>'
+		'<!DOCTYPE test [<!ENTITY   name   SYSTEM    "systemid"   >]>')
+		do: [:each |
+			self
+				shouldnt: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
 ]
 
 { #category : #tests }
@@ -979,6 +1073,27 @@ XMLParserTest >> testIncompleteXMLDeclarationTokens [
 ]
 
 { #category : #tests }
+XMLParserTest >> testInternalDeclarationParameterEntityReference [
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE root [
+					<!ENTITY % name "root">
+					<!ENTITY % contentModel "EMPTY">
+					<!ELEMENT %name; %contentModel;>
+				]><root/>']
+		raise: XMLWellFormednessException.
+	self
+		shouldnt: [
+			SAXHandler parse:
+				'<!DOCTYPE root [
+					<!ENTITY % element "<!ELEMENT root EMPTY>">
+					%element;
+				]><root/>']
+		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
 XMLParserTest >> testInvalidElementContentModels [
 	self
 		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root ()>]>']
@@ -1032,6 +1147,32 @@ XMLParserTest >> testLineEndingsDoNotMatter [
 	self
 		assert: (docFromSourceWithCRs root contentString) = (docFromSourceWithLFs root contentString);
 		assert: (docFromSourceWithLFs root contentString) = (docFromSourceWithCRLFs root contentString).
+]
+
+{ #category : #tests }
+XMLParserTest >> testMultipleDoctypeDeclarations [
+	#('<!DOCTYPE test><!DOCTYPE test>'
+		'<!DOCTYPE test><!--comment--><!DOCTYPE test>'
+		'<!DOCTYPE test><!pi data?><!DOCTYPE test>'
+		'<!DOCTYPE test [<!DOCTYPE test>]>'
+		'<test><!DOCTYPE test></test>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testMultipleXMLDeclarations [
+	#('<?xml version="1.0"?><?xml version="1.0"?>'
+		'<?xml version="1.0"?><!--comment--><?xml version="1.0"?>'
+		'<?xml version="1.0"?><!DOCTYPE test [<?xml version="1.0"?>]>'
+		'<?xml version="1.0"?><test><?xml version="1.0"?></test>'
+		'<test><?xml version="1.0"?></test>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
 ]
 
 { #category : #tests }
@@ -1107,6 +1248,26 @@ XMLParserTest >> testNamespacePrefixInheritance [
 					</one>'
 				usingNamespaces: false]
 		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testNotationDeclarationWhitespace [
+	#('<!DOCTYPE test [<!NOTATIONname PUBLIC "publicid">]>'
+		'<!DOCTYPE test [<!NOTATION name PUBLIC"publicid">]>'
+		'<!DOCTYPE test [<!NOTATION name PUBLIC "publicid""systemid">]>'
+		'<!DOCTYPE test [<!NOTATION name SYSTEM"systemid">]>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+
+	#('<!DOCTYPE test [<!NOTATION     name  PUBLIC  "publicid"   >]>'
+		'<!DOCTYPE test [<!NOTATION name PUBLIC        "publicid"   "systemid"   >]>'
+		'<!DOCTYPE test [<!NOTATION name SYSTEM        "systemid"		>]>')
+		do: [:each |
+			self
+				shouldnt: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
 ]
 
 { #category : #tests }
@@ -1210,6 +1371,26 @@ XMLParserTest >> testProcessingInstructions [
 		assert: document firstNode data = 'first>Data';
 		assert: document root firstNode target = 'secondTarget';
 		assert: document root firstNode data = 'second?Data'.
+]
+
+{ #category : #tests }
+XMLParserTest >> testProcessingInstructionsReservedTargets [
+	self
+		should: [SAXHandler parse: '<test><?xml version="1.0"?></test>']
+		raise: XMLWellFormednessException.
+	self
+		should: [SAXHandler parse: '<test><?XML version="1.0"?></test>']
+		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testProcessingInstructionsWhitespace [
+	self
+		should: [SAXHandler parse: '<pi><?target?data?></pi>']
+		raise: XMLWellFormednessException.
+	self
+		shouldnt: [SAXHandler parse: '<pi><?target ?data  ?></pi>']
+		raise: XMLWellFormednessException.
 ]
 
 { #category : #tests }
@@ -1606,6 +1787,23 @@ XMLParserTest >> testWhitespacePreservationValidation [
 	self
 		should: [SAXHandler parse: (dtd copyReplaceAll: '(default|preserve)' with: 'CDATA')]
 		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testXMLDeclarationWhitespace [
+	#('<? xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+		'<?xml version="1.0"standalone="yes"?>'
+		'<?xml version="1.0"encoding="UTF-8" standalone="yes"?>'
+		'<?xml version="1.0" encoding="UTF-8"standalone="yes"?>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+	self
+		shouldnt: [
+			SAXHandler parse:
+				'<?xml version="1.0" 	encoding="UTF-8"	standalone="yes"	?>']
+		raise: XMLWellFormednessException.
 ]
 
 { #category : #tests }

@@ -116,7 +116,7 @@ SAXHandlerTest >> testSAXIgnorableWhitespace [
 	(parser allSentMessagesNamed: #ignorableWhitespace:) do: [:each |
 		self assert:
 			((each arguments first) notEmpty
-				and: [each arguments first allSatisfy: [:char | char isSeparator]])].
+				and: [each arguments first allSatisfy: [:char | char xmlParserIsSeparator]])].
 ]
 
 { #category : #tests }
@@ -134,8 +134,6 @@ SAXHandlerTest >> testSAXParsingInterrupt [
 		self assert:
 			(parser wasSentSelectors:
 				((self prefixedXMLSourceSelectors copyUpTo: each) copyWith: each))].
-		
-	
 ]
 
 { #category : #tests }

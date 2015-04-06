@@ -20,7 +20,8 @@ XMLExternalEntityLimitsTest >> testDefaultLimits [
 XMLExternalEntityLimitsTest >> testExternalEntitiesLimit [
 	| parser xml entityLimit |
 
-	self skipOrReturnWith: [^ self].
+	self isSkipping
+		ifTrue: [self skipOrReturnWith: [^ self]].
 
 	entityLimit := 2.
 	xml := self doctypeWithDeclarationsForEntityURIs: (self externalEntityURLs copyFrom: 1 to: entityLimit).
@@ -47,7 +48,8 @@ XMLExternalEntityLimitsTest >> testExternalEntitiesLimit [
 XMLExternalEntityLimitsTest >> testExternalEntitySizeLimit [
 	| parser url xml size |
 
-	self skipOrReturnWith: [^ self].
+	self isSkipping
+		ifTrue: [self skipOrReturnWith: [^ self]].
 
 	url := self externalEntityURLs first asXMLURI.
 	xml := self doctypeWithDeclarationsForEntityURIs: (Array with: url asString).
@@ -75,7 +77,8 @@ XMLExternalEntityLimitsTest >> testExternalEntitySizeLimit [
 XMLExternalEntityLimitsTest >> testExternalSubsetReadLimit [
 	| xml externalSubset fileName parser |
 
-	self skipOrReturnWith: [^ self].
+	self isSkipping
+		ifTrue: [self skipOrReturnWith: [^ self]].
 
 	fileName := 'externalSubset.dtd'.
 	externalSubset := '<?xml encoding="UTF-8"?><!ELEMENT test EMPTY>'.
@@ -104,7 +107,8 @@ XMLExternalEntityLimitsTest >> testExternalSubsetReadLimit [
 XMLExternalEntityLimitsTest >> testOnURLUpToLimit [
 	| parser size |
 
-	self skipOrReturnWith: [^ self].
+	self isSkipping
+		ifTrue: [self skipOrReturnWith: [^ self]].
 
 	size := (self feedURL asXMLURI get) contents size.
 	self
