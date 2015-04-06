@@ -1,12 +1,9 @@
 "
-The context a token occurs in.
+Abstract class for token parsing contexts.
 "
 Class {
 	#name : #XMLTokenContext,
 	#superclass : #Object,
-	#instVars : [
-		'isLiteralValueContext'
-	],
 	#category : #'XML-Parser'
 }
 
@@ -16,18 +13,8 @@ XMLTokenContext >> contentContext [
 ]
 
 { #category : #changing }
-XMLTokenContext >> doctypeContext [
-	^ XMLDoctypeContext new
-]
-
-{ #category : #changing }
-XMLTokenContext >> enterLiteralValue [
-	isLiteralValueContext := true
-]
-
-{ #category : #changing }
-XMLTokenContext >> exitLiteralValue [
-	isLiteralValueContext := false
+XMLTokenContext >> doctypeDeclarationContext [
+	^ XMLDoctypeDeclarationContext new
 ]
 
 { #category : #changing }
@@ -46,7 +33,7 @@ XMLTokenContext >> isContentContext [
 ]
 
 { #category : #testing }
-XMLTokenContext >> isDoctypeContext [
+XMLTokenContext >> isDoctypeDeclarationContext [
 	^ false
 ]
 
@@ -67,16 +54,16 @@ XMLTokenContext >> isInternalSubsetContext [
 
 { #category : #testing }
 XMLTokenContext >> isLiteralValueContext [
-	^ isLiteralValueContext ifNil: [isLiteralValueContext := false]
-]
-
-{ #category : #testing }
-XMLTokenContext >> isPrologContext [
 	^ false
 ]
 
 { #category : #testing }
-XMLTokenContext >> isSubsetContext [
+XMLTokenContext >> isPostDoctypeDeclarationContext [
+	^ false
+]
+
+{ #category : #testing }
+XMLTokenContext >> isPrologContext [
 	^ false
 ]
 
@@ -86,13 +73,18 @@ XMLTokenContext >> isTerminatedContext [
 ]
 
 { #category : #testing }
-XMLTokenContext >> isTextDeclarationContext [
+XMLTokenContext >> isXMLDeclarationContext [
 	^ false
 ]
 
 { #category : #tokenizing }
 XMLTokenContext >> nextTokenFrom: aTokenizer [
 	self subclassResponsibility
+]
+
+{ #category : #changing }
+XMLTokenContext >> postDoctypeDeclarationContext [
+	^ XMLPostDoctypeDeclarationContext new
 ]
 
 { #category : #changing }

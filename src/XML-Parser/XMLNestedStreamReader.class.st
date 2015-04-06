@@ -149,8 +149,9 @@ XMLNestedStreamReader >> errorNestingLimitExceeded [
 XMLNestedStreamReader >> errorReadLimitExceeded [
 	XMLLimitException signal:
 		'Security read limit on input exceeded; ',
-		'use #documentReadLimit: or #externalSubsetReadLimit: ',
-		'to change or disable'
+		'use #documentReadLimit: (or #externalSubsetReadLimit:) ',
+		'to change or disable, or #defaultReadLimit: to ',
+		'persistently change or disable'
 ]
 
 { #category : #private }
@@ -323,9 +324,10 @@ XMLNestedStreamReader >> setStream: aStream readLimit: aReadLimit [
 
 { #category : #streaming }
 XMLNestedStreamReader >> skipSeparators [
-	"inlined peek"
-	[(peekChar ifNil: [peekChar := self basicNext]) notNil
-		and: [peekChar isSeparator]]
+	"nil understands xmlParserIsSeparator so the result of the inlined peek
+	does not need to be tested for nil first"
+	[(peekChar ifNil: [peekChar := self basicNext]) "inlined peek"
+		xmlParserIsSeparator]
 		whileTrue: [
 			"inlined next"
 			peekChar == normalizedLineEndingChar

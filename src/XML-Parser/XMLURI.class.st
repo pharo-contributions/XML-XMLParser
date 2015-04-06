@@ -126,7 +126,7 @@ XMLURI >> asRetrievableResource [
 
 { #category : #converting }
 XMLURI >> asString [
-	"for compatibility if Object>>asString isn't defined"
+	"for compatibility with GS where Object>>asString isn't defined"
 	^ self printString
 ]
 
@@ -459,10 +459,13 @@ XMLURI >> scheme [
 XMLURI >> setPathSegmentsFromString: aString [
 	pathSegments := OrderedCollection new.
 
-	aString ifNotEmpty: [
-		$/
-			xmlParserSplit: aString
-			do: [:segment | pathSegments addLast: segment]].
+	"pathSegments must remain empty if the path string is empty, but splitting
+	an empty string would add a single empty string to it"
+	aString isEmpty
+		ifFalse: [
+			$/
+				xmlParserSplit: aString
+				do: [:segment | pathSegments addLast: segment]].
 ]
 
 { #category : #accessing }

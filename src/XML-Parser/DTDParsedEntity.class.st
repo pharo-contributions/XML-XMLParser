@@ -46,6 +46,11 @@ DTDParsedEntity >> constructReplacementOn: aTokenizer [
 ]
 
 { #category : #testing }
+DTDParsedEntity >> hasReplacement [
+	^ self replacement notEmpty
+]
+
+{ #category : #testing }
 DTDParsedEntity >> isExternal [
 	^ false
 ]
@@ -68,7 +73,7 @@ DTDParsedEntity >> referencePrefix [
 	self subclassResponsibility
 ]
 
-{ #category : #replacing }
+{ #category : #accessing }
 DTDParsedEntity >> replacement [
 	^ replacement ifNil: [replacement := '']
 ]

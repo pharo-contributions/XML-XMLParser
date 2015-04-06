@@ -56,7 +56,7 @@ XMLDocument >> encoding: aString [
 
 { #category : #private }
 XMLDocument >> innerXMLContext [
-	^ XMLPrologContext new
+	^ XMLXMLDeclarationContext new
 ]
 
 { #category : #testing }
@@ -94,6 +94,27 @@ XMLDocument >> root: anElement [
 	self hasChildren
 		ifTrue: [self removeNodes: self elements].
 	self addNode: anElement.
+]
+
+{ #category : #validating }
+XMLDocument >> validate [
+	"revalidate against the DTD it was parsed with (if any)"
+
+	| dtd |
+
+	((dtd := self doctypeDefinition) notNil
+		and: [dtd hasValidators])
+		ifTrue: [
+			dtd clearIDsAndIDReferences.
+			self validateWith: (DTDDocumentValidator doctypeDefinition: dtd)]
+]
+
+{ #category : #validating }
+XMLDocument >> validateWith: aValidator [
+	self root
+		ifNotNil: [:rootElement | aValidator validateRootElement: rootElement name].
+	super validateWith: aValidator.
+	aValidator validateEndDocument.
 ]
 
 { #category : #accessing }

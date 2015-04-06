@@ -1,5 +1,5 @@
 "
-This class represents the parsed internal and external subset of a DTD.
+This class represents the parsed internal and external subset of a DTD taken together.
 "
 Class {
 	#name : #DTDDoctypeDefinition,
@@ -110,6 +110,12 @@ DTDDoctypeDefinition >> addValidatorForElement: anElement contentModel: aContent
 { #category : #private }
 DTDDoctypeDefinition >> attributeValidators [
 	^ attributeValidators ifNil: [attributeValidators := Dictionary new]
+]
+
+{ #category : #accessing }
+DTDDoctypeDefinition >> clearIDsAndIDReferences [
+	self hasElementIDValidator
+		ifTrue: [self elementIDValidator clearIDsAndIDReferences]
 ]
 
 { #category : #private }

@@ -249,8 +249,16 @@ SAXParserDriver >> handleEndTag: anElementName [
 
 { #category : #'handling - dtd' }
 SAXParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotation [
-	aNotation
-		ifNotEmpty: [
+	aNotation isEmpty
+		ifTrue: [
+			self resolvesExternalEntities
+				ifTrue: [
+					self doctypeDefinition
+						addExternalGeneralEntity: aName
+						resolver: self externalEntityResolver
+						uri: aSystemID
+						from: self currentURI]]
+		ifFalse: [
 			self isValidating
 				ifTrue: [
 					self doctypeDefinition unparsedEntityValidator
@@ -258,15 +266,7 @@ SAXParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicID sys
 						withNotation: aNotation].
 			self doctypeDefinition
 				addUnparsedEntity: aName
-				ndata: aNotation]
-		ifEmpty: [
-			self resolvesExternalEntities
-				ifTrue: [
-					self doctypeDefinition
-						addExternalGeneralEntity: aName
-						resolver: self externalEntityResolver
-						uri: aSystemID
-						from: self currentURI]].
+				ndata: aNotation].
 
 	self saxHandler
 		generalEntityDeclaration: aName
@@ -474,6 +474,11 @@ SAXParserDriver >> hasUnhandledReservedAttributes [
 { #category : #private }
 SAXParserDriver >> haveUnhandledReservedAttributes [
 	hasUnhandledReservedAttributes := true
+]
+
+{ #category : #initialization }
+SAXParserDriver >> initialContext [
+	^ XMLXMLDeclarationContext new
 ]
 
 { #category : #testing }

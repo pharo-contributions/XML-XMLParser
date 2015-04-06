@@ -1,5 +1,5 @@
 "
-A context for text declaration tokens.
+A context for <?xml ...?> text declaration tokens at the start of external entities.
 "
 Class {
 	#name : #XMLTextDeclarationContext,
@@ -13,11 +13,6 @@ Class {
 { #category : #'instance creation' }
 XMLTextDeclarationContext class >> previousContext: aTokenContex [
 	^ self new previousContext: aTokenContex
-]
-
-{ #category : #testing }
-XMLTextDeclarationContext >> isTextDeclarationContext [
-	^ true
 ]
 
 { #category : #tokenizing }

@@ -76,7 +76,7 @@ XMLNode >> ancestorNodesDo: aBlock [
 
 { #category : #converting }
 XMLNode >> asString [
-	"for compatibility if Object>>asString isn't defined"
+	"for compatibility with GS where Object>>asString isn't defined"
 	^ self printString
 ]
 
@@ -315,6 +315,17 @@ XMLNode >> sortKey [
 	"used to compare nodes when sorting"
 
 	^ self class name asString
+]
+
+{ #category : #validating }
+XMLNode >> validate [
+	"revalidate against the DTD it was parsed with (if any)"
+
+	self document ifNotNil: [:node | node validate]
+]
+
+{ #category : #validating }
+XMLNode >> validateWith: aValidator [
 ]
 
 { #category : #private }

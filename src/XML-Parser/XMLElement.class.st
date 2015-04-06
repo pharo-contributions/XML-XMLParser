@@ -462,7 +462,8 @@ XMLElement >> resolvePrefix: aPrefix [
 
 { #category : #initialization }
 XMLElement >> setAttributes: aDictionaryOrArray [
-	self attributeNodes removeAll.
+	self hasAttributes
+		ifTrue: [self attributeNodes removeAll].
 	aDictionaryOrArray associationsDo: [:each |
 		self attributeNodes
 			addName: each key
@@ -546,6 +547,24 @@ XMLElement >> validateName [
 			self namespaceScope
 				validateAndResolvePrefix: self prefix
 				ofElement: self name]
+]
+
+{ #category : #validating }
+XMLElement >> validateWith: aValidator [
+	| attributeDictionary |
+
+	attributeDictionary := 
+		self hasAttributes
+			ifTrue: [self attributeNodes asDictionary]
+			ifFalse: [Dictionary new].
+	aValidator
+		validateStartTag: self name
+		attributes: attributeDictionary.
+	self setAttributes: attributeDictionary.
+
+	super validateWith: aValidator.
+
+	aValidator validateEndTag: self name.
 ]
 
 { #category : #printing }

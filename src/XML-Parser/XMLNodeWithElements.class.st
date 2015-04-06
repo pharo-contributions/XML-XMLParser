@@ -537,3 +537,9 @@ XMLNodeWithElements >> usesNamespaces [
 XMLNodeWithElements >> usesNamespaces: aBoolean [
 	self configuration usesNamespaces: aBoolean
 ]
+
+{ #category : #validating }
+XMLNodeWithElements >> validateWith: aValidator [
+	self hasChildren
+		ifTrue: [self nodesDo: [:each | each validateWith: aValidator]]
+]

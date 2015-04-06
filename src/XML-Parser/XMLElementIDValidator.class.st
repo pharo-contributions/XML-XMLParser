@@ -13,6 +13,12 @@ Class {
 }
 
 { #category : #accessing }
+XMLElementIDValidator >> clearIDsAndIDReferences [
+	self ids removeAll.
+	self idReferences removeAll.
+]
+
+{ #category : #accessing }
 XMLElementIDValidator >> elementsAndIDAttributes [
 	^ elementsAndIdAttributes ifNil: [elementsAndIdAttributes := Dictionary new]
 ]

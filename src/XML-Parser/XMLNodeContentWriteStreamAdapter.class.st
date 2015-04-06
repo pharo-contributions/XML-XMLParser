@@ -24,8 +24,8 @@ XMLNodeContentWriteStreamAdapter >> contents [
 { #category : #private }
 XMLNodeContentWriteStreamAdapter >> insertSpaceBefore: aCharacter [
 	(lastChar == nil
-		or: [lastChar isSeparator
-			or: [aCharacter isSeparator]])
+		or: [lastChar xmlParserIsWhitespace
+			or: [aCharacter xmlParserIsWhitespace]])
 		ifFalse: [stream space]
 ]
 

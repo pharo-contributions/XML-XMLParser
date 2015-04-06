@@ -4,8 +4,21 @@ A context for external subset tokens.
 Class {
 	#name : #XMLExternalSubsetContext,
 	#superclass : #XMLTokenContext,
+	#instVars : [
+		'isLiteralValueContext'
+	],
 	#category : #'XML-Parser'
 }
+
+{ #category : #changing }
+XMLExternalSubsetContext >> enterLiteralValue [
+	isLiteralValueContext := true
+]
+
+{ #category : #changing }
+XMLExternalSubsetContext >> exitLiteralValue [
+	isLiteralValueContext := false
+]
 
 { #category : #testing }
 XMLExternalSubsetContext >> isExternalSubsetContext [
@@ -13,8 +26,8 @@ XMLExternalSubsetContext >> isExternalSubsetContext [
 ]
 
 { #category : #testing }
-XMLExternalSubsetContext >> isSubsetContext [
-	^ true
+XMLExternalSubsetContext >> isLiteralValueContext [
+	^ isLiteralValueContext ifNil: [isLiteralValueContext := false]
 ]
 
 { #category : #tokenizing }

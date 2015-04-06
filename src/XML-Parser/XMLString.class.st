@@ -108,7 +108,7 @@ XMLString >> isStringNode: aStringOrStringNode [
 { #category : #testing }
 XMLString >> isWhitespace [
 	^ self isEmpty not
-		and: [self string allSatisfy: [:each | each isSeparator]]
+		and: [self string allSatisfy: [:each | each xmlParserIsWhitespace]]
 ]
 
 { #category : #'splitting/merging' }
@@ -201,6 +201,11 @@ XMLString >> string [
 { #category : #accessing }
 XMLString >> string: aString [
 	string := aString asString
+]
+
+{ #category : #validating }
+XMLString >> validateWith: aValidator [
+	aValidator validatePCData: self string
 ]
 
 { #category : #printing }

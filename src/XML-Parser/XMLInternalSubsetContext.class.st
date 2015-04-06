@@ -3,9 +3,22 @@ A context for internal subset tokens.
 "
 Class {
 	#name : #XMLInternalSubsetContext,
-	#superclass : #XMLDoctypeContext,
+	#superclass : #XMLDoctypeDeclarationContext,
+	#instVars : [
+		'isLiteralValueContext'
+	],
 	#category : #'XML-Parser'
 }
+
+{ #category : #changing }
+XMLInternalSubsetContext >> enterLiteralValue [
+	isLiteralValueContext := true
+]
+
+{ #category : #changing }
+XMLInternalSubsetContext >> exitLiteralValue [
+	isLiteralValueContext := false
+]
 
 { #category : #testing }
 XMLInternalSubsetContext >> isInternalSubsetContext [
@@ -13,8 +26,8 @@ XMLInternalSubsetContext >> isInternalSubsetContext [
 ]
 
 { #category : #testing }
-XMLInternalSubsetContext >> isSubsetContext [
-	^ true
+XMLInternalSubsetContext >> isLiteralValueContext [
+	^ isLiteralValueContext ifNil: [isLiteralValueContext := false]
 ]
 
 { #category : #tokenizing }
