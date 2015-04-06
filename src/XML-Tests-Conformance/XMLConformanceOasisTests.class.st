@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 XMLConformanceOasisTests class >> skippableTests [
-	^ #( teste2xml testp66fail5xml testp18fail3xml testp39fail3xml testp01fail2xml testp22fail2xml testp22fail1xml testp23fail1xml testp66fail6xml testp01fail1xml testp14fail3xml testp44fail5xml testp09fail2xml )
+	^ #( testp66fail5xml testp01fail1xml testp09fail2xml teste2xml testp18fail3xml testp44fail5xml testp14fail3xml testp22fail1xml testp66fail6xml testp39fail3xml )
 ]
 
 { #category : #'xml source' }
