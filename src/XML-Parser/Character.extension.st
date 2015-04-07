@@ -32,6 +32,15 @@ Character >> xmlParserIsWhitespace [
 ]
 
 { #category : #'*XML-Parser' }
+Character class >> xmlParserSeparators [
+	^ String
+		with: 32 asCharacter "Character space asciiValue"
+		with: 10 asCharacter "Character lf asciiValue"
+		with: 9 asCharacter "Character tab asciiValue"
+		with: 13 asCharacter "Character cr asciiValue"
+]
+
+{ #category : #'*XML-Parser' }
 Character >> xmlParserSplit: aCollection [
 	"faster, portable version"
 	| parts |
@@ -55,4 +64,10 @@ Character >> xmlParserSplit: aCollection do: aBlock [
 	start > aCollection size
 		ifTrue: [aBlock value: '']
 		ifFalse: [aBlock value: (aCollection copyFrom: start to: aCollection size)].
+]
+
+{ #category : #'*XML-Parser' }
+Character class >> xmlParserWhitespace [
+	^ self xmlParserSeparators copyWith:
+		12 asCharacter "Character newPage asciiValue"
 ]
