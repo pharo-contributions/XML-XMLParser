@@ -87,7 +87,7 @@ Examples
 { #category : #catalog }
 ConfigurationOfXMLParser class >> catalogKeywords [
 
-	^ #( XML DOM SAX DTD HTML parser validation web markup )
+	^ #( XML DOM SAX DTD HTML XHTML parser validation web markup document )
 					
 
 ]
@@ -169,7 +169,9 @@ ConfigurationOfXMLParser class >> unloadMetacello [
 ConfigurationOfXMLParser >> baseline10: spec [
 	<version: '1.0-baseline'>
 
-	"default baseline inherited by others"
+	"default baseline inherited by others, describes basic dependencies.
+	other baselines that inherit choose concrete versions of projects
+	that need it while for the rest loading #stable is enough"
 	spec
 		for: #common
 		do: [ 
@@ -180,6 +182,8 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				timestamp: '04/30/2013';
 				repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLParser/main'.
 
+			"other baselines choose concrete versions because this package changes
+			with XMLParser to be backwards incompatible"
 			spec
 				project: 'XMLWriter'
 				with: [
@@ -189,6 +193,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 						loads: #('default'); 
 						repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLWriter/main'.].
 
+			"#stable is fine, public API doesn't change to backwards incompatible"
 			spec
 				project: 'BitmapCharacterSet'
 				with: [
@@ -198,6 +203,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 						loads: #('Core'); 
 						repository: 'http://www.smalltalkhub.com/mc/PharoExtras/BitmapCharacterSet/main'.].
 
+			"#stable is fine, the public API doesn't change to backwards incompatible"
 			spec
 				project: 'OrderPreservingDictionary'
 				with: [
@@ -437,7 +443,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '2.2.2'.
+	spec for: #'common' version: '2.2.3'.
 ]
 
 { #category : #versions }
@@ -1752,5 +1758,16 @@ ConfigurationOfXMLParser >> version222: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.290'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.109'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version223: spec [ 
+        <version: '2.2.3' imports: #('2.2.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.291'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.110'.
                 ].
 ]
