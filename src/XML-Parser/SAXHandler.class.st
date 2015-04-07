@@ -51,28 +51,30 @@ Class {
 
 { #category : #'instance creation' }
 SAXHandler class >> on: aStringOrStream [
+	"Returns new parser on the argument string or stream but doesn't parse"
+
 	^ self new on: aStringOrStream
 ]
 
 { #category : #'instance creation' }
 SAXHandler class >> on: aStringOrStream documentURI: aURIString [
-	"Returns a new instance with associated base URI"
+	"Returns new parser with associated base URI but doesn't parse"
 
-	^ self new
-		on: aStringOrStream
-		documentURI: aURIString
+	^ (self on: aStringOrStream) documentURI: aURIString
 ]
 
 { #category : #'instance creation' }
-SAXHandler class >> onFileNamed: aFileName [
+SAXHandler class >> onFileNamed: aFilePathString [
+	"Returns new parser on the specified file but doesn't parse"
+
 	^ self
-		on: (XMLFileHandle path: aFileName) readStream
-		documentURI: aFileName
+		on: (XMLFileHandle path: aFilePathString) readStream
+		documentURI: aFilePathString
 ]
 
 { #category : #'instance creation' }
 SAXHandler class >> onURL: aURLString [
-	"Fetches the URL and returns a new instance on the response"
+	"Fetches URL and returns new parser on the response but doesn't parse"
 
 	^ self
 		onURL: aURLString
@@ -81,22 +83,35 @@ SAXHandler class >> onURL: aURLString [
 
 { #category : #'instance creation' }
 SAXHandler class >> onURL: aURLString upToLimit: aLimit [
-	"Fetches the URL and returns a new instance on the response up
-	to the input limit (use nil to disable)."
+	"Fetches URL and returns new parser on the response up to
+	the input limit (use nil to disable) but doesn't parse"
 
 	^ (self
 		on: (aURLString asXMLURI getUpToLimit: aLimit)
 		documentURI: aURLString)
-		documentReadLimit: aLimit
+			documentReadLimit: aLimit
 ]
 
 { #category : #parsing }
 SAXHandler class >> parse: aStringOrStream [
+	"Parse document in argument string or stream"
+
 	^ (self on: aStringOrStream) parseDocument
 ]
 
 { #category : #parsing }
+SAXHandler class >> parse: aStringOrStream documentURI: aURI [
+	"Parse document in argument string or stream with associated base URI"
+
+	^ (self
+		on: aStringOrStream
+		documentURI: aURI) parseDocument
+]
+
+{ #category : #parsing }
 SAXHandler class >> parse: aStringOrStream usingNamespaces: aBoolean [
+	"Parses string or stream possibly with namespace checking (default enabled)"
+
 	^ (self on: aStringOrStream)
 		usesNamespaces: aBoolean;
 		parseDocument
@@ -104,6 +119,9 @@ SAXHandler class >> parse: aStringOrStream usingNamespaces: aBoolean [
 
 { #category : #parsing }
 SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean validation: aValidationBoolean [
+	"Parses string or stream possibly with namespace checking
+	or validation (both defualt enabled)"
+
 	^ (self on: aStringOrStream)
 		usesNamespaces: aNamespaceBoolean;
 		isValidating: aValidationBoolean;
@@ -111,11 +129,15 @@ SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean va
 ]
 
 { #category : #parsing }
-SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean validation: aValidationBoolean externalEntities: anEntityBoolean [
+SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean validation: aValidationBoolean externalEntities: anEntityResolutionBoolean [
+	"Parses string or stream possibly with namespace checking
+	or validation (both defualt enabled)
+	or external entity resolution (default disabled)"
+
 	^ (self on: aStringOrStream)
 		usesNamespaces: aNamespaceBoolean;
 		isValidating: aValidationBoolean;
-		resolvesExternalEntities: anEntityBoolean;
+		resolvesExternalEntities: anEntityResolutionBoolean;
 		parseDocument
 ]
 
@@ -127,13 +149,26 @@ SAXHandler class >> parseDocumentFrom: aStringOrStream [
 ]
 
 { #category : #parsing }
-SAXHandler class >> parseFileNamed: aFileName [
-	^ (self onFileNamed: aFileName) parseDocument
+SAXHandler class >> parseFileNamed: aFilePathString [
+	"Parses document in specified file"
+
+	^ (self onFileNamed: aFilePathString) parseDocument
 ]
 
 { #category : #parsing }
 SAXHandler class >> parseURL: aURLString [
+	"Fetches URL and parses response"
+
 	^ (self onURL: aURLString) parseDocument
+]
+
+{ #category : #parsing }
+SAXHandler class >> parseURL: aURLString upToLimit: aLimit [
+	"Fetches URL upto specified input limit (nil to disable) and parses response"
+
+	^ (self
+		onURL: aURLString
+		upToLimit: aLimit) parseDocument
 ]
 
 { #category : #'handling - declarations' }
@@ -195,6 +230,11 @@ SAXHandler >> documentReadLimit: aLimit [
 { #category : #accessing }
 SAXHandler >> documentURI [
 	^ documentURI ifNil: [documentURI := self defaultDocumentURI]
+]
+
+{ #category : #accessing }
+SAXHandler >> documentURI: aURI [
+	documentURI := aURI
 ]
 
 { #category : #private }
@@ -348,19 +388,18 @@ SAXHandler >> notationDeclaration: aName publicID: aPublicID systemID: aSystemID
 
 { #category : #initialization }
 SAXHandler >> on: aStringOrStream [
-	self
-		on: aStringOrStream
-		documentURI: nil
-]
-
-{ #category : #initialization }
-SAXHandler >> on: aStringOrStream documentURI: aURI [
 	input := aStringOrStream.
-	documentURI := aURI.
-	configuration
-		ifNil: [self configuration: self configurationClass new].
+
+	"a single instance can parse multiple documents with on:,
+	so all these values must be reset"
+	documentURI := nil.
 	isInContent := false.
 	isInCDataSection := false.
+
+	"but the configurations can be shared, so it is only
+	default initialized once"
+	configuration 
+		ifNil: [self configuration: self configurationClass new].
 ]
 
 { #category : #configuring }

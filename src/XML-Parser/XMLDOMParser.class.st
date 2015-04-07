@@ -142,10 +142,8 @@ XMLDOMParser >> notationDeclaration: aName publicID: aPublicID systemID: aSystem
 ]
 
 { #category : #initialization }
-XMLDOMParser >> on: aStringOrStream documentURI: aURI [
-	super
-		on: aStringOrStream
-		documentURI: aURI.
+XMLDOMParser >> on: aStringOrStream [
+	super on: aStringOrStream.
 
 	nodeStack := OrderedCollection new: 10.
 ]
