@@ -455,7 +455,7 @@ XMLParserTest >> testDefaultDocumentURI [
 	documentURI := (SAXHandler on: '') documentURI.
 	self
 		assert: documentURI size > (cwd size + 1);
-		assert: (documentURI copyUpToLast: $/) = cwd
+		assert: (documentURI copyUpToLast: $/) = cwd.
 ]
 
 { #category : #tests }
@@ -1413,11 +1413,16 @@ XMLParserTest >> testRequiredDTDDeclarations [
 XMLParserTest >> testReusingParser [
 	| parser oldConfiguraiton |
 
-	parser := SAXHandler on: self addressBookXML.
+	parser :=
+		SAXHandler
+			on: self addressBookXML
+			documentURI: 'oldURI'.
 	oldConfiguraiton := parser configuration.
 	parser parseDocument.
 	parser on: self addressBookXMLWithDTD.
-	self assert: parser configuration == oldConfiguraiton.
+	self
+		assert: parser configuration == oldConfiguraiton;
+		deny: parser documentURI = 'oldURI'.
 ]
 
 { #category : #tests }
