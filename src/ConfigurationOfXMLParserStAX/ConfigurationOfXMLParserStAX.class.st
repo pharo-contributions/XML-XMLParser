@@ -57,8 +57,7 @@ Examples:
 { #category : #catalog }
 ConfigurationOfXMLParserStAX class >> catalogKeywords [
 
-	^ #( XML parser pull-parser validation DOM StAX DTD )
-				
+	^ #( XML DOM StAX DTD HTML XHTML pull parser #'pull-parser' validation web markup document )
 ]
 
 { #category : #private }
@@ -193,7 +192,7 @@ ConfigurationOfXMLParserStAX >> project [
 ConfigurationOfXMLParserStAX >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.0.8'.
+	spec for: #'common' version: '1.0.9'.
 
 ]
 
@@ -292,6 +291,17 @@ ConfigurationOfXMLParserStAX >> version108: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.9'.
+			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.8'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserStAX >> version109: spec [ 
+        <version: '1.0.9' imports: #('1.0.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.10'.
 			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.8'.
                 ].
 ]
