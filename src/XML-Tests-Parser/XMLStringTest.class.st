@@ -241,7 +241,7 @@ XMLStringTest >> testIsWhitespace [
 	node := self nodeClass new.
 	self deny: node isWhitespace.
 
-	node string: self whitespaceCharacters.
+	node string: Character xmlParserWhitespace.
 	self assert: node isWhitespace.
 
 	node append: 'non-space'.
@@ -395,12 +395,4 @@ XMLStringTest >> testWriteXMLOn [
 	self
 		assert: self nodeClass new printString isEmpty;
 		assert: (self nodeClass string: self markupString) printString = self escapedString.
-]
-
-{ #category : #accessing }
-XMLStringTest >> whitespaceCharacters [
-	"for portability"
-	^ String withAll:
-		(((0 to: 255) collect: [:each | each asCharacter])
-			select: [:each | each xmlParserIsWhitespace])
 ]

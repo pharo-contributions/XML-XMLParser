@@ -24,31 +24,22 @@ XMLCharacterMethodsTest >> testSplit [
 XMLCharacterMethodsTest >> testXMLParserIsSeparator [
 	| separators |
 
-	separators := #(
-			32 "Character space asciiValue"
-			9 "Character tab asciiValue"
-			13 "Character cr asciiValue"
-			10 "Character lf asciiValue"
-		) asSet.
-	0 to: 255 do: [:each |
-		(separators includes: each)
-			ifTrue: [self assert: each asCharacter xmlParserIsSeparator]
-			ifFalse: [self deny: each asCharacter xmlParserIsSeparator]].
+	separators := Character xmlParserSeparators.
+	0 to: 255 do: [:each | | char |
+		char := each asCharacter.
+		(separators includes: char)
+			ifTrue: [self assert: char xmlParserIsSeparator]
+			ifFalse: [self deny: char xmlParserIsSeparator]].
 ]
 
 { #category : #tests }
 XMLCharacterMethodsTest >> testXMLParserIsWhitespace [
 	| whitespace |
 
-	whitespace := #(
-			32 "Character space asciiValue"
-			9 "Character tab asciiValue"
-			13 "Character cr asciiValue"
-			10 "Character lf asciiValue"
-			12 "Character newPage asciiValue"
-		) asSet.
-	0 to: 255 do: [:each |
-		(whitespace includes: each)
-			ifTrue: [self assert: each asCharacter xmlParserIsWhitespace]
-			ifFalse: [self deny: each asCharacter xmlParserIsWhitespace]].
+	whitespace := Character xmlParserWhitespace.
+	0 to: 255 do: [:each | | char |
+		char := each asCharacter.
+		(whitespace includes: char)
+			ifTrue: [self assert: char xmlParserIsWhitespace]
+			ifFalse: [self deny: char xmlParserIsWhitespace]].
 ]
