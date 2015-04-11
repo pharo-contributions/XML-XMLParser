@@ -33,6 +33,15 @@ XMLOrderedListTest >> assertList: aList copiedFrom: aSecondList equals: aThirdLi
 ]
 
 { #category : #assertions }
+XMLOrderedListTest >> assertList: aFirstList equals: aSecondList [
+	self
+		assert: aFirstList = aFirstList;
+		assert: aSecondList = aSecondList;
+		assert: aFirstList = aSecondList;
+		assert: aSecondList = aFirstList
+]
+
+{ #category : #assertions }
 XMLOrderedListTest >> assertList: aList isCopyOf: aSecondList [
 	self
 		assert: aList = aSecondList;
@@ -59,6 +68,13 @@ XMLOrderedListTest >> changedSingleElement [
 { #category : #accessing }
 XMLOrderedListTest >> defaultValue [
 	^ nil
+]
+
+{ #category : #assertions }
+XMLOrderedListTest >> denyList: aFirstList equals: aSecondList [
+	self
+		deny: aFirstList = aSecondList;
+		deny: aSecondList = aFirstList
 ]
 
 { #category : #accessing }
@@ -936,15 +952,54 @@ XMLOrderedListTest >> testEndsWith [
 { #category : #tests }
 XMLOrderedListTest >> testEquals [
 	self
-		assert: self emptyList = self emptyList;
-		assert: self listWithSingleElement = self listWithSingleElement;
-		assert: self listWithElements = self listWithElements;
-		deny: self emptyList = self listWithSingleElement;
-		deny: self listWithSingleElement = self emptyList;
-		deny: self emptyList = self listWithElements;
-		deny: self listWithElements = self emptyList;
-		deny: self listWithElements = self listWithSingleElement;
-		deny: self listWithSingleElement = self listWithElements
+		assertList: self emptyList equals: self emptyList;
+		assertList: self listWithSingleElement equals: self listWithSingleElement;
+		assertList: self listWithElements equals: self listWithElements;
+		denyList: self emptyList equals: self listWithSingleElement;
+		denyList: self emptyList equals: self listWithElements;
+		denyList: self listWithSingleElement equals: self listWithElements
+]
+
+{ #category : #tests }
+XMLOrderedListTest >> testEqualsInternalCollections [
+	| emptyArrayList emptyOCList arrayListWithSingleElement ocListWithSingleElement arrayListWithElements ocListWithElements |
+
+	emptyArrayList := self listClass collection: #().
+	emptyOCList := self listClass collection: OrderedCollection new.
+	arrayListWithSingleElement := self listClass collection: (Array with: self singleElement).
+	ocListWithSingleElement := self listClass collection: (OrderedCollection with: self singleElement).
+	arrayListWithElements := self listClass collection: (Array newFrom: self listElements).
+	ocListWithElements := self listClass collection: (OrderedCollection newFrom: self listElements).
+
+	self
+		assertList: emptyArrayList equals: emptyOCList;
+		assertList: arrayListWithSingleElement equals: ocListWithSingleElement;
+		assertList: arrayListWithElements equals: ocListWithElements;
+		denyList: emptyArrayList equals: ocListWithSingleElement;
+		denyList: emptyArrayList equals: ocListWithElements;
+		denyList: arrayListWithSingleElement equals: emptyOCList;
+		denyList: arrayListWithSingleElement equals: ocListWithElements;
+		denyList: arrayListWithElements equals: emptyOCList;
+		denyList: arrayListWithElements equals: ocListWithSingleElement.
+]
+
+{ #category : #tests }
+XMLOrderedListTest >> testEqualsSpecies [
+	| emptySpeciesList speciesListWithSingleElement speciesListWithElements |
+
+	emptySpeciesList := self listSpecies new.
+	speciesListWithSingleElement := self listSpecies with: self singleElement.
+	speciesListWithElements := self listSpecies newFrom: self listElements.
+	self
+		assertList: self emptyList equals: emptySpeciesList;
+		assertList: self listWithSingleElement equals: speciesListWithSingleElement;
+		assertList: self listWithElements equals: speciesListWithElements;
+		denyList: self emptyList equals: speciesListWithSingleElement;
+		denyList: self emptyList equals: speciesListWithElements;
+		denyList: self listWithSingleElement equals: emptySpeciesList;
+		denyList: self listWithSingleElement equals: speciesListWithElements;
+		denyList: self listWithElements equals: emptySpeciesList;
+		denyList: self listWithElements equals: speciesListWithSingleElement.
 ]
 
 { #category : #tests }
