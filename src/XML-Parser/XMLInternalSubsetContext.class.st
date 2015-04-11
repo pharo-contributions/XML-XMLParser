@@ -10,6 +10,11 @@ Class {
 	#category : #'XML-Parser'
 }
 
+{ #category : #testing }
+XMLInternalSubsetContext >> canTerminateDocument [
+	^ false
+]
+
 { #category : #changing }
 XMLInternalSubsetContext >> enterLiteralValue [
 	isLiteralValueContext := true

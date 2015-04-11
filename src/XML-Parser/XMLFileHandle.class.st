@@ -22,7 +22,7 @@ XMLFileHandle class >> currentWorkingDirectoryPathString [
 
 { #category : #private }
 XMLFileHandle class >> errorUnsupported [
-	XMLFileException signal: 'File IO unsupported'.
+	XMLFileException signal: 'File IO unsupported'
 ]
 
 { #category : #'instance creation' }

@@ -1,5 +1,5 @@
 "
-A base class for HTTP requests. Subclasses need to implement the abstract requesting method to return a ReadStream on the respone or raise an exception if it is too large or an HTTP error happens.
+A base class for HTTP requests. Subclasses need to implement the abstract requesting method to return a ReadStream on the respone or raise an exception if a network or HTTP error happens or if the response is too large.
 "
 Class {
 	#name : #XMLHTTPRequest,
@@ -12,7 +12,7 @@ Class {
 
 { #category : #private }
 XMLHTTPRequest class >> errorUnsupported [
-	XMLHTTPException signal: 'HTTP unsupported'.
+	XMLHTTPException signal: 'HTTP unsupported'
 ]
 
 { #category : #private }
@@ -53,7 +53,7 @@ XMLHTTPRequest >> getUpToLimit: aMaxSize [
 
 { #category : #private }
 XMLHTTPRequest >> isMaxSizeException: anException [
-	self subclassResponsibility
+	^ anException isKindOf: XMLLimitException
 ]
 
 { #category : #accessing }

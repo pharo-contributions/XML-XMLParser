@@ -7,6 +7,11 @@ Class {
 	#category : #'XML-Parser'
 }
 
+{ #category : #testing }
+XMLTokenContext >> canTerminateDocument [
+	^ true
+]
+
 { #category : #changing }
 XMLTokenContext >> contentContext [
 	^ XMLContentContext new

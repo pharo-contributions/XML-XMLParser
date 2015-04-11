@@ -275,7 +275,7 @@ XMLParserTokenizer >> nextPublicID [
 
 { #category : #'tokenizing - dtd' }
 XMLParserTokenizer >> nextPublicIDLiteral [
-	self subclassResponsiblity
+	self subclassResponsibility
 ]
 
 { #category : #tokenizing }

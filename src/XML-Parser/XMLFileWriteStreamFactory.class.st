@@ -14,7 +14,7 @@ XMLFileWriteStreamFactory class >> errorUnsupported [
 
 { #category : #'instance creation' }
 XMLFileWriteStreamFactory class >> fileWriteStreamOn: aPath [
-	self subclassResponsiblity
+	self subclassResponsibility
 ]
 
 { #category : #'instance creation' }

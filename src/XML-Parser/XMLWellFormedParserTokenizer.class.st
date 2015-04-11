@@ -236,6 +236,11 @@ XMLWellFormedParserTokenizer >> currentActiveEntity [
 ]
 
 { #category : #errors }
+XMLWellFormedParserTokenizer >> errorDocumentTerminatedPrematurely [
+	self parseError: 'Document terminated prematurely'
+]
+
+{ #category : #errors }
 XMLWellFormedParserTokenizer >> errorEntityDepthLimitExceeded [
 	XMLLimitException signal: 
 		'Cannot further nest entity replacements; ',
@@ -866,8 +871,8 @@ XMLWellFormedParserTokenizer >> nextElementDeclaration [
 
 { #category : #tokenizing }
 XMLWellFormedParserTokenizer >> nextEndDocument [
-	context isInternalSubsetContext
-		ifTrue: [self errorExpected: 'end of internal subset'].
+	context canTerminateDocument
+		ifFalse: [self errorDocumentTerminatedPrematurely].
 	super nextEndDocument.
 ]
 

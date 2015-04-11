@@ -26,7 +26,15 @@ XMLDocument >> doctypeDeclaration [
 
 { #category : #accessing }
 XMLDocument >> doctypeDeclaration: aDoctypeDeclaration [
-	doctypeDeclaration := aDoctypeDeclaration
+	aDoctypeDeclaration
+		ifNotNil: [
+			aDoctypeDeclaration hasParent
+				ifTrue: [self errorAddingDoctypeDeclarationWithParent].
+			aDoctypeDeclaration parent: self].
+	doctypeDeclaration
+		ifNotNil: [doctypeDeclaration parent: nil].
+
+	doctypeDeclaration := aDoctypeDeclaration.
 ]
 
 { #category : #accessing }
@@ -52,6 +60,11 @@ XMLDocument >> encoding [
 { #category : #accessing }
 XMLDocument >> encoding: aString [	
 	encoding := aString
+]
+
+{ #category : #private }
+XMLDocument >> errorAddingDoctypeDeclarationWithParent [
+	XMLDOMException signal: 'Cannot add doctype declaration node with parent'
 ]
 
 { #category : #private }
