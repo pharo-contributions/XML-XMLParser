@@ -62,7 +62,7 @@ ConfigurationOfXMLParser class >> catalogDescription [
 { #category : #catalog }
 ConfigurationOfXMLParser class >> catalogKeyClassesAndExample [
 
-^ 'The main classes are ==SAXHandler==, =XMLDOMParser==, and ==XMLNode== and its subclasses. Read the class comments for more information.
+^ 'The main classes are ==SAXHandler==, ==XMLDOMParser==, and ==XMLNode== and its subclasses. Read the class comments for more information.
 
 Validation and namespace checking are enabled by default, but not resolution of external entities.
 
