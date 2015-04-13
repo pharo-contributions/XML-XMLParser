@@ -107,6 +107,47 @@ XMLNamespaceScopeTest >> testMapPrefixesAndURIs [
 ]
 
 { #category : #tests }
+XMLNamespaceScopeTest >> testResolvePrefix [
+	| namespaceScope |
+
+	namespaceScope := self newNamespaceScope.
+	self namespaces keysAndValuesDo: [:prefix :uri |
+		self assert: (namespaceScope resolvePrefix: prefix) isEmpty.
+		namespaceScope mapPrefix: prefix to: uri.
+		self assert: (namespaceScope resolvePrefix: prefix) = uri].
+
+	self
+		assert: (namespaceScope resolvePrefix: 'xml') = XMLNamespaceScope xmlNamespaceURI;
+		assert: (namespaceScope resolvePrefix: 'xmlns') = XMLNamespaceScope xmlnsNamespaceURI.
+]
+
+{ #category : #tests }
+XMLNamespaceScopeTest >> testResolvePrefixIfUnresolvable [
+	| namespaceScope |
+
+	namespaceScope := self newNamespaceScope.
+	self namespaces keysAndValuesDo: [:prefix :uri |
+		self assert:
+			(namespaceScope
+				resolvePrefix: prefix
+				ifUnresolvable: [#unresolvable]) = #unresolvable.
+		namespaceScope mapPrefix: prefix to: uri.
+		self assert:
+			(namespaceScope
+				resolvePrefix: prefix
+				ifUnresolvable: [#unresolvable]) = uri].
+
+	self assert:
+		(namespaceScope
+			resolvePrefix: 'xml'
+			ifUnresolvable: [#unresolvable]) = XMLNamespaceScope xmlNamespaceURI.
+	self  assert:
+		(namespaceScope
+			resolvePrefix: 'xmlns'
+			ifUnresolvable: [#unresolvable]) = XMLNamespaceScope xmlnsNamespaceURI.
+]
+
+{ #category : #tests }
 XMLNamespaceScopeTest >> testSize [
 	self
 		assert: self newNamespaceScope size = 0;

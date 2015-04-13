@@ -1,63 +1,55 @@
 "
-This observer records notifications in a queue.
+This observer records notifications using an XMLMessageRecorder.
 "
 Class {
 	#name : #XMLRecordingListObserver,
 	#superclass : #Object,
 	#instVars : [
-		'notifications'
+		'messageRecorder'
 	],
 	#category : #'XML-Tests-Parser-DOM'
 }
 
 { #category : #notifying }
 XMLRecordingListObserver >> added: anObject to: aList [
-	self recordNotification:
-		(MessageSend
-			receiver: self
-			selector: #added:to:
-			arguments: (Array with: anObject with: aList))
+	self messageRecorder
+		recordMessageReceiver: self
+		selector: #added:to:
+		arguments: (Array with: anObject with: aList)
 ]
 
 { #category : #notifying }
 XMLRecordingListObserver >> adding: anObject to: aList [
-	self recordNotification:
-		(MessageSend
-			receiver: self
-			selector: #adding:to:
-			arguments: (Array with: anObject with: aList))
+	self messageRecorder
+		recordMessageReceiver: self
+		selector: #adding:to:
+		arguments: (Array with: anObject with: aList)
 ]
 
 { #category : #accesing }
 XMLRecordingListObserver >> clearNotifications [
-	self notificationsQueue removeAll
+	self messageRecorder clearMessages
 ]
 
 { #category : #testing }
 XMLRecordingListObserver >> hasNotifications [
-	^ self notificationsQueue notEmpty
+	^ self messageRecorder hasMessages
+]
+
+{ #category : #accesing }
+XMLRecordingListObserver >> messageRecorder [
+	^ messageRecorder ifNil: [messageRecorder := XMLMessageRecorder new]
 ]
 
 { #category : #accesing }
 XMLRecordingListObserver >> nextNotification [
-	^ self notificationsQueue removeFirst
-]
-
-{ #category : #private }
-XMLRecordingListObserver >> notificationsQueue [
-	^ notifications ifNil: [notifications := OrderedCollection new]
-]
-
-{ #category : #private }
-XMLRecordingListObserver >> recordNotification: aMessageSend [
-	self notificationsQueue addLast: aMessageSend 
+	^ self messageRecorder nextMessage
 ]
 
 { #category : #notifying }
 XMLRecordingListObserver >> removed: anObject from: aList [
-	self recordNotification:
-		(MessageSend
-			receiver: self
-			selector: #removed:from:
-			arguments: (Array with: anObject with: aList))
+	self messageRecorder
+		recordMessageReceiver: self
+		selector: #removed:from:
+		arguments: (Array with: anObject with: aList)
 ]

@@ -4,12 +4,25 @@ Class {
 	#category : #'XML-Tests-Parser'
 }
 
+{ #category : #accessing }
+SAXHandlerTest >> prefixedXMLAttributes [
+	^ OrderPreservingDictionary with: 'name' -> 'value'
+]
+
+{ #category : #accessing }
+SAXHandlerTest >> prefixedXMLAttributesNamespacesDisabled [
+	^ OrderPreservingStringDictionary
+		with: 'xmlns:prefix' -> 'prefixNS'
+		with: 'xmlns' -> 'defaultNS'
+		with: 'name' -> 'value'
+]
+
 { #category : #source }
 SAXHandlerTest >> prefixedXMLSource [
 	^ '<prefix:test xmlns:prefix="prefixNS" xmlns="defaultNS" name="value">test</prefix:test>'
 ]
 
-{ #category : #tests }
+{ #category : #accessing }
 SAXHandlerTest >> prefixedXMLSourceSelectors [
 	^ #(startDocument
 		startPrefixMapping:uri: startPrefixMapping:uri:
@@ -20,7 +33,7 @@ SAXHandlerTest >> prefixedXMLSourceSelectors [
 		endDocument)
 ]
 
-{ #category : #tests }
+{ #category : #accessing }
 SAXHandlerTest >> prefixedXMLSourceSelectorsNamespacesDisabled [
 	^ self prefixedXMLSourceSelectors reject: [:each |
 		#(startPrefixMapping:uri: endPrefixMapping:) includes: each].
@@ -28,36 +41,114 @@ SAXHandlerTest >> prefixedXMLSourceSelectorsNamespacesDisabled [
 ]
 
 { #category : #tests }
-SAXHandlerTest >> testSAXEndElemenNamespacesDisabled [
-	| parser arguments |
+SAXHandlerTest >> testSAXEndElementForwarding [
+	| messageRecorder message |
 
-	(parser := SAXHandlerProxy on: self prefixedXMLSource)
-		usesNamespaces: false;
-		parseDocument.
-	self assert: (parser wasSentSelectors: self prefixedXMLSourceSelectorsNamespacesDisabled).
+	messageRecorder :=
+		(SAXElementEventRecordingHandler on: self prefixedXMLSource)
+			parseDocument;
+			messageRecorder.
 
-	arguments := parser argumentsSentWith: #endElement:prefix:uri:localName:.
+	message :=
+		messageRecorder
+			nextMessage;
+			nextMessage.
 	self
-		assert: arguments first = 'prefix:test';
-		assert: arguments second = 'prefix';
-		assert: arguments third isEmpty;
-		assert: arguments fourth = 'test'.
+		assert: message selector == #endElement:;
+		assert: message arguments = #('prefix:test').
 ]
 
 { #category : #tests }
-SAXHandlerTest >> testSAXEndElement [
-	| parser arguments |
+SAXHandlerTest >> testSAXEndElementForwardingNamespacesDisabled [
+	| messageRecorder message |
 
-	(parser := SAXHandlerProxy on: self prefixedXMLSource)
-		parseDocument.
-	self assert: (parser wasSentSelectors: self prefixedXMLSourceSelectors).
+	messageRecorder :=
+		(SAXElementEventRecordingHandler on: self prefixedXMLSource)
+			usesNamespaces: false;
+			parseDocument;
+			messageRecorder.
 
-	arguments := parser argumentsSentWith: #endElement:prefix:uri:localName:.
+	message :=
+		messageRecorder
+			nextMessage;
+			nextMessage.
 	self
-		assert: arguments first = 'prefix:test';
-		assert: arguments second = 'prefix';
-		assert: arguments third =  'prefixNS';
-		assert: arguments fourth = 'test'.
+		assert: message selector == #endElement:;
+		assert: message arguments = #('prefix:test').
+]
+
+{ #category : #tests }
+SAXHandlerTest >> testSAXEndElementPrefixURIForwarding [
+	| messageRecorder message |
+
+	messageRecorder :=
+		(SAXElementPrefixURIEventRecordingHandler on: self prefixedXMLSource)
+			parseDocument;
+			messageRecorder.
+
+	message :=
+		messageRecorder
+			nextMessage;
+			nextMessage.
+	self
+		assert: message selector == #endElement:prefix:uri:;
+		assert: message arguments = #('prefix:test' 'prefix' 'prefixNS').
+]
+
+{ #category : #tests }
+SAXHandlerTest >> testSAXEndElementPrefixURIForwardingNamespacesDisabled [
+	| messageRecorder message |
+
+	messageRecorder :=
+		(SAXElementPrefixURIEventRecordingHandler on: self prefixedXMLSource)
+			usesNamespaces: false;
+			parseDocument;
+			messageRecorder.
+
+	message :=
+		messageRecorder
+			nextMessage;
+			nextMessage.
+	self
+		assert: message selector == #endElement:prefix:uri:;
+		assert: message arguments = #('prefix:test' 'prefix' '').
+]
+
+{ #category : #tests }
+SAXHandlerTest >> testSAXEndElementPrefixURILocalName [
+	| messageRecorder message |
+
+	messageRecorder :=
+		(SAXElementPrefixURILocalNameEventRecordingHandler on: self prefixedXMLSource)
+			parseDocument;
+			messageRecorder.
+
+	message :=
+		messageRecorder
+			nextMessage;
+			nextMessage.
+	self
+		assert: message selector == #endElement:prefix:uri:localName:;
+		assert: message arguments = #('prefix:test' 'prefix' 'prefixNS' 'test').
+]
+
+{ #category : #tests }
+SAXHandlerTest >> testSAXEndElementPrefixURILocalNameNamespacesDisabled [
+	| messageRecorder message |
+
+	messageRecorder :=
+		(SAXElementPrefixURILocalNameEventRecordingHandler on: self prefixedXMLSource)
+			usesNamespaces: false;
+			parseDocument;
+			messageRecorder.
+
+	message :=
+		messageRecorder
+			nextMessage;
+			nextMessage.
+	self
+		assert: message selector == #endElement:prefix:uri:localName:;
+		assert: message arguments = #('prefix:test' 'prefix' '' 'test').
 ]
 
 { #category : #tests }
@@ -169,7 +260,7 @@ SAXHandlerTest >> testSAXSkippedEntityUndeclared [
 				skippedEntity:
 				endElement:prefix:uri:localName:
 				endDocument)).
-	self assert: (parser argumentsSentWith: #skippedEntity:) first = 'undeclared'.
+	self assert: (parser argumentsSentWith: #skippedEntity:) = #('undeclared').
 ]
 
 { #category : #tests }
@@ -190,8 +281,8 @@ SAXHandlerTest >> testSAXSkippedEntityUndeclaredPreserved [
 				endElement:prefix:uri:localName:
 				endDocument)).
 	self
-		assert: (parser argumentsSentWith: #skippedEntity:) first = 'undeclared';
-		assert: (parser argumentsSentWith: #characters:) first = '&undeclared;'.
+		assert: (parser argumentsSentWith: #skippedEntity:) = #('undeclared');
+		assert: (parser argumentsSentWith: #characters:) = #('&undeclared;').
 ]
 
 { #category : #tests }
@@ -215,48 +306,129 @@ SAXHandlerTest >> testSAXSkippedEntityUnreplaced [
 				endElement:prefix:uri:localName:
 				endDocument)).
 	self
-		assert: (parser argumentsSentWith: #skippedEntity:) first = 'declared';
-		assert: (parser argumentsSentWith: #characters:) first = '&declared;'.
+		assert: (parser argumentsSentWith: #skippedEntity:) = #('declared');
+		assert: (parser argumentsSentWith: #characters:) = #('&declared;').
 ]
 
 { #category : #tests }
-SAXHandlerTest >> testSAXStartElemenNamespacesDisabled [
-	| parser arguments |
+SAXHandlerTest >> testSAXStartElementForwarding [
+	| messageRecorder message arguments |
 
-	(parser := SAXHandlerProxy on: self prefixedXMLSource)
-		usesNamespaces: false;
-		parseDocument.
-	self assert: (parser wasSentSelectors: self prefixedXMLSourceSelectorsNamespacesDisabled).
+	messageRecorder :=
+		(SAXElementEventRecordingHandler on: self prefixedXMLSource)
+			parseDocument;
+			messageRecorder.
 
-	arguments := parser argumentsSentWith: #startElement:prefix:uri:localName:attributes:.
+	message := messageRecorder nextMessage.
+	self assert: message selector == #startElement:attributes:.
+
+	arguments := message arguments.
+	self
+		assert: arguments first = 'prefix:test';
+		assert: arguments second = self prefixedXMLAttributes.
+]
+
+{ #category : #tests }
+SAXHandlerTest >> testSAXStartElementForwardingNamespacesDisabled [
+	| messageRecorder message arguments |
+
+	messageRecorder :=
+		(SAXElementEventRecordingHandler on: self prefixedXMLSource)
+			usesNamespaces: false;
+			parseDocument;
+			messageRecorder.
+	
+	message := messageRecorder nextMessage.
+	self assert: message selector == #startElement:attributes:.
+
+	arguments := message arguments.
+	self
+		assert: arguments first = 'prefix:test';
+		assert: arguments second = self prefixedXMLAttributesNamespacesDisabled.
+]
+
+{ #category : #tests }
+SAXHandlerTest >> testSAXStartElementPrefixURIForwarding [
+	| messageRecorder message arguments |
+
+	messageRecorder :=
+		(SAXElementPrefixURIEventRecordingHandler on: self prefixedXMLSource)
+			parseDocument;
+			messageRecorder.
+
+	message := messageRecorder nextMessage.
+	self assert: message selector == #startElement:prefix:uri:attributes:.
+
+	arguments := message arguments.
+	self
+		assert: arguments first = 'prefix:test';
+		assert: arguments second = 'prefix';
+		assert: arguments third = 'prefixNS';
+		assert: arguments fourth = self prefixedXMLAttributes.
+]
+
+{ #category : #tests }
+SAXHandlerTest >> testSAXStartElementPrefixURIForwardingNamespacesDisabled [
+	| messageRecorder message arguments |
+
+	messageRecorder :=
+		(SAXElementPrefixURIEventRecordingHandler on: self prefixedXMLSource)
+			usesNamespaces: false;
+			parseDocument;
+			messageRecorder.
+
+	message := messageRecorder nextMessage.
+	self assert: message selector == #startElement:prefix:uri:attributes:.
+
+	arguments := message arguments.
 	self
 		assert: arguments first = 'prefix:test';
 		assert: arguments second = 'prefix';
 		assert: arguments third isEmpty;
-		assert: arguments fourth = 'test'.
-	self assert:
-		arguments fifth =
-			(OrderPreservingDictionary
-				with: 'xmlns:prefix' -> 'prefixNS'
-				with: 'xmlns' -> 'defaultNS'
-				with: 'name' -> 'value').
+		assert: arguments fourth = self prefixedXMLAttributesNamespacesDisabled.
 ]
 
 { #category : #tests }
-SAXHandlerTest >> testSAXStartElement [
-	| parser arguments |
+SAXHandlerTest >> testSAXStartElementPrefixURILocalName [
+	| messageRecorder message arguments |
 
-	(parser := SAXHandlerProxy on: self prefixedXMLSource)
-		parseDocument.
-	self assert: (parser wasSentSelectors: self prefixedXMLSourceSelectors).
+	messageRecorder :=
+		(SAXElementPrefixURILocalNameEventRecordingHandler on: self prefixedXMLSource)
+			parseDocument;
+			messageRecorder.
 
-	arguments := parser argumentsSentWith: #startElement:prefix:uri:localName:attributes:.
+	message := messageRecorder nextMessage.
+	self assert: message selector == #startElement:prefix:uri:localName:attributes:.
+
+	arguments := message arguments.
 	self
 		assert: arguments first = 'prefix:test';
 		assert: arguments second = 'prefix';
-		assert: arguments third =  'prefixNS';
+		assert: arguments third = 'prefixNS';
 		assert: arguments fourth = 'test';
-		assert: arguments fifth = (OrderPreservingStringDictionary with: 'name' -> 'value').
+		assert: arguments fifth = self prefixedXMLAttributes.
+]
+
+{ #category : #tests }
+SAXHandlerTest >> testSAXStartElementPrefixURILocalNameNamespacesDisabled [
+	| messageRecorder message arguments |
+
+	messageRecorder :=
+		(SAXElementPrefixURILocalNameEventRecordingHandler on: self prefixedXMLSource)
+			usesNamespaces: false;
+			parseDocument;
+			messageRecorder.
+
+	message := messageRecorder nextMessage.
+	self assert: message selector == #startElement:prefix:uri:localName:attributes:.
+
+	arguments := message arguments.
+	self
+		assert: arguments first = 'prefix:test';
+		assert: arguments second = 'prefix';
+		assert: arguments third = '';
+		assert: arguments fourth = 'test';
+		assert: arguments fifth = self prefixedXMLAttributesNamespacesDisabled.
 ]
 
 { #category : #tests }

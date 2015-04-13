@@ -28,6 +28,7 @@ XMLOrderedListTest >> assertList: aList copiedFrom: aSecondList equals: aThirdLi
 	self
 		assert: aList = aThirdList;
 		assert: aList class == self listCopyClass;
+		assert: aList collection class == aSecondList collection class;
 		deny: aList == aSecondList;
 		deny: aList collection == aSecondList collection
 ]
@@ -46,6 +47,8 @@ XMLOrderedListTest >> assertList: aList isCopyOf: aSecondList [
 	self
 		assert: aList = aSecondList;
 		assert: aList class == self listCopyClass;
+		assert: aList collection class == aSecondList collection class;
+		assert: aList collection = aSecondList collection;
 		deny: aList == aSecondList;
 		deny: aList collection == aSecondList collection
 ]

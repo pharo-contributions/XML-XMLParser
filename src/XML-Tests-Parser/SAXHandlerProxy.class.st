@@ -1,12 +1,12 @@
 "
-A SAXHandler that records events.
+A class that wraps a SAXHandler and records handler events messages using a message recorder. Non-handler messages are forwarded to the wrapped SAXHandler.
 "
 Class {
 	#name : #SAXHandlerProxy,
 	#superclass : #Object,
 	#instVars : [
 		'saxHandler',
-		'sentHandlerMessages'
+		'messageRecorder'
 	],
 	#category : #'XML-Tests-Parser'
 }
@@ -23,14 +23,15 @@ SAXHandlerProxy class >> saxHandler: aSaxHandler [
 
 { #category : #accessing }
 SAXHandlerProxy >> allSentMessagesNamed: aName [
-	^ self sentHandlerMessages select: [:each | each selector = aName asSymbol]
+	^ self messageRecorder messagesSelect: [:each | each selector = aName asSymbol]
 ]
 
 { #category : #accessing }
 SAXHandlerProxy >> argumentsSentWith: aSelector [
-	^ (self sentHandlerMessages
-		detect: [:each | each selector = aSelector]
-		ifNone: [^ #()]) arguments
+	self messageRecorder messagesDo: [:each |
+		each selector = aSelector
+			ifTrue: [^ each arguments]].
+	^ #().
 ]
 
 { #category : #'reflective operations' }
@@ -39,7 +40,7 @@ SAXHandlerProxy >> doesNotUnderstand: aMessage [
 
 	(self handlerCategories includes:
 		(saxHandler class whichCategoryIncludesSelector: aMessage selector))
-		ifTrue: [self sentHandlerMessages addLast: aMessage].
+		ifTrue: [self messageRecorder recordMessage: aMessage].
 
 	^ (result := aMessage sendTo: saxHandler) == saxHandler
 		ifTrue: [self]
@@ -52,7 +53,12 @@ SAXHandlerProxy >> handlerCategories [
 		#'handling - content'
 		#'handling - lexical'
 		#'handling - declarations'
-		)
+	)
+]
+
+{ #category : #accessing }
+SAXHandlerProxy >> messageRecorder [
+	^ messageRecorder ifNil: [messageRecorder := XMLMessageRecorder new]
 ]
 
 { #category : #parsing }
@@ -72,17 +78,8 @@ SAXHandlerProxy >> saxHandler: aSaxHandler [
 	saxHandler := aSaxHandler
 ]
 
-{ #category : #accessing }
-SAXHandlerProxy >> sentHandlerMessages [
-	^ sentHandlerMessages ifNil: [sentHandlerMessages := OrderedCollection new]
-]
-
-{ #category : #accessing }
-SAXHandlerProxy >> sentHandlerSelectors [
-	^ (self sentHandlerMessages collect: [:each | each selector]) asArray.
-]
-
 { #category : #testing }
 SAXHandlerProxy >> wasSentSelectors: aSelectorArray [
-	^ self sentHandlerSelectors asArray = aSelectorArray asArray
+	^ (self messageRecorder messagesCollect: [:each | each selector]) asArray =
+		aSelectorArray asArray
 ]

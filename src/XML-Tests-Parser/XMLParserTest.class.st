@@ -370,8 +370,9 @@ XMLParserTest >> testAttributeValueWithAngleBrackets [
 { #category : #tests }
 XMLParserTest >> testComments [
 	self
-		shouldnt: [SAXHandler parse: '<test><!-- <comment/> --></test>']
+		shouldnt: [SAXHandler parse: '<test><!-- <comment/> - - --></test>']
 		raise: XMLWellFormednessException.
+	"can't contain --"
 	self
 		should: [SAXHandler parse: '<test><!-- <comment/> -- --></test>']
 		raise: XMLWellFormednessException.
@@ -1039,7 +1040,7 @@ XMLParserTest >> testIncompleteEndTagTokens [
 
 { #category : #tests }
 XMLParserTest >> testIncompletePITokens [
-	#('<?name' '<?name value' '<?name value?' '<?name value>')
+	#('<?' '<??' '<??>' '<?name' '<?name value' '<?name value?' '<?name value>')
 		do: [:each | 
 			self
 				should: [SAXHandler parse: each]
@@ -1407,6 +1408,19 @@ XMLParserTest >> testRequiredDTDDeclarations [
 				requiresDocumentConstraints: true;
 				parseDocument]
 		raise: XMLValidationException.
+	self
+		should: [
+			(SAXHandler on: '
+				<!DOCTYPE root [
+					<!ENTITY one "two">
+					<!ENTITY % three "four">
+					<!NOTATION five PUBLIC "six">
+					<!--seven-->]>
+				<root/>')
+				requiresDocumentConstraints: true;
+				parseDocument]
+		raise: XMLValidationException.
+	
 ]
 
 { #category : #tests }
@@ -1436,6 +1450,36 @@ XMLParserTest >> testSelfReferentialEntityReplacement [
 		should: [
 			SAXHandler parse:
 				'<!DOCTYPE root [<!ENTITY % first "&#37;first;">%first;]><root/>']
+		raise: XMLWellFormednessException.
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE root [
+					<!ENTITY first "&second;">
+					<!ENTITY second "&first;">]><root>&first;</root>']
+		raise: XMLWellFormednessException.
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE root [
+					<!ENTITY % first "&#37;second;">
+					<!ENTITY % second "&#37;first;">
+					%first;]><root/>']
+		raise: XMLWellFormednessException.
+	self
+		shouldnt: [
+			SAXHandler parse:
+				'<!DOCTYPE root [
+					<!ENTITY first "&second;">
+					<!ENTITY second "<!--replacement-->">]><root>&first;</root>']
+		raise: XMLWellFormednessException.
+	self
+		shouldnt: [
+			SAXHandler parse:
+				'<!DOCTYPE root [
+					<!ENTITY % first "&#37;second;">
+					<!ENTITY % second "<!--replacement-->">
+					%first;]><root/>']
 		raise: XMLWellFormednessException.
 ]
 
