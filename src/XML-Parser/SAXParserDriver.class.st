@@ -23,7 +23,7 @@ SAXParserDriver class >> saxHandler: aHandler [
 ]
 
 { #category : #private }
-SAXParserDriver >> checkForReservedAttributesIn: anAttributeDictionary after: anIndex [
+SAXParserDriver >> checkForReservedAttributesIn: anAttributeDictionary afterIndex: anIndex [
 	"validation may add attributes"
 	self hasUnhandledReservedAttributes
 		ifFalse: [
@@ -417,8 +417,14 @@ SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 		ifTrue: [
 			currentScope := self scopeAllocator enterScope.
 			aNamespaceDictionary
-				ifNotNil: [self declareNamespaces: aNamespaceDictionary inScope: currentScope].
-			namespaceUri := currentScope validateAndResolvePrefix: prefix ofElement: anElementName.
+				ifNotNil: [
+					self
+						declareNamespaces: aNamespaceDictionary
+						inScope: currentScope].
+			namespaceUri :=
+				currentScope
+					validateAndResolvePrefix: prefix
+					ofElement: anElementName.
 			totalAttributes > 0
 				ifTrue: [currentScope validateAttributePrefixes: anAttributeDictionary]].
 	self isValidating
@@ -429,7 +435,10 @@ SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 				validateStartTag: anElementName
 				attributes: anAttributeDictionary.
 			anAttributeDictionary size > totalAttributes
-				ifTrue: [self checkForReservedAttributesIn: anAttributeDictionary after: totalAttributes]].
+				ifTrue: [
+					self
+						checkForReservedAttributesIn: anAttributeDictionary
+						afterIndex: totalAttributes]].
 	self hasUnhandledReservedAttributes
 		ifTrue: [self handleReservedAttributes: anAttributeDictionary].
 
@@ -439,6 +448,7 @@ SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 		uri: (namespaceUri ifNil: [''])
 		localName: (anElementName localNameAfterPrefix: prefix)
 		attributes: anAttributeDictionary.
+
 	currentScope
 		ifNotNil: [self saxHandler currentScope: currentScope].
 ]

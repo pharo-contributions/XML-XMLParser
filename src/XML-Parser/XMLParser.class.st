@@ -37,7 +37,8 @@ XMLParser >> handleParserError: anError [
 
 	(anError isKindOf: XMLParserException)
 		ifTrue: [
-			anError appendLineNumber: self currentLineNumber.
+			anError hasLineNumber
+				ifFalse: [anError lineNumber: self currentLineNumber].
 			anError shouldPassOnWhenCaught
 				ifTrue: [anError pass]]
 		ifFalse: [anError pass].

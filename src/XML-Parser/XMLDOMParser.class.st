@@ -5,7 +5,7 @@ By default, CDATA sections are treated as regular string nodes and comments are 
 
 Lastly. you can control what node classes the DOM parser uses to create node objects by injecting a custom node factory with #nodeFactory: prior to parsing. See XMLNodeFactory for more information.
 
-Read the superclass comment for more information on use and configuration.
+Read the superclass comment for more info.
 "
 Class {
 	#name : #XMLDOMParser,

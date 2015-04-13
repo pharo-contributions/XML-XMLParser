@@ -22,7 +22,7 @@ XMLTextDeclarationContext >> nextTokenFrom: aTokenizer [
 
 { #category : #accessing }
 XMLTextDeclarationContext >> previousContext [
-	^ previousContext
+	^ previousContext ifNil: [self externalSubsetContext]
 ]
 
 { #category : #accessing }

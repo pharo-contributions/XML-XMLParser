@@ -112,7 +112,7 @@ DTDExternalSubsetParserDriver >> handleParameterEntityReference: aName [
 
 { #category : #initialization }
 DTDExternalSubsetParserDriver >> initialContext [
-	^ XMLExternalSubsetContext new textDeclarationContext
+	^ XMLTextDeclarationContext new
 ]
 
 { #category : #testing }
