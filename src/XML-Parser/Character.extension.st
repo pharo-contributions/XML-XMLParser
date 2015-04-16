@@ -34,10 +34,10 @@ Character >> xmlParserIsWhitespace [
 { #category : #'*XML-Parser' }
 Character class >> xmlParserSeparators [
 	^ String
-		with: 32 asCharacter "Character space asciiValue"
-		with: 10 asCharacter "Character lf asciiValue"
-		with: 9 asCharacter "Character tab asciiValue"
-		with: 13 asCharacter "Character cr asciiValue"
+		with: 32 asCharacter "space"
+		with: 10 asCharacter "lf"
+		with: 9 asCharacter "tab"
+		with: 13 asCharacter "cr"
 ]
 
 { #category : #'*XML-Parser' }
@@ -68,6 +68,5 @@ Character >> xmlParserSplit: aCollection do: aBlock [
 
 { #category : #'*XML-Parser' }
 Character class >> xmlParserWhitespace [
-	^ self xmlParserSeparators copyWith:
-		12 asCharacter "Character newPage asciiValue"
+	^ self xmlParserSeparators copyWith: 12 asCharacter "form feed"
 ]

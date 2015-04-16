@@ -10,6 +10,11 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
+{ #category : #'instance creation' }
+XMLAttributeList class >> new [
+	^ self new: 5
+]
+
 { #category : #adding }
 XMLAttributeList >> addName: aName value: aValue [
 	^ self addLast:
@@ -141,12 +146,21 @@ XMLAttributeList >> attributeValueAt: aName put: aValue [
 
 { #category : #private }
 XMLAttributeList >> attributesByName [
-	^ attributesByName ifNil: [attributesByName := Dictionary new: 5]
+	^ attributesByName ifNil: [attributesByName := Dictionary new: self capacity]
 ]
 
 { #category : #private }
 XMLAttributeList >> beforeAdding: anAttribute [
 	observer ifNotNil: [observer addingAttribute: anAttribute]
+]
+
+{ #category : #testing }
+XMLAttributeList >> includes: aNode [
+	^ aNode isAttribute
+		and: [
+			(self attributesByName
+				at: aNode name
+				ifAbsent: [^ false]) = aNode]
 ]
 
 { #category : #testing }

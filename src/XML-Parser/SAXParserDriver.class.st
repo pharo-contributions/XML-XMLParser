@@ -235,8 +235,8 @@ SAXParserDriver >> handleEndTag: anElementName [
 		uri:
 			(self usesNamespaces
 				ifTrue: [
-					currentScope := self scopeAllocator exitScope.
-					currentScope resolvePrefix: prefix]
+					(currentScope := self scopeAllocator exitScope)
+						resolvePrefix: prefix]
 				ifFalse: [''])
 		localName: (anElementName localNameAfterPrefix: prefix).
 

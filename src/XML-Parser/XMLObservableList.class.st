@@ -15,7 +15,7 @@ XMLObservableList class >> observer: anObject [
 	^ self new observer: anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 XMLObservableList class >> ofSize: aSize [
 	self shouldNotImplement
 ]

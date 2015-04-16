@@ -7,6 +7,11 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
+{ #category : #'instance creation' }
+XMLNodeList class >> new [
+	^ self new: 5
+]
+
 { #category : #private }
 XMLNodeList >> afterAdding: aNode at: anIndex [
 	observer ifNotNil: [

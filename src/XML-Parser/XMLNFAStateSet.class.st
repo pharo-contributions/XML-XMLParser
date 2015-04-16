@@ -36,6 +36,13 @@ XMLNFAStateSet >> add: aState [
 	^ set add: aState.
 ]
 
+{ #category : #converting }
+XMLNFAStateSet >> asDFAStateWithStateCache: aDFAStateCache [
+	^ XMLDFAState
+		nfaStates: self
+		dfaStateCache: aDFAStateCache
+]
+
 { #category : #enumerating }
 XMLNFAStateSet >> do: aBlock [
 	set do: aBlock

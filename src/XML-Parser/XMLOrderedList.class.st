@@ -29,7 +29,7 @@ XMLOrderedList class >> inspectorClass [
 
 { #category : #'instance creation' }
 XMLOrderedList class >> new [
-	^ self new: 5
+	^ self new: 10
 ]
 
 { #category : #'instance creation' }
@@ -240,6 +240,7 @@ XMLOrderedList >> beginsWith: aCollection [
 
 { #category : #accessing }
 XMLOrderedList >> capacity [
+	"overridden in GS version to use collection size"
 	^ collection capacity
 ]
 

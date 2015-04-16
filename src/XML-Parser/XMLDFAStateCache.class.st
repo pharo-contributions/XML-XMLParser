@@ -16,8 +16,17 @@ XMLDFAStateCache class >> firstState: aFirstState [
 	^ self new firstState: aFirstState
 ]
 
+{ #category : #adding }
+XMLDFAStateCache >> addDFAState: aDFAState [
+	cachedStates size >= self maxCachedStates
+		ifTrue: [self clear].
+	^ cachedStates
+		at: aDFAState nfaStates
+		put: aDFAState.
+]
+
 { #category : #private }
-XMLDFAStateCache >> clearCache [
+XMLDFAStateCache >> clear [
 	cachedStates
 		removeAll;
 		at: firstState nfaStates
@@ -28,13 +37,7 @@ XMLDFAStateCache >> clearCache [
 XMLDFAStateCache >> dfaStateFor: aStateSet [
 	^ cachedStates
 		at: aStateSet
-		ifAbsent: [
-			cachedStates size >= self maxCachedStates
-				ifTrue: [self clearCache].
-
-			cachedStates
-				at: aStateSet
-				put: (self newDFAStateFor: aStateSet)]
+		ifAbsent: [self addDFAState: (aStateSet asDFAStateWithStateCache: self)]
 ]
 
 { #category : #accessing }
@@ -49,11 +52,4 @@ XMLDFAStateCache >> firstState: aFirstState [
 { #category : #private }
 XMLDFAStateCache >> maxCachedStates [
 	^ 32
-]
-
-{ #category : #private }
-XMLDFAStateCache >> newDFAStateFor: aStateSet [
-	^ XMLDFAState
-		nfaStates: aStateSet
-		dfaStateCache: self.
 ]

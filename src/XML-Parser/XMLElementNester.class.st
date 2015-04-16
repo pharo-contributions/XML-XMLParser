@@ -48,11 +48,16 @@ XMLElementNester >> enclosedElementsAsString: anElement [
 XMLElementNester >> endElement: anElementName [
 	self openElements removeLast.
 	self hasScopedAttributes
-		ifTrue: [scopedAttributes removeLast].
+		ifTrue: [self endScopedAttributes].
 ]
 
 { #category : #checking }
 XMLElementNester >> endNesting [
+]
+
+{ #category : #private }
+XMLElementNester >> endScopedAttributes [
+	scopedAttributes removeLast
 ]
 
 { #category : #testing }
@@ -193,5 +198,10 @@ XMLElementNester >> setScopedAttributesNamed: aNameCollection from: aDictionary 
 XMLElementNester >> startElement: anElementName [
 	self openElements addLast: anElementName.
 	self hasScopedAttributes
-		ifTrue: [scopedAttributes addLast: self currentScopedAttributes].
+		ifTrue: [self startScopedAttributes].
+]
+
+{ #category : #private }
+XMLElementNester >> startScopedAttributes [
+	scopedAttributes addLast: self currentScopedAttributes
 ]
