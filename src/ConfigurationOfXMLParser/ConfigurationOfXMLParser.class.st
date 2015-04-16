@@ -443,7 +443,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '2.2.9'.
+	spec for: #'common' version: '2.3.0'.
 ]
 
 { #category : #versions }
@@ -1834,6 +1834,17 @@ ConfigurationOfXMLParser >> version229: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.298'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.115'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version230: spec [ 
+        <version: '2.3.0' imports: #('2.2.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.299'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.115'.
                 ].
 ]
