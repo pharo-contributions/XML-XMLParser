@@ -1,6 +1,11 @@
 Extension { #name : #Character }
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
+Character >> xmlParserASCIIValue [
+	^ self asciiValue
+]
+
+{ #category : #'*XML-Parser-GemstoneCompatibility' }
 Character >> xmlParserIsSeparator [
 	| tmpValue |
 
