@@ -1118,6 +1118,37 @@ XMLParserTest >> testInvalidElementContentModels [
 ]
 
 { #category : #tests }
+XMLParserTest >> testInvalidNameChar [
+	#(16rBF 16rD7 16rF7 16r37E
+		16r2000 16r200B 16r200E 16r206F
+		16r2190 16r2BFF 16r2FFF 16r3000
+		16rD800 16rF8FF 16rFDD0 16rFDEF
+		16rFFFE 16r0FFFF 16rF0000) do: [:each | | charString |
+		charString := each asCharacter asString.
+		self
+			should: [SAXHandler parse: '<test', charString, '/>']
+			raise: XMLWellFormednessException.
+		self
+			should: [SAXHandler parse: '<test name', charString, '="value"/>']
+			raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
+XMLParserTest >> testInvalidNameStartChar [
+	#($- $. $0 $9 16rB7 16r0300 16r036F 16r203F 16r2040) do: [:each | | charString |
+		charString := each asCharacter asString.
+		self
+			should: [SAXHandler parse: '<', charString, 'test/>']
+			raise: XMLWellFormednessException.
+		self
+			should: [SAXHandler parse: '<test ', charString, 'name="value"/>']
+			raise: XMLWellFormednessException.
+		self
+			shouldnt: [SAXHandler parse: '<test', charString, ' name', charString, '="value"/>']
+			raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
 XMLParserTest >> testIsInContent [
 	| xml handler parser |
 

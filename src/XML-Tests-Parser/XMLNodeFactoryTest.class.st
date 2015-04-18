@@ -70,6 +70,17 @@ XMLNodeFactoryTest >> stringClass [
 ]
 
 { #category : #tests }
+XMLNodeFactoryTest >> testAsPluggableNodeFactory [
+	| factory pluggableFactory |
+
+	factory := self factoryClass new.
+	pluggableFactory := factory asPluggableNodeFactory.
+	self
+		assert: (pluggableFactory isKindOf: XMLPluggableNodeFactory);
+		deny: pluggableFactory == factory.
+]
+
+{ #category : #tests }
 XMLNodeFactoryTest >> testNewCData [
 	| cdata |
 
