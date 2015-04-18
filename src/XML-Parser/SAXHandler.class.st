@@ -143,9 +143,16 @@ SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean va
 
 { #category : #deprecated }
 SAXHandler class >> parseDocumentFrom: aStringOrStream [
-	self deprecated: 'use #parse: instead'.
+	self deprecated: 'Use #parse: instead'.
 
 	^ self parse: aStringOrStream.
+]
+
+{ #category : #deprecated }
+SAXHandler class >> parseDocumentFromFileNamed: aFileName [
+	self deprecated: 'Use #parseFileNamed: instead'.
+
+	self parseFileNamed: aFileName.
 ]
 
 { #category : #parsing }

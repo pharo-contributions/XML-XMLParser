@@ -7,6 +7,11 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
+{ #category : #converting }
+XMLNodeFactory >> asPluggableNodeFactory [
+	^ XMLPluggableNodeFactory new
+]
+
 { #category : #accessing }
 XMLNodeFactory >> attributeDeclarationClass [
 	^ XMLAttributeDeclaration
@@ -111,6 +116,11 @@ XMLNodeFactory >> newPI [
 { #category : #'instance creation' }
 XMLNodeFactory >> newString: aString [
 	^ self stringClass string: aString
+]
+
+{ #category : #accessing }
+XMLNodeFactory >> nodeListClass [
+	^ XMLNodeList
 ]
 
 { #category : #accessing }

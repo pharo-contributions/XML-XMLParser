@@ -11,6 +11,15 @@ Class {
 }
 
 { #category : #building }
+XMLNFABuilder >> acceptingNFAFirstState [
+	[self totalFragments > 1]
+		whileTrue: [self applyConcatenation].
+	^ self popFragment
+		connectToState: XMLNFAAcceptingState new;
+		firstState.
+]
+
+{ #category : #building }
 XMLNFABuilder >> applyBranch [
 	| branchState leftFragment  rightFragment |
 
@@ -76,19 +85,6 @@ XMLNFABuilder >> applyStar [
 		(XMLNFAFragment
 			firstState: branchState
 			terminalState: branchState)
-]
-
-{ #category : #building }
-XMLNFABuilder >> firstStateOfAcceptingNFA [
-	| firstFragment |
-
-	[self totalFragments > 1]
-		whileTrue: [self applyConcatenation].
-
-	firstFragment := self popFragment.
-	firstFragment connectToState: XMLNFAAcceptingState new.
-
-	^ firstFragment firstState.
 ]
 
 { #category : #accessing }

@@ -41,15 +41,15 @@ XMLDFAState >> detectNextStateMatching: aMatcher ifNone: aBlock [
 
 { #category : #accessing }
 XMLDFAState >> dfaStateMatching: aMatcher [
-	| matchingNfaStates |
+	| matchingNFAStates |
 
-	matchingNfaStates := XMLNFAStateSet new.
+	matchingNFAStates := XMLNFAStateSet new.
 	nfaStates do: [:state |
 		(state matches: aMatcher)
-			ifTrue: [state nextState addTo: matchingNfaStates]].
-	matchingNfaStates isEmpty
-		ifTrue: [^ nil].
-	^ dfaStateCache dfaStateFor: matchingNfaStates.
+			ifTrue: [state nextState addTo: matchingNFAStates]].
+	matchingNFAStates isEmpty
+		ifTrue: [^ nil]
+		ifFalse: [^ dfaStateCache dfaStateFor: matchingNFAStates].
 ]
 
 { #category : #testing }
@@ -65,7 +65,7 @@ XMLDFAState >> nfaStates [
 { #category : #initialization }
 XMLDFAState >> setNFAStates: anNFAStateSet dfaStateCache: aDFAStateCache [
 	nfaStates := anNFAStateSet.
-	dfaStateCache := (aDFAStateCache ifNil: [XMLDFAStateCache firstState: self]).
+	dfaStateCache := (aDFAStateCache ifNil: [XMLDFAStateCache firstDFAState: self]).
 ]
 
 { #category : #accessing }

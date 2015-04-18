@@ -177,13 +177,15 @@ XMLNodeWithChildren >> includesNode: aNode [
 
 { #category : #accessing }
 XMLNodeWithChildren >> innerXML [
+	"returns descendent nodes as XML string"
 	self hasChildren
-		ifFalse: [^ ''].
-	self
-		withNewXMLWriterOn: (String new: self nodes size * 10) writeStream
-		do: [:writer |
-			self writeInnerXMLOn: writer.
-			^ writer contents].
+		ifTrue: [
+			^ self
+				withNewXMLWriterOn: (String new: self nodes size * 10) writeStream
+				do: [:writer |
+					self writeInnerXMLOn: writer.
+					writer contents]]
+		ifFalse: [^ '']
 ]
 
 { #category : #accessing }
@@ -225,6 +227,8 @@ XMLNodeWithChildren >> nodeListClass [
 
 { #category : #accessing }
 XMLNodeWithChildren >> nodes [
+	"returns the internal node list; safe to modify, but adding/removing will
+	have the affect of adding/removing from the receiver"
 	^ nodes ifNil: [nodes := self nodeListClass observer: self]
 ]
 

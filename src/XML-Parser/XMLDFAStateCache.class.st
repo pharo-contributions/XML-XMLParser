@@ -5,51 +5,55 @@ Class {
 	#name : #XMLDFAStateCache,
 	#superclass : #Object,
 	#instVars : [
-		'firstState',
-		'cachedStates'
+		'firstDFAState',
+		'cachedDFAStates'
 	],
 	#category : #'XML-Parser-Validation-DFA'
 }
 
 { #category : #'instance creation' }
-XMLDFAStateCache class >> firstState: aFirstState [
-	^ self new firstState: aFirstState
+XMLDFAStateCache class >> firstDFAState: aDFAState [
+	^ self new setFirstDFAState: aDFAState
 ]
 
 { #category : #adding }
 XMLDFAStateCache >> addDFAState: aDFAState [
-	cachedStates size >= self maxCachedStates
-		ifTrue: [self clear].
-	^ cachedStates
+	cachedDFAStates size >= self maxCachedDFAStates
+		ifTrue: [self clearCachedDFAStates].
+	^ cachedDFAStates
 		at: aDFAState nfaStates
 		put: aDFAState.
 ]
 
 { #category : #private }
-XMLDFAStateCache >> clear [
-	cachedStates
+XMLDFAStateCache >> clearCachedDFAStates [
+	cachedDFAStates
 		removeAll;
-		at: firstState nfaStates
-		put: firstState
+		at: firstDFAState nfaStates
+		put: firstDFAState
 ]
 
 { #category : #accessing }
 XMLDFAStateCache >> dfaStateFor: aStateSet [
-	^ cachedStates
+	^ cachedDFAStates
 		at: aStateSet
 		ifAbsent: [self addDFAState: (aStateSet asDFAStateWithStateCache: self)]
 ]
 
 { #category : #accessing }
-XMLDFAStateCache >> firstState: aFirstState [
-	firstState := aFirstState.
-
-	(cachedStates := Dictionary new: 5)
-		at: firstState nfaStates
-		put: firstState.
+XMLDFAStateCache >> firstDFAState [
+	^ firstDFAState
 ]
 
 { #category : #private }
-XMLDFAStateCache >> maxCachedStates [
+XMLDFAStateCache >> maxCachedDFAStates [
 	^ 32
+]
+
+{ #category : #initialization }
+XMLDFAStateCache >> setFirstDFAState: aDFAState [
+	firstDFAState := aDFAState.
+	(cachedDFAStates := Dictionary new: 5)
+		at: firstDFAState nfaStates
+		put: firstDFAState.
 ]

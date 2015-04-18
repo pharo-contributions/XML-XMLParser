@@ -121,11 +121,13 @@ XMLDOMParser >> nodeFactory: aNodeFactory [
 
 { #category : #configuring }
 XMLDOMParser >> nodeListClass [
+	"will be deprecated"
 	^ self configuration nodeListClass
 ]
 
 { #category : #configuring }
 XMLDOMParser >> nodeListClass: aClass [
+	"will be deprecated"
 	self configuration nodeListClass: aClass
 ]
 

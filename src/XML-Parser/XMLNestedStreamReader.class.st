@@ -148,10 +148,10 @@ XMLNestedStreamReader >> errorNestingLimitExceeded [
 { #category : #private }
 XMLNestedStreamReader >> errorReadLimitExceeded [
 	XMLLimitException signal:
-		'Security read limit on input exceeded; ',
+		'Security input read limit exceeded; ',
 		'use #documentReadLimit: (or #externalSubsetReadLimit:) ',
-		'to change or disable, or #defaultReadLimit: to ',
-		'persistently change or disable'
+		'to change or disable or #defaultReadLimit: ',
+		'to persistently change or disable'
 ]
 
 { #category : #private }
@@ -335,7 +335,7 @@ XMLNestedStreamReader >> skipSeparators [
 			readLimit ifNotNil: [
 				(readLimit := readLimit - 1) >= 0
 					ifFalse: [self errorReadLimitExceeded]].
-			peekChar := nil].
+			peekChar := nil]
 ]
 
 { #category : #positioning }

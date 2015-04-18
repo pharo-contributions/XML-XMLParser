@@ -12,8 +12,7 @@ Class {
 		'EncodingNameChars',
 		'NameChars',
 		'NormalizedSpace',
-		'PubidChars',
-		'UnaryOperatorChars'
+		'PubidChars'
 	],
 	#category : #'XML-Parser'
 }
@@ -27,8 +26,7 @@ XMLWellFormedParserTokenizer class >> initialize [
 		initializeAdditionalNameChars;
 		initializeNameChars;
 		initializePubidChars;
-		initializeEncodingNameChars;
-		initializeUnaryOperatorChars
+		initializeEncodingNameChars
 ]
 
 { #category : #'class initialization' }
@@ -100,11 +98,6 @@ XMLWellFormedParserTokenizer class >> initializePubidChars [
 		addAll: '-''()+,./:=?;!*#@$_%'
 ]
 
-{ #category : #'class initialization' }
-XMLWellFormedParserTokenizer class >> initializeUnaryOperatorChars [
-	UnaryOperatorChars := BitmapCharacterSet with: $? with: $* with: $+
-]
-
 { #category : #testing }
 XMLWellFormedParserTokenizer class >> isNCName: aString [
 	"optimized"
@@ -140,6 +133,8 @@ XMLWellFormedParserTokenizer class >> isNmtoken: aString [
 
 { #category : #streaming }
 XMLWellFormedParserTokenizer class >> nextNCNameFrom: aReadStream on: aWriteStream [
+	"atEnd test is used instead of xmlParserIncludes: because the argument
+	readStream may not return nil when atEnd on other platforms"
 	| nextChar |
 
 	(aReadStream atEnd
@@ -158,6 +153,8 @@ XMLWellFormedParserTokenizer class >> nextNCNameFrom: aReadStream on: aWriteStre
 
 { #category : #streaming }
 XMLWellFormedParserTokenizer class >> nextNameFrom: aReadStream on: aWriteStream [
+	"atEnd test is used instead of xmlParserIncludes: because the argument
+	readStream may not return nil when atEnd on other platforms"
 	(aReadStream atEnd
 		or: [(NameChars includes: aReadStream peek) not
 			or: [AdditionalNameChars includes: aReadStream peek]])
@@ -837,8 +834,9 @@ XMLWellFormedParserTokenizer >> nextContentModelSequenceValuesOnWriteStream [
 XMLWellFormedParserTokenizer >> nextContentModelUnaryOperatorOnWriteStream [
 	| nextChar |
 
-	((nextChar := streamReader peek) notNil
-		and: [UnaryOperatorChars includes: nextChar])
+	((nextChar := streamReader peek) == $?
+		or: [nextChar == $*
+			or: [nextChar == $+]])
 		ifTrue: [writeStream nextPut: streamReader next]
 ]
 
@@ -1111,14 +1109,12 @@ XMLWellFormedParserTokenizer >> nextName [
 	| nextChar |
 
 	nameStream reset.
-	((nextChar := streamReader next) notNil
-		and: [(NameChars includes: nextChar)
-			and: [(AdditionalNameChars includes: nextChar) not]])
+	((NameChars xmlParserIncludes: (nextChar := streamReader next))
+		and: [(AdditionalNameChars xmlParserIncludes: nextChar) not])
 		ifFalse: [self errorExpectedName].
 	nameStream nextPut: nextChar.
 
-	[(nextChar := streamReader peek) notNil
-		and: [NameChars includes: nextChar]]
+	[NameChars xmlParserIncludes: streamReader peek]
 		whileTrue: [nameStream nextPut: streamReader next].
 	^ nameStream contents.
 ]
@@ -1139,29 +1135,23 @@ XMLWellFormedParserTokenizer >> nextNameListValuesOnWriteStream [
 XMLWellFormedParserTokenizer >> nextNameOnWriteStream [
 	| nextChar |
 
-	((nextChar := streamReader next) notNil
-		and: [(NameChars includes: nextChar)
-			and: [(AdditionalNameChars includes: nextChar) not]])
+	((NameChars xmlParserIncludes: (nextChar := streamReader next))
+		and: [(AdditionalNameChars xmlParserIncludes: nextChar) not])
 		ifFalse: [self errorExpectedName].
 	writeStream nextPut: nextChar.
 
-	[(nextChar := streamReader peek) notNil
-		and: [NameChars includes: nextChar]]
+	[NameChars xmlParserIncludes: streamReader peek]
 		whileTrue: [writeStream nextPut: streamReader next].
 ]
 
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextNmtokenOnWriteStream [
 	"matches the nmtoken production"
-	| nextChar |
-
-	((nextChar := streamReader peek) notNil
-		and: [(NameChars includes: nextChar)])
+	(NameChars xmlParserIncludes: streamReader peek)
 		ifFalse: [self errorExpected: 'name token'].
 	writeStream nextPut: streamReader next.
 		
-	[(nextChar := streamReader peek) notNil
-		and: [NameChars includes: nextChar]]
+	[NameChars xmlParserIncludes: streamReader peek]
 		whileTrue: [writeStream nextPut: streamReader next].
 ]
 
@@ -1308,9 +1298,8 @@ XMLWellFormedParserTokenizer >> nextPublicIDLiteral [
 
 	quote := self expectQuote.
 	writeStream reset.
-	[(nextChar := streamReader peek) == nil
-		or: [nextChar == quote
-			or: [(PubidChars includes: nextChar) not]]]
+	[(nextChar := streamReader peek) == quote
+		or: [(PubidChars xmlParserIncludes: nextChar) not]]
 		whileFalse: [writeStream nextPut: streamReader next].
 	self expectNext: quote.
 
@@ -1447,15 +1436,13 @@ XMLWellFormedParserTokenizer >> nextXMLEncodingAttributeValue [
 	| quote |
 
 	quote := self expectQuote.
-
 	writeStream
 		reset;
 		nextPut: self expectLetter.
-	[streamReader atEnd not
-		and: [EncodingNameChars includes: streamReader peek]]
+	[EncodingNameChars xmlParserIncludes: streamReader peek]
 		whileTrue: [writeStream nextPut: streamReader next].
-
 	self expectNext: quote.
+
 	^ writeStream contents.
 ]
 

@@ -18,10 +18,16 @@ Class {
 		'stringClass',
 		'cdataClass',
 		'commentClass',
-		'piClass'
+		'piClass',
+		'nodeListClass'
 	],
 	#category : #'XML-Parser-DOM'
 }
+
+{ #category : #converting }
+XMLPluggableNodeFactory >> asPluggableNodeFactory [
+	^ self
+]
 
 { #category : #accessing }
 XMLPluggableNodeFactory >> cdataClass [
@@ -61,6 +67,16 @@ XMLPluggableNodeFactory >> elementClass [
 { #category : #accessing }
 XMLPluggableNodeFactory >> elementClass: aClass [
 	elementClass := aClass
+]
+
+{ #category : #accessing }
+XMLPluggableNodeFactory >> nodeListClass [
+	^ nodeListClass ifNil: [nodeListClass := super nodeListClass]
+]
+
+{ #category : #accessing }
+XMLPluggableNodeFactory >> nodeListClass: aClass [
+	nodeListClass := aClass
 ]
 
 { #category : #accessing }

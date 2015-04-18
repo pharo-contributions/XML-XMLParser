@@ -1,6 +1,11 @@
 Extension { #name : #Character }
 
 { #category : #'*XML-Parser' }
+Character >> xmlParserASCIIValue [
+	^ value
+]
+
+{ #category : #'*XML-Parser' }
 Character >> xmlParserIsSeparator [
 	"Overridden in Gemstone version"
 	value = 32 "space"

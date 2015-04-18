@@ -35,7 +35,8 @@ XMLNodeWithElements >> addContent: aStringOrStringNode [
 
 { #category : #adding }
 XMLNodeWithElements >> addElement: anElement [
-	self deprecated: 'use #addNode: or #addElementNamed: instead'.
+	self deprecated: 'Use #addNode: or #addElementNamed: instead'.
+
 	self addNode: anElement.
 ]
 
@@ -481,7 +482,7 @@ XMLNodeWithElements >> nodeFactory: aNodeFactory [
 
 { #category : #private }
 XMLNodeWithElements >> nodeListClass [
-	^ self configuration nodeListClass
+	^ self configuration nodeFactory nodeListClass
 ]
 
 { #category : #private }
