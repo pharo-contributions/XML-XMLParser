@@ -192,8 +192,6 @@ ConfigurationOfXMLParser >> baseline10: spec [
 						versionString: #stable;
 						loads: #('default'); 
 						repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLWriter/main'.].
-
-			"#stable is fine, public API doesn't change to backwards incompatible"
 			spec
 				project: 'BitmapCharacterSet'
 				with: [
@@ -418,11 +416,28 @@ ConfigurationOfXMLParser >> baseline221: spec [
                     with: 'XML-Parser-GemstoneCompatibility-monty.9'. ].
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline231: spec [ 
+        <version: '2.3.1-baseline' imports: #('1.0-baseline')>
+        
+        spec for: #common do: [
+                spec blessing: #baseline.
+                spec project: 'XMLWriter' with: '2.5.6'.
+
+					"requires concrete versions from now on"
+                spec project: 'BitmapCharacterSet' with: '1.1.4'. ].
+
+        spec for: #gemstone do: [
+                spec
+                    package: 'XML-Parser-GemstoneCompatibility'
+                    with: 'XML-Parser-GemstoneCompatibility-monty.10'. ].
+]
+
 { #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.2.1-baseline'.
+	spec for: #'common' version: '2.3.1-baseline'.
 
 ]
 
@@ -443,7 +458,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '2.3.0'.
+	spec for: #'common' version: '2.3.1'.
 ]
 
 { #category : #versions }
@@ -1846,5 +1861,16 @@ ConfigurationOfXMLParser >> version230: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.299'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.115'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version231: spec [ 
+        <version: '2.3.1' imports: #('2.3.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.300'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.116'.
                 ].
 ]
