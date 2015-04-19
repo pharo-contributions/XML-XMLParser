@@ -971,8 +971,9 @@ XMLOrderedListTest >> testEqualsInternalCollections [
 	emptyOCList := self listClass collection: OrderedCollection new.
 	arrayListWithSingleElement := self listClass collection: (Array with: self singleElement).
 	ocListWithSingleElement := self listClass collection: (OrderedCollection with: self singleElement).
-	arrayListWithElements := self listClass collection: (Array newFrom: self listElements).
-	ocListWithElements := self listClass collection: (OrderedCollection newFrom: self listElements).
+	"use withAll: for portability to GS"
+	arrayListWithElements := self listClass collection: (Array withAll: self listElements).
+	ocListWithElements := self listClass collection: (OrderedCollection withAll: self listElements).
 
 	self
 		assertList: emptyArrayList equals: emptyOCList;

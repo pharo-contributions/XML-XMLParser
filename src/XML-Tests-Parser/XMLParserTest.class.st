@@ -1118,6 +1118,21 @@ XMLParserTest >> testInvalidElementContentModels [
 ]
 
 { #category : #tests }
+XMLParserTest >> testInvalidEncodingNameChar [
+	| validChars |
+
+	validChars := '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_.-'.
+	0 to: 255 do: [:each | | char charString |
+		char := each asCharacter.
+		(validChars includes: char)
+			ifFalse: [
+				charString := char asString.
+				self
+					should: [SAXHandler parse: '<?xml version="1.0" encoding="ISO', charString, '"?>']
+					raise: XMLWellFormednessException]].
+]
+
+{ #category : #tests }
 XMLParserTest >> testInvalidNameChar [
 	#(16rBF 16rD7 16rF7 16r37E
 		16r2000 16r200B 16r200E 16r206F
@@ -1146,6 +1161,30 @@ XMLParserTest >> testInvalidNameStartChar [
 		self
 			shouldnt: [SAXHandler parse: '<test', charString, ' name', charString, '="value"/>']
 			raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
+XMLParserTest >> testInvalidPublicIDChar [
+	| validChars |
+
+	validChars :=
+		'!#$%''()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz',
+		(Character xmlParserSeparators copyWithout: Character tab).
+	0 to: 255 do: [:each | | char charString |
+		char := each asCharacter.
+		(validChars includes: char)
+			ifFalse: [
+				charString := char asString.
+				self
+					should: [
+						SAXHandler parse:
+							'<!DOCTYPE test PUBLIC "//public//', charString, '" "external.dtd">']
+					raise: XMLWellFormednessException]].
+	self
+		shouldnt: [
+			SAXHandler parse:
+				'<!DOCTYPE test PUBLIC "//public//', validChars, '" "external.dtd">']
+		raise: XMLWellFormednessException.
 ]
 
 { #category : #tests }
