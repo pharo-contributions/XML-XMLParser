@@ -425,7 +425,7 @@ ConfigurationOfXMLParser >> baseline231: spec [
                 spec project: 'XMLWriter' with: '2.5.6'.
 
 					"requires concrete versions from now on"
-                spec project: 'BitmapCharacterSet' with: '1.1.4'. ].
+                spec project: 'BitmapCharacterSet' with: '1.1.5'. ].
 
         spec for: #gemstone do: [
                 spec
@@ -458,7 +458,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '2.3.1'.
+	spec for: #'common' version: '2.3.2'.
 ]
 
 { #category : #versions }
@@ -1872,5 +1872,16 @@ ConfigurationOfXMLParser >> version231: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.300'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.116'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version232: spec [ 
+        <version: '2.3.2' imports: #('2.3.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.300'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.117'.
                 ].
 ]
