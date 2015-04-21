@@ -216,6 +216,8 @@ XMLElement >> defaultNamespace [
 
 { #category : #namespacing }
 XMLElement >> defaultNamespace: aURI [
+	"unlike non-default namespaces, the uri can be empty to shadow an
+	inherited default namesapce"
 	| oldNamespace |
 
 	oldNamespace := self defaultNamespace.

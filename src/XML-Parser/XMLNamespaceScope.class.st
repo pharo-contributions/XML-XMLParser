@@ -49,6 +49,8 @@ XMLNamespaceScope >> defaultNamespace [
 
 { #category : #accessing }
 XMLNamespaceScope >> defaultNamespace: aURI [
+	"unlike non-default namespaces, the uri can be empty to shadow an
+	inherited default namesapce"
 	self
 		validatePrefix: ''
 		beforeMappingTo: aURI.
@@ -211,7 +213,7 @@ XMLNamespaceScope >> prefixMappingAt: aPrefix ifAbsent: aBlock [
 		ifNotNil: [prefixMappings at: aPrefix ifAbsent: aBlock]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLNamespaceScope >> prefixMappings [
 	^ prefixMappings ifNil: [prefixMappings := OrderPreservingStringDictionary new: 5]
 ]

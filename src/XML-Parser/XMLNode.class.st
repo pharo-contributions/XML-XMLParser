@@ -56,14 +56,6 @@ XMLNode >> ancestorNodes [
 ]
 
 { #category : #enumerating }
-XMLNode >> ancestorNodesDetect: aBlock ifNone: anExceptionBlock [
-	self ancestorNodesDo: [:each |
-		(aBlock value: each)
-			ifTrue: [^ each]].
-	^ anExceptionBlock value.
-]
-
-{ #category : #enumerating }
 XMLNode >> ancestorNodesDo: aBlock [
 	| ancestor |
 
