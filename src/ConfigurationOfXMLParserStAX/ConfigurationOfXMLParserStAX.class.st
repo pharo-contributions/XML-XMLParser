@@ -36,7 +36,7 @@ ConfigurationOfXMLParserStAX class >> baseConfigurationClassIfAbsent: aBlock [
 { #category : #catalog }
 ConfigurationOfXMLParserStAX class >> catalogDescription [
 
-^ 'XMLParserStAX is a pull-parser based on XMLParser that provides a stream-like interface to parsing XML and also supports partial DOM construction.'
+^ 'XMLParserStAX is a pull parser for XMLParser that provides a streaming interface for "pulling" XML events and also supports pull-style DOM parsing for dynamically converting events into DOM nodes.'
 ]
 
 { #category : #catalog }
@@ -46,11 +46,13 @@ ConfigurationOfXMLParserStAX class >> catalogKeyClassesAndExample [
 
 Examples:
 [[[ 
-	"get first book element as an XMLElement object:"
-	element := 
-		(parser := StAXParser on: xml)
-			skipUntil: [parser peek isStartTag: ''book''];
-			nextDOM.
+	parser := StAXParser on: xml.
+
+	"get first <item> element as an XMLElement object"
+	itemElement := parser nextElementNamed: ''item''.
+
+	"get next DOM node of any type"
+	node := parser nextNode.
 ]]]'
 ]
 
@@ -192,7 +194,7 @@ ConfigurationOfXMLParserStAX >> project [
 ConfigurationOfXMLParserStAX >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.1.0'.
+	spec for: #'common' version: '1.1.1'.
 
 ]
 
@@ -314,5 +316,16 @@ ConfigurationOfXMLParserStAX >> version110: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.11'.
 			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.9'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserStAX >> version111: spec [ 
+        <version: '1.1.1' imports: #('1.0.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.12'.
+			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.10'.
                 ].
 ]
