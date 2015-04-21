@@ -1031,7 +1031,7 @@ XMLParserTest >> testIncompleteDoctypeTokens [
 
 { #category : #tests }
 XMLParserTest >> testIncompleteEndTagTokens [
-	#('<test></' '<test></test')
+	#('<test></' '<test></test' '<test></ test' '<test></ test>')
 		do: [:each | 
 			self
 				should: [SAXHandler parse: each]
@@ -1118,21 +1118,6 @@ XMLParserTest >> testInvalidElementContentModels [
 ]
 
 { #category : #tests }
-XMLParserTest >> testInvalidEncodingNameChar [
-	| validChars |
-
-	validChars := '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_.-'.
-	0 to: 255 do: [:each | | char charString |
-		char := each asCharacter.
-		(validChars includes: char)
-			ifFalse: [
-				charString := char asString.
-				self
-					should: [SAXHandler parse: '<?xml version="1.0" encoding="ISO', charString, '"?>']
-					raise: XMLWellFormednessException]].
-]
-
-{ #category : #tests }
 XMLParserTest >> testInvalidNameChar [
 	#(16rBF 16rD7 16rF7 16r37E
 		16r2000 16r200B 16r200E 16r206F
@@ -1185,6 +1170,73 @@ XMLParserTest >> testInvalidPublicIDChar [
 			SAXHandler parse:
 				'<!DOCTYPE test PUBLIC "//public//', validChars, '" "external.dtd">']
 		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testInvalidXMLEncodingNameChar [
+	| validChars |
+
+	validChars := '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_.-'.
+	0 to: 255 do: [:each | | char charString |
+		char := each asCharacter.
+		(validChars includes: char)
+			ifFalse: [
+				charString := char asString.
+				self
+					should: [SAXHandler parse: '<?xml version="1.0" encoding="ISO', charString, '"?>']
+					raise: XMLWellFormednessException]].
+]
+
+{ #category : #tests }
+XMLParserTest >> testInvalidXMLStandaloneAttribute [
+	#('<?xml version="1.0" standalone=""?>'
+		'<?xml version="1.0" standalone="YES"?>'
+		'<?xml version="1.0" standalone="Yes"?>'
+		'<?xml version="1.0" standalone=" yes "?>'
+		'<?xml version="1.0" standalone="NO"?>'
+		'<?xml version="1.0" standalone="No"?>'
+		'<?xml version="1.0" standalone=" no "?>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+
+	#('<?xml version="1.0" standalone="no"?>'
+		'<?xml version="1.0" standalone="yes"?>')
+		do: [:each |
+			self
+				shouldnt: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testInvalidXMLVersionAttribute [
+	#('<?xml version=""?>'
+		'<?xml version="1"?>'
+		'<?xml version="1."?>'
+		'<?xml version="1.0."?>'
+		'<?xml version="1.0.1"?>'
+		'<?xml version="10"?>'
+		'<?xml version="10."?>'
+		'<?xml version="10.00."?>'
+		'<?xml version="10.00.10"?>'
+		'<?xml version="one"?>'
+		'<?xml version="one."?>'
+		'<?xml version="one.zero."?>'
+		'<?xml version="one.zero.one"?>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+
+	#('<?xml version="1.0"?>'
+		'<?xml version="1.1"?>'
+		'<?xml version="1.00"?>'
+		'<?xml version="1.10"?>')
+		do: [:each |
+			self
+				shouldnt: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
 ]
 
 { #category : #tests }
