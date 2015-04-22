@@ -36,14 +36,6 @@ XMLElementNester >> currentScopedAttributes [
 	^ self scopedAttributes lastOrNil
 ]
 
-{ #category : #printing }
-XMLElementNester >> enclosedElementsAsString: anElement [
-	^ String streamContents: [:stream |
-		self
-			printFrom: (self openElements lastIndexOf: anElement) + 1
-			on: stream]
-]
-
 { #category : #checking }
 XMLElementNester >> endElement: anElementName [
 	self openElements removeLast.
@@ -116,15 +108,15 @@ XMLElementNester >> openElementsReverseDo: aBlock [
 ]
 
 { #category : #printing }
-XMLElementNester >> printFrom: aStart on: aStream [
+XMLElementNester >> printElementsFrom: aStart on: aStream [
 	self
-		printFrom: aStart
+		printElementsFrom: aStart
 		to: aStart + self printLimit - 1
 		on: aStream
 ]
 
 { #category : #printing }
-XMLElementNester >> printFrom: aStart to: aStop on: aStream [
+XMLElementNester >> printElementsFrom: aStart to: aStop on: aStream [
 	aStart to: aStop do: [:i |
 		i > self openElements size
 			ifTrue: [^ self].
@@ -140,6 +132,13 @@ XMLElementNester >> printFrom: aStart to: aStop on: aStream [
 		ifTrue: [aStream nextPutAll: '...'].
 ]
 
+{ #category : #printing }
+XMLElementNester >> printElementsOn: aStream [
+	self
+		printElementsFrom: 1
+		on: aStream
+]
+
 { #category : #private }
 XMLElementNester >> printLimit [
 	^ 5
@@ -147,9 +146,25 @@ XMLElementNester >> printLimit [
 
 { #category : #printing }
 XMLElementNester >> printOn: aStream [
+	super printOn: aStream.
+	aStream nextPut: $(.
 	self
-		printFrom: 1
-		on: aStream
+		printElementsFrom: 1
+		on: aStream.
+	aStream nextPut: $).
+]
+
+{ #category : #printing }
+XMLElementNester >> printedElements [
+	^ String streamContents: [:stream | self printElementsOn: stream]
+]
+
+{ #category : #printing }
+XMLElementNester >> printedElementsEnclosedBy: anElement [
+	^ String streamContents: [:stream |
+		self
+			printElementsFrom: (self openElements lastIndexOf: anElement) + 1
+			on: stream]
 ]
 
 { #category : #accessing }

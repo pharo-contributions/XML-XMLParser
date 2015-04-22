@@ -35,3 +35,12 @@ XMLNFAMatchingState >> matches: anObject [
 XMLNFAMatchingState >> nextState [
 	^ nextState
 ]
+
+{ #category : #printing }
+XMLNFAMatchingState >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: matcher;
+		nextPut: $).
+]

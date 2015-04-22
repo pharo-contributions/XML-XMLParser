@@ -16,28 +16,25 @@ XMLDFAStateCache class >> firstDFAState: aDFAState [
 	^ self new setFirstDFAState: aDFAState
 ]
 
-{ #category : #adding }
+{ #category : #private }
 XMLDFAStateCache >> addDFAState: aDFAState [
 	cachedDFAStates size >= self maxCachedDFAStates
-		ifTrue: [self clearCachedDFAStates].
+		ifTrue: [self removeDFAStates].
 	^ cachedDFAStates
 		at: aDFAState nfaStates
 		put: aDFAState.
 ]
 
-{ #category : #private }
-XMLDFAStateCache >> clearCachedDFAStates [
-	cachedDFAStates
-		removeAll;
-		at: firstDFAState nfaStates
-		put: firstDFAState
+{ #category : #accessing }
+XMLDFAStateCache >> cachedDFAStateFor: anNFAStateSet [
+	^ cachedDFAStates
+		at: anNFAStateSet
+		ifAbsent: [self addDFAState: (anNFAStateSet asDFAStateWithStateCache: self)]
 ]
 
-{ #category : #accessing }
-XMLDFAStateCache >> dfaStateFor: aStateSet [
+{ #category : #private }
+XMLDFAStateCache >> cachedDFAStates [
 	^ cachedDFAStates
-		at: aStateSet
-		ifAbsent: [self addDFAState: (aStateSet asDFAStateWithStateCache: self)]
 ]
 
 { #category : #accessing }
@@ -47,7 +44,15 @@ XMLDFAStateCache >> firstDFAState [
 
 { #category : #private }
 XMLDFAStateCache >> maxCachedDFAStates [
-	^ 32
+	^ 64
+]
+
+{ #category : #private }
+XMLDFAStateCache >> removeDFAStates [
+	cachedDFAStates
+		valuesDo: [:each | each removeDFAStateTransitions];
+		removeAll;
+		at: firstDFAState nfaStates put: firstDFAState
 ]
 
 { #category : #initialization }

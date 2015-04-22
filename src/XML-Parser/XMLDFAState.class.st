@@ -6,8 +6,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'nfaStates',
-		'transitions',
-		'dfaStateCache'
+		'dfaStateCache',
+		'dfaStateTransitions'
 	],
 	#category : #'XML-Parser-Validation-DFA'
 }
@@ -26,17 +26,33 @@ XMLDFAState class >> nfaStates: anNFAStateSet dfaStateCache: aDFAStateCache [
 		dfaStateCache: aDFAStateCache
 ]
 
+{ #category : #private }
+XMLDFAState >> addDFAStateTransitionMatching: aMatcher [
+	self dfaStateTransitions size >= self maxDFAStateTransitions
+		ifTrue: [self removeDFAStateTransitions].
+	^ self dfaStateTransitions
+		at: aMatcher
+		put: (self dfaStateMatching: aMatcher).
+]
+
 { #category : #enumerating }
 XMLDFAState >> detectNextStateMatching: aMatcher [
-	^ self detectNextStateMatching: aMatcher ifNone: [nil]
+	^ self
+		detectNextStateMatching: aMatcher
+		ifNone: nil
 ]
 
 { #category : #enumerating }
 XMLDFAState >> detectNextStateMatching: aMatcher ifNone: aBlock [
-	^ (self transitions
+	^ (self dfaStateTransitions
 		at: aMatcher
-		ifAbsentPut: [self dfaStateMatching: aMatcher])
-			ifNil: [aBlock value]
+		ifAbsent: [self addDFAStateTransitionMatching: aMatcher])
+		ifNil: [aBlock value]
+]
+
+{ #category : #accessing }
+XMLDFAState >> dfaStateCache [
+	^ dfaStateCache
 ]
 
 { #category : #accessing }
@@ -49,7 +65,12 @@ XMLDFAState >> dfaStateMatching: aMatcher [
 			ifTrue: [state nextState addTo: matchingNFAStates]].
 	matchingNFAStates isEmpty
 		ifTrue: [^ nil]
-		ifFalse: [^ dfaStateCache dfaStateFor: matchingNFAStates].
+		ifFalse: [^ dfaStateCache cachedDFAStateFor: matchingNFAStates].
+]
+
+{ #category : #private }
+XMLDFAState >> dfaStateTransitions [
+	^ dfaStateTransitions ifNil: [dfaStateTransitions := Dictionary new]
 ]
 
 { #category : #testing }
@@ -57,18 +78,32 @@ XMLDFAState >> isAccepting [
 	^ nfaStates isAccepting
 ]
 
+{ #category : #private }
+XMLDFAState >> maxDFAStateTransitions [
+	^ 64
+]
+
 { #category : #accessing }
 XMLDFAState >> nfaStates [
 	^ nfaStates
+]
+
+{ #category : #printing }
+XMLDFAState >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: self nfaStates;
+		nextPut: $).
+]
+
+{ #category : #private }
+XMLDFAState >> removeDFAStateTransitions [
+	dfaStateTransitions := nil
 ]
 
 { #category : #initialization }
 XMLDFAState >> setNFAStates: anNFAStateSet dfaStateCache: aDFAStateCache [
 	nfaStates := anNFAStateSet.
 	dfaStateCache := (aDFAStateCache ifNil: [XMLDFAStateCache firstDFAState: self]).
-]
-
-{ #category : #accessing }
-XMLDFAState >> transitions [
-	^ transitions ifNil: [transitions := Dictionary new]
 ]

@@ -242,19 +242,38 @@ XMLNamespaceScope >> prefixesOfNamespaceURI: aURI [
 ]
 
 { #category : #printing }
-XMLNamespaceScope >> printOn: aStream [
+XMLNamespaceScope >> printDeclarationsOn: aStream [
+	| isFirst |
+
+	isFirst := true.
 	self prefixesAndURIsDo: [:prefix :uri |
+		isFirst 
+			ifTrue: [isFirst := false]
+			ifFalse: [aStream space].
 		aStream nextPutAll: 'xmlns'.
-		prefix ifNotEmpty: [
-			aStream
-				nextPut: $:;
-				nextPutAll: prefix].
+		prefix
+			ifNotEmpty: [
+				aStream
+					nextPut: $:;
+					nextPutAll: prefix].
 		aStream
 			nextPut: $=;
 			nextPut: $";
 			nextPutAll: uri;
-			nextPut: $";
-			space]
+			nextPut: $"].
+]
+
+{ #category : #printing }
+XMLNamespaceScope >> printOn: aStream [
+	super printOn: aStream.
+	aStream nextPut: $(.
+	self printDeclarationsOn: aStream.
+	aStream nextPut: $).
+]
+
+{ #category : #printing }
+XMLNamespaceScope >> printedDeclarations [
+	^ String streamContents: [:stream | self printDeclarationsOn: stream]
 ]
 
 { #category : #resolving }

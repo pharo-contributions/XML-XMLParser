@@ -24,6 +24,16 @@ XMLDFAElementValidator >> atEnd [
 	^ currentState isAccepting
 ]
 
+{ #category : #accessing }
+XMLDFAElementValidator >> currentState [
+	^ currentState
+]
+
+{ #category : #accessing }
+XMLDFAElementValidator >> dfa [
+	^ dfa
+]
+
 { #category : #copying }
 XMLDFAElementValidator >> postCopy [
 	currentState := dfa
