@@ -382,6 +382,187 @@ XMLParserTest >> testComments [
 ]
 
 { #category : #tests }
+XMLParserTest >> testConditionalSectionInInternalSubset [
+	#('<![INCLUDE[ <!-- comment --> ]]>'
+		'<![IGNORE[ <!-- comment --> ]]>'
+		'<!ENTITY % include "INCLUDE"> <![%include;[ <!-- comment --> ]]>'
+		'<!ENTITY % ignore "IGNORE"> <![%ignore;[ <!-- comment --> ]]>'
+		) do: [:each |
+			self
+				should: [SAXHandler parse:'<!DOCTYPE test [', each, ']>']
+				raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
+XMLParserTest >> testConditionalSectionLabelReplacementIgnore [
+	| handler parser |
+
+	#('<!ENTITY % label "{1}">
+		<![%label;[ <malformed-xml/> ]]>'
+		'<!ENTITY % label "{1}">
+		<![ %label; [ <malformed-xml/> ]]>'
+		) do: [:each |
+		self
+			should: [
+				handler := SAXHandler on: (each format: (Array with: 'INCLUDE')).
+				parser := handler parser.
+				parser tokenizer tokenContext: XMLExternalSubsetContext new.
+				parser parseDocument]
+			raise: XMLWellFormednessException.
+		self
+			shouldnt: [
+				handler := SAXHandler on: (each format: (Array with: 'IGNORE')).
+				parser := handler parser.
+				parser tokenizer tokenContext: XMLExternalSubsetContext new.
+				parser parseDocument]
+			raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
+XMLParserTest >> testConditionalSectionLabelReplacementInclude [
+	| handler parser |
+
+	#('<!ENTITY % label "{1}">
+		<![%label;[
+			<!ENTITY % comment "<!--comment-->">
+		]]> %comment;'
+		'<!ENTITY % label "{1}">
+		<![ %label; [
+			<!ENTITY % comment "<!--comment-->">
+		]]> %comment;'
+	) do: [:each |
+		self
+			shouldnt: [
+				handler := SAXHandler on: (each format: (Array with: 'INCLUDE')).
+				parser := handler parser.
+				parser tokenizer tokenContext: XMLExternalSubsetContext new.
+				parser parseDocument]
+			raise: XMLValidationException.
+		self
+			should: [
+				handler := SAXHandler on: (each format: (Array with: 'IGNORE')).
+				parser := handler parser.
+				parser tokenizer tokenContext: XMLExternalSubsetContext new.
+				parser parseDocument]
+			raise: XMLValidationException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testConditionalSectionMixedIncludeIgnore [
+	| xml handler parser |
+
+	xml := '
+		<![INCLUDE[
+			<![IGNORE[ %comment; ]]>
+			<!ENTITY % comment "<!--comment]]>-->">
+			<![INCLUDE[
+				<![IGNORE[ %commentTwo; ]]>
+				<!ENTITY % commentTwo "<!--comment]]>-->">
+				%commentTwo;
+			]]>
+			%comment;
+			%commentTwo;
+		]]>
+		%comment;
+		%commentTwo;'.
+	self
+		shouldnt: [
+				handler := SAXHandler on: xml.
+				parser := handler parser.
+				parser tokenizer tokenContext: XMLExternalSubsetContext new.
+				parser parseDocument]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testConditionalSectionNestedIgnores [
+	| xml handler parser |
+
+	xml := '
+		<![ IGNORE [
+			<!--ignored terminator {1} -->
+			<![ INCLUDE [
+				<!ENTITY % comment "<!--ignored terminator {1} -->">
+				%comment;
+			]]>
+			%comment;
+		]]>'.
+	self
+		shouldnt: [
+			handler := SAXHandler on: (xml format: (Array with: ']]')).
+			parser := handler parser.
+			parser tokenizer tokenContext: XMLExternalSubsetContext new.
+			parser parseDocument]
+		raise: XMLWellFormednessException.
+	self
+		should: [
+			handler := SAXHandler on: (xml format: (Array with: ']]>')).
+			parser := handler parser.
+			parser tokenizer tokenContext: XMLExternalSubsetContext new.
+			parser parseDocument]
+		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testConditionalSectionNestedIncludes [
+	| xml handler parser |
+
+	xml := '
+		<![ INCLUDE [
+			<!--ignored terminator ]]> -->
+			<![ INCLUDE [
+				<!ENTITY % comment "<!--ignored terminator ]]> -->">
+				%comment;
+			]]>
+			%comment;
+		]]>
+		%comment;'.
+	self
+		shouldnt: [
+			handler := SAXHandler on: xml.
+			parser := handler parser.
+			parser tokenizer tokenContext: XMLExternalSubsetContext new.
+			parser parseDocument]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testConditionalSectionUnterminatedIignores [
+	| handler parser |
+
+	#('<![IGNORE['
+		'<![IGNORE[<!--comment-->'
+		'<![IGNORE[<!--comment--><![IGNORE['
+		'<![IGNORE[<!--comment--><![IGNORE[ ]]>'
+	) do: [:each |
+		self
+			should: [
+				handler := SAXHandler on: each.
+				parser := handler parser.
+				parser tokenizer tokenContext: XMLExternalSubsetContext new.
+				parser parseDocument]
+			raise: XMLWellFormednessException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testConditionalSectionUnterminatedIncludes [
+	| handler parser |
+
+	#('<![INCLUDE['
+		'<![INCLUDE[<!--comment-->'
+		'<![INCLUDE[<!--comment--><![INCLUDE['
+		'<![INCLUDE[<!--comment--><![INCLUDE[ ]]>'
+	) do: [:each |
+		self
+			should: [
+				handler := SAXHandler on: each.
+				parser := handler parser.
+				parser tokenizer tokenContext: XMLExternalSubsetContext new.
+				parser parseDocument]
+			raise: XMLWellFormednessException].
+]
+
+{ #category : #tests }
 XMLParserTest >> testDeclaringNamespaces [
 	self
 		shouldnt: [SAXHandler parse: '<prefix:root prefix:name="test" xmlns:prefix="NS"/>']
