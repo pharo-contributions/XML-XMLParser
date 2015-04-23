@@ -27,7 +27,7 @@ XMLKeyValueCache class >> defaultMaxSize [
 { #category : #'instance creation' }
 XMLKeyValueCache class >> maxSize: anInteger [
 	^ self
-		collection: (Dictionary new: anInteger)
+		collection: Dictionary new
 		maxSize: anInteger
 ]
 

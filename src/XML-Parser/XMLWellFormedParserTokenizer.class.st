@@ -5,7 +5,8 @@ Class {
 	#name : #XMLWellFormedParserTokenizer,
 	#superclass : #XMLParserTokenizer,
 	#instVars : [
-		'activeEntities'
+		'activeEntities',
+		'totalOpenIncludeSections'
 	],
 	#classVars : [
 		'AdditionalNameChars',
@@ -335,7 +336,7 @@ XMLWellFormedParserTokenizer >> errorInternalDeclarationParameterEntityReference
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorInternalSubsetIncludeOrIgnoreSection [
+XMLWellFormedParserTokenizer >> errorInternalSubsetConditionalSection [
 	self parseError: 'Cannot have <![INCLUDE[...]> or <![IGNORE[...]> sections in internal subset'
 ]
 
@@ -362,6 +363,16 @@ XMLWellFormedParserTokenizer >> errorParameterEntityTerminatingSubset [
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorSelfReferentialEntity: anEntity [
 	self parseError: 'Illegal self-referential entity ', anEntity asReference
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorUnexpectedEndOfIncludeSection [
+	self parseError: 'Unexpected end of section "]" in external entity'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorUnterminatedIncludeSections [
+	self parseError: 'Unterminated <![INCLUDE[...]]> section(s) in external entity'
 ]
 
 { #category : #errors }
@@ -496,6 +507,12 @@ XMLWellFormedParserTokenizer >> hasActiveEntityNamed: aName [
 { #category : #testing }
 XMLWellFormedParserTokenizer >> hasActiveExternalEntity [
 	^ self activeEntities anySatisfy: [:each | each isExternal]
+]
+
+{ #category : #testing }
+XMLWellFormedParserTokenizer >> hasOpenIncludeSections [
+	^ totalOpenIncludeSections notNil
+		and: [totalOpenIncludeSections > 0]
 ]
 
 { #category : #accessing }
@@ -735,20 +752,11 @@ XMLWellFormedParserTokenizer >> nextComment [
 XMLWellFormedParserTokenizer >> nextConditionalSection [
 	"skip ["
 	streamReader next.
-
-	writeStream reset.
-	self nextConditionalSectionOnWriteStream.
-	streamReader pushBack: writeStream contents.
-]
-
-{ #category : #'tokenizing - dtd' }
-XMLWellFormedParserTokenizer >> nextConditionalSectionOnWriteStream [
 	self
 		skipSeparatorsInDeclaration;
 		expectNext: $I.
-
 	streamReader peek == $N
-		ifTrue: [self nextIncludeSectionOnWriteStream]
+		ifTrue: [self nextStartIncludeSection]
 		ifFalse: [self nextIgnoreSection].
 ]
 
@@ -871,7 +879,21 @@ XMLWellFormedParserTokenizer >> nextElementDeclaration [
 XMLWellFormedParserTokenizer >> nextEndDocument [
 	context canTerminateDocument
 		ifFalse: [self errorDocumentTerminatedPrematurely].
+	self hasOpenIncludeSections
+		ifTrue: [self errorUnterminatedIncludeSections].
 	super nextEndDocument.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> nextEndIncludeSection [
+	self totalOpenIncludeSections > 0
+		ifFalse: [self errorUnexpectedEndOfIncludeSection].
+	"skip ]"
+	streamReader next.
+	self
+		expectNext: $];
+		expectTerminator.
+	totalOpenIncludeSections := self totalOpenIncludeSections - 1.
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -1049,27 +1071,6 @@ XMLWellFormedParserTokenizer >> nextIgnoreSection [
 						ifFalse: [streamReader next]]].
 
 	openSections > 0
-		ifTrue: [self errorExpectedSectionTerminator].
-]
-
-{ #category : #'tokenizing - dtd' }
-XMLWellFormedParserTokenizer >> nextIncludeSectionOnWriteStream [
-	| isOpen  |
-
-	self expectNextAll: 'NCLUDE'.
-	streamReader skipSeparators.
-	self expectNext: $[.
-
-	isOpen := true.
-	[isOpen and: [streamReader atEnd not]]
-		whileTrue: [
-			(streamReader nextMatchAll: '<![')
-				ifTrue: [self nextConditionalSectionOnWriteStream]
-				ifFalse: [
-					(streamReader nextMatchAll: ']]>')
-						ifTrue: [isOpen := false]
-						ifFalse: [writeStream nextPut: streamReader next]]].
-	isOpen
 		ifTrue: [self errorExpectedSectionTerminator].
 ]
 
@@ -1307,6 +1308,14 @@ XMLWellFormedParserTokenizer >> nextPublicIDLiteral [
 ]
 
 { #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> nextStartIncludeSection [
+	self expectNextAll: 'NCLUDE'.
+	streamReader skipSeparators.
+	self expectNext: $[.
+	totalOpenIncludeSections := self totalOpenIncludeSections + 1.
+]
+
+{ #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextSubsetDeclaration [
 	streamReader peek == $E
 		ifTrue: [
@@ -1337,7 +1346,7 @@ XMLWellFormedParserTokenizer >> nextSubsetMarkupToken [
 			(context isExternalSubsetContext
 				or: [self hasActiveExternalEntity])
 				ifTrue: [^ self nextConditionalSection].
-			self errorInternalSubsetIncludeOrIgnoreSection].
+			self errorInternalSubsetConditionalSection].
 
 	self nextSubsetDeclaration.
 ]
@@ -1523,4 +1532,9 @@ XMLWellFormedParserTokenizer >> skipSeparatorsInDeclaration [
 			streamReader next.
 			self nextParameterEntityReferenceInDeclaration.
 			streamReader skipSeparators]
+]
+
+{ #category : #accessing }
+XMLWellFormedParserTokenizer >> totalOpenIncludeSections [
+	^ totalOpenIncludeSections ifNil: [totalOpenIncludeSections := 0]
 ]

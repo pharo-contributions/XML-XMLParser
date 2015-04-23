@@ -16,23 +16,30 @@ DTDCachingExternalEntityResolver class >> clearEntityCache [
 	self entityCache clear
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 DTDCachingExternalEntityResolver class >> entityCache [
 	^ entityCache ifNil: [entityCache := XMLKeyValueCache maxSize: 64]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
+DTDCachingExternalEntityResolver class >> entityCacheAt: aURI ifAbsent: aBlock [
+	^ self entityCache
+		at: aURI
+		ifAbsent: aBlock
+]
+
+{ #category : #accessing }
 DTDCachingExternalEntityResolver class >> entityCacheAt: aURI ifAbsentPut: aBlock [
 	^ self entityCache
 		at: aURI
 		ifAbsentPut: aBlock
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 DTDCachingExternalEntityResolver class >> entityCacheAt: aURI put: anEntity [
 	^ self entityCache
 		at: aURI
-		put: anEntity.
+		put: anEntity
 ]
 
 { #category : #accessing }

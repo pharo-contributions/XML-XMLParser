@@ -190,12 +190,24 @@ XMLParserTokenizer >> nextEndDocument [
 ]
 
 { #category : #'tokenizing - dtd' }
+XMLParserTokenizer >> nextEndIncludeSection [
+	self subclassResponsibility
+]
+
+{ #category : #'tokenizing - dtd' }
 XMLParserTokenizer >> nextEndInternalSubset [
 	"skip ]"
 	streamReader
 		next;
 		skipSeparators.
 	self nextEndDoctypeDeclaration.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLParserTokenizer >> nextEndInternalSubsetOrIncludeSection [
+	context isInternalSubsetContext
+		ifTrue: [self nextEndInternalSubset]
+		ifFalse: [self nextEndIncludeSection]
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -307,9 +319,8 @@ XMLParserTokenizer >> nextSubsetToken [
 		ifTrue: [
 			streamReader next.
 			^ self nextParameterEntityReference].
-	(context isInternalSubsetContext
-		and: [streamReader peek == $]])
-		ifTrue: [^ self nextEndInternalSubset].
+	streamReader peek == $]
+		ifTrue: [^ self nextEndInternalSubsetOrIncludeSection].
 
 	self nextSubsetMarkupToken.
 ]
