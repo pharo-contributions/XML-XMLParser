@@ -35,7 +35,7 @@ XMLExternalEntityTest >> deleteFileNamed: aFileName [
 
 { #category : #source }
 XMLExternalEntityTest >> docBookArticleSource [
-^ '<?xml version="1.0" encoding="UTF-8"?>
+	^ '<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://docbook.org/xml/4.5/docbookx.dtd">
 <article>
 	<articleinfo>
@@ -68,28 +68,28 @@ XMLExternalEntityTest >> docBookArticleSource [
 ]
 
 { #category : #source }
+XMLExternalEntityTest >> docBookExampleSource [
+	^ '<!DOCTYPE example
+	PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+	"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+	<example>
+		<title>An Example</title>
+		<programlisting>
+		XMLDocument root:
+			((XMLElement named: ''test'')
+				addNode: ''An example'' asXMLString;
+				yourself)
+		</programlisting>
+	</example>'
+]
+
+{ #category : #source }
 XMLExternalEntityTest >> doctypeWithDeclarationsForEntityURIs: aURICollection [
 	^  String streamContents: [:stream |
 		stream nextPutAll: '<!DOCTYPE test ['.
 		aURICollection withIndexDo: [:each :i |
 			stream nextPutAll: '<!ENTITY entity', i printString, ' SYSTEM "', each, '">'].
 		stream nextPutAll: ']>']
-]
-
-{ #category : #urls }
-XMLExternalEntityTest >> externalEntityURLs [
-	^  #('http://www.musicxml.org/dtds/note.mod'
-		'http://www.musicxml.org/dtds/isolat1.ent'
-		'http://www.musicxml.org/dtds/isolat2.ent'
-		'http://www.musicxml.org/dtds/layout.mod'
-		'http://www.musicxml.org/dtds/identity.mod'
-		'http://www.musicxml.org/dtds/attributes.mod'
-		'http://www.musicxml.org/dtds/partwise.dtd'
-		'http://www.musicxml.org/dtds/barline.mod'
-		'http://www.musicxml.org/dtds/direction.mod'
-		'http://www.musicxml.org/dtds/score.mod'
-		'http://www.musicxml.org/dtds/link.mod'
-		'http://www.musicxml.org/dtds/common.mod')
 ]
 
 { #category : #urls }
@@ -109,17 +109,9 @@ XMLExternalEntityTest >> isSkipping [
 	^ self class isSkipping
 ]
 
-{ #category : #private }
-XMLExternalEntityTest >> skipOrReturnWith: aBlock [
-	"skip is not portable to squeak"
-	(self respondsTo: #skip)
-		ifTrue: [self skip]
-		ifFalse: [aBlock value]
-]
-
 { #category : #source }
-XMLExternalEntityTest >> sourceXML [
-^ '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+XMLExternalEntityTest >> musicXMLDocument [
+	^ '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE score-partwise PUBLIC
     "-//Recordare//DTD MusicXML 3.0 Partwise//EN"
     "http://www.musicxml.org/dtds/partwise.dtd">
@@ -157,6 +149,30 @@ XMLExternalEntityTest >> sourceXML [
   </part>
 </score-partwise>
 '.
+]
+
+{ #category : #urls }
+XMLExternalEntityTest >> musicXMLExternalEntityURLs [
+	^  #('http://www.musicxml.org/dtds/note.mod'
+		'http://www.musicxml.org/dtds/isolat1.ent'
+		'http://www.musicxml.org/dtds/isolat2.ent'
+		'http://www.musicxml.org/dtds/layout.mod'
+		'http://www.musicxml.org/dtds/identity.mod'
+		'http://www.musicxml.org/dtds/attributes.mod'
+		'http://www.musicxml.org/dtds/partwise.dtd'
+		'http://www.musicxml.org/dtds/barline.mod'
+		'http://www.musicxml.org/dtds/direction.mod'
+		'http://www.musicxml.org/dtds/score.mod'
+		'http://www.musicxml.org/dtds/link.mod'
+		'http://www.musicxml.org/dtds/common.mod')
+]
+
+{ #category : #private }
+XMLExternalEntityTest >> skipOrReturnWith: aBlock [
+	"skip is not portable to squeak"
+	(self respondsTo: #skip)
+		ifTrue: [self skip]
+		ifFalse: [aBlock value]
 ]
 
 { #category : #tests }
@@ -210,6 +226,22 @@ XMLExternalEntityTest >> testParsingDocBookArticle [
 ]
 
 { #category : #tests }
+XMLExternalEntityTest >> testParsingDocBookExample [
+	"This uses HTTP so is skipped by default"
+
+	self isSkipping
+		ifTrue: [self skipOrReturnWith: [^ self]].
+
+	self
+		shouldnt: [
+			(SAXHandler on: self docBookExampleSource)
+				resolvesExternalEntities: true;
+				removeLimits;
+				parseDocument]
+		raise: XMLParserException.
+]
+
+{ #category : #tests }
 XMLExternalEntityTest >> testParsingExternalEntities [
 	"This test uses HTTP so is skipped by default."
 	| entityCache entityCacheCopy |
@@ -219,25 +251,25 @@ XMLExternalEntityTest >> testParsingExternalEntities [
 
 	DTDCachingExternalEntityResolver clearEntityCache.
 	entityCache := DTDCachingExternalEntityResolver entityCache.
-	self externalEntityURLs do: [:each |
+	self musicXMLExternalEntityURLs do: [:each |
 		self deny: (entityCache includesKey: each asXMLURI)].
 
 	SAXHandler
-		parse: self sourceXML
+		parse: self musicXMLDocument
 		usingNamespaces: true
 		validation: true
 		externalEntities: true.
-	self externalEntityURLs do: [:each |
+	self musicXMLExternalEntityURLs do: [:each |
 		self assert: (entityCache at: each asXMLURI ifAbsent: ['']) notEmpty].
 
 	"check for re-requesting"
 	entityCacheCopy := entityCache copy.
 	SAXHandler
-		parse: self sourceXML
+		parse: self musicXMLDocument
 		usingNamespaces: true
 		validation: true
 		externalEntities: true.
-	self externalEntityURLs do: [:each |
+	self musicXMLExternalEntityURLs do: [:each |
 		self assert: (entityCache at: each asXMLURI) == (entityCacheCopy at: each asXMLURI)].
 ]
 
@@ -255,7 +287,7 @@ XMLExternalEntityTest >> testParsingFile [
 		raise: XMLFileException.
 	self
 		fileNamed: fileName
-		write: self sourceXML.
+		write: self musicXMLDocument.
 	self
 		shouldnt: [doc := XMLDOMParser parseFileNamed: fileName]
 		raise: XMLFileException.
