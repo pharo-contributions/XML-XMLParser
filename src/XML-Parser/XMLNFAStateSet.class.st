@@ -37,6 +37,11 @@ XMLNFAStateSet >> add: aState [
 ]
 
 { #category : #converting }
+XMLNFAStateSet >> asDFAState [
+	^ self asDFAStateWithStateCache: nil
+]
+
+{ #category : #converting }
 XMLNFAStateSet >> asDFAStateWithStateCache: aDFAStateCache [
 	^ XMLDFAState
 		nfaStates: self

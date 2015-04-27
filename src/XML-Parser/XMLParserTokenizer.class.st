@@ -9,9 +9,9 @@ Class {
 	#instVars : [
 		'context',
 		'driver',
-		'nameStream',
 		'streamReader',
-		'writeStream'
+		'writeStream',
+		'nameStream'
 	],
 	#classVars : [
 		'PredefinedEntities'
@@ -451,6 +451,17 @@ XMLParserTokenizer >> normalizedLineEndingChar [
 { #category : #accessing }
 XMLParserTokenizer >> normalizedLineEndingChar: aCharacter [
 	streamReader normalizedLineEndingChar: aCharacter
+]
+
+{ #category : #printing }
+XMLParserTokenizer >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: context;
+		nextPutAll: '; ';
+		print: streamReader;
+		nextPut: $).
 ]
 
 { #category : #initialization }

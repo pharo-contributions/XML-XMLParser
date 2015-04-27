@@ -106,6 +106,17 @@ XMLKeyValueCache >> postCopy [
 	collection := collection copy
 ]
 
+{ #category : #printing }
+XMLKeyValueCache >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: self size;
+		nextPut: $/;
+		print: self maxSize;
+		nextPut: $).
+]
+
 { #category : #initialization }
 XMLKeyValueCache >> setCollection: aCollection maxSize: anInteger [
 	collection := aCollection.

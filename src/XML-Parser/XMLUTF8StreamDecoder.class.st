@@ -9,7 +9,7 @@ Class {
 
 { #category : #private }
 XMLUTF8StreamDecoder class >> basicEncodingNames [
-	^ #('utf8' 'utf-8')
+	^ #('UTF-8' 'UTF8')
 ]
 
 { #category : #private }

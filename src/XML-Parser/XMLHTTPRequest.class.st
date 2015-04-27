@@ -56,6 +56,15 @@ XMLHTTPRequest >> isMaxSizeException: anException [
 	^ anException isKindOf: XMLLimitException
 ]
 
+{ #category : #printing }
+XMLHTTPRequest >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		nextPutAll: url;
+		nextPut: $).
+]
+
 { #category : #accessing }
 XMLHTTPRequest >> url [
 	^ url

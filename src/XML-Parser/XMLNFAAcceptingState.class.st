@@ -11,3 +11,12 @@ Class {
 XMLNFAAcceptingState >> isAccepting [
 	^ true
 ]
+
+{ #category : #printing }
+XMLNFAAcceptingState >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: self identityHash; "only print ids to avoid loops"
+		nextPut: $).
+]

@@ -19,12 +19,20 @@ Class {
 
 { #category : #private }
 XMLStreamDecoder class >> basicEncodingNames [
+	"encodingNames will have these names + upper/lowercase versions"
 	^ #()
 ]
 
 { #category : #testing }
 XMLStreamDecoder class >> canDecodeEncoding: anEncoding [
 	^ self encodingNames includes: anEncoding
+]
+
+{ #category : #accessing }
+XMLStreamDecoder class >> defaultEncodingName [
+	^ self basicEncodingNames
+		at: 1
+		ifAbsent: ['']
 ]
 
 { #category : #accessing }
@@ -35,12 +43,18 @@ XMLStreamDecoder class >> defaultStreamDecoder [
 { #category : #accessing }
 XMLStreamDecoder class >> encodingNames [
 	^ encodingNames ifNil: [
-		encodingNames := self basicEncodingNames asSet.
+		encodingNames := Set new.
 		self basicEncodingNames do: [:each |
 			encodingNames
+				add: each;
 				add: each asLowercase;
 				add: each asUppercase].
 		encodingNames]
+]
+
+{ #category : #private }
+XMLStreamDecoder class >> encodingNames: aSet [
+	encodingNames := aSet
 ]
 
 { #category : #private }
@@ -74,23 +88,30 @@ XMLStreamDecoder class >> isDefaultStreamDecoder [
 
 { #category : #'instance creation' }
 XMLStreamDecoder class >> newForEncoding: anEncoding [
-	^ (StreamDecoderCache
+	^ (self streamDecoderCache
 		at: anEncoding
 		ifAbsentPut: [self findStreamDecoderForEncoding: anEncoding])
-			ifNotNil: [:decoderClass |
-				decoderClass new
-					setEncodingName: anEncoding]
+			ifNotNil: [:decoderClass | decoderClass new encodingName: anEncoding]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLStreamDecoder class >> preferredStreamDecoders [
 	^ PreferredStreamDecoders
 ]
 
+{ #category : #private }
+XMLStreamDecoder class >> streamDecoderCache [
+	^ StreamDecoderCache
+]
+
 { #category : #accessing }
 XMLStreamDecoder >> encodingName [
-	^ encodingName
-		ifNil: [encodingName := self class encodingName anyOne]
+	^ encodingName ifNil: [encodingName := self class defaultEncodingName]
+]
+
+{ #category : #accessing }
+XMLStreamDecoder >> encodingName: anEncodingName [
+	encodingName := anEncodingName
 ]
 
 { #category : #testing }
@@ -101,9 +122,4 @@ XMLStreamDecoder >> isDefaultStreamDecoder [
 { #category : #decoding }
 XMLStreamDecoder >> nextFromStream: aStream [
 	self subclassResponsibility
-]
-
-{ #category : #initialization }
-XMLStreamDecoder >> setEncodingName: anEncodingName [
-	encodingName := anEncodingName
 ]

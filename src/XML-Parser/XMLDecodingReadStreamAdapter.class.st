@@ -50,6 +50,15 @@ XMLDecodingReadStreamAdapter >> peek [
 	^ peekChar ifNil: [peekChar := streamDecoder nextFromStream: self]
 ]
 
+{ #category : #printing }
+XMLDecodingReadStreamAdapter >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: streamDecoder;
+		nextPut: $).
+]
+
 { #category : #accessing }
 XMLDecodingReadStreamAdapter >> streamDecoder [
 	^ streamDecoder

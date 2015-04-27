@@ -9,7 +9,7 @@ Class {
 
 { #category : #private }
 XMLUTF32BigEndianStreamDecoder class >> basicEncodingNames [
-	^ #('utf32' 'utf-32' 'utf32be' 'utf-32be' 'utf-32-be' 'utf32-be')
+	^ #('UTF-32' 'UTF-32BE' 'UTF-32-BE' 'UTF32' 'UTF32-BE' 'UTF32BE')
 ]
 
 { #category : #private }

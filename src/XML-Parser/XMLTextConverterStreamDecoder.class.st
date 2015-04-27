@@ -34,16 +34,24 @@ XMLTextConverterStreamDecoder class >> textConverterForEncoding: anEncoding [
 				defaultConverterClassForEncoding: anEncoding asLowercase]
 ]
 
+{ #category : #accessing }
+XMLTextConverterStreamDecoder >> encodingName: anEncodingName [
+	super encodingName: anEncodingName.
+	self textConverter: (self class textConverterForEncoding: anEncodingName) new.
+]
+
 { #category : #decoding }
 XMLTextConverterStreamDecoder >> nextFromStream: aStream [
 	^ textConverter nextFromStream: aStream
 ]
 
-{ #category : #initialization }
-XMLTextConverterStreamDecoder >> setEncodingName: anEncodingName [
-	super setEncodingName: anEncodingName.
-	self textConverter:
-		(self class textConverterForEncoding: anEncodingName) new.
+{ #category : #printing }
+XMLTextConverterStreamDecoder >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		nextPutAll: self encodingName;
+		nextPut: $).
 ]
 
 { #category : #accessing }

@@ -31,6 +31,17 @@ XMLAttributeDefaultValidator >> defaultValue [
 	^ defaultValue
 ]
 
+{ #category : #printing }
+XMLAttributeDefaultValidator >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		nextPutAll: self attribute;
+		nextPutAll: '="';
+		nextPutAll: self defaultValue;
+		nextPutAll: '")'.
+]
+
 { #category : #initialization }
 XMLAttributeDefaultValidator >> setAttribute: anAttribute defaultValue: aDefaultValue [
 	attribute := anAttribute.

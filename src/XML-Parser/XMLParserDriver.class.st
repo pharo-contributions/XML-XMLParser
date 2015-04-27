@@ -102,8 +102,8 @@ XMLParserDriver >> handleParameterEntityReference: aName [
 ]
 
 { #category : #handling }
-XMLParserDriver >> handleParseError: anErrorString [
-	XMLWellFormednessException signal: anErrorString
+XMLParserDriver >> handleParseError: aString [
+	XMLWellFormednessException signal: aString
 ]
 
 { #category : #handling }

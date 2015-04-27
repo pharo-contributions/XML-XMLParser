@@ -45,6 +45,15 @@ XMLElementValidator >> errorUnexpectedPCData: aString [
 		with: self element
 ]
 
+{ #category : #printing }
+XMLElementValidator >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPutAll: '(<';
+		nextPutAll: self element;
+		nextPutAll: '>)'.
+]
+
 { #category : #validating }
 XMLElementValidator >> validatePCData: aString [
 ]

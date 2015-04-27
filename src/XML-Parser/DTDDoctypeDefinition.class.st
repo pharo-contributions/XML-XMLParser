@@ -185,6 +185,11 @@ DTDDoctypeDefinition >> hasParameterEntities [
 ]
 
 { #category : #testing }
+DTDDoctypeDefinition >> hasRoot [
+	^ root notNil and: [root notEmpty]
+]
+
+{ #category : #testing }
 DTDDoctypeDefinition >> hasUnparsedEntities [
 	^ unparsedEntities notNil and: [unparsedEntities notEmpty]
 ]

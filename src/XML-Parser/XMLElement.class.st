@@ -481,7 +481,6 @@ XMLElement >> setNamespaceScope: aNamespaceScope [
 XMLElement >> setQualifiedName: aQualifiedName localName: aLocalName attributes: anAttributeDictionary [
 	name := aQualifiedName.
 	localName := aLocalName.
-
 	anAttributeDictionary isEmpty "avoid ifNotEmpty: closure overhead"
 		ifFalse: [
 			"The setFrom method is used to avoid revalidating the

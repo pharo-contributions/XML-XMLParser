@@ -37,7 +37,7 @@ DTDParsedEntity class >> named: aString [
 
 { #category : #converting }
 DTDParsedEntity >> asReference [
-	^ self printString
+	^ String streamContents: [:stream | self printReferenceOn: stream]
 ]
 
 { #category : #replacing }
@@ -62,6 +62,21 @@ DTDParsedEntity >> name [
 
 { #category : #printing }
 DTDParsedEntity >> printOn: aStream [
+	super printOn: aStream.
+	aStream nextPut: $(.
+	self isExternal
+		ifTrue: [
+			aStream
+				nextPut: ${;
+				nextPutAll: self uri;
+				nextPut: $}].
+	aStream
+		nextPutAll: self name;
+		nextPut: $).
+]
+
+{ #category : #printing }
+DTDParsedEntity >> printReferenceOn: aStream [
 	aStream
 		nextPutAll: self referencePrefix;
 		nextPutAll: self name;

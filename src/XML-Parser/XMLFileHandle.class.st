@@ -91,6 +91,15 @@ XMLFileHandle >> path: aPath [
 	path := aPath
 ]
 
+{ #category : #printing }
+XMLFileHandle >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		nextPutAll: path;
+		nextPut: $).
+]
+
 { #category : #reading }
 XMLFileHandle >> readStream [
 	^ self readStreamUpToLimit: nil

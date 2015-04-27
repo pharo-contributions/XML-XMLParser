@@ -36,6 +36,11 @@ XMLElementNester >> currentScopedAttributes [
 	^ self scopedAttributes lastOrNil
 ]
 
+{ #category : #private }
+XMLElementNester >> elementPrintLimit [
+	^ 5
+]
+
 { #category : #checking }
 XMLElementNester >> endElement: anElementName [
 	self openElements removeLast.
@@ -111,7 +116,7 @@ XMLElementNester >> openElementsReverseDo: aBlock [
 XMLElementNester >> printElementsFrom: aStart on: aStream [
 	self
 		printElementsFrom: aStart
-		to: aStart + self printLimit - 1
+		to: aStart + self elementPrintLimit - 1
 		on: aStream
 ]
 
@@ -139,19 +144,16 @@ XMLElementNester >> printElementsOn: aStream [
 		on: aStream
 ]
 
-{ #category : #private }
-XMLElementNester >> printLimit [
-	^ 5
-]
-
 { #category : #printing }
 XMLElementNester >> printOn: aStream [
 	super printOn: aStream.
-	aStream nextPut: $(.
-	self
-		printElementsFrom: 1
-		on: aStream.
-	aStream nextPut: $).
+	self hasOpenElements
+		ifTrue: [
+			aStream nextPut: $(.
+			self
+				printElementsFrom: 1
+				on: aStream.
+			aStream nextPut: $)].
 ]
 
 { #category : #printing }

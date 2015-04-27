@@ -47,7 +47,8 @@ DTDDocumentValidator >> elementValidatorFor: aName [
 { #category : #private }
 DTDDocumentValidator >> errorInvalidRoot: anElementName [
 	XMLValidationException
-		formatSignal: 'Element <{1}> cannot be root'
+		formatSignal: 'Root element must be <{1}>, not <{2}>'
+		with: self doctypeDefinition root
 		with: anElementName
 ]
 
@@ -83,7 +84,7 @@ DTDDocumentValidator >> validateIDReferences [
 
 { #category : #validating }
 DTDDocumentValidator >> validateRootElement: anElementName [
-	(self doctypeDefinition root notEmpty
+	(self doctypeDefinition hasRoot
 		and: [self doctypeDefinition root ~= anElementName])
 		ifTrue: [self errorInvalidRoot: anElementName]
 ]

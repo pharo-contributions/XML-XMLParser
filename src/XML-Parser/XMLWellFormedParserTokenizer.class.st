@@ -246,17 +246,17 @@ XMLWellFormedParserTokenizer >> errorEntityDepthLimitExceeded [
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpected: anExpectedString [
-	self parseError: 'Expected ', anExpectedString
+XMLWellFormedParserTokenizer >> errorExpected: aString [
+	self parseError: 'Expected ', aString
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpected: anExpectedCharacterOrString butGot: aReceivedCharacterOrString [
+XMLWellFormedParserTokenizer >> errorExpected: aString butGot: aCharacter [
 	self errorExpected:
 		('{1} but got "{2}"' format:
 			(Array
-				with: anExpectedCharacterOrString
-				with: (aReceivedCharacterOrString ifNil: [''])))
+				with: aString
+				with: (aCharacter ifNil: [''])))
 ]
 
 { #category : #errors }
@@ -284,18 +284,18 @@ XMLWellFormedParserTokenizer >> errorExpectedLiteral: aCharacterOrString [
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpectedLiteral: anExpectedLiteral butGot: aCharacter [
+XMLWellFormedParserTokenizer >> errorExpectedLiteral: aCharacterOrString butGot: aCharacter [
 	self
-		errorExpectedLiteral: anExpectedLiteral
+		errorExpectedLiteral: aCharacterOrString
 		butGot: aCharacter
 		at: 1
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpectedLiteral: anExpectedLiteral butGot: aCharacter at: aPosition [
+XMLWellFormedParserTokenizer >> errorExpectedLiteral: aCharacterOrString butGot: aCharacter at: aPosition [
 	| literal replacement |
 
-	literal := anExpectedLiteral asString.
+	literal := aCharacterOrString asString.
 	replacement := (aCharacter ifNil: ['']) asString.
 	self errorExpected:
 		('"{1}" but got "{2}"' format:
@@ -314,20 +314,15 @@ XMLWellFormedParserTokenizer >> errorExpectedName [
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpectedSectionTerminator [
-	self errorExpectedLiteral: ']]>'
-]
-
-{ #category : #errors }
 XMLWellFormedParserTokenizer >> errorExpectedSeparators [
 	self errorExpected: 'one or more whitespace characters'
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpectedTerminatorButGot: aReceivedCharacer [
+XMLWellFormedParserTokenizer >> errorExpectedTerminatorButGot: aCharacter [
 	self
 		errorExpected: '">" terminator'
-		butGot: aReceivedCharacer
+		butGot: aCharacter
 ]
 
 { #category : #errors }
@@ -337,7 +332,8 @@ XMLWellFormedParserTokenizer >> errorInternalDeclarationParameterEntityReference
 
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorInternalSubsetConditionalSection [
-	self parseError: 'Cannot have <![INCLUDE[...]> or <![IGNORE[...]> sections in internal subset'
+	self parseError:
+		'Cannot have <![INCLUDE[...]> or <![IGNORE[...]> sections in internal subset'
 ]
 
 { #category : #errors }
@@ -347,7 +343,8 @@ XMLWellFormedParserTokenizer >> errorInvalidCodePoint: aCodePoint [
 
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorLiteralContextExternalEntity: anEntity [
-	self parseError: 'External general entity ', anEntity asReference, ' in literal context'
+	self parseError:
+		'External general entity reference ', anEntity asReference, ' in literal context'
 ]
 
 { #category : #errors }
@@ -368,6 +365,11 @@ XMLWellFormedParserTokenizer >> errorSelfReferentialEntity: anEntity [
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorUnexpectedEndOfIncludeSection [
 	self parseError: 'Unexpected end of section "]" in external entity'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorUnterminatedIgnoreSections [
+	self parseError: 'Unterminated <![IGNORE[...]]> section(s) in external entity'
 ]
 
 { #category : #errors }
@@ -1071,7 +1073,7 @@ XMLWellFormedParserTokenizer >> nextIgnoreSection [
 						ifFalse: [streamReader next]]].
 
 	openSections > 0
-		ifTrue: [self errorExpectedSectionTerminator].
+		ifTrue: [self errorUnterminatedIgnoreSections].
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -1490,8 +1492,8 @@ XMLWellFormedParserTokenizer >> nextXMLVersionAttributeValue [
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> parseError: anErrorString [
-	driver handleParseError: anErrorString
+XMLWellFormedParserTokenizer >> parseError: aString [
+	driver handleParseError: aString
 ]
 
 { #category : #'entity replacing' }

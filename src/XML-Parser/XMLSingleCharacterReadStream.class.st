@@ -55,3 +55,12 @@ XMLSingleCharacterReadStream >> on: aCharacter [
 XMLSingleCharacterReadStream >> peek [
 	^ character
 ]
+
+{ #category : #printing }
+XMLSingleCharacterReadStream >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: character;
+		nextPut: $).
+]

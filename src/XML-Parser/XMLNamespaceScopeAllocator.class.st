@@ -35,10 +35,26 @@ XMLNamespaceScopeAllocator >> exitScope [
 	^ self scopes removeLast
 ]
 
+{ #category : #testing }
+XMLNamespaceScopeAllocator >> hasCurentScope [
+	^ scopes notEmpty
+]
+
 { #category : #initialization }
 XMLNamespaceScopeAllocator >> initialize [
 	super initialize.
 	scopes := OrderedCollection new: 10.
+]
+
+{ #category : #printing }
+XMLNamespaceScopeAllocator >> printOn: aStream [
+	super printOn: aStream.
+	self hasCurentScope
+		ifTrue: [
+			aStream
+				nextPut: $(;
+				print: self currentScope;
+				nextPut: $)].
 ]
 
 { #category : #private }

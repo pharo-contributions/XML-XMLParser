@@ -65,6 +65,11 @@ XMLDocumentValidator >> hasAttributeValidators [
 ]
 
 { #category : #testing }
+XMLDocumentValidator >> hasCurrentElementValidator [
+	^ self currentElementValidator notNil
+]
+
+{ #category : #testing }
 XMLDocumentValidator >> hasElementValidators [
 	self subclassResponsibility
 ]
@@ -72,6 +77,17 @@ XMLDocumentValidator >> hasElementValidators [
 { #category : #testing }
 XMLDocumentValidator >> hasValidators [
 	^ self hasElementValidators or: [self hasAttributeValidators]
+]
+
+{ #category : #printing }
+XMLDocumentValidator >> printOn: aStream [
+	super printOn: aStream.
+	self hasCurrentElementValidator
+		ifTrue: [
+			aStream
+				nextPut: $(;
+				print: self currentElementValidator;
+				nextPut: $)].
 ]
 
 { #category : #validating }

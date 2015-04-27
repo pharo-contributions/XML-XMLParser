@@ -122,6 +122,17 @@ XMLAttributeValidator >> listValuesIn: aSpaceSeparatedList do: aBlock [
 		do: aBlock
 ]
 
+{ #category : #printing }
+XMLAttributeValidator >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPutAll: '(<';
+		nextPutAll: self element;
+		space;
+		nextPutAll: self attribute;
+		nextPutAll: '="">)'.
+]
+
 { #category : #initialization }
 XMLAttributeValidator >> setElement: anElement attribute: anAttribute defaultValueValidator: aDefaultValueValidator [
 	element := anElement.
