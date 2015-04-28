@@ -107,7 +107,8 @@ XMLNode >> configuration [
 
 { #category : #accessing }
 XMLNode >> contentString [
- 	"This returns the combined content string of all descendants with spaces inserted where necessary."
+ 	"Returns combined content strings of all descendants with space inserted
+	when one string has no trailing space and the one after has no leading space"
 	^ String streamContents: [:stream | self printContentOn: stream]
 ]
 
@@ -242,6 +243,7 @@ XMLNode >> postCopy [
 
 { #category : #printing }
 XMLNode >> prettyPrintOn: aStream [
+ 	"Prints XML with whitespace formatting for readability"
 	self
 		withNewXMLWriterOn: aStream
 		do: [:writer |
@@ -253,6 +255,7 @@ XMLNode >> prettyPrintOn: aStream [
 
 { #category : #printing }
 XMLNode >> prettyPrinted [
+ 	"Prints XML with whitespace formatting for readability"
 	^ String streamContents: [:stream | self prettyPrintOn: stream]
 ]
 
@@ -263,7 +266,8 @@ XMLNode >> previousNode [
 
 { #category : #printing }
 XMLNode >> printContentOn: aStream [
- 	"Prints on aStream the content strings of all descendants with spaces inserted where necessary."
+ 	"Prints combined content strings of all descendants with space inserted
+	when one string has no trailing space and the one after has no leading space"
 	self printRawContentOn: (XMLNodeContentWriteStreamAdapter on: aStream)
 ]
 
@@ -333,9 +337,8 @@ XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock whenAbsent: aZeroArgBloc
 	| writer |
 
 	writer :=
-		(Smalltalk
-			at: #XMLWriter
-			ifAbsent: [^ aZeroArgBlock value]) on: aStream.
+		(self xmlWriterClassOrNil
+			ifNil: [^ aZeroArgBlock value]) on: aStream.
 	self escapesContentEntitiesWhenWriting
 		ifFalse: [writer escapesContentEntityReferences: false].
 	^ aOneArgBlock value: writer.
@@ -343,4 +346,11 @@ XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock whenAbsent: aZeroArgBloc
 
 { #category : #printing }
 XMLNode >> writeXMLOn: aWriter [
+]
+
+{ #category : #private }
+XMLNode >> xmlWriterClassOrNil [
+	^ Smalltalk
+		at: #XMLWriter
+		ifAbsent: [nil]
 ]
