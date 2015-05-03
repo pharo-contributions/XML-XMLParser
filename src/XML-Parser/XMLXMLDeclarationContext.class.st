@@ -11,3 +11,8 @@ Class {
 XMLXMLDeclarationContext >> isXMLDeclarationContext [
 	^ true
 ]
+
+{ #category : #testing }
+XMLXMLDeclarationContext >> supportsEncodingDetection [
+	^ true
+]

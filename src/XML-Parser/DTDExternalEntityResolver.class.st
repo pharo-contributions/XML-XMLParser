@@ -19,13 +19,13 @@ DTDExternalEntityResolver >> checkExternalEntityLimit [
 ]
 
 { #category : #combining }
-DTDExternalEntityResolver >> combineURI: aBaseURI with: aRelativeURI [
-	| baseURI combinedURI |
+DTDExternalEntityResolver >> combineSourceURI: aSourceURI withEntityURI: anEntityURI [
+	| sourceURI combinedURI |
 
-	baseURI := XMLURI fromString: aBaseURI.
-	combinedURI := baseURI / aRelativeURI.
+	sourceURI := aSourceURI asXMLURI.
+	combinedURI := sourceURI / anEntityURI.
 	(combinedURI isLocalURI
-		and: [baseURI isLocalURI not
+		and: [sourceURI isLocalURI not
 			and: [self resolvesLocalFromNonLocal notNil
 				and: [self resolvesLocalFromNonLocal not]]])
 		ifTrue: [self errorLocalFromNonLocal].
@@ -107,11 +107,22 @@ DTDExternalEntityResolver >> resolveEntityURI: aURI [
 	^ readStream.
 ]
 
+{ #category : #resolving }
+DTDExternalEntityResolver >> resolveEntityURI: aURI from: aSourceURI [
+	^ self resolveEntityURI:
+		(self
+			combineSourceURI: aSourceURI
+			withEntityURI: aURI)
+]
+
 { #category : #private }
 DTDExternalEntityResolver >> resolveExternalEntity: aName uri: anEntityURI from: aSourceURI class: aClass [
 	| combinedURI replacement replacementStream |
 
-	combinedURI := self combineURI: aSourceURI with: anEntityURI.
+	combinedURI :=
+		self
+			combineSourceURI: aSourceURI
+			withEntityURI: anEntityURI.
 
 	replacementStream := self resolveEntityURI: combinedURI.
 	replacement  := replacementStream contents.

@@ -83,6 +83,16 @@ XMLParserTokenizer >> constructReplacementForParameterEntity: anEntity [
 ]
 
 { #category : #accessing }
+XMLParserTokenizer >> context [
+	^ context
+]
+
+{ #category : #accessing }
+XMLParserTokenizer >> context: aTokenContext [
+	context := aTokenContext
+]
+
+{ #category : #accessing }
 XMLParserTokenizer >> currentLineNumber [
 	^ streamReader currentLineNumber
 ]
@@ -299,7 +309,7 @@ XMLParserTokenizer >> nextStartContent [
 { #category : #tokenizing }
 XMLParserTokenizer >> nextStartDocument [
 	context := driver initialContext ifNil: [XMLXMLDeclarationContext new].
-	context isPrologContext
+	context supportsEncodingDetection
 		ifTrue: [streamReader detectCurrentEncoding].
 	driver handleStartDocument.
 ]
@@ -340,8 +350,8 @@ XMLParserTokenizer >> nextSystemIDLiteral [
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextToken [
-	(context isInitializedContext
-		and: [streamReader atEnd])
+	(streamReader atEnd
+		and: [context isInitializedContext])
 		ifTrue: [^ self nextEndDocument].
 	context nextTokenFrom: self.
 ]
@@ -479,14 +489,4 @@ XMLParserTokenizer >> setDriver: aDriver stream: aStream readLimit: aReadLimit [
 { #category : #accessing }
 XMLParserTokenizer >> streamReader [
 	^ streamReader
-]
-
-{ #category : #accessing }
-XMLParserTokenizer >> tokenContext [
-	^ context
-]
-
-{ #category : #accessing }
-XMLParserTokenizer >> tokenContext: aTokenContext [
-	context := aTokenContext
 ]

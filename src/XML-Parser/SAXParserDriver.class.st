@@ -124,14 +124,28 @@ SAXParserDriver >> externalEntityResolver [
 ]
 
 { #category : #private }
-SAXParserDriver >> externalSubsetParserOnURI: aURI [
+SAXParserDriver >> externalSubsetParserOn: aStringOrStream documentURI: aURI [
 	^ self saxHandler parserClass
 		driver:
 			(DTDExternalSubsetParserDriver
 				saxDriver: self
-				documentURI: aURI asString)
-		on: (self externalEntityResolver resolveEntityURI: aURI)
-	
+				documentURI: aURI)
+		on: aStringOrStream
+]
+
+{ #category : #private }
+SAXParserDriver >> externalSubsetParserOnURI: aURI [
+	| combinedURI |
+
+	combinedURI :=
+		self externalEntityResolver
+			combineSourceURI: self documentURI
+			withEntityURI: aURI.
+
+	^ self
+		externalSubsetParserOn:
+			(self externalEntityResolver resolveEntityURI: combinedURI)
+		documentURI: combinedURI asString.
 ]
 
 { #category : #accessing }
@@ -200,7 +214,7 @@ SAXParserDriver >> handleEndDTD [
 	(self resolvesExternalEntities
 		and: [self externalSubsetURI notEmpty
 			and: [self isValidating or: [self isStandalone not]]])
-		ifTrue: [self parseExternalSubset: self externalSubsetURI].
+		ifTrue: [self parseExternalSubset].
 
 	self saxHandler
 		doctypeDefinition: self doctypeDefinition;
@@ -507,15 +521,8 @@ SAXParserDriver >> maxEntityReplacementDepth [
 ]
 
 { #category : #private }
-SAXParserDriver >> parseExternalSubset: aURI [
-	| parser |
-
-	parser :=
-		self externalSubsetParserOnURI:
-			(self externalEntityResolver
-				combineURI: self documentURI
-				with: aURI).
-	parser parseDocument.
+SAXParserDriver >> parseExternalSubset [
+	(self externalSubsetParserOnURI: self externalSubsetURI) parseDocument
 ]
 
 { #category : #testing }

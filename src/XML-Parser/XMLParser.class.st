@@ -22,6 +22,16 @@ XMLParser >> atEnd [
 ]
 
 { #category : #accessing }
+XMLParser >> context [
+	^ self tokenizer context
+]
+
+{ #category : #accessing }
+XMLParser >> context: aTokenContext [
+	self tokenizer context: aTokenContext
+]
+
+{ #category : #accessing }
 XMLParser >> currentLineNumber [
 	^ self tokenizer currentLineNumber
 ]
@@ -42,11 +52,6 @@ XMLParser >> handleParserError: anError [
 			anError shouldPassOnWhenCaught
 				ifTrue: [anError pass]]
 		ifFalse: [anError pass].
-]
-
-{ #category : #accessing }
-XMLParser >> initialContext: aContext [
-	self tokenizer tokenContext: aContext
 ]
 
 { #category : #parsing }

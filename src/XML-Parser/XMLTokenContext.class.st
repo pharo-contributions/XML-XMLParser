@@ -97,6 +97,11 @@ XMLTokenContext >> prologContext [
 	^ XMLPrologContext new
 ]
 
+{ #category : #testing }
+XMLTokenContext >> supportsEncodingDetection [
+	^ false
+]
+
 { #category : #changing }
 XMLTokenContext >> terminatedContext [
 	^ XMLTerminatedContext new

@@ -29,3 +29,8 @@ XMLTextDeclarationContext >> previousContext [
 XMLTextDeclarationContext >> previousContext: aTokenContex [
 	previousContext := aTokenContex
 ]
+
+{ #category : #testing }
+XMLTextDeclarationContext >> supportsEncodingDetection [
+	^ true
+]
