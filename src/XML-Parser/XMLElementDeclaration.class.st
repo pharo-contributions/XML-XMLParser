@@ -42,5 +42,6 @@ XMLElementDeclaration >> element: aName [
 XMLElementDeclaration >> writeXMLOn: aWriter [
 	aWriter elementDeclaration
 		element: self element;
-		contentModel: self contentModel
+		contentModel: self contentModel;
+		write
 ]

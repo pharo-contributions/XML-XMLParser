@@ -81,5 +81,6 @@ XMLAttributeDeclaration >> writeXMLOn: aWriter [
 		attribute: self attribute;
 		type: self type;
 		defaultPragma: self defaultPragma;
-		defaultValue: self defaultValue
+		defaultValue: self defaultValue;
+		write
 ]

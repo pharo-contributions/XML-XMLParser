@@ -19,5 +19,6 @@ XMLParameterEntityDeclaration >> writeXMLOn: aWriter [
 		isParameter: true;
 		replacement: self replacement;
 		publicID: self publicID;
-		systemID: self systemID
+		systemID: self systemID;
+		write
 ]

@@ -138,15 +138,26 @@ XMLDocument >> version: aVersionNumber [
 ]
 
 { #category : #printing }
-XMLDocument >> writeXMLOn: aWriter [
+XMLDocument >> writeDoctypeDeclarationOn: aWriter [
+	self doctypeDeclaration
+		ifNotNil: [self doctypeDeclaration writeXMLOn: aWriter]
+]
+
+{ #category : #printing }
+XMLDocument >> writeXMLDeclarationOn: aWriter [
 	self version
 		ifNotNil: [
 			aWriter xml
 				version: self version;
 				encoding: self encoding;
-				standalone: self isStandalone].
-	self doctypeDeclaration
-		ifNotNil: [self doctypeDeclaration writeXMLOn: aWriter].
-	
-	self writeInnerXMLOn: aWriter.
+				standalone: self isStandalone;
+				write]
+]
+
+{ #category : #printing }
+XMLDocument >> writeXMLOn: aWriter [
+	self
+		writeXMLDeclarationOn: aWriter;
+		writeDoctypeDeclarationOn: aWriter;
+		writeInnerXMLOn: aWriter
 ]

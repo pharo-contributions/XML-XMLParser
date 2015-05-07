@@ -66,5 +66,5 @@ XMLDoctypeDeclaration >> writeXMLOn: aWriter [
 		root: self root;
 		publicID: self publicID;
 		systemID: self systemID;
-		withInternalSubset: [self writeInnerXMLOn: aWriter]
+		with: [self writeInnerXMLOn: aWriter]
 ]
