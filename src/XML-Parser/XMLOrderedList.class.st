@@ -184,11 +184,13 @@ XMLOrderedList >> anyOne [
 
 { #category : #converting }
 XMLOrderedList >> asArray [
+	"use withAll: not newFrom: for portability"
 	^ Array withAll: collection
 ]
 
 { #category : #converting }
 XMLOrderedList >> asOrderedCollection [
+	"use withAll: not newFrom: for portability"
 	^ OrderedCollection withAll: collection
 ]
 

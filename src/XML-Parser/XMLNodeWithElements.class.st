@@ -389,23 +389,29 @@ XMLNodeWithElements >> includesElement: aName [
 
 { #category : #parsing }
 XMLNodeWithElements >> innerXML: aStringOrStream [
-	self
-		innerXML: aStringOrStream
-		parsedWith: (self parserHandlerClass on: aStringOrStream)
-]
-
-{ #category : #parsing }
-XMLNodeWithElements >> innerXML: aStringOrStream parsedWith: aParser [
-	self removeNodes.
-
-	aParser
-		pushInnerXMLRootNode: self;
-		parseDocument.
+	self innerXMLParsedWith: (self parserHandlerClass on: aStringOrStream)
 ]
 
 { #category : #private }
 XMLNodeWithElements >> innerXMLContext [
 	self subclassResponsibility
+]
+
+{ #category : #parsing }
+XMLNodeWithElements >> innerXMLParsedWith: aParser [
+	| oldNodes |
+
+	oldNodes := self nodes asArray.
+	self removeNodes.
+	[aParser
+		pushInnerXMLRootNode: self;
+		parseDocument]
+		on: Error
+		do: [:error |
+			self
+				removeNodes;
+				addNodes: oldNodes.
+			error pass].
 ]
 
 { #category : #testing }
