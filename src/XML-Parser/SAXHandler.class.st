@@ -213,6 +213,18 @@ SAXHandler >> configurationClass [
 SAXHandler >> currentScope: aNamespaceScope [
 ]
 
+{ #category : #configuring }
+SAXHandler >> decodesCharacters [
+	^ self configuration decodesCharacters
+]
+
+{ #category : #configuring }
+SAXHandler >> decodesCharacters: aBoolean [
+	"If disabled, encoding attributes in <?xml ...?> declarations will be ignored
+	and encodings will not be inferred from byte order marks"
+	self configuration decodesCharacters: aBoolean
+]
+
 { #category : #private }
 SAXHandler >> defaultDocumentURI [
 	^ self externalEntityResolver defaultDocumentURI

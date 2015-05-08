@@ -92,6 +92,12 @@ XMLParserTokenizer >> context: aTokenContext [
 	context := aTokenContext
 ]
 
+{ #category : #encodings }
+XMLParserTokenizer >> convertFromEncoding: anEncoding [
+	driver decodesCharacters
+		ifTrue: [streamReader convertFromEncoding: anEncoding]
+]
+
 { #category : #accessing }
 XMLParserTokenizer >> currentLineNumber [
 	^ streamReader currentLineNumber
@@ -309,7 +315,8 @@ XMLParserTokenizer >> nextStartContent [
 { #category : #tokenizing }
 XMLParserTokenizer >> nextStartDocument [
 	context := driver initialContext ifNil: [XMLXMLDeclarationContext new].
-	context supportsEncodingDetection
+	(context supportsEncodingDetection
+		and: [driver decodesCharacters])
 		ifTrue: [streamReader detectCurrentEncoding].
 	driver handleStartDocument.
 ]
@@ -374,20 +381,19 @@ XMLParserTokenizer >> nextXMLDeclaration [
 		ifFalse: [self expectSeparators].
 	(encoding := self nextXMLEncodingAttributeRequired: false) isEmpty
 		ifFalse: [
-			streamReader convertFromEncoding: encoding.
+			self convertFromEncoding: encoding.
 			streamReader peek == $?
 				ifFalse: [self expectSeparators]].
-	
 	driver
 		handleXMLVersion: version
 		encoding: encoding
 		standalone: self nextXMLStandaloneAttribute.
-	context := context prologContext.
-
 	streamReader skipSeparators.
 	self
 		expectNext: $?;
 		expectTerminator.
+
+	context := context prologContext.
 ]
 
 { #category : #tokenizing }
@@ -429,7 +435,7 @@ XMLParserTokenizer >> nextXMLTextDeclaration [
 			(self nextXMLVersionAttributeRequired: false) isEmpty
 				ifFalse: [self expectSeparators].
 			(encoding := self nextXMLEncodingAttributeRequired: true) isEmpty
-				ifFalse: [streamReader convertFromEncoding: encoding].
+				ifFalse: [self convertFromEncoding: encoding].
 
 			streamReader skipSeparators.
 			self

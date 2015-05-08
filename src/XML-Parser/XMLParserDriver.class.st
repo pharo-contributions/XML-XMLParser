@@ -20,6 +20,11 @@ XMLParserDriver >> currentURI: aURI [
 	self uris addLast: aURI
 ]
 
+{ #category : #testing }
+XMLParserDriver >> decodesCharacters [
+	^ true
+]
+
 { #category : #accessing }
 XMLParserDriver >> doctypeDefinition [
 	^ nil

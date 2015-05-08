@@ -19,6 +19,11 @@ DTDExternalSubsetParserDriver class >> saxDriver: aSaxDriver documentURI: anExte
 		documentURI: anExternalSubsetURI
 ]
 
+{ #category : #testing }
+DTDExternalSubsetParserDriver >> decodesCharacters [
+	^ self saxDriver decodesCharacters
+]
+
 { #category : #accessing }
 DTDExternalSubsetParserDriver >> doctypeDefinition [
 	^ doctypeDefinition

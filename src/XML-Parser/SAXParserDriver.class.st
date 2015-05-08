@@ -46,6 +46,11 @@ SAXParserDriver >> declareNamespaces: aDictionary inScope: aScope [
 		self saxHandler startPrefixMapping: prefix uri: uri].
 ]
 
+{ #category : #testing }
+SAXParserDriver >> decodesCharacters [
+	^ self saxHandler decodesCharacters
+]
+
 { #category : #accessing }
 SAXParserDriver >> doctypeDefinition [
 	^ doctypeDefinition ifNil: [doctypeDefinition := DTDDoctypeDefinition new]

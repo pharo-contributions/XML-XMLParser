@@ -7,6 +7,7 @@ Class {
 	#instVars : [
 		'isValidating',
 		'usesNamespaces',
+		'decodesCharacters',
 		'requiresDocumentConstraints',
 		'parserHandlerClass',
 		'parserLimits',
@@ -14,6 +15,16 @@ Class {
 	],
 	#category : #'XML-Parser'
 }
+
+{ #category : #accessing }
+XMLConfiguration >> decodesCharacters [
+	^ decodesCharacters
+]
+
+{ #category : #accessing }
+XMLConfiguration >> decodesCharacters: aBoolean [
+	decodesCharacters := aBoolean
+]
 
 { #category : #accessing }
 XMLConfiguration >> defaultParserHandlerClass [
@@ -57,6 +68,7 @@ XMLConfiguration >> initialize [
 	"always used, so explicitly initialized"
 	isValidating := true.
 	usesNamespaces := true.
+	decodesCharacters := true.
 	requiresDocumentConstraints := false.
 	parserLimits := XMLParserLimits new.
 ]
