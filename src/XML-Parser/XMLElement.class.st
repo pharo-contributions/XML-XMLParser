@@ -269,11 +269,6 @@ XMLElement >> inheritNamespacesFrom: anElement [
 			anElement namespaceScope]
 ]
 
-{ #category : #private }
-XMLElement >> innerXMLContext [
-	^ XMLContentContext new
-]
-
 { #category : #testing }
 XMLElement >> isDeclaredPrefix: aPrefix [
 	"is namespace prefix in scope for use by receiver and descendants"
