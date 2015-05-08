@@ -448,11 +448,26 @@ ConfigurationOfXMLParser >> baseline239: spec [
                     with: 'XML-Parser-GemstoneCompatibility-monty.10'. ].
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline241: spec [ 
+        <version: '2.4.1-baseline' imports: #('1.0-baseline')>
+        
+        spec for: #common do: [
+                spec blessing: #baseline.
+                spec project: 'XMLWriter' with: '2.6.0'.
+                spec project: 'BitmapCharacterSet' with: '1.1.5'. ].
+
+        spec for: #gemstone do: [
+                spec
+                    package: 'XML-Parser-GemstoneCompatibility'
+                    with: 'XML-Parser-GemstoneCompatibility-monty.10'. ].
+]
+
 { #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.3.9-baseline'.
+	spec for: #'common' version: '2.4.1-baseline'.
 
 ]
 
@@ -473,7 +488,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '2.4.0'.
+	spec for: #'common' version: '2.4.1'.
 ]
 
 { #category : #versions }
@@ -1986,5 +2001,16 @@ ConfigurationOfXMLParser >> version240: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.308'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.123'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version241: spec [ 
+        <version: '2.4.1' imports: #('2.4.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.309'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.124'.
                 ].
 ]
