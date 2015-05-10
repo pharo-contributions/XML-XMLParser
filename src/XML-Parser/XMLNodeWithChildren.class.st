@@ -177,15 +177,16 @@ XMLNodeWithChildren >> includesNode: aNode [
 
 { #category : #accessing }
 XMLNodeWithChildren >> innerXML [
-	"returns descendent nodes as XML string"
-	self hasChildren
-		ifTrue: [
-			^ self
-				withNewXMLWriterOn: (String new: self nodes size * 10) writeStream
-				do: [:writer |
-					self writeInnerXMLOn: writer.
-					writer contents]]
-		ifFalse: [^ '']
+	"returns XML source of descendent nodes as string"
+	^ String streamContents: [:stream | self printInnerXMLOn: stream]
+]
+
+{ #category : #accessing }
+XMLNodeWithChildren >> innerXMLPrettyPrinted [
+	^ String streamContents: [:stream |
+		self
+			printInnerXMLOn: stream
+			beforeWritingDo: [:writer | writer enablePrettyPrinting]]
 ]
 
 { #category : #accessing }
@@ -268,6 +269,25 @@ XMLNodeWithChildren >> postCopy [
 
 	nodes
 		ifNotNil: [nodes := nodes deepCopyWithObserver: self].
+]
+
+{ #category : #printing }
+XMLNodeWithChildren >> printInnerXMLOn: aStream [
+	self
+		printInnerXMLOn: aStream
+		beforeWritingDo: [:writer | ]
+]
+
+{ #category : #printing }
+XMLNodeWithChildren >> printInnerXMLOn: aStream beforeWritingDo: aBlock [
+	self hasChildren
+		ifTrue: [
+			self
+				withNewXMLWriterOn: aStream
+				do: [:writer |
+					aBlock value: writer.
+					self writeInnerXMLOn: writer.
+					writer write]]
 ]
 
 { #category : #removing }

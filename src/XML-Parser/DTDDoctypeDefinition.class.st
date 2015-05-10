@@ -41,6 +41,14 @@ DTDDoctypeDefinition >> addExternalParameterEntity: aName resolver: aResolver ur
 ]
 
 { #category : #adding }
+DTDDoctypeDefinition >> addGeneralEntitiesFrom: aDoctypeDefinition [
+	aDoctypeDefinition generalEntities keysAndValuesDo: [:name :entity |
+		self generalEntities
+			at: name
+			ifAbsentPut: [entity]]
+]
+
+{ #category : #adding }
 DTDDoctypeDefinition >> addGeneralEntity: aName replacement: aReplacement from: aDocumentOrEntityURI [
 	self generalEntities
 		at: aName

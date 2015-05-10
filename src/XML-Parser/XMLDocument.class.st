@@ -67,9 +67,19 @@ XMLDocument >> errorAddingDoctypeDeclarationWithParent [
 	XMLDOMException signal: 'Cannot add doctype declaration node with parent'
 ]
 
+{ #category : #testing }
+XMLDocument >> hasDoctypeDeclaration [
+	^ self doctypeDeclaration notNil
+]
+
+{ #category : #testing }
+XMLDocument >> hasDoctypeDefinition [
+	^ self doctypeDefinition notNil
+]
+
 { #category : #private }
 XMLDocument >> innerXMLContext [
-	^ XMLXMLDeclarationContext new
+	^ XMLPostDoctypeDeclarationContext new
 ]
 
 { #category : #testing }
@@ -139,8 +149,8 @@ XMLDocument >> version: aVersionNumber [
 
 { #category : #printing }
 XMLDocument >> writeDoctypeDeclarationOn: aWriter [
-	self doctypeDeclaration
-		ifNotNil: [self doctypeDeclaration writeXMLOn: aWriter]
+	self hasDoctypeDeclaration
+		ifTrue: [self doctypeDeclaration writeXMLOn: aWriter]
 ]
 
 { #category : #printing }

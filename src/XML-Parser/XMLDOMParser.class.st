@@ -174,15 +174,10 @@ XMLDOMParser >> parser [
 	| parser |
 
 	parser := super parser.
-	self topNode
-		ifNotNil: [:root |
-			parser context: root innerXMLContext.
-			self nodeStack do: [:each |
-				each isElement
-					ifTrue: [
-						self
-							startInnerXMLElement: each
-							forParser: parser]]].
+	self document
+		ifNotNil: [self setupInnerXMLDocumentForParser: parser].
+	self nodeStack isEmpty
+		ifFalse: [self setupInnerXMLNodesForParser: parser].
 	^ parser.
 ]
 
@@ -257,6 +252,25 @@ XMLDOMParser >> pushInnerXMLRootNode: aRootNode [
 XMLDOMParser >> pushNode: aNode [
 	^ self nodeStack addLast: aNode
 
+]
+
+{ #category : #private }
+XMLDOMParser >> setupInnerXMLDocumentForParser: aParser [
+	self document hasDoctypeDefinition
+		ifTrue: [
+			aParser driver doctypeDefinition addGeneralEntitiesFrom:
+				self document doctypeDefinition]
+]
+
+{ #category : #private }
+XMLDOMParser >> setupInnerXMLNodesForParser: aParser [
+	self nodeStack do: [:each |
+		each isElement
+			ifTrue: [
+				self
+					startInnerXMLElement: each
+					forParser: aParser]].
+	aParser context: self topNode innerXMLContext.
 ]
 
 { #category : #'handling - lexical' }

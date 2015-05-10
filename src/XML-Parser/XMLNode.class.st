@@ -86,12 +86,8 @@ XMLNode >> canonicallyEquals: aNode [
 XMLNode >> canonicallyPrintOn: aStream [
  	"Prints on aStream as canonical XML"
 	self
-		withNewXMLWriterOn: aStream
-		do: [:writer |
-			writer
-				isCanonical: true;
-				writeWith: [self writeXMLOn: writer]]
-		whenAbsent: [self printOn: aStream]
+		printOn: aStream
+		beforeWritingDo: [:writer | writer isCanonical: true]
 ]
 
 { #category : #printing }
@@ -245,12 +241,8 @@ XMLNode >> postCopy [
 XMLNode >> prettyPrintOn: aStream [
  	"Prints XML with whitespace formatting for readability"
 	self
-		withNewXMLWriterOn: aStream
-		do: [:writer |
-			writer
-				enablePrettyPrinting;
-				writeWith: [self writeXMLOn: writer]]
-		whenAbsent: [self printOn: aStream]
+		printOn: aStream
+		beforeWritingDo: [:writer | writer enablePrettyPrinting]
 ]
 
 { #category : #printing }
@@ -273,10 +265,24 @@ XMLNode >> printContentOn: aStream [
 
 { #category : #printing }
 XMLNode >> printOn: aStream [
+	"uses XMLWriter if supported, otherwise uses basic Object>>printOn:"
 	self
 		withNewXMLWriterOn: aStream
-		do: [:writer | writer writeWith: [self writeXMLOn: writer]]
+		do: [:writer |
+			self writeXMLOn: writer.
+			writer write]
 		whenAbsent: [super printOn: aStream]
+]
+
+{ #category : #printing }
+XMLNode >> printOn: aStream beforeWritingDo: aBlock [
+	"used to customize printOn:. raises error without XMLWriter support"
+	self
+		withNewXMLWriterOn: aStream
+		do: [:writer |
+			aBlock value: writer.
+			self writeXMLOn: writer.
+			writer write]
 ]
 
 { #category : #printing }
@@ -287,12 +293,8 @@ XMLNode >> printRawContentOn: aStream [
 { #category : #printing }
 XMLNode >> printWithoutSelfClosingTagsOn: aStream [
 	self
-		withNewXMLWriterOn: aStream
-		do: [:writer |
-			writer
-				outputsSelfClosingTags: false;
-				writeWith: [self writeXMLOn: writer]]
-		whenAbsent: [self printOn: aStream]
+		printOn: aStream
+		beforeWritingDo: [:writer | writer outputsSelfClosingTags: false]
 ]
 
 { #category : #printing }
@@ -346,6 +348,8 @@ XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock whenAbsent: aZeroArgBloc
 
 { #category : #printing }
 XMLNode >> writeXMLOn: aWriter [
+	"Template method used by nodes to write on XMLWriters.
+	Send with customized XMLWriter for custom printing"
 ]
 
 { #category : #private }

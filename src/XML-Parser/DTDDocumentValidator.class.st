@@ -33,11 +33,6 @@ DTDDocumentValidator >> doctypeDefinition: aDoctypeDefinition [
 ]
 
 { #category : #accessing }
-DTDDocumentValidator >> elementIDValidator [
-	self doctypeDefinition elementIDValidator
-]
-
-{ #category : #accessing }
 DTDDocumentValidator >> elementValidatorFor: aName [
 	^ (self doctypeDefinition elementValidators
 		at: aName
