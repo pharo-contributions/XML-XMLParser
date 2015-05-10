@@ -75,6 +75,30 @@ XMLDocumentTest >> testEncoding [
 ]
 
 { #category : #tests }
+XMLDocumentTest >> testHasDoctypeDeclaration [
+	| document |
+
+	document := self nodeClass new.
+	self deny: document hasDoctypeDeclaration.
+	document doctypeDeclaration: XMLDoctypeDeclaration new.	
+	self assert: document hasDoctypeDeclaration.
+	document doctypeDeclaration: nil.
+	self deny: document hasDoctypeDeclaration.
+]
+
+{ #category : #tests }
+XMLDocumentTest >> testHasDoctypeDefinition [
+	| document |
+
+	document := self nodeClass new.
+	self deny: document hasDoctypeDefinition.
+	document doctypeDefinition: DTDDoctypeDefinition new.
+	self assert: document hasDoctypeDefinition.
+	document doctypeDefinition: nil.
+	self deny: document hasDoctypeDefinition.
+]
+
+{ #category : #tests }
 XMLDocumentTest >> testIsDocument [
 	self assert: self nodeClass new isDocument
 ]

@@ -426,13 +426,48 @@ XMLDOMParserTest >> testInnerXMLDocument [
 		assert: ((document innerXML: '<new-root/>') root isNamed: 'new-root');
 		assert: document innerXML = '<new-root />';
 		assert: ((document root innerXML: 'test') contentString = 'test');
-		assert: document root innerXML = 'test';
-		assert:
-			(document innerXML: self addressBookXMLWithDTD) printString =
-				(XMLDOMParser parse: self addressBookXMLWithDTD) printString.
+		assert: document root innerXML = 'test'.
+	
+	document := XMLDOMParser parse: self addressBookXMLWithDTD.
+	self assert:
+		(document innerXML: document innerXML) printString =
+			(XMLDOMParser parse: self addressBookXMLWithDTD) printString.
+	self
+		should: [document innerXML: self addressBookXMLWithDTD]
+		raise: XMLWellFormednessException.
+
+	document := XMLDOMParser parse: '<root/>'.
 	self
 		should: [document innerXML: '<root1/><root2/>']
 		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testInnerXMLEntities [
+	| document |
+
+	document :=
+		XMLDOMParser parse:
+			'<!DOCTYPE test [
+					<!ENTITY one "one">
+					<!ENTITY two "two">
+				]>
+			<test name="&one;">&one;</test>'.
+	self
+		assert: (document root attributeAt: 'name') = 'one';
+		assert: document root contentString = 'one'.
+
+	document innerXML: '<test name="&two;">&two;</test>'.
+	self
+		assert: (document root attributeAt: 'name') = 'two';
+		assert: document root contentString = 'two'.
+
+	self
+		should: [document innerXML: '<test name="&three;"></test>']
+		raise: XMLValidationException.
+	self
+		should: [document innerXML: '<test name="">&four;</test>']
+		raise: XMLValidationException.
 ]
 
 { #category : #'tests - internal subset' }
