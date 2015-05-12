@@ -154,11 +154,6 @@ ConfigurationOfXMLParser class >> metacelloVersion: versionString loads: anArray
 ]
 
 { #category : #accessing }
-ConfigurationOfXMLParser class >> pharoGTVersions [
-	^ #(#'pharo4.x' #'pharo5.x') copy
-]
-
-{ #category : #accessing }
 ConfigurationOfXMLParser class >> project [
 
 	^self new project
@@ -230,7 +225,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 
 	"load gemstone compatibility methods"
 	spec
-		for: #'gemstone'
+		for: #gemstone
 		do: [
 			spec
 				package: 'XML-Parser'
@@ -241,7 +236,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 
 	"load GT extension methods"
 	spec
-		for: self class pharoGTVersions
+		for: #gt
 		do: [
 			spec
 				package: 'XML-Parser'
@@ -466,8 +461,18 @@ ConfigurationOfXMLParser >> baseline241: spec [
 		for: #gemstone
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.10' ].
 	spec
-		for: self class pharoGTVersions
+		for: #gt
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.1' ]
+]
+
+{ #category : #accessing }
+ConfigurationOfXMLParser >> customProjectAttributes [
+    "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
+	For more information see: http://code.google.com/p/metacello/wiki/CustomProjectAttrributes "
+
+	(Smalltalk includesKey: #GTInspector)
+		ifTrue: [ ^ #(gt) ]
+		ifFalse: [ ^ #() ]
 ]
 
 { #category : #'symbolic versions' }
@@ -480,15 +485,15 @@ ConfigurationOfXMLParser >> development: spec [
 
 { #category : #accessing }
 ConfigurationOfXMLParser >> project [
-
-	^ project ifNil: [ | constructor |
-		"Bootstrap Metacello if it is not already loaded"
-		self class ensureMetacello.
-		"Construct Metacello project"
-		constructor := (Smalltalk at: #MetacelloVersionConstructor) on: self.
-		project := constructor project.
-		project loadType: #linear. "change to #atomic if desired"
-		project ]
+	^ project
+		ifNil: [ 
+			| constructor |
+			"Bootstrap Metacello if it is not already loaded"
+			self class ensureMetacello.
+			project := MetacelloMCProject new projectAttributes: self customProjectAttributes.	"Construct Metacello project"
+			constructor := (Smalltalk at: #MetacelloVersionConstructor) on: self project: project.
+			project loadType: #linear.	"change to #atomic if desired"
+			project ]
 ]
 
 { #category : #'symbolic versions' }
