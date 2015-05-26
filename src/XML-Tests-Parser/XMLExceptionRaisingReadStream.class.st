@@ -20,9 +20,14 @@ XMLExceptionRaisingReadStream >> atEnd [
 	^ stream atEnd
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #closing }
 XMLExceptionRaisingReadStream >> close [
 	stream close
+]
+
+{ #category : #testing }
+XMLExceptionRaisingReadStream >> isBinary [
+	^ false
 ]
 
 { #category : #testing }

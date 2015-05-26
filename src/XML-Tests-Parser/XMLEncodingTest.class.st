@@ -61,7 +61,7 @@ XMLEncodingTest >> testDecodingCharacters [
 			<test-data>&#{1};</test-data>'.
 
 	document := XMLDOMParser parse: (xml format: (Array with: '8230')).
-	self assert: document root contentString first charCode = 8230.
+	self assert: document root contentString first asciiValue = 8230.
 
 	self
 		should: [XMLDOMParser parse: (xml format: (Array with: ''))]
@@ -255,6 +255,24 @@ XMLEncodingTest >> testEncodingDeclarationUTF8 [
 			SAXHandler parse:
 				(self convertableStreamOn: (self encodingDeclaration: 'UTF-8'), self sourceXML)]
 		raise: XMLParserException.
+]
+
+{ #category : #tests }
+XMLEncodingTest >> testExternalReadStreamDecoder [
+	| readStreamAdapter |
+
+	readStreamAdapter :=
+		XMLDecodingReadStreamAdapter onExternalStream: 
+			(self convertableStreamOn:
+				self utf16LittleEndianBOM, (self toUTF16: self sourceXML littleEndian: true)).
+
+	self
+		shouldnt: [SAXHandler parse: readStreamAdapter]
+		raise: XMLParserException.
+
+	self
+		assert: readStreamAdapter atEnd;
+		assert: (readStreamAdapter streamDecoder isKindOf: XMLUTF16StreamDecoder).
 ]
 
 { #category : #tests }

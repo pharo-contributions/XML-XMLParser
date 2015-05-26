@@ -153,7 +153,7 @@ XMLExternalEntityLimitsTest >> testRemoveLimits [
 		assert: resolver externalSubsetReadLimit isNil;
 		assert: resolver maxExternalEntities isNil;
 		assert: resolver maxExternalEntitySize isNil;
-		assert: resolver resolvesLocalFromNonLocal isNil.
+		assert: resolver resolvesLocalFromNonLocal.
 ]
 
 { #category : #tests }
