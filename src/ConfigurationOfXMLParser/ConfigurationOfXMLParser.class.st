@@ -170,8 +170,8 @@ ConfigurationOfXMLParser >> baseline10: spec [
 	<version: '1.0-baseline'>
 
 	"default baseline inherited by others, describes basic dependencies.
-	other baselines that inherit choose concrete versions of projects
-	that need it while for the rest loading #stable is enough"
+	other baselines that inherit pick concrete project versions
+	if loading #stable isn't enough"
 	spec
 		for: #common
 		do: [ 
@@ -190,7 +190,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 					spec 
 						className: 'ConfigurationOfXMLWriter';
 						versionString: #stable;
-						loads: #('default'); 
+						loads: 'default'; 
 						repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLWriter/main'.].
 			spec
 				project: 'BitmapCharacterSet'
@@ -198,7 +198,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 					spec 
 						className: 'ConfigurationOfBitmapCharacterSet';
 						versionString: #stable;
-						loads: #('Core'); 
+						loads: 'Core'; 
 						repository: 'http://www.smalltalkhub.com/mc/PharoExtras/BitmapCharacterSet/main'.].
 
 			"#stable is fine, the public API doesn't change to backwards incompatible"
@@ -208,7 +208,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 					spec 
 						className: 'ConfigurationOfOrderPreservingDictionary';
 						versionString: #stable; 
-						loads: #('Core'); 
+						loads: 'Core'; 
 						repository: 'http://smalltalkhub.com/mc/PharoExtras/OrderPreservingDictionary/main'].	
 
 			spec 
@@ -218,9 +218,11 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				package: 'XML-Tests-Parser'
 				with: [ spec requires: #('XML-Parser' 'XMLWriter') ].
 			
+			"Core was made to only load XMLParser, CoreWithWriting loads XMLParser and XMLWriter"
 			spec
 				group: 'default' with: #('Core' 'Tests');
 				group: 'Core' with: #('XML-Parser');
+				group: 'CoreWithWriting' with: #('XML-Parser' 'XMLWriter');
 				group: 'Tests' with: #('XML-Tests-Parser') ].
 
 	"load gemstone compatibility methods"
@@ -465,6 +467,23 @@ ConfigurationOfXMLParser >> baseline241: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.1' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline244: spec [
+	<version: '2.4.4-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.2'.
+			spec project: 'BitmapCharacterSet' with: '1.1.5' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.10' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.1' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParser >> customProjectAttributes [
     "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -479,7 +498,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.4.1-baseline'.
+	spec for: #'common' version: '2.4.4-baseline'.
 
 ]
 
@@ -497,10 +516,18 @@ ConfigurationOfXMLParser >> project [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release2: spec [
+	<symbolicVersion: #'release-2'>
+
+	spec for: #'common' version: '2.4.4'.
+]
+
+{ #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '2.4.3'.
+	"delegates to a release version from now on"
+	spec for: #'common' version: #'release-2'.
 ]
 
 { #category : #versions }
@@ -2046,5 +2073,16 @@ ConfigurationOfXMLParser >> version243: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.311'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.126'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version244: spec [ 
+        <version: '2.4.4' imports: #('2.4.4-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.312'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.127'.
                 ].
 ]
