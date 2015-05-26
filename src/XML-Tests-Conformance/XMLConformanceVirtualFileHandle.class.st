@@ -25,12 +25,16 @@ XMLConformanceVirtualFileHandle >> get [
 	sourceSelector := sourceClass sourceSelectorForPath: virtualPath.
 	(sourceClass respondsTo: sourceSelector)
 		ifFalse: [XMLFileException signal: 'Cannot retrieve ', virtualPath].
-
-	^ (sourceClass perform: sourceSelector) readStream.
+	^ sourceClass perform: sourceSelector.
 ]
 
 { #category : #initialization }
 XMLConformanceVirtualFileHandle >> setVirtualPath: aPath sourceClass: aClass [
 	virtualPath := aPath.
 	sourceClass := aClass.
+]
+
+{ #category : #retrieving }
+XMLConformanceVirtualFileHandle >> streamGet [
+	^ self get readStream
 ]

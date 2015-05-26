@@ -55,15 +55,19 @@ XMLConformanceTests class >> buildPassingTestMethodFor: aFileReference in: aClas
 
 { #category : #'building subclasses' }
 XMLConformanceTests class >> buildSkippableTestsMethodsFromFailures [
-	"Run this after possibly fixing a failing skipped test.
-	If fixed, it will be excluded form the list of skippable tests.
+	"Run this after possibly fixing a failing skipped test so it
+	will be excluded form the list of skippable tests.
 
-	self buildSkippableTestsMethodsFromFailures"
+	self buildSkippableTestsMethodsFromFailures
+	"
 
 	self buildDefaultSkippableTestsMethods.
 	self allSubclassesDo: [:testCaseClass | | result failures methodSource |
 		result := testCaseClass buildSuite run.
-		failures := result failures collect: [:each | each selector asString].
+		failures := OrderedCollection new.
+		result failures do: [:each | failures addLast: each selector asString].
+		failures sort.
+
 		methodSource :=
 			(String streamContents: [:stream |
 				stream nextPutAll: 'skippableTests
