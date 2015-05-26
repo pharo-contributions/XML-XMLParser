@@ -178,12 +178,14 @@ ConfigurationOfXMLParserHTML >> baseline100: spec [
 { #category : #baselines }
 ConfigurationOfXMLParserHTML >> baseline114: spec [
 	<version: '1.1.4-baseline' imports: #('1.0.0-baseline')>
-
-		spec for: #gemstone do: [
+	spec
+		for: #common
+		do: [ spec project: 'XMLParser' with: #'release-2' ].
+	spec
+		for: #gemstone
+		do: [ 
 			spec blessing: #baseline.
-			spec
-				package: 'XML-Parser-HTML-GemstoneCompatibility'
-				with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'. ].
+			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
 ]
 
 { #category : #accessing }
@@ -218,7 +220,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.1.8'.
+	spec for: #'common' version: '1.1.9'.
 
 ]
 
@@ -428,5 +430,16 @@ ConfigurationOfXMLParserHTML >> version118: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.26'.
 			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.13'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version119: spec [ 
+        <version: '1.1.9' imports: #('1.1.4-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.27'.
+			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.14'.
                 ].
 ]
