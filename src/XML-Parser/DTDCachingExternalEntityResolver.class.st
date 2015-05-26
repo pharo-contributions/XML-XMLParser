@@ -1,5 +1,5 @@
 "
-This resolver can cache entities so they don't have to be retrieved again (like over HTTP). (The default resolver)
+This resolver can cache non-local entities so they don't have to be retrieved again (like over HTTP). (The default resolver)
 "
 Class {
 	#name : #DTDCachingExternalEntityResolver,
@@ -19,6 +19,11 @@ DTDCachingExternalEntityResolver class >> clearEntityCache [
 { #category : #accessing }
 DTDCachingExternalEntityResolver class >> entityCache [
 	^ entityCache ifNil: [entityCache := XMLKeyValueCache maxSize: 64]
+]
+
+{ #category : #accessing }
+DTDCachingExternalEntityResolver class >> entityCacheAt: aURI [
+	^ self entityCache at: aURI
 ]
 
 { #category : #accessing }
@@ -52,6 +57,22 @@ DTDCachingExternalEntityResolver class >> maxCachedEntities: anInteger [
 	self entityCache maxSize: anInteger
 ]
 
+{ #category : #private }
+DTDCachingExternalEntityResolver >> cachingResolveEntityURI: aURIOrURIString [
+	| uri |
+
+	uri := aURIOrURIString asXMLURI.
+	^ self class
+		entityCacheAt: uri
+		ifAbsentPut: [
+			self resolveEntityWith: [:maxSize | uri getUpToLimit: maxSize]]
+]
+
+{ #category : #private }
+DTDCachingExternalEntityResolver >> cachingStreamResolveEntityURI: aURIOrURIString [
+	^ (self cachingResolveEntityURI: aURIOrURIString) readStream
+]
+
 { #category : #clearing }
 DTDCachingExternalEntityResolver >> clearEntityCache [
 	self class clearEntityCache
@@ -68,14 +89,19 @@ DTDCachingExternalEntityResolver >> maxCachedEntities: anInteger [
 ]
 
 { #category : #resolving }
-DTDCachingExternalEntityResolver >> resolveEntityURI: aURI [
+DTDCachingExternalEntityResolver >> resolveEntityURI: aURIOrURIString [
 	| uri |
 
-	^ (uri := aURI asXMLURI) isLocalURI
-		ifTrue: [super resolveEntityURI: uri]
-		ifFalse: [
-			(self class
-				entityCacheAt: uri
-				ifAbsentPut: [(super resolveEntityURI: uri) contents])
-					readStream]
+	(uri := aURIOrURIString asXMLURI) isLocalURI
+		ifTrue: [^ super resolveEntityURI: uri]
+		ifFalse: [^ self cachingResolveEntityURI: uri]
+]
+
+{ #category : #resolving }
+DTDCachingExternalEntityResolver >> streamResolveEntityURI: aURIOrURIString [
+	| uri |
+
+	(uri := aURIOrURIString asXMLURI) isLocalURI
+		ifTrue: [^ super streamResolveEntityURI: uri]
+		ifFalse: [^ self cachingStreamResolveEntityURI: uri]
 ]

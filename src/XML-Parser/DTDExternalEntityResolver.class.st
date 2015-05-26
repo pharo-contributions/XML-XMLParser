@@ -19,15 +19,14 @@ DTDExternalEntityResolver >> checkExternalEntityLimit [
 ]
 
 { #category : #combining }
-DTDExternalEntityResolver >> combineSourceURI: aSourceURI withEntityURI: anEntityURI [
+DTDExternalEntityResolver >> combineSourceURI: aSourceURIOrURIString withEntityURI: anEntityURIOrURIString [
 	| sourceURI combinedURI |
 
-	sourceURI := aSourceURI asXMLURI.
-	combinedURI := sourceURI / anEntityURI.
+	sourceURI := aSourceURIOrURIString asXMLURI.
+	combinedURI := sourceURI / anEntityURIOrURIString.
 	(combinedURI isLocalURI
 		and: [sourceURI isLocalURI not
-			and: [self resolvesLocalFromNonLocal notNil
-				and: [self resolvesLocalFromNonLocal not]]])
+			and: [self resolvesLocalFromNonLocal not]])
 		ifTrue: [self errorLocalFromNonLocal].
 
 	^ combinedURI.
@@ -97,58 +96,52 @@ DTDExternalEntityResolver >> removeLimits [
 ]
 
 { #category : #resolving }
-DTDExternalEntityResolver >> resolveEntityURI: aURI [
-	| readStream |
-
-	self checkExternalEntityLimit.
-	readStream := aURI asXMLURI getUpToLimit: self maxExternalEntitySize.
-	self incrementEntityTotal.
-
-	^ readStream.
-]
-
-{ #category : #resolving }
-DTDExternalEntityResolver >> resolveEntityURI: aURI from: aSourceURI [
-	^ self resolveEntityURI:
-		(self
-			combineSourceURI: aSourceURI
-			withEntityURI: aURI)
+DTDExternalEntityResolver >> resolveEntityURI: aURIOrURIString [
+	^ self resolveEntityWith: [:maxSize |
+		aURIOrURIString asXMLURI getUpToLimit: maxSize]
 ]
 
 { #category : #private }
-DTDExternalEntityResolver >> resolveExternalEntity: aName uri: anEntityURI from: aSourceURI class: aClass [
-	| combinedURI replacement replacementStream |
+DTDExternalEntityResolver >> resolveEntityWith: aBlock [
+	| result |
+
+	self checkExternalEntityLimit.
+	result := aBlock value: self maxExternalEntitySize.
+	self incrementEntityTotal.
+
+	^ result.
+]
+
+{ #category : #private }
+DTDExternalEntityResolver >> resolveExternalEntity: aName uri: anEntityURIOrURIString from: aSourceURIOrURIString class: aClass [
+	| combinedURI |
 
 	combinedURI :=
 		self
-			combineSourceURI: aSourceURI
-			withEntityURI: anEntityURI.
-
-	replacementStream := self resolveEntityURI: combinedURI.
-	replacement  := replacementStream contents.
-	replacementStream close.
+			combineSourceURI: aSourceURIOrURIString
+			withEntityURI: anEntityURIOrURIString.
 
 	^ aClass
 		name: aName
-		replacement: replacement
+		replacement: (self resolveEntityURI: combinedURI)
 		uri: combinedURI asString.
 ]
 
 { #category : #resolving }
-DTDExternalEntityResolver >> resolveExternalGeneralEntity: aName uri: anEntityURI from: aSourceURI [
+DTDExternalEntityResolver >> resolveExternalGeneralEntity: aName uri: anEntityURIOrURIString from: aSourceURIOrURIString [
 	^ self
 		resolveExternalEntity: aName
-		uri: anEntityURI
-		from: aSourceURI
+		uri: anEntityURIOrURIString
+		from: aSourceURIOrURIString
 		class: DTDExternalGeneralEntity
 ]
 
 { #category : #resolving }
-DTDExternalEntityResolver >> resolveExternalParameterEntity: aName uri: anEntityURI from: aSourceURI [
+DTDExternalEntityResolver >> resolveExternalParameterEntity: aName uri: anEntityURIOrURIString from: aSourceURIOrURIString [
 	^ self
 		resolveExternalEntity: aName
-		uri: anEntityURI
-		from: aSourceURI
+		uri: anEntityURIOrURIString
+		from: aSourceURIOrURIString
 		class: DTDExternalParameterEntity
 ]
 
@@ -159,7 +152,16 @@ DTDExternalEntityResolver >> resolvesLocalFromNonLocal [
 
 { #category : #configuring }
 DTDExternalEntityResolver >> resolvesLocalFromNonLocal: aBoolean [
+	"allow non-local (http) entities to reference local (file) entities?
+	(default disabled)"
+
 	self externalEntityLimits resolvesLocalFromNonLocal: aBoolean
+]
+
+{ #category : #resolving }
+DTDExternalEntityResolver >> streamResolveEntityURI: aURIOrURIString [
+	^ self resolveEntityWith: [:maxSize |
+		aURIOrURIString asXMLURI streamGetUpToLimit: maxSize]
 ]
 
 { #category : #private }

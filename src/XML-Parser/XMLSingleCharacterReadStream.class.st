@@ -25,7 +25,7 @@ XMLSingleCharacterReadStream >> basicNext [
 	^ self next
 ]
 
-{ #category : #'file open/close' }
+{ #category : #closing }
 XMLSingleCharacterReadStream >> close [
 ]
 

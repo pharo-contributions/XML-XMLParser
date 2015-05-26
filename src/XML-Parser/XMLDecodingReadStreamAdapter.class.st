@@ -1,5 +1,5 @@
 "
-This stream adapter decodes stream contents using a stream decoder.
+A read stream adapter that decodes stream contents using a stream decoder.
 "
 Class {
 	#name : #XMLDecodingReadStreamAdapter,
@@ -20,8 +20,21 @@ XMLDecodingReadStreamAdapter class >> on: aStream [
 
 { #category : #'instance creation' }
 XMLDecodingReadStreamAdapter class >> on: aStream streamDecoder: aDecoder [
-	^ (self new on: aStream)
-		streamDecoder: aDecoder
+	^ (self new on: aStream) streamDecoder: aDecoder
+]
+
+{ #category : #'instance creation' }
+XMLDecodingReadStreamAdapter class >> onExternalStream: aReadStream [
+	^ self on: (XMLBinaryReadStreamAdapter onStreamIfBinary: aReadStream)
+]
+
+{ #category : #'instance creation' }
+XMLDecodingReadStreamAdapter class >> onStreamIfBinary: aStream [
+	| streamAdapter |
+
+	(streamAdapter := XMLBinaryReadStreamAdapter onStreamIfBinary: aStream) == aStream
+		ifTrue: [^ aStream]
+		ifFalse: [^ self on: streamAdapter]
 ]
 
 { #category : #testing }
@@ -34,6 +47,11 @@ XMLDecodingReadStreamAdapter >> basicNext [
 	stream atEnd
 		ifTrue: [^ nil]
 		ifFalse: [^ stream next].
+]
+
+{ #category : #testing }
+XMLDecodingReadStreamAdapter >> isDecodingReadStreamAdapter [
+	^ true
 ]
 
 { #category : #accessing }

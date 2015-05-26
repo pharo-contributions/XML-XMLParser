@@ -5,7 +5,7 @@ To instantiate a SAXHandler, send any of the #on: or #parse- messages to a subcl
 
 The class-side #parse- messages take some input source and parse it immediately, returning the result:
 	SAXHandlerSubclass parse: xml.
-	SAXHandlerSubclass parseURL: aUrl. 
+	SAXHandlerSubclass parseURL: url.
 	SAXHandlerSubclass parse: xml usingNamespaces: false
 
 The #on: messages create new parsers on the given input string, stream, URL, or file and return it; the instance can then be further configured and ultimately sent #parseDocument to parse the input:
@@ -68,7 +68,9 @@ SAXHandler class >> onFileNamed: aFilePathString [
 	"Returns new parser on the specified file but doesn't parse"
 
 	^ self
-		on: (XMLFileHandle path: aFilePathString) readStream
+		on:
+			(XMLDecodingReadStreamAdapter onExternalStream:
+				(XMLFileHandle path: aFilePathString) readStream)
 		documentURI: aFilePathString
 ]
 
@@ -87,9 +89,10 @@ SAXHandler class >> onURL: aURLString upToLimit: aLimit [
 	the input limit (use nil to disable) but doesn't parse"
 
 	^ (self
-		on: (aURLString asXMLURI getUpToLimit: aLimit)
-		documentURI: aURLString)
-			documentReadLimit: aLimit
+		on:
+			(XMLDecodingReadStreamAdapter onExternalStream:
+				(aURLString asXMLURI streamGetUpToLimit: aLimit))
+		documentURI: aURLString) documentReadLimit: aLimit
 ]
 
 { #category : #parsing }
@@ -100,12 +103,12 @@ SAXHandler class >> parse: aStringOrStream [
 ]
 
 { #category : #parsing }
-SAXHandler class >> parse: aStringOrStream documentURI: aURI [
+SAXHandler class >> parse: aStringOrStream documentURI: aURIString [
 	"Parse document in argument string or stream with associated base URI"
 
 	^ (self
 		on: aStringOrStream
-		documentURI: aURI) parseDocument
+		documentURI: aURIString) parseDocument
 ]
 
 { #category : #parsing }
@@ -152,7 +155,7 @@ SAXHandler class >> parseDocumentFrom: aStringOrStream [
 SAXHandler class >> parseDocumentFromFileNamed: aFileName [
 	self deprecated: 'Use #parseFileNamed: instead'.
 
-	self parseFileNamed: aFileName.
+	^ self parseFileNamed: aFileName.
 ]
 
 { #category : #parsing }
@@ -248,12 +251,13 @@ SAXHandler >> documentReadLimit: aLimit [
 
 { #category : #accessing }
 SAXHandler >> documentURI [
+	"Returns current document base URI string"
 	^ documentURI ifNil: [documentURI := self defaultDocumentURI]
 ]
 
 { #category : #accessing }
-SAXHandler >> documentURI: aURI [
-	documentURI := aURI
+SAXHandler >> documentURI: aURIString [
+	documentURI := aURIString
 ]
 
 { #category : #private }

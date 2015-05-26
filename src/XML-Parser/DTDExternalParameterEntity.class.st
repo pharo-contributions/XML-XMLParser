@@ -11,3 +11,8 @@ Class {
 DTDExternalParameterEntity >> isExternal [
 	^ true
 ]
+
+{ #category : #accessing }
+DTDExternalParameterEntity >> replacementStream [
+	^ XMLDecodingReadStreamAdapter onExternalStream: super replacementStream
+]

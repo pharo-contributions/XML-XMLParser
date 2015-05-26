@@ -49,14 +49,14 @@ DTDDoctypeDefinition >> addGeneralEntitiesFrom: aDoctypeDefinition [
 ]
 
 { #category : #adding }
-DTDDoctypeDefinition >> addGeneralEntity: aName replacement: aReplacement from: aDocumentOrEntityURI [
+DTDDoctypeDefinition >> addGeneralEntity: aName replacement: aReplacement from: aDocumentOrEntityURIString [
 	self generalEntities
 		at: aName
 		ifAbsentPut: [
 			DTDGeneralEntity 
 				name: aName
 				replacement: aReplacement
-				uri: aDocumentOrEntityURI]
+				uri: aDocumentOrEntityURIString]
 ]
 
 { #category : #adding }
@@ -65,14 +65,14 @@ DTDDoctypeDefinition >> addNotation: aName [
 ]
 
 { #category : #adding }
-DTDDoctypeDefinition >> addParameterEntity: aName replacement: aReplacement from: aDocumentOrEntityURI [
+DTDDoctypeDefinition >> addParameterEntity: aName replacement: aReplacement from: aDocumentOrEntityURIString [
 	self parameterEntities
 		at: aName
 		ifAbsentPut: [
 			DTDParameterEntity
 				name: aName
 				replacement: aReplacement
-				uri: aDocumentOrEntityURI]
+				uri: aDocumentOrEntityURIString]
 ]
 
 { #category : #adding }

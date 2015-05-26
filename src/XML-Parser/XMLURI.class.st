@@ -185,7 +185,7 @@ XMLURI >> fromString: aString [
 
 { #category : #retrieving }
 XMLURI >> get [
-	^ self getUpToLimit: nil
+	^ self asRetrievableResource get
 ]
 
 { #category : #retrieving }
@@ -466,6 +466,16 @@ XMLURI >> setPathSegmentsFromString: aString [
 			$/
 				xmlParserSplit: aString
 				do: [:segment | pathSegments addLast: segment]].
+]
+
+{ #category : #retrieving }
+XMLURI >> streamGet [
+	^ self asRetrievableResource streamGet
+]
+
+{ #category : #retrieving }
+XMLURI >> streamGetUpToLimit: aMaxSize [
+	^ self asRetrievableResource streamGetUpToLimit: aMaxSize
 ]
 
 { #category : #accessing }

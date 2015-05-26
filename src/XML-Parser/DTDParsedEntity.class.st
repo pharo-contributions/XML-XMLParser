@@ -13,25 +13,25 @@ Class {
 }
 
 { #category : #'instance creation' }
-DTDParsedEntity class >> name: aString replacement: aValueString [
-	^ self new
-		setName: aString
-		replacement: aValueString
+DTDParsedEntity class >> name: aName replacement: aReplacementString [
+	^ self
+		name: aName
+		replacement: aReplacementString
 		uri: nil
 ]
 
 { #category : #'instance creation' }
-DTDParsedEntity class >> name: aString replacement: aValueString uri: aURI [
+DTDParsedEntity class >> name: aName replacement: aReplacementString uri: aURIString [
 	^ self new
-		setName: aString
-		replacement: aValueString
-		uri: aURI
+		setName: aName
+		replacement: aReplacementString
+		uri: aURIString
 ]
 
 { #category : #'instance creation' }
-DTDParsedEntity class >> named: aString [
+DTDParsedEntity class >> named: aName [
 	^ self
-		name: aString
+		name: aName
 		replacement: ''
 ]
 
@@ -93,11 +93,16 @@ DTDParsedEntity >> replacement [
 	^ replacement ifNil: [replacement := '']
 ]
 
+{ #category : #accessing }
+DTDParsedEntity >> replacementStream [
+	^ self replacement readStream
+]
+
 { #category : #initialization }
-DTDParsedEntity >> setName: aName replacement: aReplacement uri: aURI [
+DTDParsedEntity >> setName: aName replacement: aReplacementString uri: aURIString [
 	name := aName.
-	replacement := aReplacement.
-	uri := aURI.
+	replacement := aReplacementString.
+	uri := aURIString.
 ]
 
 { #category : #accessing }

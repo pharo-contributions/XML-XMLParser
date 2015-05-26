@@ -17,10 +17,14 @@ XMLZincHTTPRequest >> getResponseUpToLimit: aMaxSize withTimeout: aTimeout onErr
 	^ self
 		setZincMaxEntitySize: aMaxSize
 		during: [
+			"use streaming entities to get the undecoded response
+			to not conflict with our own decoding"
 			((Smalltalk at: #ZnClient) new
 				timeout: aTimeout;
+				streaming: true;
 				url: url;
-				get) readStream]
+				get;
+				entity) contents]
 		onError: aBlock
 ]
 
@@ -31,11 +35,12 @@ XMLZincHTTPRequest >> isMaxSizeException: anException [
 
 { #category : #private }
 XMLZincHTTPRequest >> setZincMaxEntitySize: aMaxSize during: aDuringBlock onError: anErrorBlock [
-	^ [(Smalltalk at: #ZnMaximumEntitySize)
-		value: aMaxSize
-		during: [
-			"value:during: doesn't return during block on gemstone"
-			^ aDuringBlock value]]
+	^ [
+		(Smalltalk at: #ZnMaximumEntitySize)
+			value: aMaxSize
+			during: [
+				"^ is for GS value:during: which does not return block result"
+				^ aDuringBlock value]]
 		on: Error
 		do: anErrorBlock
 ]

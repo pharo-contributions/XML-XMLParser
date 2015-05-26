@@ -98,7 +98,7 @@ XMLNestedStreamReader >> closeCurrentStream [
 	onClose ifNotNil: [onClose value].
 ]
 
-{ #category : #'file open/close' }
+{ #category : #closing }
 XMLNestedStreamReader >> closeStreams [
 	nestedStreams ifNotNil: [
 		[nestedStreams notEmpty]
@@ -126,7 +126,7 @@ XMLNestedStreamReader >> currentLineNumber [
 
 { #category : #encodings }
 XMLNestedStreamReader >> decodeStreamWithDecoder: aStreamDecoder [
-	(stream respondsTo: #streamDecoder:)
+	stream isDecodingReadStreamAdapter
 		ifTrue: [stream streamDecoder: aStreamDecoder]
 		ifFalse: [
 			stream :=
@@ -369,9 +369,7 @@ XMLNestedStreamReader >> stream [
 
 { #category : #accessing }
 XMLNestedStreamReader >> stream: aStream [
-	stream := 
-		(aStream atEnd
-			or: [aStream peek isCharacter])
-			ifTrue: [aStream]
-			ifFalse: [XMLBinaryReadStreamAdapter on: aStream]
+	aStream isDecodingReadStreamAdapter
+		ifTrue: [stream := aStream]
+		ifFalse: [stream := XMLDecodingReadStreamAdapter onStreamIfBinary: aStream]
 ]

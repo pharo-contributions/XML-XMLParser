@@ -66,14 +66,20 @@ XMLFileHandle >> fileSize [
 	self subclassResponsibility
 ]
 
-{ #category : #requesting }
+{ #category : #retrieving }
 XMLFileHandle >> get [
-	^ self readStream
+	^ self getUpToLimit: nil
 ]
 
-{ #category : #requesting }
+{ #category : #retrieving }
 XMLFileHandle >> getUpToLimit: aMaxSize [
-	^ self readStreamUpToLimit: aMaxSize
+	| stream contents |
+
+	stream := self streamGetUpToLimit: aMaxSize.
+	contents := stream contents.
+	stream close.
+
+	^ contents.
 ]
 
 { #category : #testing }
@@ -125,6 +131,16 @@ XMLFileHandle >> readStreamUpToLimit: aMaxSize [
 		ifTrue: [self errorFileSize: fileSize exceedsMaxSize: aMaxSize].
 
 	^ self readStreamOnFileOrDo: [:error | XMLFileException signalMessageFrom: error]
+]
+
+{ #category : #retrieving }
+XMLFileHandle >> streamGet [
+	^ self streamGetUpToLimit: nil
+]
+
+{ #category : #retrieving }
+XMLFileHandle >> streamGetUpToLimit: aMaxSize [
+	^ self readStreamUpToLimit: aMaxSize
 ]
 
 { #category : #writing }

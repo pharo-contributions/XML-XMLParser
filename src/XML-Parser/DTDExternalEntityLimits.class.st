@@ -69,7 +69,7 @@ DTDExternalEntityLimits >> removeAll [
 	externalSubsetReadLimit := nil.
 	maxExternalEntities := nil.
 	maxExternalEntitySize := nil.
-	resolvesLocalFromNonLocal := nil.
+	resolvesLocalFromNonLocal := true.
 ]
 
 { #category : #accessing }

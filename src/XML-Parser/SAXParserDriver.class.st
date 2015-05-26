@@ -129,27 +129,28 @@ SAXParserDriver >> externalEntityResolver [
 ]
 
 { #category : #private }
-SAXParserDriver >> externalSubsetParserOn: aStringOrStream documentURI: aURI [
+SAXParserDriver >> externalSubsetParserOn: aStringOrStream documentURI: aURIString [
 	^ self saxHandler parserClass
 		driver:
 			(DTDExternalSubsetParserDriver
 				saxDriver: self
-				documentURI: aURI)
+				documentURI: aURIString)
 		on: aStringOrStream
 ]
 
 { #category : #private }
-SAXParserDriver >> externalSubsetParserOnURI: aURI [
+SAXParserDriver >> externalSubsetParserOnURI: aURIString [
 	| combinedURI |
 
 	combinedURI :=
 		self externalEntityResolver
 			combineSourceURI: self documentURI
-			withEntityURI: aURI.
+			withEntityURI: aURIString.
 
 	^ self
 		externalSubsetParserOn:
-			(self externalEntityResolver resolveEntityURI: combinedURI)
+			(XMLDecodingReadStreamAdapter onExternalStream:
+				(self externalEntityResolver streamResolveEntityURI: combinedURI))
 		documentURI: combinedURI asString.
 ]
 

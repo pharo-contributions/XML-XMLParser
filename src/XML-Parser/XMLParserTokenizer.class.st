@@ -69,7 +69,7 @@ XMLParserTokenizer >> characterFromCodePoint: anInteger [
 		do: [:error | nil].
 ]
 
-{ #category : #'file open/close' }
+{ #category : #closing }
 XMLParserTokenizer >> closeStreams [
 	streamReader closeStreams
 ]

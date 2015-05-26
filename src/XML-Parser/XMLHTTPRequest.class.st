@@ -30,7 +30,7 @@ XMLHTTPRequest >> defaultTimeout [
 	^ 30
 ]
 
-{ #category : #requesting }
+{ #category : #retrieving }
 XMLHTTPRequest >> get [
 	^ self getUpToLimit: nil
 ]
@@ -40,7 +40,7 @@ XMLHTTPRequest >> getResponseUpToLimit: aMaxSize withTimeout: aTimeout onError: 
 	self subclassResponsibility
 ]
 
-{ #category : #requesting }
+{ #category : #retrieving }
 XMLHTTPRequest >> getUpToLimit: aMaxSize [
 	^ self
 		getResponseUpToLimit: aMaxSize
@@ -63,6 +63,16 @@ XMLHTTPRequest >> printOn: aStream [
 		nextPut: $(;
 		nextPutAll: url;
 		nextPut: $).
+]
+
+{ #category : #retrieving }
+XMLHTTPRequest >> streamGet [
+	^ self streamGetUpToLimit: nil
+]
+
+{ #category : #retrieving }
+XMLHTTPRequest >> streamGetUpToLimit: aMaxSize [
+	^ (self getUpToLimit: aMaxSize) readStream
 ]
 
 { #category : #accessing }

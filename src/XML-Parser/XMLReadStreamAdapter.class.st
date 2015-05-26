@@ -1,5 +1,5 @@
 "
-An abstract class for read stream adapters for basic read streams that support peek, next, and atEnd.
+An abstract class for read stream adapters for basic streams that support next, peek, and atEnd.
 "
 Class {
 	#name : #XMLReadStreamAdapter,
@@ -15,6 +15,11 @@ XMLReadStreamAdapter class >> on: aStream [
 	^ self new on: aStream
 ]
 
+{ #category : #'instance creation' }
+XMLReadStreamAdapter class >> onStreamIfBinary: aStream [
+	self subclassResponsibility
+]
+
 { #category : #testing }
 XMLReadStreamAdapter >> atEnd [
 	self subclassResponsibility
@@ -25,7 +30,7 @@ XMLReadStreamAdapter >> basicNext [
 	self subclassResponsibility
 ]
 
-{ #category : #'file open/close' }
+{ #category : #closing }
 XMLReadStreamAdapter >> close [
 	(stream respondsTo: #close)
 		ifTrue: [stream close]
@@ -46,7 +51,7 @@ XMLReadStreamAdapter >> next [
 	self subclassResponsibility
 ]
 
-{ #category : #'instance creation' }
+{ #category : #initialization }
 XMLReadStreamAdapter >> on: aStream [
 	stream := aStream
 ]
@@ -54,4 +59,9 @@ XMLReadStreamAdapter >> on: aStream [
 { #category : #accessing }
 XMLReadStreamAdapter >> peek [
 	self subclassResponsibility
+]
+
+{ #category : #accessing }
+XMLReadStreamAdapter >> stream [
+	^ stream
 ]
