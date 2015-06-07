@@ -40,12 +40,12 @@ DTDExternalSubsetParserDriver >> externalEntityResolver [
 ]
 
 { #category : #'handling - dtd' }
-DTDExternalSubsetParserDriver >> handleAttributeDeclaration: anElement name: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
+DTDExternalSubsetParserDriver >> handleAttributeDeclaration: anElement name: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	self isValidating
 		ifTrue: [
 			self doctypeDefinition
 				addValidatorForAttributeIn: anElement
-				named: aName
+				named: anAttribute
 				type: aType
 				defaultPragma: aDefaultPragma
 				defaultValue: aDefaultValue]

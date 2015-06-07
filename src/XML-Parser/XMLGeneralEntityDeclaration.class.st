@@ -25,8 +25,8 @@ XMLGeneralEntityDeclaration >> ndata [
 ]
 
 { #category : #accessing }
-XMLGeneralEntityDeclaration >> ndata: anNdata [
-	ndata := anNdata
+XMLGeneralEntityDeclaration >> ndata: aNotationName [
+	ndata := aNotationName
 ]
 
 { #category : #printing }

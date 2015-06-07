@@ -12,9 +12,9 @@ Class {
 }
 
 { #category : #'instance creation' }
-DTDContentModelParser class >> element: aName contentModel: aContentModel [
+DTDContentModelParser class >> element: anElement contentModel: aContentModel [
 	^ self new
-		setElement: aName
+		setElement: anElement
 		contentModel: aContentModel
 ]
 
@@ -35,7 +35,7 @@ DTDContentModelParser >> parse [
 ]
 
 { #category : #initialization }
-DTDContentModelParser >> setElement: aName contentModel: aContentModel [
-	element := aName.
+DTDContentModelParser >> setElement: anElement contentModel: aContentModel [
+	element := anElement.
 	contentModel := aContentModel.
 ]

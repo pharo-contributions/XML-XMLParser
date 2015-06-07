@@ -182,7 +182,7 @@ SAXHandler class >> parseURL: aURLString upToLimit: aLimit [
 ]
 
 { #category : #'handling - declarations' }
-SAXHandler >> attributeDeclaration: anElement name: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
+SAXHandler >> attributeDeclaration: anElementName name: anAttributeName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 ]
 
 { #category : #'handling - content' }
@@ -266,7 +266,7 @@ SAXHandler >> driverClass [
 ]
 
 { #category : #'handling - declarations' }
-SAXHandler >> elementDeclaration: aName contentModel: aContentModel [
+SAXHandler >> elementDeclaration: anElementName contentModel: aContentModel [
 
 ]
 
@@ -340,7 +340,7 @@ SAXHandler >> externalEntityResolver: anExternalEntityResolver [
 ]
 
 { #category : #'handling - declarations' }
-SAXHandler >> generalEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotation [
+SAXHandler >> generalEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotationName [
 ]
 
 { #category : #'handling - declarations' }

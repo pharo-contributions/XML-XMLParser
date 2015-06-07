@@ -36,7 +36,7 @@ XMLParserDriver >> documentURI [
 ]
 
 { #category : #'handling - dtd' }
-XMLParserDriver >> handleAttributeDeclaration: anElement name: anName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
+XMLParserDriver >> handleAttributeDeclaration: anElement name: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 ]
 
 { #category : #handling }

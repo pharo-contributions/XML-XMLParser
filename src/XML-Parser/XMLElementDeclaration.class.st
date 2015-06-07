@@ -12,9 +12,9 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLElementDeclaration class >> element: aName contentModel: aContentModel [
+XMLElementDeclaration class >> element: anElementName contentModel: aContentModel [
 	^ self new
-		element: aName;
+		element: anElementName;
 		contentModel: aContentModel
 ]
 
@@ -34,8 +34,8 @@ XMLElementDeclaration >> element [
 ]
 
 { #category : #accessing }
-XMLElementDeclaration >> element: aName [
-	element := aName
+XMLElementDeclaration >> element: anElementName [
+	element := anElementName
 ]
 
 { #category : #printing }

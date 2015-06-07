@@ -18,11 +18,11 @@ Class {
 }
 
 { #category : #'handling - declarations' }
-XMLDOMParser >> attributeDeclaration: anElement name: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
+XMLDOMParser >> attributeDeclaration: anElementName name: anAttributeName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	self topNode addNode:
 		(self nodeFactory attributeDeclarationClass
-			element: anElement
-			attribute: aName
+			element: anElementName
+			attribute: anAttributeName
 			type: aType
 			defaultPragma: aDefaultPragma
 			defaultValue: aDefaultValue)
@@ -68,10 +68,10 @@ XMLDOMParser >> document: aDocument [
 ]
 
 { #category : #'handling - declarations' }
-XMLDOMParser >> elementDeclaration: aName contentModel: aContentModel [
+XMLDOMParser >> elementDeclaration: anElementName contentModel: aContentModel [
 	self topNode addNode:
 		(self nodeFactory elementDeclarationClass
-			element: aName
+			element: anElementName
 			contentModel: aContentModel)
 ]
 
@@ -86,13 +86,13 @@ XMLDOMParser >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: 
 ]
 
 { #category : #'handling - declarations' }
-XMLDOMParser >> generalEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotation [
+XMLDOMParser >> generalEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotationName [
 	self topNode addNode:
 		(self nodeFactory generalEntityDeclarationClass
 			name: aName
 			publicID: aPublicID
 			systemID: aSystemID
-			ndata: aNotation)
+			ndata: aNotationName)
 ]
 
 { #category : #'handling - declarations' }

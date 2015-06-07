@@ -83,22 +83,22 @@ DTDDoctypeDefinition >> addUnparsedEntity: aName ndata: aNotation [
 ]
 
 { #category : #adding }
-DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: aName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
+DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	| attributeValidatorsForElement |
 
 	attributeValidatorsForElement :=
 		self attributeValidators
 			at: anElement
 			ifAbsentPut: [Dictionary new].
-	(attributeValidatorsForElement includesKey: aName)
+	(attributeValidatorsForElement includesKey: anAttribute)
 		ifTrue: [^ self].
 
 	attributeValidatorsForElement
-		at: aName
+		at: anAttribute
 		put: 
 			((DTDAttributeDefinitionParser
 				element:  anElement
-				attribute: aName
+				attribute: anAttribute
 				type: aType
 				defaultPragma: aDefaultPragma
 				defaultValue: aDefaultValue) parse
