@@ -474,7 +474,7 @@ ConfigurationOfXMLParser >> baseline244: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.2'.
+			spec project: 'XMLWriter' with: '2.6.3'.
 			spec project: 'BitmapCharacterSet' with: '1.1.5' ].
 	spec
 		for: #gemstone
@@ -2082,7 +2082,7 @@ ConfigurationOfXMLParser >> version244: spec [
 
         spec for: #common do: [
                 spec blessing: #release.
-			spec package: 'XML-Parser' with: 'XML-Parser-monty.313'.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.314'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.127'.
                 ].
 ]
