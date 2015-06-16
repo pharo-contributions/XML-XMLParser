@@ -1,5 +1,5 @@
 "
-This class places security limits on parser input. You can set these using the configuration messages in SAXHandler or remove them using removeLimits.
+This class places security limits on parser input. You can change them using configuration messages in SAXHandler or remove them with removeLimits.
 "
 Class {
 	#name : #XMLParserLimits,

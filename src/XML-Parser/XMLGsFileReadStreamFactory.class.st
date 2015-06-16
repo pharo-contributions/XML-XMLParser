@@ -1,5 +1,5 @@
 "
-A GsFile read stream factory. This stream is preferred for Gemstone because it does no encoding conversion so XMLParser can do its own.
+A GsFile read stream factory. This stream is preferred for Gemstone because it does no decoding so XMLParser can do its own.
 "
 Class {
 	#name : #XMLGsFileReadStreamFactory,

@@ -1,13 +1,13 @@
 "
-The class represents an element node. An element consists of a name and optionally attributes, namespace declarations and any number child nodes and elements.
+The class represents an element node, which has a qualified or unqualified name and optionally attributes, namespace declarations and child nodes.
 
-The name can consist of a local name only or a qualified name, which is a namespace prefix and local name separated by a colon. If the name is qualfied and namespace support is enabled (the default), then the prefix must be mapped to a namespace URI in the element or its parent at the time the name is set. The class-side instance creation #name:namespaceURI:* messages and #name:namespaces:* messages allow you set both simulaniously, as does the instance-side #name:namespaceURI: message. If namespace support is disabled, prefixes are ignored (not validated). You can test the name of an element using #isNamed: and #isNamedAny:, which test the qualified and local names of an element for a match.
+Element names can be tested using #isNamed: and #isNamedAny:, which test both the qualified and local name.
 
-Namespaces can be declared using #declareNamespace:uri:, using #declareNamespaces: with a collection of associations (where an empty prefix represents the default namespace) or simultaniously while changing the element's name using #name:namespaceURI:. The default namespace can be accessed through #defaultNamespace and #defaultNamespace:. When you print an element, the minimum number of xmlns declarations necessary for it to be valid will be printed. You can query an element's namespace information using #namespaceURI, #prefix, #expandedName. For an element to be namespaced, it must have a qualified name with a valid prefix or have a default namespace declaration in scope for it.
+If the name is qualfied and namespace support is enabled (the default), then the prefix must be mapped to a namespace URI in the element or an ancestor. The class-side instance creation #name:namespaceURI:* and #name:namespaces:* messages and the instance-side #name:namespaceURI: message can set both simulaniously. If namespace support is disabled, prefixes are ignored (not validated).
 
-The #attribute- messages provide a Dictionary-like prototcol for manipulating attribute nodes. Attribute value accessors return empty strings when the specified value is not present. The underlying attribute node list can be accessed using #attributeNodes, and an order-preserving dictionary of attribute names/values can be obtained using #attributes.
+The #attribute* messages provide a Dictionary-like prototcol for manipulating attribute nodes. Attribute value accessors return empty strings if the attribute is absent. The underlying attribute node list can be accessed using #attributeNodes (copy before modifying if you don't want to add/remove attribute nodes from the element), and the names/values can be obtained as an (order-preserving) dictionary using #attributes.
 
-See the comment for the superclass for how to access child nodes and elements.
+See the superclasses for more info.
 "
 Class {
 	#name : #XMLElement,
@@ -556,6 +556,7 @@ XMLElement >> validateWith: aValidator [
 	aValidator
 		validateStartTag: self name
 		attributes: attributeDictionary.
+	"validation can change/add attribute values"
 	self setAttributes: attributeDictionary.
 
 	super validateWith: aValidator.

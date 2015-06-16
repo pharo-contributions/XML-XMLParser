@@ -1,5 +1,5 @@
 "
-This class is an is an ordered list that sends notifications to observers when objects are added to it or removed from it. Subclasses should override the #beforeAdding:, #afterAdding: and #afterRemoving: messages to send custom notifications.
+This class is an ordered list that sends notifications to observers when objects are added to it or removed from it. Subclasses should override the #beforeAdding:, #afterAdding:at:, #afterAddingLast: and #afterRemoving: messages to send custom notifications.
 "
 Class {
 	#name : #XMLObservableList,

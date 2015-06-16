@@ -1,5 +1,5 @@
 "
-This is tokenizer for well-formed XML documents that supports DTD subsets and entity replacement.
+This is a tokenizer for well-formed XML documents that supports DTD subsets and entity replacement.
 "
 Class {
 	#name : #XMLWellFormedParserTokenizer,

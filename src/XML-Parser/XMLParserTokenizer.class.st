@@ -1,7 +1,7 @@
 "
-This is a base class for tokenizers. It reads tokens from a stream using a NestedStreamReader. Sending it #nextToken causes a token to be read and one or more handler messages to be dispatched to a driver.
+This is a base class for parser tokenizers that read tokens from a stream using an XMLNestedStreamReader and context objects. Sending #nextToken causes a token to be read and handler messages to be sent to a driver.
 
-Be careful changing the code in this class or subclass because it is optimized.
+Be careful changing the code in this class or subclasses because it's optimized.
 "
 Class {
 	#name : #XMLParserTokenizer,

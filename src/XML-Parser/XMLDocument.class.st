@@ -1,5 +1,5 @@
 "
-This class represents a document node, which is often the root of a node tree. It can contain XML version and encoding information, a DOCTYPE declaration with a possible internal subset and a root element child node.
+This class represents a document node, which is often the root of a DOM tree. Nodes can access their document ancestor with #document.
 "
 Class {
 	#name : #XMLDocument,
@@ -143,8 +143,8 @@ XMLDocument >> version [
 ]
 
 { #category : #accessing }
-XMLDocument >> version: aVersionNumber [
-	version := aVersionNumber
+XMLDocument >> version: aVersionFloat [
+	version := aVersionFloat
 ]
 
 { #category : #printing }

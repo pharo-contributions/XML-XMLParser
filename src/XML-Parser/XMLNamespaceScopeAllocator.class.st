@@ -1,5 +1,5 @@
 "
-This class handles the allocation of namespace scopes using a stack. Sending #enterScope to an instance will cause it to push a new scope onto the stack that inherits all mappings from the previous, enclosing scope and makes it the current scope. Sending #exitScop causes that scope to be removed and the parent scope to again be the current scope.
+This class allocates namespace scopes with a stack. Sending #enterScope pushes a new scope onto the stack that inherits all mappings from the previous (enclosing) scope, and #exitScop pops it off.
 "
 Class {
 	#name : #XMLNamespaceScopeAllocator,

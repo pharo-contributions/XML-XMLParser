@@ -1,9 +1,9 @@
 "
-This class represents a node that can contain child nodes. You probably will only use its API through one its subclasses, specifically the document, element and doctype declaration node classes.
+This is an abstract class for nodes that can contain child nodes.
 
-This class provides message to access, add and remove child nodes under the ""accessing"" category. The nodes themselves are stored in some type of XMLObservableList, the exact type of which varies depending on the subclass and can be accessed directly using #nodes. You can modify the #nodes list directly if you like, but adding nodes to it or removing nodes from it will have the effect of adding them to removing them from the parent node. If this is not what you want, then make sure you copy the return value of #nodes before manipulating it.
+It has messages to access, add and remove child nodes. The nodes are stored in a kind of XMLObservableList returned by #nodes, which can be modified directly to add or remove nodes from the owner of #nodes (copy it first if that isn't what you want).
 
-The ""enumerating"" category provides three different modes of enumeration: the #nodes* enumerating messages enumerate child nodes of the receiver only, while the #allNode* forms recursively enumerate all descendent nodes, including the receiver itself, using depth-first traversal, while the #descendentNode* forms  enumerate only descendent nodes and not the receiver.
+There are three types of ""enumerating"" messages: the #nodes* messages enumerate child nodes of the receiver, the #allNode* forms enumerate (using depth-first traversal) the receiver and all descendent nodes, and the #descendentNode* forms  enumerate only descendent nodes.
 "
 Class {
 	#name : #XMLNodeWithChildren,

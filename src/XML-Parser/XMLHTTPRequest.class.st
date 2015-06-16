@@ -1,5 +1,5 @@
 "
-A base class for HTTP requests. Subclasses need to implement the abstract requesting method to return a ReadStream on the respone or raise an exception if a network or HTTP error happens or if the response is too large.
+A base class for HTTP requests. Subclasses need to implement the abstract requesting method to return the HTTP response as a string or raise an exception if an HTTP/network error happens or the response is too large.
 "
 Class {
 	#name : #XMLHTTPRequest,

@@ -1,20 +1,18 @@
 "
-This class is an XML parser that uses event handling. The acronym ""SAX"" refers to Java's ""Simple API for XML,"" on which SAXHandler's API is based. To use this class, create a subclass and override handlers under the handling ""content"" and ""lexical"" categories as needed. By default, namespace support and validation are enabled (but not external entity resolution).
+This class is an XML parser that uses event handling. The acronym ""SAX"" refers to Java's ""Simple API for XML."" To use this class, create a subclass and override handlers under ""handling - content"" and ""handling - lexical"" as needed. By default, namespace support and validation are enabled (but not external entity resolution).
 
-To instantiate a SAXHandler, send any of the #on: or #parse- messages to a subclass.
-
-The class-side #parse- messages take some input source and parse it immediately, returning the result:
+To instantiate a SAXHandler, send any of the ""instance creation"" or ""parsing"" messages to a subclass. The ""parsing"" messages take some input and parse it immediately, returning the result:
 	SAXHandlerSubclass parse: xml.
 	SAXHandlerSubclass parseURL: url.
 	SAXHandlerSubclass parse: xml usingNamespaces: false
 
-The #on: messages create new parsers on the given input string, stream, URL, or file and return it; the instance can then be further configured and ultimately sent #parseDocument to parse the input:
+The ""instance creation"" messages create new parsers on the input and return it so it can be configured before being sent #parseDocument to parse the input:
 	(SAXHandlerSubclass on: xml)
 		isValidating: true;
 		resolvesExternalEntities: true;
 		parseDocument.
 
-#interruptParsing can be sent from within a handler to stop parsing before end, and there is also #parseDocumentWhile: and #parseDocumentUntil: 
+#interruptParsing can be sent from within a handler to stop parsing, and there is also #parseDocumentWhile: and #parseDocumentUntil: 
 	(SAXHandlerSubclass on: xml)
 		parseDocumentWhile: [self shouldKeepParsing].
 

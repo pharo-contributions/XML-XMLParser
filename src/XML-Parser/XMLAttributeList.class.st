@@ -1,5 +1,5 @@
 "
-This class represents an ordered list of attribute nodes that also keeps a dictionary mapping attribute names to nodes for faster lookups. You usually shouldn't have to use this class directly.
+This class represents an ordered list of attribute nodes that also keeps a dictionary mapping attribute names to nodes for faster lookup.
 "
 Class {
 	#name : #XMLAttributeList,

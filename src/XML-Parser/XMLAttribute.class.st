@@ -1,5 +1,5 @@
 "
-The class represents an attribute node, to be stored in an attribute node list. You generally won't need to interact with these objects directly; the various #attribute- messages element nodes respond to will normally suffice. The name of an attribute node can be namespaced using prefixes; however, the prefix must be mapped to a namespace URI in the containing element node. Unprefixed attributes have no namespace, not even a default namespace URI if one is in scope, per the XML namespace standard.
+The class represents an attribute node stored in an attribute node list. The name of an attribute node can be namespaced using prefixes, but the prefix must be mapped to a namespace URI in the containing element node. Unprefixed attributes have no namespace, not even a default if one is in scope, per the XML namespace standard.
 "
 Class {
 	#name : #XMLAttribute,

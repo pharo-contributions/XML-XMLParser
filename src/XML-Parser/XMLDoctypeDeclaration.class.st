@@ -1,5 +1,5 @@
 "
-This class represents the <!DOCTYPE ...> declaration one often finds at the top of an XML document. It stores the root element name, formal public identifier (FPI) if any, system identifier (a URI) and then any nodes comprising the internal subset.
+This class represents a <!DOCTYPE ...> declaration. It stores the root element name, public/system ID, and its nodes are the internal subset.
 "
 Class {
 	#name : #XMLDoctypeDeclaration,
