@@ -1,5 +1,5 @@
 "
-This class records the last element events forwarded to a SAX handler if no others are defined, #startElement:attributes: and #endElement:, using an XMLMessageRecorder.
+This class records the final element events (startElement:attributes: and #endElement:) used when no others are defined.
 "
 Class {
 	#name : #SAXElementEventRecordingHandler,

@@ -1,5 +1,5 @@
 "
-A pluggable version that allows blocks to be injected to respond to handlers.
+A pluggable version that allows blocks to be used to respond to handlers.
 "
 Class {
 	#name : #SAXHandlerPluggableProxy,
