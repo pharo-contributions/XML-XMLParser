@@ -132,7 +132,7 @@ ConfigurationOfXMLTestsConformance >> baseline100: spec [
 				with: [ 
 					spec
 						className: 'ConfigurationOfXMLParser';
-						versionString: #stable;
+						versionString: #'release-2';
 						loads: #('default');
 						repository: 'http://smalltalkhub.com/mc/PharoExtras/XMLParser/main' ].
 			spec package: 'XML-Tests-Conformance' with: [ spec requires: 'XMLParser' ].
@@ -172,7 +172,7 @@ ConfigurationOfXMLTestsConformance >> project [
 ConfigurationOfXMLTestsConformance >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.0.2'.
+	spec for: #'common' version: '1.0.3'.
 ]
 
 { #category : #versions }
@@ -202,5 +202,15 @@ ConfigurationOfXMLTestsConformance >> version102: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Tests-Conformance' with: 'XML-Tests-Conformance-monty.13'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLTestsConformance >> version103: spec [ 
+        <version: '1.0.3' imports: #('1.0.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Tests-Conformance' with: 'XML-Tests-Conformance-monty.14'.
                 ].
 ]
