@@ -101,8 +101,8 @@ XMLNestedStreamReader >> closeCurrentStream [
 { #category : #closing }
 XMLNestedStreamReader >> closeStreams [
 	nestedStreams ifNotNil: [
-		[nestedStreams notEmpty]
-			whileTrue: [self popNestedStream]].
+		[nestedStreams isEmpty]
+			whileFalse: [self popNestedStream]].
 	self closeCurrentStream.
 ]
 

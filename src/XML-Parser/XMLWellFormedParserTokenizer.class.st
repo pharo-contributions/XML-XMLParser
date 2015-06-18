@@ -737,7 +737,7 @@ XMLWellFormedParserTokenizer >> nextComment [
 	streamReader next.
 	self expectNext: $-.
 
-	"xml comments cannot contain -- sequences not followed by terminating >"
+	"xml comments can't have '--' unless followed by the terminating '>'"
 	writeStream reset.
 	[(nextChar := streamReader next) == nil
 		or: [nextChar == $-
@@ -1203,7 +1203,7 @@ XMLWellFormedParserTokenizer >> nextPCDataToken [
 						ifFalse: [self nextGeneralEntityReferenceOnWriteStream])
 							ifTrue: [isIgnorableWhitespace := false]]
 				ifFalse: [
-					"we do not check for illegal ]]> CDATA terminators in PCDATA
+					"we don't check for illegal ]]> CDATA terminators in PCDATA
 					for performance"
 					isIgnorableWhitespace
 						ifTrue: [isIgnorableWhitespace := nextChar xmlParserIsSeparator].

@@ -72,12 +72,21 @@ XMLUnparsedEntityValidator >> unparsedEntities [
 ]
 
 { #category : #validating }
-XMLUnparsedEntityValidator >> validateEntityReference: aName inAttribute: anAttribute [
-	(self unparsedEntities includesKey: aName)
+XMLUnparsedEntityValidator >> validateEntityReference: anEntity inAttribute: anAttribute [
+	| notation |
+
+	notation :=
+		self unparsedEntities
+			at: anEntity
+			ifAbsent: [
+				self
+					errorUndeclaredUnparsedEntityReference: anEntity
+					inAttribute: anAttribute].
+	(self notations includes: notation)
 		ifFalse: [
 			self
-				errorUndeclaredUnparsedEntityReference: aName
-				inAttribute: anAttribute]
+				errorUndeclaredNotation: notation
+				inEntity: anEntity]
 ]
 
 { #category : #validating }
@@ -100,13 +109,4 @@ XMLUnparsedEntityValidator >> validateNotationReference: aNotation inAttribute: 
 			self
 				errorUndeclaredNotation: aNotation
 				inAttribute: anAttribute]
-]
-
-{ #category : #validating }
-XMLUnparsedEntityValidator >> validateUnparsedEntity: anEntity withNotation: aNotation [
-	(self notations includes: aNotation)
-		ifFalse: [
-			self
-				errorUndeclaredNotation: aNotation
-				inEntity: anEntity]
 ]

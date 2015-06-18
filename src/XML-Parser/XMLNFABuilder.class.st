@@ -90,12 +90,18 @@ XMLNFABuilder >> applyStar [
 
 { #category : #accessing }
 XMLNFABuilder >> fragmentStack [
-	^ fragmentStack ifNil: [fragmentStack := OrderedCollection new]
+	^ fragmentStack
 ]
 
 { #category : #testing }
 XMLNFABuilder >> hasFragments [
-	^ self fragmentStack notEmpty
+	^ self totalFragments > 0
+]
+
+{ #category : #initialization }
+XMLNFABuilder >> initialize [
+	super initialize.
+	fragmentStack := OrderedCollection new.
 ]
 
 { #category : #accessing }

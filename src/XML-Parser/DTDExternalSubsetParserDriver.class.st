@@ -70,11 +70,6 @@ DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName publicID:
 				uri: aSystemID
 				from: self currentURI]
 		ifFalse: [
-			self isValidating
-				ifTrue: [
-					self doctypeDefinition unparsedEntityValidator
-						validateUnparsedEntity: aName
-						withNotation: aNotation].
 			self doctypeDefinition
 				addUnparsedEntity: aName
 				ndata: aNotation]
