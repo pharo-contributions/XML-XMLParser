@@ -357,7 +357,7 @@ ConfigurationOfXMLParserStAX >> version113: spec [
 
         spec for: #common do: [
                 spec blessing: #release.
-			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.14'.
-			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.11'.
+			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.15'.
+			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.10'.
                 ].
 ]
