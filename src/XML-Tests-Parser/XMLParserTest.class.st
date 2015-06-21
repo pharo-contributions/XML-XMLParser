@@ -1729,8 +1729,9 @@ XMLParserTest >> testReusingParser [
 	parser parseDocument.
 	parser on: self addressBookXMLWithDTD.
 	self
-		assert: parser configuration == oldConfiguraiton;
-		deny: parser documentURI = 'oldURI'.
+		assert: parser input = self addressBookXMLWithDTD;
+		deny: parser documentURI = 'oldURI';
+		deny: parser configuration == oldConfiguraiton.
 ]
 
 { #category : #tests }
