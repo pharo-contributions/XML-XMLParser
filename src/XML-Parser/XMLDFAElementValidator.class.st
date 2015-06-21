@@ -34,16 +34,11 @@ XMLDFAElementValidator >> dfa [
 	^ dfa
 ]
 
-{ #category : #copying }
-XMLDFAElementValidator >> postCopy [
-	currentState := dfa
-]
-
-{ #category : #accessing }
+{ #category : #initialization }
 XMLDFAElementValidator >> setElement: aName dfa: aDFA [
 	element := aName.
 	dfa := aDFA.
-	currentState := dfa.
+	currentState := aDFA.
 ]
 
 { #category : #validating }

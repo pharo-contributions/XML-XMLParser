@@ -90,6 +90,15 @@ DTDExternalEntityResolver >> maxExternalEntitySize: aLimit [
 	self externalEntityLimits maxExternalEntitySize: aLimit
 ]
 
+{ #category : #copying }
+DTDExternalEntityResolver >> postCopy [
+	super postCopy.
+
+	totalResolvedEntities := 0.
+	externalEntityLimits
+		ifNotNil: [externalEntityLimits := externalEntityLimits copy].
+]
+
 { #category : #configuring }
 DTDExternalEntityResolver >> removeLimits [
 	self externalEntityLimits removeAll

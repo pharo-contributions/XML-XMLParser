@@ -115,6 +115,15 @@ XMLConfiguration >> parserLimits: aParserLimits [
 	parserLimits := aParserLimits
 ]
 
+{ #category : #copying }
+XMLConfiguration >> postCopy [
+	super postCopy.
+
+	parserLimits := parserLimits copy.
+	entityConfiguration
+		ifNotNil: [entityConfiguration := entityConfiguration copy].
+]
+
 { #category : #accessing }
 XMLConfiguration >> preservesUndeclaredEntityReferences [
 	^ self entityConfiguration preservesUndeclaredEntityReferences

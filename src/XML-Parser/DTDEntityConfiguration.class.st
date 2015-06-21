@@ -23,6 +23,14 @@ DTDEntityConfiguration >> externalEntityResolver: anExternalEntityResolver [
 	externalEntityResolver := anExternalEntityResolver
 ]
 
+{ #category : #copying }
+DTDEntityConfiguration >> postCopy [
+	super postCopy.
+
+	externalEntityResolver
+		ifNotNil: [externalEntityResolver := externalEntityResolver copy].
+]
+
 { #category : #accessing }
 DTDEntityConfiguration >> preservesUndeclaredEntityReferences [
 	^ preservesUndeclaredEntityReferences ifNil: [preservesUndeclaredEntityReferences := false]

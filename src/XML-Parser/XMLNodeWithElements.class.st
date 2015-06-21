@@ -180,6 +180,16 @@ XMLNodeWithElements >> contentStringAt: aName [
 	^ self nodes contentStringAt: aName
 ]
 
+{ #category : #copying }
+XMLNodeWithElements >> copy [
+	| copy |
+
+	copy := super copy.
+	configuration "so all copied descendants have the same config"
+		ifNotNil: [copy configuration: configuration copy].
+	^ copy.
+]
+
 { #category : #accessing }
 XMLNodeWithElements >> descendentElements [
 	| descendentElements |

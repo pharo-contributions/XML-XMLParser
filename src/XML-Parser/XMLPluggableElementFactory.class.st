@@ -108,6 +108,14 @@ XMLPluggableElementFactory >> handleElementsMatchingClasses: aClassCollection [
 	aClassCollection do: [:each | self handleElementsMatchingClass: each]
 ]
 
+{ #category : #copying }
+XMLPluggableElementFactory >> postCopy [
+	super postCopy.
+
+	elementClassesByName
+		ifNotNil: [elementClassesByName := elementClassesByName copy].
+]
+
 { #category : #private }
 XMLPluggableElementFactory >> toCamelCasedName: aString [
 	^ aString allButFirst copyWithFirst: aString first asLowercase

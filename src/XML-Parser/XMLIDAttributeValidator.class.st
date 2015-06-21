@@ -1,5 +1,5 @@
 "
-This class validates ID attributes that must be unique in each element of the type.
+This class validates ID attributes that must have unique values.
 "
 Class {
 	#name : #XMLIDAttributeValidator,
@@ -13,7 +13,7 @@ Class {
 { #category : #private }
 XMLIDAttributeValidator class >> classForAttribute: anAttribute [
 	anAttribute = 'xml:id'
-		ifTrue: [^ XMLXMLIDIDAttributeValidator]
+		ifTrue: [^ XMLIDAttributeXMLIDValidator]
 		ifFalse: [^ XMLIDAttributeValidator]
 ]
 

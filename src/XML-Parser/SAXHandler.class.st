@@ -416,11 +416,9 @@ SAXHandler >> on: aStringOrStream [
 	documentURI := nil.
 	isInContent := false.
 	isInCDataSection := false.
-
-	"but the configurations can be shared, so it is only
-	default initialized once"
-	configuration 
-		ifNil: [self configuration: self configurationClass new].
+	configuration
+		ifNil: [self configuration: self configurationClass new]
+		ifNotNil: [self configuration: configuration copy].
 ]
 
 { #category : #configuring }

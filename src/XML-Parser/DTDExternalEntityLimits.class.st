@@ -20,6 +20,11 @@ DTDExternalEntityLimits class >> defaultExternalSubsetReadLimit [
 ]
 
 { #category : #accessing }
+DTDExternalEntityLimits class >> defaultMaxExternalEntities [
+	^ 20
+]
+
+{ #category : #accessing }
 DTDExternalEntityLimits class >> defaultMaxExternalEntitySize [
 	^ 2500000
 ]
@@ -39,7 +44,7 @@ DTDExternalEntityLimits >> initialize [
 	super initialize.
 
 	externalSubsetReadLimit := self class defaultExternalSubsetReadLimit.
-	maxExternalEntities := 20.
+	maxExternalEntities := self class defaultMaxExternalEntities.
 	maxExternalEntitySize := self class defaultMaxExternalEntitySize.
 	resolvesLocalFromNonLocal := false.
 ]

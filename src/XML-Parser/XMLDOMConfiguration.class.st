@@ -5,10 +5,10 @@ Class {
 	#name : #XMLDOMConfiguration,
 	#superclass : #XMLConfiguration,
 	#instVars : [
-		'nodeFactory',
 		'preservesCDataNodes',
 		'preservesCommentNodes',
-		'preservesIgnorableWhitespace'
+		'preservesIgnorableWhitespace',
+		'nodeFactory'
 	],
 	#category : #'XML-Parser'
 }
@@ -23,10 +23,10 @@ XMLDOMConfiguration >> initialize [
 	super initialize.
 
 	"always used, so explicitly initialized"
-	nodeFactory := XMLNodeFactory new.
 	preservesCDataNodes := false.
 	preservesCommentNodes := false.
 	preservesIgnorableWhitespace := false.
+	nodeFactory := XMLNodeFactory new.
 ]
 
 { #category : #accessing }
@@ -48,6 +48,13 @@ XMLDOMConfiguration >> nodeListClass [
 XMLDOMConfiguration >> nodeListClass: aClass [
 	self nodeFactory:
 		(self nodeFactory asPluggableNodeFactory nodeListClass: aClass)
+]
+
+{ #category : #copying }
+XMLDOMConfiguration >> postCopy [
+	super postCopy.
+
+	nodeFactory := nodeFactory copy.
 ]
 
 { #category : #accessing }

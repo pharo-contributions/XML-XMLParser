@@ -28,11 +28,11 @@ XMLDocumentValidator >> defaultElementValidatorFor: aName [
 
 { #category : #private }
 XMLDocumentValidator >> defaultXMLIDValidator [
-	"used to validate xml:id attributes in the absence of DTD or other validators"
+	"used to validate xml:id attributes if there's no DTD or other validators"
 	^ defaultXMLIDValidator
 		ifNil: [
 			defaultXMLIDValidator :=
-				XMLXMLIDIDAttributeValidator
+				XMLIDAttributeXMLIDValidator
 					element: ''
 					attribute: 'xml:id'
 					defaultValueValidator:

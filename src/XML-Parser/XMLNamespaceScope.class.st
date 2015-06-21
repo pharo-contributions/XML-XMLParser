@@ -331,7 +331,7 @@ XMLNamespaceScope >> validateAndResolvePrefix: aPrefix [
 
 { #category : #validating }
 XMLNamespaceScope >> validateAndResolvePrefix: aPrefix ofElement: aName [
-	aPrefix isEmpty "avoid ifEmpty: closure overhead"
+	aPrefix size = 0 "optimization"
 		ifTrue: [
 			self validateUnprefixedName: aName.
 			^ self defaultNamespace]
@@ -344,9 +344,8 @@ XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
 	| namespacedAttributes |
 
 	aDictionary keysDo: [:each | | prefix |
-		(prefix := each prefixBeforeLocalName) isEmpty "avoid ifNotEmpty: closure overhead"
-			ifTrue: [self validateUnprefixedName: each]
-			ifFalse: [ | namespace oldSize |
+		(prefix := each prefixBeforeLocalName) size > 0 "optimization"
+			ifTrue: [| namespace oldSize |
 				"not initialized unless needed"
 				namespacedAttributes
 					ifNil: [namespacedAttributes := Set new: aDictionary size].
@@ -356,7 +355,8 @@ XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
 				oldSize := namespacedAttributes size.
 				namespacedAttributes add: namespace, (each localNameAfterPrefix: prefix).
 				namespacedAttributes size > oldSize
-					ifFalse: [self errorAttribute: each aliasesNamespace: namespace]]]
+					ifFalse: [self errorAttribute: each aliasesNamespace: namespace]]
+			ifFalse: [self validateUnprefixedName: each]]
 ]
 
 { #category : #private }
@@ -366,8 +366,8 @@ XMLNamespaceScope >> validatePrefix: aPrefix beforeMappingTo: aURI [
 			aURI = self class xmlNamespaceURI
 				ifFalse: [self errorCannotRemapXMLPrefix]]
 		ifFalse: [
-			aPrefix isEmpty "avoid ifEmpty: overhead"
-				ifFalse: [
+			aPrefix size > 0 "optimization"
+				ifTrue: [
 					aPrefix = 'xmlns'
 						ifTrue: [self errorCannotMapXMLNSPrefix].
 					(aPrefix indexOf: $:) > 0 
