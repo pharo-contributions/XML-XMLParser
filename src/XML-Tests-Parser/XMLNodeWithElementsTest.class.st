@@ -1180,61 +1180,6 @@ XMLNodeWithElementsTest >> testNodeFactory [
 ]
 
 { #category : #tests }
-XMLNodeWithElementsTest >> testOuterXMLForNode [
-	| nodeWithElements root nodes |
-
-	nodeWithElements := self newNodeWithElements.
-	root := nodeWithElements firstElement.
-	nodes := root nodes copy.
-	nodes copy withIndexDo: [:each :i | | innerXML newNode |
-		innerXML := '<new', i printString, '>test</new', i printString, '>'.
-		root outerXML: innerXML forNode: each.
-		newNode := root nodeAt: i.
-		self
-			assert: newNode printString = innerXML;
-			deny: root nodes = nodes.
-		nodes at: i put: newNode.
-		self assert: root nodes = nodes].
-
-	nodes copy do: [:each |
-		root outerXML: '' forNode: each.
-		self deny: root nodes = nodes.
-		nodes remove: each.
-		self assert: root nodes = nodes].
-]
-
-{ #category : #tests }
-XMLNodeWithElementsTest >> testOuterXMLForNodeResetting [
-	| nodeWithElements root |
-
-	nodeWithElements := self newNodeWithElements.
-	root := nodeWithElements firstElement.
-	self
-		should: [
-			root
-				outerXML: '<one><two></one></two>'
-				forNode: root firstNode]
-		raise: XMLWellFormednessException.
-	self assert: nodeWithElements printString = self newNodeWithNodes printString.
-
-	self
-		should: [
-			root
-				outerXML: '<one>&invalid;</one>'
-				forNode: root firstNode]
-		raise: XMLValidationException.
-	self assert: nodeWithElements printString = self newNodeWithNodes printString.
-
-	self
-		should: [
-			root
-				outerXML: '<one />'
-				forNode: self nodeClass new]
-		raise: XMLDOMException.
-	self assert: nodeWithElements printString = self newNodeWithNodes printString.
-]
-
-{ #category : #tests }
 XMLNodeWithElementsTest >> testPrintedWithoutSelfClosingTags [
 	| nodeWithElements printString |
 
