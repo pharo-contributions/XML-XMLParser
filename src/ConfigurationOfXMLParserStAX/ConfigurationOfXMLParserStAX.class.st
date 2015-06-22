@@ -44,15 +44,17 @@ ConfigurationOfXMLParserStAX class >> catalogKeyClassesAndExample [
 
 	^ 'The main classes are ==StAXParser== and the ==StAXEvent== subclasses.
 
-Examples:
+Example:
 [[[ 
-	parser := StAXParser on: xml.
+	| parser item |
+	parser := StAXParser on:
+		''<list>
+			<item>one</item>
+			<item>two</item>
+		</list>''.
 
-	"get first <item> element as an XMLElement object"
-	itemElement := parser nextElementNamed: ''item''.
-
-	"get next DOM node of any type"
-	node := parser nextNode.
+	"get the first item as an XMLElement"
+	item := parser nextElementNamed: ''item''.
 ]]]'
 ]
 
@@ -204,7 +206,7 @@ ConfigurationOfXMLParserStAX >> project [
 ConfigurationOfXMLParserStAX >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.1.3'.
+	spec for: #'common' version: '1.1.4'.
 
 ]
 
@@ -358,6 +360,17 @@ ConfigurationOfXMLParserStAX >> version113: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.15'.
-			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.10'.
+			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.11'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserStAX >> version114: spec [ 
+        <version: '1.1.4' imports: #('1.1.2-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.16'.
+			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.12'.
                 ].
 ]
