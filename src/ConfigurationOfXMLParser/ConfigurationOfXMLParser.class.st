@@ -234,8 +234,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				with: [ spec includes: 'XML-Parser-GemstoneCompatibility' ].
 			spec
 				package: 'XML-Parser-GemstoneCompatibility'
-				with: [ spec requires: 'XML-Parser' ].
-			spec preLoadDoIt: #preLoadForGemstone. ].
+				with: [ spec requires: 'XML-Parser' ]. ].
 
 	"load GT extension methods"
 	spec
@@ -501,14 +500,6 @@ ConfigurationOfXMLParser >> development: spec [
 
 	spec for: #'common' version: '2.4.4-baseline'.
 
-]
-
-{ #category : #preloading }
-ConfigurationOfXMLParser >> preLoadForGemstone [
-	"the GS package overrides methods, so it must be loaded whenever the project
-	is loaded, and removing it first forces Metacello to load it again"
-	
-	(MCPackage named: 'XML-Parser-GemstoneCompatibility') unload
 ]
 
 { #category : #accessing }
