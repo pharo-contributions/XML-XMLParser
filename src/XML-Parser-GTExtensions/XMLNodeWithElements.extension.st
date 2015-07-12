@@ -55,11 +55,22 @@ XMLNodeWithElements >> gtName [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNodeWithElements >> gtSpotterElementsFor: aStep [
+XMLNodeWithElements >> gtSpotterAllElementsFor: aStep [
 	<spotterOrder: 40>
 	aStep listProcessor
 		title: 'All elements';
 		allCandidates: [ self allElements ];
+		itemName: [ :element | element gtDisplayString ];
+		filter: GTFilterSubstring;
+		wantsToDisplayOnEmptyQuery: true
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLNodeWithElements >> gtSpotterDirectElementsFor: aStep [
+	<spotterOrder: 40>
+	aStep listProcessor
+		title: 'Direct elements';
+		allCandidates: [ self elements ];
 		itemName: [ :element | element gtDisplayString ];
 		filter: GTFilterSubstring;
 		wantsToDisplayOnEmptyQuery: true
