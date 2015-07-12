@@ -484,6 +484,23 @@ ConfigurationOfXMLParser >> baseline244: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.1' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline248: spec [
+	<version: '2.4.8-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.3'.
+			spec project: 'BitmapCharacterSet' with: '1.1.5' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.10' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-AndreiChis.7' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParser >> customProjectAttributes [
     "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -498,7 +515,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.4.4-baseline'.
+	spec for: #'common' version: '2.4.8-baseline'.
 
 ]
 
