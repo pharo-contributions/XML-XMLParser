@@ -14,6 +14,11 @@ Class {
 }
 
 { #category : #accessing }
+XMLDOMConfiguration >> defaultNodeFactoryClass [
+	^ XMLNodeFactory
+]
+
+{ #category : #accessing }
 XMLDOMConfiguration >> defaultParserHandlerClass [
 	^ XMLDOMParser
 ]
@@ -26,7 +31,7 @@ XMLDOMConfiguration >> initialize [
 	preservesCDataNodes := false.
 	preservesCommentNodes := false.
 	preservesIgnorableWhitespace := false.
-	nodeFactory := XMLNodeFactory new.
+	nodeFactory := self defaultNodeFactoryClass new.
 ]
 
 { #category : #accessing }

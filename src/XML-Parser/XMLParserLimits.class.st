@@ -1,5 +1,5 @@
 "
-This class places security limits on parser input. You can change them using configuration messages in SAXHandler or remove them with removeLimits.
+This class places security limits on input. Setting a limit to nil disables it, and removeAll disables all.
 "
 Class {
 	#name : #XMLParserLimits,
@@ -17,6 +17,11 @@ Class {
 { #category : #accessing }
 XMLParserLimits class >> defaultDocumentReadLimit [
 	^ self defaultReadLimit
+]
+
+{ #category : #accessing }
+XMLParserLimits class >> defaultMaxEntityReplacementDepth [
+	^ 10
 ]
 
 { #category : #accessing }
@@ -51,7 +56,7 @@ XMLParserLimits >> initialize [
 	super initialize.
 
 	documentReadLimit := self class defaultDocumentReadLimit.
-	maxEntityReplacementDepth := 10.
+	maxEntityReplacementDepth := self class defaultMaxEntityReplacementDepth.
 ]
 
 { #category : #accessing }

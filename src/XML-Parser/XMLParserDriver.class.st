@@ -1,5 +1,5 @@
 "
-This is a base class for parser drivers. Drivers are sent messages by a tokenizer to handle various XML tokens as they are read. To create a driver, subclass this class and override the handler messages and testing messages that control tokenization.
+This is a base class for parser drivers. Subclasses should override any of the ""handling"" or ""handling - dtd"" messages sent by tokenizers to parse tokens.
 "
 Class {
 	#name : #XMLParserDriver,

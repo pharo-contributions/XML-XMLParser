@@ -1,5 +1,5 @@
 "
-This class stores the shared settings and components for a parser. The configuration values are stored in separate inst vars instead of using a dictionary for speed, and some sub-configurations are lazy initialized only if needed.
+This class stores the settings and components of a parser. For performance it uses separate inst vars instead of a dictionary and lazy initializes some components.
 "
 Class {
 	#name : #XMLConfiguration,

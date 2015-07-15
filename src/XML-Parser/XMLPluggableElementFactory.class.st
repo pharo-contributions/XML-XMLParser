@@ -20,50 +20,51 @@ Class {
 	#name : #XMLPluggableElementFactory,
 	#superclass : #XMLPluggableNodeFactory,
 	#instVars : [
-		'elementClassesByName'
+		'elementClasses'
 	],
 	#category : #'XML-Parser-DOM'
 }
 
 { #category : #accessing }
 XMLPluggableElementFactory >> classForElement: aName prefix: aPrefix uri: aURI localName: aLocalName [
-	^ (self classForElement: aName uri: aURI)
+	^ (self elementClassAtName: aName uri: aURI)
 		ifNil: [
-			aPrefix isEmpty
-				ifTrue: [self elementClass]
-				ifFalse: [
-					(self classForElement: aLocalName uri: aURI)
-						ifNil: [self elementClass]]]
+			aPrefix size > 0
+				ifTrue: [
+					(self elementClassAtName: aLocalName uri: aURI)
+						ifNil: [self elementClass]]
+				ifFalse: [self elementClass]]
 ]
 
 { #category : #private }
-XMLPluggableElementFactory >> classForElement: aName uri: aURI [
-	| classesForElement |
-
-	classesForElement :=
-		self elementClassesByName
-			at: aName
-			ifAbsent: [^ nil].
-
-	^ classesForElement
-		at: aURI
-		ifAbsent: [
-			classesForElement
-				at: ''
-				ifAbsent: [nil]].
+XMLPluggableElementFactory >> elementClassAtName: aName uri: aURI [
+	aURI size > 0
+		ifTrue: [
+			^ self elementClasses
+				at: aName -> aURI
+				ifAbsent: [
+					self elementClasses
+						at: aName 
+						ifAbsent: [nil]]]
+		ifFalse: [
+			^ self elementClasses
+				at: aName
+				ifAbsent: [nil]]
 ]
 
 { #category : #private }
-XMLPluggableElementFactory >> elementClassesByName [
-	^ elementClassesByName ifNil: [elementClassesByName := Dictionary new]
+XMLPluggableElementFactory >> elementClasses [
+	^ elementClasses
 ]
 
 { #category : #'element handling' }
 XMLPluggableElementFactory >> handleElement: anElementName namespaceURI: aURI withClass: aClass [
-	(self elementClassesByName
-		at: anElementName
-		ifAbsentPut: [Dictionary new])
-			at: aURI put: aClass
+	self elementClasses
+		at:
+			(aURI isEmpty
+				ifTrue: [anElementName]
+				ifFalse: [anElementName -> aURI])
+		put: aClass
 ]
 
 { #category : #'element handling' }
@@ -108,12 +109,19 @@ XMLPluggableElementFactory >> handleElementsMatchingClasses: aClassCollection [
 	aClassCollection do: [:each | self handleElementsMatchingClass: each]
 ]
 
+{ #category : #initialization }
+XMLPluggableElementFactory >> initialize [
+	super initialize.
+
+	elementClasses := Dictionary new.
+]
+
 { #category : #copying }
 XMLPluggableElementFactory >> postCopy [
 	super postCopy.
 
-	elementClassesByName
-		ifNotNil: [elementClassesByName := elementClassesByName copy].
+	elementClasses
+		ifNotNil: [elementClasses := elementClasses copy].
 ]
 
 { #category : #private }
