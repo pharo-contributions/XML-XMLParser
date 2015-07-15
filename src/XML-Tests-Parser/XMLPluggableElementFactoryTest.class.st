@@ -89,8 +89,11 @@ XMLPluggableElementFactoryTest >> testCopy [
 	copy := factory copy.
 	self
 		deny: copy == factory;
-		deny: copy elementClassesByName == factory elementClassesByName;
-		assert: copy elementClassesByName = factory elementClassesByName.
+		deny: copy elementClasses == factory elementClasses;
+		assert: copy elementClasses = factory elementClasses.
+
+	copy handleElement: 'user' withClass: XMLElement.
+	self deny: copy elementClasses = factory elementClasses.
 ]
 
 { #category : #tests }
