@@ -234,7 +234,8 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				with: [ spec includes: 'XML-Parser-GemstoneCompatibility' ].
 			spec
 				package: 'XML-Parser-GemstoneCompatibility'
-				with: [ spec requires: 'XML-Parser' ]. ].
+				with: [ spec requires: 'XML-Parser' ].
+			spec postLoadDoIt: #'postLoadForGemstone:spec:'. ].
 
 	"load GT extension methods"
 	spec
@@ -519,6 +520,24 @@ ConfigurationOfXMLParser >> development: spec [
 
 ]
 
+{ #category : #'post loading' }
+ConfigurationOfXMLParser >> postLoadForGemstone: aLoader spec: aSpec [
+	"this forces the GS package to always be loaded after, even if it hasn't
+	changed between versions, because it needs to override methods in the base"
+
+	| packageName fileName |
+
+	packageName := 'XML-Parser-GemstoneCompatibility'.
+	fileName :=
+		(aSpec
+			packageNamed: packageName
+			ifAbsent: [^ self]) file.
+	Gofer it
+		url: aSpec repositories list first name;
+		package: packageName constraint: [:version | version name = fileName];
+		load.
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParser >> project [
 	^ project
@@ -533,6 +552,13 @@ ConfigurationOfXMLParser >> project [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release24: spec [
+	<symbolicVersion: #'release-2.4'>
+
+	spec for: #'common' version: '2.4.8'.
+]
+
+{ #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> release2: spec [
 	<symbolicVersion: #'release-2'>
 
@@ -544,7 +570,7 @@ ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
 	"delegates to a release version from now on"
-	spec for: #'common' version: #'release-2'.
+	spec for: #'common' version: #'release-2.4'.
 ]
 
 { #category : #versions }
@@ -2134,5 +2160,16 @@ ConfigurationOfXMLParser >> version247: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.317'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.130'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version248: spec [ 
+        <version: '2.4.8' imports: #('2.4.8-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.318'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.131'.
                 ].
 ]
