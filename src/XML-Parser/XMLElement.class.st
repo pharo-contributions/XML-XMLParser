@@ -3,9 +3,9 @@ The class represents an element node, which has a qualified or unqualified name 
 
 Element names can be tested using #isNamed: and #isNamedAny:, which test both the qualified and local name.
 
-If the name is qualfied and namespace support is enabled (the default), then the prefix must be mapped to a namespace URI in the element or an ancestor. The class-side instance creation #name:namespaceURI:* and #name:namespaces:* messages and the instance-side #name:namespaceURI: message can set both simulaniously. If namespace support is disabled, prefixes are ignored (not validated).
+If the name is qualified and namespace support is enabled (the default), then the prefix must be mapped to a namespace URI in the element or an ancestor. The class-side instance creation #name:namespaceURI:* and #name:namespaces:* messages and the instance-side #name:namespaceURI: message can set both simultaneously. If namespace support is disabled, prefixes are not checked.
 
-The #attribute* messages provide a Dictionary-like prototcol for manipulating attribute nodes. Attribute value accessors return empty strings if the attribute is absent. The underlying attribute node list can be accessed using #attributeNodes (copy before modifying if you don't want to add/remove attribute nodes from the element), and the names/values can be obtained as an (order-preserving) dictionary using #attributes.
+The #attribute* messages provide a Dictionary-like protocol for manipulating attribute nodes. Attribute value accessors return empty strings if the attribute is absent. The underlying attribute node list can be accessed using #attributeNodes (copy before modifying if you don't want to add/remove attribute nodes from the element), and the names/values can be obtained as an (order-preserving) dictionary using #attributes.
 
 See the superclasses for more info.
 "
@@ -61,6 +61,22 @@ XMLElement class >> name: aQualifiedName namespaces: aNamespaceDictionaryOrArray
 { #category : #'instance creation' }
 XMLElement class >> named: aLocalName [
 	^ self new name: aLocalName
+]
+
+{ #category : #adding }
+XMLElement >> addElementNamed: aName [
+	| elementPrefix elementClass |
+
+	elementPrefix := aName prefixBeforeLocalName.
+	elementClass :=
+		self nodeFactory
+			classForElement: aName
+			prefix: elementPrefix
+			uri: (self resolvePrefix: elementPrefix)
+			localName: (aName localNameAfterPrefix: elementPrefix).
+
+	"added first to inherit the config and namespaces before setting the name"
+	^ (self addNode: elementClass new) name: aName.
 ]
 
 { #category : #notifying }
@@ -198,7 +214,8 @@ XMLElement >> declaresDefaultNamespace [
 	"Did the receiver declare a new default namespace rather than inheriting one?"
 
 	^ self namespaceScope hasDefaultNamespace
-		and: [self isRoot or: [self defaultNamespace ~= self parent defaultNamespace]]
+		and: [self isRoot
+			or: [self defaultNamespace ~= self parent defaultNamespace]]
 ]
 
 { #category : #testing }
@@ -206,7 +223,8 @@ XMLElement >> declaresPrefix: aPrefix uri: aURI [
 	"Did the receiver declare a new prefix/uri pair rather than inheriting one?"
 
 	^ (self isDeclaredPrefix: aPrefix uri: aURI)
-		and: [self isRoot or: [(self parent isDeclaredPrefix: aPrefix uri: aURI) not]]
+		and: [self isRoot
+			or: [(self parent isDeclaredPrefix: aPrefix uri: aURI) not]]
 ]
 
 { #category : #namespacing }
@@ -239,6 +257,7 @@ XMLElement >> expandedName [
 
 { #category : #testing }
 XMLElement >> hasAttributes [
+	"avoid lazy initializing"
 	^ attributes notNil and: [attributes notEmpty]
 ]
 
@@ -454,7 +473,9 @@ XMLElement >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 
 { #category : #namespacing }
 XMLElement >> resolvePrefix: aPrefix [
-	^ self namespaceScope resolvePrefix: aPrefix
+	self hasNamespaces "avoid lazy initializing the scope"
+		ifTrue: [^ self namespaceScope resolvePrefix: aPrefix]
+		ifFalse: [^ '']
 ]
 
 { #category : #initialization }

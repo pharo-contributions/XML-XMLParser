@@ -42,9 +42,7 @@ XMLNodeWithElements >> addElement: anElement [
 
 { #category : #adding }
 XMLNodeWithElements >> addElementNamed: aName [
-	"element is added first before naming so it inherits namespaces from self"
-	^ (self addNode: (self nodeFactory classForElement: aName) new)
-		name: aName
+	^ self addNode: (self nodeFactory newElementNamed: aName)
 ]
 
 { #category : #adding }
@@ -338,11 +336,6 @@ XMLNodeWithElements >> elementsSelect: aBlock [
 ]
 
 { #category : #private }
-XMLNodeWithElements >> errorOuterXMLForAbsentNode [
-	XMLDOMException signal: 'Cannot set outer XML for absent node'
-]
-
-{ #category : #private }
 XMLNodeWithElements >> escapesContentEntitiesWhenWriting [
 	"avoid initializing config; defualt to true"
 	^ configuration isNil
@@ -438,11 +431,6 @@ XMLNodeWithElements >> isContentNode [
 XMLNodeWithElements >> lastElement [
 	"returns nil if no elements"
 	^ self nodes lastElement
-]
-
-{ #category : #private }
-XMLNodeWithElements >> namespaceScope [
-	^ XMLNamespaceScope new
 ]
 
 { #category : #'instance creation' }
