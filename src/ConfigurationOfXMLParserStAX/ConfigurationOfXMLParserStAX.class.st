@@ -206,7 +206,7 @@ ConfigurationOfXMLParserStAX >> project [
 ConfigurationOfXMLParserStAX >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.1.4'.
+	spec for: #'common' version: '1.1.5'.
 
 ]
 
@@ -372,5 +372,16 @@ ConfigurationOfXMLParserStAX >> version114: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.16'.
 			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.12'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserStAX >> version115: spec [ 
+        <version: '1.1.5' imports: #('1.1.2-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.17'.
+			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.13'.
                 ].
 ]
