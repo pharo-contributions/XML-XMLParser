@@ -522,8 +522,9 @@ ConfigurationOfXMLParser >> development: spec [
 
 { #category : #'post loading' }
 ConfigurationOfXMLParser >> postLoadForGemstone: aLoader spec: aSpec [
-	"this forces the GS package to always be loaded after, even if it hasn't
-	changed between versions, because it needs to override methods in the base"
+	"This forces the GS compatibility package to always be loaded, even if
+	it hasn't changed between versions, because it needs to override methods
+	in the base. If removed, upgrading on GS may not work."
 
 	| packageName fileName |
 
@@ -555,7 +556,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> release24: spec [
 	<symbolicVersion: #'release-2.4'>
 
-	spec for: #'common' version: '2.4.8'.
+	spec for: #'common' version: '2.4.9'.
 ]
 
 { #category : #'symbolic versions' }
@@ -2171,5 +2172,16 @@ ConfigurationOfXMLParser >> version248: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.318'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.131'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version249: spec [ 
+        <version: '2.4.9' imports: #('2.4.8-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.319'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.132'.
                 ].
 ]
