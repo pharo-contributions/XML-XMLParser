@@ -61,7 +61,7 @@ Example:
 { #category : #catalog }
 ConfigurationOfXMLParserStAX class >> catalogKeywords [
 
-	^ #( XML DOM StAX DTD HTML XHTML pull parser #'pull-parser' validation web markup document )
+	^ #( XML DOM StAX DTD HTML XHTML pull parser #'pull-parser' XMLPullParser validation web markup document )
 ]
 
 { #category : #private }
