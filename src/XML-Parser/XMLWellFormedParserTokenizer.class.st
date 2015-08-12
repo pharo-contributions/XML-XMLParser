@@ -314,6 +314,11 @@ XMLWellFormedParserTokenizer >> errorExpectedName [
 ]
 
 { #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedNmtoken [
+	self errorExpected: 'a Nmtoken name'
+]
+
+{ #category : #errors }
 XMLWellFormedParserTokenizer >> errorExpectedSeparators [
 	self errorExpected: 'one or more whitespace characters'
 ]
@@ -1112,12 +1117,14 @@ XMLWellFormedParserTokenizer >> nextName [
 	| nextChar |
 
 	nameStream reset.
-	((NameChars xmlParserIncludes: (nextChar := streamReader next))
-		and: [(AdditionalNameChars xmlParserIncludes: nextChar) not])
+	((nextChar := streamReader next) notNil
+		and: [(NameChars includes: nextChar)
+			and: [(AdditionalNameChars includes: nextChar) not]])
 		ifFalse: [self errorExpectedName].
 	nameStream nextPut: nextChar.
 
-	[NameChars xmlParserIncludes: streamReader peek]
+	[(nextChar := streamReader peek) notNil
+		and: [NameChars includes: nextChar]]
 		whileTrue: [nameStream nextPut: streamReader next].
 	^ nameStream contents.
 ]
@@ -1138,23 +1145,29 @@ XMLWellFormedParserTokenizer >> nextNameListValuesOnWriteStream [
 XMLWellFormedParserTokenizer >> nextNameOnWriteStream [
 	| nextChar |
 
-	((NameChars xmlParserIncludes: (nextChar := streamReader next))
-		and: [(AdditionalNameChars xmlParserIncludes: nextChar) not])
+	((nextChar := streamReader next) notNil
+		and: [(NameChars includes: nextChar)
+			and: [(AdditionalNameChars includes: nextChar) not]])
 		ifFalse: [self errorExpectedName].
 	writeStream nextPut: nextChar.
 
-	[NameChars xmlParserIncludes: streamReader peek]
+	[(nextChar := streamReader peek) notNil
+		and: [NameChars includes: nextChar]]
 		whileTrue: [writeStream nextPut: streamReader next].
 ]
 
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextNmtokenOnWriteStream [
-	"matches the nmtoken production"
-	(NameChars xmlParserIncludes: streamReader peek)
-		ifFalse: [self errorExpected: 'name token'].
+	"matches the Nmtoken production"
+	| nextChar |
+
+	((nextChar := streamReader peek) notNil
+		and: [(NameChars includes: nextChar)])
+		ifFalse: [self errorExpectedNmtoken].
 	writeStream nextPut: streamReader next.
 		
-	[NameChars xmlParserIncludes: streamReader peek]
+	[(nextChar := streamReader peek) notNil
+		and: [NameChars includes: nextChar]]
 		whileTrue: [writeStream nextPut: streamReader next].
 ]
 
@@ -1301,8 +1314,9 @@ XMLWellFormedParserTokenizer >> nextPublicIDLiteral [
 
 	quote := self expectQuote.
 	writeStream reset.
-	[(nextChar := streamReader peek) == quote
-		or: [(PubidChars xmlParserIncludes: nextChar) not]]
+	[(nextChar := streamReader peek) == nil
+		or: [nextChar == quote "duoble quoted pubids can contain subquotes"
+			or: [(PubidChars includes: nextChar) not]]]
 		whileFalse: [writeStream nextPut: streamReader next].
 	self expectNext: quote.
 
@@ -1444,14 +1458,15 @@ XMLWellFormedParserTokenizer >> nextUnreplacedGeneralEntityOnWriteStreamNamed: a
 
 { #category : #tokenizing }
 XMLWellFormedParserTokenizer >> nextXMLEncodingAttributeValue [
-	| quote |
+	| quote nextChar |
 
 	quote := self expectQuote.
 	writeStream
 		reset;
 		nextPut: self expectLetter.
-	[EncodingNameChars xmlParserIncludes: streamReader peek]
-		whileTrue: [writeStream nextPut: streamReader next].
+	[(nextChar := streamReader peek) == nil
+		or: [(EncodingNameChars includes: nextChar) not]]
+		whileFalse: [writeStream nextPut: streamReader next].
 	self expectNext: quote.
 
 	^ writeStream contents.
