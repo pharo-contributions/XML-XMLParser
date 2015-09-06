@@ -509,14 +509,14 @@ ConfigurationOfXMLParser >> baseline250: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.3'.
-			spec project: 'BitmapCharacterSet' with: '1.1.5' ].
+			spec project: 'XMLWriter' with: '2.6.4'.
+			spec project: 'BitmapCharacterSet' with: '1.1.6' ].
 	spec
 		for: #gemstone
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.11' ].
 	spec
 		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-AndreiChis.7' ]
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.8' ]
 ]
 
 { #category : #accessing }
