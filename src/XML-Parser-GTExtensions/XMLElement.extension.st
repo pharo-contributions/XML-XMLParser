@@ -17,12 +17,15 @@ XMLElement >> gtDisplayOn: stream [
 		nextPutAll: self name.
 	self hasAttributes
 		ifTrue: [ 
-			self
-				attributeNodesDo: [ :each | 
-					stream space.
-					each gtDisplayOn: stream ] ].
-	stream nextPut: $>.
-	stream nextPutAll: self contentString
+			self attributeNodesDo: [ :each | 
+				stream space.
+				each gtDisplayOn: stream ] ].
+	self hasChildren
+		ifTrue: [ 
+			stream nextPut: $>.
+			self hasElements
+				ifFalse: [ self printContentOn: stream ] ]
+		ifFalse: [ stream nextPutAll: ' />' ]
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
