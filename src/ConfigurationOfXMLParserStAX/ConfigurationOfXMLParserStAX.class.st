@@ -174,6 +174,16 @@ ConfigurationOfXMLParserStAX >> baseline112: spec [
 			spec project: 'XMLParser' with: #'release-2.4' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baseline117: spec [
+	<version: '1.1.7-baseline' imports: #('1.0.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.5' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParserStAX >> customProjectAttributes [
 	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -206,7 +216,7 @@ ConfigurationOfXMLParserStAX >> project [
 ConfigurationOfXMLParserStAX >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.1.6'.
+	spec for: #'common' version: '1.1.7'.
 
 ]
 
@@ -394,5 +404,16 @@ ConfigurationOfXMLParserStAX >> version116: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.19'.
 			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.14'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserStAX >> version117: spec [ 
+        <version: '1.1.7' imports: #('1.1.2-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.20'.
+			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.15'.
                 ].
 ]
