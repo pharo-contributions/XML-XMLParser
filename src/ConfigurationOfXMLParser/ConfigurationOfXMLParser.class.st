@@ -589,6 +589,13 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> release24: spec [
 	<symbolicVersion: #'release-2.4'>
 
+	spec for: #'common' version: '2.4.9'.
+]
+
+{ #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release25: spec [
+	<symbolicVersion: #'release-2.5'>
+
 	spec for: #'common' version: '2.5.1'.
 ]
 
@@ -604,7 +611,7 @@ ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
 	"delegates to a release version from now on"
-	spec for: #'common' version: #'release-2.4'.
+	spec for: #'common' version: #'release-2.5'.
 ]
 
 { #category : #versions }
