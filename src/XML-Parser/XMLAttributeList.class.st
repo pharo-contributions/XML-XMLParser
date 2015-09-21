@@ -226,24 +226,24 @@ XMLAttributeList >> sort [
 ]
 
 { #category : #private }
-XMLAttributeList >> writeAttributesOn: aTagWriter [
+XMLAttributeList >> writeAttributesOn: aWriter [
 	"use to:do: for speed"
 	1 to: self size do: [:i | | attribute |
 		attribute := self at: i.
-		aTagWriter
+		aWriter
 			writeAttributeName: attribute name
 			value: attribute value]
 ]
 
 { #category : #private }
-XMLAttributeList >> writeSortedAttributesOn: aTagWriter [
+XMLAttributeList >> writeSortedAttributesOn: aWriter [
 	| sortedAttributes |
 
 	sortedAttributes := self sorted.
 	"use to:do: for speed"
 	1 to: self size do: [:i | | attribute |
 		attribute := sortedAttributes at: i.
-		aTagWriter
+		aWriter
 			writeAttributeName: attribute name
 			value: attribute value]
 ]
