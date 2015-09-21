@@ -241,9 +241,9 @@ ConfigurationOfXMLParser >> baseline10: spec [
 	spec
 		for: #gt
 		do: [
-			spec
-				package: 'XML-Parser'
-				with: [ spec includes: 'XML-Parser-GTExtensions' ].
+			spec "the extensions require XMLWriter"
+				group: 'default' with: #('Core' 'Tests' 'XML-Parser-GTExtensions');
+				group: 'CoreWithWriting' with: #('XML-Parser' 'XMLWriter' 'XML-Parser-GTExtensions').
 			spec
 				package: 'XML-Parser-GTExtensions'
 				with: [ spec requires: 'XML-Parser' ]. ].
@@ -510,13 +510,29 @@ ConfigurationOfXMLParser >> baseline250: spec [
 		do: [ 
 			spec blessing: #baseline.
 			spec project: 'XMLWriter' with: '2.6.4'.
-			spec project: 'BitmapCharacterSet' with: '1.1.6' ].
+			"#stable BitmapCharacterSet is ok now because XMLParser isn't extending it anymore" ].
 	spec
 		for: #gemstone
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.11' ].
 	spec
 		for: #gt
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.8' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline251: spec [
+	<version: '2.5.1-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.5'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.11' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.9' ]
 ]
 
 { #category : #accessing }
@@ -573,7 +589,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> release24: spec [
 	<symbolicVersion: #'release-2.4'>
 
-	spec for: #'common' version: '2.5.0'.
+	spec for: #'common' version: '2.5.1'.
 ]
 
 { #category : #'symbolic versions' }
@@ -2210,6 +2226,17 @@ ConfigurationOfXMLParser >> version250: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.321'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.133'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version251: spec [ 
+        <version: '2.5.1' imports: #('2.5.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.322'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.133'.
                 ].
 ]
