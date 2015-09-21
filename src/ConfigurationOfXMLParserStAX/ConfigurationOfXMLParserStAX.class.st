@@ -409,7 +409,7 @@ ConfigurationOfXMLParserStAX >> version116: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParserStAX >> version117: spec [ 
-        <version: '1.1.7' imports: #('1.1.2-baseline')>
+        <version: '1.1.7' imports: #('1.1.7-baseline')>
 
         spec for: #common do: [
                 spec blessing: #release.
