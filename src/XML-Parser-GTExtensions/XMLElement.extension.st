@@ -11,24 +11,6 @@ XMLElement >> formForImageEntity: imageEntity [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLElement >> gtDisplayOn: stream [
-	stream
-		nextPut: $<;
-		nextPutAll: self name.
-	self hasAttributes
-		ifTrue: [ 
-			self attributeNodesDo: [ :each | 
-				stream space.
-				each gtDisplayOn: stream ] ].
-	self hasChildren
-		ifTrue: [ 
-			stream nextPut: $>.
-			self hasElements
-				ifFalse: [ self printContentOn: stream ] ]
-		ifFalse: [ stream nextPutAll: ' />' ]
-]
-
-{ #category : #'*XML-Parser-GTExtensions' }
 XMLElement classSide >> gtExampleXmlNode [
 	<gtExample>
 	^ XMLDocument gtExampleXmlNode firstElement
@@ -63,4 +45,18 @@ XMLElement >> gtInspectorImageIn: composite inContext: aGTInspector [
 { #category : #'*XML-Parser-GTExtensions' }
 XMLElement >> gtName [
 	^ self localName
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLElement >> treeLabelText [
+	| writer |
+
+	writer := XMLHighlightingWriter new.
+	(self hasChildren
+		ifTrue: [writer startTag]
+		ifFalse: [writer tag])
+		name: self name;
+		setAttributes: attributes;
+		write.
+	^ writer asHighlightedText.
 ]

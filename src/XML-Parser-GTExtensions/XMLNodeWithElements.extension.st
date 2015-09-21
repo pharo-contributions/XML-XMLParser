@@ -1,11 +1,6 @@
 Extension { #name : #XMLNodeWithElements }
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNodeWithElements >> gtDisplayOn: stream [
-	self subclassResponsibility
-]
-
-{ #category : #'*XML-Parser-GTExtensions' }
 XMLNodeWithElements classSide >> gtExampleXmlNode [
 	<gtExample>
 	^ XMLDocument gtExampleXmlNode nodes
@@ -18,7 +13,10 @@ XMLNodeWithElements >> gtInspectorSourceIn: composite [
 	"removed unfinished source panel editing support for now"
 	composite text 
 		title: 'Source';
-		format: [ self prettyPrinted ]
+		format: [| writer |
+			writer := XMLHighlightingWriter new.
+			self writeXMLOn: writer.
+			writer asHighlightedText]
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
@@ -28,7 +26,7 @@ XMLNodeWithElements >> gtInspectorTreeIn: composite [
 		title: 'Tree';
 		display: [ { self } ];
 		children: #elements;
-		format: #gtDisplayString;
+		format: #treeLabelText;
 		when: [self hasElements];
 		rootsExpanded
 ]
@@ -68,4 +66,9 @@ XMLNodeWithElements >> spotterPreviewSourceIn: aComposite [
 		title: 'Source';
 		display: [ :anElement | self prettyPrinted ];
 		entity: self
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLNodeWithElements >> treeLabelText [
+	self subclassResponsibility
 ]
