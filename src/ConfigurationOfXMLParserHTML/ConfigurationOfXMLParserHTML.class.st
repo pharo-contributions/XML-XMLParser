@@ -180,7 +180,7 @@ ConfigurationOfXMLParserHTML >> baseline114: spec [
 	<version: '1.1.4-baseline' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
-		do: [ spec project: 'XMLParser' with: #'release-2.4' ].
+		do: [ spec project: 'XMLParser' with: #'release-2.5' ].
 	spec
 		for: #gemstone
 		do: [ 
