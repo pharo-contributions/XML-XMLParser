@@ -549,7 +549,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.4.8-baseline'.
+	spec for: #'common' version: '2.5.1-baseline'.
 
 ]
 
