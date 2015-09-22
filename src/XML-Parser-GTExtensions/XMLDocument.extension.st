@@ -7,7 +7,7 @@ XMLDocument classSide >> gtExampleXmlNode [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLDocument >> treeLabelText [
+XMLDocument >> treeNodeLabelText [
 	| writer |
 
 	writer := XMLHighlightingWriter new.

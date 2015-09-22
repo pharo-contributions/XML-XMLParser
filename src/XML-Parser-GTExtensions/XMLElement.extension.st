@@ -48,7 +48,7 @@ XMLElement >> gtName [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLElement >> treeLabelText [
+XMLElement >> treeNodeLabelText [
 	| writer |
 
 	writer := XMLHighlightingWriter new.
