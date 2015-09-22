@@ -24,81 +24,81 @@ Class {
 		'cdataHighlight',
 		'quotedStringValueHighlight'
 	],
-	#classVars : [
-		'DefaultCDataColor',
-		'DefaultCommentColor',
-		'DefaultEntityReferenceColor',
-		'DefaultPrimaryMarkupColor',
-		'DefaultQuotedStringValueColor',
-		'DefaultSecondaryMarkupColor'
+	#classInstVars : [
+		'defaultCDataColor',
+		'defaultCommentColor',
+		'defaultEntityReferenceColor',
+		'defaultPrimaryMarkupColor',
+		'defaultQuotedStringValueColor',
+		'defaultSecondaryMarkupColor'
 	],
 	#category : #'XML-Parser-GTExtensions'
 }
 
 { #category : #accessing }
 XMLHighlightingPrettyPrintingWriterFormatter class >> defaultCDataColor [
-	^ DefaultCDataColor
-		ifNil: [DefaultCDataColor := self textColorForShoutProperty: #primitive]
+	^ defaultCDataColor
+		ifNil: [defaultCDataColor := self textColorForShoutProperty: #primitive]
 ]
 
 { #category : #accessing }
 XMLHighlightingPrettyPrintingWriterFormatter class >> defaultCDataColor: aTextColor [
-	DefaultCDataColor := aTextColor
+	defaultCDataColor := aTextColor
 ]
 
 { #category : #accessing }
 XMLHighlightingPrettyPrintingWriterFormatter class >> defaultCommentColor [
-	^ DefaultCommentColor
-		ifNil: [DefaultCommentColor :=  self textColorForShoutProperty: #comment]
+	^ defaultCommentColor
+		ifNil: [defaultCommentColor :=  self textColorForShoutProperty: #comment]
 ]
 
 { #category : #accessing }
 XMLHighlightingPrettyPrintingWriterFormatter class >> defaultCommentColor: aTextColor [
-	DefaultCommentColor := aTextColor
+	defaultCommentColor := aTextColor
 ]
 
 { #category : #accessing }
 XMLHighlightingPrettyPrintingWriterFormatter class >> defaultEntityReferenceColor [
-	^ DefaultEntityReferenceColor
-		ifNil: [DefaultEntityReferenceColor := self textColorForShoutProperty: #character]
+	^ defaultEntityReferenceColor
+		ifNil: [defaultEntityReferenceColor := self textColorForShoutProperty: #character]
 ]
 
 { #category : #accessing }
 XMLHighlightingPrettyPrintingWriterFormatter class >> defaultEntityReferenceColor: aTextColor [
-	DefaultEntityReferenceColor := aTextColor
+	defaultEntityReferenceColor := aTextColor
 ]
 
 { #category : #accessing }
 XMLHighlightingPrettyPrintingWriterFormatter class >> defaultPrimaryMarkupColor [
-	^ DefaultPrimaryMarkupColor
-		ifNil: [DefaultPrimaryMarkupColor := self textColorForShoutProperty: #argument]
+	^ defaultPrimaryMarkupColor
+		ifNil: [defaultPrimaryMarkupColor := self textColorForShoutProperty: #argument]
 ]
 
 { #category : #accessing }
 XMLHighlightingPrettyPrintingWriterFormatter class >> defaultPrimaryMarkupColor: aTextColor [
-	DefaultPrimaryMarkupColor := aTextColor
+	defaultPrimaryMarkupColor := aTextColor
 ]
 
 { #category : #accessing }
 XMLHighlightingPrettyPrintingWriterFormatter class >> defaultQuotedStringValueColor [
-	^ DefaultQuotedStringValueColor
-		ifNil: [DefaultQuotedStringValueColor := self textColorForShoutProperty: #string]
+	^ defaultQuotedStringValueColor
+		ifNil: [defaultQuotedStringValueColor := self textColorForShoutProperty: #string]
 ]
 
 { #category : #accessing }
 XMLHighlightingPrettyPrintingWriterFormatter class >> defaultQuotedStringValueColor: aTextColor [
-	DefaultQuotedStringValueColor := aTextColor
+	defaultQuotedStringValueColor := aTextColor
 ]
 
 { #category : #accessing }
 XMLHighlightingPrettyPrintingWriterFormatter class >> defaultSecondaryMarkupColor [
-	^ DefaultSecondaryMarkupColor
-		ifNil: [DefaultSecondaryMarkupColor := self textColorForShoutProperty: #self]
+	^ defaultSecondaryMarkupColor
+		ifNil: [defaultSecondaryMarkupColor := self textColorForShoutProperty: #self]
 ]
 
 { #category : #accessing }
 XMLHighlightingPrettyPrintingWriterFormatter class >> defaultSecondaryMarkupColor: aTextColor [
-	DefaultSecondaryMarkupColor := aTextColor
+	defaultSecondaryMarkupColor := aTextColor
 ]
 
 { #category : #'class initialization' }
