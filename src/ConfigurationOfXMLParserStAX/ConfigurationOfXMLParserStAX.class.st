@@ -196,7 +196,7 @@ ConfigurationOfXMLParserStAX >> customProjectAttributes [
 ConfigurationOfXMLParserStAX >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.1.2-baseline'.
+	spec for: #'common' version: '1.1.7-baseline'.
 ]
 
 { #category : #accessing }
