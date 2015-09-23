@@ -7,6 +7,19 @@ XMLDocument classSide >> gtExampleXmlNode [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
+XMLDocument >> hasTreeNodeChildren [
+	^ self hasChildren
+		or: [self hasDoctypeDeclaration]
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLDocument >> treeNodeChildren [
+	self hasDoctypeDeclaration
+		ifTrue: [^ self nodes copyWithFirst: self doctypeDeclaration]
+		ifFalse: [^ self nodes]
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
 XMLDocument >> treeNodeLabelText [
 	| writer |
 

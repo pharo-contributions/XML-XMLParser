@@ -43,8 +43,17 @@ XMLElement >> gtInspectorImageIn: composite inContext: aGTInspector [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLElement >> gtName [
-	^ self localName
+XMLElement >> hasTreeNodeChildren [
+	^ self hasChildren
+		and: [self nodes size > 1
+			or: [self nodes first isStringNode not]]
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLElement >> treeNodeChildren [
+	self hasTreeNodeChildren
+		ifTrue: [^ self nodes]
+		ifFalse: [^ #()]
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
@@ -52,11 +61,16 @@ XMLElement >> treeNodeLabelText [
 	| writer |
 
 	writer := XMLHighlightingWriter new.
-	(self hasChildren
-		ifTrue: [writer startTag]
-		ifFalse: [writer tag])
-		name: self name;
-		setAttributes: attributes;
-		write.
+	self hasTreeNodeChildren
+		ifTrue: [
+			writer startTag
+				name: self name;
+				setAttributes: attributes]
+		ifFalse: [| tagWriter |
+			(tagWriter := writer tag)
+				name: self name;
+				setAttributes: attributes.
+			self hasChildren
+				ifTrue: [tagWriter with: [self writeInnerXMLOn: writer]]].
 	^ writer asHighlightedText.
 ]
