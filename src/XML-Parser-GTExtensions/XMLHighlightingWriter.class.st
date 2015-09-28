@@ -29,6 +29,11 @@ XMLHighlightingWriter >> asHighlightedText [
 	^ text.
 ]
 
+{ #category : #'private ' }
+XMLHighlightingWriter >> highlights [
+	^ highlights
+]
+
 { #category : #initialization }
 XMLHighlightingWriter >> initialize [
 	super initialize.

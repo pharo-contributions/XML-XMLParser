@@ -14,6 +14,7 @@ Class {
 		'tagColor',
 		'cdataColor',
 		'quotedStringValueColor',
+		'defaultHighlight',
 		'xmlDeclarationHighlight',
 		'doctypeDeclarationHighlight',
 		'declarationHighlight',
@@ -25,6 +26,7 @@ Class {
 		'quotedStringValueHighlight'
 	],
 	#classInstVars : [
+		'defaultDefaultColor',
 		'defaultCDataColor',
 		'defaultCommentColor',
 		'defaultEntityReferenceColor',
@@ -55,6 +57,17 @@ XMLHighlightingPrettyPrintingWriterFormatter class >> defaultCommentColor [
 { #category : #accessing }
 XMLHighlightingPrettyPrintingWriterFormatter class >> defaultCommentColor: aTextColor [
 	defaultCommentColor := aTextColor
+]
+
+{ #category : #accessing }
+XMLHighlightingPrettyPrintingWriterFormatter class >> defaultDefaultColor [
+	^ defaultDefaultColor
+		ifNil: [defaultDefaultColor := self textColorForShoutProperty: #default]
+]
+
+{ #category : #accessing }
+XMLHighlightingPrettyPrintingWriterFormatter class >> defaultDefaultColor: aTextColor [
+	defaultDefaultColor := aTextColor
 ]
 
 { #category : #accessing }
@@ -106,6 +119,7 @@ XMLHighlightingPrettyPrintingWriterFormatter class >> initialize [
 	"self initialize"
 
 	self
+		defaultDefaultColor: nil;
 		defaultPrimaryMarkupColor: nil;
 		defaultSecondaryMarkupColor: nil;
 		defaultQuotedStringValueColor: nil;
@@ -150,6 +164,16 @@ XMLHighlightingPrettyPrintingWriterFormatter >> declarationColor [
 { #category : #accessing }
 XMLHighlightingPrettyPrintingWriterFormatter >> declarationColor: aTextColor [
 	declarationColor := aTextColor
+]
+
+{ #category : #accessing }
+XMLHighlightingPrettyPrintingWriterFormatter >> defaultColor [
+	^ defaultHighlight color
+]
+
+{ #category : #accessing }
+XMLHighlightingPrettyPrintingWriterFormatter >> defaultColor: aTextColor [
+	defaultHighlight color: aTextColor
 ]
 
 { #category : #accessing }
@@ -336,17 +360,29 @@ XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforeXMLDeclaration: anXM
 XMLHighlightingPrettyPrintingWriterFormatter >> initialize [
 	super initialize.
 
-	xmlDeclarationColor := self class defaultSecondaryMarkupColor.
-	doctypeDeclarationColor := self class defaultSecondaryMarkupColor.
-	piColor := self class defaultSecondaryMarkupColor.
+	self
+		initializeDefaultHighlight;
+		initializeColors.
+]
 
-	declarationColor := self class defaultPrimaryMarkupColor.
-	tagColor := self class defaultPrimaryMarkupColor.
+{ #category : #initialization }
+XMLHighlightingPrettyPrintingWriterFormatter >> initializeColors [
+	self
+		defaultColor: self class defaultDefaultColor;
+		xmlDeclarationColor: self class defaultSecondaryMarkupColor;
+		doctypeDeclarationColor: self class defaultSecondaryMarkupColor;
+		piColor: self class defaultSecondaryMarkupColor;
+		declarationColor: self class defaultPrimaryMarkupColor;
+		tagColor: self class defaultPrimaryMarkupColor;
+		quotedStringValueColor: self class defaultQuotedStringValueColor;
+		entityReferenceColor: self class defaultEntityReferenceColor;
+		commentColor: self class defaultCommentColor;
+		cdataColor: self class defaultCDataColor
+]
 
-	quotedStringValueColor := self class defaultQuotedStringValueColor.
-	entityReferenceColor := self class defaultEntityReferenceColor.
-	commentColor := self class defaultCommentColor.
-	cdataColor := self class defaultCDataColor.
+{ #category : #initialization }
+XMLHighlightingPrettyPrintingWriterFormatter >> initializeDefaultHighlight [
+	defaultHighlight := XMLHighlight new
 ]
 
 { #category : #'private ' }
@@ -392,6 +428,13 @@ XMLHighlightingPrettyPrintingWriterFormatter >> tagColor [
 { #category : #accessing }
 XMLHighlightingPrettyPrintingWriterFormatter >> tagColor: aTextColor [
 	tagColor := aTextColor
+]
+
+{ #category : #accessing }
+XMLHighlightingPrettyPrintingWriterFormatter >> writer: aWriter [
+	super writer: aWriter.
+
+	aWriter addHighlight: defaultHighlight.
 ]
 
 { #category : #accessing }

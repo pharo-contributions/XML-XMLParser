@@ -1,12 +1,19 @@
 Extension { #name : #XMLNode }
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNode >> asHighlightedText [
-	| writer |
+XMLNode >> asHighlightedSpotterText [
+	^ XMLHighlightingWriter new
+		writeWith: [:writer |
+			writer formatter indentString: '  '.
+			self writeXMLOn: writer];
+		asHighlightedText
+]
 
-	writer := XMLHighlightingWriter new.
-	self writeXMLOn: writer.
-	^ writer asHighlightedText.
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLNode >> asHighlightedText [
+	^ XMLHighlightingWriter new
+		writeWith: [:writer | self writeXMLOn: writer];
+		asHighlightedText
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }

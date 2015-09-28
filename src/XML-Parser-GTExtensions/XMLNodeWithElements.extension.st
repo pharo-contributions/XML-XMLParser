@@ -11,8 +11,8 @@ XMLNodeWithElements >> gtSpotterAllElementsFor: aStep [
 	<spotterOrder: 40>
 	aStep listProcessor
 		title: 'All elements';
-		allCandidates: [ self allElements ];
-		itemName: [ :element | element gtDisplayString ];
+		allCandidates: [self allElements];
+		itemName: #asHighlightedSpotterText;
 		filter: GTFilterSubstring;
 		wantsToDisplayOnEmptyQuery: true
 ]
@@ -22,8 +22,8 @@ XMLNodeWithElements >> gtSpotterDirectElementsFor: aStep [
 	<spotterOrder: 40>
 	aStep listProcessor
 		title: 'Direct elements';
-		allCandidates: [ self elements ];
-		itemName: [ :element | element gtDisplayString ];
+		allCandidates: [self elements];
+		itemName: #asHighlightedSpotterText;
 		filter: GTFilterSubstring;
 		wantsToDisplayOnEmptyQuery: true
 ]
@@ -34,6 +34,6 @@ XMLNodeWithElements >> spotterPreviewSourceIn: aComposite [
 	
 	aComposite text
 		title: 'Source';
-		display: [ :anElement | self prettyPrinted ];
+		display: #asHighlightedSpotterText;
 		entity: self
 ]
