@@ -2,9 +2,18 @@ Extension { #name : #XMLNode }
 
 { #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> asHighlightedText [
-	^ XMLHighlightingWriter new
-		writeWith: [:writer | self writeXMLOn: writer];
-		asHighlightedText
+	^ self asHighlightedTextWrittenWith: [:writer | self writeXMLOn: writer]
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLNode >> asHighlightedTextWrittenWith: aBlock [
+	| writer |
+
+	writer := XMLHighlightingWriter new.
+	self escapesContentEntitiesWhenWriting
+		ifFalse: [writer escapesContentEntityReferences: false].
+	aBlock value: writer.
+	^ writer asHighlightedText.
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
@@ -41,9 +50,7 @@ XMLNode >> treeNodeChildren [
 
 { #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> treeNodeLabelText [
-	^ XMLHighlightingWriter new
-		writeWith: [:writer | self writeTreeNodeLabelXMLOn: writer];
-		asHighlightedText
+	^ self asHighlightedTextWrittenWith: [:writer | self writeTreeNodeLabelXMLOn: writer]
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }

@@ -35,10 +35,9 @@ XMLNodeWithElements >> spotterPreviewSourceIn: aComposite [
 	aComposite text
 		title: 'Source';
 		display: [
-			XMLHighlightingWriter new
-				writeWith: [:writer |
-					writer formatter indentString: '  '.
-					self writeXMLOn: writer];
-				asHighlightedText];
+			self asHighlightedTextWrittenWith: [:writer |
+				"use less indent for spotter previews"
+				writer formatter indentString: '  '.
+				self writeXMLOn: writer]];
 		entity: self
 ]
