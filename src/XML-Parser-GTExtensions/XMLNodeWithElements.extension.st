@@ -12,7 +12,7 @@ XMLNodeWithElements >> gtSpotterAllElementsFor: aStep [
 	aStep listProcessor
 		title: 'All elements';
 		allCandidates: [self allElements];
-		itemName: #asHighlightedSpotterText;
+		itemName: #gtDisplayString;
 		filter: GTFilterSubstring;
 		wantsToDisplayOnEmptyQuery: true
 ]
@@ -23,7 +23,7 @@ XMLNodeWithElements >> gtSpotterDirectElementsFor: aStep [
 	aStep listProcessor
 		title: 'Direct elements';
 		allCandidates: [self elements];
-		itemName: #asHighlightedSpotterText;
+		itemName: #gtDisplayString;
 		filter: GTFilterSubstring;
 		wantsToDisplayOnEmptyQuery: true
 ]
@@ -34,6 +34,11 @@ XMLNodeWithElements >> spotterPreviewSourceIn: aComposite [
 	
 	aComposite text
 		title: 'Source';
-		display: #asHighlightedSpotterText;
+		display: [
+			XMLHighlightingWriter new
+				writeWith: [:writer |
+					writer formatter indentString: '  '.
+					self writeXMLOn: writer];
+				asHighlightedText];
 		entity: self
 ]

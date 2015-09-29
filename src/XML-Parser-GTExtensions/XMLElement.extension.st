@@ -57,20 +57,16 @@ XMLElement >> treeNodeChildren [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLElement >> treeNodeLabelText [
-	| writer |
-
-	writer := XMLHighlightingWriter new.
+XMLElement >> writeTreeNodeLabelXMLOn: aWriter [
 	self hasTreeNodeChildren
 		ifTrue: [
-			writer startTag
+			aWriter startTag
 				name: self name;
 				setAttributes: attributes]
 		ifFalse: [| tagWriter |
-			(tagWriter := writer tag)
+			(tagWriter := aWriter tag)
 				name: self name;
 				setAttributes: attributes.
 			self hasChildren
-				ifTrue: [tagWriter with: [self writeInnerXMLOn: writer]]].
-	^ writer asHighlightedText.
+				ifTrue: [tagWriter with: [self writeInnerXMLOn: aWriter]]].
 ]

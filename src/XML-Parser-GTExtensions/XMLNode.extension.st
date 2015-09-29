@@ -1,15 +1,6 @@
 Extension { #name : #XMLNode }
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNode >> asHighlightedSpotterText [
-	^ XMLHighlightingWriter new
-		writeWith: [:writer |
-			writer formatter indentString: '  '.
-			self writeXMLOn: writer];
-		asHighlightedText
-]
-
-{ #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> asHighlightedText [
 	^ XMLHighlightingWriter new
 		writeWith: [:writer | self writeXMLOn: writer];
@@ -50,5 +41,12 @@ XMLNode >> treeNodeChildren [
 
 { #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> treeNodeLabelText [
-	^ self asHighlightedText
+	^ XMLHighlightingWriter new
+		writeWith: [:writer | self writeTreeNodeLabelXMLOn: writer];
+		asHighlightedText
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLNode >> writeTreeNodeLabelXMLOn: aWriter [
+	self writeXMLOn: aWriter
 ]

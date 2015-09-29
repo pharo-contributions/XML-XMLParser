@@ -20,10 +20,6 @@ XMLDocument >> treeNodeChildren [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLDocument >> treeNodeLabelText [
-	| writer |
-
-	writer := XMLHighlightingWriter new.
-	self writeXMLDeclarationOn: writer.
-	^ writer asHighlightedText.
+XMLDocument >> writeTreeNodeLabelXMLOn: aWriter [
+	self writeXMLDeclarationOn: aWriter
 ]
