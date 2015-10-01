@@ -1,13 +1,13 @@
 "
-This class is an XMLWriter that can make highlighted text output with XMLHighlightingPrettyPrintingWriterFormatter.
+This class is an XMLWriter that can make highlighted text output with XMLHighlightingPrettyPrintingWriterFormatter and XMLHighlighter.
 "
 Class {
 	#name : #XMLHighlightingWriter,
 	#superclass : #XMLWriter,
 	#instVars : [
-		'highlights'
+		'highlighter'
 	],
-	#category : #'XML-Parser-GTExtensions'
+	#category : #'XML-Parser-GTExtensions-Highlighting-Writer'
 }
 
 { #category : #'instance creation' }
@@ -15,30 +15,25 @@ XMLHighlightingWriter class >> on: aStream [
 	^ (super on: aStream) formatter: XMLHighlightingPrettyPrintingWriterFormatter new
 ]
 
-{ #category : #'private ' }
-XMLHighlightingWriter >> addHighlight: aHighlight [
-	^ highlights addLast: aHighlight
-]
-
 { #category : #converting }
 XMLHighlightingWriter >> asHighlightedText [
 	| text |
 
 	text := self asString asText.
-	highlights do: [:each | each applyToText: text].
+	self highlighter highlightText: text.
 	^ text.
 ]
 
-{ #category : #'private ' }
-XMLHighlightingWriter >> highlights [
-	^ highlights
+{ #category : #accessing }
+XMLHighlightingWriter >> highlighter [
+	^ highlighter
 ]
 
 { #category : #initialization }
 XMLHighlightingWriter >> initialize [
 	super initialize.
 
-	highlights := OrderedCollection new.
+	highlighter := XMLHighlighter new.
 ]
 
 { #category : #accessing }

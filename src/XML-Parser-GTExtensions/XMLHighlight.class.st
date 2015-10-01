@@ -9,7 +9,7 @@ Class {
 		'start',
 		'end'
 	],
-	#category : #'XML-Parser-GTExtensions'
+	#category : #'XML-Parser-GTExtensions-Highlighting'
 }
 
 { #category : #highlighting }
