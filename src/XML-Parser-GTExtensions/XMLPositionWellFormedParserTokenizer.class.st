@@ -1,0 +1,137 @@
+"
+This class is a tokenizer that tracks token start/end positions. Does not support entities.
+"
+Class {
+	#name : #XMLPositionWellFormedParserTokenizer,
+	#superclass : #XMLWellFormedParserTokenizer,
+	#instVars : [
+		'initialReadLimit'
+	],
+	#category : #'XML-Parser-GTExtensions-Highlighting-Parser'
+}
+
+{ #category : #accessing }
+XMLPositionWellFormedParserTokenizer >> currentPosition [
+	^ initialReadLimit - streamReader readLimit + 1
+]
+
+{ #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextAttributeValue [
+	| attributeValue |
+
+	driver handleStartQuotedStringValuePosition: self currentPosition + 1.
+	attributeValue := super nextAttributeValue.
+	driver handleEndQuotedStringValuePosition: self currentPosition - 1.
+	^ attributeValue.
+]
+
+{ #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextCDataSection [
+	driver handleStartCDataPosition: self currentPosition - 2.
+	super nextCDataSection.
+	driver handleEndCDataPosition: self currentPosition - 1.
+]
+
+{ #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextCharacterReferenceOnWriteStream [
+	driver handleStartEntityReferencePosition: self currentPosition - 2.
+	self nextInteger
+		ifNil: [self errorExpected: 'integer'].
+	driver handleEndEntityReferencePosition: self currentPosition.
+	self expectNext: $;.
+	^ false.
+]
+
+{ #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextComment [
+	driver handleStartCommentPosition: self currentPosition - 2.
+	super nextComment.
+	driver handleEndCommentPosition: self currentPosition - 1.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLPositionWellFormedParserTokenizer >> nextDoctypeDeclaration [
+	driver handleStartDoctypeDeclarationPosition: self currentPosition - 2.
+	super nextDoctypeDeclaration.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLPositionWellFormedParserTokenizer >> nextEndDoctypeDeclaration [
+	super nextEndDoctypeDeclaration.
+	driver handleEndDoctypeDeclarationPosition: self currentPosition - 1.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLPositionWellFormedParserTokenizer >> nextEntityValue [
+	| entityValue |
+
+	driver handleStartQuotedStringValuePosition: self currentPosition + 1.
+	entityValue := super nextEntityValue.
+	driver handleEndQuotedStringValuePosition: self currentPosition - 1.
+	^ entityValue.
+]
+
+{ #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextGeneralEntityReferenceOnWriteStream [
+	driver handleStartEntityReferencePosition: self currentPosition - 1.
+	self nextName.
+	driver handleEndEntityReferencePosition: self currentPosition.
+	self expectNext: $;.
+	^ false.
+]
+
+{ #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextPIWithTarget: aTarget [
+	driver handleStartPIPosition: self currentPosition - (2 + aTarget size).
+	super nextPIWithTarget: aTarget.
+	driver handleEndPIPosition: self currentPosition - 1.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLPositionWellFormedParserTokenizer >> nextParameterEntityReference [
+	driver handleStartEntityReferencePosition: self currentPosition - 1.
+	self nextName.
+	driver handleEndEntityReferencePosition: self currentPosition.
+	self expectNext: $;.
+	^ false.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLPositionWellFormedParserTokenizer >> nextParameterEntityReferenceInDeclaration [
+	^ self nextParameterEntityReference
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLPositionWellFormedParserTokenizer >> nextParameterEntityReferenceOnWriteStream [
+	^ self nextParameterEntityReference
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLPositionWellFormedParserTokenizer >> nextSubsetDeclaration [
+	driver handleStartDeclaration: self currentPosition + 2.
+	super nextSubsetDeclaration.
+	driver handleEndDeclaration: self currentPosition - 1.
+]
+
+{ #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextTag [
+	driver handleStartTagPosition: self currentPosition - 1.
+	super nextTag.
+	driver handleEndTagPosition: self currentPosition - 1.
+]
+
+{ #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextXMLDeclaration [
+	driver handleStartXMLDeclarationPosition: self currentPosition - 5. "'<?xml' size"
+	super nextXMLDeclaration.
+	driver handleEndXMLDeclarationPosition: self currentPosition - 1.
+]
+
+{ #category : #initialization }
+XMLPositionWellFormedParserTokenizer >> setDriver: aDriver stream: aStream readLimit: aReadLimit [
+	super
+		setDriver: aDriver
+		stream: aStream
+		readLimit: aReadLimit.
+	initialReadLimit := aReadLimit.
+]

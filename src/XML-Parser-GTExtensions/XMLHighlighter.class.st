@@ -168,6 +168,14 @@ XMLHighlighter >> highlightText: aText [
 	highlights do: [:each | each applyToText: aText]
 ]
 
+{ #category : #highlighting }
+XMLHighlighter >> highlightText: aText withColor: aTextColor startingAt: aPosition [
+	XMLHighlight new
+		color: aTextColor;
+		start: aPosition;
+		applyToText: aText
+]
+
 { #category : #initialization }
 XMLHighlighter >> initialize [
 	super initialize.

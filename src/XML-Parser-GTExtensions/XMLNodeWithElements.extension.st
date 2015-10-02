@@ -7,7 +7,7 @@ XMLNodeWithElements classSide >> gtExampleXmlNode [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNodeWithElements >> gtSpotterAllElementsFor: aStep [
+XMLNodeWithElements >> spotterForAllElementsFor: aStep [
 	<spotterOrder: 40>
 	aStep listProcessor
 		title: 'All elements';
@@ -18,7 +18,7 @@ XMLNodeWithElements >> gtSpotterAllElementsFor: aStep [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNodeWithElements >> gtSpotterDirectElementsFor: aStep [
+XMLNodeWithElements >> spotterForDirectElementsFor: aStep [
 	<spotterOrder: 40>
 	aStep listProcessor
 		title: 'Direct elements';
