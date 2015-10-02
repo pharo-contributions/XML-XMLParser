@@ -19,9 +19,17 @@ GLMXMLHighlighterTextStylerDecorator >> errorColor [
 	^ TextColor red
 ]
 
+{ #category : #accessing }
+GLMXMLHighlighterTextStylerDecorator >> highlightableLengthLimit [
+	^ 100000
+]
+
 { #category : #parsing }
 GLMXMLHighlighterTextStylerDecorator >> parse: aString onError: anError [
 	| highlightingParser parser |
+
+	aString size > self highlightableLengthLimit
+		ifTrue: [^ aString asText].
 
 	highlightingParser := XMLHighlightingParser on: aString.
 	parser := highlightingParser parser.

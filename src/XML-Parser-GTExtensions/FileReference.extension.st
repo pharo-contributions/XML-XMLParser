@@ -2,7 +2,7 @@ Extension { #name : #FileReference }
 
 { #category : #'*XML-Parser-GTExtensions' }
 FileReference >> gtInspectorXMLFileIn: composite [
-	<gtInspectorPresentationOrder: 40>
+	<gtInspectorPresentationOrder: 4>
 
 	self isXMLFile
 		ifFalse: [^ self].
@@ -14,6 +14,7 @@ FileReference >> gtInspectorXMLFileIn: composite [
 				GLMHighlighterTextRubEditingMode withStylerDecorator:
 					GLMXMLHighlighterTextStylerDecorator new];
 			display: [XMLPositionExternalStreamConverter convert: self readStream];
+			withLineNumbers: true;
 			act: [:presentation | 
 					self
 						ensureDelete;

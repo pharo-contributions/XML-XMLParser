@@ -34,12 +34,24 @@ XMLPositionExternalStreamConverter class >> on: aStringOrStream readLimit: aRead
 		readLimit: aReadLimit
 ]
 
+{ #category : #closing }
+XMLPositionExternalStreamConverter >> close [
+	streamReader closeStreams
+]
+
+{ #category : #accessing }
+XMLPositionExternalStreamConverter >> contents [
+	^ outputStream contents
+]
+
 { #category : #converting }
 XMLPositionExternalStreamConverter >> convert [
 	^ self
 		detectCurrentEncoding;
 		nextXMLDeclaration;
-		upToEnd
+		skipToEnd;
+		close;
+		contents
 ]
 
 { #category : #'private ' }
@@ -118,8 +130,8 @@ XMLPositionExternalStreamConverter >> setStream: aStream readLimit: aReadLimit [
 	"this is the preferred LE char for Pharo/Squeak"
 	streamReader normalizedLineEndingChar: Character cr.
 
-	outputStream := (String new: aReadLimit) writeStream.
-	writeStream := (String new: 128) writeStream.
+	outputStream := (String new: 10240) writeStream.
+	writeStream := (String new: 64) writeStream.
 ]
 
 { #category : #'private ' }
@@ -129,7 +141,6 @@ XMLPositionExternalStreamConverter >> skipSeparators [
 ]
 
 { #category : #'private ' }
-XMLPositionExternalStreamConverter >> upToEnd [
-	[self next notNil] whileTrue.
-	^ outputStream contents.
+XMLPositionExternalStreamConverter >> skipToEnd [
+	[self next notNil] whileTrue
 ]
