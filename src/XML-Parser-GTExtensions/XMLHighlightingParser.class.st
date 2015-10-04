@@ -5,7 +5,8 @@ Class {
 	#name : #XMLHighlightingParser,
 	#superclass : #SAXPositionHandler,
 	#instVars : [
-		'highlighter'
+		'highlighter',
+		'encodingName'
 	],
 	#category : #'XML-Parser-GTExtensions-Highlighting-Parser'
 }
@@ -29,6 +30,11 @@ XMLHighlightingParser >> asHighlightedTextWithRemainderColored: aTextColor start
 		withColor: aTextColor
 		startingAt: aPosition.
 	^ text.
+]
+
+{ #category : #accessing }
+XMLHighlightingParser >> encodingName [
+	^ encodingName
 ]
 
 { #category : #'handling - positions' }
@@ -91,6 +97,7 @@ XMLHighlightingParser >> on: aStringOrStream [
 	super on: aStringOrStream.
 
 	highlighter := XMLHighlighter new.
+	encodingName := ''.
 ]
 
 { #category : #parsing }
@@ -141,4 +148,9 @@ XMLHighlightingParser >> startTagPosition: aPosition [
 { #category : #'handling - positions' }
 XMLHighlightingParser >> startXMLDeclarationPosition: aPosition [
 	highlighter startXMLDeclarationHighlightPosition: aPosition
+]
+
+{ #category : #'handling - content' }
+XMLHighlightingParser >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
+	encodingName := anEncoding
 ]
