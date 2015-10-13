@@ -532,7 +532,7 @@ ConfigurationOfXMLParser >> baseline251: spec [
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.11' ].
 	spec
 		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.21' ]
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.22' ]
 ]
 
 { #category : #accessing }
