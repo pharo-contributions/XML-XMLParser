@@ -17,12 +17,6 @@ XMLNode >> asHighlightedTextWrittenWith: aBlock [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNode classSide >> gtExampleNodeWithParent [
-	<gtExample>
-	^ self new parent: self new
-]
-
-{ #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> gtInspectorSourceIn: composite [
 	<gtInspectorPresentationOrder: 40>
 
