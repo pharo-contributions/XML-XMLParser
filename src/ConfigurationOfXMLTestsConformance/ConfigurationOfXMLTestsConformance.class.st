@@ -132,7 +132,7 @@ ConfigurationOfXMLTestsConformance >> baseline100: spec [
 				with: [ 
 					spec
 						className: 'ConfigurationOfXMLParser';
-						versionString: #'release-2';
+						versionString: #'release-2.5';
 						loads: #('default');
 						repository: 'http://smalltalkhub.com/mc/PharoExtras/XMLParser/main' ].
 			spec package: 'XML-Tests-Conformance' with: [ spec requires: 'XMLParser' ].
