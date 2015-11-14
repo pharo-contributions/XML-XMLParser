@@ -101,8 +101,14 @@ XMLElementNester >> openElements [
 ]
 
 { #category : #enumerating }
+XMLElementNester >> openElementsDo: aBlock [
+	self openElements do: aBlock
+]
+
+{ #category : #enumerating }
 XMLElementNester >> openElementsReverseDo: aBlock [
-	"reimplemented so it is always safe to remove at the end while scanning backwards"
+	"implemented for XMLParserHTML so it's always safe to remove at
+	the end while scanning backwards"
 	| i |
 
 	i := self openElements size.

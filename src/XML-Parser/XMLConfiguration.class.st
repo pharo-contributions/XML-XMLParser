@@ -136,7 +136,7 @@ XMLConfiguration >> preservesUndeclaredEntityReferences: aBoolean [
 		ifTrue: [self isValidating: false].
 ]
 
-{ #category : #accessing }
+{ #category : #removing }
 XMLConfiguration >> removeLimits [
 	self parserLimits removeAll.
 	self externalEntityResolver removeLimits.

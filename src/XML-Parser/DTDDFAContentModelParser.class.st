@@ -111,7 +111,7 @@ DTDDFAContentModelParser >> parse [
 
 	^ XMLDFAElementValidator
 		element: element
-		dfa: nfaBuilder acceptingNFAFirstState asDFAState.
+		dfa: nfaBuilder buildAcceptingNFAFromFragments asDFAState.
 ]
 
 { #category : #private }

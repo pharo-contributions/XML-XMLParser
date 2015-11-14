@@ -102,7 +102,8 @@ DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: anAttribute
 				type: aType
 				defaultPragma: aDefaultPragma
 				defaultValue: aDefaultValue) parse
-					initializeWithValidatorsFrom: self).
+					initializeWithValidatorsFrom: self;
+					validateDeclaration).
 ]
 
 { #category : #adding }
@@ -118,12 +119,6 @@ DTDDoctypeDefinition >> addValidatorForElement: anElement contentModel: aContent
 { #category : #private }
 DTDDoctypeDefinition >> attributeValidators [
 	^ attributeValidators ifNil: [attributeValidators := Dictionary new]
-]
-
-{ #category : #accessing }
-DTDDoctypeDefinition >> clearIDsAndIDReferences [
-	self hasElementIDValidator
-		ifTrue: [self elementIDValidator clearIDsAndIDReferences]
 ]
 
 { #category : #private }
@@ -237,6 +232,12 @@ DTDDoctypeDefinition >> parameterEntityAt: aName ifAbsent: aBlock [
 	^ self parameterEntities
 		at: aName
 		ifAbsent: aBlock
+]
+
+{ #category : #removing }
+DTDDoctypeDefinition >> removeIDsAndIDReferences [
+	self hasElementIDValidator
+		ifTrue: [self elementIDValidator removeIDsAndIDReferences]
 ]
 
 { #category : #accessing }

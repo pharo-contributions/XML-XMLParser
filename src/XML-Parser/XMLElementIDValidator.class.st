@@ -13,14 +13,6 @@ Class {
 }
 
 { #category : #accessing }
-XMLElementIDValidator >> clearIDsAndIDReferences [
-	"Gemstone's Set does not understand removeAll, so nil reassignment
-	is used instead (will be lazy initialized by accessors) "
-	ids := nil.
-	idReferences := nil.
-]
-
-{ #category : #accessing }
 XMLElementIDValidator >> elementsAndIDAttributes [
 	^ elementsAndIdAttributes ifNil: [elementsAndIdAttributes := Dictionary new]
 ]
@@ -63,6 +55,14 @@ XMLElementIDValidator >> idReferences [
 { #category : #accessing }
 XMLElementIDValidator >> ids [
 	^ ids ifNil: [ids := Set new]
+]
+
+{ #category : #removing }
+XMLElementIDValidator >> removeIDsAndIDReferences [
+	"Gemstone's Set does not understand removeAll, so nil reassignment
+	is used instead (will be lazy initialized by accessors)"
+	ids := nil.
+	idReferences := nil.
 ]
 
 { #category : #validating }

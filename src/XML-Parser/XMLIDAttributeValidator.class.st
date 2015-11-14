@@ -37,15 +37,7 @@ XMLIDAttributeValidator >> elementIDValidator: anElementIDValidator [
 
 { #category : #initialization }
 XMLIDAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
-	(elementIdValidator := aValidatorContainer elementIDValidator)
-		validateIDAttribute: self attribute
-		forElement: self element.
-	self validateReservedAttributeValidator.
-]
-
-{ #category : #testing }
-XMLIDAttributeValidator >> isIDValidator [
-	^ true
+	elementIdValidator := aValidatorContainer elementIDValidator
 ]
 
 { #category : #validating }
@@ -53,4 +45,12 @@ XMLIDAttributeValidator >> validateAttributeValue: aValue [
 	self elementIDValidator
 		validateID: aValue
 		inAttribute: self attribute
+]
+
+{ #category : #validating }
+XMLIDAttributeValidator >> validateDeclaration [
+	self elementIDValidator
+		validateIDAttribute: self attribute
+		forElement: self element.
+	super validateDeclaration.
 ]

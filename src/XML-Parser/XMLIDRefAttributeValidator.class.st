@@ -17,8 +17,7 @@ XMLIDRefAttributeValidator >> elementIDValidator [
 
 { #category : #initialization }
 XMLIDRefAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
-	elementIdValidator := aValidatorContainer elementIDValidator.
-	self validateReservedAttributeValidator.
+	elementIdValidator := aValidatorContainer elementIDValidator
 ]
 
 { #category : #validating }

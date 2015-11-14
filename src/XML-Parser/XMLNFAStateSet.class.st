@@ -24,7 +24,7 @@ XMLNFAStateSet class >> new: aCapacity [
 { #category : #comparing }
 XMLNFAStateSet >> = anObject [
 	^ self == anObject
-		or: [self class == anObject class
+		or: [self species == anObject species
 			and: [set = anObject set]]
 ]
 
@@ -86,7 +86,7 @@ XMLNFAStateSet >> remove: aState ifAbsent: anExceptionBlock [
 	^ aState.
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLNFAStateSet >> set [
 	^ set
 ]

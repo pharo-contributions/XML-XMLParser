@@ -107,7 +107,7 @@ XMLString >> isStringNode: aStringOrStringNode [
 
 { #category : #testing }
 XMLString >> isWhitespace [
-	^ self isEmpty not
+	^ self notEmpty
 		and: [self string allSatisfy: [:each | each xmlParserIsWhitespace]]
 ]
 
@@ -133,6 +133,11 @@ XMLString >> mergeAdjacent [
 			self prepend: adjacentNode.
 			siblingNodes removeAt: selfIndex - 1.
 			selfIndex := selfIndex - 1].
+]
+
+{ #category : #testing }
+XMLString >> notEmpty [
+	^ self string notEmpty
 ]
 
 { #category : #adding }

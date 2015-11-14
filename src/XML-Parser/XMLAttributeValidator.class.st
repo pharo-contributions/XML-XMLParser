@@ -41,14 +41,6 @@ XMLAttributeValidator >> element [
 ]
 
 { #category : #private }
-XMLAttributeValidator >> errorInvalidID: anID [
-	XMLValidationException
-		formatSignal: 'Invalid ID "{1}" in attribute "{2}"'
-		with: anID
-		with: self attribute
-]
-
-{ #category : #private }
 XMLAttributeValidator >> errorInvalidXMLIDAttributeValidator [
 	XMLValidationException signal: 'Attribute "xml:id" must have ID type'
 ]
@@ -90,28 +82,12 @@ XMLAttributeValidator >> furtherNormalizeAttributeValueIn: anAttributeDictionary
 	attributeAssociation value: writeStream contents.
 ]
 
-{ #category : #testing }
-XMLAttributeValidator >> hasIDRefs [
-	^ false
-]
-
-{ #category : #testing }
-XMLAttributeValidator >> hasNotationValues [
-	^ false
-]
-
 { #category : #initialization }
 XMLAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
-	self validateReservedAttributeValidator
 ]
 
 { #category : #testing }
 XMLAttributeValidator >> isEnumerationValidator [
-	^ false
-]
-
-{ #category : #testing }
-XMLAttributeValidator >> isIDValidator [
 	^ false
 ]
 
@@ -169,7 +145,7 @@ XMLAttributeValidator >> validateAttributes: anAttributeDictionary [
 ]
 
 { #category : #validating }
-XMLAttributeValidator >> validateReservedAttributeValidator [
+XMLAttributeValidator >> validateDeclaration [
 	(self attribute at: 1) == $x
 		ifTrue: [
 			(self attribute = 'xml:id')

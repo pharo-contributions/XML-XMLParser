@@ -15,17 +15,9 @@ XMLNotationEnumerationAttributeValidator >> enumerationListParserClass [
 	^ DTDNotationEnumerationListParser
 ]
 
-{ #category : #testing }
-XMLNotationEnumerationAttributeValidator >> hasNotationValues [
-	^ true
-]
-
 { #category : #initialization }
 XMLNotationEnumerationAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
-	(unparsedEntityValidator := aValidatorContainer unparsedEntityValidator)
-		validateNotationAttribute: self attribute
-		forElement: self element.
-	self validateReservedAttributeValidator.
+	unparsedEntityValidator := aValidatorContainer unparsedEntityValidator
 ]
 
 { #category : #accessing }
@@ -39,6 +31,14 @@ XMLNotationEnumerationAttributeValidator >> validateAttributeValue: aValue [
 	self unparsedEntityValidator
 		validateNotationReference: aValue
 		inAttribute: self attribute.
+]
+
+{ #category : #validating }
+XMLNotationEnumerationAttributeValidator >> validateDeclaration [
+	self unparsedEntityValidator
+		validateNotationAttribute: self attribute
+		forElement: self element.
+	super validateDeclaration.
 ]
 
 { #category : #validating }

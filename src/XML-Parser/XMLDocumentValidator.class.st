@@ -144,10 +144,6 @@ XMLDocumentValidator >> validatePCData: aString [
 ]
 
 { #category : #validating }
-XMLDocumentValidator >> validateReservedAttributes: aDictionary for: aStartTag [
-]
-
-{ #category : #validating }
 XMLDocumentValidator >> validateRootElement: anElementName [
 ]
 

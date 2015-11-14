@@ -12,13 +12,7 @@ Class {
 
 { #category : #initialization }
 XMLEntityAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
-	unparsedEntityValidator := aValidatorContainer unparsedEntityValidator.
-	self validateReservedAttributeValidator.
-]
-
-{ #category : #testing }
-XMLEntityAttributeValidator >> isEntityValidator [
-	^ true
+	unparsedEntityValidator := aValidatorContainer unparsedEntityValidator
 ]
 
 { #category : #accessing }

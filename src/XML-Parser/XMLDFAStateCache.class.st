@@ -25,16 +25,16 @@ XMLDFAStateCache >> addDFAState: aDFAState [
 		put: aDFAState.
 ]
 
-{ #category : #accessing }
-XMLDFAStateCache >> cachedDFAStateFor: anNFAStateSet [
-	^ cachedDFAStates
-		at: anNFAStateSet
-		ifAbsent: [self addDFAState: (anNFAStateSet asDFAStateWithStateCache: self)]
-]
-
 { #category : #private }
 XMLDFAStateCache >> cachedDFAStates [
 	^ cachedDFAStates
+]
+
+{ #category : #accessing }
+XMLDFAStateCache >> dfaStateForNFAStates: anNFAStateSet [
+	^ cachedDFAStates
+		at: anNFAStateSet
+		ifAbsent: [self addDFAState: (anNFAStateSet asDFAStateWithStateCache: self)]
 ]
 
 { #category : #accessing }

@@ -34,6 +34,17 @@ XMLDFAElementValidator >> dfa [
 	^ dfa
 ]
 
+{ #category : #private }
+XMLDFAElementValidator >> errorNonDeterminismInContentModelAfter: aName [
+	XMLValidationException
+		formatSignal:
+			'Content model for <{1}> becomes non-deterministic after <{2}>. ',
+			'Rewrite it deterministically; for example "(a,(b|c))" instead ',
+			'of "((a,b)|(a,c))"'
+		with: self element
+		with: aName
+]
+
 { #category : #initialization }
 XMLDFAElementValidator >> setElement: aName dfa: aDFA [
 	element := aName.
@@ -50,6 +61,8 @@ XMLDFAElementValidator >> validatePCData: aString [
 XMLDFAElementValidator >> validateStartTag: aName [
 	currentState :=
 		currentState
-			detectNextStateMatching: aName
-			ifNone: [self errorUnexpectedElement: aName]
+			nextDFAStateMatching: aName
+			ifNone: [self errorUnexpectedElement: aName].
+	currentState hasNonDeterminism
+		ifTrue: [self errorNonDeterminismInContentModelAfter: aName].
 ]

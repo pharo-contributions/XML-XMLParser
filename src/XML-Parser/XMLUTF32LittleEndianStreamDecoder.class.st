@@ -12,7 +12,7 @@ XMLUTF32LittleEndianStreamDecoder class >> basicEncodingNames [
 	^ #('UTF-32LE' 'UTF-32-LE' 'UTF32-LE' 'UTF32LE')
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLUTF32LittleEndianStreamDecoder class >> byteOrderMarkBytes [
 	^ #(16rFF 16rFE 16r00 16r00)
 ]
