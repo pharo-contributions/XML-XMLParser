@@ -285,6 +285,13 @@ XMLStringTest >> testMergeAdjacent [
 ]
 
 { #category : #tests }
+XMLStringTest >> testNotEmpty [
+	self
+		deny: self nodeClass new notEmpty;
+		assert: (self nodeClass string: ' ') notEmpty
+]
+
+{ #category : #tests }
 XMLStringTest >> testPrepend [
 	| node |
 

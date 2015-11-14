@@ -1546,6 +1546,37 @@ XMLParserTest >> testNamespacePrefixInheritance [
 ]
 
 { #category : #tests }
+XMLParserTest >> testNonDeterministicContentModels [
+	| template |
+	
+	template :=
+		'<!DOCTYPE a [
+			<!ELEMENT a {1}>
+			<!ELEMENT b EMPTY>
+			<!ELEMENT c EMPTY>
+			<!ELEMENT d EMPTY>
+		]>{2}'.
+
+	#(#('((b,c)|(b,d))' '(b,(c|d))' '<a><b/><c/></a>')
+		#('(b?,b*)' '(b,b*)' '<a><b/></a>')
+		#('(b+,b?)' '(b,b+)' '<a><b/><b/></a>')
+		) do: [:each | | nonDeterministic deterministic source |
+		nonDeterministic := each first.
+		deterministic := each second.
+		source := each third.
+		self
+			should: [
+				SAXHandler parse:
+					(template format: (Array with: nonDeterministic with: source))]
+			raise: XMLValidationException.
+		self
+			shouldnt: [
+				SAXHandler parse:
+					(template format: (Array with: deterministic with: source))]
+			raise: XMLValidationException].
+]
+
+{ #category : #tests }
 XMLParserTest >> testNotationDeclarationWhitespace [
 	#('<!DOCTYPE test [<!NOTATIONname PUBLIC "publicid">]>'
 		'<!DOCTYPE test [<!NOTATION name PUBLIC"publicid">]>'
@@ -1563,6 +1594,23 @@ XMLParserTest >> testNotationDeclarationWhitespace [
 			self
 				shouldnt: [SAXHandler parse: each]
 				raise: XMLWellFormednessException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testOptimizeForLargeDocuments [
+	| parser |
+
+	parser := SAXHandler on: ''.
+	self
+		assert: parser isValidating;
+		assert: parser usesNamespaces;
+		assert: parser documentReadLimit = XMLParserLimits defaultDocumentReadLimit.
+
+	parser optimizeForLargeDocuments.
+	self
+		deny: parser isValidating;
+		deny: parser usesNamespaces;
+		assert: parser documentReadLimit isNil.
 ]
 
 { #category : #tests }

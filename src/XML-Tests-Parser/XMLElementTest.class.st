@@ -32,6 +32,13 @@ XMLElementTest >> namespaces [
 	^ OrderPreservingDictionary with: 'prefix' -> 'prefixNS' with: '' -> 'defaultNS'
 ]
 
+{ #category : #'instance creation' }
+XMLElementTest >> newNodeWithElements [
+	^ super newNodeWithElements
+		name: 'root';
+		yourself
+]
+
 { #category : #accessing }
 XMLElementTest >> nodeClass [
 	^ XMLElement

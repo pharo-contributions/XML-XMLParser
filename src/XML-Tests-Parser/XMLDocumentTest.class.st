@@ -12,7 +12,7 @@ XMLDocumentTest class >> isAbstract [
 { #category : #'instance creation' }
 XMLDocumentTest >> newNodeWithElements [
 	^ super newNodeWithElements
-		doctypeDeclaration: XMLDoctypeDeclaration new;
+		doctypeDeclaration: (XMLDoctypeDeclaration new root: 'zero');
 		yourself
 ]
 
@@ -119,7 +119,7 @@ XMLDocumentTest >> testRoot [
 	nodeWithElements := self newNodeWithElements.
 	firstNode := XMLComment string: 'first'.
 	nodeWithElements addNodeFirst: firstNode.
-	self assert: (nodeWithElements root isElementNamed: 'root').
+	self assert: (nodeWithElements root isElementNamed: 'zero').
 
 	newRoot := XMLElement named: 'new-root'.
 	nodeWithElements root: newRoot.

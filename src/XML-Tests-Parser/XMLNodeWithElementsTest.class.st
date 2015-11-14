@@ -17,7 +17,7 @@ XMLNodeWithElementsTest >> newNodeWithElements [
 	^ self nodeClass new
 		addNode: (XMLComment string: 'before');
 		addNode:
-			((XMLElement name: 'root')
+			((XMLElement name: 'zero')
 				addNode: (XMLComment string: 'before');
 				addNode:
 					((XMLElement named: 'one')
@@ -127,7 +127,7 @@ XMLNodeWithElementsTest >> testAllElements [
 			allElements removeFirst].
 	self assert:
 		(allElements collect: [:each | each name]) asArray =
-			#('root' 'one' 'two' 'three' 'four' 'prefix:four' 'prefix:five' 'four').
+			#('zero' 'one' 'two' 'three' 'four' 'prefix:four' 'prefix:five' 'four').
 	self
 		assertList: allElements first allElements selects: (allElements copyFrom: 1 to: 8);
 		assertList: allElements second allElements selects: (allElements copyFrom: 2 to: 3);
@@ -283,7 +283,7 @@ XMLNodeWithElementsTest >> testAllNodes [
 		assert: allNodes size = 16;
 		assert: (allNodes at: 1) == nodeWithElements;
 		assert: (allNodes at: 2) isComment;
-		assert: ((allNodes at: 3) isElementNamed: 'root');
+		assert: ((allNodes at: 3) isElementNamed: 'zero');
 		assert: (allNodes at: 4) isComment;
 		assert: ((allNodes at: 5) isElementNamed: 'one');
 		assert: ((allNodes at: 6) isStringNode: 'testing one');
@@ -413,7 +413,7 @@ XMLNodeWithElementsTest >> testDescendentElements [
 	descendentElements := nodeWithElements descendentElements.
 	self assert:
 		(descendentElements collect: [:each | each name]) asArray =
-			#('root' 'one' 'two' 'three' 'four' 'prefix:four' 'prefix:five' 'four').
+			#('zero' 'one' 'two' 'three' 'four' 'prefix:four' 'prefix:five' 'four').
 	self
 		assertList: descendentElements first descendentElements selects: (descendentElements copyFrom: 2 to: 8);
 		assertList: descendentElements second descendentElements selects: (descendentElements copyFrom: 3 to: 3);
@@ -1180,12 +1180,43 @@ XMLNodeWithElementsTest >> testNodeFactory [
 ]
 
 { #category : #tests }
-XMLNodeWithElementsTest >> testPrintedWithoutSelfClosingTags [
-	| nodeWithElements printString |
+XMLNodeWithElementsTest >> testPrettyPrinted [
+	| nodeWithElements printString prettyPrintString prettyNodeWithElements |
 
 	nodeWithElements := self newNodeWithElements.
 	printString := nodeWithElements printString.
-	self deny: printString = nodeWithElements printedWithoutSelfClosingTags.
+	prettyPrintString := nodeWithElements prettyPrinted.
+	self deny: printString = prettyPrintString.
+
+	prettyNodeWithElements :=
+		(XMLDOMParser on: prettyPrintString)
+			preservesIgnorableWhitespace: true;
+			parseDocument.
+	nodeWithElements allElements
+		with: prettyNodeWithElements allElements
+		do: [:element :prettyElement |
+			element hasChildren
+				ifTrue: [
+					element firstNode isStringNode
+						ifFalse: [
+							self
+								assert: prettyElement firstNode isStringNode;
+								assert: prettyElement firstNode isWhitespace].
+					element hasStringNodes
+						ifFalse: [
+							self
+								assert: prettyElement lastNode isStringNode;
+								assert: prettyElement lastNode isWhitespace]]].
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testPrintedWithoutSelfClosingTags [
+	| nodeWithElements printString printStringWithoutSelfClosingTags |
+
+	nodeWithElements := self newNodeWithElements.
+	printString := nodeWithElements printString.
+	printStringWithoutSelfClosingTags := nodeWithElements printedWithoutSelfClosingTags.
+	self deny: printString = printStringWithoutSelfClosingTags.
 
 	nodeWithElements allElementsDo: [:each |
 		each hasChildren
@@ -1194,7 +1225,7 @@ XMLNodeWithElementsTest >> testPrintedWithoutSelfClosingTags [
 					printString
 						copyReplaceAll: '<', each name, ' />'
 						with: '<', each name, '></', each name, '>']].
-	self assert: printString = nodeWithElements printedWithoutSelfClosingTags.
+	self assert: printString = printStringWithoutSelfClosingTags.
 ]
 
 { #category : #tests }
