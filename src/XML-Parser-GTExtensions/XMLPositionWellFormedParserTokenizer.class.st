@@ -35,8 +35,8 @@ XMLPositionWellFormedParserTokenizer >> nextCDataSection [
 { #category : #tokenizing }
 XMLPositionWellFormedParserTokenizer >> nextCharacterReferenceOnWriteStream [
 	driver handleStartEntityReferencePosition: self currentPosition - 2.
-	self nextInteger
-		ifNil: [self errorExpected: 'integer'].
+	streamReader nextInteger
+		ifNil: [self errorExpectedIntegerCharacterReference].
 	driver handleEndEntityReferencePosition: self currentPosition.
 	self expectNext: $;.
 	^ false.

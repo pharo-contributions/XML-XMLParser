@@ -71,7 +71,9 @@ XMLPositionExternalStreamConverter >> expectNextAll: aString [
 { #category : #'private ' }
 XMLPositionExternalStreamConverter >> next [
 	^ streamReader next
-		ifNotNil: [:nextChar | outputStream nextPut: nextChar]
+		ifNotNil: [:nextChar |
+			outputStream nextPut: nextChar.
+			nextChar]
 ]
 
 { #category : #'private ' }
