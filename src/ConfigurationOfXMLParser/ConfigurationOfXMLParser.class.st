@@ -56,7 +56,9 @@ I had to largely rewrite the tokenizer to make everything work, but I followed t
 { #category : #catalog }
 ConfigurationOfXMLParser class >> catalogDescription [
 
-	^ 'XMLParser provides validating SAX and DOM parsers for well-formed XML documents on Pharo, Squeak, and Gemstone. It also provides a DOM API for manipulating documents, namespace support, and an optional XMLWriter for writing documents. Validation and namespace checking are enabled by default, but not resolution of external entities.'
+	^ 'XMLParser provides validating SAX and DOM parsers for well-formed XML documents on Pharo, Squeak, and Gemstone. It also provides a DOM API for manipulating documents, namespace support, and an optional XMLWriter for writing documents. Validation and namespace checking are enabled by default, but not resolution of external entities.
+
+Implements XML 1.0, Namespaces 1.0, xml:id 1.0, and XML Base 1.0.'
 ]
 
 { #category : #catalog }
@@ -535,6 +537,22 @@ ConfigurationOfXMLParser >> baseline251: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.24' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline253: spec [
+	<version: '2.5.3-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.5'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.11' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.26' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParser >> customProjectAttributes [
     "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -549,7 +567,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.5.1-baseline'.
+	spec for: #'common' version: '2.5.3-baseline'.
 
 ]
 
@@ -593,6 +611,13 @@ ConfigurationOfXMLParser >> release24: spec [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release253: spec [
+	<symbolicVersion: #'release-2.5.3'>
+
+	spec for: #'common' version: '2.5.3'.
+]
+
+{ #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> release25: spec [
 	<symbolicVersion: #'release-2.5'>
 
@@ -611,7 +636,7 @@ ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
 	"delegates to a release version from now on"
-	spec for: #'common' version: #'release-2.5'.
+	spec for: #'common' version: #'release-2.5.3'.
 ]
 
 { #category : #versions }
@@ -2256,5 +2281,16 @@ ConfigurationOfXMLParser >> version252: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.323'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.134'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version253: spec [ 
+        <version: '2.5.3' imports: #('2.5.3-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.324'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.135'.
                 ].
 ]
