@@ -38,8 +38,7 @@ SAXHandlerProxy >> argumentsSentWith: aSelector [
 SAXHandlerProxy >> doesNotUnderstand: aMessage [
 	| result |
 
-	(self handlerCategories includes:
-		(saxHandler class whichCategoryIncludesSelector: aMessage selector))
+	(self isHandlerMessage: aMessage)
 		ifTrue: [self messageRecorder recordMessage: aMessage].
 
 	^ (result := aMessage sendTo: saxHandler) == saxHandler
@@ -47,13 +46,13 @@ SAXHandlerProxy >> doesNotUnderstand: aMessage [
 		ifFalse: [result].
 ]
 
-{ #category : #accessing }
-SAXHandlerProxy >> handlerCategories [
-	^ #(
-		#'handling - content'
-		#'handling - lexical'
-		#'handling - declarations'
-	)
+{ #category : #testing }
+SAXHandlerProxy >> isHandlerMessage: aMessage [
+	| category |
+
+	category := saxHandler class whichCategoryIncludesSelector: aMessage selector.
+
+	^ category asString beginsWith: 'handling'.
 ]
 
 { #category : #accessing }

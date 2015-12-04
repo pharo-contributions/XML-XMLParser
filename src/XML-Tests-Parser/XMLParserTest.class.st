@@ -1180,6 +1180,25 @@ XMLParserTest >> testIncompleteCDataTokens [
 ]
 
 { #category : #tests }
+XMLParserTest >> testIncompleteCharacterReferences [
+	#('<test>&#</test>'
+		'<test>&#34</test>'
+		'<test>&#x22</test>'
+		'<test>&#;</test>'
+		'<test>&#x;</test>')
+		do: [:each | 
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException.
+			self
+				should: [
+					(SAXHandler on: each)
+						replacesContentEntityReferences: false;
+						parseDocument]
+				raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
 XMLParserTest >> testIncompleteCommentTokens [
 	#('<!--' '<!-- comment' '<!-- comment -' '<!-- comment --')
 		do: [:each | 
@@ -1207,6 +1226,32 @@ XMLParserTest >> testIncompleteEndTagTokens [
 		do: [:each | 
 			self
 				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
+XMLParserTest >> testIncompleteEntityReferences [
+	#('<!DOCTYPE test [
+			<!ENTITY % entity "<!ELEMENT test EMPTY>">
+			%]><test/>'
+		'<!DOCTYPE test [
+			<!ENTITY % entity "<!ELEMENT test EMPTY>">
+			%;]><test/>'
+		'<!DOCTYPE test [
+			<!ENTITY % entity "<!ELEMENT test EMPTY>">
+			%entity]><test/>'
+		'<test>&</test>'
+		'<test>&test</test>'
+		'<test>&;</test>')
+		do: [:each | 
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException.
+			self
+				should: [
+					(SAXHandler on: each)
+						replacesContentEntityReferences: false;
+						parseDocument]
 				raise: XMLWellFormednessException]
 ]
 
@@ -1639,6 +1684,7 @@ XMLParserTest >> testPredefinedEntityReplacement [
 			nextPut: $&;
 			nextPutAll: name;
 			nextPut: $;.
+
 		replacements nextPut: char].
 
 	document :=
@@ -1651,8 +1697,8 @@ XMLParserTest >> testPredefinedEntityReplacement [
 			</root>' format: (Array with: references contents)).
 	self
 		assert: (document root attributeAt: 'name') = replacements contents;
-		assert: (document findElementNamed: 'one') contentString = replacements contents;
-		assert: (document findElementNamed: 'two') contentString = '&nonRecursive;'.
+		assert: (document root contentStringAt: 'one') = replacements contents;
+		assert: (document root contentStringAt: 'two') = '&nonRecursive;'.
 ]
 
 { #category : #tests }
@@ -2028,14 +2074,14 @@ XMLParserTest >> testUnreplacedContentEntities [
 
 	xml := '
 		<!DOCTYPE one [<!ENTITY declared "replacement">]>
-		<one two="&quot;&declared;&quot;">&#60;&declared;&#62;</one>'.
+		<one two="&quot;&declared;&quot;">&#60;&declared;&#x2F;&#x3e;</one>'.
 	document :=
 		(XMLDOMParser on: xml)
 			replacesContentEntityReferences: false;
 			parseDocument.
 	self
 		assert: (document root attributeAt: 'two') = '&quot;&declared;&quot;';
-		assert: document root contentString = '&#60;&declared;&#62;'.
+		assert: document root contentString = '&#60;&declared;&#x2F;&#x3e;'.
 ]
 
 { #category : #tests }
