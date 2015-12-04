@@ -12,14 +12,14 @@ Class {
 
 { #category : #accessing }
 XMLPositionWellFormedParserTokenizer >> currentPosition [
-	^ initialReadLimit - streamReader readLimit + 1
+	^ initialReadLimit - streamReader readLimit
 ]
 
 { #category : #tokenizing }
 XMLPositionWellFormedParserTokenizer >> nextAttributeValue [
 	| attributeValue |
 
-	driver handleStartQuotedStringValuePosition: self currentPosition + 1.
+	driver handleStartQuotedStringValuePosition: self currentPosition.
 	attributeValue := super nextAttributeValue.
 	driver handleEndQuotedStringValuePosition: self currentPosition - 1.
 	^ attributeValue.
@@ -34,12 +34,12 @@ XMLPositionWellFormedParserTokenizer >> nextCDataSection [
 
 { #category : #tokenizing }
 XMLPositionWellFormedParserTokenizer >> nextCharacterReferenceOnWriteStream [
-	driver handleStartEntityReferencePosition: self currentPosition - 2.
-	streamReader nextInteger
-		ifNil: [self errorExpectedIntegerCharacterReference].
-	driver handleEndEntityReferencePosition: self currentPosition.
-	self expectNext: $;.
-	^ false.
+	| result |
+
+	driver handleStartEntityReferencePosition: self currentPosition - 1.
+	result := super nextCharacterReferenceOnWriteStream.
+	driver handleEndEntityReferencePosition: self currentPosition - 1.
+	^ result.
 ]
 
 { #category : #tokenizing }
@@ -133,5 +133,5 @@ XMLPositionWellFormedParserTokenizer >> setDriver: aDriver stream: aStream readL
 		setDriver: aDriver
 		stream: aStream
 		readLimit: aReadLimit.
-	initialReadLimit := aReadLimit.
+	initialReadLimit := aReadLimit + 1. "+1 to get 1-based positions"
 ]
