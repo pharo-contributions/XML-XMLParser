@@ -1,5 +1,5 @@
 "
-A read stream adapter that decodes stream contents using a stream decoder.
+A read stream adapter that decodes stream contents using a stream decoder. Used with undecoded external streams.
 "
 Class {
 	#name : #XMLDecodingReadStreamAdapter,

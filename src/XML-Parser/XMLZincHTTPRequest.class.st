@@ -13,15 +13,17 @@ XMLZincHTTPRequest class >> isSupported [
 ]
 
 { #category : #private }
-XMLZincHTTPRequest >> getResponseUpToLimit: aMaxSize withTimeout: aTimeout onError: aBlock [
+XMLZincHTTPRequest >> getResponseUpToLimit: aMaxSize decoding: aBoolean timeout: aTimeout onError: aBlock [
 	^ self
 		setZincMaxEntitySize: aMaxSize
 		during: [
-			"use streaming entities to get the undecoded response
-			to not conflict with our own decoding"
+			"Use streaming entities to get the undecoded response when
+			decoding is disabled. This is used to not conflict with our
+			own decoding that relies on byte-order marks and <?xml?>
+			encoding attributes."
 			((Smalltalk at: #ZnClient) new
+				streaming: aBoolean not;
 				timeout: aTimeout;
-				streaming: true;
 				url: url;
 				get;
 				entity) contents]

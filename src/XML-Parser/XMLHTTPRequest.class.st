@@ -32,19 +32,22 @@ XMLHTTPRequest >> defaultTimeout [
 
 { #category : #retrieving }
 XMLHTTPRequest >> get [
-	^ self getUpToLimit: nil
+	^ self
+		getUpToLimit: nil
+		decoding: true
 ]
 
 { #category : #private }
-XMLHTTPRequest >> getResponseUpToLimit: aMaxSize withTimeout: aTimeout onError: aBlock [
+XMLHTTPRequest >> getResponseUpToLimit: aMaxSize decoding: aBoolean timeout: aTimeout onError: aBlock [
 	self subclassResponsibility
 ]
 
 { #category : #retrieving }
-XMLHTTPRequest >> getUpToLimit: aMaxSize [
+XMLHTTPRequest >> getUpToLimit: aMaxSize decoding: aBoolean [
 	^ self
 		getResponseUpToLimit: aMaxSize
-		withTimeout: self defaultTimeout
+		decoding: aBoolean
+		timeout: self defaultTimeout
 		onError: [:error |
 			(self isMaxSizeException: error)
 				ifTrue: [XMLLimitException signal: 'HTTP reponse limit exceeded']
@@ -67,12 +70,16 @@ XMLHTTPRequest >> printOn: aStream [
 
 { #category : #retrieving }
 XMLHTTPRequest >> streamGet [
-	^ self streamGetUpToLimit: nil
+	^ self
+		streamGetUpToLimit: nil
+		decoding: true
 ]
 
 { #category : #retrieving }
-XMLHTTPRequest >> streamGetUpToLimit: aMaxSize [
-	^ (self getUpToLimit: aMaxSize) readStream
+XMLHTTPRequest >> streamGetUpToLimit: aMaxSize decoding: aBoolean [
+	^ (self
+		getUpToLimit: aMaxSize
+		decoding: aBoolean) readStream
 ]
 
 { #category : #accessing }

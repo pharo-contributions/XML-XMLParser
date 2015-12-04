@@ -203,11 +203,14 @@ XMLNestedStreamReader >> next [
 
 { #category : #accessing }
 XMLNestedStreamReader >> nextInteger [
-	^ XMLIntegerReader
-		readFrom: self
-		withBase: 16
-		startingWithAny: 'x'
-		orBase: 10
+	^ self nextIntegerPrintedOn: nil
+]
+
+{ #category : #accessing }
+XMLNestedStreamReader >> nextIntegerPrintedOn: aStream [
+	^ (XMLIntegerReader on: self)
+		printStream: aStream;
+		nextIntegerWithBase: 16 startingWithAny: 'x' orBase: 10
 ]
 
 { #category : #accessing }

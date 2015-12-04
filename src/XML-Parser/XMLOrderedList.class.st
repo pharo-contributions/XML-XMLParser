@@ -567,6 +567,11 @@ XMLOrderedList >> lastIndexOf: anObject ifAbsent: aBlock [
 ]
 
 { #category : #accessing }
+XMLOrderedList >> lastOrNil [
+	^ self last
+]
+
+{ #category : #accessing }
 XMLOrderedList >> ninth [
 	^ self at: 9
 ]

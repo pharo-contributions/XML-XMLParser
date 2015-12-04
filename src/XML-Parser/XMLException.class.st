@@ -47,7 +47,10 @@ XMLException class >> formatSignal: aString withAll: anArray [
 
 { #category : #signalling }
 XMLException class >> signalMessageFrom: anException [
-	^ self signal: anException messageText
+	^ self
+		formatSignal: '({1}) {2}'
+		with: anException class name
+		with: anException messageText
 ]
 
 { #category : #private }

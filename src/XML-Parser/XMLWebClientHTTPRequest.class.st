@@ -13,7 +13,7 @@ XMLWebClientHTTPRequest class >> isSupported [
 ]
 
 { #category : #private }
-XMLWebClientHTTPRequest >> getResponseUpToLimit: aMaxSize withTimeout: aTimeout onError: aBlock [
+XMLWebClientHTTPRequest >> getResponseUpToLimit: aMaxSize decoding: aBoolean timeout: aTimeout onError: aBlock [
 	^ [| response |
 		response :=
 			(Smalltalk at: #WebClient) new

@@ -5,7 +5,8 @@ Class {
 	#name : #XMLIntegerReader,
 	#superclass : #Object,
 	#instVars : [
-		'stream'
+		'readStream',
+		'printStream'
 	],
 	#classVars : [
 		'CharacterDigitValues'
@@ -76,12 +77,17 @@ XMLIntegerReader class >> readFrom: aStream withBase: aBase upTo: anInteger [
 
 { #category : #testing }
 XMLIntegerReader >> atEnd [
-	^ stream atEnd
+	^ readStream atEnd
 ]
 
 { #category : #accessing }
 XMLIntegerReader >> next [
-	^ stream next
+	^ printStream
+		ifNil: [readStream next]
+		ifNotNil: [| nextChar |
+			nextChar := readStream next.
+			printStream nextPut: nextChar.
+			^ nextChar]
 ]
 
 { #category : #private }
@@ -146,10 +152,15 @@ XMLIntegerReader >> nextIntegerWithBase: aBase upTo: aReadLimit [
 
 { #category : #initialization }
 XMLIntegerReader >> on: aStream [
-	stream := aStream
+	readStream := aStream
 ]
 
 { #category : #accessing }
 XMLIntegerReader >> peek [
-	^ stream peek
+	^ readStream peek
+]
+
+{ #category : #accessing }
+XMLIntegerReader >> printStream: aStream [
+	printStream := aStream
 ]

@@ -68,14 +68,19 @@ XMLFileHandle >> fileSize [
 
 { #category : #retrieving }
 XMLFileHandle >> get [
-	^ self getUpToLimit: nil
+	^ self
+		getUpToLimit: nil
+		decoding: true
 ]
 
 { #category : #retrieving }
-XMLFileHandle >> getUpToLimit: aMaxSize [
+XMLFileHandle >> getUpToLimit: aMaxSize decoding: aBoolean [
 	| stream contents |
 
-	stream := self streamGetUpToLimit: aMaxSize.
+	stream :=
+		self
+			streamGetUpToLimit: aMaxSize
+			decoding: aBoolean.
 	contents := stream contents.
 	stream close.
 
@@ -135,11 +140,13 @@ XMLFileHandle >> readStreamUpToLimit: aMaxSize [
 
 { #category : #retrieving }
 XMLFileHandle >> streamGet [
-	^ self streamGetUpToLimit: nil
+	^ self
+		streamGetUpToLimit: nil
+		decoding: true
 ]
 
 { #category : #retrieving }
-XMLFileHandle >> streamGetUpToLimit: aMaxSize [
+XMLFileHandle >> streamGetUpToLimit: aMaxSize decoding: aBoolean [
 	^ self readStreamUpToLimit: aMaxSize
 ]
 

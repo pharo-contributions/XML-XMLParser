@@ -107,7 +107,9 @@ DTDExternalEntityResolver >> removeLimits [
 { #category : #resolving }
 DTDExternalEntityResolver >> resolveEntityURI: aURIOrURIString [
 	^ self resolveEntityWith: [:maxSize |
-		aURIOrURIString asXMLURI getUpToLimit: maxSize]
+		aURIOrURIString asXMLURI
+			getUpToLimit: maxSize
+			decoding: false]
 ]
 
 { #category : #private }
@@ -170,7 +172,9 @@ DTDExternalEntityResolver >> resolvesLocalFromNonLocal: aBoolean [
 { #category : #resolving }
 DTDExternalEntityResolver >> streamResolveEntityURI: aURIOrURIString [
 	^ self resolveEntityWith: [:maxSize |
-		aURIOrURIString asXMLURI streamGetUpToLimit: maxSize]
+		aURIOrURIString asXMLURI
+			streamGetUpToLimit: maxSize
+			decoding: false]
 ]
 
 { #category : #private }

@@ -198,8 +198,10 @@ XMLURI >> get [
 ]
 
 { #category : #retrieving }
-XMLURI >> getUpToLimit: aMaxSize [
-	^ self asRetrievableResource getUpToLimit: aMaxSize
+XMLURI >> getUpToLimit: aMaxSize decoding: aBoolean [
+	^ self asRetrievableResource
+		getUpToLimit: aMaxSize
+		decoding: aBoolean
 ]
 
 { #category : #testing }
@@ -483,8 +485,10 @@ XMLURI >> streamGet [
 ]
 
 { #category : #retrieving }
-XMLURI >> streamGetUpToLimit: aMaxSize [
-	^ self asRetrievableResource streamGetUpToLimit: aMaxSize
+XMLURI >> streamGetUpToLimit: aMaxSize decoding: aBoolean [
+	^ self asRetrievableResource
+		streamGetUpToLimit: aMaxSize
+		decoding: aBoolean
 ]
 
 { #category : #accessing }
