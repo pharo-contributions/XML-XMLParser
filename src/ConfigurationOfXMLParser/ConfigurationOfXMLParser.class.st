@@ -58,7 +58,12 @@ ConfigurationOfXMLParser class >> catalogDescription [
 
 	^ 'XMLParser provides validating SAX and DOM parsers for well-formed XML documents on Pharo, Squeak, and Gemstone. It also provides a DOM API for manipulating documents, namespace support, and an optional XMLWriter for writing documents. Validation and namespace checking are enabled by default, but not resolution of external entities.
 
-Implements XML 1.0, Namespaces 1.0, xml:id 1.0, and XML Base 1.0.'
+Implements:
+http://www.w3.org/TR/REC-xml/
+http://www.w3.org/TR/REC-xml-names/
+http://www.w3.org/TR/xml-id/
+http://www.w3.org/TR/xmlbase/
+'
 ]
 
 { #category : #catalog }
@@ -71,15 +76,15 @@ Validation and namespace checking are enabled by default, but not resolution of 
 Examples
 [[[ 
 	| doc |
-	"Get all article titles from the content of the <title> child of each <entry>:"
+	"Get all article titles from the content of the <title> child of each <entry>"
 	((doc := (XMLDOMParser parseURL: ''http://pharo.org/news/atom.xml''))
 		allElementsNamed: ''entry'')
-			collect: [:each | (each elementAt: ''title'') contentString].
+			collect: [:each | each contentStringAt: ''title''].
 
-	"Get feed title from first <title> anywhere in the doc:"
+	"Get feed title from first <title> anywhere in the doc"
 	(doc findElementNamed: ''title'') contentString.
 	
-	"Get all article links:"
+	"Get all article links"
 	(doc allElementsNamed: ''entry'') collect: [:each |
 		(each elementAt: ''link'') attributeAt: ''href'' ].
 ]]]
@@ -550,7 +555,7 @@ ConfigurationOfXMLParser >> baseline253: spec [
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.11' ].
 	spec
 		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.26' ]
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.27' ]
 ]
 
 { #category : #accessing }
