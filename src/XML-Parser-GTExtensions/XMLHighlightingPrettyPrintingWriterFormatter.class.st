@@ -73,7 +73,7 @@ XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterPI: aPIWriter [
 
 { #category : #formatting }
 XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterQuotedStringValue: aString [
-	highlighter endQuotedStringValueHighlightPosition: self endPosition.
+	highlighter endQuotedStringValueHighlightPosition: self endPosition + 1.
 
 	super formatAfterQuotedStringValue: aString.
 ]
@@ -152,7 +152,7 @@ XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforePI: aPIWriter [
 XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforeQuotedStringValue: aString [
 	super formatBeforeQuotedStringValue: aString.
 
-	highlighter startQuotedStringValueHighlightPosition: self startPosition.
+	highlighter startQuotedStringValueHighlightPosition: self startPosition - 1.
 ]
 
 { #category : #formatting }

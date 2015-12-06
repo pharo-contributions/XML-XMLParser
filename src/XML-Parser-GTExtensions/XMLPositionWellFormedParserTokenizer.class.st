@@ -22,6 +22,7 @@ XMLPositionWellFormedParserTokenizer >> nextAttributeValue [
 	driver handleStartQuotedStringValuePosition: self currentPosition.
 	attributeValue := super nextAttributeValue.
 	driver handleEndQuotedStringValuePosition: self currentPosition - 1.
+
 	^ attributeValue.
 ]
 
@@ -39,6 +40,7 @@ XMLPositionWellFormedParserTokenizer >> nextCharacterReferenceOnWriteStream [
 	driver handleStartEntityReferencePosition: self currentPosition - 1.
 	result := super nextCharacterReferenceOnWriteStream.
 	driver handleEndEntityReferencePosition: self currentPosition - 1.
+
 	^ result.
 ]
 
@@ -65,9 +67,10 @@ XMLPositionWellFormedParserTokenizer >> nextEndDoctypeDeclaration [
 XMLPositionWellFormedParserTokenizer >> nextEntityValue [
 	| entityValue |
 
-	driver handleStartQuotedStringValuePosition: self currentPosition + 1.
+	driver handleStartQuotedStringValuePosition: self currentPosition.
 	entityValue := super nextEntityValue.
 	driver handleEndQuotedStringValuePosition: self currentPosition - 1.
+
 	^ entityValue.
 ]
 
@@ -77,6 +80,7 @@ XMLPositionWellFormedParserTokenizer >> nextGeneralEntityReferenceOnWriteStream 
 	self nextName.
 	driver handleEndEntityReferencePosition: self currentPosition.
 	self expectNext: $;.
+
 	^ false.
 ]
 
@@ -107,10 +111,32 @@ XMLPositionWellFormedParserTokenizer >> nextParameterEntityReferenceOnWriteStrea
 ]
 
 { #category : #'tokenizing - dtd' }
+XMLPositionWellFormedParserTokenizer >> nextPublicIDLiteral [
+	| publicID |
+
+	driver handleStartQuotedStringValuePosition: self currentPosition.
+	publicID := super nextPublicIDLiteral.
+	driver handleEndQuotedStringValuePosition: self currentPosition - 1.
+
+	^ publicID.
+]
+
+{ #category : #'tokenizing - dtd' }
 XMLPositionWellFormedParserTokenizer >> nextSubsetDeclaration [
-	driver handleStartDeclaration: self currentPosition + 2.
+	driver handleStartDeclaration: self currentPosition - 2.
 	super nextSubsetDeclaration.
 	driver handleEndDeclaration: self currentPosition - 1.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLPositionWellFormedParserTokenizer >> nextSystemIDLiteral [
+	| systemID |
+
+	driver handleStartQuotedStringValuePosition: self currentPosition.
+	systemID := super nextSystemIDLiteral.
+	driver handleEndQuotedStringValuePosition: self currentPosition - 1.
+
+	^ systemID.
 ]
 
 { #category : #tokenizing }
@@ -125,6 +151,39 @@ XMLPositionWellFormedParserTokenizer >> nextXMLDeclaration [
 	driver handleStartXMLDeclarationPosition: self currentPosition - 5. "'<?xml' size"
 	super nextXMLDeclaration.
 	driver handleEndXMLDeclarationPosition: self currentPosition - 1.
+]
+
+{ #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextXMLEncodingAttributeValue [
+	| encoding |
+
+	driver handleStartQuotedStringValuePosition: self currentPosition.
+	encoding := super nextXMLEncodingAttributeValue.
+	driver handleEndQuotedStringValuePosition: self currentPosition - 1.
+
+	^ encoding.
+]
+
+{ #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextXMLStandaloneAttributeValue [
+	| yesOrNo |
+
+	driver handleStartQuotedStringValuePosition: self currentPosition.
+	yesOrNo := super nextXMLStandaloneAttributeValue.
+	driver handleEndQuotedStringValuePosition: self currentPosition - 1.
+
+	^ yesOrNo.
+]
+
+{ #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextXMLVersionAttributeValue [
+	| version |
+
+	driver handleStartQuotedStringValuePosition: self currentPosition.
+	version := super nextXMLVersionAttributeValue.
+	driver handleEndQuotedStringValuePosition: self currentPosition - 1.
+
+	^ version.
 ]
 
 { #category : #initialization }
