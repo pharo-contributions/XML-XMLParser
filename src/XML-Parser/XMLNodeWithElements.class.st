@@ -175,6 +175,7 @@ XMLNodeWithElements >> contentString: aString [
 
 { #category : #accessing }
 XMLNodeWithElements >> contentStringAt: aName [
+	"returns the content string of the element named aName or empty if absent"
 	^ self nodes contentStringAt: aName
 ]
 
@@ -257,11 +258,13 @@ XMLNodeWithElements >> descendentElementsSelect: aBlock [
 
 { #category : #accessing }
 XMLNodeWithElements >> elementAfter: anElement [
+	"returns nil if anElement is last"
 	^ self nodes elementAfter: anElement
 ]
 
 { #category : #accessing }
 XMLNodeWithElements >> elementAt: aName [
+	"returns nil if absent"
 	^ self nodes elementAt: aName
 ]
 
@@ -272,6 +275,7 @@ XMLNodeWithElements >> elementAt: aName ifAbsent: aBlock [
 
 { #category : #accessing }
 XMLNodeWithElements >> elementAt: aName namespaceURI: aURI [
+	"returns nil if absent"
 	^ self nodes elementAt: aName namespaceURI: aURI
 ]
 
@@ -282,6 +286,7 @@ XMLNodeWithElements >> elementAt: aName namespaceURI: aURI ifAbsent: aBlock [
 
 { #category : #accessing }
 XMLNodeWithElements >> elementBefore: anElement [
+	"returns nil if anElement is first"
 	^ self nodes elementBefore: anElement
 ]
 
@@ -365,6 +370,30 @@ XMLNodeWithElements >> findElementNamed: aName namespaceURI: aURI with: aBlock [
 { #category : #searching }
 XMLNodeWithElements >> findElementNamed: aName with: aBlock [
 	^ self allElementsDetect: [:each | (each isNamed: aName) and: [aBlock value: each]]
+]
+
+{ #category : #searching }
+XMLNodeWithElements >> findElementWithID: anID [
+	"implements getElementByID()"
+
+	| document doctypeDefinition elementsAndIDAttributes |
+	
+	((document := self document) notNil
+		and: [(doctypeDefinition := document doctypeDefinition) notNil
+			and: [doctypeDefinition hasElementIDValidator]])
+		ifFalse: [^ nil].
+	elementsAndIDAttributes :=
+		doctypeDefinition elementIDValidator elementsAndIDAttributes.
+
+	self allElementsDo: [:each |
+		each hasAttributes
+			ifTrue: [
+				elementsAndIDAttributes
+					at: each name
+					ifPresent: [:idAttribute |
+						(each attributeAt: idAttribute) = anID
+							ifTrue: [^ each]]]].
+	^ nil.
 ]
 
 { #category : #accessing }

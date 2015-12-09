@@ -197,6 +197,7 @@ XMLNodeWithChildren >> lastNode [
 
 { #category : #accessing }
 XMLNodeWithChildren >> nodeAfter: aNode [
+	"returns nil if aNode is last"
 	^ self nodes after: aNode
 ]
 
@@ -218,6 +219,7 @@ XMLNodeWithChildren >> nodeAt: anIndex put: aNode [
 
 { #category : #accessing }
 XMLNodeWithChildren >> nodeBefore: aNode [
+	"returns nil if aNode is first"
 	^ self nodes before: aNode
 ]
 

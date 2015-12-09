@@ -70,7 +70,9 @@ XMLString >> endsWith: aStringOrStringNode [
 
 { #category : #testing }
 XMLString >> includesSubstring: aStringOrStringNode [
-	^ (self indexOfSubstring: aStringOrStringNode) > 0
+	"avoid String>>includesSubstring: for backwards compatibility"
+	^ aStringOrStringNode isEmpty
+		or: [(self indexOfSubstring: aStringOrStringNode) > 0]
 ]
 
 { #category : #accessing }

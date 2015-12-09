@@ -108,6 +108,7 @@ XMLElement >> allElementsDo: aBlock [
 
 { #category : #accessing }
 XMLElement >> attributeAssociations [
+	"returns name->value associations"
 	^ self attributeNodes attributeAssociations
 ]
 
@@ -154,22 +155,31 @@ XMLElement >> attributeNamesDo: aBlock [
 
 { #category : #accessing }
 XMLElement >> attributeNodeAt: aName [
+	"returns nil if absent"
 	^ self attributeNodes attributeNodeAt: aName
 ]
 
 { #category : #accessing }
 XMLElement >> attributeNodeAt: aName ifAbsent: aBlock [
-	^ self attributeNodes attributeNodeAt: aName ifAbsent: aBlock
+	^ self attributeNodes
+		attributeNodeAt: aName
+		ifAbsent: aBlock
 ]
 
 { #category : #accessing }
 XMLElement >> attributeNodeAt: aLocalName namespaceURI: aURI [
-	^ self attributeNodes attributeNodeAt: aLocalName namespaceURI: aURI
+	"returns nil if absent"
+	^ self attributeNodes
+		attributeNodeAt: aLocalName
+		namespaceURI: aURI
 ]
 
 { #category : #accessing }
 XMLElement >> attributeNodeAt: aLocalName namespaceURI: aURI ifAbsent: aBlock [
-	^ self attributeNodes attributeNodeAt: aLocalName namespaceURI: aURI ifAbsent: aBlock
+	^ self attributeNodes
+		attributeNodeAt: aLocalName
+		namespaceURI: aURI
+		ifAbsent: aBlock
 ]
 
 { #category : #accessing }
@@ -432,7 +442,9 @@ XMLElement >> removeAttributeNode: aNode [
 
 { #category : #removing }
 XMLElement >> removeAttributeNode: aNode ifAbsent: aBlock [
-	^ self attributeNodes remove: aNode ifAbsent: aBlock
+	^ self attributeNodes
+		remove: aNode
+		ifAbsent: aBlock
 ]
 
 { #category : #removing }
