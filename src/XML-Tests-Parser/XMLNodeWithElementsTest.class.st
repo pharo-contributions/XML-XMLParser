@@ -18,7 +18,7 @@ XMLNodeWithElementsTest >> newNodeWithElements [
 		addNode: (XMLComment string: 'before');
 		addNode:
 			((XMLElement name: 'zero')
-				addNode: (XMLComment string: 'before');
+				addNode: (XMLComment string: 'during');
 				addNode:
 					((XMLElement named: 'one')
 						attributeAt: 'one' put: '1';
@@ -981,6 +981,63 @@ XMLNodeWithElementsTest >> testFindElementNamedWith [
 ]
 
 { #category : #tests }
+XMLNodeWithElementsTest >> testFindElementWithID [
+	| xml document idElement xmlIDElement |
+
+	xml := '
+		<!DOCTYPE a [
+			<!ELEMENT a (
+				b,
+				c,
+				d,
+				e
+			)>
+			<!ELEMENT b EMPTY>
+			<!ELEMENT c EMPTY>
+			<!ELEMENT d EMPTY>
+			<!ELEMENT e EMPTY>
+			<!ATTLIST b id CDATA #REQUIRED>
+			<!ATTLIST c id ID #REQUIRED>
+			<!ATTLIST d xml:id ID #REQUIRED> ]>
+		<a>
+			<b id="one"/>
+			<c id="one"/>
+			<d xml:id="two"/>
+			<e/>
+		</a>'.
+
+	document := XMLDOMParser parse: xml.
+	idElement := document findElementNamed: 'c'.
+	xmlIDElement := document findElementNamed: 'd'.
+	self
+		assert: (document findElementWithID: 'one') = idElement;
+		assert: (idElement findElementWithID: 'one') = idElement;
+		assert: (idElement nextElement findElementWithID: 'one') isNil;
+		assert: (document findElementWithID: 'two') = xmlIDElement;
+		assert: (xmlIDElement findElementWithID: 'two') = xmlIDElement;
+		assert: (xmlIDElement nextElement findElementWithID: 'two') isNil;
+		assert: (document findElementWithID: 'three') isNil.
+
+	document root
+		removeNode: idElement;
+		removeNode: xmlIDElement.
+	self
+		assert: (document findElementWithID: 'one') isNil;
+		assert: (idElement findElementWithID: 'one') isNil;
+		assert: (document findElementWithID: 'two') isNil;
+		assert: (xmlIDElement findElementWithID: 'two') isNil.
+
+	document :=
+		XMLDOMParser
+			parse: xml
+			usingNamespaces: true
+			validation: false.
+	self
+		assert: (document findElementWithID: 'one') isNil;
+		assert: (document findElementWithID: 'two') isNil.
+]
+
+{ #category : #tests }
 XMLNodeWithElementsTest >> testFirstElement [
 	| root |
 
@@ -1048,6 +1105,37 @@ XMLNodeWithElementsTest >> testInnerXML [
 		assert: node innerXML = '<test xmlns:prefix="ns"><prefix:inner>test</prefix:inner></test>';
 		assert: element innerXML = '<prefix:inner xmlns:prefix="ns">test</prefix:inner>';
 		assert: element firstNode innerXML = 'test'.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testInnerXMLPrettyPrinted [
+	| nodeWithElements printString prettyPrintString prettyNodeWithElements |
+
+	nodeWithElements := self newNodeWithElements.
+	printString := nodeWithElements innerXML.
+	prettyPrintString := nodeWithElements innerXMLPrettyPrinted.
+	self deny: printString = prettyPrintString.
+
+	prettyNodeWithElements :=
+		(XMLDOMParser on: prettyPrintString)
+			preservesCommentNodes: true;
+			preservesIgnorableWhitespace: true;
+			parseDocument.
+	(nodeWithElements allElements copyWithout: nodeWithElements)
+		with: (prettyNodeWithElements allElements copyWithout: prettyNodeWithElements)
+		do: [:element :prettyElement |
+			element hasChildren
+				ifTrue: [
+					element firstNode isStringNode
+						ifFalse: [
+							self
+								assert: prettyElement firstNode isStringNode;
+								assert: prettyElement firstNode isWhitespace].
+					element hasStringNodes
+						ifFalse: [
+							self
+								assert: prettyElement lastNode isStringNode;
+								assert: prettyElement lastNode isWhitespace]]].
 ]
 
 { #category : #tests }
@@ -1190,6 +1278,7 @@ XMLNodeWithElementsTest >> testPrettyPrinted [
 
 	prettyNodeWithElements :=
 		(XMLDOMParser on: prettyPrintString)
+			preservesCommentNodes: true;
 			preservesIgnorableWhitespace: true;
 			parseDocument.
 	nodeWithElements allElements

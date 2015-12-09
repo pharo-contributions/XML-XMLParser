@@ -138,6 +138,8 @@ XMLStringTest >> testIncludesSubstring [
 
 	node := self nodeClass new.
 	self
+		assert: (node includesSubstring: '');
+		assert: (node includesSubstring: (self nodeClass string: ''));
 		deny: (node includesSubstring: 'one');
 		deny: (node includesSubstring: (self nodeClass string: 'one')).
 	node prepend: 'one'.
@@ -154,12 +156,16 @@ XMLStringTest >> testIncludesSubstring [
 		assert: (node includesSubstring: (self nodeClass string: 'three')).
 
 	self
-		deny: (node includesSubstring: 'onetwothree');
-		deny: (node includesSubstring: (self nodeClass string: 'onetwothree')).
+		deny: (node includesSubstring: 'two');
+		deny: (node includesSubstring: (self nodeClass string: 'two')).
 	node replaceFrom: 4 to: 3 with: 'two'.
 	self
-		assert: (node includesSubstring: 'onetwothree');
-		assert: (node includesSubstring: (self nodeClass string: 'onetwothree')).
+		assert: (node includesSubstring: 'two');
+		assert: (node includesSubstring: (self nodeClass string: 'two')).
+
+	self
+		assert: (node includesSubstring: '');
+		assert: (node includesSubstring: (self nodeClass string: '')).
 ]
 
 { #category : #tests }
