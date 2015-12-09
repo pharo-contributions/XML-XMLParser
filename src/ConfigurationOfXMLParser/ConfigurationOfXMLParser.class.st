@@ -619,7 +619,7 @@ ConfigurationOfXMLParser >> release24: spec [
 ConfigurationOfXMLParser >> release253: spec [
 	<symbolicVersion: #'release-2.5.3'>
 
-	spec for: #'common' version: '2.5.3'.
+	spec for: #'common' version: '2.5.4'.
 ]
 
 { #category : #'symbolic versions' }
@@ -2297,5 +2297,16 @@ ConfigurationOfXMLParser >> version253: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.324'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.135'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version254: spec [ 
+        <version: '2.5.4' imports: #('2.5.3-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.325'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.136'.
                 ].
 ]
