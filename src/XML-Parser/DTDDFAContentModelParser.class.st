@@ -48,7 +48,7 @@ DTDDFAContentModelParser class >> initializeSpecialCharacterParsers [
 		at: $+ asciiValue put: #parseUnaryOperator:
 ]
 
-{ #category : #evaluation }
+{ #category : #private }
 DTDDFAContentModelParser >> applyBinaryOperatorOnStack [
 	nfaBuilder totalFragments > 1
 		ifFalse: [self errorMissingOperand].
@@ -56,7 +56,7 @@ DTDDFAContentModelParser >> applyBinaryOperatorOnStack [
 	self applyOperator: operatorStack removeLast.
 ]
 
-{ #category : #evaluation }
+{ #category : #private }
 DTDDFAContentModelParser >> applyOperator: aCharacter [
 	nfaBuilder perform: (OperatorApplicators at: aCharacter asciiValue)
 ]
@@ -145,13 +145,14 @@ DTDDFAContentModelParser >> parseUnaryOperator: aCharacter [
 DTDDFAContentModelParser >> parserForSpecialCharacter: aCharacter [
 	| asciiValue |
 
+	"avoid at:ifAbsent: for speed"
 	((asciiValue := aCharacter asciiValue) > 0
 		and: [asciiValue <= SpecialCharacterParsers size])
 			ifTrue: [^ SpecialCharacterParsers at: asciiValue]
 			ifFalse: [^ nil]
 ]
 
-{ #category : #evaluation }
+{ #category : #private }
 DTDDFAContentModelParser >> popParenthesizedOperators [
 	[operatorStack notEmpty]
 		whileTrue: [
@@ -164,7 +165,7 @@ DTDDFAContentModelParser >> popParenthesizedOperators [
 	self errorMismatchedParens.
 ]
 
-{ #category : #evaluation }
+{ #category : #private }
 DTDDFAContentModelParser >> popRemainingOperators [
 	[operatorStack notEmpty]
 		whileTrue: [

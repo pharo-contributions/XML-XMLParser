@@ -1,5 +1,5 @@
 "
-This is a basic URI parser that can split a URI into scheme, host (with port), path, query string, and fragment.
+This class is a parser that can extract the scheme, user info, host, port, path segments, query (as a dictionary), and fragment of a URI. It automatically handles percent decoding and raises no errors.
 "
 Class {
 	#name : #XMLURIParser,
@@ -12,120 +12,226 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLURIParser class >> on: aString [
-	^ self new on: aString
+XMLURIParser class >> on: aStringOrStream [
+	^ self new on: aStringOrStream
+]
+
+{ #category : #private }
+XMLURIParser >> atEnd [
+	^ readStream atEnd
+]
+
+{ #category : #private }
+XMLURIParser >> next [
+	self atEnd
+		ifTrue: [^ nil]
+		ifFalse: [^ readStream next]
+]
+
+{ #category : #private }
+XMLURIParser >> nextIntegerWithBase: aBase upTo: aLimit [
+	^ XMLIntegerReader
+		readFrom: readStream
+		withBase: aBase
+		upTo: aLimit
+]
+
+{ #category : #private }
+XMLURIParser >> nextPercentEncodedChar [
+	| nextChar |
+
+	(nextChar := self next) == $%
+		ifTrue: [^ ((self nextIntegerWithBase: 16 upTo: 2) ifNil: [$%]) asCharacter]
+		ifFalse: [^ nextChar]
+]
+
+{ #category : #private }
+XMLURIParser >> nextPercentEncodedDelimitedBy: aCollection [
+	writeStream reset.
+	[self atEnd
+		or: [aCollection includes: self peek]]
+		whileFalse: [writeStream nextPut: self nextPercentEncodedChar].
+	^ writeStream contents.
+]
+
+{ #category : #private }
+XMLURIParser >> nextPercentEncodedUpToEnd [
+	writeStream reset.
+	[self atEnd]
+		whileFalse: [writeStream nextPut: self nextPercentEncodedChar].
+	^ writeStream contents.
+]
+
+{ #category : #private }
+XMLURIParser >> nextPercentOrPlusEncodedChar [
+	| nextChar |
+
+	(nextChar := self next) == $%
+		ifTrue: [^ ((self nextIntegerWithBase: 16 upTo: 2) ifNil: [$%]) asCharacter]
+		ifFalse: [
+			nextChar == $+
+				ifTrue: [^ Character space]
+				ifFalse: [^ nextChar]]
+]
+
+{ #category : #private }
+XMLURIParser >> nextPercentOrPlusEncodedDelimitedBy: aCollection [
+	writeStream reset.
+	[self atEnd
+		or: [aCollection includes: self peek]]
+		whileFalse: [writeStream nextPut: self nextPercentOrPlusEncodedChar].
+	^ writeStream contents.
 ]
 
 { #category : #initialization }
-XMLURIParser >> on: aString [
-	readStream := aString readStream.
-	writeStream := (String new: aString size) writeStream.
+XMLURIParser >> on: aStringOrStream [
+	readStream :=
+		aStringOrStream isStream
+			ifTrue: [aStringOrStream]
+			ifFalse: [aStringOrStream readStream].
+	writeStream := (String new: 64) writeStream.
 ]
 
 { #category : #parsing }
 XMLURIParser >> parseAuthorityPrefix [
 	| oldPosition |
 
-	oldPosition := readStream position.
-	((self parseNext: $/)
-		and: [self parseNext: $/])
+	oldPosition := self position.
+	((self peekFor: $/)
+		and: [self peekFor: $/])
 		ifTrue: [^ true]
 		ifFalse: [
-			readStream position: oldPosition.
+			self position: oldPosition.
 			^ false].
 ]
 
 { #category : #parsing }
 XMLURIParser >> parseFragment [
-	^ self parseUpToEndAfterNext: $#
+	(self peekFor: $#)
+		ifTrue: [^ self nextPercentEncodedUpToEnd]
+		ifFalse: [^ '']
 ]
 
 { #category : #parsing }
 XMLURIParser >> parseHost [
-	^ (self parseUpToAnyNotSkipping: ':/?#') asLowercase
-]
+	| host |
 
-{ #category : #private }
-XMLURIParser >> parseNext: aCharacter [
-	(readStream atEnd not
-		and: [readStream peek == aCharacter])
+	self peek == $[
 		ifTrue: [
-			readStream next.
-			^ true]
-		ifFalse: [^ false]
+			host := (self nextPercentEncodedDelimitedBy: ']') copyWith: $].
+			self peekFor: $]]
+		ifFalse: [host := self nextPercentEncodedDelimitedBy: ':/?#'].
+	^ host asLowercase.
 ]
 
 { #category : #parsing }
-XMLURIParser >> parsePath [
-	^ self parseUpToAnyNotSkipping: '?#'
+XMLURIParser >> parsePathSegments [
+	| pathSegments segment |
+
+	pathSegments := OrderedCollection new.
+
+	segment := self nextPercentEncodedDelimitedBy: '/?#'.
+	[self peekFor: $/]
+		whileTrue: [
+			pathSegments addLast: segment.
+			segment := self nextPercentEncodedDelimitedBy: '/?#'].
+	(pathSegments isEmpty
+		and: [segment isEmpty])
+		ifFalse: [pathSegments addLast: segment].
+
+	^ pathSegments.
 ]
 
 { #category : #parsing }
 XMLURIParser >> parsePort [
-	(self parseNext: $:)
+	| port |
+
+	(self peekFor: $:)
 		ifTrue: [
-			^ XMLIntegerReader
-				readFrom: (self parseUpToAnyNotSkipping: '/?#') readStream
-				withBase: 10]
-		ifFalse: [^ nil]
+			port :=
+				self
+					nextIntegerWithBase: 10
+					upTo: nil.
+			[self atEnd
+				or: ['/?#' includes: self peek]]
+				whileFalse: [self next]].
+	^ port.
 ]
 
 { #category : #parsing }
-XMLURIParser >> parseQueryString [
-	^ self
-		parseUpToAnyNotSkipping: '#'
-		afterNext: $?
+XMLURIParser >> parseQuery [
+	| query key value |
+
+	query := OrderPreservingStringDictionary new.
+	(self peekFor: $?)
+		ifFalse: [^ query].
+
+	[self atEnd
+		or: [(key := self nextPercentOrPlusEncodedDelimitedBy: '=&#') isEmpty
+			and: [self peek == $#]]]
+		whileFalse: [| hasValue |
+			(hasValue := self peekFor: $=)
+				ifTrue: [value := self nextPercentOrPlusEncodedDelimitedBy: '&#']
+				ifFalse: [value := ''].
+			(key notEmpty
+				or: [hasValue])
+				ifTrue: [
+					query
+						at: key
+						put: value].
+			self peekFor: $&].
+
+	^ query.
 ]
 
 { #category : #parsing }
 XMLURIParser >> parseScheme [
-	| scheme |
+	| oldPosition scheme |
 
-	scheme := self parseUpToAnyNotSkipping: ':/@?#'.
-	(self parseNext: $:)
+	oldPosition := self position.
+	scheme := self nextPercentEncodedDelimitedBy: ':/@?#%'.
+	(self peekFor: $:)
 		ifTrue: [^ scheme asLowercase]
 		ifFalse: [
-			readStream reset.
+			self position: oldPosition.
 			^ ''].
-]
-
-{ #category : #private }
-XMLURIParser >> parseUpToAnyNotSkipping: aCollection [
-	^ self
-		parseUpToAnyNotSkipping: aCollection
-		afterNext: nil
-]
-
-{ #category : #private }
-XMLURIParser >> parseUpToAnyNotSkipping: aCollection afterNext: aCharacter [
-	aCharacter
-		ifNotNil: [
-			(self parseNext: aCharacter)
-				ifFalse: [^ '']].
-
-	writeStream reset.
-	[readStream atEnd
-		or: [aCollection includes: readStream peek]]
-		whileFalse: [writeStream nextPut: readStream next].
-	^ writeStream contents.
-]
-
-{ #category : #private }
-XMLURIParser >> parseUpToEndAfterNext: aCharacter [
-	(self parseNext: aCharacter)
-		ifTrue: [^ readStream upToEnd]
-		ifFalse: [^ '']
 ]
 
 { #category : #parsing }
 XMLURIParser >> parseUserInfo [
 	| userInfo oldPosition |
 
-	oldPosition := readStream position.
-	userInfo := self parseUpToAnyNotSkipping: ':/@?#'.
-	(self parseNext: $@)
+	oldPosition := self position.
+	userInfo := self nextPercentEncodedDelimitedBy: ':/@?#'.
+	(self peekFor: $@)
 		ifTrue: [^ userInfo]
 		ifFalse: [
-			readStream position: oldPosition.
+			self position: oldPosition.
 			^ ''].
+]
+
+{ #category : #private }
+XMLURIParser >> peek [
+	self atEnd
+		ifTrue: [^ nil]
+		ifFalse: [^ readStream peek]
+]
+
+{ #category : #private }
+XMLURIParser >> peekFor: aCharacter [
+	self peek == aCharacter
+		ifTrue: [
+			self next.
+			^ true]
+		ifFalse: [^ false]
+]
+
+{ #category : #private }
+XMLURIParser >> position [
+	^ readStream position
+]
+
+{ #category : #private }
+XMLURIParser >> position: anInteger [
+	readStream position: anInteger
 ]

@@ -1,5 +1,5 @@
 "
-This class reads hex or decimal integers from a minimal stream supporting next, peek, and atEnd.
+This class reads positive hex or decimal integers up to the maximum a SmallInteger can hold from minimal streams supporting next, peek, and atEnd. It returns nil instead of raising errors for invalid integers.
 "
 Class {
 	#name : #XMLIntegerReader,
@@ -9,7 +9,8 @@ Class {
 		'printStream'
 	],
 	#classVars : [
-		'CharacterDigitValues'
+		'CharacterDigitValues',
+		'MaxIntegerValue'
 	],
 	#category : #'XML-Parser-Util'
 }
@@ -18,6 +19,13 @@ Class {
 XMLIntegerReader class >> initialize [
 	"self initialize"
 
+	self
+		initializeMaxIntegerValue;
+		initializeCharacterDigitValues
+]
+
+{ #category : #'class initialization' }
+XMLIntegerReader class >> initializeCharacterDigitValues [
 	"array instead of dictionary for speed"
 	CharacterDigitValues := Array new: 256 withAll: -1.
 	($0 to: $9) do: [:each |
@@ -34,6 +42,11 @@ XMLIntegerReader class >> initialize [
 			put: each asciiValue - $a asciiValue + 10].
 ]
 
+{ #category : #'class initialization' }
+XMLIntegerReader class >> initializeMaxIntegerValue [
+	MaxIntegerValue := SmallInteger maxVal
+]
+
 { #category : #private }
 XMLIntegerReader class >> maxBase [
 	^ 16
@@ -41,13 +54,12 @@ XMLIntegerReader class >> maxBase [
 
 { #category : #private }
 XMLIntegerReader class >> maxIntegerValue [
-	"SmallInteger maxVal"
-	^ 1073741823
+	^ MaxIntegerValue
 ]
 
 { #category : #'instance creation' }
-XMLIntegerReader class >> on: aStream [
-	^ self new on: aStream
+XMLIntegerReader class >> on: aStringOrStream [
+	^ self new on: aStringOrStream
 ]
 
 { #category : #'instance creation' }
@@ -80,28 +92,30 @@ XMLIntegerReader >> atEnd [
 	^ readStream atEnd
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLIntegerReader >> next [
-	^ printStream
-		ifNil: [readStream next]
-		ifNotNil: [| nextChar |
+	| nextChar |
+
+	self atEnd
+		ifFalse: [
 			nextChar := readStream next.
-			printStream nextPut: nextChar.
-			^ nextChar]
+			printStream
+				ifNotNil: [printStream nextPut: nextChar]].
+	^ nextChar.
 ]
 
 { #category : #private }
 XMLIntegerReader >> nextDigitWithBase: aBase [
-	| digit |
-	
-	digit :=
-		CharacterDigitValues
-			at: self peek asciiValue
-			ifAbsent: [^ nil].
-	(digit >= 0 and: [digit < aBase])
-		ifFalse: [^ nil].
-	self next.
-	^ digit.
+	| asciiValue digit |
+
+	((asciiValue := self peek asciiValue) > 0
+		and: [asciiValue <= CharacterDigitValues size
+			and: [(digit := CharacterDigitValues at: asciiValue) >= 0
+				and: [digit < aBase]]])
+				ifTrue: [
+					self next.
+					^ digit]
+				ifFalse: [^ nil]
 ]
 
 { #category : #reading }
@@ -137,7 +151,8 @@ XMLIntegerReader >> nextIntegerWithBase: aBase upTo: aReadLimit [
 		or: [(readLimit notNil and: [readLimit <= 0])
 			or: [(digitValue := self nextDigitWithBase: aBase) isNil]]]
 		whileFalse: [
-			integer ifNil: [integer := 0].
+			integer
+				ifNil: [integer := 0].
 	
 			integer > maxBaseValue
 				ifTrue: [^ maxValue].
@@ -146,18 +161,24 @@ XMLIntegerReader >> nextIntegerWithBase: aBase upTo: aReadLimit [
 			integer > (maxValue - digitValue)
 				ifTrue: [^ maxValue].
 			integer := integer + digitValue.
-			readLimit ifNotNil: [readLimit := readLimit - 1]].
+			readLimit
+				ifNotNil: [readLimit := readLimit - 1]].
 	^ integer.
 ]
 
 { #category : #initialization }
-XMLIntegerReader >> on: aStream [
-	readStream := aStream
+XMLIntegerReader >> on: aStringOrStream [
+	readStream :=
+		aStringOrStream isStream
+			ifTrue: [aStringOrStream]
+			ifFalse: [aStringOrStream readStream]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLIntegerReader >> peek [
-	^ readStream peek
+	self atEnd
+		ifTrue: [^ nil]
+		ifFalse: [^ readStream peek]
 ]
 
 { #category : #accessing }

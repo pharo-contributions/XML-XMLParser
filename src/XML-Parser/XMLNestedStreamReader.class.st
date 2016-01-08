@@ -177,6 +177,11 @@ XMLNestedStreamReader >> isEscapingQuotes: aBoolean [
 	isEscapingQuotes := aBoolean
 ]
 
+{ #category : #testing }
+XMLNestedStreamReader >> isStream [
+	^ true
+]
+
 { #category : #private }
 XMLNestedStreamReader >> maxNestedStreams [
 	^ 32

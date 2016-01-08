@@ -234,7 +234,9 @@ XMLNode >> parent: aParentNode [
 
 { #category : #copying }
 XMLNode >> postCopy [
-	parent := nil
+	super postCopy.
+
+	parent := nil.
 ]
 
 { #category : #printing }

@@ -103,6 +103,8 @@ XMLKeyValueCache >> maxSize: anInteger [
 
 { #category : #copying }
 XMLKeyValueCache >> postCopy [
+	super postCopy.
+
 	collection := collection copy
 ]
 

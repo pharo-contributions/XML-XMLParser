@@ -32,7 +32,7 @@ There are security limits on input you can remove with #removeLimits or change w
 		maxEntityReplacementDepth: newMaxEntityDepth;
 		parseDocument.
 		
-#optimizeForLargeDocuments should be used when parsing large documents if you don't care for validating or namespaces.
+#optimizeForLargeDocuments can be used when parsing large documents if you don't care for validating or namespaces.
 "
 Class {
 	#name : #SAXHandler,
