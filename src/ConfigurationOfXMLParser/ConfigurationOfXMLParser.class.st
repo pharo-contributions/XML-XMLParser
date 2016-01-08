@@ -99,6 +99,19 @@ ConfigurationOfXMLParser class >> catalogKeywords [
 
 ]
 
+{ #category : #catalog }
+ConfigurationOfXMLParser class >> catalogLicense [
+	^ 'The MIT License (MIT)
+
+Copyright (c) 2016 PharoExtras Team.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.'
+]
+
 { #category : #private }
 ConfigurationOfXMLParser class >> ensureMetacello [
 	"Bootstrap Gofer (if necessary), bootstrap ConfigurationOfMetacello (using old Gofer API), then load the latest 
@@ -623,6 +636,13 @@ ConfigurationOfXMLParser >> release253: spec [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release255: spec [
+	<symbolicVersion: #'release-2.5.5'>
+
+	spec for: #'common' version: '2.5.5'.
+]
+
+{ #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> release25: spec [
 	<symbolicVersion: #'release-2.5'>
 
@@ -641,7 +661,7 @@ ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
 	"delegates to a release version from now on"
-	spec for: #'common' version: #'release-2.5.3'.
+	spec for: #'common' version: #'release-2.5.5'.
 ]
 
 { #category : #versions }
@@ -2308,5 +2328,16 @@ ConfigurationOfXMLParser >> version254: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.325'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.136'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version255: spec [ 
+        <version: '2.5.5' imports: #('2.5.3-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.326'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.137'.
                 ].
 ]
