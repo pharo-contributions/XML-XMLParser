@@ -19,7 +19,7 @@ XMLConformanceVirtualFileResolver class >> virtualFileClass: aClass [
 XMLConformanceVirtualFileResolver >> resolveEntityURI: aURIOrURIString [
 	^ self resolveEntityWith: [:maxSize |
 		(XMLConformanceVirtualFileHandle
-			virtualPath: aURIOrURIString asXMLURI unescapedPath
+			virtualPath: aURIOrURIString asXMLURI path
 			sourceClass: virtualFileClass) get]
 ]
 
@@ -27,7 +27,7 @@ XMLConformanceVirtualFileResolver >> resolveEntityURI: aURIOrURIString [
 XMLConformanceVirtualFileResolver >> streamResolveEntityURI: aURIOrURIString [
 	^ self resolveEntityWith: [:maxSize |
 		(XMLConformanceVirtualFileHandle
-			virtualPath: aURIOrURIString asXMLURI unescapedPath
+			virtualPath: aURIOrURIString asXMLURI path
 			sourceClass: virtualFileClass) streamGet]
 ]
 
