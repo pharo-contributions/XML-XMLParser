@@ -38,6 +38,19 @@ ConfigurationOfXMLTestsConformance class >> catalogDescription [
 	^ 'XMLTestsConformance is an extra test suite for XMLParser generated from the W3C conformance test suite: http://www.w3.org/XML/Test/'
 ]
 
+{ #category : #catalog }
+ConfigurationOfXMLTestsConformance class >> catalogLicense [
+	^ 'The MIT License (MIT)
+
+Copyright (c) 2016 PharoExtras Team.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.'
+]
+
 { #category : #private }
 ConfigurationOfXMLTestsConformance class >> ensureMetacello [
 
@@ -132,7 +145,7 @@ ConfigurationOfXMLTestsConformance >> baseline100: spec [
 				with: [ 
 					spec
 						className: 'ConfigurationOfXMLParser';
-						versionString: #'release-2.5';
+						versionString: #'release-2.5.5';
 						loads: #('default');
 						repository: 'http://smalltalkhub.com/mc/PharoExtras/XMLParser/main' ].
 			spec package: 'XML-Tests-Conformance' with: [ spec requires: 'XMLParser' ].
@@ -172,7 +185,7 @@ ConfigurationOfXMLTestsConformance >> project [
 ConfigurationOfXMLTestsConformance >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.0.3'.
+	spec for: #'common' version: '1.0.4'.
 ]
 
 { #category : #versions }
@@ -212,5 +225,15 @@ ConfigurationOfXMLTestsConformance >> version103: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Tests-Conformance' with: 'XML-Tests-Conformance-monty.14'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLTestsConformance >> version104: spec [ 
+        <version: '1.0.4' imports: #('1.0.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Tests-Conformance' with: 'XML-Tests-Conformance-monty.15'.
                 ].
 ]
