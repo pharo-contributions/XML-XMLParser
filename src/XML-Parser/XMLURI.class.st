@@ -41,10 +41,7 @@ XMLURI class >> initialize [
 		addAll: ($a to: $z);
 		addAll: ($A to: $Z);
 		addAll: ($0 to: $9);
-		add: $-;
-		add: $.;
-		add: $_;
-		add: $~
+		addAll: '-._~'
 ]
 
 { #category : #'instance creation' }
@@ -77,15 +74,17 @@ XMLURI class >> printPercentEncodedCharacter: aCharacter on: aStream [
 			aStream nextPut: $%.
 			asciiValue < 16
 				ifTrue: [aStream nextPut: $0].
+			"printOn:base: on GS shows the radix, so the three arg form is used instead"
 			asciiValue
 				printOn: aStream
-				base: 16]
+				base: 16
+				showRadix: false]
 		ifFalse: [aStream nextPut: aCharacter]
 ]
 
 { #category : #accessing }
 XMLURI class >> printPercentOrPlusEncodedCharacter: aCharacter on: aStream [
-	aCharacter asciiValue = 32
+	aCharacter asciiValue = 32 "Character space asciiValue"
 		ifTrue: [aStream nextPut: $+]
 		ifFalse: [
 			self
@@ -591,7 +590,10 @@ XMLURI >> printHostOn: aStream [
 					atBeginning := true.
 					aStream nextPut: $[.
 					$:
-						xmlParserSplit: self host allButFirst allButLast
+						xmlParserSplit:
+							(self host
+								copyFrom: 2
+								to: self host size - 1)
 						do: [:each |
 							atBeginning
 								ifTrue: [atBeginning := false]
@@ -675,7 +677,7 @@ XMLURI >> printQueryOn: aStream [
 XMLURI >> printSchemeOn: aStream [
 	self hasScheme
 		ifTrue: [
-			aStream 
+			aStream "do not percent encode scheme"
 				nextPutAll: self scheme;
 				nextPut: $:.
 			self hasAuthorityPrefix

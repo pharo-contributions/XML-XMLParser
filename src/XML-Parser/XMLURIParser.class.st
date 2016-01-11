@@ -8,8 +8,60 @@ Class {
 		'writeStream',
 		'readStream'
 	],
+	#classVars : [
+		'HostDelimiters',
+		'PathDelimiters',
+		'QueryKeyDelimiters',
+		'QueryValueDelimiters',
+		'SchemeDelimiters',
+		'UserInfoDelimiters'
+	],
 	#category : #'XML-Parser-URI'
 }
+
+{ #category : #'class initialization' }
+XMLURIParser class >> initialize [
+	"self initialize"
+
+	self
+		initializeSchemeDelimiters;
+		initializeUserInfoDelimiters;
+		initializeHostDelimiters;
+		initializePathDelimiters;
+		initializeQueryKeyDelimiters;
+		initializeQueryValueDelimiters
+]
+
+{ #category : #'class initialization' }
+XMLURIParser class >> initializeHostDelimiters [
+	HostDelimiters := BitmapCharacterSet newFrom: ':/?#'
+]
+
+{ #category : #'class initialization' }
+XMLURIParser class >> initializePathDelimiters [
+	PathDelimiters := BitmapCharacterSet newFrom: '/?#'
+]
+
+{ #category : #'class initialization' }
+XMLURIParser class >> initializeQueryKeyDelimiters [
+	QueryKeyDelimiters := BitmapCharacterSet newFrom: '=&#'
+]
+
+{ #category : #'class initialization' }
+XMLURIParser class >> initializeQueryValueDelimiters [
+	QueryValueDelimiters := BitmapCharacterSet newFrom: '&#'
+]
+
+{ #category : #'class initialization' }
+XMLURIParser class >> initializeSchemeDelimiters [
+	"including % disallows percent encoding in schemes"
+	SchemeDelimiters := BitmapCharacterSet newFrom: ':@/?#%'
+]
+
+{ #category : #'class initialization' }
+XMLURIParser class >> initializeUserInfoDelimiters [
+	UserInfoDelimiters := BitmapCharacterSet newFrom: '@/?#'
+]
 
 { #category : #'instance creation' }
 XMLURIParser class >> on: aStringOrStream [
@@ -120,7 +172,7 @@ XMLURIParser >> parseHost [
 		ifTrue: [
 			host := (self nextPercentEncodedDelimitedBy: ']') copyWith: $].
 			self peekFor: $]]
-		ifFalse: [host := self nextPercentEncodedDelimitedBy: ':/?#'].
+		ifFalse: [host := self nextPercentEncodedDelimitedBy: HostDelimiters].
 	^ host asLowercase.
 ]
 
@@ -130,11 +182,11 @@ XMLURIParser >> parsePathSegments [
 
 	pathSegments := OrderedCollection new.
 
-	segment := self nextPercentEncodedDelimitedBy: '/?#'.
+	segment := self nextPercentEncodedDelimitedBy: PathDelimiters.
 	[self peekFor: $/]
 		whileTrue: [
 			pathSegments addLast: segment.
-			segment := self nextPercentEncodedDelimitedBy: '/?#'].
+			segment := self nextPercentEncodedDelimitedBy: PathDelimiters].
 	(pathSegments isEmpty
 		and: [segment isEmpty])
 		ifFalse: [pathSegments addLast: segment].
@@ -153,7 +205,7 @@ XMLURIParser >> parsePort [
 					nextIntegerWithBase: 10
 					upTo: nil.
 			[self atEnd
-				or: ['/?#' includes: self peek]]
+				or: [PathDelimiters includes: self peek]]
 				whileFalse: [self next]].
 	^ port.
 ]
@@ -167,11 +219,11 @@ XMLURIParser >> parseQuery [
 		ifFalse: [^ query].
 
 	[self atEnd
-		or: [(key := self nextPercentOrPlusEncodedDelimitedBy: '=&#') isEmpty
+		or: [(key := self nextPercentOrPlusEncodedDelimitedBy: QueryKeyDelimiters) isEmpty
 			and: [self peek == $#]]]
 		whileFalse: [| hasValue |
 			(hasValue := self peekFor: $=)
-				ifTrue: [value := self nextPercentOrPlusEncodedDelimitedBy: '&#']
+				ifTrue: [value := self nextPercentOrPlusEncodedDelimitedBy: QueryValueDelimiters]
 				ifFalse: [value := ''].
 			(key notEmpty
 				or: [hasValue])
@@ -189,7 +241,7 @@ XMLURIParser >> parseScheme [
 	| oldPosition scheme |
 
 	oldPosition := self position.
-	scheme := self nextPercentEncodedDelimitedBy: ':/@?#%'.
+	scheme := self nextPercentEncodedDelimitedBy: SchemeDelimiters.
 	(self peekFor: $:)
 		ifTrue: [^ scheme asLowercase]
 		ifFalse: [
@@ -202,7 +254,7 @@ XMLURIParser >> parseUserInfo [
 	| userInfo oldPosition |
 
 	oldPosition := self position.
-	userInfo := self nextPercentEncodedDelimitedBy: ':/@?#'.
+	userInfo := self nextPercentEncodedDelimitedBy: UserInfoDelimiters.
 	(self peekFor: $@)
 		ifTrue: [^ userInfo]
 		ifFalse: [
