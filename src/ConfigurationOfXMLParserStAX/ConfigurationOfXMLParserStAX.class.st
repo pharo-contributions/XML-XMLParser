@@ -162,7 +162,8 @@ ConfigurationOfXMLParserStAX >> baseline100: spec [
 
 	spec for: #'common' do: [
 		spec blessing: #'baseline'.
-		spec repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLParser/main'.
+		"migrated to PharoExtras/XMLParserStAX from PharoExtras/XMLParser"
+		spec repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLParserStAX/main'.
 		spec project: 'XMLParser' with: [ 
 			spec
 				className: 'ConfigurationOfXMLParser';
