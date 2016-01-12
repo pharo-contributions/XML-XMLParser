@@ -160,7 +160,8 @@ ConfigurationOfXMLParserHTML >> baseline100: spec [
 			spec
 				blessing: #baseline;
 				description: 'XML-Parser-HTML baseline';
-				repository: 'http://smalltalkhub.com/mc/PharoExtras/XMLParser/main'.
+				"migrated from PharoExtras/XMLParser to PharoExtras/XMLParserHTML"
+				repository: 'http://smalltalkhub.com/mc/PharoExtras/XMLParserHTML/main'.
 			spec
 				project: 'XMLParser'
 				with: [ 
