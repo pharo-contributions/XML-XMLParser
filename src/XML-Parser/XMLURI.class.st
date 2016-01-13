@@ -274,6 +274,11 @@ XMLURI >> copyWithHost: aString [
 ]
 
 { #category : #copying }
+XMLURI >> copyWithPath: aString [
+	^ self copyWithPathSegments: (XMLURIParser on: aString) parsePathSegments
+]
+
+{ #category : #copying }
 XMLURI >> copyWithPathSegments: aCollection [
 	^ self copy pathSegments: (OrderedCollection newFrom: aCollection)
 ]
@@ -290,7 +295,11 @@ XMLURI >> copyWithQuery: aDictionary [
 
 { #category : #copying }
 XMLURI >> copyWithScheme: aString [
-	^ self copy scheme: aString
+	^ self copy
+		scheme: aString;
+		hasAuthorityPrefix:
+			(self hasAuthorityPrefix
+				or: [self hasScheme not])
 ]
 
 { #category : #copying }
@@ -561,13 +570,17 @@ XMLURI >> print: aString withPercentOrPlusEncodingOn: aStream [
 XMLURI >> printAuthorityOn: aStream [
 	self hasAuthority
 		ifTrue: [
-			(self hasScheme not
-				and: [self hasAuthorityPrefix])
-				ifTrue: [aStream nextPutAll: '//'].
 			self
 				printUserInfoOn: aStream;
 				printHostOn: aStream;
 				printPortOn: aStream]
+]
+
+{ #category : #printing }
+XMLURI >> printAuthorityPrefixOn: aStream [
+	(self hasAuthorityPrefix
+		or: [self hasScheme not and: [self hasAuthority]])
+		ifTrue: [aStream nextPutAll: '//']
 ]
 
 { #category : #printing }
@@ -615,7 +628,9 @@ XMLURI >> printOn: aStream [
 			writeStream := (String new: 64) writeStream.
 			self
 				printSchemeOn: writeStream;
+				printAuthorityPrefixOn: writeStream;
 				printAuthorityOn: writeStream;
+				printPathPrefixOn: writeStream;
 				printPathOn: writeStream;
 				printQueryOn: writeStream;
 				printFragmentOn: writeStream.
@@ -628,6 +643,14 @@ XMLURI >> printPathOn: aStream [
 	self
 		printPathWithPercentEncoding: true
 		on: aStream
+]
+
+{ #category : #printing }
+XMLURI >> printPathPrefixOn: aStream [
+	(self hasPath
+		and: [self hasAbsolutePath not
+			and: [self hasScheme or: [self hasAuthority]]])
+		ifTrue: [aStream nextPut: $/]
 ]
 
 { #category : #printing }
@@ -679,9 +702,7 @@ XMLURI >> printSchemeOn: aStream [
 		ifTrue: [
 			aStream "do not percent encode scheme"
 				nextPutAll: self scheme;
-				nextPut: $:.
-			self hasAuthorityPrefix
-				ifTrue: [aStream nextPutAll: '//']]
+				nextPut: $:]
 ]
 
 { #category : #printing }
