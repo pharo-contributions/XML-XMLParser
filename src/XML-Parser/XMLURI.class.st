@@ -25,6 +25,7 @@ Class {
 
 { #category : #'instance creation' }
 XMLURI class >> fromStream: aStream [
+	"streams must be parsed eagerly, unlike strings"
 	^ self basicNew initialize parseURIStream: aStream
 ]
 
@@ -432,11 +433,23 @@ XMLURI >> host: aString [
 
 { #category : #testing }
 XMLURI >> isEmpty [
-	^ (self hasScheme
-		or: [self hasAuthority
-			or: [self hasPath
-				or: [self hasQuery
-					or: [self hasFragment]]]]) not
+	"optimization to avoid parsing"
+	(self uriString notNil
+		and: [self uriString isEmpty])
+		ifTrue: [^ true].
+
+	self hasScheme
+		ifTrue: [^ false].
+	self hasAuthority
+		ifTrue: [^ false].
+	self hasPath
+		ifTrue: [^ false].
+	self hasQuery
+		ifTrue: [^ false].
+	self hasFragment
+		ifTrue: [^ false].
+
+	^ true.
 ]
 
 { #category : #testing }
@@ -535,9 +548,12 @@ XMLURI >> port: anInteger [
 
 { #category : #copying }
 XMLURI >> postCopy [
+	"the copyWith* methods modify copies, so any URI string of a copy must be parsed
+	if it hasn't been already and then cleared because it will be obsolete after a
+	URI component is changed"
 	self
 		parseURIStringIfUnparsed;
-		uriString: nil "clear to prepare for modification"
+		uriString: nil
 ]
 
 { #category : #printing }
