@@ -915,13 +915,14 @@ XMLURITest >> testFragmentPercentEncodedCharacters [
 
 { #category : #tests }
 XMLURITest >> testFromStream [
-	self allURIStringsDo: [:each | | readStream uri |
-		readStream := each readStream.
-		uri := XMLURI fromStream: readStream.
+	self allURIStringsDo: [:each | | stream uri |
+		stream := each readStream.
+		uri := XMLURI fromStream: stream.
 		self
 			assert: uri class == XMLURI;
-			assert: readStream atEnd;
-			assert: uri = each asXMLURI]
+			assert: uri uriString isNil;
+			assert: uri = each asXMLURI;
+			assert: stream atEnd]
 ]
 
 { #category : #tests }
@@ -1324,11 +1325,27 @@ XMLURITest >> testInvalidPortSuffix [
 
 { #category : #tests }
 XMLURITest >> testIsEmpty [
-	self allURIStringsDo: [:each | | uri |
+	| uri |
+
+	self allURIStringsDo: [:each |
 		uri := each asXMLURI.
 		each isEmpty
 			ifTrue: [self assert: uri isEmpty]
-			ifFalse: [self deny: uri isEmpty]]
+			ifFalse: [self deny: uri isEmpty].
+
+		uri
+			parseURIStringIfUnparsed;
+			uriString: nil.
+		each isEmpty
+			ifTrue: [self assert: uri isEmpty]
+			ifFalse: [self deny: uri isEmpty]].
+
+	uri := '//:?#' asXMLURI.
+	self assert: uri isEmpty.
+	uri
+		parseURIStringIfUnparsed;
+		uriString: nil.
+	self assert: uri isEmpty.
 ]
 
 { #category : #tests }
@@ -1400,11 +1417,27 @@ XMLURITest >> testNew [
 
 { #category : #tests }
 XMLURITest >> testNotEmpty [
-	self allURIStringsDo: [:each | | uri |
+	| uri |
+
+	self allURIStringsDo: [:each |
 		uri := each asXMLURI.
 		each notEmpty
 			ifTrue: [self assert: uri notEmpty]
-			ifFalse: [self deny: uri notEmpty]]
+			ifFalse: [self deny: uri notEmpty].
+
+		uri
+			parseURIStringIfUnparsed;
+			uriString: nil.
+		each notEmpty
+			ifTrue: [self assert: uri notEmpty]
+			ifFalse: [self deny: uri notEmpty]].
+
+	uri := '//:?#' asXMLURI.
+	self deny: uri notEmpty.
+	uri
+		parseURIStringIfUnparsed;
+		uriString: nil.
+	self deny: uri notEmpty.
 ]
 
 { #category : #tests }
@@ -1715,6 +1748,24 @@ XMLURITest >> testQueryWithEmptyKeysOrValues [
 		self assert:
 			each asXMLURI query =
 				(OrderPreservingStringDictionary with: 'c' -> '' with: 'a' -> 'b')].
+]
+
+{ #category : #tests }
+XMLURITest >> testReadFrom [
+	self allURIStringsDo: [:each | | stream uri |
+		stream := each readStream.
+		uri := XMLURI readFrom: stream.
+		self
+			assert: uri class == XMLURI;
+			assert: uri uriString isNil;
+			assert: uri = each asXMLURI;
+			assert: stream atEnd.
+
+		uri := XMLURI readFrom: each.
+		self
+			assert: uri class == XMLURI;
+			assert: uri uriString = each;
+			assert: uri = each asXMLURI]
 ]
 
 { #category : #tests }
