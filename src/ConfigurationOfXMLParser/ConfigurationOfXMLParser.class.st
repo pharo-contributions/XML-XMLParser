@@ -1,5 +1,14 @@
 "
-(ConfigurationOfXMLParser project version: #stable) load: 'default'
+Loads the XMLParser library and related packages.
+
+The loadable groups are:
+	default - XMLParser with tests and XMLWriter.
+	Core - XMLParser (but no tests or XMLWriter).
+	CoreWithWriting - XMLParser (but no tests) and XMLWriter.
+
+Users should continue to depend on #stable, but it will delegate to a specific #release version from now on:
+
+	(ConfigurationOfXMLParser project version: #stable) load: 'default'
 "
 Class {
 	#name : #ConfigurationOfXMLParser,
@@ -568,7 +577,7 @@ ConfigurationOfXMLParser >> baseline253: spec [
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.11' ].
 	spec
 		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.27' ]
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.29' ]
 ]
 
 { #category : #accessing }
@@ -639,7 +648,7 @@ ConfigurationOfXMLParser >> release253: spec [
 ConfigurationOfXMLParser >> release255: spec [
 	<symbolicVersion: #'release-2.5.5'>
 
-	spec for: #'common' version: '2.5.8'.
+	spec for: #'common' version: '2.5.9'.
 ]
 
 { #category : #'symbolic versions' }
@@ -660,7 +669,8 @@ ConfigurationOfXMLParser >> release2: spec [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	"delegates to a release version from now on"
+	"Users should continue to depend on #stable, but it will delegate
+	to a specific #release version from now on."
 	spec for: #'common' version: #'release-2.5.5'.
 ]
 
@@ -2371,6 +2381,17 @@ ConfigurationOfXMLParser >> version258: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.329'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.140'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version259: spec [ 
+        <version: '2.5.9' imports: #('2.5.3-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.330'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.140'.
                 ].
 ]
