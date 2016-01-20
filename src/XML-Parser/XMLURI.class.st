@@ -70,6 +70,7 @@ XMLURI class >> percentOrPlusEncodeCharacter: aCharacter [
 XMLURI class >> printPercentEncodedCharacter: aCharacter on: aStream [
 	| asciiValue |
 
+	"only the ASCII range contains reserved chars"
 	(asciiValue := aCharacter asciiValue) < 128
 		ifTrue: [
 			aStream nextPut: $%.
@@ -137,6 +138,7 @@ XMLURI >> = anObject [
 		ifFalse: [^ false].
 	self fragment = anObject fragment
 		ifFalse: [^ false].
+
 	^ true.
 ]
 
@@ -433,11 +435,6 @@ XMLURI >> host: aString [
 
 { #category : #testing }
 XMLURI >> isEmpty [
-	"optimization to avoid parsing"
-	(self uriString notNil
-		and: [self uriString isEmpty])
-		ifTrue: [^ true].
-
 	self hasScheme
 		ifTrue: [^ false].
 	self hasAuthority

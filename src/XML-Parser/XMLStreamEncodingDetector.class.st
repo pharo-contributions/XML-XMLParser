@@ -26,27 +26,28 @@ XMLStreamEncodingDetector class >> for: aStreamReader [
 ]
 
 { #category : #private }
-XMLStreamEncodingDetector class >> handlerForLeadByte: aByte [
-	aByte = 0
-		ifTrue: [^ #detectBigEndianUTF32BOMOrImplicitEncoding].
-	aByte = XMLUTF16BigEndianStreamDecoder byteOrderMarkBytes first
-		ifTrue: [^ #detectBigEndianUTF16BOM].
-	aByte = XMLUTF8StreamDecoder byteOrderMarkBytes first
-		ifTrue: [^ #detectUTF8BOM].
-	aByte = XMLUTF16LittleEndianStreamDecoder byteOrderMarkBytes first
-		ifTrue: [^ #detectLittleEndianUTF16BOMOrUTF32BOM].
-	aByte = $< asciiValue
-		ifTrue: [^ #detectLittleEndianImplicitEncoding].
+XMLStreamEncodingDetector class >> handlerForByteValue: aByteValue [
+	aByteValue = 0
+		ifTrue: [^ #handleBigEndianUTF32BOMOrImplicitEncoding].
+	aByteValue = XMLUTF16BigEndianStreamDecoder byteOrderMarkBytes first
+		ifTrue: [^ #handleBigEndianUTF16BOM].
+	aByteValue = XMLUTF8StreamDecoder byteOrderMarkBytes first
+		ifTrue: [^ #handleUTF8BOM].
+	aByteValue = XMLUTF16LittleEndianStreamDecoder byteOrderMarkBytes first
+		ifTrue: [^ #handleLittleEndianUTF16BOMOrUTF32BOM].
+	aByteValue = $< asciiValue
+		ifTrue: [^ #handleLittleEndianImplicitEncoding].
 	^ nil.
 ]
 
 { #category : #'class initialization' }
 XMLStreamEncodingDetector class >> initialize [
 	"self initialize"
+
 	self
-		initializeNullCharacter;
 		initializeByteOrderMarks;
-		initializeEncodingHandlerTable.
+		initializeNullCharacter;
+		initializeEncodingHandlerTable
 ]
 
 { #category : #'class initialization' }
@@ -65,7 +66,7 @@ XMLStreamEncodingDetector class >> initializeEncodingHandlerTable [
 	0 to: 255 do: [:each |
 		EncodingHandlerTable
 			at: each + 1
-			put: (self handlerForLeadByte: each)].
+			put: (self handlerForByteValue: each)].
 ]
 
 { #category : #'class initialization' }
@@ -73,126 +74,124 @@ XMLStreamEncodingDetector class >> initializeNullCharacter [
 	NullCharacter := Character value: 0
 ]
 
-{ #category : #private }
-XMLStreamEncodingDetector >> detectBOM: aByteOrderMark forDecoderClass: aClass [
-	stream next.
-	2 to: aByteOrderMark size do: [:i |
-		(stream atEnd not
-			and: [stream peek == (aByteOrderMark at: i)])
-			ifFalse: [^ aByteOrderMark copyFrom: 1 to: i - 1].
-		stream next].
-	streamReader decodeStreamWithDecoder: aClass new.
-	^ nil.
-]
-
-{ #category : #private }
-XMLStreamEncodingDetector >> detectBigEndianUTF16BOM [
-	(self
-		detectBOM: UTF16BigEndianBOM
-		forDecoderClass: XMLUTF16BigEndianStreamDecoder)
-		ifNotNil: [:remainder | streamReader pushBack: remainder]
-]
-
-{ #category : #private }
-XMLStreamEncodingDetector >> detectBigEndianUTF32BOMOrImplicitEncoding [
-	| remainder |
-
-	(remainder :=
-		self
-			detectBOM: UTF32BigEndianBOM
-			forDecoderClass: XMLUTF32BigEndianStreamDecoder)
-		ifNil: [^ self].
-	(remainder allSatisfy: [:each | each == NullCharacter])
-		ifFalse: [
-			streamReader pushBack: remainder.
-			^ self].
-
-	(remainder size = 1
-		and: [stream atEnd not
-			and: [stream peek == $<]])
-		ifTrue: [
-			stream next.
-			streamReader
-				decodeStreamWithDecoder: XMLUTF16BigEndianStreamDecoder new;
-				pushBackCharacter: $<.
-			^ self].
-	(remainder size = 2
-		and: [stream atEnd not
-			and: [stream peek == NullCharacter]])
-		ifTrue: [
-			stream next.
-			(stream atEnd not
-				and: [stream peek == $<])
-				ifTrue: [ 
-					stream next.
-					streamReader
-						decodeStreamWithDecoder: XMLUTF32BigEndianStreamDecoder new;
-						pushBackCharacter: $<.
-					^ self].
-			remainder := remainder copyWith: NullCharacter].
-
-	streamReader pushBack: remainder.
-]
-
 { #category : #detecting }
 XMLStreamEncodingDetector >> detectCurrentEncoding [
-	| characterCode handlerSelector |
+	| handlerTableIndex handlerSelector |
 
-	(stream := streamReader stream) atEnd
+	((stream := streamReader stream) atEnd
+		or: [stream isDecodingReadStreamAdapter
+			and: [stream streamDecoder isDefaultStreamDecoder not]])
 		ifTrue: [^ self].
 
 	stream isDecodingReadStreamAdapter
-		ifTrue: [
-			stream streamDecoder isDefaultStreamDecoder
-				ifFalse: [^ self].
-			stream := stream stream].
+		ifTrue: [stream := stream stream].
 
-	((characterCode := stream peek asciiValue) < 256
-		and: [(handlerSelector := EncodingHandlerTable at: characterCode + 1) notNil])
+	"the index is asciiValue + 1 for null"
+	((handlerTableIndex := stream peek asciiValue + 1) <= EncodingHandlerTable size
+		and: [(handlerSelector := EncodingHandlerTable at: handlerTableIndex) notNil])
 		ifTrue: [self perform: handlerSelector].
 ]
 
 { #category : #private }
-XMLStreamEncodingDetector >> detectLittleEndianImplicitEncoding [
+XMLStreamEncodingDetector >> handleBOM: aByteOrderMark forDecoderClass: aDecoderClass [
+	self
+		handleBOM: aByteOrderMark
+		forDecoderClass: aDecoderClass
+		ifUnmatched: [:matchedPortion | streamReader pushBack: matchedPortion]
+]
+
+{ #category : #private }
+XMLStreamEncodingDetector >> handleBOM: aByteOrderMark forDecoderClass: aDecoderClass ifUnmatched: aBlock [
+	"to:do: for speed"
+	1 to: aByteOrderMark size do: [:i |
+		(stream atEnd not
+			and: [stream peek == (aByteOrderMark at: i)])
+			ifFalse: [
+				aBlock value: (aByteOrderMark copyFrom: 1 to: i - 1).
+				^ self].
+		stream next].
+
+	streamReader decodeStreamWithDecoder: aDecoderClass new.
+]
+
+{ #category : #private }
+XMLStreamEncodingDetector >> handleBigEndianUTF16BOM [
+	self
+		handleBOM: UTF16BigEndianBOM
+		forDecoderClass: XMLUTF16BigEndianStreamDecoder
+]
+
+{ #category : #private }
+XMLStreamEncodingDetector >> handleBigEndianUTF32BOMOrImplicitEncoding [
+	self
+		handleBOM: UTF32BigEndianBOM
+		forDecoderClass: XMLUTF32BigEndianStreamDecoder
+		ifUnmatched: [:matchedPortion |
+			(matchedPortion size = 1 "one null char"
+				and: [stream atEnd not
+					and: [stream peek == $<]])
+				ifTrue: [
+					stream next.
+					streamReader
+						decodeStreamWithDecoder: XMLUTF16BigEndianStreamDecoder new;
+						pushBackCharacter: $<]
+				ifFalse: [
+					(matchedPortion size = 2  "two null chars"
+						and: [stream atEnd not
+							and: [stream peek == NullCharacter]])
+						ifTrue: [
+							stream next.
+							(stream atEnd not
+								and: [stream peek == $<])
+								ifTrue: [	
+									stream next.
+									streamReader
+										decodeStreamWithDecoder: XMLUTF32BigEndianStreamDecoder new;
+										pushBackCharacter: $<]
+								ifFalse: [streamReader pushBack: (matchedPortion copyWith: NullCharacter)]]
+						ifFalse: [streamReader pushBack: matchedPortion]]]
+]
+
+{ #category : #private }
+XMLStreamEncodingDetector >> handleLittleEndianImplicitEncoding [
 	"skip <"
-	stream next.
-	(stream atEnd
-		or: [stream peek asciiValue > 0])
-		ifTrue: [
-			streamReader pushBackCharacter: $<.
-			^ self].
 	stream next.
 	(stream atEnd not
 		and: [stream peek == NullCharacter])
 		ifTrue: [
 			stream next.
-			stream atEnd
-				ifFalse: [stream next].
-			streamReader decodeStreamWithDecoder: XMLUTF32LittleEndianStreamDecoder new]
-		ifFalse: [streamReader decodeStreamWithDecoder: XMLUTF16LittleEndianStreamDecoder new].
-	
+			(stream atEnd not
+				and: [stream peek == NullCharacter])
+				ifTrue: [
+					stream next.
+					stream atEnd
+						ifFalse: [stream next].
+					streamReader decodeStreamWithDecoder:
+						XMLUTF32LittleEndianStreamDecoder new]
+				ifFalse: [
+					streamReader decodeStreamWithDecoder:
+						XMLUTF16LittleEndianStreamDecoder new]].
 	streamReader pushBackCharacter: $<.
 ]
 
 { #category : #private }
-XMLStreamEncodingDetector >> detectLittleEndianUTF16BOMOrUTF32BOM [
-	(self
-		detectBOM: UTF32LittleEndianBOM
-		forDecoderClass: XMLUTF32LittleEndianStreamDecoder)
-		ifNotNil: [:remainder |
-			remainder = UTF16LittleEndianBOM
+XMLStreamEncodingDetector >> handleLittleEndianUTF16BOMOrUTF32BOM [
+	self
+		handleBOM: UTF32LittleEndianBOM
+		forDecoderClass: XMLUTF32LittleEndianStreamDecoder
+		ifUnmatched: [:matchedPortion |
+			matchedPortion = UTF16LittleEndianBOM
 				ifTrue: [
 					streamReader decodeStreamWithDecoder:
 						XMLUTF16LittleEndianStreamDecoder new]
-				ifFalse: [streamReader pushBack: remainder]]
+				ifFalse: [streamReader pushBack: matchedPortion]]
 ]
 
 { #category : #private }
-XMLStreamEncodingDetector >> detectUTF8BOM [
-	(self
-		detectBOM: UTF8BOM
-		forDecoderClass: XMLUTF8StreamDecoder)
-		ifNotNil: [:remainder | streamReader pushBack: remainder]
+XMLStreamEncodingDetector >> handleUTF8BOM [
+	self
+		handleBOM: UTF8BOM
+		forDecoderClass: XMLUTF8StreamDecoder
 ]
 
 { #category : #accessing }
