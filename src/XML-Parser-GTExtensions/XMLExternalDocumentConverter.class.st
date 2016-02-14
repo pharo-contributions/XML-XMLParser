@@ -1,8 +1,8 @@
 "
-This class converts an external stream into a string with line endings normalized to CRs (the Pharo/Squeak LE) and decodes it from any of the supported character encodings.
+This class converts an external XML document  into a string with line endings normalized to CRs (the Pharo/Squeak LE) and decodes it from any of the supported character encodings and will infer incodings from byte order marks or null bytes and also consider  <?xml ...?> encoding attributes.
 "
 Class {
-	#name : #XMLPositionExternalStreamConverter,
+	#name : #XMLExternalDocumentConverter,
 	#superclass : #Object,
 	#instVars : [
 		'streamReader',
@@ -13,19 +13,24 @@ Class {
 }
 
 { #category : #converting }
-XMLPositionExternalStreamConverter class >> convert: aStringOrStream [
+XMLExternalDocumentConverter class >> convert: aStringOrStream [
 	^ (self on: aStringOrStream) convert
 ]
 
 { #category : #converting }
-XMLPositionExternalStreamConverter class >> on: aStringOrStream [
+XMLExternalDocumentConverter class >> convertFileNamed: aFileName [
+	^ (self onFileNamed: aFileName) convert
+]
+
+{ #category : #'instance creation' }
+XMLExternalDocumentConverter class >> on: aStringOrStream [
 	^ self
 		on: aStringOrStream
 		readLimit: XMLParserLimits defaultReadLimit
 ]
 
 { #category : #'instance creation' }
-XMLPositionExternalStreamConverter class >> on: aStringOrStream readLimit: aReadLimit [
+XMLExternalDocumentConverter class >> on: aStringOrStream readLimit: aReadLimit [
 	^ self new
 		setStream:
 			(aStringOrStream isStream
@@ -34,18 +39,26 @@ XMLPositionExternalStreamConverter class >> on: aStringOrStream readLimit: aRead
 		readLimit: aReadLimit
 ]
 
+{ #category : #'instance creation' }
+XMLExternalDocumentConverter class >> onFileNamed: aFileName [
+	^ self on:
+		(aFileName asXMLFileHandle
+			readStreamUpToLimit: nil
+			decoding: false)
+]
+
 { #category : #closing }
-XMLPositionExternalStreamConverter >> close [
+XMLExternalDocumentConverter >> close [
 	streamReader closeStreams
 ]
 
 { #category : #accessing }
-XMLPositionExternalStreamConverter >> contents [
+XMLExternalDocumentConverter >> contents [
 	^ outputStream contents
 ]
 
 { #category : #converting }
-XMLPositionExternalStreamConverter >> convert [
+XMLExternalDocumentConverter >> convert [
 	^ self
 		detectCurrentEncoding;
 		nextXMLDeclaration;
@@ -55,13 +68,13 @@ XMLPositionExternalStreamConverter >> convert [
 ]
 
 { #category : #'private ' }
-XMLPositionExternalStreamConverter >> detectCurrentEncoding [
+XMLExternalDocumentConverter >> detectCurrentEncoding [
 	streamReader detectCurrentEncoding
 
 ]
 
 { #category : #'private ' }
-XMLPositionExternalStreamConverter >> expectNextAll: aString [
+XMLExternalDocumentConverter >> expectNextAll: aString [
 	aString do: [:each |
 		self next == each
 			ifFalse: [^ nil]].
@@ -69,7 +82,7 @@ XMLPositionExternalStreamConverter >> expectNextAll: aString [
 ]
 
 { #category : #'private ' }
-XMLPositionExternalStreamConverter >> next [
+XMLExternalDocumentConverter >> next [
 	^ streamReader next
 		ifNotNil: [:nextChar |
 			outputStream nextPut: nextChar.
@@ -77,7 +90,7 @@ XMLPositionExternalStreamConverter >> next [
 ]
 
 { #category : #'private ' }
-XMLPositionExternalStreamConverter >> nextXMLAttributeNamed: anAttributeName [
+XMLExternalDocumentConverter >> nextXMLAttributeNamed: anAttributeName [
 	| quote nextChar |
 
 	self skipSeparators.
@@ -104,7 +117,7 @@ XMLPositionExternalStreamConverter >> nextXMLAttributeNamed: anAttributeName [
 ]
 
 { #category : #'private ' }
-XMLPositionExternalStreamConverter >> nextXMLDeclaration [
+XMLExternalDocumentConverter >> nextXMLDeclaration [
 	self skipSeparators.
 	(self expectNextAll: '<?xml')
 		ifNil: [^ self].
@@ -119,30 +132,34 @@ XMLPositionExternalStreamConverter >> nextXMLDeclaration [
 ]
 
 { #category : #'private ' }
-XMLPositionExternalStreamConverter >> peek [
+XMLExternalDocumentConverter >> peek [
 	^ streamReader peek
 ]
 
 { #category : #initialization }
-XMLPositionExternalStreamConverter >> setStream: aStream readLimit: aReadLimit [
+XMLExternalDocumentConverter >> setStream: aStream readLimit: aReadLimit [
 	streamReader :=
 		XMLNestedStreamReader
-			on: (XMLDecodingReadStreamAdapter onExternalStream: aStream)
+			on:
+				(aStream isConvertingStreamAdapter
+					ifTrue: [aStream]
+					ifFalse: [XMLDecodingReadStreamAdapter on: aStream])
 			readLimit: aReadLimit.
+
 	"this is the preferred LE char for Pharo/Squeak"
 	streamReader normalizedLineEndingChar: Character cr.
 
-	outputStream := (String new: 10240) writeStream.
+	outputStream := (String new: 1024) writeStream.
 	writeStream := (String new: 64) writeStream.
 ]
 
 { #category : #'private ' }
-XMLPositionExternalStreamConverter >> skipSeparators [
+XMLExternalDocumentConverter >> skipSeparators [
 	[self peek xmlParserIsSeparator]
 		whileTrue: [self next]
 ]
 
 { #category : #'private ' }
-XMLPositionExternalStreamConverter >> skipToEnd [
+XMLExternalDocumentConverter >> skipToEnd [
 	[self next notNil] whileTrue
 ]
