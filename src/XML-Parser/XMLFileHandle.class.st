@@ -35,6 +35,11 @@ XMLFileHandle class >> preferredImplementation [
 	^ XMLFileSystemFileHandle
 ]
 
+{ #category : #converting }
+XMLFileHandle >> asXMLFileHandle [
+	^ self
+]
+
 { #category : #deleting }
 XMLFileHandle >> delete [
 	self deleteFileOrDo: [:error | XMLFileException signalMessageFrom: error]
@@ -75,16 +80,16 @@ XMLFileHandle >> get [
 
 { #category : #retrieving }
 XMLFileHandle >> getUpToLimit: aMaxSize decoding: aBoolean [
-	| stream contents |
+	| stream upToEnd |
 
 	stream :=
 		self
 			streamGetUpToLimit: aMaxSize
 			decoding: aBoolean.
-	contents := stream contents.
+	upToEnd := stream upToEnd.
 	stream close.
 
-	^ contents.
+	^ upToEnd.
 ]
 
 { #category : #testing }
@@ -113,29 +118,45 @@ XMLFileHandle >> printOn: aStream [
 
 { #category : #reading }
 XMLFileHandle >> readStream [
-	^ self readStreamUpToLimit: nil
-]
-
-{ #category : #private }
-XMLFileHandle >> readStreamOnFileOrDo: aBlock [
-	^ [XMLFileReadStreamFactory on: path]
-		on: Error
-		do: aBlock
+	^ self
+		readStreamUpToLimit: nil
+		decoding: true
 ]
 
 { #category : #reading }
-XMLFileHandle >> readStreamUpToLimit: aMaxSize [
-	| fileSize |
+XMLFileHandle >> readStreamDo: aBlock [
+	| readStream |
+
+	readStream := self readStream.
+	^ [aBlock value: readStream]
+		ensure: [readStream close].
+]
+
+{ #category : #reading }
+XMLFileHandle >> readStreamUpToLimit: aMaxSize decoding: aBoolean [
+	| fileSize readStream |
 
 	self isFile
 		ifFalse: [self errorNotAFile].
 	
 	(fileSize := self fileSize) > 0
 		ifFalse: [ ^ '' readStream].
-	(aMaxSize notNil and: [fileSize > aMaxSize])
+
+	(aMaxSize notNil
+		and: [fileSize > aMaxSize])
 		ifTrue: [self errorFileSize: fileSize exceedsMaxSize: aMaxSize].
 
-	^ self readStreamOnFileOrDo: [:error | XMLFileException signalMessageFrom: error]
+	[readStream := XMLFileReadStreamFactory onPath: path]
+		on: Error
+		do: [:error | XMLFileException signalMessageFrom: error].
+
+	aBoolean
+		ifTrue: [| decodingReadStreamAdapter |
+			decodingReadStreamAdapter := XMLDecodingReadStreamAdapter on: readStream.
+			(XMLFileStreamEncodingDetector for: decodingReadStreamAdapter)
+				detectCurrentEncoding.
+			^ decodingReadStreamAdapter]
+		ifFalse: [^ readStream].
 ]
 
 { #category : #retrieving }
@@ -147,17 +168,35 @@ XMLFileHandle >> streamGet [
 
 { #category : #retrieving }
 XMLFileHandle >> streamGetUpToLimit: aMaxSize decoding: aBoolean [
-	^ self readStreamUpToLimit: aMaxSize
+	^ self
+		readStreamUpToLimit: aMaxSize
+		decoding: aBoolean
 ]
 
 { #category : #writing }
 XMLFileHandle >> writeStream [
-	^ self writeStreamOnFileOrDo: [:error | XMLFileException signalMessageFrom: error]
+	^ self writeStreamDecoding: true
 ]
 
-{ #category : #private }
-XMLFileHandle >> writeStreamOnFileOrDo: aBlock [
-	^ [XMLFileWriteStreamFactory on: path]
-		on: Error
-		do: aBlock
+{ #category : #writing }
+XMLFileHandle >> writeStreamDecoding: aBoolean [
+	| writeStream |
+
+	writeStream :=
+		[XMLFileWriteStreamFactory onPath: path]
+			on: Error
+			do: [:error | XMLFileException signalMessageFrom: error].
+
+	aBoolean
+		ifTrue: [^ XMLEncodingWriteStreamAdapter on: writeStream]
+		ifFalse: [^ writeStream].
+]
+
+{ #category : #writing }
+XMLFileHandle >> writeStreamDo: aBlock [
+	| writeStream |
+
+	writeStream := self writeStream.
+	^ [aBlock value: writeStream]
+		ensure: [writeStream close].
 ]

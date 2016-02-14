@@ -15,22 +15,23 @@ XMLBinaryReadStreamAdapter class >> onStreamIfBinary: aStream [
 		ifFalse: [^ self on: aStream]
 ]
 
-{ #category : #testing }
-XMLBinaryReadStreamAdapter >> atEnd [
-	^ stream atEnd
-]
-
-{ #category : #accessing }
+{ #category : #private }
 XMLBinaryReadStreamAdapter >> basicNext [
-	^ Character value: stream next
+	stream atEnd
+		ifTrue: [^ nil]
+		ifFalse: [^ Character value: stream next]
 ]
 
 { #category : #accessing }
 XMLBinaryReadStreamAdapter >> next [
-	^ Character value: stream next
+	stream atEnd
+		ifTrue: [^ nil]
+		ifFalse: [^ Character value: stream next]
 ]
 
 { #category : #accessing }
 XMLBinaryReadStreamAdapter >> peek [
-	^ Character value: stream peek
+	stream atEnd
+		ifTrue: [^ nil]
+		ifFalse: [^ Character value: stream peek]
 ]

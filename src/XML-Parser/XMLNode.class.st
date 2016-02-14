@@ -91,6 +91,13 @@ XMLNode >> canonicallyPrintOn: aStream [
 ]
 
 { #category : #printing }
+XMLNode >> canonicallyPrintToFileNamed: aFileName [
+	self
+		withWriteStreamOnFileNamed: aFileName
+		do: [:writeStream | self canonicallyPrintOn: writeStream]
+]
+
+{ #category : #printing }
 XMLNode >> canonicallyPrinted [
  	"Prints as canonical XML"
 	^ String streamContents: [:stream | self canonicallyPrintOn: stream]
@@ -248,6 +255,13 @@ XMLNode >> prettyPrintOn: aStream [
 ]
 
 { #category : #printing }
+XMLNode >> prettyPrintToFileNamed: aFileName [
+	self
+		withWriteStreamOnFileNamed: aFileName
+		do: [:writeStream | self prettyPrintOn: writeStream]
+]
+
+{ #category : #printing }
 XMLNode >> prettyPrinted [
  	"Prints XML with whitespace formatting for readability"
 	^ String streamContents: [:stream | self prettyPrintOn: stream]
@@ -293,10 +307,24 @@ XMLNode >> printRawContentOn: aStream [
 ]
 
 { #category : #printing }
+XMLNode >> printToFileNamed: aFileName [
+	self
+		withWriteStreamOnFileNamed: aFileName
+		do: [:writeStream | self printOn: writeStream]
+]
+
+{ #category : #printing }
 XMLNode >> printWithoutSelfClosingTagsOn: aStream [
 	self
 		printOn: aStream
 		beforeWritingDo: [:writer | writer outputsSelfClosingTags: false]
+]
+
+{ #category : #printing }
+XMLNode >> printWithoutSelfClosingTagsToFileNamed: aFileName [
+	self
+		withWriteStreamOnFileNamed: aFileName
+		do: [:writeStream | self printWithoutSelfClosingTagsOn: writeStream]
 ]
 
 { #category : #printing }
@@ -346,6 +374,11 @@ XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock whenAbsent: aZeroArgBloc
 	self escapesContentEntitiesWhenWriting
 		ifFalse: [writer escapesContentEntityReferences: false].
 	^ aOneArgBlock value: writer.
+]
+
+{ #category : #private }
+XMLNode >> withWriteStreamOnFileNamed: aFileName do: aBlock [
+	^ aFileName asXMLFileHandle writeStreamDo: aBlock
 ]
 
 { #category : #printing }

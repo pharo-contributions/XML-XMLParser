@@ -1,12 +1,12 @@
 "
-A read stream adapter that decodes stream contents using a stream decoder. Used with undecoded external streams.
+A read stream adapter that decodes stream contents using a stream converter. Used to handle encoded external streams.
 "
 Class {
 	#name : #XMLDecodingReadStreamAdapter,
 	#superclass : #XMLReadStreamAdapter,
 	#instVars : [
-		'streamDecoder',
-		'peekChar'
+		'peekChar',
+		'streamConverter'
 	],
 	#category : #'XML-Parser-Streams'
 }
@@ -15,26 +15,27 @@ Class {
 XMLDecodingReadStreamAdapter class >> on: aStream [
 	^ self
 		on: aStream
-		streamDecoder: XMLStreamDecoder defaultStreamDecoder new
+		streamConverter: XMLStreamConverter default
 ]
 
 { #category : #'instance creation' }
-XMLDecodingReadStreamAdapter class >> on: aStream streamDecoder: aDecoder [
-	^ (self new on: aStream) streamDecoder: aDecoder
-]
-
-{ #category : #'instance creation' }
-XMLDecodingReadStreamAdapter class >> onExternalStream: aReadStream [
-	^ self on: (XMLBinaryReadStreamAdapter onStreamIfBinary: aReadStream)
+XMLDecodingReadStreamAdapter class >> on: aStream streamConverter: aStreamConverter [
+	^ self new
+		on: (XMLBinaryReadStreamAdapter onStreamIfBinary: aStream);
+		streamConverter: aStreamConverter
 ]
 
 { #category : #'instance creation' }
 XMLDecodingReadStreamAdapter class >> onStreamIfBinary: aStream [
 	| streamAdapter |
 
-	(streamAdapter := XMLBinaryReadStreamAdapter onStreamIfBinary: aStream) == aStream
+	streamAdapter := XMLBinaryReadStreamAdapter onStreamIfBinary: aStream.
+	streamAdapter == aStream
 		ifTrue: [^ aStream]
-		ifFalse: [^ self on: streamAdapter]
+		ifFalse: [
+			^ self new
+				on: streamAdapter;
+				streamConverter: XMLStreamConverter default]
 ]
 
 { #category : #testing }
@@ -42,22 +43,20 @@ XMLDecodingReadStreamAdapter >> atEnd [
 	^ peekChar == nil and: [stream atEnd]
 ]
 
-{ #category : #accessing }
-XMLDecodingReadStreamAdapter >> basicNext [
-	stream atEnd
-		ifTrue: [^ nil]
-		ifFalse: [^ stream next].
+{ #category : #testing }
+XMLDecodingReadStreamAdapter >> hasDefaultStreamConverter [
+	^ streamConverter isDefault
 ]
 
 { #category : #testing }
-XMLDecodingReadStreamAdapter >> isDecodingReadStreamAdapter [
+XMLDecodingReadStreamAdapter >> isConvertingStreamAdapter [
 	^ true
 ]
 
 { #category : #accessing }
 XMLDecodingReadStreamAdapter >> next [
 	peekChar
-		ifNil: [^ streamDecoder nextFromStream: self]
+		ifNil: [^ streamConverter nextFromStream: self]
 		ifNotNil: [:nextChar |
 			peekChar := nil.
 			^ nextChar]
@@ -65,7 +64,8 @@ XMLDecodingReadStreamAdapter >> next [
 
 { #category : #accessing }
 XMLDecodingReadStreamAdapter >> peek [
-	^ peekChar ifNil: [peekChar := streamDecoder nextFromStream: self]
+	^ peekChar
+		ifNil: [peekChar := streamConverter nextFromStream: self]
 ]
 
 { #category : #printing }
@@ -73,16 +73,17 @@ XMLDecodingReadStreamAdapter >> printOn: aStream [
 	super printOn: aStream.
 	aStream
 		nextPut: $(;
-		print: streamDecoder;
+		print: streamConverter;
 		nextPut: $).
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapter >> streamDecoder [
-	^ streamDecoder
+XMLDecodingReadStreamAdapter >> streamConverter [
+	^ streamConverter
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapter >> streamDecoder: aStreamDecoder [
-	streamDecoder := aStreamDecoder
+XMLDecodingReadStreamAdapter >> streamConverter: aStreamConverter [
+	streamConverter :=
+		(aStreamConverter ifNil: [XMLNullStreamConverter new])
 ]

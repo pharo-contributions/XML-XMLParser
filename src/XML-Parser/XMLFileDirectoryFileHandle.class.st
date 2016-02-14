@@ -1,5 +1,5 @@
 "
-This class uses FileDirectory/DirectoryEntry to implement file IO.
+This class uses FileDirectory/DirectoryEntry to implement file IO. This is used on Squeak and Gemstone, which don't support the FileSystem API.
 "
 Class {
 	#name : #XMLFileDirectoryFileHandle,
@@ -36,7 +36,8 @@ XMLFileDirectoryFileHandle >> directoryEntry [
 
 { #category : #private }
 XMLFileDirectoryFileHandle >> fileDirectory [
-	^ fileDirectory ifNil: [fileDirectory := (Smalltalk at: #FileDirectory) default]
+	^ fileDirectory
+		ifNil: [fileDirectory := (Smalltalk at: #FileDirectory) default]
 ]
 
 { #category : #accessing }

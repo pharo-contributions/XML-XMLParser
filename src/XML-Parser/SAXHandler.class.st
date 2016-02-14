@@ -62,14 +62,12 @@ SAXHandler class >> on: aStringOrStream documentURI: aURIString [
 ]
 
 { #category : #'instance creation' }
-SAXHandler class >> onFileNamed: aFilePathString [
+SAXHandler class >> onFileNamed: aFileNameString [
 	"Returns new parser on the specified file but doesn't parse"
 
 	^ self
-		on:
-			(XMLDecodingReadStreamAdapter onExternalStream:
-				(XMLFileHandle path: aFilePathString) readStream)
-		documentURI: aFilePathString
+		on: aFileNameString asXMLFileHandle readStream
+		documentURI: aFileNameString
 ]
 
 { #category : #'instance creation' }
@@ -88,9 +86,11 @@ SAXHandler class >> onURL: aURLString upToLimit: aLimit [
 
 	^ (self
 		on:
-			(XMLDecodingReadStreamAdapter onExternalStream:
+			(XMLDecodingReadStreamAdapter on:
 				(aURLString asXMLURI
 					streamGetUpToLimit: aLimit
+					"disable decoding so we can do our own looking at byte order
+					marks and <?xml ...?> encoding attributes"
 					decoding: false))
 		documentURI: aURLString) documentReadLimit: aLimit
 ]
@@ -152,17 +152,17 @@ SAXHandler class >> parseDocumentFrom: aStringOrStream [
 ]
 
 { #category : #deprecated }
-SAXHandler class >> parseDocumentFromFileNamed: aFileName [
+SAXHandler class >> parseDocumentFromFileNamed: aFileNameString [
 	self deprecated: 'Use #parseFileNamed: instead'.
 
-	^ self parseFileNamed: aFileName.
+	^ self parseFileNamed: aFileNameString.
 ]
 
 { #category : #parsing }
-SAXHandler class >> parseFileNamed: aFilePathString [
-	"Parses document in specified file"
+SAXHandler class >> parseFileNamed: aFileNameString [
+	"Parses a document in a specified file"
 
-	^ (self onFileNamed: aFilePathString) parseDocument
+	^ (self onFileNamed: aFileNameString) parseDocument
 ]
 
 { #category : #parsing }

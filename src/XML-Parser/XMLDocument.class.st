@@ -148,6 +148,20 @@ XMLDocument >> version: aVersionFloat [
 	version := aVersionFloat
 ]
 
+{ #category : #private }
+XMLDocument >> withWriteStreamOnFileNamed: aFileName do: aBlock [
+	^ super
+		withWriteStreamOnFileNamed: aFileName
+		do: [:writeStream | | streamConverter |
+			streamConverter :=
+				(XMLStreamConverter newForEncoding: self encoding)
+					ifNil: [XMLStreamConverter default].
+			writeStream
+				streamConverter: streamConverter;
+				nextPutByteOrderMark.
+			aBlock value: writeStream]
+]
+
 { #category : #printing }
 XMLDocument >> writeDoctypeDeclarationOn: aWriter [
 	self hasDoctypeDeclaration

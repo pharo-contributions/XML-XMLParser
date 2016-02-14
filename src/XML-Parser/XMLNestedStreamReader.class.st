@@ -1,5 +1,5 @@
 "
-This class represents a stream reader that implements pushBack: using nested streams. This enables subsitution/replacement to be performed without modifying the underlying collections streamed-over or having to copy them. It also performs line-ending normalization, transforming CR and CRLF sequences into a single LF character.
+This class represents a stream reader that implements pushBack: using nested streams. This enables subsitution/replacement to be performed without modifying the underlying collections streamed-over or having to copy them. It also performs line-ending normalization, transforming a CR or a CRLF sequence into a single LF character.
 
 (The code in this class is optimized; refactor with care.)
 "
@@ -17,8 +17,8 @@ Class {
 		'isEscapingQuotes'
 	],
 	#classVars : [
-		'CarriageReturn',
-		'LineFeed'
+		'CRCharacter',
+		'LFCharacter'
 	],
 	#category : #'XML-Parser-Streams'
 }
@@ -27,8 +27,9 @@ Class {
 XMLNestedStreamReader class >> initialize [
 	"self initialize"
 
-	CarriageReturn := Character cr.
-	LineFeed := Character lf.
+	"stored in class vars for faster access"
+	CRCharacter := Character cr.
+	LFCharacter := Character lf.
 ]
 
 { #category : #'instance creation' }
@@ -65,7 +66,7 @@ XMLNestedStreamReader >> atQuote [
 		or: [peekChar == $']
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLNestedStreamReader >> basicNext [
 	"Returns next character in the stream after performing line-ending normalization."
 	| nextChar |
@@ -75,16 +76,16 @@ XMLNestedStreamReader >> basicNext [
 			self popNestedStreamWhileAtEnd.
 			stream atEnd
 				ifTrue: [^ nil]].
-	(nextChar := stream next) == CarriageReturn
+	(nextChar := stream next) == CRCharacter
 		ifTrue: [
 			self popNestedStreamWhileAtEnd.
 			stream atEnd
 				ifFalse: [
-					stream peek == LineFeed
+					stream peek == LFCharacter
 						ifTrue: [stream next]].
 			nextChar := normalizedLineEndingChar]
 		ifFalse: [
-			nextChar == LineFeed
+			nextChar == LFCharacter
 				ifTrue: [nextChar := normalizedLineEndingChar]].
 	isEscapingQuotes
 		ifTrue: [^ self escapeNextQuoteCharacter: nextChar]
@@ -108,15 +109,15 @@ XMLNestedStreamReader >> closeStreams [
 
 { #category : #encodings }
 XMLNestedStreamReader >> convertFromEncoding: anEncodingName [
-	| streamDecoder |
+	| streamConverter |
 
 	"encoding declarations for the default encoding are ignored on ReadStreams,
 	which are assumed to be on strings that don't need decoding"
-	streamDecoder := XMLStreamDecoder newForEncoding: anEncodingName.
-	(streamDecoder == nil
+	streamConverter := XMLStreamConverter newForEncoding: anEncodingName.
+	(streamConverter == nil
 		or: [(stream isKindOf: ReadStream)
-			and: [streamDecoder isDefaultStreamDecoder]])
-		ifFalse: [self decodeStreamWithDecoder: streamDecoder].
+			and: [streamConverter isDefault]])
+		ifFalse: [self decodeStreamWithConverter: streamConverter].
 ]
 
 { #category : #accessing }
@@ -125,19 +126,19 @@ XMLNestedStreamReader >> currentLineNumber [
 ]
 
 { #category : #encodings }
-XMLNestedStreamReader >> decodeStreamWithDecoder: aStreamDecoder [
-	stream isDecodingReadStreamAdapter
-		ifTrue: [stream streamDecoder: aStreamDecoder]
+XMLNestedStreamReader >> decodeStreamWithConverter: aStreamConverter [
+	stream isConvertingStreamAdapter
+		ifTrue: [stream streamConverter: aStreamConverter]
 		ifFalse: [
 			stream :=
 				XMLDecodingReadStreamAdapter
 					on: stream
-					streamDecoder: aStreamDecoder]
+					streamConverter: aStreamConverter]
 ]
 
 { #category : #encodings }
 XMLNestedStreamReader >> detectCurrentEncoding [
-	(XMLStreamEncodingDetector for: self) detectCurrentEncoding
+	(XMLNestedStreamReaderEncodingDetector for: self) detectCurrentEncoding
 ]
 
 { #category : #private }
@@ -187,6 +188,11 @@ XMLNestedStreamReader >> maxNestedStreams [
 	^ 32
 ]
 
+{ #category : #private }
+XMLNestedStreamReader >> newWriteStream [
+	^ (String new: 128) writeStream
+]
+
 { #category : #accessing }
 XMLNestedStreamReader >> next [
 	| nextChar |
@@ -204,6 +210,18 @@ XMLNestedStreamReader >> next [
 			ifFalse: [self errorReadLimitExceeded]].
 
 	^ nextChar.
+]
+
+{ #category : #accessing }
+XMLNestedStreamReader >> next: anInteger [
+	| writeStream |
+
+	writeStream := self newWriteStream.
+	1 to: anInteger do: [:i |
+		self atEnd
+			ifTrue: [^ writeStream contents].
+		writeStream nextPut: self next].
+	^ writeStream contents.
 ]
 
 { #category : #accessing }
@@ -340,20 +358,28 @@ XMLNestedStreamReader >> readLimit [
 { #category : #initialization }
 XMLNestedStreamReader >> setStream: aStream readLimit: aReadLimit [
 	currentLineNumber := 1.
-	normalizedLineEndingChar := LineFeed.
+	normalizedLineEndingChar := LFCharacter.
 	readLimit := aReadLimit.
 	isEscapingQuotes := false.
 	self stream: aStream.
 ]
 
-{ #category : #streaming }
+{ #category : #positioning }
+XMLNestedStreamReader >> skip: anInteger [
+	1 to: anInteger do: [:i |
+		self atEnd
+			ifTrue: [^ self].
+		self next]
+]
+
+{ #category : #positioning }
 XMLNestedStreamReader >> skipSeparators [
-	"nil understands xmlParserIsSeparator so the result of the inlined peek
+	"nil understands xmlParserIsSeparator so the result of the inlined #peek
 	does not need to be tested for nil first"
-	[(peekChar ifNil: [peekChar := self basicNext]) "inlined peek"
+	[(peekChar ifNil: [peekChar := self basicNext]) "inlined #peek"
 		xmlParserIsSeparator]
 		whileTrue: [
-			"inlined next"
+			"inlined #next"
 			peekChar == normalizedLineEndingChar
 				ifTrue: [currentLineNumber := currentLineNumber + 1].
 			readLimit ifNotNil: [
@@ -363,10 +389,11 @@ XMLNestedStreamReader >> skipSeparators [
 ]
 
 { #category : #positioning }
-XMLNestedStreamReader >> skipTo: aDelimiter [
-	[self atEnd] whileFalse: [
-		self next == aDelimiter
-			ifTrue: [^ true]].
+XMLNestedStreamReader >> skipTo: aCharacter [
+	[self atEnd]
+		whileFalse: [
+			self next == aCharacter
+				ifTrue: [^ true]].
 	^ false.
 ]
 
@@ -377,7 +404,30 @@ XMLNestedStreamReader >> stream [
 
 { #category : #accessing }
 XMLNestedStreamReader >> stream: aStream [
-	aStream isDecodingReadStreamAdapter
+	"if the stream is not already a decoding adapter,
+	then only assume it needs one if it's binary"
+	aStream isConvertingStreamAdapter
 		ifTrue: [stream := aStream]
 		ifFalse: [stream := XMLDecodingReadStreamAdapter onStreamIfBinary: aStream]
+]
+
+{ #category : #accessing }
+XMLNestedStreamReader >> upTo: aCharacter [
+	| writeStream |
+
+	writeStream := self newWriteStream.
+	[self atEnd
+		or: [self peek == aCharacter]]
+		whileFalse: [writeStream nextPut: self next].
+	^ writeStream contents.
+]
+
+{ #category : #accessing }
+XMLNestedStreamReader >> upToEnd [
+	| writeStream |
+
+	writeStream := self newWriteStream.
+	[self atEnd]
+		whileFalse: [writeStream nextPut: self next].
+	^ writeStream contents.
 ]

@@ -1,0 +1,85 @@
+"
+An abstract class for write stream adapters for basic streams that support nextPut:, nextPutAll:, contents, reset, positioning.
+"
+Class {
+	#name : #XMLWriteStreamAdapter,
+	#superclass : #XMLStreamAdapter,
+	#classVars : [
+		'CRCharacter',
+		'LFCharacter',
+		'SpaceCharacter',
+		'TabCharacter'
+	],
+	#category : #'XML-Parser-Streams'
+}
+
+{ #category : #'class initialization' }
+XMLWriteStreamAdapter class >> initialize [
+	"self initialize"
+
+	"stored in class vars for faster access"
+	SpaceCharacter := Character space.
+	TabCharacter := Character tab.
+	CRCharacter := Character cr.
+	LFCharacter := Character lf.
+]
+
+{ #category : #testing }
+XMLWriteStreamAdapter >> atBeginning [
+	"overridden in the GS version to use Stream>>atBeginning because
+	not all streams are 0-based on GS"
+
+	^ stream position = 0
+]
+
+{ #category : #accessing }
+XMLWriteStreamAdapter >> contents [
+	^ stream contents
+]
+
+{ #category : #'character writing' }
+XMLWriteStreamAdapter >> cr [
+	^ self nextPut: CRCharacter
+]
+
+{ #category : #'character writing' }
+XMLWriteStreamAdapter >> lf [
+	^ self nextPut: LFCharacter
+]
+
+{ #category : #accessing }
+XMLWriteStreamAdapter >> nextPut: anObject [
+	stream nextPut: anObject.
+	^ anObject.
+]
+
+{ #category : #accessing }
+XMLWriteStreamAdapter >> nextPutAll: aCollection [
+	stream nextPutAll: aCollection.
+	^ aCollection.
+]
+
+{ #category : #positioning }
+XMLWriteStreamAdapter >> position [
+	^ stream position
+]
+
+{ #category : #positioning }
+XMLWriteStreamAdapter >> position: anInteger [
+	stream position: anInteger
+]
+
+{ #category : #positioning }
+XMLWriteStreamAdapter >> reset [
+	stream reset
+]
+
+{ #category : #'character writing' }
+XMLWriteStreamAdapter >> space [
+	^ self nextPut: SpaceCharacter
+]
+
+{ #category : #'character writing' }
+XMLWriteStreamAdapter >> tab [
+	^ self nextPut: TabCharacter
+]

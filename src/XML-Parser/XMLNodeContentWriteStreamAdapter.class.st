@@ -1,32 +1,21 @@
 "
-A stream for writing node content with whitespace insertion if needed between writes.
+A write stream adapter for writing node content with whitespace insertion if needed between writes.
 "
 Class {
 	#name : #XMLNodeContentWriteStreamAdapter,
-	#superclass : #Object,
+	#superclass : #XMLWriteStreamAdapter,
 	#instVars : [
-		'stream',
 		'lastChar'
 	],
 	#category : #'XML-Parser-Streams'
 }
-
-{ #category : #'instance creation' }
-XMLNodeContentWriteStreamAdapter class >> on: aStream [
-	^ self new on: aStream
-]
-
-{ #category : #accessing }
-XMLNodeContentWriteStreamAdapter >> contents [
-	^ stream contents
-]
 
 { #category : #private }
 XMLNodeContentWriteStreamAdapter >> insertSpaceBefore: aCharacter [
 	(lastChar == nil
 		or: [lastChar xmlParserIsWhitespace
 			or: [aCharacter xmlParserIsWhitespace]])
-		ifFalse: [stream space]
+		ifFalse: [stream nextPut: SpaceCharacter]
 ]
 
 { #category : #accessing }
@@ -38,15 +27,10 @@ XMLNodeContentWriteStreamAdapter >> nextPut: aCharacter [
 
 { #category : #accessing }
 XMLNodeContentWriteStreamAdapter >> nextPutAll: aString [
-	aString size > 0
+	aString size > 0 "optimization"
 		ifTrue: [
 			self insertSpaceBefore: aString first.
 			stream nextPutAll: aString.
 			lastChar := aString last].
 	^ aString.
-]
-
-{ #category : #initialization }
-XMLNodeContentWriteStreamAdapter >> on: aStream [
-	stream := aStream
 ]

@@ -20,6 +20,16 @@ String >> asXMLEscapedString [
 ]
 
 { #category : #'*XML-Parser' }
+String >> asXMLFileHandle [
+	^ XMLFileHandle path: self
+]
+
+{ #category : #'*XML-Parser' }
+String >> asXMLHTTPRequest [
+	^ XMLHTTPRequest url: self
+]
+
+{ #category : #'*XML-Parser' }
 String >> asXMLString [
 	^ XMLString string: self
 ]

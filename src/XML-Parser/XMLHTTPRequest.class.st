@@ -25,6 +25,11 @@ XMLHTTPRequest class >> url: aURL [
 	^ self new url: aURL
 ]
 
+{ #category : #converting }
+XMLHTTPRequest >> asXMLHTTPRequest [
+	^ self
+]
+
 { #category : #private }
 XMLHTTPRequest >> defaultTimeout [
 	^ 30

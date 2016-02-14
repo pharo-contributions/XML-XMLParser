@@ -6,7 +6,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'writeStream',
-		'readStream'
+		'readStream',
+		'decodingStream'
 	],
 	#classVars : [
 		'HostDelimiters',
@@ -81,20 +82,13 @@ XMLURIParser >> next [
 ]
 
 { #category : #private }
-XMLURIParser >> nextIntegerWithBase: aBase upTo: aLimit [
-	^ XMLIntegerReader
-		readFrom: readStream
-		withBase: aBase
-		upTo: aLimit
-]
+XMLURIParser >> nextPercentEncodedCharsOnWriteStream [
+	| percentDecodingReadStreamAdapter |
 
-{ #category : #private }
-XMLURIParser >> nextPercentEncodedChar [
-	| nextChar |
-
-	(nextChar := self next) == $%
-		ifTrue: [^ ((self nextIntegerWithBase: 16 upTo: 2) ifNil: [$%]) asCharacter]
-		ifFalse: [^ nextChar]
+	percentDecodingReadStreamAdapter :=
+		XMLPercentDecodingReadStreamAdapter on: readStream.
+	[percentDecodingReadStreamAdapter atEnd]
+		whileFalse: [writeStream nextPut: percentDecodingReadStreamAdapter next].
 ]
 
 { #category : #private }
@@ -102,7 +96,10 @@ XMLURIParser >> nextPercentEncodedDelimitedBy: aCollection [
 	writeStream reset.
 	[self atEnd
 		or: [aCollection includes: self peek]]
-		whileFalse: [writeStream nextPut: self nextPercentEncodedChar].
+		whileFalse: [
+			self peek == $%
+				ifTrue: [self nextPercentEncodedCharsOnWriteStream]
+				ifFalse: [writeStream nextPut: self next]].
 	^ writeStream contents.
 ]
 
@@ -110,20 +107,11 @@ XMLURIParser >> nextPercentEncodedDelimitedBy: aCollection [
 XMLURIParser >> nextPercentEncodedUpToEnd [
 	writeStream reset.
 	[self atEnd]
-		whileFalse: [writeStream nextPut: self nextPercentEncodedChar].
+		whileFalse: [
+			self peek == $%
+				ifTrue: [self nextPercentEncodedCharsOnWriteStream]
+				ifFalse: [writeStream nextPut: self next]].
 	^ writeStream contents.
-]
-
-{ #category : #private }
-XMLURIParser >> nextPercentOrPlusEncodedChar [
-	| nextChar |
-
-	(nextChar := self next) == $%
-		ifTrue: [^ ((self nextIntegerWithBase: 16 upTo: 2) ifNil: [$%]) asCharacter]
-		ifFalse: [
-			nextChar == $+
-				ifTrue: [^ Character space]
-				ifFalse: [^ nextChar]]
 ]
 
 { #category : #private }
@@ -131,7 +119,13 @@ XMLURIParser >> nextPercentOrPlusEncodedDelimitedBy: aCollection [
 	writeStream reset.
 	[self atEnd
 		or: [aCollection includes: self peek]]
-		whileFalse: [writeStream nextPut: self nextPercentOrPlusEncodedChar].
+		whileFalse: [
+			self peek == $%
+				ifTrue: [self nextPercentEncodedCharsOnWriteStream]
+				ifFalse: [| nextChar |
+					(nextChar := self next) == $+
+						ifTrue: [writeStream nextPut: Character space]
+						ifFalse: [writeStream nextPut: nextChar]]].
 	^ writeStream contents.
 ]
 
@@ -201,9 +195,9 @@ XMLURIParser >> parsePort [
 	(self peekFor: $:)
 		ifTrue: [
 			port :=
-				self
-					nextIntegerWithBase: 10
-					upTo: nil.
+				XMLIntegerReader
+					readFrom: readStream
+					withBase: 10.
 			[self atEnd
 				or: [PathDelimiters includes: self peek]]
 				whileFalse: [self next]].

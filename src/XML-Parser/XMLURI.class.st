@@ -68,20 +68,8 @@ XMLURI class >> percentOrPlusEncodeCharacter: aCharacter [
 
 { #category : #accessing }
 XMLURI class >> printPercentEncodedCharacter: aCharacter on: aStream [
-	| asciiValue |
-
-	"only the ASCII range contains reserved chars"
-	(asciiValue := aCharacter asciiValue) < 128
-		ifTrue: [
-			aStream nextPut: $%.
-			asciiValue < 16
-				ifTrue: [aStream nextPut: $0].
-			"printOn:base: on GS shows the radix, so the three arg form is used instead"
-			asciiValue
-				printOn: aStream
-				base: 16
-				showRadix: false]
-		ifFalse: [aStream nextPut: aCharacter]
+	(XMLPercentEncodingWriteStreamAdapter on: aStream)
+		nextPut: aCharacter
 ]
 
 { #category : #accessing }
@@ -206,8 +194,8 @@ XMLURI >> addPathSegmentsFrom: aURI [
 { #category : #converting }
 XMLURI >> asRetrievableResource [
 	^ self isLocalURI
-		ifTrue: [XMLFileHandle path: self path]
-		ifFalse: [XMLHTTPRequest url: self asString]
+		ifTrue: [self path asXMLFileHandle]
+		ifFalse: [self asString asXMLHTTPRequest]
 ]
 
 { #category : #converting }

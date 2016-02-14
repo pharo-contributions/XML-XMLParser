@@ -3,17 +3,9 @@ An abstract class for read stream adapters for basic streams that support next, 
 "
 Class {
 	#name : #XMLReadStreamAdapter,
-	#superclass : #Object,
-	#instVars : [
-		'stream'
-	],
+	#superclass : #XMLStreamAdapter,
 	#category : #'XML-Parser-Streams'
 }
-
-{ #category : #'instance creation' }
-XMLReadStreamAdapter class >> on: aStream [
-	^ self new on: aStream
-]
 
 { #category : #'instance creation' }
 XMLReadStreamAdapter class >> onStreamIfBinary: aStream [
@@ -22,46 +14,106 @@ XMLReadStreamAdapter class >> onStreamIfBinary: aStream [
 
 { #category : #testing }
 XMLReadStreamAdapter >> atEnd [
-	self subclassResponsibility
+	^ stream atEnd
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLReadStreamAdapter >> basicNext [
-	self subclassResponsibility
+	stream atEnd
+		ifTrue: [^ nil]
+		ifFalse: [^ stream next]
 ]
 
-{ #category : #closing }
-XMLReadStreamAdapter >> close [
-	(stream respondsTo: #close)
-		ifTrue: [stream close]
-]
-
-{ #category : #testing }
-XMLReadStreamAdapter >> isBinary [
-	^ false
-]
-
-{ #category : #testing }
-XMLReadStreamAdapter >> isStream [
-	^ true
+{ #category : #private }
+XMLReadStreamAdapter >> newWriteStream [
+	^ (self writeStreamCollectionClass new: 128) writeStream
 ]
 
 { #category : #accessing }
 XMLReadStreamAdapter >> next [
-	self subclassResponsibility
+	stream atEnd
+		ifTrue: [^ nil]
+		ifFalse: [^ stream next]
 ]
 
-{ #category : #initialization }
-XMLReadStreamAdapter >> on: aStream [
-	stream := aStream
+{ #category : #accessing }
+XMLReadStreamAdapter >> next: anInteger [
+	| writeStream |
+
+	writeStream := self newWriteStream.
+	1 to: anInteger do: [:i |
+		self atEnd
+			ifTrue: [^ writeStream contents].
+		writeStream nextPut: self next].
+	^ writeStream contents.
 ]
 
 { #category : #accessing }
 XMLReadStreamAdapter >> peek [
-	self subclassResponsibility
+	stream atEnd
+		ifTrue: [^ nil]
+		ifFalse: [^ stream peek]
 ]
 
 { #category : #accessing }
-XMLReadStreamAdapter >> stream [
-	^ stream
+XMLReadStreamAdapter >> peekFor: anObject [
+	self peek = anObject
+		ifTrue: [
+			self next.
+			^ true]
+		ifFalse: [^ false]
+]
+
+{ #category : #positioning }
+XMLReadStreamAdapter >> skip: anInteger [
+	"only supports skipping forwards"
+	1 to: anInteger do: [:i |
+		self atEnd
+			ifTrue: [^ self].
+		self next]
+]
+
+{ #category : #positioning }
+XMLReadStreamAdapter >> skipSeparators [
+	"xmlParserIsWhitespace matches the Squeak/Pharo isSeparator range, so
+	it is used here instead of xmlParserIsSeparator to give expected behavior
+	when reading non-XML files"
+	[self atEnd not
+		and: [self peek xmlParserIsWhitespace]]
+		whileTrue: [self next]
+]
+
+{ #category : #positioning }
+XMLReadStreamAdapter >> skipTo: anObject [
+	[self atEnd]
+		whileFalse: [
+			self next = anObject
+				ifTrue: [^ true]].
+	^ false.
+]
+
+{ #category : #accessing }
+XMLReadStreamAdapter >> upTo: anObject [
+	| writeStream |
+
+	writeStream := self newWriteStream.
+	[self atEnd
+		or: [self peek = anObject]]
+		whileFalse: [writeStream nextPut: self next].
+	^ writeStream contents.
+]
+
+{ #category : #accessing }
+XMLReadStreamAdapter >> upToEnd [
+	| writeStream |
+
+	writeStream := self newWriteStream.
+	[self atEnd]
+		whileFalse: [writeStream nextPut: self next].
+	^ writeStream contents.
+]
+
+{ #category : #private }
+XMLReadStreamAdapter >> writeStreamCollectionClass [
+	^ String
 ]

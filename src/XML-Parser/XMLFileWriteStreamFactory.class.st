@@ -1,5 +1,7 @@
 "
 An abstract factory for file write streams used by XMLFileHandle.
+
+Subclasses should create write streams that do no automatic encoding and accept raw byte characters, so XMLParser can do its own encoding.
 "
 Class {
 	#name : #XMLFileWriteStreamFactory,
@@ -13,16 +15,16 @@ XMLFileWriteStreamFactory class >> errorUnsupported [
 ]
 
 { #category : #'instance creation' }
-XMLFileWriteStreamFactory class >> fileWriteStreamOn: aPath [
+XMLFileWriteStreamFactory class >> fileWriteStreamOnPath: aPath [
 	self subclassResponsibility
 ]
 
 { #category : #'instance creation' }
-XMLFileWriteStreamFactory class >> on: aPath [
-	^ self implementation fileWriteStreamOn: aPath
+XMLFileWriteStreamFactory class >> onPath: aPath [
+	^ self implementation fileWriteStreamOnPath: aPath
 ]
 
 { #category : #private }
 XMLFileWriteStreamFactory class >> preferredImplementation [
-	^ XMLFileStreamWriteStreamFactory
+	^ XMLStandardFileStreamWriteStreamFactory
 ]
