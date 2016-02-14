@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLNamespaceScopeTest,
 	#superclass : #TestCase,
-	#category : #'XML-Tests-Parser'
+	#category : #'XML-Tests-Parser-Namespaces'
 }
 
 { #category : #accessing }

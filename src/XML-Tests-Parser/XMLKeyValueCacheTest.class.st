@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLKeyValueCacheTest,
 	#superclass : #TestCase,
-	#category : #'XML-Tests-Parser'
+	#category : #'XML-Tests-Parser-Util'
 }
 
 { #category : #accessing }

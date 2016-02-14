@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLIntegerReaderTest,
 	#superclass : #TestCase,
-	#category : #'XML-Tests-Parser'
+	#category : #'XML-Tests-Parser-Util'
 }
 
 { #category : #private }
@@ -151,9 +151,10 @@ XMLIntegerReaderTest >> testStreamReadingPortability [
 	stream := XMLExceptionRaisingReadStream on: '123abc'.
 	integerReader := XMLIntegerReader on: stream.
 	self
+		assert: (integerReader nextIntegerWithBase: 16) = 16r123ABC;
+		assert: integerReader atEnd.
+	self
 		shouldnt: [
-			integer := integerReader nextIntegerWithBase: 16.
-			atEnd := integerReader atEnd.
 			integerReader
 				nextInteger;
 				nextIntegerWithBase: 16;
@@ -162,9 +163,6 @@ XMLIntegerReaderTest >> testStreamReadingPortability [
 				peek;
 				next]
 		raise: Error.
-	self
-		assert: integer = 16r123ABC;
-		assert: atEnd.
 
 	self assert: stream atEnd.
 	self should: [stream peek] raise: Error.

@@ -30,7 +30,7 @@ XMLExternalEntityTest class >> isSkipping: aBoolean [
 
 { #category : #files }
 XMLExternalEntityTest >> deleteFileNamed: aFileName [
-	(XMLFileHandle path: aFileName) delete
+	aFileName asXMLFileHandle delete
 ]
 
 { #category : #source }
@@ -99,9 +99,8 @@ XMLExternalEntityTest >> feedURL [
 
 { #category : #files }
 XMLExternalEntityTest >> fileNamed: aFileName write: aString [
-	(XMLFileHandle path: aFileName) writeStream
-		nextPutAll: aString;
-		close.
+	aFileName asXMLFileHandle writeStreamDo: [:writeStream |
+		writeStream nextPutAll: aString]
 ]
 
 { #category : #accessing }

@@ -1,0 +1,131 @@
+Class {
+	#name : #XMLWriteStreamAdapterTest,
+	#superclass : #XMLStreamAdapterTest,
+	#category : #'XML-Tests-Parser-Streams'
+}
+
+{ #category : #accessing }
+XMLWriteStreamAdapterTest >> adapterClass [
+	^ XMLWriteStreamAdapter
+]
+
+{ #category : #converting }
+XMLWriteStreamAdapterTest >> contentsFromCharacter: aCharacter [
+	^ aCharacter asString
+]
+
+{ #category : #accessing }
+XMLWriteStreamAdapterTest >> inputCollection [
+	^ 'test'
+]
+
+{ #category : #accessing }
+XMLWriteStreamAdapterTest >> outputCollection [
+	^ 'test'
+]
+
+{ #category : #accessing }
+XMLWriteStreamAdapterTest >> streamClass [
+	^ WriteStream
+]
+
+{ #category : #tests }
+XMLWriteStreamAdapterTest >> testAtBeginning [
+	| adapter |
+
+	adapter := self newAdapter.
+	self assert: adapter atBeginning.
+	self inputCollection do: [:each |
+		adapter nextPut: each.
+		self deny: adapter atBeginning].
+	adapter reset.
+	self assert: adapter atBeginning.
+]
+
+{ #category : #tests }
+XMLWriteStreamAdapterTest >> testCR [
+	| adapter |
+
+	adapter := self newAdapter.
+	self
+		assert: adapter cr == Character cr;
+		assert: adapter contents = (self contentsFromCharacter: Character cr).
+]
+
+{ #category : #tests }
+XMLWriteStreamAdapterTest >> testLF [
+	| adapter |
+
+	adapter := self newAdapter.
+	self
+		assert: adapter lf == Character lf;
+		assert: adapter contents = (self contentsFromCharacter: Character lf).
+]
+
+{ #category : #tests }
+XMLWriteStreamAdapterTest >> testNextPut [
+	| adapter |
+
+	adapter := self newAdapter.
+	self inputCollection do: [:each |
+		self assert: (adapter nextPut: each) == each].
+	self assert: adapter contents = self outputCollection.
+]
+
+{ #category : #tests }
+XMLWriteStreamAdapterTest >> testNextPutAll [
+	| adapter |
+
+	adapter := self newAdapter.
+	self
+		assert: (adapter nextPutAll: self inputCollection) = self inputCollection;
+		assert: adapter contents = self outputCollection.
+]
+
+{ #category : #tests }
+XMLWriteStreamAdapterTest >> testPosition [
+	| adapter startPosition position |
+
+	adapter := self newAdapter.
+	startPosition := adapter position. "1 or 0 depending on the stream on GS"
+	position := startPosition.
+	self inputCollection do: [:each |
+		adapter nextPut: each.
+		self assert: adapter position > position.
+		position := adapter position].
+
+	adapter position: startPosition.
+	self assert: adapter position = startPosition.
+]
+
+{ #category : #tests }
+XMLWriteStreamAdapterTest >> testReset [
+	| adapter startPosition |
+
+	adapter := self newAdapter.
+	startPosition := adapter position. "1 or 0 depending on the stream on GS"
+	adapter nextPutAll: self inputCollection.
+	self
+		assert: adapter reset == adapter;
+		assert: adapter position = startPosition.
+]
+
+{ #category : #tests }
+XMLWriteStreamAdapterTest >> testSpace [
+	| adapter |
+
+	adapter := self newAdapter.
+	self
+		assert: adapter space == Character space;
+		assert: adapter contents = (self contentsFromCharacter: Character space).
+]
+
+{ #category : #tests }
+XMLWriteStreamAdapterTest >> testTab [
+	| adapter |
+
+	adapter := self newAdapter.
+	self
+		assert: adapter tab == Character tab;
+		assert: adapter contents = (self contentsFromCharacter: Character tab).
+]

@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLURITest,
 	#superclass : #TestCase,
-	#category : #'XML-Tests-Parser'
+	#category : #'XML-Tests-Parser-URI'
 }
 
 { #category : #private }
