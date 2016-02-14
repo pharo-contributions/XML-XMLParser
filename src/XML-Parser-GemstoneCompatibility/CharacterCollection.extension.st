@@ -20,6 +20,16 @@ CharacterCollection >> asXMLEscapedString [
 ]
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
+CharacterCollection >> asXMLFileHandle [
+	^ XMLFileHandle path: self
+]
+
+{ #category : #'*XML-Parser-GemstoneCompatibility' }
+CharacterCollection >> asXMLHTTPRequest [
+	^ XMLHTTPRequest url: self
+]
+
+{ #category : #'*XML-Parser-GemstoneCompatibility' }
 CharacterCollection >> asXMLString [
 	^ XMLString string: self
 ]
