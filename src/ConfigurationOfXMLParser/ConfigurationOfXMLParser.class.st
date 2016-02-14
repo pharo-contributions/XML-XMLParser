@@ -6,7 +6,8 @@ The loadable groups are:
 	Core - XMLParser (but no tests or XMLWriter).
 	CoreWithWriting - XMLParser (but no tests) and XMLWriter.
 
-Users should continue to depend on #stable, but it will delegate to a specific #release version from now on:
+Users should prefer #stable unless they rely on XMLParser internals,
+but it will delegate to a specific #release version from now on:
 
 	(ConfigurationOfXMLParser project version: #stable) load: 'default'
 "
@@ -580,6 +581,22 @@ ConfigurationOfXMLParser >> baseline253: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.29' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline260: spec [
+	<version: '2.6.0-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.6'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.12' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.30' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParser >> customProjectAttributes [
     "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -594,7 +611,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.5.3-baseline'.
+	spec for: #'common' version: '2.6.0-baseline'.
 
 ]
 
@@ -634,6 +651,7 @@ ConfigurationOfXMLParser >> project [
 ConfigurationOfXMLParser >> release24: spec [
 	<symbolicVersion: #'release-2.4'>
 
+	"Users should prefer #stable unless they rely on XMLParser internals"
 	spec for: #'common' version: '2.4.9'.
 ]
 
@@ -641,6 +659,7 @@ ConfigurationOfXMLParser >> release24: spec [
 ConfigurationOfXMLParser >> release253: spec [
 	<symbolicVersion: #'release-2.5.3'>
 
+	"Users should prefer #stable unless they rely on XMLParser internals"
 	spec for: #'common' version: '2.5.4'.
 ]
 
@@ -648,6 +667,7 @@ ConfigurationOfXMLParser >> release253: spec [
 ConfigurationOfXMLParser >> release255: spec [
 	<symbolicVersion: #'release-2.5.5'>
 
+	"Users should prefer #stable unless they rely on XMLParser internals"
 	spec for: #'common' version: '2.5.9'.
 ]
 
@@ -655,13 +675,23 @@ ConfigurationOfXMLParser >> release255: spec [
 ConfigurationOfXMLParser >> release25: spec [
 	<symbolicVersion: #'release-2.5'>
 
+	"Users should prefer #stable unless they rely on XMLParser internals"
 	spec for: #'common' version: '2.5.2'.
+]
+
+{ #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release26: spec [
+	<symbolicVersion: #'release-2.6'>
+
+	"Users should prefer #stable unless they rely on XMLParser internals"
+	spec for: #'common' version: '2.6.0'.
 ]
 
 { #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> release2: spec [
 	<symbolicVersion: #'release-2'>
 
+	"Users should prefer #stable unless they rely on XMLParser internals"
 	spec for: #'common' version: '2.4.7'.
 ]
 
@@ -669,9 +699,9 @@ ConfigurationOfXMLParser >> release2: spec [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	"Users should continue to depend on #stable, but it will delegate
-	to a specific #release version from now on."
-	spec for: #'common' version: #'release-2.5.5'.
+	"Users should prefer #stable unless they rely on XMLParser internals,
+	but it will delegate to a specific #release version from now on."
+	spec for: #'common' version: #'release-2.6'.
 ]
 
 { #category : #versions }
@@ -2393,5 +2423,16 @@ ConfigurationOfXMLParser >> version259: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.330'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.140'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version260: spec [ 
+        <version: '2.6.0' imports: #('2.6.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.331'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.141'.
                 ].
 ]
