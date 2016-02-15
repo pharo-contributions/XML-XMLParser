@@ -112,11 +112,10 @@ XMLReadStreamAdapterTest >> testSkipTo [
 
 { #category : #tests }
 XMLReadStreamAdapterTest >> testStreamReadingPortability [
-	| adapter stream |
+	| stream adapter |
 
-	adapter := self newAdapter.
-	stream := XMLExceptionRaisingReadStream on: adapter stream.
-	adapter on: stream.
+	stream := XMLExceptionRaisingReadStream on: self streamCollection.
+	adapter := self newAdapterOn: stream.
 	self outputCollection do: [:each |
 		self
 			deny: adapter atEnd;

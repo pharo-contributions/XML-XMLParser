@@ -10,8 +10,9 @@ XMLEncodingWriteStreamAdapterTest >> adapterClass [
 ]
 
 { #category : #'instance creation' }
-XMLEncodingWriteStreamAdapterTest >> newAdapter [
-	^ super newAdapter streamConverter: self streamConverterClass new
+XMLEncodingWriteStreamAdapterTest >> newAdapterOn: aStream [
+	^ (super newAdapterOn: aStream)
+		streamConverter: self streamConverterClass new
 ]
 
 { #category : #accessing }
@@ -21,12 +22,9 @@ XMLEncodingWriteStreamAdapterTest >> streamConverterClass [
 
 { #category : #tests }
 XMLEncodingWriteStreamAdapterTest >> testHasDefaultStreamConverter [
-	| adapter |
-
-	adapter := self newAdapter.
-	adapter streamConverter class == XMLUTF8StreamConverter
-		ifTrue: [self assert: adapter hasDefaultStreamConverter]
-		ifFalse: [self deny: adapter hasDefaultStreamConverter]
+	self streamConverterClass == XMLUTF8StreamConverter
+		ifTrue: [self assert: self newAdapter hasDefaultStreamConverter]
+		ifFalse: [self deny: self newAdapter hasDefaultStreamConverter]
 ]
 
 { #category : #tests }

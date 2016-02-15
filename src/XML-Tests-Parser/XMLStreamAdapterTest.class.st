@@ -155,12 +155,22 @@ XMLStreamAdapterTest >> encodedUTF8String [
 
 { #category : #'instance creation' }
 XMLStreamAdapterTest >> newAdapter [
-	^ self adapterClass on: self newStream
+	^ self newAdapterOn: self newStream
+]
+
+{ #category : #'instance creation' }
+XMLStreamAdapterTest >> newAdapterOn: aStream [
+	^ self adapterClass on: aStream
 ]
 
 { #category : #'instance creation' }
 XMLStreamAdapterTest >> newStream [
-	^ self streamClass on: self streamCollection
+	^ self newStreamOn: self streamCollection
+]
+
+{ #category : #'instance creation' }
+XMLStreamAdapterTest >> newStreamOn: aCollection [
+	^ self streamClass on: aCollection
 ]
 
 { #category : #converting }
