@@ -11,8 +11,8 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLExceptionRaisingReadStream class >> on: aString [
-	^ self new stream: aString readStream
+XMLExceptionRaisingReadStream class >> on: aCollection [
+	^ self new on: aCollection
 ]
 
 { #category : #testing }
@@ -42,14 +42,14 @@ XMLExceptionRaisingReadStream >> next [
 	^ stream next.
 ]
 
+{ #category : #initialization }
+XMLExceptionRaisingReadStream >> on: aCollection [
+	stream := aCollection readStream
+]
+
 { #category : #accessing }
 XMLExceptionRaisingReadStream >> peek [
 	stream atEnd
 		ifTrue: [Error signal: 'Cannot call peek on this stream when atEnd'].
 	^ stream peek.
-]
-
-{ #category : #accessing }
-XMLExceptionRaisingReadStream >> stream: aStream [
-	stream := aStream
 ]

@@ -5,6 +5,45 @@ Class {
 }
 
 { #category : #tests }
+XMLStringMethodsTest >> testAsXMLEscapedString [
+	self assert:
+		'<test name="&name;">''&value;''</test>' asXMLEscapedString =
+			'&lt;test name="&amp;name;"&gt;''&amp;value;''&lt;/test&gt;'
+]
+
+{ #category : #tests }
+XMLStringMethodsTest >> testAsXMLFileHandle [
+	| path fileHandle |
+
+	path := 'test.xml'.
+	fileHandle := path asXMLFileHandle.
+	self
+		assert: (fileHandle isKindOf: XMLFileHandle);
+		assert: fileHandle path = path.
+]
+
+{ #category : #tests }
+XMLStringMethodsTest >> testAsXMLHTTPRequest [
+	| url request |
+
+	url := 'test.xml'.
+	request := url asXMLHTTPRequest.
+	self
+		assert: (request isKindOf: XMLHTTPRequest);
+		assert: request url = url.
+]
+
+{ #category : #tests }
+XMLStringMethodsTest >> testAsXMLString [
+	| node |
+
+	node := 'test' asXMLString.
+	self
+		assert: node class == XMLString;
+		assert: node string = 'test'.
+]
+
+{ #category : #tests }
 XMLStringMethodsTest >> testHasPrefixBeforeLocalName [
 	self
 		deny: 'name' hasPrefixBeforeLocalName;
