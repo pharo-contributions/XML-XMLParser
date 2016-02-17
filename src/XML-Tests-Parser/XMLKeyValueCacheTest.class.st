@@ -40,6 +40,16 @@ XMLKeyValueCacheTest >> newCacheWithEntries [
 ]
 
 { #category : #tests }
+XMLKeyValueCacheTest >> testAt [
+	| cache |
+
+	cache := self newCacheWithEntries.
+	self keysAndValuesDo: [:key :value |
+		self assert: (cache at: key) = value].
+	self assert: (cache at: 'newkey') isNil.
+]
+
+{ #category : #tests }
 XMLKeyValueCacheTest >> testAtIfAbsent [
 	| cache |
 
@@ -124,6 +134,13 @@ XMLKeyValueCacheTest >> testMaxSize [
 	self assert: cache size = self maxSize.
 	cache maxSize: 0.
 	self assert: cache size = 0.
+]
+
+{ #category : #tests }
+XMLKeyValueCacheTest >> testNotEmpty [
+	self
+		deny: self newCache notEmpty;
+		assert: self newCacheWithEntries notEmpty
 ]
 
 { #category : #tests }

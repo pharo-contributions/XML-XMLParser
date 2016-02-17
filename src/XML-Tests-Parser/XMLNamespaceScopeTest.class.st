@@ -370,3 +370,23 @@ XMLNamespaceScopeTest >> testUnmapPrefix [
 			raise: XMLNamespaceException].
 	self assert: scope prefixMappings isEmpty.
 ]
+
+{ #category : #tests }
+XMLNamespaceScopeTest >> testXMLNSNamespaceURI [
+	| namespaceURI |
+
+	namespaceURI := 'http://www.w3.org/2000/xmlns/'.
+	self
+		assert: self newNamespaceScope xmlnsNamespaceURI = namespaceURI;
+		assert: XMLNamespaceScope xmlnsNamespaceURI = namespaceURI.
+]
+
+{ #category : #tests }
+XMLNamespaceScopeTest >> testXMLNamespaceURI [
+	| namespaceURI |
+
+	namespaceURI := 'http://www.w3.org/XML/1998/namespace'.
+	self
+		assert: self newNamespaceScope xmlNamespaceURI = namespaceURI;
+		assert: XMLNamespaceScope xmlNamespaceURI = namespaceURI.
+]
