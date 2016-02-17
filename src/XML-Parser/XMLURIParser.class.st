@@ -6,8 +6,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'writeStream',
-		'readStream',
-		'decodingStream'
+		'readStream'
 	],
 	#classVars : [
 		'HostDelimiters',

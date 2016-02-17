@@ -1,6 +1,5 @@
 "
-A simple key-value cache that empties when full.
-
+A simple key-value cache that automatically empties when it reaches a maximum size.
 "
 Class {
 	#name : #XMLKeyValueCache,
@@ -38,12 +37,16 @@ XMLKeyValueCache class >> new [
 
 { #category : #accessing }
 XMLKeyValueCache >> at: aKey [
-	^ self collection at: aKey
+	^ self
+		at: aKey
+		ifAbsent: [nil]
 ]
 
 { #category : #accessing }
 XMLKeyValueCache >> at: aKey ifAbsent: aBlock [
-	^ self collection at: aKey ifAbsent: aBlock
+	^ self collection
+		at: aKey
+		ifAbsent: aBlock
 ]
 
 { #category : #accessing }
@@ -65,7 +68,10 @@ XMLKeyValueCache >> at: aKey put: aValue [
 		ifFalse: [
 			self collection size >= self maxSize
 				ifTrue: [self clear]].
-	^ self collection at: aKey put: aValue.
+
+	^ self collection
+		at: aKey
+		put: aValue.
 ]
 
 { #category : #clearing }
@@ -99,6 +105,11 @@ XMLKeyValueCache >> maxSize: anInteger [
 		ifTrue: [self clear].
 
 	maxSize := anInteger.
+]
+
+{ #category : #testing }
+XMLKeyValueCache >> notEmpty [
+	^ self isEmpty not
 ]
 
 { #category : #copying }

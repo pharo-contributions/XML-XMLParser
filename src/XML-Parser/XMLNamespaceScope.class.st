@@ -229,10 +229,10 @@ XMLNamespaceScope >> prefixesOfNamespaceURI: aURI [
 	| prefixes |
 
 	prefixes := Set new.
-	aURI = self class xmlNamespaceURI
+	aURI = self xmlNamespaceURI
 		ifTrue: [prefixes add: 'xml']
 		ifFalse: [
-			aURI = self class xmlnsNamespaceURI
+			aURI = self xmlnsNamespaceURI
 				ifTrue: [prefixes add: 'xmlns']
 				ifFalse: [
 					self prefixesAndURIsDo: [:prefix :uri |
@@ -291,10 +291,10 @@ XMLNamespaceScope >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 		prefixMappingAt: aPrefix
 		ifAbsent: [
 			aPrefix = 'xml'
-				ifTrue: [self class xmlNamespaceURI]
+				ifTrue: [self xmlNamespaceURI]
 				ifFalse: [
 					aPrefix = 'xmlns'
-						ifTrue: [self class xmlnsNamespaceURI]
+						ifTrue: [self xmlnsNamespaceURI]
 						ifFalse: [aBlock value]]]
 ]
 
@@ -322,7 +322,7 @@ XMLNamespaceScope >> validateAndResolvePrefix: aPrefix [
 		prefixMappingAt: aPrefix
 		ifAbsent: [
 			aPrefix = 'xml'
-				ifTrue: [self class xmlNamespaceURI]
+				ifTrue: [self xmlNamespaceURI]
 				ifFalse: [					
 					(aPrefix = 'xmlns'
 						ifTrue: [self errorCannotUseXMLNSPrefix]
@@ -361,22 +361,24 @@ XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
 
 { #category : #private }
 XMLNamespaceScope >> validatePrefix: aPrefix beforeMappingTo: aURI [
-	aPrefix = 'xml'
+	aPrefix size > 0 "optimization"
 		ifTrue: [
-			aURI = self class xmlNamespaceURI
-				ifFalse: [self errorCannotRemapXMLPrefix]]
-		ifFalse: [
-			aPrefix size > 0 "optimization"
+			aPrefix = 'xml' "cannot be remapped"
 				ifTrue: [
-					aPrefix = 'xmlns'
-						ifTrue: [self errorCannotMapXMLNSPrefix].
-					(aPrefix indexOf: $:) > 0 
-						ifTrue: [self errorInvalidPrefix: aPrefix].
-					aURI isEmpty
-						ifTrue: [self errorCannotMapPrefixToEmptyURI]].
-			(aURI = self class xmlNamespaceURI
-				or: [aURI = self class xmlnsNamespaceURI])
-				ifTrue: [self errorCannotAliasXMLOrXMLNSWithPrefix: aPrefix]]
+					aURI = self xmlNamespaceURI
+						ifFalse: [self errorCannotRemapXMLPrefix].
+					^ self].
+			aPrefix = 'xmlns' "cannot be mapped, even to the same URI"
+				ifTrue: [self errorCannotMapXMLNSPrefix].
+			(aPrefix indexOf: $:) > 0 
+				ifTrue: [self errorInvalidPrefix: aPrefix].
+			aURI size > 0
+				ifFalse: [self errorCannotMapPrefixToEmptyURI]].
+
+	"these URIs cannot be aliased, even by the default namespace"
+	(aURI = self xmlNamespaceURI
+		or: [aURI = self xmlnsNamespaceURI])
+		ifTrue: [self errorCannotAliasXMLOrXMLNSWithPrefix: aPrefix].
 ]
 
 { #category : #private }
@@ -385,4 +387,14 @@ XMLNamespaceScope >> validateUnprefixedName: aName [
 	(aName size > 0
 		and: [(aName at: 1) == $:])
 		ifTrue: [self errorInvalidUnprefixedName: aName]
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> xmlNamespaceURI [
+	^ self class xmlNamespaceURI
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> xmlnsNamespaceURI [
+	^ self class xmlnsNamespaceURI
 ]
