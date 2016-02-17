@@ -36,6 +36,13 @@ XMLAbstractFactory class >> implementation: aClass [
 	implementation := aClass
 ]
 
+{ #category : #'class initialization' }
+XMLAbstractFactory class >> initialize [
+	"self initialize"
+
+	self clearImplementations
+]
+
 { #category : #testing }
 XMLAbstractFactory class >> isSupported [
 	^ false
