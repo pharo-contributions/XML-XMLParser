@@ -64,6 +64,8 @@ XMLAttributeValidator >> furtherNormalizeAttributeValueIn: anAttributeDictionary
 			associationAt: self attribute
 			ifAbsent: [^ self].
 	semiNormalizedValue := attributeAssociation value.
+	"must use #writeStream instead of WriteStream on: to get a 0-based stream
+	on Gemstone"
 	writeStream := (String new: semiNormalizedValue size) writeStream.
 	isInWhitespace := false.
 	"to:do: for speed"
@@ -75,8 +77,8 @@ XMLAttributeValidator >> furtherNormalizeAttributeValueIn: anAttributeDictionary
 			ifFalse: [
 				isInWhitespace
 					ifTrue: [
-						writeStream xmlParserAtBeginning
-							ifFalse: [writeStream nextPut: NormalizedSpace].
+						writeStream position > 0
+							ifTrue: [writeStream nextPut: NormalizedSpace].
 						isInWhitespace := false].
 				writeStream nextPut: nextChar]].
 	attributeAssociation value: writeStream contents.
