@@ -264,8 +264,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				with: [ spec includes: 'XML-Parser-GemstoneCompatibility' ].
 			spec
 				package: 'XML-Parser-GemstoneCompatibility'
-				with: [ spec requires: 'XML-Parser' ].
-			spec postLoadDoIt: #'postLoadForGemstone:spec:'. ].
+				with: [ spec requires: 'XML-Parser' ]. ].
 
 	"load GT extension methods"
 	spec
@@ -597,6 +596,22 @@ ConfigurationOfXMLParser >> baseline260: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.30' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline263: spec [
+	<version: '2.6.3-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.7'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.14' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.30' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParser >> customProjectAttributes [
     "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -611,27 +626,8 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.6.0-baseline'.
+	spec for: #'common' version: '2.6.3-baseline'.
 
-]
-
-{ #category : #'post loading' }
-ConfigurationOfXMLParser >> postLoadForGemstone: aLoader spec: aSpec [
-	"This forces the GS compatibility package to always be loaded, even if
-	it hasn't changed between versions, because it needs to override methods
-	in the base. If removed, upgrading on GS may not work."
-
-	| packageName fileName |
-
-	packageName := 'XML-Parser-GemstoneCompatibility'.
-	fileName :=
-		(aSpec
-			packageNamed: packageName
-			ifAbsent: [^ self]) file.
-	Gofer it
-		url: aSpec repositories list first name;
-		package: packageName constraint: [:version | version name = fileName];
-		load.
 ]
 
 { #category : #accessing }
@@ -680,6 +676,14 @@ ConfigurationOfXMLParser >> release25: spec [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release263: spec [
+	<symbolicVersion: #'release-2.6.3'>
+
+	"Users should prefer #stable unless they rely on XMLParser internals"
+	spec for: #'common' version: '2.6.3'.
+]
+
+{ #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> release26: spec [
 	<symbolicVersion: #'release-2.6'>
 
@@ -701,7 +705,7 @@ ConfigurationOfXMLParser >> stable: spec [
 
 	"Users should prefer #stable unless they rely on XMLParser internals,
 	but it will delegate to a specific #release version from now on."
-	spec for: #'common' version: #'release-2.6'.
+	spec for: #'common' version: #'release-2.6.3'.
 ]
 
 { #category : #versions }
@@ -2456,5 +2460,16 @@ ConfigurationOfXMLParser >> version262: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.333'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.144'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version263: spec [ 
+        <version: '2.6.3' imports: #('2.6.3-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.335'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.145'.
                 ].
 ]
