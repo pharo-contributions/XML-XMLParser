@@ -23,3 +23,8 @@ XMLPercentEncodingWriteStreamAdapter >> basicNextPut: aByteCharacter [
 		base: 16
 		showRadix: false.
 ]
+
+{ #category : #accessing }
+XMLPercentEncodingWriteStreamAdapter >> nextPutByteOrderMark [
+	self shouldNotImplement
+]

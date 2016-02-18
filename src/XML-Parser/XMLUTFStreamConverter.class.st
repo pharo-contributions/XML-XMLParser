@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #converting }
-XMLUTFStreamConverter >> characterWithValue: aCodePoint [
+XMLUTFStreamConverter >> characterForValue: aCodePoint [
 	aCodePoint > 16r10FFFF
 		ifTrue: [self errorInvalidCharacter].
 
@@ -16,11 +16,11 @@ XMLUTFStreamConverter >> characterWithValue: aCodePoint [
 ]
 
 { #category : #converting }
-XMLUTFStreamConverter >> valueFromCharacter: aCharacter [
-	| asciiValue |
+XMLUTFStreamConverter >> valueOfCharacter: aCharacter [
+	| codePoint |
 
-	(asciiValue := aCharacter asciiValue) > 16r10FFFF
+	(codePoint := aCharacter asciiValue) > 16r10FFFF
 		ifTrue: [self errorInvalidCharacter].
 
-	^ asciiValue.
+	^ codePoint.
 ]

@@ -92,8 +92,9 @@ XMLNode >> canonicallyPrintOn: aStream [
 
 { #category : #printing }
 XMLNode >> canonicallyPrintToFileNamed: aFileName [
+ 	"Prints to specified file as canonical XML"
 	self
-		withWriteStreamOnFileNamed: aFileName
+		withNewWriteStreamOnFileNamed: aFileName
 		do: [:writeStream | self canonicallyPrintOn: writeStream]
 ]
 
@@ -248,7 +249,7 @@ XMLNode >> postCopy [
 
 { #category : #printing }
 XMLNode >> prettyPrintOn: aStream [
- 	"Prints XML with whitespace formatting for readability"
+ 	"Prints XML on aStream with whitespace formatting for readability"
 	self
 		printOn: aStream
 		beforeWritingDo: [:writer | writer enablePrettyPrinting]
@@ -256,8 +257,9 @@ XMLNode >> prettyPrintOn: aStream [
 
 { #category : #printing }
 XMLNode >> prettyPrintToFileNamed: aFileName [
+ 	"Prints XML to specified file with whitespace formatting for readability"
 	self
-		withWriteStreamOnFileNamed: aFileName
+		withNewWriteStreamOnFileNamed: aFileName
 		do: [:writeStream | self prettyPrintOn: writeStream]
 ]
 
@@ -281,7 +283,8 @@ XMLNode >> printContentOn: aStream [
 
 { #category : #printing }
 XMLNode >> printOn: aStream [
-	"uses XMLWriter if supported, otherwise uses basic Object>>printOn:"
+	"Uses XMLWriter if supported to print XML on aStream, uses the
+	basic Object>>printOn: otherwise"
 	self
 		withNewXMLWriterOn: aStream
 		do: [:writer |
@@ -292,7 +295,7 @@ XMLNode >> printOn: aStream [
 
 { #category : #printing }
 XMLNode >> printOn: aStream beforeWritingDo: aBlock [
-	"used to customize printOn:. raises error without XMLWriter support"
+	"Used to customize XML writing. Raises error without XMLWriter support"
 	self
 		withNewXMLWriterOn: aStream
 		do: [:writer |
@@ -308,8 +311,10 @@ XMLNode >> printRawContentOn: aStream [
 
 { #category : #printing }
 XMLNode >> printToFileNamed: aFileName [
+	"Prints XML to specified file. Uses the encoding specified in the
+	document's encoding attribute if supported or UTF-8 otherwise."
 	self
-		withWriteStreamOnFileNamed: aFileName
+		withNewWriteStreamOnFileNamed: aFileName
 		do: [:writeStream | self printOn: writeStream]
 ]
 
@@ -323,7 +328,7 @@ XMLNode >> printWithoutSelfClosingTagsOn: aStream [
 { #category : #printing }
 XMLNode >> printWithoutSelfClosingTagsToFileNamed: aFileName [
 	self
-		withWriteStreamOnFileNamed: aFileName
+		withNewWriteStreamOnFileNamed: aFileName
 		do: [:writeStream | self printWithoutSelfClosingTagsOn: writeStream]
 ]
 
@@ -357,6 +362,20 @@ XMLNode >> validateWith: aValidator [
 ]
 
 { #category : #private }
+XMLNode >> withNewWriteStreamOnFileNamed: aFileName do: aBlock [
+	aFileName asXMLFileHandle writeStreamDo: [:writeStream | | streamConverter |
+		self document
+			ifNotNil: [:document |
+				streamConverter :=
+					XMLStreamConverter newForEncoding: document encoding].
+		writeStream
+			streamConverter:
+				(streamConverter ifNil: [XMLStreamConverter default]);
+			nextPutByteOrderMark.
+		aBlock value: writeStream]
+]
+
+{ #category : #private }
 XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock [
 	^ self
 		withNewXMLWriterOn: aStream
@@ -374,11 +393,6 @@ XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock whenAbsent: aZeroArgBloc
 	self escapesContentEntitiesWhenWriting
 		ifFalse: [writer escapesContentEntityReferences: false].
 	^ aOneArgBlock value: writer.
-]
-
-{ #category : #private }
-XMLNode >> withWriteStreamOnFileNamed: aFileName do: aBlock [
-	^ aFileName asXMLFileHandle writeStreamDo: aBlock
 ]
 
 { #category : #printing }

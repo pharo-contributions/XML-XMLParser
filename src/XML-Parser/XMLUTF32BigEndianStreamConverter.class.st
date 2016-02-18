@@ -19,7 +19,7 @@ XMLUTF32BigEndianStreamConverter class >> byteOrderMarkBytes [
 
 { #category : #private }
 XMLUTF32BigEndianStreamConverter >> codePointFromFirstByte: aFirstByte secondByte: aSecondByte thirdByte: aThirdByte fourthByte: aFourthByte [
-	^ self characterWithValue:
+	^ self characterForValue:
 		(aFirstByte bitShift: 24) +
 		(aSecondByte bitShift: 16) +
 		(aThirdByte bitShift: 8) +

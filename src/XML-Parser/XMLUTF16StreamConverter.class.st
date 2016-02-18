@@ -29,7 +29,7 @@ XMLUTF16StreamConverter >> nextFromStream: aStream [
 				(aStream basicNext ifNil: [self errorInvalidCharacter]) asciiValue.
 
 	(codePoint < 16rD800 or: [codePoint > 16rDBFF])
-		ifTrue: [^ self characterWithValue: codePoint]
+		ifTrue: [^ self characterForValue: codePoint]
 		ifFalse: [
 			^ self
 				surrogatePairFromStream: aStream
@@ -40,7 +40,7 @@ XMLUTF16StreamConverter >> nextFromStream: aStream [
 XMLUTF16StreamConverter >> nextPut: aCharacter toStream: aStream [
 	| codePoint |
 
-	(codePoint := self valueFromCharacter: aCharacter) < 16r10000
+	(codePoint := self valueOfCharacter: aCharacter) < 16r10000
 		ifTrue: [
 			self
 				nextPutFirstByte: ((codePoint bitShift: -8) bitAnd: 16rFF)
@@ -76,7 +76,7 @@ XMLUTF16StreamConverter >> surrogatePairFromStream: aStream withHighSurrogate: a
 			secondByte:
 				(aStream basicNext ifNil: [self errorInvalidCharacter]) asciiValue.
 
-	^ self characterWithValue:
+	^ self characterForValue:
 		((aHighSurrogate bitAnd: 16r3FF) bitShift: 10) +
 		(lowSurrogate bitAnd: 16r3FF) +
 		16r10000.

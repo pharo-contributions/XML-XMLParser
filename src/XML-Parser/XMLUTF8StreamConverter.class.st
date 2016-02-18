@@ -31,19 +31,19 @@ XMLUTF8StreamConverter >> nextFromStream: aStream [
 	secondByte := (aStream basicNext ifNil: [self errorInvalidCharacter]) asciiValue.
 	(firstByte bitAnd: 16rF0) < 16rE0 "two bytes"
 		ifTrue: [
-			^ self characterWithValue: 
+			^ self characterForValue: 
 				((firstByte bitAnd: 16r1F) bitShift: 6) +
 				(secondByte bitAnd: 16r3F)].
 
 	thirdByte := (aStream basicNext ifNil: [self errorInvalidCharacter]) asciiValue.
 	(firstByte bitAnd: 16rF0) = 16rE0 "three bytes"
 		ifTrue: [
-			^ self characterWithValue: 
+			^ self characterForValue: 
 				((firstByte bitAnd: 16r0F) bitShift: 12) +
 				((secondByte bitAnd: 16r3F) bitShift: 6) +
 				(thirdByte bitAnd: 16r3F)].
 
-	^ self characterWithValue: "four"
+	^ self characterForValue: "four"
 		((firstByte bitAnd: 16r07) bitShift: 18) +
 		((secondByte bitAnd: 16r3F) bitShift: 12) +
 		((thirdByte bitAnd: 16r3F) bitShift: 6) +
@@ -54,7 +54,7 @@ XMLUTF8StreamConverter >> nextFromStream: aStream [
 XMLUTF8StreamConverter >> nextPut: aCharacter toStream: aStream [
 	| codePoint |
 
-	(codePoint := self valueFromCharacter: aCharacter) < 16r80
+	(codePoint := self valueOfCharacter: aCharacter) < 16r80
 		ifTrue: [^ aStream basicNextPut: aCharacter].
 
 	codePoint < 16r0800
