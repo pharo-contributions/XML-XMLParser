@@ -174,7 +174,7 @@ XMLStreamAdapterTest >> newStreamOn: aCollection [
 ]
 
 { #category : #converting }
-XMLStreamAdapterTest >> percentEncode: aCharacter [
+XMLStreamAdapterTest >> percentEncodeCharacter: aCharacter [
 	| hexString |
 
 	(hexString := aCharacter asciiValue printStringHex asUppercase) size > 1
@@ -186,7 +186,7 @@ XMLStreamAdapterTest >> percentEncode: aCharacter [
 XMLStreamAdapterTest >> percentEncodedUTF8String [
 	^ String streamContents: [:stream |
 		self encodedUTF8String do: [:each |
-			stream nextPutAll: (self percentEncode: each)]]
+			stream nextPutAll: (self percentEncodeCharacter: each)]]
 ]
 
 { #category : #accessing }

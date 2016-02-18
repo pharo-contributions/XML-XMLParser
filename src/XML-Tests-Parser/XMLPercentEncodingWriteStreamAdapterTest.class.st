@@ -11,7 +11,7 @@ XMLPercentEncodingWriteStreamAdapterTest >> adapterClass [
 
 { #category : #converting }
 XMLPercentEncodingWriteStreamAdapterTest >> contentsFromCharacter: aCharacter [
-	^ self percentEncode: aCharacter
+	^ self percentEncodeCharacter: aCharacter
 ]
 
 { #category : #accessing }
@@ -27,4 +27,11 @@ XMLPercentEncodingWriteStreamAdapterTest >> outputCollection [
 { #category : #accessing }
 XMLPercentEncodingWriteStreamAdapterTest >> streamConverterClass [
 	^ XMLUTF8StreamConverter
+]
+
+{ #category : #'as yet unclassified' }
+XMLPercentEncodingWriteStreamAdapterTest >> testNextPutByteOrderMark [
+	self
+		should: [self newAdapter nextPutByteOrderMark]
+		raise: Error
 ]
