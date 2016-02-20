@@ -69,10 +69,11 @@ ConfigurationOfXMLParser class >> catalogDescription [
 	^ 'XMLParser provides validating SAX and DOM parsers for well-formed XML documents on Pharo, Squeak, and Gemstone. It also provides a DOM API for manipulating documents, namespace support, and an optional XMLWriter for writing documents. Validation and namespace checking are enabled by default, but not resolution of external entities.
 
 Implements:
-http://www.w3.org/TR/REC-xml/
-http://www.w3.org/TR/REC-xml-names/
-http://www.w3.org/TR/xml-id/
-http://www.w3.org/TR/xmlbase/
+	http://www.w3.org/TR/REC-xml/
+	http://www.w3.org/TR/REC-xml-names/
+	http://www.w3.org/TR/xml-id/
+	http://www.w3.org/TR/xmlbase/
+	https://www.w3.org/TR/xml-c14n
 '
 ]
 
@@ -680,7 +681,7 @@ ConfigurationOfXMLParser >> release263: spec [
 	<symbolicVersion: #'release-2.6.3'>
 
 	"Users should prefer #stable unless they rely on XMLParser internals"
-	spec for: #'common' version: '2.6.3'.
+	spec for: #'common' version: '2.6.4'.
 ]
 
 { #category : #'symbolic versions' }
@@ -2471,5 +2472,16 @@ ConfigurationOfXMLParser >> version263: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.335'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.145'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version264: spec [ 
+        <version: '2.6.4' imports: #('2.6.3-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.336'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.146'.
                 ].
 ]
