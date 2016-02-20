@@ -604,7 +604,7 @@ ConfigurationOfXMLParser >> baseline263: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.7'. ].
+			spec project: 'XMLWriter' with: '2.6.8'. ].
 	spec
 		for: #gemstone
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.14' ].
