@@ -189,26 +189,158 @@ XMLParserTest >> testAttributeDeclarationWhitespace [
 ]
 
 { #category : #tests }
-XMLParserTest >> testAttributeDefaultDeclaration [
-	| dtd document |
+XMLParserTest >> testAttributeDefaultFixedValue [
+	| dtd document root |
 
 	dtd := '
 		<!DOCTYPE root [
-		<!ELEMENT root EMPTY>
-		<!ATTLIST root one CDATA #IMPLIED
-						two CDATA #REQUIRED
-						three CDATA #FIXED "fixedDefault"
-						three CDATA #FIXED "redundant"
-						four CDATA "default" >]>'.
-	document := XMLDOMParser parse: dtd, '<root two=''required'' />'.
+			<!ELEMENT root EMPTY>
+			<!ATTLIST root
+				one CDATA #FIXED "fixedDefault"
+				one CDATA #FIXED "redundant"
+				two CDATA #FIXED "fixedDefaultTwo"
+				three CDATA #FIXED "" >
+		]>'.
+
+	document :=
+		XMLDOMParser parse:
+			dtd, '<root one=''fixedDefault'' two="fixedDefaultTwo" three=""/>'.
+	root := document root.
 	self
-		assert: (document root attributeAt: 'two') = 'required';
-		deny: (document root includesAttribute: 'one');
-		assert: (document root attributeAt: 'three') = 'fixedDefault';
-		assert: (document root attributeAt: 'four') = 'default'.
+		assert: (root attributeAt: 'one') = 'fixedDefault';
+		assert: (root attributeAt: 'two') = 'fixedDefaultTwo';
+		assert: (root includesAttribute: 'three');
+		assert: (root attributeAt: 'three') isEmpty.
+
+	"attributes with fixed defaults are set automatically if not present"
+	document := XMLDOMParser parse: dtd, '<root />'.
+	root := document root.
 	self
-		should: [SAXHandler parse: dtd, '<root />'] raise: XMLValidationException;
-		should: [SAXHandler parse: dtd, '<root three="nonDefault"/>'] raise: XMLValidationException.
+		assert: (root attributeAt: 'one') = 'fixedDefault';
+		assert: (root attributeAt: 'two') = 'fixedDefaultTwo';
+		assert: (root includesAttribute: 'three');
+		assert: (root attributeAt: 'three') isEmpty.
+
+	"but if present cannot have non-default values"
+	#('<root one="nonDefault" />'
+		'<root two="nonDefault"/>'
+		'<root three="nonDefault"/>') do: [:each |
+		self
+			should: [SAXHandler parse: dtd, each]
+			raise: XMLValidationException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeDefaultImplied [
+	| dtd document root |
+
+	dtd := '
+		<!DOCTYPE root [
+			<!ELEMENT root EMPTY>
+			<!ATTLIST root
+				one CDATA #IMPLIED
+				one CDATA #REQUIRED
+				two CDATA #IMPLIED >
+		]>'.
+
+	document :=
+		XMLDOMParser parse:
+			dtd, '<root one=''nonDefault'' two="nonDefaultTwo" />'.
+	root := document root.
+	self
+		assert: (root attributeAt: 'one') = 'nonDefault';
+		assert: (root attributeAt: 'two') = 'nonDefaultTwo'.
+
+	document := XMLDOMParser parse: dtd, '<root one='''' two="" />'.
+	root := document root.
+	self
+		assert: (root includesAttribute: 'one');
+		assert: (root attributeAt: 'one') isEmpty;
+		assert: (root includesAttribute: 'two');
+		assert: (root attributeAt: 'two') isEmpty.
+
+	"implied makes them optional"
+	document := XMLDOMParser parse: dtd, '<root />'.
+	root := document root.
+	self
+		deny: (root includesAttribute: 'one');
+		deny: (root includesAttribute: 'two').
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeDefaultRequired [
+	| dtd document root |
+
+	dtd := '
+		<!DOCTYPE root [
+			<!ELEMENT root EMPTY>
+			<!ATTLIST root
+				one CDATA #REQUIRED
+				one CDATA #IMPLIED
+				two CDATA #REQUIRED >
+		]>'.
+
+	document :=
+		XMLDOMParser parse:
+			dtd, '<root one=''nonDefault'' two="nonDefaultTwo" />'.
+	root := document root.
+	self
+		assert: (root attributeAt: 'one') = 'nonDefault';
+		assert: (root attributeAt: 'two') = 'nonDefaultTwo'.
+
+	"empty values still count as being present"
+	document := XMLDOMParser parse: dtd, '<root one='''' two="" />'.
+	root := document root.
+	self
+		assert: (root includesAttribute: 'one');
+		assert: (root attributeAt: 'one') isEmpty;
+		assert: (root includesAttribute: 'two');
+		assert: (root attributeAt: 'two') isEmpty.
+
+	"all required attributes must be present"
+	#('<root one="nonDefault" />'
+		'<root two="nonDefault" />') do: [:each |
+		self
+			should: [SAXHandler parse: dtd, each]
+			raise: XMLValidationException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeDefaultValue [
+	| dtd document root |
+
+	dtd := '
+		<!DOCTYPE root [
+			<!ELEMENT root EMPTY>
+			<!ATTLIST root
+				one CDATA "default"
+				one CDATA "redundant"
+				two CDATA "" >
+		]>'.
+
+	document :=
+		XMLDOMParser parse:
+			dtd, '<root one=''nonDefault'' two="nonDefaultTwo" />'.
+	root := document root.
+	self
+		assert: (root attributeAt: 'one') = 'nonDefault';
+		assert: (root attributeAt: 'two') = 'nonDefaultTwo'.
+
+	document := XMLDOMParser parse: dtd, '<root one='''' two="" />'.
+	root := document root.
+	self
+		assert: (root includesAttribute: 'one');
+		assert: (root attributeAt: 'one') isEmpty;
+		assert: (root includesAttribute: 'two');
+		assert: (root attributeAt: 'two') isEmpty.
+
+	"attributes with defaults are set automatically if not present"
+	document := XMLDOMParser parse: dtd, '<root />'.
+	root := document root.
+	self
+		assert: (root attributeAt: 'one') = 'default';
+		assert: (root includesAttribute: 'two');
+		assert: (root attributeAt: 'two') isEmpty.
 ]
 
 { #category : #tests }
@@ -688,7 +820,7 @@ XMLParserTest >> testElementAnyDeclarations [
 				'<!DOCTYPE one [
 					<!ELEMENT one ANY>
 					<!ELEMENT two ANY>]>
-				<one>one<two><![CDATA[two]]><two/></two>three</one>']
+				<one>one<two><![CDATA[two]]><two /></two>three</one>']
 		raise: XMLValidationException.
 	self
 		shouldnt: [
@@ -1060,8 +1192,7 @@ XMLParserTest >> testEntityDeclarationWhitespace [
 XMLParserTest >> testEntityEmptyReplacements [
 	| xml document |
 
-	xml := '
-	<?xml version="1.0"?>
+	xml := '<?xml version="1.0"?>
 	<!DOCTYPE entities [
 		<!ENTITY % inner "">
 		%inner;
@@ -1086,8 +1217,7 @@ XMLParserTest >> testEntityEmptyReplacements [
 XMLParserTest >> testEntityLiteralContextNesting [
 	| xml inner outer document |
 
-	xml := '
-	<?xml version="1.0"?>
+	xml := '<?xml version="1.0"?>
 	<!DOCTYPE entities [
 		<!ENTITY % inner " '' inner &#34; ">
 		<!ENTITY % outer '' "%inner;&#39; ''>
@@ -1313,21 +1443,16 @@ XMLParserTest >> testInternalDeclarationParameterEntityReference [
 
 { #category : #tests }
 XMLParserTest >> testInvalidElementContentModels [
-	self
-		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root ()>]>']
-		raise: XMLWellFormednessException.
-	self
-		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root (one,)>]>']
-		raise: XMLWellFormednessException.
-	self
-		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root (one|)>]>']
-		raise: XMLWellFormednessException.
-	self
-		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root (one)(two)>]>']
-		raise: XMLWellFormednessException.
-	self
-		should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root (one|,two)>]>']
-		raise: XMLWellFormednessException.
+	#('<!DOCTYPE root [<!ELEMENT root ()>]>'
+		'<!DOCTYPE root [<!ELEMENT root (one,)>]>'
+		'<!DOCTYPE root [<!ELEMENT root (one|)>]>'
+		'<!DOCTYPE root [<!ELEMENT root (one)(two)>]>'
+		'<!DOCTYPE root [<!ELEMENT root (one|,two)>]>'
+	) do: [:each |
+		self
+			should: [SAXHandler parse: each]
+			raise: XMLWellFormednessException].
+
 	'|,?*+' do: [:each |
 		self
 			should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root (', each asString, 'one)>]>']
