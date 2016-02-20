@@ -35,8 +35,8 @@ XMLDocumentValidator >> defaultXMLIDValidator [
 				XMLIDAttributeXMLIDValidator
 					element: ''
 					attribute: 'xml:id'
-					defaultValueValidator:
-						(XMLImpliedValueAttributeValidator attribute: 'xml:id').
+					defaultValidator:
+						(XMLAttributeDefaultImpliedValidator attribute: 'xml:id').
 			defaultXMLIDValidator
 				elementIDValidator: XMLElementIDValidator new;
 				yourself]

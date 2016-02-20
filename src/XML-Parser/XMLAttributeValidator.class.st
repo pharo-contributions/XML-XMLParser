@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'element',
 		'attribute',
-		'defaultValueValidator'
+		'defaultValidator'
 	],
 	#classVars : [
 		'NormalizedSpace'
@@ -16,11 +16,11 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLAttributeValidator class >> element: anElement attribute: anAttribute defaultValueValidator: aDefaultValueValidator [
+XMLAttributeValidator class >> element: anElement attribute: anAttribute defaultValidator: aDefaultValidator [
 	^ self new
 		setElement: anElement
 		attribute: anAttribute
-		defaultValueValidator: aDefaultValueValidator
+		defaultValidator: aDefaultValidator
 ]
 
 { #category : #'class initialization' }
@@ -33,6 +33,11 @@ XMLAttributeValidator class >> initialize [
 { #category : #accessing }
 XMLAttributeValidator >> attribute [
 	^ attribute
+]
+
+{ #category : #accessing }
+XMLAttributeValidator >> defaultValidator [
+	^ defaultValidator
 ]
 
 { #category : #accessing }
@@ -88,11 +93,6 @@ XMLAttributeValidator >> furtherNormalizeAttributeValueIn: anAttributeDictionary
 XMLAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
 ]
 
-{ #category : #testing }
-XMLAttributeValidator >> isEnumerationValidator [
-	^ false
-]
-
 { #category : #private }
 XMLAttributeValidator >> listValuesIn: aSpaceSeparatedList do: aBlock [
 	NormalizedSpace
@@ -112,10 +112,10 @@ XMLAttributeValidator >> printOn: aStream [
 ]
 
 { #category : #initialization }
-XMLAttributeValidator >> setElement: anElement attribute: anAttribute defaultValueValidator: aDefaultValueValidator [
+XMLAttributeValidator >> setElement: anElement attribute: anAttribute defaultValidator: aDefaultValidator [
 	element := anElement.
 	attribute := anAttribute.
-	defaultValueValidator := aDefaultValueValidator.
+	defaultValidator := aDefaultValidator.
 ]
 
 { #category : #testing }
@@ -125,7 +125,7 @@ XMLAttributeValidator >> shouldFurtherNormalizeAttributeValue [
 
 { #category : #validating }
 XMLAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
-	defaultValueValidator validateAttributeDefaultIn: anAttributeDictionary.
+	self defaultValidator validateAttributeDefaultIn: anAttributeDictionary.
 
 	self shouldFurtherNormalizeAttributeValue
 		ifTrue: [self furtherNormalizeAttributeValueIn: anAttributeDictionary].
@@ -148,7 +148,7 @@ XMLAttributeValidator >> validateAttributes: anAttributeDictionary [
 
 { #category : #validating }
 XMLAttributeValidator >> validateDeclaration [
-	(self attribute at: 1) == $x
+	(self attribute at: 1) == $x "optimization"
 		ifTrue: [
 			(self attribute = 'xml:id')
 				ifTrue: [^ self validateXMLIDAttributeValidator].

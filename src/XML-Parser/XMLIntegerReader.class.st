@@ -27,7 +27,7 @@ XMLIntegerReader class >> initialize [
 { #category : #'class initialization' }
 XMLIntegerReader class >> initializeCharacterDigitValues [
 	"array instead of dictionary for speed"
-	CharacterDigitValues := Array new: 256 withAll: -1.
+	CharacterDigitValues := Array new: 255 withAll: -1.
 	($0 to: $9) do: [:each |
 		CharacterDigitValues
 			at: each asciiValue

@@ -10,11 +10,6 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
-{ #category : #'private ' }
-XMLNotationEnumerationAttributeValidator >> enumerationListParserClass [
-	^ DTDNotationEnumerationListParser
-]
-
 { #category : #initialization }
 XMLNotationEnumerationAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
 	unparsedEntityValidator := aValidatorContainer unparsedEntityValidator

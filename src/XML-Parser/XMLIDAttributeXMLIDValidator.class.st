@@ -1,5 +1,5 @@
 "
-A validator of xml:id ID attributes.
+This class validates xml:id ID attributes.
 "
 Class {
 	#name : #XMLIDAttributeXMLIDValidator,

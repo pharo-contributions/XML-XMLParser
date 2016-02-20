@@ -766,11 +766,6 @@ XMLURI >> removePathSegments [
 	^ self pathSegments removeAll
 ]
 
-{ #category : #private }
-XMLURI >> removeQuery [
-	self query removeAll
-]
-
 { #category : #accessing }
 XMLURI >> scheme [
 	self parseURIStringIfUnparsed.

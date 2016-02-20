@@ -8,11 +8,11 @@ Class {
 		'element',
 		'attribute',
 		'type',
-		'defaultValueValidator'
+		'defaultValidator'
 	],
 	#classVars : [
-		'DefaultValueValidators',
-		'NonEnumerationValidators'
+		'AttributeDefaultValidatorClasses',
+		'NonEnumerationAttributeValidatorClasses'
 	],
 	#category : #'XML-Parser-DTD'
 }
@@ -23,12 +23,10 @@ DTDAttributeDefinitionParser class >> element: anElement attribute: anAttribute 
 		setElement: anElement
 		attribute: anAttribute
 		type: aType
-		defaultValueValidator:
-			((DefaultValueValidators
-				at: aDefaultPragma
-				ifAbsent: [XMLDefaultValueAttributeValidator])
-					attribute: anAttribute
-					defaultValue: aDefaultValue).
+		defaultValidator:
+			((AttributeDefaultValidatorClasses at: aDefaultPragma)
+				attribute: anAttribute
+				defaultValue: aDefaultValue)
 ]
 
 { #category : #'class initialization' }
@@ -36,21 +34,22 @@ DTDAttributeDefinitionParser class >> initialize [
 	"self initialize"
 
 	self
-		initializeDefaultValueValidators;
-		initializeNonEnumerationValidators
+		initializeAttributeDefaultValidatorClasses;
+		initializeNonEnumerationAttributeValidatorClasses
 ]
 
 { #category : #'class initialization' }
-DTDAttributeDefinitionParser class >> initializeDefaultValueValidators [
-	(DefaultValueValidators := Dictionary new)
-		at: 'FIXED' put: XMLFixedValueAttributeValidator;
-		at: 'IMPLIED' put: XMLImpliedValueAttributeValidator;
-		at: 'REQUIRED' put: XMLRequiredValueAttributeValidator
+DTDAttributeDefinitionParser class >> initializeAttributeDefaultValidatorClasses [
+	(AttributeDefaultValidatorClasses := Dictionary new)
+		at: '' put: XMLAttributeDefaultValueValidator;
+		at: 'FIXED' put: XMLAttributeDefaultFixedValueValidator;
+		at: 'IMPLIED' put: XMLAttributeDefaultImpliedValidator;
+		at: 'REQUIRED' put: XMLAttributeDefaultRequiredValidator
 ]
 
 { #category : #'class initialization' }
-DTDAttributeDefinitionParser class >> initializeNonEnumerationValidators [
-	(NonEnumerationValidators := Dictionary new)
+DTDAttributeDefinitionParser class >> initializeNonEnumerationAttributeValidatorClasses [
+	(NonEnumerationAttributeValidatorClasses := Dictionary new)
 		at: 'CDATA' put: XMLCDataAttributeValidator;
 		at: 'ID' put: XMLIDAttributeValidator;
 		at: 'IDREF' put: XMLIDRefAttributeValidator;
@@ -63,33 +62,38 @@ DTDAttributeDefinitionParser class >> initializeNonEnumerationValidators [
 
 { #category : #parsing }
 DTDAttributeDefinitionParser >> parse [
-	| attributeValidator |
+	^ (NonEnumerationAttributeValidatorClasses
+		at: type
+		ifAbsent: [^ self parseEnumerationAttributeDefinition])
+		element: element
+		attribute: attribute
+		defaultValidator: defaultValidator
+]
 
-	attributeValidator :=
-		self validatorClassForType
-			element: element
-			attribute: attribute
-			defaultValueValidator: defaultValueValidator.
-	attributeValidator isEnumerationValidator
-		ifTrue: [attributeValidator setAllowedValuesFromString: type].
+{ #category : #parsing }
+DTDAttributeDefinitionParser >> parseEnumerationAttributeDefinition [
+	| attributeValidatorClass enumerationListParserClass |
 
-	^ attributeValidator.
+	"either a '(...)' or 'NOTATION (...)' enumeration type"
+	(type at: 1) == $(
+		ifTrue: [
+			attributeValidatorClass := XMLEnumerationAttributeValidator.
+			enumerationListParserClass := DTDEnumerationListParser]
+		ifFalse: [
+			attributeValidatorClass := XMLNotationEnumerationAttributeValidator.
+			enumerationListParserClass := DTDNotationEnumerationListParser].
+
+	^ (attributeValidatorClass
+		element: element
+		attribute: attribute
+		defaultValidator: defaultValidator)
+			allowedValues: (enumerationListParserClass on: type) parse.
 ]
 
 { #category : #initialization }
-DTDAttributeDefinitionParser >> setElement: anElement attribute: anAttribute type: aType defaultValueValidator: aDefaultValueValidator [
+DTDAttributeDefinitionParser >> setElement: anElement attribute: anAttribute type: aType defaultValidator: aDefaultValidator [
 	element := anElement.
 	attribute := anAttribute.
 	type := aType.
-	defaultValueValidator := aDefaultValueValidator.
-]
-
-{ #category : #'private ' }
-DTDAttributeDefinitionParser >> validatorClassForType [
-	^ NonEnumerationValidators
-		at: type
-		ifAbsent: [
-			type first == $N
-				ifTrue: [XMLNotationEnumerationAttributeValidator]
-				ifFalse: [XMLEnumerationAttributeValidator]]
+	defaultValidator := aDefaultValidator.
 ]

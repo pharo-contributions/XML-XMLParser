@@ -18,16 +18,15 @@ Class {
 { #category : #'class initialization' }
 DTDDFAContentModelParser class >> initialize [
 	"self initialize"
-
 	self
 		initializeSpecialCharacterParsers;
-		initializeOperatorApplicators
+		initializeOperatorApplicators.
 ]
 
 { #category : #'class initialization' }
 DTDDFAContentModelParser class >> initializeOperatorApplicators [
 	"use Array for faster lookup"
-	(OperatorApplicators := Array new: 256)
+	(OperatorApplicators := Array new: 255)
 		at: $, asciiValue put: #applyConcatenation;
 		at: $| asciiValue put: #applyBranch;
 		at: $? asciiValue put: #applyOptional;
@@ -38,7 +37,7 @@ DTDDFAContentModelParser class >> initializeOperatorApplicators [
 { #category : #'class initialization' }
 DTDDFAContentModelParser class >> initializeSpecialCharacterParsers [
 	"use Array for faster lookup"
-	(SpecialCharacterParsers := Array new: 256)
+	(SpecialCharacterParsers := Array new: 255)
 		at: $( asciiValue put: #parseParen:;
 		at: $) asciiValue put: #parseParen:;
 		at: $, asciiValue put: #parseBinaryOperator:;
@@ -79,11 +78,6 @@ DTDDFAContentModelParser >> hasOperatorOnStack [
 { #category : #private }
 DTDDFAContentModelParser >> isBinaryOperator: aFirstOperator higherPrecedenceThan: aSecondOperator [
 	^ aFirstOperator == $, and: [aSecondOperator == $|]
-]
-
-{ #category : #private }
-DTDDFAContentModelParser >> isSpecialCharacter: aCharacter [
-	^ (self parserForSpecialCharacter: aCharacter) notNil
 ]
 
 { #category : #parsing }

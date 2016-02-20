@@ -21,12 +21,14 @@ DTDContentModelParser class >> element: anElement contentModel: aContentModel [
 { #category : #parsing }
 DTDContentModelParser class >> parserForContentModel: aContentModel [
 	"the tokenizer removes all spaces from the content model"
-	^ (aContentModel notEmpty and: [aContentModel first == $(])
+	(aContentModel size > 0
+		and: [(aContentModel at: 1) == $(])
 		ifTrue: [
-			(aContentModel size > 1 and: [aContentModel second == $#])
-				ifTrue: [DTDMixedContentModelParser]
-				ifFalse: [DTDDFAContentModelParser]]
-		ifFalse: [DTDLiteralContentModelParser]
+			(aContentModel size > 1
+				and: [(aContentModel at: 2) == $#]) "#PCDATA mixed content"
+				ifTrue: [^ DTDMixedContentModelParser]
+				ifFalse: [^ DTDDFAContentModelParser]]
+		ifFalse: [^ DTDLiteralContentModelParser]
 ]
 
 { #category : #parsing }

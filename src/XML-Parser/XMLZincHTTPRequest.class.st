@@ -22,7 +22,7 @@ XMLZincHTTPRequest >> getResponseUpToLimit: aMaxSize decoding: aBoolean timeout:
 			own decoding that relies on byte-order marks and <?xml?>
 			encoding attributes."
 			((Smalltalk at: #ZnClient) new
-				streaming: aBoolean not;
+				streaming: aBoolean not; "use streaming if not decoding"
 				timeout: aTimeout;
 				url: url;
 				get;
@@ -41,7 +41,7 @@ XMLZincHTTPRequest >> setZincMaxEntitySize: aMaxSize during: aDuringBlock onErro
 		(Smalltalk at: #ZnMaximumEntitySize)
 			value: aMaxSize
 			during: [
-				"^ is for GS value:during: which does not return block result"
+				"^ for GS value:during: which doesn't return the block result"
 				^ aDuringBlock value]]
 		on: Error
 		do: anErrorBlock

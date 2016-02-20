@@ -1,21 +1,21 @@
 "
-Attributes declared #REQUIRED require values.
+This class makes sure an attribute is present (the #REQUIRED constrant).
 "
 Class {
-	#name : #XMLRequiredValueAttributeValidator,
+	#name : #XMLAttributeDefaultRequiredValidator,
 	#superclass : #XMLAttributeDefaultValidator,
 	#category : #'XML-Parser-Validation'
 }
 
 { #category : #private }
-XMLRequiredValueAttributeValidator >> errorRequiredAttributeMissing [
+XMLAttributeDefaultRequiredValidator >> errorRequiredAttributeMissing [
 	XMLValidationException
 		formatSignal: 'Required attribute "{1}" is missing'
 		with: self attribute
 ]
 
 { #category : #validating }
-XMLRequiredValueAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
+XMLAttributeDefaultRequiredValidator >> validateAttributeDefaultIn: anAttributeDictionary [
 	(anAttributeDictionary includesKey: self attribute)
 		ifFalse: [self errorRequiredAttributeMissing]
 ]

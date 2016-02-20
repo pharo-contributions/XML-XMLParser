@@ -1,5 +1,5 @@
 "
-CDATA attribute values are left alone (whitespace is not normalized further).
+This class validates CDATA attributes, which are not whitespace-normalized further.
 "
 Class {
 	#name : #XMLCDataAttributeValidator,

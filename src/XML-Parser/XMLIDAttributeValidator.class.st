@@ -1,5 +1,5 @@
 "
-This class validates ID attributes that must have unique values.
+This class validates ID attributes that must have unique (not repeated in the same document) values.
 "
 Class {
 	#name : #XMLIDAttributeValidator,
@@ -18,11 +18,11 @@ XMLIDAttributeValidator class >> classForAttribute: anAttribute [
 ]
 
 { #category : #'instance creation' }
-XMLIDAttributeValidator class >> element: anElement attribute: anAttribute defaultValueValidator: aDefaultValueValidator [
+XMLIDAttributeValidator class >> element: anElement attribute: anAttribute defaultValidator: aDefaultValidator [
 	^ (self classForAttribute: anAttribute) new
 		setElement: anElement
 		attribute: anAttribute
-		defaultValueValidator: aDefaultValueValidator
+		defaultValidator: aDefaultValidator
 ]
 
 { #category : #accessing }

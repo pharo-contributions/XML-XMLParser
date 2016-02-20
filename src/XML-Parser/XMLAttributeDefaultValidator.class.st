@@ -1,11 +1,10 @@
 "
-This is a base class for attribute default value validators that implement the constraints (like #REQUIRED) from the default declaration.
+This is a base class for attribute default validators that implement constraints from the default declaration part of an ATTLIST attribute definition.
 "
 Class {
 	#name : #XMLAttributeDefaultValidator,
 	#superclass : #Object,
 	#instVars : [
-		'defaultValue',
 		'attribute'
 	],
 	#category : #'XML-Parser-Validation'
@@ -13,12 +12,16 @@ Class {
 
 { #category : #'instance creation' }
 XMLAttributeDefaultValidator class >> attribute: anAttribute [
-	^ self attribute: anAttribute defaultValue: ''
+	^ self
+		attribute: anAttribute
+		defaultValue: ''
 ]
 
 { #category : #'instance creation' }
 XMLAttributeDefaultValidator class >> attribute: anAttribute defaultValue: aDefaultValue [
-	^ self new setAttribute: anAttribute defaultValue: aDefaultValue
+	^ self new
+		setAttribute: anAttribute
+		defaultValue: aDefaultValue
 ]
 
 { #category : #accessing }
@@ -28,7 +31,7 @@ XMLAttributeDefaultValidator >> attribute [
 
 { #category : #accessing }
 XMLAttributeDefaultValidator >> defaultValue [
-	^ defaultValue
+	^ ''
 ]
 
 { #category : #printing }
@@ -44,8 +47,7 @@ XMLAttributeDefaultValidator >> printOn: aStream [
 
 { #category : #initialization }
 XMLAttributeDefaultValidator >> setAttribute: anAttribute defaultValue: aDefaultValue [
-	attribute := anAttribute.
-	defaultValue := aDefaultValue.
+	attribute := anAttribute
 ]
 
 { #category : #validating }

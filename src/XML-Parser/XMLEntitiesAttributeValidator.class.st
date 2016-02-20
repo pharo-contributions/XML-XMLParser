@@ -1,5 +1,5 @@
 "
-This class validates attributes with lists of unparsed entity name values separated by spaces.
+This class validates attributes with lists of unparsed entity name values (that must be declared) separated by spaces.
 "
 Class {
 	#name : #XMLEntitiesAttributeValidator,
