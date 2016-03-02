@@ -406,167 +406,166 @@ XMLNodeWithElementsTest >> testContentStringAt [
 ]
 
 { #category : #tests }
-XMLNodeWithElementsTest >> testDescendentElements [
-	| nodeWithElements descendentElements |
+XMLNodeWithElementsTest >> testDescendantElements [
+	| nodeWithElements descendantElements |
 
 	nodeWithElements := self newNodeWithElements.
-	descendentElements := nodeWithElements descendentElements.
+	descendantElements := nodeWithElements descendantElements.
 	self assert:
-		(descendentElements collect: [:each | each name]) asArray =
+		(descendantElements collect: [:each | each name]) asArray =
 			#('zero' 'one' 'two' 'three' 'four' 'prefix:four' 'prefix:five' 'four').
 	self
-		assertList: descendentElements first descendentElements selects: (descendentElements copyFrom: 2 to: 8);
-		assertList: descendentElements second descendentElements selects: (descendentElements copyFrom: 3 to: 3);
-		assertList: descendentElements third descendentElements selects: descendentElements copyEmpty;
-		assertList: descendentElements fourth descendentElements selects: (descendentElements copyFrom: 5 to: 5);
-		assertList: descendentElements fifth descendentElements selects: descendentElements copyEmpty;
-		assertList: descendentElements sixth descendentElements selects: (descendentElements copyFrom: 7 to: 7);
-		assertList: descendentElements seventh descendentElements selects: descendentElements copyEmpty;
-		assertList: descendentElements eighth descendentElements selects: descendentElements copyEmpty.
+		assertList: descendantElements first descendantElements selects: (descendantElements copyFrom: 2 to: 8);
+		assertList: descendantElements second descendantElements selects: (descendantElements copyFrom: 3 to: 3);
+		assertList: descendantElements third descendantElements selects: descendantElements copyEmpty;
+		assertList: descendantElements fourth descendantElements selects: (descendantElements copyFrom: 5 to: 5);
+		assertList: descendantElements fifth descendantElements selects: descendantElements copyEmpty;
+		assertList: descendantElements sixth descendantElements selects: (descendantElements copyFrom: 7 to: 7);
+		assertList: descendantElements seventh descendantElements selects: descendantElements copyEmpty;
+		assertList: descendantElements eighth descendantElements selects: descendantElements copyEmpty.
 ]
 
 { #category : #tests }
-XMLNodeWithElementsTest >> testDescendentElementsCollect [
-	| nodeWithElements descendentElements |
+XMLNodeWithElementsTest >> testDescendantElementsCollect [
+	| nodeWithElements descendantElements |
 
 	nodeWithElements := self newNodeWithElements.
-	descendentElements := nodeWithElements descendentElements.
+	descendantElements := nodeWithElements descendantElements.
 	self
-		assertList: (nodeWithElements descendentElementsCollect: [:each | each identityHash])
-		collects: (descendentElements collect: [:each | each identityHash]).
+		assertList: (nodeWithElements descendantElementsCollect: [:each | each identityHash])
+		collects: (descendantElements collect: [:each | each identityHash]).
 
-	descendentElements do: [:node |
+	descendantElements do: [:node |
 		self
-			assertList: (node descendentElementsCollect: [:each | each identityHash])
-			collects: (node descendentElements collect: [:each | each identityHash])].
+			assertList: (node descendantElementsCollect: [:each | each identityHash])
+			collects: (node descendantElements collect: [:each | each identityHash])].
 ]
 
 { #category : #tests }
-XMLNodeWithElementsTest >> testDescendentElementsDetect [
-	| nodeWithElements descendentElements detectedElement |
+XMLNodeWithElementsTest >> testDescendantElementsDetect [
+	| nodeWithElements descendantElements detectedElement |
 
 	nodeWithElements := self newNodeWithElements.
-	descendentElements := nodeWithElements descendentElements.
-	detectedElement := nodeWithElements descendentElementsDetect: [:each | each isNamed: 'prefix:four'].
+	descendantElements := nodeWithElements descendantElements.
+	detectedElement := nodeWithElements descendantElementsDetect: [:each | each isNamed: 'prefix:four'].
 	self
 		assert: detectedElement notNil;
 		assert: (detectedElement isNamed: 'prefix:four');
-		assert: detectedElement == (descendentElements detect: [:each | each isNamed: 'prefix:four']);
-		assert: (detectedElement descendentElementsDetect: [:each | each isNamed: 'prefix:four']) isNil.
+		assert: detectedElement == (descendantElements detect: [:each | each isNamed: 'prefix:four']);
+		assert: (detectedElement descendantElementsDetect: [:each | each isNamed: 'prefix:four']) isNil.
 ]
 
 { #category : #tests }
-XMLNodeWithElementsTest >> testDescendentElementsDetectIfNone [
-	| nodeWithElements descendentElements detectedElement |
+XMLNodeWithElementsTest >> testDescendantElementsDetectIfNone [
+	| nodeWithElements descendantElements detectedElement |
 
 	nodeWithElements := self newNodeWithElements.
-	descendentElements := nodeWithElements descendentElements.
+	descendantElements := nodeWithElements descendantElements.
 	detectedElement :=
 		nodeWithElements
-			descendentElementsDetect: [:each | each isNamed: 'prefix:four']
+			descendantElementsDetect: [:each | each isNamed: 'prefix:four']
 			ifNone: [#absent].
 	self
 		deny: detectedElement = #absent;
 		assert: (detectedElement isNamed: 'prefix:four').
 	self assert:	
 		detectedElement ==
-			(descendentElements
+			(descendantElements
 				detect: [:each | each isNamed: 'prefix:four'] 
 				ifNone: [#absent]).
 	self assert:
 		(detectedElement
-			descendentElementsDetect: [:each | each isNamed: 'prefix:four']
+			descendantElementsDetect: [:each | each isNamed: 'prefix:four']
 			ifNone: [#absent]) = #absent.
 ]
 
 { #category : #tests }
-XMLNodeWithElementsTest >> testDescendentElementsDo [
-	| nodeWithElements descendentElements |
+XMLNodeWithElementsTest >> testDescendantElementsDo [
+	| nodeWithElements descendantElements |
 
 	nodeWithElements := self newNodeWithElements.
-	descendentElements := nodeWithElements descendentElements.
+	descendantElements := nodeWithElements descendantElements.
 	self
-		should: [:block | nodeWithElements descendentElementsDo: block]
-		enumerate: descendentElements.
+		should: [:block | nodeWithElements descendantElementsDo: block]
+		enumerate: descendantElements.
 
-	descendentElements do: [:element |
+	descendantElements do: [:element |
 		self
-			should: [:block | element descendentElementsDo: block]
-			enumerate: element descendentElements].
+			should: [:block | element descendantElementsDo: block]
+			enumerate: element descendantElements].
 ]
 
 { #category : #tests }
-XMLNodeWithElementsTest >> testDescendentElementsNamed [
-	| nodeWithElements descendentElements namedElements |
+XMLNodeWithElementsTest >> testDescendantElementsNamed [
+	| nodeWithElements descendantElements namedElements |
 
 	nodeWithElements := self newNodeWithElements.
-	self assert: (nodeWithElements descendentElementsNamed: 'absent') isEmpty.
+	self assert: (nodeWithElements descendantElementsNamed: 'absent') isEmpty.
 
-	descendentElements := nodeWithElements descendentElements.
-	namedElements := nodeWithElements descendentElementsNamed: 'four'. 
+	descendantElements := nodeWithElements descendantElements.
+	namedElements := nodeWithElements descendantElementsNamed: 'four'. 
 	self assert: namedElements size = 3.
 	self
 		assertList: namedElements
-		selects: (descendentElements select: [:each | each isNamed: 'four']).
+		selects: (descendantElements select: [:each | each isNamed: 'four']).
 
 	namedElements do: [:each |
-		self assert: (each descendentElementsNamed: 'four') isEmpty]
+		self assert: (each descendantElementsNamed: 'four') isEmpty]
 ]
 
 { #category : #tests }
-XMLNodeWithElementsTest >> testDescendentElementsNamedDo [
-	| nodeWithElements descendentElements namedElements |
+XMLNodeWithElementsTest >> testDescendantElementsNamedDo [
+	| nodeWithElements namedElements |
 
 	nodeWithElements := self newNodeWithElements.
 	self
-		should: [:block | nodeWithElements descendentElementsNamed: 'absent' do: block]
+		should: [:block | nodeWithElements descendantElementsNamed: 'absent' do: block]
 		enumerate: #().
 
-	descendentElements := nodeWithElements descendentElements.
-	namedElements := nodeWithElements descendentElementsNamed: 'four'. 
+	namedElements := nodeWithElements descendantElementsNamed: 'four'. 
 	self
-		should: [:block | nodeWithElements descendentElementsNamed: 'four' do: block]
+		should: [:block | nodeWithElements descendantElementsNamed: 'four' do: block]
 		enumerate: namedElements.
 ]
 
 { #category : #tests }
-XMLNodeWithElementsTest >> testDescendentElementsNamedNamespaceURI [
-	| nodeWithElements descendentElements namedElements |
+XMLNodeWithElementsTest >> testDescendantElementsNamedNamespaceURI [
+	| nodeWithElements descendantElements namedElements |
 
 	nodeWithElements := self newNodeWithElements.
 	self assert:
 		(nodeWithElements
-			descendentElementsNamed: 'four'
+			descendantElementsNamed: 'four'
 			namespaceURI: 'absent') isEmpty.
 
-	descendentElements := nodeWithElements descendentElements.
+	descendantElements := nodeWithElements descendantElements.
 	namedElements :=
 		nodeWithElements
-			descendentElementsNamed: 'four'
+			descendantElementsNamed: 'four'
 			namespaceURI: 'testNS'. 
 	self
 		assert: namedElements size = 2;
 		assertList: namedElements
 		selects:
-			(descendentElements select: [:each |
+			(descendantElements select: [:each |
 				(each isNamed: 'four')
 					and: [each namespaceURI = 'testNS']]).
 ]
 
 { #category : #tests }
-XMLNodeWithElementsTest >> testDescendentElementsSelect [
-	| nodeWithElements descendentElements |
+XMLNodeWithElementsTest >> testDescendantElementsSelect [
+	| nodeWithElements descendantElements |
 
 	nodeWithElements := self newNodeWithElements.
-	descendentElements := nodeWithElements descendentElements.
+	descendantElements := nodeWithElements descendantElements.
 	self
-		assertList: (nodeWithElements descendentElementsSelect: [:each | each hasChildren])
-		selects: (descendentElements select: [:each | each hasChildren]).
+		assertList: (nodeWithElements descendantElementsSelect: [:each | each hasChildren])
+		selects: (descendantElements select: [:each | each hasChildren]).
 
-	descendentElements do: [:node |
+	descendantElements do: [:node |
 		self
-			assertList: (node descendentElementsSelect: [:each | each hasChildren])
-			selects: (node descendentElements select: [:each | each hasChildren])].
+			assertList: (node descendantElementsSelect: [:each | each hasChildren])
+			selects: (node descendantElements select: [:each | each hasChildren])].
 ]
 
 { #category : #tests }

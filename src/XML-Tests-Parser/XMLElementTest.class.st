@@ -22,16 +22,6 @@ XMLElementTest >> assertElement: anElement hasAttributes: anAssociationCollectio
 			assert: attributeNode value = each value.]
 ]
 
-{ #category : #accessing }
-XMLElementTest >> attributes [
-	^ self newElementWithAttributes attributeNodes asDictionary
-]
-
-{ #category : #accessing }
-XMLElementTest >> namespaces [
-	^ OrderPreservingDictionary with: 'prefix' -> 'prefixNS' with: '' -> 'defaultNS'
-]
-
 { #category : #'instance creation' }
 XMLElementTest >> newNodeWithElements [
 	^ super newNodeWithElements
@@ -196,7 +186,7 @@ XMLElementTest >> testAttributeNodeAtNamespaceURI [
 	self assert:
 		(element attributeNodeAt: 'prefix:three' namespaceURI: 'absent') isNil.
 	self assert:
-		(element attributeNodeAt: 'prefix:three' namespaceURI: 'testNS') ==
+		(element attributeNodeAt: 'prefix:three' namespaceURI: 'prefixNS') ==
 			(element attributeNodes third).
 ]
 
@@ -213,7 +203,7 @@ XMLElementTest >> testAttributeNodeAtNamespaceURIIfAbsent [
 	self assert:
 		(element
 			attributeNodeAt: 'prefix:three'
-			namespaceURI: 'testNS'
+			namespaceURI: 'prefixNS'
 			ifAbsent: [#absent]) ==
 				(element attributeNodes third).
 ]
@@ -379,6 +369,20 @@ XMLElementTest >> testDeclarePrefixURI [
 	self
 		should: [element declarePrefix: 'xml' uri: 'newNS']
 		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
+XMLElementTest >> testDeclaredPrefixes [
+	| element prefixes |
+
+	element := self nodeClass new.
+	prefixes := OrderedCollection new.
+	self namespaces keysAndValuesDo: [:prefix :uri |
+		element
+			declarePrefix: prefix
+			uri: uri.
+		prefixes addLast: prefix.
+		self assert: element declaredPrefixes = prefixes asArray].
 ]
 
 { #category : #tests }
@@ -714,7 +718,7 @@ XMLElementTest >> testIsRoot [
 
 	element := self newNodeWithElements.
 	self assert: element allElements first isRoot.
-	element descendentElementsDo: [:each |
+	element descendantElementsDo: [:each |
 		self deny: each isRoot].
 	(element removeNodes: element elements copy) do: [:each |
 		self assert: each isRoot].
@@ -770,7 +774,10 @@ XMLElementTest >> testNameAttributes [
 
 	attributes := self attributes.
 	unprefixedAttributes := self unprefixedAttributes.
-	element := self nodeClass name: 'one' attributes: unprefixedAttributes.
+	element :=
+		self nodeClass
+			name: 'one'
+			attributes: self unprefixedAttributeAssociations.
 	self
 		assert: element name = 'one';
 		assertElement: element hasAttributes: unprefixedAttributes.
@@ -814,7 +821,7 @@ XMLElementTest >> testNameNamespaceURIAttributes [
 		self nodeClass
 			name: 'prefix:one'
 			namespaceURI: 'prefixNS'
-			attributes: attributes.
+			attributes: self attributeAssociations.
 	self
 		assert: element name = 'prefix:one';
 		assert: element namespaceURI = 'prefixNS';
@@ -1096,14 +1103,81 @@ XMLElementTest >> testRemoveAttributes [
 XMLElementTest >> testResolvePrefix [
 	| element |
 
-	(element := self nodeClass new)
-		declareNamespaces: self namespaces.
+	element := self nodeClass new.
 	self namespaces keysAndValuesDo: [:prefix :uri |
+		self assert: (element resolvePrefix: prefix) = ''.
+		element declarePrefix: prefix uri: uri.
 		self assert: (element resolvePrefix: prefix) = uri].
 	self
 		assert: (element resolvePrefix: 'xml') = XMLNamespaceScope xmlNamespaceURI;
-		assert: (element resolvePrefix: 'xmlns') = XMLNamespaceScope xmlnsNamespaceURI;
-		assert: (element resolvePrefix: 'undeclared') isEmpty.
+		assert: (element resolvePrefix: 'xmlns') = XMLNamespaceScope xmlnsNamespaceURI.
+]
+
+{ #category : #tests }
+XMLElementTest >> testResolvePrefixIfUnresolvable [
+	| element |
+
+	element := self nodeClass new.
+	self namespaces keysAndValuesDo: [:prefix :uri |
+		self assert:
+			(element
+				resolvePrefix: prefix
+				ifUnresolvable: [#absent]) = #absent.
+		element declarePrefix: prefix uri: uri.
+		self assert:
+			(element
+				resolvePrefix: prefix
+				ifUnresolvable: [#absent]) = uri].
+	self
+		assert:
+			(element
+				resolvePrefix: 'xml'
+				ifUnresolvable: [#absent]) = XMLNamespaceScope xmlNamespaceURI;
+		assert:
+			(element
+				resolvePrefix: 'xmlns'
+				ifUnresolvable: [#absent]) = XMLNamespaceScope xmlnsNamespaceURI.
+]
+
+{ #category : #tests }
+XMLElementTest >> testResolvePrefixesOfNamespaceURI [
+	| element |
+
+	element := self nodeClass new.
+	self namespaces keysAndValuesDo: [:prefix :uri |
+		self assert: (element resolvePrefixesOfNamespaceURI: uri) isEmpty.
+		element
+			declarePrefix: prefix
+			uri: uri.
+		self assert:
+			(element resolvePrefixesOfNamespaceURI: uri) =
+				(Set with: prefix)].
+	self
+		assert:
+			(element resolvePrefixesOfNamespaceURI:
+				XMLNamespaceScope xmlNamespaceURI) =
+					(Set with: 'xml');
+		assert:
+			(element resolvePrefixesOfNamespaceURI:
+				XMLNamespaceScope xmlnsNamespaceURI) =
+					(Set with: 'xmlns').
+]
+
+{ #category : #tests }
+XMLElementTest >> testSetAttributes [
+	| element newAttributeAssociations |
+
+	element := self newElementWithAttributes.
+	newAttributeAssociations :=
+		Array
+			with: 'newName' -> 'newValue'
+			with: 'newName2' -> 'newValue2'.
+	element setAttributes: newAttributeAssociations.
+
+	self assert:
+		(element attributeNodes collect: [:each |
+			each name -> each value]) asArray =
+				newAttributeAssociations.
 ]
 
 { #category : #tests }
@@ -1132,24 +1206,43 @@ XMLElementTest >> testUndeclareDefaultNamespace [
 XMLElementTest >> testUndeclarePrefix [
 	| element |
 
-	element :=
-		XMLElement
-			name: 'outer'
-			namespaces: (Array with: '' -> 'defaultNS' with: 'unused' -> 'unusedNS' with: 'used' -> 'usedNS').
-	element addElementNamed: 'used:inner'.
+	element := self newElementWithAttributes.
+	element addElementNamed: 'prefix:inner'.
 
 	self
-		shouldnt: [element undeclarePrefix: '']
-		raise: XMLNamespaceException.
-	self
-		shouldnt: [element undeclarePrefix: 'unused']
-		raise: XMLNamespaceException.
+		assert: (element undeclarePrefix: '') == element;
+		assert: (element undeclarePrefix: 'prefixTwo') == element.
 	element allElementsDo: [:each |
 		self
 			deny: (each isDeclaredPrefix: '');
-			deny: (each isDeclaredPrefix: 'unused')].
+			deny: (each isDeclaredPrefix: 'prefixTwo')].
 	self
-		should: [element undeclarePrefix: 'used']
+		should: [element undeclarePrefix: 'prefix']
+		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
+XMLElementTest >> testUndeclarePrefixes [
+	| element innerElement |
+
+	element :=
+		self nodeClass
+			name: 'outer'
+			namespaces: self namespaces
+			attributes: self unprefixedAttributes.
+	(innerElement := element addElementNamed: 'prefixTwo:inner')
+		declarePrefix: 'prefixTwo'
+		uri: 'newNS'.
+
+	self
+		assert: (element undeclarePrefixes) == element;
+		deny: element hasNamespaces;
+		assert: innerElement hasNamespaces;
+		assert: innerElement declaredPrefixes asArray = #('prefixTwo');
+		assert: (innerElement resolvePrefix: 'prefixTwo') = 'newNS'.
+
+	self
+		should: [innerElement undeclarePrefixes]
 		raise: XMLNamespaceException.
 ]
 
@@ -1157,20 +1250,15 @@ XMLElementTest >> testUndeclarePrefix [
 XMLElementTest >> testUndeclaringAttributePrefixes [
 	| element |
 
-	element :=
-		XMLElement
-			name: 'element'
-			namespaces: (Array with: '' -> 'defaultNS' with: 'unused' -> 'unusedNS' with: 'used' -> 'usedNS')
-			attributes: (Array with: 'name' -> 'value' with: 'used:name' -> 'value').
-
+	element := self newElementWithAttributes.
 	self
 		shouldnt: [element undeclarePrefix: '']
 		raise: XMLNamespaceException.
 	self
-		shouldnt: [element undeclarePrefix: 'unused']
+		shouldnt: [element undeclarePrefix: 'prefixTwo']
 		raise: XMLNamespaceException.
 	self
-		should: [element undeclarePrefix: 'used']
+		should: [element undeclarePrefix: 'prefix']
 		raise: XMLNamespaceException.
 ]
 
@@ -1184,11 +1272,4 @@ XMLElementTest >> testWriteXMLOn [
 		assert: element printString = '<element />';
 		assert: (element contentString: 'test') printString = '<element>test</element>';
 		assert: (element setAttributes: attributes) printString = '<element b="two" a="one">test</element>'
-]
-
-{ #category : #accessing }
-XMLElementTest >> unprefixedAttributes [
-	^ OrderPreservingStringDictionary newFrom:
-		(self attributes associations collect: [:each |
-			each key localNameAfterPrefix -> each value])
 ]

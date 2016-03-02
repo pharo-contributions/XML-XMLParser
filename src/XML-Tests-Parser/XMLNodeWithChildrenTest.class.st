@@ -334,109 +334,109 @@ XMLNodeWithChildrenTest >> testCopy [
 ]
 
 { #category : #tests }
-XMLNodeWithChildrenTest >> testDescendentNodes [
-	| nodeWithNodes descendentNodes |
+XMLNodeWithChildrenTest >> testDescendantNodes [
+	| nodeWithNodes descendantNodes |
 
 	nodeWithNodes := self newNodeWithNodes.
-	descendentNodes := nodeWithNodes descendentNodes.
+	descendantNodes := nodeWithNodes descendantNodes.
 	self
-		assertList: descendentNodes
+		assertList: descendantNodes
 		selects: nodeWithNodes allNodes allButFirst.
 
-	descendentNodes do: [:node |
+	descendantNodes do: [:node |
 		node canHaveChildren
 			ifTrue: [
 				self
-					assertList: node descendentNodes
+					assertList: node descendantNodes
 					selects: node allNodes allButFirst]].
 ]
 
 { #category : #tests }
-XMLNodeWithChildrenTest >> testDescendentNodesCollect [
-	| nodeWithNodes descendentNodes |
+XMLNodeWithChildrenTest >> testDescendantNodesCollect [
+	| nodeWithNodes descendantNodes |
 
 	nodeWithNodes := self newNodeWithNodes.
-	descendentNodes := nodeWithNodes descendentNodes.
+	descendantNodes := nodeWithNodes descendantNodes.
 	self
-		assertList: (nodeWithNodes descendentNodesCollect: [:each | each identityHash])
-		collects: (descendentNodes collect: [:each | each identityHash]).
+		assertList: (nodeWithNodes descendantNodesCollect: [:each | each identityHash])
+		collects: (descendantNodes collect: [:each | each identityHash]).
 
-	descendentNodes do: [:node |
+	descendantNodes do: [:node |
 		node canHaveChildren
 			ifTrue: [
 				self
-					assertList: (node descendentNodesCollect: [:each | each identityHash])
-					collects: (node descendentNodes collect: [:each | each identityHash])]].
+					assertList: (node descendantNodesCollect: [:each | each identityHash])
+					collects: (node descendantNodes collect: [:each | each identityHash])]].
 ]
 
 { #category : #tests }
-XMLNodeWithChildrenTest >> testDescendentNodesDetect [
-	| nodeWithNodes descendentNodes detectedNode |
+XMLNodeWithChildrenTest >> testDescendantNodesDetect [
+	| nodeWithNodes descendantNodes detectedNode |
 
 	nodeWithNodes := self newNodeWithNodes.
-	descendentNodes := nodeWithNodes descendentNodes.
-	detectedNode := nodeWithNodes descendentNodesDetect: [:each | each isPI].
+	descendantNodes := nodeWithNodes descendantNodes.
+	detectedNode := nodeWithNodes descendantNodesDetect: [:each | each isPI].
 	self
 		assert: detectedNode notNil;
 		assert: detectedNode isPI;
-		assert: detectedNode == (descendentNodes detect: [:each | each isPI]);
-		assert: (nodeWithNodes descendentNodesDetect: [:each | each isElementNamed: 'absent']) isNil.
+		assert: detectedNode == (descendantNodes detect: [:each | each isPI]);
+		assert: (nodeWithNodes descendantNodesDetect: [:each | each isElementNamed: 'absent']) isNil.
 ]
 
 { #category : #tests }
-XMLNodeWithChildrenTest >> testDescendentNodesDetectIfNone [
-	| nodeWithNodes descendentNodes detectedNode |
+XMLNodeWithChildrenTest >> testDescendantNodesDetectIfNone [
+	| nodeWithNodes descendantNodes detectedNode |
 
 	nodeWithNodes := self newNodeWithNodes.
-	descendentNodes := nodeWithNodes descendentNodes.
+	descendantNodes := nodeWithNodes descendantNodes.
 	detectedNode :=
 		nodeWithNodes
-			descendentNodesDetect: [:each | each isPI]
+			descendantNodesDetect: [:each | each isPI]
 			ifNone: [#absent].
 	self
 		deny: detectedNode = #absent;
 		assert: detectedNode isPI;
-		assert: detectedNode == (descendentNodes detect: [:each | each isPI] ifNone: [#absent]);
+		assert: detectedNode == (descendantNodes detect: [:each | each isPI] ifNone: [#absent]);
 		assert:
 			(nodeWithNodes
-				descendentNodesDetect: [:each | each isElementNamed: 'absent']
+				descendantNodesDetect: [:each | each isElementNamed: 'absent']
 				ifNone: [#absent]) = #absent.
 ]
 
 { #category : #tests }
-XMLNodeWithChildrenTest >> testDescendentNodesDo [
-	| nodeWithNodes descendentNodes |
+XMLNodeWithChildrenTest >> testDescendantNodesDo [
+	| nodeWithNodes descendantNodes |
 
 	nodeWithNodes := self newNodeWithNodes.
-	descendentNodes := nodeWithNodes descendentNodes.
+	descendantNodes := nodeWithNodes descendantNodes.
 	self
-		should: [:block | nodeWithNodes descendentNodesDo: block]
-		enumerate: descendentNodes.
+		should: [:block | nodeWithNodes descendantNodesDo: block]
+		enumerate: descendantNodes.
 
-	descendentNodes do: [:node |
+	descendantNodes do: [:node |
 		node canHaveChildren
 			ifTrue: [
 				self
-					should: [:block | node descendentNodesDo: block]
-					enumerate: node descendentNodes]].
+					should: [:block | node descendantNodesDo: block]
+					enumerate: node descendantNodes]].
 ]
 
 { #category : #tests }
-XMLNodeWithChildrenTest >> testDescendentNodesSelect [
-	| nodeWithNodes descendentNodes |
+XMLNodeWithChildrenTest >> testDescendantNodesSelect [
+	| nodeWithNodes descendantNodes |
 
 	nodeWithNodes := self newNodeWithNodes.
-	descendentNodes := nodeWithNodes descendentNodes.
+	descendantNodes := nodeWithNodes descendantNodes.
 	self
-		assertList: (nodeWithNodes descendentNodesSelect: [:each | each isComment])
-		selects: (descendentNodes select: [:each | each isComment]).
+		assertList: (nodeWithNodes descendantNodesSelect: [:each | each isComment])
+		selects: (descendantNodes select: [:each | each isComment]).
 
-	descendentNodes do: [:node |
+	descendantNodes do: [:node |
 		node canHaveChildren
 			ifTrue: [
 				self
-					assertList: (node descendentNodesSelect: [:each | each isComment])
-					selects: (node descendentNodes select: [:each | each isComment])]].
+					assertList: (node descendantNodesSelect: [:each | each isComment])
+					selects: (node descendantNodes select: [:each | each isComment])]].
 ]
 
 { #category : #tests }

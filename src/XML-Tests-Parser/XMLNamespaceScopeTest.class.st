@@ -99,6 +99,21 @@ XMLNamespaceScopeTest >> testHasNamespaces [
 ]
 
 { #category : #tests }
+XMLNamespaceScopeTest >> testHash [
+	self assert:
+		self newNamespaceScope hash =
+			self newNamespaceScope hash.
+	self assert:
+		self newNamespaceScopeWithNamespaces hash =
+			self newNamespaceScopeWithNamespaces hash.
+	self assert:
+		self newNamespaceScope hash =
+			(self newNamespaceScopeWithNamespaces
+				unmapPrefixes;
+				hash).
+]
+
+{ #category : #tests }
 XMLNamespaceScopeTest >> testIncludesPrefix [
 	| namespaceScope |
 
@@ -213,6 +228,20 @@ XMLNamespaceScopeTest >> testMapPrefixesAndURIs [
 ]
 
 { #category : #tests }
+XMLNamespaceScopeTest >> testMappedPrefixes [
+	| scope prefixes |
+
+	scope := self newNamespaceScope.
+	prefixes := OrderedCollection new.
+	self namespaces keysAndValuesDo: [:prefix :uri |
+		scope
+			mapPrefix: prefix
+			to: uri.
+		prefixes addLast: prefix.
+		self assert: scope mappedPrefixes = prefixes asArray].
+]
+
+{ #category : #tests }
 XMLNamespaceScopeTest >> testPrefixMappingAt [
 	| namespaceScope |
 
@@ -274,36 +303,6 @@ XMLNamespaceScopeTest >> testPrefixesAndURIsDo [
 ]
 
 { #category : #tests }
-XMLNamespaceScopeTest >> testPrefixesOfNamespaceURI [
-	| namespaceScope |
-
-	namespaceScope := self newNamespaceScope.
-	self assert:
-		(namespaceScope prefixesOfNamespaceURI: XMLNamespaceScope xmlNamespaceURI) =
-			(Set with: 'xml').
-	self assert:
-		(namespaceScope prefixesOfNamespaceURI: XMLNamespaceScope xmlnsNamespaceURI) =
-			(Set with: 'xmlns').
-
-	"cannot map xmlns prefix, but can map xml"
-	namespaceScope mapPrefix: 'xml' to: XMLNamespaceScope xmlNamespaceURI.
-	self assert:
-		(namespaceScope prefixesOfNamespaceURI: XMLNamespaceScope xmlNamespaceURI) =
-			(Set with: 'xml').
-
-	self namespaces keysAndValuesDo: [:prefix :uri |
-		self assert: (namespaceScope prefixesOfNamespaceURI: uri) isEmpty.
-
-		namespaceScope mapPrefix: prefix to: uri.
-		self assert: (namespaceScope prefixesOfNamespaceURI: uri) = (Set with: prefix).
-
-		namespaceScope mapPrefix: 'newPrefix' to: uri.
-		self assert:
-			(namespaceScope prefixesOfNamespaceURI: uri) =
-				(Set with: prefix with: 'newPrefix')].
-]
-
-{ #category : #tests }
 XMLNamespaceScopeTest >> testResolvePrefix [
 	| namespaceScope |
 
@@ -345,6 +344,40 @@ XMLNamespaceScopeTest >> testResolvePrefixIfUnresolvable [
 ]
 
 { #category : #tests }
+XMLNamespaceScopeTest >> testResolvePrefixesOfNamespaceURI [
+	| namespaceScope |
+
+	namespaceScope := self newNamespaceScope.
+
+	self namespaces keysAndValuesDo: [:prefix :uri |
+		self assert:
+			(namespaceScope resolvePrefixesOfNamespaceURI: uri) isEmpty.
+
+		namespaceScope mapPrefix: prefix to: uri.
+		self assert:
+			(namespaceScope resolvePrefixesOfNamespaceURI: uri) =
+				(Set with: prefix).
+
+		namespaceScope mapPrefix: 'newPrefix' to: uri.
+		self assert:
+			(namespaceScope resolvePrefixesOfNamespaceURI: uri) =
+				(Set with: prefix with: 'newPrefix')].
+
+	self assert:
+		(namespaceScope resolvePrefixesOfNamespaceURI:
+			XMLNamespaceScope xmlNamespaceURI) = (Set with: 'xml').
+	self assert:
+		(namespaceScope resolvePrefixesOfNamespaceURI:
+			XMLNamespaceScope xmlnsNamespaceURI) = (Set with: 'xmlns').
+
+	"cannot map xmlns prefix, but can map xml"
+	namespaceScope mapPrefix: 'xml' to: XMLNamespaceScope xmlNamespaceURI.
+	self assert:
+		(namespaceScope resolvePrefixesOfNamespaceURI:
+			XMLNamespaceScope xmlNamespaceURI) = (Set with: 'xml').
+]
+
+{ #category : #tests }
 XMLNamespaceScopeTest >> testSize [
 	self
 		assert: self newNamespaceScope size = 0;
@@ -353,12 +386,51 @@ XMLNamespaceScopeTest >> testSize [
 
 { #category : #tests }
 XMLNamespaceScopeTest >> testUnmapPrefix [
-	| scope oldPrefixMappings |
+	| scope |
 
-	scope := self newNamespaceScopeWithNamespaces.
-	self namespaces keysAndValuesDo: [:prefix :uri |
+	scope := self newNamespaceScope.
+	self namespaces keysAndValuesDo: [:prefix :uri |  | oldPrefixMappings |
+		self
+			should: [scope unmapPrefix: prefix]
+			raise: XMLNamespaceException.
+		scope
+			mapPrefix: prefix
+			to: uri.
+	
 		oldPrefixMappings := scope prefixMappings.
-		scope unmapPrefix: prefix.
+		self assert: (scope unmapPrefix: prefix) = uri.
+
+		"ensure prefixMappings is copied when removing"
+		self
+			deny: (scope prefixMappings includesKey: prefix);
+			deny: scope prefixMappings = oldPrefixMappings;
+			deny: scope prefixMappings == oldPrefixMappings.
+		self
+			should: [scope unmapPrefix: prefix]
+			raise: XMLNamespaceException].
+	self assert: scope prefixMappings isEmpty.
+]
+
+{ #category : #tests }
+XMLNamespaceScopeTest >> testUnmapPrefixIfAbsent [
+	| scope |
+
+	scope := self newNamespaceScope.
+	self namespaces keysAndValuesDo: [:prefix :uri |  | oldPrefixMappings |
+		self assert:
+			(scope
+				unmapPrefix: prefix
+				ifAbsent: [#absent]) = #absent.
+		scope
+			mapPrefix: prefix
+			to: uri.
+
+		oldPrefixMappings := scope prefixMappings.
+		self assert:
+			(scope
+				unmapPrefix: prefix
+				ifAbsent: [#absent]) = uri.
+
 		"ensure prefixMappings is copied when removing"
 		self
 			deny: (scope prefixMappings includesKey: prefix);
@@ -366,8 +438,10 @@ XMLNamespaceScopeTest >> testUnmapPrefix [
 			deny: scope prefixMappings == oldPrefixMappings.
 
 		self
-			should: [scope unmapPrefix: prefix]
-			raise: XMLNamespaceException].
+			assert:
+				(scope
+					unmapPrefix: prefix
+					ifAbsent: [#absent]) = #absent].
 	self assert: scope prefixMappings isEmpty.
 ]
 

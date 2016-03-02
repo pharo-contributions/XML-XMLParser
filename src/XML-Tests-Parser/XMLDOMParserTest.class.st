@@ -757,13 +757,12 @@ XMLDOMParserTest >> testNodeListClass [
 	| document parser listClass |
 
 	listClass := XMLCachingNodeList.
-	document :=
-		(parser := XMLDOMParser on: self addressBookXML)
-			nodeListClass: listClass;
-			parseDocument.
+	parser := XMLDOMParser on: self addressBookXML.
+	parser configuration nodeListClass: listClass.
+	document := parser parseDocument.
 
 	self
-		assert: parser nodeListClass == listClass;
+		assert: parser configuration nodeListClass == listClass;
 		assert: document nodes class == listClass;
 		assert: (document allElements allSatisfy: [:each | each nodes class == listClass]).
 ]

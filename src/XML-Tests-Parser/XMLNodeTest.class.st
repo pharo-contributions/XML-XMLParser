@@ -27,6 +27,20 @@ XMLNodeTest >> assertList: aList selects: aSecondList [
 ]
 
 { #category : #accessing }
+XMLNodeTest >> attributeAssociations [
+	^ Array
+		with: 'one' -> 'two'
+		with: 'three' -> 'four'
+		with: 'prefix:three' -> 'five'
+		with: 'prefix:six' -> 'seven'
+]
+
+{ #category : #accessing }
+XMLNodeTest >> attributes [
+	^ OrderPreservingStringDictionary newFrom: self attributeAssociations
+]
+
+{ #category : #accessing }
 XMLNodeTest >> collectListClass [
 	^ XMLOrderedList
 ]
@@ -41,6 +55,19 @@ XMLNodeTest >> markupString [
 	^ '<test name="&name;">''&value;''</test>'
 ]
 
+{ #category : #accessing }
+XMLNodeTest >> namespaceAssociations [
+	^ Array
+		with: '' -> 'defaultNS'
+		with: 'prefix' -> 'prefixNS'
+		with: 'prefixTwo' -> 'prefixTwoNS'
+]
+
+{ #category : #accessing }
+XMLNodeTest >> namespaces [
+	^ OrderPreservingStringDictionary newFrom: self namespaceAssociations
+]
+
 { #category : #'instance creation' }
 XMLNodeTest >> newElementWithAttributes [
 	| element |
@@ -48,12 +75,12 @@ XMLNodeTest >> newElementWithAttributes [
 	element :=
 		XMLElement
 			name: 'test'
-			namespaces: (Array with: '' -> 'defaultNS' with: 'prefix' -> 'testNS').
-	element attributeNodes
-		add: (XMLAttribute name: 'one' value: 'two');
-		add: (XMLAttribute name: 'three' value: 'four');
-		add: (XMLAttribute name: 'prefix:three' value: 'five');
-		add: (XMLAttribute name: 'prefix:six' value: 'seven').
+			namespaces: self namespaceAssociations.
+	self attributeAssociations do: [:each |
+		element attributeNodes addLast:
+			(XMLAttribute
+				name: each key
+				value: each value)].
 	^ element.
 ]
 
@@ -259,4 +286,15 @@ XMLNodeTest >> testValidate [
 	self
 		shouldnt: [self nodeClass new validate]
 		raise: XMLValidationException
+]
+
+{ #category : #accessing }
+XMLNodeTest >> unprefixedAttributeAssociations [
+	^ self attributeAssociations collect: [:each |
+		each key localNameAfterPrefix -> each value]
+]
+
+{ #category : #accessing }
+XMLNodeTest >> unprefixedAttributes [
+	^ OrderPreservingStringDictionary newFrom: self unprefixedAttributeAssociations
 ]
