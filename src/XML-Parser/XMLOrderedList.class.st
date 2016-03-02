@@ -242,7 +242,6 @@ XMLOrderedList >> beginsWith: aCollection [
 
 { #category : #accessing }
 XMLOrderedList >> capacity [
-	"overridden in GS version to use collection size"
 	^ collection capacity
 ]
 

@@ -124,17 +124,6 @@ XMLObservableList >> beforeAdding: anObject [
 	observer ifNotNil: [observer adding: anObject to: self]
 ]
 
-{ #category : #copying }
-XMLObservableList >> deepCopyWithObserver: anObserver [
-	| newList |
-
-	newList := self copyEmpty observer: anObserver.
-	self do: [:each |
-		"avoid copy here to not conflict with XMLNodeWithElements>>copy"
-		newList addLast: each shallowCopy postCopy].
-	^ newList.
-]
-
 { #category : #private }
 XMLObservableList >> indexOf: anObject otherThan: anIndex [
 	"used by subclasses to remove duplicates"

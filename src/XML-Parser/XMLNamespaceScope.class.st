@@ -40,17 +40,15 @@ XMLNamespaceScope >> copiedPrefixMappings [
 		ifNotNil: [^ prefixMappings := prefixMappings copy]
 ]
 
-{ #category : #accessing }
+{ #category : #mapping }
 XMLNamespaceScope >> defaultNamespace [
 	^ prefixMappings
 		ifNil: ['']
 		ifNotNil: [prefixMappings at: '' ifAbsent: ['']]
 ]
 
-{ #category : #accessing }
+{ #category : #mapping }
 XMLNamespaceScope >> defaultNamespace: aURI [
-	"unlike non-default namespaces, the uri can be empty to shadow an
-	inherited default namesapce"
 	self
 		validatePrefix: ''
 		beforeMappingTo: aURI.
@@ -99,6 +97,13 @@ XMLNamespaceScope >> errorCannotRemapXMLPrefix [
 ]
 
 { #category : #private }
+XMLNamespaceScope >> errorCannotUnmapPrefix: aPrefix [
+	XMLNamespaceException
+		formatSignal: 'Prefix "{1}" was not mapped and cannot be unmapped'
+		with: aPrefix
+]
+
+{ #category : #private }
 XMLNamespaceScope >> errorCannotUseXMLNSPrefix [	
 	XMLNamespaceException signal: 'Cannot use reserved "xmlns" prefix for elements or attributes'
 ]
@@ -139,8 +144,8 @@ XMLNamespaceScope >> hash [
 	| hash |
 
 	hash := self class hash.
-	prefixMappings
-		ifNotNil: [hash := hash bitXor: prefixMappings hash].
+	self hasNamespaces
+		ifTrue: [hash := hash bitXor: self prefixMappings hash].
 	^ hash.
 ]
 
@@ -155,7 +160,7 @@ XMLNamespaceScope >> includesPrefix: aPrefix mappedTo: aURI [
 	^ (self prefixMappingAt: aPrefix ifAbsent: [^ false]) = aURI
 ]
 
-{ #category : #accessing }
+{ #category : #mapping }
 XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope [
 	anEnclosingScope hasNamespaces
 		ifFalse: [^ self].
@@ -164,16 +169,18 @@ XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope [
 			anEnclosingScope prefixesAndURIsDo: [:prefix :uri |
 				(self includesPrefix: prefix)
 					ifFalse: [
-						(copiedPrefixMappings "used so we only copy once"
+						"nil test ensures we only copy the first time when needed"
+						(copiedPrefixMappings
 							ifNil: [copiedPrefixMappings := self copiedPrefixMappings])
 							at: prefix
 							put: uri]]]
 		ifFalse: [
-			"can reuse because of copy-on-write"
+			"can safely share anEnclosingScope's prefixMappings because of
+			copy-on-write behavior"
 			prefixMappings := anEnclosingScope prefixMappings].
 ]
 
-{ #category : #accessing }
+{ #category : #mapping }
 XMLNamespaceScope >> mapPrefix: aPrefix to: aURI [
 	self
 		validatePrefix: aPrefix
@@ -185,7 +192,7 @@ XMLNamespaceScope >> mapPrefix: aPrefix to: aURI [
 		put: aURI.
 ]
 
-{ #category : #accessing }
+{ #category : #mapping }
 XMLNamespaceScope >> mapPrefixesAndURIs: anAssociationCollection [
 	| copiedPrefixMappings |
 
@@ -193,10 +200,18 @@ XMLNamespaceScope >> mapPrefixesAndURIs: anAssociationCollection [
 		self
 			validatePrefix: each key
 			beforeMappingTo: each value.
-		(copiedPrefixMappings "used so we only copy once"
+		"nil test ensures we only copy the first time when needed"
+		(copiedPrefixMappings
 			ifNil: [copiedPrefixMappings := self copiedPrefixMappings])
 			at: each key
 			put: each value]
+]
+
+{ #category : #accessing }
+XMLNamespaceScope >> mappedPrefixes [
+	^ prefixMappings
+		ifNil: [Array new]
+		ifNotNil: [prefixMappings keys]
 ]
 
 { #category : #accessing }
@@ -222,23 +237,6 @@ XMLNamespaceScope >> prefixMappings [
 XMLNamespaceScope >> prefixesAndURIsDo: aTwoArgumentBlock [
 	prefixMappings
 		ifNotNil: [prefixMappings keysAndValuesDo: aTwoArgumentBlock]
-]
-
-{ #category : #accessing }
-XMLNamespaceScope >> prefixesOfNamespaceURI: aURI [
-	| prefixes |
-
-	prefixes := Set new.
-	aURI = self xmlNamespaceURI
-		ifTrue: [prefixes add: 'xml']
-		ifFalse: [
-			aURI = self xmlnsNamespaceURI
-				ifTrue: [prefixes add: 'xmlns']
-				ifFalse: [
-					self prefixesAndURIsDo: [:prefix :uri |
-						uri = aURI
-							ifTrue: [prefixes add: prefix]]]].
-	^ prefixes.
 ]
 
 { #category : #printing }
@@ -298,6 +296,23 @@ XMLNamespaceScope >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 						ifFalse: [aBlock value]]]
 ]
 
+{ #category : #resolving }
+XMLNamespaceScope >> resolvePrefixesOfNamespaceURI: aURI [
+	| prefixes |
+
+	prefixes := Set new.
+	aURI = self xmlNamespaceURI
+		ifTrue: [prefixes add: 'xml'] "cannot be aliased"
+		ifFalse: [
+			aURI = self xmlnsNamespaceURI
+				ifTrue: [prefixes add: 'xmlns'] "cannot be aliased"
+				ifFalse: [
+					self prefixesAndURIsDo: [:prefix :uri |
+						uri = aURI
+							ifTrue: [prefixes add: prefix]]]].
+	^ prefixes.
+]
+
 { #category : #accessing }
 XMLNamespaceScope >> size [
 	^ prefixMappings
@@ -305,15 +320,30 @@ XMLNamespaceScope >> size [
 		ifNotNil: [prefixMappings size]
 ]
 
-{ #category : #accessing }
+{ #category : #unmapping }
 XMLNamespaceScope >> unmapPrefix: aPrefix [
-	"copy-on-write"
-	^ self copiedPrefixMappings 
-		removeKey: aPrefix
-		ifAbsent: [
-			XMLNamespaceException
-				formatSignal: 'Prefix "{1}" was not mapped and cannot be unmapped'
-				with: aPrefix]
+	^ self
+		unmapPrefix: aPrefix
+		ifAbsent: [self errorCannotUnmapPrefix: aPrefix]
+]
+
+{ #category : #unmapping }
+XMLNamespaceScope >> unmapPrefix: aPrefix ifAbsent: aBlock [
+	prefixMappings
+		ifNil: [^ aBlock value]
+		ifNotNil: [
+			"copy-on-write"
+			^ self copiedPrefixMappings 
+				removeKey: aPrefix
+				ifAbsent: aBlock]
+]
+
+{ #category : #unmapping }
+XMLNamespaceScope >> unmapPrefixes [
+	self hasNamespaces
+		ifTrue: [
+			"copy-on-write"
+			self copiedPrefixMappings removeAll]
 ]
 
 { #category : #private }
@@ -372,6 +402,8 @@ XMLNamespaceScope >> validatePrefix: aPrefix beforeMappingTo: aURI [
 				ifTrue: [self errorCannotMapXMLNSPrefix].
 			(aPrefix indexOf: $:) > 0 
 				ifTrue: [self errorInvalidPrefix: aPrefix].
+			"non-default namespaces cannot be mapped to empty the uris,
+			even to shadow an inherited namesapce"
 			aURI size > 0
 				ifFalse: [self errorCannotMapPrefixToEmptyURI]].
 

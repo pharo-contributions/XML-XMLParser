@@ -3,7 +3,7 @@ This is an abstract class for nodes that can contain child nodes.
 
 It has messages to access, add and remove child nodes. The nodes are stored in a kind of XMLObservableList returned by #nodes, which can be modified directly to add or remove nodes from the owner of #nodes (copy it first if that isn't what you want).
 
-There are three types of ""enumerating"" messages: the #nodes* messages enumerate child nodes of the receiver, the #allNode* forms enumerate (using depth-first traversal) the receiver and all descendent nodes, and the #descendentNode* forms  enumerate only descendent nodes.
+There are three types of ""enumerating"" messages: the #nodes* messages enumerate child nodes of the receiver, the #allNode* forms enumerate (using depth-first traversal) the receiver and all descendant nodes, and the #descendantNode* forms  enumerate only descendant nodes.
 "
 Class {
 	#name : #XMLNodeWithChildren,
@@ -105,51 +105,85 @@ XMLNodeWithChildren >> canHaveChildren [
 ]
 
 { #category : #accessing }
-XMLNodeWithChildren >> descendentNodes [
+XMLNodeWithChildren >> descendantNodes [
 	| descendentNodes |
 
 	descendentNodes := self newListForSelect.
-	self descendentNodesDo: [:each | descendentNodes addLast: each].
+	self descendantNodesDo: [:each | descendentNodes addLast: each].
 	^ descendentNodes.
 ]
 
 { #category : #enumerating }
-XMLNodeWithChildren >> descendentNodesCollect: aBlock [
+XMLNodeWithChildren >> descendantNodesCollect: aBlock [
 	| collectedObjects |
 
 	collectedObjects := self newListForCollect.
-	self descendentNodesDo: [:each | collectedObjects addLast: (aBlock value: each)].
+	self descendantNodesDo: [:each | collectedObjects addLast: (aBlock value: each)].
 	^ collectedObjects.
 ]
 
 { #category : #enumerating }
-XMLNodeWithChildren >> descendentNodesDetect: aBlock [
-	^ self descendentNodesDetect: aBlock ifNone: [nil]
+XMLNodeWithChildren >> descendantNodesDetect: aBlock [
+	^ self
+		descendantNodesDetect: aBlock
+		ifNone: [nil]
 ]
 
 { #category : #enumerating }
-XMLNodeWithChildren >> descendentNodesDetect: aBlock ifNone: anExceptionBlock [
-	self descendentNodesDo: [:each |
+XMLNodeWithChildren >> descendantNodesDetect: aBlock ifNone: anExceptionBlock [
+	self descendantNodesDo: [:each |
 		(aBlock value: each)
 			ifTrue: [^ each]].
 	^ anExceptionBlock value.
 ]
 
 { #category : #enumerating }
-XMLNodeWithChildren >> descendentNodesDo: aBlock [
+XMLNodeWithChildren >> descendantNodesDo: aBlock [
 	self hasChildren
 		ifTrue: [self nodesDo: [:each | each allNodesDo: aBlock]]
 ]
 
 { #category : #enumerating }
-XMLNodeWithChildren >> descendentNodesSelect: aBlock [
+XMLNodeWithChildren >> descendantNodesSelect: aBlock [
 	| selectedNodes |
 
 	selectedNodes := self newListForSelect.
-	self descendentNodesDo: [:each |
+	self descendantNodesDo: [:each |
 		(aBlock value: each)
 			ifTrue: [selectedNodes addLast: each]].
 	^ selectedNodes.
+]
+
+{ #category : #deprecated }
+XMLNodeWithChildren >> descendentNodes [
+	"less common alternate spelling"
+	^ self descendantNodes
+]
+
+{ #category : #deprecated }
+XMLNodeWithChildren >> descendentNodesCollect: aBlock [
+	"less common alternate spelling"
+	^ self descendantNodesCollect: aBlock
+]
+
+{ #category : #deprecated }
+XMLNodeWithChildren >> descendentNodesDetect: aBlock [
+	"less common alternate spelling"
+	^ self descendantNodesDetect: aBlock
+]
+
+{ #category : #deprecated }
+XMLNodeWithChildren >> descendentNodesDetect: aBlock ifNone: anExceptionBlock [
+	"less common alternate spelling"
+	^ self
+		descendantNodesDetect: aBlock
+		ifNone: anExceptionBlock
+]
+
+{ #category : #deprecated }
+XMLNodeWithChildren >> descendentNodesSelect: aBlock [
+	"less common alternate spelling"
+	^ self descendantNodesSelect: aBlock
 ]
 
 { #category : #private }
@@ -165,9 +199,9 @@ XMLNodeWithChildren >> firstNode [
 
 { #category : #testing }
 XMLNodeWithChildren >> hasChildren [
-	"Direct variable access avoids possibly unnecessary lazy initialization of the node list"
-
-	^ nodes notNil and: [nodes size > 0]
+	"nil test and size check to avoid lazy initializing"
+	^ nodes notNil
+		and: [nodes size > 0]
 ]
 
 { #category : #testing }
@@ -270,7 +304,14 @@ XMLNodeWithChildren >> postCopy [
 	super postCopy.
 
 	nodes
-		ifNotNil: [nodes := nodes deepCopyWithObserver: self].
+		ifNotNil: [| copiedNodes |
+			copiedNodes := nodes copyEmpty observer: self.
+			nodes do: [:each |
+				"copySharingConfiguration is used so the config is only ever copied
+				once when an element or doc is sent #copy and is done after all of the
+				descendants have been copied"
+				copiedNodes addLast: each copySharingConfiguration].
+			nodes := copiedNodes].
 ]
 
 { #category : #printing }

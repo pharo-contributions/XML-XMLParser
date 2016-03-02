@@ -116,8 +116,26 @@ XMLNode >> contentString [
 	^ String streamContents: [:stream | self printContentOn: stream]
 ]
 
+{ #category : #copying }
+XMLNode >> copy [
+	^ self shallowCopy
+		postCopy;
+		postCopyConfiguration
+]
+
+{ #category : #copying }
+XMLNode >> copySharingConfiguration [
+	^ self shallowCopy postCopy
+]
+
 { #category : #enumerating }
+XMLNode >> descendantNodesDo: aBlock [
+]
+
+{ #category : #deprecated }
 XMLNode >> descendentNodesDo: aBlock [
+	"less common alternate spelling"
+	^ self descendantNodesDo: aBlock
 ]
 
 { #category : #accessing }
@@ -247,6 +265,10 @@ XMLNode >> postCopy [
 	parent := nil.
 ]
 
+{ #category : #copying }
+XMLNode >> postCopyConfiguration [
+]
+
 { #category : #printing }
 XMLNode >> prettyPrintOn: aStream [
  	"Prints XML on aStream with whitespace formatting for readability"
@@ -339,8 +361,9 @@ XMLNode >> printedWithoutSelfClosingTags [
 
 { #category : #accessing }
 XMLNode >> rawContentString [
- 	"This returns the combined content string of all descendants without spaces inserted."
-	^ String streamContents: [:stream | self printRawContentOn: stream].
+ 	"Returns the combined content string of all descendants without
+	spaces inserted."
+	^ String streamContents: [:stream | self printRawContentOn: stream]
 ]
 
 { #category : #private }

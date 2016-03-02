@@ -16,11 +16,26 @@ XMLAttributeList class >> new [
 ]
 
 { #category : #adding }
-XMLAttributeList >> addName: aName value: aValue [
+XMLAttributeList >> addAttributeAssociation: anAssociation [
+	^ self
+		addAttributeName: anAssociation key
+		value: anAssociation value
+]
+
+{ #category : #adding }
+XMLAttributeList >> addAttributeName: aName value: aValue [
 	^ self addLast:
 		(self attributeClass
 			name: aName
 			value: aValue)
+]
+
+{ #category : #deprecated }
+XMLAttributeList >> addName: aName value: aValue [
+	self deprecated: 'use #addAttributeName:value: instead'.
+	^ self
+		addAttributeName: aName
+		value: aValue
 ]
 
 { #category : #private }
@@ -60,7 +75,10 @@ XMLAttributeList >> asDictionary [
 	| dictionary |
 
 	dictionary := OrderPreservingStringDictionary new: self size.
-	self do: [:each | dictionary at: each name put: each value].
+	self do: [:each |
+		dictionary
+			at: each name
+			put: each value].
 	^ dictionary.
 ]
 
@@ -82,7 +100,10 @@ XMLAttributeList >> attributeNames [
 
 { #category : #enumerating }
 XMLAttributeList >> attributeNamesAndValuesDo: aTwoArgumentBlock [
-	self do: [:each | aTwoArgumentBlock value: each name value: each value]
+	self do: [:each |
+		aTwoArgumentBlock
+			value: each name
+			value: each value]
 ]
 
 { #category : #enumerating }
@@ -92,12 +113,16 @@ XMLAttributeList >> attributeNamesDo: aBlock [
 
 { #category : #accessing }
 XMLAttributeList >> attributeNodeAt: aName [
-	^ self attributeNodeAt: aName ifAbsent: [self defaultValue]
+	^ self
+		attributeNodeAt: aName
+		ifAbsent: [self defaultValue]
 ]
 
 { #category : #accessing }
 XMLAttributeList >> attributeNodeAt: aName ifAbsent: aBlock [
-	^ self attributesByName at: aName ifAbsent: aBlock
+	^ self attributesByName
+		at: aName
+		ifAbsent: aBlock
 ]
 
 { #category : #accessing }
@@ -119,7 +144,9 @@ XMLAttributeList >> attributeNodeAt: aLocalName namespaceURI: aURI ifAbsent: aBl
 
 { #category : #accessing }
 XMLAttributeList >> attributeValueAt: aName [
-	^ self attributeValueAt: aName ifAbsent: ['']
+	^ self
+		attributeValueAt: aName
+		ifAbsent: ['']
 ]
 
 { #category : #accessing }
@@ -133,14 +160,17 @@ XMLAttributeList >> attributeValueAt: aName ifAbsent: aBlock [
 XMLAttributeList >> attributeValueAt: aName ifAbsentPut: aBlock [
 	^ self
 		attributeValueAt: aName
-		ifAbsent: [self attributeValueAt: aName put: aBlock value]
+		ifAbsent: [
+			self
+				attributeValueAt: aName
+				put: aBlock value]
 ]
 
 { #category : #accessing }
 XMLAttributeList >> attributeValueAt: aName put: aValue [
 	(self includesAttribute: aName)
 		ifTrue: [(self attributeNodeAt: aName) value: aValue]
-		ifFalse: [self addName: aName value: aValue].
+		ifFalse: [self addAttributeName: aName value: aValue].
 	^ aValue.
 ]
 
@@ -201,16 +231,14 @@ XMLAttributeList >> replacedAttribute: anAttribute withAttributeAt: anIndex [
 ]
 
 { #category : #private }
-XMLAttributeList >> setFromDictionary: anOrderPreservingDictionary [
-	| association |
-
+XMLAttributeList >> setWithOrderPreservingDictionary: anOrderPreservingDictionary [
 	"hack to reuse a dictionary for speed"
 	attributesByName := anOrderPreservingDictionary dictionary.
 
 	"add the XMLAttributes in order directly to the collection
 	to avoid sending notifications and also replace the value in
 	the attributesByName association with the XMLAttribute"
-	anOrderPreservingDictionary keysDo: [:each |
+	anOrderPreservingDictionary keysDo: [:each | | association |
 		(association := attributesByName associationAt: each ifAbsent: nil)
 			value:
 				(collection addLast: 

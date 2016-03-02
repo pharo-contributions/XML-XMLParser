@@ -90,7 +90,9 @@ XMLElement >> addedElement: anElement [
 	super addedElement: anElement.
 	(self hasNamespaces
 		and: [self namespaceScope ~= anElement namespaceScope])
-		ifTrue: [anElement inheritNamespacesFrom: self]
+		ifTrue: [
+			anElement allNamespaceScopesDo: [:each |
+				each inheritMappingsFrom: self namespaceScope]]
 ]
 
 { #category : #notifying }
@@ -106,9 +108,46 @@ XMLElement >> allElementsDo: aBlock [
 		ifTrue: [self elementsDo: [:each | each allElementsDo: aBlock]].
 ]
 
+{ #category : #private }
+XMLElement >> allNamespaceScopesDo: aBlock [
+	self allElementsDo: [:each |
+		aBlock value: each namespaceScope]
+]
+
+{ #category : #private }
+XMLElement >> allNamespaceScopesDo: aBlock whileTrue: aConditionalBlock [
+	"Updates the receiver's scope and the scopes of all descendants with aBlock
+	where aConditional is true but does not validate the namespaces after"
+
+	(aConditionalBlock value: self namespaceScope)
+		ifTrue: [
+			aBlock value: self namespaceScope.
+			self elementsDo: [:each |
+				each
+					allNamespaceScopesDo: aBlock
+					whileTrue: aConditionalBlock]]
+]
+
+{ #category : #private }
+XMLElement >> allNamespaceScopesWithValidationDo: aBlock whileTrue: aConditionalBlock [
+	"Updates the receiver's scope and the scopes of all descendants with aBlock
+	where aConditional is true and validates the namespaces after"
+
+	(aConditionalBlock value: self namespaceScope)
+		ifTrue: [
+			aBlock value: self namespaceScope.
+			self
+				validateName;
+				validateAttributes.
+			self elementsDo: [:each |
+				each
+					allNamespaceScopesWithValidationDo: aBlock
+					whileTrue: aConditionalBlock]]
+]
+
 { #category : #accessing }
 XMLElement >> attributeAssociations [
-	"returns name->value associations"
+	"returns attribute name->value associations"
 	^ self attributeNodes attributeAssociations
 ]
 
@@ -120,17 +159,23 @@ XMLElement >> attributeAt: aName [
 
 { #category : #accessing }
 XMLElement >> attributeAt: aName ifAbsent: aBlock [
-	^ self attributeNodes attributeValueAt: aName ifAbsent: aBlock
+	^ self attributeNodes
+		attributeValueAt: aName
+		ifAbsent: aBlock
 ]
 
 { #category : #accessing }
 XMLElement >> attributeAt: aName ifAbsentPut: aBlock [
-	^ self attributeNodes attributeValueAt: aName ifAbsentPut: aBlock
+	^ self attributeNodes
+		attributeValueAt: aName
+		ifAbsentPut: aBlock
 ]
 
 { #category : #accessing }
 XMLElement >> attributeAt: aName put: aValue [
-	^ self attributeNodes attributeValueAt: aName put: aValue
+	^ self attributeNodes
+		attributeValueAt: aName
+		put: aValue
 ]
 
 { #category : #private }
@@ -184,6 +229,8 @@ XMLElement >> attributeNodeAt: aLocalName namespaceURI: aURI ifAbsent: aBlock [
 
 { #category : #accessing }
 XMLElement >> attributeNodes [
+	"Returns the attribute node list. Can be modified, but adding or removing
+	attributes modify the element"
 	^ attributes ifNil: [attributes := self attributeListClass observer: self]
 ]
 
@@ -194,12 +241,13 @@ XMLElement >> attributeNodesDo: aBlock [
 
 { #category : #accessing }
 XMLElement >> attributes [
+	"returns a new dictionary of attribute names and values"
 	^ self attributeNodes asDictionary
 ]
 
 { #category : #namespacing }
-XMLElement >> declareNamespaces: aDictionaryOrArray [
-	aDictionaryOrArray associationsDo: [:each |
+XMLElement >> declareNamespaces: anAssociationCollection [
+	anAssociationCollection associationsDo: [:each |
 		self
 			declarePrefix: each key
 			uri: each value]
@@ -209,14 +257,29 @@ XMLElement >> declareNamespaces: aDictionaryOrArray [
 XMLElement >> declarePrefix: aPrefix uri: aURI [
 	| oldMapping |
 
-	(oldMapping := self namespaceScope prefixMappingAt: aPrefix ifAbsent: [nil]) = aURI
+	oldMapping :=
+		self namespaceScope
+			prefixMappingAt: aPrefix
+			ifAbsent: [nil].
+	(oldMapping notNil
+		and: [oldMapping = aURI])
 		ifFalse: [
 			self
-				updateEnclosedScopesWith: [:scope | scope mapPrefix: aPrefix to: aURI]
+				allNamespaceScopesDo: [:scope |
+					scope
+						mapPrefix: aPrefix
+						to: aURI]
 				whileTrue: [:scope |
 					(scope includesPrefix: aPrefix) not
-						or: [scope includesPrefix: aPrefix mappedTo: oldMapping]]
-				validateAfter: false]
+						or: [
+							scope
+								includesPrefix: aPrefix
+								mappedTo: oldMapping]]]
+]
+
+{ #category : #namespacing }
+XMLElement >> declaredPrefixes [
+	^ self namespaceScope mappedPrefixes
 ]
 
 { #category : #testing }
@@ -250,9 +313,10 @@ XMLElement >> defaultNamespace: aURI [
 
 	oldNamespace := self defaultNamespace.
 	self
-		updateEnclosedScopesWith: [:scope | scope defaultNamespace: aURI]
-		whileTrue: [:scope | scope defaultNamespace = oldNamespace]
-		validateAfter: false.
+		allNamespaceScopesDo: [:scope |
+			scope defaultNamespace: aURI]
+		whileTrue: [:scope |
+			scope defaultNamespace = oldNamespace].
 ]
 
 { #category : #private }
@@ -267,8 +331,9 @@ XMLElement >> expandedName [
 
 { #category : #testing }
 XMLElement >> hasAttributes [
-	"avoid lazy initializing"
-	^ attributes notNil and: [attributes notEmpty]
+	"nil test and size check to avoid lazy initializing"
+	^ attributes notNil
+		and: [attributes size > 0]
 ]
 
 { #category : #testing }
@@ -380,7 +445,7 @@ XMLElement >> name: aName [
 XMLElement >> name: aQualifiedName namespaceURI: aURI [
 	self
 		declarePrefix: (aQualifiedName prefixBeforeLocalName) uri: aURI;
-		name: aQualifiedName.
+		name: aQualifiedName
 ]
 
 { #category : #private }
@@ -405,7 +470,10 @@ XMLElement >> postCopy [
 	namespaceScope
 		ifNotNil: [namespaceScope := namespaceScope copy].
 	attributes
-		ifNotNil: [attributes := attributes deepCopyWithObserver: self].
+		ifNotNil: [| copiedAttributes |
+			copiedAttributes := attributes copyEmpty observer: self.
+			attributes do: [:each | copiedAttributes addLast: each copy].
+			attributes := copiedAttributes].
 ]
 
 { #category : #accessing }
@@ -485,37 +553,52 @@ XMLElement >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 
 { #category : #namespacing }
 XMLElement >> resolvePrefix: aPrefix [
+	"returns empty string if unresolvable"
+	^ self
+		resolvePrefix: aPrefix
+		ifUnresolvable: ''
+]
+
+{ #category : #namespacing }
+XMLElement >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 	self hasNamespaces "avoid lazy initializing the scope"
-		ifTrue: [^ self namespaceScope resolvePrefix: aPrefix]
-		ifFalse: [^ '']
+		ifTrue: [
+			^ self namespaceScope
+				resolvePrefix: aPrefix
+				ifUnresolvable: aBlock]
+		ifFalse: [^ aBlock value]
+]
+
+{ #category : #namespacing }
+XMLElement >> resolvePrefixesOfNamespaceURI: aURI [
+	"returns a set of all the namespace prefixes of aURI"
+	^ self namespaceScope resolvePrefixesOfNamespaceURI: aURI
 ]
 
 { #category : #initialization }
-XMLElement >> setAttributes: aDictionaryOrArray [
+XMLElement >> setAttributes: anAssociationCollection [
 	self hasAttributes
-		ifTrue: [self attributeNodes removeAll].
-	aDictionaryOrArray associationsDo: [:each |
-		self attributeNodes
-			addName: each key
-			value: each value].
+		ifTrue: [self removeAttributes].
+	anAssociationCollection associationsDo: [:each |
+		self attributeNodes addAttributeAssociation: each].
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 XMLElement >> setNamespaceScope: aNamespaceScope [
 	namespaceScope := aNamespaceScope
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 XMLElement >> setQualifiedName: aQualifiedName localName: aLocalName attributes: anAttributeDictionary [
 	name := aQualifiedName.
 	localName := aLocalName.
 	anAttributeDictionary size > 0 "optimization"
 		ifTrue: [
-			"The setFrom method is used to avoid revalidating the
-			attributes when adding them to the list"
+			"setWithOrderPreservingDictionary: is used to initialize the attribute
+			node list with anAttributeDictionary without revalidation"
 			(attributes := self attributeListClass new: anAttributeDictionary size)
 				observer: self;
-				setFromDictionary: anAttributeDictionary].
+				setWithOrderPreservingDictionary: anAttributeDictionary].
 ]
 
 { #category : #private }
@@ -530,43 +613,33 @@ XMLElement >> undeclareDefaultNamespace [
 
 { #category : #namespacing }
 XMLElement >> undeclarePrefix: aPrefix [
-	| currentMapping |
+	| currentNamespaceURI |
 
-	currentMapping := self namespaceScope prefixMappingAt: aPrefix ifAbsent: [^ self].
+	currentNamespaceURI :=
+		self namespaceScope
+			prefixMappingAt: aPrefix
+			ifAbsent: [^ self].
 	self
-		updateEnclosedScopesWith: [:scope | scope unmapPrefix: aPrefix]
-		whileTrue: [:scope | scope includesPrefix: aPrefix mappedTo: currentMapping]
-		validateAfter: true.
+		allNamespaceScopesWithValidationDo: [:scope |
+			scope unmapPrefix: aPrefix]
+		whileTrue: [:scope |
+			scope
+				includesPrefix: aPrefix
+				mappedTo: currentNamespaceURI].
 ]
 
-{ #category : #private }
-XMLElement >> updateEnclosedScopesWith: aBlock whileTrue: aConditionalBlock validateAfter: aBoolean [
-	"Updates the receiver's scope and the scopes of all descendants with aBlock
-	where aConditional is true. It stops descending down a path of a subtree
-	as soon as aConditional is false, but continues down other paths."
-
-	(aConditionalBlock value: self namespaceScope)
-		ifFalse: [^ self].
-
-	aBlock value: self namespaceScope.
-	aBoolean
-		ifTrue: [
-			self
-				validateName;
-				validateAttributes].
-	self elementsDo: [:each |
-		each
-			updateEnclosedScopesWith: aBlock
-			whileTrue: aConditionalBlock
-			validateAfter: aBoolean]
+{ #category : #namespacing }
+XMLElement >> undeclarePrefixes [
+	self declaredPrefixes do: [:each |
+		self undeclarePrefix: each]
 ]
 
 { #category : #private }
 XMLElement >> validateAttributes [
 	self usesNamespaces
 		ifTrue: [
-			self namespaceScope
-				validateAttributePrefixes: self attributeNodes attributesByName]
+			self namespaceScope validateAttributePrefixes:
+				self attributeNodes attributesByName]
 ]
 
 { #category : #private }
@@ -602,12 +675,14 @@ XMLElement >> writeXMLOn: aWriter [
 	| tagWriter |
 
 	tagWriter := aWriter tag: self name.
-
-	"non-standard use for performance"
 	self hasNamespaces
-		ifTrue: [tagWriter setXMLNSDeclarations: self namespaceScope prefixMappings].
+		ifTrue: [
+			"non-standard setXMLNSDeclarations: use for performance"
+			tagWriter setXMLNSDeclarations: self namespaceScope prefixMappings].
 	self hasAttributes
-		ifTrue: [tagWriter setAttributes: self attributeNodes].
+		ifTrue: [
+			"non-standard setAttributes: use for performance"
+			tagWriter setAttributes: self attributeNodes].
 	self hasChildren
 		ifTrue: [tagWriter with: [self writeInnerXMLOn: aWriter]]
 		ifFalse: [tagWriter write].

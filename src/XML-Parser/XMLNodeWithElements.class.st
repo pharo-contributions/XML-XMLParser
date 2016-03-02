@@ -3,7 +3,7 @@ This is an abstract class for nodes with elements.
 
 Instances provide ""accessing"" messages to retrieve child elements by their name and namespace information. The #elementAt: forms return the first matching element, while the #elementsAt: forms return all matching child elements.
 
-There are three different modes of enumeration: the #elements* enumerating messages enumerate child elements, the #allElements* forms enumerate the receiver (if it's an element) and all descendent elements, and the #descendentElement* forms enumerate descendent elements only.
+There are three different modes of enumeration: the #elements* enumerating messages enumerate child elements, the #allElements* forms enumerate the receiver (if it's an element) and all descendant elements, and the #descendantElement* forms enumerate descendant elements only.
 
 The #findElementNamed:* forms search the receicer (if it's an element) and descendants for a specific element.
 
@@ -179,81 +179,134 @@ XMLNodeWithElements >> contentStringAt: aName [
 	^ self nodes contentStringAt: aName
 ]
 
-{ #category : #copying }
-XMLNodeWithElements >> copy [
-	| copy |
-
-	copy := super copy.
-	configuration "so all copied descendants have the same config"
-		ifNotNil: [copy configuration: configuration copy].
-	^ copy.
-]
-
 { #category : #accessing }
-XMLNodeWithElements >> descendentElements [
+XMLNodeWithElements >> descendantElements [
 	| descendentElements |
 
 	descendentElements := self newListForSelect.
-	self descendentElementsDo: [:each | descendentElements addLast: each].
+	self descendantElementsDo: [:each | descendentElements addLast: each].
 	^ descendentElements.
 ]
 
 { #category : #enumerating }
-XMLNodeWithElements >> descendentElementsCollect: aBlock [
+XMLNodeWithElements >> descendantElementsCollect: aBlock [
 	| collectedObjects |
 
 	collectedObjects := self newListForCollect.
-	self descendentElementsDo: [:each | collectedObjects addLast: (aBlock value: each)].
+	self descendantElementsDo: [:each |
+		collectedObjects addLast: (aBlock value: each)].
 	^ collectedObjects.
 ]
 
 { #category : #enumerating }
-XMLNodeWithElements >> descendentElementsDetect: aBlock [
-	^ self descendentElementsDetect: aBlock ifNone: [nil]
+XMLNodeWithElements >> descendantElementsDetect: aBlock [
+	^ self
+		descendantElementsDetect: aBlock
+		ifNone: [nil]
 ]
 
 { #category : #enumerating }
-XMLNodeWithElements >> descendentElementsDetect: aBlock ifNone: anExceptionBlock [
-	self descendentElementsDo: [:each |
+XMLNodeWithElements >> descendantElementsDetect: aBlock ifNone: anExceptionBlock [
+	self descendantElementsDo: [:each |
 		(aBlock value: each)
 			ifTrue: [^ each]].
 	^ anExceptionBlock value.
 ]
 
 { #category : #enumerating }
-XMLNodeWithElements >> descendentElementsDo: aBlock [
+XMLNodeWithElements >> descendantElementsDo: aBlock [
 	self hasChildren
 		ifTrue: [self elementsDo: [:each | each allElementsDo: aBlock]]
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> descendentElementsNamed: aName [
-	^ self descendentElementsSelect: [:each | each isNamed: aName]
+XMLNodeWithElements >> descendantElementsNamed: aName [
+	^ self descendantElementsSelect: [:each | each isNamed: aName]
 ]
 
 { #category : #enumerating }
-XMLNodeWithElements >> descendentElementsNamed: aName do: aBlock [
-	self descendentElementsDo: [:each |
+XMLNodeWithElements >> descendantElementsNamed: aName do: aBlock [
+	self descendantElementsDo: [:each |
 		(each isNamed: aName)
 			ifTrue: [aBlock value: each]]
 ]
 
 { #category : #accessing }
-XMLNodeWithElements >> descendentElementsNamed: aName namespaceURI: aURI [
-	^ self descendentElementsSelect: [:each |
+XMLNodeWithElements >> descendantElementsNamed: aName namespaceURI: aURI [
+	^ self descendantElementsSelect: [:each |
 		(each isNamed: aName)
 			and: [each namespaceURI = aURI]]
 ]
 
 { #category : #enumerating }
-XMLNodeWithElements >> descendentElementsSelect: aBlock [
+XMLNodeWithElements >> descendantElementsSelect: aBlock [
 	| selectedElements |
 
 	selectedElements := self newListForSelect.
-	self descendentElementsDo: [:each |
+	self descendantElementsDo: [:each |
 		(aBlock value: each)
 			ifTrue: [selectedElements addLast: each]].
 	^ selectedElements.
+]
+
+{ #category : #deprecated }
+XMLNodeWithElements >> descendentElements [
+	"less common alternate spelling"
+	^ self descendantElements
+]
+
+{ #category : #deprecated }
+XMLNodeWithElements >> descendentElementsCollect: aBlock [
+	"less common alternate spelling"
+	^ self descendantElementsCollect: aBlock
+]
+
+{ #category : #deprecated }
+XMLNodeWithElements >> descendentElementsDetect: aBlock [
+	"less common alternate spelling"
+	^ self descendantElementsDetect: aBlock
+]
+
+{ #category : #deprecated }
+XMLNodeWithElements >> descendentElementsDetect: aBlock ifNone: anExceptionBlock [
+	"less common alternate spelling"
+	^ self
+		descendantElementsDetect: aBlock
+		ifNone: anExceptionBlock
+]
+
+{ #category : #deprecated }
+XMLNodeWithElements >> descendentElementsDo: aBlock [
+	"less common alternate spelling"
+	^ self descendantElementsDo: aBlock
+]
+
+{ #category : #deprecated }
+XMLNodeWithElements >> descendentElementsNamed: aName [
+	"less common alternate spelling"
+	^ self descendantElementsNamed: aName
+]
+
+{ #category : #deprecated }
+XMLNodeWithElements >> descendentElementsNamed: aName do: aBlock [
+	"less common alternate spelling"
+	^ self
+		descendantElementsNamed: aName
+		do: aBlock
+]
+
+{ #category : #deprecated }
+XMLNodeWithElements >> descendentElementsNamed: aName namespaceURI: aURI [
+	"less common alternate spelling"
+	^ self
+		descendantElementsNamed: aName
+		namespaceURI: aURI
+]
+
+{ #category : #deprecated }
+XMLNodeWithElements >> descendentElementsSelect: aBlock [
+	"less common alternate spelling"
+	^ self descendantElementsSelect: aBlock
 ]
 
 { #category : #accessing }
@@ -369,7 +422,9 @@ XMLNodeWithElements >> findElementNamed: aName namespaceURI: aURI with: aBlock [
 
 { #category : #searching }
 XMLNodeWithElements >> findElementNamed: aName with: aBlock [
-	^ self allElementsDetect: [:each | (each isNamed: aName) and: [aBlock value: each]]
+	^ self allElementsDetect: [:each |
+		(each isNamed: aName)
+			and: [aBlock value: each]]
 ]
 
 { #category : #searching }
@@ -526,6 +581,12 @@ XMLNodeWithElements >> nodeListClass [
 { #category : #private }
 XMLNodeWithElements >> parserHandlerClass [
 	^ self configuration parserHandlerClass
+]
+
+{ #category : #copying }
+XMLNodeWithElements >> postCopyConfiguration [
+	configuration
+		ifNotNil: [self configuration: configuration copy]
 ]
 
 { #category : #printing }
