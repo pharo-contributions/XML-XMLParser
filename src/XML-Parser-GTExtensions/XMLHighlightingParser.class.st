@@ -1,12 +1,12 @@
 "
-This class is an XML parser that can convert its input to styled Text objects after parsing.
+This class is an XML parser that can convert its input to Text objects styled with highlighting after parsing.
 "
 Class {
 	#name : #XMLHighlightingParser,
 	#superclass : #SAXPositionHandler,
 	#instVars : [
 		'highlighter',
-		'encodingName'
+		'encoding'
 	],
 	#category : #'XML-Parser-GTExtensions-Highlighting-Parser'
 }
@@ -33,8 +33,8 @@ XMLHighlightingParser >> asHighlightedTextWithRemainderColored: aTextColor start
 ]
 
 { #category : #accessing }
-XMLHighlightingParser >> encodingName [
-	^ encodingName
+XMLHighlightingParser >> encoding [
+	^ encoding
 ]
 
 { #category : #'handling - positions' }
@@ -97,7 +97,7 @@ XMLHighlightingParser >> on: aStringOrStream [
 	super on: aStringOrStream.
 
 	highlighter := XMLHighlighter new.
-	encodingName := ''.
+	encoding := ''.
 ]
 
 { #category : #parsing }
@@ -152,5 +152,5 @@ XMLHighlightingParser >> startXMLDeclarationPosition: aPosition [
 
 { #category : #'handling - content' }
 XMLHighlightingParser >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
-	encodingName := anEncoding
+	encoding := anEncoding
 ]

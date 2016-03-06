@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'highlightableLengthLimit',
 		'errorColor',
-		'encodingName'
+		'encoding'
 	],
 	#category : #'XML-Parser-GTExtensions-Highlighting-Parser'
 }
@@ -20,8 +20,8 @@ GLMXMLHighlighterTextStylerDecorator >> defaultStyler [
 ]
 
 { #category : #accessing }
-GLMXMLHighlighterTextStylerDecorator >> encodingName [
-	^ encodingName
+GLMXMLHighlighterTextStylerDecorator >> encoding [
+	^ encoding
 ]
 
 { #category : #accessing }
@@ -50,7 +50,7 @@ GLMXMLHighlighterTextStylerDecorator >> initialize [
 
 	highlightableLengthLimit := 100000.
 	errorColor := TextColor red.
-	encodingName := ''.
+	encoding := ''.
 ]
 
 { #category : #parsing }
@@ -73,7 +73,7 @@ GLMXMLHighlighterTextStylerDecorator >> parse: aString onError: anError [
 						(parser currentPosition >= aString size
 							ifTrue: [1]
 							ifFalse: [parser currentPosition])].
-	encodingName := highlightingParser encodingName.
+	encoding := highlightingParser encoding.
 
 	^ highlightedText.
 ]

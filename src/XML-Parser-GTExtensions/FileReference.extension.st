@@ -13,26 +13,23 @@ FileReference >> gtInspectorXMLFileIn: aComposite [
 		(GLMRubricHighlightedTextPresentation new
 			title: 'Source';
 			editingMode: [
-				"saved to get the converter later"
+				"saved to get the encoding later"
 				currentTextStylerDecorator := GLMXMLHighlighterTextStylerDecorator new.
 				GLMHighlighterTextRubEditingMode withStylerDecorator: currentTextStylerDecorator];
 			display: [XMLExternalDocumentConverter convertFileNamed: self fullName];
 			withLineNumbers: true;
-			act: [:presentation | | outputString outputStreamConverter |
-					outputString := presentation text asString.
-					outputStreamConverter :=
-						(XMLStreamConverter newForEncoding:
-							currentTextStylerDecorator encodingName)
-							ifNil: [XMLStreamConverter default].
-					self fullName asXMLFileHandle writeStreamDo: [:writeStream |
-						writeStream
-							streamConverter: outputStreamConverter;
-							nextPutByteOrderMark;
-							nextPutAll: outputString].
-					presentation clearUserEdits]
+			act: [:presentation | | sourceToSave streamConverter |
+				sourceToSave := presentation text asString.
+				streamConverter := currentTextStylerDecorator encoding asXMLStreamConverter.
+				self fullName asXMLFileHandle writeStreamDo: [:writeStream |
+					writeStream
+						streamConverter: streamConverter;
+						nextPutByteOrderMark;
+						nextPutAll: sourceToSave].
+				presentation clearUserEdits]
 				icon: GLMUIThemeExtraIcons glamorousSave
 				on: $s
-				entitled: 'Save')
+				entitled: 'Save').
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
@@ -52,7 +49,7 @@ FileReference >> spotterForXMLFileFor: aStep [
 		allCandidates: [(XMLDOMParser parseFileNamed: self fullName) allElements];
 		itemName: #gtDisplayString;
 		filter: GTFilterSubstring;
-		wantsToDisplayOnEmptyQuery: true
+		wantsToDisplayOnEmptyQuery: true.
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
