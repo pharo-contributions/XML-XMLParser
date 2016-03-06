@@ -30,6 +30,11 @@ CharacterCollection >> asXMLHTTPRequest [
 ]
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
+CharacterCollection >> asXMLStreamConverter [
+	^ XMLStreamConverter newForEncoding: self
+]
+
+{ #category : #'*XML-Parser-GemstoneCompatibility' }
 CharacterCollection >> asXMLString [
 	^ XMLString string: self
 ]
