@@ -4,39 +4,64 @@ Class {
 	#category : #'XML-Tests-Parser-Streams'
 }
 
-{ #category : #accessing }
-XMLDecodingReadStreamAdapterTest >> adapterClass [
-	^ XMLDecodingReadStreamAdapter
-]
-
 { #category : #'instance creation' }
-XMLDecodingReadStreamAdapterTest >> newAdapterOn: aStream [
-	^ (super newAdapterOn: aStream)
+XMLDecodingReadStreamAdapterTest >> newStreamAdapterOn: aStream [
+	^ (super newStreamAdapterOn: aStream)
 		streamConverter: self streamConverterClass new
 ]
 
 { #category : #accessing }
+XMLDecodingReadStreamAdapterTest >> streamAdapterClass [
+	^ XMLDecodingReadStreamAdapter
+]
+
+{ #category : #accessing }
 XMLDecodingReadStreamAdapterTest >> streamConverterClass [
-	^ XMLByteStreamConverter
+	^ XMLNullStreamConverter
 ]
 
 { #category : #tests }
 XMLDecodingReadStreamAdapterTest >> testHasDefaultStreamConverter [
-	self streamConverterClass == XMLUTF8StreamConverter
-		ifTrue: [self assert: self newAdapter hasDefaultStreamConverter]
-		ifFalse: [self deny: self newAdapter hasDefaultStreamConverter]
+	| adapter |
+
+	adapter := self newStreamAdapter.
+	self assert:
+		adapter hasDefaultStreamConverter = adapter streamConverter isDefault.
+]
+
+{ #category : #tests }
+XMLDecodingReadStreamAdapterTest >> testHasNullStreamConverter [
+	| adapter |
+
+	adapter := self newStreamAdapter.
+	self assert:
+		adapter hasNullStreamConverter = adapter streamConverter isNull.
 ]
 
 { #category : #tests }
 XMLDecodingReadStreamAdapterTest >> testIsConvertingStreamAdapter [
-	self assert: self newAdapter isConvertingStreamAdapter
+	self assert: self newStreamAdapter isConvertingStreamAdapter
+]
+
+{ #category : #tests }
+XMLDecodingReadStreamAdapterTest >> testOn [
+	| stream adapter |
+
+	super testOn.
+
+	stream := #(1) readStream.
+	adapter := self newStreamAdapterOn: stream.
+	self
+		assert: adapter class == self streamAdapterClass;
+		assert: adapter stream class == XMLBinaryReadStreamAdapter;
+		assert: adapter stream stream == stream.
 ]
 
 { #category : #tests }
 XMLDecodingReadStreamAdapterTest >> testStreamConverter [
 	| adapter newConverter |
 
-	adapter := self newAdapter.
+	adapter := self newStreamAdapter.
 	self
 		deny: adapter streamConverter isNil;
 		assert: adapter streamConverter class == self streamConverterClass.

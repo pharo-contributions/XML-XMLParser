@@ -5,11 +5,11 @@ Class {
 }
 
 { #category : #accessing }
-XMLBinaryReadStreamAdapterTest >> adapterClass [
-	^ XMLBinaryReadStreamAdapter
+XMLBinaryReadStreamAdapterTest >> inputCollection [
+	^ super inputCollection asArray collect: [:each | each asciiValue]
 ]
 
 { #category : #accessing }
-XMLBinaryReadStreamAdapterTest >> inputCollection [
-	^ super inputCollection asArray collect: [:each | each asciiValue]
+XMLBinaryReadStreamAdapterTest >> streamAdapterClass [
+	^ XMLBinaryReadStreamAdapter
 ]

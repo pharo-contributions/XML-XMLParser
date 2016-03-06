@@ -55,11 +55,6 @@ XMLStreamAdapterTest class >> stringFrom: aCollection [
 	^ String withAll: (aCollection collect: [:each | each asCharacter])
 ]
 
-{ #category : #accessing }
-XMLStreamAdapterTest >> adapterClass [
-	^ XMLStreamAdapter
-]
-
 { #category : #converting }
 XMLStreamAdapterTest >> asciiToUTF16BE: anASCIIString [
 	^ self class asciiToUTF16BE: anASCIIString
@@ -154,18 +149,18 @@ XMLStreamAdapterTest >> encodedUTF8String [
 ]
 
 { #category : #'instance creation' }
-XMLStreamAdapterTest >> newAdapter [
-	^ self newAdapterOn: self newStream
-]
-
-{ #category : #'instance creation' }
-XMLStreamAdapterTest >> newAdapterOn: aStream [
-	^ self adapterClass on: aStream
-]
-
-{ #category : #'instance creation' }
 XMLStreamAdapterTest >> newStream [
 	^ self newStreamOn: self streamCollection
+]
+
+{ #category : #'instance creation' }
+XMLStreamAdapterTest >> newStreamAdapter [
+	^ self newStreamAdapterOn: self newStream
+]
+
+{ #category : #'instance creation' }
+XMLStreamAdapterTest >> newStreamAdapterOn: aStream [
+	^ self streamAdapterClass on: aStream
 ]
 
 { #category : #'instance creation' }
@@ -190,6 +185,11 @@ XMLStreamAdapterTest >> percentEncodedUTF8String [
 ]
 
 { #category : #accessing }
+XMLStreamAdapterTest >> streamAdapterClass [
+	^ XMLStreamAdapter
+]
+
+{ #category : #accessing }
 XMLStreamAdapterTest >> streamClass [
 	^ ReadStream
 ]
@@ -207,21 +207,32 @@ XMLStreamAdapterTest >> stringFrom: aCollection [
 { #category : #tests }
 XMLStreamAdapterTest >> testClose [
 	self
-		shouldnt: [self newAdapter close]
+		shouldnt: [self newStreamAdapter close]
 		raise: Error
 ]
 
 { #category : #tests }
 XMLStreamAdapterTest >> testIsBinary [
-	self deny: self newAdapter isBinary
+	self deny: self newStreamAdapter isBinary
 ]
 
 { #category : #tests }
 XMLStreamAdapterTest >> testIsConvertingStreamAdapter [
-	self deny: self newAdapter isConvertingStreamAdapter
+	self deny: self newStreamAdapter isConvertingStreamAdapter
 ]
 
 { #category : #tests }
 XMLStreamAdapterTest >> testIsStream [
-	self assert: self newAdapter isStream
+	self assert: self newStreamAdapter isStream
+]
+
+{ #category : #tests }
+XMLStreamAdapterTest >> testOn [
+	| stream adapter |
+
+	stream := self newStream.
+	adapter := self newStreamAdapterOn: stream.
+	self
+		assert: adapter class == self streamAdapterClass;
+		assert: adapter stream == stream.
 ]

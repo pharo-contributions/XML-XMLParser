@@ -99,6 +99,29 @@ XMLDocumentTest >> testHasDoctypeDefinition [
 ]
 
 { #category : #tests }
+XMLDocumentTest >> testHasEncoding [
+	| document |
+
+	document := self nodeClass new.
+	self deny: document hasEncoding.
+	document encoding: 'UTF-8'.
+	self assert: document hasEncoding.
+	document encoding: ''.
+	self deny: document hasEncoding.
+]
+
+{ #category : #tests }
+XMLDocumentTest >> testHasRoot [
+	| nodeWithElements |
+
+	self deny: self nodeClass new hasRoot.
+	nodeWithElements := self newNodeWithElements.
+	self assert: nodeWithElements hasRoot.
+	nodeWithElements removeNode: nodeWithElements root.
+	self deny: nodeWithElements hasRoot.
+]
+
+{ #category : #tests }
 XMLDocumentTest >> testIsDocument [
 	self assert: self nodeClass new isDocument
 ]
@@ -112,26 +135,32 @@ XMLDocumentTest >> testIsStandalone [
 
 { #category : #tests }
 XMLDocumentTest >> testRoot [
-	| nodeWithElements firstNode newRoot |
+	| nodeWithElements documentNodes newRoot |
 
 	self assert: self nodeClass new root isNil.
 
 	nodeWithElements := self newNodeWithElements.
-	firstNode := XMLComment string: 'first'.
-	nodeWithElements addNodeFirst: firstNode.
-	self assert: (nodeWithElements root isElementNamed: 'zero').
+	documentNodes := nodeWithElements nodes.
+	self
+		assert: documentNodes size = 3;
+		assert: documentNodes first isComment;
+		assert: (documentNodes second isElementNamed: 'zero');
+		assert: documentNodes third isComment;
+		assert: nodeWithElements root == documentNodes second.
 
 	newRoot := XMLElement named: 'new-root'.
-	nodeWithElements root: newRoot.
+	documentNodes at: 2 put: newRoot.
 	self
-		assert: nodeWithElements firstNode == firstNode;
-		assert: nodeWithElements root == newRoot.
+		assert: (nodeWithElements root: newRoot) == nodeWithElements;
+		assert: nodeWithElements root == newRoot;
+		assert: nodeWithElements nodes = documentNodes.
 
 	nodeWithElements removeNodes.
 	self assert: nodeWithElements root isNil.
 
-	newRoot := XMLElement named: 'root'.
-	self assert: (self nodeClass root: newRoot) root == newRoot.
+	self
+		should: [nodeWithElements root: 'test' asXMLString]
+		raise: XMLDOMException.
 ]
 
 { #category : #tests }

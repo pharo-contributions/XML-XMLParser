@@ -4,11 +4,6 @@ Class {
 	#category : #'XML-Tests-Parser-Streams'
 }
 
-{ #category : #accessing }
-XMLPercentEncodingWriteStreamAdapterTest >> adapterClass [
-	^ XMLPercentEncodingWriteStreamAdapter
-]
-
 { #category : #converting }
 XMLPercentEncodingWriteStreamAdapterTest >> contentsFromCharacter: aCharacter [
 	^ self percentEncodeCharacter: aCharacter
@@ -25,6 +20,11 @@ XMLPercentEncodingWriteStreamAdapterTest >> outputCollection [
 ]
 
 { #category : #accessing }
+XMLPercentEncodingWriteStreamAdapterTest >> streamAdapterClass [
+	^ XMLPercentEncodingWriteStreamAdapter
+]
+
+{ #category : #accessing }
 XMLPercentEncodingWriteStreamAdapterTest >> streamConverterClass [
 	^ XMLUTF8StreamConverter
 ]
@@ -32,6 +32,6 @@ XMLPercentEncodingWriteStreamAdapterTest >> streamConverterClass [
 { #category : #'as yet unclassified' }
 XMLPercentEncodingWriteStreamAdapterTest >> testNextPutByteOrderMark [
 	self
-		should: [self newAdapter nextPutByteOrderMark]
+		should: [self newStreamAdapter nextPutByteOrderMark]
 		raise: Error
 ]

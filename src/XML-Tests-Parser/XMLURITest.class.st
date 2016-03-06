@@ -318,6 +318,10 @@ XMLURITest >> subDelimiterCharacters [
 
 { #category : #tests }
 XMLURITest >> testAsRetrievableResource [
+	(XMLFileHandle hasSupportedImplementation
+		and: [XMLHTTPRequest hasSupportedImplementation])
+		ifFalse: [^ self].
+
 	self allURIStringsDo: [:each | | uri retrievableResource |
 		uri := each asXMLURI.
 		retrievableResource := uri asRetrievableResource.

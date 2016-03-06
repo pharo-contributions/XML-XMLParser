@@ -5,11 +5,6 @@ Class {
 }
 
 { #category : #accessing }
-XMLPercentDecodingReadStreamAdapterTest >> adapterClass [
-	^ XMLPercentDecodingReadStreamAdapter
-]
-
-{ #category : #accessing }
 XMLPercentDecodingReadStreamAdapterTest >> inputCollection [
 	^ self percentEncodedUTF8String
 ]
@@ -17,6 +12,11 @@ XMLPercentDecodingReadStreamAdapterTest >> inputCollection [
 { #category : #accessing }
 XMLPercentDecodingReadStreamAdapterTest >> outputCollection [
 	^ self decodedUTF8String
+]
+
+{ #category : #accessing }
+XMLPercentDecodingReadStreamAdapterTest >> streamAdapterClass [
+	^ XMLPercentDecodingReadStreamAdapter
 ]
 
 { #category : #accessing }
