@@ -67,6 +67,11 @@ XMLDocument >> errorAddingDoctypeDeclarationWithParent [
 	XMLDOMException signal: 'Cannot add doctype declaration node with parent'
 ]
 
+{ #category : #private }
+XMLDocument >> errorCannotHaveNonElementRoot [
+	XMLDOMException signal: 'Cannot have non-element root'
+]
+
 { #category : #testing }
 XMLDocument >> hasDoctypeDeclaration [
 	^ self doctypeDeclaration notNil
@@ -75,6 +80,16 @@ XMLDocument >> hasDoctypeDeclaration [
 { #category : #testing }
 XMLDocument >> hasDoctypeDefinition [
 	^ self doctypeDefinition notNil
+]
+
+{ #category : #testing }
+XMLDocument >> hasEncoding [
+	^ self encoding notEmpty
+]
+
+{ #category : #testing }
+XMLDocument >> hasRoot [
+	^ self root notNil
 ]
 
 { #category : #private }
@@ -114,6 +129,8 @@ XMLDocument >> root [
 { #category : #accessing }
 XMLDocument >> root: anElement [
 	"replaces root element with new element"
+	anElement isElement
+		ifFalse: [self errorCannotHaveNonElementRoot].
 	self hasChildren
 		ifTrue: [self removeNodes: self elements].
 	self addNode: anElement.

@@ -92,10 +92,10 @@ XMLParserTokenizer >> context: aTokenContext [
 	context := aTokenContext
 ]
 
-{ #category : #encodings }
-XMLParserTokenizer >> convertFromEncoding: anEncoding [
+{ #category : #decoding }
+XMLParserTokenizer >> convertFromEncoding: anEncodingName [
 	driver decodesCharacters
-		ifTrue: [streamReader convertFromEncoding: anEncoding]
+		ifTrue: [streamReader convertFromEncoding: anEncodingName]
 ]
 
 { #category : #accessing }

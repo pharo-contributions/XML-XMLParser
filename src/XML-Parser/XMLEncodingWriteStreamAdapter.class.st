@@ -40,6 +40,11 @@ XMLEncodingWriteStreamAdapter >> hasDefaultStreamConverter [
 ]
 
 { #category : #testing }
+XMLEncodingWriteStreamAdapter >> hasNullStreamConverter [
+	^ streamConverter isNull
+]
+
+{ #category : #testing }
 XMLEncodingWriteStreamAdapter >> isConvertingStreamAdapter [
 	^ true
 ]
@@ -84,5 +89,5 @@ XMLEncodingWriteStreamAdapter >> streamConverter [
 { #category : #accessing }
 XMLEncodingWriteStreamAdapter >> streamConverter: aStreamConverter [
 	streamConverter :=
-		(aStreamConverter ifNil: [XMLNullStreamConverter new])
+		aStreamConverter ifNil: [XMLStreamConverter null]
 ]

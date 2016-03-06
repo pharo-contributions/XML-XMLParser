@@ -42,8 +42,8 @@ XMLTextConverterStreamConverter class >> textConverterClassForEncoding: anEncodi
 ]
 
 { #category : #accessing }
-XMLTextConverterStreamConverter >> encodingName: anEncodingName [
-	super encodingName: anEncodingName.
+XMLTextConverterStreamConverter >> encoding: anEncodingName [
+	super encoding: anEncodingName.
 	self textConverter:
 		(self class textConverterClassForEncoding: anEncodingName) new.
 ]

@@ -1,5 +1,5 @@
 "
-A base class for XML exceptions to make catching XML errors easier.
+A base class for XMLParser exceptions that supports line number error info and can be used with on:do: to catch all XMLParser-related errors.
 "
 Class {
 	#name : #XMLParserException,

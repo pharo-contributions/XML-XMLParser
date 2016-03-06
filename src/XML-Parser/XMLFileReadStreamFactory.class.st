@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #private }
-XMLFileReadStreamFactory class >> errorUnsupported [
+XMLFileReadStreamFactory class >> errorNoSupportedImplementation [
 	XMLFileException signal: 'File reading unsupported'
 ]
 
@@ -24,7 +24,7 @@ XMLFileReadStreamFactory class >> onPath: aPath [
 	^ self implementation fileReadStreamOnPath: aPath
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLFileReadStreamFactory class >> preferredImplementation [
 	^ XMLStandardFileStreamReadStreamFactory
 ]

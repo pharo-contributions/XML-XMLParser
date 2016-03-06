@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #private }
-XMLFileWriteStreamFactory class >> errorUnsupported [
+XMLFileWriteStreamFactory class >> errorNoSupportedImplementation [
 	XMLFileException signal: 'File writing unsupported'
 ]
 
@@ -24,7 +24,7 @@ XMLFileWriteStreamFactory class >> onPath: aPath [
 	^ self implementation fileWriteStreamOnPath: aPath
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLFileWriteStreamFactory class >> preferredImplementation [
 	^ XMLStandardFileStreamWriteStreamFactory
 ]

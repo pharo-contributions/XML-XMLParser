@@ -7,14 +7,6 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
-{ #category : #'instance creation' }
-XMLBinaryReadStreamAdapter class >> onStreamIfBinary: aStream [
-	(aStream atEnd
-		or: [aStream peek isCharacter])
-		ifTrue: [^ aStream]
-		ifFalse: [^ self on: aStream]
-]
-
 { #category : #private }
 XMLBinaryReadStreamAdapter >> basicNext [
 	stream atEnd

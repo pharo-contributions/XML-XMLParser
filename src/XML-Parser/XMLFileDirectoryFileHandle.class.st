@@ -16,7 +16,7 @@ XMLFileDirectoryFileHandle class >> currentWorkingDirectoryPathString [
 ]
 
 { #category : #testing }
-XMLFileDirectoryFileHandle class >> isSupported [
+XMLFileDirectoryFileHandle class >> isSupportedImplementation [
 	^ Smalltalk includesKey: #FileDirectory
 ]
 

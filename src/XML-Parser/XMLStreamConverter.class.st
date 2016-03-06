@@ -9,7 +9,7 @@ Class {
 	#name : #XMLStreamConverter,
 	#superclass : #Object,
 	#instVars : [
-		'encodingName'
+		'encoding'
 	],
 	#classVars : [
 		'EncodingNamesAndClassesCache',
@@ -20,6 +20,13 @@ Class {
 	],
 	#category : #'XML-Parser-Streams'
 }
+
+{ #category : #accessing }
+XMLStreamConverter class >> anyEncodingName [
+	^ self basicEncodingNames
+		at: 1
+		ifAbsent: ['']
+]
 
 { #category : #private }
 XMLStreamConverter class >> basicEncodingNames [
@@ -61,13 +68,6 @@ XMLStreamConverter class >> defaultClass [
 ]
 
 { #category : #accessing }
-XMLStreamConverter class >> defaultEncodingName [
-	^ self basicEncodingNames
-		at: 1
-		ifAbsent: ['']
-]
-
-{ #category : #accessing }
 XMLStreamConverter class >> encodingNames [
 	^ encodingNames ifNil: [
 		encodingNames := Set new.
@@ -79,7 +79,7 @@ XMLStreamConverter class >> encodingNames [
 		encodingNames]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLStreamConverter class >> encodingNames: aSet [
 	encodingNames := aSet
 ]
@@ -91,16 +91,15 @@ XMLStreamConverter class >> encodingNamesAndClassesCache [
 
 { #category : #private }
 XMLStreamConverter class >> findClassForEncoding: anEncodingName [
+	"check preferred classes first"
 	self preferredClasses do: [:each |
 		(each canConvertEncoding: anEncodingName)
 			ifTrue: [^ each]].
 
-	(self isPreferred not
-		and: [self canConvertEncoding: anEncodingName])
-			ifTrue: [^ self].
+	(self isNonPreferredClassForEncoding: anEncodingName)
+		ifTrue: [^ self].
 	self allSubclassesDo: [:each |
-		(each isPreferred not
-			and: [each canConvertEncoding: anEncodingName])
+		(each isNonPreferredClassForEncoding: anEncodingName)
 			ifTrue: [^ each]].
 
 	^ nil.
@@ -133,47 +132,63 @@ XMLStreamConverter class >> isDefaultClass [
 ]
 
 { #category : #testing }
-XMLStreamConverter class >> isPreferred [
+XMLStreamConverter class >> isNonPreferredClassForEncoding: anEncoding [
+	^ self isPreferredClass not
+		and: [self canConvertEncoding: anEncoding]
+]
+
+{ #category : #testing }
+XMLStreamConverter class >> isPreferredClass [
 	^ self preferredClasses includes: self
 ]
 
 { #category : #'instance creation' }
 XMLStreamConverter class >> newForEncoding: anEncodingName [
-	^ (self classForEncoding: anEncodingName)
-		ifNotNil: [:converterClass |
-			converterClass new encodingName: anEncodingName]
+	(self classForEncoding: anEncodingName)
+		ifNil: [^ self null]
+		ifNotNil: [:converterClass | ^ converterClass new encoding: anEncodingName]
 ]
 
-{ #category : #private }
+{ #category : #'instance creation' }
+XMLStreamConverter class >> null [
+	^ XMLNullStreamConverter new
+]
+
+{ #category : #accessing }
 XMLStreamConverter class >> preferredClasses [
 	^ PreferredClasses
 ]
 
-{ #category : #accessing }
-XMLStreamConverter >> defaultEncodingName [
-	^ self class defaultEncodingName
+{ #category : #converting }
+XMLStreamConverter >> asXMLStreamConverter [
+	^ self
 ]
 
 { #category : #accessing }
-XMLStreamConverter >> encodingName [
-	^ encodingName ifNil: [encodingName := self defaultEncodingName]
+XMLStreamConverter >> encoding [
+	^ encoding ifNil: [encoding := self class anyEncodingName]
 ]
 
 { #category : #accessing }
-XMLStreamConverter >> encodingName: anEncodingName [
-	encodingName := anEncodingName
+XMLStreamConverter >> encoding: anEncodingName [
+	encoding := anEncodingName
 ]
 
 { #category : #private }
 XMLStreamConverter >> errorInvalidCharacter [
 	XMLEncodingException
 		formatSignal: 'Invalid {1} character'
-		with: self defaultEncodingName
+		with: self encoding
 ]
 
 { #category : #testing }
 XMLStreamConverter >> isDefault [
 	^ self class isDefaultClass
+]
+
+{ #category : #testing }
+XMLStreamConverter >> isNull [
+	^ false
 ]
 
 { #category : #decoding }
@@ -196,6 +211,6 @@ XMLStreamConverter >> printOn: aStream [
 	super printOn: aStream.
 	aStream
 		nextPut: $(;
-		nextPutAll: self encodingName;
+		nextPutAll: self encoding;
 		nextPut: $).
 ]

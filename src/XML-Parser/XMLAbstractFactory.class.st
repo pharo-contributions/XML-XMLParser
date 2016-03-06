@@ -1,5 +1,7 @@
 "
-An abstract class for dynamically choosing supported concrete implementations for different platforms.
+An abstract class for dynamically choosing a supported concrete implementation from a class hierarchy for this platform.
+
+Each root subclass needs to override preferredImplementation to return the preferred subclass and errorNoSupportedImplementation to signal an error if none are supported, and then each subclass of the root needs to define isSupportedImplementation to return true if it supports this platform.
 "
 Class {
 	#name : #XMLAbstractFactory,
@@ -11,27 +13,47 @@ Class {
 }
 
 { #category : #private }
-XMLAbstractFactory class >> clearImplementations [
+XMLAbstractFactory class >> clearAllImplementations [
 	"self clearImplementations"
 
+	self implementation: nil.
 	self allSubclassesDo: [:each | each implementation: nil]
 ]
 
 { #category : #private }
-XMLAbstractFactory class >> errorUnsupported [
+XMLAbstractFactory class >> errorNoSupportedImplementation [
 	self subclassResponsibility
 ]
 
 { #category : #private }
+XMLAbstractFactory class >> findSupportedImplementation [
+	self preferredImplementation isSupportedImplementation
+		ifTrue: [^ self preferredImplementation].
+
+	self isSupportedImplementation
+		ifTrue: [^ self].
+	self allSubclassesDo: [:each |
+		each isSupportedImplementation
+			ifTrue: [^ each]].
+
+	^ nil.
+]
+
+{ #category : #testing }
+XMLAbstractFactory class >> hasSupportedImplementation [
+	^ self findSupportedImplementation notNil
+]
+
+{ #category : #accessing }
 XMLAbstractFactory class >> implementation [
 	^ implementation
 		ifNil: [
-			self isSupported
-				ifTrue: [implementation := self]
-				ifFalse: [implementation := self selectImplementation]]
+			(implementation := self findSupportedImplementation)
+				ifNil: [self errorNoSupportedImplementation].
+			implementation]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLAbstractFactory class >> implementation: aClass [
 	implementation := aClass
 ]
@@ -40,11 +62,11 @@ XMLAbstractFactory class >> implementation: aClass [
 XMLAbstractFactory class >> initialize [
 	"self initialize"
 
-	self clearImplementations
+	self clearAllImplementations
 ]
 
 { #category : #testing }
-XMLAbstractFactory class >> isSupported [
+XMLAbstractFactory class >> isSupportedImplementation [
 	^ false
 ]
 
@@ -53,19 +75,7 @@ XMLAbstractFactory class >> new [
 	^ self implementation basicNew initialize
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLAbstractFactory class >> preferredImplementation [
 	self subclassResponsibility
-]
-
-{ #category : #private }
-XMLAbstractFactory class >> selectImplementation [
-	self preferredImplementation isSupported
-		ifTrue: [^ self preferredImplementation].
-
-	self allSubclassesDo: [:each |
-		each isSupported
-			ifTrue: [^ each]].
-
-	self errorUnsupported.
 ]

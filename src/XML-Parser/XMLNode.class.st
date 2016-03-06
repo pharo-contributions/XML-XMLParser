@@ -165,6 +165,19 @@ XMLNode >> hasParent [
 	^ parent notNil
 ]
 
+{ #category : #private }
+XMLNode >> initializeFileWriteStream: aWriteStream [
+	| document streamConverter |
+
+	((document := self document) notNil
+		and: [document hasEncoding])
+		ifTrue: [streamConverter := document encoding asXMLStreamConverter]
+		ifFalse: [streamConverter := XMLStreamConverter default].
+	aWriteStream
+		streamConverter: streamConverter;
+		nextPutByteOrderMark.
+]
+
 { #category : #testing }
 XMLNode >> isAttribute [
 	^ false
@@ -386,15 +399,8 @@ XMLNode >> validateWith: aValidator [
 
 { #category : #private }
 XMLNode >> withNewWriteStreamOnFileNamed: aFileName do: aBlock [
-	aFileName asXMLFileHandle writeStreamDo: [:writeStream | | streamConverter |
-		self document
-			ifNotNil: [:document |
-				streamConverter :=
-					XMLStreamConverter newForEncoding: document encoding].
-		writeStream
-			streamConverter:
-				(streamConverter ifNil: [XMLStreamConverter default]);
-			nextPutByteOrderMark.
+	aFileName asXMLFileHandle writeStreamDo: [:writeStream |
+		self initializeFileWriteStream: writeStream.
 		aBlock value: writeStream]
 ]
 

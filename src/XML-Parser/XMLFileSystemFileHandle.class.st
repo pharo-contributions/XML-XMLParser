@@ -22,7 +22,7 @@ XMLFileSystemFileHandle class >> currentWorkingDirectoryPathString [
 ]
 
 { #category : #testing }
-XMLFileSystemFileHandle class >> isSupported [
+XMLFileSystemFileHandle class >> isSupportedImplementation [
 	^ Smalltalk includesKey: #FileSystem
 ]
 

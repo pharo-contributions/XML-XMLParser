@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #testing }
-XMLZincHTTPRequest class >> isSupported [
+XMLZincHTTPRequest class >> isSupportedImplementation [
 	^ Smalltalk includesKey: #ZnClient
 ]
 

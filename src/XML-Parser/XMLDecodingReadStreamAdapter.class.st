@@ -27,15 +27,16 @@ XMLDecodingReadStreamAdapter class >> on: aStream streamConverter: aStreamConver
 
 { #category : #'instance creation' }
 XMLDecodingReadStreamAdapter class >> onStreamIfBinary: aStream [
-	| streamAdapter |
+	| binaryReadStreamAdapter |
 
-	streamAdapter := XMLBinaryReadStreamAdapter onStreamIfBinary: aStream.
-	streamAdapter == aStream
+	binaryReadStreamAdapter :=
+		XMLBinaryReadStreamAdapter onStreamIfBinary: aStream.
+	binaryReadStreamAdapter == aStream
 		ifTrue: [^ aStream]
 		ifFalse: [
 			^ self new
-				on: streamAdapter;
-				streamConverter: XMLStreamConverter default]
+				on: binaryReadStreamAdapter;
+				streamConverter: XMLStreamConverter default].
 ]
 
 { #category : #testing }
@@ -46,6 +47,11 @@ XMLDecodingReadStreamAdapter >> atEnd [
 { #category : #testing }
 XMLDecodingReadStreamAdapter >> hasDefaultStreamConverter [
 	^ streamConverter isDefault
+]
+
+{ #category : #testing }
+XMLDecodingReadStreamAdapter >> hasNullStreamConverter [
+	^ streamConverter isNull
 ]
 
 { #category : #testing }
@@ -85,5 +91,5 @@ XMLDecodingReadStreamAdapter >> streamConverter [
 { #category : #accessing }
 XMLDecodingReadStreamAdapter >> streamConverter: aStreamConverter [
 	streamConverter :=
-		(aStreamConverter ifNil: [XMLNullStreamConverter new])
+		aStreamConverter ifNil: [XMLStreamConverter null]
 ]

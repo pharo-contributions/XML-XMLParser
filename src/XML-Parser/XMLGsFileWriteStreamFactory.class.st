@@ -16,6 +16,6 @@ XMLGsFileWriteStreamFactory class >> fileWriteStreamOnPath: aPath [
 ]
 
 { #category : #testing }
-XMLGsFileWriteStreamFactory class >> isSupported [
+XMLGsFileWriteStreamFactory class >> isSupportedImplementation [
 	^ (Smalltalk includesKey: #GsFile)
 ]

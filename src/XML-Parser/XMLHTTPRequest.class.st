@@ -11,11 +11,11 @@ Class {
 }
 
 { #category : #private }
-XMLHTTPRequest class >> errorUnsupported [
+XMLHTTPRequest class >> errorNoSupportedImplementation [
 	XMLHTTPException signal: 'HTTP unsupported'
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLHTTPRequest class >> preferredImplementation [
 	^ XMLZincHTTPRequest
 ]

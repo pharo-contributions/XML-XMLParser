@@ -21,7 +21,7 @@ XMLFileHandle class >> currentWorkingDirectoryPathString [
 ]
 
 { #category : #private }
-XMLFileHandle class >> errorUnsupported [
+XMLFileHandle class >> errorNoSupportedImplementation [
 	XMLFileException signal: 'File IO unsupported'
 ]
 
@@ -30,7 +30,7 @@ XMLFileHandle class >> path: aSystemPath [
 	^ self new path: aSystemPath
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLFileHandle class >> preferredImplementation [
 	^ XMLFileSystemFileHandle
 ]

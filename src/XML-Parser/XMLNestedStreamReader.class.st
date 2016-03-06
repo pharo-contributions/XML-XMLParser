@@ -107,16 +107,16 @@ XMLNestedStreamReader >> closeStreams [
 	self closeCurrentStream.
 ]
 
-{ #category : #encodings }
+{ #category : #decoding }
 XMLNestedStreamReader >> convertFromEncoding: anEncodingName [
 	| streamConverter |
 
 	"encoding declarations for the default encoding are ignored on ReadStreams,
 	which are assumed to be on strings that don't need decoding"
-	streamConverter := XMLStreamConverter newForEncoding: anEncodingName.
-	(streamConverter == nil
-		or: [(stream isKindOf: ReadStream)
-			and: [streamConverter isDefault]])
+	streamConverter := anEncodingName asXMLStreamConverter.
+	((stream isKindOf: ReadStream)
+		and: [streamConverter isDefault
+			or: [streamConverter isNull]])
 		ifFalse: [self decodeStreamWithConverter: streamConverter].
 ]
 
@@ -125,7 +125,7 @@ XMLNestedStreamReader >> currentLineNumber [
 	^ currentLineNumber
 ]
 
-{ #category : #encodings }
+{ #category : #decoding }
 XMLNestedStreamReader >> decodeStreamWithConverter: aStreamConverter [
 	stream isConvertingStreamAdapter
 		ifTrue: [stream streamConverter: aStreamConverter]
@@ -136,7 +136,7 @@ XMLNestedStreamReader >> decodeStreamWithConverter: aStreamConverter [
 					streamConverter: aStreamConverter]
 ]
 
-{ #category : #encodings }
+{ #category : #decoding }
 XMLNestedStreamReader >> detectCurrentEncoding [
 	(XMLNestedStreamReaderEncodingDetector for: self) detectCurrentEncoding
 ]

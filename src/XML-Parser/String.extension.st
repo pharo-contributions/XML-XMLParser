@@ -30,6 +30,11 @@ String >> asXMLHTTPRequest [
 ]
 
 { #category : #'*XML-Parser' }
+String >> asXMLStreamConverter [
+	^ XMLStreamConverter newForEncoding: self
+]
+
+{ #category : #'*XML-Parser' }
 String >> asXMLString [
 	^ XMLString string: self
 ]

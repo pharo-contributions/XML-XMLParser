@@ -16,6 +16,6 @@ XMLGsFileReadStreamFactory class >> fileReadStreamOnPath: aPath [
 ]
 
 { #category : #testing }
-XMLGsFileReadStreamFactory class >> isSupported [
+XMLGsFileReadStreamFactory class >> isSupportedImplementation [
 	^ (Smalltalk includesKey: #GsFile)
 ]

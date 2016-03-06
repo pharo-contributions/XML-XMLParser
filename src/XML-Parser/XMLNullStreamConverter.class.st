@@ -7,6 +7,11 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
+{ #category : #testing }
+XMLNullStreamConverter >> isNull [
+	^ true
+]
+
 { #category : #decoding }
 XMLNullStreamConverter >> nextFromStream: aStream [
 	^ aStream basicNext

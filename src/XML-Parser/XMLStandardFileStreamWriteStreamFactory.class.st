@@ -14,6 +14,6 @@ XMLStandardFileStreamWriteStreamFactory class >> fileWriteStreamOnPath: aPath [
 ]
 
 { #category : #testing }
-XMLStandardFileStreamWriteStreamFactory class >> isSupported [
+XMLStandardFileStreamWriteStreamFactory class >> isSupportedImplementation [
 	^ (Smalltalk includesKey: #StandardFileStream)
 ]

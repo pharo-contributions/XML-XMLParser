@@ -70,7 +70,7 @@ DTDAttributeDefinitionParser >> parse [
 		defaultValidator: defaultValidator
 ]
 
-{ #category : #parsing }
+{ #category : #private }
 DTDAttributeDefinitionParser >> parseEnumerationAttributeDefinition [
 	| attributeValidatorClass enumerationListParserClass |
 

@@ -13,6 +13,6 @@ XMLStandardFileStreamReadStreamFactory class >> fileReadStreamOnPath: aPath [
 ]
 
 { #category : #testing }
-XMLStandardFileStreamReadStreamFactory class >> isSupported [
+XMLStandardFileStreamReadStreamFactory class >> isSupportedImplementation [
 	^ (Smalltalk includesKey: #StandardFileStream)
 ]

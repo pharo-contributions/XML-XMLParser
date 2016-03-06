@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #testing }
-XMLWebClientHTTPRequest class >> isSupported [
+XMLWebClientHTTPRequest class >> isSupportedImplementation [
 	^ Smalltalk includesKey: #WebClient
 ]
 
