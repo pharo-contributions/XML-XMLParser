@@ -111,7 +111,7 @@ XMLStreamConverter class >> initialize [
 
 	self
 		initializeEncodingNamesAndClassesCache;
-		initializePreferredClasses
+		initializePreferredClasses.
 ]
 
 { #category : #'class initialization' }
