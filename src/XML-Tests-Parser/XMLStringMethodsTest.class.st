@@ -24,13 +24,13 @@ XMLStringMethodsTest >> testAsXMLFileHandle [
 
 { #category : #tests }
 XMLStringMethodsTest >> testAsXMLHTTPRequest [
-	| url request |
-
-	url := 'test.xml'.
-	request := url asXMLHTTPRequest.
-	self
-		assert: (request isKindOf: XMLHTTPRequest);
-		assert: request url = url.
+	XMLHTTPRequest hasSupportedImplementation
+		ifTrue: [| url request |
+			url := 'test.xml'.
+			request := url asXMLHTTPRequest.
+			self
+				assert: (request isKindOf: XMLHTTPRequest);
+				assert: request url = url]
 ]
 
 { #category : #tests }
