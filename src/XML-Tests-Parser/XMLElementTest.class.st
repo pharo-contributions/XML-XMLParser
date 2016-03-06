@@ -363,11 +363,13 @@ XMLElementTest >> testDeclarePrefixURI [
 	self
 		should: [element declarePrefix: 'nonDefault' uri: '']
 		raise: XMLNamespaceException.
+	"cannot rebind the xml prefix to a new NS"
+	self 
+		should: [element declarePrefix: 'xml' uri: 'newNS']
+		raise: XMLNamespaceException.
+	"cannot rebind the xmlns prefix, even to the same NS"
 	self
 		should: [element declarePrefix: 'xmlns' uri: XMLNamespaceScope xmlnsNamespaceURI]
-		raise: XMLNamespaceException.
-	self
-		should: [element declarePrefix: 'xml' uri: 'newNS']
 		raise: XMLNamespaceException.
 ]
 
@@ -1108,9 +1110,12 @@ XMLElementTest >> testResolvePrefix [
 		self assert: (element resolvePrefix: prefix) = ''.
 		element declarePrefix: prefix uri: uri.
 		self assert: (element resolvePrefix: prefix) = uri].
-	self
-		assert: (element resolvePrefix: 'xml') = XMLNamespaceScope xmlNamespaceURI;
-		assert: (element resolvePrefix: 'xmlns') = XMLNamespaceScope xmlnsNamespaceURI.
+
+	self assert:
+		(element resolvePrefix: 'xml') = XMLNamespaceScope xmlNamespaceURI.
+
+	self assert:
+		(element resolvePrefix: 'xmlns') = XMLNamespaceScope xmlnsNamespaceURI.
 ]
 
 { #category : #tests }
@@ -1128,15 +1133,16 @@ XMLElementTest >> testResolvePrefixIfUnresolvable [
 			(element
 				resolvePrefix: prefix
 				ifUnresolvable: [#absent]) = uri].
-	self
-		assert:
-			(element
-				resolvePrefix: 'xml'
-				ifUnresolvable: [#absent]) = XMLNamespaceScope xmlNamespaceURI;
-		assert:
-			(element
-				resolvePrefix: 'xmlns'
-				ifUnresolvable: [#absent]) = XMLNamespaceScope xmlnsNamespaceURI.
+
+	self assert:
+		(element
+			resolvePrefix: 'xml'
+			ifUnresolvable: [#absent]) = XMLNamespaceScope xmlNamespaceURI.
+	
+	self assert:
+		(element
+			resolvePrefix: 'xmlns'
+			ifUnresolvable: [#absent]) = XMLNamespaceScope xmlnsNamespaceURI.
 ]
 
 { #category : #tests }
@@ -1146,21 +1152,30 @@ XMLElementTest >> testResolvePrefixesOfNamespaceURI [
 	element := self nodeClass new.
 	self namespaces keysAndValuesDo: [:prefix :uri |
 		self assert: (element resolvePrefixesOfNamespaceURI: uri) isEmpty.
+
 		element
 			declarePrefix: prefix
 			uri: uri.
 		self assert:
 			(element resolvePrefixesOfNamespaceURI: uri) =
-				(Set with: prefix)].
-	self
-		assert:
-			(element resolvePrefixesOfNamespaceURI:
-				XMLNamespaceScope xmlNamespaceURI) =
-					(Set with: 'xml');
-		assert:
-			(element resolvePrefixesOfNamespaceURI:
-				XMLNamespaceScope xmlnsNamespaceURI) =
-					(Set with: 'xmlns').
+				(Set with: prefix).
+
+		element
+			declarePrefix: 'newPrefix'
+			uri: uri.
+		self assert:
+			(element resolvePrefixesOfNamespaceURI: uri) =
+				(Set with: prefix with: 'newPrefix')].
+
+	self assert:
+		(element resolvePrefixesOfNamespaceURI:
+			XMLNamespaceScope xmlNamespaceURI) =
+				(Set with: 'xml').
+
+	self assert:
+		(element resolvePrefixesOfNamespaceURI:
+			XMLNamespaceScope xmlnsNamespaceURI) =
+				(Set with: 'xmlns').
 ]
 
 { #category : #tests }
