@@ -28,11 +28,6 @@ XMLExternalEntityTest class >> isSkipping: aBoolean [
 	IsSkipping := aBoolean
 ]
 
-{ #category : #files }
-XMLExternalEntityTest >> deleteFileNamed: aFileName [
-	aFileName asXMLFileHandle delete
-]
-
 { #category : #source }
 XMLExternalEntityTest >> docBookArticleSource [
 	^ '<?xml version="1.0" encoding="UTF-8"?>
@@ -85,7 +80,7 @@ XMLExternalEntityTest >> docBookExampleSource [
 
 { #category : #source }
 XMLExternalEntityTest >> doctypeWithDeclarationsForEntityURIs: aURICollection [
-	^  String streamContents: [:stream |
+	^ String streamContents: [:stream |
 		stream nextPutAll: '<!DOCTYPE test ['.
 		aURICollection withIndexDo: [:each :i |
 			stream nextPutAll: '<!ENTITY entity', i printString, ' SYSTEM "', each, '">'].
@@ -98,9 +93,13 @@ XMLExternalEntityTest >> feedURL [
 ]
 
 { #category : #files }
-XMLExternalEntityTest >> fileNamed: aFileName write: aString [
-	aFileName asXMLFileHandle writeStreamDo: [:writeStream |
-		writeStream nextPutAll: aString]
+XMLExternalEntityTest >> fileHandleForNewFileSuffixed: aFileSuffix [
+	| fileHandle |
+	
+	fileHandle := (self class name asString, '-', aFileSuffix) asXMLFileHandle.
+	fileHandle isFile
+		ifTrue: [fileHandle delete].
+	^ fileHandle.
 ]
 
 { #category : #accessing }
@@ -176,21 +175,22 @@ XMLExternalEntityTest >> skipOrReturnWith: aBlock [
 
 { #category : #tests }
 XMLExternalEntityTest >> testOnFileNamed [
-	| parser fileName |
+	| parser fileHandle |
 
 	self isSkipping
 		ifTrue: [self skipOrReturnWith: [^ self]].
 
-	fileName := 'testOnFileNamed.xml'.
-	self fileNamed: fileName write: ''.
+	fileHandle := self fileHandleForNewFileSuffixed: 'testOnFileNamed.xml'.
+	fileHandle writeStreamDo: [:writeStream |
+		writeStream nextPutAll: '<test/>'].
 	self
-		shouldnt: [parser := SAXHandler onFileNamed: fileName]
+		shouldnt: [parser := SAXHandler onFileNamed: fileHandle path]
 		raise: XMLFileException.
 	self
-		assert: parser documentURI = fileName;
+		assert: parser documentURI = fileHandle path;
 		assert: parser documentURI asXMLURI isLocalURI.
 
-	self deleteFileNamed: fileName.
+	fileHandle delete.
 ]
 
 { #category : #tests }
@@ -241,6 +241,29 @@ XMLExternalEntityTest >> testParsingDocBookExample [
 ]
 
 { #category : #tests }
+XMLExternalEntityTest >> testParsingEncodedFile [
+	"This test creates/deletes a file so is skipped by default"
+	| fileHandle doc docFromFile |
+
+	self isSkipping
+		ifTrue: [self skipOrReturnWith: [^ self]].
+
+	fileHandle := self fileHandleForNewFileSuffixed: 'testParsingEncodedFile.xml'.
+	doc := XMLDOMParser parse: self docBookArticleSource.
+	doc
+		encoding: 'UTF-16BE';
+		printToFileNamed: fileHandle path.
+	self
+		shouldnt: [docFromFile := XMLDOMParser parseFileNamed: fileHandle path]
+		raise: XMLFileException.
+	self
+		assert: docFromFile encoding = 'UTF-16BE';
+		assert: doc printString = docFromFile printString.
+
+	fileHandle delete.
+]
+
+{ #category : #tests }
 XMLExternalEntityTest >> testParsingExternalEntities [
 	"This test uses HTTP so is skipped by default."
 	| entityCache entityCacheCopy |
@@ -275,24 +298,24 @@ XMLExternalEntityTest >> testParsingExternalEntities [
 { #category : #tests }
 XMLExternalEntityTest >> testParsingFile [
 	"This test creates/deletes a file so is skipped by default"
-	| fileName doc |
+	| fileHandle doc |
 
 	self isSkipping
 		ifTrue: [self skipOrReturnWith: [^ self]].
 
-	fileName := 'testParsingFile.xml'.
+	fileHandle := self fileHandleForNewFileSuffixed: 'testParsingFile.xml'.
 	self
-		should: [XMLDOMParser parseFileNamed: fileName]
+		should: [XMLDOMParser parseFileNamed: fileHandle path]
 		raise: XMLFileException.
+
+	fileHandle writeStreamDo: [:writeStream |
+		writeStream nextPutAll: self musicXMLDocument].
 	self
-		fileNamed: fileName
-		write: self musicXMLDocument.
-	self
-		shouldnt: [doc := XMLDOMParser parseFileNamed: fileName]
+		shouldnt: [doc := XMLDOMParser parseFileNamed: fileHandle path]
 		raise: XMLFileException.
 	self assert: (doc root isNamed: 'score-partwise').
 
-	self deleteFileNamed: fileName.
+	fileHandle delete.
 ]
 
 { #category : #tests }

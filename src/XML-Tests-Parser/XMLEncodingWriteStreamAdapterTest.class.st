@@ -4,6 +4,16 @@ Class {
 	#category : #'XML-Tests-Parser-Streams'
 }
 
+{ #category : #accessing }
+XMLEncodingWriteStreamAdapterTest >> decodedInvalidCharacters [
+	^ #()
+]
+
+{ #category : #accessing }
+XMLEncodingWriteStreamAdapterTest >> decodedUnicodeInvalidCharacters [
+	^ self stringFrom: #(16rD800 16rDBFF 16rDC00 16rD8FF 16r11FFFF)
+]
+
 { #category : #'instance creation' }
 XMLEncodingWriteStreamAdapterTest >> newStreamAdapterOn: aStream [
 	^ (super newStreamAdapterOn: aStream)
@@ -36,6 +46,14 @@ XMLEncodingWriteStreamAdapterTest >> testHasNullStreamConverter [
 	adapter := self newStreamAdapter.
 	self assert:
 		adapter hasNullStreamConverter = adapter streamConverter isNull.
+]
+
+{ #category : #tests }
+XMLEncodingWriteStreamAdapterTest >> testInvalidCharacters [
+	self decodedInvalidCharacters do: [:each |
+		self
+			should: [self newStreamAdapter nextPut: each]
+			raise: XMLEncodingException]
 ]
 
 { #category : #tests }

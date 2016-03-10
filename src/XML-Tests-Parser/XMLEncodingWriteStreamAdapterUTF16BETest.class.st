@@ -10,6 +10,11 @@ XMLEncodingWriteStreamAdapterUTF16BETest >> contentsFromCharacter: aCharacter [
 ]
 
 { #category : #accessing }
+XMLEncodingWriteStreamAdapterUTF16BETest >> decodedInvalidCharacters [
+	^ self decodedUnicodeInvalidCharacters
+]
+
+{ #category : #accessing }
 XMLEncodingWriteStreamAdapterUTF16BETest >> inputCollection [
 	^ self decodedUTF16String
 ]

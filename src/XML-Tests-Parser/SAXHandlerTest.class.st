@@ -435,9 +435,16 @@ SAXHandlerTest >> testSAXStartElementPrefixURILocalNameNamespacesDisabled [
 SAXHandlerTest >> testSAXXMLDeclaration [
 	| parser selectors arguments |
 
-	(parser := SAXHandlerProxy on: '<?xml version="1.0" encoding="UTF-8"?>')
+	(parser :=
+		SAXHandlerProxy on:
+			'<?xml version="1.0" encoding="UTF-8"?><test/>')
 		parseDocument.
-	selectors := #(startDocument xmlVersion:encoding:standalone: endDocument).
+	selectors :=
+		#(startDocument
+			xmlVersion:encoding:standalone:
+			startElement:prefix:uri:localName:attributes:
+			endElement:prefix:uri:localName:
+			endDocument).
 	self assert: (parser wasSentSelectors: selectors).
 
 	arguments := parser argumentsSentWith: #xmlVersion:encoding:standalone:.
@@ -448,7 +455,7 @@ SAXHandlerTest >> testSAXXMLDeclaration [
 
 	(parser :=
 		SAXHandlerProxy on:
-			'<?xml version="1.1" encoding="utf-8" standalone="yes"?>')
+			'<?xml version="1.1" encoding="utf-8" standalone="yes"?><test/>')
 		parseDocument.
 	self assert: (parser wasSentSelectors: selectors).
 

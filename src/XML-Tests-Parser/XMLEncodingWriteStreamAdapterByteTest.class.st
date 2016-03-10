@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #accessing }
+XMLEncodingWriteStreamAdapterByteTest >> decodedInvalidCharacters [
+	^ self decodedUnicodeInvalidCharacters copyWithFirst: 256 asCharacter
+]
+
+{ #category : #accessing }
 XMLEncodingWriteStreamAdapterByteTest >> streamConverterClass [
 	^ XMLByteStreamConverter
 ]

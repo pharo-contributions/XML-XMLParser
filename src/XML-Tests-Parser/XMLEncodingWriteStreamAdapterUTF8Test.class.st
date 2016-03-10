@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #accessing }
+XMLEncodingWriteStreamAdapterUTF8Test >> decodedInvalidCharacters [
+	^ self decodedUnicodeInvalidCharacters
+]
+
+{ #category : #accessing }
 XMLEncodingWriteStreamAdapterUTF8Test >> inputCollection [
 	^ self decodedUTF8String
 ]

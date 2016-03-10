@@ -4,6 +4,11 @@ Class {
 	#category : #'XML-Tests-Parser-Streams'
 }
 
+{ #category : #accessing }
+XMLDecodingReadStreamAdapterTest >> encodedInvalidCharacters [
+	^ ''
+]
+
 { #category : #'instance creation' }
 XMLDecodingReadStreamAdapterTest >> newStreamAdapterOn: aStream [
 	^ (super newStreamAdapterOn: aStream)
@@ -36,6 +41,21 @@ XMLDecodingReadStreamAdapterTest >> testHasNullStreamConverter [
 	adapter := self newStreamAdapter.
 	self assert:
 		adapter hasNullStreamConverter = adapter streamConverter isNull.
+]
+
+{ #category : #tests }
+XMLDecodingReadStreamAdapterTest >> testInvalidCharacters [
+	| streamAdapter |
+
+	streamAdapter :=
+		self newStreamAdapterOn:
+			self encodedInvalidCharacters readStream.
+	[streamAdapter atEnd]
+		whileFalse: [
+			self
+				should: [streamAdapter next]
+				raise: XMLEncodingException].
+	self assert: streamAdapter atEnd.
 ]
 
 { #category : #tests }

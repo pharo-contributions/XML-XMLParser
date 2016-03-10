@@ -25,8 +25,9 @@ XMLExternalEntityLimitsTest >> testExternalEntitiesLimit [
 
 	entityLimit := 2.
 	xml :=
-		self doctypeWithDeclarationsForEntityURIs:
-			(self musicXMLExternalEntityURLs copyFrom: 1 to: entityLimit).
+		(self doctypeWithDeclarationsForEntityURIs:
+			(self musicXMLExternalEntityURLs copyFrom: 1 to: entityLimit)),
+		'<test/>'.
 	(parser := SAXHandler on: xml)
 		resolvesExternalEntities: true.
 	(externalEntityResolver := parser externalEntityResolver)
@@ -68,7 +69,9 @@ XMLExternalEntityLimitsTest >> testExternalEntitySizeLimit [
 		ifTrue: [self skipOrReturnWith: [^ self]].
 
 	url := self musicXMLExternalEntityURLs first asXMLURI.
-	xml := self doctypeWithDeclarationsForEntityURIs: (Array with: url asString).
+	xml :=
+		(self doctypeWithDeclarationsForEntityURIs: (Array with: url asString)),
+		'<test/>'.
 	size :=
 		(url
 			getUpToLimit: nil
@@ -94,15 +97,17 @@ XMLExternalEntityLimitsTest >> testExternalEntitySizeLimit [
 
 { #category : #tests }
 XMLExternalEntityLimitsTest >> testExternalSubsetReadLimit [
-	| xml externalSubset fileName parser |
+	| xml fileHandle externalSubset parser |
 
 	self isSkipping
 		ifTrue: [self skipOrReturnWith: [^ self]].
 
-	fileName := 'externalSubset.dtd'.
+	fileHandle := self fileHandleForNewFileSuffixed: 'externalSubset.dtd'.
 	externalSubset := '<?xml encoding="UTF-8"?><!ELEMENT test EMPTY>'.
-	self fileNamed: fileName write: externalSubset.
-	xml := '<!DOCTYPE test SYSTEM "', fileName, '"><test/>'.
+	fileHandle writeStreamDo: [:writeStream |
+		writeStream nextPutAll: externalSubset].
+	xml := '<!DOCTYPE test SYSTEM "', fileHandle path, '"><test/>'.
+
 	self
 		shouldnt: [
 			(parser := SAXHandler on: xml)
@@ -111,6 +116,7 @@ XMLExternalEntityLimitsTest >> testExternalSubsetReadLimit [
 				resolvesExternalEntities: true;
 				parseDocument]
 		raise: XMLLimitException.
+
 	self
 		should: [
 			(parser := SAXHandler on: xml)
@@ -119,7 +125,8 @@ XMLExternalEntityLimitsTest >> testExternalSubsetReadLimit [
 				resolvesExternalEntities: true;
 				parseDocument]
 		raise: XMLLimitException.
-	self deleteFileNamed: fileName.
+
+	fileHandle delete.
 ]
 
 { #category : #tests }

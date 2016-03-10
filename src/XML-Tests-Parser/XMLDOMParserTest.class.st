@@ -56,7 +56,8 @@ XMLDOMParserTest >> internalSubsetWithDeclarations [
 			<!ENTITY % parameter "replacement">
 			<!ENTITY % externalParameter SYSTEM "external2.dtd">
 			<!NOTATION notation SYSTEM "note.doc">
-		]>'
+		]>
+		<root>test</root>'
 ]
 
 { #category : #tests }
@@ -139,7 +140,7 @@ XMLDOMParserTest >> testAttributesIncludingDeclarations [
 ]
 
 { #category : #tests }
-XMLDOMParserTest >> testCDATASection [
+XMLDOMParserTest >> testCDataSection [
 	| document element unescaped escaped xml |
 
 	unescaped := 'this is CDATA test content 1 < 2 & 5 > 3'.
@@ -909,13 +910,17 @@ XMLDOMParserTest >> testUnreplacedEntityRererencePrinting [
 XMLDOMParserTest >> testXMLDeclaration [
 	| document |
 
-	document := XMLDOMParser parse: '<?xml version="1.0" encoding="UTF-8"?>'.
+	document :=
+		XMLDOMParser parse:
+			'<?xml version="1.0" encoding="UTF-8"?><test/>'.
 	self
 		assert: document version = 1.0;
 		assert: document encoding = 'UTF-8';
 		deny: document isStandalone.
 
-	document := XMLDOMParser parse: '<?xml version="1.1" encoding="utf-8" standalone="yes"?>'.
+	document :=
+		XMLDOMParser parse:
+			'<?xml version="1.1" encoding="utf-8" standalone="yes"?><test/>'.
 	self
 		assert: document version = 1.1;
 		assert: document encoding = 'utf-8';

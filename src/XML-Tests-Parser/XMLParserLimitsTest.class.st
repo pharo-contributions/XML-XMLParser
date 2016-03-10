@@ -200,7 +200,7 @@ XMLParserLimitsTest >> xmlWithRecursiveEntitiesNamed: aName depth: aLimit isPara
 			depth: aLimit
 			isParameter: aBoolean).
 	aBoolean
-		ifTrue: [xml nextPutAll: '%', aName, '1;]>']
+		ifTrue: [xml nextPutAll: '%', aName, '1;]><test/>']
 		ifFalse: [xml nextPutAll: ']><test>&', aName, '1;</test>'].
 
 	^ xml contents.

@@ -29,7 +29,7 @@ XMLPercentEncodingWriteStreamAdapterTest >> streamConverterClass [
 	^ XMLUTF8StreamConverter
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 XMLPercentEncodingWriteStreamAdapterTest >> testNextPutByteOrderMark [
 	self
 		should: [self newStreamAdapter nextPutByteOrderMark]
