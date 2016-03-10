@@ -14,6 +14,7 @@ Class {
 		'nameStream'
 	],
 	#classVars : [
+		'CharacterConverter',
 		'PredefinedEntities'
 	],
 	#category : #'XML-Parser'
@@ -42,6 +43,18 @@ XMLParserTokenizer class >> driver: aDriver on: aStringOrStream readLimit: aRead
 XMLParserTokenizer class >> initialize [
 	"self initialize"
 
+	self
+		initializePredefinedEntities;
+		initializeCharacterConverter
+]
+
+{ #category : #'class initialization' }
+XMLParserTokenizer class >> initializeCharacterConverter [
+	CharacterConverter := XMLUTF8StreamConverter new
+]
+
+{ #category : #'class initialization' }
+XMLParserTokenizer class >> initializePredefinedEntities [
 	(PredefinedEntities := Dictionary new)
 		at: 'lt' put: $<;
 		at: 'gt' put: $>;
@@ -60,13 +73,15 @@ XMLParserTokenizer >> atEnd [
 	^ context isTerminatedContext
 ]
 
-{ #category : #'entity replacing' }
-XMLParserTokenizer >> characterFromCodePoint: anInteger [
-	(anInteger notNil and: [anInteger > 0])
+{ #category : #decoding }
+XMLParserTokenizer >> characterFromCodePoint: aCodePoint [
+	(aCodePoint notNil
+		and: [aCodePoint > 0])
+		ifTrue: [
+			^ [CharacterConverter characterFromCodePoint: aCodePoint]
+				on: Error
+				do: [:error | nil]]
 		ifFalse: [^ nil].
-	^ [anInteger asCharacter]
-		on: Error
-		do: [:error | nil].
 ]
 
 { #category : #closing }

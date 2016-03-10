@@ -18,7 +18,7 @@ XMLByteStreamConverter >> nextFromStream: aStream [
 
 	((character := aStream basicNext) notNil
 		and: [character asciiValue > 255])
-		ifTrue: [self errorInvalidCharacter].
+		ifTrue: [self errorBadCharacterValue: character asciiValue].
 
 	^ character.
 ]
@@ -26,7 +26,7 @@ XMLByteStreamConverter >> nextFromStream: aStream [
 { #category : #encoding }
 XMLByteStreamConverter >> nextPut: aCharacter toStream: aStream [
 	aCharacter asciiValue > 255
-		ifTrue: [self errorInvalidCharacter].
+		ifTrue: [self errorBadCharacterValue: aCharacter asciiValue].
 
 	aStream basicNextPut: aCharacter.
 ]

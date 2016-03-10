@@ -22,8 +22,9 @@ XMLOrderedList class >> collectionClass [
 	^ OrderedCollection
 ]
 
-{ #category : #private }
+{ #category : #inspecting }
 XMLOrderedList class >> inspectorClass [
+	"for pre-GTInspector Pharo"
 	^ self collectionClass inspectorClass
 ]
 
@@ -538,6 +539,12 @@ XMLOrderedList >> indexOf: anObject startingAt: anIndex ifAbsent: aBlock [
 		indexOf: anObject
 		startingAt: (anIndex max: 1)
 		ifAbsent: aBlock
+]
+
+{ #category : #inspecting }
+XMLOrderedList >> inspectorClass [
+	"for Squeak"
+	^ collection inspectorClass
 ]
 
 { #category : #testing }

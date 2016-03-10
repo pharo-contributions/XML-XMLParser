@@ -19,11 +19,6 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
-{ #category : #'instance creation' }
-XMLEncodingDetector class >> for: aStream [
-	^ self new stream: aStream
-]
-
 { #category : #private }
 XMLEncodingDetector class >> handlerForByteValue: aByteValue [
 	aByteValue = 0
@@ -71,6 +66,11 @@ XMLEncodingDetector class >> initializeEncodingHandlerTable [
 { #category : #'class initialization' }
 XMLEncodingDetector class >> initializeNullCharacter [
 	NullCharacter := Character value: 0
+]
+
+{ #category : #'instance creation' }
+XMLEncodingDetector class >> on: aStream [
+	^ self new on: aStream
 ]
 
 { #category : #private }
@@ -211,6 +211,14 @@ XMLEncodingDetector >> nextASCII [
 		ifFalse: [^ nil]
 ]
 
+{ #category : #initialization }
+XMLEncodingDetector >> on: aStream [
+	stream :=
+		aStream isConvertingStreamAdapter
+			ifTrue: [aStream stream]
+			ifFalse: [aStream]
+]
+
 { #category : #private }
 XMLEncodingDetector >> peek [
 	stream atEnd
@@ -235,9 +243,4 @@ XMLEncodingDetector >> pushBack: aString [
 { #category : #private }
 XMLEncodingDetector >> pushBackCharacter: aCharacter [
 	self subclassResponsibility
-]
-
-{ #category : #private }
-XMLEncodingDetector >> stream: aStream [
-	stream := aStream
 ]

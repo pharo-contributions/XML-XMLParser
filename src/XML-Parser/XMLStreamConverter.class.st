@@ -175,9 +175,17 @@ XMLStreamConverter >> encoding: anEncodingName [
 ]
 
 { #category : #private }
-XMLStreamConverter >> errorInvalidCharacter [
+XMLStreamConverter >> errorBadCharacterEncoding [
 	XMLEncodingException
-		formatSignal: 'Invalid {1} character'
+		formatSignal: 'Invalid {1} character encoding'
+		with: self encoding
+]
+
+{ #category : #private }
+XMLStreamConverter >> errorBadCharacterValue: aValue [
+	XMLEncodingException
+		formatSignal: 'Invalid character 0x{1} for {2} encoding'
+		with: aValue printStringHex
 		with: self encoding
 ]
 

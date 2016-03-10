@@ -33,7 +33,7 @@ XMLNodeWithElements >> addContent: aStringOrStringNode [
 				ifFalse: [aStringOrStringNode])]
 ]
 
-{ #category : #adding }
+{ #category : #deprecated }
 XMLNodeWithElements >> addElement: anElement [
 	self deprecated: 'Use #addNode: or #addElementNamed: instead'.
 

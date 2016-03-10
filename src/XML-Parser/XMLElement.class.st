@@ -356,13 +356,6 @@ XMLElement >> includesAttribute: aName [
 	^ self attributeNodes includesAttribute: aName.
 ]
 
-{ #category : #private }
-XMLElement >> inheritNamespacesFrom: anElement [
-	self allElementsDo: [:each |
-		each namespaceScope inheritMappingsFrom:
-			anElement namespaceScope]
-]
-
 { #category : #testing }
 XMLElement >> isDeclaredPrefix: aPrefix [
 	"is namespace prefix in scope for use by receiver and descendants"

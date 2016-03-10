@@ -371,6 +371,11 @@ XMLWellFormedParserTokenizer >> errorSelfReferentialEntity: anEntity [
 ]
 
 { #category : #errors }
+XMLWellFormedParserTokenizer >> errorUnexpectedCDataTerminatorInPCData [
+	self parseError: 'Unexpected CDATA "]]>" terminator in PCDATA'
+]
+
+{ #category : #errors }
 XMLWellFormedParserTokenizer >> errorUnexpectedEndOfIncludeSection [
 	self parseError: 'Unexpected end of section "]" in external entity'
 ]
@@ -1222,8 +1227,13 @@ XMLWellFormedParserTokenizer >> nextPCDataToken [
 						ifFalse: [self nextGeneralEntityReferenceOnWriteStream])
 							ifTrue: [isIgnorableWhitespace := false]]
 				ifFalse: [
-					"we don't check for illegal ]]> CDATA terminators in PCDATA
-					for performance"
+					(nextChar == $]
+						and: [streamReader peek == $]])
+						ifTrue: [
+							streamReader next.
+							streamReader peek == $>
+								ifTrue: [self errorUnexpectedCDataTerminatorInPCData]
+								ifFalse: [streamReader pushBackCharacter: $]]].
 					isIgnorableWhitespace
 						ifTrue: [isIgnorableWhitespace := nextChar xmlParserIsSeparator].
 					writeStream nextPut: nextChar]].
@@ -1429,7 +1439,7 @@ XMLWellFormedParserTokenizer >> nextTag [
 							"initialize only if needed"
 							(namespaces
 								ifNil: [namespaces := OrderPreservingStringDictionary new: 5])
-								at:
+								xmlNamespaceAt:
 									((attributeName size > 6)
 										ifTrue: [attributeName copyFrom: 7 to: attributeName size]
 										ifFalse: [''])
@@ -1437,8 +1447,13 @@ XMLWellFormedParserTokenizer >> nextTag [
 						ifFalse: [							
 							attributeName isReservedAttributeName
 								ifTrue: [driver haveUnhandledReservedAttributes].
-							attributes at: attributeName put: attributeValue]]
-				ifFalse: [attributes at: attributeName put: attributeValue]].
+							attributes
+								xmlAttributeAt: attributeName
+								put: attributeValue]]
+				ifFalse: [
+					attributes
+						xmlAttributeAt: attributeName
+						put: attributeValue]].
 
 	driver
 		handleStartTag: tagName

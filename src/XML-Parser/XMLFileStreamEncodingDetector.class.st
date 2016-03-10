@@ -11,8 +11,8 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLFileStreamEncodingDetector class >> for: aDecodingReadStreamAdapter [
-	^ (super for: aDecodingReadStreamAdapter stream)
+XMLFileStreamEncodingDetector class >> on: aDecodingReadStreamAdapter [
+	^ (super on: aDecodingReadStreamAdapter stream)
 		decodingReadStreamAdapter: aDecodingReadStreamAdapter
 ]
 

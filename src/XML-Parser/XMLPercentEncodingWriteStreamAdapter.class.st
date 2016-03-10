@@ -17,7 +17,8 @@ XMLPercentEncodingWriteStreamAdapter >> basicNextPut: aByteCharacter [
 	(asciiValue := aByteCharacter asciiValue) < 16
 		ifTrue: [stream nextPut: $0].
 
-	"printOn:base: on GS shows the radix, so the three arg form is used instead"
+	"printOn:base: on GS shows the radix, so printOn:base:showRadix:
+	is used instead"
 	asciiValue
 		printOn: stream
 		base: 16

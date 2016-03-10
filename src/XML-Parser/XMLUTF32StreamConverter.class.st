@@ -20,17 +20,25 @@ XMLUTF32StreamConverter >> isBigEndian [
 { #category : #decoding }
 XMLUTF32StreamConverter >> nextFromStream: aStream [
 	^ self
-		codePointFromFirstByte: (aStream basicNext ifNil: [^ nil]) asciiValue
-		secondByte: (aStream basicNext ifNil: [self errorInvalidCharacter]) asciiValue
-		thirdByte: (aStream basicNext ifNil: [self errorInvalidCharacter]) asciiValue
-		fourthByte: (aStream basicNext ifNil: [self errorInvalidCharacter]) asciiValue
+		codePointFromFirstByte:
+			(aStream basicNext
+				ifNil: [^ nil]) asciiValue
+		secondByte:
+			(aStream basicNext
+				ifNil: [self errorBadCharacterEncoding]) asciiValue
+		thirdByte:
+			(aStream basicNext
+				ifNil: [self errorBadCharacterEncoding]) asciiValue
+		fourthByte:
+			(aStream basicNext
+				ifNil: [self errorBadCharacterEncoding]) asciiValue
 ]
 
 { #category : #encoding }
 XMLUTF32StreamConverter >> nextPut: aCharacter toStream: aStream [
 	| codePoint |
 
-	codePoint := self valueOfCharacter: aCharacter.
+	codePoint := self codePointFromCharacter: aCharacter.
 	self
 		nextPutFirstByte: ((codePoint bitShift: -24) bitAnd: 16rFF)
 		secondByte: ((codePoint bitShift: -16) bitAnd: 16rFF)

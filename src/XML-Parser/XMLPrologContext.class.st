@@ -8,6 +8,11 @@ Class {
 }
 
 { #category : #testing }
+XMLPrologContext >> canTerminateDocument [
+	^ false
+]
+
+{ #category : #testing }
 XMLPrologContext >> isPrologContext [
 	^ true
 ]

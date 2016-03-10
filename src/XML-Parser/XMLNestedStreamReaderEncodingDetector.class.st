@@ -11,8 +11,8 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLNestedStreamReaderEncodingDetector class >> for: aStreamReader [
-	^ (super for: aStreamReader stream)
+XMLNestedStreamReaderEncodingDetector class >> on: aStreamReader [
+	^ (super on: aStreamReader stream)
 		streamReader: aStreamReader
 ]
 
@@ -36,14 +36,6 @@ XMLNestedStreamReaderEncodingDetector >> pushBack: aString [
 { #category : #private }
 XMLNestedStreamReaderEncodingDetector >> pushBackCharacter: aCharacter [
 	streamReader pushBackCharacter: aCharacter
-]
-
-{ #category : #private }
-XMLNestedStreamReaderEncodingDetector >> stream: aStream [
-	super stream:
-		(aStream isConvertingStreamAdapter
-			ifTrue: [aStream stream]
-			ifFalse: [aStream])
 ]
 
 { #category : #private }
