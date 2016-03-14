@@ -4,9 +4,10 @@ Extension { #name : #FileReference }
 FileReference >> gtInspectorXMLFileIn: aComposite [
 	<gtInspectorPresentationOrder: 4>
 
-	| currentTextStylerDecorator |
+	| xmlFileHandle currentTextStylerDecorator |
 
-	self isXMLFile
+	xmlFileHandle := XMLFileSystemFileHandle fileReference: self.
+	xmlFileHandle isXMLDocumentFile
 		ifFalse: [^ self].
 
 	aComposite custom:
@@ -14,14 +15,18 @@ FileReference >> gtInspectorXMLFileIn: aComposite [
 			title: 'Source';
 			editingMode: [
 				"saved to get the encoding later"
-				currentTextStylerDecorator := GLMXMLHighlighterTextStylerDecorator new.
-				GLMHighlighterTextRubEditingMode withStylerDecorator: currentTextStylerDecorator];
-			display: [XMLExternalDocumentConverter convertFileNamed: self fullName];
+				currentTextStylerDecorator :=
+					GLMXMLHighlighterTextStylerDecorator new.
+				GLMHighlighterTextRubEditingMode withStylerDecorator:
+					currentTextStylerDecorator];
+			display: [
+				XMLExternalDocumentConverter convert: xmlFileHandle rawReadStream];
 			withLineNumbers: true;
 			act: [:presentation | | sourceToSave streamConverter |
 				sourceToSave := presentation text asString.
-				streamConverter := currentTextStylerDecorator encoding asXMLStreamConverter.
-				self fullName asXMLFileHandle writeStreamDo: [:writeStream |
+				streamConverter :=
+					currentTextStylerDecorator encoding asXMLStreamConverter.
+				xmlFileHandle writeStreamDo: [:writeStream |
 					writeStream
 						streamConverter: streamConverter;
 						nextPutByteOrderMark;
@@ -33,20 +38,19 @@ FileReference >> gtInspectorXMLFileIn: aComposite [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-FileReference >> isXMLFile [
-	^ #('xml' 'xhtml') includes: self extension asLowercase
-]
-
-{ #category : #'*XML-Parser-GTExtensions' }
 FileReference >> spotterForXMLFileFor: aStep [
 	<spotterOrder: 40>
 
-	self isXMLFile
+	| xmlFileHandle |
+
+	xmlFileHandle := XMLFileSystemFileHandle fileReference: self.
+	xmlFileHandle isXMLDocumentFile
 		ifFalse: [^ self].
 
 	aStep listProcessor
 		title: 'XML Document';
-		allCandidates: [(XMLDOMParser parseFileNamed: self fullName) allElements];
+		allCandidates: [
+			(XMLDOMParser parse: xmlFileHandle rawReadStream) allElements];
 		itemName: #gtDisplayString;
 		filter: GTFilterSubstring;
 		wantsToDisplayOnEmptyQuery: true.
@@ -56,13 +60,17 @@ FileReference >> spotterForXMLFileFor: aStep [
 FileReference >> spotterPreviewXMLFileIn: aComposite [
 	<spotterPreview: 10>
 
-	self isXMLFile
+	| xmlFileHandle |
+
+	xmlFileHandle := XMLFileSystemFileHandle fileReference: self.
+	xmlFileHandle isXMLDocumentFile
 		ifFalse: [^ self].
 
 	aComposite text
 		title: 'Source';
 		display: [
+			"the source is converted to a decoded string and then highlighted"
 			XMLHighlightingParser parse:
-				(XMLExternalDocumentConverter convertFileNamed: self fullName)];
+				(XMLExternalDocumentConverter convert: xmlFileHandle rawReadStream)];
 		entity: self.
 ]

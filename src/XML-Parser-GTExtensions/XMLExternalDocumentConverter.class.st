@@ -18,6 +18,13 @@ XMLExternalDocumentConverter class >> convert: aStringOrStream [
 ]
 
 { #category : #converting }
+XMLExternalDocumentConverter class >> convert: aStringOrStream readLimit: aReadLimit [
+	^ (self
+		on: aStringOrStream
+		readLimit: aReadLimit) convert
+]
+
+{ #category : #converting }
 XMLExternalDocumentConverter class >> convertFileNamed: aFileName [
 	^ (self onFileNamed: aFileName) convert
 ]
@@ -43,7 +50,7 @@ XMLExternalDocumentConverter class >> on: aStringOrStream readLimit: aReadLimit 
 XMLExternalDocumentConverter class >> onFileNamed: aFileName [
 	^ self on:
 		(aFileName asXMLFileHandle
-			readStreamUpToLimit: nil
+			streamGetUpToLimit: nil
 			decoding: false)
 ]
 
@@ -155,7 +162,7 @@ XMLExternalDocumentConverter >> setStream: aStream readLimit: aReadLimit [
 
 { #category : #'private ' }
 XMLExternalDocumentConverter >> skipSeparators [
-	[self peek xmlParserIsSeparator]
+	[self peek isXMLSeparator]
 		whileTrue: [self next]
 ]
 
