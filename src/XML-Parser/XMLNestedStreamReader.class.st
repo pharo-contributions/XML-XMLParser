@@ -375,10 +375,10 @@ XMLNestedStreamReader >> skip: anInteger [
 
 { #category : #positioning }
 XMLNestedStreamReader >> skipSeparators [
-	"nil understands xmlParserIsSeparator so the result of the inlined #peek
+	"nil understands isXMLSeparator so the result of the inlined #peek
 	does not need to be tested for nil first"
 	[(peekChar ifNil: [peekChar := self basicNext]) "inlined #peek"
-		xmlParserIsSeparator]
+		isXMLSeparator]
 		whileTrue: [
 			"inlined #next"
 			peekChar == normalizedLineEndingChar

@@ -1,5 +1,5 @@
 "
-A GsFile read stream factory. This stream is preferred for Gemstone because it does no decoding and returns byte characters, so XMLParser can do its own decoding.
+A GsFile read stream factory. This stream is preferred for Gemstone because it does no decoding and returns byte characters so XMLParser can do its own decoding.
 "
 Class {
 	#name : #XMLGsFileReadStreamFactory,
@@ -8,14 +8,14 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLGsFileReadStreamFactory class >> fileReadStreamOnPath: aPath [
+XMLGsFileReadStreamFactory class >> basicOnPath: aPathString [
 	^ (Smalltalk at: #GsFile)
-		open: aPath
+		open: aPathString
 		mode: 'rb' "binary to avoid CRLF<->LF conversions on Windows"
 		onClient: false "use server files by default"
 ]
 
 { #category : #testing }
 XMLGsFileReadStreamFactory class >> isSupportedImplementation [
-	^ (Smalltalk includesKey: #GsFile)
+	^ Smalltalk includesKey: #GsFile
 ]

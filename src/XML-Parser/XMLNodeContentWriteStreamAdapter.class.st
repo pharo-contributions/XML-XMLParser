@@ -13,8 +13,8 @@ Class {
 { #category : #private }
 XMLNodeContentWriteStreamAdapter >> insertSpaceBefore: aCharacter [
 	(lastChar == nil
-		or: [lastChar xmlParserIsWhitespace
-			or: [aCharacter xmlParserIsWhitespace]])
+		or: [lastChar isXMLWhitespace
+			or: [aCharacter isXMLWhitespace]])
 		ifFalse: [stream nextPut: SpaceCharacter]
 ]
 

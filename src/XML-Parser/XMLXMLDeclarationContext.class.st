@@ -12,6 +12,11 @@ XMLXMLDeclarationContext >> isXMLDeclarationContext [
 	^ true
 ]
 
+{ #category : #tokenizing }
+XMLXMLDeclarationContext >> nextTokenFrom: aTokenizer [
+	aTokenizer nextXMLDeclarationOrPrologToken
+]
+
 { #category : #testing }
 XMLXMLDeclarationContext >> supportsEncodingDetection [
 	^ true

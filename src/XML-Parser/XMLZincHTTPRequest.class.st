@@ -13,36 +13,25 @@ XMLZincHTTPRequest class >> isSupportedImplementation [
 ]
 
 { #category : #private }
-XMLZincHTTPRequest >> getResponseUpToLimit: aMaxSize decoding: aBoolean timeout: aTimeout onError: aBlock [
-	^ self
-		setZincMaxEntitySize: aMaxSize
+XMLZincHTTPRequest >> basicGetUpToLimit: aMaxSize decoding: aBoolean [
+	"value:during: on GS doesn't return the result of evaluating its second
+	argument, so instead the value:during: block is returned from"
+	(Smalltalk at: #ZnMaximumEntitySize)
+		value: aMaxSize
 		during: [
 			"Use streaming entities to get the undecoded response when
 			decoding is disabled. This is used to not conflict with our
 			own decoding that relies on byte-order marks and <?xml?>
 			encoding attributes."
-			((Smalltalk at: #ZnClient) new
+			^ ((Smalltalk at: #ZnClient) new
 				streaming: aBoolean not; "use streaming if not decoding"
-				timeout: aTimeout;
-				url: url;
+				timeout: self defaultTimeout;
+				url: self url;
 				get;
 				entity) contents]
-		onError: aBlock
 ]
 
 { #category : #private }
 XMLZincHTTPRequest >> isMaxSizeException: anException [
 	^ anException isKindOf: (Smalltalk at: #ZnEntityTooLarge)
-]
-
-{ #category : #private }
-XMLZincHTTPRequest >> setZincMaxEntitySize: aMaxSize during: aDuringBlock onError: anErrorBlock [
-	^ [
-		(Smalltalk at: #ZnMaximumEntitySize)
-			value: aMaxSize
-			during: [
-				"^ for GS value:during: which doesn't return the block result"
-				^ aDuringBlock value]]
-		on: Error
-		do: anErrorBlock
 ]

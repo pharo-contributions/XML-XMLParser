@@ -80,11 +80,11 @@ XMLReadStreamAdapter >> skip: anInteger [
 
 { #category : #positioning }
 XMLReadStreamAdapter >> skipSeparators [
-	"xmlParserIsWhitespace matches the Squeak/Pharo isSeparator range, so
-	it is used here instead of xmlParserIsSeparator to give expected behavior
+	"isXMLWhitespace matches the Squeak/Pharo isSeparator range, so
+	it is used here instead of isXMLSeparator to give expected behavior
 	when reading non-XML files"
 	[self atEnd not
-		and: [self peek xmlParserIsWhitespace]]
+		and: [self peek isXMLWhitespace]]
 		whileTrue: [self next]
 ]
 

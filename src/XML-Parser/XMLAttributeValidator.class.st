@@ -96,7 +96,7 @@ XMLAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
 { #category : #private }
 XMLAttributeValidator >> listValuesIn: aSpaceSeparatedList do: aBlock [
 	NormalizedSpace
-		xmlParserSplit: aSpaceSeparatedList
+		xmlSplit: aSpaceSeparatedList
 		do: aBlock
 ]
 

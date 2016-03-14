@@ -1,5 +1,9 @@
 "
-This is an abstract class for file handles to read/write/delete files. Subclasses need to implement the abstract methods.
+This is an abstract class for file handles to read/write/delete files. Subclasses need to implement the abstract methods, and then instances of the correct concrete class for this platform can be created by sending #asXMLFileHandle to a string.
+
+The #readStream/#writeStream messages return file streams that do decoding/encoding, while the #rawReadStream/#rawWriteStream streams don't.
+
+The #get/#getUpToLimit:decoding: and #streamGet/#streamGetUpToLimit:decoding: interface of XMLURI is supported.
 "
 Class {
 	#name : #XMLFileHandle,
@@ -7,17 +11,22 @@ Class {
 	#instVars : [
 		'path'
 	],
+	#classVars : [
+		'XMLDocumentFileExtensions'
+	],
 	#category : #'XML-Parser-File'
 }
 
-{ #category : #accessing }
-XMLFileHandle class >> currentWorkingDirectory [
-	^ self implementation currentWorkingDirectoryPathString
+{ #category : #private }
+XMLFileHandle class >> basicCurrentWorkingDirectory [
+	self subclassResponsibility
 ]
 
-{ #category : #private }
-XMLFileHandle class >> currentWorkingDirectoryPathString [
-	self subclassResponsibility
+{ #category : #accessing }
+XMLFileHandle class >> currentWorkingDirectory [
+	"returns a path string for the current working directory"
+
+	^ self implementation basicCurrentWorkingDirectory
 ]
 
 { #category : #private }
@@ -25,9 +34,33 @@ XMLFileHandle class >> errorNoSupportedImplementation [
 	XMLFileException signal: 'File IO unsupported'
 ]
 
+{ #category : #initialization }
+XMLFileHandle class >> initialize [
+	"self initialize"
+
+	XMLDocumentFileExtensions :=
+		Set withAll: "avoid newFrom: for GS portability"
+			#('dbk' "DocBook XML"
+				'docm' "Office Open XML Document"
+				'docx' "Office Open XML Document"
+				'pptm' "Office Open XML Presentation"
+				'pptx' "Office Open XML Presentation"
+				'rdf' "Resource Description Framework"
+				'xbel' "XML Bookmark Exchange Language"
+				'xfd' "Extensible Forms Description Language"
+				'xfdl' "Extensible Forms Description Language"
+				'xhtml'
+				'xlsm' "Office Open XML Workbook"
+				'xlsx' "Office Open XML Workbook"
+				'xml'
+				'xsd' "XML Schema Definition"
+				'xspf' "XML Shareable Playlist Format"
+				'xul') "XML User Interface Language"
+]
+
 { #category : #'instance creation' }
-XMLFileHandle class >> path: aSystemPath [
-	^ self new path: aSystemPath
+XMLFileHandle class >> path: aPathString [
+	^ self new path: aPathString
 ]
 
 { #category : #accessing }
@@ -40,30 +73,60 @@ XMLFileHandle >> asXMLFileHandle [
 	^ self
 ]
 
+{ #category : #private }
+XMLFileHandle >> basicDelete [
+	self subclassResponsibility
+]
+
+{ #category : #accessing }
+XMLFileHandle >> contents [
+	"the read stream adapters don't support #contents so #upToEnd is used instead"
+	^ self readStreamDo: [:readStream | readStream upToEnd]
+]
+
 { #category : #deleting }
 XMLFileHandle >> delete [
-	self deleteFileOrDo: [:error | XMLFileException signalMessageFrom: error]
+	self exists
+		ifFalse: [self errorFileDoesNotExist].
+
+	[self basicDelete]
+		on: Error
+		do: [:error | XMLFileException signalMessageFrom: error].
 ]
 
 { #category : #private }
-XMLFileHandle >> deleteFileOrDo: aBlock [
-	self subclassResponsibility
+XMLFileHandle >> errorFileDoesNotExist [
+	XMLFileException
+		formatSignal: 'File does does not exist: {1}'
+		with: self path
 ]
 
 { #category : #private }
 XMLFileHandle >> errorFileSize: aFileSize exceedsMaxSize: aMaxSize [
 	XMLLimitException
-		formatSignal: 'File of size {1} exceeds max size limit of {2}: {3}'
+		formatSignal: 'File size {1} bytes exceeds max size of {2}: {3}'
 		with: aFileSize
 		with: aMaxSize
-		with: path
+		with: self path
 ]
 
 { #category : #private }
 XMLFileHandle >> errorNotAFile [
 	XMLFileException
 		formatSignal: 'Not a file: {1}'
-		with: path
+		with: self path
+]
+
+{ #category : #testing }
+XMLFileHandle >> exists [
+	"returns true if the file exists"
+
+	self subclassResponsibility
+]
+
+{ #category : #accessing }
+XMLFileHandle >> extension [
+	^ self path copyAfterLast: $.
 ]
 
 { #category : #accessing }
@@ -80,7 +143,7 @@ XMLFileHandle >> get [
 
 { #category : #retrieving }
 XMLFileHandle >> getUpToLimit: aMaxSize decoding: aBoolean [
-	| stream upToEnd |
+	| stream contents |
 
 	"can be safely implemented using streamGetUpToLimit:decoding: rather
 	than the other way around like XMLHTTPRequest requires, because files
@@ -90,15 +153,37 @@ XMLFileHandle >> getUpToLimit: aMaxSize decoding: aBoolean [
 		self
 			streamGetUpToLimit: aMaxSize
 			decoding: aBoolean.
-	upToEnd := stream upToEnd.
+	"the read stream adapters don't support #contents so #upToEnd is used instead"
+	contents := stream upToEnd.
 	stream close.
 
-	^ upToEnd.
+	^ contents.
 ]
 
 { #category : #testing }
 XMLFileHandle >> isFile [
+	"returns true if the file exists and is a file (not a directory)"
+
 	self subclassResponsibility
+]
+
+{ #category : #testing }
+XMLFileHandle >> isXMLDocumentFile [
+	"Returns true if the file has a known extension of an XML document format
+	such as .xml, .xhtml, and .xul, but not .dtd, .ent, or other formats that
+	are XML-related but not proper XML documents."
+
+	^ XMLDocumentFileExtensions includes: self extension asLowercase
+]
+
+{ #category : #private }
+XMLFileHandle >> newFileReadStreamOnPath [
+	^ XMLFileReadStreamFactory onPath: self path
+]
+
+{ #category : #private }
+XMLFileHandle >> newFileWriteStreamOnPath [
+	^ XMLFileWriteStreamFactory onPath: self path
 ]
 
 { #category : #accessing }
@@ -107,8 +192,8 @@ XMLFileHandle >> path [
 ]
 
 { #category : #accessing }
-XMLFileHandle >> path: aPath [
-	path := aPath
+XMLFileHandle >> path: aPathString [
+	path := aPathString
 ]
 
 { #category : #printing }
@@ -116,15 +201,44 @@ XMLFileHandle >> printOn: aStream [
 	super printOn: aStream.
 	aStream
 		nextPut: $(;
-		nextPutAll: path;
+		nextPutAll: self path;
 		nextPut: $).
 ]
 
 { #category : #reading }
+XMLFileHandle >> rawReadStream [
+	"returns a raw file read stream with no decoding"
+
+	self exists
+		ifFalse: [self errorFileDoesNotExist].
+	self isFile
+		ifFalse: [self errorNotAFile].
+	
+	^ [self newFileReadStreamOnPath]
+		on: Error
+		do: [:error | XMLFileException signalMessageFrom: error].
+]
+
+{ #category : #writing }
+XMLFileHandle >> rawWriteStream [
+	"returns a raw file write stream with no encoding; truncates existing files"
+
+	^ [self newFileWriteStreamOnPath]
+		on: Error
+		do: [:error | XMLFileException signalMessageFrom: error]
+]
+
+{ #category : #reading }
 XMLFileHandle >> readStream [
-	^ self
-		readStreamUpToLimit: nil
-		decoding: true
+	"returns a file read stream with decoding"
+
+	| decodingReadStreamAdapter |
+	
+	decodingReadStreamAdapter :=
+		XMLDecodingReadStreamAdapter on: self rawReadStream.
+	(XMLFileStreamEncodingDetector on: decodingReadStreamAdapter)
+			detectCurrentEncoding.
+	^ decodingReadStreamAdapter.
 ]
 
 { #category : #reading }
@@ -136,33 +250,6 @@ XMLFileHandle >> readStreamDo: aBlock [
 		ensure: [readStream close].
 ]
 
-{ #category : #reading }
-XMLFileHandle >> readStreamUpToLimit: aMaxSize decoding: aBoolean [
-	| fileSize readStream |
-
-	self isFile
-		ifFalse: [self errorNotAFile].
-	
-	(fileSize := self fileSize) > 0
-		ifFalse: [ ^ '' readStream].
-
-	(aMaxSize notNil
-		and: [fileSize > aMaxSize])
-		ifTrue: [self errorFileSize: fileSize exceedsMaxSize: aMaxSize].
-
-	[readStream := XMLFileReadStreamFactory onPath: path]
-		on: Error
-		do: [:error | XMLFileException signalMessageFrom: error].
-
-	aBoolean
-		ifTrue: [| decodingReadStreamAdapter |
-			decodingReadStreamAdapter := XMLDecodingReadStreamAdapter on: readStream.
-			(XMLFileStreamEncodingDetector on: decodingReadStreamAdapter)
-				detectCurrentEncoding.
-			^ decodingReadStreamAdapter]
-		ifFalse: [^ readStream].
-]
-
 { #category : #retrieving }
 XMLFileHandle >> streamGet [
 	^ self
@@ -172,28 +259,21 @@ XMLFileHandle >> streamGet [
 
 { #category : #retrieving }
 XMLFileHandle >> streamGetUpToLimit: aMaxSize decoding: aBoolean [
-	^ self
-		readStreamUpToLimit: aMaxSize
-		decoding: aBoolean
+	(aMaxSize notNil
+		and: [self fileSize > aMaxSize])
+		ifTrue: [
+			self
+				errorFileSize: self fileSize
+				exceedsMaxSize: aMaxSize].
+
+	^ aBoolean
+		ifTrue: [self readStream]
+		ifFalse: [self rawReadStream].
 ]
 
 { #category : #writing }
 XMLFileHandle >> writeStream [
-	^ self writeStreamDecoding: true
-]
-
-{ #category : #writing }
-XMLFileHandle >> writeStreamDecoding: aBoolean [
-	| writeStream |
-
-	writeStream :=
-		[XMLFileWriteStreamFactory onPath: path]
-			on: Error
-			do: [:error | XMLFileException signalMessageFrom: error].
-
-	aBoolean
-		ifTrue: [^ XMLEncodingWriteStreamAdapter on: writeStream]
-		ifFalse: [^ writeStream].
+	^ XMLEncodingWriteStreamAdapter on: self rawWriteStream
 ]
 
 { #category : #writing }

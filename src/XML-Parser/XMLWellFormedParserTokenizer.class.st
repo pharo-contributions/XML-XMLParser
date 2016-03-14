@@ -244,16 +244,16 @@ XMLWellFormedParserTokenizer >> errorEntityDepthLimitExceeded [
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpected: aString [
-	self parseError: 'Expected ', aString
+XMLWellFormedParserTokenizer >> errorExpected: aDescription [
+	self parseError: 'Expected ', aDescription
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpected: aString butGot: aCharacter [
+XMLWellFormedParserTokenizer >> errorExpected: aDescription butGot: aCharacter [
 	self errorExpected:
 		('{1} but got "{2}"' format:
 			(Array
-				with: aString
+				with: aDescription
 				with: (aCharacter ifNil: [''])))
 ]
 
@@ -265,7 +265,7 @@ XMLWellFormedParserTokenizer >> errorExpectedAttributeNameValueSeparator [
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorExpectedAttributeValueEndButGot: aCharacter [
 	aCharacter == $<
-		ifTrue: [self parseError: 'Attribute value contains "<" character']
+		ifTrue: [self parseError: 'Attribute value contains illegal "<" character']
 		ifFalse: [self errorExpected: 'end of quoted attribute value']
 ]
 
@@ -276,7 +276,8 @@ XMLWellFormedParserTokenizer >> errorExpectedAttributeValueStart [
 
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorExpectedIntegerCharacterReference [
-	self errorExpected: 'decimal or hex integer character reference'
+	self errorExpected:
+		'decimal or hex integer after "&#" character reference start'
 ]
 
 { #category : #errors }
@@ -327,6 +328,12 @@ XMLWellFormedParserTokenizer >> errorExpectedSeparators [
 ]
 
 { #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedSubsetDeclaration [
+	self errorExpected:
+		'DTD subset ELEMENT, ENTITY, ATTLIST, or NOTATION declaration'
+]
+
+{ #category : #errors }
 XMLWellFormedParserTokenizer >> errorExpectedTerminatorButGot: aCharacter [
 	self
 		errorExpected: '">" terminator'
@@ -345,8 +352,9 @@ XMLWellFormedParserTokenizer >> errorInternalSubsetConditionalSection [
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorInvalidCodePoint: aCodePoint [
-	self parseError: 'Invalid character code point ', aCodePoint printString
+XMLWellFormedParserTokenizer >> errorInvalidCharacterReferenceCodePoint: aCodePoint [
+	self parseError:
+		'Invalid character reference to code point U+', aCodePoint printStringHex
 ]
 
 { #category : #errors }
@@ -465,8 +473,8 @@ XMLWellFormedParserTokenizer >> expectQuote [
 
 { #category : #'tokenizing - expecting' }
 XMLWellFormedParserTokenizer >> expectSeparators [
-	"nil understands xmlParserIsSeparator so no nil test is needed"
-	streamReader peek xmlParserIsSeparator
+	"nil understands isXMLSeparator so no nil test is needed"
+	streamReader peek isXMLSeparator
 		ifTrue: [
 			streamReader
 				next;
@@ -704,7 +712,7 @@ XMLWellFormedParserTokenizer >> nextAttributeValue [
 						ifTrue: [self nextCharacterReferenceOnWriteStream]
 						ifFalse: [self nextGeneralEntityReferenceOnWriteStream]]
 				ifFalse: [
-					nextChar xmlParserIsSeparator
+					nextChar isXMLSeparator
 						ifTrue: [nextChar := NormalizedSpace].
 					writeStream nextPut: nextChar]].
 	context exitLiteralValue.
@@ -729,7 +737,7 @@ XMLWellFormedParserTokenizer >> nextCharacterReferenceOnWriteStream [
 			(codePoint := streamReader nextIntegerPrintedOn: nameStream)
 				ifNil: [self errorExpectedIntegerCharacterReference].
 			(self characterFromCodePoint: codePoint)
-				ifNil: [self errorInvalidCodePoint: codePoint].
+				ifNil: [self errorInvalidCharacterReferenceCodePoint: codePoint].
 			self expectNext: $;.
 			writeStream
 				nextPutAll: '&#';
@@ -739,7 +747,7 @@ XMLWellFormedParserTokenizer >> nextCharacterReferenceOnWriteStream [
 			(codePoint := streamReader nextInteger)
 				ifNil: [self errorExpectedIntegerCharacterReference].
 			(character := self characterFromCodePoint: codePoint)
-				ifNil: [self errorInvalidCodePoint: codePoint].
+				ifNil: [self errorInvalidCharacterReferenceCodePoint: codePoint].
 			self expectNext: $;.
 			writeStream nextPut: character].
 	^ true.
@@ -871,10 +879,7 @@ XMLWellFormedParserTokenizer >> nextDoctypeDeclarationOrComment [
 	"skip !"
 	streamReader next.
 	streamReader peek == $-
-		ifTrue: [
-			context isXMLDeclarationContext
-				ifTrue: [context := context prologContext].
-			^ self nextComment].
+		ifTrue: [^ self nextComment].
 	context isPostDoctypeDeclarationContext
 		ifTrue: [self errorMultipleDoctypeDeclarations].
 	self nextDoctypeDeclaration.
@@ -946,8 +951,8 @@ XMLWellFormedParserTokenizer >> nextEntityDeclaration [
 					streamReader peek == $%
 						ifTrue: [
 							streamReader next.
-							"nil understands xmlParserIsSeparator so no nil test is needed"
-							streamReader peek xmlParserIsSeparator
+							"nil understands isXMLSeparator so no nil test is needed"
+							streamReader peek isXMLSeparator
 								ifTrue: [
 									isParameterEntity := true.
 									self expectSeparatorsInDeclaration]
@@ -1040,6 +1045,20 @@ XMLWellFormedParserTokenizer >> nextExternalEntityDeclaration: aName isParameter
 				publicID: publicID
 				systemID: systemID
 				ndata: notation].
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> nextExternalSubsetToken [
+	streamReader skipSeparators.
+	streamReader atEnd
+		ifTrue: [^ self].
+	streamReader peek == $%
+		ifTrue: [
+			streamReader next.
+			^ self nextParameterEntityReference].
+	streamReader peek == $]
+		ifTrue: [^ self nextEndIncludeSection].
+	self nextSubsetMarkupToken.
 ]
 
 { #category : #tokenizing }
@@ -1182,6 +1201,15 @@ XMLWellFormedParserTokenizer >> nextNmtokenOnWriteStream [
 		whileTrue: [writeStream nextPut: streamReader next].
 ]
 
+{ #category : #tokenizing }
+XMLWellFormedParserTokenizer >> nextNonPIPrologOrContentToken [
+	streamReader peek == $!
+		ifTrue: [^ self nextDoctypeDeclarationOrComment].
+	self
+		nextStartContent;
+		nextTag.
+]
+
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextNotationDeclaration [
 	| name publicID systemID |
@@ -1235,7 +1263,7 @@ XMLWellFormedParserTokenizer >> nextPCDataToken [
 								ifTrue: [self errorUnexpectedCDataTerminatorInPCData]
 								ifFalse: [streamReader pushBackCharacter: $]]].
 					isIgnorableWhitespace
-						ifTrue: [isIgnorableWhitespace := nextChar xmlParserIsSeparator].
+						ifTrue: [isIgnorableWhitespace := nextChar isXMLSeparator].
 					writeStream nextPut: nextChar]].
 	isIgnorableWhitespace
 		ifTrue: [
@@ -1248,14 +1276,15 @@ XMLWellFormedParserTokenizer >> nextPCDataToken [
 XMLWellFormedParserTokenizer >> nextPITarget [
 	| target |
 
-	target := self nextName.
-	context isXMLDeclarationContext
-		ifFalse: [
+	(target := self nextName) size = 3
+		ifTrue: [
 			target = 'xml'
-				ifTrue: [self errorXMLDeclarationNotAtBeginning]].
-	target = 'XML'
-		ifTrue: [self errorXMLPITargetReserved].
-
+				ifTrue: [
+					context isXMLDeclarationContext
+						ifFalse: [self errorXMLDeclarationNotAtBeginning]]
+				ifFalse: [
+					target asLowercase = 'xml'
+						ifTrue: [self errorXMLPITargetReserved]]].
 	^ target.
 ]
 
@@ -1303,17 +1332,10 @@ XMLWellFormedParserTokenizer >> nextParameterEntityReferenceOnWriteStream [
 { #category : #tokenizing }
 XMLWellFormedParserTokenizer >> nextPrologToken [
 	streamReader skipSeparators.
-	streamReader atEnd
-		ifTrue: [^ self].
-
 	self expectNext: $<.
 	streamReader peek == $?
-		ifTrue: [^ self nextPIOrXMLDeclaration].
-	streamReader peek == $!
-		ifTrue: [^ self nextDoctypeDeclarationOrComment].
-	self
-		nextStartContent;
-		nextTag.
+		ifTrue: [^ self nextPI].
+	self nextNonPIPrologOrContentToken.
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -1360,7 +1382,7 @@ XMLWellFormedParserTokenizer >> nextSubsetDeclaration [
 	streamReader peek == $N
 		ifTrue: [^ self nextNotationDeclaration].
 
-	self errorExpected: 'DTD subset declaration'.
+	self errorExpectedSubsetDeclaration.
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -1415,8 +1437,8 @@ XMLWellFormedParserTokenizer >> nextTag [
 	tagName := self nextName.
 
 	attributes := OrderPreservingStringDictionary new: 10.
-	"nil understands xmlParserIsSeparator so is not tested for"
-	[(nextChar := streamReader peek) xmlParserIsSeparator
+	"nil understands isXMLSeparator so is not tested for"
+	[(nextChar := streamReader peek) isXMLSeparator
 		and: [
 			streamReader
 				next;
@@ -1433,7 +1455,7 @@ XMLWellFormedParserTokenizer >> nextTag [
 	
 			(attributeName at: 1) == $x
 				ifTrue: [
-					(attributeName isNamespaceAttributeName
+					(attributeName isXMLNSAttributeName
 						and: [driver usesNamespaces])
 						ifTrue: [
 							"initialize only if needed"
@@ -1445,7 +1467,7 @@ XMLWellFormedParserTokenizer >> nextTag [
 										ifFalse: [''])
 								put: attributeValue]
 						ifFalse: [							
-							attributeName isReservedAttributeName
+							attributeName isXMLReservedAttributeName
 								ifTrue: [driver haveUnhandledReservedAttributes].
 							attributes
 								xmlAttributeAt: attributeName

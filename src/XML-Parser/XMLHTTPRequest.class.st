@@ -31,6 +31,11 @@ XMLHTTPRequest >> asXMLHTTPRequest [
 ]
 
 { #category : #private }
+XMLHTTPRequest >> basicGetUpToLimit: aMaxSize decoding: aBoolean [
+	self subclassResponsibility
+]
+
+{ #category : #private }
 XMLHTTPRequest >> defaultTimeout [
 	^ 30
 ]
@@ -42,21 +47,16 @@ XMLHTTPRequest >> get [
 		decoding: true
 ]
 
-{ #category : #private }
-XMLHTTPRequest >> getResponseUpToLimit: aMaxSize decoding: aBoolean timeout: aTimeout onError: aBlock [
-	self subclassResponsibility
-]
-
 { #category : #retrieving }
 XMLHTTPRequest >> getUpToLimit: aMaxSize decoding: aBoolean [
-	^ self
-		getResponseUpToLimit: aMaxSize
-		decoding: aBoolean
-		timeout: self defaultTimeout
-		onError: [:error |
-			(self isMaxSizeException: error)
-				ifTrue: [XMLLimitException signal: 'HTTP reponse limit exceeded']
-				ifFalse: [XMLHTTPException signalMessageFrom: error]]
+	^ [self
+			basicGetUpToLimit: aMaxSize
+			decoding: aBoolean]
+			on: Error
+			do: [:error |
+				(self isMaxSizeException: error)
+					ifTrue: [XMLLimitException signal: 'HTTP reponse limit exceeded']
+					ifFalse: [XMLHTTPException signalMessageFrom: error]]
 ]
 
 { #category : #private }
@@ -69,7 +69,7 @@ XMLHTTPRequest >> printOn: aStream [
 	super printOn: aStream.
 	aStream
 		nextPut: $(;
-		nextPutAll: url;
+		nextPutAll: self url;
 		nextPut: $).
 ]
 

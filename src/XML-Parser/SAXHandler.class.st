@@ -1,23 +1,27 @@
 "
-This class is an XML parser that uses event handling. Subclass it and override handlers under ""handling - content"" and ""handling - lexical"" as needed. By default, namespace support and validation are enabled but not external entity resolution.
+This class is an event-handling XML parser. To use it, subclass it and override event handlers in the ""handling"" categories, such as startDocument, startElement:attributes:, endElement:, and endDocument.
 
-To instantiate a subclass, send any of the ""instance creation"" or ""parsing"" messages. The ""parsing"" messages take some input and parse it immediately, returning the result:
-	SAXHandlerSubclass parse: xml.
-	SAXHandlerSubclass parseURL: url.
-	SAXHandlerSubclass parse: xml usingNamespaces: false
+By default XML namespace support and validation are enabled but not external entity resolution.
 
-The ""instance creation"" messages create new parsers on the input and return it so it can be configured before being sent #parseDocument to parse the input:
-	(SAXHandlerSubclass on: xml)
-		isValidating: true;
-		resolvesExternalEntities: true;
-		parseDocument.
+Once the subclass is ready, use the class ""parsing"" messages to parse XML:
+	result := SAXHandlerSubclass parse: xmlStringOrStream.
+	resultFromURL := SAXHandlerSubclass parseURL: xmlURLString.
+	resultFromFile := SAXHandlerSubclass parseFileNamed: xmlFileName.
+
+The class ""instance creation"" messages create and return new parsers on the input so they can be configured with messages in the  ""configuring"" category before parsing:
+	result :=
+		(SAXHandlerSubclass on: xmlStringOrStream)
+			isValidating: true;
+			resolvesExternalEntities: true;
+			parseDocument.
 
 #interruptParsing can be sent from within a handler to stop parsing, and there is also #parseDocumentWhile: and #parseDocumentUntil: 
-	(SAXHandlerSubclass on: xml)
-		parseDocumentWhile: [self shouldKeepParsing].
+	result :=
+		(SAXHandlerSubclass on: xmlStringOrStream)
+			parseDocumentWhile: [self shouldKeepParsing].
 
 To parse incrementally, send #parser to an instance to get the underlying XMLParser object and send it #parseToken repeatedly:
-	(handler := SAXHandlerSubclass on: xml)
+	(handler := SAXHandlerSubclass on: xmlStringOrStream)
 		isValidating: false; 
 		preservesUndeclaredEntityReferences: true.
 	parser := handler parser.
@@ -26,11 +30,12 @@ To parse incrementally, send #parser to an instance to get the underlying XMLPar
 	10 timesRepeat: [parser parseToken].
 
 There are security limits on input you can remove with #removeLimits or change with messages like #documentReadLimit:
-	(SAXHandlerSubclass on: xml)
-		removeLimits;
-		documentReadLimit: newReadLimit;
-		maxEntityReplacementDepth: newMaxEntityDepth;
-		parseDocument.
+	result :=
+		(SAXHandlerSubclass on: xmlStringOrStream)
+			removeLimits;
+			documentReadLimit: newReadLimit;
+			maxEntityReplacementDepth: newMaxEntityDepth;
+			parseDocument.
 		
 #optimizeForLargeDocuments can be used when parsing large documents if you don't care for validating or namespaces.
 "
@@ -49,30 +54,49 @@ Class {
 
 { #category : #'instance creation' }
 SAXHandler class >> on: aStringOrStream [
-	"Returns new parser on the argument string or stream but doesn't parse"
+	"Returns a new parser on the string or stream argument but doesn't parse it.
+
+	Can be used to configure a parser with 'configuring' messages before
+	parsing with parseDocument."
 
 	^ self new on: aStringOrStream
 ]
 
 { #category : #'instance creation' }
 SAXHandler class >> on: aStringOrStream documentURI: aURIString [
-	"Returns new parser with associated base URI but doesn't parse"
+	"Returns a new parser on the string or stream argument treating the
+	specified URI as the base URI of the document but doesn't parse it.
+
+	Can be used to configure a parser with 'configuring' messages before
+	parsing with parseDocument."
 
 	^ (self on: aStringOrStream) documentURI: aURIString
 ]
 
 { #category : #'instance creation' }
-SAXHandler class >> onFileNamed: aFileNameString [
-	"Returns new parser on the specified file but doesn't parse"
+SAXHandler class >> onFileNamed: aFileName [
+	"Returns a new parser on the specified file but doesn't parse it.
+	If aFileName is a relative path, it will be resolved in the context of
+	the current working directory.
+
+	Can be used to configure file parsers with 'configuring' messages before
+	parsing with parseDocument."
 
 	^ self
-		on: aFileNameString asXMLFileHandle readStream
-		documentURI: aFileNameString
+		on:
+			(aFileName asXMLFileHandle
+				streamGetUpToLimit: nil
+				decoding: false)
+		documentURI: aFileName
 ]
 
 { #category : #'instance creation' }
 SAXHandler class >> onURL: aURLString [
-	"Fetches URL and returns new parser on the response but doesn't parse"
+	"Fetches the URL and returns new parser on the response content but doesn't
+	parse it. If the URL has no scheme, it will be treated as a file path.
+
+	Can be used to configure URL parsers with 'configuring' messages before
+	parsing with parseDocument."
 
 	^ self
 		onURL: aURLString
@@ -80,31 +104,36 @@ SAXHandler class >> onURL: aURLString [
 ]
 
 { #category : #'instance creation' }
-SAXHandler class >> onURL: aURLString upToLimit: aLimit [
-	"Fetches URL and returns new parser on the response up to
-	the input limit (use nil to disable) but doesn't parse"
+SAXHandler class >> onURL: aURLString upToLimit: aMaxSize [
+	"Fetches a URL and returns new parser on the response content up to the
+	input limit (use nil to disable) but doesn't parse it. If the URL has
+	no scheme, it will be treated as a file path.
+
+	Can be used to configure limited URL parsers with 'configuring' messages
+	before parsing with parseDocument."
 
 	^ (self
 		on:
 			(XMLDecodingReadStreamAdapter on:
 				(aURLString asXMLURI
-					streamGetUpToLimit: aLimit
+					streamGetUpToLimit: aMaxSize
 					"disable decoding so we can do our own looking at byte order
 					marks and <?xml ...?> encoding attributes"
 					decoding: false))
-		documentURI: aURLString) documentReadLimit: aLimit
+		documentURI: aURLString) documentReadLimit: aMaxSize
 ]
 
 { #category : #parsing }
 SAXHandler class >> parse: aStringOrStream [
-	"Parse document in argument string or stream"
+	"Parses the document in the string or stream argument"
 
 	^ (self on: aStringOrStream) parseDocument
 ]
 
 { #category : #parsing }
 SAXHandler class >> parse: aStringOrStream documentURI: aURIString [
-	"Parse document in argument string or stream with associated base URI"
+	"Parses the document in the string or stream argument treating the specified
+	URI as the base URI of the document."
 
 	^ (self
 		on: aStringOrStream
@@ -113,7 +142,8 @@ SAXHandler class >> parse: aStringOrStream documentURI: aURIString [
 
 { #category : #parsing }
 SAXHandler class >> parse: aStringOrStream usingNamespaces: aBoolean [
-	"Parses string or stream possibly with namespace checking (default enabled)"
+	"Parses the document in the string or stream argument possibly with namespace
+	checking enabled (default)"
 
 	^ (self on: aStringOrStream)
 		usesNamespaces: aBoolean;
@@ -122,8 +152,8 @@ SAXHandler class >> parse: aStringOrStream usingNamespaces: aBoolean [
 
 { #category : #parsing }
 SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean validation: aValidationBoolean [
-	"Parses string or stream possibly with namespace checking
-	or validation (both defualt enabled)"
+	"Parses the document in the string or stream argument possibly with namespace
+	checking (default) and validation (default) enabled."
 
 	^ (self on: aStringOrStream)
 		usesNamespaces: aNamespaceBoolean;
@@ -133,9 +163,9 @@ SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean va
 
 { #category : #parsing }
 SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean validation: aValidationBoolean externalEntities: anEntityResolutionBoolean [
-	"Parses string or stream possibly with namespace checking
-	or validation (both defualt enabled)
-	or external entity resolution (default disabled)"
+	"Parses the document in the string or stream argument possibly with namespace
+	checking (default), validation (default), or external entity resolution (not
+	default) enabled."
 
 	^ (self on: aStringOrStream)
 		usesNamespaces: aNamespaceBoolean;
@@ -152,33 +182,37 @@ SAXHandler class >> parseDocumentFrom: aStringOrStream [
 ]
 
 { #category : #deprecated }
-SAXHandler class >> parseDocumentFromFileNamed: aFileNameString [
+SAXHandler class >> parseDocumentFromFileNamed: aFileName [
 	self deprecated: 'Use #parseFileNamed: instead'.
 
-	^ self parseFileNamed: aFileNameString.
+	^ self parseFileNamed: aFileName.
 ]
 
 { #category : #parsing }
 SAXHandler class >> parseFileNamed: aFileNameString [
-	"Parses a document in a specified file"
+	"Parses the specified file. If aFileName is a relative path, it will be
+	resolved in the context of the current working directory."
 
 	^ (self onFileNamed: aFileNameString) parseDocument
 ]
 
 { #category : #parsing }
 SAXHandler class >> parseURL: aURLString [
-	"Fetches URL and parses response"
+	"Fetches the URL and parses the response content. If the URL has no scheme,
+	it will be treated as a file path."
 
 	^ (self onURL: aURLString) parseDocument
 ]
 
 { #category : #parsing }
-SAXHandler class >> parseURL: aURLString upToLimit: aLimit [
-	"Fetches URL upto specified input limit (nil to disable) and parses response"
+SAXHandler class >> parseURL: aURLString upToLimit: aMaxSize [
+	"Fetches the URL upto the input limit (nil to disable) and parses the
+	response content. If the URL has no scheme, it will be treated as a file
+	path."
 
 	^ (self
 		onURL: aURLString
-		upToLimit: aLimit) parseDocument
+		upToLimit: aMaxSize) parseDocument
 ]
 
 { #category : #'handling - declarations' }
@@ -187,14 +221,19 @@ SAXHandler >> attributeDeclaration: anElementName name: anAttributeName type: aT
 
 { #category : #'handling - content' }
 SAXHandler >> characters: aString [
-	"This call corresponds to the Java SAX call
-	characters(char[] ch, int start, int length)."
+	"Handles character data in an element, such as the 'test' in
+	'<characters>test</characters>' or in the CDATA section '<![CDATA[test]]>'.
+	
+	It may be sent multiple times for different sections of character data
+	in a single element if they're separated by other nodes or entity
+	references like in '<characters>one<!--comment-->two</characters>'.
+	
+	See isInCDataSection and ignorableWhitespace:"
 ]
 
 { #category : #'handling - lexical' }
-SAXHandler >> comment: aCommentString [
-	"This call corresponds to the Java SAX ext call
-	comment(char[] ch, int start, int length)."
+SAXHandler >> comment: aString [
+	"Handles '<!--comment-->' sections in documents."
 ]
 
 { #category : #accessing }
@@ -225,6 +264,7 @@ SAXHandler >> decodesCharacters [
 SAXHandler >> decodesCharacters: aBoolean [
 	"If disabled, encoding attributes in <?xml ...?> declarations will be ignored
 	and encodings will not be inferred from byte order marks"
+
 	self configuration decodesCharacters: aBoolean
 ]
 
@@ -244,7 +284,8 @@ SAXHandler >> documentReadLimit [
 
 { #category : #configuring }
 SAXHandler >> documentReadLimit: aLimit [
-	"change the document read limit or nil to disable"
+	"change the document read limit (maximum number of chars that can be read)
+	or nil to disable"
 
 	self configuration documentReadLimit: aLimit
 ]
@@ -272,13 +313,7 @@ SAXHandler >> elementDeclaration: anElementName contentModel: aContentModel [
 
 { #category : #'handling - lexical' }
 SAXHandler >> endCData [
-	"This call corresponds to the Java SAX ext call
-	endCData()."
-]
-
-{ #category : #private }
-SAXHandler >> endCDataSection [
-	isInCDataSection := false
+	"Sent after the character data of a '<![CDATA[...]]>' section."
 ]
 
 { #category : #'handling - lexical' }
@@ -288,31 +323,43 @@ SAXHandler >> endDTD [
 
 { #category : #'handling - content' }
 SAXHandler >> endDocument [
-	"This call corresponds to the Java SAX call
-	endDocument()."
+	"Handles the end of an XML document. No more handlers are invoked after this."
 ]
 
 { #category : #'handling - content' }
 SAXHandler >> endElement: aQualifiedName [
-
+	"Handles the end of an element if a subclass doesn't implement
+	endElement:prefix:uri:localName: or endElement:prefix:uri:."
 ]
 
 { #category : #'handling - content' }
 SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI [
-	"This call corresponds to the Java SAX call
-	endElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName).
-	By default this call is mapped to the following more convenient call:"
+	"Handles the end of an element if a subclass doesn't implement
+	endElement:prefix:uri:localName:. By default it forwards to a simpler
+	handler, endElement:.
+	
+	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
+	aPrefix - the prefix of the qualified name or an empty string
+	aURI - the namespace URI of the element or an empty string"
 
 	self endElement: aQualifiedName
 ]
 
 { #category : #'handling - content' }
 SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName [
-	"This call corresponds to the Java SAX call
-	endElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName).
-	By default this call is mapped to the following more convenient call:"
+	"Handles the end of an element, either an end tag like '</end>' or a
+	self-closed tag like '<empty/>'. By default it forwards to a simpler handler,
+	endElement:prefix:uri:.
+	
+	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
+	aPrefix - the prefix of the qualified name or an empty string
+	aURI - the namespace URI of the element or an empty string
+	aLocalName - the local part of the qualified name"
 
-	self endElement: aQualifiedName prefix: aPrefix uri:  aURI
+	self
+		endElement: aQualifiedName
+		prefix: aPrefix
+		uri:  aURI
 ]
 
 { #category : #'handling - lexical' }
@@ -323,8 +370,10 @@ SAXHandler >> endEntity: anEntityName [
 
 { #category : #'handling - content' }
 SAXHandler >> endPrefixMapping: aPrefix [
-	"This call corresonds to the Java SAX call
-	endPrefixMapping(java.lang.String prefix)."
+	"Handles the end of a namespace prefix/URI mapping when namespaces are
+	enabled. After, aPrefix (empty for the default namespace) will be either
+	unmapped or mapped to a different URI. The 'xml' prefix is predefined
+	and never unmapped."
 ]
 
 { #category : #configuring }
@@ -349,8 +398,13 @@ SAXHandler >> generalEntityDeclaration: aName replacement: aReplacement [
 
 { #category : #'handling - content' }
 SAXHandler >> ignorableWhitespace: aString [
-	"This call corresonds to the Java SAX call
-	ignorableWhitespace(char[] ch, int start, int length)."
+	"Handles ignorable whitespace in content, such as between '<outer>'
+	and '<inner>' or between '</inner>' and '</outer>' in:
+	'<outer>
+		<inner>test</inner>
+	<outer>'
+
+	Whitespace around character data is not ignorable."
 ]
 
 { #category : #private }
@@ -368,11 +422,21 @@ SAXHandler >> interruptParsing [
 
 { #category : #testing }
 SAXHandler >> isInCDataSection [
+	"Can be used by characters: handlers to distinguish ordinary character
+	data from characters within '<![CDATA[...]]>' sections"
+
 	^ isInCDataSection
+]
+
+{ #category : #private }
+SAXHandler >> isInCDataSection: aBoolean [
+	isInCDataSection := aBoolean
 ]
 
 { #category : #testing }
 SAXHandler >> isInContent [
+	"True if parsing has reached the first element of the document."
+
 	^ isInContent
 ]
 
@@ -426,6 +490,7 @@ SAXHandler >> on: aStringOrStream [
 { #category : #configuring }
 SAXHandler >> optimizeForLargeDocuments [
 	"use this for faster parsing/less memory use with large documents"
+
 	self
 		isValidating: false;
 		usesNamespaces: false;
@@ -506,8 +571,11 @@ SAXHandler >> preservesUndeclaredEntityReferences: aBoolean [
 
 { #category : #'handling - content' }
 SAXHandler >> processingInstruction: aTargetString data: aDataString [
-	"This call corresonds to the Java SAX call
-	processingInstruction(java.lang.String target, java.lang.String data)."
+	"Handles processing instructions like '<?name value?>', where 'name' is
+	the target and 'value' is the data.
+	
+	XML declarations may look like PIs but are different and are handled
+	with xmlVersion:encoding:standalone: instead."
 ]
 
 { #category : #configuring }
@@ -559,19 +627,14 @@ SAXHandler >> resolvesExternalEntities: aBoolean [
 
 { #category : #'handling - content' }
 SAXHandler >> skippedEntity: anEntityName [
-	"This call corresonds to the Java SAX call
-	skippedEntity(java.lang.String name)."
+	"Sent when a general parsed entity reference like '&name;' is
+	unreplaced in content. Only sent when validation is turned off
+	or entity replacement is disabled."
 ]
 
 { #category : #'handling - lexical' }
 SAXHandler >> startCData [
-	"This call corresponds to the Java SAX ext call
-	startCData()."
-]
-
-{ #category : #private }
-SAXHandler >> startCDataSection [
-	isInCDataSection := true
+	"Sent before the character data of a '<![CDATA[...]]>' section."
 ]
 
 { #category : #private }
@@ -581,31 +644,57 @@ SAXHandler >> startContent [
 
 { #category : #'handling - lexical' }
 SAXHandler >> startDTD: aRootElementName publicID: aPublicID systemID: aSystemID [
-	"This call corresponds to the Java SAX ext call
-	startDTD(java.lang.String name, java.lang.String publicId, java.lang.String systemId)."
+	"Handles the start of a '<!DOCTYPE ...>' declaration. Any events
+	after this and until endDTD is sent are part of the internal subset
+	of the DTD.
+	
+	aRootElementName - the expected name of the document's root element
+	aPublicID - the public ID of the external DTD subset or an empty string
+	aSystemID - the URI where the external subset can be found or an empty string"
 ]
 
 { #category : #'handling - content' }
 SAXHandler >> startDocument [
-	"This call corresonds to the Java SAX call
-	startDocument()."
+	"Handles the start of an XML document, the first handler invoked."
 ]
 
 { #category : #'handling - content' }
 SAXHandler >> startElement: aQualifiedName attributes: aDictionary [
+	"Handles the start of an element if a subclass doesn't implement
+	startElement:prefix:uri:localName:attributes: or
+	startElement:prefix:uri:attributes:.
 
+	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
+	aDictionary - an OrderPreservingStringDictionary of attributes"
 ]
 
 { #category : #'handling - content' }
 SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes: aDictionary [
-	self startElement: aQualifiedName attributes: aDictionary
+	"Handles the start of an element if a subclass doesn't implement
+	startElement:prefix:uri:localName:attributes:. By default it forwards
+	to a simpler handler, startElement:attributes:.
+	
+	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
+	aPrefix - the prefix of the qualified name or an empty string
+	aURI - the namespace URI of the element or an empty string
+	aDictionary - an OrderPreservingStringDictionary of attributes"
+
+	self
+		startElement: aQualifiedName
+		attributes: aDictionary
 ]
 
 { #category : #'handling - content' }
 SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: aDictionary [
-	"This call corresonds to the Java SAX call
-	startElement(java.lang.String namespaceURI, java.lang.String localName,
-		java.lang.String qName, Attributes atts)."
+	"Handles the start of an element, either a start tag like '<start>' or a
+	self-closed tag like '<empty/>'. By default it forwards to a simpler handler,
+	startElement:prefix:uri:attributes:.
+	
+	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
+	aPrefix - the prefix of the qualified name or an empty string
+	aURI - the namespace URI of the element or an empty string
+	aLocalName - the local part of the qualified name
+	aDictionary - an OrderPreservingStringDictionary of attributes"
 
 	self
 		startElement: aQualifiedName
@@ -622,8 +711,11 @@ SAXHandler >> startEntity: anEntityName [
 
 { #category : #'handling - content' }
 SAXHandler >> startPrefixMapping: aPrefix uri: aURI [
-	"This call corresonds to the Java SAX call
-	startPrefixMapping(java.lang.String prefix, java.lang.String uri)."
+	"Handles the start of a namespace prefix/URI mapping when namespaces are
+	enabled. The 'xml' prefix is predefined and never remapped.
+
+	aPrefix - the prefix of the namespace (empty for the default namesapce)
+	aURI - the namespace URI"
 ]
 
 { #category : #configuring }
@@ -640,5 +732,9 @@ SAXHandler >> usesNamespaces: aBoolean [
 
 { #category : #'handling - content' }
 SAXHandler >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
-
+	"Handles the '<?xml ...?>' declaration of a document.
+	
+	aVersionFloat - the version of XML the document uses, usually 1.0
+	anEncoding - the name of the encoding or an empty string
+	aBoolean - true if standalone='yes'"
 ]

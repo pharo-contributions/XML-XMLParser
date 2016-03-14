@@ -110,7 +110,7 @@ XMLString >> isStringNode: aStringOrStringNode [
 { #category : #testing }
 XMLString >> isWhitespace [
 	^ self notEmpty
-		and: [self string allSatisfy: [:each | each xmlParserIsWhitespace]]
+		and: [self string allSatisfy: [:each | each isXMLWhitespace]]
 ]
 
 { #category : #'splitting/merging' }

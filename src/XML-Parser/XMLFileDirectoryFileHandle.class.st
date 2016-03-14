@@ -1,5 +1,5 @@
 "
-This class uses FileDirectory/DirectoryEntry to implement file IO. This is used on Squeak and Gemstone, which don't support the FileSystem API.
+This class uses FileDirectory/DirectoryEntry to implement file IO. This is used on Squeak and Gemstone, which don't support the Pharo FileSystem API.
 "
 Class {
 	#name : #XMLFileDirectoryFileHandle,
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #private }
-XMLFileDirectoryFileHandle class >> currentWorkingDirectoryPathString [
+XMLFileDirectoryFileHandle class >> basicCurrentWorkingDirectory [
 	^ (Smalltalk at: #FileDirectory) default pathName
 ]
 
@@ -21,20 +21,27 @@ XMLFileDirectoryFileHandle class >> isSupportedImplementation [
 ]
 
 { #category : #private }
-XMLFileDirectoryFileHandle >> deleteFileOrDo: aBlock [
-	[self fileDirectory
-		deleteFileNamed: path
-		ifAbsent: [^ aBlock value]]
-		on: Error
-		do: aBlock
+XMLFileDirectoryFileHandle >> basicDelete [
+	"FileDirectory's deleteFileNamed: is used because DirectoryEntry
+	doesn't understand #delete on GS"
+	self fileDirectory deleteFileNamed: self path
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLFileDirectoryFileHandle >> directoryEntry [
-	^ self fileDirectory directoryEntryFor: path
+	"a bug on Squeak (but not GS) with the handling of dot relative paths
+	like './file.xml' requires fully qualifying the path before creating
+	the DirectoryEntry"
+	^ self fileDirectory directoryEntryFor:
+		(self fileDirectory fullPathFor: self path)
 ]
 
-{ #category : #private }
+{ #category : #testing }
+XMLFileDirectoryFileHandle >> exists [
+	^ self directoryEntry notNil
+]
+
+{ #category : #accessing }
 XMLFileDirectoryFileHandle >> fileDirectory [
 	^ fileDirectory
 		ifNil: [fileDirectory := (Smalltalk at: #FileDirectory) default]
@@ -42,11 +49,13 @@ XMLFileDirectoryFileHandle >> fileDirectory [
 
 { #category : #accessing }
 XMLFileDirectoryFileHandle >> fileSize [
-	^ (self directoryEntry ifNil: [^ 0]) fileSize
+	^ self exists
+		ifTrue: [self directoryEntry fileSize]
+		ifFalse: [0]
 ]
 
 { #category : #testing }
 XMLFileDirectoryFileHandle >> isFile [
-	^ self directoryEntry notNil
+	^ self exists
 		and: [self directoryEntry isDirectory not]
 ]

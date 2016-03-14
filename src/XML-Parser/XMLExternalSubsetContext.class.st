@@ -32,5 +32,5 @@ XMLExternalSubsetContext >> isLiteralValueContext [
 
 { #category : #tokenizing }
 XMLExternalSubsetContext >> nextTokenFrom: aTokenizer [
-	aTokenizer nextSubsetToken
+	aTokenizer nextExternalSubsetToken
 ]

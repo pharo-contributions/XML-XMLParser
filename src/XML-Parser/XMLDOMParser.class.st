@@ -1,9 +1,12 @@
 "
-This class is an XML parser that parses documents into a DOM tree of nodes. Browse the XML-Parser-DOM category for info on the nodes.
+This class is an XML parser that parses XML into a tree of nodes with an XMLDocument node as the root:
+	document := XMLDOMParser parse: xmlStringOrStream.
 
-By default, CDATA sections are treated as regular string nodes and comments are ignored entirely. To suppress this behavior, enable #preservesCDataNodes: and #preservesCommentNodes: before parsing. You can also use #preservesIgnorableWhitespace: to preserve ignorable whitespace as string nodes.
+See the XML-Parser-DOM category for info on the node classes.
 
-You can control what node classes the DOM parser uses to create nodes by injecting a custom node factory with #nodeFactory: prior to parsing. See XMLNodeFactory.
+By default, XML comments are ignored during parsing and ""<![CDATA[...]]>"" sections are merged with adjacent character data as XMLString nodes. Use #preservesCommentNodes: or #preservesCDataNodes: before parsing to change this. You can also use #preservesIgnorableWhitespace: to preserve ignorable whitespace as XMLString nodes.
+
+To control what node classes the parser uses to construct the tree, inject a custom node factory with #nodeFactory: prior to parsing. See XMLNodeFactory.
 
 See the superclass for more info.
 "
@@ -37,9 +40,9 @@ XMLDOMParser >> characters: aString [
 ]
 
 { #category : #'handling - lexical' }
-XMLDOMParser >> comment: aComment [
+XMLDOMParser >> comment: aString [
 	self preservesCommentNodes
-		ifTrue: [self topNode addNode: (self nodeFactory newComment: aComment)]
+		ifTrue: [self topNode addNode: (self nodeFactory newComment: aString)]
 ]
 
 { #category : #private }

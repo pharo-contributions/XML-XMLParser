@@ -2,6 +2,7 @@ Extension { #name : #String }
 
 { #category : #'*XML-Parser' }
 String >> asXMLEscapedString [
+	"returns a copy of self with &, <, and > escaped with &amp;, &lt;, and &gt;"
 	| stream |
 
 	stream := (self class new: self size) writeStream.
@@ -59,13 +60,6 @@ String >> hasPrefixBeforeLocalName [
 ]
 
 { #category : #'*XML-Parser' }
-String >> isNamespaceAttributeName [
-	^ (self beginsWith: 'xmlns')
-		and: [self size = 5
-			or: [(self at: 6) == $:]]
-]
-
-{ #category : #'*XML-Parser' }
 String >> isQualifiedName: aQualifiedName orLocalName: aLocalName [
 	"optimized"
 	^ self = aQualifiedName
@@ -74,7 +68,14 @@ String >> isQualifiedName: aQualifiedName orLocalName: aLocalName [
 ]
 
 { #category : #'*XML-Parser' }
-String >> isReservedAttributeName [
+String >> isXMLNSAttributeName [
+	^ (self beginsWith: 'xmlns')
+		and: [self size = 5 "'xmlns' size"
+			or: [(self at: 6) == $:]]
+]
+
+{ #category : #'*XML-Parser' }
+String >> isXMLReservedAttributeName [
 	^ self size > 4
 		and: [self beginsWith: 'xml:']
 ]

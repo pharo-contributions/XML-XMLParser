@@ -1,5 +1,5 @@
 "
-A StandardFileStream read stream factory. This stream is preferred for Squeak/Pharo because it does no decoding and returns byte characters, so XMLParser can do its own decoding.
+A StandardFileStream read stream factory. This stream is preferred for Squeak/Pharo because it does no decoding and returns byte characters so XMLParser can do its own decoding.
 "
 Class {
 	#name : #XMLStandardFileStreamReadStreamFactory,
@@ -8,11 +8,11 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLStandardFileStreamReadStreamFactory class >> fileReadStreamOnPath: aPath [
-	^ (Smalltalk at: #StandardFileStream) readOnlyFileNamed: aPath
+XMLStandardFileStreamReadStreamFactory class >> basicOnPath: aPathString [
+	^ (Smalltalk at: #StandardFileStream) readOnlyFileNamed: aPathString
 ]
 
 { #category : #testing }
 XMLStandardFileStreamReadStreamFactory class >> isSupportedImplementation [
-	^ (Smalltalk includesKey: #StandardFileStream)
+	^ Smalltalk includesKey: #StandardFileStream
 ]

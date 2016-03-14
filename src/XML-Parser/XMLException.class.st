@@ -1,5 +1,5 @@
 "
-A generic exception class that supports message formatting. Used as a base class for exceptions from XMLParser and related libraries.
+A generic exception class that supports message formatting. Used as a base class for exceptions in XMLParser and related packages.
 "
 Class {
 	#name : #XMLException,

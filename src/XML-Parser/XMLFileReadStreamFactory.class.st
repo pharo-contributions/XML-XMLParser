@@ -9,19 +9,19 @@ Class {
 	#category : #'XML-Parser-File'
 }
 
+{ #category : #'instance creation' }
+XMLFileReadStreamFactory class >> basicOnPath: aPathString [
+	self subclassResponsibility
+]
+
 { #category : #private }
 XMLFileReadStreamFactory class >> errorNoSupportedImplementation [
 	XMLFileException signal: 'File reading unsupported'
 ]
 
 { #category : #'instance creation' }
-XMLFileReadStreamFactory class >> fileReadStreamOnPath: aPath [
-	self subclassResponsibility
-]
-
-{ #category : #'instance creation' }
-XMLFileReadStreamFactory class >> onPath: aPath [
-	^ self implementation fileReadStreamOnPath: aPath
+XMLFileReadStreamFactory class >> onPath: aPathString [
+	^ self implementation basicOnPath: aPathString
 ]
 
 { #category : #accessing }

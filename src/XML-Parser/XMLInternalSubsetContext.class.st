@@ -32,5 +32,5 @@ XMLInternalSubsetContext >> isLiteralValueContext [
 
 { #category : #tokenizing }
 XMLInternalSubsetContext >> nextTokenFrom: aTokenizer [
-	aTokenizer nextSubsetToken
+	aTokenizer nextInternalSubsetToken
 ]

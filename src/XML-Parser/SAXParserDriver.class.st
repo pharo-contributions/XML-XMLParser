@@ -30,7 +30,7 @@ SAXParserDriver >> checkForReservedAttributesIn: anAttributeDictionary afterInde
 			anIndex + 1
 				to: anAttributeDictionary size
 				do: [:i |
-					(anAttributeDictionary keyAtIndex: i) isReservedAttributeName
+					(anAttributeDictionary keyAtIndex: i) isXMLReservedAttributeName
 						ifTrue: [^ self haveUnhandledReservedAttributes]]]
 ]
 
@@ -41,9 +41,13 @@ SAXParserDriver >> currentElement [
 
 { #category : #private }
 SAXParserDriver >> declareNamespaces: aDictionary inScope: aScope [
-	aScope mapPrefixesAndURIs: aDictionary.
 	aDictionary keysAndValuesDo: [:prefix :uri |
-		self saxHandler startPrefixMapping: prefix uri: uri].
+		(aScope resolvePrefix: prefix) = uri
+			ifFalse: [
+				self saxHandler
+					startPrefixMapping: prefix
+					uri: uri]].
+	aScope mapPrefixesAndURIs: aDictionary.
 ]
 
 { #category : #testing }
@@ -178,11 +182,11 @@ SAXParserDriver >> handleCData: aString [
 		ifTrue: [self validator validatePCData: aString].
 
 	self saxHandler
+		isInCDataSection: true;
 		startCData;
-		startCDataSection;
 		characters: aString;
-		endCDataSection;
-		endCData.
+		endCData;
+		isInCDataSection: false.
 ]
 
 { #category : #handling }
@@ -571,12 +575,12 @@ SAXParserDriver >> setSAXHandler: aHandler [
 ]
 
 { #category : #private }
-SAXParserDriver >> undeclareNamespacesInScope: aScope [
+SAXParserDriver >> undeclareNamespacesInScope: anExitedScope [
 	| currentScope |
 
 	currentScope := self scopeAllocator currentScope.
-	aScope prefixesAndURIsDo: [:prefix :uri |
-		(currentScope includesPrefix: prefix mappedTo: uri)
+	anExitedScope prefixesAndURIsDo: [:prefix :uri |
+		(currentScope resolvePrefix: prefix) = uri
 			ifFalse: [self saxHandler endPrefixMapping: prefix]].
 ]
 

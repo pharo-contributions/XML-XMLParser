@@ -136,7 +136,8 @@ XMLNamespaceScope >> hasDefaultNamespace [
 
 { #category : #testing }
 XMLNamespaceScope >> hasNamespaces [
-	^ prefixMappings notNil and: [prefixMappings notEmpty]
+	^ prefixMappings notNil
+		and: [prefixMappings size > 0]
 ]
 
 { #category : #comparing }
@@ -157,7 +158,9 @@ XMLNamespaceScope >> includesPrefix: aPrefix [
 
 { #category : #testing }
 XMLNamespaceScope >> includesPrefix: aPrefix mappedTo: aURI [
-	^ (self prefixMappingAt: aPrefix ifAbsent: [^ false]) = aURI
+	^ (self
+		prefixMappingAt: aPrefix
+		ifAbsent: [^ false]) = aURI
 ]
 
 { #category : #mapping }
@@ -225,7 +228,10 @@ XMLNamespaceScope >> prefixMappingAt: aPrefix [
 XMLNamespaceScope >> prefixMappingAt: aPrefix ifAbsent: aBlock [
 	^ prefixMappings
 		ifNil: [aBlock value]
-		ifNotNil: [prefixMappings at: aPrefix ifAbsent: aBlock]
+		ifNotNil: [
+			prefixMappings
+				at: aPrefix
+				ifAbsent: aBlock]
 ]
 
 { #category : #private }

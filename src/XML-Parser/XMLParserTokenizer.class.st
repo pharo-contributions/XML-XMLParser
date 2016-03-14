@@ -235,17 +235,22 @@ XMLParserTokenizer >> nextEndInternalSubset [
 ]
 
 { #category : #'tokenizing - dtd' }
-XMLParserTokenizer >> nextEndInternalSubsetOrIncludeSection [
-	context isInternalSubsetContext
-		ifTrue: [self nextEndInternalSubset]
-		ifFalse: [self nextEndIncludeSection]
-]
-
-{ #category : #'tokenizing - dtd' }
 XMLParserTokenizer >> nextInternalSubsetStart [
 	"skip ["
 	streamReader next.
 	context := context internalSubsetContext.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLParserTokenizer >> nextInternalSubsetToken [
+	streamReader skipSeparators.
+	streamReader peek == $%
+		ifTrue: [
+			streamReader next.
+			^ self nextParameterEntityReference].
+	streamReader peek == $]
+		ifTrue: [^ self nextEndInternalSubset].
+	self nextSubsetMarkupToken.
 ]
 
 { #category : #tokenizing }
@@ -263,18 +268,6 @@ XMLParserTokenizer >> nextPI [
 	"skip ?"
 	streamReader next.
 	self nextPIWithTarget: self nextPITarget.
-]
-
-{ #category : #tokenizing }
-XMLParserTokenizer >> nextPIOrXMLDeclaration [
-	| target |
-
-	streamReader next.
-	(target := self nextPITarget) = 'xml'
-		ifTrue: [^ self nextXMLDeclaration].
-
-	context := context prologContext.
-	self nextPIWithTarget: target.
 ]
 
 { #category : #tokenizing }
@@ -342,22 +335,6 @@ XMLParserTokenizer >> nextSubsetMarkupToken [
 ]
 
 { #category : #'tokenizing - dtd' }
-XMLParserTokenizer >> nextSubsetToken [
-	streamReader skipSeparators.
-	streamReader atEnd
-		ifTrue: [^ self].
-
-	streamReader peek == $%
-		ifTrue: [
-			streamReader next.
-			^ self nextParameterEntityReference].
-	streamReader peek == $]
-		ifTrue: [^ self nextEndInternalSubsetOrIncludeSection].
-
-	self nextSubsetMarkupToken.
-]
-
-{ #category : #'tokenizing - dtd' }
 XMLParserTokenizer >> nextSystemID [
 	^ self
 		expectNextAll: 'SYSTEM';
@@ -409,6 +386,28 @@ XMLParserTokenizer >> nextXMLDeclaration [
 		expectTerminator.
 
 	context := context prologContext.
+]
+
+{ #category : #tokenizing }
+XMLParserTokenizer >> nextXMLDeclarationOrPrologToken [
+	streamReader peek == $<
+		ifTrue: [
+			streamReader next.
+			streamReader peek == $?
+				ifTrue: [| target |
+					streamReader next.
+					(target := self nextPITarget) = 'xml'
+						ifTrue: [^ self nextXMLDeclaration]
+						ifFalse: [
+							context := context prologContext.
+							^ self nextPIWithTarget: target]].
+			context := context prologContext.
+			^ self nextNonPIPrologOrContentToken].
+
+	"other prolog tokens can have whitespace before them, so the doc
+	does not need to start with an < for them"
+	context := context prologContext.
+	self nextPrologToken.
 ]
 
 { #category : #tokenizing }

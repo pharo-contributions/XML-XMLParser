@@ -9,19 +9,19 @@ Class {
 	#category : #'XML-Parser-File'
 }
 
+{ #category : #'instance creation' }
+XMLFileWriteStreamFactory class >> basicOnPath: aPathString [
+	self subclassResponsibility
+]
+
 { #category : #private }
 XMLFileWriteStreamFactory class >> errorNoSupportedImplementation [
 	XMLFileException signal: 'File writing unsupported'
 ]
 
 { #category : #'instance creation' }
-XMLFileWriteStreamFactory class >> fileWriteStreamOnPath: aPath [
-	self subclassResponsibility
-]
-
-{ #category : #'instance creation' }
-XMLFileWriteStreamFactory class >> onPath: aPath [
-	^ self implementation fileWriteStreamOnPath: aPath
+XMLFileWriteStreamFactory class >> onPath: aPathString [
+	^ self implementation basicOnPath: aPathString
 ]
 
 { #category : #accessing }

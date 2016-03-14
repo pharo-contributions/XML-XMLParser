@@ -1,7 +1,7 @@
 Extension { #name : #Character }
 
 { #category : #'*XML-Parser' }
-Character >> xmlParserIsSeparator [
+Character >> isXMLSeparator [
 	"a temp is used because Character in newer SpurVM images
 	has no 'value' inst var"
 	| tempValue |
@@ -19,7 +19,7 @@ Character >> xmlParserIsSeparator [
 ]
 
 { #category : #'*XML-Parser' }
-Character >> xmlParserIsWhitespace [
+Character >> isXMLWhitespace [
 	"a temp is used because Character in newer SpurVM images
 	has no 'value' inst var"
 	| tempValue |
@@ -38,7 +38,7 @@ Character >> xmlParserIsWhitespace [
 ]
 
 { #category : #'*XML-Parser' }
-Character class >> xmlParserSeparators [
+Character class >> xmlSeparators [
 	^ String
 		with: 32 asCharacter "space"
 		with: 10 asCharacter "lf"
@@ -47,17 +47,19 @@ Character class >> xmlParserSeparators [
 ]
 
 { #category : #'*XML-Parser' }
-Character >> xmlParserSplit: aCollection [
+Character >> xmlSplit: aCollection [
 	"faster, portable version"
 	| parts |
 
 	parts := OrderedCollection new.
-	self xmlParserSplit: aCollection do: [:each | parts addLast: each].
+	self
+		xmlSplit: aCollection
+		do: [:each | parts addLast: each].
 	^ parts.
 ]
 
 { #category : #'*XML-Parser' }
-Character >> xmlParserSplit: aCollection do: aBlock [
+Character >> xmlSplit: aCollection do: aBlock [
 	"faster, portable version"
 	| start |
 
@@ -73,6 +75,6 @@ Character >> xmlParserSplit: aCollection do: aBlock [
 ]
 
 { #category : #'*XML-Parser' }
-Character class >> xmlParserWhitespace [
-	^ self xmlParserSeparators copyWith: 12 asCharacter "form feed"
+Character class >> xmlWhitespace [
+	^ self xmlSeparators copyWith: 12 asCharacter "form feed"
 ]
