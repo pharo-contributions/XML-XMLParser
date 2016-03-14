@@ -449,6 +449,6 @@ ConfigurationOfXMLParserStAX >> version118: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.21'.
-			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.15'.
+			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.16'.
                 ].
 ]
