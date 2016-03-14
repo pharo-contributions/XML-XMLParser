@@ -669,19 +669,16 @@ XMLParserTest >> testAttributeXMLIDValidation [
 ]
 
 { #category : #tests }
-XMLParserTest >> testCDataSectionUnstarted [
-	self
-		should: [SAXHandler parse: '<test>test]]>test</test>']
-		raise: XMLWellFormednessException.
-
-	#('<test>test]] >test</test>'
-		'<test>test] ]>test</test>'
-		'<test>test ] ] > test</test>'
-		'<test name="test]]>test]] >test] ]>test ] ] > test"/>')
-		do: [:each | 
+XMLParserTest >> testCDataOutsideElement [
+	#('<!DOCTYPE test [ <![CDATA[test]]> ]><test/>'
+		'<![CDATA[test]]><test/>'
+		'	<![CDATA[test]]><test/>'
+		'<test/><![CDATA[test]]>'
+		'<test/>	<![CDATA[test]]>')
+		do: [:each |
 			self
-				shouldnt: [SAXHandler parse: each]
-				raise: XMLWellFormednessException].
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException]
 ]
 
 { #category : #tests }
@@ -908,10 +905,11 @@ XMLParserTest >> testConditionalSectionUnterminatedInclude [
 { #category : #tests }
 XMLParserTest >> testContentlessDocument [
 	#(''
+		' 	'
 		'<?xml version="1.0"?>'
-		'<!DOCTYPE test>'
-		'<!--comment-->'
-		'<?target data?>'
+		'	<!DOCTYPE test>'
+		'	<!--comment-->'
+		'	<?target data?>'
 		'<?xml version="1.0"?><!DOCTYPE test>'
 		'<?xml version="1.0"?><!DOCTYPE test><!--comment-->'
 		'<?xml version="1.0"?><!DOCTYPE test><!--comment--><?pi data?>')
@@ -958,7 +956,7 @@ XMLParserTest >> testDoctypeDeclarationBadPublicIDChar [
 
 	validChars :=
 		'!#$%''()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz',
-		(Character xmlParserSeparators copyWithout: Character tab).
+		(Character xmlSeparators copyWithout: Character tab).
 	0 to: 255 do: [:each | | char charString |
 		char := each asCharacter.
 		(validChars includes: char)
@@ -2154,6 +2152,35 @@ XMLParserTest >> testOptimizeForLargeDocuments [
 ]
 
 { #category : #tests }
+XMLParserTest >> testPCDataOutsideElement [
+	#('<!DOCTYPE test [ test ]><test/>'
+		'test<test/>'
+		'	test<test/>'
+		'<test/>test'
+		'<test/>	test')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
+XMLParserTest >> testPCDataWithCDataTerminator [
+	self
+		should: [SAXHandler parse: '<test>test]]>test</test>']
+		raise: XMLWellFormednessException.
+
+	#('<test>test]] >test</test>'
+		'<test>test] ]>test</test>'
+		'<test>test ] ] > test</test>'
+		'<test name="test]]>test]] >test] ]>test ] ] > test"/>')
+		do: [:each | 
+			self
+				shouldnt: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+]
+
+{ #category : #tests }
 XMLParserTest >> testParserLittleDocument [
 
 	| doc |
@@ -2189,12 +2216,14 @@ XMLParserTest >> testProcessingInstruction [
 
 { #category : #tests }
 XMLParserTest >> testProcessingInstructionBadTarget [
-	self
-		should: [SAXHandler parse: '<test><?xml version="1.0"?></test>']
-		raise: XMLWellFormednessException.
-	self
-		should: [SAXHandler parse: '<test><?XML version="1.0"?></test>']
-		raise: XMLWellFormednessException.
+	#('<test><?xml version="1.0"?></test>'
+		'<test><?XML version="1.0"?></test>'
+		'<test><?XmL version="1.0"?></test>'
+		'<test><?xMl version="1.0"?></test>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException]
 ]
 
 { #category : #tests }
@@ -2486,7 +2515,11 @@ XMLParserTest >> testXMLDeclarationEncodingNameChar [
 
 { #category : #tests }
 XMLParserTest >> testXMLDeclarationRedundance [
-	#('<?xml version="1.0"?><?xml version="1.0"?><test/>'
+	#('
+<?xml version="1.0"?><test/>'
+		' <?xml version="1.0"?><test/>'
+		'	<?xml version="1.0"?><test/>'
+		'<?xml version="1.0"?><?xml version="1.0"?><test/>'
 		'<?xml version="1.0"?><!--comment--><?xml version="1.0"?><test/>'
 		'<?xml version="1.0"?><!DOCTYPE test [<?xml version="1.0"?>]><test/>'
 		'<?xml version="1.0"?><test><?xml version="1.0"?></test>'

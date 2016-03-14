@@ -5,47 +5,47 @@ Class {
 }
 
 { #category : #tests }
-XMLCharacterMethodsTest >> testXMLParserIsSeparator [
+XMLCharacterMethodsTest >> testIsXMLSeparator [
 	| separators |
 
-	separators := Character xmlParserSeparators.
+	separators := Character xmlSeparators.
 	0 to: 255 do: [:each | | char |
 		char := each asCharacter.
 		(separators includes: char)
-			ifTrue: [self assert: char xmlParserIsSeparator]
-			ifFalse: [self deny: char xmlParserIsSeparator]].
+			ifTrue: [self assert: char isXMLSeparator]
+			ifFalse: [self deny: char isXMLSeparator]].
 	self
-		assert: (nil respondsTo: #xmlParserIsSeparator);
-		deny: nil xmlParserIsSeparator.
+		assert: (nil respondsTo: #isXMLSeparator);
+		deny: nil isXMLSeparator.
 ]
 
 { #category : #tests }
-XMLCharacterMethodsTest >> testXMLParserIsWhitespace [
+XMLCharacterMethodsTest >> testIsXMLWhitespace [
 	| whitespace |
 
-	whitespace := Character xmlParserWhitespace.
+	whitespace := Character xmlWhitespace.
 	0 to: 255 do: [:each | | char |
 		char := each asCharacter.
 		(whitespace includes: char)
-			ifTrue: [self assert: char xmlParserIsWhitespace]
-			ifFalse: [self deny: char xmlParserIsWhitespace]].
+			ifTrue: [self assert: char isXMLWhitespace]
+			ifFalse: [self deny: char isXMLWhitespace]].
 	self
-		assert: (nil respondsTo: #xmlParserIsWhitespace);
-		deny: nil xmlParserIsWhitespace.
+		assert: (nil respondsTo: #isXMLWhitespace);
+		deny: nil isXMLWhitespace.
 ]
 
 { #category : #tests }
-XMLCharacterMethodsTest >> testXMLParserSplit [
+XMLCharacterMethodsTest >> testXMLSplit [
 	self
-		assert: ($: xmlParserSplit: '') = (OrderedCollection with: '');
-		assert: ($: xmlParserSplit: 'abc') = (OrderedCollection with: 'abc');
-		assert: ($: xmlParserSplit: ':') = #('' '') asOrderedCollection;
-		assert: ($: xmlParserSplit: '::') = #('' '' '') asOrderedCollection;
-		assert: ($: xmlParserSplit: 'a:bc:') = #('a' 'bc' '') asOrderedCollection;
-		assert: ($: xmlParserSplit: ':ab:c:') = #('' 'ab' 'c' '') asOrderedCollection;
-		assert: ($: xmlParserSplit: 'a:bc:') = #('a' 'bc' '') asOrderedCollection;
-		assert: ($: xmlParserSplit: 'ab::cd::ef') = #('ab'  '' 'cd' '' 'ef') asOrderedCollection;
+		assert: ($: xmlSplit: '') = (OrderedCollection with: '');
+		assert: ($: xmlSplit: 'abc') = (OrderedCollection with: 'abc');
+		assert: ($: xmlSplit: ':') = #('' '') asOrderedCollection;
+		assert: ($: xmlSplit: '::') = #('' '' '') asOrderedCollection;
+		assert: ($: xmlSplit: 'a:bc:') = #('a' 'bc' '') asOrderedCollection;
+		assert: ($: xmlSplit: ':ab:c:') = #('' 'ab' 'c' '') asOrderedCollection;
+		assert: ($: xmlSplit: 'a:bc:') = #('a' 'bc' '') asOrderedCollection;
+		assert: ($: xmlSplit: 'ab::cd::ef') = #('ab'  '' 'cd' '' 'ef') asOrderedCollection;
 		assert:
-			($: xmlParserSplit: '::ab:::cd:::ef::') =
+			($: xmlSplit: '::ab:::cd:::ef::') =
 				#('' '' 'ab'  '' '' 'cd' '' '' 'ef' '' '') asOrderedCollection
 ]

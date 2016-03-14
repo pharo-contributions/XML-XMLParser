@@ -152,6 +152,46 @@ SAXHandlerTest >> testSAXEndElementPrefixURILocalNameNamespacesDisabled [
 ]
 
 { #category : #tests }
+SAXHandlerTest >> testSAXEndPrefixMapping [
+	| parser messages |
+
+	(parser := SAXHandlerProxy on: self prefixedXMLSource)
+		parseDocument.
+	self assert: (parser wasSentSelectors: self prefixedXMLSourceSelectors).
+	messages := parser allSentMessagesNamed: #endPrefixMapping:.
+	self
+		assert: messages size = 2;
+		assert: messages first arguments = #('prefix');
+		assert: messages second arguments = #('').
+
+	(parser :=
+		SAXHandlerProxy on:
+			'<one xmlns="defaultNS"><two xmlns="defaultNS"/></one>')
+		parseDocument.
+	messages := parser allSentMessagesNamed: #endPrefixMapping:.
+	self
+		assert: messages size = 1;
+		assert: messages first arguments = #('').
+
+	(parser :=
+		SAXHandlerProxy on:
+			'<one xmlns="defaultNS"><two xmlns="newDefaultNS"/></one>')
+		parseDocument.
+	messages := parser allSentMessagesNamed: #endPrefixMapping:.
+	self
+		assert: messages size = 2;
+		assert: messages first arguments = #('');
+		assert: messages second arguments = #('').
+
+	(parser :=
+		SAXHandlerProxy on:
+			'<one xmlns:xml="', XMLNamespaceScope xmlNamespaceURI, '"/>')
+		parseDocument.
+	self assert:
+		(parser allSentMessagesNamed: #endPrefixMapping:) isEmpty.
+]
+
+{ #category : #tests }
 SAXHandlerTest >> testSAXEntityHandlers [
 	| xml parser messages |
 
@@ -207,7 +247,7 @@ SAXHandlerTest >> testSAXIgnorableWhitespace [
 	(parser allSentMessagesNamed: #ignorableWhitespace:) do: [:each |
 		self assert:
 			((each arguments first) notEmpty
-				and: [each arguments first allSatisfy: [:char | char xmlParserIsSeparator]])].
+				and: [each arguments first allSatisfy: [:char | char isXMLSeparator]])].
 ]
 
 { #category : #tests }
@@ -225,24 +265,6 @@ SAXHandlerTest >> testSAXParsingInterrupt [
 		self assert:
 			(parser wasSentSelectors:
 				((self prefixedXMLSourceSelectors copyUpTo: each) copyWith: each))].
-]
-
-{ #category : #tests }
-SAXHandlerTest >> testSAXPrefixMappingHandlers [
-	| parser messages |
-
-	(parser := SAXHandlerProxy on: self prefixedXMLSource) parseDocument.
-	self assert: (parser wasSentSelectors: self prefixedXMLSourceSelectors).
-
-	messages := parser allSentMessagesNamed: #startPrefixMapping:uri:.
-	self
-		assert: messages first arguments = #('prefix' 'prefixNS');
-		assert: messages second arguments = #('' 'defaultNS').
-
-	messages := parser allSentMessagesNamed: #endPrefixMapping:.
-	self
-		assert: messages first arguments = #('prefix');
-		assert: messages second arguments = #('').
 ]
 
 { #category : #tests }
@@ -429,6 +451,46 @@ SAXHandlerTest >> testSAXStartElementPrefixURILocalNameNamespacesDisabled [
 		assert: arguments third = '';
 		assert: arguments fourth = 'test';
 		assert: arguments fifth = self prefixedXMLAttributesNamespacesDisabled.
+]
+
+{ #category : #tests }
+SAXHandlerTest >> testSAXStartPrefixMapping [
+	| parser messages |
+
+	(parser := SAXHandlerProxy on: self prefixedXMLSource)
+		parseDocument.
+	self assert: (parser wasSentSelectors: self prefixedXMLSourceSelectors).
+	messages := parser allSentMessagesNamed: #startPrefixMapping:uri:.
+	self
+		assert: messages size = 2;
+		assert: messages first arguments = #('prefix' 'prefixNS');
+		assert: messages second arguments = #('' 'defaultNS').
+
+	(parser :=
+		SAXHandlerProxy on:
+			'<one xmlns="defaultNS"><two xmlns="defaultNS"/></one>')
+		parseDocument.
+	messages := parser allSentMessagesNamed: #startPrefixMapping:uri:.
+	self
+		assert: messages size = 1;
+		assert: messages first arguments = #('' 'defaultNS').
+
+	(parser :=
+		SAXHandlerProxy on:
+			'<one xmlns="defaultNS"><two xmlns="newDefaultNS"/></one>')
+		parseDocument.
+	messages := parser allSentMessagesNamed: #startPrefixMapping:uri:.
+	self
+		assert: messages size = 2;
+		assert: messages first arguments = #('' 'defaultNS');
+		assert: messages second arguments = #('' 'newDefaultNS').
+
+	(parser :=
+		SAXHandlerProxy on:
+			'<one xmlns:xml="', XMLNamespaceScope xmlNamespaceURI, '"/>')
+		parseDocument.
+	self assert:
+		(parser allSentMessagesNamed: #startPrefixMapping:uri:) isEmpty.
 ]
 
 { #category : #tests }

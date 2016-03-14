@@ -247,7 +247,7 @@ XMLStringTest >> testIsWhitespace [
 	node := self nodeClass new.
 	self deny: node isWhitespace.
 
-	node string: Character xmlParserWhitespace.
+	node string: Character xmlWhitespace.
 	self assert: node isWhitespace.
 
 	node append: 'non-space'.
