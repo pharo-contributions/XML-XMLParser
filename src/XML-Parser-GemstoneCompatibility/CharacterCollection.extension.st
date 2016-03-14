@@ -2,6 +2,7 @@ Extension { #name : #CharacterCollection }
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
 CharacterCollection >> asXMLEscapedString [
+	"returns a copy of self with &, <, and > escaped with &amp;, &lt;, and &gt;"
 	| stream |
 
 	stream := (self class new: self size) writeStream.
@@ -59,13 +60,6 @@ CharacterCollection >> hasPrefixBeforeLocalName [
 ]
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
-CharacterCollection >> isNamespaceAttributeName [
-	^ (self beginsWith: 'xmlns')
-		and: [self size = 5
-			or: [(self at: 6) == $:]]
-]
-
-{ #category : #'*XML-Parser-GemstoneCompatibility' }
 CharacterCollection >> isQualifiedName: aQualifiedName orLocalName: aLocalName [
 	"optimized"
 	^ self = aQualifiedName
@@ -74,7 +68,14 @@ CharacterCollection >> isQualifiedName: aQualifiedName orLocalName: aLocalName [
 ]
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
-CharacterCollection >> isReservedAttributeName [
+CharacterCollection >> isXMLNSAttributeName [
+	^ (self beginsWith: 'xmlns')
+		and: [self size = 5 "'xmlns' size"
+			or: [(self at: 6) == $:]]
+]
+
+{ #category : #'*XML-Parser-GemstoneCompatibility' }
+CharacterCollection >> isXMLReservedAttributeName [
 	^ self size > 4
 		and: [self beginsWith: 'xml:']
 ]
