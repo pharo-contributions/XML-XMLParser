@@ -12,7 +12,7 @@ Class {
 		'CharacterDigitValues',
 		'MaxIntegerValue'
 	],
-	#category : #'XML-Parser-Util'
+	#category : #'XML-Parser-Utils'
 }
 
 { #category : #'class initialization' }

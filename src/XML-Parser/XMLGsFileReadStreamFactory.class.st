@@ -4,7 +4,7 @@ A GsFile read stream factory. This stream is preferred for Gemstone because it d
 Class {
 	#name : #XMLGsFileReadStreamFactory,
 	#superclass : #XMLFileReadStreamFactory,
-	#category : #'XML-Parser-File'
+	#category : #'XML-Parser-Files'
 }
 
 { #category : #'instance creation' }

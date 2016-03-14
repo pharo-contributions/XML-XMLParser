@@ -9,7 +9,7 @@ Class {
 	#classInstVars : [
 		'implementation'
 	],
-	#category : #'XML-Parser-Util'
+	#category : #'XML-Parser-Utils'
 }
 
 { #category : #private }

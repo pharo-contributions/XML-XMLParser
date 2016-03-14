@@ -8,7 +8,7 @@ Class {
 		'collection',
 		'maxSize'
 	],
-	#category : #'XML-Parser-Util'
+	#category : #'XML-Parser-Utils'
 }
 
 { #category : #'instance creation' }

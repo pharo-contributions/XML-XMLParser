@@ -4,7 +4,7 @@ A GsFile write stream factory. This stream is preferred for Gemstone because it 
 Class {
 	#name : #XMLGsFileWriteStreamFactory,
 	#superclass : #XMLFileWriteStreamFactory,
-	#category : #'XML-Parser-File'
+	#category : #'XML-Parser-Files'
 }
 
 { #category : #'instance creation' }

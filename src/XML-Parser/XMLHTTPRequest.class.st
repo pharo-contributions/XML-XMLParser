@@ -12,7 +12,7 @@ Class {
 
 { #category : #private }
 XMLHTTPRequest class >> errorNoSupportedImplementation [
-	XMLHTTPException signal: 'HTTP unsupported'
+	XMLHTTPException signal: 'HTTP unsupported; install Zinc or WebClient'
 ]
 
 { #category : #accessing }

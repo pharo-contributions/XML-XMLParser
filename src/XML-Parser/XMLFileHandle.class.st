@@ -14,7 +14,7 @@ Class {
 	#classVars : [
 		'XMLDocumentFileExtensions'
 	],
-	#category : #'XML-Parser-File'
+	#category : #'XML-Parser-Files'
 }
 
 { #category : #private }

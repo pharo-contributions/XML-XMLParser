@@ -4,7 +4,7 @@ A StandardFileStream read stream factory. This stream is preferred for Squeak/Ph
 Class {
 	#name : #XMLStandardFileStreamReadStreamFactory,
 	#superclass : #XMLFileReadStreamFactory,
-	#category : #'XML-Parser-File'
+	#category : #'XML-Parser-Files'
 }
 
 { #category : #'instance creation' }

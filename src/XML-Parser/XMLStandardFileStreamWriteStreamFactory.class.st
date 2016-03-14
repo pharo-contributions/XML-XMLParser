@@ -4,7 +4,7 @@ A StandardFileStream write stream factory. This stream is preferred for Pharo/Sq
 Class {
 	#name : #XMLStandardFileStreamWriteStreamFactory,
 	#superclass : #XMLFileWriteStreamFactory,
-	#category : #'XML-Parser-File'
+	#category : #'XML-Parser-Files'
 }
 
 { #category : #'instance creation' }

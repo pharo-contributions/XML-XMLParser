@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'fileDirectory'
 	],
-	#category : #'XML-Parser-File'
+	#category : #'XML-Parser-Files'
 }
 
 { #category : #private }
