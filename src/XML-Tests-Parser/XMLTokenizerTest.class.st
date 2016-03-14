@@ -18,7 +18,8 @@ XMLTokenizerTest class >> badNames [
 
 { #category : #accessing }
 XMLTokenizerTest class >> badNmtokenChars [
-	^ #(16r00 16r01 16r0F 16r10
+	"16r00 is not tested for GS compatibility, neither is 16r110000"
+	^ #(16r01 16r0F 16r10
 			16r2C 16r2F 16r40 16r5B
 			16r5E 16r60 16r7B 16r80
 			16rBF 16rD7 16rF7 16r37E
