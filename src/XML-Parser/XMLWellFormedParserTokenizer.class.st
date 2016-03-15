@@ -246,6 +246,21 @@ XMLWellFormedParserTokenizer >> errorDocumentTerminatedPrematurely [
 ]
 
 { #category : #errors }
+XMLWellFormedParserTokenizer >> errorDuplicateAttribute: anAttributeName [
+	self parseError: 'Duplicate attribute "', anAttributeName, '" in start tag'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorDuplicateNamespace: aPrefix [
+	self parseError:
+		(aPrefix
+			ifEmpty: [
+				'Duplicate default namespace declaration in start tag']
+			ifNotEmpty: [
+				'Duplicate namespace declaration "xmlns:', aPrefix, '" in start tag'])
+]
+
+{ #category : #errors }
 XMLWellFormedParserTokenizer >> errorEntityDepthLimitExceeded [
 	XMLLimitException signal: 
 		'Cannot further nest entity replacements; ',
@@ -383,6 +398,11 @@ XMLWellFormedParserTokenizer >> errorParameterEntityTerminatingSubset [
 ]
 
 { #category : #errors }
+XMLWellFormedParserTokenizer >> errorReservedPITarget: aTarget [
+	self parseError: 'Processing instruction target "', aTarget, '" is reserved'
+]
+
+{ #category : #errors }
 XMLWellFormedParserTokenizer >> errorSelfReferentialEntity: anEntity [
 	self parseError: 'Illegal self-referential entity ', anEntity asReference
 ]
@@ -410,11 +430,6 @@ XMLWellFormedParserTokenizer >> errorUnterminatedIncludeSections [
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorXMLDeclarationNotAtBeginning [
 	self parseError: 'XML declaration must only occur at beginning of document'
-]
-
-{ #category : #errors }
-XMLWellFormedParserTokenizer >> errorXMLPITargetReserved [
-	self parseError: 'Processing instruction target "XML" is reserved'
 ]
 
 { #category : #'tokenizing - expecting' }
@@ -1293,7 +1308,7 @@ XMLWellFormedParserTokenizer >> nextPITarget [
 						ifFalse: [self errorXMLDeclarationNotAtBeginning]]
 				ifFalse: [
 					target asLowercase = 'xml'
-						ifTrue: [self errorXMLPITargetReserved]]].
+						ifTrue: [self errorReservedPITarget: target]]].
 	^ target.
 ]
 
@@ -1468,23 +1483,26 @@ XMLWellFormedParserTokenizer >> nextTag [
 						and: [driver usesNamespaces])
 						ifTrue: [
 							"initialize only if needed"
-							(namespaces
+							((namespaces
 								ifNil: [namespaces := OrderPreservingStringDictionary new: 5])
-								xmlNamespaceAt:
+								xmlAt:
 									((attributeName size > 6)
 										ifTrue: [attributeName copyFrom: 7 to: attributeName size]
 										ifFalse: [''])
-								put: attributeValue]
+								newPut: attributeValue)
+								ifFalse: [self errorDuplicateNamespace: attributeName]]
 						ifFalse: [							
 							attributeName isXMLReservedAttributeName
 								ifTrue: [driver haveUnhandledReservedAttributes].
-							attributes
-								xmlAttributeAt: attributeName
-								put: attributeValue]]
+							(attributes
+								xmlAt: attributeName
+								newPut: attributeValue)
+								ifFalse: [self errorDuplicateAttribute: attributeName]]]
 				ifFalse: [
-					attributes
-						xmlAttributeAt: attributeName
-						put: attributeValue]].
+					(attributes
+						xmlAt: attributeName
+						newPut: attributeValue)
+						ifFalse: [self errorDuplicateAttribute: attributeName]]].
 
 	driver
 		handleStartTag: tagName
