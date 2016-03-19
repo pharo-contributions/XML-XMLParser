@@ -48,11 +48,6 @@ SAXPositionHandler >> endTagPosition: aPosition [
 SAXPositionHandler >> endXMLDeclarationPosition: aPosition [
 ]
 
-{ #category : #private }
-SAXPositionHandler >> parserClass [
-	^ XMLPositionParser
-]
-
 { #category : #'handling - positions' }
 SAXPositionHandler >> startCDataPosition: aPosition [
 ]
