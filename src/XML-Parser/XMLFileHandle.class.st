@@ -104,7 +104,7 @@ XMLFileHandle >> errorFileDoesNotExist [
 { #category : #private }
 XMLFileHandle >> errorFileExceedsMaxSize: aMaxSize [
 	XMLLimitException
-		formatSignal: 'File exceeds max size of {1}: {2}'
+		formatSignal: 'File exceeds max size of {1} bytes: {2}'
 		with: aMaxSize
 		with: self path
 ]
