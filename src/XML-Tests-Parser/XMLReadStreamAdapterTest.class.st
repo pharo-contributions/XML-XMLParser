@@ -154,24 +154,29 @@ XMLReadStreamAdapterTest >> testStreamReadingPortability [
 
 { #category : #tests }
 XMLReadStreamAdapterTest >> testUpTo [
-	| adapter |
-
-	self outputCollection do: [:each |
+	self outputCollection do: [:each | | adapter |
 		adapter := self newStreamAdapter.
 		self assert:
 			(adapter upTo: each) =
-				(self outputCollection copyUpTo: each)].
-
-	adapter := self newStreamAdapter.
-	self assert: (adapter upTo: #absent) = self outputCollection.
+				(self outputCollection copyUpTo: each).
+		self assert:
+			adapter upToEnd =
+				(self outputCollection copyAfter: each)].
+	self assert: (self newStreamAdapter upTo: #absent) = self outputCollection.
 ]
 
 { #category : #tests }
 XMLReadStreamAdapterTest >> testUpToEnd [
 	| adapter |
 
+	self outputCollection withIndexDo: [:each :i |
+		adapter := self newStreamAdapter.
+		adapter next: i.
+		self
+			assert: adapter upToEnd = (self outputCollection allButFirst: i);
+			assert: adapter upToEnd = ''].
 	adapter := self newStreamAdapter.
 	self
 		assert: adapter upToEnd = self outputCollection;
-		assert: adapter upToEnd isEmpty.
+		assert: adapter upToEnd = ''.
 ]
