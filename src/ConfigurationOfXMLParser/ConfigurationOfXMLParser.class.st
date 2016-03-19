@@ -645,6 +645,22 @@ ConfigurationOfXMLParser >> baseline268: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.32' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline270: spec [
+	<version: '2.7.0-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.8'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.16' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.33' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParser >> customProjectAttributes [
     "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -659,7 +675,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.6.8-baseline'.
+	spec for: #'common' version: '2.7.0-baseline'.
 
 ]
 
@@ -729,7 +745,7 @@ ConfigurationOfXMLParser >> release268: spec [
 	<symbolicVersion: #'release-2.6.8'>
 
 	"Users should prefer #stable unless they rely on XMLParser internals"
-	spec for: #'common' version: '2.6.9'.
+	spec for: #'common' version: '2.7.0'.
 ]
 
 { #category : #'symbolic versions' }
@@ -2586,5 +2602,16 @@ ConfigurationOfXMLParser >> version269: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.344'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.155'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version270: spec [ 
+        <version: '2.7.0' imports: #('2.7.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.345'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.156'.
                 ].
 ]
