@@ -26,12 +26,12 @@ XMLParserException >> columnNumber: aColumnNumber [
 
 { #category : #testing }
 XMLParserException >> hasColumnNumber [
-	^ columnNumber notNil
+	^ self columnNumber notNil
 ]
 
 { #category : #testing }
 XMLParserException >> hasLineNumber [
-	^ lineNumber notNil
+	^ self lineNumber notNil
 ]
 
 { #category : #accessing }

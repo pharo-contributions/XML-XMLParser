@@ -102,10 +102,9 @@ XMLFileHandle >> errorFileDoesNotExist [
 ]
 
 { #category : #private }
-XMLFileHandle >> errorFileSize: aFileSize exceedsMaxSize: aMaxSize [
+XMLFileHandle >> errorFileExceedsMaxSize: aMaxSize [
 	XMLLimitException
-		formatSignal: 'File size {1} bytes exceeds max size of {2}: {3}'
-		with: aFileSize
+		formatSignal: 'File exceeds max size of {1}: {2}'
 		with: aMaxSize
 		with: self path
 ]
@@ -170,8 +169,8 @@ XMLFileHandle >> isFile [
 { #category : #testing }
 XMLFileHandle >> isXMLDocumentFile [
 	"Returns true if the file has a known extension of an XML document format
-	such as .xml, .xhtml, and .xul, but not .dtd, .ent, or other formats that
-	are XML-related but not proper XML documents."
+	such as .xml, .xhtml, .xul, but not .dtd, .ent, or other XML-related
+	formats that aren't proper XML documents."
 
 	^ XMLDocumentFileExtensions includes: self extension asLowercase
 ]
@@ -261,10 +260,7 @@ XMLFileHandle >> streamGet [
 XMLFileHandle >> streamGetUpToLimit: aMaxSize decoding: aBoolean [
 	(aMaxSize notNil
 		and: [self fileSize > aMaxSize])
-		ifTrue: [
-			self
-				errorFileSize: self fileSize
-				exceedsMaxSize: aMaxSize].
+		ifTrue: [self errorFileExceedsMaxSize: aMaxSize].
 
 	^ aBoolean
 		ifTrue: [self readStream]

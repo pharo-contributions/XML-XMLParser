@@ -67,11 +67,10 @@ XMLNestedStreamReader >> atEnd [
 		ifFalse: [^ false].
 	stream atEnd
 		ifFalse: [^ false].
-
-	nestedStreams ifNotNil: [
-		nestedStreams do: [:each |
-			each key atEnd
-				ifFalse: [^ false]]].
+	"to:do: for speed"
+	1 to: nestedStreams size do: [:i |
+		(nestedStreams at: i) key atEnd
+			ifFalse: [^ false]].
 	^ true.
 ]
 
@@ -116,9 +115,8 @@ XMLNestedStreamReader >> closeCurrentStream [
 
 { #category : #closing }
 XMLNestedStreamReader >> closeStreams [
-	nestedStreams ifNotNil: [
-		[nestedStreams isEmpty]
-			whileFalse: [self popNestedStream]].
+	[nestedStreams size > 0]
+		whileTrue: [self popNestedStream].
 	self closeCurrentStream.
 ]
 
@@ -146,11 +144,6 @@ XMLNestedStreamReader >> currentColumnNumber [
 { #category : #accessing }
 XMLNestedStreamReader >> currentLineNumber [
 	^ currentLineNumber
-]
-
-{ #category : #accessing }
-XMLNestedStreamReader >> currentLineStartPosition [
-	^ currentLineStartPosition
 ]
 
 { #category : #accessing }
@@ -321,10 +314,9 @@ XMLNestedStreamReader >> popNestedStream [
 
 { #category : #private }
 XMLNestedStreamReader >> popNestedStreamWhileAtEnd [
-	nestedStreams ifNotNil: [
-		[stream atEnd
-			and: [nestedStreams notEmpty]]
-			whileTrue: [self popNestedStream]]
+	[stream atEnd
+		and: [nestedStreams size > 0]]
+		whileTrue: [self popNestedStream]
 ]
 
 { #category : #printing }
@@ -334,13 +326,10 @@ XMLNestedStreamReader >> printOn: aStream [
 		nextPutAll: '(';
 		print: peekChar;
 		nextPutAll: '; ';
-		print: stream.
-	nestedStreams
-		ifNotNil: [
-			aStream
-				space;
-				print: nestedStreams].
-	aStream nextPut: $).
+		print: stream;
+		space;
+		print: nestedStreams;
+		nextPut: $).
 ]
 
 { #category : #positioning }
@@ -367,19 +356,28 @@ XMLNestedStreamReader >> pushBackStream: aStream [
 
 { #category : #positioning }
 XMLNestedStreamReader >> pushBackStream: aStream onClose: aBlock [
-	nestedStreams
-		ifNil: [(nestedStreams := OrderedCollection new: self maxNestedStreams)].
 	(nestedStreams size >= self maxNestedStreams)
 		ifTrue: [self errorNestingLimitExceeded].
 
-	nestedStreams addLast: stream -> onClose.
+	self
+		pushNestedStream: stream
+		onClose: onClose.
 	peekChar
 		ifNotNil: [
-			nestedStreams addLast: (XMLSingleCharacterReadStream on: peekChar) -> nil.
+			self
+				pushNestedStream: (XMLSingleCharacterReadStream on: peekChar)
+				onClose: nil.
 			peekChar := nil].
 
 	self stream: aStream.
 	onClose := aBlock.
+]
+
+{ #category : #private }
+XMLNestedStreamReader >> pushNestedStream: aStream onClose: aBlock [
+	nestedStreams size >= self maxNestedStreams
+		ifTrue: [self errorNestingLimitExceeded].
+	nestedStreams addLast: aStream -> aBlock.
 ]
 
 { #category : #accessing }
@@ -389,13 +387,14 @@ XMLNestedStreamReader >> readLimit [
 
 { #category : #initialization }
 XMLNestedStreamReader >> setStream: aStream readLimit: aReadLimit [
+	self stream: aStream.
+	nestedStreams := OrderedCollection new: 5.
 	currentLineNumber := 1.
 	currentPosition := 0.
 	currentLineStartPosition := 0.
 	normalizedLineEndingChar := LFCharacter.
 	readLimit := aReadLimit.
 	isEscapingQuotes := false.
-	self stream: aStream.
 ]
 
 { #category : #positioning }

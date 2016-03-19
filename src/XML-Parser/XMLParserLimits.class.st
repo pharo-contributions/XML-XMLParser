@@ -26,19 +26,13 @@ XMLParserLimits class >> defaultMaxEntityReplacementDepth [
 
 { #category : #accessing }
 XMLParserLimits class >> defaultReadLimit [
-	^ defaultReadLimit
+	^ defaultReadLimit ifNil: [defaultReadLimit := 10000000]
 ]
 
 { #category : #accessing }
-XMLParserLimits class >> defaultReadLimit: aReadLimit [
-	defaultReadLimit := aReadLimit
-]
-
-{ #category : #'class initialization' }
-XMLParserLimits class >> initialize [
-	"self initialize"
-
-	defaultReadLimit := 10000000
+XMLParserLimits class >> defaultReadLimit: aDefaultLimit [
+	"can be used to change the default read limit instances start with"
+	defaultReadLimit := aDefaultLimit
 ]
 
 { #category : #accessing }

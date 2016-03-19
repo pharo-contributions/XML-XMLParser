@@ -275,11 +275,6 @@ XMLNamespaceScope >> printOn: aStream [
 	aStream nextPut: $).
 ]
 
-{ #category : #printing }
-XMLNamespaceScope >> printedDeclarations [
-	^ String streamContents: [:stream | self printDeclarationsOn: stream]
-]
-
 { #category : #resolving }
 XMLNamespaceScope >> resolvePrefix: aPrefix [
 	"resolve namespace from prefix"
