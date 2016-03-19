@@ -625,6 +625,11 @@ SAXHandler >> resolvesExternalEntities: aBoolean [
 	self configuration resolvesExternalEntities: aBoolean
 ]
 
+{ #category : #private }
+SAXHandler >> schema [
+	^ nil
+]
+
 { #category : #'handling - content' }
 SAXHandler >> skippedEntity: anEntityName [
 	"Sent when a general parsed entity reference like '&name;' is

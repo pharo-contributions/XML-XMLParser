@@ -25,7 +25,8 @@ Class {
 
 { #category : #'instance creation' }
 XMLURI class >> fromStream: aStream [
-	"streams must be parsed eagerly, unlike strings"
+	"streams must be parsed eagerly (because the stream might be read from
+	or closed after), unlike strings"
 	^ self basicNew initialize parseURIStream: aStream
 ]
 
@@ -39,9 +40,9 @@ XMLURI class >> initialize [
 	"self initialize"
 
 	(UnreservedCharacters := BitmapCharacterSet new)
-		addAll: ($a to: $z);
-		addAll: ($A to: $Z);
-		addAll: ($0 to: $9);
+		addRangeFrom: $a to: $z;
+		addRangeFrom: $A to: $Z;
+		addRangeFrom: $0 to: $9;
 		addAll: '-._~'
 ]
 

@@ -210,6 +210,11 @@ DTDDoctypeDefinition >> includesNotation: aName [
 	^ self notations includes: aName
 ]
 
+{ #category : #'instance creation' }
+DTDDoctypeDefinition >> newValidator [
+	^ DTDDocumentValidator doctypeDefinition: self
+]
+
 { #category : #private }
 DTDDoctypeDefinition >> notations [
 	^ notations ifNil: [notations := Set new]

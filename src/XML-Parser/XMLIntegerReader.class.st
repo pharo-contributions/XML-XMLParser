@@ -27,19 +27,14 @@ XMLIntegerReader class >> initialize [
 { #category : #'class initialization' }
 XMLIntegerReader class >> initializeCharacterDigitValues [
 	"array instead of dictionary for speed"
-	CharacterDigitValues := Array new: 255 withAll: -1.
-	($0 to: $9) do: [:each |
-		CharacterDigitValues
-			at: each asciiValue
-			put: each asciiValue - $0 asciiValue].
-	($A to: $F) do: [:each |
-		CharacterDigitValues
-			at: each asciiValue
-			put: each asciiValue - $A asciiValue + 10].
-	($a to: $f) do: [:each |
-		CharacterDigitValues
-			at: each asciiValue
-			put: each asciiValue - $a asciiValue + 10].
+	CharacterDigitValues := Array new: 255.
+	#(#($0 $9 0) #($a $f 10) #($A $Z 10)) do: [:each |
+		each first asciiValue
+			to: each second asciiValue
+			do: [:i |
+				CharacterDigitValues
+					at: i
+					put: i - each first asciiValue + each last]].
 ]
 
 { #category : #'class initialization' }
@@ -110,7 +105,7 @@ XMLIntegerReader >> nextDigitWithBase: aBase [
 
 	((asciiValue := self peek asciiValue) > 0
 		and: [asciiValue <= CharacterDigitValues size
-			and: [(digit := CharacterDigitValues at: asciiValue) >= 0
+			and: [(digit := CharacterDigitValues at: asciiValue) notNil
 				and: [digit < aBase]]])
 				ifTrue: [
 					self next.

@@ -14,7 +14,9 @@ Class {
 		'normalizedLineEndingChar',
 		'currentLineNumber',
 		'readLimit',
-		'isEscapingQuotes'
+		'isEscapingQuotes',
+		'currentPosition',
+		'currentLineStartPosition'
 	],
 	#classVars : [
 		'CRCharacter',
@@ -46,6 +48,19 @@ XMLNestedStreamReader class >> on: aStream readLimit: aReadLimit [
 		readLimit: aReadLimit
 ]
 
+{ #category : #private }
+XMLNestedStreamReader >> asEscapedCharacterIfQuote: aCharacter [
+	aCharacter ==  $"
+		ifTrue: [
+			self pushBack: '#34;'.
+			^ $&].
+	aCharacter == $'
+		ifTrue: [
+			self pushBack: '#39;'.
+			^ $&].
+	^ aCharacter.
+]
+
 { #category : #testing }
 XMLNestedStreamReader >> atEnd [
 	peekChar == nil
@@ -68,7 +83,8 @@ XMLNestedStreamReader >> atQuote [
 
 { #category : #private }
 XMLNestedStreamReader >> basicNext [
-	"Returns next character in the stream after performing line-ending normalization."
+	"Returns the next character in the stream for #next and #peek with CR/LF/CRLF
+	line endings normalized (to LF by default) and quotes escaped when needed."
 	| nextChar |
 
 	stream atEnd
@@ -76,20 +92,19 @@ XMLNestedStreamReader >> basicNext [
 			self popNestedStreamWhileAtEnd.
 			stream atEnd
 				ifTrue: [^ nil]].
-	(nextChar := stream next) == CRCharacter
+	(nextChar := stream next) == LFCharacter
+		ifTrue: [^ normalizedLineEndingChar].
+	nextChar == CRCharacter
 		ifTrue: [
 			self popNestedStreamWhileAtEnd.
 			stream atEnd
 				ifFalse: [
 					stream peek == LFCharacter
 						ifTrue: [stream next]].
-			nextChar := normalizedLineEndingChar]
-		ifFalse: [
-			nextChar == LFCharacter
-				ifTrue: [nextChar := normalizedLineEndingChar]].
+			^ normalizedLineEndingChar].
 	isEscapingQuotes
-		ifTrue: [^ self escapeNextQuoteCharacter: nextChar]
-		ifFalse: [^ nextChar].
+		ifTrue: [^ self asEscapedCharacterIfQuote: nextChar].
+	^ nextChar.
 ]
 
 { #category : #private }
@@ -121,8 +136,26 @@ XMLNestedStreamReader >> convertFromEncoding: anEncodingName [
 ]
 
 { #category : #accessing }
+XMLNestedStreamReader >> currentColumnNumber [
+	"recording the start pos. of the line and subtracting it from the current
+	pos. is faster than an explicit column var that would need to be incremented
+	each time through #next/#skipSeparators"
+	^ currentPosition - currentLineStartPosition
+]
+
+{ #category : #accessing }
 XMLNestedStreamReader >> currentLineNumber [
 	^ currentLineNumber
+]
+
+{ #category : #accessing }
+XMLNestedStreamReader >> currentLineStartPosition [
+	^ currentLineStartPosition
+]
+
+{ #category : #accessing }
+XMLNestedStreamReader >> currentPosition [
+	^ currentPosition
 ]
 
 { #category : #decoding }
@@ -156,17 +189,9 @@ XMLNestedStreamReader >> errorReadLimitExceeded [
 		'to persistently change or disable'
 ]
 
-{ #category : #private }
-XMLNestedStreamReader >> escapeNextQuoteCharacter: aCharacter [
-	aCharacter ==  $"
-		ifTrue: [
-			self pushBack: '#34;'.
-			^ $&].
-	aCharacter == $'
-		ifTrue: [
-			self pushBack: '#39;'.
-			^ $&].
-	^ aCharacter.
+{ #category : #testing }
+XMLNestedStreamReader >> isBinary [
+	^ false
 ]
 
 { #category : #testing }
@@ -204,11 +229,15 @@ XMLNestedStreamReader >> next [
 			nextChar := peekChar.
 			peekChar := nil].
 
-	nextChar == normalizedLineEndingChar
-		ifTrue: [currentLineNumber := currentLineNumber + 1].
+	"this is inlined in skipSeparators"
+	currentPosition := currentPosition + 1.
 	readLimit ifNotNil: [
-		(readLimit := readLimit - 1) >= 0
-			ifFalse: [self errorReadLimitExceeded]].
+		currentPosition > readLimit
+			ifTrue: [self errorReadLimitExceeded]].
+	nextChar == normalizedLineEndingChar
+		ifTrue: [
+			currentLineNumber := currentLineNumber + 1.
+			currentLineStartPosition := currentPosition].
 
 	^ nextChar.
 ]
@@ -239,14 +268,18 @@ XMLNestedStreamReader >> nextIntegerPrintedOn: aStream [
 
 { #category : #accessing }
 XMLNestedStreamReader >> nextMatchAll: aString [
-	| nextChar oldCurrentLineNumber oldReadLimit |
+	| nextChar oldCurrentLineNumber oldCurrentPosition oldCurrentLineStartPosition |
+
+	aString size > 0
+		ifFalse: [^ true].
 
 	"inlined peek"
 	(peekChar ifNil: [peekChar := self basicNext]) == (aString at: 1)
 		ifFalse: [^ false].
 
 	oldCurrentLineNumber := currentLineNumber.
-	oldReadLimit := readLimit.
+	oldCurrentPosition := currentPosition.
+	oldCurrentLineStartPosition := currentLineStartPosition.
 	self next.
 	"we unrolled the first iteration with the above inlined peek"
 	2 to: aString size do: [:i |
@@ -255,7 +288,8 @@ XMLNestedStreamReader >> nextMatchAll: aString [
 			ifFalse: [
 				self pushBack: (aString copyFrom: 1 to: i -1).
 				currentLineNumber := oldCurrentLineNumber.
-				readLimit := oldReadLimit.
+				currentPosition := oldCurrentPosition.
+				currentLineStartPosition := oldCurrentLineStartPosition.
 				^ false]].
 	^ true.
 ]
@@ -319,12 +353,9 @@ XMLNestedStreamReader >> pushBack: aString [
 
 { #category : #positioning }
 XMLNestedStreamReader >> pushBackCharacter: aCharacter [
-	peekChar
-		ifNil: [peekChar := aCharacter]
-		ifNotNil: [
-			self
-				pushBackStream: (XMLSingleCharacterReadStream on: aCharacter)
-				onClose: nil]
+	self
+		pushBackStream: (XMLSingleCharacterReadStream on: aCharacter)
+		onClose: nil
 ]
 
 { #category : #positioning }
@@ -359,6 +390,8 @@ XMLNestedStreamReader >> readLimit [
 { #category : #initialization }
 XMLNestedStreamReader >> setStream: aStream readLimit: aReadLimit [
 	currentLineNumber := 1.
+	currentPosition := 0.
+	currentLineStartPosition := 0.
 	normalizedLineEndingChar := LFCharacter.
 	readLimit := aReadLimit.
 	isEscapingQuotes := false.
@@ -380,12 +413,16 @@ XMLNestedStreamReader >> skipSeparators [
 	[(peekChar ifNil: [peekChar := self basicNext]) "inlined #peek"
 		isXMLSeparator]
 		whileTrue: [
-			"inlined #next"
-			peekChar == normalizedLineEndingChar
-				ifTrue: [currentLineNumber := currentLineNumber + 1].
+			"inlined from #next"
+			currentPosition := currentPosition + 1.
 			readLimit ifNotNil: [
-				(readLimit := readLimit - 1) >= 0
-					ifFalse: [self errorReadLimitExceeded]].
+				currentPosition > readLimit
+					ifTrue: [self errorReadLimitExceeded]].
+			peekChar == normalizedLineEndingChar
+				ifTrue: [
+					currentLineNumber := currentLineNumber + 1.
+					currentLineStartPosition := currentPosition].
+
 			peekChar := nil]
 ]
 
@@ -414,12 +451,12 @@ XMLNestedStreamReader >> stream: aStream [
 
 { #category : #accessing }
 XMLNestedStreamReader >> upTo: aCharacter [
-	| writeStream |
+	| writeStream nextChar |
 
 	writeStream := self newWriteStream.
 	[self atEnd
-		or: [self peek == aCharacter]]
-		whileFalse: [writeStream nextPut: self next].
+		or: [(nextChar := self next) == aCharacter]]
+		whileFalse: [writeStream nextPut: nextChar].
 	^ writeStream contents.
 ]
 

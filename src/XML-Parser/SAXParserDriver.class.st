@@ -57,7 +57,7 @@ SAXParserDriver >> decodesCharacters [
 
 { #category : #accessing }
 SAXParserDriver >> doctypeDefinition [
-	^ doctypeDefinition ifNil: [doctypeDefinition := DTDDoctypeDefinition new]
+	^ doctypeDefinition
 ]
 
 { #category : #accessing }
@@ -569,6 +569,8 @@ SAXParserDriver >> setRootElement: anElementName currentScope: aNamespaceScope [
 SAXParserDriver >> setSAXHandler: aHandler [
 	saxHandler := aHandler.
 	elementNester := self elementNesterClass new.
+	doctypeDefinition := DTDDoctypeDefinition new.
+	validator := (aHandler schema ifNil: [doctypeDefinition]) newValidator.
 	externalSubsetURI := ''.
 	isStandalone := false.
 	hasUnhandledReservedAttributes := false.
@@ -600,5 +602,5 @@ SAXParserDriver >> validateRootElement: aStartTag [
 
 { #category : #accessing }
 SAXParserDriver >> validator [
-	^ validator ifNil: [validator := DTDDocumentValidator doctypeDefinition: self doctypeDefinition]
+	^ validator
 ]

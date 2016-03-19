@@ -114,8 +114,18 @@ XMLParserTokenizer >> convertFromEncoding: anEncodingName [
 ]
 
 { #category : #accessing }
+XMLParserTokenizer >> currentColumnNumber [
+	^ streamReader currentColumnNumber
+]
+
+{ #category : #accessing }
 XMLParserTokenizer >> currentLineNumber [
 	^ streamReader currentLineNumber
+]
+
+{ #category : #accessing }
+XMLParserTokenizer >> currentPosition [
+	^ streamReader currentPosition
 ]
 
 { #category : #accessing }

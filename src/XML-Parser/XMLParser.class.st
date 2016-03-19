@@ -32,8 +32,18 @@ XMLParser >> context: aTokenContext [
 ]
 
 { #category : #accessing }
+XMLParser >> currentColumnNumber [
+	^ self tokenizer currentColumnNumber
+]
+
+{ #category : #accessing }
 XMLParser >> currentLineNumber [
 	^ self tokenizer currentLineNumber
+]
+
+{ #category : #accessing }
+XMLParser >> currentPosition [
+	^ self tokenizer currentPosition
 ]
 
 { #category : #accessing }
@@ -46,12 +56,14 @@ XMLParser >> handleParserError: anError [
 	self tokenizer closeStreams.
 
 	(anError isKindOf: XMLParserException)
-		ifTrue: [
-			anError hasLineNumber
-				ifFalse: [anError lineNumber: self currentLineNumber].
-			anError shouldPassOnWhenCaught
-				ifTrue: [anError pass]]
 		ifFalse: [anError pass].
+
+	anError hasLineNumber
+		ifFalse: [anError lineNumber: self currentLineNumber].
+	anError hasColumnNumber
+		ifFalse: [anError columnNumber: self currentColumnNumber].
+	anError shouldPassOnWhenCaught
+		ifTrue: [anError pass].
 ]
 
 { #category : #parsing }

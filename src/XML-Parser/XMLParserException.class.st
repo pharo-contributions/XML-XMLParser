@@ -5,10 +5,29 @@ Class {
 	#name : #XMLParserException,
 	#superclass : #XMLException,
 	#instVars : [
-		'lineNumber'
+		'lineNumber',
+		'columnNumber'
 	],
 	#category : #'XML-Parser-Exceptions'
 }
+
+{ #category : #accessing }
+XMLParserException >> columnNumber [
+	^ columnNumber
+]
+
+{ #category : #accessing }
+XMLParserException >> columnNumber: aColumnNumber [
+	columnNumber := aColumnNumber.
+	self
+		append: aColumnNumber
+		withDescription: 'column'.
+]
+
+{ #category : #testing }
+XMLParserException >> hasColumnNumber [
+	^ columnNumber notNil
+]
 
 { #category : #testing }
 XMLParserException >> hasLineNumber [
