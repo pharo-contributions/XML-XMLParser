@@ -19,25 +19,27 @@ Class {
 }
 
 { #category : #adding }
-DTDDoctypeDefinition >> addExternalGeneralEntity: aName resolver: aResolver uri: aSystemURI from: aDocumentOrEntityURI [
+DTDDoctypeDefinition >> addExternalGeneralEntity: aName resolver: aResolver publicID: aPublicID systemID: aSystemID from: aSourceURIString [
 	self generalEntities
 		at: aName
 		ifAbsentPut: [
 			aResolver
 				resolveExternalGeneralEntity: aName
-				uri: aSystemURI
-				from: aDocumentOrEntityURI]
+				publicID: aPublicID
+				systemID: aSystemID
+				from: aSourceURIString]
 ]
 
 { #category : #adding }
-DTDDoctypeDefinition >> addExternalParameterEntity: aName resolver: aResolver uri: aSystemURI from: aDocumentOrEntityURI [
+DTDDoctypeDefinition >> addExternalParameterEntity: aName resolver: aResolver publicID: aPublicID systemID: aSystemID from: aSourceURIString [
 	self parameterEntities
 		at: aName
 		ifAbsentPut: [
 			aResolver
 				resolveExternalParameterEntity: aName
-				uri: aSystemURI
-				from: aDocumentOrEntityURI]
+				publicID: aPublicID
+				systemID: aSystemID
+				from: aSourceURIString]
 ]
 
 { #category : #adding }
@@ -108,12 +110,19 @@ DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: anAttribute
 
 { #category : #adding }
 DTDDoctypeDefinition >> addValidatorForElement: anElement contentModel: aContentModel [
-	self elementValidators
-		at: anElement
-		ifAbsentPut: [
-			((DTDContentModelParser parserForContentModel: aContentModel)
-				element: anElement
-				contentModel: aContentModel) parse]
+	| validator oldSize |
+
+	validator :=
+		((DTDContentModelParser parserForContentModel: aContentModel)
+			element: anElement
+			contentModel: aContentModel) parse.
+
+	"testing the size after is faster than an includes: test before"
+	oldSize := self elementValidators size.
+	(self elementValidators
+		at: anElement put: validator;
+		size) > oldSize
+		ifFalse: [self errorMultipleDeclarationsForElement: anElement]
 ]
 
 { #category : #private }
@@ -129,6 +138,13 @@ DTDDoctypeDefinition >> elementIDValidator [
 { #category : #private }
 DTDDoctypeDefinition >> elementValidators [
 	^ elementValidators ifNil: [elementValidators := Dictionary new]
+]
+
+{ #category : #private }
+DTDDoctypeDefinition >> errorMultipleDeclarationsForElement: anElement [
+	XMLValidationException
+		formatSignal: 'Multiple declarations for <{1}> element'
+		with: anElement
 ]
 
 { #category : #private }

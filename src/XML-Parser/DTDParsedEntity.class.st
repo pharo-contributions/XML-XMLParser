@@ -17,7 +17,7 @@ DTDParsedEntity class >> name: aName replacement: aReplacementString [
 	^ self
 		name: aName
 		replacement: aReplacementString
-		uri: nil
+		uri: ''
 ]
 
 { #category : #'instance creation' }
@@ -53,6 +53,12 @@ DTDParsedEntity >> hasReplacement [
 { #category : #testing }
 DTDParsedEntity >> isExternal [
 	^ false
+]
+
+{ #category : #testing }
+DTDParsedEntity >> isInternalTo: aURI [
+	^ self isExternal not
+		and: [self uri = aURI]
 ]
 
 { #category : #accessing }

@@ -32,11 +32,6 @@ DTDExternalEntityResolver >> combineSourceURI: aSourceURIOrURIString withEntityU
 	^ combinedURI.
 ]
 
-{ #category : #accessing }
-DTDExternalEntityResolver >> defaultDocumentURI [
-	^ XMLFileHandle currentWorkingDirectory, '/default'
-]
-
 { #category : #private }
 DTDExternalEntityResolver >> erorrExternalEntityLimitExceeded [
 	XMLLimitException signal: 'External entity limit exceeded; use #maxExternalEntities: to change'
@@ -124,13 +119,13 @@ DTDExternalEntityResolver >> resolveEntityWith: aBlock [
 ]
 
 { #category : #private }
-DTDExternalEntityResolver >> resolveExternalEntity: aName uri: anEntityURIOrURIString from: aSourceURIOrURIString class: aClass [
+DTDExternalEntityResolver >> resolveExternalEntity: aName publicID: aPublicID systemID: aSystemID from: aSourceURIString class: aClass [
 	| combinedURI |
 
 	combinedURI :=
 		self
-			combineSourceURI: aSourceURIOrURIString
-			withEntityURI: anEntityURIOrURIString.
+			combineSourceURI: aSourceURIString
+			withEntityURI: aSystemID.
 
 	^ aClass
 		name: aName
@@ -139,20 +134,22 @@ DTDExternalEntityResolver >> resolveExternalEntity: aName uri: anEntityURIOrURIS
 ]
 
 { #category : #resolving }
-DTDExternalEntityResolver >> resolveExternalGeneralEntity: aName uri: anEntityURIOrURIString from: aSourceURIOrURIString [
+DTDExternalEntityResolver >> resolveExternalGeneralEntity: aName publicID: aPublicID systemID: aSystemID from: aSourceURIString [
 	^ self
 		resolveExternalEntity: aName
-		uri: anEntityURIOrURIString
-		from: aSourceURIOrURIString
+		publicID: aPublicID
+		systemID: aSystemID
+		from: aSourceURIString
 		class: DTDExternalGeneralEntity
 ]
 
 { #category : #resolving }
-DTDExternalEntityResolver >> resolveExternalParameterEntity: aName uri: anEntityURIOrURIString from: aSourceURIOrURIString [
+DTDExternalEntityResolver >> resolveExternalParameterEntity: aName publicID: aPublicID systemID: aSystemID from: aSourceURIString [
 	^ self
 		resolveExternalEntity: aName
-		uri: anEntityURIOrURIString
-		from: aSourceURIOrURIString
+		publicID: aPublicID
+		systemID: aSystemID
+		from: aSourceURIString
 		class: DTDExternalParameterEntity
 ]
 

@@ -270,7 +270,7 @@ SAXHandler >> decodesCharacters: aBoolean [
 
 { #category : #private }
 SAXHandler >> defaultDocumentURI [
-	^ self externalEntityResolver defaultDocumentURI
+	^ ''
 ]
 
 { #category : #private }

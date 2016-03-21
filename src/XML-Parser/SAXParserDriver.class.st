@@ -273,7 +273,8 @@ SAXParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicID sys
 					self doctypeDefinition
 						addExternalGeneralEntity: aName
 						resolver: self externalEntityResolver
-						uri: aSystemID
+						publicID: aPublicID
+						systemID: aSystemID
 						from: self currentURI]]
 		ifFalse: [
 			self doctypeDefinition
@@ -344,7 +345,8 @@ SAXParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicID s
 			self doctypeDefinition
 				addExternalParameterEntity: aName
 				resolver: self externalEntityResolver
-				uri: aSystemID
+				publicID: aPublicID
+				systemID: aSystemID
 				from: self currentURI].
 
 	self saxHandler
@@ -419,7 +421,7 @@ SAXParserDriver >> handleStartDocument [
 { #category : #handling }
 SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
 	"performance critical method"
-	| prefix totalAttributes namespaceUri currentScope |
+	| prefix totalAttributes namespaceURI currentScope |
 
 	self elementNester startElement: anElementName.
 
@@ -433,7 +435,7 @@ SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 					self
 						declareNamespaces: aNamespaceDictionary
 						inScope: currentScope].
-			namespaceUri :=
+			namespaceURI :=
 				currentScope
 					validateAndResolvePrefix: prefix
 					ofElement: anElementName.
@@ -457,7 +459,7 @@ SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 	self saxHandler
 		startElement: anElementName
 		prefix: prefix
-		uri: (namespaceUri ifNil: [''])
+		uri: (namespaceURI ifNil: [''])
 		localName: (anElementName localNameAfterPrefix: prefix)
 		attributes: anAttributeDictionary.
 

@@ -67,7 +67,8 @@ DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName publicID:
 			self doctypeDefinition
 				addExternalGeneralEntity: aName
 				resolver: self externalEntityResolver
-				uri: aSystemID
+				publicID: aPublicID
+				systemID: aSystemID
 				from: self currentURI]
 		ifFalse: [
 			self doctypeDefinition
@@ -93,7 +94,8 @@ DTDExternalSubsetParserDriver >> handleParameterEntityDeclaration: aName publicI
 	self doctypeDefinition
 		addExternalParameterEntity: aName
 		resolver: self externalEntityResolver
-		uri: aSystemID
+		publicID: aPublicID
+		systemID: aSystemID
 		from: self currentURI
 ]
 

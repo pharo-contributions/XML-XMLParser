@@ -216,12 +216,12 @@ XMLWellFormedParserTokenizer >> constructReplacementForGeneralEntity: anEntity [
 		ifTrue: [
 			anEntity isExternal
 				ifTrue: [self errorLiteralContextExternalEntity: anEntity].
-			^ self constructReplacementForLiteralContextEntity: anEntity].
-
-	driver handleStartContentEntityReplacement: anEntity name.
-	self
-		pushBackEntity: anEntity
-		onClose: [driver handleEndContentEntityReplacement: anEntity name].
+			self constructReplacementForLiteralContextEntity: anEntity]
+		ifFalse: [
+			driver handleStartContentEntityReplacement: anEntity name.
+				self
+				pushBackEntity: anEntity
+				onClose: [driver handleEndContentEntityReplacement: anEntity name]]
 ]
 
 { #category : #'entity replacing' }
@@ -242,13 +242,13 @@ XMLWellFormedParserTokenizer >> constructReplacementForLiteralContextEntity: anE
 { #category : #'entity replacing' }
 XMLWellFormedParserTokenizer >> constructReplacementForParameterEntity: anEntity [
 	context isLiteralValueContext
-		ifTrue: [^ self constructReplacementForLiteralContextEntity: anEntity].
-
-	streamReader pushBackCharacter: NormalizedSpace.
-	self
-		pushBackEntity: anEntity
-		onClose: nil.
-	streamReader pushBackCharacter: NormalizedSpace.
+		ifTrue: [self constructReplacementForLiteralContextEntity: anEntity]
+		ifFalse: [
+			streamReader pushBackCharacter: NormalizedSpace.
+			self
+				pushBackEntity: anEntity
+				onClose: nil.
+			streamReader pushBackCharacter: NormalizedSpace]
 ]
 
 { #category : #accessing }
@@ -383,6 +383,11 @@ XMLWellFormedParserTokenizer >> errorExpectedTerminatorButGot: aCharacter [
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorInternalDeclarationParameterEntityReference: aName [
 	self parseError: 'Parameter entity reference %', aName, '; in internal subset declaration'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorInternalEntityValueParameterEntityReference [
+	self parseError: 'Internal entity values cannot contain parameter entity references'
 ]
 
 { #category : #errors }
@@ -568,14 +573,21 @@ XMLWellFormedParserTokenizer >> hasActiveEntityNamed: aName [
 ]
 
 { #category : #testing }
-XMLWellFormedParserTokenizer >> hasActiveExternalEntity [
-	^ self activeEntities anySatisfy: [:each | each isExternal]
-]
-
-{ #category : #testing }
 XMLWellFormedParserTokenizer >> hasOpenIncludeSections [
 	^ totalOpenIncludeSections notNil
 		and: [totalOpenIncludeSections > 0]
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLWellFormedParserTokenizer >> isInExternalSubsetOrExternallyDefinedEntity [
+	context isExternalSubsetContext
+		ifTrue: [^ true].
+	self hasActiveEntities
+		ifTrue: [
+			self activeEntities do: [:each |
+				(each isInternalTo: driver documentURI)
+					ifFalse: [^ true]]].
+	^ false.
 ]
 
 { #category : #accessing }
@@ -1031,11 +1043,20 @@ XMLWellFormedParserTokenizer >> nextEntityValue [
 			streamReader next == $&
 				ifTrue: [
 					streamReader peek == $#
-						ifTrue: [self nextCharacterReferenceOnWriteStream]
-						ifFalse: [writeStream nextPut: $&]]
+						ifTrue: [
+							"character refs are replaced in entity values"
+							self nextCharacterReferenceOnWriteStream]
+						ifFalse: [
+							"general entity refs aren't replaced but must be complete"
+							writeStream nextPut: $&.
+							self nextNameOnWriteStream.
+							writeStream nextPut: (self expectNext: $;)]]
 				ifFalse: [
 					nextChar == $%
-						ifTrue: [self nextParameterEntityReferenceOnWriteStream]
+						ifTrue: [
+							self isInExternalSubsetOrExternallyDefinedEntity
+								ifFalse: [self errorInternalEntityValueParameterEntityReference].
+							self nextParameterEntityReferenceOnWriteStream]
 						ifFalse: [writeStream nextPut: nextChar]]].
 	context exitLiteralValue.
 	self expectNext: quote.
@@ -1343,8 +1364,8 @@ XMLWellFormedParserTokenizer >> nextParameterEntityReferenceInDeclaration [
 	| name |
 
 	name := self nextName.
-	context isInternalSubsetContext
-		ifTrue: [self errorInternalDeclarationParameterEntityReference: name].
+	self isInExternalSubsetOrExternallyDefinedEntity
+		ifFalse: [self errorInternalDeclarationParameterEntityReference: name].
 	self expectNext: $;.
 	(driver handleParameterEntityReference: name)
 		ifNotNil: [:entity | entity constructReplacementOn: self].
@@ -1437,10 +1458,9 @@ XMLWellFormedParserTokenizer >> nextSubsetMarkupToken [
 
 	(streamReader peek == $[)
 		ifTrue: [
-			(context isExternalSubsetContext
-				or: [self hasActiveExternalEntity])
-				ifTrue: [^ self nextConditionalSection].
-			self errorInternalSubsetConditionalSection].
+			self isInExternalSubsetOrExternallyDefinedEntity
+				ifFalse: [self errorInternalSubsetConditionalSection].
+			^ self nextConditionalSection].
 
 	self nextSubsetDeclaration.
 ]
