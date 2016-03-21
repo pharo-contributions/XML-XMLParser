@@ -171,20 +171,17 @@ XMLParserLimitsTest >> testRemoveLimits [
 ]
 
 { #category : #tests }
-XMLParserLimitsTest >> testTokenizerMaxPushBack [
-	| tokenizer |
+XMLParserLimitsTest >> testStreamReaderMaxPushBack [
+	| streamReader |
 
-	tokenizer :=
-		XMLWellFormedParserTokenizer
-			driver: nil
-			on: '' readStream.
+	streamReader := XMLNestedStreamReader on: '' readStream.
 	self
 		shouldnt: [
-			tokenizer streamReader maxNestedStreams
-				timesRepeat: [tokenizer streamReader pushBack: 'test']]
+			streamReader maxNestedStreams
+				timesRepeat: [streamReader pushBack: 'test']]
 		raise: XMLLimitException.
 	self
-		should: [tokenizer streamReader pushBack: 'test']
+		should: [streamReader pushBack: 'test']
 		raise: XMLLimitException.
 ]
 
