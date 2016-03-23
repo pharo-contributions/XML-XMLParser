@@ -274,7 +274,7 @@ XMLExternalEntityTest >> testParsingExternalEntities [
 	DTDCachingExternalEntityResolver clearEntityCache.
 	entityCache := DTDCachingExternalEntityResolver entityCache.
 	self musicXMLExternalEntityURLs do: [:each |
-		self deny: (entityCache includesKey: each asXMLURI)].
+		self deny: (entityCache includesKey: each)].
 
 	SAXHandler
 		parse: self musicXMLDocument

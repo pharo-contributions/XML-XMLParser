@@ -746,30 +746,88 @@ XMLParserTest >> testConditionalSectionInInternalSubset [
 ]
 
 { #category : #tests }
+XMLParserTest >> testConditionalSectionInInternalSubsetExternallyDefined [
+	| conditionalSections |
+
+	conditionalSections := '
+		<![INCLUDE[<!ELEMENT test ANY>]]>
+		<![IGNORE[<!ELEMENT test EMPTY>]]>'.
+	self
+		shouldnt: [
+			"the rule against internal subset include/ignore sections
+			shouldn't apply to external entities included in the subset"
+			(SAXHandler on: '
+				<!DOCTYPE test [
+					<!ENTITY % extern SYSTEM "extern.ent">
+					%extern;
+					<!ATTLIST test name CDATA #IMPLIED>
+				]>
+				<test name="value">test</test>')
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver entities:
+						(Array with: 'extern.ent' -> conditionalSections));
+				resolvesExternalEntities: true;
+				parseDocument]
+		raise: XMLValidationException.
+	self
+		shouldnt: [| entityReplacementMixedSections |
+			"the rule against internal subset include/ignore sections
+			shouldn't apply to internal entities included in the subset
+			if they're internal to an external entity"
+			entityReplacementMixedSections :=
+				'<!ENTITY % extern2 "', conditionalSections, '">'.
+			(SAXHandler on: '
+				<!DOCTYPE test [
+					<!ENTITY % extern SYSTEM "extern.ent">
+					%extern;
+					%extern2;
+					<!ATTLIST test name CDATA #IMPLIED>
+				]>
+				<test name="value">test</test>')
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver entities:
+						(Array with: 'extern.ent' -> entityReplacementMixedSections));
+				resolvesExternalEntities: true;
+				parseDocument]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
 XMLParserTest >> testConditionalSectionLabelReplacementIgnore [
-	#('<!ENTITY % label "{1}">
-		<![%label;[ <malformed-xml/> ]]>'
-		'<!ENTITY % label "{1}">
-		<![ %label; [ <malformed-xml/> ]]>'
-		) do: [:each |
-		self
-			should: [
-				(SAXHandler on: (each format: (Array with: 'INCLUDE')))
-					parser
-						context: XMLExternalSubsetContext new;
+	| xml dtd |
+
+	xml := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
+
+	#('<!ENTITY % label "{1}"> <![%label;[ <malformed-xml/> ]]>'
+		'<!ENTITY % label "{1}"> <![ %label; [ <malformed-xml/> ]]>')
+		do: [:each |
+			self
+				should: [
+					dtd := each format: (Array with: 'INCLUDE').
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver entities:
+								(Array with: 'extern.dtd' -> dtd));
+						resolvesExternalEntities: true;
 						parseDocument]
-			raise: XMLWellFormednessException.
-		self
-			shouldnt: [
-				(SAXHandler on: (each format: (Array with: 'IGNORE')))
-					parser
-						context: XMLExternalSubsetContext new;
+				raise: XMLWellFormednessException.
+			self
+				shouldnt: [
+					dtd := each format: (Array with: 'IGNORE').
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver entities:
+								(Array with: 'extern.dtd' -> dtd));
+						resolvesExternalEntities: true;
 						parseDocument]
-			raise: XMLWellFormednessException]
+				raise: XMLWellFormednessException].
 ]
 
 { #category : #tests }
 XMLParserTest >> testConditionalSectionLabelReplacementInclude [
+	| xml dtd |
+
+	xml := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
 	#('<!ENTITY % label "{1}">
 		<![%label;[
 			<!ENTITY % comment "<!--comment-->">
@@ -777,29 +835,36 @@ XMLParserTest >> testConditionalSectionLabelReplacementInclude [
 		'<!ENTITY % label "{1}">
 		<![ %label; [
 			<!ENTITY % comment "<!--comment-->">
-		]]> %comment;'
-	) do: [:each |
-		self
-			shouldnt: [
-				(SAXHandler on: (each format: (Array with: 'INCLUDE')))
-					parser
-						context: XMLExternalSubsetContext new;
+		]]> %comment;')
+		do: [:each |
+			self
+				shouldnt: [
+					dtd := each format: (Array with: 'INCLUDE').
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver entities:
+								(Array with: 'extern.dtd' -> dtd));
+						resolvesExternalEntities: true;
 						parseDocument]
-			raise: XMLValidationException.
-		self
-			should: [
-				(SAXHandler on: (each format: (Array with: 'IGNORE')))
-					parser
-						context: XMLExternalSubsetContext new;
+				raise: XMLValidationException.
+			self
+				should: [
+					dtd := each format: (Array with: 'IGNORE').
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver entities:
+								(Array with: 'extern.dtd' -> dtd));
+						resolvesExternalEntities: true;
 						parseDocument]
-			raise: XMLValidationException].
+				raise: XMLValidationException].
 ]
 
 { #category : #tests }
 XMLParserTest >> testConditionalSectionMixedIncludeIgnore [
-	| xml |
+	| xml dtd |
 
-	xml := '
+	xml := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
+	dtd := '
 		<![INCLUDE[
 			<![IGNORE[ %comment; ]]>
 			<!ENTITY % comment "<!--comment]]>-->">
@@ -815,17 +880,21 @@ XMLParserTest >> testConditionalSectionMixedIncludeIgnore [
 		%commentTwo;'.
 	self
 		shouldnt: [
-			(SAXHandler on: xml) parser
-				context: XMLExternalSubsetContext new;
+			(SAXHandler on: xml)
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver entities:
+						(Array with: 'extern.dtd' -> dtd));
+				resolvesExternalEntities: true;
 				parseDocument]
 		raise: XMLValidationException.
 ]
 
 { #category : #tests }
 XMLParserTest >> testConditionalSectionNestedIgnore [
-	| xml |
+	| xml dtdTemplate dtd |
 
-	xml := '
+	xml := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
+	dtdTemplate := '
 		<![ IGNORE [
 			<!--ignored terminator {1} -->
 			<![ INCLUDE [
@@ -836,25 +905,32 @@ XMLParserTest >> testConditionalSectionNestedIgnore [
 		]]>'.
 	self
 		shouldnt: [
-			(SAXHandler on: (xml format: (Array with: ']]')))
-				parser
-					context: XMLExternalSubsetContext new;
-					parseDocument]
+			dtd := dtdTemplate format: (Array with: ']]').
+			(SAXHandler on: xml)
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver entities:
+						(Array with: 'extern.dtd' -> dtd));
+				resolvesExternalEntities: true;
+				parseDocument]
 		raise: XMLWellFormednessException.
 	self
 		should: [
-			(SAXHandler on: (xml format: (Array with: ']]>')))
-				parser
-					context: XMLExternalSubsetContext new;
-					parseDocument]
+			dtd := dtdTemplate format: (Array with: ']]>').
+			(SAXHandler on: xml)
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver entities:
+						(Array with: 'extern.dtd' -> dtd));
+				resolvesExternalEntities: true;
+				parseDocument]
 		raise: XMLWellFormednessException.
 ]
 
 { #category : #tests }
 XMLParserTest >> testConditionalSectionNestedInclude [
-	| xml |
+	| xml dtd |
 
-	xml := '
+	xml := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
+	dtd := '
 		<![ INCLUDE [
 			<!--ignored terminator ]]> -->
 			<![ INCLUDE [
@@ -866,40 +942,55 @@ XMLParserTest >> testConditionalSectionNestedInclude [
 		%comment;'.
 	self
 		shouldnt: [
-			(SAXHandler on: xml) parser
-				context: XMLExternalSubsetContext new;
+			(SAXHandler on: xml)
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver entities:
+						(Array with: 'extern.dtd' -> dtd));
+				resolvesExternalEntities: true;
 				parseDocument]
 		raise: XMLValidationException.
 ]
 
 { #category : #tests }
 XMLParserTest >> testConditionalSectionUnterminatedIgnore [
+	| xml |
+
+	xml := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
 	#('<![IGNORE['
 		'<![IGNORE[<!--comment-->'
 		'<![IGNORE[<!--comment--><![IGNORE['
-		'<![IGNORE[<!--comment--><![IGNORE[ ]]>'
-	) do: [:each |
-		self
-			should: [
-				(SAXHandler on: each) parser
-					context: XMLExternalSubsetContext new;
-					parseDocument]
-			raise: XMLWellFormednessException]
+		'<![IGNORE[<!--comment--><![IGNORE[ ]]>')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver entities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLWellFormednessException]
 ]
 
 { #category : #tests }
 XMLParserTest >> testConditionalSectionUnterminatedInclude [
+	| xml |
+
+	xml := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
 	#('<![INCLUDE['
 		'<![INCLUDE[<!--comment-->'
 		'<![INCLUDE[<!--comment--><![INCLUDE['
-		'<![INCLUDE[<!--comment--><![INCLUDE[ ]]>'
-	) do: [:each |
-		self
-			should: [
-				(SAXHandler on: each) parser
-					context: XMLExternalSubsetContext new;
-					parseDocument]
-			raise: XMLWellFormednessException].
+		'<![INCLUDE[<!--comment--><![INCLUDE[ ]]>')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver entities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLWellFormednessException]
 ]
 
 { #category : #tests }
@@ -1525,8 +1616,16 @@ XMLParserTest >> testElementWhitespace [
 XMLParserTest >> testElementsUndeclared [
 	self
 		shouldnt: [
+			"entity and notation declarations aren't enough to trigger
+			DTD validation; at least one element or attlist declaration
+			is needed"
 			SAXHandler
-				parse: '<!DOCTYPE root [<!ENTITY ignored "">]><root/>'
+				parse: '
+					<!DOCTYPE root [
+						<!ENTITY ignored "">
+						<!NOTATION ignored2 PUBLIC "ignored2">
+					]>
+					<root/>'
 				usingNamespaces:true
 				validation: true]
 		raise:XMLValidationException.
@@ -1618,6 +1717,59 @@ XMLParserTest >> testEntityReferenceInternalDeclaration [
 					<!ENTITY % element "<!ELEMENT root EMPTY>">
 					%element;
 				]><root/>']
+		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityReferenceInternalDeclarationExternallyDefined [
+	| declarations |
+
+	self
+		shouldnt: [
+			"the rule against param entity refs in internal declarations
+			shouldn't apply to declarations in external entities included
+			in the subset"
+			declarations := '
+				<!ENTITY % name "test">
+				<!ENTITY % contentModel "(#PCDATA)">
+				<!ELEMENT %name; %contentModel;>'.
+			(SAXHandler on: '
+				<!DOCTYPE test [
+					<!ENTITY % extern SYSTEM "extern.ent">
+					%extern;
+					<!ATTLIST test name CDATA #IMPLIED>
+				]>
+				<test name="value">test</test>')
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver entities:
+						(Array with: 'extern.ent' -> declarations));
+				resolvesExternalEntities: true;
+				parseDocument]
+		raise: XMLWellFormednessException.
+	self
+		shouldnt: [
+			"the rule against param entity refs in internal declarations
+			shouldn't apply to declarations in internal entities included
+			in the subset if they're internal to an external entity"
+			declarations :=
+				'<!ENTITY % extern2 "
+					<!ENTITY &#37; name &#34;test&#34;>
+					<!ENTITY &#37; contentModel &#34;(#PCDATA)&#34;>
+					<!ELEMENT &#37;name; &#37;contentModel;>
+				">'.
+			(SAXHandler on: '
+				<!DOCTYPE test [
+					<!ENTITY % extern SYSTEM "extern.ent">
+					%extern;
+					%extern2;
+					<!ATTLIST test name CDATA #IMPLIED>
+				]>
+				<test name="value">test</test>')
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver entities:
+						(Array with: 'extern.ent' -> declarations));
+				resolvesExternalEntities: true;
+				parseDocument]
 		raise: XMLWellFormednessException.
 ]
 
