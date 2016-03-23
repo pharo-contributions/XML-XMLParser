@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 XMLConformanceOasisTests class >> skippableTests [
-	^ #( teste2xml testp09fail2xml testp66fail5xml )
+	^ #( testp66fail5xml )
 ]
 
 { #category : #'xml source' }
@@ -3866,22 +3866,17 @@ XMLConformanceOasisTests class >> sourcep76pass1xml [
 '
 ]
 
-{ #category : #tests }
+{ #category : #'tests - exception raising' }
 XMLConformanceOasisTests >> teste2xml [
 	"Source file: oasis/e2.xml"
 
 	(self isSkippableTest: #teste2xml)
 		ifTrue: [self skipOrReturnWith: [^ self]].
 	self
-		shouldnt: [
-			[self
+		should: [
+			self
 				parse: self class sourcee2xml
 				documentURI: 'e2.xml']
-				on: self parserExceptions
-				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
-						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 

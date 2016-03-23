@@ -37,8 +37,26 @@ XMLConformanceFileVisitor >> failingNamePatterns [
 ]
 
 { #category : #accessing }
+XMLConformanceFileVisitor >> failingNames [
+	^ #('e2.xml') "an unsually named  OASIS failing test"
+]
+
+{ #category : #accessing }
 XMLConformanceFileVisitor >> failingTestFiles [
 	^ failingTestFiles ifNil: [failingTestFiles := OrderedCollection new]
+]
+
+{ #category : #testing }
+XMLConformanceFileVisitor >> isFailingTestFilePathSegments: aPathSegmentCollection [
+	(self failingNames includes: aPathSegmentCollection last)
+		ifTrue: [^ true].
+
+	aPathSegmentCollection do: [:segment |
+		(self failingNamePatterns anySatisfy: [:pattern |
+			segment includesSubstring: pattern])
+			ifTrue: [^ true]].
+
+	^ false.
 ]
 
 { #category : #accessing }
@@ -78,9 +96,7 @@ XMLConformanceFileVisitor >> visitReference: aDirectoryEntry [
 
 	(basename endsWith: '.xml')
 		ifFalse: [^ self].
-	(pathSegments anySatisfy: [:segment |
-		self failingNamePatterns anySatisfy: [:pattern |
-			segment includesSubstring: pattern]])
+	(self isFailingTestFilePathSegments: pathSegments)
 		ifTrue: [self failingTestFiles add: fileReference]
 		ifFalse: [self passingTestFiles add: fileReference].
 ]

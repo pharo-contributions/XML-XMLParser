@@ -119,33 +119,36 @@ XMLConformanceTests class >> buildTestCaseForSuite: aSuite [
 			skipFilesInBase: (self suitesWithSkippableBases includes: aSuite).
 	(PreorderGuide for: fileVisitor) show: (self fileReferenceForSuite: aSuite).
 
-	badSourceFiles := OrderedCollection new.
+	badSourceFiles := Set new.
 	(fileVisitor passingTestFiles,
 		fileVisitor failingTestFiles,
 		fileVisitor entityFiles) do: [:each |
 			[self
 				buildSourceFileClassMethodFor: each
 				in: testCaseClass]
-				on: ZnCharacterEncodingError
+				on: Error
 				do: [:error | badSourceFiles add: each]].
 
-	(fileVisitor passingTestFiles copyWithoutAll: badSourceFiles)
-		do: [:each |
-			self
-				buildPassingTestMethodFor: each
-				in: testCaseClass].
-	(fileVisitor failingTestFiles copyWithoutAll: badSourceFiles)
-		do: [:each |
-			self
-				buildFailingTestMethodFor: each
-				in: testCaseClass].
+	fileVisitor passingTestFiles do: [:each |
+		(badSourceFiles includes: each)
+			ifFalse: [
+				self
+					buildPassingTestMethodFor: each
+					in: testCaseClass]].
+	fileVisitor failingTestFiles do: [:each |
+		(badSourceFiles includes: each)
+			ifFalse: [
+				self
+					buildFailingTestMethodFor: each
+					in: testCaseClass]].
 ]
 
 { #category : #'building subclasses' }
 XMLConformanceTests class >> buildTestCases [
 	"self buildTestCases"
 
-	self supportedTestSuites do: [:each | self buildTestCaseForSuite: each]
+	self supportedTestSuites do: [:each | self buildTestCaseForSuite: each].
+	self buildSkippableTestsMethodsFromFailures.
 ]
 
 { #category : #'building subclasses' }

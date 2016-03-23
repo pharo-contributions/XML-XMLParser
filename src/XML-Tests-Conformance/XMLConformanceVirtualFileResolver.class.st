@@ -16,18 +16,18 @@ XMLConformanceVirtualFileResolver class >> virtualFileClass: aClass [
 ]
 
 { #category : #resolving }
-XMLConformanceVirtualFileResolver >> resolveEntityURI: aURIOrURIString [
+XMLConformanceVirtualFileResolver >> resolveEntityURI: anXMLURIOrURIString [
 	^ self resolveEntityWith: [:maxSize |
 		(XMLConformanceVirtualFileHandle
-			virtualPath: aURIOrURIString asXMLURI path
+			virtualPath: anXMLURIOrURIString asXMLURI path
 			sourceClass: virtualFileClass) get]
 ]
 
 { #category : #resolving }
-XMLConformanceVirtualFileResolver >> streamResolveEntityURI: aURIOrURIString [
+XMLConformanceVirtualFileResolver >> streamResolveEntityURI: anXMLURIOrURIString [
 	^ self resolveEntityWith: [:maxSize |
 		(XMLConformanceVirtualFileHandle
-			virtualPath: aURIOrURIString asXMLURI path
+			virtualPath: anXMLURIOrURIString asXMLURI path
 			sourceClass: virtualFileClass) streamGet]
 ]
 
