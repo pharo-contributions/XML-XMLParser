@@ -12,12 +12,13 @@ Class {
 
 { #category : #accessing }
 XMLParserDriver >> currentURI [
+	"returns a string with the current URI at this stage of parsing"
 	^ self uris lastOrNil ifNil: [self documentURI]
 ]
 
 { #category : #accessing }
-XMLParserDriver >> currentURI: aURI [
-	self uris addLast: aURI
+XMLParserDriver >> currentURI: aURIString [
+	self uris addLast: aURIString
 ]
 
 { #category : #testing }

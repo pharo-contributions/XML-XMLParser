@@ -505,7 +505,7 @@ XMLURI >> path [
 
 { #category : #accessing }
 XMLURI >> pathSegments [
-	"copy the return value before modifying it"
+	"users should copy the return value before modifying it to preserve immutability"
 
 	self parseURIStringIfUnparsed.
 	^ pathSegments.
@@ -719,7 +719,7 @@ XMLURI >> printUserInfoOn: aStream [
 
 { #category : #accessing }
 XMLURI >> query [
-	"copy the return value before modifying it"
+	"users should copy the return value before modifying it to preserve immutability"
 
 	self parseURIStringIfUnparsed.
 	^ query.
@@ -755,6 +755,11 @@ XMLURI >> queryKeys [
 { #category : #enumerating }
 XMLURI >> queryKeysAndValuesDo: aTwoArgumentBlock [
 	self query keysAndValuesDo: aTwoArgumentBlock
+]
+
+{ #category : #enumerating }
+XMLURI >> queryKeysDo: aBlock [
+	self query keysDo: aBlock
 ]
 
 { #category : #private }

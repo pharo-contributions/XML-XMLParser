@@ -961,8 +961,6 @@ XMLWellFormedParserTokenizer >> nextEndDocument [
 
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextEndIncludeSection [
-	self totalOpenIncludeSections > 0
-		ifFalse: [self errorUnexpectedEndOfIncludeSection].
 	"skip ]"
 	streamReader next.
 	self
@@ -973,9 +971,10 @@ XMLWellFormedParserTokenizer >> nextEndIncludeSection [
 
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextEndInternalSubset [
+	self hasOpenIncludeSections
+		ifTrue: [^ self nextEndIncludeSection].
 	self hasActiveEntities
 		ifTrue: [self errorParameterEntityTerminatingSubset].
-
 	super nextEndInternalSubset.
 ]
 
@@ -1118,7 +1117,10 @@ XMLWellFormedParserTokenizer >> nextExternalSubsetToken [
 			streamReader next.
 			^ self nextParameterEntityReference].
 	streamReader peek == $]
-		ifTrue: [^ self nextEndIncludeSection].
+		ifTrue: [
+			self hasOpenIncludeSections
+				ifFalse: [self errorUnexpectedEndOfIncludeSection].
+			^ self nextEndIncludeSection].
 	self nextSubsetMarkupToken.
 ]
 

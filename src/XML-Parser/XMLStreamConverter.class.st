@@ -116,11 +116,13 @@ XMLStreamConverter class >> initialize [
 
 { #category : #'class initialization' }
 XMLStreamConverter class >> initializeEncodingNamesAndClassesCache [
+	"a class var because it should be shared by all subclasses"
 	EncodingNamesAndClassesCache := XMLKeyValueCache maxSize: 128
 ]
 
 { #category : #'class initialization' }
 XMLStreamConverter class >> initializePreferredClasses [
+	"a class var because it should be shared by all subclasses"
 	(PreferredClasses := IdentitySet new)
 		addAll: XMLUTFStreamConverter allSubclasses;
 		add: XMLByteStreamConverter

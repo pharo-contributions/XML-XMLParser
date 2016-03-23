@@ -34,10 +34,11 @@ XMLFileHandle class >> errorNoSupportedImplementation [
 	XMLFileException signal: 'File IO unsupported'
 ]
 
-{ #category : #initialization }
+{ #category : #'class initialization' }
 XMLFileHandle class >> initialize [
 	"self initialize"
 
+	"a class variable so it's shared by all subclasses"
 	XMLDocumentFileExtensions :=
 		Set withAll: "avoid newFrom: for GS portability"
 			#('dbk' "DocBook XML"

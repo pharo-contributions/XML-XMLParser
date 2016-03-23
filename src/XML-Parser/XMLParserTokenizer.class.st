@@ -209,7 +209,7 @@ XMLParserTokenizer >> nextDoctypeDeclaration [
 
 	streamReader skipSeparators.
 	streamReader peek == $[
-		ifTrue: [self nextInternalSubsetStart]
+		ifTrue: [self nextStartInternalSubset]
 		ifFalse: [self nextEndDoctypeDeclaration].
 ]
 
@@ -231,24 +231,12 @@ XMLParserTokenizer >> nextEndDocument [
 ]
 
 { #category : #'tokenizing - dtd' }
-XMLParserTokenizer >> nextEndIncludeSection [
-	self subclassResponsibility
-]
-
-{ #category : #'tokenizing - dtd' }
 XMLParserTokenizer >> nextEndInternalSubset [
 	"skip ]"
 	streamReader
 		next;
 		skipSeparators.
 	self nextEndDoctypeDeclaration.
-]
-
-{ #category : #'tokenizing - dtd' }
-XMLParserTokenizer >> nextInternalSubsetStart [
-	"skip ["
-	streamReader next.
-	context := context internalSubsetContext.
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -337,6 +325,13 @@ XMLParserTokenizer >> nextStartDocument [
 		and: [driver decodesCharacters])
 		ifTrue: [streamReader detectCurrentEncoding].
 	driver handleStartDocument.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLParserTokenizer >> nextStartInternalSubset [
+	"skip ["
+	streamReader next.
+	context := context internalSubsetContext.
 ]
 
 { #category : #'tokenizing - dtd' }

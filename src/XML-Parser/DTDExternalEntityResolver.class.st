@@ -19,16 +19,15 @@ DTDExternalEntityResolver >> checkExternalEntityLimit [
 ]
 
 { #category : #combining }
-DTDExternalEntityResolver >> combineSourceURI: aSourceURIOrURIString withEntityURI: anEntityURIOrURIString [
+DTDExternalEntityResolver >> combineSourceURI: aSourceXMLURIOrURIString withEntityURI: anEntityXMLURIOrURIString [
 	| sourceURI combinedURI |
 
-	sourceURI := aSourceURIOrURIString asXMLURI.
-	combinedURI := sourceURI / anEntityURIOrURIString.
+	sourceURI := aSourceXMLURIOrURIString asXMLURI.
+	combinedURI := sourceURI / anEntityXMLURIOrURIString.
 	(combinedURI isLocalURI
 		and: [sourceURI isLocalURI not
 			and: [self resolvesLocalFromNonLocal not]])
 		ifTrue: [self errorLocalFromNonLocal].
-
 	^ combinedURI.
 ]
 
@@ -49,6 +48,11 @@ DTDExternalEntityResolver >> externalEntityLimits [
 ]
 
 { #category : #configuring }
+DTDExternalEntityResolver >> externalEntityLimits: anExternalEntityLimits [
+	externalEntityLimits := anExternalEntityLimits
+]
+
+{ #category : #configuring }
 DTDExternalEntityResolver >> externalSubsetReadLimit [
 	^ self externalEntityLimits externalSubsetReadLimit
 ]
@@ -61,7 +65,7 @@ DTDExternalEntityResolver >> externalSubsetReadLimit: aLimit [
 ]
 
 { #category : #private }
-DTDExternalEntityResolver >> incrementEntityTotal [
+DTDExternalEntityResolver >> incrementTotalResolvedEntities [
 	totalResolvedEntities := (totalResolvedEntities ifNil: [0]) + 1
 ]
 
@@ -100,9 +104,9 @@ DTDExternalEntityResolver >> removeLimits [
 ]
 
 { #category : #resolving }
-DTDExternalEntityResolver >> resolveEntityURI: aURIOrURIString [
+DTDExternalEntityResolver >> resolveEntityURI: anXMLURIOrURIString [
 	^ self resolveEntityWith: [:maxSize |
-		aURIOrURIString asXMLURI
+		anXMLURIOrURIString asXMLURI
 			getUpToLimit: maxSize
 			decoding: false]
 ]
@@ -113,7 +117,7 @@ DTDExternalEntityResolver >> resolveEntityWith: aBlock [
 
 	self checkExternalEntityLimit.
 	result := aBlock value: self maxExternalEntitySize.
-	self incrementEntityTotal.
+	self incrementTotalResolvedEntities.
 
 	^ result.
 ]
@@ -167,14 +171,14 @@ DTDExternalEntityResolver >> resolvesLocalFromNonLocal: aBoolean [
 ]
 
 { #category : #resolving }
-DTDExternalEntityResolver >> streamResolveEntityURI: aURIOrURIString [
+DTDExternalEntityResolver >> streamResolveEntityURI: anXMLURIOrURIString [
 	^ self resolveEntityWith: [:maxSize |
-		aURIOrURIString asXMLURI
+		anXMLURIOrURIString asXMLURI
 			streamGetUpToLimit: maxSize
 			decoding: false]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 DTDExternalEntityResolver >> totalResolvedEntities [
 	^ totalResolvedEntities ifNil: [totalResolvedEntities := 0]
 ]
