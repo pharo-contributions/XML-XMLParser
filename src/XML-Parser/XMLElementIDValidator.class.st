@@ -67,7 +67,7 @@ XMLElementIDValidator >> removeIDsAndIDReferences [
 
 { #category : #validating }
 XMLElementIDValidator >> validateID: anID inAttribute: anAttribute [
-	(XMLWellFormedParserTokenizer isName: anID)
+	anID isXMLName
 		ifFalse: [
 			self
 				errorInvalidID: anID
@@ -92,7 +92,7 @@ XMLElementIDValidator >> validateIDAttribute: anAttribute forElement: anElement 
 
 { #category : #validating }
 XMLElementIDValidator >> validateIDReference: anID inAttribute: anAttribute [
-	(XMLWellFormedParserTokenizer isName: anID)
+	anID isXMLName
 		ifFalse: [
 			self
 				errorInvalidID: anID
@@ -124,7 +124,7 @@ XMLElementIDValidator >> validateUniquenessOfID: anID inAttribute: anAttribute [
 
 { #category : #validating }
 XMLElementIDValidator >> validateXMLID: anID [
-	(XMLWellFormedParserTokenizer isNCName: anID)
+	anID isXMLNCName
 		ifFalse: [
 			self
 				errorInvalidID: anID

@@ -92,20 +92,22 @@ DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: anAttribute
 		self attributeValidators
 			at: anElement
 			ifAbsentPut: [Dictionary new].
-	(attributeValidatorsForElement includesKey: anAttribute)
-		ifTrue: [^ self].
 
-	attributeValidatorsForElement
-		at: anAttribute
-		put: 
-			((DTDAttributeDefinitionParser
-				element:  anElement
-				attribute: anAttribute
-				type: aType
-				defaultPragma: aDefaultPragma
-				defaultValue: aDefaultValue) parse
-					initializeWithValidatorsFrom: self;
-					validateDeclaration).
+	"additional declarations for the same attribute are legal, unlike with
+	element declarations, but are ignored"
+	(attributeValidatorsForElement includesKey: anAttribute)
+		ifFalse: [
+			attributeValidatorsForElement
+				at: anAttribute
+				put: 
+					((DTDAttributeDefinitionParser
+						element:  anElement
+						attribute: anAttribute
+						type: aType
+						defaultPragma: aDefaultPragma
+						defaultValue: aDefaultValue) parse
+							initializeWithValidatorsFrom: self;
+							validateDeclaration)].
 ]
 
 { #category : #adding }
@@ -168,7 +170,10 @@ DTDDoctypeDefinition >> generalEntityAt: aName ifAbsent: aBlock [
 
 { #category : #testing }
 DTDDoctypeDefinition >> hasAttributeValidators [
-	^ attributeValidators notNil and: [attributeValidators notEmpty]
+	"optimized to avoid lazy initialization"
+	attributeValidators == nil
+		ifTrue: [^ false].
+	^ attributeValidators size > 0.
 ]
 
 { #category : #testing }
@@ -178,7 +183,10 @@ DTDDoctypeDefinition >> hasElementIDValidator [
 
 { #category : #testing }
 DTDDoctypeDefinition >> hasElementValidators [
-	^ elementValidators notNil and: [elementValidators notEmpty]
+	"optimized to avoid lazy initialization"
+	elementValidators == nil
+		ifTrue: [^ false].
+	^ elementValidators size > 0.
 ]
 
 { #category : #testing }
@@ -215,10 +223,8 @@ DTDDoctypeDefinition >> hasUnparsedEntities [
 
 { #category : #testing }
 DTDDoctypeDefinition >> hasValidators [
-	^ (attributeValidators notNil
-		and: [attributeValidators notEmpty])
-			or: [elementValidators notNil
-				and: [elementValidators notEmpty]]
+	^ self hasElementValidators
+		or: [self hasAttributeValidators]
 ]
 
 { #category : #testing }

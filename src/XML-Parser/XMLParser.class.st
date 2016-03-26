@@ -13,7 +13,9 @@ Class {
 
 { #category : #'instance creation' }
 XMLParser class >> driver: aDriver on: aStringOrStream [
-	^ self new setDriver: aDriver tokenizer: (aDriver tokenizerOn: aStringOrStream)
+	^ self new
+		setDriver: aDriver
+		tokenizer: (aDriver tokenizerOn: aStringOrStream)
 ]
 
 { #category : #testing }

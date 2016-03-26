@@ -377,6 +377,11 @@ SAXParserDriver >> handleParameterEntityReference: aName [
 			nil]
 ]
 
+{ #category : #handling }
+SAXParserDriver >> handleParseError: aString [
+	XMLWellFormednessException signal: aString
+]
+
 { #category : #private }
 SAXParserDriver >> handleReservedAttributes: anAttributeDictionary [
 	anAttributeDictionary

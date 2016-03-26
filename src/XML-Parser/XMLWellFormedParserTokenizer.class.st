@@ -10,8 +10,6 @@ Class {
 	],
 	#classVars : [
 		'EncodingNameChars',
-		'NameChars',
-		'NonNameStartCharNameChars',
 		'NormalizedSpace',
 		'PublicIDChars'
 	],
@@ -24,8 +22,6 @@ XMLWellFormedParserTokenizer class >> initialize [
 
 	self
 		initializeNormalizedSpace;
-		initializeNonNameStartCharNameChars;
-		initializeNameChars;
 		initializePublicIDChars;
 		initializeEncodingNameChars
 ]
@@ -42,59 +38,6 @@ XMLWellFormedParserTokenizer class >> initializeEncodingNameChars [
 ]
 
 { #category : #'class initialization' }
-XMLWellFormedParserTokenizer class >> initializeNameChars [
-	"This character set is built from the range below for 'NameStartChars' plus
-	the characters from NonNameStartCharNameChars. 
-	
-	NameStartChar ::=
-		':' | [A-Z] | '_' | [a-z] | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x2FF] |
-		[#x370-#x37D] | [#x37F-#x1FFF] | [#x200C-#x200D] | [#x2070-#x218F] |
-		[#x2C00-#x2FEF] | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] |
-		[#x10000-#xEFFFF]
-	NameChar ::=
-		NameStartChar | '-' | '.' | [0-9] | #xB7 | [#x0300-#x036F] |
-		[#x203F-#x2040]"
-
-	(NameChars := BitmapCharacterSet new: 16rF0000)
-		add: $:;
-		addRangeFrom: $A to: $Z;
-		add: $_;
-		addRangeFrom: $a to: $z;
-		addRangeFrom: 16rC0 asCharacter to: 16rD6 asCharacter;
-		addRangeFrom: 16rD8 asCharacter to: 16rF6 asCharacter;
-		addRangeFrom: 16rF8 asCharacter to: 16r2FF asCharacter;
-		addRangeFrom: 16r370 asCharacter to: 16r37D asCharacter;
-		addRangeFrom: 16r37F asCharacter to: 16r1FFF asCharacter;
-		addRangeFrom: 16r200C asCharacter to: 16r200D asCharacter;
-		addRangeFrom: 16r2070 asCharacter to: 16r218F asCharacter;
-		addRangeFrom: 16r2C00 asCharacter to: 16r2FEF asCharacter;
-		addRangeFrom: 16r3001 asCharacter to: 16rD7FF asCharacter;
-		addRangeFrom: 16rF900 asCharacter to: 16rFDCF asCharacter;
-		addRangeFrom: 16rFDF0 asCharacter to: 16rFFFD asCharacter;
-		addRangeFrom: 16r10000 asCharacter to: 16rEFFFF asCharacter;
-		addAll: NonNameStartCharNameChars
-]
-
-{ #category : #'class initialization' }
-XMLWellFormedParserTokenizer class >> initializeNonNameStartCharNameChars [
-	"This character set equals 'NameChar' except 'NameStartChar', which
-	requires less memory than creating one for 'NameStartChar' but can
-	still be used to test for illegal start chars in names.
-
-	NameChar ::=
-		NameStartChar | '-' | '.' | [0-9] | #xB7 | [#x0300-#x036F] |
-		 [#x203F-#x2040]"
-
-	(NonNameStartCharNameChars := BitmapCharacterSet new: 16r2041)
-		add: $-;
-		add: $.;
-		addRangeFrom: $0 to: $9;
-		add: 16rB7 asCharacter;
-		addRangeFrom: 16r0300 asCharacter to: 16r036F asCharacter;
-		addRangeFrom: 16r203F asCharacter to: 16r2040 asCharacter
-]
-
-{ #category : #'class initialization' }
 XMLWellFormedParserTokenizer class >> initializeNormalizedSpace [
 	NormalizedSpace := Character space
 ]
@@ -105,90 +48,12 @@ XMLWellFormedParserTokenizer class >> initializePublicIDChars [
 
 	(PublicIDChars := BitmapCharacterSet new)
 		add: 16r20 asCharacter;
-		add: 16r0D asCharacter;
-		add: 16r0A asCharacter;
+		add: 16rD asCharacter;
+		add: 16rA asCharacter;
 		addRangeFrom: $a to: $z;
 		addRangeFrom: $A to: $Z;
 		addRangeFrom: $0 to: $9;
 		addAll: '-''()+,./:=?;!*#@$_%'
-]
-
-{ #category : #testing }
-XMLWellFormedParserTokenizer class >> isNCName: aString [
-	"optimized"
-	1 to: aString size do: [:i | | nextChar |
-		(nextChar := aString at: i) == $:
-			ifTrue: [^ false].
-		((NameChars includes: nextChar)
-			and: [i > 1
-				or: [(NonNameStartCharNameChars includes: nextChar) not]])
-			ifFalse: [^ false]].
-	^ aString size > 0.
-]
-
-{ #category : #testing }
-XMLWellFormedParserTokenizer class >> isName: aString [
-	"optimized"
-	1 to: aString size do: [:i | 
-		((NameChars includes: (aString at: i))
-			and: [i > 1
-				or: [(NonNameStartCharNameChars includes: (aString at: i)) not]])
-			ifFalse: [^ false]].
-	^ aString size > 0.
-]
-
-{ #category : #testing }
-XMLWellFormedParserTokenizer class >> isNmtoken: aString [
-	"optimized"
-	1 to: aString size do: [:i |
-		(NameChars includes: (aString at: i))
-			ifFalse: [^ false]].
-	^ aString size > 0.
-]
-
-{ #category : #streaming }
-XMLWellFormedParserTokenizer class >> nextNCNameFrom: aReadStream on: aWriteStream [
-	| nextChar |
-
-	(aReadStream atEnd
-		or: [(NameChars includes: (nextChar := aReadStream peek)) not
-			or: [nextChar == $:
-				or: [NonNameStartCharNameChars includes: nextChar]]])
-		ifTrue: [^ false].
-	aWriteStream nextPut: aReadStream next.
-
-	[aReadStream atEnd
-		or: [(NameChars includes: (nextChar := aReadStream peek)) not
-			or: [nextChar == $:]]]
-		whileFalse: [aWriteStream nextPut: aReadStream next].
-	^ true.
-]
-
-{ #category : #streaming }
-XMLWellFormedParserTokenizer class >> nextNameFrom: aReadStream on: aWriteStream [
-	(aReadStream atEnd
-		or: [(NameChars includes: aReadStream peek) not
-			or: [NonNameStartCharNameChars includes: aReadStream peek]])
-		ifTrue: [^ false].
-	aWriteStream nextPut: aReadStream next.
-
-	[aReadStream atEnd not
-		and: [NameChars includes: aReadStream peek]]
-		whileTrue: [aWriteStream nextPut: aReadStream next].
-	^ true.
-]
-
-{ #category : #streaming }
-XMLWellFormedParserTokenizer class >> nextNmtokenFrom: aReadStream on: aWriteStream [
-	(aReadStream atEnd
-		or: [(NameChars includes: aReadStream peek) not])
-		ifTrue: [^ false].
-	aWriteStream nextPut: aReadStream next.
-
-	[aReadStream atEnd not
-		and: [NameChars includes: aReadStream peek]]
-		whileTrue: [aWriteStream nextPut: aReadStream next].
-	^ true.
 ]
 
 { #category : #accessing }
@@ -208,6 +73,16 @@ XMLWellFormedParserTokenizer >> addActiveEntity: anEntity [
 	self activeEntities addLast: anEntity.
 	anEntity isExternal
 		ifTrue: [driver currentURI: anEntity uri].
+]
+
+{ #category : #decoding }
+XMLWellFormedParserTokenizer >> characterFromCodePoint: aCodePoint [
+	| character |
+
+	"nil understands isXMLChar so it does not need to be tested for"
+	(character := super characterFromCodePoint: aCodePoint) isXMLChar
+		ifTrue: [^ character]
+		ifFalse: [^ nil].
 ]
 
 { #category : #'entity replacing' }
@@ -263,17 +138,21 @@ XMLWellFormedParserTokenizer >> errorDocumentTerminatedPrematurely [
 
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorDuplicateAttribute: anAttributeName [
-	self parseError: 'Duplicate attribute "', anAttributeName, '" in start tag'
+	self
+		formatParseError: 'Duplicate attribute "{1}" in start tag'
+		with: anAttributeName
 ]
 
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorDuplicateNamespace: aPrefix [
-	self parseError:
-		(aPrefix
-			ifEmpty: [
-				'Duplicate default namespace declaration in start tag']
-			ifNotEmpty: [
-				'Duplicate namespace declaration "xmlns:', aPrefix, '" in start tag'])
+	aPrefix
+		ifEmpty: [
+			self parseError: 'Duplicate default namespace declaration in start tag']
+		ifNotEmpty: [
+			self
+				formatParseError:
+					'Duplicate namespace declaration "xmlns:{1}" in start tag'
+				with: aPrefix]
 ]
 
 { #category : #errors }
@@ -281,20 +160,6 @@ XMLWellFormedParserTokenizer >> errorEntityDepthLimitExceeded [
 	XMLLimitException signal: 
 		'Cannot further nest entity replacements; ',
 		'use #maxEntityReplacementDepth: to change or disable'
-]
-
-{ #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpected: aDescription [
-	self parseError: 'Expected ', aDescription
-]
-
-{ #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpected: aDescription butGot: aCharacter [
-	self errorExpected:
-		('{1} but got "{2}"' format:
-			(Array
-				with: aDescription
-				with: (aCharacter ifNil: [''])))
 ]
 
 { #category : #errors }
@@ -315,51 +180,24 @@ XMLWellFormedParserTokenizer >> errorExpectedAttributeValueStart [
 ]
 
 { #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedCDataSectionTerminator [
+	self errorExpected: 'end of CDATA section "]]>" terminator'
+]
+
+{ #category : #errors }
 XMLWellFormedParserTokenizer >> errorExpectedIntegerCharacterReference [
 	self errorExpected:
 		'decimal or hex integer after "&#" character reference start'
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpectedLiteral: aCharacterOrString [
-	self
-		errorExpectedLiteral: aCharacterOrString
-		butGot: nil
-]
-
-{ #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpectedLiteral: aCharacterOrString butGot: aCharacter [
-	self
-		errorExpectedLiteral: aCharacterOrString
-		butGot: aCharacter
-		at: 1
-]
-
-{ #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpectedLiteral: aCharacterOrString butGot: aCharacter at: aPosition [
-	| literal replacement |
-
-	literal := aCharacterOrString asString.
-	replacement := (aCharacter ifNil: ['']) asString.
-	self errorExpected:
-		('"{1}" but got "{2}"' format:
-			(Array
-				with: literal
-				with:
-					(literal
-						copyReplaceFrom: aPosition
-						to: literal size
-						with: replacement)))
-]
-
-{ #category : #errors }
 XMLWellFormedParserTokenizer >> errorExpectedName [
-	self errorExpected: 'a name'
+	self errorExpected: 'an XML name'
 ]
 
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorExpectedNmtoken [
-	self errorExpected: 'a Nmtoken name'
+	self errorExpected: 'an XML Nmtoken name'
 ]
 
 { #category : #errors }
@@ -382,12 +220,16 @@ XMLWellFormedParserTokenizer >> errorExpectedTerminatorButGot: aCharacter [
 
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorInternalDeclarationParameterEntityReference: aName [
-	self parseError: 'Parameter entity reference %', aName, '; in internal subset declaration'
+	self
+		formatParseError:
+			'Parameter entity reference %{1}; in internal subset declaration'
+		with: aName
 ]
 
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorInternalEntityValueParameterEntityReference [
-	self parseError: 'Internal entity values cannot contain parameter entity references'
+	self parseError:
+		'Internal entity values cannot contain parameter entity references'
 ]
 
 { #category : #errors }
@@ -398,19 +240,64 @@ XMLWellFormedParserTokenizer >> errorInternalSubsetConditionalSection [
 
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorInvalidCharacterReferenceCodePoint: aCodePoint [
-	self parseError:
-		'Invalid character reference to code point U+', aCodePoint printStringHex
+	self
+		formatParseError: 'Invalid character reference to U+{1} code point'
+		with: aCodePoint printStringHex
 ]
 
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorLiteralContextExternalEntity: anEntity [
-	self parseError:
-		'External general entity reference ', anEntity asReference, ' in literal context'
+	self
+		formatParseError: 'External general entity reference {1} in literal context'
+		with: anEntity asReference
 ]
 
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorMultipleDoctypeDeclarations [
 	self parseError: 'Multiple <!DOCTYPE ...> declarations'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorNonChar: aCharacter in: aDescription [
+	self
+		formatParseError: 'Invalid character U+{1} in {2}'
+		with: aCharacter printStringHex
+		with: aDescription
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorNonCharInAttributeValue: aCharacter [
+	self
+		errorNonChar: aCharacter
+		in: 'attribute value'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorNonCharInComment: aCharacter [
+	self
+		errorNonChar: aCharacter
+		in: 'comment'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorNonCharInPCData: aCharacter [
+	self
+		errorNonChar: aCharacter
+		in: 'PCDATA'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorNonCharInPIValue: aCharacter [
+	self
+		errorNonChar: aCharacter
+		in: 'processing instruction value'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorNonCharInSystemID: aCharacter [
+	self
+		errorNonChar: aCharacter
+		in: 'system ID'
 ]
 
 { #category : #errors }
@@ -420,12 +307,16 @@ XMLWellFormedParserTokenizer >> errorParameterEntityTerminatingSubset [
 
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorReservedPITarget: aTarget [
-	self parseError: 'Processing instruction target "', aTarget, '" is reserved'
+	self
+		formatParseError: 'Processing instruction target "{1}" is reserved'
+		with: aTarget
 ]
 
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorSelfReferentialEntity: anEntity [
-	self parseError: 'Illegal self-referential entity ', anEntity asReference
+	self
+		formatParseError: 'Illegal self-referential {1} entity'
+		with: anEntity asReference
 ]
 
 { #category : #errors }
@@ -578,7 +469,7 @@ XMLWellFormedParserTokenizer >> hasOpenIncludeSections [
 		and: [totalOpenIncludeSections > 0]
 ]
 
-{ #category : #'tokenizing - dtd' }
+{ #category : #testing }
 XMLWellFormedParserTokenizer >> isInExternalSubsetOrExternallyDefinedEntity [
 	context isExternalSubsetContext
 		ifTrue: [^ true].
@@ -757,6 +648,8 @@ XMLWellFormedParserTokenizer >> nextAttributeValue [
 		or: [nextChar == $<
 			or: [nextChar == nil]]]
 		whileFalse: [
+			nextChar isXMLChar
+				ifFalse: [self errorNonCharInAttributeValue: nextChar].
 			nextChar == $&
 				ifTrue: [
 					"char refs should be ignored by whitespace normalization"
@@ -773,6 +666,24 @@ XMLWellFormedParserTokenizer >> nextAttributeValue [
 		ifFalse: [self errorExpectedAttributeValueEndButGot: nextChar].
 
 	^ writeStream contents.
+]
+
+{ #category : #tokenizing }
+XMLWellFormedParserTokenizer >> nextCDataSection [
+	| wasTerminated |
+
+	self expectNextAll: '[CDATA['.
+	writeStream reset.
+	wasTerminated := false.
+	[streamReader atEnd
+		or: [wasTerminated := streamReader nextMatchAll: ']]>']]
+		whileFalse: [| nextChar |
+			(nextChar := streamReader next) isXMLChar
+				ifFalse: [self errorNonCharInPCData: nextChar].
+			writeStream nextPut: nextChar].
+	wasTerminated
+		ifFalse: [self errorExpectedCDataSectionTerminator].
+	driver handleCData: writeStream contents.
 ]
 
 { #category : #tokenizing }
@@ -817,8 +728,11 @@ XMLWellFormedParserTokenizer >> nextComment [
 	writeStream reset.
 	[(nextChar := streamReader next) == nil
 		or: [nextChar == $-
-			and: [(streamReader peek) == $-]]]
-		whileFalse: [writeStream nextPut: nextChar].
+			and: [streamReader peek == $-]]]
+		whileFalse: [
+			nextChar isXMLChar
+				ifFalse: [self errorNonCharInComment: nextChar].
+			writeStream nextPut: nextChar].
 	self
 		expectNext: $-;
 		expectTerminator.
@@ -1210,14 +1124,13 @@ XMLWellFormedParserTokenizer >> nextName [
 	| nextChar |
 
 	nameStream reset.
-	((nextChar := streamReader next) notNil
-		and: [(NameChars includes: nextChar)
-			and: [(NonNameStartCharNameChars includes: nextChar) not]])
+	"nil understands isXMLNameStartChar so it does not need to be tested for"
+	(nextChar := streamReader next) isXMLNameStartChar
 		ifFalse: [self errorExpectedName].
 	nameStream nextPut: nextChar.
 
-	[(nextChar := streamReader peek) notNil
-		and: [NameChars includes: nextChar]]
+	"nil understands isXMLNameChar so it does not need to be tested for"
+	[(nextChar := streamReader peek) isXMLNameChar]
 		whileTrue: [nameStream nextPut: streamReader next].
 	^ nameStream contents.
 ]
@@ -1238,14 +1151,13 @@ XMLWellFormedParserTokenizer >> nextNameListValuesOnWriteStream [
 XMLWellFormedParserTokenizer >> nextNameOnWriteStream [
 	| nextChar |
 
-	((nextChar := streamReader next) notNil
-		and: [(NameChars includes: nextChar)
-			and: [(NonNameStartCharNameChars includes: nextChar) not]])
+	"nil understands isXMLNameStartChar so it does not need to be tested for"
+	(nextChar := streamReader next) isXMLNameStartChar
 		ifFalse: [self errorExpectedName].
 	writeStream nextPut: nextChar.
 
-	[(nextChar := streamReader peek) notNil
-		and: [NameChars includes: nextChar]]
+	"nil understands isXMLNameChar so it does not need to be tested for"
+	[(nextChar := streamReader peek) isXMLNameChar]
 		whileTrue: [writeStream nextPut: streamReader next].
 ]
 
@@ -1254,13 +1166,13 @@ XMLWellFormedParserTokenizer >> nextNmtokenOnWriteStream [
 	"matches the Nmtoken production"
 	| nextChar |
 
-	((nextChar := streamReader peek) notNil
-		and: [(NameChars includes: nextChar)])
+	"nil understands isXMLNameChar so it does not need to be tested for"
+	(nextChar := streamReader next) isXMLNameChar
 		ifFalse: [self errorExpectedNmtoken].
-	writeStream nextPut: streamReader next.
-		
-	[(nextChar := streamReader peek) notNil
-		and: [NameChars includes: nextChar]]
+	writeStream nextPut: nextChar.
+
+	"nil understands isXMLNameChar so it does not need to be tested for"
+	[(nextChar := streamReader peek) isXMLNameChar]
 		whileTrue: [writeStream nextPut: streamReader next].
 ]
 
@@ -1311,7 +1223,9 @@ XMLWellFormedParserTokenizer >> nextPCDataToken [
 	[(nextChar := streamReader peek) == $<
 		or: [nextChar == nil]]
 		whileFalse: [
-			streamReader next == $&
+			streamReader next isXMLChar
+				ifFalse: [self errorNonCharInPCData: nextChar].
+			nextChar == $&
 				ifTrue: [
 					(streamReader peek == $#
 						ifTrue: [self nextCharacterReferenceOnWriteStream]
@@ -1349,6 +1263,22 @@ XMLWellFormedParserTokenizer >> nextPITarget [
 					target asLowercase = 'xml'
 						ifTrue: [self errorReservedPITarget: target]]].
 	^ target.
+]
+
+{ #category : #tokenizing }
+XMLWellFormedParserTokenizer >> nextPIValue [
+	| nextChar |
+
+	writeStream reset.
+	[(nextChar := streamReader next) == nil
+		or: [nextChar == $?
+			and: [streamReader peek == $>]]]
+		whileFalse: [
+			nextChar isXMLChar
+				ifFalse: [self errorNonCharInPIValue: nextChar].
+			writeStream nextPut: nextChar].
+	self expectTerminator.
+	^ writeStream contents.
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -1483,7 +1413,10 @@ XMLWellFormedParserTokenizer >> nextSystemIDLiteral [
 	writeStream reset.
 	[(nextChar := streamReader peek) == nil
 		or: [nextChar == quote]]
-		whileFalse: [writeStream nextPut: streamReader next].
+		whileFalse: [
+			nextChar isXMLChar
+				ifFalse: [self errorNonCharInSystemID: nextChar].
+			writeStream nextPut: streamReader next].
 	self expectNext: quote.
 
 	^ writeStream contents.
@@ -1612,11 +1545,6 @@ XMLWellFormedParserTokenizer >> nextXMLVersionAttributeValue [
 
 	self expectNext: quote.
 	^ writeStream contents.
-]
-
-{ #category : #errors }
-XMLWellFormedParserTokenizer >> parseError: aString [
-	driver handleParseError: aString
 ]
 
 { #category : #'entity replacing' }

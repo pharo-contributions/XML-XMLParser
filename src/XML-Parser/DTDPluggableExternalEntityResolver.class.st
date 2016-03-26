@@ -5,7 +5,7 @@ Class {
 	#name : #DTDPluggableExternalEntityResolver,
 	#superclass : #DTDExternalEntityResolver,
 	#instVars : [
-		'resolvedEntities'
+		'entities'
 	],
 	#category : #'XML-Parser-DTD'
 }
@@ -17,7 +17,7 @@ DTDPluggableExternalEntityResolver class >> entities: anAssociationCollection [
 
 { #category : #private }
 DTDPluggableExternalEntityResolver >> entities [
-	^ resolvedEntities ifNil: [resolvedEntities := Dictionary new]
+	^ entities ifNil: [entities := Dictionary new]
 ]
 
 { #category : #accessing }

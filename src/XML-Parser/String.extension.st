@@ -68,10 +68,47 @@ String >> isQualifiedName: aQualifiedName orLocalName: aLocalName [
 ]
 
 { #category : #'*XML-Parser' }
+String >> isXMLNCName [
+	"optimized"
+	self size > 0
+		ifFalse: [^ false].
+	(self at: 1) isXMLNCNameStartChar
+		ifFalse: [^ false].
+	2 to: self size do: [:i |
+		(self at: i) isXMLNCNameChar
+			ifFalse: [^ false]].
+	^ true.
+]
+
+{ #category : #'*XML-Parser' }
 String >> isXMLNSAttributeName [
 	^ (self beginsWith: 'xmlns')
 		and: [self size = 5 "'xmlns' size"
 			or: [(self at: 6) == $:]]
+]
+
+{ #category : #'*XML-Parser' }
+String >> isXMLName [
+	"optimized"
+	self size > 0
+		ifFalse: [^ false].
+	(self at: 1) isXMLNameStartChar
+		ifFalse: [^ false].
+	2 to: self size do: [:i |
+		(self at: i) isXMLNameChar
+			ifFalse: [^ false]].
+	^ true.
+]
+
+{ #category : #'*XML-Parser' }
+String >> isXMLNmtoken [
+	"optimized"
+	self size > 0
+		ifFalse: [^ false].
+	1 to: self size do: [:i |
+		(self at: i) isXMLNameChar
+			ifFalse: [^ false]].
+	^ true.
 ]
 
 { #category : #'*XML-Parser' }

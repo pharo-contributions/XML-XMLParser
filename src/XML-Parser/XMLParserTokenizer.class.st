@@ -14,7 +14,6 @@ Class {
 		'nameStream'
 	],
 	#classVars : [
-		'CharacterConverter',
 		'PredefinedEntities'
 	],
 	#category : #'XML-Parser'
@@ -43,14 +42,7 @@ XMLParserTokenizer class >> driver: aDriver on: aStringOrStream readLimit: aRead
 XMLParserTokenizer class >> initialize [
 	"self initialize"
 
-	self
-		initializePredefinedEntities;
-		initializeCharacterConverter
-]
-
-{ #category : #'class initialization' }
-XMLParserTokenizer class >> initializeCharacterConverter [
-	CharacterConverter := XMLUTF8StreamConverter new
+	self initializePredefinedEntities
 ]
 
 { #category : #'class initialization' }
@@ -76,12 +68,13 @@ XMLParserTokenizer >> atEnd [
 { #category : #decoding }
 XMLParserTokenizer >> characterFromCodePoint: aCodePoint [
 	(aCodePoint notNil
-		and: [aCodePoint > 0])
+		and: [aCodePoint > 0
+			and: [aCodePoint <= 16r10FFFF]])
 		ifTrue: [
-			^ [CharacterConverter characterFromCodePoint: aCodePoint]
+			^ [Character value: aCodePoint]
 				on: Error
 				do: [:error | nil]]
-		ifFalse: [^ nil].
+		ifFalse: [^ nil]
 ]
 
 { #category : #closing }
@@ -133,6 +126,50 @@ XMLParserTokenizer >> driver [
 	^ driver
 ]
 
+{ #category : #errors }
+XMLParserTokenizer >> errorExpected: aDescription [
+	self parseError: 'Expected ', aDescription
+]
+
+{ #category : #errors }
+XMLParserTokenizer >> errorExpected: aDescription butGot: aCharacter [
+	self
+		formatParseError: 'Expected {1} but got "{2}"'
+		with: aDescription
+		with: (aCharacter ifNil: [''])
+]
+
+{ #category : #errors }
+XMLParserTokenizer >> errorExpectedLiteral: aCharacterOrString [
+	self
+		errorExpectedLiteral: aCharacterOrString
+		butGot: nil
+]
+
+{ #category : #errors }
+XMLParserTokenizer >> errorExpectedLiteral: aCharacterOrString butGot: aCharacter [
+	self
+		errorExpectedLiteral: aCharacterOrString
+		butGot: aCharacter
+		at: 1
+]
+
+{ #category : #errors }
+XMLParserTokenizer >> errorExpectedLiteral: aCharacterOrString butGot: aCharacter at: aPosition [
+	| literal replacement |
+
+	literal := aCharacterOrString asString.
+	replacement := (aCharacter ifNil: ['']) asString.
+	self
+		formatParseError: 'Expected "{1}" but got "{2}"' 
+		with: literal
+		with:
+			(literal
+				copyReplaceFrom: aPosition
+				to: literal size
+				with: replacement).
+]
+
 { #category : #'tokenizing - expecting' }
 XMLParserTokenizer >> expectNext: aCharacter [
 	self subclassResponsibility
@@ -158,11 +195,54 @@ XMLParserTokenizer >> expectUpToAll: aString [
 	self subclassResponsibility
 ]
 
+{ #category : #errors }
+XMLParserTokenizer >> formatParseError: aString with: aFirstValue [
+	self
+		formatParseError: aString
+		withAll: (Array with: aFirstValue)
+]
+
+{ #category : #errors }
+XMLParserTokenizer >> formatParseError: aString with: aFirstValue with: aSecondValue [
+	self
+		formatParseError: aString
+		withAll:
+			(Array
+				with: aFirstValue
+				with: aSecondValue)
+]
+
+{ #category : #errors }
+XMLParserTokenizer >> formatParseError: aString with: aFirstValue with: aSecondValue with: aThirdValue [
+	self
+		formatParseError: aString
+		withAll:
+			(Array
+				with: aFirstValue
+				with: aSecondValue
+				with: aThirdValue)
+]
+
+{ #category : #errors }
+XMLParserTokenizer >> formatParseError: aString with: aFirstValue with: aSecondValue with: aThirdValue with: aFourthValue [
+	self
+		formatParseError: aString
+		withAll:
+			(Array
+				with: aFirstValue
+				with: aSecondValue
+				with: aThirdValue
+				with: aFourthValue)
+]
+
+{ #category : #errors }
+XMLParserTokenizer >> formatParseError: aString withAll: aValueCollection [
+	self parseError: (aString format: aValueCollection)
+]
+
 { #category : #tokenizing }
 XMLParserTokenizer >> nextCDataSection [
-	self expectNextAll: '[CDATA['.
-
-	driver handleCData: (self expectUpToAll: ']]>').
+	self subclassResponsibility
 
 ]
 
@@ -257,6 +337,11 @@ XMLParserTokenizer >> nextName [
 ]
 
 { #category : #tokenizing }
+XMLParserTokenizer >> nextNonPIPrologOrContentToken [
+	self subclassResponsibility
+]
+
+{ #category : #tokenizing }
 XMLParserTokenizer >> nextPCDataToken [
 	self subclassResponsibility
 ]
@@ -274,6 +359,11 @@ XMLParserTokenizer >> nextPITarget [
 ]
 
 { #category : #tokenizing }
+XMLParserTokenizer >> nextPIValue [
+	self subclassResponsibility
+]
+
+{ #category : #tokenizing }
 XMLParserTokenizer >> nextPIWithTarget: aTarget [
 	streamReader peek == $?
 		ifTrue: [
@@ -286,7 +376,7 @@ XMLParserTokenizer >> nextPIWithTarget: aTarget [
 			self expectSeparators.
 			driver
 				handlePI: aTarget
-				data: (self expectUpToAll: '?>')].
+				data: self nextPIValue].
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -486,6 +576,11 @@ XMLParserTokenizer >> normalizedLineEndingChar [
 { #category : #accessing }
 XMLParserTokenizer >> normalizedLineEndingChar: aCharacter [
 	streamReader normalizedLineEndingChar: aCharacter
+]
+
+{ #category : #errors }
+XMLParserTokenizer >> parseError: aString [
+	driver handleParseError: aString
 ]
 
 { #category : #printing }

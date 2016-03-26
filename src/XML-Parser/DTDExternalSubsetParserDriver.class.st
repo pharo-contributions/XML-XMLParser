@@ -112,6 +112,11 @@ DTDExternalSubsetParserDriver >> handleParameterEntityReference: aName [
 	^ self saxDriver handleParameterEntityReference: aName
 ]
 
+{ #category : #handling }
+DTDExternalSubsetParserDriver >> handleParseError: aString [
+	XMLWellFormednessException signal: aString
+]
+
 { #category : #initialization }
 DTDExternalSubsetParserDriver >> initialContext [
 	^ XMLTextDeclarationContext new

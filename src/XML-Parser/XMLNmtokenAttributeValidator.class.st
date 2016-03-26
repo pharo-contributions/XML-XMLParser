@@ -22,6 +22,6 @@ XMLNmtokenAttributeValidator >> validateAttributeValue: aValue [
 
 { #category : #validating }
 XMLNmtokenAttributeValidator >> validateNmtoken: aName [
-	(XMLWellFormedParserTokenizer isNmtoken: aName)
+	aName isXMLNmtoken
 		ifFalse: [self errorInvalidNmtoken: aName]
 ]

@@ -74,7 +74,10 @@ XMLElementNester >> hasOpenElements [
 
 { #category : #testing }
 XMLElementNester >> hasScopedAttributes [
-	^ scopedAttributes notNil and: [scopedAttributes notEmpty]
+	"optimized to avoid lazy initialization"
+	scopedAttributes == nil
+		ifTrue: [^ false].
+	^ scopedAttributes size > 0.
 ]
 
 { #category : #initialization }

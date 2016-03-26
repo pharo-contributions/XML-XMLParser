@@ -76,7 +76,8 @@ XMLDocumentValidator >> hasElementValidators [
 
 { #category : #testing }
 XMLDocumentValidator >> hasValidators [
-	^ self hasElementValidators or: [self hasAttributeValidators]
+	^ self hasElementValidators
+		or: [self hasAttributeValidators]
 ]
 
 { #category : #printing }

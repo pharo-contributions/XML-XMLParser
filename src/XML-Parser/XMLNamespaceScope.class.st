@@ -24,12 +24,15 @@ XMLNamespaceScope class >> xmlnsNamespaceURI [
 XMLNamespaceScope >> = anObject [
 	self == anObject
 		ifTrue: [^ true].
-	self class == anObject class
+	self species == anObject species
 		ifFalse: [^ false].
 
-	^ self hasNamespaces
-		ifTrue: [anObject hasNamespaces and: [prefixMappings = anObject prefixMappings]]
-		ifFalse: [anObject hasNamespaces not].
+	self hasNamespaces
+		ifFalse: [^ anObject hasNamespaces not].
+
+	"use hasNamespaces first to avoid initializing anObject's prefixMappings"
+	^ anObject hasNamespaces
+		and: [prefixMappings = anObject prefixMappings].
 ]
 
 { #category : #private }
@@ -136,8 +139,10 @@ XMLNamespaceScope >> hasDefaultNamespace [
 
 { #category : #testing }
 XMLNamespaceScope >> hasNamespaces [
-	^ prefixMappings notNil
-		and: [prefixMappings size > 0]
+	"optimized to avoid lazy initialization"
+	prefixMappings == nil
+		ifTrue: [^ false].
+	^ prefixMappings size > 0.
 ]
 
 { #category : #comparing }
