@@ -68,10 +68,47 @@ CharacterCollection >> isQualifiedName: aQualifiedName orLocalName: aLocalName [
 ]
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
+CharacterCollection >> isXMLNCName [
+	"optimized"
+	self size > 0
+		ifFalse: [^ false].
+	(self at: 1) isXMLNCNameStartChar
+		ifFalse: [^ false].
+	2 to: self size do: [:i |
+		(self at: i) isXMLNCNameChar
+			ifFalse: [^ false]].
+	^ true.
+]
+
+{ #category : #'*XML-Parser-GemstoneCompatibility' }
 CharacterCollection >> isXMLNSAttributeName [
 	^ (self beginsWith: 'xmlns')
 		and: [self size = 5 "'xmlns' size"
 			or: [(self at: 6) == $:]]
+]
+
+{ #category : #'*XML-Parser-GemstoneCompatibility' }
+CharacterCollection >> isXMLName [
+	"optimized"
+	self size > 0
+		ifFalse: [^ false].
+	(self at: 1) isXMLNameStartChar
+		ifFalse: [^ false].
+	2 to: self size do: [:i |
+		(self at: i) isXMLNameChar
+			ifFalse: [^ false]].
+	^ true.
+]
+
+{ #category : #'*XML-Parser-GemstoneCompatibility' }
+CharacterCollection >> isXMLNmtoken [
+	"optimized"
+	self size > 0
+		ifFalse: [^ false].
+	1 to: self size do: [:i |
+		(self at: i) isXMLNameChar
+			ifFalse: [^ false]].
+	^ true.
 ]
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
