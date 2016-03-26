@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 XMLConformanceExpatTests class >> skippableTests [
-	^ #( testinvalid002xml testinvalid005xml testinvalid006xml testinvalidnotsa022xml testnotwfnotsa009xml testnotwfnotsa010xml testnotwfnotsa011xml testnotwfsa030xml testnotwfsa031xml testnotwfsa032xml testnotwfsa033xml testnotwfsa074xml testnotwfsa104xml testnotwfsa110xml testnotwfsa116xml testnotwfsa117xml testnotwfsa119xml testnotwfsa140xml testnotwfsa141xml testnotwfsa143xml testnotwfsa144xml testnotwfsa166xml testnotwfsa167xml testnotwfsa168xml testnotwfsa169xml testnotwfsa171xml testnotwfsa172xml testnotwfsa173xml testnotwfsa174xml testnotwfsa175xml testnotwfsa177xml testnotwfsa181xml testnotwfsa182xml )
+	^ #( testinvalid002xml testinvalid005xml testinvalid006xml testinvalidnotsa022xml testnotwfnotsa009xml testnotwfnotsa010xml testnotwfnotsa011xml testnotwfsa074xml testnotwfsa104xml testnotwfsa110xml testnotwfsa116xml testnotwfsa117xml testnotwfsa119xml testnotwfsa140xml testnotwfsa141xml testnotwfsa175xml testnotwfsa181xml testnotwfsa182xml )
 ]
 
 { #category : #'xml source' }
