@@ -636,7 +636,7 @@ ConfigurationOfXMLParser >> baseline268: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.8'. ].
+			spec project: 'XMLWriter' with: '2.6.9'. ].
 	spec
 		for: #gemstone
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.16' ].
@@ -652,10 +652,26 @@ ConfigurationOfXMLParser >> baseline270: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.8'. ].
+			spec project: 'XMLWriter' with: '2.6.9'. ].
 	spec
 		for: #gemstone
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.16' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.33' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline273: spec [
+	<version: '2.7.3-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.9'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.17' ].
 	spec
 		for: #gt
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.33' ]
@@ -675,7 +691,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.7.0-baseline'.
+	spec for: #'common' version: '2.7.3-baseline'.
 
 ]
 
@@ -757,6 +773,14 @@ ConfigurationOfXMLParser >> release26: spec [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release273: spec [
+	<symbolicVersion: #'release-2.7.3'>
+
+	"Users should prefer #stable unless they rely on XMLParser internals"
+	spec for: #'common' version: '2.7.3'.
+]
+
+{ #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> release2: spec [
 	<symbolicVersion: #'release-2'>
 
@@ -770,7 +794,7 @@ ConfigurationOfXMLParser >> stable: spec [
 
 	"Users should prefer #stable unless they rely on XMLParser internals,
 	but it will delegate to a specific #release version from now on."
-	spec for: #'common' version: #'release-2.6.8'.
+	spec for: #'common' version: #'release-2.7.3'.
 ]
 
 { #category : #versions }
@@ -2635,5 +2659,16 @@ ConfigurationOfXMLParser >> version272: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.349'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.159'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version273: spec [ 
+        <version: '2.7.3' imports: #('2.7.3-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.350'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.160'.
                 ].
 ]
