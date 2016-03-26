@@ -165,6 +165,14 @@ XMLParserTest >> elementDeclarationsNamed: aNameCollection [
 ]
 
 { #category : #tests }
+XMLParserTest >> testAttributeBadName [
+	XMLStringMethodsTest badNames do: [:each |
+		self
+			should: [SAXHandler parse: '<test ', each, '="value"/>']
+			raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
 XMLParserTest >> testAttributeDeclarationPrefixed [
 	| dtd |
 
@@ -565,6 +573,14 @@ XMLParserTest >> testAttributeUndeclared [
 ]
 
 { #category : #tests }
+XMLParserTest >> testAttributeValueBadChar [
+	XMLCharacterMethodsTest nonChars do: [:each |
+		self
+			should: [SAXHandler parse: '<test name="', each asString, '"/>']
+			raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
 XMLParserTest >> testAttributeValueNormalization [
 	| separators unnormalized normalized document |
 
@@ -669,6 +685,14 @@ XMLParserTest >> testAttributeXMLIDValidation [
 ]
 
 { #category : #tests }
+XMLParserTest >> testCDataBadChar [
+	XMLCharacterMethodsTest nonChars do: [:each |
+		self
+			should: [SAXHandler parse: '<test><![CDATA[', each asString, ']]>']
+			raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
 XMLParserTest >> testCDataOutsideElement [
 	#('<!DOCTYPE test [ <![CDATA[test]]> ]><test/>'
 		'<![CDATA[test]]><test/>'
@@ -722,6 +746,14 @@ XMLParserTest >> testComment [
 	self
 		should: [SAXHandler parse: '<test><!-- <comment/> -- --></test>']
 		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testCommentBadChar [
+	XMLCharacterMethodsTest nonChars do: [:each |
+		self
+			should: [SAXHandler parse: '<!--', each asString, '-->']
+			raise: XMLWellFormednessException]
 ]
 
 { #category : #tests }
@@ -1157,14 +1189,11 @@ XMLParserTest >> testElementAnyDeclaration [
 ]
 
 { #category : #tests }
-XMLParserTest >> testElementBadNames [
-	XMLTokenizerTest badNames do: [:each |
+XMLParserTest >> testElementBadName [
+	XMLStringMethodsTest badNames do: [:each |
 		self
 			should: [SAXHandler parse: '<', each, '/>']
-			raise: XMLWellFormednessException.
-		self
-			should: [SAXHandler parse: '<test ', each, '="value"/>']
-			raise: XMLWellFormednessException]
+			raise: XMLWellFormednessException].
 ]
 
 { #category : #tests }
@@ -1639,6 +1668,18 @@ XMLParserTest >> testElementsUndeclared [
 			SAXHandler parse:
 				'<!DOCTYPE root [<!ATTLIST root name CDATA #IMPLIED>]><root/>']
 		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityDeclarationBadName [
+	XMLStringMethodsTest badNames do: [:each |
+		self
+			should: [
+				SAXHandler parse:
+					'<!DOCTYPE test [
+						<!ENTITY ', each, ' "value">
+					]><test/>']
+			raise: XMLWellFormednessException]
 ]
 
 { #category : #tests }
@@ -2331,6 +2372,14 @@ XMLParserTest >> testOptimizeForLargeDocuments [
 ]
 
 { #category : #tests }
+XMLParserTest >> testPCDataBadChar [
+	XMLCharacterMethodsTest nonChars do: [:each |
+		self
+			should: [SAXHandler parse: '<test>', each asString, '</test>']
+			raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
 XMLParserTest >> testPCDataOutsideElement [
 	#('<!DOCTYPE test [ test ]><test/>'
 		'test<test/>'
@@ -2394,14 +2443,19 @@ XMLParserTest >> testProcessingInstruction [
 ]
 
 { #category : #tests }
+XMLParserTest >> testProcessingInstructionBadChar [
+	XMLCharacterMethodsTest nonChars do: [:each |
+		self
+			should: [SAXHandler parse: '<?pi ', each asString, '?><test/>']
+			raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
 XMLParserTest >> testProcessingInstructionBadTarget [
-	#('<test><?xml version="1.0"?></test>'
-		'<test><?XML version="1.0"?></test>'
-		'<test><?XmL version="1.0"?></test>'
-		'<test><?xMl version="1.0"?></test>')
+	XMLStringMethodsTest badNames, #('xml' 'XML' 'XmL' 'xMl' 'xML' 'XMl')
 		do: [:each |
 			self
-				should: [SAXHandler parse: each]
+				should: [SAXHandler parse: '<?', each, ' value?><test/>']
 				raise: XMLWellFormednessException]
 ]
 
@@ -2513,6 +2567,16 @@ XMLParserTest >> testSubsetEndingEntityReplacement [
 					%endOfSubset;
 					<root/>']
 		raise: XMLWellFormednessException
+]
+
+{ #category : #tests }
+XMLParserTest >> testSystemIDBadChar [
+	XMLCharacterMethodsTest nonChars do: [:each |
+		self
+			should: [
+				SAXHandler parse:
+					'<!DOCTYPE test SYSTEM "', each asString, '"><test/>']
+			raise: XMLWellFormednessException]
 ]
 
 { #category : #tests }

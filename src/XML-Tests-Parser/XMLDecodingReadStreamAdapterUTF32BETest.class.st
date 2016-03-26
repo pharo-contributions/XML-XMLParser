@@ -6,12 +6,7 @@ Class {
 
 { #category : #accessing }
 XMLDecodingReadStreamAdapterUTF32BETest >> encodedInvalidCharacters [
-	^ self stringFrom:
-		#(16r00 16r00 16rD8 16r00
-			16r00 16r00 16rDB 16rFF
-			16r00 16r00 16rDC 16r00
-			16r00 16r00 16rD8 16rFF
-			16r00 16r11 16rFF 16rFF)
+	^ self stringFrom: #(16r00 16r11 16r00 16r00)
 ]
 
 { #category : #accessing }

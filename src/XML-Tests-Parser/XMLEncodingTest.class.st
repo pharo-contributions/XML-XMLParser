@@ -126,9 +126,16 @@ XMLEncodingTest >> testDecodingCharacterReferences [
 							nextPut: $;]])).
 	self assert: document root contentString = self sourceContent.
 
-	#('&#0;' '&#-1;' '&#9:;' '&#xFFG;') do: [:each |
+	#('&#0;' '&#x110000;' '&#-1;' '&#9:;' '&#xFFG;') do: [:each |
 		self
 			should: [XMLDOMParser parse: (self sourceXMLWithContent: each)]
+			raise: XMLWellFormednessException].
+
+	XMLCharacterMethodsTest nonChars do: [:each |
+		self
+			should: [
+				XMLDOMParser parse:
+					(self sourceXMLWithContent: '&#', each asciiValue asString, ';')]
 			raise: XMLWellFormednessException].
 ]
 
