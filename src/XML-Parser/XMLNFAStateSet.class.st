@@ -21,11 +21,34 @@ XMLNFAStateSet class >> new: aCapacity [
 	^ self basicNew initialize: aCapacity
 ]
 
+{ #category : #'instance creation' }
+XMLNFAStateSet class >> newFrom: aCollection [
+	"for GS portability"
+	^ self withAll: aCollection
+]
+
+{ #category : #copying }
+XMLNFAStateSet >> , aCollection [
+	"GS does not define , for non-sequenceable collections"
+	^ self copy
+		addAll: aCollection;
+		yourself
+]
+
 { #category : #comparing }
 XMLNFAStateSet >> = anObject [
-	^ self == anObject
-		or: [self species == anObject species
-			and: [set = anObject set]]
+	self == anObject
+		ifTrue: [^ true].
+
+	(self species == anObject species
+		and: [self size = anObject size])
+		ifFalse: [^ false].
+
+	"avoid allSatisfy: for speed"
+	self do: [:each |
+		(anObject includes: each)
+			ifFalse: [^ false]].
+	^ true.
 ]
 
 { #category : #adding }
@@ -48,6 +71,11 @@ XMLNFAStateSet >> asDFAStateWithStateCache: aDFAStateCache [
 		dfaStateCache: aDFAStateCache
 ]
 
+{ #category : #accessing }
+XMLNFAStateSet >> capacity [
+	^ set capacity
+]
+
 { #category : #enumerating }
 XMLNFAStateSet >> do: aBlock [
 	set do: aBlock
@@ -55,7 +83,13 @@ XMLNFAStateSet >> do: aBlock [
 
 { #category : #comparing }
 XMLNFAStateSet >> hash [
-	^ set hash
+	| hash |
+
+	hash := self species hash.
+	self size > 5
+		ifFalse: [
+			self do: [:each | hash := hash bitXor: each hash]].
+	^ hash bitXor: self size hash.
 ]
 
 { #category : #testing }
@@ -74,16 +108,30 @@ XMLNFAStateSet >> isAccepting [
 	^ isAccepting
 ]
 
+{ #category : #copying }
+XMLNFAStateSet >> postCopy [
+	set := set copy
+]
+
 { #category : #removing }
-XMLNFAStateSet >> remove: aState ifAbsent: anExceptionBlock [
+XMLNFAStateSet >> remove: aState ifAbsent: aBlock [
 	set
 		remove: aState
-		ifAbsent: [^ anExceptionBlock value].
+		ifAbsent: [^ aBlock value].
 
 	isAccepting
 		ifTrue: [isAccepting := set anySatisfy: [:each | each isAccepting]].
 
 	^ aState.
+]
+
+{ #category : #removing }
+XMLNFAStateSet >> removeAll [
+	"Redefined because Collection>>removeAll assumes the collection can
+	be safely modified while iterating it with do:, and 'set removeAll'
+	is not used because GS's Set/IdentitySet don't implement it"
+
+	self initialize: self capacity
 ]
 
 { #category : #private }

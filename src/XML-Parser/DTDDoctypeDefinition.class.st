@@ -27,7 +27,7 @@ DTDDoctypeDefinition >> addExternalGeneralEntity: aName resolver: aResolver publ
 				resolveExternalGeneralEntity: aName
 				publicID: aPublicID
 				systemID: aSystemID
-				from: aSourceURIString]
+				baseURI: aSourceURIString]
 ]
 
 { #category : #adding }
@@ -39,7 +39,7 @@ DTDDoctypeDefinition >> addExternalParameterEntity: aName resolver: aResolver pu
 				resolveExternalParameterEntity: aName
 				publicID: aPublicID
 				systemID: aSystemID
-				from: aSourceURIString]
+				baseURI: aSourceURIString]
 ]
 
 { #category : #adding }

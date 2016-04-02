@@ -1,7 +1,7 @@
 Extension { #name : #SequenceableCollection }
 
 { #category : #'*XML-Parser' }
-SequenceableCollection >> lastOrNil [
+SequenceableCollection >> xmlLastOrNil [
 	"for speed to avoid at:ifAbsent: closure"
 	| lastOrNilOffset |
 

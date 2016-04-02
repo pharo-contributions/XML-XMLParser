@@ -214,7 +214,7 @@ XMLEncodingDetector >> nextASCII [
 { #category : #initialization }
 XMLEncodingDetector >> on: aStream [
 	stream :=
-		aStream isConvertingStreamAdapter
+		aStream isXMLConvertingStreamAdapter
 			ifTrue: [aStream stream]
 			ifFalse: [aStream]
 ]

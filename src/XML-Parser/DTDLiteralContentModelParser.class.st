@@ -1,5 +1,5 @@
 "
-Parser for ANY and EMPTY elements.
+This class parses literal ""ANY"" and ""EMPTY"" element content models.
 "
 Class {
 	#name : #DTDLiteralContentModelParser,

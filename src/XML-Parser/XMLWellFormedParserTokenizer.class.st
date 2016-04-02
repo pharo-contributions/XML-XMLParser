@@ -5,13 +5,15 @@ Class {
 	#name : #XMLWellFormedParserTokenizer,
 	#superclass : #XMLParserTokenizer,
 	#instVars : [
-		'activeEntities',
-		'totalOpenIncludeSections'
+		'totalOpenIncludeSections',
+		'pushedBackEntities'
 	],
 	#classVars : [
 		'EncodingNameChars',
+		'EncodingNameStartChars',
 		'NormalizedSpace',
-		'PublicIDChars'
+		'PublicIDChars',
+		'VersionDigitChars'
 	],
 	#category : #'XML-Parser'
 }
@@ -23,7 +25,9 @@ XMLWellFormedParserTokenizer class >> initialize [
 	self
 		initializeNormalizedSpace;
 		initializePublicIDChars;
-		initializeEncodingNameChars
+		initializeEncodingNameStartChars;
+		initializeEncodingNameChars;
+		initializeVersionDigitChars
 ]
 
 { #category : #'class initialization' }
@@ -35,6 +39,18 @@ XMLWellFormedParserTokenizer class >> initializeEncodingNameChars [
 		addRangeFrom: $A to: $Z;
 		addRangeFrom: $0 to: $9;
 		addAll: '-_.'
+]
+
+{ #category : #'class initialization' }
+XMLWellFormedParserTokenizer class >> initializeEncodingNameStartChars [
+	"Character>>isLetter is not used because it may return true for non-ASCII
+	letters depending on the locale.
+	
+	EncName ::= [A-Za-z] ([A-Za-z0-9._] | '-')*"
+
+	(EncodingNameStartChars := BitmapCharacterSet new)
+		addRangeFrom: $a to: $z;
+		addRangeFrom: $A to: $Z
 ]
 
 { #category : #'class initialization' }
@@ -56,23 +72,29 @@ XMLWellFormedParserTokenizer class >> initializePublicIDChars [
 		addAll: '-''()+,./:=?;!*#@$_%'
 ]
 
-{ #category : #accessing }
-XMLWellFormedParserTokenizer >> activeEntities [
-	^ activeEntities ifNil: [activeEntities := OrderedCollection new]
+{ #category : #'class initialization' }
+XMLWellFormedParserTokenizer class >> initializeVersionDigitChars [
+	"Character>>isDigit is not used because it may return true for non-ASCII
+	digits depending on the locale.
+	
+	VersionNum ::= '1.' [0-9]+"
+
+	(VersionDigitChars := BitmapCharacterSet new)
+		addRangeFrom: $0 to: $9
 ]
 
 { #category : #'entity replacing' }
-XMLWellFormedParserTokenizer >> addActiveEntity: anEntity [
-	(self hasActiveEntityNamed: anEntity name)
+XMLWellFormedParserTokenizer >> addPushedBackEntity: anEntity [
+	(self hasPushedBackEntityNamed: anEntity name)
 		ifTrue: [self errorSelfReferentialEntity: anEntity].
 	self maxEntityReplacementDepth
 		ifNotNil: [:maxDepth |
-			(self activeEntities size + 1 > maxDepth)
+			self pushedBackEntities size >= maxDepth
 				ifTrue: [self errorEntityDepthLimitExceeded]].
 	
-	self activeEntities addLast: anEntity.
+	self pushedBackEntities addLast: anEntity.
 	anEntity isExternal
-		ifTrue: [driver currentURI: anEntity uri].
+		ifTrue: [driver pushEntityURI: anEntity uri].
 ]
 
 { #category : #decoding }
@@ -109,7 +131,7 @@ XMLWellFormedParserTokenizer >> constructReplacementForLiteralContextEntity: anE
 		onClose: [streamReader isEscapingQuotes: wasEscapingQuotes].
 
 	"wait till after the text declaration was read to start escaping"
-	(self currentActiveEntity == anEntity
+	(self currentPushedBackEntity == anEntity
 		and: [wasEscapingQuotes not])
 		ifTrue: [streamReader isEscapingQuotes: true].
 ]
@@ -127,8 +149,8 @@ XMLWellFormedParserTokenizer >> constructReplacementForParameterEntity: anEntity
 ]
 
 { #category : #accessing }
-XMLWellFormedParserTokenizer >> currentActiveEntity [
-	^ self activeEntities lastOrNil
+XMLWellFormedParserTokenizer >> currentPushedBackEntity [
+	^ self pushedBackEntities xmlLastOrNil
 ]
 
 { #category : #errors }
@@ -185,9 +207,39 @@ XMLWellFormedParserTokenizer >> errorExpectedCDataSectionTerminator [
 ]
 
 { #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedEncodingName [
+	self errorExpected: 'encoding name in <?xml ...?> encoding attribute'
+]
+
+{ #category : #errors }
 XMLWellFormedParserTokenizer >> errorExpectedIntegerCharacterReference [
 	self errorExpected:
 		'decimal or hex integer after "&#" character reference start'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedLiteral: aString butGot: aCharacter at: aStringPosition [
+	| oldPosition receivedString |
+
+	oldPosition := streamReader currentPosition.
+	receivedString :=
+		(aString
+			copyReplaceFrom: aStringPosition
+			to: aString size
+			with:
+				(aCharacter ifNil: ['']) asString,
+				(streamReader next: aString size - aStringPosition)).
+
+	"more accurately estimate where the error occured"
+	streamReader
+		currentPosition: oldPosition - aStringPosition + 1;
+		currentLineNumber:
+			streamReader currentLineNumber -
+				(receivedString occurrencesOf: streamReader normalizedLineEndingChar).
+
+	self
+		errorExpectedLiteral: aString
+		butGot: receivedString.
 ]
 
 { #category : #errors }
@@ -198,6 +250,13 @@ XMLWellFormedParserTokenizer >> errorExpectedName [
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorExpectedNmtoken [
 	self errorExpected: 'an XML Nmtoken name'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedQuoteButGot: aCharacter [
+	self
+		errorExpected: 'single ('') or double (") quote character delimiter'
+		butGot: aCharacter
 ]
 
 { #category : #errors }
@@ -261,7 +320,7 @@ XMLWellFormedParserTokenizer >> errorMultipleDoctypeDeclarations [
 XMLWellFormedParserTokenizer >> errorNonChar: aCharacter in: aDescription [
 	self
 		formatParseError: 'Invalid character U+{1} in {2}'
-		with: aCharacter printStringHex
+		with: aCharacter asciiValue printStringHex
 		with: aDescription
 ]
 
@@ -270,6 +329,13 @@ XMLWellFormedParserTokenizer >> errorNonCharInAttributeValue: aCharacter [
 	self
 		errorNonChar: aCharacter
 		in: 'attribute value'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorNonCharInCDataSection: aCharacter [
+	self
+		errorNonChar: aCharacter
+		in: '<![CDATA[...]]> section'
 ]
 
 { #category : #errors }
@@ -340,34 +406,8 @@ XMLWellFormedParserTokenizer >> errorUnterminatedIncludeSections [
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorXMLDeclarationNotAtBeginning [
-	self parseError: 'XML declaration must only occur at beginning of document'
-]
-
-{ #category : #'tokenizing - expecting' }
-XMLWellFormedParserTokenizer >> expectDigit [
-	| nextChar |
-
-	((nextChar := streamReader next) notNil
-		and: [nextChar isDigit])
-		ifFalse: [
-			self
-				errorExpected: 'digit'
-				butGot: nextChar].
-	^ nextChar.
-]
-
-{ #category : #'tokenizing - expecting' }
-XMLWellFormedParserTokenizer >> expectLetter [
-	| nextChar |
-
-	((nextChar := streamReader next) notNil
-		and: [nextChar isLetter])
-		ifFalse: [
-			self
-				errorExpected: 'letter'
-				butGot: nextChar].
-	^ nextChar.
+XMLWellFormedParserTokenizer >> errorXMLDeclarationNotAtStart [
+	self parseError: 'XML declaration can only occur at the start of a document'
 ]
 
 { #category : #'tokenizing - expecting' }
@@ -383,44 +423,53 @@ XMLWellFormedParserTokenizer >> expectNext: aCharacter [
 ]
 
 { #category : #'tokenizing - expecting' }
-XMLWellFormedParserTokenizer >> expectNextAll: anExpectedLiteral [
-	1 to: anExpectedLiteral size do: [:i | | nextChar |
-		(nextChar := streamReader next) == (anExpectedLiteral at: i)
+XMLWellFormedParserTokenizer >> expectNextAll: aString [
+	"uses to:do: and not implemented in terms of expectNextAll:startingAt:
+	for speed"
+	1 to: aString size do: [:i | | nextChar |
+		(nextChar := streamReader next) == (aString at: i)
 			ifFalse: [
 				self
-					errorExpectedLiteral: anExpectedLiteral
+					errorExpectedLiteral: aString
 					butGot: nextChar
 					at: i]].
-	^ anExpectedLiteral.
+	^ aString.
+]
+
+{ #category : #'tokenizing - expecting' }
+XMLWellFormedParserTokenizer >> expectNextAll: aString startingAt: aPosition [
+	"to:do: for speed"
+	aPosition to: aString size do: [:i | | nextChar |
+		(nextChar := streamReader next) == (aString at: i)
+			ifFalse: [
+				self
+					errorExpectedLiteral: aString
+					butGot: nextChar
+					at: i]].
+	^ aString.
 ]
 
 { #category : #'tokenizing - expecting' }
 XMLWellFormedParserTokenizer >> expectQuote [
 	| nextChar |
 
-	(((nextChar := streamReader next) == $")
+	((nextChar := streamReader next) == $"
 		or: [nextChar == $'])
-		ifFalse: [
-			self
-				errorExpected: 'quote character delimiter'
-				butGot: nextChar].
+		ifFalse: [self errorExpectedQuoteButGot: nextChar].
 	^ nextChar.
 ]
 
 { #category : #'tokenizing - expecting' }
 XMLWellFormedParserTokenizer >> expectSeparators [
 	"nil understands isXMLSeparator so no nil test is needed"
-	streamReader peek isXMLSeparator
-		ifTrue: [
-			streamReader
-				next;
-				skipSeparators]
+	streamReader next isXMLSeparator
+		ifTrue: [streamReader skipSeparators]
 		ifFalse: [self errorExpectedSeparators]
 ]
 
 { #category : #'tokenizing - expecting' }
 XMLWellFormedParserTokenizer >> expectSeparatorsInDeclaration [
-	"this can be used to replace references within declarations"
+	"this can be used to replace entity references within declarations"
 
 	[streamReader peek == $%]
 		whileTrue: [
@@ -443,24 +492,16 @@ XMLWellFormedParserTokenizer >> expectTerminator [
 ]
 
 { #category : #'tokenizing - expecting' }
-XMLWellFormedParserTokenizer >> expectUpToAll: aString [
-	writeStream reset.
-	[streamReader atEnd]
-		whileFalse: [
-			(streamReader nextMatchAll: aString)
-				ifTrue: [^ writeStream contents].
-			writeStream nextPut: streamReader next].
-	self errorExpectedLiteral: aString.
-]
+XMLWellFormedParserTokenizer >> expectVersionDigit [
+	| nextChar |
 
-{ #category : #testing }
-XMLWellFormedParserTokenizer >> hasActiveEntities [
-	^ activeEntities notNil and: [activeEntities notEmpty]
-]
-
-{ #category : #testing }
-XMLWellFormedParserTokenizer >> hasActiveEntityNamed: aName [
-	^ self activeEntities anySatisfy: [:each | each name = aName]
+	((nextChar := streamReader next) notNil
+		and: [VersionDigitChars includes: nextChar])
+		ifFalse: [
+			self
+				errorExpected: 'XML version digit'
+				butGot: nextChar].
+	^ nextChar.
 ]
 
 { #category : #testing }
@@ -470,12 +511,25 @@ XMLWellFormedParserTokenizer >> hasOpenIncludeSections [
 ]
 
 { #category : #testing }
+XMLWellFormedParserTokenizer >> hasPushedBackEntities [
+	pushedBackEntities == nil
+		ifTrue: [^ false].
+	^ pushedBackEntities size > 0.
+]
+
+{ #category : #testing }
+XMLWellFormedParserTokenizer >> hasPushedBackEntityNamed: aName [
+	^ self hasPushedBackEntities
+		and: [self pushedBackEntities anySatisfy: [:each | each name = aName]]
+]
+
+{ #category : #testing }
 XMLWellFormedParserTokenizer >> isInExternalSubsetOrExternallyDefinedEntity [
 	context isExternalSubsetContext
 		ifTrue: [^ true].
-	self hasActiveEntities
+	self hasPushedBackEntities
 		ifTrue: [
-			self activeEntities do: [:each |
+			self pushedBackEntities do: [:each |
 				(each isInternalTo: driver documentURI)
 					ifFalse: [^ true]]].
 	^ false.
@@ -541,14 +595,14 @@ XMLWellFormedParserTokenizer >> nextAttributeDefaultValueForPragma: aPragma [
 
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextAttributeEntityType [
-	streamReader next.
-	self expectNextAll: 'NTIT'.
+	self expectNextAll: 'ENTIT'.
 	streamReader peek == $Y
-		ifTrue: [
-			streamReader next.
-			^ 'ENTITY'].
-	self expectNextAll: 'IES'.
-	^ 'ENTITIES'.
+		ifFalse: [
+			^ self
+				expectNextAll: 'ENTITIES'
+				startingAt: 6 "'ENTITIES' indexOfSubCollection: 'IES'"].
+	streamReader next.
+	^ 'ENTITY'.
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -574,40 +628,45 @@ XMLWellFormedParserTokenizer >> nextAttributeEnumerationType [
 
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextAttributeIDOrIDRefType [
-	streamReader next.
-	self expectNext: $D.
+	self expectNextAll: 'ID'.
 	streamReader peek == $R
 		ifFalse: [^ 'ID'].	
-	self expectNextAll: 'REF'.
+	self
+		expectNextAll: 'IDREF'
+		startingAt: 3.
 	streamReader peek == $S
-		ifTrue: [
-			streamReader next.
-			^ 'IDREFS'].
-	^ 'IDREF'.
+		ifFalse: [^ 'IDREF'].
+	streamReader next.
+	^ 'IDREFS'.
 ]
 
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextAttributeNotationEnumerationOrNmtokenType [
+	"skip the N"
 	streamReader next.
 	streamReader peek == $O
-		ifTrue: [
-			self expectNextAll: 'OTATION'.
-			^ self nextAttributeNotationEnumerationType].
-	self expectNextAll: 'MTOKEN'.
+		ifTrue: [^ self nextAttributeNotationEnumerationType].
+	self
+		expectNextAll: 'NMTOKEN'
+		startingAt: 2.
 	streamReader peek == $S
-		ifTrue: [
-			streamReader next.
-			^ 'NMTOKENS'].
-	^ 'NMTOKEN'.
+		ifFalse: [^ 'NMTOKEN'].
+	streamReader next.
+	^ 'NMTOKENS'.
 ]
 
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextAttributeNotationEnumerationType [
 	writeStream
 		reset;
-		nextPutAll: 'NOTATION '.
-	self expectSeparatorsInDeclaration.
-	writeStream nextPut: (self expectNext: $().
+		nextPutAll:
+			(self
+				expectNextAll: 'NOTATION'
+				startingAt: 2). "the 'N' was already read"
+	self
+		expectSeparatorsInDeclaration;
+		expectNext: $(.
+	writeStream nextPutAll: ' ('.
 
 	self
 		skipSeparatorsInDeclaration;
@@ -670,16 +729,17 @@ XMLWellFormedParserTokenizer >> nextAttributeValue [
 
 { #category : #tokenizing }
 XMLWellFormedParserTokenizer >> nextCDataSection [
-	| wasTerminated |
+	| wasTerminated nextChar |
 
 	self expectNextAll: '[CDATA['.
 	writeStream reset.
 	wasTerminated := false.
 	[streamReader atEnd
-		or: [wasTerminated := streamReader nextMatchAll: ']]>']]
-		whileFalse: [| nextChar |
-			(nextChar := streamReader next) isXMLChar
-				ifFalse: [self errorNonCharInPCData: nextChar].
+		or: [(nextChar := streamReader next) == $]
+			and: [wasTerminated := streamReader nextMatch: $] followedBy: $>]]]
+		whileFalse: [
+			nextChar isXMLChar
+				ifFalse: [self errorNonCharInCDataSection: nextChar].
 			writeStream nextPut: nextChar].
 	wasTerminated
 		ifFalse: [self errorExpectedCDataSectionTerminator].
@@ -854,8 +914,10 @@ XMLWellFormedParserTokenizer >> nextDoctypeDeclarationOrComment [
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextElementDeclaration [
 	self
-		expectNextAll: 'LEMENT';
-		expectSeparatorsInDeclaration.
+		expectNextAll: 'ELEMENT'
+		startingAt: 2. "the 'E' was already read"
+
+	self expectSeparatorsInDeclaration.
 	driver
 		handleElementDeclaration: self nextName
 		contentModel: self nextContentModel.
@@ -887,7 +949,7 @@ XMLWellFormedParserTokenizer >> nextEndIncludeSection [
 XMLWellFormedParserTokenizer >> nextEndInternalSubset [
 	self hasOpenIncludeSections
 		ifTrue: [^ self nextEndIncludeSection].
-	self hasActiveEntities
+	self hasPushedBackEntities
 		ifTrue: [self errorParameterEntityTerminatingSubset].
 	super nextEndInternalSubset.
 ]
@@ -905,7 +967,9 @@ XMLWellFormedParserTokenizer >> nextEndTag [
 XMLWellFormedParserTokenizer >> nextEntityDeclaration [
 	| isParameterEntity name |
 
-	self expectNextAll: 'NTITY'.
+	self
+		expectNextAll: 'ENTITY'
+		startingAt: 2. "the 'E' was already read"
 
 	context isExternalSubsetContext
 		ifTrue: [
@@ -1070,7 +1134,9 @@ XMLWellFormedParserTokenizer >> nextGeneralEntityReferenceOnWriteStream [
 XMLWellFormedParserTokenizer >> nextIgnoreSection [
 	| openSections |
 
-	self expectNextAll: 'GNORE'.
+	self
+		expectNextAll: 'IGNORE'
+		startingAt: 2. "the 'I' was already read"
 	streamReader skipSeparators.
 	self expectNext: $[.
 
@@ -1232,13 +1298,10 @@ XMLWellFormedParserTokenizer >> nextPCDataToken [
 						ifFalse: [self nextGeneralEntityReferenceOnWriteStream])
 							ifTrue: [isIgnorableWhitespace := false]]
 				ifFalse: [
-					(nextChar == $]
-						and: [streamReader peek == $]])
+					nextChar == $]
 						ifTrue: [
-							streamReader next.
-							streamReader peek == $>
-								ifTrue: [self errorUnexpectedCDataTerminatorInPCData]
-								ifFalse: [streamReader pushBackCharacter: $]]].
+							(streamReader nextMatch: $] followedBy: $>)
+								ifTrue: [self errorUnexpectedCDataTerminatorInPCData]].
 					isIgnorableWhitespace
 						ifTrue: [isIgnorableWhitespace := nextChar isXMLSeparator].
 					writeStream nextPut: nextChar]].
@@ -1258,7 +1321,7 @@ XMLWellFormedParserTokenizer >> nextPITarget [
 			target = 'xml'
 				ifTrue: [
 					context isXMLDeclarationContext
-						ifFalse: [self errorXMLDeclarationNotAtBeginning]]
+						ifFalse: [self errorXMLDeclarationNotAtStart]]
 				ifFalse: [
 					target asLowercase = 'xml'
 						ifTrue: [self errorReservedPITarget: target]]].
@@ -1356,7 +1419,9 @@ XMLWellFormedParserTokenizer >> nextPublicIDLiteral [
 
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextStartIncludeSection [
-	self expectNextAll: 'NCLUDE'.
+	self
+		expectNextAll: 'INCLUDE'
+		startingAt: 2. "the 'I' was already read"
 	streamReader skipSeparators.
 	self expectNext: $[.
 	totalOpenIncludeSections := self totalOpenIncludeSections + 1.
@@ -1502,9 +1567,13 @@ XMLWellFormedParserTokenizer >> nextXMLEncodingAttributeValue [
 	| quote nextChar |
 
 	quote := self expectQuote.
+	((nextChar := streamReader next) notNil
+		and: [EncodingNameStartChars includes: nextChar])
+		ifFalse: [self errorExpectedEncodingName].
 	writeStream
 		reset;
-		nextPut: self expectLetter.
+		nextPut: nextChar.
+
 	[(nextChar := streamReader peek) == nil
 		or: [(EncodingNameChars includes: nextChar) not]]
 		whileFalse: [writeStream nextPut: streamReader next].
@@ -1535,13 +1604,13 @@ XMLWellFormedParserTokenizer >> nextXMLVersionAttributeValue [
 
 	writeStream
 		reset;
-		nextPut: self expectDigit;
+		nextPut: self expectVersionDigit;
 		nextPut: (self expectNext: $.);
-		nextPut: self expectDigit.
+		nextPut: self expectVersionDigit.
 
 	[streamReader atEnd
 		or: [streamReader peek == quote]]
-		whileFalse: [writeStream nextPut: self expectDigit].
+		whileFalse: [writeStream nextPut: self expectVersionDigit].
 
 	self expectNext: quote.
 	^ writeStream contents.
@@ -1554,11 +1623,11 @@ XMLWellFormedParserTokenizer >> pushBackEntity: anEntity onClose: aBlock [
 			aBlock ifNotNil: [aBlock value].
 			^ self].
 
-	self addActiveEntity: anEntity.
+	self addPushedBackEntity: anEntity.
 	streamReader
 		pushBackStream: anEntity replacementStream
 		onClose: [
-			self removeActiveEntity: anEntity.
+			self removePushedBackEntity: anEntity.
 			aBlock ifNotNil: [aBlock value]].
 
 	anEntity isExternal
@@ -1568,11 +1637,16 @@ XMLWellFormedParserTokenizer >> pushBackEntity: anEntity onClose: aBlock [
 				nextTokenFrom: self].
 ]
 
+{ #category : #accessing }
+XMLWellFormedParserTokenizer >> pushedBackEntities [
+	^ pushedBackEntities ifNil: [pushedBackEntities := OrderedCollection new]
+]
+
 { #category : #'entity replacing' }
-XMLWellFormedParserTokenizer >> removeActiveEntity: anEntity [
-	self activeEntities remove: anEntity.
+XMLWellFormedParserTokenizer >> removePushedBackEntity: anEntity [
+	self pushedBackEntities remove: anEntity.
 	anEntity isExternal
-		ifTrue: [driver removeURI: anEntity uri].
+		ifTrue: [driver popEntityURI: anEntity uri].
 ]
 
 { #category : #'tokenizing - dtd' }

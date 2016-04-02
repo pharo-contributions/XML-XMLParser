@@ -18,7 +18,7 @@ XMLDocumentValidator >> attributeValidatorsFor: anElement [
 
 { #category : #accessing }
 XMLDocumentValidator >> currentElementValidator [
-	^ self elementValidatorStack lastOrNil
+	^ self elementValidatorStack xmlLastOrNil
 ]
 
 { #category : #accessing }

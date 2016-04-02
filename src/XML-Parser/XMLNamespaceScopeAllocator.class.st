@@ -12,7 +12,7 @@ Class {
 
 { #category : #accessing }
 XMLNamespaceScopeAllocator >> currentScope [
-	^ self scopes lastOrNil ifNil: [self emptyScope]
+	^ self scopes xmlLastOrNil ifNil: [self emptyScope]
 ]
 
 { #category : #accessing }

@@ -13,10 +13,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-DTDExternalSubsetParserDriver class >> saxDriver: aSaxDriver documentURI: anExternalSubsetURI [
+DTDExternalSubsetParserDriver class >> saxDriver: aSAXDriver documentURI: anExternalSubsetURIString [
 	^ self new
-		setSAXDriver: aSaxDriver
-		documentURI: anExternalSubsetURI
+		setSAXDriver: aSAXDriver
+		documentURI: anExternalSubsetURIString
 ]
 
 { #category : #testing }
@@ -69,7 +69,7 @@ DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName publicID:
 				resolver: self externalEntityResolver
 				publicID: aPublicID
 				systemID: aSystemID
-				from: self currentURI]
+				from: self baseURI]
 		ifFalse: [
 			self doctypeDefinition
 				addUnparsedEntity: aName
@@ -81,7 +81,7 @@ DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName replaceme
 	self doctypeDefinition
 		addGeneralEntity: aName
 		replacement: aReplacement
-		from: self currentURI
+		from: self baseURI
 ]
 
 { #category : #'handling - dtd' }
@@ -96,7 +96,7 @@ DTDExternalSubsetParserDriver >> handleParameterEntityDeclaration: aName publicI
 		resolver: self externalEntityResolver
 		publicID: aPublicID
 		systemID: aSystemID
-		from: self currentURI
+		from: self baseURI
 ]
 
 { #category : #'handling - dtd' }
@@ -104,7 +104,7 @@ DTDExternalSubsetParserDriver >> handleParameterEntityDeclaration: aName replace
 	self doctypeDefinition
 		addParameterEntity: aName
 		replacement:aReplacement
-		from: self currentURI
+		from: self baseURI
 ]
 
 { #category : #'handling - dtd' }
@@ -117,16 +117,6 @@ DTDExternalSubsetParserDriver >> handleParseError: aString [
 	XMLWellFormednessException signal: aString
 ]
 
-{ #category : #initialization }
-DTDExternalSubsetParserDriver >> initialContext [
-	^ XMLTextDeclarationContext new
-]
-
-{ #category : #testing }
-DTDExternalSubsetParserDriver >> isParsingExternalSubset [
-	^ true
-]
-
 { #category : #testing }
 DTDExternalSubsetParserDriver >> isValidating [
 	^ self saxDriver isValidating
@@ -135,6 +125,11 @@ DTDExternalSubsetParserDriver >> isValidating [
 { #category : #accessing }
 DTDExternalSubsetParserDriver >> maxEntityReplacementDepth [
 	^ self saxDriver maxEntityReplacementDepth
+]
+
+{ #category : #'instance creation' }
+DTDExternalSubsetParserDriver >> newInitialContext [
+	^ XMLTextDeclarationContext new
 ]
 
 { #category : #testing }
@@ -152,24 +147,14 @@ DTDExternalSubsetParserDriver >> replacesContentEntityReferences [
 	^ self saxDriver replacesContentEntityReferences
 ]
 
-{ #category : #testing }
-DTDExternalSubsetParserDriver >> resolvesExternalEntities [
-	^ self saxDriver resolvesExternalEntities
-]
-
 { #category : #accessing }
 DTDExternalSubsetParserDriver >> saxDriver [
 	^ saxDriver
 ]
 
 { #category : #initialization }
-DTDExternalSubsetParserDriver >> setSAXDriver: aSaxdriver documentURI: aURI [
-	saxDriver := aSaxdriver.
-	doctypeDefinition := aSaxdriver doctypeDefinition.
-	documentURI := aURI.
-]
-
-{ #category : #testing }
-DTDExternalSubsetParserDriver >> usesNamespaces [
-	^ self saxDriver usesNamespaces
+DTDExternalSubsetParserDriver >> setSAXDriver: aSAXDriver documentURI: anExternalSubsetURIString [
+	saxDriver := aSAXDriver.
+	doctypeDefinition := aSAXDriver doctypeDefinition.
+	documentURI := anExternalSubsetURIString.
 ]

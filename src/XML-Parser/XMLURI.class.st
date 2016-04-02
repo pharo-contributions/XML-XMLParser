@@ -10,12 +10,12 @@ Class {
 		'uriString',
 		'scheme',
 		'hasAuthorityPrefix',
-		'userInfo',
-		'host',
+		'rawUserInfo',
+		'rawHost',
 		'port',
-		'pathSegments',
-		'query',
-		'fragment'
+		'rawPathSegments',
+		'rawQuery',
+		'rawFragment'
 	],
 	#classVars : [
 		'UnreservedCharacters'
@@ -39,6 +39,11 @@ XMLURI class >> fromString: aString [
 XMLURI class >> initialize [
 	"self initialize"
 
+	self initializeUnreservedCharacters.
+]
+
+{ #category : #'class initialization' }
+XMLURI class >> initializeUnreservedCharacters [
 	(UnreservedCharacters := BitmapCharacterSet new)
 		addRangeFrom: $a to: $z;
 		addRangeFrom: $A to: $Z;
@@ -49,38 +54,6 @@ XMLURI class >> initialize [
 { #category : #'instance creation' }
 XMLURI class >> new [
 	^ self fromString: ''
-]
-
-{ #category : #accessing }
-XMLURI class >> percentEncodeCharacter: aCharacter [
-	^ String streamContents: [:stream |
-		self
-			printPercentEncodedCharacter: aCharacter
-			on: stream]
-]
-
-{ #category : #accessing }
-XMLURI class >> percentOrPlusEncodeCharacter: aCharacter [
-	^ String streamContents: [:stream |
-		self
-			printPercentOrPlusEncodedCharacter: aCharacter
-			on: stream]
-]
-
-{ #category : #accessing }
-XMLURI class >> printPercentEncodedCharacter: aCharacter on: aStream [
-	(XMLPercentEncodingWriteStreamAdapter on: aStream)
-		nextPut: aCharacter
-]
-
-{ #category : #accessing }
-XMLURI class >> printPercentOrPlusEncodedCharacter: aCharacter on: aStream [
-	aCharacter asciiValue = 32 "Character space asciiValue"
-		ifTrue: [aStream nextPut: $+]
-		ifFalse: [
-			self
-				printPercentEncodedCharacter: aCharacter
-				on: aStream]
 ]
 
 { #category : #'instance creation' }
@@ -96,13 +69,7 @@ XMLURI >> / aURIOrURIString [
 	context of the receiver if it is relative, to do relative path resolution
 	or replace hosts, query strings, and other components."
 
-	| uriToCombineWith |
-
-	(uriToCombineWith := aURIOrURIString asXMLURI) isEmpty
-		ifFalse: [
-			(uriToCombineWith isRelative)
-				ifTrue: [^ self combinedWithRelativeURI: uriToCombineWith]
-				ifFalse: [^ uriToCombineWith]]
+	^ self combinedWith: aURIOrURIString
 ]
 
 { #category : #comparing }
@@ -115,81 +82,86 @@ XMLURI >> = anObject [
 
 	self scheme = anObject scheme
 		ifFalse: [^ false].
-	self userInfo = anObject userInfo
+	((self hasUserInfo = anObject hasUserInfo)
+		and: [self userInfo = anObject userInfo])
 		ifFalse: [^ false].
-	self host = anObject host
+	((self hasHost = anObject hasHost)
+		and: [self host = anObject host])
 		ifFalse: [^ false].
 	self port = anObject port
 		ifFalse: [^ false].
-	self pathSegments = anObject pathSegments
+	(self hasPath = anObject hasPath
+		and: [self pathSegments = anObject pathSegments])
 		ifFalse: [^ false].
-	self query = anObject query
+	((self hasQuery = anObject hasQuery)
+		and: [self query = anObject query])
 		ifFalse: [^ false].
-	self fragment = anObject fragment
+	((self hasFragment = anObject hasFragment)
+		and: [self fragment = anObject fragment])
 		ifFalse: [^ false].
 
 	^ true.
 ]
 
 { #category : #private }
-XMLURI >> addDotPathSegment [
+XMLURI >> addRawDotPathSegment [
 	self hasNonDirectoryPath
 		ifTrue: [self haveDirectoryPath]
 ]
 
 { #category : #private }
-XMLURI >> addDoubleDotPathSegment [
+XMLURI >> addRawDoubleDotPathSegment [
 	self hasPath
 		ifFalse: [^ self].
 
 	self hasRootPath
-		ifTrue: [self removePathSegments]
+		ifTrue: [self removeRawPathSegments]
 		ifFalse: [| hadAbsolutePath |
 			hadAbsolutePath := self hasAbsolutePath.
 			self hasDirectoryPath
-				ifTrue: [self removeLastPathSegment].
+				ifTrue: [self removeLastRawPathSegment].
 			self hasPath
 				ifTrue: [
-					self removeLastPathSegment.
+					self removeLastRawPathSegment.
 					(self hasPath
 						or: [hadAbsolutePath])
 						ifTrue: [self haveDirectoryPath]]].
 ]
 
 { #category : #private }
-XMLURI >> addPathSegment: aString [
+XMLURI >> addRawPathSegment: aString [
 	aString = '.'
-		ifTrue: [^ self addDotPathSegment].
+		ifTrue: [^ self addRawDotPathSegment].
 	aString = '..'
-		ifTrue: [^ self addDoubleDotPathSegment].
+		ifTrue: [^ self addRawDoubleDotPathSegment].
 
 	self hasPath
 		ifTrue: [
 			(self hasDirectoryPath
-				and: [self pathSegments size > 1])
-				ifTrue: [self removeLastPathSegment]]
+				and: [self rawPathSegments size > 1])
+				ifTrue: [self removeLastRawPathSegment]]
 		ifFalse: [
 			self hasHost
-				ifTrue: [self pathSegments addLast: '']].
+				ifTrue: [self rawPathSegments addLast: '']].
 
-	self pathSegments addLast: aString.
+	self rawPathSegments addLast: aString.
 ]
 
 { #category : #private }
-XMLURI >> addPathSegmentsFrom: aURI [
-	aURI hasPath
-		ifFalse: [^ self].
+XMLURI >> addRawPathSegmentsFrom: aURI [
+	"copy before modifying"
+	self rawPathSegments: self rawPathSegments copy.
 
 	aURI hasAbsolutePath
-		ifTrue: [self removePathSegments]
+		ifTrue: [self removeRawPathSegments]
 		ifFalse: [
 			self hasNonDirectoryPath
 				ifTrue: [
-					self removeLastPathSegment.
+					self removeLastRawPathSegment.
 					self hasPath
 						ifTrue: [self haveDirectoryPath]]].
 
-	aURI pathSegments do: [:each | self addPathSegment: each].
+	aURI rawPathSegments do: [:each | self addRawPathSegment: each].
 ]
 
 { #category : #converting }
@@ -210,6 +182,21 @@ XMLURI >> asXMLURI [
 	^ self
 ]
 
+{ #category : #combining }
+XMLURI >> combinedWith: aURIOrURIString [
+	"Returns the argument URI if it is absolute or the argument resolved in the
+	context of the receiver if it is relative, to do relative path resolution
+	or replace hosts, query strings, and other components."
+
+	| uriToCombineWith |
+
+	(uriToCombineWith := aURIOrURIString asXMLURI) isEmpty
+		ifFalse: [
+			(uriToCombineWith isRelative)
+				ifTrue: [^ self combinedWithRelativeURI: uriToCombineWith]
+				ifFalse: [^ uriToCombineWith]]
+]
+
 { #category : #private }
 XMLURI >> combinedWithRelativeURI: aRelativeURI [
 	| copy |
@@ -218,61 +205,79 @@ XMLURI >> combinedWithRelativeURI: aRelativeURI [
 	aRelativeURI hasUserInfo
 		ifTrue: [
 			^ copy
-				userInfo: aRelativeURI userInfo;
-				host: aRelativeURI host;
+				rawUserInfo: aRelativeURI rawUserInfo;
+				rawHost: aRelativeURI rawHost;
 				port: aRelativeURI port;
-				pathSegments: aRelativeURI pathSegments;
-				query: aRelativeURI query;
-				fragment: aRelativeURI fragment].
+				rawPathSegments: aRelativeURI rawPathSegments;
+				rawQuery: aRelativeURI rawQuery;
+				rawFragment: aRelativeURI rawFragment].
 	aRelativeURI hasHost
 		ifTrue: [
 			^ copy
-				host: aRelativeURI host;
+				rawHost: aRelativeURI rawHost;
 				port: aRelativeURI port;
-				pathSegments: aRelativeURI pathSegments;
-				query: aRelativeURI query;
-				fragment: aRelativeURI fragment].
+				rawPathSegments: aRelativeURI rawPathSegments;
+				rawQuery: aRelativeURI rawQuery;
+				rawFragment: aRelativeURI rawFragment].
 	aRelativeURI hasPort
 		ifTrue: [
 			^ copy
 				port: aRelativeURI port;
-				pathSegments: aRelativeURI pathSegments;
-				query: aRelativeURI query;
-				fragment: aRelativeURI fragment].
+				rawPathSegments: aRelativeURI rawPathSegments;
+				rawQuery: aRelativeURI rawQuery;
+				rawFragment: aRelativeURI rawFragment].
 	aRelativeURI hasPath
 		ifTrue: [
-			^ copy "copy path segments before modifying"
-				pathSegments: self pathSegments copy;
-				addPathSegmentsFrom: aRelativeURI;
-				query: aRelativeURI query;
-				fragment: aRelativeURI fragment].
+			^ copy
+				addRawPathSegmentsFrom: aRelativeURI;
+				rawQuery: aRelativeURI rawQuery;
+				rawFragment: aRelativeURI rawFragment].
 	aRelativeURI hasQuery
 		ifTrue: [
 			^ copy
-				query: aRelativeURI query;
-				fragment: aRelativeURI fragment].
+				rawQuery: aRelativeURI rawQuery;
+				rawFragment: aRelativeURI rawFragment].
 	aRelativeURI hasFragment
-		ifTrue: [^ copy fragment: aRelativeURI fragment].
+		ifTrue: [^ copy rawFragment: aRelativeURI rawFragment].
 ]
 
 { #category : #copying }
 XMLURI >> copyWithFragment: aString [
-	^ self copy fragment: aString
+	^ self copy rawFragment: (self percentEncoded: aString)
 ]
 
 { #category : #copying }
 XMLURI >> copyWithHost: aString [
-	^ self copy host: aString
+	| copy |
+
+	copy := self copy.
+	(aString size > 0
+		and: [aString first == $[
+			and: [aString last == $]]])
+		ifTrue: [copy rawHost: aString]
+		ifFalse: [copy rawHost: (self percentEncoded: aString)].
+	^ copy.
 ]
 
 { #category : #copying }
 XMLURI >> copyWithPath: aString [
-	^ self copyWithPathSegments: (XMLURIParser on: aString) parsePathSegments
+	| newRawPathSegments |
+
+	newRawPathSegments := self rawPathSegments copyEmpty.
+	$/
+		xmlSplit: aString
+		do: [:each | newRawPathSegments addLast: (self percentEncoded: each)].
+	^ self copy rawPathSegments: newRawPathSegments.
 ]
 
 { #category : #copying }
 XMLURI >> copyWithPathSegments: aCollection [
-	^ self copy pathSegments: (OrderedCollection newFrom: aCollection)
+	| newRawPathSegments |
+
+	newRawPathSegments := self rawPathSegments copyEmpty.
+	aCollection do: [:each |
+		newRawPathSegments addLast: (self percentEncoded: each)].
+	^ self copy rawPathSegments: newRawPathSegments.
 ]
 
 { #category : #copying }
@@ -282,7 +287,14 @@ XMLURI >> copyWithPort: anInteger [
 
 { #category : #copying }
 XMLURI >> copyWithQuery: aDictionary [
-	^ self copy query: (OrderPreservingStringDictionary newFrom: aDictionary)
+	| newRawQuery |
+
+	newRawQuery := self rawQuery copyEmpty.
+	aDictionary keysAndValuesDo: [:key :value |
+		newRawQuery
+			at: (self percentAndPlusEncoded: key)
+			put: (self percentAndPlusEncoded: value)].
+	^ self copy rawQuery: newRawQuery.
 ]
 
 { #category : #copying }
@@ -296,18 +308,12 @@ XMLURI >> copyWithScheme: aString [
 
 { #category : #copying }
 XMLURI >> copyWithUserInfo: aString [
-	^ self copy userInfo: aString
+	^ self copy rawUserInfo: (self percentEncoded: aString)
 ]
 
 { #category : #accessing }
 XMLURI >> fragment [
-	self parseURIStringIfUnparsed.
-	^ fragment.
-]
-
-{ #category : #private }
-XMLURI >> fragment: aString [
-	fragment := aString
+	^ self percentDecoded: self rawFragment
 ]
 
 { #category : #retrieving }
@@ -324,8 +330,8 @@ XMLURI >> getUpToLimit: aMaxSize decoding: aBoolean [
 
 { #category : #testing }
 XMLURI >> hasAbsolutePath [
-	^ self pathSegments notEmpty
-		and: [self pathSegments first isEmpty]
+	^ self hasPath
+		and: [self rawPathSegments first isEmpty]
 ]
 
 { #category : #testing }
@@ -348,18 +354,25 @@ XMLURI >> hasAuthorityPrefix: aBoolean [
 
 { #category : #testing }
 XMLURI >> hasDirectoryPath [
-	^ self pathSegments notEmpty
-		and: [self pathSegments last isEmpty]
+	^ self hasPath
+		and: [self rawPathSegments last isEmpty]
 ]
 
 { #category : #testing }
 XMLURI >> hasFragment [
-	^ self fragment notEmpty
+	^ self rawFragment notEmpty
 ]
 
 { #category : #testing }
 XMLURI >> hasHost [
-	^ self host notEmpty
+	^ self rawHost notEmpty
+]
+
+{ #category : #testing }
+XMLURI >> hasIPv6Host [
+	^ self hasHost
+		and: [self rawHost first == $[
+			and: [self rawHost last == $]]]
 ]
 
 { #category : #testing }
@@ -370,7 +383,7 @@ XMLURI >> hasNonDirectoryPath [
 
 { #category : #testing }
 XMLURI >> hasPath [
-	^ self pathSegments notEmpty
+	^ self rawPathSegments notEmpty
 ]
 
 { #category : #testing }
@@ -380,13 +393,13 @@ XMLURI >> hasPort [
 
 { #category : #testing }
 XMLURI >> hasQuery [
-	^ self query notEmpty
+	^ self rawQuery notEmpty
 ]
 
 { #category : #testing }
 XMLURI >> hasRootPath [
-	^ self pathSegments size = 2
-		and: [self pathSegments allSatisfy: [:each | each isEmpty]]
+	^ self rawPathSegments size = 2
+		and: [self rawPathSegments allSatisfy: [:each | each isEmpty]]
 ]
 
 { #category : #testing }
@@ -396,7 +409,7 @@ XMLURI >> hasScheme [
 
 { #category : #testing }
 XMLURI >> hasUserInfo [
-	^ self userInfo notEmpty
+	^ self rawUserInfo notEmpty
 ]
 
 { #category : #comparing }
@@ -407,19 +420,15 @@ XMLURI >> hash [
 { #category : #private }
 XMLURI >> haveDirectoryPath [
 	self hasPath
-		ifFalse: [self pathSegments addLast: ''].
-	self pathSegments addLast: ''.
+		ifFalse: [self rawPathSegments addLast: ''].
+	self rawPathSegments addLast: ''.
 ]
 
 { #category : #accessing }
 XMLURI >> host [
-	self parseURIStringIfUnparsed.
-	^ host.
-]
-
-{ #category : #private }
-XMLURI >> host: aString [
-	host := aString
+	self hasIPv6Host
+		ifTrue: [^ self rawHost]
+		ifFalse: [^ (self percentDecoded: self rawHost) asLowercase]
 ]
 
 { #category : #testing }
@@ -472,17 +481,17 @@ XMLURI >> parseURIStream: aStream [
 		or: [self hasAuthorityPrefix])
 		ifTrue: [
 			self
-				userInfo: parser parseUserInfo;
-				host: parser parseHost;
+				rawUserInfo: parser parseUserInfo;
+				rawHost: parser parseHost;
 				port: parser parsePort]
 		ifFalse: [
 			self
-				userInfo: '';
-				host: ''].
+				rawUserInfo: '';
+				rawHost: ''].
 	self
-		pathSegments: parser parsePathSegments;
-		query: parser parseQuery;
-		fragment: parser parseFragment.
+		rawPathSegments: parser parsePathSegments;
+		rawQuery: parser parseQuery;
+		rawFragment: parser parseFragment.
 ]
 
 { #category : #private }
@@ -495,30 +504,109 @@ XMLURI >> parseURIStringIfUnparsed [
 XMLURI >> path [
 	self hasPath
 		ifTrue: [| writeStream |
-			writeStream := (String new: self pathSegments size * 10) writeStream.
-			self
-				printPathWithPercentEncoding: false
-				on: writeStream.
+			writeStream := (String new: self rawPathSegments size * 10) writeStream.
+			self rawPathSegments
+				do: [:each | writeStream nextPutAll: (self percentDecoded: each)]
+				separatedBy: [writeStream nextPut: $/].
 			^ writeStream contents]
 		ifFalse: [^ '']
 ]
 
 { #category : #accessing }
 XMLURI >> pathSegments [
-	"users should copy the return value before modifying it to preserve immutability"
-
-	self parseURIStringIfUnparsed.
-	^ pathSegments.
-]
-
-{ #category : #private }
-XMLURI >> pathSegments: aPathSegmentCollection [
-	pathSegments := aPathSegmentCollection
+	^ self rawPathSegments collect: [:each | self percentDecoded: each]
 ]
 
 { #category : #enumerating }
 XMLURI >> pathSegmentsDo: aBlock [
-	self pathSegments do: aBlock
+	self rawPathSegments do: [:each |
+		aBlock value: (self percentDecoded: each)]
+]
+
+{ #category : #private }
+XMLURI >> percentAndPlusDecoded: aString [
+	| readStream writeStream |
+
+	((aString includes: $%)
+		or: [aString includes: $+])
+		ifFalse: [^ aString].
+
+	readStream := aString readStream.
+	writeStream := (String new: aString size) writeStream.
+	[readStream atEnd]
+		whileFalse: [
+			readStream peek == $%
+				ifTrue: [
+					self
+						percentDecodeNextFrom: readStream
+						on: writeStream]
+				ifFalse: [| nextChar |
+					(nextChar := readStream next) == $+
+						ifTrue: [writeStream nextPut: Character space]
+						ifFalse: [writeStream nextPut: nextChar]]].
+	^ writeStream contents.
+]
+
+{ #category : #private }
+XMLURI >> percentAndPlusEncoded: aString [
+	| writeStream |
+
+	writeStream := (String new: aString size) writeStream.
+	"to:do: for speed"
+	1 to: aString size do: [:i | | nextChar |
+		(UnreservedCharacters includes: (nextChar := aString at: i))
+			ifTrue: [	
+				nextChar asciiValue = 32 "Character space asciiValue"
+					ifTrue: [writeStream nextPut: $+]
+					ifFalse: [writeStream nextPut: nextChar]]
+			ifFalse: [
+				(XMLPercentEncodingWriteStreamAdapter on: writeStream)
+					nextPut: nextChar]].
+	^ writeStream contents.
+]
+
+{ #category : #private }
+XMLURI >> percentDecodeNextFrom: aReadStream on: aWriteStream [
+	| readStreamAdapter |
+
+	readStreamAdapter := XMLPercentDecodingReadStreamAdapter on: aReadStream.
+	[readStreamAdapter atEnd]
+		whileFalse: [aWriteStream nextPut: readStreamAdapter next].
+]
+
+{ #category : #private }
+XMLURI >> percentDecoded: aString [
+	| readStream writeStream |
+
+	(aString includes: $%)
+		ifFalse: [^ aString].
+
+	readStream := aString readStream.
+	writeStream := (String new: aString size) writeStream.
+	[readStream atEnd]
+		whileFalse: [
+			readStream peek == $%
+				ifTrue: [
+					self
+						percentDecodeNextFrom: readStream
+						on: writeStream]
+				ifFalse: [writeStream nextPut: readStream next]].
+	^ writeStream contents.
+]
+
+{ #category : #private }
+XMLURI >> percentEncoded: aString [
+	| writeStream |
+
+	writeStream := (String new: aString size) writeStream.
+	"to:do: for speed"
+	1 to: aString size do: [:i | | nextChar |
+		(UnreservedCharacters includes: (nextChar := aString at: i))
+			ifTrue: [writeStream nextPut: nextChar]
+			ifFalse: [
+				(XMLPercentEncodingWriteStreamAdapter on: writeStream)
+					nextPut: nextChar]].
+	^ writeStream contents.
 ]
 
 { #category : #accessing }
@@ -543,32 +631,6 @@ XMLURI >> postCopy [
 ]
 
 { #category : #printing }
-XMLURI >> print: aString withPercentEncodingOn: aStream [
-	"to:do: for speed"
-	1 to: aString size do: [:i | | nextChar |
-		nextChar := aString at: i.
-		(UnreservedCharacters includes: nextChar)
-			ifTrue: [aStream nextPut: nextChar]
-			ifFalse: [
-				self class
-					printPercentEncodedCharacter: nextChar
-					on: aStream]].
-]
-
-{ #category : #printing }
-XMLURI >> print: aString withPercentOrPlusEncodingOn: aStream [
-	"to:do: for speed"
-	1 to: aString size do: [:i | | nextChar |
-		nextChar := aString at: i.
-		(UnreservedCharacters includes: nextChar)
-			ifTrue: [aStream nextPut: nextChar]
-			ifFalse: [
-				self class
-					printPercentOrPlusEncodedCharacter: nextChar
-					on: aStream]].
-]
-
-{ #category : #printing }
 XMLURI >> printAuthorityOn: aStream [
 	self hasAuthority
 		ifTrue: [
@@ -589,38 +651,15 @@ XMLURI >> printAuthorityPrefixOn: aStream [
 XMLURI >> printFragmentOn: aStream [
 	self hasFragment
 		ifTrue: [
-			aStream nextPut: $#.
-			self
-				print: self fragment
-				withPercentEncodingOn: aStream]
+			aStream
+				nextPut: $#;
+				nextPutAll: self rawFragment]
 ]
 
 { #category : #printing }
 XMLURI >> printHostOn: aStream [
 	self hasHost
-		ifTrue: [
-			(self host first == $[
-				and: [self host last == $]])
-				ifTrue: [| atBeginning |
-					atBeginning := true.
-					aStream nextPut: $[.
-					$:
-						xmlSplit:
-							(self host
-								copyFrom: 2
-								to: self host size - 1)
-						do: [:each |
-							atBeginning
-								ifTrue: [atBeginning := false]
-								ifFalse: [aStream nextPut: $:].
-							self
-								print: each
-								withPercentEncodingOn: aStream].
-					aStream nextPut: $]]
-				ifFalse: [
-					self
-						print: self host
-						withPercentEncodingOn: aStream]]
+		ifTrue: [aStream nextPutAll: self rawHost]
 ]
 
 { #category : #printing }
@@ -642,9 +681,9 @@ XMLURI >> printOn: aStream [
 
 { #category : #printing }
 XMLURI >> printPathOn: aStream [
-	self
-		printPathWithPercentEncoding: true
-		on: aStream
+	self rawPathSegments
+		do: [:each | aStream nextPutAll: each]
+		separatedBy: [aStream nextPut: $/]
 ]
 
 { #category : #printing }
@@ -653,19 +692,6 @@ XMLURI >> printPathPrefixOn: aStream [
 		and: [self hasAbsolutePath not
 			and: [self hasScheme or: [self hasAuthority]]])
 		ifTrue: [aStream nextPut: $/]
-]
-
-{ #category : #printing }
-XMLURI >> printPathWithPercentEncoding: aBoolean on: aStream [
-	self pathSegments
-		do: [:each |
-			aBoolean
-				ifTrue: [
-					self
-						print: each
-						withPercentEncodingOn: aStream]
-				ifFalse: [aStream nextPutAll: each]]
-		separatedBy: [aStream nextPut: $/]
 ]
 
 { #category : #printing }
@@ -685,17 +711,14 @@ XMLURI >> printQueryOn: aStream [
 	
 	aStream nextPut: $?.
 	atBeginning := true.
-	self queryKeysAndValuesDo: [:key :value |
+	self rawQuery keysAndValuesDo: [:key :value |
 		atBeginning
 			ifTrue: [atBeginning := false]
 			ifFalse: [aStream nextPut: $&].
-		self
-			print: key
-			withPercentOrPlusEncodingOn: aStream.
-		aStream nextPut: $=.
-		self
-			print: value
-			withPercentOrPlusEncodingOn: aStream].
+		aStream
+			nextPutAll: key;
+			nextPut: $=;
+			nextPutAll: value].
 ]
 
 { #category : #printing }
@@ -711,65 +734,127 @@ XMLURI >> printSchemeOn: aStream [
 XMLURI >> printUserInfoOn: aStream [
 	self hasUserInfo
 		ifTrue: [
-			self
-				print: self userInfo
-				withPercentEncodingOn: aStream.
-			aStream nextPut: $@]
+			aStream
+				nextPutAll: self rawUserInfo;
+				nextPut: $@]
 ]
 
 { #category : #accessing }
 XMLURI >> query [
-	"users should copy the return value before modifying it to preserve immutability"
+	| query |
 
-	self parseURIStringIfUnparsed.
+	query := self rawQuery copyEmpty.
+	self queryKeysAndValuesDo: [:key :value |
+		query
+			at: key
+			put: value].
 	^ query.
 ]
 
-{ #category : #private }
-XMLURI >> query: aDictionary [
-	query := aDictionary
+{ #category : #accessing }
+XMLURI >> queryAt: aKey [
+	"returns an empty string if aKey is absent"
+	^ self percentAndPlusDecoded: (self rawQuery at: aKey)
 ]
 
 { #category : #accessing }
-XMLURI >> queryAt: aName [
-	^ self query at: aName
-]
-
-{ #category : #accessing }
-XMLURI >> queryAt: aName ifAbsent: aBlock [
-	^ self query
-		at: aName
-		ifAbsent: aBlock
+XMLURI >> queryAt: aKey ifAbsent: aBlock [
+	^ self percentAndPlusDecoded:
+		(self rawQuery
+			at: aKey
+			ifAbsent: [^ aBlock value])
 ]
 
 { #category : #testing }
 XMLURI >> queryIncludesKey: aKey [
-	^ self query includesKey: aKey
+	self
+		queryAt: aKey
+		ifAbsent: [^ false].
+	^ true.
 ]
 
 { #category : #accessing }
 XMLURI >> queryKeys [
-	^ self query keys
+	^ self rawQuery keys collect: [:each | self percentAndPlusDecoded: each]
 ]
 
 { #category : #enumerating }
 XMLURI >> queryKeysAndValuesDo: aTwoArgumentBlock [
-	self query keysAndValuesDo: aTwoArgumentBlock
+	self rawQuery keysAndValuesDo: [:key :value |
+		aTwoArgumentBlock
+			value: (self percentAndPlusDecoded: key)
+			value: (self percentAndPlusDecoded: value)]
 ]
 
 { #category : #enumerating }
 XMLURI >> queryKeysDo: aBlock [
-	self query keysDo: aBlock
+	self rawQuery keysDo: [:each |
+		aBlock value: (self percentAndPlusDecoded: each)]
 ]
 
 { #category : #private }
-XMLURI >> removeLastPathSegment [
-	^ self pathSegments removeLast
+XMLURI >> rawFragment [
+	self parseURIStringIfUnparsed.
+	^ rawFragment.
 ]
 
 { #category : #private }
-XMLURI >> removePathSegments [
-	^ self pathSegments removeAll
+XMLURI >> rawFragment: aString [
+	rawFragment := aString
+]
+
+{ #category : #private }
+XMLURI >> rawHost [
+	self parseURIStringIfUnparsed.
+	^ rawHost.
+]
+
+{ #category : #private }
+XMLURI >> rawHost: aString [
+	rawHost := aString
+]
+
+{ #category : #private }
+XMLURI >> rawPathSegments [
+	self parseURIStringIfUnparsed.
+	^ rawPathSegments.
+]
+
+{ #category : #private }
+XMLURI >> rawPathSegments: aPathSegmentCollection [
+	rawPathSegments := aPathSegmentCollection
+]
+
+{ #category : #private }
+XMLURI >> rawQuery [
+	self parseURIStringIfUnparsed.
+	^ rawQuery.
+]
+
+{ #category : #private }
+XMLURI >> rawQuery: aDictionary [
+	rawQuery := aDictionary
+]
+
+{ #category : #private }
+XMLURI >> rawUserInfo [
+	self parseURIStringIfUnparsed.
+	^ rawUserInfo.
+]
+
+{ #category : #private }
+XMLURI >> rawUserInfo: aString [
+	rawUserInfo := aString
+]
+
+{ #category : #private }
+XMLURI >> removeLastRawPathSegment [
+	^ self rawPathSegments removeLast
+]
+
+{ #category : #private }
+XMLURI >> removeRawPathSegments [
+	self rawPathSegments removeAll
 ]
 
 { #category : #accessing }
@@ -807,11 +892,5 @@ XMLURI >> uriString: aString [
 
 { #category : #accessing }
 XMLURI >> userInfo [
-	self parseURIStringIfUnparsed.
-	^ userInfo.
-]
-
-{ #category : #private }
-XMLURI >> userInfo: aString [
-	userInfo := aString
+	^ self percentDecoded: self rawUserInfo
 ]

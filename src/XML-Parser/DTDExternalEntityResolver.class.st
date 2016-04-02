@@ -18,17 +18,27 @@ DTDExternalEntityResolver >> checkExternalEntityLimit [
 		ifTrue: [self erorrExternalEntityLimitExceeded]
 ]
 
-{ #category : #combining }
-DTDExternalEntityResolver >> combineSourceURI: aSourceXMLURIOrURIString withEntityURI: anEntityXMLURIOrURIString [
-	| sourceURI combinedURI |
+{ #category : #resolving }
+DTDExternalEntityResolver >> entityURIFromPublicID: aPublicID systemID: aSystemID [
+	^ aSystemID asXMLURI
+]
 
-	sourceURI := aSourceXMLURIOrURIString asXMLURI.
-	combinedURI := sourceURI / anEntityXMLURIOrURIString.
-	(combinedURI isLocalURI
-		and: [sourceURI isLocalURI not
+{ #category : #resolving }
+DTDExternalEntityResolver >> entityURIFromPublicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
+	| baseURI entityURI |
+
+	baseURI := aBaseURIString asXMLURI.
+	entityURI :=
+		baseURI combinedWith:
+			(self
+				entityURIFromPublicID: aPublicID
+				systemID: aSystemID).
+	(entityURI isLocalURI
+		and: [baseURI isLocalURI not
 			and: [self resolvesLocalFromNonLocal not]])
 		ifTrue: [self errorLocalFromNonLocal].
-	^ combinedURI.
+
+	^ entityURI.
 ]
 
 { #category : #private }
@@ -66,7 +76,10 @@ DTDExternalEntityResolver >> externalSubsetReadLimit: aLimit [
 
 { #category : #private }
 DTDExternalEntityResolver >> incrementTotalResolvedEntities [
-	totalResolvedEntities := (totalResolvedEntities ifNil: [0]) + 1
+	totalResolvedEntities :=
+		totalResolvedEntities
+			ifNil: [1]
+			ifNotNil: [totalResolvedEntities + 1]
 ]
 
 { #category : #configuring }
@@ -123,37 +136,38 @@ DTDExternalEntityResolver >> resolveEntityWith: aBlock [
 ]
 
 { #category : #private }
-DTDExternalEntityResolver >> resolveExternalEntity: aName publicID: aPublicID systemID: aSystemID from: aSourceURIString class: aClass [
-	| combinedURI |
+DTDExternalEntityResolver >> resolveExternalEntity: aName publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString class: aClass [
+	| entityURI |
 
-	combinedURI :=
+	entityURI :=
 		self
-			combineSourceURI: aSourceURIString
-			withEntityURI: aSystemID.
+			entityURIFromPublicID: aPublicID
+			systemID: aSystemID
+			baseURI: aBaseURIString.
 
 	^ aClass
 		name: aName
-		replacement: (self resolveEntityURI: combinedURI)
-		uri: combinedURI asString.
+		replacement: (self resolveEntityURI: entityURI)
+		uri: entityURI asString.
 ]
 
 { #category : #resolving }
-DTDExternalEntityResolver >> resolveExternalGeneralEntity: aName publicID: aPublicID systemID: aSystemID from: aSourceURIString [
+DTDExternalEntityResolver >> resolveExternalGeneralEntity: aName publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
 	^ self
 		resolveExternalEntity: aName
 		publicID: aPublicID
 		systemID: aSystemID
-		from: aSourceURIString
+		baseURI: aBaseURIString
 		class: DTDExternalGeneralEntity
 ]
 
 { #category : #resolving }
-DTDExternalEntityResolver >> resolveExternalParameterEntity: aName publicID: aPublicID systemID: aSystemID from: aSourceURIString [
+DTDExternalEntityResolver >> resolveExternalParameterEntity: aName publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
 	^ self
 		resolveExternalEntity: aName
 		publicID: aPublicID
 		systemID: aSystemID
-		from: aSourceURIString
+		baseURI: aBaseURIString
 		class: DTDExternalParameterEntity
 ]
 

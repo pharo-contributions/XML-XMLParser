@@ -1,12 +1,14 @@
 "
 This class parses a content model using postfix conversion and an NFABuilder to build a NFA before converting it to a DFA.
+
+It assumes all spaces have been removed from the input and that it's been checked for well-formedness (meaning no missing names or misplaced operators/parentheses).
 "
 Class {
 	#name : #DTDDFAContentModelParser,
 	#superclass : #DTDContentModelParser,
 	#instVars : [
-		'operatorStack',
-		'nfaBuilder'
+		'nfaBuilder',
+		'binaryOperatorStack'
 	],
 	#classVars : [
 		'OperatorApplicators',
@@ -18,9 +20,10 @@ Class {
 { #category : #'class initialization' }
 DTDDFAContentModelParser class >> initialize [
 	"self initialize"
+
 	self
 		initializeSpecialCharacterParsers;
-		initializeOperatorApplicators.
+		initializeOperatorApplicators
 ]
 
 { #category : #'class initialization' }
@@ -38,8 +41,8 @@ DTDDFAContentModelParser class >> initializeOperatorApplicators [
 DTDDFAContentModelParser class >> initializeSpecialCharacterParsers [
 	"use Array for faster lookup"
 	(SpecialCharacterParsers := Array new: 255)
-		at: $( asciiValue put: #parseParen:;
-		at: $) asciiValue put: #parseParen:;
+		at: $( asciiValue put: #parseOpeningParenthesis:;
+		at: $) asciiValue put: #parseClosingParenthesis:;
 		at: $, asciiValue put: #parseBinaryOperator:;
 		at: $| asciiValue put: #parseBinaryOperator:;
 		at: $? asciiValue put: #parseUnaryOperator:;
@@ -49,10 +52,7 @@ DTDDFAContentModelParser class >> initializeSpecialCharacterParsers [
 
 { #category : #private }
 DTDDFAContentModelParser >> applyBinaryOperatorOnStack [
-	nfaBuilder totalFragments > 1
-		ifFalse: [self errorMissingOperand].
-
-	self applyOperator: operatorStack removeLast.
+	self applyOperator: binaryOperatorStack removeLast
 ]
 
 { #category : #private }
@@ -61,47 +61,35 @@ DTDDFAContentModelParser >> applyOperator: aCharacter [
 ]
 
 { #category : #private }
-DTDDFAContentModelParser >> errorMismatchedParens [
-	XMLValidationException signal: 'Mismatched parentheses in content model'
-]
-
-{ #category : #private }
-DTDDFAContentModelParser >> errorMissingOperand [
-	XMLValidationException signal: 'Missing element name in content model'
-]
-
-{ #category : #private }
-DTDDFAContentModelParser >> hasOperatorOnStack [
-	^ (operatorStack isEmpty or: [operatorStack last == $(]) not
-]
-
-{ #category : #private }
-DTDDFAContentModelParser >> isBinaryOperator: aFirstOperator higherPrecedenceThan: aSecondOperator [
-	^ aFirstOperator == $, and: [aSecondOperator == $|]
+DTDDFAContentModelParser >> hasBinaryOperatorOnStack [
+	^ (binaryOperatorStack isEmpty
+		or: [binaryOperatorStack last == $(]) not
 ]
 
 { #category : #parsing }
 DTDDFAContentModelParser >> parse [
-	"the tokenizer removes all spaces from the content model"
+	"the tokenizer removes all spaces from the content model and checks
+	it for well-formedness (meaning no missing names or misplaced
+	operators/parentheses), which simplifies parsing"
 	| nameStart |
 
-	operatorStack := OrderedCollection new.
+	binaryOperatorStack := OrderedCollection new.
 	nfaBuilder := XMLNFABuilder new.
 	1 to: contentModel size do: [:i |
 		(self parserForSpecialCharacter: (contentModel at: i))
-				ifNil: [
-					nameStart
-						ifNil: [nameStart := i]]
-				ifNotNil: [:selector |
-					nameStart
-						ifNotNil: [
-							nfaBuilder pushMatcher:
-								(contentModel copyFrom: nameStart to: i - 1).
-							nameStart := nil].
-					self
-						perform: selector
-						with: (contentModel at: i)]].
-	self popRemainingOperators.
+			ifNil: [
+				nameStart
+					ifNil: [nameStart := i]]
+			ifNotNil: [:selector |
+				nameStart
+					ifNotNil: [
+						nfaBuilder pushMatcher:
+							(contentModel copyFrom: nameStart to: i - 1).
+						nameStart := nil].
+				self
+					perform: selector
+					with: (contentModel at: i)]].
+	self popRemainingBinaryOperators.
 
 	^ XMLDFAElementValidator
 		element: element
@@ -110,29 +98,25 @@ DTDDFAContentModelParser >> parse [
 
 { #category : #private }
 DTDDFAContentModelParser >> parseBinaryOperator: aCharacter [
-	self hasOperatorOnStack
-		ifTrue: [
-			(self
-				isBinaryOperator: aCharacter
-				higherPrecedenceThan: operatorStack last)
-					ifFalse: [self applyBinaryOperatorOnStack]].
-
-	operatorStack addLast: aCharacter.
+	binaryOperatorStack addLast: aCharacter
 ]
 
 { #category : #private }
-DTDDFAContentModelParser >> parseParen: aCharacter [
-	aCharacter == $)
-		ifTrue: [self popParenthesizedOperators]
-		ifFalse: [operatorStack addLast: $(].
+DTDDFAContentModelParser >> parseClosingParenthesis: aCharacter [
+	self popRemainingBinaryOperators.
+	(binaryOperatorStack notEmpty
+		and: [binaryOperatorStack last == $(])
+		ifTrue: [binaryOperatorStack removeLast].
+]
+
+{ #category : #private }
+DTDDFAContentModelParser >> parseOpeningParenthesis: aCharacter [
+	binaryOperatorStack addLast: $(
 ]
 
 { #category : #private }
 DTDDFAContentModelParser >> parseUnaryOperator: aCharacter [
-	nfaBuilder hasFragments
-		ifFalse: [self errorMissingOperand].
-
-	self applyOperator: aCharacter.
+	self applyOperator: aCharacter
 ]
 
 { #category : #private }
@@ -147,26 +131,7 @@ DTDDFAContentModelParser >> parserForSpecialCharacter: aCharacter [
 ]
 
 { #category : #private }
-DTDDFAContentModelParser >> popParenthesizedOperators [
-	[operatorStack notEmpty]
-		whileTrue: [
-			operatorStack last == $(
-				ifTrue: [
-					operatorStack removeLast.
-					^ self]
-				ifFalse: [self applyBinaryOperatorOnStack]].
-
-	self errorMismatchedParens.
-]
-
-{ #category : #private }
-DTDDFAContentModelParser >> popRemainingOperators [
-	[operatorStack notEmpty]
-		whileTrue: [
-			operatorStack last == $(
-				ifTrue: [self errorMismatchedParens].
-			self applyBinaryOperatorOnStack].
-
-	nfaBuilder totalFragments = 1
-		ifFalse: [self errorMissingOperand].
+DTDDFAContentModelParser >> popRemainingBinaryOperators [
+	[self hasBinaryOperatorOnStack]
+		whileTrue: [self applyBinaryOperatorOnStack]
 ]

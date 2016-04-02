@@ -144,7 +144,7 @@ XMLDocument >> validate [
 		ifNotNil: [:dtd |
 			dtd hasValidators
 				ifTrue: [dtd removeIDsAndIDReferences].
-			self validateWith: (DTDDocumentValidator doctypeDefinition: dtd)]
+			self validateWith: dtd newValidator]
 ]
 
 { #category : #validating }

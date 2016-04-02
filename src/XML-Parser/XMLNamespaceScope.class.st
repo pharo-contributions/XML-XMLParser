@@ -24,6 +24,7 @@ XMLNamespaceScope class >> xmlnsNamespaceURI [
 XMLNamespaceScope >> = anObject [
 	self == anObject
 		ifTrue: [^ true].
+
 	self species == anObject species
 		ifFalse: [^ false].
 
@@ -41,6 +42,12 @@ XMLNamespaceScope >> copiedPrefixMappings [
 	prefixMappings
 		ifNil: [^ self prefixMappings]
 		ifNotNil: [^ prefixMappings := prefixMappings copy]
+]
+
+{ #category : #copying }
+XMLNamespaceScope >> copy [
+	"copy-on-write allows copies to share state so no postCopy is needed"
+	^ self shallowCopy
 ]
 
 { #category : #mapping }
@@ -149,7 +156,7 @@ XMLNamespaceScope >> hasNamespaces [
 XMLNamespaceScope >> hash [
 	| hash |
 
-	hash := self class hash.
+	hash := self species hash.
 	self hasNamespaces
 		ifTrue: [hash := hash bitXor: self prefixMappings hash].
 	^ hash.
@@ -388,7 +395,7 @@ XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
 	| namespacedAttributes |
 
 	aDictionary keysDo: [:each | | prefix |
-		(prefix := each prefixBeforeLocalName) size > 0 "optimization"
+		(prefix := each xmlPrefixBeforeLocalName) size > 0 "optimization"
 			ifTrue: [| namespace oldSize |
 				"not initialized unless needed"
 				namespacedAttributes
@@ -397,8 +404,9 @@ XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
 
 				"checking size after is faster than includes:"
 				oldSize := namespacedAttributes size.
-				namespacedAttributes add: namespace, (each localNameAfterPrefix: prefix).
-				namespacedAttributes size > oldSize
+				(namespacedAttributes
+					add: namespace, (each xmlLocalNameAfterPrefix: prefix);
+					size) > oldSize
 					ifFalse: [self errorAttribute: each aliasesNamespace: namespace]]
 			ifFalse: [self validateUnprefixedName: each]]
 ]

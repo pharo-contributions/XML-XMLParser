@@ -147,27 +147,11 @@ XMLParserTokenizer >> errorExpectedLiteral: aCharacterOrString [
 ]
 
 { #category : #errors }
-XMLParserTokenizer >> errorExpectedLiteral: aCharacterOrString butGot: aCharacter [
-	self
-		errorExpectedLiteral: aCharacterOrString
-		butGot: aCharacter
-		at: 1
-]
-
-{ #category : #errors }
-XMLParserTokenizer >> errorExpectedLiteral: aCharacterOrString butGot: aCharacter at: aPosition [
-	| literal replacement |
-
-	literal := aCharacterOrString asString.
-	replacement := (aCharacter ifNil: ['']) asString.
+XMLParserTokenizer >> errorExpectedLiteral: anExpectedCharacterOrString butGot: anReceivedCharacterOrString [
 	self
 		formatParseError: 'Expected "{1}" but got "{2}"' 
-		with: literal
-		with:
-			(literal
-				copyReplaceFrom: aPosition
-				to: literal size
-				with: replacement).
+		with: anExpectedCharacterOrString
+		with: (anReceivedCharacterOrString ifNil: [''])
 ]
 
 { #category : #'tokenizing - expecting' }
@@ -187,11 +171,6 @@ XMLParserTokenizer >> expectSeparators [
 
 { #category : #'tokenizing - expecting' }
 XMLParserTokenizer >> expectTerminator [
-	self subclassResponsibility
-]
-
-{ #category : #'tokenizing - expecting' }
-XMLParserTokenizer >> expectUpToAll: aString [
 	self subclassResponsibility
 ]
 
@@ -410,8 +389,7 @@ XMLParserTokenizer >> nextStartContent [
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextStartDocument [
-	context := driver initialContext ifNil: [XMLXMLDeclarationContext new].
-	(context supportsEncodingDetection
+	((context := driver newInitialContext) supportsEncodingDetection
 		and: [driver decodesCharacters])
 		ifTrue: [streamReader detectCurrentEncoding].
 	driver handleStartDocument.

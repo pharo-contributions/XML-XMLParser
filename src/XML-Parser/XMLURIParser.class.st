@@ -1,5 +1,5 @@
 "
-This class is a parser that can extract the scheme, user info, host, port, path segments, query (as a dictionary), and fragment of a URI. It automatically handles percent decoding and raises no errors.
+This class is a parser that can extract the scheme, user info, host, port, path segments, query (as a dictionary), and fragment of a URI. It does not handle percent decoding and raises no errors.
 "
 Class {
 	#name : #XMLURIParser,
@@ -81,50 +81,11 @@ XMLURIParser >> next [
 ]
 
 { #category : #private }
-XMLURIParser >> nextPercentEncodedCharsOnWriteStream [
-	| percentDecodingReadStreamAdapter |
-
-	percentDecodingReadStreamAdapter :=
-		XMLPercentDecodingReadStreamAdapter on: readStream.
-	[percentDecodingReadStreamAdapter atEnd]
-		whileFalse: [writeStream nextPut: percentDecodingReadStreamAdapter next].
-]
-
-{ #category : #private }
-XMLURIParser >> nextPercentEncodedDelimitedBy: aCollection [
+XMLURIParser >> nextDelimitedBy: aCollection [
 	writeStream reset.
 	[self atEnd
 		or: [aCollection includes: self peek]]
-		whileFalse: [
-			self peek == $%
-				ifTrue: [self nextPercentEncodedCharsOnWriteStream]
-				ifFalse: [writeStream nextPut: self next]].
-	^ writeStream contents.
-]
-
-{ #category : #private }
-XMLURIParser >> nextPercentEncodedUpToEnd [
-	writeStream reset.
-	[self atEnd]
-		whileFalse: [
-			self peek == $%
-				ifTrue: [self nextPercentEncodedCharsOnWriteStream]
-				ifFalse: [writeStream nextPut: self next]].
-	^ writeStream contents.
-]
-
-{ #category : #private }
-XMLURIParser >> nextPercentOrPlusEncodedDelimitedBy: aCollection [
-	writeStream reset.
-	[self atEnd
-		or: [aCollection includes: self peek]]
-		whileFalse: [
-			self peek == $%
-				ifTrue: [self nextPercentEncodedCharsOnWriteStream]
-				ifFalse: [| nextChar |
-					(nextChar := self next) == $+
-						ifTrue: [writeStream nextPut: Character space]
-						ifFalse: [writeStream nextPut: nextChar]]].
+		whileFalse: [writeStream nextPut: self next].
 	^ writeStream contents.
 ]
 
@@ -153,7 +114,7 @@ XMLURIParser >> parseAuthorityPrefix [
 { #category : #parsing }
 XMLURIParser >> parseFragment [
 	(self peekFor: $#)
-		ifTrue: [^ self nextPercentEncodedUpToEnd]
+		ifTrue: [^ readStream upToEnd]
 		ifFalse: [^ '']
 ]
 
@@ -163,10 +124,10 @@ XMLURIParser >> parseHost [
 
 	self peek == $[
 		ifTrue: [
-			host := (self nextPercentEncodedDelimitedBy: ']') copyWith: $].
+			host := (self nextDelimitedBy: ']') copyWith: $].
 			self peekFor: $]]
-		ifFalse: [host := self nextPercentEncodedDelimitedBy: HostDelimiters].
-	^ host asLowercase.
+		ifFalse: [host := self nextDelimitedBy: HostDelimiters].
+	^ host.
 ]
 
 { #category : #parsing }
@@ -175,11 +136,11 @@ XMLURIParser >> parsePathSegments [
 
 	pathSegments := OrderedCollection new.
 
-	segment := self nextPercentEncodedDelimitedBy: PathDelimiters.
+	segment := self nextDelimitedBy: PathDelimiters.
 	[self peekFor: $/]
 		whileTrue: [
 			pathSegments addLast: segment.
-			segment := self nextPercentEncodedDelimitedBy: PathDelimiters].
+			segment := self nextDelimitedBy: PathDelimiters].
 	(pathSegments isEmpty
 		and: [segment isEmpty])
 		ifFalse: [pathSegments addLast: segment].
@@ -212,11 +173,11 @@ XMLURIParser >> parseQuery [
 		ifFalse: [^ query].
 
 	[self atEnd
-		or: [(key := self nextPercentOrPlusEncodedDelimitedBy: QueryKeyDelimiters) isEmpty
+		or: [(key := self nextDelimitedBy: QueryKeyDelimiters) isEmpty
 			and: [self peek == $#]]]
 		whileFalse: [| hasValue |
 			(hasValue := self peekFor: $=)
-				ifTrue: [value := self nextPercentOrPlusEncodedDelimitedBy: QueryValueDelimiters]
+				ifTrue: [value := self nextDelimitedBy: QueryValueDelimiters]
 				ifFalse: [value := ''].
 			(key notEmpty
 				or: [hasValue])
@@ -234,7 +195,7 @@ XMLURIParser >> parseScheme [
 	| oldPosition scheme |
 
 	oldPosition := self position.
-	scheme := self nextPercentEncodedDelimitedBy: SchemeDelimiters.
+	scheme := self nextDelimitedBy: SchemeDelimiters.
 	(self peekFor: $:)
 		ifTrue: [^ scheme asLowercase]
 		ifFalse: [
@@ -247,7 +208,7 @@ XMLURIParser >> parseUserInfo [
 	| userInfo oldPosition |
 
 	oldPosition := self position.
-	userInfo := self nextPercentEncodedDelimitedBy: UserInfoDelimiters.
+	userInfo := self nextDelimitedBy: UserInfoDelimiters.
 	(self peekFor: $@)
 		ifTrue: [^ userInfo]
 		ifFalse: [

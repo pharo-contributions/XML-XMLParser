@@ -28,12 +28,12 @@ XMLElementNester >> copiedScopedAttributes [
 
 { #category : #accessing }
 XMLElementNester >> currentElement [
-	^ self openElements lastOrNil
+	^ self openElements xmlLastOrNil
 ]
 
 { #category : #accessing }
 XMLElementNester >> currentScopedAttributes [
-	^ self scopedAttributes lastOrNil
+	^ self scopedAttributes xmlLastOrNil
 ]
 
 { #category : #private }

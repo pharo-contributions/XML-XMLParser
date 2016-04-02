@@ -322,10 +322,10 @@ XMLDOMParser >> startInnerXMLElement: anElement forParser: aParser [
 
 { #category : #private }
 XMLDOMParser >> topNode [
-	^ self nodeStack lastOrNil
+	^ self nodeStack xmlLastOrNil
 ]
 
-{ #category : #'handling - content' }
+{ #category : #'handling - lexical' }
 XMLDOMParser >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
 	self document ifNotNil: [
 		self document

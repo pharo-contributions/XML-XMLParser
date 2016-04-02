@@ -55,7 +55,7 @@ XMLDecodingReadStreamAdapter >> hasNullStreamConverter [
 ]
 
 { #category : #testing }
-XMLDecodingReadStreamAdapter >> isConvertingStreamAdapter [
+XMLDecodingReadStreamAdapter >> isXMLConvertingStreamAdapter [
 	^ true
 ]
 

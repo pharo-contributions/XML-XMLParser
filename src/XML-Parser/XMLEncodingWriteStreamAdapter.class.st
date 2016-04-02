@@ -45,7 +45,7 @@ XMLEncodingWriteStreamAdapter >> hasNullStreamConverter [
 ]
 
 { #category : #testing }
-XMLEncodingWriteStreamAdapter >> isConvertingStreamAdapter [
+XMLEncodingWriteStreamAdapter >> isXMLConvertingStreamAdapter [
 	^ true
 ]
 

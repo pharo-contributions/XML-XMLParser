@@ -138,7 +138,8 @@ XMLNestedStreamReader >> currentColumnNumber [
 	"recording the start pos. of the line and subtracting it from the current
 	pos. is faster than an explicit column var that would need to be incremented
 	each time through #next/#skipSeparators"
-	^ currentPosition - currentLineStartPosition
+	^ currentLineStartPosition
+		ifNotNil: [currentPosition - currentLineStartPosition]
 ]
 
 { #category : #accessing }
@@ -147,13 +148,26 @@ XMLNestedStreamReader >> currentLineNumber [
 ]
 
 { #category : #accessing }
+XMLNestedStreamReader >> currentLineNumber: aLineNumber [
+	currentLineNumber = aLineNumber
+		ifFalse: [
+			currentLineNumber := aLineNumber.
+			currentLineStartPosition := nil].
+]
+
+{ #category : #accessing }
 XMLNestedStreamReader >> currentPosition [
 	^ currentPosition
 ]
 
+{ #category : #accessing }
+XMLNestedStreamReader >> currentPosition: aPosition [
+	currentPosition := aPosition
+]
+
 { #category : #decoding }
 XMLNestedStreamReader >> decodeStreamWithConverter: aStreamConverter [
-	stream isConvertingStreamAdapter
+	stream isXMLConvertingStreamAdapter
 		ifTrue: [stream streamConverter: aStreamConverter]
 		ifFalse: [
 			stream :=
@@ -237,13 +251,15 @@ XMLNestedStreamReader >> next [
 
 { #category : #accessing }
 XMLNestedStreamReader >> next: anInteger [
-	| writeStream |
+	| writeStream i |
 
 	writeStream := self newWriteStream.
-	1 to: anInteger do: [:i |
-		self atEnd
-			ifTrue: [^ writeStream contents].
-		writeStream nextPut: self next].
+	i := anInteger.
+	[self atEnd
+		or: [i <= 0]]
+		whileFalse: [
+			writeStream nextPut: self next.
+			i := i - 1].
 	^ writeStream contents.
 ]
 
@@ -260,8 +276,32 @@ XMLNestedStreamReader >> nextIntegerPrintedOn: aStream [
 ]
 
 { #category : #accessing }
+XMLNestedStreamReader >> nextMatch: aFirstCharacter followedBy: aSecondCharacter [
+	"a more efficient two character version of nextMatchAll:"
+
+	| oldCurrentLineNumber oldCurrentLineStartPosition |
+
+	"inlined peek"
+	(peekChar ifNil: [peekChar := self basicNext]) == aFirstCharacter
+		ifFalse: [^ false].
+	oldCurrentLineNumber := currentLineNumber.
+	oldCurrentLineStartPosition := currentLineStartPosition.
+	self next.
+
+	self peek == aSecondCharacter
+		ifFalse: [
+			self pushBackCharacter: aFirstCharacter.
+			currentPosition := currentPosition - 1.
+			currentLineNumber := oldCurrentLineNumber.
+			currentLineStartPosition := oldCurrentLineStartPosition.
+			^ false].
+	self next.
+	^ true.
+]
+
+{ #category : #accessing }
 XMLNestedStreamReader >> nextMatchAll: aString [
-	| nextChar oldCurrentLineNumber oldCurrentPosition oldCurrentLineStartPosition |
+	| oldCurrentLineNumber oldCurrentPosition oldCurrentLineStartPosition |
 
 	aString size > 0
 		ifFalse: [^ true].
@@ -269,21 +309,21 @@ XMLNestedStreamReader >> nextMatchAll: aString [
 	"inlined peek"
 	(peekChar ifNil: [peekChar := self basicNext]) == (aString at: 1)
 		ifFalse: [^ false].
-
 	oldCurrentLineNumber := currentLineNumber.
 	oldCurrentPosition := currentPosition.
 	oldCurrentLineStartPosition := currentLineStartPosition.
 	self next.
-	"we unrolled the first iteration with the above inlined peek"
+	"the first iteration was unrolled with the above inlined peek/self next, so
+	the to:do: loop starts at 2"
 	2 to: aString size do: [:i |
-		(nextChar := self peek) == (aString at: i)
-			ifTrue: [self next]
+		self peek == (aString at: i)
 			ifFalse: [
 				self pushBack: (aString copyFrom: 1 to: i -1).
 				currentLineNumber := oldCurrentLineNumber.
 				currentPosition := oldCurrentPosition.
 				currentLineStartPosition := oldCurrentLineStartPosition.
-				^ false]].
+				^ false].
+		self next].
 	^ true.
 ]
 
@@ -300,6 +340,15 @@ XMLNestedStreamReader >> normalizedLineEndingChar: aCharacter [
 { #category : #accessing }
 XMLNestedStreamReader >> peek [
 	^ peekChar ifNil: [peekChar := self basicNext]
+]
+
+{ #category : #accessing }
+XMLNestedStreamReader >> peekFor: aCharacter [
+	(peekChar ifNil: [peekChar := self basicNext]) == aCharacter
+		ifTrue: [
+			self next.
+			^ true]
+		ifFalse: [^ false]
 ]
 
 { #category : #private }
@@ -443,7 +492,7 @@ XMLNestedStreamReader >> stream [
 XMLNestedStreamReader >> stream: aStream [
 	"if the stream is not already a decoding adapter,
 	then only assume it needs one if it's binary"
-	aStream isConvertingStreamAdapter
+	aStream isXMLConvertingStreamAdapter
 		ifTrue: [stream := aStream]
 		ifFalse: [stream := XMLDecodingReadStreamAdapter onStreamIfBinary: aStream]
 ]

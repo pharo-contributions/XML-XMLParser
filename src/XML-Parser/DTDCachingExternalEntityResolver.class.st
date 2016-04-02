@@ -97,7 +97,9 @@ DTDCachingExternalEntityResolver >> resolveEntityURI: anXMLURIOrURIString [
 
 	(uri := anXMLURIOrURIString asXMLURI) isLocalURI
 		ifTrue: [^ super resolveEntityURI: uri]
-		ifFalse: [^ self cachingResolveEntityURI: uri]
+		ifFalse: [
+			"non-local entities are cached"
+			^ self cachingResolveEntityURI: uri]
 ]
 
 { #category : #resolving }
@@ -106,5 +108,7 @@ DTDCachingExternalEntityResolver >> streamResolveEntityURI: anXMLURIOrURIString 
 
 	(uri := anXMLURIOrURIString asXMLURI) isLocalURI
 		ifTrue: [^ super streamResolveEntityURI: uri]
-		ifFalse: [^ self cachingStreamResolveEntityURI: uri]
+		ifFalse: [
+			"non-local entities are cached"
+			^ self cachingStreamResolveEntityURI: uri]
 ]

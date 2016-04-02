@@ -505,7 +505,13 @@ XMLOrderedList >> grownBy: aSize [
 
 { #category : #comparing }
 XMLOrderedList >> hash [
-	^ collection hash
+	| hash|
+
+	hash := self species hash.
+	self size > 10
+		ifFalse: [
+			self do: [:each | hash := hash bitXor: each hash]].
+	^ hash bitXor: self size hash.
 ]
 
 { #category : #accessing }
@@ -573,11 +579,6 @@ XMLOrderedList >> lastIndexOf: anObject ifAbsent: aBlock [
 ]
 
 { #category : #accessing }
-XMLOrderedList >> lastOrNil [
-	^ self last
-]
-
-{ #category : #accessing }
 XMLOrderedList >> ninth [
 	^ self at: 9
 ]
@@ -621,6 +622,9 @@ XMLOrderedList >> remove: anObject ifAbsent: aBlock [
 
 { #category : #removing }
 XMLOrderedList >> removeAll [
+	"Redefined because Collection>>removeAll assumes the collection can
+	be safely modified while iterating it with do:"
+
 	[self isEmpty] whileFalse: [self removeLast]
 ]
 
@@ -835,4 +839,9 @@ XMLOrderedList >> withIndexDo: aBlock [
 { #category : #converting }
 XMLOrderedList >> writeStream [
 	^ WriteStream on: self
+]
+
+{ #category : #accessing }
+XMLOrderedList >> xmlLastOrNil [
+	^ self last
 ]

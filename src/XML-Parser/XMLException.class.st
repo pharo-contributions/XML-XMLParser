@@ -55,10 +55,14 @@ XMLException class >> signalMessageFrom: anException [
 
 { #category : #private }
 XMLException >> append: anObject withDescription: aDescription [
+	| oldMessageText |
+
+	"older Pharo versions of #messageText can return nil, so ifNil: is used"
+	oldMessageText := self messageText ifNil: [''].
 	self messageText:
 		('{1} ({2} {3})' format:
-			(Array "ifNil: for compatibility with older versions of messageText"
-				with: (self messageText ifNil: [''])
+			(Array
+				with: oldMessageText
 				with: aDescription
 				with: anObject))
 ]

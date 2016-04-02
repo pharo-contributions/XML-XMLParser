@@ -15,7 +15,7 @@ Class {
 XMLParser class >> driver: aDriver on: aStringOrStream [
 	^ self new
 		setDriver: aDriver
-		tokenizer: (aDriver tokenizerOn: aStringOrStream)
+		tokenizer: (aDriver newTokenizerOn: aStringOrStream)
 ]
 
 { #category : #testing }
@@ -60,10 +60,13 @@ XMLParser >> handleParserError: anError [
 	(anError isKindOf: XMLParserException)
 		ifFalse: [anError pass].
 
-	anError hasLineNumber
+	(anError hasLineNumber
+		or: [self currentLineNumber isNil])
 		ifFalse: [anError lineNumber: self currentLineNumber].
-	anError hasColumnNumber
+	(anError hasColumnNumber
+		or: [self currentColumnNumber isNil])
 		ifFalse: [anError columnNumber: self currentColumnNumber].
+
 	anError shouldPassOnWhenCaught
 		ifTrue: [anError pass].
 ]

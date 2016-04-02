@@ -67,13 +67,13 @@ XMLElement class >> named: aLocalName [
 XMLElement >> addElementNamed: aName [
 	| elementPrefix elementClass |
 
-	elementPrefix := aName prefixBeforeLocalName.
+	elementPrefix := aName xmlPrefixBeforeLocalName.
 	elementClass :=
 		self nodeFactory
 			classForElement: aName
 			prefix: elementPrefix
 			uri: (self resolvePrefix: elementPrefix)
-			localName: (aName localNameAfterPrefix: elementPrefix).
+			localName: (aName xmlLocalNameAfterPrefix: elementPrefix).
 
 	"added first to inherit the config and namespaces before setting the name"
 	^ (self addNode: elementClass new) name: aName.
@@ -326,7 +326,7 @@ XMLElement >> errorAddingAttributeWithElement [
 
 { #category : #accessing }
 XMLElement >> expandedName [
-	^ self localName expandWithNamespaceURI: self namespaceURI
+	^ self localName expandWithXMLNamespaceURI: self namespaceURI
 ]
 
 { #category : #testing }
@@ -399,7 +399,7 @@ XMLElement >> isInLanguage: aLanguage [
 XMLElement >> isNamed: aName [
 	"Does the receiver's qualified or local name match the argument?'"
 	^ aName
-		isQualifiedName: self name
+		isXMLQualifiedName: self name
 		orLocalName: self localName
 ]
 
@@ -407,7 +407,7 @@ XMLElement >> isNamed: aName [
 XMLElement >> isNamedAny: aNameCollection [
 	"Does the receiver's qualified or local name match any of the names supplied as the argument?'"
 	^ aNameCollection
-		includesQualifiedName: self name
+		includesXMLQualifiedName: self name
 		orLocalName: self localName
 ]
 
@@ -419,7 +419,7 @@ XMLElement >> isRoot [
 
 { #category : #accessing }
 XMLElement >> localName [
-	^ localName ifNil: [localName := self name localNameAfterPrefix]
+	^ localName ifNil: [localName := self name xmlLocalNameAfterPrefix]
 ]
 
 { #category : #accessing }
@@ -431,13 +431,13 @@ XMLElement >> name [
 XMLElement >> name: aName [
 	self renameWith: [
 		name := aName.
-		localName := aName localNameAfterPrefix]
+		localName := aName xmlLocalNameAfterPrefix]
 ]
 
 { #category : #accessing }
 XMLElement >> name: aQualifiedName namespaceURI: aURI [
 	self
-		declarePrefix: (aQualifiedName prefixBeforeLocalName) uri: aURI;
+		declarePrefix: (aQualifiedName xmlPrefixBeforeLocalName) uri: aURI;
 		name: aQualifiedName
 ]
 
@@ -471,12 +471,12 @@ XMLElement >> postCopy [
 
 { #category : #accessing }
 XMLElement >> prefix [
-	^ self name prefixBeforeLocalName: self localName
+	^ self name xmlPrefixBeforeLocalName: self localName
 ]
 
 { #category : #accessing }
 XMLElement >> prefix: aPrefix [
-	self renameWith: [name := self localName qualifyWithPrefix:  aPrefix]
+	self renameWith: [name := self localName qualifyWithXMLPrefix:  aPrefix]
 ]
 
 { #category : #accessing }

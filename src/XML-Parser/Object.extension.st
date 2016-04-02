@@ -1,6 +1,6 @@
 Extension { #name : #Object }
 
 { #category : #'*XML-Parser' }
-Object >> isConvertingStreamAdapter [
+Object >> isXMLConvertingStreamAdapter [
 	^ false
 ]

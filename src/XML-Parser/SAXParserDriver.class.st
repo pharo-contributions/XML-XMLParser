@@ -10,9 +10,10 @@ Class {
 		'scopeAllocator',
 		'doctypeDefinition',
 		'validator',
-		'externalSubsetURI',
 		'isStandalone',
-		'hasUnhandledReservedAttributes'
+		'hasUnhandledReservedAttributes',
+		'externalSubsetSystemID',
+		'externalSubsetPublicID'
 	],
 	#category : #'XML-Parser'
 }
@@ -20,6 +21,17 @@ Class {
 { #category : #'instance creation' }
 SAXParserDriver class >> saxHandler: aHandler [
 	^ self new setSAXHandler: aHandler
+]
+
+{ #category : #accessing }
+SAXParserDriver >> baseURI [
+	"returns a string with the current base URI at this stage of parsing"
+	self elementNester hasScopedAttributes
+		ifTrue: [
+			^ self elementNester
+				scopedAttributeAt: 'xml:base'
+				ifAbsent: [super baseURI]].
+	^ super baseURI.
 ]
 
 { #category : #private }
@@ -81,22 +93,6 @@ SAXParserDriver >> elementNesterClass [
 ]
 
 { #category : #private }
-SAXParserDriver >> endNestingOfElement: anElementName withScopedAttributes: anAttributeDictionary [
-	| base |
-
-	base :=
-		anAttributeDictionary
-			at: 'xml:base'
-			ifAbsent: [
-				self elementNester endElement: anElementName.
-				^ self].
-	(self elementNester
-		endElement: anElementName;
-		scopedAttributeAt: 'xml:base') = base
-			ifFalse: [self removeURI: base].
-]
-
-{ #category : #private }
 SAXParserDriver >> errorCharacterDataOutsideElement [
 	XMLWellFormednessException signal: 'Character data outside of element'
 ]
@@ -104,6 +100,14 @@ SAXParserDriver >> errorCharacterDataOutsideElement [
 { #category : #private }
 SAXParserDriver >> errorDocumentConstraintsRequired [
 	XMLValidationException signal: 'Document validation constraints required'
+]
+
+{ #category : #private }
+SAXParserDriver >> errorStandaloneUndeclaredGeneralEntity: aName [
+	XMLWellFormednessException
+		formatSignal:
+			'Undeclared general entity reference &{1}; in standalone document'
+		with: aName
 ]
 
 { #category : #private }
@@ -135,25 +139,14 @@ SAXParserDriver >> externalSubsetParserOn: aStringOrStream documentURI: aURIStri
 		on: aStringOrStream
 ]
 
-{ #category : #private }
-SAXParserDriver >> externalSubsetParserOnURI: aURIString [
-	| combinedURI |
-
-	combinedURI :=
-		self externalEntityResolver
-			combineSourceURI: self documentURI
-			withEntityURI: aURIString.
-
-	^ self
-		externalSubsetParserOn:
-			(XMLDecodingReadStreamAdapter on:
-				(self externalEntityResolver streamResolveEntityURI: combinedURI))
-		documentURI: combinedURI asString.
+{ #category : #accessing }
+SAXParserDriver >> externalSubsetPublicID [
+	^ externalSubsetPublicID
 ]
 
 { #category : #accessing }
-SAXParserDriver >> externalSubsetURI [
-	^ externalSubsetURI
+SAXParserDriver >> externalSubsetSystemID [
+	^ externalSubsetSystemID
 ]
 
 { #category : #'handling - dtd' }
@@ -214,9 +207,7 @@ SAXParserDriver >> handleEndContentEntityReplacement: aName [
 
 { #category : #'handling - dtd' }
 SAXParserDriver >> handleEndDTD [
-	(self resolvesExternalEntities
-		and: [self externalSubsetURI notEmpty
-			and: [self isValidating or: [self isStandalone not]]])
+	self hasExternalSubsetToParse
 		ifTrue: [self parseExternalSubset].
 
 	self saxHandler
@@ -238,14 +229,9 @@ SAXParserDriver >> handleEndTag: anElementName [
 	"performance critical method"
 	| prefix currentScope |
 
-	self elementNester hasScopedAttributes
-		ifTrue: [
-			self
-				endNestingOfElement: anElementName
-				withScopedAttributes: self elementNester currentScopedAttributes]
-		ifFalse: [self elementNester endElement: anElementName].
+	self elementNester endElement: anElementName.
 
-	prefix := anElementName prefixBeforeLocalName.
+	prefix := anElementName xmlPrefixBeforeLocalName.
 	self saxHandler 
 		endElement: anElementName
 		prefix: prefix
@@ -255,7 +241,7 @@ SAXParserDriver >> handleEndTag: anElementName [
 					(currentScope := self scopeAllocator exitScope)
 						resolvePrefix: prefix]
 				ifFalse: [''])
-		localName: (anElementName localNameAfterPrefix: prefix).
+		localName: (anElementName xmlLocalNameAfterPrefix: prefix).
 
 	currentScope ifNotNil: [
 		currentScope hasNamespaces
@@ -275,7 +261,7 @@ SAXParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicID sys
 						resolver: self externalEntityResolver
 						publicID: aPublicID
 						systemID: aSystemID
-						from: self currentURI]]
+						from: self baseURI]]
 		ifFalse: [
 			self doctypeDefinition
 				addUnparsedEntity: aName
@@ -293,7 +279,7 @@ SAXParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplaceme
 	self doctypeDefinition
 		addGeneralEntity: aName
 		replacement: aReplacement
-		from: self currentURI.
+		from: self baseURI.
 
 	self saxHandler
 		generalEntityDeclaration: aName
@@ -306,7 +292,10 @@ SAXParserDriver >> handleGeneralEntityReference: aName [
 		generalEntityAt: aName
 		ifAbsent: [
 			self isValidating
-				ifTrue: [self errorUndeclaredGeneralEntity: aName].
+				ifTrue: [self errorUndeclaredGeneralEntity: aName]
+				ifFalse: [
+					self isStandalone
+						ifTrue: [self errorStandaloneUndeclaredGeneralEntity: aName]].
 			nil]
 ]
 
@@ -347,7 +336,7 @@ SAXParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicID s
 				resolver: self externalEntityResolver
 				publicID: aPublicID
 				systemID: aSystemID
-				from: self currentURI].
+				from: self baseURI].
 
 	self saxHandler
 		parameterEntityDeclaration: aName
@@ -360,7 +349,7 @@ SAXParserDriver >> handleParameterEntityDeclaration: aName replacement: aReplace
 	self doctypeDefinition
 		addParameterEntity: aName
 		replacement:aReplacement
-		from: self currentURI.
+		from: self baseURI.
 
 	self saxHandler
 		parameterEntityDeclaration: aName
@@ -386,7 +375,11 @@ SAXParserDriver >> handleParseError: aString [
 SAXParserDriver >> handleReservedAttributes: anAttributeDictionary [
 	anAttributeDictionary
 		at: 'xml:base'
-		ifPresent: [:uri | self currentURI: uri].
+		ifPresent: [:uri |
+			"expand the new base URI using the current"
+			anAttributeDictionary
+				at: 'xml:base'
+				put: (self baseURI asXMLURI / uri) asString].
 	self isValidating
 		ifTrue: [self validator validateXMLIDAttributeIn: anAttributeDictionary].
 
@@ -409,7 +402,8 @@ SAXParserDriver >> handleStartContentEntityReplacement: aName [
 
 { #category : #'handling - dtd' }
 SAXParserDriver >> handleStartDTD: aRoot publicID: aPublicID systemID: aSystemID [
-	externalSubsetURI := aSystemID.
+	externalSubsetPublicID := aPublicID.
+	externalSubsetSystemID := aSystemID.
 
 	self doctypeDefinition root: aRoot.
 	self saxHandler
@@ -430,7 +424,7 @@ SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 
 	self elementNester startElement: anElementName.
 
-	prefix := anElementName prefixBeforeLocalName.
+	prefix := anElementName xmlPrefixBeforeLocalName.
 	totalAttributes := anAttributeDictionary size.
 	self usesNamespaces
 		ifTrue: [
@@ -465,7 +459,7 @@ SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 		startElement: anElementName
 		prefix: prefix
 		uri: (namespaceURI ifNil: [''])
-		localName: (anElementName localNameAfterPrefix: prefix)
+		localName: (anElementName xmlLocalNameAfterPrefix: prefix)
 		attributes: anAttributeDictionary.
 
 	currentScope
@@ -495,6 +489,19 @@ SAXParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: a
 		standalone: isStandalone.
 ]
 
+{ #category : #testing }
+SAXParserDriver >> hasExternalSubsetToParse [
+	self resolvesExternalEntities
+		ifFalse: [^ false].
+
+	(self externalSubsetPublicID notEmpty
+		or: [self externalSubsetSystemID notEmpty])
+		ifFalse: [^ false].
+	
+	^ self isValidating
+		or: [self isStandalone not].
+]
+
 { #category : #private }
 SAXParserDriver >> hasUnhandledReservedAttributes [
 	^ hasUnhandledReservedAttributes
@@ -503,11 +510,6 @@ SAXParserDriver >> hasUnhandledReservedAttributes [
 { #category : #private }
 SAXParserDriver >> haveUnhandledReservedAttributes [
 	hasUnhandledReservedAttributes := true
-]
-
-{ #category : #initialization }
-SAXParserDriver >> initialContext [
-	^ XMLXMLDeclarationContext new
 ]
 
 { #category : #testing }
@@ -527,7 +529,25 @@ SAXParserDriver >> maxEntityReplacementDepth [
 
 { #category : #private }
 SAXParserDriver >> parseExternalSubset [
-	(self externalSubsetParserOnURI: self externalSubsetURI) parseDocument
+	| externalSubsetURI externalSubsetStream |
+
+	externalSubsetURI :=
+		self externalEntityResolver
+			entityURIFromPublicID: self externalSubsetPublicID
+			systemID: self externalSubsetSystemID
+			baseURI: self baseURI.
+
+	"External subsets are stream-resolved so if they are local (stored on disk),
+	they aren't kept entirely in memory during parsing. HTTP entities will be
+	kept in memory regardless and this will just return a read stream on them."
+	externalSubsetStream :=
+		self externalEntityResolver streamResolveEntityURI: externalSubsetURI.
+
+	(self
+		externalSubsetParserOn:
+			(XMLDecodingReadStreamAdapter on: externalSubsetStream)
+		documentURI: externalSubsetURI asString)
+		parseDocument.
 ]
 
 { #category : #testing }
@@ -578,7 +598,8 @@ SAXParserDriver >> setSAXHandler: aHandler [
 	elementNester := self elementNesterClass new.
 	doctypeDefinition := DTDDoctypeDefinition new.
 	validator := (aHandler schema ifNil: [doctypeDefinition]) newValidator.
-	externalSubsetURI := ''.
+	externalSubsetPublicID := ''.
+	externalSubsetSystemID := ''.
 	isStandalone := false.
 	hasUnhandledReservedAttributes := false.
 ]

@@ -33,7 +33,7 @@ XMLAttribute >> element: anElement [
 
 { #category : #accessing }
 XMLAttribute >> expandedName [
-	^ self localName expandWithNamespaceURI: self namespaceURI
+	^ self localName expandWithXMLNamespaceURI: self namespaceURI
 ]
 
 { #category : #testing }
@@ -52,7 +52,9 @@ XMLAttribute >> hasNamespaceURI [
 
 { #category : #testing }
 XMLAttribute >> hasPrefix [
-	^ self name hasPrefixBeforeLocalName
+	^ (self name
+		indexOf: $:
+		startingAt: 2) > 0
 ]
 
 { #category : #testing }
@@ -70,20 +72,20 @@ XMLAttribute >> isInLanguage: aLanguage [
 { #category : #testing }
 XMLAttribute >> isNamed: aName [
 	^ aName
-		isQualifiedName: self name
+		isXMLQualifiedName: self name
 		orLocalName: self localName
 ]
 
 { #category : #testing }
 XMLAttribute >> isNamedAny: aNameCollection [
 	^ aNameCollection
-		includesQualifiedName: self name
+		includesXMLQualifiedName: self name
 		orLocalName: self localName
 ]
 
 { #category : #accessing }
 XMLAttribute >> localName [
-	^ self name localNameAfterPrefix
+	^ self name xmlLocalNameAfterPrefix
 ]
 
 { #category : #accessing }
@@ -109,12 +111,12 @@ XMLAttribute >> namespaceURI [
 
 { #category : #accessing }
 XMLAttribute >> prefix [
-	^ self name prefixBeforeLocalName
+	^ self name xmlPrefixBeforeLocalName
 ]
 
 { #category : #accessing }
 XMLAttribute >> prefix: aPrefix [
-	self renameWith: [name := self localName qualifyWithPrefix:  aPrefix]
+	self renameWith: [name := self localName qualifyWithXMLPrefix:  aPrefix]
 ]
 
 { #category : #private }

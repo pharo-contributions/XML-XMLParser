@@ -5,20 +5,15 @@ Class {
 	#name : #XMLParserDriver,
 	#superclass : #Object,
 	#instVars : [
-		'uris'
+		'entityURIStack'
 	],
 	#category : #'XML-Parser'
 }
 
 { #category : #accessing }
-XMLParserDriver >> currentURI [
-	"returns a string with the current URI at this stage of parsing"
-	^ self uris lastOrNil ifNil: [self documentURI]
-]
-
-{ #category : #accessing }
-XMLParserDriver >> currentURI: aURIString [
-	self uris addLast: aURIString
+XMLParserDriver >> baseURI [
+	"returns a string with the current base URI at this stage of parsing"
+	^ self entityURIStack xmlLastOrNil ifNil: [self documentURI]
 ]
 
 { #category : #testing }
@@ -27,13 +22,13 @@ XMLParserDriver >> decodesCharacters [
 ]
 
 { #category : #accessing }
-XMLParserDriver >> doctypeDefinition [
+XMLParserDriver >> documentURI [
 	^ nil
 ]
 
-{ #category : #accessing }
-XMLParserDriver >> documentURI [
-	^ nil
+{ #category : #private }
+XMLParserDriver >> entityURIStack [
+	^ entityURIStack ifNil: [entityURIStack := OrderedCollection new]
 ]
 
 { #category : #'handling - dtd' }
@@ -143,24 +138,32 @@ XMLParserDriver >> handleWhitespace: aString [
 XMLParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
 ]
 
-{ #category : #initialization }
-XMLParserDriver >> initialContext [
-	^ nil
+{ #category : #'instance creation' }
+XMLParserDriver >> newInitialContext [
+	^ XMLXMLDeclarationContext new
 ]
 
-{ #category : #testing }
-XMLParserDriver >> isParsingExternalSubset [
-	^ false
+{ #category : #'instance creation' }
+XMLParserDriver >> newTokenizerOn: aStringOrStream [
+	^ self tokenizerClass
+		driver: self
+		on: aStringOrStream
+		readLimit: self readLimit
 ]
 
-{ #category : #testing }
-XMLParserDriver >> isValidating [
-	^ false
+{ #category : #accessing }
+XMLParserDriver >> popEntityURI: aURI [
+	"remove: removes the first match"
+	self entityURIStack removeAt:
+		(self entityURIStack
+			lastIndexOf: aURI
+			ifAbsent: [^ aURI]).
+	^ aURI.
 ]
 
-{ #category : #testing }
-XMLParserDriver >> preservesUndeclaredEntityReferences [
-	^ false
+{ #category : #accessing }
+XMLParserDriver >> pushEntityURI: aURIString [
+	^ self entityURIStack addLast: aURIString
 ]
 
 { #category : #accessing }
@@ -168,44 +171,7 @@ XMLParserDriver >> readLimit [
 	^ nil
 ]
 
-{ #category : #accessing }
-XMLParserDriver >> removeURI: aURI [
-	"remove: removes the first match"
-	self uris removeAt:
-		(self uris
-			lastIndexOf: aURI
-			ifAbsent: [^ self])
-]
-
-{ #category : #testing }
-XMLParserDriver >> replacesContentEntityReferences [
-	^ true
-]
-
-{ #category : #testing }
-XMLParserDriver >> resolvesExternalEntities [
-	^ false
-]
-
 { #category : #private }
 XMLParserDriver >> tokenizerClass [
 	^ XMLWellFormedParserTokenizer
-]
-
-{ #category : #initialization }
-XMLParserDriver >> tokenizerOn: aStringOrStream [
-	^ self tokenizerClass
-		driver: self
-		on: aStringOrStream
-		readLimit: self readLimit
-]
-
-{ #category : #private }
-XMLParserDriver >> uris [
-	^ uris ifNil: [uris := OrderedCollection new]
-]
-
-{ #category : #testing }
-XMLParserDriver >> usesNamespaces [
-	^ true
 ]

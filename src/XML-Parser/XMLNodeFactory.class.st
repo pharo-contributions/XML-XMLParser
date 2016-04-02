@@ -35,9 +35,9 @@ XMLNodeFactory >> classForElement: aQualifiedName namespaceURI: aURI [
 
 	^ self
 		classForElement: aQualifiedName
-		prefix: (prefix := aQualifiedName prefixBeforeLocalName)
+		prefix: (prefix := aQualifiedName xmlPrefixBeforeLocalName)
 		uri: aURI
-		localName: (aQualifiedName localNameAfterPrefix: prefix)
+		localName: (aQualifiedName xmlLocalNameAfterPrefix: prefix)
 ]
 
 { #category : #accessing }

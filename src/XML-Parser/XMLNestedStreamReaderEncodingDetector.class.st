@@ -19,7 +19,7 @@ XMLNestedStreamReaderEncodingDetector class >> on: aStreamReader [
 { #category : #private }
 XMLNestedStreamReaderEncodingDetector >> canSkipDetection [
 	^ super canSkipDetection
-		or: [stream isConvertingStreamAdapter
+		or: [stream isXMLConvertingStreamAdapter
 			and: [stream hasDefaultStreamConverter not]]
 ]
 

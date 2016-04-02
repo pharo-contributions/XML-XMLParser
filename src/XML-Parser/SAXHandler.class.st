@@ -364,8 +364,9 @@ SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aL
 
 { #category : #'handling - lexical' }
 SAXHandler >> endEntity: anEntityName [
-	"This call corresponds to the Java SAX ext call
-	endEntity(java.lang.String name)."
+	"Handles the end of some general entity's replacement in content.
+	Not sent if the entity is undeclared or if content entity replacement
+	is disabled."
 ]
 
 { #category : #'handling - content' }
@@ -710,8 +711,9 @@ SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: 
 
 { #category : #'handling - lexical' }
 SAXHandler >> startEntity: anEntityName [
-	"This call corresponds to the Java SAX ext call
-	startEntity(java.lang.String name)."
+	"Handles the start of some general entity's replacement in content.
+	Not sent if the entity is undeclared or if content entity replacement
+	is disabled."
 ]
 
 { #category : #'handling - content' }
@@ -735,7 +737,7 @@ SAXHandler >> usesNamespaces: aBoolean [
 	self configuration usesNamespaces: aBoolean
 ]
 
-{ #category : #'handling - content' }
+{ #category : #'handling - lexical' }
 SAXHandler >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
 	"Handles the '<?xml ...?>' declaration of a document.
 	

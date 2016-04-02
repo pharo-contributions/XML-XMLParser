@@ -101,7 +101,9 @@ DTDParsedEntity >> replacement [
 
 { #category : #accessing }
 DTDParsedEntity >> replacementStream [
-	^ self replacement readStream
+	self isExternal
+		ifTrue: [^ XMLDecodingReadStreamAdapter on: self replacement readStream]
+		ifFalse: [^ self replacement readStream]
 ]
 
 { #category : #initialization }

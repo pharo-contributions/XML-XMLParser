@@ -46,25 +46,10 @@ String >> asXMLURI [
 ]
 
 { #category : #'*XML-Parser' }
-String >> expandWithNamespaceURI: aURI [
+String >> expandWithXMLNamespaceURI: aURI [
 	aURI size > 0
 		ifTrue: [^ 'Q{', aURI, '}', self]
 		ifFalse: [^ self]
-]
-
-{ #category : #'*XML-Parser' }
-String >> hasPrefixBeforeLocalName [
-	^ (self
-		indexOf: $:
-		startingAt: 2) > 0
-]
-
-{ #category : #'*XML-Parser' }
-String >> isQualifiedName: aQualifiedName orLocalName: aLocalName [
-	"optimized"
-	^ self = aQualifiedName
-		or: [(aQualifiedName size > aLocalName size)
-			and: [self = aLocalName]]
 ]
 
 { #category : #'*XML-Parser' }
@@ -112,18 +97,39 @@ String >> isXMLNmtoken [
 ]
 
 { #category : #'*XML-Parser' }
+String >> isXMLQualifiedName: aQualifiedName orLocalName: aLocalName [
+	"optimized"
+	^ self = aQualifiedName
+		or: [(aQualifiedName size > aLocalName size)
+			and: [self = aLocalName]]
+]
+
+{ #category : #'*XML-Parser' }
 String >> isXMLReservedAttributeName [
 	^ self size > 4
 		and: [self beginsWith: 'xml:']
 ]
 
 { #category : #'*XML-Parser' }
-String >> localNameAfterPrefix [
-	^ self localNameAfterPrefix: self prefixBeforeLocalName
+String >> parseXML [
+	^ XMLDOMParser parse: self
 ]
 
 { #category : #'*XML-Parser' }
-String >> localNameAfterPrefix: aPrefix [
+String >> qualifyWithXMLPrefix: aPrefix [
+	"optimized"
+	aPrefix size > 0
+		ifTrue: [^ (aPrefix copyWith: $:), self]
+		ifFalse: [^ self]
+]
+
+{ #category : #'*XML-Parser' }
+String >> xmlLocalNameAfterPrefix [
+	^ self xmlLocalNameAfterPrefix: self xmlPrefixBeforeLocalName
+]
+
+{ #category : #'*XML-Parser' }
+String >> xmlLocalNameAfterPrefix: aPrefix [
 	"optimized"
 	| prefixSize |
 
@@ -133,12 +139,7 @@ String >> localNameAfterPrefix: aPrefix [
 ]
 
 { #category : #'*XML-Parser' }
-String >> parseXML [
-	^ XMLDOMParser parse: self
-]
-
-{ #category : #'*XML-Parser' }
-String >> prefixBeforeLocalName [
+String >> xmlPrefixBeforeLocalName [
 	"Split the name into namespace prefix
 	(Optimized code)"
 	| i |
@@ -153,19 +154,11 @@ String >> prefixBeforeLocalName [
 ]
 
 { #category : #'*XML-Parser' }
-String >> prefixBeforeLocalName: aLocalName [
+String >> xmlPrefixBeforeLocalName: aLocalName [
 	"optimized"
 	| prefixSize |
 
 	(prefixSize := self size - aLocalName size - 1) > 0
 		ifTrue: [^ self copyFrom: 1 to: prefixSize]
 		ifFalse: [^ '']
-]
-
-{ #category : #'*XML-Parser' }
-String >> qualifyWithPrefix: aPrefix [
-	"optimized"
-	aPrefix size > 0
-		ifTrue: [^ (aPrefix copyWith: $:), self]
-		ifFalse: [^ self]
 ]
