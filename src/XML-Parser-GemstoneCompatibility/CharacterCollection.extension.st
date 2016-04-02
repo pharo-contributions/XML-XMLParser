@@ -46,25 +46,10 @@ CharacterCollection >> asXMLURI [
 ]
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
-CharacterCollection >> expandWithNamespaceURI: aURI [
+CharacterCollection >> expandWithXMLNamespaceURI: aURI [
 	aURI size > 0
 		ifTrue: [^ 'Q{', aURI, '}', self]
 		ifFalse: [^ self]
-]
-
-{ #category : #'*XML-Parser-GemstoneCompatibility' }
-CharacterCollection >> hasPrefixBeforeLocalName [
-	^ (self
-		indexOf: $:
-		startingAt: 2) > 0
-]
-
-{ #category : #'*XML-Parser-GemstoneCompatibility' }
-CharacterCollection >> isQualifiedName: aQualifiedName orLocalName: aLocalName [
-	"optimized"
-	^ self = aQualifiedName
-		or: [(aQualifiedName size > aLocalName size)
-			and: [self = aLocalName]]
 ]
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
@@ -112,18 +97,39 @@ CharacterCollection >> isXMLNmtoken [
 ]
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
+CharacterCollection >> isXMLQualifiedName: aQualifiedName orLocalName: aLocalName [
+	"optimized"
+	^ self = aQualifiedName
+		or: [(aQualifiedName size > aLocalName size)
+			and: [self = aLocalName]]
+]
+
+{ #category : #'*XML-Parser-GemstoneCompatibility' }
 CharacterCollection >> isXMLReservedAttributeName [
 	^ self size > 4
 		and: [self beginsWith: 'xml:']
 ]
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
-CharacterCollection >> localNameAfterPrefix [
-	^ self localNameAfterPrefix: self prefixBeforeLocalName
+CharacterCollection >> parseXML [
+	^ XMLDOMParser parse: self
 ]
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
-CharacterCollection >> localNameAfterPrefix: aPrefix [
+CharacterCollection >> qualifyWithXMLPrefix: aPrefix [
+	"optimized"
+	aPrefix size > 0
+		ifTrue: [^ (aPrefix copyWith: $:), self]
+		ifFalse: [^ self]
+]
+
+{ #category : #'*XML-Parser-GemstoneCompatibility' }
+CharacterCollection >> xmlLocalNameAfterPrefix [
+	^ self xmlLocalNameAfterPrefix: self xmlPrefixBeforeLocalName
+]
+
+{ #category : #'*XML-Parser-GemstoneCompatibility' }
+CharacterCollection >> xmlLocalNameAfterPrefix: aPrefix [
 	"optimized"
 	| prefixSize |
 
@@ -133,12 +139,7 @@ CharacterCollection >> localNameAfterPrefix: aPrefix [
 ]
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
-CharacterCollection >> parseXML [
-	^ XMLDOMParser parse: self
-]
-
-{ #category : #'*XML-Parser-GemstoneCompatibility' }
-CharacterCollection >> prefixBeforeLocalName [
+CharacterCollection >> xmlPrefixBeforeLocalName [
 	"Split the name into namespace prefix
 	(Optimized code)"
 	| i |
@@ -153,19 +154,11 @@ CharacterCollection >> prefixBeforeLocalName [
 ]
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
-CharacterCollection >> prefixBeforeLocalName: aLocalName [
+CharacterCollection >> xmlPrefixBeforeLocalName: aLocalName [
 	"optimized"
 	| prefixSize |
 
 	(prefixSize := self size - aLocalName size - 1) > 0
 		ifTrue: [^ self copyFrom: 1 to: prefixSize]
 		ifFalse: [^ '']
-]
-
-{ #category : #'*XML-Parser-GemstoneCompatibility' }
-CharacterCollection >> qualifyWithPrefix: aPrefix [
-	"optimized"
-	aPrefix size > 0
-		ifTrue: [^ (aPrefix copyWith: $:), self]
-		ifFalse: [^ self]
 ]
