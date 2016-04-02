@@ -148,7 +148,7 @@ XMLExternalDocumentConverter >> setStream: aStream readLimit: aReadLimit [
 	streamReader :=
 		XMLNestedStreamReader
 			on:
-				(aStream isConvertingStreamAdapter
+				(aStream isXMLConvertingStreamAdapter
 					ifTrue: [aStream]
 					ifFalse: [XMLDecodingReadStreamAdapter on: aStream])
 			readLimit: aReadLimit.
