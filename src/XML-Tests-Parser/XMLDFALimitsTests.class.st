@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLDFALimitsTests,
 	#superclass : #TestCase,
-	#category : #'XML-Tests-Parser'
+	#category : #'XML-Tests-Parser-Validation-DFA'
 }
 
 { #category : #tests }

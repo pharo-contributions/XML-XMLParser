@@ -529,20 +529,6 @@ XMLParserTest >> testAttributeRedundance [
 ]
 
 { #category : #tests }
-XMLParserTest >> testAttributeReserved [
-	| xml document |
-
-	xml := '<a xml="one" xmll="two" xml:="three" xmlnss="four"></a>'.
-	document := XMLDOMParser parse: xml usingNamespaces: true.
-
-	self
-		assert: (document root attributeAt: 'xml') = 'one';
-		assert: (document root attributeAt: 'xmll') = 'two';
-		assert: (document root attributeAt: 'xml:') = 'three';
-		assert: (document root attributeAt: 'xmlnss') = 'four'.
-]
-
-{ #category : #tests }
 XMLParserTest >> testAttributeUndeclared [
 	self
 		shouldnt: [
@@ -610,6 +596,46 @@ XMLParserTest >> testAttributeValueWithAngleBrackets [
 	self
 		shouldnt: [SAXHandler parse: '<test name=''&lt;test name="value"/>''/>']
 		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeXMLBase [
+	| document |
+
+	document :=
+		XMLDOMParser parse: '
+			<one xml:base="a/b">
+				<two xml:base="c/d">
+					<three xml:base="/e/f">test</three>
+					<four xml:base=""><!--resolved as inherited base--> 
+						<five/><!--no base attribute-->
+					</four>
+				</two>
+			</one>'.
+	self assert:
+		(document allElementsCollect: [:each | each attributeAt: 'xml:base']) asArray =
+			#('a/b' 'a/c/d' '/e/f' 'a/c/d' '').
+
+	"resolution should not cause decoding/encoding"
+	document :=
+		XMLDOMParser parse: '
+			<one xml:base="[%61]/{%62}">
+				<two xml:base="{%63}/(%64)">
+					<three xml:base="/!%65!/|%66|">test</three>
+				</two>
+			</one>'.
+	self assert:
+		(document allElementsCollect: [:each | each attributeAt: 'xml:base']) asArray =
+			#('[%61]/{%62}' '[%61]/{%63}/(%64)' '/!%65!/|%66|').
+
+	document :=
+		XMLDOMParser
+			parse:
+				'<one xml:base=""><!--resolved as inherited base-->
+					<two/><!--no base attribute-->
+				</one>'
+			documentURI: 'doc.xml'.
+	self assert: (document root attributeAt: 'xml:base') = 'doc.xml'.
 ]
 
 { #category : #tests }
@@ -682,6 +708,20 @@ XMLParserTest >> testAttributeXMLIDValidation [
 				isValidating: false;
 				parseDocument]
 		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeXMLReserved [
+	| xml document |
+
+	xml := '<a xml="one" xmll="two" xml:="three" xmlnss="four"></a>'.
+	document := XMLDOMParser parse: xml usingNamespaces: true.
+
+	self
+		assert: (document root attributeAt: 'xml') = 'one';
+		assert: (document root attributeAt: 'xmll') = 'two';
+		assert: (document root attributeAt: 'xml:') = 'three';
+		assert: (document root attributeAt: 'xmlnss') = 'four'.
 ]
 
 { #category : #tests }
@@ -1197,21 +1237,63 @@ XMLParserTest >> testElementBadName [
 ]
 
 { #category : #tests }
-XMLParserTest >> testElementContentModelBad [
-	#('<!DOCTYPE root [<!ELEMENT root ()>]>'
-		'<!DOCTYPE root [<!ELEMENT root (one,)>]>'
-		'<!DOCTYPE root [<!ELEMENT root (one|)>]>'
-		'<!DOCTYPE root [<!ELEMENT root (one)(two)>]>'
-		'<!DOCTYPE root [<!ELEMENT root (one|,two)>]>'
-	) do: [:each |
-		self
-			should: [SAXHandler parse: each]
-			raise: XMLWellFormednessException].
+XMLParserTest >> testElementContentModelBadBinaryOperator [
+	#('<!DOCTYPE a [<!ELEMENT a (,b)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b,)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (,b c)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b c,)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (|b)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b|)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (|b c)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b c|)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b, c | d)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b | c, d)>]>')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: each, '<a></a>')
+						isValidating: false;
+						parseDocument]
+				raise: XMLWellFormednessException]
+]
 
-	'|,?*+' do: [:each |
-		self
-			should: [SAXHandler parse: '<!DOCTYPE root [<!ELEMENT root (', each asString, 'one)>]>']
-			raise: XMLWellFormednessException].
+{ #category : #tests }
+XMLParserTest >> testElementContentModelBadParenthesis [
+	#('<!DOCTYPE a [<!ELEMENT a b>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b>]>'
+		'<!DOCTYPE a [<!ELEMENT a b)>]>'
+		'<!DOCTYPE a [<!ELEMENT a ((b)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b))>]>')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: each, '<a></a>')
+						isValidating: false;
+						parseDocument]
+				raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
+XMLParserTest >> testElementContentModelBadUnaryOperator [
+	#('<!DOCTYPE a [<!ELEMENT a (?b)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (*b)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (+b)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b??)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b**)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b++)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b?*)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b?+)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b*?)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b*+)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b+?)>]>'
+		'<!DOCTYPE a [<!ELEMENT a (b+*)>]>')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: each, '<a></a>')
+						isValidating: false;
+						parseDocument]
+				raise: XMLWellFormednessException]
 ]
 
 { #category : #tests }
@@ -1708,6 +1790,93 @@ XMLParserTest >> testEntityDeclarationWhitespace [
 ]
 
 { #category : #tests }
+XMLParserTest >> testEntityExternalResolution [
+	| xml entities |
+
+	xml := '
+		<!DOCTYPE test [
+			<!ENTITY % extern SYSTEM "/base/extern.ent">
+			%extern;
+			%extern2;
+			%extern3;
+		]>
+		<test>&extern4;</test>'.
+	entities :=
+		Array
+			with: '/base/extern.ent' -> '<!ENTITY % extern2 SYSTEM "sub/extern2.ent">'
+			with: '/base/sub/extern2.ent' -> '<!ENTITY % extern3 SYSTEM "./extern3.ent">'
+			with: '/base/sub/extern3.ent' -> '<!ENTITY extern4 "test">'.
+	1 to: entities size - 1 do: [:i |
+		self
+			should: [
+				(SAXHandler on: xml)
+					externalEntityResolver:
+						(DTDPluggableExternalEntityResolver entities:
+							(entities copyFrom: 1 to: i));
+					resolvesExternalEntities: true;
+					parseDocument]
+			raise: XMLParserException].
+	self
+		should: [
+			(SAXHandler on: xml)
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver entities: entities);
+				resolvesExternalEntities: false;
+				parseDocument]
+		raise: XMLParserException.
+	self
+		shouldnt: [
+			(SAXHandler on: xml)
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver entities: entities);
+				resolvesExternalEntities: true;
+				parseDocument]
+		raise: XMLParserException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityExternalSubsetResolution [
+	| xml entities |
+
+	xml := '<!DOCTYPE test SYSTEM "/base/extern.ent"><test>&extern4;</test>'.
+	entities :=
+		Array
+			with:
+				'/base/extern.ent' ->
+					'<!ENTITY % extern2 SYSTEM "sub/extern2.ent">
+					%extern2;
+					%extern3;'
+			with: '/base/sub/extern2.ent' -> '<!ENTITY % extern3 SYSTEM "./extern3.ent">'
+			with: '/base/sub/extern3.ent' -> '<!ENTITY extern4 "test">'.
+	1 to: entities size - 1 do: [:i |
+		self
+			should: [
+				(SAXHandler on: xml)
+					externalEntityResolver:
+						(DTDPluggableExternalEntityResolver entities:
+							(entities copyFrom: 1 to: i));
+					resolvesExternalEntities: true;
+					parseDocument]
+			raise: XMLParserException].
+	self
+		should: [
+			(SAXHandler on: xml)
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver entities: entities);
+				resolvesExternalEntities: false;
+				parseDocument]
+		raise: XMLParserException.
+	self
+		shouldnt: [
+			(SAXHandler on: xml)
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver entities: entities);
+				resolvesExternalEntities: true;
+				parseDocument]
+		raise: XMLParserException.
+]
+
+{ #category : #tests }
 XMLParserTest >> testEntityLiteralContextNesting [
 	| xml inner outer document |
 
@@ -2003,22 +2172,22 @@ XMLParserTest >> testEntityURIInheritance [
 					replacement: '<!ENTITY second "<!--comment-->">'
 					uri: 'test.ent').
 
-	self assert: driver currentURI = 'test.xml'.
+	self assert: driver baseURI = 'test.xml'.
 
 	3 timesRepeat: [parser parseToken].
-	self assert: driver currentURI = 'test.ent'.
+	self assert: driver baseURI = 'test.ent'.
 
 	2 timesRepeat: [parser parseToken].
-	self assert: driver currentURI = 'test.xml'.
+	self assert: driver baseURI = 'test.xml'.
 	
 	"internal entities (declared in the internal subset or in an external DTD)
 	can't change abase URI according to the xml:base spec"
 	2 timesRepeat: [parser parseToken].
-	self assert: driver currentURI = '/new/xml'.
+	self assert: driver baseURI = '/new/xml'.
 
 	3 timesRepeat: [parser parseToken].
 	self
-		assert: driver currentURI = 'test.xml';
+		assert: driver baseURI = 'test.xml';
 		assert: parser atEnd.
 ]
 
@@ -2059,6 +2228,35 @@ XMLParserTest >> testEntityUndeclaredAndPreserved [
 		assert: document doctypeDeclaration firstNode replacement = '&undeclaredOne;';
 		assert: (document root attributeAt: 'name') = '"&undeclaredTwo;"';
 		assert: (document root contentString) = '<&undeclaredThree;>'.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityUndeclaredStandalone [
+	| xml |
+
+	xml := '
+		<!DOCTYPE root [
+			<!ENTITY declared "">
+		]>
+		<root>&undeclared;</root>'.
+	self
+		should: [SAXHandler parse: xml]
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: '<?xml version="1.0" standalone="yes"?>', xml]
+		raise: XMLValidationException.
+	self
+		should: [
+			(SAXHandler on: '<?xml version="1.0" standalone="yes"?>', xml)
+				isValidating: false;
+				parseDocument]
+		raise: XMLWellFormednessException.
+	self
+		shouldnt: [
+			(SAXHandler on: '<?xml version="1.0" standalone="no"?>', xml)
+				isValidating: false;
+				parseDocument]
+		raise: XMLParserException.
 ]
 
 { #category : #tests }
@@ -2742,7 +2940,7 @@ XMLParserTest >> testWhitespacePreservationValidation [
 ]
 
 { #category : #tests }
-XMLParserTest >> testXMLDeclarationEncodingNameChar [
+XMLParserTest >> testXMLDeclarationEncodingNameBadChar [
 	| validChars |
 
 	validChars := '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_.-'.
@@ -2802,8 +3000,11 @@ XMLParserTest >> testXMLDeclarationUnterminated [
 		'<?xml ?>'
 		'<?xml version'
 		'<?xml version='
+		'<?xml version=""?>'
 		'<?xml version="1.0'
 		'<?xml version="1.0" encoding'
+		'<?xml version="1.0" encoding='
+		'<?xml version="1.0" encoding=""?>'
 		'<?xml version="1.0" encoding="UTF-8'
 		'<?xml version="1.0" encoding="UTF-8" standalone'
 		'<?xml version="1.0" encoding="UTF-8" standalone="yes'

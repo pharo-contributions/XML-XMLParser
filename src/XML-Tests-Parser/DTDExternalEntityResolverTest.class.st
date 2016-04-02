@@ -115,3 +115,19 @@ DTDExternalEntityResolverTest >> testResolvesLocalFromNonLocal [
 		assert: (resolver resolvesLocalFromNonLocal: true) == resolver;
 		assert: resolver resolvesLocalFromNonLocal.
 ]
+
+{ #category : #tests }
+DTDExternalEntityResolverTest >> testTotalResolvedEntities [
+	| resolver |
+
+	resolver := self newResolver.
+	self assert: resolver totalResolvedEntities = 0.
+
+	resolver incrementTotalResolvedEntities.
+	self assert: resolver totalResolvedEntities = 1.
+
+	self assert:
+		(self newResolver
+			incrementTotalResolvedEntities;
+			totalResolvedEntities) = 1.
+]

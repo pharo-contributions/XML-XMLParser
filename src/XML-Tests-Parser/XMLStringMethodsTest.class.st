@@ -127,32 +127,9 @@ XMLStringMethodsTest >> testAsXMLString [
 ]
 
 { #category : #tests }
-XMLStringMethodsTest >> testHasPrefixBeforeLocalName [
-	self
-		deny: 'name' hasPrefixBeforeLocalName;
-		deny: ':name' hasPrefixBeforeLocalName;
-		assert: 'prefix:name' hasPrefixBeforeLocalName;
-		assert: '::name' hasPrefixBeforeLocalName;
-		assert: 'invalid:prefix:name' hasPrefixBeforeLocalName;
-		assert: ':::name' hasPrefixBeforeLocalName;
-		assert: ':invalid:prefix:name' hasPrefixBeforeLocalName.
-]
-
-{ #category : #tests }
-XMLStringMethodsTest >> testIsQualifiedNameOrLocalName [
-	self
-		assert: ('name' isQualifiedName: 'name' orLocalName: 'name');
-		assert: ('name' isQualifiedName: 'prefix:name' orLocalName: 'name');
-		assert: ('prefix:name' isQualifiedName: 'prefix:name' orLocalName: 'name');
-		deny: ('name' isQualifiedName: 'different' orLocalName: 'different');
-		deny: ('name' isQualifiedName: 'prefix:different' orLocalName: 'different');
-		deny: ('prefix:name' isQualifiedName: 'prefix:different' orLocalName: 'different').
-]
-
-{ #category : #tests }
 XMLStringMethodsTest >> testIsXMLNCName [
 	self badNCNames do: [:each |
-		self deny: each isXMLNCName].
+		self deny: each isXMLNCName]
 ]
 
 { #category : #tests }
@@ -174,15 +151,14 @@ XMLStringMethodsTest >> testIsXMLNmtoken [
 ]
 
 { #category : #tests }
-XMLStringMethodsTest >> testLocalNameAfterPrefix [
+XMLStringMethodsTest >> testIsXMLQualifiedNameOrLocalName [
 	self
-		assert: 'name' localNameAfterPrefix = 'name';
-		assert: ':name' localNameAfterPrefix = ':name';
-		assert: 'prefix:name' localNameAfterPrefix = 'name';
-		assert: '::name' localNameAfterPrefix = 'name';
-		assert: 'invalid:prefix:name' localNameAfterPrefix = 'name';
-		assert: ':::name' localNameAfterPrefix = 'name';
-		assert: ':invalid:prefix:name' localNameAfterPrefix = 'name'.
+		assert: ('name' isXMLQualifiedName: 'name' orLocalName: 'name');
+		assert: ('name' isXMLQualifiedName: 'prefix:name' orLocalName: 'name');
+		assert: ('prefix:name' isXMLQualifiedName: 'prefix:name' orLocalName: 'name');
+		deny: ('name' isXMLQualifiedName: 'different' orLocalName: 'different');
+		deny: ('name' isXMLQualifiedName: 'prefix:different' orLocalName: 'different');
+		deny: ('prefix:name' isXMLQualifiedName: 'prefix:different' orLocalName: 'different').
 ]
 
 { #category : #tests }
@@ -194,13 +170,25 @@ XMLStringMethodsTest >> testParseXML [
 ]
 
 { #category : #tests }
-XMLStringMethodsTest >> testPrefixBeforeLocalName [
+XMLStringMethodsTest >> testXMLLocalNameAfterPrefix [
 	self
-		assert: 'name' prefixBeforeLocalName = '';
-		assert: ':name' prefixBeforeLocalName = '';
-		assert: 'prefix:name' prefixBeforeLocalName = 'prefix';
-		assert: '::name' prefixBeforeLocalName = ':';
-		assert: 'invalid:prefix:name' prefixBeforeLocalName = 'invalid:prefix';
-		assert: ':::name' prefixBeforeLocalName = '::';
-		assert: ':invalid:prefix:name' prefixBeforeLocalName = ':invalid:prefix'.
+		assert: 'name' xmlLocalNameAfterPrefix = 'name';
+		assert: ':name' xmlLocalNameAfterPrefix = ':name';
+		assert: 'prefix:name' xmlLocalNameAfterPrefix = 'name';
+		assert: '::name' xmlLocalNameAfterPrefix = 'name';
+		assert: 'invalid:prefix:name' xmlLocalNameAfterPrefix = 'name';
+		assert: ':::name' xmlLocalNameAfterPrefix = 'name';
+		assert: ':invalid:prefix:name' xmlLocalNameAfterPrefix = 'name'.
+]
+
+{ #category : #tests }
+XMLStringMethodsTest >> testXMLPrefixBeforeLocalName [
+	self
+		assert: 'name' xmlPrefixBeforeLocalName = '';
+		assert: ':name' xmlPrefixBeforeLocalName = '';
+		assert: 'prefix:name' xmlPrefixBeforeLocalName = 'prefix';
+		assert: '::name' xmlPrefixBeforeLocalName = ':';
+		assert: 'invalid:prefix:name' xmlPrefixBeforeLocalName = 'invalid:prefix';
+		assert: ':::name' xmlPrefixBeforeLocalName = '::';
+		assert: ':invalid:prefix:name' xmlPrefixBeforeLocalName = ':invalid:prefix'.
 ]

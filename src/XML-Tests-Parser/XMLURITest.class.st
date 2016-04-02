@@ -1,6 +1,13 @@
 Class {
 	#name : #XMLURITest,
 	#superclass : #TestCase,
+	#instVars : [
+		'reservedCharacters',
+		'unreservedCharacters',
+		'asciiCharacters',
+		'percentEncodedASCIICharacters',
+		'percentEncodedReservedCharacters'
+	],
 	#category : #'XML-Tests-Parser-URI'
 }
 
@@ -165,9 +172,16 @@ XMLURITest >> alphaNumericCharacters [
 	^ 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 ]
 
-{ #category : #enumerating }
-XMLURITest >> asciiCharactersDo: aBlock [
-	0 to: 127 do: [:each | aBlock value: each asCharacter]
+{ #category : #accessing }
+XMLURITest >> asciiCharacters [
+	asciiCharacters ifNil: [
+		asciiCharacters :=
+			String streamContents: [:stream |
+				"0 is ignored for GS compatibility, because it uses it as a string
+				terminator"
+				1 to: 127 do: [:i |
+					stream nextPut: i asCharacter]]].
+	^ asciiCharacters.
 ]
 
 { #category : #asserting }
@@ -259,14 +273,35 @@ XMLURITest >> host [
 	^ self domainURIString copyAfterLast: $/
 ]
 
-{ #category : #testing }
-XMLURITest >> isUnreservedCharacter: aCharacter [
-	^ self unreservedCharacters includes: aCharacter
-]
-
 { #category : #accessing }
 XMLURITest >> nonPercentEncodedPathCharacters [
 	^ self unreservedCharacters, self subDelimiterCharacters, ':@'
+]
+
+{ #category : #converting }
+XMLURITest >> percentEncodeCharacter: aCharacter [
+	^ XMLStreamAdapterTest percentEncodeCharacter: aCharacter
+]
+
+{ #category : #accessing }
+XMLURITest >> percentEncodedASCIICharacters [
+	percentEncodedASCIICharacters ifNil: [
+		percentEncodedASCIICharacters :=
+			String streamContents: [:stream |
+				self asciiCharacters do: [:each |
+					stream nextPutAll:
+						(self percentEncodeCharacter: each)]]].
+	^ percentEncodedASCIICharacters.
+]
+
+{ #category : #accessing }
+XMLURITest >> percentEncodedReservedCharacters [
+	percentEncodedReservedCharacters ifNil: [
+		percentEncodedReservedCharacters :=
+			String streamContents: [:stream |
+				self reservedCharacters do: [:each |
+					stream nextPutAll: (self percentEncodeCharacter: each)]]].
+	^ percentEncodedReservedCharacters.
 ]
 
 { #category : #accessing }
@@ -299,6 +334,18 @@ XMLURITest >> relativeAbsoluteCombinedSegments [
 { #category : #accessing }
 XMLURITest >> relativeSegments [
 	^ #('relative' 'path') asOrderedCollection
+]
+
+{ #category : #accessing }
+XMLURITest >> reservedCharacters [
+	reservedCharacters
+		ifNil: [
+			reservedCharacters :=
+				String streamContents: [:stream |
+					self asciiCharacters do: [:each |
+						(self unreservedCharacters includes: each)
+							ifFalse: [stream nextPut: each]]]].
+	^ reservedCharacters.
 ]
 
 { #category : #accessing }
@@ -619,10 +666,13 @@ XMLURITest >> testCopyWithPath [
 
 { #category : #tests }
 XMLURITest >> testCopyWithPathSegments [
-	self allURIStringsDo: [:each | | uri oldPathSegments newPathSegments copy |
+	self allURIStringsDo: [:each | | uri oldPathSegments oldRawPathSegments newPathSegments newRawPathSegments copy |
 		uri := each asXMLURI.
 		oldPathSegments := uri pathSegments.
-		newPathSegments := oldPathSegments copyWith: 'new'.
+		oldRawPathSegments := uri rawPathSegments.
+		newPathSegments := oldPathSegments copyWith: 'new', self reservedCharacters.
+		newRawPathSegments :=
+			oldRawPathSegments copyWith: 'new', self percentEncodedReservedCharacters.
 		copy := uri copyWithPathSegments: newPathSegments.
 		self
 			assert: uri = each asXMLURI;
@@ -636,8 +686,11 @@ XMLURITest >> testCopyWithPathSegments [
 			assert: uri host = copy host;
 			assert: uri port = copy port;
 			deny: uri pathSegments = copy pathSegments;
+			deny: uri rawPathSegments = copy rawPathSegments;
 			assert: uri pathSegments = oldPathSegments;
+			assert: uri rawPathSegments = oldRawPathSegments;
 			assert: copy pathSegments = newPathSegments;
+			assert: copy rawPathSegments = newRawPathSegments;
 			assert: uri query = copy query;
 			assert: uri fragment = copy fragment]
 ]
@@ -669,10 +722,16 @@ XMLURITest >> testCopyWithPort [
 
 { #category : #tests }
 XMLURITest >> testCopyWithQuery [
-	self allURIStringsDo: [:each | | uri oldQuery newQuery copy |
+	self allURIStringsDo: [:each | | uri oldQuery oldRawQuery newQuery newRawQuery copy |
 		uri := each asXMLURI.
 		oldQuery := uri query.
-		(newQuery := oldQuery copy) add: 'new' -> 'new'.
+		oldRawQuery := uri rawQuery.
+		(newQuery := oldQuery copy)
+			at: 'newKey', self reservedCharacters
+			put: 'newValue', self reservedCharacters.
+		(newRawQuery := oldRawQuery copy)
+			at: 'newKey', self percentEncodedReservedCharacters
+			put: 'newValue', self percentEncodedReservedCharacters.
 		copy := uri copyWithQuery: newQuery.
 		self
 			assert: uri = each asXMLURI;
@@ -687,8 +746,11 @@ XMLURITest >> testCopyWithQuery [
 			assert: uri port = copy port;
 			assert: uri pathSegments = copy pathSegments;
 			deny: uri query = copy query;
+			deny: uri rawQuery = copy rawQuery;
 			assert: uri query = oldQuery;
+			assert: uri rawQuery = oldRawQuery;
 			assert: copy query = newQuery;
+			assert: copy rawQuery = newRawQuery;
 			assert: uri fragment = copy fragment]
 ]
 
@@ -727,10 +789,12 @@ XMLURITest >> testCopyWithScheme [
 
 { #category : #tests }
 XMLURITest >> testCopyWithUserInfo [
-	self allURIStringsDo: [:each | | uri oldUserInfo newUserInfo copy |
+	self allURIStringsDo: [:each | | uri oldUserInfo oldRawUserInfo newUserInfo newRawUserInfo copy |
 		uri := each asXMLURI.
 		oldUserInfo := uri userInfo.
-		newUserInfo := oldUserInfo, 'new'.
+		oldRawUserInfo := uri rawUserInfo.
+		newUserInfo := oldUserInfo, 'new', self reservedCharacters.
+		newRawUserInfo := oldUserInfo, 'new', self percentEncodedReservedCharacters.
 		copy := uri copyWithUserInfo: newUserInfo.
 		self
 			assert: uri = each asXMLURI;
@@ -741,8 +805,11 @@ XMLURITest >> testCopyWithUserInfo [
 			assert: uri scheme = copy scheme;
 			assert: uri hasAuthorityPrefix = copy hasAuthorityPrefix;
 			deny: uri userInfo = copy userInfo;
+			deny: uri rawUserInfo = copy rawUserInfo;
 			assert: uri userInfo = oldUserInfo;
+			assert: uri rawUserInfo = oldRawUserInfo;
 			assert: copy userInfo = newUserInfo;
+			assert: copy rawUserInfo = newRawUserInfo;
 			assert: uri host = copy host;
 			assert: uri port = copy port;
 			assert: uri pathSegments = copy pathSegments;
@@ -821,7 +888,7 @@ XMLURITest >> testEquality [
 		self
 			assert: uri = otherURI;
 			assert: otherURI = uri.
-		otherURI userInfo: uri userInfo, 'new'.
+		otherURI rawUserInfo: uri userInfo, 'new'.
 		self
 			deny: uri = otherURI;
 			deny: otherURI = uri.
@@ -830,7 +897,7 @@ XMLURITest >> testEquality [
 		self
 			assert: uri = otherURI;
 			assert: otherURI = uri.
-		otherURI host: uri host, 'new'.
+		otherURI rawHost: uri host, 'new'.
 		self
 			deny: uri = otherURI;
 			deny: otherURI = uri.
@@ -839,7 +906,7 @@ XMLURITest >> testEquality [
 		self
 			assert: uri = otherURI;
 			assert: otherURI = uri.
-		otherURI pathSegments: (uri pathSegments copyWith: 'new').
+		otherURI rawPathSegments: (uri pathSegments copyWith: 'new').
 		self
 			deny: uri = otherURI;
 			deny: otherURI = uri.
@@ -848,7 +915,7 @@ XMLURITest >> testEquality [
 		self
 			assert: uri = otherURI;
 			assert: otherURI = uri.
-		otherURI query:
+		otherURI rawQuery:
 			(uri query copy
 				add: 'new' -> '';
 				yourself).
@@ -860,7 +927,7 @@ XMLURITest >> testEquality [
 		self
 			assert: uri = otherURI;
 			assert: otherURI = uri.
-		otherURI fragment: uri fragment, 'new'.
+		otherURI rawFragment: uri fragment, 'new'.
 		self
 			deny: uri = otherURI;
 			deny: otherURI = uri]
@@ -892,29 +959,34 @@ XMLURITest >> testFragment [
 
 { #category : #tests }
 XMLURITest >> testFragmentNonPercentEncodedCharacters [
-	| fragment uri |
+	| fragment uriString uri |
 
 	fragment := self nonPercentEncodedPathCharacters , '/?'.
-	uri := ('#', fragment) asXMLURI.
+	uriString := '#', fragment.
+	uri := uriString asXMLURI.
 	self assert: uri fragment = fragment.
+	
+	uri uriString: nil.
+	self assert: uri printString = uriString.
 ]
 
 { #category : #tests }
 XMLURITest >> testFragmentPercentEncodedCharacters [
-	| uri |
+	| encodedURIString uri |
 
-	self asciiCharactersDo: [:each | | encodedURIString |
-		encodedURIString := '#', (XMLURI percentEncodeCharacter: each).
-		uri := encodedURIString asXMLURI.
-		self assert: uri fragment = each asString.
+	encodedURIString := '#', self percentEncodedASCIICharacters.
+	uri := encodedURIString asXMLURI.
+	self
+		assert: uri fragment = self asciiCharacters;
+		assert: uri rawFragment = self percentEncodedASCIICharacters.
 
-		uri uriString: nil.
-		(self isUnreservedCharacter: each)
-			ifTrue: [self assert: uri printString = ('#' copyWith: each)]
-			ifFalse: [self assert: uri printString = encodedURIString]].
+	uri uriString: nil.
+	self assert: uri printString = encodedURIString.
 
 	uri := '#+' asXMLURI.
-	self assert: uri fragment = '+'.
+	self
+		assert: uri fragment = '+';
+		assert: uri rawFragment = '+'.
 ]
 
 { #category : #tests }
@@ -1217,38 +1289,37 @@ XMLURITest >> testHost [
 
 { #category : #tests }
 XMLURITest >> testHostNonPercentEncodedCharacters [
-	| host uri |
+	| host uriString uri |
 
 	host := self unreservedCharacters, self subDelimiterCharacters.
-	uri := ('http://', host) asXMLURI.
+	uriString := 'http://', host.
+	uri := uriString asXMLURI.
 	self
 		assert: uri scheme = 'http';
 		assert: uri host = host asLowercase.
+
+	uri uriString: nil.
+	self assert: uri printString = uriString.
 ]
 
 { #category : #tests }
 XMLURITest >> testHostPercentEncodedCharacters [
-	| prefix uri |
+	| prefix encodedURIString uri |
 
 	prefix := 'http://'.
-	self asciiCharactersDo: [:each | | lowercasedChar |
-		uri := (prefix, (XMLURI percentEncodeCharacter: each)) asXMLURI.
-		lowercasedChar := each asLowercase.
-		self assert: uri host = lowercasedChar asString.
+	encodedURIString := prefix, self percentEncodedASCIICharacters.
+	uri := encodedURIString asXMLURI.
+	self
+		assert: uri host = self asciiCharacters asLowercase;
+		assert: uri rawHost = self percentEncodedASCIICharacters.
 
-		uri uriString: nil.
-		(self isUnreservedCharacter: each)
-			ifTrue: [
-				self assert:
-					uri printString =
-						(prefix copyWith: lowercasedChar)]
-			ifFalse: [
-				self assert:
-					uri printString =
-						(prefix, (XMLURI percentEncodeCharacter: lowercasedChar))]].
+	uri uriString: nil.
+	self assert: uri printString = encodedURIString.
 
 	uri := (prefix, '+') asXMLURI.
-	self assert: uri host = '+'.
+	self
+		assert: uri host = '+';
+		assert: uri rawHost = '+'.
 ]
 
 { #category : #tests }
@@ -1260,25 +1331,25 @@ XMLURITest >> testIPv6Hosts [
 	uri := uriString asXMLURI.
 	self
 		assert: uri scheme = 'http';
-		assert: uri host = ipv6Host asLowercase;
+		assert: uri host = ipv6Host;
 		assert: uri port = 80;
 		assert: uri path = self absolute;
 		assert: uri query isEmpty;
 		assert: uri fragment isEmpty.
 	uri uriString: nil.
-	self assert: uri printString = uriString asLowercase.
+	self assert: uri printString = uriString.
 
 	uriString := 'http://', ipv6Host, self absolute.
 	uri := uriString asXMLURI.
 	self
 		assert: uri scheme = 'http';
-		assert: uri host = ipv6Host asLowercase;
+		assert: uri host = ipv6Host;
 		assert: uri port isNil;
 		assert: uri path = self absolute;
 		assert: uri query isEmpty;
 		assert: uri fragment isEmpty.
 	uri uriString: nil.
-	self assert: uri printString = uriString asLowercase.
+	self assert: uri printString = uriString.
 ]
 
 { #category : #tests }
@@ -1493,32 +1564,39 @@ XMLURITest >> testPath [
 
 { #category : #tests }
 XMLURITest >> testPathNonPercentEncodedCharacters [
-	| firstSegment secondSegment uri |
+	| firstSegment secondSegment uriString uri |
 
 	firstSegment := self nonPercentEncodedPathCharacters copyWithout: $:.
 	secondSegment := self nonPercentEncodedPathCharacters.
-	uri := (firstSegment, '/', secondSegment) asXMLURI.
+	uriString := firstSegment, '/', secondSegment.
+	uri := uriString asXMLURI.
 	self assert:
 		uri pathSegments =
 			(OrderedCollection with: firstSegment with: secondSegment).
+
+	uri uriString: nil.
+	self assert: uri printString = uriString.
 ]
 
 { #category : #tests }
 XMLURITest >> testPathPercentEncodedCharacters [
-	| uri |
+	| uri encodedURIString |
 
-	self asciiCharactersDo: [:each | | encodedURIString |
-		encodedURIString := XMLURI percentEncodeCharacter: each.
-		uri := encodedURIString asXMLURI.
-		self assert: uri path = each asString.
+	encodedURIString := self percentEncodedASCIICharacters.
+	uri := encodedURIString asXMLURI.
+	self
+		assert: uri path = self asciiCharacters;
+		assert: uri pathSegments = (OrderedCollection with: self asciiCharacters);
+		assert: uri rawPathSegments = (OrderedCollection with: self percentEncodedASCIICharacters).
 
-		uri uriString: nil.
-		(self isUnreservedCharacter: each)
-			ifTrue: [self assert: uri printString = each asString]
-			ifFalse: [self assert: uri printString = encodedURIString]].
+	uri uriString: nil.
+	self assert: uri printString = encodedURIString.
 
 	uri := '+' asXMLURI.
-	self assert: uri path = '+'.
+	self
+		assert: uri path = '+';
+		assert: uri pathSegments = (OrderedCollection with: '+');
+		assert: uri rawPathSegments = (OrderedCollection with: '+').
 ]
 
 { #category : #tests }
@@ -1552,35 +1630,6 @@ XMLURITest >> testPathSegmentsDo [
 		visited := OrderedCollection new.
 		uri pathSegmentsDo: [:each | visited addLast: each].
 		self assert: visited = uri pathSegments]
-]
-
-{ #category : #tests }
-XMLURITest >> testPercentEncodeCharacter [
-	self asciiCharactersDo: [:each | | encoded |
-		encoded := XMLURI percentEncodeCharacter: each.
-		self
-			assert: encoded size = 3;
-			assert: encoded first == $%;
-			assert:
-				(XMLIntegerReader
-					readFrom: encoded allButFirst
-					withBase: 16) = each asciiValue]
-]
-
-{ #category : #tests }
-XMLURITest >> testPercentOrPlusEncodeCharacter [
-	self asciiCharactersDo: [:each | | encoded |
-		encoded := XMLURI percentOrPlusEncodeCharacter: each.
-		each = Character space
-			ifTrue: [self assert: encoded = '+']
-			ifFalse: [
-				self
-					assert: encoded size = 3;
-					assert: encoded first == $%;
-					assert:
-						(XMLIntegerReader
-							readFrom: encoded allButFirst
-							withBase: 16) = each asciiValue]]
 ]
 
 { #category : #tests }
@@ -1709,38 +1758,44 @@ XMLURITest >> testQueryKeysDo [
 
 { #category : #tests }
 XMLURITest >> testQueryNonPercentOrPlusEncodedCharacters [
-	| queryKey queryValue uri |
+	| queryKey queryValue uriString uri |
 
 	queryKey := (self nonPercentEncodedPathCharacters copyWithoutAll: '=&+'), '/?'.
 	queryValue :=  (self nonPercentEncodedPathCharacters copyWithoutAll: '&+'), '/?'.
-	uri := ('?', queryKey, '=', queryValue) asXMLURI.
+	uriString := '?', queryKey, '=', queryValue.
+	uri := uriString asXMLURI.
 	self assert:
 		uri query =
 			(OrderPreservingStringDictionary with: queryKey -> queryValue).
+
+	uri uriString: nil.
+	self assert: uri printString = uriString.
 ]
 
 { #category : #tests }
 XMLURITest >> testQueryPercentOrPlusEncodedCharacters [
-	| uri |
+	| encodedURIString uri |
 
-	self asciiCharactersDo: [:each | | encodedURIString |
-		encodedURIString :=
-			'?', (XMLURI percentEncodeCharacter: each), '=', (XMLURI percentEncodeCharacter: each).
-		uri := encodedURIString asXMLURI.
-		self assert:
-			uri query =
-				(OrderPreservingStringDictionary with: each asString -> each asString).
+	encodedURIString :=
+		'?', self percentEncodedASCIICharacters,
+		'=', self percentEncodedASCIICharacters.
+	uri := encodedURIString asXMLURI.
+	self assert:
+		uri query =
+			(OrderPreservingStringDictionary with:
+				self asciiCharacters -> self asciiCharacters).
+	self assert:
+		uri rawQuery =
+			(OrderPreservingStringDictionary with:
+				self percentEncodedASCIICharacters -> self percentEncodedASCIICharacters).
 
-		uri uriString: nil.
-		(self isUnreservedCharacter: each)
-			ifTrue: [self assert: uri printString = ('?', each asString, '=', each asString)]
-			ifFalse: [
-				each = Character space
-					ifTrue: [self assert: uri printString = '?+=+']
-					ifFalse: [self assert: uri printString = encodedURIString]]].
+	uri uriString: nil.
+	self assert: uri printString = encodedURIString.
 
 	uri := '?+=+' asXMLURI.
-	self assert: uri query = (OrderPreservingStringDictionary with: ' ' -> ' ').
+	self
+		assert: uri query = (OrderPreservingStringDictionary with: ' ' -> ' ');
+		assert: uri rawQuery = (OrderPreservingStringDictionary with: '+' -> '+').
 ]
 
 { #category : #tests }
@@ -1902,37 +1957,43 @@ XMLURITest >> testUserInfo [
 
 { #category : #tests }
 XMLURITest >> testUserInfoNonPercentEncodedCharacters [
-	| userInfo uri |
+	| userInfo uriString uri |
 
 	userInfo := self unreservedCharacters, self subDelimiterCharacters, ':'.
-	uri := ('mailto:', userInfo, '@', self host) asXMLURI.
+	uriString := 'mailto:', userInfo, '@', self host.
+	uri := uriString asXMLURI.
 	self
 		assert: uri scheme = 'mailto';
 		assert: uri userInfo = userInfo;
 		assert: uri host = self host.
+
+	uri uriString: nil.
+	self assert: uri printString = uriString.
 ]
 
 { #category : #tests }
 XMLURITest >> testUserInfoPercentEncodedCharacters [
-	| prefix suffix uri |
+	| prefix suffix encodedURIString uri |
 
 	prefix := 'mailto:'.
 	suffix := '@', self host.
-	self asciiCharactersDo: [:each | | encodedURIString |
-		encodedURIString := prefix, (XMLURI percentEncodeCharacter: each), suffix.
-		uri := encodedURIString asXMLURI.
-		self assert: uri userInfo = each asString.
+	encodedURIString := prefix, self percentEncodedASCIICharacters, suffix.
+	uri := encodedURIString asXMLURI.
+	self
+		assert: uri userInfo = self asciiCharacters;
+		assert: uri rawUserInfo = self percentEncodedASCIICharacters.
 
-		uri uriString: nil.
-		(self isUnreservedCharacter: each)
-			ifTrue: [self assert: uri printString = (prefix, each asString, suffix)]
-			ifFalse: [self assert: uri printString = encodedURIString]].
+	uri uriString: nil.
+	self assert: uri printString = encodedURIString.
 
 	uri := (prefix, '+', suffix) asXMLURI.
-	self assert: uri userInfo = '+'.
+	self
+		assert: uri userInfo = '+';
+		assert: uri rawUserInfo = '+'.
 ]
 
 { #category : #accessing }
 XMLURITest >> unreservedCharacters [
-	^ self alphaNumericCharacters, '-._~'
+	^ unreservedCharacters
+		ifNil: [unreservedCharacters := self alphaNumericCharacters, '-._~']
 ]

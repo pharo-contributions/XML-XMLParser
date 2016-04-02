@@ -44,6 +44,15 @@ XMLStreamAdapterTest class >> asciiToUTF32LE: anASCIIString [
 				nextPut: 0 asCharacter]]
 ]
 
+{ #category : #converting }
+XMLStreamAdapterTest class >> percentEncodeCharacter: aCharacter [
+	| hexString |
+
+	(hexString := aCharacter asciiValue printStringHex asUppercase) size > 1
+		ifTrue: [^ '%', hexString]
+		ifFalse: [^ '%0', hexString]
+]
+
 { #category : #testing }
 XMLStreamAdapterTest class >> shouldInheritSelectors [
 	^ true
@@ -170,11 +179,7 @@ XMLStreamAdapterTest >> newStreamOn: aCollection [
 
 { #category : #converting }
 XMLStreamAdapterTest >> percentEncodeCharacter: aCharacter [
-	| hexString |
-
-	(hexString := aCharacter asciiValue printStringHex asUppercase) size > 1
-		ifTrue: [^ '%', hexString]
-		ifFalse: [^ '%0', hexString]
+	^ self class percentEncodeCharacter: aCharacter
 ]
 
 { #category : #accessing }
@@ -217,13 +222,13 @@ XMLStreamAdapterTest >> testIsBinary [
 ]
 
 { #category : #tests }
-XMLStreamAdapterTest >> testIsConvertingStreamAdapter [
-	self deny: self newStreamAdapter isConvertingStreamAdapter
+XMLStreamAdapterTest >> testIsStream [
+	self assert: self newStreamAdapter isStream
 ]
 
 { #category : #tests }
-XMLStreamAdapterTest >> testIsStream [
-	self assert: self newStreamAdapter isStream
+XMLStreamAdapterTest >> testIsXMLConvertingStreamAdapter [
+	self deny: self newStreamAdapter isXMLConvertingStreamAdapter
 ]
 
 { #category : #tests }

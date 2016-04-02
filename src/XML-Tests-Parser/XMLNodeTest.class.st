@@ -291,7 +291,7 @@ XMLNodeTest >> testValidate [
 { #category : #accessing }
 XMLNodeTest >> unprefixedAttributeAssociations [
 	^ self attributeAssociations collect: [:each |
-		each key localNameAfterPrefix -> each value]
+		each key xmlLocalNameAfterPrefix -> each value]
 ]
 
 { #category : #accessing }

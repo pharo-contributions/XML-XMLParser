@@ -39,8 +39,8 @@ XMLEncodingWriteStreamAdapterTest >> testHasNullStreamConverter [
 ]
 
 { #category : #tests }
-XMLEncodingWriteStreamAdapterTest >> testIsConvertingStreamAdapter [
-	self assert: self newStreamAdapter isConvertingStreamAdapter
+XMLEncodingWriteStreamAdapterTest >> testIsXMLConvertingStreamAdapter [
+	self assert: self newStreamAdapter isXMLConvertingStreamAdapter
 ]
 
 { #category : #tests }

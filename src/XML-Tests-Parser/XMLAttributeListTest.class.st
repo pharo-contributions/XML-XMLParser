@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #accessing }
-XMLAttributeListTest >> absentElement [
+XMLAttributeListTest >> absentListItem [
 	^ absentAttribute
 		ifNil: [absentAttribute := XMLAttribute name: 'absentName' value: 'absentValue']
 ]
@@ -58,7 +58,7 @@ XMLAttributeListTest >> beforeAddingToNotifications [
 ]
 
 { #category : #accessing }
-XMLAttributeListTest >> changeElement: anAttribute [
+XMLAttributeListTest >> changeListItem: anAttribute [
 	^ (changedAttributes ifNil: [changedAttributes := IdentityDictionary new])
 		at: anAttribute
 		ifAbsentPut: [
@@ -73,16 +73,16 @@ XMLAttributeListTest >> listClass [
 ]
 
 { #category : #accessing }
-XMLAttributeListTest >> listElements [
+XMLAttributeListTest >> listItems [
 	attributes ifNil: [
 		attributes :=
-			super listElements collect: [:each |
+			super listItems collect: [:each |
 				XMLAttribute name: each value: each]].
 	^ attributes copy.
 ]
 
 { #category : #accessing }
-XMLAttributeListTest >> newElement [
+XMLAttributeListTest >> newListItem [
 	^ newAttribute
 		ifNil: [newAttribute := XMLAttribute name: 'newName' value: 'newValue']
 ]

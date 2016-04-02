@@ -121,19 +121,19 @@ XMLObservableListTest >> listClass [
 ]
 
 { #category : #accessing }
-XMLObservableListTest >> listWithElements [
+XMLObservableListTest >> listWithItems [
 	| list |
 
-	list := super listWithElements.
+	list := super listWithItems.
 	self observerOnList: list.
 	^ list.
 ]
 
 { #category : #accessing }
-XMLObservableListTest >> listWithSingleElement [
+XMLObservableListTest >> listWithSingleItem [
 	| list |
 
-	list := super listWithSingleElement.
+	list := super listWithSingleItem.
 	self observerOnList: list.
 	^ list.
 ]
@@ -197,7 +197,7 @@ XMLObservableListTest >> testAdd [
 	super testAdd.
 
 	list := self emptyList.
-	self listElements do: [:each |
+	self listItems do: [:each |
 		self
 			should: [list add: each]
 			add: each
@@ -210,10 +210,10 @@ XMLObservableListTest >> testAddAfter [
 
 	super testAddAfter.
 
-	list := self listWithSingleElement.
-	self listElements allButFirst reverseDo: [:each |
+	list := self listWithSingleItem.
+	self listItems allButFirst reverseDo: [:each |
 		self
-			should: [list add: each after: self singleElement]
+			should: [list add: each after: self singleListItem]
 			add: each
 			toAndNotify: list].
 ]
@@ -224,8 +224,8 @@ XMLObservableListTest >> testAddAfterIndex [
 
 	super testAddAfterIndex.
 
-	list := self listWithSingleElement.
-	self listElements allButFirst reverseDo: [:each |
+	list := self listWithSingleItem.
+	self listItems allButFirst reverseDo: [:each |
 		self
 			should: [list add: each afterIndex: 1]
 			add: each
@@ -240,12 +240,12 @@ XMLObservableListTest >> testAddAll [
 
 	list := self emptyList.
 	self
-		should: [list addAll: self listElements]
-		addAll: self listElements
+		should: [list addAll: self listItems]
+		addAll: self listItems
 		toAndNotify: list.
 	self
-		should: [list addAll: self changedListElements]
-		addAll: self changedListElements
+		should: [list addAll: self changedListItems]
+		addAll: self changedListItems
 		toAndNotify: list.
 ]
 
@@ -257,12 +257,12 @@ XMLObservableListTest >> testAddAllFirst [
 
 	list := self emptyList.
 	self
-		should: [list addAllFirst: self listElements]
-		addAll: self listElements reversed
+		should: [list addAllFirst: self listItems]
+		addAll: self listItems reversed
 		toAndNotify: list.
 	self
-		should: [list addAllFirst: self changedListElements]
-		addAll: self changedListElements reversed
+		should: [list addAllFirst: self changedListItems]
+		addAll: self changedListItems reversed
 		toAndNotify: list.
 ]
 
@@ -274,12 +274,12 @@ XMLObservableListTest >> testAddAllLast [
 
 	list := self emptyList.
 	self
-		should: [list addAllLast: self listElements]
-		addAll: self listElements
+		should: [list addAllLast: self listItems]
+		addAll: self listItems
 		toAndNotify: list.
 	self
-		should: [list addAllLast: self changedListElements]
-		addAll: self changedListElements
+		should: [list addAllLast: self changedListItems]
+		addAll: self changedListItems
 		toAndNotify: list.
 ]
 
@@ -289,10 +289,10 @@ XMLObservableListTest >> testAddBefore [
 
 	super testAddBefore.
 
-	last := self listElements last.
+	last := self listItems last.
 	(list := self emptyList) add: last.
 	"allButLastDo: is not portable"
-	self listElements allButLast do: [:each |
+	self listItems allButLast do: [:each |
 		self
 			should: [list add: each before: last]
 			add: each
@@ -305,8 +305,8 @@ XMLObservableListTest >> testAddBeforeIndex [
 
 	super testAddBeforeIndex.
 
-	(list := self emptyList) add: self listElements last.
-	self listElements allButLast withIndexDo: [:each :i |
+	(list := self emptyList) add: self listItems last.
+	self listItems allButLast withIndexDo: [:each :i |
 		self
 			should: [list add: each beforeIndex: i]
 			add: each
@@ -320,7 +320,7 @@ XMLObservableListTest >> testAddFirst [
 	super testAddFirst.
 
 	list := self emptyList.
-	self listElements reverseDo: [:each |
+	self listItems reverseDo: [:each |
 		self
 			should: [list addFirst: each]
 			add: each
@@ -334,7 +334,7 @@ XMLObservableListTest >> testAddLast [
 	super testAddLast.
 
 	list := self emptyList.
-	self listElements do: [:each |
+	self listItems do: [:each |
 		self
 			should: [list addLast: each]
 			add: each
@@ -347,21 +347,21 @@ XMLObservableListTest >> testAtPut [
 
 	super testAtPut.
 
-	list := self listWithElements.
+	list := self listWithItems.
 	1 to: list size do: [:i | | old new |
 		old := list at: i.
-		new := self changedListElements at: i.
+		new := self changedListItems at: i.
 		list at: i put: new.
 		self
 			assertList: list
 			receivedNotificationOfReplacing: old
 			with: new].
 	self
-		should: [list at: list size + 2 put: self newElement]
+		should: [list at: list size + 2 put: self newListItem]
 		raise: Error.
 	self
 		assertList: list
-		receivedNotificationOfBeforeAdding: self newElement.
+		receivedNotificationOfBeforeAdding: self newListItem.
 	self deny: list observer hasNotifications.
 ]
 
@@ -378,10 +378,10 @@ XMLObservableListTest >> testRemoveAll [
 
 	super testRemoveAll.
 
-	list := self listWithElements.
+	list := self listWithItems.
 	self
 		should: [list removeAll]
-		removeAll: self listElements reversed
+		removeAll: self listItems reversed
 		fromAndNotify: list.
 ]
 
@@ -389,8 +389,8 @@ XMLObservableListTest >> testRemoveAll [
 XMLObservableListTest >> testRemoveAt [
 	super testRemoveAt.
 
-	self listElements withIndexDo: [:each :i | | list |
-		list := self listWithElements.
+	self listItems withIndexDo: [:each :i | | list |
+		list := self listWithItems.
 		self
 			should: [list removeAt: i]
 			remove: each
@@ -407,8 +407,8 @@ XMLObservableListTest >> testRemoveFirst [
 
 	super testRemoveFirst.
 
-	list := self listWithElements.
-	self listElements do: [:each |
+	list := self listWithItems.
+	self listItems do: [:each |
 		self
 			should: [list removeFirst]
 			remove: each
@@ -424,11 +424,11 @@ XMLObservableListTest >> testRemoveFirstFew [
 
 	super testRemoveFirstFew.
 
-	1 to: self listElements size do: [:i |
-		list := self listWithElements.
+	1 to: self listItems size do: [:i |
+		list := self listWithItems.
 		self
 			should: [list removeFirst: i]
-			removeAll: (self listElementsFirst: i)
+			removeAll: (self listItemsFirst: i)
 			fromAndNotify: list].
 	list := self emptyList.
 	self
@@ -442,14 +442,19 @@ XMLObservableListTest >> testRemoveIfAbsent [
 
 	super testRemoveIfAbsent.
 
-	list := self listWithElements.
+	list := self listWithItems.
 	self
-		should: [list remove: self singleElement ifAbsent: [nil]]
-		remove: self singleElement
+		should: [
+			list
+				remove: self singleListItem
+				ifAbsent: [self absentListItem]]
+		remove: self singleListItem
 		fromAndNotify: list.
-	self
-		assert: (list remove: self singleElement ifAbsent: [nil]) isNil;
-		deny: list observer hasNotifications.
+	self assert:
+		(list
+			remove: self singleListItem
+			ifAbsent: [self absentListItem]) = self absentListItem.
+	self deny: list observer hasNotifications.
 ]
 
 { #category : #tests }
@@ -458,8 +463,8 @@ XMLObservableListTest >> testRemoveLast [
 
 	super testRemoveLast.
 
-	list := self listWithElements.
-	self listElements reverseDo: [:each |
+	list := self listWithItems.
+	self listItems reverseDo: [:each |
 		self
 			should: [list removeLast]
 			remove: each
@@ -475,11 +480,11 @@ XMLObservableListTest >> testRemoveLastFew [
 	
 	super testRemoveLastFew.
 
-	1 to: self listElements size do: [:i |
-		list := self listWithElements.
+	1 to: self listItems size do: [:i |
+		list := self listWithItems.
 		self
 			should: [list removeLast: i]
-			removeAll: (self listElementsLast: i) reversed
+			removeAll: (self listItemsLast: i) reversed
 			fromAndNotify: list].
 	list := self emptyList.
 	self
@@ -491,15 +496,15 @@ XMLObservableListTest >> testRemoveLastFew [
 XMLObservableListTest >> testReplaceFromToWith [
 	super testReplaceFromToWith.
 
-	1 to: self listElements size do: [:start |
-		start to: self listElements size do: [:stop | | list old new |
-			list := self listWithElements.
-			old := self listElements copyFrom: start to: stop.
-			new := self changedListElements copyFrom: 1 to: stop - start + 1.
+	1 to: self listItems size do: [:start |
+		start to: self listItems size do: [:stop | | list old new |
+			list := self listWithItems.
+			old := self listItems copyFrom: start to: stop.
+			new := self changedListItems copyFrom: 1 to: stop - start + 1.
 			list
 				replaceFrom: start
 				to: stop
-				with: self changedListElements.
+				with: self changedListItems.
 			old with: new do: [:oldElement :newElement |
 				self
 					assertList: list
@@ -512,15 +517,15 @@ XMLObservableListTest >> testReplaceFromToWith [
 XMLObservableListTest >> testReplaceFromToWithStartingAt [
 	super testReplaceFromToWithStartingAt.
 
-	1 to: self listElements size do: [:start |
-		start to: self listElements size do: [:stop | | list old new |
-			list := self listWithElements.
-			old := self listElements copyFrom: start to: stop.
-			new := self changedListElements copyFrom: start to: stop.
+	1 to: self listItems size do: [:start |
+		start to: self listItems size do: [:stop | | list old new |
+			list := self listWithItems.
+			old := self listItems copyFrom: start to: stop.
+			new := self changedListItems copyFrom: start to: stop.
 			list
 				replaceFrom: start
 				to: stop
-				with: self changedListElements
+				with: self changedListItems
 				startingAt: start.
 			old with: new do: [:oldElement :newElement |
 				self
@@ -535,9 +540,9 @@ XMLObservableListTest >> testReset [
 	| list |
 
 	super testReset.
-	list := self listWithElements.
+	list := self listWithItems.
 	self
 		should: [list reset]
-		removeAll: self listElements
+		removeAll: self listItems
 		fromAndNotify: list.
 ]

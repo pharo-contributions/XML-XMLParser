@@ -11,8 +11,8 @@ Class {
 }
 
 { #category : #accessing }
-XMLNodeListTest >> absentElement [
-	^ absentNode ifNil: [absentNode := 'absentElement' asXMLString]
+XMLNodeListTest >> absentListItem [
+	^ absentNode ifNil: [absentNode := super absentListItem asXMLString]
 ]
 
 { #category : #accessing }
@@ -31,7 +31,7 @@ XMLNodeListTest >> beforeAddingToNotifications [
 ]
 
 { #category : #accessing }
-XMLNodeListTest >> changeElement: anElement [
+XMLNodeListTest >> changeListItem: anElement [
 	^ (changedNodes ifNil: [changedNodes := IdentityDictionary new])
 		at: anElement
 		ifAbsentPut: [anElement copy]
@@ -43,10 +43,10 @@ XMLNodeListTest >> listClass [
 ]
 
 { #category : #accessing }
-XMLNodeListTest >> listElements [
+XMLNodeListTest >> listItems [
 	nodes ifNil: [
 		nodes := OrderedCollection new.
-		super listElements withIndexDo: [:each :i |
+		super listItems withIndexDo: [:each :i |
 			i even
 				ifTrue: [nodes addLast: (XMLElement named: each)]
 				ifFalse: [nodes addLast: each asXMLString]].
@@ -55,8 +55,8 @@ XMLNodeListTest >> listElements [
 ]
 
 { #category : #accessing }
-XMLNodeListTest >> newElement [
-	^ newNode ifNil: [newNode := 'newElement' asXMLString]
+XMLNodeListTest >> newListItem [
+	^ newNode ifNil: [newNode := super newListItem asXMLString]
 ]
 
 { #category : #accessing }

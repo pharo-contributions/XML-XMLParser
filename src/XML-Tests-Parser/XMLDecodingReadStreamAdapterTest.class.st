@@ -59,8 +59,8 @@ XMLDecodingReadStreamAdapterTest >> testInvalidCharacters [
 ]
 
 { #category : #tests }
-XMLDecodingReadStreamAdapterTest >> testIsConvertingStreamAdapter [
-	self assert: self newStreamAdapter isConvertingStreamAdapter
+XMLDecodingReadStreamAdapterTest >> testIsXMLConvertingStreamAdapter [
+	self assert: self newStreamAdapter isXMLConvertingStreamAdapter
 ]
 
 { #category : #tests }
