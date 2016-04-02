@@ -241,6 +241,19 @@ ConfigurationOfXMLParserHTML >> baseline125: spec [
 			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline126: spec [
+	<version: '1.2.6-baseline' imports: #('1.0.0-baseline')>
+	spec
+		for: #common
+		do: [ spec project: 'XMLParser' with: #'release-2.7.4' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec blessing: #baseline.
+			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParserHTML >> customProjectAttributes [
 	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -253,7 +266,7 @@ ConfigurationOfXMLParserHTML >> customProjectAttributes [
 ConfigurationOfXMLParserHTML >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.2.5-baseline'.
+	spec for: #'common' version: '1.2.6-baseline'.
 ]
 
 { #category : #accessing }
@@ -273,7 +286,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.2.5'.
+	spec for: #'common' version: '1.2.6'.
 
 ]
 
@@ -559,6 +572,17 @@ ConfigurationOfXMLParserHTML >> version125: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.36'.
+			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.17'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version126: spec [ 
+        <version: '1.2.6' imports: #('1.2.6-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.37'.
 			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.17'.
                 ].
 ]
