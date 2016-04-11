@@ -284,6 +284,6 @@ ConfigurationOfXMLTestsConformance >> version109: spec [
 
         spec for: #common do: [
                 spec blessing: #release.
-			spec package: 'XML-Tests-Conformance' with: 'XML-Tests-Conformance-monty.20'.
+			spec package: 'XML-Tests-Conformance' with: 'XML-Tests-Conformance-monty.21'.
                 ].
 ]
