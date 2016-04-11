@@ -95,10 +95,12 @@ XMLConformanceTests class >> buildSourceFileClassMethodFor: aFileReference in: a
 	UTF-8 and UTF-16. This makes it harder to test for invalid UTF in source
 	but easier to get the xml source into the image."
 	aFileReference fullName asXMLFileHandle readStreamDo: [:readStream |
-		readStream peek == $'
-			ifTrue: [sourceStream nextPut: $'].
-		sourceStream nextPut: readStream next].
-		
+		[readStream atEnd]
+			whileFalse: [
+				readStream peek == $'
+					ifTrue: [sourceStream nextPut: $'].
+				sourceStream nextPut: readStream next]].
+
 	aClass class
 		compile:
 			(self sourceFileMethodTemplate format:
