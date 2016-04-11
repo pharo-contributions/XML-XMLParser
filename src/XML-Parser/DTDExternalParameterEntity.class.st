@@ -1,13 +1,13 @@
 "
-A parameter entity with an external replacement.
+This is a class for external parameter parsed entities with external replacements that can be inserted into an XML document.
 "
 Class {
 	#name : #DTDExternalParameterEntity,
-	#superclass : #DTDParameterEntity,
+	#superclass : #DTDExternalEntity,
 	#category : #'XML-Parser-DTD'
 }
 
 { #category : #testing }
-DTDExternalParameterEntity >> isExternal [
+DTDExternalParameterEntity >> isParameter [
 	^ true
 ]

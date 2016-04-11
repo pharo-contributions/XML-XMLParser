@@ -1,44 +1,35 @@
 "
 This class resolves external entity references using XMLURI, XMLHTTPRequest, and XMLFileHandle.
+
+It supports retrieving external general entities as DTDExternalGeneralEntity objects with #resolveExternalGeneralEntity:publicID:systemID:baseURI: and external parameter entities as DTDExternalParameterEntity objects with #resolveExternalParameterEntity:publicID:systemID:baseURI:.
+
+#resolveExternalEntityURI: and  #streamResolveExternalEntityURI: messages can resolve generic external entity URIs as strings or read streams.
 "
 Class {
 	#name : #DTDExternalEntityResolver,
 	#superclass : #Object,
 	#instVars : [
 		'externalEntityLimits',
-		'totalResolvedEntities'
+		'totalResolvedExternalEntities'
 	],
 	#category : #'XML-Parser-DTD'
 }
 
+{ #category : #'instance creation' }
+DTDExternalEntityResolver class >> default [
+	^ self defaultClass new
+]
+
+{ #category : #accessing }
+DTDExternalEntityResolver class >> defaultClass [
+	^ DTDCachingExternalEntityResolver
+]
+
 { #category : #private }
 DTDExternalEntityResolver >> checkExternalEntityLimit [
 	(self maxExternalEntities notNil
-		and: [self totalResolvedEntities + 1 > self maxExternalEntities])
+		and: [self totalResolvedExternalEntities >= self maxExternalEntities])
 		ifTrue: [self erorrExternalEntityLimitExceeded]
-]
-
-{ #category : #resolving }
-DTDExternalEntityResolver >> entityURIFromPublicID: aPublicID systemID: aSystemID [
-	^ aSystemID asXMLURI
-]
-
-{ #category : #resolving }
-DTDExternalEntityResolver >> entityURIFromPublicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
-	| baseURI entityURI |
-
-	baseURI := aBaseURIString asXMLURI.
-	entityURI :=
-		baseURI combinedWith:
-			(self
-				entityURIFromPublicID: aPublicID
-				systemID: aSystemID).
-	(entityURI isLocalURI
-		and: [baseURI isLocalURI not
-			and: [self resolvesLocalFromNonLocal not]])
-		ifTrue: [self errorLocalFromNonLocal].
-
-	^ entityURI.
 ]
 
 { #category : #private }
@@ -62,6 +53,29 @@ DTDExternalEntityResolver >> externalEntityLimits: anExternalEntityLimits [
 	externalEntityLimits := anExternalEntityLimits
 ]
 
+{ #category : #resolving }
+DTDExternalEntityResolver >> externalEntityURIFromPublicID: aPublicID systemID: aSystemID [
+	^ aSystemID asXMLURI
+]
+
+{ #category : #resolving }
+DTDExternalEntityResolver >> externalEntityURIFromPublicID: aPublicID systemID: aSystemID baseURI: aBaseXMLURIOrURIString [
+	| baseURI externalEntityURI |
+
+	baseURI := aBaseXMLURIOrURIString asXMLURI.
+	externalEntityURI :=
+		baseURI combinedWith:
+			(self
+				externalEntityURIFromPublicID: aPublicID
+				systemID: aSystemID).
+	(externalEntityURI isLocalURI
+		and: [baseURI isLocalURI not
+			and: [self resolvesLocalFromNonLocal not]])
+		ifTrue: [self errorLocalFromNonLocal].
+
+	^ externalEntityURI.
+]
+
 { #category : #configuring }
 DTDExternalEntityResolver >> externalSubsetReadLimit [
 	^ self externalEntityLimits externalSubsetReadLimit
@@ -75,11 +89,11 @@ DTDExternalEntityResolver >> externalSubsetReadLimit: aLimit [
 ]
 
 { #category : #private }
-DTDExternalEntityResolver >> incrementTotalResolvedEntities [
-	totalResolvedEntities :=
-		totalResolvedEntities
+DTDExternalEntityResolver >> incrementTotalResolvedExternalEntities [
+	totalResolvedExternalEntities :=
+		totalResolvedExternalEntities
 			ifNil: [1]
-			ifNotNil: [totalResolvedEntities + 1]
+			ifNotNil: [totalResolvedExternalEntities + 1]
 ]
 
 { #category : #configuring }
@@ -106,7 +120,7 @@ DTDExternalEntityResolver >> maxExternalEntitySize: aLimit [
 DTDExternalEntityResolver >> postCopy [
 	super postCopy.
 
-	totalResolvedEntities := 0.
+	totalResolvedExternalEntities := 0.
 	externalEntityLimits
 		ifNotNil: [externalEntityLimits := externalEntityLimits copy].
 ]
@@ -117,58 +131,22 @@ DTDExternalEntityResolver >> removeLimits [
 ]
 
 { #category : #resolving }
-DTDExternalEntityResolver >> resolveEntityURI: anXMLURIOrURIString [
-	^ self resolveEntityWith: [:maxSize |
+DTDExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString [
+	^ self resolveExternalEntityWith: [:maxSize |
 		anXMLURIOrURIString asXMLURI
 			getUpToLimit: maxSize
 			decoding: false]
 ]
 
 { #category : #private }
-DTDExternalEntityResolver >> resolveEntityWith: aBlock [
+DTDExternalEntityResolver >> resolveExternalEntityWith: aBlock [
 	| result |
 
 	self checkExternalEntityLimit.
 	result := aBlock value: self maxExternalEntitySize.
-	self incrementTotalResolvedEntities.
+	self incrementTotalResolvedExternalEntities.
 
 	^ result.
-]
-
-{ #category : #private }
-DTDExternalEntityResolver >> resolveExternalEntity: aName publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString class: aClass [
-	| entityURI |
-
-	entityURI :=
-		self
-			entityURIFromPublicID: aPublicID
-			systemID: aSystemID
-			baseURI: aBaseURIString.
-
-	^ aClass
-		name: aName
-		replacement: (self resolveEntityURI: entityURI)
-		uri: entityURI asString.
-]
-
-{ #category : #resolving }
-DTDExternalEntityResolver >> resolveExternalGeneralEntity: aName publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
-	^ self
-		resolveExternalEntity: aName
-		publicID: aPublicID
-		systemID: aSystemID
-		baseURI: aBaseURIString
-		class: DTDExternalGeneralEntity
-]
-
-{ #category : #resolving }
-DTDExternalEntityResolver >> resolveExternalParameterEntity: aName publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
-	^ self
-		resolveExternalEntity: aName
-		publicID: aPublicID
-		systemID: aSystemID
-		baseURI: aBaseURIString
-		class: DTDExternalParameterEntity
 ]
 
 { #category : #configuring }
@@ -185,14 +163,14 @@ DTDExternalEntityResolver >> resolvesLocalFromNonLocal: aBoolean [
 ]
 
 { #category : #resolving }
-DTDExternalEntityResolver >> streamResolveEntityURI: anXMLURIOrURIString [
-	^ self resolveEntityWith: [:maxSize |
+DTDExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString [
+	^ self resolveExternalEntityWith: [:maxSize |
 		anXMLURIOrURIString asXMLURI
 			streamGetUpToLimit: maxSize
 			decoding: false]
 ]
 
 { #category : #accessing }
-DTDExternalEntityResolver >> totalResolvedEntities [
-	^ totalResolvedEntities ifNil: [totalResolvedEntities := 0]
+DTDExternalEntityResolver >> totalResolvedExternalEntities [
+	^ totalResolvedExternalEntities ifNil: [totalResolvedExternalEntities := 0]
 ]

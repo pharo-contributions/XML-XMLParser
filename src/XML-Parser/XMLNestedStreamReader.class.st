@@ -95,7 +95,8 @@ XMLNestedStreamReader >> basicNext [
 		ifTrue: [^ normalizedLineEndingChar].
 	nextChar == CRCharacter
 		ifTrue: [
-			self popNestedStreamWhileAtEnd.
+			stream atEnd
+				ifTrue: [self popNestedStreamWhileAtEnd].
 			stream atEnd
 				ifFalse: [
 					stream peek == LFCharacter
@@ -107,17 +108,21 @@ XMLNestedStreamReader >> basicNext [
 ]
 
 { #category : #private }
-XMLNestedStreamReader >> closeCurrentStream [
+XMLNestedStreamReader >> closeStream [
 	(stream respondsTo: #close)
 		ifTrue: [stream close].
-	onClose ifNotNil: [onClose value].
+	onClose
+		ifNotNil: [onClose value].
 ]
 
 { #category : #closing }
 XMLNestedStreamReader >> closeStreams [
+	self closeStream.
 	[nestedStreams size > 0]
-		whileTrue: [self popNestedStream].
-	self closeCurrentStream.
+		whileTrue: [
+			self
+				popNestedStream;
+				closeStream].
 ]
 
 { #category : #decoding }
@@ -223,7 +228,7 @@ XMLNestedStreamReader >> maxNestedStreams [
 
 { #category : #private }
 XMLNestedStreamReader >> newWriteStream [
-	^ (String new: 128) writeStream
+	^ (self writeStreamCollectionClass new: 128) writeStream
 ]
 
 { #category : #accessing }
@@ -254,12 +259,12 @@ XMLNestedStreamReader >> next: anInteger [
 	| writeStream i |
 
 	writeStream := self newWriteStream.
-	i := anInteger.
+	i := 0.
 	[self atEnd
-		or: [i <= 0]]
+		or: [i >= anInteger]]
 		whileFalse: [
 			writeStream nextPut: self next.
-			i := i - 1].
+			i := i + 1].
 	^ writeStream contents.
 ]
 
@@ -282,13 +287,13 @@ XMLNestedStreamReader >> nextMatch: aFirstCharacter followedBy: aSecondCharacter
 	| oldCurrentLineNumber oldCurrentLineStartPosition |
 
 	"inlined peek"
-	(peekChar ifNil: [peekChar := self basicNext]) == aFirstCharacter
+	(peekChar ifNil: [peekChar := self basicNext]) = aFirstCharacter
 		ifFalse: [^ false].
 	oldCurrentLineNumber := currentLineNumber.
 	oldCurrentLineStartPosition := currentLineStartPosition.
 	self next.
 
-	self peek == aSecondCharacter
+	self peek = aSecondCharacter
 		ifFalse: [
 			self pushBackCharacter: aFirstCharacter.
 			currentPosition := currentPosition - 1.
@@ -307,7 +312,7 @@ XMLNestedStreamReader >> nextMatchAll: aString [
 		ifFalse: [^ true].
 
 	"inlined peek"
-	(peekChar ifNil: [peekChar := self basicNext]) == (aString at: 1)
+	(peekChar ifNil: [peekChar := self basicNext]) = (aString at: 1)
 		ifFalse: [^ false].
 	oldCurrentLineNumber := currentLineNumber.
 	oldCurrentPosition := currentPosition.
@@ -316,7 +321,7 @@ XMLNestedStreamReader >> nextMatchAll: aString [
 	"the first iteration was unrolled with the above inlined peek/self next, so
 	the to:do: loop starts at 2"
 	2 to: aString size do: [:i |
-		self peek == (aString at: i)
+		self peek = (aString at: i)
 			ifFalse: [
 				self pushBack: (aString copyFrom: 1 to: i -1).
 				currentLineNumber := oldCurrentLineNumber.
@@ -344,7 +349,7 @@ XMLNestedStreamReader >> peek [
 
 { #category : #accessing }
 XMLNestedStreamReader >> peekFor: aCharacter [
-	(peekChar ifNil: [peekChar := self basicNext]) == aCharacter
+	self peek = aCharacter
 		ifTrue: [
 			self next.
 			^ true]
@@ -355,7 +360,6 @@ XMLNestedStreamReader >> peekFor: aCharacter [
 XMLNestedStreamReader >> popNestedStream [
 	| nextStreamAndCallback |
 
-	self closeCurrentStream.
 	nextStreamAndCallback := nestedStreams removeLast.
 	stream := nextStreamAndCallback key.
 	onClose := nextStreamAndCallback value.
@@ -363,9 +367,13 @@ XMLNestedStreamReader >> popNestedStream [
 
 { #category : #private }
 XMLNestedStreamReader >> popNestedStreamWhileAtEnd [
-	[stream atEnd
-		and: [nestedStreams size > 0]]
-		whileTrue: [self popNestedStream]
+	[nestedStreams size > 0]
+		whileTrue: [
+			self
+				closeStream;
+				popNestedStream.
+			stream atEnd
+				ifFalse: [^ self]]
 ]
 
 { #category : #printing }
@@ -478,7 +486,7 @@ XMLNestedStreamReader >> skipSeparators [
 XMLNestedStreamReader >> skipTo: aCharacter [
 	[self atEnd]
 		whileFalse: [
-			self next == aCharacter
+			self next = aCharacter
 				ifTrue: [^ true]].
 	^ false.
 ]
@@ -503,7 +511,7 @@ XMLNestedStreamReader >> upTo: aCharacter [
 
 	writeStream := self newWriteStream.
 	[self atEnd
-		or: [(nextChar := self next) == aCharacter]]
+		or: [(nextChar := self next) = aCharacter]]
 		whileFalse: [writeStream nextPut: nextChar].
 	^ writeStream contents.
 ]
@@ -516,4 +524,9 @@ XMLNestedStreamReader >> upToEnd [
 	[self atEnd]
 		whileFalse: [writeStream nextPut: self next].
 	^ writeStream contents.
+]
+
+{ #category : #private }
+XMLNestedStreamReader >> writeStreamCollectionClass [
+	^ String
 ]

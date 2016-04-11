@@ -19,27 +19,29 @@ Class {
 }
 
 { #category : #adding }
-DTDDoctypeDefinition >> addExternalGeneralEntity: aName resolver: aResolver publicID: aPublicID systemID: aSystemID from: aSourceURIString [
+DTDDoctypeDefinition >> addExternalGeneralEntity: aName resolver: aResolver publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
 	self generalEntities
 		at: aName
 		ifAbsentPut: [
-			aResolver
-				resolveExternalGeneralEntity: aName
+			DTDExternalGeneralEntity
+				name: aName
+				resolver: aResolver
 				publicID: aPublicID
 				systemID: aSystemID
-				baseURI: aSourceURIString]
+				baseURI: aBaseURIString]
 ]
 
 { #category : #adding }
-DTDDoctypeDefinition >> addExternalParameterEntity: aName resolver: aResolver publicID: aPublicID systemID: aSystemID from: aSourceURIString [
+DTDDoctypeDefinition >> addExternalParameterEntity: aName resolver: aResolver publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
 	self parameterEntities
 		at: aName
 		ifAbsentPut: [
-			aResolver
-				resolveExternalParameterEntity: aName
+			DTDExternalParameterEntity
+				name: aName
+				resolver: aResolver
 				publicID: aPublicID
 				systemID: aSystemID
-				baseURI: aSourceURIString]
+				baseURI: aBaseURIString]
 ]
 
 { #category : #adding }
@@ -51,30 +53,30 @@ DTDDoctypeDefinition >> addGeneralEntitiesFrom: aDoctypeDefinition [
 ]
 
 { #category : #adding }
-DTDDoctypeDefinition >> addGeneralEntity: aName replacement: aReplacement from: aDocumentOrEntityURIString [
+DTDDoctypeDefinition >> addInternalGeneralEntity: aName replacement: aReplacement baseURI: aBaseURIString [
 	self generalEntities
 		at: aName
 		ifAbsentPut: [
-			DTDGeneralEntity 
+			DTDInternalGeneralEntity 
 				name: aName
 				replacement: aReplacement
-				uri: aDocumentOrEntityURIString]
+				uri: aBaseURIString]
+]
+
+{ #category : #adding }
+DTDDoctypeDefinition >> addInternalParameterEntity: aName replacement: aReplacement baseURI: aBaseURIString [
+	self parameterEntities
+		at: aName
+		ifAbsentPut: [
+			DTDInternalParameterEntity
+				name: aName
+				replacement: aReplacement
+				uri: aBaseURIString]
 ]
 
 { #category : #adding }
 DTDDoctypeDefinition >> addNotation: aName [
 	self notations add: aName
-]
-
-{ #category : #adding }
-DTDDoctypeDefinition >> addParameterEntity: aName replacement: aReplacement from: aDocumentOrEntityURIString [
-	self parameterEntities
-		at: aName
-		ifAbsentPut: [
-			DTDParameterEntity
-				name: aName
-				replacement: aReplacement
-				uri: aDocumentOrEntityURIString]
 ]
 
 { #category : #adding }
@@ -107,7 +109,7 @@ DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: anAttribute
 						defaultPragma: aDefaultPragma
 						defaultValue: aDefaultValue) parse
 							initializeWithValidatorsFrom: self;
-							validateDeclaration)].
+							validateAttributeDeclaration)].
 ]
 
 { #category : #adding }

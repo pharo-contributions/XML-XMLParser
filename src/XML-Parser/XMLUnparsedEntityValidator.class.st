@@ -25,6 +25,13 @@ XMLUnparsedEntityValidator >> elementsAndNotationAttributes [
 ]
 
 { #category : #private }
+XMLUnparsedEntityValidator >> errorMultipleDeclarationsForNotation: aNotation [
+	XMLValidationException
+		formatSignal: 'Multiple declarations for notation "{1}"'
+		with: aNotation
+]
+
+{ #category : #private }
 XMLUnparsedEntityValidator >> errorMultipleNotationAttributesForElement: anElement [
 	XMLValidationException
 		formatSignal: 'Element <{1}> has multiple NOTATION list attributes'
@@ -100,6 +107,15 @@ XMLUnparsedEntityValidator >> validateNotationAttribute: anAttribute forElement:
 		put: anAttribute;
 		size) > oldSize
 		ifFalse: [self errorMultipleNotationAttributesForElement: anElement].
+]
+
+{ #category : #validating }
+XMLUnparsedEntityValidator >> validateNotationDeclaration: aNotation [
+	"Unlike redundant entity declarations which are just ignored, redundant
+	notation declarations are invalid"
+
+	(self notations includes: aNotation)
+		ifTrue: [self errorMultipleDeclarationsForNotation: aNotation]
 ]
 
 { #category : #validating }

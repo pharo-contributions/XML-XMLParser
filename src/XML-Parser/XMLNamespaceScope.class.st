@@ -321,16 +321,16 @@ XMLNamespaceScope >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 XMLNamespaceScope >> resolvePrefixesOfNamespaceURI: aURI [
 	| prefixes |
 
-	prefixes := Set new.
+	"the xml and xmlns namespaces URIs can't be aliased"
 	aURI = self xmlNamespaceURI
-		ifTrue: [prefixes add: 'xml'] "cannot be aliased"
-		ifFalse: [
-			aURI = self xmlnsNamespaceURI
-				ifTrue: [prefixes add: 'xmlns'] "cannot be aliased"
-				ifFalse: [
-					self prefixesAndURIsDo: [:prefix :uri |
-						uri = aURI
-							ifTrue: [prefixes add: prefix]]]].
+		ifTrue: [^ Set with: 'xml'].
+	aURI = self xmlnsNamespaceURI
+		ifTrue: [^ Set with: 'xmlns'].
+
+	prefixes := Set new.
+	self prefixesAndURIsDo: [:prefix :uri |
+		uri = aURI
+			ifTrue: [prefixes add: prefix]].
 	^ prefixes.
 ]
 

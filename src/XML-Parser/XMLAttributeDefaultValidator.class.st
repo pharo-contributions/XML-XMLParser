@@ -34,6 +34,11 @@ XMLAttributeDefaultValidator >> defaultValue [
 	^ ''
 ]
 
+{ #category : #testing }
+XMLAttributeDefaultValidator >> hasDefaultValue [
+	^ false
+]
+
 { #category : #printing }
 XMLAttributeDefaultValidator >> printOn: aStream [
 	super printOn: aStream.

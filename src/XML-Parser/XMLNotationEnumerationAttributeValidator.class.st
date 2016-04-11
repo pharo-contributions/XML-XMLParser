@@ -21,19 +21,22 @@ XMLNotationEnumerationAttributeValidator >> unparsedEntityValidator [
 ]
 
 { #category : #validating }
+XMLNotationEnumerationAttributeValidator >> validateAttributeDeclaration [
+	super validateAttributeDeclaration.
+	self unparsedEntityValidator
+		validateNotationAttribute: self attribute
+		forElement: self element.
+	"The 'all notation names in the declaration MUST be declared' constraint
+	is not checked here because doing so causes tests in the W3C XML Conformance
+	suite to fail"
+]
+
+{ #category : #validating }
 XMLNotationEnumerationAttributeValidator >> validateAttributeValue: aValue [
 	super validateAttributeValue: aValue.
 	self unparsedEntityValidator
 		validateNotationReference: aValue
 		inAttribute: self attribute.
-]
-
-{ #category : #validating }
-XMLNotationEnumerationAttributeValidator >> validateDeclaration [
-	self unparsedEntityValidator
-		validateNotationAttribute: self attribute
-		forElement: self element.
-	super validateDeclaration.
 ]
 
 { #category : #validating }

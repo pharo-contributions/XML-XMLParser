@@ -225,7 +225,7 @@ XMLURIParser >> peek [
 
 { #category : #private }
 XMLURIParser >> peekFor: aCharacter [
-	self peek == aCharacter
+	self peek = aCharacter
 		ifTrue: [
 			self next.
 			^ true]

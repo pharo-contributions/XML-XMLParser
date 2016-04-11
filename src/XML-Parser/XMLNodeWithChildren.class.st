@@ -20,13 +20,13 @@ XMLNodeWithChildren >> addNode: aNode [
 ]
 
 { #category : #adding }
-XMLNodeWithChildren >> addNode: aNode after: aPriorNode [
-	^ self nodes add: aNode after: aPriorNode
+XMLNodeWithChildren >> addNode: aNode after: aPreviousNode [
+	^ self nodes add: aNode after: aPreviousNode
 ]
 
 { #category : #adding }
-XMLNodeWithChildren >> addNode: aNode before: aSubsequentNode [
-	^ self nodes add: aNode before: aSubsequentNode
+XMLNodeWithChildren >> addNode: aNode before: aNextNode [
+	^ self nodes add: aNode before: aNextNode
 ]
 
 { #category : #adding }

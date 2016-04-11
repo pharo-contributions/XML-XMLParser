@@ -103,6 +103,12 @@ SAXParserDriver >> errorDocumentConstraintsRequired [
 ]
 
 { #category : #private }
+SAXParserDriver >> errorImproperParameterEntityNesting [
+	XMLValidationException signal:
+		'Improper nesting of parameter entity replacement within DTD subset'
+]
+
+{ #category : #private }
 SAXParserDriver >> errorStandaloneUndeclaredGeneralEntity: aName [
 	XMLWellFormednessException
 		formatSignal:
@@ -261,7 +267,7 @@ SAXParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicID sys
 						resolver: self externalEntityResolver
 						publicID: aPublicID
 						systemID: aSystemID
-						from: self baseURI]]
+						baseURI: self baseURI]]
 		ifFalse: [
 			self doctypeDefinition
 				addUnparsedEntity: aName
@@ -277,9 +283,9 @@ SAXParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicID sys
 { #category : #'handling - dtd' }
 SAXParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplacement [
 	self doctypeDefinition
-		addGeneralEntity: aName
+		addInternalGeneralEntity: aName
 		replacement: aReplacement
-		from: self baseURI.
+		baseURI: self baseURI.
 
 	self saxHandler
 		generalEntityDeclaration: aName
@@ -300,9 +306,19 @@ SAXParserDriver >> handleGeneralEntityReference: aName [
 ]
 
 { #category : #'handling - dtd' }
+SAXParserDriver >> handleImproperParameterEntityNesting [
+	"this is a validity constraint and is only checked when validating"
+	self isValidating
+		ifTrue: [self errorImproperParameterEntityNesting]
+]
+
+{ #category : #'handling - dtd' }
 SAXParserDriver >> handleNotationDeclaration: aName publicID: aPublicID systemID: aSystemID [
 	self isValidating
-		ifTrue: [self doctypeDefinition addNotation: aName].
+		ifTrue: [
+			self doctypeDefinition unparsedEntityValidator
+				validateNotationDeclaration: aName].
+	self doctypeDefinition addNotation: aName.
 
 	self saxHandler
 		notationDeclaration: aName
@@ -336,7 +352,7 @@ SAXParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicID s
 				resolver: self externalEntityResolver
 				publicID: aPublicID
 				systemID: aSystemID
-				from: self baseURI].
+				baseURI: self baseURI].
 
 	self saxHandler
 		parameterEntityDeclaration: aName
@@ -347,9 +363,9 @@ SAXParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicID s
 { #category : #'handling - dtd' }
 SAXParserDriver >> handleParameterEntityDeclaration: aName replacement: aReplacement [
 	self doctypeDefinition
-		addParameterEntity: aName
+		addInternalParameterEntity: aName
 		replacement:aReplacement
-		from: self baseURI.
+		baseURI: self baseURI.
 
 	self saxHandler
 		parameterEntityDeclaration: aName
@@ -533,7 +549,7 @@ SAXParserDriver >> parseExternalSubset [
 
 	externalSubsetURI :=
 		self externalEntityResolver
-			entityURIFromPublicID: self externalSubsetPublicID
+			externalEntityURIFromPublicID: self externalSubsetPublicID
 			systemID: self externalSubsetSystemID
 			baseURI: self baseURI.
 
@@ -541,7 +557,8 @@ SAXParserDriver >> parseExternalSubset [
 	they aren't kept entirely in memory during parsing. HTTP entities will be
 	kept in memory regardless and this will just return a read stream on them."
 	externalSubsetStream :=
-		self externalEntityResolver streamResolveEntityURI: externalSubsetURI.
+		self externalEntityResolver streamResolveExternalEntityURI:
+			externalSubsetURI.
 
 	(self
 		externalSubsetParserOn:

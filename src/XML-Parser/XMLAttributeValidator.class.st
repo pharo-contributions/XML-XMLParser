@@ -46,36 +46,43 @@ XMLAttributeValidator >> element [
 ]
 
 { #category : #private }
+XMLAttributeValidator >> errorInvalidDefaultValue: aDefaultValue [
+	XMLValidationException
+		formatSignal: 'Invalid default value "{1}" in attribute "{2}" of element <3>'
+		with: aDefaultValue
+		with: self attribute
+		with: self element
+]
+
+{ #category : #private }
 XMLAttributeValidator >> errorInvalidXMLIDAttributeValidator [
-	XMLValidationException signal: 'Attribute "xml:id" must have ID type'
+	XMLValidationException signal:
+		'All "xml:id" attributes must be declared to be of ID type'
 ]
 
 { #category : #private }
 XMLAttributeValidator >> errorInvalidXMLSpaceAttributeValidator [
-	XMLValidationException signal:
-		'Attribute "xml:space" must be declared as enumeration type
-		with only "default" and "preserver" as values'
+	XMLValidationException
+		formatSignal:
+			'Attribute "xml:space" of element <{1}> must be declared as ',
+			'an enumeration type with "default" and/or "preserve" values'
+		with: self element
 ]
 
 { #category : #private }
-XMLAttributeValidator >> furtherNormalizeAttributeValueIn: anAttributeDictionary [
-	"The tokenizer normalizes all whitespace in attribute values to spaces
-	and this step normalizes again by removing leading and trailing spaces
-	and turing multiple spaces to single spaces."
-	| attributeAssociation semiNormalizedValue writeStream isInWhitespace |
+XMLAttributeValidator >> furtherNormalizeAttributeValue: aSemiNormalizedAttributeValue [
+	"The tokenizer normalizes all (non-char escaped) whitespace in attribute
+	values to spaces (0x20), and this further normalizes them by removing
+	leading and trailing spaces and turing multiple spaces to single spaces."
+	| writeStream isInWhitespace |
 
-	attributeAssociation :=
-		anAttributeDictionary
-			associationAt: self attribute
-			ifAbsent: [^ self].
-	semiNormalizedValue := attributeAssociation value.
 	"must use #writeStream instead of WriteStream on: to get a 0-based stream
 	on Gemstone"
-	writeStream := (String new: semiNormalizedValue size) writeStream.
+	writeStream := (String new: aSemiNormalizedAttributeValue size) writeStream.
 	isInWhitespace := false.
 	"to:do: for speed"
-	1 to: semiNormalizedValue size do: [:i | | nextChar |
-		(nextChar := semiNormalizedValue at: i) == NormalizedSpace
+	1 to: aSemiNormalizedAttributeValue size do: [:i | | nextChar |
+		(nextChar := aSemiNormalizedAttributeValue at: i) == NormalizedSpace
 			ifTrue: [
 				isInWhitespace
 					ifFalse: [isInWhitespace := true]]
@@ -86,18 +93,24 @@ XMLAttributeValidator >> furtherNormalizeAttributeValueIn: anAttributeDictionary
 							ifTrue: [writeStream nextPut: NormalizedSpace].
 						isInWhitespace := false].
 				writeStream nextPut: nextChar]].
-	attributeAssociation value: writeStream contents.
+	^ writeStream contents.
+]
+
+{ #category : #private }
+XMLAttributeValidator >> furtherNormalizeAttributeValueIn: anAttributeDictionary [
+	| attributeAssociation |
+
+	attributeAssociation :=
+		anAttributeDictionary
+			associationAt: self attribute
+			ifAbsent: [^ self].
+
+	attributeAssociation value:
+		(self furtherNormalizeAttributeValue: attributeAssociation value).
 ]
 
 { #category : #initialization }
 XMLAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
-]
-
-{ #category : #private }
-XMLAttributeValidator >> listValuesIn: aSpaceSeparatedList do: aBlock [
-	NormalizedSpace
-		xmlSplit: aSpaceSeparatedList
-		do: aBlock
 ]
 
 { #category : #printing }
@@ -123,12 +136,38 @@ XMLAttributeValidator >> shouldFurtherNormalizeAttributeValue [
 	^ true
 ]
 
-{ #category : #validating }
-XMLAttributeValidator >> validateAttributeDefaultIn: anAttributeDictionary [
-	self defaultValidator validateAttributeDefaultIn: anAttributeDictionary.
+{ #category : #private }
+XMLAttributeValidator >> spaceSeparatedListValuesIn: aSpaceSeparatedList do: aBlock [
+	NormalizedSpace
+		xmlSplit: aSpaceSeparatedList
+		do: aBlock
+]
 
-	self shouldFurtherNormalizeAttributeValue
-		ifTrue: [self furtherNormalizeAttributeValueIn: anAttributeDictionary].
+{ #category : #validating }
+XMLAttributeValidator >> validateAttributeDeclaration [
+	self defaultValidator hasDefaultValue
+		ifTrue: [| defaultValue |
+			self shouldFurtherNormalizeAttributeValue
+				ifTrue: [
+					defaultValue :=
+						self furtherNormalizeAttributeValue:
+							self defaultValidator defaultValue.
+					self defaultValidator defaultValue: defaultValue]
+				ifFalse: [defaultValue := self defaultValidator defaultValue].
+			self validateAttributeDefaultValue: defaultValue].
+
+	(self attribute at: 1) == $x "optimization"
+		ifTrue: [
+			(self attribute = 'xml:id')
+				ifTrue: [^ self validateXMLIDAttributeValidator].
+			(self attribute = 'xml:space')
+				ifTrue: [^ self validateXMLSpaceAttributeValidator]].
+]
+
+{ #category : #validating }
+XMLAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
+	"This is overriden in subclasses to check default values, but CDATA types
+	should not be validated, and ID types cannot have default values at all"
 ]
 
 { #category : #validating }
@@ -138,22 +177,15 @@ XMLAttributeValidator >> validateAttributeValue: aValue [
 
 { #category : #validating }
 XMLAttributeValidator >> validateAttributes: anAttributeDictionary [
-	self
-		validateAttributeDefaultIn: anAttributeDictionary;
-		validateAttributeValue:
-			(anAttributeDictionary
-				at: self attribute
-				ifAbsent: [^ self])
-]
+	self shouldFurtherNormalizeAttributeValue
+		ifTrue: [self furtherNormalizeAttributeValueIn: anAttributeDictionary].
 
-{ #category : #validating }
-XMLAttributeValidator >> validateDeclaration [
-	(self attribute at: 1) == $x "optimization"
-		ifTrue: [
-			(self attribute = 'xml:id')
-				ifTrue: [^ self validateXMLIDAttributeValidator].
-			(self attribute = 'xml:space')
-				ifTrue: [^ self validateXMLSpaceAttributeValidator]]
+	self defaultValidator validateAttributeDefaultIn: anAttributeDictionary.
+
+	self validateAttributeValue:
+		(anAttributeDictionary
+			at: self attribute
+			ifAbsent: [^ self]).
 ]
 
 { #category : #validating }

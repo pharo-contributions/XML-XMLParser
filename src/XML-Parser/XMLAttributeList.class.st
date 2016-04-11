@@ -30,14 +30,6 @@ XMLAttributeList >> addAttributeName: aName value: aValue [
 			value: aValue)
 ]
 
-{ #category : #deprecated }
-XMLAttributeList >> addName: aName value: aValue [
-	self deprecated: 'use #addAttributeName:value: instead'.
-	^ self
-		addAttributeName: aName
-		value: aValue
-]
-
 { #category : #private }
 XMLAttributeList >> afterAdding: anAttribute at: anIndex [
 	self attributesByName
@@ -72,19 +64,38 @@ XMLAttributeList >> afterRemoving: anAttribute [
 
 { #category : #converting }
 XMLAttributeList >> asDictionary [
-	| dictionary |
-
-	dictionary := OrderPreservingStringDictionary new: self size.
-	self do: [:each |
-		dictionary
-			at: each name
-			put: each value].
-	^ dictionary.
+	^ self attributes
 ]
 
 { #category : #accessing }
 XMLAttributeList >> attributeAssociations [
 	^ self collect: [:each | each name -> each value]
+]
+
+{ #category : #accessing }
+XMLAttributeList >> attributeAt: aName [
+	^ self attributeValueAt: aName
+]
+
+{ #category : #accessing }
+XMLAttributeList >> attributeAt: aName ifAbsent: aBlock [
+	^ self
+		attributeValueAt: aName
+		ifAbsent: aBlock
+]
+
+{ #category : #accessing }
+XMLAttributeList >> attributeAt: aName ifAbsentPut: aBlock [
+	^ self
+		attributeValueAt: aName
+		ifAbsentPut: aBlock
+]
+
+{ #category : #accessing }
+XMLAttributeList >> attributeAt: aName put: aValue [
+	^ self
+		attributeValueAt: aName
+		put: aValue
 ]
 
 { #category : #private }
@@ -126,37 +137,38 @@ XMLAttributeList >> attributeNodeAt: aName ifAbsent: aBlock [
 ]
 
 { #category : #accessing }
-XMLAttributeList >> attributeNodeAt: aLocalName namespaceURI: aURI [
+XMLAttributeList >> attributeNodeAt: aName namespaceURI: aURI [
 	^ self
-		attributeNodeAt: aLocalName
+		attributeNodeAt: aName
 		namespaceURI: aURI
 		ifAbsent: [self defaultValue]
 ]
 
 { #category : #accessing }
-XMLAttributeList >> attributeNodeAt: aLocalName namespaceURI: aURI ifAbsent: aBlock [
-	^ self
-		detect: [:each |
-			each name = aLocalName
-				and: [each namespaceURI = aURI]]
-		ifNone: aBlock
+XMLAttributeList >> attributeNodeAt: aName namespaceURI: aURI ifAbsent: aBlock [
+	| attributeNode |
+
+	((attributeNode := self attributeNodeAt: aName) notNil
+		and: [attributeNode namespaceURI = aURI])
+		ifTrue: [^ attributeNode]
+		ifFalse: [^ aBlock value]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLAttributeList >> attributeValueAt: aName [
 	^ self
 		attributeValueAt: aName
 		ifAbsent: ['']
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLAttributeList >> attributeValueAt: aName ifAbsent: aBlock [
 	^ (self attributesByName
 		at: aName
 		ifAbsent: [^ aBlock value]) value
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLAttributeList >> attributeValueAt: aName ifAbsentPut: aBlock [
 	^ self
 		attributeValueAt: aName
@@ -166,12 +178,24 @@ XMLAttributeList >> attributeValueAt: aName ifAbsentPut: aBlock [
 				put: aBlock value]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLAttributeList >> attributeValueAt: aName put: aValue [
 	(self includesAttribute: aName)
 		ifTrue: [(self attributeNodeAt: aName) value: aValue]
 		ifFalse: [self addAttributeName: aName value: aValue].
 	^ aValue.
+]
+
+{ #category : #accessing }
+XMLAttributeList >> attributes [
+	| dictionary |
+
+	dictionary := OrderPreservingStringDictionary new: self size.
+	self do: [:each |
+		dictionary
+			at: each name
+			put: each value].
+	^ dictionary.
 ]
 
 { #category : #private }
@@ -199,8 +223,20 @@ XMLAttributeList >> includesAttribute: aName [
 ]
 
 { #category : #removing }
+XMLAttributeList >> removeAttribute: aName [
+	^ (self removeAttributeNodeAt: aName) value
+]
+
+{ #category : #removing }
+XMLAttributeList >> removeAttribute: aName ifAbsent: aBlock [
+	^ (self
+		removeAttributeNodeAt: aName
+		ifAbsent: [^ aBlock value]) value
+]
+
+{ #category : #removing }
 XMLAttributeList >> removeAttributeNodeAt: aName [
-	^ self remove: (self attributeNodeAt: aName).
+	^ self remove: (self attributeNodeAt: aName)
 ]
 
 { #category : #removing }
@@ -208,7 +244,7 @@ XMLAttributeList >> removeAttributeNodeAt: aName ifAbsent: aBlock [
 	^ self remove:
 		(self
 			attributeNodeAt: aName
-			ifAbsent: [^ aBlock value]).
+			ifAbsent: [^ aBlock value])
 ]
 
 { #category : #notifying }
@@ -228,6 +264,13 @@ XMLAttributeList >> replacedAttribute: anAttribute withAttributeAt: anIndex [
 			indexOf: anAttribute
 			otherThan: anIndex) > 0
 		ifTrue: [self removeAt: i]
+]
+
+{ #category : #initialization }
+XMLAttributeList >> setAttributes: anAssociationCollection [
+	self removeAll.
+	anAssociationCollection associationsDo: [:each |
+		self addAttributeAssociation: each].
 ]
 
 { #category : #private }

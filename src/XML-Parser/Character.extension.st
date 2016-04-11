@@ -459,7 +459,7 @@ Character >> xmlSplit: aString do: aBlock [
 
 	start := 1.
 	1 to: aString size do: [:end |
-		(aString at: end) == self
+		(aString at: end) = self
 			ifTrue: [
 				aBlock value: (aString copyFrom: start to: end - 1).
 				start := end + 1]].

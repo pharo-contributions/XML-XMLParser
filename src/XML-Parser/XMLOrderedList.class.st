@@ -90,8 +90,8 @@ XMLOrderedList >> add: anObject [
 ]
 
 { #category : #adding }
-XMLOrderedList >> add: anObject after: aPriorObject [
-	^ collection add: anObject after: aPriorObject
+XMLOrderedList >> add: anObject after: aPreviousObject [
+	^ collection add: anObject after: aPreviousObject
 ]
 
 { #category : #adding }
@@ -100,8 +100,8 @@ XMLOrderedList >> add: anObject afterIndex: anIndex [
 ]
 
 { #category : #adding }
-XMLOrderedList >> add: anObject before: aSubsequentObject [
-	^ collection add: anObject before: aSubsequentObject
+XMLOrderedList >> add: anObject before: aNextObject [
+	^ collection add: anObject before: aNextObject
 ]
 
 { #category : #adding }
@@ -306,6 +306,7 @@ XMLOrderedList >> copyAfterLast: anObject [
 
 { #category : #private }
 XMLOrderedList >> copyClass [
+	"the class to use for copies"
 	^ self class
 ]
 
@@ -776,6 +777,8 @@ XMLOrderedList >> sorted: aSortBlock [
 
 { #category : #private }
 XMLOrderedList >> species [
+	"this makes instances of this class and all subclasses with the same
+	items in the same order be equal"
 	^ XMLOrderedList
 ]
 

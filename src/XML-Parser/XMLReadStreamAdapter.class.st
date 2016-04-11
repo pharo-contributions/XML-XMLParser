@@ -46,12 +46,12 @@ XMLReadStreamAdapter >> next: anInteger [
 	| writeStream i |
 
 	writeStream := self newWriteStream.
-	i := anInteger.
+	i := 0.
 	[self atEnd
-		or: [i <= 0]]
+		or: [i >= anInteger]]
 		whileFalse: [
 			writeStream nextPut: self next.
-			i := i - 1].
+			i := i + 1].
 	^ writeStream contents.
 ]
 

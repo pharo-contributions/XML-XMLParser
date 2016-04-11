@@ -8,9 +8,18 @@ Class {
 }
 
 { #category : #validating }
+XMLEntitiesAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
+	self
+		spaceSeparatedListValuesIn: aDefaultValue
+		do: [:each |
+			each isXMLName
+				ifFalse: [self errorInvalidDefaultValue: aDefaultValue]]
+]
+
+{ #category : #validating }
 XMLEntitiesAttributeValidator >> validateAttributeValue: aValue [
 	self
-		listValuesIn: aValue
+		spaceSeparatedListValuesIn: aValue
 		do: [:each |
 			self unparsedEntityValidator
 				validateEntityReference: each

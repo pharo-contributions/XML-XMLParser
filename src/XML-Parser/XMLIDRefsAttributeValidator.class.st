@@ -8,9 +8,18 @@ Class {
 }
 
 { #category : #validating }
+XMLIDRefsAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
+	self
+		spaceSeparatedListValuesIn: aDefaultValue
+		do: [:each |
+			each isXMLName
+				ifFalse: [self errorInvalidDefaultValue: aDefaultValue]]
+]
+
+{ #category : #validating }
 XMLIDRefsAttributeValidator >> validateAttributeValue: aValue [
 	self
-		listValuesIn: aValue
+		spaceSeparatedListValuesIn: aValue
 		do: [:each |
 			self elementIDValidator
 				validateIDReference: each

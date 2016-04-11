@@ -69,7 +69,7 @@ DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName publicID:
 				resolver: self externalEntityResolver
 				publicID: aPublicID
 				systemID: aSystemID
-				from: self baseURI]
+				baseURI: self baseURI]
 		ifFalse: [
 			self doctypeDefinition
 				addUnparsedEntity: aName
@@ -79,14 +79,23 @@ DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName publicID:
 { #category : #'handling - dtd' }
 DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplacement [
 	self doctypeDefinition
-		addGeneralEntity: aName
+		addInternalGeneralEntity: aName
 		replacement: aReplacement
-		from: self baseURI
+		baseURI: self baseURI
+]
+
+{ #category : #'handling - dtd' }
+DTDExternalSubsetParserDriver >> handleImproperParameterEntityNesting [
+	self saxDriver handleImproperParameterEntityNesting
 ]
 
 { #category : #'handling - dtd' }
 DTDExternalSubsetParserDriver >> handleNotationDeclaration: aName publicID: aPublicID systemID: aSystemID [
-	self doctypeDefinition addNotation: aName
+	self isValidating
+		ifTrue: [
+			self doctypeDefinition unparsedEntityValidator
+				validateNotationDeclaration: aName].
+	self doctypeDefinition addNotation: aName.
 ]
 
 { #category : #'handling - dtd' }
@@ -96,15 +105,15 @@ DTDExternalSubsetParserDriver >> handleParameterEntityDeclaration: aName publicI
 		resolver: self externalEntityResolver
 		publicID: aPublicID
 		systemID: aSystemID
-		from: self baseURI
+		baseURI: self baseURI
 ]
 
 { #category : #'handling - dtd' }
 DTDExternalSubsetParserDriver >> handleParameterEntityDeclaration: aName replacement: aReplacement [
 	self doctypeDefinition
-		addParameterEntity: aName
+		addInternalParameterEntity: aName
 		replacement:aReplacement
-		from: self baseURI
+		baseURI: self baseURI
 ]
 
 { #category : #'handling - dtd' }

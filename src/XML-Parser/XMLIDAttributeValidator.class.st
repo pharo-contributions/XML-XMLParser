@@ -35,9 +35,32 @@ XMLIDAttributeValidator >> elementIDValidator: anElementIDValidator [
 	elementIdValidator := anElementIDValidator
 ]
 
+{ #category : #private }
+XMLIDAttributeValidator >> errorIDAttributeMustBeRequiredOrImplied [
+	XMLValidationException
+		formatSignal:
+			'Attribute "{1}" of element <{2}> is of ID type and must ',
+			'be declared #REQUIRED or #IMPLIED'
+		with: self attribute
+		with: self element
+]
+
 { #category : #initialization }
 XMLIDAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
 	elementIdValidator := aValidatorContainer elementIDValidator
+]
+
+{ #category : #validating }
+XMLIDAttributeValidator >> validateAttributeDeclaration [
+	super validateAttributeDeclaration.
+	self elementIDValidator
+		validateIDAttribute: self attribute
+		forElement: self element.
+]
+
+{ #category : #validating }
+XMLIDAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
+	self errorIDAttributeMustBeRequiredOrImplied
 ]
 
 { #category : #validating }
@@ -45,12 +68,4 @@ XMLIDAttributeValidator >> validateAttributeValue: aValue [
 	self elementIDValidator
 		validateID: aValue
 		inAttribute: self attribute
-]
-
-{ #category : #validating }
-XMLIDAttributeValidator >> validateDeclaration [
-	self elementIDValidator
-		validateIDAttribute: self attribute
-		forElement: self element.
-	super validateDeclaration.
 ]

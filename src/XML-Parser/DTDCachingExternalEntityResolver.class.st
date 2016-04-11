@@ -65,7 +65,7 @@ DTDCachingExternalEntityResolver >> cachingResolveEntityURI: anXMLURIOrURIString
 	^ self class
 		entityCacheAtURI: uri
 		ifAbsentPut: [
-			self resolveEntityWith: [:maxSize |
+			self resolveExternalEntityWith: [:maxSize |
 				uri
 					getUpToLimit: maxSize
 					decoding: false]]
@@ -92,22 +92,22 @@ DTDCachingExternalEntityResolver >> maxCachedEntities: anInteger [
 ]
 
 { #category : #resolving }
-DTDCachingExternalEntityResolver >> resolveEntityURI: anXMLURIOrURIString [
+DTDCachingExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString [
 	| uri |
 
 	(uri := anXMLURIOrURIString asXMLURI) isLocalURI
-		ifTrue: [^ super resolveEntityURI: uri]
+		ifTrue: [^ super resolveExternalEntityURI: uri]
 		ifFalse: [
 			"non-local entities are cached"
 			^ self cachingResolveEntityURI: uri]
 ]
 
 { #category : #resolving }
-DTDCachingExternalEntityResolver >> streamResolveEntityURI: anXMLURIOrURIString [
+DTDCachingExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString [
 	| uri |
 
 	(uri := anXMLURIOrURIString asXMLURI) isLocalURI
-		ifTrue: [^ super streamResolveEntityURI: uri]
+		ifTrue: [^ super streamResolveExternalEntityURI: uri]
 		ifFalse: [
 			"non-local entities are cached"
 			^ self cachingStreamResolveEntityURI: uri]

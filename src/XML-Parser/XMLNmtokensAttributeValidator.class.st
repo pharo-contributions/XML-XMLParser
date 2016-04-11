@@ -8,8 +8,17 @@ Class {
 }
 
 { #category : #validating }
+XMLNmtokensAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
+	self
+		spaceSeparatedListValuesIn: aDefaultValue
+		do: [:each |
+			each isXMLNmtoken
+				ifFalse: [self errorInvalidDefaultValue: aDefaultValue]]
+]
+
+{ #category : #validating }
 XMLNmtokensAttributeValidator >> validateAttributeValue: aValue [
 	self
-		listValuesIn: aValue
+		spaceSeparatedListValuesIn: aValue
 		do: [:each | self validateNmtoken: each]
 ]

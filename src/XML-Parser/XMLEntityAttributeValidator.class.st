@@ -21,6 +21,12 @@ XMLEntityAttributeValidator >> unparsedEntityValidator [
 ]
 
 { #category : #validating }
+XMLEntityAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
+	aDefaultValue isXMLName
+		ifFalse: [self errorInvalidDefaultValue: aDefaultValue]
+]
+
+{ #category : #validating }
 XMLEntityAttributeValidator >> validateAttributeValue: aValue [
 	self unparsedEntityValidator
 		validateEntityReference: aValue

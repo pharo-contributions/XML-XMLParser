@@ -21,6 +21,12 @@ XMLIDRefAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer 
 ]
 
 { #category : #validating }
+XMLIDRefAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
+	aDefaultValue isXMLName
+		ifFalse: [self errorInvalidDefaultValue: aDefaultValue]
+]
+
+{ #category : #validating }
 XMLIDRefAttributeValidator >> validateAttributeValue: aValue [
 	self elementIDValidator
 		validateIDReference: aValue

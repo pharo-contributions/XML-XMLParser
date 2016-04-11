@@ -5,7 +5,7 @@ Element names can be tested using #isNamed: and #isNamedAny:, which test both th
 
 If the name is qualified and namespace support is enabled (the default), then the prefix must be mapped to a namespace URI in the element or an ancestor. The class-side instance creation #name:namespaceURI:* and #name:namespaces:* messages and the instance-side #name:namespaceURI: message can set both simultaneously. If namespace support is disabled, prefixes are not checked.
 
-The #attribute* messages provide a Dictionary-like protocol for manipulating attribute nodes. Attribute value accessors return empty strings if the attribute is absent. The underlying attribute node list can be accessed using #attributeNodes (copy before modifying if you don't want to add/remove attribute nodes from the element), and the names/values can be obtained as an (order-preserving) dictionary using #attributes.
+The #attribute* messages provide a Dictionary-like protocol for manipulating attribute nodes. Unlike the #elementAt:* messages, they match qualified names only, and attribute value accessors return empty strings if the attribute is absent. The underlying attribute node list can be accessed using #attributeNodes (copy before modifying if you don't want to change the element's attributes), and the names/values can be obtained as an (order-preserving) dictionary using #attributes.
 
 See the superclasses for more info.
 "
@@ -212,17 +212,17 @@ XMLElement >> attributeNodeAt: aName ifAbsent: aBlock [
 ]
 
 { #category : #accessing }
-XMLElement >> attributeNodeAt: aLocalName namespaceURI: aURI [
+XMLElement >> attributeNodeAt: aName namespaceURI: aURI [
 	"returns nil if absent"
 	^ self attributeNodes
-		attributeNodeAt: aLocalName
+		attributeNodeAt: aName
 		namespaceURI: aURI
 ]
 
 { #category : #accessing }
-XMLElement >> attributeNodeAt: aLocalName namespaceURI: aURI ifAbsent: aBlock [
+XMLElement >> attributeNodeAt: aName namespaceURI: aURI ifAbsent: aBlock [
 	^ self attributeNodes
-		attributeNodeAt: aLocalName
+		attributeNodeAt: aName
 		namespaceURI: aURI
 		ifAbsent: aBlock
 ]
@@ -241,8 +241,8 @@ XMLElement >> attributeNodesDo: aBlock [
 
 { #category : #accessing }
 XMLElement >> attributes [
-	"returns a new dictionary of attribute names and values"
-	^ self attributeNodes asDictionary
+	"returns a new order preserving dictionary of attribute names and values"
+	^ self attributeNodes attributes
 ]
 
 { #category : #namespacing }
@@ -486,14 +486,14 @@ XMLElement >> previousElement [
 
 { #category : #removing }
 XMLElement >> removeAttribute: aName [
-	^ (self attributeNodes removeAttributeNodeAt: aName) value.
+	^ (self attributeNodes removeAttribute: aName) value.
 ]
 
 { #category : #removing }
 XMLElement >> removeAttribute: aName ifAbsent: aBlock [
-	^ (self attributeNodes
-		removeAttributeNodeAt: aName
-		ifAbsent: [^ aBlock value]) value.
+	^ self attributeNodes
+		removeAttribute: aName
+		ifAbsent: aBlock
 ]
 
 { #category : #removing }
@@ -577,10 +577,7 @@ XMLElement >> resolvePrefixesOfNamespaceURI: aURI [
 
 { #category : #initialization }
 XMLElement >> setAttributes: anAssociationCollection [
-	self hasAttributes
-		ifTrue: [self removeAttributes].
-	anAssociationCollection associationsDo: [:each |
-		self attributeNodes addAttributeAssociation: each].
+	self attributeNodes setAttributes: anAssociationCollection
 ]
 
 { #category : #private }
