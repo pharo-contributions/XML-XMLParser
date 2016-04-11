@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 XMLConformanceSunTests class >> skippableTests [
-	^ #( testinvalidattr04xml testinvalidattr13xml testinvalidattr14xml testinvalidattr15xml testinvalidattr16xml testinvaliddtd02xml testinvalidid05xml testinvalidnotsa01xml testinvalidnotsa04xml testinvalidnotsa05xml testinvalidnotsa06xml testinvalidnotsa07xml testinvalidnotsa09xml testinvalidnotsa10xml testinvalidnotsa11xml testinvalidnotsa12xml testinvalidnotsa13xml testnotwfnotsa03xml )
+	^ #( testinvalidattr04xml testinvaliddtd02xml testinvalidnotsa01xml testinvalidnotsa04xml testinvalidnotsa05xml testinvalidnotsa06xml testinvalidnotsa07xml testinvalidnotsa09xml testinvalidnotsa10xml testinvalidnotsa11xml testinvalidnotsa12xml testinvalidnotsa13xml testinvalidutf16bxml testinvalidutf16lxml testnotwfnotsa03xml testnotwfuri01xml )
 ]
 
 { #category : #'xml source' }
@@ -1240,6 +1240,24 @@ XMLConformanceSunTests class >> sourceinvalidrootxml [
 
 <!-- the name in the dtd must match the element type of the root element -->
     
+<root/>
+'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTests class >> sourceinvalidutf16bxml [
+	"Source file: sun/invalid/utf16b.xml"
+
+	^ '<?xml version=''1.0'' encoding=''UTF-16''?>
+<root/>
+'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTests class >> sourceinvalidutf16lxml [
+	"Source file: sun/invalid/utf16l.xml"
+
+	^ '<?xml version=''1.0'' encoding=''UTF-16''?>
 <root/>
 '
 ]
@@ -3928,6 +3946,34 @@ XMLConformanceSunTests >> testinvalidrootxml [
 			self
 				parse: self class sourceinvalidrootxml
 				documentURI: 'invalid/root.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceSunTests >> testinvalidutf16bxml [
+	"Source file: sun/invalid/utf16b.xml"
+
+	(self isSkippableTest: #testinvalidutf16bxml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourceinvalidutf16bxml
+				documentURI: 'invalid/utf16b.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceSunTests >> testinvalidutf16lxml [
+	"Source file: sun/invalid/utf16l.xml"
+
+	(self isSkippableTest: #testinvalidutf16lxml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourceinvalidutf16lxml
+				documentURI: 'invalid/utf16l.xml']
 		raise: self parserExceptions
 ]
 

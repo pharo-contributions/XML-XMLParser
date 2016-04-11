@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 XMLConformanceExpatTests class >> skippableTests [
-	^ #( testinvalid002xml testinvalid005xml testinvalid006xml testinvalidnotsa022xml testnotwfnotsa009xml testnotwfnotsa010xml testnotwfnotsa011xml testnotwfsa074xml testnotwfsa104xml testnotwfsa110xml testnotwfsa116xml testnotwfsa117xml testnotwfsa119xml testnotwfsa140xml testnotwfsa141xml testnotwfsa175xml testnotwfsa181xml testnotwfsa182xml )
+	^ #( testnotwfsa074xml testnotwfsa104xml testnotwfsa110xml testnotwfsa140xml testnotwfsa141xml testnotwfsa175xml )
 ]
 
 { #category : #'xml source' }
@@ -2372,6 +2372,13 @@ XMLConformanceExpatTests class >> sourcevalidextsa006xml [
 ]
 
 { #category : #'xml source' }
+XMLConformanceExpatTests class >> sourcevalidextsa007ent [
+	"Source file: xmltest/valid/ext-sa/007.ent"
+
+	^ 'Y'
+]
+
+{ #category : #'xml source' }
 XMLConformanceExpatTests class >> sourcevalidextsa007xml [
 	"Source file: xmltest/valid/ext-sa/007.xml"
 
@@ -2381,6 +2388,13 @@ XMLConformanceExpatTests class >> sourcevalidextsa007xml [
 ]>
 <doc>X&e;Z</doc>
 '
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTests class >> sourcevalidextsa008ent [
+	"Source file: xmltest/valid/ext-sa/008.ent"
+
+	^ '<?xml encoding="UTF-16"?>Y'
 ]
 
 { #category : #'xml source' }
@@ -2499,6 +2513,13 @@ XMLConformanceExpatTests class >> sourcevalidextsa013xml [
 ]>
 <doc>&x;</doc>
 '
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTests class >> sourcevalidextsa014ent [
+	"Source file: xmltest/valid/ext-sa/014.ent"
+
+	^ 'data'
 ]
 
 { #category : #'xml source' }
@@ -3714,6 +3735,39 @@ XMLConformanceExpatTests class >> sourcevalidsa048xml [
 <!ELEMENT doc (#PCDATA)>
 ]>
 <doc>]</doc>
+'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTests class >> sourcevalidsa049xml [
+	"Source file: xmltest/valid/sa/049.xml"
+
+	^ '<!DOCTYPE doc [
+<!ELEMENT doc (#PCDATA)>
+]>
+<doc>£</doc>
+'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTests class >> sourcevalidsa050xml [
+	"Source file: xmltest/valid/sa/050.xml"
+
+	^ '<!DOCTYPE doc [
+<!ELEMENT doc (#PCDATA)>
+]>
+<doc>เจมส์</doc>
+'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTests class >> sourcevalidsa051xml [
+	"Source file: xmltest/valid/sa/051.xml"
+
+	^ '<!DOCTYPE เจมส์ [
+<!ELEMENT เจมส์  (#PCDATA)>
+]>
+<เจมส์></เจมส์>
 '
 ]
 
@@ -9167,6 +9221,63 @@ XMLConformanceExpatTests >> testvalidsa048xml [
 			[self
 				parse: self class sourcevalidsa048xml
 				documentURI: 'valid/sa/048.xml']
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skipOrReturnWith: [^ self]]
+						ifFalse: [error pass]]]
+		raise: self parserExceptions
+]
+
+{ #category : #tests }
+XMLConformanceExpatTests >> testvalidsa049xml [
+	"Source file: xmltest/valid/sa/049.xml"
+
+	(self isSkippableTest: #testvalidsa049xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		shouldnt: [
+			[self
+				parse: self class sourcevalidsa049xml
+				documentURI: 'valid/sa/049.xml']
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skipOrReturnWith: [^ self]]
+						ifFalse: [error pass]]]
+		raise: self parserExceptions
+]
+
+{ #category : #tests }
+XMLConformanceExpatTests >> testvalidsa050xml [
+	"Source file: xmltest/valid/sa/050.xml"
+
+	(self isSkippableTest: #testvalidsa050xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		shouldnt: [
+			[self
+				parse: self class sourcevalidsa050xml
+				documentURI: 'valid/sa/050.xml']
+				on: self parserExceptions
+				do: [:error |
+					(self isSkippableException: error)
+						ifTrue: [self skipOrReturnWith: [^ self]]
+						ifFalse: [error pass]]]
+		raise: self parserExceptions
+]
+
+{ #category : #tests }
+XMLConformanceExpatTests >> testvalidsa051xml [
+	"Source file: xmltest/valid/sa/051.xml"
+
+	(self isSkippableTest: #testvalidsa051xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		shouldnt: [
+			[self
+				parse: self class sourcevalidsa051xml
+				documentURI: 'valid/sa/051.xml']
 				on: self parserExceptions
 				do: [:error |
 					(self isSkippableException: error)

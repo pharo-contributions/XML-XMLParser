@@ -87,16 +87,17 @@ XMLConformanceTests class >> buildSkippableTestsMethodsFromFailures [
 XMLConformanceTests class >> buildSourceFileClassMethodFor: aFileReference in: aClass [
 	| sourceSelector pathString sourceStream |
 
-	sourceSelector := (self sourceSelectorFor: aFileReference).
+	sourceSelector := self sourceSelectorFor: aFileReference.
 	pathString := self relativePathStringFor: aFileReference.
 
 	sourceStream := (String new: aFileReference size) writeStream.
-	aFileReference readStreamDo: [:readStream |
-		[readStream atEnd not]
-			whileTrue: [
-				readStream peek == $'
-					ifTrue: [sourceStream nextPut: $'].
-				sourceStream nextPut: readStream next]].
+	"Use XMLFileHandle to get proper (inferred from BOMs) decoding of both
+	UTF-8 and UTF-16. This makes it harder to test for invalid UTF in source
+	but easier to get the xml source into the image."
+	aFileReference fullName asXMLFileHandle readStreamDo: [:readStream |
+		readStream peek == $'
+			ifTrue: [sourceStream nextPut: $'].
+		sourceStream nextPut: readStream next].
 		
 	aClass class
 		compile:
@@ -105,7 +106,7 @@ XMLConformanceTests class >> buildSourceFileClassMethodFor: aFileReference in: a
 					with: sourceSelector asString
 					with: pathString
 					with: sourceStream contents))
-		classified: 'xml source' asSymbol.
+		classified: #'xml source'.
 ]
 
 { #category : #'building subclasses' }
@@ -339,8 +340,8 @@ XMLConformanceTests >> isSkippableTest: aSelector [
 ]
 
 { #category : #accessing }
-XMLConformanceTests >> newVirtualFileResolver [
-	^ XMLConformanceVirtualFileResolver virtualFileClass: self class
+XMLConformanceTests >> newVirtualFileExternalEntityResolver [
+	^ XMLConformanceVirtualFileExternalEntityResolver virtualFileClass: self class
 ]
 
 { #category : #parsing }
@@ -351,11 +352,17 @@ XMLConformanceTests >> parse: aString documentURI: aUri [
 		self parserClass
 			on: aString
 			documentURI: aUri.
+
+	"none of the tests use namespaces, but the Expat suite has examples with
+	invalid QNames that trigger namespace exceptions, so namespace support is
+	disabled, and because the source is pre-decoded from UTF-8/UTF-16, so
+	decoding is disabled"
 	parser
 		usesNamespaces: false;
 		isValidating: true;
 		resolvesExternalEntities: true;
-		externalEntityResolver: self newVirtualFileResolver;
+		externalEntityResolver: self newVirtualFileExternalEntityResolver;
+		decodesCharacters: false;
 		parseDocument.
 ]
 

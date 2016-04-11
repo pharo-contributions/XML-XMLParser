@@ -133,6 +133,223 @@ XMLConformanceOasisTests class >> sourcep01pass3xml [
 ]
 
 { #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail10xml [
+	"Source file: oasis/p02fail10.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail11xml [
+	"Source file: oasis/p02fail11.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail12xml [
+	"Source file: oasis/p02fail12.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail13xml [
+	"Source file: oasis/p02fail13.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail14xml [
+	"Source file: oasis/p02fail14.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail15xml [
+	"Source file: oasis/p02fail15.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail16xml [
+	"Source file: oasis/p02fail16.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail17xml [
+	"Source file: oasis/p02fail17.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail18xml [
+	"Source file: oasis/p02fail18.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail19xml [
+	"Source file: oasis/p02fail19.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail1xml [
+	"Source file: oasis/p02fail1.xml"
+
+	^ '<doc> </doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail20xml [
+	"Source file: oasis/p02fail20.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail21xml [
+	"Source file: oasis/p02fail21.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail22xml [
+	"Source file: oasis/p02fail22.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail23xml [
+	"Source file: oasis/p02fail23.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail24xml [
+	"Source file: oasis/p02fail24.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail25xml [
+	"Source file: oasis/p02fail25.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail26xml [
+	"Source file: oasis/p02fail26.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail27xml [
+	"Source file: oasis/p02fail27.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail28xml [
+	"Source file: oasis/p02fail28.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail29xml [
+	"Source file: oasis/p02fail29.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail2xml [
+	"Source file: oasis/p02fail2.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail30xml [
+	"Source file: oasis/p02fail30.xml"
+
+	^ '<doc>￾</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail31xml [
+	"Source file: oasis/p02fail31.xml"
+
+	^ '<doc>￿</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail3xml [
+	"Source file: oasis/p02fail3.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail4xml [
+	"Source file: oasis/p02fail4.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail5xml [
+	"Source file: oasis/p02fail5.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail6xml [
+	"Source file: oasis/p02fail6.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail7xml [
+	"Source file: oasis/p02fail7.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail8xml [
+	"Source file: oasis/p02fail8.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceOasisTests class >> sourcep02fail9xml [
+	"Source file: oasis/p02fail9.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
 XMLConformanceOasisTests class >> sourcep03fail10xml [
 	"Source file: oasis/p03fail10.xml"
 
@@ -3990,6 +4207,440 @@ XMLConformanceOasisTests >> testp01pass3xml [
 					(self isSkippableException: error)
 						ifTrue: [self skipOrReturnWith: [^ self]]
 						ifFalse: [error pass]]]
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail10xml [
+	"Source file: oasis/p02fail10.xml"
+
+	(self isSkippableTest: #testp02fail10xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail10xml
+				documentURI: 'p02fail10.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail11xml [
+	"Source file: oasis/p02fail11.xml"
+
+	(self isSkippableTest: #testp02fail11xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail11xml
+				documentURI: 'p02fail11.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail12xml [
+	"Source file: oasis/p02fail12.xml"
+
+	(self isSkippableTest: #testp02fail12xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail12xml
+				documentURI: 'p02fail12.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail13xml [
+	"Source file: oasis/p02fail13.xml"
+
+	(self isSkippableTest: #testp02fail13xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail13xml
+				documentURI: 'p02fail13.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail14xml [
+	"Source file: oasis/p02fail14.xml"
+
+	(self isSkippableTest: #testp02fail14xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail14xml
+				documentURI: 'p02fail14.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail15xml [
+	"Source file: oasis/p02fail15.xml"
+
+	(self isSkippableTest: #testp02fail15xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail15xml
+				documentURI: 'p02fail15.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail16xml [
+	"Source file: oasis/p02fail16.xml"
+
+	(self isSkippableTest: #testp02fail16xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail16xml
+				documentURI: 'p02fail16.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail17xml [
+	"Source file: oasis/p02fail17.xml"
+
+	(self isSkippableTest: #testp02fail17xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail17xml
+				documentURI: 'p02fail17.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail18xml [
+	"Source file: oasis/p02fail18.xml"
+
+	(self isSkippableTest: #testp02fail18xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail18xml
+				documentURI: 'p02fail18.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail19xml [
+	"Source file: oasis/p02fail19.xml"
+
+	(self isSkippableTest: #testp02fail19xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail19xml
+				documentURI: 'p02fail19.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail1xml [
+	"Source file: oasis/p02fail1.xml"
+
+	(self isSkippableTest: #testp02fail1xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail1xml
+				documentURI: 'p02fail1.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail20xml [
+	"Source file: oasis/p02fail20.xml"
+
+	(self isSkippableTest: #testp02fail20xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail20xml
+				documentURI: 'p02fail20.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail21xml [
+	"Source file: oasis/p02fail21.xml"
+
+	(self isSkippableTest: #testp02fail21xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail21xml
+				documentURI: 'p02fail21.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail22xml [
+	"Source file: oasis/p02fail22.xml"
+
+	(self isSkippableTest: #testp02fail22xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail22xml
+				documentURI: 'p02fail22.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail23xml [
+	"Source file: oasis/p02fail23.xml"
+
+	(self isSkippableTest: #testp02fail23xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail23xml
+				documentURI: 'p02fail23.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail24xml [
+	"Source file: oasis/p02fail24.xml"
+
+	(self isSkippableTest: #testp02fail24xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail24xml
+				documentURI: 'p02fail24.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail25xml [
+	"Source file: oasis/p02fail25.xml"
+
+	(self isSkippableTest: #testp02fail25xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail25xml
+				documentURI: 'p02fail25.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail26xml [
+	"Source file: oasis/p02fail26.xml"
+
+	(self isSkippableTest: #testp02fail26xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail26xml
+				documentURI: 'p02fail26.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail27xml [
+	"Source file: oasis/p02fail27.xml"
+
+	(self isSkippableTest: #testp02fail27xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail27xml
+				documentURI: 'p02fail27.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail28xml [
+	"Source file: oasis/p02fail28.xml"
+
+	(self isSkippableTest: #testp02fail28xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail28xml
+				documentURI: 'p02fail28.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail29xml [
+	"Source file: oasis/p02fail29.xml"
+
+	(self isSkippableTest: #testp02fail29xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail29xml
+				documentURI: 'p02fail29.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail2xml [
+	"Source file: oasis/p02fail2.xml"
+
+	(self isSkippableTest: #testp02fail2xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail2xml
+				documentURI: 'p02fail2.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail30xml [
+	"Source file: oasis/p02fail30.xml"
+
+	(self isSkippableTest: #testp02fail30xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail30xml
+				documentURI: 'p02fail30.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail31xml [
+	"Source file: oasis/p02fail31.xml"
+
+	(self isSkippableTest: #testp02fail31xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail31xml
+				documentURI: 'p02fail31.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail3xml [
+	"Source file: oasis/p02fail3.xml"
+
+	(self isSkippableTest: #testp02fail3xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail3xml
+				documentURI: 'p02fail3.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail4xml [
+	"Source file: oasis/p02fail4.xml"
+
+	(self isSkippableTest: #testp02fail4xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail4xml
+				documentURI: 'p02fail4.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail5xml [
+	"Source file: oasis/p02fail5.xml"
+
+	(self isSkippableTest: #testp02fail5xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail5xml
+				documentURI: 'p02fail5.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail6xml [
+	"Source file: oasis/p02fail6.xml"
+
+	(self isSkippableTest: #testp02fail6xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail6xml
+				documentURI: 'p02fail6.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail7xml [
+	"Source file: oasis/p02fail7.xml"
+
+	(self isSkippableTest: #testp02fail7xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail7xml
+				documentURI: 'p02fail7.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail8xml [
+	"Source file: oasis/p02fail8.xml"
+
+	(self isSkippableTest: #testp02fail8xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail8xml
+				documentURI: 'p02fail8.xml']
+		raise: self parserExceptions
+]
+
+{ #category : #'tests - exception raising' }
+XMLConformanceOasisTests >> testp02fail9xml [
+	"Source file: oasis/p02fail9.xml"
+
+	(self isSkippableTest: #testp02fail9xml)
+		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		should: [
+			self
+				parse: self class sourcep02fail9xml
+				documentURI: 'p02fail9.xml']
 		raise: self parserExceptions
 ]
 
