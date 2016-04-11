@@ -19,8 +19,9 @@ XMLStringMethodsTest class >> badNames [
 { #category : #accessing }
 XMLStringMethodsTest class >> badNmtokenChars [
 	"16r10FFFF is the max value a char can hold on GS, so nothing above it
-	is tested for"
-	^ #(16r00 16r01 16r0F 16r10
+	is tested for, and 16r0 is not tested for because it terminates strings
+	on GS"
+	^ #(16r01 16r0F 16r10
 			16r2C 16r2F 16r40 16r5B
 			16r5E 16r60 16r7B 16r80
 			16rBF 16rD7 16rF7 16r37E

@@ -39,7 +39,7 @@ DTDPluggableExternalEntityResolverTest >> newEntityReplacement [
 
 { #category : #'instance creation' }
 DTDPluggableExternalEntityResolverTest >> newResolverWithEntities [
-	^ self newResolver entities: self entityAssociations
+	^ self newResolver externalEntities: self entityAssociations
 ]
 
 { #category : #accessing }
@@ -48,244 +48,244 @@ DTDPluggableExternalEntityResolverTest >> resolverClass [
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testEntities [
+DTDPluggableExternalEntityResolverTest >> testExternalEntities [
 	| resolver replacementAssociation |
 
 	resolver := self newResolver.
 	self
-		assert: resolver entities class == Dictionary;
-		assert: resolver entities isEmpty.
+		assert: resolver externalEntities class == Dictionary;
+		assert: resolver externalEntities isEmpty.
 
-	resolver entities: self entityAssociations.
-	self assert: resolver entities = self entityDictionary.
+	resolver externalEntities: self entityAssociations.
+	self assert: resolver externalEntities = self entityDictionary.
 
 	replacementAssociation := 'new.ent' asXMLURI -> self newEntityReplacement.
-	resolver entities: (Array with: replacementAssociation).
-	self assert: resolver entities = (Dictionary with: replacementAssociation).
+	resolver externalEntities: (Array with: replacementAssociation).
+	self assert: resolver externalEntities = (Dictionary with: replacementAssociation).
 
-	resolver := self resolverClass entities: self entityAssociations.
+	resolver := self resolverClass externalEntities: self entityAssociations.
 	self
 		assert: resolver class == self resolverClass;
-		assert: resolver entities = self entityDictionary.
+		assert: resolver externalEntities = self entityDictionary.
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testEntityAtURI [
+DTDPluggableExternalEntityResolverTest >> testExternalEntityAtURI [
 	| resolver |
 
 	resolver := self newResolver.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement |
 		self
-			assert: (resolver entityAtURI: uriString) = '';
-			assert: (resolver entityAtURI: uriString asXMLURI) = ''.
+			assert: (resolver externalEntityAtURI: uriString) = '';
+			assert: (resolver externalEntityAtURI: uriString asXMLURI) = ''.
 
 		resolver
-			entityAtURI: uriString
+			externalEntityAtURI: uriString
 			put: replacement.
 		self
-			assert: (resolver entityAtURI: uriString) = replacement;
-			assert: (resolver entityAtURI: uriString asXMLURI) = replacement].
+			assert: (resolver externalEntityAtURI: uriString) = replacement;
+			assert: (resolver externalEntityAtURI: uriString asXMLURI) = replacement].
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testEntityAtURIIfAbsent [
+DTDPluggableExternalEntityResolverTest >> testExternalEntityAtURIIfAbsent [
 	| resolver |
 
 	resolver := self newResolver.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement |
 		self assert:
 			(resolver
-				entityAtURI: uriString
+				externalEntityAtURI: uriString
 				ifAbsent: [#absent]) = #absent.
 		self assert:
 			(resolver
-				entityAtURI: uriString asXMLURI
+				externalEntityAtURI: uriString asXMLURI
 				ifAbsent: [#absent]) = #absent.
 
 		resolver
-			entityAtURI: uriString
+			externalEntityAtURI: uriString
 			put: replacement.
 		self assert:
 			(resolver
-				entityAtURI: uriString
+				externalEntityAtURI: uriString
 				ifAbsent: [#absent]) = replacement.
 		self assert:
 			(resolver
-				entityAtURI: uriString asXMLURI
+				externalEntityAtURI: uriString asXMLURI
 				ifAbsent: [#absent]) = replacement].
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testEntityAtURIIfAbsentPut [
+DTDPluggableExternalEntityResolverTest >> testExternalEntityAtURIIfAbsentPut [
 	| resolver |
 
 	resolver := self newResolver.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement |
 		self assert:
 			(resolver
-				entityAtURI: uriString
+				externalEntityAtURI: uriString
 				ifAbsentPut: [replacement]) = replacement.
 		self assert:
 			(resolver
-				entityAtURI: uriString asXMLURI
+				externalEntityAtURI: uriString asXMLURI
 				ifAbsentPut: [#absent]) = replacement.
-		self assert: (resolver entityAtURI: uriString) = replacement].
+		self assert: (resolver externalEntityAtURI: uriString) = replacement].
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testEntityAtURIPut [
+DTDPluggableExternalEntityResolverTest >> testExternalEntityAtURIPut [
 	| resolver |
 
 	resolver := self newResolver.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement |
 		self assert:
 			(resolver
-				entityAtURI: uriString
+				externalEntityAtURI: uriString
 				put: replacement) = replacement.
-		self assert: (resolver entityAtURI: uriString) = replacement.
+		self assert: (resolver externalEntityAtURI: uriString) = replacement.
 
 		self assert:
 			(resolver
-				entityAtURI: uriString asXMLURI
+				externalEntityAtURI: uriString asXMLURI
 				put: self newEntityReplacement) = self newEntityReplacement.
 		self assert:
-			(resolver entityAtURI: uriString asXMLURI) = self newEntityReplacement].
+			(resolver externalEntityAtURI: uriString asXMLURI) = self newEntityReplacement].
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testHasEntities [
+DTDPluggableExternalEntityResolverTest >> testHasExternalEntities [
 	self
-		deny: self newResolver hasEntities;
-		assert: self newResolverWithEntities hasEntities
+		deny: self newResolver hasExternalEntities;
+		assert: self newResolverWithEntities hasExternalEntities
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testIncludesEntityURI [
+DTDPluggableExternalEntityResolverTest >> testIncludesExternalEntityURI [
 	| resolver |
 
 	resolver := self newResolver.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement |
 		self
-			deny: (resolver includesEntityURI: uriString);
-			deny: (resolver includesEntityURI: uriString asXMLURI).
+			deny: (resolver includesExternalEntityURI: uriString);
+			deny: (resolver includesExternalEntityURI: uriString asXMLURI).
 
 		resolver
-			entityAtURI: uriString
+			externalEntityAtURI: uriString
 			put: replacement.
 		self
-			assert: (resolver includesEntityURI: uriString);
-			assert: (resolver includesEntityURI: uriString asXMLURI)].
+			assert: (resolver includesExternalEntityURI: uriString);
+			assert: (resolver includesExternalEntityURI: uriString asXMLURI)].
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testRemoveEntities [
+DTDPluggableExternalEntityResolverTest >> testRemoveExternalEntities [
 	| resolver |
 
 	resolver := self newResolverWithEntities.
 	self
-		assert: resolver removeEntities == resolver;
-		deny: resolver hasEntities.
+		assert: resolver removeExternalEntities == resolver;
+		deny: resolver hasExternalEntities.
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testRemoveEntityURI [
+DTDPluggableExternalEntityResolverTest >> testRemoveExternalEntityURI [
 	| resolver |
 
 	resolver := self newResolverWithEntities.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement |
 		self
-			assert: (resolver removeEntityURI: uriString) = replacement;
-			deny: (resolver includesEntityURI: uriString).
+			assert: (resolver removeExternalEntityURI: uriString) = replacement;
+			deny: (resolver includesExternalEntityURI: uriString).
 		self
-			should: [resolver removeEntityURI: uriString]
+			should: [resolver removeExternalEntityURI: uriString]
 			raise: Error.
 		self
-			should: [resolver removeEntityURI: uriString asXMLURI]
+			should: [resolver removeExternalEntityURI: uriString asXMLURI]
 			raise: Error.].
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testRemoveEntityURIIfAbsent [
+DTDPluggableExternalEntityResolverTest >> testRemoveExternalEntityURIIfAbsent [
 	| resolver |
 
 	resolver := self newResolverWithEntities.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement |
 		self assert:
 			(resolver
-				removeEntityURI: uriString
+				removeExternalEntityURI: uriString
 				ifAbsent: [#absent]) = replacement.
-		self deny: (resolver includesEntityURI: uriString).
+		self deny: (resolver includesExternalEntityURI: uriString).
 		self assert:
 			(resolver
-				removeEntityURI: uriString
+				removeExternalEntityURI: uriString
 				ifAbsent: [#absent]) = #absent.
 		self assert:
 			(resolver
-				removeEntityURI: uriString asXMLURI
+				removeExternalEntityURI: uriString asXMLURI
 				ifAbsent: [#absent]) = #absent].
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testResolveEntityURI [
+DTDPluggableExternalEntityResolverTest >> testResolveExternalEntityURI [
 	| resolver |
 
 	resolver := self newResolver.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement |
 		self
-			should: [resolver resolveEntityURI: uriString]
+			should: [resolver resolveExternalEntityURI: uriString]
 			raise: XMLParserException.
 		self
-			should: [resolver resolveEntityURI: uriString asXMLURI]
+			should: [resolver resolveExternalEntityURI: uriString asXMLURI]
 			raise: XMLParserException.
 
 		resolver
 			maxExternalEntitySize: replacement size;
-			entityAtURI: uriString
+			externalEntityAtURI: uriString
 			put: replacement.
 		self
-			assert: (resolver resolveEntityURI: uriString) = replacement;
-			assert: (resolver resolveEntityURI: uriString asXMLURI) = replacement.
+			assert: (resolver resolveExternalEntityURI: uriString) = replacement;
+			assert: (resolver resolveExternalEntityURI: uriString asXMLURI) = replacement.
 
 		resolver maxExternalEntitySize: replacement size - 1.
 		self
-			should: [resolver resolveEntityURI: uriString]
+			should: [resolver resolveExternalEntityURI: uriString]
 			raise: XMLLimitException.
 		self
-			should: [resolver resolveEntityURI: uriString asXMLURI]
+			should: [resolver resolveExternalEntityURI: uriString asXMLURI]
 			raise: XMLLimitException].
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testStreamResolveEntityURI [
+DTDPluggableExternalEntityResolverTest >> testStreamResolveExternalEntityURI [
 	| resolver |
 
 	resolver := self newResolver.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement | | stream |
 		self
-			should: [resolver streamResolveEntityURI: uriString]
+			should: [resolver streamResolveExternalEntityURI: uriString]
 			raise: XMLParserException.
 		self
-			should: [resolver streamResolveEntityURI: uriString asXMLURI]
+			should: [resolver streamResolveExternalEntityURI: uriString asXMLURI]
 			raise: XMLParserException.
 
 		resolver
 			maxExternalEntitySize: replacement size;
-			entityAtURI: uriString
+			externalEntityAtURI: uriString
 			put: replacement.
-		stream := resolver streamResolveEntityURI: uriString.
+		stream := resolver streamResolveExternalEntityURI: uriString.
 		self
 			assert: (stream isKindOf: ReadStream);
 			assert: stream contents = replacement.
-		stream := resolver streamResolveEntityURI: uriString asXMLURI.
+		stream := resolver streamResolveExternalEntityURI: uriString asXMLURI.
 		self
 			assert: (stream isKindOf: ReadStream);
 			assert: stream contents = replacement.
 
 		resolver maxExternalEntitySize: replacement size - 1.
 		self
-			should: [resolver streamResolveEntityURI: uriString]
+			should: [resolver streamResolveExternalEntityURI: uriString]
 			raise: XMLLimitException.
 		self
-			should: [resolver streamResolveEntityURI: uriString asXMLURI]
+			should: [resolver streamResolveExternalEntityURI: uriString asXMLURI]
 			raise: XMLLimitException].
 ]

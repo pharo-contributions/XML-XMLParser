@@ -105,6 +105,42 @@ XMLParserTest >> addressBookXMLWithDTD [
 	^ self class addressBookXMLWithDTD
 ]
 
+{ #category : #accessing }
+XMLParserTest >> badNameAttributeListValues [
+	^ self badNameAttributeValues reject: [:badNameAttributeValue |
+		badNameAttributeValue allSatisfy: [:each | each isXMLWhitespace]]
+]
+
+{ #category : #accessing }
+XMLParserTest >> badNameAttributeValues [
+	^ self badNames reject: [:badName |
+		(badName includes: $<)
+			or: [badName anySatisfy: [:each | each isXMLChar not]]]
+]
+
+{ #category : #accessing }
+XMLParserTest >> badNames [
+	^ XMLStringMethodsTest badNames
+]
+
+{ #category : #accessing }
+XMLParserTest >> badNmtokenAttributeListValues [
+	^ self badNmtokenAttributeValues reject: [:badNmtokenAttributeValue |
+		badNmtokenAttributeValue allSatisfy: [:each | each isXMLWhitespace]]
+]
+
+{ #category : #accessing }
+XMLParserTest >> badNmtokenAttributeValues [
+	^ self badNmtokens reject: [:badName |
+		(badName includes: $<)
+			or: [badName anySatisfy: [:each | each isXMLChar not]]]
+]
+
+{ #category : #accessing }
+XMLParserTest >> badNmtokens [
+	^ XMLStringMethodsTest badNmtokens
+]
+
 { #category : #benchmark }
 XMLParserTest >> benchmark1 [
 	"
@@ -166,7 +202,7 @@ XMLParserTest >> elementDeclarationsNamed: aNameCollection [
 
 { #category : #tests }
 XMLParserTest >> testAttributeBadName [
-	XMLStringMethodsTest badNames do: [:each |
+	self badNames do: [:each |
 		self
 			should: [SAXHandler parse: '<test ', each, '="value"/>']
 			raise: XMLWellFormednessException]
@@ -245,22 +281,24 @@ XMLParserTest >> testAttributeDefaultFixedValue [
 			<!ATTLIST root
 				one CDATA #FIXED "fixedDefault"
 				one CDATA #FIXED "redundant"
-				two CDATA #FIXED "fixedDefaultTwo"
-				three CDATA #FIXED "" >
+				two IDREF #FIXED "fixedDefaultTwo"
+				three CDATA #FIXED ""
+				four ID #REQUIRED >
 		]>'.
 
 	document :=
 		XMLDOMParser parse:
-			dtd, '<root one=''fixedDefault'' two="fixedDefaultTwo" three=""/>'.
+			dtd, '<root one=''fixedDefault'' two="  fixedDefaultTwo  " three="" four="fixedDefaultTwo"/>'.
 	root := document root.
 	self
 		assert: (root attributeAt: 'one') = 'fixedDefault';
 		assert: (root attributeAt: 'two') = 'fixedDefaultTwo';
 		assert: (root includesAttribute: 'three');
-		assert: (root attributeAt: 'three') isEmpty.
+		assert: (root attributeAt: 'three') isEmpty;
+		assert: (root attributeAt: 'four') = 'fixedDefaultTwo'.
 
 	"attributes with fixed defaults are set automatically if not present"
-	document := XMLDOMParser parse: dtd, '<root />'.
+	document := XMLDOMParser parse: dtd, '<root four="fixedDefaultTwo"/>'.
 	root := document root.
 	self
 		assert: (root attributeAt: 'one') = 'fixedDefault';
@@ -362,24 +400,28 @@ XMLParserTest >> testAttributeDefaultValue [
 			<!ATTLIST root
 				one CDATA "default"
 				one CDATA "redundant"
-				two CDATA "" >
+				two CDATA ""
+				three NMTOKEN " defaultThree " >
 		]>'.
 
 	document :=
 		XMLDOMParser parse:
-			dtd, '<root one=''nonDefault'' two="nonDefaultTwo" />'.
+			dtd, '<root one=''nonDefault'' two="nonDefaultTwo" three="nonDefaultThree"/>'.
 	root := document root.
 	self
 		assert: (root attributeAt: 'one') = 'nonDefault';
-		assert: (root attributeAt: 'two') = 'nonDefaultTwo'.
+		assert: (root attributeAt: 'two') = 'nonDefaultTwo';
+		assert: (root attributeAt: 'three') = 'nonDefaultThree'.
 
-	document := XMLDOMParser parse: dtd, '<root one='''' two="" />'.
+	"empty but present attributes shouldn't get the default value"
+	document := XMLDOMParser parse: dtd, '<root one='''' two=""/>'.
 	root := document root.
-	self
-		assert: (root includesAttribute: 'one');
-		assert: (root attributeAt: 'one') isEmpty;
-		assert: (root includesAttribute: 'two');
-		assert: (root attributeAt: 'two') isEmpty.
+		self
+			assert: (root includesAttribute: 'one');
+			assert: (root attributeAt: 'one') isEmpty;
+			assert: (root includesAttribute: 'two');
+			assert: (root attributeAt: 'two') isEmpty;
+			assert: (root attributeAt: 'three') = 'defaultThree'.
 
 	"attributes with defaults are set automatically if not present"
 	document := XMLDOMParser parse: dtd, '<root />'.
@@ -387,7 +429,257 @@ XMLParserTest >> testAttributeDefaultValue [
 	self
 		assert: (root attributeAt: 'one') = 'default';
 		assert: (root includesAttribute: 'two');
-		assert: (root attributeAt: 'two') isEmpty.
+		assert: (root attributeAt: 'two') isEmpty;
+		assert: (root attributeAt: 'three') = 'defaultThree'.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeDefaultValueEntities [
+	| xmlTemplate |
+
+	xmlTemplate := '
+		<!DOCTYPE root [
+			<!ELEMENT root EMPTY>
+			<!NOTATION note PUBLIC "note">
+			<!ENTITY one PUBLIC "one" "" NDATA note>
+			<!ATTLIST root entity ENTITIES " one {1} ">
+		]><root entity="one" />'.
+
+	self badNameAttributeListValues do: [:each |
+		self
+			should: [		
+				SAXHandler parse:
+					(xmlTemplate format: (Array with: each))]
+			raise: XMLValidationException.
+		self
+			shouldnt: [
+				(SAXHandler on:
+					(xmlTemplate format: (Array with: each)))
+					isValidating: false;
+					parseDocument]
+			raise: XMLValidationException.].
+	self
+		shouldnt: [
+			SAXHandler parse:
+				(xmlTemplate format: (Array with: 'two'))]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeDefaultValueEntity [
+	| xmlTemplate |
+
+	xmlTemplate := '
+		<!DOCTYPE root [
+			<!ELEMENT root EMPTY>
+			<!NOTATION note PUBLIC "note">
+			<!ENTITY one PUBLIC "one" "" NDATA note>
+			<!ATTLIST root entity ENTITY "{1}">
+		]><root entity="one" />'.
+
+	self badNameAttributeValues do: [:each |
+		self
+			should: [		
+				SAXHandler parse:
+					(xmlTemplate format: (Array with: each))]
+			raise: XMLValidationException.
+		self
+			shouldnt: [
+				(SAXHandler on:
+					(xmlTemplate format: (Array with: each)))
+					isValidating: false;
+					parseDocument]
+			raise: XMLValidationException.].
+	self
+		shouldnt: [
+			SAXHandler parse:
+				(xmlTemplate format: (Array with: 'one'))]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeDefaultValueEnumeration [
+	| xmlTemplate |
+
+	xmlTemplate := '
+		<!DOCTYPE root [
+			<!ELEMENT root EMPTY>
+			<!ATTLIST root name (one|two|three) " {1} ">
+		]><root name="one" />'.
+
+	self
+		should: [
+			SAXHandler parse:
+				(xmlTemplate format: (Array with: 'four'))]
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			(SAXHandler on:
+				(xmlTemplate format: (Array with: 'four')))
+				isValidating: false;
+				parseDocument]
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			SAXHandler parse:
+				(xmlTemplate format: (Array with: 'one'))]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeDefaultValueIDRef [
+	| xmlTemplate |
+
+	xmlTemplate := '
+		<!DOCTYPE root [
+			<!ELEMENT root EMPTY>
+			<!ATTLIST root
+				id ID #REQUIRED
+				idref IDREF "{1}">
+		]><root id="one" idref="one" />'.
+
+	self badNameAttributeValues do: [:each |
+		self
+			should: [		
+				SAXHandler parse:
+					(xmlTemplate format: (Array with: each))]
+			raise: XMLValidationException.
+		self
+			shouldnt: [
+				(SAXHandler on:
+					(xmlTemplate format: (Array with: each)))
+					isValidating: false;
+					parseDocument]
+			raise: XMLValidationException.].
+	self
+		shouldnt: [
+			SAXHandler parse:
+				(xmlTemplate format: (Array with: 'one'))]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeDefaultValueIDRefs [
+	| xmlTemplate |
+
+	xmlTemplate := '
+		<!DOCTYPE root [
+			<!ELEMENT root EMPTY>
+			<!ATTLIST root
+				id ID #REQUIRED
+				idref IDREFS " one {1} ">
+		]><root id="one" idref="one" />'.
+
+	self badNameAttributeListValues do: [:each |
+		self
+			should: [		
+				SAXHandler parse:
+					(xmlTemplate format: (Array with: each))]
+			raise: XMLValidationException.
+		self
+			shouldnt: [
+				(SAXHandler on:
+					(xmlTemplate format: (Array with: each)))
+					isValidating: false;
+					parseDocument]
+			raise: XMLValidationException.].
+	self
+		shouldnt: [
+			SAXHandler parse:
+				(xmlTemplate format: (Array with: 'two'))]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeDefaultValueNmtoken [
+	| xmlTemplate |
+
+	xmlTemplate := '
+		<!DOCTYPE root [
+			<!ELEMENT root EMPTY>
+			<!ATTLIST root name NMTOKEN "{1}">
+		]><root name="one" />'.
+
+	self badNmtokenAttributeValues do: [:each |
+		self
+			should: [		
+				SAXHandler parse:
+					(xmlTemplate format: (Array with: each))]
+			raise: XMLValidationException.
+		self
+			shouldnt: [
+				(SAXHandler on:
+					(xmlTemplate format: (Array with: each)))
+					isValidating: false;
+					parseDocument]
+			raise: XMLValidationException.].
+	self
+		shouldnt: [
+			SAXHandler parse:
+				(xmlTemplate format: (Array with: 'one'))]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeDefaultValueNmtokens [
+	| xmlTemplate |
+
+	xmlTemplate := '
+		<!DOCTYPE root [
+			<!ELEMENT root EMPTY>
+			<!ATTLIST root name NMTOKENS " one {1} ">
+		]><root name="one" />'.
+
+	self badNmtokenAttributeListValues do: [:each |
+		self
+			should: [		
+				SAXHandler parse:
+					(xmlTemplate format: (Array with: each))]
+			raise: XMLValidationException.
+		self
+			shouldnt: [
+				(SAXHandler on:
+					(xmlTemplate format: (Array with: each)))
+					isValidating: false;
+					parseDocument]
+			raise: XMLValidationException.].
+	self
+		shouldnt: [
+			SAXHandler parse:
+				(xmlTemplate format: (Array with: 'two'))]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeDefaultValueNotation [
+	| xmlTemplate |
+
+	xmlTemplate := '
+		<!DOCTYPE root [
+			<!NOTATION one PUBLIC "one.note">
+			<!NOTATION two PUBLIC "two.note">
+			<!NOTATION three PUBLIC "three.note">
+			<!ELEMENT root EMPTY>
+			<!ATTLIST root note NOTATION (one|two|three) " {1} ">
+		]><root note="one" />'.
+
+	self
+		should: [
+			SAXHandler parse:
+				(xmlTemplate format: (Array with: 'four'))]
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			SAXHandler parse:
+				(xmlTemplate format: (Array with: 'one'))]
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			(SAXHandler on:
+				(xmlTemplate format: (Array with: 'four')))
+				isValidating: false;
+				parseDocument]
+		raise: XMLValidationException.
 ]
 
 { #category : #tests }
@@ -420,21 +712,45 @@ XMLParserTest >> testAttributeEntityDeclaration [
 XMLParserTest >> testAttributeEnumerationDeclaration [
 	| dtd |
 
-	dtd := '<!DOCTYPE root [
-		<!NOTATION txtFile PUBLIC "//file.txt//">
-		<!NOTATION confFile PUBLIC "//file.conf//">
-		<!ELEMENT root EMPTY>
-		<!ATTLIST root
-			number ( one | two | three) #IMPLIED
-			note NOTATION (txtFile | confFile ) #IMPLIED>]>'.
-	self
-		shouldnt: [SAXHandler parse: dtd, '<root number="two" note="txtFile"/>']
-		raise: XMLValidationException.
+	dtd := '
+		<!DOCTYPE root [
+			<!ELEMENT root ANY>
+			<!ATTLIST root number ( one | two | three) #IMPLIED>
+		]>'.
+	#('one' 'two' 'three' '  one  ' '		two 	' '
+		three
+		') do: [:each |
+		self
+			shouldnt: [SAXHandler parse: dtd, '<root number="', each, '"/>']
+			raise: XMLValidationException].
 	self
 		should: [SAXHandler parse: dtd, '<root number="four"/>']
 		raise: XMLValidationException.
 	self
-		should: [SAXHandler parse: dtd, '<root note="htmlFile" />']
+		shouldnt: [
+			(SAXHandler on: dtd, '<root number="four"/>')
+				isValidating: false;
+				parseDocument]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeEnumerationDeclarationListValueRedundance [
+	| xml |
+
+	xml := '
+		<!DOCTYPE root [
+			<!ELEMENT root ANY>
+			<!ATTLIST root number ( one | two | one ) #IMPLIED>
+		]><root/>'.
+	self
+		should: [SAXHandler parse: xml]
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			(SAXHandler on: xml)
+				isValidating: false;
+				parseDocument]
 		raise: XMLValidationException.
 ]
 
@@ -447,24 +763,35 @@ XMLParserTest >> testAttributeIDDeclaration [
 		<!ELEMENT unique EMPTY>
 		<!ELEMENT unique2 EMPTY>
 		<!ATTLIST unique id ID #REQUIRED>
-		<!ATTLIST unique2 id ID #REQUIRED>]>'.
+		<!ATTLIST unique2 id ID #IMPLIED>]>'.
 	self
 		shouldnt: [
 			SAXHandler parse:
-				dtd, '<root><unique id=" one "/><unique id="two"/><unique2 id="three"/></root> ']
+				dtd, '<root><unique id=" one "/><unique id="two"/><unique2 id="three"/></root>']
 		raise:XMLValidationException.
 	self
 		should: [
 			SAXHandler parse:
-				dtd, '<root><unique id="one"/><unique id=" one "/></root> ']
+				dtd, '<root><unique id="one"/><unique id=" one "/><unique2 id="three"/></root> ']
+		raise: XMLValidationException.
+		
+	"ID attributes can't have defaults values or #FIXED defaults and must be #REQUIRED or #IMPLIED"
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE root [
+					<!ELEMENT root ANY>
+					<!ELEMENT unique EMPTY>
+					<!ATTLIST unique id ID #FIXED "one">]>
+					<root/>']
 		raise: XMLValidationException.
 	self
 		should: [
 			SAXHandler parse:
 				'<!DOCTYPE root [
-					<!ATTLIST unique
-						id ID #REQUIRED
-						id2 ID #REQUIRED>]>
+					<!ELEMENT root ANY>
+					<!ELEMENT unique EMPTY>
+					<!ATTLIST unique id ID "one">]>
 					<root/>']
 		raise: XMLValidationException.
 ]
@@ -514,6 +841,84 @@ XMLParserTest >> testAttributeNmtokenDeclaration [
 		raise: XMLValidationException.
 	self
 		should: [SAXHandler parse: dtd, '<root name="one" names="# #" />']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeNotationDeclaration [
+	| dtd |
+
+	dtd := '
+		<!DOCTYPE root [
+			<!NOTATION txtFile PUBLIC "//file.txt//">
+			<!NOTATION confFile PUBLIC "//file.conf//">
+			<!ELEMENT root ANY>
+			<!ATTLIST root note NOTATION (txtFile | confFile ) #IMPLIED>
+		]>'.
+	#('txtFile' 'confFile' ' 	txtFile ' '
+		confFile 	')
+		do: [:each |
+			self
+				shouldnt: [SAXHandler parse: dtd, '<root note="', each, '"/>']
+				raise: XMLValidationException].
+	self
+		should: [SAXHandler parse: dtd, '<root note="htmlFile" />']
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			(SAXHandler on: dtd, '<root note="htmlFile" />')
+				isValidating: false;
+				parseDocument]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeNotationDeclarationListValueRedundance [
+	| xml |
+
+	xml := '
+		<!DOCTYPE root [
+			<!NOTATION txtFile PUBLIC "//file.txt//">
+			<!NOTATION confFile PUBLIC "//file.conf//">
+			<!ELEMENT root ANY>
+			<!ATTLIST root
+				note NOTATION (txtFile | confFile | txtFile) #IMPLIED>
+		]><root/>'.
+	self
+		should: [SAXHandler parse: xml]
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			(SAXHandler on: xml)
+				isValidating: false;
+				parseDocument]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeNotationDeclarationRedundance [
+	"only one notation attribute is allowed per element"
+	| xml |
+
+	xml := '
+		<!DOCTYPE root [
+			<!NOTATION txtFile PUBLIC "//file.txt//">
+			<!NOTATION confFile PUBLIC "//file.conf//">
+			<!NOTATION txtFile2 PUBLIC "//file.txt//">
+			<!NOTATION confFile2 PUBLIC "//file.conf//">
+			<!ELEMENT root ANY>
+			<!ATTLIST root
+				note NOTATION (txtFile | confFile) #IMPLIED
+				note2 NOTATION (txtFile2 | confFile2) #IMPLIED>
+		]><root/>'.
+	self
+		should: [SAXHandler parse: xml]
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			(SAXHandler on: xml)
+				isValidating: false;
+				parseDocument]
 		raise: XMLValidationException.
 ]
 
@@ -836,7 +1241,7 @@ XMLParserTest >> testConditionalSectionInInternalSubsetExternallyDefined [
 				]>
 				<test name="value">test</test>')
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver entities:
+					(DTDPluggableExternalEntityResolver externalEntities:
 						(Array with: 'extern.ent' -> conditionalSections));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -857,7 +1262,7 @@ XMLParserTest >> testConditionalSectionInInternalSubsetExternallyDefined [
 				]>
 				<test name="value">test</test>')
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver entities:
+					(DTDPluggableExternalEntityResolver externalEntities:
 						(Array with: 'extern.ent' -> entityReplacementMixedSections));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -878,7 +1283,7 @@ XMLParserTest >> testConditionalSectionLabelReplacementIgnore [
 					dtd := each format: (Array with: 'INCLUDE').
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver entities:
+							(DTDPluggableExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> dtd));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -888,7 +1293,7 @@ XMLParserTest >> testConditionalSectionLabelReplacementIgnore [
 					dtd := each format: (Array with: 'IGNORE').
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver entities:
+							(DTDPluggableExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> dtd));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -914,7 +1319,7 @@ XMLParserTest >> testConditionalSectionLabelReplacementInclude [
 					dtd := each format: (Array with: 'INCLUDE').
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver entities:
+							(DTDPluggableExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> dtd));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -924,7 +1329,7 @@ XMLParserTest >> testConditionalSectionLabelReplacementInclude [
 					dtd := each format: (Array with: 'IGNORE').
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver entities:
+							(DTDPluggableExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> dtd));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -954,7 +1359,7 @@ XMLParserTest >> testConditionalSectionMixedIncludeIgnore [
 		shouldnt: [
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver entities:
+					(DTDPluggableExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> dtd));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -980,7 +1385,7 @@ XMLParserTest >> testConditionalSectionNestedIgnore [
 			dtd := dtdTemplate format: (Array with: ']]').
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver entities:
+					(DTDPluggableExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> dtd));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -990,7 +1395,7 @@ XMLParserTest >> testConditionalSectionNestedIgnore [
 			dtd := dtdTemplate format: (Array with: ']]>').
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver entities:
+					(DTDPluggableExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> dtd));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -1016,7 +1421,7 @@ XMLParserTest >> testConditionalSectionNestedInclude [
 		shouldnt: [
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver entities:
+					(DTDPluggableExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> dtd));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -1037,7 +1442,7 @@ XMLParserTest >> testConditionalSectionUnterminatedIgnore [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver entities:
+							(DTDPluggableExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -1058,7 +1463,7 @@ XMLParserTest >> testConditionalSectionUnterminatedInclude [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver entities:
+							(DTDPluggableExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -1179,29 +1584,75 @@ XMLParserTest >> testDoctypeDeclarationRoot [
 
 { #category : #tests }
 XMLParserTest >> testDoctypeDeclarationUnterminated [
-	#('<!DOCTYPE' '<!DOCTYPE >'
-		'<!DOCTYPE test' '<!DOCTYPE test PUBLIC' '<!DOCTYPE test PUBLIC "pubid'
-		'<!DOCTYPE test PUBLIC "pubid" "sysid' '<!DOCTYPE test PUBLIC "pubid" "sysid"'
-		'<!DOCTYPE test SYSTEM' '<!DOCTYPE test SYSTEM "sysid' '<!DOCTYPE test SYSTEM "sysid"'
-		'<!DOCTYPE test [' '<!DOCTYPE test []')
+	#('<!DOCTYPE'
+		'<!DOCTYPE >'
+		'<!DOCTYPE test'
+		'<!DOCTYPE test PUBLIC'
+		'<!DOCTYPE test PUBLIC>'
+		'<!DOCTYPE test PUBLIC "pubid'
+		'<!DOCTYPE test PUBLIC "pubid>'
+		'<!DOCTYPE test PUBLIC "pubid"'
+		'<!DOCTYPE test PUBLIC "pubid">'
+		'<!DOCTYPE test PUBLIC "pubid" "sysid'
+		'<!DOCTYPE test PUBLIC "pubid" "sysid>'
+		'<!DOCTYPE test PUBLIC "pubid" "sysid"'
+		'<!DOCTYPE test SYSTEM'
+		'<!DOCTYPE test SYSTEM "sysid'
+		'<!DOCTYPE test SYSTEM "sysid>'
+		'<!DOCTYPE test SYSTEM "sysid"'
+		'<!DOCTYPE test ['
+		'<!DOCTYPE test [>'
+		'<!DOCTYPE test []')
 		do: [:each | 
 			self
-				should: [SAXHandler parse: each]
+				should: [SAXHandler parse: each, '<test/>']
 				raise: XMLWellFormednessException]
 ]
 
 { #category : #tests }
 XMLParserTest >> testDoctypeDeclarationWhitespace [
+	"whitespace is mandatory after the 'DOCTYPE', before and within any external id,
+	but is optional before the '[' and after the ']' of the interal subset"
 	#('<!DOCTYPEtest>'
-		'<!DOCTYPE test PUBLIC"publicid">'
+		'<!DOCTYPE testPUBLIC "publicid" "systemid">'
+		'<!DOCTYPE test PUBLIC"publicid" "systemid">'
 		'<!DOCTYPE test PUBLIC "publicid""systemid">'
+		'<!DOCTYPE testSYSTEM "systemid">'
 		'<!DOCTYPE test SYSTEM"systemid">')
 		do: [:each |
 			self
 				should: [SAXHandler parse: each, '<test/>']
 				raise: XMLWellFormednessException].
-	#('<!DOCTYPE test PUBLIC "publicid" "systemid"	 >'
-		'<!DOCTYPE test SYSTEM "systemid"	>')
+
+	#('<!DOCTYPE
+			test
+			PUBLIC
+			   "publicid"
+			   "systemid"
+		 >'
+		'<!DOCTYPE
+			test
+			SYSTEM
+			   "systemid"
+		>'
+		'<!DOCTYPE
+			test
+			PUBLIC
+			   "publicid"
+			   "systemid"
+			[
+			]
+		 >'
+		'<!DOCTYPE
+			test
+			SYSTEM
+			   "systemid"
+			[
+			]
+		>'
+		'<!DOCTYPE test PUBLIC "publicid" "systemid"[]>'
+		'<!DOCTYPE test SYSTEM "systemid"[]>'
+		'<!DOCTYPE test[]>')
 		do: [:each |
 			self
 				shouldnt: [SAXHandler parse: each, '<test/>']
@@ -1230,7 +1681,7 @@ XMLParserTest >> testElementAnyDeclaration [
 
 { #category : #tests }
 XMLParserTest >> testElementBadName [
-	XMLStringMethodsTest badNames do: [:each |
+	self badNames do: [:each |
 		self
 			should: [SAXHandler parse: '<', each, '/>']
 			raise: XMLWellFormednessException].
@@ -1754,7 +2205,7 @@ XMLParserTest >> testElementsUndeclared [
 
 { #category : #tests }
 XMLParserTest >> testEntityDeclarationBadName [
-	XMLStringMethodsTest badNames do: [:each |
+	self badNames do: [:each |
 		self
 			should: [
 				SAXHandler parse:
@@ -1811,7 +2262,7 @@ XMLParserTest >> testEntityExternalResolution [
 			should: [
 				(SAXHandler on: xml)
 					externalEntityResolver:
-						(DTDPluggableExternalEntityResolver entities:
+						(DTDPluggableExternalEntityResolver externalEntities:
 							(entities copyFrom: 1 to: i));
 					resolvesExternalEntities: true;
 					parseDocument]
@@ -1820,7 +2271,7 @@ XMLParserTest >> testEntityExternalResolution [
 		should: [
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver entities: entities);
+					(DTDPluggableExternalEntityResolver externalEntities: entities);
 				resolvesExternalEntities: false;
 				parseDocument]
 		raise: XMLParserException.
@@ -1828,7 +2279,7 @@ XMLParserTest >> testEntityExternalResolution [
 		shouldnt: [
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver entities: entities);
+					(DTDPluggableExternalEntityResolver externalEntities: entities);
 				resolvesExternalEntities: true;
 				parseDocument]
 		raise: XMLParserException.
@@ -1853,7 +2304,7 @@ XMLParserTest >> testEntityExternalSubsetResolution [
 			should: [
 				(SAXHandler on: xml)
 					externalEntityResolver:
-						(DTDPluggableExternalEntityResolver entities:
+						(DTDPluggableExternalEntityResolver externalEntities:
 							(entities copyFrom: 1 to: i));
 					resolvesExternalEntities: true;
 					parseDocument]
@@ -1862,7 +2313,7 @@ XMLParserTest >> testEntityExternalSubsetResolution [
 		should: [
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver entities: entities);
+					(DTDPluggableExternalEntityResolver externalEntities: entities);
 				resolvesExternalEntities: false;
 				parseDocument]
 		raise: XMLParserException.
@@ -1870,7 +2321,7 @@ XMLParserTest >> testEntityExternalSubsetResolution [
 		shouldnt: [
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver entities: entities);
+					(DTDPluggableExternalEntityResolver externalEntities: entities);
 				resolvesExternalEntities: true;
 				parseDocument]
 		raise: XMLParserException.
@@ -1899,6 +2350,680 @@ XMLParserTest >> testEntityLiteralContextNesting [
 		assert: (document root attributeAt: 'three') = outer;
 		assert: (document root attributeAt: 'four') = inner;
 		assert: (document root contentString) = (outer, inner).
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityNestingAttributeDeclaration [
+	| xml |
+	
+	xml := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
+
+	"these are wellformedness exceptions because the replacement is surrounded with
+	spaces which interrupt the '<!ATTLIST' sequence"
+	#('<!ELEMENT test EMPTY>
+		<!ENTITY % partial "<">
+		%partial;!ATTLIST test name CDATA #IMPLIED>'
+		'<!ELEMENT test EMPTY>
+		<!ENTITY % partial "<!">
+		%partial;ATTLIST test name CDATA #IMPLIED')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLWellFormednessException].
+
+	"these are validity exceptions"
+	#('<!ELEMENT test EMPTY>
+			<!ENTITY % partial "<!ATTLIST">
+			%partial; test name CDATA #IMPLIED>'
+		'<!ELEMENT test EMPTY>
+			<!ENTITY % partial "<!ATTLIST test">
+			%partial; name CDATA #IMPLIED>'
+		'<!ELEMENT test EMPTY>
+			<!ENTITY % partial "<!ATTLIST test name">
+			%partial; CDATA #IMPLIED>'
+		'<!ELEMENT test EMPTY>
+			<!ENTITY % partial "<!ATTLIST test name CDATA">
+			%partial; #IMPLIED>'
+		'<!ELEMENT test EMPTY>
+			<!ENTITY % partial "<!ATTLIST test name CDATA #IMPLIED">
+			%partial;>'
+		'<!ELEMENT test EMPTY>
+			<!ENTITY % partial ">">
+			<!ATTLIST test name CDATA #IMPLIED %partial;'
+		'<!ELEMENT test EMPTY>
+			<!ENTITY % partial "#IMPLIED>">
+			<!ATTLIST test name CDATA %partial;'
+		'<!ELEMENT test EMPTY>
+			<!ENTITY % partial "CDATA #IMPLIED>">
+			<!ATTLIST test name %partial;'
+		'<!ELEMENT test EMPTY>
+			<!ENTITY % partial "name CDATA #IMPLIED>">
+			<!ATTLIST test %partial;'
+		'<!ELEMENT test EMPTY>
+			<!ENTITY % partial "test name CDATA #IMPLIED>">
+			<!ATTLIST %partial;')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLValidationException.
+			self
+				shouldnt: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						isValidating: false;
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLException].
+	self
+		shouldnt: [| dtd |
+			dtd := '
+				<!ELEMENT test EMPTY>
+				<!ENTITY % total "<!ATTLIST test name CDATA #IMPLIED>">
+				%total;'.
+			(SAXHandler on: xml)
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver externalEntities:
+						(Array with: 'extern.dtd' -> dtd));
+				resolvesExternalEntities: true;
+				parseDocument]
+		raise: XMLException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityNestingCharacterReference [
+	"even though general entity refs are bypassed in entity values, they are still
+	checked for well formedness (they must be complete), so the only way to have an
+	entity value containing part of a general ref is to use a char escape for the &"
+	#('<!DOCTYPE test [
+				<!ENTITY partial "&#38;">
+			]><test>&partial;#64;</test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "&#38;#">
+			]><test>&partial;64;</test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "&#38;#64">
+			]><test>&partial;;</test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "#64;">
+			]><test>&&partial;</test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "64;">
+			]><test>&#&partial;</test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial ";">
+			]><test>&#64&partial;</test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "&#38;">
+			]><test name="&partial;#64;"></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "&#38;#">
+			]><test name="&partial;64;"></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "&#38;#64">
+			]><test name="&partial;;"></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "#64;">
+			]><test name="&&partial;"></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "64;">
+			]><test name="&#&partial;"></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial ";">
+			]><test name="&#64&partial;"></test>')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: each)
+						isValidating: false;
+						parseDocument]
+				raise: XMLWellFormednessException].
+	self
+		shouldnt: [
+			(SAXHandler on:
+				'<!DOCTYPE test [
+					<!ENTITY total "&#38;#64;">
+				]><test name="&total;">&total;</test>')
+				isValidating: false;
+				parseDocument]
+		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityNestingComment [
+	#('<!DOCTYPE test [
+				<!ENTITY partial "<">
+			]><test>&partial;!--ignored--></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<!">
+			]><test>&partial;--ignored--></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<!-">
+			]><test>&partial;-ignored--></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<!--">
+			]><test>&partial;ignored--></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<!--ignored">
+			]><test>&partial;--></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<!--ignored-">
+			]><test>&partial;-></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<!--ignored--">
+			]><test>&partial;></test>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+
+	self
+		shouldnt: [
+			SAXHandler parse:
+				'<!DOCTYPE test [
+						<!ENTITY total "<?name value?>">
+					]><test>&total;</test>']
+		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityNestingElementDeclaration [
+	| xml |
+	
+	xml := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
+
+	"these are wellformedness exceptions because the replacement is surrounded
+	with spaces which interrupt the '<!ELEMENT' sequence"
+	#('<!ENTITY % partial "<">%partial;!ELEMENT test EMPTY>'
+		'<!ENTITY % partial "<!">%partial;ELEMENT test EMPTY')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLWellFormednessException].
+
+	"these are validity exceptions"
+	#('<!ENTITY % partial "<!ELEMENT">%partial;test EMPTY>'
+		'<!ENTITY % partial "<!ELEMENT test">%partial;EMPTY>'
+		'<!ENTITY % partial "<!ELEMENT test EMPTY">%partial;>'
+		'<!ENTITY % partial ">"><!ELEMENT test EMPTY%partial;'
+		'<!ENTITY % partial "EMPTY>"><!ELEMENT test %partial;'
+		'<!ENTITY % partial "test EMPTY>"><!ELEMENT %partial;'
+		'<!ENTITY % partial "("><!ELEMENT test %partial; #PCDATA)>'
+		'<!ENTITY % partial ")"><!ELEMENT test (#PCDATA %partial;>'
+		'<!ENTITY % partial "(#PCDATA"><!ELEMENT test %partial;)>'
+		'<!ENTITY % partial "#PCDATA)"><!ELEMENT test (%partial;>'
+		'<!ENTITY % partial "("><!ELEMENT test %partial; a?)>'
+		'<!ENTITY % partial ")"><!ELEMENT test (a? %partial;>'
+		'<!ENTITY % partial "(a?"><!ELEMENT test %partial;)>'
+		'<!ENTITY % partial "a?)"><!ELEMENT test (%partial;>'
+		'<!ENTITY % partial "(a|b"><!ELEMENT test (%partial;))?>'
+		'<!ENTITY % partial "a|b)"><!ELEMENT test ((%partial;)?>')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLValidationException.
+			self
+				shouldnt: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						isValidating: false;
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLException].
+
+	#('<!ENTITY % partial1 "(a|b)">
+			<!ENTITY % partial2 "(c,d)">
+			<!ENTITY % partial3 "(%partial1;, %partial2;)?">
+			<!ENTITY % total "<!ELEMENT test %partial3;>">
+			%total;'
+		'<!ENTITY % partial1 "a">
+			<!ENTITY % partial2 "b">
+			<!ENTITY % partial3 "(#PCDATA | %partial1; | %partial2;)*">
+			<!ENTITY % total "<!ELEMENT test %partial3;>">
+			%total;')
+		do: [:each |
+			self
+				shouldnt: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityNestingGeneralEntityReference [
+	"even though general entity refs are bypassed in entity values, they are still
+	checked for well formedness (they must be complete), so the only way to declare
+	an entity with a replacement containing a '&' is to escape it as char ref"
+	#('<!DOCTYPE test [
+			<!ENTITY name "value">
+			<!ENTITY partial "&#38;">
+		]><test>&partial;name;</test>'
+		'<!DOCTYPE test [
+			<!ENTITY name "value">
+			<!ENTITY partial "&#38;name">
+		]><test>&partial;;</test>'
+		'<!DOCTYPE test [
+			<!ENTITY name "value">
+			<!ENTITY partial "name;">
+		]><test>&&partial;</test>'
+		'<!DOCTYPE test [
+			<!ENTITY name "value">
+			<!ENTITY partial "name;">
+		]><test>&name&partial;</test>'
+		'<!DOCTYPE test [
+			<!ENTITY name "value">
+			<!ENTITY partial "&#38;">
+		]><test name="&partial;name;"></test>'
+		'<!DOCTYPE test [
+			<!ENTITY name "value">
+			<!ENTITY partial "&#38;name">
+		]><test name="&partial;;"></test>'
+		'<!DOCTYPE test [
+			<!ENTITY name "value">
+			<!ENTITY partial "name;">
+		]><test name="&&partial;"></test>'
+		'<!DOCTYPE test [
+			<!ENTITY name "value">
+			<!ENTITY partial "name;">
+		]><test name="&name&partial;"></test>')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: each)
+						isValidating: false;
+						parseDocument]
+				raise: XMLWellFormednessException].
+	self
+		shouldnt: [
+			(SAXHandler on:
+				'<!DOCTYPE test [
+					<!ENTITY name "value">
+					<!ENTITY total "&name;">
+				]><test name="&total;">&total;</test>')
+				isValidating: false;
+				parseDocument]
+		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityNestingIgnoreSection [
+	"If any of the '<![', '[', or ']]>' of a conditional section is contained
+	in the replacement text for a parameter-entity reference, all of them
+	MUST be contained in the same replacement text."
+	| xml |
+	
+	xml := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
+
+	"these are wellformedness exceptions because the replacement is surrounded
+	with spaces which interrupt the '<![' and ']]>' sequences"
+	#('<!ENTITY % partial "<">%partial;![IGNORE[<!--ignore-->]]>'
+		'<!ENTITY % partial "<!">%partial;[IGNORE[<!--ignore-->]]>'
+		'<!ENTITY % partial "<![IGNORE[<!--ignore-->]">%partial;]>'
+		'<!ENTITY % partial "<![IGNORE[<!--ignore-->]]">%partial;>')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLWellFormednessException].
+
+	"these are validity exceptions"
+	#('<!ENTITY % partial "<![">%partial;IGNORE[<!--ignore-->]]>'
+		'<!ENTITY % partial "<![IGNORE">%partial;[<!--ignore-->]]>'
+		'<!ENTITY % partial "<![IGNORE[">%partial;<!--ignore-->]]>'
+		'<!ENTITY % partial "<![IGNORE[<!--ignore-->">%partial;]]>'
+		'<!ENTITY % partial "IGNORE["><![%partial;<!--ignore-->]]>'
+		'<!ENTITY % partial "IGNORE[<!--ignore-->"><![%partial;]]>'
+		'<!ENTITY % partial "IGNORE[<!--ignore-->]]>"><![%partial;')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLValidationException.
+			self
+				shouldnt: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						isValidating: false;
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLException].
+	self
+		shouldnt: [| dtd |
+			dtd := '
+				<!ENTITY % partial "IGNORE">
+				<!ENTITY % total "<![%partial;[<!--ignore-->]]]]]>">
+				%total;'.
+			(SAXHandler on: xml)
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver externalEntities:
+						(Array with: 'extern.dtd' -> dtd));
+				resolvesExternalEntities: true;
+				parseDocument]
+		raise: XMLException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityNestingIncludeSection [
+	"If any of the '<![', '[', or ']]>' of a conditional section is contained
+	in the replacement text for a parameter-entity reference, all of them
+	MUST be contained in the same replacement text."
+	| xml |
+	
+	xml := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
+
+	"these are wellformedness exceptions because the replacement is surrounded
+	with spaces which interrupt the '<![' and ']]>' sequences"
+	#('<!ENTITY % partial "<">%partial;![INCLUDE[<!--ignore-->]]>'
+		'<!ENTITY % partial "<!">%partial;[INCLUDE[<!--ignore-->]]>'
+		'<!ENTITY % partial "<![INCLUDE[<!--ignore-->]">%partial;]>'
+		'<!ENTITY % partial "<![INCLUDE[<!--ignore-->]]">%partial;>'
+		'<!ENTITY % partial "]"<![INCLUDE[<!--ignore-->%partial;]>'
+		'<!ENTITY % partial "]]"><![INCLUDE[<!--ignore-->%partial;>')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLWellFormednessException].
+
+	"these are validity exceptions"
+	#('<!ENTITY % partial "<![">%partial;INCLUDE[<!--ignore-->]]>'
+		'<!ENTITY % partial "<![INCLUDE">%partial;[<!--ignore-->]]>'
+		'<!ENTITY % partial "<![INCLUDE[">%partial;<!--ignore-->]]>'
+		'<!ENTITY % partial "<![INCLUDE[<!--ignore-->">%partial;]]>'
+		'<!ENTITY % partial "INCLUDE["><![%partial;<!--ignore-->]]>'
+		'<!ENTITY % partial "INCLUDE[<!--ignore-->"><![%partial;]]>'
+		'<!ENTITY % partial "INCLUDE[<!--ignore-->]]>"><![%partial;'
+		'<!ENTITY % partial "]]>"><![INCLUDE[<!--ignore-->%partial;')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLValidationException.
+			self
+				shouldnt: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						isValidating: false;
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLException].
+	self
+		shouldnt: [| dtd |
+			dtd := '
+				<!ENTITY % partial1 "INCLUDE">
+				<!ENTITY % partial2 "<!--ignore-->">
+				<!ENTITY % total "<![%partial1;[%partial2;]]>">
+				%total;'.
+			(SAXHandler on: xml)
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver externalEntities:
+						(Array with: 'extern.dtd' -> dtd));
+				resolvesExternalEntities: true;
+				parseDocument]
+		raise: XMLException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityNestingProcessingInstruction [
+	#('<!DOCTYPE test [
+				<!ENTITY partial "<">
+			]><test>&partial;?name value?></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<?">
+			]><test>&partial;name value?></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<?name">
+			]><test>&partial; value?></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<?name value">
+			]><test>&partial;?></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<?name value?">
+			]><test>&partial;></test>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+
+	self
+		shouldnt: [
+			SAXHandler parse:
+				'<!DOCTYPE test [
+						<!ENTITY total "<?name value?>">
+					]><test>&total;</test>']
+		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityNestingSubsetComment [
+	| xml |
+	
+	xml := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
+
+	"these are wellformedness exceptions because the replacement is surrounded
+	with spaces which interrupt the '<!--' and '-->' sequences"
+	#('<!ENTITY % partial "<">%partial;!--ignore-->'
+		'<!ENTITY % partial "<!">%partial;--ignore-->'
+		'<!ENTITY % partial "<!-">%partial;-ignore-->'
+		'<!ENTITY % partial "<!--ignore-">%partial;->'
+		'<!ENTITY % partial "<!--ignore--">%partial;>')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLWellFormednessException].
+
+	#('<!ENTITY % partial "<!--">%partial;ignore-->'
+		'<!ENTITY % partial "<!--ignore">%partial;-->')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLValidationException.
+			self
+				shouldnt: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						isValidating: false;
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLException].
+	self
+		shouldnt: [| dtd |
+			dtd := '
+				<!ENTITY % total "<!--ignore-->">
+				%total;'.
+			(SAXHandler on: xml)
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver externalEntities:
+						(Array with: 'extern.dtd' -> dtd));
+				resolvesExternalEntities: true;
+				parseDocument]
+		raise: XMLException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityNestingSubsetProcessingInstruction [
+	| xml |
+	
+	xml := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
+
+	"these are wellformedness exceptions because the replacement is surrounded
+	with spaces which interrupt the '<?name' and '?>' sequences"
+	#('<!ENTITY % partial "<">%partial;?name value?>'
+		'<!ENTITY % partial "<?">%partial;name value?>'
+		'<!ENTITY % partial "<?name value?">%partial;>')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLWellFormednessException].
+
+	#('<!ENTITY % partial "<?name">%partial; value?>'
+		'<!ENTITY % partial "<?name value">%partial;?>')
+		do: [:each |
+			self
+				should: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLValidationException.
+			self
+				shouldnt: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						isValidating: false;
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLException].
+	self
+		shouldnt: [| dtd |
+			dtd := '
+				<!ENTITY % total "<?name value?>">
+				%total;'.
+			(SAXHandler on: xml)
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver externalEntities:
+						(Array with: 'extern.dtd' -> dtd));
+				resolvesExternalEntities: true;
+				parseDocument]
+		raise: XMLException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityNestingTag [
+	#('<!DOCTYPE test [
+				<!ENTITY partial "<">
+			]><test>&partial;a name=''value''></a></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<">
+			]><test>&partial;a name=''value''/></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a">
+			]><test>&partial;name=''value''></a></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a">
+			]><test>&partial;name=''value''/></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name">
+			]><test>&partial;=''value''></a></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name">
+			]><test>&partial;=''value''/></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=">
+			]><test>&partial;''value''></a></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=">
+			]><test>&partial;''value''/></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=''">
+			]><test>&partial;value''></a></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=''">
+			]><test>&partial;value''/></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=''value">
+			]><test>&partial;''></a></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=''value">
+			]><test>&partial;''/></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=''value''">
+			]><test>&partial;></a></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=''value''">
+			]><test>&partial;/></test>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+
+	self
+		shouldnt: [
+			SAXHandler parse:
+				'<!DOCTYPE test [
+						<!ENTITY total1 "<a name=''value''></a>">
+						<!ENTITY total2 "<a name=''value''/>">
+					]><test>&total1;&total2;</test>']
+		raise: XMLWellFormednessException.
 ]
 
 { #category : #tests }
@@ -1951,7 +3076,7 @@ XMLParserTest >> testEntityReferenceInternalDeclarationExternallyDefined [
 				]>
 				<test name="value">test</test>')
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver entities:
+					(DTDPluggableExternalEntityResolver externalEntities:
 						(Array with: 'extern.ent' -> declarations));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -1976,7 +3101,7 @@ XMLParserTest >> testEntityReferenceInternalDeclarationExternallyDefined [
 				]>
 				<test name="value">test</test>')
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver entities:
+					(DTDPluggableExternalEntityResolver externalEntities:
 						(Array with: 'extern.ent' -> declarations));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -2001,6 +3126,7 @@ XMLParserTest >> testEntityReferenceUnterminated [
 			self
 				should: [SAXHandler parse: each]
 				raise: XMLWellFormednessException.
+			"should still raise erros even when replacement is disabled"
 			self
 				should: [
 					(SAXHandler on: each)
@@ -2152,6 +3278,47 @@ XMLParserTest >> testEntityReplacementSelfReferential [
 					<!ENTITY % second "<!--replacement-->">
 					%first;]><root/>']
 		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityReplacementStandard [
+	"this test comes from the XML spec"
+	| dtd xml doc |
+
+	dtd := '
+		<!ENTITY % pub    "&#xc9;ditions Gallimard" >
+		<!ENTITY   rights "All rights reserved" >
+		<!ENTITY   book   "La Peste: Albert Camus, &#xA9; 1947 %pub;. &rights;" >'.
+	xml := '
+		<!DOCTYPE test SYSTEM ''extern.dtd''>
+		<test>&book;</test>'.
+	doc :=
+		(XMLDOMParser on: xml)
+			externalEntityResolver:
+				(DTDPluggableExternalEntityResolver externalEntities:
+					(Array with: 'extern.dtd' -> dtd));
+			resolvesExternalEntities: true;
+			parseDocument.
+	self assert:
+		doc root contentString =
+			('La Peste: Albert Camus, ', 16rA9 asCharacter asString, ' 1947 ',
+				16rC9 asCharacter asString, 'ditions Gallimard. All rights reserved').
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityReplacementTerminatingInternalSubset [
+	#('<!DOCTYPE root [<!ENTITY % end "]>">%end;'
+		'<!DOCTYPE root [<!ENTITY % end "]">%end;>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each,  '<root/>']
+				raise: XMLWellFormednessException].
+	#('<!DOCTYPE root [<!ENTITY % end "">%end;]>'
+		'<!DOCTYPE root [<!ENTITY % end "<!--]>-->">%end;]>')
+		do: [:each |
+			self
+				shouldnt: [SAXHandler parse: each,  '<root/>']
+				raise: XMLWellFormednessException].
 ]
 
 { #category : #tests }
@@ -2533,6 +3700,32 @@ XMLParserTest >> testNamespaceUndeclared [
 ]
 
 { #category : #tests }
+XMLParserTest >> testNotationDeclarationRedundance [
+	#('<!DOCTYPE test [
+			<!NOTATION name PUBLIC "note">
+			<!NOTATION name PUBLIC "newnote">
+		]>'
+		'<!DOCTYPE test [
+			<!NOTATION name PUBLIC "note">
+			<!NOTATION name PUBLIC "note">
+		]>'
+		'<!DOCTYPE test [
+			<!NOTATION name PUBLIC "note">
+			<!NOTATION name SYSTEM "newnote">
+		]>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each, '<test/>']
+				raise: XMLValidationException.
+			self
+				shouldnt: [
+					(SAXHandler on: each, '<test/>')
+						isValidating: false;
+						parseDocument]
+				raise: XMLValidationException]
+]
+
+{ #category : #tests }
 XMLParserTest >> testNotationDeclarationWhitespace [
 	#('<!DOCTYPE test [<!NOTATIONname PUBLIC "publicid">]>'
 		'<!DOCTYPE test [<!NOTATION name PUBLIC"publicid">]>'
@@ -2650,7 +3843,7 @@ XMLParserTest >> testProcessingInstructionBadChar [
 
 { #category : #tests }
 XMLParserTest >> testProcessingInstructionBadTarget [
-	XMLStringMethodsTest badNames, #('xml' 'XML' 'XmL' 'xMl' 'xML' 'XMl')
+	self badNames, #('xml' 'XML' 'Xml' 'xML' 'XMl' 'xmL' 'XmL' 'xMl')
 		do: [:each |
 			self
 				should: [SAXHandler parse: '<?', each, ' value?><test/>']
@@ -2753,18 +3946,6 @@ XMLParserTest >> testStandalone [
 				validation: true
 				externalEntities: false]
 		raise: XMLFileException.
-]
-
-{ #category : #tests }
-XMLParserTest >> testSubsetEndingEntityReplacement [
-	self
-		should: [
-			SAXHandler parse:
-				'<!DOCTYPE root [
-					<!ENTITY % endOfSubset "]>">
-					%endOfSubset;
-					<root/>']
-		raise: XMLWellFormednessException
 ]
 
 { #category : #tests }

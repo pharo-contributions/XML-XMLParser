@@ -38,12 +38,12 @@ DTDExternalEntityResolverTest >> testCopy [
 		maxExternalEntities: 10;
 		maxExternalEntitySize: 10000;
 		resolvesLocalFromNonLocal: true;
-		incrementTotalResolvedEntities.
+		incrementTotalResolvedExternalEntities.
 	copy := resolver copy.
 	self
 		deny: resolver == copy;
-		assert: resolver totalResolvedEntities = 1;
-		assert: copy totalResolvedEntities = 0;
+		assert: resolver totalResolvedExternalEntities = 1;
+		assert: copy totalResolvedExternalEntities = 0;
 		deny: copy externalEntityLimits == resolver externalEntityLimits;
 		assert: copy externalSubsetReadLimit = 1000000;
 		assert: copy maxExternalEntities = 10;
@@ -117,17 +117,17 @@ DTDExternalEntityResolverTest >> testResolvesLocalFromNonLocal [
 ]
 
 { #category : #tests }
-DTDExternalEntityResolverTest >> testTotalResolvedEntities [
+DTDExternalEntityResolverTest >> testTotalResolvedExternalEntities [
 	| resolver |
 
 	resolver := self newResolver.
-	self assert: resolver totalResolvedEntities = 0.
+	self assert: resolver totalResolvedExternalEntities = 0.
 
-	resolver incrementTotalResolvedEntities.
-	self assert: resolver totalResolvedEntities = 1.
+	resolver incrementTotalResolvedExternalEntities.
+	self assert: resolver totalResolvedExternalEntities = 1.
 
 	self assert:
 		(self newResolver
-			incrementTotalResolvedEntities;
-			totalResolvedEntities) = 1.
+			incrementTotalResolvedExternalEntities;
+			totalResolvedExternalEntities) = 1.
 ]

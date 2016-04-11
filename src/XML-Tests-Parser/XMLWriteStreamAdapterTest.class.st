@@ -35,7 +35,7 @@ XMLWriteStreamAdapterTest >> testCR [
 
 	adapter := self newStreamAdapter.
 	self
-		assert: adapter cr == Character cr;
+		assert: adapter cr = Character cr;
 		assert: adapter contents = (self contentsFromCharacter: Character cr).
 ]
 
@@ -45,7 +45,7 @@ XMLWriteStreamAdapterTest >> testLF [
 
 	adapter := self newStreamAdapter.
 	self
-		assert: adapter lf == Character lf;
+		assert: adapter lf = Character lf;
 		assert: adapter contents = (self contentsFromCharacter: Character lf).
 ]
 
@@ -103,7 +103,7 @@ XMLWriteStreamAdapterTest >> testSpace [
 
 	adapter := self newStreamAdapter.
 	self
-		assert: adapter space == Character space;
+		assert: adapter space = Character space;
 		assert: adapter contents = (self contentsFromCharacter: Character space).
 ]
 
@@ -113,6 +113,6 @@ XMLWriteStreamAdapterTest >> testTab [
 
 	adapter := self newStreamAdapter.
 	self
-		assert: adapter tab == Character tab;
+		assert: adapter tab = Character tab;
 		assert: adapter contents = (self contentsFromCharacter: Character tab).
 ]

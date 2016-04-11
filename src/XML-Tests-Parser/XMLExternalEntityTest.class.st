@@ -78,15 +78,6 @@ XMLExternalEntityTest >> docBookExampleSource [
 	</example>'
 ]
 
-{ #category : #source }
-XMLExternalEntityTest >> doctypeWithDeclarationsForEntityURIs: aURICollection [
-	^ String streamContents: [:stream |
-		stream nextPutAll: '<!DOCTYPE test ['.
-		aURICollection withIndexDo: [:each :i |
-			stream nextPutAll: '<!ENTITY entity', i printString, ' SYSTEM "', each, '">'].
-		stream nextPutAll: ']>']
-]
-
 { #category : #urls }
 XMLExternalEntityTest >> feedURL [
 	^ 'http://pharo.org/news/atom.xml'

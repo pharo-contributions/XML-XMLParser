@@ -1,11 +1,12 @@
 "
-This is a read stream that raises errors if sent peek or next when atEnd like streams on other platforms . Used to test portability.
+This is a read stream that raises errors if sent peek or next when atEnd, which streams on other platforms disallow, or if sent close multiple times or if sent atEnd, next, or peek when closed, which StandardFileStream disallows . Used to test portability.
 "
 Class {
 	#name : #XMLExceptionRaisingReadStream,
 	#superclass : #Object,
 	#instVars : [
-		'stream'
+		'stream',
+		'isClosed'
 	],
 	#category : #'XML-Tests-Parser'
 }
@@ -17,12 +18,19 @@ XMLExceptionRaisingReadStream class >> on: aCollection [
 
 { #category : #testing }
 XMLExceptionRaisingReadStream >> atEnd [
+	isClosed
+		ifTrue: [Error signal: 'Cannot send #atEnd to a closed stream'].
 	^ stream atEnd
 ]
 
 { #category : #closing }
 XMLExceptionRaisingReadStream >> close [
-	stream close
+	isClosed
+		ifTrue: [Error signal: 'Cannot close already closed stream']
+		ifFalse: [
+			(stream respondsTo: #close)
+				ifTrue: [stream close].
+			isClosed := true]
 ]
 
 { #category : #testing }
@@ -44,7 +52,8 @@ XMLExceptionRaisingReadStream >> next [
 
 { #category : #initialization }
 XMLExceptionRaisingReadStream >> on: aCollection [
-	stream := aCollection readStream
+	stream := aCollection readStream.
+	isClosed := false.
 ]
 
 { #category : #accessing }

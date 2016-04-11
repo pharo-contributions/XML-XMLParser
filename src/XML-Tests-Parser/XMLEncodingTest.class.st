@@ -333,7 +333,7 @@ XMLEncodingTest >> testExternalSubsetByteOrderMarkDetection [
 			encodedDTDWithBOM := self utf16BigEndianBOM, (self asciiToUTF16BE: dtd).
 			(SAXHandler on: document)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver entities:
+					(DTDPluggableExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> encodedDTDWithBOM));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -343,7 +343,7 @@ XMLEncodingTest >> testExternalSubsetByteOrderMarkDetection [
 			encodedDTDWithBOM := self utf16LittleEndianBOM, (self asciiToUTF16LE: dtd).
 			(SAXHandler on: document)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver entities:
+					(DTDPluggableExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> encodedDTDWithBOM));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -360,7 +360,7 @@ XMLEncodingTest >> testExternalSubsetImplicitEncodingDetection [
 		shouldnt: [
 			(SAXHandler on: document)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver entities:
+					(DTDPluggableExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> (self asciiToUTF16BE: dtd)));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -369,7 +369,7 @@ XMLEncodingTest >> testExternalSubsetImplicitEncodingDetection [
 		shouldnt: [
 			(SAXHandler on: document)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver entities:
+					(DTDPluggableExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> (self asciiToUTF16LE: dtd)));
 				resolvesExternalEntities: true;
 				parseDocument]
