@@ -215,21 +215,69 @@ XMLParserTest >> testAttributeDeclarationPrefixed [
 	dtd := '<!DOCTYPE root [
 		<!ELEMENT root EMPTY>
 		<!ATTLIST root
+			xmlns:prefix CDATA #IMPLIED
 			prefix:name CDATA #IMPLIED
-			unprefixed CDATA #IMPLIED>]>'.
+			unprefixed CDATA #IMPLIED>
+		]>'.
+
+	#('<root xmlns:prefix="prefixNS" prefix:name="value" unprefixed="value"/>'
+		'<root xmlns:prefix="prefixNS" prefix:name="value" />'
+		'<root unprefixed="value" />'
+		'<root/>')
+		do: [:each |
+			self
+				shouldnt: [SAXHandler parse: dtd, each]
+				raise: XMLValidationException].
+
+	"valid, but a NS exception"
+	self
+		should: [SAXHandler parse: dtd, '<root prefix:name="value"/>']
+		raise: XMLNamespaceException.
 	self
 		shouldnt: [
-			SAXHandler parse:
-				dtd, '<root xmlns:prefix="ns" prefix:name="value" unprefixed="value"/>']
-		raise: XMLValidationException.
-	self
-		should: [SAXHandler parse: dtd, '<root name="value" unprefixed="value" />']
-		raise: XMLValidationException.
-	self
-		should: [
-			SAXHandler parse:
-				dtd, '<root xmlns:prefix="ns" prefix:name="value" prefix:unprefixed="value"/>']
-		raise: XMLValidationException.
+			(SAXHandler on: dtd, '<root prefix:name="value"/>')
+				usesNamespaces: false;
+				parseDocument]
+		raise: XMLNamespaceException.
+
+	#('<root xmlns:prefix="prefixNS" prefix:name="value" prefix:unprefixed="value"/>'
+		'<root name="value" unprefixed="value" />')
+		do: [:each |
+			self
+				should: [SAXHandler parse: dtd, each]
+				raise: XMLValidationException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeDeclarationPrefixedDefault [
+	| dtd |
+
+	dtd := '<!DOCTYPE root [
+		<!ELEMENT root EMPTY>
+		<!ATTLIST root
+			xmlns:prefix CDATA #FIXED "prefixNS"
+			prefix:name CDATA "value"
+			unprefixed CDATA "value">
+		]>'.
+
+	#('<root xmlns:prefix="prefixNS" prefix:name="value" unprefixed="value"/>'
+		'<root prefix:name="value" unprefixed="value"/>'
+		'<root xmlns:prefix="prefixNS" />'
+		'<root prefix:name="value"/>'
+		'<root unprefixed="value"/>'
+		'<root/>')
+		do: [:each |
+			self
+				shouldnt: [SAXHandler parse: dtd, each]
+				raise: XMLValidationException].
+
+	#('<root name="value" />'
+		'<root xmlns:prefix="newPrefixNS" />'
+		'<root prefix:unprefixed="value" />')
+		do: [:each |
+			self
+				should: [SAXHandler parse: dtd, each]
+				raise: XMLValidationException].
 ]
 
 { #category : #tests }
@@ -972,6 +1020,46 @@ XMLParserTest >> testAttributeValueBadChar [
 ]
 
 { #category : #tests }
+XMLParserTest >> testAttributeValueExternalEntityReference [
+	| xmlTemplate entities xml |
+	
+	xmlTemplate := '
+		<!DOCTYPE test [
+			<!ENTITY internal "value">
+			<!ENTITY external SYSTEM  "extern.ent">
+			<!ENTITY interalReferencingExternal "&external;">
+			<!ENTITY
+				interalReferencinginteralReferencingExternal
+				"&interalReferencingExternal;">
+		]>
+		<test name="&{1};"/>'.
+	entities := Array with: 'extern.ent' -> 'value'.
+
+	self
+		shouldnt: [
+			xml := xmlTemplate format: (Array with: 'internal').
+			(SAXHandler on: xml)
+				externalEntityResolver:
+					(DTDPluggableExternalEntityResolver externalEntities: entities);
+				resolvesExternalEntities: true;
+				parseDocument]
+		raise: XMLWellFormednessException.
+
+	#('external' 'interalReferencingExternal'
+		'interalReferencinginteralReferencingExternal')
+		do: [:each |
+			xml := xmlTemplate format: (Array with: each).
+			self
+				should: [
+					(SAXHandler on: xml)
+						externalEntityResolver:
+							(DTDPluggableExternalEntityResolver externalEntities: entities);
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLWellFormednessException].
+]
+
+{ #category : #tests }
 XMLParserTest >> testAttributeValueNormalization [
 	| separators unnormalized normalized document |
 
@@ -1127,6 +1215,39 @@ XMLParserTest >> testAttributeXMLReserved [
 		assert: (document root attributeAt: 'xmll') = 'two';
 		assert: (document root attributeAt: 'xml:') = 'three';
 		assert: (document root attributeAt: 'xmlnss') = 'four'.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeXMLSpaceValidation [
+	"xml:space must be declared an enumeration type with only 'default' and
+	'preserve' as allowed values"
+	| xmlTemplate xml |
+
+	xmlTemplate := '
+		<!DOCTYPE whitespace [
+			<!ELEMENT whitespace EMPTY>
+			<!ATTLIST whitespace xml:space {1} #IMPLIED>
+		]><whitespace></whitespace>'.
+	#('CDATA' 'ID' 'IDREF' 'IDREFS' 'ENTITY' 'ENTITIES'
+		'(default|preserve|other)' 'NOTATION (default|preserve)')
+		do: [:each |
+			xml := xmlTemplate format: (Array with: each).
+			self
+				should: [SAXHandler parse: xml]
+				raise: XMLValidationException.
+			self
+				shouldnt: [
+					(SAXHandler on: xml)
+						isValidating: false;
+						parseDocument]
+				raise: XMLValidationException].
+
+	#('(default|preserve)' '(preserve|default)' '(default)' '(preserve)')
+		do: [:each |
+			xml := xmlTemplate format: (Array with: each).
+			self
+				shouldnt: [SAXHandler parse: xml]
+				raise: XMLValidationException].
 ]
 
 { #category : #tests }
@@ -2002,6 +2123,7 @@ XMLParserTest >> testElementDeclarationPrefixed [
 
 	dtd := '<!DOCTYPE prefix:root [
 		<!ELEMENT prefix:root ANY>
+		<!ATTLIST prefix:root xmlns:prefix CDATA #IMPLIED>
 		<!ELEMENT unprefixed EMPTY>]>'.
 	self
 		shouldnt: [SAXHandler parse: dtd, '<prefix:root xmlns:prefix="ns"><unprefixed/></prefix:root>']
@@ -2045,34 +2167,42 @@ XMLParserTest >> testElementDeclarationWhitespace [
 
 { #category : #tests }
 XMLParserTest >> testElementEmptyDeclaration [
-	self
-		shouldnt: [
-			SAXHandler parse: 
-				'<!DOCTYPE root [<!ELEMENT root EMPTY>]>',
-				'<root> <!--empty--> <?pi data?> </root>']
-		raise: XMLValidationException.
-	self
-		should: [
-			SAXHandler parse: 
-				'<!DOCTYPE root [
-					<!ELEMENT root EMPTY>
-					<!ELEMENT non-empty ANY>]><root><non-empty/></root>']
-		raise: XMLValidationException.
-	self
-		should: [
-			SAXHandler parse: 
-				'<!DOCTYPE root [<!ELEMENT root EMPTY>]><root>non-empty</root>']
-		raise: XMLValidationException.
-	self
-		should: [
-			SAXHandler parse: 
-				'<!DOCTYPE root [<!ELEMENT root EMPTY>]><root>&#32;</root>']
-		raise: XMLValidationException.
-	self
-		should: [
-			SAXHandler parse: 
-				'<!DOCTYPE root [<!ELEMENT root EMPTY>]><root><![CDATA[non-empty]]></root>']
-		raise: XMLValidationException.
+	| dtd |
+
+	dtd := '<!DOCTYPE empty [<!ELEMENT empty EMPTY>]>'.
+
+	#('<empty/>'
+		'<empty></empty>')
+		do: [:each |
+			self
+				shouldnt: [SAXHandler parse: dtd, each]
+				raise: XMLValidationException].
+
+	"the spec says EMPTY elements can't have any content, even whitespace,
+	comments or PIs"
+	#('<empty><empty/></empty>'
+		'<empty>non-empty</empty>'
+		'<empty> </empty>'
+		'<empty>	</empty>'
+		'<empty>
+</empty>'
+		'<empty>&#32;</empty>' "Character space asciiValue"
+		'<empty>&#9;</empty>' "Character tab asciiValue"
+		'<empty>&#10;</empty>' "Character lf asciiValue"
+		'<empty>&#13;</empty>' "Character cr asciiValue"
+		'<empty><![CDATA[non-empty]]></empty>'
+		'<empty><!--non-empty--></empty>'
+		'<empty><?non empty?></empty>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: dtd, each]
+				raise: XMLValidationException.
+			self
+				shouldnt: [
+					(SAXHandler on: dtd, each)
+						isValidating: false;
+						parseDocument]
+				raise: XMLValidationException].
 ]
 
 { #category : #tests }
@@ -4030,94 +4160,6 @@ XMLParserTest >> testValidationAndEntityReferenceToggle [
 			preservesUndeclaredEntityReferences: true;
 			isValidating: true;
 			preservesUndeclaredEntityReferences).
-]
-
-{ #category : #tests }
-XMLParserTest >> testWhitespacePreservation [
-	| xml root notPreserved preserved |
-
-	xml := '
-		<root xml:space="preserve">
-			<not-preserved xml:space="default">
-				<preserved xml:space="preserve">
-				</preserved>
-			</not-preserved>
-		</root>'.
-	root := (XMLDOMParser parse: xml) root.
-	self
-		assert: root nodes size = 3;
-		assert: root stringNodes size = 2.
-	root stringNodesDo: [:each | self assert: each isWhitespace].
-
-	notPreserved := root nodes second.
-	self assert: notPreserved nodes size = 1.
-
-	preserved := notPreserved firstElement.
-	self
-		assert: preserved firstNode isStringNode;
-		assert: preserved firstNode isWhitespace.
-]
-
-{ #category : #tests }
-XMLParserTest >> testWhitespacePreservationValidation [
-	| dtd |
-
-	dtd := '
-		<!DOCTYPE whitespace [
-			<!ELEMENT whitespace EMPTY>
-			<!ATTLIST whitespace xml:space (default|preserve) ''preserve''>
-		]>'.
-	self
-		shouldnt: [SAXHandler parse: dtd, '<whitespace></whitespace>']
-		raise: XMLValidationException.
-	self
-		shouldnt: [SAXHandler parse: dtd, '<whitespace xml:space="default"> </whitespace>']
-		raise: XMLValidationException.
-	self
-		shouldnt: [
-			SAXHandler parse:
-				(dtd copyReplaceAll: '(default|preserve)' with: '(preserve|default)'),
-				'<whitespace></whitespace>']
-		raise: XMLValidationException.
-	self
-		shouldnt: [
-			SAXHandler parse:
-				(dtd copyReplaceAll: '(default|preserve)' with: '(preserve)'),
-				'<whitespace></whitespace>']
-		raise: XMLValidationException.
-	self
-		should: [
-			SAXHandler parse:
-				(dtd copyReplaceAll: '(default|preserve)' with: '(default|preserve|other)'),
-				'<whitespace></whitespace>']
-		raise: XMLValidationException.
-	self
-		should: [
-			SAXHandler parse:
-				(dtd copyReplaceAll: '(default|preserve)' with: 'CDATA'),
-				'<whitespace></whitespace>']
-		raise: XMLValidationException.
-	self
-		should: [SAXHandler parse: dtd, '<whitespace> </whitespace>']
-		raise: XMLValidationException.
-	self
-		should: [SAXHandler parse: dtd, '<whitespace><![CDATA[ ]]></whitespace>']
-		raise: XMLValidationException.
-	self
-		should: [SAXHandler parse: dtd, '<whitespace xml:space="default"><![CDATA[ ]]></whitespace>']
-		raise: XMLValidationException.
-	self
-		should: [
-			SAXHandler parse:
-				(dtd copyReplaceAll: '(default|preserve)' with: '(not|valid)'),
-				'<whitespace></whitespace>']
-		raise: XMLValidationException.
-	self
-		should: [
-			SAXHandler parse:
-				(dtd copyReplaceAll: '(default|preserve)' with: 'CDATA'),
-				'<whitespace></whitespace>']
-		raise: XMLValidationException.
 ]
 
 { #category : #tests }

@@ -38,18 +38,18 @@ XMLAttributeListTest >> assertList: aList copiedFrom: aSecondList equals: aThird
 		copiedFrom: aSecondList
 		equals: aThirdList.
 	self
-		assert: aList attributesByName size = aList size;
-		assert: aList attributesByName = aThirdList attributesByName;
-		deny: aList attributesByName == aSecondList attributesByName.
+		assert: aList attributeNodesByName size = aList size;
+		assert: aList attributeNodesByName = aThirdList attributeNodesByName;
+		deny: aList attributeNodesByName == aSecondList attributeNodesByName.
 ]
 
 { #category : #assertions }
 XMLAttributeListTest >> assertList: aList isCopyOf: aSecondList [
 	super assertList: aList isCopyOf: aSecondList.
 	self
-		assert: aList attributesByName size = aList size;
-		assert: aList attributesByName = aSecondList attributesByName;
-		deny: aList attributesByName == aSecondList attributesByName.
+		assert: aList attributeNodesByName size = aList size;
+		assert: aList attributeNodesByName = aSecondList attributeNodesByName;
+		deny: aList attributeNodesByName == aSecondList attributeNodesByName.
 ]
 
 { #category : #accessing }
@@ -58,7 +58,7 @@ XMLAttributeListTest >> beforeAddingToNotifications [
 ]
 
 { #category : #accessing }
-XMLAttributeListTest >> changeListItem: anAttribute [
+XMLAttributeListTest >> changedListItem: anAttribute [
 	^ (changedAttributes ifNil: [changedAttributes := IdentityDictionary new])
 		at: anAttribute
 		ifAbsentPut: [

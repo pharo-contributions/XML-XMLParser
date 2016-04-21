@@ -31,6 +31,17 @@ XMLSingleCharacterReadStreamTest >> testAtEnd [
 ]
 
 { #category : #tests }
+XMLSingleCharacterReadStreamTest >> testClose [
+	| stream |
+
+	stream := self newStreamOnCharacter.
+	self
+		deny: stream atEnd;
+		assert: stream close == stream;
+		assert: stream atEnd.
+]
+
+{ #category : #tests }
 XMLSingleCharacterReadStreamTest >> testIsBinary [
 	self deny: self newStreamOnCharacter isBinary
 ]

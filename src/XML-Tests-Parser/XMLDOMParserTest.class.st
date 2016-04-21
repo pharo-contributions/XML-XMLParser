@@ -183,22 +183,6 @@ XMLDOMParserTest >> testChangingNamespaces [
 ]
 
 { #category : #tests }
-XMLDOMParserTest >> testCollectingParsedNodes [
-	| document firstPerson allNames |
-	"self debug: #testParsing"
-
-	document := XMLDOMParser parse: self addressBookXML.
-	firstPerson := document findElementNamed: 'person'.
-
-	allNames := #('person' 'contact-info' 'address' 'job-info' 'manager').
-	self
-		assert: (firstPerson allElementsCollect: [:each | each name]) asArray = allNames;
-		assert: (firstPerson allElements collect: [:each | each name]) asArray = allNames;
-		assert: (firstPerson nodesCollect: [:each | each name]) asArray = allNames allButFirst;
-		assert: (firstPerson nodes collect: [:each | each name]) asArray = allNames allButFirst.
-]
-
-{ #category : #tests }
 XMLDOMParserTest >> testDeclaringXMLNamespace [
 	| xmlNamespace elements |
 
@@ -350,48 +334,32 @@ XMLDOMParserTest >> testFindElementNamespaceURI [
 ]
 
 { #category : #tests }
-XMLDOMParserTest >> testIgnorableWhitespacePreservation [
-	| xml document elements |
+XMLDOMParserTest >> testIgnorableWhitespaceValidationToggle [
+	| parser |
 
-	xml :=
-		'<one>
-			<two>
-					<three>
-					test
-					</three>
-			</two>
-		</one>'.
-	document :=
-		(XMLDOMParser on: xml)
-			preservesIgnorableWhitespace: true;
-			parseDocument.
-	elements := document allElements.
+	parser := XMLDOMParser on: ''.
 	self
-		assert: document allNodes size = 9;
-		assert: elements size = 3.
-	"avoid allButLastDo: for portability"
-	elements allButLast do: [:each |
-		self
-			assert: each nodes size = 3;
-			assert: (each firstNode isStringNode and: [each firstNode isWhitespace]);
-			assert: (each lastNode isStringNode and: [each lastNode isWhitespace])].
-	self
-		assert: elements last nodes size = 1;
-		assert: elements last firstNode isStringNode;
-		deny: elements last firstNode isWhitespace.
+		assert: parser isValidating;
+		deny: parser preservesIgnorableWhitespace;
+		assert: (parser preservesIgnorableWhitespace: true) == parser;
+		assert: parser preservesIgnorableWhitespace;
+		assert: parser isValidating.
 
-	document :=
-		(XMLDOMParser on: xml)
-			preservesIgnorableWhitespace: false;
-			parseDocument.
-	elements := document allElements.
 	self
-		assert: document allNodes size = 5;
-		assert: elements size = 3.
-	elements do: [:each |
-		self
-			assert: each nodes size = 1;
-			deny: (each firstNode isStringNode and: [each firstNode isWhitespace])].
+		assert: (parser preservesIgnorableWhitespace: false) == parser;
+		assert: parser isValidating;
+		deny: parser preservesIgnorableWhitespace.
+
+	self
+		assert: (parser preservesIgnorableWhitespace: true) == parser;
+		assert: (parser isValidating: false) == parser;
+		deny: parser isValidating;
+		deny: parser preservesIgnorableWhitespace.
+
+	self
+		assert: (parser preservesIgnorableWhitespace: true) == parser;
+		assert: parser isValidating;
+		assert: parser preservesIgnorableWhitespace.
 ]
 
 { #category : #tests }
@@ -859,6 +827,28 @@ XMLDOMParserTest >> testParsingAttributes [
 ]
 
 { #category : #tests }
+XMLDOMParserTest >> testParsingMixedContent [
+	| xml mixedContent |
+
+	xml := '<mixed-content> one <two/> <three/> four <five> </five> seven </mixed-content>'.
+	mixedContent := (XMLDOMParser parse: xml) root.
+	self
+		assert: mixedContent nodes size = 7;
+		assert: (mixedContent nodes first isStringNode: ' one ');
+		assert: (mixedContent nodes second isElementNamed: 'two');
+		deny: mixedContent nodes second hasChildren;
+		assert: (mixedContent nodes third isStringNode: ' ');
+		assert: (mixedContent nodes fourth isElementNamed: 'three');
+		deny: mixedContent nodes fourth hasChildren;
+		assert: (mixedContent nodes fifth isStringNode: ' four ');
+		assert: (mixedContent nodes sixth isElementNamed: 'five');
+		assert: mixedContent nodes sixth hasChildren;
+		assert: mixedContent nodes sixth nodes size = 1;
+		assert: (mixedContent nodes sixth nodes first isStringNode: ' ');
+		assert: (mixedContent nodes seventh isStringNode: ' seven ').
+]
+
+{ #category : #tests }
 XMLDOMParserTest >> testParsingRoot [
 	| document root  |
 
@@ -904,6 +894,46 @@ XMLDOMParserTest >> testUnreplacedEntityRererencePrinting [
 			isValidating: false;
 			replacesContentEntityReferences: false;
 			parseDocument) printString = xml.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testWhitespacePreservation [
+	| xml root notPreserved preserved |
+
+	xml := '
+		<!DOCTYPE root [
+			<!ELEMENT root (not-preserved)>
+			<!ELEMENT not-preserved (preserved+)>
+			<!ELEMENT preserved (not-preserved?)>
+			<!ATTLIST root xml:space (default|preserve) #IMPLIED>
+			<!ATTLIST not-preserved xml:space (default|preserve) #IMPLIED>
+			<!ATTLIST preserved xml:space (default|preserve) "preserve">
+		]>
+		<root xml:space="preserve">
+			<not-preserved xml:space="default">
+				<preserved>
+				</preserved>
+			</not-preserved>
+		</root>'.
+	root := (XMLDOMParser parse: xml) root.
+	self
+		assert: root nodes size = 3;
+		assert: root nodes first isStringNode;
+		assert: root nodes first isWhitespace;
+		assert: (root nodes second isElementNamed: 'not-preserved');
+		assert: root nodes third isStringNode;
+		assert: root nodes third isWhitespace.
+
+	notPreserved := root nodes second.
+	self
+		assert: notPreserved nodes size = 1;
+		assert: (notPreserved nodes first isElementNamed: 'preserved').
+
+	preserved := notPreserved firstNode.
+	self
+		assert: preserved nodes size = 1;
+		assert: preserved nodes first isStringNode;
+		assert: preserved nodes first isWhitespace.
 ]
 
 { #category : #tests }

@@ -21,7 +21,7 @@ XMLDFALimitsTests >> testDFAStateCacheLimit [
 		stream nextPut: $)].
 
 	firstState :=
-		(DTDDFAContentModelParser
+		(DTDElementContentModelParser
 			element: 'test'
 			contentModel: contentModel) parse dfa.
 	currentState := firstState.
@@ -65,7 +65,7 @@ XMLDFALimitsTests >> testDFAStateTransitionLimit [
 	| dfaState elementName |
 
 	dfaState :=
-		(DTDDFAContentModelParser
+		(DTDElementContentModelParser
 			element: 'test'
 			contentModel: '(test)') parse dfa.
 	1 to: dfaState maxDFAStateTransitions do: [:i |

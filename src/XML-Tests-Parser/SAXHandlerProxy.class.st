@@ -27,6 +27,11 @@ SAXHandlerProxy >> allSentMessagesNamed: aName [
 ]
 
 { #category : #accessing }
+SAXHandlerProxy >> allSentSelectors [
+	^ (self messageRecorder messagesCollect: [:each | each selector]) asArray
+]
+
+{ #category : #accessing }
 SAXHandlerProxy >> argumentsSentWith: aSelector [
 	self messageRecorder messagesDo: [:each |
 		each selector = aSelector
@@ -79,6 +84,5 @@ SAXHandlerProxy >> saxHandler: aSaxHandler [
 
 { #category : #testing }
 SAXHandlerProxy >> wasSentSelectors: aSelectorArray [
-	^ (self messageRecorder messagesCollect: [:each | each selector]) asArray =
-		aSelectorArray asArray
+	^ self allSentSelectors = aSelectorArray asArray
 ]

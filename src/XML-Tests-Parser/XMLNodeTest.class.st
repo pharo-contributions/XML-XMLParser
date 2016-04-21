@@ -29,10 +29,10 @@ XMLNodeTest >> assertList: aList selects: aSecondList [
 { #category : #accessing }
 XMLNodeTest >> attributeAssociations [
 	^ Array
-		with: 'one' -> 'two'
-		with: 'three' -> 'four'
-		with: 'prefix:three' -> 'five'
-		with: 'prefix:six' -> 'seven'
+		with: 'one' -> '1'
+		with: 'two' -> '2'
+		with: 'prefix:two' -> '3'
+		with: 'prefix:four' -> '4'
 ]
 
 { #category : #accessing }

@@ -176,8 +176,9 @@ XMLAttributeTest >> testIsNamedAny [
 
 	(attribute := self nodeClass new) name: 'one'.
 	self
-		assert: (attribute isNamedAny: #('two' 'one' 'three'));
-		deny: (attribute isNamedAny: #('two' 'three')).
+		assert: (attribute isNamedAny: #('two' 'one' 'three') asSet);
+		deny: (attribute isNamedAny: #('two' 'three') asSet).
+
 	attribute name: 'one:two'.
 	self
 		assert: (attribute isNamedAny: #('one' 'one:two' 'three'));

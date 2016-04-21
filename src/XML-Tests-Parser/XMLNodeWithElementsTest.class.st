@@ -12,6 +12,30 @@ XMLNodeWithElementsTest class >> isAbstract [
 	^ true
 ]
 
+{ #category : #asserting }
+XMLNodeWithElementsTest >> assertElements: aPrettyPrintFormattedElementCollection werePrettyPrintFormattedFrom: anElementCollection [
+	anElementCollection
+		with: aPrettyPrintFormattedElementCollection
+		do: [:element :prettyElement |
+			element hasChildren
+				ifTrue: [
+					"if the first node wasn't a string node, then whitespace
+					formatting should have been output before it"
+					element firstNode isStringNode
+						ifFalse: [
+							self
+								assert: prettyElement firstNode isStringNode;
+								assert: prettyElement firstNode isWhitespace].
+
+					"if there were no string nodes at all, then trailing
+					whitespace formatting should have been output"	
+					element hasStringNodes
+						ifFalse: [
+							self
+								assert: prettyElement lastNode isStringNode;
+								assert: prettyElement lastNode isWhitespace]]].
+]
+
 { #category : #'instance creation' }
 XMLNodeWithElementsTest >> newNodeWithElements [
 	^ self nodeClass new
@@ -1042,7 +1066,7 @@ XMLNodeWithElementsTest >> testFirstElement [
 
 	root := self newNodeWithElements nodeAt: 2.
 	root elements copy do: [:each |
-		self  assert: root firstElement == each.
+		self assert: root firstElement == each.
 		root removeNode: each].
 	self assert: root firstElement isNil.
 ]
@@ -1111,6 +1135,12 @@ XMLNodeWithElementsTest >> testInnerXMLPrettyPrinted [
 	| nodeWithElements printString prettyPrintString prettyNodeWithElements |
 
 	nodeWithElements := self newNodeWithElements.
+	"remove any whitespace formatting around elements"
+	nodeWithElements descendantNodes do: [:each |
+		(each isStringNode
+			and: [each isWhitespace])
+			ifTrue: [each parent removeNode: each]].
+
 	printString := nodeWithElements innerXML.
 	prettyPrintString := nodeWithElements innerXMLPrettyPrinted.
 	self deny: printString = prettyPrintString.
@@ -1118,23 +1148,10 @@ XMLNodeWithElementsTest >> testInnerXMLPrettyPrinted [
 	prettyNodeWithElements :=
 		(XMLDOMParser on: prettyPrintString)
 			preservesCommentNodes: true;
-			preservesIgnorableWhitespace: true;
 			parseDocument.
-	(nodeWithElements allElements copyWithout: nodeWithElements)
-		with: (prettyNodeWithElements allElements copyWithout: prettyNodeWithElements)
-		do: [:element :prettyElement |
-			element hasChildren
-				ifTrue: [
-					element firstNode isStringNode
-						ifFalse: [
-							self
-								assert: prettyElement firstNode isStringNode;
-								assert: prettyElement firstNode isWhitespace].
-					element hasStringNodes
-						ifFalse: [
-							self
-								assert: prettyElement lastNode isStringNode;
-								assert: prettyElement lastNode isWhitespace]]].
+	self
+		assertElements: prettyNodeWithElements descendantElements
+		werePrettyPrintFormattedFrom: nodeWithElements descendantElements
 ]
 
 { #category : #tests }
@@ -1164,7 +1181,7 @@ XMLNodeWithElementsTest >> testLastElement [
 
 	root := self newNodeWithElements nodeAt: 2.
 	root elements reversed do: [:each |
-		self  assert: root lastElement == each.
+		self assert: root lastElement == each.
 		root removeNode: each].
 	self assert: root lastElement isNil.
 ]
@@ -1271,6 +1288,12 @@ XMLNodeWithElementsTest >> testPrettyPrinted [
 	| nodeWithElements printString prettyPrintString prettyNodeWithElements |
 
 	nodeWithElements := self newNodeWithElements.
+	"remove any whitespace formatting around elements"
+	nodeWithElements allNodes do: [:each |
+		(each isStringNode
+			and: [each isWhitespace])
+			ifTrue: [each parent removeNode: each]].
+
 	printString := nodeWithElements printString.
 	prettyPrintString := nodeWithElements prettyPrinted.
 	self deny: printString = prettyPrintString.
@@ -1278,23 +1301,10 @@ XMLNodeWithElementsTest >> testPrettyPrinted [
 	prettyNodeWithElements :=
 		(XMLDOMParser on: prettyPrintString)
 			preservesCommentNodes: true;
-			preservesIgnorableWhitespace: true;
 			parseDocument.
-	nodeWithElements allElements
-		with: prettyNodeWithElements allElements
-		do: [:element :prettyElement |
-			element hasChildren
-				ifTrue: [
-					element firstNode isStringNode
-						ifFalse: [
-							self
-								assert: prettyElement firstNode isStringNode;
-								assert: prettyElement firstNode isWhitespace].
-					element hasStringNodes
-						ifFalse: [
-							self
-								assert: prettyElement lastNode isStringNode;
-								assert: prettyElement lastNode isWhitespace]]].
+	self
+		assertElements: prettyNodeWithElements allElements
+		werePrettyPrintFormattedFrom: nodeWithElements allElements.
 ]
 
 { #category : #tests }
@@ -1319,6 +1329,15 @@ XMLNodeWithElementsTest >> testPrintedWithoutSelfClosingTags [
 { #category : #tests }
 XMLNodeWithElementsTest >> testRawContentString [
 	self assert: self newNodeWithElements rawContentString = 'testing onetesting twotesting three'
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testRawContentStringAt [
+	| root |
+
+	root := self newNodeWithElements firstElement.
+	root elementsDo: [:each |
+		self assert: (root rawContentStringAt: each name) = each rawContentString].
 ]
 
 { #category : #tests }

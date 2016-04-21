@@ -134,6 +134,18 @@ XMLStringMethodsTest >> testIsXMLNCName [
 ]
 
 { #category : #tests }
+XMLStringMethodsTest >> testIsXMLNSAttributeName [
+	self
+		deny: '' isXMLNSAttributeName;
+		deny: 'name' isXMLNSAttributeName;
+		deny: 'xml:base' isXMLNSAttributeName;
+		deny: 'xml:space' isXMLNSAttributeName;
+		assert: 'xmlns' isXMLNSAttributeName;
+		assert: 'xmlns:' isXMLNSAttributeName;
+		assert: 'xmlns:name' isXMLNSAttributeName
+]
+
+{ #category : #tests }
 XMLStringMethodsTest >> testIsXMLName [
 	self nonNCNameNames do: [:each |
 		self assert: each isXMLName].
@@ -152,14 +164,39 @@ XMLStringMethodsTest >> testIsXMLNmtoken [
 ]
 
 { #category : #tests }
-XMLStringMethodsTest >> testIsXMLQualifiedNameOrLocalName [
+XMLStringMethodsTest >> testIsXMLQualifiedOrLocalName [
 	self
-		assert: ('name' isXMLQualifiedName: 'name' orLocalName: 'name');
-		assert: ('name' isXMLQualifiedName: 'prefix:name' orLocalName: 'name');
-		assert: ('prefix:name' isXMLQualifiedName: 'prefix:name' orLocalName: 'name');
-		deny: ('name' isXMLQualifiedName: 'different' orLocalName: 'different');
-		deny: ('name' isXMLQualifiedName: 'prefix:different' orLocalName: 'different');
-		deny: ('prefix:name' isXMLQualifiedName: 'prefix:different' orLocalName: 'different').
+		deny: ('' isXMLQualifiedOrLocalName: 'name');
+		deny: ('' isXMLQualifiedOrLocalName: 'prefix:name');
+		assert: ('name' isXMLQualifiedOrLocalName: 'name');
+		assert: ('prefix:name' isXMLQualifiedOrLocalName: 'name');
+		assert: ('prefix:name' isXMLQualifiedOrLocalName: 'prefix:name');
+		deny: ('name' isXMLQualifiedOrLocalName: 'different');
+		deny: ('name' isXMLQualifiedOrLocalName: 'prefix:name');
+		deny: ('prefix:name' isXMLQualifiedOrLocalName: 'prefix:different');
+		deny: ('prefix:name' isXMLQualifiedOrLocalName: 'different:name').
+
+	"test wide char equality for pre-Spur images"
+	self assert:
+		((String with: 256 asCharacter)
+			isXMLQualifiedOrLocalName:
+				(String with: 256 asCharacter)).
+	self assert:
+		((String with: 16r039A asCharacter with: $: with: 16r039B asCharacter)
+			isXMLQualifiedOrLocalName:
+				(String with: 16r039B asCharacter)).
+]
+
+{ #category : #tests }
+XMLStringMethodsTest >> testIsXMLReservedAttributeName [
+	self
+		deny: '' isXMLReservedAttributeName;
+		deny: 'name' isXMLReservedAttributeName;
+		assert: 'xml:base' isXMLReservedAttributeName;
+		assert: 'xml:space' isXMLReservedAttributeName;
+		assert: 'xmlns' isXMLReservedAttributeName;
+		assert: 'xmlns:' isXMLReservedAttributeName;
+		assert: 'xmlns:name' isXMLReservedAttributeName
 ]
 
 { #category : #tests }
