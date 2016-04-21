@@ -1,6 +1,13 @@
 Extension { #name : #XMLNodeWithChildren }
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNodeWithChildren >> treeNodeChildren [
-	^ self nodes
+XMLNodeWithChildren >> requiresTreeView [
+	^ self hasChildren
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLNodeWithChildren >> treeViewChildren [
+	self hasChildren
+		ifTrue: [^ self nodes]
+		ifFalse: [^ #()]
 ]

@@ -39,30 +39,20 @@ XMLElement >> gtInspectorImageIn: composite inContext: aGTInspector [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLElement >> hasTreeNodeChildren [
-	^ self hasChildren
-		and: [self nodes size > 1
-			or: [self nodes first isStringNode not]]
-]
-
-{ #category : #'*XML-Parser-GTExtensions' }
-XMLElement >> treeNodeChildren [
-	self hasTreeNodeChildren
-		ifTrue: [^ self nodes]
-		ifFalse: [^ #()]
-]
-
-{ #category : #'*XML-Parser-GTExtensions' }
-XMLElement >> writeTreeNodeLabelXMLOn: aWriter [
-	self hasTreeNodeChildren
+XMLElement >> writeTreeViewLabelXMLOn: aWriter [
+	self requiresTreeView
 		ifTrue: [
 			aWriter startTag
 				name: self name;
+				"uses setAttributes: for performance"
 				setAttributes: attributes]
 		ifFalse: [| tagWriter |
 			(tagWriter := aWriter tag)
 				name: self name;
+				"uses setAttributes: for performance"
 				setAttributes: attributes.
 			self hasChildren
-				ifTrue: [tagWriter with: [self writeInnerXMLOn: aWriter]]].
+				ifTrue: [
+					tagWriter with: [
+						self writeInnerXMLOn: aWriter]]].
 ]

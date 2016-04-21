@@ -1,9 +1,25 @@
 Extension { #name : #XMLNodeWithElements }
 
 { #category : #'*XML-Parser-GTExtensions' }
+XMLNodeWithElements >> addTreeViewChildrenTo: aSequenceableCollection [
+	self nodesDo: [:each |
+		(each isStringNode
+			and: [each isEmpty
+				or: [each isWhitespace]])
+			ifFalse: [aSequenceableCollection addLast: each]]
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
 XMLNodeWithElements classSide >> gtExampleXmlNode [
 	<gtExample>
 	^ XMLDocument gtExampleXmlNode nodes
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLNodeWithElements >> requiresTreeView [
+	^ self hasChildren
+		and: [self nodes size > 1
+			or: [self firstNode isStringNode not]]
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
@@ -40,4 +56,14 @@ XMLNodeWithElements >> spotterPreviewSourceIn: aComposite [
 				writer formatter indentString: '  '.
 				self writeXMLOn: writer]];
 		entity: self
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLNodeWithElements >> treeViewChildren [
+	self requiresTreeView
+		ifTrue: [| treeViewChildren |
+			treeViewChildren := OrderedCollection new: self nodes size.
+			self addTreeViewChildrenTo: treeViewChildren.
+			^ treeViewChildren]
+		ifFalse: [^ #()]
 ]

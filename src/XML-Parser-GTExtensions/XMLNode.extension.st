@@ -38,28 +38,32 @@ XMLNode >> gtInspectorTreeIn: composite [
 	^ composite tree
 		title: 'Tree';
 		display: [ {self} ];
-		children: #treeNodeChildren;
-		format: #treeNodeLabelText;
-		when: [self hasTreeNodeChildren];
+		children: #treeViewChildren;
+		format: #treeViewLabelText;
+		when: #requiresTreeView;
 		rootsExpanded
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNode >> hasTreeNodeChildren [
-	^ self hasChildren
+XMLNode >> requiresTreeView [
+	"returns true if this node needs a tree view tab when inspected"
+	^ false
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNode >> treeNodeChildren [
+XMLNode >> treeViewChildren [
+	"returns the subnodes of this node in a tree view"
 	^ #()
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNode >> treeNodeLabelText [
-	^ self asHighlightedTextWrittenWith: [:writer | self writeTreeNodeLabelXMLOn: writer]
+XMLNode >> treeViewLabelText [
+	"the label (text) of this node in a tree view"
+	^ self asHighlightedTextWrittenWith: [:writer |
+		self writeTreeViewLabelXMLOn: writer]
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNode >> writeTreeNodeLabelXMLOn: aWriter [
+XMLNode >> writeTreeViewLabelXMLOn: aWriter [
 	self writeXMLOn: aWriter
 ]
