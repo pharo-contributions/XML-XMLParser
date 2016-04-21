@@ -41,8 +41,8 @@ XMLParserLimits >> documentReadLimit [
 ]
 
 { #category : #accessing }
-XMLParserLimits >> documentReadLimit: aLimit [
-	documentReadLimit := aLimit
+XMLParserLimits >> documentReadLimit: anInteger [
+	documentReadLimit := anInteger
 ]
 
 { #category : #initialization }
@@ -59,8 +59,8 @@ XMLParserLimits >> maxEntityReplacementDepth [
 ]
 
 { #category : #accessing }
-XMLParserLimits >> maxEntityReplacementDepth: aLimit [
-	maxEntityReplacementDepth := aLimit
+XMLParserLimits >> maxEntityReplacementDepth: anInteger [
+	maxEntityReplacementDepth := anInteger
 ]
 
 { #category : #removing }

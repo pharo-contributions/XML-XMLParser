@@ -4,7 +4,7 @@ This class parses a content model using postfix conversion and an NFABuilder to 
 It assumes all spaces have been removed from the input and that it's been checked for well-formedness (meaning no missing names or misplaced operators/parentheses).
 "
 Class {
-	#name : #DTDDFAContentModelParser,
+	#name : #DTDElementContentModelParser,
 	#superclass : #DTDContentModelParser,
 	#instVars : [
 		'nfaBuilder',
@@ -18,7 +18,7 @@ Class {
 }
 
 { #category : #'class initialization' }
-DTDDFAContentModelParser class >> initialize [
+DTDElementContentModelParser class >> initialize [
 	"self initialize"
 
 	self
@@ -27,7 +27,7 @@ DTDDFAContentModelParser class >> initialize [
 ]
 
 { #category : #'class initialization' }
-DTDDFAContentModelParser class >> initializeOperatorApplicators [
+DTDElementContentModelParser class >> initializeOperatorApplicators [
 	"use Array for faster lookup"
 	(OperatorApplicators := Array new: 255)
 		at: $, asciiValue put: #applyConcatenation;
@@ -38,7 +38,7 @@ DTDDFAContentModelParser class >> initializeOperatorApplicators [
 ]
 
 { #category : #'class initialization' }
-DTDDFAContentModelParser class >> initializeSpecialCharacterParsers [
+DTDElementContentModelParser class >> initializeSpecialCharacterParsers [
 	"use Array for faster lookup"
 	(SpecialCharacterParsers := Array new: 255)
 		at: $( asciiValue put: #parseOpeningParenthesis:;
@@ -51,23 +51,23 @@ DTDDFAContentModelParser class >> initializeSpecialCharacterParsers [
 ]
 
 { #category : #private }
-DTDDFAContentModelParser >> applyBinaryOperatorOnStack [
+DTDElementContentModelParser >> applyBinaryOperatorOnStack [
 	self applyOperator: binaryOperatorStack removeLast
 ]
 
 { #category : #private }
-DTDDFAContentModelParser >> applyOperator: aCharacter [
+DTDElementContentModelParser >> applyOperator: aCharacter [
 	nfaBuilder perform: (OperatorApplicators at: aCharacter asciiValue)
 ]
 
 { #category : #private }
-DTDDFAContentModelParser >> hasBinaryOperatorOnStack [
+DTDElementContentModelParser >> hasBinaryOperatorOnStack [
 	^ (binaryOperatorStack isEmpty
 		or: [binaryOperatorStack last == $(]) not
 ]
 
 { #category : #parsing }
-DTDDFAContentModelParser >> parse [
+DTDElementContentModelParser >> parse [
 	"the tokenizer removes all spaces from the content model and checks
 	it for well-formedness (meaning no missing names or misplaced
 	operators/parentheses), which simplifies parsing"
@@ -91,18 +91,18 @@ DTDDFAContentModelParser >> parse [
 					with: (contentModel at: i)]].
 	self popRemainingBinaryOperators.
 
-	^ XMLDFAElementValidator
+	^ XMLDFAElementContentElementValidator
 		element: element
 		dfa: nfaBuilder buildAcceptingNFAFromFragments asDFAState.
 ]
 
 { #category : #private }
-DTDDFAContentModelParser >> parseBinaryOperator: aCharacter [
+DTDElementContentModelParser >> parseBinaryOperator: aCharacter [
 	binaryOperatorStack addLast: aCharacter
 ]
 
 { #category : #private }
-DTDDFAContentModelParser >> parseClosingParenthesis: aCharacter [
+DTDElementContentModelParser >> parseClosingParenthesis: aCharacter [
 	self popRemainingBinaryOperators.
 	(binaryOperatorStack notEmpty
 		and: [binaryOperatorStack last == $(])
@@ -110,17 +110,17 @@ DTDDFAContentModelParser >> parseClosingParenthesis: aCharacter [
 ]
 
 { #category : #private }
-DTDDFAContentModelParser >> parseOpeningParenthesis: aCharacter [
+DTDElementContentModelParser >> parseOpeningParenthesis: aCharacter [
 	binaryOperatorStack addLast: $(
 ]
 
 { #category : #private }
-DTDDFAContentModelParser >> parseUnaryOperator: aCharacter [
+DTDElementContentModelParser >> parseUnaryOperator: aCharacter [
 	self applyOperator: aCharacter
 ]
 
 { #category : #private }
-DTDDFAContentModelParser >> parserForSpecialCharacter: aCharacter [
+DTDElementContentModelParser >> parserForSpecialCharacter: aCharacter [
 	| asciiValue |
 
 	"avoid at:ifAbsent: for speed"
@@ -131,7 +131,7 @@ DTDDFAContentModelParser >> parserForSpecialCharacter: aCharacter [
 ]
 
 { #category : #private }
-DTDDFAContentModelParser >> popRemainingBinaryOperators [
+DTDElementContentModelParser >> popRemainingBinaryOperators [
 	[self hasBinaryOperatorOnStack]
 		whileTrue: [self applyBinaryOperatorOnStack]
 ]

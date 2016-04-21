@@ -82,10 +82,10 @@ DTDExternalEntityResolver >> externalSubsetReadLimit [
 ]
 
 { #category : #configuring }
-DTDExternalEntityResolver >> externalSubsetReadLimit: aLimit [
+DTDExternalEntityResolver >> externalSubsetReadLimit: anInteger [
 	"change the external subset read limit or nil to disable"
 
-	self externalEntityLimits externalSubsetReadLimit: aLimit
+	self externalEntityLimits externalSubsetReadLimit: anInteger
 ]
 
 { #category : #private }

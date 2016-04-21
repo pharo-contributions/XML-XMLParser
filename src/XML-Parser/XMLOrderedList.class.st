@@ -159,7 +159,8 @@ XMLOrderedList >> allButFirst: anInteger [
 { #category : #enumerating }
 XMLOrderedList >> allButFirstDo: aBlock [
 	"reimplemented for portability"
-	2 to: self size do: [:i | aBlock value: (self at: i)]
+	2 to: collection size do: [:i |
+		aBlock value: (collection at: i)]
 ]
 
 { #category : #accessing }
@@ -175,7 +176,8 @@ XMLOrderedList >> allButLast: anInteger [
 { #category : #enumerating }
 XMLOrderedList >> allButLastDo: aBlock [
 	"reimplemented for portability"
-	1 to: self size - 1 do: [:i | aBlock value: (self at: i)]
+	1 to: collection size - 1 do: [:i |
+		aBlock value: (collection at: i)]
 ]
 
 { #category : #accessing }
@@ -250,20 +252,24 @@ XMLOrderedList >> capacity [
 XMLOrderedList >> collect: aBlock [
 	| collected |
 
-	collected := self species new: self size.
-	self do: [:each | collected addLast: (aBlock value: each)].
+	collected := self copyEmptyForCollect.
+	"use to:do: for speed"
+	1 to: collection size do: [:i |
+		collected addLast: (aBlock value: (collection at: i))].
 	^ collected.
 ]
 
 { #category : #enumerating }
 XMLOrderedList >> collect: aCollectBlock thenSelect: aSelectBlock [
-	| collected |
+	| selected |
 
-	collected := self species new.
-	self do: [:each | | collectedObject |
-		(aSelectBlock value: (collectedObject := aCollectBlock value: each))
-			ifTrue: [collected addLast: collectedObject]].
-	^ collected.
+	selected := self copyEmpty.
+	"use to:do: for speed"
+	1 to: collection size do: [:i | | item |
+		item := aCollectBlock value: (collection at: i).
+		(aSelectBlock value: item)
+			ifTrue: [selected addLast: item]].
+	^ selected.
 ]
 
 { #category : #private }
@@ -313,6 +319,15 @@ XMLOrderedList >> copyClass [
 { #category : #copying }
 XMLOrderedList >> copyEmpty [
 	^ self copyClass collection: collection copyEmpty
+]
+
+{ #category : #private }
+XMLOrderedList >> copyEmptyForCollect [
+	"collect: methods return instances of the generic ordered list species class
+	because a collect block can return any value, which may not be appropiate to
+	store in copies of particular subclasses (like XMLNodeList)"
+
+	^ self species new: self size
 ]
 
 { #category : #copying }
@@ -370,6 +385,7 @@ XMLOrderedList >> copyReplaceFrom: aStart to: aStop with: aReplacementCollection
 			^ self copy
 				addAll: aReplacementCollection;
 				yourself].
+
 	copy := self copyEmpty.
 	start := aStart max: 1.
 	stop := aStop min: self size.
@@ -532,12 +548,17 @@ XMLOrderedList >> indexOf: anObject [
 
 { #category : #accessing }
 XMLOrderedList >> indexOf: anObject ifAbsent: aBlock [
-	^ collection indexOf: anObject ifAbsent: aBlock
+	^ collection
+		indexOf: anObject
+		ifAbsent: aBlock
 ]
 
 { #category : #accessing }
 XMLOrderedList >> indexOf: anObject startingAt: anIndex [ 
-	^ self indexOf: anObject startingAt: anIndex ifAbsent: [0]
+	^ self
+		indexOf: anObject
+		startingAt: anIndex
+		ifAbsent: [0]
 ]
 
 { #category : #accessing }
@@ -545,6 +566,22 @@ XMLOrderedList >> indexOf: anObject startingAt: anIndex ifAbsent: aBlock [
 	^ collection
 		indexOf: anObject
 		startingAt: (anIndex max: 1)
+		ifAbsent: aBlock
+]
+
+{ #category : #accessing }
+XMLOrderedList >> indexOfSubCollection: aSubCollection startingAt: anIndex [
+	^ self
+		indexOfSubCollection: aSubCollection
+		startingAt: anIndex
+		ifAbsent: [0]
+]
+
+{ #category : #accessing }
+XMLOrderedList >> indexOfSubCollection: aSubCollection startingAt: anIndex ifAbsent: aBlock [
+	^ collection
+		indexOfSubCollection: aSubCollection
+		startingAt: anIndex
 		ifAbsent: aBlock
 ]
 
@@ -599,9 +636,11 @@ XMLOrderedList >> reject: aBlock [
 	| selected |
 
 	selected := self copyEmpty.
-	self do: [:each |
-		(aBlock value: each)
-			ifFalse: [selected addLast: each]].
+	"use to:do: for speed"
+	1 to: collection size do: [:i | | item |
+		item := collection at: i.
+		(aBlock value: item)
+			ifFalse: [selected addLast: item]].
 	^ selected.
 ]
 
@@ -609,10 +648,12 @@ XMLOrderedList >> reject: aBlock [
 XMLOrderedList >> reject: aRejectBlock thenCollect: aCollectBlock [
 	| collected |
 
-	collected := self species new.
-	self do: [:each |
-		(aRejectBlock value: each)
-			ifFalse: [collected addLast: (aCollectBlock value: each)]].
+	collected := self copyEmptyForCollect.
+	"use to:do: for speed"
+	1 to: collection size do: [:i | | item |
+		item := collection at: i.
+		(aRejectBlock value: item)
+			ifFalse: [collected addLast: (aCollectBlock value: item)]].
 	^ collected.
 ]
 
@@ -691,6 +732,9 @@ XMLOrderedList >> reset [
 
 { #category : #converting }
 XMLOrderedList >> reverse [
+	"despite its name, this returns a reversed copy rather than doing in-place
+	reversal. Same as SequenceableCollection's reverse"
+
 	^ self reversed
 ]
 
@@ -718,9 +762,11 @@ XMLOrderedList >> select: aBlock [
 	| selected |
 
 	selected := self copyEmpty.
-	self do: [:each |
-		(aBlock value: each)
-			ifTrue: [selected addLast: each]].
+	"use to:do: for speed"
+	1 to: collection size do: [:i | | item |
+		item := collection at: i.
+		(aBlock value: item)
+			ifTrue: [selected addLast: item]].
 	^ selected.
 ]
 
@@ -728,10 +774,12 @@ XMLOrderedList >> select: aBlock [
 XMLOrderedList >> select: aSelectBlock thenCollect: aCollectBlock [
 	| collected |
 
-	collected := self species new.
-	self do: [:each |
-		(aSelectBlock value: each)
-			ifTrue: [collected addLast: (aCollectBlock value: each)]].
+	collected := self copyEmptyForCollect.
+	"use to:do: for speed"
+	1 to: collection size do: [:i | | item |
+		item := collection at: i.
+		(aSelectBlock value: item)
+			ifTrue: [collected addLast: (aCollectBlock value: item)]].
 	^ collected.
 ]
 
@@ -804,32 +852,32 @@ XMLOrderedList >> third [
 XMLOrderedList >> with: aCollection collect: aBlock [
 	| collected |
 
-	collected := self species new: self size.
-	1 to: (self size min: aCollection size) do: [:i |
+	collected := self copyEmptyForCollect.
+	1 to: (collection size min: aCollection size) do: [:i |
 		collected addLast:
 			(aBlock
-				value: (self at: i)
+				value: (collection at: i)
 				value: (aCollection at: i))].
 	^ collected.
 ]
 
 { #category : #enumerating }
 XMLOrderedList >> with: aCollection do: aBlock [
-	1 to: (self size min: aCollection size) do: [:i |
-		(aBlock
-			value: (self at: i)
-			value: (aCollection at: i))]
+	1 to: (collection size min: aCollection size) do: [:i |
+		aBlock
+			value: (collection at: i)
+			value: (aCollection at: i)]
 ]
 
 { #category : #enumerating }
 XMLOrderedList >> withIndexCollect: aTwoArgumentBlock [
 	| collected |
 
-	collected := self species new: self size.
-	1 to: self size do: [:i |
+	collected := self copyEmptyForCollect.
+	1 to: collection size do: [:i |
 		collected addLast:
 			(aTwoArgumentBlock
-				value: (self at: i)
+				value: (collection at: i)
 				value: i)].
 	^ collected.
 ]

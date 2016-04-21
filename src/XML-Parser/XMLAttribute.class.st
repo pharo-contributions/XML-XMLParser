@@ -33,6 +33,9 @@ XMLAttribute >> element: anElement [
 
 { #category : #accessing }
 XMLAttribute >> expandedName [
+	"returns the expanded name of the element as a string in the form of either
+	'{namespaceURI}localName' (if there's a namespace URI) or 'localName'"
+
 	^ self localName expandWithXMLNamespaceURI: self namespaceURI
 ]
 
@@ -64,6 +67,11 @@ XMLAttribute >> isAttribute [
 
 { #category : #testing }
 XMLAttribute >> isInLanguage: aLanguage [
+	"Returns true if the receiver is an xml:lang attribute or if its element
+	or an ancestor element has an xml:lang attribute, and if the value is an IETF
+	language tag that matches aLanguage or if its first ('-' separated) subtag
+	matches aLanguage."
+
 	self name = 'xml:lang'
 		ifTrue: [^ self hasLanguage: aLanguage]
 		ifFalse: [^ super isInLanguage: aLanguage]
@@ -71,16 +79,17 @@ XMLAttribute >> isInLanguage: aLanguage [
 
 { #category : #testing }
 XMLAttribute >> isNamed: aName [
-	^ aName
-		isXMLQualifiedName: self name
-		orLocalName: self localName
+	"Does the receiver's qualified or local name match the argument?"
+
+	^ self name isXMLQualifiedOrLocalName: aName
 ]
 
 { #category : #testing }
 XMLAttribute >> isNamedAny: aNameCollection [
-	^ aNameCollection
-		includesXMLQualifiedName: self name
-		orLocalName: self localName
+	"Does the receiver's qualified or local name match any of the names
+	in aNameCollection?"
+
+	^ aNameCollection includesXMLName: self name
 ]
 
 { #category : #accessing }

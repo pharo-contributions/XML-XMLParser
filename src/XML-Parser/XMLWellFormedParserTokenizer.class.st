@@ -176,18 +176,6 @@ XMLWellFormedParserTokenizer >> errorDuplicateAttribute: anAttributeName [
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorDuplicateNamespace: aPrefix [
-	aPrefix
-		ifEmpty: [
-			self parseError: 'Duplicate default namespace declaration in start tag']
-		ifNotEmpty: [
-			self
-				formatParseError:
-					'Duplicate namespace declaration "xmlns:{1}" in start tag'
-				with: aPrefix]
-]
-
-{ #category : #errors }
 XMLWellFormedParserTokenizer >> errorEntityDepthLimitExceeded [
 	XMLLimitException signal: 
 		'Cannot further nest entity replacements; ',
@@ -533,6 +521,10 @@ XMLWellFormedParserTokenizer >> hasPushedBackEntityNamed: aName [
 
 { #category : #testing }
 XMLWellFormedParserTokenizer >> isInExternalSubsetOrExternallyDefinedEntity [
+	"this is used to check for conditional sections and
+	parameter entity refs within declarations within the
+	internal subset, which are disallowed"
+
 	context isExternalSubsetContext
 		ifTrue: [^ true].
 	self hasPushedBackEntities
@@ -1188,6 +1180,12 @@ XMLWellFormedParserTokenizer >> nextIgnoreSectionFromEntity: aParameterEntity [
 	self topPushedBackEntity == aParameterEntity
 		ifFalse: [driver handleImproperParameterEntityNesting].
 
+	"From the spec:
+	The contents of an ignored conditional section MUST be parsed by
+	ignoring all characters after the '[' following the keyword, except
+	conditional section starts '<![' and ends ']]>', until the matching
+	conditional section end is found. Parameter entity references MUST
+	NOT be recognized in this process."
 	openSections := 1.
 	[openSections > 0
 		and: [streamReader atEnd not]]
@@ -1559,7 +1557,7 @@ XMLWellFormedParserTokenizer >> nextSystemIDLiteral [
 { #category : #tokenizing }
 XMLWellFormedParserTokenizer >> nextTag [
 	"performance critical method"
-	| tagName attributes nextChar namespaces |
+	| tagName attributes nextChar |
 
 	(streamReader peek == $/)
 		ifTrue: [^ self nextEndTag].
@@ -1574,45 +1572,26 @@ XMLWellFormedParserTokenizer >> nextTag [
 				skipSeparators.
 			((nextChar := streamReader peek) == $>
 				or: [nextChar == $/]) not]]
-		whileTrue: [ | attributeName attributeValue |
+		whileTrue: [| attributeName |
 			attributeName := self nextName.
 			streamReader skipSeparators.
 			streamReader next == $=
 				ifFalse: [self errorExpectedAttributeNameValueSeparator].
 			streamReader skipSeparators.
-			attributeValue := self nextAttributeValue.
-	
+			(attributes
+				xmlAt: attributeName
+				newPut: self nextAttributeValue)
+				ifFalse: [self errorDuplicateAttribute: attributeName].
+			"the ordering of these tests is optimized"
 			(attributeName at: 1) == $x
 				ifTrue: [
-					(attributeName isXMLNSAttributeName
-						and: [driver usesNamespaces])
-						ifTrue: [
-							"initialize only if needed"
-							((namespaces
-								ifNil: [namespaces := OrderPreservingStringDictionary new: 5])
-								xmlAt:
-									((attributeName size > 6)
-										ifTrue: [attributeName copyFrom: 7 to: attributeName size]
-										ifFalse: [''])
-								newPut: attributeValue)
-								ifFalse: [self errorDuplicateNamespace: attributeName]]
-						ifFalse: [							
+					driver hasUnhandledReservedAttributes
+						ifFalse: [
 							attributeName isXMLReservedAttributeName
-								ifTrue: [driver haveUnhandledReservedAttributes].
-							(attributes
-								xmlAt: attributeName
-								newPut: attributeValue)
-								ifFalse: [self errorDuplicateAttribute: attributeName]]]
-				ifFalse: [
-					(attributes
-						xmlAt: attributeName
-						newPut: attributeValue)
-						ifFalse: [self errorDuplicateAttribute: attributeName]]].
-
+								ifTrue: [driver haveUnhandledReservedAttributes]]]].
 	driver
 		handleStartTag: tagName
-		attributes: attributes
-		namespaces: namespaces.
+		attributes: attributes.
 
 	nextChar == $/
 		ifTrue: [

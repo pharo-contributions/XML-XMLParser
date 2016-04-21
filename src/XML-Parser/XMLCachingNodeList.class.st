@@ -182,6 +182,13 @@ XMLCachingNodeList >> elementsAt: aName [
 ]
 
 { #category : #enumerating }
+XMLCachingNodeList >> elementsAt: aName do: aBlock [
+	(self cachedElementsByName
+		at: aName
+		ifAbsent: [^ self]) do: aBlock
+]
+
+{ #category : #enumerating }
 XMLCachingNodeList >> elementsDetect: aBlock ifNone: anExceptionBlock [
 	^ self cachedElements
 		detect: aBlock

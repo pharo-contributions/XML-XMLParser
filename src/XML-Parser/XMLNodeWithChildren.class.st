@@ -16,21 +16,37 @@ Class {
 
 { #category : #adding }
 XMLNodeWithChildren >> addNode: aNode [
+	"Adds aNode to the end of the receiver's node list. Can be used for elements,
+	comments, and other types of nodes."
+
 	^ self nodes addLast: aNode
 ]
 
 { #category : #adding }
 XMLNodeWithChildren >> addNode: aNode after: aPreviousNode [
-	^ self nodes add: aNode after: aPreviousNode
+	"Adds aNode to the receiver's node list after aPreviousNode raising an
+	error if aPreviousNode is absent"
+
+	^ self nodes
+		add: aNode
+		after: aPreviousNode
 ]
 
 { #category : #adding }
 XMLNodeWithChildren >> addNode: aNode before: aNextNode [
-	^ self nodes add: aNode before: aNextNode
+	"Adds aNode to the receiver's node list before aNextNode raising an
+	error if aNextNode is absent"
+
+	^ self nodes
+		add: aNode
+		before: aNextNode
 ]
 
 { #category : #adding }
 XMLNodeWithChildren >> addNodeFirst: aNode [
+	"Adds aNode to the begining of the receiver's node list. Can be used for
+	elements, comments, and other types of nodes."
+
 	^ self nodes addFirst: aNode
 ]
 
@@ -52,6 +68,7 @@ XMLNodeWithChildren >> addingNode: aNode [
 
 { #category : #accessing }
 XMLNodeWithChildren >> allNodes [
+	"returns a node list with the receiver and all of its descendant nodes"
 	| allNodes |
 
 	allNodes := self newListForSelect.
@@ -61,6 +78,8 @@ XMLNodeWithChildren >> allNodes [
 
 { #category : #enumerating }
 XMLNodeWithChildren >> allNodesCollect: aBlock [
+	"returns an ordered list of the receiver and all of its descendant nodes
+	evaluated with aBlock"
 	| collectedObjects |
 
 	collectedObjects := self newListForCollect.
@@ -83,6 +102,8 @@ XMLNodeWithChildren >> allNodesDetect: aBlock ifNone: anExceptionBlock [
 
 { #category : #enumerating }
 XMLNodeWithChildren >> allNodesDo: aBlock [
+	"evaluates aBlock for the receiver and all of its descendant nodes"
+
 	aBlock value: self.
 	self hasChildren
 		ifTrue: [self nodesDo: [:each | each allNodesDo: aBlock]]
@@ -106,6 +127,7 @@ XMLNodeWithChildren >> canHaveChildren [
 
 { #category : #accessing }
 XMLNodeWithChildren >> descendantNodes [
+	"returns a node list with all descendant nodes of the receiver"
 	| descendentNodes |
 
 	descendentNodes := self newListForSelect.
@@ -115,15 +137,21 @@ XMLNodeWithChildren >> descendantNodes [
 
 { #category : #enumerating }
 XMLNodeWithChildren >> descendantNodesCollect: aBlock [
+	"returns an ordered list of the values of all descendant nodes of the
+	receiver evaluated with aBlock"
 	| collectedObjects |
 
 	collectedObjects := self newListForCollect.
-	self descendantNodesDo: [:each | collectedObjects addLast: (aBlock value: each)].
+	self descendantNodesDo: [:each |
+		collectedObjects addLast: (aBlock value: each)].
 	^ collectedObjects.
 ]
 
 { #category : #enumerating }
 XMLNodeWithChildren >> descendantNodesDetect: aBlock [
+	"returns the first descendant node of the receiver that aBlock evaluates
+	true for or nil if there isn't one"
+
 	^ self
 		descendantNodesDetect: aBlock
 		ifNone: [nil]
@@ -131,6 +159,9 @@ XMLNodeWithChildren >> descendantNodesDetect: aBlock [
 
 { #category : #enumerating }
 XMLNodeWithChildren >> descendantNodesDetect: aBlock ifNone: anExceptionBlock [
+	"returns the first descendant node of the receiver that aBlock evaluates
+	true for or the value of anExceptionBlock if there isn't one"
+
 	self descendantNodesDo: [:each |
 		(aBlock value: each)
 			ifTrue: [^ each]].
@@ -139,12 +170,16 @@ XMLNodeWithChildren >> descendantNodesDetect: aBlock ifNone: anExceptionBlock [
 
 { #category : #enumerating }
 XMLNodeWithChildren >> descendantNodesDo: aBlock [
+	"evaluates aBlock for all descendant nodes of the receiver"
+
 	self hasChildren
 		ifTrue: [self nodesDo: [:each | each allNodesDo: aBlock]]
 ]
 
 { #category : #enumerating }
 XMLNodeWithChildren >> descendantNodesSelect: aBlock [
+	"returns a node list of all descendant nodes of the receiver that aBlock
+	evaluates true for"
 	| selectedNodes |
 
 	selectedNodes := self newListForSelect.
@@ -193,7 +228,8 @@ XMLNodeWithChildren >> errorAddingNodeWithParent [
 
 { #category : #accessing }
 XMLNodeWithChildren >> firstNode [
-	"returns nil when empty"
+	"returns the first child node of the receiver if it has one, nil otherwise"
+
 	^ self nodes first
 ]
 
@@ -212,12 +248,19 @@ XMLNodeWithChildren >> includesNode: aNode [
 
 { #category : #accessing }
 XMLNodeWithChildren >> innerXML [
-	"returns XML source of descendent nodes as string"
+	"Returns a string containing the XML source of all descendent nodes.
+	
+	See #innerXML:"
+
 	^ String streamContents: [:stream | self printInnerXMLOn: stream]
 ]
 
 { #category : #accessing }
 XMLNodeWithChildren >> innerXMLPrettyPrinted [
+	"Pretty print version of #innerXML.
+	
+	See #innerXML:"
+
 	^ String streamContents: [:stream |
 		self
 			printInnerXMLOn: stream
@@ -226,35 +269,51 @@ XMLNodeWithChildren >> innerXMLPrettyPrinted [
 
 { #category : #accessing }
 XMLNodeWithChildren >> lastNode [
-	"returns nil when empty"
+	"returns the last child node of the receiver if it has one, nil otherwise"
+
 	^ self nodes last
 ]
 
 { #category : #accessing }
 XMLNodeWithChildren >> nodeAfter: aNode [
-	"returns nil if aNode is last"
+	"returns the first child node of the receiver after aNode or nil if there
+	isn't one"
+
 	^ self nodes after: aNode
 ]
 
 { #category : #accessing }
 XMLNodeWithChildren >> nodeAt: anIndex [
-	"returns nil if absent"
+	"returns the child node at position anIndex or nil if there isn't one"
+
 	^ self nodes at: anIndex
 ]
 
 { #category : #accessing }
 XMLNodeWithChildren >> nodeAt: anIndex ifAbsent: aBlock [
-	^ self nodes at: anIndex ifAbsent: aBlock
+	"returns the child node at position anIndex or the value of aBlock
+	if there isn't one"
+
+	^ self nodes
+		at: anIndex
+		ifAbsent: aBlock
 ]
 
 { #category : #accessing }
 XMLNodeWithChildren >> nodeAt: anIndex put: aNode [
-	^ self nodes at: anIndex put: aNode
+	"replaces the child node at anIndex with aNode, raising an error if
+	anIndex is outside the current range of the node list"
+
+	^ self nodes
+		at: anIndex
+		put: aNode
 ]
 
 { #category : #accessing }
 XMLNodeWithChildren >> nodeBefore: aNode [
-	"returns nil if aNode is first"
+	"returns the first child node of the receiver before aNode or nil if there
+	isn't one"
+
 	^ self nodes before: aNode
 ]
 
@@ -265,13 +324,17 @@ XMLNodeWithChildren >> nodeListClass [
 
 { #category : #accessing }
 XMLNodeWithChildren >> nodes [
-	"returns the internal node list; safe to modify, but adding/removing will
-	have the affect of adding/removing from the receiver"
+	"returns the internal node list; safe to modify, but adding or removing nodes
+	from it will have the effect of adding or removing them from the receiver"
+
 	^ nodes ifNil: [nodes := self nodeListClass observer: self]
 ]
 
 { #category : #enumerating }
 XMLNodeWithChildren >> nodesCollect: aBlock [
+	"returns an ordered list of the values of all node children of the
+	receiver evaluated with aBlock"
+
 	^ self nodes collect: aBlock
 ]
 
@@ -287,11 +350,16 @@ XMLNodeWithChildren >> nodesDetect: aBlock ifNone: anExceptionBlock [
 
 { #category : #enumerating }
 XMLNodeWithChildren >> nodesDo: aBlock [
+	"evaluates aBlock for all child nodes of the receiver"
+
 	self nodes do: aBlock
 ]
 
 { #category : #enumerating }
 XMLNodeWithChildren >> nodesSelect: aBlock [
+	"returns a node list of all node children of the receiver that aBlock
+	evaluates true for"
+
 	^ self nodes select: aBlock
 ]
 
@@ -317,9 +385,12 @@ XMLNodeWithChildren >> postCopy [
 
 { #category : #printing }
 XMLNodeWithChildren >> printInnerXMLOn: aStream [
-	self
-		printInnerXMLOn: aStream
-		beforeWritingDo: [:writer | ]
+	self hasChildren
+		ifTrue: [
+			self
+				withNewXMLWriterOn: aStream
+				do: [:writer |
+					self writeInnerXMLOn: writer]]
 ]
 
 { #category : #printing }
@@ -361,9 +432,8 @@ XMLNodeWithChildren >> removedNode: aNode [
 
 { #category : #accessing }
 XMLNodeWithChildren >> replaceNode: aNode with: aReplacementNode [
-	"replace node in the receiver with another node.
-	if the second node is also in the receiver, their
-	positions are just swapped"
+	"replaces aNode in the receiver with aReplacementNode, or if aReplacementNode
+	is already a child of the receiver, just swaps their locations"
 	| firstIndex secondIndex |
 
 	firstIndex := self nodes indexOf: aNode.

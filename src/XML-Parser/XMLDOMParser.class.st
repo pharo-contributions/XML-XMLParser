@@ -33,10 +33,10 @@ XMLDOMParser >> attributeDeclaration: anElementName name: anAttributeName type: 
 
 { #category : #'handling - content' }
 XMLDOMParser >> characters: aString [
-	(self isInCDataSection and: [self preservesCDataNodes])
+	(self isInCDataSection
+		and: [self preservesCDataNodes])
 		ifTrue: [self topNode addNode: (self nodeFactory newCData: aString)]
-		ifFalse: [self topNode addContent: (self nodeFactory newString: aString)]
-
+		ifFalse: [self topNode addContent: aString]
 ]
 
 { #category : #'handling - lexical' }
@@ -225,7 +225,10 @@ XMLDOMParser >> preservesIgnorableWhitespace [
 
 { #category : #configuring }
 XMLDOMParser >> preservesIgnorableWhitespace: aBoolean [
-	"if enabled, ignorable whitespace will be preserved as string nodes (not default)"
+	"If enabled, ignorable whitespace (identified by DTD element declarations
+	with element content) will be preserved as string nodes. Enables validation.
+	(Not default)"
+
 	self configuration preservesIgnorableWhitespace: aBoolean
 ]
 

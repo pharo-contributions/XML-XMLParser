@@ -35,8 +35,8 @@ DTDExternalEntityLimits >> externalSubsetReadLimit [
 ]
 
 { #category : #accessing }
-DTDExternalEntityLimits >> externalSubsetReadLimit: aLimit [
-	externalSubsetReadLimit := aLimit
+DTDExternalEntityLimits >> externalSubsetReadLimit: anInteger [
+	externalSubsetReadLimit := anInteger
 ]
 
 { #category : #initialization }
@@ -55,8 +55,8 @@ DTDExternalEntityLimits >> maxExternalEntities [
 ]
 
 { #category : #accessing }
-DTDExternalEntityLimits >> maxExternalEntities: aLimit [
-	maxExternalEntities := aLimit
+DTDExternalEntityLimits >> maxExternalEntities: anInteger [
+	maxExternalEntities := anInteger
 ]
 
 { #category : #accessing }
@@ -65,8 +65,8 @@ DTDExternalEntityLimits >> maxExternalEntitySize [
 ]
 
 { #category : #accessing }
-DTDExternalEntityLimits >> maxExternalEntitySize: aLimit [
-	maxExternalEntitySize := aLimit
+DTDExternalEntityLimits >> maxExternalEntitySize: anInteger [
+	maxExternalEntitySize := anInteger
 ]
 
 { #category : #removing }

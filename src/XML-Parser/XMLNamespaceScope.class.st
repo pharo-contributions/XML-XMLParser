@@ -405,9 +405,12 @@ XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
 				"checking size after is faster than includes:"
 				oldSize := namespacedAttributes size.
 				(namespacedAttributes
-					add: namespace, (each xmlLocalNameAfterPrefix: prefix);
+					add: (each xmlLocalNameAfterPrefix: prefix) -> namespace;
 					size) > oldSize
-					ifFalse: [self errorAttribute: each aliasesNamespace: namespace]]
+					ifFalse: [
+						self
+							errorAttribute: each
+							aliasesNamespace: namespace]]
 			ifFalse: [self validateUnprefixedName: each]]
 ]
 

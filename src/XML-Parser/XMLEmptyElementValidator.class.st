@@ -1,6 +1,5 @@
 "
-This class validates empty elements.
-
+This class validates EMPTY elements, which can't contain elements, PCDATA, or even comments or PIs.
 "
 Class {
 	#name : #XMLEmptyElementValidator,
@@ -13,19 +12,27 @@ XMLEmptyElementValidator >> atEnd [
 	^ true
 ]
 
-{ #category : #private }
-XMLEmptyElementValidator >> errorMustBeEmpty [
-	XMLValidationException
-		formatSignal: 'Element <{1}> must be empty'
-		with: self element
+{ #category : #accessing }
+XMLEmptyElementValidator >> type [
+	^ 'EMPTY'
+]
+
+{ #category : #validating }
+XMLEmptyElementValidator >> validateComment: aString [
+	self errorUnexpectedComment
 ]
 
 { #category : #validating }
 XMLEmptyElementValidator >> validatePCData: aString [
-	self errorMustBeEmpty
+	self errorUnexpectedPCData
 ]
 
 { #category : #validating }
-XMLEmptyElementValidator >> validateStartTag: aName [
-	self errorMustBeEmpty
+XMLEmptyElementValidator >> validatePI: aTargetString data: aDataString [
+	self errorUnexpectedPI
+]
+
+{ #category : #validating }
+XMLEmptyElementValidator >> validateStartTag: anElement [
+	self errorUnexpectedElement: anElement
 ]

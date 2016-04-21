@@ -98,11 +98,15 @@ XMLElement >> addedElement: anElement [
 { #category : #notifying }
 XMLElement >> addingAttribute: anAttribute [
 	anAttribute element
-		ifNotNil: [self errorAddingAttributeWithElement]
+		ifNotNil: [:element |
+			element == self
+				ifFalse: [self errorAddingAttributeFromOtherElement]]
 ]
 
 { #category : #enumerating }
 XMLElement >> allElementsDo: aBlock [
+	"evaluates aBlock for the receiver and all descendant elements"
+
 	aBlock value: self.
 	self hasChildren
 		ifTrue: [self elementsDo: [:each | each allElementsDo: aBlock]].
@@ -148,17 +152,23 @@ XMLElement >> allNamespaceScopesWithValidationDo: aBlock whileTrue: aConditional
 { #category : #accessing }
 XMLElement >> attributeAssociations [
 	"returns attribute name->value associations"
+
 	^ self attributeNodes attributeAssociations
 ]
 
 { #category : #accessing }
 XMLElement >> attributeAt: aName [
-	"returns empty string when absent"
+	"returns the value of the attribute whose full name matches aName or an
+	empty string if there isn't any"
+
 	^ self attributeNodes attributeValueAt: aName
 ]
 
 { #category : #accessing }
 XMLElement >> attributeAt: aName ifAbsent: aBlock [
+	"returns the value of the attribute whose full name matches aName or the
+	value of aBlock if there isn't any"
+
 	^ self attributeNodes
 		attributeValueAt: aName
 		ifAbsent: aBlock
@@ -166,6 +176,9 @@ XMLElement >> attributeAt: aName ifAbsent: aBlock [
 
 { #category : #accessing }
 XMLElement >> attributeAt: aName ifAbsentPut: aBlock [
+	"sets the value of the attribute whose full name matches aName to the value
+	of aBlock if there isn't one already"
+
 	^ self attributeNodes
 		attributeValueAt: aName
 		ifAbsentPut: aBlock
@@ -173,6 +186,9 @@ XMLElement >> attributeAt: aName ifAbsentPut: aBlock [
 
 { #category : #accessing }
 XMLElement >> attributeAt: aName put: aValue [
+	"sets the value of the attribute whose full name matches aName to the value
+	aValue"
+
 	^ self attributeNodes
 		attributeValueAt: aName
 		put: aValue
@@ -200,12 +216,19 @@ XMLElement >> attributeNamesDo: aBlock [
 
 { #category : #accessing }
 XMLElement >> attributeNodeAt: aName [
-	"returns nil if absent"
+	"returns the attribute node whose qualified or local name matches aName
+	(unlike attributeAt:, which matches the full name exactly), or nil if there
+	isn't any"
+
 	^ self attributeNodes attributeNodeAt: aName
 ]
 
 { #category : #accessing }
 XMLElement >> attributeNodeAt: aName ifAbsent: aBlock [
+	"returns the attribute node whose qualified or local name matches aName
+	(unlike attributeAt:ifAbsent:, which matches the full name exactly), or
+	the value of aBlock if there isn't any"
+
 	^ self attributeNodes
 		attributeNodeAt: aName
 		ifAbsent: aBlock
@@ -213,7 +236,10 @@ XMLElement >> attributeNodeAt: aName ifAbsent: aBlock [
 
 { #category : #accessing }
 XMLElement >> attributeNodeAt: aName namespaceURI: aURI [
-	"returns nil if absent"
+	"returns the attribute node whose qualified or local name matches aName
+	(unlike attributeAt:, which matches the full name exactly) and whose
+	namespace URI matches aURI, or nil if there isn't any"
+
 	^ self attributeNodes
 		attributeNodeAt: aName
 		namespaceURI: aURI
@@ -221,6 +247,10 @@ XMLElement >> attributeNodeAt: aName namespaceURI: aURI [
 
 { #category : #accessing }
 XMLElement >> attributeNodeAt: aName namespaceURI: aURI ifAbsent: aBlock [
+	"returns the attribute node whose qualified or local name matches aName
+	(unlike attributeAt:ifAbsent:, which matches the full name exactly) and
+	whose namespace URI matches aURI, or the value of aBlock if there isn't any"
+
 	^ self attributeNodes
 		attributeNodeAt: aName
 		namespaceURI: aURI
@@ -230,7 +260,9 @@ XMLElement >> attributeNodeAt: aName namespaceURI: aURI ifAbsent: aBlock [
 { #category : #accessing }
 XMLElement >> attributeNodes [
 	"Returns the attribute node list. Can be modified, but adding or removing
-	attributes modify the element"
+	attributes also adds or removes them from the element. Copy before
+	modifying if you don't want that."
+
 	^ attributes ifNil: [attributes := self attributeListClass observer: self]
 ]
 
@@ -242,6 +274,7 @@ XMLElement >> attributeNodesDo: aBlock [
 { #category : #accessing }
 XMLElement >> attributes [
 	"returns a new order preserving dictionary of attribute names and values"
+
 	^ self attributeNodes attributes
 ]
 
@@ -320,20 +353,26 @@ XMLElement >> defaultNamespace: aURI [
 ]
 
 { #category : #private }
-XMLElement >> errorAddingAttributeWithElement [
+XMLElement >> errorAddingAttributeFromOtherElement [
 	XMLDOMException signal: 'Cannot add attribute node from other element'
 ]
 
 { #category : #accessing }
 XMLElement >> expandedName [
+	"returns the expanded name of the element as a string in the form of either
+	'{namespaceURI}localName' (if there's a namespace URI) or 'localName'"
+
 	^ self localName expandWithXMLNamespaceURI: self namespaceURI
 ]
 
 { #category : #testing }
 XMLElement >> hasAttributes [
-	"nil test and size check to avoid lazy initializing"
-	^ attributes notNil
-		and: [attributes size > 0]
+	"returns true if this element has attribute"
+
+	"optimized to avoid lazy initialization"
+	attributes == nil
+		ifTrue: [^ false].
+	^ attributes size > 0.
 ]
 
 { #category : #testing }
@@ -343,11 +382,18 @@ XMLElement >> hasNamespaceURI [
 
 { #category : #testing }
 XMLElement >> hasNamespaces [
-	^ namespaceScope notNil and: [namespaceScope hasNamespaces]
+	"returns true if the receiver declared or inherited namespace declarations"
+
+	"optimized to avoid lazy initialization"
+	namespaceScope == nil
+		ifTrue: [^ false].
+	^ namespaceScope hasNamespaces.
 ]
 
 { #category : #testing }
 XMLElement >> hasPrefix [
+	"returns true if the receiver's name is a qualified name with a prefix"
+
 	^ self name size > self localName size
 ]
 
@@ -357,14 +403,29 @@ XMLElement >> includesAttribute: aName [
 ]
 
 { #category : #testing }
+XMLElement >> includesAttributeNode: aName [
+	^ self attributeNodes includesAttributeNode: aName.
+]
+
+{ #category : #testing }
+XMLElement >> includesAttributeNode: aName namespaceURI: aURI [
+	^ self attributeNodes
+		includesAttributeNode: aName
+		namespaceURI: aURI
+]
+
+{ #category : #testing }
 XMLElement >> isDeclaredPrefix: aPrefix [
-	"is namespace prefix in scope for use by receiver and descendants"
+	"is the namespace prefix aPrefix declared for the receiver and its descendants?"
+
 	^ self namespaceScope includesPrefix: aPrefix
 ]
 
 { #category : #testing }
 XMLElement >> isDeclaredPrefix: aPrefix uri: aURI [
-	"is namespace prefix mapped to uri in scope for use by receiver and descendants"
+	"is the namespace prefix aPrefix mapped to aURI for the receiver and
+	its descendants?"
+
 	^ self namespaceScope
 		includesPrefix: aPrefix
 		mappedTo: aURI
@@ -377,16 +438,25 @@ XMLElement >> isElement [
 
 { #category : #testing }
 XMLElement >> isElementNamed: aName [
+	"returns true if the receiver's qualified name or local name matches aName"
+
 	^ self isNamed: aName
 ]
 
 { #category : #testing }
 XMLElement >> isElementNamedAny: aNameCollection [
+	"returns true if the receiver's qualified name or local name matches any
+	name in aNameCollection"
+
 	^ self isNamedAny: aNameCollection
 ]
 
 { #category : #testing }
 XMLElement >> isInLanguage: aLanguage [
+	"Returns true if the receiver or one of its ancestors has an xml:lang
+	attribute, and if the value is an IETF language tag that matches aLanguage
+	or if its first ('-' separated) subtag matches aLanguage."
+
 	^ (self
 		attributeNodeAt: 'xml:lang'
 		ifAbsent: [
@@ -397,48 +467,62 @@ XMLElement >> isInLanguage: aLanguage [
 
 { #category : #testing }
 XMLElement >> isNamed: aName [
-	"Does the receiver's qualified or local name match the argument?'"
-	^ aName
-		isXMLQualifiedName: self name
-		orLocalName: self localName
+	"Does the receiver's qualified or local name match the argument?"
+
+	^ self name isXMLQualifiedOrLocalName: aName
 ]
 
 { #category : #testing }
 XMLElement >> isNamedAny: aNameCollection [
-	"Does the receiver's qualified or local name match any of the names supplied as the argument?'"
-	^ aNameCollection
-		includesXMLQualifiedName: self name
-		orLocalName: self localName
+	"Does the receiver's qualified or local name match any of the names
+	in aNameCollection?"
+
+	^ aNameCollection includesXMLName: self name
 ]
 
 { #category : #testing }
 XMLElement >> isRoot [
-	"Is the receiver the root element?"
+	"Is the receiver the root element of a DOM tree?"
+
 	^ (self hasParent and: [self parent isElement]) not
 ]
 
 { #category : #accessing }
 XMLElement >> localName [
+	"returns the local name of the receiver, which is diffrent from #name if
+	#name is a qualified name"
+
 	^ localName ifNil: [localName := self name xmlLocalNameAfterPrefix]
 ]
 
 { #category : #accessing }
 XMLElement >> name [
+	"returns the full name of the element, either a qualified name if it has a
+	prefix or just a local name if it doesn't"
+
 	^ name ifNil: [name := '']
 ]
 
 { #category : #accessing }
 XMLElement >> name: aName [
+	"Renames the element. If aName is a qualified name and namespace checking is
+	enabled (default), then the prefix must already have been declared. This can
+	be done while renaming using name:namespaceURI."
+
 	self renameWith: [
 		name := aName.
 		localName := aName xmlLocalNameAfterPrefix]
 ]
 
 { #category : #accessing }
-XMLElement >> name: aQualifiedName namespaceURI: aURI [
+XMLElement >> name: aName namespaceURI: aURI [
+	"Renames the element and also declares a namespace URI in one step. If aName
+	is qualified, then it declares the prefix to be mapped to aURI. If aName has
+	no prefix, then aURI is declared as the default namespace URI."
+
 	self
-		declarePrefix: (aQualifiedName xmlPrefixBeforeLocalName) uri: aURI;
-		name: aQualifiedName
+		declarePrefix: (aName xmlPrefixBeforeLocalName) uri: aURI;
+		name: aName
 ]
 
 { #category : #private }
@@ -453,6 +537,9 @@ XMLElement >> namespaceURI [
 
 { #category : #accessing }
 XMLElement >> nextElement [
+	"returns the first element after the receiver that is a child of the same
+	parent if there is one, nil otherwise"
+
 	^ self parent ifNotNil: [:node | node elementAfter: self]
 ]
 
@@ -471,16 +558,26 @@ XMLElement >> postCopy [
 
 { #category : #accessing }
 XMLElement >> prefix [
+	"returns the prefix of the name of the receiver or an empty string if
+	there isn't one"
+
 	^ self name xmlPrefixBeforeLocalName: self localName
 ]
 
 { #category : #accessing }
 XMLElement >> prefix: aPrefix [
+	"Changes the prefix of the name of the receiver to aPrefix. If namespace
+	checking is enabled (default) and aPrefix is non-empty, then aPrefix must
+	have been declared."
+
 	self renameWith: [name := self localName qualifyWithXMLPrefix:  aPrefix]
 ]
 
 { #category : #accessing }
 XMLElement >> previousElement [
+	"returns the first element before the receiver that is a child of the same
+	parent if there is one, nil otherwise"
+
 	^ self parent ifNotNil: [:node | node elementBefore: self]
 ]
 
@@ -636,7 +733,7 @@ XMLElement >> validateAttributes [
 	self usesNamespaces
 		ifTrue: [
 			self namespaceScope validateAttributePrefixes:
-				self attributeNodes attributesByName]
+				self attributeNodes attributeNodesByName]
 ]
 
 { #category : #private }

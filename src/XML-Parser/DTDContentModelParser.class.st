@@ -27,7 +27,7 @@ DTDContentModelParser class >> parserForContentModel: aContentModel [
 			(aContentModel size > 1
 				and: [(aContentModel at: 2) == $#]) "#PCDATA mixed content"
 				ifTrue: [^ DTDMixedContentModelParser]
-				ifFalse: [^ DTDDFAContentModelParser]]
+				ifFalse: [^ DTDElementContentModelParser]]
 		ifFalse: [^ DTDLiteralContentModelParser]
 ]
 

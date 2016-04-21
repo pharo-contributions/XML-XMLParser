@@ -123,7 +123,7 @@ XMLParserDriver >> handleStartDocument [
 ]
 
 { #category : #handling }
-XMLParserDriver >> handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary [
+XMLParserDriver >> handleStartTag: anElementName attributes: anAttributeDictionary [
 ]
 
 { #category : #handling }

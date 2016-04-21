@@ -283,11 +283,11 @@ SAXHandler >> documentReadLimit [
 ]
 
 { #category : #configuring }
-SAXHandler >> documentReadLimit: aLimit [
+SAXHandler >> documentReadLimit: anInteger [
 	"change the document read limit (maximum number of chars that can be read)
 	or nil to disable"
 
-	self configuration documentReadLimit: aLimit
+	self configuration documentReadLimit: anInteger
 ]
 
 { #category : #accessing }
@@ -399,13 +399,27 @@ SAXHandler >> generalEntityDeclaration: aName replacement: aReplacement [
 
 { #category : #'handling - content' }
 SAXHandler >> ignorableWhitespace: aString [
-	"Handles ignorable whitespace in content, such as between '<outer>'
-	and '<inner>' or between '</inner>' and '</outer>' in:
-	'<outer>
-		<inner>test</inner>
-	<outer>'
+	"When validation is enabled and a DTD with element declarations is
+	present, this can be used to handle ignorable whitespace in elements
+	with 'element content' (meaning they can only contain other elements
+	and no PCDATA), such as between '<element-content>' and '<mixed-content>'
+	or between '</mixed-content>' and '</element-content>' in this sample:
+		'<!DOCTYPE element-content [
+			<!--this has element content, so its whitespace is ignorable-->
+			<!ELEMENT element-content (mixed-content)>
+			<!--this has mixed content, so its whitespace is not ignorable-->
+			<!ELEMENT mixed-content (#PCDATA|any-content)*>
+			<!--this has any content, so its whitespace is not ignorable-->
+			<!ELEMENT any-content ANY>
+		]>
+		<element-content>
+			<mixed-content>
+				<any-content> any </any-content>
+			</mixed-content>
+		</element-content>'
 
-	Whitespace around character data is not ignorable."
+	Not sent if validation is disabled or if there's no DTD with element
+	declarations."
 ]
 
 { #category : #private }
@@ -463,10 +477,10 @@ SAXHandler >> maxEntityReplacementDepth [
 ]
 
 { #category : #configuring }
-SAXHandler >> maxEntityReplacementDepth: aLimit [
+SAXHandler >> maxEntityReplacementDepth: anInteger [
 	"change the max replacement depth or nil to disable"
 
-	self configuration maxEntityReplacementDepth: aLimit
+	self configuration maxEntityReplacementDepth: anInteger
 ]
 
 { #category : #'handling - declarations' }

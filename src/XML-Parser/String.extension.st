@@ -67,9 +67,22 @@ String >> isXMLNCName [
 
 { #category : #'*XML-Parser' }
 String >> isXMLNSAttributeName [
-	^ (self beginsWith: 'xmlns')
-		and: [self size = 5 "'xmlns' size"
-			or: [(self at: 6) == $:]]
+	"optimized"
+	self size >= 5
+		ifFalse: [^ false].
+	(self at: 1) == $x
+		ifFalse: [^ false].
+	(self at: 2) == $m
+		ifFalse: [^ false].
+	(self at: 3) == $l
+		ifFalse: [^ false].
+	(self at: 4) == $n
+		ifFalse: [^ false].
+	(self at: 5) == $s
+		ifFalse: [^ false].
+	self size = 5
+		ifTrue: [^ true].
+	^ (self at: 6) == $:.
 ]
 
 { #category : #'*XML-Parser' }
@@ -97,17 +110,43 @@ String >> isXMLNmtoken [
 ]
 
 { #category : #'*XML-Parser' }
-String >> isXMLQualifiedName: aQualifiedName orLocalName: aLocalName [
-	"optimized"
-	^ self = aQualifiedName
-		or: [(aQualifiedName size > aLocalName size)
-			and: [self = aLocalName]]
+String >> isXMLQualifiedOrLocalName: aQualifiedOrLocalName [
+	"returns true if self and aQualifiedOrLocalName are the
+	same QName or if self is a QName and aQualifiedOrLocalName
+	is the local part, or if they are the same NCName."
+	| i |
+
+	i := aQualifiedOrLocalName size.
+	self size to: 1 by: -1 do: [:j |
+		i > 0
+			ifFalse: [^ (self at: j) == $:].
+		(aQualifiedOrLocalName at: i) = (self at: j)
+			ifFalse: [^ false].
+		i := i - 1].
+	^ i = 0.
 ]
 
 { #category : #'*XML-Parser' }
 String >> isXMLReservedAttributeName [
-	^ self size > 4
-		and: [self beginsWith: 'xml:']
+	"optimized"
+	self size > 3
+		ifFalse: [^ false].
+	(self at: 1) == $x
+		ifFalse: [^ false].
+	(self at: 2) == $m
+		ifFalse: [^ false].
+	^ (self at: 3) == $l.
+]
+
+{ #category : #'*XML-Parser' }
+String >> isXMLWhitespace [
+	"optimized"
+	self size > 0
+		ifFalse: [^ false].
+	1 to: self size do: [:i |
+		(self at: i) isXMLWhitespace
+			ifFalse: [^ false]].
+	^ true.
 ]
 
 { #category : #'*XML-Parser' }

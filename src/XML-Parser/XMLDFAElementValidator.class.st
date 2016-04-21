@@ -1,6 +1,5 @@
 "
-This class can use a DFA to validate element content.
-
+This class validates elements using a regular expression converted to a DFA. It ignores PCDATA, comments, and PIs.
 "
 Class {
 	#name : #XMLDFAElementValidator,
@@ -13,9 +12,9 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLDFAElementValidator class >> element: aName dfa: aDFA [
+XMLDFAElementValidator class >> element: anElement dfa: aDFA [
 	^ self new
-		setElement: aName
+		setElement: anElement
 		dfa: aDFA
 ]
 
@@ -35,36 +34,31 @@ XMLDFAElementValidator >> dfa [
 ]
 
 { #category : #private }
-XMLDFAElementValidator >> errorNonDeterminismInContentModelAfter: aName [
+XMLDFAElementValidator >> errorNonDeterminismInContentModelAfter: anElement [
 	XMLValidationException
 		formatSignal:
 			'Content model for <{1}> becomes non-deterministic after <{2}>. ',
 			'Rewrite it deterministically; for example "{3}" instead ',
 			'of "{4}"'
 		with: self element
-		with: aName
+		with: anElement
 		with: '(a,(b|c))'
 		with: '((a,b)|(a,c))'
 ]
 
 { #category : #initialization }
-XMLDFAElementValidator >> setElement: aName dfa: aDFA [
-	element := aName.
+XMLDFAElementValidator >> setElement: anElement dfa: aDFA [
+	element := anElement.
 	dfa := aDFA.
 	currentState := aDFA.
 ]
 
 { #category : #validating }
-XMLDFAElementValidator >> validatePCData: aString [
-	self errorUnexpectedPCData: aString
-]
-
-{ #category : #validating }
-XMLDFAElementValidator >> validateStartTag: aName [
+XMLDFAElementValidator >> validateStartTag: anElement [
 	currentState :=
 		currentState
-			nextDFAStateMatching: aName
-			ifNone: [self errorUnexpectedElement: aName].
+			nextDFAStateMatching: anElement
+			ifNone: [self errorUnexpectedElement: anElement].
 	currentState hasNonDeterminism
-		ifTrue: [self errorNonDeterminismInContentModelAfter: aName].
+		ifTrue: [self errorNonDeterminismInContentModelAfter: anElement].
 ]

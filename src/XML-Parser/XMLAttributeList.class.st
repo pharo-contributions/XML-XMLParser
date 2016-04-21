@@ -5,7 +5,7 @@ Class {
 	#name : #XMLAttributeList,
 	#superclass : #XMLObservableList,
 	#instVars : [
-		'attributesByName'
+		'attributeNodesByName'
 	],
 	#category : #'XML-Parser-DOM'
 }
@@ -31,35 +31,33 @@ XMLAttributeList >> addAttributeName: aName value: aValue [
 ]
 
 { #category : #private }
-XMLAttributeList >> afterAdding: anAttribute at: anIndex [
-	self attributesByName
-		at: anAttribute name
-		ifPresent: [:oldAttribute |
+XMLAttributeList >> afterAdding: aNode at: anIndex [
+	self attributeNodesByName
+		at: aNode name ifPresent: [:oldNode |
 			self
-				replacedAttribute: oldAttribute
-				withAttributeAt: anIndex];
-		at: anAttribute name
-		put: anAttribute.
-	observer ifNotNil: [observer addedAttribute: anAttribute].
+				replaced: oldNode
+				with: aNode 
+				at: anIndex];
+		at: aNode name put: aNode.
+	observer ifNotNil: [observer addedAttribute: aNode].
 ]
 
 { #category : #private }
-XMLAttributeList >> afterAddingLast: anAttribute [
-	self attributesByName
-		at: anAttribute name
-		ifPresent: [:oldAttribute |
+XMLAttributeList >> afterAddingLast: aNode [
+	self attributeNodesByName
+		at: aNode name ifPresent: [:oldNode |
 			self
-				replacedAttribute: oldAttribute
-				withAttributeAt: self size];
-		at: anAttribute name
-		put: anAttribute.
-	observer ifNotNil: [observer addedAttribute: anAttribute].
+				replaced: oldNode
+				with: aNode 
+				at: self size];
+		at: aNode name put: aNode.
+	observer ifNotNil: [observer addedAttribute: aNode].
 ]
 
 { #category : #private }
-XMLAttributeList >> afterRemoving: anAttribute [
-	self attributesByName removeKey: anAttribute name.
-	observer ifNotNil: [observer removedAttribute: anAttribute].
+XMLAttributeList >> afterRemoving: aNode [
+	self attributeNodesByName removeKey: aNode name.
+	observer ifNotNil: [observer removedAttribute: aNode].
 ]
 
 { #category : #converting }
@@ -131,9 +129,10 @@ XMLAttributeList >> attributeNodeAt: aName [
 
 { #category : #accessing }
 XMLAttributeList >> attributeNodeAt: aName ifAbsent: aBlock [
-	^ self attributesByName
-		at: aName
-		ifAbsent: aBlock
+	self do: [:each |
+		(each isNamed: aName)
+			ifTrue: [^ each]].
+	^ aBlock value.
 ]
 
 { #category : #accessing }
@@ -146,12 +145,17 @@ XMLAttributeList >> attributeNodeAt: aName namespaceURI: aURI [
 
 { #category : #accessing }
 XMLAttributeList >> attributeNodeAt: aName namespaceURI: aURI ifAbsent: aBlock [
-	| attributeNode |
+	self do: [:each |
+		((each isNamed: aName)
+			and: [each namespaceURI = aURI])
+			ifTrue: [^ each]].
+	^ aBlock value.
+]
 
-	((attributeNode := self attributeNodeAt: aName) notNil
-		and: [attributeNode namespaceURI = aURI])
-		ifTrue: [^ attributeNode]
-		ifFalse: [^ aBlock value]
+{ #category : #private }
+XMLAttributeList >> attributeNodesByName [
+	^ attributeNodesByName
+		ifNil: [attributeNodesByName := Dictionary new: self capacity]
 ]
 
 { #category : #private }
@@ -163,7 +167,7 @@ XMLAttributeList >> attributeValueAt: aName [
 
 { #category : #private }
 XMLAttributeList >> attributeValueAt: aName ifAbsent: aBlock [
-	^ (self attributesByName
+	^ (self attributeNodesByName
 		at: aName
 		ifAbsent: [^ aBlock value]) value
 ]
@@ -199,71 +203,60 @@ XMLAttributeList >> attributes [
 ]
 
 { #category : #private }
-XMLAttributeList >> attributesByName [
-	^ attributesByName ifNil: [attributesByName := Dictionary new: self capacity]
-]
-
-{ #category : #private }
-XMLAttributeList >> beforeAdding: anAttribute [
-	observer ifNotNil: [observer addingAttribute: anAttribute]
+XMLAttributeList >> beforeAdding: aNode [
+	observer ifNotNil: [observer addingAttribute: aNode]
 ]
 
 { #category : #testing }
 XMLAttributeList >> includes: aNode [
 	^ aNode isAttribute
 		and: [
-			(self attributesByName
+			(self attributeNodesByName
 				at: aNode name
 				ifAbsent: [^ false]) = aNode]
 ]
 
 { #category : #testing }
 XMLAttributeList >> includesAttribute: aName [
-	^ self attributesByName includesKey: aName
+	^ self attributeNodesByName includesKey: aName
+]
+
+{ #category : #testing }
+XMLAttributeList >> includesAttributeNode: aName [
+	self
+		attributeNodeAt: aName
+		ifAbsent: [^ false].
+	^ true.
+]
+
+{ #category : #testing }
+XMLAttributeList >> includesAttributeNode: aName namespaceURI: aURI [
+	self
+		attributeNodeAt: aName
+		namespaceURI: aURI
+		ifAbsent: [^ false].
+	^ true.
 ]
 
 { #category : #removing }
 XMLAttributeList >> removeAttribute: aName [
-	^ (self removeAttributeNodeAt: aName) value
+	^ (self remove: (self attributeNodesByName at: aName)) value
 ]
 
 { #category : #removing }
 XMLAttributeList >> removeAttribute: aName ifAbsent: aBlock [
-	^ (self
-		removeAttributeNodeAt: aName
-		ifAbsent: [^ aBlock value]) value
-]
-
-{ #category : #removing }
-XMLAttributeList >> removeAttributeNodeAt: aName [
-	^ self remove: (self attributeNodeAt: aName)
-]
-
-{ #category : #removing }
-XMLAttributeList >> removeAttributeNodeAt: aName ifAbsent: aBlock [
-	^ self remove:
-		(self
-			attributeNodeAt: aName
-			ifAbsent: [^ aBlock value])
+	^ (self remove:
+		(self attributeNodesByName
+			at: aName
+			ifAbsent: [^ aBlock value])) value
 ]
 
 { #category : #notifying }
-XMLAttributeList >> renamedAttribute: anAttribute from: anOldName to: aNewName [
-	self attributesByName
+XMLAttributeList >> renamedAttribute: anAttributeNode from: anOldName to: aNewName [
+	self attributeNodesByName
 		removeKey: anOldName;
 		at: aNewName ifPresent: [:attribute | self remove: attribute];
-		at: aNewName put: anAttribute
-]
-
-{ #category : #private }
-XMLAttributeList >> replacedAttribute: anAttribute withAttributeAt: anIndex [
-	| i |
-
-	(i :=
-		self
-			indexOf: anAttribute
-			otherThan: anIndex) > 0
-		ifTrue: [self removeAt: i]
+		at: aNewName put: anAttributeNode
 ]
 
 { #category : #initialization }
@@ -276,13 +269,13 @@ XMLAttributeList >> setAttributes: anAssociationCollection [
 { #category : #private }
 XMLAttributeList >> setWithOrderPreservingDictionary: anOrderPreservingDictionary [
 	"hack to reuse a dictionary for speed"
-	attributesByName := anOrderPreservingDictionary dictionary.
+	attributeNodesByName := anOrderPreservingDictionary dictionary.
 
 	"add the XMLAttributes in order directly to the collection
 	to avoid sending notifications and also replace the value in
 	the attributesByName association with the XMLAttribute"
 	anOrderPreservingDictionary keysDo: [:each | | association |
-		(association := attributesByName associationAt: each ifAbsent: nil)
+		(association := attributeNodesByName associationAt: each ifAbsent: nil)
 			value:
 				(collection addLast: 
 					(self attributeClass new
@@ -299,8 +292,8 @@ XMLAttributeList >> sort [
 { #category : #private }
 XMLAttributeList >> writeAttributesOn: aWriter [
 	"use to:do: for speed"
-	1 to: self size do: [:i | | attribute |
-		attribute := self at: i.
+	1 to: collection size do: [:i | | attribute |
+		attribute := collection at: i.
 		aWriter
 			writeAttributeName: attribute name
 			value: attribute value]
@@ -312,7 +305,7 @@ XMLAttributeList >> writeSortedAttributesOn: aWriter [
 
 	sortedAttributes := self sorted.
 	"use to:do: for speed"
-	1 to: self size do: [:i | | attribute |
+	1 to: sortedAttributes size do: [:i | | attribute |
 		attribute := sortedAttributes at: i.
 		aWriter
 			writeAttributeName: attribute name

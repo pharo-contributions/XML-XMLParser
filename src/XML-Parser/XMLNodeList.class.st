@@ -53,7 +53,9 @@ XMLNodeList >> contentNodesDo: aBlock [
 
 { #category : #accessing }
 XMLNodeList >> contentStringAt: aName [
-	^ (self elementAt: aName ifAbsent: [^ '']) contentString
+	^ (self
+		elementAt: aName
+		ifAbsent: [^ '']) contentString
 ]
 
 { #category : #accessing }
@@ -74,9 +76,10 @@ XMLNodeList >> elementAt: aName [
 
 { #category : #accessing }
 XMLNodeList >> elementAt: aName ifAbsent: aBlock [
-	^ self
-		detect: [:each | each isElement and: [each isNamed: aName]]
-		ifNone: aBlock
+	self do: [:each |
+		(each isElementNamed: aName)
+			ifTrue: [^ each]].
+	^ aBlock value.
 ]
 
 { #category : #accessing }
@@ -89,9 +92,12 @@ XMLNodeList >> elementAt: aName namespaceURI: aURI [
 
 { #category : #accessing }
 XMLNodeList >> elementAt: aName namespaceURI: aURI ifAbsent: aBlock [
-	^ (self elementsAt: aName)
-		detect: [:each | each namespaceURI = aURI]
-		ifNone: aBlock
+	self
+		elementsAt: aName
+		do: [:each |
+			each namespaceURI = aURI
+				ifTrue: [^ each]].
+	^ aBlock value.
 ]
 
 { #category : #accessing }
@@ -123,12 +129,17 @@ XMLNodeList >> elementsAt: aName [
 
 { #category : #enumerating }
 XMLNodeList >> elementsAt: aName do: aBlock [
-	(self elementsAt: aName) do: aBlock
+	self do: [:each |
+		(each isElement
+			and: [each isNamed: aName])
+			ifTrue: [aBlock value: each]]
 ]
 
 { #category : #accessing }
 XMLNodeList >> elementsAt: aName namespaceURI: aURI [
-	^ (self elementsAt: aName) select: [:each | each namespaceURI = aURI]
+	^ self elementsSelect: [:each |
+		(each isNamed: aName)
+			and: [each namespaceURI = aURI]]
 ]
 
 { #category : #enumerating }
@@ -155,7 +166,9 @@ XMLNodeList >> elementsDo: aBlock [
 
 { #category : #enumerating }
 XMLNodeList >> elementsSelect: aBlock [
-	^ self select: [:each | each isElement and: [aBlock value: each]]
+	^ self select: [:each |
+		each isElement
+			and: [aBlock value: each]]
 ]
 
 { #category : #accessing }
@@ -186,12 +199,28 @@ XMLNodeList >> includesElement: aName [
 	^ true.
 ]
 
+{ #category : #testing }
+XMLNodeList >> includesElement: aName namespaceURI: aURI [
+	self
+		elementAt: aName
+		namespaceURI: aURI
+		ifAbsent: [^ false].
+	^ true.
+]
+
 { #category : #accessing }
 XMLNodeList >> lastElement [
 	self reverseDo: [:each |
 		each isElement
 			ifTrue: [^ each]].
 	^ self defaultValue.
+]
+
+{ #category : #accessing }
+XMLNodeList >> rawContentStringAt: aName [
+	^ (self
+		elementAt: aName
+		ifAbsent: [^ '']) rawContentString
 ]
 
 { #category : #notifying }

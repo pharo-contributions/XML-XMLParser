@@ -43,7 +43,7 @@ XMLDocumentValidator >> defaultXMLIDValidator [
 ]
 
 { #category : #accessing }
-XMLDocumentValidator >> elementValidatorFor: aName [
+XMLDocumentValidator >> elementValidatorFor: anElement [
 	self subclassResponsibility
 ]
 
@@ -53,10 +53,10 @@ XMLDocumentValidator >> elementValidatorStack [
 ]
 
 { #category : #private }
-XMLDocumentValidator >> errorMissingContentFor: aName [
+XMLDocumentValidator >> errorUnexpectEndOfElement: anElement [
 	XMLValidationException
 		formatSignal: 'Element <{1}> terminated prematurely'
-		with: aName
+		with: anElement
 ]
 
 { #category : #testing }
@@ -67,6 +67,16 @@ XMLDocumentValidator >> hasAttributeValidators [
 { #category : #testing }
 XMLDocumentValidator >> hasCurrentElementValidator [
 	^ self currentElementValidator notNil
+]
+
+{ #category : #testing }
+XMLDocumentValidator >> hasElementContent [
+	self hasElementValidators
+		ifTrue: [
+			self currentElementValidator
+				ifNotNil: [:elementValidator |
+					^ elementValidator hasElementContent]].
+	^ false.
 ]
 
 { #category : #testing }
@@ -96,7 +106,7 @@ XMLDocumentValidator >> unvalidatedAttributes: anAttributeCollection [
 ]
 
 { #category : #validating }
-XMLDocumentValidator >> unvalidatedElement: aName [
+XMLDocumentValidator >> unvalidatedElement: anElement [
 ]
 
 { #category : #validating }
@@ -118,19 +128,28 @@ XMLDocumentValidator >> validateAttributes: anAttributeDictionary with: aValidat
 ]
 
 { #category : #validating }
+XMLDocumentValidator >> validateComment: aString [
+	self hasElementValidators
+		ifTrue: [
+			self currentElementValidator
+				ifNotNil: [:elementValidator |
+					elementValidator validateComment: aString]]
+]
+
+{ #category : #validating }
 XMLDocumentValidator >> validateEndDocument [
 	self validateIDReferences
 ]
 
 { #category : #validating }
-XMLDocumentValidator >> validateEndTag: aName [
+XMLDocumentValidator >> validateEndTag: anElement [
 	self hasElementValidators
 		ifTrue: [
-			(self currentElementValidator element = aName)
-				ifTrue: [
-					self currentElementValidator atEnd
-						ifFalse: [self errorMissingContentFor: aName]].
-			self elementValidatorStack removeLast]
+			self currentElementValidator
+				ifNotNil: [:elementValidator |
+					elementValidator atEnd
+						ifFalse: [self errorUnexpectEndOfElement: anElement].
+					self elementValidatorStack removeLast]]
 ]
 
 { #category : #validating }
@@ -145,31 +164,43 @@ XMLDocumentValidator >> validatePCData: aString [
 ]
 
 { #category : #validating }
-XMLDocumentValidator >> validateRootElement: anElementName [
+XMLDocumentValidator >> validatePI: aTargetString data: aDataString [
+	self hasElementValidators
+		ifTrue: [
+			self currentElementValidator
+				ifNotNil: [:elementValidator |
+					elementValidator
+						validatePI: aTargetString
+						data: aDataString]]
 ]
 
 { #category : #validating }
-XMLDocumentValidator >> validateStartTag: aName [
+XMLDocumentValidator >> validateRootElement: anElement [
+]
+
+{ #category : #validating }
+XMLDocumentValidator >> validateStartTag: anElement [
 	self currentElementValidator
-		ifNotNil: [:currentValidator | currentValidator validateStartTag: aName].
+		ifNotNil: [:elementValidator |
+			elementValidator validateStartTag: anElement].
 
 	self elementValidatorStack addLast:
-		((self elementValidatorFor: aName)
+		((self elementValidatorFor: anElement)
 			ifNil: [
 				self
-					unvalidatedElement: aName;
-					defaultElementValidatorFor: aName]).
+					unvalidatedElement: anElement;
+					defaultElementValidatorFor: anElement]).
 ]
 
 { #category : #validating }
-XMLDocumentValidator >> validateStartTag: aName attributes: anAttributeDictionary [
+XMLDocumentValidator >> validateStartTag: anElement attributes: anAttributeDictionary [
 	(self hasElementValidators
 		or: [self hasAttributeValidators])
 		ifTrue: [
-			self validateStartTag: aName.
+			self validateStartTag: anElement.
 			self
 				validateAttributes: anAttributeDictionary
-				with: (self attributeValidatorsFor: aName)]
+				with: (self attributeValidatorsFor: anElement)]
 ]
 
 { #category : #validating }

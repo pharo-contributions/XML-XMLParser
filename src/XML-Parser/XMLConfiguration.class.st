@@ -37,8 +37,8 @@ XMLConfiguration >> documentReadLimit [
 ]
 
 { #category : #accessing }
-XMLConfiguration >> documentReadLimit: aLimit [
-	self parserLimits documentReadLimit: aLimit
+XMLConfiguration >> documentReadLimit: anInteger [
+	self parserLimits documentReadLimit: anInteger
 ]
 
 { #category : #accessing }
@@ -91,8 +91,8 @@ XMLConfiguration >> maxEntityReplacementDepth [
 ]
 
 { #category : #accessing }
-XMLConfiguration >> maxEntityReplacementDepth: aLimit [
-	self parserLimits maxEntityReplacementDepth: aLimit
+XMLConfiguration >> maxEntityReplacementDepth: anInteger [
+	self parserLimits maxEntityReplacementDepth: anInteger
 ]
 
 { #category : #accessing }

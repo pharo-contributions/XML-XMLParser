@@ -17,16 +17,19 @@ XMLNode >> acceptsContent [
 
 { #category : #adding }
 XMLNode >> addContent: aStringOrStringNode [
-	XMLDOMException signal: 'Node cannot contain content'
+	self errorNodeCannotContainStringContent
 ]
 
 { #category : #enumerating }
 XMLNode >> allNodesDo: aBlock [
+	"evaluates aBlock for the receiver and all of its descendant nodes"
+
 	aBlock value: self
 ]
 
 { #category : #accessing }
 XMLNode >> ancestorElements [
+	"returns a node list with all ancestor elements of the receiver"
 	| ancestorElements |
 
 	ancestorElements := self newListForSelect.
@@ -48,6 +51,7 @@ XMLNode >> ancestorElementsDo: aBlock [
 
 { #category : #accessing }
 XMLNode >> ancestorNodes [
+	"returns a node list with all ancestor nodes of the receiver"
 	| ancestors |
 
 	ancestors := self newListForSelect.
@@ -74,17 +78,23 @@ XMLNode >> asString [
 
 { #category : #testing }
 XMLNode >> canHaveChildren [
+	"returns true if the receiver is a type of node that can have child nodes"
+
 	^ false
 ]
 
 { #category : #testing }
 XMLNode >> canonicallyEquals: aNode [
+	"returns true if the receiver and aNode have the same canonical
+	representation (http://www.w3.org/TR/xml-c14n)"
+
 	^ self canonicallyPrinted = aNode canonicallyPrinted
 ]
 
 { #category : #printing }
 XMLNode >> canonicallyPrintOn: aStream [
- 	"Prints on aStream as canonical XML"
+ 	"Prints on aStream as canonical XML (http://www.w3.org/TR/xml-c14n)"
+
 	self
 		printOn: aStream
 		beforeWritingDo: [:writer | writer isCanonical: true]
@@ -92,7 +102,8 @@ XMLNode >> canonicallyPrintOn: aStream [
 
 { #category : #printing }
 XMLNode >> canonicallyPrintToFileNamed: aFileName [
- 	"Prints to specified file as canonical XML"
+ 	"Prints to specified file as canonical XML (http://www.w3.org/TR/xml-c14n)"
+
 	self
 		withNewWriteStreamOnFileNamed: aFileName
 		do: [:writeStream | self canonicallyPrintOn: writeStream]
@@ -100,7 +111,8 @@ XMLNode >> canonicallyPrintToFileNamed: aFileName [
 
 { #category : #printing }
 XMLNode >> canonicallyPrinted [
- 	"Prints as canonical XML"
+ 	"Prints as canonical XML (http://www.w3.org/TR/xml-c14n)"
+
 	^ String streamContents: [:stream | self canonicallyPrintOn: stream]
 ]
 
@@ -111,13 +123,16 @@ XMLNode >> configuration [
 
 { #category : #accessing }
 XMLNode >> contentString [
- 	"Returns combined content strings of all descendants with space inserted
-	when one string has no trailing space and the one after has no leading space"
+ 	"Returns the combined content strings of all descendants with space inserted
+	when one string has no trailing space and the next has no leading space"
+
 	^ String streamContents: [:stream | self printContentOn: stream]
 ]
 
 { #category : #copying }
 XMLNode >> copy [
+	"returns a deep copy of the receiver, including copies of any descendant nodes"
+
 	^ self shallowCopy
 		postCopy;
 		postCopyConfiguration
@@ -140,7 +155,15 @@ XMLNode >> descendentNodesDo: aBlock [
 
 { #category : #accessing }
 XMLNode >> document [
+	"returns the document node that the receiver belongs to (the receiver if it's a
+	document) or nil if there isn't one"
+
 	^ self parent ifNotNil: [:node | node document]
+]
+
+{ #category : #private }
+XMLNode >> errorNodeCannotContainStringContent [
+	XMLDOMException signal: 'Node cannot contain string content'
 ]
 
 { #category : #private }
@@ -157,11 +180,15 @@ XMLNode >> escapesContentEntitiesWhenWriting [
 
 { #category : #testing }
 XMLNode >> hasChildren [
+	"returns true if the receiver has child nodes"
+
 	^ false
 ]
 
 { #category : #testing }
 XMLNode >> hasParent [
+	"returns true if the receiver has a parent node"
+
 	^ parent notNil
 ]
 
@@ -195,6 +222,8 @@ XMLNode >> isComment [
 
 { #category : #testing }
 XMLNode >> isContentNode [
+	"returns true if the receiver is a content node (an element or string node)"
+
 	^ false
 ]
 
@@ -215,22 +244,34 @@ XMLNode >> isElement [
 
 { #category : #testing }
 XMLNode >> isElementNamed: aName [
+	"returns true if the receiver is an element whose qualified name or local
+	name matches aName"
+
 	^ false
 ]
 
 { #category : #testing }
 XMLNode >> isElementNamedAny: aNameCollection [
+	"returns true if the receiver is an element whose qualified name or local
+	name matches any name in aNameCollection"
+
 	^ false
 ]
 
 { #category : #testing }
 XMLNode >> isInLanguage: aLanguage [
+	"Returns true if one of the ancestor elements of the receiver has an xml:lang
+	attribute, and if the value is an IETF language tag that matches aLanguage
+	or if its first ('-' separated) subtag matches aLanguage."
+
 	^ self hasParent
 		and: [self parent isInLanguage: aLanguage]
 ]
 
 { #category : #testing }
 XMLNode >> isPI [
+	"returns true if the receiver is a processing instruction node"
+
 	^ false
 ]
 
@@ -258,17 +299,22 @@ XMLNode >> newListForSelect [
 
 { #category : #accessing }
 XMLNode >> nextNode [
+	"returns the first node after this one that is a child of the same parent (the next
+	sibling) or nil if there isn't one"
+
 	^ self parent ifNotNil: [:node | node nodeAfter: self]
 ]
 
 { #category : #accessing }
 XMLNode >> parent [
+	"returns the parent node of this node or nil if there isn't one"
+
 	^ parent
 ]
 
-{ #category : #accessing }
-XMLNode >> parent: aParentNode [
-	parent := aParentNode
+{ #category : #private }
+XMLNode >> parent: aNode [
+	parent := aNode
 ]
 
 { #category : #copying }
@@ -285,6 +331,7 @@ XMLNode >> postCopyConfiguration [
 { #category : #printing }
 XMLNode >> prettyPrintOn: aStream [
  	"Prints XML on aStream with whitespace formatting for readability"
+
 	self
 		printOn: aStream
 		beforeWritingDo: [:writer | writer enablePrettyPrinting]
@@ -293,6 +340,7 @@ XMLNode >> prettyPrintOn: aStream [
 { #category : #printing }
 XMLNode >> prettyPrintToFileNamed: aFileName [
  	"Prints XML to specified file with whitespace formatting for readability"
+
 	self
 		withNewWriteStreamOnFileNamed: aFileName
 		do: [:writeStream | self prettyPrintOn: writeStream]
@@ -301,18 +349,23 @@ XMLNode >> prettyPrintToFileNamed: aFileName [
 { #category : #printing }
 XMLNode >> prettyPrinted [
  	"Prints XML with whitespace formatting for readability"
+
 	^ String streamContents: [:stream | self prettyPrintOn: stream]
 ]
 
 { #category : #accessing }
 XMLNode >> previousNode [
+	"returns the first node before this one that is a child of the same parent
+	(the preivous sibling) or nil if there isn't one"
+
 	^ self parent ifNotNil: [:node | node nodeBefore: self]
 ]
 
 { #category : #printing }
 XMLNode >> printContentOn: aStream [
- 	"Prints combined content strings of all descendants with space inserted
-	when one string has no trailing space and the one after has no leading space"
+ 	"Prints the combined content strings of all descendants with space inserted
+	when one string has no trailing space and the next has no leading space"
+
 	self printRawContentOn: (XMLNodeContentWriteStreamAdapter on: aStream)
 ]
 
@@ -320,6 +373,7 @@ XMLNode >> printContentOn: aStream [
 XMLNode >> printOn: aStream [
 	"Uses XMLWriter if supported to print XML on aStream, uses the
 	basic Object>>printOn: otherwise"
+
 	self
 		withNewXMLWriterOn: aStream
 		do: [:writer |
@@ -331,6 +385,7 @@ XMLNode >> printOn: aStream [
 { #category : #printing }
 XMLNode >> printOn: aStream beforeWritingDo: aBlock [
 	"Used to customize XML writing. Raises error without XMLWriter support"
+
 	self
 		withNewXMLWriterOn: aStream
 		do: [:writer |
@@ -348,6 +403,7 @@ XMLNode >> printRawContentOn: aStream [
 XMLNode >> printToFileNamed: aFileName [
 	"Prints XML to specified file. Uses the encoding specified in the
 	document's encoding attribute if supported or UTF-8 otherwise."
+
 	self
 		withNewWriteStreamOnFileNamed: aFileName
 		do: [:writeStream | self printOn: writeStream]
@@ -376,6 +432,7 @@ XMLNode >> printedWithoutSelfClosingTags [
 XMLNode >> rawContentString [
  	"Returns the combined content string of all descendants without
 	spaces inserted."
+
 	^ String streamContents: [:stream | self printRawContentOn: stream]
 ]
 
@@ -427,7 +484,9 @@ XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock whenAbsent: aZeroArgBloc
 { #category : #printing }
 XMLNode >> writeXMLOn: aWriter [
 	"Template method used by nodes to write on XMLWriters.
-	Send with customized XMLWriter for custom printing"
+
+	Sending with a customized XMLWriter instance as the argument can be used to
+	control printing."
 ]
 
 { #category : #private }

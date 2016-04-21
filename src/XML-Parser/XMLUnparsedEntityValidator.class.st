@@ -55,10 +55,10 @@ XMLUnparsedEntityValidator >> errorUndeclaredNotation: aNotation inEntity: anEnt
 ]
 
 { #category : #private }
-XMLUnparsedEntityValidator >> errorUndeclaredUnparsedEntityReference: aName inAttribute: anAttriubute [
+XMLUnparsedEntityValidator >> errorUndeclaredUnparsedEntityReference: anEntity inAttribute: anAttriubute [
 	XMLValidationException
 		formatSignal: 'Undeclared unparsed entity "{1}" in "{2}" attribute'
-		with: aName
+		with: anEntity
 		with: anAttriubute
 ]
 

@@ -27,6 +27,7 @@ XMLSingleCharacterReadStream >> basicNext [
 
 { #category : #closing }
 XMLSingleCharacterReadStream >> close [
+	character := nil
 ]
 
 { #category : #testing }

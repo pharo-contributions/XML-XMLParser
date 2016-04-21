@@ -1,5 +1,5 @@
 "
-This is a base class for element content validators.
+This is a base class for element validators.
 "
 Class {
 	#name : #XMLElementValidator,
@@ -11,8 +11,8 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLElementValidator class >> element: aName [
-	^ self new element: aName
+XMLElementValidator class >> element: anElement [
+	^ self new element: anElement
 ]
 
 { #category : #testing }
@@ -26,23 +26,46 @@ XMLElementValidator >> element [
 ]
 
 { #category : #accessing }
-XMLElementValidator >> element: aName [
-	element := aName
+XMLElementValidator >> element: anElement [
+	element := anElement
 ]
 
 { #category : #private }
-XMLElementValidator >> errorUnexpectedElement: aName [
+XMLElementValidator >> errorUnexpected: aDescription [
 	XMLValidationException
-		formatSignal: 'Unexpected <{1}> element in <{2}> element'
-		with: aName
+		formatSignal: 'Unexpected {1} in {2} type element <{3}>'
+		with: aDescription
+		with: self type
 		with: self element
 ]
 
 { #category : #private }
-XMLElementValidator >> errorUnexpectedPCData: aString [
+XMLElementValidator >> errorUnexpectedComment [
+	^ self errorUnexpected: 'comment'
+]
+
+{ #category : #private }
+XMLElementValidator >> errorUnexpectedElement: anElement [
 	XMLValidationException
-		formatSignal: 'Unexpected PCDATA in <{1}> element'
+		formatSignal: 'Unexpected <{1}> element in {2} type element <{3}>'
+		with: anElement
+		with: self type
 		with: self element
+]
+
+{ #category : #private }
+XMLElementValidator >> errorUnexpectedPCData [
+	^ self errorUnexpected: 'PCDATA'
+]
+
+{ #category : #private }
+XMLElementValidator >> errorUnexpectedPI [
+	^ self errorUnexpected: 'processing instruction'
+]
+
+{ #category : #testing }
+XMLElementValidator >> hasElementContent [
+	^ false
 ]
 
 { #category : #printing }
@@ -54,10 +77,23 @@ XMLElementValidator >> printOn: aStream [
 		nextPutAll: '>)'.
 ]
 
+{ #category : #accessing }
+XMLElementValidator >> type [
+	self subclassResponsibility
+]
+
+{ #category : #validating }
+XMLElementValidator >> validateComment: aString [
+]
+
 { #category : #validating }
 XMLElementValidator >> validatePCData: aString [
 ]
 
 { #category : #validating }
-XMLElementValidator >> validateStartTag: aName [
+XMLElementValidator >> validatePI: aTargetString data: aDataString [
+]
+
+{ #category : #validating }
+XMLElementValidator >> validateStartTag: anElement [
 ]

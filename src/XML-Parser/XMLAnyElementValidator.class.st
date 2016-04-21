@@ -11,3 +11,8 @@ Class {
 XMLAnyElementValidator >> atEnd [
 	^ true
 ]
+
+{ #category : #accessing }
+XMLAnyElementValidator >> type [
+	^ 'ANY'
+]

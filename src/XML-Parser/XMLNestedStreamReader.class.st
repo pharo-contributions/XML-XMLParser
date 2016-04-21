@@ -13,10 +13,10 @@ Class {
 		'peekChar',
 		'normalizedLineEndingChar',
 		'currentLineNumber',
-		'readLimit',
-		'isEscapingQuotes',
 		'currentPosition',
-		'currentLineStartPosition'
+		'currentLineStartPosition',
+		'readLimit',
+		'isEscapingQuotes'
 	],
 	#classVars : [
 		'CRCharacter',
@@ -413,9 +413,6 @@ XMLNestedStreamReader >> pushBackStream: aStream [
 
 { #category : #positioning }
 XMLNestedStreamReader >> pushBackStream: aStream onClose: aBlock [
-	(nestedStreams size >= self maxNestedStreams)
-		ifTrue: [self errorNestingLimitExceeded].
-
 	self
 		pushNestedStream: stream
 		onClose: onClose.
@@ -449,8 +446,8 @@ XMLNestedStreamReader >> setStream: aStream readLimit: aReadLimit [
 	currentLineNumber := 1.
 	currentPosition := 0.
 	currentLineStartPosition := 0.
-	normalizedLineEndingChar := LFCharacter.
 	readLimit := aReadLimit.
+	normalizedLineEndingChar := LFCharacter.
 	isEscapingQuotes := false.
 ]
 

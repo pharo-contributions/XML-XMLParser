@@ -11,10 +11,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLMixedContentElementValidator class >> element: aName allowedElements: aNameCollection [
+XMLMixedContentElementValidator class >> element: anElement allowedElements: anAllowedElementsCollection [
 	^ self new
-		setElement: aName
-		allowedElements: aNameCollection
+		setElement: anElement
+		allowedElements: anAllowedElementsCollection
 ]
 
 { #category : #accessing }
@@ -28,14 +28,19 @@ XMLMixedContentElementValidator >> atEnd [
 ]
 
 { #category : #initialization }
-XMLMixedContentElementValidator >> setElement: aName allowedElements: aNameCollection [
-	element := aName.
-	allowedElements := aNameCollection.
+XMLMixedContentElementValidator >> setElement: anElement allowedElements: anAllowedElementsCollection [
+	element := anElement.
+	allowedElements := anAllowedElementsCollection asSet.
+]
+
+{ #category : #accessing }
+XMLMixedContentElementValidator >> type [
+	^ 'mixed content'
 ]
 
 { #category : #validating }
-XMLMixedContentElementValidator >> validateStartTag: aName [
-	(self allowedElements includes: aName)
-		ifFalse: [self errorUnexpectedElement: aName]
+XMLMixedContentElementValidator >> validateStartTag: anElement [
+	(self allowedElements includes: anElement)
+		ifFalse: [self errorUnexpectedElement: anElement]
 	
 ]

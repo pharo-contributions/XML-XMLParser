@@ -35,6 +35,13 @@ XMLDOMConfiguration >> initialize [
 ]
 
 { #category : #accessing }
+XMLDOMConfiguration >> isValidating: aBoolean [
+	aBoolean
+		ifFalse: [self preservesIgnorableWhitespace: false].
+	super isValidating: aBoolean.
+]
+
+{ #category : #accessing }
 XMLDOMConfiguration >> nodeFactory [
 	^ nodeFactory
 ]
@@ -89,5 +96,6 @@ XMLDOMConfiguration >> preservesIgnorableWhitespace [
 
 { #category : #accessing }
 XMLDOMConfiguration >> preservesIgnorableWhitespace: aBoolean [
-	preservesIgnorableWhitespace := aBoolean
+	(preservesIgnorableWhitespace := aBoolean)
+		ifTrue: [self isValidating: true]
 ]

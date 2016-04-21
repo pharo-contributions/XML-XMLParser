@@ -33,9 +33,9 @@ DTDDocumentValidator >> doctypeDefinition: aDoctypeDefinition [
 ]
 
 { #category : #accessing }
-DTDDocumentValidator >> elementValidatorFor: aName [
+DTDDocumentValidator >> elementValidatorFor: anElement [
 	^ (self doctypeDefinition elementValidators
-		at: aName
+		at: anElement
 		ifAbsent: [nil]) copy
 ]
 
@@ -65,10 +65,10 @@ DTDDocumentValidator >> unvalidatedAttributes: anAttributeCollection [
 ]
 
 { #category : #validating }
-DTDDocumentValidator >> unvalidatedElement: aName [
+DTDDocumentValidator >> unvalidatedElement: anElement [
 	XMLValidationException
 		formatSignal: 'Undeclared element <{1}>'
-		with: aName
+		with: anElement
 ]
 
 { #category : #validating }
@@ -78,8 +78,8 @@ DTDDocumentValidator >> validateIDReferences [
 ]
 
 { #category : #validating }
-DTDDocumentValidator >> validateRootElement: anElementName [
+DTDDocumentValidator >> validateRootElement: anElement [
 	(self doctypeDefinition hasRoot
-		and: [self doctypeDefinition root ~= anElementName])
-		ifTrue: [self errorInvalidRoot: anElementName]
+		and: [self doctypeDefinition root ~= anElement])
+		ifTrue: [self errorInvalidRoot: anElement]
 ]

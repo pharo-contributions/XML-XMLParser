@@ -125,7 +125,7 @@ XMLObservableList >> beforeAdding: anObject [
 ]
 
 { #category : #private }
-XMLObservableList >> indexOf: anObject otherThan: anIndex [
+XMLObservableList >> indexOf: anObject notAt: anIndex [
 	"used by subclasses to remove duplicates"
 	1 to: anIndex - 1 do: [:i |
 		(collection at: i) = anObject
@@ -160,6 +160,23 @@ XMLObservableList >> removeAt: anIndex [
 	removed := super removeAt: anIndex.
 	self afterRemoving: removed.
 	^ removed.
+]
+
+{ #category : #private }
+XMLObservableList >> replaced: anOldObject with: aNewObject at: aNewIndex [
+	| i |
+
+	(i :=
+		self
+			indexOf: anOldObject
+			notAt: aNewIndex) > 0
+		ifTrue: [
+			anOldObject == aNewObject
+				ifTrue: [
+					"exact same object being moved to another index; can be
+					removed directly without signaling observers"
+					collection removeAt: i]
+				ifFalse: [self removeAt: i]]
 ]
 
 { #category : #removing }
