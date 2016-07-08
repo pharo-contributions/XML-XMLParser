@@ -146,7 +146,7 @@ XMLIntegerReaderTest >> testReadLimit [
 
 { #category : #tests }
 XMLIntegerReaderTest >> testStreamReadingPortability [
-	| stream integerReader integer atEnd |
+	| stream integerReader |
 
 	stream := XMLExceptionRaisingReadStream on: '123abc'.
 	integerReader := XMLIntegerReader on: stream.

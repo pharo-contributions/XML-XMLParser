@@ -15,9 +15,14 @@ XMLCharacterMethodsTest class >> nonChars [
 			collect: [:each | each asCharacter]
 ]
 
+{ #category : #accessing }
+XMLCharacterMethodsTest >> nonChars [
+	^ self class nonChars
+]
+
 { #category : #tests }
 XMLCharacterMethodsTest >> testIsXMLChar [
-	self class nonChars do: [:each |
+	self nonChars do: [:each |
 		self deny: each isXMLChar]
 ]
 

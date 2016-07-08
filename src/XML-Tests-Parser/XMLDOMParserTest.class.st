@@ -1,47 +1,27 @@
 Class {
 	#name : #XMLDOMParserTest,
-	#superclass : #XMLParserTest,
-	#instVars : [
-		'addressBookNamespacePrefixedXML',
-		'addressBookNamespacedXML'
-	],
+	#superclass : #TestCase,
 	#category : #'XML-Tests-Parser'
 }
 
 { #category : #source }
-XMLDOMParserTest class >> addressBookNamespacePrefixedXML [
-	"
-	self addressBookNamespacePrefixedXML
-	"
-	| xmlWithPrefixes |
-
-	xmlWithPrefixes := self addressBookNamespacedXML.
-	#('<addressbook' '</addressbook' '<person' '</person' 'family-name=' 'first-name=')
-		with: #('<book:addressbook' '</book:addressbook' '<ps:person' '</ps:person' 'ps:family-name=' 'ps:first-name=')
-		do: [:source :replacement |
-			xmlWithPrefixes := xmlWithPrefixes copyReplaceAll: source with: replacement].
-	^ xmlWithPrefixes.
-]
-
-{ #category : #source }
-XMLDOMParserTest class >> addressBookNamespacedXML [
-	"
-	self addressBookNamespacedXML
-	"
-	^ '<addressbook xmlns="defaultNS" xmlns:book="bookNS" xmlns:ps="personNS">',
-		(self addressBookXML copyAfter:  $>)
-]
-
-{ #category : #source }
 XMLDOMParserTest >> addressBookNamespacePrefixedXML [
-	^ addressBookNamespacePrefixedXML
-		ifNil: [addressBookNamespacePrefixedXML := self class addressBookNamespacePrefixedXML]
+	^ XMLParserTest addressBookNamespacePrefixedXML
 ]
 
 { #category : #source }
 XMLDOMParserTest >> addressBookNamespacedXML [
-	^ addressBookNamespacedXML
-		ifNil: [addressBookNamespacedXML := self class addressBookNamespacedXML]
+	^ XMLParserTest addressBookNamespacedXML
+]
+
+{ #category : #source }
+XMLDOMParserTest >> addressBookXML [
+	^ XMLParserTest addressBookXML
+]
+
+{ #category : #source }
+XMLDOMParserTest >> addressBookXMLWithDTD [
+	^ XMLParserTest addressBookXMLWithDTD
 ]
 
 { #category : #source }
@@ -116,6 +96,23 @@ XMLDOMParserTest >> testAttributeNamespacesDisabled [
 ]
 
 { #category : #tests }
+XMLDOMParserTest >> testAttributes [
+	| document firstPerson  |
+
+	document := XMLDOMParser parse: self addressBookXML.
+	firstPerson := document findElementNamed: 'person'.
+	self
+		assert: (firstPerson attributeAt: 'employee-number') = 'A0000';
+		assert: (firstPerson attributeAt: 'family-name') = 'Gates';
+		assert: (firstPerson attributeAt: 'first-name') = 'Bob';
+		assert:
+			firstPerson attributeNames asArray =
+				#('employee-number' 'family-name' 'first-name');
+		assert: firstPerson attributeAssociations asArray =
+			{('employee-number'->'A0000'). ('family-name'->'Gates'). ('first-name'->'Bob').}.
+]
+
+{ #category : #tests }
 XMLDOMParserTest >> testAttributesExcludingDeclarations [
 	| document   |
 
@@ -183,6 +180,25 @@ XMLDOMParserTest >> testChangingNamespaces [
 ]
 
 { #category : #tests }
+XMLDOMParserTest >> testComment [
+	| xml document comments |
+
+	xml := '<!--one--><test><!--two--></test><!--three-->'.
+	document := XMLDOMParser parse: xml.
+	comments := document allNodesSelect: [:each | each isComment].
+	self assert: comments isEmpty.
+
+	document :=
+		(XMLDOMParser on: xml)
+			preservesCommentNodes: true;
+			parseDocument.
+	comments := document allNodesSelect: [:each | each isComment].
+	self
+		assert: (comments allSatisfy: [:each | each isComment]);
+		assert: (comments collect: [:each | each string]) asArray = #('one' 'two' 'three').
+]
+
+{ #category : #tests }
 XMLDOMParserTest >> testDeclaringXMLNamespace [
 	| xmlNamespace elements |
 
@@ -216,7 +232,7 @@ XMLDOMParserTest >> testDisabledNamespacesAttributes [
 		assert: (document root attributeAt: 'name') = 'value'.
 ]
 
-{ #category : #'tests - internal subset' }
+{ #category : #tests }
 XMLDOMParserTest >> testDoctypeDeclaration [
 	| doctype |
 
@@ -261,6 +277,44 @@ XMLDOMParserTest >> testDocumentInternalSubset [
 	document doctypeDeclaration: nil.
 	doctypeDeclaration allNodesDo: [:each |
 		self assert: each document isNil].
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testDocumentRoot [
+	| document root  |
+
+	document := XMLDOMParser parse: self addressBookXML.
+	self assert: (document isKindOf: XMLDocument).
+	root := document root.
+	self assert: (root class == XMLElement).
+
+	self assert:
+		(root allNodesDetect: [:each |
+			each isElement
+				and: [each isNamedAny: #('AddressBook' 'addressbook')]]) == root.
+	self assert: (root findElementNamed: 'addressbook') == root.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testElementMixedContent [
+	| xml mixedContent |
+
+	xml := '<mixed-content> one <two/> <three/> four <five> </five> seven </mixed-content>'.
+	mixedContent := (XMLDOMParser parse: xml) root.
+	self
+		assert: mixedContent nodes size = 7;
+		assert: (mixedContent nodes first isStringNode: ' one ');
+		assert: (mixedContent nodes second isElementNamed: 'two');
+		deny: mixedContent nodes second hasChildren;
+		assert: (mixedContent nodes third isStringNode: ' ');
+		assert: (mixedContent nodes fourth isElementNamed: 'three');
+		deny: mixedContent nodes fourth hasChildren;
+		assert: (mixedContent nodes fifth isStringNode: ' four ');
+		assert: (mixedContent nodes sixth isElementNamed: 'five');
+		assert: mixedContent nodes sixth hasChildren;
+		assert: mixedContent nodes sixth nodes size = 1;
+		assert: (mixedContent nodes sixth nodes first isStringNode: ' ');
+		assert: (mixedContent nodes seventh isStringNode: ' seven ').
 ]
 
 { #category : #tests }
@@ -331,35 +385,6 @@ XMLDOMParserTest >> testFindElementNamespaceURI [
 			findElementNamed: 'person'
 			namespaceURI: 'defaultNS'
 			with: [:each | (each attributeAt: 'family-name') = 'Brown']) == people second.
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testIgnorableWhitespaceValidationToggle [
-	| parser |
-
-	parser := XMLDOMParser on: ''.
-	self
-		assert: parser isValidating;
-		deny: parser preservesIgnorableWhitespace;
-		assert: (parser preservesIgnorableWhitespace: true) == parser;
-		assert: parser preservesIgnorableWhitespace;
-		assert: parser isValidating.
-
-	self
-		assert: (parser preservesIgnorableWhitespace: false) == parser;
-		assert: parser isValidating;
-		deny: parser preservesIgnorableWhitespace.
-
-	self
-		assert: (parser preservesIgnorableWhitespace: true) == parser;
-		assert: (parser isValidating: false) == parser;
-		deny: parser isValidating;
-		deny: parser preservesIgnorableWhitespace.
-
-	self
-		assert: (parser preservesIgnorableWhitespace: true) == parser;
-		assert: parser isValidating;
-		assert: parser preservesIgnorableWhitespace.
 ]
 
 { #category : #tests }
@@ -439,7 +464,7 @@ XMLDOMParserTest >> testInnerXMLEntities [
 		raise: XMLValidationException.
 ]
 
-{ #category : #'tests - internal subset' }
+{ #category : #tests }
 XMLDOMParserTest >> testInternalAttributeDeclarations [
 	| doctype firstAttribute secondAttribute |
 
@@ -467,7 +492,7 @@ XMLDOMParserTest >> testInternalAttributeDeclarations [
 		assert: secondAttribute defaultValue = 'three'.
 ]
 
-{ #category : #'tests - internal subset' }
+{ #category : #tests }
 XMLDOMParserTest >> testInternalElementDeclaration [
 	| doctype elementDeclaration |
 
@@ -483,7 +508,7 @@ XMLDOMParserTest >> testInternalElementDeclaration [
 		assert: elementDeclaration contentModel = '(#PCDATA|one|two)*'.
 ]
 
-{ #category : #'tests - internal subset' }
+{ #category : #tests }
 XMLDOMParserTest >> testInternalGeneralEntityDeclarations [
 	| doctype firstEntity secondEntity |
 
@@ -513,7 +538,7 @@ XMLDOMParserTest >> testInternalGeneralEntityDeclarations [
 		assert: secondEntity ndata isEmpty.
 ]
 
-{ #category : #'tests - internal subset' }
+{ #category : #tests }
 XMLDOMParserTest >> testInternalNotationDeclarations [
 	| doctype notation |
 
@@ -531,7 +556,7 @@ XMLDOMParserTest >> testInternalNotationDeclarations [
 		assert: notation systemID = 'note.doc'.
 ]
 
-{ #category : #'tests - internal subset' }
+{ #category : #tests }
 XMLDOMParserTest >> testInternalParameterEntityDeclarations [
 	| doctype firstEntity secondEntity |
 
@@ -722,6 +747,19 @@ XMLDOMParserTest >> testNodeDetecting [
 ]
 
 { #category : #tests }
+XMLDOMParserTest >> testNodeFactory [
+	| parser newNodeFactory |
+
+	parser := XMLDOMParser on: self addressBookXML.
+	self assert: (parser nodeFactory isKindOf: XMLNodeFactory).
+
+	newNodeFactory := XMLPluggableNodeFactory new.
+	self
+		assert: (parser nodeFactory: newNodeFactory) == parser;
+		assert: parser nodeFactory == newNodeFactory.
+]
+
+{ #category : #tests }
 XMLDOMParserTest >> testNodeListClass [
 	| document parser listClass |
 
@@ -810,75 +848,49 @@ XMLDOMParserTest >> testParsedElementNames [
 ]
 
 { #category : #tests }
-XMLDOMParserTest >> testParsingAttributes [
-	| document firstPerson  |
+XMLDOMParserTest >> testPreservesCDataNodes [
+	| parser |
 
-	document := XMLDOMParser parse: self addressBookXML.
-	firstPerson := document findElementNamed: 'person'.
+	parser := XMLDOMParser on: self addressBookXML.
 	self
-		assert: (firstPerson attributeAt: 'employee-number') = 'A0000';
-		assert: (firstPerson attributeAt: 'family-name') = 'Gates';
-		assert: (firstPerson attributeAt: 'first-name') = 'Bob';
-		assert:
-			firstPerson attributeNames asArray =
-				#('employee-number' 'family-name' 'first-name');
-		assert: firstPerson attributeAssociations asArray =
-			{('employee-number'->'A0000'). ('family-name'->'Gates'). ('first-name'->'Bob').}.
+		deny: parser preservesCDataNodes;
+		assert: (parser preservesCDataNodes: true) == parser;
+		assert: parser preservesCDataNodes;
+		assert: (parser preservesCDataNodes: false) == parser;
+		deny: parser preservesCDataNodes.
 ]
 
 { #category : #tests }
-XMLDOMParserTest >> testParsingMixedContent [
-	| xml mixedContent |
+XMLDOMParserTest >> testPreservesCommentNodes [
+	| parser |
 
-	xml := '<mixed-content> one <two/> <three/> four <five> </five> seven </mixed-content>'.
-	mixedContent := (XMLDOMParser parse: xml) root.
+	parser := XMLDOMParser on: self addressBookXML.
 	self
-		assert: mixedContent nodes size = 7;
-		assert: (mixedContent nodes first isStringNode: ' one ');
-		assert: (mixedContent nodes second isElementNamed: 'two');
-		deny: mixedContent nodes second hasChildren;
-		assert: (mixedContent nodes third isStringNode: ' ');
-		assert: (mixedContent nodes fourth isElementNamed: 'three');
-		deny: mixedContent nodes fourth hasChildren;
-		assert: (mixedContent nodes fifth isStringNode: ' four ');
-		assert: (mixedContent nodes sixth isElementNamed: 'five');
-		assert: mixedContent nodes sixth hasChildren;
-		assert: mixedContent nodes sixth nodes size = 1;
-		assert: (mixedContent nodes sixth nodes first isStringNode: ' ');
-		assert: (mixedContent nodes seventh isStringNode: ' seven ').
+		deny: parser preservesCommentNodes;
+		assert: (parser preservesCommentNodes: true) == parser;
+		assert: parser preservesCommentNodes;
+		assert: (parser preservesCommentNodes: false) == parser;
+		deny: parser preservesCommentNodes.
 ]
 
 { #category : #tests }
-XMLDOMParserTest >> testParsingRoot [
-	| document root  |
+XMLDOMParserTest >> testPreservesIgnorableWhitespace [
+	| parser |
 
-	document := XMLDOMParser parse: self addressBookXML.
-	self assert: (document isKindOf: XMLDocument).
-	root := document root.
-	self assert: (root class == XMLElement).
-
-	self assert:
-		(root allNodesDetect: [:each |
-			each isElement
-				and: [each isNamedAny: #('AddressBook' 'addressbook')]]) == root.
-	self assert: (root findElementNamed: 'addressbook') == root.
-]
-
-{ #category : #tests }
-XMLDOMParserTest >> testPreservingCommentNodes [
-	| document comment|
-
-	document := XMLDOMParser parse: self addressBookXML.
-	self deny: (document findElementNamed: 'contact-info') hasChildren.
-
-	document :=
-		(XMLDOMParser on: self addressBookXML)
-			preservesCommentNodes: true;
-			parseDocument.
-	comment := (document findElementNamed: 'contact-info') firstNode.
+	parser := XMLDOMParser on: self addressBookXML.
+	parser isValidating: false.
+	"should enable validation"
 	self
-		assert: comment notNil;
-		assert: comment string = 'Confidential'.
+		deny: parser preservesIgnorableWhitespace;
+		assert: (parser preservesIgnorableWhitespace: true) == parser;
+		assert: parser preservesIgnorableWhitespace;
+		assert: parser isValidating.
+
+	"disabling validation should disable it"
+	self
+		assert: (parser isValidating: false) == parser;
+		deny: parser preservesIgnorableWhitespace;
+		deny: parser isValidating
 ]
 
 { #category : #tests }

@@ -4,6 +4,11 @@ Class {
 	#category : #'XML-Tests-Parser-Factories'
 }
 
+{ #category : #testing }
+XMLNodeFactoryTest class >> shouldInheritSelectors [
+	^ true
+]
+
 { #category : #accessing }
 XMLNodeFactoryTest >> cdataClass [
 	^ XMLCData

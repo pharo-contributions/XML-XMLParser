@@ -51,10 +51,19 @@ XMLMessageRecorder >> recordMessage: aMessage [
 ]
 
 { #category : #recording }
-XMLMessageRecorder >> recordMessageReceiver: anObject selector: aSelector arguments: anArgumentCollection [
+XMLMessageRecorder >> recordMessageReceiver: anObject selector: aSelector [
 	self recordMessage:
 		(MessageSend
 			receiver: anObject
 			selector: aSelector
-			arguments: anArgumentCollection)
+			arguments: #())
+]
+
+{ #category : #recording }
+XMLMessageRecorder >> recordMessageReceiver: anObject selector: aSelector arguments: aSequenceableCollection [
+	self recordMessage:
+		(MessageSend
+			receiver: anObject
+			selector: aSelector
+			arguments: aSequenceableCollection asArray)
 ]

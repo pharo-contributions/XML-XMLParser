@@ -4,11 +4,6 @@ Class {
 	#category : #'XML-Tests-Parser-Factories'
 }
 
-{ #category : #testing }
-XMLPluggableNodeFactoryTest class >> shouldInheritSelectors [
-	^ true
-]
-
 { #category : #accessing }
 XMLPluggableNodeFactoryTest >> cdataClass [
 	^ XMLFCData

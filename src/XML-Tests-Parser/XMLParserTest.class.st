@@ -5,6 +5,110 @@ Class {
 }
 
 { #category : #source }
+XMLParserTest class >> addressBookNamespacePrefixedXML [
+	"
+	| xmlWithPrefixes |
+
+	xmlWithPrefixes := self addressBookNamespacedXML.
+	#('<addressbook' '</addressbook' '<person' '</person' 'family-name=' 'first-name=')
+		with: #('<book:addressbook' '</book:addressbook' '<ps:person' '</ps:person' 'ps:family-name=' 'ps:first-name=')
+		do: [:source :replacement |
+			xmlWithPrefixes := xmlWithPrefixes copyReplaceAll: source with: replacement].
+	^ xmlWithPrefixes.
+	"
+
+	^  '<book:addressbook xmlns=''defaultNS'' xmlns:book=''bookNS'' xmlns:ps=''personNS''>
+  <ps:person employee-number="A0000" ps:family-name="Gates" ps:first-name="Bob">
+    <contact-info><!--Confidential--></contact-info>
+    <address city="Los Angeles" number="1239" state="CA" street="Pine Rd."/>
+    <job-info employee-type="Full-Time" is-manager="no" job-description="Manager"/>
+    <manager employee-number="A0000"/>
+  </ps:person>
+  <ps:person employee-number="A7000" ps:family-name="Brown"
+    ps:first-name="Robert" middle-initial="L.">
+    <contact-info>
+      <email address="robb@iro.ibm.com"/>
+      <home-phone number="03-3987873"/>
+    </contact-info>
+    <address city="New York" number="344" state="NY" street="118 St."/>
+    <job-info employee-type="Full-Time" is-manager="yes" job-description="Group Leader"/>
+    <manager employee-number="A0000"/>
+  </ps:person>
+  <ps:person employee-number="A7890" ps:family-name="DePaiva"
+    ps:first-name="Kassie" middle-initial="W.">
+    <contact-info><!-- Kassie''s agent phone: 03-987654 --></contact-info>
+    <address city="Los Angeles" number="1234" state="CA" street="Pine Rd."/>
+    <job-info employee-type="Full-Time" is-manager="no" job-description="Actor"/>
+    <manager employee-number="A0000"/>
+    <misc-info>One of the most talented actresses on Daytime. Kassie
+      plays the devious and beautiful Blair Cramer on ABC&apos;s
+      &quot;One Life To Live.&quot;</misc-info>
+  </ps:person>
+  <ps:person employee-number="A7987" ps:family-name="Smith" ps:first-name="Joe">
+    <contact-info>
+      <email address="joes@iro.ibm.com"/>
+      <mobile-phone number="888-7657765"/>
+      <home-phone number="03-8767898"/>
+      <home-phone number="03-8767871"/>
+    </contact-info>
+    <address city="New York" number="12789" state="NY" street="W. 15th Ave."/>
+    <job-info employee-type="Part-Time" is-manager="no" job-description="Hacker"/>
+    <manager employee-number="A7000"/>
+  </ps:person>
+</book:addressbook>
+'
+]
+
+{ #category : #source }
+XMLParserTest class >> addressBookNamespacedXML [
+	"
+	^ '<addressbook xmlns=''defaultNS'' xmlns:book=''bookNS'' xmlns:ps=''personNS''>',
+		(self addressBookXML copyAfter: $>)
+	"
+
+	^ '<addressbook xmlns=''defaultNS'' xmlns:book=''bookNS'' xmlns:ps=''personNS''>
+  <person employee-number="A0000" family-name="Gates" first-name="Bob">
+    <contact-info><!--Confidential--></contact-info>
+    <address city="Los Angeles" number="1239" state="CA" street="Pine Rd."/>
+    <job-info employee-type="Full-Time" is-manager="no" job-description="Manager"/>
+    <manager employee-number="A0000"/>
+  </person>
+  <person employee-number="A7000" family-name="Brown"
+    first-name="Robert" middle-initial="L.">
+    <contact-info>
+      <email address="robb@iro.ibm.com"/>
+      <home-phone number="03-3987873"/>
+    </contact-info>
+    <address city="New York" number="344" state="NY" street="118 St."/>
+    <job-info employee-type="Full-Time" is-manager="yes" job-description="Group Leader"/>
+    <manager employee-number="A0000"/>
+  </person>
+  <person employee-number="A7890" family-name="DePaiva"
+    first-name="Kassie" middle-initial="W.">
+    <contact-info><!-- Kassie''s agent phone: 03-987654 --></contact-info>
+    <address city="Los Angeles" number="1234" state="CA" street="Pine Rd."/>
+    <job-info employee-type="Full-Time" is-manager="no" job-description="Actor"/>
+    <manager employee-number="A0000"/>
+    <misc-info>One of the most talented actresses on Daytime. Kassie
+      plays the devious and beautiful Blair Cramer on ABC&apos;s
+      &quot;One Life To Live.&quot;</misc-info>
+  </person>
+  <person employee-number="A7987" family-name="Smith" first-name="Joe">
+    <contact-info>
+      <email address="joes@iro.ibm.com"/>
+      <mobile-phone number="888-7657765"/>
+      <home-phone number="03-8767898"/>
+      <home-phone number="03-8767871"/>
+    </contact-info>
+    <address city="New York" number="12789" state="NY" street="W. 15th Ave."/>
+    <job-info employee-type="Part-Time" is-manager="no" job-description="Hacker"/>
+    <manager employee-number="A7000"/>
+  </person>
+</addressbook>
+'
+]
+
+{ #category : #source }
 XMLParserTest class >> addressBookXML [
 	^'<addressbook>
   <person employee-number="A0000" family-name="Gates" first-name="Bob">
@@ -93,6 +197,16 @@ XMLParserTest class >> addressBookXMLWithDTD [
   </person>
 </addressbook>
 '
+]
+
+{ #category : #source }
+XMLParserTest >> addressBookNamespacePrefixedXML [
+	^ self class addressBookNamespacePrefixedXML
+]
+
+{ #category : #source }
+XMLParserTest >> addressBookNamespacedXML [
+	^ self class addressBookNamespacedXML
 ]
 
 { #category : #source }
@@ -186,6 +300,24 @@ XMLParserTest >> benchmark4 [
 			elementAt: 'manager']] timeToRun.
 ]
 
+{ #category : #benchmark }
+XMLParserTest >> benchmark5 [
+	"
+	XMLParserTest new benchmark5
+	"
+	Smalltalk garbageCollect.
+	^ [4000 timesRepeat: [XMLDOMParser parse: self addressBookNamespacedXML]] timeToRun
+]
+
+{ #category : #benchmark }
+XMLParserTest >> benchmark6 [
+	"
+	XMLParserTest new benchmark6
+	"
+	Smalltalk garbageCollect.
+	^ [4000 timesRepeat: [XMLDOMParser parse: self addressBookNamespacePrefixedXML]] timeToRun
+]
+
 { #category : #source }
 XMLParserTest >> elementDeclarationsNamed: aNameCollection [
 	| stream |
@@ -198,6 +330,11 @@ XMLParserTest >> elementDeclarationsNamed: aNameCollection [
 			nextPutAll: ' EMPTY>';
 			cr].
 	^ stream contents.
+]
+
+{ #category : #accessing }
+XMLParserTest >> nonChars [
+	^ XMLCharacterMethodsTest nonChars
 ]
 
 { #category : #tests }
@@ -1013,7 +1150,7 @@ XMLParserTest >> testAttributeUndeclared [
 
 { #category : #tests }
 XMLParserTest >> testAttributeValueBadChar [
-	XMLCharacterMethodsTest nonChars do: [:each |
+	self nonChars do: [:each |
 		self
 			should: [SAXHandler parse: '<test name="', each asString, '"/>']
 			raise: XMLWellFormednessException]
@@ -1040,7 +1177,7 @@ XMLParserTest >> testAttributeValueExternalEntityReference [
 			xml := xmlTemplate format: (Array with: 'internal').
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities: entities);
+					(DTDStaticExternalEntityResolver externalEntities: entities);
 				resolvesExternalEntities: true;
 				parseDocument]
 		raise: XMLWellFormednessException.
@@ -1053,7 +1190,7 @@ XMLParserTest >> testAttributeValueExternalEntityReference [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities: entities);
+							(DTDStaticExternalEntityResolver externalEntities: entities);
 						resolvesExternalEntities: true;
 						parseDocument]
 				raise: XMLWellFormednessException].
@@ -1252,7 +1389,7 @@ XMLParserTest >> testAttributeXMLSpaceValidation [
 
 { #category : #tests }
 XMLParserTest >> testCDataBadChar [
-	XMLCharacterMethodsTest nonChars do: [:each |
+	self nonChars do: [:each |
 		self
 			should: [SAXHandler parse: '<test><![CDATA[', each asString, ']]>']
 			raise: XMLWellFormednessException]
@@ -1316,7 +1453,7 @@ XMLParserTest >> testComment [
 
 { #category : #tests }
 XMLParserTest >> testCommentBadChar [
-	XMLCharacterMethodsTest nonChars do: [:each |
+	self nonChars do: [:each |
 		self
 			should: [SAXHandler parse: '<!--', each asString, '-->']
 			raise: XMLWellFormednessException]
@@ -1362,7 +1499,7 @@ XMLParserTest >> testConditionalSectionInInternalSubsetExternallyDefined [
 				]>
 				<test name="value">test</test>')
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities:
+					(DTDStaticExternalEntityResolver externalEntities:
 						(Array with: 'extern.ent' -> conditionalSections));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -1383,7 +1520,7 @@ XMLParserTest >> testConditionalSectionInInternalSubsetExternallyDefined [
 				]>
 				<test name="value">test</test>')
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities:
+					(DTDStaticExternalEntityResolver externalEntities:
 						(Array with: 'extern.ent' -> entityReplacementMixedSections));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -1404,7 +1541,7 @@ XMLParserTest >> testConditionalSectionLabelReplacementIgnore [
 					dtd := each format: (Array with: 'INCLUDE').
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> dtd));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -1414,7 +1551,7 @@ XMLParserTest >> testConditionalSectionLabelReplacementIgnore [
 					dtd := each format: (Array with: 'IGNORE').
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> dtd));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -1440,7 +1577,7 @@ XMLParserTest >> testConditionalSectionLabelReplacementInclude [
 					dtd := each format: (Array with: 'INCLUDE').
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> dtd));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -1450,7 +1587,7 @@ XMLParserTest >> testConditionalSectionLabelReplacementInclude [
 					dtd := each format: (Array with: 'IGNORE').
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> dtd));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -1480,7 +1617,7 @@ XMLParserTest >> testConditionalSectionMixedIncludeIgnore [
 		shouldnt: [
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities:
+					(DTDStaticExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> dtd));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -1506,7 +1643,7 @@ XMLParserTest >> testConditionalSectionNestedIgnore [
 			dtd := dtdTemplate format: (Array with: ']]').
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities:
+					(DTDStaticExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> dtd));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -1516,7 +1653,7 @@ XMLParserTest >> testConditionalSectionNestedIgnore [
 			dtd := dtdTemplate format: (Array with: ']]>').
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities:
+					(DTDStaticExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> dtd));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -1542,7 +1679,7 @@ XMLParserTest >> testConditionalSectionNestedInclude [
 		shouldnt: [
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities:
+					(DTDStaticExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> dtd));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -1563,7 +1700,7 @@ XMLParserTest >> testConditionalSectionUnterminatedIgnore [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -1584,7 +1721,7 @@ XMLParserTest >> testConditionalSectionUnterminatedInclude [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -1623,16 +1760,6 @@ XMLParserTest >> testContentlessSubset [
 						externalSubsetParserOn: each
 						documentURI: 'extern.dtd') parseDocument]
 				raise: XMLWellFormednessException]
-]
-
-{ #category : #tests }
-XMLParserTest >> testDefaultDocumentURI [
-	| uri |
-
-	uri := 'test/test.xml'.
-	self
-		assert: (SAXHandler on: '' documentURI: uri) documentURI = uri;
-		assert: (SAXHandler on: '') documentURI = ''.
 ]
 
 { #category : #tests }
@@ -1778,6 +1905,34 @@ XMLParserTest >> testDoctypeDeclarationWhitespace [
 			self
 				shouldnt: [SAXHandler parse: each, '<test/>']
 				raise: XMLWellFormednessException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testDocumentConstraintsRequired [
+	self
+		shouldnt: [
+			(SAXHandler on: '<!DOCTYPE root [<!ELEMENT root EMPTY>]><root/>')
+				requiresDocumentConstraints: true;
+				parseDocument]
+		raise: XMLValidationException.
+	self
+		should: [
+			(SAXHandler on: '<root/>')
+				requiresDocumentConstraints: true;
+				parseDocument]
+		raise: XMLValidationException.
+	self
+		should: [
+			(SAXHandler on: '
+				<!DOCTYPE root [
+					<!ENTITY one "two">
+					<!ENTITY % three "four">
+					<!NOTATION five PUBLIC "six">
+					<!--seven-->]>
+				<root/>')
+				requiresDocumentConstraints: true;
+				parseDocument]
+		raise: XMLValidationException.
 ]
 
 { #category : #tests }
@@ -2118,6 +2273,59 @@ XMLParserTest >> testElementContentModelStarEmpty [
 ]
 
 { #category : #tests }
+XMLParserTest >> testElementContentWhitespace [
+	| xmlTemplate |
+
+	"LibXML2 and Xerces allow general entity refs with empty and whitespace
+	replacements and char refs to whitespace chars inbetween elements in
+	elements with DTD-valited 'element content'. This tests for that behavior."
+	xmlTemplate := '
+		<!DOCTYPE element-content [
+			<!ELEMENT element-content (one, two)>
+			<!ELEMENT one EMPTY>
+			<!ELEMENT two EMPTY>
+			<!ENTITY empty ''''>
+			<!ENTITY not-empty "not empty">
+			<!ENTITY whitespace " 	
+				">
+		]>
+		<element-content>{1}<one/>{1}<two/>{1}</element-content>'.
+	(Array
+		with: (String withAll: Character xmlSeparators)
+		with: '&empty;'
+		with: '&whitespace;'
+		with: '')
+		do: [:each |
+			self
+				shouldnt: [SAXHandler parse: (xmlTemplate format: (Array with: each))]
+				raise: XMLValidationException].
+	Character xmlSeparators do: [:each |
+		self
+			shouldnt: [
+				SAXHandler parse:
+					(xmlTemplate format:
+						(Array with: '&#', each asciiValue asString, ';'))]
+			raise: XMLValidationException].
+
+	(Array
+		with: 'one'
+		with: '2'
+		with: '&non-empty;'
+		with: '&#34;')
+		do: [:each | | xml |
+			xml := xmlTemplate format: (Array with: each).
+			self
+				should: [SAXHandler parse: xml]
+				raise: XMLValidationException.
+			self
+				shouldnt: [
+					(SAXHandler on: xml)
+						isValidating: false;
+						parseDocument]
+				raise: XMLValidationException].
+]
+
+{ #category : #tests }
 XMLParserTest >> testElementDeclarationPrefixed [
 	| dtd |
 
@@ -2346,6 +2554,18 @@ XMLParserTest >> testEntityDeclarationBadName [
 ]
 
 { #category : #tests }
+XMLParserTest >> testEntityDeclarationValueBadChar [
+	self nonChars do: [:each |
+		self
+			should: [
+				SAXHandler parse:
+					'<!DOCTYPE test [
+						<!ENTITY name "', each asString, '">
+					]><test/>']
+			raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
 XMLParserTest >> testEntityDeclarationWhitespace [
 	#('<!DOCTYPE test [<!ENTITYname "value">]>'
 		'<!DOCTYPE test [<!ENTITY name"value">]>'
@@ -2392,7 +2612,7 @@ XMLParserTest >> testEntityExternalResolution [
 			should: [
 				(SAXHandler on: xml)
 					externalEntityResolver:
-						(DTDPluggableExternalEntityResolver externalEntities:
+						(DTDStaticExternalEntityResolver externalEntities:
 							(entities copyFrom: 1 to: i));
 					resolvesExternalEntities: true;
 					parseDocument]
@@ -2401,7 +2621,7 @@ XMLParserTest >> testEntityExternalResolution [
 		should: [
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities: entities);
+					(DTDStaticExternalEntityResolver externalEntities: entities);
 				resolvesExternalEntities: false;
 				parseDocument]
 		raise: XMLParserException.
@@ -2409,7 +2629,7 @@ XMLParserTest >> testEntityExternalResolution [
 		shouldnt: [
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities: entities);
+					(DTDStaticExternalEntityResolver externalEntities: entities);
 				resolvesExternalEntities: true;
 				parseDocument]
 		raise: XMLParserException.
@@ -2434,7 +2654,7 @@ XMLParserTest >> testEntityExternalSubsetResolution [
 			should: [
 				(SAXHandler on: xml)
 					externalEntityResolver:
-						(DTDPluggableExternalEntityResolver externalEntities:
+						(DTDStaticExternalEntityResolver externalEntities:
 							(entities copyFrom: 1 to: i));
 					resolvesExternalEntities: true;
 					parseDocument]
@@ -2443,7 +2663,7 @@ XMLParserTest >> testEntityExternalSubsetResolution [
 		should: [
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities: entities);
+					(DTDStaticExternalEntityResolver externalEntities: entities);
 				resolvesExternalEntities: false;
 				parseDocument]
 		raise: XMLParserException.
@@ -2451,7 +2671,7 @@ XMLParserTest >> testEntityExternalSubsetResolution [
 		shouldnt: [
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities: entities);
+					(DTDStaticExternalEntityResolver externalEntities: entities);
 				resolvesExternalEntities: true;
 				parseDocument]
 		raise: XMLParserException.
@@ -2501,7 +2721,7 @@ XMLParserTest >> testEntityNestingAttributeDeclaration [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -2543,7 +2763,7 @@ XMLParserTest >> testEntityNestingAttributeDeclaration [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -2552,7 +2772,7 @@ XMLParserTest >> testEntityNestingAttributeDeclaration [
 				shouldnt: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						isValidating: false;
 						resolvesExternalEntities: true;
@@ -2566,7 +2786,7 @@ XMLParserTest >> testEntityNestingAttributeDeclaration [
 				%total;'.
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities:
+					(DTDStaticExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> dtd));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -2684,7 +2904,7 @@ XMLParserTest >> testEntityNestingElementDeclaration [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -2712,7 +2932,7 @@ XMLParserTest >> testEntityNestingElementDeclaration [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -2721,7 +2941,7 @@ XMLParserTest >> testEntityNestingElementDeclaration [
 				shouldnt: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						isValidating: false;
 						resolvesExternalEntities: true;
@@ -2743,7 +2963,7 @@ XMLParserTest >> testEntityNestingElementDeclaration [
 				shouldnt: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -2826,7 +3046,7 @@ XMLParserTest >> testEntityNestingIgnoreSection [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -2845,7 +3065,7 @@ XMLParserTest >> testEntityNestingIgnoreSection [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -2854,7 +3074,7 @@ XMLParserTest >> testEntityNestingIgnoreSection [
 				shouldnt: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						isValidating: false;
 						resolvesExternalEntities: true;
@@ -2868,7 +3088,7 @@ XMLParserTest >> testEntityNestingIgnoreSection [
 				%total;'.
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities:
+					(DTDStaticExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> dtd));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -2897,7 +3117,7 @@ XMLParserTest >> testEntityNestingIncludeSection [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -2917,7 +3137,7 @@ XMLParserTest >> testEntityNestingIncludeSection [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -2926,7 +3146,7 @@ XMLParserTest >> testEntityNestingIncludeSection [
 				shouldnt: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						isValidating: false;
 						resolvesExternalEntities: true;
@@ -2941,7 +3161,7 @@ XMLParserTest >> testEntityNestingIncludeSection [
 				%total;'.
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities:
+					(DTDStaticExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> dtd));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -2997,7 +3217,7 @@ XMLParserTest >> testEntityNestingSubsetComment [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -3010,7 +3230,7 @@ XMLParserTest >> testEntityNestingSubsetComment [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -3019,7 +3239,7 @@ XMLParserTest >> testEntityNestingSubsetComment [
 				shouldnt: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						isValidating: false;
 						resolvesExternalEntities: true;
@@ -3032,7 +3252,7 @@ XMLParserTest >> testEntityNestingSubsetComment [
 				%total;'.
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities:
+					(DTDStaticExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> dtd));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -3055,7 +3275,7 @@ XMLParserTest >> testEntityNestingSubsetProcessingInstruction [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -3068,7 +3288,7 @@ XMLParserTest >> testEntityNestingSubsetProcessingInstruction [
 				should: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						resolvesExternalEntities: true;
 						parseDocument]
@@ -3077,7 +3297,7 @@ XMLParserTest >> testEntityNestingSubsetProcessingInstruction [
 				shouldnt: [
 					(SAXHandler on: xml)
 						externalEntityResolver:
-							(DTDPluggableExternalEntityResolver externalEntities:
+							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
 						isValidating: false;
 						resolvesExternalEntities: true;
@@ -3090,7 +3310,7 @@ XMLParserTest >> testEntityNestingSubsetProcessingInstruction [
 				%total;'.
 			(SAXHandler on: xml)
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities:
+					(DTDStaticExternalEntityResolver externalEntities:
 						(Array with: 'extern.dtd' -> dtd));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -3206,7 +3426,7 @@ XMLParserTest >> testEntityReferenceInternalDeclarationExternallyDefined [
 				]>
 				<test name="value">test</test>')
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities:
+					(DTDStaticExternalEntityResolver externalEntities:
 						(Array with: 'extern.ent' -> declarations));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -3231,7 +3451,7 @@ XMLParserTest >> testEntityReferenceInternalDeclarationExternallyDefined [
 				]>
 				<test name="value">test</test>')
 				externalEntityResolver:
-					(DTDPluggableExternalEntityResolver externalEntities:
+					(DTDStaticExternalEntityResolver externalEntities:
 						(Array with: 'extern.ent' -> declarations));
 				resolvesExternalEntities: true;
 				parseDocument]
@@ -3425,7 +3645,7 @@ XMLParserTest >> testEntityReplacementStandard [
 	doc :=
 		(XMLDOMParser on: xml)
 			externalEntityResolver:
-				(DTDPluggableExternalEntityResolver externalEntities:
+				(DTDStaticExternalEntityResolver externalEntities:
 					(Array with: 'extern.dtd' -> dtd));
 			resolvesExternalEntities: true;
 			parseDocument.
@@ -3734,6 +3954,29 @@ XMLParserTest >> testNamespaceDeclarationRedundance [
 ]
 
 { #category : #tests }
+XMLParserTest >> testNamespaceParsing [
+	self
+		shouldnt: [SAXHandler parse: self addressBookNamespacedXML]
+		raise: XMLException.
+	self
+		shouldnt: [
+			SAXHandler
+				parse: self addressBookNamespacedXML
+				usingNamespaces: false]
+		raise: XMLException.
+
+	self
+		shouldnt: [SAXHandler parse: self addressBookNamespacePrefixedXML]
+		raise: XMLException.
+	self
+		shouldnt: [
+			SAXHandler
+				parse: self addressBookNamespacePrefixedXML
+				usingNamespaces: false]
+		raise: XMLException.
+]
+
+{ #category : #tests }
 XMLParserTest >> testNamespacePrefixAliasing [
 	| declarations |
 
@@ -3876,25 +4119,8 @@ XMLParserTest >> testNotationDeclarationWhitespace [
 ]
 
 { #category : #tests }
-XMLParserTest >> testOptimizeForLargeDocuments [
-	| parser |
-
-	parser := SAXHandler on: ''.
-	self
-		assert: parser isValidating;
-		assert: parser usesNamespaces;
-		assert: parser documentReadLimit = XMLParserLimits defaultDocumentReadLimit.
-
-	parser optimizeForLargeDocuments.
-	self
-		deny: parser isValidating;
-		deny: parser usesNamespaces;
-		assert: parser documentReadLimit isNil.
-]
-
-{ #category : #tests }
 XMLParserTest >> testPCDataBadChar [
-	XMLCharacterMethodsTest nonChars do: [:each |
+	self nonChars do: [:each |
 		self
 			should: [SAXHandler parse: '<test>', each asString, '</test>']
 			raise: XMLWellFormednessException]
@@ -3965,7 +4191,7 @@ XMLParserTest >> testProcessingInstruction [
 
 { #category : #tests }
 XMLParserTest >> testProcessingInstructionBadChar [
-	XMLCharacterMethodsTest nonChars do: [:each |
+	self nonChars do: [:each |
 		self
 			should: [SAXHandler parse: '<?pi ', each asString, '?><test/>']
 			raise: XMLWellFormednessException]
@@ -3997,51 +4223,6 @@ XMLParserTest >> testProcessingInstructionWhitespace [
 	self
 		shouldnt: [SAXHandler parse: '<pi><?target ?data  ?></pi>']
 		raise: XMLWellFormednessException.
-]
-
-{ #category : #tests }
-XMLParserTest >> testRequiresDocumentConstraints [
-	self
-		shouldnt: [
-			(SAXHandler on: '<!DOCTYPE root [<!ELEMENT root EMPTY>]><root/>')
-				requiresDocumentConstraints: true;
-				parseDocument]
-		raise: XMLValidationException.
-	self
-		should: [
-			(SAXHandler on: '<root/>')
-				requiresDocumentConstraints: true;
-				parseDocument]
-		raise: XMLValidationException.
-	self
-		should: [
-			(SAXHandler on: '
-				<!DOCTYPE root [
-					<!ENTITY one "two">
-					<!ENTITY % three "four">
-					<!NOTATION five PUBLIC "six">
-					<!--seven-->]>
-				<root/>')
-				requiresDocumentConstraints: true;
-				parseDocument]
-		raise: XMLValidationException.
-]
-
-{ #category : #tests }
-XMLParserTest >> testReusingParser [
-	| parser oldConfiguraiton |
-
-	parser :=
-		SAXHandler
-			on: self addressBookXML
-			documentURI: 'oldURI'.
-	oldConfiguraiton := parser configuration.
-	parser parseDocument.
-	parser on: self addressBookXMLWithDTD.
-	self
-		assert: parser input = self addressBookXMLWithDTD;
-		deny: parser documentURI = 'oldURI';
-		deny: parser configuration == oldConfiguraiton.
 ]
 
 { #category : #tests }
@@ -4080,7 +4261,7 @@ XMLParserTest >> testStandalone [
 
 { #category : #tests }
 XMLParserTest >> testSystemIDBadChar [
-	XMLCharacterMethodsTest nonChars do: [:each |
+	self nonChars do: [:each |
 		self
 			should: [
 				SAXHandler parse:
@@ -4132,34 +4313,6 @@ XMLParserTest >> testUnparsedEntitiesUndeclaredNotations [
 			SAXHandler parse:
 				beforeNotation, '<!NOTATION note SYSTEM "note.txt">', afterNotation]
 		raise: XMLValidationException.
-]
-
-{ #category : #tests }
-XMLParserTest >> testValidationAndConstraintsToggle [
-	self assert:
-		((SAXHandler on: '')
-			isValidating: false;
-			requiresDocumentConstraints: true;
-			isValidating).
-	self deny:
-		((SAXHandler on: '')
-			requiresDocumentConstraints: true;
-			isValidating: false;
-			requiresDocumentConstraints).
-]
-
-{ #category : #tests }
-XMLParserTest >> testValidationAndEntityReferenceToggle [
-	self deny:
-		((SAXHandler on: '')
-			isValidating: true;
-			preservesUndeclaredEntityReferences: true;
-			isValidating).
-	self deny:
-		((SAXHandler on: '')
-			preservesUndeclaredEntityReferences: true;
-			isValidating: true;
-			preservesUndeclaredEntityReferences).
 ]
 
 { #category : #tests }

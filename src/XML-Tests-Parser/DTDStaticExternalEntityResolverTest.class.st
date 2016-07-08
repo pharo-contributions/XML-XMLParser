@@ -1,11 +1,11 @@
 Class {
-	#name : #DTDPluggableExternalEntityResolverTest,
+	#name : #DTDStaticExternalEntityResolverTest,
 	#superclass : #DTDExternalEntityResolverTest,
 	#category : #'XML-Tests-Parser-DTD'
 }
 
 { #category : #accessing }
-DTDPluggableExternalEntityResolverTest >> entityAssociations [
+DTDStaticExternalEntityResolverTest >> entityAssociations [
 	^ Array
 		with: 'extern.dtd' -> '<!ENTITY extern SYSTEM "extern/extern.ent">'
 		with: 'extern/extern.ent' -> '<!ENTITY extern SYSTEM "extern2.ent">'
@@ -13,7 +13,7 @@ DTDPluggableExternalEntityResolverTest >> entityAssociations [
 ]
 
 { #category : #accessing }
-DTDPluggableExternalEntityResolverTest >> entityDictionary [
+DTDStaticExternalEntityResolverTest >> entityDictionary [
 	| entities |
 
 	entities := Dictionary new.
@@ -25,7 +25,7 @@ DTDPluggableExternalEntityResolverTest >> entityDictionary [
 ]
 
 { #category : #enumerating }
-DTDPluggableExternalEntityResolverTest >> entityURIStringsAndReplacementsDo: aBlock [
+DTDStaticExternalEntityResolverTest >> entityURIStringsAndReplacementsDo: aBlock [
 	self entityAssociations do: [:each |
 		aBlock
 			value: each key
@@ -33,22 +33,22 @@ DTDPluggableExternalEntityResolverTest >> entityURIStringsAndReplacementsDo: aBl
 ]
 
 { #category : #accessing }
-DTDPluggableExternalEntityResolverTest >> newEntityReplacement [
+DTDStaticExternalEntityResolverTest >> newEntityReplacement [
 	^ '<!--new replacement-->'
 ]
 
 { #category : #'instance creation' }
-DTDPluggableExternalEntityResolverTest >> newResolverWithEntities [
+DTDStaticExternalEntityResolverTest >> newResolverWithEntities [
 	^ self newResolver externalEntities: self entityAssociations
 ]
 
 { #category : #accessing }
-DTDPluggableExternalEntityResolverTest >> resolverClass [
-	^ DTDPluggableExternalEntityResolver
+DTDStaticExternalEntityResolverTest >> resolverClass [
+	^ DTDStaticExternalEntityResolver
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testExternalEntities [
+DTDStaticExternalEntityResolverTest >> testExternalEntities [
 	| resolver replacementAssociation |
 
 	resolver := self newResolver.
@@ -70,7 +70,7 @@ DTDPluggableExternalEntityResolverTest >> testExternalEntities [
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testExternalEntityAtURI [
+DTDStaticExternalEntityResolverTest >> testExternalEntityAtURI [
 	| resolver |
 
 	resolver := self newResolver.
@@ -88,7 +88,7 @@ DTDPluggableExternalEntityResolverTest >> testExternalEntityAtURI [
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testExternalEntityAtURIIfAbsent [
+DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsent [
 	| resolver |
 
 	resolver := self newResolver.
@@ -116,7 +116,7 @@ DTDPluggableExternalEntityResolverTest >> testExternalEntityAtURIIfAbsent [
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testExternalEntityAtURIIfAbsentPut [
+DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsentPut [
 	| resolver |
 
 	resolver := self newResolver.
@@ -133,7 +133,7 @@ DTDPluggableExternalEntityResolverTest >> testExternalEntityAtURIIfAbsentPut [
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testExternalEntityAtURIPut [
+DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIPut [
 	| resolver |
 
 	resolver := self newResolver.
@@ -153,14 +153,14 @@ DTDPluggableExternalEntityResolverTest >> testExternalEntityAtURIPut [
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testHasExternalEntities [
+DTDStaticExternalEntityResolverTest >> testHasExternalEntities [
 	self
 		deny: self newResolver hasExternalEntities;
 		assert: self newResolverWithEntities hasExternalEntities
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testIncludesExternalEntityURI [
+DTDStaticExternalEntityResolverTest >> testIncludesExternalEntityURI [
 	| resolver |
 
 	resolver := self newResolver.
@@ -178,7 +178,7 @@ DTDPluggableExternalEntityResolverTest >> testIncludesExternalEntityURI [
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testRemoveExternalEntities [
+DTDStaticExternalEntityResolverTest >> testRemoveExternalEntities [
 	| resolver |
 
 	resolver := self newResolverWithEntities.
@@ -188,7 +188,7 @@ DTDPluggableExternalEntityResolverTest >> testRemoveExternalEntities [
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testRemoveExternalEntityURI [
+DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURI [
 	| resolver |
 
 	resolver := self newResolverWithEntities.
@@ -205,7 +205,7 @@ DTDPluggableExternalEntityResolverTest >> testRemoveExternalEntityURI [
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testRemoveExternalEntityURIIfAbsent [
+DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURIIfAbsent [
 	| resolver |
 
 	resolver := self newResolverWithEntities.
@@ -226,7 +226,7 @@ DTDPluggableExternalEntityResolverTest >> testRemoveExternalEntityURIIfAbsent [
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testResolveExternalEntityURI [
+DTDStaticExternalEntityResolverTest >> testResolveExternalEntityURI [
 	| resolver |
 
 	resolver := self newResolver.
@@ -256,7 +256,7 @@ DTDPluggableExternalEntityResolverTest >> testResolveExternalEntityURI [
 ]
 
 { #category : #tests }
-DTDPluggableExternalEntityResolverTest >> testStreamResolveExternalEntityURI [
+DTDStaticExternalEntityResolverTest >> testStreamResolveExternalEntityURI [
 	| resolver |
 
 	resolver := self newResolver.

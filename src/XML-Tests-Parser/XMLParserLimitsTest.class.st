@@ -32,16 +32,6 @@ XMLParserLimitsTest >> recursiveEntitiesNamed: aName depth: aLimit isParameter: 
 ]
 
 { #category : #tests }
-XMLParserLimitsTest >> testDefaultLimits [
-	| parser |
-
-	parser := SAXHandler on: ''.
-	self
-		assert: parser documentReadLimit = XMLParserLimits defaultDocumentReadLimit;
-		assert: parser maxEntityReplacementDepth > 0.
-]
-
-{ #category : #tests }
 XMLParserLimitsTest >> testDocumentReadLimit [
 	| xml replacement |
 
@@ -152,22 +142,20 @@ XMLParserLimitsTest >> testRecursiveParameterEntityReplacementPastLimit [
 ]
 
 { #category : #tests }
-XMLParserLimitsTest >> testRemoveLimits [
-	| parser readLimit depthLimit |
+XMLParserLimitsTest >> testResolvingLocalFromNonLocal [
+	| parser |
 
-	readLimit := 100.
-	depthLimit := 5.
-	(parser := SAXHandler on: '')
-		documentReadLimit: readLimit;
-		maxEntityReplacementDepth: depthLimit.
 	self
-		assert: parser documentReadLimit = readLimit;
-		assert: parser maxEntityReplacementDepth = depthLimit.
-
-	parser removeLimits.
-	self
-		assert: parser documentReadLimit isNil;
-		assert: parser maxEntityReplacementDepth isNil.
+		should: [
+			(parser :=
+				SAXHandler
+					on: '<!DOCTYPE root SYSTEM "file://local/uri">'
+					documentURI: 'http://www.example.com')
+				externalEntityResolver resolvesLocalFromNonLocal: false.
+			parser
+				resolvesExternalEntities: true;
+				parseDocument]
+		raise: XMLLimitException.
 ]
 
 { #category : #tests }
