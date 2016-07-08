@@ -4,7 +4,7 @@ A context for prolog tokens.
 Class {
 	#name : #XMLPrologContext,
 	#superclass : #XMLTokenContext,
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Drivers'
 }
 
 { #category : #testing }

@@ -14,7 +14,7 @@ Class {
 XMLFileSystemFileHandle class >> basicCurrentWorkingDirectory [
 	^ String streamContents: [:stream |
 		"the class-side workingDirectory isn't used for backwards compatibility"
-		(Smalltalk at: #FileSystem) disk workingDirectory
+		(XMLClassFinder classNamed: #FileSystem) disk workingDirectory
 			path segments do: [:each |
 				stream
 					nextPut: $/;
@@ -28,7 +28,7 @@ XMLFileSystemFileHandle class >> fileReference: aFileReference [
 
 { #category : #testing }
 XMLFileSystemFileHandle class >> isSupportedImplementation [
-	^ Smalltalk includesKey: #FileSystem
+	^ XMLClassFinder hasClassNamed: #FileSystem
 ]
 
 { #category : #private }

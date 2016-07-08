@@ -4,7 +4,7 @@ The class keeps track of elements as they start and end and ensures that they ne
 Class {
 	#name : #XMLWellFormedElementNester,
 	#superclass : #XMLElementNester,
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Drivers'
 }
 
 { #category : #checking }

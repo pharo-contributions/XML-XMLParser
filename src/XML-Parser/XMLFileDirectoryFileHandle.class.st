@@ -12,12 +12,12 @@ Class {
 
 { #category : #private }
 XMLFileDirectoryFileHandle class >> basicCurrentWorkingDirectory [
-	^ (Smalltalk at: #FileDirectory) default pathName
+	^ (XMLClassFinder classNamed: #FileDirectory) default pathName
 ]
 
 { #category : #testing }
 XMLFileDirectoryFileHandle class >> isSupportedImplementation [
-	^ Smalltalk includesKey: #FileDirectory
+	^ XMLClassFinder hasClassNamed: #FileDirectory
 ]
 
 { #category : #private }
@@ -44,7 +44,7 @@ XMLFileDirectoryFileHandle >> exists [
 { #category : #accessing }
 XMLFileDirectoryFileHandle >> fileDirectory [
 	^ fileDirectory
-		ifNil: [fileDirectory := (Smalltalk at: #FileDirectory) default]
+		ifNil: [fileDirectory := (XMLClassFinder classNamed: #FileDirectory) default]
 ]
 
 { #category : #accessing }

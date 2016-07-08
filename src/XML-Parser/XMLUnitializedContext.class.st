@@ -4,7 +4,7 @@ A context for before parsing.
 Class {
 	#name : #XMLUnitializedContext,
 	#superclass : #XMLTokenContext,
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Drivers'
 }
 
 { #category : #testing }

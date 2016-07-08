@@ -11,28 +11,28 @@ Class {
 XMLException class >> formatSignal: aString with: aFirstValue [
 	^ self
 		formatSignal: aString
-		withAll: (Array with: aFirstValue)
+		withArguments: (Array with: aFirstValue)
 ]
 
 { #category : #signalling }
 XMLException class >> formatSignal: aString with: aFirstValue with: aSecondValue [
 	^ self
 		formatSignal: aString
-		withAll: (Array with: aFirstValue with: aSecondValue)
+		withArguments: (Array with: aFirstValue with: aSecondValue)
 ]
 
 { #category : #signalling }
 XMLException class >> formatSignal: aString with: aFirstValue with: aSecondValue with: aThirdValue [
 	^ self
 		formatSignal: aString
-		withAll: (Array with: aFirstValue with: aSecondValue with: aThirdValue)
+		withArguments: (Array with: aFirstValue with: aSecondValue with: aThirdValue)
 ]
 
 { #category : #signalling }
 XMLException class >> formatSignal: aString with: aFirstValue with: aSecondValue with: aThirdValue with: aFourthValue [
 	^ self
 		formatSignal: aString
-		withAll:
+		withArguments:
 			(Array
 				with: aFirstValue
 				with: aSecondValue
@@ -41,7 +41,7 @@ XMLException class >> formatSignal: aString with: aFirstValue with: aSecondValue
 ]
 
 { #category : #signalling }
-XMLException class >> formatSignal: aString withAll: anArray [
+XMLException class >> formatSignal: aString withArguments: anArray [
 	^ self signal: (aString format: anArray)
 ]
 

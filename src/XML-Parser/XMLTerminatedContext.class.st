@@ -4,7 +4,7 @@ A context for after parsing.
 Class {
 	#name : #XMLTerminatedContext,
 	#superclass : #XMLTokenContext,
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Drivers'
 }
 
 { #category : #testing }

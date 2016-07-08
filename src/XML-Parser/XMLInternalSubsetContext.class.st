@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'isLiteralValueContext'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Drivers'
 }
 
 { #category : #changing }

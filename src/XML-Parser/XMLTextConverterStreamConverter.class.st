@@ -1,5 +1,5 @@
 "
-A stream converter that uses Pharo TextConverter classes.
+A stream converter that delegates to a Pharo/Squeak TextConverter subclass. This will only be used on Pharo/Squeak if none of the other XML stream converters support the specified encoding but a TextConverter subclass does.
 "
 Class {
 	#name : #XMLTextConverterStreamConverter,
@@ -28,8 +28,8 @@ XMLTextConverterStreamConverter class >> encodingNamesAndTextConverterClassesCac
 
 { #category : #private }
 XMLTextConverterStreamConverter class >> findTextConverterClassForEncoding: anEncoding [
-	^ (Smalltalk
-		at: #TextConverter
+	^ (XMLClassFinder
+		classNamed: #TextConverter
 		ifAbsent: [^ nil])
 			defaultConverterClassForEncoding: anEncoding asLowercase
 ]

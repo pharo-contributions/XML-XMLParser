@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'entityURIStack'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Drivers'
 }
 
 { #category : #accessing }

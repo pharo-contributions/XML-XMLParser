@@ -4,7 +4,7 @@ Abstract class for token parsing contexts.
 Class {
 	#name : #XMLTokenContext,
 	#superclass : #Object,
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Drivers'
 }
 
 { #category : #testing }

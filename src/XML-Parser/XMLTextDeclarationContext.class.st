@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'previousContext'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Drivers'
 }
 
 { #category : #'instance creation' }

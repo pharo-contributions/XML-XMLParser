@@ -9,10 +9,10 @@ Class {
 
 { #category : #'instance creation' }
 XMLStandardFileStreamReadStreamFactory class >> basicOnPath: aPathString [
-	^ (Smalltalk at: #StandardFileStream) readOnlyFileNamed: aPathString
+	^ (XMLClassFinder classNamed: #StandardFileStream) readOnlyFileNamed: aPathString
 ]
 
 { #category : #testing }
 XMLStandardFileStreamReadStreamFactory class >> isSupportedImplementation [
-	^ Smalltalk includesKey: #StandardFileStream
+	^ XMLClassFinder hasClassNamed: #StandardFileStream
 ]

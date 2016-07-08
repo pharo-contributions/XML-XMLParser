@@ -15,7 +15,7 @@ Class {
 		'externalSubsetSystemID',
 		'externalSubsetPublicID'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Drivers'
 }
 
 { #category : #'instance creation' }
@@ -645,7 +645,8 @@ SAXParserDriver >> scopeAllocator [
 
 { #category : #private }
 SAXParserDriver >> scopedAttributeNames [
-	^ #('xml:space' 'xml:base' 'xml:lang')
+	"the scoped attributes tracked by this driver"
+	^ #('xml:space' 'xml:base')
 ]
 
 { #category : #accessing }

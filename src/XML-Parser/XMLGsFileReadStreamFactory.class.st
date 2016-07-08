@@ -9,7 +9,7 @@ Class {
 
 { #category : #'instance creation' }
 XMLGsFileReadStreamFactory class >> basicOnPath: aPathString [
-	^ (Smalltalk at: #GsFile)
+	^ (XMLClassFinder classNamed: #GsFile)
 		open: aPathString
 		mode: 'rb' "binary to avoid CRLF<->LF conversions on Windows"
 		onClient: false "use server files by default"
@@ -17,5 +17,5 @@ XMLGsFileReadStreamFactory class >> basicOnPath: aPathString [
 
 { #category : #testing }
 XMLGsFileReadStreamFactory class >> isSupportedImplementation [
-	^ Smalltalk includesKey: #GsFile
+	^ XMLClassFinder hasClassNamed: #GsFile
 ]

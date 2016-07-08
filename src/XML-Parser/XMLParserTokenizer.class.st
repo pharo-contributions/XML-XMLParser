@@ -16,7 +16,7 @@ Class {
 	#classVars : [
 		'PredefinedEntities'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Drivers'
 }
 
 { #category : #'instance creation' }
@@ -178,14 +178,14 @@ XMLParserTokenizer >> expectTerminator [
 XMLParserTokenizer >> formatParseError: aString with: aFirstValue [
 	self
 		formatParseError: aString
-		withAll: (Array with: aFirstValue)
+		withArguments: (Array with: aFirstValue)
 ]
 
 { #category : #errors }
 XMLParserTokenizer >> formatParseError: aString with: aFirstValue with: aSecondValue [
 	self
 		formatParseError: aString
-		withAll:
+		withArguments:
 			(Array
 				with: aFirstValue
 				with: aSecondValue)
@@ -195,7 +195,7 @@ XMLParserTokenizer >> formatParseError: aString with: aFirstValue with: aSecondV
 XMLParserTokenizer >> formatParseError: aString with: aFirstValue with: aSecondValue with: aThirdValue [
 	self
 		formatParseError: aString
-		withAll:
+		withArguments:
 			(Array
 				with: aFirstValue
 				with: aSecondValue
@@ -206,7 +206,7 @@ XMLParserTokenizer >> formatParseError: aString with: aFirstValue with: aSecondV
 XMLParserTokenizer >> formatParseError: aString with: aFirstValue with: aSecondValue with: aThirdValue with: aFourthValue [
 	self
 		formatParseError: aString
-		withAll:
+		withArguments:
 			(Array
 				with: aFirstValue
 				with: aSecondValue
@@ -215,7 +215,7 @@ XMLParserTokenizer >> formatParseError: aString with: aFirstValue with: aSecondV
 ]
 
 { #category : #errors }
-XMLParserTokenizer >> formatParseError: aString withAll: aValueCollection [
+XMLParserTokenizer >> formatParseError: aString withArguments: aValueCollection [
 	self parseError: (aString format: aValueCollection)
 ]
 

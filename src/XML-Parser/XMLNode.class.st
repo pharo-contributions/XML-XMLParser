@@ -105,8 +105,8 @@ XMLNode >> canonicallyPrintToFileNamed: aFileName [
  	"Prints to specified file as canonical XML (http://www.w3.org/TR/xml-c14n)"
 
 	self
-		withNewWriteStreamOnFileNamed: aFileName
-		do: [:writeStream | self canonicallyPrintOn: writeStream]
+		printToFileNamed: aFileName
+		beforeWritingDo: [:writer | writer isCanonical: true]
 ]
 
 { #category : #printing }
@@ -342,8 +342,8 @@ XMLNode >> prettyPrintToFileNamed: aFileName [
  	"Prints XML to specified file with whitespace formatting for readability"
 
 	self
-		withNewWriteStreamOnFileNamed: aFileName
-		do: [:writeStream | self prettyPrintOn: writeStream]
+		printToFileNamed: aFileName
+		beforeWritingDo: [:writer | writer enablePrettyPrinting]
 ]
 
 { #category : #printing }
@@ -384,7 +384,10 @@ XMLNode >> printOn: aStream [
 
 { #category : #printing }
 XMLNode >> printOn: aStream beforeWritingDo: aBlock [
-	"Used to customize XML writing. Raises error without XMLWriter support"
+	"Prints XML on aStream using an XMLWriter object it creates but first
+	evaluates aBlock with the XMLWriter so it can be configured before writing.
+
+	Raises an error without XMLWriter support."
 
 	self
 		withNewXMLWriterOn: aStream
@@ -406,7 +409,29 @@ XMLNode >> printToFileNamed: aFileName [
 
 	self
 		withNewWriteStreamOnFileNamed: aFileName
-		do: [:writeStream | self printOn: writeStream]
+		do: [:writeStream |
+			self
+				printOn: writeStream
+				beforeWritingDo: [:writer |
+					"use the platform's line break because we're writing to a file"
+					writer enablePlatformSpecificLineBreak]]
+]
+
+{ #category : #printing }
+XMLNode >> printToFileNamed: aFileName beforeWritingDo: aBlock [
+	"Prints XML to specified file after evaluating aBlock with the XMLWriter.
+	Uses the encoding specified in the document's encoding attribute if
+	supported or UTF-8 otherwise."
+
+	self
+		withNewWriteStreamOnFileNamed: aFileName
+		do: [:writeStream |
+			self
+				printOn: writeStream
+				beforeWritingDo: [:writer |
+					"use the platform's line break because we're writing to a file"
+					writer enablePlatformSpecificLineBreak.
+					aBlock value: writer]]
 ]
 
 { #category : #printing }
@@ -419,8 +444,8 @@ XMLNode >> printWithoutSelfClosingTagsOn: aStream [
 { #category : #printing }
 XMLNode >> printWithoutSelfClosingTagsToFileNamed: aFileName [
 	self
-		withNewWriteStreamOnFileNamed: aFileName
-		do: [:writeStream | self printWithoutSelfClosingTagsOn: writeStream]
+		printToFileNamed: aFileName
+		beforeWritingDo: [:writer | writer outputsSelfClosingTags: false]
 ]
 
 { #category : #printing }
@@ -483,15 +508,15 @@ XMLNode >> withNewXMLWriterOn: aStream do: aOneArgBlock whenAbsent: aZeroArgBloc
 
 { #category : #printing }
 XMLNode >> writeXMLOn: aWriter [
-	"Template method used by nodes to write on XMLWriters.
+	"Template method used by nodes to write themselves on XMLWriters.
 
-	Sending with a customized XMLWriter instance as the argument can be used to
-	control printing."
+	Sending with a customized XMLWriter instance as the argument can be used
+	to customize printing, but #printOn:beforeWritingDo: should be preferred."
 ]
 
 { #category : #private }
 XMLNode >> xmlWriterClassOrNil [
-	^ Smalltalk
-		at: #XMLWriter
-		ifAbsent: [nil]
+	"can be overriden to return a custom XMLWriter subclass"
+
+	^ XMLClassFinder classNamed: #XMLWriter
 ]

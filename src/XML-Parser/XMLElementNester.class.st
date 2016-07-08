@@ -10,7 +10,7 @@ Class {
 		'hasExternalRootElement',
 		'scopedAttributes'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Drivers'
 }
 
 { #category : #private }

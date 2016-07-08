@@ -20,7 +20,7 @@ Class {
 	#category : #'XML-Parser'
 }
 
-{ #category : #'handling - declarations' }
+{ #category : #'handling - declaration' }
 XMLDOMParser >> attributeDeclaration: anElementName name: anAttributeName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	self topNode addNode:
 		(self nodeFactory attributeDeclarationClass
@@ -70,7 +70,7 @@ XMLDOMParser >> document: aDocument [
 	document := aDocument
 ]
 
-{ #category : #'handling - declarations' }
+{ #category : #'handling - declaration' }
 XMLDOMParser >> elementDeclaration: anElementName contentModel: aContentModel [
 	self topNode addNode:
 		(self nodeFactory elementDeclarationClass
@@ -88,7 +88,7 @@ XMLDOMParser >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: 
 	self popNode
 ]
 
-{ #category : #'handling - declarations' }
+{ #category : #'handling - declaration' }
 XMLDOMParser >> generalEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotationName [
 	self topNode addNode:
 		(self nodeFactory generalEntityDeclarationClass
@@ -98,7 +98,7 @@ XMLDOMParser >> generalEntityDeclaration: aName publicID: aPublicID systemID: aS
 			ndata: aNotationName)
 ]
 
-{ #category : #'handling - declarations' }
+{ #category : #'handling - declaration' }
 XMLDOMParser >> generalEntityDeclaration: aName replacement: aReplacement [
 	self topNode addNode:
 		(self nodeFactory generalEntityDeclarationClass
@@ -139,7 +139,7 @@ XMLDOMParser >> nodeStack [
 	^ nodeStack
 ]
 
-{ #category : #'handling - declarations' }
+{ #category : #'handling - declaration' }
 XMLDOMParser >> notationDeclaration: aName publicID: aPublicID systemID: aSystemID [
 	self topNode addNode:
 		(self nodeFactory notationDeclarationClass
@@ -155,7 +155,7 @@ XMLDOMParser >> on: aStringOrStream [
 	nodeStack := OrderedCollection new: 10.
 ]
 
-{ #category : #'handling - declarations' }
+{ #category : #'handling - declaration' }
 XMLDOMParser >> parameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
 	self topNode addNode:
 		(self nodeFactory parameterEntityDeclarationClass
@@ -164,7 +164,7 @@ XMLDOMParser >> parameterEntityDeclaration: aName publicID: aPublicID systemID: 
 			systemID: aSystemID)
 ]
 
-{ #category : #'handling - declarations' }
+{ #category : #'handling - declaration' }
 XMLDOMParser >> parameterEntityDeclaration: aName replacement: aReplacement [
 	self topNode addNode:
 		(self nodeFactory parameterEntityDeclarationClass

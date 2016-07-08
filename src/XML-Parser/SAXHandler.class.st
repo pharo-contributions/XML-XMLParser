@@ -215,7 +215,7 @@ SAXHandler class >> parseURL: aURLString upToLimit: aMaxSize [
 		upToLimit: aMaxSize) parseDocument
 ]
 
-{ #category : #'handling - declarations' }
+{ #category : #'handling - declaration' }
 SAXHandler >> attributeDeclaration: anElementName name: anAttributeName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 ]
 
@@ -306,7 +306,7 @@ SAXHandler >> driverClass [
 	^ SAXParserDriver
 ]
 
-{ #category : #'handling - declarations' }
+{ #category : #'handling - declaration' }
 SAXHandler >> elementDeclaration: anElementName contentModel: aContentModel [
 
 ]
@@ -389,11 +389,11 @@ SAXHandler >> externalEntityResolver: anExternalEntityResolver [
 	self configuration externalEntityResolver: anExternalEntityResolver
 ]
 
-{ #category : #'handling - declarations' }
+{ #category : #'handling - declaration' }
 SAXHandler >> generalEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotationName [
 ]
 
-{ #category : #'handling - declarations' }
+{ #category : #'handling - declaration' }
 SAXHandler >> generalEntityDeclaration: aName replacement: aReplacement [
 ]
 
@@ -483,7 +483,7 @@ SAXHandler >> maxEntityReplacementDepth: anInteger [
 	self configuration maxEntityReplacementDepth: anInteger
 ]
 
-{ #category : #'handling - declarations' }
+{ #category : #'handling - declaration' }
 SAXHandler >> notationDeclaration: aName publicID: aPublicID systemID: aSystemID [
 
 ]
@@ -512,11 +512,11 @@ SAXHandler >> optimizeForLargeDocuments [
 		documentReadLimit: nil
 ]
 
-{ #category : #'handling - declarations' }
+{ #category : #'handling - declaration' }
 SAXHandler >> parameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
 ]
 
-{ #category : #'handling - declarations' }
+{ #category : #'handling - declaration' }
 SAXHandler >> parameterEntityDeclaration: aName replacement: aReplacement [
 ]
 

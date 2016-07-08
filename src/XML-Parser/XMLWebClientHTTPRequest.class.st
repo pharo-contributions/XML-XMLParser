@@ -9,7 +9,7 @@ Class {
 
 { #category : #testing }
 XMLWebClientHTTPRequest class >> isSupportedImplementation [
-	^ Smalltalk includesKey: #WebClient
+	^ XMLClassFinder hasClassNamed: #WebClient
 ]
 
 { #category : #private }
@@ -17,7 +17,7 @@ XMLWebClientHTTPRequest >> basicGetUpToLimit: aMaxSize decoding: aBoolean [
 	| response |
 
 	response :=
-		(Smalltalk at: #WebClient) new
+		(XMLClassFinder classNamed: #WebClient) new
 			timeout: self defaultTimeout;
 			httpGet: self url.
 	response isSuccess

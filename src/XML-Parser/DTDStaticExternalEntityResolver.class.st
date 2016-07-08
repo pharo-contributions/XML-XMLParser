@@ -1,8 +1,8 @@
 "
-This class is a pluggable resolver that maps entity URIs to string replacements so resolution can be done without HTTP or file access. Used during testing.
+This class is a resolver that maps entity URIs to string replacements so resolution can be done without HTTP or file access. Used during testing.
 "
 Class {
-	#name : #DTDPluggableExternalEntityResolver,
+	#name : #DTDStaticExternalEntityResolver,
 	#superclass : #DTDExternalEntityResolver,
 	#instVars : [
 		'externalEntities'
@@ -11,12 +11,12 @@ Class {
 }
 
 { #category : #'instance creation' }
-DTDPluggableExternalEntityResolver class >> externalEntities: anAssociationCollection [
+DTDStaticExternalEntityResolver class >> externalEntities: anAssociationCollection [
 	^ self new externalEntities: anAssociationCollection
 ]
 
 { #category : #private }
-DTDPluggableExternalEntityResolver >> errorMaxExternalEntitySize: aMaxSize exceededByURI: anXMLURIOrURIString [
+DTDStaticExternalEntityResolver >> errorMaxExternalEntitySize: aMaxSize exceededByURI: anXMLURIOrURIString [
 	XMLLimitException
 		formatSignal: 'Entity exceeds max size of {1} bytes: {2}'
 		with: aMaxSize
@@ -24,19 +24,19 @@ DTDPluggableExternalEntityResolver >> errorMaxExternalEntitySize: aMaxSize excee
 ]
 
 { #category : #private }
-DTDPluggableExternalEntityResolver >> errorUnresolvableExternalEntityURI: anXMLURIOrURIString [
+DTDStaticExternalEntityResolver >> errorUnresolvableExternalEntityURI: anXMLURIOrURIString [
 	XMLParserException
 		formatSignal: 'Unresolvable external entity URI: {1}'
 		with: anXMLURIOrURIString asString
 ]
 
 { #category : #private }
-DTDPluggableExternalEntityResolver >> externalEntities [
+DTDStaticExternalEntityResolver >> externalEntities [
 	^ externalEntities ifNil: [externalEntities := Dictionary new]
 ]
 
 { #category : #accessing }
-DTDPluggableExternalEntityResolver >> externalEntities: anAssociationCollection [
+DTDStaticExternalEntityResolver >> externalEntities: anAssociationCollection [
 	self hasExternalEntities
 		ifTrue: [self removeExternalEntities].
 	anAssociationCollection associationsDo: [:each |
@@ -46,62 +46,62 @@ DTDPluggableExternalEntityResolver >> externalEntities: anAssociationCollection 
 ]
 
 { #category : #accessing }
-DTDPluggableExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString [
+DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString [
 	^ self
 		externalEntityAtURI: anXMLURIOrURIString asXMLURI
 		ifAbsent: ['']
 ]
 
 { #category : #accessing }
-DTDPluggableExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString ifAbsent: aBlock [
+DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString ifAbsent: aBlock [
 	^ self externalEntities
 		at: anXMLURIOrURIString asXMLURI
 		ifAbsent: aBlock
 ]
 
 { #category : #accessing }
-DTDPluggableExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString ifAbsentPut: aBlock [
+DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString ifAbsentPut: aBlock [
 	^ self externalEntities
 		at: anXMLURIOrURIString asXMLURI
 		ifAbsentPut: aBlock
 ]
 
 { #category : #accessing }
-DTDPluggableExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString put: aReplacement [
+DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString put: aReplacement [
 	^ self externalEntities
 		at: anXMLURIOrURIString asXMLURI
 		put: aReplacement
 ]
 
 { #category : #testing }
-DTDPluggableExternalEntityResolver >> hasExternalEntities [
+DTDStaticExternalEntityResolver >> hasExternalEntities [
 	^ self externalEntities notEmpty
 ]
 
 { #category : #testing }
-DTDPluggableExternalEntityResolver >> includesExternalEntityURI: anXMLURIOrURIString [
+DTDStaticExternalEntityResolver >> includesExternalEntityURI: anXMLURIOrURIString [
 	^ self externalEntities includesKey: anXMLURIOrURIString asXMLURI
 ]
 
 { #category : #removing }
-DTDPluggableExternalEntityResolver >> removeExternalEntities [
+DTDStaticExternalEntityResolver >> removeExternalEntities [
 	self externalEntities removeAll
 ]
 
 { #category : #removing }
-DTDPluggableExternalEntityResolver >> removeExternalEntityURI: anXMLURIOrURIString [
+DTDStaticExternalEntityResolver >> removeExternalEntityURI: anXMLURIOrURIString [
 	^ self externalEntities removeKey: anXMLURIOrURIString asXMLURI
 ]
 
 { #category : #removing }
-DTDPluggableExternalEntityResolver >> removeExternalEntityURI: anXMLURIOrURIString ifAbsent: aBlock [
+DTDStaticExternalEntityResolver >> removeExternalEntityURI: anXMLURIOrURIString ifAbsent: aBlock [
 	^ self externalEntities
 		removeKey: anXMLURIOrURIString asXMLURI
 		ifAbsent: aBlock
 ]
 
 { #category : #resolving }
-DTDPluggableExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString [
+DTDStaticExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString [
 	^ self resolveExternalEntityWith: [:maxSize | | replacement |
 		replacement :=
 			self
@@ -117,6 +117,6 @@ DTDPluggableExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIStr
 ]
 
 { #category : #resolving }
-DTDPluggableExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString [
+DTDStaticExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString [
 	^ (self resolveExternalEntityURI: anXMLURIOrURIString) readStream
 ]

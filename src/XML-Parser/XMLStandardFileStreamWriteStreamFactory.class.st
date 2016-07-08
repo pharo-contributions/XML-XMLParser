@@ -10,10 +10,10 @@ Class {
 { #category : #'instance creation' }
 XMLStandardFileStreamWriteStreamFactory class >> basicOnPath: aPathString [
 	"use forceNewFileNamed: to ensure truncation of existing files before writing"
-	^ (Smalltalk at: #StandardFileStream) forceNewFileNamed: aPathString
+	^ (XMLClassFinder classNamed: #StandardFileStream) forceNewFileNamed: aPathString
 ]
 
 { #category : #testing }
 XMLStandardFileStreamWriteStreamFactory class >> isSupportedImplementation [
-	^ Smalltalk includesKey: #StandardFileStream
+	^ XMLClassFinder hasClassNamed: #StandardFileStream
 ]

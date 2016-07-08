@@ -8,7 +8,7 @@ Class {
 		'tokenizer',
 		'driver'
 	],
-	#category : #'XML-Parser'
+	#category : #'XML-Parser-Drivers'
 }
 
 { #category : #'instance creation' }

@@ -1,0 +1,62 @@
+"
+This is a base class for SAX lexical handler classes that can be injected into SAX2Parser instances before parsing.
+"
+Class {
+	#name : #SAXLexicalHandler,
+	#superclass : #Object,
+	#category : #'XML-Parser'
+}
+
+{ #category : #'handling - lexical' }
+SAXLexicalHandler >> comment: aString [
+	"Handles '<!--comment-->' sections in documents."
+]
+
+{ #category : #'handling - lexical' }
+SAXLexicalHandler >> endCData [
+	"Sent after the character data of a '<![CDATA[...]]>' section."
+]
+
+{ #category : #'handling - lexical' }
+SAXLexicalHandler >> endDTD [
+
+]
+
+{ #category : #'handling - lexical' }
+SAXLexicalHandler >> endEntity: anEntityName [
+	"Handles the end of some general entity's replacement in content.
+	Not sent if the entity is undeclared or if content entity replacement
+	is disabled."
+]
+
+{ #category : #'handling - lexical' }
+SAXLexicalHandler >> startCData [
+	"Sent before the character data of a '<![CDATA[...]]>' section."
+]
+
+{ #category : #'handling - lexical' }
+SAXLexicalHandler >> startDTD: aRootElementName publicID: aPublicID systemID: aSystemID [
+	"Handles the start of a '<!DOCTYPE ...>' declaration. Any events
+	after this and until endDTD is sent are part of the internal subset
+	of the DTD.
+	
+	aRootElementName - the expected name of the document's root element
+	aPublicID - the public ID of the external DTD subset or an empty string
+	aSystemID - the URI where the external subset can be found or an empty string"
+]
+
+{ #category : #'handling - lexical' }
+SAXLexicalHandler >> startEntity: anEntityName [
+	"Handles the start of some general entity's replacement in content.
+	Not sent if the entity is undeclared or if content entity replacement
+	is disabled."
+]
+
+{ #category : #'handling - lexical' }
+SAXLexicalHandler >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
+	"Handles the '<?xml ...?>' declaration of a document.
+	
+	aVersionFloat - the version of XML the document uses, usually 1.0
+	anEncoding - the name of the encoding or an empty string
+	aBoolean - true if standalone='yes'"
+]

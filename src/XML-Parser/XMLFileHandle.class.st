@@ -41,12 +41,15 @@ XMLFileHandle class >> initialize [
 	"a class variable so it's shared by all subclasses"
 	XMLDocumentFileExtensions :=
 		Set withAll: "avoid newFrom: for GS portability"
-			#('dbk' "DocBook XML"
+			#('atom' "Atom Syndication Format"
+				'dbk' "DocBook XML"
 				'docm' "Office Open XML Document"
 				'docx' "Office Open XML Document"
 				'pptm' "Office Open XML Presentation"
 				'pptx' "Office Open XML Presentation"
 				'rdf' "Resource Description Framework"
+				'rss' "Rich Site Summary"
+				'svg' "Scalable Vector Graphics"
 				'xbel' "XML Bookmark Exchange Language"
 				'xfd' "Extensible Forms Description Language"
 				'xfdl' "Extensible Forms Description Language"
@@ -126,7 +129,17 @@ XMLFileHandle >> exists [
 
 { #category : #accessing }
 XMLFileHandle >> extension [
-	^ self path copyAfterLast: $.
+	"Returns the file extension, everything after the first '.' of the
+	last path segment:
+		'one.two/three.txt' asXMLFileHandle extension = 'txt'.
+		'one.two/three.tar.gz' asXMLFileHandle extension = 'tar.gz'.
+		'one.two/three.four/' asXMLFileHandle extension = ''.
+	"
+	| i |
+
+	^ ((i := self path lastIndexOf: $/) > 0
+		ifTrue: [self path copyFrom: i + 1 to: self path size]
+		ifFalse: [self path]) copyAfter: $.
 ]
 
 { #category : #accessing }

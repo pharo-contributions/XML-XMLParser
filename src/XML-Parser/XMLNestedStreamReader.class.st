@@ -196,9 +196,9 @@ XMLNestedStreamReader >> errorNestingLimitExceeded [
 XMLNestedStreamReader >> errorReadLimitExceeded [
 	XMLLimitException signal:
 		'Security input read limit exceeded; ',
-		'use #documentReadLimit: (or #externalSubsetReadLimit:) ',
-		'to change or disable or #defaultReadLimit: ',
-		'to persistently change or disable'
+		'use #documentReadLimit: and #externalSubsetReadLimit: ',
+		'to change/disable it, or #defaultReadLimit: ',
+		'to persistently change/disable it'
 ]
 
 { #category : #testing }
