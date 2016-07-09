@@ -1342,16 +1342,59 @@ XMLParserTest >> testAttributeXMLIDValidation [
 
 { #category : #tests }
 XMLParserTest >> testAttributeXMLReserved [
-	| xml document |
+	| xml document element |
 
 	xml := '<a xml="one" xmll="two" xml:="three" xmlnss="four"></a>'.
 	document := XMLDOMParser parse: xml usingNamespaces: true.
-
+	element := document root.
 	self
-		assert: (document root attributeAt: 'xml') = 'one';
-		assert: (document root attributeAt: 'xmll') = 'two';
-		assert: (document root attributeAt: 'xml:') = 'three';
-		assert: (document root attributeAt: 'xmlnss') = 'four'.
+		assert: element attributes size = 4;
+		assert: (element attributeAt: 'xml') = 'one';
+		assert: (element attributeAt: 'xmll') = 'two';
+		assert: (element attributeAt: 'xml:') = 'three';
+		assert: (element attributeAt: 'xmlnss') = 'four'.
+]
+
+{ #category : #tests }
+XMLParserTest >> testAttributeXMLReservedNamespaces [
+	| xml xmlWithDuplicateID document element |
+
+	xml :=
+		'<test
+			xml:id="test"
+			xmlns="defaultNS"
+			xmlns:test="testNS"
+			xname="xvalue"/>'.
+	document := XMLDOMParser parse: xml.
+	element := document root.
+	self
+		assert: element namespaceScope mappedPrefixes size = 2;
+		assert: element namespaceURI = 'defaultNS';
+		assert: (element declaresPrefix: '' uri: 'defaultNS');
+		assert: (element declaresPrefix: 'test' uri: 'testNS');
+		assert: element attributes size = 2;
+		assert: (element attributeAt: 'xml:id') = 'test';
+		assert: (element attributeAt: 'xname') = 'xvalue'.
+
+	document :=
+		XMLDOMParser
+			parse: xml
+			usingNamespaces: false.
+	element := document root.
+	self
+		deny: element hasNamespaces;
+		assert: element attributes size = 4;
+		assert: (element attributeAt: 'xml:id') = 'test';
+		assert: (element attributeAt: 'xmlns') = 'defaultNS';
+		assert: (element attributeAt: 'xmlns:test') = 'testNS';
+		assert: (element attributeAt: 'xname') = 'xvalue'.
+
+	"test that reserved attributes are still processed when namespaces
+	are present by triggering an xml:id duplicate validation exception"
+	xmlWithDuplicateID := '<test xml:id="test">', xml, '<test/>'.
+	self
+		should: [SAXHandler parse: xmlWithDuplicateID]
+		raise: XMLValidationException.
 ]
 
 { #category : #tests }
@@ -1364,9 +1407,16 @@ XMLParserTest >> testAttributeXMLSpaceValidation [
 		<!DOCTYPE whitespace [
 			<!ELEMENT whitespace EMPTY>
 			<!ATTLIST whitespace xml:space {1} #IMPLIED>
-		]><whitespace></whitespace>'.
-	#('CDATA' 'ID' 'IDREF' 'IDREFS' 'ENTITY' 'ENTITIES'
-		'(default|preserve|other)' 'NOTATION (default|preserve)')
+		]>
+		<whitespace></whitespace>'.
+	#('CDATA'
+		'ID'
+		'IDREF'
+		'IDREFS'
+		'ENTITY'
+		'ENTITIES'
+		'(default|preserve|other)'
+		'NOTATION (default|preserve)')
 		do: [:each |
 			xml := xmlTemplate format: (Array with: each).
 			self
