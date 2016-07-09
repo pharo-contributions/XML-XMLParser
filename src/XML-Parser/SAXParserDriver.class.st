@@ -158,21 +158,38 @@ SAXParserDriver >> externalSubsetSystemID [
 
 { #category : #private }
 SAXParserDriver >> extractNamespacesFromAttributes: anAttributeDictionary [
+	"returns an ordered collection of namespace prefix/uri associations
+	removed from the attribute dictionary or nil if there aren't any"
 	| namespaces keysToRemove |
 
+	self haveNoUnhandledReservedAttributes.
 	anAttributeDictionary keysDo: [:name |
-		name isXMLNSAttributeName
+		"optimized comparison ordering"
+		(name at: 1) == $x
 			ifTrue: [
-				"only initialize if needed"
-				(namespaces ifNil: [namespaces := OrderedCollection new: 5])
-					addLast:
-						((name size > 6)
-							ifTrue: [name copyFrom: 7 to: name size]
-							ifFalse: ['']) -> (anAttributeDictionary at: name).
-				(keysToRemove ifNil: [keysToRemove := OrderedCollection new: 5])
-					addLast: name]].
+				name isXMLNSAttributeName
+					ifTrue: [
+						"only initialize when needed"
+						(namespaces ifNil: [namespaces := OrderedCollection new: 5])
+							addLast:
+								((name size > 6)
+									ifTrue: [name copyFrom: 7 to: name size]
+									ifFalse: ['']) -> (anAttributeDictionary at: name).
+						"only initialize when needed"
+						(keysToRemove ifNil: [keysToRemove := OrderedCollection new: 5])
+							addLast: name]
+					ifFalse: [
+						name isXMLReservedAttributeName
+							ifTrue: [
+								"at least one xml attr is not an xmlns attr, so there
+								will still be reserved attrs to handle after extracting
+								the namespaces"
+								self haveUnhandledReservedAttributes]]]].
+
 	keysToRemove
-		ifNotNil: [anAttributeDictionary removeKeys: keysToRemove].
+		ifNotNil: [
+			"use removeKeys: for speed"
+			anAttributeDictionary removeKeys: keysToRemove].
 
 	^ namespaces.
 ]
@@ -436,7 +453,7 @@ SAXParserDriver >> handleReservedAttributes: anAttributeDictionary [
 		setScopedAttributesNamed: self scopedAttributeNames
 		from: anAttributeDictionary.
 
-	hasUnhandledReservedAttributes := false.
+	self haveNoUnhandledReservedAttributes.
 ]
 
 { #category : #handling }
@@ -469,7 +486,7 @@ SAXParserDriver >> handleStartDocument [
 { #category : #handling }
 SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictionary [
 	"performance critical method"
-	| prefix totalAttributes namespaceURI currentScope namespaces |
+	| prefix totalAttributes namespaceURI currentScope |
 
 	self elementNester startElement: anElementName.
 
@@ -487,25 +504,24 @@ SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 					self
 						checkForReservedAttributesIn: anAttributeDictionary
 						afterIndex: totalAttributes]].
-	self hasUnhandledReservedAttributes
-		ifTrue: [
-			self handleReservedAttributes: anAttributeDictionary.
-			self usesNamespaces
-				ifTrue: [namespaces := self extractNamespacesFromAttributes: anAttributeDictionary]].
 	self usesNamespaces
 		ifTrue: [
 			currentScope := self scopeAllocator enterScope.
-			namespaces
-				ifNotNil: [
-					self
-						declareNamespaces: namespaces
-						inScope: currentScope].
+			self hasUnhandledReservedAttributes
+				ifTrue: [
+					(self extractNamespacesFromAttributes: anAttributeDictionary)
+						ifNotNil: [:namespaces |
+							self
+								declareNamespaces: namespaces
+								inScope: currentScope]].
 			namespaceURI :=
 				currentScope
 					validateAndResolvePrefix: prefix
 					ofElement: anElementName.
 			totalAttributes > 0
 				ifTrue: [currentScope validateAttributePrefixes: anAttributeDictionary]].
+	self hasUnhandledReservedAttributes
+		ifTrue: [self handleReservedAttributes: anAttributeDictionary].
 
 	self saxHandler
 		startElement: anElementName
@@ -567,6 +583,11 @@ SAXParserDriver >> hasExternalSubsetToParse [
 { #category : #private }
 SAXParserDriver >> hasUnhandledReservedAttributes [
 	^ hasUnhandledReservedAttributes
+]
+
+{ #category : #private }
+SAXParserDriver >> haveNoUnhandledReservedAttributes [
+	hasUnhandledReservedAttributes := false
 ]
 
 { #category : #private }
