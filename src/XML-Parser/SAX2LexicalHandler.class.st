@@ -2,40 +2,40 @@
 This is a base class for SAX lexical handler classes that can be injected into SAX2Parser instances before parsing.
 "
 Class {
-	#name : #SAXLexicalHandler,
+	#name : #SAX2LexicalHandler,
 	#superclass : #Object,
 	#category : #'XML-Parser'
 }
 
 { #category : #'handling - lexical' }
-SAXLexicalHandler >> comment: aString [
+SAX2LexicalHandler >> comment: aString [
 	"Handles '<!--comment-->' sections in documents."
 ]
 
 { #category : #'handling - lexical' }
-SAXLexicalHandler >> endCData [
+SAX2LexicalHandler >> endCData [
 	"Sent after the character data of a '<![CDATA[...]]>' section."
 ]
 
 { #category : #'handling - lexical' }
-SAXLexicalHandler >> endDTD [
+SAX2LexicalHandler >> endDTD [
 
 ]
 
 { #category : #'handling - lexical' }
-SAXLexicalHandler >> endEntity: anEntityName [
+SAX2LexicalHandler >> endEntity: anEntityName [
 	"Handles the end of some general entity's replacement in content.
 	Not sent if the entity is undeclared or if content entity replacement
 	is disabled."
 ]
 
 { #category : #'handling - lexical' }
-SAXLexicalHandler >> startCData [
+SAX2LexicalHandler >> startCData [
 	"Sent before the character data of a '<![CDATA[...]]>' section."
 ]
 
 { #category : #'handling - lexical' }
-SAXLexicalHandler >> startDTD: aRootElementName publicID: aPublicID systemID: aSystemID [
+SAX2LexicalHandler >> startDTD: aRootElementName publicID: aPublicID systemID: aSystemID [
 	"Handles the start of a '<!DOCTYPE ...>' declaration. Any events
 	after this and until endDTD is sent are part of the internal subset
 	of the DTD.
@@ -46,14 +46,14 @@ SAXLexicalHandler >> startDTD: aRootElementName publicID: aPublicID systemID: aS
 ]
 
 { #category : #'handling - lexical' }
-SAXLexicalHandler >> startEntity: anEntityName [
+SAX2LexicalHandler >> startEntity: anEntityName [
 	"Handles the start of some general entity's replacement in content.
 	Not sent if the entity is undeclared or if content entity replacement
 	is disabled."
 ]
 
 { #category : #'handling - lexical' }
-SAXLexicalHandler >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
+SAX2LexicalHandler >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
 	"Handles the '<?xml ...?>' declaration of a document.
 	
 	aVersionFloat - the version of XML the document uses, usually 1.0

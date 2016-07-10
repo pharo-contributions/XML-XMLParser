@@ -1,5 +1,5 @@
 "
-This class is a parser with an API like SAX 2.0, with separate SAXContentHandler, SAXLexicalHandler, and SAXDeclarationHandler classes that are subclassed so their instances can be injected into a parser before parsing, unlike SAX 1.0 where a single handler class  is subclassed directly.
+This class is a parser with an API like SAX 2.0, with separate SAX2ContentHandler, SAX2LexicalHandler, and SAX2DeclarationHandler classes that are subclassed so their instances can be injected into a parser before parsing, unlike SAX 1.0 where a single handler class  is subclassed directly.
 
 SAXHandler is not deprecated and should still be used if you prefer a SAX 1.0 style API.
 "
@@ -62,9 +62,9 @@ SAX2Parser class >> generateMethodsInHandlerClasses [
 	"
 
 	(Array
-		with: SAXContentHandler -> #'handling - content'
-		with: SAXLexicalHandler -> #'handling - lexical'
-		with: SAXDeclarationHandler -> #'handling - declaration')
+		with: SAX2ContentHandler -> #'handling - content'
+		with: SAX2LexicalHandler -> #'handling - lexical'
+		with: SAX2DeclarationHandler -> #'handling - declaration')
 		do: [:handlerClassAndCategory | | handlerClass handlerCategory |
 			handlerClass := handlerClassAndCategory key.
 			handlerCategory := handlerClassAndCategory value.
@@ -119,17 +119,17 @@ SAX2Parser >> declarationHandler: aDeclarationHandler [
 
 { #category : #private }
 SAX2Parser >> defaultContentHandlerClass [
-	^ SAXContentHandler
+	^ SAX2ContentHandler
 ]
 
 { #category : #private }
 SAX2Parser >> defaultDeclarationHandlerClass [
-	^ SAXDeclarationHandler
+	^ SAX2DeclarationHandler
 ]
 
 { #category : #private }
 SAX2Parser >> defaultLexicalHandlerClass [
-	^ SAXLexicalHandler
+	^ SAX2LexicalHandler
 ]
 
 { #category : #'handling - declaration' }

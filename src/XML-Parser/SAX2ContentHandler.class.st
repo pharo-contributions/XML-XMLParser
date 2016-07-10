@@ -2,13 +2,13 @@
 This is a base class for SAX content handler classes that can be injected into SAX2Parser instances before parsing.
 "
 Class {
-	#name : #SAXContentHandler,
+	#name : #SAX2ContentHandler,
 	#superclass : #Object,
 	#category : #'XML-Parser'
 }
 
 { #category : #'handling - content' }
-SAXContentHandler >> characters: aString [
+SAX2ContentHandler >> characters: aString [
 	"Handles character data in an element, such as the 'test' in
 	'<characters>test</characters>' or in the CDATA section '<![CDATA[test]]>'.
 	
@@ -20,18 +20,18 @@ SAXContentHandler >> characters: aString [
 ]
 
 { #category : #'handling - content' }
-SAXContentHandler >> endDocument [
+SAX2ContentHandler >> endDocument [
 	"Handles the end of an XML document. No more handlers are invoked after this."
 ]
 
 { #category : #'handling - content' }
-SAXContentHandler >> endElement: aQualifiedName [
+SAX2ContentHandler >> endElement: aQualifiedName [
 	"Handles the end of an element if a subclass doesn't implement
 	endElement:prefix:uri:localName: or endElement:prefix:uri:."
 ]
 
 { #category : #'handling - content' }
-SAXContentHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI [
+SAX2ContentHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI [
 	"Handles the end of an element if a subclass doesn't implement
 	endElement:prefix:uri:localName:. By default it forwards to a simpler
 	handler, endElement:.
@@ -44,7 +44,7 @@ SAXContentHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI [
 ]
 
 { #category : #'handling - content' }
-SAXContentHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName [
+SAX2ContentHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName [
 	"Handles the end of an element, either an end tag like '</end>' or a
 	self-closed tag like '<empty/>'. By default it forwards to a simpler handler,
 	endElement:prefix:uri:.
@@ -61,7 +61,7 @@ SAXContentHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI localN
 ]
 
 { #category : #'handling - content' }
-SAXContentHandler >> endPrefixMapping: aPrefix [
+SAX2ContentHandler >> endPrefixMapping: aPrefix [
 	"Handles the end of a namespace prefix/URI mapping when namespaces are
 	enabled. After, aPrefix (empty for the default namespace) will be either
 	unmapped or mapped to a different URI. The 'xml' prefix is predefined
@@ -69,7 +69,7 @@ SAXContentHandler >> endPrefixMapping: aPrefix [
 ]
 
 { #category : #'handling - content' }
-SAXContentHandler >> ignorableWhitespace: aString [
+SAX2ContentHandler >> ignorableWhitespace: aString [
 	"When validation is enabled and a DTD with element declarations is
 	present, this can be used to handle ignorable whitespace in elements
 	with 'element content' (meaning they can only contain other elements
@@ -94,7 +94,7 @@ SAXContentHandler >> ignorableWhitespace: aString [
 ]
 
 { #category : #'handling - content' }
-SAXContentHandler >> processingInstruction: aTargetString data: aDataString [
+SAX2ContentHandler >> processingInstruction: aTargetString data: aDataString [
 	"Handles processing instructions like '<?name value?>', where 'name' is
 	the target and 'value' is the data.
 	
@@ -103,19 +103,19 @@ SAXContentHandler >> processingInstruction: aTargetString data: aDataString [
 ]
 
 { #category : #'handling - content' }
-SAXContentHandler >> skippedEntity: anEntityName [
+SAX2ContentHandler >> skippedEntity: anEntityName [
 	"Sent when a general parsed entity reference like '&name;' is
 	unreplaced in content. Only sent when validation is turned off
 	or entity replacement is disabled."
 ]
 
 { #category : #'handling - content' }
-SAXContentHandler >> startDocument [
+SAX2ContentHandler >> startDocument [
 	"Handles the start of an XML document, the first handler invoked."
 ]
 
 { #category : #'handling - content' }
-SAXContentHandler >> startElement: aQualifiedName attributes: aDictionary [
+SAX2ContentHandler >> startElement: aQualifiedName attributes: aDictionary [
 	"Handles the start of an element if a subclass doesn't implement
 	startElement:prefix:uri:localName:attributes: or
 	startElement:prefix:uri:attributes:.
@@ -125,7 +125,7 @@ SAXContentHandler >> startElement: aQualifiedName attributes: aDictionary [
 ]
 
 { #category : #'handling - content' }
-SAXContentHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes: aDictionary [
+SAX2ContentHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes: aDictionary [
 	"Handles the start of an element if a subclass doesn't implement
 	startElement:prefix:uri:localName:attributes:. By default it forwards
 	to a simpler handler, startElement:attributes:.
@@ -141,7 +141,7 @@ SAXContentHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attr
 ]
 
 { #category : #'handling - content' }
-SAXContentHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: aDictionary [
+SAX2ContentHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: aDictionary [
 	"Handles the start of an element, either a start tag like '<start>' or a
 	self-closed tag like '<empty/>'. By default it forwards to a simpler handler,
 	startElement:prefix:uri:attributes:.
@@ -160,7 +160,7 @@ SAXContentHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI loca
 ]
 
 { #category : #'handling - content' }
-SAXContentHandler >> startPrefixMapping: aPrefix uri: aURI [
+SAX2ContentHandler >> startPrefixMapping: aPrefix uri: aURI [
 	"Handles the start of a namespace prefix/URI mapping when namespaces are
 	enabled. The 'xml' prefix is predefined and never remapped.
 
