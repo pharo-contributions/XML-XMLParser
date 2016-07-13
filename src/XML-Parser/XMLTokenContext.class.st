@@ -1,5 +1,5 @@
 "
-Abstract class for token parsing contexts.
+This is an abstract class for token contexts to control tokenization. Subclasses must implement #nextTokenFrom: to send a tokenizing message to the argument tokenizer.
 "
 Class {
 	#name : #XMLTokenContext,

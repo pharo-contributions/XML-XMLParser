@@ -251,7 +251,7 @@ XMLDOMParser >> pushInnerXMLRootNode: aRootNode [
 	self
 		configuration: aRootNode configuration;
 		document: aRootNode document;
-		pushNode: aRootNode.
+		pushNode: aRootNode
 ]
 
 { #category : #private }

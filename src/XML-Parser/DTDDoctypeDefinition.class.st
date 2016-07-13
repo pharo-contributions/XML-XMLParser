@@ -81,9 +81,15 @@ DTDDoctypeDefinition >> addNotation: aName [
 
 { #category : #adding }
 DTDDoctypeDefinition >> addUnparsedEntity: aName ndata: aNotation [
-	self unparsedEntities
+	self generalEntities
 		at: aName
-		ifAbsentPut: [aNotation]
+		ifAbsentPut: [
+			self unparsedEntities
+				at: aName
+				put:
+					(DTDUnparsedEntity
+						name: aName
+						ndata: aNotation)]
 ]
 
 { #category : #adding }
@@ -134,6 +140,20 @@ DTDDoctypeDefinition >> attributeValidators [
 	^ attributeValidators ifNil: [attributeValidators := Dictionary new]
 ]
 
+{ #category : #accessing }
+DTDDoctypeDefinition >> attributeValidatorsAt: aName [
+	^ self
+		attributeValidatorsAt: aName
+		ifAbsent: [nil]
+]
+
+{ #category : #accessing }
+DTDDoctypeDefinition >> attributeValidatorsAt: aName ifAbsent: aBlock [
+	^ self attributeValidators
+		at: aName
+		ifAbsent: aBlock
+]
+
 { #category : #private }
 DTDDoctypeDefinition >> elementIDValidator [
 	^ elementIDValidator ifNil: [elementIDValidator := XMLElementIDValidator new]
@@ -142,6 +162,20 @@ DTDDoctypeDefinition >> elementIDValidator [
 { #category : #private }
 DTDDoctypeDefinition >> elementValidators [
 	^ elementValidators ifNil: [elementValidators := Dictionary new]
+]
+
+{ #category : #accessing }
+DTDDoctypeDefinition >> elementValidatorsAt: aName [
+	^ self
+		elementValidatorsAt: aName
+		ifAbsent: [nil]
+]
+
+{ #category : #accessing }
+DTDDoctypeDefinition >> elementValidatorsAt: aName ifAbsent: aBlock [
+	^ self elementValidators
+		at: aName
+		ifAbsent: aBlock
 ]
 
 { #category : #private }
@@ -201,6 +235,12 @@ DTDDoctypeDefinition >> hasEntities [
 { #category : #testing }
 DTDDoctypeDefinition >> hasGeneralEntities [
 	^ generalEntities notNil and: [generalEntities notEmpty]
+]
+
+{ #category : #testing }
+DTDDoctypeDefinition >> hasNotationAttributeValidators [
+	^ self hasAttributeValidators
+		and: [self unparsedEntityValidator hasNotationAttributeValidators]
 ]
 
 { #category : #testing }
@@ -292,4 +332,12 @@ DTDDoctypeDefinition >> unparsedEntityValidator [
 				XMLUnparsedEntityValidator
 					unparsedEntities: self unparsedEntities
 					notations: self notations]
+]
+
+{ #category : #validation }
+DTDDoctypeDefinition >> validateCompletedDefinition [
+	self hasUnparsedEntities
+		ifTrue: [self unparsedEntityValidator validateUnparsedEntities].
+	self hasNotationAttributeValidators
+		ifTrue: [self unparsedEntityValidator validateNotationAttributes].
 ]

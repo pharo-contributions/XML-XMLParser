@@ -94,7 +94,7 @@ DTDExternalSubsetParserDriver >> handleNotationDeclaration: aName publicID: aPub
 	self isValidating
 		ifTrue: [
 			self doctypeDefinition unparsedEntityValidator
-				validateNotationDeclaration: aName].
+				validateNotation: aName].
 	self doctypeDefinition addNotation: aName.
 ]
 

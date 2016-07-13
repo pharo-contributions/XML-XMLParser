@@ -5,9 +5,9 @@ Class {
 	#name : #XMLUnparsedEntityValidator,
 	#superclass : #Object,
 	#instVars : [
-		'elementsAndNotationAttributes',
 		'unparsedEntities',
-		'notations'
+		'notations',
+		'notationAttributeValidators'
 	],
 	#category : #'XML-Parser-Validation'
 }
@@ -20,8 +20,18 @@ XMLUnparsedEntityValidator class >> unparsedEntities: anUnparsedEntityDictionary
 ]
 
 { #category : #accessing }
-XMLUnparsedEntityValidator >> elementsAndNotationAttributes [
-	^ elementsAndNotationAttributes ifNil: [elementsAndNotationAttributes := Dictionary new]
+XMLUnparsedEntityValidator >> addNotationAttributeValidator: aNotationAttributeValidator [
+	| oldSize |
+
+	"checking size after is faster than includes"
+	oldSize := self notationAttributeValidators size.
+	(self notationAttributeValidators
+		at: aNotationAttributeValidator element
+		put: aNotationAttributeValidator;
+		size) > oldSize
+		ifFalse: [
+			self errorMultipleNotationAttributesForElement:
+				aNotationAttributeValidator element].
 ]
 
 { #category : #private }
@@ -41,7 +51,7 @@ XMLUnparsedEntityValidator >> errorMultipleNotationAttributesForElement: anEleme
 { #category : #private }
 XMLUnparsedEntityValidator >> errorUndeclaredNotation: aNotation inAttribute: anAttribute [
 	XMLValidationException
-		formatSignal: 'Undeclared NOTATION "{1}" in "{2}" attribute'
+		formatSignal: 'Undeclared notation "{1}" in NOTATION (...) attribute "{2}"'
 		with: aNotation
 		with: anAttribute
 ]
@@ -49,7 +59,7 @@ XMLUnparsedEntityValidator >> errorUndeclaredNotation: aNotation inAttribute: an
 { #category : #private }
 XMLUnparsedEntityValidator >> errorUndeclaredNotation: aNotation inEntity: anEntity [
 	XMLValidationException
-		formatSignal: 'Undeclared notation "{1}" referenced by &{2}; entity'
+		formatSignal: 'Undeclared notation "{1}" referenced by <!ENTITY {2} ...> declaration'
 		with: aNotation
 		with: anEntity
 ]
@@ -60,6 +70,18 @@ XMLUnparsedEntityValidator >> errorUndeclaredUnparsedEntityReference: anEntity i
 		formatSignal: 'Undeclared unparsed entity "{1}" in "{2}" attribute'
 		with: anEntity
 		with: anAttriubute
+]
+
+{ #category : #testing }
+XMLUnparsedEntityValidator >> hasNotationAttributeValidators [
+	"direct access to avoid lazy initialization"
+	^ notationAttributeValidators notNil
+		and: [notationAttributeValidators notEmpty]
+]
+
+{ #category : #accessing }
+XMLUnparsedEntityValidator >> notationAttributeValidators [
+	^ notationAttributeValidators ifNil: [notationAttributeValidators := Dictionary new]
 ]
 
 { #category : #accessing }
@@ -80,49 +102,44 @@ XMLUnparsedEntityValidator >> unparsedEntities [
 
 { #category : #validating }
 XMLUnparsedEntityValidator >> validateEntityReference: anEntity inAttribute: anAttribute [
-	| notation |
-
-	notation :=
-		self unparsedEntities
-			at: anEntity
-			ifAbsent: [
-				self
-					errorUndeclaredUnparsedEntityReference: anEntity
-					inAttribute: anAttribute].
-	(self notations includes: notation)
+	(self unparsedEntities includesKey: anEntity)
 		ifFalse: [
 			self
-				errorUndeclaredNotation: notation
-				inEntity: anEntity]
+				errorUndeclaredUnparsedEntityReference: anEntity
+				inAttribute: anAttribute]
 ]
 
 { #category : #validating }
-XMLUnparsedEntityValidator >> validateNotationAttribute: anAttribute forElement: anElement [
-	| oldSize |
-
-	"checking size after is faster than includes"
-	oldSize := self elementsAndNotationAttributes size.
-	(self elementsAndNotationAttributes
-		at: anElement
-		put: anAttribute;
-		size) > oldSize
-		ifFalse: [self errorMultipleNotationAttributesForElement: anElement].
-]
-
-{ #category : #validating }
-XMLUnparsedEntityValidator >> validateNotationDeclaration: aNotation [
+XMLUnparsedEntityValidator >> validateNotation: aNotation [
 	"Unlike redundant entity declarations which are just ignored, redundant
 	notation declarations are invalid"
-
 	(self notations includes: aNotation)
 		ifTrue: [self errorMultipleDeclarationsForNotation: aNotation]
 ]
 
 { #category : #validating }
-XMLUnparsedEntityValidator >> validateNotationReference: aNotation inAttribute: anAttribute [
-	(self notations includes: aNotation)
-		ifFalse: [
-			self
-				errorUndeclaredNotation: aNotation
-				inAttribute: anAttribute]
+XMLUnparsedEntityValidator >> validateNotationAttributes [
+	"this validatin has to be delayed until the entire DTD
+	is processed so NOTATION attributes can be declared before
+	the notations in their enumeration are"
+	self notationAttributeValidators valuesDo: [:validator |
+		validator allowedValues do: [:each |
+			(self notations includes: each)
+				ifFalse: [
+					self
+						errorUndeclaredNotation: each
+						inAttribute: validator attribute]]]
+]
+
+{ #category : #validating }
+XMLUnparsedEntityValidator >> validateUnparsedEntities [
+	"this validatin has to be delayed until the entire DTD
+	is processed so unparsed entities can be declared before
+	their notations"
+	self unparsedEntities valuesDo: [:each |
+		(self notations includes: each ndata)
+			ifFalse: [
+				self
+					errorUndeclaredNotation: each ndata
+					inEntity: each name]]
 ]

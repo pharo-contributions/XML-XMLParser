@@ -131,6 +131,13 @@ SAXParserDriver >> errorUndeclaredParameterEntity: aName [
 		with: aName
 ]
 
+{ #category : #private }
+SAXParserDriver >> errorUnparsedGeneralEntityReference: aName [
+	XMLWellFormednessException
+		formatSignal: 'Illegal unparsed general entity reference &{1};'
+		with: aName
+]
+
 { #category : #accessing }
 SAXParserDriver >> externalEntityResolver [
 	^ self saxHandler externalEntityResolver
@@ -259,6 +266,9 @@ SAXParserDriver >> handleEndDTD [
 	self hasExternalSubsetToParse
 		ifTrue: [self parseExternalSubset].
 
+	self isValidating
+		ifTrue: [self doctypeDefinition validateCompletedDefinition].
+
 	self saxHandler
 		doctypeDefinition: self doctypeDefinition;
 		endDTD.
@@ -337,15 +347,21 @@ SAXParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplaceme
 
 { #category : #handling }
 SAXParserDriver >> handleGeneralEntityReference: aName [
-	^ self doctypeDefinition
-		generalEntityAt: aName
-		ifAbsent: [
-			self isValidating
-				ifTrue: [self errorUndeclaredGeneralEntity: aName]
-				ifFalse: [
-					self isStandalone
-						ifTrue: [self errorStandaloneUndeclaredGeneralEntity: aName]].
-			nil]
+	| entity |
+
+	entity :=
+		self doctypeDefinition
+			generalEntityAt: aName
+			ifAbsent: [
+				self isValidating
+					ifTrue: [self errorUndeclaredGeneralEntity: aName]
+					ifFalse: [
+						self isStandalone
+							ifTrue: [self errorStandaloneUndeclaredGeneralEntity: aName]].
+				^ nil].
+	entity isUnparsed
+		ifTrue: [self errorUnparsedGeneralEntityReference: aName].
+	^ entity.
 ]
 
 { #category : #'handling - dtd' }
@@ -360,7 +376,7 @@ SAXParserDriver >> handleNotationDeclaration: aName publicID: aPublicID systemID
 	self isValidating
 		ifTrue: [
 			self doctypeDefinition unparsedEntityValidator
-				validateNotationDeclaration: aName].
+				validateNotation: aName].
 	self doctypeDefinition addNotation: aName.
 
 	self saxHandler

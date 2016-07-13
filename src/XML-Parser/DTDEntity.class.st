@@ -60,6 +60,11 @@ DTDEntity >> isParameter [
 	^ false
 ]
 
+{ #category : #testing }
+DTDEntity >> isUnparsed [
+	^ false
+]
+
 { #category : #accessing }
 DTDEntity >> name [
 	^ name ifNil: [name := '']

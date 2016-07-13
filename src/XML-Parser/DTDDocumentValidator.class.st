@@ -17,8 +17,8 @@ DTDDocumentValidator class >> doctypeDefinition: aDoctypeDefinition [
 
 { #category : #accessing }
 DTDDocumentValidator >> attributeValidatorsFor: anElement [
-	^ self doctypeDefinition attributeValidators
-		at: anElement
+	^ self doctypeDefinition
+		attributeValidatorsAt: anElement
 		ifAbsent: [nil]
 ]
 
@@ -34,8 +34,8 @@ DTDDocumentValidator >> doctypeDefinition: aDoctypeDefinition [
 
 { #category : #accessing }
 DTDDocumentValidator >> elementValidatorFor: anElement [
-	^ (self doctypeDefinition elementValidators
-		at: anElement
+	^ (self doctypeDefinition
+		elementValidatorsAt: anElement
 		ifAbsent: [nil]) copy
 ]
 

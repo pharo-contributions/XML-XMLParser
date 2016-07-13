@@ -53,6 +53,7 @@ XMLIDAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
 { #category : #validating }
 XMLIDAttributeValidator >> validateAttributeDeclaration [
 	super validateAttributeDeclaration.
+
 	self elementIDValidator
 		validateIDAttribute: self attribute
 		forElement: self element.
