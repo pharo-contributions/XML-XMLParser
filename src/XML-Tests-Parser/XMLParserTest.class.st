@@ -1058,6 +1058,34 @@ XMLParserTest >> testAttributeNotationDeclaration [
 ]
 
 { #category : #tests }
+XMLParserTest >> testAttributeNotationDeclarationDeclared [
+	| xmlTemplate |
+
+	xmlTemplate := '
+		<!DOCTYPE root [
+			<!NOTATION txtFile PUBLIC "//file.txt//">
+			<!NOTATION confFile PUBLIC "//file.conf//">
+			<!ELEMENT root ANY>
+			<!ATTLIST root note NOTATION {1} #IMPLIED>
+		]><root note="txtFile"/>'.
+
+	"event if the value used in the attribute is declared, all values
+	in the NOTATION enumeration list must be declared too"
+	#('(txtFile | htmlFile)' '(zipFile)' '(htmlFile | confFile)')
+		do: [:each | | xml |
+			xml := xmlTemplate format: (Array with: each).
+			self
+				should: [SAXHandler parse: xml]
+				raise: XMLValidationException.
+			self
+				shouldnt: [
+					(SAXHandler on: xml)
+						isValidating: false;
+						parseDocument]
+				raise: XMLValidationException].
+]
+
+{ #category : #tests }
 XMLParserTest >> testAttributeNotationDeclarationListValueRedundance [
 	| xml |
 
@@ -1416,6 +1444,7 @@ XMLParserTest >> testAttributeXMLSpaceValidation [
 		'ENTITY'
 		'ENTITIES'
 		'(default|preserve|other)'
+		'(default|preserve|default)'
 		'NOTATION (default|preserve)')
 		do: [:each |
 			xml := xmlTemplate format: (Array with: each).
@@ -4320,7 +4349,7 @@ XMLParserTest >> testSystemIDBadChar [
 ]
 
 { #category : #tests }
-XMLParserTest >> testUnparsedEntities [
+XMLParserTest >> testUnparsedEntity [
 	| dtd |
 
 	dtd := '
@@ -4339,15 +4368,53 @@ XMLParserTest >> testUnparsedEntities [
 ]
 
 { #category : #tests }
-XMLParserTest >> testUnparsedEntitiesUndeclaredNotations [
+XMLParserTest >> testUnparsedEntityDeclarationRedundance [
+	| dtd |
+
+	dtd :=
+		'<!DOCTYPE test [
+			<!ELEMENT test ANY>
+			<!ATTLIST test
+				name CDATA #IMPIED>
+			<!NOTATION external-note SYSTEM "external.txt">
+			<!ENTITY external-ent SYSTEM "external.txt" NDATA external-note>
+			<!ENTITY external-ent "value">
+		]>'.
+	#('<test>&external-ent;</test>' '<test name="&external-ent;"></test>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: dtd, each]
+				raise: XMLWellFormednessException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testUnparsedEntityReference [
+	| dtd |
+
+	dtd :=
+		'<!DOCTYPE test [
+			<!ELEMENT test ANY>
+			<!ATTLIST test
+				name CDATA #IMPIED>
+			<!NOTATION external-note SYSTEM "external.txt">
+			<!ENTITY external-ent SYSTEM "external.txt" NDATA external-note>
+		]>'.
+	#('<test>&external-ent;</test>' '<test name="&external-ent;"></test>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: dtd, each]
+				raise: XMLWellFormednessException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testUnparsedEntityUndeclaredNotations [
 	| beforeNotation afterNotation |
 
 	beforeNotation := '
-		<!DOCTYPE entity [
-			<!ELEMENT entity EMPTY>
-			<!ATTLIST entity name ENTITY #REQUIRED>
+		<!DOCTYPE test [
+			<!ELEMENT test EMPTY>
 			<!ENTITY notationEntity SYSTEM "note.txt" NDATA note>'.
-	afterNotation := ']><entity name="notationEntity"/>'.
+	afterNotation := ']><test/>'.
 	self
 		should: [SAXHandler parse: beforeNotation, afterNotation]
 		raise: XMLValidationException.
