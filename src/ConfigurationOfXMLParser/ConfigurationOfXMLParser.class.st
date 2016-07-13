@@ -849,7 +849,7 @@ ConfigurationOfXMLParser >> release277: spec [
 	<symbolicVersion: #'release-2.7.7'>
 
 	"Users should prefer #stable unless they rely on XMLParser internals"
-	spec for: #'common' version: '2.7.9'.
+	spec for: #'common' version: '2.8.0'.
 ]
 
 { #category : #'symbolic versions' }
@@ -2808,5 +2808,16 @@ ConfigurationOfXMLParser >> version279: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.357'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.165'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version280: spec [ 
+        <version: '2.8.0' imports: #('2.7.7-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.358'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.166'.
                 ].
 ]
