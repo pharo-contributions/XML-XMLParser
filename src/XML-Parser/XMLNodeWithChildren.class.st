@@ -237,7 +237,7 @@ XMLNodeWithChildren >> firstNode [
 XMLNodeWithChildren >> hasChildren [
 	"optimized with nil test and size check to avoid lazy initializing"
 	nodes == nil
-		ifTrue: [^ false ].
+		ifTrue: [^ false].
 	^ nodes size > 0.
 ]
 

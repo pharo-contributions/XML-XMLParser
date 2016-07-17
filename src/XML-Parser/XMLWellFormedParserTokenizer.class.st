@@ -183,20 +183,28 @@ XMLWellFormedParserTokenizer >> errorEntityDepthLimitExceeded [
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpectedAttributeNameValueSeparator [
-	self errorExpected: 'attribute name-value "=" separator'
+XMLWellFormedParserTokenizer >> errorExpectedAttributeNameValueSeparatorButGot: aCharacter [
+	self
+		errorExpected: 'attribute name-value "=" separator'
+		butGot: aCharacter
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpectedAttributeValueEndButGot: aCharacter [
+XMLWellFormedParserTokenizer >> errorExpectedAttributeValueEnd: aQuote butGot: aCharacter [
 	aCharacter == $<
 		ifTrue: [self parseError: 'Attribute value contains illegal "<" character']
-		ifFalse: [self errorExpected: 'end of quoted attribute value']
+		ifFalse: [
+			self
+				errorExpectedQuote: aQuote
+				ending: 'attribute value'
+				butGot: aCharacter]
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpectedAttributeValueStart [
-	self errorExpected: 'start of quoted attribute value'
+XMLWellFormedParserTokenizer >> errorExpectedAttributeValueStartButGot: aCharacter [
+	self
+		errorExpectedQuoteStarting: 'attribute value'
+		butGot: aCharacter
 ]
 
 { #category : #errors }
@@ -207,6 +215,14 @@ XMLWellFormedParserTokenizer >> errorExpectedCDataSectionTerminator [
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorExpectedEncodingName [
 	self errorExpected: 'encoding name in <?xml ...?> encoding attribute'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedEntityValueEnd: aQuote butGot: aCharacter [
+	self
+		errorExpectedQuote: aQuote
+		ending: 'entity value'
+		butGot: aCharacter
 ]
 
 { #category : #errors }
@@ -251,10 +267,40 @@ XMLWellFormedParserTokenizer >> errorExpectedNmtoken [
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorExpectedQuoteButGot: aCharacter [
+XMLWellFormedParserTokenizer >> errorExpectedPublicIDLiteralEnd: aQuote butGot: aCharacter [
 	self
-		errorExpected: 'single ('') or double (") quote character delimiter'
+		errorExpectedQuote: aQuote
+		ending: 'public ID literal'
 		butGot: aCharacter
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedPublicIDLiteralStartButGot: aCharacter [
+	self
+		errorExpectedQuoteStarting: 'public ID literal'
+		butGot: aCharacter
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedQuote: aQuote ending: aDescription butGot: aCharacter [
+	self
+		formatParseError: 'Expected end of {1} ({2}) quoted {3} but got "{4}"'
+		with:
+			(aQuote == $"
+				ifTrue: ['double']
+				ifFalse: ['single'])
+		with: aQuote
+		with: aDescription
+		with: (aCharacter ifNil: [''])
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedQuoteStarting: aDescription butGot: aCharacter [
+	self
+		formatParseError:
+			'Expected start of double (") or single ('') quoted {2} but got "{2}"'
+		with: aDescription
+		with: (aCharacter ifNil: [''])
 ]
 
 { #category : #errors }
@@ -269,9 +315,76 @@ XMLWellFormedParserTokenizer >> errorExpectedSubsetDeclaration [
 ]
 
 { #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedSystemIDLiteralEnd: aQuote butGot: aCharacter [
+	self
+		errorExpectedQuote: aQuote
+		ending: 'system ID literal'
+		butGot: aCharacter
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedSystemIDLiteralStartButGot: aCharacter [
+	self
+		errorExpectedQuoteStarting: 'system ID literal'
+		butGot: aCharacter
+]
+
+{ #category : #errors }
 XMLWellFormedParserTokenizer >> errorExpectedTerminatorButGot: aCharacter [
 	self
 		errorExpected: '">" terminator'
+		butGot: aCharacter
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedVersionDigitButGot: aCharacter [
+	self
+		errorExpected: 'XML version digit'
+		butGot: aCharacter
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedXMLEncodingValueEnd: aQuote butGot: aCharacter [
+	self
+		errorExpectedQuote: aQuote
+		ending: '<?xml ...?> encoding value'
+		butGot: aCharacter
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedXMLEncodingValueStartButGot: aCharacter [
+	self
+		errorExpectedQuoteStarting: '<?xml ...?> encoding value'
+		butGot: aCharacter
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedXMLStandaloneValueEnd: aQuote butGot: aCharacter [
+	self
+		errorExpectedQuote: aQuote
+		ending: '<?xml ...?> standalone value'
+		butGot: aCharacter
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedXMLStandaloneValueStartButGot: aCharacter [
+	self
+		errorExpectedQuoteStarting: '<?xml ...?> standalone value'
+		butGot: aCharacter
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedXMLVersionValueEnd: aQuote butGot: aCharacter [
+	self
+		errorExpectedQuote: aQuote
+		ending: '<?xml ...?> version value'
+		butGot: aCharacter
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorExpectedXMLVersionValueStartButGot: aCharacter [
+	self
+		errorExpectedQuoteStarting: '<?xml ...?> version value'
 		butGot: aCharacter
 ]
 
@@ -452,16 +565,6 @@ XMLWellFormedParserTokenizer >> expectNextAll: aString startingAt: aPosition [
 ]
 
 { #category : #'tokenizing - expecting' }
-XMLWellFormedParserTokenizer >> expectQuote [
-	| nextChar |
-
-	((nextChar := streamReader next) == $"
-		or: [nextChar == $'])
-		ifFalse: [self errorExpectedQuoteButGot: nextChar].
-	^ nextChar.
-]
-
-{ #category : #'tokenizing - expecting' }
 XMLWellFormedParserTokenizer >> expectSeparators [
 	"nil understands isXMLSeparator so no nil test is needed"
 	streamReader next isXMLSeparator
@@ -497,12 +600,9 @@ XMLWellFormedParserTokenizer >> expectTerminator [
 XMLWellFormedParserTokenizer >> expectVersionDigit [
 	| nextChar |
 
-	((nextChar := streamReader next) notNil
-		and: [VersionDigitChars includes: nextChar])
-		ifFalse: [
-			self
-				errorExpected: 'XML version digit'
-				butGot: nextChar].
+	((nextChar := streamReader next) == nil
+		or: [(VersionDigitChars includes: nextChar) not])
+		ifTrue: [self errorExpectedVersionDigitButGot: nextChar].
 	^ nextChar.
 ]
 
@@ -706,7 +806,7 @@ XMLWellFormedParserTokenizer >> nextAttributeValue [
 
 	((quote := streamReader next) == $"
 		or: [quote == $'])
-		ifFalse: [self errorExpectedAttributeValueStart].
+		ifFalse: [self errorExpectedAttributeValueStartButGot: quote].
 	
 	context enterLiteralValue.
 	writeStream reset.
@@ -728,7 +828,10 @@ XMLWellFormedParserTokenizer >> nextAttributeValue [
 	context exitLiteralValue.
 
 	nextChar == quote
-		ifFalse: [self errorExpectedAttributeValueEndButGot: nextChar].
+		ifFalse: [
+			self
+				errorExpectedAttributeValueEnd: quote
+				butGot: nextChar].
 
 	^ writeStream contents.
 ]
@@ -1040,12 +1143,13 @@ XMLWellFormedParserTokenizer >> nextEntityValue [
 	| quote nextChar |
 
 	quote := streamReader next.
+
 	context enterLiteralValue.
 	writeStream reset.
-	[(nextChar := streamReader peek) == quote
+	[(nextChar := streamReader next) == quote
 		or: [nextChar == nil]]
 		whileFalse: [
-			streamReader next == $&
+			nextChar == $&
 				ifTrue: [
 					streamReader peek == $#
 						ifTrue: [
@@ -1068,7 +1172,12 @@ XMLWellFormedParserTokenizer >> nextEntityValue [
 								ifFalse: [self errorNonCharInEntityValue: nextChar].
 							writeStream nextPut: nextChar]]].
 	context exitLiteralValue.
-	self expectNext: quote.
+
+	nextChar == quote
+		ifFalse: [
+			self
+				errorExpectedEntityValueEnd: quote
+				butGot: nextChar].
 
 	^ writeStream contents.
 ]
@@ -1380,7 +1489,7 @@ XMLWellFormedParserTokenizer >> nextPCDataToken [
 XMLWellFormedParserTokenizer >> nextPITarget [
 	| target |
 
-	(target := self nextName) size = 3
+	(target := self nextName) size = 3 "optimization"
 		ifTrue: [
 			target = 'xml'
 				ifTrue: [
@@ -1473,13 +1582,25 @@ XMLWellFormedParserTokenizer >> nextPublicIDInDeclaration [
 XMLWellFormedParserTokenizer >> nextPublicIDLiteral [
 	| quote nextChar |
 
-	quote := self expectQuote.
+	((quote := streamReader next) == $"
+		or: [quote == $'])
+		ifFalse: [self errorExpectedPublicIDLiteralStartButGot: quote].
+
 	writeStream reset.
-	[(nextChar := streamReader peek) == nil
-		or: [nextChar == quote "duoble quoted pubids can contain subquotes"
+	"it's not enough to test for nil and PublicIDChars inclusion because
+	(PublicIDChars includes: $') = true (double quoted pubids can contain
+	single quotes), so the terminating quote must be tested for first to
+	handle single quoted pubids correctly"
+	[(nextChar := streamReader next) == nil
+		or: [nextChar == quote
 			or: [(PublicIDChars includes: nextChar) not]]]
-		whileFalse: [writeStream nextPut: streamReader next].
-	self expectNext: quote.
+		whileFalse: [writeStream nextPut: nextChar].
+
+	nextChar == quote
+		ifFalse: [
+			self
+				errorExpectedPublicIDLiteralEnd: quote
+				butGot: nextChar].
 
 	^ writeStream contents.
 ]
@@ -1556,16 +1677,24 @@ XMLWellFormedParserTokenizer >> nextSystemIDInDeclaration [
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextSystemIDLiteral [
 	| quote nextChar |
-	
-	quote := self expectQuote.
+
+	((quote := streamReader next) == $"
+		or: [quote == $'])
+		ifFalse: [self errorExpectedSystemIDLiteralStartButGot: quote].
+
 	writeStream reset.
-	[(nextChar := streamReader peek) == nil
+	[(nextChar := streamReader next) == nil
 		or: [nextChar == quote]]
 		whileFalse: [
 			nextChar isXMLChar
 				ifFalse: [self errorNonCharInSystemID: nextChar].
-			writeStream nextPut: streamReader next].
-	self expectNext: quote.
+			writeStream nextPut: nextChar].
+
+	nextChar == quote
+		ifFalse: [
+			self
+				errorExpectedSystemIDLiteralEnd: quote
+				butGot: nextChar].
 
 	^ writeStream contents.
 ]
@@ -1590,8 +1719,9 @@ XMLWellFormedParserTokenizer >> nextTag [
 		whileTrue: [| attributeName |
 			attributeName := self nextName.
 			streamReader skipSeparators.
-			streamReader next == $=
-				ifFalse: [self errorExpectedAttributeNameValueSeparator].
+			(nextChar := streamReader next) == $=
+				ifFalse: [
+					self errorExpectedAttributeNameValueSeparatorButGot: nextChar].
 			streamReader skipSeparators.
 
 			"delay initializing attributes until now to know for sure if it
@@ -1638,41 +1768,58 @@ XMLWellFormedParserTokenizer >> nextUnreplacedGeneralEntityOnWriteStreamNamed: a
 XMLWellFormedParserTokenizer >> nextXMLEncodingAttributeValue [
 	| quote nextChar |
 
-	quote := self expectQuote.
+	((quote := streamReader next) == $"
+		or: [quote == $'])
+		ifFalse: [self errorExpectedXMLEncodingValueStartButGot: quote].
+
 	((nextChar := streamReader next) notNil
 		and: [EncodingNameStartChars includes: nextChar])
 		ifFalse: [self errorExpectedEncodingName].
 	writeStream
 		reset;
 		nextPut: nextChar.
-
-	[(nextChar := streamReader peek) == nil
+	[(nextChar := streamReader next) == nil
 		or: [(EncodingNameChars includes: nextChar) not]]
-		whileFalse: [writeStream nextPut: streamReader next].
-	self expectNext: quote.
+		whileFalse: [writeStream nextPut: nextChar].
+
+	nextChar == quote
+		ifFalse: [
+			self
+				errorExpectedXMLEncodingValueEnd: quote
+				butGot: nextChar].
 
 	^ writeStream contents.
 ]
 
 { #category : #tokenizing }
 XMLWellFormedParserTokenizer >> nextXMLStandaloneAttributeValue [
-	| quote yesOrNo |
+	| quote yesOrNo nextChar |
 
-	quote := self expectQuote.
+	((quote := streamReader next) == $"
+		or: [quote == $'])
+		ifFalse: [self errorExpectedXMLStandaloneValueStartButGot: quote].
+
 	yesOrNo := 
 		streamReader peek == $y
 			ifTrue: [self expectNextAll: 'yes']
 			ifFalse: [self expectNextAll: 'no'].
-	self expectNext: quote.
+
+	(nextChar := streamReader next) == quote
+		ifFalse: [
+			self
+				errorExpectedXMLStandaloneValueEnd: quote
+				butGot: nextChar].
 
 	^ yesOrNo.
 ]
 
 { #category : #tokenizing }
 XMLWellFormedParserTokenizer >> nextXMLVersionAttributeValue [
-	| quote |
+	| quote nextChar |
 
-	quote := self expectQuote.
+	((quote := streamReader next) == $"
+		or: [quote == $'])
+		ifFalse: [self errorExpectedXMLVersionValueStartButGot: quote].
 
 	writeStream
 		reset;
@@ -1680,11 +1827,16 @@ XMLWellFormedParserTokenizer >> nextXMLVersionAttributeValue [
 		nextPut: (self expectNext: $.);
 		nextPut: self expectVersionDigit.
 
-	[streamReader atEnd
-		or: [streamReader peek == quote]]
-		whileFalse: [writeStream nextPut: self expectVersionDigit].
+	[(nextChar := streamReader next) == nil
+		or: [(VersionDigitChars includes: nextChar) not]]
+		whileFalse: [writeStream nextPut: nextChar].
 
-	self expectNext: quote.
+	nextChar == quote
+		ifFalse: [
+			self
+				errorExpectedXMLVersionValueEnd: quote
+				butGot: nextChar].
+
 	^ writeStream contents.
 ]
 

@@ -12,7 +12,7 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : #private }
 XMLOrderedList class >> collection: aCollection [
 	^ self basicNew setCollection: aCollection
 ]
@@ -502,7 +502,10 @@ XMLOrderedList >> fifth [
 
 { #category : #accessing }
 XMLOrderedList >> first [
-	^ self at: 1
+	"optimized implementation"
+	^ collection size > 0
+		ifTrue: [collection at: 1]
+		ifFalse: [self defaultValue]
 ]
 
 { #category : #accessing }
@@ -598,7 +601,12 @@ XMLOrderedList >> isSequenceable [
 
 { #category : #accessing }
 XMLOrderedList >> last [
-	^ self at: self size
+	| lastIndex |
+
+	"optimized implementation"
+	^ (lastIndex := collection size) > 0
+		ifTrue: [collection at: lastIndex]
+		ifFalse: [self defaultValue]
 ]
 
 { #category : #accessing }

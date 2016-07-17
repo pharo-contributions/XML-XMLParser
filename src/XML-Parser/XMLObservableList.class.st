@@ -11,8 +11,8 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLObservableList class >> observer: anObject [
-	^ self new observer: anObject
+XMLObservableList class >> observer: anObserver [
+	^ self new observer: anObserver
 ]
 
 { #category : #'instance creation' }

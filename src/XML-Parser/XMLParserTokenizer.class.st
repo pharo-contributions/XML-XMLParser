@@ -147,11 +147,11 @@ XMLParserTokenizer >> errorExpectedLiteral: aCharacterOrString [
 ]
 
 { #category : #errors }
-XMLParserTokenizer >> errorExpectedLiteral: anExpectedCharacterOrString butGot: anReceivedCharacterOrString [
+XMLParserTokenizer >> errorExpectedLiteral: anExpectedCharacterOrString butGot: aReceivedCharacterOrString [
 	self
 		formatParseError: 'Expected "{1}" but got "{2}"' 
 		with: anExpectedCharacterOrString
-		with: (anReceivedCharacterOrString ifNil: [''])
+		with: (aReceivedCharacterOrString ifNil: [''])
 ]
 
 { #category : #'tokenizing - expecting' }
