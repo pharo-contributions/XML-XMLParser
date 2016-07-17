@@ -235,7 +235,7 @@ ConfigurationOfXMLParserStAX >> baseline122: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.7.7' ]
+			spec project: 'XMLParser' with: #'release-2.8.1' ]
 ]
 
 { #category : #accessing }
