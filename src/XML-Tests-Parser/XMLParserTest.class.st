@@ -1490,10 +1490,15 @@ XMLParserTest >> testCDataOutsideElement [
 { #category : #tests }
 XMLParserTest >> testCDataSectionUnterminated [
 	#('<test><!['
+		'<test><![</test>'
 		'<test><![CDATA['
+		'<test><![CDATA[</test>'
 		'<test><![CDATA[ test'
+		'<test><![CDATA[ test</test>'
 		'<test><![CDATA[ test ]'
-		'<test><![CDATA[ test ]]')
+		'<test><![CDATA[ test ]</test>'
+		'<test><![CDATA[ test ]]'
+		'<test><![CDATA[ test ]]</test>')
 		do: [:each | 
 			self
 				should: [SAXHandler parse: each]
@@ -1502,10 +1507,17 @@ XMLParserTest >> testCDataSectionUnterminated [
 
 { #category : #tests }
 XMLParserTest >> testCharacterReferenceUnterminated [
-	#('<test>&#</test>'
+	#('<test>&#'
+		'<test>&#</test>'
+		'<test>&#x'
+		'<test>&#x</test>'
+		'<test>&#34'
 		'<test>&#34</test>'
+		'<test>&#x22'
 		'<test>&#x22</test>'
+		'<test>&#;'
 		'<test>&#;</test>'
+		'<test>&#x;'
 		'<test>&#x;</test>')
 		do: [:each | 
 			self
@@ -1541,9 +1553,18 @@ XMLParserTest >> testCommentBadChar [
 { #category : #tests }
 XMLParserTest >> testCommentUnterminated [
 	#('<!--' '<!-- comment' '<!-- comment -' '<!-- comment --')
-		do: [:each | 
+		do: [:each |
 			self
 				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException.
+			self
+				should: [SAXHandler parse: each, '<test/>']
+				raise: XMLWellFormednessException.
+			self
+				should: [SAXHandler parse: '<test/>', each]
+				raise: XMLWellFormednessException.
+			self
+				should: [SAXHandler parse: '<test>', each, '<test/>']
 				raise: XMLWellFormednessException]
 ]
 
@@ -1813,6 +1834,7 @@ XMLParserTest >> testContentlessDocument [
 		' 	'
 		'<?xml version="1.0"?>'
 		'	<!DOCTYPE test>'
+		'	<!DOCTYPE test [<!--comment-->]>'
 		'	<!--comment-->'
 		'	<?target data?>'
 		'<?xml version="1.0"?><!DOCTYPE test>'
@@ -1821,6 +1843,9 @@ XMLParserTest >> testContentlessDocument [
 		do: [:each |
 			self
 				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException.
+			self
+				shouldnt: [SAXHandler parse: each, '<test/>']
 				raise: XMLWellFormednessException]
 ]
 
@@ -1916,21 +1941,51 @@ XMLParserTest >> testDoctypeDeclarationUnterminated [
 		'<!DOCTYPE test'
 		'<!DOCTYPE test PUBLIC'
 		'<!DOCTYPE test PUBLIC>'
-		'<!DOCTYPE test PUBLIC "pubid'
-		'<!DOCTYPE test PUBLIC "pubid>'
-		'<!DOCTYPE test PUBLIC "pubid"'
-		'<!DOCTYPE test PUBLIC "pubid">'
-		'<!DOCTYPE test PUBLIC "pubid" "sysid'
-		'<!DOCTYPE test PUBLIC "pubid" "sysid>'
-		'<!DOCTYPE test PUBLIC "pubid" "sysid"'
+		'<!DOCTYPE test PUBLIC "'
+		'<!DOCTYPE test PUBLIC ">'
+		'<!DOCTYPE test PUBLIC "publicid'
+		'<!DOCTYPE test PUBLIC "publicid"'
+		'<!DOCTYPE test PUBLIC "publicid">'
+		'<!DOCTYPE test PUBLIC '''
+		'<!DOCTYPE test PUBLIC ''>'
+		'<!DOCTYPE test PUBLIC ''publicid'
+		'<!DOCTYPE test PUBLIC ''publicid'''
+		'<!DOCTYPE test PUBLIC "publicid">'
+		'<!DOCTYPE test PUBLIC "publicid" "'
+		'<!DOCTYPE test PUBLIC "publicid" ">'
+		'<!DOCTYPE test PUBLIC "publicid" "systemid'
+		'<!DOCTYPE test PUBLIC "publicid" "systemid"'
+		'<!DOCTYPE test PUBLIC "publicid" '''
+		'<!DOCTYPE test PUBLIC "publicid" ''>'
+		'<!DOCTYPE test PUBLIC "publicid" ''systemid'
+		'<!DOCTYPE test PUBLIC "publicid" ''systemid'''
+		'<!DOCTYPE test PUBLIC "publicid" "systemid''>'
+		'<!DOCTYPE test PUBLIC "publicid" ''systemid">'
+		'<!DOCTYPE test PUBLIC "publicid" "systemid" ['
+		'<!DOCTYPE test PUBLIC "publicid" "systemid" [>'
+		'<!DOCTYPE test PUBLIC "publicid" "systemid" []'
 		'<!DOCTYPE test SYSTEM'
-		'<!DOCTYPE test SYSTEM "sysid'
-		'<!DOCTYPE test SYSTEM "sysid>'
-		'<!DOCTYPE test SYSTEM "sysid"'
+		'<!DOCTYPE test SYSTEM>'
+		'<!DOCTYPE test SYSTEM "'
+		'<!DOCTYPE test SYSTEM ">'
+		'<!DOCTYPE test SYSTEM "systemid'
+		'<!DOCTYPE test SYSTEM "systemid"'
+		'<!DOCTYPE test SYSTEM '''
+		'<!DOCTYPE test SYSTEM ''>'
+		'<!DOCTYPE test SYSTEM ''systemid'
+		'<!DOCTYPE test SYSTEM ''systemid'''
+		'<!DOCTYPE test SYSTEM "systemid''>'
+		'<!DOCTYPE test SYSTEM ''systemid">'
+		'<!DOCTYPE test SYSTEM "systemid" ['
+		'<!DOCTYPE test SYSTEM "systemid" [>'
+		'<!DOCTYPE test SYSTEM "systemid" []'
 		'<!DOCTYPE test ['
 		'<!DOCTYPE test [>'
 		'<!DOCTYPE test []')
-		do: [:each | 
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException.
 			self
 				should: [SAXHandler parse: each, '<test/>']
 				raise: XMLWellFormednessException]
@@ -2548,7 +2603,11 @@ XMLParserTest >> testElementNesting [
 
 { #category : #tests }
 XMLParserTest >> testElementUnterminatedEndTag [
-	#('<test></' '<test></test' '<test></ test' '<test></ test>')
+	#('<test><'
+		'<test></'
+		'<test></test'
+		'<test></ test'
+		'<test></ test>')
 		do: [:each | 
 			self
 				should: [SAXHandler parse: each]
@@ -2557,9 +2616,36 @@ XMLParserTest >> testElementUnterminatedEndTag [
 
 { #category : #tests }
 XMLParserTest >> testElementUnterminatedStartTag [
-	#('<' '<test' '<test name'
-		'<test name=' '<test name="value' '<test name="value"'
-		'<test name="value" /')
+	#('<'
+		'<></>'
+		'</>'
+		'<test'
+		'<test</test>'
+		'<test/'
+		'<test name'
+		'<test name></test>'
+		'<test name/>'
+		'<test name='
+		'<test name=></test>'
+		'<test name=/>'
+		'<test name="'
+		'<test name="></test>'
+		'<test name="/>'
+		'<test name="value'
+		'<test name="value"'
+		'<test name="value"</test>'
+		'<test name="value"/'
+		'<test name='''
+		'<test name=''></test>'
+		'<test name=''/>'
+		'<test name=''value'
+		'<test name=''value'''
+		'<test name=''value''</test>'
+		'<test name=''value''/'
+		'<test name="value''></test>'
+		'<test name=''value"></test>'
+		'<test name="value''/>'
+		'<test name=''value"/>')
 		do: [:each | 
 			self
 				should: [SAXHandler parse: each]
@@ -2633,6 +2719,76 @@ XMLParserTest >> testEntityDeclarationBadName [
 ]
 
 { #category : #tests }
+XMLParserTest >> testEntityDeclarationUnterminated [
+	#('<!ENTITY'
+		'<!ENTITY>'
+		'<!ENTITY name'
+		'<!ENTITY name>'
+		'<!ENTITY name "'
+		'<!ENTITY name ">'
+		'<!ENTITY name "value'
+		'<!ENTITY name "value"'
+		'<!ENTITY name '''
+		'<!ENTITY name ''>'
+		'<!ENTITY name ''value'
+		'<!ENTITY name ''value'''
+		'<!ENTITY name "value''>'
+		'<!ENTITY name ''value">'
+		'<!ENTITY name PUBLIC'
+		'<!ENTITY name PUBLIC>'
+		'<!ENTITY name PUBLIC "'
+		'<!ENTITY name PUBLIC ">'
+		'<!ENTITY name PUBLIC "publicid"'
+		'<!ENTITY name PUBLIC "publicid">'
+		'<!ENTITY name PUBLIC '''
+		'<!ENTITY name PUBLIC ''>'
+		'<!ENTITY name PUBLIC ''publicid'''
+		'<!ENTITY name PUBLIC ''publicid''>'
+		'<!ENTITY name PUBLIC "publicid''>'
+		'<!ENTITY name PUBLIC ''publicid">'
+		'<!ENTITY name PUBLIC "publicid" "'
+		'<!ENTITY name PUBLIC "publicid" ">'
+		'<!ENTITY name PUBLIC "publicid" "systemid'
+		'<!ENTITY name PUBLIC "publicid" "systemid"'
+		'<!ENTITY name PUBLIC "publicid" '''
+		'<!ENTITY name PUBLIC "publicid" ''>'
+		'<!ENTITY name PUBLIC "publicid" ''systemid'
+		'<!ENTITY name PUBLIC "publicid" ''systemid'''
+		'<!ENTITY name PUBLIC "publicid" "systemid''>'
+		'<!ENTITY name PUBLIC "publicid" ''systemid">'
+		'<!ENTITY name SYSTEM'
+		'<!ENTITY name SYSTEM>'
+		'<!ENTITY name SYSTEM "'
+		'<!ENTITY name SYSTEM ">'
+		'<!ENTITY name SYSTEM "systemid'
+		'<!ENTITY name SYSTEM "systemid"'
+		'<!ENTITY name SYSTEM '''
+		'<!ENTITY name SYSTEM ''>'
+		'<!ENTITY name SYSTEM ''systemid'
+		'<!ENTITY name SYSTEM ''systemid'''
+		'<!ENTITY name SYSTEM "systemid''>'
+		'<!ENTITY name SYSTEM ''systemid">'
+		'<!ENTITY name SYSTEM "systemid''>'
+		'<!ENTITY name SYSTEM ''systemid">')
+		do: [:each |
+			self
+				should: [
+					SAXHandler parse:
+						'<!DOCTYPE test [
+							<!NOTATION gif SYSTEM "file.gif">',
+							each]
+				raise: XMLWellFormednessException.
+			self
+				should: [
+					SAXHandler parse:
+						'<!DOCTYPE test [
+							<!NOTATION gif SYSTEM "file.gif">',
+							each,
+						']><test/>']
+				raise: XMLWellFormednessException].
+]
+
+{ #category : #tests }
 XMLParserTest >> testEntityDeclarationValueBadChar [
 	self nonChars do: [:each |
 		self
@@ -2646,26 +2802,27 @@ XMLParserTest >> testEntityDeclarationValueBadChar [
 
 { #category : #tests }
 XMLParserTest >> testEntityDeclarationWhitespace [
-	#('<!DOCTYPE test [<!ENTITYname "value">]>'
-		'<!DOCTYPE test [<!ENTITY name"value">]>'
-		'<!DOCTYPE test [<!ENTITY name PUBLIC"publicid" "systemid">]>'
-		'<!DOCTYPE test [<!ENTITY name PUBLIC "publicid""systemid">]>'
-		'<!DOCTYPE test [<!ENTITY name SYSTEM"systemid">]>'
-		'<!DOCTYPE test [<!ENTITY name PUBLIC "publicid" "systemid"NDATA GIF>]>'
-		'<!DOCTYPE test [<!ENTITY name SYSTEM "systemid"NDATA GIF>]>'
-		'<!DOCTYPE test [<!ENTITY% name "value">]>'
-		'<!DOCTYPE test [<!ENTITY %name "value">]>')
+	#('<!ENTITYname "value">'
+		'<!ENTITY name"value">'
+		'<!ENTITY name PUBLIC"publicid" "systemid">'
+		'<!ENTITY name PUBLIC "publicid""systemid">'
+		'<!ENTITY name SYSTEM"systemid">'
+		'<!ENTITY name PUBLIC "publicid" "systemid"NDATA GIF>'
+		'<!ENTITY name SYSTEM "systemid"NDATA GIF>'
+		'<!ENTITY% name "value">'
+		'<!ENTITY %name "value">')
 		do: [:each |
 			self
-				should: [SAXHandler parse: each, '<test/>']
+				should: [SAXHandler parse: '<!DOCTYPE test [', each, ']><test/>']
 				raise: XMLWellFormednessException].
-	#('<!DOCTYPE test [<!ENTITY  name 	"value"   >]>'
-		'<!DOCTYPE test [<!ENTITY   % 	 name "value"	>]>'
-		'<!DOCTYPE test [<!ENTITY   name   PUBLIC   "publicid"    "systemid"   >]>'
-		'<!DOCTYPE test [<!ENTITY   name   SYSTEM    "systemid"   >]>')
+
+	#('<!ENTITY  name 	"value"   >'
+		'<!ENTITY   % 	 name "value"	>'
+		'<!ENTITY   name   PUBLIC   "publicid"    "systemid"   >'
+		'<!ENTITY   name   SYSTEM    "systemid"   >')
 		do: [:each |
 			self
-				shouldnt: [SAXHandler parse: each, '<test/>']
+				shouldnt: [SAXHandler parse: '<!DOCTYPE test [', each, ']><test/>']
 				raise: XMLWellFormednessException].
 ]
 
@@ -3548,8 +3705,11 @@ XMLParserTest >> testEntityReferenceUnterminated [
 		'<!DOCTYPE test [
 			<!ENTITY % entity "<!ELEMENT test EMPTY>">
 			%entity]><test/>'
+		'<test>&'
 		'<test>&</test>'
-		'<test>&test</test>'
+		'<test>&amp'
+		'<test>&amp</test>'
+		'<test>&;'
 		'<test>&;</test>')
 		do: [:each | 
 			self
@@ -4178,6 +4338,41 @@ XMLParserTest >> testNotationDeclarationRedundance [
 ]
 
 { #category : #tests }
+XMLParserTest >> testNotationDeclarationUnterminated [
+	#('<!NOTATION'
+		'<!NOTATION>'
+		'<!NOTATION name'
+		'<!NOTATION name>'
+		'<!NOTATION name PUBLIC'
+		'<!NOTATION name PUBLIC>'
+		'<!NOTATION name PUBLIC "'
+		'<!NOTATION name PUBLIC ">'
+		'<!NOTATION name PUBLIC "pubicid"'
+		'<!NOTATION name PUBLIC '''
+		'<!NOTATION name PUBLIC ''>'
+		'<!NOTATION name PUBLIC ''pubicid'''
+		'<!NOTATION name PUBLIC "pubicid''>'
+		'<!NOTATION name PUBLIC ''pubicid">'
+		'<!NOTATION name SYSTEM'
+		'<!NOTATION name SYSTEM>'
+		'<!NOTATION name SYSTEM "'
+		'<!NOTATION name SYSTEM ">'
+		'<!NOTATION name SYSTEM "systemid"'
+		'<!NOTATION name SYSTEM '''
+		'<!NOTATION name SYSTEM ''>'
+		'<!NOTATION name SYSTEM ''systemid'''
+		'<!NOTATION name SYSTEM "systemid''>'
+		'<!NOTATION name SYSTEM ''systemid">')
+		do: [:each |
+			self
+				should: [SAXHandler parse: '<!DOCTYPE test [', each]
+				raise: XMLWellFormednessException.
+			self
+				should: [SAXHandler parse: '<!DOCTYPE test [', each, ']><test/>']
+				raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
 XMLParserTest >> testNotationDeclarationWhitespace [
 	#('<!DOCTYPE test [<!NOTATIONname PUBLIC "publicid">]>'
 		'<!DOCTYPE test [<!NOTATION name PUBLIC"publicid">]>'
@@ -4287,10 +4482,26 @@ XMLParserTest >> testProcessingInstructionBadTarget [
 
 { #category : #tests }
 XMLParserTest >> testProcessingInstructionUnterminated [
-	#('<?' '<??' '<??>' '<?name' '<?name value' '<?name value?' '<?name value>')
+	#('<?'
+		'<??'
+		'<??>'
+		'<?name'
+		'<?name?'
+		'<?name value'
+		'<?name value?'
+		'<?name value>')
 		do: [:each | 
 			self
 				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException.
+			self
+				should: [SAXHandler parse: each, '<test/>']
+				raise: XMLWellFormednessException.
+			self
+				should: [SAXHandler parse: '<test/>', each]
+				raise: XMLWellFormednessException.
+			self
+				should: [SAXHandler parse: '<test/>', each, '<test/>']
 				raise: XMLWellFormednessException]
 ]
 
@@ -4384,6 +4595,32 @@ XMLParserTest >> testUnparsedEntityDeclarationRedundance [
 		do: [:each |
 			self
 				should: [SAXHandler parse: dtd, each]
+				raise: XMLWellFormednessException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testUnparsedEntityDeclarationUnterminated [
+	#('<!ENTITY name PUBLIC "publicid" "systemid" NDATA'
+		'<!ENTITY name PUBLIC "publicid" "systemid" NDATA>'
+		'<!ENTITY name PUBLIC "publicid" "systemid" NDATA gif'
+		'<!ENTITY name SYSTEM "systemid" NDATA'
+		'<!ENTITY name SYSTEM "systemid" NDATA>'
+		'<!ENTITY name SYSTEM "systemid" NDATA gif')
+		do: [:each |
+			self
+				should: [
+					SAXHandler parse:
+						'<!DOCTYPE test [
+							<!NOTATION gif SYSTEM "file.gif">',
+							each]
+				raise: XMLWellFormednessException.
+			self
+				should: [
+					SAXHandler parse:
+						'<!DOCTYPE test [
+							<!NOTATION gif SYSTEM "file.gif">',
+							each,
+						']><test/>']
 				raise: XMLWellFormednessException].
 ]
 
@@ -4492,20 +4729,62 @@ XMLParserTest >> testXMLDeclarationUnterminated [
 		'<?xml ?'
 		'<?xml ?>'
 		'<?xml version'
+		'<?xml version?'
+		'<?xml version?>'
 		'<?xml version='
-		'<?xml version=""?>'
+		'<?xml version=?'
+		'<?xml version=?>'
+		'<?xml version="'
+		'<?xml version="?'
+		'<?xml version="?>'
 		'<?xml version="1.0'
+		'<?xml version="1.0"'
+		'<?xml version="1.0"?'
+		'<?xml version=''1.0'
+		'<?xml version=''1.0'''
+		'<?xml version=''1.0''?'
+		'<?xml version="1.0''?>'
+		'<?xml version=''1.0"?>'
 		'<?xml version="1.0" encoding'
+		'<?xml version="1.0" encoding?'
+		'<?xml version="1.0" encoding?>'
 		'<?xml version="1.0" encoding='
-		'<?xml version="1.0" encoding=""?>'
+		'<?xml version="1.0" encoding=?'
+		'<?xml version="1.0" encoding=?>'
+		'<?xml version="1.0" encoding="'
+		'<?xml version="1.0" encoding="?'
+		'<?xml version="1.0" encoding="?>'
 		'<?xml version="1.0" encoding="UTF-8'
+		'<?xml version="1.0" encoding="UTF-8"'
+		'<?xml version="1.0" encoding="UTF-8"?'
+		'<?xml version="1.0" encoding=''UTF-8'
+		'<?xml version="1.0" encoding=''UTF-8'''
+		'<?xml version="1.0" encoding=''UTF-8''?'
+		'<?xml version="1.0" encoding="UTF-8''?>'
+		'<?xml version="1.0" encoding=''UTF-8"?>'
 		'<?xml version="1.0" encoding="UTF-8" standalone'
+		'<?xml version="1.0" encoding="UTF-8" standalone?'
+		'<?xml version="1.0" encoding="UTF-8" standalone?>'
+		'<?xml version="1.0" encoding="UTF-8" standalone='
+		'<?xml version="1.0" encoding="UTF-8" standalone=?'
+		'<?xml version="1.0" encoding="UTF-8" standalone=?>'
+		'<?xml version="1.0" encoding="UTF-8" standalone="'
+		'<?xml version="1.0" encoding="UTF-8" standalone="?'
+		'<?xml version="1.0" encoding="UTF-8" standalone="?>'
 		'<?xml version="1.0" encoding="UTF-8" standalone="yes'
 		'<?xml version="1.0" encoding="UTF-8" standalone="yes"'
-		'<?xml version="1.0" encoding="UTF-8" standalone="yes"?')
-		do: [:each | 
+		'<?xml version="1.0" encoding="UTF-8" standalone="yes"?'
+		'<?xml version="1.0" encoding="UTF-8" standalone=''yes'
+		'<?xml version="1.0" encoding="UTF-8" standalone=''yes'''
+		'<?xml version="1.0" encoding="UTF-8" standalone=''yes''?'
+		'<?xml version="1.0" encoding="UTF-8" standalone="yes''?>'
+		'<?xml version="1.0" encoding="UTF-8" standalone=''yes"?>')
+		do: [:each |
 			self
 				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException.
+			self
+				should: [SAXHandler parse: each, '<test/>']
 				raise: XMLWellFormednessException]
 ]
 
