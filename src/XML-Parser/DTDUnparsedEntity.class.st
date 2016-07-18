@@ -1,5 +1,5 @@
 "
-A class for unparsed entities. These should never be referenced with the &name; syntax and only appear in values to ENTITY and ENTITIES attributes.
+A class for unparsed entities. These should never be referenced with the &name; syntax but can be named in values of ENTITY and ENTITIES attributes.
 "
 Class {
 	#name : #DTDUnparsedEntity,

@@ -93,6 +93,20 @@ DTDDoctypeDefinition >> addUnparsedEntity: aName ndata: aNotation [
 ]
 
 { #category : #adding }
+DTDDoctypeDefinition >> addUnresolvableExternalGeneralEntity: aName [
+	self generalEntities
+		at: aName
+		ifAbsentPut: [DTDUnresolvableExternalGeneralEntity named: aName]
+]
+
+{ #category : #adding }
+DTDDoctypeDefinition >> addUnresolvableExternalParameterEntity: aName [
+	self parameterEntities
+		at: aName
+		ifAbsentPut: [DTDUnresolvableExternalParameterEntity named: aName]
+]
+
+{ #category : #adding }
 DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	| attributeValidatorsForElement |
 
@@ -135,7 +149,7 @@ DTDDoctypeDefinition >> addValidatorForElement: anElement contentModel: aContent
 		ifFalse: [self errorMultipleDeclarationsForElement: anElement]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 DTDDoctypeDefinition >> attributeValidators [
 	^ attributeValidators ifNil: [attributeValidators := Dictionary new]
 ]
@@ -154,12 +168,12 @@ DTDDoctypeDefinition >> attributeValidatorsAt: aName ifAbsent: aBlock [
 		ifAbsent: aBlock
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 DTDDoctypeDefinition >> elementIDValidator [
 	^ elementIDValidator ifNil: [elementIDValidator := XMLElementIDValidator new]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 DTDDoctypeDefinition >> elementValidators [
 	^ elementValidators ifNil: [elementValidators := Dictionary new]
 ]
@@ -185,7 +199,7 @@ DTDDoctypeDefinition >> errorMultipleDeclarationsForElement: anElement [
 		with: anElement
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 DTDDoctypeDefinition >> generalEntities [
 	^ generalEntities ifNil: [generalEntities := Dictionary new]
 ]
@@ -269,22 +283,17 @@ DTDDoctypeDefinition >> hasValidators [
 		or: [self hasAttributeValidators]
 ]
 
-{ #category : #testing }
-DTDDoctypeDefinition >> includesNotation: aName [
-	^ self notations includes: aName
-]
-
 { #category : #'instance creation' }
 DTDDoctypeDefinition >> newValidator [
 	^ DTDDocumentValidator doctypeDefinition: self
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 DTDDoctypeDefinition >> notations [
 	^ notations ifNil: [notations := Set new]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 DTDDoctypeDefinition >> parameterEntities [
 	^ parameterEntities ifNil: [parameterEntities := Dictionary new]
 ]
@@ -319,7 +328,7 @@ DTDDoctypeDefinition >> root: aRootElement [
 	root := aRootElement
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 DTDDoctypeDefinition >> unparsedEntities [
 	^ unparsedEntities ifNil: [unparsedEntities := Dictionary new]
 ]

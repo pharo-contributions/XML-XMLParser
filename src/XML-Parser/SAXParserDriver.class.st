@@ -320,7 +320,13 @@ SAXParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicID sys
 						resolver: self externalEntityResolver
 						publicID: aPublicID
 						systemID: aSystemID
-						baseURI: self baseURI]]
+						baseURI: self baseURI]
+				ifFalse: [
+					(self isValidating
+						or: [self isStandalone])
+						ifTrue: [
+							self doctypeDefinition
+								addUnresolvableExternalGeneralEntity: aName]]]
 		ifFalse: [
 			self doctypeDefinition
 				addUnparsedEntity: aName
@@ -354,13 +360,14 @@ SAXParserDriver >> handleGeneralEntityReference: aName [
 			generalEntityAt: aName
 			ifAbsent: [
 				self isValidating
-					ifTrue: [self errorUndeclaredGeneralEntity: aName]
-					ifFalse: [
-						self isStandalone
-							ifTrue: [self errorStandaloneUndeclaredGeneralEntity: aName]].
+					ifTrue: [self errorUndeclaredGeneralEntity: aName].
+				self isStandalone
+					ifTrue: [self errorStandaloneUndeclaredGeneralEntity: aName].
 				^ nil].
+
 	entity isUnparsed
 		ifTrue: [self errorUnparsedGeneralEntityReference: aName].
+
 	^ entity.
 ]
 
@@ -418,7 +425,13 @@ SAXParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicID s
 				resolver: self externalEntityResolver
 				publicID: aPublicID
 				systemID: aSystemID
-				baseURI: self baseURI].
+				baseURI: self baseURI]
+		ifFalse: [
+			(self isValidating
+				or: [self isStandalone])
+				ifTrue: [
+					self doctypeDefinition
+						addUnresolvableExternalParameterEntity: aName]].
 
 	self saxHandler
 		parameterEntityDeclaration: aName
