@@ -104,8 +104,14 @@ XMLNodeTest >> should: aBlock enumerate: aCollection [
 ]
 
 { #category : #tests }
-XMLNodeTest >> testAddContent [
-	self should: [self nodeClass new addContent: 'test'] raise: Error
+XMLNodeTest >> testAcceptNodeVisitor [
+	| visitor node |
+
+	visitor := XMLRecordingNodeVisitor new.
+	node := self nodeClass new.
+	self
+		assert: (node acceptNodeVisitor: visitor) == node;
+		deny: visitor messageRecorder hasMessages.
 ]
 
 { #category : #tests }
@@ -247,6 +253,161 @@ XMLNodeTest >> testIsStringNode [
 	self
 		deny: self nodeClass new isStringNode;
 		deny: (self nodeClass new isStringNode: '').
+]
+
+{ #category : #tests }
+XMLNodeTest >> testNewCData [
+	| cdata |
+
+	cdata := self nodeClass new newCData: 'test'.
+	self
+		assert: cdata isCData;
+		assert: cdata string = 'test'.
+]
+
+{ #category : #tests }
+XMLNodeTest >> testNewComment [
+	| comment |
+
+	comment := self nodeClass new newComment: 'test'.
+	self
+		assert: comment isComment;
+		assert: comment string = 'test'.
+]
+
+{ #category : #tests }
+XMLNodeTest >> testNewDocument [
+	| node document |
+
+	node := self nodeClass new.
+	document := node newDocument.
+	self assert: document isDocument.
+	node configuration
+		ifNotNil: [
+			self
+				assert: document configuration == node configuration;
+				assert: document nodeFactory == node nodeFactory].
+]
+
+{ #category : #tests }
+XMLNodeTest >> testNewElement [
+	| node element |
+
+	node := self nodeClass new.
+	element := node newElement.
+	self assert: element isElement.
+	node configuration
+		ifNotNil: [
+			self
+				assert: element configuration == node configuration;
+				assert: element nodeFactory == node nodeFactory].
+]
+
+{ #category : #tests }
+XMLNodeTest >> testNewElementNamed [
+	| node element |
+
+	node := self nodeClass new.
+	element := node newElementNamed: 'test'.
+	self
+		assert: element isElement;
+		assert: element name = 'test'.
+	node configuration
+		ifNotNil: [
+			self
+				assert: element configuration == node configuration;
+				assert: element nodeFactory == node nodeFactory].
+]
+
+{ #category : #tests }
+XMLNodeTest >> testNewElementNamedAttributes [
+	| node element |
+
+	node := self nodeClass new.
+	element :=
+		node
+			newElementNamed: 'test'
+			attributes: self unprefixedAttributeAssociations.
+	self
+		assert: element isElement;
+		assert: element name = 'test';
+		assert: element attributes = self unprefixedAttributes.
+	node configuration
+		ifNotNil: [
+			self
+				assert: element configuration == node configuration;
+				assert: element nodeFactory == node nodeFactory].
+]
+
+{ #category : #tests }
+XMLNodeTest >> testNewElementNamedNamespaceURI [
+	| node element |
+
+	node := self nodeClass new.
+	element :=
+		node
+			newElementNamed: 'prefix:test'
+			namespaceURI: 'prefixNS'.
+	self
+		assert: element isElement;
+		assert: element name = 'prefix:test';
+		assert: element namespaceURI = 'prefixNS'.
+	node configuration
+		ifNotNil: [
+			self
+				assert: element configuration == node configuration;
+				assert: element nodeFactory == node nodeFactory].
+]
+
+{ #category : #tests }
+XMLNodeTest >> testNewElementNamedNamespaceURIAttributes [
+	| node element |
+
+	node := self nodeClass new.
+	element :=
+		node
+			newElementNamed: 'prefix:test'
+			namespaceURI: 'prefixNS'
+			attributes: self attributeAssociations.
+	self
+		assert: element isElement;
+		assert: element name = 'prefix:test';
+		assert: element namespaceURI = 'prefixNS';
+		assert: element attributes = self attributes.
+	node configuration
+		ifNotNil: [
+			self
+				assert: element configuration == node configuration;
+				assert: element nodeFactory == node nodeFactory].
+]
+
+{ #category : #tests }
+XMLNodeTest >> testNewPI [
+	self assert: self nodeClass new newPI isPI.
+]
+
+{ #category : #tests }
+XMLNodeTest >> testNewPITargetData [
+	| pi |
+
+	pi :=
+		self nodeClass new
+			newPITarget: 'target'
+			data: 'data'.
+	self
+		assert: pi isPI;
+		assert: pi target = 'target';
+		assert: pi data = 'data'.
+]
+
+{ #category : #tests }
+XMLNodeTest >> testNewStringNode [
+	| stringNode |
+
+	stringNode := self nodeClass new newStringNode: 'test'.
+	self
+		assert: stringNode isStringNode;
+		assert: stringNode string = 'test'.
 ]
 
 { #category : #tests }

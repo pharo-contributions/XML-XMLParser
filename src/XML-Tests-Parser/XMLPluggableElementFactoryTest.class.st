@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLPluggableElementFactoryTest,
 	#superclass : #XMLPluggableNodeFactoryTest,
-	#category : #'XML-Tests-Parser-Factories'
+	#category : #'XML-Tests-Parser-DOM-Factories'
 }
 
 { #category : #accessing }
@@ -67,19 +67,75 @@ XMLPluggableElementFactoryTest >> testAddElementNamed [
 ]
 
 { #category : #tests }
+XMLPluggableElementFactoryTest >> testClassForElement [
+	| factory |
+
+	(factory := self newFactoryWithClasses)
+		handleElement: 'user'
+		withClass: self userElementClass.
+	self
+		assert: (factory classForElement: 'user') == self userElementClass;
+		assert: (factory classForElement: 'prefix:user') == self userElementClass;
+		assert: (factory classForElement: 'absent') == self elementClass.
+
+	factory
+		handleElement: 'prefix:user'
+		withClass: self usernameElementClass.
+	self
+		assert: (factory classForElement: 'user') == self userElementClass;
+		assert: (factory classForElement: 'prefix:user') == self usernameElementClass;
+		assert: (factory classForElement: 'prefix:absent') == self elementClass.
+]
+
+{ #category : #tests }
+XMLPluggableElementFactoryTest >> testClassForElementNamespaceURI [
+	| factory |
+
+	(factory := self newFactoryWithClasses)
+		handleElement: 'user'
+		namespaceURI: 'userNS'
+		withClass: self userElementClass.
+	self assert:
+		(factory
+			classForElement: 'user'
+			namespaceURI: 'userNS') == self userElementClass.
+	self assert:
+		(factory
+			classForElement: 'prefix:user'
+			namespaceURI: 'userNS') == self userElementClass.
+	self assert:
+		(factory
+			classForElement: 'user'
+			namespaceURI: 'absentNS') == self elementClass.
+
+	factory
+		handleElement: 'prefix:user'
+		namespaceURI: 'userNS'
+		withClass: self usernameElementClass.
+	self assert:
+		(factory
+			classForElement: 'user'
+			namespaceURI: 'userNS') == self userElementClass.
+	self assert:
+		(factory
+			classForElement: 'prefix:user'
+			namespaceURI: 'userNS') == self usernameElementClass.
+	self assert:
+		(factory
+			classForElement: 'prefix:user'
+			namespaceURI: 'absentNS') == self elementClass.
+]
+
+{ #category : #tests }
 XMLPluggableElementFactoryTest >> testCopy [
 	| factory copy |
 
-	factory := self newFactory.
+	factory := self newFactoryWithClasses.
 	factory handleElement: 'user' withClass: XMLFUserElement.
 	copy := factory copy.
 	self
 		deny: copy == factory;
-		deny: copy elementClasses == factory elementClasses;
-		assert: copy elementClasses = factory elementClasses.
-
-	copy handleElement: 'user' withClass: XMLElement.
-	self deny: copy elementClasses = factory elementClasses.
+		deny: copy elementClassMapper == factory elementClassMapper.
 ]
 
 { #category : #tests }
@@ -100,13 +156,26 @@ XMLPluggableElementFactoryTest >> testElementClassAccessor [
 ]
 
 { #category : #tests }
+XMLPluggableElementFactoryTest >> testElementClassMapper [
+	| factory newMapper |
+
+	factory := self newFactoryWithClasses.
+	self assert: (factory elementClassMapper isKindOf: XMLElementClassMapper).
+
+	newMapper := XMLSimpleElementClassMapper.
+	self
+		assert: (factory elementClassMapper: newMapper) == factory;
+		assert: factory elementClassMapper == newMapper.
+]
+
+{ #category : #tests }
 XMLPluggableElementFactoryTest >> testElementClassNameMatching [
 	| document |
 
 	document :=
 		(XMLDOMParser on: self sampleUserXML)
 			nodeFactory:
-				(self newFactory
+				(self newFactoryWithClasses
 					handleElementsMatchingClass: self userElementClass;
 					handleElementsMatchingClasses:
 						(Array
@@ -126,7 +195,7 @@ XMLPluggableElementFactoryTest >> testElementClassNameMatching [
 XMLPluggableElementFactoryTest >> testElementNameAndNamespaceMatching [
 	| factory document root |
 
-	(factory := self newFactory)
+	(factory := self newFactoryWithClasses)
 		elementClass: self defaultElementClass;
 		handleElement: 'user:user' namespaceURI: 'urn:user' withClass: self userElementClass;
 		handleElement: 'user:user' withClass: self wrongElementClass;
@@ -161,7 +230,7 @@ XMLPluggableElementFactoryTest >> testElementNameAndNamespaceMatching [
 XMLPluggableElementFactoryTest >> testElementsNameAndNamespaceMatching [
 	| factory document root |
 
-	factory := self newFactory.
+	factory := self newFactoryWithClasses.
 	factory
 		handleElements: #('date-registered' 'date-last-active')
 		namespaceURI: 'urn:user'

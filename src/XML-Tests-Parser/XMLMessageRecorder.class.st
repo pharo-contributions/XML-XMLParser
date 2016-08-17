@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'messageQueue'
 	],
-	#category : #'XML-Tests-Parser'
+	#category : #'XML-Tests-Parser-Utils'
 }
 
 { #category : #accessing }
@@ -42,7 +42,16 @@ XMLMessageRecorder >> messagesSelect: aBlock [
 
 { #category : #accessing }
 XMLMessageRecorder >> nextMessage [
-	^ self messageQueue removeFirst
+	^ self hasMessages
+		ifTrue: [self messageQueue removeFirst]
+		ifFalse: [nil]
+]
+
+{ #category : #accessing }
+XMLMessageRecorder >> peekMessage [
+	^ self hasMessages
+		ifTrue: [self messageQueue first]
+		ifFalse: [nil]
 ]
 
 { #category : #recording }
@@ -56,7 +65,16 @@ XMLMessageRecorder >> recordMessageReceiver: anObject selector: aSelector [
 		(MessageSend
 			receiver: anObject
 			selector: aSelector
-			arguments: #())
+			arguments: Array new)
+]
+
+{ #category : #recording }
+XMLMessageRecorder >> recordMessageReceiver: anObject selector: aSelector argument: anArgument [
+	self recordMessage:
+		(MessageSend
+			receiver: anObject
+			selector: aSelector
+			arguments: (Array with: anArgument))
 ]
 
 { #category : #recording }

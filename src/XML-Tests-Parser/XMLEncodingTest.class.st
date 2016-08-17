@@ -26,7 +26,7 @@ XMLEncodingTest >> asciiToUTF32LE: anASCIIString [
 
 { #category : #converting }
 XMLEncodingTest >> convertableStreamOn: aString [
-	^ aString readStream
+	^ XMLDecodingReadStreamAdapter on: aString readStream
 ]
 
 { #category : #source }
@@ -80,13 +80,16 @@ XMLEncodingTest >> stringFrom: aCollection [
 
 { #category : #tests }
 XMLEncodingTest >> testDecodingBinary [
-	| source binarySource |
-	
+	| source binarySource parser stream |
+
 	source := self sourceXML.
 	binarySource := source asArray collect: [:each | each asciiValue].
-	self assert:
-		(XMLDOMParser parse: binarySource) printString =
-			(XMLDOMParser parse: source) printString.
+	parser := (SAXHandler on: binarySource) parser.
+	stream := parser tokenizer streamReader stream.
+	self
+		assert: stream isXMLConvertingStreamAdapter;
+		assert: stream hasDefaultStreamConverter;
+		assert: stream upToEnd = source.
 ]
 
 { #category : #tests }
@@ -140,47 +143,6 @@ XMLEncodingTest >> testDecodingCharacterReferences [
 ]
 
 { #category : #tests }
-XMLEncodingTest >> testDecodingDisabledEncodingDeclaration [
-	| xml |
-
-	xml := 
-		self
-			sourceXMLWithEncoding: 'UTF-16-BE'
-			andASCIIContentAsUTF16BE: self sourceXML.
-	self
-		should: [
-			(SAXHandler on: (self convertableStreamOn: xml))
-				decodesCharacters: false;
-				parseDocument]
-		raise: XMLParserException.
-	self
-		shouldnt: [
-			(SAXHandler on: (self convertableStreamOn: xml))
-				decodesCharacters: true;
-				parseDocument]
-		raise: XMLParserException.
-]
-
-{ #category : #tests }
-XMLEncodingTest >> testDecodingDisabledEncodingDetection [
-	| xml |
-
-	xml := self asciiToUTF16LE: self sourceXML.
-	self
-		should: [
-			(SAXHandler on: (self convertableStreamOn: xml))
-				decodesCharacters: false;
-				parseDocument]
-		raise: XMLParserException.
-	self
-		shouldnt: [
-			(SAXHandler on: (self convertableStreamOn: xml))
-				decodesCharacters: true;
-				parseDocument]
-		raise: XMLParserException.
-]
-
-{ #category : #tests }
 XMLEncodingTest >> testEncodingDeclarationLatin1 [
 	| xml |
 
@@ -205,10 +167,33 @@ XMLEncodingTest >> testEncodingDeclarationUTF16BE [
 		should: [
 			SAXHandler parse:
 				(self convertableStreamOn:
+					(self encodingDeclaration: 'UTF-16-BE'), self sourceXML)]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				(self convertableStreamOn:
 					(self
 						sourceXMLWithEncoding: 'UTF-16-BE'
 						andASCIIContentAsUTF16LE: self sourceXML))]
 		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				(self convertableStreamOn:
+					(self
+						sourceXMLWithEncoding: 'UTF-16-BE'
+						andASCIIContentAsUTF32BE: self sourceXML))]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				(self convertableStreamOn:
+					(self
+						sourceXMLWithEncoding: 'UTF-16-BE'
+						andASCIIContentAsUTF32LE: self sourceXML))]
+		raise: XMLParserException.
+
 	self
 		shouldnt: [
 			SAXHandler parse:
@@ -216,6 +201,16 @@ XMLEncodingTest >> testEncodingDeclarationUTF16BE [
 					(self
 						sourceXMLWithEncoding: 'UTF-16-BE'
 						andASCIIContentAsUTF16BE: self sourceXML))]
+		raise: XMLParserException.
+	self
+		should: [
+			(SAXHandler on:
+				(self convertableStreamOn:
+					(self
+						sourceXMLWithEncoding: 'UTF-16-BE'
+						andASCIIContentAsUTF16BE: self sourceXML)))
+					decodesCharacters: false;
+					parseDocument]
 		raise: XMLParserException.
 ]
 
@@ -225,17 +220,50 @@ XMLEncodingTest >> testEncodingDeclarationUTF16LE [
 		should: [
 			SAXHandler parse:
 				(self convertableStreamOn:
+					(self encodingDeclaration: 'UTF-16-LE'), self sourceXML)]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				(self convertableStreamOn:
 					(self
-						sourceXMLWithEncoding: 'UTF-16LE'
+						sourceXMLWithEncoding: 'UTF-16-LE'
 						andASCIIContentAsUTF16BE: self sourceXML))]
 		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				(self convertableStreamOn:
+					(self
+						sourceXMLWithEncoding: 'UTF-16-LE'
+						andASCIIContentAsUTF32BE: self sourceXML))]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				(self convertableStreamOn:
+					(self
+						sourceXMLWithEncoding: 'UTF-16-LE'
+						andASCIIContentAsUTF32LE: self sourceXML))]
+		raise: XMLParserException.
+
 	self
 		shouldnt: [
 			SAXHandler parse:
 				(self convertableStreamOn:
 					(self
-						sourceXMLWithEncoding: 'UTF-16BE'
-						andASCIIContentAsUTF16BE: self sourceXML))]
+						sourceXMLWithEncoding: 'UTF-16-LE'
+						andASCIIContentAsUTF16LE: self sourceXML))]
+		raise: XMLParserException.
+	self
+		should: [
+			(SAXHandler on:
+				(self convertableStreamOn:
+					(self
+						sourceXMLWithEncoding: 'UTF-16-LE'
+						andASCIIContentAsUTF16LE: self sourceXML)))
+					decodesCharacters: false;
+					parseDocument]
 		raise: XMLParserException.
 ]
 
@@ -245,17 +273,50 @@ XMLEncodingTest >> testEncodingDeclarationUTF32BE [
 		should: [
 			SAXHandler parse:
 				(self convertableStreamOn:
+					(self encodingDeclaration: 'UTF-32-BE'), self sourceXML)]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				(self convertableStreamOn:
 					(self
-						sourceXMLWithEncoding: 'utf-32be'
+						sourceXMLWithEncoding: 'UTF-32-BE'
+						andASCIIContentAsUTF16BE: self sourceXML))]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				(self convertableStreamOn:
+					(self
+						sourceXMLWithEncoding: 'UTF-32-BE'
+						andASCIIContentAsUTF16LE: self sourceXML))]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				(self convertableStreamOn:
+					(self
+						sourceXMLWithEncoding: 'UTF-32-BE'
 						andASCIIContentAsUTF32LE: self sourceXML))]
 		raise: XMLParserException.
+
 	self
 		shouldnt: [
 			SAXHandler parse:
 				(self convertableStreamOn:
 					(self
-						sourceXMLWithEncoding: 'utf-32be'
+						sourceXMLWithEncoding: 'UTF-32-BE'
 						andASCIIContentAsUTF32BE: self sourceXML))]
+		raise: XMLParserException.
+	self
+		should: [
+			(SAXHandler on:
+				(self convertableStreamOn:
+					(self
+						sourceXMLWithEncoding: 'UTF-32-BE'
+						andASCIIContentAsUTF32BE: self sourceXML)))
+					decodesCharacters: false;
+					parseDocument]
 		raise: XMLParserException.
 ]
 
@@ -265,17 +326,50 @@ XMLEncodingTest >> testEncodingDeclarationUTF32LE [
 		should: [
 			SAXHandler parse:
 				(self convertableStreamOn:
+					(self encodingDeclaration: 'UTF-32-LE'), self sourceXML)]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				(self convertableStreamOn:
 					(self
-						sourceXMLWithEncoding: 'utf-32-le'
+						sourceXMLWithEncoding: 'UTF-32-LE'
+						andASCIIContentAsUTF16BE: self sourceXML))]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				(self convertableStreamOn:
+					(self
+						sourceXMLWithEncoding: 'UTF-32-LE'
+						andASCIIContentAsUTF16LE: self sourceXML))]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				(self convertableStreamOn:
+					(self
+						sourceXMLWithEncoding: 'UTF-32-LE'
 						andASCIIContentAsUTF32BE: self sourceXML))]
 		raise: XMLParserException.
+
 	self
 		shouldnt: [
 			SAXHandler parse:
 				(self convertableStreamOn:
 					(self
-						sourceXMLWithEncoding: 'utf-32-le'
+						sourceXMLWithEncoding: 'UTF-32-LE'
 						andASCIIContentAsUTF32LE: self sourceXML))]
+		raise: XMLParserException.
+	self
+		should: [
+			(SAXHandler on:
+				(self convertableStreamOn:
+					(self
+						sourceXMLWithEncoding: 'UTF-32-LE'
+						andASCIIContentAsUTF32LE: self sourceXML)))
+					decodesCharacters: false;
+					parseDocument]
 		raise: XMLParserException.
 ]
 
@@ -286,7 +380,7 @@ XMLEncodingTest >> testEncodingDeclarationUTF8 [
 			SAXHandler parse:
 				(self convertableStreamOn:
 					(self
-						sourceXMLWithEncoding: 'UTF8'
+						sourceXMLWithEncoding: 'UTF-8'
 						andASCIIContentAsUTF16BE: self sourceXML))]
 		raise: XMLParserException.
 	self
@@ -298,111 +392,330 @@ XMLEncodingTest >> testEncodingDeclarationUTF8 [
 						andASCIIContentAsUTF16LE: self sourceXML))]
 		raise: XMLParserException.
 	self
+		should: [
+			SAXHandler parse:
+				(self convertableStreamOn:
+					(self
+						sourceXMLWithEncoding: 'UTF-8'
+						andASCIIContentAsUTF32BE: self sourceXML))]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				(self convertableStreamOn:
+					(self
+						sourceXMLWithEncoding: 'UTF-8'
+						andASCIIContentAsUTF32LE: self sourceXML))]
+		raise: XMLParserException.
+
+	self
 		shouldnt: [
 			SAXHandler parse:
-				(self convertableStreamOn: (self encodingDeclaration: 'UTF-8'), self sourceXML)]
+				(self convertableStreamOn:
+					(self encodingDeclaration: 'UTF-8'), self sourceXML)]
 		raise: XMLParserException.
 ]
 
 { #category : #tests }
-XMLEncodingTest >> testExternalReadStreamDecoder [
-	| readStreamAdapter |
+XMLEncodingTest >> testExternalEntityByteOrderMarkDetection [
+	| document entity |
 
-	readStreamAdapter :=
-		XMLDecodingReadStreamAdapter on: 
-			(self convertableStreamOn:
-				self utf16LittleEndianBOM, (self asciiToUTF16LE: self sourceXML)).
+	document := '
+		<!DOCTYPE test [
+			<!ENTITY % external SYSTEM "extern.ent">
+			 %external;
+		]>
+		<test/>'.
+	entity := '<!ELEMENT test EMPTY>'.
+	(Array
+		with: self utf8BOM, entity
+		with: self utf16BigEndianBOM, (self asciiToUTF16BE: entity)
+		with: self utf16LittleEndianBOM, (self asciiToUTF16LE: entity)
+		with: self utf32BigEndianBOM, (self asciiToUTF32BE: entity)
+		with: self utf32LittleEndianBOM, (self asciiToUTF32LE: entity))
+		do: [:each |
+			self
+				shouldnt: [
+					(SAXHandler on: document)
+						externalEntityResolver:
+							(DTDStaticExternalEntityResolver externalEntities:
+								(Array with: 'extern.ent' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLParserException.
+			self
+				should: [
+					(SAXHandler on: document)
+						externalEntityResolver:
+							(DTDStaticExternalEntityResolver externalEntities:
+								(Array with: 'extern.ent' -> each));
+						resolvesExternalEntities: true;
+						decodesCharacters: false;
+						parseDocument]
+				raise: XMLParserException].
+]
 
-	self
-		shouldnt: [SAXHandler parse: readStreamAdapter]
-		raise: XMLParserException.
+{ #category : #tests }
+XMLEncodingTest >> testExternalEntityImplicitEncodingDetection [
+	| document entity |
 
-	self
-		assert: readStreamAdapter atEnd;
-		assert: (readStreamAdapter streamConverter isKindOf: XMLUTF16StreamConverter).
+	document := '
+		<!DOCTYPE test [
+			<!ENTITY % external SYSTEM "extern.ent">
+			 %external;
+		]>
+		<test/>'.
+	entity := '<!ELEMENT test EMPTY>'.
+	(Array
+		with: (self asciiToUTF16BE: entity)
+		with: (self asciiToUTF16LE: entity)
+		with: (self asciiToUTF32BE: entity)
+		with: (self asciiToUTF32LE: entity))
+		do: [:each |
+			self
+				shouldnt: [
+					(SAXHandler on: document)
+						externalEntityResolver:
+							(DTDStaticExternalEntityResolver externalEntities:
+								(Array with: 'extern.ent' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLParserException.
+			self
+				should: [
+					(SAXHandler on: document)
+						externalEntityResolver:
+							(DTDStaticExternalEntityResolver externalEntities:
+								(Array with: 'extern.ent' -> each));
+						resolvesExternalEntities: true;
+						decodesCharacters: false;
+						parseDocument]
+				raise: XMLParserException].
+]
+
+{ #category : #tests }
+XMLEncodingTest >> testExternalEntityTextDeclaration [
+	| document entity |
+
+	document := '
+		<!DOCTYPE test [
+			<!ENTITY % external SYSTEM "extern.ent">
+			 %external;
+		]>
+		<test/>'.
+	entity := '<!ELEMENT test EMPTY>'.
+	(Array
+		with:
+			(self
+				sourceXMLWithEncoding: 'UTF-16-BE'
+				andASCIIContentAsUTF16BE: entity)
+		with:
+			(self
+				sourceXMLWithEncoding: 'UTF-16-LE'
+				andASCIIContentAsUTF16LE: entity)
+		with:
+			(self
+				sourceXMLWithEncoding: 'UTF-32-BE'
+				andASCIIContentAsUTF32BE: entity)
+		with:
+			(self
+				sourceXMLWithEncoding: 'UTF-32-LE'
+				andASCIIContentAsUTF32LE: entity))
+		do: [:each |
+			self
+				shouldnt: [
+					(SAXHandler on: document)
+						externalEntityResolver:
+							(DTDStaticExternalEntityResolver externalEntities:
+								(Array with: 'extern.ent' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLParserException.
+			self
+				should: [
+					(SAXHandler on: document)
+						externalEntityResolver:
+							(DTDStaticExternalEntityResolver externalEntities:
+								(Array with: 'extern.ent' -> each));
+						resolvesExternalEntities: true;
+						decodesCharacters: false;
+						parseDocument]
+				raise: XMLParserException].
 ]
 
 { #category : #tests }
 XMLEncodingTest >> testExternalSubsetByteOrderMarkDetection [
-	| document dtd encodedDTDWithBOM |
-
-	document := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
-	dtd := '<!ELEMENT test EMPTY>'.
-	self
-		shouldnt: [
-			encodedDTDWithBOM := self utf16BigEndianBOM, (self asciiToUTF16BE: dtd).
-			(SAXHandler on: document)
-				externalEntityResolver:
-					(DTDStaticExternalEntityResolver externalEntities:
-						(Array with: 'extern.dtd' -> encodedDTDWithBOM));
-				resolvesExternalEntities: true;
-				parseDocument]
-		raise: XMLParserException.
-	self
-		shouldnt: [
-			encodedDTDWithBOM := self utf16LittleEndianBOM, (self asciiToUTF16LE: dtd).
-			(SAXHandler on: document)
-				externalEntityResolver:
-					(DTDStaticExternalEntityResolver externalEntities:
-						(Array with: 'extern.dtd' -> encodedDTDWithBOM));
-				resolvesExternalEntities: true;
-				parseDocument]
-		raise: XMLParserException.
-]
-
-{ #category : #tests }
-XMLEncodingTest >> testExternalSubsetImplicitEncodingDetection [	
 	| document dtd |
 
 	document := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
 	dtd := '<!ELEMENT test EMPTY>'.
+	(Array
+		with: self utf8BOM, dtd
+		with: self utf16BigEndianBOM, (self asciiToUTF16BE: dtd)
+		with: self utf16LittleEndianBOM, (self asciiToUTF16LE: dtd)
+		with: self utf32BigEndianBOM, (self asciiToUTF32BE: dtd)
+		with: self utf32LittleEndianBOM, (self asciiToUTF32LE: dtd))
+		do: [:each |
+			self
+				shouldnt: [
+					(SAXHandler on: document)
+						externalEntityResolver:
+							(DTDStaticExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLParserException.
+			self
+				should: [
+					(SAXHandler on: document)
+						externalEntityResolver:
+							(DTDStaticExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						decodesCharacters: false;
+						parseDocument]
+				raise: XMLParserException].
+]
+
+{ #category : #tests }
+XMLEncodingTest >> testExternalSubsetImplicitEncodingDetection [
+	| document dtd |
+
+	document := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
+	dtd := '<!ELEMENT test EMPTY>'.
+	(Array
+		with: (self asciiToUTF16BE: dtd)
+		with: (self asciiToUTF16LE: dtd)
+		with: (self asciiToUTF32BE: dtd)
+		with: (self asciiToUTF32LE: dtd))
+		do: [:each |
+			self
+				shouldnt: [
+					(SAXHandler on: document)
+						externalEntityResolver:
+							(DTDStaticExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						parseDocument]
+				raise: XMLParserException.
+			self
+				should: [
+					(SAXHandler on: document)
+						externalEntityResolver:
+							(DTDStaticExternalEntityResolver externalEntities:
+								(Array with: 'extern.dtd' -> each));
+						resolvesExternalEntities: true;
+						decodesCharacters: false;
+						parseDocument]
+				raise: XMLParserException].
+]
+
+{ #category : #tests }
+XMLEncodingTest >> testExternalSubsetTextDeclaration [
+	| document dtd |
+
+	document := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
+	dtd := '<!ELEMENT test EMPTY>'.
+	(Array
+		with:
+			(self
+				sourceXMLWithEncoding: 'UTF-16-BE'
+				andASCIIContentAsUTF16BE: dtd)
+		with:
+			(self
+				sourceXMLWithEncoding: 'UTF-16-LE'
+				andASCIIContentAsUTF16LE: dtd)
+		with:
+			(self
+				sourceXMLWithEncoding: 'UTF-32-BE'
+				andASCIIContentAsUTF32BE: dtd)
+		with:
+			(self
+				sourceXMLWithEncoding: 'UTF-32-LE'
+				andASCIIContentAsUTF32LE: dtd))
+			do: [:each |
+				self
+					shouldnt: [
+						(SAXHandler on: document)
+							externalEntityResolver:
+								(DTDStaticExternalEntityResolver externalEntities:
+									(Array with: 'extern.dtd' -> each));
+							resolvesExternalEntities: true;
+							parseDocument]
+					raise: XMLParserException.
+				self
+					should: [
+						(SAXHandler on: document)
+							externalEntityResolver:
+								(DTDStaticExternalEntityResolver externalEntities:
+									(Array with: 'extern.dtd' -> each));
+							resolvesExternalEntities: true;
+							decodesCharacters: false;
+							parseDocument]
+					raise: XMLParserException].
+]
+
+{ #category : #tests }
+XMLEncodingTest >> testImplicitUTF16BigEndianEncodingDetection [
 	self
 		shouldnt: [
-			(SAXHandler on: document)
-				externalEntityResolver:
-					(DTDStaticExternalEntityResolver externalEntities:
-						(Array with: 'extern.dtd' -> (self asciiToUTF16BE: dtd)));
-				resolvesExternalEntities: true;
-				parseDocument]
+			SAXHandler parse:
+				(self asciiToUTF16BE: self sourceXML)]
 		raise: XMLParserException.
 	self
-		shouldnt: [
-			(SAXHandler on: document)
-				externalEntityResolver:
-					(DTDStaticExternalEntityResolver externalEntities:
-						(Array with: 'extern.dtd' -> (self asciiToUTF16LE: dtd)));
-				resolvesExternalEntities: true;
-				parseDocument]
+		should: [
+			(SAXHandler on:
+				(self asciiToUTF16BE: self sourceXML))
+					decodesCharacters: false;
+					parseDocument]
 		raise: XMLParserException.
 ]
 
 { #category : #tests }
-XMLEncodingTest >> testImplicitUTF16EncodingDetection [
+XMLEncodingTest >> testImplicitUTF16LittleEndianEncodingDetection [
 	self
 		shouldnt: [
 			SAXHandler parse:
-				(self convertableStreamOn: (self asciiToUTF16LE: self sourceXML))]
+				(self asciiToUTF16LE: self sourceXML)]
 		raise: XMLParserException.
 	self
-		shouldnt: [
-			SAXHandler parse:
-				(self convertableStreamOn: (self asciiToUTF16BE: self sourceXML))]
+		should: [
+			(SAXHandler on:
+				(self asciiToUTF16LE: self sourceXML))
+					decodesCharacters: false;
+					parseDocument]
 		raise: XMLParserException.
 ]
 
 { #category : #tests }
-XMLEncodingTest >> testImplicitUTF32EncodingDetection [
+XMLEncodingTest >> testImplicitUTF32BigEndianEncodingDetection [
 	self
 		shouldnt: [
 			SAXHandler parse:
-				(self convertableStreamOn:
-					(self asciiToUTF32LE: self sourceXML))]
+				(self asciiToUTF32BE: self sourceXML)]
 		raise: XMLParserException.
 	self
+		should: [
+			(SAXHandler on:
+				(self asciiToUTF32BE: self sourceXML))
+					decodesCharacters: false;
+					parseDocument]
+		raise: XMLParserException.
+]
+
+{ #category : #tests }
+XMLEncodingTest >> testImplicitUTF32LittleEndianEncodingDetection [
+	self
 		shouldnt: [
 			SAXHandler parse:
-				(self convertableStreamOn:
-					(self asciiToUTF32BE: self sourceXML))]
+				(self asciiToUTF32LE: self sourceXML)]
+		raise: XMLParserException.
+	self
+		should: [
+			(SAXHandler on:
+				(self asciiToUTF32LE: self sourceXML))
+					decodesCharacters: false;
+					parseDocument]
 		raise: XMLParserException.
 ]
 
@@ -411,19 +724,34 @@ XMLEncodingTest >> testUTF16BigEndianByteOrderMarkDetection [
 	self
 		should: [
 			SAXHandler parse:
-				(self convertableStreamOn: self utf16BigEndianBOM, self sourceXML)]
+				self utf16BigEndianBOM, self sourceXML]
 		raise: XMLParserException.
 	self
 		should: [
 			SAXHandler parse:
-				(self convertableStreamOn:
-					self utf16BigEndianBOM, (self asciiToUTF16LE: self sourceXML))]
+				self utf16BigEndianBOM, (self asciiToUTF16LE: self sourceXML)]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				self utf16BigEndianBOM, (self asciiToUTF32BE: self sourceXML)]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				self utf16BigEndianBOM, (self asciiToUTF32LE: self sourceXML)]
 		raise: XMLParserException.
 	self
 		shouldnt: [
 			SAXHandler parse:
-				(self convertableStreamOn:
-					self utf16BigEndianBOM, (self asciiToUTF16BE: self sourceXML))]
+				self utf16BigEndianBOM, (self asciiToUTF16BE: self sourceXML)]
+		raise: XMLParserException.
+	self
+		should: [
+			(SAXHandler on:
+				self utf16BigEndianBOM, (self asciiToUTF16BE: self sourceXML))
+					decodesCharacters: false;
+					parseDocument]
 		raise: XMLParserException.
 ]
 
@@ -432,63 +760,34 @@ XMLEncodingTest >> testUTF16LittleEndianByteOrderMarkDetection [
 	self
 		should: [
 			SAXHandler parse:
-				(self convertableStreamOn:
-					self utf16LittleEndianBOM, self sourceXML)]
+				self utf16LittleEndianBOM, self sourceXML]
 		raise: XMLParserException.
 	self
 		should: [
 			SAXHandler parse:
-				(self convertableStreamOn:
-					self utf16LittleEndianBOM, (self asciiToUTF16BE: self sourceXML))]
+				self utf16LittleEndianBOM, (self asciiToUTF16BE: self sourceXML)]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				self utf16LittleEndianBOM, (self asciiToUTF32BE: self sourceXML)]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				self utf16LittleEndianBOM, (self asciiToUTF32LE: self sourceXML)]
 		raise: XMLParserException.
 	self
 		shouldnt: [
 			SAXHandler parse:
-				(self convertableStreamOn:
-					self utf16LittleEndianBOM, (self asciiToUTF16LE: self sourceXML))]
-		raise: XMLParserException.
-]
-
-{ #category : #tests }
-XMLEncodingTest >> testUTF32BigEndianByteOrderMarkDetection [
-	self
-		should: [
-			SAXHandler parse:
-				(self convertableStreamOn:
-					self utf32BigEndianBOM, self sourceXML)]
+				self utf16LittleEndianBOM, (self asciiToUTF16LE: self sourceXML)]
 		raise: XMLParserException.
 	self
 		should: [
-			SAXHandler parse:
-				(self convertableStreamOn:
-					self utf32BigEndianBOM, (self asciiToUTF32LE: self sourceXML))]
-		raise: XMLParserException.
-	self
-		shouldnt: [
-			SAXHandler parse:
-				(self convertableStreamOn:
-					self utf32BigEndianBOM, (self asciiToUTF32BE: self sourceXML))]
-		raise: XMLParserException.
-]
-
-{ #category : #tests }
-XMLEncodingTest >> testUTF32LittleEndianByteOrderMarkDetection [
-	self
-		should: [
-			SAXHandler parse:
-				(self convertableStreamOn: self utf32LittleEndianBOM, self sourceXML)]
-		raise: XMLParserException.
-	self
-		should: [
-			SAXHandler parse:
-				(self convertableStreamOn:
-					self utf32LittleEndianBOM, (self asciiToUTF32BE: self sourceXML))]
-		raise: XMLParserException.
-	self
-		shouldnt: [
-			SAXHandler parse:
-				(self convertableStreamOn:
-					self utf32LittleEndianBOM, (self asciiToUTF32LE: self sourceXML))]
+			(SAXHandler on:
+				self utf16LittleEndianBOM, (self asciiToUTF16LE: self sourceXML))
+					decodesCharacters: false;
+					parseDocument]
 		raise: XMLParserException.
 ]
 
@@ -497,20 +796,34 @@ XMLEncodingTest >> testUTF8ByteOrderMarkDetection [
 	self
 		should: [
 			SAXHandler parse:
-				(self convertableStreamOn:
-					self utf8BOM, (self asciiToUTF16LE: self sourceXML))]
+				self utf8BOM, (self asciiToUTF16BE: self sourceXML)]
 		raise: XMLParserException.
 	self
 		should: [
 			SAXHandler parse:
-				(self convertableStreamOn:
-					self utf8BOM, (self asciiToUTF16BE: self sourceXML))]
+				self utf8BOM, (self asciiToUTF16LE: self sourceXML)]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				self utf8BOM, (self asciiToUTF32BE: self sourceXML)]
+		raise: XMLParserException.
+	self
+		should: [
+			SAXHandler parse:
+				self utf8BOM, (self asciiToUTF32LE: self sourceXML)]
 		raise: XMLParserException.
 	self
 		shouldnt: [
 			SAXHandler parse:
-				(self convertableStreamOn:
-					self utf8BOM, self sourceXML)]
+				self utf8BOM, self sourceXML]
+		raise: XMLParserException.
+	self
+		should: [
+			(SAXHandler on:
+				self utf8BOM, self sourceXML)
+					decodesCharacters: false;
+					parseDocument]
 		raise: XMLParserException.
 ]
 

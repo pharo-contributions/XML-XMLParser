@@ -4,7 +4,7 @@ An abstract and portable test case for sets.
 Class {
 	#name : #XMLAbstractSetTest,
 	#superclass : #TestCase,
-	#category : #'XML-Tests-Parser'
+	#category : #'XML-Tests-Parser-Utils'
 }
 
 { #category : #testing }

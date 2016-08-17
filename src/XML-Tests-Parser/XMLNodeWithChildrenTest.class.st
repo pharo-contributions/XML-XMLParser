@@ -38,6 +38,19 @@ XMLNodeWithChildrenTest >> nodeClass [
 ]
 
 { #category : #tests }
+XMLNodeWithChildrenTest >> testAddComment [
+	| nodeWithNodes comment |
+
+	nodeWithNodes := self nodeClass new.
+	comment := nodeWithNodes addComment: 'test'.
+	self
+		assert: nodeWithNodes nodes size = 1;
+		assert: nodeWithNodes firstNode == comment;
+		assert: comment isComment;
+		assert: comment string = 'test'.
+]
+
+{ #category : #tests }
 XMLNodeWithChildrenTest >> testAddNode [
 	| node nodeWithNodes added |
 
@@ -135,6 +148,23 @@ XMLNodeWithChildrenTest >> testAddNodes [
 
 	node nodes asOrderedCollection = added.
 
+]
+
+{ #category : #tests }
+XMLNodeWithChildrenTest >> testAddPITargetData [
+	| nodeWithNodes pi |
+
+	nodeWithNodes := self nodeClass new.
+	pi :=
+		nodeWithNodes
+			addPITarget: 'target'
+			data: 'data'.
+	self
+		assert: nodeWithNodes nodes size = 1;
+		assert: nodeWithNodes firstNode == pi;
+		assert: pi isPI;
+		assert: pi target = 'target';
+		assert: pi data = 'data'.
 ]
 
 { #category : #tests }

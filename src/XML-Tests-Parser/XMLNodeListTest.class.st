@@ -13,7 +13,7 @@ Class {
 
 { #category : #accessing }
 XMLNodeListTest >> absentListItem [
-	^ absentNode ifNil: [absentNode := super absentListItem asXMLString]
+	^ absentNode ifNil: [absentNode := super absentListItem asXMLStringNode]
 ]
 
 { #category : #accessing }
@@ -65,15 +65,15 @@ XMLNodeListTest >> listItems [
 			document := XMLDocument new.
 			(document addElementNamed: 'root')
 				addElementNamed: 'one';
-				addContent: 'two';
+				addString: 'two';
 				addElementNamed: 'prefix:three' namespaceURI: 'prefixNS';
 				addNode: (XMLComment string: 'four');
 				addElementNamed: 'three';
-				addContent: 'five';
+				addString: 'five';
 				addElementNamed: 'six';
 				addNode: (XMLPI target: 'seven' data: 'seven');
 				addElementNamed: 'eight';
-				addContent: 'nine'.
+				addString: 'nine'.
 			nodes := document root nodes asArray].
 	"return a copy of the array, but share the nodes"
 	^ nodes copy.
@@ -91,7 +91,7 @@ XMLNodeListTest >> listStrings [
 
 { #category : #accessing }
 XMLNodeListTest >> newListItem [
-	^ newNode ifNil: [newNode := super newListItem asXMLString]
+	^ newNode ifNil: [newNode := super newListItem asXMLStringNode]
 ]
 
 { #category : #accessing }

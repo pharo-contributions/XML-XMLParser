@@ -620,13 +620,13 @@ XMLDOMParserTest >> testNamespacesCopyOnWrite [
 		</one>'.
 	elements := (XMLDOMParser parse: xml) allElements.
 	self assert:
-		(IdentitySet withAll:
+		(IdentitySet withAll: "avoid newFrom: for GS portability"
 			(elements collect: [:each |
 				each namespaceScope prefixMappings])) size = 3.
 
 	elements := (XMLDOMParser parse: xml usingNamespaces: false) allElements.
 	self assert:
-		(IdentitySet withAll:
+		(IdentitySet withAll: "avoid newFrom: for GS portability"
 			(elements collect: [:each |
 				each namespaceScope prefixMappings])) size = elements size.
 ]

@@ -79,34 +79,50 @@ XMLDoctypeDeclarationTest >> testNodes [
 
 { #category : #tests }
 XMLDoctypeDeclarationTest >> testPublicID [
+	| doctype |
+
+	doctype := self nodeClass new.
 	self
-		assert: self nodeClass new publicID isEmpty;
-		assert: (self nodeClass new publicID: 'test') publicID = 'test'
+		assert: doctype publicID = '';
+		assert: (doctype publicID: 'test') == doctype;
+		assert: doctype publicID = 'test'.
 ]
 
 { #category : #tests }
 XMLDoctypeDeclarationTest >> testRoot [
+	| doctype |
+
+	doctype := self nodeClass new.
 	self
-		assert: self nodeClass new root isEmpty;
-		assert: (self nodeClass new root: 'test') root = 'test'
+		assert: doctype root = '';
+		assert: (doctype root: 'test') == doctype;
+		assert: doctype root = 'test'.
 ]
 
 { #category : #tests }
 XMLDoctypeDeclarationTest >> testRootPublicIDSystemID [
 	| doctype |
 
-	doctype := self nodeClass root: 'one' publicID: 'two' systemID: 'three'.
+	doctype :=
+		self nodeClass
+			root: 'one'
+			publicID: 'two'
+			systemID: 'three'.
 	self
 		assert: doctype root = 'one';
 		assert: doctype publicID = 'two';
-		assert: doctype systemID = 'three'
+		assert: doctype systemID = 'three'.
 ]
 
 { #category : #tests }
 XMLDoctypeDeclarationTest >> testSystemID [
+	| doctype |
+
+	doctype := self nodeClass new.
 	self
-		assert: self nodeClass new systemID isEmpty;
-		assert: (self nodeClass new systemID: 'test') systemID = 'test'
+		assert: doctype systemID = '';
+		assert: (doctype systemID: 'test') == doctype;
+		assert: doctype systemID = 'test'.
 ]
 
 { #category : #tests }

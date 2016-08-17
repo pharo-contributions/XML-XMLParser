@@ -22,6 +22,31 @@ XMLDocumentTest >> nodeClass [
 ]
 
 { #category : #tests }
+XMLDocumentTest >> testAcceptNodeVisitor [
+	| visitor document message |
+
+	visitor := XMLRecordingNodeVisitor new.
+	document := self nodeClass new.
+	self
+		assert: (document acceptNodeVisitor: visitor) == document;
+		assert: visitor messageRecorder hasMessages.
+
+	message := visitor messageRecorder nextMessage.
+	self
+		assert: message selector == #visitDocument:;
+		assert: message arguments = (Array with: document);
+		assert: visitor messageRecorder hasMessages.
+
+	message := visitor messageRecorder nextMessage.
+	self
+		assert: message selector == #visitNodeWithElements:;
+		assert: message arguments = (Array with: document);
+		deny: visitor messageRecorder hasMessages.
+
+	super testAcceptNodeVisitor.
+]
+
+{ #category : #tests }
 XMLDocumentTest >> testDoctypeDeclaration [
 	| document doctypeDeclaration |
 
@@ -159,7 +184,7 @@ XMLDocumentTest >> testRoot [
 	self assert: nodeWithElements root isNil.
 
 	self
-		should: [nodeWithElements root: 'test' asXMLString]
+		should: [nodeWithElements root: 'test' asXMLStringNode]
 		raise: XMLDOMException.
 ]
 
@@ -171,13 +196,18 @@ XMLDocumentTest >> testValidate [
 
 	xml := '
 		<!DOCTYPE one [
-			<!ELEMENT one (two+)>
+			<!ELEMENT one (two+, three)>
 			<!ATTLIST one idref IDREF #REQUIRED>
 			<!ELEMENT two (#PCDATA)*>
-			<!ATTLIST two id ID #REQUIRED>]>
+			<!ATTLIST two id ID #REQUIRED>
+			<!ELEMENT three EMPTY>]>
+		<!--comment-->
 		<one idref="a">
-			<two id="a">three</two><two id="b"><!--comment--></two>
-		</one>'.
+			<two id="a">three</two>
+			<two id="b"><!--comment--></two>
+			<three></three>
+		</one>
+		<?target data?>'.
 
 	document :=
 		(XMLDOMParser on: xml)
@@ -212,7 +242,35 @@ XMLDocumentTest >> testValidate [
 		raise: XMLValidationException.
 
 	document := XMLDOMParser parse: xml.
-	document root addElementNamed: 'three'.
+	document root addElementNamed: 'four'.
+	self
+		should: [document validate]
+		raise: XMLValidationException.
+
+	document := XMLDOMParser parse: xml.
+	(document root elementAt: 'three') addNode:
+		(XMLComment string: 'comment').
+	self
+		should: [document validate]
+		raise: XMLValidationException.
+
+	document := XMLDOMParser parse: xml.
+	(document root elementAt: 'three') addNode:
+		(XMLPI
+			target: 'target'
+			data: 'data').
+	self
+		should: [document validate]
+		raise: XMLValidationException.
+
+	document := XMLDOMParser parse: xml.
+	(document root elementAt: 'three') addNode: (XMLCData string: 'five').
+	self
+		should: [document validate]
+		raise: XMLValidationException.
+
+	document := XMLDOMParser parse: xml.
+	(document root elementAt: 'three') addElementNamed: 'four'.
 	self
 		should: [document validate]
 		raise: XMLValidationException.
@@ -221,8 +279,16 @@ XMLDocumentTest >> testValidate [
 	document root
 		name: 'zero';
 		attributeAt: 'idref' put: 'undeclared';
-		addElementNamed: 'three';
+		addElementNamed: 'four';
 		allElementsNamed: 'two' do: [:each | each attributeAt: 'id' put: 'same'].
+	(document root elementAt: 'three')
+		addNode: (XMLComment string: 'comment');
+		addNode:
+			(XMLPI
+				target: 'target'
+				data: 'data');
+		addNode: (XMLCData string: 'five');
+		addElementNamed: 'four'.
 	self
 		shouldnt: [document validate]
 		raise: XMLValidationException.

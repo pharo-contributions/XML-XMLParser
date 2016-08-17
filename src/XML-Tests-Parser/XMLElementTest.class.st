@@ -35,6 +35,75 @@ XMLElementTest >> nodeClass [
 ]
 
 { #category : #tests }
+XMLElementTest >> testAcceptNodeVisitor [
+	| visitor element message |
+
+	visitor := XMLRecordingNodeVisitor new.
+	element := self nodeClass new.
+	self
+		assert: (element acceptNodeVisitor: visitor) == element;
+		assert: visitor messageRecorder hasMessages.
+
+	message := visitor messageRecorder nextMessage.
+	self
+		assert: message selector == #visitElement:;
+		assert: message arguments = (Array with: element);
+		assert: visitor messageRecorder hasMessages.
+
+	message := visitor messageRecorder nextMessage.
+	self
+		assert: message selector == #visitNodeWithElements:;
+		assert: message arguments = (Array with: element);
+		deny: visitor messageRecorder hasMessages.
+
+	super testAcceptNodeVisitor.
+]
+
+{ #category : #tests }
+XMLElementTest >> testAddElementNamed [
+	| element |
+
+	super testAddElementNamed.
+
+	element := self nodeClass new.
+	element
+		declarePrefix: 'prefix'
+		uri: 'prefixNS'.
+	self
+		shouldnt: [element addElementNamed: 'prefix:test']
+		raise: XMLNamespaceException.
+	self
+		assert: element nodes size = 1;
+		assert: element firstNode isElement;
+		assert: element firstNode name = 'prefix:test';
+		assert: element firstNode namespaceURI = 'prefixNS'.
+]
+
+{ #category : #tests }
+XMLElementTest >> testAddElementNamedAttributes [
+	| element |
+
+	super testAddElementNamedAttributes.
+
+	element := self nodeClass new.
+	element
+		declarePrefix: 'prefix'
+		uri: 'prefixNS'.
+	self
+		shouldnt: [
+			element
+				addElementNamed: 'prefix:test'
+				attributes: self attributeAssociations]
+		raise: XMLNamespaceException.
+	self
+		assert: element nodes size = 1;
+		assert: element firstNode isElement;
+		assert: element firstNode name = 'prefix:test';
+		assert: element firstNode namespaceURI = 'prefixNS';
+		assert: element firstNode attributes = self attributes.
+]
+
+{ #category : #tests }
 XMLElementTest >> testAttributeAssociations [
 	| element |
 
@@ -1320,12 +1389,14 @@ XMLElementTest >> testUndeclaringAttributePrefixes [
 
 { #category : #tests }
 XMLElementTest >> testWriteXMLOn [
-	| element attributes |
+	| element |
 
 	element := XMLElement named: 'element'.
-	attributes := OrderPreservingDictionary with: 'b'->'two' with: 'a'->'one'.
-	self
-		assert: element printString = '<element />';
-		assert: (element contentString: 'test') printString = '<element>test</element>';
-		assert: (element setAttributes: attributes) printString = '<element b="two" a="one">test</element>'
+	self assert: element printString = '<element />'.
+	
+	element addString: 'test'.
+	self assert: element printString = '<element>test</element>'.
+
+	element setAttributes: (Dictionary with: 'b' -> 'two' with: 'a' -> 'one').
+	self assert: element printString = '<element b="two" a="one">test</element>'.
 ]

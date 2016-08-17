@@ -144,6 +144,48 @@ XMLKeyValueCacheTest >> testNotEmpty [
 ]
 
 { #category : #tests }
+XMLKeyValueCacheTest >> testRemoveAll [
+	| cache |
+
+	cache := self newCacheWithEntries.
+	self deny: cache isEmpty.
+	cache removeAll.
+	self assert: cache isEmpty.
+]
+
+{ #category : #tests }
+XMLKeyValueCacheTest >> testRemoveKey [
+	| cache |
+
+	cache := self newCacheWithEntries.
+	self keysAndValuesDo: [:key :value |
+		self
+			assert: (cache removeKey: key) = value;
+			deny: (cache includesKey: key).
+		self
+			should: [cache removeKey: key]
+			raise: Error].
+	self assert: cache isEmpty.
+]
+
+{ #category : #tests }
+XMLKeyValueCacheTest >> testRemoveKeyIfAbsent [
+	| cache |
+
+	cache := self newCacheWithEntries.
+	self keysAndValuesDo: [:key :value |
+		self assert:
+			(cache
+				removeKey: key
+				ifAbsent: [#absent]) = value.
+		self assert:
+			(cache
+				removeKey: key
+				ifAbsent: [#absent]) = #absent].
+	self assert: cache isEmpty.
+]
+
+{ #category : #tests }
 XMLKeyValueCacheTest >> testSize [
 	self
 		assert: self newCache size = 0;

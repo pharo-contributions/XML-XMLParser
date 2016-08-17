@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLNodeFactoryTest,
 	#superclass : #TestCase,
-	#category : #'XML-Tests-Parser-Factories'
+	#category : #'XML-Tests-Parser-DOM-Factories'
 }
 
 { #category : #testing }
@@ -10,23 +10,15 @@ XMLNodeFactoryTest class >> shouldInheritSelectors [
 ]
 
 { #category : #accessing }
-XMLNodeFactoryTest >> cdataClass [
-	^ XMLCData
+XMLNodeFactoryTest >> attributeAssociations [
+	^ Array
+		with: 'one' -> '1'
+		with: 'two' -> '2'
 ]
 
 { #category : #accessing }
-XMLNodeFactoryTest >> commentClass [
-	^ XMLComment
-]
-
-{ #category : #accessing }
-XMLNodeFactoryTest >> documentClass [
-	^ XMLDocument
-]
-
-{ #category : #accessing }
-XMLNodeFactoryTest >> elementClass [
-	^ XMLElement
+XMLNodeFactoryTest >> attributes [
+	^ OrderPreservingStringDictionary newFrom: self attributeAssociations
 ]
 
 { #category : #accessing }
@@ -37,11 +29,6 @@ XMLNodeFactoryTest >> factoryClass [
 { #category : #'instance creation' }
 XMLNodeFactoryTest >> newFactory [
 	^ self factoryClass new
-]
-
-{ #category : #accessing }
-XMLNodeFactoryTest >> piClass [
-	^ XMLPI
 ]
 
 { #category : #'source XML' }
@@ -69,11 +56,6 @@ XMLNodeFactoryTest >> sampleUserXML [
 		contents
 ]
 
-{ #category : #accessing }
-XMLNodeFactoryTest >> stringClass [
-	^ XMLString
-]
-
 { #category : #tests }
 XMLNodeFactoryTest >> testAsPluggableNodeFactory [
 	| factory pluggableFactory |
@@ -86,12 +68,71 @@ XMLNodeFactoryTest >> testAsPluggableNodeFactory [
 ]
 
 { #category : #tests }
+XMLNodeFactoryTest >> testAttributeDeclarationClass [
+	self assert: self newFactory attributeDeclarationClass == XMLAttributeDeclaration
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testCDataClass [
+	self assert: self newFactory cdataClass == XMLCData
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testClassForElement [
+	self assert: (self newFactory classForElement: 'test') == XMLElement
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testClassForElementNamespaceURI [
+	self assert:
+		(self newFactory
+			classForElement: 'test'
+			namespaceURI: '') == XMLElement.
+	self assert:
+		(self newFactory
+			classForElement: 'test'
+			namespaceURI: 'testNS') == XMLElement.
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testCommentClass [
+	self assert: self newFactory commentClass == XMLComment
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testDoctypeDeclarationClass [
+	self assert: self newFactory doctypeDeclarationClass == XMLDoctypeDeclaration
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testDocumentClass [
+	self assert: self newFactory documentClass == XMLDocument
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testElementClass [
+	self assert: self newFactory elementClass == XMLElement
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testElementDeclarationClass [
+	self assert: self newFactory elementDeclarationClass == XMLElementDeclaration
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testGeneralEntityDeclarationClass [
+	self assert:
+		self newFactory generalEntityDeclarationClass ==
+			XMLGeneralEntityDeclaration
+]
+
+{ #category : #tests }
 XMLNodeFactoryTest >> testNewCData [
 	| cdata |
 
 	cdata := self newFactory newCData: 'test'.
 	self
-		assert: cdata class == self cdataClass;
+		assert: cdata class == XMLCData;
 		assert: cdata string = 'test'.
 ]
 
@@ -101,24 +142,18 @@ XMLNodeFactoryTest >> testNewComment [
 
 	comment := self newFactory newComment: 'test'.
 	self
-		assert: comment class == self commentClass;
+		assert: comment class == XMLComment;
 		assert: comment string = 'test'.
 ]
 
 { #category : #tests }
 XMLNodeFactoryTest >> testNewDocument [
-	| newDocument |
-
-	newDocument := self newFactory newDocument.
-	self assert: newDocument class == self documentClass.
+	self assert: self newFactory newDocument class == XMLDocument
 ]
 
 { #category : #tests }
 XMLNodeFactoryTest >> testNewElement [
-	| element |
-
-	element := self newFactory newElement.
-	self assert: element class == self elementClass.
+	self assert: self newFactory newElement class == XMLElement
 ]
 
 { #category : #tests }
@@ -127,66 +162,106 @@ XMLNodeFactoryTest >> testNewElementNamed [
 
 	element := self newFactory newElementNamed: 'test'.
 	self
-		assert: element class == self elementClass;
+		assert: element class == XMLElement;
 		assert: element name = 'test'.
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testNewElementNamedAttributes [
+	| element |
+
+	element :=
+		self newFactory
+			newElementNamed: 'test'
+			attributes: self attributeAssociations.
+	self
+		assert: element class == XMLElement;
+		assert: element name = 'test';
+		assert: element attributes = self attributes
 ]
 
 { #category : #tests }
 XMLNodeFactoryTest >> testNewElementNamedNamespaceURI [
 	| element |
 
-	element := self newFactory newElementNamed: 'prefix:test' namespaceURI: 'prefixNS'.
+	element :=
+		self newFactory
+			newElementNamed: 'prefix:test'
+			namespaceURI: 'prefixNS'.
 	self
-		assert: element class == self elementClass;
+		assert: element class == XMLElement;
 		assert: element name = 'prefix:test';
 		assert: element namespaceURI = 'prefixNS'.
 ]
 
 { #category : #tests }
+XMLNodeFactoryTest >> testNewElementNamedNamespaceURIAttributes [
+	| element |
+
+	element :=
+		self newFactory
+			newElementNamed: 'prefix:test'
+			namespaceURI: 'prefixNS'
+			attributes: self attributeAssociations.
+	self
+		assert: element class == XMLElement;
+		assert: element name = 'prefix:test';
+		assert: element namespaceURI = 'prefixNS';
+		assert: element attributes = self attributes.
+]
+
+{ #category : #tests }
 XMLNodeFactoryTest >> testNewPI [
-	self assert: self newFactory newPI class == self piClass
+	self assert: self newFactory newPI class == XMLPI
 ]
 
 { #category : #tests }
-XMLNodeFactoryTest >> testNewString [
-	| string |
+XMLNodeFactoryTest >> testNewPITargetData [
+	| pi |
 
-	string := self newFactory newString: 'test'.
+	pi :=
+		self newFactory
+			newPITarget: 'target'
+			data: 'data'.
 	self
-		assert: string class == self stringClass;
-		assert: string string = 'test'.
+		assert: pi class == XMLPI;
+		assert: pi target = 'target';
+		assert: pi data = 'data'.
 ]
 
 { #category : #tests }
-XMLNodeFactoryTest >> testParsingSample [
-	| document factory |
+XMLNodeFactoryTest >> testNewStringNode [
+	| cdata |
 
-	factory := self newFactory.
-	document :=
-		(XMLDOMParser on: self sampleUserXML)
-			nodeFactory: factory;
-			preservesCDataNodes: true;
-			preservesCommentNodes: true;
-			parseDocument.
+	cdata := self newFactory newStringNode: 'test'.
 	self
-		assert: document class == self documentClass;
-		assert: document nodeFactory == factory.
+		assert: cdata class == XMLString;
+		assert: cdata string = 'test'.
+]
 
-	document allElementsDo: [:each |
-		self
-			assert: each class == self elementClass;
-			assert: each nodeFactory == factory].
+{ #category : #tests }
+XMLNodeFactoryTest >> testNodeListClass [
+	self assert: self newFactory nodeListClass == XMLNodeList
+]
 
-	document allNodesDo: [:each |
-		each isStringNode
-			ifTrue: [
-				self assert:
-					each class == 
-						(each isCData
-							ifTrue: [self cdataClass]
-							ifFalse: [self stringClass])].
-		each isComment
-			ifTrue: [self assert: each class == self commentClass].
-		each isPI
-			ifTrue: [self assert: each class == self piClass]].
+{ #category : #tests }
+XMLNodeFactoryTest >> testNotationDeclarationClass [
+	self assert: self newFactory notationDeclarationClass == XMLNotationDeclaration
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testPIClass [
+	self assert: self newFactory piClass == XMLPI
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testParameterEntityDeclarationClass [
+	self assert:
+		self newFactory parameterEntityDeclarationClass ==
+			XMLParameterEntityDeclaration
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testStringNodeClass [
+	self assert: self newFactory stringNodeClass == XMLString
 ]

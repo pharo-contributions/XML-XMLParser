@@ -65,10 +65,8 @@ XMLNFAStateSetTest >> testIsAccepting [
 		self assert: set isAccepting = isAccepting].
 	self assert: set isAccepting.
 
-	self setElements do: [:element |
-		set
-			remove: element
-			ifAbsent: [nil].
+	self setElements do: [:each |
+		set remove: each.
 		(set includes: lastAccepting)
 			ifTrue: [self assert: set isAccepting]
 			ifFalse: [self deny: set isAccepting]].

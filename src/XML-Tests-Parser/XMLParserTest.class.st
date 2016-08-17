@@ -318,6 +318,24 @@ XMLParserTest >> benchmark6 [
 	^ [4000 timesRepeat: [XMLDOMParser parse: self addressBookNamespacePrefixedXML]] timeToRun
 ]
 
+{ #category : #benchmark }
+XMLParserTest >> benchmark7 [
+	"
+	XMLParserTest new benchmark7
+	"
+	Smalltalk garbageCollect.
+	^ [4000 timesRepeat: [SAX2Parser parse: self addressBookXML]] timeToRun
+]
+
+{ #category : #benchmark }
+XMLParserTest >> benchmark8 [
+	"
+	XMLParserTest new benchmark8
+	"
+	Smalltalk garbageCollect.
+	^ [4000 timesRepeat: [SAX2ElementParser parse: self addressBookXML]] timeToRun
+]
+
 { #category : #source }
 XMLParserTest >> elementDeclarationsNamed: aNameCollection [
 	| stream |

@@ -78,65 +78,387 @@ XMLNodeWithElementsTest >> nodeClass [
 ]
 
 { #category : #tests }
-XMLNodeWithElementsTest >> testAddContent [
-	| node |
+XMLNodeWithElementsTest >> testAcceptNodeVisitor [
+	| visitor nodeWithElements message |
 
-	node := self nodeClass new.
-	node addContent: 'one'.
+	visitor := XMLRecordingNodeVisitor new.
+	nodeWithElements := self newNodeWithElements.
 	self
-		assert: node nodes size = 1;
-		assert: (node firstNode isStringNode: 'one').
-	node addContent: 'two' asXMLString.
-	self
-		assert: node nodes size = 1;
-		assert: (node firstNode isStringNode: 'onetwo').
+		assert: (nodeWithElements acceptNodeVisitor: visitor) == nodeWithElements;
+		assert: visitor messageRecorder hasMessages.
 
-	node addNode: (XMLElement named: 'three').
-	self
-		assert: node nodes size = 2;
-		assert: (node firstNode isStringNode: 'onetwo');
-		assert: (node nodes second isElementNamed: 'three').
+	"skip the messages for the nodeWithElements"
+	[visitor messageRecorder hasMessages
+		and: [
+			visitor messageRecorder peekMessage arguments =
+				(Array with: nodeWithElements)]]
+		whileTrue: [visitor messageRecorder nextMessage].
 
-	node
-		addContent: (XMLCData string: 'four');
-		addContent: (XMLString string: 'five').
+	nodeWithElements descendantNodesDo: [:node | | visitingSelectors |
+		visitingSelectors :=
+			(#(
+				#(isElement #(visitElement: visitNodeWithElements:))
+				#(isCData #(visitCData: #visitStringNode:))
+				#(isStringNode #(#visitStringNode:))
+				#(isComment #(visitComment:))
+				#(isPI #(visitPI:)))
+					detect: [:each | node perform: each first]
+					ifNone: [#(nil #())]) second.
+
+		self assert: visitingSelectors notEmpty.
+		visitingSelectors do: [:selector |
+			self assert: visitor messageRecorder hasMessages.
+
+			message := visitor messageRecorder nextMessage.
+			self
+				assert: message selector = selector;
+				assert: message arguments = (Array with: node)]].
+
+	self deny: visitor messageRecorder hasMessages.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testAddCData [
+	| nodeWithElements cdataNode |
+
+	nodeWithElements := self nodeClass new.
+	cdataNode := nodeWithElements addCData: 'test'.
 	self
-		assert: node nodes size = 4;
-		assert: (node firstNode isStringNode: 'onetwo');
-		assert: (node nodes second isElementNamed: 'three');
-		assert: (node nodes third isCData and: [node nodes third string = 'four']);
-		assert: (node nodes fourth isStringNode: 'five').
+		assert: cdataNode isCData;
+		assert: cdataNode string = 'test';
+		assert: nodeWithElements nodes size = 1;
+		assert: nodeWithElements firstNode == cdataNode.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testAddCDataNodeFactoryUse [
+	| nodeWithElements firstCDataNode lastCDataNode |
+
+	nodeWithElements := self nodeClass new.
+	firstCDataNode := nodeWithElements addCData: 'one'.
+	nodeWithElements nodeFactory:
+		(XMLPluggableNodeFactory new
+			cdataClass: XMLFCData).
+	lastCDataNode := nodeWithElements addCData: 'two'.
+	self
+		assert: nodeWithElements nodes size = 2;
+		assert: firstCDataNode class == XMLCData;
+		assert: firstCDataNode string = 'one';
+		assert: lastCDataNode class == XMLFCData;
+		assert: lastCDataNode string = 'two'.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testAddComment [
+	| nodeWithElements comment |
+
+	super testAddComment.
+
+	(nodeWithElements := self nodeClass new)
+		nodeFactory:
+			(XMLPluggableNodeFactory new
+				commentClass: XMLFComment).
+	comment := nodeWithElements addComment: 'test'.
+	self
+		assert: nodeWithElements nodes size = 1;
+		assert: nodeWithElements firstNode == comment;
+		assert: comment class == XMLFComment;
+		assert: comment string = 'test'.
 ]
 
 { #category : #tests }
 XMLNodeWithElementsTest >> testAddElementNamed [
-	| node element |
+	| nodeWithElements element |
 
-	node := self nodeClass new.
-	(element := node addElementNamed: 'test')
-		addElementNamed: 'first';
-		declarePrefix: 'prefix' uri: 'ns';
-		addElementNamed: 'prefix:second'.
-	self assert: element elementNames asArray = #('first' 'prefix:second').
+	nodeWithElements := self nodeClass new.
+	element := nodeWithElements addElementNamed: 'one'.
 	self
-		should: [element addElementNamed: 'undeclared:fourth']
+		assert: nodeWithElements nodes size = 1;
+		assert: element isElement;
+		assert: element name = 'one'.
+	self
+		should: [nodeWithElements addElementNamed: 'undeclared:two']
+		raise: XMLNamespaceException.
+
+	nodeWithElements := self nodeClass new.
+	nodeWithElements usesNamespaces: false.
+	self
+		shouldnt: [nodeWithElements addElementNamed: 'undeclared:three']
 		raise: XMLNamespaceException.
 ]
 
 { #category : #tests }
-XMLNodeWithElementsTest >> testAddElementNamedNamespaceURI [
-	| node element |
+XMLNodeWithElementsTest >> testAddElementNamedAttributes [
+	| nodeWithElements element |
 
-	node := self nodeClass new.
-	(element := node addElementNamed: 'test' namespaceURI: 'defaultNS')
-		addElementNamed: 'prefix:first' namespaceURI: 'firstNS';
-		addElementNamed: 'second' namespaceURI: 'secondNS'.
+	nodeWithElements := self nodeClass new.
+	element :=
+		nodeWithElements
+			addElementNamed: 'one'
+			attributes: self unprefixedAttributeAssociations.
 	self
-		assert: element namespaceURI = 'defaultNS';
-		assert: element nodes first name = 'prefix:first';
-		assert: element nodes first namespaceURI = 'firstNS';
-		assert: element nodes second name = 'second';
-		assert: element nodes second namespaceURI = 'secondNS'.
+		assert: nodeWithElements nodes size = 1;
+		assert: element isElement;
+		assert: element name = 'one';
+		assert: element attributes = self unprefixedAttributes.
+	self
+		should: [
+			nodeWithElements
+				addElementNamed: 'undeclared:two'
+				attributes: self unprefixedAttributeAssociations]
+		raise: XMLNamespaceException.
+	self
+		should: [
+			"attributes with undeclared prefixes should be caught too"
+			nodeWithElements
+				addElementNamed: 'three'
+				attributes: self attributeAssociations]
+		raise: XMLNamespaceException.
+
+	nodeWithElements := self nodeClass new.
+	nodeWithElements usesNamespaces: false.
+	self
+		shouldnt: [
+			nodeWithElements
+				addElementNamed: 'undeclared:four'
+				attributes: self attributeAssociations]
+		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testAddElementNamedAttributesNodeFactoryUse [
+	| nodeWithElements element |
+
+	nodeWithElements := self nodeClass new.
+	nodeWithElements nodeFactory:
+		(XMLPluggableElementFactory new
+			handleElement: 'test'
+			attributes: self unprefixedAttributeAssociations
+			withClass: XMLFElement).
+	element :=
+		nodeWithElements
+			addElementNamed: 'test'
+			attributes: self unprefixedAttributeAssociations.
+	self
+		assert: nodeWithElements nodes size = 1;
+		assert: element class == XMLFElement;
+		assert: element name = 'test';
+		assert: element attributes = self unprefixedAttributes.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testAddElementNamedNamespaceURI [
+	| nodeWithElements element |
+
+	nodeWithElements := self nodeClass new.
+	element :=
+		nodeWithElements
+			addElementNamed: 'test'
+			namespaceURI: 'defaultNS'.
+	self
+		assert: nodeWithElements nodes size = 1;
+		assert: element isElement;
+		assert: element name = 'test';
+		assert: element namespaceURI = 'defaultNS'.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testAddElementNamedNamespaceURIAttributes [
+	| nodeWithElements element |
+
+	nodeWithElements := self nodeClass new.
+	element :=
+		nodeWithElements
+			addElementNamed: 'prefix:one'
+			namespaceURI: 'prefixNS'
+			attributes: self attributeAssociations.
+	self
+		assert: nodeWithElements nodes size = 1;
+		assert: element isElement;
+		assert: element name = 'prefix:one';
+		assert: element namespaceURI = 'prefixNS';
+		assert: element attributes = self attributes.
+	self
+		should: [
+			"attributes with undeclared prefixes should be caught"
+			nodeWithElements
+				addElementNamed: 'two'
+				namespaceURI: 'defaultNS'
+				attributes: self attributeAssociations]
+		raise: XMLNamespaceException.
+
+	nodeWithElements := self nodeClass new.
+	nodeWithElements usesNamespaces: false.
+	self
+		shouldnt: [
+			nodeWithElements
+				addElementNamed: 'three'
+				namespaceURI: 'defaultNS'
+				attributes: self attributeAssociations]
+		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testAddElementNamedNamespaceURIAttributesNodeFactoryUse [
+	| nodeWithElements element |
+
+	nodeWithElements := self nodeClass new.
+	nodeWithElements nodeFactory:
+		(XMLPluggableElementFactory new
+			handleElement: 'prefix:test'
+			namespaceURI: 'prefixNS'
+			attributes: self attributeAssociations
+			withClass: XMLFElement).
+	element :=
+		nodeWithElements
+			addElementNamed: 'prefix:test'
+			namespaceURI: 'prefixNS'
+			attributes: self attributeAssociations.
+	self
+		assert: nodeWithElements nodes size = 1;
+		assert: element class == XMLFElement;
+		assert: element name = 'prefix:test';
+		assert: element namespaceURI = 'prefixNS';
+		assert: element attributes = self attributes.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testAddElementNamedNamespaceURINodeFactoryUse [
+	| nodeWithElements element |
+
+	nodeWithElements := self nodeClass new.
+	nodeWithElements nodeFactory:
+		(XMLPluggableElementFactory new
+			handleElement: 'test'
+			namespaceURI: 'defaultNS'
+			withClass: XMLFElement).
+	element :=
+		nodeWithElements
+			addElementNamed: 'test'
+			namespaceURI: 'defaultNS'.
+	self
+		assert: nodeWithElements nodes size = 1;
+		assert: element class == XMLFElement;
+		assert: element name = 'test';
+		assert: element namespaceURI = 'defaultNS'.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testAddElementNamedNodeFactoryUse [
+	| nodeWithElements element |
+
+	nodeWithElements := self nodeClass new.
+	nodeWithElements nodeFactory:
+		(XMLPluggableElementFactory new
+			handleElement: 'test'
+			withClass: XMLFElement).
+	element := nodeWithElements addElementNamed: 'test'.
+	self
+		assert: nodeWithElements nodes size = 1;
+		assert: element class == XMLFElement;
+		assert: element name = 'test'.
+
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testAddPITargetData [
+	| nodeWithElements pi |
+
+	super testAddPITargetData.
+
+	(nodeWithElements := self nodeClass new)
+		nodeFactory:
+			(XMLPluggableNodeFactory new
+				piClass: XMLFPI).
+	pi :=
+		nodeWithElements
+			addPITarget: 'target'
+			data: 'data'.
+	self
+		assert: nodeWithElements nodes size = 1;
+		assert: nodeWithElements firstNode == pi;
+		assert: pi class == XMLFPI;
+		assert: pi target = 'target';
+		assert: pi data = 'data'.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testAddString [
+	| nodeWithElements firstStringNode elementNode lastStringNode |
+
+	nodeWithElements := self nodeClass new.
+	firstStringNode := nodeWithElements addString: 'one'.
+	self
+		assert: (firstStringNode isStringNode: 'one');
+		assert: nodeWithElements nodes size = 1;
+		assert: nodeWithElements firstNode == firstStringNode.
+
+	self
+		assert: (nodeWithElements addString: 'two') == firstStringNode;
+		assert: (firstStringNode isStringNode: 'onetwo');
+		assert: nodeWithElements nodes size = 1;
+		assert: nodeWithElements nodes first == firstStringNode.
+
+	elementNode := nodeWithElements addNode: (XMLElement named: 'three').
+	self
+		assert: (elementNode isElementNamed: 'three');
+		assert: nodeWithElements nodes size = 2;
+		assert: nodeWithElements nodes first == firstStringNode;
+		assert: nodeWithElements nodes second == elementNode.
+
+	lastStringNode := nodeWithElements addString: 'four'.
+	self
+		assert: (lastStringNode isStringNode: 'four');
+		assert: nodeWithElements nodes size = 3;
+		assert: nodeWithElements nodes first == firstStringNode;
+		assert: nodeWithElements nodes second == elementNode;
+		assert: nodeWithElements nodes third == lastStringNode.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testAddStringNodeFactoryUse [
+	| nodeWithElements firstStringNode elementNode lastStringNode |
+
+	nodeWithElements := self nodeClass new.
+	firstStringNode := nodeWithElements addString: 'one'.
+	self
+		assert: (firstStringNode isStringNode: 'one');
+		assert: nodeWithElements nodes size = 1;
+		assert: nodeWithElements firstNode == firstStringNode.
+
+	nodeWithElements nodeFactory:
+		(XMLPluggableNodeFactory new
+			stringNodeClass: XMLFString).
+	self
+		assert: (nodeWithElements addString: 'two') == firstStringNode;
+		assert: (firstStringNode isStringNode: 'onetwo');
+		assert: nodeWithElements nodes size = 1;
+		assert: nodeWithElements nodes first == firstStringNode.
+
+	elementNode := nodeWithElements addNode: (XMLElement named: 'three').
+	self
+		assert: (elementNode isElementNamed: 'three');
+		assert: nodeWithElements nodes size = 2;
+		assert: nodeWithElements nodes first == firstStringNode;
+		assert: nodeWithElements nodes second == elementNode.
+
+	lastStringNode := nodeWithElements addString: 'four'.
+	self
+		assert: lastStringNode class == XMLFString;
+		assert: (lastStringNode isStringNode: 'four');
+		assert: nodeWithElements nodes size = 3;
+		assert: nodeWithElements nodes first == firstStringNode;
+		assert: nodeWithElements nodes second == elementNode;
+		assert: nodeWithElements nodes third == lastStringNode.
+
+	self
+		assert: (nodeWithElements addString: 'five') == lastStringNode;
+		assert: lastStringNode class == XMLFString;
+		assert: (lastStringNode isStringNode: 'fourfive');
+		assert: nodeWithElements nodes size = 3;
+		assert: nodeWithElements nodes first == firstStringNode;
+		assert: nodeWithElements nodes second == elementNode;
+		assert: nodeWithElements nodes third == lastStringNode.
 ]
 
 { #category : #tests }
@@ -1188,88 +1510,210 @@ XMLNodeWithElementsTest >> testLastElement [
 
 { #category : #tests }
 XMLNodeWithElementsTest >> testNewCData [
-	| cdata |
+	| nodeWithElements cdata |
 
-	cdata := self nodeClass new newCData: 'test'.
+	super testNewCData.
+
+	(nodeWithElements := self nodeClass new)
+		nodeFactory:
+			(XMLPluggableNodeFactory new
+				cdataClass: XMLFCData).
+	cdata := nodeWithElements newCData: 'test'.
 	self
-		assert: cdata isCData;
+		assert: cdata class == XMLFCData;
 		assert: cdata string = 'test'.
 ]
 
 { #category : #tests }
 XMLNodeWithElementsTest >> testNewComment [
-	| comment |
+	| nodeWithElements comment |
 
-	comment := self nodeClass new newComment: 'test'.
+	super testNewComment.
+
+	(nodeWithElements := self nodeClass new)
+		nodeFactory:
+			(XMLPluggableNodeFactory new
+				commentClass: XMLFComment).
+	comment := nodeWithElements newComment: 'test'.
 	self
-		assert: comment isComment;
+		assert: comment class == XMLFComment;
 		assert: comment string = 'test'.
 ]
 
 { #category : #tests }
 XMLNodeWithElementsTest >> testNewDocument [
-	| node document |
+	| nodeWithElements document |
 
-	node := self nodeClass new.
-	document := node newDocument.
+	super testNewDocument.
+
+	(nodeWithElements := self nodeClass new)
+		 nodeFactory:
+			(XMLPluggableNodeFactory new
+				documentClass: XMLFDocument).
+	document := nodeWithElements newDocument.
 	self
-		assert: document isDocument;
-		assert: document configuration == node configuration;
-		assert: document nodeFactory == node nodeFactory.
+		assert: document class == XMLFDocument;
+		assert: document configuration == nodeWithElements configuration;
+		assert: document nodeFactory == nodeWithElements nodeFactory.
 ]
 
 { #category : #tests }
 XMLNodeWithElementsTest >> testNewElement [
-	| node element |
+	| nodeWithElements element |
 
-	node := self nodeClass new.
-	element := node newElement.
+	super testNewElement.
+
+	(nodeWithElements := self nodeClass new)
+		nodeFactory:
+			(XMLPluggableNodeFactory new
+				elementClass: XMLFElement).
+	element := nodeWithElements newElement.
 	self
-		assert: element isElement;
-		assert: element configuration == node configuration;
-		assert: element nodeFactory == node nodeFactory.
+		assert: element class == XMLFElement;
+		assert: element configuration == nodeWithElements configuration;
+		assert: element nodeFactory == nodeWithElements nodeFactory.
 ]
 
 { #category : #tests }
 XMLNodeWithElementsTest >> testNewElementNamed [
-	| node element |
+	| nodeWithElements element |
 
-	node := self nodeClass new.
-	element := node newElementNamed: 'test'.
+	super testNewElementNamed.
+
+	(nodeWithElements := self nodeClass new)
+		nodeFactory:
+			(XMLPluggableElementFactory new
+				handleElement: 'test' withClass: XMLFElement).
+	element := nodeWithElements newElementNamed: 'test'.
 	self
-		assert: element isElement;
-		assert: element configuration == node configuration;
-		assert: element nodeFactory == node nodeFactory;
-		assert: element name = 'test'.
+		assert: element class == XMLFElement;
+		assert: element name = 'test';
+		assert: element configuration == nodeWithElements configuration;
+		assert: element nodeFactory == nodeWithElements nodeFactory.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testNewElementNamedAttributes [
+	| nodeWithElements element |
+
+	super testNewElementNamedAttributes.
+
+	(nodeWithElements := self nodeClass new)
+		nodeFactory:
+			(XMLPluggableElementFactory new
+				handleElement: 'test'
+				attributes: self unprefixedAttributeAssociations
+				withClass: XMLFElement).
+	element :=
+		nodeWithElements
+			newElementNamed: 'test'
+			attributes: self unprefixedAttributeAssociations.
+	self
+		assert: element class == XMLFElement;
+		assert: element name = 'test';
+		assert: element attributes = self unprefixedAttributes;
+		assert: element configuration == nodeWithElements configuration;
+		assert: element nodeFactory == nodeWithElements nodeFactory.
 ]
 
 { #category : #tests }
 XMLNodeWithElementsTest >> testNewElementNamedNamespaceURI [
-	| node element |
+	| nodeWithElements element |
 
-	node := self nodeClass new.
-	element := node newElementNamed: 'prefix:test' namespaceURI: 'prefixNS'.
+	super testNewElementNamedNamespaceURI.
+
+	(nodeWithElements := self nodeClass new)
+		nodeFactory:
+			(XMLPluggableElementFactory new
+				handleElement: 'prefix:test'
+				namespaceURI: 'prefixNS'
+				withClass: XMLFElement).
+	element :=
+		nodeWithElements
+			newElementNamed: 'prefix:test'
+			namespaceURI: 'prefixNS'.
 	self
-		assert: element isElement;
-		assert: element configuration == node configuration;
-		assert: element nodeFactory == node nodeFactory;
+		assert: element class == XMLFElement;
 		assert: element name = 'prefix:test';
-		assert: element namespaceURI = 'prefixNS'.
+		assert: element namespaceURI = 'prefixNS';
+		assert: element configuration == nodeWithElements configuration;
+		assert: element nodeFactory == nodeWithElements nodeFactory.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testNewElementNamedNamespaceURIAttributes [
+	| nodeWithElements element |
+
+	super testNewElementNamedNamespaceURIAttributes.
+
+	(nodeWithElements := self nodeClass new)
+		nodeFactory:
+			(XMLPluggableElementFactory new
+				handleElement: 'prefix:test'
+				namespaceURI: 'prefixNS'
+				attributes: self attributeAssociations
+				withClass: XMLFElement).
+	element :=
+		nodeWithElements
+			newElementNamed: 'prefix:test'
+			namespaceURI: 'prefixNS'
+			attributes: self attributeAssociations.
+	self
+		assert: element class == XMLFElement;
+		assert: element name = 'prefix:test';
+		assert: element namespaceURI = 'prefixNS';
+		assert: element attributes = self attributes;
+		assert: element configuration == nodeWithElements configuration;
+		assert: element nodeFactory == nodeWithElements nodeFactory.
 ]
 
 { #category : #tests }
 XMLNodeWithElementsTest >> testNewPI [
-	self assert: self nodeClass new newPI isPI
+	| nodeWithElements |
+
+	super testNewPI.
+
+	(nodeWithElements := self nodeClass new)
+		nodeFactory:
+			(XMLPluggableNodeFactory new
+				piClass: XMLFPI).
+	self assert: nodeWithElements newPI class == XMLFPI.
 ]
 
 { #category : #tests }
-XMLNodeWithElementsTest >> testNewString [
-	| string |
+XMLNodeWithElementsTest >> testNewPITargetData [
+	| nodeWithElements pi |
 
-	string := self nodeClass new newString: 'test'.
+	super testNewPITargetData.
+
+	(nodeWithElements := self nodeClass new)
+		nodeFactory:
+			(XMLPluggableNodeFactory new
+				piClass: XMLFPI).
+	pi :=
+		nodeWithElements
+			newPITarget: 'target'
+			data: 'data'.
 	self
-		assert: string isStringNode;
-		assert: string string = 'test'.
+		assert: pi class == XMLFPI;
+		assert: pi target = 'target';
+		assert: pi data = 'data'.
+]
+
+{ #category : #tests }
+XMLNodeWithElementsTest >> testNewStringNode [
+	| nodeWithElements stringNode |
+
+	super testNewStringNode.
+
+	(nodeWithElements := self nodeClass new)
+		nodeFactory:
+			(XMLPluggableNodeFactory new
+				stringNodeClass: XMLFString).
+	stringNode := nodeWithElements newStringNode: 'test'.
+	self
+		assert: stringNode class == XMLFString;
+		assert: stringNode string = 'test'.
 ]
 
 { #category : #tests }
@@ -1277,10 +1721,12 @@ XMLNodeWithElementsTest >> testNodeFactory [
 	| nodeWithElements newFactory |
 
 	nodeWithElements := self newNodeWithElements.
+	self assert: (nodeWithElements nodeFactory isKindOf: XMLNodeFactory).
+
 	newFactory := XMLPluggableNodeFactory new.
 	self
-		assert: (nodeWithElements nodeFactory isKindOf: XMLNodeFactory);
-		assert: (nodeWithElements nodeFactory: newFactory) nodeFactory == newFactory.
+		assert: (nodeWithElements nodeFactory: newFactory) == nodeWithElements;
+		assert: nodeWithElements nodeFactory == newFactory.
 ]
 
 { #category : #tests }

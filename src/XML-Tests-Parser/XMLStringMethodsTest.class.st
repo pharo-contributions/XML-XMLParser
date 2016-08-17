@@ -118,10 +118,10 @@ XMLStringMethodsTest >> testAsXMLStreamConverter [
 ]
 
 { #category : #tests }
-XMLStringMethodsTest >> testAsXMLString [
+XMLStringMethodsTest >> testAsXMLStringNode [
 	| node |
 
-	node := 'test' asXMLString.
+	node := 'test' asXMLStringNode.
 	self
 		assert: node class == XMLString;
 		assert: node string = 'test'.
