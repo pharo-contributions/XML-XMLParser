@@ -8,14 +8,14 @@ Class {
 }
 
 { #category : #checking }
-XMLWellFormedElementNester >> endElement: anElementName [
-	(self currentElement = anElementName)
+XMLWellFormedElementNester >> endElement: anElement [
+	(self currentElement = anElement)
 		ifFalse: [
-			^ (self hasOpenElement: anElementName)
-				ifTrue: [self errorImproperlyNestedElements: anElementName]
-				ifFalse: [self errorUnmatchedEndTag: anElementName]].
+			^ (self hasOpenElement: anElement)
+				ifTrue: [self errorImproperlyNestedElements: anElement]
+				ifFalse: [self errorUnmatchedEndTag: anElement]].
 
-	super endElement: anElementName.
+	super endElement: anElement.
 ]
 
 { #category : #checking }
@@ -25,11 +25,11 @@ XMLWellFormedElementNester >> endNesting [
 ]
 
 { #category : #private }
-XMLWellFormedElementNester >> errorImproperlyNestedElements: anElementName [
+XMLWellFormedElementNester >> errorImproperlyNestedElements: anElement [
 	XMLWellFormednessException
 		formatSignal: '<{1}> element ended before enclosed element(s) {2}'
-		with: anElementName
-		with: (self printedElementsEnclosedBy: anElementName)
+		with: anElement
+		with: (self printedElementsEnclosedBy: anElement)
 ]
 
 { #category : #private }
@@ -38,10 +38,10 @@ XMLWellFormedElementNester >> errorMultipleRoots [
 ]
 
 { #category : #private }
-XMLWellFormedElementNester >> errorUnmatchedEndTag: anElementName [
+XMLWellFormedElementNester >> errorUnmatchedEndTag: anElement [
 	XMLWellFormednessException
 		formatSignal: 'End </{1}> tag with no corresponding start <{1}> tag'
-		with: anElementName
+		with: anElement
 ]
 
 { #category : #private }
@@ -50,13 +50,13 @@ XMLWellFormedElementNester >> errorUnterminatedElements [
 ]
 
 { #category : #checking }
-XMLWellFormedElementNester >> startElement: anElementName [
+XMLWellFormedElementNester >> startElement: anElement [
 	rootElement
-		ifNil: [rootElement := anElementName]
+		ifNil: [rootElement := anElement]
 		ifNotNil: [
 			(self openElements size > 0
 				or: [self hasExternalRootElement])
 				ifFalse: [self errorMultipleRoots]].
 
-	super startElement: anElementName.
+	super startElement: anElement.
 ]

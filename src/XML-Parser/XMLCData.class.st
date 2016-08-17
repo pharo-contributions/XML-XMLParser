@@ -7,14 +7,22 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
-{ #category : #private }
-XMLCData >> acceptsContent [
-	^ false
+{ #category : #visiting }
+XMLCData >> acceptNodeVisitor: aNodeVisitor [
+	aNodeVisitor visitCData: self
 ]
 
 { #category : #testing }
 XMLCData >> isCData [
 	^ true
+]
+
+{ #category : #private }
+XMLCData >> isCoalescingStringNode [
+	"this returns false to stop preserved CDATA nodes from coalescing
+	together or with ordinary string nodes"
+
+	^ false
 ]
 
 { #category : #printing }

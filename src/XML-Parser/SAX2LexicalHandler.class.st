@@ -1,11 +1,19 @@
 "
-This is a base class for SAX lexical handler classes that can be injected into SAX2Parser instances before parsing.
+This is a base class for SAX2 lexical handler classes that can be injected into SAX2Parser instances with #lexicalHandler: before parsing.
 "
 Class {
 	#name : #SAX2LexicalHandler,
 	#superclass : #Object,
+	#instVars : [
+		'parser'
+	],
 	#category : #'XML-Parser'
 }
+
+{ #category : #'instance creation' }
+SAX2LexicalHandler class >> parser: aParser [
+	^ self new parser: aParser
+]
 
 { #category : #'handling - lexical' }
 SAX2LexicalHandler >> comment: aString [
@@ -27,6 +35,18 @@ SAX2LexicalHandler >> endEntity: anEntityName [
 	"Handles the end of some general entity's replacement in content.
 	Not sent if the entity is undeclared or if content entity replacement
 	is disabled."
+]
+
+{ #category : #accessing }
+SAX2LexicalHandler >> parser [
+	"Returns the SAX2Parser"
+
+	^ parser
+]
+
+{ #category : #accessing }
+SAX2LexicalHandler >> parser: aParser [
+	parser := aParser
 ]
 
 { #category : #'handling - lexical' }

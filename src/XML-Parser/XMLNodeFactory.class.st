@@ -24,24 +24,26 @@ XMLNodeFactory >> cdataClass [
 
 { #category : #accessing }
 XMLNodeFactory >> classForElement: aQualifiedName [
-	^ self
-		classForElement: aQualifiedName
-		namespaceURI: ''
+	^ self elementClass
+]
+
+{ #category : #accessing }
+XMLNodeFactory >> classForElement: aQualifiedName attributes: anAssociationCollection [
+	^ self elementClass
 ]
 
 { #category : #accessing }
 XMLNodeFactory >> classForElement: aQualifiedName namespaceURI: aURI [
-	| prefix |
-
-	^ self
-		classForElement: aQualifiedName
-		prefix: (prefix := aQualifiedName xmlPrefixBeforeLocalName)
-		uri: aURI
-		localName: (aQualifiedName xmlLocalNameAfterPrefix: prefix)
+	^ self elementClass
 ]
 
 { #category : #accessing }
-XMLNodeFactory >> classForElement: aQualifiedName prefix: aPrefix uri: aNamespaceURI localName: aLocalName [
+XMLNodeFactory >> classForElement: aQualifiedName namespaceURI: aURI attributes: anAssociationCollection [
+	^ self elementClass
+]
+
+{ #category : #accessing }
+XMLNodeFactory >> classForElement: aQualifiedName namespaceURI: aURI localName: aLocalName attributes: anAssociationCollection [
 	^ self elementClass
 ]
 
@@ -102,10 +104,32 @@ XMLNodeFactory >> newElementNamed: aName [
 ]
 
 { #category : #'instance creation' }
+XMLNodeFactory >> newElementNamed: aName attributes: anAssociationCollection [
+	^ (self
+		classForElement: aName
+		attributes: anAssociationCollection)
+			name: aName
+			attributes: anAssociationCollection
+]
+
+{ #category : #'instance creation' }
 XMLNodeFactory >> newElementNamed: aName namespaceURI: aURI [
-	^ (self classForElement: aName namespaceURI: aURI)
-		name: aName
+	^ (self
+		classForElement: aName
+		namespaceURI: aURI)
+			name: aName
+			namespaceURI: aURI
+]
+
+{ #category : #'instance creation' }
+XMLNodeFactory >> newElementNamed: aName namespaceURI: aURI attributes: anAssociationCollection [
+	^ (self
+		classForElement: aName
 		namespaceURI: aURI
+		attributes: anAssociationCollection)
+			name: aName
+			namespaceURI: aURI
+			attributes: anAssociationCollection
 ]
 
 { #category : #'instance creation' }
@@ -114,8 +138,22 @@ XMLNodeFactory >> newPI [
 ]
 
 { #category : #'instance creation' }
+XMLNodeFactory >> newPITarget: aTargetString data: aDataString [
+	^ self newPI
+		target: aTargetString;
+		data: aDataString
+]
+
+{ #category : #deprecated }
 XMLNodeFactory >> newString: aString [
-	^ self stringClass string: aString
+	"will be deprecated; use #newStringNode: instead"
+
+	^ self newStringNode: aString
+]
+
+{ #category : #'instance creation' }
+XMLNodeFactory >> newStringNode: aString [
+	^ self stringNodeClass new string: aString
 ]
 
 { #category : #accessing }
@@ -138,7 +176,17 @@ XMLNodeFactory >> piClass [
 	^ XMLPI
 ]
 
-{ #category : #accessing }
+{ #category : #deprecated }
 XMLNodeFactory >> stringClass [
+	"will be deprecated; use #stringNodeClass instead"
+
 	^ XMLString
+]
+
+{ #category : #accessing }
+XMLNodeFactory >> stringNodeClass [
+	"for now this delegates to the soft-deprecated #stringClass to not
+	break custom subclasses that override it expecting it to be sent"
+
+	^ self stringClass
 ]

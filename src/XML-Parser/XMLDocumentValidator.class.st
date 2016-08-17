@@ -193,18 +193,18 @@ XMLDocumentValidator >> validateStartTag: anElement [
 ]
 
 { #category : #validating }
-XMLDocumentValidator >> validateStartTag: anElement attributes: anAttributeDictionary [
+XMLDocumentValidator >> validateStartTag: anElement attributes: aDictionary [
 	(self hasElementValidators
 		or: [self hasAttributeValidators])
 		ifTrue: [
 			self validateStartTag: anElement.
 			self
-				validateAttributes: anAttributeDictionary
+				validateAttributes: aDictionary
 				with: (self attributeValidatorsFor: anElement)]
 ]
 
 { #category : #validating }
-XMLDocumentValidator >> validateXMLIDAttributeIn: anAttributeDictionary [
+XMLDocumentValidator >> validateXMLIDAttributeIn: aDictionary [
 	self hasAttributeValidators
-		ifFalse: [self defaultXMLIDValidator validateAttributes: anAttributeDictionary]
+		ifFalse: [self defaultXMLIDValidator validateAttributes: aDictionary]
 ]

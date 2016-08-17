@@ -44,39 +44,39 @@ XMLKeyValueCache >> at: aKey [
 
 { #category : #accessing }
 XMLKeyValueCache >> at: aKey ifAbsent: aBlock [
-	^ self collection
+	^ collection
 		at: aKey
 		ifAbsent: aBlock
 ]
 
 { #category : #accessing }
 XMLKeyValueCache >> at: aKey ifAbsentPut: aBlock [
-	^ self collection
+	^ collection
 		at: aKey
 		ifAbsent: [
-			self collection size >= self maxSize
-				ifTrue: [self clear].
+			collection size >= maxSize
+				ifTrue: [self removeAll].
 
-			self collection
+			collection
 				at: aKey
 				put: aBlock value]
 ]
 
 { #category : #accessing }
 XMLKeyValueCache >> at: aKey put: aValue [
-	(self collection includesKey: aKey)
+	(collection includesKey: aKey)
 		ifFalse: [
-			self collection size >= self maxSize
-				ifTrue: [self clear]].
+			collection size >= self maxSize
+				ifTrue: [self removeAll]].
 
-	^ self collection
+	^ collection
 		at: aKey
 		put: aValue.
 ]
 
 { #category : #clearing }
 XMLKeyValueCache >> clear [
-	self collection removeAll
+	self removeAll
 ]
 
 { #category : #accessing }
@@ -86,12 +86,12 @@ XMLKeyValueCache >> collection [
 
 { #category : #testing }
 XMLKeyValueCache >> includesKey: aKey [
-	^ self collection includesKey: aKey
+	^ collection includesKey: aKey
 ]
 
 { #category : #testing }
 XMLKeyValueCache >> isEmpty [
-	^ self collection isEmpty
+	^ collection isEmpty
 ]
 
 { #category : #accessing }
@@ -130,6 +130,23 @@ XMLKeyValueCache >> printOn: aStream [
 		nextPut: $).
 ]
 
+{ #category : #removing }
+XMLKeyValueCache >> removeAll [
+	collection removeAll
+]
+
+{ #category : #removing }
+XMLKeyValueCache >> removeKey: aKey [
+	^ collection removeKey: aKey
+]
+
+{ #category : #removing }
+XMLKeyValueCache >> removeKey: aKey ifAbsent: aBlock [
+	^ collection
+		removeKey: aKey
+		ifAbsent: aBlock
+]
+
 { #category : #initialization }
 XMLKeyValueCache >> setCollection: aCollection maxSize: anInteger [
 	collection := aCollection.
@@ -138,5 +155,5 @@ XMLKeyValueCache >> setCollection: aCollection maxSize: anInteger [
 
 { #category : #accessing }
 XMLKeyValueCache >> size [
-	^ self collection size
+	^ collection size
 ]

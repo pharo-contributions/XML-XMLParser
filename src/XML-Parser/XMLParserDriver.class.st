@@ -61,7 +61,7 @@ XMLParserDriver >> handleEndDocument [
 ]
 
 { #category : #handling }
-XMLParserDriver >> handleEndTag: anElementName [
+XMLParserDriver >> handleEndTag: anElement [
 ]
 
 { #category : #'handling - dtd' }
@@ -123,7 +123,7 @@ XMLParserDriver >> handleStartDocument [
 ]
 
 { #category : #handling }
-XMLParserDriver >> handleStartTag: anElementName attributes: anAttributeDictionary [
+XMLParserDriver >> handleStartTag: anElementName attributes: aDictionary [
 ]
 
 { #category : #handling }

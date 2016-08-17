@@ -27,9 +27,9 @@ XMLElement class >> name: aLocalName [
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> name: aLocalName attributes: aDictionaryOrArray [
+XMLElement class >> name: aLocalName attributes: anAssociationCollection [
 	^ (self named: aLocalName)
-		setAttributes: aDictionaryOrArray
+		setAttributes: anAssociationCollection
 ]
 
 { #category : #'instance creation' }
@@ -38,9 +38,9 @@ XMLElement class >> name: aQualifiedName namespaceURI: aURI [
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> name: aQualifiedName namespaceURI: aURI attributes: aDictionaryOrArray [
+XMLElement class >> name: aQualifiedName namespaceURI: aURI attributes: anAssociationCollection [
 	^ (self name: aQualifiedName namespaceURI: aURI)
-		setAttributes: aDictionaryOrArray
+		setAttributes: anAssociationCollection
 ]
 
 { #category : #'instance creation' }
@@ -51,11 +51,11 @@ XMLElement class >> name: aQualifiedName namespaces: aNamespaceDictionaryOrArray
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> name: aQualifiedName namespaces: aNamespaceDictionaryOrArray attributes: anAttributeDictionaryOrArray [
+XMLElement class >> name: aQualifiedName namespaces: aNamespaceAssociationCollection attributes: anAttributeAssociationCollection [
 	^ (self
 		name: aQualifiedName
-		namespaces: aNamespaceDictionaryOrArray)
-			setAttributes: anAttributeDictionaryOrArray
+		namespaces: aNamespaceAssociationCollection)
+			setAttributes: anAttributeAssociationCollection
 ]
 
 { #category : #'instance creation' }
@@ -63,20 +63,32 @@ XMLElement class >> named: aLocalName [
 	^ self new name: aLocalName
 ]
 
+{ #category : #visiting }
+XMLElement >> acceptNodeVisitor: aNodeVisitor [
+	aNodeVisitor visitElement: self
+]
+
 { #category : #adding }
 XMLElement >> addElementNamed: aName [
-	| elementPrefix elementClass |
-
-	elementPrefix := aName xmlPrefixBeforeLocalName.
-	elementClass :=
-		self nodeFactory
-			classForElement: aName
-			prefix: elementPrefix
-			uri: (self resolvePrefix: elementPrefix)
-			localName: (aName xmlLocalNameAfterPrefix: elementPrefix).
-
 	"added first to inherit the config and namespaces before setting the name"
-	^ (self addNode: elementClass new) name: aName.
+	^ (self addNode: 
+		(self nodeFactory
+			classForElement: aName
+			namespaceURI: (self resolvePrefix: aName xmlPrefixBeforeLocalName)) new)
+				name: aName
+]
+
+{ #category : #adding }
+XMLElement >> addElementNamed: aName attributes: anAssociationCollection [
+	"added first to inherit the config and namespaces before setting the name
+	and attributes"
+	^ (self addNode:
+		(self nodeFactory
+			classForElement: aName
+			namespaceURI: (self resolvePrefix: aName xmlPrefixBeforeLocalName)
+			attributes: anAssociationCollection) new)
+				name: aName;
+				setAttributes: anAssociationCollection
 ]
 
 { #category : #notifying }
@@ -683,16 +695,16 @@ XMLElement >> setNamespaceScope: aNamespaceScope [
 ]
 
 { #category : #private }
-XMLElement >> setQualifiedName: aQualifiedName localName: aLocalName attributes: anAttributeDictionary [
+XMLElement >> setQualifiedName: aQualifiedName localName: aLocalName attributes: aDictionary [
 	name := aQualifiedName.
 	localName := aLocalName.
-	anAttributeDictionary size > 0 "optimization"
+	aDictionary size > 0 "optimization"
 		ifTrue: [
 			"setWithOrderPreservingDictionary: is used to initialize the attribute
-			node list with anAttributeDictionary without revalidation"
-			(attributes := self attributeListClass new: anAttributeDictionary size)
+			node list with aDictionary without revalidation"
+			(attributes := self attributeListClass new: aDictionary size)
 				observer: self;
-				setWithOrderPreservingDictionary: anAttributeDictionary].
+				setWithOrderPreservingDictionary: aDictionary].
 ]
 
 { #category : #private }
@@ -743,25 +755,6 @@ XMLElement >> validateName [
 			self namespaceScope
 				validateAndResolvePrefix: self prefix
 				ofElement: self name]
-]
-
-{ #category : #validating }
-XMLElement >> validateWith: aValidator [
-	| attributeDictionary |
-
-	attributeDictionary := 
-		self hasAttributes
-			ifTrue: [self attributeNodes asDictionary]
-			ifFalse: [Dictionary new].
-	aValidator
-		validateStartTag: self name
-		attributes: attributeDictionary.
-	"validation can change/add attribute values"
-	self setAttributes: attributeDictionary.
-
-	super validateWith: aValidator.
-
-	aValidator validateEndTag: self name.
 ]
 
 { #category : #printing }

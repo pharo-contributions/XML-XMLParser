@@ -15,6 +15,11 @@ Class {
 }
 
 { #category : #adding }
+XMLNodeWithChildren >> addComment: aString [
+	^ self addNode: (self newComment: aString)
+]
+
+{ #category : #adding }
 XMLNodeWithChildren >> addNode: aNode [
 	"Adds aNode to the end of the receiver's node list. Can be used for elements,
 	comments, and other types of nodes."
@@ -53,6 +58,14 @@ XMLNodeWithChildren >> addNodeFirst: aNode [
 { #category : #adding }
 XMLNodeWithChildren >> addNodes: aNodeCollection [
 	^ self nodes addAll: aNodeCollection
+]
+
+{ #category : #adding }
+XMLNodeWithChildren >> addPITarget: aTargetString data: aDataString [
+	^ self addNode:
+		(self
+			newPITarget: aTargetString
+			data: aDataString)
 ]
 
 { #category : #notifying }
@@ -191,25 +204,33 @@ XMLNodeWithChildren >> descendantNodesSelect: aBlock [
 
 { #category : #deprecated }
 XMLNodeWithChildren >> descendentNodes [
-	"less common alternate spelling"
+	"less common alternate spelling, will be deprecated;
+	use #descendantNodes instead"
+
 	^ self descendantNodes
 ]
 
 { #category : #deprecated }
 XMLNodeWithChildren >> descendentNodesCollect: aBlock [
-	"less common alternate spelling"
+	"less common alternate spelling, will be deprecated;
+	use #descendantNodesCollect: instead"
+
 	^ self descendantNodesCollect: aBlock
 ]
 
 { #category : #deprecated }
 XMLNodeWithChildren >> descendentNodesDetect: aBlock [
-	"less common alternate spelling"
+	"less common alternate spelling, will be deprecated;
+	use #descendantNodesDetect: instead"
+
 	^ self descendantNodesDetect: aBlock
 ]
 
 { #category : #deprecated }
 XMLNodeWithChildren >> descendentNodesDetect: aBlock ifNone: anExceptionBlock [
-	"less common alternate spelling"
+	"less common alternate spelling, will be deprecated;
+	use #descendantNodesDetect:ifNone: instead"
+
 	^ self
 		descendantNodesDetect: aBlock
 		ifNone: anExceptionBlock
@@ -217,7 +238,9 @@ XMLNodeWithChildren >> descendentNodesDetect: aBlock ifNone: anExceptionBlock [
 
 { #category : #deprecated }
 XMLNodeWithChildren >> descendentNodesSelect: aBlock [
-	"less common alternate spelling"
+	"less common alternate spelling, will be deprecated;
+	use #descendantNodesSelect: instead"
+
 	^ self descendantNodesSelect: aBlock
 ]
 

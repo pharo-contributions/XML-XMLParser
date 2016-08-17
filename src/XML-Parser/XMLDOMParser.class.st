@@ -36,7 +36,7 @@ XMLDOMParser >> characters: aString [
 	(self isInCDataSection
 		and: [self preservesCDataNodes])
 		ifTrue: [self topNode addNode: (self nodeFactory newCData: aString)]
-		ifFalse: [self topNode addContent: aString]
+		ifFalse: [self topNode addString: aString]
 ]
 
 { #category : #'handling - lexical' }
@@ -308,9 +308,9 @@ XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName
 	self pushElement:
 		((self nodeFactory
 			classForElement: aQualifiedName
-			prefix: aPrefix
-			uri: aURI
-			localName: aLocalName) new
+			namespaceURI: aURI
+			localName: aLocalName
+			attributes: aDictionary) new
 				setQualifiedName: aQualifiedName
 				localName: aLocalName
 				attributes: aDictionary)

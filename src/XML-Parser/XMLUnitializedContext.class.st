@@ -1,5 +1,5 @@
 "
-A context for before parsing.
+A context for before tokenizing has started.
 "
 Class {
 	#name : #XMLUnitializedContext,

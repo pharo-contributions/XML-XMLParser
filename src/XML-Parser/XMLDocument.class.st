@@ -19,6 +19,11 @@ XMLDocument class >> root: aRoot [
 	^ self new root: aRoot
 ]
 
+{ #category : #visiting }
+XMLDocument >> acceptNodeVisitor: aNodeVisitor [
+	aNodeVisitor visitDocument: self
+]
+
 { #category : #accessing }
 XMLDocument >> doctypeDeclaration [
 	^ doctypeDeclaration
@@ -149,10 +154,9 @@ XMLDocument >> validate [
 
 { #category : #validating }
 XMLDocument >> validateWith: aValidator [
-	self root
-		ifNotNil: [:rootElement | aValidator validateRootElement: rootElement name].
-	super validateWith: aValidator.
-	aValidator validateEndDocument.
+	"revalidate against a custom DTD or other validator"
+
+	(XMLValidatingNodeVisitor validator: aValidator) visitDocument: self
 ]
 
 { #category : #accessing }

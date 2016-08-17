@@ -6,7 +6,7 @@ This is a pluggable factory that can be used to change which classes the DOM par
 			(XMLPluggableFactory new
 				documentClass: MyDocumentClass;
 				elementClass: MyElementClass;
-				stringClass: MyStringClass)
+				stringNodeClass: MyStringNodeClass)
 		parseDocument.
 "
 Class {
@@ -15,7 +15,7 @@ Class {
 	#instVars : [
 		'documentClass',
 		'elementClass',
-		'stringClass',
+		'stringNodeClass',
 		'cdataClass',
 		'commentClass',
 		'piClass',
@@ -31,7 +31,7 @@ XMLPluggableNodeFactory >> asPluggableNodeFactory [
 
 { #category : #accessing }
 XMLPluggableNodeFactory >> cdataClass [
-	^ cdataClass ifNil: [cdataClass := super cdataClass]
+	^ cdataClass
 ]
 
 { #category : #accessing }
@@ -41,7 +41,7 @@ XMLPluggableNodeFactory >> cdataClass: aClass [
 
 { #category : #accessing }
 XMLPluggableNodeFactory >> commentClass [
-	^ commentClass ifNil: [commentClass := super commentClass]
+	^ commentClass
 ]
 
 { #category : #accessing }
@@ -51,7 +51,7 @@ XMLPluggableNodeFactory >> commentClass: aClass [
 
 { #category : #accessing }
 XMLPluggableNodeFactory >> documentClass [
-	^ documentClass ifNil: [documentClass := super documentClass]
+	^ documentClass
 ]
 
 { #category : #accessing }
@@ -61,7 +61,7 @@ XMLPluggableNodeFactory >> documentClass: aClass [
 
 { #category : #accessing }
 XMLPluggableNodeFactory >> elementClass [
-	^ elementClass ifNil: [elementClass := super elementClass]
+	^ elementClass
 ]
 
 { #category : #accessing }
@@ -69,9 +69,22 @@ XMLPluggableNodeFactory >> elementClass: aClass [
 	elementClass := aClass
 ]
 
+{ #category : #initialization }
+XMLPluggableNodeFactory >> initialize [
+	super initialize.
+
+	documentClass := XMLDocument.
+	elementClass := XMLElement.
+	stringNodeClass := XMLString.
+	cdataClass := XMLCData.
+	commentClass := XMLComment.
+	piClass := XMLPI.
+	nodeListClass := XMLNodeList.
+]
+
 { #category : #accessing }
 XMLPluggableNodeFactory >> nodeListClass [
-	^ nodeListClass ifNil: [nodeListClass := super nodeListClass]
+	^ nodeListClass
 ]
 
 { #category : #accessing }
@@ -81,7 +94,7 @@ XMLPluggableNodeFactory >> nodeListClass: aClass [
 
 { #category : #accessing }
 XMLPluggableNodeFactory >> piClass [
-	^ piClass ifNil: [piClass := super piClass]
+	^ piClass
 ]
 
 { #category : #accessing }
@@ -89,12 +102,26 @@ XMLPluggableNodeFactory >> piClass: aClass [
 	piClass := aClass
 ]
 
-{ #category : #accessing }
+{ #category : #deprecated }
 XMLPluggableNodeFactory >> stringClass [
-	^ stringClass ifNil: [stringClass := super stringClass]
+	"will be deprecated; use #stringNodeClass instead"
+
+	^ stringNodeClass
+]
+
+{ #category : #deprecated }
+XMLPluggableNodeFactory >> stringClass: aClass [
+	"will be deprecated; use #stringNodeClass: instead"
+
+	stringNodeClass := aClass
 ]
 
 { #category : #accessing }
-XMLPluggableNodeFactory >> stringClass: aClass [
-	stringClass := aClass
+XMLPluggableNodeFactory >> stringNodeClass [
+	^ stringNodeClass
+]
+
+{ #category : #accessing }
+XMLPluggableNodeFactory >> stringNodeClass: aClass [
+	stringNodeClass := aClass
 ]

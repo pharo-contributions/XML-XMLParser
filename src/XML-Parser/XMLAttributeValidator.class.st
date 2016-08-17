@@ -97,16 +97,16 @@ XMLAttributeValidator >> furtherNormalizeAttributeValue: aSemiNormalizedAttribut
 ]
 
 { #category : #private }
-XMLAttributeValidator >> furtherNormalizeAttributeValueIn: anAttributeDictionary [
-	| attributeAssociation |
+XMLAttributeValidator >> furtherNormalizeAttributeValueIn: aDictionary [
+	| association |
 
-	attributeAssociation :=
-		anAttributeDictionary
+	association :=
+		aDictionary
 			associationAt: self attribute
 			ifAbsent: [^ self].
 
-	attributeAssociation value:
-		(self furtherNormalizeAttributeValue: attributeAssociation value).
+	association value:
+		(self furtherNormalizeAttributeValue: association value).
 ]
 
 { #category : #initialization }
@@ -176,14 +176,14 @@ XMLAttributeValidator >> validateAttributeValue: aValue [
 ]
 
 { #category : #validating }
-XMLAttributeValidator >> validateAttributes: anAttributeDictionary [
+XMLAttributeValidator >> validateAttributes: aDictionary [
 	self shouldFurtherNormalizeAttributeValue
-		ifTrue: [self furtherNormalizeAttributeValueIn: anAttributeDictionary].
+		ifTrue: [self furtherNormalizeAttributeValueIn: aDictionary].
 
-	self defaultValidator validateAttributeDefaultIn: anAttributeDictionary.
+	self defaultValidator validateAttributeDefaultIn: aDictionary.
 
 	self validateAttributeValue:
-		(anAttributeDictionary
+		(aDictionary
 			at: self attribute
 			ifAbsent: [^ self]).
 ]

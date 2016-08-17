@@ -15,6 +15,11 @@ XMLComment class >> string: aString [
 	^ self new string: aString
 ]
 
+{ #category : #visiting }
+XMLComment >> acceptNodeVisitor: aNodeVisitor [
+	aNodeVisitor visitComment: self
+]
+
 { #category : #testing }
 XMLComment >> isComment [
 	^ true

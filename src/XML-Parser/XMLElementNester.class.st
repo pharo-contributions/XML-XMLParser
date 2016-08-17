@@ -42,7 +42,7 @@ XMLElementNester >> elementPrintLimit [
 ]
 
 { #category : #checking }
-XMLElementNester >> endElement: anElementName [
+XMLElementNester >> endElement: anElement [
 	self openElements removeLast.
 	self hasScopedAttributes
 		ifTrue: [self endScopedAttributes].
@@ -63,8 +63,8 @@ XMLElementNester >> hasExternalRootElement [
 ]
 
 { #category : #testing }
-XMLElementNester >> hasOpenElement: anElementName [
-	^ self openElements includes: anElementName
+XMLElementNester >> hasOpenElement: anElement [
+	^ self openElements includes: anElement
 ]
 
 { #category : #testing }
@@ -123,35 +123,35 @@ XMLElementNester >> openElementsReverseDo: aBlock [
 ]
 
 { #category : #printing }
-XMLElementNester >> printElementsFrom: aStart on: aStream [
+XMLElementNester >> printElementsOn: aStream [
 	self
-		printElementsFrom: aStart
-		to: aStart + self elementPrintLimit - 1
+		printElementsStartingAt: 1
 		on: aStream
 ]
 
 { #category : #printing }
-XMLElementNester >> printElementsFrom: aStart to: aStop on: aStream [
-	aStart to: aStop do: [:i |
-		i > self openElements size
-			ifTrue: [^ self].
-		i > aStart
-			ifTrue: [aStream nextPutAll: ', '].
+XMLElementNester >> printElementsStartingAt: aStart on: aStream [
+	self
+		printElementsStartingAt: aStart
+		stoppingAt: aStart + self elementPrintLimit - 1
+		on: aStream
+]
 
-		aStream
-			nextPut: $<;
-			nextPutAll: (self openElements at: i);
-			nextPut: $>].
+{ #category : #printing }
+XMLElementNester >> printElementsStartingAt: aStart stoppingAt: aStop on: aStream [
+	aStart
+		to: (aStop min: self openElements size)
+		do: [:i |
+			i > aStart
+				ifTrue: [aStream nextPutAll: ', '].
+
+			aStream
+				nextPut: $<;
+				nextPutAll: (self openElements at: i);
+				nextPut: $>].
 
 	(aStop < self openElements size)
 		ifTrue: [aStream nextPutAll: '...'].
-]
-
-{ #category : #printing }
-XMLElementNester >> printElementsOn: aStream [
-	self
-		printElementsFrom: 1
-		on: aStream
 ]
 
 { #category : #printing }
@@ -161,7 +161,7 @@ XMLElementNester >> printOn: aStream [
 		ifTrue: [
 			aStream nextPut: $(.
 			self
-				printElementsFrom: 1
+				printElementsStartingAt: 1
 				on: aStream.
 			aStream nextPut: $)].
 ]
@@ -175,24 +175,24 @@ XMLElementNester >> printedElements [
 XMLElementNester >> printedElementsEnclosedBy: anElement [
 	^ String streamContents: [:stream |
 		self
-			printElementsFrom: (self openElements lastIndexOf: anElement) + 1
+			printElementsStartingAt: (self openElements lastIndexOf: anElement) + 1
 			on: stream]
 ]
 
 { #category : #accessing }
-XMLElementNester >> scopedAttributeAt: aName [
+XMLElementNester >> scopedAttributeAt: anAttribute [
 	^ self
-		scopedAttributeAt: aName
+		scopedAttributeAt: anAttribute
 		ifAbsent: ['']
 ]
 
 { #category : #accessing }
-XMLElementNester >> scopedAttributeAt: aName ifAbsent: aBlock [
+XMLElementNester >> scopedAttributeAt: anAttribute ifAbsent: aBlock [
 	^ self currentScopedAttributes
 		ifNil: [aBlock value]
 		ifNotNil: [:attributes |
 			attributes
-				at: aName
+				at: anAttribute
 				ifAbsent: aBlock]
 ]
 
@@ -208,10 +208,10 @@ XMLElementNester >> setExternalRootElement: anElement [
 ]
 
 { #category : #accessing }
-XMLElementNester >> setScopedAttributesNamed: aNameCollection from: aDictionary [
+XMLElementNester >> setScopedAttributesNamed: anAttributeCollection from: aDictionary [
 	| attributes |
 
-	aNameCollection do: [:each |
+	anAttributeCollection do: [:each |
 		aDictionary
 			at: each
 			ifPresent: [:value |
@@ -222,8 +222,8 @@ XMLElementNester >> setScopedAttributesNamed: aNameCollection from: aDictionary 
 ]
 
 { #category : #checking }
-XMLElementNester >> startElement: anElementName [
-	self openElements addLast: anElementName.
+XMLElementNester >> startElement: anElement [
+	self openElements addLast: anElement.
 	self hasScopedAttributes
 		ifTrue: [self startScopedAttributes].
 ]

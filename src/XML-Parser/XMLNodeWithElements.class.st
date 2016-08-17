@@ -20,32 +20,62 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
+{ #category : #visiting }
+XMLNodeWithElements >> acceptNodeVisitor: aNodeVisitor [
+	aNodeVisitor visitNodeWithElements: self
+]
+
 { #category : #adding }
+XMLNodeWithElements >> addCData: aString [
+	^ self addNode: (self newCData: aString)
+]
+
+{ #category : #deprecated }
 XMLNodeWithElements >> addContent: aStringOrStringNode [
-	"Adds a string or string node. If the last child node is already a string node,
-	the characters being added are concatenated to it."
+	"will be deprecated; use #addString: instead"
 
 	(self hasChildren
-		and: [self lastNode acceptsContent])
-		ifTrue: [self lastNode addContent: aStringOrStringNode]
+		and: [self lastNode isCoalescingStringNode])
+		ifTrue: [self lastNode append: aStringOrStringNode]
 		ifFalse: [self addNode:
 			(aStringOrStringNode isString
-				ifTrue: [self nodeFactory newString: aStringOrStringNode]
-				ifFalse: [aStringOrStringNode])]
+				ifTrue: [self nodeFactory newStringNode: aStringOrStringNode]
+				ifFalse: [aStringOrStringNode])].
+	"returns self for backwards compatibility"
 ]
 
 { #category : #deprecated }
 XMLNodeWithElements >> addElement: anElement [
-	self deprecated: 'Use #addNode: or #addElementNamed: instead'.
+	self deprecated:
+		'Use #addNode: with an element argument or #addElementNamed: instead'.
 
 	self addNode: anElement.
+	"returns self for backwards compatibility"
 ]
 
 { #category : #adding }
 XMLNodeWithElements >> addElementNamed: aName [
 	"adds and returns a new element with the specified name"
 
-	^ self addNode: (self nodeFactory newElementNamed: aName)
+	"added first to inherit the config and namespaces
+	before setting the name"
+	^ (self addNode:
+		(self nodeFactory classForElement: aName) new)
+			name: aName
+]
+
+{ #category : #adding }
+XMLNodeWithElements >> addElementNamed: aName attributes: anAssociationCollection [
+	"adds and returns a new element with the specified name and attributes"
+
+	"added first to inherit the config and namespaces
+	before setting the name and attributes"
+	^ (self addNode:
+		(self nodeFactory
+			classForElement: aName
+			attributes: anAssociationCollection) new)
+				name: aName;
+				setAttributes: anAssociationCollection
 ]
 
 { #category : #adding }
@@ -53,10 +83,45 @@ XMLNodeWithElements >> addElementNamed: aName namespaceURI: aURI [
 	"adds and returns a new element with the specified name and namespace
 	URI"
 
-	^ self addNode:
+	"added first to inherit the config and namespaces
+	before setting the name and namespace URI"
+	^ (self addNode:
 		(self nodeFactory
-			newElementNamed: aName
-			namespaceURI: aURI)
+			classForElement: aName
+			namespaceURI: aURI) new)
+				name: aName
+				namespaceURI: aURI
+]
+
+{ #category : #adding }
+XMLNodeWithElements >> addElementNamed: aName namespaceURI: aURI attributes: anAssociationCollection [
+	"adds and returns a new element with the specified name, namespace URI
+	and attributes"
+
+	"added first to inherit the config and namespaces
+	before setting the name, namespace URI, and attributes"
+	^ (self addNode:
+		(self nodeFactory
+			classForElement: aName
+			namespaceURI: aURI
+			attributes: anAssociationCollection) new)
+				name: aName namespaceURI: aURI;
+				setAttributes: anAssociationCollection
+]
+
+{ #category : #adding }
+XMLNodeWithElements >> addString: aString [
+	"Adds a new string node for aString or just appends aString to the
+	last node if it's a coalescing string node (not CDATA).
+
+	Returns the new string node or the string node appeneded to."
+
+	| lastNode |
+
+	(self hasChildren
+		and: [(lastNode := self lastNode) isCoalescingStringNode])
+		ifTrue: [^ lastNode append: aString]
+		ifFalse: [^ self addNode: (self nodeFactory newStringNode: aString)]
 ]
 
 { #category : #notifying }
@@ -198,14 +263,16 @@ XMLNodeWithElements >> contentNodesDo: aBlock [
 XMLNodeWithElements >> contentString: aString [
 	self
 		removeNodes;
-		addContent: aString
+		addString: aString
 ]
 
 { #category : #accessing }
 XMLNodeWithElements >> contentStringAt: aName [
-	"returns the content string of the first element child of the receiver
+	"Returns the content string of the first element child of the receiver
 	whose qualified or local name matches aName or an empty string if there
-	isn't one"
+	isn't one.
+
+	See also #rawContentStringAt:"
 
 	^ self nodes contentStringAt: aName
 ]
@@ -304,25 +371,33 @@ XMLNodeWithElements >> descendantElementsSelect: aBlock [
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElements [
-	"less common alternate spelling"
+	"less common alternate spelling, will be deprecated;
+	use #descendantElements instead"
+
 	^ self descendantElements
 ]
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElementsCollect: aBlock [
-	"less common alternate spelling"
+	"less common alternate spelling, will be deprecated;
+	use #descendantElementsCollect: instead"
+
 	^ self descendantElementsCollect: aBlock
 ]
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElementsDetect: aBlock [
-	"less common alternate spelling"
+	"less common alternate spelling, will be deprecated;
+	use #descendantElementsDetect: instead"
+
 	^ self descendantElementsDetect: aBlock
 ]
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElementsDetect: aBlock ifNone: anExceptionBlock [
-	"less common alternate spelling"
+	"less common alternate spelling, will be deprecated;
+	use #descendantElementsDetect:ifNone: instead"
+
 	^ self
 		descendantElementsDetect: aBlock
 		ifNone: anExceptionBlock
@@ -330,19 +405,25 @@ XMLNodeWithElements >> descendentElementsDetect: aBlock ifNone: anExceptionBlock
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElementsDo: aBlock [
-	"less common alternate spelling"
+	"less common alternate spelling, will be deprecated;
+	use #descendantElementsDo: instead"
+
 	^ self descendantElementsDo: aBlock
 ]
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElementsNamed: aName [
-	"less common alternate spelling"
+	"less common alternate spelling, will be deprecated;
+	use #descendantElementsNamed: instead"
+
 	^ self descendantElementsNamed: aName
 ]
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElementsNamed: aName do: aBlock [
-	"less common alternate spelling"
+	"less common alternate spelling, will be deprecated;
+	use #descendantElementsNamed:do: instead"
+
 	^ self
 		descendantElementsNamed: aName
 		do: aBlock
@@ -350,7 +431,9 @@ XMLNodeWithElements >> descendentElementsNamed: aName do: aBlock [
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElementsNamed: aName namespaceURI: aURI [
-	"less common alternate spelling"
+	"less common alternate spelling, will be deprecated;
+	use #descendantElementsNamed:namespaceURI: instead"
+
 	^ self
 		descendantElementsNamed: aName
 		namespaceURI: aURI
@@ -358,7 +441,9 @@ XMLNodeWithElements >> descendentElementsNamed: aName namespaceURI: aURI [
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElementsSelect: aBlock [
-	"less common alternate spelling"
+	"less common alternate spelling, will be deprecated;
+	use #descendantElementsSelect: instead"
+
 	^ self descendantElementsSelect: aBlock
 ]
 
@@ -620,8 +705,9 @@ XMLNodeWithElements >> includesElement: aName namespaceURI: aURI [
 
 { #category : #parsing }
 XMLNodeWithElements >> innerXML: aStringOrStream [
-	"can be used to dynamically set the inner XML from a string that will
-	be parsed"
+	"Replaces the node children by parsing new inner XML from a string or stream
+	argument. By default the same parser configuration will be used to parse the
+	new inner XML."
 
 	self innerXMLParsedWith: (self parserHandlerClass on: aStringOrStream)
 ]
@@ -661,50 +747,11 @@ XMLNodeWithElements >> lastElement [
 	^ self nodes lastElement
 ]
 
-{ #category : #'instance creation' }
-XMLNodeWithElements >> newCData: aString [
-	^ self nodeFactory newCData: aString
-]
-
-{ #category : #'instance creation' }
-XMLNodeWithElements >> newComment: aString [
-	^ self nodeFactory newComment: aString
-]
-
-{ #category : #'instance creation' }
-XMLNodeWithElements >> newDocument [
-	^ self nodeFactory newDocument
-		configuration: self configuration
-]
-
-{ #category : #'instance creation' }
-XMLNodeWithElements >> newElement [
-	^ self nodeFactory newElement
-		configuration: self configuration
-]
-
-{ #category : #'instance creation' }
-XMLNodeWithElements >> newElementNamed: aName [
-	^ (self nodeFactory newElementNamed: aName)
-		configuration: self configuration
-]
-
-{ #category : #'instance creation' }
-XMLNodeWithElements >> newElementNamed: aName namespaceURI: aURI [
-	^ (self nodeFactory
-		newElementNamed: aName
-		namespaceURI: aURI)
-		configuration: self configuration
-]
-
-{ #category : #'instance creation' }
-XMLNodeWithElements >> newPI [
-	^ self nodeFactory newPI
-]
-
-{ #category : #'instance creation' }
+{ #category : #deprecated }
 XMLNodeWithElements >> newString: aString [
-	^ self nodeFactory newString: aString
+	"will be deprecated; use #newStringNode: instead"
+
+	^ self newStringNode: aString
 ]
 
 { #category : #accessing }
@@ -804,10 +851,4 @@ XMLNodeWithElements >> usesNamespaces: aBoolean [
 	"can be used to disable namespace checking, which is enabled by default"
 
 	self configuration usesNamespaces: aBoolean
-]
-
-{ #category : #validating }
-XMLNodeWithElements >> validateWith: aValidator [
-	self hasChildren
-		ifTrue: [self nodesDo: [:each | each validateWith: aValidator]]
 ]

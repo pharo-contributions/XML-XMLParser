@@ -10,13 +10,14 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
-{ #category : #private }
-XMLNode >> acceptsContent [
-	^ false
+{ #category : #visiting }
+XMLNode >> acceptNodeVisitor: aNodeVisitor [
 ]
 
-{ #category : #adding }
+{ #category : #deprecated }
 XMLNode >> addContent: aStringOrStringNode [
+	"will be deprecated"
+
 	self errorNodeCannotContainStringContent
 ]
 
@@ -124,22 +125,26 @@ XMLNode >> configuration [
 { #category : #accessing }
 XMLNode >> contentString [
  	"Returns the combined content strings of all descendants with space inserted
-	when one string has no trailing space and the next has no leading space"
+	when one string has no trailing space and the next has no leading space.
+
+	See also #rawContentString."
 
 	^ String streamContents: [:stream | self printContentOn: stream]
 ]
 
 { #category : #copying }
 XMLNode >> copy [
-	"returns a deep copy of the receiver, including copies of any descendant nodes"
+	"returns a deep copy of the receiver, including copies of any descendant nodes,
+	and copies the config"
 
-	^ self shallowCopy
-		postCopy;
-		postCopyConfiguration
+	^ self shallowCopy postCopy postCopyConfiguration
 ]
 
 { #category : #copying }
-XMLNode >> copySharingConfiguration [
+XMLNode >> copySharingConfiguration [	
+	"returns a deep copy of the receiver, including copies of any descendant nodes,
+	but does not copy the config"
+
 	^ self shallowCopy postCopy
 ]
 
@@ -149,7 +154,9 @@ XMLNode >> descendantNodesDo: aBlock [
 
 { #category : #deprecated }
 XMLNode >> descendentNodesDo: aBlock [
-	"less common alternate spelling"
+	"less common alternate spelling, will be deprecated;
+	use #descendantNodesDo: instead"
+
 	^ self descendantNodesDo: aBlock
 ]
 
@@ -194,15 +201,18 @@ XMLNode >> hasParent [
 
 { #category : #private }
 XMLNode >> initializeFileWriteStream: aWriteStream [
-	| document streamConverter |
+	"This sets a stream converter on aWriteStream based on the document's encoding
+	attribute and writes the encoding's byte order mark."
 
-	((document := self document) notNil
-		and: [document hasEncoding])
-		ifTrue: [streamConverter := document encoding asXMLStreamConverter]
-		ifFalse: [streamConverter := XMLStreamConverter default].
+	| document |
+
 	aWriteStream
-		streamConverter: streamConverter;
-		nextPutByteOrderMark.
+		streamConverter:
+			(((document := self document) notNil
+				and: [document hasEncoding])
+				ifTrue: [document encoding asXMLStreamConverter]
+				ifFalse: [XMLStreamConverter default]);
+		nextPutByteOrderMark
 ]
 
 { #category : #testing }
@@ -212,6 +222,11 @@ XMLNode >> isAttribute [
 
 { #category : #testing }
 XMLNode >> isCData [
+	^ false
+]
+
+{ #category : #private }
+XMLNode >> isCoalescingStringNode [
 	^ false
 ]
 
@@ -285,6 +300,59 @@ XMLNode >> isStringNode: aStringOrStringNode [
 	^ false
 ]
 
+{ #category : #'instance creation' }
+XMLNode >> newCData: aString [
+	^ self nodeFactory newCData: aString
+]
+
+{ #category : #'instance creation' }
+XMLNode >> newComment: aString [
+	^ self nodeFactory newComment: aString
+]
+
+{ #category : #'instance creation' }
+XMLNode >> newDocument [
+	^ self nodeFactory newDocument
+		configuration: self configuration
+]
+
+{ #category : #'instance creation' }
+XMLNode >> newElement [
+	^ self nodeFactory newElement
+		configuration: self configuration
+]
+
+{ #category : #'instance creation' }
+XMLNode >> newElementNamed: aName [
+	^ (self nodeFactory newElementNamed: aName)
+		configuration: self configuration
+]
+
+{ #category : #'instance creation' }
+XMLNode >> newElementNamed: aName attributes: anAssociationCollection [
+	^ (self nodeFactory
+		newElementNamed: aName
+		attributes: anAssociationCollection)
+			configuration: self configuration
+]
+
+{ #category : #'instance creation' }
+XMLNode >> newElementNamed: aName namespaceURI: aURI [
+	^ (self nodeFactory
+		newElementNamed: aName
+		namespaceURI: aURI)
+			configuration: self configuration
+]
+
+{ #category : #'instance creation' }
+XMLNode >> newElementNamed: aName namespaceURI: aURI attributes: anAssociationCollection [
+	^ (self nodeFactory
+		newElementNamed: aName
+		namespaceURI: aURI
+		attributes: anAssociationCollection)
+			configuration: self configuration
+]
+
 { #category : #private }
 XMLNode >> newListForCollect [
 	"collect can return non-nodes, so a basic ordered list is used"
@@ -297,12 +365,36 @@ XMLNode >> newListForSelect [
 	^ XMLNodeList new: 10
 ]
 
+{ #category : #'instance creation' }
+XMLNode >> newPI [
+	^ self nodeFactory newPI
+]
+
+{ #category : #'instance creation' }
+XMLNode >> newPITarget: aTargetString data: aDataString [
+	^ self nodeFactory
+		newPITarget: aTargetString
+		data: aDataString
+]
+
+{ #category : #'instance creation' }
+XMLNode >> newStringNode: aString [
+	^ self nodeFactory newStringNode: aString
+]
+
 { #category : #accessing }
 XMLNode >> nextNode [
 	"returns the first node after this one that is a child of the same parent (the next
 	sibling) or nil if there isn't one"
 
 	^ self parent ifNotNil: [:node | node nodeAfter: self]
+]
+
+{ #category : #accessing }
+XMLNode >> nodeFactory [
+	^ self configuration
+		ifNil: [XMLNodeFactory new]
+		ifNotNil: [:config | config nodeFactory]
 ]
 
 { #category : #accessing }
@@ -477,6 +569,9 @@ XMLNode >> validate [
 
 { #category : #validating }
 XMLNode >> validateWith: aValidator [
+	"revalidate against a custom DTD or other validator"
+
+	self document ifNotNil: [:node | node validateWith: aValidator]
 ]
 
 { #category : #private }

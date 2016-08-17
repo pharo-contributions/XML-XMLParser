@@ -1,5 +1,5 @@
 "
-This class parses mixed content declarations like ""(#PCDATA|one|two)"" using a DTDEnumerationListParser.
+This class parses mixed content declarations like ""(#PCDATA|one|two)*"" using a DTDEnumerationListParser and returns an element validator accepting any sequence of PCDATA and the named elements.
 "
 Class {
 	#name : #DTDMixedContentModelParser,
@@ -11,12 +11,8 @@ Class {
 DTDMixedContentModelParser >> parse [
 	^ XMLMixedContentElementValidator
 		element: element
-		allowedElements: self parseAllowedElements
-]
-
-{ #category : #private }
-DTDMixedContentModelParser >> parseAllowedElements [
-	^ (DTDEnumerationListParser on: contentModel) parse
-		remove: '#PCDATA';
-		yourself
+		allowedElements:
+			((DTDEnumerationListParser on: contentModel) parse
+				remove: '#PCDATA';
+				yourself)
 ]

@@ -1,11 +1,19 @@
 "
-This is a base class for SAX content handler classes that can be injected into SAX2Parser instances before parsing.
+This is a base class for SAX2 content handler classes that can be injected into SAX2Parser instances with #contentHandler: before parsing.
 "
 Class {
 	#name : #SAX2ContentHandler,
 	#superclass : #Object,
+	#instVars : [
+		'parser'
+	],
 	#category : #'XML-Parser'
 }
+
+{ #category : #'instance creation' }
+SAX2ContentHandler class >> parser: aParser [
+	^ self new parser: aParser
+]
 
 { #category : #'handling - content' }
 SAX2ContentHandler >> characters: aString [
@@ -91,6 +99,18 @@ SAX2ContentHandler >> ignorableWhitespace: aString [
 
 	Not sent if validation is disabled or if there's no DTD with element
 	declarations."
+]
+
+{ #category : #accessing }
+SAX2ContentHandler >> parser [
+	"Returns the SAX2Parser"
+
+	^ parser
+]
+
+{ #category : #accessing }
+SAX2ContentHandler >> parser: aParser [
+	parser := aParser
 ]
 
 { #category : #'handling - content' }

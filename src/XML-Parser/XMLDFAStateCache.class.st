@@ -17,12 +17,12 @@ XMLDFAStateCache class >> firstDFAState: aDFAState [
 ]
 
 { #category : #private }
-XMLDFAStateCache >> addDFAState: aDFAState [
+XMLDFAStateCache >> addDFAStateForNFAStates: anNFAStateSet [
 	cachedDFAStates size >= self maxCachedDFAStates
 		ifTrue: [self removeDFAStates].
 	^ cachedDFAStates
-		at: aDFAState nfaStates
-		put: aDFAState.
+		at: anNFAStateSet
+		put:  (anNFAStateSet asDFAStateWithStateCache: self).
 ]
 
 { #category : #private }
@@ -34,7 +34,7 @@ XMLDFAStateCache >> cachedDFAStates [
 XMLDFAStateCache >> dfaStateForNFAStates: anNFAStateSet [
 	^ cachedDFAStates
 		at: anNFAStateSet
-		ifAbsent: [self addDFAState: (anNFAStateSet asDFAStateWithStateCache: self)]
+		ifAbsent: [self addDFAStateForNFAStates: anNFAStateSet]
 ]
 
 { #category : #accessing }

@@ -1,5 +1,7 @@
 "
 A read stream adapter that decodes stream contents using a stream converter. Used to handle encoded external streams.
+
+The class  #on: and #on:streamConverter: instance creation messages accept character and binary streams.
 "
 Class {
 	#name : #XMLDecodingReadStreamAdapter,
@@ -11,6 +13,13 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
+{ #category : #private }
+XMLDecodingReadStreamAdapter class >> basicOn: aStream streamConverter: aStreamConverter [
+	^ self new
+		on: aStream;
+		streamConverter: aStreamConverter
+]
+
 { #category : #'instance creation' }
 XMLDecodingReadStreamAdapter class >> on: aStream [
 	^ self
@@ -20,8 +29,8 @@ XMLDecodingReadStreamAdapter class >> on: aStream [
 
 { #category : #'instance creation' }
 XMLDecodingReadStreamAdapter class >> on: aStream streamConverter: aStreamConverter [
-	^ self new
-		on: (XMLBinaryReadStreamAdapter onStreamIfBinary: aStream);
+	^ self
+		basicOn: (XMLBinaryReadStreamAdapter onStreamIfBinary: aStream)
 		streamConverter: aStreamConverter
 ]
 
@@ -34,8 +43,8 @@ XMLDecodingReadStreamAdapter class >> onStreamIfBinary: aStream [
 	binaryReadStreamAdapter == aStream
 		ifTrue: [^ aStream]
 		ifFalse: [
-			^ self new
-				on: binaryReadStreamAdapter;
+			^ self
+				basicOn: binaryReadStreamAdapter
 				streamConverter: XMLStreamConverter default].
 ]
 

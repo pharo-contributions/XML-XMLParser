@@ -8,5 +8,5 @@ Class {
 }
 
 { #category : #validating }
-XMLAttributeDefaultImpliedValidator >> validateAttributeDefaultIn: anAttributeDictionary [
+XMLAttributeDefaultImpliedValidator >> validateAttributeDefaultIn: aDictionary [
 ]

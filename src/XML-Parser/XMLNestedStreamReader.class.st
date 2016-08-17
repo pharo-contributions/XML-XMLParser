@@ -127,15 +127,9 @@ XMLNestedStreamReader >> closeStreams [
 
 { #category : #decoding }
 XMLNestedStreamReader >> convertFromEncoding: anEncodingName [
-	| streamConverter |
-
-	"encoding declarations for the default encoding are ignored on ReadStreams,
-	which are assumed to be on strings that don't need decoding"
-	streamConverter := anEncodingName asXMLStreamConverter.
-	((stream isKindOf: ReadStream)
-		and: [streamConverter isDefault
-			or: [streamConverter isNull]])
-		ifFalse: [self decodeStreamWithConverter: streamConverter].
+	"encoding attributes are ignored unless we are already decoding"
+	stream isXMLConvertingStreamAdapter
+		ifTrue: [self decodeStreamWithConverter: anEncodingName asXMLStreamConverter]
 ]
 
 { #category : #accessing }

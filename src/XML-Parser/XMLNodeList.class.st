@@ -232,7 +232,7 @@ XMLNodeList >> sort [
 	self sort: [:a :b | a sortKey <= b sortKey]
 ]
 
-{ #category : #enumerating }
+{ #category : #accessing }
 XMLNodeList >> stringNodes [
 	^ self select: [:each | each isStringNode]
 ]
@@ -242,7 +242,7 @@ XMLNodeList >> stringNodesDo: aBlock [
 	self do: [:each | each isStringNode ifTrue: [aBlock value: each]]
 ]
 
-{ #category : #enumerating }
+{ #category : #accessing }
 XMLNodeList >> strings [
 	^ self
 		select: [:each | each isStringNode]

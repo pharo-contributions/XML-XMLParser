@@ -1,5 +1,5 @@
 "
-A context for <?xml ...?> text declaration tokens at the start of external entities.
+A context for <?xml ...?> text declaration tokens at the start of external parsed entities and the external DTD subset.
 "
 Class {
 	#name : #XMLTextDeclarationContext,

@@ -169,10 +169,10 @@ XMLWellFormedParserTokenizer >> errorDocumentTerminatedPrematurely [
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorDuplicateAttribute: anAttributeName [
+XMLWellFormedParserTokenizer >> errorDuplicateAttribute: anAttribute [
 	self
 		formatParseError: 'Duplicate attribute "{1}" in start tag'
-		with: anAttributeName
+		with: anAttribute
 ]
 
 { #category : #errors }

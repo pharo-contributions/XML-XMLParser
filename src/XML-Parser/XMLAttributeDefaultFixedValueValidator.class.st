@@ -16,10 +16,10 @@ XMLAttributeDefaultFixedValueValidator >> errorNonDefaultValue [
 ]
 
 { #category : #validating }
-XMLAttributeDefaultFixedValueValidator >> validateAttributeDefaultIn: anAttributeDictionary [
+XMLAttributeDefaultFixedValueValidator >> validateAttributeDefaultIn: aDictionary [
 	"unless the attribute is set (even just to an empty value), then it's set
 	to the fixed default value, which it must match"
-	(anAttributeDictionary
+	(aDictionary
 		at: self attribute
 		ifAbsentPut: [self defaultValue]) = self defaultValue
 		ifFalse: [self errorNonDefaultValue]

@@ -1,11 +1,19 @@
 "
-This is a base class for SAX declaration handler classes that can be injected into SAX2Parser instances before parsing.
+This is a base class for SAX2 declaration handler classes that can be injected into SAX2Parser instances with #declarationHandler: before parsing.
 "
 Class {
 	#name : #SAX2DeclarationHandler,
 	#superclass : #Object,
+	#instVars : [
+		'parser'
+	],
 	#category : #'XML-Parser'
 }
+
+{ #category : #'instance creation' }
+SAX2DeclarationHandler class >> parser: aParser [
+	^ self new parser: aParser
+]
 
 { #category : #'handling - declaration' }
 SAX2DeclarationHandler >> attributeDeclaration: anElementName name: anAttributeName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
@@ -35,4 +43,16 @@ SAX2DeclarationHandler >> parameterEntityDeclaration: aName publicID: aPublicID 
 
 { #category : #'handling - declaration' }
 SAX2DeclarationHandler >> parameterEntityDeclaration: aName replacement: aReplacement [
+]
+
+{ #category : #accessing }
+SAX2DeclarationHandler >> parser [
+	"Returns the SAX2Parser"
+
+	^ parser
+]
+
+{ #category : #accessing }
+SAX2DeclarationHandler >> parser: aParser [
+	parser := aParser
 ]

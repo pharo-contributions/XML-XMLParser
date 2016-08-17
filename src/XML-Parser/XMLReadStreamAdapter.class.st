@@ -1,21 +1,11 @@
 "
-An abstract class for read stream adapters for basic streams that support next, peek, and atEnd.
+An abstract class for read stream adapters for basic streams that support #next, #peek, and #atEnd.
 "
 Class {
 	#name : #XMLReadStreamAdapter,
 	#superclass : #XMLStreamAdapter,
 	#category : #'XML-Parser-Streams'
 }
-
-{ #category : #'instance creation' }
-XMLReadStreamAdapter class >> onStreamIfBinary: aStream [
-	"consider any stream that returns ints to be binary, because not every
-	stream implements isBinary and it isn't portable to GS"
-	(aStream atEnd not
-		and: [aStream peek isInteger])
-		ifTrue: [^ self on: aStream]
-		ifFalse: [^ aStream]
-]
 
 { #category : #testing }
 XMLReadStreamAdapter >> atEnd [

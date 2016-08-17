@@ -32,10 +32,10 @@ XMLAttributeDefaultValueValidator >> setAttribute: anAttribute defaultValue: aDe
 ]
 
 { #category : #validating }
-XMLAttributeDefaultValueValidator >> validateAttributeDefaultIn: anAttributeDictionary [
+XMLAttributeDefaultValueValidator >> validateAttributeDefaultIn: aDictionary [
 	"unless the attribute is set (even just to an empty value), then it's set
 	to the default value"
-	anAttributeDictionary
+	aDictionary
 		at: self attribute
 		ifAbsentPut: [self defaultValue]
 ]

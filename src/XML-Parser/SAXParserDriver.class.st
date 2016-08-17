@@ -35,15 +35,17 @@ SAXParserDriver >> baseURI [
 ]
 
 { #category : #private }
-SAXParserDriver >> checkForReservedAttributesIn: anAttributeDictionary afterIndex: anIndex [
-	"validation may add attributes"
+SAXParserDriver >> checkForReservedAttributesIn: anOrderPreservingDictionary afterIndex: anIndex [
+	"validation may add attributes, so this is used to check if reserved
+	attributes were added that need handling when there weren't any before"
+
 	self hasUnhandledReservedAttributes
-		ifFalse: [
-			anIndex + 1
-				to: anAttributeDictionary size
-				do: [:i |
-					(anAttributeDictionary keyAtIndex: i) isXMLReservedAttributeName
-						ifTrue: [^ self haveUnhandledReservedAttributes]]]
+		ifTrue: [^ self].
+	anIndex + 1
+		to: anOrderPreservingDictionary size
+		do: [:i |
+			(anOrderPreservingDictionary keyAtIndex: i) isXMLReservedAttributeName
+				ifTrue: [^ self haveUnhandledReservedAttributes]].
 ]
 
 { #category : #accessing }
@@ -164,13 +166,13 @@ SAXParserDriver >> externalSubsetSystemID [
 ]
 
 { #category : #private }
-SAXParserDriver >> extractNamespacesFromAttributes: anAttributeDictionary [
+SAXParserDriver >> extractNamespacesFromAttributes: anOrderPreservingDictionary [
 	"returns an ordered collection of namespace prefix/uri associations
 	removed from the attribute dictionary or nil if there aren't any"
 	| namespaces keysToRemove |
 
 	self haveNoUnhandledReservedAttributes.
-	anAttributeDictionary keysDo: [:name |
+	anOrderPreservingDictionary keysDo: [:name |
 		"optimized comparison ordering"
 		(name at: 1) == $x
 			ifTrue: [
@@ -179,9 +181,10 @@ SAXParserDriver >> extractNamespacesFromAttributes: anAttributeDictionary [
 						"only initialize when needed"
 						(namespaces ifNil: [namespaces := OrderedCollection new: 5])
 							addLast:
-								((name size > 6)
+								(name size > 6 "'xmlns:' size"
 									ifTrue: [name copyFrom: 7 to: name size]
-									ifFalse: ['']) -> (anAttributeDictionary at: name).
+									ifFalse: ['']) ->
+										(anOrderPreservingDictionary at: name).
 						"only initialize when needed"
 						(keysToRemove ifNil: [keysToRemove := OrderedCollection new: 5])
 							addLast: name]
@@ -196,7 +199,7 @@ SAXParserDriver >> extractNamespacesFromAttributes: anAttributeDictionary [
 	keysToRemove
 		ifNotNil: [
 			"use removeKeys: for speed"
-			anAttributeDictionary removeKeys: keysToRemove].
+			anOrderPreservingDictionary removeKeys: keysToRemove].
 
 	^ namespaces.
 ]
@@ -284,15 +287,15 @@ SAXParserDriver >> handleEndDocument [
 ]
 
 { #category : #handling }
-SAXParserDriver >> handleEndTag: anElementName [
+SAXParserDriver >> handleEndTag: anElement [
 	"performance critical method"
 	| prefix currentScope |
 
-	self elementNester endElement: anElementName.
+	self elementNester endElement: anElement.
 
-	prefix := anElementName xmlPrefixBeforeLocalName.
+	prefix := anElement xmlPrefixBeforeLocalName.
 	self saxHandler 
-		endElement: anElementName
+		endElement: anElement
 		prefix: prefix
 		uri:
 			(self usesNamespaces
@@ -300,13 +303,13 @@ SAXParserDriver >> handleEndTag: anElementName [
 					(currentScope := self scopeAllocator exitScope)
 						resolvePrefix: prefix]
 				ifFalse: [''])
-		localName: (anElementName xmlLocalNameAfterPrefix: prefix).
+		localName: (anElement xmlLocalNameAfterPrefix: prefix).
 
 	currentScope ifNotNil: [
 		currentScope hasNamespaces
 			ifTrue: [self undeclareNamespacesInScope: currentScope]].
 	self isValidating
-		ifTrue: [self validator validateEndTag: anElementName].
+		ifTrue: [self validator validateEndTag: anElement].
 ]
 
 { #category : #'handling - dtd' }
@@ -467,20 +470,20 @@ SAXParserDriver >> handleParseError: aString [
 ]
 
 { #category : #private }
-SAXParserDriver >> handleReservedAttributes: anAttributeDictionary [
-	anAttributeDictionary
+SAXParserDriver >> handleReservedAttributes: aDictionary [
+	aDictionary
 		at: 'xml:base'
 		ifPresent: [:uri |
 			"expand the new base URI using the current"
-			anAttributeDictionary
+			aDictionary
 				at: 'xml:base'
 				put: (self baseURI asXMLURI / uri) asString].
 	self isValidating
-		ifTrue: [self validator validateXMLIDAttributeIn: anAttributeDictionary].
+		ifTrue: [self validator validateXMLIDAttributeIn: aDictionary].
 
 	self elementNester
 		setScopedAttributesNamed: self scopedAttributeNames
-		from: anAttributeDictionary.
+		from: aDictionary.
 
 	self haveNoUnhandledReservedAttributes.
 ]
@@ -513,32 +516,32 @@ SAXParserDriver >> handleStartDocument [
 ]
 
 { #category : #handling }
-SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictionary [
+SAXParserDriver >> handleStartTag: anElement attributes: aDictionary [
 	"performance critical method"
 	| prefix totalAttributes namespaceURI currentScope |
 
-	self elementNester startElement: anElementName.
+	self elementNester startElement: anElement.
 
-	prefix := anElementName xmlPrefixBeforeLocalName.
-	totalAttributes := anAttributeDictionary size.
+	prefix := anElement xmlPrefixBeforeLocalName.
+	totalAttributes := aDictionary size.
 	self isValidating
 		ifTrue: [
 			self elementNester isCurrentElementRoot
-				ifTrue: [self validateRootElement: anElementName].
+				ifTrue: [self validateRootElement: anElement].
 			self validator
-				validateStartTag: anElementName
-				attributes: anAttributeDictionary.
-			anAttributeDictionary size > totalAttributes
+				validateStartTag: anElement
+				attributes: aDictionary.
+			aDictionary size > totalAttributes
 				ifTrue: [
 					self
-						checkForReservedAttributesIn: anAttributeDictionary
+						checkForReservedAttributesIn: aDictionary
 						afterIndex: totalAttributes]].
 	self usesNamespaces
 		ifTrue: [
 			currentScope := self scopeAllocator enterScope.
 			self hasUnhandledReservedAttributes
 				ifTrue: [
-					(self extractNamespacesFromAttributes: anAttributeDictionary)
+					(self extractNamespacesFromAttributes: aDictionary)
 						ifNotNil: [:namespaces |
 							self
 								declareNamespaces: namespaces
@@ -546,18 +549,18 @@ SAXParserDriver >> handleStartTag: anElementName attributes: anAttributeDictiona
 			namespaceURI :=
 				currentScope
 					validateAndResolvePrefix: prefix
-					ofElement: anElementName.
+					ofElement: anElement.
 			totalAttributes > 0
-				ifTrue: [currentScope validateAttributePrefixes: anAttributeDictionary]].
+				ifTrue: [currentScope validateAttributePrefixes: aDictionary]].
 	self hasUnhandledReservedAttributes
-		ifTrue: [self handleReservedAttributes: anAttributeDictionary].
+		ifTrue: [self handleReservedAttributes: aDictionary].
 
 	self saxHandler
-		startElement: anElementName
+		startElement: anElement
 		prefix: prefix
 		uri: (namespaceURI ifNil: [''])
-		localName: (anElementName xmlLocalNameAfterPrefix: prefix)
-		attributes: anAttributeDictionary.
+		localName: (anElement xmlLocalNameAfterPrefix: prefix)
+		attributes: aDictionary.
 
 	currentScope
 		ifNotNil: [self saxHandler currentScope: currentScope].
@@ -700,8 +703,8 @@ SAXParserDriver >> scopedAttributeNames [
 ]
 
 { #category : #accessing }
-SAXParserDriver >> setRootElement: anElementName currentScope: aNamespaceScope [
-	self elementNester setExternalRootElement: anElementName.
+SAXParserDriver >> setRootElement: anElement currentScope: aNamespaceScope [
+	self elementNester setExternalRootElement: anElement.
 	self usesNamespaces
 		ifTrue: [self scopeAllocator currentScope: aNamespaceScope].
 ]

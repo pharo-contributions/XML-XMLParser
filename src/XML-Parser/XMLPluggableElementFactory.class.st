@@ -1,5 +1,5 @@
 "
-This class is a pluggable factory that can map elements to different XMLElement subclasses based on the name and namespace information of those elements. You have to create an instance, configure it to handle certain elements with certain classes, and then inject your instance into a DOM parser using #nodeFactory: before parsing. Here is an example of its use:
+This class is a pluggable factory that can map elements to different XMLElement subclasses based on the name, namespace information, and attributes of those elements. You have to create an instance, configure it to handle certain elements with certain classes, and then inject your instance into a DOM parser using #nodeFactory: before parsing. Here is an example of its use:
 
 	doc := (XMLDOMParser on: someXML)
 		nodeFactory:
@@ -20,140 +20,135 @@ Class {
 	#name : #XMLPluggableElementFactory,
 	#superclass : #XMLPluggableNodeFactory,
 	#instVars : [
-		'elementClasses'
+		'elementClassMapper'
 	],
 	#category : #'XML-Parser-DOM'
 }
 
 { #category : #accessing }
-XMLPluggableElementFactory >> classForElement: aName prefix: aPrefix uri: aURI localName: aLocalName [
-	^ (self elementClassAtName: aName uri: aURI)
-		ifNil: [
-			aPrefix size > 0
-				ifTrue: [
-					(self elementClassAtName: aLocalName uri: aURI)
-						ifNil: [self elementClass]]
-				ifFalse: [self elementClass]]
+XMLPluggableElementFactory >> classForElement: aQualifiedName [
+	^ elementClassMapper
+		classForElement: aQualifiedName
+		ifNone: [self elementClass]
 ]
 
-{ #category : #private }
-XMLPluggableElementFactory >> elementClassAtName: aName uri: aURI [
-	aURI size > 0
-		ifTrue: [
-			^ self elementClasses
-				at: aName -> aURI
-				ifAbsent: [
-					self elementClasses
-						at: aName 
-						ifAbsent: [nil]]]
-		ifFalse: [
-			^ self elementClasses
-				at: aName
-				ifAbsent: [nil]]
+{ #category : #accessing }
+XMLPluggableElementFactory >> classForElement: aQualifiedName attributes: anAssociationCollection [
+	^ elementClassMapper
+		classForElement: aQualifiedName
+		attributes: anAssociationCollection
+		ifNone: [self elementClass]
 ]
 
-{ #category : #private }
-XMLPluggableElementFactory >> elementClasses [
-	^ elementClasses
+{ #category : #accessing }
+XMLPluggableElementFactory >> classForElement: aQualifiedName namespaceURI: aURI [
+	^ elementClassMapper
+		classForElement: aQualifiedName
+		namespaceURI: aURI
+		ifNone: [self elementClass]
 ]
 
-{ #category : #'element handling' }
+{ #category : #accessing }
+XMLPluggableElementFactory >> classForElement: aQualifiedName namespaceURI: aURI attributes: anAssociationCollection [
+	^ elementClassMapper
+		classForElement: aQualifiedName
+		namespaceURI: aURI
+		attributes: anAssociationCollection
+		ifNone: [self elementClass]
+]
+
+{ #category : #accessing }
+XMLPluggableElementFactory >> classForElement: aQualifiedName namespaceURI: aURI localName: aLocalName attributes: anAssociationCollection [
+	^ elementClassMapper
+		classForElement: aQualifiedName
+		namespaceURI: aURI
+		localName: aLocalName
+		attributes: anAssociationCollection
+		ifNone: [self elementClass]
+]
+
+{ #category : #accessing }
+XMLPluggableElementFactory >> elementClassMapper [
+	^ elementClassMapper
+]
+
+{ #category : #accessing }
+XMLPluggableElementFactory >> elementClassMapper: anElementClassMapper [
+	elementClassMapper := anElementClassMapper
+]
+
+{ #category : #'private ' }
+XMLPluggableElementFactory >> elementClassMapperClass [
+	^ XMLSimpleElementClassMapper
+]
+
+{ #category : #handling }
+XMLPluggableElementFactory >> handleElement: anElementName attributes: anAssociationCollectionOrAttributeSpec withClass: aClass [
+	elementClassMapper
+		mapElement: anElementName
+		attributeSpec: anAssociationCollectionOrAttributeSpec asXMLAttributeSpec
+		toClass: aClass
+]
+
+{ #category : #handling }
+XMLPluggableElementFactory >> handleElement: anElementName namespaceURI: aURI attributes: aDictionaryOrAttributeSpec withClass: aClass [
+	elementClassMapper
+		mapElement: anElementName
+		namespaceURI: aURI
+		attributeSpec: aDictionaryOrAttributeSpec asXMLAttributeSpec
+		toClass: aClass
+]
+
+{ #category : #handling }
 XMLPluggableElementFactory >> handleElement: anElementName namespaceURI: aURI withClass: aClass [
-	self elementClasses
-		at:
-			(aURI isEmpty
-				ifTrue: [anElementName]
-				ifFalse: [anElementName -> aURI])
-		put: aClass
+	elementClassMapper
+		mapElement: anElementName
+		namespaceURI: aURI
+		toClass: aClass
 ]
 
-{ #category : #'element handling' }
+{ #category : #handling }
 XMLPluggableElementFactory >> handleElement: anElementName withClass: aClass [
-	self
-		handleElement: anElementName
-		namespaceURI: ''
-		withClass: aClass
+	elementClassMapper
+		mapElement: anElementName
+		toClass: aClass
 ]
 
-{ #category : #'element handling' }
+{ #category : #handling }
 XMLPluggableElementFactory >> handleElements: anElementNameCollection namespaceURI: aNamespaceURI withClass: aClass [
-	anElementNameCollection do: [:each |
-		self
-			handleElement: each
-			namespaceURI: aNamespaceURI
-			withClass: aClass]
+	elementClassMapper
+		mapElements: anElementNameCollection
+		namespaceURI: aNamespaceURI
+		toClass: aClass
 ]
 
-{ #category : #'element handling' }
+{ #category : #handling }
 XMLPluggableElementFactory >> handleElements: anElementNameCollection withClass: aClass [
-	anElementNameCollection do: [:each | self handleElement: each withClass: aClass]
+	elementClassMapper
+		mapElements: anElementNameCollection
+		toClass: aClass
 ]
 
-{ #category : #'element handling' }
+{ #category : #handling }
 XMLPluggableElementFactory >> handleElementsMatchingClass: aClass [
-	| className |
-
-	(className := self toNameWithoutPrefixAndElementSuffix: aClass name asString)
-		ifEmpty: [^ self].
-
-	self
-		handleElement: (self toCamelCasedName: className)
-		withClass: aClass.
-	self
-		handleElement: (self toHyphenatedName: className)
-		withClass: aClass.
+	elementClassMapper mapAllMatchingElementsToClass: aClass
 ]
 
-{ #category : #'element handling' }
+{ #category : #handling }
 XMLPluggableElementFactory >> handleElementsMatchingClasses: aClassCollection [
-	aClassCollection do: [:each | self handleElementsMatchingClass: each]
+	elementClassMapper mapAllMatchingElementsToClasses: aClassCollection
 ]
 
 { #category : #initialization }
 XMLPluggableElementFactory >> initialize [
 	super initialize.
 
-	elementClasses := Dictionary new.
+	elementClassMapper := self elementClassMapperClass new.
 ]
 
 { #category : #copying }
 XMLPluggableElementFactory >> postCopy [
 	super postCopy.
 
-	elementClasses := elementClasses copy.
-]
-
-{ #category : #private }
-XMLPluggableElementFactory >> toCamelCasedName: aString [
-	^ aString allButFirst copyWithFirst: aString first asLowercase
-]
-
-{ #category : #private }
-XMLPluggableElementFactory >> toHyphenatedName: aString [
-	| nameStream hyphenatedStream previousChar nextChar |
-
-	nameStream := aString readStream.
-	hyphenatedStream := (String new: nameStream size) writeStream.
-	[nameStream atEnd]
-		whileFalse: [
-			((nextChar := nameStream next) isUppercase
-				and: [previousChar notNil and: [previousChar isLowercase]])
-				ifTrue: [hyphenatedStream nextPut: $-].
-			hyphenatedStream nextPut: nextChar asLowercase.
-			previousChar := nextChar].
-	^ hyphenatedStream contents.
-]
-
-{ #category : #private }
-XMLPluggableElementFactory >> toNameWithoutPrefixAndElementSuffix: aString [
-	| nameStream |
-
-	nameStream := aString readStream.
-	[nameStream atEnd not and: [nameStream peek isUppercase]]
-		whileTrue: [nameStream next].
-	nameStream atEnd
-		ifTrue: [^ ''].
-	nameStream position: nameStream position - 1.
-
-	^ nameStream upToEnd copyReplaceAll: 'Element' with: ''.
+	elementClassMapper := elementClassMapper copy.
 ]

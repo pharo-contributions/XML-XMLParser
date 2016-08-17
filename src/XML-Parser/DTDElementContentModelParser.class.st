@@ -1,5 +1,5 @@
 "
-This class parses a content model using postfix conversion and an NFABuilder to build a NFA before converting it to a DFA.
+This class parses a content model using postfix conversion and an XMLNFABuilder to build an NFA before converting it to a lazy DFA (states are built when needed and cached) and returned as an element validator.
 
 It assumes all spaces have been removed from the input and that it's been checked for well-formedness (meaning no missing names or misplaced operators/parentheses).
 "

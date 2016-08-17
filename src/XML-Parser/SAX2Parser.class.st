@@ -1,7 +1,9 @@
 "
-This class is a parser with an API like SAX 2.0, with separate SAX2ContentHandler, SAX2LexicalHandler, and SAX2DeclarationHandler classes that are subclassed so their instances can be injected into a parser before parsing, unlike SAX 1.0 where a single handler class  is subclassed directly.
+This class is a parser with an API like SAX 2.0, with separate SAX2ContentHandler, SAX2LexicalHandler, and SAX2DeclarationHandler classes that are subclassed unlike SAX 1.0 where a single,  unified handler class is subclassed directly. Parsers can be created with #on: or other instance creation messages, and instances of the content, lexical, and declaration handlers can be injected before parsing with #contentHandler:, #lexicalHandler:, and #declarationHandler:.
 
-SAXHandler is not deprecated and should still be used if you prefer a SAX 1.0 style API.
+Each handler can access the SAX2Parser object with #parser and set the parsing result returned by #parseDocument with #parsingResult:.
+
+SAXHandler is not deprecated and can still be used if you prefer the SAX 1.0 style API.
 "
 Class {
 	#name : #SAX2Parser,
@@ -9,7 +11,8 @@ Class {
 	#instVars : [
 		'contentHandler',
 		'lexicalHandler',
-		'declarationHandler'
+		'declarationHandler',
+		'parsingResult'
 	],
 	#category : #'XML-Parser'
 }
@@ -102,8 +105,9 @@ SAX2Parser >> contentHandler [
 
 { #category : #accessing }
 SAX2Parser >> contentHandler: aContentHandler [
-	contentHandler :=
-		aContentHandler ifNil: [self defaultContentHandlerClass new]
+	(contentHandler :=
+		aContentHandler ifNil: [self defaultContentHandlerClass new])
+			parser: self
 ]
 
 { #category : #accessing }
@@ -113,8 +117,9 @@ SAX2Parser >> declarationHandler [
 
 { #category : #accessing }
 SAX2Parser >> declarationHandler: aDeclarationHandler [
-	declarationHandler :=
-		aDeclarationHandler ifNil: [self defaultDeclarationHandlerClass new]
+	(declarationHandler :=
+		aDeclarationHandler ifNil: [self defaultDeclarationHandlerClass new])
+			parser: self
 ]
 
 { #category : #private }
@@ -152,19 +157,6 @@ SAX2Parser >> endDTD [
 { #category : #'handling - content' }
 SAX2Parser >> endDocument [
 	self contentHandler endDocument
-]
-
-{ #category : #'handling - content' }
-SAX2Parser >> endElement: aQualifiedName [
-	self contentHandler endElement: aQualifiedName
-]
-
-{ #category : #'handling - content' }
-SAX2Parser >> endElement: aQualifiedName prefix: aPrefix uri: aURI [
-	self contentHandler
-		endElement: aQualifiedName
-		prefix: aPrefix
-		uri: aURI
 ]
 
 { #category : #'handling - content' }
@@ -214,8 +206,9 @@ SAX2Parser >> lexicalHandler [
 
 { #category : #accessing }
 SAX2Parser >> lexicalHandler: aLexicalHandler [
-	lexicalHandler :=
-		aLexicalHandler ifNil: [self defaultLexicalHandlerClass new]
+	(lexicalHandler :=
+		aLexicalHandler ifNil: [self defaultLexicalHandlerClass new])
+			parser: self
 ]
 
 { #category : #'handling - declaration' }
@@ -230,9 +223,12 @@ SAX2Parser >> notationDeclaration: aName publicID: aPublicID systemID: aSystemID
 SAX2Parser >> on: aStringOrStream [
 	super on: aStringOrStream.
 
-	contentHandler := self defaultContentHandlerClass new.
-	lexicalHandler := self defaultLexicalHandlerClass new.
-	declarationHandler := self defaultDeclarationHandlerClass new.
+	contentHandler := self defaultContentHandlerClass parser: self.
+	lexicalHandler := self defaultLexicalHandlerClass parser: self.
+	declarationHandler := self defaultDeclarationHandlerClass parser: self.
+	
+	"self is the returns parsing result SAXHandler returns"
+	parsingResult := self.
 ]
 
 { #category : #'handling - declaration' }
@@ -248,6 +244,16 @@ SAX2Parser >> parameterEntityDeclaration: aName replacement: aReplacement [
 	self declarationHandler
 		parameterEntityDeclaration: aName
 		replacement: aReplacement
+]
+
+{ #category : #parsing }
+SAX2Parser >> parsingResult [
+	^ parsingResult
+]
+
+{ #category : #parsing }
+SAX2Parser >> parsingResult: anObject [
+	parsingResult := anObject
 ]
 
 { #category : #'handling - content' }
@@ -278,22 +284,6 @@ SAX2Parser >> startDTD: aRootElementName publicID: aPublicID systemID: aSystemID
 { #category : #'handling - content' }
 SAX2Parser >> startDocument [
 	self contentHandler startDocument
-]
-
-{ #category : #'handling - content' }
-SAX2Parser >> startElement: aQualifiedName attributes: aDictionary [
-	self contentHandler
-		startElement: aQualifiedName
-		attributes: aDictionary
-]
-
-{ #category : #'handling - content' }
-SAX2Parser >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes: aDictionary [
-	self contentHandler
-		startElement: aQualifiedName
-		prefix: aPrefix
-		uri: aURI
-		attributes: aDictionary
 ]
 
 { #category : #'handling - content' }

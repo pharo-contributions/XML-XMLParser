@@ -19,6 +19,11 @@ XMLPI class >> target: aTargetString data: aDataString [
 		data: aDataString
 ]
 
+{ #category : #visiting }
+XMLPI >> acceptNodeVisitor: aNodeVisitor [
+	aNodeVisitor visitPI: self
+]
+
 { #category : #accessing }
 XMLPI >> data [
 	^ data ifNil: [data := '']

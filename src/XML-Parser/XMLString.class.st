@@ -1,5 +1,7 @@
 "
-This class represents string (character data) nodes. Instances are mutable and can be created using the class-side #string: message or by sending a String #asXMLString. When printing, they XML-escape special characters.
+This class represents string (character data) nodes. Instances are mutable, but the string is treated as immutable. String nodes can be created using the class-side #string: message or by sending a String #asXMLStringNode. 
+
+When printing, special characters XML-escaped.
 "
 Class {
 	#name : #XMLString,
@@ -15,22 +17,24 @@ XMLString class >> string: aString [
 	^ self new string: aString
 ]
 
-{ #category : #private }
-XMLString >> acceptsContent [
-	^ true
+{ #category : #visiting }
+XMLString >> acceptNodeVisitor: aNodeVisitor [
+	aNodeVisitor visitStringNode: self
 ]
 
-{ #category : #adding }
+{ #category : #deprecated }
 XMLString >> addContent: aStringOrStringNode [
+	"will be deprecated"
+
+	self append: aStringOrStringNode
+]
+
+{ #category : #'appending/prepending' }
+XMLString >> append: aStringOrStringNode [
 	string :=
 		string
 			ifNil: [aStringOrStringNode asString]
 			ifNotNil: [string, aStringOrStringNode asString]
-]
-
-{ #category : #adding }
-XMLString >> append: aStringOrStringNode [
-	self addContent: aStringOrStringNode
 ]
 
 { #category : #converting }
@@ -43,8 +47,15 @@ XMLString >> asXMLEscapedString [
 	^ self string asXMLEscapedString
 ]
 
-{ #category : #converting }
+{ #category : #deprecated }
 XMLString >> asXMLString [
+	"will be deprecated; use #asXMLStringNode instead"
+
+	^ self asXMLStringNode
+]
+
+{ #category : #converting }
+XMLString >> asXMLStringNode [
 	^ self
 ]
 
@@ -80,6 +91,11 @@ XMLString >> indexOfSubstring: aStringOrStringNode [
 	^ self string
 		findString: aStringOrStringNode asString
 		startingAt: 1
+]
+
+{ #category : #private }
+XMLString >> isCoalescingStringNode [
+	^ true
 ]
 
 { #category : #testing }
@@ -141,9 +157,12 @@ XMLString >> notEmpty [
 	^ self string notEmpty
 ]
 
-{ #category : #adding }
+{ #category : #'appending/prepending' }
 XMLString >> prepend: aStringOrStringNode [
-	self string: aStringOrStringNode asString, self string
+	string :=
+		string
+			ifNil: [aStringOrStringNode asString]
+			ifNotNil: [aStringOrStringNode asString, string]
 ]
 
 { #category : #printing }
@@ -207,11 +226,6 @@ XMLString >> string [
 { #category : #accessing }
 XMLString >> string: aString [
 	string := aString asString
-]
-
-{ #category : #validating }
-XMLString >> validateWith: aValidator [
-	aValidator validatePCData: self string
 ]
 
 { #category : #printing }

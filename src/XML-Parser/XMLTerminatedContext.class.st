@@ -1,5 +1,5 @@
 "
-A context for after parsing.
+A context for when tokenizing has stopped.
 "
 Class {
 	#name : #XMLTerminatedContext,

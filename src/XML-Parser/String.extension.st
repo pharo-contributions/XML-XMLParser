@@ -37,6 +37,13 @@ String >> asXMLStreamConverter [
 
 { #category : #'*XML-Parser' }
 String >> asXMLString [
+	"will be deprecated; use #asXMLStringNode instead"
+
+	^ self asXMLStringNode
+]
+
+{ #category : #'*XML-Parser' }
+String >> asXMLStringNode [
 	^ XMLString string: self
 ]
 
