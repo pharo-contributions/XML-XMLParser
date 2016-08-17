@@ -37,6 +37,13 @@ CharacterCollection >> asXMLStreamConverter [
 
 { #category : #'*XML-Parser-GemstoneCompatibility' }
 CharacterCollection >> asXMLString [
+	"will be deprecated; use #asXMLStringNode instead"
+
+	^ self asXMLStringNode
+]
+
+{ #category : #'*XML-Parser-GemstoneCompatibility' }
+CharacterCollection >> asXMLStringNode [
 	^ XMLString string: self
 ]
 
