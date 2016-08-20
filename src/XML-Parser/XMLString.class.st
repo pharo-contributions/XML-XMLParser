@@ -64,8 +64,10 @@ XMLString >> beginsWith: aStringOrStringNode [
 	^ self string beginsWith: aStringOrStringNode asString
 ]
 
-{ #category : #accessing }
+{ #category : #deprecated }
 XMLString >> contentString: aString [
+	"will be deprecated; use #string: instead"
+
 	self string: aString
 ]
 

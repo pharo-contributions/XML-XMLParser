@@ -63,20 +63,16 @@ SAX2ElementParser >> elementHandlerFactoryMapper: anElementHandlerFactoryMapper 
 
 { #category : #'handling - content' }
 SAX2ElementParser >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName [
-	(self elementHandler
+	| oldElementHandler |
+
+	(oldElementHandler := self elementHandler)
 		endElement: aQualifiedName
-			prefix: aPrefix
-			uri: aURI
-			localName: aLocalName;
-		parent)
-		ifNil: [
-			self
-				elementHandler: nil;
-				elementHandlerFactory: nil]
-		ifNotNil: [:parent |
-			self
-				elementHandler: parent;
-				elementHandlerFactory: parent elementHandlerFactory]
+		prefix: aPrefix
+		uri: aURI
+		localName: aLocalName.
+	self
+		elementHandler: oldElementHandler parent;
+		elementHandlerFactory: oldElementHandler parentFactory.
 ]
 
 { #category : #initialization }
@@ -89,25 +85,28 @@ SAX2ElementParser >> on: aStringOrStream [
 
 { #category : #'handling - content' }
 SAX2ElementParser >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: aDictionary [
-	self elementHandler:
-		((self elementHandlerFactory
+	| newElementHandler |
+
+	newElementHandler :=
+		(self elementHandlerFactory
 			classForElement: aQualifiedName
 			namespaceURI: aURI
 			localName: aLocalName
 			attributes: aDictionary)
 				parser: self
-				parent: self elementHandler).
+				parent: self elementHandler
+				parentFactory: self elementHandlerFactory.
+	self
+		elementHandler: newElementHandler;
+		elementHandlerFactory:
+			(self elementHandlerFactoryMapper
+				factoryForElementHandler: newElementHandler
+				ifNone: [self elementHandlerFactory]).
 
-	self elementHandlerFactory:
-		(self elementHandlerFactoryMapper
-			factoryForElementHandler: self elementHandler
-			ifNone: [self elementHandlerFactory]).
-
-	self elementHandler
-		elementHandlerFactory: self elementHandlerFactory;
+	newElementHandler
 		startElement: aQualifiedName
-			prefix: aPrefix
-			uri: aURI
-			localName: aLocalName
-			attributes: aDictionary.
+		prefix: aPrefix
+		uri: aURI
+		localName: aLocalName
+		attributes: aDictionary.
 ]

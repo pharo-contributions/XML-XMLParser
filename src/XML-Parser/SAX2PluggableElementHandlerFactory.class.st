@@ -1,7 +1,7 @@
 "
 This class is a pluggable element handler factory with an API like XMLPluggableElementFactory. Instances can be injected into a SAX2ElementParser with #elementHandlerFactory: before parsing.
 
-You can map combinations of element name, namespace URI, and attributes to specific element handler classes.
+You can map combinations of element name, namespace URI, and attributes to specific element handler classes using the ""handling"" messages, and change the default element handler class when there's no mapping with #elementHandlerClass:.
 "
 Class {
 	#name : #SAX2PluggableElementHandlerFactory,
@@ -48,19 +48,29 @@ SAX2PluggableElementHandlerFactory >> elementHandlerClass: aClass [
 ]
 
 { #category : #handling }
-SAX2PluggableElementHandlerFactory >> handleElement: anElementName attributes: anAssociationCollectionOrAttributeSpec withClass: aClass [
+SAX2PluggableElementHandlerFactory >> handleElement: anElementName attributes: aCollectionOrAttributeSpec withClass: aClass [
+	"aCollectionOrAttributeSpec can be some kind of XMLAttributeSpec or a
+	collection of associations of required attribute names and values, and the
+	required values can be strings, blocks, or nil meaning the attribute is
+	required but can take any value"
+
 	elementClassMapper
 		mapElement: anElementName
-		attributeSpec: anAssociationCollectionOrAttributeSpec asXMLAttributeSpec
+		attributeSpec: aCollectionOrAttributeSpec asXMLAttributeSpec
 		toClass: aClass
 ]
 
 { #category : #handling }
-SAX2PluggableElementHandlerFactory >> handleElement: anElementName namespaceURI: aURI attributes: anAssociationCollectionOrAttributeSpec withClass: aClass [
+SAX2PluggableElementHandlerFactory >> handleElement: anElementName namespaceURI: aURI attributes: aCollectionOrAttributeSpec withClass: aClass [
+	"aCollectionOrAttributeSpec can be some kind of XMLAttributeSpec or a
+	collection of associations of required attribute names and values, and the
+	required values can be strings, blocks, or nil meaning the attribute is
+	required but can take any value"
+
 	elementClassMapper
 		mapElement: anElementName
 		namespaceURI: aURI
-		attributeSpec: anAssociationCollectionOrAttributeSpec asXMLAttributeSpec
+		attributeSpec: aCollectionOrAttributeSpec asXMLAttributeSpec
 		toClass: aClass
 ]
 

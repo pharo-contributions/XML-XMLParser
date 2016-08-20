@@ -9,21 +9,47 @@ Class {
 	#instVars : [
 		'parser',
 		'parent',
-		'elementHandlerFactory'
+		'parentFactory'
 	],
 	#category : #'XML-Parser'
 }
 
-{ #category : #accessing }
-SAX2ElementHandler class >> elementHandlerFactory [
-	^ nil
+{ #category : #parsing }
+SAX2ElementHandler class >> parser: aParser [
+	^ self
+		parser: aParser
+		parent: aParser elementHandler
+		parentFactory: aParser elementHandlerFactory
 ]
 
-{ #category : #'instance creation' }
-SAX2ElementHandler class >> parser: aParser parent: anElementHandler [
+{ #category : #parsing }
+SAX2ElementHandler class >> parser: aParser parent: anElementHandler parentFactory: anElementHandlerFactory [
 	^ self new
-		parser: aParser;
+		setParser: aParser
 		parent: anElementHandler
+		parentFactory: anElementHandlerFactory
+]
+
+{ #category : #accessing }
+SAX2ElementHandler >> ancestors [	
+	"Returns a list of all ancestor element handlers of the receiver."
+
+	| ancestors |
+
+	ancestors := XMLOrderedList new.
+	self ancestorsDo: [:each | ancestors addLast: each].
+	^ ancestors.
+]
+
+{ #category : #enumerating }
+SAX2ElementHandler >> ancestorsDo: aBlock [
+	| ancestor |
+
+	ancestor := self parent.
+	[ancestor notNil]
+		whileTrue: [
+			aBlock value: ancestor.
+			ancestor := ancestor parent].
 ]
 
 { #category : #accessing }
@@ -48,12 +74,10 @@ SAX2ElementHandler >> characters: aString [
 
 { #category : #accessing }
 SAX2ElementHandler >> elementHandlerFactory [
-	^ elementHandlerFactory
-]
+	"Can return a default factory to use by a factory mapper if no other
+	one is mapped to the receiver."
 
-{ #category : #accessing }
-SAX2ElementHandler >> elementHandlerFactory: anElementHandlerFactory [
-	elementHandlerFactory := anElementHandlerFactory
+	^ nil
 ]
 
 { #category : #'handling - content' }
@@ -93,8 +117,8 @@ SAX2ElementHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI local
 ]
 
 { #category : #testing }
-SAX2ElementHandler >> isHandlingRootElement [
-	^ self parent isNil
+SAX2ElementHandler >> hasParent [
+	^ parent notNil
 ]
 
 { #category : #accessing }
@@ -106,8 +130,10 @@ SAX2ElementHandler >> parent [
 ]
 
 { #category : #accessing }
-SAX2ElementHandler >> parent: anElementHandler [
-	parent := anElementHandler
+SAX2ElementHandler >> parentFactory [
+	"Returns the factory that created this element handler."
+
+	^ parentFactory
 ]
 
 { #category : #accessing }
@@ -117,9 +143,11 @@ SAX2ElementHandler >> parser [
 	^ parser
 ]
 
-{ #category : #accessing }
-SAX2ElementHandler >> parser: aParser [
-	parser := aParser
+{ #category : #initialization }
+SAX2ElementHandler >> setParser: aParser parent: anElementHandler parentFactory: anElementHandlerFactory [
+	parser := aParser.
+	parent := anElementHandler.
+	parentFactory := anElementHandlerFactory.
 ]
 
 { #category : #'handling - content' }

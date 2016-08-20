@@ -1,5 +1,5 @@
 "
-This is a base class for mappers to map element handler objects to element handler factories Querying the factory for an element handler checks the handler's class #elementHandlerFactory message first and then the mapper's own #elementHandlerFactory message.
+This is a base class for mappers to map element handler objects to element handler factories Querying the factory for an element handler checks the handler's #elementHandlerFactory message first and then the mapper's own #elementHandlerFactory message.
 
 SAX2ElementParsers will reuse (inherit) the current factory if none is found for a new element handler.
 "
@@ -23,7 +23,7 @@ SAX2ElementHandlerFactoryMapper >> factoryForElementHandler: anElementHandler [
 
 { #category : #accessing }
 SAX2ElementHandlerFactoryMapper >> factoryForElementHandler: anElementHandler ifNone: aBlock [
-	^ anElementHandler class elementHandlerFactory
+	^ anElementHandler elementHandlerFactory
 		ifNil: [
 			self elementHandlerFactory
 				ifNil: [aBlock value]]

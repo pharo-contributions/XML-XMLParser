@@ -109,7 +109,7 @@ XMLKeyValueCache >> maxSize: anInteger [
 
 { #category : #testing }
 XMLKeyValueCache >> notEmpty [
-	^ self isEmpty not
+	^ collection notEmpty
 ]
 
 { #category : #copying }

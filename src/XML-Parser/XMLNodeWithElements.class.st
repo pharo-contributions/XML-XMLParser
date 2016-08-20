@@ -259,8 +259,10 @@ XMLNodeWithElements >> contentNodesDo: aBlock [
 	self nodes contentNodesDo: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : #deprecated }
 XMLNodeWithElements >> contentString: aString [
+	"will be deprecated; use #removeNodes and #addString: instead"
+
 	self
 		removeNodes;
 		addString: aString

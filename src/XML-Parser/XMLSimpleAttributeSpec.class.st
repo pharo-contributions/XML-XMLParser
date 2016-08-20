@@ -5,7 +5,7 @@ Class {
 	#name : #XMLSimpleAttributeSpec,
 	#superclass : #XMLAttributeSpec,
 	#instVars : [
-		'attributes'
+		'attributeSpec'
 	],
 	#category : #'XML-Parser-Utils'
 }
@@ -17,7 +17,7 @@ XMLSimpleAttributeSpec class >> attributes: aDictionaryOrCollectionOfAssociation
 
 { #category : #adding }
 XMLSimpleAttributeSpec >> addAttribute: anAttribute [
-	^ attributes
+	^ attributeSpec
 		at: anAttribute
 		ifAbsentPut: [nil]
 ]
@@ -31,34 +31,36 @@ XMLSimpleAttributeSpec >> addAttributeAssociation: anAssociation [
 
 { #category : #adding }
 XMLSimpleAttributeSpec >> addAttributeName: aName value: aValue [
-	^ attributes
+	^ attributeSpec
 		at: aName
 		put: aValue
 ]
 
 { #category : #initialization }
 XMLSimpleAttributeSpec >> initialize [
-	attributes := Dictionary new
+	attributeSpec := Dictionary new
 ]
 
 { #category : #matching }
 XMLSimpleAttributeSpec >> matchesAttributes: aDictionary [
-	attributes keysAndValuesDo: [:key :value |
-		"nil values only mean that the attribute has to present and
-		can have any value"
-		value
+	attributeSpec keysAndValuesDo: [:specName :specValue |
+		specValue
 			ifNil: [
-				(aDictionary includesKey: key)
+				"nil values only mean that the attribute has to present and
+				can have any value"
+				(aDictionary includesKey: specName)
 					ifFalse: [^ false]]
 			ifNotNil: [
-				(aDictionary at: key ifAbsent: [nil]) = value
-					ifFalse: [^ false]]].
+				(specValue isBlock
+					ifTrue: [specValue value: (aDictionary at: specName ifAbsent: [^ false])]
+					ifFalse: [specValue = (aDictionary at: specName ifAbsent: [^ false])])
+							ifFalse: [^ false]]].
 	^ true.
 ]
 
 { #category : #initialization }
 XMLSimpleAttributeSpec >> setAttributes: aDictionaryOrCollectionOfAssociationsAndStrings [
-	attributes removeAll.
+	attributeSpec removeAll.
 
 	"associationsDo: works for dictionaries and non-dictionaries, including
 	arrays, to support specs like {'one'. 'two'->'three'}"
