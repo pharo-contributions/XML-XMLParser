@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'name',
 		'dateOfBirth',
-		'emailAddresses'
+		'emailAddresses',
+		'residence'
 	],
 	#category : #'XML-Tests-Parser-ElementHandlers'
 }
@@ -39,6 +40,7 @@ SAX2SamplePerson >> initialize [
 	name := ''.
 	dateOfBirth := nil.
 	emailAddresses := OrderedCollection new.
+	residence := ''.
 ]
 
 { #category : #accessing }
@@ -49,4 +51,14 @@ SAX2SamplePerson >> name [
 { #category : #accessing }
 SAX2SamplePerson >> name: aString [
 	name := aString
+]
+
+{ #category : #accessing }
+SAX2SamplePerson >> residence [
+	^ residence
+]
+
+{ #category : #accessing }
+SAX2SamplePerson >> residence: aString [
+	residence := aString
 ]

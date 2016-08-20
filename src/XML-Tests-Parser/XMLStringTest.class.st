@@ -90,14 +90,6 @@ XMLStringTest >> testCanonicallyEquals [
 ]
 
 { #category : #tests }
-XMLStringTest >> testContentString [
-	super testContentString.
-	self
-		assert: (self nodeClass string: 'test') contentString = 'test';
-		assert: ((self nodeClass new) contentString: 'test') contentString = 'test'.
-]
-
-{ #category : #tests }
 XMLStringTest >> testDeleteFromTo [
 	| stringNode |
 

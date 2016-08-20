@@ -3,7 +3,7 @@ Handler for the sample <books> <book> <isbn> element.
 "
 Class {
 	#name : #SAX2HISBNElementHandler,
-	#superclass : #SAX2ElementCharactersHandler,
+	#superclass : #SAX2ElementCharacterHandler,
 	#category : #'XML-Tests-Parser-ElementHandlers'
 }
 

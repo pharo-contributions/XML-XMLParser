@@ -55,6 +55,15 @@ XMLSimpleAttributeSpecTest >> testMatchesAttributeAssociations [
 				with: 'name' -> 'value'
 				with: 'name2' -> 'value2'
 				with: 'name3' -> 'value3')).
+
+	attributeSpec := (Array with: 'name3' -> [:value | value endsWith: '3']) asXMLAttributeSpec.
+	self deny: (attributeSpec matchesAttributeAssociations: #()).
+	self deny:
+		(attributeSpec matchesAttributeAssociations:
+			(Array with: 'name3' -> 'value2')).
+	self assert:
+		(attributeSpec matchesAttributeAssociations:
+			(Array with: 'name3' -> 'value3')).
 ]
 
 { #category : #tests }
@@ -103,4 +112,13 @@ XMLSimpleAttributeSpecTest >> testMatchesAttributes [
 				with: 'name' -> 'value'
 				with: 'name2' -> 'value2'
 				with: 'name3' -> 'value3')).
+
+	attributeSpec := (Array with: 'name3' -> [:value | value endsWith: '3']) asXMLAttributeSpec.
+	self deny: (attributeSpec matchesAttributes: Dictionary new).
+	self deny:
+		(attributeSpec matchesAttributes:
+			(Dictionary with: 'name3' -> 'value2')).
+	self assert:
+		(attributeSpec matchesAttributes:
+			(Dictionary with: 'name3' -> 'value3')).
 ]

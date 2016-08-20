@@ -3,7 +3,7 @@ Handler for the sample <person> <name> element.
 "
 Class {
 	#name : #SAX2HNameElementHandler,
-	#superclass : #SAX2ElementCharactersHandler,
+	#superclass : #SAX2ElementCharacterHandler,
 	#category : #'XML-Tests-Parser-ElementHandlers'
 }
 

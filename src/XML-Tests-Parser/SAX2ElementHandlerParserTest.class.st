@@ -42,6 +42,7 @@ SAX2ElementHandlerParserTest >> samplePersonXML [
 				<email address="tbray@textuality.com"/>
 				<email address="tbray@tbray.org"/>
 			</contacts>
+			<residence>Vancouver, British Columbia, Canada</residence>
 		</person>
 	'
 ]
@@ -97,7 +98,8 @@ SAX2ElementHandlerParserTest >> testParsingSamplePerson [
 		SAX2PluggableElementHandlerFactory new
 			handleElement: 'name' withClass: SAX2HNameElementHandler;
 			handleElement: 'date-of-birth' withClass: SAX2HDateOfBirthElementHandler;
-			handleElement: 'contacts' withClass: SAX2HContactsElementHandler.
+			handleElement: 'contacts' withClass: SAX2HContactsElementHandler;
+			handleElement: 'residence' withClass: SAX2HResidenceElementHandler.
 	contactsFactory :=
 		SAX2PluggableElementHandlerFactory new
 			handleElement: 'email' withClass: SAX2HEmailElementHandler.
@@ -116,9 +118,6 @@ SAX2ElementHandlerParserTest >> testParsingSamplePerson [
 		assert: person class == SAX2SamplePerson;
 		assert: person name = 'Tim Bray';
 		assert: person dateOfBirth = (Date year: 1955 month: 6 day: 21);
-		assert:
-			person emailAddresses =
-				(OrderedCollection
-					with: 'tbray@textuality.com'
-					with: 'tbray@tbray.org').
+		assert: person emailAddresses asArray = #('tbray@textuality.com' 'tbray@tbray.org');
+		assert: person residence = 'Vancouver, British Columbia, Canada'.
 ]

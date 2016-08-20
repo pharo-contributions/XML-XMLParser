@@ -1389,7 +1389,7 @@ XMLElementTest >> testUndeclaringAttributePrefixes [
 
 { #category : #tests }
 XMLElementTest >> testWriteXMLOn [
-	| element |
+	| element attributes |
 
 	element := XMLElement named: 'element'.
 	self assert: element printString = '<element />'.
@@ -1397,6 +1397,20 @@ XMLElementTest >> testWriteXMLOn [
 	element addString: 'test'.
 	self assert: element printString = '<element>test</element>'.
 
-	element setAttributes: (Dictionary with: 'b' -> 'two' with: 'a' -> 'one').
-	self assert: element printString = '<element b="two" a="one">test</element>'.
+	"attribute order should be preserved when printing"
+	attributes :=
+		OrderPreservingStringDictionary
+			with: 'b' -> 'one'
+			with: 'a' -> 'two'
+			with: 'c' -> 'three'
+			with: 'e' -> 'four'
+			with: 'd' -> 'five'.
+	element setAttributes: attributes.
+	self assert:
+		element printString =
+			'<element b="one" a="two" c="three" e="four" d="five">test</element>'.
+	element setAttributes: attributes associations reversed.
+	self assert:
+		element printString =
+			'<element d="five" e="four" c="three" a="two" b="one">test</element>'.
 ]
