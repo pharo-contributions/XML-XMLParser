@@ -1,5 +1,10 @@
 "
-This is a base class for SAX2 declaration handler classes that can be injected into SAX2Parser instances with #declarationHandler: before parsing.
+This is a base class for SAX2 declaration handler classes that can be injected into SAX2Parser instances with #declarationHandler: before parsing:
+	(SAX2Parser on: xmlStringOrStream)
+		declarationHandler: MyDeclarationHandlerClass new;
+		parseDocument.
+
+See SAX2Parser and SAXHandler for more info.
 "
 Class {
 	#name : #SAX2DeclarationHandler,
@@ -47,7 +52,7 @@ SAX2DeclarationHandler >> parameterEntityDeclaration: aName replacement: aReplac
 
 { #category : #accessing }
 SAX2DeclarationHandler >> parser [
-	"Returns the SAX2Parser"
+	"Returns the SAX2Parser this handler was injected into"
 
 	^ parser
 ]

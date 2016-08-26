@@ -389,31 +389,6 @@ XMLNamespaceScope >> validateAndResolvePrefix: aPrefix ofElement: aName [
 		ifFalse: [^ self validateAndResolvePrefix: aPrefix]
 ]
 
-{ #category : #validating }
-XMLNamespaceScope >> validateAttributePrefixes: aDictionary [
-	"performance critical method"
-	| namespacedAttributes |
-
-	aDictionary keysDo: [:each | | prefix |
-		(prefix := each xmlPrefixBeforeLocalName) size > 0 "optimization"
-			ifTrue: [| namespace oldSize |
-				"not initialized unless needed"
-				namespacedAttributes
-					ifNil: [namespacedAttributes := Set new: aDictionary size].
-				namespace := self validateAndResolvePrefix: prefix.
-
-				"checking size after is faster than includes:"
-				oldSize := namespacedAttributes size.
-				(namespacedAttributes
-					add: (each xmlLocalNameAfterPrefix: prefix) -> namespace;
-					size) > oldSize
-					ifFalse: [
-						self
-							errorAttribute: each
-							aliasesNamespace: namespace]]
-			ifFalse: [self validateUnprefixedName: each]]
-]
-
 { #category : #private }
 XMLNamespaceScope >> validatePrefix: aPrefix beforeMappingTo: aURI [
 	aPrefix size > 0 "optimization"
@@ -436,6 +411,54 @@ XMLNamespaceScope >> validatePrefix: aPrefix beforeMappingTo: aURI [
 	(aURI = self xmlNamespaceURI
 		or: [aURI = self xmlnsNamespaceURI])
 		ifTrue: [self errorCannotAliasXMLOrXMLNSWithPrefix: aPrefix].
+]
+
+{ #category : #validating }
+XMLNamespaceScope >> validatePrefix: aPrefix ofAttribute: anAttribute hasNoAliasesin: aDictionaryOrSet [
+	| namespace oldSize |
+
+	namespace := self validateAndResolvePrefix: aPrefix.
+
+	"#add: and a #size check after is faster than #includes: or #includesKey:
+	and works for both Sets and Dictionaries"
+	oldSize := aDictionaryOrSet size.
+	(aDictionaryOrSet
+		add: (anAttribute xmlLocalNameAfterPrefix: aPrefix) -> namespace;
+		size) > oldSize
+		ifFalse: [
+			self
+				errorAttribute: anAttribute
+				aliasesNamespace: namespace]
+]
+
+{ #category : #validating }
+XMLNamespaceScope >> validatePrefixesOfAttributes: anAttributeCollection [
+	^ self
+		validatePrefixesOfAttributes: anAttributeCollection asArray
+		from: 1
+		to: anAttributeCollection size
+]
+
+{ #category : #validating }
+XMLNamespaceScope >> validatePrefixesOfAttributes: anAttributeCollection from: aStart to: aStop [
+	"performance critical method"
+	| attributeLocalNamesAndURIs |
+
+	"to:do: for speed"
+	aStart to: aStop do: [:i | | attribute prefix |
+		attribute := anAttributeCollection at: i.
+		(prefix := attribute xmlPrefixBeforeLocalName) size > 0 "optimization"
+			ifTrue: [
+				"not initialized unless needed"
+				attributeLocalNamesAndURIs
+					ifNil: [
+						attributeLocalNamesAndURIs :=
+							Set new: anAttributeCollection size].
+				self
+					validatePrefix: prefix
+					ofAttribute: attribute
+					hasNoAliasesin: attributeLocalNamesAndURIs]
+			ifFalse: [self validateUnprefixedName: attribute]]
 ]
 
 { #category : #private }

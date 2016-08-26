@@ -8,6 +8,8 @@ This is a pluggable factory that can be used to change which classes the DOM par
 				elementClass: MyElementClass;
 				stringNodeClass: MyStringNodeClass)
 		parseDocument.
+
+Instances can be saved and resused for performance and safely modified after copying.
 "
 Class {
 	#name : #XMLPluggableNodeFactory,

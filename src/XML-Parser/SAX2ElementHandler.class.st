@@ -1,5 +1,7 @@
 "
-This class is a SAX2 handler for individual elements to be used with a SAX2ElementParser. Unlike a SAX2ContentHandler, element handlers are created by SAX2ElementParsers to handle each element in the document and only handle the #startElement*, #endElement*, and #characters: events.
+This is base class for SAX2 element handlers to be used with SAX2ElementParsers.
+
+SAX2ElementParsers use separate SAX2ElementHandlers to handle the  #startElement*, #endElement*, and #characters: events of each element in the document instead of using a single SAX2ContentHandler for everything.
 
 The parser can be accessed with #parser, and the parent element handler (if any) can be accessed with #parent.
 "
@@ -67,9 +69,7 @@ SAX2ElementHandler >> characters: aString [
 	
 	It may be sent multiple times for different sections of character data
 	in a single element if they're separated by other nodes or entity
-	references like in '<characters>one<!--comment-->two</characters>'.
-	
-	See isInCDataSection and ignorableWhitespace:"
+	references like in '<characters>one<!--comment-->two</characters>'."
 ]
 
 { #category : #accessing }
@@ -124,14 +124,14 @@ SAX2ElementHandler >> hasParent [
 { #category : #accessing }
 SAX2ElementHandler >> parent [
 	"Returns the parent element handler or nil if there isn't one (if
-	this element handler is handling the root element)."
+	the receiver is handling the root element)."
 
 	^ parent
 ]
 
 { #category : #accessing }
 SAX2ElementHandler >> parentFactory [
-	"Returns the factory that created this element handler."
+	"Returns the factory that created the receiver."
 
 	^ parentFactory
 ]

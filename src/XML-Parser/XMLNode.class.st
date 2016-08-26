@@ -18,7 +18,7 @@ XMLNode >> acceptNodeVisitor: aNodeVisitor [
 XMLNode >> addContent: aStringOrStringNode [
 	"will be deprecated"
 
-	self errorNodeCannotContainStringContent
+	XMLDOMException signal: 'Node cannot contain string content'
 ]
 
 { #category : #enumerating }
@@ -166,11 +166,6 @@ XMLNode >> document [
 	document) or nil if there isn't one"
 
 	^ self parent ifNotNil: [:node | node document]
-]
-
-{ #category : #private }
-XMLNode >> errorNodeCannotContainStringContent [
-	XMLDOMException signal: 'Node cannot contain string content'
 ]
 
 { #category : #private }
@@ -564,14 +559,14 @@ XMLNode >> sortKey [
 XMLNode >> validate [
 	"revalidate against the DTD it was parsed with (if any)"
 
-	self document ifNotNil: [:node | node validate]
+	self document ifNotNil: [:document | document validate]
 ]
 
 { #category : #validating }
 XMLNode >> validateWith: aValidator [
 	"revalidate against a custom DTD or other validator"
 
-	self document ifNotNil: [:node | node validateWith: aValidator]
+	self document ifNotNil: [:document | document validateWith: aValidator]
 ]
 
 { #category : #private }

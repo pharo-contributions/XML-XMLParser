@@ -1,5 +1,5 @@
 "
-This class is a SAX2ElementHandler that tracks character data. Sending #characters returns the complete character data of the element as a string.
+This class is a SAX2ElementHandler that handles #characters: events. Sending #characters returns the complete character data of the element as a string.
 "
 Class {
 	#name : #SAX2ElementCharacterHandler,

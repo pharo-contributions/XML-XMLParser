@@ -11,12 +11,26 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
+{ #category : #deprecated }
+XMLAttribute class >> name: aName [
+	"will be deprecated; defined here just to avoid accidentally renaming the class"
+
+	^ self named: aName
+]
+
 { #category : #'instance creation' }
 XMLAttribute class >> name: aName value: aValue [
 	^ self new	
 		setName: aName
 		value: aValue
 		element: nil
+]
+
+{ #category : #'instance creation' }
+XMLAttribute class >> named: aName [
+	^ self
+		name: aName
+		value: ''
 ]
 
 { #category : #accessing }

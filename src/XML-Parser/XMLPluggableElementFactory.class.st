@@ -15,6 +15,8 @@ The #handleElementsMatchingClass*: forms try to match elements to the specified 
 		handleElementsMatchingClass: MYRootUserElement
 		....
 will handle 'rootUser' and 'root-user' elements with the MYRootUserElement class.
+
+Instances can be saved and resused for performance and safely modified after copying.
 "
 Class {
 	#name : #XMLPluggableElementFactory,
@@ -79,7 +81,7 @@ XMLPluggableElementFactory >> elementClassMapper: anElementClassMapper [
 
 { #category : #'private ' }
 XMLPluggableElementFactory >> elementClassMapperClass [
-	^ XMLSimpleElementClassMapper
+	^ XMLBasicElementClassMapper
 ]
 
 { #category : #handling }
@@ -141,12 +143,32 @@ XMLPluggableElementFactory >> handleElements: anElementNameCollection withClass:
 
 { #category : #handling }
 XMLPluggableElementFactory >> handleElementsMatchingClass: aClass [
-	elementClassMapper mapAllMatchingElementsToClass: aClass
+	"This will handle all elements matching the name of a class with that
+	class, but igoring the class's prefix and any 'Element' suffix.
+
+	For example, it will match MyUserDefinedElement to:
+		<UserDefined>
+		<userDefined>
+		<user-defined>
+		<user_defined>"
+
+	elementClassMapper
+		mapAllMatchingElementsToClass: aClass
+		ignoringSuffixes: self ignorableClassNameSuffixes
 ]
 
 { #category : #handling }
 XMLPluggableElementFactory >> handleElementsMatchingClasses: aClassCollection [
-	elementClassMapper mapAllMatchingElementsToClasses: aClassCollection
+	"See the comment in #handleElementsMatchingClass:"
+
+	elementClassMapper
+		mapAllMatchingElementsToClasses: aClassCollection
+		ignoringSuffixes: self ignorableClassNameSuffixes
+]
+
+{ #category : #'private ' }
+XMLPluggableElementFactory >> ignorableClassNameSuffixes [
+	^ #('Element')
 ]
 
 { #category : #initialization }

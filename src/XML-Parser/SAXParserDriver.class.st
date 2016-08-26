@@ -535,7 +535,8 @@ SAXParserDriver >> handleStartTag: anElement attributes: aDictionary [
 				ifTrue: [
 					self
 						checkForReservedAttributesIn: aDictionary
-						afterIndex: totalAttributes]].
+						afterIndex: totalAttributes.
+					totalAttributes := aDictionary size]].
 	self usesNamespaces
 		ifTrue: [
 			currentScope := self scopeAllocator enterScope.
@@ -545,13 +546,18 @@ SAXParserDriver >> handleStartTag: anElement attributes: aDictionary [
 						ifNotNil: [:namespaces |
 							self
 								declareNamespaces: namespaces
-								inScope: currentScope]].
+								inScope: currentScope.
+							totalAttributes := aDictionary size]].
 			namespaceURI :=
 				currentScope
 					validateAndResolvePrefix: prefix
 					ofElement: anElement.
 			totalAttributes > 0
-				ifTrue: [currentScope validateAttributePrefixes: aDictionary]].
+				ifTrue: [
+					currentScope
+						validatePrefixesOfAttributes: aDictionary orderedKeys
+						from: 1
+						to: totalAttributes]].
 	self hasUnhandledReservedAttributes
 		ifTrue: [self handleReservedAttributes: aDictionary].
 

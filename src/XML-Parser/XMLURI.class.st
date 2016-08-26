@@ -313,6 +313,9 @@ XMLURI >> copyWithUserInfo: aString [
 
 { #category : #accessing }
 XMLURI >> fragment [
+	"Returns the percent-decoded URI fragment (everything after the '#') or
+	an empty string if there isn't one"
+
 	^ self percentDecoded: self rawFragment
 ]
 
@@ -426,6 +429,9 @@ XMLURI >> haveDirectoryPath [
 
 { #category : #accessing }
 XMLURI >> host [
+	"Returns the percent-decoded host or IPv6-style host or an empty string
+	if there isn't one"
+
 	self hasIPv6Host
 		ifTrue: [^ self rawHost]
 		ifFalse: [^ (self percentDecoded: self rawHost) asLowercase]
@@ -502,6 +508,8 @@ XMLURI >> parseURIStringIfUnparsed [
 
 { #category : #accessing }
 XMLURI >> path [
+	"Returns the percent-decoded path as a string"
+
 	self hasPath
 		ifTrue: [| writeStream |
 			writeStream := (String new: self rawPathSegments size * 10) writeStream.
@@ -514,6 +522,8 @@ XMLURI >> path [
 
 { #category : #accessing }
 XMLURI >> pathSegments [
+	"Returns a collection of percent-decoded path segments"
+
 	^ self rawPathSegments collect: [:each | self percentDecoded: each]
 ]
 
@@ -611,6 +621,8 @@ XMLURI >> percentEncoded: aString [
 
 { #category : #accessing }
 XMLURI >> port [
+	"Returns the integer port or nil if there isn't one"
+
 	self parseURIStringIfUnparsed.
 	^ port.
 ]
@@ -741,6 +753,9 @@ XMLURI >> printUserInfoOn: aStream [
 
 { #category : #accessing }
 XMLURI >> query [
+	"Returns a (temporary) order-preserving dictionary of percent and plus
+	decoded query string key=value pairs"
+
 	| query |
 
 	query := self rawQuery copyEmpty.
@@ -753,7 +768,9 @@ XMLURI >> query [
 
 { #category : #accessing }
 XMLURI >> queryAt: aKey [
-	"returns an empty string if aKey is absent"
+	"Returns the percent and plus decoded value of the query string parameter at
+	aKey or an empty string if there isn't one"
+
 	^ self percentAndPlusDecoded: (self rawQuery at: aKey)
 ]
 

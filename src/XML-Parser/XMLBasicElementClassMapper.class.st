@@ -12,7 +12,7 @@ The precedence of mapping goes:
 -Non-qualified name
 "
 Class {
-	#name : #XMLSimpleElementClassMapper,
+	#name : #XMLBasicElementClassMapper,
 	#superclass : #XMLElementClassMapper,
 	#instVars : [
 		'elementClassMap'
@@ -21,7 +21,7 @@ Class {
 }
 
 { #category : #accessing }
-XMLSimpleElementClassMapper >> classForElement: aQualifiedName attributes: anAssociationCollection ifNone: aBlock [
+XMLBasicElementClassMapper >> classForElement: aQualifiedName attributes: anAssociationCollection ifNone: aBlock [
 	^ self
 		classForElement: aQualifiedName
 		namespaceURI: ''
@@ -30,7 +30,7 @@ XMLSimpleElementClassMapper >> classForElement: aQualifiedName attributes: anAss
 ]
 
 { #category : #accessing }
-XMLSimpleElementClassMapper >> classForElement: aQualifiedName ifNone: aBlock [
+XMLBasicElementClassMapper >> classForElement: aQualifiedName ifNone: aBlock [
 	^ self
 		classForElement: aQualifiedName
 		namespaceURI: ''
@@ -39,7 +39,7 @@ XMLSimpleElementClassMapper >> classForElement: aQualifiedName ifNone: aBlock [
 ]
 
 { #category : #accessing }
-XMLSimpleElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI attributes: anAssociationCollection ifNone: aBlock [
+XMLBasicElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI attributes: anAssociationCollection ifNone: aBlock [
 	| localName |
 
 	aURI size > 0 "optimization"
@@ -78,7 +78,7 @@ XMLSimpleElementClassMapper >> classForElement: aQualifiedName namespaceURI: aUR
 ]
 
 { #category : #accessing }
-XMLSimpleElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI ifNone: aBlock [
+XMLBasicElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI ifNone: aBlock [
 	^ self
 		classForElement: aQualifiedName
 		namespaceURI: aURI
@@ -87,7 +87,7 @@ XMLSimpleElementClassMapper >> classForElement: aQualifiedName namespaceURI: aUR
 ]
 
 { #category : #accessing }
-XMLSimpleElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI localName: aLocalName attributes: anAssociationCollection ifNone: aBlock [
+XMLBasicElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI localName: aLocalName attributes: anAssociationCollection ifNone: aBlock [
 	aURI size > 0 "optimization"
 		ifTrue: [
 			(self
@@ -124,12 +124,12 @@ XMLSimpleElementClassMapper >> classForElement: aQualifiedName namespaceURI: aUR
 ]
 
 { #category : #private }
-XMLSimpleElementClassMapper >> elementClassMap [
+XMLBasicElementClassMapper >> elementClassMap [
 	^ elementClassMap
 ]
 
 { #category : #private }
-XMLSimpleElementClassMapper >> elementClassMapAt: aKey attributes: anAssociationCollection [
+XMLBasicElementClassMapper >> elementClassMapAt: aKey attributes: anAssociationCollection [
 	| classOrCollection |
 
 	classOrCollection :=
@@ -149,14 +149,14 @@ XMLSimpleElementClassMapper >> elementClassMapAt: aKey attributes: anAssociation
 ]
 
 { #category : #initialization }
-XMLSimpleElementClassMapper >> initialize [
+XMLBasicElementClassMapper >> initialize [
 	super initialize.
 
 	elementClassMap := Dictionary new.
 ]
 
 { #category : #mapping }
-XMLSimpleElementClassMapper >> mapElement: anElement attributeSpec: anAttributeSpec toClass: aClass [
+XMLBasicElementClassMapper >> mapElement: anElement attributeSpec: anAttributeSpec toClass: aClass [
 	| classOrCollection |
 
 	classOrCollection :=
@@ -178,7 +178,7 @@ XMLSimpleElementClassMapper >> mapElement: anElement attributeSpec: anAttributeS
 ]
 
 { #category : #mapping }
-XMLSimpleElementClassMapper >> mapElement: anElement namespaceURI: aURI attributeSpec: anAttributeSpec toClass: aClass [
+XMLBasicElementClassMapper >> mapElement: anElement namespaceURI: aURI attributeSpec: anAttributeSpec toClass: aClass [
 	self
 		mapElement:
 			(aURI size > 0
@@ -189,7 +189,7 @@ XMLSimpleElementClassMapper >> mapElement: anElement namespaceURI: aURI attribut
 ]
 
 { #category : #mapping }
-XMLSimpleElementClassMapper >> mapElement: anElement namespaceURI: aURI toClass: aClass [
+XMLBasicElementClassMapper >> mapElement: anElement namespaceURI: aURI toClass: aClass [
 	self
 		mapElement:
 			(aURI size > 0
@@ -199,7 +199,7 @@ XMLSimpleElementClassMapper >> mapElement: anElement namespaceURI: aURI toClass:
 ]
 
 { #category : #mapping }
-XMLSimpleElementClassMapper >> mapElement: anElement toClass: aClass [
+XMLBasicElementClassMapper >> mapElement: anElement toClass: aClass [
 	| classOrCollection |
 
 	classOrCollection :=
@@ -219,7 +219,7 @@ XMLSimpleElementClassMapper >> mapElement: anElement toClass: aClass [
 ]
 
 { #category : #copying }
-XMLSimpleElementClassMapper >> postCopy [
+XMLBasicElementClassMapper >> postCopy [
 	super postCopy.
 
 	elementClassMap := elementClassMap copy.

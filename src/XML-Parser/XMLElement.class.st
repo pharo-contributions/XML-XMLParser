@@ -21,37 +21,85 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : #deprecated }
 XMLElement class >> name: aLocalName [
-	^ self new name: aLocalName
+	"will be deprecated; defined here to avoid accidentally renaming the class"
+
+	^ self named: aLocalName
 ]
 
 { #category : #'instance creation' }
 XMLElement class >> name: aLocalName attributes: anAssociationCollection [
+	"Returns a new element with the specified name and attributes.
+
+	Both aLocalName and the attributes must not be prefixed or a namespace
+	exception will be thrown.
+
+	The anAssociationCollection argument can be a dictionary or any collection
+	of associations."
+
 	^ (self named: aLocalName)
 		setAttributes: anAssociationCollection
 ]
 
 { #category : #'instance creation' }
 XMLElement class >> name: aQualifiedName namespaceURI: aURI [
-	^ self new name: aQualifiedName namespaceURI: aURI
+	"Returns a new element with the specified name and namespace URI.
+
+	If aQualifiedName has a prefix, then aURI must be non-empty and the prefix
+	will be bound to it. Otherwise aURI will be declared as the default namespace."
+
+	^ self new
+		name: aQualifiedName
+		namespaceURI: aURI
 ]
 
 { #category : #'instance creation' }
 XMLElement class >> name: aQualifiedName namespaceURI: aURI attributes: anAssociationCollection [
-	^ (self name: aQualifiedName namespaceURI: aURI)
-		setAttributes: anAssociationCollection
+	"Returns a new element with the specified name, namespace URI, and attributes.
+
+	If aQualifiedName has a prefix, then aURI must be non-empty and the prefix
+	will be bound to it. Otherwise aURI will be declared as the default namespace.
+	If the attributes are prefixed, then aQualifiedName must have the same prefix
+	or a namespace exception will be thrown.
+
+	The anAssociationCollection argument can be a dictionary or any collection
+	of associations."
+
+	^ (self
+		name: aQualifiedName
+		namespaceURI: aURI)
+			setAttributes: anAssociationCollection
 ]
 
 { #category : #'instance creation' }
-XMLElement class >> name: aQualifiedName namespaces: aNamespaceDictionaryOrArray [
+XMLElement class >> name: aQualifiedName namespaces: anAssociationCollection [
+	"Returns a new element with the specified name and namespaces.
+
+	If aQualifiedName has a prefix, then anAssociationCollection must contain
+	an association for it or a namespace exception will be thrown.
+
+	The anAssociationCollection argument can be a dictionary or any collection
+	of associations. An association with an empty string key sets the default
+	namespace."
+
 	^ self new
-		declareNamespaces: aNamespaceDictionaryOrArray;
+		declareNamespaces: anAssociationCollection;
 		name: aQualifiedName
 ]
 
 { #category : #'instance creation' }
 XMLElement class >> name: aQualifiedName namespaces: aNamespaceAssociationCollection attributes: anAttributeAssociationCollection [
+	"Returns a new element with the specified name, namespaces, and attributes.
+
+	If aQualifiedName or one of the attributes has a prefix, then
+	aNamespaceAssociationCollection must contain an association for it or a
+	namespace exception will be thrown.
+
+	The aNamespaceAssociationCollection and anAttributeAssociationCollection
+	arguments can be dictionaries or any collection of associations. An
+	association with an empty string key sets the default namespace."
+
 	^ (self
 		name: aQualifiedName
 		namespaces: aNamespaceAssociationCollection)
@@ -60,6 +108,10 @@ XMLElement class >> name: aQualifiedName namespaces: aNamespaceAssociationCollec
 
 { #category : #'instance creation' }
 XMLElement class >> named: aLocalName [
+	"Returns a new element with the specified name.
+
+	The argument must not be prefixed or a namespace exception will be thrown."
+
 	^ self new name: aLocalName
 ]
 
@@ -742,10 +794,24 @@ XMLElement >> undeclarePrefixes [
 
 { #category : #private }
 XMLElement >> validateAttributes [
+	| attributeLocalNamesAndURIs |
+
 	self usesNamespaces
-		ifTrue: [
-			self namespaceScope validateAttributePrefixes:
-				self attributeNodes attributeNodesByName]
+		ifFalse: [^ self].
+
+	self attributeNodesDo: [:attribute | | prefix |
+		(prefix := attribute prefix) notEmpty
+			ifTrue: [
+				"not initialized unless needed"
+				attributeLocalNamesAndURIs
+					ifNil: [
+						attributeLocalNamesAndURIs :=
+							Set new: self attributeNodes size].
+				self namespaceScope
+					validatePrefix: prefix
+					ofAttribute: attribute name
+					hasNoAliasesin: attributeLocalNamesAndURIs]
+			ifFalse: [self namespaceScope validateUnprefixedName: attribute name]].
 ]
 
 { #category : #private }

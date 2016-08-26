@@ -431,6 +431,13 @@ SAXHandler >> input [
 	^ input
 ]
 
+{ #category : #private }
+SAXHandler >> input: aStringOrStream [
+	"here for backwards compatibility; use #on: instead"
+
+	input := aStringOrStream
+]
+
 { #category : #parsing }
 SAXHandler >> interruptParsing [
 	"Can be sent within a handler to stop parsing;

@@ -1,7 +1,9 @@
 "
-This is a base class for mappers to map element handler objects to element handler factories Querying the factory for an element handler checks the handler's #elementHandlerFactory message first and then the mapper's own #elementHandlerFactory message.
+This is a base class for mappers to map element handler objects to element handler factories.
 
-SAX2ElementParsers will reuse (inherit) the current factory if none is found for a new element handler.
+Requesting the factory for an element handler checks the handler's #elementHandlerFactory message first and then the mapper's own #elementHandlerFactory message which can be (and is) overriden in subclasses to return a default factory.
+
+When a SAX2ElementParser requests the factory for a new element handler, if none is found, it will reuse (inherit) the current factory.
 "
 Class {
 	#name : #SAX2ElementHandlerFactoryMapper,
@@ -11,6 +13,9 @@ Class {
 
 { #category : #accessing }
 SAX2ElementHandlerFactoryMapper >> elementHandlerFactory [
+	"Can be overriden to return a default element handler factory to use
+	if no other mapping is defined for it."
+
 	^ nil
 ]
 

@@ -85,6 +85,17 @@ XMLElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI loca
 ]
 
 { #category : #private }
+XMLElementClassMapper >> classNameFrom: aClass withoutIgnorableSuffixes: aSuffixCollection [
+	| className |
+
+	className := aClass name asString.
+	aSuffixCollection do: [:each |
+		(className endsWith: each)
+			ifTrue: [^ className allButLast: each size]].
+	^ className.
+]
+
+{ #category : #private }
 XMLElementClassMapper >> classNameSegmentsFrom: aString [
 	| nameSegments startIndex |
 
@@ -117,17 +128,6 @@ XMLElementClassMapper >> classNameSegmentsFrom: aString [
 ]
 
 { #category : #private }
-XMLElementClassMapper >> classNameWithoutIgnorableSuffixesFrom: aClass [
-	| className |
-
-	className := aClass name asString.
-	self ignorableClassNameSuffixes do: [:each |
-		(className endsWith: each)
-			ifTrue: [^ className allButLast: each size]].
-	^ className.
-]
-
-{ #category : #private }
 XMLElementClassMapper >> hyphenatedNameFromClassNameSegments: aNameSegmentCollection [
 	^ String streamContents: [:stream |
 		aNameSegmentCollection
@@ -135,43 +135,45 @@ XMLElementClassMapper >> hyphenatedNameFromClassNameSegments: aNameSegmentCollec
 			separatedBy: [stream nextPut: $-]]
 ]
 
-{ #category : #private }
-XMLElementClassMapper >> ignorableClassNameSuffixes [
-	^ #('Element' 'ElementHandler')
+{ #category : #mapping }
+XMLElementClassMapper >> mapAllMatchingElementsToClass: aClass ignoringSuffixes: aSuffixCollection [
+	| classNameWithoutSuffixes classNameSegments totalClassNameSegments |
+
+	classNameWithoutSuffixes :=
+		self
+			classNameFrom: aClass
+			withoutIgnorableSuffixes: aSuffixCollection.
+	classNameSegments := self classNameSegmentsFrom: classNameWithoutSuffixes.
+	(totalClassNameSegments := classNameSegments size) > 0
+		ifFalse: [^ self].
+
+	"remove the class prefix if any"
+	totalClassNameSegments > 1
+		ifTrue: [classNameSegments removeFirst].
+	self
+		mapElement:
+			(self nameFromClassNameSegments: classNameSegments)
+		toClass: aClass.
+	self
+		mapElement:
+			(self camelCasedNameFromClassNameSegments: classNameSegments)
+		toClass: aClass.
+	self
+		mapElement:
+			(self hyphenatedNameFromClassNameSegments: classNameSegments)
+		toClass: aClass.
+	self
+		mapElement:
+			(self underscoredNameFromClassNameSegments: classNameSegments)
+		toClass: aClass.
 ]
 
 { #category : #mapping }
-XMLElementClassMapper >> mapAllMatchingElementsToClass: aClass [
-	| classNameWithoutSuffixes classNameSegments |
-
-	classNameWithoutSuffixes := self classNameWithoutIgnorableSuffixesFrom: aClass.
-	(classNameSegments :=
-		self classNameSegmentsFrom: classNameWithoutSuffixes) size > 0
-		ifTrue: [
-			"remove the class prefix if any"
-			classNameSegments size > 1
-				ifTrue: [classNameSegments removeFirst].
-			self
-				mapElement:
-					(self nameFromClassNameSegments: classNameSegments)
-				toClass: aClass.
-			self
-				mapElement:
-					(self camelCasedNameFromClassNameSegments: classNameSegments)
-				toClass: aClass.
-			self
-				mapElement:
-					(self hyphenatedNameFromClassNameSegments: classNameSegments)
-				toClass: aClass.
-			self
-				mapElement:
-					(self underscoredNameFromClassNameSegments: classNameSegments)
-				toClass: aClass].
-]
-
-{ #category : #mapping }
-XMLElementClassMapper >> mapAllMatchingElementsToClasses: aClassCollection [
-	aClassCollection do: [:each | self mapAllMatchingElementsToClass: each]
+XMLElementClassMapper >> mapAllMatchingElementsToClasses: aClassCollection ignoringSuffixes: aSuffixCollection [
+	aClassCollection do: [:each |
+		self
+			mapAllMatchingElementsToClass: each
+			ignoringSuffixes: aSuffixCollection]
 ]
 
 { #category : #mapping }

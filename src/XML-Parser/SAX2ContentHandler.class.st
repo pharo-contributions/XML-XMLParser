@@ -1,5 +1,10 @@
 "
-This is a base class for SAX2 content handler classes that can be injected into SAX2Parser instances with #contentHandler: before parsing.
+This is a base class for SAX2 content handler classes that can be injected into SAX2Parser instances with #contentHandler: before parsing:
+	(SAX2Parser on: xmlStringOrStream)
+		contentHandler: MyContentHandlerClass new;
+		parseDocument.
+
+See SAX2Parser and SAXHandler for more info.
 "
 Class {
 	#name : #SAX2ContentHandler,
@@ -24,7 +29,7 @@ SAX2ContentHandler >> characters: aString [
 	in a single element if they're separated by other nodes or entity
 	references like in '<characters>one<!--comment-->two</characters>'.
 	
-	See isInCDataSection and ignorableWhitespace:"
+	See ignorableWhitespace:"
 ]
 
 { #category : #'handling - content' }
@@ -103,7 +108,7 @@ SAX2ContentHandler >> ignorableWhitespace: aString [
 
 { #category : #accessing }
 SAX2ContentHandler >> parser [
-	"Returns the SAX2Parser"
+	"Returns the SAX2Parser this handler was injected into"
 
 	^ parser
 ]

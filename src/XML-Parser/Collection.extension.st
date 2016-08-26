@@ -2,7 +2,7 @@ Extension { #name : #Collection }
 
 { #category : #'*XML-Parser' }
 Collection >> asXMLAttributeSpec [
-	^ XMLSimpleAttributeSpec attributes: self
+	^ XMLBasicAttributeSpec attributes: self
 ]
 
 { #category : #'*XML-Parser' }

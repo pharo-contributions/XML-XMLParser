@@ -2,7 +2,7 @@
 A simple attribute spec that checks for attributes being present and optionally having a specific value.
 "
 Class {
-	#name : #XMLSimpleAttributeSpec,
+	#name : #XMLBasicAttributeSpec,
 	#superclass : #XMLAttributeSpec,
 	#instVars : [
 		'attributeSpec'
@@ -11,55 +11,57 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLSimpleAttributeSpec class >> attributes: aDictionaryOrCollectionOfAssociationsAndStrings [
+XMLBasicAttributeSpec class >> attributes: aDictionaryOrCollectionOfAssociationsAndStrings [
 	^ self new setAttributes: aDictionaryOrCollectionOfAssociationsAndStrings
 ]
 
 { #category : #adding }
-XMLSimpleAttributeSpec >> addAttribute: anAttribute [
+XMLBasicAttributeSpec >> addAttribute: anAttribute [
 	^ attributeSpec
 		at: anAttribute
 		ifAbsentPut: [nil]
 ]
 
 { #category : #adding }
-XMLSimpleAttributeSpec >> addAttributeAssociation: anAssociation [
+XMLBasicAttributeSpec >> addAttributeAssociation: anAssociation [
 	^ self
 		addAttributeName: anAssociation key
 		value: anAssociation value
 ]
 
 { #category : #adding }
-XMLSimpleAttributeSpec >> addAttributeName: aName value: aValue [
+XMLBasicAttributeSpec >> addAttributeName: aName value: aValue [
 	^ attributeSpec
 		at: aName
 		put: aValue
 ]
 
 { #category : #initialization }
-XMLSimpleAttributeSpec >> initialize [
+XMLBasicAttributeSpec >> initialize [
 	attributeSpec := Dictionary new
 ]
 
 { #category : #matching }
-XMLSimpleAttributeSpec >> matchesAttributes: aDictionary [
+XMLBasicAttributeSpec >> matchesAttributes: aDictionary [
 	attributeSpec keysAndValuesDo: [:specName :specValue |
 		specValue
 			ifNil: [
-				"nil values only mean that the attribute has to present and
-				can have any value"
+				"nil values mean the attribute has to be present and can have
+				any value"
 				(aDictionary includesKey: specName)
 					ifFalse: [^ false]]
 			ifNotNil: [
 				(specValue isBlock
-					ifTrue: [specValue value: (aDictionary at: specName ifAbsent: [^ false])]
-					ifFalse: [specValue = (aDictionary at: specName ifAbsent: [^ false])])
+					ifTrue: [
+						specValue value: (aDictionary at: specName ifAbsent: [^ false])]
+					ifFalse: [
+						specValue = (aDictionary at: specName ifAbsent: [^ false])])
 							ifFalse: [^ false]]].
 	^ true.
 ]
 
 { #category : #initialization }
-XMLSimpleAttributeSpec >> setAttributes: aDictionaryOrCollectionOfAssociationsAndStrings [
+XMLBasicAttributeSpec >> setAttributes: aDictionaryOrCollectionOfAssociationsAndStrings [
 	attributeSpec removeAll.
 
 	"associationsDo: works for dictionaries and non-dictionaries, including

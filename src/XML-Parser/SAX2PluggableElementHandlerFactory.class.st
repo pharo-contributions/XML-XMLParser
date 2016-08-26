@@ -1,7 +1,9 @@
 "
 This class is a pluggable element handler factory with an API like XMLPluggableElementFactory. Instances can be injected into a SAX2ElementParser with #elementHandlerFactory: before parsing.
 
-You can map combinations of element name, namespace URI, and attributes to specific element handler classes using the ""handling"" messages, and change the default element handler class when there's no mapping with #elementHandlerClass:.
+You can map combinations of element name, namespace URI, and attributes to specific element handler classes using the ""handling"" messages, and change the default element handler class for when there's no mapping with #elementHandlerClass:.
+
+Instances can be saved and resused for performance and safely modified after copying.
 "
 Class {
 	#name : #SAX2PluggableElementHandlerFactory,
@@ -34,7 +36,7 @@ SAX2PluggableElementHandlerFactory >> elementClassMapper: anElementClassMapper [
 
 { #category : #'private ' }
 SAX2PluggableElementHandlerFactory >> elementClassMapperClass [
-	^ XMLSimpleElementClassMapper
+	^ XMLBasicElementClassMapper
 ]
 
 { #category : #accessing }
@@ -106,12 +108,33 @@ SAX2PluggableElementHandlerFactory >> handleElements: anElementNameCollection wi
 
 { #category : #handling }
 SAX2PluggableElementHandlerFactory >> handleElementsMatchingClass: aClass [
-	elementClassMapper mapAllMatchingElementsToClass: aClass
+	"This will handle all elements matching the name of a class with that
+	class, but igoring the class's prefix and any 'Element' or 'ElementHandler'
+	suffix.
+
+	For example, it will match MyUserDefinedElement to:
+		<UserDefined>
+		<userDefined>
+		<user-defined>
+		<user_defined>"
+
+	elementClassMapper
+		mapAllMatchingElementsToClass: aClass
+		ignoringSuffixes: self ignorableClassNameSuffixes
 ]
 
 { #category : #handling }
 SAX2PluggableElementHandlerFactory >> handleElementsMatchingClasses: aClassCollection [
-	elementClassMapper mapAllMatchingElementsToClasses: aClassCollection
+	"See the comment in #handleElementsMatchingClass:"
+
+	elementClassMapper
+		mapAllMatchingElementsToClasses: aClassCollection
+		ignoringSuffixes: self ignorableClassNameSuffixes
+]
+
+{ #category : #'private ' }
+SAX2PluggableElementHandlerFactory >> ignorableClassNameSuffixes [
+	^ #('Element' 'ElementHandler')
 ]
 
 { #category : #initialization }
