@@ -24,6 +24,29 @@ XMLPluggableElementFactoryTest >> realNameElementClass [
 	^ XMLFRealNameElement
 ]
 
+{ #category : #'source XML' }
+XMLPluggableElementFactoryTest >> sampleUsersXML [
+	^
+		'<users>
+			<user>
+				<Username>jsmith</Username>
+				<RealName>John Smith</RealName>
+			</user>
+			<User>
+				<username>msmith</username>
+				<realName>Michael Smith</realName>
+			</User>
+			<user>
+				<Username>jsmith2</Username>
+				<real-name>James Smith</real-name>
+			</user>
+			<User>
+				<username>rsmith</username>
+				<real_name>Robert Smith</real_name>
+			</User>
+		</users>'.
+]
+
 { #category : #accessing }
 XMLPluggableElementFactoryTest >> serializationFormatElementClass [
 	^ XMLFSerializationFormatElement
@@ -162,7 +185,7 @@ XMLPluggableElementFactoryTest >> testElementClassMapper [
 	factory := self newFactoryWithClasses.
 	self assert: (factory elementClassMapper isKindOf: XMLElementClassMapper).
 
-	newMapper := XMLSimpleElementClassMapper.
+	newMapper := XMLBasicElementClassMapper new.
 	self
 		assert: (factory elementClassMapper: newMapper) == factory;
 		assert: factory elementClassMapper == newMapper.
@@ -251,6 +274,48 @@ XMLPluggableElementFactoryTest >> testElementsNameAndNamespaceMatching [
 		assert: ((root elementAt: 'date-registered') isMemberOf: self dateElementClass);
 		assert: ((root elementAt: 'date-last-active') isMemberOf: self dateElementClass);
 		assert: ((root elementAt: 'table-name') isMemberOf: self tableElementClass).
+]
+
+{ #category : #tests }
+XMLPluggableElementFactoryTest >> testHandleElementsMatchingClass [
+	| document |
+
+	document :=
+		(XMLDOMParser on: self sampleUsersXML)
+			nodeFactory:
+				(XMLPluggableElementFactory new
+					handleElementsMatchingClass: XMLFUserElement;
+					handleElementsMatchingClass: XMLFUsernameElement;
+					handleElementsMatchingClass: XMLFRealNameElement);
+			parseDocument.
+
+	document root elementsDo: [:element |
+			self
+				assert: (element isKindOf: XMLFUserElement);
+				assert: (element elements first isKindOf: XMLFUsernameElement);
+				assert: (element elements second isKindOf: XMLFRealNameElement)].
+]
+
+{ #category : #tests }
+XMLPluggableElementFactoryTest >> testHandleElementsMatchingClasses [
+	| document |
+
+	document :=
+		(XMLDOMParser on: self sampleUsersXML)
+			nodeFactory:
+				(XMLPluggableElementFactory new
+					handleElementsMatchingClasses:
+						(Array
+							with: XMLFUserElement
+							with: XMLFUsernameElement
+							with: XMLFRealNameElement));
+			parseDocument.
+
+	document root elementsDo: [:element |
+			self
+				assert: (element isKindOf: XMLFUserElement);
+				assert: (element elements first isKindOf: XMLFUsernameElement);
+				assert: (element elements second isKindOf: XMLFRealNameElement)].
 ]
 
 { #category : #accessing }

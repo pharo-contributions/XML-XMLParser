@@ -1,16 +1,16 @@
 Class {
-	#name : #XMLSimpleAttributeSpecTest,
+	#name : #XMLBasicAttributeSpecTest,
 	#superclass : #XMLAttributeSpecTest,
 	#category : #'XML-Tests-Parser-Utils'
 }
 
 { #category : #accessing }
-XMLSimpleAttributeSpecTest >> attributeSpecClass [
-	^ XMLSimpleAttributeSpec
+XMLBasicAttributeSpecTest >> attributeSpecClass [
+	^ XMLBasicAttributeSpec
 ]
 
 { #category : #tests }
-XMLSimpleAttributeSpecTest >> testMatchesAttributeAssociations [
+XMLBasicAttributeSpecTest >> testMatchesAttributeAssociations [
 	| attributeSpec |
 
 	attributeSpec := #() asXMLAttributeSpec.
@@ -67,7 +67,7 @@ XMLSimpleAttributeSpecTest >> testMatchesAttributeAssociations [
 ]
 
 { #category : #tests }
-XMLSimpleAttributeSpecTest >> testMatchesAttributes [
+XMLBasicAttributeSpecTest >> testMatchesAttributes [
 	| attributeSpec |
 
 	attributeSpec := #() asXMLAttributeSpec.

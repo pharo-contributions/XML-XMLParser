@@ -344,6 +344,63 @@ XMLElementTest >> testAttributeNodesDo [
 ]
 
 { #category : #tests }
+XMLElementTest >> testAttributePrefixAliasing [
+	| element |
+
+	(element := self newElementWithAttributes)
+		declarePrefix: 'alias' uri: 'prefixNS'.
+	self
+		should: [
+			element attributeNodes addLast:
+				(XMLAttribute named: 'alias:four')]
+		raise: XMLNamespaceException.
+
+	(element := self newElementWithAttributes)
+		declarePrefix: 'alias' uri: 'prefixNS'.
+	self
+		should: [(element attributeNodeAt: 'two') name: 'alias:two']
+		raise: XMLNamespaceException.
+
+	(element := self newElementWithAttributes)
+		declarePrefix: 'alias' uri: 'prefixNS';
+		usesNamespaces: false.
+	self
+		shouldnt: [
+			element attributeNodes addLast:
+				(XMLAttribute named: 'alias:four').
+			(element attributeNodeAt: 'two') name: 'alias:two']
+		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
+XMLElementTest >> testAttributePrefixUndeclared [
+	| element |
+
+	element := self newElementWithAttributes.
+	self
+		should: [
+			element attributeNodes add:
+				(XMLAttribute named: 'undeclared:newName')]
+		raise: XMLNamespaceException.
+
+	element := self newElementWithAttributes.
+	self
+		should: [
+			(element attributeNodeAt: 'one') name: 'undeclared:one']
+		raise: XMLNamespaceException.
+
+	element := self newElementWithAttributes.
+	self
+		shouldnt: [
+			element usesNamespaces: false.
+			element attributeNodes add:
+				(XMLAttribute named: 'undeclared:newName').
+			(element attributeNodeAt: 'one') name: 'undeclared:one']
+		raise: XMLNamespaceException.
+
+]
+
+{ #category : #tests }
 XMLElementTest >> testAttributeRenaming [
 	| elementWithAttributes attributeNodes attributeNode oldSize oldNames oldName |
 
@@ -373,8 +430,6 @@ XMLElementTest >> testAttributeRenaming [
 				((oldNames copyFrom: 2 to: oldNames size - 1) copyWithFirst: oldNames last);
 		deny: (elementWithAttributes includesAttribute: oldName);
 		assert: (elementWithAttributes attributeNodeAt: attributeNode name) == attributeNode.
-
-	self should: [attributeNode name: 'undeclared:newName'] raise: XMLNamespaceException.
 ]
 
 { #category : #tests }
@@ -949,14 +1004,28 @@ XMLElementTest >> testNameNamespaceURIAttributes [
 		assert: element namespaceURI = 'prefixNS';
 		assertElement: element hasAttributes: unprefixedAttributes.
 
+	"if the attributes have a prefix, then the element must have the same prefix
+	and the namespace must be non-empty"
 	self
-		should: [self nodeClass name: 'three' namespaceURI: '' attributes: attributes]
+		should: [
+			self nodeClass
+				name: 'three'
+				namespaceURI: ''
+				attributes: attributes]
 		raise: XMLNamespaceException.
 	self
-		should: [self nodeClass name: 'four' namespaceURI: 'prefixNS' attributes: attributes]
+		should: [
+			self nodeClass
+				name: 'four'
+				namespaceURI: 'prefixNS'
+				attributes: attributes]
 		raise: XMLNamespaceException.
 	self
-		should: [self nodeClass name: 'prefix:five' namespaceURI: '' attributes: unprefixedAttributes]
+		should: [
+			self nodeClass
+				name: 'prefix:five'
+				namespaceURI: ''
+				attributes: unprefixedAttributes]
 		raise: XMLNamespaceException.
 ]
 

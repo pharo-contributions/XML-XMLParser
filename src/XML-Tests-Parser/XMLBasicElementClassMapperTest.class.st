@@ -1,16 +1,16 @@
 Class {
-	#name : #XMLSimpleElementClassMapperTest,
+	#name : #XMLBasicElementClassMapperTest,
 	#superclass : #XMLElementClassMapperTest,
 	#category : #'XML-Tests-Parser-Utils'
 }
 
 { #category : #acccessing }
-XMLSimpleElementClassMapperTest >> mapperClass [
-	^ XMLSimpleElementClassMapper
+XMLBasicElementClassMapperTest >> mapperClass [
+	^ XMLBasicElementClassMapper
 ]
 
 { #category : #tests }
-XMLSimpleElementClassMapperTest >> testClassForElement [
+XMLBasicElementClassMapperTest >> testClassForElement [
 	| mapper |
 
 	mapper := self newMapper.
@@ -60,7 +60,7 @@ XMLSimpleElementClassMapperTest >> testClassForElement [
 ]
 
 { #category : #tests }
-XMLSimpleElementClassMapperTest >> testClassForElementAttributes [
+XMLBasicElementClassMapperTest >> testClassForElementAttributes [
 	| mapper |
 
 	mapper := self newMapper.
@@ -140,7 +140,7 @@ XMLSimpleElementClassMapperTest >> testClassForElementAttributes [
 ]
 
 { #category : #tests }
-XMLSimpleElementClassMapperTest >> testClassForElementAttributesIfNone [
+XMLBasicElementClassMapperTest >> testClassForElementAttributesIfNone [
 	| mapper |
 
 	mapper := self newMapper.
@@ -233,7 +233,7 @@ XMLSimpleElementClassMapperTest >> testClassForElementAttributesIfNone [
 ]
 
 { #category : #tests }
-XMLSimpleElementClassMapperTest >> testClassForElementIfNone [
+XMLBasicElementClassMapperTest >> testClassForElementIfNone [
 	| mapper |
 
 	mapper := self newMapper.
@@ -313,7 +313,7 @@ XMLSimpleElementClassMapperTest >> testClassForElementIfNone [
 ]
 
 { #category : #tests }
-XMLSimpleElementClassMapperTest >> testClassForElementNamespaceURI [
+XMLBasicElementClassMapperTest >> testClassForElementNamespaceURI [
 	| mapper |
 
 	mapper := self newMapper.
@@ -394,7 +394,7 @@ XMLSimpleElementClassMapperTest >> testClassForElementNamespaceURI [
 ]
 
 { #category : #tests }
-XMLSimpleElementClassMapperTest >> testClassForElementNamespaceURIAttributes [
+XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIAttributes [
 	| mapper |
 
 	mapper := self newMapper.
@@ -488,7 +488,7 @@ XMLSimpleElementClassMapperTest >> testClassForElementNamespaceURIAttributes [
 ]
 
 { #category : #tests }
-XMLSimpleElementClassMapperTest >> testClassForElementNamespaceURIAttributesIfNone [
+XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIAttributesIfNone [
 	| mapper |
 
 	mapper := self newMapper.
@@ -594,7 +594,7 @@ XMLSimpleElementClassMapperTest >> testClassForElementNamespaceURIAttributesIfNo
 ]
 
 { #category : #tests }
-XMLSimpleElementClassMapperTest >> testClassForElementNamespaceURIIfNone [
+XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIIfNone [
 	| mapper |
 
 	mapper := self newMapper.
@@ -687,7 +687,7 @@ XMLSimpleElementClassMapperTest >> testClassForElementNamespaceURIIfNone [
 ]
 
 { #category : #tests }
-XMLSimpleElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttributes [
+XMLBasicElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttributes [
 	| mapper |
 
 	mapper := self newMapper.
@@ -793,7 +793,7 @@ XMLSimpleElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttri
 ]
 
 { #category : #tests }
-XMLSimpleElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttributesIfNone [
+XMLBasicElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttributesIfNone [
 	| mapper |
 
 	mapper := self newMapper.
@@ -911,7 +911,7 @@ XMLSimpleElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttri
 ]
 
 { #category : #tests }
-XMLSimpleElementClassMapperTest >> testCopy [
+XMLBasicElementClassMapperTest >> testCopy [
 	| mapper copy |
 
 	mapper := self newMapperWithMappings.
@@ -941,7 +941,7 @@ XMLSimpleElementClassMapperTest >> testCopy [
 ]
 
 { #category : #tests }
-XMLSimpleElementClassMapperTest >> testMapElementAttributeSpecToClass [
+XMLBasicElementClassMapperTest >> testMapElementAttributeSpecToClass [
 	| mapper |
 
 	mapper := self newMapper.
@@ -967,7 +967,7 @@ XMLSimpleElementClassMapperTest >> testMapElementAttributeSpecToClass [
 ]
 
 { #category : #tests }
-XMLSimpleElementClassMapperTest >> testMapElementNamespaceURIAttributeSpecToClass [
+XMLBasicElementClassMapperTest >> testMapElementNamespaceURIAttributeSpecToClass [
 	| mapper |
 
 	mapper := self newMapper.
@@ -997,7 +997,7 @@ XMLSimpleElementClassMapperTest >> testMapElementNamespaceURIAttributeSpecToClas
 ]
 
 { #category : #tests }
-XMLSimpleElementClassMapperTest >> testMapElementNamespaceURIToClass [
+XMLBasicElementClassMapperTest >> testMapElementNamespaceURIToClass [
 	| mapper |
 
 	mapper := self newMapper.
@@ -1023,7 +1023,7 @@ XMLSimpleElementClassMapperTest >> testMapElementNamespaceURIToClass [
 ]
 
 { #category : #tests }
-XMLSimpleElementClassMapperTest >> testMapElementToClass [
+XMLBasicElementClassMapperTest >> testMapElementToClass [
 	| mapper |
 
 	mapper := self newMapper.

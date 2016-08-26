@@ -30,7 +30,7 @@ XMLElementClassMapperTest >> newMapper [
 XMLElementClassMapperTest >> newMapperWithMappings [
 	| mapper |
 
-	mapper := XMLSimpleElementClassMapper new.
+	mapper := XMLBasicElementClassMapper new.
 	mapper
 		mapElement: 'test'
 		toClass: self elementClass.

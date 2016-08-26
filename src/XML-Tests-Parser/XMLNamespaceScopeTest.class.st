@@ -436,18 +436,22 @@ XMLNamespaceScopeTest >> testUnmapPrefix [
 		self
 			should: [scope unmapPrefix: prefix]
 			raise: XMLNamespaceException.
+		self deny: (scope includesPrefix: prefix).
 		scope
 			mapPrefix: prefix
 			to: uri.
 	
 		oldPrefixMappings := scope prefixMappings.
-		self assert: (scope unmapPrefix: prefix) = uri.
+		self
+			assert: (scope unmapPrefix: prefix) = uri;
+			deny: (scope includesPrefix: prefix).
 
 		"ensure prefixMappings is copied when removing"
 		self
-			deny: (scope prefixMappings includesKey: prefix);
+			assert: (oldPrefixMappings includesKey: prefix);
 			deny: scope prefixMappings = oldPrefixMappings;
 			deny: scope prefixMappings == oldPrefixMappings.
+
 		self
 			should: [scope unmapPrefix: prefix]
 			raise: XMLNamespaceException].
@@ -464,6 +468,7 @@ XMLNamespaceScopeTest >> testUnmapPrefixIfAbsent [
 			(scope
 				unmapPrefix: prefix
 				ifAbsent: [#absent]) = #absent.
+		self deny: (scope includesPrefix: prefix).
 		scope
 			mapPrefix: prefix
 			to: uri.
@@ -473,10 +478,11 @@ XMLNamespaceScopeTest >> testUnmapPrefixIfAbsent [
 			(scope
 				unmapPrefix: prefix
 				ifAbsent: [#absent]) = uri.
+		self deny: (scope includesPrefix: prefix).
 
 		"ensure prefixMappings is copied when removing"
 		self
-			deny: (scope prefixMappings includesKey: prefix);
+			assert: (oldPrefixMappings includesKey: prefix);
 			deny: scope prefixMappings = oldPrefixMappings;
 			deny: scope prefixMappings == oldPrefixMappings.
 
@@ -486,6 +492,68 @@ XMLNamespaceScopeTest >> testUnmapPrefixIfAbsent [
 					unmapPrefix: prefix
 					ifAbsent: [#absent]) = #absent].
 	self assert: scope prefixMappings isEmpty.
+]
+
+{ #category : #tests }
+XMLNamespaceScopeTest >> testUnmapPrefixes [
+	| scope oldPrefixMappings |
+
+	scope := self newNamespaceScopeWithNamespaces.
+	oldPrefixMappings := scope prefixMappings.
+	self
+		assert: scope unmapPrefixes == scope;
+		deny: scope hasNamespaces.
+
+	"ensure prefixMappings is copied when removing"
+	self
+		assert: oldPrefixMappings = self namespaces;
+		deny: scope prefixMappings = oldPrefixMappings;
+		deny: scope prefixMappings == oldPrefixMappings.
+]
+
+{ #category : #tests }
+XMLNamespaceScopeTest >> testValidatePrefixesOfAttributes [
+	| scope attributes |
+
+	scope := self newNamespaceScopeWithNamespaces.
+	attributes :=
+		self namespaces keys collect: [:each |
+			each = ''
+				ifTrue: ['name']
+				ifFalse: [each, ':name']].
+	self
+		shouldnt: [
+			scope validatePrefixesOfAttributes: attributes]
+		raise: XMLNamespaceException.
+	self
+		should: [
+			scope validatePrefixesOfAttributes:
+				(attributes copyWith: 'undeclared:name')]
+		raise: XMLNamespaceException.
+	self
+		should: [
+			scope validatePrefixesOfAttributes:
+				(attributes copyWith: ':name')]
+		raise: XMLNamespaceException.
+
+	self namespaces keysAndValuesDo: [:prefix :uri | | attribute |
+		scope
+			mapPrefix: 'alias', prefix
+			to: uri.
+		attribute := 'alias', prefix, ':name'.
+		prefix = ''
+			ifTrue: [
+				self
+					shouldnt: [
+						scope validatePrefixesOfAttributes:
+							(attributes copyWith: attribute)]
+					raise: XMLNamespaceException]
+			ifFalse: [
+				self
+					should: [
+						scope validatePrefixesOfAttributes:
+							(attributes copyWith: attribute)]
+					raise: XMLNamespaceException]].
 ]
 
 { #category : #tests }

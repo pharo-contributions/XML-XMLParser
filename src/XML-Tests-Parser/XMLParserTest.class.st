@@ -4141,6 +4141,53 @@ XMLParserTest >> testLineEndingsDoNotMatter [
 ]
 
 { #category : #tests }
+XMLParserTest >> testNamespaceAttributePrefixAliasing [
+	| xmlns |
+
+	xmlns := 'xmlns:prefix1="ns" xmlns:prefix2="ns"'.
+	self
+		shouldnt: [
+			SAXHandler
+				parse: '<test ', xmlns, ' prefix1:name1="value" prefix2:name2="value2"/>'
+				usingNamespaces: true]
+		raise: XMLNamespaceException.
+
+	(Array
+		with: '<test ', xmlns, ' prefix1:aliased="value" prefix2:aliased="value2"/>'
+		with: "ensure it checks inherited namespaces"
+			'<test ', xmlns, '>
+				<test2 prefix1:aliased="value" prefix2:aliased="value2"/>
+			</test>'
+		with: "and default attributes"
+			'<!DOCTYPE test [
+				<!ELEMENT test (test2)>
+				<!ATTLIST test
+					xmlns:prefix1 CDATA #IMPLIED
+					xmlns:prefix2 CDATA #IMPLIED>
+				<!ELEMENT test2 EMPTY>
+				<!ATTLIST test2
+					prefix1:aliased CDATA "value"
+					prefix2:aliased CDATA "value2">
+			]>
+			<test ', xmlns, '>
+				<test2/>
+			</test>')
+		do: [:each |
+			self
+				should: [
+					SAXHandler
+						parse: each
+						usingNamespaces: true]
+				raise: XMLNamespaceException.
+			self
+				shouldnt: [
+					SAXHandler
+						parse: each
+						usingNamespaces: false]
+				raise: XMLNamespaceException].
+]
+
+{ #category : #tests }
 XMLParserTest >> testNamespaceDeclaration [
 	self
 		shouldnt: [SAXHandler parse: '<prefix:root prefix:name="test" xmlns:prefix="NS"/>']
@@ -4243,31 +4290,6 @@ XMLParserTest >> testNamespaceParsing [
 ]
 
 { #category : #tests }
-XMLParserTest >> testNamespacePrefixAliasing [
-	| declarations |
-
-	declarations := '<test xmlns:alias1="ns" xmlns:alias2="ns" '.
-	self
-		shouldnt: [
-			SAXHandler
-				parse: declarations, ' alias1:name="value" />'
-				usingNamespaces: true]
-		raise: XMLNamespaceException.
-	self
-		should: [
-			SAXHandler
-				parse: declarations, ' alias1:name="value" alias2:name="value"/>'
-				usingNamespaces: true]
-		raise: XMLNamespaceException.
-	self
-		shouldnt: [
-			SAXHandler
-				parse: declarations, ' alias1:name="value" alias2:name2="value"/>'
-				usingNamespaces: true]
-		raise: XMLNamespaceException.
-]
-
-{ #category : #tests }
 XMLParserTest >> testNamespacePrefixInheritance [
 	self
 		shouldnt: [
@@ -4280,41 +4302,30 @@ XMLParserTest >> testNamespacePrefixInheritance [
 					</one>'
 				usingNamespaces: true]
 		raise: XMLNamespaceException.
-	self
-		should: [
-			SAXHandler
-				parse:
-					'<one xmlns:prefix1="ns">
-						<prefix1:two xmlns:prefix2="ns2" />
-						<prefix2:three />
-					</one>'
-				usingNamespaces: true]
-		raise: XMLNamespaceException.
-	self
-		should: [
-			SAXHandler
-				parse:
-					'<one xmlns:prefix1="ns">
-						<prefix1:two xmlns:prefix2="ns2">
-							<prefix2:three xmlns:prefix3="ns3" />
-						</prefix1:two>
-						<prefix3:four />
-					</one>'
-				usingNamespaces: true]
-		raise: XMLNamespaceException.
-	self
-		shouldnt: [
-			SAXHandler
-				parse:
-					'<one xmlns:prefix1="ns">
-						<prefix1:two xmlns:prefix2="ns2">
-							<prefix2:three xmlns:prefix3="ns3" />
-						</prefix1:two>
-						<prefix2:four />
-						<prefix3:five />
-					</one>'
-				usingNamespaces: false]
-		raise: XMLNamespaceException.
+	
+	#('<one xmlns:prefix1="ns">
+			<prefix1:two xmlns:prefix2="ns2" />
+			<prefix2:three />
+		</one>'
+		'<one xmlns:prefix1="ns">
+			<prefix1:two xmlns:prefix2="ns2">
+				<prefix2:three xmlns:prefix3="ns3" />
+			</prefix1:two>
+			<prefix3:four />
+		</one>')
+		do: [:each |
+			self
+				should: [
+					SAXHandler
+						parse: each
+						usingNamespaces: true]
+				raise: XMLNamespaceException.
+			self
+				shouldnt: [
+					SAXHandler
+						parse: each
+						usingNamespaces: false]
+				raise: XMLNamespaceException].
 ]
 
 { #category : #tests }
