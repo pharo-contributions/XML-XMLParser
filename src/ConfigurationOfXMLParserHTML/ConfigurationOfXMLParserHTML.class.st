@@ -285,7 +285,7 @@ ConfigurationOfXMLParserHTML >> baseline129: spec [
 	<version: '1.2.9-baseline' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
-		do: [ spec project: 'XMLParser' with: #'release-2.8.3' ].
+		do: [ spec project: 'XMLParser' with: #'release-2.8.6' ].
 	spec
 		for: #gemstone
 		do: [ 
@@ -655,6 +655,6 @@ ConfigurationOfXMLParserHTML >> version129: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.40'.
-			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.19'.
+			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.20'.
                 ].
 ]
