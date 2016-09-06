@@ -14,7 +14,7 @@ XMLCDataTest >> testAcceptNodeVisitor [
 	| visitor cdata message |
 
 	visitor := XMLRecordingNodeVisitor new.
-	cdata := self nodeClass new.
+	cdata := self newNode.
 	self
 		assert: (cdata acceptNodeVisitor: visitor) == cdata;
 		assert: visitor messageRecorder hasMessages.
@@ -34,12 +34,12 @@ XMLCDataTest >> testAcceptNodeVisitor [
 
 { #category : #tests }
 XMLCDataTest >> testIsCData [
-	self assert: self nodeClass new isCData
+	self assert: self newNode isCData
 ]
 
 { #category : #tests }
 XMLCDataTest >> testWriteXMLOn [
 	self
-		assert: self nodeClass new printString = '<![CDATA[]]>';
+		assert: self newNode printString = '<![CDATA[]]>';
 		assert: (self nodeClass string: self markupString) printString = ('<![CDATA[', self markupString, ']]>').
 ]

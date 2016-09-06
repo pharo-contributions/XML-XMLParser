@@ -497,7 +497,7 @@ XMLParserTest >> testAttributeDefaultFixedValue [
 		assert: (root attributeAt: 'one') = 'fixedDefault';
 		assert: (root attributeAt: 'two') = 'fixedDefaultTwo';
 		assert: (root includesAttribute: 'three');
-		assert: (root attributeAt: 'three') isEmpty;
+		assert: (root attributeAt: 'three') = '';
 		assert: (root attributeAt: 'four') = 'fixedDefaultTwo'.
 
 	"attributes with fixed defaults are set automatically if not present"
@@ -507,7 +507,7 @@ XMLParserTest >> testAttributeDefaultFixedValue [
 		assert: (root attributeAt: 'one') = 'fixedDefault';
 		assert: (root attributeAt: 'two') = 'fixedDefaultTwo';
 		assert: (root includesAttribute: 'three');
-		assert: (root attributeAt: 'three') isEmpty.
+		assert: (root attributeAt: 'three') = ''.
 
 	"but if present cannot have non-default values"
 	#('<root one="nonDefault" />'
@@ -543,9 +543,9 @@ XMLParserTest >> testAttributeDefaultImplied [
 	root := document root.
 	self
 		assert: (root includesAttribute: 'one');
-		assert: (root attributeAt: 'one') isEmpty;
+		assert: (root attributeAt: 'one') = '';
 		assert: (root includesAttribute: 'two');
-		assert: (root attributeAt: 'two') isEmpty.
+		assert: (root attributeAt: 'two') = ''.
 
 	"implied makes them optional"
 	document := XMLDOMParser parse: dtd, '<root />'.
@@ -581,9 +581,9 @@ XMLParserTest >> testAttributeDefaultRequired [
 	root := document root.
 	self
 		assert: (root includesAttribute: 'one');
-		assert: (root attributeAt: 'one') isEmpty;
+		assert: (root attributeAt: 'one') = '';
 		assert: (root includesAttribute: 'two');
-		assert: (root attributeAt: 'two') isEmpty.
+		assert: (root attributeAt: 'two') = ''.
 
 	"all required attributes must be present"
 	#('<root one="nonDefault" />'
@@ -621,9 +621,9 @@ XMLParserTest >> testAttributeDefaultValue [
 	root := document root.
 		self
 			assert: (root includesAttribute: 'one');
-			assert: (root attributeAt: 'one') isEmpty;
+			assert: (root attributeAt: 'one') = '';
 			assert: (root includesAttribute: 'two');
-			assert: (root attributeAt: 'two') isEmpty;
+			assert: (root attributeAt: 'two') = '';
 			assert: (root attributeAt: 'three') = 'defaultThree'.
 
 	"attributes with defaults are set automatically if not present"
@@ -632,7 +632,7 @@ XMLParserTest >> testAttributeDefaultValue [
 	self
 		assert: (root attributeAt: 'one') = 'default';
 		assert: (root includesAttribute: 'two');
-		assert: (root attributeAt: 'two') isEmpty;
+		assert: (root attributeAt: 'two') = '';
 		assert: (root attributeAt: 'three') = 'defaultThree'.
 ]
 
@@ -3817,11 +3817,11 @@ XMLParserTest >> testEntityReplacementEmpty [
 		shouldnt: [document := XMLDOMParser parse: xml]
 		raise: XMLWellFormednessException.
 	self
-		assert: (document root attributeAt: 'one') isEmpty;
-		assert: (document root attributeAt: 'two') isEmpty;
-		assert: (document root attributeAt: 'three') isEmpty;
-		assert: (document root attributeAt: 'four') isEmpty;
-		assert: document root contentString isEmpty.
+		assert: (document root attributeAt: 'one') = '';
+		assert: (document root attributeAt: 'two') = '';
+		assert: (document root attributeAt: 'three') = '';
+		assert: (document root attributeAt: 'four') = '';
+		assert: document root contentString = ''.
 ]
 
 { #category : #tests }

@@ -13,6 +13,19 @@ XMLNodeTest class >> shouldInheritSelectors [
 ]
 
 { #category : #assertions }
+XMLNodeTest >> assertElement: anElement hasAttributes: anAssociationCollection [
+	| attributeNodes |
+
+	self assert: anElement attributeNodes size = anAssociationCollection size.
+	attributeNodes := anElement attributeNodes copy.
+	anAssociationCollection associationsDo: [:each | | attributeNode |
+		attributeNode := attributeNodes removeFirst.
+		self
+			assert: attributeNode name = each key;
+			assert: attributeNode value = each value].
+]
+
+{ #category : #assertions }
 XMLNodeTest >> assertList: aList collects: aSecondList [
 	self
 		assert: aList = aSecondList;
@@ -36,13 +49,38 @@ XMLNodeTest >> attributeAssociations [
 ]
 
 { #category : #accessing }
+XMLNodeTest >> attributeClass [
+	^ XMLAttribute
+]
+
+{ #category : #accessing }
+XMLNodeTest >> attributeNames [
+	^ self attributeAssociations collect: [:each | each name]
+]
+
+{ #category : #accessing }
+XMLNodeTest >> attributeValues [
+	^ self attributeAssociations collect: [:each | each value]
+]
+
+{ #category : #accessing }
 XMLNodeTest >> attributes [
-	^ OrderPreservingStringDictionary newFrom: self attributeAssociations
+	^ self attributesClass newFrom: self attributeAssociations
+]
+
+{ #category : #accessing }
+XMLNodeTest >> attributesClass [
+	^ OrderPreservingStringDictionary
 ]
 
 { #category : #accessing }
 XMLNodeTest >> collectListClass [
 	^ XMLOrderedList
+]
+
+{ #category : #accessing }
+XMLNodeTest >> elementClass [
+	^ XMLElement
 ]
 
 { #category : #accessing }
@@ -65,23 +103,32 @@ XMLNodeTest >> namespaceAssociations [
 
 { #category : #accessing }
 XMLNodeTest >> namespaces [
-	^ OrderPreservingStringDictionary newFrom: self namespaceAssociations
+	^ self attributesClass newFrom: self namespaceAssociations
+]
+
+{ #category : #'instance creation' }
+XMLNodeTest >> newElement [
+	^ self elementClass
+		name: 'test'
+		namespaces: self namespaceAssociations
 ]
 
 { #category : #'instance creation' }
 XMLNodeTest >> newElementWithAttributes [
 	| element |
 
-	element :=
-		XMLElement
-			name: 'test'
-			namespaces: self namespaceAssociations.
+	element := self newElement.
 	self attributeAssociations do: [:each |
 		element attributeNodes addLast:
-			(XMLAttribute
+			(self attributeClass
 				name: each key
 				value: each value)].
 	^ element.
+]
+
+{ #category : #'instance creation' }
+XMLNodeTest >> newNode [
+	^ self nodeClass new
 ]
 
 { #category : #accessing }
@@ -103,12 +150,27 @@ XMLNodeTest >> should: aBlock enumerate: aCollection [
 	self assert: enumerated = aCollection asOrderedCollection.
 ]
 
+{ #category : #assertions }
+XMLNodeTest >> should: aBlock enumerate: aFirstCollection and: aSecondCollection [
+	| firstEnumerated secondEnumerated |
+
+	firstEnumerated := OrderedCollection new.
+	secondEnumerated := OrderedCollection new.
+	aBlock
+		value: [:first :second |
+			firstEnumerated addLast: first.
+			secondEnumerated addLast: second].
+	self
+		assert: firstEnumerated = aFirstCollection asOrderedCollection;
+		assert: secondEnumerated = aSecondCollection asOrderedCollection.
+]
+
 { #category : #tests }
 XMLNodeTest >> testAcceptNodeVisitor [
 	| visitor node |
 
 	visitor := XMLRecordingNodeVisitor new.
-	node := self nodeClass new.
+	node := self newNode.
 	self
 		assert: (node acceptNodeVisitor: visitor) == node;
 		deny: visitor messageRecorder hasMessages.
@@ -116,56 +178,60 @@ XMLNodeTest >> testAcceptNodeVisitor [
 
 { #category : #tests }
 XMLNodeTest >> testAncestorElements [
-	self assert: self nodeClass new ancestorElements isEmpty
+	self assert: self newNode ancestorElements isEmpty
 ]
 
 { #category : #tests }
 XMLNodeTest >> testAncestorElementsDo [
 	| node |
 
-	node := self nodeClass new.
-	self should: [:block |  node ancestorElementsDo: block] enumerate: #().
+	node := self newNode.
+	self
+		should: [:block |  node ancestorElementsDo: block]
+		enumerate: #().
 ]
 
 { #category : #tests }
 XMLNodeTest >> testAncestorNodes [
-	self assert: self nodeClass new ancestorNodes isEmpty
+	self assert: self newNode ancestorNodes isEmpty
 ]
 
 { #category : #tests }
 XMLNodeTest >> testAncestorNodesDo [
 	| node |
 
-	node := self nodeClass new.
-	self should: [:block |  node ancestorNodesDo: block] enumerate: #().
+	node := self newNode.
+	self
+		should: [:block |  node ancestorNodesDo: block]
+		enumerate: #().
 ]
 
 { #category : #tests }
 XMLNodeTest >> testCanHaveChildren [
-	self deny: self nodeClass new canHaveChildren
+	self deny: self newNode canHaveChildren
 ]
 
 { #category : #tests }
 XMLNodeTest >> testCanonicallyEquals [
-	self assert: (self nodeClass new canonicallyEquals: self nodeClass new)
+	self assert: (self newNode canonicallyEquals: self newNode)
 ]
 
 { #category : #tests }
 XMLNodeTest >> testConfiguration [
-	self assert: self nodeClass new configuration isNil
+	self assert: self newNode configuration isNil
 ]
 
 { #category : #tests }
 XMLNodeTest >> testContentString [
-	self assert: self nodeClass new contentString isEmpty
+	self assert: self newNode contentString = ''
 ]
 
 { #category : #tests }
 XMLNodeTest >> testCopy [
 	| node copy |
 
-	(node := self nodeClass new)
-		parent: self nodeClass new.
+	(node := self newNode)
+		parent: self newNode.
 	copy := node copy.
 	self
 		deny: copy == node;
@@ -174,92 +240,92 @@ XMLNodeTest >> testCopy [
 
 { #category : #tests }
 XMLNodeTest >> testDocument [
-	self assert: self nodeClass new document isNil
+	self assert: self newNode document isNil
 ]
 
 { #category : #tests }
 XMLNodeTest >> testHasChildren [
-	self deny: self nodeClass new hasChildren
+	self deny: self newNode hasChildren
 ]
 
 { #category : #tests }
 XMLNodeTest >> testHasParent [
 	| node |
 
-	node := self nodeClass new.
+	node := self newNode.
 	self deny: node hasParent.
 
-	node parent: self nodeClass new.
+	node parent: self newNode.
 	self assert: node hasParent.
 ]
 
 { #category : #tests }
 XMLNodeTest >> testIsAttribute [
-	self deny: self nodeClass new isAttribute
+	self deny: self newNode isAttribute
 ]
 
 { #category : #tests }
 XMLNodeTest >> testIsCData [
-	self deny: self nodeClass new isCData
+	self deny: self newNode isCData
 ]
 
 { #category : #tests }
 XMLNodeTest >> testIsComment [
-	self deny: self nodeClass new isComment
+	self deny: self newNode isComment
 ]
 
 { #category : #tests }
 XMLNodeTest >> testIsContentNode [
-	self deny: self nodeClass new isContentNode
+	self deny: self newNode isContentNode
 ]
 
 { #category : #tests }
 XMLNodeTest >> testIsDeclaration [
-	self deny: self nodeClass new isDeclaration
+	self deny: self newNode isDeclaration
 ]
 
 { #category : #tests }
 XMLNodeTest >> testIsDocument [
-	self deny: self nodeClass new isDocument
+	self deny: self newNode isDocument
 ]
 
 { #category : #tests }
 XMLNodeTest >> testIsElement [
-	self deny: self nodeClass new isElement
+	self deny: self newNode isElement
 ]
 
 { #category : #tests }
 XMLNodeTest >> testIsElementNamed [
-	self deny: (self nodeClass new isElementNamed: '')
+	self deny: (self newNode isElementNamed: '')
 ]
 
 { #category : #tests }
 XMLNodeTest >> testIsElementNamedAny [
-	self deny: (self nodeClass new isElementNamedAny: #())
+	self deny: (self newNode isElementNamedAny: #())
 ]
 
 { #category : #tests }
 XMLNodeTest >> testIsInLanguage [
-	self deny: (self nodeClass new isInLanguage: 'test')
+	self deny: (self newNode isInLanguage: 'test')
 ]
 
 { #category : #tests }
 XMLNodeTest >> testIsPI [
-	self deny: self nodeClass new isPI
+	self deny: self newNode isPI
 ]
 
 { #category : #tests }
 XMLNodeTest >> testIsStringNode [
 	self
-		deny: self nodeClass new isStringNode;
-		deny: (self nodeClass new isStringNode: '').
+		deny: self newNode isStringNode;
+		deny: (self newNode isStringNode: '').
 ]
 
 { #category : #tests }
 XMLNodeTest >> testNewCData [
 	| cdata |
 
-	cdata := self nodeClass new newCData: 'test'.
+	cdata := self newNode newCData: 'test'.
 	self
 		assert: cdata isCData;
 		assert: cdata string = 'test'.
@@ -269,7 +335,7 @@ XMLNodeTest >> testNewCData [
 XMLNodeTest >> testNewComment [
 	| comment |
 
-	comment := self nodeClass new newComment: 'test'.
+	comment := self newNode newComment: 'test'.
 	self
 		assert: comment isComment;
 		assert: comment string = 'test'.
@@ -279,7 +345,7 @@ XMLNodeTest >> testNewComment [
 XMLNodeTest >> testNewDocument [
 	| node document |
 
-	node := self nodeClass new.
+	node := self newNode.
 	document := node newDocument.
 	self assert: document isDocument.
 	node configuration
@@ -293,7 +359,7 @@ XMLNodeTest >> testNewDocument [
 XMLNodeTest >> testNewElement [
 	| node element |
 
-	node := self nodeClass new.
+	node := self newNode.
 	element := node newElement.
 	self assert: element isElement.
 	node configuration
@@ -307,7 +373,7 @@ XMLNodeTest >> testNewElement [
 XMLNodeTest >> testNewElementNamed [
 	| node element |
 
-	node := self nodeClass new.
+	node := self newNode.
 	element := node newElementNamed: 'test'.
 	self
 		assert: element isElement;
@@ -323,7 +389,7 @@ XMLNodeTest >> testNewElementNamed [
 XMLNodeTest >> testNewElementNamedAttributes [
 	| node element |
 
-	node := self nodeClass new.
+	node := self newNode.
 	element :=
 		node
 			newElementNamed: 'test'
@@ -331,7 +397,7 @@ XMLNodeTest >> testNewElementNamedAttributes [
 	self
 		assert: element isElement;
 		assert: element name = 'test';
-		assert: element attributes = self unprefixedAttributes.
+		assertElement: element hasAttributes: self unprefixedAttributes.
 	node configuration
 		ifNotNil: [
 			self
@@ -343,7 +409,7 @@ XMLNodeTest >> testNewElementNamedAttributes [
 XMLNodeTest >> testNewElementNamedNamespaceURI [
 	| node element |
 
-	node := self nodeClass new.
+	node := self newNode.
 	element :=
 		node
 			newElementNamed: 'prefix:test'
@@ -363,7 +429,7 @@ XMLNodeTest >> testNewElementNamedNamespaceURI [
 XMLNodeTest >> testNewElementNamedNamespaceURIAttributes [
 	| node element |
 
-	node := self nodeClass new.
+	node := self newNode.
 	element :=
 		node
 			newElementNamed: 'prefix:test'
@@ -373,7 +439,7 @@ XMLNodeTest >> testNewElementNamedNamespaceURIAttributes [
 		assert: element isElement;
 		assert: element name = 'prefix:test';
 		assert: element namespaceURI = 'prefixNS';
-		assert: element attributes = self attributes.
+		assertElement: element hasAttributes: self attributes.
 	node configuration
 		ifNotNil: [
 			self
@@ -383,7 +449,7 @@ XMLNodeTest >> testNewElementNamedNamespaceURIAttributes [
 
 { #category : #tests }
 XMLNodeTest >> testNewPI [
-	self assert: self nodeClass new newPI isPI.
+	self assert: self newNode newPI isPI.
 ]
 
 { #category : #tests }
@@ -391,7 +457,7 @@ XMLNodeTest >> testNewPITargetData [
 	| pi |
 
 	pi :=
-		self nodeClass new
+		self newNode
 			newPITarget: 'target'
 			data: 'data'.
 	self
@@ -404,7 +470,7 @@ XMLNodeTest >> testNewPITargetData [
 XMLNodeTest >> testNewStringNode [
 	| stringNode |
 
-	stringNode := self nodeClass new newStringNode: 'test'.
+	stringNode := self newNode newStringNode: 'test'.
 	self
 		assert: stringNode isStringNode;
 		assert: stringNode string = 'test'.
@@ -412,40 +478,41 @@ XMLNodeTest >> testNewStringNode [
 
 { #category : #tests }
 XMLNodeTest >> testNextNode [
-	self assert: self nodeClass new nextNode isNil
+	self assert: self newNode nextNode isNil
 ]
 
 { #category : #tests }
 XMLNodeTest >> testParent [
 	| node parent |
 
-	node := self nodeClass new.
+	node := self newNode.
 	self assert: node parent isNil.
 
-	parent := self nodeClass new.
-	node parent: parent.
-	self assert: node parent == parent.
+	parent := self newNode.
+	self
+		assert: (node parent: parent) == node;
+		assert: node parent == parent.
 ]
 
 { #category : #tests }
 XMLNodeTest >> testPreviousNode [
-	self assert: self nodeClass new previousNode isNil
+	self assert: self newNode previousNode isNil
 ]
 
 { #category : #tests }
 XMLNodeTest >> testRawContentString [
-	self assert: self nodeClass new rawContentString isEmpty
+	self assert: self newNode rawContentString = ''
 ]
 
 { #category : #tests }
 XMLNodeTest >> testSortKey [
-	self assert: self nodeClass new sortKey = self nodeClass name asString
+	self assert: self newNode sortKey = self nodeClass name asString
 ]
 
 { #category : #tests }
 XMLNodeTest >> testValidate [
 	self
-		shouldnt: [self nodeClass new validate]
+		shouldnt: [self newNode validate]
 		raise: XMLValidationException
 ]
 
@@ -457,5 +524,5 @@ XMLNodeTest >> unprefixedAttributeAssociations [
 
 { #category : #accessing }
 XMLNodeTest >> unprefixedAttributes [
-	^ OrderPreservingStringDictionary newFrom: self unprefixedAttributeAssociations
+	^ self attributesClass newFrom: self unprefixedAttributeAssociations
 ]

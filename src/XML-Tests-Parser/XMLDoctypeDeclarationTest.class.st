@@ -11,7 +11,7 @@ XMLDoctypeDeclarationTest class >> isAbstract [
 
 { #category : #'instance creation' }
 XMLDoctypeDeclarationTest >> newNodeWithNodes [
-	^ self nodeClass new
+	^ self newNode
 		addNode: (XMLComment string: 'before');
 		addNode: (XMLGeneralEntityDeclaration name: 'one' replacement: 'two');
 		addNode: (XMLParameterEntityDeclaration name: 'three' publicID: 'four' systemID: 'four');
@@ -36,6 +36,11 @@ XMLDoctypeDeclarationTest >> newNodeWithNodes [
 { #category : #accessing }
 XMLDoctypeDeclarationTest >> nodeClass [
 	^ XMLDoctypeDeclaration
+]
+
+{ #category : #accessing }
+XMLDoctypeDeclarationTest >> nodeListClass [
+	^ XMLInternalSubsetList
 ]
 
 { #category : #accessing }
@@ -67,21 +72,16 @@ XMLDoctypeDeclarationTest >> testAllNodes [
 { #category : #tests }
 XMLDoctypeDeclarationTest >> testCanonicallyEquals [
 	self
-		assert: (self nodeClass new canonicallyEquals: self nodeClass new);
+		assert: (self newNode canonicallyEquals: self newNode);
 		assert: (self newNodeWithNodes canonicallyEquals: self newNodeWithNodes);
-		assert: (self newNodeWithNodes canonicallyEquals: self nodeClass new)
-]
-
-{ #category : #tests }
-XMLDoctypeDeclarationTest >> testNodes [
-	self assert: (self nodeClass new nodes isKindOf: XMLInternalSubsetList)
+		assert: (self newNodeWithNodes canonicallyEquals: self newNode)
 ]
 
 { #category : #tests }
 XMLDoctypeDeclarationTest >> testPublicID [
 	| doctype |
 
-	doctype := self nodeClass new.
+	doctype := self newNode.
 	self
 		assert: doctype publicID = '';
 		assert: (doctype publicID: 'test') == doctype;
@@ -92,7 +92,7 @@ XMLDoctypeDeclarationTest >> testPublicID [
 XMLDoctypeDeclarationTest >> testRoot [
 	| doctype |
 
-	doctype := self nodeClass new.
+	doctype := self newNode.
 	self
 		assert: doctype root = '';
 		assert: (doctype root: 'test') == doctype;
@@ -109,6 +109,7 @@ XMLDoctypeDeclarationTest >> testRootPublicIDSystemID [
 			publicID: 'two'
 			systemID: 'three'.
 	self
+		assert: doctype class == self nodeClass;
 		assert: doctype root = 'one';
 		assert: doctype publicID = 'two';
 		assert: doctype systemID = 'three'.
@@ -118,7 +119,7 @@ XMLDoctypeDeclarationTest >> testRootPublicIDSystemID [
 XMLDoctypeDeclarationTest >> testSystemID [
 	| doctype |
 
-	doctype := self nodeClass new.
+	doctype := self newNode.
 	self
 		assert: doctype systemID = '';
 		assert: (doctype systemID: 'test') == doctype;
@@ -129,7 +130,7 @@ XMLDoctypeDeclarationTest >> testSystemID [
 XMLDoctypeDeclarationTest >> testWriteXMLOn [
 	| doctype elementDeclaration |
 
-	doctype := self nodeClass new.
+	doctype := self newNode.
 	self assert: doctype printString = '<!DOCTYPE >'.
 	doctype root: 'one'.
 	self assert: doctype printString = '<!DOCTYPE one>'.

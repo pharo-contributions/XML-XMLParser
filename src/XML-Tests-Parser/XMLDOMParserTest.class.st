@@ -40,6 +40,11 @@ XMLDOMParserTest >> internalSubsetWithDeclarations [
 		<root>test</root>'
 ]
 
+{ #category : #accessing }
+XMLDOMParserTest >> nodeFactoryClass [
+	^ XMLNodeFactory
+]
+
 { #category : #tests }
 XMLDOMParserTest >> testAllElementsNamespaceURIs [
 	| document people |
@@ -93,6 +98,18 @@ XMLDOMParserTest >> testAttributeNamespacesDisabled [
 			deny: each attributeNames isEmpty;
 			assert: (each attributeNodeAt: 'ps:family-name' namespaceURI: 'personNS') isNil;
 			assert: (each attributeNodeAt: 'ps:first-name' namespaceURI: 'personNS') isNil].
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testAttributeParent [
+	(XMLDOMParser parse: self addressBookXML) allElementsDo: [:element |
+		element hasAttributes
+			ifTrue: [
+				element attributeNodesDo: [:each |
+					self
+						assert: each hasParent;
+						assert: each parent == element;
+						assert: each element == element]]]
 ]
 
 { #category : #tests }
@@ -284,7 +301,7 @@ XMLDOMParserTest >> testDocumentRoot [
 	| document root  |
 
 	document := XMLDOMParser parse: self addressBookXML.
-	self assert: (document isKindOf: XMLDocument).
+	self assert: document class == XMLDocument.
 	root := document root.
 	self assert: (root class == XMLElement).
 
@@ -394,7 +411,7 @@ XMLDOMParserTest >> testInnerXML [
 	document := XMLDOMParser parse: self addressBookXML.
 	document allElementsNamed: 'person' do: [:person | | contactInfo address1 address2 |
 		#('address' 'job-info' 'manager') do: [:each |
-			self assert: (person elementAt: each) innerXML isEmpty].
+			self assert: (person elementAt: each) innerXML = ''].
 
 		contactInfo := person elementAt: 'contact-info'.
 		address1 := (person attributeAt: 'first-name'), '@example.com'.
@@ -481,14 +498,14 @@ XMLDOMParserTest >> testInternalAttributeDeclarations [
 		assert: firstAttribute attribute = 'name';
 		assert: firstAttribute type = 'CDATA';
 		assert: firstAttribute defaultPragma = 'IMPLIED';
-		assert: firstAttribute defaultValue isEmpty.
+		assert: firstAttribute defaultValue = ''.
 
 	secondAttribute := doctype nodes third.
 	self
 		assert: secondAttribute element = 'root';
 		assert: secondAttribute attribute = 'number';
 		assert: secondAttribute type = '(one|two|three)';
-		assert: secondAttribute defaultPragma isEmpty;
+		assert: secondAttribute defaultPragma = '';
 		assert: secondAttribute defaultValue = 'three'.
 ]
 
@@ -524,18 +541,18 @@ XMLDOMParserTest >> testInternalGeneralEntityDeclarations [
 		deny: firstEntity isParameter;
 		assert: firstEntity name = 'general';
 		assert: firstEntity replacement = 'replacement';
-		assert: firstEntity publicID isEmpty;
-		assert: firstEntity systemID isEmpty;
-		assert: firstEntity ndata isEmpty.
+		assert: firstEntity publicID = '';
+		assert: firstEntity systemID = '';
+		assert: firstEntity ndata = ''.
 
 	secondEntity := doctype nodes fifth.
 	self
 		deny: secondEntity isParameter;
 		assert: secondEntity name = 'externalGeneral';
-		assert: secondEntity replacement isEmpty;
+		assert: secondEntity replacement = '';
 		assert: secondEntity publicID = 'pubid2';
 		assert: secondEntity systemID = 'external1.dtd';
-		assert: secondEntity ndata isEmpty.
+		assert: secondEntity ndata = ''.
 ]
 
 { #category : #tests }
@@ -552,7 +569,7 @@ XMLDOMParserTest >> testInternalNotationDeclarations [
 	notation := doctype nodes eighth.
 	self
 		assert: notation name = 'notation';
-		assert: notation publicID isEmpty;
+		assert: notation publicID = '';
 		assert: notation systemID = 'note.doc'.
 ]
 
@@ -572,15 +589,15 @@ XMLDOMParserTest >> testInternalParameterEntityDeclarations [
 		assert: firstEntity isParameter;
 		assert: firstEntity name = 'parameter';
 		assert: firstEntity replacement = 'replacement';
-		assert: firstEntity publicID isEmpty;
-		assert: firstEntity systemID isEmpty.
+		assert: firstEntity publicID = '';
+		assert: firstEntity systemID = ''.
 
 	secondEntity := doctype nodes seventh.
 	self
 		assert: secondEntity isParameter;
 		assert: secondEntity name = 'externalParameter';
-		assert: secondEntity replacement isEmpty;
-		assert: secondEntity publicID isEmpty;
+		assert: secondEntity replacement = '';
+		assert: secondEntity publicID = '';
 		assert: secondEntity systemID = 'external2.dtd'.
 ]
 
@@ -606,7 +623,7 @@ XMLDOMParserTest >> testNamespaces [
 				self
 					assert: each namespaceURI = 'defaultNS';
 					deny: each hasPrefix;
-					assert: each prefix isEmpty]].
+					assert: each prefix = '']].
 ]
 
 { #category : #tests }
@@ -678,7 +695,7 @@ XMLDOMParserTest >> testNamespacesDisabled [
 			parse: self addressBookNamespacePrefixedXML
 			usingNamespaces: false.
 	document allElementsDo: [:each |
-		self assert: each namespaceURI isEmpty.
+		self assert: each namespaceURI = ''.
 		(each == document root or: [each isNamed: 'person'])
 			ifTrue: [
 				self
@@ -689,7 +706,7 @@ XMLDOMParserTest >> testNamespacesDisabled [
 			ifFalse: [
 				self
 					deny: each hasPrefix;
-					assert: each prefix isEmpty]].
+					assert: each prefix = '']].
 ]
 
 { #category : #tests }
@@ -720,10 +737,10 @@ XMLDOMParserTest >> testNamespacesResolvingDisabled [
 			usingNamespaces: false.
 	document allElementsDo: [:each |
 		self
-			assert: each defaultNamespace isEmpty;
-			assert: (each resolvePrefix: '') isEmpty;
-			assert: (each resolvePrefix: 'book') isEmpty;
-			assert: (each resolvePrefix: 'ps') isEmpty;
+			assert: each defaultNamespace = '';
+			assert: (each resolvePrefix: '') = '';
+			assert: (each resolvePrefix: 'book') = '';
+			assert: (each resolvePrefix: 'ps') = '';
 			assert:
 				each namespaceURI =
 					(each hasPrefix
@@ -748,12 +765,13 @@ XMLDOMParserTest >> testNodeDetecting [
 
 { #category : #tests }
 XMLDOMParserTest >> testNodeFactory [
-	| parser newNodeFactory |
+	| parser oldNodeFactory newNodeFactory |
 
 	parser := XMLDOMParser on: self addressBookXML.
-	self assert: (parser nodeFactory isKindOf: XMLNodeFactory).
+	oldNodeFactory := parser nodeFactory.
+	self assert: oldNodeFactory class == self nodeFactoryClass.
 
-	newNodeFactory := XMLPluggableNodeFactory new.
+	newNodeFactory := self nodeFactoryClass new.
 	self
 		assert: (parser nodeFactory: newNodeFactory) == parser;
 		assert: parser nodeFactory == newNodeFactory.
@@ -775,15 +793,42 @@ XMLDOMParserTest >> testNodeListClass [
 ]
 
 { #category : #tests }
+XMLDOMParserTest >> testNodeParent [
+	(XMLDOMParser parse: self addressBookXML) allNodesDo: [:node |
+		node hasChildren
+			ifTrue: [
+				node nodesDo: [:each |
+					self
+						assert: each hasParent;
+						assert: each parent == node]]]
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testOptimizeForLargeDocuments [
+	| parser |
+
+	parser := XMLDOMParser on: ''.
+
+	parser optimizeForLargeDocuments.
+	self
+		deny: parser isValidating;
+		deny: parser usesNamespaces;
+		assert: parser documentReadLimit isNil;
+		assert: parser nodeFactory attributeListClass == XMLAttributeList.
+]
+
+{ #category : #tests }
 XMLDOMParserTest >> testOverridingDefaultNamespace [
 	| document |
 
-	document := XMLDOMParser parse: '<outer xmlns="default"><inner xmlns=""/></outer>'.
+	document :=
+		XMLDOMParser parse:
+			'<outer xmlns="default"><inner xmlns=""/></outer>'.
 	self
 		assert: document root namespaceURI = 'default';
 		assert: document root defaultNamespace = 'default';
-		assert: document root firstNode namespaceURI isEmpty;
-		assert: document root firstNode defaultNamespace isEmpty.
+		assert: document root firstNode namespaceURI = '';
+		assert: document root firstNode defaultNamespace = ''.
 ]
 
 { #category : #tests }

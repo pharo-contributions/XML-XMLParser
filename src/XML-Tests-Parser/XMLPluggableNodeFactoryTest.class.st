@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #accessing }
+XMLPluggableNodeFactoryTest >> attributeListClass [
+	^ XMLAttributeList
+]
+
+{ #category : #accessing }
 XMLPluggableNodeFactoryTest >> cdataClass [
 	^ XMLFCData
 ]
@@ -51,17 +56,25 @@ XMLPluggableNodeFactoryTest >> piClass [
 ]
 
 { #category : #accessing }
+XMLPluggableNodeFactoryTest >> pluggableFactoryClass [
+	^ self factoryClass
+]
+
+{ #category : #accessing }
 XMLPluggableNodeFactoryTest >> stringNodeClass [
 	^ XMLFString
 ]
 
 { #category : #tests }
-XMLPluggableNodeFactoryTest >> testAsPluggableNodeFactory [
-	| factory pluggableFactory |
+XMLPluggableNodeFactoryTest >> testAttributeListClass [
+	| factory |
 
-	factory := self factoryClass new.
-	pluggableFactory := factory asPluggableNodeFactory.
-	self assert: pluggableFactory == factory.
+	super testAttributeListClass.
+
+	factory := self newFactoryWithClasses.
+	self
+		assert: (factory attributeListClass: self attributeListClass) == factory;
+		assert: factory attributeListClass == self attributeListClass.
 ]
 
 { #category : #tests }

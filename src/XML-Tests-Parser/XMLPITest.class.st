@@ -4,6 +4,13 @@ Class {
 	#category : #'XML-Tests-Parser-DOM'
 }
 
+{ #category : #'instance creation' }
+XMLPITest >> newPIWithTargetAndData [
+	^ self nodeClass
+		target: 'target'
+		data: 'data'
+]
+
 { #category : #accessing }
 XMLPITest >> nodeClass [
 	^ XMLPI
@@ -14,7 +21,7 @@ XMLPITest >> testAcceptNodeVisitor [
 	| visitor pi message |
 
 	visitor := XMLRecordingNodeVisitor new.
-	pi := self nodeClass new.
+	pi := self newNode.
 	self
 		assert: (pi acceptNodeVisitor: visitor) == pi;
 		assert: visitor messageRecorder hasMessages.
@@ -30,54 +37,66 @@ XMLPITest >> testAcceptNodeVisitor [
 XMLPITest >> testCanonicallyEquals [
 	super testCanonicallyEquals.
 	self assert:
-		((self nodeClass target: 'one' data: 'two')
-			canonicallyEquals: (self nodeClass target: 'one' data: 'two')).
-	self deny: ((self nodeClass target: 'one' data: 'two') canonicallyEquals: self nodeClass new).
+		(self newPIWithTargetAndData canonicallyEquals:
+			self newPIWithTargetAndData).
+	self deny:
+		(self newPIWithTargetAndData canonicallyEquals:
+			self newNode).
 ]
 
 { #category : #tests }
 XMLPITest >> testData [
 	| pi |
 
-	pi := self nodeClass new.
-	self assert: pi data isEmpty.
-	pi data: 'test'.
-	self assert: pi data = 'test'.
+	pi := self newNode.
+	self
+		assert: pi data = '';
+		assert: (pi data: 'test') == pi;
+		assert: pi data = 'test'.
 ]
 
 { #category : #tests }
 XMLPITest >> testIsPI [
-	self assert: self nodeClass new isPI
+	self assert: self newNode isPI
 ]
 
 { #category : #tests }
 XMLPITest >> testSortKey [
-	self assert: (self nodeClass new target: 'test') sortKey = 'test'
+	self assert: self newPIWithTargetAndData sortKey = 'target'
 ]
 
 { #category : #tests }
 XMLPITest >> testTarget [
 	| pi |
 
-	pi := self nodeClass new.
-	self assert: pi target isEmpty.
-	pi target: 'test'.
-	self assert: pi target = 'test'.
+	pi := self newNode.
+	self
+		assert: pi target = '';
+		assert: (pi target: 'test') == pi;
+		assert: pi target = 'test'.
 ]
 
 { #category : #tests }
 XMLPITest >> testTargetData [
 	| pi |
 
-	pi := self nodeClass target: 'target' data: 'data'.
+	pi :=
+		self nodeClass
+			target: 'target'
+			data: 'data'.
 	self
+		assert: pi class == self nodeClass;
 		assert: pi target = 'target';
 		assert: pi data = 'data'.
 ]
 
 { #category : #tests }
 XMLPITest >> testWriteXMLOn [
-	self
-		assert: (self nodeClass target: 'target' data: 'data') printString = '<?target data?>';
-		assert: (self nodeClass target: 'target ' data: ' data') printString = '<?target   data?>'.
+	| pi |
+
+	pi := self newPIWithTargetAndData.
+	self assert: pi printString = '<?target data?>'.
+
+	pi data: ' ', pi data.
+	self assert: pi printString = '<?target  data?>'.
 ]

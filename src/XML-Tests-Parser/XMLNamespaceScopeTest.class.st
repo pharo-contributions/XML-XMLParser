@@ -44,7 +44,7 @@ XMLNamespaceScopeTest >> testDefaultNamespace [
 	| scope oldPrefixMappings |
 
 	scope := self newNamespaceScope.
-	self assert: scope defaultNamespace isEmpty.
+	self assert: scope defaultNamespace = ''.
 
 	oldPrefixMappings := scope prefixMappings.
 	scope defaultNamespace: 'test'.
@@ -54,7 +54,7 @@ XMLNamespaceScopeTest >> testDefaultNamespace [
 		deny: scope prefixMappings = oldPrefixMappings.
 
 	scope unmapPrefix: ''.
-	self assert: scope defaultNamespace isEmpty.
+	self assert: scope defaultNamespace = ''.
 ]
 
 { #category : #tests }
@@ -281,15 +281,15 @@ XMLNamespaceScopeTest >> testPrefixMappingAt [
 
 	scope := self newNamespaceScope.
 	self
-		assert: (scope prefixMappingAt: 'xml') isEmpty;
-		assert: (scope prefixMappingAt: 'xmlns') isEmpty.
+		assert: (scope prefixMappingAt: 'xml') = '';
+		assert: (scope prefixMappingAt: 'xmlns') = ''.
 
 	"cannot map xmlns prefix, but can map xml"
 	scope mapPrefix: 'xml' to: XMLNamespaceScope xmlNamespaceURI.
 	self assert: (scope prefixMappingAt: 'xml') = XMLNamespaceScope xmlNamespaceURI.
 
 	self namespaces keysAndValuesDo: [:prefix :uri |
-		self assert: (scope prefixMappingAt: prefix) isEmpty.
+		self assert: (scope prefixMappingAt: prefix) = ''.
 		scope mapPrefix: prefix to: uri.
 		self assert: (scope prefixMappingAt: prefix) = uri].
 ]
@@ -342,7 +342,7 @@ XMLNamespaceScopeTest >> testResolvePrefix [
 
 	scope := self newNamespaceScope.
 	self namespaces keysAndValuesDo: [:prefix :uri |
-		self assert: (scope resolvePrefix: prefix) isEmpty.
+		self assert: (scope resolvePrefix: prefix) = ''.
 		scope mapPrefix: prefix to: uri.
 		self assert: (scope resolvePrefix: prefix) = uri].
 

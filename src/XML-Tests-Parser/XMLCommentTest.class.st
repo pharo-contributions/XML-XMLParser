@@ -14,7 +14,7 @@ XMLCommentTest >> testAcceptNodeVisitor [
 	| visitor comment message |
 
 	visitor := XMLRecordingNodeVisitor new.
-	comment := self nodeClass new.
+	comment := self newNode.
 	self
 		assert: (comment acceptNodeVisitor: visitor) == comment;
 		assert: visitor messageRecorder hasMessages.
@@ -29,14 +29,17 @@ XMLCommentTest >> testAcceptNodeVisitor [
 { #category : #tests }
 XMLCommentTest >> testCanonicallyEquals [
 	super testCanonicallyEquals.
-	self
-		assert: ((self nodeClass string: 'test') canonicallyEquals: (self nodeClass string: 'test'));
-		deny: ((self nodeClass string: 'test') canonicallyEquals: self nodeClass new).
+	self assert:
+		((self nodeClass string: 'test') canonicallyEquals:
+			(self nodeClass string: 'test')).
+	self deny:
+		((self nodeClass string: 'test') canonicallyEquals:
+			self newNode).
 ]
 
 { #category : #tests }
 XMLCommentTest >> testIsComment [
-	self assert: self nodeClass new isComment
+	self assert: self newNode isComment
 ]
 
 { #category : #tests }
@@ -48,17 +51,26 @@ XMLCommentTest >> testSortKey [
 XMLCommentTest >> testString [
 	| comment |
 
-	comment := self nodeClass new.
-	self assert: comment string isEmpty.
+	comment := self nodeClass string: self markupString.
+	self
+		assert: comment class == self nodeClass;
+		assert: comment string = self markupString.
+
+	comment := self newNode.
+	self assert: comment string = ''.
+
 	comment string: self markupString.
 	self assert: comment string = self markupString.
 
-	self assert: (self nodeClass string: self markupString) string = self markupString.
+	comment string: ''.
+	self assert: comment string = ''.
 ]
 
 { #category : #tests }
 XMLCommentTest >> testWriteXMLOn [
 	self
-		assert: self nodeClass new printString = '<!---->';
-		assert: (self nodeClass string: self markupString) printString = ('<!--', self markupString, '-->')
+		assert: self newNode printString = '<!---->';
+		assert:
+			(self nodeClass string: self markupString) printString =
+				('<!--', self markupString, '-->')
 ]

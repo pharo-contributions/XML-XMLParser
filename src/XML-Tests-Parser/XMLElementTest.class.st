@@ -9,17 +9,9 @@ XMLElementTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #assertions }
-XMLElementTest >> assertElement: anElement hasAttributes: anAssociationCollection [
-	| attributeNodes |
-
-	self assert: anElement attributeNodes size = anAssociationCollection size.
-	attributeNodes := anElement attributeNodes copy.
-	anAssociationCollection associationsDo: [:each | | attributeNode |
-		attributeNode := attributeNodes removeFirst.
-		self
-			assert: attributeNode name = each key;
-			assert: attributeNode value = each value.]
+{ #category : #accessing }
+XMLElementTest >> attributeListClass [
+	^ XMLCachingAttributeList
 ]
 
 { #category : #'instance creation' }
@@ -39,7 +31,7 @@ XMLElementTest >> testAcceptNodeVisitor [
 	| visitor element message |
 
 	visitor := XMLRecordingNodeVisitor new.
-	element := self nodeClass new.
+	element := self newNode.
 	self
 		assert: (element acceptNodeVisitor: visitor) == element;
 		assert: visitor messageRecorder hasMessages.
@@ -65,7 +57,7 @@ XMLElementTest >> testAddElementNamed [
 
 	super testAddElementNamed.
 
-	element := self nodeClass new.
+	element := self newNode.
 	element
 		declarePrefix: 'prefix'
 		uri: 'prefixNS'.
@@ -85,7 +77,7 @@ XMLElementTest >> testAddElementNamedAttributes [
 
 	super testAddElementNamedAttributes.
 
-	element := self nodeClass new.
+	element := self newNode.
 	element
 		declarePrefix: 'prefix'
 		uri: 'prefixNS'.
@@ -100,7 +92,7 @@ XMLElementTest >> testAddElementNamedAttributes [
 		assert: element firstNode isElement;
 		assert: element firstNode name = 'prefix:test';
 		assert: element firstNode namespaceURI = 'prefixNS';
-		assert: element firstNode attributes = self attributes.
+		assertElement: element firstNode hasAttributes: self attributes.
 ]
 
 { #category : #tests }
@@ -119,8 +111,8 @@ XMLElementTest >> testAttributeAt [
 
 	element := self newElementWithAttributes.
 	element attributeNodes do: [:each |
-		self assert: (element attributeAt: each name) == each value].
-	self assert: (element attributeAt: 'absent') isEmpty.
+		self assert: (element attributeAt: each name) = each value].
+	self assert: (element attributeAt: 'absent') = ''.
 ]
 
 { #category : #tests }
@@ -175,8 +167,6 @@ XMLElementTest >> testAttributeListCopying [
 	self
 		assert: attributeListCopy = element attributeNodes;
 		deny: attributeListCopy == element attributeNodes;
-		assert: attributeListCopy attributeNodesByName = element attributeNodes attributeNodesByName;
-		deny: attributeListCopy attributeNodesByName == element attributeNodes attributeNodesByName;
 		assert: element attributeNodes observer == element;
 		assert: attributeListCopy observer isNil.
 ]
@@ -193,27 +183,28 @@ XMLElementTest >> testAttributeNames [
 
 { #category : #tests }
 XMLElementTest >> testAttributeNamesAndValuesDo [
-	| element pairs |
+	| element |
 
-	pairs := OrderedCollection new.
-	XMLElement new attributeNamesAndValuesDo: [:attributeName :attributeValue|
-		pairs add: attributeName -> attributeValue].
-	self assert: pairs isEmpty.
+	element := self newNode.
+	self
+		should: [:twoArgumentBlock |
+			element attributeNamesAndValuesDo: twoArgumentBlock]
+		enumerate: #()
+		and: #().
 
 	element := self newElementWithAttributes.
-	element attributeNamesAndValuesDo: [:attributeName :attributeValue|
-		pairs add: attributeName -> attributeValue].
-	self assert:
-		pairs =
-			((element attributeNodes collect: [:each |
-				each name -> each value]) asOrderedCollection).
+	self
+		should: [:twoArgumentBlock |
+			element attributeNamesAndValuesDo: twoArgumentBlock]
+		enumerate: self attributeNames
+		and: self attributeValues.
 ]
 
 { #category : #tests }
 XMLElementTest >> testAttributeNamesDo [
 	| element |
 
-	element := XMLElement new.
+	element := self newNode.
 	self
 		should: [:block | element attributeNamesDo: block]
 		enumerate: #().
@@ -298,44 +289,54 @@ XMLElementTest >> testAttributeNodeAtNamespaceURIIfAbsent [
 
 { #category : #tests }
 XMLElementTest >> testAttributeNodes [
-	| element nodes |
+	| element attributeNodes |
 
 	element := self newElementWithAttributes.
-	nodes := element attributeNodes.
-	self
-		assert: (nodes isKindOf: XMLAttributeList);
-		assert: nodes size = 4.
+	attributeNodes := element attributeNodes.
+	self assert: attributeNodes class == self attributeListClass.
 	self assert:
-		(nodes collect: [:each | each name]) asArray =
-			#('one' 'two' 'prefix:two' 'prefix:four').
-	self assert:
-		(nodes collect: [:each | each value]) asArray =
-			#('1' '2' '3' '4').
+		(attributeNodes collect: [:each | each name -> each value]) asArray
+			= self attributeAssociations asArray.
 ]
 
 { #category : #tests }
 XMLElementTest >> testAttributeNodesAdding [
-	| element attributeNodesCopy |
+	| element attributesAdded elementWithAttributes |
 
-	element := self newElementWithAttributes.
-	attributeNodesCopy := element attributeNodes copy.
-	attributeNodesCopy do: [:each |
-		element attributeNodes addLast: each].
-	self assert: element attributeNodes = attributeNodesCopy.
+	element := self newElement.
+	attributesAdded := element attributeNodes copyEmpty.
+	elementWithAttributes := self newElementWithAttributes.
 
-	attributeNodesCopy do: [:each |
+	"adding from another element should remove them from the previous element"
+	elementWithAttributes attributeNodes copy do: [:each |
+		attributesAdded addLast: each.
+		element attributeNodes addLast: each.
 		self
-			should: [
-				self newElementWithAttributes attributeNodes addLast: each]
-			raise: XMLDOMException].
+			assert: each element == element;
+			assert: each parent == element;
+			assert: element attributeNodes = attributesAdded;
+			deny: (elementWithAttributes attributeNodes includes: each)].
+
+	"adding already present nodes should move them in-place"
+	element attributeNodes reversed do: [:each |
+		attributesAdded
+			remove: each;
+			addLast: each.
+		element attributeNodes addLast: each.
+		self
+			assert: each element == element;
+			assert: each parent == element;
+			assert: element attributeNodes = attributesAdded]
 ]
 
 { #category : #tests }
 XMLElementTest >> testAttributeNodesDo [
 	| element |
 
-	element := self nodeClass new.
-	self should: [:block | element attributeNodesDo: block] enumerate: #().
+	element := self newNode.
+	self
+		should: [:block | element attributeNodesDo: block]
+		enumerate: #().
 
 	element := self newElementWithAttributes.
 	self
@@ -352,7 +353,7 @@ XMLElementTest >> testAttributePrefixAliasing [
 	self
 		should: [
 			element attributeNodes addLast:
-				(XMLAttribute named: 'alias:four')]
+				(self attributeClass named: 'alias:four')]
 		raise: XMLNamespaceException.
 
 	(element := self newElementWithAttributes)
@@ -367,7 +368,7 @@ XMLElementTest >> testAttributePrefixAliasing [
 	self
 		shouldnt: [
 			element attributeNodes addLast:
-				(XMLAttribute named: 'alias:four').
+				(self attributeClass named: 'alias:four').
 			(element attributeNodeAt: 'two') name: 'alias:two']
 		raise: XMLNamespaceException.
 ]
@@ -380,7 +381,7 @@ XMLElementTest >> testAttributePrefixUndeclared [
 	self
 		should: [
 			element attributeNodes add:
-				(XMLAttribute named: 'undeclared:newName')]
+				(self attributeClass named: 'undeclared:newName')]
 		raise: XMLNamespaceException.
 
 	element := self newElementWithAttributes.
@@ -394,7 +395,7 @@ XMLElementTest >> testAttributePrefixUndeclared [
 		shouldnt: [
 			element usesNamespaces: false.
 			element attributeNodes add:
-				(XMLAttribute named: 'undeclared:newName').
+				(self attributeClass named: 'undeclared:newName').
 			(element attributeNodeAt: 'one') name: 'undeclared:one']
 		raise: XMLNamespaceException.
 
@@ -437,7 +438,7 @@ XMLElementTest >> testAttributeSorting [
 	| element |
 
 	element :=
-		XMLElement
+		self nodeClass
 			name: 'sorted'
 			attributes: (Array with: 'c' -> '3' with: 'b' -> '2' with: 'a' -> '1').
 	self assert:
@@ -462,7 +463,7 @@ XMLElementTest >> testAttributes [
 	element := self newElementWithAttributes.
 	attributeDictionary := element attributes.
 	self
-		assert: attributeDictionary isDictionary;
+		assert: attributeDictionary class == self attributesClass;
 		assert: attributeDictionary size = element attributeNodes size.
 	self assert:
 		(element attributeNodes allSatisfy: [:each |
@@ -474,7 +475,7 @@ XMLElementTest >> testCanonicalPrinting [
 	| element |
 
 	element :=
-		XMLElement
+		self nodeClass
 			name: 'test'
 			namespaces: (Array with: 'b' -> 'ns2' with: 'a' -> 'ns1' with: '' -> 'default')
 			attributes: (Array with: 'c' -> '3' with: 'b' -> '2' with: 'a' -> '1').
@@ -491,12 +492,12 @@ XMLElementTest >> testCanonicalPrinting [
 XMLElementTest >> testDeclareNamespaces [
 	| element |
 
-	element := self nodeClass new.
+	element := self newNode.
 	element declareNamespaces: self namespaces.
 	self namespaces keysAndValuesDo: [:prefix :uri |
 		self assert: (element isDeclaredPrefix: prefix uri: uri)].
 
-	element := self nodeClass new.
+	element := self newNode.
 	element declareNamespaces: self namespaces associations.
 	self namespaces keysAndValuesDo: [:prefix :uri |
 		self assert: (element isDeclaredPrefix: prefix uri: uri)]
@@ -541,7 +542,7 @@ XMLElementTest >> testDeclarePrefixURI [
 XMLElementTest >> testDeclaredPrefixes [
 	| element prefixes |
 
-	element := self nodeClass new.
+	element := self newNode.
 	prefixes := OrderedCollection new.
 	self namespaces keysAndValuesDo: [:prefix :uri |
 		element
@@ -617,15 +618,15 @@ XMLElementTest >> testDefaultNamespace [
 		defaultNamespace: '';
 		allElementsDo: [:each |
 			(elementsWithDefaultNamespace includes: each)
-				ifTrue: [self assert: each defaultNamespace notEmpty]
-				ifFalse: [self assert: each defaultNamespace isEmpty]].
+				ifTrue: [self deny: each defaultNamespace = '']
+				ifFalse: [self assert: each defaultNamespace = '']].
 ]
 
 { #category : #tests }
 XMLElementTest >> testElementSorting [
 	| element |
 
-	(element := XMLElement name: 'sorted')
+	(element := self nodeClass named: 'sorted')
 		addElementNamed: 'c';
 		addElementNamed: 'b';
 		addElementNamed: 'a'.
@@ -664,7 +665,7 @@ XMLElementTest >> testExpandedName [
 { #category : #tests }
 XMLElementTest >> testHasAttributes [
 	self
-		deny: self nodeClass new hasAttributes;
+		deny: self newNode hasAttributes;
 		assert: self newElementWithAttributes hasAttributes;
 		deny: self newElementWithAttributes removeAttributes hasAttributes
 ]
@@ -693,7 +694,7 @@ XMLElementTest >> testHasNamespaceURI [
 XMLElementTest >> testHasNamespaces [
 	| element |
 
-	element := self nodeClass new.
+	element := self newNode.
 	self deny: element hasNamespaces.
 
 	element defaultNamespace: 'defaultNS'.
@@ -713,7 +714,7 @@ XMLElementTest >> testHasNamespaces [
 XMLElementTest >> testHasPrefix [
 	| element |
 
-	element := self nodeClass new.
+	element := self newNode.
 	self deny: element hasPrefix.
 
 	element name: 'one'.
@@ -789,7 +790,7 @@ XMLElementTest >> testIsDeclaredPrefixURI [
 
 { #category : #tests }
 XMLElementTest >> testIsElement [
-	self assert: self nodeClass new isElement
+	self assert: self newNode isElement
 ]
 
 { #category : #tests }
@@ -800,6 +801,7 @@ XMLElementTest >> testIsElementNamed [
 	self
 		assert: (element isElementNamed: 'one');
 		deny: (element isElementNamed: 'two').
+	
 	element name: 'one:two' namespaceURI: 'testNS'.
 	self
 		assert: (element isElementNamed: 'one:two');
@@ -815,6 +817,7 @@ XMLElementTest >> testIsElementNamedAny [
 	self
 		assert: (element isElementNamedAny: #('two' 'one' 'three'));
 		deny: (element isElementNamedAny: #('two' 'three')).
+
 	element name: 'one:two' namespaceURI: 'testNS'.
 	self
 		assert: (element isElementNamedAny: #('one' 'one:two' 'three'));
@@ -856,6 +859,7 @@ XMLElementTest >> testIsNamed [
 	self
 		assert: (element isNamed: 'one');
 		deny: (element isNamed: 'two').
+
 	element name: 'one:two' namespaceURI: 'testNS'.
 	self
 		assert: (element isNamed: 'one:two');
@@ -885,8 +889,10 @@ XMLElementTest >> testIsRoot [
 
 	element := self newNodeWithElements.
 	self assert: element allElements first isRoot.
+
 	element descendantElementsDo: [:each |
 		self deny: each isRoot].
+
 	(element removeNodes: element elements copy) do: [:each |
 		self assert: each isRoot].
 ]
@@ -895,43 +901,45 @@ XMLElementTest >> testIsRoot [
 XMLElementTest >> testLocalName [
 	| element |
 
-	element := self nodeClass new.
-	self assert: element name isEmpty.
+	element := self newNode.
+	self
+		assert: element localName = '';
+		assert: (element name: 'one') == element;
+		assert: element localName = 'one';
+		assert: (element name: 'two') == element;
+		assert: element localName = 'two'.
 
-	element name: 'one'.
-	self assert: element localName = 'one'.
-
-	element name: 'two'.
-	self assert: element localName = 'two'.
-
-	element declarePrefix: 'prefix' uri: 'prefixNS'.
-	element name: 'prefix:three'.
-	self assert: element localName = 'three'.
-
-	element name: 'four'.
-	self assert: element localName = 'four'.
+	element
+		declarePrefix: 'prefix'
+		uri: 'prefixNS'.
+	self
+		assert: (element name: 'prefix:three') == element;
+		assert: element localName = 'three';
+		assert: (element name: 'four') == element;
+		assert: element localName = 'four'.
 ]
 
 { #category : #tests }
 XMLElementTest >> testName [
 	| element |
 
+	"XMLElement class>>#name: is not tested here because it is soft-deprecated"
+
+	element := self newNode.
 	self
-		assert: (self nodeClass name: 'one') name = 'one';
-		should: [self nodeClass name: 'unmapped:two'] raise: XMLNamespaceException.
-	
-	element := self nodeClass new.
-	self assert: element name isEmpty.
-
-	element name: 'one'.
-	self assert: element name = 'one'.
-
-	element name: 'two'.
-	self assert: element name = 'two'.
-	self should: [element name: 'unmapped:two'] raise: XMLNamespaceException.
+		assert: element name = '';
+		assert: (element name: 'one') == element;
+		assert: element name = 'one';
+		assert: (element name: 'two') == element;
+		assert: element name = 'two'.
+	self
+		should: [element name: 'unmapped:two']
+		raise: XMLNamespaceException.
 
 	element usesNamespaces: false.
-	self shouldnt: [element name: 'unmapped:three'] raise: XMLNamespaceException.
+	self
+		shouldnt: [element name: 'unmapped:three']
+		raise: XMLNamespaceException.
 	self assert: element name = 'unmapped:three'.
 ]
 
@@ -946,19 +954,32 @@ XMLElementTest >> testNameAttributes [
 			name: 'one'
 			attributes: self unprefixedAttributeAssociations.
 	self
+		assert: element class == self nodeClass;
 		assert: element name = 'one';
 		assertElement: element hasAttributes: unprefixedAttributes.
 
-	element := self nodeClass name: 'two' attributes: unprefixedAttributes associations.
+	"attributes: should accept any collection of associations"
+	element :=
+		self nodeClass
+			name: 'two'
+			attributes: unprefixedAttributes associations.
 	self
 		assert: element name = 'two';
+		assert: element class == self nodeClass;
 		assertElement: element hasAttributes: unprefixedAttributes.
 
 	self
-		should: [self nodeClass name: 'undeclared:three' attributes: unprefixedAttributes]
+		should: [
+			self nodeClass
+				name: 'undeclared:three'
+				attributes: unprefixedAttributes]
 		raise: XMLNamespaceException.
+	"prefixed attributes are not accepted"
 	self
-		should: [self nodeClass name: 'four' attributes: attributes]
+		should: [
+			self nodeClass
+				name: 'four'
+				attributes: attributes]
 		raise: XMLNamespaceException.
 ]
 
@@ -966,16 +987,53 @@ XMLElementTest >> testNameAttributes [
 XMLElementTest >> testNameNamespaceURI [
 	| element |
 
-	element := self nodeClass new.
-	element name: 'one' namespaceURI: 'defaultNS'.
+	element :=
+		self nodeClass
+			name: 'one'
+			namespaceURI: 'defaultNS'.
+	self
+		assert: element class == self nodeClass;
+		assert: element name = 'one';
+		assert: element namespaceURI = 'defaultNS'.
+
+	element :=
+		self nodeClass
+			name: 'prefix:two'
+			namespaceURI: 'prefixNS'.
+	self
+		assert: element class == self nodeClass;
+		assert: element name = 'prefix:two';
+		assert: element namespaceURI = 'prefixNS'.
+	self
+		should: [
+			self nodeClass
+				name: 'prefix:three'
+				namespaceURI: '']
+		raise: XMLNamespaceException.
+
+	element := self newNode.
+	self assert:
+		(element
+			name: 'one'
+			namespaceURI: 'defaultNS') == element.
 	self
 		assert: element name = 'one';
 		assert: element namespaceURI = 'defaultNS'.
 
-	element := self nodeClass name: 'prefix:two' namespaceURI: 'prefixNS'.
+	self assert:
+		(element
+			name: 'prefix:two'
+			namespaceURI: 'prefixNS') == element.
 	self
 		assert: element name = 'prefix:two';
 		assert: element namespaceURI = 'prefixNS'.
+
+	self
+		should: [
+			element
+				name: 'prefix:three'
+				namespaceURI: '']
+		raise: XMLNamespaceException.
 ]
 
 { #category : #tests }
@@ -986,37 +1044,39 @@ XMLElementTest >> testNameNamespaceURIAttributes [
 	unprefixedAttributes := self unprefixedAttributes.
 	element :=
 		self nodeClass
-			name: 'prefix:one'
-			namespaceURI: 'prefixNS'
-			attributes: self attributeAssociations.
+			name: 'one'
+			namespaceURI: 'defaultNS'
+			attributes: unprefixedAttributes.
 	self
-		assert: element name = 'prefix:one';
-		assert: element namespaceURI = 'prefixNS';
-		assertElement: element hasAttributes: attributes.
+		assert: element class == self nodeClass;
+		assert: element name = 'one';
+		assert: element namespaceURI = 'defaultNS';
+		assertElement: element hasAttributes: unprefixedAttributes.
 
 	element :=
 		self nodeClass
-			name: 'two'
+			name: 'prefix:two'
 			namespaceURI: 'prefixNS'
-			attributes: unprefixedAttributes.
+			attributes: attributes associations.
 	self
-		assert: element name = 'two';
+		assert: element class == self nodeClass;
+		assert: element name = 'prefix:two';
 		assert: element namespaceURI = 'prefixNS';
-		assertElement: element hasAttributes: unprefixedAttributes.
+		assertElement: element hasAttributes: attributes.
 
-	"if the attributes have a prefix, then the element must have the same prefix
-	and the namespace must be non-empty"
+	"if the attributes have a prefix, then the element must have the
+	same prefix and the namespace must be non-empty"
 	self
 		should: [
 			self nodeClass
-				name: 'three'
-				namespaceURI: ''
+				name: 'three'  "no prefix"
+				namespaceURI: ''  "no namespace"
 				attributes: attributes]
 		raise: XMLNamespaceException.
 	self
 		should: [
 			self nodeClass
-				name: 'four'
+				name: 'four' "no prefix"
 				namespaceURI: 'prefixNS'
 				attributes: attributes]
 		raise: XMLNamespaceException.
@@ -1024,7 +1084,7 @@ XMLElementTest >> testNameNamespaceURIAttributes [
 		should: [
 			self nodeClass
 				name: 'prefix:five'
-				namespaceURI: ''
+				namespaceURI: ''  "no namespace"
 				attributes: unprefixedAttributes]
 		raise: XMLNamespaceException.
 ]
@@ -1033,13 +1093,37 @@ XMLElementTest >> testNameNamespaceURIAttributes [
 XMLElementTest >> testNameNamespaces [
 	| element |
 	
-	element := self nodeClass name: 'one' namespaces: self namespaces.
-	self assert: element namespaceURI = 'defaultNS'.
+	element :=
+		self nodeClass
+			name: 'one'
+			namespaces: self namespaces.
+	self
+		assert: element class == self nodeClass;
+		assert: element name = 'one';
+		assert: element namespaceURI = 'defaultNS'.
 	self namespaces keysAndValuesDo: [:prefix :uri |
 		self assert: (element isDeclaredPrefix: prefix uri: uri)].
 
-	element := self nodeClass name: 'two' namespaces: self namespaces associations.
-	self assert: element namespaceURI = 'defaultNS'.
+	"namespaces: should accept any collection of associations"
+	element :=
+		self nodeClass
+			name: 'two'
+			namespaces: self namespaces associations.
+	self
+		assert: element class == self nodeClass;
+		assert: element name = 'two';
+		assert: element namespaceURI = 'defaultNS'.
+	self namespaces keysAndValuesDo: [:prefix :uri |
+		self assert: (element isDeclaredPrefix: prefix uri: uri)].
+
+	element :=
+		self nodeClass
+			name: 'prefix:three'
+			namespaces: self namespaces.
+	self
+		assert: element class == self nodeClass;
+		assert: element name = 'prefix:three';
+		assert: element namespaceURI = 'prefixNS'.
 	self namespaces keysAndValuesDo: [:prefix :uri |
 		self assert: (element isDeclaredPrefix: prefix uri: uri)].
 
@@ -1061,6 +1145,8 @@ XMLElementTest >> testNameNamespacesAttributes [
 			namespaces: self namespaces
 			attributes: self attributes.
 	self
+		assert: element class == self nodeClass;
+		assert: element name = 'one';
 		assert: element namespaceURI = 'defaultNS';
 		assertElement: element hasAttributes: self attributes.
 	self namespaces keysAndValuesDo: [:prefix :uri |
@@ -1072,6 +1158,8 @@ XMLElementTest >> testNameNamespacesAttributes [
 			namespaces: self namespaces associations
 			attributes: self attributes associations.
 	self
+		assert: element class == self nodeClass;
+		assert: element name = 'two';
 		assert: element namespaceURI = 'defaultNS';
 		assertElement: element hasAttributes: self attributes.
 	self namespaces keysAndValuesDo: [:prefix :uri |
@@ -1095,28 +1183,36 @@ XMLElementTest >> testNameNamespacesAttributes [
 
 { #category : #tests }
 XMLElementTest >> testNamed [
+	| element |
+
+	element := self nodeClass named: 'test'.
 	self
-		assert: (self nodeClass named: 'test') name = 'test';
-		should: [self nodeClass named: 'undeclared:test'] raise: XMLNamespaceException
+		assert: element class == self nodeClass;
+		assert: element name = 'test'.
+	self
+		should: [self nodeClass named: 'undeclared:test']
+		raise: XMLNamespaceException.
 ]
 
 { #category : #tests }
 XMLElementTest >> testNamespaceURI [
 	| element |
 
-	element := self nodeClass new.
-	self assert: element namespaceURI isEmpty.
+	element := self newNode.
+	self assert: element namespaceURI = ''.
 
 	element defaultNamespace: 'defaultNS'.
 	self assert: element namespaceURI = 'defaultNS'.
 
-	element name: 'prefix:test' namespaceURI: 'prefixNS'.
+	element
+		name: 'prefix:test'
+		namespaceURI: 'prefixNS'.
 	self assert: element namespaceURI = 'prefixNS'.
 	
 	element
 		defaultNamespace: '';
 		name: 'test'.
-	self assert: element namespaceURI isEmpty.
+	self assert: element namespaceURI = ''.
 ]
 
 { #category : #tests }
@@ -1134,18 +1230,29 @@ XMLElementTest >> testNextElement [
 XMLElementTest >> testPrefix [
 	| element |
 
-	element := self nodeClass new.
-	self assert: element prefix isEmpty.
+	element := self newNode.
+	self
+		assert: element prefix = '';
+		assert: (element name: 'one') == element;
+		assert: element prefix = ''.
 
-	element name: 'one'.
-	self assert: element prefix isEmpty.
+	element
+		declarePrefix: 'prefix'
+		uri: 'prefixNS'.
+	self
+		assert: (element prefix: 'prefix') == element;
+		assert: element name = 'prefix:one';
+		assert: element prefix = 'prefix';
+		assert: (element name: 'prefix:two') == element;
+		assert: element name = 'prefix:two';
+		assert: element prefix = 'prefix';
+		assert: (element prefix: '') == element;
+		assert: element name = 'two';
+		assert: element prefix = ''.
 
-	element declarePrefix: 'prefix' uri: 'prefixNS'.
-	element name: 'prefix:two'.
-	self assert: element prefix = 'prefix'.
-
-	element name: 'three'.
-	self assert: element prefix isEmpty.
+	self
+		should: [element prefix: 'undeclared']
+		raise: XMLNamespaceException.
 ]
 
 { #category : #tests }
@@ -1164,11 +1271,11 @@ XMLElementTest >> testPrintingDefaultNamespaces [
 	| element |
 
 	element :=
-		XMLElement
+		self nodeClass
 			name: 'element'
 			namespaceURI: 'default'.
 	element addNode:
-		((XMLElement
+		((self nodeClass
 			name: 'element'
 			namespaceURI: '')
 			addElementNamed: 'empty';
@@ -1186,10 +1293,10 @@ XMLElementTest >> testPrintingNonRootNamespaces [
 	| element |
 
 	element :=
-		XMLElement
+		self nodeClass
 			name: 'element'.
 	element addNode:
-		(XMLElement
+		(self nodeClass
 			name: 'used:empty'
 			namespaces: (Array with: '' -> 'defaultNS' with: 'used' -> 'usedNS')).
 
@@ -1205,7 +1312,7 @@ XMLElementTest >> testPrintingRootNamespaces [
 	| element |
 
 	element :=
-		XMLElement
+		self nodeClass
 			name: 'used:element'
 			namespaces: (Array with: '' -> 'defaultNS' with: 'used' -> 'usedNS').
 	element addElementNamed: 'empty'.
@@ -1284,7 +1391,7 @@ XMLElementTest >> testRemoveAttributes [
 XMLElementTest >> testResolvePrefix [
 	| element |
 
-	element := self nodeClass new.
+	element := self newNode.
 	self namespaces keysAndValuesDo: [:prefix :uri |
 		self assert: (element resolvePrefix: prefix) = ''.
 		element declarePrefix: prefix uri: uri.
@@ -1301,7 +1408,7 @@ XMLElementTest >> testResolvePrefix [
 XMLElementTest >> testResolvePrefixIfUnresolvable [
 	| element |
 
-	element := self nodeClass new.
+	element := self newNode.
 	self namespaces keysAndValuesDo: [:prefix :uri |
 		self assert:
 			(element
@@ -1328,7 +1435,7 @@ XMLElementTest >> testResolvePrefixIfUnresolvable [
 XMLElementTest >> testResolvePrefixesOfNamespaceURI [
 	| element |
 
-	element := self nodeClass new.
+	element := self newNode.
 	self namespaces keysAndValuesDo: [:prefix :uri |
 		self assert: (element resolvePrefixesOfNamespaceURI: uri) isEmpty.
 
@@ -1460,7 +1567,7 @@ XMLElementTest >> testUndeclaringAttributePrefixes [
 XMLElementTest >> testWriteXMLOn [
 	| element attributes |
 
-	element := XMLElement named: 'element'.
+	element := self nodeClass named: 'element'.
 	self assert: element printString = '<element />'.
 	
 	element addString: 'test'.
@@ -1468,7 +1575,7 @@ XMLElementTest >> testWriteXMLOn [
 
 	"attribute order should be preserved when printing"
 	attributes :=
-		OrderPreservingStringDictionary
+		self attributesClass
 			with: 'b' -> 'one'
 			with: 'a' -> 'two'
 			with: 'c' -> 'three'

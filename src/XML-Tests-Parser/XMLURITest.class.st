@@ -774,7 +774,7 @@ XMLURITest >> testCopyWithScheme [
 			assert: uri hasAuthorityPrefix = oldHasAuthorityPrefix.
 		"If the original had no scheme and no // prefix, then the copy should
 		gain one. Otherwise it should only have one if the original did."
-		(oldScheme isEmpty
+		(oldScheme = ''
 			and: [oldHasAuthorityPrefix not])
 			ifTrue: [self assert: copy hasAuthorityPrefix]
 			ifFalse: [self assert: copy hasAuthorityPrefix = oldHasAuthorityPrefix].
@@ -936,23 +936,23 @@ XMLURITest >> testEquality [
 { #category : #tests }
 XMLURITest >> testFragment [
 	self
-		assert: '' asXMLURI fragment isEmpty;
-		assert: '/' asXMLURI fragment isEmpty;
-		assert: self absolute asXMLURI fragment isEmpty;
-		assert: self absoluteDir asXMLURI fragment isEmpty;
-		assert: self absoluteDirRelativeCombined asXMLURI fragment isEmpty;
-		assert: self absoluteRelativeCombined asXMLURI fragment isEmpty;
-		assert: self domainURIString asXMLURI fragment isEmpty;
-		assert: self domainURIWithPortString asXMLURI fragment isEmpty;
-		assert: self emailURIString asXMLURI fragment isEmpty;
-		assert: self fileURIWithHostString asXMLURI fragment isEmpty;
-		assert: self fileURIString asXMLURI fragment isEmpty;
+		assert: '' asXMLURI fragment = '';
+		assert: '/' asXMLURI fragment = '';
+		assert: self absolute asXMLURI fragment = '';
+		assert: self absoluteDir asXMLURI fragment = '';
+		assert: self absoluteDirRelativeCombined asXMLURI fragment = '';
+		assert: self absoluteRelativeCombined asXMLURI fragment = '';
+		assert: self domainURIString asXMLURI fragment = '';
+		assert: self domainURIWithPortString asXMLURI fragment = '';
+		assert: self emailURIString asXMLURI fragment = '';
+		assert: self fileURIWithHostString asXMLURI fragment = '';
+		assert: self fileURIString asXMLURI fragment = '';
 		assert: self fragmentURIString asXMLURI fragment = self fragment;
 		assert: self fullURIString asXMLURI fragment = self fragment;
 		assert: self fullURIWithPortString asXMLURI fragment = self fragment;
-		assert: self queryURIString asXMLURI fragment isEmpty;
-		assert: self relative asXMLURI fragment isEmpty;
-		assert: self relativeAbsoluteCombined asXMLURI fragment isEmpty;
+		assert: self queryURIString asXMLURI fragment = '';
+		assert: self relative asXMLURI fragment = '';
+		assert: self relativeAbsoluteCombined asXMLURI fragment = '';
 		assert: self schemelessURIString asXMLURI fragment = self fragment;
 		assert: self schemelessURIWithPortString asXMLURI fragment = self fragment
 ]
@@ -1266,23 +1266,23 @@ XMLURITest >> testHasUserInfo [
 { #category : #tests }
 XMLURITest >> testHost [
 	self
-		assert: '' asXMLURI host isEmpty;
-		assert: '/' asXMLURI host isEmpty;
-		assert: self absolute asXMLURI host isEmpty;
-		assert: self absoluteDir asXMLURI host isEmpty;
-		assert: self absoluteDirRelativeCombined asXMLURI host isEmpty;
-		assert: self absoluteRelativeCombined asXMLURI host isEmpty;
+		assert: '' asXMLURI host = '';
+		assert: '/' asXMLURI host = '';
+		assert: self absolute asXMLURI host = '';
+		assert: self absoluteDir asXMLURI host = '';
+		assert: self absoluteDirRelativeCombined asXMLURI host = '';
+		assert: self absoluteRelativeCombined asXMLURI host = '';
 		assert: self domainURIString asXMLURI host = self host;
 		assert: self domainURIWithPortString asXMLURI host = self host;
 		assert: self emailURIString asXMLURI host = self host;
 		assert: self fileURIWithHostString asXMLURI host = self host;
-		assert: self fileURIString asXMLURI host isEmpty;
-		assert: self fragmentURIString asXMLURI host isEmpty;
+		assert: self fileURIString asXMLURI host = '';
+		assert: self fragmentURIString asXMLURI host = '';
 		assert: self fullURIString asXMLURI host = self host;
 		assert: self fullURIWithPortString asXMLURI host = self host;
-		assert: self queryURIString asXMLURI host isEmpty;
-		assert: self relative asXMLURI host isEmpty;
-		assert: self relativeAbsoluteCombined asXMLURI host isEmpty;
+		assert: self queryURIString asXMLURI host = '';
+		assert: self relative asXMLURI host = '';
+		assert: self relativeAbsoluteCombined asXMLURI host = '';
 		assert: self schemelessURIString asXMLURI host = self host;
 		assert: self schemelessURIWithPortString asXMLURI host = self host
 ]
@@ -1335,7 +1335,7 @@ XMLURITest >> testIPv6Hosts [
 		assert: uri port = 80;
 		assert: uri path = self absolute;
 		assert: uri query isEmpty;
-		assert: uri fragment isEmpty.
+		assert: uri fragment = ''.
 	uri uriString: nil.
 	self assert: uri printString = uriString.
 
@@ -1347,7 +1347,7 @@ XMLURITest >> testIPv6Hosts [
 		assert: uri port isNil;
 		assert: uri path = self absolute;
 		assert: uri query isEmpty;
-		assert: uri fragment isEmpty.
+		assert: uri fragment = ''.
 	uri uriString: nil.
 	self assert: uri printString = uriString.
 ]
@@ -1404,7 +1404,7 @@ XMLURITest >> testIsEmpty [
 
 	self allURIStringsDo: [:each |
 		uri := each asXMLURI.
-		each isEmpty
+		each = ''
 			ifTrue: [self assert: uri isEmpty]
 			ifFalse: [self deny: uri isEmpty].
 
@@ -1541,21 +1541,21 @@ XMLURITest >> testParsingQueryString [
 { #category : #tests }
 XMLURITest >> testPath [
 	self
-		assert: '' asXMLURI path isEmpty;
+		assert: '' asXMLURI path = '';
 		assert: '/' asXMLURI path = '/';
 		assert: self absolute asXMLURI path = self absolute;
 		assert: self absoluteDir asXMLURI path = self absoluteDir;
 		assert: self absoluteDirRelativeCombined asXMLURI path = self absoluteDirRelativeCombined;
 		assert: self absoluteRelativeCombined asXMLURI path = self absoluteRelativeCombined;
-		assert: self domainURIString asXMLURI path isEmpty;
-		assert: self domainURIWithPortString asXMLURI path isEmpty;
-		assert: self emailURIString asXMLURI path isEmpty;
+		assert: self domainURIString asXMLURI path = '';
+		assert: self domainURIWithPortString asXMLURI path = '';
+		assert: self emailURIString asXMLURI path = '';
 		assert: self fileURIWithHostString asXMLURI path = self absolute;
 		assert: self fileURIString asXMLURI path = self absolute;
-		assert: self fragmentURIString asXMLURI path isEmpty;
+		assert: self fragmentURIString asXMLURI path = '';
 		assert: self fullURIString asXMLURI path = self absolute;
 		assert: self fullURIWithPortString asXMLURI path = self absolute;
-		assert: self queryURIString asXMLURI path isEmpty;
+		assert: self queryURIString asXMLURI path = '';
 		assert: self relative asXMLURI path = self relative;
 		assert: self relativeAbsoluteCombined asXMLURI path = self relativeAbsoluteCombined;
 		assert: self schemelessURIString asXMLURI path = self absolute;
@@ -1840,25 +1840,25 @@ XMLURITest >> testReadFrom [
 { #category : #tests }
 XMLURITest >> testScheme [
 	self
-		assert: '' asXMLURI scheme isEmpty;
-		assert: '/' asXMLURI scheme isEmpty;
-		assert: self absolute asXMLURI scheme isEmpty;
-		assert: self absoluteDir asXMLURI scheme isEmpty;
-		assert: self absoluteDirRelativeCombined asXMLURI scheme isEmpty;
-		assert: self absoluteRelativeCombined asXMLURI scheme isEmpty;
+		assert: '' asXMLURI scheme = '';
+		assert: '/' asXMLURI scheme = '';
+		assert: self absolute asXMLURI scheme = '';
+		assert: self absoluteDir asXMLURI scheme = '';
+		assert: self absoluteDirRelativeCombined asXMLURI scheme = '';
+		assert: self absoluteRelativeCombined asXMLURI scheme = '';
 		assert: self domainURIString asXMLURI scheme = 'http';
 		assert: self domainURIWithPortString asXMLURI scheme = 'http';
 		assert: self emailURIString asXMLURI scheme = 'mailto';
 		assert: self fileURIWithHostString asXMLURI scheme = 'file';
 		assert: self fileURIString asXMLURI scheme  = 'file';
-		assert: self fragmentURIString asXMLURI scheme isEmpty;
+		assert: self fragmentURIString asXMLURI scheme = '';
 		assert: self fullURIString asXMLURI scheme = 'http';
 		assert: self fullURIWithPortString asXMLURI scheme = 'http';
-		assert: self queryURIString asXMLURI scheme isEmpty;
-		assert: self relative asXMLURI scheme isEmpty;
-		assert: self relativeAbsoluteCombined asXMLURI scheme isEmpty;
-		assert: self schemelessURIString asXMLURI scheme isEmpty;
-		assert: self schemelessURIWithPortString asXMLURI scheme isEmpty
+		assert: self queryURIString asXMLURI scheme = '';
+		assert: self relative asXMLURI scheme = '';
+		assert: self relativeAbsoluteCombined asXMLURI scheme = '';
+		assert: self schemelessURIString asXMLURI scheme = '';
+		assert: self schemelessURIWithPortString asXMLURI scheme = ''
 ]
 
 { #category : #tests }
@@ -1952,7 +1952,7 @@ XMLURITest >> testUserInfo [
 		uri := each asXMLURI.
 		uri scheme = 'mailto'
 			ifTrue: [self assert: uri userInfo = 'userName']
-			ifFalse: [self assert: uri userInfo isEmpty]]
+			ifFalse: [self assert: uri userInfo = '']]
 ]
 
 { #category : #tests }

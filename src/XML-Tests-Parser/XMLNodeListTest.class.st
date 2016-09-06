@@ -18,17 +18,12 @@ XMLNodeListTest >> absentListItem [
 
 { #category : #accessing }
 XMLNodeListTest >> afterAddingToNotifications [
-	^ #(addedNode: addedElement:)
+	^ #(addedNode:)
 ]
 
 { #category : #accessing }
 XMLNodeListTest >> afterRemovingFromNotifications [
-	^ #(removedNode: removedElement:)
-]
-
-{ #category : #accessing }
-XMLNodeListTest >> beforeAddingToNotifications [
-	^ #(addingNode:)
+	^ #(removedNode:)
 ]
 
 { #category : #accessing }

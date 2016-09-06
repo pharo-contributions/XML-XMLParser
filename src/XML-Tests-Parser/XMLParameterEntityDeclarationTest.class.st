@@ -16,7 +16,7 @@ XMLParameterEntityDeclarationTest >> nodeClass [
 
 { #category : #tests }
 XMLParameterEntityDeclarationTest >> testIsParameter [
-	self assert: self nodeClass new isParameter
+	self assert: self newNode isParameter
 ]
 
 { #category : #tests }

@@ -15,22 +15,32 @@ XMLGeneralEntityDeclarationTest >> nodeClass [
 ]
 
 { #category : #tests }
+XMLGeneralEntityDeclarationTest >> testNData [
+	| declaration |
+
+	declaration := self newNode.
+	self
+		assert: declaration ndata = '';
+		assert: (declaration ndata: 'test') == declaration;
+		assert: declaration ndata = 'test'.
+]
+
+{ #category : #tests }
 XMLGeneralEntityDeclarationTest >> testNamePublicIDSystemIDNdata [
 	| declaration |
 
-	declaration := self nodeClass name: 'one' publicID: 'two' systemID: 'three' ndata: 'four'.
+	declaration :=
+		self nodeClass
+			name: 'one'
+			publicID: 'two'
+			systemID: 'three'
+			ndata: 'four'.
 	self
+		assert: declaration class == self nodeClass;
 		assert: declaration name = 'one';
 		assert: declaration publicID = 'two';
 		assert: declaration systemID = 'three';
 		assert: declaration ndata = 'four'.
-]
-
-{ #category : #tests }
-XMLGeneralEntityDeclarationTest >> testNdata [
-	self
-		assert: self nodeClass new ndata isEmpty;
-		assert: (self nodeClass new ndata: 'test') ndata = 'test'
 ]
 
 { #category : #tests }

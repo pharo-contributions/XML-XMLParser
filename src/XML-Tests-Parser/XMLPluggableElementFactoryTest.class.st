@@ -15,6 +15,11 @@ XMLPluggableElementFactoryTest >> defaultElementClass [
 ]
 
 { #category : #accessing }
+XMLPluggableElementFactoryTest >> elementClassMapperClass [
+	^ XMLBasicElementClassMapper
+]
+
+{ #category : #accessing }
 XMLPluggableElementFactoryTest >> factoryClass [
 	^ XMLPluggableElementFactory
 ]
@@ -180,12 +185,13 @@ XMLPluggableElementFactoryTest >> testElementClassAccessor [
 
 { #category : #tests }
 XMLPluggableElementFactoryTest >> testElementClassMapper [
-	| factory newMapper |
+	| factory oldMapper newMapper |
 
 	factory := self newFactoryWithClasses.
-	self assert: (factory elementClassMapper isKindOf: XMLElementClassMapper).
+	oldMapper := factory elementClassMapper.
+	self assert: oldMapper class == self elementClassMapperClass.
 
-	newMapper := XMLBasicElementClassMapper new.
+	newMapper := self elementClassMapperClass new.
 	self
 		assert: (factory elementClassMapper: newMapper) == factory;
 		assert: factory elementClassMapper == newMapper.
@@ -291,9 +297,9 @@ XMLPluggableElementFactoryTest >> testHandleElementsMatchingClass [
 
 	document root elementsDo: [:element |
 			self
-				assert: (element isKindOf: XMLFUserElement);
-				assert: (element elements first isKindOf: XMLFUsernameElement);
-				assert: (element elements second isKindOf: XMLFRealNameElement)].
+				assert: (element class == XMLFUserElement);
+				assert: (element elements first class == XMLFUsernameElement);
+				assert: (element elements second class == XMLFRealNameElement)].
 ]
 
 { #category : #tests }
@@ -313,9 +319,9 @@ XMLPluggableElementFactoryTest >> testHandleElementsMatchingClasses [
 
 	document root elementsDo: [:element |
 			self
-				assert: (element isKindOf: XMLFUserElement);
-				assert: (element elements first isKindOf: XMLFUsernameElement);
-				assert: (element elements second isKindOf: XMLFRealNameElement)].
+				assert: (element class == XMLFUserElement);
+				assert: (element elements first class == XMLFUsernameElement);
+				assert: (element elements second class == XMLFRealNameElement)].
 ]
 
 { #category : #accessing }

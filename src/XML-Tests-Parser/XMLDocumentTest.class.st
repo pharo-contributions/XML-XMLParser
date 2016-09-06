@@ -26,7 +26,7 @@ XMLDocumentTest >> testAcceptNodeVisitor [
 	| visitor document message |
 
 	visitor := XMLRecordingNodeVisitor new.
-	document := self nodeClass new.
+	document := self newNode.
 	self
 		assert: (document acceptNodeVisitor: visitor) == document;
 		assert: visitor messageRecorder hasMessages.
@@ -48,22 +48,31 @@ XMLDocumentTest >> testAcceptNodeVisitor [
 
 { #category : #tests }
 XMLDocumentTest >> testDoctypeDeclaration [
-	| document doctypeDeclaration |
+	| document doctypeDeclaration newDocument |
 
-	document := self nodeClass new.
+	document := self newNode.
 	self assert: document doctypeDeclaration isNil.
+
 	doctypeDeclaration := XMLDoctypeDeclaration new.
 	self
 		assert: (document doctypeDeclaration: doctypeDeclaration) == document;
 		assert: document doctypeDeclaration == doctypeDeclaration;
 		assert: doctypeDeclaration parent == document.
-	self
-		should: [self nodeClass new doctypeDeclaration: document doctypeDeclaration]
-		raise: XMLDOMException.
 
-	document doctypeDeclaration: nil.
+	"adding a doctypeDeclaration from another doc should remove it from the
+	other doc"
+	newDocument := self newNode.
 	self
-		assert: document doctypeDeclaration isNil;
+		assert:
+			(newDocument doctypeDeclaration: document doctypeDeclaration) ==
+				newDocument;
+		assert: newDocument doctypeDeclaration == doctypeDeclaration;
+		assert: newDocument doctypeDeclaration parent == newDocument;
+		assert: document doctypeDeclaration isNil.
+
+	newDocument doctypeDeclaration: nil.
+	self
+		assert: newDocument doctypeDeclaration isNil;
 		assert: doctypeDeclaration parent isNil.
 ]
 
@@ -71,8 +80,9 @@ XMLDocumentTest >> testDoctypeDeclaration [
 XMLDocumentTest >> testDoctypeDefinition [
 	| document doctypeDefinition |
 
-	document := self nodeClass new.
+	document := self newNode.
 	self assert: document doctypeDefinition isNil.
+
 	doctypeDefinition := DTDDoctypeDefinition new.
 	self
 		assert: (document doctypeDefinition: doctypeDefinition) == document;
@@ -85,7 +95,7 @@ XMLDocumentTest >> testDocument [
 
 	super testDocument.
 
-	document := self nodeClass new.
+	document := self newNode.
 	self assert: document document == document.
 
 	document := self newNodeWithElements.
@@ -94,19 +104,25 @@ XMLDocumentTest >> testDocument [
 
 { #category : #tests }
 XMLDocumentTest >> testEncoding [
+	| document |
+
+	document := self newNode.
 	self
-		assert: self nodeClass new encoding isEmpty;
-		assert: ((self nodeClass new encoding: 'UTF-8') encoding) = 'UTF-8'.
+		assert: document encoding = '';
+		assert: (document encoding: 'UTF-8') == document;
+		assert: document encoding = 'UTF-8'.
 ]
 
 { #category : #tests }
 XMLDocumentTest >> testHasDoctypeDeclaration [
 	| document |
 
-	document := self nodeClass new.
+	document := self newNode.
 	self deny: document hasDoctypeDeclaration.
+
 	document doctypeDeclaration: XMLDoctypeDeclaration new.	
 	self assert: document hasDoctypeDeclaration.
+
 	document doctypeDeclaration: nil.
 	self deny: document hasDoctypeDeclaration.
 ]
@@ -115,10 +131,12 @@ XMLDocumentTest >> testHasDoctypeDeclaration [
 XMLDocumentTest >> testHasDoctypeDefinition [
 	| document |
 
-	document := self nodeClass new.
+	document := self newNode.
 	self deny: document hasDoctypeDefinition.
+
 	document doctypeDefinition: DTDDoctypeDefinition new.
 	self assert: document hasDoctypeDefinition.
+
 	document doctypeDefinition: nil.
 	self deny: document hasDoctypeDefinition.
 ]
@@ -127,10 +145,12 @@ XMLDocumentTest >> testHasDoctypeDefinition [
 XMLDocumentTest >> testHasEncoding [
 	| document |
 
-	document := self nodeClass new.
+	document := self newNode.
 	self deny: document hasEncoding.
+
 	document encoding: 'UTF-8'.
 	self assert: document hasEncoding.
+
 	document encoding: ''.
 	self deny: document hasEncoding.
 ]
@@ -139,52 +159,63 @@ XMLDocumentTest >> testHasEncoding [
 XMLDocumentTest >> testHasRoot [
 	| nodeWithElements |
 
-	self deny: self nodeClass new hasRoot.
+	self deny: self newNode hasRoot.
 	nodeWithElements := self newNodeWithElements.
+
 	self assert: nodeWithElements hasRoot.
+
 	nodeWithElements removeNode: nodeWithElements root.
 	self deny: nodeWithElements hasRoot.
 ]
 
 { #category : #tests }
 XMLDocumentTest >> testIsDocument [
-	self assert: self nodeClass new isDocument
+	self assert: self newNode isDocument
 ]
 
 { #category : #tests }
 XMLDocumentTest >> testIsStandalone [
+	| document |
+
+	document := self newNode.
 	self
-		deny: self nodeClass new isStandalone;
-		assert: (self nodeClass new isStandalone: true) isStandalone
+		deny: document isStandalone;
+		assert: (document isStandalone: true) == document;
+		assert: document isStandalone.
 ]
 
 { #category : #tests }
 XMLDocumentTest >> testRoot [
-	| nodeWithElements documentNodes newRoot |
+	| document documentNodes newRoot |
 
-	self assert: self nodeClass new root isNil.
+	newRoot := self newElementWithAttributes.
+	document := self nodeClass root: newRoot.
+	self
+		assert: document class == self nodeClass;
+		assert: document root == newRoot.
+	 
+	self assert: self newNode root isNil.
 
-	nodeWithElements := self newNodeWithElements.
-	documentNodes := nodeWithElements nodes.
+	document := self newNodeWithElements.
+	documentNodes := document nodes.
 	self
 		assert: documentNodes size = 3;
 		assert: documentNodes first isComment;
 		assert: (documentNodes second isElementNamed: 'zero');
 		assert: documentNodes third isComment;
-		assert: nodeWithElements root == documentNodes second.
+		assert: document root == documentNodes second.
 
-	newRoot := XMLElement named: 'new-root'.
-	documentNodes at: 2 put: newRoot.
+	newRoot := self elementClass named: 'new-root'.
 	self
-		assert: (nodeWithElements root: newRoot) == nodeWithElements;
-		assert: nodeWithElements root == newRoot;
-		assert: nodeWithElements nodes = documentNodes.
+		assert: (document root: newRoot) == document;
+		assert: document root == newRoot;
+		assert: document nodes = documentNodes.
 
-	nodeWithElements removeNodes.
-	self assert: nodeWithElements root isNil.
+	document removeNodes.
+	self assert: document root isNil.
 
 	self
-		should: [nodeWithElements root: 'test' asXMLStringNode]
+		should: [document root: 'test' asXMLStringNode]
 		raise: XMLDOMException.
 ]
 
@@ -329,7 +360,11 @@ XMLDocumentTest >> testValidateNoSubset [
 
 { #category : #tests }
 XMLDocumentTest >> testVersion [
+	| document |
+
+	document := self newNode.
 	self
-		assert: self nodeClass new version isNil;
-		assert: (self nodeClass new version: 1.0) version = 1.0
+		assert: document version isNil;
+		assert: (document version: 1.0) == document;
+		assert: document version = 1.0.
 ]

@@ -28,6 +28,8 @@ XMLExceptionRaisingReadStream >> close [
 	isClosed
 		ifTrue: [Error signal: 'Cannot close already closed stream']
 		ifFalse: [
+			"must use respondsTo: to support streams only implementing the basic
+			protocol"
 			(stream respondsTo: #close)
 				ifTrue: [stream close].
 			isClosed := true]

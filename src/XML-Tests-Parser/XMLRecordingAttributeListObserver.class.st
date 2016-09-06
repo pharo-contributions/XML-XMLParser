@@ -16,14 +16,6 @@ XMLRecordingAttributeListObserver >> addedAttribute: anAttribute [
 ]
 
 { #category : #notifying }
-XMLRecordingAttributeListObserver >> addingAttribute: anAttribute [
-	self messageRecorder
-		recordMessageReceiver: self
-		selector: #addingAttribute:
-		arguments: (Array with: anAttribute)
-]
-
-{ #category : #notifying }
 XMLRecordingAttributeListObserver >> removedAttribute: anAttribute [
 	self messageRecorder
 		recordMessageReceiver: self

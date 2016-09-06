@@ -20,90 +20,78 @@ XMLObservableListTest >> afterRemovingFromNotifications [
 ]
 
 { #category : #assertions }
-XMLObservableListTest >> assertList: aList copiedFrom: aSecondList equals: aThirdList [
+XMLObservableListTest >> assertList: aFirstList copiedFrom: aSecondList equals: aThirdList [
 	super
-		assertList: aList
+		assertList: aFirstList
 		copiedFrom: aSecondList
 		equals: aThirdList.
-	self denyList: aList sharesObserverWith: aSecondList.
+	self
+		denyList: aFirstList
+		sharesObserverWith: aSecondList.
 ]
 
 { #category : #assertions }
-XMLObservableListTest >> assertList: aList isCopyOf: aSecondList [
-	super assertList: aList isCopyOf: aSecondList.
-	self denyList: aList sharesObserverWith: aSecondList.
+XMLObservableListTest >> assertList: aFirstList isCopyOf: aSecondList [
+	super
+		assertList: aFirstList
+		isCopyOf: aSecondList.
+	self
+		denyList: aFirstList
+		sharesObserverWith: aSecondList.
 ]
 
 { #category : #assertions }
-XMLObservableListTest >> assertList: aList receivedNotificationOfAdding: anElement [
+XMLObservableListTest >> assertList: aList receivedNotificationOfAdding: anObject [
 	self
 		assertList: aList
-		receivedNotificationOfBeforeAdding: anElement;
-		assertList: aList
-		receivedNotificationOfAfterAdding: anElement
+		receivedNotificationOfAfterAdding: anObject
 ]
 
 { #category : #assertions }
-XMLObservableListTest >> assertList: aList receivedNotificationOfAfterAdding: anElement [
+XMLObservableListTest >> assertList: aList receivedNotificationOfAfterAdding: anObject [
 	self
 		assertNotification: aList observer nextNotification
-		forElement: anElement
-		andList: aList
+		for: anObject
+		withList: aList
 		hasType: self afterAddingToNotifications
 ]
 
 { #category : #assertions }
-XMLObservableListTest >> assertList: aList receivedNotificationOfBeforeAdding: anElement [
+XMLObservableListTest >> assertList: aList receivedNotificationOfRemoving: anObject [
 	self
 		assertNotification: aList observer nextNotification
-		forElement: anElement
-		andList: aList
-		hasType: self beforeAddingToNotifications
-]
-
-{ #category : #assertions }
-XMLObservableListTest >> assertList: aList receivedNotificationOfRemoving: anElement [
-	self
-		assertNotification: aList observer nextNotification
-		forElement: anElement
-		andList: aList
+		for: anObject
+		withList: aList
 		hasType: self afterRemovingFromNotifications
 ]
 
 { #category : #assertions }
-XMLObservableListTest >> assertList: aList receivedNotificationOfReplacing: anOldElement with: aNewElement [
+XMLObservableListTest >> assertList: aList receivedNotificationOfReplacing: anOldObject with: aNewObject [
 	self
 		assertList: aList
-		receivedNotificationOfBeforeAdding: aNewElement.
+		receivedNotificationOfRemoving: anOldObject.
 	self
 		assertList: aList
-		receivedNotificationOfRemoving: anOldElement.
-	self
-		assertList: aList
-		receivedNotificationOfAfterAdding: aNewElement.
+		receivedNotificationOfAfterAdding: aNewObject.
 ]
 
 { #category : #assertions }
-XMLObservableListTest >> assertNotification: aNotification forElement: anElement andList: aList hasType: aSelectorColleciton [
-	self assert: (aSelectorColleciton includes: aNotification selector).
+XMLObservableListTest >> assertNotification: aNotification for: anObject withList: aList hasType: aSelectorCollection [
+	self
+		assert: aNotification notNil;
+		assert: (aSelectorCollection includes: aNotification selector).
 	self assert:
 		aNotification arguments =
-			((Array with: anElement with: aList)
+			((Array with: anObject with: aList)
 				copyFrom: 1
 				to: (aNotification selector asString occurrencesOf: $:)).
 ]
 
-{ #category : #accessing }
-XMLObservableListTest >> beforeAddingToNotifications [
-	^ #(adding:to:)
-]
-
 { #category : #assertions }
-XMLObservableListTest >> denyList: aList sharesObserverWith: aSecondList [
+XMLObservableListTest >> denyList: aFirstList sharesObserverWith: aSecondList [
 	self deny:
-		(aList observer notNil
-			and: [aSecondList observer notNil
-				and: [aList observer == aSecondList observer]])
+		(aFirstList observer notNil
+			and: [aFirstList observer == aSecondList observer])
 ]
 
 { #category : #accessing }
@@ -153,18 +141,18 @@ XMLObservableListTest >> observerOnList: aList [
 ]
 
 { #category : #assertions }
-XMLObservableListTest >> should: aBlock add: anElement toAndNotify: aList [
+XMLObservableListTest >> should: aBlock add: anObject toAndNotify: aList [
 	self
 		should: aBlock
-		addAll: (Array with: anElement)
+		addAll: (Array with: anObject)
 		toAndNotify: aList
 ]
 
 { #category : #assertions }
-XMLObservableListTest >> should: aBlock addAll: anElementCollection toAndNotify: aList [
+XMLObservableListTest >> should: aBlock addAll: aCollection toAndNotify: aList [
 	aList observer clearNotifications.
 	aBlock value.
-	anElementCollection do: [:each |
+	aCollection do: [:each |
 		self assert: (aList includes: each).
 		self 
 			assertList: aList
@@ -172,18 +160,18 @@ XMLObservableListTest >> should: aBlock addAll: anElementCollection toAndNotify:
 ]
 
 { #category : #assertions }
-XMLObservableListTest >> should: aBlock remove: anElement fromAndNotify: aList [
+XMLObservableListTest >> should: aBlock remove: anObject fromAndNotify: aList [
 	self
 		should: aBlock
-		removeAll: (Array with: anElement)
+		removeAll: (Array with: anObject)
 		fromAndNotify: aList
 ]
 
 { #category : #assertions }
-XMLObservableListTest >> should: aBlock removeAll: anElementCollection fromAndNotify: aList [
+XMLObservableListTest >> should: aBlock removeAll: aCollection fromAndNotify: aList [
 	aList observer clearNotifications.
 	aBlock value.
-	anElementCollection do: [:each |
+	aCollection do: [:each |
 		self deny: (aList includes: each).
 		self
 			assertList: aList
@@ -359,9 +347,6 @@ XMLObservableListTest >> testAtPut [
 	self
 		should: [list at: list size + 2 put: self newListItem]
 		raise: Error.
-	self
-		assertList: list
-		receivedNotificationOfBeforeAdding: self newListItem.
 	self deny: list observer hasNotifications.
 ]
 

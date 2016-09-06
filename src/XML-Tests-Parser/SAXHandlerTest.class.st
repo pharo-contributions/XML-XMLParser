@@ -4,6 +4,16 @@ Class {
 	#category : #'XML-Tests-Parser'
 }
 
+{ #category : #accessing }
+SAXHandlerTest >> configurationClass [
+	^ XMLConfiguration
+]
+
+{ #category : #accessing }
+SAXHandlerTest >> externalEntityResolverClass [
+	^ DTDCachingExternalEntityResolver
+]
+
 { #category : #source }
 SAXHandlerTest >> generalEntityXMLSource [
 	^ '
@@ -193,12 +203,12 @@ SAXHandlerTest >> testConfiguration [
 
 	parser := SAXHandler on: self prefixedXMLSource.
 	oldConfiguration := parser configuration.
-	self assert: (oldConfiguration isKindOf: XMLConfiguration).
+	self assert: oldConfiguration class == self configurationClass.
 
-	newConfiguration := XMLConfiguration new.
+	newConfiguration := self configurationClass new.
 	self
 		assert: (parser configuration: newConfiguration) == parser;
-		assert: parser configuration == newConfiguration.
+		assert: parser configuration class == self configurationClass.
 ]
 
 { #category : #tests }
@@ -437,12 +447,13 @@ SAXHandlerTest >> testEndPrefixMapping [
 
 { #category : #tests }
 SAXHandlerTest >> testExternalEntityResolver [
-	| parser newResolver |
+	| parser oldResolver newResolver |
 
 	parser := SAXHandler on: self prefixedXMLSource.
-	self assert: (parser externalEntityResolver isKindOf: DTDExternalEntityResolver).
+	oldResolver := parser externalEntityResolver.
+	self assert: oldResolver class == self externalEntityResolverClass.
 
-	newResolver := DTDExternalEntityResolver default.
+	newResolver := self externalEntityResolverClass new.
 	self
 		assert: (parser externalEntityResolver: newResolver) == parser;
 		assert: parser externalEntityResolver == newResolver.

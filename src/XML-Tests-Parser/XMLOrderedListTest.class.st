@@ -201,6 +201,21 @@ XMLOrderedListTest >> should: aBlock enumerate: aCollection [
 	self assert: enumerated = aCollection asOrderedCollection.
 ]
 
+{ #category : #assertions }
+XMLOrderedListTest >> should: aBlock enumerate: aFirstCollection and: aSecondCollection [
+	| firstEnumerated secondEnumerated |
+
+	firstEnumerated := OrderedCollection new.
+	secondEnumerated := OrderedCollection new.
+	aBlock
+		value: [:first :second |
+			firstEnumerated addLast: first.
+			secondEnumerated addLast: second].
+	self
+		assert: firstEnumerated = aFirstCollection asOrderedCollection;
+		assert: secondEnumerated = aSecondCollection asOrderedCollection.
+]
+
 { #category : #accessing }
 XMLOrderedListTest >> singleListItem [
 	^ self listItems first
@@ -1329,16 +1344,22 @@ XMLOrderedListTest >> testOfSize [
 
 { #category : #tests }
 XMLOrderedListTest >> testPairsDo [
-	| pairs |
+	"does not require the receiver to have an even number of items"
 
-	0 to: self listItems size do: [:i |
-		pairs := OrderedCollection new.
-		(self listClass newFrom: (self listItems allButLast: i))
-			pairsDo: [:a :b | pairs addLast: a -> b].
-		
-		(self listItems allButLast: i) pairsDo: [:a :b |
-			self assert: pairs removeFirst = (a -> b)].
-		self assert: pairs isEmpty].
+	0 to: self listItems size do: [:i | | list odd even |
+		list := self listClass newFrom: (self listItems allButLast: i).
+		odd := OrderedCollection new.
+		even := OrderedCollection new.
+		list withIndexDo: [:each :oddOrEven |
+			oddOrEven odd
+				ifTrue: [
+					oddOrEven < list size
+						ifTrue: [odd addLast: each]]
+				ifFalse: [even addLast: each]].
+		self
+			should: [:twoArgumentBlock | list pairsDo: twoArgumentBlock]
+			enumerate: odd
+			and: even]
 ]
 
 { #category : #tests }
@@ -1435,15 +1456,17 @@ XMLOrderedListTest >> testRemoveIfAbsent [
 	| list |
 
 	list := self listWithItems.
-	self assert:
-		(list
-			remove: self singleListItem
-			ifAbsent: [self absentListItem]) = self singleListItem.
-	self deny: (list includes: self singleListItem).
-	self assert:
-		(list
-			remove: self singleListItem
-			ifAbsent: [self absentListItem]) = self absentListItem.
+	self listItems do: [:each |
+		self assert:
+			(list
+				remove: each
+				ifAbsent: [self absentListItem]) = each.
+		self deny: (list includes: each).
+
+		self assert:
+			(list
+				remove: each
+				ifAbsent: [self absentListItem]) = self absentListItem].
 ]
 
 { #category : #tests }

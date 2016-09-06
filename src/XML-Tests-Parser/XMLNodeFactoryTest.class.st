@@ -31,6 +31,11 @@ XMLNodeFactoryTest >> newFactory [
 	^ self factoryClass new
 ]
 
+{ #category : #accessing }
+XMLNodeFactoryTest >> pluggableFactoryClass [
+	^ XMLPluggableNodeFactory 
+]
+
 { #category : #'source XML' }
 XMLNodeFactoryTest >> sampleUserXML [
 	^
@@ -62,14 +67,20 @@ XMLNodeFactoryTest >> testAsPluggableNodeFactory [
 
 	factory := self factoryClass new.
 	pluggableFactory := factory asPluggableNodeFactory.
-	self
-		assert: (pluggableFactory isKindOf: XMLPluggableNodeFactory);
-		deny: pluggableFactory == factory.
+	self assert: pluggableFactory class == self pluggableFactoryClass.
+	factory class == self pluggableFactoryClass
+		ifTrue: [self assert: pluggableFactory == factory]
+		ifFalse: [self deny: pluggableFactory == factory].
 ]
 
 { #category : #tests }
 XMLNodeFactoryTest >> testAttributeDeclarationClass [
 	self assert: self newFactory attributeDeclarationClass == XMLAttributeDeclaration
+]
+
+{ #category : #tests }
+XMLNodeFactoryTest >> testAttributeListClass [
+	self assert: self newFactory attributeListClass == XMLCachingAttributeList
 ]
 
 { #category : #tests }

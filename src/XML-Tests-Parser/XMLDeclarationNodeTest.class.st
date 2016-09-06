@@ -19,5 +19,5 @@ XMLDeclarationNodeTest >> nodeClass [
 
 { #category : #tests }
 XMLDeclarationNodeTest >> testIsDeclaration [
-	self assert: self nodeClass new isDeclaration
+	self assert: self newNode isDeclaration
 ]

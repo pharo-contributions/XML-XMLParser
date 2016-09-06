@@ -16,30 +16,46 @@ XMLAttributeDeclarationTest >> nodeClass [
 
 { #category : #tests }
 XMLAttributeDeclarationTest >> testAttribute [
+	| declaration |
+
+	declaration := self newNode.
 	self
-		assert: self nodeClass new attribute isEmpty;
-		assert: (self nodeClass new attribute: 'test') attribute = 'test'
+		assert: declaration attribute = '';
+		assert: (declaration attribute: 'test') == declaration;
+		assert: declaration attribute = 'test'.
 ]
 
 { #category : #tests }
 XMLAttributeDeclarationTest >> testDefaultPragma [
+	| declaration |
+
+	declaration := self newNode.
 	self
-		assert: self nodeClass new defaultPragma isEmpty;
-		assert: (self nodeClass new defaultPragma: 'REQUIRED') defaultPragma = 'REQUIRED'
+		assert: declaration defaultPragma = '';
+		assert: (declaration defaultPragma: 'REQUIRED') == declaration;
+		assert: declaration defaultPragma = 'REQUIRED'.
 ]
 
 { #category : #tests }
 XMLAttributeDeclarationTest >> testDefaultValue [
+	| declaration |
+
+	declaration := self newNode.
 	self
-		assert: self nodeClass new defaultValue isEmpty;
-		assert: (self nodeClass new defaultValue: 'test') defaultValue = 'test'
+		assert: declaration defaultValue = '';
+		assert: (declaration defaultValue: 'test') == declaration;
+		assert: declaration defaultValue = 'test'.
 ]
 
 { #category : #tests }
 XMLAttributeDeclarationTest >> testElement [
+	| declaration |
+
+	declaration := self newNode.
 	self
-		assert: self nodeClass new element isEmpty;
-		assert: (self nodeClass new element: 'test') element = 'test'
+		assert: declaration element = '';
+		assert: (declaration element: 'test') == declaration;
+		assert: declaration element = 'test'.
 ]
 
 { #category : #tests }
@@ -54,6 +70,7 @@ XMLAttributeDeclarationTest >> testElementAttributeTypeDefaultPragmaDefaultValue
 			defaultPragma: '#IMPLIED'
 			defaultValue: 'default'.
 	self
+		assert: declaration class == self nodeClass;
 		assert: declaration element = 'one';
 		assert: declaration attribute = 'two';
 		assert: declaration type = 'CDATA';
@@ -63,9 +80,13 @@ XMLAttributeDeclarationTest >> testElementAttributeTypeDefaultPragmaDefaultValue
 
 { #category : #tests }
 XMLAttributeDeclarationTest >> testType [
+	| declaration |
+
+	declaration := self newNode.
 	self
-		assert: self nodeClass new type isEmpty;
-		assert: (self nodeClass new type: 'CDATA') type = 'CDATA'
+		assert: declaration type = '';
+		assert: (declaration type: 'CDATA') == declaration;
+		assert: declaration type = 'CDATA'.
 ]
 
 { #category : #tests }

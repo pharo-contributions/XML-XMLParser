@@ -18,14 +18,6 @@ XMLRecordingListObserver >> added: anObject to: aList [
 		arguments: (Array with: anObject with: aList)
 ]
 
-{ #category : #notifying }
-XMLRecordingListObserver >> adding: anObject to: aList [
-	self messageRecorder
-		recordMessageReceiver: self
-		selector: #adding:to:
-		arguments: (Array with: anObject with: aList)
-]
-
 { #category : #accesing }
 XMLRecordingListObserver >> clearNotifications [
 	self messageRecorder clearMessages
