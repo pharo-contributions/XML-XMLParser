@@ -55,7 +55,7 @@ XMLNodeTest >> attributeClass [
 
 { #category : #accessing }
 XMLNodeTest >> attributeNames [
-	^ self attributeAssociations collect: [:each | each name]
+	^ self attributeAssociations collect: [:each | each key]
 ]
 
 { #category : #accessing }
