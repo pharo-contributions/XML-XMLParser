@@ -1,5 +1,7 @@
 "
 The class represents an attribute node stored in an attribute node list. The name of an attribute node can be namespaced using prefixes, but the prefix must be mapped to a namespace URI in the containing element node. Unprefixed attributes have no namespace, not even a default if one is in scope, per the XML namespace standard.
+
+The element of an attribute can be accessed with #element, but also with #parent, because attributes are modeled so their element is their parent (to simplify the implementation of the XPath library).
 "
 Class {
 	#name : #XMLAttribute,
@@ -35,13 +37,13 @@ XMLAttribute class >> named: aName [
 
 { #category : #accessing }
 XMLAttribute >> element [
-	"reuse instance variable to save memory"
+	"reuse an inst var to save memory"
 	^ parent
 ]
 
 { #category : #accessing }
 XMLAttribute >> element: anElement [
-	"reuse instance variable to save memory"
+	"reuse an inst var to save memory"
 	parent := anElement
 ]
 
@@ -108,6 +110,11 @@ XMLAttribute >> isNamedAny: aNameCollection [
 
 { #category : #accessing }
 XMLAttribute >> localName [
+	"Returns the local name of the receiver, the name minus any leading
+	prefix and colon like 'local' in 'prefix:local'"
+
+	"this is recomputed from the name to save memory instead of
+	being stored in an inst var like it is for XMLElement"
 	^ self name xmlLocalNameAfterPrefix
 ]
 
@@ -134,6 +141,11 @@ XMLAttribute >> namespaceURI [
 
 { #category : #accessing }
 XMLAttribute >> prefix [
+	"Returns the prefix of the receiver's name or an empty string if there
+	isn't one."
+
+	"this is recomputed from the qualified name instead of being stored
+	in an inst var to save memory."
 	^ self name xmlPrefixBeforeLocalName
 ]
 

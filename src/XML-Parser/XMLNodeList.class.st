@@ -14,31 +14,32 @@ XMLNodeList class >> new [
 
 { #category : #private }
 XMLNodeList >> afterAdding: aNode at: anIndex [
-	observer ifNotNil: [
-		aNode isElement
-			ifTrue: [observer addedElement: aNode]
-			ifFalse: [observer addedNode: aNode]]
+	(aNode hasParentWithNodeList: self)
+		ifTrue: [
+			self
+				removeDuplicateOf: aNode
+				notAt: anIndex]
+		ifFalse: [
+			observer
+				ifNotNil: [observer addedNode: aNode]]
 ]
 
 { #category : #private }
 XMLNodeList >> afterAddingLast: aNode [
-	observer ifNotNil: [
-		aNode isElement
-			ifTrue: [observer addedElement: aNode]
-			ifFalse: [observer addedNode: aNode]]
+	(aNode hasParentWithNodeList: self)
+		ifTrue: [
+			self
+				removeDuplicateOf: aNode
+				notAt: self size]
+		ifFalse: [
+			observer
+				ifNotNil: [observer addedNode: aNode]]
 ]
 
 { #category : #private }
 XMLNodeList >> afterRemoving: aNode [
-	observer ifNotNil: [
-		aNode isElement
-			ifTrue: [observer removedElement: aNode]
-			ifFalse: [observer removedNode: aNode]]
-]
-
-{ #category : #private }
-XMLNodeList >> beforeAdding: aNode [
-	observer ifNotNil: [observer addingNode: aNode]
+	observer
+		ifNotNil: [observer removedNode: aNode]
 ]
 
 { #category : #accessing }

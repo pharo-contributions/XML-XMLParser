@@ -32,7 +32,6 @@ XMLObservableList >> add: anObject after: aPreviousObject [
 
 { #category : #adding }
 XMLObservableList >> add: anObject afterIndex: anIndex [
-	self beforeAdding: anObject.
 	collection
 		add: anObject
 		afterIndex: anIndex.
@@ -54,7 +53,6 @@ XMLObservableList >> add: anObject before: aNextObject [
 
 { #category : #adding }
 XMLObservableList >> add: anObject beforeIndex: anIndex [
-	self beforeAdding: anObject.
 	collection
 		add: anObject
 		beforeIndex: anIndex.
@@ -66,7 +64,6 @@ XMLObservableList >> add: anObject beforeIndex: anIndex [
 
 { #category : #adding }
 XMLObservableList >> addFirst: anObject [
-	self beforeAdding: anObject.
 	collection addFirst: anObject.
 	self afterAdding: anObject at: 1.
 	^ anObject.
@@ -74,7 +71,6 @@ XMLObservableList >> addFirst: anObject [
 
 { #category : #adding }
 XMLObservableList >> addLast: anObject [
-	self beforeAdding: anObject.
 	collection addLast: anObject.
 	self afterAddingLast: anObject.
 	^ anObject.
@@ -82,7 +78,11 @@ XMLObservableList >> addLast: anObject [
 
 { #category : #private }
 XMLObservableList >> afterAdding: anObject at: anIndex [
-	observer ifNotNil: [observer added: anObject to: self]
+	observer
+		ifNotNil: [
+			observer
+				added: anObject
+				to: self]
 ]
 
 { #category : #private }
@@ -94,45 +94,52 @@ XMLObservableList >> afterAddingLast: anObject [
 
 { #category : #private }
 XMLObservableList >> afterRemoving: anObject [
-	observer ifNotNil: [observer removed: anObject from: self]
+	observer
+		ifNotNil: [
+			observer
+				removed: anObject
+				from: self]
 ]
 
 { #category : #accessing }
 XMLObservableList >> at: anIndex put: anObject [
 	| oldObject |
 
-	"gemstone behavior"
+	"Gemstone's OrderedCollection>>#at:put: allows the index to be
+	just after the last, treating it like addLast:, so this is needed
+	for compatbility"
 	anIndex = (self size + 1)
 		ifTrue: [^ self addLast: anObject].
 
-	self beforeAdding: anObject.
-
+	"this will raise an error if the index is invalid"
 	oldObject := collection at: anIndex.
+
+	"remove the old object and notify any observer"
 	collection at: anIndex put: nil.
 	oldObject
 		ifNotNil: [self afterRemoving: oldObject].
 	
+	"now add the new object and notify any observer"
 	collection at: anIndex put: anObject.
 	self
 		afterAdding: anObject
 		at: anIndex.
+
 	^ anObject.
 ]
 
 { #category : #private }
-XMLObservableList >> beforeAdding: anObject [
-	observer ifNotNil: [observer adding: anObject to: self]
-]
-
-{ #category : #private }
-XMLObservableList >> indexOf: anObject notAt: anIndex [
-	"used by subclasses to remove duplicates"
+XMLObservableList >> duplicateIndexOf: anObject notAt: anIndex [
+	"to:do: for speed because some subclasses need this to be fast"
 	1 to: anIndex - 1 do: [:i |
 		(collection at: i) = anObject
 			ifTrue: [^ i]].
+
+	"to:do: for speed because some subclasses need this to be fast"
 	anIndex + 1 to: collection size do: [:i |
 		(collection at: i) = anObject
 			ifTrue: [^ i]].
+
 	^ 0.
 ]
 
@@ -163,20 +170,25 @@ XMLObservableList >> removeAt: anIndex [
 ]
 
 { #category : #private }
-XMLObservableList >> replaced: anOldObject with: aNewObject at: aNewIndex [
-	| i |
+XMLObservableList >> removeDuplicateOf: anObject notAt: anIndex [
+	"Removes a duplicate of anObject at any index besides anIndex and
+	returns the removed duplicate or nil if there isn't one."
 
-	(i :=
+	| duplicateIndex |
+
+	(duplicateIndex := 
 		self
-			indexOf: anOldObject
-			notAt: aNewIndex) > 0
-		ifTrue: [
-			anOldObject == aNewObject
-				ifTrue: [
-					"exact same object being moved to another index; can be
-					removed directly without signaling observers"
-					collection removeAt: i]
-				ifFalse: [self removeAt: i]]
+			duplicateIndexOf: anObject
+			notAt: anIndex) > 0
+		ifTrue: [| duplicate |
+			(duplicate := collection removeAt: duplicateIndex) = anObject
+				ifFalse: [
+					"subclasses may implement #duplicateIndexOf:notAt: to test
+					for duplicates not with #=, so 'duplicate' can be a
+					distinct object from 'anObject' that's been removed"
+					self afterRemoving: duplicate].
+			^ duplicate]
+		ifFalse: [^ nil]
 ]
 
 { #category : #removing }

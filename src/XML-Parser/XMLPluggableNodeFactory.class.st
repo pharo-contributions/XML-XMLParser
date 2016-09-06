@@ -21,7 +21,8 @@ Class {
 		'cdataClass',
 		'commentClass',
 		'piClass',
-		'nodeListClass'
+		'nodeListClass',
+		'attributeListClass'
 	],
 	#category : #'XML-Parser-DOM'
 }
@@ -29,6 +30,16 @@ Class {
 { #category : #converting }
 XMLPluggableNodeFactory >> asPluggableNodeFactory [
 	^ self
+]
+
+{ #category : #accessing }
+XMLPluggableNodeFactory >> attributeListClass [
+	^ attributeListClass
+]
+
+{ #category : #accessing }
+XMLPluggableNodeFactory >> attributeListClass: aClass [
+	attributeListClass := aClass
 ]
 
 { #category : #accessing }
@@ -82,6 +93,7 @@ XMLPluggableNodeFactory >> initialize [
 	commentClass := XMLComment.
 	piClass := XMLPI.
 	nodeListClass := XMLNodeList.
+	attributeListClass := XMLCachingAttributeList.
 ]
 
 { #category : #accessing }

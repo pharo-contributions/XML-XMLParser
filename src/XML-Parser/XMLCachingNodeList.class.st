@@ -6,7 +6,9 @@ You can inject it into the DOM parser like this:
 		nodeFactory:
 			(XMLPluggableNodeFactory new
 				nodeListClass: XMLCachingNodeList);
-		parseDocument
+		parseDocument.
+
+This should only be used when you know the DOM tree will be queried much more often than parsed or modified and the extra memory use is OK.
 "
 Class {
 	#name : #XMLCachingNodeList,
@@ -20,35 +22,52 @@ Class {
 
 { #category : #private }
 XMLCachingNodeList >> afterAdding: aNode at: anIndex [
-	aNode isElement
+	(aNode hasParentWithNodeList: self)
 		ifTrue: [
-			anIndex = self size
-				ifTrue: [self cacheElementAddedLast: aNode]
-				ifFalse: [
+			self
+				removeDuplicateOf: aNode
+				notAt: anIndex.
+			aNode isElement
+				ifTrue: [self rebuildCachedElements]]
+		ifFalse: [
+			aNode isElement
+				ifTrue: [
 					self
 						cacheElement: aNode
-						addedAt: anIndex]].
-	super
-		afterAdding: aNode
-		at: anIndex.
+						addedAt: anIndex].
+			observer
+				ifNotNil: [observer addedNode: aNode]]
 ]
 
 { #category : #private }
 XMLCachingNodeList >> afterAddingLast: aNode [
-	aNode isElement
-		ifTrue: [self cacheElementAddedLast: aNode].
-	super afterAddingLast: aNode.
+	(aNode hasParentWithNodeList: self)
+		ifTrue: [
+			self
+				removeDuplicateOf: aNode
+				notAt: self size.
+			aNode isElement
+				ifTrue: [self rebuildCachedElements]]
+		ifFalse: [
+			aNode isElement
+				ifTrue: [self cacheElementAddedLast: aNode].
+			observer
+				ifNotNil: [observer addedNode: aNode]]
 ]
 
 { #category : #private }
 XMLCachingNodeList >> afterRemoving: aNode [
 	aNode isElement
 		ifTrue: [self uncacheElement: aNode].
-	super afterRemoving: aNode.
+	observer
+		ifNotNil: [observer removedNode: aNode].
 ]
 
 { #category : #private }
 XMLCachingNodeList >> cacheElement: anElement addedAt: anIndex [
+	anIndex = self size
+		ifTrue: [^ self cacheElementAddedLast: anElement].
+
 	(self findElementAfterIndex: anIndex)
 		ifNil: [self cachedElements addLast: anElement]
 		ifNotNil: [:elementAfter |
@@ -183,9 +202,14 @@ XMLCachingNodeList >> elementsAt: aName [
 
 { #category : #enumerating }
 XMLCachingNodeList >> elementsAt: aName do: aBlock [
-	(self cachedElementsByName
-		at: aName
-		ifAbsent: [^ self]) do: aBlock
+	| elementsWithName |
+
+	(elementsWithName :=
+		self cachedElementsByName
+			at: aName
+			ifAbsent: [^ self]) isCollection
+		ifTrue: [elementsWithName do: aBlock]
+		ifFalse: [aBlock value: elementsWithName]
 ]
 
 { #category : #enumerating }
@@ -270,8 +294,8 @@ XMLCachingNodeList >> renamedElement: anElement from: anOldName to: aNewName [
 	self
 		cachedElementsByNameAt: anOldName
 		remove: anElement.
-	(oldPrefix := anOldName xmlPrefixBeforeLocalName)
-		ifNotEmpty: [
+	(oldPrefix := anOldName xmlPrefixBeforeLocalName) notEmpty
+		ifTrue: [
 			self
 				cachedElementsByNameAt: (anOldName xmlLocalNameAfterPrefix: oldPrefix)
 				remove: anElement].

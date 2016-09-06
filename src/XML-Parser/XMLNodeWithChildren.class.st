@@ -70,13 +70,11 @@ XMLNodeWithChildren >> addPITarget: aTargetString data: aDataString [
 
 { #category : #notifying }
 XMLNodeWithChildren >> addedNode: aNode [
-	aNode parent: self
-]
-
-{ #category : #notifying }
-XMLNodeWithChildren >> addingNode: aNode [
-	aNode hasParent
-		ifTrue: [self errorAddingNodeWithParent]
+	aNode parent
+		ifNotNil: [:nodeParent |
+			nodeParent == self
+				ifFalse: [nodeParent removeNode: aNode]].
+	aNode parent: self.
 ]
 
 { #category : #accessing }
@@ -244,11 +242,6 @@ XMLNodeWithChildren >> descendentNodesSelect: aBlock [
 	^ self descendantNodesSelect: aBlock
 ]
 
-{ #category : #private }
-XMLNodeWithChildren >> errorAddingNodeWithParent [
-	XMLDOMException signal: 'Cannot add child node that already has a parent'
-]
-
 { #category : #accessing }
 XMLNodeWithChildren >> firstNode [
 	"returns the first child node of the receiver if it has one, nil otherwise"
@@ -262,6 +255,11 @@ XMLNodeWithChildren >> hasChildren [
 	nodes == nil
 		ifTrue: [^ false].
 	^ nodes size > 0.
+]
+
+{ #category : #private }
+XMLNodeWithChildren >> hasNodeList: aNodeList [
+	^ nodes == aNodeList
 ]
 
 { #category : #testing }

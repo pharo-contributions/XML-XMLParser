@@ -155,6 +155,14 @@ XMLDOMParser >> on: aStringOrStream [
 	nodeStack := OrderedCollection new: 10.
 ]
 
+{ #category : #configuring }
+XMLDOMParser >> optimizeForLargeDocuments [
+	super optimizeForLargeDocuments.
+
+	"use the non-caching attribute list class to save memory"
+	self configuration attributeListClass: XMLAttributeList.
+]
+
 { #category : #'handling - declaration' }
 XMLDOMParser >> parameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
 	self topNode addNode:

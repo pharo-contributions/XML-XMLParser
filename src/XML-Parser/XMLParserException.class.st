@@ -34,6 +34,11 @@ XMLParserException >> hasLineNumber [
 	^ self lineNumber notNil
 ]
 
+{ #category : #testing }
+XMLParserException >> isXMLParserException [
+	^ true
+]
+
 { #category : #accessing }
 XMLParserException >> lineNumber [
 	^ lineNumber

@@ -18,6 +18,11 @@ XMLNodeFactory >> attributeDeclarationClass [
 ]
 
 { #category : #accessing }
+XMLNodeFactory >> attributeListClass [
+	^ XMLCachingAttributeList
+]
+
+{ #category : #accessing }
 XMLNodeFactory >> cdataClass [
 	^ XMLCData
 ]

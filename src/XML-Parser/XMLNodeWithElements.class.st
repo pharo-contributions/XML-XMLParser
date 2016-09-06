@@ -124,10 +124,16 @@ XMLNodeWithElements >> addString: aString [
 		ifFalse: [^ self addNode: (self nodeFactory newStringNode: aString)]
 ]
 
-{ #category : #notifying }
+{ #category : #private }
 XMLNodeWithElements >> addedElement: anElement [
-	self addedNode: anElement.
-	anElement configuration: self configuration.
+	anElement configuration: self configuration
+]
+
+{ #category : #notifying }
+XMLNodeWithElements >> addedNode: aNode [
+	super addedNode: aNode.
+	aNode isElement
+		ifTrue: [self addedElement: aNode].
 ]
 
 { #category : #accessing }
@@ -794,11 +800,6 @@ XMLNodeWithElements >> rawContentStringAt: aName [
 	or an empty string if there isn't one"
 
 	^ self nodes rawContentStringAt: aName
-]
-
-{ #category : #notifying }
-XMLNodeWithElements >> removedElement: anElement [
-	self removedNode: anElement
 ]
 
 { #category : #notifying }

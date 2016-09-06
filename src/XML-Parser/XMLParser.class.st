@@ -57,7 +57,7 @@ XMLParser >> driver [
 XMLParser >> handleParserError: anError [
 	self tokenizer closeStreams.
 
-	(anError isKindOf: XMLParserException)
+	anError isXMLParserException
 		ifFalse: [anError pass].
 
 	(anError hasLineNumber

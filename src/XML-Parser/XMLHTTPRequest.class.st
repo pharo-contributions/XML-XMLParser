@@ -63,7 +63,7 @@ XMLHTTPRequest >> getUpToLimit: aMaxSize decoding: aBoolean [
 
 { #category : #private }
 XMLHTTPRequest >> isMaxSizeException: anException [
-	^ anException isKindOf: XMLLimitException
+	^ anException class == XMLLimitException
 ]
 
 { #category : #printing }

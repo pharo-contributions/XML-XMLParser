@@ -4,9 +4,6 @@ This class represents an ordered list of attribute nodes that also keeps a dicti
 Class {
 	#name : #XMLAttributeList,
 	#superclass : #XMLObservableList,
-	#instVars : [
-		'attributeNodesByName'
-	],
 	#category : #'XML-Parser-DOM'
 }
 
@@ -32,32 +29,32 @@ XMLAttributeList >> addAttributeName: aName value: aValue [
 
 { #category : #private }
 XMLAttributeList >> afterAdding: aNode at: anIndex [
-	self attributeNodesByName
-		at: aNode name ifPresent: [:oldNode |
-			self
-				replaced: oldNode
-				with: aNode 
-				at: anIndex];
-		at: aNode name put: aNode.
-	observer ifNotNil: [observer addedAttribute: aNode].
+	(self
+		removeDuplicateOf: aNode
+		notAt: anIndex)
+		ifNotNil: [:duplicate |
+			duplicate = aNode
+				ifTrue: [^ self]].
+	observer
+		ifNotNil: [observer addedAttribute: aNode].
 ]
 
 { #category : #private }
 XMLAttributeList >> afterAddingLast: aNode [
-	self attributeNodesByName
-		at: aNode name ifPresent: [:oldNode |
-			self
-				replaced: oldNode
-				with: aNode 
-				at: self size];
-		at: aNode name put: aNode.
-	observer ifNotNil: [observer addedAttribute: aNode].
+	(self
+		removeDuplicateOf: aNode
+		notAt: self size)
+		ifNotNil: [:duplicate |
+			duplicate = aNode
+				ifTrue: [^ self]].
+	observer
+		ifNotNil: [observer addedAttribute: aNode].
 ]
 
 { #category : #private }
 XMLAttributeList >> afterRemoving: aNode [
-	self attributeNodesByName removeKey: aNode name.
-	observer ifNotNil: [observer removedAttribute: aNode].
+	observer
+		ifNotNil: [observer removedAttribute: aNode].
 ]
 
 { #category : #converting }
@@ -98,6 +95,8 @@ XMLAttributeList >> attributeAt: aName put: aValue [
 
 { #category : #private }
 XMLAttributeList >> attributeClass [
+	"Can be overridden in subclasses to use a custom attribute class"
+
 	^ XMLAttribute
 
 ]
@@ -153,12 +152,6 @@ XMLAttributeList >> attributeNodeAt: aName namespaceURI: aURI ifAbsent: aBlock [
 ]
 
 { #category : #private }
-XMLAttributeList >> attributeNodesByName [
-	^ attributeNodesByName
-		ifNil: [attributeNodesByName := Dictionary new: self capacity]
-]
-
-{ #category : #private }
 XMLAttributeList >> attributeValueAt: aName [
 	^ self
 		attributeValueAt: aName
@@ -167,8 +160,8 @@ XMLAttributeList >> attributeValueAt: aName [
 
 { #category : #private }
 XMLAttributeList >> attributeValueAt: aName ifAbsent: aBlock [
-	^ (self attributeNodesByName
-		at: aName
+	^ (self
+		at: (self indexOfAttribute: aName)
 		ifAbsent: [^ aBlock value]) value
 ]
 
@@ -194,7 +187,7 @@ XMLAttributeList >> attributeValueAt: aName put: aValue [
 XMLAttributeList >> attributes [
 	| dictionary |
 
-	dictionary := OrderPreservingStringDictionary new: self size.
+	dictionary := self attributesClass new: self size.
 	self do: [:each |
 		dictionary
 			at: each name
@@ -203,22 +196,30 @@ XMLAttributeList >> attributes [
 ]
 
 { #category : #private }
-XMLAttributeList >> beforeAdding: aNode [
-	observer ifNotNil: [observer addingAttribute: aNode]
+XMLAttributeList >> attributesClass [
+	"Can be overridden in subclasses to use a custom dictionary class"
+
+	^ OrderPreservingStringDictionary
 ]
 
-{ #category : #testing }
-XMLAttributeList >> includes: aNode [
-	^ aNode isAttribute
-		and: [
-			(self attributeNodesByName
-				at: aNode name
-				ifAbsent: [^ false]) = aNode]
+{ #category : #private }
+XMLAttributeList >> duplicateIndexOf: aNode notAt: anIndex [
+	"like the superclass version, but it considers nodes with
+	the same name to be duplicates"
+	1 to: anIndex - 1 do: [:i | | node |
+		(node := collection at: i) name = aNode name
+			ifTrue: [^ i]].
+
+	anIndex + 1 to: collection size do: [:i | | node |
+		(node := collection at: i) name = aNode name
+			ifTrue: [^ i]].
+
+	^ 0.
 ]
 
 { #category : #testing }
 XMLAttributeList >> includesAttribute: aName [
-	^ self attributeNodesByName includesKey: aName
+	^ (self indexOfAttribute: aName) > 0
 ]
 
 { #category : #testing }
@@ -238,25 +239,34 @@ XMLAttributeList >> includesAttributeNode: aName namespaceURI: aURI [
 	^ true.
 ]
 
+{ #category : #private }
+XMLAttributeList >> indexOfAttribute: aName [
+	"to:do: for speed, because this is used for attribute lookup"
+	1 to: collection size do: [:i | | node |
+		(node := collection at: i) name = aName
+			ifTrue: [^ i]].
+	^ 0.
+]
+
 { #category : #removing }
 XMLAttributeList >> removeAttribute: aName [
-	^ (self remove: (self attributeNodesByName at: aName)) value
+	^ (self removeAt: (self indexOfAttribute: aName)) value
 ]
 
 { #category : #removing }
 XMLAttributeList >> removeAttribute: aName ifAbsent: aBlock [
-	^ (self remove:
-		(self attributeNodesByName
-			at: aName
-			ifAbsent: [^ aBlock value])) value
+	| i |
+
+	(i := self indexOfAttribute: aName) > 0
+		ifTrue: [^ (self removeAt: i) value]
+		ifFalse: [^ aBlock value].
 ]
 
 { #category : #notifying }
-XMLAttributeList >> renamedAttribute: anAttributeNode from: anOldName to: aNewName [
-	self attributeNodesByName
-		removeKey: anOldName;
-		at: aNewName ifPresent: [:attribute | self remove: attribute];
-		at: aNewName put: anAttributeNode
+XMLAttributeList >> renamedAttribute: anAttribute from: anOldName to: aNewName [
+	self
+		removeDuplicateOf: anAttribute
+		notAt: (self indexOf: anAttribute)
 ]
 
 { #category : #initialization }
@@ -267,21 +277,27 @@ XMLAttributeList >> setAttributes: anAssociationCollection [
 ]
 
 { #category : #private }
-XMLAttributeList >> setWithOrderPreservingDictionary: anOrderPreservingDictionary [
-	"hack to reuse a dictionary for speed"
-	attributeNodesByName := anOrderPreservingDictionary dictionary.
+XMLAttributeList >> setAttributesFromOrderPreservingDictionary: anOrderPreservingDictionary [
+	"This should only be sent by DOM parsers/builders, not public API users"
+	| orderedKeys |
 
-	"add the XMLAttributes in order directly to the collection
-	to avoid sending notifications and also replace the value in
-	the attributesByName association with the XMLAttribute"
-	anOrderPreservingDictionary keysDo: [:each | | association |
-		(association := attributeNodesByName associationAt: each ifAbsent: nil)
-			value:
-				(collection addLast: 
-					(self attributeClass new
-						setName: each
-						value: association value
-						element: observer))].
+	"Add the XMLAttributes in order directly to the collection to avoid
+	sending notifications that would do unneeded, costly namespace prefix
+	revalidation.
+	Use the internal #orderedKeys with #to:do: to create an inlined #keysDo:
+	without block closure overhead."
+	orderedKeys := anOrderPreservingDictionary orderedKeys.
+	1 to: anOrderPreservingDictionary size do: [:i | | key |
+		key := orderedKeys at: i.
+		collection addLast: 
+			(self attributeClass new
+				setName: key
+				value:
+					"use dictionary at:ifAbsent: for speed over at:"
+					(anOrderPreservingDictionary
+						at: key
+						ifAbsent: nil)
+				element: observer)].
 ]
 
 { #category : #sorting }
@@ -291,7 +307,7 @@ XMLAttributeList >> sort [
 
 { #category : #private }
 XMLAttributeList >> writeAttributesOn: aWriter [
-	"use to:do: for speed"
+	"use to:do: for fast writing"
 	1 to: collection size do: [:i | | attribute |
 		attribute := collection at: i.
 		aWriter
@@ -304,7 +320,7 @@ XMLAttributeList >> writeSortedAttributesOn: aWriter [
 	| sortedAttributes |
 
 	sortedAttributes := self sorted.
-	"use to:do: for speed"
+	"use to:do: for fast writing"
 	1 to: sortedAttributes size do: [:i | | attribute |
 		attribute := sortedAttributes at: i.
 		aWriter

@@ -14,6 +14,17 @@ Class {
 }
 
 { #category : #accessing }
+XMLDOMConfiguration >> attributeListClass [
+	^ self nodeFactory attributeListClass
+]
+
+{ #category : #accessing }
+XMLDOMConfiguration >> attributeListClass: aClass [
+	self nodeFactory:
+		(self nodeFactory asPluggableNodeFactory attributeListClass: aClass)
+]
+
+{ #category : #accessing }
 XMLDOMConfiguration >> defaultNodeFactoryClass [
 	^ XMLNodeFactory
 ]

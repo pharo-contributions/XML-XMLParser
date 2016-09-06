@@ -531,6 +531,7 @@ SAXParserDriver >> handleStartTag: anElement attributes: aDictionary [
 			self validator
 				validateStartTag: anElement
 				attributes: aDictionary.
+			"validation can add attributes"
 			aDictionary size > totalAttributes
 				ifTrue: [
 					self
@@ -554,6 +555,8 @@ SAXParserDriver >> handleStartTag: anElement attributes: aDictionary [
 					ofElement: anElement.
 			totalAttributes > 0
 				ifTrue: [
+					"aDictionary is an OrderPreservingStringDictionary, so use
+					its internal #orderedKeys over #keys for speed"
 					currentScope
 						validatePrefixesOfAttributes: aDictionary orderedKeys
 						from: 1

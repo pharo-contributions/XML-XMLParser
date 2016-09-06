@@ -187,11 +187,24 @@ XMLNode >> hasChildren [
 	^ false
 ]
 
+{ #category : #private }
+XMLNode >> hasNodeList: aNodeList [
+	^ false
+]
+
 { #category : #testing }
 XMLNode >> hasParent [
 	"returns true if the receiver has a parent node"
 
 	^ parent notNil
+]
+
+{ #category : #private }
+XMLNode >> hasParentWithNodeList: aNodeList [
+	"optimized"
+	parent == nil
+		ifTrue: [^ false].
+	^ parent hasNodeList: aNodeList.
 ]
 
 { #category : #private }

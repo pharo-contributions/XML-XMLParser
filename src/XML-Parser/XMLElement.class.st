@@ -145,11 +145,15 @@ XMLElement >> addElementNamed: aName attributes: anAssociationCollection [
 
 { #category : #notifying }
 XMLElement >> addedAttribute: anAttribute [
+	anAttribute element
+		ifNotNil: [:element |
+			element == self
+				ifFalse: [element removeAttributeNode: anAttribute]].
 	anAttribute element: self.
-	self validateAttributes.
+	self validateAttributeNamespacePrefixes.
 ]
 
-{ #category : #notifying }
+{ #category : #private }
 XMLElement >> addedElement: anElement [
 	super addedElement: anElement.
 	(self hasNamespaces
@@ -157,14 +161,6 @@ XMLElement >> addedElement: anElement [
 		ifTrue: [
 			anElement allNamespaceScopesDo: [:each |
 				each inheritMappingsFrom: self namespaceScope]]
-]
-
-{ #category : #notifying }
-XMLElement >> addingAttribute: anAttribute [
-	anAttribute element
-		ifNotNil: [:element |
-			element == self
-				ifFalse: [self errorAddingAttributeFromOtherElement]]
 ]
 
 { #category : #enumerating }
@@ -205,8 +201,8 @@ XMLElement >> allNamespaceScopesWithValidationDo: aBlock whileTrue: aConditional
 		ifTrue: [
 			aBlock value: self namespaceScope.
 			self
-				validateName;
-				validateAttributes.
+				validateNamespacePrefix;
+				validateAttributeNamespacePrefixes.
 			self elementsDo: [:each |
 				each
 					allNamespaceScopesWithValidationDo: aBlock
@@ -260,7 +256,7 @@ XMLElement >> attributeAt: aName put: aValue [
 
 { #category : #private }
 XMLElement >> attributeListClass [
-	^ XMLAttributeList
+	^ self configuration nodeFactory attributeListClass
 ]
 
 { #category : #accessing }
@@ -416,11 +412,6 @@ XMLElement >> defaultNamespace: aURI [
 			scope defaultNamespace = oldNamespace].
 ]
 
-{ #category : #private }
-XMLElement >> errorAddingAttributeFromOtherElement [
-	XMLDOMException signal: 'Cannot add attribute node from other element'
-]
-
 { #category : #accessing }
 XMLElement >> expandedName [
 	"returns the expanded name of the element as a string in the form of either
@@ -553,8 +544,8 @@ XMLElement >> isRoot [
 
 { #category : #accessing }
 XMLElement >> localName [
-	"returns the local name of the receiver, which is diffrent from #name if
-	#name is a qualified name"
+	"Returns the local name of the receiver, the name minus any leading
+	prefix and colon like 'local' in 'prefix:local'"
 
 	^ localName ifNil: [localName := self name xmlLocalNameAfterPrefix]
 ]
@@ -622,9 +613,11 @@ XMLElement >> postCopy [
 
 { #category : #accessing }
 XMLElement >> prefix [
-	"returns the prefix of the name of the receiver or an empty string if
-	there isn't one"
+	"Returns the prefix of the receiver's name or an empty string if there
+	isn't one."
 
+	"this is recomputed from the qualified and local name instead of being
+	stored in an inst var to save memory."
 	^ self name xmlPrefixBeforeLocalName: self localName
 ]
 
@@ -647,11 +640,17 @@ XMLElement >> previousElement [
 
 { #category : #removing }
 XMLElement >> removeAttribute: aName [
+	"Removes and returns the value of the attribute whose full name matches
+	aName or raises an error if it's absent."
+
 	^ (self attributeNodes removeAttribute: aName) value.
 ]
 
 { #category : #removing }
 XMLElement >> removeAttribute: aName ifAbsent: aBlock [
+	"Removes and returns the value of the attribute whose full name matches
+	aName or returns the value of aBlock if it's absent."
+
 	^ self attributeNodes
 		removeAttribute: aName
 		ifAbsent: aBlock
@@ -659,11 +658,17 @@ XMLElement >> removeAttribute: aName ifAbsent: aBlock [
 
 { #category : #removing }
 XMLElement >> removeAttributeNode: aNode [
+	"Removes and returns the attribute node aNode or raises an error if
+	it's absent."
+
 	^ self attributeNodes remove: aNode
 ]
 
 { #category : #removing }
 XMLElement >> removeAttributeNode: aNode ifAbsent: aBlock [
+	"Removes and returns the attribute node aNode or the value of aBlock if
+	it's absent."
+
 	^ self attributeNodes
 		remove: aNode
 		ifAbsent: aBlock
@@ -687,7 +692,7 @@ XMLElement >> renameWith: aBlock [
 	aBlock value.
 	self name = oldName
 		ifFalse: [
-			self validateName.
+			self validateNamespacePrefix.
 			self hasParent
 				ifTrue: [
 					self parent
@@ -702,7 +707,7 @@ XMLElement >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 		renamedAttribute: anAttribute
 		from: anOldName
 		to: aNewName.
-	self validateAttributes.
+	self validateAttributeNamespacePrefixes.
 ]
 
 { #category : #namespacing }
@@ -747,16 +752,20 @@ XMLElement >> setNamespaceScope: aNamespaceScope [
 ]
 
 { #category : #private }
-XMLElement >> setQualifiedName: aQualifiedName localName: aLocalName attributes: aDictionary [
+XMLElement >> setQualifiedName: aQualifiedName localName: aLocalName attributes: anOrderPreservingDictionary [
+	"This should only be sent by DOM parsers/builders, not public API users"
+
 	name := aQualifiedName.
 	localName := aLocalName.
-	aDictionary size > 0 "optimization"
+	anOrderPreservingDictionary size > 0 "optimization"
 		ifTrue: [
-			"setWithOrderPreservingDictionary: is used to initialize the attribute
-			node list with aDictionary without revalidation"
-			(attributes := self attributeListClass new: aDictionary size)
+			"This consumes anOrderPreservingDictionary, so it can never be used
+			again safely"
+			(attributes :=
+				self attributeListClass new: anOrderPreservingDictionary size)
 				observer: self;
-				setWithOrderPreservingDictionary: aDictionary].
+				setAttributesFromOrderPreservingDictionary: 
+					anOrderPreservingDictionary].
 ]
 
 { #category : #private }
@@ -793,7 +802,13 @@ XMLElement >> undeclarePrefixes [
 ]
 
 { #category : #private }
-XMLElement >> validateAttributes [
+XMLElement >> validateAttributeNamespacePrefixes [
+	"This is similar to #validatePrefixesOfAttributes:from:to:, but for
+	a collection of XMLAttributes instead of attribute names.
+
+	Not performance critical because it's only used after parsing when
+	an attribute is added or renamed to a parsed DOM tree."
+
 	| attributeLocalNamesAndURIs |
 
 	self usesNamespaces
@@ -815,8 +830,9 @@ XMLElement >> validateAttributes [
 ]
 
 { #category : #private }
-XMLElement >> validateName [
-	self usesNamespaces
+XMLElement >> validateNamespacePrefix [
+	(self usesNamespaces
+		and: [self hasPrefix])
 		ifTrue: [
 			self namespaceScope
 				validateAndResolvePrefix: self prefix

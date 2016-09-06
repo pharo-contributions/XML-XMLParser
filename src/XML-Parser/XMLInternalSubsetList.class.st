@@ -9,17 +9,31 @@ Class {
 
 { #category : #private }
 XMLInternalSubsetList >> afterAdding: aNode at: anIndex [
-	observer ifNotNil: [observer addedNode: aNode]
+	(aNode hasParentWithNodeList: self)
+		ifTrue: [
+			self
+				removeDuplicateOf: aNode
+				notAt: anIndex]
+		ifFalse: [
+			observer
+				ifNotNil: [observer addedNode: aNode]]
+]
+
+{ #category : #private }
+XMLInternalSubsetList >> afterAddingLast: aNode [
+	(aNode hasParentWithNodeList: self)
+		ifTrue: [
+			self
+				removeDuplicateOf: aNode
+				notAt: self size]
+		ifFalse: [
+			observer
+				ifNotNil: [observer addedNode: aNode]]
 ]
 
 { #category : #private }
 XMLInternalSubsetList >> afterRemoving: aNode [
 	observer ifNotNil: [observer removedNode: aNode]
-]
-
-{ #category : #private }
-XMLInternalSubsetList >> beforeAdding: aNode [
-	observer ifNotNil: [observer addingNode: aNode]
 ]
 
 { #category : #sorting }
