@@ -285,7 +285,7 @@ ConfigurationOfXMLParserHTML >> baseline129: spec [
 	<version: '1.2.9-baseline' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
-		do: [ spec project: 'XMLParser' with: #'release-2.8.6' ].
+		do: [ spec project: 'XMLParser' with: #'release-2.8.7' ].
 	spec
 		for: #gemstone
 		do: [ 
