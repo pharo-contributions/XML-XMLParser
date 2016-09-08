@@ -126,14 +126,15 @@ XMLNodeWithElements >> addString: aString [
 
 { #category : #private }
 XMLNodeWithElements >> addedElement: anElement [
-	anElement configuration: self configuration
 ]
 
 { #category : #notifying }
 XMLNodeWithElements >> addedNode: aNode [
 	super addedNode: aNode.
 	aNode isElement
-		ifTrue: [self addedElement: aNode].
+		ifTrue: [
+			aNode configuration: self configuration.
+			self addedElement: aNode].
 ]
 
 { #category : #accessing }
@@ -241,9 +242,10 @@ XMLNodeWithElements >> configuration [
 { #category : #accessing }
 XMLNodeWithElements >> configuration: aConfiguration [
 	configuration := aConfiguration.
-
 	self hasChildren
-		ifTrue: [self elementsDo: [:each | each configuration: aConfiguration]]
+		ifTrue: [
+			self elementsDo: [:each |
+				each configuration: aConfiguration]].
 ]
 
 { #category : #private }

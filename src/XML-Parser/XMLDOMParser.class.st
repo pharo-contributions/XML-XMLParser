@@ -319,7 +319,8 @@ XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName
 			namespaceURI: aURI
 			localName: aLocalName
 			attributes: aDictionary) new
-				setQualifiedName: aQualifiedName
+				setConfiguration: self configuration
+				name: aQualifiedName
 				localName: aLocalName
 				attributes: aDictionary)
 ]

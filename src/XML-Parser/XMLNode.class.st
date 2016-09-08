@@ -332,33 +332,39 @@ XMLNode >> newElement [
 
 { #category : #'instance creation' }
 XMLNode >> newElementNamed: aName [
-	^ (self nodeFactory newElementNamed: aName)
-		configuration: self configuration
+	^ (self nodeFactory classForElement: aName) new
+		configuration: self configuration;
+		name: aName
 ]
 
 { #category : #'instance creation' }
 XMLNode >> newElementNamed: aName attributes: anAssociationCollection [
 	^ (self nodeFactory
-		newElementNamed: aName
-		attributes: anAssociationCollection)
-			configuration: self configuration
+		classForElement: aName
+		attributes: anAssociationCollection) new
+			configuration: self configuration;
+			name: aName;
+			setAttributes: anAssociationCollection
 ]
 
 { #category : #'instance creation' }
 XMLNode >> newElementNamed: aName namespaceURI: aURI [
 	^ (self nodeFactory
-		newElementNamed: aName
-		namespaceURI: aURI)
-			configuration: self configuration
+		classForElement: aName
+		namespaceURI: aURI) new
+			configuration: self configuration;
+			name: aName namespaceURI: aURI
 ]
 
 { #category : #'instance creation' }
 XMLNode >> newElementNamed: aName namespaceURI: aURI attributes: anAssociationCollection [
 	^ (self nodeFactory
-		newElementNamed: aName
+		classForElement: aName
 		namespaceURI: aURI
-		attributes: anAssociationCollection)
-			configuration: self configuration
+		attributes: anAssociationCollection) new
+			configuration: self configuration;
+			name: aName namespaceURI: aURI;
+			setAttributes: anAssociationCollection
 ]
 
 { #category : #private }

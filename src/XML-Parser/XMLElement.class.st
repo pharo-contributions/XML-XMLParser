@@ -155,7 +155,6 @@ XMLElement >> addedAttribute: anAttribute [
 
 { #category : #private }
 XMLElement >> addedElement: anElement [
-	super addedElement: anElement.
 	(self hasNamespaces
 		and: [self namespaceScope ~= anElement namespaceScope])
 		ifTrue: [
@@ -747,15 +746,11 @@ XMLElement >> setAttributes: anAssociationCollection [
 ]
 
 { #category : #private }
-XMLElement >> setNamespaceScope: aNamespaceScope [
-	namespaceScope := aNamespaceScope
-]
-
-{ #category : #private }
-XMLElement >> setQualifiedName: aQualifiedName localName: aLocalName attributes: anOrderPreservingDictionary [
+XMLElement >> setConfiguration: aConfiguration name: aName localName: aLocalName attributes: anOrderPreservingDictionary [
 	"This should only be sent by DOM parsers/builders, not public API users"
 
-	name := aQualifiedName.
+	configuration := aConfiguration.
+	name := aName.
 	localName := aLocalName.
 	anOrderPreservingDictionary size > 0 "optimization"
 		ifTrue: [
@@ -766,6 +761,11 @@ XMLElement >> setQualifiedName: aQualifiedName localName: aLocalName attributes:
 				observer: self;
 				setAttributesFromOrderPreservingDictionary: 
 					anOrderPreservingDictionary].
+]
+
+{ #category : #private }
+XMLElement >> setNamespaceScope: aNamespaceScope [
+	namespaceScope := aNamespaceScope
 ]
 
 { #category : #private }
