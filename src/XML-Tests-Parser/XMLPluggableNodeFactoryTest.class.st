@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 XMLPluggableNodeFactoryTest >> attributeListClass [
-	^ XMLAttributeList
+	^ XMLFAttributeList
 ]
 
 { #category : #accessing }
@@ -47,7 +47,7 @@ XMLPluggableNodeFactoryTest >> newFactoryWithClasses [
 
 { #category : #accessing }
 XMLPluggableNodeFactoryTest >> nodeListClass [
-	^ XMLCachingNodeList
+	^ XMLFNodeList
 ]
 
 { #category : #accessing }

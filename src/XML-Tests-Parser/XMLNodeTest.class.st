@@ -54,6 +54,11 @@ XMLNodeTest >> attributeClass [
 ]
 
 { #category : #accessing }
+XMLNodeTest >> attributeListClass [
+	^ XMLCachingAttributeList
+]
+
+{ #category : #accessing }
 XMLNodeTest >> attributeNames [
 	^ self attributeAssociations collect: [:each | each key]
 ]
@@ -134,6 +139,18 @@ XMLNodeTest >> newNode [
 { #category : #accessing }
 XMLNodeTest >> nodeClass [
 	^ XMLNode
+]
+
+{ #category : #accessing }
+XMLNodeTest >> otherAttributeListClass [
+	"must be different from attributeListClass"
+	^ XMLFAttributeList
+]
+
+{ #category : #accessing }
+XMLNodeTest >> otherElementClass [
+	"must be different from elementClass"
+	^ XMLFElement
 ]
 
 { #category : #accessing }

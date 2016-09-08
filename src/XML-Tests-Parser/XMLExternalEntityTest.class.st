@@ -28,6 +28,23 @@ XMLExternalEntityTest class >> isSkipping: aBoolean [
 	IsSkipping := aBoolean
 ]
 
+{ #category : #accessing }
+XMLExternalEntityTest class >> startSkipping [
+	^ self isSkipping: true
+]
+
+{ #category : #accessing }
+XMLExternalEntityTest class >> stopSkipping [
+	^ self isSkipping: false
+]
+
+{ #category : #accessing }
+XMLExternalEntityTest >> defaultTimeout [
+	"this is needed for Squeak to prevent it from timing out
+	these long-running tests when skipping is disabled"
+	^ 60 * 10
+]
+
 { #category : #source }
 XMLExternalEntityTest >> docBookArticleSource [
 	^ '<?xml version="1.0" encoding="UTF-8"?>

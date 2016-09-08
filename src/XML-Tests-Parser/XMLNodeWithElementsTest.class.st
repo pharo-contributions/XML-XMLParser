@@ -256,14 +256,14 @@ XMLNodeWithElementsTest >> testAddElementNamedAttributesNodeFactoryUse [
 		(XMLPluggableElementFactory new
 			handleElement: 'test'
 			attributes: self unprefixedAttributeAssociations
-			withClass: XMLFElement).
+			withClass: self otherElementClass).
 	element :=
 		nodeWithElements
 			addElementNamed: 'test'
 			attributes: self unprefixedAttributeAssociations.
 	self
 		assert: nodeWithElements nodes size = 1;
-		assert: element class == XMLFElement;
+		assert: element class == self otherElementClass;
 		assert: element name = 'test';
 		assertElement: element hasAttributes: self unprefixedAttributes.
 ]
@@ -330,7 +330,7 @@ XMLNodeWithElementsTest >> testAddElementNamedNamespaceURIAttributesNodeFactoryU
 			handleElement: 'prefix:test'
 			namespaceURI: 'prefixNS'
 			attributes: self attributeAssociations
-			withClass: XMLFElement).
+			withClass: self otherElementClass).
 	element :=
 		nodeWithElements
 			addElementNamed: 'prefix:test'
@@ -338,7 +338,7 @@ XMLNodeWithElementsTest >> testAddElementNamedNamespaceURIAttributesNodeFactoryU
 			attributes: self attributeAssociations.
 	self
 		assert: nodeWithElements nodes size = 1;
-		assert: element class == XMLFElement;
+		assert: element class == self otherElementClass;
 		assert: element name = 'prefix:test';
 		assert: element namespaceURI = 'prefixNS';
 		assertElement: element hasAttributes: self attributes.
@@ -353,14 +353,14 @@ XMLNodeWithElementsTest >> testAddElementNamedNamespaceURINodeFactoryUse [
 		(XMLPluggableElementFactory new
 			handleElement: 'test'
 			namespaceURI: 'defaultNS'
-			withClass: XMLFElement).
+			withClass: self otherElementClass).
 	element :=
 		nodeWithElements
 			addElementNamed: 'test'
 			namespaceURI: 'defaultNS'.
 	self
 		assert: nodeWithElements nodes size = 1;
-		assert: element class == XMLFElement;
+		assert: element class == self otherElementClass;
 		assert: element name = 'test';
 		assert: element namespaceURI = 'defaultNS'.
 ]
@@ -373,11 +373,11 @@ XMLNodeWithElementsTest >> testAddElementNamedNodeFactoryUse [
 	nodeWithElements nodeFactory:
 		(XMLPluggableElementFactory new
 			handleElement: 'test'
-			withClass: XMLFElement).
+			withClass: self otherElementClass).
 	element := nodeWithElements addElementNamed: 'test'.
 	self
 		assert: nodeWithElements nodes size = 1;
-		assert: element class == XMLFElement;
+		assert: element class == self otherElementClass;
 		assert: element name = 'test'.
 
 ]
@@ -1777,10 +1777,10 @@ XMLNodeWithElementsTest >> testNewElement [
 	(nodeWithElements := self newNode)
 		nodeFactory:
 			(XMLPluggableNodeFactory new
-				elementClass: XMLFElement).
+				elementClass: self otherElementClass).
 	element := nodeWithElements newElement.
 	self
-		assert: element class == XMLFElement;
+		assert: element class == self otherElementClass;
 		assert: element configuration == nodeWithElements configuration;
 		assert: element nodeFactory == nodeWithElements nodeFactory.
 ]
@@ -1794,10 +1794,10 @@ XMLNodeWithElementsTest >> testNewElementNamed [
 	(nodeWithElements := self newNode)
 		nodeFactory:
 			(XMLPluggableElementFactory new
-				handleElement: 'test' withClass: XMLFElement).
+				handleElement: 'test' withClass: self otherElementClass).
 	element := nodeWithElements newElementNamed: 'test'.
 	self
-		assert: element class == XMLFElement;
+		assert: element class == self otherElementClass;
 		assert: element name = 'test';
 		assert: element configuration == nodeWithElements configuration;
 		assert: element nodeFactory == nodeWithElements nodeFactory.
@@ -1814,14 +1814,16 @@ XMLNodeWithElementsTest >> testNewElementNamedAttributes [
 			(XMLPluggableElementFactory new
 				handleElement: 'test'
 				attributes: self unprefixedAttributeAssociations
-				withClass: XMLFElement).
+				withClass: self otherElementClass;
+				attributeListClass: self otherAttributeListClass).
 	element :=
 		nodeWithElements
 			newElementNamed: 'test'
 			attributes: self unprefixedAttributeAssociations.
 	self
-		assert: element class == XMLFElement;
+		assert: element class == self otherElementClass;
 		assert: element name = 'test';
+		assert: element attributeNodes class == self otherAttributeListClass;
 		assertElement: element hasAttributes: self unprefixedAttributes;
 		assert: element configuration == nodeWithElements configuration;
 		assert: element nodeFactory == nodeWithElements nodeFactory.
@@ -1838,13 +1840,13 @@ XMLNodeWithElementsTest >> testNewElementNamedNamespaceURI [
 			(XMLPluggableElementFactory new
 				handleElement: 'prefix:test'
 				namespaceURI: 'prefixNS'
-				withClass: XMLFElement).
+				withClass: self otherElementClass).
 	element :=
 		nodeWithElements
 			newElementNamed: 'prefix:test'
 			namespaceURI: 'prefixNS'.
 	self
-		assert: element class == XMLFElement;
+		assert: element class == self otherElementClass;
 		assert: element name = 'prefix:test';
 		assert: element namespaceURI = 'prefixNS';
 		assert: element configuration == nodeWithElements configuration;
@@ -1863,16 +1865,18 @@ XMLNodeWithElementsTest >> testNewElementNamedNamespaceURIAttributes [
 				handleElement: 'prefix:test'
 				namespaceURI: 'prefixNS'
 				attributes: self attributeAssociations
-				withClass: XMLFElement).
+				withClass: self otherElementClass;
+				attributeListClass: self otherAttributeListClass).
 	element :=
 		nodeWithElements
 			newElementNamed: 'prefix:test'
 			namespaceURI: 'prefixNS'
 			attributes: self attributeAssociations.
 	self
-		assert: element class == XMLFElement;
+		assert: element class == self otherElementClass;
 		assert: element name = 'prefix:test';
 		assert: element namespaceURI = 'prefixNS';
+		assert: element attributeNodes class == self otherAttributeListClass;
 		assertElement: element hasAttributes: self attributes;
 		assert: element configuration == nodeWithElements configuration;
 		assert: element nodeFactory == nodeWithElements nodeFactory.

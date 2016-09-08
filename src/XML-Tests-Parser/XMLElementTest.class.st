@@ -9,11 +9,6 @@ XMLElementTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
-XMLElementTest >> attributeListClass [
-	^ XMLCachingAttributeList
-]
-
 { #category : #'instance creation' }
 XMLElementTest >> newNodeWithElements [
 	^ super newNodeWithElements

@@ -64,6 +64,20 @@ XMLDOMParserTest >> testAllElementsNamespaceURIs [
 ]
 
 { #category : #tests }
+XMLDOMParserTest >> testAttributeListClass [
+	(Array
+		with: XMLAttributeList
+		with: XMLCachingAttributeList)
+		do: [:listClass | | document parser |
+			parser := XMLDOMParser on: self addressBookXML.
+			parser configuration attributeListClass: listClass.
+			document := parser parseDocument.
+			self assert: parser configuration attributeListClass == listClass.
+			document allElements do: [:each |
+				self assert: each attributeNodes class == listClass]]
+]
+
+{ #category : #tests }
 XMLDOMParserTest >> testAttributeNamespaces [
 	| document  people |
 
@@ -779,17 +793,18 @@ XMLDOMParserTest >> testNodeFactory [
 
 { #category : #tests }
 XMLDOMParserTest >> testNodeListClass [
-	| document parser listClass |
-
-	listClass := XMLCachingNodeList.
-	parser := XMLDOMParser on: self addressBookXML.
-	parser configuration nodeListClass: listClass.
-	document := parser parseDocument.
-
-	self
-		assert: parser configuration nodeListClass == listClass;
-		assert: document nodes class == listClass;
-		assert: (document allElements allSatisfy: [:each | each nodes class == listClass]).
+	(Array
+		with: XMLNodeList
+		with: XMLCachingNodeList)
+		do: [:listClass | | document parser |
+			parser := XMLDOMParser on: self addressBookXML.
+			parser configuration nodeListClass: listClass.
+			document := parser parseDocument.
+			self
+				assert: parser configuration nodeListClass == listClass;
+				assert: document nodes class == listClass.
+			document allElements do: [:each |
+				self assert: each nodes class == listClass]]
 ]
 
 { #category : #tests }
