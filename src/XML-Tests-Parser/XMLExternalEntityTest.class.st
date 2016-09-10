@@ -1,41 +1,24 @@
 "
 These tests use HTTP and the file system and are skipped by default. This enables them:
-
-self isSkipping: false.
+	self stopSkipping
 "
 Class {
 	#name : #XMLExternalEntityTest,
-	#superclass : #TestCase,
-	#classVars : [
-		'IsSkipping'
-	],
+	#superclass : #XMLSkippableTest,
 	#category : #'XML-Tests-Parser'
 }
 
 { #category : #testing }
-XMLExternalEntityTest class >> isSkipping [
-	"HTTP/file tests are skipped by default"
-	^ IsSkipping ifNil: [IsSkipping := true]
-]
-
-{ #category : #testing }
-XMLExternalEntityTest class >> isSkipping: aBoolean [
-	"HTTP/file tests are skipped by default.
-
-	self isSkipping: false.
-	self isSkipping: true.
-	"
-	IsSkipping := aBoolean
+XMLExternalEntityTest class >> isAbstract [
+	^ false
 ]
 
 { #category : #accessing }
-XMLExternalEntityTest class >> startSkipping [
-	^ self isSkipping: true
-]
-
-{ #category : #accessing }
-XMLExternalEntityTest class >> stopSkipping [
-	^ self isSkipping: false
+XMLExternalEntityTest class >> skippableTests [
+	^ #(#testExternalSubsetReadLimit #testOnFileNamed #testOnURL
+			#testOnURLUpToLimit #testParsingDocBookArticle #testParsingDocBookExample
+			#testParsingEncodedFile #testParsingExternalEntities #testParsingFile
+			#testParsingRetrievedURL #testParsingURL)
 ]
 
 { #category : #accessing }
@@ -173,20 +156,13 @@ XMLExternalEntityTest >> musicXMLExternalEntityURLs [
 		'http://www.musicxml.org/dtds/common.mod')
 ]
 
-{ #category : #private }
-XMLExternalEntityTest >> skipOrReturnWith: aBlock [
-	"skip is not portable to squeak"
-	(self respondsTo: #skip)
-		ifTrue: [self skip]
-		ifFalse: [aBlock value]
-]
-
 { #category : #tests }
 XMLExternalEntityTest >> testExternalSubsetReadLimit [
 	| xml fileHandle externalSubset parser |
 
-	self isSkipping
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testExternalSubsetReadLimit.
 
 	fileHandle := self fileHandleForNewFileSuffixed: 'externalSubset.dtd'.
 	externalSubset := '<?xml encoding="UTF-8"?><!ELEMENT test EMPTY>'.
@@ -219,8 +195,9 @@ XMLExternalEntityTest >> testExternalSubsetReadLimit [
 XMLExternalEntityTest >> testOnFileNamed [
 	| parser fileHandle |
 
-	self isSkipping
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testOnFileNamed.
 
 	fileHandle := self fileHandleForNewFileSuffixed: 'testOnFileNamed.xml'.
 	fileHandle writeStreamDo: [:writeStream |
@@ -239,8 +216,9 @@ XMLExternalEntityTest >> testOnFileNamed [
 XMLExternalEntityTest >> testOnURL [
 	| parser |
 
-	self isSkipping
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testOnURL.
 
 	self
 		shouldnt: [parser := SAXHandler onURL: self feedURL]
@@ -254,8 +232,9 @@ XMLExternalEntityTest >> testOnURL [
 XMLExternalEntityTest >> testOnURLUpToLimit [
 	| parser size |
 
-	self isSkipping
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testOnURLUpToLimit.
 
 	size :=
 		(self feedURL asXMLURI
@@ -283,8 +262,9 @@ XMLExternalEntityTest >> testOnURLUpToLimit [
 XMLExternalEntityTest >> testParsingDocBookArticle [
 	"This uses HTTP so is skipped by default"
 
-	self isSkipping
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testParsingDocBookArticle.
 
 	self
 		shouldnt: [
@@ -299,8 +279,9 @@ XMLExternalEntityTest >> testParsingDocBookArticle [
 XMLExternalEntityTest >> testParsingDocBookExample [
 	"This uses HTTP so is skipped by default"
 
-	self isSkipping
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testParsingDocBookExample.
 
 	self
 		shouldnt: [
@@ -316,8 +297,9 @@ XMLExternalEntityTest >> testParsingEncodedFile [
 	"This test creates/deletes a file so is skipped by default"
 	| fileHandle doc docFromFile |
 
-	self isSkipping
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testParsingEncodedFile.
 
 	fileHandle := self fileHandleForNewFileSuffixed: 'testParsingEncodedFile.xml'.
 	doc := XMLDOMParser parse: self docBookArticleSource.
@@ -339,8 +321,9 @@ XMLExternalEntityTest >> testParsingExternalEntities [
 	"This test uses HTTP so is skipped by default."
 	| entityCache entityCacheCopy |
 
-	self isSkipping
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testParsingExternalEntities.
 
 	DTDCachingExternalEntityResolver clearEntityCache.
 	entityCache := DTDCachingExternalEntityResolver entityCache.
@@ -371,8 +354,9 @@ XMLExternalEntityTest >> testParsingFile [
 	"This test creates/deletes a file so is skipped by default"
 	| fileHandle doc |
 
-	self isSkipping
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testParsingFile.
 
 	fileHandle := self fileHandleForNewFileSuffixed: 'testParsingFile.xml'.
 	self
@@ -391,10 +375,12 @@ XMLExternalEntityTest >> testParsingFile [
 
 { #category : #tests }
 XMLExternalEntityTest >> testParsingRetrievedURL [
+	"This uses HTTP so is skipped by default"
 	| source |
 
-	self isSkipping
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testParsingRetrievedURL.
 
 	source := self feedURL asXMLURI get.
 	self assert: source isString.
@@ -416,8 +402,9 @@ XMLExternalEntityTest >> testParsingURL [
 	"This uses HTTP so is skipped by default"
 	| doc |
 
-	self isSkipping
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testParsingURL.
 
 	self
 		shouldnt: [doc := XMLDOMParser parseURL: self feedURL]
