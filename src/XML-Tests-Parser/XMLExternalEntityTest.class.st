@@ -93,11 +93,6 @@ XMLExternalEntityTest >> fileHandleForNewFileSuffixed: aFileSuffix [
 	^ fileHandle.
 ]
 
-{ #category : #accessing }
-XMLExternalEntityTest >> isSkipping [
-	^ self class isSkipping
-]
-
 { #category : #source }
 XMLExternalEntityTest >> musicXMLDocument [
 	^ '<?xml version="1.0" encoding="UTF-8" standalone="no"?>

@@ -49,6 +49,11 @@ XMLSkippableTest class >> stopSkipping [
 	^ self isSkipping: false
 ]
 
+{ #category : #testing }
+XMLSkippableTest >> isSkipping [
+	^ self class isSkipping
+]
+
 { #category : #private }
 XMLSkippableTest >> skipOrReturnWith: aBlock [
 	"skip is not portable to Squeak, so a return block is used as a backup"
@@ -60,7 +65,7 @@ XMLSkippableTest >> skipOrReturnWith: aBlock [
 { #category : #private }
 XMLSkippableTest >> skipOrReturnWith: aBlock ifSkippable: aSelector [
 	"skip is not portable to Squeak, so a return block is used as a backup"
-	(self class isSkipping
+	(self isSkipping
 		and: [self skippableTests includes: aSelector])
 		ifTrue: [self skipOrReturnWith: aBlock]
 ]
