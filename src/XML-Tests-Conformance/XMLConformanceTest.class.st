@@ -8,25 +8,21 @@ To  make failing tests skippable or update the lists of skippable tests in subca
 	self buildSkippableTestsMethodsFromFailures.
 "
 Class {
-	#name : #XMLConformanceTests,
-	#superclass : #TestCase,
+	#name : #XMLConformanceTest,
+	#superclass : #XMLSkippableTest,
 	#instVars : [
-		'skippableTests',
-		'skippableExceptions'
-	],
-	#classVars : [
-		'IsSkipping'
+		'ignorableParserExceptions'
 	],
 	#category : #'XML-Tests-Conformance'
 }
 
 { #category : #accessing }
-XMLConformanceTests class >> baseDirectory [
+XMLConformanceTest class >> baseDirectory [
 	^ 'xmlconf'
 ]
 
 { #category : #'building subclasses' }
-XMLConformanceTests class >> buildDefaultSkippableTestsMethods [
+XMLConformanceTest class >> buildDefaultSkippableTestsMethods [
 	"self buildDefaultSkippableTestsMethods"
 	self allSubclassesDo: [:each |
 		each class
@@ -36,7 +32,7 @@ XMLConformanceTests class >> buildDefaultSkippableTestsMethods [
 ]
 
 { #category : #'building subclasses' }
-XMLConformanceTests class >> buildFailingTestMethodFor: aFileReference in: aClass [
+XMLConformanceTest class >> buildFailingTestMethodFor: aFileReference in: aClass [
 	self
 		buildTestMethodFor: aFileReference
 		in: aClass
@@ -45,7 +41,7 @@ XMLConformanceTests class >> buildFailingTestMethodFor: aFileReference in: aClas
 ]
 
 { #category : #'building subclasses' }
-XMLConformanceTests class >> buildPassingTestMethodFor: aFileReference in: aClass [
+XMLConformanceTest class >> buildPassingTestMethodFor: aFileReference in: aClass [
 	self
 		buildTestMethodFor: aFileReference
 		in: aClass
@@ -54,7 +50,7 @@ XMLConformanceTests class >> buildPassingTestMethodFor: aFileReference in: aClas
 ]
 
 { #category : #'building subclasses' }
-XMLConformanceTests class >> buildSkippableTestsMethodsFromFailures [
+XMLConformanceTest class >> buildSkippableTestsMethodsFromFailures [
 	"Run this after possibly fixing a failing skipped test so it
 	will be excluded form the list of skippable tests.
 
@@ -84,7 +80,7 @@ XMLConformanceTests class >> buildSkippableTestsMethodsFromFailures [
 ]
 
 { #category : #'building subclasses' }
-XMLConformanceTests class >> buildSourceFileClassMethodFor: aFileReference in: aClass [
+XMLConformanceTest class >> buildSourceFileClassMethodFor: aFileReference in: aClass [
 	| sourceSelector pathString sourceStream |
 
 	sourceSelector := self sourceSelectorFor: aFileReference.
@@ -112,7 +108,7 @@ XMLConformanceTests class >> buildSourceFileClassMethodFor: aFileReference in: a
 ]
 
 { #category : #'building subclasses' }
-XMLConformanceTests class >> buildTestCaseForSuite: aSuite [
+XMLConformanceTest class >> buildTestCaseForSuite: aSuite [
 	| testCaseClass fileVisitor badSourceFiles |
 
 	testCaseClass := self createSubclassForSuite: aSuite.
@@ -147,7 +143,7 @@ XMLConformanceTests class >> buildTestCaseForSuite: aSuite [
 ]
 
 { #category : #'building subclasses' }
-XMLConformanceTests class >> buildTestCases [
+XMLConformanceTest class >> buildTestCases [
 	"self buildTestCases"
 
 	self supportedTestSuites do: [:each | self buildTestCaseForSuite: each].
@@ -155,7 +151,7 @@ XMLConformanceTests class >> buildTestCases [
 ]
 
 { #category : #'building subclasses' }
-XMLConformanceTests class >> buildTestMethodFor: aFileReference in: aClass usingTemplate: aTemplate classified: aCategory [
+XMLConformanceTest class >> buildTestMethodFor: aFileReference in: aClass usingTemplate: aTemplate classified: aCategory [
 	| failingTestSelector sourceSelector pathString documentURI |
 
 	failingTestSelector := self testSelectorFor: aFileReference.
@@ -174,16 +170,21 @@ XMLConformanceTests class >> buildTestMethodFor: aFileReference in: aClass using
 ]
 
 { #category : #accessing }
-XMLConformanceTests class >> classNameForSuite: aSuite [
+XMLConformanceTest class >> classNameForSuite: aSuite [
 	^ ('XMLConformance',
-		(self suiteClassNames
-			at: aSuite
-			ifAbsent: [aSuite]) capitalized,
-		'Tests') asSymbol
+		(self classNameStemForSuite: aSuite),
+		'Test') asSymbol
+]
+
+{ #category : #accessing }
+XMLConformanceTest class >> classNameStemForSuite: aSuite [
+	^ (aSuite = 'xmltest'
+		ifTrue: ['Expat']
+		ifFalse: [aSuite]) capitalized
 ]
 
 { #category : #'building subclasses' }
-XMLConformanceTests class >> createSubclassForSuite: aSuite [
+XMLConformanceTest class >> createSubclassForSuite: aSuite [
 	^ self
 		subclass: (self classNameForSuite: aSuite)
 		instanceVariableNames: ''
@@ -193,17 +194,18 @@ XMLConformanceTests class >> createSubclassForSuite: aSuite [
 ]
 
 { #category : #paths }
-XMLConformanceTests class >> documentURIFor: aFileReference [
+XMLConformanceTest class >> documentURIFor: aFileReference [
 	^ self pathStringRelativeToSuiteFor: aFileReference
 ]
 
 { #category : #'method templates' }
-XMLConformanceTests class >> failingTestMethodTemplate [
+XMLConformanceTest class >> failingTestMethodTemplate [
 	^ '{1}
 	"Source file: {2}"
 
-	(self isSkippableTest: #{1})
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #{1}.
 	self
 		should: [
 			self
@@ -213,33 +215,30 @@ XMLConformanceTests class >> failingTestMethodTemplate [
 ]
 
 { #category : #accessing }
-XMLConformanceTests class >> fileReferenceForSuite: aSuite [
+XMLConformanceTest class >> fileReferenceForSuite: aSuite [
 	^ FileSystem workingDirectory / self baseDirectory / aSuite
 ]
 
-{ #category : #testing }
-XMLConformanceTests class >> isSkipping [
-	"allow skipping of certain tests by default"
-	^ IsSkipping ifNil: [IsSkipping := true]
+{ #category : #accessing }
+XMLConformanceTest class >> ignorableParserExceptions [
+	"Can be overridden to return a single exception or an ExceptionSet of
+	exceptions built with #, like 'XMLHTTPException, XMLFileException'"
+	^ nil
 ]
 
-{ #category : #accessing }
-XMLConformanceTests class >> isSkipping: aBoolean [
-	"certain tests are skipped by default
-
-	self isSkipping: false.
-	self isSkipping: true.
-	"
-	IsSkipping := aBoolean
+{ #category : #testing }
+XMLConformanceTest class >> isAbstract [
+	^ false
 ]
 
 { #category : #'method templates' }
-XMLConformanceTests class >> passingTestMethodTemplate [
+XMLConformanceTest class >> passingTestMethodTemplate [
 	^ '{1}
 	"Source file: {2}"
 
-	(self isSkippableTest: #{1})
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #{1}.
 	self
 		shouldnt: [
 			[self
@@ -247,26 +246,25 @@ XMLConformanceTests class >> passingTestMethodTemplate [
 				documentURI: ''{4}'']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions'
 ]
 
 { #category : #paths }
-XMLConformanceTests class >> pathStringRelativeToSuiteFor: aFileReference [
+XMLConformanceTest class >> pathStringRelativeToSuiteFor: aFileReference [
 	^ self relativePathStringFromSegments:
 		(aFileReference pathSegments copyAfter: self baseDirectory) allButFirst
 ]
 
 { #category : #paths }
-XMLConformanceTests class >> relativePathStringFor: aFileReference [
+XMLConformanceTest class >> relativePathStringFor: aFileReference [
 	^ self relativePathStringFromSegments:
 		(aFileReference pathSegments copyAfter: self baseDirectory)
 ]
 
 { #category : #paths }
-XMLConformanceTests class >> relativePathStringFromSegments: aSegmentArray [
+XMLConformanceTest class >> relativePathStringFromSegments: aSegmentArray [
 	^ String streamContents: [:stream |
 		aSegmentArray withIndexDo: [:each :i |
 			i > 1
@@ -274,13 +272,8 @@ XMLConformanceTests class >> relativePathStringFromSegments: aSegmentArray [
 			stream nextPutAll: each]]
 ]
 
-{ #category : #accessing }
-XMLConformanceTests class >> skippableTests [
-	^ #()
-]
-
 { #category : #'method templates' }
-XMLConformanceTests class >> sourceFileMethodTemplate [
+XMLConformanceTest class >> sourceFileMethodTemplate [
 	^ '{1}
 	"Source file: {2}"
 
@@ -288,66 +281,54 @@ XMLConformanceTests class >> sourceFileMethodTemplate [
 ]
 
 { #category : #selectors }
-XMLConformanceTests class >> sourceSelectorFor: aFileReference [
+XMLConformanceTest class >> sourceSelectorFor: aFileReference [
 	^ self sourceSelectorForPath: (self pathStringRelativeToSuiteFor: aFileReference)
 ]
 
 { #category : #selectors }
-XMLConformanceTests class >> sourceSelectorForPath: aPathString [
+XMLConformanceTest class >> sourceSelectorForPath: aPathString [
 	^ ('source', (aPathString select: [:each | each isAlphaNumeric])) asSymbol
 ]
 
 { #category : #accessing }
-XMLConformanceTests class >> suiteClassNames [
-	^ Dictionary with: 'xmltest' -> 'expat'
-]
-
-{ #category : #accessing }
-XMLConformanceTests class >> suitesWithSkippableBases [
+XMLConformanceTest class >> suitesWithSkippableBases [
 	^ self supportedTestSuites copyWithout: 'oasis'
 ]
 
 { #category : #accessing }
-XMLConformanceTests class >> supportedTestSuites [
+XMLConformanceTest class >> supportedTestSuites [
 	^ #('xmltest' 'sun' 'oasis')
 ]
 
 { #category : #selectors }
-XMLConformanceTests class >> testSelectorFor: aFileReference [
+XMLConformanceTest class >> testSelectorFor: aFileReference [
 	^ self testSelectorForPath: (self pathStringRelativeToSuiteFor: aFileReference)
 ]
 
 { #category : #selectors }
-XMLConformanceTests class >> testSelectorForPath: aPathString [
+XMLConformanceTest class >> testSelectorForPath: aPathString [
 	^ ('test', (aPathString select: [:each | each isAlphaNumeric])) asSymbol
 ]
 
-{ #category : #'reflective operations' }
-XMLConformanceTests >> doesNotUnderstand: aMessage [
-	"for squeak"
-	aMessage selector == #skip
-		ifFalse: [super doesNotUnderstand: aMessage]
+{ #category : #accessing }
+XMLConformanceTest >> ignorableParserExceptions [
+	^ ignorableParserExceptions
+		ifNil: [ignorableParserExceptions := self class ignorableParserExceptions]
 ]
 
 { #category : #testing }
-XMLConformanceTests >> isSkippableException: anError [
-	^ self class isSkipping
-		and: [self skippableExceptions handles: anError]
-]
-
-{ #category : #testing }
-XMLConformanceTests >> isSkippableTest: aSelector [
-	^ self class isSkipping
-		and: [self skippableTests includes: aSelector]
+XMLConformanceTest >> isIgnorableParserException: anError [
+	^ self ignorableParserExceptions notNil
+		and: [self ignorableParserExceptions handles: anError]
 ]
 
 { #category : #accessing }
-XMLConformanceTests >> newVirtualFileExternalEntityResolver [
+XMLConformanceTest >> newVirtualFileExternalEntityResolver [
 	^ XMLConformanceVirtualFileExternalEntityResolver virtualFileClass: self class
 ]
 
 { #category : #parsing }
-XMLConformanceTests >> parse: aString documentURI: aUri [
+XMLConformanceTest >> parse: aString documentURI: aUri [
 	| parser |
 
 	parser :=
@@ -369,30 +350,11 @@ XMLConformanceTests >> parse: aString documentURI: aUri [
 ]
 
 { #category : #accessing }
-XMLConformanceTests >> parserClass [
+XMLConformanceTest >> parserClass [
 	^ SAXHandler
 ]
 
 { #category : #accessing }
-XMLConformanceTests >> parserExceptions [
+XMLConformanceTest >> parserExceptions [
 	^ XMLParserException
-]
-
-{ #category : #private }
-XMLConformanceTests >> skipOrReturnWith: aBlock [
-	"skip is not portable to squeak"
-	(self respondsTo: #skip)
-		ifTrue: [self skip]
-		ifFalse: [aBlock value]
-]
-
-{ #category : #accessing }
-XMLConformanceTests >> skippableExceptions [
-	^ skippableExceptions
-		ifNil: [skippableExceptions := XMLFileException, XMLHTTPException, XMLLimitException]
-]
-
-{ #category : #accessing }
-XMLConformanceTests >> skippableTests [
-	^ skippableTests ifNil: [skippableTests := self class skippableTests asSet]
 ]

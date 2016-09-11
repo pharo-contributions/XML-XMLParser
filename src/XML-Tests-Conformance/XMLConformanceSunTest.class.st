@@ -1,16 +1,16 @@
 Class {
-	#name : #XMLConformanceSunTests,
-	#superclass : #XMLConformanceTests,
+	#name : #XMLConformanceSunTest,
+	#superclass : #XMLConformanceTest,
 	#category : #'XML-Tests-Conformance'
 }
 
 { #category : #accessing }
-XMLConformanceSunTests class >> skippableTests [
+XMLConformanceSunTest class >> skippableTests [
 	^ #( testinvalidnotsa01xml testinvalidnotsa04xml testinvalidnotsa05xml testinvalidnotsa06xml testinvalidnotsa07xml testinvalidnotsa09xml testinvalidnotsa10xml testinvalidnotsa11xml testinvalidnotsa12xml testinvalidnotsa13xml testinvalidutf16bxml testinvalidutf16lxml testnotwfnotsa03xml testnotwfuri01xml )
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidattr01xml [
+XMLConformanceSunTest class >> sourceinvalidattr01xml [
 	"Source file: sun/invalid/attr01.xml"
 
 	^ '<!DOCTYPE root [
@@ -26,7 +26,7 @@ XMLConformanceSunTests class >> sourceinvalidattr01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidattr02xml [
+XMLConformanceSunTest class >> sourceinvalidattr02xml [
 	"Source file: sun/invalid/attr02.xml"
 
 	^ '<!DOCTYPE root [
@@ -45,7 +45,7 @@ XMLConformanceSunTests class >> sourceinvalidattr02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidattr03xml [
+XMLConformanceSunTest class >> sourceinvalidattr03xml [
 	"Source file: sun/invalid/attr03.xml"
 
 	^ '<!DOCTYPE root [
@@ -69,7 +69,7 @@ XMLConformanceSunTests class >> sourceinvalidattr03xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidattr04xml [
+XMLConformanceSunTest class >> sourceinvalidattr04xml [
 	"Source file: sun/invalid/attr04.xml"
 
 	^ '<!DOCTYPE root [
@@ -88,7 +88,7 @@ XMLConformanceSunTests class >> sourceinvalidattr04xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidattr05xml [
+XMLConformanceSunTest class >> sourceinvalidattr05xml [
 	"Source file: sun/invalid/attr05.xml"
 
 	^ '<!DOCTYPE root [
@@ -104,7 +104,7 @@ XMLConformanceSunTests class >> sourceinvalidattr05xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidattr06xml [
+XMLConformanceSunTest class >> sourceinvalidattr06xml [
 	"Source file: sun/invalid/attr06.xml"
 
 	^ '<!DOCTYPE root [
@@ -120,7 +120,7 @@ XMLConformanceSunTests class >> sourceinvalidattr06xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidattr07xml [
+XMLConformanceSunTest class >> sourceinvalidattr07xml [
 	"Source file: sun/invalid/attr07.xml"
 
 	^ '<!DOCTYPE arbor [
@@ -137,7 +137,7 @@ XMLConformanceSunTests class >> sourceinvalidattr07xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidattr08xml [
+XMLConformanceSunTest class >> sourceinvalidattr08xml [
 	"Source file: sun/invalid/attr08.xml"
 
 	^ '<!DOCTYPE palimpest [
@@ -153,7 +153,7 @@ XMLConformanceSunTests class >> sourceinvalidattr08xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidattr09xml [
+XMLConformanceSunTest class >> sourceinvalidattr09xml [
 	"Source file: sun/invalid/attr09.xml"
 
 	^ '<!DOCTYPE collection [
@@ -180,7 +180,7 @@ XMLConformanceSunTests class >> sourceinvalidattr09xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidattr10xml [
+XMLConformanceSunTest class >> sourceinvalidattr10xml [
 	"Source file: sun/invalid/attr10.xml"
 
 	^ '<!DOCTYPE collection [
@@ -207,7 +207,7 @@ XMLConformanceSunTests class >> sourceinvalidattr10xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidattr11xml [
+XMLConformanceSunTest class >> sourceinvalidattr11xml [
 	"Source file: sun/invalid/attr11.xml"
 
 	^ '<!DOCTYPE reference [
@@ -229,7 +229,7 @@ XMLConformanceSunTests class >> sourceinvalidattr11xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidattr12xml [
+XMLConformanceSunTest class >> sourceinvalidattr12xml [
 	"Source file: sun/invalid/attr12.xml"
 
 	^ '<!DOCTYPE references [
@@ -251,7 +251,7 @@ XMLConformanceSunTests class >> sourceinvalidattr12xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidattr13xml [
+XMLConformanceSunTest class >> sourceinvalidattr13xml [
 	"Source file: sun/invalid/attr13.xml"
 
 	^ '<!DOCTYPE root [
@@ -269,7 +269,7 @@ XMLConformanceSunTests class >> sourceinvalidattr13xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidattr14xml [
+XMLConformanceSunTest class >> sourceinvalidattr14xml [
 	"Source file: sun/invalid/attr14.xml"
 
 	^ '<!DOCTYPE root [
@@ -288,7 +288,7 @@ XMLConformanceSunTests class >> sourceinvalidattr14xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidattr15xml [
+XMLConformanceSunTest class >> sourceinvalidattr15xml [
 	"Source file: sun/invalid/attr15.xml"
 
 	^ '<!DOCTYPE reference [
@@ -309,7 +309,7 @@ XMLConformanceSunTests class >> sourceinvalidattr15xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidattr16xml [
+XMLConformanceSunTest class >> sourceinvalidattr16xml [
 	"Source file: sun/invalid/attr16.xml"
 
 	^ '<!DOCTYPE root [
@@ -326,7 +326,7 @@ XMLConformanceSunTests class >> sourceinvalidattr16xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvaliddtd01xml [
+XMLConformanceSunTest class >> sourceinvaliddtd01xml [
 	"Source file: sun/invalid/dtd01.xml"
 
 	^ '<!DOCTYPE root [
@@ -340,7 +340,7 @@ XMLConformanceSunTests class >> sourceinvaliddtd01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvaliddtd02xml [
+XMLConformanceSunTest class >> sourceinvaliddtd02xml [
 	"Source file: sun/invalid/dtd02.xml"
 
 	^ '<!DOCTYPE paper [
@@ -352,7 +352,7 @@ XMLConformanceSunTests class >> sourceinvaliddtd02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvaliddtd03xml [
+XMLConformanceSunTest class >> sourceinvaliddtd03xml [
 	"Source file: sun/invalid/dtd03.xml"
 
 	^ '<!DOCTYPE violation [
@@ -373,7 +373,7 @@ XMLConformanceSunTests class >> sourceinvaliddtd03xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvaliddtd06xml [
+XMLConformanceSunTest class >> sourceinvaliddtd06xml [
 	"Source file: sun/invalid/dtd06.xml"
 
 	^ '<!DOCTYPE root [
@@ -386,7 +386,7 @@ XMLConformanceSunTests class >> sourceinvaliddtd06xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidel01xml [
+XMLConformanceSunTest class >> sourceinvalidel01xml [
 	"Source file: sun/invalid/el01.xml"
 
 	^ '<!DOCTYPE root [
@@ -398,7 +398,7 @@ XMLConformanceSunTests class >> sourceinvalidel01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidel02xml [
+XMLConformanceSunTest class >> sourceinvalidel02xml [
 	"Source file: sun/invalid/el02.xml"
 
 	^ '<!DOCTYPE root [
@@ -409,7 +409,7 @@ XMLConformanceSunTests class >> sourceinvalidel02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidel03xml [
+XMLConformanceSunTest class >> sourceinvalidel03xml [
 	"Source file: sun/invalid/el03.xml"
 
 	^ '<!DOCTYPE root [
@@ -421,7 +421,7 @@ XMLConformanceSunTests class >> sourceinvalidel03xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidel04xml [
+XMLConformanceSunTest class >> sourceinvalidel04xml [
 	"Source file: sun/invalid/el04.xml"
 
 	^ '<!DOCTYPE root [
@@ -434,7 +434,7 @@ XMLConformanceSunTests class >> sourceinvalidel04xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidel05xml [
+XMLConformanceSunTest class >> sourceinvalidel05xml [
 	"Source file: sun/invalid/el05.xml"
 
 	^ '<!DOCTYPE root [
@@ -446,7 +446,7 @@ XMLConformanceSunTests class >> sourceinvalidel05xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidel06xml [
+XMLConformanceSunTest class >> sourceinvalidel06xml [
 	"Source file: sun/invalid/el06.xml"
 
 	^ '<!DOCTYPE root [
@@ -459,7 +459,7 @@ XMLConformanceSunTests class >> sourceinvalidel06xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidemptyxml [
+XMLConformanceSunTest class >> sourceinvalidemptyxml [
 	"Source file: sun/invalid/empty.xml"
 
 	^ '<!--
@@ -488,7 +488,7 @@ XMLConformanceSunTests class >> sourceinvalidemptyxml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidid01xml [
+XMLConformanceSunTest class >> sourceinvalidid01xml [
 	"Source file: sun/invalid/id01.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/sa.dtd">
@@ -502,7 +502,7 @@ XMLConformanceSunTests class >> sourceinvalidid01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidid02xml [
+XMLConformanceSunTest class >> sourceinvalidid02xml [
 	"Source file: sun/invalid/id02.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/sa.dtd">
@@ -518,7 +518,7 @@ XMLConformanceSunTests class >> sourceinvalidid02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidid03xml [
+XMLConformanceSunTest class >> sourceinvalidid03xml [
 	"Source file: sun/invalid/id03.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/sa.dtd" [
@@ -535,7 +535,7 @@ XMLConformanceSunTests class >> sourceinvalidid03xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidid04xml [
+XMLConformanceSunTest class >> sourceinvalidid04xml [
 	"Source file: sun/invalid/id04.xml"
 
 	^ '<!DOCTYPE root [
@@ -554,7 +554,7 @@ XMLConformanceSunTests class >> sourceinvalidid04xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidid05xml [
+XMLConformanceSunTest class >> sourceinvalidid05xml [
 	"Source file: sun/invalid/id05.xml"
 
 	^ '<!DOCTYPE root [
@@ -575,7 +575,7 @@ XMLConformanceSunTests class >> sourceinvalidid05xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidid06xml [
+XMLConformanceSunTest class >> sourceinvalidid06xml [
 	"Source file: sun/invalid/id06.xml"
 
 	^ '<!DOCTYPE root [
@@ -596,7 +596,7 @@ XMLConformanceSunTests class >> sourceinvalidid06xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidid07xml [
+XMLConformanceSunTest class >> sourceinvalidid07xml [
 	"Source file: sun/invalid/id07.xml"
 
 	^ '<!DOCTYPE root [
@@ -619,7 +619,7 @@ XMLConformanceSunTests class >> sourceinvalidid07xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidid08xml [
+XMLConformanceSunTest class >> sourceinvalidid08xml [
 	"Source file: sun/invalid/id08.xml"
 
 	^ '<!DOCTYPE root [
@@ -640,7 +640,7 @@ XMLConformanceSunTests class >> sourceinvalidid08xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidid09xml [
+XMLConformanceSunTest class >> sourceinvalidid09xml [
 	"Source file: sun/invalid/id09.xml"
 
 	^ '<!DOCTYPE root [
@@ -664,7 +664,7 @@ XMLConformanceSunTests class >> sourceinvalidid09xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidnotsa01xml [
+XMLConformanceSunTest class >> sourceinvalidnotsa01xml [
 	"Source file: sun/invalid/not-sa01.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -681,7 +681,7 @@ XMLConformanceSunTests class >> sourceinvalidnotsa01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidnotsa02xml [
+XMLConformanceSunTest class >> sourceinvalidnotsa02xml [
 	"Source file: sun/invalid/not-sa02.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -719,7 +719,7 @@ XMLConformanceSunTests class >> sourceinvalidnotsa02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidnotsa04xml [
+XMLConformanceSunTest class >> sourceinvalidnotsa04xml [
 	"Source file: sun/invalid/not-sa04.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -737,7 +737,7 @@ XMLConformanceSunTests class >> sourceinvalidnotsa04xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidnotsa05xml [
+XMLConformanceSunTest class >> sourceinvalidnotsa05xml [
 	"Source file: sun/invalid/not-sa05.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -755,7 +755,7 @@ XMLConformanceSunTests class >> sourceinvalidnotsa05xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidnotsa06xml [
+XMLConformanceSunTest class >> sourceinvalidnotsa06xml [
 	"Source file: sun/invalid/not-sa06.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -775,7 +775,7 @@ XMLConformanceSunTests class >> sourceinvalidnotsa06xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidnotsa07xml [
+XMLConformanceSunTest class >> sourceinvalidnotsa07xml [
 	"Source file: sun/invalid/not-sa07.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -794,7 +794,7 @@ XMLConformanceSunTests class >> sourceinvalidnotsa07xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidnotsa08xml [
+XMLConformanceSunTest class >> sourceinvalidnotsa08xml [
 	"Source file: sun/invalid/not-sa08.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -813,7 +813,7 @@ XMLConformanceSunTests class >> sourceinvalidnotsa08xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidnotsa09xml [
+XMLConformanceSunTest class >> sourceinvalidnotsa09xml [
 	"Source file: sun/invalid/not-sa09.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -832,7 +832,7 @@ XMLConformanceSunTests class >> sourceinvalidnotsa09xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidnotsa10xml [
+XMLConformanceSunTest class >> sourceinvalidnotsa10xml [
 	"Source file: sun/invalid/not-sa10.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -853,7 +853,7 @@ XMLConformanceSunTests class >> sourceinvalidnotsa10xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidnotsa11xml [
+XMLConformanceSunTest class >> sourceinvalidnotsa11xml [
 	"Source file: sun/invalid/not-sa11.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -874,7 +874,7 @@ XMLConformanceSunTests class >> sourceinvalidnotsa11xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidnotsa12xml [
+XMLConformanceSunTest class >> sourceinvalidnotsa12xml [
 	"Source file: sun/invalid/not-sa12.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -893,7 +893,7 @@ XMLConformanceSunTests class >> sourceinvalidnotsa12xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidnotsa13xml [
+XMLConformanceSunTest class >> sourceinvalidnotsa13xml [
 	"Source file: sun/invalid/not-sa13.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -916,7 +916,7 @@ XMLConformanceSunTests class >> sourceinvalidnotsa13xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidnotsa14xml [
+XMLConformanceSunTest class >> sourceinvalidnotsa14xml [
 	"Source file: sun/invalid/not-sa14.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -934,7 +934,7 @@ XMLConformanceSunTests class >> sourceinvalidnotsa14xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional01xml [
+XMLConformanceSunTest class >> sourceinvalidoptional01xml [
 	"Source file: sun/invalid/optional01.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -945,7 +945,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional02xml [
+XMLConformanceSunTest class >> sourceinvalidoptional02xml [
 	"Source file: sun/invalid/optional02.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -957,7 +957,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional03xml [
+XMLConformanceSunTest class >> sourceinvalidoptional03xml [
 	"Source file: sun/invalid/optional03.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -969,7 +969,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional03xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional04xml [
+XMLConformanceSunTest class >> sourceinvalidoptional04xml [
 	"Source file: sun/invalid/optional04.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -981,7 +981,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional04xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional05xml [
+XMLConformanceSunTest class >> sourceinvalidoptional05xml [
 	"Source file: sun/invalid/optional05.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -993,7 +993,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional05xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional06xml [
+XMLConformanceSunTest class >> sourceinvalidoptional06xml [
 	"Source file: sun/invalid/optional06.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -1006,7 +1006,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional06xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional07xml [
+XMLConformanceSunTest class >> sourceinvalidoptional07xml [
 	"Source file: sun/invalid/optional07.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -1019,7 +1019,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional07xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional08xml [
+XMLConformanceSunTest class >> sourceinvalidoptional08xml [
 	"Source file: sun/invalid/optional08.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -1032,7 +1032,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional08xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional09xml [
+XMLConformanceSunTest class >> sourceinvalidoptional09xml [
 	"Source file: sun/invalid/optional09.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -1045,7 +1045,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional09xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional10xml [
+XMLConformanceSunTest class >> sourceinvalidoptional10xml [
 	"Source file: sun/invalid/optional10.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -1058,7 +1058,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional10xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional11xml [
+XMLConformanceSunTest class >> sourceinvalidoptional11xml [
 	"Source file: sun/invalid/optional11.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -1072,7 +1072,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional11xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional12xml [
+XMLConformanceSunTest class >> sourceinvalidoptional12xml [
 	"Source file: sun/invalid/optional12.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -1086,7 +1086,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional12xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional13xml [
+XMLConformanceSunTest class >> sourceinvalidoptional13xml [
 	"Source file: sun/invalid/optional13.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -1100,7 +1100,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional13xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional14xml [
+XMLConformanceSunTest class >> sourceinvalidoptional14xml [
 	"Source file: sun/invalid/optional14.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -1114,7 +1114,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional14xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional20xml [
+XMLConformanceSunTest class >> sourceinvalidoptional20xml [
 	"Source file: sun/invalid/optional20.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -1125,7 +1125,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional20xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional21xml [
+XMLConformanceSunTest class >> sourceinvalidoptional21xml [
 	"Source file: sun/invalid/optional21.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -1137,7 +1137,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional21xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional22xml [
+XMLConformanceSunTest class >> sourceinvalidoptional22xml [
 	"Source file: sun/invalid/optional22.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -1149,7 +1149,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional22xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional23xml [
+XMLConformanceSunTest class >> sourceinvalidoptional23xml [
 	"Source file: sun/invalid/optional23.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -1161,7 +1161,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional23xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional24xml [
+XMLConformanceSunTest class >> sourceinvalidoptional24xml [
 	"Source file: sun/invalid/optional24.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -1173,7 +1173,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional24xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidoptional25xml [
+XMLConformanceSunTest class >> sourceinvalidoptional25xml [
 	"Source file: sun/invalid/optional25.xml"
 
 	^ '<!DOCTYPE root SYSTEM "../valid/dtdtest.dtd">
@@ -1185,7 +1185,7 @@ XMLConformanceSunTests class >> sourceinvalidoptional25xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidrequired00xml [
+XMLConformanceSunTest class >> sourceinvalidrequired00xml [
 	"Source file: sun/invalid/required00.xml"
 
 	^ '<!DOCTYPE root [
@@ -1202,7 +1202,7 @@ XMLConformanceSunTests class >> sourceinvalidrequired00xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidrequired01xml [
+XMLConformanceSunTest class >> sourceinvalidrequired01xml [
 	"Source file: sun/invalid/required01.xml"
 
 	^ '<!DOCTYPE root [
@@ -1216,7 +1216,7 @@ XMLConformanceSunTests class >> sourceinvalidrequired01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidrequired02xml [
+XMLConformanceSunTest class >> sourceinvalidrequired02xml [
 	"Source file: sun/invalid/required02.xml"
 
 	^ '<!DOCTYPE root [
@@ -1231,7 +1231,7 @@ XMLConformanceSunTests class >> sourceinvalidrequired02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidrootxml [
+XMLConformanceSunTest class >> sourceinvalidrootxml [
 	"Source file: sun/invalid/root.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -1245,7 +1245,7 @@ XMLConformanceSunTests class >> sourceinvalidrootxml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidutf16bxml [
+XMLConformanceSunTest class >> sourceinvalidutf16bxml [
 	"Source file: sun/invalid/utf16b.xml"
 
 	^ '<?xml version=''1.0'' encoding=''UTF-16''?>
@@ -1254,7 +1254,7 @@ XMLConformanceSunTests class >> sourceinvalidutf16bxml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourceinvalidutf16lxml [
+XMLConformanceSunTest class >> sourceinvalidutf16lxml [
 	"Source file: sun/invalid/utf16l.xml"
 
 	^ '<?xml version=''1.0'' encoding=''UTF-16''?>
@@ -1263,7 +1263,7 @@ XMLConformanceSunTests class >> sourceinvalidutf16lxml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfattlist01xml [
+XMLConformanceSunTest class >> sourcenotwfattlist01xml [
 	"Source file: sun/not-wf/attlist01.xml"
 
 	^ '<!DOCTYPE root [
@@ -1282,7 +1282,7 @@ XMLConformanceSunTests class >> sourcenotwfattlist01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfattlist02xml [
+XMLConformanceSunTest class >> sourcenotwfattlist02xml [
 	"Source file: sun/not-wf/attlist02.xml"
 
 	^ '<!DOCTYPE root [
@@ -1302,7 +1302,7 @@ XMLConformanceSunTests class >> sourcenotwfattlist02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfattlist03xml [
+XMLConformanceSunTest class >> sourcenotwfattlist03xml [
 	"Source file: sun/not-wf/attlist03.xml"
 
 	^ '<!DOCTYPE root [
@@ -1322,7 +1322,7 @@ XMLConformanceSunTests class >> sourcenotwfattlist03xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfattlist04xml [
+XMLConformanceSunTest class >> sourcenotwfattlist04xml [
 	"Source file: sun/not-wf/attlist04.xml"
 
 	^ '<!DOCTYPE root [
@@ -1342,7 +1342,7 @@ XMLConformanceSunTests class >> sourcenotwfattlist04xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfattlist05xml [
+XMLConformanceSunTest class >> sourcenotwfattlist05xml [
 	"Source file: sun/not-wf/attlist05.xml"
 
 	^ '<!DOCTYPE root [
@@ -1362,7 +1362,7 @@ XMLConformanceSunTests class >> sourcenotwfattlist05xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfattlist06xml [
+XMLConformanceSunTest class >> sourcenotwfattlist06xml [
 	"Source file: sun/not-wf/attlist06.xml"
 
 	^ '<!DOCTYPE root [
@@ -1382,7 +1382,7 @@ XMLConformanceSunTests class >> sourcenotwfattlist06xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfattlist07xml [
+XMLConformanceSunTest class >> sourcenotwfattlist07xml [
 	"Source file: sun/not-wf/attlist07.xml"
 
 	^ '<!DOCTYPE root [
@@ -1402,7 +1402,7 @@ XMLConformanceSunTests class >> sourcenotwfattlist07xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfattlist08xml [
+XMLConformanceSunTest class >> sourcenotwfattlist08xml [
 	"Source file: sun/not-wf/attlist08.xml"
 
 	^ '<!DOCTYPE root [
@@ -1421,7 +1421,7 @@ XMLConformanceSunTests class >> sourcenotwfattlist08xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfattlist09xml [
+XMLConformanceSunTest class >> sourcenotwfattlist09xml [
 	"Source file: sun/not-wf/attlist09.xml"
 
 	^ '<!DOCTYPE root [
@@ -1439,7 +1439,7 @@ XMLConformanceSunTests class >> sourcenotwfattlist09xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfattlist10xml [
+XMLConformanceSunTest class >> sourcenotwfattlist10xml [
 	"Source file: sun/not-wf/attlist10.xml"
 
 	^ '<!DOCTYPE root [
@@ -1454,7 +1454,7 @@ XMLConformanceSunTests class >> sourcenotwfattlist10xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfattlist11xml [
+XMLConformanceSunTest class >> sourcenotwfattlist11xml [
 	"Source file: sun/not-wf/attlist11.xml"
 
 	^ '<!DOCTYPE root [
@@ -1468,7 +1468,7 @@ XMLConformanceSunTests class >> sourcenotwfattlist11xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfcond01xml [
+XMLConformanceSunTest class >> sourcenotwfcond01xml [
 	"Source file: sun/not-wf/cond01.xml"
 
 	^ '<!DOCTYPE root SYSTEM "cond.dtd" [
@@ -1480,7 +1480,7 @@ XMLConformanceSunTests class >> sourcenotwfcond01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfcond02xml [
+XMLConformanceSunTest class >> sourcenotwfcond02xml [
 	"Source file: sun/not-wf/cond02.xml"
 
 	^ '<!DOCTYPE root SYSTEM "cond.dtd" [
@@ -1493,7 +1493,7 @@ XMLConformanceSunTests class >> sourcenotwfcond02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfconddtd [
+XMLConformanceSunTest class >> sourcenotwfconddtd [
 	"Source file: sun/not-wf/cond.dtd"
 
 	^ '<!-- test conditional sections -->
@@ -1503,7 +1503,7 @@ XMLConformanceSunTests class >> sourcenotwfconddtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfcontent01xml [
+XMLConformanceSunTest class >> sourcenotwfcontent01xml [
 	"Source file: sun/not-wf/content01.xml"
 
 	^ '<!DOCTYPE root [
@@ -1515,7 +1515,7 @@ XMLConformanceSunTests class >> sourcenotwfcontent01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfcontent02xml [
+XMLConformanceSunTest class >> sourcenotwfcontent02xml [
 	"Source file: sun/not-wf/content02.xml"
 
 	^ '<!DOCTYPE root [
@@ -1528,7 +1528,7 @@ XMLConformanceSunTests class >> sourcenotwfcontent02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfcontent03xml [
+XMLConformanceSunTest class >> sourcenotwfcontent03xml [
 	"Source file: sun/not-wf/content03.xml"
 
 	^ '<!DOCTYPE root [
@@ -1541,7 +1541,7 @@ XMLConformanceSunTests class >> sourcenotwfcontent03xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfdecl01ent [
+XMLConformanceSunTest class >> sourcenotwfdecl01ent [
 	"Source file: sun/not-wf/decl01.ent"
 
 	^ '<?xml version="1.0" encoding="utf-8" standalone="yes"?>
@@ -1550,7 +1550,7 @@ XMLConformanceSunTests class >> sourcenotwfdecl01ent [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfdecl01xml [
+XMLConformanceSunTest class >> sourcenotwfdecl01xml [
 	"Source file: sun/not-wf/decl01.xml"
 
 	^ '<!DOCTYPE root [
@@ -1565,7 +1565,7 @@ XMLConformanceSunTests class >> sourcenotwfdecl01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfdtd00xml [
+XMLConformanceSunTest class >> sourcenotwfdtd00xml [
 	"Source file: sun/not-wf/dtd00.xml"
 
 	^ '<!DOCTYPE root [
@@ -1580,7 +1580,7 @@ XMLConformanceSunTests class >> sourcenotwfdtd00xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfdtd01xml [
+XMLConformanceSunTest class >> sourcenotwfdtd01xml [
 	"Source file: sun/not-wf/dtd01.xml"
 
 	^ '<!DOCTYPE root [
@@ -1595,7 +1595,7 @@ XMLConformanceSunTests class >> sourcenotwfdtd01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfdtd02xml [
+XMLConformanceSunTest class >> sourcenotwfdtd02xml [
 	"Source file: sun/not-wf/dtd02.xml"
 
 	^ '<!DOCTYPE root [
@@ -1610,7 +1610,7 @@ XMLConformanceSunTests class >> sourcenotwfdtd02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfdtd03xml [
+XMLConformanceSunTest class >> sourcenotwfdtd03xml [
 	"Source file: sun/not-wf/dtd03.xml"
 
 	^ '<!DOCTYPE root [
@@ -1626,7 +1626,7 @@ XMLConformanceSunTests class >> sourcenotwfdtd03xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfdtd04xml [
+XMLConformanceSunTest class >> sourcenotwfdtd04xml [
 	"Source file: sun/not-wf/dtd04.xml"
 
 	^ '<!DOCTYPE root [
@@ -1640,7 +1640,7 @@ XMLConformanceSunTests class >> sourcenotwfdtd04xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfdtd05xml [
+XMLConformanceSunTest class >> sourcenotwfdtd05xml [
 	"Source file: sun/not-wf/dtd05.xml"
 
 	^ '<!DOCTYPE root [
@@ -1654,7 +1654,7 @@ XMLConformanceSunTests class >> sourcenotwfdtd05xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfdtd07dtd [
+XMLConformanceSunTest class >> sourcenotwfdtd07dtd [
 	"Source file: sun/not-wf/dtd07.dtd"
 
 	^ '<?xml version="1.0"?>
@@ -1668,7 +1668,7 @@ XMLConformanceSunTests class >> sourcenotwfdtd07dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfdtd07xml [
+XMLConformanceSunTest class >> sourcenotwfdtd07xml [
 	"Source file: sun/not-wf/dtd07.xml"
 
 	^ '<!DOCTYPE root SYSTEM "dtd07.dtd" [
@@ -1679,7 +1679,7 @@ XMLConformanceSunTests class >> sourcenotwfdtd07xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfelement00xml [
+XMLConformanceSunTest class >> sourcenotwfelement00xml [
 	"Source file: sun/not-wf/element00.xml"
 
 	^ '<root>
@@ -1688,7 +1688,7 @@ XMLConformanceSunTests class >> sourcenotwfelement00xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfelement01xml [
+XMLConformanceSunTest class >> sourcenotwfelement01xml [
 	"Source file: sun/not-wf/element01.xml"
 
 	^ '<root>
@@ -1697,7 +1697,7 @@ XMLConformanceSunTests class >> sourcenotwfelement01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfelement02xml [
+XMLConformanceSunTest class >> sourcenotwfelement02xml [
 	"Source file: sun/not-wf/element02.xml"
 
 	^ '<!DOCTYPE html [ <!ELEMENT html ANY> ]>
@@ -1708,7 +1708,7 @@ XMLConformanceSunTests class >> sourcenotwfelement02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfelement03xml [
+XMLConformanceSunTest class >> sourcenotwfelement03xml [
 	"Source file: sun/not-wf/element03.xml"
 
 	^ '<!DOCTYPE html [ <!ELEMENT html ANY> ]>
@@ -1720,7 +1720,7 @@ XMLConformanceSunTests class >> sourcenotwfelement03xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfelement04xml [
+XMLConformanceSunTest class >> sourcenotwfelement04xml [
 	"Source file: sun/not-wf/element04.xml"
 
 	^ '<!DOCTYPE root [ <!ELEMENT root ANY> ]>
@@ -1731,7 +1731,7 @@ XMLConformanceSunTests class >> sourcenotwfelement04xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfencoding01xml [
+XMLConformanceSunTest class >> sourcenotwfencoding01xml [
 	"Source file: sun/not-wf/encoding01.xml"
 
 	^ '<?xml version="1.0" encoding=" utf-8"?>
@@ -1740,7 +1740,7 @@ XMLConformanceSunTests class >> sourcenotwfencoding01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfencoding02xml [
+XMLConformanceSunTest class >> sourcenotwfencoding02xml [
 	"Source file: sun/not-wf/encoding02.xml"
 
 	^ '<?xml version="1.0" encoding="a/b"?>
@@ -1750,7 +1750,7 @@ XMLConformanceSunTests class >> sourcenotwfencoding02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfencoding03xml [
+XMLConformanceSunTest class >> sourcenotwfencoding03xml [
 	"Source file: sun/not-wf/encoding03.xml"
 
 	^ '<?xml version="1.0" encoding="just&#41;word"?>
@@ -1760,7 +1760,7 @@ XMLConformanceSunTests class >> sourcenotwfencoding03xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfencoding04xml [
+XMLConformanceSunTest class >> sourcenotwfencoding04xml [
 	"Source file: sun/not-wf/encoding04.xml"
 
 	^ '<?xml version="1.0" encoding="utf:8"?>
@@ -1770,7 +1770,7 @@ XMLConformanceSunTests class >> sourcenotwfencoding04xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfencoding05xml [
+XMLConformanceSunTest class >> sourcenotwfencoding05xml [
 	"Source file: sun/not-wf/encoding05.xml"
 
 	^ '<?xml version="1.0" encoding="@import(sys-encoding)"?>
@@ -1780,7 +1780,7 @@ XMLConformanceSunTests class >> sourcenotwfencoding05xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfencoding06xml [
+XMLConformanceSunTest class >> sourcenotwfencoding06xml [
 	"Source file: sun/not-wf/encoding06.xml"
 
 	^ '<?xml version="1.0" encoding="XYZ+999"?>
@@ -1792,7 +1792,7 @@ XMLConformanceSunTests class >> sourcenotwfencoding06xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfencoding07xml [
+XMLConformanceSunTest class >> sourcenotwfencoding07xml [
 	"Source file: sun/not-wf/encoding07.xml"
 
 	^ '<!DOCTYPE root [
@@ -1809,7 +1809,7 @@ XMLConformanceSunTests class >> sourcenotwfencoding07xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfnotsa03xml [
+XMLConformanceSunTest class >> sourcenotwfnotsa03xml [
 	"Source file: sun/not-wf/not-sa03.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -1828,7 +1828,7 @@ XMLConformanceSunTests class >> sourcenotwfnotsa03xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfpixml [
+XMLConformanceSunTest class >> sourcenotwfpixml [
 	"Source file: sun/not-wf/pi.xml"
 
 	^ '<!DOCTYPE root [
@@ -1841,7 +1841,7 @@ XMLConformanceSunTests class >> sourcenotwfpixml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfpubid01xml [
+XMLConformanceSunTest class >> sourcenotwfpubid01xml [
 	"Source file: sun/not-wf/pubid01.xml"
 
 	^ '<!DOCTYPE root [
@@ -1857,7 +1857,7 @@ XMLConformanceSunTests class >> sourcenotwfpubid01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfpubid02xml [
+XMLConformanceSunTest class >> sourcenotwfpubid02xml [
 	"Source file: sun/not-wf/pubid02.xml"
 
 	^ '<!DOCTYPE root [
@@ -1874,7 +1874,7 @@ XMLConformanceSunTests class >> sourcenotwfpubid02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfpubid03xml [
+XMLConformanceSunTest class >> sourcenotwfpubid03xml [
 	"Source file: sun/not-wf/pubid03.xml"
 
 	^ '<!DOCTYPE root [
@@ -1891,7 +1891,7 @@ XMLConformanceSunTests class >> sourcenotwfpubid03xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfpubid04xml [
+XMLConformanceSunTest class >> sourcenotwfpubid04xml [
 	"Source file: sun/not-wf/pubid04.xml"
 
 	^ '<!DOCTYPE root [
@@ -1908,7 +1908,7 @@ XMLConformanceSunTests class >> sourcenotwfpubid04xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfpubid05xml [
+XMLConformanceSunTest class >> sourcenotwfpubid05xml [
 	"Source file: sun/not-wf/pubid05.xml"
 
 	^ '<!DOCTYPE root [
@@ -1923,7 +1923,7 @@ XMLConformanceSunTests class >> sourcenotwfpubid05xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfsgml01xml [
+XMLConformanceSunTest class >> sourcenotwfsgml01xml [
 	"Source file: sun/not-wf/sgml01.xml"
 
 	^ '<!DOCTYPE root [
@@ -1937,7 +1937,7 @@ XMLConformanceSunTests class >> sourcenotwfsgml01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfsgml02xml [
+XMLConformanceSunTest class >> sourcenotwfsgml02xml [
 	"Source file: sun/not-wf/sgml02.xml"
 
 	^ ' <?xml version="1.0"?>
@@ -1948,7 +1948,7 @@ XMLConformanceSunTests class >> sourcenotwfsgml02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfsgml03xml [
+XMLConformanceSunTest class >> sourcenotwfsgml03xml [
 	"Source file: sun/not-wf/sgml03.xml"
 
 	^ '<!DOCTYPE root [ <!ELEMENT root EMPTY> ]>
@@ -1959,7 +1959,7 @@ XMLConformanceSunTests class >> sourcenotwfsgml03xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfsgml04xml [
+XMLConformanceSunTest class >> sourcenotwfsgml04xml [
 	"Source file: sun/not-wf/sgml04.xml"
 
 	^ '<!DOCTYPE root [
@@ -1978,7 +1978,7 @@ XMLConformanceSunTests class >> sourcenotwfsgml04xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfsgml05xml [
+XMLConformanceSunTest class >> sourcenotwfsgml05xml [
 	"Source file: sun/not-wf/sgml05.xml"
 
 	^ '<!DOCTYPE root [
@@ -1997,7 +1997,7 @@ XMLConformanceSunTests class >> sourcenotwfsgml05xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfsgml06xml [
+XMLConformanceSunTest class >> sourcenotwfsgml06xml [
 	"Source file: sun/not-wf/sgml06.xml"
 
 	^ '<!DOCTYPE root [
@@ -2015,7 +2015,7 @@ XMLConformanceSunTests class >> sourcenotwfsgml06xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfsgml07xml [
+XMLConformanceSunTest class >> sourcenotwfsgml07xml [
 	"Source file: sun/not-wf/sgml07.xml"
 
 	^ '<!DOCTYPE root [
@@ -2028,7 +2028,7 @@ XMLConformanceSunTests class >> sourcenotwfsgml07xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfsgml08xml [
+XMLConformanceSunTest class >> sourcenotwfsgml08xml [
 	"Source file: sun/not-wf/sgml08.xml"
 
 	^ '<!DOCTYPE root [
@@ -2042,7 +2042,7 @@ XMLConformanceSunTests class >> sourcenotwfsgml08xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfsgml09xml [
+XMLConformanceSunTest class >> sourcenotwfsgml09xml [
 	"Source file: sun/not-wf/sgml09.xml"
 
 	^ '<!DOCTYPE root [
@@ -2057,7 +2057,7 @@ XMLConformanceSunTests class >> sourcenotwfsgml09xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfsgml10xml [
+XMLConformanceSunTest class >> sourcenotwfsgml10xml [
 	"Source file: sun/not-wf/sgml10.xml"
 
 	^ '<!DOCTYPE root [
@@ -2071,7 +2071,7 @@ XMLConformanceSunTests class >> sourcenotwfsgml10xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfsgml11xml [
+XMLConformanceSunTest class >> sourcenotwfsgml11xml [
 	"Source file: sun/not-wf/sgml11.xml"
 
 	^ '<!DOCTYPE root [
@@ -2085,7 +2085,7 @@ XMLConformanceSunTests class >> sourcenotwfsgml11xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfsgml12xml [
+XMLConformanceSunTest class >> sourcenotwfsgml12xml [
 	"Source file: sun/not-wf/sgml12.xml"
 
 	^ '<!DOCTYPE root [
@@ -2100,7 +2100,7 @@ XMLConformanceSunTests class >> sourcenotwfsgml12xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfsgml13xml [
+XMLConformanceSunTest class >> sourcenotwfsgml13xml [
 	"Source file: sun/not-wf/sgml13.xml"
 
 	^ '<!DOCTYPE root [
@@ -2118,7 +2118,7 @@ XMLConformanceSunTests class >> sourcenotwfsgml13xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcenotwfuri01xml [
+XMLConformanceSunTest class >> sourcenotwfuri01xml [
 	"Source file: sun/not-wf/uri01.xml"
 
 	^ '<!DOCTYPE root [
@@ -2131,7 +2131,7 @@ XMLConformanceSunTests class >> sourcenotwfuri01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevaliddtd00xml [
+XMLConformanceSunTest class >> sourcevaliddtd00xml [
 	"Source file: sun/valid/dtd00.xml"
 
 	^ '<!DOCTYPE root [
@@ -2145,7 +2145,7 @@ XMLConformanceSunTests class >> sourcevaliddtd00xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevaliddtd01xml [
+XMLConformanceSunTest class >> sourcevaliddtd01xml [
 	"Source file: sun/valid/dtd01.xml"
 
 	^ '<!DOCTYPE root [
@@ -2158,7 +2158,7 @@ XMLConformanceSunTests class >> sourcevaliddtd01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevaliddtdtestdtd [
+XMLConformanceSunTest class >> sourcevaliddtdtestdtd [
 	"Source file: sun/valid/dtdtest.dtd"
 
 	^ '<?xml version="1.0" encoding="UTF-8"?>
@@ -2208,7 +2208,7 @@ XMLConformanceSunTests class >> sourcevaliddtdtestdtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidelementxml [
+XMLConformanceSunTest class >> sourcevalidelementxml [
 	"Source file: sun/valid/element.xml"
 
 	^ '<!DOCTYPE root [
@@ -2253,7 +2253,7 @@ XMLConformanceSunTests class >> sourcevalidelementxml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidext01ent [
+XMLConformanceSunTest class >> sourcevalidext01ent [
 	"Source file: sun/valid/ext01.ent"
 
 	^ '<?xml encoding="UTF-8"?>
@@ -2267,7 +2267,7 @@ XMLConformanceSunTests class >> sourcevalidext01ent [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidext01xml [
+XMLConformanceSunTest class >> sourcevalidext01xml [
 	"Source file: sun/valid/ext01.xml"
 
 	^ '<!DOCTYPE root [
@@ -2283,7 +2283,7 @@ XMLConformanceSunTests class >> sourcevalidext01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidext02xml [
+XMLConformanceSunTest class >> sourcevalidext02xml [
 	"Source file: sun/valid/ext02.xml"
 
 	^ '<!DOCTYPE foo [
@@ -2298,7 +2298,7 @@ XMLConformanceSunTests class >> sourcevalidext02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidnotation01dtd [
+XMLConformanceSunTest class >> sourcevalidnotation01dtd [
 	"Source file: sun/valid/notation01.dtd"
 
 	^ '<?xml version="1.0" encoding="UTF-8"?>
@@ -2313,7 +2313,7 @@ XMLConformanceSunTests class >> sourcevalidnotation01dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidnotation01xml [
+XMLConformanceSunTest class >> sourcevalidnotation01xml [
 	"Source file: sun/valid/notation01.xml"
 
 	^ '<?xml version="1.0"?>
@@ -2325,7 +2325,7 @@ XMLConformanceSunTests class >> sourcevalidnotation01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidnotsa01xml [
+XMLConformanceSunTest class >> sourcevalidnotsa01xml [
 	"Source file: sun/valid/not-sa01.xml"
 
 	^ '<?xml version=''1.0'' standalone=''no''?>
@@ -2342,7 +2342,7 @@ XMLConformanceSunTests class >> sourcevalidnotsa01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidnotsa02xml [
+XMLConformanceSunTest class >> sourcevalidnotsa02xml [
 	"Source file: sun/valid/not-sa02.xml"
 
 	^ '<?xml version=''1.0'' standalone=''no''?>
@@ -2379,7 +2379,7 @@ XMLConformanceSunTests class >> sourcevalidnotsa02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidnotsa03xml [
+XMLConformanceSunTest class >> sourcevalidnotsa03xml [
 	"Source file: sun/valid/not-sa03.xml"
 
 	^ '<?xml version=''1.0'' standalone=''no''?>
@@ -2411,7 +2411,7 @@ XMLConformanceSunTests class >> sourcevalidnotsa03xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidnotsa04xml [
+XMLConformanceSunTest class >> sourcevalidnotsa04xml [
 	"Source file: sun/valid/not-sa04.xml"
 
 	^ '<?xml version=''1.0'' standalone=''no''?>
@@ -2448,14 +2448,14 @@ XMLConformanceSunTests class >> sourcevalidnotsa04xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidnullent [
+XMLConformanceSunTest class >> sourcevalidnullent [
 	"Source file: sun/valid/null.ent"
 
 	^ ''
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidoptionalxml [
+XMLConformanceSunTest class >> sourcevalidoptionalxml [
 	"Source file: sun/valid/optional.xml"
 
 	^ '<!DOCTYPE root SYSTEM "dtdtest.dtd">
@@ -2512,7 +2512,7 @@ XMLConformanceSunTests class >> sourcevalidoptionalxml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidpe00dtd [
+XMLConformanceSunTest class >> sourcevalidpe00dtd [
 	"Source file: sun/valid/pe00.dtd"
 
 	^ '<!ELEMENT root (#PCDATA)>
@@ -2525,7 +2525,7 @@ XMLConformanceSunTests class >> sourcevalidpe00dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidpe00xml [
+XMLConformanceSunTest class >> sourcevalidpe00xml [
 	"Source file: sun/valid/pe00.xml"
 
 	^ '<!DOCTYPE root SYSTEM "pe00.dtd">
@@ -2534,7 +2534,7 @@ XMLConformanceSunTests class >> sourcevalidpe00xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidpe01dtd [
+XMLConformanceSunTest class >> sourcevalidpe01dtd [
 	"Source file: sun/valid/pe01.dtd"
 
 	^ '<!ENTITY % bad-pe SYSTEM "pe01.ent">
@@ -2547,7 +2547,7 @@ XMLConformanceSunTests class >> sourcevalidpe01dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidpe01ent [
+XMLConformanceSunTest class >> sourcevalidpe01ent [
 	"Source file: sun/valid/pe01.ent"
 
 	^ 'This is not a legal parameter entity, because
@@ -2556,7 +2556,7 @@ it does not match the "markupdecl" production.
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidpe01xml [
+XMLConformanceSunTest class >> sourcevalidpe01xml [
 	"Source file: sun/valid/pe01.xml"
 
 	^ '<!DOCTYPE root SYSTEM "pe01.dtd">
@@ -2565,7 +2565,7 @@ XMLConformanceSunTests class >> sourcevalidpe01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidpe02xml [
+XMLConformanceSunTest class >> sourcevalidpe02xml [
 	"Source file: sun/valid/pe02.xml"
 
 	^ '<?xml version=''1.0''?>
@@ -2581,7 +2581,7 @@ XMLConformanceSunTests class >> sourcevalidpe02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidpe03xml [
+XMLConformanceSunTest class >> sourcevalidpe03xml [
 	"Source file: sun/valid/pe03.xml"
 
 	^ '<!DOCTYPE root [
@@ -2596,7 +2596,7 @@ numerically (&#38;#38;#38) or with a general entity (&amp;amp;).</p>" >
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidrequired00xml [
+XMLConformanceSunTest class >> sourcevalidrequired00xml [
 	"Source file: sun/valid/required00.xml"
 
 	^ '<!DOCTYPE root [
@@ -2611,7 +2611,7 @@ XMLConformanceSunTests class >> sourcevalidrequired00xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidsa01xml [
+XMLConformanceSunTest class >> sourcevalidsa01xml [
 	"Source file: sun/valid/sa01.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -2631,7 +2631,7 @@ XMLConformanceSunTests class >> sourcevalidsa01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidsa02xml [
+XMLConformanceSunTest class >> sourcevalidsa02xml [
 	"Source file: sun/valid/sa02.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -2690,7 +2690,7 @@ XMLConformanceSunTests class >> sourcevalidsa02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidsa03xml [
+XMLConformanceSunTest class >> sourcevalidsa03xml [
 	"Source file: sun/valid/sa03.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -2725,7 +2725,7 @@ XMLConformanceSunTests class >> sourcevalidsa03xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidsa04xml [
+XMLConformanceSunTest class >> sourcevalidsa04xml [
 	"Source file: sun/valid/sa04.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -2770,7 +2770,7 @@ XMLConformanceSunTests class >> sourcevalidsa04xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidsa05xml [
+XMLConformanceSunTest class >> sourcevalidsa05xml [
 	"Source file: sun/valid/sa05.xml"
 
 	^ '<?xml version=''1.0'' standalone=''yes''?>
@@ -2784,7 +2784,7 @@ XMLConformanceSunTests class >> sourcevalidsa05xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidsadtd [
+XMLConformanceSunTest class >> sourcevalidsadtd [
 	"Source file: sun/valid/sa.dtd"
 
 	^ '<?xml version="1.0" encoding="UTF-8"?>
@@ -2830,7 +2830,7 @@ XMLConformanceSunTests class >> sourcevalidsadtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidsgml01xml [
+XMLConformanceSunTest class >> sourcevalidsgml01xml [
 	"Source file: sun/valid/sgml01.xml"
 
 	^ '<!DOCTYPE root [
@@ -2851,7 +2851,7 @@ XMLConformanceSunTests class >> sourcevalidsgml01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidvlang01xml [
+XMLConformanceSunTest class >> sourcevalidvlang01xml [
 	"Source file: sun/valid/v-lang01.xml"
 
 	^ '<!DOCTYPE root [
@@ -2863,7 +2863,7 @@ XMLConformanceSunTests class >> sourcevalidvlang01xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidvlang02xml [
+XMLConformanceSunTest class >> sourcevalidvlang02xml [
 	"Source file: sun/valid/v-lang02.xml"
 
 	^ '<!DOCTYPE root [
@@ -2876,7 +2876,7 @@ XMLConformanceSunTests class >> sourcevalidvlang02xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidvlang03xml [
+XMLConformanceSunTest class >> sourcevalidvlang03xml [
 	"Source file: sun/valid/v-lang03.xml"
 
 	^ '<!DOCTYPE root [
@@ -2889,7 +2889,7 @@ XMLConformanceSunTests class >> sourcevalidvlang03xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidvlang04xml [
+XMLConformanceSunTest class >> sourcevalidvlang04xml [
 	"Source file: sun/valid/v-lang04.xml"
 
 	^ '<!DOCTYPE root [
@@ -2902,7 +2902,7 @@ XMLConformanceSunTests class >> sourcevalidvlang04xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidvlang05xml [
+XMLConformanceSunTest class >> sourcevalidvlang05xml [
 	"Source file: sun/valid/v-lang05.xml"
 
 	^ '<!DOCTYPE root [
@@ -2915,7 +2915,7 @@ XMLConformanceSunTests class >> sourcevalidvlang05xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceSunTests class >> sourcevalidvlang06xml [
+XMLConformanceSunTest class >> sourcevalidvlang06xml [
 	"Source file: sun/valid/v-lang06.xml"
 
 	^ '<!DOCTYPE root [
@@ -2928,11 +2928,12 @@ XMLConformanceSunTests class >> sourcevalidvlang06xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidattr01xml [
+XMLConformanceSunTest >> testinvalidattr01xml [
 	"Source file: sun/invalid/attr01.xml"
 
-	(self isSkippableTest: #testinvalidattr01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidattr01xml.
 	self
 		should: [
 			self
@@ -2942,11 +2943,12 @@ XMLConformanceSunTests >> testinvalidattr01xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidattr02xml [
+XMLConformanceSunTest >> testinvalidattr02xml [
 	"Source file: sun/invalid/attr02.xml"
 
-	(self isSkippableTest: #testinvalidattr02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidattr02xml.
 	self
 		should: [
 			self
@@ -2956,11 +2958,12 @@ XMLConformanceSunTests >> testinvalidattr02xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidattr03xml [
+XMLConformanceSunTest >> testinvalidattr03xml [
 	"Source file: sun/invalid/attr03.xml"
 
-	(self isSkippableTest: #testinvalidattr03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidattr03xml.
 	self
 		should: [
 			self
@@ -2970,11 +2973,12 @@ XMLConformanceSunTests >> testinvalidattr03xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidattr04xml [
+XMLConformanceSunTest >> testinvalidattr04xml [
 	"Source file: sun/invalid/attr04.xml"
 
-	(self isSkippableTest: #testinvalidattr04xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidattr04xml.
 	self
 		should: [
 			self
@@ -2984,11 +2988,12 @@ XMLConformanceSunTests >> testinvalidattr04xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidattr05xml [
+XMLConformanceSunTest >> testinvalidattr05xml [
 	"Source file: sun/invalid/attr05.xml"
 
-	(self isSkippableTest: #testinvalidattr05xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidattr05xml.
 	self
 		should: [
 			self
@@ -2998,11 +3003,12 @@ XMLConformanceSunTests >> testinvalidattr05xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidattr06xml [
+XMLConformanceSunTest >> testinvalidattr06xml [
 	"Source file: sun/invalid/attr06.xml"
 
-	(self isSkippableTest: #testinvalidattr06xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidattr06xml.
 	self
 		should: [
 			self
@@ -3012,11 +3018,12 @@ XMLConformanceSunTests >> testinvalidattr06xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidattr07xml [
+XMLConformanceSunTest >> testinvalidattr07xml [
 	"Source file: sun/invalid/attr07.xml"
 
-	(self isSkippableTest: #testinvalidattr07xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidattr07xml.
 	self
 		should: [
 			self
@@ -3026,11 +3033,12 @@ XMLConformanceSunTests >> testinvalidattr07xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidattr08xml [
+XMLConformanceSunTest >> testinvalidattr08xml [
 	"Source file: sun/invalid/attr08.xml"
 
-	(self isSkippableTest: #testinvalidattr08xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidattr08xml.
 	self
 		should: [
 			self
@@ -3040,11 +3048,12 @@ XMLConformanceSunTests >> testinvalidattr08xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidattr09xml [
+XMLConformanceSunTest >> testinvalidattr09xml [
 	"Source file: sun/invalid/attr09.xml"
 
-	(self isSkippableTest: #testinvalidattr09xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidattr09xml.
 	self
 		should: [
 			self
@@ -3054,11 +3063,12 @@ XMLConformanceSunTests >> testinvalidattr09xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidattr10xml [
+XMLConformanceSunTest >> testinvalidattr10xml [
 	"Source file: sun/invalid/attr10.xml"
 
-	(self isSkippableTest: #testinvalidattr10xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidattr10xml.
 	self
 		should: [
 			self
@@ -3068,11 +3078,12 @@ XMLConformanceSunTests >> testinvalidattr10xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidattr11xml [
+XMLConformanceSunTest >> testinvalidattr11xml [
 	"Source file: sun/invalid/attr11.xml"
 
-	(self isSkippableTest: #testinvalidattr11xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidattr11xml.
 	self
 		should: [
 			self
@@ -3082,11 +3093,12 @@ XMLConformanceSunTests >> testinvalidattr11xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidattr12xml [
+XMLConformanceSunTest >> testinvalidattr12xml [
 	"Source file: sun/invalid/attr12.xml"
 
-	(self isSkippableTest: #testinvalidattr12xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidattr12xml.
 	self
 		should: [
 			self
@@ -3096,11 +3108,12 @@ XMLConformanceSunTests >> testinvalidattr12xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidattr13xml [
+XMLConformanceSunTest >> testinvalidattr13xml [
 	"Source file: sun/invalid/attr13.xml"
 
-	(self isSkippableTest: #testinvalidattr13xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidattr13xml.
 	self
 		should: [
 			self
@@ -3110,11 +3123,12 @@ XMLConformanceSunTests >> testinvalidattr13xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidattr14xml [
+XMLConformanceSunTest >> testinvalidattr14xml [
 	"Source file: sun/invalid/attr14.xml"
 
-	(self isSkippableTest: #testinvalidattr14xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidattr14xml.
 	self
 		should: [
 			self
@@ -3124,11 +3138,12 @@ XMLConformanceSunTests >> testinvalidattr14xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidattr15xml [
+XMLConformanceSunTest >> testinvalidattr15xml [
 	"Source file: sun/invalid/attr15.xml"
 
-	(self isSkippableTest: #testinvalidattr15xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidattr15xml.
 	self
 		should: [
 			self
@@ -3138,11 +3153,12 @@ XMLConformanceSunTests >> testinvalidattr15xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidattr16xml [
+XMLConformanceSunTest >> testinvalidattr16xml [
 	"Source file: sun/invalid/attr16.xml"
 
-	(self isSkippableTest: #testinvalidattr16xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidattr16xml.
 	self
 		should: [
 			self
@@ -3152,11 +3168,12 @@ XMLConformanceSunTests >> testinvalidattr16xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvaliddtd01xml [
+XMLConformanceSunTest >> testinvaliddtd01xml [
 	"Source file: sun/invalid/dtd01.xml"
 
-	(self isSkippableTest: #testinvaliddtd01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvaliddtd01xml.
 	self
 		should: [
 			self
@@ -3166,11 +3183,12 @@ XMLConformanceSunTests >> testinvaliddtd01xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvaliddtd02xml [
+XMLConformanceSunTest >> testinvaliddtd02xml [
 	"Source file: sun/invalid/dtd02.xml"
 
-	(self isSkippableTest: #testinvaliddtd02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvaliddtd02xml.
 	self
 		should: [
 			self
@@ -3180,11 +3198,12 @@ XMLConformanceSunTests >> testinvaliddtd02xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvaliddtd03xml [
+XMLConformanceSunTest >> testinvaliddtd03xml [
 	"Source file: sun/invalid/dtd03.xml"
 
-	(self isSkippableTest: #testinvaliddtd03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvaliddtd03xml.
 	self
 		should: [
 			self
@@ -3194,11 +3213,12 @@ XMLConformanceSunTests >> testinvaliddtd03xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvaliddtd06xml [
+XMLConformanceSunTest >> testinvaliddtd06xml [
 	"Source file: sun/invalid/dtd06.xml"
 
-	(self isSkippableTest: #testinvaliddtd06xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvaliddtd06xml.
 	self
 		should: [
 			self
@@ -3208,11 +3228,12 @@ XMLConformanceSunTests >> testinvaliddtd06xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidel01xml [
+XMLConformanceSunTest >> testinvalidel01xml [
 	"Source file: sun/invalid/el01.xml"
 
-	(self isSkippableTest: #testinvalidel01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidel01xml.
 	self
 		should: [
 			self
@@ -3222,11 +3243,12 @@ XMLConformanceSunTests >> testinvalidel01xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidel02xml [
+XMLConformanceSunTest >> testinvalidel02xml [
 	"Source file: sun/invalid/el02.xml"
 
-	(self isSkippableTest: #testinvalidel02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidel02xml.
 	self
 		should: [
 			self
@@ -3236,11 +3258,12 @@ XMLConformanceSunTests >> testinvalidel02xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidel03xml [
+XMLConformanceSunTest >> testinvalidel03xml [
 	"Source file: sun/invalid/el03.xml"
 
-	(self isSkippableTest: #testinvalidel03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidel03xml.
 	self
 		should: [
 			self
@@ -3250,11 +3273,12 @@ XMLConformanceSunTests >> testinvalidel03xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidel04xml [
+XMLConformanceSunTest >> testinvalidel04xml [
 	"Source file: sun/invalid/el04.xml"
 
-	(self isSkippableTest: #testinvalidel04xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidel04xml.
 	self
 		should: [
 			self
@@ -3264,11 +3288,12 @@ XMLConformanceSunTests >> testinvalidel04xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidel05xml [
+XMLConformanceSunTest >> testinvalidel05xml [
 	"Source file: sun/invalid/el05.xml"
 
-	(self isSkippableTest: #testinvalidel05xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidel05xml.
 	self
 		should: [
 			self
@@ -3278,11 +3303,12 @@ XMLConformanceSunTests >> testinvalidel05xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidel06xml [
+XMLConformanceSunTest >> testinvalidel06xml [
 	"Source file: sun/invalid/el06.xml"
 
-	(self isSkippableTest: #testinvalidel06xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidel06xml.
 	self
 		should: [
 			self
@@ -3292,11 +3318,12 @@ XMLConformanceSunTests >> testinvalidel06xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidemptyxml [
+XMLConformanceSunTest >> testinvalidemptyxml [
 	"Source file: sun/invalid/empty.xml"
 
-	(self isSkippableTest: #testinvalidemptyxml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidemptyxml.
 	self
 		should: [
 			self
@@ -3306,11 +3333,12 @@ XMLConformanceSunTests >> testinvalidemptyxml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidid01xml [
+XMLConformanceSunTest >> testinvalidid01xml [
 	"Source file: sun/invalid/id01.xml"
 
-	(self isSkippableTest: #testinvalidid01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidid01xml.
 	self
 		should: [
 			self
@@ -3320,11 +3348,12 @@ XMLConformanceSunTests >> testinvalidid01xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidid02xml [
+XMLConformanceSunTest >> testinvalidid02xml [
 	"Source file: sun/invalid/id02.xml"
 
-	(self isSkippableTest: #testinvalidid02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidid02xml.
 	self
 		should: [
 			self
@@ -3334,11 +3363,12 @@ XMLConformanceSunTests >> testinvalidid02xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidid03xml [
+XMLConformanceSunTest >> testinvalidid03xml [
 	"Source file: sun/invalid/id03.xml"
 
-	(self isSkippableTest: #testinvalidid03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidid03xml.
 	self
 		should: [
 			self
@@ -3348,11 +3378,12 @@ XMLConformanceSunTests >> testinvalidid03xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidid04xml [
+XMLConformanceSunTest >> testinvalidid04xml [
 	"Source file: sun/invalid/id04.xml"
 
-	(self isSkippableTest: #testinvalidid04xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidid04xml.
 	self
 		should: [
 			self
@@ -3362,11 +3393,12 @@ XMLConformanceSunTests >> testinvalidid04xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidid05xml [
+XMLConformanceSunTest >> testinvalidid05xml [
 	"Source file: sun/invalid/id05.xml"
 
-	(self isSkippableTest: #testinvalidid05xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidid05xml.
 	self
 		should: [
 			self
@@ -3376,11 +3408,12 @@ XMLConformanceSunTests >> testinvalidid05xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidid06xml [
+XMLConformanceSunTest >> testinvalidid06xml [
 	"Source file: sun/invalid/id06.xml"
 
-	(self isSkippableTest: #testinvalidid06xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidid06xml.
 	self
 		should: [
 			self
@@ -3390,11 +3423,12 @@ XMLConformanceSunTests >> testinvalidid06xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidid07xml [
+XMLConformanceSunTest >> testinvalidid07xml [
 	"Source file: sun/invalid/id07.xml"
 
-	(self isSkippableTest: #testinvalidid07xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidid07xml.
 	self
 		should: [
 			self
@@ -3404,11 +3438,12 @@ XMLConformanceSunTests >> testinvalidid07xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidid08xml [
+XMLConformanceSunTest >> testinvalidid08xml [
 	"Source file: sun/invalid/id08.xml"
 
-	(self isSkippableTest: #testinvalidid08xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidid08xml.
 	self
 		should: [
 			self
@@ -3418,11 +3453,12 @@ XMLConformanceSunTests >> testinvalidid08xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidid09xml [
+XMLConformanceSunTest >> testinvalidid09xml [
 	"Source file: sun/invalid/id09.xml"
 
-	(self isSkippableTest: #testinvalidid09xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidid09xml.
 	self
 		should: [
 			self
@@ -3432,11 +3468,12 @@ XMLConformanceSunTests >> testinvalidid09xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidnotsa01xml [
+XMLConformanceSunTest >> testinvalidnotsa01xml [
 	"Source file: sun/invalid/not-sa01.xml"
 
-	(self isSkippableTest: #testinvalidnotsa01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidnotsa01xml.
 	self
 		should: [
 			self
@@ -3446,11 +3483,12 @@ XMLConformanceSunTests >> testinvalidnotsa01xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidnotsa02xml [
+XMLConformanceSunTest >> testinvalidnotsa02xml [
 	"Source file: sun/invalid/not-sa02.xml"
 
-	(self isSkippableTest: #testinvalidnotsa02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidnotsa02xml.
 	self
 		should: [
 			self
@@ -3460,11 +3498,12 @@ XMLConformanceSunTests >> testinvalidnotsa02xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidnotsa04xml [
+XMLConformanceSunTest >> testinvalidnotsa04xml [
 	"Source file: sun/invalid/not-sa04.xml"
 
-	(self isSkippableTest: #testinvalidnotsa04xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidnotsa04xml.
 	self
 		should: [
 			self
@@ -3474,11 +3513,12 @@ XMLConformanceSunTests >> testinvalidnotsa04xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidnotsa05xml [
+XMLConformanceSunTest >> testinvalidnotsa05xml [
 	"Source file: sun/invalid/not-sa05.xml"
 
-	(self isSkippableTest: #testinvalidnotsa05xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidnotsa05xml.
 	self
 		should: [
 			self
@@ -3488,11 +3528,12 @@ XMLConformanceSunTests >> testinvalidnotsa05xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidnotsa06xml [
+XMLConformanceSunTest >> testinvalidnotsa06xml [
 	"Source file: sun/invalid/not-sa06.xml"
 
-	(self isSkippableTest: #testinvalidnotsa06xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidnotsa06xml.
 	self
 		should: [
 			self
@@ -3502,11 +3543,12 @@ XMLConformanceSunTests >> testinvalidnotsa06xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidnotsa07xml [
+XMLConformanceSunTest >> testinvalidnotsa07xml [
 	"Source file: sun/invalid/not-sa07.xml"
 
-	(self isSkippableTest: #testinvalidnotsa07xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidnotsa07xml.
 	self
 		should: [
 			self
@@ -3516,11 +3558,12 @@ XMLConformanceSunTests >> testinvalidnotsa07xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidnotsa08xml [
+XMLConformanceSunTest >> testinvalidnotsa08xml [
 	"Source file: sun/invalid/not-sa08.xml"
 
-	(self isSkippableTest: #testinvalidnotsa08xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidnotsa08xml.
 	self
 		should: [
 			self
@@ -3530,11 +3573,12 @@ XMLConformanceSunTests >> testinvalidnotsa08xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidnotsa09xml [
+XMLConformanceSunTest >> testinvalidnotsa09xml [
 	"Source file: sun/invalid/not-sa09.xml"
 
-	(self isSkippableTest: #testinvalidnotsa09xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidnotsa09xml.
 	self
 		should: [
 			self
@@ -3544,11 +3588,12 @@ XMLConformanceSunTests >> testinvalidnotsa09xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidnotsa10xml [
+XMLConformanceSunTest >> testinvalidnotsa10xml [
 	"Source file: sun/invalid/not-sa10.xml"
 
-	(self isSkippableTest: #testinvalidnotsa10xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidnotsa10xml.
 	self
 		should: [
 			self
@@ -3558,11 +3603,12 @@ XMLConformanceSunTests >> testinvalidnotsa10xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidnotsa11xml [
+XMLConformanceSunTest >> testinvalidnotsa11xml [
 	"Source file: sun/invalid/not-sa11.xml"
 
-	(self isSkippableTest: #testinvalidnotsa11xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidnotsa11xml.
 	self
 		should: [
 			self
@@ -3572,11 +3618,12 @@ XMLConformanceSunTests >> testinvalidnotsa11xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidnotsa12xml [
+XMLConformanceSunTest >> testinvalidnotsa12xml [
 	"Source file: sun/invalid/not-sa12.xml"
 
-	(self isSkippableTest: #testinvalidnotsa12xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidnotsa12xml.
 	self
 		should: [
 			self
@@ -3586,11 +3633,12 @@ XMLConformanceSunTests >> testinvalidnotsa12xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidnotsa13xml [
+XMLConformanceSunTest >> testinvalidnotsa13xml [
 	"Source file: sun/invalid/not-sa13.xml"
 
-	(self isSkippableTest: #testinvalidnotsa13xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidnotsa13xml.
 	self
 		should: [
 			self
@@ -3600,11 +3648,12 @@ XMLConformanceSunTests >> testinvalidnotsa13xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidnotsa14xml [
+XMLConformanceSunTest >> testinvalidnotsa14xml [
 	"Source file: sun/invalid/not-sa14.xml"
 
-	(self isSkippableTest: #testinvalidnotsa14xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidnotsa14xml.
 	self
 		should: [
 			self
@@ -3614,11 +3663,12 @@ XMLConformanceSunTests >> testinvalidnotsa14xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional01xml [
+XMLConformanceSunTest >> testinvalidoptional01xml [
 	"Source file: sun/invalid/optional01.xml"
 
-	(self isSkippableTest: #testinvalidoptional01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional01xml.
 	self
 		should: [
 			self
@@ -3628,11 +3678,12 @@ XMLConformanceSunTests >> testinvalidoptional01xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional02xml [
+XMLConformanceSunTest >> testinvalidoptional02xml [
 	"Source file: sun/invalid/optional02.xml"
 
-	(self isSkippableTest: #testinvalidoptional02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional02xml.
 	self
 		should: [
 			self
@@ -3642,11 +3693,12 @@ XMLConformanceSunTests >> testinvalidoptional02xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional03xml [
+XMLConformanceSunTest >> testinvalidoptional03xml [
 	"Source file: sun/invalid/optional03.xml"
 
-	(self isSkippableTest: #testinvalidoptional03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional03xml.
 	self
 		should: [
 			self
@@ -3656,11 +3708,12 @@ XMLConformanceSunTests >> testinvalidoptional03xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional04xml [
+XMLConformanceSunTest >> testinvalidoptional04xml [
 	"Source file: sun/invalid/optional04.xml"
 
-	(self isSkippableTest: #testinvalidoptional04xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional04xml.
 	self
 		should: [
 			self
@@ -3670,11 +3723,12 @@ XMLConformanceSunTests >> testinvalidoptional04xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional05xml [
+XMLConformanceSunTest >> testinvalidoptional05xml [
 	"Source file: sun/invalid/optional05.xml"
 
-	(self isSkippableTest: #testinvalidoptional05xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional05xml.
 	self
 		should: [
 			self
@@ -3684,11 +3738,12 @@ XMLConformanceSunTests >> testinvalidoptional05xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional06xml [
+XMLConformanceSunTest >> testinvalidoptional06xml [
 	"Source file: sun/invalid/optional06.xml"
 
-	(self isSkippableTest: #testinvalidoptional06xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional06xml.
 	self
 		should: [
 			self
@@ -3698,11 +3753,12 @@ XMLConformanceSunTests >> testinvalidoptional06xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional07xml [
+XMLConformanceSunTest >> testinvalidoptional07xml [
 	"Source file: sun/invalid/optional07.xml"
 
-	(self isSkippableTest: #testinvalidoptional07xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional07xml.
 	self
 		should: [
 			self
@@ -3712,11 +3768,12 @@ XMLConformanceSunTests >> testinvalidoptional07xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional08xml [
+XMLConformanceSunTest >> testinvalidoptional08xml [
 	"Source file: sun/invalid/optional08.xml"
 
-	(self isSkippableTest: #testinvalidoptional08xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional08xml.
 	self
 		should: [
 			self
@@ -3726,11 +3783,12 @@ XMLConformanceSunTests >> testinvalidoptional08xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional09xml [
+XMLConformanceSunTest >> testinvalidoptional09xml [
 	"Source file: sun/invalid/optional09.xml"
 
-	(self isSkippableTest: #testinvalidoptional09xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional09xml.
 	self
 		should: [
 			self
@@ -3740,11 +3798,12 @@ XMLConformanceSunTests >> testinvalidoptional09xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional10xml [
+XMLConformanceSunTest >> testinvalidoptional10xml [
 	"Source file: sun/invalid/optional10.xml"
 
-	(self isSkippableTest: #testinvalidoptional10xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional10xml.
 	self
 		should: [
 			self
@@ -3754,11 +3813,12 @@ XMLConformanceSunTests >> testinvalidoptional10xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional11xml [
+XMLConformanceSunTest >> testinvalidoptional11xml [
 	"Source file: sun/invalid/optional11.xml"
 
-	(self isSkippableTest: #testinvalidoptional11xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional11xml.
 	self
 		should: [
 			self
@@ -3768,11 +3828,12 @@ XMLConformanceSunTests >> testinvalidoptional11xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional12xml [
+XMLConformanceSunTest >> testinvalidoptional12xml [
 	"Source file: sun/invalid/optional12.xml"
 
-	(self isSkippableTest: #testinvalidoptional12xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional12xml.
 	self
 		should: [
 			self
@@ -3782,11 +3843,12 @@ XMLConformanceSunTests >> testinvalidoptional12xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional13xml [
+XMLConformanceSunTest >> testinvalidoptional13xml [
 	"Source file: sun/invalid/optional13.xml"
 
-	(self isSkippableTest: #testinvalidoptional13xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional13xml.
 	self
 		should: [
 			self
@@ -3796,11 +3858,12 @@ XMLConformanceSunTests >> testinvalidoptional13xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional14xml [
+XMLConformanceSunTest >> testinvalidoptional14xml [
 	"Source file: sun/invalid/optional14.xml"
 
-	(self isSkippableTest: #testinvalidoptional14xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional14xml.
 	self
 		should: [
 			self
@@ -3810,11 +3873,12 @@ XMLConformanceSunTests >> testinvalidoptional14xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional20xml [
+XMLConformanceSunTest >> testinvalidoptional20xml [
 	"Source file: sun/invalid/optional20.xml"
 
-	(self isSkippableTest: #testinvalidoptional20xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional20xml.
 	self
 		should: [
 			self
@@ -3824,11 +3888,12 @@ XMLConformanceSunTests >> testinvalidoptional20xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional21xml [
+XMLConformanceSunTest >> testinvalidoptional21xml [
 	"Source file: sun/invalid/optional21.xml"
 
-	(self isSkippableTest: #testinvalidoptional21xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional21xml.
 	self
 		should: [
 			self
@@ -3838,11 +3903,12 @@ XMLConformanceSunTests >> testinvalidoptional21xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional22xml [
+XMLConformanceSunTest >> testinvalidoptional22xml [
 	"Source file: sun/invalid/optional22.xml"
 
-	(self isSkippableTest: #testinvalidoptional22xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional22xml.
 	self
 		should: [
 			self
@@ -3852,11 +3918,12 @@ XMLConformanceSunTests >> testinvalidoptional22xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional23xml [
+XMLConformanceSunTest >> testinvalidoptional23xml [
 	"Source file: sun/invalid/optional23.xml"
 
-	(self isSkippableTest: #testinvalidoptional23xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional23xml.
 	self
 		should: [
 			self
@@ -3866,11 +3933,12 @@ XMLConformanceSunTests >> testinvalidoptional23xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional24xml [
+XMLConformanceSunTest >> testinvalidoptional24xml [
 	"Source file: sun/invalid/optional24.xml"
 
-	(self isSkippableTest: #testinvalidoptional24xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional24xml.
 	self
 		should: [
 			self
@@ -3880,11 +3948,12 @@ XMLConformanceSunTests >> testinvalidoptional24xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidoptional25xml [
+XMLConformanceSunTest >> testinvalidoptional25xml [
 	"Source file: sun/invalid/optional25.xml"
 
-	(self isSkippableTest: #testinvalidoptional25xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidoptional25xml.
 	self
 		should: [
 			self
@@ -3894,11 +3963,12 @@ XMLConformanceSunTests >> testinvalidoptional25xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidrequired00xml [
+XMLConformanceSunTest >> testinvalidrequired00xml [
 	"Source file: sun/invalid/required00.xml"
 
-	(self isSkippableTest: #testinvalidrequired00xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidrequired00xml.
 	self
 		should: [
 			self
@@ -3908,11 +3978,12 @@ XMLConformanceSunTests >> testinvalidrequired00xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidrequired01xml [
+XMLConformanceSunTest >> testinvalidrequired01xml [
 	"Source file: sun/invalid/required01.xml"
 
-	(self isSkippableTest: #testinvalidrequired01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidrequired01xml.
 	self
 		should: [
 			self
@@ -3922,11 +3993,12 @@ XMLConformanceSunTests >> testinvalidrequired01xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidrequired02xml [
+XMLConformanceSunTest >> testinvalidrequired02xml [
 	"Source file: sun/invalid/required02.xml"
 
-	(self isSkippableTest: #testinvalidrequired02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidrequired02xml.
 	self
 		should: [
 			self
@@ -3936,11 +4008,12 @@ XMLConformanceSunTests >> testinvalidrequired02xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidrootxml [
+XMLConformanceSunTest >> testinvalidrootxml [
 	"Source file: sun/invalid/root.xml"
 
-	(self isSkippableTest: #testinvalidrootxml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidrootxml.
 	self
 		should: [
 			self
@@ -3950,11 +4023,12 @@ XMLConformanceSunTests >> testinvalidrootxml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidutf16bxml [
+XMLConformanceSunTest >> testinvalidutf16bxml [
 	"Source file: sun/invalid/utf16b.xml"
 
-	(self isSkippableTest: #testinvalidutf16bxml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidutf16bxml.
 	self
 		should: [
 			self
@@ -3964,11 +4038,12 @@ XMLConformanceSunTests >> testinvalidutf16bxml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testinvalidutf16lxml [
+XMLConformanceSunTest >> testinvalidutf16lxml [
 	"Source file: sun/invalid/utf16l.xml"
 
-	(self isSkippableTest: #testinvalidutf16lxml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testinvalidutf16lxml.
 	self
 		should: [
 			self
@@ -3978,11 +4053,12 @@ XMLConformanceSunTests >> testinvalidutf16lxml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfattlist01xml [
+XMLConformanceSunTest >> testnotwfattlist01xml [
 	"Source file: sun/not-wf/attlist01.xml"
 
-	(self isSkippableTest: #testnotwfattlist01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfattlist01xml.
 	self
 		should: [
 			self
@@ -3992,11 +4068,12 @@ XMLConformanceSunTests >> testnotwfattlist01xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfattlist02xml [
+XMLConformanceSunTest >> testnotwfattlist02xml [
 	"Source file: sun/not-wf/attlist02.xml"
 
-	(self isSkippableTest: #testnotwfattlist02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfattlist02xml.
 	self
 		should: [
 			self
@@ -4006,11 +4083,12 @@ XMLConformanceSunTests >> testnotwfattlist02xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfattlist03xml [
+XMLConformanceSunTest >> testnotwfattlist03xml [
 	"Source file: sun/not-wf/attlist03.xml"
 
-	(self isSkippableTest: #testnotwfattlist03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfattlist03xml.
 	self
 		should: [
 			self
@@ -4020,11 +4098,12 @@ XMLConformanceSunTests >> testnotwfattlist03xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfattlist04xml [
+XMLConformanceSunTest >> testnotwfattlist04xml [
 	"Source file: sun/not-wf/attlist04.xml"
 
-	(self isSkippableTest: #testnotwfattlist04xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfattlist04xml.
 	self
 		should: [
 			self
@@ -4034,11 +4113,12 @@ XMLConformanceSunTests >> testnotwfattlist04xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfattlist05xml [
+XMLConformanceSunTest >> testnotwfattlist05xml [
 	"Source file: sun/not-wf/attlist05.xml"
 
-	(self isSkippableTest: #testnotwfattlist05xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfattlist05xml.
 	self
 		should: [
 			self
@@ -4048,11 +4128,12 @@ XMLConformanceSunTests >> testnotwfattlist05xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfattlist06xml [
+XMLConformanceSunTest >> testnotwfattlist06xml [
 	"Source file: sun/not-wf/attlist06.xml"
 
-	(self isSkippableTest: #testnotwfattlist06xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfattlist06xml.
 	self
 		should: [
 			self
@@ -4062,11 +4143,12 @@ XMLConformanceSunTests >> testnotwfattlist06xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfattlist07xml [
+XMLConformanceSunTest >> testnotwfattlist07xml [
 	"Source file: sun/not-wf/attlist07.xml"
 
-	(self isSkippableTest: #testnotwfattlist07xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfattlist07xml.
 	self
 		should: [
 			self
@@ -4076,11 +4158,12 @@ XMLConformanceSunTests >> testnotwfattlist07xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfattlist08xml [
+XMLConformanceSunTest >> testnotwfattlist08xml [
 	"Source file: sun/not-wf/attlist08.xml"
 
-	(self isSkippableTest: #testnotwfattlist08xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfattlist08xml.
 	self
 		should: [
 			self
@@ -4090,11 +4173,12 @@ XMLConformanceSunTests >> testnotwfattlist08xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfattlist09xml [
+XMLConformanceSunTest >> testnotwfattlist09xml [
 	"Source file: sun/not-wf/attlist09.xml"
 
-	(self isSkippableTest: #testnotwfattlist09xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfattlist09xml.
 	self
 		should: [
 			self
@@ -4104,11 +4188,12 @@ XMLConformanceSunTests >> testnotwfattlist09xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfattlist10xml [
+XMLConformanceSunTest >> testnotwfattlist10xml [
 	"Source file: sun/not-wf/attlist10.xml"
 
-	(self isSkippableTest: #testnotwfattlist10xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfattlist10xml.
 	self
 		should: [
 			self
@@ -4118,11 +4203,12 @@ XMLConformanceSunTests >> testnotwfattlist10xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfattlist11xml [
+XMLConformanceSunTest >> testnotwfattlist11xml [
 	"Source file: sun/not-wf/attlist11.xml"
 
-	(self isSkippableTest: #testnotwfattlist11xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfattlist11xml.
 	self
 		should: [
 			self
@@ -4132,11 +4218,12 @@ XMLConformanceSunTests >> testnotwfattlist11xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfcond01xml [
+XMLConformanceSunTest >> testnotwfcond01xml [
 	"Source file: sun/not-wf/cond01.xml"
 
-	(self isSkippableTest: #testnotwfcond01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfcond01xml.
 	self
 		should: [
 			self
@@ -4146,11 +4233,12 @@ XMLConformanceSunTests >> testnotwfcond01xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfcond02xml [
+XMLConformanceSunTest >> testnotwfcond02xml [
 	"Source file: sun/not-wf/cond02.xml"
 
-	(self isSkippableTest: #testnotwfcond02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfcond02xml.
 	self
 		should: [
 			self
@@ -4160,11 +4248,12 @@ XMLConformanceSunTests >> testnotwfcond02xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfcontent01xml [
+XMLConformanceSunTest >> testnotwfcontent01xml [
 	"Source file: sun/not-wf/content01.xml"
 
-	(self isSkippableTest: #testnotwfcontent01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfcontent01xml.
 	self
 		should: [
 			self
@@ -4174,11 +4263,12 @@ XMLConformanceSunTests >> testnotwfcontent01xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfcontent02xml [
+XMLConformanceSunTest >> testnotwfcontent02xml [
 	"Source file: sun/not-wf/content02.xml"
 
-	(self isSkippableTest: #testnotwfcontent02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfcontent02xml.
 	self
 		should: [
 			self
@@ -4188,11 +4278,12 @@ XMLConformanceSunTests >> testnotwfcontent02xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfcontent03xml [
+XMLConformanceSunTest >> testnotwfcontent03xml [
 	"Source file: sun/not-wf/content03.xml"
 
-	(self isSkippableTest: #testnotwfcontent03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfcontent03xml.
 	self
 		should: [
 			self
@@ -4202,11 +4293,12 @@ XMLConformanceSunTests >> testnotwfcontent03xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfdecl01xml [
+XMLConformanceSunTest >> testnotwfdecl01xml [
 	"Source file: sun/not-wf/decl01.xml"
 
-	(self isSkippableTest: #testnotwfdecl01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfdecl01xml.
 	self
 		should: [
 			self
@@ -4216,11 +4308,12 @@ XMLConformanceSunTests >> testnotwfdecl01xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfdtd00xml [
+XMLConformanceSunTest >> testnotwfdtd00xml [
 	"Source file: sun/not-wf/dtd00.xml"
 
-	(self isSkippableTest: #testnotwfdtd00xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfdtd00xml.
 	self
 		should: [
 			self
@@ -4230,11 +4323,12 @@ XMLConformanceSunTests >> testnotwfdtd00xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfdtd01xml [
+XMLConformanceSunTest >> testnotwfdtd01xml [
 	"Source file: sun/not-wf/dtd01.xml"
 
-	(self isSkippableTest: #testnotwfdtd01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfdtd01xml.
 	self
 		should: [
 			self
@@ -4244,11 +4338,12 @@ XMLConformanceSunTests >> testnotwfdtd01xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfdtd02xml [
+XMLConformanceSunTest >> testnotwfdtd02xml [
 	"Source file: sun/not-wf/dtd02.xml"
 
-	(self isSkippableTest: #testnotwfdtd02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfdtd02xml.
 	self
 		should: [
 			self
@@ -4258,11 +4353,12 @@ XMLConformanceSunTests >> testnotwfdtd02xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfdtd03xml [
+XMLConformanceSunTest >> testnotwfdtd03xml [
 	"Source file: sun/not-wf/dtd03.xml"
 
-	(self isSkippableTest: #testnotwfdtd03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfdtd03xml.
 	self
 		should: [
 			self
@@ -4272,11 +4368,12 @@ XMLConformanceSunTests >> testnotwfdtd03xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfdtd04xml [
+XMLConformanceSunTest >> testnotwfdtd04xml [
 	"Source file: sun/not-wf/dtd04.xml"
 
-	(self isSkippableTest: #testnotwfdtd04xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfdtd04xml.
 	self
 		should: [
 			self
@@ -4286,11 +4383,12 @@ XMLConformanceSunTests >> testnotwfdtd04xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfdtd05xml [
+XMLConformanceSunTest >> testnotwfdtd05xml [
 	"Source file: sun/not-wf/dtd05.xml"
 
-	(self isSkippableTest: #testnotwfdtd05xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfdtd05xml.
 	self
 		should: [
 			self
@@ -4300,11 +4398,12 @@ XMLConformanceSunTests >> testnotwfdtd05xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfdtd07xml [
+XMLConformanceSunTest >> testnotwfdtd07xml [
 	"Source file: sun/not-wf/dtd07.xml"
 
-	(self isSkippableTest: #testnotwfdtd07xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfdtd07xml.
 	self
 		should: [
 			self
@@ -4314,11 +4413,12 @@ XMLConformanceSunTests >> testnotwfdtd07xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfelement00xml [
+XMLConformanceSunTest >> testnotwfelement00xml [
 	"Source file: sun/not-wf/element00.xml"
 
-	(self isSkippableTest: #testnotwfelement00xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfelement00xml.
 	self
 		should: [
 			self
@@ -4328,11 +4428,12 @@ XMLConformanceSunTests >> testnotwfelement00xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfelement01xml [
+XMLConformanceSunTest >> testnotwfelement01xml [
 	"Source file: sun/not-wf/element01.xml"
 
-	(self isSkippableTest: #testnotwfelement01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfelement01xml.
 	self
 		should: [
 			self
@@ -4342,11 +4443,12 @@ XMLConformanceSunTests >> testnotwfelement01xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfelement02xml [
+XMLConformanceSunTest >> testnotwfelement02xml [
 	"Source file: sun/not-wf/element02.xml"
 
-	(self isSkippableTest: #testnotwfelement02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfelement02xml.
 	self
 		should: [
 			self
@@ -4356,11 +4458,12 @@ XMLConformanceSunTests >> testnotwfelement02xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfelement03xml [
+XMLConformanceSunTest >> testnotwfelement03xml [
 	"Source file: sun/not-wf/element03.xml"
 
-	(self isSkippableTest: #testnotwfelement03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfelement03xml.
 	self
 		should: [
 			self
@@ -4370,11 +4473,12 @@ XMLConformanceSunTests >> testnotwfelement03xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfelement04xml [
+XMLConformanceSunTest >> testnotwfelement04xml [
 	"Source file: sun/not-wf/element04.xml"
 
-	(self isSkippableTest: #testnotwfelement04xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfelement04xml.
 	self
 		should: [
 			self
@@ -4384,11 +4488,12 @@ XMLConformanceSunTests >> testnotwfelement04xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfencoding01xml [
+XMLConformanceSunTest >> testnotwfencoding01xml [
 	"Source file: sun/not-wf/encoding01.xml"
 
-	(self isSkippableTest: #testnotwfencoding01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfencoding01xml.
 	self
 		should: [
 			self
@@ -4398,11 +4503,12 @@ XMLConformanceSunTests >> testnotwfencoding01xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfencoding02xml [
+XMLConformanceSunTest >> testnotwfencoding02xml [
 	"Source file: sun/not-wf/encoding02.xml"
 
-	(self isSkippableTest: #testnotwfencoding02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfencoding02xml.
 	self
 		should: [
 			self
@@ -4412,11 +4518,12 @@ XMLConformanceSunTests >> testnotwfencoding02xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfencoding03xml [
+XMLConformanceSunTest >> testnotwfencoding03xml [
 	"Source file: sun/not-wf/encoding03.xml"
 
-	(self isSkippableTest: #testnotwfencoding03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfencoding03xml.
 	self
 		should: [
 			self
@@ -4426,11 +4533,12 @@ XMLConformanceSunTests >> testnotwfencoding03xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfencoding04xml [
+XMLConformanceSunTest >> testnotwfencoding04xml [
 	"Source file: sun/not-wf/encoding04.xml"
 
-	(self isSkippableTest: #testnotwfencoding04xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfencoding04xml.
 	self
 		should: [
 			self
@@ -4440,11 +4548,12 @@ XMLConformanceSunTests >> testnotwfencoding04xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfencoding05xml [
+XMLConformanceSunTest >> testnotwfencoding05xml [
 	"Source file: sun/not-wf/encoding05.xml"
 
-	(self isSkippableTest: #testnotwfencoding05xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfencoding05xml.
 	self
 		should: [
 			self
@@ -4454,11 +4563,12 @@ XMLConformanceSunTests >> testnotwfencoding05xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfencoding06xml [
+XMLConformanceSunTest >> testnotwfencoding06xml [
 	"Source file: sun/not-wf/encoding06.xml"
 
-	(self isSkippableTest: #testnotwfencoding06xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfencoding06xml.
 	self
 		should: [
 			self
@@ -4468,11 +4578,12 @@ XMLConformanceSunTests >> testnotwfencoding06xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfencoding07xml [
+XMLConformanceSunTest >> testnotwfencoding07xml [
 	"Source file: sun/not-wf/encoding07.xml"
 
-	(self isSkippableTest: #testnotwfencoding07xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfencoding07xml.
 	self
 		should: [
 			self
@@ -4482,11 +4593,12 @@ XMLConformanceSunTests >> testnotwfencoding07xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfnotsa03xml [
+XMLConformanceSunTest >> testnotwfnotsa03xml [
 	"Source file: sun/not-wf/not-sa03.xml"
 
-	(self isSkippableTest: #testnotwfnotsa03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfnotsa03xml.
 	self
 		should: [
 			self
@@ -4496,11 +4608,12 @@ XMLConformanceSunTests >> testnotwfnotsa03xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfpixml [
+XMLConformanceSunTest >> testnotwfpixml [
 	"Source file: sun/not-wf/pi.xml"
 
-	(self isSkippableTest: #testnotwfpixml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfpixml.
 	self
 		should: [
 			self
@@ -4510,11 +4623,12 @@ XMLConformanceSunTests >> testnotwfpixml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfpubid01xml [
+XMLConformanceSunTest >> testnotwfpubid01xml [
 	"Source file: sun/not-wf/pubid01.xml"
 
-	(self isSkippableTest: #testnotwfpubid01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfpubid01xml.
 	self
 		should: [
 			self
@@ -4524,11 +4638,12 @@ XMLConformanceSunTests >> testnotwfpubid01xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfpubid02xml [
+XMLConformanceSunTest >> testnotwfpubid02xml [
 	"Source file: sun/not-wf/pubid02.xml"
 
-	(self isSkippableTest: #testnotwfpubid02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfpubid02xml.
 	self
 		should: [
 			self
@@ -4538,11 +4653,12 @@ XMLConformanceSunTests >> testnotwfpubid02xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfpubid03xml [
+XMLConformanceSunTest >> testnotwfpubid03xml [
 	"Source file: sun/not-wf/pubid03.xml"
 
-	(self isSkippableTest: #testnotwfpubid03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfpubid03xml.
 	self
 		should: [
 			self
@@ -4552,11 +4668,12 @@ XMLConformanceSunTests >> testnotwfpubid03xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfpubid04xml [
+XMLConformanceSunTest >> testnotwfpubid04xml [
 	"Source file: sun/not-wf/pubid04.xml"
 
-	(self isSkippableTest: #testnotwfpubid04xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfpubid04xml.
 	self
 		should: [
 			self
@@ -4566,11 +4683,12 @@ XMLConformanceSunTests >> testnotwfpubid04xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfpubid05xml [
+XMLConformanceSunTest >> testnotwfpubid05xml [
 	"Source file: sun/not-wf/pubid05.xml"
 
-	(self isSkippableTest: #testnotwfpubid05xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfpubid05xml.
 	self
 		should: [
 			self
@@ -4580,11 +4698,12 @@ XMLConformanceSunTests >> testnotwfpubid05xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfsgml01xml [
+XMLConformanceSunTest >> testnotwfsgml01xml [
 	"Source file: sun/not-wf/sgml01.xml"
 
-	(self isSkippableTest: #testnotwfsgml01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfsgml01xml.
 	self
 		should: [
 			self
@@ -4594,11 +4713,12 @@ XMLConformanceSunTests >> testnotwfsgml01xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfsgml02xml [
+XMLConformanceSunTest >> testnotwfsgml02xml [
 	"Source file: sun/not-wf/sgml02.xml"
 
-	(self isSkippableTest: #testnotwfsgml02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfsgml02xml.
 	self
 		should: [
 			self
@@ -4608,11 +4728,12 @@ XMLConformanceSunTests >> testnotwfsgml02xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfsgml03xml [
+XMLConformanceSunTest >> testnotwfsgml03xml [
 	"Source file: sun/not-wf/sgml03.xml"
 
-	(self isSkippableTest: #testnotwfsgml03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfsgml03xml.
 	self
 		should: [
 			self
@@ -4622,11 +4743,12 @@ XMLConformanceSunTests >> testnotwfsgml03xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfsgml04xml [
+XMLConformanceSunTest >> testnotwfsgml04xml [
 	"Source file: sun/not-wf/sgml04.xml"
 
-	(self isSkippableTest: #testnotwfsgml04xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfsgml04xml.
 	self
 		should: [
 			self
@@ -4636,11 +4758,12 @@ XMLConformanceSunTests >> testnotwfsgml04xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfsgml05xml [
+XMLConformanceSunTest >> testnotwfsgml05xml [
 	"Source file: sun/not-wf/sgml05.xml"
 
-	(self isSkippableTest: #testnotwfsgml05xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfsgml05xml.
 	self
 		should: [
 			self
@@ -4650,11 +4773,12 @@ XMLConformanceSunTests >> testnotwfsgml05xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfsgml06xml [
+XMLConformanceSunTest >> testnotwfsgml06xml [
 	"Source file: sun/not-wf/sgml06.xml"
 
-	(self isSkippableTest: #testnotwfsgml06xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfsgml06xml.
 	self
 		should: [
 			self
@@ -4664,11 +4788,12 @@ XMLConformanceSunTests >> testnotwfsgml06xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfsgml07xml [
+XMLConformanceSunTest >> testnotwfsgml07xml [
 	"Source file: sun/not-wf/sgml07.xml"
 
-	(self isSkippableTest: #testnotwfsgml07xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfsgml07xml.
 	self
 		should: [
 			self
@@ -4678,11 +4803,12 @@ XMLConformanceSunTests >> testnotwfsgml07xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfsgml08xml [
+XMLConformanceSunTest >> testnotwfsgml08xml [
 	"Source file: sun/not-wf/sgml08.xml"
 
-	(self isSkippableTest: #testnotwfsgml08xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfsgml08xml.
 	self
 		should: [
 			self
@@ -4692,11 +4818,12 @@ XMLConformanceSunTests >> testnotwfsgml08xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfsgml09xml [
+XMLConformanceSunTest >> testnotwfsgml09xml [
 	"Source file: sun/not-wf/sgml09.xml"
 
-	(self isSkippableTest: #testnotwfsgml09xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfsgml09xml.
 	self
 		should: [
 			self
@@ -4706,11 +4833,12 @@ XMLConformanceSunTests >> testnotwfsgml09xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfsgml10xml [
+XMLConformanceSunTest >> testnotwfsgml10xml [
 	"Source file: sun/not-wf/sgml10.xml"
 
-	(self isSkippableTest: #testnotwfsgml10xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfsgml10xml.
 	self
 		should: [
 			self
@@ -4720,11 +4848,12 @@ XMLConformanceSunTests >> testnotwfsgml10xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfsgml11xml [
+XMLConformanceSunTest >> testnotwfsgml11xml [
 	"Source file: sun/not-wf/sgml11.xml"
 
-	(self isSkippableTest: #testnotwfsgml11xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfsgml11xml.
 	self
 		should: [
 			self
@@ -4734,11 +4863,12 @@ XMLConformanceSunTests >> testnotwfsgml11xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfsgml12xml [
+XMLConformanceSunTest >> testnotwfsgml12xml [
 	"Source file: sun/not-wf/sgml12.xml"
 
-	(self isSkippableTest: #testnotwfsgml12xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfsgml12xml.
 	self
 		should: [
 			self
@@ -4748,11 +4878,12 @@ XMLConformanceSunTests >> testnotwfsgml12xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfsgml13xml [
+XMLConformanceSunTest >> testnotwfsgml13xml [
 	"Source file: sun/not-wf/sgml13.xml"
 
-	(self isSkippableTest: #testnotwfsgml13xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfsgml13xml.
 	self
 		should: [
 			self
@@ -4762,11 +4893,12 @@ XMLConformanceSunTests >> testnotwfsgml13xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceSunTests >> testnotwfuri01xml [
+XMLConformanceSunTest >> testnotwfuri01xml [
 	"Source file: sun/not-wf/uri01.xml"
 
-	(self isSkippableTest: #testnotwfuri01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testnotwfuri01xml.
 	self
 		should: [
 			self
@@ -4776,11 +4908,12 @@ XMLConformanceSunTests >> testnotwfuri01xml [
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvaliddtd00xml [
+XMLConformanceSunTest >> testvaliddtd00xml [
 	"Source file: sun/valid/dtd00.xml"
 
-	(self isSkippableTest: #testvaliddtd00xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvaliddtd00xml.
 	self
 		shouldnt: [
 			[self
@@ -4788,18 +4921,18 @@ XMLConformanceSunTests >> testvaliddtd00xml [
 				documentURI: 'valid/dtd00.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvaliddtd01xml [
+XMLConformanceSunTest >> testvaliddtd01xml [
 	"Source file: sun/valid/dtd01.xml"
 
-	(self isSkippableTest: #testvaliddtd01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvaliddtd01xml.
 	self
 		shouldnt: [
 			[self
@@ -4807,18 +4940,18 @@ XMLConformanceSunTests >> testvaliddtd01xml [
 				documentURI: 'valid/dtd01.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidelementxml [
+XMLConformanceSunTest >> testvalidelementxml [
 	"Source file: sun/valid/element.xml"
 
-	(self isSkippableTest: #testvalidelementxml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidelementxml.
 	self
 		shouldnt: [
 			[self
@@ -4826,18 +4959,18 @@ XMLConformanceSunTests >> testvalidelementxml [
 				documentURI: 'valid/element.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidext01xml [
+XMLConformanceSunTest >> testvalidext01xml [
 	"Source file: sun/valid/ext01.xml"
 
-	(self isSkippableTest: #testvalidext01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidext01xml.
 	self
 		shouldnt: [
 			[self
@@ -4845,18 +4978,18 @@ XMLConformanceSunTests >> testvalidext01xml [
 				documentURI: 'valid/ext01.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidext02xml [
+XMLConformanceSunTest >> testvalidext02xml [
 	"Source file: sun/valid/ext02.xml"
 
-	(self isSkippableTest: #testvalidext02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidext02xml.
 	self
 		shouldnt: [
 			[self
@@ -4864,18 +4997,18 @@ XMLConformanceSunTests >> testvalidext02xml [
 				documentURI: 'valid/ext02.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidnotation01xml [
+XMLConformanceSunTest >> testvalidnotation01xml [
 	"Source file: sun/valid/notation01.xml"
 
-	(self isSkippableTest: #testvalidnotation01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidnotation01xml.
 	self
 		shouldnt: [
 			[self
@@ -4883,18 +5016,18 @@ XMLConformanceSunTests >> testvalidnotation01xml [
 				documentURI: 'valid/notation01.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidnotsa01xml [
+XMLConformanceSunTest >> testvalidnotsa01xml [
 	"Source file: sun/valid/not-sa01.xml"
 
-	(self isSkippableTest: #testvalidnotsa01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidnotsa01xml.
 	self
 		shouldnt: [
 			[self
@@ -4902,18 +5035,18 @@ XMLConformanceSunTests >> testvalidnotsa01xml [
 				documentURI: 'valid/not-sa01.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidnotsa02xml [
+XMLConformanceSunTest >> testvalidnotsa02xml [
 	"Source file: sun/valid/not-sa02.xml"
 
-	(self isSkippableTest: #testvalidnotsa02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidnotsa02xml.
 	self
 		shouldnt: [
 			[self
@@ -4921,18 +5054,18 @@ XMLConformanceSunTests >> testvalidnotsa02xml [
 				documentURI: 'valid/not-sa02.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidnotsa03xml [
+XMLConformanceSunTest >> testvalidnotsa03xml [
 	"Source file: sun/valid/not-sa03.xml"
 
-	(self isSkippableTest: #testvalidnotsa03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidnotsa03xml.
 	self
 		shouldnt: [
 			[self
@@ -4940,18 +5073,18 @@ XMLConformanceSunTests >> testvalidnotsa03xml [
 				documentURI: 'valid/not-sa03.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidnotsa04xml [
+XMLConformanceSunTest >> testvalidnotsa04xml [
 	"Source file: sun/valid/not-sa04.xml"
 
-	(self isSkippableTest: #testvalidnotsa04xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidnotsa04xml.
 	self
 		shouldnt: [
 			[self
@@ -4959,18 +5092,18 @@ XMLConformanceSunTests >> testvalidnotsa04xml [
 				documentURI: 'valid/not-sa04.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidoptionalxml [
+XMLConformanceSunTest >> testvalidoptionalxml [
 	"Source file: sun/valid/optional.xml"
 
-	(self isSkippableTest: #testvalidoptionalxml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidoptionalxml.
 	self
 		shouldnt: [
 			[self
@@ -4978,18 +5111,18 @@ XMLConformanceSunTests >> testvalidoptionalxml [
 				documentURI: 'valid/optional.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidpe00xml [
+XMLConformanceSunTest >> testvalidpe00xml [
 	"Source file: sun/valid/pe00.xml"
 
-	(self isSkippableTest: #testvalidpe00xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidpe00xml.
 	self
 		shouldnt: [
 			[self
@@ -4997,18 +5130,18 @@ XMLConformanceSunTests >> testvalidpe00xml [
 				documentURI: 'valid/pe00.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidpe01xml [
+XMLConformanceSunTest >> testvalidpe01xml [
 	"Source file: sun/valid/pe01.xml"
 
-	(self isSkippableTest: #testvalidpe01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidpe01xml.
 	self
 		shouldnt: [
 			[self
@@ -5016,18 +5149,18 @@ XMLConformanceSunTests >> testvalidpe01xml [
 				documentURI: 'valid/pe01.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidpe02xml [
+XMLConformanceSunTest >> testvalidpe02xml [
 	"Source file: sun/valid/pe02.xml"
 
-	(self isSkippableTest: #testvalidpe02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidpe02xml.
 	self
 		shouldnt: [
 			[self
@@ -5035,18 +5168,18 @@ XMLConformanceSunTests >> testvalidpe02xml [
 				documentURI: 'valid/pe02.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidpe03xml [
+XMLConformanceSunTest >> testvalidpe03xml [
 	"Source file: sun/valid/pe03.xml"
 
-	(self isSkippableTest: #testvalidpe03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidpe03xml.
 	self
 		shouldnt: [
 			[self
@@ -5054,18 +5187,18 @@ XMLConformanceSunTests >> testvalidpe03xml [
 				documentURI: 'valid/pe03.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidrequired00xml [
+XMLConformanceSunTest >> testvalidrequired00xml [
 	"Source file: sun/valid/required00.xml"
 
-	(self isSkippableTest: #testvalidrequired00xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidrequired00xml.
 	self
 		shouldnt: [
 			[self
@@ -5073,18 +5206,18 @@ XMLConformanceSunTests >> testvalidrequired00xml [
 				documentURI: 'valid/required00.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidsa01xml [
+XMLConformanceSunTest >> testvalidsa01xml [
 	"Source file: sun/valid/sa01.xml"
 
-	(self isSkippableTest: #testvalidsa01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidsa01xml.
 	self
 		shouldnt: [
 			[self
@@ -5092,18 +5225,18 @@ XMLConformanceSunTests >> testvalidsa01xml [
 				documentURI: 'valid/sa01.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidsa02xml [
+XMLConformanceSunTest >> testvalidsa02xml [
 	"Source file: sun/valid/sa02.xml"
 
-	(self isSkippableTest: #testvalidsa02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidsa02xml.
 	self
 		shouldnt: [
 			[self
@@ -5111,18 +5244,18 @@ XMLConformanceSunTests >> testvalidsa02xml [
 				documentURI: 'valid/sa02.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidsa03xml [
+XMLConformanceSunTest >> testvalidsa03xml [
 	"Source file: sun/valid/sa03.xml"
 
-	(self isSkippableTest: #testvalidsa03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidsa03xml.
 	self
 		shouldnt: [
 			[self
@@ -5130,18 +5263,18 @@ XMLConformanceSunTests >> testvalidsa03xml [
 				documentURI: 'valid/sa03.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidsa04xml [
+XMLConformanceSunTest >> testvalidsa04xml [
 	"Source file: sun/valid/sa04.xml"
 
-	(self isSkippableTest: #testvalidsa04xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidsa04xml.
 	self
 		shouldnt: [
 			[self
@@ -5149,18 +5282,18 @@ XMLConformanceSunTests >> testvalidsa04xml [
 				documentURI: 'valid/sa04.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidsa05xml [
+XMLConformanceSunTest >> testvalidsa05xml [
 	"Source file: sun/valid/sa05.xml"
 
-	(self isSkippableTest: #testvalidsa05xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidsa05xml.
 	self
 		shouldnt: [
 			[self
@@ -5168,18 +5301,18 @@ XMLConformanceSunTests >> testvalidsa05xml [
 				documentURI: 'valid/sa05.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidsgml01xml [
+XMLConformanceSunTest >> testvalidsgml01xml [
 	"Source file: sun/valid/sgml01.xml"
 
-	(self isSkippableTest: #testvalidsgml01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidsgml01xml.
 	self
 		shouldnt: [
 			[self
@@ -5187,18 +5320,18 @@ XMLConformanceSunTests >> testvalidsgml01xml [
 				documentURI: 'valid/sgml01.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidvlang01xml [
+XMLConformanceSunTest >> testvalidvlang01xml [
 	"Source file: sun/valid/v-lang01.xml"
 
-	(self isSkippableTest: #testvalidvlang01xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidvlang01xml.
 	self
 		shouldnt: [
 			[self
@@ -5206,18 +5339,18 @@ XMLConformanceSunTests >> testvalidvlang01xml [
 				documentURI: 'valid/v-lang01.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidvlang02xml [
+XMLConformanceSunTest >> testvalidvlang02xml [
 	"Source file: sun/valid/v-lang02.xml"
 
-	(self isSkippableTest: #testvalidvlang02xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidvlang02xml.
 	self
 		shouldnt: [
 			[self
@@ -5225,18 +5358,18 @@ XMLConformanceSunTests >> testvalidvlang02xml [
 				documentURI: 'valid/v-lang02.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidvlang03xml [
+XMLConformanceSunTest >> testvalidvlang03xml [
 	"Source file: sun/valid/v-lang03.xml"
 
-	(self isSkippableTest: #testvalidvlang03xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidvlang03xml.
 	self
 		shouldnt: [
 			[self
@@ -5244,18 +5377,18 @@ XMLConformanceSunTests >> testvalidvlang03xml [
 				documentURI: 'valid/v-lang03.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidvlang04xml [
+XMLConformanceSunTest >> testvalidvlang04xml [
 	"Source file: sun/valid/v-lang04.xml"
 
-	(self isSkippableTest: #testvalidvlang04xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidvlang04xml.
 	self
 		shouldnt: [
 			[self
@@ -5263,18 +5396,18 @@ XMLConformanceSunTests >> testvalidvlang04xml [
 				documentURI: 'valid/v-lang04.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidvlang05xml [
+XMLConformanceSunTest >> testvalidvlang05xml [
 	"Source file: sun/valid/v-lang05.xml"
 
-	(self isSkippableTest: #testvalidvlang05xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidvlang05xml.
 	self
 		shouldnt: [
 			[self
@@ -5282,18 +5415,18 @@ XMLConformanceSunTests >> testvalidvlang05xml [
 				documentURI: 'valid/v-lang05.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceSunTests >> testvalidvlang06xml [
+XMLConformanceSunTest >> testvalidvlang06xml [
 	"Source file: sun/valid/v-lang06.xml"
 
-	(self isSkippableTest: #testvalidvlang06xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testvalidvlang06xml.
 	self
 		shouldnt: [
 			[self
@@ -5301,8 +5434,7 @@ XMLConformanceSunTests >> testvalidvlang06xml [
 				documentURI: 'valid/v-lang06.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]

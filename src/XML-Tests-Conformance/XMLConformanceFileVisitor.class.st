@@ -21,7 +21,7 @@ XMLConformanceFileVisitor class >> suite: aSuite skipFilesInBase: aBoolean [
 		skipFilesInBase: aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLConformanceFileVisitor >> entityExtensions [
 	^ #('.ent' '.dtd')
 ]
@@ -31,14 +31,14 @@ XMLConformanceFileVisitor >> entityFiles [
 	^ entityFiles ifNil: [entityFiles := OrderedCollection new]
 ]
 
-{ #category : #accessing }
-XMLConformanceFileVisitor >> failingNamePatterns [
-	^ #('not-wf' 'not-valid' 'notwf' 'notvalid' 'invalid' 'fail')
+{ #category : #private }
+XMLConformanceFileVisitor >> failingTestFileBasenames [
+	^ #('e2.xml') "an unsually named  OASIS failing test"
 ]
 
-{ #category : #accessing }
-XMLConformanceFileVisitor >> failingNames [
-	^ #('e2.xml') "an unsually named  OASIS failing test"
+{ #category : #private }
+XMLConformanceFileVisitor >> failingTestFileNamePatterns [
+	^ #('not-wf' 'not-valid' 'notwf' 'notvalid' 'invalid' 'fail')
 ]
 
 { #category : #accessing }
@@ -47,16 +47,43 @@ XMLConformanceFileVisitor >> failingTestFiles [
 ]
 
 { #category : #testing }
+XMLConformanceFileVisitor >> isEntityFileBasename: aBasename [
+	^ self entityExtensions anySatisfy: [:each |
+		aBasename endsWith: each]
+]
+
+{ #category : #testing }
+XMLConformanceFileVisitor >> isFailingTestFileBasename: aBasename [
+	^ self failingTestFileBasenames includes: aBasename
+]
+
+{ #category : #testing }
 XMLConformanceFileVisitor >> isFailingTestFilePathSegments: aPathSegmentCollection [
-	(self failingNames includes: aPathSegmentCollection last)
+	aPathSegmentCollection do: [:segment |
+		self failingTestFileNamePatterns do: [:pattern |
+			(segment includesSubstring: pattern)
+				ifTrue: [^ true]]].
+	^ false.
+]
+
+{ #category : #testing }
+XMLConformanceFileVisitor >> isSkippableFilePathSegments: aPathSegmentCollection [
+	(skipFilesInBase
+		and: [aPathSegmentCollection allButLast last = suite])
 		ifTrue: [^ true].
 
-	aPathSegmentCollection do: [:segment |
-		(self failingNamePatterns anySatisfy: [:pattern |
-			segment includesSubstring: pattern])
-			ifTrue: [^ true]].
+	"skip the xml files that describe the suite and its tests"	
+	(aPathSegmentCollection asArray endsWith:
+		(Array with: suite with: suite, '.xml'))
+		ifTrue: [^ true].
 
-	^ false.
+	"skip 'out' files"
+	^ aPathSegmentCollection includes: 'out'.
+]
+
+{ #category : #testing }
+XMLConformanceFileVisitor >> isXMLFileBasename: aBasename [
+	^ aBasename endsWith: '.xml'
 ]
 
 { #category : #accessing }
@@ -64,15 +91,10 @@ XMLConformanceFileVisitor >> passingTestFiles [
 	^ passingTestFiles ifNil: [passingTestFiles := OrderedCollection new]
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 XMLConformanceFileVisitor >> setSuite: aSuite skipFilesInBase: aBoolean [
 	suite := aSuite.
 	skipFilesInBase := aBoolean.
-]
-
-{ #category : #accessing }
-XMLConformanceFileVisitor >> suite: aSuite [
-	suite := aSuite
 ]
 
 { #category : #visiting }
@@ -83,20 +105,21 @@ XMLConformanceFileVisitor >> visitReference: aDirectoryEntry [
 	pathSegments := fileReference pathSegments.
 	basename := fileReference basename asLowercase.
 	(fileReference isDirectory
-		or: [(skipFilesInBase and: [pathSegments allButLast last = suite])
-			or: [basename = (suite, '.xml')
-				or: [pathSegments includes: 'out']]])
+		or: [self isSkippableFilePathSegments: pathSegments])
 		ifTrue: [^ self].
 
-	(self entityExtensions anySatisfy: [:extension |
-		basename endsWith: extension])
+	(self isEntityFileBasename: basename)
 		ifTrue: [
 			self entityFiles add: fileReference.
 			^ self].
 
-	(basename endsWith: '.xml')
-		ifFalse: [^ self].
-	(self isFailingTestFilePathSegments: pathSegments)
-		ifTrue: [self failingTestFiles add: fileReference]
-		ifFalse: [self passingTestFiles add: fileReference].
+	self isXMLFileBasename: basename.
+
+	((self isFailingTestFileBasename: basename)
+		or: [self isFailingTestFilePathSegments: pathSegments])
+		ifTrue: [
+			self failingTestFiles add: fileReference.
+			^ self].
+	
+	self passingTestFiles add: fileReference.
 ]

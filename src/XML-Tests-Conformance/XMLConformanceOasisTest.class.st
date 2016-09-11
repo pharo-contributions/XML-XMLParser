@@ -1,16 +1,16 @@
 Class {
-	#name : #XMLConformanceOasisTests,
-	#superclass : #XMLConformanceTests,
+	#name : #XMLConformanceOasisTest,
+	#superclass : #XMLConformanceTest,
 	#category : #'XML-Tests-Conformance'
 }
 
 { #category : #accessing }
-XMLConformanceOasisTests class >> skippableTests [
+XMLConformanceOasisTest class >> skippableTests [
 	^ #( )
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcee2xml [
+XMLConformanceOasisTest class >> sourcee2xml [
 	"Source file: oasis/e2.xml"
 
 	^ '<!DOCTYPE el [
@@ -22,7 +22,7 @@ XMLConformanceOasisTests class >> sourcee2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep01fail1xml [
+XMLConformanceOasisTest class >> sourcep01fail1xml [
 	"Source file: oasis/p01fail1.xml"
 
 	^ '
@@ -40,7 +40,7 @@ XMLConformanceOasisTests class >> sourcep01fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep01fail2xml [
+XMLConformanceOasisTest class >> sourcep01fail2xml [
 	"Source file: oasis/p01fail2.xml"
 
 	^ '<!--bad comment--><?xml version="1.0"?>
@@ -57,7 +57,7 @@ XMLConformanceOasisTests class >> sourcep01fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep01fail3xml [
+XMLConformanceOasisTest class >> sourcep01fail3xml [
 	"Source file: oasis/p01fail3.xml"
 
 	^ '<doc/><bad/>
@@ -71,14 +71,14 @@ XMLConformanceOasisTests class >> sourcep01fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep01fail4xml [
+XMLConformanceOasisTest class >> sourcep01fail4xml [
 	"Source file: oasis/p01fail4.xml"
 
 	^ '<doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep01pass1xml [
+XMLConformanceOasisTest class >> sourcep01pass1xml [
 	"Source file: oasis/p01pass1.xml"
 
 	^ '<doc>
@@ -87,7 +87,7 @@ XMLConformanceOasisTests class >> sourcep01pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep01pass2xml [
+XMLConformanceOasisTest class >> sourcep01pass2xml [
 	"Source file: oasis/p01pass2.xml"
 
 	^ '<?PI before document element?>
@@ -117,7 +117,7 @@ XMLConformanceOasisTests class >> sourcep01pass2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep01pass3xml [
+XMLConformanceOasisTest class >> sourcep01pass3xml [
 	"Source file: oasis/p01pass3.xml"
 
 	^ '<doc>
@@ -133,420 +133,413 @@ XMLConformanceOasisTests class >> sourcep01pass3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail10xml [
+XMLConformanceOasisTest class >> sourcep02fail10xml [
 	"Source file: oasis/p02fail10.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail11xml [
+XMLConformanceOasisTest class >> sourcep02fail11xml [
 	"Source file: oasis/p02fail11.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail12xml [
+XMLConformanceOasisTest class >> sourcep02fail12xml [
 	"Source file: oasis/p02fail12.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail13xml [
+XMLConformanceOasisTest class >> sourcep02fail13xml [
 	"Source file: oasis/p02fail13.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail14xml [
+XMLConformanceOasisTest class >> sourcep02fail14xml [
 	"Source file: oasis/p02fail14.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail15xml [
+XMLConformanceOasisTest class >> sourcep02fail15xml [
 	"Source file: oasis/p02fail15.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail16xml [
+XMLConformanceOasisTest class >> sourcep02fail16xml [
 	"Source file: oasis/p02fail16.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail17xml [
+XMLConformanceOasisTest class >> sourcep02fail17xml [
 	"Source file: oasis/p02fail17.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail18xml [
+XMLConformanceOasisTest class >> sourcep02fail18xml [
 	"Source file: oasis/p02fail18.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail19xml [
+XMLConformanceOasisTest class >> sourcep02fail19xml [
 	"Source file: oasis/p02fail19.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail1xml [
+XMLConformanceOasisTest class >> sourcep02fail1xml [
 	"Source file: oasis/p02fail1.xml"
 
 	^ '<doc> </doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail20xml [
+XMLConformanceOasisTest class >> sourcep02fail20xml [
 	"Source file: oasis/p02fail20.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail21xml [
+XMLConformanceOasisTest class >> sourcep02fail21xml [
 	"Source file: oasis/p02fail21.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail22xml [
+XMLConformanceOasisTest class >> sourcep02fail22xml [
 	"Source file: oasis/p02fail22.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail23xml [
+XMLConformanceOasisTest class >> sourcep02fail23xml [
 	"Source file: oasis/p02fail23.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail24xml [
+XMLConformanceOasisTest class >> sourcep02fail24xml [
 	"Source file: oasis/p02fail24.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail25xml [
+XMLConformanceOasisTest class >> sourcep02fail25xml [
 	"Source file: oasis/p02fail25.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail26xml [
+XMLConformanceOasisTest class >> sourcep02fail26xml [
 	"Source file: oasis/p02fail26.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail27xml [
+XMLConformanceOasisTest class >> sourcep02fail27xml [
 	"Source file: oasis/p02fail27.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail28xml [
+XMLConformanceOasisTest class >> sourcep02fail28xml [
 	"Source file: oasis/p02fail28.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail29xml [
+XMLConformanceOasisTest class >> sourcep02fail29xml [
 	"Source file: oasis/p02fail29.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail2xml [
+XMLConformanceOasisTest class >> sourcep02fail2xml [
 	"Source file: oasis/p02fail2.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail30xml [
+XMLConformanceOasisTest class >> sourcep02fail30xml [
 	"Source file: oasis/p02fail30.xml"
 
 	^ '<doc>￾</doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail31xml [
+XMLConformanceOasisTest class >> sourcep02fail31xml [
 	"Source file: oasis/p02fail31.xml"
 
 	^ '<doc>￿</doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail3xml [
+XMLConformanceOasisTest class >> sourcep02fail3xml [
 	"Source file: oasis/p02fail3.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail4xml [
+XMLConformanceOasisTest class >> sourcep02fail4xml [
 	"Source file: oasis/p02fail4.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail5xml [
+XMLConformanceOasisTest class >> sourcep02fail5xml [
 	"Source file: oasis/p02fail5.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail6xml [
+XMLConformanceOasisTest class >> sourcep02fail6xml [
 	"Source file: oasis/p02fail6.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail7xml [
+XMLConformanceOasisTest class >> sourcep02fail7xml [
 	"Source file: oasis/p02fail7.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail8xml [
+XMLConformanceOasisTest class >> sourcep02fail8xml [
 	"Source file: oasis/p02fail8.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep02fail9xml [
+XMLConformanceOasisTest class >> sourcep02fail9xml [
 	"Source file: oasis/p02fail9.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail10xml [
+XMLConformanceOasisTest class >> sourcep03fail10xml [
 	"Source file: oasis/p03fail10.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail11xml [
+XMLConformanceOasisTest class >> sourcep03fail11xml [
 	"Source file: oasis/p03fail11.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail12xml [
+XMLConformanceOasisTest class >> sourcep03fail12xml [
 	"Source file: oasis/p03fail12.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail13xml [
+XMLConformanceOasisTest class >> sourcep03fail13xml [
 	"Source file: oasis/p03fail13.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail14xml [
+XMLConformanceOasisTest class >> sourcep03fail14xml [
 	"Source file: oasis/p03fail14.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail15xml [
+XMLConformanceOasisTest class >> sourcep03fail15xml [
 	"Source file: oasis/p03fail15.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail16xml [
+XMLConformanceOasisTest class >> sourcep03fail16xml [
 	"Source file: oasis/p03fail16.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail17xml [
+XMLConformanceOasisTest class >> sourcep03fail17xml [
 	"Source file: oasis/p03fail17.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail18xml [
+XMLConformanceOasisTest class >> sourcep03fail18xml [
 	"Source file: oasis/p03fail18.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail19xml [
+XMLConformanceOasisTest class >> sourcep03fail19xml [
 	"Source file: oasis/p03fail19.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail1xml [
-	"Source file: oasis/p03fail1.xml"
-
-	^ ' <doc/>'
-]
-
-{ #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail20xml [
+XMLConformanceOasisTest class >> sourcep03fail20xml [
 	"Source file: oasis/p03fail20.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail21xml [
+XMLConformanceOasisTest class >> sourcep03fail21xml [
 	"Source file: oasis/p03fail21.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail22xml [
+XMLConformanceOasisTest class >> sourcep03fail22xml [
 	"Source file: oasis/p03fail22.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail23xml [
+XMLConformanceOasisTest class >> sourcep03fail23xml [
 	"Source file: oasis/p03fail23.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail24xml [
+XMLConformanceOasisTest class >> sourcep03fail24xml [
 	"Source file: oasis/p03fail24.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail25xml [
+XMLConformanceOasisTest class >> sourcep03fail25xml [
 	"Source file: oasis/p03fail25.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail26xml [
+XMLConformanceOasisTest class >> sourcep03fail26xml [
 	"Source file: oasis/p03fail26.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail27xml [
+XMLConformanceOasisTest class >> sourcep03fail27xml [
 	"Source file: oasis/p03fail27.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail28xml [
+XMLConformanceOasisTest class >> sourcep03fail28xml [
 	"Source file: oasis/p03fail28.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail29xml [
+XMLConformanceOasisTest class >> sourcep03fail29xml [
 	"Source file: oasis/p03fail29.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail2xml [
+XMLConformanceOasisTest class >> sourcep03fail2xml [
 	"Source file: oasis/p03fail2.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail3xml [
+XMLConformanceOasisTest class >> sourcep03fail3xml [
 	"Source file: oasis/p03fail3.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail4xml [
+XMLConformanceOasisTest class >> sourcep03fail4xml [
 	"Source file: oasis/p03fail4.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail5xml [
+XMLConformanceOasisTest class >> sourcep03fail5xml [
 	"Source file: oasis/p03fail5.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail7xml [
+XMLConformanceOasisTest class >> sourcep03fail7xml [
 	"Source file: oasis/p03fail7.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail8xml [
+XMLConformanceOasisTest class >> sourcep03fail8xml [
 	"Source file: oasis/p03fail8.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03fail9xml [
+XMLConformanceOasisTest class >> sourcep03fail9xml [
 	"Source file: oasis/p03fail9.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep03pass1xml [
+XMLConformanceOasisTest class >> sourcep03pass1xml [
 	"Source file: oasis/p03pass1.xml"
 
 	^ '	
@@ -554,7 +547,7 @@ XMLConformanceOasisTests class >> sourcep03pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep04fail1xml [
+XMLConformanceOasisTest class >> sourcep04fail1xml [
 	"Source file: oasis/p04fail1.xml"
 
 	^ '<A@/>
@@ -562,7 +555,7 @@ XMLConformanceOasisTests class >> sourcep04fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep04fail2xml [
+XMLConformanceOasisTest class >> sourcep04fail2xml [
 	"Source file: oasis/p04fail2.xml"
 
 	^ '<A#/>
@@ -570,7 +563,7 @@ XMLConformanceOasisTests class >> sourcep04fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep04fail3xml [
+XMLConformanceOasisTest class >> sourcep04fail3xml [
 	"Source file: oasis/p04fail3.xml"
 
 	^ '<A$/>
@@ -578,7 +571,7 @@ XMLConformanceOasisTests class >> sourcep04fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep04pass1xml [
+XMLConformanceOasisTest class >> sourcep04pass1xml [
 	"Source file: oasis/p04pass1.xml"
 
 	^ '<doc>
@@ -590,42 +583,42 @@ XMLConformanceOasisTests class >> sourcep04pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep05fail1xml [
+XMLConformanceOasisTest class >> sourcep05fail1xml [
 	"Source file: oasis/p05fail1.xml"
 
 	^ '<0A/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep05fail2xml [
+XMLConformanceOasisTest class >> sourcep05fail2xml [
 	"Source file: oasis/p05fail2.xml"
 
 	^ '<.A/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep05fail3xml [
+XMLConformanceOasisTest class >> sourcep05fail3xml [
 	"Source file: oasis/p05fail3.xml"
 
 	^ '<-A/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep05fail4xml [
+XMLConformanceOasisTest class >> sourcep05fail4xml [
 	"Source file: oasis/p05fail4.xml"
 
 	^ '<̀A/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep05fail5xml [
+XMLConformanceOasisTest class >> sourcep05fail5xml [
 	"Source file: oasis/p05fail5.xml"
 
 	^ '<·A/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep05pass1xml [
+XMLConformanceOasisTest class >> sourcep05pass1xml [
 	"Source file: oasis/p05pass1.xml"
 
 	^ '<doc>
@@ -639,7 +632,7 @@ XMLConformanceOasisTests class >> sourcep05pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep06fail1xml [
+XMLConformanceOasisTest class >> sourcep06fail1xml [
 	"Source file: oasis/p06fail1.xml"
 
 	^ '<!--non-validating processors may pass this instance because they don''t check the IDREFS attribute type-->
@@ -658,7 +651,7 @@ XMLConformanceOasisTests class >> sourcep06fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep06pass1xml [
+XMLConformanceOasisTest class >> sourcep06pass1xml [
 	"Source file: oasis/p06pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -679,7 +672,7 @@ A2	A3"/>
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep07pass1xml [
+XMLConformanceOasisTest class >> sourcep07pass1xml [
 	"Source file: oasis/p07pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -691,7 +684,7 @@ XMLConformanceOasisTests class >> sourcep07pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep08fail1xml [
+XMLConformanceOasisTest class >> sourcep08fail1xml [
 	"Source file: oasis/p08fail1.xml"
 
 	^ '<!--note: non-validating parsers may accept this document-->
@@ -707,7 +700,7 @@ XMLConformanceOasisTests class >> sourcep08fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep08fail2xml [
+XMLConformanceOasisTest class >> sourcep08fail2xml [
 	"Source file: oasis/p08fail2.xml"
 
 	^ '<!--note: non-validating parsers may accept this document-->
@@ -723,7 +716,7 @@ XMLConformanceOasisTests class >> sourcep08fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep08pass1xml [
+XMLConformanceOasisTest class >> sourcep08pass1xml [
 	"Source file: oasis/p08pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -741,7 +734,7 @@ def
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep09fail1dtd [
+XMLConformanceOasisTest class >> sourcep09fail1dtd [
 	"Source file: oasis/p09fail1.dtd"
 
 	^ '<!ELEMENT doc EMPTY>
@@ -750,7 +743,7 @@ XMLConformanceOasisTests class >> sourcep09fail1dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep09fail1xml [
+XMLConformanceOasisTest class >> sourcep09fail1xml [
 	"Source file: oasis/p09fail1.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p09fail1.dtd">
@@ -758,7 +751,7 @@ XMLConformanceOasisTests class >> sourcep09fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep09fail2dtd [
+XMLConformanceOasisTest class >> sourcep09fail2dtd [
 	"Source file: oasis/p09fail2.dtd"
 
 	^ '<!ELEMENT doc EMPTY>
@@ -767,7 +760,7 @@ XMLConformanceOasisTests class >> sourcep09fail2dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep09fail2xml [
+XMLConformanceOasisTest class >> sourcep09fail2xml [
 	"Source file: oasis/p09fail2.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p09fail2.dtd">
@@ -775,7 +768,7 @@ XMLConformanceOasisTests class >> sourcep09fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep09fail3xml [
+XMLConformanceOasisTest class >> sourcep09fail3xml [
 	"Source file: oasis/p09fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -787,7 +780,7 @@ XMLConformanceOasisTests class >> sourcep09fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep09fail4xml [
+XMLConformanceOasisTest class >> sourcep09fail4xml [
 	"Source file: oasis/p09fail4.xml"
 
 	^ '<!DOCTYPE doc
@@ -799,7 +792,7 @@ XMLConformanceOasisTests class >> sourcep09fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep09fail5xml [
+XMLConformanceOasisTest class >> sourcep09fail5xml [
 	"Source file: oasis/p09fail5.xml"
 
 	^ '<!DOCTYPE doc
@@ -811,7 +804,7 @@ XMLConformanceOasisTests class >> sourcep09fail5xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep09pass1dtd [
+XMLConformanceOasisTest class >> sourcep09pass1dtd [
 	"Source file: oasis/p09pass1.dtd"
 
 	^ '<!ELEMENT doc EMPTY>
@@ -823,7 +816,7 @@ XMLConformanceOasisTests class >> sourcep09pass1dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep09pass1xml [
+XMLConformanceOasisTest class >> sourcep09pass1xml [
 	"Source file: oasis/p09pass1.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p09pass1.dtd">
@@ -831,7 +824,7 @@ XMLConformanceOasisTests class >> sourcep09pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep10fail1xml [
+XMLConformanceOasisTest class >> sourcep10fail1xml [
 	"Source file: oasis/p10fail1.xml"
 
 	^ '<doc a="1 < 2"/>
@@ -839,7 +832,7 @@ XMLConformanceOasisTests class >> sourcep10fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep10fail2xml [
+XMLConformanceOasisTest class >> sourcep10fail2xml [
 	"Source file: oasis/p10fail2.xml"
 
 	^ '<doc a="1 &"/>
@@ -847,7 +840,7 @@ XMLConformanceOasisTests class >> sourcep10fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep10fail3xml [
+XMLConformanceOasisTest class >> sourcep10fail3xml [
 	"Source file: oasis/p10fail3.xml"
 
 	^ '<doc a=''asd"/>
@@ -855,7 +848,7 @@ XMLConformanceOasisTests class >> sourcep10fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep10pass1xml [
+XMLConformanceOasisTest class >> sourcep10pass1xml [
 	"Source file: oasis/p10pass1.xml"
 
 	^ '<doc>
@@ -867,7 +860,7 @@ asdf
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep11fail1xml [
+XMLConformanceOasisTest class >> sourcep11fail1xml [
 	"Source file: oasis/p11fail1.xml"
 
 	^ '<!--Inability to resolve a notation should not be reported as an error-->
@@ -881,7 +874,7 @@ XMLConformanceOasisTests class >> sourcep11fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep11fail2xml [
+XMLConformanceOasisTest class >> sourcep11fail2xml [
 	"Source file: oasis/p11fail2.xml"
 
 	^ '<!--Inability to resolve a notation should not be reported as an error-->
@@ -895,7 +888,7 @@ XMLConformanceOasisTests class >> sourcep11fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep11pass1xml [
+XMLConformanceOasisTest class >> sourcep11pass1xml [
 	"Source file: oasis/p11pass1.xml"
 
 	^ '<!--Inability to resolve a notation should not be reported as an error-->
@@ -913,7 +906,7 @@ XMLConformanceOasisTests class >> sourcep11pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep12fail1xml [
+XMLConformanceOasisTest class >> sourcep12fail1xml [
 	"Source file: oasis/p12fail1.xml"
 
 	^ '<!--Inability to resolve a notation should not be reported as an error-->
@@ -927,7 +920,7 @@ XMLConformanceOasisTests class >> sourcep12fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep12fail2xml [
+XMLConformanceOasisTest class >> sourcep12fail2xml [
 	"Source file: oasis/p12fail2.xml"
 
 	^ '<!--Inability to resolve a notation should not be reported as an error-->
@@ -941,7 +934,7 @@ XMLConformanceOasisTests class >> sourcep12fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep12fail3xml [
+XMLConformanceOasisTest class >> sourcep12fail3xml [
 	"Source file: oasis/p12fail3.xml"
 
 	^ '<!--Inability to resolve a notation should not be reported as an error-->
@@ -956,7 +949,7 @@ XMLConformanceOasisTests class >> sourcep12fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep12fail4xml [
+XMLConformanceOasisTest class >> sourcep12fail4xml [
 	"Source file: oasis/p12fail4.xml"
 
 	^ '<!--Inability to resolve a notation should not be reported as an error-->
@@ -970,7 +963,7 @@ XMLConformanceOasisTests class >> sourcep12fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep12fail5xml [
+XMLConformanceOasisTest class >> sourcep12fail5xml [
 	"Source file: oasis/p12fail5.xml"
 
 	^ '<!--Inability to resolve a notation should not be reported as an error-->
@@ -984,7 +977,7 @@ XMLConformanceOasisTests class >> sourcep12fail5xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep12fail6xml [
+XMLConformanceOasisTest class >> sourcep12fail6xml [
 	"Source file: oasis/p12fail6.xml"
 
 	^ '<!--Inability to resolve a notation should not be reported as an error-->
@@ -998,7 +991,7 @@ XMLConformanceOasisTests class >> sourcep12fail6xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep12fail7xml [
+XMLConformanceOasisTest class >> sourcep12fail7xml [
 	"Source file: oasis/p12fail7.xml"
 
 	^ '<!--Inability to resolve a notation should not be reported as an error-->
@@ -1012,7 +1005,7 @@ XMLConformanceOasisTests class >> sourcep12fail7xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep12pass1xml [
+XMLConformanceOasisTest class >> sourcep12pass1xml [
 	"Source file: oasis/p12pass1.xml"
 
 	^ '<!--Inability to resolve a notation should not be reported as an error-->
@@ -1029,7 +1022,7 @@ cdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ">
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep14fail1xml [
+XMLConformanceOasisTest class >> sourcep14fail1xml [
 	"Source file: oasis/p14fail1.xml"
 
 	^ '<doc>< </doc>
@@ -1037,7 +1030,7 @@ XMLConformanceOasisTests class >> sourcep14fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep14fail2xml [
+XMLConformanceOasisTest class >> sourcep14fail2xml [
 	"Source file: oasis/p14fail2.xml"
 
 	^ '<doc>& </doc>
@@ -1045,7 +1038,7 @@ XMLConformanceOasisTests class >> sourcep14fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep14fail3xml [
+XMLConformanceOasisTest class >> sourcep14fail3xml [
 	"Source file: oasis/p14fail3.xml"
 
 	^ '<doc>a]]>b</doc>
@@ -1053,7 +1046,7 @@ XMLConformanceOasisTests class >> sourcep14fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep14pass1xml [
+XMLConformanceOasisTest class >> sourcep14pass1xml [
 	"Source file: oasis/p14pass1.xml"
 
 	^ '<doc>a%b%&lt;/doc>&#60;/doc>]]&lt;&amp;</doc>
@@ -1061,7 +1054,7 @@ XMLConformanceOasisTests class >> sourcep14pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep15fail1xml [
+XMLConformanceOasisTest class >> sourcep15fail1xml [
 	"Source file: oasis/p15fail1.xml"
 
 	^ '<!--a--->
@@ -1069,7 +1062,7 @@ XMLConformanceOasisTests class >> sourcep15fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep15fail2xml [
+XMLConformanceOasisTest class >> sourcep15fail2xml [
 	"Source file: oasis/p15fail2.xml"
 
 	^ '<!-- -- -- -->
@@ -1077,7 +1070,7 @@ XMLConformanceOasisTests class >> sourcep15fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep15fail3xml [
+XMLConformanceOasisTest class >> sourcep15fail3xml [
 	"Source file: oasis/p15fail3.xml"
 
 	^ '<!-- --- -->
@@ -1085,7 +1078,7 @@ XMLConformanceOasisTests class >> sourcep15fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep15pass1xml [
+XMLConformanceOasisTest class >> sourcep15pass1xml [
 	"Source file: oasis/p15pass1.xml"
 
 	^ '<!--a
@@ -1099,7 +1092,7 @@ XMLConformanceOasisTests class >> sourcep15pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep16fail1xml [
+XMLConformanceOasisTest class >> sourcep16fail1xml [
 	"Source file: oasis/p16fail1.xml"
 
 	^ '<?pitarget?>
@@ -1108,7 +1101,7 @@ XMLConformanceOasisTests class >> sourcep16fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep16fail2xml [
+XMLConformanceOasisTest class >> sourcep16fail2xml [
 	"Source file: oasis/p16fail2.xml"
 
 	^ '<??>
@@ -1116,7 +1109,7 @@ XMLConformanceOasisTests class >> sourcep16fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep16fail3xml [
+XMLConformanceOasisTest class >> sourcep16fail3xml [
 	"Source file: oasis/p16fail3.xml"
 
 	^ '<?pitarget+++?>
@@ -1125,7 +1118,7 @@ XMLConformanceOasisTests class >> sourcep16fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep16pass1xml [
+XMLConformanceOasisTest class >> sourcep16pass1xml [
 	"Source file: oasis/p16pass1.xml"
 
 	^ '<?pitarget?>
@@ -1138,7 +1131,7 @@ XMLConformanceOasisTests class >> sourcep16pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep16pass2xml [
+XMLConformanceOasisTest class >> sourcep16pass2xml [
 	"Source file: oasis/p16pass2.xml"
 
 	^ '<?pitarget ''?>
@@ -1146,7 +1139,7 @@ XMLConformanceOasisTests class >> sourcep16pass2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep16pass3xml [
+XMLConformanceOasisTest class >> sourcep16pass3xml [
 	"Source file: oasis/p16pass3.xml"
 
 	^ '<?pitarget "?>
@@ -1154,21 +1147,21 @@ XMLConformanceOasisTests class >> sourcep16pass3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep18fail1xml [
+XMLConformanceOasisTest class >> sourcep18fail1xml [
 	"Source file: oasis/p18fail1.xml"
 
 	^ '<doc><![ CDATA[a]]></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep18fail2xml [
+XMLConformanceOasisTest class >> sourcep18fail2xml [
 	"Source file: oasis/p18fail2.xml"
 
 	^ '<doc><![CDATA [a]]></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep18fail3xml [
+XMLConformanceOasisTest class >> sourcep18fail3xml [
 	"Source file: oasis/p18fail3.xml"
 
 	^ '<doc>
@@ -1179,7 +1172,7 @@ XMLConformanceOasisTests class >> sourcep18fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep18pass1xml [
+XMLConformanceOasisTest class >> sourcep18pass1xml [
 	"Source file: oasis/p18pass1.xml"
 
 	^ '<doc><![CDATA[<doc<!DOCTYPE&a%b&#c]] >] ]> ]]]><![CDATA[]]>
@@ -1190,7 +1183,7 @@ XMLConformanceOasisTests class >> sourcep18pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep22fail1xml [
+XMLConformanceOasisTest class >> sourcep22fail1xml [
 	"Source file: oasis/p22fail1.xml"
 
 	^ '
@@ -1200,7 +1193,7 @@ XMLConformanceOasisTests class >> sourcep22fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep22fail2xml [
+XMLConformanceOasisTest class >> sourcep22fail2xml [
 	"Source file: oasis/p22fail2.xml"
 
 	^ '<!DOCTYPE doc [
@@ -1212,7 +1205,7 @@ XMLConformanceOasisTests class >> sourcep22fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep22pass1xml [
+XMLConformanceOasisTest class >> sourcep22pass1xml [
 	"Source file: oasis/p22pass1.xml"
 
 	^ '<doc/>
@@ -1220,7 +1213,7 @@ XMLConformanceOasisTests class >> sourcep22pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep22pass2xml [
+XMLConformanceOasisTest class >> sourcep22pass2xml [
 	"Source file: oasis/p22pass2.xml"
 
 	^ '<?xml version="1.0"?>
@@ -1229,7 +1222,7 @@ XMLConformanceOasisTests class >> sourcep22pass2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep22pass3xml [
+XMLConformanceOasisTest class >> sourcep22pass3xml [
 	"Source file: oasis/p22pass3.xml"
 
 	^ '<?xml version="1.0"?>
@@ -1239,7 +1232,7 @@ XMLConformanceOasisTests class >> sourcep22pass3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep22pass4xml [
+XMLConformanceOasisTest class >> sourcep22pass4xml [
 	"Source file: oasis/p22pass4.xml"
 
 	^ '<?xml version="1.0"?>
@@ -1256,7 +1249,7 @@ XMLConformanceOasisTests class >> sourcep22pass4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep22pass5xml [
+XMLConformanceOasisTest class >> sourcep22pass5xml [
 	"Source file: oasis/p22pass5.xml"
 
 	^ '<!--comment--> <?pi?>
@@ -1272,7 +1265,7 @@ XMLConformanceOasisTests class >> sourcep22pass5xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep22pass6xml [
+XMLConformanceOasisTest class >> sourcep22pass6xml [
 	"Source file: oasis/p22pass6.xml"
 
 	^ '<?xml version="1.0"?><!DOCTYPE doc
@@ -1283,7 +1276,7 @@ XMLConformanceOasisTests class >> sourcep22pass6xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep23fail1xml [
+XMLConformanceOasisTest class >> sourcep23fail1xml [
 	"Source file: oasis/p23fail1.xml"
 
 	^ '<?XML version="1.0"?>
@@ -1292,7 +1285,7 @@ XMLConformanceOasisTests class >> sourcep23fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep23fail2xml [
+XMLConformanceOasisTest class >> sourcep23fail2xml [
 	"Source file: oasis/p23fail2.xml"
 
 	^ '<?xml encoding="UTF-8"?>
@@ -1301,7 +1294,7 @@ XMLConformanceOasisTests class >> sourcep23fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep23fail3xml [
+XMLConformanceOasisTest class >> sourcep23fail3xml [
 	"Source file: oasis/p23fail3.xml"
 
 	^ '<?xml encoding="UTF-8" version="1.0"?>
@@ -1310,7 +1303,7 @@ XMLConformanceOasisTests class >> sourcep23fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep23fail4xml [
+XMLConformanceOasisTest class >> sourcep23fail4xml [
 	"Source file: oasis/p23fail4.xml"
 
 	^ '<?xml version="1.0" standalone="yes" encoding="UTF-8"?>
@@ -1319,7 +1312,7 @@ XMLConformanceOasisTests class >> sourcep23fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep23fail5xml [
+XMLConformanceOasisTest class >> sourcep23fail5xml [
 	"Source file: oasis/p23fail5.xml"
 
 	^ '<?xml version="1.0">
@@ -1328,7 +1321,7 @@ XMLConformanceOasisTests class >> sourcep23fail5xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep23pass1xml [
+XMLConformanceOasisTest class >> sourcep23pass1xml [
 	"Source file: oasis/p23pass1.xml"
 
 	^ '<?xml version="1.0"?>
@@ -1337,7 +1330,7 @@ XMLConformanceOasisTests class >> sourcep23pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep23pass2xml [
+XMLConformanceOasisTest class >> sourcep23pass2xml [
 	"Source file: oasis/p23pass2.xml"
 
 	^ '<?xml version="1.0" encoding="UTF-8"?>
@@ -1346,7 +1339,7 @@ XMLConformanceOasisTests class >> sourcep23pass2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep23pass3xml [
+XMLConformanceOasisTest class >> sourcep23pass3xml [
 	"Source file: oasis/p23pass3.xml"
 
 	^ '<?xml version="1.0" standalone="yes"?>
@@ -1355,7 +1348,7 @@ XMLConformanceOasisTests class >> sourcep23pass3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep23pass4xml [
+XMLConformanceOasisTest class >> sourcep23pass4xml [
 	"Source file: oasis/p23pass4.xml"
 
 	^ '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1364,7 +1357,7 @@ XMLConformanceOasisTests class >> sourcep23pass4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep24fail1xml [
+XMLConformanceOasisTest class >> sourcep24fail1xml [
 	"Source file: oasis/p24fail1.xml"
 
 	^ '<?xml version = ''1.0"?>
@@ -1373,7 +1366,7 @@ XMLConformanceOasisTests class >> sourcep24fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep24fail2xml [
+XMLConformanceOasisTest class >> sourcep24fail2xml [
 	"Source file: oasis/p24fail2.xml"
 
 	^ '<?xml version = "1.0''?>
@@ -1382,7 +1375,7 @@ XMLConformanceOasisTests class >> sourcep24fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep24pass1xml [
+XMLConformanceOasisTest class >> sourcep24pass1xml [
 	"Source file: oasis/p24pass1.xml"
 
 	^ '<?xml version="1.0"?>
@@ -1391,7 +1384,7 @@ XMLConformanceOasisTests class >> sourcep24pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep24pass2xml [
+XMLConformanceOasisTest class >> sourcep24pass2xml [
 	"Source file: oasis/p24pass2.xml"
 
 	^ '<?xml version=''1.0''?>
@@ -1400,7 +1393,7 @@ XMLConformanceOasisTests class >> sourcep24pass2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep24pass3xml [
+XMLConformanceOasisTest class >> sourcep24pass3xml [
 	"Source file: oasis/p24pass3.xml"
 
 	^ '<?xml
@@ -1415,7 +1408,7 @@ version
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep24pass4xml [
+XMLConformanceOasisTest class >> sourcep24pass4xml [
 	"Source file: oasis/p24pass4.xml"
 
 	^ '<?xml version = ''1.0''?>
@@ -1424,7 +1417,7 @@ XMLConformanceOasisTests class >> sourcep24pass4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep25fail1xml [
+XMLConformanceOasisTest class >> sourcep25fail1xml [
 	"Source file: oasis/p25fail1.xml"
 
 	^ '<?xml version <!--bad comment--> ="1.0"?>
@@ -1433,7 +1426,7 @@ XMLConformanceOasisTests class >> sourcep25fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep25pass1xml [
+XMLConformanceOasisTest class >> sourcep25pass1xml [
 	"Source file: oasis/p25pass1.xml"
 
 	^ '<?xml version="1.0"?>
@@ -1442,7 +1435,7 @@ XMLConformanceOasisTests class >> sourcep25pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep25pass2xml [
+XMLConformanceOasisTest class >> sourcep25pass2xml [
 	"Source file: oasis/p25pass2.xml"
 
 	^ '<?xml version
@@ -1457,7 +1450,7 @@ XMLConformanceOasisTests class >> sourcep25pass2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep26fail1xml [
+XMLConformanceOasisTest class >> sourcep26fail1xml [
 	"Source file: oasis/p26fail1.xml"
 
 	^ '<?xml version="1.0?"?>
@@ -1466,7 +1459,7 @@ XMLConformanceOasisTests class >> sourcep26fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep26fail2xml [
+XMLConformanceOasisTest class >> sourcep26fail2xml [
 	"Source file: oasis/p26fail2.xml"
 
 	^ '<?xml version="1.0^"?>
@@ -1475,7 +1468,7 @@ XMLConformanceOasisTests class >> sourcep26fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep26pass1xml [
+XMLConformanceOasisTest class >> sourcep26pass1xml [
 	"Source file: oasis/p26pass1.xml"
 
 	^ '<?xml version="1.0"?>
@@ -1488,7 +1481,7 @@ XMLConformanceOasisTests class >> sourcep26pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep27fail1xml [
+XMLConformanceOasisTest class >> sourcep27fail1xml [
 	"Source file: oasis/p27fail1.xml"
 
 	^ '<?xml version="1.0"?>
@@ -1498,7 +1491,7 @@ XMLConformanceOasisTests class >> sourcep27fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep27pass1xml [
+XMLConformanceOasisTest class >> sourcep27pass1xml [
 	"Source file: oasis/p27pass1.xml"
 
 	^ '<?xml version="1.0"?>
@@ -1509,7 +1502,7 @@ XMLConformanceOasisTests class >> sourcep27pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep27pass2xml [
+XMLConformanceOasisTest class >> sourcep27pass2xml [
 	"Source file: oasis/p27pass2.xml"
 
 	^ '<?xml version="1.0"?>
@@ -1519,7 +1512,7 @@ XMLConformanceOasisTests class >> sourcep27pass2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep27pass3xml [
+XMLConformanceOasisTest class >> sourcep27pass3xml [
 	"Source file: oasis/p27pass3.xml"
 
 	^ '<?xml version="1.0"?>
@@ -1531,7 +1524,7 @@ XMLConformanceOasisTests class >> sourcep27pass3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep27pass4xml [
+XMLConformanceOasisTest class >> sourcep27pass4xml [
 	"Source file: oasis/p27pass4.xml"
 
 	^ '<?xml version="1.0"?><?pi?>
@@ -1549,7 +1542,7 @@ XMLConformanceOasisTests class >> sourcep27pass4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep28fail1xml [
+XMLConformanceOasisTest class >> sourcep28fail1xml [
 	"Source file: oasis/p28fail1.xml"
 
 	^ '<!DOCTYPE doc [
@@ -1560,7 +1553,7 @@ XMLConformanceOasisTests class >> sourcep28fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep28pass1xml [
+XMLConformanceOasisTest class >> sourcep28pass1xml [
 	"Source file: oasis/p28pass1.xml"
 
 	^ '<!DOCTYPE 
@@ -1575,7 +1568,7 @@ doc
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep28pass2xml [
+XMLConformanceOasisTest class >> sourcep28pass2xml [
 	"Source file: oasis/p28pass2.xml"
 
 	^ '<!DOCTYPE 
@@ -1590,7 +1583,7 @@ doc
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep28pass3xml [
+XMLConformanceOasisTest class >> sourcep28pass3xml [
 	"Source file: oasis/p28pass3.xml"
 
 	^ '<!DOCTYPE doc [
@@ -1602,7 +1595,7 @@ XMLConformanceOasisTests class >> sourcep28pass3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep28pass4dtd [
+XMLConformanceOasisTest class >> sourcep28pass4dtd [
 	"Source file: oasis/p28pass4.dtd"
 
 	^ '<!ELEMENT doc EMPTY>
@@ -1610,7 +1603,7 @@ XMLConformanceOasisTests class >> sourcep28pass4dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep28pass4xml [
+XMLConformanceOasisTest class >> sourcep28pass4xml [
 	"Source file: oasis/p28pass4.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p28pass4.dtd">
@@ -1619,7 +1612,7 @@ XMLConformanceOasisTests class >> sourcep28pass4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep28pass5dtd [
+XMLConformanceOasisTest class >> sourcep28pass5dtd [
 	"Source file: oasis/p28pass5.dtd"
 
 	^ '%rootdecl;
@@ -1628,7 +1621,7 @@ XMLConformanceOasisTests class >> sourcep28pass5dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep28pass5xml [
+XMLConformanceOasisTest class >> sourcep28pass5xml [
 	"Source file: oasis/p28pass5.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p28pass5.dtd"[
@@ -1641,7 +1634,7 @@ XMLConformanceOasisTests class >> sourcep28pass5xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep29fail1xml [
+XMLConformanceOasisTest class >> sourcep29fail1xml [
 	"Source file: oasis/p29fail1.xml"
 
 	^ '<!DOCTYPE doc [
@@ -1653,7 +1646,7 @@ XMLConformanceOasisTests class >> sourcep29fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep29pass1xml [
+XMLConformanceOasisTest class >> sourcep29pass1xml [
 	"Source file: oasis/p29pass1.xml"
 
 	^ '<!DOCTYPE doc [
@@ -1672,7 +1665,7 @@ XMLConformanceOasisTests class >> sourcep29pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep30fail1dtd [
+XMLConformanceOasisTest class >> sourcep30fail1dtd [
 	"Source file: oasis/p30fail1.dtd"
 
 	^ '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1681,7 +1674,7 @@ XMLConformanceOasisTests class >> sourcep30fail1dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep30fail1xml [
+XMLConformanceOasisTest class >> sourcep30fail1xml [
 	"Source file: oasis/p30fail1.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p30fail1.dtd">
@@ -1690,7 +1683,7 @@ XMLConformanceOasisTests class >> sourcep30fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep30pass1dtd [
+XMLConformanceOasisTest class >> sourcep30pass1dtd [
 	"Source file: oasis/p30pass1.dtd"
 
 	^ '<!ELEMENT doc EMPTY>
@@ -1700,7 +1693,7 @@ XMLConformanceOasisTests class >> sourcep30pass1dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep30pass1xml [
+XMLConformanceOasisTest class >> sourcep30pass1xml [
 	"Source file: oasis/p30pass1.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p30pass1.dtd">
@@ -1709,7 +1702,7 @@ XMLConformanceOasisTests class >> sourcep30pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep30pass2dtd [
+XMLConformanceOasisTest class >> sourcep30pass2dtd [
 	"Source file: oasis/p30pass2.dtd"
 
 	^ '<?xml encoding="UTF-8"?>
@@ -1718,7 +1711,7 @@ XMLConformanceOasisTests class >> sourcep30pass2dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep30pass2xml [
+XMLConformanceOasisTest class >> sourcep30pass2xml [
 	"Source file: oasis/p30pass2.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p30pass2.dtd">
@@ -1727,7 +1720,7 @@ XMLConformanceOasisTests class >> sourcep30pass2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep31fail1dtd [
+XMLConformanceOasisTest class >> sourcep31fail1dtd [
 	"Source file: oasis/p31fail1.dtd"
 
 	^ '<!DOCTYPE doc
@@ -1738,7 +1731,7 @@ XMLConformanceOasisTests class >> sourcep31fail1dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep31fail1xml [
+XMLConformanceOasisTest class >> sourcep31fail1xml [
 	"Source file: oasis/p31fail1.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p31fail1.dtd">
@@ -1747,14 +1740,14 @@ XMLConformanceOasisTests class >> sourcep31fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep31pass1dtd [
+XMLConformanceOasisTest class >> sourcep31pass1dtd [
 	"Source file: oasis/p31pass1.dtd"
 
 	^ ''
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep31pass1xml [
+XMLConformanceOasisTest class >> sourcep31pass1xml [
 	"Source file: oasis/p31pass1.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p31pass1.dtd" [<!ELEMENT doc EMPTY>]>
@@ -1763,7 +1756,7 @@ XMLConformanceOasisTests class >> sourcep31pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep31pass2dtd [
+XMLConformanceOasisTest class >> sourcep31pass2dtd [
 	"Source file: oasis/p31pass2.dtd"
 
 	^ '<![INCLUDE[
@@ -1780,7 +1773,7 @@ XMLConformanceOasisTests class >> sourcep31pass2dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep31pass2xml [
+XMLConformanceOasisTest class >> sourcep31pass2xml [
 	"Source file: oasis/p31pass2.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p31pass2.dtd">
@@ -1789,7 +1782,7 @@ XMLConformanceOasisTests class >> sourcep31pass2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep32fail1xml [
+XMLConformanceOasisTest class >> sourcep32fail1xml [
 	"Source file: oasis/p32fail1.xml"
 
 	^ '<?xml version="1.0" standalone=''yes"?>
@@ -1798,7 +1791,7 @@ XMLConformanceOasisTests class >> sourcep32fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep32fail2xml [
+XMLConformanceOasisTest class >> sourcep32fail2xml [
 	"Source file: oasis/p32fail2.xml"
 
 	^ '<?xml version="1.0" standalone="yes''?>
@@ -1807,7 +1800,7 @@ XMLConformanceOasisTests class >> sourcep32fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep32fail3xml [
+XMLConformanceOasisTest class >> sourcep32fail3xml [
 	"Source file: oasis/p32fail3.xml"
 
 	^ '<?xml version="1.0"standalone="yes"?>
@@ -1816,7 +1809,7 @@ XMLConformanceOasisTests class >> sourcep32fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep32fail4xml [
+XMLConformanceOasisTest class >> sourcep32fail4xml [
 	"Source file: oasis/p32fail4.xml"
 
 	^ '<?xml version="1.0" standalone=yes?>
@@ -1825,7 +1818,7 @@ XMLConformanceOasisTests class >> sourcep32fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep32fail5xml [
+XMLConformanceOasisTest class >> sourcep32fail5xml [
 	"Source file: oasis/p32fail5.xml"
 
 	^ '<?xml version="1.0" standalone="YES"?>
@@ -1834,7 +1827,7 @@ XMLConformanceOasisTests class >> sourcep32fail5xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep32pass1xml [
+XMLConformanceOasisTest class >> sourcep32pass1xml [
 	"Source file: oasis/p32pass1.xml"
 
 	^ '<?xml version="1.0" standalone="yes"?>
@@ -1843,7 +1836,7 @@ XMLConformanceOasisTests class >> sourcep32pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep32pass2xml [
+XMLConformanceOasisTest class >> sourcep32pass2xml [
 	"Source file: oasis/p32pass2.xml"
 
 	^ '<?xml version="1.0" standalone=''no''?>
@@ -1852,28 +1845,28 @@ XMLConformanceOasisTests class >> sourcep32pass2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep39fail1xml [
+XMLConformanceOasisTest class >> sourcep39fail1xml [
 	"Source file: oasis/p39fail1.xml"
 
 	^ '<doc>content'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep39fail2xml [
+XMLConformanceOasisTest class >> sourcep39fail2xml [
 	"Source file: oasis/p39fail2.xml"
 
 	^ '<doc>content</a></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep39fail3xml [
+XMLConformanceOasisTest class >> sourcep39fail3xml [
 	"Source file: oasis/p39fail3.xml"
 
 	^ ''
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep39fail4xml [
+XMLConformanceOasisTest class >> sourcep39fail4xml [
 	"Source file: oasis/p39fail4.xml"
 
 	^ '<?xml version="1.0">
@@ -1881,7 +1874,7 @@ XMLConformanceOasisTests class >> sourcep39fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep39fail5xml [
+XMLConformanceOasisTest class >> sourcep39fail5xml [
 	"Source file: oasis/p39fail5.xml"
 
 	^ '<?xml version="1.0">
@@ -1896,56 +1889,56 @@ XMLConformanceOasisTests class >> sourcep39fail5xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep39pass1xml [
+XMLConformanceOasisTest class >> sourcep39pass1xml [
 	"Source file: oasis/p39pass1.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep39pass2xml [
+XMLConformanceOasisTest class >> sourcep39pass2xml [
 	"Source file: oasis/p39pass2.xml"
 
 	^ '<doc>content</doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep40fail1xml [
+XMLConformanceOasisTest class >> sourcep40fail1xml [
 	"Source file: oasis/p40fail1.xml"
 
 	^ '<doc att="val"att2="val2"></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep40fail2xml [
+XMLConformanceOasisTest class >> sourcep40fail2xml [
 	"Source file: oasis/p40fail2.xml"
 
 	^ '<3notname></3notname>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep40fail3xml [
+XMLConformanceOasisTest class >> sourcep40fail3xml [
 	"Source file: oasis/p40fail3.xml"
 
 	^ '<3notname></notname>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep40fail4xml [
+XMLConformanceOasisTest class >> sourcep40fail4xml [
 	"Source file: oasis/p40fail4.xml"
 
 	^ '< doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep40pass1xml [
+XMLConformanceOasisTest class >> sourcep40pass1xml [
 	"Source file: oasis/p40pass1.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep40pass2xml [
+XMLConformanceOasisTest class >> sourcep40pass2xml [
 	"Source file: oasis/p40pass2.xml"
 
 	^ '<doc
@@ -1954,14 +1947,14 @@ XMLConformanceOasisTests class >> sourcep40pass2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep40pass3xml [
+XMLConformanceOasisTest class >> sourcep40pass3xml [
 	"Source file: oasis/p40pass3.xml"
 
 	^ '<doc att="val"></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep40pass4xml [
+XMLConformanceOasisTest class >> sourcep40pass4xml [
 	"Source file: oasis/p40pass4.xml"
 
 	^ '<doc att="val" att2="val2"
@@ -1970,7 +1963,7 @@ att3="val3"
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep41fail1xml [
+XMLConformanceOasisTest class >> sourcep41fail1xml [
 	"Source file: oasis/p41fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -1981,7 +1974,7 @@ XMLConformanceOasisTests class >> sourcep41fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep41fail2xml [
+XMLConformanceOasisTest class >> sourcep41fail2xml [
 	"Source file: oasis/p41fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -1992,21 +1985,21 @@ XMLConformanceOasisTests class >> sourcep41fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep41fail3xml [
+XMLConformanceOasisTest class >> sourcep41fail3xml [
 	"Source file: oasis/p41fail3.xml"
 
 	^ '<doc att "val"></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep41pass1xml [
+XMLConformanceOasisTest class >> sourcep41pass1xml [
 	"Source file: oasis/p41pass1.xml"
 
 	^ '<doc att="val"></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep41pass2xml [
+XMLConformanceOasisTest class >> sourcep41pass2xml [
 	"Source file: oasis/p41pass2.xml"
 
 	^ '<doc att
@@ -2015,35 +2008,35 @@ XMLConformanceOasisTests class >> sourcep41pass2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep42fail1xml [
+XMLConformanceOasisTest class >> sourcep42fail1xml [
 	"Source file: oasis/p42fail1.xml"
 
 	^ '<doc></ doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep42fail2xml [
+XMLConformanceOasisTest class >> sourcep42fail2xml [
 	"Source file: oasis/p42fail2.xml"
 
 	^ '<doc></doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep42fail3xml [
+XMLConformanceOasisTest class >> sourcep42fail3xml [
 	"Source file: oasis/p42fail3.xml"
 
 	^ '<doc/doc/'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep42pass1xml [
+XMLConformanceOasisTest class >> sourcep42pass1xml [
 	"Source file: oasis/p42pass1.xml"
 
 	^ '<doc></doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep42pass2xml [
+XMLConformanceOasisTest class >> sourcep42pass2xml [
 	"Source file: oasis/p42pass2.xml"
 
 	^ '<doc></doc  
@@ -2051,7 +2044,7 @@ XMLConformanceOasisTests class >> sourcep42pass2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep43fail1xml [
+XMLConformanceOasisTest class >> sourcep43fail1xml [
 	"Source file: oasis/p43fail1.xml"
 
 	^ '<!DOCTYPE elem
@@ -2066,7 +2059,7 @@ XMLConformanceOasisTests class >> sourcep43fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep43fail2xml [
+XMLConformanceOasisTest class >> sourcep43fail2xml [
 	"Source file: oasis/p43fail2.xml"
 
 	^ '<!DOCTYPE elem
@@ -2081,7 +2074,7 @@ XMLConformanceOasisTests class >> sourcep43fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep43fail3xml [
+XMLConformanceOasisTest class >> sourcep43fail3xml [
 	"Source file: oasis/p43fail3.xml"
 
 	^ '<!DOCTYPE elem
@@ -2096,7 +2089,7 @@ XMLConformanceOasisTests class >> sourcep43fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep43pass1xml [
+XMLConformanceOasisTest class >> sourcep43pass1xml [
 	"Source file: oasis/p43pass1.xml"
 
 	^ '<!DOCTYPE elem
@@ -2130,56 +2123,56 @@ CharData
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep44fail1xml [
+XMLConformanceOasisTest class >> sourcep44fail1xml [
 	"Source file: oasis/p44fail1.xml"
 
 	^ '< doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep44fail2xml [
+XMLConformanceOasisTest class >> sourcep44fail2xml [
 	"Source file: oasis/p44fail2.xml"
 
 	^ '<doc/ >'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep44fail3xml [
+XMLConformanceOasisTest class >> sourcep44fail3xml [
 	"Source file: oasis/p44fail3.xml"
 
 	^ '<doc --bad comment--/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep44fail4xml [
+XMLConformanceOasisTest class >> sourcep44fail4xml [
 	"Source file: oasis/p44fail4.xml"
 
 	^ '<doc att="val"att2="val2"/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep44fail5xml [
+XMLConformanceOasisTest class >> sourcep44fail5xml [
 	"Source file: oasis/p44fail5.xml"
 
 	^ '<doc att="val" att="val"/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep44pass1xml [
+XMLConformanceOasisTest class >> sourcep44pass1xml [
 	"Source file: oasis/p44pass1.xml"
 
 	^ '<doc/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep44pass2xml [
+XMLConformanceOasisTest class >> sourcep44pass2xml [
 	"Source file: oasis/p44pass2.xml"
 
 	^ '<doc att="val"/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep44pass3xml [
+XMLConformanceOasisTest class >> sourcep44pass3xml [
 	"Source file: oasis/p44pass3.xml"
 
 	^ '<doc att="val"
@@ -2189,7 +2182,7 @@ XMLConformanceOasisTests class >> sourcep44pass3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep44pass4xml [
+XMLConformanceOasisTest class >> sourcep44pass4xml [
 	"Source file: oasis/p44pass4.xml"
 
 	^ '<doc
@@ -2198,7 +2191,7 @@ XMLConformanceOasisTests class >> sourcep44pass4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep44pass5xml [
+XMLConformanceOasisTest class >> sourcep44pass5xml [
 	"Source file: oasis/p44pass5.xml"
 
 	^ '<doc att="val"
@@ -2206,7 +2199,7 @@ att2="val2" att3="val3"/>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep45fail1xml [
+XMLConformanceOasisTest class >> sourcep45fail1xml [
 	"Source file: oasis/p45fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2217,7 +2210,7 @@ XMLConformanceOasisTests class >> sourcep45fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep45fail2xml [
+XMLConformanceOasisTest class >> sourcep45fail2xml [
 	"Source file: oasis/p45fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -2228,7 +2221,7 @@ XMLConformanceOasisTests class >> sourcep45fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep45fail3xml [
+XMLConformanceOasisTest class >> sourcep45fail3xml [
 	"Source file: oasis/p45fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -2239,7 +2232,7 @@ XMLConformanceOasisTests class >> sourcep45fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep45fail4xml [
+XMLConformanceOasisTest class >> sourcep45fail4xml [
 	"Source file: oasis/p45fail4.xml"
 
 	^ '<!DOCTYPE doc
@@ -2250,7 +2243,7 @@ XMLConformanceOasisTests class >> sourcep45fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep45pass1xml [
+XMLConformanceOasisTest class >> sourcep45pass1xml [
 	"Source file: oasis/p45pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2265,7 +2258,7 @@ a ANY
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep46fail1xml [
+XMLConformanceOasisTest class >> sourcep46fail1xml [
 	"Source file: oasis/p46fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2277,7 +2270,7 @@ XMLConformanceOasisTests class >> sourcep46fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep46fail2xml [
+XMLConformanceOasisTest class >> sourcep46fail2xml [
 	"Source file: oasis/p46fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -2289,7 +2282,7 @@ XMLConformanceOasisTests class >> sourcep46fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep46fail3xml [
+XMLConformanceOasisTest class >> sourcep46fail3xml [
 	"Source file: oasis/p46fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -2301,7 +2294,7 @@ XMLConformanceOasisTests class >> sourcep46fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep46fail4xml [
+XMLConformanceOasisTest class >> sourcep46fail4xml [
 	"Source file: oasis/p46fail4.xml"
 
 	^ '<!DOCTYPE doc
@@ -2313,7 +2306,7 @@ XMLConformanceOasisTests class >> sourcep46fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep46fail5xml [
+XMLConformanceOasisTest class >> sourcep46fail5xml [
 	"Source file: oasis/p46fail5.xml"
 
 	^ '<!DOCTYPE doc
@@ -2325,7 +2318,7 @@ XMLConformanceOasisTests class >> sourcep46fail5xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep46fail6xml [
+XMLConformanceOasisTest class >> sourcep46fail6xml [
 	"Source file: oasis/p46fail6.xml"
 
 	^ '<!DOCTYPE doc
@@ -2337,7 +2330,7 @@ XMLConformanceOasisTests class >> sourcep46fail6xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep46pass1xml [
+XMLConformanceOasisTest class >> sourcep46pass1xml [
 	"Source file: oasis/p46pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2351,7 +2344,7 @@ XMLConformanceOasisTests class >> sourcep46pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep47fail1xml [
+XMLConformanceOasisTest class >> sourcep47fail1xml [
 	"Source file: oasis/p47fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2363,7 +2356,7 @@ XMLConformanceOasisTests class >> sourcep47fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep47fail2xml [
+XMLConformanceOasisTest class >> sourcep47fail2xml [
 	"Source file: oasis/p47fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -2375,7 +2368,7 @@ XMLConformanceOasisTests class >> sourcep47fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep47fail3xml [
+XMLConformanceOasisTest class >> sourcep47fail3xml [
 	"Source file: oasis/p47fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -2387,7 +2380,7 @@ XMLConformanceOasisTests class >> sourcep47fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep47fail4xml [
+XMLConformanceOasisTest class >> sourcep47fail4xml [
 	"Source file: oasis/p47fail4.xml"
 
 	^ '<!DOCTYPE doc
@@ -2399,7 +2392,7 @@ XMLConformanceOasisTests class >> sourcep47fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep47pass1xml [
+XMLConformanceOasisTest class >> sourcep47pass1xml [
 	"Source file: oasis/p47pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2416,7 +2409,7 @@ XMLConformanceOasisTests class >> sourcep47pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep48fail1xml [
+XMLConformanceOasisTest class >> sourcep48fail1xml [
 	"Source file: oasis/p48fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2428,7 +2421,7 @@ XMLConformanceOasisTests class >> sourcep48fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep48fail2xml [
+XMLConformanceOasisTest class >> sourcep48fail2xml [
 	"Source file: oasis/p48fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -2440,7 +2433,7 @@ XMLConformanceOasisTests class >> sourcep48fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep48pass1xml [
+XMLConformanceOasisTest class >> sourcep48pass1xml [
 	"Source file: oasis/p48pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2460,7 +2453,7 @@ XMLConformanceOasisTests class >> sourcep48pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep49fail1xml [
+XMLConformanceOasisTest class >> sourcep49fail1xml [
 	"Source file: oasis/p49fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2471,7 +2464,7 @@ XMLConformanceOasisTests class >> sourcep49fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep49pass1xml [
+XMLConformanceOasisTest class >> sourcep49pass1xml [
 	"Source file: oasis/p49pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2492,7 +2485,7 @@ c?
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep50fail1xml [
+XMLConformanceOasisTest class >> sourcep50fail1xml [
 	"Source file: oasis/p50fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2503,7 +2496,7 @@ XMLConformanceOasisTests class >> sourcep50fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep50pass1xml [
+XMLConformanceOasisTest class >> sourcep50pass1xml [
 	"Source file: oasis/p50pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2524,7 +2517,7 @@ c?
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep51fail1xml [
+XMLConformanceOasisTest class >> sourcep51fail1xml [
 	"Source file: oasis/p51fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2535,7 +2528,7 @@ XMLConformanceOasisTests class >> sourcep51fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep51fail2xml [
+XMLConformanceOasisTest class >> sourcep51fail2xml [
 	"Source file: oasis/p51fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -2546,7 +2539,7 @@ XMLConformanceOasisTests class >> sourcep51fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep51fail3xml [
+XMLConformanceOasisTest class >> sourcep51fail3xml [
 	"Source file: oasis/p51fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -2558,7 +2551,7 @@ XMLConformanceOasisTests class >> sourcep51fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep51fail4xml [
+XMLConformanceOasisTest class >> sourcep51fail4xml [
 	"Source file: oasis/p51fail4.xml"
 
 	^ '<!DOCTYPE doc
@@ -2570,7 +2563,7 @@ XMLConformanceOasisTests class >> sourcep51fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep51fail5xml [
+XMLConformanceOasisTest class >> sourcep51fail5xml [
 	"Source file: oasis/p51fail5.xml"
 
 	^ '<!DOCTYPE doc
@@ -2582,7 +2575,7 @@ XMLConformanceOasisTests class >> sourcep51fail5xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep51fail6xml [
+XMLConformanceOasisTest class >> sourcep51fail6xml [
 	"Source file: oasis/p51fail6.xml"
 
 	^ '<!DOCTYPE doc
@@ -2594,7 +2587,7 @@ XMLConformanceOasisTests class >> sourcep51fail6xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep51fail7xml [
+XMLConformanceOasisTest class >> sourcep51fail7xml [
 	"Source file: oasis/p51fail7.xml"
 
 	^ '<!DOCTYPE doc
@@ -2606,7 +2599,7 @@ XMLConformanceOasisTests class >> sourcep51fail7xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep51pass1xml [
+XMLConformanceOasisTest class >> sourcep51pass1xml [
 	"Source file: oasis/p51pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2628,7 +2621,7 @@ b
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep52fail1xml [
+XMLConformanceOasisTest class >> sourcep52fail1xml [
 	"Source file: oasis/p52fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2640,7 +2633,7 @@ XMLConformanceOasisTests class >> sourcep52fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep52fail2xml [
+XMLConformanceOasisTest class >> sourcep52fail2xml [
 	"Source file: oasis/p52fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -2652,7 +2645,7 @@ XMLConformanceOasisTests class >> sourcep52fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep52pass1xml [
+XMLConformanceOasisTest class >> sourcep52pass1xml [
 	"Source file: oasis/p52pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2681,7 +2674,7 @@ att2 CDATA
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep53fail1xml [
+XMLConformanceOasisTest class >> sourcep53fail1xml [
 	"Source file: oasis/p53fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2694,7 +2687,7 @@ XMLConformanceOasisTests class >> sourcep53fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep53fail2xml [
+XMLConformanceOasisTest class >> sourcep53fail2xml [
 	"Source file: oasis/p53fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -2707,7 +2700,7 @@ XMLConformanceOasisTests class >> sourcep53fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep53fail3xml [
+XMLConformanceOasisTest class >> sourcep53fail3xml [
 	"Source file: oasis/p53fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -2720,7 +2713,7 @@ XMLConformanceOasisTests class >> sourcep53fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep53fail4xml [
+XMLConformanceOasisTest class >> sourcep53fail4xml [
 	"Source file: oasis/p53fail4.xml"
 
 	^ '<!DOCTYPE doc
@@ -2733,7 +2726,7 @@ XMLConformanceOasisTests class >> sourcep53fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep53fail5xml [
+XMLConformanceOasisTest class >> sourcep53fail5xml [
 	"Source file: oasis/p53fail5.xml"
 
 	^ '<!DOCTYPE doc
@@ -2746,7 +2739,7 @@ XMLConformanceOasisTests class >> sourcep53fail5xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep53pass1xml [
+XMLConformanceOasisTest class >> sourcep53pass1xml [
 	"Source file: oasis/p53pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2759,7 +2752,7 @@ XMLConformanceOasisTests class >> sourcep53pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep54fail1xml [
+XMLConformanceOasisTest class >> sourcep54fail1xml [
 	"Source file: oasis/p54fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2772,7 +2765,7 @@ XMLConformanceOasisTests class >> sourcep54fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep54pass1xml [
+XMLConformanceOasisTest class >> sourcep54pass1xml [
 	"Source file: oasis/p54pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2790,7 +2783,7 @@ XMLConformanceOasisTests class >> sourcep54pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep55fail1xml [
+XMLConformanceOasisTest class >> sourcep55fail1xml [
 	"Source file: oasis/p55fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2803,7 +2796,7 @@ XMLConformanceOasisTests class >> sourcep55fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep55pass1xml [
+XMLConformanceOasisTest class >> sourcep55pass1xml [
 	"Source file: oasis/p55pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2816,7 +2809,7 @@ XMLConformanceOasisTests class >> sourcep55pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep56fail1xml [
+XMLConformanceOasisTest class >> sourcep56fail1xml [
 	"Source file: oasis/p56fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2829,7 +2822,7 @@ XMLConformanceOasisTests class >> sourcep56fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep56fail2xml [
+XMLConformanceOasisTest class >> sourcep56fail2xml [
 	"Source file: oasis/p56fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -2842,7 +2835,7 @@ XMLConformanceOasisTests class >> sourcep56fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep56fail3xml [
+XMLConformanceOasisTest class >> sourcep56fail3xml [
 	"Source file: oasis/p56fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -2855,7 +2848,7 @@ XMLConformanceOasisTests class >> sourcep56fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep56fail4xml [
+XMLConformanceOasisTest class >> sourcep56fail4xml [
 	"Source file: oasis/p56fail4.xml"
 
 	^ '<!DOCTYPE doc
@@ -2868,7 +2861,7 @@ XMLConformanceOasisTests class >> sourcep56fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep56fail5xml [
+XMLConformanceOasisTest class >> sourcep56fail5xml [
 	"Source file: oasis/p56fail5.xml"
 
 	^ '<!DOCTYPE doc
@@ -2881,7 +2874,7 @@ XMLConformanceOasisTests class >> sourcep56fail5xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep56pass1xml [
+XMLConformanceOasisTest class >> sourcep56pass1xml [
 	"Source file: oasis/p56pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2907,7 +2900,7 @@ XMLConformanceOasisTests class >> sourcep56pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep57fail1xml [
+XMLConformanceOasisTest class >> sourcep57fail1xml [
 	"Source file: oasis/p57fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2920,7 +2913,7 @@ XMLConformanceOasisTests class >> sourcep57fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep57pass1xml [
+XMLConformanceOasisTest class >> sourcep57pass1xml [
 	"Source file: oasis/p57pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2938,7 +2931,7 @@ XMLConformanceOasisTests class >> sourcep57pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep58fail1xml [
+XMLConformanceOasisTest class >> sourcep58fail1xml [
 	"Source file: oasis/p58fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -2953,7 +2946,7 @@ XMLConformanceOasisTests class >> sourcep58fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep58fail2xml [
+XMLConformanceOasisTest class >> sourcep58fail2xml [
 	"Source file: oasis/p58fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -2968,7 +2961,7 @@ XMLConformanceOasisTests class >> sourcep58fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep58fail3xml [
+XMLConformanceOasisTest class >> sourcep58fail3xml [
 	"Source file: oasis/p58fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -2987,7 +2980,7 @@ XMLConformanceOasisTests class >> sourcep58fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep58fail4xml [
+XMLConformanceOasisTest class >> sourcep58fail4xml [
 	"Source file: oasis/p58fail4.xml"
 
 	^ '<!DOCTYPE doc
@@ -3002,7 +2995,7 @@ XMLConformanceOasisTests class >> sourcep58fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep58fail5xml [
+XMLConformanceOasisTest class >> sourcep58fail5xml [
 	"Source file: oasis/p58fail5.xml"
 
 	^ '<!DOCTYPE doc
@@ -3017,7 +3010,7 @@ XMLConformanceOasisTests class >> sourcep58fail5xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep58fail6xml [
+XMLConformanceOasisTest class >> sourcep58fail6xml [
 	"Source file: oasis/p58fail6.xml"
 
 	^ '<!DOCTYPE doc
@@ -3031,7 +3024,7 @@ XMLConformanceOasisTests class >> sourcep58fail6xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep58fail7xml [
+XMLConformanceOasisTest class >> sourcep58fail7xml [
 	"Source file: oasis/p58fail7.xml"
 
 	^ '<!DOCTYPE doc
@@ -3045,7 +3038,7 @@ XMLConformanceOasisTests class >> sourcep58fail7xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep58fail8xml [
+XMLConformanceOasisTest class >> sourcep58fail8xml [
 	"Source file: oasis/p58fail8.xml"
 
 	^ '<!DOCTYPE doc
@@ -3059,7 +3052,7 @@ XMLConformanceOasisTests class >> sourcep58fail8xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep58pass1xml [
+XMLConformanceOasisTest class >> sourcep58pass1xml [
 	"Source file: oasis/p58pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3077,7 +3070,7 @@ XMLConformanceOasisTests class >> sourcep58pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep59fail1xml [
+XMLConformanceOasisTest class >> sourcep59fail1xml [
 	"Source file: oasis/p59fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3090,7 +3083,7 @@ XMLConformanceOasisTests class >> sourcep59fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep59fail2xml [
+XMLConformanceOasisTest class >> sourcep59fail2xml [
 	"Source file: oasis/p59fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -3103,7 +3096,7 @@ XMLConformanceOasisTests class >> sourcep59fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep59fail3xml [
+XMLConformanceOasisTest class >> sourcep59fail3xml [
 	"Source file: oasis/p59fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -3116,7 +3109,7 @@ XMLConformanceOasisTests class >> sourcep59fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep59pass1xml [
+XMLConformanceOasisTest class >> sourcep59pass1xml [
 	"Source file: oasis/p59pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3132,7 +3125,7 @@ XMLConformanceOasisTests class >> sourcep59pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep60fail1xml [
+XMLConformanceOasisTest class >> sourcep60fail1xml [
 	"Source file: oasis/p60fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3145,7 +3138,7 @@ XMLConformanceOasisTests class >> sourcep60fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep60fail2xml [
+XMLConformanceOasisTest class >> sourcep60fail2xml [
 	"Source file: oasis/p60fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -3158,7 +3151,7 @@ XMLConformanceOasisTests class >> sourcep60fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep60fail3xml [
+XMLConformanceOasisTest class >> sourcep60fail3xml [
 	"Source file: oasis/p60fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -3171,7 +3164,7 @@ XMLConformanceOasisTests class >> sourcep60fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep60fail4xml [
+XMLConformanceOasisTest class >> sourcep60fail4xml [
 	"Source file: oasis/p60fail4.xml"
 
 	^ '<!DOCTYPE doc
@@ -3184,7 +3177,7 @@ XMLConformanceOasisTests class >> sourcep60fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep60fail5xml [
+XMLConformanceOasisTest class >> sourcep60fail5xml [
 	"Source file: oasis/p60fail5.xml"
 
 	^ '<!DOCTYPE doc
@@ -3197,7 +3190,7 @@ XMLConformanceOasisTests class >> sourcep60fail5xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep60pass1xml [
+XMLConformanceOasisTest class >> sourcep60pass1xml [
 	"Source file: oasis/p60pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3217,7 +3210,7 @@ XMLConformanceOasisTests class >> sourcep60pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep61fail1dtd [
+XMLConformanceOasisTest class >> sourcep61fail1dtd [
 	"Source file: oasis/p61fail1.dtd"
 
 	^ '<!ELEMENT doc EMPTY>
@@ -3228,7 +3221,7 @@ XMLConformanceOasisTests class >> sourcep61fail1dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep61fail1xml [
+XMLConformanceOasisTest class >> sourcep61fail1xml [
 	"Source file: oasis/p61fail1.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p61fail1.dtd">
@@ -3236,7 +3229,7 @@ XMLConformanceOasisTests class >> sourcep61fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep61pass1dtd [
+XMLConformanceOasisTest class >> sourcep61pass1dtd [
 	"Source file: oasis/p61pass1.dtd"
 
 	^ '<![INCLUDE[<![INCLUDE[
@@ -3249,7 +3242,7 @@ XMLConformanceOasisTests class >> sourcep61pass1dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep61pass1xml [
+XMLConformanceOasisTest class >> sourcep61pass1xml [
 	"Source file: oasis/p61pass1.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p61pass1.dtd">
@@ -3257,7 +3250,7 @@ XMLConformanceOasisTests class >> sourcep61pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep62fail1dtd [
+XMLConformanceOasisTest class >> sourcep62fail1dtd [
 	"Source file: oasis/p62fail1.dtd"
 
 	^ '<![include[
@@ -3267,7 +3260,7 @@ XMLConformanceOasisTests class >> sourcep62fail1dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep62fail1xml [
+XMLConformanceOasisTest class >> sourcep62fail1xml [
 	"Source file: oasis/p62fail1.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p62fail1.dtd">
@@ -3275,7 +3268,7 @@ XMLConformanceOasisTests class >> sourcep62fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep62fail2dtd [
+XMLConformanceOasisTest class >> sourcep62fail2dtd [
 	"Source file: oasis/p62fail2.dtd"
 
 	^ '<![INCLUDE[
@@ -3285,7 +3278,7 @@ XMLConformanceOasisTests class >> sourcep62fail2dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep62fail2xml [
+XMLConformanceOasisTest class >> sourcep62fail2xml [
 	"Source file: oasis/p62fail2.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p62fail2.dtd">
@@ -3293,7 +3286,7 @@ XMLConformanceOasisTests class >> sourcep62fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep62pass1dtd [
+XMLConformanceOasisTest class >> sourcep62pass1dtd [
 	"Source file: oasis/p62pass1.dtd"
 
 	^ '<![INCLUDE[
@@ -3312,7 +3305,7 @@ INCLUDE
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep62pass1xml [
+XMLConformanceOasisTest class >> sourcep62pass1xml [
 	"Source file: oasis/p62pass1.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p62pass1.dtd">
@@ -3320,7 +3313,7 @@ XMLConformanceOasisTests class >> sourcep62pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep63fail1dtd [
+XMLConformanceOasisTest class >> sourcep63fail1dtd [
 	"Source file: oasis/p63fail1.dtd"
 
 	^ '<!ELEMENT doc EMPTY>
@@ -3329,7 +3322,7 @@ XMLConformanceOasisTests class >> sourcep63fail1dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep63fail1xml [
+XMLConformanceOasisTest class >> sourcep63fail1xml [
 	"Source file: oasis/p63fail1.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p63fail1.dtd">
@@ -3337,7 +3330,7 @@ XMLConformanceOasisTests class >> sourcep63fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep63fail2dtd [
+XMLConformanceOasisTest class >> sourcep63fail2dtd [
 	"Source file: oasis/p63fail2.dtd"
 
 	^ '<!ELEMENT doc EMPTY>
@@ -3346,7 +3339,7 @@ XMLConformanceOasisTests class >> sourcep63fail2dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep63fail2xml [
+XMLConformanceOasisTest class >> sourcep63fail2xml [
 	"Source file: oasis/p63fail2.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p63fail2.dtd">
@@ -3354,7 +3347,7 @@ XMLConformanceOasisTests class >> sourcep63fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep63pass1dtd [
+XMLConformanceOasisTest class >> sourcep63pass1dtd [
 	"Source file: oasis/p63pass1.dtd"
 
 	^ '<!ELEMENT doc EMPTY>
@@ -3373,7 +3366,7 @@ IGNORE
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep63pass1xml [
+XMLConformanceOasisTest class >> sourcep63pass1xml [
 	"Source file: oasis/p63pass1.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p63pass1.dtd">
@@ -3381,7 +3374,7 @@ XMLConformanceOasisTests class >> sourcep63pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep64fail1dtd [
+XMLConformanceOasisTest class >> sourcep64fail1dtd [
 	"Source file: oasis/p64fail1.dtd"
 
 	^ '<!ELEMENT doc EMPTY>
@@ -3389,7 +3382,7 @@ XMLConformanceOasisTests class >> sourcep64fail1dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep64fail1xml [
+XMLConformanceOasisTest class >> sourcep64fail1xml [
 	"Source file: oasis/p64fail1.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p64fail1.dtd">
@@ -3398,7 +3391,7 @@ XMLConformanceOasisTests class >> sourcep64fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep64fail2dtd [
+XMLConformanceOasisTest class >> sourcep64fail2dtd [
 	"Source file: oasis/p64fail2.dtd"
 
 	^ '<!ELEMENT doc EMPTY>
@@ -3407,7 +3400,7 @@ XMLConformanceOasisTests class >> sourcep64fail2dtd [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep64fail2xml [
+XMLConformanceOasisTest class >> sourcep64fail2xml [
 	"Source file: oasis/p64fail2.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p64fail2.dtd">
@@ -3416,7 +3409,7 @@ XMLConformanceOasisTests class >> sourcep64fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep64pass1dtd [
+XMLConformanceOasisTest class >> sourcep64pass1dtd [
 	"Source file: oasis/p64pass1.dtd"
 
 	^ '<!ELEMENT doc EMPTY>
@@ -3436,7 +3429,7 @@ asdfasdfasdf
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep64pass1xml [
+XMLConformanceOasisTest class >> sourcep64pass1xml [
 	"Source file: oasis/p64pass1.xml"
 
 	^ '<!DOCTYPE doc SYSTEM "p64pass1.dtd">
@@ -3445,49 +3438,49 @@ XMLConformanceOasisTests class >> sourcep64pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep66fail1xml [
+XMLConformanceOasisTest class >> sourcep66fail1xml [
 	"Source file: oasis/p66fail1.xml"
 
 	^ '<doc>&#65</doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep66fail2xml [
+XMLConformanceOasisTest class >> sourcep66fail2xml [
 	"Source file: oasis/p66fail2.xml"
 
 	^ '<doc>&# 65;</doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep66fail3xml [
+XMLConformanceOasisTest class >> sourcep66fail3xml [
 	"Source file: oasis/p66fail3.xml"
 
 	^ '<doc>&#A;</doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep66fail4xml [
+XMLConformanceOasisTest class >> sourcep66fail4xml [
 	"Source file: oasis/p66fail4.xml"
 
 	^ '<doc>&#x4G;</doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep66fail5xml [
+XMLConformanceOasisTest class >> sourcep66fail5xml [
 	"Source file: oasis/p66fail5.xml"
 
 	^ '<doc>&#5;</doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep66fail6xml [
+XMLConformanceOasisTest class >> sourcep66fail6xml [
 	"Source file: oasis/p66fail6.xml"
 
 	^ '<doc>&#xd802;&#xdc02;</doc>'
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep66pass1xml [
+XMLConformanceOasisTest class >> sourcep66pass1xml [
 	"Source file: oasis/p66pass1.xml"
 
 	^ '<doc>
@@ -3497,7 +3490,7 @@ XMLConformanceOasisTests class >> sourcep66pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep68fail1xml [
+XMLConformanceOasisTest class >> sourcep68fail1xml [
 	"Source file: oasis/p68fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3512,7 +3505,7 @@ XMLConformanceOasisTests class >> sourcep68fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep68fail2xml [
+XMLConformanceOasisTest class >> sourcep68fail2xml [
 	"Source file: oasis/p68fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -3527,7 +3520,7 @@ XMLConformanceOasisTests class >> sourcep68fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep68fail3xml [
+XMLConformanceOasisTest class >> sourcep68fail3xml [
 	"Source file: oasis/p68fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -3542,7 +3535,7 @@ XMLConformanceOasisTests class >> sourcep68fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep68pass1xml [
+XMLConformanceOasisTest class >> sourcep68pass1xml [
 	"Source file: oasis/p68pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3560,7 +3553,7 @@ XMLConformanceOasisTests class >> sourcep68pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep69fail1xml [
+XMLConformanceOasisTest class >> sourcep69fail1xml [
 	"Source file: oasis/p69fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3574,7 +3567,7 @@ XMLConformanceOasisTests class >> sourcep69fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep69fail2xml [
+XMLConformanceOasisTest class >> sourcep69fail2xml [
 	"Source file: oasis/p69fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -3588,7 +3581,7 @@ XMLConformanceOasisTests class >> sourcep69fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep69fail3xml [
+XMLConformanceOasisTest class >> sourcep69fail3xml [
 	"Source file: oasis/p69fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -3602,7 +3595,7 @@ XMLConformanceOasisTests class >> sourcep69fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep69pass1xml [
+XMLConformanceOasisTest class >> sourcep69pass1xml [
 	"Source file: oasis/p69pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3616,7 +3609,7 @@ XMLConformanceOasisTests class >> sourcep69pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep70fail1xml [
+XMLConformanceOasisTest class >> sourcep70fail1xml [
 	"Source file: oasis/p70fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3629,7 +3622,7 @@ XMLConformanceOasisTests class >> sourcep70fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep70pass1xml [
+XMLConformanceOasisTest class >> sourcep70pass1xml [
 	"Source file: oasis/p70pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3643,7 +3636,7 @@ XMLConformanceOasisTests class >> sourcep70pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep71fail1xml [
+XMLConformanceOasisTest class >> sourcep71fail1xml [
 	"Source file: oasis/p71fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3656,7 +3649,7 @@ XMLConformanceOasisTests class >> sourcep71fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep71fail2xml [
+XMLConformanceOasisTest class >> sourcep71fail2xml [
 	"Source file: oasis/p71fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -3669,7 +3662,7 @@ XMLConformanceOasisTests class >> sourcep71fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep71fail3xml [
+XMLConformanceOasisTest class >> sourcep71fail3xml [
 	"Source file: oasis/p71fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -3682,7 +3675,7 @@ XMLConformanceOasisTests class >> sourcep71fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep71fail4xml [
+XMLConformanceOasisTest class >> sourcep71fail4xml [
 	"Source file: oasis/p71fail4.xml"
 
 	^ '<!DOCTYPE doc
@@ -3695,7 +3688,7 @@ XMLConformanceOasisTests class >> sourcep71fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep71pass1xml [
+XMLConformanceOasisTest class >> sourcep71pass1xml [
 	"Source file: oasis/p71pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3712,7 +3705,7 @@ XMLConformanceOasisTests class >> sourcep71pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep72fail1xml [
+XMLConformanceOasisTest class >> sourcep72fail1xml [
 	"Source file: oasis/p72fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3725,7 +3718,7 @@ XMLConformanceOasisTests class >> sourcep72fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep72fail2xml [
+XMLConformanceOasisTest class >> sourcep72fail2xml [
 	"Source file: oasis/p72fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -3738,7 +3731,7 @@ XMLConformanceOasisTests class >> sourcep72fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep72fail3xml [
+XMLConformanceOasisTest class >> sourcep72fail3xml [
 	"Source file: oasis/p72fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -3751,7 +3744,7 @@ XMLConformanceOasisTests class >> sourcep72fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep72fail4xml [
+XMLConformanceOasisTest class >> sourcep72fail4xml [
 	"Source file: oasis/p72fail4.xml"
 
 	^ '<!DOCTYPE doc
@@ -3764,7 +3757,7 @@ XMLConformanceOasisTests class >> sourcep72fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep72pass1xml [
+XMLConformanceOasisTest class >> sourcep72pass1xml [
 	"Source file: oasis/p72pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3782,7 +3775,7 @@ XMLConformanceOasisTests class >> sourcep72pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep73fail1xml [
+XMLConformanceOasisTest class >> sourcep73fail1xml [
 	"Source file: oasis/p73fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3796,7 +3789,7 @@ XMLConformanceOasisTests class >> sourcep73fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep73fail2xml [
+XMLConformanceOasisTest class >> sourcep73fail2xml [
 	"Source file: oasis/p73fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -3810,7 +3803,7 @@ XMLConformanceOasisTests class >> sourcep73fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep73fail3xml [
+XMLConformanceOasisTest class >> sourcep73fail3xml [
 	"Source file: oasis/p73fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -3824,7 +3817,7 @@ XMLConformanceOasisTests class >> sourcep73fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep73fail4xml [
+XMLConformanceOasisTest class >> sourcep73fail4xml [
 	"Source file: oasis/p73fail4.xml"
 
 	^ '<!DOCTYPE doc
@@ -3838,7 +3831,7 @@ XMLConformanceOasisTests class >> sourcep73fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep73fail5xml [
+XMLConformanceOasisTest class >> sourcep73fail5xml [
 	"Source file: oasis/p73fail5.xml"
 
 	^ '<!DOCTYPE doc
@@ -3852,7 +3845,7 @@ XMLConformanceOasisTests class >> sourcep73fail5xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep73pass1xml [
+XMLConformanceOasisTest class >> sourcep73pass1xml [
 	"Source file: oasis/p73pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3868,7 +3861,7 @@ XMLConformanceOasisTests class >> sourcep73pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep74fail1xml [
+XMLConformanceOasisTest class >> sourcep74fail1xml [
 	"Source file: oasis/p74fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3881,7 +3874,7 @@ XMLConformanceOasisTests class >> sourcep74fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep74fail2xml [
+XMLConformanceOasisTest class >> sourcep74fail2xml [
 	"Source file: oasis/p74fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -3894,7 +3887,7 @@ XMLConformanceOasisTests class >> sourcep74fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep74fail3xml [
+XMLConformanceOasisTest class >> sourcep74fail3xml [
 	"Source file: oasis/p74fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -3906,7 +3899,7 @@ XMLConformanceOasisTests class >> sourcep74fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep74pass1xml [
+XMLConformanceOasisTest class >> sourcep74pass1xml [
 	"Source file: oasis/p74pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3919,7 +3912,7 @@ XMLConformanceOasisTests class >> sourcep74pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep75fail1xml [
+XMLConformanceOasisTest class >> sourcep75fail1xml [
 	"Source file: oasis/p75fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -3931,7 +3924,7 @@ XMLConformanceOasisTests class >> sourcep75fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep75fail2xml [
+XMLConformanceOasisTest class >> sourcep75fail2xml [
 	"Source file: oasis/p75fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -3943,7 +3936,7 @@ XMLConformanceOasisTests class >> sourcep75fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep75fail3xml [
+XMLConformanceOasisTest class >> sourcep75fail3xml [
 	"Source file: oasis/p75fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -3955,7 +3948,7 @@ XMLConformanceOasisTests class >> sourcep75fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep75fail4xml [
+XMLConformanceOasisTest class >> sourcep75fail4xml [
 	"Source file: oasis/p75fail4.xml"
 
 	^ '<!DOCTYPE doc
@@ -3967,7 +3960,7 @@ XMLConformanceOasisTests class >> sourcep75fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep75fail5xml [
+XMLConformanceOasisTest class >> sourcep75fail5xml [
 	"Source file: oasis/p75fail5.xml"
 
 	^ '<!DOCTYPE doc
@@ -3979,7 +3972,7 @@ XMLConformanceOasisTests class >> sourcep75fail5xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep75fail6xml [
+XMLConformanceOasisTest class >> sourcep75fail6xml [
 	"Source file: oasis/p75fail6.xml"
 
 	^ '<!DOCTYPE doc
@@ -3991,7 +3984,7 @@ XMLConformanceOasisTests class >> sourcep75fail6xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep75pass1xml [
+XMLConformanceOasisTest class >> sourcep75pass1xml [
 	"Source file: oasis/p75pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -4008,7 +4001,7 @@ XMLConformanceOasisTests class >> sourcep75pass1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep76fail1xml [
+XMLConformanceOasisTest class >> sourcep76fail1xml [
 	"Source file: oasis/p76fail1.xml"
 
 	^ '<!DOCTYPE doc
@@ -4022,7 +4015,7 @@ XMLConformanceOasisTests class >> sourcep76fail1xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep76fail2xml [
+XMLConformanceOasisTest class >> sourcep76fail2xml [
 	"Source file: oasis/p76fail2.xml"
 
 	^ '<!DOCTYPE doc
@@ -4036,7 +4029,7 @@ XMLConformanceOasisTests class >> sourcep76fail2xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep76fail3xml [
+XMLConformanceOasisTest class >> sourcep76fail3xml [
 	"Source file: oasis/p76fail3.xml"
 
 	^ '<!DOCTYPE doc
@@ -4050,7 +4043,7 @@ XMLConformanceOasisTests class >> sourcep76fail3xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep76fail4xml [
+XMLConformanceOasisTest class >> sourcep76fail4xml [
 	"Source file: oasis/p76fail4.xml"
 
 	^ '<!DOCTYPE doc
@@ -4066,7 +4059,7 @@ XMLConformanceOasisTests class >> sourcep76fail4xml [
 ]
 
 { #category : #'xml source' }
-XMLConformanceOasisTests class >> sourcep76pass1xml [
+XMLConformanceOasisTest class >> sourcep76pass1xml [
 	"Source file: oasis/p76pass1.xml"
 
 	^ '<!DOCTYPE doc
@@ -4084,11 +4077,12 @@ XMLConformanceOasisTests class >> sourcep76pass1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> teste2xml [
+XMLConformanceOasisTest >> teste2xml [
 	"Source file: oasis/e2.xml"
 
-	(self isSkippableTest: #teste2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #teste2xml.
 	self
 		should: [
 			self
@@ -4098,11 +4092,12 @@ XMLConformanceOasisTests >> teste2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp01fail1xml [
+XMLConformanceOasisTest >> testp01fail1xml [
 	"Source file: oasis/p01fail1.xml"
 
-	(self isSkippableTest: #testp01fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp01fail1xml.
 	self
 		should: [
 			self
@@ -4112,11 +4107,12 @@ XMLConformanceOasisTests >> testp01fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp01fail2xml [
+XMLConformanceOasisTest >> testp01fail2xml [
 	"Source file: oasis/p01fail2.xml"
 
-	(self isSkippableTest: #testp01fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp01fail2xml.
 	self
 		should: [
 			self
@@ -4126,11 +4122,12 @@ XMLConformanceOasisTests >> testp01fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp01fail3xml [
+XMLConformanceOasisTest >> testp01fail3xml [
 	"Source file: oasis/p01fail3.xml"
 
-	(self isSkippableTest: #testp01fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp01fail3xml.
 	self
 		should: [
 			self
@@ -4140,11 +4137,12 @@ XMLConformanceOasisTests >> testp01fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp01fail4xml [
+XMLConformanceOasisTest >> testp01fail4xml [
 	"Source file: oasis/p01fail4.xml"
 
-	(self isSkippableTest: #testp01fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp01fail4xml.
 	self
 		should: [
 			self
@@ -4154,11 +4152,12 @@ XMLConformanceOasisTests >> testp01fail4xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp01pass1xml [
+XMLConformanceOasisTest >> testp01pass1xml [
 	"Source file: oasis/p01pass1.xml"
 
-	(self isSkippableTest: #testp01pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp01pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -4166,18 +4165,18 @@ XMLConformanceOasisTests >> testp01pass1xml [
 				documentURI: 'p01pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp01pass2xml [
+XMLConformanceOasisTest >> testp01pass2xml [
 	"Source file: oasis/p01pass2.xml"
 
-	(self isSkippableTest: #testp01pass2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp01pass2xml.
 	self
 		shouldnt: [
 			[self
@@ -4185,18 +4184,18 @@ XMLConformanceOasisTests >> testp01pass2xml [
 				documentURI: 'p01pass2.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp01pass3xml [
+XMLConformanceOasisTest >> testp01pass3xml [
 	"Source file: oasis/p01pass3.xml"
 
-	(self isSkippableTest: #testp01pass3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp01pass3xml.
 	self
 		shouldnt: [
 			[self
@@ -4204,18 +4203,18 @@ XMLConformanceOasisTests >> testp01pass3xml [
 				documentURI: 'p01pass3.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail10xml [
+XMLConformanceOasisTest >> testp02fail10xml [
 	"Source file: oasis/p02fail10.xml"
 
-	(self isSkippableTest: #testp02fail10xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail10xml.
 	self
 		should: [
 			self
@@ -4225,11 +4224,12 @@ XMLConformanceOasisTests >> testp02fail10xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail11xml [
+XMLConformanceOasisTest >> testp02fail11xml [
 	"Source file: oasis/p02fail11.xml"
 
-	(self isSkippableTest: #testp02fail11xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail11xml.
 	self
 		should: [
 			self
@@ -4239,11 +4239,12 @@ XMLConformanceOasisTests >> testp02fail11xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail12xml [
+XMLConformanceOasisTest >> testp02fail12xml [
 	"Source file: oasis/p02fail12.xml"
 
-	(self isSkippableTest: #testp02fail12xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail12xml.
 	self
 		should: [
 			self
@@ -4253,11 +4254,12 @@ XMLConformanceOasisTests >> testp02fail12xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail13xml [
+XMLConformanceOasisTest >> testp02fail13xml [
 	"Source file: oasis/p02fail13.xml"
 
-	(self isSkippableTest: #testp02fail13xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail13xml.
 	self
 		should: [
 			self
@@ -4267,11 +4269,12 @@ XMLConformanceOasisTests >> testp02fail13xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail14xml [
+XMLConformanceOasisTest >> testp02fail14xml [
 	"Source file: oasis/p02fail14.xml"
 
-	(self isSkippableTest: #testp02fail14xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail14xml.
 	self
 		should: [
 			self
@@ -4281,11 +4284,12 @@ XMLConformanceOasisTests >> testp02fail14xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail15xml [
+XMLConformanceOasisTest >> testp02fail15xml [
 	"Source file: oasis/p02fail15.xml"
 
-	(self isSkippableTest: #testp02fail15xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail15xml.
 	self
 		should: [
 			self
@@ -4295,11 +4299,12 @@ XMLConformanceOasisTests >> testp02fail15xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail16xml [
+XMLConformanceOasisTest >> testp02fail16xml [
 	"Source file: oasis/p02fail16.xml"
 
-	(self isSkippableTest: #testp02fail16xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail16xml.
 	self
 		should: [
 			self
@@ -4309,11 +4314,12 @@ XMLConformanceOasisTests >> testp02fail16xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail17xml [
+XMLConformanceOasisTest >> testp02fail17xml [
 	"Source file: oasis/p02fail17.xml"
 
-	(self isSkippableTest: #testp02fail17xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail17xml.
 	self
 		should: [
 			self
@@ -4323,11 +4329,12 @@ XMLConformanceOasisTests >> testp02fail17xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail18xml [
+XMLConformanceOasisTest >> testp02fail18xml [
 	"Source file: oasis/p02fail18.xml"
 
-	(self isSkippableTest: #testp02fail18xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail18xml.
 	self
 		should: [
 			self
@@ -4337,11 +4344,12 @@ XMLConformanceOasisTests >> testp02fail18xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail19xml [
+XMLConformanceOasisTest >> testp02fail19xml [
 	"Source file: oasis/p02fail19.xml"
 
-	(self isSkippableTest: #testp02fail19xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail19xml.
 	self
 		should: [
 			self
@@ -4351,11 +4359,12 @@ XMLConformanceOasisTests >> testp02fail19xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail1xml [
+XMLConformanceOasisTest >> testp02fail1xml [
 	"Source file: oasis/p02fail1.xml"
 
-	(self isSkippableTest: #testp02fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail1xml.
 	self
 		should: [
 			self
@@ -4365,11 +4374,12 @@ XMLConformanceOasisTests >> testp02fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail20xml [
+XMLConformanceOasisTest >> testp02fail20xml [
 	"Source file: oasis/p02fail20.xml"
 
-	(self isSkippableTest: #testp02fail20xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail20xml.
 	self
 		should: [
 			self
@@ -4379,11 +4389,12 @@ XMLConformanceOasisTests >> testp02fail20xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail21xml [
+XMLConformanceOasisTest >> testp02fail21xml [
 	"Source file: oasis/p02fail21.xml"
 
-	(self isSkippableTest: #testp02fail21xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail21xml.
 	self
 		should: [
 			self
@@ -4393,11 +4404,12 @@ XMLConformanceOasisTests >> testp02fail21xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail22xml [
+XMLConformanceOasisTest >> testp02fail22xml [
 	"Source file: oasis/p02fail22.xml"
 
-	(self isSkippableTest: #testp02fail22xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail22xml.
 	self
 		should: [
 			self
@@ -4407,11 +4419,12 @@ XMLConformanceOasisTests >> testp02fail22xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail23xml [
+XMLConformanceOasisTest >> testp02fail23xml [
 	"Source file: oasis/p02fail23.xml"
 
-	(self isSkippableTest: #testp02fail23xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail23xml.
 	self
 		should: [
 			self
@@ -4421,11 +4434,12 @@ XMLConformanceOasisTests >> testp02fail23xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail24xml [
+XMLConformanceOasisTest >> testp02fail24xml [
 	"Source file: oasis/p02fail24.xml"
 
-	(self isSkippableTest: #testp02fail24xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail24xml.
 	self
 		should: [
 			self
@@ -4435,11 +4449,12 @@ XMLConformanceOasisTests >> testp02fail24xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail25xml [
+XMLConformanceOasisTest >> testp02fail25xml [
 	"Source file: oasis/p02fail25.xml"
 
-	(self isSkippableTest: #testp02fail25xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail25xml.
 	self
 		should: [
 			self
@@ -4449,11 +4464,12 @@ XMLConformanceOasisTests >> testp02fail25xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail26xml [
+XMLConformanceOasisTest >> testp02fail26xml [
 	"Source file: oasis/p02fail26.xml"
 
-	(self isSkippableTest: #testp02fail26xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail26xml.
 	self
 		should: [
 			self
@@ -4463,11 +4479,12 @@ XMLConformanceOasisTests >> testp02fail26xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail27xml [
+XMLConformanceOasisTest >> testp02fail27xml [
 	"Source file: oasis/p02fail27.xml"
 
-	(self isSkippableTest: #testp02fail27xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail27xml.
 	self
 		should: [
 			self
@@ -4477,11 +4494,12 @@ XMLConformanceOasisTests >> testp02fail27xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail28xml [
+XMLConformanceOasisTest >> testp02fail28xml [
 	"Source file: oasis/p02fail28.xml"
 
-	(self isSkippableTest: #testp02fail28xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail28xml.
 	self
 		should: [
 			self
@@ -4491,11 +4509,12 @@ XMLConformanceOasisTests >> testp02fail28xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail29xml [
+XMLConformanceOasisTest >> testp02fail29xml [
 	"Source file: oasis/p02fail29.xml"
 
-	(self isSkippableTest: #testp02fail29xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail29xml.
 	self
 		should: [
 			self
@@ -4505,11 +4524,12 @@ XMLConformanceOasisTests >> testp02fail29xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail2xml [
+XMLConformanceOasisTest >> testp02fail2xml [
 	"Source file: oasis/p02fail2.xml"
 
-	(self isSkippableTest: #testp02fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail2xml.
 	self
 		should: [
 			self
@@ -4519,11 +4539,12 @@ XMLConformanceOasisTests >> testp02fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail30xml [
+XMLConformanceOasisTest >> testp02fail30xml [
 	"Source file: oasis/p02fail30.xml"
 
-	(self isSkippableTest: #testp02fail30xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail30xml.
 	self
 		should: [
 			self
@@ -4533,11 +4554,12 @@ XMLConformanceOasisTests >> testp02fail30xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail31xml [
+XMLConformanceOasisTest >> testp02fail31xml [
 	"Source file: oasis/p02fail31.xml"
 
-	(self isSkippableTest: #testp02fail31xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail31xml.
 	self
 		should: [
 			self
@@ -4547,11 +4569,12 @@ XMLConformanceOasisTests >> testp02fail31xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail3xml [
+XMLConformanceOasisTest >> testp02fail3xml [
 	"Source file: oasis/p02fail3.xml"
 
-	(self isSkippableTest: #testp02fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail3xml.
 	self
 		should: [
 			self
@@ -4561,11 +4584,12 @@ XMLConformanceOasisTests >> testp02fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail4xml [
+XMLConformanceOasisTest >> testp02fail4xml [
 	"Source file: oasis/p02fail4.xml"
 
-	(self isSkippableTest: #testp02fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail4xml.
 	self
 		should: [
 			self
@@ -4575,11 +4599,12 @@ XMLConformanceOasisTests >> testp02fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail5xml [
+XMLConformanceOasisTest >> testp02fail5xml [
 	"Source file: oasis/p02fail5.xml"
 
-	(self isSkippableTest: #testp02fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail5xml.
 	self
 		should: [
 			self
@@ -4589,11 +4614,12 @@ XMLConformanceOasisTests >> testp02fail5xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail6xml [
+XMLConformanceOasisTest >> testp02fail6xml [
 	"Source file: oasis/p02fail6.xml"
 
-	(self isSkippableTest: #testp02fail6xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail6xml.
 	self
 		should: [
 			self
@@ -4603,11 +4629,12 @@ XMLConformanceOasisTests >> testp02fail6xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail7xml [
+XMLConformanceOasisTest >> testp02fail7xml [
 	"Source file: oasis/p02fail7.xml"
 
-	(self isSkippableTest: #testp02fail7xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail7xml.
 	self
 		should: [
 			self
@@ -4617,11 +4644,12 @@ XMLConformanceOasisTests >> testp02fail7xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail8xml [
+XMLConformanceOasisTest >> testp02fail8xml [
 	"Source file: oasis/p02fail8.xml"
 
-	(self isSkippableTest: #testp02fail8xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail8xml.
 	self
 		should: [
 			self
@@ -4631,11 +4659,12 @@ XMLConformanceOasisTests >> testp02fail8xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp02fail9xml [
+XMLConformanceOasisTest >> testp02fail9xml [
 	"Source file: oasis/p02fail9.xml"
 
-	(self isSkippableTest: #testp02fail9xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp02fail9xml.
 	self
 		should: [
 			self
@@ -4645,11 +4674,12 @@ XMLConformanceOasisTests >> testp02fail9xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail10xml [
+XMLConformanceOasisTest >> testp03fail10xml [
 	"Source file: oasis/p03fail10.xml"
 
-	(self isSkippableTest: #testp03fail10xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail10xml.
 	self
 		should: [
 			self
@@ -4659,11 +4689,12 @@ XMLConformanceOasisTests >> testp03fail10xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail11xml [
+XMLConformanceOasisTest >> testp03fail11xml [
 	"Source file: oasis/p03fail11.xml"
 
-	(self isSkippableTest: #testp03fail11xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail11xml.
 	self
 		should: [
 			self
@@ -4673,11 +4704,12 @@ XMLConformanceOasisTests >> testp03fail11xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail12xml [
+XMLConformanceOasisTest >> testp03fail12xml [
 	"Source file: oasis/p03fail12.xml"
 
-	(self isSkippableTest: #testp03fail12xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail12xml.
 	self
 		should: [
 			self
@@ -4687,11 +4719,12 @@ XMLConformanceOasisTests >> testp03fail12xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail13xml [
+XMLConformanceOasisTest >> testp03fail13xml [
 	"Source file: oasis/p03fail13.xml"
 
-	(self isSkippableTest: #testp03fail13xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail13xml.
 	self
 		should: [
 			self
@@ -4701,11 +4734,12 @@ XMLConformanceOasisTests >> testp03fail13xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail14xml [
+XMLConformanceOasisTest >> testp03fail14xml [
 	"Source file: oasis/p03fail14.xml"
 
-	(self isSkippableTest: #testp03fail14xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail14xml.
 	self
 		should: [
 			self
@@ -4715,11 +4749,12 @@ XMLConformanceOasisTests >> testp03fail14xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail15xml [
+XMLConformanceOasisTest >> testp03fail15xml [
 	"Source file: oasis/p03fail15.xml"
 
-	(self isSkippableTest: #testp03fail15xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail15xml.
 	self
 		should: [
 			self
@@ -4729,11 +4764,12 @@ XMLConformanceOasisTests >> testp03fail15xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail16xml [
+XMLConformanceOasisTest >> testp03fail16xml [
 	"Source file: oasis/p03fail16.xml"
 
-	(self isSkippableTest: #testp03fail16xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail16xml.
 	self
 		should: [
 			self
@@ -4743,11 +4779,12 @@ XMLConformanceOasisTests >> testp03fail16xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail17xml [
+XMLConformanceOasisTest >> testp03fail17xml [
 	"Source file: oasis/p03fail17.xml"
 
-	(self isSkippableTest: #testp03fail17xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail17xml.
 	self
 		should: [
 			self
@@ -4757,11 +4794,12 @@ XMLConformanceOasisTests >> testp03fail17xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail18xml [
+XMLConformanceOasisTest >> testp03fail18xml [
 	"Source file: oasis/p03fail18.xml"
 
-	(self isSkippableTest: #testp03fail18xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail18xml.
 	self
 		should: [
 			self
@@ -4771,11 +4809,12 @@ XMLConformanceOasisTests >> testp03fail18xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail19xml [
+XMLConformanceOasisTest >> testp03fail19xml [
 	"Source file: oasis/p03fail19.xml"
 
-	(self isSkippableTest: #testp03fail19xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail19xml.
 	self
 		should: [
 			self
@@ -4785,25 +4824,12 @@ XMLConformanceOasisTests >> testp03fail19xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail1xml [
-	"Source file: oasis/p03fail1.xml"
-
-	(self isSkippableTest: #testp03fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
-	self
-		should: [
-			self
-				parse: self class sourcep03fail1xml
-				documentURI: 'p03fail1.xml']
-		raise: self parserExceptions
-]
-
-{ #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail20xml [
+XMLConformanceOasisTest >> testp03fail20xml [
 	"Source file: oasis/p03fail20.xml"
 
-	(self isSkippableTest: #testp03fail20xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail20xml.
 	self
 		should: [
 			self
@@ -4813,11 +4839,12 @@ XMLConformanceOasisTests >> testp03fail20xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail21xml [
+XMLConformanceOasisTest >> testp03fail21xml [
 	"Source file: oasis/p03fail21.xml"
 
-	(self isSkippableTest: #testp03fail21xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail21xml.
 	self
 		should: [
 			self
@@ -4827,11 +4854,12 @@ XMLConformanceOasisTests >> testp03fail21xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail22xml [
+XMLConformanceOasisTest >> testp03fail22xml [
 	"Source file: oasis/p03fail22.xml"
 
-	(self isSkippableTest: #testp03fail22xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail22xml.
 	self
 		should: [
 			self
@@ -4841,11 +4869,12 @@ XMLConformanceOasisTests >> testp03fail22xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail23xml [
+XMLConformanceOasisTest >> testp03fail23xml [
 	"Source file: oasis/p03fail23.xml"
 
-	(self isSkippableTest: #testp03fail23xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail23xml.
 	self
 		should: [
 			self
@@ -4855,11 +4884,12 @@ XMLConformanceOasisTests >> testp03fail23xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail24xml [
+XMLConformanceOasisTest >> testp03fail24xml [
 	"Source file: oasis/p03fail24.xml"
 
-	(self isSkippableTest: #testp03fail24xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail24xml.
 	self
 		should: [
 			self
@@ -4869,11 +4899,12 @@ XMLConformanceOasisTests >> testp03fail24xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail25xml [
+XMLConformanceOasisTest >> testp03fail25xml [
 	"Source file: oasis/p03fail25.xml"
 
-	(self isSkippableTest: #testp03fail25xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail25xml.
 	self
 		should: [
 			self
@@ -4883,11 +4914,12 @@ XMLConformanceOasisTests >> testp03fail25xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail26xml [
+XMLConformanceOasisTest >> testp03fail26xml [
 	"Source file: oasis/p03fail26.xml"
 
-	(self isSkippableTest: #testp03fail26xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail26xml.
 	self
 		should: [
 			self
@@ -4897,11 +4929,12 @@ XMLConformanceOasisTests >> testp03fail26xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail27xml [
+XMLConformanceOasisTest >> testp03fail27xml [
 	"Source file: oasis/p03fail27.xml"
 
-	(self isSkippableTest: #testp03fail27xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail27xml.
 	self
 		should: [
 			self
@@ -4911,11 +4944,12 @@ XMLConformanceOasisTests >> testp03fail27xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail28xml [
+XMLConformanceOasisTest >> testp03fail28xml [
 	"Source file: oasis/p03fail28.xml"
 
-	(self isSkippableTest: #testp03fail28xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail28xml.
 	self
 		should: [
 			self
@@ -4925,11 +4959,12 @@ XMLConformanceOasisTests >> testp03fail28xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail29xml [
+XMLConformanceOasisTest >> testp03fail29xml [
 	"Source file: oasis/p03fail29.xml"
 
-	(self isSkippableTest: #testp03fail29xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail29xml.
 	self
 		should: [
 			self
@@ -4939,11 +4974,12 @@ XMLConformanceOasisTests >> testp03fail29xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail2xml [
+XMLConformanceOasisTest >> testp03fail2xml [
 	"Source file: oasis/p03fail2.xml"
 
-	(self isSkippableTest: #testp03fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail2xml.
 	self
 		should: [
 			self
@@ -4953,11 +4989,12 @@ XMLConformanceOasisTests >> testp03fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail3xml [
+XMLConformanceOasisTest >> testp03fail3xml [
 	"Source file: oasis/p03fail3.xml"
 
-	(self isSkippableTest: #testp03fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail3xml.
 	self
 		should: [
 			self
@@ -4967,11 +5004,12 @@ XMLConformanceOasisTests >> testp03fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail4xml [
+XMLConformanceOasisTest >> testp03fail4xml [
 	"Source file: oasis/p03fail4.xml"
 
-	(self isSkippableTest: #testp03fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail4xml.
 	self
 		should: [
 			self
@@ -4981,11 +5019,12 @@ XMLConformanceOasisTests >> testp03fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail5xml [
+XMLConformanceOasisTest >> testp03fail5xml [
 	"Source file: oasis/p03fail5.xml"
 
-	(self isSkippableTest: #testp03fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail5xml.
 	self
 		should: [
 			self
@@ -4995,11 +5034,12 @@ XMLConformanceOasisTests >> testp03fail5xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail7xml [
+XMLConformanceOasisTest >> testp03fail7xml [
 	"Source file: oasis/p03fail7.xml"
 
-	(self isSkippableTest: #testp03fail7xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail7xml.
 	self
 		should: [
 			self
@@ -5009,11 +5049,12 @@ XMLConformanceOasisTests >> testp03fail7xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail8xml [
+XMLConformanceOasisTest >> testp03fail8xml [
 	"Source file: oasis/p03fail8.xml"
 
-	(self isSkippableTest: #testp03fail8xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail8xml.
 	self
 		should: [
 			self
@@ -5023,11 +5064,12 @@ XMLConformanceOasisTests >> testp03fail8xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp03fail9xml [
+XMLConformanceOasisTest >> testp03fail9xml [
 	"Source file: oasis/p03fail9.xml"
 
-	(self isSkippableTest: #testp03fail9xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03fail9xml.
 	self
 		should: [
 			self
@@ -5037,11 +5079,12 @@ XMLConformanceOasisTests >> testp03fail9xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp03pass1xml [
+XMLConformanceOasisTest >> testp03pass1xml [
 	"Source file: oasis/p03pass1.xml"
 
-	(self isSkippableTest: #testp03pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp03pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -5049,18 +5092,18 @@ XMLConformanceOasisTests >> testp03pass1xml [
 				documentURI: 'p03pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp04fail1xml [
+XMLConformanceOasisTest >> testp04fail1xml [
 	"Source file: oasis/p04fail1.xml"
 
-	(self isSkippableTest: #testp04fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp04fail1xml.
 	self
 		should: [
 			self
@@ -5070,11 +5113,12 @@ XMLConformanceOasisTests >> testp04fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp04fail2xml [
+XMLConformanceOasisTest >> testp04fail2xml [
 	"Source file: oasis/p04fail2.xml"
 
-	(self isSkippableTest: #testp04fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp04fail2xml.
 	self
 		should: [
 			self
@@ -5084,11 +5128,12 @@ XMLConformanceOasisTests >> testp04fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp04fail3xml [
+XMLConformanceOasisTest >> testp04fail3xml [
 	"Source file: oasis/p04fail3.xml"
 
-	(self isSkippableTest: #testp04fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp04fail3xml.
 	self
 		should: [
 			self
@@ -5098,11 +5143,12 @@ XMLConformanceOasisTests >> testp04fail3xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp04pass1xml [
+XMLConformanceOasisTest >> testp04pass1xml [
 	"Source file: oasis/p04pass1.xml"
 
-	(self isSkippableTest: #testp04pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp04pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -5110,18 +5156,18 @@ XMLConformanceOasisTests >> testp04pass1xml [
 				documentURI: 'p04pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp05fail1xml [
+XMLConformanceOasisTest >> testp05fail1xml [
 	"Source file: oasis/p05fail1.xml"
 
-	(self isSkippableTest: #testp05fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp05fail1xml.
 	self
 		should: [
 			self
@@ -5131,11 +5177,12 @@ XMLConformanceOasisTests >> testp05fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp05fail2xml [
+XMLConformanceOasisTest >> testp05fail2xml [
 	"Source file: oasis/p05fail2.xml"
 
-	(self isSkippableTest: #testp05fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp05fail2xml.
 	self
 		should: [
 			self
@@ -5145,11 +5192,12 @@ XMLConformanceOasisTests >> testp05fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp05fail3xml [
+XMLConformanceOasisTest >> testp05fail3xml [
 	"Source file: oasis/p05fail3.xml"
 
-	(self isSkippableTest: #testp05fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp05fail3xml.
 	self
 		should: [
 			self
@@ -5159,11 +5207,12 @@ XMLConformanceOasisTests >> testp05fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp05fail4xml [
+XMLConformanceOasisTest >> testp05fail4xml [
 	"Source file: oasis/p05fail4.xml"
 
-	(self isSkippableTest: #testp05fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp05fail4xml.
 	self
 		should: [
 			self
@@ -5173,11 +5222,12 @@ XMLConformanceOasisTests >> testp05fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp05fail5xml [
+XMLConformanceOasisTest >> testp05fail5xml [
 	"Source file: oasis/p05fail5.xml"
 
-	(self isSkippableTest: #testp05fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp05fail5xml.
 	self
 		should: [
 			self
@@ -5187,11 +5237,12 @@ XMLConformanceOasisTests >> testp05fail5xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp05pass1xml [
+XMLConformanceOasisTest >> testp05pass1xml [
 	"Source file: oasis/p05pass1.xml"
 
-	(self isSkippableTest: #testp05pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp05pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -5199,18 +5250,18 @@ XMLConformanceOasisTests >> testp05pass1xml [
 				documentURI: 'p05pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp06fail1xml [
+XMLConformanceOasisTest >> testp06fail1xml [
 	"Source file: oasis/p06fail1.xml"
 
-	(self isSkippableTest: #testp06fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp06fail1xml.
 	self
 		should: [
 			self
@@ -5220,11 +5271,12 @@ XMLConformanceOasisTests >> testp06fail1xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp06pass1xml [
+XMLConformanceOasisTest >> testp06pass1xml [
 	"Source file: oasis/p06pass1.xml"
 
-	(self isSkippableTest: #testp06pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp06pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -5232,18 +5284,18 @@ XMLConformanceOasisTests >> testp06pass1xml [
 				documentURI: 'p06pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp07pass1xml [
+XMLConformanceOasisTest >> testp07pass1xml [
 	"Source file: oasis/p07pass1.xml"
 
-	(self isSkippableTest: #testp07pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp07pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -5251,18 +5303,18 @@ XMLConformanceOasisTests >> testp07pass1xml [
 				documentURI: 'p07pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp08fail1xml [
+XMLConformanceOasisTest >> testp08fail1xml [
 	"Source file: oasis/p08fail1.xml"
 
-	(self isSkippableTest: #testp08fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp08fail1xml.
 	self
 		should: [
 			self
@@ -5272,11 +5324,12 @@ XMLConformanceOasisTests >> testp08fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp08fail2xml [
+XMLConformanceOasisTest >> testp08fail2xml [
 	"Source file: oasis/p08fail2.xml"
 
-	(self isSkippableTest: #testp08fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp08fail2xml.
 	self
 		should: [
 			self
@@ -5286,11 +5339,12 @@ XMLConformanceOasisTests >> testp08fail2xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp08pass1xml [
+XMLConformanceOasisTest >> testp08pass1xml [
 	"Source file: oasis/p08pass1.xml"
 
-	(self isSkippableTest: #testp08pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp08pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -5298,18 +5352,18 @@ XMLConformanceOasisTests >> testp08pass1xml [
 				documentURI: 'p08pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp09fail1xml [
+XMLConformanceOasisTest >> testp09fail1xml [
 	"Source file: oasis/p09fail1.xml"
 
-	(self isSkippableTest: #testp09fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp09fail1xml.
 	self
 		should: [
 			self
@@ -5319,11 +5373,12 @@ XMLConformanceOasisTests >> testp09fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp09fail2xml [
+XMLConformanceOasisTest >> testp09fail2xml [
 	"Source file: oasis/p09fail2.xml"
 
-	(self isSkippableTest: #testp09fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp09fail2xml.
 	self
 		should: [
 			self
@@ -5333,11 +5388,12 @@ XMLConformanceOasisTests >> testp09fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp09fail3xml [
+XMLConformanceOasisTest >> testp09fail3xml [
 	"Source file: oasis/p09fail3.xml"
 
-	(self isSkippableTest: #testp09fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp09fail3xml.
 	self
 		should: [
 			self
@@ -5347,11 +5403,12 @@ XMLConformanceOasisTests >> testp09fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp09fail4xml [
+XMLConformanceOasisTest >> testp09fail4xml [
 	"Source file: oasis/p09fail4.xml"
 
-	(self isSkippableTest: #testp09fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp09fail4xml.
 	self
 		should: [
 			self
@@ -5361,11 +5418,12 @@ XMLConformanceOasisTests >> testp09fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp09fail5xml [
+XMLConformanceOasisTest >> testp09fail5xml [
 	"Source file: oasis/p09fail5.xml"
 
-	(self isSkippableTest: #testp09fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp09fail5xml.
 	self
 		should: [
 			self
@@ -5375,11 +5433,12 @@ XMLConformanceOasisTests >> testp09fail5xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp09pass1xml [
+XMLConformanceOasisTest >> testp09pass1xml [
 	"Source file: oasis/p09pass1.xml"
 
-	(self isSkippableTest: #testp09pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp09pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -5387,18 +5446,18 @@ XMLConformanceOasisTests >> testp09pass1xml [
 				documentURI: 'p09pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp10fail1xml [
+XMLConformanceOasisTest >> testp10fail1xml [
 	"Source file: oasis/p10fail1.xml"
 
-	(self isSkippableTest: #testp10fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp10fail1xml.
 	self
 		should: [
 			self
@@ -5408,11 +5467,12 @@ XMLConformanceOasisTests >> testp10fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp10fail2xml [
+XMLConformanceOasisTest >> testp10fail2xml [
 	"Source file: oasis/p10fail2.xml"
 
-	(self isSkippableTest: #testp10fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp10fail2xml.
 	self
 		should: [
 			self
@@ -5422,11 +5482,12 @@ XMLConformanceOasisTests >> testp10fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp10fail3xml [
+XMLConformanceOasisTest >> testp10fail3xml [
 	"Source file: oasis/p10fail3.xml"
 
-	(self isSkippableTest: #testp10fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp10fail3xml.
 	self
 		should: [
 			self
@@ -5436,11 +5497,12 @@ XMLConformanceOasisTests >> testp10fail3xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp10pass1xml [
+XMLConformanceOasisTest >> testp10pass1xml [
 	"Source file: oasis/p10pass1.xml"
 
-	(self isSkippableTest: #testp10pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp10pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -5448,18 +5510,18 @@ XMLConformanceOasisTests >> testp10pass1xml [
 				documentURI: 'p10pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp11fail1xml [
+XMLConformanceOasisTest >> testp11fail1xml [
 	"Source file: oasis/p11fail1.xml"
 
-	(self isSkippableTest: #testp11fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp11fail1xml.
 	self
 		should: [
 			self
@@ -5469,11 +5531,12 @@ XMLConformanceOasisTests >> testp11fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp11fail2xml [
+XMLConformanceOasisTest >> testp11fail2xml [
 	"Source file: oasis/p11fail2.xml"
 
-	(self isSkippableTest: #testp11fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp11fail2xml.
 	self
 		should: [
 			self
@@ -5483,11 +5546,12 @@ XMLConformanceOasisTests >> testp11fail2xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp11pass1xml [
+XMLConformanceOasisTest >> testp11pass1xml [
 	"Source file: oasis/p11pass1.xml"
 
-	(self isSkippableTest: #testp11pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp11pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -5495,18 +5559,18 @@ XMLConformanceOasisTests >> testp11pass1xml [
 				documentURI: 'p11pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp12fail1xml [
+XMLConformanceOasisTest >> testp12fail1xml [
 	"Source file: oasis/p12fail1.xml"
 
-	(self isSkippableTest: #testp12fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp12fail1xml.
 	self
 		should: [
 			self
@@ -5516,11 +5580,12 @@ XMLConformanceOasisTests >> testp12fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp12fail2xml [
+XMLConformanceOasisTest >> testp12fail2xml [
 	"Source file: oasis/p12fail2.xml"
 
-	(self isSkippableTest: #testp12fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp12fail2xml.
 	self
 		should: [
 			self
@@ -5530,11 +5595,12 @@ XMLConformanceOasisTests >> testp12fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp12fail3xml [
+XMLConformanceOasisTest >> testp12fail3xml [
 	"Source file: oasis/p12fail3.xml"
 
-	(self isSkippableTest: #testp12fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp12fail3xml.
 	self
 		should: [
 			self
@@ -5544,11 +5610,12 @@ XMLConformanceOasisTests >> testp12fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp12fail4xml [
+XMLConformanceOasisTest >> testp12fail4xml [
 	"Source file: oasis/p12fail4.xml"
 
-	(self isSkippableTest: #testp12fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp12fail4xml.
 	self
 		should: [
 			self
@@ -5558,11 +5625,12 @@ XMLConformanceOasisTests >> testp12fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp12fail5xml [
+XMLConformanceOasisTest >> testp12fail5xml [
 	"Source file: oasis/p12fail5.xml"
 
-	(self isSkippableTest: #testp12fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp12fail5xml.
 	self
 		should: [
 			self
@@ -5572,11 +5640,12 @@ XMLConformanceOasisTests >> testp12fail5xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp12fail6xml [
+XMLConformanceOasisTest >> testp12fail6xml [
 	"Source file: oasis/p12fail6.xml"
 
-	(self isSkippableTest: #testp12fail6xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp12fail6xml.
 	self
 		should: [
 			self
@@ -5586,11 +5655,12 @@ XMLConformanceOasisTests >> testp12fail6xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp12fail7xml [
+XMLConformanceOasisTest >> testp12fail7xml [
 	"Source file: oasis/p12fail7.xml"
 
-	(self isSkippableTest: #testp12fail7xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp12fail7xml.
 	self
 		should: [
 			self
@@ -5600,11 +5670,12 @@ XMLConformanceOasisTests >> testp12fail7xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp12pass1xml [
+XMLConformanceOasisTest >> testp12pass1xml [
 	"Source file: oasis/p12pass1.xml"
 
-	(self isSkippableTest: #testp12pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp12pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -5612,18 +5683,18 @@ XMLConformanceOasisTests >> testp12pass1xml [
 				documentURI: 'p12pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp14fail1xml [
+XMLConformanceOasisTest >> testp14fail1xml [
 	"Source file: oasis/p14fail1.xml"
 
-	(self isSkippableTest: #testp14fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp14fail1xml.
 	self
 		should: [
 			self
@@ -5633,11 +5704,12 @@ XMLConformanceOasisTests >> testp14fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp14fail2xml [
+XMLConformanceOasisTest >> testp14fail2xml [
 	"Source file: oasis/p14fail2.xml"
 
-	(self isSkippableTest: #testp14fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp14fail2xml.
 	self
 		should: [
 			self
@@ -5647,11 +5719,12 @@ XMLConformanceOasisTests >> testp14fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp14fail3xml [
+XMLConformanceOasisTest >> testp14fail3xml [
 	"Source file: oasis/p14fail3.xml"
 
-	(self isSkippableTest: #testp14fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp14fail3xml.
 	self
 		should: [
 			self
@@ -5661,11 +5734,12 @@ XMLConformanceOasisTests >> testp14fail3xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp14pass1xml [
+XMLConformanceOasisTest >> testp14pass1xml [
 	"Source file: oasis/p14pass1.xml"
 
-	(self isSkippableTest: #testp14pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp14pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -5673,18 +5747,18 @@ XMLConformanceOasisTests >> testp14pass1xml [
 				documentURI: 'p14pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp15fail1xml [
+XMLConformanceOasisTest >> testp15fail1xml [
 	"Source file: oasis/p15fail1.xml"
 
-	(self isSkippableTest: #testp15fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp15fail1xml.
 	self
 		should: [
 			self
@@ -5694,11 +5768,12 @@ XMLConformanceOasisTests >> testp15fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp15fail2xml [
+XMLConformanceOasisTest >> testp15fail2xml [
 	"Source file: oasis/p15fail2.xml"
 
-	(self isSkippableTest: #testp15fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp15fail2xml.
 	self
 		should: [
 			self
@@ -5708,11 +5783,12 @@ XMLConformanceOasisTests >> testp15fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp15fail3xml [
+XMLConformanceOasisTest >> testp15fail3xml [
 	"Source file: oasis/p15fail3.xml"
 
-	(self isSkippableTest: #testp15fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp15fail3xml.
 	self
 		should: [
 			self
@@ -5722,11 +5798,12 @@ XMLConformanceOasisTests >> testp15fail3xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp15pass1xml [
+XMLConformanceOasisTest >> testp15pass1xml [
 	"Source file: oasis/p15pass1.xml"
 
-	(self isSkippableTest: #testp15pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp15pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -5734,18 +5811,18 @@ XMLConformanceOasisTests >> testp15pass1xml [
 				documentURI: 'p15pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp16fail1xml [
+XMLConformanceOasisTest >> testp16fail1xml [
 	"Source file: oasis/p16fail1.xml"
 
-	(self isSkippableTest: #testp16fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp16fail1xml.
 	self
 		should: [
 			self
@@ -5755,11 +5832,12 @@ XMLConformanceOasisTests >> testp16fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp16fail2xml [
+XMLConformanceOasisTest >> testp16fail2xml [
 	"Source file: oasis/p16fail2.xml"
 
-	(self isSkippableTest: #testp16fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp16fail2xml.
 	self
 		should: [
 			self
@@ -5769,11 +5847,12 @@ XMLConformanceOasisTests >> testp16fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp16fail3xml [
+XMLConformanceOasisTest >> testp16fail3xml [
 	"Source file: oasis/p16fail3.xml"
 
-	(self isSkippableTest: #testp16fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp16fail3xml.
 	self
 		should: [
 			self
@@ -5783,11 +5862,12 @@ XMLConformanceOasisTests >> testp16fail3xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp16pass1xml [
+XMLConformanceOasisTest >> testp16pass1xml [
 	"Source file: oasis/p16pass1.xml"
 
-	(self isSkippableTest: #testp16pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp16pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -5795,18 +5875,18 @@ XMLConformanceOasisTests >> testp16pass1xml [
 				documentURI: 'p16pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp16pass2xml [
+XMLConformanceOasisTest >> testp16pass2xml [
 	"Source file: oasis/p16pass2.xml"
 
-	(self isSkippableTest: #testp16pass2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp16pass2xml.
 	self
 		shouldnt: [
 			[self
@@ -5814,18 +5894,18 @@ XMLConformanceOasisTests >> testp16pass2xml [
 				documentURI: 'p16pass2.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp16pass3xml [
+XMLConformanceOasisTest >> testp16pass3xml [
 	"Source file: oasis/p16pass3.xml"
 
-	(self isSkippableTest: #testp16pass3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp16pass3xml.
 	self
 		shouldnt: [
 			[self
@@ -5833,18 +5913,18 @@ XMLConformanceOasisTests >> testp16pass3xml [
 				documentURI: 'p16pass3.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp18fail1xml [
+XMLConformanceOasisTest >> testp18fail1xml [
 	"Source file: oasis/p18fail1.xml"
 
-	(self isSkippableTest: #testp18fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp18fail1xml.
 	self
 		should: [
 			self
@@ -5854,11 +5934,12 @@ XMLConformanceOasisTests >> testp18fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp18fail2xml [
+XMLConformanceOasisTest >> testp18fail2xml [
 	"Source file: oasis/p18fail2.xml"
 
-	(self isSkippableTest: #testp18fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp18fail2xml.
 	self
 		should: [
 			self
@@ -5868,11 +5949,12 @@ XMLConformanceOasisTests >> testp18fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp18fail3xml [
+XMLConformanceOasisTest >> testp18fail3xml [
 	"Source file: oasis/p18fail3.xml"
 
-	(self isSkippableTest: #testp18fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp18fail3xml.
 	self
 		should: [
 			self
@@ -5882,11 +5964,12 @@ XMLConformanceOasisTests >> testp18fail3xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp18pass1xml [
+XMLConformanceOasisTest >> testp18pass1xml [
 	"Source file: oasis/p18pass1.xml"
 
-	(self isSkippableTest: #testp18pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp18pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -5894,18 +5977,18 @@ XMLConformanceOasisTests >> testp18pass1xml [
 				documentURI: 'p18pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp22fail1xml [
+XMLConformanceOasisTest >> testp22fail1xml [
 	"Source file: oasis/p22fail1.xml"
 
-	(self isSkippableTest: #testp22fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp22fail1xml.
 	self
 		should: [
 			self
@@ -5915,11 +5998,12 @@ XMLConformanceOasisTests >> testp22fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp22fail2xml [
+XMLConformanceOasisTest >> testp22fail2xml [
 	"Source file: oasis/p22fail2.xml"
 
-	(self isSkippableTest: #testp22fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp22fail2xml.
 	self
 		should: [
 			self
@@ -5929,11 +6013,12 @@ XMLConformanceOasisTests >> testp22fail2xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp22pass1xml [
+XMLConformanceOasisTest >> testp22pass1xml [
 	"Source file: oasis/p22pass1.xml"
 
-	(self isSkippableTest: #testp22pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp22pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -5941,18 +6026,18 @@ XMLConformanceOasisTests >> testp22pass1xml [
 				documentURI: 'p22pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp22pass2xml [
+XMLConformanceOasisTest >> testp22pass2xml [
 	"Source file: oasis/p22pass2.xml"
 
-	(self isSkippableTest: #testp22pass2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp22pass2xml.
 	self
 		shouldnt: [
 			[self
@@ -5960,18 +6045,18 @@ XMLConformanceOasisTests >> testp22pass2xml [
 				documentURI: 'p22pass2.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp22pass3xml [
+XMLConformanceOasisTest >> testp22pass3xml [
 	"Source file: oasis/p22pass3.xml"
 
-	(self isSkippableTest: #testp22pass3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp22pass3xml.
 	self
 		shouldnt: [
 			[self
@@ -5979,18 +6064,18 @@ XMLConformanceOasisTests >> testp22pass3xml [
 				documentURI: 'p22pass3.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp22pass4xml [
+XMLConformanceOasisTest >> testp22pass4xml [
 	"Source file: oasis/p22pass4.xml"
 
-	(self isSkippableTest: #testp22pass4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp22pass4xml.
 	self
 		shouldnt: [
 			[self
@@ -5998,18 +6083,18 @@ XMLConformanceOasisTests >> testp22pass4xml [
 				documentURI: 'p22pass4.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp22pass5xml [
+XMLConformanceOasisTest >> testp22pass5xml [
 	"Source file: oasis/p22pass5.xml"
 
-	(self isSkippableTest: #testp22pass5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp22pass5xml.
 	self
 		shouldnt: [
 			[self
@@ -6017,18 +6102,18 @@ XMLConformanceOasisTests >> testp22pass5xml [
 				documentURI: 'p22pass5.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp22pass6xml [
+XMLConformanceOasisTest >> testp22pass6xml [
 	"Source file: oasis/p22pass6.xml"
 
-	(self isSkippableTest: #testp22pass6xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp22pass6xml.
 	self
 		shouldnt: [
 			[self
@@ -6036,18 +6121,18 @@ XMLConformanceOasisTests >> testp22pass6xml [
 				documentURI: 'p22pass6.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp23fail1xml [
+XMLConformanceOasisTest >> testp23fail1xml [
 	"Source file: oasis/p23fail1.xml"
 
-	(self isSkippableTest: #testp23fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp23fail1xml.
 	self
 		should: [
 			self
@@ -6057,11 +6142,12 @@ XMLConformanceOasisTests >> testp23fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp23fail2xml [
+XMLConformanceOasisTest >> testp23fail2xml [
 	"Source file: oasis/p23fail2.xml"
 
-	(self isSkippableTest: #testp23fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp23fail2xml.
 	self
 		should: [
 			self
@@ -6071,11 +6157,12 @@ XMLConformanceOasisTests >> testp23fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp23fail3xml [
+XMLConformanceOasisTest >> testp23fail3xml [
 	"Source file: oasis/p23fail3.xml"
 
-	(self isSkippableTest: #testp23fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp23fail3xml.
 	self
 		should: [
 			self
@@ -6085,11 +6172,12 @@ XMLConformanceOasisTests >> testp23fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp23fail4xml [
+XMLConformanceOasisTest >> testp23fail4xml [
 	"Source file: oasis/p23fail4.xml"
 
-	(self isSkippableTest: #testp23fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp23fail4xml.
 	self
 		should: [
 			self
@@ -6099,11 +6187,12 @@ XMLConformanceOasisTests >> testp23fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp23fail5xml [
+XMLConformanceOasisTest >> testp23fail5xml [
 	"Source file: oasis/p23fail5.xml"
 
-	(self isSkippableTest: #testp23fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp23fail5xml.
 	self
 		should: [
 			self
@@ -6113,11 +6202,12 @@ XMLConformanceOasisTests >> testp23fail5xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp23pass1xml [
+XMLConformanceOasisTest >> testp23pass1xml [
 	"Source file: oasis/p23pass1.xml"
 
-	(self isSkippableTest: #testp23pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp23pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -6125,18 +6215,18 @@ XMLConformanceOasisTests >> testp23pass1xml [
 				documentURI: 'p23pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp23pass2xml [
+XMLConformanceOasisTest >> testp23pass2xml [
 	"Source file: oasis/p23pass2.xml"
 
-	(self isSkippableTest: #testp23pass2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp23pass2xml.
 	self
 		shouldnt: [
 			[self
@@ -6144,18 +6234,18 @@ XMLConformanceOasisTests >> testp23pass2xml [
 				documentURI: 'p23pass2.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp23pass3xml [
+XMLConformanceOasisTest >> testp23pass3xml [
 	"Source file: oasis/p23pass3.xml"
 
-	(self isSkippableTest: #testp23pass3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp23pass3xml.
 	self
 		shouldnt: [
 			[self
@@ -6163,18 +6253,18 @@ XMLConformanceOasisTests >> testp23pass3xml [
 				documentURI: 'p23pass3.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp23pass4xml [
+XMLConformanceOasisTest >> testp23pass4xml [
 	"Source file: oasis/p23pass4.xml"
 
-	(self isSkippableTest: #testp23pass4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp23pass4xml.
 	self
 		shouldnt: [
 			[self
@@ -6182,18 +6272,18 @@ XMLConformanceOasisTests >> testp23pass4xml [
 				documentURI: 'p23pass4.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp24fail1xml [
+XMLConformanceOasisTest >> testp24fail1xml [
 	"Source file: oasis/p24fail1.xml"
 
-	(self isSkippableTest: #testp24fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp24fail1xml.
 	self
 		should: [
 			self
@@ -6203,11 +6293,12 @@ XMLConformanceOasisTests >> testp24fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp24fail2xml [
+XMLConformanceOasisTest >> testp24fail2xml [
 	"Source file: oasis/p24fail2.xml"
 
-	(self isSkippableTest: #testp24fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp24fail2xml.
 	self
 		should: [
 			self
@@ -6217,11 +6308,12 @@ XMLConformanceOasisTests >> testp24fail2xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp24pass1xml [
+XMLConformanceOasisTest >> testp24pass1xml [
 	"Source file: oasis/p24pass1.xml"
 
-	(self isSkippableTest: #testp24pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp24pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -6229,18 +6321,18 @@ XMLConformanceOasisTests >> testp24pass1xml [
 				documentURI: 'p24pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp24pass2xml [
+XMLConformanceOasisTest >> testp24pass2xml [
 	"Source file: oasis/p24pass2.xml"
 
-	(self isSkippableTest: #testp24pass2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp24pass2xml.
 	self
 		shouldnt: [
 			[self
@@ -6248,18 +6340,18 @@ XMLConformanceOasisTests >> testp24pass2xml [
 				documentURI: 'p24pass2.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp24pass3xml [
+XMLConformanceOasisTest >> testp24pass3xml [
 	"Source file: oasis/p24pass3.xml"
 
-	(self isSkippableTest: #testp24pass3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp24pass3xml.
 	self
 		shouldnt: [
 			[self
@@ -6267,18 +6359,18 @@ XMLConformanceOasisTests >> testp24pass3xml [
 				documentURI: 'p24pass3.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp24pass4xml [
+XMLConformanceOasisTest >> testp24pass4xml [
 	"Source file: oasis/p24pass4.xml"
 
-	(self isSkippableTest: #testp24pass4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp24pass4xml.
 	self
 		shouldnt: [
 			[self
@@ -6286,18 +6378,18 @@ XMLConformanceOasisTests >> testp24pass4xml [
 				documentURI: 'p24pass4.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp25fail1xml [
+XMLConformanceOasisTest >> testp25fail1xml [
 	"Source file: oasis/p25fail1.xml"
 
-	(self isSkippableTest: #testp25fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp25fail1xml.
 	self
 		should: [
 			self
@@ -6307,11 +6399,12 @@ XMLConformanceOasisTests >> testp25fail1xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp25pass1xml [
+XMLConformanceOasisTest >> testp25pass1xml [
 	"Source file: oasis/p25pass1.xml"
 
-	(self isSkippableTest: #testp25pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp25pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -6319,18 +6412,18 @@ XMLConformanceOasisTests >> testp25pass1xml [
 				documentURI: 'p25pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp25pass2xml [
+XMLConformanceOasisTest >> testp25pass2xml [
 	"Source file: oasis/p25pass2.xml"
 
-	(self isSkippableTest: #testp25pass2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp25pass2xml.
 	self
 		shouldnt: [
 			[self
@@ -6338,18 +6431,18 @@ XMLConformanceOasisTests >> testp25pass2xml [
 				documentURI: 'p25pass2.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp26fail1xml [
+XMLConformanceOasisTest >> testp26fail1xml [
 	"Source file: oasis/p26fail1.xml"
 
-	(self isSkippableTest: #testp26fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp26fail1xml.
 	self
 		should: [
 			self
@@ -6359,11 +6452,12 @@ XMLConformanceOasisTests >> testp26fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp26fail2xml [
+XMLConformanceOasisTest >> testp26fail2xml [
 	"Source file: oasis/p26fail2.xml"
 
-	(self isSkippableTest: #testp26fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp26fail2xml.
 	self
 		should: [
 			self
@@ -6373,11 +6467,12 @@ XMLConformanceOasisTests >> testp26fail2xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp26pass1xml [
+XMLConformanceOasisTest >> testp26pass1xml [
 	"Source file: oasis/p26pass1.xml"
 
-	(self isSkippableTest: #testp26pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp26pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -6385,18 +6480,18 @@ XMLConformanceOasisTests >> testp26pass1xml [
 				documentURI: 'p26pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp27fail1xml [
+XMLConformanceOasisTest >> testp27fail1xml [
 	"Source file: oasis/p27fail1.xml"
 
-	(self isSkippableTest: #testp27fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp27fail1xml.
 	self
 		should: [
 			self
@@ -6406,11 +6501,12 @@ XMLConformanceOasisTests >> testp27fail1xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp27pass1xml [
+XMLConformanceOasisTest >> testp27pass1xml [
 	"Source file: oasis/p27pass1.xml"
 
-	(self isSkippableTest: #testp27pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp27pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -6418,18 +6514,18 @@ XMLConformanceOasisTests >> testp27pass1xml [
 				documentURI: 'p27pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp27pass2xml [
+XMLConformanceOasisTest >> testp27pass2xml [
 	"Source file: oasis/p27pass2.xml"
 
-	(self isSkippableTest: #testp27pass2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp27pass2xml.
 	self
 		shouldnt: [
 			[self
@@ -6437,18 +6533,18 @@ XMLConformanceOasisTests >> testp27pass2xml [
 				documentURI: 'p27pass2.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp27pass3xml [
+XMLConformanceOasisTest >> testp27pass3xml [
 	"Source file: oasis/p27pass3.xml"
 
-	(self isSkippableTest: #testp27pass3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp27pass3xml.
 	self
 		shouldnt: [
 			[self
@@ -6456,18 +6552,18 @@ XMLConformanceOasisTests >> testp27pass3xml [
 				documentURI: 'p27pass3.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp27pass4xml [
+XMLConformanceOasisTest >> testp27pass4xml [
 	"Source file: oasis/p27pass4.xml"
 
-	(self isSkippableTest: #testp27pass4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp27pass4xml.
 	self
 		shouldnt: [
 			[self
@@ -6475,18 +6571,18 @@ XMLConformanceOasisTests >> testp27pass4xml [
 				documentURI: 'p27pass4.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp28fail1xml [
+XMLConformanceOasisTest >> testp28fail1xml [
 	"Source file: oasis/p28fail1.xml"
 
-	(self isSkippableTest: #testp28fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp28fail1xml.
 	self
 		should: [
 			self
@@ -6496,11 +6592,12 @@ XMLConformanceOasisTests >> testp28fail1xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp28pass1xml [
+XMLConformanceOasisTest >> testp28pass1xml [
 	"Source file: oasis/p28pass1.xml"
 
-	(self isSkippableTest: #testp28pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp28pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -6508,18 +6605,18 @@ XMLConformanceOasisTests >> testp28pass1xml [
 				documentURI: 'p28pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp28pass2xml [
+XMLConformanceOasisTest >> testp28pass2xml [
 	"Source file: oasis/p28pass2.xml"
 
-	(self isSkippableTest: #testp28pass2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp28pass2xml.
 	self
 		shouldnt: [
 			[self
@@ -6527,18 +6624,18 @@ XMLConformanceOasisTests >> testp28pass2xml [
 				documentURI: 'p28pass2.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp28pass3xml [
+XMLConformanceOasisTest >> testp28pass3xml [
 	"Source file: oasis/p28pass3.xml"
 
-	(self isSkippableTest: #testp28pass3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp28pass3xml.
 	self
 		shouldnt: [
 			[self
@@ -6546,18 +6643,18 @@ XMLConformanceOasisTests >> testp28pass3xml [
 				documentURI: 'p28pass3.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp28pass4xml [
+XMLConformanceOasisTest >> testp28pass4xml [
 	"Source file: oasis/p28pass4.xml"
 
-	(self isSkippableTest: #testp28pass4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp28pass4xml.
 	self
 		shouldnt: [
 			[self
@@ -6565,18 +6662,18 @@ XMLConformanceOasisTests >> testp28pass4xml [
 				documentURI: 'p28pass4.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp28pass5xml [
+XMLConformanceOasisTest >> testp28pass5xml [
 	"Source file: oasis/p28pass5.xml"
 
-	(self isSkippableTest: #testp28pass5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp28pass5xml.
 	self
 		shouldnt: [
 			[self
@@ -6584,18 +6681,18 @@ XMLConformanceOasisTests >> testp28pass5xml [
 				documentURI: 'p28pass5.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp29fail1xml [
+XMLConformanceOasisTest >> testp29fail1xml [
 	"Source file: oasis/p29fail1.xml"
 
-	(self isSkippableTest: #testp29fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp29fail1xml.
 	self
 		should: [
 			self
@@ -6605,11 +6702,12 @@ XMLConformanceOasisTests >> testp29fail1xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp29pass1xml [
+XMLConformanceOasisTest >> testp29pass1xml [
 	"Source file: oasis/p29pass1.xml"
 
-	(self isSkippableTest: #testp29pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp29pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -6617,18 +6715,18 @@ XMLConformanceOasisTests >> testp29pass1xml [
 				documentURI: 'p29pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp30fail1xml [
+XMLConformanceOasisTest >> testp30fail1xml [
 	"Source file: oasis/p30fail1.xml"
 
-	(self isSkippableTest: #testp30fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp30fail1xml.
 	self
 		should: [
 			self
@@ -6638,11 +6736,12 @@ XMLConformanceOasisTests >> testp30fail1xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp30pass1xml [
+XMLConformanceOasisTest >> testp30pass1xml [
 	"Source file: oasis/p30pass1.xml"
 
-	(self isSkippableTest: #testp30pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp30pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -6650,18 +6749,18 @@ XMLConformanceOasisTests >> testp30pass1xml [
 				documentURI: 'p30pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp30pass2xml [
+XMLConformanceOasisTest >> testp30pass2xml [
 	"Source file: oasis/p30pass2.xml"
 
-	(self isSkippableTest: #testp30pass2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp30pass2xml.
 	self
 		shouldnt: [
 			[self
@@ -6669,18 +6768,18 @@ XMLConformanceOasisTests >> testp30pass2xml [
 				documentURI: 'p30pass2.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp31fail1xml [
+XMLConformanceOasisTest >> testp31fail1xml [
 	"Source file: oasis/p31fail1.xml"
 
-	(self isSkippableTest: #testp31fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp31fail1xml.
 	self
 		should: [
 			self
@@ -6690,11 +6789,12 @@ XMLConformanceOasisTests >> testp31fail1xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp31pass1xml [
+XMLConformanceOasisTest >> testp31pass1xml [
 	"Source file: oasis/p31pass1.xml"
 
-	(self isSkippableTest: #testp31pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp31pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -6702,18 +6802,18 @@ XMLConformanceOasisTests >> testp31pass1xml [
 				documentURI: 'p31pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp31pass2xml [
+XMLConformanceOasisTest >> testp31pass2xml [
 	"Source file: oasis/p31pass2.xml"
 
-	(self isSkippableTest: #testp31pass2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp31pass2xml.
 	self
 		shouldnt: [
 			[self
@@ -6721,18 +6821,18 @@ XMLConformanceOasisTests >> testp31pass2xml [
 				documentURI: 'p31pass2.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp32fail1xml [
+XMLConformanceOasisTest >> testp32fail1xml [
 	"Source file: oasis/p32fail1.xml"
 
-	(self isSkippableTest: #testp32fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp32fail1xml.
 	self
 		should: [
 			self
@@ -6742,11 +6842,12 @@ XMLConformanceOasisTests >> testp32fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp32fail2xml [
+XMLConformanceOasisTest >> testp32fail2xml [
 	"Source file: oasis/p32fail2.xml"
 
-	(self isSkippableTest: #testp32fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp32fail2xml.
 	self
 		should: [
 			self
@@ -6756,11 +6857,12 @@ XMLConformanceOasisTests >> testp32fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp32fail3xml [
+XMLConformanceOasisTest >> testp32fail3xml [
 	"Source file: oasis/p32fail3.xml"
 
-	(self isSkippableTest: #testp32fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp32fail3xml.
 	self
 		should: [
 			self
@@ -6770,11 +6872,12 @@ XMLConformanceOasisTests >> testp32fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp32fail4xml [
+XMLConformanceOasisTest >> testp32fail4xml [
 	"Source file: oasis/p32fail4.xml"
 
-	(self isSkippableTest: #testp32fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp32fail4xml.
 	self
 		should: [
 			self
@@ -6784,11 +6887,12 @@ XMLConformanceOasisTests >> testp32fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp32fail5xml [
+XMLConformanceOasisTest >> testp32fail5xml [
 	"Source file: oasis/p32fail5.xml"
 
-	(self isSkippableTest: #testp32fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp32fail5xml.
 	self
 		should: [
 			self
@@ -6798,11 +6902,12 @@ XMLConformanceOasisTests >> testp32fail5xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp32pass1xml [
+XMLConformanceOasisTest >> testp32pass1xml [
 	"Source file: oasis/p32pass1.xml"
 
-	(self isSkippableTest: #testp32pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp32pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -6810,18 +6915,18 @@ XMLConformanceOasisTests >> testp32pass1xml [
 				documentURI: 'p32pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp32pass2xml [
+XMLConformanceOasisTest >> testp32pass2xml [
 	"Source file: oasis/p32pass2.xml"
 
-	(self isSkippableTest: #testp32pass2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp32pass2xml.
 	self
 		shouldnt: [
 			[self
@@ -6829,18 +6934,18 @@ XMLConformanceOasisTests >> testp32pass2xml [
 				documentURI: 'p32pass2.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp39fail1xml [
+XMLConformanceOasisTest >> testp39fail1xml [
 	"Source file: oasis/p39fail1.xml"
 
-	(self isSkippableTest: #testp39fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp39fail1xml.
 	self
 		should: [
 			self
@@ -6850,11 +6955,12 @@ XMLConformanceOasisTests >> testp39fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp39fail2xml [
+XMLConformanceOasisTest >> testp39fail2xml [
 	"Source file: oasis/p39fail2.xml"
 
-	(self isSkippableTest: #testp39fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp39fail2xml.
 	self
 		should: [
 			self
@@ -6864,11 +6970,12 @@ XMLConformanceOasisTests >> testp39fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp39fail3xml [
+XMLConformanceOasisTest >> testp39fail3xml [
 	"Source file: oasis/p39fail3.xml"
 
-	(self isSkippableTest: #testp39fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp39fail3xml.
 	self
 		should: [
 			self
@@ -6878,11 +6985,12 @@ XMLConformanceOasisTests >> testp39fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp39fail4xml [
+XMLConformanceOasisTest >> testp39fail4xml [
 	"Source file: oasis/p39fail4.xml"
 
-	(self isSkippableTest: #testp39fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp39fail4xml.
 	self
 		should: [
 			self
@@ -6892,11 +7000,12 @@ XMLConformanceOasisTests >> testp39fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp39fail5xml [
+XMLConformanceOasisTest >> testp39fail5xml [
 	"Source file: oasis/p39fail5.xml"
 
-	(self isSkippableTest: #testp39fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp39fail5xml.
 	self
 		should: [
 			self
@@ -6906,11 +7015,12 @@ XMLConformanceOasisTests >> testp39fail5xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp39pass1xml [
+XMLConformanceOasisTest >> testp39pass1xml [
 	"Source file: oasis/p39pass1.xml"
 
-	(self isSkippableTest: #testp39pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp39pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -6918,18 +7028,18 @@ XMLConformanceOasisTests >> testp39pass1xml [
 				documentURI: 'p39pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp39pass2xml [
+XMLConformanceOasisTest >> testp39pass2xml [
 	"Source file: oasis/p39pass2.xml"
 
-	(self isSkippableTest: #testp39pass2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp39pass2xml.
 	self
 		shouldnt: [
 			[self
@@ -6937,18 +7047,18 @@ XMLConformanceOasisTests >> testp39pass2xml [
 				documentURI: 'p39pass2.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp40fail1xml [
+XMLConformanceOasisTest >> testp40fail1xml [
 	"Source file: oasis/p40fail1.xml"
 
-	(self isSkippableTest: #testp40fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp40fail1xml.
 	self
 		should: [
 			self
@@ -6958,11 +7068,12 @@ XMLConformanceOasisTests >> testp40fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp40fail2xml [
+XMLConformanceOasisTest >> testp40fail2xml [
 	"Source file: oasis/p40fail2.xml"
 
-	(self isSkippableTest: #testp40fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp40fail2xml.
 	self
 		should: [
 			self
@@ -6972,11 +7083,12 @@ XMLConformanceOasisTests >> testp40fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp40fail3xml [
+XMLConformanceOasisTest >> testp40fail3xml [
 	"Source file: oasis/p40fail3.xml"
 
-	(self isSkippableTest: #testp40fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp40fail3xml.
 	self
 		should: [
 			self
@@ -6986,11 +7098,12 @@ XMLConformanceOasisTests >> testp40fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp40fail4xml [
+XMLConformanceOasisTest >> testp40fail4xml [
 	"Source file: oasis/p40fail4.xml"
 
-	(self isSkippableTest: #testp40fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp40fail4xml.
 	self
 		should: [
 			self
@@ -7000,11 +7113,12 @@ XMLConformanceOasisTests >> testp40fail4xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp40pass1xml [
+XMLConformanceOasisTest >> testp40pass1xml [
 	"Source file: oasis/p40pass1.xml"
 
-	(self isSkippableTest: #testp40pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp40pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -7012,18 +7126,18 @@ XMLConformanceOasisTests >> testp40pass1xml [
 				documentURI: 'p40pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp40pass2xml [
+XMLConformanceOasisTest >> testp40pass2xml [
 	"Source file: oasis/p40pass2.xml"
 
-	(self isSkippableTest: #testp40pass2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp40pass2xml.
 	self
 		shouldnt: [
 			[self
@@ -7031,18 +7145,18 @@ XMLConformanceOasisTests >> testp40pass2xml [
 				documentURI: 'p40pass2.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp40pass3xml [
+XMLConformanceOasisTest >> testp40pass3xml [
 	"Source file: oasis/p40pass3.xml"
 
-	(self isSkippableTest: #testp40pass3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp40pass3xml.
 	self
 		shouldnt: [
 			[self
@@ -7050,18 +7164,18 @@ XMLConformanceOasisTests >> testp40pass3xml [
 				documentURI: 'p40pass3.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp40pass4xml [
+XMLConformanceOasisTest >> testp40pass4xml [
 	"Source file: oasis/p40pass4.xml"
 
-	(self isSkippableTest: #testp40pass4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp40pass4xml.
 	self
 		shouldnt: [
 			[self
@@ -7069,18 +7183,18 @@ XMLConformanceOasisTests >> testp40pass4xml [
 				documentURI: 'p40pass4.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp41fail1xml [
+XMLConformanceOasisTest >> testp41fail1xml [
 	"Source file: oasis/p41fail1.xml"
 
-	(self isSkippableTest: #testp41fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp41fail1xml.
 	self
 		should: [
 			self
@@ -7090,11 +7204,12 @@ XMLConformanceOasisTests >> testp41fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp41fail2xml [
+XMLConformanceOasisTest >> testp41fail2xml [
 	"Source file: oasis/p41fail2.xml"
 
-	(self isSkippableTest: #testp41fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp41fail2xml.
 	self
 		should: [
 			self
@@ -7104,11 +7219,12 @@ XMLConformanceOasisTests >> testp41fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp41fail3xml [
+XMLConformanceOasisTest >> testp41fail3xml [
 	"Source file: oasis/p41fail3.xml"
 
-	(self isSkippableTest: #testp41fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp41fail3xml.
 	self
 		should: [
 			self
@@ -7118,11 +7234,12 @@ XMLConformanceOasisTests >> testp41fail3xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp41pass1xml [
+XMLConformanceOasisTest >> testp41pass1xml [
 	"Source file: oasis/p41pass1.xml"
 
-	(self isSkippableTest: #testp41pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp41pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -7130,18 +7247,18 @@ XMLConformanceOasisTests >> testp41pass1xml [
 				documentURI: 'p41pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp41pass2xml [
+XMLConformanceOasisTest >> testp41pass2xml [
 	"Source file: oasis/p41pass2.xml"
 
-	(self isSkippableTest: #testp41pass2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp41pass2xml.
 	self
 		shouldnt: [
 			[self
@@ -7149,18 +7266,18 @@ XMLConformanceOasisTests >> testp41pass2xml [
 				documentURI: 'p41pass2.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp42fail1xml [
+XMLConformanceOasisTest >> testp42fail1xml [
 	"Source file: oasis/p42fail1.xml"
 
-	(self isSkippableTest: #testp42fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp42fail1xml.
 	self
 		should: [
 			self
@@ -7170,11 +7287,12 @@ XMLConformanceOasisTests >> testp42fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp42fail2xml [
+XMLConformanceOasisTest >> testp42fail2xml [
 	"Source file: oasis/p42fail2.xml"
 
-	(self isSkippableTest: #testp42fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp42fail2xml.
 	self
 		should: [
 			self
@@ -7184,11 +7302,12 @@ XMLConformanceOasisTests >> testp42fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp42fail3xml [
+XMLConformanceOasisTest >> testp42fail3xml [
 	"Source file: oasis/p42fail3.xml"
 
-	(self isSkippableTest: #testp42fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp42fail3xml.
 	self
 		should: [
 			self
@@ -7198,11 +7317,12 @@ XMLConformanceOasisTests >> testp42fail3xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp42pass1xml [
+XMLConformanceOasisTest >> testp42pass1xml [
 	"Source file: oasis/p42pass1.xml"
 
-	(self isSkippableTest: #testp42pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp42pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -7210,18 +7330,18 @@ XMLConformanceOasisTests >> testp42pass1xml [
 				documentURI: 'p42pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp42pass2xml [
+XMLConformanceOasisTest >> testp42pass2xml [
 	"Source file: oasis/p42pass2.xml"
 
-	(self isSkippableTest: #testp42pass2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp42pass2xml.
 	self
 		shouldnt: [
 			[self
@@ -7229,18 +7349,18 @@ XMLConformanceOasisTests >> testp42pass2xml [
 				documentURI: 'p42pass2.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp43fail1xml [
+XMLConformanceOasisTest >> testp43fail1xml [
 	"Source file: oasis/p43fail1.xml"
 
-	(self isSkippableTest: #testp43fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp43fail1xml.
 	self
 		should: [
 			self
@@ -7250,11 +7370,12 @@ XMLConformanceOasisTests >> testp43fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp43fail2xml [
+XMLConformanceOasisTest >> testp43fail2xml [
 	"Source file: oasis/p43fail2.xml"
 
-	(self isSkippableTest: #testp43fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp43fail2xml.
 	self
 		should: [
 			self
@@ -7264,11 +7385,12 @@ XMLConformanceOasisTests >> testp43fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp43fail3xml [
+XMLConformanceOasisTest >> testp43fail3xml [
 	"Source file: oasis/p43fail3.xml"
 
-	(self isSkippableTest: #testp43fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp43fail3xml.
 	self
 		should: [
 			self
@@ -7278,11 +7400,12 @@ XMLConformanceOasisTests >> testp43fail3xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp43pass1xml [
+XMLConformanceOasisTest >> testp43pass1xml [
 	"Source file: oasis/p43pass1.xml"
 
-	(self isSkippableTest: #testp43pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp43pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -7290,18 +7413,18 @@ XMLConformanceOasisTests >> testp43pass1xml [
 				documentURI: 'p43pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp44fail1xml [
+XMLConformanceOasisTest >> testp44fail1xml [
 	"Source file: oasis/p44fail1.xml"
 
-	(self isSkippableTest: #testp44fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp44fail1xml.
 	self
 		should: [
 			self
@@ -7311,11 +7434,12 @@ XMLConformanceOasisTests >> testp44fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp44fail2xml [
+XMLConformanceOasisTest >> testp44fail2xml [
 	"Source file: oasis/p44fail2.xml"
 
-	(self isSkippableTest: #testp44fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp44fail2xml.
 	self
 		should: [
 			self
@@ -7325,11 +7449,12 @@ XMLConformanceOasisTests >> testp44fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp44fail3xml [
+XMLConformanceOasisTest >> testp44fail3xml [
 	"Source file: oasis/p44fail3.xml"
 
-	(self isSkippableTest: #testp44fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp44fail3xml.
 	self
 		should: [
 			self
@@ -7339,11 +7464,12 @@ XMLConformanceOasisTests >> testp44fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp44fail4xml [
+XMLConformanceOasisTest >> testp44fail4xml [
 	"Source file: oasis/p44fail4.xml"
 
-	(self isSkippableTest: #testp44fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp44fail4xml.
 	self
 		should: [
 			self
@@ -7353,11 +7479,12 @@ XMLConformanceOasisTests >> testp44fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp44fail5xml [
+XMLConformanceOasisTest >> testp44fail5xml [
 	"Source file: oasis/p44fail5.xml"
 
-	(self isSkippableTest: #testp44fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp44fail5xml.
 	self
 		should: [
 			self
@@ -7367,11 +7494,12 @@ XMLConformanceOasisTests >> testp44fail5xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp44pass1xml [
+XMLConformanceOasisTest >> testp44pass1xml [
 	"Source file: oasis/p44pass1.xml"
 
-	(self isSkippableTest: #testp44pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp44pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -7379,18 +7507,18 @@ XMLConformanceOasisTests >> testp44pass1xml [
 				documentURI: 'p44pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp44pass2xml [
+XMLConformanceOasisTest >> testp44pass2xml [
 	"Source file: oasis/p44pass2.xml"
 
-	(self isSkippableTest: #testp44pass2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp44pass2xml.
 	self
 		shouldnt: [
 			[self
@@ -7398,18 +7526,18 @@ XMLConformanceOasisTests >> testp44pass2xml [
 				documentURI: 'p44pass2.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp44pass3xml [
+XMLConformanceOasisTest >> testp44pass3xml [
 	"Source file: oasis/p44pass3.xml"
 
-	(self isSkippableTest: #testp44pass3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp44pass3xml.
 	self
 		shouldnt: [
 			[self
@@ -7417,18 +7545,18 @@ XMLConformanceOasisTests >> testp44pass3xml [
 				documentURI: 'p44pass3.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp44pass4xml [
+XMLConformanceOasisTest >> testp44pass4xml [
 	"Source file: oasis/p44pass4.xml"
 
-	(self isSkippableTest: #testp44pass4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp44pass4xml.
 	self
 		shouldnt: [
 			[self
@@ -7436,18 +7564,18 @@ XMLConformanceOasisTests >> testp44pass4xml [
 				documentURI: 'p44pass4.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp44pass5xml [
+XMLConformanceOasisTest >> testp44pass5xml [
 	"Source file: oasis/p44pass5.xml"
 
-	(self isSkippableTest: #testp44pass5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp44pass5xml.
 	self
 		shouldnt: [
 			[self
@@ -7455,18 +7583,18 @@ XMLConformanceOasisTests >> testp44pass5xml [
 				documentURI: 'p44pass5.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp45fail1xml [
+XMLConformanceOasisTest >> testp45fail1xml [
 	"Source file: oasis/p45fail1.xml"
 
-	(self isSkippableTest: #testp45fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp45fail1xml.
 	self
 		should: [
 			self
@@ -7476,11 +7604,12 @@ XMLConformanceOasisTests >> testp45fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp45fail2xml [
+XMLConformanceOasisTest >> testp45fail2xml [
 	"Source file: oasis/p45fail2.xml"
 
-	(self isSkippableTest: #testp45fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp45fail2xml.
 	self
 		should: [
 			self
@@ -7490,11 +7619,12 @@ XMLConformanceOasisTests >> testp45fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp45fail3xml [
+XMLConformanceOasisTest >> testp45fail3xml [
 	"Source file: oasis/p45fail3.xml"
 
-	(self isSkippableTest: #testp45fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp45fail3xml.
 	self
 		should: [
 			self
@@ -7504,11 +7634,12 @@ XMLConformanceOasisTests >> testp45fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp45fail4xml [
+XMLConformanceOasisTest >> testp45fail4xml [
 	"Source file: oasis/p45fail4.xml"
 
-	(self isSkippableTest: #testp45fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp45fail4xml.
 	self
 		should: [
 			self
@@ -7518,11 +7649,12 @@ XMLConformanceOasisTests >> testp45fail4xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp45pass1xml [
+XMLConformanceOasisTest >> testp45pass1xml [
 	"Source file: oasis/p45pass1.xml"
 
-	(self isSkippableTest: #testp45pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp45pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -7530,18 +7662,18 @@ XMLConformanceOasisTests >> testp45pass1xml [
 				documentURI: 'p45pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp46fail1xml [
+XMLConformanceOasisTest >> testp46fail1xml [
 	"Source file: oasis/p46fail1.xml"
 
-	(self isSkippableTest: #testp46fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp46fail1xml.
 	self
 		should: [
 			self
@@ -7551,11 +7683,12 @@ XMLConformanceOasisTests >> testp46fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp46fail2xml [
+XMLConformanceOasisTest >> testp46fail2xml [
 	"Source file: oasis/p46fail2.xml"
 
-	(self isSkippableTest: #testp46fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp46fail2xml.
 	self
 		should: [
 			self
@@ -7565,11 +7698,12 @@ XMLConformanceOasisTests >> testp46fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp46fail3xml [
+XMLConformanceOasisTest >> testp46fail3xml [
 	"Source file: oasis/p46fail3.xml"
 
-	(self isSkippableTest: #testp46fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp46fail3xml.
 	self
 		should: [
 			self
@@ -7579,11 +7713,12 @@ XMLConformanceOasisTests >> testp46fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp46fail4xml [
+XMLConformanceOasisTest >> testp46fail4xml [
 	"Source file: oasis/p46fail4.xml"
 
-	(self isSkippableTest: #testp46fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp46fail4xml.
 	self
 		should: [
 			self
@@ -7593,11 +7728,12 @@ XMLConformanceOasisTests >> testp46fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp46fail5xml [
+XMLConformanceOasisTest >> testp46fail5xml [
 	"Source file: oasis/p46fail5.xml"
 
-	(self isSkippableTest: #testp46fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp46fail5xml.
 	self
 		should: [
 			self
@@ -7607,11 +7743,12 @@ XMLConformanceOasisTests >> testp46fail5xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp46fail6xml [
+XMLConformanceOasisTest >> testp46fail6xml [
 	"Source file: oasis/p46fail6.xml"
 
-	(self isSkippableTest: #testp46fail6xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp46fail6xml.
 	self
 		should: [
 			self
@@ -7621,11 +7758,12 @@ XMLConformanceOasisTests >> testp46fail6xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp46pass1xml [
+XMLConformanceOasisTest >> testp46pass1xml [
 	"Source file: oasis/p46pass1.xml"
 
-	(self isSkippableTest: #testp46pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp46pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -7633,18 +7771,18 @@ XMLConformanceOasisTests >> testp46pass1xml [
 				documentURI: 'p46pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp47fail1xml [
+XMLConformanceOasisTest >> testp47fail1xml [
 	"Source file: oasis/p47fail1.xml"
 
-	(self isSkippableTest: #testp47fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp47fail1xml.
 	self
 		should: [
 			self
@@ -7654,11 +7792,12 @@ XMLConformanceOasisTests >> testp47fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp47fail2xml [
+XMLConformanceOasisTest >> testp47fail2xml [
 	"Source file: oasis/p47fail2.xml"
 
-	(self isSkippableTest: #testp47fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp47fail2xml.
 	self
 		should: [
 			self
@@ -7668,11 +7807,12 @@ XMLConformanceOasisTests >> testp47fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp47fail3xml [
+XMLConformanceOasisTest >> testp47fail3xml [
 	"Source file: oasis/p47fail3.xml"
 
-	(self isSkippableTest: #testp47fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp47fail3xml.
 	self
 		should: [
 			self
@@ -7682,11 +7822,12 @@ XMLConformanceOasisTests >> testp47fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp47fail4xml [
+XMLConformanceOasisTest >> testp47fail4xml [
 	"Source file: oasis/p47fail4.xml"
 
-	(self isSkippableTest: #testp47fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp47fail4xml.
 	self
 		should: [
 			self
@@ -7696,11 +7837,12 @@ XMLConformanceOasisTests >> testp47fail4xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp47pass1xml [
+XMLConformanceOasisTest >> testp47pass1xml [
 	"Source file: oasis/p47pass1.xml"
 
-	(self isSkippableTest: #testp47pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp47pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -7708,18 +7850,18 @@ XMLConformanceOasisTests >> testp47pass1xml [
 				documentURI: 'p47pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp48fail1xml [
+XMLConformanceOasisTest >> testp48fail1xml [
 	"Source file: oasis/p48fail1.xml"
 
-	(self isSkippableTest: #testp48fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp48fail1xml.
 	self
 		should: [
 			self
@@ -7729,11 +7871,12 @@ XMLConformanceOasisTests >> testp48fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp48fail2xml [
+XMLConformanceOasisTest >> testp48fail2xml [
 	"Source file: oasis/p48fail2.xml"
 
-	(self isSkippableTest: #testp48fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp48fail2xml.
 	self
 		should: [
 			self
@@ -7743,11 +7886,12 @@ XMLConformanceOasisTests >> testp48fail2xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp48pass1xml [
+XMLConformanceOasisTest >> testp48pass1xml [
 	"Source file: oasis/p48pass1.xml"
 
-	(self isSkippableTest: #testp48pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp48pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -7755,18 +7899,18 @@ XMLConformanceOasisTests >> testp48pass1xml [
 				documentURI: 'p48pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp49fail1xml [
+XMLConformanceOasisTest >> testp49fail1xml [
 	"Source file: oasis/p49fail1.xml"
 
-	(self isSkippableTest: #testp49fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp49fail1xml.
 	self
 		should: [
 			self
@@ -7776,11 +7920,12 @@ XMLConformanceOasisTests >> testp49fail1xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp49pass1xml [
+XMLConformanceOasisTest >> testp49pass1xml [
 	"Source file: oasis/p49pass1.xml"
 
-	(self isSkippableTest: #testp49pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp49pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -7788,18 +7933,18 @@ XMLConformanceOasisTests >> testp49pass1xml [
 				documentURI: 'p49pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp50fail1xml [
+XMLConformanceOasisTest >> testp50fail1xml [
 	"Source file: oasis/p50fail1.xml"
 
-	(self isSkippableTest: #testp50fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp50fail1xml.
 	self
 		should: [
 			self
@@ -7809,11 +7954,12 @@ XMLConformanceOasisTests >> testp50fail1xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp50pass1xml [
+XMLConformanceOasisTest >> testp50pass1xml [
 	"Source file: oasis/p50pass1.xml"
 
-	(self isSkippableTest: #testp50pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp50pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -7821,18 +7967,18 @@ XMLConformanceOasisTests >> testp50pass1xml [
 				documentURI: 'p50pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp51fail1xml [
+XMLConformanceOasisTest >> testp51fail1xml [
 	"Source file: oasis/p51fail1.xml"
 
-	(self isSkippableTest: #testp51fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp51fail1xml.
 	self
 		should: [
 			self
@@ -7842,11 +7988,12 @@ XMLConformanceOasisTests >> testp51fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp51fail2xml [
+XMLConformanceOasisTest >> testp51fail2xml [
 	"Source file: oasis/p51fail2.xml"
 
-	(self isSkippableTest: #testp51fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp51fail2xml.
 	self
 		should: [
 			self
@@ -7856,11 +8003,12 @@ XMLConformanceOasisTests >> testp51fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp51fail3xml [
+XMLConformanceOasisTest >> testp51fail3xml [
 	"Source file: oasis/p51fail3.xml"
 
-	(self isSkippableTest: #testp51fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp51fail3xml.
 	self
 		should: [
 			self
@@ -7870,11 +8018,12 @@ XMLConformanceOasisTests >> testp51fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp51fail4xml [
+XMLConformanceOasisTest >> testp51fail4xml [
 	"Source file: oasis/p51fail4.xml"
 
-	(self isSkippableTest: #testp51fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp51fail4xml.
 	self
 		should: [
 			self
@@ -7884,11 +8033,12 @@ XMLConformanceOasisTests >> testp51fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp51fail5xml [
+XMLConformanceOasisTest >> testp51fail5xml [
 	"Source file: oasis/p51fail5.xml"
 
-	(self isSkippableTest: #testp51fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp51fail5xml.
 	self
 		should: [
 			self
@@ -7898,11 +8048,12 @@ XMLConformanceOasisTests >> testp51fail5xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp51fail6xml [
+XMLConformanceOasisTest >> testp51fail6xml [
 	"Source file: oasis/p51fail6.xml"
 
-	(self isSkippableTest: #testp51fail6xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp51fail6xml.
 	self
 		should: [
 			self
@@ -7912,11 +8063,12 @@ XMLConformanceOasisTests >> testp51fail6xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp51fail7xml [
+XMLConformanceOasisTest >> testp51fail7xml [
 	"Source file: oasis/p51fail7.xml"
 
-	(self isSkippableTest: #testp51fail7xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp51fail7xml.
 	self
 		should: [
 			self
@@ -7926,11 +8078,12 @@ XMLConformanceOasisTests >> testp51fail7xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp51pass1xml [
+XMLConformanceOasisTest >> testp51pass1xml [
 	"Source file: oasis/p51pass1.xml"
 
-	(self isSkippableTest: #testp51pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp51pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -7938,18 +8091,18 @@ XMLConformanceOasisTests >> testp51pass1xml [
 				documentURI: 'p51pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp52fail1xml [
+XMLConformanceOasisTest >> testp52fail1xml [
 	"Source file: oasis/p52fail1.xml"
 
-	(self isSkippableTest: #testp52fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp52fail1xml.
 	self
 		should: [
 			self
@@ -7959,11 +8112,12 @@ XMLConformanceOasisTests >> testp52fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp52fail2xml [
+XMLConformanceOasisTest >> testp52fail2xml [
 	"Source file: oasis/p52fail2.xml"
 
-	(self isSkippableTest: #testp52fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp52fail2xml.
 	self
 		should: [
 			self
@@ -7973,11 +8127,12 @@ XMLConformanceOasisTests >> testp52fail2xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp52pass1xml [
+XMLConformanceOasisTest >> testp52pass1xml [
 	"Source file: oasis/p52pass1.xml"
 
-	(self isSkippableTest: #testp52pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp52pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -7985,18 +8140,18 @@ XMLConformanceOasisTests >> testp52pass1xml [
 				documentURI: 'p52pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp53fail1xml [
+XMLConformanceOasisTest >> testp53fail1xml [
 	"Source file: oasis/p53fail1.xml"
 
-	(self isSkippableTest: #testp53fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp53fail1xml.
 	self
 		should: [
 			self
@@ -8006,11 +8161,12 @@ XMLConformanceOasisTests >> testp53fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp53fail2xml [
+XMLConformanceOasisTest >> testp53fail2xml [
 	"Source file: oasis/p53fail2.xml"
 
-	(self isSkippableTest: #testp53fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp53fail2xml.
 	self
 		should: [
 			self
@@ -8020,11 +8176,12 @@ XMLConformanceOasisTests >> testp53fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp53fail3xml [
+XMLConformanceOasisTest >> testp53fail3xml [
 	"Source file: oasis/p53fail3.xml"
 
-	(self isSkippableTest: #testp53fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp53fail3xml.
 	self
 		should: [
 			self
@@ -8034,11 +8191,12 @@ XMLConformanceOasisTests >> testp53fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp53fail4xml [
+XMLConformanceOasisTest >> testp53fail4xml [
 	"Source file: oasis/p53fail4.xml"
 
-	(self isSkippableTest: #testp53fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp53fail4xml.
 	self
 		should: [
 			self
@@ -8048,11 +8206,12 @@ XMLConformanceOasisTests >> testp53fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp53fail5xml [
+XMLConformanceOasisTest >> testp53fail5xml [
 	"Source file: oasis/p53fail5.xml"
 
-	(self isSkippableTest: #testp53fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp53fail5xml.
 	self
 		should: [
 			self
@@ -8062,11 +8221,12 @@ XMLConformanceOasisTests >> testp53fail5xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp53pass1xml [
+XMLConformanceOasisTest >> testp53pass1xml [
 	"Source file: oasis/p53pass1.xml"
 
-	(self isSkippableTest: #testp53pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp53pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -8074,18 +8234,18 @@ XMLConformanceOasisTests >> testp53pass1xml [
 				documentURI: 'p53pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp54fail1xml [
+XMLConformanceOasisTest >> testp54fail1xml [
 	"Source file: oasis/p54fail1.xml"
 
-	(self isSkippableTest: #testp54fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp54fail1xml.
 	self
 		should: [
 			self
@@ -8095,11 +8255,12 @@ XMLConformanceOasisTests >> testp54fail1xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp54pass1xml [
+XMLConformanceOasisTest >> testp54pass1xml [
 	"Source file: oasis/p54pass1.xml"
 
-	(self isSkippableTest: #testp54pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp54pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -8107,18 +8268,18 @@ XMLConformanceOasisTests >> testp54pass1xml [
 				documentURI: 'p54pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp55fail1xml [
+XMLConformanceOasisTest >> testp55fail1xml [
 	"Source file: oasis/p55fail1.xml"
 
-	(self isSkippableTest: #testp55fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp55fail1xml.
 	self
 		should: [
 			self
@@ -8128,11 +8289,12 @@ XMLConformanceOasisTests >> testp55fail1xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp55pass1xml [
+XMLConformanceOasisTest >> testp55pass1xml [
 	"Source file: oasis/p55pass1.xml"
 
-	(self isSkippableTest: #testp55pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp55pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -8140,18 +8302,18 @@ XMLConformanceOasisTests >> testp55pass1xml [
 				documentURI: 'p55pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp56fail1xml [
+XMLConformanceOasisTest >> testp56fail1xml [
 	"Source file: oasis/p56fail1.xml"
 
-	(self isSkippableTest: #testp56fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp56fail1xml.
 	self
 		should: [
 			self
@@ -8161,11 +8323,12 @@ XMLConformanceOasisTests >> testp56fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp56fail2xml [
+XMLConformanceOasisTest >> testp56fail2xml [
 	"Source file: oasis/p56fail2.xml"
 
-	(self isSkippableTest: #testp56fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp56fail2xml.
 	self
 		should: [
 			self
@@ -8175,11 +8338,12 @@ XMLConformanceOasisTests >> testp56fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp56fail3xml [
+XMLConformanceOasisTest >> testp56fail3xml [
 	"Source file: oasis/p56fail3.xml"
 
-	(self isSkippableTest: #testp56fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp56fail3xml.
 	self
 		should: [
 			self
@@ -8189,11 +8353,12 @@ XMLConformanceOasisTests >> testp56fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp56fail4xml [
+XMLConformanceOasisTest >> testp56fail4xml [
 	"Source file: oasis/p56fail4.xml"
 
-	(self isSkippableTest: #testp56fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp56fail4xml.
 	self
 		should: [
 			self
@@ -8203,11 +8368,12 @@ XMLConformanceOasisTests >> testp56fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp56fail5xml [
+XMLConformanceOasisTest >> testp56fail5xml [
 	"Source file: oasis/p56fail5.xml"
 
-	(self isSkippableTest: #testp56fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp56fail5xml.
 	self
 		should: [
 			self
@@ -8217,11 +8383,12 @@ XMLConformanceOasisTests >> testp56fail5xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp56pass1xml [
+XMLConformanceOasisTest >> testp56pass1xml [
 	"Source file: oasis/p56pass1.xml"
 
-	(self isSkippableTest: #testp56pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp56pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -8229,18 +8396,18 @@ XMLConformanceOasisTests >> testp56pass1xml [
 				documentURI: 'p56pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp57fail1xml [
+XMLConformanceOasisTest >> testp57fail1xml [
 	"Source file: oasis/p57fail1.xml"
 
-	(self isSkippableTest: #testp57fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp57fail1xml.
 	self
 		should: [
 			self
@@ -8250,11 +8417,12 @@ XMLConformanceOasisTests >> testp57fail1xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp57pass1xml [
+XMLConformanceOasisTest >> testp57pass1xml [
 	"Source file: oasis/p57pass1.xml"
 
-	(self isSkippableTest: #testp57pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp57pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -8262,18 +8430,18 @@ XMLConformanceOasisTests >> testp57pass1xml [
 				documentURI: 'p57pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp58fail1xml [
+XMLConformanceOasisTest >> testp58fail1xml [
 	"Source file: oasis/p58fail1.xml"
 
-	(self isSkippableTest: #testp58fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp58fail1xml.
 	self
 		should: [
 			self
@@ -8283,11 +8451,12 @@ XMLConformanceOasisTests >> testp58fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp58fail2xml [
+XMLConformanceOasisTest >> testp58fail2xml [
 	"Source file: oasis/p58fail2.xml"
 
-	(self isSkippableTest: #testp58fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp58fail2xml.
 	self
 		should: [
 			self
@@ -8297,11 +8466,12 @@ XMLConformanceOasisTests >> testp58fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp58fail3xml [
+XMLConformanceOasisTest >> testp58fail3xml [
 	"Source file: oasis/p58fail3.xml"
 
-	(self isSkippableTest: #testp58fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp58fail3xml.
 	self
 		should: [
 			self
@@ -8311,11 +8481,12 @@ XMLConformanceOasisTests >> testp58fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp58fail4xml [
+XMLConformanceOasisTest >> testp58fail4xml [
 	"Source file: oasis/p58fail4.xml"
 
-	(self isSkippableTest: #testp58fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp58fail4xml.
 	self
 		should: [
 			self
@@ -8325,11 +8496,12 @@ XMLConformanceOasisTests >> testp58fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp58fail5xml [
+XMLConformanceOasisTest >> testp58fail5xml [
 	"Source file: oasis/p58fail5.xml"
 
-	(self isSkippableTest: #testp58fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp58fail5xml.
 	self
 		should: [
 			self
@@ -8339,11 +8511,12 @@ XMLConformanceOasisTests >> testp58fail5xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp58fail6xml [
+XMLConformanceOasisTest >> testp58fail6xml [
 	"Source file: oasis/p58fail6.xml"
 
-	(self isSkippableTest: #testp58fail6xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp58fail6xml.
 	self
 		should: [
 			self
@@ -8353,11 +8526,12 @@ XMLConformanceOasisTests >> testp58fail6xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp58fail7xml [
+XMLConformanceOasisTest >> testp58fail7xml [
 	"Source file: oasis/p58fail7.xml"
 
-	(self isSkippableTest: #testp58fail7xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp58fail7xml.
 	self
 		should: [
 			self
@@ -8367,11 +8541,12 @@ XMLConformanceOasisTests >> testp58fail7xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp58fail8xml [
+XMLConformanceOasisTest >> testp58fail8xml [
 	"Source file: oasis/p58fail8.xml"
 
-	(self isSkippableTest: #testp58fail8xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp58fail8xml.
 	self
 		should: [
 			self
@@ -8381,11 +8556,12 @@ XMLConformanceOasisTests >> testp58fail8xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp58pass1xml [
+XMLConformanceOasisTest >> testp58pass1xml [
 	"Source file: oasis/p58pass1.xml"
 
-	(self isSkippableTest: #testp58pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp58pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -8393,18 +8569,18 @@ XMLConformanceOasisTests >> testp58pass1xml [
 				documentURI: 'p58pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp59fail1xml [
+XMLConformanceOasisTest >> testp59fail1xml [
 	"Source file: oasis/p59fail1.xml"
 
-	(self isSkippableTest: #testp59fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp59fail1xml.
 	self
 		should: [
 			self
@@ -8414,11 +8590,12 @@ XMLConformanceOasisTests >> testp59fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp59fail2xml [
+XMLConformanceOasisTest >> testp59fail2xml [
 	"Source file: oasis/p59fail2.xml"
 
-	(self isSkippableTest: #testp59fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp59fail2xml.
 	self
 		should: [
 			self
@@ -8428,11 +8605,12 @@ XMLConformanceOasisTests >> testp59fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp59fail3xml [
+XMLConformanceOasisTest >> testp59fail3xml [
 	"Source file: oasis/p59fail3.xml"
 
-	(self isSkippableTest: #testp59fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp59fail3xml.
 	self
 		should: [
 			self
@@ -8442,11 +8620,12 @@ XMLConformanceOasisTests >> testp59fail3xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp59pass1xml [
+XMLConformanceOasisTest >> testp59pass1xml [
 	"Source file: oasis/p59pass1.xml"
 
-	(self isSkippableTest: #testp59pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp59pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -8454,18 +8633,18 @@ XMLConformanceOasisTests >> testp59pass1xml [
 				documentURI: 'p59pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp60fail1xml [
+XMLConformanceOasisTest >> testp60fail1xml [
 	"Source file: oasis/p60fail1.xml"
 
-	(self isSkippableTest: #testp60fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp60fail1xml.
 	self
 		should: [
 			self
@@ -8475,11 +8654,12 @@ XMLConformanceOasisTests >> testp60fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp60fail2xml [
+XMLConformanceOasisTest >> testp60fail2xml [
 	"Source file: oasis/p60fail2.xml"
 
-	(self isSkippableTest: #testp60fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp60fail2xml.
 	self
 		should: [
 			self
@@ -8489,11 +8669,12 @@ XMLConformanceOasisTests >> testp60fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp60fail3xml [
+XMLConformanceOasisTest >> testp60fail3xml [
 	"Source file: oasis/p60fail3.xml"
 
-	(self isSkippableTest: #testp60fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp60fail3xml.
 	self
 		should: [
 			self
@@ -8503,11 +8684,12 @@ XMLConformanceOasisTests >> testp60fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp60fail4xml [
+XMLConformanceOasisTest >> testp60fail4xml [
 	"Source file: oasis/p60fail4.xml"
 
-	(self isSkippableTest: #testp60fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp60fail4xml.
 	self
 		should: [
 			self
@@ -8517,11 +8699,12 @@ XMLConformanceOasisTests >> testp60fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp60fail5xml [
+XMLConformanceOasisTest >> testp60fail5xml [
 	"Source file: oasis/p60fail5.xml"
 
-	(self isSkippableTest: #testp60fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp60fail5xml.
 	self
 		should: [
 			self
@@ -8531,11 +8714,12 @@ XMLConformanceOasisTests >> testp60fail5xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp60pass1xml [
+XMLConformanceOasisTest >> testp60pass1xml [
 	"Source file: oasis/p60pass1.xml"
 
-	(self isSkippableTest: #testp60pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp60pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -8543,18 +8727,18 @@ XMLConformanceOasisTests >> testp60pass1xml [
 				documentURI: 'p60pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp61fail1xml [
+XMLConformanceOasisTest >> testp61fail1xml [
 	"Source file: oasis/p61fail1.xml"
 
-	(self isSkippableTest: #testp61fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp61fail1xml.
 	self
 		should: [
 			self
@@ -8564,11 +8748,12 @@ XMLConformanceOasisTests >> testp61fail1xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp61pass1xml [
+XMLConformanceOasisTest >> testp61pass1xml [
 	"Source file: oasis/p61pass1.xml"
 
-	(self isSkippableTest: #testp61pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp61pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -8576,18 +8761,18 @@ XMLConformanceOasisTests >> testp61pass1xml [
 				documentURI: 'p61pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp62fail1xml [
+XMLConformanceOasisTest >> testp62fail1xml [
 	"Source file: oasis/p62fail1.xml"
 
-	(self isSkippableTest: #testp62fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp62fail1xml.
 	self
 		should: [
 			self
@@ -8597,11 +8782,12 @@ XMLConformanceOasisTests >> testp62fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp62fail2xml [
+XMLConformanceOasisTest >> testp62fail2xml [
 	"Source file: oasis/p62fail2.xml"
 
-	(self isSkippableTest: #testp62fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp62fail2xml.
 	self
 		should: [
 			self
@@ -8611,11 +8797,12 @@ XMLConformanceOasisTests >> testp62fail2xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp62pass1xml [
+XMLConformanceOasisTest >> testp62pass1xml [
 	"Source file: oasis/p62pass1.xml"
 
-	(self isSkippableTest: #testp62pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp62pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -8623,18 +8810,18 @@ XMLConformanceOasisTests >> testp62pass1xml [
 				documentURI: 'p62pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp63fail1xml [
+XMLConformanceOasisTest >> testp63fail1xml [
 	"Source file: oasis/p63fail1.xml"
 
-	(self isSkippableTest: #testp63fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp63fail1xml.
 	self
 		should: [
 			self
@@ -8644,11 +8831,12 @@ XMLConformanceOasisTests >> testp63fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp63fail2xml [
+XMLConformanceOasisTest >> testp63fail2xml [
 	"Source file: oasis/p63fail2.xml"
 
-	(self isSkippableTest: #testp63fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp63fail2xml.
 	self
 		should: [
 			self
@@ -8658,11 +8846,12 @@ XMLConformanceOasisTests >> testp63fail2xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp63pass1xml [
+XMLConformanceOasisTest >> testp63pass1xml [
 	"Source file: oasis/p63pass1.xml"
 
-	(self isSkippableTest: #testp63pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp63pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -8670,18 +8859,18 @@ XMLConformanceOasisTests >> testp63pass1xml [
 				documentURI: 'p63pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp64fail1xml [
+XMLConformanceOasisTest >> testp64fail1xml [
 	"Source file: oasis/p64fail1.xml"
 
-	(self isSkippableTest: #testp64fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp64fail1xml.
 	self
 		should: [
 			self
@@ -8691,11 +8880,12 @@ XMLConformanceOasisTests >> testp64fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp64fail2xml [
+XMLConformanceOasisTest >> testp64fail2xml [
 	"Source file: oasis/p64fail2.xml"
 
-	(self isSkippableTest: #testp64fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp64fail2xml.
 	self
 		should: [
 			self
@@ -8705,11 +8895,12 @@ XMLConformanceOasisTests >> testp64fail2xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp64pass1xml [
+XMLConformanceOasisTest >> testp64pass1xml [
 	"Source file: oasis/p64pass1.xml"
 
-	(self isSkippableTest: #testp64pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp64pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -8717,18 +8908,18 @@ XMLConformanceOasisTests >> testp64pass1xml [
 				documentURI: 'p64pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp66fail1xml [
+XMLConformanceOasisTest >> testp66fail1xml [
 	"Source file: oasis/p66fail1.xml"
 
-	(self isSkippableTest: #testp66fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp66fail1xml.
 	self
 		should: [
 			self
@@ -8738,11 +8929,12 @@ XMLConformanceOasisTests >> testp66fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp66fail2xml [
+XMLConformanceOasisTest >> testp66fail2xml [
 	"Source file: oasis/p66fail2.xml"
 
-	(self isSkippableTest: #testp66fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp66fail2xml.
 	self
 		should: [
 			self
@@ -8752,11 +8944,12 @@ XMLConformanceOasisTests >> testp66fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp66fail3xml [
+XMLConformanceOasisTest >> testp66fail3xml [
 	"Source file: oasis/p66fail3.xml"
 
-	(self isSkippableTest: #testp66fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp66fail3xml.
 	self
 		should: [
 			self
@@ -8766,11 +8959,12 @@ XMLConformanceOasisTests >> testp66fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp66fail4xml [
+XMLConformanceOasisTest >> testp66fail4xml [
 	"Source file: oasis/p66fail4.xml"
 
-	(self isSkippableTest: #testp66fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp66fail4xml.
 	self
 		should: [
 			self
@@ -8780,11 +8974,12 @@ XMLConformanceOasisTests >> testp66fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp66fail5xml [
+XMLConformanceOasisTest >> testp66fail5xml [
 	"Source file: oasis/p66fail5.xml"
 
-	(self isSkippableTest: #testp66fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp66fail5xml.
 	self
 		should: [
 			self
@@ -8794,11 +8989,12 @@ XMLConformanceOasisTests >> testp66fail5xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp66fail6xml [
+XMLConformanceOasisTest >> testp66fail6xml [
 	"Source file: oasis/p66fail6.xml"
 
-	(self isSkippableTest: #testp66fail6xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp66fail6xml.
 	self
 		should: [
 			self
@@ -8808,11 +9004,12 @@ XMLConformanceOasisTests >> testp66fail6xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp66pass1xml [
+XMLConformanceOasisTest >> testp66pass1xml [
 	"Source file: oasis/p66pass1.xml"
 
-	(self isSkippableTest: #testp66pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp66pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -8820,18 +9017,18 @@ XMLConformanceOasisTests >> testp66pass1xml [
 				documentURI: 'p66pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp68fail1xml [
+XMLConformanceOasisTest >> testp68fail1xml [
 	"Source file: oasis/p68fail1.xml"
 
-	(self isSkippableTest: #testp68fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp68fail1xml.
 	self
 		should: [
 			self
@@ -8841,11 +9038,12 @@ XMLConformanceOasisTests >> testp68fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp68fail2xml [
+XMLConformanceOasisTest >> testp68fail2xml [
 	"Source file: oasis/p68fail2.xml"
 
-	(self isSkippableTest: #testp68fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp68fail2xml.
 	self
 		should: [
 			self
@@ -8855,11 +9053,12 @@ XMLConformanceOasisTests >> testp68fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp68fail3xml [
+XMLConformanceOasisTest >> testp68fail3xml [
 	"Source file: oasis/p68fail3.xml"
 
-	(self isSkippableTest: #testp68fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp68fail3xml.
 	self
 		should: [
 			self
@@ -8869,11 +9068,12 @@ XMLConformanceOasisTests >> testp68fail3xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp68pass1xml [
+XMLConformanceOasisTest >> testp68pass1xml [
 	"Source file: oasis/p68pass1.xml"
 
-	(self isSkippableTest: #testp68pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp68pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -8881,18 +9081,18 @@ XMLConformanceOasisTests >> testp68pass1xml [
 				documentURI: 'p68pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp69fail1xml [
+XMLConformanceOasisTest >> testp69fail1xml [
 	"Source file: oasis/p69fail1.xml"
 
-	(self isSkippableTest: #testp69fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp69fail1xml.
 	self
 		should: [
 			self
@@ -8902,11 +9102,12 @@ XMLConformanceOasisTests >> testp69fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp69fail2xml [
+XMLConformanceOasisTest >> testp69fail2xml [
 	"Source file: oasis/p69fail2.xml"
 
-	(self isSkippableTest: #testp69fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp69fail2xml.
 	self
 		should: [
 			self
@@ -8916,11 +9117,12 @@ XMLConformanceOasisTests >> testp69fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp69fail3xml [
+XMLConformanceOasisTest >> testp69fail3xml [
 	"Source file: oasis/p69fail3.xml"
 
-	(self isSkippableTest: #testp69fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp69fail3xml.
 	self
 		should: [
 			self
@@ -8930,11 +9132,12 @@ XMLConformanceOasisTests >> testp69fail3xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp69pass1xml [
+XMLConformanceOasisTest >> testp69pass1xml [
 	"Source file: oasis/p69pass1.xml"
 
-	(self isSkippableTest: #testp69pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp69pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -8942,18 +9145,18 @@ XMLConformanceOasisTests >> testp69pass1xml [
 				documentURI: 'p69pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp70fail1xml [
+XMLConformanceOasisTest >> testp70fail1xml [
 	"Source file: oasis/p70fail1.xml"
 
-	(self isSkippableTest: #testp70fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp70fail1xml.
 	self
 		should: [
 			self
@@ -8963,11 +9166,12 @@ XMLConformanceOasisTests >> testp70fail1xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp70pass1xml [
+XMLConformanceOasisTest >> testp70pass1xml [
 	"Source file: oasis/p70pass1.xml"
 
-	(self isSkippableTest: #testp70pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp70pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -8975,18 +9179,18 @@ XMLConformanceOasisTests >> testp70pass1xml [
 				documentURI: 'p70pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp71fail1xml [
+XMLConformanceOasisTest >> testp71fail1xml [
 	"Source file: oasis/p71fail1.xml"
 
-	(self isSkippableTest: #testp71fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp71fail1xml.
 	self
 		should: [
 			self
@@ -8996,11 +9200,12 @@ XMLConformanceOasisTests >> testp71fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp71fail2xml [
+XMLConformanceOasisTest >> testp71fail2xml [
 	"Source file: oasis/p71fail2.xml"
 
-	(self isSkippableTest: #testp71fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp71fail2xml.
 	self
 		should: [
 			self
@@ -9010,11 +9215,12 @@ XMLConformanceOasisTests >> testp71fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp71fail3xml [
+XMLConformanceOasisTest >> testp71fail3xml [
 	"Source file: oasis/p71fail3.xml"
 
-	(self isSkippableTest: #testp71fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp71fail3xml.
 	self
 		should: [
 			self
@@ -9024,11 +9230,12 @@ XMLConformanceOasisTests >> testp71fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp71fail4xml [
+XMLConformanceOasisTest >> testp71fail4xml [
 	"Source file: oasis/p71fail4.xml"
 
-	(self isSkippableTest: #testp71fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp71fail4xml.
 	self
 		should: [
 			self
@@ -9038,11 +9245,12 @@ XMLConformanceOasisTests >> testp71fail4xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp71pass1xml [
+XMLConformanceOasisTest >> testp71pass1xml [
 	"Source file: oasis/p71pass1.xml"
 
-	(self isSkippableTest: #testp71pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp71pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -9050,18 +9258,18 @@ XMLConformanceOasisTests >> testp71pass1xml [
 				documentURI: 'p71pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp72fail1xml [
+XMLConformanceOasisTest >> testp72fail1xml [
 	"Source file: oasis/p72fail1.xml"
 
-	(self isSkippableTest: #testp72fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp72fail1xml.
 	self
 		should: [
 			self
@@ -9071,11 +9279,12 @@ XMLConformanceOasisTests >> testp72fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp72fail2xml [
+XMLConformanceOasisTest >> testp72fail2xml [
 	"Source file: oasis/p72fail2.xml"
 
-	(self isSkippableTest: #testp72fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp72fail2xml.
 	self
 		should: [
 			self
@@ -9085,11 +9294,12 @@ XMLConformanceOasisTests >> testp72fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp72fail3xml [
+XMLConformanceOasisTest >> testp72fail3xml [
 	"Source file: oasis/p72fail3.xml"
 
-	(self isSkippableTest: #testp72fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp72fail3xml.
 	self
 		should: [
 			self
@@ -9099,11 +9309,12 @@ XMLConformanceOasisTests >> testp72fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp72fail4xml [
+XMLConformanceOasisTest >> testp72fail4xml [
 	"Source file: oasis/p72fail4.xml"
 
-	(self isSkippableTest: #testp72fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp72fail4xml.
 	self
 		should: [
 			self
@@ -9113,11 +9324,12 @@ XMLConformanceOasisTests >> testp72fail4xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp72pass1xml [
+XMLConformanceOasisTest >> testp72pass1xml [
 	"Source file: oasis/p72pass1.xml"
 
-	(self isSkippableTest: #testp72pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp72pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -9125,18 +9337,18 @@ XMLConformanceOasisTests >> testp72pass1xml [
 				documentURI: 'p72pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp73fail1xml [
+XMLConformanceOasisTest >> testp73fail1xml [
 	"Source file: oasis/p73fail1.xml"
 
-	(self isSkippableTest: #testp73fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp73fail1xml.
 	self
 		should: [
 			self
@@ -9146,11 +9358,12 @@ XMLConformanceOasisTests >> testp73fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp73fail2xml [
+XMLConformanceOasisTest >> testp73fail2xml [
 	"Source file: oasis/p73fail2.xml"
 
-	(self isSkippableTest: #testp73fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp73fail2xml.
 	self
 		should: [
 			self
@@ -9160,11 +9373,12 @@ XMLConformanceOasisTests >> testp73fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp73fail3xml [
+XMLConformanceOasisTest >> testp73fail3xml [
 	"Source file: oasis/p73fail3.xml"
 
-	(self isSkippableTest: #testp73fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp73fail3xml.
 	self
 		should: [
 			self
@@ -9174,11 +9388,12 @@ XMLConformanceOasisTests >> testp73fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp73fail4xml [
+XMLConformanceOasisTest >> testp73fail4xml [
 	"Source file: oasis/p73fail4.xml"
 
-	(self isSkippableTest: #testp73fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp73fail4xml.
 	self
 		should: [
 			self
@@ -9188,11 +9403,12 @@ XMLConformanceOasisTests >> testp73fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp73fail5xml [
+XMLConformanceOasisTest >> testp73fail5xml [
 	"Source file: oasis/p73fail5.xml"
 
-	(self isSkippableTest: #testp73fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp73fail5xml.
 	self
 		should: [
 			self
@@ -9202,11 +9418,12 @@ XMLConformanceOasisTests >> testp73fail5xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp73pass1xml [
+XMLConformanceOasisTest >> testp73pass1xml [
 	"Source file: oasis/p73pass1.xml"
 
-	(self isSkippableTest: #testp73pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp73pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -9214,18 +9431,18 @@ XMLConformanceOasisTests >> testp73pass1xml [
 				documentURI: 'p73pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp74fail1xml [
+XMLConformanceOasisTest >> testp74fail1xml [
 	"Source file: oasis/p74fail1.xml"
 
-	(self isSkippableTest: #testp74fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp74fail1xml.
 	self
 		should: [
 			self
@@ -9235,11 +9452,12 @@ XMLConformanceOasisTests >> testp74fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp74fail2xml [
+XMLConformanceOasisTest >> testp74fail2xml [
 	"Source file: oasis/p74fail2.xml"
 
-	(self isSkippableTest: #testp74fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp74fail2xml.
 	self
 		should: [
 			self
@@ -9249,11 +9467,12 @@ XMLConformanceOasisTests >> testp74fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp74fail3xml [
+XMLConformanceOasisTest >> testp74fail3xml [
 	"Source file: oasis/p74fail3.xml"
 
-	(self isSkippableTest: #testp74fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp74fail3xml.
 	self
 		should: [
 			self
@@ -9263,11 +9482,12 @@ XMLConformanceOasisTests >> testp74fail3xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp74pass1xml [
+XMLConformanceOasisTest >> testp74pass1xml [
 	"Source file: oasis/p74pass1.xml"
 
-	(self isSkippableTest: #testp74pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp74pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -9275,18 +9495,18 @@ XMLConformanceOasisTests >> testp74pass1xml [
 				documentURI: 'p74pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp75fail1xml [
+XMLConformanceOasisTest >> testp75fail1xml [
 	"Source file: oasis/p75fail1.xml"
 
-	(self isSkippableTest: #testp75fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp75fail1xml.
 	self
 		should: [
 			self
@@ -9296,11 +9516,12 @@ XMLConformanceOasisTests >> testp75fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp75fail2xml [
+XMLConformanceOasisTest >> testp75fail2xml [
 	"Source file: oasis/p75fail2.xml"
 
-	(self isSkippableTest: #testp75fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp75fail2xml.
 	self
 		should: [
 			self
@@ -9310,11 +9531,12 @@ XMLConformanceOasisTests >> testp75fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp75fail3xml [
+XMLConformanceOasisTest >> testp75fail3xml [
 	"Source file: oasis/p75fail3.xml"
 
-	(self isSkippableTest: #testp75fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp75fail3xml.
 	self
 		should: [
 			self
@@ -9324,11 +9546,12 @@ XMLConformanceOasisTests >> testp75fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp75fail4xml [
+XMLConformanceOasisTest >> testp75fail4xml [
 	"Source file: oasis/p75fail4.xml"
 
-	(self isSkippableTest: #testp75fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp75fail4xml.
 	self
 		should: [
 			self
@@ -9338,11 +9561,12 @@ XMLConformanceOasisTests >> testp75fail4xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp75fail5xml [
+XMLConformanceOasisTest >> testp75fail5xml [
 	"Source file: oasis/p75fail5.xml"
 
-	(self isSkippableTest: #testp75fail5xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp75fail5xml.
 	self
 		should: [
 			self
@@ -9352,11 +9576,12 @@ XMLConformanceOasisTests >> testp75fail5xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp75fail6xml [
+XMLConformanceOasisTest >> testp75fail6xml [
 	"Source file: oasis/p75fail6.xml"
 
-	(self isSkippableTest: #testp75fail6xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp75fail6xml.
 	self
 		should: [
 			self
@@ -9366,11 +9591,12 @@ XMLConformanceOasisTests >> testp75fail6xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp75pass1xml [
+XMLConformanceOasisTest >> testp75pass1xml [
 	"Source file: oasis/p75pass1.xml"
 
-	(self isSkippableTest: #testp75pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp75pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -9378,18 +9604,18 @@ XMLConformanceOasisTests >> testp75pass1xml [
 				documentURI: 'p75pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp76fail1xml [
+XMLConformanceOasisTest >> testp76fail1xml [
 	"Source file: oasis/p76fail1.xml"
 
-	(self isSkippableTest: #testp76fail1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp76fail1xml.
 	self
 		should: [
 			self
@@ -9399,11 +9625,12 @@ XMLConformanceOasisTests >> testp76fail1xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp76fail2xml [
+XMLConformanceOasisTest >> testp76fail2xml [
 	"Source file: oasis/p76fail2.xml"
 
-	(self isSkippableTest: #testp76fail2xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp76fail2xml.
 	self
 		should: [
 			self
@@ -9413,11 +9640,12 @@ XMLConformanceOasisTests >> testp76fail2xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp76fail3xml [
+XMLConformanceOasisTest >> testp76fail3xml [
 	"Source file: oasis/p76fail3.xml"
 
-	(self isSkippableTest: #testp76fail3xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp76fail3xml.
 	self
 		should: [
 			self
@@ -9427,11 +9655,12 @@ XMLConformanceOasisTests >> testp76fail3xml [
 ]
 
 { #category : #'tests - exception raising' }
-XMLConformanceOasisTests >> testp76fail4xml [
+XMLConformanceOasisTest >> testp76fail4xml [
 	"Source file: oasis/p76fail4.xml"
 
-	(self isSkippableTest: #testp76fail4xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp76fail4xml.
 	self
 		should: [
 			self
@@ -9441,11 +9670,12 @@ XMLConformanceOasisTests >> testp76fail4xml [
 ]
 
 { #category : #tests }
-XMLConformanceOasisTests >> testp76pass1xml [
+XMLConformanceOasisTest >> testp76pass1xml [
 	"Source file: oasis/p76pass1.xml"
 
-	(self isSkippableTest: #testp76pass1xml)
-		ifTrue: [self skipOrReturnWith: [^ self]].
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testp76pass1xml.
 	self
 		shouldnt: [
 			[self
@@ -9453,8 +9683,7 @@ XMLConformanceOasisTests >> testp76pass1xml [
 				documentURI: 'p76pass1.xml']
 				on: self parserExceptions
 				do: [:error |
-					(self isSkippableException: error)
-						ifTrue: [self skipOrReturnWith: [^ self]]
+					(self isIgnorableParserException: error)
 						ifFalse: [error pass]]]
 		raise: self parserExceptions
 ]
