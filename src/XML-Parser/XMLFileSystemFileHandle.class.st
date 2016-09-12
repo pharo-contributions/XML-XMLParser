@@ -65,15 +65,23 @@ XMLFileSystemFileHandle >> isFile [
 { #category : #private }
 XMLFileSystemFileHandle >> newFileReadStreamOnPath [
 	"memory file references need special handling"
-	self fileReference fileSystem isMemoryFileSystem
-		ifTrue: [^ self fileReference readStream]
-		ifFalse: [^ super newFileReadStreamOnPath]
+	self usesMemoryStore
+		ifTrue: [^ self fileReference readStream].
+	^ super newFileReadStreamOnPath.
 ]
 
 { #category : #private }
 XMLFileSystemFileHandle >> newFileWriteStreamOnPath [
 	"memory file references need special handling"
-	self fileReference fileSystem isMemoryFileSystem
-		ifTrue: [^ self fileReference writeStream]
-		ifFalse: [^ super newFileWriteStreamOnPath]
+	self usesMemoryStore
+		ifTrue: [^ self fileReference writeStream].
+	^ super newFileWriteStreamOnPath.
+]
+
+{ #category : #private }
+XMLFileSystemFileHandle >> usesMemoryStore [
+	"Pharo 3.0 has memory stores but lacks #isMemoryFileSystem, so
+	this test is used instead for backwards compatibility"
+	^ self fileReference fileSystem store class ==
+		(XMLClassFinder classNamed: #MemoryStore)
 ]
