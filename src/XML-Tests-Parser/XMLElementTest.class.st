@@ -1226,7 +1226,7 @@ XMLElementTest >> testNextElement [
 	root := self newNodeWithElements firstElement.
 	nextElement := nil.
 	root elements reverseDo: [:each |
-		self assert: each nextElement == nextElement.
+		self assert: each nextElement = nextElement.
 		nextElement := each].
 ]
 
@@ -1266,7 +1266,7 @@ XMLElementTest >> testPreviousElement [
 	root := self newNodeWithElements firstElement.
 	previousElement := nil.
 	root elements do: [:each |
-		self assert: each previousElement == previousElement.
+		self assert: each previousElement = previousElement.
 		previousElement := each].
 ]
 
@@ -1336,8 +1336,10 @@ XMLElementTest >> testRemoveAttribute [
 	element attributeNodes copy do: [:each |
 		self
 			assert: (element removeAttribute: each name) = each value;
-			should: [element removeAttribute: each name] raise: Error;
-			deny: (element includesAttribute: each name)].
+			deny: (element includesAttribute: each name).
+		self
+			should: [element removeAttribute: each name]
+			raise: Error].
 	self assert: element attributeNodes isEmpty.
 ]
 
@@ -1347,10 +1349,15 @@ XMLElementTest >> testRemoveAttributeIfAbsent [
 
 	element := self newElementWithAttributes.
 	element attributeNodes copy do: [:each |
-		self
-			assert: (element removeAttribute: each name ifAbsent: [#absent]) = each value;
-			assert: (element removeAttribute: each name ifAbsent: [#absent]) = #absent;
-			deny: (element includesAttribute: each name)].
+		self assert:
+			(element
+				removeAttribute: each name
+				ifAbsent: [self fail]) = each value.
+		self deny: (element includesAttribute: each name).
+		self assert:
+			(element
+				removeAttribute: each name
+				ifAbsent: [#absent]) = #absent].
 	self assert: element attributeNodes isEmpty.
 ]
 
@@ -1361,9 +1368,11 @@ XMLElementTest >> testRemoveAttributeNode [
 	element := self newElementWithAttributes.
 	element attributeNodes copy do: [:each |
 		self
-			assert: (element removeAttributeNode: each) == each ;
-			should: [element removeAttribute: each] raise: Error;
-			deny: (element attributeNodes includes: each)].
+			assert: (element removeAttributeNode: each) = each ;
+			deny: (element attributeNodes includes: each).
+		self
+			should: [element removeAttribute: each]
+			raise: Error].
 	self assert: element attributeNodes isEmpty.
 ]
 
@@ -1373,10 +1382,15 @@ XMLElementTest >> testRemoveAttributeNodeIfAbsent [
 
 	element := self newElementWithAttributes.
 	element attributeNodes copy do: [:each |
-		self
-			assert: (element removeAttributeNode: each ifAbsent: [#absent]) == each ;
-			assert: (element removeAttributeNode: each ifAbsent: [#absent]) = #absent;
-			deny: (element attributeNodes includes: each)].
+		self assert:
+			(element
+				removeAttributeNode: each
+				ifAbsent: [self fail]) = each.
+		self deny: (element attributeNodes includes: each).
+		self assert:
+			(element
+				removeAttributeNode: each
+				ifAbsent: [#absent]) = #absent].
 	self assert: element attributeNodes isEmpty.
 ]
 
@@ -1422,17 +1436,17 @@ XMLElementTest >> testResolvePrefixIfUnresolvable [
 		self assert:
 			(element
 				resolvePrefix: prefix
-				ifUnresolvable: [#absent]) = uri].
+				ifUnresolvable: [self fail]) = uri].
 
 	self assert:
 		(element
 			resolvePrefix: 'xml'
-			ifUnresolvable: [#absent]) = XMLNamespaceScope xmlNamespaceURI.
+			ifUnresolvable: [self fail]) = XMLNamespaceScope xmlNamespaceURI.
 	
 	self assert:
 		(element
 			resolvePrefix: 'xmlns'
-			ifUnresolvable: [#absent]) = XMLNamespaceScope xmlnsNamespaceURI.
+			ifUnresolvable: [self fail]) = XMLNamespaceScope xmlnsNamespaceURI.
 ]
 
 { #category : #tests }

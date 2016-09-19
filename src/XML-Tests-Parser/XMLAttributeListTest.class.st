@@ -130,7 +130,7 @@ XMLAttributeListTest >> testAddAttributeAssociation [
 			assert: attribute class == self attributeClass;
 			assert: attribute name = each name;
 			assert: attribute value = each value;
-			assert: (list attributeNodeAt: each name) == attribute].
+			assert: (list attributeNodeAt: each name) = attribute].
 ]
 
 { #category : #tests }
@@ -148,7 +148,7 @@ XMLAttributeListTest >> testAddAttributeNameValue [
 			assert: attribute class == self attributeClass;
 			assert: attribute name = each name;
 			assert: attribute value = each value;
-			assert: (list attributeNodeAt: each name) == attribute].
+			assert: (list attributeNodeAt: each name) = attribute].
 ]
 
 { #category : #tests }
@@ -394,7 +394,7 @@ XMLAttributeListTest >> testAttributeNodeAtIfAbsent [
 		self assert:
 			(list
 				attributeNodeAt: each name
-				ifAbsent: [self fail]) == each].
+				ifAbsent: [self fail]) = each].
 
 	self assert:
 		(list

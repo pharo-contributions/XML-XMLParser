@@ -147,7 +147,7 @@ XMLNodeListTest >> testElementAfter [
 	list := self listWithItems.
 	elementAfter := nil.
 	self listElements reverseDo: [:each |
-		self assert: (list elementAfter: each) == elementAfter.
+		self assert: (list elementAfter: each) = elementAfter.
 		elementAfter := each].
 ]
 
@@ -157,11 +157,11 @@ XMLNodeListTest >> testElementAt [
 
 	list := self listWithItems.
 	self listElements do: [:each | | changedElement |
-		self assert: (list elementAt: each name) == each.
+		self assert: (list elementAt: each name) = each.
 
 		changedElement := self changedListItem: each.
 		list addFirst: changedElement.
-		self assert: (list elementAt: each name) == changedElement.
+		self assert: (list elementAt: each name) = changedElement.
 
 		list
 			remove: each;
@@ -178,14 +178,14 @@ XMLNodeListTest >> testElementAtIfAbsent [
 		self assert:
 			(list
 				elementAt: each name
-				ifAbsent: [self fail]) == each.
+				ifAbsent: [self fail]) = each.
 
 		changedElement := self changedListItem: each.
 		list addFirst: changedElement.
 		self assert:
 			(list
 				elementAt: each name
-				ifAbsent: [self fail]) == changedElement.
+				ifAbsent: [self fail]) = changedElement.
 
 		list
 			remove: each;
@@ -203,7 +203,7 @@ XMLNodeListTest >> testElementBefore [
 	list := self listWithItems.
 	elementBefore := nil.
 	self listElements do: [:each |
-		self assert: (list elementBefore: each) == elementBefore.
+		self assert: (list elementBefore: each) = elementBefore.
 		elementBefore := each].
 ]
 
@@ -301,7 +301,7 @@ XMLNodeListTest >> testFirstElement [
 
 	list := self listWithItems.
 	self listElements do: [:each |
-		self assert: list firstElement == each.
+		self assert: list firstElement = each.
 		list remove: each].
 	self assert: list firstElement = self defaultValue.
 ]
@@ -354,7 +354,7 @@ XMLNodeListTest >> testLastElement [
 
 	list := self listWithItems.
 	self listElements reverseDo: [:each |
-		self assert: list lastElement == each.
+		self assert: list lastElement = each.
 		list remove: each].
 	self assert: list lastElement = self defaultValue.
 ]

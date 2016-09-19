@@ -491,7 +491,7 @@ XMLNodeWithElementsTest >> testAllElements [
 	allElements := nodeWithElements allElements.
 	nodeWithElements isElement
 		ifTrue: [
-			self assert: allElements first == nodeWithElements.
+			self assert: allElements first = nodeWithElements.
 			allElements removeFirst].
 	self assert:
 		(allElements collect: [:each | each name]) asArray =
@@ -645,7 +645,7 @@ XMLNodeWithElementsTest >> testAllNodes [
 	allNodes := nodeWithElements allNodes.
 	self
 		assert: allNodes size = 16;
-		assert: (allNodes at: 1) == nodeWithElements;
+		assert: (allNodes at: 1) = nodeWithElements;
 		assert: (allNodes at: 2) isComment;
 		assert: ((allNodes at: 3) isElementNamed: 'zero');
 		assert: (allNodes at: 4) isComment;
@@ -682,7 +682,7 @@ XMLNodeWithElementsTest >> testAncestorElements [
 	ancestorStack := OrderedCollection new.
 	nodeWithElements allNodesDo: [:each |
 		[ancestorStack isEmpty
-			or: [ancestorStack last == each parent]]
+			or: [ancestorStack last = each parent]]
 			whileFalse: [ancestorStack removeLast].
 		self assert:
 			each ancestorElements asOrderedCollection =
@@ -929,7 +929,7 @@ XMLNodeWithElementsTest >> testElementAfter [
 			ifTrue: [| elementAfter |
 				elementAfter := nil.
 				node elements reverseDo: [:each |
-					self assert: (node elementAfter: each) == elementAfter.
+					self assert: (node elementAfter: each) = elementAfter.
 					elementAfter := each]]]
 ]
 
@@ -1116,7 +1116,7 @@ XMLNodeWithElementsTest >> testElementBefore [
 			ifTrue: [| elementBefore |
 				elementBefore := nil.
 				node elements do: [:each |
-					self assert: (node elementBefore: each) == elementBefore.
+					self assert: (node elementBefore: each) = elementBefore.
 					elementBefore := each]]]
 ]
 
@@ -1149,16 +1149,16 @@ XMLNodeWithElementsTest >> testElementRenamingToNext [
 					each name = oldName
 						ifFalse: [
 							self
-								deny: ((parent elementAt: oldName) == each);
+								deny: ((parent elementAt: oldName) = each);
 								deny: ((parent elementsAt: oldName) includes: each)].
 					each localName = oldLocalName
 						ifFalse: [
 							self
-								deny: ((parent elementAt: oldLocalName) == each);
+								deny: ((parent elementAt: oldLocalName) = each);
 								deny: ((parent elementsAt: oldLocalName) includes: each)].
 					self
-						assert: ((parent elementsAt: each name) after: each) == nextElement;
-						assert: ((parent elementsAt: each localName) after: each) == nextElement]].
+						assert: ((parent elementsAt: each name) after: each) = nextElement;
+						assert: ((parent elementsAt: each localName) after: each) = nextElement]].
 ]
 
 { #category : #tests }
@@ -1176,16 +1176,16 @@ XMLNodeWithElementsTest >> testElementRenamingToPrevious [
 					each name = oldName
 						ifFalse: [
 							self
-								deny: ((parent elementAt: oldName) == each);
+								deny: ((parent elementAt: oldName) = each);
 								deny: ((parent elementsAt: oldName) includes: each)].
 					each localName = oldLocalName
 						ifFalse: [
 							self
-								deny: ((parent elementAt: oldLocalName) == each);
+								deny: ((parent elementAt: oldLocalName) = each);
 								deny: ((parent elementsAt: oldLocalName) includes: each)].
 					self
-						assert: ((parent elementsAt: each name) before: each) == previousElement;
-						assert: ((parent elementsAt: each localName) before: each) == previousElement]].
+						assert: ((parent elementsAt: each name) before: each) = previousElement;
+						assert: ((parent elementsAt: each localName) before: each) = previousElement]].
 ]
 
 { #category : #tests }
@@ -1587,7 +1587,7 @@ XMLNodeWithElementsTest >> testFirstElement [
 
 	root := self newNodeWithElements nodeAt: 2.
 	root elements copy do: [:each |
-		self assert: root firstElement == each.
+		self assert: root firstElement = each.
 		root removeNode: each].
 	self assert: root firstElement isNil.
 ]
@@ -1708,7 +1708,7 @@ XMLNodeWithElementsTest >> testLastElement [
 
 	root := self newNodeWithElements nodeAt: 2.
 	root elements reversed do: [:each |
-		self assert: root lastElement == each.
+		self assert: root lastElement = each.
 		root removeNode: each].
 	self assert: root lastElement isNil.
 ]

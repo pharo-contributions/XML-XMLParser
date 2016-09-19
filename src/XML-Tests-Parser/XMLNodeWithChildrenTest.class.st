@@ -548,7 +548,7 @@ XMLNodeWithChildrenTest >> testFirstNode [
 
 	nodeWithNodes := self newNodeWithNodes.
 	nodeWithNodes nodes copy do: [:each |
-		self  assert: nodeWithNodes firstNode == each.
+		self  assert: nodeWithNodes firstNode = each.
 		nodeWithNodes removeNode: each].
 	self assert: nodeWithNodes firstNode isNil.
 ]
@@ -576,7 +576,7 @@ XMLNodeWithChildrenTest >> testLastNode [
 
 	nodeWithNodes := self newNodeWithNodes.
 	nodeWithNodes nodes reversed do: [:each |
-		self  assert: nodeWithNodes lastNode == each.
+		self  assert: nodeWithNodes lastNode = each.
 		nodeWithNodes removeNode: each].
 
 	self assert: nodeWithNodes lastNode isNil.
@@ -590,7 +590,7 @@ XMLNodeWithChildrenTest >> testNextNode [
 	nodeWithNodes := self newNodeWithNodes.
 	nextNode := nil.
 	nodeWithNodes nodes reverseDo: [:each |
-		self assert: each nextNode == nextNode.
+		self assert: each nextNode = nextNode.
 		nextNode := each].
 ]
 
@@ -767,7 +767,7 @@ XMLNodeWithChildrenTest >> testPreviousNode [
 	nodeWithNodes := self newNodeWithNodes.
 	previousNode := nil.
 	nodeWithNodes nodes do: [:each |
-		self assert: each previousNode == previousNode.
+		self assert: each previousNode = previousNode.
 		previousNode := each].
 ]
 
