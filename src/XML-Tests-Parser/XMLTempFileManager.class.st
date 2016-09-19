@@ -71,9 +71,13 @@ XMLTempFileManager >> newFileHandleWithSuffix: aSuffix [
 	| fileHandle |
 
 	"This is an obvious race condition and may also leak temp files,
-	but it's good enough for tests that are skipped by default."
-	[fileHandle := (self newUniqueFileNameWithSuffix: aSuffix) asXMLFileHandle]
-		doWhileTrue: [fileHandle exists].
+	but it's good enough for tests that are skipped by default.
+	(must avoid doWhileTrue: for GS compatibility)"
+	[fileHandle isNil
+		or: [fileHandle exists]]
+		whileTrue: [
+			fileHandle :=
+				(self newUniqueFileNameWithSuffix: aSuffix) asXMLFileHandle].
 	^ fileHandle.
 ]
 
@@ -97,21 +101,24 @@ XMLTempFileManager >> newUniqueFileName [
 
 { #category : #'instance creation' }
 XMLTempFileManager >> newUniqueFileNameWithSuffix: aSuffix [
-	| uniqueFileName |
+	| uniqueFileName oldSize |
 
 	"Try to come up with a unique file name.
-	This is good enough for tests that are skipped by default."
-	[uniqueFileName :=
-		'XMLTempFile{1}-{2}{3}' format:
-			(Array
-				with: self identityHash asString
-				with: (0 to: 100000) atRandom asString
-				with: aSuffix)]
-		doWhileTrue: [| oldSize |
+	This is good enough for tests that are skipped by default.
+	(must avoid doWhileTrue: for GS compatibility)"
+	[uniqueFileName isNil
+		or: [
 			oldSize := self uniqueFileNames size.
 			(self uniqueFileNames
 				add: uniqueFileName;
-				size) = oldSize].
+				size) = oldSize]]
+		whileTrue: [
+			uniqueFileName :=
+				'XMLTempFile{1}-{2}{3}' format:
+					(Array
+						with: self identityHash asString
+						with: (0 to: 100000) atRandom asString
+						with: aSuffix)].
 	^ uniqueFileName.
 ]
 
