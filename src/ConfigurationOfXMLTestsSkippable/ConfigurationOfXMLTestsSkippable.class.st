@@ -170,8 +170,7 @@ ConfigurationOfXMLTestsSkippable >> stable: spec [
 
 { #category : #doits }
 ConfigurationOfXMLTestsSkippable >> stopSkipping [
-	XMLExternalEntityTest stopSkipping.
-	XMLFileHandleTest stopSkipping.
+	XMLSkippableTest allSubclassesDo: [:each | each stopSkipping]
 ]
 
 { #category : #versions }
