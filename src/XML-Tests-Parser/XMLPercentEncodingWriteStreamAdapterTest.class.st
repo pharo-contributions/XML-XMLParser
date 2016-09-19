@@ -6,7 +6,7 @@ Class {
 
 { #category : #converting }
 XMLPercentEncodingWriteStreamAdapterTest >> contentsFromCharacter: aCharacter [
-	^ self percentEncodeCharacter: aCharacter
+	^ self class percentEncodeCharacter: aCharacter
 ]
 
 { #category : #accessing }

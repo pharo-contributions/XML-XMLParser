@@ -272,7 +272,7 @@ XMLNodeWithChildrenTest >> testAllNodesDetect [
 	self
 		assert: detectedNode notNil;
 		assert: detectedNode isPI;
-		assert: detectedNode == (allNodes detect: [:each | each isPI]);
+		assert: detectedNode = (allNodes detect: [:each | each isPI]);
 		assert: (nodeWithNodes allNodesDetect: [:each | each isElementNamed: 'absent']) isNil.
 ]
 
@@ -285,11 +285,10 @@ XMLNodeWithChildrenTest >> testAllNodesDetectIfNone [
 	detectedNode :=
 		nodeWithNodes
 			allNodesDetect: [:each | each isPI]
-			ifNone: [#absent].
+			ifNone: [self fail].
 	self
-		deny: detectedNode = #absent;
 		assert: detectedNode isPI;
-		assert: detectedNode == (allNodes detect: [:each | each isPI] ifNone: [#absent]);
+		assert: detectedNode = (allNodes detect: [:each | each isPI] ifNone: [#absent]);
 		assert:
 			(nodeWithNodes
 				allNodesDetect: [:each | each isElementNamed: 'absent']
@@ -467,7 +466,7 @@ XMLNodeWithChildrenTest >> testDescendantNodesDetect [
 	self
 		assert: detectedNode notNil;
 		assert: detectedNode isPI;
-		assert: detectedNode == (descendantNodes detect: [:each | each isPI]);
+		assert: detectedNode = (descendantNodes detect: [:each | each isPI]);
 		assert: (nodeWithNodes descendantNodesDetect: [:each | each isElementNamed: 'absent']) isNil.
 ]
 
@@ -480,11 +479,10 @@ XMLNodeWithChildrenTest >> testDescendantNodesDetectIfNone [
 	detectedNode :=
 		nodeWithNodes
 			descendantNodesDetect: [:each | each isPI]
-			ifNone: [#absent].
+			ifNone: [self fail].
 	self
-		deny: detectedNode = #absent;
 		assert: detectedNode isPI;
-		assert: detectedNode == (descendantNodes detect: [:each | each isPI] ifNone: [#absent]);
+		assert: detectedNode = (descendantNodes detect: [:each | each isPI] ifNone: [#absent]);
 		assert:
 			(nodeWithNodes
 				descendantNodesDetect: [:each | each isElementNamed: 'absent']
@@ -603,7 +601,7 @@ XMLNodeWithChildrenTest >> testNodeAfter [
 	nodeWithNodes := self newNodeWithNodes.
 	nodeAfter := nil.
 	nodeWithNodes nodes reverseDo: [:each |
-		self assert: (nodeWithNodes nodeAfter: each) == nodeAfter.
+		self assert: (nodeWithNodes nodeAfter: each) = nodeAfter.
 		nodeAfter := each].
 	self assert: (nodeWithNodes nodeAfter: self newNode) isNil.
 ]
@@ -615,7 +613,7 @@ XMLNodeWithChildrenTest >> testNodeAt [
 	nodeWithNodes := self newNodeWithNodes.
 	self assert: (nodeWithNodes nodeAt: 0) isNil.
 	1 to: nodeWithNodes nodes size do: [:i |
-		self assert: (nodeWithNodes nodeAt: i) == (nodeWithNodes nodes at: i)].
+		self assert: (nodeWithNodes nodeAt: i) = (nodeWithNodes nodes at: i)].
 	self assert: (nodeWithNodes nodeAt: nodeWithNodes nodes size + 1) isNil.
 ]
 
@@ -624,12 +622,15 @@ XMLNodeWithChildrenTest >> testNodeAtIfAbsent [
 	| nodeWithNodes |
 
 	nodeWithNodes := self newNodeWithNodes.
-	self assert: (nodeWithNodes nodeAt: 0 ifAbsent: [#absent]) = #absent.
 	1 to: nodeWithNodes nodes size do: [:i |
 		self assert:
 			(nodeWithNodes
 				nodeAt: i
-				ifAbsent: [#absent]) == (nodeWithNodes nodes at: i)].
+				ifAbsent: [self fail]) = (nodeWithNodes nodes at: i)].
+	self assert:
+		(nodeWithNodes
+			nodeAt: 0
+			ifAbsent: [#absent]) = #absent.
 	self assert:
 		(nodeWithNodes
 			nodeAt: nodeWithNodes nodes size + 1
@@ -672,7 +673,7 @@ XMLNodeWithChildrenTest >> testNodeBefore [
 	nodeWithNodes := self newNodeWithNodes.
 	nodeBefore := nil.
 	nodeWithNodes nodes do: [:each |
-		self assert: (nodeWithNodes nodeBefore: each) == nodeBefore.
+		self assert: (nodeWithNodes nodeBefore: each) = nodeBefore.
 		nodeBefore := each].
 	self assert: (nodeWithNodes nodeBefore: self newNode) isNil.
 ]
@@ -713,23 +714,20 @@ XMLNodeWithChildrenTest >> testNodesDetect [
 	detectedNode := node nodesDetect: [:each | each isComment].
 	self
 		assert: detectedNode notNil;
-		assert: detectedNode == (node nodes detect: [:each | each isComment]);
+		assert: detectedNode = (node nodes detect: [:each | each isComment]);
 		assert: (node nodesDetect: [:each | each isElementNamed: 'absent']) isNil.
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testNodesDetectIfNone [
-	| node detectedNode |
+	| node |
 
 	node := self newNodeWithNodes.
-	detectedNode :=
-		node
-			nodesDetect: [:each | each isComment]
-			ifNone: [#absent].
-	self deny: detectedNode = #absent.
 	self assert:
-		detectedNode ==
-			(node nodes detect: [:each | each isComment] ifNone: [#absent]).
+		(node
+			nodesDetect: [:each | each isComment]
+			ifNone: [self fail]) =
+				(node nodes detect: [:each | each isComment]).
 	self assert:
 		(node
 			nodesDetect: [:each | each isElementNamed: 'absent']
@@ -795,10 +793,12 @@ XMLNodeWithChildrenTest >> testRemoveNodeIfAbsent [
 
 	nodeWithNodes := self newNodeWithNodes.
 	nodeWithNodes nodes copy do: [:each |
-		self
-			assert: (nodeWithNodes includesNode: each);
-			assert: (nodeWithNodes removeNode: each ifAbsent: [#absent]) == each;
-			deny: (nodeWithNodes includesNode: each)].
+		self assert: (nodeWithNodes includesNode: each).
+		self assert:
+			(nodeWithNodes
+				removeNode: each
+				ifAbsent: [self fail]) == each.
+		self deny: (nodeWithNodes includesNode: each)].
 	self deny: nodeWithNodes hasChildren.
 	self assert:
 		(nodeWithNodes

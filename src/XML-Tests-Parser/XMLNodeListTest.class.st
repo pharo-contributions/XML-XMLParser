@@ -178,14 +178,14 @@ XMLNodeListTest >> testElementAtIfAbsent [
 		self assert:
 			(list
 				elementAt: each name
-				ifAbsent: [self newListItem]) == each.
+				ifAbsent: [self fail]) == each.
 
 		changedElement := self changedListItem: each.
 		list addFirst: changedElement.
 		self assert:
 			(list
 				elementAt: each name
-				ifAbsent: [self newListItem]) == changedElement.
+				ifAbsent: [self fail]) == changedElement.
 
 		list
 			remove: each;

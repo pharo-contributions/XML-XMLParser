@@ -214,7 +214,7 @@ XMLAttributeListTest >> testAttributeAtIfAbsent [
 		self assert:
 			(list
 				attributeAt: each name
-				ifAbsent: [self absentListItem value]) = each value].
+				ifAbsent: [self fail]) = each value].
 
 	self assert:
 		(list
@@ -229,7 +229,7 @@ XMLAttributeListTest >> testAttributeAtIfAbsent [
 	self assert:
 		(list
 			attributeAt: self prefixedAttribute name
-			ifAbsent: [self absentListItem value]) = self prefixedAttribute value.
+			ifAbsent: [self fail]) = self prefixedAttribute value.
 	self assert:
 		(list
 			attributeAt: self prefixedAttribute localName
@@ -251,7 +251,7 @@ XMLAttributeListTest >> testAttributeAtIfAbsentPut [
 		self assert:
 			(list
 				attributeAt: each name
-				ifAbsentPut: [self newListItem value]) = each value.
+				ifAbsentPut: [self fail]) = each value.
 		self assert: (list attributeAt: each name) = each value].
 
 	self assert:
@@ -272,11 +272,11 @@ XMLAttributeListTest >> testAttributeAtIfAbsentPut [
 	self assert:
 		(list
 			attributeAt: self prefixedAttribute name
-			ifAbsentPut: [self newListItem value]) = self prefixedAttribute value.
+			ifAbsentPut: [self fail]) = self prefixedAttribute value.
 	self assert:
 		(list
 			attributeAt: self prefixedAttribute localName
-			ifAbsentPut: [self newListItem value]) = self newListItem value.
+			ifAbsentPut: [self fail]) = self newListItem value.
 	self assert:
 		(list attributeAt: self prefixedAttribute name) =
 			self prefixedAttribute value.
@@ -367,7 +367,7 @@ XMLAttributeListTest >> testAttributeNodeAt [
 		self assert: (list attributeNodeAt: each name) = self defaultValue.
 	
 		list add: each.
-		self assert: (list attributeNodeAt: each name) == each].
+		self assert: (list attributeNodeAt: each name) = each].
 
 	self
 		assert: (list attributeNodeAt: self prefixedAttribute name) = self defaultValue;
@@ -394,7 +394,7 @@ XMLAttributeListTest >> testAttributeNodeAtIfAbsent [
 		self assert:
 			(list
 				attributeNodeAt: each name
-				ifAbsent: [self absentListItem]) == each].
+				ifAbsent: [self fail]) == each].
 
 	self assert:
 		(list
@@ -409,11 +409,11 @@ XMLAttributeListTest >> testAttributeNodeAtIfAbsent [
 	self assert:
 		(list
 			attributeNodeAt: self prefixedAttribute name
-			ifAbsent: [self absentListItem]) = self prefixedAttribute.
+			ifAbsent: [self fail]) = self prefixedAttribute.
 	self assert:
 		(list
 			attributeNodeAt: self prefixedAttribute localName
-			ifAbsent: [self absentListItem]) = self prefixedAttribute.
+			ifAbsent: [self fail]) = self prefixedAttribute.
 ]
 
 { #category : #tests }
@@ -455,7 +455,7 @@ XMLAttributeListTest >> testAttributeValueAtIfAbsent [
 		self assert:
 			(list
 				attributeValueAt: each name
-				ifAbsent: [self absentListItem value]) = each value].
+				ifAbsent: [self fail]) = each value].
 
 	self assert:
 		(list
@@ -470,7 +470,7 @@ XMLAttributeListTest >> testAttributeValueAtIfAbsent [
 	self assert:
 		(list
 			attributeValueAt: self prefixedAttribute name
-			ifAbsent: [self absentListItem value]) = self prefixedAttribute value.
+			ifAbsent: [self fail]) = self prefixedAttribute value.
 	self assert:
 		(list
 			attributeValueAt: self prefixedAttribute localName
@@ -492,7 +492,7 @@ XMLAttributeListTest >> testAttributeValueAtIfAbsentPut [
 		self assert:
 			(list
 				attributeValueAt: each name
-				ifAbsentPut: [self newListItem value]) = each value.
+				ifAbsentPut: [self fail]) = each value.
 		self assert: (list attributeValueAt: each name) = each value].
 
 	self assert:
@@ -513,11 +513,11 @@ XMLAttributeListTest >> testAttributeValueAtIfAbsentPut [
 	self assert:
 		(list
 			attributeValueAt: self prefixedAttribute name
-			ifAbsentPut: [self newListItem value]) = self prefixedAttribute value.
+			ifAbsentPut: [self fail]) = self prefixedAttribute value.
 	self assert:
 		(list
 			attributeValueAt: self prefixedAttribute localName
-			ifAbsentPut: [self newListItem value]) = self newListItem value.
+			ifAbsentPut: [self fail]) = self newListItem value.
 	self assert:
 		(list attributeValueAt: self prefixedAttribute name) =
 			self prefixedAttribute value.
@@ -700,7 +700,7 @@ XMLAttributeListTest >> testRemoveAttributeIfAbsent [
 		self assert:
 			(list
 				removeAttribute: each name
-				ifAbsent: [self absentListItem value]) = each value.
+				ifAbsent: [self fail]) = each value.
 		self deny: (list includes: each).
 	
 		self assert:
@@ -717,7 +717,7 @@ XMLAttributeListTest >> testRemoveAttributeIfAbsent [
 	self assert:
 		(list
 			removeAttribute: self prefixedAttribute name
-			ifAbsent: [self absentListItem value]) = self prefixedAttribute value.
+			ifAbsent: [self fail]) = self prefixedAttribute value.
 	self deny: (list includes: self prefixedAttribute).
 ]
 

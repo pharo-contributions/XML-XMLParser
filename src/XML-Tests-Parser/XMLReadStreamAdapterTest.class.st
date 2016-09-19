@@ -4,6 +4,11 @@ Class {
 	#category : #'XML-Tests-Parser-Streams'
 }
 
+{ #category : #testing }
+XMLReadStreamAdapterTest class >> isAbstract [
+	^ false
+]
+
 { #category : #accessing }
 XMLReadStreamAdapterTest >> inputCollection [
 	^ 'test'

@@ -4,7 +4,7 @@ An abstract and portable test case for sets.
 Class {
 	#name : #XMLAbstractSetTest,
 	#superclass : #TestCase,
-	#category : #'XML-Tests-Parser-Utils'
+	#category : #'XML-Tests-Parser'
 }
 
 { #category : #testing }
@@ -189,13 +189,13 @@ XMLAbstractSetTest >> testRemoveIfAbsent [
 		self assert:
 			(set
 				remove: each
-				ifAbsent: [self absentSetElement]) == each.
+				ifAbsent: [self fail]) == each.
+		self deny: (set includes: each).
 		self
 			assert:
 				(set
 					remove: each
 					ifAbsent: [self absentSetElement]) == self absentSetElement.
-		self deny: (set includes: each).
 		self
 			should: [set remove: each]
 			raise: Error].

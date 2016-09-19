@@ -7,7 +7,16 @@ Class {
 { #category : #accessing }
 XMLDecodingReadStreamAdapterByteTest >> encodedInvalidCharacters [
 	^ self stringFrom: #(16r0100)
-	"16r11FFFF is ommitted because GS disallows chars with >= that value"
+]
+
+{ #category : #accessing }
+XMLDecodingReadStreamAdapterByteTest >> inputCollection [
+	^ self encodedByteString
+]
+
+{ #category : #accessing }
+XMLDecodingReadStreamAdapterByteTest >> outputCollection [
+	^ self decodedByteString
 ]
 
 { #category : #accessing }

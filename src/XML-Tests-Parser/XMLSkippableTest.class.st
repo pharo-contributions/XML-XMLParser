@@ -28,11 +28,6 @@ XMLSkippableTest class >> isSkipping: aBoolean [
 	isSkipping := aBoolean
 ]
 
-{ #category : #testing }
-XMLSkippableTest class >> shouldInheritSelectors [
-	^ true
-]
-
 { #category : #accessing }
 XMLSkippableTest class >> skippableTests [
 	"subclasses should override to return a collection of skippable test selectors"

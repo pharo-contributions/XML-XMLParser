@@ -119,8 +119,11 @@ XMLElementTest >> testAttributeAtIfAbsent [
 		self assert:
 			(element
 				attributeAt: each name
-				ifAbsent: [#absent]) == each value].
-	self assert: (element attributeAt: 'absent' ifAbsent: [#absent]) = #absent.
+				ifAbsent: [self fail]) = each value].
+	self assert:
+		(element
+			attributeAt: 'absent'
+			ifAbsent: [#absent]) = #absent.
 ]
 
 { #category : #tests }
@@ -132,10 +135,12 @@ XMLElementTest >> testAttributeAtIfAbsentPut [
 		self assert:
 			(element
 				attributeAt: each name
-				ifAbsentPut: ['newValue']) == each value].
-	self
-		assert: (element attributeAt: 'newName' ifAbsentPut: ['newValue']) = 'newValue';
-		assert: (element attributeAt: 'newName') = 'newValue'.
+				ifAbsentPut: [self fail]) = each value].
+	self assert:
+		(element
+			attributeAt: 'newName'
+			ifAbsentPut: ['newValue']) = 'newValue'.
+	self assert: (element attributeAt: 'newName') = 'newValue'.
 ]
 
 { #category : #tests }
@@ -225,18 +230,22 @@ XMLElementTest >> testAttributeNodeAt [
 
 { #category : #tests }
 XMLElementTest >> testAttributeNodeAtIfAbsent [
-	| element  |
+	| element attributeLocalNames |
 
 	element := self newElementWithAttributes.
 	element attributeNodes do: [:each |
 		self assert:
 			(element
 				attributeNodeAt: each name
-				ifAbsent: [#absent]) = each].
-	self assert:
-		(element
-			attributeNodeAt: 'two'
-			ifAbsent: [#absent]) = element attributeNodes second.
+				ifAbsent: [self fail]) = each].
+	attributeLocalNames :=
+		(element attributeNodes collect: [:each | each localName]) asSet.
+	attributeLocalNames do: [:localName |
+		self assert:
+			(element
+				attributeNodeAt: localName
+				ifAbsent: [self fail]) =
+					(element attributeNodes detect: [:each | each localName = localName])].
 	self assert:
 		(element
 			attributeNodeAt: 'absent'
@@ -267,13 +276,13 @@ XMLElementTest >> testAttributeNodeAtNamespaceURIIfAbsent [
 		(element
 			attributeNodeAt: 'prefix:two'
 			namespaceURI: 'prefixNS'
-			ifAbsent: [#absent]) =
+			ifAbsent: [self fail]) =
 				element attributeNodes third.
 	self assert:
 		(element
 			attributeNodeAt: 'two'
 			namespaceURI: 'prefixNS'
-			ifAbsent: [#absent]) =
+			ifAbsent: [self fail]) =
 				element attributeNodes third.
 	self assert:
 		(element

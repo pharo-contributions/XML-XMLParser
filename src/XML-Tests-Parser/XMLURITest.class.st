@@ -871,7 +871,7 @@ XMLURITest >> testDefaultPathPrefixPrinting [
 ]
 
 { #category : #tests }
-XMLURITest >> testEquality [
+XMLURITest >> testEquals [
 	self allURIStringsDo: [:each | | uri otherURI |
 		uri := each asXMLURI.
 
@@ -1261,6 +1261,15 @@ XMLURITest >> testHasUserInfo [
 		uri scheme = 'mailto'
 			ifTrue: [self assert: uri hasUserInfo]
 			ifFalse: [self deny: uri hasUserInfo]]
+]
+
+{ #category : #tests }
+XMLURITest >> testHash [
+	"We can only safely test that equal objects have the same hash; testing
+	that different objects have different hashes would be unreliable
+	because #hash is non-cryptographic and has collisions."
+	self allURIStringsDo: [:each |
+		self assert: each asXMLURI hash = each asXMLURI hash]
 ]
 
 { #category : #tests }
@@ -1713,7 +1722,7 @@ XMLURITest >> testQueryAtIfAbsent [
 			self assert:
 				(uri
 					queryAt: key
-					ifAbsent: ['absentValue']) = value].
+					ifAbsent: [self fail]) = value].
 		self assert:
 			(uri
 				queryAt: 'absentKey'

@@ -4,6 +4,11 @@ Class {
 	#category : #'XML-Tests-Parser-Streams'
 }
 
+{ #category : #testing }
+XMLWriteStreamAdapterTest class >> isAbstract [
+	^ false
+]
+
 { #category : #converting }
 XMLWriteStreamAdapterTest >> contentsFromCharacter: aCharacter [
 	^ aCharacter asString

@@ -6,7 +6,7 @@ Class {
 
 { #category : #converting }
 XMLEncodingWriteStreamAdapterUTF32LETest >> contentsFromCharacter: aCharacter [
-	^ self asciiToUTF32LE: aCharacter asString
+	^ self class asciiToUTF32LE: aCharacter asString
 ]
 
 { #category : #accessing }

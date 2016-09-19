@@ -162,12 +162,12 @@ XMLBasicElementClassMapperTest >> testClassForElementAttributesIfNone [
 		(mapper
 			classForElement: 'test'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 
 	mapper
 		mapElement: 'test'
@@ -177,12 +177,12 @@ XMLBasicElementClassMapperTest >> testClassForElementAttributesIfNone [
 		(mapper
 			classForElement: 'test'
 			attributes: self attributes
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			attributes: self attributes
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 
 	mapper
 		mapElement: 'test'
@@ -192,12 +192,12 @@ XMLBasicElementClassMapperTest >> testClassForElementAttributesIfNone [
 		(mapper
 			classForElement: 'test'
 			attributes: self attributes
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			attributes: self attributes
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 
 	mapper
 		mapElement: 'test'
@@ -208,12 +208,12 @@ XMLBasicElementClassMapperTest >> testClassForElementAttributesIfNone [
 		(mapper
 			classForElement: 'test'
 			attributes: self attributes
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			attributes: self attributes
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 
 	"QName mappings should take precedence over NCName mappings"
 	mapper
@@ -224,12 +224,12 @@ XMLBasicElementClassMapperTest >> testClassForElementAttributesIfNone [
 		(mapper
 			classForElement: 'test'
 			attributes: self attributes
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 ]
 
 { #category : #tests }
@@ -252,11 +252,11 @@ XMLBasicElementClassMapperTest >> testClassForElementIfNone [
 	self assert:
 		(mapper
 			classForElement: 'test'
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 
 	mapper
 		mapElement: 'test'
@@ -265,11 +265,11 @@ XMLBasicElementClassMapperTest >> testClassForElementIfNone [
 	self assert:
 		(mapper
 			classForElement: 'test'
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 
 	mapper
 		mapElement: 'test'
@@ -278,11 +278,11 @@ XMLBasicElementClassMapperTest >> testClassForElementIfNone [
 	self assert:
 		(mapper
 			classForElement: 'test'
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 
 	mapper
 		mapElement: 'test'
@@ -292,11 +292,11 @@ XMLBasicElementClassMapperTest >> testClassForElementIfNone [
 	self assert:
 		(mapper
 			classForElement: 'test'
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 
 	"QName mappings should take precedence over NCName mappings"
 	mapper
@@ -305,11 +305,11 @@ XMLBasicElementClassMapperTest >> testClassForElementIfNone [
 	self assert:
 		(mapper
 			classForElement: 'test'
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 ]
 
 { #category : #tests }
@@ -513,13 +513,13 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIAttributesIfNon
 			classForElement: 'test'
 			namespaceURI: 'testNS'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 
 	mapper
 		mapElement: 'test'
@@ -530,13 +530,13 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIAttributesIfNon
 			classForElement: 'test'
 			namespaceURI: 'testNS'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 
 	mapper
 		mapElement: 'test'
@@ -547,13 +547,13 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIAttributesIfNon
 			classForElement: 'test'
 			namespaceURI: 'testNS'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 
 	mapper
 		mapElement: 'test'
@@ -565,13 +565,13 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIAttributesIfNon
 			classForElement: 'test'
 			namespaceURI: 'testNS'
 			attributes: self attributes
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
 			attributes: self attributes
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 
 	"QName mappings should take precedence over NCName mappings"
 	mapper
@@ -584,13 +584,13 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIAttributesIfNon
 			classForElement: 'test'
 			namespaceURI: 'testNS'
 			attributes: self attributes
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 ]
 
 { #category : #tests }
@@ -616,12 +616,12 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIIfNone [
 		(mapper
 			classForElement: 'test'
 			namespaceURI: 'testNS'
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 
 	mapper
 		mapElement: 'test'
@@ -631,12 +631,12 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIIfNone [
 		(mapper
 			classForElement: 'test'
 			namespaceURI: 'testNS'
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 
 	mapper
 		mapElement: 'test'
@@ -646,12 +646,12 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIIfNone [
 		(mapper
 			classForElement: 'test'
 			namespaceURI: 'testNS'
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 
 	mapper
 		mapElement: 'test'
@@ -662,12 +662,12 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIIfNone [
 		(mapper
 			classForElement: 'test'
 			namespaceURI: 'testNS'
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 
 	"QName mappings should take precedence over NCName mappings"
 	mapper
@@ -678,12 +678,12 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIIfNone [
 		(mapper
 			classForElement: 'test'
 			namespaceURI: 'testNS'
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 ]
 
 { #category : #tests }
@@ -821,14 +821,14 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttrib
 			namespaceURI: 'testNS'
 			localName: 'test'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
 			localName: 'test'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 
 	mapper
 		mapElement: 'test'
@@ -840,14 +840,14 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttrib
 			namespaceURI: 'testNS'
 			localName: 'test'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
 			localName: 'test'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 
 	mapper
 		mapElement: 'test'
@@ -859,14 +859,14 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttrib
 			namespaceURI: 'testNS'
 			localName: 'test'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
 			localName: 'test'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 
 	mapper
 		mapElement: 'test'
@@ -879,14 +879,14 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttrib
 			namespaceURI: 'testNS'
 			localName: 'test'
 			attributes: self attributes
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
 			localName: 'test'
 			attributes: self attributes
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 
 	"QName mappings should take precedence over NCName mappings"
 	mapper
@@ -900,14 +900,14 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttrib
 			namespaceURI: 'testNS'
 			localName: 'test'
 			attributes: self attributes
-			ifNone: [#none]) == self elementClass.
+			ifNone: [self fail]) == self elementClass.
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
 			localName: 'test'
 			attributes: self attributes
-			ifNone: [#none]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass.
 ]
 
 { #category : #tests }

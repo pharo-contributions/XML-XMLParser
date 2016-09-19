@@ -5,6 +5,9 @@ These tests use HTTP and the file system and are skipped by default. This enable
 Class {
 	#name : #XMLExternalEntityTest,
 	#superclass : #XMLSkippableTest,
+	#instVars : [
+		'tempFileManager'
+	],
 	#category : #'XML-Tests-Parser'
 }
 
@@ -24,7 +27,7 @@ XMLExternalEntityTest class >> skippableTests [
 { #category : #accessing }
 XMLExternalEntityTest >> defaultTimeout [
 	"this is needed for Squeak to prevent it from timing out
-	these long-running tests when skipping is disabled"
+	the long-running HTTP tests when skipping is disabled"
 	^ 60 * 10
 ]
 
@@ -81,16 +84,6 @@ XMLExternalEntityTest >> docBookExampleSource [
 { #category : #urls }
 XMLExternalEntityTest >> feedURL [
 	^ 'http://pharo.org/news/atom.xml'
-]
-
-{ #category : #files }
-XMLExternalEntityTest >> fileHandleForNewFileSuffixed: aFileSuffix [
-	| fileHandle |
-	
-	fileHandle := (self class name asString, '-', aFileSuffix) asXMLFileHandle.
-	fileHandle exists
-		ifTrue: [fileHandle delete].
-	^ fileHandle.
 ]
 
 { #category : #source }
@@ -151,60 +144,63 @@ XMLExternalEntityTest >> musicXMLExternalEntityURLs [
 		'http://www.musicxml.org/dtds/common.mod')
 ]
 
+{ #category : #accessing }
+XMLExternalEntityTest >> tempFileManager [
+	^ tempFileManager ifNil: [tempFileManager := XMLTempFileManager new]
+]
+
 { #category : #tests }
 XMLExternalEntityTest >> testExternalSubsetReadLimit [
-	| xml fileHandle externalSubset parser |
-
 	self
 		skipOrReturnWith: [^ self]
 		ifSkippable: #testExternalSubsetReadLimit.
 
-	fileHandle := self fileHandleForNewFileSuffixed: 'externalSubset.dtd'.
-	externalSubset := '<?xml encoding="UTF-8"?><!ELEMENT test EMPTY>'.
-	fileHandle writeStreamDo: [:writeStream |
-		writeStream nextPutAll: externalSubset].
-	xml := '<!DOCTYPE test SYSTEM "', fileHandle path, '"><test/>'.
+	self tempFileManager newFileHandleDo: [:fileHandle |
+		| xml externalSubset parser |
 
-	self
-		shouldnt: [
-			(parser := SAXHandler on: xml)
-				externalEntityResolver externalSubsetReadLimit: externalSubset size.
-			parser
-				resolvesExternalEntities: true;
-				parseDocument]
-		raise: XMLLimitException.
+		externalSubset := '<?xml encoding="UTF-8"?><!ELEMENT test EMPTY>'.
+		self tempFileManager
+			createFileWithContents: externalSubset
+			forHandle: fileHandle.
+		xml := '<!DOCTYPE test SYSTEM "', fileHandle path, '"><test/>'.
 
-	self
-		should: [
-			(parser := SAXHandler on: xml)
-				externalEntityResolver externalSubsetReadLimit: externalSubset size - 1.
-			parser
-				resolvesExternalEntities: true;
-				parseDocument]
-		raise: XMLLimitException.
+		self
+			shouldnt: [
+				(parser := SAXHandler on: xml)
+					externalEntityResolver externalSubsetReadLimit:
+						externalSubset size.
+				parser
+					resolvesExternalEntities: true;
+					parseDocument]
+			raise: XMLLimitException.
 
-	fileHandle delete.
+		self
+			should: [
+				(parser := SAXHandler on: xml)
+					externalEntityResolver externalSubsetReadLimit:
+						externalSubset size - 1.
+				parser
+					resolvesExternalEntities: true;
+					parseDocument]
+			raise: XMLLimitException].
 ]
 
 { #category : #tests }
 XMLExternalEntityTest >> testOnFileNamed [
-	| parser fileHandle |
-
 	self
 		skipOrReturnWith: [^ self]
 		ifSkippable: #testOnFileNamed.
 
-	fileHandle := self fileHandleForNewFileSuffixed: 'testOnFileNamed.xml'.
-	fileHandle writeStreamDo: [:writeStream |
-		writeStream nextPutAll: '<test/>'].
-	self
-		shouldnt: [parser := SAXHandler onFileNamed: fileHandle path]
-		raise: XMLFileException.
-	self
-		assert: parser documentURI = fileHandle path;
-		assert: parser documentURI asXMLURI isLocalURI.
-
-	fileHandle delete.
+	self tempFileManager newFileHandleDo: [:fileHandle | | parser |
+		self tempFileManager
+			createFileWithContents: '<test/>'
+			forHandle: fileHandle.
+		self
+			shouldnt: [parser := SAXHandler onFileNamed: fileHandle path]
+			raise: XMLFileException.
+		self
+			assert: parser documentURI = fileHandle path;
+			assert: parser documentURI asXMLURI isLocalURI].
 ]
 
 { #category : #tests }
@@ -290,25 +286,25 @@ XMLExternalEntityTest >> testParsingDocBookExample [
 { #category : #tests }
 XMLExternalEntityTest >> testParsingEncodedFile [
 	"This test creates/deletes a file so is skipped by default"
-	| fileHandle doc docFromFile |
-
 	self
 		skipOrReturnWith: [^ self]
 		ifSkippable: #testParsingEncodedFile.
 
-	fileHandle := self fileHandleForNewFileSuffixed: 'testParsingEncodedFile.xml'.
-	doc := XMLDOMParser parse: self docBookArticleSource.
-	doc
-		encoding: 'UTF-16BE';
-		printToFileNamed: fileHandle path.
-	self
-		shouldnt: [docFromFile := XMLDOMParser parseFileNamed: fileHandle path]
-		raise: XMLFileException.
-	self
-		assert: docFromFile encoding = 'UTF-16BE';
-		assert: doc printString = docFromFile printString.
-
-	fileHandle delete.
+	self tempFileManager newFileHandleDo: [:fileHandle |
+		| document documentFromFile |
+	
+		document := XMLDOMParser parse: self docBookArticleSource.
+		document
+			encoding: 'UTF-16BE';
+			printToFileNamed: fileHandle path.
+		self
+			shouldnt: [
+				documentFromFile :=
+					XMLDOMParser parseFileNamed: fileHandle path]
+			raise: XMLFileException.
+		self
+			assert: documentFromFile encoding = 'UTF-16BE';
+			assert: documentFromFile printString = document printString].
 ]
 
 { #category : #tests }
@@ -347,25 +343,22 @@ XMLExternalEntityTest >> testParsingExternalEntities [
 { #category : #tests }
 XMLExternalEntityTest >> testParsingFile [
 	"This test creates/deletes a file so is skipped by default"
-	| fileHandle doc |
-
 	self
 		skipOrReturnWith: [^ self]
 		ifSkippable: #testParsingFile.
 
-	fileHandle := self fileHandleForNewFileSuffixed: 'testParsingFile.xml'.
-	self
-		should: [XMLDOMParser parseFileNamed: fileHandle path]
-		raise: XMLFileException.
+	self tempFileManager newFileHandleDo: [:fileHandle | | document |
+		self
+			should: [XMLDOMParser parseFileNamed: fileHandle path]
+			raise: XMLFileException.
 
-	fileHandle writeStreamDo: [:writeStream |
-		writeStream nextPutAll: self musicXMLDocument].
-	self
-		shouldnt: [doc := XMLDOMParser parseFileNamed: fileHandle path]
-		raise: XMLFileException.
-	self assert: (doc root isNamed: 'score-partwise').
-
-	fileHandle delete.
+		self tempFileManager
+			createFileWithContents: self musicXMLDocument
+			forHandle: fileHandle.
+		self
+			shouldnt: [document := XMLDOMParser parseFileNamed: fileHandle path]
+			raise: XMLFileException.
+		self assert: (document root isNamed: 'score-partwise')].
 ]
 
 { #category : #tests }

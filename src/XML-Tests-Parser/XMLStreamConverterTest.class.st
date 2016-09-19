@@ -1,8 +1,16 @@
+"
+Abstract, do not run.
+"
 Class {
 	#name : #XMLStreamConverterTest,
 	#superclass : #TestCase,
 	#category : #'XML-Tests-Parser-Streams'
 }
+
+{ #category : #testing }
+XMLStreamConverterTest class >> isAbstract [
+	^ true
+]
 
 { #category : #testing }
 XMLStreamConverterTest class >> shouldInheritSelectors [

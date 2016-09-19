@@ -369,10 +369,13 @@ XMLOrderedListTest >> testAfter [
 	| list |
 
 	list := self listWithItems.
-	self assert:
-		(self listItems allSatisfy: [:each |
-			(list after: each) = (self listItems after: each ifAbsent: [self defaultValue])]).
-	self assert: (list after: self absentListItem) = self defaultValue.
+	1 to: list size - 1 do: [:i |
+		self assert:
+			(list after: (self listItems at: i)) =
+				(self listItems at: i + 1)].
+	self
+		assert: (list after: self listItems last) = self defaultValue;
+		assert: (list after: self absentListItem) = self defaultValue.
 ]
 
 { #category : #tests }
@@ -380,11 +383,19 @@ XMLOrderedListTest >> testAfterIfAbsent [
 	| list |
 
 	list := self listWithItems.
+	1 to: list size - 1 do: [:i |
+		self assert:
+			(list
+				after: (self listItems at: i)
+				ifAbsent: [self fail]) = (self listItems at: i + 1)].
 	self assert:
-		(self listItems allSatisfy: [:each |
-			(list after: each ifAbsent: [self newListItem]) =
-				(self listItems after: each ifAbsent: [self newListItem])]).
-	self assert: (list after: self absentListItem ifAbsent: [self newListItem]) = self newListItem.
+		(list
+			after: self listItems last
+			ifAbsent: [self newListItem]) = self newListItem.
+	self assert:
+		(list
+			after: self absentListItem
+			ifAbsent: [self newListItem]) = self newListItem.
 ]
 
 { #category : #tests }
@@ -524,8 +535,12 @@ XMLOrderedListTest >> testAtIfAbsent [
 	| list |
 
 	list := self listWithItems.
+	1 to: list size do: [:i |
+		self assert:
+			(list
+				at: i
+				ifAbsent: [self fail]) = (self listItems at: i)].
 	self
-		assert: ((1 to: list size) allSatisfy: [:i | (list at: i ifAbsent: [self newListItem]) = (self listItems at: i)]);
 		assert: (list at: 0 ifAbsent: [self newListItem]) = self newListItem;
 		assert: (list at: list size + 1 ifAbsent: [self newListItem]) = self newListItem.
 ]
@@ -599,10 +614,11 @@ XMLOrderedListTest >> testBefore [
 	| list |
 
 	list := self listWithItems.
-	self assert:
-		(self listItems allSatisfy: [:each |
-			(list before: each) = (self listItems before: each ifAbsent: [self defaultValue])]).
-	self assert: (list before: self absentListItem) = self defaultValue.
+	2 to: list size do: [:i |
+		self assert: (list before: (self listItems at: i)) = (self listItems at: i - 1)].
+	self
+		assert: (list before: self listItems first) = self defaultValue;
+		assert: (list before: self absentListItem) = self defaultValue.
 ]
 
 { #category : #tests }
@@ -610,11 +626,19 @@ XMLOrderedListTest >> testBeforeIfAbsent [
 	| list |
 
 	list := self listWithItems.
+	2 to: list size do: [:i |
+		self assert:
+			(list
+				before: (self listItems at: i)
+				ifAbsent: [self fail]) = (self listItems at: i - 1)].
 	self assert:
-		(self listItems allSatisfy: [:each |
-			(list before: each ifAbsent: [self newListItem]) =
-				(self listItems before: each ifAbsent: [self newListItem])]).
-	self assert: (list before: self absentListItem ifAbsent: [self newListItem]) = self newListItem.
+		(list
+			before: self listItems first
+			ifAbsent: [self newListItem]) = self newListItem.
+	self assert:
+		(list
+			before: self absentListItem
+			ifAbsent: [self newListItem]) = self newListItem.
 ]
 
 { #category : #tests }
@@ -1114,10 +1138,17 @@ XMLOrderedListTest >> testFourth [
 
 { #category : #tests }
 XMLOrderedListTest >> testHash [
+	"We can only safely test that equal objects have the same hash; testing
+	that different objects have different hashes would be unreliable
+	because #hash is non-cryptographic and has collisions."
 	self
 		assert: self emptyList hash = self emptyList hash;
 		assert: self listWithSingleItem hash = self listWithSingleItem hash;
-		assert: self listWithItems hash = self listWithItems hash
+		assert: self listWithItems hash = self listWithItems hash;
+		assert:
+			(self listWithItems
+				removeAll;
+				hash) = self emptyList hash.
 ]
 
 { #category : #tests }
@@ -1460,7 +1491,7 @@ XMLOrderedListTest >> testRemoveIfAbsent [
 		self assert:
 			(list
 				remove: each
-				ifAbsent: [self absentListItem]) = each.
+				ifAbsent: [self fail]) = each.
 		self deny: (list includes: each).
 
 		self assert:

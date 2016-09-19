@@ -1,3 +1,6 @@
+"
+Abstract, do not run.
+"
 Class {
 	#name : #XMLStreamAdapterTest,
 	#superclass : #TestCase,
@@ -44,65 +47,36 @@ XMLStreamAdapterTest class >> asciiToUTF32LE: anASCIIString [
 				nextPut: 0 asCharacter]]
 ]
 
-{ #category : #converting }
-XMLStreamAdapterTest class >> percentEncodeCharacter: aCharacter [
-	| hexString |
-
-	(hexString := aCharacter asciiValue printStringHex asUppercase) size > 1
-		ifTrue: [^ '%', hexString]
-		ifFalse: [^ '%0', hexString]
-]
-
-{ #category : #testing }
-XMLStreamAdapterTest class >> shouldInheritSelectors [
-	^ true
-]
-
-{ #category : #converting }
-XMLStreamAdapterTest class >> stringFrom: aCollection [
-	"avoid asString for portability"
-	^ String withAll: (aCollection collect: [:each | each asCharacter])
-]
-
-{ #category : #converting }
-XMLStreamAdapterTest >> asciiToUTF16BE: anASCIIString [
-	^ self class asciiToUTF16BE: anASCIIString
-]
-
-{ #category : #converting }
-XMLStreamAdapterTest >> asciiToUTF16LE: anASCIIString [
-	^ self class asciiToUTF16LE: anASCIIString
-]
-
-{ #category : #converting }
-XMLStreamAdapterTest >> asciiToUTF32BE: anASCIIString [
-	^ self class asciiToUTF32BE: anASCIIString
-]
-
-{ #category : #converting }
-XMLStreamAdapterTest >> asciiToUTF32LE: anASCIIString [
-	^ self class asciiToUTF32LE: anASCIIString
+{ #category : #accessing }
+XMLStreamAdapterTest class >> decodedByteString [
+	"avoid ASCII null for GS compatibility"
+	^ self stringFrom: #(16r01 16r0F 16r10 16rFF)
 ]
 
 { #category : #accessing }
-XMLStreamAdapterTest >> decodedUTF16String [
+XMLStreamAdapterTest class >> decodedUTF16String [
 	^ self stringFrom:
 		#(16rFF 16r0100 16rD7FF 16rE000 16rFFFF 16r10000 16r10437 16r24B62 16r10FFFF)
 ]
 
 { #category : #accessing }
-XMLStreamAdapterTest >> decodedUTF32String [
+XMLStreamAdapterTest class >> decodedUTF32String [
 	^ self stringFrom: #(16rFE 16rD7FE 16r10FFFF)
 ]
 
 { #category : #accessing }
-XMLStreamAdapterTest >> decodedUTF8String [
+XMLStreamAdapterTest class >> decodedUTF8String [
 	^ self stringFrom:
 		#(16r7F 16r80 16r7FF 16r800 16rFFFF 16r10000 16r10FFFF)
 ]
 
 { #category : #accessing }
-XMLStreamAdapterTest >> encodedUTF16BEString [
+XMLStreamAdapterTest class >> encodedByteString [
+	^ self decodedByteString
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest class >> encodedUTF16BEString [
 	^ self stringFrom:
 		#(16r00 16rFF
 			16r01 16r00
@@ -116,7 +90,7 @@ XMLStreamAdapterTest >> encodedUTF16BEString [
 ]
 
 { #category : #accessing }
-XMLStreamAdapterTest >> encodedUTF16LEString [
+XMLStreamAdapterTest class >> encodedUTF16LEString [
 	^ self stringFrom:
 		#(16rFF 16r00
 			16r00 16r01
@@ -130,7 +104,7 @@ XMLStreamAdapterTest >> encodedUTF16LEString [
 ]
 
 { #category : #accessing }
-XMLStreamAdapterTest >> encodedUTF32BEString [
+XMLStreamAdapterTest class >> encodedUTF32BEString [
 	^ self stringFrom:
 		#(16r00 16r00 16r00 16rFE
 			16r00 16r00 16rD7 16rFE
@@ -138,7 +112,7 @@ XMLStreamAdapterTest >> encodedUTF32BEString [
 ]
 
 { #category : #accessing }
-XMLStreamAdapterTest >> encodedUTF32LEString [
+XMLStreamAdapterTest class >> encodedUTF32LEString [
 	^ self stringFrom:
 		#(16rFE 16r00 16r00 16r00
 			16rFE 16rD7 16r00 16r00
@@ -146,7 +120,7 @@ XMLStreamAdapterTest >> encodedUTF32LEString [
 ]
 
 { #category : #accessing }
-XMLStreamAdapterTest >> encodedUTF8String [
+XMLStreamAdapterTest class >> encodedUTF8String [
 	^ self stringFrom:
 		#(16r7F
 			16rC2 16r80
@@ -155,6 +129,88 @@ XMLStreamAdapterTest >> encodedUTF8String [
 			16rEF 16rBF 16rBF
 			16rF0 16r90 16r80 16r80
 			16rF4 16r8F 16rBF 16rBF)
+]
+
+{ #category : #testing }
+XMLStreamAdapterTest class >> isAbstract [
+	^ true
+]
+
+{ #category : #converting }
+XMLStreamAdapterTest class >> percentEncodeCharacter: aCharacter [
+	| hexString |
+
+	(hexString := aCharacter asciiValue printStringHex asUppercase) size > 1
+		ifTrue: [^ '%', hexString]
+		ifFalse: [^ '%0', hexString]
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest class >> percentEncodedUTF8String [
+	^ String streamContents: [:stream |
+		self encodedUTF8String do: [:each |
+			stream nextPutAll: (self percentEncodeCharacter: each)]]
+]
+
+{ #category : #testing }
+XMLStreamAdapterTest class >> shouldInheritSelectors [
+	^ true
+]
+
+{ #category : #converting }
+XMLStreamAdapterTest class >> stringFrom: aCollection [
+	"avoid asString for portability"
+	^ String withAll: (aCollection collect: [:each | each asCharacter])
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest >> decodedByteString [
+	^ self class decodedByteString
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest >> decodedUTF16String [
+	^ self class decodedUTF16String
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest >> decodedUTF32String [
+	^ self class decodedUTF32String
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest >> decodedUTF8String [
+	^ self class decodedUTF8String
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest >> encodedByteString [
+	^ self class encodedByteString
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest >> encodedUTF16BEString [
+	^ self class encodedUTF16BEString
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest >> encodedUTF16LEString [
+	^ self class encodedUTF16LEString
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest >> encodedUTF32BEString [
+	^ self class encodedUTF32BEString
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest >> encodedUTF32LEString [
+	^ self class encodedUTF32LEString
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest >> encodedUTF8String [
+	^ self class encodedUTF8String
 ]
 
 { #category : #'instance creation' }
@@ -177,16 +233,9 @@ XMLStreamAdapterTest >> newStreamOn: aCollection [
 	^ self streamClass on: aCollection
 ]
 
-{ #category : #converting }
-XMLStreamAdapterTest >> percentEncodeCharacter: aCharacter [
-	^ self class percentEncodeCharacter: aCharacter
-]
-
 { #category : #accessing }
 XMLStreamAdapterTest >> percentEncodedUTF8String [
-	^ String streamContents: [:stream |
-		self encodedUTF8String do: [:each |
-			stream nextPutAll: (self percentEncodeCharacter: each)]]
+	^ self class percentEncodedUTF8String
 ]
 
 { #category : #accessing }

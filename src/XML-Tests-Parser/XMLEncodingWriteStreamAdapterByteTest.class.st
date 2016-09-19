@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #accessing }
+XMLEncodingWriteStreamAdapterByteTest >> inputCollection [
+	^ self decodedByteString
+]
+
+{ #category : #accessing }
+XMLEncodingWriteStreamAdapterByteTest >> outputCollection [
+	^ self encodedByteString
+]
+
+{ #category : #accessing }
 XMLEncodingWriteStreamAdapterByteTest >> streamConverterClass [
 	^ XMLByteStreamConverter
 ]

@@ -4,6 +4,11 @@ Class {
 	#category : #'XML-Tests-Parser-Streams'
 }
 
+{ #category : #testing }
+XMLUTF16LittleEndianStreamConverterTest class >> isAbstract [
+	^ false
+]
+
 { #category : #accessing }
 XMLUTF16LittleEndianStreamConverterTest >> streamConverterClass [
 	^ XMLUTF16LittleEndianStreamConverter

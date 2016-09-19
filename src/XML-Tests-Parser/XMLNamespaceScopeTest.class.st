@@ -100,6 +100,9 @@ XMLNamespaceScopeTest >> testHasNamespaces [
 
 { #category : #tests }
 XMLNamespaceScopeTest >> testHash [
+	"We can only safely test that equal objects have the same hash; testing
+	that different objects have different hashes would be unreliable
+	because #hash is non-cryptographic and has collisions."
 	self assert:
 		self newNamespaceScope hash =
 			self newNamespaceScope hash.
@@ -299,16 +302,21 @@ XMLNamespaceScopeTest >> testPrefixMappingAtIfAbsent [
 	| scope |
 
 	scope := self newNamespaceScope.
-	self
-		assert: (scope prefixMappingAt: 'xml' ifAbsent: [#absent]) = #absent;
-		assert: (scope prefixMappingAt: 'xmlns'ifAbsent: [#absent]) = #absent.
+	self assert:
+		(scope
+			prefixMappingAt: 'xml'
+			ifAbsent: [#absent]) = #absent.
+	self assert:
+		(scope
+			prefixMappingAt: 'xmlns'
+			ifAbsent: [#absent]) = #absent.
 
 	"cannot map xmlns prefix, but can map xml"
 	scope mapPrefix: 'xml' to: XMLNamespaceScope xmlNamespaceURI.
 	self assert:
 		(scope
 			prefixMappingAt: 'xml'
-			ifAbsent: [#absent]) = XMLNamespaceScope xmlNamespaceURI.
+			ifAbsent: [self fail]) = XMLNamespaceScope xmlNamespaceURI.
 
 	self namespaces keysAndValuesDo: [:prefix :uri |
 		self assert:
@@ -319,7 +327,7 @@ XMLNamespaceScopeTest >> testPrefixMappingAtIfAbsent [
 		self assert:
 			(scope
 				prefixMappingAt: prefix
-				ifAbsent: [#absent]) = uri].
+				ifAbsent: [self fail]) = uri].
 ]
 
 { #category : #tests }
@@ -367,17 +375,16 @@ XMLNamespaceScopeTest >> testResolvePrefixIfUnresolvable [
 		self assert:
 			(scope
 				resolvePrefix: prefix
-				ifUnresolvable: [#unresolvable]) = uri].
+				ifUnresolvable: [self fail]) = uri].
 
 	self assert:
 		(scope
 			resolvePrefix: 'xml'
-			ifUnresolvable: [#unresolvable]) = scope xmlNamespaceURI.
-
+			ifUnresolvable: [self fail]) = scope xmlNamespaceURI.
 	self  assert:
 		(scope
 			resolvePrefix: 'xmlns'
-			ifUnresolvable: [#unresolvable]) = scope xmlnsNamespaceURI.
+			ifUnresolvable: [self fail]) = scope xmlnsNamespaceURI.
 ]
 
 { #category : #tests }
@@ -477,7 +484,7 @@ XMLNamespaceScopeTest >> testUnmapPrefixIfAbsent [
 		self assert:
 			(scope
 				unmapPrefix: prefix
-				ifAbsent: [#absent]) = uri.
+				ifAbsent: [self fail]) = uri.
 		self deny: (scope includesPrefix: prefix).
 
 		"ensure prefixMappings is copied when removing"

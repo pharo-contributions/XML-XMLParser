@@ -1,17 +1,142 @@
 Class {
 	#name : #XMLFileHandleTest,
-	#superclass : #TestCase,
+	#superclass : #XMLSkippableTest,
+	#instVars : [
+		'tempFileManager',
+		'currentWorkingDirectoryFileHandle'
+	],
 	#category : #'XML-Tests-Parser-Files'
 }
 
 { #category : #testing }
-XMLFileHandleTest >> hasSupportedImplementation [
-	^ XMLFileHandle hasSupportedImplementation
+XMLFileHandleTest class >> isAbstract [
+	^ false
+]
+
+{ #category : #testing }
+XMLFileHandleTest class >> shouldInheritSelectors [
+	^ true
+]
+
+{ #category : #accessing }
+XMLFileHandleTest class >> skippableTests [
+	^ #(#testContents #testDelete
+		#testExists #testExtension
+		#testGet #testGetUpToLimitDecoding
+		#testIsFile #testIsXMLDocumentFile
+		#testRawReadStream #testRawWriteStream
+		#testReadStream #testReadStreamDo
+		#testSize #testStreamGet
+		#testStreamGetUpToLimitDecoding
+		#testWriteStream #testWriteStreamDo)
+]
+
+{ #category : #accessing }
+XMLFileHandleTest >> currentWorkingDirectoryFileHandle [
+	^ currentWorkingDirectoryFileHandle
+		ifNil: [
+			currentWorkingDirectoryFileHandle :=
+				XMLFileHandle currentWorkingDirectory asXMLFileHandle]
+]
+
+{ #category : #accessing }
+XMLFileHandleTest >> decodedFileContents [
+	^ 'test'
+]
+
+{ #category : #accessing }
+XMLFileHandleTest >> encodedFileContents [
+	^ 'test'
+]
+
+{ #category : #accessing }
+XMLFileHandleTest >> encodedFileContentsWithByteOrderMark [
+	^ self streamConverterClass byteOrderMark, self encodedFileContents
+]
+
+{ #category : #accessing }
+XMLFileHandleTest >> streamConverterClass [
+	^ XMLNullStreamConverter
+]
+
+{ #category : #accessing }
+XMLFileHandleTest >> tempFileManager [
+	^ tempFileManager
+		ifNil: [
+			tempFileManager :=
+				XMLTempFileManager
+					streamConverter: self streamConverterClass new
+					fileContents: self decodedFileContents
+					fileSuffix: '.txt']
+]
+
+{ #category : #tests }
+XMLFileHandleTest >> testAsXMLFileHandle [
+	XMLFileHandle hasSupportedImplementation
+		ifTrue: [| fileHandle |
+			fileHandle := '' asXMLFileHandle.
+			self
+				assert: (fileHandle isKindOf: XMLFileHandle);
+				assert: fileHandle asXMLFileHandle == fileHandle]
+]
+
+{ #category : #tests }
+XMLFileHandleTest >> testContents [
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testContents.
+
+	self tempFileManager newFileHandleDo: [:fileHandle |
+		self
+			should: [fileHandle contents]
+			raise: XMLFileException.
+		self
+			should: [self currentWorkingDirectoryFileHandle contents]
+			raise: XMLFileException.
+
+		self tempFileManager createFileWithContentsForHandle: fileHandle.
+		self assert: fileHandle contents = self decodedFileContents].
+]
+
+{ #category : #tests }
+XMLFileHandleTest >> testDelete [
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testDelete.
+
+	self tempFileManager newFileHandleDo: [:fileHandle |
+		self
+			should: [fileHandle delete]
+			raise: XMLFileException.
+
+		self tempFileManager createFileForHandle: fileHandle.
+		self
+			assert: fileHandle delete == fileHandle;
+			deny: fileHandle exists.
+
+		self
+			should: [fileHandle delete]
+			raise: XMLFileException].
+]
+
+{ #category : #tests }
+XMLFileHandleTest >> testExists [
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testExists.
+
+	self tempFileManager newFileHandleDo: [:fileHandle |
+		self
+			deny: fileHandle exists;
+			assert: self currentWorkingDirectoryFileHandle exists.
+
+		self tempFileManager createFileForHandle: fileHandle.
+		self assert: fileHandle exists].
 ]
 
 { #category : #tests }
 XMLFileHandleTest >> testExtension [
-	self hasSupportedImplementation
+	XMLFileHandle hasSupportedImplementation
 		ifFalse: [^ self].
 
 	self
@@ -33,8 +158,86 @@ XMLFileHandleTest >> testExtension [
 ]
 
 { #category : #tests }
+XMLFileHandleTest >> testGet [
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testGet.
+
+	self tempFileManager newFileHandleDo: [:fileHandle |
+		self
+			should: [fileHandle get]
+			raise: XMLFileException.
+
+		self tempFileManager createFileWithContentsForHandle: fileHandle.
+		self assert: fileHandle get = self decodedFileContents].
+]
+
+{ #category : #tests }
+XMLFileHandleTest >> testGetUpToLimitDecoding [
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testGetUpToLimitDecoding.
+
+	self tempFileManager newFileHandleDo: [:fileHandle |
+		self
+			should: [
+				fileHandle
+					getUpToLimit: nil
+					decoding: true]
+			raise: XMLFileException.
+
+		self tempFileManager createFileWithContentsForHandle: fileHandle.
+
+		self assert:
+			(fileHandle
+				getUpToLimit: nil
+				decoding: true) = self decodedFileContents.
+		self assert:
+			(fileHandle
+				getUpToLimit: nil
+				decoding: false) = self encodedFileContentsWithByteOrderMark.
+
+		self assert:
+			(fileHandle
+				getUpToLimit: self encodedFileContentsWithByteOrderMark size
+				decoding: true) = self decodedFileContents.
+		self assert:
+			(fileHandle
+				getUpToLimit: self encodedFileContentsWithByteOrderMark size
+				decoding: false) = self encodedFileContentsWithByteOrderMark.
+
+		self
+			should: [
+				fileHandle
+					getUpToLimit: self encodedFileContentsWithByteOrderMark size - 1
+					decoding: true]
+			raise: XMLLimitException.
+		self
+			should: [
+				fileHandle
+					getUpToLimit: self encodedFileContentsWithByteOrderMark size - 1
+					decoding: false]
+			raise: XMLLimitException].
+]
+
+{ #category : #tests }
+XMLFileHandleTest >> testIsFile [
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testIsFile.
+
+	self tempFileManager newFileHandleDo: [:fileHandle |
+		self
+			deny: fileHandle isFile;
+			deny: self currentWorkingDirectoryFileHandle isFile.
+
+		self tempFileManager createFileForHandle: fileHandle.
+		self assert: fileHandle isFile].
+]
+
+{ #category : #tests }
 XMLFileHandleTest >> testIsXMLDocumentFile [
-	self hasSupportedImplementation
+	XMLFileHandle hasSupportedImplementation
 		ifFalse: [^ self].
 
 	#('atom' 'dbk' 'docm' 'docx' 'pptm' 'pptx' 'rdf' 'rss' 'svg' 'xbel'
@@ -43,10 +246,226 @@ XMLFileHandleTest >> testIsXMLDocumentFile [
 			self assert:
 				('test.', each) asXMLFileHandle isXMLDocumentFile.
 			self assert:
-				('test.', each asUppercase) asXMLFileHandle isXMLDocumentFile].
+				('test.', each) asUppercase asXMLFileHandle isXMLDocumentFile].
 
 	#('txt' 'html' 'jpeg' 'jpg' 'gif' 'dtd' 'ent')
 		do: [:each |
 			self deny:
-				('test.', each) asXMLFileHandle isXMLDocumentFile].
+				('test.', each) asXMLFileHandle isXMLDocumentFile.
+			self deny:
+				('test.', each) asUppercase asXMLFileHandle isXMLDocumentFile].
+]
+
+{ #category : #tests }
+XMLFileHandleTest >> testRawReadStream [
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testRawReadStream.
+
+	self tempFileManager newFileHandleDo: [:fileHandle | | readStream |
+		self
+			should: [fileHandle rawReadStream]
+			raise: XMLFileException.
+
+		self tempFileManager createFileWithContentsForHandle: fileHandle.
+		readStream := fileHandle rawReadStream.
+		self
+			deny: readStream isXMLConvertingStreamAdapter;
+			assert: readStream upToEnd = self encodedFileContentsWithByteOrderMark.
+		readStream close].
+]
+
+{ #category : #tests }
+XMLFileHandleTest >> testRawWriteStream [
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testRawWriteStream.
+
+	self tempFileManager newFileHandleDo: [:fileHandle | | writeStream |
+		writeStream :=  fileHandle rawWriteStream.
+		self deny: writeStream isXMLConvertingStreamAdapter.
+
+		writeStream
+			nextPutAll: self encodedFileContentsWithByteOrderMark;
+			close.
+		self assert: fileHandle contents = self decodedFileContents].
+]
+
+{ #category : #tests }
+XMLFileHandleTest >> testReadStream [
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testReadStream.
+
+	self tempFileManager newFileHandleDo: [:fileHandle | | readStream |
+		self
+			should: [fileHandle readStream]
+			raise: XMLFileException.
+
+		self tempFileManager createFileWithContentsForHandle: fileHandle.
+		readStream := fileHandle readStream.
+		self
+			assert: readStream isXMLConvertingStreamAdapter;
+			assert: readStream upToEnd = self decodedFileContents.
+		readStream close].
+]
+
+{ #category : #tests }
+XMLFileHandleTest >> testReadStreamDo [
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testReadStreamDo.
+
+	self tempFileManager newFileHandleDo: [:fileHandle | | contents |
+		self
+			should: [fileHandle readStreamDo: [:readStream | ]]
+			raise: XMLFileException.
+
+		self tempFileManager createFileWithContentsForHandle: fileHandle.
+		fileHandle readStreamDo: [:readStream |
+			self assert: readStream isXMLConvertingStreamAdapter.
+			"saved to a temp to ensure the block was evaluated"
+			contents := readStream upToEnd].
+		self assert: contents = self decodedFileContents].
+]
+
+{ #category : #tests }
+XMLFileHandleTest >> testSize [
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testSize.
+
+	self tempFileManager newFileHandleDo: [:fileHandle |
+		self
+			should: [fileHandle size]
+			raise: XMLFileException.
+
+		self tempFileManager createFileWithContentsForHandle: fileHandle.
+		self assert:
+			fileHandle size >=
+				self encodedFileContentsWithByteOrderMark size].
+]
+
+{ #category : #tests }
+XMLFileHandleTest >> testStreamGet [
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testStreamGet.
+
+	self tempFileManager newFileHandleDo: [:fileHandle | | readStream |
+		self
+			should: [fileHandle streamGet]
+			raise: XMLFileException.
+
+		self tempFileManager createFileWithContentsForHandle: fileHandle.
+		readStream := fileHandle streamGet.
+		self
+			assert: readStream isXMLConvertingStreamAdapter;
+			assert: readStream upToEnd = self decodedFileContents.
+		readStream close].
+]
+
+{ #category : #tests }
+XMLFileHandleTest >> testStreamGetUpToLimitDecoding [
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testStreamGetUpToLimitDecoding.
+
+	self tempFileManager newFileHandleDo: [:fileHandle | | readStream |
+		self
+			should: [
+				fileHandle
+					streamGetUpToLimit: nil
+					decoding: true]
+			raise: XMLFileException.
+
+		self tempFileManager createFileWithContentsForHandle: fileHandle.
+
+		readStream :=
+			fileHandle
+				streamGetUpToLimit: nil
+				decoding: true.
+		self
+			assert: readStream isXMLConvertingStreamAdapter;
+			assert: readStream upToEnd = self decodedFileContents.
+		readStream close.
+		readStream :=
+			fileHandle
+				streamGetUpToLimit: nil
+				decoding: false.
+		self
+			deny: readStream isXMLConvertingStreamAdapter;
+			assert: readStream upToEnd = self encodedFileContentsWithByteOrderMark.
+		readStream close.
+
+		readStream :=
+			fileHandle
+				streamGetUpToLimit: self encodedFileContentsWithByteOrderMark size
+				decoding: true.
+		self
+			assert: readStream isXMLConvertingStreamAdapter;
+			assert: readStream upToEnd = self decodedFileContents.
+		readStream close.
+		readStream :=
+			fileHandle
+				streamGetUpToLimit: self encodedFileContentsWithByteOrderMark size
+				decoding: false.
+		self
+			deny: readStream isXMLConvertingStreamAdapter;
+			assert: readStream upToEnd = self encodedFileContentsWithByteOrderMark.
+		readStream close.
+
+		self
+			should: [
+				fileHandle
+					streamGetUpToLimit:
+						self encodedFileContentsWithByteOrderMark size - 1
+					decoding: true]
+			raise: XMLLimitException.
+		self
+			should: [
+				fileHandle
+					streamGetUpToLimit:
+						self encodedFileContentsWithByteOrderMark size - 1
+					decoding: false]
+			raise: XMLLimitException].
+]
+
+{ #category : #tests }
+XMLFileHandleTest >> testWriteStream [
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testWriteStream.
+
+	self tempFileManager newFileHandleDo: [:fileHandle | | writeStream |
+		writeStream := fileHandle writeStream.
+		self
+			assert: writeStream isXMLConvertingStreamAdapter;
+			assert: writeStream hasDefaultStreamConverter.
+
+		writeStream
+			streamConverter: self streamConverterClass new;
+			nextPutByteOrderMark;
+			nextPutAll: self decodedFileContents;
+			close.
+		self assert: fileHandle contents = self decodedFileContents].
+]
+
+{ #category : #tests }
+XMLFileHandleTest >> testWriteStreamDo [
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testWriteStreamDo.
+
+	self tempFileManager newFileHandleDo: [:fileHandle |
+		fileHandle writeStreamDo: [:writeStream |
+			self
+				assert: writeStream isXMLConvertingStreamAdapter;
+				assert: writeStream hasDefaultStreamConverter.
+
+			writeStream
+				streamConverter: self streamConverterClass new;
+				nextPutByteOrderMark;
+				nextPutAll: self decodedFileContents].
+		self assert: fileHandle contents = self decodedFileContents].
 ]

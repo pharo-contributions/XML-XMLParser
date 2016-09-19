@@ -108,11 +108,11 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsent [
 		self assert:
 			(resolver
 				externalEntityAtURI: uriString
-				ifAbsent: [#absent]) = replacement.
+				ifAbsent: [self fail]) = replacement.
 		self assert:
 			(resolver
 				externalEntityAtURI: uriString asXMLURI
-				ifAbsent: [#absent]) = replacement].
+				ifAbsent: [self fail]) = replacement].
 ]
 
 { #category : #tests }
@@ -125,10 +125,11 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsentPut [
 			(resolver
 				externalEntityAtURI: uriString
 				ifAbsentPut: [replacement]) = replacement.
+		self assert: (resolver externalEntityAtURI: uriString) = replacement.
 		self assert:
 			(resolver
 				externalEntityAtURI: uriString asXMLURI
-				ifAbsentPut: [#absent]) = replacement.
+				ifAbsentPut: [self fail]) = replacement..
 		self assert: (resolver externalEntityAtURI: uriString) = replacement].
 ]
 
@@ -213,7 +214,7 @@ DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURIIfAbsent [
 		self assert:
 			(resolver
 				removeExternalEntityURI: uriString
-				ifAbsent: [#absent]) = replacement.
+				ifAbsent: [self fail]) = replacement.
 		self deny: (resolver includesExternalEntityURI: uriString).
 		self assert:
 			(resolver

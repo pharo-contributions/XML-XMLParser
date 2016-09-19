@@ -39,8 +39,7 @@ XMLDecodingReadStreamAdapterTest >> testHasNullStreamConverter [
 	| adapter |
 
 	adapter := self newStreamAdapter.
-	self assert:
-		adapter hasNullStreamConverter = adapter streamConverter isNull.
+	self assert: adapter hasNullStreamConverter = adapter streamConverter isNull.
 ]
 
 { #category : #tests }

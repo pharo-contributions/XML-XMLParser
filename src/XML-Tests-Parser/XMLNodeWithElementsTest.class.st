@@ -533,7 +533,7 @@ XMLNodeWithElementsTest >> testAllElementsDetect [
 	self
 		assert: detectedElement notNil;
 		assert: (detectedElement isNamed: 'prefix:four');
-		assert: detectedElement == (allElements detect: [:each | each isNamed: 'prefix:four']);
+		assert: detectedElement = (allElements detect: [:each | each isNamed: 'prefix:four']);
 		assert: (nodeWithElements allElementsDetect: [:each | each isNamed: 'absent']) isNil.
 ]
 
@@ -546,15 +546,11 @@ XMLNodeWithElementsTest >> testAllElementsDetectIfNone [
 	detectedElement :=
 		nodeWithElements
 			allElementsDetect: [:each | each isNamed: 'prefix:four']
-			ifNone: [#absent].
-	self
-		deny: detectedElement = #absent;
-		assert: (detectedElement isNamed: 'prefix:four').
+			ifNone: [self fail].
+	self assert: (detectedElement isNamed: 'prefix:four').
 	self assert:	
-		detectedElement ==
-			(allElements
-				detect: [:each | each isNamed: 'prefix:four']
-				ifNone: [#absent]).
+		detectedElement =
+			(allElements detect: [:each | each isNamed: 'prefix:four']).
 	self assert:
 		(nodeWithElements
 			allElementsDetect: [:each | each isNamed: 'absent']
@@ -813,7 +809,7 @@ XMLNodeWithElementsTest >> testDescendantElementsDetect [
 	self
 		assert: detectedElement notNil;
 		assert: (detectedElement isNamed: 'prefix:four');
-		assert: detectedElement == (descendantElements detect: [:each | each isNamed: 'prefix:four']);
+		assert: detectedElement = (descendantElements detect: [:each | each isNamed: 'prefix:four']);
 		assert: (detectedElement descendantElementsDetect: [:each | each isNamed: 'prefix:four']) isNil.
 ]
 
@@ -826,15 +822,11 @@ XMLNodeWithElementsTest >> testDescendantElementsDetectIfNone [
 	detectedElement :=
 		nodeWithElements
 			descendantElementsDetect: [:each | each isNamed: 'prefix:four']
-			ifNone: [#absent].
-	self
-		deny: detectedElement = #absent;
-		assert: (detectedElement isNamed: 'prefix:four').
+			ifNone: [self fail].
+	self assert: (detectedElement isNamed: 'prefix:four').
 	self assert:	
-		detectedElement ==
-			(descendantElements
-				detect: [:each | each isNamed: 'prefix:four'] 
-				ifNone: [#absent]).
+		detectedElement =
+			(descendantElements detect: [:each | each isNamed: 'prefix:four']).
 	self assert:
 		(detectedElement
 			descendantElementsDetect: [:each | each isNamed: 'prefix:four']
@@ -1007,7 +999,7 @@ XMLNodeWithElementsTest >> testElementAtIfAbsent [
 					self assert:
 						(node
 							elementAt: localName
-							ifAbsent: [#absent]) =
+							ifAbsent: [self fail]) =
 								(elements detect: [:each | each localName = localName]).
 					self assert:
 						(node
@@ -1017,7 +1009,7 @@ XMLNodeWithElementsTest >> testElementAtIfAbsent [
 					self assert:
 						(node
 							elementAt: qualifiedName
-							ifAbsent: [#absent]) =
+							ifAbsent: [self fail]) =
 								(elements detect: [:each |
 									each hasPrefix
 										and: [each name = qualifiedName]])].
@@ -1383,38 +1375,40 @@ XMLNodeWithElementsTest >> testElementsDetect [
 	root := self newNodeWithElements firstElement.
 	element :=
 		root elementsDetect: [:each |
-			(each isNamed: 'four') and: [each namespaceURI = 'testNS']].
+			(each isNamed: 'four')
+				and: [each namespaceURI = 'testNS']].
 	self deny: element isNil.
 	self assert:
-		element == 
+		element = 
 			(root elements detect: [:each |
-				(each isNamed: 'four') and: [each namespaceURI = 'testNS']]).
+				(each isNamed: 'four')
+					and: [each namespaceURI = 'testNS']]).
 	self assert:
 		(root elementsDetect: [:each |
-			(each isNamed: 'four') and: [each namespaceURI = 'absentNS']]) isNil.
+			(each isNamed: 'four')
+				and: [each namespaceURI = 'absentNS']]) isNil.
 ]
 
 { #category : #tests }
 XMLNodeWithElementsTest >> testElementsDetectIfNone [
-	| root element |
+	| root |
 
 	root := self newNodeWithElements firstElement.
-	element :=
-		root
+	self assert: 
+		(root
 			elementsDetect: [:each |
-				(each isNamed: 'four') and: [each namespaceURI = 'testNS']]
-			ifNone: [#absent].
-	self deny: element = #absent.
-	self assert:
-		element == 
-			(root elements
-				detect: [:each |
-					(each isNamed: 'four') and: [each namespaceURI = 'testNS']]
-				ifNone: [#absent]).
+				(each isNamed: 'four')
+					and: [each namespaceURI = 'testNS']]
+			ifNone: [self fail]) =
+				(root elements
+					detect: [:each |
+						(each isNamed: 'four')
+							and: [each namespaceURI = 'testNS']]).
 	self assert:
 		(root
 			elementsDetect: [:each |
-				(each isNamed: 'four') and: [each namespaceURI = 'absentNS']]
+				(each isNamed: 'four')
+					and: [each namespaceURI = 'absentNS']]
 			ifNone: [#absent]) = #absent.
 ]
 

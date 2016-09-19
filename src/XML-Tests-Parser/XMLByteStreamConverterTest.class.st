@@ -4,6 +4,11 @@ Class {
 	#category : #'XML-Tests-Parser-Streams'
 }
 
+{ #category : #testing }
+XMLByteStreamConverterTest class >> isAbstract [
+	^ false
+]
+
 { #category : #accessing }
 XMLByteStreamConverterTest >> streamConverterClass [
 	^ XMLByteStreamConverter

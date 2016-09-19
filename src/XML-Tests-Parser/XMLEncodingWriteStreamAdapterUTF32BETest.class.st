@@ -6,7 +6,7 @@ Class {
 
 { #category : #converting }
 XMLEncodingWriteStreamAdapterUTF32BETest >> contentsFromCharacter: aCharacter [
-	^ self asciiToUTF32BE: aCharacter asString
+	^ self class asciiToUTF32BE: aCharacter asString
 ]
 
 { #category : #accessing }
