@@ -129,7 +129,7 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsentPut [
 		self assert:
 			(resolver
 				externalEntityAtURI: uriString asXMLURI
-				ifAbsentPut: [self fail]) = replacement..
+				ifAbsentPut: [self fail]) = replacement.
 		self assert: (resolver externalEntityAtURI: uriString) = replacement].
 ]
 
