@@ -741,6 +741,22 @@ ConfigurationOfXMLParser >> baseline283: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.36' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline288: spec [
+	<version: '2.8.8-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.7.2'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.21' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.36' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParser >> customProjectAttributes [
     "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -755,7 +771,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.8.3-baseline'.
+	spec for: #'common' version: '2.8.8-baseline'.
 
 ]
 
@@ -2949,7 +2965,7 @@ ConfigurationOfXMLParser >> version287: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version288: spec [ 
-        <version: '2.8.8' imports: #('2.8.3-baseline')>
+        <version: '2.8.8' imports: #('2.8.8-baseline')>
 
         spec for: #common do: [
                 spec blessing: #release.
