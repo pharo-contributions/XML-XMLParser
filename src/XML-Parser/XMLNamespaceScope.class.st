@@ -154,12 +154,9 @@ XMLNamespaceScope >> hasNamespaces [
 
 { #category : #comparing }
 XMLNamespaceScope >> hash [
-	| hash |
-
-	hash := self species hash.
 	self hasNamespaces
-		ifTrue: [hash := hash bitXor: self prefixMappings hash].
-	^ hash.
+		ifTrue: [^ self species hash bitXor: self prefixMappings hash]
+		ifFalse: [^ self species hash]
 ]
 
 { #category : #testing }

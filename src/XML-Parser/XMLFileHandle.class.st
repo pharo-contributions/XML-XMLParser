@@ -82,6 +82,14 @@ XMLFileHandle >> basicDelete [
 	self subclassResponsibility
 ]
 
+{ #category : #private }
+XMLFileHandle >> basicFileSize [
+	"This is named #basicFileSize instead of #basicSize to avoid conflicting
+	with the Object>>#basicSize primitive"
+
+	self subclassResponsibility
+]
+
 { #category : #accessing }
 XMLFileHandle >> contents [
 	"the read stream adapters don't support #contents so #upToEnd is used instead"
@@ -140,11 +148,6 @@ XMLFileHandle >> extension [
 	^ ((i := self path lastIndexOf: $/) > 0
 		ifTrue: [self path copyFrom: i + 1 to: self path size]
 		ifFalse: [self path]) copyAfter: $.
-]
-
-{ #category : #accessing }
-XMLFileHandle >> fileSize [
-	self subclassResponsibility
 ]
 
 { #category : #retrieving }
@@ -250,7 +253,7 @@ XMLFileHandle >> readStream [
 	decodingReadStreamAdapter :=
 		XMLDecodingReadStreamAdapter on: self rawReadStream.
 	(XMLFileStreamEncodingDetector on: decodingReadStreamAdapter)
-			detectCurrentEncoding.
+		detectCurrentEncoding.
 	^ decodingReadStreamAdapter.
 ]
 
@@ -263,6 +266,14 @@ XMLFileHandle >> readStreamDo: aBlock [
 		ensure: [readStream close].
 ]
 
+{ #category : #accessing }
+XMLFileHandle >> size [
+	self exists
+		ifFalse: [self errorFileDoesNotExist].
+
+	^ self basicFileSize.
+]
+
 { #category : #retrieving }
 XMLFileHandle >> streamGet [
 	^ self
@@ -273,7 +284,7 @@ XMLFileHandle >> streamGet [
 { #category : #retrieving }
 XMLFileHandle >> streamGetUpToLimit: aMaxSize decoding: aBoolean [
 	(aMaxSize notNil
-		and: [self fileSize > aMaxSize])
+		and: [self size > aMaxSize])
 		ifTrue: [self errorFileExceedsMaxSize: aMaxSize].
 
 	^ aBoolean

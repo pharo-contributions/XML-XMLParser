@@ -36,6 +36,11 @@ XMLFileSystemFileHandle >> basicDelete [
 	self fileReference delete
 ]
 
+{ #category : #private }
+XMLFileSystemFileHandle >> basicFileSize [
+	^ self fileReference size
+]
+
 { #category : #testing }
 XMLFileSystemFileHandle >> exists [
 	^ self fileReference exists
@@ -50,11 +55,6 @@ XMLFileSystemFileHandle >> fileReference [
 XMLFileSystemFileHandle >> fileReference: aFileReference [
 	fileReference := aFileReference.
 	self path: aFileReference fullName.
-]
-
-{ #category : #accessing }
-XMLFileSystemFileHandle >> fileSize [
-	^ self fileReference size
 ]
 
 { #category : #testing }

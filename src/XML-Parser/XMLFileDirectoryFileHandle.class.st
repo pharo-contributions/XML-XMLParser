@@ -27,6 +27,11 @@ XMLFileDirectoryFileHandle >> basicDelete [
 	self fileDirectory deleteFileNamed: self path
 ]
 
+{ #category : #private }
+XMLFileDirectoryFileHandle >> basicFileSize [
+	^ self directoryEntry fileSize
+]
+
 { #category : #accessing }
 XMLFileDirectoryFileHandle >> directoryEntry [
 	"a bug on Squeak (but not GS) with the handling of dot relative paths
@@ -45,13 +50,6 @@ XMLFileDirectoryFileHandle >> exists [
 XMLFileDirectoryFileHandle >> fileDirectory [
 	^ fileDirectory
 		ifNil: [fileDirectory := (XMLClassFinder classNamed: #FileDirectory) default]
-]
-
-{ #category : #accessing }
-XMLFileDirectoryFileHandle >> fileSize [
-	^ self exists
-		ifTrue: [self directoryEntry fileSize]
-		ifFalse: [0]
 ]
 
 { #category : #testing }

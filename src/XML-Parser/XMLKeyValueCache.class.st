@@ -35,6 +35,13 @@ XMLKeyValueCache class >> new [
 	^ self maxSize: self defaultMaxSize
 ]
 
+{ #category : #comparing }
+XMLKeyValueCache >> = anObject [
+	^ self == anObject
+		or: [self species == anObject species
+			and: [collection = anObject collection]]
+]
+
 { #category : #accessing }
 XMLKeyValueCache >> at: aKey [
 	^ self
@@ -84,6 +91,11 @@ XMLKeyValueCache >> collection [
 	^ collection
 ]
 
+{ #category : #comparing }
+XMLKeyValueCache >> hash [
+	^ self species hash bitXor: collection hash
+]
+
 { #category : #testing }
 XMLKeyValueCache >> includesKey: aKey [
 	^ collection includesKey: aKey
@@ -95,6 +107,21 @@ XMLKeyValueCache >> isEmpty [
 ]
 
 { #category : #accessing }
+XMLKeyValueCache >> keys [
+	^ collection keys
+]
+
+{ #category : #enumerating }
+XMLKeyValueCache >> keysAndValuesDo: aTwoArgumentBlock [
+	collection keysAndValuesDo: aTwoArgumentBlock
+]
+
+{ #category : #enumerating }
+XMLKeyValueCache >> keysDo: aBlock [
+	collection keysDo: aBlock
+]
+
+{ #category : #accessing }
 XMLKeyValueCache >> maxSize [
 	^ maxSize
 ]
@@ -102,7 +129,7 @@ XMLKeyValueCache >> maxSize [
 { #category : #accessing }
 XMLKeyValueCache >> maxSize: anInteger [
 	anInteger < maxSize
-		ifTrue: [self clear].
+		ifTrue: [self removeAll].
 
 	maxSize := anInteger.
 ]
@@ -156,4 +183,14 @@ XMLKeyValueCache >> setCollection: aCollection maxSize: anInteger [
 { #category : #accessing }
 XMLKeyValueCache >> size [
 	^ collection size
+]
+
+{ #category : #accessing }
+XMLKeyValueCache >> values [
+	^ collection values
+]
+
+{ #category : #enumerating }
+XMLKeyValueCache >> valuesDo: aBlock [
+	collection valuesDo: aBlock
 ]
