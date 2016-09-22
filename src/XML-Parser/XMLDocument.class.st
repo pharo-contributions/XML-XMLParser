@@ -143,11 +143,12 @@ XMLDocument >> root: anElement [
 XMLDocument >> validate [
 	"revalidate against the DTD it was parsed with (if any)"
 
-	self doctypeDefinition
-		ifNotNil: [:dtd |
-			dtd hasValidators
-				ifTrue: [dtd removeIDsAndIDReferences].
-			self validateWith: dtd newValidator]
+	self hasDoctypeDefinition
+		ifTrue: [
+			self doctypeDefinition
+				removeElementIDReferences;
+				removeElementIDs.
+			self validateWith: self doctypeDefinition newValidator]
 ]
 
 { #category : #validating }

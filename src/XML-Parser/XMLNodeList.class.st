@@ -49,7 +49,9 @@ XMLNodeList >> contentNodes [
 
 { #category : #enumerating }
 XMLNodeList >> contentNodesDo: aBlock [
-	self do: [:each | each isContentNode ifTrue: [aBlock value: each]]
+	self do: [:each |
+		each isContentNode
+			ifTrue: [aBlock value: each]]
 ]
 
 { #category : #accessing }
@@ -72,13 +74,15 @@ XMLNodeList >> elementAfter: anElement [
 
 { #category : #accessing }
 XMLNodeList >> elementAt: aName [
-	^ self elementAt: aName ifAbsent: [self defaultValue]
+	^ self
+		elementAt: aName
+		ifAbsent: [self defaultValue]
 ]
 
 { #category : #accessing }
 XMLNodeList >> elementAt: aName ifAbsent: aBlock [
-	self do: [:each |
-		(each isElementNamed: aName)
+	self elementsDo: [:each |
+		(each isNamed: aName)
 			ifTrue: [^ each]].
 	^ aBlock value.
 ]
@@ -130,9 +134,8 @@ XMLNodeList >> elementsAt: aName [
 
 { #category : #enumerating }
 XMLNodeList >> elementsAt: aName do: aBlock [
-	self do: [:each |
-		(each isElement
-			and: [each isNamed: aName])
+	self elementsDo: [:each |
+		(each isNamed: aName)
 			ifTrue: [aBlock value: each]]
 ]
 
@@ -145,38 +148,58 @@ XMLNodeList >> elementsAt: aName namespaceURI: aURI [
 
 { #category : #enumerating }
 XMLNodeList >> elementsCollect: aBlock [
-	^ self elements collect: aBlock
+	| collectedElements |
+
+	"implementing with #elementsDo: benefits the caching subclass because
+	of its fast #elementsDo: implementation"
+	collectedElements := self copyEmptyForCollect.
+	self elementsDo: [:each |
+		collectedElements addLast: (aBlock value: each)].
+	^ collectedElements.
 ]
 
 { #category : #enumerating }
 XMLNodeList >> elementsDetect: aBlock [
-	^ self elementsDetect: aBlock ifNone: [self defaultValue]
+	^ self
+		elementsDetect: aBlock
+		ifNone: [self defaultValue]
 ]
 
 { #category : #enumerating }
 XMLNodeList >> elementsDetect: aBlock ifNone: anExceptionBlock [
-	^ self
-		detect: [:each | each isElement and: [aBlock value: each]]
-		ifNone: anExceptionBlock
+	"implementing with #elementsDo: benefits the caching subclass because
+	of its fast #elementsDo: implementation"
+	self elementsDo: [:each |
+		(aBlock value: each)
+			ifTrue: [^ each]].
+	^ anExceptionBlock value.
 ]
 
 { #category : #enumerating }
 XMLNodeList >> elementsDo: aBlock [
-	self do: [:each | each isElement ifTrue: [aBlock value: each]]
+	"to:do: for performance, because so many methods rely on this"
+	1 to: collection size do: [:i | | node |
+		(node := collection at: i) isElement
+			ifTrue: [aBlock value: node]]
 ]
 
 { #category : #enumerating }
 XMLNodeList >> elementsSelect: aBlock [
-	^ self select: [:each |
-		each isElement
-			and: [aBlock value: each]]
+	| selectedElements |
+
+	"implementing with #elementsDo: benefits the caching subclass because
+	of its fast #elementsDo: implementation"
+	selectedElements := self copyEmpty.
+	self elementsDo: [:each |
+		(aBlock value: each)
+			ifTrue: [selectedElements addLast: each]].
+	^ selectedElements.
 ]
 
 { #category : #accessing }
 XMLNodeList >> firstElement [
-	^ self
-		detect: [:each | each isElement]
-		ifNone: [self defaultValue]
+	self elementsDo: [:each | ^ each].
+	^ self defaultValue.
 ]
 
 { #category : #testing }
@@ -196,7 +219,9 @@ XMLNodeList >> hasStringNodes [
 
 { #category : #testing }
 XMLNodeList >> includesElement: aName [
-	self elementAt: aName ifAbsent: [^ false].
+	self
+		elementAt: aName
+		ifAbsent: [^ false].
 	^ true.
 ]
 
@@ -240,7 +265,9 @@ XMLNodeList >> stringNodes [
 
 { #category : #enumerating }
 XMLNodeList >> stringNodesDo: aBlock [
-	self do: [:each | each isStringNode ifTrue: [aBlock value: each]]
+	self do: [:each |
+		each isStringNode
+			ifTrue: [aBlock value: each]]
 ]
 
 { #category : #accessing }

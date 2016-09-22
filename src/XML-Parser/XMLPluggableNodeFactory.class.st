@@ -1,15 +1,15 @@
 "
-This is a pluggable factory that can be used to change which classes the DOM parser uses to build the DOM tree. Here is an example:
+This is a pluggable node factory that can be used to change which classes the DOM parser uses to build the DOM tree. Here is an example:
 
-	(XMLDOMParser on: someXML)
+	(XMLDOMParser on: anXMLStringOrStream)
 		nodeFactory:
-			(XMLPluggableFactory new
+			(XMLPluggableNodeFactory new
 				documentClass: MyDocumentClass;
 				elementClass: MyElementClass;
-				stringNodeClass: MyStringNodeClass)
+				stringNodeClass: MyStringNodeClass);
 		parseDocument.
 
-Instances can be saved and resused for performance and safely modified after copying.
+Instances can be saved and reused for performance and safely modified after copying.
 "
 Class {
 	#name : #XMLPluggableNodeFactory,

@@ -74,7 +74,7 @@ DTDDocumentValidator >> unvalidatedElement: anElement [
 
 { #category : #validating }
 DTDDocumentValidator >> validateIDReferences [
-	self doctypeDefinition hasElementIDValidator
+	self doctypeDefinition hasElementIDReferences
 		ifTrue: [self doctypeDefinition elementIDValidator validateIDReferences]
 ]
 

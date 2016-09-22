@@ -1,7 +1,7 @@
 "
-This is base class for SAX2 element handlers to be used with SAX2ElementParsers.
+This is a base class for SAX2 element handlers to be used with SAX2ElementParsers.
 
-SAX2ElementParsers use separate SAX2ElementHandlers to handle the  #startElement*, #endElement*, and #characters: events of each element in the document instead of using a single SAX2ContentHandler for everything.
+SAX2ElementParsers use individual SAX2ElementHandlers to handle the #startElement*, #endElement*, and #characters: events of each element in the document.
 
 The parser can be accessed with #parser, and the parent element handler (if any) can be accessed with #parent.
 "
@@ -74,8 +74,8 @@ SAX2ElementHandler >> characters: aString [
 
 { #category : #accessing }
 SAX2ElementHandler >> elementHandlerFactory [
-	"Can return a default factory to use by a factory mapper if no other
-	one is mapped to the receiver."
+	"Can be overridden to return a default factory to use by a factory
+	mapper when no other factory is mapped to the receiver."
 
 	^ nil
 ]
@@ -118,6 +118,9 @@ SAX2ElementHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI local
 
 { #category : #testing }
 SAX2ElementHandler >> hasParent [
+	"Returns true if the receiver has a parent element handler (meaning it's
+	not the root element handler)"
+
 	^ parent notNil
 ]
 

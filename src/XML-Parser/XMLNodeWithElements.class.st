@@ -644,26 +644,34 @@ XMLNodeWithElements >> findElementNamed: aName with: aBlock [
 
 { #category : #searching }
 XMLNodeWithElements >> findElementWithID: anID [
-	"Works like XML DOM Level 2's getElementByID(). Unlike HTML, it requires
-	a DTD with ID declarations to identify ID attributes."
+	"Works like XML DOM Level 2's getElementByID(). It will scan attributes
+	identified as IDs by a DTD with '<!ATTLIST ...>' declarations or any
+	attribute named 'xml:id'."
 
-	| document doctypeDefinition elementsAndIDAttributes |
+	| document doctypeDefinition |
 	
 	((document := self document) notNil
 		and: [(doctypeDefinition := document doctypeDefinition) notNil
-			and: [doctypeDefinition hasElementIDValidator]])
-		ifFalse: [^ nil].
-	elementsAndIDAttributes :=
-		doctypeDefinition elementIDValidator elementsAndIDAttributes.
-
-	self allElementsDo: [:each |
-		each hasAttributes
-			ifTrue: [
-				elementsAndIDAttributes
-					at: each name
-					ifPresent: [:idAttribute |
-						(each attributeAt: idAttribute) = anID
-							ifTrue: [^ each]]]].
+			and: [doctypeDefinition hasValidators]])
+		ifTrue: [| elementsAndIDAttributes |
+			doctypeDefinition hasElementIDs
+				ifFalse: [^ nil].
+			elementsAndIDAttributes :=
+				doctypeDefinition elementIDValidator elementsAndIDAttributes.
+			self allElementsDo: [:each |
+				each hasAttributes
+					ifTrue: [
+						elementsAndIDAttributes
+							at: each name
+							ifPresent: [:idAttribute |
+								(each attributeAt: idAttribute) = anID
+									ifTrue: [^ each]]]]]
+		ifFalse: [
+			"default to just looking for xml:id attributes"
+			self allElementsDo: [:each |
+				(each hasAttributes
+					and: [(each attributeAt: 'xml:id') = anID])
+					ifTrue: [^ each]]].
 	^ nil.
 ]
 

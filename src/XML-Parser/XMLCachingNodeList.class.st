@@ -211,26 +211,8 @@ XMLCachingNodeList >> elementsAt: aName do: aBlock [
 ]
 
 { #category : #enumerating }
-XMLCachingNodeList >> elementsDetect: aBlock ifNone: anExceptionBlock [
-	^ self cachedElements
-		detect: aBlock
-		ifNone: anExceptionBlock
-]
-
-{ #category : #enumerating }
 XMLCachingNodeList >> elementsDo: aBlock [
 	self cachedElements do: aBlock
-]
-
-{ #category : #enumerating }
-XMLCachingNodeList >> elementsSelect: aBlock [
-	| selectedElements |
-
-	selectedElements := self copyEmpty.
-	self cachedElements do: [:each |
-		(aBlock value: each)
-			ifTrue: [selectedElements addLast: each]].
-	^ selectedElements.
 ]
 
 { #category : #private }

@@ -47,6 +47,18 @@ XMLElementIDValidator >> errorUnknownIDReference: anID [
 		with: anID
 ]
 
+{ #category : #testing }
+XMLElementIDValidator >> hasIDReferences [
+	^ idReferences notNil
+		and: [idReferences notEmpty]
+]
+
+{ #category : #testing }
+XMLElementIDValidator >> hasIDs [
+	^ ids notNil
+		and: [ids notEmpty]
+]
+
 { #category : #accessing }
 XMLElementIDValidator >> idReferences [
 	^ idReferences ifNil: [idReferences := Set new]
@@ -58,11 +70,17 @@ XMLElementIDValidator >> ids [
 ]
 
 { #category : #removing }
-XMLElementIDValidator >> removeIDsAndIDReferences [
+XMLElementIDValidator >> removeIDReferences [
 	"Gemstone's Set does not understand removeAll, so nil reassignment
 	is used instead (will be lazy initialized by accessors)"
-	ids := nil.
-	idReferences := nil.
+	idReferences := nil
+]
+
+{ #category : #removing }
+XMLElementIDValidator >> removeIDs [
+	"Gemstone's Set does not understand removeAll, so nil reassignment
+	is used instead (will be lazy initialized by accessors)"
+	ids := nil
 ]
 
 { #category : #validating }

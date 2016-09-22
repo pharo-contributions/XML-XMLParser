@@ -5,7 +5,7 @@ Requesting the factory for an element handler checks for a mapping set with  #ma
 
 When a SAX2ElementParser requests the factory for a new element handler, if none is found, it will reuse (inherit) the current factory, but this won't happen unless the default factory is cleared by setting #elementHandlerFactory: to nil.
 
-Instances can be saved and resused for performance and safely modified after copying.
+Instances can be saved and reused for performance and safely modified after copying.
 "
 Class {
 	#name : #SAX2PluggableElementHandlerFactoryMapper,

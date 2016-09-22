@@ -227,8 +227,17 @@ DTDDoctypeDefinition >> hasAttributeValidators [
 ]
 
 { #category : #testing }
-DTDDoctypeDefinition >> hasElementIDValidator [
+DTDDoctypeDefinition >> hasElementIDReferences [
+	"direct access to avoid lazy initialization"
 	^ elementIDValidator notNil
+		and: [elementIDValidator hasIDReferences]
+]
+
+{ #category : #testing }
+DTDDoctypeDefinition >> hasElementIDs [
+	"direct access to avoid lazy initialization"
+	^ elementIDValidator notNil
+		and: [elementIDValidator hasIDs]
 ]
 
 { #category : #testing }
@@ -248,7 +257,9 @@ DTDDoctypeDefinition >> hasEntities [
 
 { #category : #testing }
 DTDDoctypeDefinition >> hasGeneralEntities [
-	^ generalEntities notNil and: [generalEntities notEmpty]
+	"direct access to avoid lazy initialization"
+	^ generalEntities notNil
+		and: [generalEntities notEmpty]
 ]
 
 { #category : #testing }
@@ -259,12 +270,16 @@ DTDDoctypeDefinition >> hasNotationAttributeValidators [
 
 { #category : #testing }
 DTDDoctypeDefinition >> hasNotations [
-	^ notations notNil and: [notations notEmpty]
+	"direct access to avoid lazy initialization"
+	^ notations notNil
+		and: [notations notEmpty]
 ]
 
 { #category : #testing }
 DTDDoctypeDefinition >> hasParameterEntities [
-	^ parameterEntities notNil and: [parameterEntities notEmpty]
+	"direct access to avoid lazy initialization"
+	^ parameterEntities notNil
+		and: [parameterEntities notEmpty]
 ]
 
 { #category : #testing }
@@ -274,7 +289,9 @@ DTDDoctypeDefinition >> hasRoot [
 
 { #category : #testing }
 DTDDoctypeDefinition >> hasUnparsedEntities [
-	^ unparsedEntities notNil and: [unparsedEntities notEmpty]
+	"direct access to avoid lazy initialization"
+	^ unparsedEntities notNil
+		and: [unparsedEntities notEmpty]
 ]
 
 { #category : #testing }
@@ -313,9 +330,15 @@ DTDDoctypeDefinition >> parameterEntityAt: aName ifAbsent: aBlock [
 ]
 
 { #category : #removing }
-DTDDoctypeDefinition >> removeIDsAndIDReferences [
-	self hasElementIDValidator
-		ifTrue: [self elementIDValidator removeIDsAndIDReferences]
+DTDDoctypeDefinition >> removeElementIDReferences [
+	self hasElementIDReferences
+		ifTrue: [self elementIDValidator removeIDReferences]
+]
+
+{ #category : #removing }
+DTDDoctypeDefinition >> removeElementIDs [
+	self hasElementIDs
+		ifTrue: [self elementIDValidator removeIDs]
 ]
 
 { #category : #accessing }

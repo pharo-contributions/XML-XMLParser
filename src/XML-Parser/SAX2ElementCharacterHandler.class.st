@@ -20,9 +20,10 @@ SAX2ElementCharacterHandler >> characters [
 
 { #category : #'handling - content' }
 SAX2ElementCharacterHandler >> characters: aString [
+	"building the string this way is simpler and performs as well in tests
+	as using a write stream"
 	characters :=
-		(characters == nil "optimization"
-			or: [characters size = 0]) "optimization"
-			ifTrue: [aString]
-			ifFalse: [characters, aString]
+		characters
+			ifNil: [aString]
+			ifNotNil: [characters, aString]
 ]
