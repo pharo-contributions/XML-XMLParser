@@ -76,7 +76,7 @@ XMLFileHandleTest >> testAsXMLFileHandle [
 		ifTrue: [| fileHandle |
 			fileHandle := '' asXMLFileHandle.
 			self
-				assert: (fileHandle isKindOf: XMLFileHandle);
+				assert: fileHandle class == XMLFileHandle implementation;
 				assert: fileHandle asXMLFileHandle == fileHandle]
 ]
 
@@ -242,18 +242,28 @@ XMLFileHandleTest >> testIsXMLDocumentFile [
 
 	#('atom' 'dbk' 'docm' 'docx' 'pptm' 'pptx' 'rdf' 'rss' 'svg' 'xbel'
 		'xfd' 'xfdl' 'xhtml' 'xlsm' 'xlsx' 'xml' 'xsd' 'xspf' 'xul')
-		do: [:each |
-			self assert:
-				('test.', each) asXMLFileHandle isXMLDocumentFile.
-			self assert:
-				('test.', each) asUppercase asXMLFileHandle isXMLDocumentFile].
+		do: [:each | | file |
+			file := 'test.', each.
+			self
+				assert: file asXMLFileHandle isXMLDocumentFile;
+				assert: file asUppercase asXMLFileHandle isXMLDocumentFile].
 
 	#('txt' 'html' 'jpeg' 'jpg' 'gif' 'dtd' 'ent')
-		do: [:each |
-			self deny:
-				('test.', each) asXMLFileHandle isXMLDocumentFile.
-			self deny:
-				('test.', each) asUppercase asXMLFileHandle isXMLDocumentFile].
+		do: [:each | | file |
+			file := 'test.', each.
+			self
+				deny: file asXMLFileHandle isXMLDocumentFile;
+				deny: file asUppercase asXMLFileHandle isXMLDocumentFile].
+]
+
+{ #category : #tests }
+XMLFileHandleTest >> testPath [
+	XMLFileHandle hasSupportedImplementation
+		ifTrue: [| fileHandle |
+			fileHandle := XMLFileHandle implementation path: 'test'.
+			self
+				assert: fileHandle class == XMLFileHandle implementation;
+				assert: fileHandle path = 'test']
 ]
 
 { #category : #tests }

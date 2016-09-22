@@ -375,12 +375,12 @@ XMLURITest >> testAsRetrievableResource [
 		uri isLocalURI
 			ifTrue: [
 				self
-					assert: (retrievableResource isKindOf: XMLFileHandle);
-					assert: (retrievableResource path = uri path)]
+					assert: retrievableResource class == XMLFileHandle implementation;
+					assert: retrievableResource path = uri path]
 			ifFalse: [
 				self
-					assert: (retrievableResource isKindOf: XMLHTTPRequest);
-					assert: (retrievableResource url = uri printString)]]
+					assert: retrievableResource class == XMLHTTPRequest implementation;
+					assert: retrievableResource url = uri printString]]
 ]
 
 { #category : #tests }

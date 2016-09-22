@@ -95,7 +95,7 @@ XMLStringMethodsTest >> testAsXMLFileHandle [
 			path := 'test.xml'.
 			fileHandle := path asXMLFileHandle.
 			self
-				assert: (fileHandle isKindOf: XMLFileHandle);
+				assert: fileHandle class == XMLFileHandle implementation;
 				assert: fileHandle path = path]
 ]
 
@@ -106,7 +106,7 @@ XMLStringMethodsTest >> testAsXMLHTTPRequest [
 			url := 'test.xml'.
 			request := url asXMLHTTPRequest.
 			self
-				assert: (request isKindOf: XMLHTTPRequest);
+				assert: request class == XMLHTTPRequest implementation;
 				assert: request url = url]
 ]
 

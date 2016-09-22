@@ -41,9 +41,9 @@ DTDExternalEntityResolverTest >> testCopy [
 		incrementTotalResolvedExternalEntities.
 	copy := resolver copy.
 	self
-		deny: resolver == copy;
-		assert: resolver totalResolvedExternalEntities = 1;
+		deny: copy == resolver;
 		assert: copy totalResolvedExternalEntities = 0;
+		assert: resolver totalResolvedExternalEntities = 1;
 		deny: copy externalEntityLimits == resolver externalEntityLimits;
 		assert: copy externalSubsetReadLimit = 1000000;
 		assert: copy maxExternalEntities = 10;

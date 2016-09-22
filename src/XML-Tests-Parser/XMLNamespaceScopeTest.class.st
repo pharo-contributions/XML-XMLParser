@@ -32,11 +32,15 @@ XMLNamespaceScopeTest >> newNamespaceScopeWithNamespaces [
 
 { #category : #tests }
 XMLNamespaceScopeTest >> testCopy [
-	| scope oldPrefixMappings |
+	| scope oldPrefixMappings copy |
 
 	scope := self newNamespaceScopeWithNamespaces.
 	oldPrefixMappings := scope prefixMappings.
-	self assert: scope copy prefixMappings == oldPrefixMappings.
+	copy := scope copy.
+	self
+		deny: copy == scope;
+		assert: copy = scope;
+		assert: copy prefixMappings == oldPrefixMappings.
 ]
 
 { #category : #tests }

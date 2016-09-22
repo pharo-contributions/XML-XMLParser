@@ -48,6 +48,20 @@ DTDStaticExternalEntityResolverTest >> resolverClass [
 ]
 
 { #category : #tests }
+DTDStaticExternalEntityResolverTest >> testCopy [
+	| resolver copy |
+
+	super testCopy.
+
+	resolver := self newResolverWithEntities.
+	copy := resolver copy.
+	self
+		deny: copy == resolver;
+		deny: copy externalEntities == resolver externalEntities;
+		assert: copy externalEntities = resolver externalEntities.
+]
+
+{ #category : #tests }
 DTDStaticExternalEntityResolverTest >> testExternalEntities [
 	| resolver replacementAssociation |
 

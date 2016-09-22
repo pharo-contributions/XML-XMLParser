@@ -1562,6 +1562,7 @@ XMLNodeWithElementsTest >> testFindElementWithID [
 		assert: (xmlIDElement nextElement findElementWithID: 'two') isNil;
 		assert: (document findElementWithID: 'three') isNil.
 
+	"remove them so they can't access the DTD anymore"
 	document root
 		removeNode: idElement;
 		removeNode: xmlIDElement.
@@ -1569,16 +1570,20 @@ XMLNodeWithElementsTest >> testFindElementWithID [
 		assert: (document findElementWithID: 'one') isNil;
 		assert: (idElement findElementWithID: 'one') isNil;
 		assert: (document findElementWithID: 'two') isNil;
-		assert: (xmlIDElement findElementWithID: 'two') isNil.
+		"xml:id is always an ID attribute, even without a DTD declaring it"
+		assert: (xmlIDElement findElementWithID: 'two') = xmlIDElement.
 
 	document :=
 		XMLDOMParser
 			parse: xml
 			usingNamespaces: true
 			validation: false.
+	xmlIDElement := document findElementNamed: 'd'.
 	self
 		assert: (document findElementWithID: 'one') isNil;
-		assert: (document findElementWithID: 'two') isNil.
+		"xml:id is always an ID attribute, even without a DTD declaring it"
+		assert: (document findElementWithID: 'two') = xmlIDElement;
+		assert: (xmlIDElement findElementWithID: 'two') = xmlIDElement.
 ]
 
 { #category : #tests }
@@ -1662,7 +1667,8 @@ XMLNodeWithElementsTest >> testInnerXMLPrettyPrinted [
 	| nodeWithElements printString prettyPrintString prettyNodeWithElements |
 
 	nodeWithElements := self newNodeWithElements.
-	"remove any whitespace formatting around elements"
+	"remove any whitespace formatting around elements
+	(avoid descendantNodesDo: because we're removing)"
 	nodeWithElements descendantNodes do: [:each |
 		(each isStringNode
 			and: [each isWhitespace])
@@ -1944,8 +1950,9 @@ XMLNodeWithElementsTest >> testPrettyPrinted [
 	| nodeWithElements printString prettyPrintString prettyNodeWithElements |
 
 	nodeWithElements := self newNodeWithElements.
-	"remove any whitespace formatting around elements"
-	nodeWithElements allNodesDo: [:each |
+	"remove any whitespace formatting around elements
+	(avoid #allNodesDo: because we're removing)"
+	nodeWithElements allNodes do: [:each |
 		(each isStringNode
 			and: [each isWhitespace])
 			ifTrue: [each parent removeNode: each]].

@@ -23,7 +23,7 @@ XMLSkippableTest class >> isSkipping [
 	^ isSkipping ifNil: [isSkipping := true]
 ]
 
-{ #category : #testing }
+{ #category : #accessing }
 XMLSkippableTest class >> isSkipping: aBoolean [
 	isSkipping := aBoolean
 ]
@@ -34,14 +34,26 @@ XMLSkippableTest class >> skippableTests [
 	^ #()
 ]
 
-{ #category : #accessing }
+{ #category : #skipping }
 XMLSkippableTest class >> startSkipping [
-	^ self isSkipping: true
+	self isSkipping: true
 ]
 
-{ #category : #accessing }
+{ #category : #skipping }
+XMLSkippableTest class >> startSkippingAll [
+	self startSkipping.
+	self allSubclassesDo: [:each | each startSkipping]
+]
+
+{ #category : #skipping }
 XMLSkippableTest class >> stopSkipping [
-	^ self isSkipping: false
+	self isSkipping: false
+]
+
+{ #category : #skipping }
+XMLSkippableTest class >> stopSkippingAll [
+	self stopSkipping.
+	self allSubclassesDo: [:each | each stopSkipping]
 ]
 
 { #category : #testing }

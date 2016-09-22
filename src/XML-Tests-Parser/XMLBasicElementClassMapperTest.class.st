@@ -924,8 +924,8 @@ XMLBasicElementClassMapperTest >> testCopy [
 	mapper elementClassMap values
 		with: copy elementClassMap values
 		do: [:classOrCollection :classOrCollectionCopy |
-			"the collection values need to be copied to, so a new mapping
-			in either the copy or original doesn't affect the other"
+			"the collection values need to be copied so any new mappings
+			in either the copy or original don't affect the other"
 			classOrCollection isCollection
 				ifTrue: [
 					self
