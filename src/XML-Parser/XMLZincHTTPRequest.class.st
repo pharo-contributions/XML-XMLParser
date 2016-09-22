@@ -33,5 +33,5 @@ XMLZincHTTPRequest >> basicGetUpToLimit: aMaxSize decoding: aBoolean [
 
 { #category : #private }
 XMLZincHTTPRequest >> isMaxSizeException: anException [
-	^ anException isKindOf: (XMLClassFinder classNamed: #ZnEntityTooLarge)
+	^ anException class == (XMLClassFinder classNamed: #ZnEntityTooLarge)
 ]
