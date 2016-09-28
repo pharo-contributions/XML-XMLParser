@@ -42,17 +42,16 @@ XMLParserTokenizer class >> driver: aDriver on: aStringOrStream readLimit: aRead
 XMLParserTokenizer class >> initialize [
 	"self initialize"
 
-	self initializePredefinedEntities
-]
-
-{ #category : #'class initialization' }
-XMLParserTokenizer class >> initializePredefinedEntities [
-	(PredefinedEntities := Dictionary new)
-		at: 'lt' put: $<;
-		at: 'gt' put: $>;
-		at: 'amp' put: $&;
-		at: 'apos' put: $';
-		at: 'quot' put: $"
+	"assign after with #yourself to avoid possible race
+	conditions when reinitializing the class"
+	PredefinedEntities :=
+		Dictionary new
+			at: 'lt' put: $<;
+			at: 'gt' put: $>;
+			at: 'amp' put: $&;
+			at: 'apos' put: $';
+			at: 'quot' put: $";
+			yourself
 ]
 
 { #category : #accessing }

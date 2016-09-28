@@ -42,6 +42,16 @@ XMLHTTPRequest >> defaultTimeout [
 	^ 30
 ]
 
+{ #category : #private }
+XMLHTTPRequest >> errorHTTPException: anError [
+	XMLHTTPException signalMessageFrom: anError
+]
+
+{ #category : #private }
+XMLHTTPRequest >> errorHTTPResponseLimitExceeded [
+	XMLLimitException signal: 'HTTP reponse limit exceeded'
+]
+
 { #category : #retrieving }
 XMLHTTPRequest >> get [
 	^ self
@@ -57,8 +67,8 @@ XMLHTTPRequest >> getUpToLimit: aMaxSize decoding: aBoolean [
 			on: Error
 			do: [:error |
 				(self isMaxSizeException: error)
-					ifTrue: [XMLLimitException signal: 'HTTP reponse limit exceeded']
-					ifFalse: [XMLHTTPException signalMessageFrom: error]]
+					ifTrue: [self errorHTTPResponseLimitExceeded]
+					ifFalse: [self errorHTTPException: error]]
 ]
 
 { #category : #private }

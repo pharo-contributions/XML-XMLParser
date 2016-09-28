@@ -34,11 +34,15 @@ XMLWellFormedParserTokenizer class >> initialize [
 XMLWellFormedParserTokenizer class >> initializeEncodingNameChars [
 	"EncName ::= [A-Za-z] ([A-Za-z0-9._] | '-')*"
 
-	(EncodingNameChars := BitmapCharacterSet new)
-		addRangeFrom: $a to: $z;
-		addRangeFrom: $A to: $Z;
-		addRangeFrom: $0 to: $9;
-		addAll: '-_.'
+	"assign the fully initialized object with #yourself to avoid
+	possible race conditions when reinitialization the class"
+	EncodingNameChars :=
+		BitmapCharacterSet new
+			addRangeFrom: $a to: $z;
+			addRangeFrom: $A to: $Z;
+			addRangeFrom: $0 to: $9;
+			addAll: '-_.';
+			yourself
 ]
 
 { #category : #'class initialization' }
@@ -48,9 +52,13 @@ XMLWellFormedParserTokenizer class >> initializeEncodingNameStartChars [
 	
 	EncName ::= [A-Za-z] ([A-Za-z0-9._] | '-')*"
 
-	(EncodingNameStartChars := BitmapCharacterSet new)
-		addRangeFrom: $a to: $z;
-		addRangeFrom: $A to: $Z
+	"assign the fully initialized object with #yourself to avoid
+	possible race conditions when reinitialization the class"
+	EncodingNameStartChars :=
+		BitmapCharacterSet new
+			addRangeFrom: $a to: $z;
+			addRangeFrom: $A to: $Z;
+			yourself
 ]
 
 { #category : #'class initialization' }
@@ -62,25 +70,31 @@ XMLWellFormedParserTokenizer class >> initializeNormalizedSpace [
 XMLWellFormedParserTokenizer class >> initializePublicIDChars [
 	"PubidChar ::= #x20 | #xD | #xA | [a-zA-Z0-9] | [-'()+,./:=?;!*#@$_%]"
 
-	(PublicIDChars := BitmapCharacterSet new)
-		add: 16r20 asCharacter;
-		add: 16rD asCharacter;
-		add: 16rA asCharacter;
-		addRangeFrom: $a to: $z;
-		addRangeFrom: $A to: $Z;
-		addRangeFrom: $0 to: $9;
-		addAll: '-''()+,./:=?;!*#@$_%'
+	PublicIDChars :=
+		BitmapCharacterSet new
+			add: 16r20 asCharacter;
+			add: 16rD asCharacter;
+			add: 16rA asCharacter;
+			addRangeFrom: $a to: $z;
+			addRangeFrom: $A to: $Z;
+			addRangeFrom: $0 to: $9;
+			addAll: '-''()+,./:=?;!*#@$_%';
+			yourself
 ]
 
 { #category : #'class initialization' }
 XMLWellFormedParserTokenizer class >> initializeVersionDigitChars [
-	"Character>>isDigit is not used because it may return true for non-ASCII
+	"Character>>#isDigit is not used because it may return true for non-ASCII
 	digits depending on the locale.
 	
 	VersionNum ::= '1.' [0-9]+"
 
-	(VersionDigitChars := BitmapCharacterSet new)
-		addRangeFrom: $0 to: $9
+	"assign the fully initialized object with #yourself to avoid
+	possible race conditions when reinitialization the class"
+	VersionDigitChars :=
+		BitmapCharacterSet new
+			addRangeFrom: $0 to: $9;
+			yourself
 ]
 
 { #category : #'entity replacing' }

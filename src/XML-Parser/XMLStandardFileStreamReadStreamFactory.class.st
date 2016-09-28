@@ -9,7 +9,8 @@ Class {
 
 { #category : #'instance creation' }
 XMLStandardFileStreamReadStreamFactory class >> basicOnPath: aPathString [
-	^ (XMLClassFinder classNamed: #StandardFileStream) readOnlyFileNamed: aPathString
+	^ (XMLClassFinder classNamed: #StandardFileStream)
+		readOnlyFileNamed: aPathString
 ]
 
 { #category : #testing }

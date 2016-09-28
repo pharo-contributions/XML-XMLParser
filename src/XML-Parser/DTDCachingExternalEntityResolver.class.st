@@ -18,7 +18,8 @@ DTDCachingExternalEntityResolver class >> clearEntityCache [
 
 { #category : #accessing }
 DTDCachingExternalEntityResolver class >> entityCache [
-	^ entityCache ifNil: [entityCache := XMLKeyValueCache maxSize: 64]
+	^ entityCache
+		ifNil: [entityCache := XMLKeyValueCache maxSize: 64]
 ]
 
 { #category : #accessing }

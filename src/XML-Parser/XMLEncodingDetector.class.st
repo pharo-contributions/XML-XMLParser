@@ -55,16 +55,22 @@ XMLEncodingDetector class >> initializeByteOrderMarks [
 
 { #category : #'class initialization' }
 XMLEncodingDetector class >> initializeEncodingHandlerTable [
-	EncodingHandlerTable := Array new: 256.
+	| temp |
 
+	"use an array instead of a dictionary for speed, and use a temp
+	to fully initialize it before assignment to avoid possible race
+	conditions during class reinitialization"
+	temp := Array new: 256.
 	0 to: 255 do: [:each |
-		EncodingHandlerTable
+		temp
 			at: each + 1
 			put: (self handlerForByteValue: each)].
+	EncodingHandlerTable := temp.
 ]
 
 { #category : #'class initialization' }
 XMLEncodingDetector class >> initializeNullCharacter [
+	"stored in a class var for faster access"
 	NullCharacter := Character value: 0
 ]
 

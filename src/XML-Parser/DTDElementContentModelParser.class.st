@@ -28,26 +28,34 @@ DTDElementContentModelParser class >> initialize [
 
 { #category : #'class initialization' }
 DTDElementContentModelParser class >> initializeOperatorApplicators [
-	"use Array for faster lookup"
-	(OperatorApplicators := Array new: 255)
-		at: $, asciiValue put: #applyConcatenation;
-		at: $| asciiValue put: #applyBranch;
-		at: $? asciiValue put: #applyOptional;
-		at: $* asciiValue put: #applyStar;
-		at: $+ asciiValue put: #applyPlus
+	"use an array instead of a dictionary for speed, and
+	assign after with #yourself to avoid possible race
+	conditions when reinitializing the class"
+	OperatorApplicators :=
+		(Array new: 255)
+			at: $, asciiValue put: #applyConcatenation;
+			at: $| asciiValue put: #applyBranch;
+			at: $? asciiValue put: #applyOptional;
+			at: $* asciiValue put: #applyStar;
+			at: $+ asciiValue put: #applyPlus;
+			yourself
 ]
 
 { #category : #'class initialization' }
 DTDElementContentModelParser class >> initializeSpecialCharacterParsers [
-	"use Array for faster lookup"
-	(SpecialCharacterParsers := Array new: 255)
-		at: $( asciiValue put: #parseOpeningParenthesis:;
-		at: $) asciiValue put: #parseClosingParenthesis:;
-		at: $, asciiValue put: #parseBinaryOperator:;
-		at: $| asciiValue put: #parseBinaryOperator:;
-		at: $? asciiValue put: #parseUnaryOperator:;
-		at: $* asciiValue put: #parseUnaryOperator:;
-		at: $+ asciiValue put: #parseUnaryOperator:
+	"use an array instead of a dictionary for speed, and
+	assign after with #yourself to avoid possible race
+	conditions when reinitializing the class"
+	SpecialCharacterParsers :=
+		(Array new: 255)
+			at: $( asciiValue put: #parseOpeningParenthesis:;
+			at: $) asciiValue put: #parseClosingParenthesis:;
+			at: $, asciiValue put: #parseBinaryOperator:;
+			at: $| asciiValue put: #parseBinaryOperator:;
+			at: $? asciiValue put: #parseUnaryOperator:;
+			at: $* asciiValue put: #parseUnaryOperator:;
+			at: $+ asciiValue put: #parseUnaryOperator:;
+			yourself
 ]
 
 { #category : #private }

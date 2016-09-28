@@ -40,24 +40,32 @@ DTDAttributeDefinitionParser class >> initialize [
 
 { #category : #'class initialization' }
 DTDAttributeDefinitionParser class >> initializeAttributeDefaultValidatorClasses [
-	(AttributeDefaultValidatorClasses := Dictionary new)
-		at: '' put: XMLAttributeDefaultValueValidator;
-		at: 'FIXED' put: XMLAttributeDefaultFixedValueValidator;
-		at: 'IMPLIED' put: XMLAttributeDefaultImpliedValidator;
-		at: 'REQUIRED' put: XMLAttributeDefaultRequiredValidator
+	"assign the fully initialized object with #yourself to avoid
+	possible race conditions when reinitializing the class"
+	AttributeDefaultValidatorClasses :=
+		Dictionary new
+			at: '' put: XMLAttributeDefaultValueValidator;
+			at: 'FIXED' put: XMLAttributeDefaultFixedValueValidator;
+			at: 'IMPLIED' put: XMLAttributeDefaultImpliedValidator;
+			at: 'REQUIRED' put: XMLAttributeDefaultRequiredValidator;
+			yourself
 ]
 
 { #category : #'class initialization' }
 DTDAttributeDefinitionParser class >> initializeNonEnumerationAttributeValidatorClasses [
-	(NonEnumerationAttributeValidatorClasses := Dictionary new)
-		at: 'CDATA' put: XMLCDataAttributeValidator;
-		at: 'ID' put: XMLIDAttributeValidator;
-		at: 'IDREF' put: XMLIDRefAttributeValidator;
-		at: 'IDREFS' put: XMLIDRefsAttributeValidator;
-		at: 'ENTITY' put: XMLEntityAttributeValidator;
-		at: 'ENTITIES' put: XMLEntitiesAttributeValidator;
-		at: 'NMTOKEN' put: XMLNmtokenAttributeValidator;
-		at: 'NMTOKENS' put: XMLNmtokensAttributeValidator
+	"assign the fully initialized object with #yourself to avoid
+	possible race conditions when reinitializing the class"
+	NonEnumerationAttributeValidatorClasses :=
+		Dictionary new
+			at: 'CDATA' put: XMLCDataAttributeValidator;
+			at: 'ID' put: XMLIDAttributeValidator;
+			at: 'IDREF' put: XMLIDRefAttributeValidator;
+			at: 'IDREFS' put: XMLIDRefsAttributeValidator;
+			at: 'ENTITY' put: XMLEntityAttributeValidator;
+			at: 'ENTITIES' put: XMLEntitiesAttributeValidator;
+			at: 'NMTOKEN' put: XMLNmtokenAttributeValidator;
+			at: 'NMTOKENS' put: XMLNmtokensAttributeValidator;
+			yourself
 ]
 
 { #category : #parsing }

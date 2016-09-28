@@ -26,15 +26,24 @@ XMLIntegerReader class >> initialize [
 
 { #category : #'class initialization' }
 XMLIntegerReader class >> initializeCharacterDigitValues [
-	"array instead of dictionary for speed"
-	CharacterDigitValues := Array new: 255.
+	| temp |
+
+	"use an array instead of a dictionary for speed, and use a temp
+	to fully initialize it before assignment to avoid possible race
+	conditions during class reinitialization"
+	temp := Array new: 255.
 	#(#($0 $9 0) #($a $f 10) #($A $Z 10)) do: [:each |
-		each first asciiValue
-			to: each second asciiValue
+		| firstDigitValue lastDigitValue baseValue |
+		firstDigitValue := each first asciiValue.
+		lastDigitValue := each second asciiValue.
+		baseValue := each third.
+		firstDigitValue
+			to: lastDigitValue
 			do: [:i |
-				CharacterDigitValues
+				temp
 					at: i
-					put: i - each first asciiValue + each last]].
+					put: i - firstDigitValue + baseValue]].
+	CharacterDigitValues := temp.
 ]
 
 { #category : #'class initialization' }
@@ -88,6 +97,11 @@ XMLIntegerReader >> atEnd [
 ]
 
 { #category : #private }
+XMLIntegerReader >> errorUnsupportedBase: aBase [
+	Error signal: 'Unsupported base ', aBase printString
+]
+
+{ #category : #private }
 XMLIntegerReader >> next [
 	| nextChar |
 
@@ -137,7 +151,7 @@ XMLIntegerReader >> nextIntegerWithBase: aBase upTo: aReadLimit [
 	| integer maxValue maxBaseValue digitValue readLimit |
 
 	(aBase > 1 and: [aBase <= self class maxBase])
-		ifFalse: [Error signal: 'Unsupported base ', aBase printString].
+		ifFalse: [self errorUnsupportedBase: aBase].
 
 	maxValue := self class maxIntegerValue.
 	maxBaseValue := (maxValue / aBase) floor.

@@ -69,14 +69,18 @@ XMLStreamConverter class >> defaultClass [
 
 { #category : #accessing }
 XMLStreamConverter class >> encodingNames [
-	^ encodingNames ifNil: [
-		encodingNames := Set new.
-		self basicEncodingNames do: [:each |
-			encodingNames
-				add: each;
-				add: each asLowercase;
-				add: each asUppercase].
-		encodingNames]
+	^ encodingNames
+		ifNil: [
+			"assign the fully initialized object with #yourself to avoid
+			possible race conditions when reinitialization the class"
+			encodingNames :=
+				Set new
+					addAll: self basicEncodingNames;
+					addAll:
+						(self basicEncodingNames collect: [:each | each asLowercase]);
+					addAll:
+						(self basicEncodingNames collect: [:each | each asLowercase]);
+					yourself]
 ]
 
 { #category : #accessing }
@@ -111,7 +115,7 @@ XMLStreamConverter class >> initialize [
 
 	self
 		initializeEncodingNamesAndClassesCache;
-		initializePreferredClasses.
+		initializePreferredClasses
 ]
 
 { #category : #'class initialization' }
@@ -122,10 +126,14 @@ XMLStreamConverter class >> initializeEncodingNamesAndClassesCache [
 
 { #category : #'class initialization' }
 XMLStreamConverter class >> initializePreferredClasses [
-	"a class var because it should be shared by all subclasses"
-	(PreferredClasses := IdentitySet new)
-		addAll: XMLUTFStreamConverter allSubclasses;
-		add: XMLByteStreamConverter
+	"A class var because it should be shared by all subclasses.
+	Assign the fully initialized object with #yourself to avoid
+	possible race conditions when reinitialization the class."
+	PreferredClasses :=
+		IdentitySet new
+			addAll: XMLUTFStreamConverter allSubclasses;
+			add: XMLByteStreamConverter;
+			yourself
 ]
 
 { #category : #testing }

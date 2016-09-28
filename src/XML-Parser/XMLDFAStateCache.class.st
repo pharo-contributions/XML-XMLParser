@@ -22,7 +22,7 @@ XMLDFAStateCache >> addDFAStateForNFAStates: anNFAStateSet [
 		ifTrue: [self removeDFAStates].
 	^ cachedDFAStates
 		at: anNFAStateSet
-		put:  (anNFAStateSet asDFAStateWithStateCache: self).
+		put: (anNFAStateSet asDFAStateWithStateCache: self).
 ]
 
 { #category : #private }
@@ -51,8 +51,10 @@ XMLDFAStateCache >> maxCachedDFAStates [
 XMLDFAStateCache >> removeDFAStates [
 	cachedDFAStates
 		valuesDo: [:each | each removeDFAStateTransitions];
-		removeAll;
-		at: firstDFAState nfaStates put: firstDFAState
+		removeAll.
+	cachedDFAStates
+		at: firstDFAState nfaStates
+		put: firstDFAState.
 ]
 
 { #category : #initialization }
