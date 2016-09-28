@@ -3003,7 +3003,7 @@ ConfigurationOfXMLParser >> version289: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version290: spec [ 
-        <version: '2.90' imports: #('2.8.8-baseline')>
+        <version: '2.9.0' imports: #('2.8.8-baseline')>
 
         spec for: #common do: [
                 spec blessing: #release.
