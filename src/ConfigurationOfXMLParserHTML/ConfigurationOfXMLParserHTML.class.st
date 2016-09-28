@@ -293,6 +293,19 @@ ConfigurationOfXMLParserHTML >> baseline129: spec [
 			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline130: spec [
+	<version: '1.3.0-baseline' imports: #('1.0.0-baseline')>
+	spec
+		for: #common
+		do: [ spec project: 'XMLParser' with: #'release-2.9' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec blessing: #baseline.
+			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParserHTML >> customProjectAttributes [
 	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -305,7 +318,7 @@ ConfigurationOfXMLParserHTML >> customProjectAttributes [
 ConfigurationOfXMLParserHTML >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.2.9-baseline'.
+	spec for: #'common' version: '1.3.0-baseline'.
 ]
 
 { #category : #accessing }
@@ -325,7 +338,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.2.9'.
+	spec for: #'common' version: '1.3.0'.
 
 ]
 
@@ -656,5 +669,16 @@ ConfigurationOfXMLParserHTML >> version129: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.40'.
 			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.20'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version130: spec [ 
+        <version: '1.3.0' imports: #('1.3.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.41'.
+			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.21'.
                 ].
 ]
