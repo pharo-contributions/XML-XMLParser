@@ -76,9 +76,11 @@ XMLKeyValueCache >> at: aKey ifAbsentPut: aBlock [
 { #category : #accessing }
 XMLKeyValueCache >> at: aKey ifPresent: aBlock [
 	^ self critical: [
-		collection
-			at: aKey
-			ifPresent: aBlock]
+		"Gemstone's at:ifAbsentPut: does not use cull:"
+		aBlock cull:
+			(collection
+				at: aKey
+				ifAbsent: [^ nil])]
 ]
 
 { #category : #accessing }
