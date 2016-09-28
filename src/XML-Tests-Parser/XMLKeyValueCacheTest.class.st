@@ -22,6 +22,11 @@ XMLKeyValueCacheTest >> cacheClass [
 ]
 
 { #category : #accessing }
+XMLKeyValueCacheTest >> defaultMaxSize [
+	^ 32
+]
+
+{ #category : #accessing }
 XMLKeyValueCacheTest >> keys [
 	^ self associations collect: [:each | each key]
 ]
@@ -103,6 +108,19 @@ XMLKeyValueCacheTest >> testAtIfAbsent [
 		(cache
 			at: 'absentKey'
 			ifAbsent: ['absentValue']) = 'absentValue'.
+
+	"the ifAbsent: block can modify the cache too, so make sure
+	it is cleared if needed to make room"
+	self assert:
+		(cache
+			at: 'absentKey'
+			ifAbsent: [
+				cache
+					at: 'newKey'
+					put: 'newValue']) = 'newValue'.
+	self
+		assert: cache size = 1;
+		assert: (cache at: 'newKey') = 'newValue'.
 ]
 
 { #category : #tests }
@@ -125,23 +143,141 @@ XMLKeyValueCacheTest >> testAtIfAbsentPut [
 	self
 		assert: (cache at: 'newKey') = 'newValue';
 		assert: cache size = 1.
+
+	"the ifAbsentPut: block can modify the cache too, so make sure
+	it is cleared if needed to make room"
+	cache := self newCacheWithEntries.
+	self assert:
+		(cache
+			at: 'newKey'
+			ifAbsentPut: [
+				cache
+					at: 'newKeyTwo'
+					put: 'newValue']) = 'newValue'.
+	self
+		assert: cache size = 2;
+		assert: (cache at: 'newKey') = 'newValue';
+		assert: (cache at: 'newKeyTwo') = 'newValue'.
 ]
 
 { #category : #tests }
-XMLKeyValueCacheTest >> testAtPut [
-	| cache i |
+XMLKeyValueCacheTest >> testAtIfPresent [
+	| cache |
 
-	cache := self cacheClass maxSize: self maxSize.
-	i := 0.
+	cache := self newCacheWithEntries.
 	self keysAndValuesDo: [:key :value |
 		self assert:
 			(cache
 				at: key
-				put: value) = value.
+				ifPresent: [:each | #present -> each]) = (#present -> value).
+		"ensure cull: is used"
+		self assert:
+			(cache
+				at: key
+				ifPresent: [#present]) = #present].
+	self assert:
+		(cache
+			at: 'absentKey'
+			ifPresent: [self fail]) isNil.
+
+	"the ifPresent: block can modify the cache too, so make sure
+	it is cleared if needed to make room"
+	self assert:
+		(cache
+			at: 'absentKey'
+			ifAbsent: [
+				cache
+					at: 'newKey'
+					put: 'newValue']) = 'newValue'.
+	self
+		assert: cache size = 1;
+		assert: (cache at: 'newKey') = 'newValue'.
+]
+
+{ #category : #tests }
+XMLKeyValueCacheTest >> testAtIfPresentPut [
+	| cache |
+
+	cache := self newCacheWithEntries.
+	self keysAndValuesDo: [:key :value |
+		self assert:
+			(cache
+				at: key
+				ifPresent: [:each | each ~= value]
+				put: [self fail]) = value.
 		self assert: (cache at: key) = value.
 
-		i := i + 1.
-		self assert: cache size = i].
+		"ensure cull: is used"
+		self assert:
+			(cache
+				at: key
+				ifPresent: [false]
+				put: [self fail]) = value.
+		self assert: (cache at: key) = value.
+
+		self assert:
+			(cache
+				at: key
+				ifPresent: [:each | each = value]
+				put: ['newValue']) = 'newValue'.
+		self assert: (cache at: key) = 'newValue'].
+
+	self assert:
+		(cache
+			at: 'absentKey'
+			ifPresent: [self fail]
+			put: [self fail]) isNil.
+	self deny: (cache includesKey: 'absentKey').
+
+	"the ifPresent: block can modify the cache too, so make sure
+	it is cleared if needed to make room"
+	self assert:
+		(cache
+			at: self keys first
+			ifPresent: [
+				cache
+					at: 'newKey'
+					put: 'newValue'.
+				false]
+			put: [self fail]) = 'newValue'.
+	self
+		assert: cache size = 1;
+		assert: (cache at: 'newKey') = 'newValue'.
+
+	"the put: block can modify the cache too, so make sure
+	it is cleared if needed to make room"
+	cache := self cacheClass maxSize: 1.
+	cache
+		at: self keys first
+		put: self values first.
+	self assert:
+		(cache
+			at: self keys first
+			ifPresent: [true]
+			put: [
+				cache
+					at: 'newKey'
+					put: 'newValue']) = 'newValue'.
+	self
+		assert: cache size = 1;
+		assert: (cache at: self keys first) = 'newValue'.
+]
+
+{ #category : #tests }
+XMLKeyValueCacheTest >> testAtPut [
+	| cache |
+
+	cache := self cacheClass maxSize: self maxSize.
+	self associations withIndexDo: [:each :i | | key value |
+		key := each key.
+		value := each value.
+		self assert:
+			(cache
+				at: key
+				put: value) = value.
+		self
+			assert: (cache at: key) = value;
+			assert: cache size = i].
 	self assert:
 		(cache
 			at: 'newKey'
@@ -149,6 +285,13 @@ XMLKeyValueCacheTest >> testAtPut [
 	self
 		assert: (cache at: 'newKey') = 'newValue';
 		assert: cache size = 1.
+]
+
+{ #category : #tests }
+XMLKeyValueCacheTest >> testCapacity [
+	self
+		assert: self newCache capacity = self defaultMaxSize;
+		assert: self newCacheWithEntries capacity = self maxSize
 ]
 
 { #category : #tests }
@@ -163,6 +306,17 @@ XMLKeyValueCacheTest >> testClear [
 ]
 
 { #category : #tests }
+XMLKeyValueCacheTest >> testCollection [
+	| collection cache |
+
+	collection := OrderPreservingDictionary new.
+	cache := self cacheClass collection: collection.
+	self
+		assert: cache collection == collection;
+		assert: cache maxSize = self defaultMaxSize.
+]
+
+{ #category : #tests }
 XMLKeyValueCacheTest >> testCopy [
 	| cache copy |
 
@@ -171,36 +325,8 @@ XMLKeyValueCacheTest >> testCopy [
 	self
 		deny: cache == copy;
 		assert: cache collection = copy collection;
-		deny: cache collection == copy collection.
-]
-
-{ #category : #tests }
-XMLKeyValueCacheTest >> testDefaultMaxSize [
-	self assert: self newCache maxSize = self cacheClass defaultMaxSize
-]
-
-{ #category : #tests }
-XMLKeyValueCacheTest >> testEquals [
-	self
-		assert: self newCache = self newCache;
-		assert: self newCacheWithEntries = self newCacheWithEntries;
-		deny: self newCacheWithEntries = self newCache;
-		deny: self newCache = self newCacheWithEntries
-]
-
-{ #category : #tests }
-XMLKeyValueCacheTest >> testHash [
-	"We can only safely test that equal objects have the same hash; testing
-	that different objects have different hashes would be unreliable
-	because #hash is non-cryptographic and has collisions."
-	self
-		assert: self newCache hash = self newCache hash;
-		assert: self newCacheWithEntries hash = self newCacheWithEntries hash;
-		assert:
-			self newCache hash =
-				(self newCacheWithEntries
-					removeAll;
-					hash)
+		deny: cache collection == copy collection;
+		deny: cache mutex == copy mutex.
 ]
 
 { #category : #tests }
@@ -253,14 +379,25 @@ XMLKeyValueCacheTest >> testKeysDo [
 XMLKeyValueCacheTest >> testMaxSize [
 	| cache |
 
+	cache := self newCache.
+	self
+		assert: cache size = 0;
+		assert: cache maxSize = self defaultMaxSize.
+
 	cache := self newCacheWithEntries.
-	self assert: cache size = self maxSize.
+	self
+		assert: cache size = self maxSize;
+		assert: cache maxSize = self maxSize.
 
-	cache maxSize: self maxSize + 1.
-	self assert: cache size = self maxSize.
+	self
+		assert: (cache maxSize: self maxSize + 1) == cache;
+		assert: cache maxSize = (self maxSize + 1);
+		assert: cache size = self maxSize.
 
-	cache maxSize: 0.
-	self assert: cache size = 0.
+	self
+		assert: (cache maxSize: 0) == cache;
+		assert: cache maxSize = 0;
+		assert: cache size = 0.
 ]
 
 { #category : #tests }
@@ -290,9 +427,9 @@ XMLKeyValueCacheTest >> testRemoveKey [
 		self
 			assert: (cache removeKey: key) = value;
 			deny: (cache includesKey: key).
-		self
-			should: [cache removeKey: key]
-			raise: Error].
+
+		"does not raise errors to support concurrent removal"
+		self assert: (cache removeKey: key) isNil].
 	self assert: cache isEmpty.
 ]
 
@@ -311,6 +448,51 @@ XMLKeyValueCacheTest >> testRemoveKeyIfAbsent [
 			(cache
 				removeKey: key
 				ifAbsent: ['absentValue']) = 'absentValue'].
+	self assert: cache isEmpty.
+
+	cache := self newCacheWithEntries.
+	self assert:
+		(cache
+			removeKey: 'absentKey'
+			ifAbsent: [
+				cache
+					at: 'newKey'
+					put: 'newValue']) = 'newValue'.
+	self
+		assert: cache size = 1;
+		assert: (cache at: 'newKey') = 'newValue'.
+]
+
+{ #category : #tests }
+XMLKeyValueCacheTest >> testRemoveKeyIfPresent [
+	| cache |
+
+	cache := self newCacheWithEntries.
+	self keysAndValuesDo: [:key :value |
+		self assert:
+			(cache
+				removeKey: key
+				ifPresent: [:each | each ~= value]) = value.
+		self assert: (cache includesKey: key).
+
+		"ensure cull: is used"
+		self assert:
+			(cache
+				removeKey: key
+				ifPresent: [false]) = value.
+		self assert: (cache includesKey: key).
+
+		self assert:
+			(cache
+				removeKey: key
+				ifPresent: [:each | each = value]) = value.
+		self deny: (cache includesKey: key).
+
+		self assert:
+			(cache
+				removeKey: key
+				ifPresent: [self fail]) isNil.
+		self deny: (cache includesKey: key)].
 	self assert: cache isEmpty.
 ]
 
