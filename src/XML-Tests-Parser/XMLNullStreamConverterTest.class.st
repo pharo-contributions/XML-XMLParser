@@ -10,6 +10,11 @@ XMLNullStreamConverterTest class >> isAbstract [
 ]
 
 { #category : #accessing }
+XMLNullStreamConverterTest >> encodingNames [
+	^ #('')
+]
+
+{ #category : #accessing }
 XMLNullStreamConverterTest >> streamConverterClass [
 	^ XMLNullStreamConverter
 ]

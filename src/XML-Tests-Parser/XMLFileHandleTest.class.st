@@ -291,14 +291,16 @@ XMLFileHandleTest >> testRawWriteStream [
 		skipOrReturnWith: [^ self]
 		ifSkippable: #testRawWriteStream.
 
-	self tempFileManager newFileHandleDo: [:fileHandle | | writeStream |
-		writeStream :=  fileHandle rawWriteStream.
-		self deny: writeStream isXMLConvertingStreamAdapter.
+	self tempFileManager newFileHandleDo: [:fileHandle |
+		"evaluate twice to ensure it truncates existing contents when opening"
+		2 timesRepeat: [| writeStream |
+			writeStream := fileHandle rawWriteStream.
+			self deny: writeStream isXMLConvertingStreamAdapter.
 
-		writeStream
-			nextPutAll: self encodedFileContentsWithByteOrderMark;
-			close.
-		self assert: fileHandle contents = self decodedFileContents].
+			writeStream
+				nextPutAll: self encodedFileContentsWithByteOrderMark;
+				close.
+			self assert: fileHandle contents = self decodedFileContents]].
 ]
 
 { #category : #tests }
@@ -447,18 +449,20 @@ XMLFileHandleTest >> testWriteStream [
 		skipOrReturnWith: [^ self]
 		ifSkippable: #testWriteStream.
 
-	self tempFileManager newFileHandleDo: [:fileHandle | | writeStream |
-		writeStream := fileHandle writeStream.
-		self
-			assert: writeStream isXMLConvertingStreamAdapter;
-			assert: writeStream hasDefaultStreamConverter.
+	self tempFileManager newFileHandleDo: [:fileHandle |
+		"evaluate twice to ensure it truncates existing contents when opening"
+		2 timesRepeat: [| writeStream |
+			writeStream := fileHandle writeStream.
+			self
+				assert: writeStream isXMLConvertingStreamAdapter;
+				assert: writeStream hasDefaultStreamConverter.
 
-		writeStream
-			streamConverter: self streamConverterClass new;
-			nextPutByteOrderMark;
-			nextPutAll: self decodedFileContents;
-			close.
-		self assert: fileHandle contents = self decodedFileContents].
+			writeStream
+				streamConverter: self streamConverterClass new;
+				nextPutByteOrderMark;
+				nextPutAll: self decodedFileContents;
+				close.
+			self assert: fileHandle contents = self decodedFileContents]].
 ]
 
 { #category : #tests }
@@ -468,14 +472,16 @@ XMLFileHandleTest >> testWriteStreamDo [
 		ifSkippable: #testWriteStreamDo.
 
 	self tempFileManager newFileHandleDo: [:fileHandle |
-		fileHandle writeStreamDo: [:writeStream |
-			self
-				assert: writeStream isXMLConvertingStreamAdapter;
-				assert: writeStream hasDefaultStreamConverter.
+		"evaluate twice to ensure it truncates existing contents when opening"
+		2 timesRepeat: [
+			fileHandle writeStreamDo: [:writeStream |
+				self
+					assert: writeStream isXMLConvertingStreamAdapter;
+					assert: writeStream hasDefaultStreamConverter.
 
-			writeStream
-				streamConverter: self streamConverterClass new;
-				nextPutByteOrderMark;
-				nextPutAll: self decodedFileContents].
-		self assert: fileHandle contents = self decodedFileContents].
+				writeStream
+					streamConverter: self streamConverterClass new;
+					nextPutByteOrderMark;
+					nextPutAll: self decodedFileContents].
+			self assert: fileHandle contents = self decodedFileContents]].
 ]

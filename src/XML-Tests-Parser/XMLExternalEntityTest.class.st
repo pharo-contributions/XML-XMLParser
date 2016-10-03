@@ -18,9 +18,11 @@ XMLExternalEntityTest class >> isAbstract [
 
 { #category : #accessing }
 XMLExternalEntityTest class >> skippableTests [
-	^ #(#testExternalSubsetReadLimit #testOnFileNamed #testOnURL
-			#testOnURLUpToLimit #testParsingDocBookArticle #testParsingDocBookExample
-			#testParsingEncodedFile #testParsingExternalEntities #testParsingFile
+	^ #(#testExternalSubsetReadLimit #testOnFileNamed
+			#testOnURL #testOnURLUpToLimit
+			#testParsingDocBookArticle #testParsingDocBookExample
+			#testParsingEncodedFile #testParsingEncodedFileWithEncodingAttribute
+			#testParsingExternalEntities #testParsingFile
 			#testParsingRetrievedURL #testParsingURL)
 ]
 
@@ -81,7 +83,7 @@ XMLExternalEntityTest >> docBookExampleSource [
 	</example>'
 ]
 
-{ #category : #urls }
+{ #category : #accessing }
 XMLExternalEntityTest >> feedURL [
 	^ 'http://pharo.org/news/atom.xml'
 ]
@@ -126,22 +128,6 @@ XMLExternalEntityTest >> musicXMLDocument [
   </part>
 </score-partwise>
 '.
-]
-
-{ #category : #urls }
-XMLExternalEntityTest >> musicXMLExternalEntityURLs [
-	^  #('http://www.musicxml.org/dtds/note.mod'
-		'http://www.musicxml.org/dtds/isolat1.ent'
-		'http://www.musicxml.org/dtds/isolat2.ent'
-		'http://www.musicxml.org/dtds/layout.mod'
-		'http://www.musicxml.org/dtds/identity.mod'
-		'http://www.musicxml.org/dtds/attributes.mod'
-		'http://www.musicxml.org/dtds/partwise.dtd'
-		'http://www.musicxml.org/dtds/barline.mod'
-		'http://www.musicxml.org/dtds/direction.mod'
-		'http://www.musicxml.org/dtds/score.mod'
-		'http://www.musicxml.org/dtds/link.mod'
-		'http://www.musicxml.org/dtds/common.mod')
 ]
 
 { #category : #accessing }
@@ -293,7 +279,29 @@ XMLExternalEntityTest >> testParsingEncodedFile [
 	self tempFileManager newFileHandleDo: [:fileHandle |
 		| document documentFromFile |
 	
-		document := XMLDOMParser parse: self docBookArticleSource.
+		document := XMLDOMParser parse: self wideCharacterXML.
+		document printToFileNamed: fileHandle path.
+		self
+			shouldnt: [
+				documentFromFile :=
+					XMLDOMParser parseFileNamed: fileHandle path]
+			raise: XMLFileException.
+		self
+			assert: documentFromFile encoding isEmpty;
+			assert: documentFromFile printString = document printString].
+]
+
+{ #category : #tests }
+XMLExternalEntityTest >> testParsingEncodedFileWithEncodingAttribute [
+	"This test creates/deletes a file so is skipped by default"
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testParsingEncodedFileWithEncodingAttribute.
+
+	self tempFileManager newFileHandleDo: [:fileHandle |
+		| document documentFromFile |
+	
+		document := XMLDOMParser parse: self wideCharacterXML.
 		document
 			encoding: 'UTF-16BE';
 			printToFileNamed: fileHandle path.
@@ -310,34 +318,34 @@ XMLExternalEntityTest >> testParsingEncodedFile [
 { #category : #tests }
 XMLExternalEntityTest >> testParsingExternalEntities [
 	"This test uses HTTP so is skipped by default."
-	| entityCache entityCacheCopy |
+	| entityCacheCopy |
 
 	self
 		skipOrReturnWith: [^ self]
 		ifSkippable: #testParsingExternalEntities.
 
 	DTDCachingExternalEntityResolver clearEntityCache.
-	entityCache := DTDCachingExternalEntityResolver entityCache.
-	self musicXMLExternalEntityURLs do: [:each |
-		self deny: (entityCache includesKey: each)].
+	self assert: DTDCachingExternalEntityResolver entityCache isEmpty.
 
 	SAXHandler
 		parse: self musicXMLDocument
 		usingNamespaces: true
 		validation: true
 		externalEntities: true.
-	self musicXMLExternalEntityURLs do: [:each |
-		self assert: (entityCache at: each asXMLURI ifAbsent: ['']) notEmpty].
+	self deny: DTDCachingExternalEntityResolver entityCache isEmpty.
 
-	"check for re-requesting"
-	entityCacheCopy := entityCache copy.
+	"ensure there is no re-requesting of cached entities"
+	entityCacheCopy := DTDCachingExternalEntityResolver entityCache copy.
 	SAXHandler
 		parse: self musicXMLDocument
 		usingNamespaces: true
 		validation: true
 		externalEntities: true.
-	self musicXMLExternalEntityURLs do: [:each |
-		self assert: (entityCache at: each asXMLURI) == (entityCacheCopy at: each asXMLURI)].
+	DTDCachingExternalEntityResolver entityCache keysAndValuesDo: [:key :value |
+		self assert:
+			(entityCacheCopy
+				at: key
+				ifAbsent: [self fail]) == value].
 ]
 
 { #category : #tests }
@@ -398,4 +406,22 @@ XMLExternalEntityTest >> testParsingURL [
 		shouldnt: [doc := XMLDOMParser parseURL: self feedURL]
 		raise: XMLHTTPException.
 	self assert: (doc root isNamed: 'feed').
+]
+
+{ #category : #source }
+XMLExternalEntityTest >> wideCharacterXML [
+	^ '<?xml version="1.0"?>
+		<currency>
+			<name>Euro</name>
+			<symbol>{1}</symbol>
+			<sub>
+				<name>Cent</name>
+				<symbol>{2}</symbol>
+				<total>100</total>
+			</sub>
+		</currency>'
+			format:
+				(Array
+					with: 16r20AC asCharacter
+					with: 16rA2 asCharacter)
 ]
