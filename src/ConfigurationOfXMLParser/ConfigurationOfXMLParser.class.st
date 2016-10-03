@@ -757,6 +757,22 @@ ConfigurationOfXMLParser >> baseline288: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.36' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline291: spec [
+	<version: '2.9.1-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.7.2'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.21' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.37' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParser >> customProjectAttributes [
     "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -771,7 +787,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.8.8-baseline'.
+	spec for: #'common' version: '2.9.1-baseline'.
 
 ]
 
@@ -929,7 +945,7 @@ ConfigurationOfXMLParser >> release29: spec [
 	<symbolicVersion: #'release-2.9'>
 
 	"Users should prefer #stable unless they rely on XMLParser internals"
-	spec for: #'common' version: '2.9.0'.
+	spec for: #'common' version: '2.9.1'.
 ]
 
 { #category : #'symbolic versions' }
@@ -3009,5 +3025,16 @@ ConfigurationOfXMLParser >> version290: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.371'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.182'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version291: spec [ 
+        <version: '2.9.1' imports: #('2.9.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.372'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.183'.
                 ].
 ]
