@@ -25,7 +25,9 @@ FileReference >> gtInspectorXMLFileIn: aComposite [
 			act: [:presentation | | sourceToSave streamConverter |
 				sourceToSave := presentation text asString.
 				streamConverter :=
-					currentTextStylerDecorator encoding asXMLStreamConverter.
+					currentTextStylerDecorator hasEncoding
+						ifTrue: [currentTextStylerDecorator encoding asXMLStreamConverter]
+						ifFalse: [XMLStreamConverter default].
 				xmlFileHandle writeStreamDo: [:writeStream |
 					writeStream
 						streamConverter: streamConverter;

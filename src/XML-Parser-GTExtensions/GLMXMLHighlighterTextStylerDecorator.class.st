@@ -34,6 +34,11 @@ GLMXMLHighlighterTextStylerDecorator >> errorColor: aTextColor [
 	errorColor := aTextColor
 ]
 
+{ #category : #testing }
+GLMXMLHighlighterTextStylerDecorator >> hasEncoding [
+	^ self encoding notEmpty
+]
+
 { #category : #accessing }
 GLMXMLHighlighterTextStylerDecorator >> highlightableLengthLimit [
 	^ highlightableLengthLimit

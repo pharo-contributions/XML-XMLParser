@@ -6,9 +6,7 @@ XMLObservableList >> addOrderedListTableToComposite: aComposite paneTitle: aPane
 	^ aComposite table
 		title: aPaneTitle;
 		display: [:aCollection |
-			[(1 to: self size) collect: [:index | index -> (self at: index)]]
-				on: Error
-				do: [#()]];
+			(1 to: self size) collect: [:i | i -> (self at: i)]];
 		beMultiple;
 		searchOn: [:text :each | 
 			Smalltalk compiler
@@ -16,6 +14,8 @@ XMLObservableList >> addOrderedListTableToComposite: aComposite paneTitle: aPane
 				for: each value
 				logged: false];
 		column: 'Index' evaluated: [:assoc | assoc key printString];
+		"unfortunately we can't use #treeViewLabelText for the node column
+		to get syntax highlighting here because it only supports one color"
 		column: aColumnTitle evaluated: [:assoc | assoc value printString];
 		send: [:result |
 			result ifNotNil: [

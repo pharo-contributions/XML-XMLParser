@@ -150,7 +150,7 @@ XMLHighlightingParser >> startXMLDeclarationPosition: aPosition [
 	highlighter startXMLDeclarationHighlightPosition: aPosition
 ]
 
-{ #category : #'handling - content' }
+{ #category : #'handling - lexical' }
 XMLHighlightingParser >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
 	encoding := anEncoding
 ]

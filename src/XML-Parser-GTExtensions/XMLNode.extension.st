@@ -58,7 +58,7 @@ XMLNode >> treeViewChildren [
 
 { #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> treeViewLabelText [
-	"the label (text) of this node in a tree view"
+	"the label Text of this node to be used in a tree view"
 	^ self asHighlightedTextWrittenWith: [:writer |
 		self writeTreeViewLabelXMLOn: writer]
 ]
