@@ -24,6 +24,8 @@ XMLNodeFactory >> attributeListClass [
 
 { #category : #accessing }
 XMLNodeFactory >> cdataClass [
+	"Can be overridden to return a custom XMLCData subclass."
+
 	^ XMLCData
 ]
 
@@ -54,6 +56,8 @@ XMLNodeFactory >> classForElement: aQualifiedName namespaceURI: aURI localName: 
 
 { #category : #accessing }
 XMLNodeFactory >> commentClass [
+	"Can be overridden to return a custom XMLComment subclass."
+
 	^ XMLComment
 ]
 
@@ -64,11 +68,15 @@ XMLNodeFactory >> doctypeDeclarationClass [
 
 { #category : #accessing }
 XMLNodeFactory >> documentClass [
+	"Can be overridden to return a custom XMLDocument subclass."
+
 	^ XMLDocument
 ]
 
 { #category : #accessing }
 XMLNodeFactory >> elementClass [
+	"Can be overridden to return a custom XMLElement subclass."
+
 	^ XMLElement
 ]
 
@@ -178,6 +186,8 @@ XMLNodeFactory >> parameterEntityDeclarationClass [
 
 { #category : #accessing }
 XMLNodeFactory >> piClass [
+	"Can be overridden to return a custom XMLPI subclass."
+
 	^ XMLPI
 ]
 
@@ -190,8 +200,9 @@ XMLNodeFactory >> stringClass [
 
 { #category : #accessing }
 XMLNodeFactory >> stringNodeClass [
+	"Can be overridden to return a custom XMLString subclass."
+
 	"for now this delegates to the soft-deprecated #stringClass to not
 	break custom subclasses that override it expecting it to be sent"
-
 	^ self stringClass
 ]

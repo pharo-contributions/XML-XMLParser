@@ -6,7 +6,9 @@ StandardOrderedDictionary >> xmlAt: aKey newPut: aValue [
 	| oldSize |
 
 	oldSize := dictionary size.
-	dictionary at: aKey put: aValue.
+	dictionary
+		at: aKey
+		put: aValue.
 	dictionary size > oldSize
 		ifTrue: [
 			orderedKeys size > oldSize

@@ -17,7 +17,8 @@ DTDUnresolvableExternalEntity >> hasUnresolvedReplacement [
 DTDUnresolvableExternalEntity >> resolveReplacement [
 	XMLParserException
 		formatSignal:
-			'Unresolvable external entity {1}. ',
-			'Enable resolution with #resolvesExternalEntityReferences:'
+			'External entity {1} can''t be resolved unless resolution is ',
+			'enabled; use #resolvesExternalEntityReferences: before parsing ',
+			'to enable'
 		with: self asReference
 ]

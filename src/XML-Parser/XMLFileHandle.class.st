@@ -3,7 +3,7 @@ This is an abstract class for file handles to read/write/delete files. Subclasse
 
 The #readStream/#writeStream messages return file streams that do decoding/encoding, while the #rawReadStream/#rawWriteStream streams don't.
 
-The #get/#getUpToLimit:decoding: and #streamGet/#streamGetUpToLimit:decoding: interface of XMLURI is supported.
+These classes implement the #get/#getUpToLimit:decoding: and #streamGet/#streamGetUpToLimit:decoding: interface of XMLURI.
 "
 Class {
 	#name : #XMLFileHandle,
@@ -269,6 +269,9 @@ XMLFileHandle >> readStream [
 
 { #category : #reading }
 XMLFileHandle >> readStreamDo: aBlock [
+	"evaluates aBlock with a file read stream with decoding and automatically
+	closes it after"
+
 	| readStream |
 
 	readStream := self readStream.
@@ -304,11 +307,16 @@ XMLFileHandle >> streamGetUpToLimit: aMaxSize decoding: aBoolean [
 
 { #category : #writing }
 XMLFileHandle >> writeStream [
+	"returns a file write stream with encoding; truncates existing files"
+
 	^ XMLEncodingWriteStreamAdapter on: self rawWriteStream
 ]
 
 { #category : #writing }
 XMLFileHandle >> writeStreamDo: aBlock [
+	"evaluates aBlock with a file write stream with encoding and
+	automatically closes it after; truncates existing files"
+
 	| writeStream |
 
 	writeStream := self writeStream.
