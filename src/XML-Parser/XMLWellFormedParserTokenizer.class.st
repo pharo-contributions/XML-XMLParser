@@ -63,6 +63,7 @@ XMLWellFormedParserTokenizer class >> initializeEncodingNameStartChars [
 
 { #category : #'class initialization' }
 XMLWellFormedParserTokenizer class >> initializeNormalizedSpace [
+	"stored in a class var for faster access"
 	NormalizedSpace := Character space
 ]
 
@@ -70,6 +71,8 @@ XMLWellFormedParserTokenizer class >> initializeNormalizedSpace [
 XMLWellFormedParserTokenizer class >> initializePublicIDChars [
 	"PubidChar ::= #x20 | #xD | #xA | [a-zA-Z0-9] | [-'()+,./:=?;!*#@$_%]"
 
+	"assign the fully initialized object with #yourself to avoid
+	possible race conditions when reinitialization the class"
 	PublicIDChars :=
 		BitmapCharacterSet new
 			add: 16r20 asCharacter;

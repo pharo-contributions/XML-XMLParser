@@ -8,8 +8,8 @@ Class {
 		'documentReadLimit',
 		'maxEntityReplacementDepth'
 	],
-	#classInstVars : [
-		'defaultReadLimit'
+	#classVars : [
+		'DefaultReadLimit'
 	],
 	#category : #'XML-Parser'
 }
@@ -26,13 +26,14 @@ XMLParserLimits class >> defaultMaxEntityReplacementDepth [
 
 { #category : #accessing }
 XMLParserLimits class >> defaultReadLimit [
-	^ defaultReadLimit ifNil: [defaultReadLimit := 10000000]
+	^ DefaultReadLimit
+		ifNil: [DefaultReadLimit := 10000000]
 ]
 
 { #category : #accessing }
 XMLParserLimits class >> defaultReadLimit: aDefaultLimit [
 	"can be used to change the default read limit instances start with"
-	defaultReadLimit := aDefaultLimit
+	DefaultReadLimit := aDefaultLimit
 ]
 
 { #category : #accessing }

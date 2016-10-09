@@ -4,8 +4,8 @@ This class is a resolver that caches non-local entities in a global cache so the
 Class {
 	#name : #DTDCachingExternalEntityResolver,
 	#superclass : #DTDExternalEntityResolver,
-	#classInstVars : [
-		'entityCache'
+	#classVars : [
+		'EntityCache'
 	],
 	#category : #'XML-Parser-DTD'
 }
@@ -18,8 +18,10 @@ DTDCachingExternalEntityResolver class >> clearEntityCache [
 
 { #category : #accessing }
 DTDCachingExternalEntityResolver class >> entityCache [
-	^ entityCache
-		ifNil: [entityCache := XMLKeyValueCache maxSize: 64]
+	"a class variable so it's shared by all subclasses, but lazy initialized
+	so it isn't initialized unless needed"
+	^ EntityCache
+		ifNil: [EntityCache := XMLKeyValueCache maxSize: 64]
 ]
 
 { #category : #accessing }

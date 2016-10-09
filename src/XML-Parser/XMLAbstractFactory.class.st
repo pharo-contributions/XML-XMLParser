@@ -48,14 +48,18 @@ XMLAbstractFactory class >> hasSupportedImplementation [
 XMLAbstractFactory class >> implementation [
 	^ implementation
 		ifNil: [
-			(implementation := self findSupportedImplementation)
-				ifNil: [self errorNoSupportedImplementation].
+			"avoid assigning to the class inst var unless an implementation
+			was found to minimize write conflicts on GS"
+			self findSupportedImplementation
+				ifNil: [self errorNoSupportedImplementation]
+				ifNotNil: [:supportedImplementation |
+					implementation := supportedImplementation].
 			implementation]
 ]
 
 { #category : #accessing }
-XMLAbstractFactory class >> implementation: aClass [
-	implementation := aClass
+XMLAbstractFactory class >> implementation: aClassOrNil [
+	implementation := aClassOrNil
 ]
 
 { #category : #'class initialization' }

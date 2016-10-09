@@ -34,34 +34,6 @@ XMLFileHandle class >> errorNoSupportedImplementation [
 	XMLFileException signal: 'File IO unsupported'
 ]
 
-{ #category : #'class initialization' }
-XMLFileHandle class >> initialize [
-	"self initialize"
-
-	"a class variable so it's shared by all subclasses"
-	XMLDocumentFileExtensions :=
-		#('atom' "Atom Syndication Format"
-			'dbk' "DocBook XML"
-			'docm' "Office Open XML Document"
-			'docx' "Office Open XML Document"
-			'pptm' "Office Open XML Presentation"
-			'pptx' "Office Open XML Presentation"
-			'rdf' "Resource Description Framework"
-			'rss' "Rich Site Summary"
-			'svg' "Scalable Vector Graphics"
-			'xbel' "XML Bookmark Exchange Language"
-			'xfd' "Extensible Forms Description Language"
-			'xfdl' "Extensible Forms Description Language"
-			'xhtml'
-			'xlsm' "Office Open XML Workbook"
-			'xlsx' "Office Open XML Workbook"
-			'xml'
-			'xsd' "XML Schema Definition"
-			'xspf' "XML Shareable Playlist Format"
-			'xul' "XML User Interface Language"
-		) asSet
-]
-
 { #category : #'instance creation' }
 XMLFileHandle class >> path: aPathString [
 	^ self new path: aPathString
@@ -74,12 +46,38 @@ XMLFileHandle class >> preferredImplementation [
 
 { #category : #accessing }
 XMLFileHandle class >> xmlDocumentFileExtensions [
+	"a class variable so it's shared by all subclasses, but lazy initialized
+	so it isn't initialized unless needed"
 	^ XMLDocumentFileExtensions
+		ifNil: [
+			XMLDocumentFileExtensions :=
+				#('atom' "Atom Syndication Format"
+					'dbk' "DocBook XML"
+					'docm' "Office Open XML Document"
+					'docx' "Office Open XML Document"
+					'pptm' "Office Open XML Presentation"
+					'pptx' "Office Open XML Presentation"
+					'rdf' "Resource Description Framework"
+					'rss' "Rich Site Summary"
+					'svg' "Scalable Vector Graphics"
+					'xbel' "XML Bookmark Exchange Language"
+					'xfd' "Extensible Forms Description Language"
+					'xfdl' "Extensible Forms Description Language"
+					'xhtml'
+					'xlsm' "Office Open XML Workbook"
+					'xlsx' "Office Open XML Workbook"
+					'xml'
+					'xsd' "XML Schema Definition"
+					'xspf' "XML Shareable Playlist Format"
+					'xul' "XML User Interface Language"
+				) asSet]
 ]
 
 { #category : #accessing }
-XMLFileHandle class >> xmlDocumentFileExtensions: aCollection [
-	XMLDocumentFileExtensions := aCollection asSet
+XMLFileHandle class >> xmlDocumentFileExtensions: aCollectionOrNil [
+	XMLDocumentFileExtensions :=
+		aCollectionOrNil
+			ifNotNil: [aCollectionOrNil asSet]
 ]
 
 { #category : #converting }

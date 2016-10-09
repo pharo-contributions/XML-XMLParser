@@ -22,8 +22,7 @@ XMLTextConverterStreamConverter class >> canConvertEncoding: anEncodingName [
 XMLTextConverterStreamConverter class >> encodingNamesAndTextConverterClassesCache [
 	^ EncodingNamesAndTextConverterClassesCache
 		ifNil: [
-			EncodingNamesAndTextConverterClassesCache :=
-				XMLKeyValueCache maxSize: 32]
+			EncodingNamesAndTextConverterClassesCache := XMLKeyValueCache maxSize: 32]
 ]
 
 { #category : #private }

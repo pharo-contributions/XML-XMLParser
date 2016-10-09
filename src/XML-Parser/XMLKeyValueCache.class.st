@@ -1,9 +1,9 @@
 "
-A simple key-value cache that automatically empties when it reaches a maximum size. Uses a recursive mutex to ensure thread-safety.
+A simple key-value cache that automatically empties when it reaches a maximum size. Uses a reentrant mutex to ensure thread-safety.
 "
 Class {
 	#name : #XMLKeyValueCache,
-	#superclass : #Object,
+	#superclass : #XMLAbstractFactory,
 	#instVars : [
 		'collection',
 		'maxSize',
@@ -12,40 +12,29 @@ Class {
 	#category : #'XML-Parser-Utils'
 }
 
-{ #category : #'instance creation' }
-XMLKeyValueCache class >> collection: aKeyValueCollection [
-	^ self
-		collection: aKeyValueCollection
-		maxSize: self defaultMaxSize
-]
-
-{ #category : #'instance creation' }
-XMLKeyValueCache class >> collection: aKeyValueCollection maxSize: anInteger [
-	^ self basicNew initialize
-		setCollection: aKeyValueCollection
-		maxSize: anInteger
-]
-
-{ #category : #private }
-XMLKeyValueCache class >> collectionClass [
-	^ Dictionary
-]
-
 { #category : #private }
 XMLKeyValueCache class >> defaultMaxSize [
 	^ 32
 ]
 
+{ #category : #private }
+XMLKeyValueCache class >> errorNoSupportedImplementation [
+	Error signal: 'No supported key-value cache class'
+]
+
 { #category : #'instance creation' }
 XMLKeyValueCache class >> maxSize: anInteger [
-	^ self
-		collection: self collectionClass new
-		maxSize: anInteger
+	^ self implementation basicNew initialize setMaxSize: anInteger
 ]
 
 { #category : #'instance creation' }
 XMLKeyValueCache class >> new [
 	^ self maxSize: self defaultMaxSize
+]
+
+{ #category : #accessing }
+XMLKeyValueCache class >> preferredImplementation [
+	^ XMLStandardKeyValueCache
 ]
 
 { #category : #accessing }
@@ -58,7 +47,7 @@ XMLKeyValueCache >> at: aKey [
 { #category : #accessing }
 XMLKeyValueCache >> at: aKey ifAbsent: aBlock [
 	^ self critical: [
-		collection
+		self collection
 			at: aKey
 			ifAbsent: aBlock]
 ]
@@ -78,7 +67,7 @@ XMLKeyValueCache >> at: aKey ifPresent: aBlock [
 	^ self critical: [
 		"Gemstone's at:ifAbsentPut: does not use cull:"
 		aBlock cull:
-			(collection
+			(self collection
 				at: aKey
 				ifAbsent: [^ nil])]
 ]
@@ -103,18 +92,18 @@ XMLKeyValueCache >> at: aKey ifPresent: aPresentBlock put: aValueBlock [
 { #category : #accessing }
 XMLKeyValueCache >> at: aKey put: aValue [
 	^ self critical: [
-		(collection includesKey: aKey)
+		(self collection includesKey: aKey)
 			ifFalse: [
-				collection size >= maxSize
-					ifTrue: [collection removeAll]].
-		collection
+				self collection size >= self maxSize
+					ifTrue: [self collection removeAll]].
+		self collection
 			at: aKey
 			put: aValue]
 ]
 
 { #category : #accessing }
 XMLKeyValueCache >> capacity [
-	^ maxSize
+	^ self maxSize
 ]
 
 { #category : #clearing }
@@ -124,7 +113,12 @@ XMLKeyValueCache >> clear [
 
 { #category : #accessing }
 XMLKeyValueCache >> collection [
-	^ collection
+	self subclassResponsibility
+]
+
+{ #category : #private }
+XMLKeyValueCache >> collectionClass [
+	^ Dictionary
 ]
 
 { #category : #copying }
@@ -136,12 +130,12 @@ XMLKeyValueCache >> copy [
 XMLKeyValueCache >> critical: aBlock [
 	"Can be used to lock the cache during one or more operations in aBlock"
 
-	^ mutex critical: aBlock
+	^ self mutex critical: aBlock
 ]
 
 { #category : #testing }
 XMLKeyValueCache >> includesKey: aKey [
-	^ self critical: [collection includesKey: aKey]
+	^ self critical: [self collection includesKey: aKey]
 ]
 
 { #category : #testing }
@@ -151,22 +145,22 @@ XMLKeyValueCache >> isEmpty [
 
 { #category : #accessing }
 XMLKeyValueCache >> keys [
-	^ self critical: [collection keys]
+	^ self critical: [self collection keys]
 ]
 
 { #category : #enumerating }
 XMLKeyValueCache >> keysAndValuesDo: aTwoArgumentBlock [
-	self critical: [collection keysAndValuesDo: aTwoArgumentBlock]
+	self critical: [self collection keysAndValuesDo: aTwoArgumentBlock]
 ]
 
 { #category : #enumerating }
 XMLKeyValueCache >> keysDo: aBlock [
-	self critical: [collection keysDo: aBlock]
+	self critical: [self collection keysDo: aBlock]
 ]
 
 { #category : #accessing }
 XMLKeyValueCache >> loadFactor [
-	^ self size / maxSize
+	^ self size / self maxSize
 ]
 
 { #category : #accessing }
@@ -179,7 +173,7 @@ XMLKeyValueCache >> maxSize: anInteger [
 	self critical: [| oldMaxSize |
 		oldMaxSize := maxSize.
 		(maxSize := anInteger) < oldMaxSize
-			ifTrue: [collection removeAll]]
+			ifTrue: [self collection removeAll]]
 ]
 
 { #category : #private }
@@ -196,8 +190,8 @@ XMLKeyValueCache >> notEmpty [
 XMLKeyValueCache >> postCopy [
 	super postCopy.
 
-	collection := collection copy.
-	mutex := XMLReentrantMutexFactory new.
+	mutex := XMLReentrantMutex new.
+	self setCollection: self collection copy.
 ]
 
 { #category : #printing }
@@ -208,7 +202,7 @@ XMLKeyValueCache >> printOn: aStream [
 
 { #category : #removing }
 XMLKeyValueCache >> removeAll [
-	self critical: [collection removeAll]
+	self critical: [self collection removeAll]
 ]
 
 { #category : #removing }
@@ -216,7 +210,7 @@ XMLKeyValueCache >> removeKey: aKey [
 	"this attempts to remove a key, but to support concurrent removal, it
 	does not raise errors if it was already removed"
 	^ self critical: [
-		collection
+		self collection
 			removeKey: aKey
 			ifAbsent: [nil]]
 ]
@@ -224,7 +218,7 @@ XMLKeyValueCache >> removeKey: aKey [
 { #category : #removing }
 XMLKeyValueCache >> removeKey: aKey ifAbsent: aBlock [
 	^ self critical: [
-		collection
+		self collection
 			removeKey: aKey
 			ifAbsent: aBlock]
 ]
@@ -243,23 +237,28 @@ XMLKeyValueCache >> removeKey: aKey ifPresent: aBlock [
 ]
 
 { #category : #initialization }
-XMLKeyValueCache >> setCollection: aKeyValueCollection maxSize: anInteger [
-	collection := aKeyValueCollection.
+XMLKeyValueCache >> setCollection: aKeyValueCollection [
+	self subclassResponsibility
+]
+
+{ #category : #initialization }
+XMLKeyValueCache >> setMaxSize: anInteger [
 	maxSize := anInteger.
-	mutex := XMLReentrantMutexFactory new.
+	mutex := XMLReentrantMutex new.
+	self setCollection: self collectionClass new.
 ]
 
 { #category : #accessing }
 XMLKeyValueCache >> size [
-	^ collection size
+	^ self collection size
 ]
 
 { #category : #accessing }
 XMLKeyValueCache >> values [
-	^ self critical: [collection values]
+	^ self critical: [self collection values]
 ]
 
 { #category : #enumerating }
 XMLKeyValueCache >> valuesDo: aBlock [
-	self critical: [collection valuesDo: aBlock]
+	self critical: [self collection valuesDo: aBlock]
 ]

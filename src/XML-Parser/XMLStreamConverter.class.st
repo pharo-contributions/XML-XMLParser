@@ -36,7 +36,7 @@ XMLStreamConverter class >> basicEncodingNames [
 
 { #category : #accessing }
 XMLStreamConverter class >> byteOrderMark [
-	"avoid asString for portability"
+	"avoid #asString and #newFrom: for GS portability"
 	^ String withAll: (self byteOrderMarkBytes collect: [:each | each asCharacter])
 ]
 
@@ -79,18 +79,23 @@ XMLStreamConverter class >> encodingNames [
 					addAll:
 						(self basicEncodingNames collect: [:each | each asLowercase]);
 					addAll:
-						(self basicEncodingNames collect: [:each | each asLowercase]);
+						(self basicEncodingNames collect: [:each | each asUppercase]);
 					yourself]
 ]
 
 { #category : #accessing }
-XMLStreamConverter class >> encodingNames: aSet [
-	encodingNames := aSet
+XMLStreamConverter class >> encodingNames: aCollectionOrNil [
+	encodingNames :=
+		aCollectionOrNil
+			ifNotNil: [aCollectionOrNil asSet]
 ]
 
 { #category : #private }
 XMLStreamConverter class >> encodingNamesAndClassesCache [
+	"a class variable so it's shared by all subclasses, but lazy initialized
+	so it isn't initialized unless needed"
 	^ EncodingNamesAndClassesCache
+		ifNil: [EncodingNamesAndClassesCache := XMLKeyValueCache maxSize: 128]
 ]
 
 { #category : #private }
@@ -108,33 +113,6 @@ XMLStreamConverter class >> findClassForEncoding: anEncodingName [
 			ifTrue: [^ each]].
 
 	^ nil.
-]
-
-{ #category : #'class initialization' }
-XMLStreamConverter class >> initialize [
-	"self initialize"
-
-	self
-		initializeEncodingNamesAndClassesCache;
-		initializePreferredClasses
-]
-
-{ #category : #'class initialization' }
-XMLStreamConverter class >> initializeEncodingNamesAndClassesCache [
-	"a class var because it should be shared by all subclasses"
-	EncodingNamesAndClassesCache := XMLKeyValueCache maxSize: 128
-]
-
-{ #category : #'class initialization' }
-XMLStreamConverter class >> initializePreferredClasses [
-	"A class var because it should be shared by all subclasses.
-	Assign the fully initialized object with #yourself to avoid
-	possible race conditions when reinitialization the class."
-	PreferredClasses :=
-		IdentitySet new
-			addAll: XMLUTFStreamConverter allSubclasses;
-			add: XMLByteStreamConverter;
-			yourself
 ]
 
 { #category : #testing }
@@ -157,7 +135,8 @@ XMLStreamConverter class >> isPreferredClass [
 XMLStreamConverter class >> newForEncoding: anEncodingName [
 	(self classForEncoding: anEncodingName)
 		ifNil: [^ self null]
-		ifNotNil: [:converterClass | ^ converterClass new encoding: anEncodingName]
+		ifNotNil: [:converterClass |
+			^ converterClass new encoding: anEncodingName]
 ]
 
 { #category : #'instance creation' }
@@ -167,7 +146,23 @@ XMLStreamConverter class >> null [
 
 { #category : #accessing }
 XMLStreamConverter class >> preferredClasses [
+	"A class var because it should be shared by all subclasses.
+	Assign the fully initialized object with #yourself to avoid
+	possible race conditions when reinitialization the class."
 	^ PreferredClasses
+		ifNil: [
+			PreferredClasses :=
+				IdentitySet new
+					addAll: XMLUTFStreamConverter allSubclasses;
+					add: XMLByteStreamConverter;
+					yourself]
+]
+
+{ #category : #accessing }
+XMLStreamConverter class >> preferredClasses: aCollectionOrNil [
+	PreferredClasses :=
+		aCollectionOrNil
+			ifNotNil: [aCollectionOrNil asSet]
 ]
 
 { #category : #converting }
