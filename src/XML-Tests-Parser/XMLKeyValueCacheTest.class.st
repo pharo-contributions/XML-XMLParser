@@ -306,17 +306,6 @@ XMLKeyValueCacheTest >> testClear [
 ]
 
 { #category : #tests }
-XMLKeyValueCacheTest >> testCollection [
-	| collection cache |
-
-	collection := OrderPreservingDictionary new.
-	cache := self cacheClass collection: collection.
-	self
-		assert: cache collection == collection;
-		assert: cache maxSize = self defaultMaxSize.
-]
-
-{ #category : #tests }
 XMLKeyValueCacheTest >> testCopy [
 	| cache copy |
 
