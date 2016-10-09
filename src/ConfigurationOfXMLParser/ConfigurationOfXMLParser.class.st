@@ -256,16 +256,20 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				group: 'CoreWithWriting' with: #('XML-Parser' 'XMLWriter');
 				group: 'Tests' with: #('XML-Tests-Parser') ].
 
-	"load gemstone compatibility methods"
 	spec
 		for: #gemstone
 		do: [
+			"load gemstone compatibility methods"
 			spec
 				package: 'XML-Parser'
 				with: [ spec includes: 'XML-Parser-GemstoneCompatibility' ].
 			spec
 				package: 'XML-Parser-GemstoneCompatibility'
-				with: [ spec requires: 'XML-Parser' ]. ].
+				with: [ spec requires: 'XML-Parser' ].
+
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #forceInitializationOfClassAndClassInstanceVariables. ].
 
 	"load GT extension methods"
 	spec
@@ -791,6 +795,34 @@ ConfigurationOfXMLParser >> development: spec [
 
 ]
 
+{ #category : #doits }
+ConfigurationOfXMLParser >> forceInitializationOfClassAndClassInstanceVariables [
+	"All lazily initialized class and class instance variables must be
+	explicitly initialized on GS during installation to prevent write
+	conflicts between Gems later on. 
+	
+	This can help identify classes that use lazy initialization:
+		(SystemNavigation default allClassesInPackageNamed: 'XML-Parser') select:
+			[:each |
+				(each classVariables notEmpty
+					or: [each class instanceVariables notEmpty])
+					and: [(each class includesSelector: #initialize) not]]
+	"
+
+	XMLAbstractFactory allSubclassesDo: [:each |
+		each hasSupportedImplementation
+			ifTrue: [each implementation]].
+	XMLStreamConverter
+		encodingNamesAndClassesCache;
+		preferredClasses;
+		encodingNames;
+		allSubclassesDo: [:each | each encodingNames].
+	XMLParserLimits defaultDocumentReadLimit.
+	DTDCachingExternalEntityResolver entityCache.
+	XMLFileHandle xmlDocumentFileExtensions.
+	XMLTextConverterStreamConverter encodingNamesAndTextConverterClassesCache.
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParser >> project [
 	^ project
@@ -941,6 +973,14 @@ ConfigurationOfXMLParser >> release289: spec [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release292: spec [
+	<symbolicVersion: #'release-2.9.2'>
+
+	"Users should prefer #stable unless they rely on XMLParser internals"
+	spec for: #'common' version: '2.9.2'.
+]
+
+{ #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> release29: spec [
 	<symbolicVersion: #'release-2.9'>
 
@@ -962,7 +1002,7 @@ ConfigurationOfXMLParser >> stable: spec [
 
 	"Users should prefer #stable unless they rely on XMLParser internals,
 	but it will delegate to a specific #release version from now on."
-	spec for: #'common' version: #'release-2.9'.
+	spec for: #'common' version: #'release-2.9.2'.
 ]
 
 { #category : #versions }
@@ -3036,5 +3076,16 @@ ConfigurationOfXMLParser >> version291: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.372'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.183'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version292: spec [ 
+        <version: '2.9.2' imports: #('2.9.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.373'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.184'.
                 ].
 ]
