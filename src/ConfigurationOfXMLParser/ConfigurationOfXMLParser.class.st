@@ -771,7 +771,7 @@ ConfigurationOfXMLParser >> baseline291: spec [
 			spec project: 'XMLWriter' with: '2.7.2'. ].
 	spec
 		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.21' ].
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.22' ].
 	spec
 		for: #gt
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.37' ]
@@ -977,7 +977,7 @@ ConfigurationOfXMLParser >> release292: spec [
 	<symbolicVersion: #'release-2.9.2'>
 
 	"Users should prefer #stable unless they rely on XMLParser internals"
-	spec for: #'common' version: '2.9.2'.
+	spec for: #'common' version: '2.9.3'.
 ]
 
 { #category : #'symbolic versions' }
@@ -3087,5 +3087,16 @@ ConfigurationOfXMLParser >> version292: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.373'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.184'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version293: spec [ 
+        <version: '2.9.3' imports: #('2.9.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.374'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.185'.
                 ].
 ]
