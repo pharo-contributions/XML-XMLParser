@@ -1524,6 +1524,23 @@ XMLParserTest >> testCDataSectionUnterminated [
 ]
 
 { #category : #tests }
+XMLParserTest >> testCharacterReferenceUnexpected [
+	#('<!DOCTYPE test [&#32;]><test/>'
+		'&#32;<test/>'
+		'<test/>&#32;')
+		do: [:each | 
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException.
+			self
+				should: [
+					(SAXHandler on: each)
+						replacesContentEntityReferences: false;
+						parseDocument]
+				raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
 XMLParserTest >> testCharacterReferenceUnterminated [
 	#('<test>&#'
 		'<test>&#</test>'
@@ -3722,6 +3739,35 @@ XMLParserTest >> testEntityReferenceInternalDeclarationExternallyDefined [
 ]
 
 { #category : #tests }
+XMLParserTest >> testEntityReferenceUnexpected [
+	#('<!DOCTYPE test [
+			<!ENTITY entity "<!--comment-->">
+			&entity;]>
+		<test/>'
+		'<!DOCTYPE test [
+			<!ENTITY entity "<!--comment-->">
+			]>
+		&entity;
+		<test/>'
+		'<!DOCTYPE test [
+			<!ENTITY entity "<!--comment-->">
+			]>
+		<test/>
+		&entity;')
+		do: [:each | 
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException.
+			"should still raise errors even when replacement is disabled"
+			self
+				should: [
+					(SAXHandler on: each)
+						replacesContentEntityReferences: false;
+						parseDocument]
+				raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
 XMLParserTest >> testEntityReferenceUnterminated [
 	#('<!DOCTYPE test [
 			<!ENTITY % entity "<!ELEMENT test EMPTY>">
@@ -3742,7 +3788,7 @@ XMLParserTest >> testEntityReferenceUnterminated [
 			self
 				should: [SAXHandler parse: each]
 				raise: XMLWellFormednessException.
-			"should still raise erros even when replacement is disabled"
+			"should still raise errors even when replacement is disabled"
 			self
 				should: [
 					(SAXHandler on: each)
@@ -3835,7 +3881,6 @@ XMLParserTest >> testEntityReplacementPredefined [
 			nextPut: $&;
 			nextPutAll: name;
 			nextPut: $;.
-
 		replacements nextPut: char].
 
 	document :=

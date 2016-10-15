@@ -18,12 +18,20 @@ XMLExternalEntityTest class >> isAbstract [
 
 { #category : #accessing }
 XMLExternalEntityTest class >> skippableTests [
-	^ #(#testExternalSubsetReadLimit #testOnFileNamed
-			#testOnURL #testOnURLUpToLimit
-			#testParsingDocBookArticle #testParsingDocBookExample
-			#testParsingEncodedFile #testParsingEncodedFileWithEncodingAttribute
-			#testParsingExternalEntities #testParsingFile
-			#testParsingRetrievedURL #testParsingURL)
+	^ #(testExternalSubsetReadLimit
+			testOnFileNamed
+			testOnURL
+			testOnURLUpToLimit
+			testParsingDocBookArticle
+			testParsingDocBookExample
+			testParsingEncodedFile
+			testParsingEncodedFileWithBOM
+			testParsingEncodedFileWithEncodingAttribute
+			testParsingEncodedFileWithEncodingAttributeAndBOM
+			testParsingExternalEntities
+			testParsingFile
+			testParsingRetrievedURL
+			testParsingURL)
 ]
 
 { #category : #accessing }
@@ -81,6 +89,11 @@ XMLExternalEntityTest >> docBookExampleSource [
 				yourself)
 		</programlisting>
 	</example>'
+]
+
+{ #category : #accessing }
+XMLExternalEntityTest >> encodingNames [
+	^ #('UTF-8' 'UTF-16' 'UTF-16-LE' 'UTF-32' 'UTF-32-LE')
 ]
 
 { #category : #accessing }
@@ -277,18 +290,45 @@ XMLExternalEntityTest >> testParsingEncodedFile [
 		ifSkippable: #testParsingEncodedFile.
 
 	self tempFileManager newFileHandleDo: [:fileHandle |
-		| document documentFromFile |
-	
-		document := XMLDOMParser parse: self wideCharacterXML.
-		document printToFileNamed: fileHandle path.
-		self
-			shouldnt: [
-				documentFromFile :=
-					XMLDOMParser parseFileNamed: fileHandle path]
-			raise: XMLFileException.
-		self
-			assert: documentFromFile encoding isEmpty;
-			assert: documentFromFile printString = document printString].
+		self encodingNames do: [:encoding | | document documentFromFile |
+			document := XMLDOMParser parse: self wideCharacterXML.
+			fileHandle writeStreamDo: [:stream |
+				stream
+					streamConverter: encoding asXMLStreamConverter;
+					nextPutAll: document printString].
+			self
+				shouldnt: [
+					documentFromFile :=
+						XMLDOMParser parseFileNamed: fileHandle path]
+				raise: XMLFileException.
+			self
+				assert: documentFromFile encoding = '';
+				assert: documentFromFile printString = document printString]].
+]
+
+{ #category : #tests }
+XMLExternalEntityTest >> testParsingEncodedFileWithBOM [
+	"This test creates/deletes a file so is skipped by default"
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testParsingEncodedFileWithBOM.
+
+	self tempFileManager newFileHandleDo: [:fileHandle |
+		self encodingNames do: [:encoding | | document documentFromFile |
+			document := XMLDOMParser parse: self wideCharacterXML.
+			fileHandle writeStreamDo: [:stream |
+				stream
+					streamConverter: encoding asXMLStreamConverter;
+					nextPutByteOrderMark;
+					nextPutAll: document printString].
+			self
+				shouldnt: [
+					documentFromFile :=
+						XMLDOMParser parseFileNamed: fileHandle path]
+				raise: XMLFileException.
+			self
+				assert: documentFromFile encoding = '';
+				assert: documentFromFile printString = document printString]].
 ]
 
 { #category : #tests }
@@ -299,20 +339,47 @@ XMLExternalEntityTest >> testParsingEncodedFileWithEncodingAttribute [
 		ifSkippable: #testParsingEncodedFileWithEncodingAttribute.
 
 	self tempFileManager newFileHandleDo: [:fileHandle |
-		| document documentFromFile |
-	
-		document := XMLDOMParser parse: self wideCharacterXML.
-		document
-			encoding: 'UTF-16BE';
-			printToFileNamed: fileHandle path.
-		self
-			shouldnt: [
-				documentFromFile :=
-					XMLDOMParser parseFileNamed: fileHandle path]
-			raise: XMLFileException.
-		self
-			assert: documentFromFile encoding = 'UTF-16BE';
-			assert: documentFromFile printString = document printString].
+		self encodingNames do: [:encoding | | document documentFromFile |
+			document := XMLDOMParser parse: self wideCharacterXML.
+			document encoding: encoding.
+			fileHandle writeStreamDo: [:stream |
+				stream
+					streamConverter: encoding asXMLStreamConverter;
+					nextPutAll: document printString].
+			self
+				shouldnt: [
+					documentFromFile :=
+						XMLDOMParser parseFileNamed: fileHandle path]
+				raise: XMLFileException.
+			self
+				assert: documentFromFile encoding = encoding;
+				assert: documentFromFile printString = document printString]].
+]
+
+{ #category : #tests }
+XMLExternalEntityTest >> testParsingEncodedFileWithEncodingAttributeAndBOM [
+	"This test creates/deletes a file so is skipped by default"
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #testParsingEncodedFileWithEncodingAttributeAndBOM.
+
+	self tempFileManager newFileHandleDo: [:fileHandle |
+		self encodingNames do: [:encoding | | document documentFromFile |
+			document := XMLDOMParser parse: self wideCharacterXML.
+			document encoding: encoding.
+			fileHandle writeStreamDo: [:stream |
+				stream
+					streamConverter: encoding asXMLStreamConverter;
+					nextPutByteOrderMark;
+					nextPutAll: document printString].
+			self
+				shouldnt: [
+					documentFromFile :=
+						XMLDOMParser parseFileNamed: fileHandle path]
+				raise: XMLFileException.
+			self
+				assert: documentFromFile encoding = encoding;
+				assert: documentFromFile printString = document printString]].
 ]
 
 { #category : #tests }
