@@ -668,6 +668,8 @@ SAXParserDriver >> parseExternalSubset [
 		self externalEntityResolver streamResolveExternalEntityURI:
 			externalSubsetURI.
 
+	"use an XMLDecodingReadStreamAdapter to ensure any <?xml ...?> encoding
+	attribute is used"
 	(self
 		externalSubsetParserOn:
 			(XMLDecodingReadStreamAdapter on: externalSubsetStream)

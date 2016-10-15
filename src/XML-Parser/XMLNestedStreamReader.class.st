@@ -177,6 +177,12 @@ XMLNestedStreamReader >> decodeStreamWithConverter: aStreamConverter [
 ]
 
 { #category : #decoding }
+XMLNestedStreamReader >> decodeStreamWithNullConverter [
+	stream isXMLConvertingStreamAdapter
+		ifTrue: [stream streamConverter: XMLStreamConverter null]
+]
+
+{ #category : #decoding }
 XMLNestedStreamReader >> detectCurrentEncoding [
 	(XMLNestedStreamReaderEncodingDetector on: self)
 		detectCurrentEncoding

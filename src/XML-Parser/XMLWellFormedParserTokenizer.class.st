@@ -528,6 +528,12 @@ XMLWellFormedParserTokenizer >> errorUnexpectedEndConditionalSection [
 ]
 
 { #category : #errors }
+XMLWellFormedParserTokenizer >> errorUnexpectedGeneralEntityOrCharacterReference [
+	self parseError:
+		'Unexpected "&" starting general entity or character reference after content'
+]
+
+{ #category : #errors }
 XMLWellFormedParserTokenizer >> errorUnterminatedIgnoreSections [
 	self parseError: 'Unterminated <![IGNORE[...]]> section(s) in external entity'
 ]
@@ -1262,8 +1268,13 @@ XMLWellFormedParserTokenizer >> nextExternalSubsetToken [
 
 { #category : #tokenizing }
 XMLWellFormedParserTokenizer >> nextGeneralEntityOrCharacterReferenceOnWriteStream [
-	"returns the (first) character written to 'writeStream' if any, nil otherwise"
+	"returns the character written to 'writeStream' if any, nil otherwise"
 	| generalEntity result |
+
+	"if we're in a non-literal context, this must be in element content"
+	(context isLiteralValueContext
+		or: [driver elementNester isInElement])
+		ifFalse: [self errorUnexpectedGeneralEntityOrCharacterReference].
 
 	generalEntity := self topPushedBackEntity.
 	result :=
@@ -1274,6 +1285,7 @@ XMLWellFormedParserTokenizer >> nextGeneralEntityOrCharacterReferenceOnWriteStre
 		ifNotNil: [
 			(self pushedBackEntities includes: generalEntity)
 				ifFalse: [self errorImproperGeneralEntityNesting]].
+
 	^ result.
 ]
 
@@ -1627,7 +1639,7 @@ XMLWellFormedParserTokenizer >> nextStartExternalEntity [
 	context := context textDeclarationContext.
 	driver decodesCharacters
 		ifTrue: [streamReader detectCurrentEncoding]
-		ifFalse: [streamReader decodeStreamWithConverter: XMLStreamConverter null].
+		ifFalse: [streamReader decodeStreamWithNullConverter].
 	context nextTokenFrom: self.
 ]
 

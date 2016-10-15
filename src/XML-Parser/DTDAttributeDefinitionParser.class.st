@@ -1,5 +1,5 @@
 "
-This class parses an attribute definition in an ATTLIST declaration and creates a validator for it.
+This class parses an attribute definition in an ATTLIST declaration and returns a new XMLAttributeValidator for it.
 "
 Class {
 	#name : #DTDAttributeDefinitionParser,

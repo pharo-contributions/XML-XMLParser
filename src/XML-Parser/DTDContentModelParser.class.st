@@ -1,5 +1,5 @@
 "
-This is a base class for DTD content model parsers that turn element declarations into validators.
+This is a base class for DTD content model parsers that turn element declarations into XMLElementValidators.
 "
 Class {
 	#name : #DTDContentModelParser,

@@ -388,9 +388,12 @@ XMLParserTokenizer >> nextStartContent [
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextStartDocument [
-	((context := driver newInitialContext) supportsEncodingDetection
-		and: [driver decodesCharacters])
-		ifTrue: [streamReader detectCurrentEncoding].
+	context := driver newInitialContext.
+	driver decodesCharacters
+		ifTrue: [
+			context supportsEncodingDetection
+				ifTrue: [streamReader detectCurrentEncoding]]
+		ifFalse: [streamReader decodeStreamWithNullConverter].
 	driver handleStartDocument.
 ]
 
