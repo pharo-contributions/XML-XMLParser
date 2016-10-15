@@ -49,9 +49,8 @@ XMLExternalDocumentConverter class >> on: aStringOrStream readLimit: aReadLimit 
 { #category : #'instance creation' }
 XMLExternalDocumentConverter class >> onFileNamed: aFileName [
 	^ self on:
-		(aFileName asXMLFileHandle
-			streamGetUpToLimit: nil
-			decoding: false)
+		(XMLDecodingReadStreamAdapter on:
+			aFileName asXMLFileHandle rawReadStream)
 ]
 
 { #category : #closing }
