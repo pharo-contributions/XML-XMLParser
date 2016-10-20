@@ -3131,7 +3131,7 @@ ConfigurationOfXMLParser >> version294: spec [
 
         spec for: #common do: [
                 spec blessing: #release.
-			spec package: 'XML-Parser' with: 'XML-Parser-monty.375'.
-			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.185'.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.376'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.186'.
                 ].
 ]
