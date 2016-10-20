@@ -23,6 +23,14 @@ XMLClassFinder class >> classNamed: aClassName ifAbsent: aBlock [
 		ifAbsent: aBlock
 ]
 
+{ #category : #accessing }
+XMLClassFinder class >> classNamed: aClassName ifPresent: aBlock [
+	^ aBlock cull:
+		(self
+			classNamed: aClassName
+			ifAbsent: [^ nil])
+]
+
 { #category : #testing }
 XMLClassFinder class >> hasClassNamed: aClassName [
 	self

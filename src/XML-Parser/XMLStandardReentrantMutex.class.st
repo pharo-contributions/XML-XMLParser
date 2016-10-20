@@ -12,10 +12,18 @@ Class {
 
 { #category : #testing }
 XMLStandardReentrantMutex class >> isSupportedImplementation [
-	^ (XMLClassFinder hasClassNamed: #Mutex)
-		and: [
-			"Must use the transient class on GS to avoid persisting"
-			XMLTransientReentrantMutex isSupportedImplementation not]
+	(XMLClassFinder hasClassNamed: #Mutex)
+		ifFalse: [^ false].
+
+	"MUST use the transient class on GS to avoid persisting and causing
+	write conflicts"
+	XMLClassFinder
+		classNamed: #XMLTransientReentrantMutex
+		ifPresent: [:transientReentrantMutexClass |
+			transientReentrantMutexClass isSupportedImplementation
+				ifTrue: [^ false]].
+
+	^ true.
 ]
 
 { #category : #'mutual exclusion' }
