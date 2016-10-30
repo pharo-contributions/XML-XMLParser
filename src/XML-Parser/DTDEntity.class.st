@@ -36,6 +36,13 @@ DTDEntity class >> named: aName [
 ]
 
 { #category : #converting }
+DTDEntity >> asPushedBackEntity [
+	^ self isParameter
+		ifTrue: [XMLPushedBackParameterEntity entity: self]
+		ifFalse: [XMLPushedBackGeneralEntity entity: self]
+]
+
+{ #category : #converting }
 DTDEntity >> asReference [
 	^ String streamContents: [:stream | self printReferenceOn: stream]
 ]

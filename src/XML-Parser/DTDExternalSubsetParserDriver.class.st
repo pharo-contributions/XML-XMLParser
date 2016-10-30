@@ -126,6 +126,11 @@ DTDExternalSubsetParserDriver >> handleParseError: aString [
 	XMLWellFormednessException signal: aString
 ]
 
+{ #category : #private }
+DTDExternalSubsetParserDriver >> initialContextClass [
+	^ XMLTextDeclarationContext
+]
+
 { #category : #testing }
 DTDExternalSubsetParserDriver >> isValidating [
 	^ self saxDriver isValidating
@@ -134,11 +139,6 @@ DTDExternalSubsetParserDriver >> isValidating [
 { #category : #accessing }
 DTDExternalSubsetParserDriver >> maxEntityReplacementDepth [
 	^ self saxDriver maxEntityReplacementDepth
-]
-
-{ #category : #'instance creation' }
-DTDExternalSubsetParserDriver >> newInitialContext [
-	^ XMLTextDeclarationContext new
 ]
 
 { #category : #testing }

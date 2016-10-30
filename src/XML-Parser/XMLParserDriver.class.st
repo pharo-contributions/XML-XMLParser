@@ -5,7 +5,7 @@ Class {
 	#name : #XMLParserDriver,
 	#superclass : #Object,
 	#instVars : [
-		'entityURIStack'
+		'baseURI'
 	],
 	#category : #'XML-Parser-Drivers'
 }
@@ -13,7 +13,12 @@ Class {
 { #category : #accessing }
 XMLParserDriver >> baseURI [
 	"returns a string with the current base URI at this stage of parsing"
-	^ self entityURIStack xmlLastOrNil ifNil: [self documentURI]
+	^ baseURI ifNil: [baseURI := self documentURI]
+]
+
+{ #category : #accessing }
+XMLParserDriver >> baseURI: aURI [
+	baseURI := aURI
 ]
 
 { #category : #testing }
@@ -27,8 +32,8 @@ XMLParserDriver >> documentURI [
 ]
 
 { #category : #private }
-XMLParserDriver >> entityURIStack [
-	^ entityURIStack ifNil: [entityURIStack := OrderedCollection new]
+XMLParserDriver >> elementNesterClass [
+	^ XMLElementNester
 ]
 
 { #category : #'handling - dtd' }
@@ -138,9 +143,19 @@ XMLParserDriver >> handleWhitespace: aString [
 XMLParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
 ]
 
+{ #category : #private }
+XMLParserDriver >> initialContextClass [
+	^ XMLXMLDeclarationContext
+]
+
+{ #category : #'instance creation' }
+XMLParserDriver >> newElementNester [
+	^ self elementNesterClass new
+]
+
 { #category : #'instance creation' }
 XMLParserDriver >> newInitialContext [
-	^ XMLXMLDeclarationContext new
+	^ self initialContextClass new
 ]
 
 { #category : #'instance creation' }
@@ -149,21 +164,6 @@ XMLParserDriver >> newTokenizerOn: aStringOrStream [
 		driver: self
 		on: aStringOrStream
 		readLimit: self readLimit
-]
-
-{ #category : #accessing }
-XMLParserDriver >> popEntityURI: aURI [
-	"remove: removes the first match"
-	self entityURIStack removeAt:
-		(self entityURIStack
-			lastIndexOf: aURI
-			ifAbsent: [^ aURI]).
-	^ aURI.
-]
-
-{ #category : #accessing }
-XMLParserDriver >> pushEntityURI: aURIString [
-	^ self entityURIStack addLast: aURIString
 ]
 
 { #category : #accessing }

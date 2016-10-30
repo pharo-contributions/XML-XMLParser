@@ -187,8 +187,8 @@ XMLDOMParser >> parser [
 	parser := super parser.
 	self document
 		ifNotNil: [self setupInnerXMLDocumentForParser: parser].
-	self nodeStack isEmpty
-		ifFalse: [self setupInnerXMLNodesForParser: parser].
+	self nodeStack size > 0
+		ifTrue: [self setupInnerXMLNodesForParser: parser].
 	^ parser.
 ]
 
@@ -284,7 +284,7 @@ XMLDOMParser >> setupInnerXMLNodesForParser: aParser [
 				self
 					startInnerXMLElement: each
 					forParser: aParser]].
-	aParser context: self topNode innerXMLContext.
+	aParser context: self topNode newInnerXMLContext.
 ]
 
 { #category : #'handling - lexical' }

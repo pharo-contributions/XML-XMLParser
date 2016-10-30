@@ -9,6 +9,7 @@ Class {
 	#instVars : [
 		'context',
 		'driver',
+		'elementNester',
 		'streamReader',
 		'writeStream',
 		'nameStream'
@@ -81,14 +82,6 @@ XMLParserTokenizer >> closeStreams [
 	streamReader closeStreams
 ]
 
-{ #category : #'entity replacing' }
-XMLParserTokenizer >> constructReplacementForGeneralEntity: anEntity [
-]
-
-{ #category : #'entity replacing' }
-XMLParserTokenizer >> constructReplacementForParameterEntity: anEntity [
-]
-
 { #category : #accessing }
 XMLParserTokenizer >> context [
 	^ context
@@ -96,7 +89,13 @@ XMLParserTokenizer >> context [
 
 { #category : #accessing }
 XMLParserTokenizer >> context: aTokenContext [
-	context := aTokenContext
+	(context := aTokenContext) isContentContext
+		ifTrue: [elementNester := driver newElementNester].
+	driver decodesCharacters
+		ifTrue: [
+			context supportsEncodingDetection
+				ifTrue: [streamReader detectCurrentEncoding]]
+		ifFalse: [streamReader decodeStreamWithNullConverter].
 ]
 
 { #category : #decoding }
@@ -123,6 +122,11 @@ XMLParserTokenizer >> currentPosition [
 { #category : #accessing }
 XMLParserTokenizer >> driver [
 	^ driver
+]
+
+{ #category : #accessing }
+XMLParserTokenizer >> elementNester [
+	^ elementNester
 ]
 
 { #category : #errors }
@@ -235,7 +239,9 @@ XMLParserTokenizer >> nextContentToken [
 		ifTrue: [
 			streamReader next.
 			^ self nextContentMarkupToken].
-	self nextPCDataToken.
+	elementNester isInElement
+		ifTrue: [^ self nextPCDataToken].
+	self nextNonElementWhitespace.
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -315,6 +321,11 @@ XMLParserTokenizer >> nextName [
 ]
 
 { #category : #tokenizing }
+XMLParserTokenizer >> nextNonElementWhitespace [
+	self subclassResponsibility
+]
+
+{ #category : #tokenizing }
 XMLParserTokenizer >> nextNonPIPrologOrContentToken [
 	self subclassResponsibility
 ]
@@ -383,17 +394,13 @@ XMLParserTokenizer >> nextPublicIDLiteral [
 { #category : #tokenizing }
 XMLParserTokenizer >> nextStartContent [
 	context := context contentContext.
+	elementNester := driver newElementNester.
 	driver handleStartContent.
 ]
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextStartDocument [
-	context := driver newInitialContext.
-	driver decodesCharacters
-		ifTrue: [
-			context supportsEncodingDetection
-				ifTrue: [streamReader detectCurrentEncoding]]
-		ifFalse: [streamReader decodeStreamWithNullConverter].
+	self context: driver newInitialContext.
 	driver handleStartDocument.
 ]
 
@@ -576,16 +583,16 @@ XMLParserTokenizer >> printOn: aStream [
 
 { #category : #initialization }
 XMLParserTokenizer >> setDriver: aDriver stream: aStream readLimit: aReadLimit [
+	context := XMLUnitializedContext new.
 	driver := aDriver.
 	streamReader :=
 		(XMLNestedStreamReader
 			on: aStream
 			readLimit: aReadLimit).
-	"must use #writeStream instead of WriteStream on: to get a 0-based stream
-	on Gemstone"
+	"must use #writeStream instead of 'WriteStream on:' to get 0-based
+	streams on Gemstone"
 	writeStream := (String new: 128) writeStream.
 	nameStream := (String new: 16) writeStream.
-	context := XMLUnitializedContext new.
 ]
 
 { #category : #accessing }

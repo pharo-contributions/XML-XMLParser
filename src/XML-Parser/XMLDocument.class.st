@@ -96,8 +96,8 @@ XMLDocument >> hasRoot [
 ]
 
 { #category : #private }
-XMLDocument >> innerXMLContext [
-	^ XMLPostDoctypeDeclarationContext new
+XMLDocument >> innerXMLContextClass [
+	^ XMLPostDoctypeDeclarationContext
 ]
 
 { #category : #testing }

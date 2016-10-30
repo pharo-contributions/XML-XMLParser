@@ -8,7 +8,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'stream',
-		'onClose',
+		'whenPoppedDo',
 		'nestedStreams',
 		'peekChar',
 		'normalizedLineEndingChar',
@@ -108,22 +108,17 @@ XMLNestedStreamReader >> basicNext [
 ]
 
 { #category : #private }
-XMLNestedStreamReader >> closeStream [
+XMLNestedStreamReader >> closeStream: aStream [
 	"must use respondsTo: to support streams only implementing the basic protocol"
-	(stream respondsTo: #close)
-		ifTrue: [stream close].
-	onClose
-		ifNotNil: [onClose value].
+	(aStream respondsTo: #close)
+		ifTrue: [aStream close].
 ]
 
 { #category : #closing }
 XMLNestedStreamReader >> closeStreams [
-	self closeStream.
-	[nestedStreams size > 0]
-		whileTrue: [
-			self
-				popNestedStream;
-				closeStream].
+	self closeStream: stream.
+	1 to: nestedStreams size do: [:i |
+		self closeStream: (nestedStreams at: i)].
 ]
 
 { #category : #decoding }
@@ -361,18 +356,23 @@ XMLNestedStreamReader >> peekFor: aCharacter [
 XMLNestedStreamReader >> popNestedStream [
 	| nextStreamAndCallback |
 
+	"close the stream first and pop it before evaluating the callback so any
+	exception it raises won't cause us to leak file streams or double close a
+	stream when XMLParser>>#handleParserError: sends #closeStreams"
+	self closeStream: stream.
+
 	nextStreamAndCallback := nestedStreams removeLast.
 	stream := nextStreamAndCallback key.
-	onClose := nextStreamAndCallback value.
+	whenPoppedDo
+		ifNotNil: [whenPoppedDo value].
+	whenPoppedDo := nextStreamAndCallback value.
 ]
 
 { #category : #private }
 XMLNestedStreamReader >> popNestedStreamWhileAtEnd [
 	[nestedStreams size > 0]
 		whileTrue: [
-			self
-				closeStream;
-				popNestedStream.
+			self popNestedStream.
 			stream atEnd
 				ifFalse: [^ self]]
 ]
@@ -402,34 +402,34 @@ XMLNestedStreamReader >> pushBack: aString [
 XMLNestedStreamReader >> pushBackCharacter: aCharacter [
 	self
 		pushBackStream: (XMLSingleCharacterReadStream on: aCharacter)
-		onClose: nil
+		whenPoppedDo: nil
 ]
 
 { #category : #positioning }
 XMLNestedStreamReader >> pushBackStream: aStream [
 	self
 		pushBackStream: aStream
-		onClose: nil
+		whenPoppedDo: nil
 ]
 
 { #category : #positioning }
-XMLNestedStreamReader >> pushBackStream: aStream onClose: aBlock [
+XMLNestedStreamReader >> pushBackStream: aStream whenPoppedDo: aBlock [
 	self
 		pushNestedStream: stream
-		onClose: onClose.
+		whenPoppedDo: whenPoppedDo.
 	peekChar
 		ifNotNil: [
 			self
 				pushNestedStream: (XMLSingleCharacterReadStream on: peekChar)
-				onClose: nil.
+				whenPoppedDo: nil.
 			peekChar := nil].
 
 	self stream: aStream.
-	onClose := aBlock.
+	whenPoppedDo := aBlock.
 ]
 
 { #category : #private }
-XMLNestedStreamReader >> pushNestedStream: aStream onClose: aBlock [
+XMLNestedStreamReader >> pushNestedStream: aStream whenPoppedDo: aBlock [
 	nestedStreams size >= self maxNestedStreams
 		ifTrue: [self errorNestingLimitExceeded].
 	nestedStreams addLast: aStream -> aBlock.

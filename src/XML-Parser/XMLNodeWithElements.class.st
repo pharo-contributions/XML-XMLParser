@@ -731,8 +731,8 @@ XMLNodeWithElements >> innerXML: aStringOrStream [
 ]
 
 { #category : #private }
-XMLNodeWithElements >> innerXMLContext [
-	^ XMLContentContext new
+XMLNodeWithElements >> innerXMLContextClass [
+	^ XMLContentContext
 ]
 
 { #category : #parsing }
@@ -763,6 +763,11 @@ XMLNodeWithElements >> lastElement [
 	isn't one"
 
 	^ self nodes lastElement
+]
+
+{ #category : #private }
+XMLNodeWithElements >> newInnerXMLContext [
+	^ self innerXMLContextClass new
 ]
 
 { #category : #deprecated }

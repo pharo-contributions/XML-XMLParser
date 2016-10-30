@@ -41,15 +41,11 @@ XMLElementNester >> elementPrintLimit [
 	^ 5
 ]
 
-{ #category : #checking }
+{ #category : #nesting }
 XMLElementNester >> endElement: anElement [
 	self openElements removeLast.
 	self hasScopedAttributes
 		ifTrue: [self endScopedAttributes].
-]
-
-{ #category : #checking }
-XMLElementNester >> endNesting [
 ]
 
 { #category : #private }
@@ -86,11 +82,6 @@ XMLElementNester >> initialize [
 
 	openElements := OrderedCollection new: 10.
 	hasExternalRootElement := false.
-]
-
-{ #category : #testing }
-XMLElementNester >> isCurrentElementRoot [
-	^ self openElements size = 1
 ]
 
 { #category : #testing }
@@ -180,6 +171,11 @@ XMLElementNester >> printedElementsEnclosedBy: anElement [
 ]
 
 { #category : #accessing }
+XMLElementNester >> rootElement [
+	^ rootElement
+]
+
+{ #category : #accessing }
 XMLElementNester >> scopedAttributeAt: anAttribute [
 	^ self
 		scopedAttributeAt: anAttribute
@@ -221,8 +217,10 @@ XMLElementNester >> setScopedAttributesNamed: anAttributeCollection from: aDicti
 					put: value]]
 ]
 
-{ #category : #checking }
+{ #category : #nesting }
 XMLElementNester >> startElement: anElement [
+	rootElement
+		ifNil: [rootElement := anElement].
 	self openElements addLast: anElement.
 	self hasScopedAttributes
 		ifTrue: [self startScopedAttributes].
@@ -231,4 +229,20 @@ XMLElementNester >> startElement: anElement [
 { #category : #private }
 XMLElementNester >> startScopedAttributes [
 	scopedAttributes addLast: self currentScopedAttributes
+]
+
+{ #category : #accessing }
+XMLElementNester >> totalOpenElements [
+	^ self openElements size
+]
+
+{ #category : #testing }
+XMLElementNester >> wasRootElementClosed [
+	self openElements size > 0
+		ifTrue: [^ false].
+	self rootElement
+		ifNil: [^ false].
+	self hasExternalRootElement
+		ifTrue: [^ false].
+	^ true.
 ]

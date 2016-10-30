@@ -123,8 +123,8 @@ XMLDocumentValidator >> validateAttributes: anAttributeDictionary with: aValidat
 					remove: attribute
 					ifAbsent: nil]].
 
-	unvalidatedAttributes isEmpty
-		ifFalse: [self unvalidatedAttributes: unvalidatedAttributes].
+	unvalidatedAttributes size > 0
+		ifTrue: [self unvalidatedAttributes: unvalidatedAttributes].
 ]
 
 { #category : #validating }

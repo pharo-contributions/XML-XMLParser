@@ -30,8 +30,8 @@ SAXParserDriver >> baseURI [
 		ifTrue: [
 			^ self elementNester
 				scopedAttributeAt: 'xml:base'
-				ifAbsent: [super baseURI]].
-	^ super baseURI.
+				ifAbsent: [super baseURI]]
+		ifFalse: [^ super baseURI]
 ]
 
 { #category : #private }
@@ -75,6 +75,11 @@ SAXParserDriver >> doctypeDefinition [
 	^ doctypeDefinition
 ]
 
+{ #category : #private }
+SAXParserDriver >> doctypeDefinitionClass [
+	^ DTDDoctypeDefinition
+]
+
 { #category : #accessing }
 SAXParserDriver >> documentReadLimit [
 	^ self saxHandler documentReadLimit
@@ -91,16 +96,6 @@ SAXParserDriver >> elementNester [
 ]
 
 { #category : #private }
-SAXParserDriver >> elementNesterClass [
-	^ XMLWellFormedElementNester
-]
-
-{ #category : #private }
-SAXParserDriver >> errorCharacterDataOutsideElement [
-	XMLWellFormednessException signal: 'Character data outside of element'
-]
-
-{ #category : #private }
 SAXParserDriver >> errorDocumentConstraintsRequired [
 	XMLValidationException signal: 'Document validation constraints required'
 ]
@@ -112,31 +107,16 @@ SAXParserDriver >> errorImproperParameterEntityNesting [
 ]
 
 { #category : #private }
-SAXParserDriver >> errorStandaloneUndeclaredGeneralEntity: aName [
-	XMLWellFormednessException
-		formatSignal:
-			'Undeclared general entity reference &{1}; in standalone document'
-		with: aName
-]
-
-{ #category : #private }
-SAXParserDriver >> errorUndeclaredGeneralEntity: aName [
+SAXParserDriver >> errorUndeclaredGeneralEntityReference: aName [
 	XMLValidationException
 		formatSignal: 'Undeclared general entity reference &{1};'
 		with: aName
 ]
 
 { #category : #private }
-SAXParserDriver >> errorUndeclaredParameterEntity: aName [
+SAXParserDriver >> errorUndeclaredParameterEntityReference: aName [
 	XMLValidationException
 		formatSignal: 'Undeclared parameter entity reference %{1};'
-		with: aName
-]
-
-{ #category : #private }
-SAXParserDriver >> errorUnparsedGeneralEntityReference: aName [
-	XMLWellFormednessException
-		formatSignal: 'Illegal unparsed general entity reference &{1};'
 		with: aName
 ]
 
@@ -224,8 +204,6 @@ SAXParserDriver >> handleAttributeDeclaration: anElement name: anAttribute type:
 
 { #category : #handling }
 SAXParserDriver >> handleCData: aString [
-	self elementNester isInElement
-		ifFalse: [self errorCharacterDataOutsideElement].
 	self isValidating
 		ifTrue: [self validator validatePCData: aString].
 
@@ -279,7 +257,6 @@ SAXParserDriver >> handleEndDTD [
 
 { #category : #handling }
 SAXParserDriver >> handleEndDocument [
-	self elementNester endNesting.
 	self isValidating
 		ifTrue: [self validator validateEndDocument].
 
@@ -290,8 +267,6 @@ SAXParserDriver >> handleEndDocument [
 SAXParserDriver >> handleEndTag: anElement [
 	"performance critical method"
 	| prefix currentScope |
-
-	self elementNester endElement: anElement.
 
 	prefix := anElement xmlPrefixBeforeLocalName.
 	self saxHandler 
@@ -356,22 +331,12 @@ SAXParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplaceme
 
 { #category : #handling }
 SAXParserDriver >> handleGeneralEntityReference: aName [
-	| entity |
-
-	entity :=
-		self doctypeDefinition
-			generalEntityAt: aName
-			ifAbsent: [
-				self isValidating
-					ifTrue: [self errorUndeclaredGeneralEntity: aName].
-				self isStandalone
-					ifTrue: [self errorStandaloneUndeclaredGeneralEntity: aName].
-				^ nil].
-
-	entity isUnparsed
-		ifTrue: [self errorUnparsedGeneralEntityReference: aName].
-
-	^ entity.
+	^ self doctypeDefinition
+		generalEntityAt: aName
+		ifAbsent: [
+			self isValidating
+				ifTrue: [self errorUndeclaredGeneralEntityReference: aName].
+			nil]
 ]
 
 { #category : #'handling - dtd' }
@@ -397,8 +362,6 @@ SAXParserDriver >> handleNotationDeclaration: aName publicID: aPublicID systemID
 
 { #category : #handling }
 SAXParserDriver >> handlePCData: aString [
-	self elementNester isInElement
-		ifFalse: [self errorCharacterDataOutsideElement].
 	self isValidating
 		ifTrue: [self validator validatePCData: aString].
 
@@ -460,7 +423,7 @@ SAXParserDriver >> handleParameterEntityReference: aName [
 		parameterEntityAt: aName
 		ifAbsent: [
 			self isValidating
-				ifTrue: [self errorUndeclaredParameterEntity: aName].
+				ifTrue: [self errorUndeclaredParameterEntityReference: aName].
 			nil]
 ]
 
@@ -520,13 +483,11 @@ SAXParserDriver >> handleStartTag: anElement attributes: aDictionary [
 	"performance critical method"
 	| prefix totalAttributes namespaceURI currentScope |
 
-	self elementNester startElement: anElement.
-
 	prefix := anElement xmlPrefixBeforeLocalName.
 	totalAttributes := aDictionary size.
 	self isValidating
 		ifTrue: [
-			self elementNester isCurrentElementRoot
+			self elementNester totalOpenElements = 1
 				ifTrue: [self validateRootElement: anElement].
 			self validator
 				validateStartTag: anElement
@@ -582,9 +543,6 @@ SAXParserDriver >> handleUnreplacedGeneralEntityReference: aName [
 
 { #category : #handling }
 SAXParserDriver >> handleWhitespace: aString [
-	self elementNester isInElement
-		ifFalse: [^ self].
-
 	self isValidating
 		ifTrue: [
 			self validator hasElementContent
@@ -649,6 +607,11 @@ SAXParserDriver >> isValidating [
 { #category : #accessing }
 SAXParserDriver >> maxEntityReplacementDepth [
 	^ self saxHandler maxEntityReplacementDepth
+]
+
+{ #category : #'instance creation' }
+SAXParserDriver >> newElementNester [
+	^ elementNester
 ]
 
 { #category : #private }
@@ -723,9 +686,9 @@ SAXParserDriver >> setRootElement: anElement currentScope: aNamespaceScope [
 { #category : #initialization }
 SAXParserDriver >> setSAXHandler: aHandler [
 	saxHandler := aHandler.
-	elementNester := self elementNesterClass new.
-	doctypeDefinition := DTDDoctypeDefinition new.
+	doctypeDefinition := self doctypeDefinitionClass new.
 	validator := (aHandler schema ifNil: [doctypeDefinition]) newValidator.
+	elementNester := self elementNesterClass new.
 	externalSubsetPublicID := ''.
 	externalSubsetSystemID := ''.
 	isStandalone := false.
