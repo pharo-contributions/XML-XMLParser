@@ -306,6 +306,19 @@ ConfigurationOfXMLParserHTML >> baseline130: spec [
 			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline131: spec [
+	<version: '1.3.1-baseline' imports: #('1.0.0-baseline')>
+	spec
+		for: #common
+		do: [ spec project: 'XMLParser' with: #'release-2.9.5' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec blessing: #baseline.
+			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParserHTML >> customProjectAttributes [
 	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -318,7 +331,7 @@ ConfigurationOfXMLParserHTML >> customProjectAttributes [
 ConfigurationOfXMLParserHTML >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.3.0-baseline'.
+	spec for: #'common' version: '1.3.1-baseline'.
 ]
 
 { #category : #accessing }
@@ -338,7 +351,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.3.0'.
+	spec for: #'common' version: '1.3.1'.
 
 ]
 
@@ -680,5 +693,16 @@ ConfigurationOfXMLParserHTML >> version130: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.41'.
 			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.21'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version131: spec [ 
+        <version: '1.3.1' imports: #('1.3.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.42'.
+			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.22'.
                 ].
 ]
