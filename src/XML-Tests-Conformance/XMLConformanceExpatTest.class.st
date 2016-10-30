@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 XMLConformanceExpatTest class >> skippableTests [
-	^ #( testnotwfsa074xml testnotwfsa104xml testnotwfsa140xml testnotwfsa141xml )
+	^ #( testnotwfsa140xml testnotwfsa141xml )
 ]
 
 { #category : #'xml source' }

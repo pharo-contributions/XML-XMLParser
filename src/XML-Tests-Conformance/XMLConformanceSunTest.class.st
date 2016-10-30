@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 XMLConformanceSunTest class >> skippableTests [
-	^ #( testinvalidnotsa01xml testinvalidnotsa04xml testinvalidnotsa05xml testinvalidnotsa06xml testinvalidnotsa07xml testinvalidnotsa09xml testinvalidnotsa10xml testinvalidnotsa11xml testinvalidnotsa12xml testinvalidnotsa13xml testinvalidutf16bxml testinvalidutf16lxml testnotwfnotsa03xml testnotwfuri01xml )
+	^ #( testinvalidnotsa01xml testinvalidnotsa04xml testinvalidnotsa05xml testinvalidnotsa06xml testinvalidnotsa07xml testinvalidnotsa09xml testinvalidnotsa10xml testinvalidnotsa11xml testinvalidnotsa12xml testinvalidnotsa13xml testinvalidutf16bxml testinvalidutf16lxml testnotwfnotsa03xml )
 ]
 
 { #category : #'xml source' }
