@@ -2624,25 +2624,48 @@ XMLParserTest >> testElementMixedContentDeclaration [
 
 { #category : #tests }
 XMLParserTest >> testElementNesting [
-	| error |
+	#('<unclosed>'
+		'</unopened>'
+		'<root></unopened></root>'
+		'<root><unclosed></root>'
+		'<root><first><second></first></second></root>'
+		'<root><first><second></second></root></first>'
+		'<root><first><second></root></second></first>'
+		'<root/><secondRoot/>'
+		'<root><first/></root><secondRoot/>'
+		'<root><first/></root><secondRoot><second/></secondRoot>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException]
+]
 
-	error := XMLWellFormednessException.
-	self
-		should: [SAXHandler parse: '<unclosed>'] raise: error;
-		should: [SAXHandler parse: '</unopened>'] raise: error;
-		should: [SAXHandler parse: '<unclosed1/><unclosed2/>'] raise: error;
-		should: [SAXHandler parse: '<root></unopened></root>'] raise: error;
-		should: [SAXHandler parse: '<root><unclosed></root>'] raise: error;
-		should: [SAXHandler parse: '<root><first><second></first></second></root>'] raise: error.
+{ #category : #tests }
+XMLParserTest >> testElementUnmatchedEndTag [
+	#('<test></t>'
+		'<test></te>'
+		'<test></tes>'
+		'<test></testing>'
+		'<test></Test>'
+		'<test></TEST>')
+		do: [:each | 
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException]
 ]
 
 { #category : #tests }
 XMLParserTest >> testElementUnterminatedEndTag [
 	#('<test><'
+		'<test><test><</test>'
 		'<test></'
+		'<test><test></</test>'
 		'<test></test'
+		'<test><test></test</test>'
 		'<test></ test'
-		'<test></ test>')
+		'<test><test></ test</test>'
+		'<test></ test>'
+		'<test><test></ test></test>')
 		do: [:each | 
 			self
 				should: [SAXHandler parse: each]
@@ -3170,6 +3193,19 @@ XMLParserTest >> testEntityNestingComment [
 ]
 
 { #category : #tests }
+XMLParserTest >> testEntityNestingElement [
+	self
+		shouldnt: [
+			SAXHandler parse:
+				'<!DOCTYPE test [
+					<!ENTITY total1 "<a name=''value''/>">
+					<!ENTITY total2 "<b>&total1;</b>">
+					<!ENTITY total3 "<c>&total1;&total2;</c>">
+				]><test>&total1;&total2;&total3;</test>']
+		raise: XMLWellFormednessException.
+]
+
+{ #category : #tests }
 XMLParserTest >> testEntityNestingElementDeclaration [
 	| xml |
 	
@@ -3251,6 +3287,90 @@ XMLParserTest >> testEntityNestingElementDeclaration [
 ]
 
 { #category : #tests }
+XMLParserTest >> testEntityNestingElementPartialEndTag [
+	#('<!DOCTYPE test [
+				<!ENTITY partial "<">
+			]><test><a name=''value''>&partial;/a></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "</">
+			]><test><a name=''value''>&partial;a></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "</a">
+			]><test><a name=''value''>&partial;></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "</a>">
+			]><test><a name=''value''>&partial;</test>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityNestingElementPartialSelfClosingTag [
+	#('<!DOCTYPE test [
+				<!ENTITY partial "<">
+			]><test>&partial;a name=''value''/></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a">
+			]><test>&partial;name=''value''/></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name">
+			]><test>&partial;=''value''/></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=">
+			]><test>&partial;''value''/></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=''">
+			]><test>&partial;value''/></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=''value">
+			]><test>&partial;''/></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=''value''">
+			]><test>&partial;/></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=''value''/">
+			]><test>&partial;></test>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityNestingElementPartialStartTag [
+	#('<!DOCTYPE test [
+				<!ENTITY partial "<">
+			]><test>&partial;a name=''value''></a></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a">
+			]><test>&partial;name=''value''></a></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name">
+			]><test>&partial;=''value''></a></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=">
+			]><test>&partial;''value''></a></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=''">
+			]><test>&partial;value''></a></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=''value">
+			]><test>&partial;''></a></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=''value''">
+			]><test>&partial;></a></test>'
+		'<!DOCTYPE test [
+				<!ENTITY partial "<a name=''value''>">
+			]><test>&partial;</a></test>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+]
+
+{ #category : #tests }
 XMLParserTest >> testEntityNestingGeneralEntityReference [
 	"even though general entity refs are bypassed in entity values, they are still
 	checked for well formedness (they must be complete), so the only way to declare
@@ -3328,6 +3448,7 @@ XMLParserTest >> testEntityNestingIgnoreSection [
 						externalEntityResolver:
 							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
+						isValidating: false;
 						resolvesExternalEntities: true;
 						parseDocument]
 				raise: XMLWellFormednessException].
@@ -3399,6 +3520,7 @@ XMLParserTest >> testEntityNestingIncludeSection [
 						externalEntityResolver:
 							(DTDStaticExternalEntityResolver externalEntities:
 								(Array with: 'extern.dtd' -> each));
+						isValidating: false;
 						resolvesExternalEntities: true;
 						parseDocument]
 				raise: XMLWellFormednessException].
@@ -3598,65 +3720,6 @@ XMLParserTest >> testEntityNestingSubsetProcessingInstruction [
 ]
 
 { #category : #tests }
-XMLParserTest >> testEntityNestingTag [
-	#('<!DOCTYPE test [
-				<!ENTITY partial "<">
-			]><test>&partial;a name=''value''></a></test>'
-		'<!DOCTYPE test [
-				<!ENTITY partial "<">
-			]><test>&partial;a name=''value''/></test>'
-		'<!DOCTYPE test [
-				<!ENTITY partial "<a">
-			]><test>&partial;name=''value''></a></test>'
-		'<!DOCTYPE test [
-				<!ENTITY partial "<a">
-			]><test>&partial;name=''value''/></test>'
-		'<!DOCTYPE test [
-				<!ENTITY partial "<a name">
-			]><test>&partial;=''value''></a></test>'
-		'<!DOCTYPE test [
-				<!ENTITY partial "<a name">
-			]><test>&partial;=''value''/></test>'
-		'<!DOCTYPE test [
-				<!ENTITY partial "<a name=">
-			]><test>&partial;''value''></a></test>'
-		'<!DOCTYPE test [
-				<!ENTITY partial "<a name=">
-			]><test>&partial;''value''/></test>'
-		'<!DOCTYPE test [
-				<!ENTITY partial "<a name=''">
-			]><test>&partial;value''></a></test>'
-		'<!DOCTYPE test [
-				<!ENTITY partial "<a name=''">
-			]><test>&partial;value''/></test>'
-		'<!DOCTYPE test [
-				<!ENTITY partial "<a name=''value">
-			]><test>&partial;''></a></test>'
-		'<!DOCTYPE test [
-				<!ENTITY partial "<a name=''value">
-			]><test>&partial;''/></test>'
-		'<!DOCTYPE test [
-				<!ENTITY partial "<a name=''value''">
-			]><test>&partial;></a></test>'
-		'<!DOCTYPE test [
-				<!ENTITY partial "<a name=''value''">
-			]><test>&partial;/></test>')
-		do: [:each |
-			self
-				should: [SAXHandler parse: each]
-				raise: XMLWellFormednessException].
-
-	self
-		shouldnt: [
-			SAXHandler parse:
-				'<!DOCTYPE test [
-						<!ENTITY total1 "<a name=''value''></a>">
-						<!ENTITY total2 "<a name=''value''/>">
-					]><test>&total1;&total2;</test>']
-		raise: XMLWellFormednessException.
-]
-
-{ #category : #tests }
 XMLParserTest >> testEntityReferenceInternalDeclaration [
 	#('<!DOCTYPE root [
 			<!ENTITY % name "root">
@@ -3739,6 +3802,141 @@ XMLParserTest >> testEntityReferenceInternalDeclarationExternallyDefined [
 ]
 
 { #category : #tests }
+XMLParserTest >> testEntityReferencePredefined [
+	| document references replacements |
+
+	references := String new writeStream.
+	replacements := String new writeStream.
+	XMLWellFormedParserTokenizer predefinedEntities keysAndValuesDo: [:name :char |
+		references
+			nextPut: $&;
+			nextPutAll: name;
+			nextPut: $;.
+		replacements nextPut: char].
+
+	document :=
+		XMLDOMParser parse:
+			('<!DOCTYPE root [
+				<!ENTITY nonRecursive "&amp;nonRecursive;">]>
+			<root name=''{1}''>
+				<one>{1}</one>
+				<two>&nonRecursive;</two>
+			</root>' format: (Array with: references contents)).
+	self
+		assert: (document root attributeAt: 'name') = replacements contents;
+		assert: (document root contentStringAt: 'one') = replacements contents;
+		assert: (document root contentStringAt: 'two') = '&nonRecursive;'.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityReferenceUndeclared [
+	| document dtd content |
+
+	dtd :=
+		'<!DOCTYPE root [
+			<!ENTITY declared "">
+			%undeclared;
+		]>'.
+	content := '<root>&undeclared;test&undeclared;</root>'.
+	self
+		should: [XMLDOMParser parse: content]
+		raise: XMLValidationException.
+	self
+		should: [XMLDOMParser parse: dtd, '<root/>']
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			document :=
+				XMLDOMParser
+					parse: dtd, content
+					usingNamespaces: false
+					validation: false]
+		raise: XMLValidationException.
+	self assert: document allNodes second contentString = 'test'.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityReferenceUndeclaredAndPreserved [
+	| xml parser document |
+
+	xml := '<!DOCTYPE root [
+		<!ENTITY unreferenced "&undeclaredOne;">
+		%undeclaredOne;]>
+		<root name="&#34;&undeclaredOne;&#34;">&lt;&undeclaredTwo;&gt;</root>'.
+	(parser := XMLDOMParser on: xml)
+		isValidating: false;
+		preservesUndeclaredEntityReferences: true.
+	document := parser parseDocument.
+
+	self
+		assert: document doctypeDeclaration nodes size = 1;
+		assert: document doctypeDeclaration firstNode replacement = '&undeclaredOne;';
+		assert: (document root attributeAt: 'name') = '"&undeclaredOne;"';
+		assert: (document root contentString) = '<&undeclaredTwo;>'.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityReferenceUndeclaredInEntityValue [
+	self
+		should: [
+			(SAXHandler on: '<!DOCTYPE root SYSTEM "extern.dtd"><root/>')
+				externalEntityResolver:
+					(DTDStaticExternalEntityResolver externalEntities:
+						(Array with:
+							'extern.dtd' ->
+								'<!ENTITY unreferenced "%undeclared;">'));
+				resolvesExternalEntities: true;
+				parseDocument]
+		raise: XMLValidationException.
+
+	"the spec only requires general entity refs in replacements to be
+	well-formed, not declared, unless it's referenced too"
+	self
+		shouldnt: [
+			SAXHandler parse:
+				'<!DOCTYPE root [
+					<!ENTITY unreferenced "&undeclared;">
+				]><root/>']
+		raise: XMLValidationException.
+	self
+		should: [
+			SAXHandler parse:
+				'<!DOCTYPE root [
+					<!ENTITY unreferenced "&undeclared;">
+				]><root>&unreferenced;</root>']
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityReferenceUndeclaredStandalone [
+	| xml |
+
+	xml := '
+		<!DOCTYPE root [
+			<!ENTITY declared "">
+		]>
+		<root>&undeclared;</root>'.
+	self
+		should: [SAXHandler parse: xml]
+		raise: XMLValidationException.
+	self
+		should: [SAXHandler parse: '<?xml version="1.0" standalone="yes"?>', xml]
+		raise: XMLValidationException.
+	self
+		should: [
+			(SAXHandler on: '<?xml version="1.0" standalone="yes"?>', xml)
+				isValidating: false;
+				parseDocument]
+		raise: XMLWellFormednessException.
+	self
+		shouldnt: [
+			(SAXHandler on: '<?xml version="1.0" standalone="no"?>', xml)
+				isValidating: false;
+				parseDocument]
+		raise: XMLParserException.
+]
+
+{ #category : #tests }
 XMLParserTest >> testEntityReferenceUnexpected [
 	#('<!DOCTYPE test [
 			<!ENTITY entity "<!--comment-->">
@@ -3765,6 +3963,71 @@ XMLParserTest >> testEntityReferenceUnexpected [
 						replacesContentEntityReferences: false;
 						parseDocument]
 				raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityReferenceUnreplaced [
+	| beforeSubset subset afterSubset xml document |
+
+	beforeSubset := '<?xml version="1.1"?> <!DOCTYPE entity ['.
+	subset :=
+		'<!ENTITY % first "<!ENTITY second &#34;replacement&#34;>">
+		%first;'.
+	afterSubset := ']><entity>&second;</entity>'.
+	xml := beforeSubset, subset, afterSubset.
+	self assert: (XMLDOMParser parse: xml) root contentString = 'replacement'.
+	
+	document :=
+		(XMLDOMParser on: xml)
+			replacesContentEntityReferences: false;
+			parseDocument.
+	self assert: document root contentString = '&second;'.
+	self
+		should: [
+			(SAXHandler on: (beforeSubset, '%first;]>'))
+				replacesContentEntityReferences: false;
+				parseDocument]
+		raise: XMLValidationException.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityReferenceUnreplacedInContent [
+	| xml document |
+
+	xml := '
+		<!DOCTYPE one [<!ENTITY declared "replacement">]>
+		<one two="&quot;&declared;&quot;">&#60;&declared;&#x2F;&#x3e;</one>'.
+	document :=
+		(XMLDOMParser on: xml)
+			replacesContentEntityReferences: false;
+			parseDocument.
+	self
+		assert: (document root attributeAt: 'two') = '&quot;&declared;&quot;';
+		assert: document root contentString = '&#60;&declared;&#x2F;&#x3e;'.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityReferenceUnreplacedInContentAndUndeclared [
+	| xml document |
+
+	xml := '<one two="&quot;&undeclared;&quot;">&#60;&undeclared;&#62;</one>'.
+	self
+		should: [
+			(SAXHandler on: xml)
+				replacesContentEntityReferences: false;
+				parseDocument]
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			document :=
+				(XMLDOMParser on: xml)
+					isValidating: false;
+					replacesContentEntityReferences: false;
+					parseDocument]
+		raise: XMLValidationException.
+	self
+		assert: (document root attributeAt: 'two') = '&quot;&undeclared;&quot;';
+		assert: document root contentString = '&#60;&undeclared;&#62;'.
 ]
 
 { #category : #tests }
@@ -3868,33 +4131,6 @@ XMLParserTest >> testEntityReplacementEmpty [
 		assert: (document root attributeAt: 'three') = '';
 		assert: (document root attributeAt: 'four') = '';
 		assert: document root contentString = ''.
-]
-
-{ #category : #tests }
-XMLParserTest >> testEntityReplacementPredefined [
-	| document references replacements |
-
-	references := String new writeStream.
-	replacements := String new writeStream.
-	XMLWellFormedParserTokenizer predefinedEntities keysAndValuesDo: [:name :char |
-		references
-			nextPut: $&;
-			nextPutAll: name;
-			nextPut: $;.
-		replacements nextPut: char].
-
-	document :=
-		XMLDOMParser parse:
-			('<!DOCTYPE root [
-				<!ENTITY nonRecursive "&amp;nonRecursive;">]>
-			<root name=''{1}''>
-				<one>{1}</one>
-				<two>&nonRecursive;</two>
-			</root>' format: (Array with: references contents)).
-	self
-		assert: (document root attributeAt: 'name') = replacements contents;
-		assert: (document root contentStringAt: 'one') = replacements contents;
-		assert: (document root contentStringAt: 'two') = '&nonRecursive;'.
 ]
 
 { #category : #tests }
@@ -4017,139 +4253,6 @@ XMLParserTest >> testEntityURIInheritance [
 	self
 		assert: driver baseURI = 'test.xml';
 		assert: parser atEnd.
-]
-
-{ #category : #tests }
-XMLParserTest >> testEntityUndeclared [
-	| document dtd content |
-
-	dtd := '<!DOCTYPE root [<!ENTITY declared "">%undeclared;]>'.
-	content := '<root>&undeclared;test&undeclared;</root>'.
-	self should: [XMLDOMParser parse: content] raise: XMLValidationException.
-	self should: [XMLDOMParser parse: dtd, '<root/>'] raise: XMLValidationException.
-	self
-		shouldnt: [
-			document :=
-				XMLDOMParser
-					parse: dtd, content
-					usingNamespaces: false
-					validation: false]
-		raise: XMLValidationException.
-	self assert: document allNodes second contentString = 'test'.
-]
-
-{ #category : #tests }
-XMLParserTest >> testEntityUndeclaredAndPreserved [
-	| xml parser document |
-
-	xml := '<!DOCTYPE root [
-		<!ENTITY unreferenced "&undeclaredOne;">
-		%undeclaredOne;]>
-		<root name="&#34;&undeclaredTwo;&#34;">&lt;&undeclaredThree;&gt;</root>'.
-	(parser := XMLDOMParser on: xml)
-		isValidating: false;
-		preservesUndeclaredEntityReferences: true.
-	document := parser parseDocument.
-
-	self
-		assert: document doctypeDeclaration nodes size = 1;
-		assert: document doctypeDeclaration firstNode replacement = '&undeclaredOne;';
-		assert: (document root attributeAt: 'name') = '"&undeclaredTwo;"';
-		assert: (document root contentString) = '<&undeclaredThree;>'.
-]
-
-{ #category : #tests }
-XMLParserTest >> testEntityUndeclaredStandalone [
-	| xml |
-
-	xml := '
-		<!DOCTYPE root [
-			<!ENTITY declared "">
-		]>
-		<root>&undeclared;</root>'.
-	self
-		should: [SAXHandler parse: xml]
-		raise: XMLValidationException.
-	self
-		should: [SAXHandler parse: '<?xml version="1.0" standalone="yes"?>', xml]
-		raise: XMLValidationException.
-	self
-		should: [
-			(SAXHandler on: '<?xml version="1.0" standalone="yes"?>', xml)
-				isValidating: false;
-				parseDocument]
-		raise: XMLWellFormednessException.
-	self
-		shouldnt: [
-			(SAXHandler on: '<?xml version="1.0" standalone="no"?>', xml)
-				isValidating: false;
-				parseDocument]
-		raise: XMLParserException.
-]
-
-{ #category : #tests }
-XMLParserTest >> testEntityUnreplaced [
-	| beforeSubset subset afterSubset xml document |
-
-	beforeSubset := '<?xml version="1.1"?> <!DOCTYPE entity ['.
-	subset :=
-		'<!ENTITY % first "<!ENTITY second &#34;replacement&#34;>">
-		%first;'.
-	afterSubset := ']><entity>&second;</entity>'.
-	xml := beforeSubset, subset, afterSubset.
-	self assert: (XMLDOMParser parse: xml) root contentString = 'replacement'.
-	
-	document :=
-		(XMLDOMParser on: xml)
-			replacesContentEntityReferences: false;
-			parseDocument.
-	self assert: document root contentString = '&second;'.
-	self
-		should: [
-			(SAXHandler on: (beforeSubset, '%first;]>'))
-				replacesContentEntityReferences: false;
-				parseDocument]
-		raise: XMLValidationException.
-]
-
-{ #category : #tests }
-XMLParserTest >> testEntityUnreplacedInContent [
-	| xml document |
-
-	xml := '
-		<!DOCTYPE one [<!ENTITY declared "replacement">]>
-		<one two="&quot;&declared;&quot;">&#60;&declared;&#x2F;&#x3e;</one>'.
-	document :=
-		(XMLDOMParser on: xml)
-			replacesContentEntityReferences: false;
-			parseDocument.
-	self
-		assert: (document root attributeAt: 'two') = '&quot;&declared;&quot;';
-		assert: document root contentString = '&#60;&declared;&#x2F;&#x3e;'.
-]
-
-{ #category : #tests }
-XMLParserTest >> testEntityUnreplacedInContentAndUndeclared [
-	| xml document |
-
-	xml := '<one two="&quot;&undeclared;&quot;">&#60;&undeclared;&#62;</one>'.
-	self
-		should: [
-			(SAXHandler on: xml)
-				replacesContentEntityReferences: false;
-				parseDocument]
-		raise: XMLValidationException.
-	self
-		shouldnt: [
-			document :=
-				(XMLDOMParser on: xml)
-					isValidating: false;
-					replacesContentEntityReferences: false;
-					parseDocument]
-		raise: XMLValidationException.
-	self
-		assert: (document root attributeAt: 'two') = '&quot;&undeclared;&quot;';
-		assert: document root contentString = '&#60;&undeclared;&#62;'.
 ]
 
 { #category : #tests }
@@ -4528,25 +4631,6 @@ XMLParserTest >> testParserLittleDocument [
 ]
 
 { #category : #tests }
-XMLParserTest >> testProcessingInstruction [
-	| document |
-
-	document :=
-		XMLDOMParser parse:
-			'<?xml version="1.1" standalone="yes"?><?firstTarget first>Data?>',
-			'<root><?secondTarget second?Data?></root> '.
-
-	self
-		assert: document version = 1.1;
-		assert: document nodes size = 2;
-		assert: document firstNode isPI;
-		assert: document firstNode target = 'firstTarget';
-		assert: document firstNode data = 'first>Data';
-		assert: document root firstNode target = 'secondTarget';
-		assert: document root firstNode data = 'second?Data'.
-]
-
-{ #category : #tests }
 XMLParserTest >> testProcessingInstructionBadChar [
 	self nonChars do: [:each |
 		self
@@ -4640,6 +4724,36 @@ XMLParserTest >> testSystemIDBadChar [
 				SAXHandler parse:
 					'<!DOCTYPE test SYSTEM "', each asString, '"><test/>']
 			raise: XMLWellFormednessException]
+]
+
+{ #category : #tests }
+XMLParserTest >> testSystemIDFragment [
+	#('<!DOCTYPE test [
+			<!ENTITY one SYSTEM "test#one">
+		]><test/>'
+		'<!DOCTYPE test [
+			<!ENTITY % one SYSTEM "test#one">
+		]><test/>'
+		'<!DOCTYPE test [
+			<!NOTATION note SYSTEM "two">
+			<!ENTITY two SYSTEM "test#two" NDATA note>
+		]><test/>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: each]
+				raise: XMLWellFormednessException].
+
+	"DOCTYPE and NOTATION system IDs with fragments are OK"
+	self
+		shouldnt: [
+			SAXHandler parse:
+				'<!DOCTYPE test SYSTEM "test#one" [
+					<!NOTATION note SYSTEM "test#two">
+					<!ENTITY one SYSTEM "test">
+					<!ENTITY % two SYSTEM "test">
+					<!ENTITY three SYSTEM "test" NDATA note>
+				]><test/>']		
+		raise: XMLWellFormednessException.
 ]
 
 { #category : #tests }

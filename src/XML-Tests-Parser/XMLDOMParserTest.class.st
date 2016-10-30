@@ -196,6 +196,37 @@ XMLDOMParserTest >> testCDataSection [
 ]
 
 { #category : #tests }
+XMLDOMParserTest >> testCDataSectionEntityReplacement [
+	| document element unescaped escaped xml |
+
+	unescaped := 'this is CDATA test content 1 < 2 & 5 > 3'.
+	escaped := 'this is CDATA test content 1 &lt; 2 &amp; 5 &gt; 3'.
+	xml := 
+		'<?xml version="1.0" encoding="UTF-8"?>
+		<!DOCTYPE test-data [
+			<!ENTITY cdata "<![CDATA[this is CDATA test content 1 < 2 &#38; 5 > 3]]>">
+		]>
+		<test-data>test&cdata;test</test-data>'.
+	document := XMLDOMParser parse: xml.
+	element := document findElementNamed: 'test-data'.
+	self
+		assert: element nodes size = 1;
+		assert: element firstNode isStringNode;
+		assert: element firstNode printString = ('test', escaped, 'test').
+
+	document :=
+		(XMLDOMParser on: xml)
+			preservesCDataNodes: true;
+			parseDocument.
+	element := document findElementNamed: 'test-data'.
+	self
+		assert: element nodes size = 3;
+		assert: element nodes second isCData;
+		assert: element nodes second printString = ('<![CDATA[', unescaped, ']]>');
+		assert: element strings asArray = (Array with: 'test' with: unescaped with: 'test').
+]
+
+{ #category : #tests }
 XMLDOMParserTest >> testChangingNamespaces [
 	| document people person |
 
@@ -968,6 +999,58 @@ XMLDOMParserTest >> testPreservesIgnorableWhitespace [
 		assert: (parser isValidating: false) == parser;
 		deny: parser preservesIgnorableWhitespace;
 		deny: parser isValidating
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testProcessingInstruction [
+	| document |
+
+	document :=
+		XMLDOMParser parse:
+			'<?xml version="1.1" standalone="yes"?><?firstTarget first>Data?>',
+			'<root><?secondTarget second?Data?></root> '.
+
+	self
+		assert: document version = 1.1;
+		assert: document nodes size = 2;
+		assert: document firstNode isPI;
+		assert: document firstNode target = 'firstTarget';
+		assert: document firstNode data = 'first>Data';
+		assert: document root firstNode target = 'secondTarget';
+		assert: document root firstNode data = 'second?Data'.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testProcessingInstructionEntityReplacement [
+	| document doctypeDeclaration root |
+
+	document :=
+		XMLDOMParser parse:
+			'<?xml version="1.1" standalone="yes"?>
+			<!DOCTYPE root [
+				<!ENTITY % first "<?firstTarget first>Data?>">
+				%first;
+				<!ENTITY second "<?secondTarget second?Data?>">
+			]><root>&second;</root> '.
+
+	self
+		assert: document version = 1.1;
+		assert: document hasDoctypeDeclaration;
+		assert: document nodes size = 1.
+
+	doctypeDeclaration := document doctypeDeclaration.
+	self
+		assert: doctypeDeclaration nodes size = 3;
+		assert: doctypeDeclaration nodes second isPI;
+		assert: doctypeDeclaration nodes second target = 'firstTarget';
+		assert: doctypeDeclaration nodes second data = 'first>Data'.
+
+	root := document root.
+	self
+		assert: root nodes size = 1;
+		assert: root firstNode isPI;
+		assert: root firstNode target = 'secondTarget';
+		assert: root firstNode data = 'second?Data'.
 ]
 
 { #category : #tests }

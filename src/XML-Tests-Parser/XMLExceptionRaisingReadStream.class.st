@@ -6,7 +6,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'stream',
-		'isClosed'
+		'wasClosed'
 	],
 	#category : #'XML-Tests-Parser-Streams'
 }
@@ -18,21 +18,21 @@ XMLExceptionRaisingReadStream class >> on: aCollection [
 
 { #category : #testing }
 XMLExceptionRaisingReadStream >> atEnd [
-	isClosed
+	wasClosed
 		ifTrue: [Error signal: 'Cannot send #atEnd to a closed stream'].
 	^ stream atEnd
 ]
 
 { #category : #closing }
 XMLExceptionRaisingReadStream >> close [
-	isClosed
+	wasClosed
 		ifTrue: [Error signal: 'Cannot close already closed stream']
 		ifFalse: [
 			"must use respondsTo: to support streams only implementing the basic
 			protocol"
 			(stream respondsTo: #close)
 				ifTrue: [stream close].
-			isClosed := true]
+			wasClosed := true]
 ]
 
 { #category : #testing }
@@ -55,7 +55,7 @@ XMLExceptionRaisingReadStream >> next [
 { #category : #initialization }
 XMLExceptionRaisingReadStream >> on: aCollection [
 	stream := aCollection readStream.
-	isClosed := false.
+	wasClosed := false.
 ]
 
 { #category : #accessing }
@@ -63,4 +63,9 @@ XMLExceptionRaisingReadStream >> peek [
 	stream atEnd
 		ifTrue: [Error signal: 'Cannot call peek on this stream when atEnd'].
 	^ stream peek.
+]
+
+{ #category : #testing }
+XMLExceptionRaisingReadStream >> wasClosed [
+	^ wasClosed
 ]

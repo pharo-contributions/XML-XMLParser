@@ -83,6 +83,30 @@ XMLNestedStreamReaderTest >> testAtEnd [
 ]
 
 { #category : #tests }
+XMLNestedStreamReaderTest >> testCallbackExceptionStreamClosing [
+	| stream streamReader evaluated |
+
+	stream := XMLExceptionRaisingReadStream on: self sourceXML.
+	streamReader := self newStreamReaderOnSourceXML.
+	evaluated := false.
+	streamReader
+		pushBackStream: stream
+		whenPoppedDo: [
+			evaluated := true.
+			Error signal].
+	self
+		deny: evaluated;
+		deny: stream wasClosed.
+
+	[streamReader upToEnd]
+		on: Error
+		do: [:ignored | ].
+	self
+		assert: evaluated;
+		assert: stream wasClosed.
+]
+
+{ #category : #tests }
 XMLNestedStreamReaderTest >> testIsBinary [
 	self deny: self newStreamReaderOnSourceXML isBinary
 ]
@@ -231,14 +255,14 @@ XMLNestedStreamReaderTest >> testNormalizedLineEndingChar [
 ]
 
 { #category : #tests }
-XMLNestedStreamReaderTest >> testPushBackStreamOnClose [
+XMLNestedStreamReaderTest >> testPushBackStreamWhenPoppedDo [
 	| streamReader closed |
 
 	streamReader := XMLNestedStreamReader on: '' readStream.
 	closed := false.
 	streamReader
 		pushBackStream: self sourceXML readStream
-		onClose: [closed := true].
+		whenPoppedDo: [closed := true].
 	self normalizedSourceXML do: [:each |
 		self
 			assert: streamReader peek = each;
