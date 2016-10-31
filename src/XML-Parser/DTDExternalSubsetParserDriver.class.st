@@ -84,6 +84,12 @@ DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName replaceme
 		baseURI: self baseURI
 ]
 
+{ #category : #handling }
+DTDExternalSubsetParserDriver >> handleGeneralEntityReference: aName [
+	"these can occur in attribute default values"
+	^ self saxDriver handleGeneralEntityReference: aName
+]
+
 { #category : #'handling - dtd' }
 DTDExternalSubsetParserDriver >> handleImproperParameterEntityNesting [
 	self saxDriver handleImproperParameterEntityNesting
@@ -123,12 +129,17 @@ DTDExternalSubsetParserDriver >> handleParameterEntityReference: aName [
 
 { #category : #handling }
 DTDExternalSubsetParserDriver >> handleParseError: aString [
-	XMLWellFormednessException signal: aString
+	self saxDriver handleParseError: aString
 ]
 
 { #category : #private }
 DTDExternalSubsetParserDriver >> initialContextClass [
 	^ XMLTextDeclarationContext
+]
+
+{ #category : #testing }
+DTDExternalSubsetParserDriver >> isStandalone [
+	^ self saxDriver isStandalone
 ]
 
 { #category : #testing }
