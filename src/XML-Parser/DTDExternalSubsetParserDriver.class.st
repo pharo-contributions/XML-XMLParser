@@ -167,6 +167,11 @@ DTDExternalSubsetParserDriver >> replacesContentEntityReferences [
 	^ self saxDriver replacesContentEntityReferences
 ]
 
+{ #category : #testing }
+DTDExternalSubsetParserDriver >> resolvesExternalEntities [
+	^ true
+]
+
 { #category : #accessing }
 DTDExternalSubsetParserDriver >> saxDriver [
 	^ saxDriver

@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #testing }
-XMLPrologContext >> canTerminateDocument [
+XMLPrologContext >> canTerminateInput [
 	^ false
 ]
 

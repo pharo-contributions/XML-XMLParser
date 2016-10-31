@@ -170,11 +170,6 @@ XMLWellFormedParserTokenizer >> constructReplacementForParameterEntity: anEntity
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorDocumentTerminatedPrematurely [
-	self parseError: 'Document terminated prematurely'
-]
-
-{ #category : #errors }
 XMLWellFormedParserTokenizer >> errorDuplicateAttribute: anAttribute [
 	self
 		formatParseError: 'Duplicate attribute "{1}" in start tag'
@@ -419,6 +414,11 @@ XMLWellFormedParserTokenizer >> errorExpectedXMLVersionValueStartButGot: aCharac
 XMLWellFormedParserTokenizer >> errorImproperGeneralEntityNesting [
 	self parseError:
 		'Markup tokens must start and end in the same general entity replacement'
+]
+
+{ #category : #errors }
+XMLWellFormedParserTokenizer >> errorInputTerminatedPrematurely [
+	self parseError: 'Input terminated prematurely'
 ]
 
 { #category : #errors }
@@ -1192,8 +1192,8 @@ XMLWellFormedParserTokenizer >> nextElementDeclaration [
 
 { #category : #tokenizing }
 XMLWellFormedParserTokenizer >> nextEndDocument [
-	context canTerminateDocument
-		ifFalse: [self errorDocumentTerminatedPrematurely].
+	context canTerminateInput
+		ifFalse: [self errorInputTerminatedPrematurely].
 	context isContentContext
 		ifTrue: [
 			elementNester hasOpenElements

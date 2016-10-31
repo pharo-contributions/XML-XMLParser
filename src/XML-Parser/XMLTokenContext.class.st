@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #testing }
-XMLTokenContext >> canTerminateDocument [
+XMLTokenContext >> canTerminateInput [
 	^ true
 ]
 
