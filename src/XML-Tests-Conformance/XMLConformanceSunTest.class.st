@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 XMLConformanceSunTest class >> skippableTests [
-	^ #( testinvalidnotsa01xml testinvalidnotsa04xml testinvalidnotsa05xml testinvalidnotsa06xml testinvalidnotsa07xml testinvalidnotsa09xml testinvalidnotsa10xml testinvalidnotsa11xml testinvalidnotsa12xml testinvalidnotsa13xml testinvalidutf16bxml testinvalidutf16lxml testnotwfnotsa03xml )
+	^ #( testinvalidutf16bxml testinvalidutf16lxml )
 ]
 
 { #category : #'xml source' }
@@ -2512,6 +2512,238 @@ XMLConformanceSunTest class >> sourcevalidoptionalxml [
 ]
 
 { #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutdtd00xml [
+	"Source file: sun/valid/out/dtd00.xml"
+
+	^ '<root></root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutdtd01xml [
+	"Source file: sun/valid/out/dtd01.xml"
+
+	^ '<root></root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutelementxml [
+	"Source file: sun/valid/out/element.xml"
+
+	^ '<root>&#10;    <empty></empty>&#10;&#10;    <mixed1></mixed1>&#10;    <mixed1></mixed1>&#10;&#10;    <mixed2></mixed2>&#10;    <mixed2></mixed2>&#10;&#10;    <mixed3></mixed3>&#10;    <mixed3></mixed3>&#10;&#10;    <mixed1>allowed</mixed1>&#10;    <mixed1>&lt;allowed&gt;</mixed1>&#10;&#10;    <mixed2>also</mixed2>&#10;    <mixed2>&lt;% illegal otherwise %&gt;</mixed2>&#10;&#10;    <mixed3>moreover</mixed3>&#10;&#10;    <mixed1>allowed &amp; stuff</mixed1>&#10;&#10;    <mixed2>also</mixed2>&#10;&#10;    <mixed3>moreover <empty></empty> </mixed3>&#10;    <mixed3>moreover <empty></empty> </mixed3>&#10;    <mixed3><empty></empty> </mixed3>&#10;    <mixed3><empty></empty> too</mixed3>&#10;&#10;</root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutext01xml [
+	"Source file: sun/valid/out/ext01.xml"
+
+	^ '<root> &#10;&#10;<foo></foo>&#10;&#10;<bar></bar>&#10;&#10;<is> &quot;dumber than a bag full of hammers&quot; </is>&#10; &#10;&#10;<foo></foo>&#10;&#10;<bar></bar>&#10;&#10;<is> &quot;dumber than a bag full of hammers&quot; </is>&#10;   </root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutext02xml [
+	"Source file: sun/valid/out/ext02.xml"
+
+	^ '<foo> &#10;<root></root>&#10; &#10;<root></root>&#10; </foo>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutnotation01xml [
+	"Source file: sun/valid/out/notation01.xml"
+
+	^ '<!DOCTYPE test [
+<!NOTATION GIF PUBLIC ''+//ISBN 0-7923-9432-1::Graphic Notation//NOTATION CompuServe Graphic Interchange Format//EN''>
+]>
+<test>test</test>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutnotsa01xml [
+	"Source file: sun/valid/out/not-sa01.xml"
+
+	^ '<!DOCTYPE root [
+<!NOTATION bar SYSTEM ''file:/dev/tty''>
+<!NOTATION foo PUBLIC ''-//public id//foo'' ''file:/dev/null''>
+<!NOTATION nonce SYSTEM ''file:/dev/null''>
+]>
+<root>&#10;    <child>&#10;    The whitespace before and after this element keeps&#10;    this from being standalone.&#10;    </child>&#10;</root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutnotsa02xml [
+	"Source file: sun/valid/out/not-sa02.xml"
+
+	^ '<!DOCTYPE attributes [
+<!NOTATION bar SYSTEM ''file:/dev/tty''>
+<!NOTATION foo PUBLIC ''-//public id//foo'' ''file:/dev/null''>
+<!NOTATION nonce SYSTEM ''file:/dev/null''>
+]>
+<attributes cdata="nothing happens to this one!" entities="unparsed-1 unparsed-2" entity="unparsed-1" id="number99" idref="number99" idrefs="number99 number99 number99" nmtoken="this-gets-normalized" nmtokens="this also gets normalized" notation="nonce" token="a"></attributes>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutnotsa03xml [
+	"Source file: sun/valid/out/not-sa03.xml"
+
+	^ '<!DOCTYPE attributes [
+<!NOTATION bar SYSTEM ''file:/dev/tty''>
+<!NOTATION foo PUBLIC ''-//public id//foo'' ''file:/dev/null''>
+<!NOTATION nonce SYSTEM ''file:/dev/null''>
+]>
+<attributes cdata="nothing happens to this one!" entities="unparsed-1 unparsed-2" entity="unparsed-1" id="internal42" idref="internal42" idrefs="internal42 internal42 internal42" nmtoken="this-gets-normalized" nmtokens="this also gets normalized" notation="foo" token="b"></attributes>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutnotsa04xml [
+	"Source file: sun/valid/out/not-sa04.xml"
+
+	^ '<!DOCTYPE attributes [
+<!NOTATION bar SYSTEM ''file:/dev/tty''>
+<!NOTATION foo PUBLIC ''-//public id//foo'' ''file:/dev/null''>
+<!NOTATION nonce SYSTEM ''file:/dev/null''>
+]>
+<attributes cdata="nothing happens to this one!" entities="unparsed-1 unparsed-2" entity="unparsed-1" id="internal42" idref="internal42" idrefs="internal42 internal42 internal42" nmtoken="this-gets-normalized" nmtokens="this also gets normalized" notation="nonce" token="a"></attributes><?pi equals three?>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutoptionalxml [
+	"Source file: sun/valid/out/optional.xml"
+
+	^ '<root>&#10;    &#10;    <once><e></e></once>&#10;&#10;    <twice><e></e><e></e></twice>&#10;&#10;&#10;    <once-or-twice-a><e></e></once-or-twice-a>&#10;    <once-or-twice-b><e></e></once-or-twice-b>&#10;    <once-or-twice-c><e></e></once-or-twice-c>&#10;    <once-or-twice-d><e></e></once-or-twice-d>&#10;    <once-or-twice-e><e></e></once-or-twice-e>&#10;&#10;    <once-or-twice-a><e></e><e></e></once-or-twice-a>&#10;    <once-or-twice-b><e></e><e></e></once-or-twice-b>&#10;    <once-or-twice-c><e></e><e></e></once-or-twice-c>&#10;    <once-or-twice-d><e></e><e></e></once-or-twice-d>&#10;    <once-or-twice-e><e></e><e></e></once-or-twice-e>&#10;&#10;&#10;    <once-or-more-a><e></e></once-or-more-a>&#10;    <once-or-more-b><e></e></once-or-more-b>&#10;    <once-or-more-c><e></e></once-or-more-c>&#10;    <once-or-more-d><e></e></once-or-more-d>&#10;    <once-or-more-e><e></e></once-or-more-e>&#10;&#10;    <once-or-more-a><e></e><e></e></once-or-more-a>&#10;    <once-or-more-b><e></e><e></e></once-or-more-b>&#10;    <once-or-more-c><e></e><e></e></once-or-more-c>&#10;    <once-or-more-d><e></e><e></e></once-or-more-d>&#10;    <once-or-more-e><e></e><e></e></once-or-more-e>&#10;&#10;    <once-or-more-a><e></e><e></e><e></e></once-or-more-a>&#10;    <once-or-more-b><e></e><e></e><e></e></once-or-more-b>&#10;    <once-or-more-c><e></e><e></e><e></e></once-or-more-c>&#10;    <once-or-more-d><e></e><e></e><e></e></once-or-more-d>&#10;    <once-or-more-e><e></e><e></e><e></e></once-or-more-e>&#10;&#10;    <once-or-more-a><e></e><e></e><e></e><e></e></once-or-more-a>&#10;    <once-or-more-b><e></e><e></e><e></e><e></e></once-or-more-b>&#10;    <once-or-more-c><e></e><e></e><e></e><e></e></once-or-more-c>&#10;    <once-or-more-d><e></e><e></e><e></e><e></e></once-or-more-d>&#10;    <once-or-more-e><e></e><e></e><e></e><e></e></once-or-more-e>&#10;&#10;&#10;</root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutpe00xml [
+	"Source file: sun/valid/out/pe00.xml"
+
+	^ '<root>La Peste: Albert Camus,&#10;© 1947 Éditions Gallimard. All rights reserved</root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutpe02xml [
+	"Source file: sun/valid/out/pe02.xml"
+
+	^ '<test>This sample shows a error-prone method.</test>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutpe03xml [
+	"Source file: sun/valid/out/pe03.xml"
+
+	^ '<root><p>An ampersand (&amp;) may be escaped&#10;numerically (&amp;#38) or with a general entity (&amp;amp;).</p></root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutrequired00xml [
+	"Source file: sun/valid/out/required00.xml"
+
+	^ '<root req="foo"></root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutsa01xml [
+	"Source file: sun/valid/out/sa01.xml"
+
+	^ '<root>&#10;    <child>&#10;    The whitespace around this element would be&#10;    invalid as standalone were the DTD external.&#10;    </child>&#10;</root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutsa02xml [
+	"Source file: sun/valid/out/sa02.xml"
+
+	^ '<!DOCTYPE attributes [
+<!NOTATION bar SYSTEM ''file:/dev/tty''>
+<!NOTATION foo PUBLIC ''-//public id//foo'' ''file:/dev/null''>
+<!NOTATION nonce SYSTEM ''file:/dev/null''>
+]>
+<attributes cdata="nothing happens to this one!" entities="unparsed-1 unparsed-2" entity="unparsed-1" id="internal42" idref="internal42" idrefs="internal42 internal42 internal42" nmtoken="this-gets-normalized" nmtokens="this also gets normalized" notation="nonce" token="a"></attributes>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutsa03xml [
+	"Source file: sun/valid/out/sa03.xml"
+
+	^ '<!DOCTYPE attributes [
+<!NOTATION bar SYSTEM ''file:/dev/tty''>
+<!NOTATION foo PUBLIC ''-//public id//foo'' ''file:/dev/null''>
+<!NOTATION nonce SYSTEM ''file:/dev/null''>
+]>
+<attributes cdata="nothing happens to this one!" entities="unparsed-1 unparsed-2" entity="unparsed-1" id="internal42" idref="internal42" idrefs="internal42 internal42 internal42" nmtoken="this-gets-normalized" nmtokens="this also gets normalized" notation="foo" token="b"></attributes>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutsa04xml [
+	"Source file: sun/valid/out/sa04.xml"
+
+	^ '<!DOCTYPE attributes [
+<!NOTATION bar SYSTEM ''file:/dev/tty''>
+<!NOTATION foo PUBLIC ''-//public id//foo'' ''file:/dev/null''>
+<!NOTATION nonce SYSTEM ''file:/dev/null''>
+]>
+<attributes cdata="nothing happens to this one!" entities="unparsed-1 unparsed-2" entity="unparsed-1" id="internal42" idref="internal42" idrefs="internal42 internal42 internal42" nmtoken="this-gets-normalized" nmtokens="this also gets normalized" notation="nonce" token="a"></attributes><?pi equals three?>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutsa05xml [
+	"Source file: sun/valid/out/sa05.xml"
+
+	^ '<!DOCTYPE root [
+<!NOTATION bar SYSTEM ''file:/dev/tty''>
+<!NOTATION foo PUBLIC ''-//public id//foo'' ''file:/dev/null''>
+<!NOTATION nonce SYSTEM ''file:/dev/null''>
+]>
+<root><child>&#10;    No whitespace before or after this standalone element.&#10;</child></root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutsgml01xml [
+	"Source file: sun/valid/out/sgml01.xml"
+
+	^ '<root position="first" status="initial-draft"></root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutvlang01xml [
+	"Source file: sun/valid/out/v-lang01.xml"
+
+	^ '<root xml:lang="en"></root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutvlang02xml [
+	"Source file: sun/valid/out/v-lang02.xml"
+
+	^ '<root xml:lang="en-IN"></root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutvlang03xml [
+	"Source file: sun/valid/out/v-lang03.xml"
+
+	^ '<root xml:lang="i-klingon-whorf"></root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutvlang04xml [
+	"Source file: sun/valid/out/v-lang04.xml"
+
+	^ '<root xml:lang="x-dialect-valleygirl"></root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutvlang05xml [
+	"Source file: sun/valid/out/v-lang05.xml"
+
+	^ '<root xml:lang="DE"></root>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceSunTest class >> sourcevalidoutvlang06xml [
+	"Source file: sun/valid/out/v-lang06.xml"
+
+	^ '<root xml:lang="X-Java"></root>'
+]
+
+{ #category : #'xml source' }
 XMLConformanceSunTest class >> sourcevalidpe00dtd [
 	"Source file: sun/valid/pe00.dtd"
 
@@ -4916,9 +5148,14 @@ XMLConformanceSunTest >> testvaliddtd00xml [
 		ifSkippable: #testvaliddtd00xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevaliddtd00xml
-				documentURI: 'valid/dtd00.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevaliddtd00xml
+						documentURI: 'valid/dtd00.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutdtd00xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -4935,9 +5172,14 @@ XMLConformanceSunTest >> testvaliddtd01xml [
 		ifSkippable: #testvaliddtd01xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevaliddtd01xml
-				documentURI: 'valid/dtd01.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevaliddtd01xml
+						documentURI: 'valid/dtd01.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutdtd01xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -4954,9 +5196,14 @@ XMLConformanceSunTest >> testvalidelementxml [
 		ifSkippable: #testvalidelementxml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidelementxml
-				documentURI: 'valid/element.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidelementxml
+						documentURI: 'valid/element.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutelementxml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -4973,9 +5220,14 @@ XMLConformanceSunTest >> testvalidext01xml [
 		ifSkippable: #testvalidext01xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidext01xml
-				documentURI: 'valid/ext01.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidext01xml
+						documentURI: 'valid/ext01.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutext01xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -4992,9 +5244,14 @@ XMLConformanceSunTest >> testvalidext02xml [
 		ifSkippable: #testvalidext02xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidext02xml
-				documentURI: 'valid/ext02.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidext02xml
+						documentURI: 'valid/ext02.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutext02xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5011,9 +5268,14 @@ XMLConformanceSunTest >> testvalidnotation01xml [
 		ifSkippable: #testvalidnotation01xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotation01xml
-				documentURI: 'valid/notation01.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotation01xml
+						documentURI: 'valid/notation01.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutnotation01xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5030,9 +5292,14 @@ XMLConformanceSunTest >> testvalidnotsa01xml [
 		ifSkippable: #testvalidnotsa01xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa01xml
-				documentURI: 'valid/not-sa01.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa01xml
+						documentURI: 'valid/not-sa01.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutnotsa01xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5049,9 +5316,14 @@ XMLConformanceSunTest >> testvalidnotsa02xml [
 		ifSkippable: #testvalidnotsa02xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa02xml
-				documentURI: 'valid/not-sa02.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa02xml
+						documentURI: 'valid/not-sa02.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutnotsa02xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5068,9 +5340,14 @@ XMLConformanceSunTest >> testvalidnotsa03xml [
 		ifSkippable: #testvalidnotsa03xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa03xml
-				documentURI: 'valid/not-sa03.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa03xml
+						documentURI: 'valid/not-sa03.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutnotsa03xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5087,9 +5364,14 @@ XMLConformanceSunTest >> testvalidnotsa04xml [
 		ifSkippable: #testvalidnotsa04xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa04xml
-				documentURI: 'valid/not-sa04.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa04xml
+						documentURI: 'valid/not-sa04.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutnotsa04xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5106,9 +5388,14 @@ XMLConformanceSunTest >> testvalidoptionalxml [
 		ifSkippable: #testvalidoptionalxml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidoptionalxml
-				documentURI: 'valid/optional.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidoptionalxml
+						documentURI: 'valid/optional.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutoptionalxml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5125,9 +5412,14 @@ XMLConformanceSunTest >> testvalidpe00xml [
 		ifSkippable: #testvalidpe00xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidpe00xml
-				documentURI: 'valid/pe00.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidpe00xml
+						documentURI: 'valid/pe00.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutpe00xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5163,9 +5455,14 @@ XMLConformanceSunTest >> testvalidpe02xml [
 		ifSkippable: #testvalidpe02xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidpe02xml
-				documentURI: 'valid/pe02.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidpe02xml
+						documentURI: 'valid/pe02.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutpe02xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5182,9 +5479,14 @@ XMLConformanceSunTest >> testvalidpe03xml [
 		ifSkippable: #testvalidpe03xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidpe03xml
-				documentURI: 'valid/pe03.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidpe03xml
+						documentURI: 'valid/pe03.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutpe03xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5201,9 +5503,14 @@ XMLConformanceSunTest >> testvalidrequired00xml [
 		ifSkippable: #testvalidrequired00xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidrequired00xml
-				documentURI: 'valid/required00.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidrequired00xml
+						documentURI: 'valid/required00.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutrequired00xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5220,9 +5527,14 @@ XMLConformanceSunTest >> testvalidsa01xml [
 		ifSkippable: #testvalidsa01xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa01xml
-				documentURI: 'valid/sa01.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa01xml
+						documentURI: 'valid/sa01.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutsa01xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5239,9 +5551,14 @@ XMLConformanceSunTest >> testvalidsa02xml [
 		ifSkippable: #testvalidsa02xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa02xml
-				documentURI: 'valid/sa02.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa02xml
+						documentURI: 'valid/sa02.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutsa02xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5258,9 +5575,14 @@ XMLConformanceSunTest >> testvalidsa03xml [
 		ifSkippable: #testvalidsa03xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa03xml
-				documentURI: 'valid/sa03.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa03xml
+						documentURI: 'valid/sa03.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutsa03xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5277,9 +5599,14 @@ XMLConformanceSunTest >> testvalidsa04xml [
 		ifSkippable: #testvalidsa04xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa04xml
-				documentURI: 'valid/sa04.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa04xml
+						documentURI: 'valid/sa04.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutsa04xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5296,9 +5623,14 @@ XMLConformanceSunTest >> testvalidsa05xml [
 		ifSkippable: #testvalidsa05xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa05xml
-				documentURI: 'valid/sa05.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa05xml
+						documentURI: 'valid/sa05.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutsa05xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5315,9 +5647,14 @@ XMLConformanceSunTest >> testvalidsgml01xml [
 		ifSkippable: #testvalidsgml01xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsgml01xml
-				documentURI: 'valid/sgml01.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsgml01xml
+						documentURI: 'valid/sgml01.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutsgml01xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5334,9 +5671,14 @@ XMLConformanceSunTest >> testvalidvlang01xml [
 		ifSkippable: #testvalidvlang01xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidvlang01xml
-				documentURI: 'valid/v-lang01.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidvlang01xml
+						documentURI: 'valid/v-lang01.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutvlang01xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5353,9 +5695,14 @@ XMLConformanceSunTest >> testvalidvlang02xml [
 		ifSkippable: #testvalidvlang02xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidvlang02xml
-				documentURI: 'valid/v-lang02.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidvlang02xml
+						documentURI: 'valid/v-lang02.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutvlang02xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5372,9 +5719,14 @@ XMLConformanceSunTest >> testvalidvlang03xml [
 		ifSkippable: #testvalidvlang03xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidvlang03xml
-				documentURI: 'valid/v-lang03.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidvlang03xml
+						documentURI: 'valid/v-lang03.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutvlang03xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5391,9 +5743,14 @@ XMLConformanceSunTest >> testvalidvlang04xml [
 		ifSkippable: #testvalidvlang04xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidvlang04xml
-				documentURI: 'valid/v-lang04.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidvlang04xml
+						documentURI: 'valid/v-lang04.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutvlang04xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5410,9 +5767,14 @@ XMLConformanceSunTest >> testvalidvlang05xml [
 		ifSkippable: #testvalidvlang05xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidvlang05xml
-				documentURI: 'valid/v-lang05.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidvlang05xml
+						documentURI: 'valid/v-lang05.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutvlang05xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -5429,9 +5791,14 @@ XMLConformanceSunTest >> testvalidvlang06xml [
 		ifSkippable: #testvalidvlang06xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidvlang06xml
-				documentURI: 'valid/v-lang06.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidvlang06xml
+						documentURI: 'valid/v-lang06.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidoutvlang06xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)

@@ -1,5 +1,5 @@
 "
-This class can be used with a Guide to walk the file tree of a test suite and collect all file references to passing and failing XML test files and entity/DTD files.
+This class can be used with a Guide to walk the file tree of a test suite and collect all file references to passing, failing, and expected output XML test source files and any associated entity/DTD source files.
 "
 Class {
 	#name : #XMLConformanceFileVisitor,
@@ -9,7 +9,8 @@ Class {
 		'passingTestFiles',
 		'entityFiles',
 		'suite',
-		'skipFilesInBase'
+		'skipFilesInBase',
+		'passingTestOutputFiles'
 	],
 	#category : #'XML-Tests-Conformance'
 }
@@ -67,18 +68,19 @@ XMLConformanceFileVisitor >> isFailingTestFilePathSegments: aPathSegmentCollecti
 ]
 
 { #category : #testing }
+XMLConformanceFileVisitor >> isOutputFilePathSegments: aPathSegmentCollection [
+	^ aPathSegmentCollection includes: 'out'
+]
+
+{ #category : #testing }
 XMLConformanceFileVisitor >> isSkippableFilePathSegments: aPathSegmentCollection [
 	(skipFilesInBase
 		and: [aPathSegmentCollection allButLast last = suite])
 		ifTrue: [^ true].
 
 	"skip the xml files that describe the suite and its tests"	
-	(aPathSegmentCollection asArray endsWith:
-		(Array with: suite with: suite, '.xml'))
-		ifTrue: [^ true].
-
-	"skip 'out' files"
-	^ aPathSegmentCollection includes: 'out'.
+	^ aPathSegmentCollection asArray endsWith:
+		(Array with: suite with: suite, '.xml').
 ]
 
 { #category : #testing }
@@ -89,6 +91,11 @@ XMLConformanceFileVisitor >> isXMLFileBasename: aBasename [
 { #category : #accessing }
 XMLConformanceFileVisitor >> passingTestFiles [
 	^ passingTestFiles ifNil: [passingTestFiles := OrderedCollection new]
+]
+
+{ #category : #accessing }
+XMLConformanceFileVisitor >> passingTestOutputFiles [
+	^ passingTestOutputFiles ifNil: [passingTestOutputFiles := OrderedCollection new]
 ]
 
 { #category : #initialization }
@@ -113,13 +120,20 @@ XMLConformanceFileVisitor >> visitReference: aDirectoryEntry [
 			self entityFiles add: fileReference.
 			^ self].
 
-	self isXMLFileBasename: basename.
+	(self isXMLFileBasename: basename)
+		ifFalse: [^ self].
 
 	((self isFailingTestFileBasename: basename)
 		or: [self isFailingTestFilePathSegments: pathSegments])
 		ifTrue: [
-			self failingTestFiles add: fileReference.
+			(self isOutputFilePathSegments: pathSegments)
+				ifFalse: [self failingTestFiles add: fileReference].
 			^ self].
-	
+
+	(self isOutputFilePathSegments: pathSegments)
+		ifTrue: [
+			self passingTestOutputFiles add: fileReference.
+			^ self].
+
 	self passingTestFiles add: fileReference.
 ]

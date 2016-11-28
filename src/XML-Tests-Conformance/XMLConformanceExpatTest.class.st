@@ -2535,6 +2535,104 @@ XMLConformanceExpatTest class >> sourcevalidextsa014xml [
 ]
 
 { #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidextsaout001xml [
+	"Source file: xmltest/valid/ext-sa/out/001.xml"
+
+	^ '<doc>Data&#10;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidextsaout002xml [
+	"Source file: xmltest/valid/ext-sa/out/002.xml"
+
+	^ '<doc>Data</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidextsaout003xml [
+	"Source file: xmltest/valid/ext-sa/out/003.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidextsaout004xml [
+	"Source file: xmltest/valid/ext-sa/out/004.xml"
+
+	^ '<doc>Data&#10;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidextsaout005xml [
+	"Source file: xmltest/valid/ext-sa/out/005.xml"
+
+	^ '<doc><e></e><e></e><e></e></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidextsaout006xml [
+	"Source file: xmltest/valid/ext-sa/out/006.xml"
+
+	^ '<doc>Data&#10;<e></e>&#10;More data&#10;<e></e>&#10;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidextsaout007xml [
+	"Source file: xmltest/valid/ext-sa/out/007.xml"
+
+	^ '<doc>XYZ</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidextsaout008xml [
+	"Source file: xmltest/valid/ext-sa/out/008.xml"
+
+	^ '<doc>XYZ</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidextsaout009xml [
+	"Source file: xmltest/valid/ext-sa/out/009.xml"
+
+	^ '<doc>&#10;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidextsaout010xml [
+	"Source file: xmltest/valid/ext-sa/out/010.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidextsaout011xml [
+	"Source file: xmltest/valid/ext-sa/out/011.xml"
+
+	^ '<doc>xyzzy&#10;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidextsaout012xml [
+	"Source file: xmltest/valid/ext-sa/out/012.xml"
+
+	^ '<doc>(e5)</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidextsaout013xml [
+	"Source file: xmltest/valid/ext-sa/out/013.xml"
+
+	^ '<doc><e a1="a1 default" a2="a2 default"></e></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidextsaout014xml [
+	"Source file: xmltest/valid/ext-sa/out/014.xml"
+
+	^ '<doc>data</doc>'
+]
+
+{ #category : #'xml source' }
 XMLConformanceExpatTest class >> sourcevalidnotsa001ent [
 	"Source file: xmltest/valid/not-sa/001.ent"
 
@@ -3156,6 +3254,223 @@ XMLConformanceExpatTest class >> sourcevalidnotsa031xml [
 	^ '<!DOCTYPE doc SYSTEM "031-1.ent">
 <doc>&e;</doc>
 '
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout001xml [
+	"Source file: xmltest/valid/not-sa/out/001.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout002xml [
+	"Source file: xmltest/valid/not-sa/out/002.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout003xml [
+	"Source file: xmltest/valid/not-sa/out/003.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout004xml [
+	"Source file: xmltest/valid/not-sa/out/004.xml"
+
+	^ '<doc a1="value"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout005xml [
+	"Source file: xmltest/valid/not-sa/out/005.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout006xml [
+	"Source file: xmltest/valid/not-sa/out/006.xml"
+
+	^ '<doc a1="v1" a2="w2"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout007xml [
+	"Source file: xmltest/valid/not-sa/out/007.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout008xml [
+	"Source file: xmltest/valid/not-sa/out/008.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout009xml [
+	"Source file: xmltest/valid/not-sa/out/009.xml"
+
+	^ '<doc a1="v1" a2="v2"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout010xml [
+	"Source file: xmltest/valid/not-sa/out/010.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout011xml [
+	"Source file: xmltest/valid/not-sa/out/011.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout012xml [
+	"Source file: xmltest/valid/not-sa/out/012.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout013xml [
+	"Source file: xmltest/valid/not-sa/out/013.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout014xml [
+	"Source file: xmltest/valid/not-sa/out/014.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout015xml [
+	"Source file: xmltest/valid/not-sa/out/015.xml"
+
+	^ '<doc a2="v2"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout016xml [
+	"Source file: xmltest/valid/not-sa/out/016.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout017xml [
+	"Source file: xmltest/valid/not-sa/out/017.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout018xml [
+	"Source file: xmltest/valid/not-sa/out/018.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout019xml [
+	"Source file: xmltest/valid/not-sa/out/019.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout020xml [
+	"Source file: xmltest/valid/not-sa/out/020.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout021xml [
+	"Source file: xmltest/valid/not-sa/out/021.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout022xml [
+	"Source file: xmltest/valid/not-sa/out/022.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout023xml [
+	"Source file: xmltest/valid/not-sa/out/023.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout024xml [
+	"Source file: xmltest/valid/not-sa/out/024.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout025xml [
+	"Source file: xmltest/valid/not-sa/out/025.xml"
+
+	^ '<doc a1="x"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout026xml [
+	"Source file: xmltest/valid/not-sa/out/026.xml"
+
+	^ '<doc a1="w1" a2="x2"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout027xml [
+	"Source file: xmltest/valid/not-sa/out/027.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout028xml [
+	"Source file: xmltest/valid/not-sa/out/028.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout029xml [
+	"Source file: xmltest/valid/not-sa/out/029.xml"
+
+	^ '<doc a1="v2"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout030xml [
+	"Source file: xmltest/valid/not-sa/out/030.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidnotsaout031xml [
+	"Source file: xmltest/valid/not-sa/out/031.xml"
+
+	^ '<doc>&lt;!ATTLIST doc a1 CDATA &quot;v1&quot;&gt;&#10;</doc>'
 ]
 
 { #category : #'xml source' }
@@ -4618,6 +4933,858 @@ XMLConformanceExpatTest class >> sourcevalidsa119xml [
 ]>
 <doc><!-- -á --></doc>
 '
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout001xml [
+	"Source file: xmltest/valid/sa/out/001.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout002xml [
+	"Source file: xmltest/valid/sa/out/002.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout003xml [
+	"Source file: xmltest/valid/sa/out/003.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout004xml [
+	"Source file: xmltest/valid/sa/out/004.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout005xml [
+	"Source file: xmltest/valid/sa/out/005.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout006xml [
+	"Source file: xmltest/valid/sa/out/006.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout007xml [
+	"Source file: xmltest/valid/sa/out/007.xml"
+
+	^ '<doc> </doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout008xml [
+	"Source file: xmltest/valid/sa/out/008.xml"
+
+	^ '<doc>&amp;&lt;&gt;&quot;''</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout009xml [
+	"Source file: xmltest/valid/sa/out/009.xml"
+
+	^ '<doc> </doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout010xml [
+	"Source file: xmltest/valid/sa/out/010.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout011xml [
+	"Source file: xmltest/valid/sa/out/011.xml"
+
+	^ '<doc a1="v1" a2="v2"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout012xml [
+	"Source file: xmltest/valid/sa/out/012.xml"
+
+	^ '<doc :="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout013xml [
+	"Source file: xmltest/valid/sa/out/013.xml"
+
+	^ '<doc _.-0123456789="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout014xml [
+	"Source file: xmltest/valid/sa/out/014.xml"
+
+	^ '<doc abcdefghijklmnopqrstuvwxyz="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout015xml [
+	"Source file: xmltest/valid/sa/out/015.xml"
+
+	^ '<doc ABCDEFGHIJKLMNOPQRSTUVWXYZ="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout016xml [
+	"Source file: xmltest/valid/sa/out/016.xml"
+
+	^ '<doc><?pi ?></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout017axml [
+	"Source file: xmltest/valid/sa/out/017a.xml"
+
+	^ '<doc><?pi some data ? > <??></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout017xml [
+	"Source file: xmltest/valid/sa/out/017.xml"
+
+	^ '<doc><?pi some data ?><?x ?></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout018xml [
+	"Source file: xmltest/valid/sa/out/018.xml"
+
+	^ '<doc>&lt;foo&gt;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout019xml [
+	"Source file: xmltest/valid/sa/out/019.xml"
+
+	^ '<doc>&lt;&amp;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout020xml [
+	"Source file: xmltest/valid/sa/out/020.xml"
+
+	^ '<doc>&lt;&amp;]&gt;]</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout021xml [
+	"Source file: xmltest/valid/sa/out/021.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout022xml [
+	"Source file: xmltest/valid/sa/out/022.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout023xml [
+	"Source file: xmltest/valid/sa/out/023.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout024xml [
+	"Source file: xmltest/valid/sa/out/024.xml"
+
+	^ '<doc><foo></foo></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout025xml [
+	"Source file: xmltest/valid/sa/out/025.xml"
+
+	^ '<doc><foo></foo><foo></foo></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout026xml [
+	"Source file: xmltest/valid/sa/out/026.xml"
+
+	^ '<doc><foo></foo><foo></foo></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout027xml [
+	"Source file: xmltest/valid/sa/out/027.xml"
+
+	^ '<doc><foo></foo><foo></foo></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout028xml [
+	"Source file: xmltest/valid/sa/out/028.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout029xml [
+	"Source file: xmltest/valid/sa/out/029.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout030xml [
+	"Source file: xmltest/valid/sa/out/030.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout031xml [
+	"Source file: xmltest/valid/sa/out/031.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout032xml [
+	"Source file: xmltest/valid/sa/out/032.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout033xml [
+	"Source file: xmltest/valid/sa/out/033.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout034xml [
+	"Source file: xmltest/valid/sa/out/034.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout035xml [
+	"Source file: xmltest/valid/sa/out/035.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout036xml [
+	"Source file: xmltest/valid/sa/out/036.xml"
+
+	^ '<doc></doc><?pi data?>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout037xml [
+	"Source file: xmltest/valid/sa/out/037.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout038xml [
+	"Source file: xmltest/valid/sa/out/038.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout039xml [
+	"Source file: xmltest/valid/sa/out/039.xml"
+
+	^ '<?pi data?><doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout040xml [
+	"Source file: xmltest/valid/sa/out/040.xml"
+
+	^ '<doc a1="&quot;&lt;&amp;&gt;''"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout041xml [
+	"Source file: xmltest/valid/sa/out/041.xml"
+
+	^ '<doc a1="A"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout042xml [
+	"Source file: xmltest/valid/sa/out/042.xml"
+
+	^ '<doc>A</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout043xml [
+	"Source file: xmltest/valid/sa/out/043.xml"
+
+	^ '<doc a1="foo bar"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout044xml [
+	"Source file: xmltest/valid/sa/out/044.xml"
+
+	^ '<doc>&#10;<e a1="v1" a2="v2" a3="v3"></e>&#10;<e a1="w1" a2="v2"></e>&#10;<e a1="v1" a2="w2" a3="v3"></e>&#10;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout045xml [
+	"Source file: xmltest/valid/sa/out/045.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout046xml [
+	"Source file: xmltest/valid/sa/out/046.xml"
+
+	^ '<doc a1="v1" a2="v2"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout047xml [
+	"Source file: xmltest/valid/sa/out/047.xml"
+
+	^ '<doc>X&#10;Y</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout048xml [
+	"Source file: xmltest/valid/sa/out/048.xml"
+
+	^ '<doc>]</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout049xml [
+	"Source file: xmltest/valid/sa/out/049.xml"
+
+	^ '<doc>£</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout050xml [
+	"Source file: xmltest/valid/sa/out/050.xml"
+
+	^ '<doc>เจมส์</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout051xml [
+	"Source file: xmltest/valid/sa/out/051.xml"
+
+	^ '<เจมส์></เจมส์>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout052xml [
+	"Source file: xmltest/valid/sa/out/052.xml"
+
+	^ '<doc>𐀀􏿽</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout053xml [
+	"Source file: xmltest/valid/sa/out/053.xml"
+
+	^ '<doc><e></e></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout054xml [
+	"Source file: xmltest/valid/sa/out/054.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout055xml [
+	"Source file: xmltest/valid/sa/out/055.xml"
+
+	^ '<?pi data?><doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout056xml [
+	"Source file: xmltest/valid/sa/out/056.xml"
+
+	^ '<doc>A</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout057xml [
+	"Source file: xmltest/valid/sa/out/057.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout058xml [
+	"Source file: xmltest/valid/sa/out/058.xml"
+
+	^ '<doc a1="1 2"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout059xml [
+	"Source file: xmltest/valid/sa/out/059.xml"
+
+	^ '<doc>&#10;<e a1="v1" a2="v2" a3="v3"></e>&#10;<e a1="w1" a2="v2"></e>&#10;<e a1="v1" a2="w2" a3="v3"></e>&#10;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout060xml [
+	"Source file: xmltest/valid/sa/out/060.xml"
+
+	^ '<doc>X&#10;Y</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout061xml [
+	"Source file: xmltest/valid/sa/out/061.xml"
+
+	^ '<doc>£</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout062xml [
+	"Source file: xmltest/valid/sa/out/062.xml"
+
+	^ '<doc>เจมส์</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout063xml [
+	"Source file: xmltest/valid/sa/out/063.xml"
+
+	^ '<เจมส์></เจมส์>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout064xml [
+	"Source file: xmltest/valid/sa/out/064.xml"
+
+	^ '<doc>𐀀􏿽</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout065xml [
+	"Source file: xmltest/valid/sa/out/065.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout066xml [
+	"Source file: xmltest/valid/sa/out/066.xml"
+
+	^ '<doc a1="&quot;"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout067xml [
+	"Source file: xmltest/valid/sa/out/067.xml"
+
+	^ '<doc>&#13;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout068xml [
+	"Source file: xmltest/valid/sa/out/068.xml"
+
+	^ '<doc>&#13;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout069xml [
+	"Source file: xmltest/valid/sa/out/069.xml"
+
+	^ '<!DOCTYPE doc [
+<!NOTATION n PUBLIC ''whatever''>
+]>
+<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout070xml [
+	"Source file: xmltest/valid/sa/out/070.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout071xml [
+	"Source file: xmltest/valid/sa/out/071.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout072xml [
+	"Source file: xmltest/valid/sa/out/072.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout073xml [
+	"Source file: xmltest/valid/sa/out/073.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout074xml [
+	"Source file: xmltest/valid/sa/out/074.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout075xml [
+	"Source file: xmltest/valid/sa/out/075.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout076xml [
+	"Source file: xmltest/valid/sa/out/076.xml"
+
+	^ '<!DOCTYPE doc [
+<!NOTATION n1 SYSTEM ''http://www.w3.org/''>
+<!NOTATION n2 SYSTEM ''http://www.w3.org/''>
+]>
+<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout077xml [
+	"Source file: xmltest/valid/sa/out/077.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout078xml [
+	"Source file: xmltest/valid/sa/out/078.xml"
+
+	^ '<doc a="v"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout079xml [
+	"Source file: xmltest/valid/sa/out/079.xml"
+
+	^ '<doc a="v"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout080xml [
+	"Source file: xmltest/valid/sa/out/080.xml"
+
+	^ '<doc a="v"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout081xml [
+	"Source file: xmltest/valid/sa/out/081.xml"
+
+	^ '<doc><a></a><b></b><c><a></a></c></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout082xml [
+	"Source file: xmltest/valid/sa/out/082.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout083xml [
+	"Source file: xmltest/valid/sa/out/083.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout084xml [
+	"Source file: xmltest/valid/sa/out/084.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout085xml [
+	"Source file: xmltest/valid/sa/out/085.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout086xml [
+	"Source file: xmltest/valid/sa/out/086.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout087xml [
+	"Source file: xmltest/valid/sa/out/087.xml"
+
+	^ '<doc><foo></foo></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout088xml [
+	"Source file: xmltest/valid/sa/out/088.xml"
+
+	^ '<doc>&lt;foo&gt;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout089xml [
+	^ '<doc>𐀀􏿽􏿿</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout090xml [
+	"Source file: xmltest/valid/sa/out/090.xml"
+
+	^ '<!DOCTYPE doc [
+<!NOTATION n PUBLIC ''whatever''>
+]>
+<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout091xml [
+	"Source file: xmltest/valid/sa/out/091.xml"
+
+	^ '<!DOCTYPE doc [
+<!NOTATION n SYSTEM ''http://www.w3.org/''>
+]>
+<doc a="e"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout092xml [
+	"Source file: xmltest/valid/sa/out/092.xml"
+
+	^ '<doc>&#10;<a></a>&#10;    <a></a>&#9;<a></a>&#10;&#10;&#10;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout093xml [
+	"Source file: xmltest/valid/sa/out/093.xml"
+
+	^ '<doc>&#10;&#10;&#10;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout094xml [
+	"Source file: xmltest/valid/sa/out/094.xml"
+
+	^ '<doc a1="%e;"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout095xml [
+	"Source file: xmltest/valid/sa/out/095.xml"
+
+	^ '<doc a1="1  2"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout096xml [
+	"Source file: xmltest/valid/sa/out/096.xml"
+
+	^ '<doc a1="1 2"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout097xml [
+	"Source file: xmltest/valid/sa/out/097.xml"
+
+	^ '<doc a1="v1"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout098xml [
+	"Source file: xmltest/valid/sa/out/098.xml"
+
+	^ '<doc><?pi x
+y?></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout099xml [
+	"Source file: xmltest/valid/sa/out/099.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout100xml [
+	"Source file: xmltest/valid/sa/out/100.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout101xml [
+	"Source file: xmltest/valid/sa/out/101.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout102xml [
+	"Source file: xmltest/valid/sa/out/102.xml"
+
+	^ '<doc a="&quot;"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout103xml [
+	"Source file: xmltest/valid/sa/out/103.xml"
+
+	^ '<doc>&lt;doc&gt;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout104xml [
+	"Source file: xmltest/valid/sa/out/104.xml"
+
+	^ '<doc a="x y"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout105xml [
+	"Source file: xmltest/valid/sa/out/105.xml"
+
+	^ '<doc a="x&#9;y"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout106xml [
+	"Source file: xmltest/valid/sa/out/106.xml"
+
+	^ '<doc a="x&#10;y"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout107xml [
+	"Source file: xmltest/valid/sa/out/107.xml"
+
+	^ '<doc a="x&#13;y"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout108xml [
+	"Source file: xmltest/valid/sa/out/108.xml"
+
+	^ '<doc a="x y"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout109xml [
+	"Source file: xmltest/valid/sa/out/109.xml"
+
+	^ '<doc a=""></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout110xml [
+	"Source file: xmltest/valid/sa/out/110.xml"
+
+	^ '<doc a="x  y"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout111xml [
+	"Source file: xmltest/valid/sa/out/111.xml"
+
+	^ '<doc a="x y"></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout112xml [
+	"Source file: xmltest/valid/sa/out/112.xml"
+
+	^ '<doc><a></a></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout113xml [
+	"Source file: xmltest/valid/sa/out/113.xml"
+
+	^ '<doc></doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout114xml [
+	"Source file: xmltest/valid/sa/out/114.xml"
+
+	^ '<doc>&amp;foo;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout115xml [
+	"Source file: xmltest/valid/sa/out/115.xml"
+
+	^ '<doc>v</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout116xml [
+	"Source file: xmltest/valid/sa/out/116.xml"
+
+	^ '<doc>&#10;</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout117xml [
+	"Source file: xmltest/valid/sa/out/117.xml"
+
+	^ '<doc>]</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout118xml [
+	"Source file: xmltest/valid/sa/out/118.xml"
+
+	^ '<doc>]]</doc>'
+]
+
+{ #category : #'xml source' }
+XMLConformanceExpatTest class >> sourcevalidsaout119xml [
+	"Source file: xmltest/valid/sa/out/119.xml"
+
+	^ '<doc></doc>'
 ]
 
 { #category : #'tests - exception raising' }
@@ -7674,9 +8841,14 @@ XMLConformanceExpatTest >> testvalidextsa001xml [
 		ifSkippable: #testvalidextsa001xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidextsa001xml
-				documentURI: 'valid/ext-sa/001.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidextsa001xml
+						documentURI: 'valid/ext-sa/001.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidextsaout001xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7693,9 +8865,14 @@ XMLConformanceExpatTest >> testvalidextsa002xml [
 		ifSkippable: #testvalidextsa002xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidextsa002xml
-				documentURI: 'valid/ext-sa/002.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidextsa002xml
+						documentURI: 'valid/ext-sa/002.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidextsaout002xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7712,9 +8889,14 @@ XMLConformanceExpatTest >> testvalidextsa003xml [
 		ifSkippable: #testvalidextsa003xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidextsa003xml
-				documentURI: 'valid/ext-sa/003.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidextsa003xml
+						documentURI: 'valid/ext-sa/003.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidextsaout003xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7731,9 +8913,14 @@ XMLConformanceExpatTest >> testvalidextsa004xml [
 		ifSkippable: #testvalidextsa004xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidextsa004xml
-				documentURI: 'valid/ext-sa/004.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidextsa004xml
+						documentURI: 'valid/ext-sa/004.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidextsaout004xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7750,9 +8937,14 @@ XMLConformanceExpatTest >> testvalidextsa005xml [
 		ifSkippable: #testvalidextsa005xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidextsa005xml
-				documentURI: 'valid/ext-sa/005.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidextsa005xml
+						documentURI: 'valid/ext-sa/005.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidextsaout005xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7769,9 +8961,14 @@ XMLConformanceExpatTest >> testvalidextsa006xml [
 		ifSkippable: #testvalidextsa006xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidextsa006xml
-				documentURI: 'valid/ext-sa/006.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidextsa006xml
+						documentURI: 'valid/ext-sa/006.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidextsaout006xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7788,9 +8985,14 @@ XMLConformanceExpatTest >> testvalidextsa007xml [
 		ifSkippable: #testvalidextsa007xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidextsa007xml
-				documentURI: 'valid/ext-sa/007.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidextsa007xml
+						documentURI: 'valid/ext-sa/007.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidextsaout007xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7807,9 +9009,14 @@ XMLConformanceExpatTest >> testvalidextsa008xml [
 		ifSkippable: #testvalidextsa008xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidextsa008xml
-				documentURI: 'valid/ext-sa/008.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidextsa008xml
+						documentURI: 'valid/ext-sa/008.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidextsaout008xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7826,9 +9033,14 @@ XMLConformanceExpatTest >> testvalidextsa009xml [
 		ifSkippable: #testvalidextsa009xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidextsa009xml
-				documentURI: 'valid/ext-sa/009.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidextsa009xml
+						documentURI: 'valid/ext-sa/009.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidextsaout009xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7845,9 +9057,14 @@ XMLConformanceExpatTest >> testvalidextsa010xml [
 		ifSkippable: #testvalidextsa010xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidextsa010xml
-				documentURI: 'valid/ext-sa/010.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidextsa010xml
+						documentURI: 'valid/ext-sa/010.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidextsaout010xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7864,9 +9081,14 @@ XMLConformanceExpatTest >> testvalidextsa011xml [
 		ifSkippable: #testvalidextsa011xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidextsa011xml
-				documentURI: 'valid/ext-sa/011.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidextsa011xml
+						documentURI: 'valid/ext-sa/011.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidextsaout011xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7883,9 +9105,14 @@ XMLConformanceExpatTest >> testvalidextsa012xml [
 		ifSkippable: #testvalidextsa012xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidextsa012xml
-				documentURI: 'valid/ext-sa/012.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidextsa012xml
+						documentURI: 'valid/ext-sa/012.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidextsaout012xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7902,9 +9129,14 @@ XMLConformanceExpatTest >> testvalidextsa013xml [
 		ifSkippable: #testvalidextsa013xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidextsa013xml
-				documentURI: 'valid/ext-sa/013.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidextsa013xml
+						documentURI: 'valid/ext-sa/013.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidextsaout013xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7921,9 +9153,14 @@ XMLConformanceExpatTest >> testvalidextsa014xml [
 		ifSkippable: #testvalidextsa014xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidextsa014xml
-				documentURI: 'valid/ext-sa/014.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidextsa014xml
+						documentURI: 'valid/ext-sa/014.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidextsaout014xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7940,9 +9177,14 @@ XMLConformanceExpatTest >> testvalidnotsa001xml [
 		ifSkippable: #testvalidnotsa001xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa001xml
-				documentURI: 'valid/not-sa/001.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa001xml
+						documentURI: 'valid/not-sa/001.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout001xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7959,9 +9201,14 @@ XMLConformanceExpatTest >> testvalidnotsa002xml [
 		ifSkippable: #testvalidnotsa002xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa002xml
-				documentURI: 'valid/not-sa/002.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa002xml
+						documentURI: 'valid/not-sa/002.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout002xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7978,9 +9225,14 @@ XMLConformanceExpatTest >> testvalidnotsa003xml [
 		ifSkippable: #testvalidnotsa003xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa003xml
-				documentURI: 'valid/not-sa/003.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa003xml
+						documentURI: 'valid/not-sa/003.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout003xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -7997,9 +9249,14 @@ XMLConformanceExpatTest >> testvalidnotsa004xml [
 		ifSkippable: #testvalidnotsa004xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa004xml
-				documentURI: 'valid/not-sa/004.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa004xml
+						documentURI: 'valid/not-sa/004.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout004xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8016,9 +9273,14 @@ XMLConformanceExpatTest >> testvalidnotsa005xml [
 		ifSkippable: #testvalidnotsa005xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa005xml
-				documentURI: 'valid/not-sa/005.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa005xml
+						documentURI: 'valid/not-sa/005.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout005xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8035,9 +9297,14 @@ XMLConformanceExpatTest >> testvalidnotsa006xml [
 		ifSkippable: #testvalidnotsa006xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa006xml
-				documentURI: 'valid/not-sa/006.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa006xml
+						documentURI: 'valid/not-sa/006.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout006xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8054,9 +9321,14 @@ XMLConformanceExpatTest >> testvalidnotsa007xml [
 		ifSkippable: #testvalidnotsa007xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa007xml
-				documentURI: 'valid/not-sa/007.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa007xml
+						documentURI: 'valid/not-sa/007.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout007xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8073,9 +9345,14 @@ XMLConformanceExpatTest >> testvalidnotsa008xml [
 		ifSkippable: #testvalidnotsa008xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa008xml
-				documentURI: 'valid/not-sa/008.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa008xml
+						documentURI: 'valid/not-sa/008.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout008xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8092,9 +9369,14 @@ XMLConformanceExpatTest >> testvalidnotsa009xml [
 		ifSkippable: #testvalidnotsa009xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa009xml
-				documentURI: 'valid/not-sa/009.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa009xml
+						documentURI: 'valid/not-sa/009.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout009xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8111,9 +9393,14 @@ XMLConformanceExpatTest >> testvalidnotsa010xml [
 		ifSkippable: #testvalidnotsa010xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa010xml
-				documentURI: 'valid/not-sa/010.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa010xml
+						documentURI: 'valid/not-sa/010.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout010xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8130,9 +9417,14 @@ XMLConformanceExpatTest >> testvalidnotsa011xml [
 		ifSkippable: #testvalidnotsa011xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa011xml
-				documentURI: 'valid/not-sa/011.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa011xml
+						documentURI: 'valid/not-sa/011.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout011xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8149,9 +9441,14 @@ XMLConformanceExpatTest >> testvalidnotsa012xml [
 		ifSkippable: #testvalidnotsa012xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa012xml
-				documentURI: 'valid/not-sa/012.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa012xml
+						documentURI: 'valid/not-sa/012.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout012xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8168,9 +9465,14 @@ XMLConformanceExpatTest >> testvalidnotsa013xml [
 		ifSkippable: #testvalidnotsa013xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa013xml
-				documentURI: 'valid/not-sa/013.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa013xml
+						documentURI: 'valid/not-sa/013.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout013xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8187,9 +9489,14 @@ XMLConformanceExpatTest >> testvalidnotsa014xml [
 		ifSkippable: #testvalidnotsa014xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa014xml
-				documentURI: 'valid/not-sa/014.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa014xml
+						documentURI: 'valid/not-sa/014.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout014xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8206,9 +9513,14 @@ XMLConformanceExpatTest >> testvalidnotsa015xml [
 		ifSkippable: #testvalidnotsa015xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa015xml
-				documentURI: 'valid/not-sa/015.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa015xml
+						documentURI: 'valid/not-sa/015.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout015xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8225,9 +9537,14 @@ XMLConformanceExpatTest >> testvalidnotsa016xml [
 		ifSkippable: #testvalidnotsa016xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa016xml
-				documentURI: 'valid/not-sa/016.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa016xml
+						documentURI: 'valid/not-sa/016.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout016xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8244,9 +9561,14 @@ XMLConformanceExpatTest >> testvalidnotsa017xml [
 		ifSkippable: #testvalidnotsa017xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa017xml
-				documentURI: 'valid/not-sa/017.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa017xml
+						documentURI: 'valid/not-sa/017.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout017xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8263,9 +9585,14 @@ XMLConformanceExpatTest >> testvalidnotsa018xml [
 		ifSkippable: #testvalidnotsa018xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa018xml
-				documentURI: 'valid/not-sa/018.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa018xml
+						documentURI: 'valid/not-sa/018.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout018xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8282,9 +9609,14 @@ XMLConformanceExpatTest >> testvalidnotsa019xml [
 		ifSkippable: #testvalidnotsa019xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa019xml
-				documentURI: 'valid/not-sa/019.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa019xml
+						documentURI: 'valid/not-sa/019.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout019xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8301,9 +9633,14 @@ XMLConformanceExpatTest >> testvalidnotsa020xml [
 		ifSkippable: #testvalidnotsa020xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa020xml
-				documentURI: 'valid/not-sa/020.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa020xml
+						documentURI: 'valid/not-sa/020.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout020xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8320,9 +9657,14 @@ XMLConformanceExpatTest >> testvalidnotsa021xml [
 		ifSkippable: #testvalidnotsa021xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa021xml
-				documentURI: 'valid/not-sa/021.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa021xml
+						documentURI: 'valid/not-sa/021.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout021xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8339,9 +9681,14 @@ XMLConformanceExpatTest >> testvalidnotsa023xml [
 		ifSkippable: #testvalidnotsa023xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa023xml
-				documentURI: 'valid/not-sa/023.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa023xml
+						documentURI: 'valid/not-sa/023.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout023xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8358,9 +9705,14 @@ XMLConformanceExpatTest >> testvalidnotsa024xml [
 		ifSkippable: #testvalidnotsa024xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa024xml
-				documentURI: 'valid/not-sa/024.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa024xml
+						documentURI: 'valid/not-sa/024.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout024xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8377,9 +9729,14 @@ XMLConformanceExpatTest >> testvalidnotsa025xml [
 		ifSkippable: #testvalidnotsa025xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa025xml
-				documentURI: 'valid/not-sa/025.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa025xml
+						documentURI: 'valid/not-sa/025.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout025xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8396,9 +9753,14 @@ XMLConformanceExpatTest >> testvalidnotsa026xml [
 		ifSkippable: #testvalidnotsa026xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa026xml
-				documentURI: 'valid/not-sa/026.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa026xml
+						documentURI: 'valid/not-sa/026.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout026xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8415,9 +9777,14 @@ XMLConformanceExpatTest >> testvalidnotsa027xml [
 		ifSkippable: #testvalidnotsa027xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa027xml
-				documentURI: 'valid/not-sa/027.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa027xml
+						documentURI: 'valid/not-sa/027.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout027xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8434,9 +9801,14 @@ XMLConformanceExpatTest >> testvalidnotsa028xml [
 		ifSkippable: #testvalidnotsa028xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa028xml
-				documentURI: 'valid/not-sa/028.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa028xml
+						documentURI: 'valid/not-sa/028.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout028xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8453,9 +9825,14 @@ XMLConformanceExpatTest >> testvalidnotsa029xml [
 		ifSkippable: #testvalidnotsa029xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa029xml
-				documentURI: 'valid/not-sa/029.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa029xml
+						documentURI: 'valid/not-sa/029.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout029xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8472,9 +9849,14 @@ XMLConformanceExpatTest >> testvalidnotsa030xml [
 		ifSkippable: #testvalidnotsa030xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa030xml
-				documentURI: 'valid/not-sa/030.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa030xml
+						documentURI: 'valid/not-sa/030.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout030xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8491,9 +9873,14 @@ XMLConformanceExpatTest >> testvalidnotsa031xml [
 		ifSkippable: #testvalidnotsa031xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidnotsa031xml
-				documentURI: 'valid/not-sa/031.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidnotsa031xml
+						documentURI: 'valid/not-sa/031.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidnotsaout031xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8510,9 +9897,14 @@ XMLConformanceExpatTest >> testvalidsa001xml [
 		ifSkippable: #testvalidsa001xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa001xml
-				documentURI: 'valid/sa/001.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa001xml
+						documentURI: 'valid/sa/001.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout001xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8529,9 +9921,14 @@ XMLConformanceExpatTest >> testvalidsa002xml [
 		ifSkippable: #testvalidsa002xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa002xml
-				documentURI: 'valid/sa/002.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa002xml
+						documentURI: 'valid/sa/002.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout002xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8548,9 +9945,14 @@ XMLConformanceExpatTest >> testvalidsa003xml [
 		ifSkippable: #testvalidsa003xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa003xml
-				documentURI: 'valid/sa/003.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa003xml
+						documentURI: 'valid/sa/003.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout003xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8567,9 +9969,14 @@ XMLConformanceExpatTest >> testvalidsa004xml [
 		ifSkippable: #testvalidsa004xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa004xml
-				documentURI: 'valid/sa/004.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa004xml
+						documentURI: 'valid/sa/004.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout004xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8586,9 +9993,14 @@ XMLConformanceExpatTest >> testvalidsa005xml [
 		ifSkippable: #testvalidsa005xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa005xml
-				documentURI: 'valid/sa/005.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa005xml
+						documentURI: 'valid/sa/005.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout005xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8605,9 +10017,14 @@ XMLConformanceExpatTest >> testvalidsa006xml [
 		ifSkippable: #testvalidsa006xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa006xml
-				documentURI: 'valid/sa/006.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa006xml
+						documentURI: 'valid/sa/006.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout006xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8624,9 +10041,14 @@ XMLConformanceExpatTest >> testvalidsa007xml [
 		ifSkippable: #testvalidsa007xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa007xml
-				documentURI: 'valid/sa/007.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa007xml
+						documentURI: 'valid/sa/007.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout007xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8643,9 +10065,14 @@ XMLConformanceExpatTest >> testvalidsa008xml [
 		ifSkippable: #testvalidsa008xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa008xml
-				documentURI: 'valid/sa/008.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa008xml
+						documentURI: 'valid/sa/008.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout008xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8662,9 +10089,14 @@ XMLConformanceExpatTest >> testvalidsa009xml [
 		ifSkippable: #testvalidsa009xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa009xml
-				documentURI: 'valid/sa/009.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa009xml
+						documentURI: 'valid/sa/009.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout009xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8681,9 +10113,14 @@ XMLConformanceExpatTest >> testvalidsa010xml [
 		ifSkippable: #testvalidsa010xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa010xml
-				documentURI: 'valid/sa/010.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa010xml
+						documentURI: 'valid/sa/010.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout010xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8700,9 +10137,14 @@ XMLConformanceExpatTest >> testvalidsa011xml [
 		ifSkippable: #testvalidsa011xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa011xml
-				documentURI: 'valid/sa/011.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa011xml
+						documentURI: 'valid/sa/011.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout011xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8719,9 +10161,14 @@ XMLConformanceExpatTest >> testvalidsa012xml [
 		ifSkippable: #testvalidsa012xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa012xml
-				documentURI: 'valid/sa/012.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa012xml
+						documentURI: 'valid/sa/012.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout012xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8738,9 +10185,14 @@ XMLConformanceExpatTest >> testvalidsa013xml [
 		ifSkippable: #testvalidsa013xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa013xml
-				documentURI: 'valid/sa/013.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa013xml
+						documentURI: 'valid/sa/013.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout013xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8757,9 +10209,14 @@ XMLConformanceExpatTest >> testvalidsa014xml [
 		ifSkippable: #testvalidsa014xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa014xml
-				documentURI: 'valid/sa/014.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa014xml
+						documentURI: 'valid/sa/014.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout014xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8776,9 +10233,14 @@ XMLConformanceExpatTest >> testvalidsa015xml [
 		ifSkippable: #testvalidsa015xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa015xml
-				documentURI: 'valid/sa/015.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa015xml
+						documentURI: 'valid/sa/015.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout015xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8795,9 +10257,14 @@ XMLConformanceExpatTest >> testvalidsa016xml [
 		ifSkippable: #testvalidsa016xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa016xml
-				documentURI: 'valid/sa/016.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa016xml
+						documentURI: 'valid/sa/016.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout016xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8814,9 +10281,14 @@ XMLConformanceExpatTest >> testvalidsa017axml [
 		ifSkippable: #testvalidsa017axml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa017axml
-				documentURI: 'valid/sa/017a.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa017axml
+						documentURI: 'valid/sa/017a.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout017axml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8833,9 +10305,14 @@ XMLConformanceExpatTest >> testvalidsa017xml [
 		ifSkippable: #testvalidsa017xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa017xml
-				documentURI: 'valid/sa/017.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa017xml
+						documentURI: 'valid/sa/017.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout017xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8852,9 +10329,14 @@ XMLConformanceExpatTest >> testvalidsa018xml [
 		ifSkippable: #testvalidsa018xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa018xml
-				documentURI: 'valid/sa/018.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa018xml
+						documentURI: 'valid/sa/018.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout018xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8871,9 +10353,14 @@ XMLConformanceExpatTest >> testvalidsa019xml [
 		ifSkippable: #testvalidsa019xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa019xml
-				documentURI: 'valid/sa/019.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa019xml
+						documentURI: 'valid/sa/019.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout019xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8890,9 +10377,14 @@ XMLConformanceExpatTest >> testvalidsa020xml [
 		ifSkippable: #testvalidsa020xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa020xml
-				documentURI: 'valid/sa/020.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa020xml
+						documentURI: 'valid/sa/020.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout020xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8909,9 +10401,14 @@ XMLConformanceExpatTest >> testvalidsa021xml [
 		ifSkippable: #testvalidsa021xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa021xml
-				documentURI: 'valid/sa/021.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa021xml
+						documentURI: 'valid/sa/021.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout021xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8928,9 +10425,14 @@ XMLConformanceExpatTest >> testvalidsa022xml [
 		ifSkippable: #testvalidsa022xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa022xml
-				documentURI: 'valid/sa/022.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa022xml
+						documentURI: 'valid/sa/022.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout022xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8947,9 +10449,14 @@ XMLConformanceExpatTest >> testvalidsa023xml [
 		ifSkippable: #testvalidsa023xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa023xml
-				documentURI: 'valid/sa/023.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa023xml
+						documentURI: 'valid/sa/023.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout023xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8966,9 +10473,14 @@ XMLConformanceExpatTest >> testvalidsa024xml [
 		ifSkippable: #testvalidsa024xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa024xml
-				documentURI: 'valid/sa/024.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa024xml
+						documentURI: 'valid/sa/024.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout024xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -8985,9 +10497,14 @@ XMLConformanceExpatTest >> testvalidsa025xml [
 		ifSkippable: #testvalidsa025xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa025xml
-				documentURI: 'valid/sa/025.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa025xml
+						documentURI: 'valid/sa/025.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout025xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9004,9 +10521,14 @@ XMLConformanceExpatTest >> testvalidsa026xml [
 		ifSkippable: #testvalidsa026xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa026xml
-				documentURI: 'valid/sa/026.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa026xml
+						documentURI: 'valid/sa/026.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout026xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9023,9 +10545,14 @@ XMLConformanceExpatTest >> testvalidsa027xml [
 		ifSkippable: #testvalidsa027xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa027xml
-				documentURI: 'valid/sa/027.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa027xml
+						documentURI: 'valid/sa/027.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout027xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9042,9 +10569,14 @@ XMLConformanceExpatTest >> testvalidsa028xml [
 		ifSkippable: #testvalidsa028xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa028xml
-				documentURI: 'valid/sa/028.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa028xml
+						documentURI: 'valid/sa/028.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout028xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9061,9 +10593,14 @@ XMLConformanceExpatTest >> testvalidsa029xml [
 		ifSkippable: #testvalidsa029xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa029xml
-				documentURI: 'valid/sa/029.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa029xml
+						documentURI: 'valid/sa/029.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout029xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9080,9 +10617,14 @@ XMLConformanceExpatTest >> testvalidsa030xml [
 		ifSkippable: #testvalidsa030xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa030xml
-				documentURI: 'valid/sa/030.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa030xml
+						documentURI: 'valid/sa/030.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout030xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9099,9 +10641,14 @@ XMLConformanceExpatTest >> testvalidsa031xml [
 		ifSkippable: #testvalidsa031xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa031xml
-				documentURI: 'valid/sa/031.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa031xml
+						documentURI: 'valid/sa/031.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout031xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9118,9 +10665,14 @@ XMLConformanceExpatTest >> testvalidsa032xml [
 		ifSkippable: #testvalidsa032xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa032xml
-				documentURI: 'valid/sa/032.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa032xml
+						documentURI: 'valid/sa/032.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout032xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9137,9 +10689,14 @@ XMLConformanceExpatTest >> testvalidsa033xml [
 		ifSkippable: #testvalidsa033xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa033xml
-				documentURI: 'valid/sa/033.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa033xml
+						documentURI: 'valid/sa/033.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout033xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9156,9 +10713,14 @@ XMLConformanceExpatTest >> testvalidsa034xml [
 		ifSkippable: #testvalidsa034xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa034xml
-				documentURI: 'valid/sa/034.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa034xml
+						documentURI: 'valid/sa/034.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout034xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9175,9 +10737,14 @@ XMLConformanceExpatTest >> testvalidsa035xml [
 		ifSkippable: #testvalidsa035xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa035xml
-				documentURI: 'valid/sa/035.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa035xml
+						documentURI: 'valid/sa/035.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout035xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9194,9 +10761,14 @@ XMLConformanceExpatTest >> testvalidsa036xml [
 		ifSkippable: #testvalidsa036xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa036xml
-				documentURI: 'valid/sa/036.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa036xml
+						documentURI: 'valid/sa/036.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout036xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9213,9 +10785,14 @@ XMLConformanceExpatTest >> testvalidsa037xml [
 		ifSkippable: #testvalidsa037xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa037xml
-				documentURI: 'valid/sa/037.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa037xml
+						documentURI: 'valid/sa/037.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout037xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9232,9 +10809,14 @@ XMLConformanceExpatTest >> testvalidsa038xml [
 		ifSkippable: #testvalidsa038xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa038xml
-				documentURI: 'valid/sa/038.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa038xml
+						documentURI: 'valid/sa/038.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout038xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9251,9 +10833,14 @@ XMLConformanceExpatTest >> testvalidsa039xml [
 		ifSkippable: #testvalidsa039xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa039xml
-				documentURI: 'valid/sa/039.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa039xml
+						documentURI: 'valid/sa/039.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout039xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9270,9 +10857,14 @@ XMLConformanceExpatTest >> testvalidsa040xml [
 		ifSkippable: #testvalidsa040xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa040xml
-				documentURI: 'valid/sa/040.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa040xml
+						documentURI: 'valid/sa/040.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout040xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9289,9 +10881,14 @@ XMLConformanceExpatTest >> testvalidsa041xml [
 		ifSkippable: #testvalidsa041xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa041xml
-				documentURI: 'valid/sa/041.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa041xml
+						documentURI: 'valid/sa/041.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout041xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9308,9 +10905,14 @@ XMLConformanceExpatTest >> testvalidsa042xml [
 		ifSkippable: #testvalidsa042xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa042xml
-				documentURI: 'valid/sa/042.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa042xml
+						documentURI: 'valid/sa/042.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout042xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9327,9 +10929,14 @@ XMLConformanceExpatTest >> testvalidsa043xml [
 		ifSkippable: #testvalidsa043xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa043xml
-				documentURI: 'valid/sa/043.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa043xml
+						documentURI: 'valid/sa/043.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout043xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9346,9 +10953,14 @@ XMLConformanceExpatTest >> testvalidsa044xml [
 		ifSkippable: #testvalidsa044xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa044xml
-				documentURI: 'valid/sa/044.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa044xml
+						documentURI: 'valid/sa/044.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout044xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9365,9 +10977,14 @@ XMLConformanceExpatTest >> testvalidsa045xml [
 		ifSkippable: #testvalidsa045xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa045xml
-				documentURI: 'valid/sa/045.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa045xml
+						documentURI: 'valid/sa/045.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout045xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9384,9 +11001,14 @@ XMLConformanceExpatTest >> testvalidsa046xml [
 		ifSkippable: #testvalidsa046xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa046xml
-				documentURI: 'valid/sa/046.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa046xml
+						documentURI: 'valid/sa/046.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout046xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9403,9 +11025,14 @@ XMLConformanceExpatTest >> testvalidsa047xml [
 		ifSkippable: #testvalidsa047xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa047xml
-				documentURI: 'valid/sa/047.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa047xml
+						documentURI: 'valid/sa/047.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout047xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9422,9 +11049,14 @@ XMLConformanceExpatTest >> testvalidsa048xml [
 		ifSkippable: #testvalidsa048xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa048xml
-				documentURI: 'valid/sa/048.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa048xml
+						documentURI: 'valid/sa/048.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout048xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9441,9 +11073,14 @@ XMLConformanceExpatTest >> testvalidsa049xml [
 		ifSkippable: #testvalidsa049xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa049xml
-				documentURI: 'valid/sa/049.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa049xml
+						documentURI: 'valid/sa/049.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout049xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9460,9 +11097,14 @@ XMLConformanceExpatTest >> testvalidsa050xml [
 		ifSkippable: #testvalidsa050xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa050xml
-				documentURI: 'valid/sa/050.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa050xml
+						documentURI: 'valid/sa/050.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout050xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9479,9 +11121,14 @@ XMLConformanceExpatTest >> testvalidsa051xml [
 		ifSkippable: #testvalidsa051xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa051xml
-				documentURI: 'valid/sa/051.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa051xml
+						documentURI: 'valid/sa/051.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout051xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9498,9 +11145,14 @@ XMLConformanceExpatTest >> testvalidsa052xml [
 		ifSkippable: #testvalidsa052xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa052xml
-				documentURI: 'valid/sa/052.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa052xml
+						documentURI: 'valid/sa/052.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout052xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9517,9 +11169,14 @@ XMLConformanceExpatTest >> testvalidsa053xml [
 		ifSkippable: #testvalidsa053xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa053xml
-				documentURI: 'valid/sa/053.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa053xml
+						documentURI: 'valid/sa/053.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout053xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9536,9 +11193,14 @@ XMLConformanceExpatTest >> testvalidsa054xml [
 		ifSkippable: #testvalidsa054xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa054xml
-				documentURI: 'valid/sa/054.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa054xml
+						documentURI: 'valid/sa/054.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout054xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9555,9 +11217,14 @@ XMLConformanceExpatTest >> testvalidsa055xml [
 		ifSkippable: #testvalidsa055xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa055xml
-				documentURI: 'valid/sa/055.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa055xml
+						documentURI: 'valid/sa/055.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout055xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9574,9 +11241,14 @@ XMLConformanceExpatTest >> testvalidsa056xml [
 		ifSkippable: #testvalidsa056xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa056xml
-				documentURI: 'valid/sa/056.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa056xml
+						documentURI: 'valid/sa/056.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout056xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9593,9 +11265,14 @@ XMLConformanceExpatTest >> testvalidsa057xml [
 		ifSkippable: #testvalidsa057xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa057xml
-				documentURI: 'valid/sa/057.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa057xml
+						documentURI: 'valid/sa/057.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout057xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9612,9 +11289,14 @@ XMLConformanceExpatTest >> testvalidsa058xml [
 		ifSkippable: #testvalidsa058xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa058xml
-				documentURI: 'valid/sa/058.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa058xml
+						documentURI: 'valid/sa/058.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout058xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9631,9 +11313,14 @@ XMLConformanceExpatTest >> testvalidsa059xml [
 		ifSkippable: #testvalidsa059xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa059xml
-				documentURI: 'valid/sa/059.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa059xml
+						documentURI: 'valid/sa/059.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout059xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9650,9 +11337,14 @@ XMLConformanceExpatTest >> testvalidsa060xml [
 		ifSkippable: #testvalidsa060xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa060xml
-				documentURI: 'valid/sa/060.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa060xml
+						documentURI: 'valid/sa/060.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout060xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9669,9 +11361,14 @@ XMLConformanceExpatTest >> testvalidsa061xml [
 		ifSkippable: #testvalidsa061xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa061xml
-				documentURI: 'valid/sa/061.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa061xml
+						documentURI: 'valid/sa/061.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout061xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9688,9 +11385,14 @@ XMLConformanceExpatTest >> testvalidsa062xml [
 		ifSkippable: #testvalidsa062xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa062xml
-				documentURI: 'valid/sa/062.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa062xml
+						documentURI: 'valid/sa/062.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout062xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9707,9 +11409,14 @@ XMLConformanceExpatTest >> testvalidsa063xml [
 		ifSkippable: #testvalidsa063xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa063xml
-				documentURI: 'valid/sa/063.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa063xml
+						documentURI: 'valid/sa/063.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout063xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9726,9 +11433,14 @@ XMLConformanceExpatTest >> testvalidsa064xml [
 		ifSkippable: #testvalidsa064xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa064xml
-				documentURI: 'valid/sa/064.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa064xml
+						documentURI: 'valid/sa/064.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout064xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9745,9 +11457,14 @@ XMLConformanceExpatTest >> testvalidsa065xml [
 		ifSkippable: #testvalidsa065xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa065xml
-				documentURI: 'valid/sa/065.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa065xml
+						documentURI: 'valid/sa/065.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout065xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9764,9 +11481,14 @@ XMLConformanceExpatTest >> testvalidsa066xml [
 		ifSkippable: #testvalidsa066xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa066xml
-				documentURI: 'valid/sa/066.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa066xml
+						documentURI: 'valid/sa/066.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout066xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9783,9 +11505,14 @@ XMLConformanceExpatTest >> testvalidsa067xml [
 		ifSkippable: #testvalidsa067xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa067xml
-				documentURI: 'valid/sa/067.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa067xml
+						documentURI: 'valid/sa/067.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout067xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9802,9 +11529,14 @@ XMLConformanceExpatTest >> testvalidsa068xml [
 		ifSkippable: #testvalidsa068xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa068xml
-				documentURI: 'valid/sa/068.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa068xml
+						documentURI: 'valid/sa/068.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout068xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9821,9 +11553,14 @@ XMLConformanceExpatTest >> testvalidsa069xml [
 		ifSkippable: #testvalidsa069xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa069xml
-				documentURI: 'valid/sa/069.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa069xml
+						documentURI: 'valid/sa/069.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout069xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9840,9 +11577,14 @@ XMLConformanceExpatTest >> testvalidsa070xml [
 		ifSkippable: #testvalidsa070xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa070xml
-				documentURI: 'valid/sa/070.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa070xml
+						documentURI: 'valid/sa/070.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout070xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9859,9 +11601,14 @@ XMLConformanceExpatTest >> testvalidsa071xml [
 		ifSkippable: #testvalidsa071xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa071xml
-				documentURI: 'valid/sa/071.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa071xml
+						documentURI: 'valid/sa/071.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout071xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9878,9 +11625,14 @@ XMLConformanceExpatTest >> testvalidsa072xml [
 		ifSkippable: #testvalidsa072xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa072xml
-				documentURI: 'valid/sa/072.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa072xml
+						documentURI: 'valid/sa/072.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout072xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9897,9 +11649,14 @@ XMLConformanceExpatTest >> testvalidsa073xml [
 		ifSkippable: #testvalidsa073xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa073xml
-				documentURI: 'valid/sa/073.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa073xml
+						documentURI: 'valid/sa/073.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout073xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9916,9 +11673,14 @@ XMLConformanceExpatTest >> testvalidsa074xml [
 		ifSkippable: #testvalidsa074xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa074xml
-				documentURI: 'valid/sa/074.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa074xml
+						documentURI: 'valid/sa/074.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout074xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9935,9 +11697,14 @@ XMLConformanceExpatTest >> testvalidsa075xml [
 		ifSkippable: #testvalidsa075xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa075xml
-				documentURI: 'valid/sa/075.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa075xml
+						documentURI: 'valid/sa/075.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout075xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9954,9 +11721,14 @@ XMLConformanceExpatTest >> testvalidsa076xml [
 		ifSkippable: #testvalidsa076xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa076xml
-				documentURI: 'valid/sa/076.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa076xml
+						documentURI: 'valid/sa/076.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout076xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9973,9 +11745,14 @@ XMLConformanceExpatTest >> testvalidsa077xml [
 		ifSkippable: #testvalidsa077xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa077xml
-				documentURI: 'valid/sa/077.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa077xml
+						documentURI: 'valid/sa/077.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout077xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -9992,9 +11769,14 @@ XMLConformanceExpatTest >> testvalidsa078xml [
 		ifSkippable: #testvalidsa078xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa078xml
-				documentURI: 'valid/sa/078.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa078xml
+						documentURI: 'valid/sa/078.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout078xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10011,9 +11793,14 @@ XMLConformanceExpatTest >> testvalidsa079xml [
 		ifSkippable: #testvalidsa079xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa079xml
-				documentURI: 'valid/sa/079.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa079xml
+						documentURI: 'valid/sa/079.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout079xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10030,9 +11817,14 @@ XMLConformanceExpatTest >> testvalidsa080xml [
 		ifSkippable: #testvalidsa080xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa080xml
-				documentURI: 'valid/sa/080.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa080xml
+						documentURI: 'valid/sa/080.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout080xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10049,9 +11841,14 @@ XMLConformanceExpatTest >> testvalidsa081xml [
 		ifSkippable: #testvalidsa081xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa081xml
-				documentURI: 'valid/sa/081.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa081xml
+						documentURI: 'valid/sa/081.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout081xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10068,9 +11865,14 @@ XMLConformanceExpatTest >> testvalidsa082xml [
 		ifSkippable: #testvalidsa082xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa082xml
-				documentURI: 'valid/sa/082.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa082xml
+						documentURI: 'valid/sa/082.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout082xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10087,9 +11889,14 @@ XMLConformanceExpatTest >> testvalidsa083xml [
 		ifSkippable: #testvalidsa083xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa083xml
-				documentURI: 'valid/sa/083.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa083xml
+						documentURI: 'valid/sa/083.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout083xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10106,9 +11913,14 @@ XMLConformanceExpatTest >> testvalidsa084xml [
 		ifSkippable: #testvalidsa084xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa084xml
-				documentURI: 'valid/sa/084.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa084xml
+						documentURI: 'valid/sa/084.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout084xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10125,9 +11937,14 @@ XMLConformanceExpatTest >> testvalidsa085xml [
 		ifSkippable: #testvalidsa085xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa085xml
-				documentURI: 'valid/sa/085.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa085xml
+						documentURI: 'valid/sa/085.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout085xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10144,9 +11961,14 @@ XMLConformanceExpatTest >> testvalidsa086xml [
 		ifSkippable: #testvalidsa086xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa086xml
-				documentURI: 'valid/sa/086.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa086xml
+						documentURI: 'valid/sa/086.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout086xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10163,9 +11985,14 @@ XMLConformanceExpatTest >> testvalidsa087xml [
 		ifSkippable: #testvalidsa087xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa087xml
-				documentURI: 'valid/sa/087.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa087xml
+						documentURI: 'valid/sa/087.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout087xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10182,9 +12009,14 @@ XMLConformanceExpatTest >> testvalidsa088xml [
 		ifSkippable: #testvalidsa088xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa088xml
-				documentURI: 'valid/sa/088.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa088xml
+						documentURI: 'valid/sa/088.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout088xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10201,9 +12033,14 @@ XMLConformanceExpatTest >> testvalidsa089xml [
 		ifSkippable: #testvalidsa089xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa089xml
-				documentURI: 'valid/sa/089.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa089xml
+						documentURI: 'valid/sa/089.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout089xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10220,9 +12057,14 @@ XMLConformanceExpatTest >> testvalidsa090xml [
 		ifSkippable: #testvalidsa090xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa090xml
-				documentURI: 'valid/sa/090.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa090xml
+						documentURI: 'valid/sa/090.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout090xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10239,9 +12081,14 @@ XMLConformanceExpatTest >> testvalidsa091xml [
 		ifSkippable: #testvalidsa091xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa091xml
-				documentURI: 'valid/sa/091.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa091xml
+						documentURI: 'valid/sa/091.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout091xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10258,9 +12105,14 @@ XMLConformanceExpatTest >> testvalidsa092xml [
 		ifSkippable: #testvalidsa092xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa092xml
-				documentURI: 'valid/sa/092.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa092xml
+						documentURI: 'valid/sa/092.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout092xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10277,9 +12129,14 @@ XMLConformanceExpatTest >> testvalidsa093xml [
 		ifSkippable: #testvalidsa093xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa093xml
-				documentURI: 'valid/sa/093.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa093xml
+						documentURI: 'valid/sa/093.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout093xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10296,9 +12153,14 @@ XMLConformanceExpatTest >> testvalidsa094xml [
 		ifSkippable: #testvalidsa094xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa094xml
-				documentURI: 'valid/sa/094.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa094xml
+						documentURI: 'valid/sa/094.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout094xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10315,9 +12177,14 @@ XMLConformanceExpatTest >> testvalidsa095xml [
 		ifSkippable: #testvalidsa095xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa095xml
-				documentURI: 'valid/sa/095.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa095xml
+						documentURI: 'valid/sa/095.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout095xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10334,9 +12201,14 @@ XMLConformanceExpatTest >> testvalidsa096xml [
 		ifSkippable: #testvalidsa096xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa096xml
-				documentURI: 'valid/sa/096.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa096xml
+						documentURI: 'valid/sa/096.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout096xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10353,9 +12225,14 @@ XMLConformanceExpatTest >> testvalidsa097xml [
 		ifSkippable: #testvalidsa097xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa097xml
-				documentURI: 'valid/sa/097.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa097xml
+						documentURI: 'valid/sa/097.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout097xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10372,9 +12249,14 @@ XMLConformanceExpatTest >> testvalidsa098xml [
 		ifSkippable: #testvalidsa098xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa098xml
-				documentURI: 'valid/sa/098.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa098xml
+						documentURI: 'valid/sa/098.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout098xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10391,9 +12273,14 @@ XMLConformanceExpatTest >> testvalidsa099xml [
 		ifSkippable: #testvalidsa099xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa099xml
-				documentURI: 'valid/sa/099.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa099xml
+						documentURI: 'valid/sa/099.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout099xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10410,9 +12297,14 @@ XMLConformanceExpatTest >> testvalidsa100xml [
 		ifSkippable: #testvalidsa100xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa100xml
-				documentURI: 'valid/sa/100.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa100xml
+						documentURI: 'valid/sa/100.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout100xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10429,9 +12321,14 @@ XMLConformanceExpatTest >> testvalidsa101xml [
 		ifSkippable: #testvalidsa101xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa101xml
-				documentURI: 'valid/sa/101.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa101xml
+						documentURI: 'valid/sa/101.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout101xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10448,9 +12345,14 @@ XMLConformanceExpatTest >> testvalidsa102xml [
 		ifSkippable: #testvalidsa102xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa102xml
-				documentURI: 'valid/sa/102.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa102xml
+						documentURI: 'valid/sa/102.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout102xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10467,9 +12369,14 @@ XMLConformanceExpatTest >> testvalidsa103xml [
 		ifSkippable: #testvalidsa103xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa103xml
-				documentURI: 'valid/sa/103.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa103xml
+						documentURI: 'valid/sa/103.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout103xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10486,9 +12393,14 @@ XMLConformanceExpatTest >> testvalidsa104xml [
 		ifSkippable: #testvalidsa104xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa104xml
-				documentURI: 'valid/sa/104.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa104xml
+						documentURI: 'valid/sa/104.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout104xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10505,9 +12417,14 @@ XMLConformanceExpatTest >> testvalidsa105xml [
 		ifSkippable: #testvalidsa105xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa105xml
-				documentURI: 'valid/sa/105.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa105xml
+						documentURI: 'valid/sa/105.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout105xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10524,9 +12441,14 @@ XMLConformanceExpatTest >> testvalidsa106xml [
 		ifSkippable: #testvalidsa106xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa106xml
-				documentURI: 'valid/sa/106.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa106xml
+						documentURI: 'valid/sa/106.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout106xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10543,9 +12465,14 @@ XMLConformanceExpatTest >> testvalidsa107xml [
 		ifSkippable: #testvalidsa107xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa107xml
-				documentURI: 'valid/sa/107.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa107xml
+						documentURI: 'valid/sa/107.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout107xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10562,9 +12489,14 @@ XMLConformanceExpatTest >> testvalidsa108xml [
 		ifSkippable: #testvalidsa108xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa108xml
-				documentURI: 'valid/sa/108.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa108xml
+						documentURI: 'valid/sa/108.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout108xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10581,9 +12513,14 @@ XMLConformanceExpatTest >> testvalidsa109xml [
 		ifSkippable: #testvalidsa109xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa109xml
-				documentURI: 'valid/sa/109.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa109xml
+						documentURI: 'valid/sa/109.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout109xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10600,9 +12537,14 @@ XMLConformanceExpatTest >> testvalidsa110xml [
 		ifSkippable: #testvalidsa110xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa110xml
-				documentURI: 'valid/sa/110.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa110xml
+						documentURI: 'valid/sa/110.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout110xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10619,9 +12561,14 @@ XMLConformanceExpatTest >> testvalidsa111xml [
 		ifSkippable: #testvalidsa111xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa111xml
-				documentURI: 'valid/sa/111.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa111xml
+						documentURI: 'valid/sa/111.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout111xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10638,9 +12585,14 @@ XMLConformanceExpatTest >> testvalidsa112xml [
 		ifSkippable: #testvalidsa112xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa112xml
-				documentURI: 'valid/sa/112.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa112xml
+						documentURI: 'valid/sa/112.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout112xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10657,9 +12609,14 @@ XMLConformanceExpatTest >> testvalidsa113xml [
 		ifSkippable: #testvalidsa113xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa113xml
-				documentURI: 'valid/sa/113.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa113xml
+						documentURI: 'valid/sa/113.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout113xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10676,9 +12633,14 @@ XMLConformanceExpatTest >> testvalidsa114xml [
 		ifSkippable: #testvalidsa114xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa114xml
-				documentURI: 'valid/sa/114.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa114xml
+						documentURI: 'valid/sa/114.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout114xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10695,9 +12657,14 @@ XMLConformanceExpatTest >> testvalidsa115xml [
 		ifSkippable: #testvalidsa115xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa115xml
-				documentURI: 'valid/sa/115.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa115xml
+						documentURI: 'valid/sa/115.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout115xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10714,9 +12681,14 @@ XMLConformanceExpatTest >> testvalidsa116xml [
 		ifSkippable: #testvalidsa116xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa116xml
-				documentURI: 'valid/sa/116.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa116xml
+						documentURI: 'valid/sa/116.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout116xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10733,9 +12705,14 @@ XMLConformanceExpatTest >> testvalidsa117xml [
 		ifSkippable: #testvalidsa117xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa117xml
-				documentURI: 'valid/sa/117.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa117xml
+						documentURI: 'valid/sa/117.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout117xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10752,9 +12729,14 @@ XMLConformanceExpatTest >> testvalidsa118xml [
 		ifSkippable: #testvalidsa118xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa118xml
-				documentURI: 'valid/sa/118.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa118xml
+						documentURI: 'valid/sa/118.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout118xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)
@@ -10771,9 +12753,14 @@ XMLConformanceExpatTest >> testvalidsa119xml [
 		ifSkippable: #testvalidsa119xml.
 	self
 		shouldnt: [
-			[self
-				parse: self class sourcevalidsa119xml
-				documentURI: 'valid/sa/119.xml']
+			[| document |
+				document :=
+					self
+						domParse: self class sourcevalidsa119xml
+						documentURI: 'valid/sa/119.xml'.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class sourcevalidsaout119xml]
 				on: self parserExceptions
 				do: [:error |
 					(self isIgnorableParserException: error)

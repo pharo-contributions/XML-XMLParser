@@ -32,21 +32,42 @@ XMLConformanceTest class >> buildDefaultSkippableTestsMethods [
 ]
 
 { #category : #'building subclasses' }
-XMLConformanceTest class >> buildFailingTestMethodFor: aFileReference in: aClass [
-	self
-		buildTestMethodFor: aFileReference
-		in: aClass
-		usingTemplate: self failingTestMethodTemplate
-		classified: 'tests - exception raising' asSymbol
+XMLConformanceTest class >> buildFailingTestMethodFor: aFileReference in: aClass [	
+	aClass
+		compile:
+			(self failingTestMethodTemplate format:
+				(Array
+					with: (self testSelectorFor: aFileReference) asString
+					with: (self relativePathStringFor: aFileReference)
+					with: (self sourceSelectorFor: aFileReference) asString
+					with: (self documentURIFor: aFileReference)))
+		classified: #'tests - exception raising'
 ]
 
 { #category : #'building subclasses' }
 XMLConformanceTest class >> buildPassingTestMethodFor: aFileReference in: aClass [
-	self
-		buildTestMethodFor: aFileReference
-		in: aClass
-		usingTemplate: self passingTestMethodTemplate
-		classified: 'tests' asSymbol
+	| template arguments outputFileReference |
+
+	arguments :=
+		OrderedCollection
+			with: (self testSelectorFor: aFileReference) asString
+			with: (self relativePathStringFor: aFileReference)
+			with: (self sourceSelectorFor: aFileReference) asString
+			with: (self documentURIFor: aFileReference).
+
+	outputFileReference :=
+		((aFileReference pathString allButLast: aFileReference basename size),
+			'out/',
+			aFileReference basename) asFileReference.
+	outputFileReference exists
+		ifTrue: [
+			template := self passingTestMethodWithOutputTemplate.
+			arguments addLast: (self sourceSelectorFor: outputFileReference)]
+		ifFalse: [template := self passingTestMethodTemplate].
+
+	aClass
+		compile: (template format: arguments)
+		classified: #'tests'.
 ]
 
 { #category : #'building subclasses' }
@@ -120,6 +141,7 @@ XMLConformanceTest class >> buildTestCaseForSuite: aSuite [
 
 	badSourceFiles := Set new.
 	(fileVisitor passingTestFiles,
+		fileVisitor passingTestOutputFiles,
 		fileVisitor failingTestFiles,
 		fileVisitor entityFiles) do: [:each |
 			[self
@@ -144,7 +166,9 @@ XMLConformanceTest class >> buildTestCaseForSuite: aSuite [
 
 { #category : #'building subclasses' }
 XMLConformanceTest class >> buildTestCases [
-	"self buildTestCases"
+	"
+	self buildTestCases
+	"
 
 	self supportedTestSuites do: [:each | self buildTestCaseForSuite: each].
 	self buildSkippableTestsMethodsFromFailures.
@@ -152,20 +176,14 @@ XMLConformanceTest class >> buildTestCases [
 
 { #category : #'building subclasses' }
 XMLConformanceTest class >> buildTestMethodFor: aFileReference in: aClass usingTemplate: aTemplate classified: aCategory [
-	| failingTestSelector sourceSelector pathString documentURI |
-
-	failingTestSelector := self testSelectorFor: aFileReference.
-	sourceSelector := self sourceSelectorFor: aFileReference.
-	pathString := self relativePathStringFor: aFileReference.
-	documentURI := self documentURIFor: aFileReference.
 	aClass
 		compile:
 			(aTemplate format:
 				(Array
-					with: failingTestSelector asString
-					with: pathString
-					with: sourceSelector asString
-					with: documentURI))
+					with: (self testSelectorFor: aFileReference)
+					with: (self sourceSelectorFor: aFileReference)
+					with: (self relativePathStringFor: aFileReference)
+					with: (self documentURIFor: aFileReference)))
 		classified: aCategory
 ]
 
@@ -251,6 +269,31 @@ XMLConformanceTest class >> passingTestMethodTemplate [
 		raise: self parserExceptions'
 ]
 
+{ #category : #'method templates' }
+XMLConformanceTest class >> passingTestMethodWithOutputTemplate [
+	^ '{1}
+	"Source file: {2}"
+
+	self
+		skipOrReturnWith: [^ self]
+		ifSkippable: #{1}.
+	self
+		shouldnt: [
+			[| document |
+				document :=
+					self
+						domParse: self class {3}
+						documentURI: ''{4}''.
+				self
+					assertDocument: document 
+					canonicallyEquals: self class {5}]
+				on: self parserExceptions
+				do: [:error |
+					(self isIgnorableParserException: error)
+						ifFalse: [error pass]]]
+		raise: self parserExceptions'
+]
+
 { #category : #paths }
 XMLConformanceTest class >> pathStringRelativeToSuiteFor: aFileReference [
 	^ self relativePathStringFromSegments:
@@ -310,6 +353,54 @@ XMLConformanceTest class >> testSelectorForPath: aPathString [
 	^ ('test', (aPathString select: [:each | each isAlphaNumeric])) asSymbol
 ]
 
+{ #category : #asserting }
+XMLConformanceTest >> assertDocument: aDocument canonicallyEquals: aString [
+	self assert:
+		(self canonicalOutputFromDocument: aDocument) =
+			(self outputWithNormalizedLineEndings: aString)
+]
+
+{ #category : #private }
+XMLConformanceTest >> canonicalOutputFromDocument: aDocument [
+	| writer |
+
+	writer := XMLConformanceWriter new.
+	aDocument hasDoctypeDefinition
+		ifTrue: [| doctypeDefinition |
+			doctypeDefinition := aDocument doctypeDefinition.
+			doctypeDefinition notations values asSet
+				ifNotEmpty: [:referencedNotations |
+					writer doctypeDeclaration
+						root: aDocument doctypeDeclaration root;
+						publicID: aDocument doctypeDeclaration publicID;
+						systemID: aDocument doctypeDeclaration systemID;
+						with: [
+							(referencedNotations sorted: [:a :b | a name <= b name]) do: [:each |
+								writer notationDeclaration
+									name: each name;
+									publicID: each publicID;
+									systemID: each systemID]]]].
+
+	aDocument writeInnerXMLOn: writer.
+
+	^ writer contents.
+]
+
+{ #category : #parsing }
+XMLConformanceTest >> domParse: aString documentURI: aURIString [
+	^ (self
+		parserClass: self domParserClass
+		on: aString
+		documentURI: aURIString)
+			preservesIgnorableWhitespace: true;
+			parseDocument
+]
+
+{ #category : #accessing }
+XMLConformanceTest >> domParserClass [
+	^ XMLDOMParser
+]
+
 { #category : #accessing }
 XMLConformanceTest >> ignorableParserExceptions [
 	^ ignorableParserExceptions
@@ -327,31 +418,46 @@ XMLConformanceTest >> newVirtualFileExternalEntityResolver [
 	^ XMLConformanceVirtualFileExternalEntityResolver virtualFileClass: self class
 ]
 
+{ #category : #private }
+XMLConformanceTest >> outputWithNormalizedLineEndings: aString [
+	"just in case the LFs in the output method source got converted
+	to CRs or CRLFs on fileIn"
+	^ (XMLNestedStreamReader on: aString readStream) upToEnd
+]
+
 { #category : #parsing }
-XMLConformanceTest >> parse: aString documentURI: aUri [
-	| parser |
-
-	parser :=
-		self parserClass
-			on: aString
-			documentURI: aUri.
-
-	"none of the tests use namespaces, but the Expat suite has examples with
-	invalid QNames that trigger namespace exceptions, so namespace support is
-	disabled, and because the source is pre-decoded from UTF-8/UTF-16, so
-	decoding is disabled"
-	parser
-		usesNamespaces: false;
-		isValidating: true;
-		resolvesExternalEntities: true;
-		externalEntityResolver: self newVirtualFileExternalEntityResolver;
-		decodesCharacters: false;
-		parseDocument.
+XMLConformanceTest >> parse: aString documentURI: aURIString [
+	^ (self
+		parserClass: self domParserClass
+		on: aString
+		documentURI: aURIString)
+			parseDocument
 ]
 
 { #category : #accessing }
 XMLConformanceTest >> parserClass [
 	^ SAXHandler
+]
+
+{ #category : #parsing }
+XMLConformanceTest >> parserClass: aParserClass on: aString documentURI: aURIString [ 
+	| parser |
+
+	parser :=
+		aParserClass
+			on: aString
+			documentURI: aURIString.
+
+	"none of the tests use namespaces, but the Expat suite has examples with
+	invalid QNames that trigger namespace exceptions, so namespace support is
+	disabled, and because the source is pre-decoded from UTF-8/UTF-16, decoding
+	is disabled"
+	^ parser
+		usesNamespaces: false;
+		isValidating: true;
+		resolvesExternalEntities: true;
+		externalEntityResolver: self newVirtualFileExternalEntityResolver;
+		decodesCharacters: false.
 ]
 
 { #category : #accessing }

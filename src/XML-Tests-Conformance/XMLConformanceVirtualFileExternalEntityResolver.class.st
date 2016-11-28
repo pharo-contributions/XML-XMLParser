@@ -1,5 +1,5 @@
 "
-This is a special DTD entity resolver used to resolve virtual external entities stored as test suite class methods that return strings.
+This is a special DTD external entity resolver used to resolve virtual external entities stored as test suite class methods that return strings.
 "
 Class {
 	#name : #XMLConformanceVirtualFileExternalEntityResolver,
