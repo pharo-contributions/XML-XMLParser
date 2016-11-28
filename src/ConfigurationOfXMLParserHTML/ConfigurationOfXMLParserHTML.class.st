@@ -319,6 +319,19 @@ ConfigurationOfXMLParserHTML >> baseline131: spec [
 			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline132: spec [
+	<version: '1.3.2-baseline' imports: #('1.0.0-baseline')>
+	spec
+		for: #common
+		do: [ spec project: 'XMLParser' with: #'release-2.9.7' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec blessing: #baseline.
+			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParserHTML >> customProjectAttributes [
 	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -331,7 +344,27 @@ ConfigurationOfXMLParserHTML >> customProjectAttributes [
 ConfigurationOfXMLParserHTML >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.3.1-baseline'.
+	spec for: #'common' version: '1.3.2-baseline'.
+]
+
+{ #category : #doits }
+ConfigurationOfXMLParserHTML >> forceInitializationOfClassAndClassInstanceVariables [
+	"All lazily initialized class and class instance variables must be
+	explicitly initialized on GS during installation to prevent write
+	conflicts between Gems later on. 
+	
+	This can help identify classes that use lazy initialization:
+		(SystemNavigation default allClassesInPackageNamed: 'XML-Parser-HTML') select:
+			[:each |
+				(each classVariables notEmpty
+					or: [each class instanceVariables notEmpty])
+					and: [(each class includesSelector: #initialize) not]]
+	"
+	
+	"This project adds custom context subclasses with lazy initialized
+	singletons that need explicit initialization on GS"
+	XMLTokenContext allSubclassesDo: [:each |
+		each instance]
 ]
 
 { #category : #accessing }
@@ -351,7 +384,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.3.1'.
+	spec for: #'common' version: '1.3.2'.
 
 ]
 
@@ -704,5 +737,16 @@ ConfigurationOfXMLParserHTML >> version131: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.42'.
 			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.22'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version132: spec [ 
+        <version: '1.3.2' imports: #('1.3.2-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.43'.
+			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.23'.
                 ].
 ]
