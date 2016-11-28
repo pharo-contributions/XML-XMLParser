@@ -68,6 +68,11 @@ DTDEntity >> isParameter [
 ]
 
 { #category : #testing }
+DTDEntity >> isStandaloneExternal [
+	^ false
+]
+
+{ #category : #testing }
 DTDEntity >> isUnparsed [
 	^ false
 ]

@@ -6,10 +6,22 @@ Class {
 	#superclass : #XMLException,
 	#instVars : [
 		'lineNumber',
-		'columnNumber'
+		'columnNumber',
+		'baseURI'
 	],
 	#category : #'XML-Parser-Exceptions'
 }
+
+{ #category : #accessing }
+XMLParserException >> baseURI [
+	^ baseURI ifNil: [baseURI := '']
+]
+
+{ #category : #accessing }
+XMLParserException >> baseURI: aURIString [
+	baseURI := aURIString.
+	self messageTextAppend: aURIString.
+]
 
 { #category : #accessing }
 XMLParserException >> columnNumber [
@@ -20,8 +32,13 @@ XMLParserException >> columnNumber [
 XMLParserException >> columnNumber: aColumnNumber [
 	columnNumber := aColumnNumber.
 	self
-		append: aColumnNumber
+		messageTextAppend: aColumnNumber
 		withDescription: 'column'.
+]
+
+{ #category : #testing }
+XMLParserException >> hasBaseURI [
+	^ self baseURI notEmpty
 ]
 
 { #category : #testing }
@@ -48,7 +65,7 @@ XMLParserException >> lineNumber [
 XMLParserException >> lineNumber: aLineNumber [
 	lineNumber := aLineNumber.
 	self
-		append: aLineNumber
+		messageTextAppend: aLineNumber
 		withDescription: 'line'.
 ]
 

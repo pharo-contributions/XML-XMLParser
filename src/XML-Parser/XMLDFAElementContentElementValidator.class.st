@@ -1,5 +1,5 @@
 "
-This class validates elements that can only contain element content (no PCDATA) using a regular expression converted to a DFA. It ignores comments, and PIs.
+This class validates elements that can only contain element content (no PCDATA) using a regular expression converted to a DFA. It ignores comments, PIs, and whitespace.
 "
 Class {
 	#name : #XMLDFAElementContentElementValidator,
@@ -8,12 +8,17 @@ Class {
 }
 
 { #category : #testing }
-XMLDFAElementContentElementValidator >> hasElementContent [
+XMLDFAElementContentElementValidator >> ignoresWhitespace [
+	^ true
+]
+
+{ #category : #testing }
+XMLDFAElementContentElementValidator >> isElementContent [
 	^ true
 ]
 
 { #category : #accessing }
-XMLDFAElementContentElementValidator >> type [
+XMLDFAElementContentElementValidator >> typeName [
 	^ 'element content'
 ]
 

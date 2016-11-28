@@ -16,6 +16,14 @@ XMLDocumentValidator >> attributeValidatorsFor: anElement [
 	self subclassResponsibility
 ]
 
+{ #category : #testing }
+XMLDocumentValidator >> currentElementIgnoresWhitespace [
+	self currentElementValidator
+		ifNotNil: [:elementValidator |
+			^ elementValidator ignoresWhitespace].
+	^ false.
+]
+
 { #category : #accessing }
 XMLDocumentValidator >> currentElementValidator [
 	^ self elementValidatorStack xmlLastOrNil
@@ -32,11 +40,11 @@ XMLDocumentValidator >> defaultXMLIDValidator [
 	^ defaultXMLIDValidator
 		ifNil: [
 			defaultXMLIDValidator :=
-				XMLIDAttributeXMLIDValidator
+				XMLXMLIDAttributeValidator
 					element: ''
 					attribute: 'xml:id'
 					defaultValidator:
-						(XMLAttributeDefaultImpliedValidator attribute: 'xml:id').
+						(XMLAttributeImpliedDefaultValidator attribute: 'xml:id').
 			defaultXMLIDValidator
 				elementIDValidator: XMLElementIDValidator new;
 				yourself]
@@ -67,16 +75,6 @@ XMLDocumentValidator >> hasAttributeValidators [
 { #category : #testing }
 XMLDocumentValidator >> hasCurrentElementValidator [
 	^ self currentElementValidator notNil
-]
-
-{ #category : #testing }
-XMLDocumentValidator >> hasElementContent [
-	self hasElementValidators
-		ifTrue: [
-			self currentElementValidator
-				ifNotNil: [:elementValidator |
-					^ elementValidator hasElementContent]].
-	^ false.
 ]
 
 { #category : #testing }

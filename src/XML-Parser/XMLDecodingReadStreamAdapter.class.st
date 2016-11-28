@@ -8,6 +8,8 @@ Class {
 	#superclass : #XMLReadStreamAdapter,
 	#instVars : [
 		'peekChar',
+		'prePeekStreamPosition',
+		'postByteOrderMarkStreamPosition',
 		'streamConverter'
 	],
 	#category : #'XML-Parser-Streams'
@@ -50,7 +52,28 @@ XMLDecodingReadStreamAdapter class >> onStreamIfBinary: aStream [
 
 { #category : #testing }
 XMLDecodingReadStreamAdapter >> atEnd [
-	^ peekChar == nil and: [stream atEnd]
+	^ peekChar == nil
+		and: [stream atEnd]
+]
+
+{ #category : #decoding }
+XMLDecodingReadStreamAdapter >> detectEncoding [
+	| preDetectPosition |
+
+	prePeekStreamPosition := nil.
+	peekChar := nil.
+	postByteOrderMarkStreamPosition := nil.
+
+	"can be 0 or 1 on GS depending on the wrapped stream type"
+	preDetectPosition :=
+		stream
+			reset;
+			position.
+	(XMLEncodingDetector on: stream) streamConverterForEncoding
+		ifNotNil: [:converter |
+			self streamConverter: converter.
+			stream position > preDetectPosition
+				ifTrue: [postByteOrderMarkStreamPosition := stream position]].
 ]
 
 { #category : #testing }
@@ -73,6 +96,7 @@ XMLDecodingReadStreamAdapter >> next [
 	peekChar
 		ifNil: [^ streamConverter nextFromStream: self]
 		ifNotNil: [:nextChar |
+			prePeekStreamPosition := nil.
 			peekChar := nil.
 			^ nextChar]
 ]
@@ -80,7 +104,21 @@ XMLDecodingReadStreamAdapter >> next [
 { #category : #accessing }
 XMLDecodingReadStreamAdapter >> peek [
 	^ peekChar
-		ifNil: [peekChar := streamConverter nextFromStream: self]
+		ifNil: [
+			prePeekStreamPosition := stream position.
+			peekChar := streamConverter nextFromStream: self]
+]
+
+{ #category : #positioning }
+XMLDecodingReadStreamAdapter >> position [
+	^ prePeekStreamPosition ifNil: [stream position]
+]
+
+{ #category : #positioning }
+XMLDecodingReadStreamAdapter >> position: anInteger [
+	prePeekStreamPosition := nil.
+	peekChar := nil.
+	stream position: anInteger.
 ]
 
 { #category : #printing }
@@ -92,6 +130,15 @@ XMLDecodingReadStreamAdapter >> printOn: aStream [
 		nextPut: $).
 ]
 
+{ #category : #positioning }
+XMLDecodingReadStreamAdapter >> reset [
+	prePeekStreamPosition := nil.
+	peekChar := nil.
+	postByteOrderMarkStreamPosition
+		ifNil: [stream reset]
+		ifNotNil: [stream position: postByteOrderMarkStreamPosition].
+]
+
 { #category : #accessing }
 XMLDecodingReadStreamAdapter >> streamConverter [
 	^ streamConverter
@@ -100,5 +147,10 @@ XMLDecodingReadStreamAdapter >> streamConverter [
 { #category : #accessing }
 XMLDecodingReadStreamAdapter >> streamConverter: aStreamConverter [
 	streamConverter :=
-		aStreamConverter ifNil: [XMLStreamConverter null]
+		aStreamConverter ifNil: [XMLStreamConverter null].
+	peekChar
+		ifNotNil: [
+			stream position: prePeekStreamPosition.
+			prePeekStreamPosition := nil.
+			peekChar := nil].
 ]

@@ -24,6 +24,11 @@ XMLParser >> atEnd [
 ]
 
 { #category : #accessing }
+XMLParser >> baseURI [
+	^ self driver baseURI
+]
+
+{ #category : #accessing }
 XMLParser >> context [
 	^ self tokenizer context
 ]
@@ -66,6 +71,9 @@ XMLParser >> handleParserError: anError [
 	(anError hasColumnNumber
 		or: [self currentColumnNumber isNil])
 		ifFalse: [anError columnNumber: self currentColumnNumber].
+	(anError hasBaseURI
+		or: [self baseURI isEmpty])
+		ifFalse: [anError baseURI: self baseURI].
 
 	anError shouldPassOnWhenCaught
 		ifTrue: [anError pass].

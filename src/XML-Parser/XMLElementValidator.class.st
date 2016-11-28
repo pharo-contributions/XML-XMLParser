@@ -35,7 +35,7 @@ XMLElementValidator >> errorUnexpected: aDescription [
 	XMLValidationException
 		formatSignal: 'Unexpected {1} in {2} type element <{3}>'
 		with: aDescription
-		with: self type
+		with: self typeName
 		with: self element
 ]
 
@@ -49,7 +49,7 @@ XMLElementValidator >> errorUnexpectedElement: anElement [
 	XMLValidationException
 		formatSignal: 'Unexpected <{1}> element in {2} type element <{3}>'
 		with: anElement
-		with: self type
+		with: self typeName
 		with: self element
 ]
 
@@ -64,7 +64,27 @@ XMLElementValidator >> errorUnexpectedPI [
 ]
 
 { #category : #testing }
-XMLElementValidator >> hasElementContent [
+XMLElementValidator >> ignoresWhitespace [
+	^ false
+]
+
+{ #category : #testing }
+XMLElementValidator >> isAny [
+	^ false
+]
+
+{ #category : #testing }
+XMLElementValidator >> isElementContent [
+	^ false
+]
+
+{ #category : #testing }
+XMLElementValidator >> isEmpty [
+	^ false
+]
+
+{ #category : #testing }
+XMLElementValidator >> isMixedContent [
 	^ false
 ]
 
@@ -78,12 +98,16 @@ XMLElementValidator >> printOn: aStream [
 ]
 
 { #category : #accessing }
-XMLElementValidator >> type [
+XMLElementValidator >> typeName [
 	self subclassResponsibility
 ]
 
 { #category : #validating }
 XMLElementValidator >> validateComment: aString [
+]
+
+{ #category : #validating }
+XMLElementValidator >> validateElementDeclaration [
 ]
 
 { #category : #validating }

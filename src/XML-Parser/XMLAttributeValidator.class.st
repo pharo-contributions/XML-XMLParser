@@ -32,6 +32,11 @@ XMLAttributeValidator class >> initialize [
 ]
 
 { #category : #accessing }
+XMLAttributeValidator class >> standaloneExternalClass [
+	^ self
+]
+
+{ #category : #accessing }
 XMLAttributeValidator >> attribute [
 	^ attribute
 ]
@@ -47,22 +52,24 @@ XMLAttributeValidator >> element [
 ]
 
 { #category : #private }
-XMLAttributeValidator >> errorInvalidDefaultValue: aDefaultValue [
+XMLAttributeValidator >> errorInvalidDefaultAttributeValue: aDefaultValue [
 	XMLValidationException
-		formatSignal: 'Invalid default value "{1}" in attribute "{2}" of element <3>'
+		formatSignal:
+			'Invalid default value "{1}" in declaration for ',
+			'attribute "{2}" of element <3>'
 		with: aDefaultValue
 		with: self attribute
 		with: self element
 ]
 
 { #category : #private }
-XMLAttributeValidator >> errorInvalidXMLIDAttributeValidator [
+XMLAttributeValidator >> errorInvalidXMLIDAttributeDeclaration [
 	XMLValidationException signal:
 		'All "xml:id" attributes must be declared to be of ID type'
 ]
 
 { #category : #private }
-XMLAttributeValidator >> errorInvalidXMLSpaceAttributeValidator [
+XMLAttributeValidator >> errorInvalidXMLSpaceAttributeDeclaration [
 	XMLValidationException
 		formatSignal:
 			'Attribute "xml:space" of element <{1}> must be declared as ',
@@ -71,13 +78,26 @@ XMLAttributeValidator >> errorInvalidXMLSpaceAttributeValidator [
 ]
 
 { #category : #private }
+XMLAttributeValidator >> errorNormalizedStandaloneExternalAttribute [
+	XMLValidationException
+		formatSignal:
+			'Externally defined attribute "{1}" of element <{2}> required ',
+			'further value normalizaiton in standalone="yes" document'
+		with: self attribute
+		with: self element
+]
+
+{ #category : #private }
 XMLAttributeValidator >> furtherNormalizeAttributeValue: aSemiNormalizedAttributeValue [
-	"The tokenizer normalizes all (non-char escaped) whitespace in attribute
-	values to spaces (0x20), and this further normalizes them by removing
-	leading and trailing spaces and turing multiple spaces to single spaces."
+	"The tokenizer normalizes all non-char escaped whitespace in attribute
+	values to spaces (0x20). This further normalizes them by removing leading
+	and trailing spaces and turing multiple spaces to single spaces."
 	| writeStream isInWhitespace |
 
-	"must use #writeStream instead of WriteStream on: to get a 0-based stream
+	aSemiNormalizedAttributeValue size > 0 "optimization"
+		ifFalse: [^ aSemiNormalizedAttributeValue].
+
+	"must use #writeStream instead of 'WriteStream on:' to get a 0-based stream
 	on Gemstone"
 	writeStream := (String new: aSemiNormalizedAttributeValue size) writeStream.
 	isInWhitespace := false.
@@ -97,21 +117,79 @@ XMLAttributeValidator >> furtherNormalizeAttributeValue: aSemiNormalizedAttribut
 	^ writeStream contents.
 ]
 
-{ #category : #private }
-XMLAttributeValidator >> furtherNormalizeAttributeValueIn: aDictionary [
-	| association |
-
-	association :=
-		aDictionary
-			associationAt: self attribute
-			ifAbsent: [^ self].
-
-	association value:
-		(self furtherNormalizeAttributeValue: association value).
-]
-
 { #category : #initialization }
 XMLAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
+	(self mustFurtherNormalizeAttributeValue
+		and: [self defaultValidator isValue])
+		ifTrue: [
+			self defaultValidator value:
+				(self furtherNormalizeAttributeValue:
+					self defaultValidator value)]
+]
+
+{ #category : #testing }
+XMLAttributeValidator >> isCData [
+	^ false
+]
+
+{ #category : #testing }
+XMLAttributeValidator >> isEntities [
+	^ false
+]
+
+{ #category : #testing }
+XMLAttributeValidator >> isEntity [
+	^ false
+]
+
+{ #category : #testing }
+XMLAttributeValidator >> isEnumeration [
+	^ false
+]
+
+{ #category : #testing }
+XMLAttributeValidator >> isID [
+	^ false
+]
+
+{ #category : #testing }
+XMLAttributeValidator >> isIDRef [
+	^ false
+]
+
+{ #category : #testing }
+XMLAttributeValidator >> isIDRefs [
+	^ false
+]
+
+{ #category : #testing }
+XMLAttributeValidator >> isNmtoken [
+	^ false
+]
+
+{ #category : #testing }
+XMLAttributeValidator >> isNmtokens [
+	^ false
+]
+
+{ #category : #testing }
+XMLAttributeValidator >> isNotationEnumeration [
+	^ false
+]
+
+{ #category : #testing }
+XMLAttributeValidator >> isStandaloneExternal [
+	^ false
+]
+
+{ #category : #testing }
+XMLAttributeValidator >> isXMLID [
+	^ false
+]
+
+{ #category : #testing }
+XMLAttributeValidator >> mustFurtherNormalizeAttributeValue [
+	^ true
 ]
 
 { #category : #printing }
@@ -125,16 +203,37 @@ XMLAttributeValidator >> printOn: aStream [
 		nextPutAll: '="">)'.
 ]
 
+{ #category : #processing }
+XMLAttributeValidator >> processAttributes: aDictionary [
+	| attributeAssociation normalizedValue |
+
+	attributeAssociation :=
+		aDictionary
+			associationAt: self attribute
+			ifAbsent: [
+				self defaultValidator processedDefaultForAbsentAttributeValue
+					ifNotNil: [:defaultValue |
+						aDictionary
+							at: self attribute
+							put: defaultValue].
+				^ self].
+
+	self mustFurtherNormalizeAttributeValue
+		ifTrue: [
+			normalizedValue :=
+				self furtherNormalizeAttributeValue:
+					attributeAssociation value]
+		ifFalse: [normalizedValue := attributeAssociation value].
+	attributeAssociation value:
+		(self defaultValidator processedDefaultForPresentAttributeValue:
+			normalizedValue).
+]
+
 { #category : #initialization }
 XMLAttributeValidator >> setElement: anElement attribute: anAttribute defaultValidator: aDefaultValidator [
 	element := anElement.
 	attribute := anAttribute.
 	defaultValidator := aDefaultValidator.
-]
-
-{ #category : #testing }
-XMLAttributeValidator >> shouldFurtherNormalizeAttributeValue [
-	^ true
 ]
 
 { #category : #private }
@@ -146,55 +245,72 @@ XMLAttributeValidator >> spaceSeparatedListValuesIn: aSpaceSeparatedList do: aBl
 
 { #category : #validating }
 XMLAttributeValidator >> validateAttributeDeclaration [
-	self defaultValidator hasDefaultValue
-		ifTrue: [| defaultValue |
-			self shouldFurtherNormalizeAttributeValue
-				ifTrue: [
-					defaultValue :=
-						self furtherNormalizeAttributeValue:
-							self defaultValidator defaultValue.
-					self defaultValidator defaultValue: defaultValue]
-				ifFalse: [defaultValue := self defaultValidator defaultValue].
-			self validateAttributeDefaultValue: defaultValue].
-
 	(self attribute at: 1) == $x "optimization"
 		ifTrue: [
 			(self attribute = 'xml:id')
-				ifTrue: [^ self validateXMLIDAttributeValidator].
+				ifTrue: [^ self validateXMLIDAttributeDeclaration].
 			(self attribute = 'xml:space')
-				ifTrue: [^ self validateXMLSpaceAttributeValidator]].
+				ifTrue: [^ self validateXMLSpaceAttributeDeclaration]].
+
+	self defaultValidator isValue
+		ifTrue: [	
+			self validateAttributeDefaultValue:
+				self defaultValidator value].
 ]
 
 { #category : #validating }
 XMLAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
-	"This is overridden in subclasses to check default values, but CDATA types
-	should not be validated, and ID types cannot have default values at all"
+	"This is overridden in subclasses to check default values when validating
+	the declaration, but CDATA types should not be validated, and ID types
+	cannot have default values at all"
 ]
 
 { #category : #validating }
 XMLAttributeValidator >> validateAttributeValue: aValue [
-	self subclassResponsibility
+	"This is overridden in subclasses to check attribute values"
 ]
 
 { #category : #validating }
 XMLAttributeValidator >> validateAttributes: aDictionary [
-	self shouldFurtherNormalizeAttributeValue
-		ifTrue: [self furtherNormalizeAttributeValueIn: aDictionary].
+	| attributeAssociation wasAbsent |
 
-	self defaultValidator validateAttributeDefaultIn: aDictionary.
+	wasAbsent := false.
+	attributeAssociation :=
+		aDictionary
+			associationAt: self attribute
+			ifAbsent: [
+				wasAbsent := true.
+				self defaultValidator validatedDefaultForAbsentAttributeValue
+					ifNil: [^ self]
+					ifNotNil: [:defaultValue |
+						aDictionary add: self attribute -> defaultValue]].
 
-	self validateAttributeValue:
-		(aDictionary
-			at: self attribute
-			ifAbsent: [^ self]).
+	wasAbsent
+		ifFalse: [| normalizedValue |
+			self mustFurtherNormalizeAttributeValue
+				ifTrue: [
+					normalizedValue :=
+						self furtherNormalizeAttributeValue:
+							attributeAssociation value.
+					self isStandaloneExternal
+						ifTrue: [
+							normalizedValue size = attributeAssociation value size
+								ifFalse: [
+									self errorNormalizedStandaloneExternalAttribute]]]
+				ifFalse: [normalizedValue := attributeAssociation value].
+			attributeAssociation value:
+				(self defaultValidator validatedDefaultForPresentAttributeValue:
+					normalizedValue)].
+
+	self validateAttributeValue: attributeAssociation value.
 ]
 
 { #category : #validating }
-XMLAttributeValidator >> validateXMLIDAttributeValidator [
-	self errorInvalidXMLIDAttributeValidator
+XMLAttributeValidator >> validateXMLIDAttributeDeclaration [
+	self errorInvalidXMLIDAttributeDeclaration
 ]
 
 { #category : #validating }
-XMLAttributeValidator >> validateXMLSpaceAttributeValidator [
-	self errorInvalidXMLSpaceAttributeValidator
+XMLAttributeValidator >> validateXMLSpaceAttributeDeclaration [
+	self errorInvalidXMLSpaceAttributeDeclaration
 ]

@@ -7,12 +7,17 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
-{ #category : #testing }
-XMLCDataAttributeValidator >> shouldFurtherNormalizeAttributeValue [
-	^ false
+{ #category : #accessing }
+XMLCDataAttributeValidator class >> standaloneExternalClass [
+	^ XMLStandaloneExternalCDataAttributeValidator
 ]
 
-{ #category : #validating }
-XMLCDataAttributeValidator >> validateAttributeValue: aValue [
-	
+{ #category : #testing }
+XMLCDataAttributeValidator >> isCData [
+	^ true
+]
+
+{ #category : #testing }
+XMLCDataAttributeValidator >> mustFurtherNormalizeAttributeValue [
+	^ false
 ]

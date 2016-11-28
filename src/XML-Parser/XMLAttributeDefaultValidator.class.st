@@ -14,14 +14,19 @@ Class {
 XMLAttributeDefaultValidator class >> attribute: anAttribute [
 	^ self
 		attribute: anAttribute
-		defaultValue: ''
+		value: ''
 ]
 
 { #category : #'instance creation' }
-XMLAttributeDefaultValidator class >> attribute: anAttribute defaultValue: aDefaultValue [
+XMLAttributeDefaultValidator class >> attribute: anAttribute value: aDefaultValue [
 	^ self new
 		setAttribute: anAttribute
-		defaultValue: aDefaultValue
+		value: aDefaultValue
+]
+
+{ #category : #accessing }
+XMLAttributeDefaultValidator class >> standaloneExternalClass [
+	^ self
 ]
 
 { #category : #accessing }
@@ -29,13 +34,23 @@ XMLAttributeDefaultValidator >> attribute [
 	^ attribute
 ]
 
-{ #category : #accessing }
-XMLAttributeDefaultValidator >> defaultValue [
-	^ ''
+{ #category : #testing }
+XMLAttributeDefaultValidator >> isFixedValue [
+	^ false
 ]
 
 { #category : #testing }
-XMLAttributeDefaultValidator >> hasDefaultValue [
+XMLAttributeDefaultValidator >> isImplied [
+	^ false
+]
+
+{ #category : #testing }
+XMLAttributeDefaultValidator >> isRequired [
+	^ false
+]
+
+{ #category : #testing }
+XMLAttributeDefaultValidator >> isValue [
 	^ false
 ]
 
@@ -46,16 +61,36 @@ XMLAttributeDefaultValidator >> printOn: aStream [
 		nextPut: $(;
 		nextPutAll: self attribute;
 		nextPutAll: '="';
-		nextPutAll: self defaultValue;
+		nextPutAll: self value;
 		nextPutAll: '")'.
 ]
 
+{ #category : #processing }
+XMLAttributeDefaultValidator >> processedDefaultForAbsentAttributeValue [
+	^ nil
+]
+
+{ #category : #processing }
+XMLAttributeDefaultValidator >> processedDefaultForPresentAttributeValue: anAttributeValue [
+	^ anAttributeValue
+]
+
 { #category : #initialization }
-XMLAttributeDefaultValidator >> setAttribute: anAttribute defaultValue: aDefaultValue [
+XMLAttributeDefaultValidator >> setAttribute: anAttribute value: aDefaultValue [
 	attribute := anAttribute
 ]
 
 { #category : #validating }
-XMLAttributeDefaultValidator >> validateAttributeDefaultIn: aDictionary [
-	self subclassResponsibility
+XMLAttributeDefaultValidator >> validatedDefaultForAbsentAttributeValue [
+	^ nil
+]
+
+{ #category : #validating }
+XMLAttributeDefaultValidator >> validatedDefaultForPresentAttributeValue: anAttributeValue [
+	^ anAttributeValue
+]
+
+{ #category : #accessing }
+XMLAttributeDefaultValidator >> value [
+	^ ''
 ]

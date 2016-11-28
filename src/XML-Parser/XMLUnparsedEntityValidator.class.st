@@ -13,25 +13,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-XMLUnparsedEntityValidator class >> unparsedEntities: anUnparsedEntityDictionary notations: aNotationSet [
+XMLUnparsedEntityValidator class >> unparsedEntities: anUnparsedEntityDictionary notations: aNotationDictionary [
 	^ self new
 		setUnparsedEntities: anUnparsedEntityDictionary
-		notations: aNotationSet
-]
-
-{ #category : #accessing }
-XMLUnparsedEntityValidator >> addNotationAttributeValidator: aNotationAttributeValidator [
-	| oldSize |
-
-	"checking size after is faster than includes"
-	oldSize := self notationAttributeValidators size.
-	(self notationAttributeValidators
-		at: aNotationAttributeValidator element
-		put: aNotationAttributeValidator;
-		size) > oldSize
-		ifFalse: [
-			self errorMultipleNotationAttributesForElement:
-				aNotationAttributeValidator element].
+		notations: aNotationDictionary
 ]
 
 { #category : #private }
@@ -86,18 +71,18 @@ XMLUnparsedEntityValidator >> notationAttributeValidators [
 
 { #category : #accessing }
 XMLUnparsedEntityValidator >> notations [
-	^ notations
+	^ notations ifNil: [notations := Dictionary new]
 ]
 
 { #category : #initialization }
-XMLUnparsedEntityValidator >> setUnparsedEntities: anUnparsedEntityDictionary notations: aNotationSet [
+XMLUnparsedEntityValidator >> setUnparsedEntities: anUnparsedEntityDictionary notations: aNotationDictionary [
 	unparsedEntities := anUnparsedEntityDictionary.
-	notations := aNotationSet.
+	notations := aNotationDictionary.
 ]
 
 { #category : #accessing }
 XMLUnparsedEntityValidator >> unparsedEntities [
-	^ unparsedEntities
+	^ unparsedEntities ifNil: [unparsedEntities := Dictionary new]
 ]
 
 { #category : #validating }
@@ -110,21 +95,28 @@ XMLUnparsedEntityValidator >> validateEntityReference: anEntity inAttribute: anA
 ]
 
 { #category : #validating }
-XMLUnparsedEntityValidator >> validateNotation: aNotation [
-	"Unlike redundant entity declarations which are just ignored, redundant
-	notation declarations are invalid"
-	(self notations includes: aNotation)
-		ifTrue: [self errorMultipleDeclarationsForNotation: aNotation]
+XMLUnparsedEntityValidator >> validateNotationAttributeDeclaration: aNotationAttributeValidator [
+	| oldSize |
+
+	"checking size after is faster than includes:"
+	oldSize := self notationAttributeValidators size.
+	(self notationAttributeValidators
+		at: aNotationAttributeValidator element
+		put: aNotationAttributeValidator;
+		size) > oldSize
+		ifFalse: [
+			self errorMultipleNotationAttributesForElement:
+				aNotationAttributeValidator element].
 ]
 
 { #category : #validating }
-XMLUnparsedEntityValidator >> validateNotationAttributes [
-	"this validatin has to be delayed until the entire DTD
-	is processed so NOTATION attributes can be declared before
-	the notations in their enumeration are"
+XMLUnparsedEntityValidator >> validateNotationAttributeDeclarationDefaults [
+	"this validation has to be delayed until the entire DTD
+	is processed so notation attributes can be declared before
+	the notations referenced in their enumeration list are"
 	self notationAttributeValidators valuesDo: [:validator |
 		validator allowedValues do: [:each |
-			(self notations includes: each)
+			(self notations includesKey: each)
 				ifFalse: [
 					self
 						errorUndeclaredNotation: each
@@ -132,12 +124,12 @@ XMLUnparsedEntityValidator >> validateNotationAttributes [
 ]
 
 { #category : #validating }
-XMLUnparsedEntityValidator >> validateUnparsedEntities [
-	"this validatin has to be delayed until the entire DTD
+XMLUnparsedEntityValidator >> validateUnparsedEntityDeclarations [
+	"this validation has to be delayed until the entire DTD
 	is processed so unparsed entities can be declared before
-	their notations"
+	the notation they reference are"
 	self unparsedEntities valuesDo: [:each |
-		(self notations includes: each ndata)
+		(self notations includesKey: each ndata)
 			ifFalse: [
 				self
 					errorUndeclaredNotation: each ndata

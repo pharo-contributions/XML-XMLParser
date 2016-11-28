@@ -56,6 +56,11 @@ XMLPushedBackEntity >> isParameter [
 ]
 
 { #category : #testing }
+XMLPushedBackEntity >> isStandaloneExternal [
+	^ entity isStandaloneExternal
+]
+
+{ #category : #testing }
 XMLPushedBackEntity >> isUnparsed [
 	^ entity isUnparsed
 ]
@@ -73,9 +78,10 @@ XMLPushedBackEntity >> poppedByTokenizer: aTokenizer [
 { #category : #printing }
 XMLPushedBackEntity >> printOn: aStream [
 	super printOn: aStream.
-	aStream nextPut: $(.
-	entity printOn: aStream.
-	aStream nextPut: $).
+	aStream
+		nextPut: $(;
+		print: aStream;
+		nextPut: $).
 ]
 
 { #category : #accessing }

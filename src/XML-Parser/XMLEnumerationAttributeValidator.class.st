@@ -11,13 +11,28 @@ Class {
 }
 
 { #category : #accessing }
+XMLEnumerationAttributeValidator class >> standaloneExternalClass [
+	^ XMLStandaloneExternalEnumerationAttributeValidator
+]
+
+{ #category : #accessing }
 XMLEnumerationAttributeValidator >> allowedValues [
 	^ allowedValues ifNil: [allowedValues := Set new]
 ]
 
 { #category : #accessing }
-XMLEnumerationAttributeValidator >> allowedValues: aSet [
-	allowedValues := aSet
+XMLEnumerationAttributeValidator >> allowedValues: anAllowedValuesCollection [
+	allowedValues := anAllowedValuesCollection
+]
+
+{ #category : #'private ' }
+XMLEnumerationAttributeValidator >> errorEnumerationContainsDuplicateValues [
+	XMLValidationException
+		formatSignal:
+			'Declaration for enumeration attribute "{1}" of element ',
+			'<{2}> contains duplicate values'
+		with: self attribute
+		with: self element
 ]
 
 { #category : #'private ' }
@@ -29,10 +44,27 @@ XMLEnumerationAttributeValidator >> errorInvalidValue: aValue [
 		with: self element
 ]
 
+{ #category : #testing }
+XMLEnumerationAttributeValidator >> isEnumeration [
+	^ true
+]
+
+{ #category : #validating }
+XMLEnumerationAttributeValidator >> validateAttributeDeclaration [
+	| oldAllowedValues |
+
+	oldAllowedValues := self allowedValues.
+	self allowedValues: oldAllowedValues asSet.
+	(self allowedValues size < oldAllowedValues size)
+		ifTrue: [self errorEnumerationContainsDuplicateValues].
+
+	super validateAttributeDeclaration.
+]
+
 { #category : #validating }
 XMLEnumerationAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 	(self allowedValues includes: aDefaultValue)
-		ifFalse: [self errorInvalidDefaultValue: aDefaultValue]
+		ifFalse: [self errorInvalidDefaultAttributeValue: aDefaultValue]
 ]
 
 { #category : #validating }
@@ -42,11 +74,11 @@ XMLEnumerationAttributeValidator >> validateAttributeValue: aValue [
 ]
 
 { #category : #validating }
-XMLEnumerationAttributeValidator >> validateXMLSpaceAttributeValidator [
+XMLEnumerationAttributeValidator >> validateXMLSpaceAttributeDeclaration [
 	self allowedValues size > 2
-		ifTrue: [self errorInvalidXMLSpaceAttributeValidator].
+		ifTrue: [self errorInvalidXMLSpaceAttributeDeclaration].
 	self allowedValues do: [:each |
-		((each = 'preserve')
+		(each = 'preserve'
 			or: [each = 'default'])
-			ifFalse: [self errorInvalidXMLSpaceAttributeValidator]].
+			ifFalse: [self errorInvalidXMLSpaceAttributeDeclaration]].
 ]

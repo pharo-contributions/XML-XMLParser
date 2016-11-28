@@ -22,6 +22,11 @@ XMLStreamAdapter >> close [
 		ifTrue: [stream close]
 ]
 
+{ #category : #accessing }
+XMLStreamAdapter >> contents [
+	self subclassResponsibility
+]
+
 { #category : #testing }
 XMLStreamAdapter >> isBinary [
 	^ false
@@ -35,6 +40,21 @@ XMLStreamAdapter >> isStream [
 { #category : #initialization }
 XMLStreamAdapter >> on: aStream [
 	stream := aStream
+]
+
+{ #category : #positioning }
+XMLStreamAdapter >> position [
+	self subclassResponsibility
+]
+
+{ #category : #positioning }
+XMLStreamAdapter >> position: anInteger [
+	self subclassResponsibility
+]
+
+{ #category : #positioning }
+XMLStreamAdapter >> reset [
+	self subclassResponsibility
 ]
 
 { #category : #accessing }

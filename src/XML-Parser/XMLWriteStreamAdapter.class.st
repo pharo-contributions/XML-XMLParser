@@ -1,5 +1,5 @@
 "
-A base class for write stream adapters for basic streams that support #nextPut:, #nextPutAll:, #contents, #reset, and positioning. It adds support for writing characters like tabs, spaces, and line endings.
+A base class for write stream adapters for basic streams that support #nextPut:, #nextPutAll:, #contents, #position, #position:, and #reset. It adds support for writing characters like tabs, spaces, and line endings.
 "
 Class {
 	#name : #XMLWriteStreamAdapter,

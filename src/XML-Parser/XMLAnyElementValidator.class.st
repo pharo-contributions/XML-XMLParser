@@ -12,7 +12,12 @@ XMLAnyElementValidator >> atEnd [
 	^ true
 ]
 
+{ #category : #testing }
+XMLAnyElementValidator >> isAny [
+	^ true
+]
+
 { #category : #accessing }
-XMLAnyElementValidator >> type [
+XMLAnyElementValidator >> typeName [
 	^ 'ANY'
 ]

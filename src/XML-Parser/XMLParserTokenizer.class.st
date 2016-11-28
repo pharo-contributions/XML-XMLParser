@@ -11,8 +11,9 @@ Class {
 		'driver',
 		'elementNester',
 		'streamReader',
-		'writeStream',
-		'nameStream'
+		'nameStream',
+		'declarationStream',
+		'characterDataStream'
 	],
 	#classVars : [
 		'PredefinedEntities'
@@ -94,7 +95,7 @@ XMLParserTokenizer >> context: aTokenContext [
 	driver decodesCharacters
 		ifTrue: [
 			context supportsEncodingDetection
-				ifTrue: [streamReader detectCurrentEncoding]]
+				ifTrue: [streamReader detectEncoding]]
 		ifFalse: [streamReader decodeStreamWithNullConverter].
 ]
 
@@ -326,7 +327,7 @@ XMLParserTokenizer >> nextNonElementWhitespace [
 ]
 
 { #category : #tokenizing }
-XMLParserTokenizer >> nextNonPIPrologOrContentToken [
+XMLParserTokenizer >> nextNonPIPrologOrContentMarkupToken [
 	self subclassResponsibility
 ]
 
@@ -343,12 +344,14 @@ XMLParserTokenizer >> nextPI [
 ]
 
 { #category : #tokenizing }
-XMLParserTokenizer >> nextPITarget [
+XMLParserTokenizer >> nextPIData [
 	self subclassResponsibility
 ]
 
 { #category : #tokenizing }
-XMLParserTokenizer >> nextPIValue [
+XMLParserTokenizer >> nextPITarget [
+	"should return a PI target string or nil if it's the start of
+	an '<?xml ...?>' declaration"
 	self subclassResponsibility
 ]
 
@@ -365,7 +368,7 @@ XMLParserTokenizer >> nextPIWithTarget: aTarget [
 			self expectSeparators.
 			driver
 				handlePI: aTarget
-				data: self nextPIValue].
+				data: self nextPIData].
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -476,15 +479,15 @@ XMLParserTokenizer >> nextXMLDeclarationOrPrologToken [
 		ifTrue: [
 			streamReader next.
 			streamReader peek == $?
-				ifTrue: [| target |
+				ifTrue: [
 					streamReader next.
-					(target := self nextPITarget) = 'xml'
-						ifTrue: [^ self nextXMLDeclaration]
-						ifFalse: [
+					self nextPITarget
+						ifNil: [^ self nextXMLDeclaration]
+						ifNotNil: [:target |
 							context := context prologContext.
 							^ self nextPIWithTarget: target]].
 			context := context prologContext.
-			^ self nextNonPIPrologOrContentToken].
+			^ self nextNonPIPrologOrContentMarkupToken].
 
 	"other prolog tokens can have whitespace before them, so the doc
 	does not need to start with an < for them"
@@ -521,23 +524,6 @@ XMLParserTokenizer >> nextXMLStandaloneAttribute [
 { #category : #tokenizing }
 XMLParserTokenizer >> nextXMLStandaloneAttributeValue [
 	self subclassResponsibility
-]
-
-{ #category : #tokenizing }
-XMLParserTokenizer >> nextXMLTextDeclaration [
-	(streamReader nextMatchAll: '<?xml')
-		ifTrue: [| encoding |
-			self expectSeparators.
-			(self nextXMLVersionAttributeRequired: false) isEmpty
-				ifFalse: [self expectSeparators].
-			(encoding := self nextXMLEncodingAttributeRequired: true) isEmpty
-				ifFalse: [self convertFromEncoding: encoding].
-
-			streamReader skipSeparators.
-			self
-				expectNext: $?;
-				expectTerminator].
-	context := context previousContext.
 ]
 
 { #category : #tokenizing }
@@ -589,10 +575,12 @@ XMLParserTokenizer >> setDriver: aDriver stream: aStream readLimit: aReadLimit [
 		(XMLNestedStreamReader
 			on: aStream
 			readLimit: aReadLimit).
+
 	"must use #writeStream instead of 'WriteStream on:' to get 0-based
 	streams on Gemstone"
-	writeStream := (String new: 128) writeStream.
 	nameStream := (String new: 16) writeStream.
+	declarationStream := (String new: 32) writeStream.
+	characterDataStream := (String new: 128) writeStream.
 ]
 
 { #category : #accessing }

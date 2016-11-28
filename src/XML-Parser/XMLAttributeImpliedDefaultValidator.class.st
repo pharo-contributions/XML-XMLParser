@@ -2,11 +2,12 @@
 This class allows an attribute to be absent (the #IMPLIED constraint).
 "
 Class {
-	#name : #XMLAttributeDefaultImpliedValidator,
+	#name : #XMLAttributeImpliedDefaultValidator,
 	#superclass : #XMLAttributeDefaultValidator,
 	#category : #'XML-Parser-Validation'
 }
 
-{ #category : #validating }
-XMLAttributeDefaultImpliedValidator >> validateAttributeDefaultIn: aDictionary [
+{ #category : #testing }
+XMLAttributeImpliedDefaultValidator >> isImplied [
+	^ true
 ]

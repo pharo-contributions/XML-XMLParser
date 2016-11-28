@@ -5,7 +5,8 @@ Class {
 	#name : #XMLParserDriver,
 	#superclass : #Object,
 	#instVars : [
-		'baseURI'
+		'baseURI',
+		'currentEntity'
 	],
 	#category : #'XML-Parser-Drivers'
 }
@@ -19,6 +20,16 @@ XMLParserDriver >> baseURI [
 { #category : #accessing }
 XMLParserDriver >> baseURI: aURI [
 	baseURI := aURI
+]
+
+{ #category : #accessing }
+XMLParserDriver >> currentEntity [
+	^ currentEntity
+]
+
+{ #category : #accessing }
+XMLParserDriver >> currentEntity: anEntity [
+	currentEntity := anEntity
 ]
 
 { #category : #testing }

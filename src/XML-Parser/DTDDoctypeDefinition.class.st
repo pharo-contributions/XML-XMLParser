@@ -20,28 +20,32 @@ Class {
 
 { #category : #adding }
 DTDDoctypeDefinition >> addExternalGeneralEntity: aName resolver: aResolver publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
-	self generalEntities
+	(self generalEntities includesKey: aName)
+		ifTrue: [^ nil].
+	^ self generalEntities
 		at: aName
-		ifAbsentPut: [
-			DTDExternalGeneralEntity
+		put:
+			(DTDExternalGeneralEntity
 				name: aName
 				resolver: aResolver
 				publicID: aPublicID
 				systemID: aSystemID
-				baseURI: aBaseURIString]
+				baseURI: aBaseURIString).
 ]
 
 { #category : #adding }
 DTDDoctypeDefinition >> addExternalParameterEntity: aName resolver: aResolver publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
-	self parameterEntities
+	(self parameterEntities includesKey: aName)
+		ifTrue: [^ nil].
+	^ self parameterEntities
 		at: aName
-		ifAbsentPut: [
-			DTDExternalParameterEntity
+		put:
+			(DTDExternalParameterEntity
 				name: aName
 				resolver: aResolver
 				publicID: aPublicID
 				systemID: aSystemID
-				baseURI: aBaseURIString]
+				baseURI: aBaseURIString).
 ]
 
 { #category : #adding }
@@ -54,99 +58,173 @@ DTDDoctypeDefinition >> addGeneralEntitiesFrom: aDoctypeDefinition [
 
 { #category : #adding }
 DTDDoctypeDefinition >> addInternalGeneralEntity: aName replacement: aReplacement baseURI: aBaseURIString [
-	self generalEntities
+	(self generalEntities includesKey: aName)
+		ifTrue: [^ nil].
+	^ self generalEntities
 		at: aName
-		ifAbsentPut: [
-			DTDInternalGeneralEntity 
+		put:
+			(DTDInternalGeneralEntity 
 				name: aName
 				replacement: aReplacement
-				uri: aBaseURIString]
+				uri: aBaseURIString).
 ]
 
 { #category : #adding }
 DTDDoctypeDefinition >> addInternalParameterEntity: aName replacement: aReplacement baseURI: aBaseURIString [
-	self parameterEntities
+	(self parameterEntities includesKey: aName)
+		ifTrue: [^ nil].
+	^ self parameterEntities
 		at: aName
-		ifAbsentPut: [
-			DTDInternalParameterEntity
+		put:
+			(DTDInternalParameterEntity
 				name: aName
 				replacement: aReplacement
-				uri: aBaseURIString]
+				uri: aBaseURIString).
 ]
 
 { #category : #adding }
-DTDDoctypeDefinition >> addNotation: aName [
-	self notations add: aName
-]
-
-{ #category : #adding }
-DTDDoctypeDefinition >> addUnparsedEntity: aName ndata: aNotation [
-	self generalEntities
+DTDDoctypeDefinition >> addNotation: aName publicID: aPublicID systemID: aSystemID [
+	(self notations includesKey: aName)
+		ifTrue: [^ nil].
+	^ self notations
 		at: aName
-		ifAbsentPut: [
-			self unparsedEntities
+		put:
+			(DTDNotation
+				name: aName
+				publicID: aPublicID
+				systemID: aSystemID).
+]
+
+{ #category : #adding }
+DTDDoctypeDefinition >> addStandaloneExternalExternalGeneralEntity: aName resolver: aResolver publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
+	(self generalEntities includesKey: aName)
+		ifTrue: [^ nil].
+	^ self generalEntities
+		at: aName
+		put:
+			(DTDStandaloneExternalExternalGeneralEntity
+				name: aName
+				resolver: aResolver
+				publicID: aPublicID
+				systemID: aSystemID
+				baseURI: aBaseURIString).
+]
+
+{ #category : #adding }
+DTDDoctypeDefinition >> addStandaloneExternalInternalGeneralEntity: aName replacement: aReplacement baseURI: aBaseURIString [
+	(self generalEntities includesKey: aName)
+		ifTrue: [^ nil].
+	^ self generalEntities
+		at: aName
+		put:
+			(DTDStandaloneExternalInternalGeneralEntity 
+				name: aName
+				replacement: aReplacement
+				uri: aBaseURIString).
+]
+
+{ #category : #adding }
+DTDDoctypeDefinition >> addStandaloneExternalValidatorForAttributeIn: anElement named: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
+	| attributes |
+
+	attributes :=
+		self attributeValidators
+			at: anElement
+			ifAbsentPut: [Dictionary new].
+	(attributes includesKey: anAttribute)
+		ifTrue: [^ nil].
+	^ attributes
+		at: anAttribute
+		put:
+			((DTDStandaloneExternalAttributeDefinitionParser
+				element: anElement
+				attribute: anAttribute
+				type: aType
+				defaultPragma: aDefaultPragma
+				defaultValue: aDefaultValue) parse
+					initializeWithValidatorsFrom: self).
+]
+
+{ #category : #adding }
+DTDDoctypeDefinition >> addStandaloneExternalValidatorForElement: anElement contentModel: aContentModel [
+	(self elementValidators includesKey: anElement)
+		ifTrue: [^ nil].
+	^ self elementValidators
+		at: anElement
+		put:
+			((DTDContentModelParser parserClassForContentModel: aContentModel)
+				standaloneExternalClass
+					element: anElement
+					contentModel: aContentModel) parse.
+]
+
+{ #category : #adding }
+DTDDoctypeDefinition >> addUnparsedEntity: aName publicID: aPublicID systemID: aSystemID ndata: aNotation [
+	(self generalEntities includesKey: aName)
+		ifTrue: [^ nil].
+	^ self generalEntities
+		at: aName
+		put:
+			(self unparsedEntities
 				at: aName
 				put:
 					(DTDUnparsedEntity
 						name: aName
-						ndata: aNotation)]
+						publicID: aPublicID
+						systemID: aSystemID
+						ndata: aNotation)).
 ]
 
 { #category : #adding }
 DTDDoctypeDefinition >> addUnresolvableExternalGeneralEntity: aName [
-	self generalEntities
+	(self generalEntities includesKey: aName)
+		ifTrue: [^ nil].
+	^ self generalEntities
 		at: aName
-		ifAbsentPut: [DTDUnresolvableExternalGeneralEntity named: aName]
+		put: (DTDUnresolvableExternalGeneralEntity named: aName).
 ]
 
 { #category : #adding }
 DTDDoctypeDefinition >> addUnresolvableExternalParameterEntity: aName [
-	self parameterEntities
+	(self parameterEntities includesKey: aName)
+		ifTrue: [^ nil].
+	^ self parameterEntities
 		at: aName
-		ifAbsentPut: [DTDUnresolvableExternalParameterEntity named: aName]
+		put: (DTDUnresolvableExternalParameterEntity named: aName).
 ]
 
 { #category : #adding }
 DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
-	| attributeValidatorsForElement |
+	| attributes |
 
-	attributeValidatorsForElement :=
+	attributes :=
 		self attributeValidators
 			at: anElement
 			ifAbsentPut: [Dictionary new].
-
-	"additional declarations for the same attribute are legal, unlike with
-	element declarations, but are ignored"
-	(attributeValidatorsForElement includesKey: anAttribute)
-		ifFalse: [
-			attributeValidatorsForElement
-				at: anAttribute
-				put: 
-					((DTDAttributeDefinitionParser
-						element:  anElement
-						attribute: anAttribute
-						type: aType
-						defaultPragma: aDefaultPragma
-						defaultValue: aDefaultValue) parse
-							initializeWithValidatorsFrom: self;
-							validateAttributeDeclaration)].
+	(attributes includesKey: anAttribute)
+		ifTrue: [^ nil].
+	^ attributes
+		at: anAttribute
+		put:
+			((DTDAttributeDefinitionParser
+				element: anElement
+				attribute: anAttribute
+				type: aType
+				defaultPragma: aDefaultPragma
+				defaultValue: aDefaultValue) parse
+					initializeWithValidatorsFrom: self).
 ]
 
 { #category : #adding }
 DTDDoctypeDefinition >> addValidatorForElement: anElement contentModel: aContentModel [
-	| validator oldSize |
-
-	validator :=
-		((DTDContentModelParser parserForContentModel: aContentModel)
-			element: anElement
-			contentModel: aContentModel) parse.
-
-	"testing the size after is faster than an includes: test before"
-	oldSize := self elementValidators size.
-	(self elementValidators
-		at: anElement put: validator;
-		size) > oldSize
-		ifFalse: [self errorMultipleDeclarationsForElement: anElement]
+	(self elementValidators includesKey: anElement)
+		ifTrue: [^ nil].
+	^ self elementValidators
+		at: anElement
+		put:
+			((DTDContentModelParser parserClassForContentModel: aContentModel)
+				element: anElement
+				contentModel: aContentModel) parse.
 ]
 
 { #category : #accessing }
@@ -190,13 +268,6 @@ DTDDoctypeDefinition >> elementValidatorsAt: aName ifAbsent: aBlock [
 	^ self elementValidators
 		at: aName
 		ifAbsent: aBlock
-]
-
-{ #category : #private }
-DTDDoctypeDefinition >> errorMultipleDeclarationsForElement: anElement [
-	XMLValidationException
-		formatSignal: 'Multiple declarations for <{1}> element'
-		with: anElement
 ]
 
 { #category : #accessing }
@@ -307,7 +378,7 @@ DTDDoctypeDefinition >> newValidator [
 
 { #category : #accessing }
 DTDDoctypeDefinition >> notations [
-	^ notations ifNil: [notations := Set new]
+	^ notations ifNil: [notations := Dictionary new]
 ]
 
 { #category : #accessing }
@@ -327,6 +398,16 @@ DTDDoctypeDefinition >> parameterEntityAt: aName ifAbsent: aBlock [
 	^ self parameterEntities
 		at: aName
 		ifAbsent: aBlock
+]
+
+{ #category : #processing }
+DTDDoctypeDefinition >> processStartTag: anElement attributes: aDictionary [
+	self hasAttributeValidators
+		ifFalse: [^ self].
+	(self
+		attributeValidatorsAt: anElement
+		ifAbsent: [^ self])
+		valuesDo: [:each | each processAttributes: aDictionary]
 ]
 
 { #category : #removing }
@@ -369,7 +450,7 @@ DTDDoctypeDefinition >> unparsedEntityValidator [
 { #category : #validation }
 DTDDoctypeDefinition >> validateCompletedDefinition [
 	self hasUnparsedEntities
-		ifTrue: [self unparsedEntityValidator validateUnparsedEntities].
+		ifTrue: [self unparsedEntityValidator validateUnparsedEntityDeclarations].
 	self hasNotationAttributeValidators
-		ifTrue: [self unparsedEntityValidator validateNotationAttributes].
+		ifTrue: [self unparsedEntityValidator validateNotationAttributeDeclarationDefaults].
 ]

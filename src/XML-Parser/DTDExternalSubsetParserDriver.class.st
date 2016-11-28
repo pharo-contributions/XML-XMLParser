@@ -3,10 +3,9 @@ This class is used by SAXParserDriver for parsing the external subset of a DTD.
 "
 Class {
 	#name : #DTDExternalSubsetParserDriver,
-	#superclass : #XMLParserDriver,
+	#superclass : #DTDSubsetParserDriver,
 	#instVars : [
 		'saxDriver',
-		'doctypeDefinition',
 		'documentURI'
 	],
 	#category : #'XML-Parser-Drivers'
@@ -25,11 +24,6 @@ DTDExternalSubsetParserDriver >> decodesCharacters [
 ]
 
 { #category : #accessing }
-DTDExternalSubsetParserDriver >> doctypeDefinition [
-	^ doctypeDefinition
-]
-
-{ #category : #accessing }
 DTDExternalSubsetParserDriver >> documentURI [
 	^ documentURI
 ]
@@ -39,107 +33,49 @@ DTDExternalSubsetParserDriver >> externalEntityResolver [
 	^ self saxDriver externalEntityResolver
 ]
 
-{ #category : #'handling - dtd' }
-DTDExternalSubsetParserDriver >> handleAttributeDeclaration: anElement name: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
-	self isValidating
-		ifTrue: [
-			self doctypeDefinition
-				addValidatorForAttributeIn: anElement
-				named: anAttribute
-				type: aType
-				defaultPragma: aDefaultPragma
-				defaultValue: aDefaultValue]
+{ #category : #testing }
+DTDExternalSubsetParserDriver >> hasExternalSubset [
+	^ true
 ]
 
-{ #category : #'handling - dtd' }
-DTDExternalSubsetParserDriver >> handleElementDeclaration: aName contentModel: aContentModel [
-	self isValidating
-		ifTrue: [
-			self doctypeDefinition
-				addValidatorForElement: aName
-				contentModel: aContentModel]
+{ #category : #testing }
+DTDExternalSubsetParserDriver >> hasParameterEntityReferences [
+	^ self saxDriver hasParameterEntityReferences
 ]
 
-{ #category : #'handling - dtd' }
-DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotation [
-	aNotation isEmpty
-		ifTrue: [	
-			self doctypeDefinition
-				addExternalGeneralEntity: aName
-				resolver: self externalEntityResolver
-				publicID: aPublicID
-				systemID: aSystemID
-				baseURI: self baseURI]
-		ifFalse: [
-			self doctypeDefinition
-				addUnparsedEntity: aName
-				ndata: aNotation]
+{ #category : #testing }
+DTDExternalSubsetParserDriver >> hasSkippedParameterEntityReferences [
+	^ self saxDriver hasSkippedParameterEntityReferences
 ]
 
-{ #category : #'handling - dtd' }
-DTDExternalSubsetParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplacement [
-	self doctypeDefinition
-		addInternalGeneralEntity: aName
-		replacement: aReplacement
-		baseURI: self baseURI
+{ #category : #accessing }
+DTDExternalSubsetParserDriver >> haveParameterEntityReferences [
+	self saxDriver haveParameterEntityReferences
 ]
 
-{ #category : #handling }
-DTDExternalSubsetParserDriver >> handleGeneralEntityReference: aName [
-	"these can occur in attribute default values"
-	^ self saxDriver handleGeneralEntityReference: aName
-]
-
-{ #category : #'handling - dtd' }
-DTDExternalSubsetParserDriver >> handleImproperParameterEntityNesting [
-	self saxDriver handleImproperParameterEntityNesting
-]
-
-{ #category : #'handling - dtd' }
-DTDExternalSubsetParserDriver >> handleNotationDeclaration: aName publicID: aPublicID systemID: aSystemID [
-	self isValidating
-		ifTrue: [
-			self doctypeDefinition unparsedEntityValidator
-				validateNotation: aName].
-	self doctypeDefinition addNotation: aName.
-]
-
-{ #category : #'handling - dtd' }
-DTDExternalSubsetParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
-	self doctypeDefinition
-		addExternalParameterEntity: aName
-		resolver: self externalEntityResolver
-		publicID: aPublicID
-		systemID: aSystemID
-		baseURI: self baseURI
-]
-
-{ #category : #'handling - dtd' }
-DTDExternalSubsetParserDriver >> handleParameterEntityDeclaration: aName replacement: aReplacement [
-	self doctypeDefinition
-		addInternalParameterEntity: aName
-		replacement:aReplacement
-		baseURI: self baseURI
-]
-
-{ #category : #'handling - dtd' }
-DTDExternalSubsetParserDriver >> handleParameterEntityReference: aName [
-	^ self saxDriver handleParameterEntityReference: aName
-]
-
-{ #category : #handling }
-DTDExternalSubsetParserDriver >> handleParseError: aString [
-	self saxDriver handleParseError: aString
+{ #category : #accessing }
+DTDExternalSubsetParserDriver >> haveSkippedParameterEntityReferences [
+	self saxDriver haveSkippedParameterEntityReferences
 ]
 
 { #category : #private }
 DTDExternalSubsetParserDriver >> initialContextClass [
-	^ XMLTextDeclarationContext
+	^ XMLExternalSubsetTextDeclarationContext
+]
+
+{ #category : #testing }
+DTDExternalSubsetParserDriver >> isHandlingDTD [
+	^ true
 ]
 
 { #category : #testing }
 DTDExternalSubsetParserDriver >> isStandalone [
 	^ self saxDriver isStandalone
+]
+
+{ #category : #testing }
+DTDExternalSubsetParserDriver >> isStandaloneExternal [
+	^ self isStandalone
 ]
 
 { #category : #testing }
@@ -180,6 +116,6 @@ DTDExternalSubsetParserDriver >> saxDriver [
 { #category : #initialization }
 DTDExternalSubsetParserDriver >> setSAXDriver: aSAXDriver documentURI: anExternalSubsetURIString [
 	saxDriver := aSAXDriver.
-	doctypeDefinition := aSAXDriver doctypeDefinition.
 	documentURI := anExternalSubsetURIString.
+	doctypeDefinition := aSAXDriver doctypeDefinition.
 ]

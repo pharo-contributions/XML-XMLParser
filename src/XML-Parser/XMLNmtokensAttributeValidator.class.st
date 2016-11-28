@@ -7,13 +7,23 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
+{ #category : #accessing }
+XMLNmtokensAttributeValidator class >> standaloneExternalClass [
+	^ XMLStandaloneExternalNmtokensAttributeValidator
+]
+
+{ #category : #testing }
+XMLNmtokensAttributeValidator >> isNmtokens [
+	^ true
+]
+
 { #category : #validating }
 XMLNmtokensAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 	self
 		spaceSeparatedListValuesIn: aDefaultValue
 		do: [:each |
 			each isXMLNmtoken
-				ifFalse: [self errorInvalidDefaultValue: aDefaultValue]]
+				ifFalse: [self errorInvalidDefaultAttributeValue: aDefaultValue]]
 ]
 
 { #category : #validating }

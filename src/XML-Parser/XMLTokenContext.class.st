@@ -4,8 +4,22 @@ This is an abstract class for token contexts to control tokenization. Subclasses
 Class {
 	#name : #XMLTokenContext,
 	#superclass : #Object,
+	#classInstVars : [
+		'instance'
+	],
 	#category : #'XML-Parser-Drivers'
 }
+
+{ #category : #accessing }
+XMLTokenContext class >> instance [
+	^ instance
+		ifNil: [instance := self basicNew initialize]
+]
+
+{ #category : #'instance creation' }
+XMLTokenContext class >> new [
+	^ self instance
+]
 
 { #category : #testing }
 XMLTokenContext >> canTerminateInput [
@@ -58,11 +72,6 @@ XMLTokenContext >> isInternalSubsetContext [
 ]
 
 { #category : #testing }
-XMLTokenContext >> isLiteralValueContext [
-	^ false
-]
-
-{ #category : #testing }
 XMLTokenContext >> isPostDoctypeDeclarationContext [
 	^ false
 ]
@@ -105,9 +114,4 @@ XMLTokenContext >> supportsEncodingDetection [
 { #category : #changing }
 XMLTokenContext >> terminatedContext [
 	^ XMLTerminatedContext new
-]
-
-{ #category : #changing }
-XMLTokenContext >> textDeclarationContext [
-	^ XMLTextDeclarationContext previousContext: self
 ]

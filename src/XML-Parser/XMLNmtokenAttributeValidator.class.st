@@ -7,6 +7,11 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
+{ #category : #accessing }
+XMLNmtokenAttributeValidator class >> standaloneExternalClass [
+	^ XMLStandaloneExternalNmtokenAttributeValidator
+]
+
 { #category : #private }
 XMLNmtokenAttributeValidator >> errorInvalidNmtoken: aName [
 	XMLValidationException
@@ -16,10 +21,15 @@ XMLNmtokenAttributeValidator >> errorInvalidNmtoken: aName [
 		with: self element
 ]
 
+{ #category : #testing }
+XMLNmtokenAttributeValidator >> isNmtoken [
+	^ true
+]
+
 { #category : #validating }
 XMLNmtokenAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 	aDefaultValue isXMLNmtoken
-		ifFalse: [self errorInvalidDefaultValue: aDefaultValue]
+		ifFalse: [self errorInvalidDefaultAttributeValue: aDefaultValue]
 ]
 
 { #category : #validating }

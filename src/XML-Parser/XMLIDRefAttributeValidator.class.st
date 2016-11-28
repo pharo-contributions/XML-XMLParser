@@ -5,25 +5,37 @@ Class {
 	#name : #XMLIDRefAttributeValidator,
 	#superclass : #XMLAttributeValidator,
 	#instVars : [
-		'elementIdValidator'
+		'elementIDValidator'
 	],
 	#category : #'XML-Parser-Validation'
 }
 
 { #category : #accessing }
+XMLIDRefAttributeValidator class >> standaloneExternalClass [
+	^ XMLStandaloneExternalIDRefAttributeValidator
+]
+
+{ #category : #accessing }
 XMLIDRefAttributeValidator >> elementIDValidator [
-	^ elementIdValidator
+	^ elementIDValidator
 ]
 
 { #category : #initialization }
 XMLIDRefAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
-	elementIdValidator := aValidatorContainer elementIDValidator
+	super initializeWithValidatorsFrom: aValidatorContainer.
+
+	elementIDValidator := aValidatorContainer elementIDValidator.
+]
+
+{ #category : #testing }
+XMLIDRefAttributeValidator >> isIDRef [
+	^ true
 ]
 
 { #category : #validating }
 XMLIDRefAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 	aDefaultValue isXMLName
-		ifFalse: [self errorInvalidDefaultValue: aDefaultValue]
+		ifFalse: [self errorInvalidDefaultAttributeValue: aDefaultValue]
 ]
 
 { #category : #validating }

@@ -1,11 +1,12 @@
 "
-A read stream for single characters. (faster and less memory than converting a char to a string and creating a read stream on it)
+A read stream for single characters. This is faster and uses less memory than converting a char to a string and using a read stream on it.
 "
 Class {
 	#name : #XMLSingleCharacterReadStream,
 	#superclass : #Object,
 	#instVars : [
-		'character'
+		'character',
+		'atEnd'
 	],
 	#category : #'XML-Parser-Streams'
 }
@@ -17,7 +18,7 @@ XMLSingleCharacterReadStream class >> on: aCharacter [
 
 { #category : #testing }
 XMLSingleCharacterReadStream >> atEnd [
-	^ character == nil
+	^ atEnd
 ]
 
 { #category : #accessing }
@@ -27,7 +28,12 @@ XMLSingleCharacterReadStream >> basicNext [
 
 { #category : #closing }
 XMLSingleCharacterReadStream >> close [
-	character := nil
+	atEnd := true
+]
+
+{ #category : #accessing }
+XMLSingleCharacterReadStream >> contents [
+	^ String with: character
 ]
 
 { #category : #testing }
@@ -42,19 +48,36 @@ XMLSingleCharacterReadStream >> isStream [
 
 { #category : #accessing }
 XMLSingleCharacterReadStream >> next [
-	^ character ifNotNil: [:nextChar |
-		character := nil.
-		nextChar]
+	^ atEnd
+		ifTrue: [nil]
+		ifFalse: [
+			atEnd := true.
+			character]
 ]
 
 { #category : #initialization }
 XMLSingleCharacterReadStream >> on: aCharacter [
-	character := aCharacter
+	character := aCharacter.
+	atEnd := false.
 ]
 
 { #category : #accessing }
 XMLSingleCharacterReadStream >> peek [
-	^ character
+	^ atEnd
+		ifTrue: [nil]
+		ifFalse: [character]
+]
+
+{ #category : #positioning }
+XMLSingleCharacterReadStream >> position [
+	^ atEnd
+		ifTrue: [1]
+		ifFalse: [0]
+]
+
+{ #category : #positioning }
+XMLSingleCharacterReadStream >> position: anInteger [
+	atEnd := anInteger > 0
 ]
 
 { #category : #printing }
@@ -64,4 +87,18 @@ XMLSingleCharacterReadStream >> printOn: aStream [
 		nextPut: $(;
 		print: character;
 		nextPut: $).
+]
+
+{ #category : #positioning }
+XMLSingleCharacterReadStream >> reset [
+	atEnd := false
+]
+
+{ #category : #accessing }
+XMLSingleCharacterReadStream >> upToEnd [
+	^ atEnd
+		ifTrue: [String new]
+		ifFalse: [
+			atEnd := true.
+			String with: character]
 ]

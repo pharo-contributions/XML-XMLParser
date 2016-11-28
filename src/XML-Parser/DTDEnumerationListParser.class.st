@@ -1,14 +1,11 @@
 "
-This is a parser of lists in the form of ""(one|two|three)""
-(Assumes spaces have been removed)
+This is a parser of lists in the form of ""(one|two|...)"".  It assumes there is no whitespace around the ""|"" separated list values.
 "
 Class {
 	#name : #DTDEnumerationListParser,
 	#superclass : #Object,
 	#instVars : [
-		'listString',
-		'listValues',
-		'startIndex'
+		'listString'
 	],
 	#category : #'XML-Parser-DTD'
 }
@@ -19,46 +16,59 @@ DTDEnumerationListParser class >> on: aString [
 ]
 
 { #category : #private }
-DTDEnumerationListParser >> addListValue: aListValue [
-	| oldSize |
-
-	"checking the size avoids includes: hash lookup"
-	oldSize := listValues size.
-	listValues add: aListValue.
-	(listValues size > oldSize)
-		ifFalse: [self errorDuplicateListValue: aListValue].
-]
-
-{ #category : #private }
 DTDEnumerationListParser >> errorDuplicateListValue: aValue [
 	XMLValidationException
 		formatSignal: 'Duplicate value "{1}" in list'
 		with: aValue
 ]
 
+{ #category : #private }
+DTDEnumerationListParser >> listEndOffset [
+	^ 1 "')' size"
+]
+
+{ #category : #private }
+DTDEnumerationListParser >> listStartOffset [
+	^ 1 "'(' size"
+]
+
 { #category : #initialization }
 DTDEnumerationListParser >> on: aString [
-	listString := aString.
-	listValues := Set new.
-	startIndex := 2.
+	listString := aString
 ]
 
 { #category : #parsing }
 DTDEnumerationListParser >> parse [
 	"the tokenizer removes all spaces from lists"
-	| valueStartIndex nextChar |
+	| listStartIndex listEndIndex totalListValues listValues nextListValuesIndex nextValueStartIndex |
 
-	valueStartIndex := startIndex.
-	startIndex to: listString size do: [:i | 
-		((nextChar := listString at: i) == $)
-			or: [nextChar == $|])
+	listStartIndex := 1 + self listStartOffset.
+	listEndIndex := listString size - self listEndOffset.
+	totalListValues := 1.
+	listStartIndex to: listEndIndex do: [:i |
+		(listString at: i) == $|
+			ifTrue: [totalListValues := totalListValues + 1]].
+
+	listValues := Array new: totalListValues.
+	nextListValuesIndex := 1.
+	nextValueStartIndex := listStartIndex.
+	listStartIndex to: listEndIndex do: [:i | 
+		(listString at: i) == $|
 			ifTrue: [
-				self addListValue:
-					(listString
-						copyFrom: valueStartIndex
-						to: i - 1).
-				nextChar == $)
-					ifTrue: [^ listValues].
-				valueStartIndex := i + 1]].
+				listValues
+					at: nextListValuesIndex
+					put:
+						(listString
+							copyFrom: nextValueStartIndex
+							to: i - 1).
+				nextListValuesIndex := nextListValuesIndex + 1.
+				nextValueStartIndex := i + 1]].
+	listValues
+		at: nextListValuesIndex
+		put:
+			(listString
+				copyFrom: nextValueStartIndex
+				to: listEndIndex).
+
 	^ listValues.
 ]

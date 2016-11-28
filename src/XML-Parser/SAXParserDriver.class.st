@@ -3,24 +3,26 @@ SAXParserDriver together with SAXHandler provides a SAX-like API for XML parsing
 "
 Class {
 	#name : #SAXParserDriver,
-	#superclass : #XMLParserDriver,
+	#superclass : #DTDSubsetParserDriver,
 	#instVars : [
 		'saxHandler',
 		'elementNester',
 		'scopeAllocator',
-		'doctypeDefinition',
 		'validator',
-		'isStandalone',
-		'hasUnhandledReservedAttributes',
 		'externalSubsetSystemID',
-		'externalSubsetPublicID'
+		'externalSubsetPublicID',
+		'isStandalone',
+		'isHandlingDTD',
+		'hasParameterEntityReferences',
+		'hasSkippedParameterEntityReferences',
+		'hasUnhandledReservedAttributes'
 	],
 	#category : #'XML-Parser-Drivers'
 }
 
 { #category : #'instance creation' }
-SAXParserDriver class >> saxHandler: aHandler [
-	^ self new setSAXHandler: aHandler
+SAXParserDriver class >> saxHandler: aSAXHandler [
+	^ self new setSAXHandler: aSAXHandler
 ]
 
 { #category : #accessing }
@@ -70,11 +72,6 @@ SAXParserDriver >> decodesCharacters [
 	^ self saxHandler decodesCharacters
 ]
 
-{ #category : #accessing }
-SAXParserDriver >> doctypeDefinition [
-	^ doctypeDefinition
-]
-
 { #category : #private }
 SAXParserDriver >> doctypeDefinitionClass [
 	^ DTDDoctypeDefinition
@@ -98,26 +95,6 @@ SAXParserDriver >> elementNester [
 { #category : #private }
 SAXParserDriver >> errorDocumentConstraintsRequired [
 	XMLValidationException signal: 'Document validation constraints required'
-]
-
-{ #category : #private }
-SAXParserDriver >> errorImproperParameterEntityNesting [
-	XMLValidationException signal:
-		'Improper nesting of parameter entity replacement within DTD subset'
-]
-
-{ #category : #private }
-SAXParserDriver >> errorUndeclaredGeneralEntityReference: aName [
-	XMLValidationException
-		formatSignal: 'Undeclared general entity reference &{1};'
-		with: aName
-]
-
-{ #category : #private }
-SAXParserDriver >> errorUndeclaredParameterEntityReference: aName [
-	XMLValidationException
-		formatSignal: 'Undeclared parameter entity reference %{1};'
-		with: aName
 ]
 
 { #category : #accessing }
@@ -186,20 +163,19 @@ SAXParserDriver >> extractNamespacesFromAttributes: anOrderPreservingDictionary 
 
 { #category : #'handling - dtd' }
 SAXParserDriver >> handleAttributeDeclaration: anElement name: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
-	self isValidating
-		ifTrue: [
-			self doctypeDefinition
-				addValidatorForAttributeIn: anElement
-				named: anAttribute
-				type: aType
-				defaultPragma: aDefaultPragma
-				defaultValue: aDefaultValue].
+	super
+		handleAttributeDeclaration: anElement
+		name: anAttribute
+		type: aType
+		defaultPragma: aDefaultPragma
+		defaultValue: aDefaultValue.
+
 	self saxHandler
 		attributeDeclaration: anElement
 		name: anAttribute
 		type: aType
 		defaultPragma: aDefaultPragma
-		defaultValue: aDefaultValue
+		defaultValue: aDefaultValue.
 ]
 
 { #category : #handling }
@@ -226,15 +202,13 @@ SAXParserDriver >> handleComment: aString [
 
 { #category : #'handling - dtd' }
 SAXParserDriver >> handleElementDeclaration: aName contentModel: aContentModel [
-	self isValidating
-		ifTrue: [
-			self doctypeDefinition
-				addValidatorForElement: aName
-				contentModel: aContentModel].
+	super
+		handleElementDeclaration: aName
+		contentModel: aContentModel.
 
 	self saxHandler
 		elementDeclaration: aName
-		contentModel: aContentModel
+		contentModel: aContentModel.
 ]
 
 { #category : #handling }
@@ -244,11 +218,14 @@ SAXParserDriver >> handleEndContentEntityReplacement: aName [
 
 { #category : #'handling - dtd' }
 SAXParserDriver >> handleEndDTD [
-	self hasExternalSubsetToParse
+	(self resolvesExternalEntities
+		and: [self hasExternalSubset
+			and: [self isValidating
+				or: [self isStandalone not]]])
 		ifTrue: [self parseExternalSubset].
-
 	self isValidating
 		ifTrue: [self doctypeDefinition validateCompletedDefinition].
+	isHandlingDTD := false.
 
 	self saxHandler
 		doctypeDefinition: self doctypeDefinition;
@@ -289,26 +266,11 @@ SAXParserDriver >> handleEndTag: anElement [
 
 { #category : #'handling - dtd' }
 SAXParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotation [
-	aNotation isEmpty
-		ifTrue: [
-			self resolvesExternalEntities
-				ifTrue: [
-					self doctypeDefinition
-						addExternalGeneralEntity: aName
-						resolver: self externalEntityResolver
-						publicID: aPublicID
-						systemID: aSystemID
-						baseURI: self baseURI]
-				ifFalse: [
-					(self isValidating
-						or: [self isStandalone])
-						ifTrue: [
-							self doctypeDefinition
-								addUnresolvableExternalGeneralEntity: aName]]]
-		ifFalse: [
-			self doctypeDefinition
-				addUnparsedEntity: aName
-				ndata: aNotation].
+	super
+		handleGeneralEntityDeclaration: aName
+		publicID: aPublicID
+		systemID: aSystemID
+		ndata: aNotation.
 
 	self saxHandler
 		generalEntityDeclaration: aName
@@ -319,40 +281,21 @@ SAXParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicID sys
 
 { #category : #'handling - dtd' }
 SAXParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplacement [
-	self doctypeDefinition
-		addInternalGeneralEntity: aName
-		replacement: aReplacement
-		baseURI: self baseURI.
+	super
+		handleGeneralEntityDeclaration: aName
+		replacement: aReplacement.
 
 	self saxHandler
 		generalEntityDeclaration: aName
 		replacement: aReplacement.
 ]
 
-{ #category : #handling }
-SAXParserDriver >> handleGeneralEntityReference: aName [
-	^ self doctypeDefinition
-		generalEntityAt: aName
-		ifAbsent: [
-			self isValidating
-				ifTrue: [self errorUndeclaredGeneralEntityReference: aName].
-			nil]
-]
-
-{ #category : #'handling - dtd' }
-SAXParserDriver >> handleImproperParameterEntityNesting [
-	"this is a validity constraint and is only checked when validating"
-	self isValidating
-		ifTrue: [self errorImproperParameterEntityNesting]
-]
-
 { #category : #'handling - dtd' }
 SAXParserDriver >> handleNotationDeclaration: aName publicID: aPublicID systemID: aSystemID [
-	self isValidating
-		ifTrue: [
-			self doctypeDefinition unparsedEntityValidator
-				validateNotation: aName].
-	self doctypeDefinition addNotation: aName.
+	super
+		handleNotationDeclaration: aName
+		publicID: aPublicID
+		systemID: aSystemID.
 
 	self saxHandler
 		notationDeclaration: aName
@@ -384,20 +327,10 @@ SAXParserDriver >> handlePI: aTargetString data: aDataString [
 
 { #category : #'handling - dtd' }
 SAXParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
-	self resolvesExternalEntities
-		ifTrue: [
-			self doctypeDefinition
-				addExternalParameterEntity: aName
-				resolver: self externalEntityResolver
-				publicID: aPublicID
-				systemID: aSystemID
-				baseURI: self baseURI]
-		ifFalse: [
-			(self isValidating
-				or: [self isStandalone])
-				ifTrue: [
-					self doctypeDefinition
-						addUnresolvableExternalParameterEntity: aName]].
+	super
+		handleParameterEntityDeclaration: aName
+		publicID: aPublicID
+		systemID: aSystemID.
 
 	self saxHandler
 		parameterEntityDeclaration: aName
@@ -407,29 +340,13 @@ SAXParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicID s
 
 { #category : #'handling - dtd' }
 SAXParserDriver >> handleParameterEntityDeclaration: aName replacement: aReplacement [
-	self doctypeDefinition
-		addInternalParameterEntity: aName
-		replacement:aReplacement
-		baseURI: self baseURI.
+	super
+		handleParameterEntityDeclaration: aName
+		replacement: aReplacement.
 
 	self saxHandler
 		parameterEntityDeclaration: aName
 		replacement: aReplacement.
-]
-
-{ #category : #'handling - dtd' }
-SAXParserDriver >> handleParameterEntityReference: aName [
-	^ self doctypeDefinition
-		parameterEntityAt: aName
-		ifAbsent: [
-			self isValidating
-				ifTrue: [self errorUndeclaredParameterEntityReference: aName].
-			nil]
-]
-
-{ #category : #handling }
-SAXParserDriver >> handleParseError: aString [
-	XMLWellFormednessException signal: aString
 ]
 
 { #category : #private }
@@ -465,6 +382,7 @@ SAXParserDriver >> handleStartContentEntityReplacement: aName [
 SAXParserDriver >> handleStartDTD: aRoot publicID: aPublicID systemID: aSystemID [
 	externalSubsetPublicID := aPublicID.
 	externalSubsetSystemID := aSystemID.
+	isHandlingDTD := true.
 
 	self doctypeDefinition root: aRoot.
 	self saxHandler
@@ -491,14 +409,18 @@ SAXParserDriver >> handleStartTag: anElement attributes: aDictionary [
 				ifTrue: [self validateRootElement: anElement].
 			self validator
 				validateStartTag: anElement
-				attributes: aDictionary.
-			"validation can add attributes"
-			aDictionary size > totalAttributes
-				ifTrue: [
-					self
-						checkForReservedAttributesIn: aDictionary
-						afterIndex: totalAttributes.
-					totalAttributes := aDictionary size]].
+				attributes: aDictionary]
+		ifFalse: [
+			self doctypeDefinition
+				processStartTag: anElement
+				attributes: aDictionary].
+	"validation and processing can add attributes"
+	aDictionary size > totalAttributes
+		ifTrue: [
+			self
+				checkForReservedAttributesIn: aDictionary
+				afterIndex: totalAttributes.
+			totalAttributes := aDictionary size].
 	self usesNamespaces
 		ifTrue: [
 			currentScope := self scopeAllocator enterScope.
@@ -543,12 +465,15 @@ SAXParserDriver >> handleUnreplacedGeneralEntityReference: aName [
 
 { #category : #handling }
 SAXParserDriver >> handleWhitespace: aString [
-	self isValidating
+	(self isValidating
+		and: [self validator hasElementValidators])
 		ifTrue: [
-			self validator hasElementContent
+			self validator currentElementIgnoresWhitespace
 				ifTrue: [
 					(self elementNester hasScopedAttributes
-						and: [(self elementNester scopedAttributeAt: 'xml:space') = 'preserve'])
+						and: [
+							(self elementNester scopedAttributeAt: 'xml:space') =
+								'preserve'])
 						ifTrue: [self saxHandler characters: aString]
 						ifFalse: [self saxHandler ignorableWhitespace: aString].
 					^ self].
@@ -567,16 +492,19 @@ SAXParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: a
 ]
 
 { #category : #testing }
-SAXParserDriver >> hasExternalSubsetToParse [
-	self resolvesExternalEntities
-		ifFalse: [^ false].
+SAXParserDriver >> hasExternalSubset [
+	^ self externalSubsetPublicID notEmpty
+		or: [self externalSubsetSystemID notEmpty]
+]
 
-	(self externalSubsetPublicID notEmpty
-		or: [self externalSubsetSystemID notEmpty])
-		ifFalse: [^ false].
-	
-	^ self isValidating
-		or: [self isStandalone not].
+{ #category : #testing }
+SAXParserDriver >> hasParameterEntityReferences [
+	^ hasParameterEntityReferences
+]
+
+{ #category : #testing }
+SAXParserDriver >> hasSkippedParameterEntityReferences [
+	^ hasSkippedParameterEntityReferences
 ]
 
 { #category : #private }
@@ -589,14 +517,35 @@ SAXParserDriver >> haveNoUnhandledReservedAttributes [
 	hasUnhandledReservedAttributes := false
 ]
 
+{ #category : #accessing }
+SAXParserDriver >> haveParameterEntityReferences [
+	hasParameterEntityReferences := true
+]
+
+{ #category : #accessing }
+SAXParserDriver >> haveSkippedParameterEntityReferences [
+	hasSkippedParameterEntityReferences := true
+]
+
 { #category : #private }
 SAXParserDriver >> haveUnhandledReservedAttributes [
 	hasUnhandledReservedAttributes := true
 ]
 
 { #category : #testing }
+SAXParserDriver >> isHandlingDTD [
+	^ isHandlingDTD
+]
+
+{ #category : #testing }
 SAXParserDriver >> isStandalone [
 	^ isStandalone
+]
+
+{ #category : #testing }
+SAXParserDriver >> isStandaloneExternal [
+	^ self isStandalone
+		and: [self currentEntity notNil]
 ]
 
 { #category : #testing }
@@ -684,14 +633,17 @@ SAXParserDriver >> setRootElement: anElement currentScope: aNamespaceScope [
 ]
 
 { #category : #initialization }
-SAXParserDriver >> setSAXHandler: aHandler [
-	saxHandler := aHandler.
+SAXParserDriver >> setSAXHandler: aSAXHandler [
+	saxHandler := aSAXHandler.
 	doctypeDefinition := self doctypeDefinitionClass new.
-	validator := (aHandler schema ifNil: [doctypeDefinition]) newValidator.
+	validator := (aSAXHandler schema ifNil: [doctypeDefinition]) newValidator.
 	elementNester := self elementNesterClass new.
 	externalSubsetPublicID := ''.
 	externalSubsetSystemID := ''.
 	isStandalone := false.
+	isHandlingDTD := false.
+	hasParameterEntityReferences := false.
+	hasSkippedParameterEntityReferences := false.
 	hasUnhandledReservedAttributes := false.
 ]
 

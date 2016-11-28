@@ -1,5 +1,5 @@
 "
-A base class for read stream adapters for basic streams that support #next, #peek, and #atEnd. It adds support for skipping and reading upto a character or the end of the stream, but not #contents because that would require the wrapped stream support positioning.
+A base class for read stream adapters for basic streams that support #next, #peek, #atEnd, #position, #position:, and #reset. It adds support for skipping and reading upto a character or the end of the stream.
 "
 Class {
 	#name : #XMLReadStreamAdapter,
@@ -17,6 +17,17 @@ XMLReadStreamAdapter >> basicNext [
 	stream atEnd
 		ifTrue: [^ nil]
 		ifFalse: [^ stream next]
+]
+
+{ #category : #accessing }
+XMLReadStreamAdapter >> contents [
+	| oldPosition contents |
+
+	oldPosition := self position.
+	self reset.
+	contents := self upToEnd.
+	self position: oldPosition.
+	^ contents.
 ]
 
 { #category : #private }
@@ -59,6 +70,21 @@ XMLReadStreamAdapter >> peekFor: anObject [
 			self next.
 			^ true]
 		ifFalse: [^ false]
+]
+
+{ #category : #positioning }
+XMLReadStreamAdapter >> position [
+	^ stream position
+]
+
+{ #category : #positioning }
+XMLReadStreamAdapter >> position: anInteger [
+	stream position: anInteger
+]
+
+{ #category : #positioning }
+XMLReadStreamAdapter >> reset [
+	stream reset
 ]
 
 { #category : #positioning }

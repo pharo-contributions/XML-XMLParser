@@ -100,7 +100,6 @@ XMLFileHandle >> basicFileSize [
 
 { #category : #accessing }
 XMLFileHandle >> contents [
-	"the read stream adapters don't support #contents so #upToEnd is used instead"
 	^ self readStreamDo: [:readStream | readStream upToEnd]
 ]
 
@@ -177,7 +176,6 @@ XMLFileHandle >> getUpToLimit: aMaxSize decoding: aBoolean [
 		self
 			streamGetUpToLimit: aMaxSize
 			decoding: aBoolean.
-	"the read stream adapters don't support #contents so #upToEnd is used instead"
 	contents := stream upToEnd.
 	stream close.
 
@@ -256,13 +254,8 @@ XMLFileHandle >> rawWriteStream [
 XMLFileHandle >> readStream [
 	"returns a file read stream with decoding"
 
-	| decodingReadStreamAdapter |
-	
-	decodingReadStreamAdapter :=
-		XMLDecodingReadStreamAdapter on: self rawReadStream.
-	(XMLFileStreamEncodingDetector on: decodingReadStreamAdapter)
-		detectCurrentEncoding.
-	^ decodingReadStreamAdapter.
+	^ (XMLDecodingReadStreamAdapter on: self rawReadStream)
+		detectEncoding
 ]
 
 { #category : #reading }

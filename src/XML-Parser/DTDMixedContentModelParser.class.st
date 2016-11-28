@@ -11,8 +11,7 @@ Class {
 DTDMixedContentModelParser >> parse [
 	^ XMLMixedContentElementValidator
 		element: element
-		allowedElements:
-			((DTDEnumerationListParser on: contentModel) parse
-				remove: '#PCDATA';
-				yourself)
+		allowedContent:
+			(DTDMixedContentEnumerationListParser on: contentModel)
+				parse
 ]

@@ -10,9 +10,21 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
+{ #category : #accessing }
+XMLEntityAttributeValidator class >> standaloneExternalClass [
+	^ XMLStandaloneExternalEntityAttributeValidator
+]
+
 { #category : #initialization }
 XMLEntityAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
+	super initializeWithValidatorsFrom: aValidatorContainer.
+
 	unparsedEntityValidator := aValidatorContainer unparsedEntityValidator
+]
+
+{ #category : #testing }
+XMLEntityAttributeValidator >> isEntity [
+	^ true
 ]
 
 { #category : #accessing }
@@ -23,7 +35,7 @@ XMLEntityAttributeValidator >> unparsedEntityValidator [
 { #category : #validating }
 XMLEntityAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 	aDefaultValue isXMLName
-		ifFalse: [self errorInvalidDefaultValue: aDefaultValue]
+		ifFalse: [self errorInvalidDefaultAttributeValue: aDefaultValue]
 ]
 
 { #category : #validating }

@@ -12,8 +12,13 @@ XMLEmptyElementValidator >> atEnd [
 	^ true
 ]
 
+{ #category : #testing }
+XMLEmptyElementValidator >> isEmpty [
+	^ true
+]
+
 { #category : #accessing }
-XMLEmptyElementValidator >> type [
+XMLEmptyElementValidator >> typeName [
 	^ 'EMPTY'
 ]
 

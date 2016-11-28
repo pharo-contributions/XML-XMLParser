@@ -278,13 +278,18 @@ XMLDOMParser >> setupInnerXMLDocumentForParser: aParser [
 
 { #category : #private }
 XMLDOMParser >> setupInnerXMLNodesForParser: aParser [
+	| context |
+
 	self nodeStack do: [:each |
 		each isElement
 			ifTrue: [
 				self
 					startInnerXMLElement: each
 					forParser: aParser]].
-	aParser context: self topNode newInnerXMLContext.
+
+	(context := self topNode newInnerXMLContext) isContentContext
+		ifTrue: [isInContent := true].
+	aParser context: context.
 ]
 
 { #category : #'handling - lexical' }

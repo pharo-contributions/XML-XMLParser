@@ -5,34 +5,24 @@ Class {
 	#name : #XMLIDAttributeValidator,
 	#superclass : #XMLAttributeValidator,
 	#instVars : [
-		'elementIdValidator'
+		'elementIDValidator'
 	],
 	#category : #'XML-Parser-Validation'
 }
 
-{ #category : #private }
-XMLIDAttributeValidator class >> classForAttribute: anAttribute [
-	anAttribute = 'xml:id'
-		ifTrue: [^ XMLIDAttributeXMLIDValidator]
-		ifFalse: [^ XMLIDAttributeValidator]
-]
-
-{ #category : #'instance creation' }
-XMLIDAttributeValidator class >> element: anElement attribute: anAttribute defaultValidator: aDefaultValidator [
-	^ (self classForAttribute: anAttribute) new
-		setElement: anElement
-		attribute: anAttribute
-		defaultValidator: aDefaultValidator
+{ #category : #accessing }
+XMLIDAttributeValidator class >> standaloneExternalClass [
+	^ XMLStandaloneExternalIDAttributeValidator
 ]
 
 { #category : #accessing }
 XMLIDAttributeValidator >> elementIDValidator [
-	^ elementIdValidator
+	^ elementIDValidator
 ]
 
 { #category : #accessing }
 XMLIDAttributeValidator >> elementIDValidator: anElementIDValidator [
-	elementIdValidator := anElementIDValidator
+	elementIDValidator := anElementIDValidator
 ]
 
 { #category : #private }
@@ -47,16 +37,23 @@ XMLIDAttributeValidator >> errorIDAttributeMustBeRequiredOrImplied [
 
 { #category : #initialization }
 XMLIDAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
-	elementIdValidator := aValidatorContainer elementIDValidator
+	super initializeWithValidatorsFrom: aValidatorContainer.
+
+	elementIDValidator := aValidatorContainer elementIDValidator.
+]
+
+{ #category : #testing }
+XMLIDAttributeValidator >> isID [
+	^ true
 ]
 
 { #category : #validating }
 XMLIDAttributeValidator >> validateAttributeDeclaration [
-	super validateAttributeDeclaration.
-
 	self elementIDValidator
 		validateIDAttribute: self attribute
 		forElement: self element.
+
+	super validateAttributeDeclaration.
 ]
 
 { #category : #validating }

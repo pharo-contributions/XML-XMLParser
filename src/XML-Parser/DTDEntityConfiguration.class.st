@@ -35,7 +35,8 @@ DTDEntityConfiguration >> postCopy [
 
 { #category : #accessing }
 DTDEntityConfiguration >> preservesUndeclaredEntityReferences [
-	^ preservesUndeclaredEntityReferences ifNil: [preservesUndeclaredEntityReferences := false]
+	^ preservesUndeclaredEntityReferences
+		ifNil: [preservesUndeclaredEntityReferences := false]
 ]
 
 { #category : #accessing }

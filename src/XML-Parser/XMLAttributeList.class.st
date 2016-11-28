@@ -323,14 +323,23 @@ XMLAttributeList >> writeAttributesOn: aWriter [
 ]
 
 { #category : #private }
-XMLAttributeList >> writeSortedAttributesOn: aWriter [
+XMLAttributeList >> writeCanonicalAttributesOn: aWriter [
 	| sortedAttributes |
 
-	sortedAttributes := self sorted.
+	sortedAttributes :=
+		self sorted: [:a :b | | aNamespaceURI bNamespaceURI |
+			"the namespace URI is the primary key and
+			the local name is the secondary key"
+			aNamespaceURI := a namespaceURI.
+			bNamespaceURI := b namespaceURI.
+			aNamespaceURI < bNamespaceURI
+				or: [aNamespaceURI = bNamespaceURI
+					and: [a localName <= b localName]]].
+
 	"use to:do: for fast writing"
 	1 to: sortedAttributes size do: [:i | | attribute |
 		attribute := sortedAttributes at: i.
 		aWriter
 			writeAttributeName: attribute name
-			value: attribute value]
+			value: attribute value].
 ]

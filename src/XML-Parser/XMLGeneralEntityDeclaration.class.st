@@ -19,6 +19,11 @@ XMLGeneralEntityDeclaration class >> name: aName publicID: aPublicID systemID: a
 		ndata: aNotationName
 ]
 
+{ #category : #testing }
+XMLGeneralEntityDeclaration >> isUnparsed [
+	^ self ndata notEmpty
+]
+
 { #category : #accessing }
 XMLGeneralEntityDeclaration >> ndata [
 	^ ndata ifNil: [ndata := '']

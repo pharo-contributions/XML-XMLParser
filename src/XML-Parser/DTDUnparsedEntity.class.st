@@ -5,15 +5,19 @@ Class {
 	#name : #DTDUnparsedEntity,
 	#superclass : #DTDEntity,
 	#instVars : [
-		'ndata'
+		'ndata',
+		'publicID',
+		'systemID'
 	],
 	#category : #'XML-Parser-DTD'
 }
 
 { #category : #'instance creation' }
-DTDUnparsedEntity class >> name: aName ndata: aNotationName [
+DTDUnparsedEntity class >> name: aName publicID: aPublicID systemID: aSystemID ndata: aNotationName [
 	^ self new
 		setName: aName
+		publicID: aPublicID
+		systemID: aSystemID
 		ndata: aNotationName
 ]
 
@@ -32,8 +36,30 @@ DTDUnparsedEntity >> ndata: aNotationName [
 	ndata := aNotationName
 ]
 
+{ #category : #accessing }
+DTDUnparsedEntity >> publicID [
+	^ publicID ifNil: [publicID := '']
+]
+
+{ #category : #accessing }
+DTDUnparsedEntity >> publicID: aPublicID [
+	publicID := aPublicID
+]
+
 { #category : #initialization }
-DTDUnparsedEntity >> setName: aName ndata: aNotationName [
+DTDUnparsedEntity >> setName: aName publicID: aPublicID systemID: aSystemID ndata: aNotationName [
 	name := aName.
+	publicID := aPublicID.
+	systemID := aSystemID.
 	ndata := aNotationName.
+]
+
+{ #category : #accessing }
+DTDUnparsedEntity >> systemID [
+	^ systemID ifNil: [systemID := '']
+]
+
+{ #category : #accessing }
+DTDUnparsedEntity >> systemID: aSystemID [
+	systemID := aSystemID
 ]

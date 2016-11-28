@@ -7,13 +7,23 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
+{ #category : #accessing }
+XMLIDRefsAttributeValidator class >> standaloneExternalClass [
+	^ XMLStandaloneExternalIDRefsAttributeValidator
+]
+
+{ #category : #testing }
+XMLIDRefsAttributeValidator >> isIDRefs [
+	^ true
+]
+
 { #category : #validating }
 XMLIDRefsAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 	self
 		spaceSeparatedListValuesIn: aDefaultValue
 		do: [:each |
 			each isXMLName
-				ifFalse: [self errorInvalidDefaultValue: aDefaultValue]]
+				ifFalse: [self errorInvalidDefaultAttributeValue: aDefaultValue]]
 ]
 
 { #category : #validating }

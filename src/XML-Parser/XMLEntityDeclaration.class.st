@@ -33,6 +33,11 @@ XMLEntityDeclaration >> isParameter [
 	^ false
 ]
 
+{ #category : #testing }
+XMLEntityDeclaration >> isUnparsed [
+	^ false
+]
+
 { #category : #accessing }
 XMLEntityDeclaration >> name [
 	^ name ifNil: [name := '']

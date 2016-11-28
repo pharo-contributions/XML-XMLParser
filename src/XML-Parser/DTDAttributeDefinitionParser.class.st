@@ -1,5 +1,5 @@
 "
-This class parses an attribute definition in an ATTLIST declaration and returns a new XMLAttributeValidator for it.
+This class parses an attribute definition in an ATTLIST declaration and returns a new XMLAttributeValidator for it. It assumes the type has already been checked for well-formedness by the tokenizer and that it contains a value like ""ID"", ""ENTITY"", or an enumeration list.
 "
 Class {
 	#name : #DTDAttributeDefinitionParser,
@@ -8,14 +8,25 @@ Class {
 		'element',
 		'attribute',
 		'type',
-		'defaultValidator'
-	],
-	#classVars : [
-		'AttributeDefaultValidatorClasses',
-		'NonEnumerationAttributeValidatorClasses'
+		'defaultValidator',
+		'enumerationListParserClass'
 	],
 	#category : #'XML-Parser-DTD'
 }
+
+{ #category : #private }
+DTDAttributeDefinitionParser class >> attributeDefaultValidatorClassForPragma: aDefaultPragma [
+	"the default pragma should have been checked for well-formedness by the
+	tokenizer so it's either empty, 'FIXED', 'REQUIRED', or 'IMPLIED'"
+	aDefaultPragma size > 0
+		ifTrue: [
+			(aDefaultPragma at: 1) == $F
+				ifTrue: [^ XMLAttributeFixedValueDefaultValidator].
+			(aDefaultPragma at: 1) == $I
+				ifTrue: [^ XMLAttributeImpliedDefaultValidator].
+			^ XMLAttributeRequiredDefaultValidator].
+	^ XMLAttributeValueDefaultValidator.
+]
 
 { #category : #'instance creation' }
 DTDAttributeDefinitionParser class >> element: anElement attribute: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
@@ -24,78 +35,64 @@ DTDAttributeDefinitionParser class >> element: anElement attribute: anAttribute 
 		attribute: anAttribute
 		type: aType
 		defaultValidator:
-			((AttributeDefaultValidatorClasses at: aDefaultPragma)
+			((self attributeDefaultValidatorClassForPragma: aDefaultPragma)
 				attribute: anAttribute
-				defaultValue: aDefaultValue)
+				value: aDefaultValue)
 ]
 
-{ #category : #'class initialization' }
-DTDAttributeDefinitionParser class >> initialize [
-	"self initialize"
-
-	self
-		initializeAttributeDefaultValidatorClasses;
-		initializeNonEnumerationAttributeValidatorClasses
-]
-
-{ #category : #'class initialization' }
-DTDAttributeDefinitionParser class >> initializeAttributeDefaultValidatorClasses [
-	"assign the fully initialized object with #yourself to avoid
-	possible race conditions when reinitializing the class"
-	AttributeDefaultValidatorClasses :=
-		Dictionary new
-			at: '' put: XMLAttributeDefaultValueValidator;
-			at: 'FIXED' put: XMLAttributeDefaultFixedValueValidator;
-			at: 'IMPLIED' put: XMLAttributeDefaultImpliedValidator;
-			at: 'REQUIRED' put: XMLAttributeDefaultRequiredValidator;
-			yourself
-]
-
-{ #category : #'class initialization' }
-DTDAttributeDefinitionParser class >> initializeNonEnumerationAttributeValidatorClasses [
-	"assign the fully initialized object with #yourself to avoid
-	possible race conditions when reinitializing the class"
-	NonEnumerationAttributeValidatorClasses :=
-		Dictionary new
-			at: 'CDATA' put: XMLCDataAttributeValidator;
-			at: 'ID' put: XMLIDAttributeValidator;
-			at: 'IDREF' put: XMLIDRefAttributeValidator;
-			at: 'IDREFS' put: XMLIDRefsAttributeValidator;
-			at: 'ENTITY' put: XMLEntityAttributeValidator;
-			at: 'ENTITIES' put: XMLEntitiesAttributeValidator;
-			at: 'NMTOKEN' put: XMLNmtokenAttributeValidator;
-			at: 'NMTOKENS' put: XMLNmtokensAttributeValidator;
-			yourself
+{ #category : #private }
+DTDAttributeDefinitionParser >> attributeValidatorClassForType [
+	"the tokenizer should have checked the type for well-formedness
+	so it's only one of CDATA, ID, IDREF, IDREFS, etc"
+	(type at: 1) == $C
+		ifTrue: [^ XMLCDataAttributeValidator].
+	(type at: 1) == $I
+		ifTrue: [
+			type size = 2 "'ID' size"
+				ifTrue: [
+					attribute = 'xml:id'
+						ifTrue: [^ XMLXMLIDAttributeValidator].
+					^ XMLIDAttributeValidator].
+			type size = 5 "'IDREF' size"
+				ifTrue: [^ XMLIDRefAttributeValidator].
+			"'IDREF' size < 'IDREFS' size"
+			^ XMLIDRefsAttributeValidator].
+	(type at: 1) == $E
+		ifTrue: [
+			type size = 6 "'ENTITY' size"
+				ifTrue: [^ XMLEntityAttributeValidator].
+			"'ENTITY' size < 'ENTITIES' size"
+			^ XMLEntitiesAttributeValidator].
+	(type at: 1) == $N
+		ifTrue: [
+			type size = 7 "'NMTOKEN' size"
+				ifTrue: [^ XMLNmtokenAttributeValidator].
+			type size = 8 "'NMTOKENS' size"
+				ifTrue: [^ XMLNmtokensAttributeValidator].
+			"'NMTOKENS' size < 'NOTATION (' size"
+			enumerationListParserClass := DTDNotationEnumerationListParser.
+			^ XMLNotationEnumerationAttributeValidator].
+	"otherwise it's a (one|two|...) enumeration attribute"
+	enumerationListParserClass := DTDEnumerationListParser.
+	^ XMLEnumerationAttributeValidator.
 ]
 
 { #category : #parsing }
 DTDAttributeDefinitionParser >> parse [
-	^ (NonEnumerationAttributeValidatorClasses
-		at: type
-		ifAbsent: [^ self parseEnumerationAttributeDefinition])
-		element: element
-		attribute: attribute
-		defaultValidator: defaultValidator
-]
+	| validator |
+	
+	validator :=
+		self attributeValidatorClassForType
+			element: element
+			attribute: attribute
+			defaultValidator: defaultValidator.
 
-{ #category : #private }
-DTDAttributeDefinitionParser >> parseEnumerationAttributeDefinition [
-	| attributeValidatorClass enumerationListParserClass |
+	enumerationListParserClass
+		ifNotNil: [
+			validator allowedValues:
+				(enumerationListParserClass on: type) parse].
 
-	"either a '(...)' or 'NOTATION (...)' enumeration type"
-	(type at: 1) == $(
-		ifTrue: [
-			attributeValidatorClass := XMLEnumerationAttributeValidator.
-			enumerationListParserClass := DTDEnumerationListParser]
-		ifFalse: [
-			attributeValidatorClass := XMLNotationEnumerationAttributeValidator.
-			enumerationListParserClass := DTDNotationEnumerationListParser].
-
-	^ (attributeValidatorClass
-		element: element
-		attribute: attribute
-		defaultValidator: defaultValidator)
-			allowedValues: (enumerationListParserClass on: type) parse.
+	^ validator.
 ]
 
 { #category : #initialization }

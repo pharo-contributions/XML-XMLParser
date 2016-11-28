@@ -1,11 +1,12 @@
 "
-An abstract class for automatic encoding detectors for streams that infers encodings from byte order marks (BOM) or implicit UTF-16/32 encodings from null bytes before or after the first ASCII character.
+This is a class for automatic encoding detectors for streams that infers encodings from byte order marks (BOM) or implicit UTF-16/32 encodings from null bytes before or after the first ASCII character.
 "
 Class {
 	#name : #XMLEncodingDetector,
 	#superclass : #Object,
 	#instVars : [
-		'stream'
+		'stream',
+		'startPosition'
 	],
 	#classVars : [
 		'EncodingHandlerTable',
@@ -85,34 +86,13 @@ XMLEncodingDetector >> atEnd [
 ]
 
 { #category : #private }
-XMLEncodingDetector >> canSkipDetection [
-	^ self atEnd
-]
-
-{ #category : #private }
-XMLEncodingDetector >> decodeStreamWithConverter: aStreamConverter [
-	self subclassResponsibility
-]
-
-{ #category : #detecting }
-XMLEncodingDetector >> detectCurrentEncoding [
-	| handlerTableIndex handlerSelector |
-
-	self canSkipDetection
-		ifTrue: [^ self].
-
-	"the index is asciiValue + 1 for null"
-	((handlerTableIndex := self peek asciiValue + 1) <= EncodingHandlerTable size
-		and: [(handlerSelector := EncodingHandlerTable at: handlerTableIndex) notNil])
-		ifTrue: [self perform: handlerSelector].
-]
-
-{ #category : #private }
 XMLEncodingDetector >> handleBOM: aByteOrderMark forConverterClass: aConverterClass [
-	self
+	^ self
 		handleBOM: aByteOrderMark
 		forConverterClass: aConverterClass
-		ifUnmatched: [:matchedPortion | self pushBack: matchedPortion]
+		ifUnmatched: [:matchedPortion |
+			self resetStreamToStartPosition.
+			nil]
 ]
 
 { #category : #private }
@@ -121,79 +101,68 @@ XMLEncodingDetector >> handleBOM: aByteOrderMark forConverterClass: aConverterCl
 	1 to: aByteOrderMark size do: [:i |
 		self peek = (aByteOrderMark at: i)
 			ifFalse: [
-				aBlock value: (aByteOrderMark copyFrom: 1 to: i - 1).
-				^ self].
+				^ aBlock value: (aByteOrderMark copyFrom: 1 to: i - 1)].
 		self next].
 
-	self decodeStreamWithConverter: aConverterClass new.
+	^ aConverterClass new.
 ]
 
 { #category : #private }
 XMLEncodingDetector >> handleBigEndianUTF16BOM [
-	self
+	^ self
 		handleBOM: UTF16BigEndianBOM
 		forConverterClass: XMLUTF16BigEndianStreamConverter
 ]
 
 { #category : #private }
 XMLEncodingDetector >> handleBigEndianUTF32BOMOrImplicitEncoding [
-	self
+	^ self
 		handleBOM: UTF32BigEndianBOM
 		forConverterClass: XMLUTF32BigEndianStreamConverter
-		ifUnmatched: [:matchedPortion | | nextChar |
+		ifUnmatched: [:matchedPortion | | converter |
 			(matchedPortion size = 1 "one null char"
-				and: [(nextChar := self nextASCII) notNil])
-				ifTrue: [
-					self
-						decodeStreamWithConverter: XMLUTF16BigEndianStreamConverter new;
-						pushBackCharacter: nextChar]
+				and: [self peekForASCII])
+				ifTrue: [converter := XMLUTF16BigEndianStreamConverter new]
 				ifFalse: [
 					(matchedPortion size = 2  "two null chars"
-						and: [self peekForNull])
-						ifTrue: [
-							(nextChar := self nextASCII) notNil
-								ifTrue: [	
-									self
-										decodeStreamWithConverter: XMLUTF32BigEndianStreamConverter new;
-										pushBackCharacter: nextChar]
-								ifFalse: [self pushBack: (matchedPortion copyWith: NullCharacter)]]
-						ifFalse: [self pushBack: matchedPortion]]]
+						and: [self peekForNull "three null chars"
+							and: [self peekForASCII]]) 
+						ifTrue: [converter := XMLUTF32BigEndianStreamConverter new]].
+			self resetStreamToStartPosition.
+			converter]
 ]
 
 { #category : #private }
 XMLEncodingDetector >> handleLittleEndianImplicitEncoding [
-	| nextChar |
+	| converter |
 
-	nextChar := self nextASCII.
-	self peekForNull
+	(self peekForASCII
+		and: [self peekForNull])
 		ifTrue: [
-			self peekForNull
-				ifTrue: [
-					self next.
-					self decodeStreamWithConverter:
-						XMLUTF32LittleEndianStreamConverter new]
-				ifFalse: [
-					self decodeStreamWithConverter:
-						XMLUTF16LittleEndianStreamConverter new]].
-	self pushBackCharacter: nextChar.
+			converter :=
+				(self peekForNull
+					and: [self peekForNull])
+					ifTrue: [XMLUTF32LittleEndianStreamConverter new]
+					ifFalse: [XMLUTF16LittleEndianStreamConverter new]].
+	self resetStreamToStartPosition.
+	^ converter.
 ]
 
 { #category : #private }
 XMLEncodingDetector >> handleLittleEndianUTF16BOMOrUTF32BOM [
-	self
+	^ self
 		handleBOM: UTF32LittleEndianBOM
 		forConverterClass: XMLUTF32LittleEndianStreamConverter
-		ifUnmatched: [:matchedPortion |
+		ifUnmatched: [:matchedPortion | | converter |
 			matchedPortion = UTF16LittleEndianBOM
-				ifTrue: [
-					self decodeStreamWithConverter:
-						XMLUTF16LittleEndianStreamConverter new]
-				ifFalse: [self pushBack: matchedPortion]]
+				ifTrue: [converter := XMLUTF16LittleEndianStreamConverter new]
+				ifFalse: [self resetStreamToStartPosition].
+			converter]
 ]
 
 { #category : #private }
 XMLEncodingDetector >> handleUTF8BOM [
-	self
+	^ self
 		handleBOM: UTF8BOM
 		forConverterClass: XMLUTF8StreamConverter
 ]
@@ -205,24 +174,10 @@ XMLEncodingDetector >> next [
 		ifFalse: [^ stream next]
 ]
 
-{ #category : #private }
-XMLEncodingDetector >> nextASCII [
-	| nextChar |
-
-	((nextChar := self peek) notNil
-		and: [nextChar asciiValue < 128])
-		ifTrue: [
-			self next.
-			^ nextChar]
-		ifFalse: [^ nil]
-]
-
 { #category : #initialization }
 XMLEncodingDetector >> on: aStream [
-	stream :=
-		aStream isXMLConvertingStreamAdapter
-			ifTrue: [aStream stream]
-			ifFalse: [aStream]
+	stream := aStream.
+	startPosition := aStream position.
 ]
 
 { #category : #private }
@@ -230,6 +185,18 @@ XMLEncodingDetector >> peek [
 	stream atEnd
 		ifTrue: [^ nil]
 		ifFalse: [^ stream peek]
+]
+
+{ #category : #private }
+XMLEncodingDetector >> peekForASCII [
+	| nextChar |
+
+	((nextChar := self peek) notNil
+		and: [nextChar asciiValue < 128])
+		ifTrue: [
+			self next.
+			^ true]
+		ifFalse: [^ false]
 ]
 
 { #category : #private }
@@ -242,11 +209,18 @@ XMLEncodingDetector >> peekForNull [
 ]
 
 { #category : #private }
-XMLEncodingDetector >> pushBack: aString [
-	self subclassResponsibility
+XMLEncodingDetector >> resetStreamToStartPosition [
+	stream position: startPosition
 ]
 
-{ #category : #private }
-XMLEncodingDetector >> pushBackCharacter: aCharacter [
-	self subclassResponsibility
+{ #category : #detecting }
+XMLEncodingDetector >> streamConverterForEncoding [
+	| handlerTableIndex handlerSelector |
+
+	"the index is asciiValue + 1 for null"
+	(stream atEnd not
+		and: [(handlerTableIndex := self peek asciiValue + 1) <= EncodingHandlerTable size
+			and: [(handlerSelector := EncodingHandlerTable at: handlerTableIndex) notNil]])
+		ifTrue: [^ self perform: handlerSelector]
+		ifFalse: [^ nil]
 ]

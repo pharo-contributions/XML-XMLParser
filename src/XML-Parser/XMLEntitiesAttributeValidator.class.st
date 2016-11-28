@@ -7,13 +7,23 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
+{ #category : #accessing }
+XMLEntitiesAttributeValidator class >> standaloneExternalClass [
+	^ XMLStandaloneExternalEntitiesAttributeValidator
+]
+
+{ #category : #testing }
+XMLEntitiesAttributeValidator >> isEntities [
+	^ true
+]
+
 { #category : #validating }
 XMLEntitiesAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 	self
 		spaceSeparatedListValuesIn: aDefaultValue
 		do: [:each |
 			each isXMLName
-				ifFalse: [self errorInvalidDefaultValue: aDefaultValue]]
+				ifFalse: [self errorInvalidDefaultAttributeValue: aDefaultValue]]
 ]
 
 { #category : #validating }

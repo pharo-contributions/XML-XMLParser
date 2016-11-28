@@ -9,18 +9,19 @@ Class {
 	#instVars : [
 		'stream',
 		'whenPoppedDo',
-		'nestedStreams',
-		'peekChar',
-		'normalizedLineEndingChar',
-		'currentLineNumber',
+		'isExternal',
 		'currentPosition',
+		'currentLineNumber',
 		'currentLineStartPosition',
-		'readLimit',
-		'isEscapingQuotes'
+		'peekChar',
+		'nestedStreams',
+		'normalizedLineEndingChar',
+		'readLimit'
 	],
 	#classVars : [
 		'CRCharacter',
-		'LFCharacter'
+		'LFCharacter',
+		'NullReadStream'
 	],
 	#category : #'XML-Parser-Streams'
 }
@@ -32,6 +33,10 @@ XMLNestedStreamReader class >> initialize [
 	"stored in class vars for faster access"
 	CRCharacter := Character cr.
 	LFCharacter := Character lf.
+
+	"a null stream that is already #atEnd and can safely be sent
+	#close repeatedly and #atEnd after"
+	NullReadStream := XMLNullReadStream new.
 ]
 
 { #category : #'instance creation' }
@@ -48,19 +53,6 @@ XMLNestedStreamReader class >> on: aStream readLimit: aReadLimit [
 		readLimit: aReadLimit
 ]
 
-{ #category : #private }
-XMLNestedStreamReader >> asEscapedCharacterIfQuote: aCharacter [
-	aCharacter ==  $"
-		ifTrue: [
-			self pushBack: '#34;'.
-			^ $&].
-	aCharacter == $'
-		ifTrue: [
-			self pushBack: '#39;'.
-			^ $&].
-	^ aCharacter.
-]
-
 { #category : #testing }
 XMLNestedStreamReader >> atEnd [
 	peekChar == nil
@@ -69,7 +61,7 @@ XMLNestedStreamReader >> atEnd [
 		ifFalse: [^ false].
 	"to:do: for speed"
 	1 to: nestedStreams size do: [:i |
-		(nestedStreams at: i) key atEnd
+		(nestedStreams at: i) stream atEnd
 			ifFalse: [^ false]].
 	^ true.
 ]
@@ -83,27 +75,29 @@ XMLNestedStreamReader >> atQuote [
 { #category : #private }
 XMLNestedStreamReader >> basicNext [
 	"Returns the next character in the stream for #next and #peek with CR/LF/CRLF
-	line endings normalized (to LF by default) and quotes escaped when needed."
+	line endings normalized (to LF by default) for external streams."
 	| nextChar |
 
 	stream atEnd
 		ifTrue: [
-			self popNestedStreamWhileAtEnd.
-			stream atEnd
-				ifTrue: [^ nil]].
-	(nextChar := stream next) == LFCharacter
-		ifTrue: [^ normalizedLineEndingChar].
-	nextChar == CRCharacter
+			self popCurrentStream.
+			[stream atEnd]
+				whileTrue: [
+					nestedStreams size > 0
+						ifFalse: [^ nil].
+					self popCurrentStream]].
+	nextChar := stream next.
+	isExternal
 		ifTrue: [
-			stream atEnd
-				ifTrue: [self popNestedStreamWhileAtEnd].
-			stream atEnd
-				ifFalse: [
-					stream peek == LFCharacter
-						ifTrue: [stream next]].
-			^ normalizedLineEndingChar].
-	isEscapingQuotes
-		ifTrue: [^ self asEscapedCharacterIfQuote: nextChar].
+			nextChar == LFCharacter
+				ifTrue: [^ normalizedLineEndingChar].
+			nextChar == CRCharacter
+				ifTrue: [
+					stream atEnd
+						ifFalse: [
+							stream peek == LFCharacter
+								ifTrue: [stream next]].
+					^ normalizedLineEndingChar]].
 	^ nextChar.
 ]
 
@@ -116,9 +110,14 @@ XMLNestedStreamReader >> closeStream: aStream [
 
 { #category : #closing }
 XMLNestedStreamReader >> closeStreams [
-	self closeStream: stream.
-	1 to: nestedStreams size do: [:i |
-		self closeStream: (nestedStreams at: i)].
+	"close the streams but do not evaluate their callbacks and
+	set the current stream to the null stream sending #closeStreams
+	again won't raise an error"
+	self
+		closeStream: stream;
+		setStreamToNull.
+	[nestedStreams size > 0]
+		whileTrue: [self closeStream: nestedStreams removeLast stream].
 ]
 
 { #category : #decoding }
@@ -143,21 +142,8 @@ XMLNestedStreamReader >> currentLineNumber [
 ]
 
 { #category : #accessing }
-XMLNestedStreamReader >> currentLineNumber: aLineNumber [
-	currentLineNumber = aLineNumber
-		ifFalse: [
-			currentLineNumber := aLineNumber.
-			currentLineStartPosition := nil].
-]
-
-{ #category : #accessing }
 XMLNestedStreamReader >> currentPosition [
 	^ currentPosition
-]
-
-{ #category : #accessing }
-XMLNestedStreamReader >> currentPosition: aPosition [
-	currentPosition := aPosition
 ]
 
 { #category : #decoding }
@@ -178,9 +164,13 @@ XMLNestedStreamReader >> decodeStreamWithNullConverter [
 ]
 
 { #category : #decoding }
-XMLNestedStreamReader >> detectCurrentEncoding [
-	(XMLNestedStreamReaderEncodingDetector on: self)
-		detectCurrentEncoding
+XMLNestedStreamReader >> detectEncoding [
+	stream isXMLConvertingStreamAdapter
+		ifTrue: [stream detectEncoding]
+		ifFalse: [
+			(XMLEncodingDetector on: stream) streamConverterForEncoding
+				ifNotNil: [:converter |
+					self decodeStreamWithConverter: converter]]
 ]
 
 { #category : #private }
@@ -198,18 +188,13 @@ XMLNestedStreamReader >> errorReadLimitExceeded [
 ]
 
 { #category : #testing }
-XMLNestedStreamReader >> isBinary [
-	^ false
+XMLNestedStreamReader >> hasPushedBackStreams [
+	^ nestedStreams size > 0
 ]
 
 { #category : #testing }
-XMLNestedStreamReader >> isEscapingQuotes [
-	^ isEscapingQuotes
-]
-
-{ #category : #accessing }
-XMLNestedStreamReader >> isEscapingQuotes: aBoolean [
-	isEscapingQuotes := aBoolean
+XMLNestedStreamReader >> isBinary [
+	^ false
 ]
 
 { #category : #testing }
@@ -220,6 +205,13 @@ XMLNestedStreamReader >> isStream [
 { #category : #private }
 XMLNestedStreamReader >> maxNestedStreams [
 	^ 32
+]
+
+{ #category : #private }
+XMLNestedStreamReader >> nestedStreamsAddLast: aPushedBackStream [
+	nestedStreams size >= self maxNestedStreams
+		ifTrue: [self errorNestingLimitExceeded].
+	nestedStreams addLast: aPushedBackStream.
 ]
 
 { #category : #private }
@@ -237,15 +229,17 @@ XMLNestedStreamReader >> next [
 			nextChar := peekChar.
 			peekChar := nil].
 
-	"this is inlined in skipSeparators"
-	currentPosition := currentPosition + 1.
-	readLimit ifNotNil: [
-		currentPosition > readLimit
-			ifTrue: [self errorReadLimitExceeded]].
-	nextChar == normalizedLineEndingChar
+	readLimit
+		ifNotNil: [
+			(readLimit := readLimit - 1) >= 0
+				ifFalse: [self errorReadLimitExceeded]].
+	isExternal
 		ifTrue: [
-			currentLineNumber := currentLineNumber + 1.
-			currentLineStartPosition := currentPosition].
+			currentPosition := currentPosition + 1.
+			nextChar == normalizedLineEndingChar
+				ifTrue: [
+					currentLineNumber := currentLineNumber + 1.
+					currentLineStartPosition := currentPosition]].
 
 	^ nextChar.
 ]
@@ -277,58 +271,6 @@ XMLNestedStreamReader >> nextIntegerPrintedOn: aStream [
 ]
 
 { #category : #accessing }
-XMLNestedStreamReader >> nextMatch: aFirstCharacter followedBy: aSecondCharacter [
-	"a more efficient two character version of nextMatchAll:"
-
-	| oldCurrentLineNumber oldCurrentLineStartPosition |
-
-	"inlined peek"
-	(peekChar ifNil: [peekChar := self basicNext]) = aFirstCharacter
-		ifFalse: [^ false].
-	oldCurrentLineNumber := currentLineNumber.
-	oldCurrentLineStartPosition := currentLineStartPosition.
-	self next.
-
-	self peek = aSecondCharacter
-		ifFalse: [
-			self pushBackCharacter: aFirstCharacter.
-			currentPosition := currentPosition - 1.
-			currentLineNumber := oldCurrentLineNumber.
-			currentLineStartPosition := oldCurrentLineStartPosition.
-			^ false].
-	self next.
-	^ true.
-]
-
-{ #category : #accessing }
-XMLNestedStreamReader >> nextMatchAll: aString [
-	| oldCurrentLineNumber oldCurrentPosition oldCurrentLineStartPosition |
-
-	aString size > 0
-		ifFalse: [^ true].
-
-	"inlined peek"
-	(peekChar ifNil: [peekChar := self basicNext]) = (aString at: 1)
-		ifFalse: [^ false].
-	oldCurrentLineNumber := currentLineNumber.
-	oldCurrentPosition := currentPosition.
-	oldCurrentLineStartPosition := currentLineStartPosition.
-	self next.
-	"the first iteration was unrolled with the above inlined peek/self next, so
-	the to:do: loop starts at 2"
-	2 to: aString size do: [:i |
-		self peek = (aString at: i)
-			ifFalse: [
-				self pushBack: (aString copyFrom: 1 to: i -1).
-				currentLineNumber := oldCurrentLineNumber.
-				currentPosition := oldCurrentPosition.
-				currentLineStartPosition := oldCurrentLineStartPosition.
-				^ false].
-		self next].
-	^ true.
-]
-
-{ #category : #accessing }
 XMLNestedStreamReader >> normalizedLineEndingChar [
 	^ normalizedLineEndingChar
 ]
@@ -353,28 +295,28 @@ XMLNestedStreamReader >> peekFor: aCharacter [
 ]
 
 { #category : #private }
-XMLNestedStreamReader >> popNestedStream [
-	| nextStreamAndCallback |
+XMLNestedStreamReader >> popCurrentStream [
+	| previousWhenPoppedDo |
 
 	"close the stream first and pop it before evaluating the callback so any
 	exception it raises won't cause us to leak file streams or double close a
 	stream when XMLParser>>#handleParserError: sends #closeStreams"
 	self closeStream: stream.
+	previousWhenPoppedDo := whenPoppedDo.
+	nestedStreams size > 0 "optimization"
+		ifTrue: [| pushedBackStream |
+			pushedBackStream := nestedStreams removeLast.
+			stream := pushedBackStream stream.
+			whenPoppedDo := pushedBackStream whenPoppedDo.
+			isExternal := pushedBackStream isExternal.
+			currentPosition := pushedBackStream currentPosition.
+			currentLineNumber := pushedBackStream currentLineNumber.
+			currentLineStartPosition := pushedBackStream currentLineStartPosition]
+		ifFalse: [self setStreamToNull].
 
-	nextStreamAndCallback := nestedStreams removeLast.
-	stream := nextStreamAndCallback key.
-	whenPoppedDo
-		ifNotNil: [whenPoppedDo value].
-	whenPoppedDo := nextStreamAndCallback value.
-]
-
-{ #category : #private }
-XMLNestedStreamReader >> popNestedStreamWhileAtEnd [
-	[nestedStreams size > 0]
-		whileTrue: [
-			self popNestedStream.
-			stream atEnd
-				ifFalse: [^ self]]
+	"now it's safe to evaluate the callback"
+	previousWhenPoppedDo
+		ifNotNil: [previousWhenPoppedDo value].
 ]
 
 { #category : #printing }
@@ -403,6 +345,7 @@ XMLNestedStreamReader >> pushBackCharacter: aCharacter [
 	self
 		pushBackStream: (XMLSingleCharacterReadStream on: aCharacter)
 		whenPoppedDo: nil
+		isExternal: false
 ]
 
 { #category : #positioning }
@@ -410,29 +353,39 @@ XMLNestedStreamReader >> pushBackStream: aStream [
 	self
 		pushBackStream: aStream
 		whenPoppedDo: nil
+		isExternal: false
 ]
 
 { #category : #positioning }
-XMLNestedStreamReader >> pushBackStream: aStream whenPoppedDo: aBlock [
-	self
-		pushNestedStream: stream
-		whenPoppedDo: whenPoppedDo.
+XMLNestedStreamReader >> pushBackStream: aStream whenPoppedDo: aBlock isExternal: aBoolean [
+	self nestedStreamsAddLast:
+		((isExternal
+			ifTrue: [XMLPushedBackExternalStream]
+			ifFalse: [XMLPushedBackStream])
+				stream: stream
+				whenPoppedDo: whenPoppedDo
+				currentPosition: currentPosition
+				currentLineNumber: currentLineNumber
+				currentLineStartPosition: currentLineStartPosition).
+
 	peekChar
 		ifNotNil: [
-			self
-				pushNestedStream: (XMLSingleCharacterReadStream on: peekChar)
-				whenPoppedDo: nil.
+			self nestedStreamsAddLast:
+				(XMLPushedBackStream
+					stream: (XMLSingleCharacterReadStream on: peekChar)
+					whenPoppedDo: nil
+					currentPosition: currentPosition
+					currentLineNumber: currentLineNumber
+					currentLineStartPosition: currentLineStartPosition).
 			peekChar := nil].
 
 	self stream: aStream.
 	whenPoppedDo := aBlock.
-]
-
-{ #category : #private }
-XMLNestedStreamReader >> pushNestedStream: aStream whenPoppedDo: aBlock [
-	nestedStreams size >= self maxNestedStreams
-		ifTrue: [self errorNestingLimitExceeded].
-	nestedStreams addLast: aStream -> aBlock.
+	(isExternal := aBoolean)
+		ifTrue: [
+			currentPosition := 0.
+			currentLineNumber := 1.
+			currentLineStartPosition := 0].
 ]
 
 { #category : #accessing }
@@ -443,13 +396,23 @@ XMLNestedStreamReader >> readLimit [
 { #category : #initialization }
 XMLNestedStreamReader >> setStream: aStream readLimit: aReadLimit [
 	self stream: aStream.
-	nestedStreams := OrderedCollection new: 5.
-	currentLineNumber := 1.
+	isExternal := true.
 	currentPosition := 0.
+	currentLineNumber := 1.
 	currentLineStartPosition := 0.
+	nestedStreams := OrderedCollection new: 5.
 	readLimit := aReadLimit.
 	normalizedLineEndingChar := LFCharacter.
-	isEscapingQuotes := false.
+]
+
+{ #category : #private }
+XMLNestedStreamReader >> setStreamToNull [
+	stream := NullReadStream.
+	whenPoppedDo := nil.
+	isExternal := false.
+	currentPosition := 0.
+	currentLineNumber := 1.
+	currentLineStartPosition := 0.
 ]
 
 { #category : #positioning }
@@ -468,14 +431,17 @@ XMLNestedStreamReader >> skipSeparators [
 		isXMLSeparator]
 		whileTrue: [
 			"inlined from #next"
-			currentPosition := currentPosition + 1.
-			readLimit ifNotNil: [
-				currentPosition > readLimit
-					ifTrue: [self errorReadLimitExceeded]].
-			peekChar == normalizedLineEndingChar
+			readLimit
+				ifNotNil: [
+					(readLimit := readLimit - 1) >= 0
+						ifFalse: [self errorReadLimitExceeded]].
+			isExternal
 				ifTrue: [
-					currentLineNumber := currentLineNumber + 1.
-					currentLineStartPosition := currentPosition].
+					currentPosition := currentPosition + 1.
+					peekChar == normalizedLineEndingChar
+						ifTrue: [
+							currentLineNumber := currentLineNumber + 1.
+							currentLineStartPosition := currentPosition]].
 
 			peekChar := nil]
 ]

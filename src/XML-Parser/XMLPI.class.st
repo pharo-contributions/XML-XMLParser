@@ -35,6 +35,11 @@ XMLPI >> data: aString [
 ]
 
 { #category : #testing }
+XMLPI >> hasData [
+	^ self data notEmpty
+]
+
+{ #category : #testing }
 XMLPI >> isPI [
 	^ true
 ]

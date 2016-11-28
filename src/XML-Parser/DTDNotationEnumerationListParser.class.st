@@ -1,5 +1,5 @@
 "
-This class parses notation attribute value lists.
+This class parses notation attribute value lists in the form of ""NOTATION (one|two|...)"". It assumes there is no whitespace around the ""|"" separated list values.
 "
 Class {
 	#name : #DTDNotationEnumerationListParser,
@@ -7,8 +7,7 @@ Class {
 	#category : #'XML-Parser-DTD'
 }
 
-{ #category : #initialization }
-DTDNotationEnumerationListParser >> on: aString [
-	super on: aString.
-	startIndex := 11. "'NOTATION (' size + 1"
+{ #category : #private }
+DTDNotationEnumerationListParser >> listStartOffset [
+	^ 10 "'NOTATION (' size"
 ]

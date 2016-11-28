@@ -58,6 +58,11 @@ DTDElementContentModelParser class >> initializeSpecialCharacterParsers [
 			yourself
 ]
 
+{ #category : #accessing }
+DTDElementContentModelParser class >> standaloneExternalClass [
+	^ DTDStandaloneExternalElementContentModelParser
+]
+
 { #category : #private }
 DTDElementContentModelParser >> applyBinaryOperatorOnStack [
 	self applyOperator: binaryOperatorStack removeLast
@@ -66,6 +71,11 @@ DTDElementContentModelParser >> applyBinaryOperatorOnStack [
 { #category : #private }
 DTDElementContentModelParser >> applyOperator: aCharacter [
 	nfaBuilder perform: (OperatorApplicators at: aCharacter asciiValue)
+]
+
+{ #category : #private }
+DTDElementContentModelParser >> elementValidatorClass [
+	^ XMLDFAElementContentElementValidator
 ]
 
 { #category : #private }
@@ -99,7 +109,7 @@ DTDElementContentModelParser >> parse [
 					with: (contentModel at: i)]].
 	self popRemainingBinaryOperators.
 
-	^ XMLDFAElementContentElementValidator
+	^ self elementValidatorClass
 		element: element
 		dfa: nfaBuilder buildAcceptingNFAFromFragments asDFAState.
 ]
