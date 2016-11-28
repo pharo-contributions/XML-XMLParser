@@ -1526,9 +1526,9 @@ XMLNodeWithElementsTest >> testFindElementNamedWith [
 
 { #category : #tests }
 XMLNodeWithElementsTest >> testFindElementWithID [
-	| xml document idElement xmlIDElement |
+	| dtd content document idElement xmlIDElement |
 
-	xml := '
+	dtd := '
 		<!DOCTYPE a [
 			<!ELEMENT a (
 				b,
@@ -1542,7 +1542,9 @@ XMLNodeWithElementsTest >> testFindElementWithID [
 			<!ELEMENT e EMPTY>
 			<!ATTLIST b id CDATA #REQUIRED>
 			<!ATTLIST c id ID #REQUIRED>
-			<!ATTLIST d xml:id ID #REQUIRED> ]>
+			<!ATTLIST d xml:id ID #REQUIRED>
+		]>'.
+	content := '
 		<a>
 			<b id="one"/>
 			<c id="one"/>
@@ -1550,40 +1552,46 @@ XMLNodeWithElementsTest >> testFindElementWithID [
 			<e/>
 		</a>'.
 
-	document := XMLDOMParser parse: xml.
-	idElement := document findElementNamed: 'c'.
-	xmlIDElement := document findElementNamed: 'd'.
-	self
-		assert: (document findElementWithID: 'one') = idElement;
-		assert: (idElement findElementWithID: 'one') = idElement;
-		assert: (idElement nextElement findElementWithID: 'one') isNil;
-		assert: (document findElementWithID: 'two') = xmlIDElement;
-		assert: (xmlIDElement findElementWithID: 'two') = xmlIDElement;
-		assert: (xmlIDElement nextElement findElementWithID: 'two') isNil;
-		assert: (document findElementWithID: 'three') isNil.
+	#(true false) do: [:isValidating |
+		document :=
+			XMLDOMParser
+				parse: dtd, content
+				usingNamespaces: true
+				validation: isValidating.
+		idElement := document findElementNamed: 'c'.
+		xmlIDElement := document findElementNamed: 'd'.
+		self
+			assert: (document findElementWithID: 'one') = idElement;
+			assert: (idElement findElementWithID: 'one') = idElement;
+			assert: (idElement nextElement findElementWithID: 'one') isNil;
+			assert: (document findElementWithID: 'two') = xmlIDElement;
+			assert: (xmlIDElement findElementWithID: 'two') = xmlIDElement;
+			assert: (xmlIDElement nextElement findElementWithID: 'two') isNil;
+			assert: (document findElementWithID: 'three') isNil.
 
-	"remove them so they can't access the DTD anymore"
-	document root
-		removeNode: idElement;
-		removeNode: xmlIDElement.
-	self
-		assert: (document findElementWithID: 'one') isNil;
-		assert: (idElement findElementWithID: 'one') isNil;
-		assert: (document findElementWithID: 'two') isNil;
-		"xml:id is always an ID attribute, even without a DTD declaring it"
-		assert: (xmlIDElement findElementWithID: 'two') = xmlIDElement.
+		"remove them so they can't access the DTD anymore"
+		document root
+			removeNode: idElement;
+			removeNode: xmlIDElement.
+		self
+			assert: (document findElementWithID: 'one') isNil;
+			assert: (idElement findElementWithID: 'one') isNil;
+			assert: (document findElementWithID: 'two') isNil;
+			"xml:id is always an ID attribute, even without a DTD declaring it"
+			assert: (xmlIDElement findElementWithID: 'two') = xmlIDElement].
 
-	document :=
-		XMLDOMParser
-			parse: xml
-			usingNamespaces: true
-			validation: false.
-	xmlIDElement := document findElementNamed: 'd'.
-	self
-		assert: (document findElementWithID: 'one') isNil;
-		"xml:id is always an ID attribute, even without a DTD declaring it"
-		assert: (document findElementWithID: 'two') = xmlIDElement;
-		assert: (xmlIDElement findElementWithID: 'two') = xmlIDElement.
+	#(true false) do: [:isValidating |
+		document :=
+			XMLDOMParser
+				parse: content
+				usingNamespaces: true
+				validation: isValidating.
+		xmlIDElement := document findElementNamed: 'd'.
+		self
+			assert: (document findElementWithID: 'one') isNil;
+			"xml:id is always an ID attribute, even without a DTD declaring it"
+			assert: (document findElementWithID: 'two') = xmlIDElement;
+			assert: (xmlIDElement findElementWithID: 'two') = xmlIDElement].
 ]
 
 { #category : #tests }
@@ -1663,6 +1671,22 @@ XMLNodeWithElementsTest >> testInnerXML [
 ]
 
 { #category : #tests }
+XMLNodeWithElementsTest >> testInnerXMLIsInContent [
+	| node parser |
+
+	node := self newNodeWithElements.
+	parser := XMLDOMParser on: '<content/>'.
+	self deny: parser isInContent.
+
+	node innerXMLParsedWith: parser.
+	self
+		assert: node nodes size = 1;
+		assert: (node firstNode isElementNamed: 'content');
+		deny: node firstNode hasChildren;
+		assert: parser isInContent.
+]
+
+{ #category : #tests }
 XMLNodeWithElementsTest >> testInnerXMLPrettyPrinted [
 	| nodeWithElements printString prettyPrintString prettyNodeWithElements |
 
@@ -1699,7 +1723,7 @@ XMLNodeWithElementsTest >> testInnerXMLResetting [
 
 	self
 		should: [nodeWithElements firstElement innerXML: '<one>&invalid;</one>']
-		raise: XMLValidationException.
+		raise: XMLWellFormednessException.
 	self assert: nodeWithElements printString = self newNodeWithNodes printString.
 ]
 

@@ -194,9 +194,16 @@ XMLStringTest >> testIsContentNode [
 
 { #category : #tests }
 XMLStringTest >> testIsEmpty [
-	self
-		assert: self newNode isEmpty;
-		deny: (self nodeClass string: ' ') isEmpty
+	| node |
+
+	node := self newNode.
+	self assert: node isEmpty.
+
+	node string: ' '.
+	self deny: node isEmpty.
+
+	node string: ''.
+	self assert: node isEmpty.
 ]
 
 { #category : #tests }
@@ -209,6 +216,7 @@ XMLStringTest >> testIsString [
 		assert: (stringNode isString: self newNode);
 		deny: (stringNode isString: 'test');
 		deny: (stringNode isString: (self nodeClass string: 'test')).
+
 	stringNode string: 'test'.
 	self
 		assert: (stringNode isString: 'test');
@@ -229,6 +237,7 @@ XMLStringTest >> testIsStringNode [
 		assert: (stringNode isStringNode: self newNode);
 		deny: (stringNode isStringNode: 'test');
 		deny: (stringNode isStringNode: (self nodeClass string: 'test')).
+
 	stringNode string: 'test'.
 	self
 		assert: (stringNode isStringNode: 'test');
@@ -289,9 +298,16 @@ XMLStringTest >> testMergeAdjacent [
 
 { #category : #tests }
 XMLStringTest >> testNotEmpty [
-	self
-		deny: self newNode notEmpty;
-		assert: (self nodeClass string: ' ') notEmpty
+	| node |
+
+	node := self newNode.
+	self deny: node notEmpty.
+
+	node string: ' '.
+	self assert: node notEmpty.
+
+	node string: ''.
+	self deny: node notEmpty.
 ]
 
 { #category : #tests }

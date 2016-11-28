@@ -61,20 +61,18 @@ XMLMessageRecorder >> recordMessage: aMessage [
 
 { #category : #recording }
 XMLMessageRecorder >> recordMessageReceiver: anObject selector: aSelector [
-	self recordMessage:
-		(MessageSend
-			receiver: anObject
-			selector: aSelector
-			arguments: Array new)
+	self
+		recordMessageReceiver: anObject
+		selector: aSelector
+		arguments: Array new
 ]
 
 { #category : #recording }
 XMLMessageRecorder >> recordMessageReceiver: anObject selector: aSelector argument: anArgument [
-	self recordMessage:
-		(MessageSend
-			receiver: anObject
-			selector: aSelector
-			arguments: (Array with: anArgument))
+	self
+		recordMessageReceiver: anObject
+		selector: aSelector
+		arguments: (Array with: anArgument)
 ]
 
 { #category : #recording }

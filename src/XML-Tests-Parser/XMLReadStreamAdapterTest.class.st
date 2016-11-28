@@ -41,6 +41,20 @@ XMLReadStreamAdapterTest >> testAtEnd [
 ]
 
 { #category : #tests }
+XMLReadStreamAdapterTest >> testContents [
+	| adapter |
+
+	adapter := self newStreamAdapter.
+	self outputCollection do: [:each |
+		self
+			assert: adapter peek == each;
+			assert: adapter contents = self outputCollection;
+			assert: adapter peek == each;
+			assert: adapter next == each].
+	self assert: adapter contents = self outputCollection.
+]
+
+{ #category : #tests }
 XMLReadStreamAdapterTest >> testNext [
 	| adapter |
 
@@ -81,6 +95,48 @@ XMLReadStreamAdapterTest >> testPeekFor [
 			assert: (adapter peekFor: each);
 			deny: (adapter peekFor: #absent)].
 	self deny: (adapter peekFor: #absent).
+]
+
+{ #category : #tests }
+XMLReadStreamAdapterTest >> testPosition [
+	| adapter startPosition position |
+
+	adapter := self newStreamAdapter.
+	startPosition := adapter position. "1 or 0 depending on the stream on GS"
+	position := startPosition.
+	self outputCollection do: [:each |
+		self
+			assert: adapter position = position;
+			assert: adapter peek = each;
+			assert: adapter position = position;
+			assert: adapter next = each;
+			assert: adapter position > position.
+		
+		adapter peek.
+		self
+			assert: (adapter position: position) == adapter;
+			assert: adapter peek = each;
+			assert: adapter position = position;
+			assert: adapter next = each;
+			assert: adapter position > position.
+		position := adapter position].
+	self assert: position = (startPosition + self inputCollection size).
+]
+
+{ #category : #tests }
+XMLReadStreamAdapterTest >> testReset [
+	| adapter startPosition |
+
+	adapter := self newStreamAdapter.
+	startPosition := adapter position. "1 or 0 depending on the stream on GS"
+	adapter
+		next;
+		peek.
+	self
+		assert: adapter reset == adapter;
+		assert: adapter position = startPosition;
+		assert: adapter peek == self outputCollection first;
+		assert: adapter next == self outputCollection first.
 ]
 
 { #category : #tests }

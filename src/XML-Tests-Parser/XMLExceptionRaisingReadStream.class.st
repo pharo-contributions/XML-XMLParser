@@ -19,20 +19,32 @@ XMLExceptionRaisingReadStream class >> on: aCollection [
 { #category : #testing }
 XMLExceptionRaisingReadStream >> atEnd [
 	wasClosed
-		ifTrue: [Error signal: 'Cannot send #atEnd to a closed stream'].
+		ifTrue: [self errorClosedStreamCannotBeSent: #atEnd].
 	^ stream atEnd
 ]
 
 { #category : #closing }
 XMLExceptionRaisingReadStream >> close [
 	wasClosed
-		ifTrue: [Error signal: 'Cannot close already closed stream']
-		ifFalse: [
-			"must use respondsTo: to support streams only implementing the basic
-			protocol"
-			(stream respondsTo: #close)
-				ifTrue: [stream close].
-			wasClosed := true]
+		ifTrue: [self errorClosedStreamCannotBeSent: #close].
+
+	"must use respondsTo: to support streams only implementing the basic
+	protocol"
+	(stream respondsTo: #close)
+		ifTrue: [stream close].
+	wasClosed := true.
+]
+
+{ #category : #private }
+XMLExceptionRaisingReadStream >> errorAtEndStreamCannotBeSent: aSelector [
+	Error signal:
+		'Cannot send ', aSelector printString, ' on this stream when it''s atEnd'
+]
+
+{ #category : #private }
+XMLExceptionRaisingReadStream >> errorClosedStreamCannotBeSent: aSelector [
+	Error signal:
+		'Cannot send ', aSelector printString, ' on this stream when closed'
 ]
 
 { #category : #testing }
@@ -48,7 +60,7 @@ XMLExceptionRaisingReadStream >> isStream [
 { #category : #accessing }
 XMLExceptionRaisingReadStream >> next [
 	stream atEnd
-		ifTrue: [Error signal: 'Cannot call next on this stream when atEnd'].
+		ifTrue: [self errorAtEndStreamCannotBeSent: #next].
 	^ stream next.
 ]
 
@@ -61,8 +73,29 @@ XMLExceptionRaisingReadStream >> on: aCollection [
 { #category : #accessing }
 XMLExceptionRaisingReadStream >> peek [
 	stream atEnd
-		ifTrue: [Error signal: 'Cannot call peek on this stream when atEnd'].
+		ifTrue: [self errorAtEndStreamCannotBeSent: #peek].
 	^ stream peek.
+]
+
+{ #category : #positioning }
+XMLExceptionRaisingReadStream >> position [
+	wasClosed
+		ifTrue: [self errorClosedStreamCannotBeSent: #position].
+	^ stream position
+]
+
+{ #category : #positioning }
+XMLExceptionRaisingReadStream >> position: anInteger [
+	wasClosed
+		ifTrue: [self errorClosedStreamCannotBeSent: #position:].
+	stream position: anInteger.
+]
+
+{ #category : #positioning }
+XMLExceptionRaisingReadStream >> reset [
+	wasClosed
+		ifTrue: [self errorClosedStreamCannotBeSent: #reset].
+	stream reset.
 ]
 
 { #category : #testing }

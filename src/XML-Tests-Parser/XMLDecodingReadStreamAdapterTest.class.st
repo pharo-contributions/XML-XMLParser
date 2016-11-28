@@ -5,14 +5,39 @@ Class {
 }
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterTest >> encodedInvalidCharacters [
+XMLDecodingReadStreamAdapterTest >> inputCollectionWithBOM [
+	^ self streamConverterClass byteOrderMark, self inputCollection
+]
+
+{ #category : #accessing }
+XMLDecodingReadStreamAdapterTest >> invalidEncodedInputCollection [
 	^ ''
+]
+
+{ #category : #accessing }
+XMLDecodingReadStreamAdapterTest >> invalidEncodedInputCollectionWithBOM [
+	^ self streamConverterClass byteOrderMark, self invalidEncodedInputCollection
+]
+
+{ #category : #accessing }
+XMLDecodingReadStreamAdapterTest >> invalidStreamCollection [
+	^ self invalidEncodedInputCollection
+]
+
+{ #category : #testing }
+XMLDecodingReadStreamAdapterTest >> isDetecting [
+	^ false
 ]
 
 { #category : #'instance creation' }
 XMLDecodingReadStreamAdapterTest >> newStreamAdapterOn: aStream [
-	^ (super newStreamAdapterOn: aStream)
-		streamConverter: self streamConverterClass new
+	| adapter |
+
+	adapter := super newStreamAdapterOn: aStream.
+	self isDetecting
+		ifTrue: [adapter detectEncoding]
+		ifFalse: [adapter streamConverter: self streamConverterClass new].
+	^ adapter.
 ]
 
 { #category : #accessing }
@@ -48,7 +73,7 @@ XMLDecodingReadStreamAdapterTest >> testInvalidCharacters [
 
 	streamAdapter :=
 		self newStreamAdapterOn:
-			self encodedInvalidCharacters readStream.
+			self invalidStreamCollection readStream.
 	[streamAdapter atEnd]
 		whileFalse: [
 			self

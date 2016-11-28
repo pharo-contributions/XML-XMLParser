@@ -24,14 +24,35 @@ XMLEncodingTest >> asciiToUTF32LE: anASCIIString [
 	^ XMLStreamAdapterTest asciiToUTF32LE: anASCIIString
 ]
 
+{ #category : #asserting }
+XMLEncodingTest >> assertIsDecodedSourceXMLDocument: aDocument [
+	self assert: (self isDecodedSourceXMLDocument: aDocument)
+]
+
 { #category : #converting }
 XMLEncodingTest >> convertableStreamOn: aString [
 	^ XMLDecodingReadStreamAdapter on: aString readStream
 ]
 
+{ #category : #asserting }
+XMLEncodingTest >> denyIsDecodedSourceXMLDocument: aDocument [
+	self deny: (self isDecodedSourceXMLDocument: aDocument)
+]
+
 { #category : #source }
 XMLEncodingTest >> encodingDeclaration: anEncoding [
 	^ '<?xml version="1.0" encoding="', anEncoding, '"?>'
+]
+
+{ #category : #testing }
+XMLEncodingTest >> isDecodedSourceXMLDocument: aDocument [
+	aDocument nodes size = 1
+		ifFalse: [^ false].
+	(aDocument firstNode isElementNamed: 'encoding-test')
+		ifFalse: [^ false].
+	aDocument firstNode nodes size = 1
+		ifFalse: [^ false].
+	^ aDocument firstNode firstNode isStringNode: 'encoding test'.
 ]
 
 { #category : #source }
@@ -163,6 +184,8 @@ XMLEncodingTest >> testEncodingDeclarationLatin1 [
 
 { #category : #tests }
 XMLEncodingTest >> testEncodingDeclarationUTF16BE [
+	| document |
+
 	self
 		should: [
 			SAXHandler parse:
@@ -196,12 +219,14 @@ XMLEncodingTest >> testEncodingDeclarationUTF16BE [
 
 	self
 		shouldnt: [
-			SAXHandler parse:
-				(self convertableStreamOn:
-					(self
-						sourceXMLWithEncoding: 'UTF-16-BE'
-						andASCIIContentAsUTF16BE: self sourceXML))]
+			document :=
+				XMLDOMParser parse:
+					(self convertableStreamOn:
+						(self
+							sourceXMLWithEncoding: 'UTF-16-BE'
+							andASCIIContentAsUTF16BE: self sourceXML))]
 		raise: XMLParserException.
+	self assertIsDecodedSourceXMLDocument: document.
 	self
 		should: [
 			(SAXHandler on:
@@ -216,6 +241,8 @@ XMLEncodingTest >> testEncodingDeclarationUTF16BE [
 
 { #category : #tests }
 XMLEncodingTest >> testEncodingDeclarationUTF16LE [
+	| document |
+
 	self
 		should: [
 			SAXHandler parse:
@@ -249,12 +276,14 @@ XMLEncodingTest >> testEncodingDeclarationUTF16LE [
 
 	self
 		shouldnt: [
-			SAXHandler parse:
-				(self convertableStreamOn:
-					(self
-						sourceXMLWithEncoding: 'UTF-16-LE'
-						andASCIIContentAsUTF16LE: self sourceXML))]
+			document :=
+				XMLDOMParser parse:
+					(self convertableStreamOn:
+						(self
+							sourceXMLWithEncoding: 'UTF-16-LE'
+							andASCIIContentAsUTF16LE: self sourceXML))]
 		raise: XMLParserException.
+	self assertIsDecodedSourceXMLDocument: document.
 	self
 		should: [
 			(SAXHandler on:
@@ -269,6 +298,8 @@ XMLEncodingTest >> testEncodingDeclarationUTF16LE [
 
 { #category : #tests }
 XMLEncodingTest >> testEncodingDeclarationUTF32BE [
+	| document |
+
 	self
 		should: [
 			SAXHandler parse:
@@ -302,12 +333,14 @@ XMLEncodingTest >> testEncodingDeclarationUTF32BE [
 
 	self
 		shouldnt: [
-			SAXHandler parse:
-				(self convertableStreamOn:
-					(self
-						sourceXMLWithEncoding: 'UTF-32-BE'
-						andASCIIContentAsUTF32BE: self sourceXML))]
+			document :=
+				XMLDOMParser parse:
+					(self convertableStreamOn:
+						(self
+							sourceXMLWithEncoding: 'UTF-32-BE'
+							andASCIIContentAsUTF32BE: self sourceXML))]
 		raise: XMLParserException.
+	self assertIsDecodedSourceXMLDocument: document.
 	self
 		should: [
 			(SAXHandler on:
@@ -322,6 +355,8 @@ XMLEncodingTest >> testEncodingDeclarationUTF32BE [
 
 { #category : #tests }
 XMLEncodingTest >> testEncodingDeclarationUTF32LE [
+	| document |
+
 	self
 		should: [
 			SAXHandler parse:
@@ -355,12 +390,14 @@ XMLEncodingTest >> testEncodingDeclarationUTF32LE [
 
 	self
 		shouldnt: [
-			SAXHandler parse:
-				(self convertableStreamOn:
-					(self
-						sourceXMLWithEncoding: 'UTF-32-LE'
-						andASCIIContentAsUTF32LE: self sourceXML))]
+			document :=
+				XMLDOMParser parse:
+					(self convertableStreamOn:
+						(self
+							sourceXMLWithEncoding: 'UTF-32-LE'
+							andASCIIContentAsUTF32LE: self sourceXML))]
 		raise: XMLParserException.
+	self assertIsDecodedSourceXMLDocument: document.
 	self
 		should: [
 			(SAXHandler on:
@@ -375,6 +412,8 @@ XMLEncodingTest >> testEncodingDeclarationUTF32LE [
 
 { #category : #tests }
 XMLEncodingTest >> testEncodingDeclarationUTF8 [
+	| document |
+
 	self
 		should: [
 			SAXHandler parse:
@@ -410,83 +449,86 @@ XMLEncodingTest >> testEncodingDeclarationUTF8 [
 
 	self
 		shouldnt: [
-			SAXHandler parse:
-				(self convertableStreamOn:
-					(self encodingDeclaration: 'UTF-8'), self sourceXML)]
+			document :=
+				XMLDOMParser parse:
+					(self convertableStreamOn:
+						(self encodingDeclaration: 'UTF-8'), self sourceXML)]
 		raise: XMLParserException.
+	self assertIsDecodedSourceXMLDocument: document.
 ]
 
 { #category : #tests }
 XMLEncodingTest >> testExternalEntityByteOrderMarkDetection [
-	| document entity |
+	| content entity |
 
-	document := '
-		<!DOCTYPE test [
-			<!ENTITY % external SYSTEM "extern.ent">
-			 %external;
-		]>
-		<test/>'.
-	entity := '<!ELEMENT test EMPTY>'.
+	content :=
+		'<!DOCTYPE encoding-test [
+				<!ENTITY external SYSTEM "extern.ent">
+			]>', (self sourceXMLWithContent: '&external;').
+	entity := self sourceContent.
 	(Array
 		with: self utf8BOM, entity
 		with: self utf16BigEndianBOM, (self asciiToUTF16BE: entity)
 		with: self utf16LittleEndianBOM, (self asciiToUTF16LE: entity)
 		with: self utf32BigEndianBOM, (self asciiToUTF32BE: entity)
 		with: self utf32LittleEndianBOM, (self asciiToUTF32LE: entity))
-		do: [:each |
+		do: [:each | | resolver document |
+			(resolver := DTDStaticExternalEntityResolver new)
+				externalEntityAtURI: 'extern.ent'
+				put: each.
 			self
 				shouldnt: [
-					(SAXHandler on: document)
-						externalEntityResolver:
-							(DTDStaticExternalEntityResolver externalEntities:
-								(Array with: 'extern.ent' -> each));
-						resolvesExternalEntities: true;
-						parseDocument]
+					document :=
+						(XMLDOMParser on: content)
+							externalEntityResolver: resolver copy;
+							resolvesExternalEntities: true;
+							parseDocument]
 				raise: XMLParserException.
-			self
-				should: [
-					(SAXHandler on: document)
-						externalEntityResolver:
-							(DTDStaticExternalEntityResolver externalEntities:
-								(Array with: 'extern.ent' -> each));
+			self assertIsDecodedSourceXMLDocument: document.
+			[
+				document :=
+					(XMLDOMParser on: content)
+						externalEntityResolver: resolver copy;
 						resolvesExternalEntities: true;
 						decodesCharacters: false;
 						parseDocument]
-				raise: XMLParserException].
+				on: XMLParserException
+				do: [:error | document := nil].
+			document
+				ifNotNil: [self denyIsDecodedSourceXMLDocument: document]].
 ]
 
 { #category : #tests }
 XMLEncodingTest >> testExternalEntityImplicitEncodingDetection [
-	| document entity |
+	| content entity |
 
-	document := '
-		<!DOCTYPE test [
-			<!ENTITY % external SYSTEM "extern.ent">
-			 %external;
-		]>
-		<test/>'.
-	entity := '<!ELEMENT test EMPTY>'.
+	content :=
+		'<!DOCTYPE encoding-test [
+				<!ENTITY external SYSTEM "extern.ent">
+			]>', (self sourceXMLWithContent: '&external;').
+	entity := self sourceContent.
 	(Array
 		with: (self asciiToUTF16BE: entity)
 		with: (self asciiToUTF16LE: entity)
 		with: (self asciiToUTF32BE: entity)
 		with: (self asciiToUTF32LE: entity))
-		do: [:each |
+		do: [:each | | resolver document |
+			(resolver := DTDStaticExternalEntityResolver new)
+				externalEntityAtURI: 'extern.ent'
+				put: each.
 			self
 				shouldnt: [
-					(SAXHandler on: document)
-						externalEntityResolver:
-							(DTDStaticExternalEntityResolver externalEntities:
-								(Array with: 'extern.ent' -> each));
-						resolvesExternalEntities: true;
-						parseDocument]
+					document :=
+						(XMLDOMParser on: content)
+							externalEntityResolver: resolver copy;
+							resolvesExternalEntities: true;
+							parseDocument]
 				raise: XMLParserException.
+			self assertIsDecodedSourceXMLDocument: document.
 			self
 				should: [
-					(SAXHandler on: document)
-						externalEntityResolver:
-							(DTDStaticExternalEntityResolver externalEntities:
-								(Array with: 'extern.ent' -> each));
+					(SAXHandler on: content)
+						externalEntityResolver: resolver copy;
 						resolvesExternalEntities: true;
 						decodesCharacters: false;
 						parseDocument]
@@ -495,15 +537,13 @@ XMLEncodingTest >> testExternalEntityImplicitEncodingDetection [
 
 { #category : #tests }
 XMLEncodingTest >> testExternalEntityTextDeclaration [
-	| document entity |
+	| content entity |
 
-	document := '
-		<!DOCTYPE test [
-			<!ENTITY % external SYSTEM "extern.ent">
-			 %external;
-		]>
-		<test/>'.
-	entity := '<!ELEMENT test EMPTY>'.
+	content :=
+		'<!DOCTYPE encoding-test [
+				<!ENTITY external SYSTEM "extern.ent">
+			]>', (self sourceXMLWithContent: '&external;').
+	entity := self sourceContent.
 	(Array
 		with:
 			(self
@@ -521,22 +561,23 @@ XMLEncodingTest >> testExternalEntityTextDeclaration [
 			(self
 				sourceXMLWithEncoding: 'UTF-32-LE'
 				andASCIIContentAsUTF32LE: entity))
-		do: [:each |
+		do: [:each | | resolver document |
+			(resolver := DTDStaticExternalEntityResolver new)
+				externalEntityAtURI: 'extern.ent'
+				put: each.
 			self
 				shouldnt: [
-					(SAXHandler on: document)
-						externalEntityResolver:
-							(DTDStaticExternalEntityResolver externalEntities:
-								(Array with: 'extern.ent' -> each));
-						resolvesExternalEntities: true;
-						parseDocument]
+					document :=
+						(XMLDOMParser on: content)
+							externalEntityResolver: resolver copy;
+							resolvesExternalEntities: true;
+							parseDocument]
 				raise: XMLParserException.
+			self assertIsDecodedSourceXMLDocument: document.
 			self
 				should: [
-					(SAXHandler on: document)
-						externalEntityResolver:
-							(DTDStaticExternalEntityResolver externalEntities:
-								(Array with: 'extern.ent' -> each));
+					(SAXHandler on: content)
+						externalEntityResolver: resolver copy;
 						resolvesExternalEntities: true;
 						decodesCharacters: false;
 						parseDocument]
@@ -545,32 +586,35 @@ XMLEncodingTest >> testExternalEntityTextDeclaration [
 
 { #category : #tests }
 XMLEncodingTest >> testExternalSubsetByteOrderMarkDetection [
-	| document dtd |
+	| content subset |
 
-	document := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
-	dtd := '<!ELEMENT test EMPTY>'.
+	content :=
+		'<!DOCTYPE encoding-test SYSTEM "extern.dtd">',
+		(self sourceXMLWithContent: '&external;').
+	subset := '<!ENTITY external "', self sourceContent, '">'.
 	(Array
-		with: self utf8BOM, dtd
-		with: self utf16BigEndianBOM, (self asciiToUTF16BE: dtd)
-		with: self utf16LittleEndianBOM, (self asciiToUTF16LE: dtd)
-		with: self utf32BigEndianBOM, (self asciiToUTF32BE: dtd)
-		with: self utf32LittleEndianBOM, (self asciiToUTF32LE: dtd))
-		do: [:each |
+		with: self utf8BOM, subset
+		with: self utf16BigEndianBOM, (self asciiToUTF16BE: subset)
+		with: self utf16LittleEndianBOM, (self asciiToUTF16LE: subset)
+		with: self utf32BigEndianBOM, (self asciiToUTF32BE: subset)
+		with: self utf32LittleEndianBOM, (self asciiToUTF32LE: subset))
+		do: [:each | | resolver document |
+			(resolver := DTDStaticExternalEntityResolver new)
+				externalEntityAtURI: 'extern.dtd'
+				put: each.
 			self
 				shouldnt: [
-					(SAXHandler on: document)
-						externalEntityResolver:
-							(DTDStaticExternalEntityResolver externalEntities:
-								(Array with: 'extern.dtd' -> each));
-						resolvesExternalEntities: true;
-						parseDocument]
+					document :=
+						(XMLDOMParser on: content)
+							externalEntityResolver: resolver copy;
+							resolvesExternalEntities: true;
+							parseDocument]
 				raise: XMLParserException.
+			self assertIsDecodedSourceXMLDocument: document.
 			self
 				should: [
-					(SAXHandler on: document)
-						externalEntityResolver:
-							(DTDStaticExternalEntityResolver externalEntities:
-								(Array with: 'extern.dtd' -> each));
+					(SAXHandler on: content)
+						externalEntityResolver: resolver copy;
 						resolvesExternalEntities: true;
 						decodesCharacters: false;
 						parseDocument]
@@ -579,31 +623,34 @@ XMLEncodingTest >> testExternalSubsetByteOrderMarkDetection [
 
 { #category : #tests }
 XMLEncodingTest >> testExternalSubsetImplicitEncodingDetection [
-	| document dtd |
+	| content subset |
 
-	document := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
-	dtd := '<!ELEMENT test EMPTY>'.
+	content :=
+		'<!DOCTYPE encoding-test SYSTEM "extern.dtd">',
+		(self sourceXMLWithContent: '&external;').
+	subset := '<!ENTITY external "', self sourceContent, '">'.
 	(Array
-		with: (self asciiToUTF16BE: dtd)
-		with: (self asciiToUTF16LE: dtd)
-		with: (self asciiToUTF32BE: dtd)
-		with: (self asciiToUTF32LE: dtd))
-		do: [:each |
+		with: (self asciiToUTF16BE: subset)
+		with: (self asciiToUTF16LE: subset)
+		with: (self asciiToUTF32BE: subset)
+		with: (self asciiToUTF32LE: subset))
+		do: [:each | | resolver document |
+			(resolver := DTDStaticExternalEntityResolver new)
+				externalEntityAtURI: 'extern.dtd'
+				put: each.
 			self
 				shouldnt: [
-					(SAXHandler on: document)
-						externalEntityResolver:
-							(DTDStaticExternalEntityResolver externalEntities:
-								(Array with: 'extern.dtd' -> each));
-						resolvesExternalEntities: true;
-						parseDocument]
+					document :=
+						(XMLDOMParser on: content)
+							externalEntityResolver: resolver copy;
+							resolvesExternalEntities: true;
+							parseDocument]
 				raise: XMLParserException.
+			self assertIsDecodedSourceXMLDocument: document.
 			self
 				should: [
-					(SAXHandler on: document)
-						externalEntityResolver:
-							(DTDStaticExternalEntityResolver externalEntities:
-								(Array with: 'extern.dtd' -> each));
+					(SAXHandler on: content)
+						externalEntityResolver: resolver copy;
 						resolvesExternalEntities: true;
 						decodesCharacters: false;
 						parseDocument]
@@ -612,43 +659,46 @@ XMLEncodingTest >> testExternalSubsetImplicitEncodingDetection [
 
 { #category : #tests }
 XMLEncodingTest >> testExternalSubsetTextDeclaration [
-	| document dtd |
+	| content subset |
 
-	document := '<!DOCTYPE test SYSTEM "extern.dtd"><test/>'.
-	dtd := '<!ELEMENT test EMPTY>'.
+	content :=
+		'<!DOCTYPE encoding-test SYSTEM "extern.dtd">',
+		(self sourceXMLWithContent: '&external;').
+	subset := '<!ENTITY external "', self sourceContent, '">'.
 	(Array
 		with:
 			(self
 				sourceXMLWithEncoding: 'UTF-16-BE'
-				andASCIIContentAsUTF16BE: dtd)
+				andASCIIContentAsUTF16BE: subset)
 		with:
 			(self
 				sourceXMLWithEncoding: 'UTF-16-LE'
-				andASCIIContentAsUTF16LE: dtd)
+				andASCIIContentAsUTF16LE: subset)
 		with:
 			(self
 				sourceXMLWithEncoding: 'UTF-32-BE'
-				andASCIIContentAsUTF32BE: dtd)
+				andASCIIContentAsUTF32BE: subset)
 		with:
 			(self
 				sourceXMLWithEncoding: 'UTF-32-LE'
-				andASCIIContentAsUTF32LE: dtd))
-			do: [:each |
+				andASCIIContentAsUTF32LE: subset))
+			do: [:each | | resolver document |
+				(resolver := DTDStaticExternalEntityResolver new)
+					externalEntityAtURI: 'extern.dtd'
+					put: each.
 				self
 					shouldnt: [
-						(SAXHandler on: document)
-							externalEntityResolver:
-								(DTDStaticExternalEntityResolver externalEntities:
-									(Array with: 'extern.dtd' -> each));
-							resolvesExternalEntities: true;
-							parseDocument]
+						document :=
+							(XMLDOMParser on: content)
+								externalEntityResolver: resolver copy;
+								resolvesExternalEntities: true;
+								parseDocument]
 					raise: XMLParserException.
+				self assertIsDecodedSourceXMLDocument: document.
 				self
 					should: [
-						(SAXHandler on: document)
-							externalEntityResolver:
-								(DTDStaticExternalEntityResolver externalEntities:
-									(Array with: 'extern.dtd' -> each));
+						(SAXHandler on: content)
+							externalEntityResolver: resolver copy;
 							resolvesExternalEntities: true;
 							decodesCharacters: false;
 							parseDocument]
@@ -657,11 +707,15 @@ XMLEncodingTest >> testExternalSubsetTextDeclaration [
 
 { #category : #tests }
 XMLEncodingTest >> testImplicitUTF16BigEndianEncodingDetection [
+	| document |
+
 	self
 		shouldnt: [
-			SAXHandler parse:
-				(self asciiToUTF16BE: self sourceXML)]
+			document :=
+				XMLDOMParser parse:
+					(self asciiToUTF16BE: self sourceXML)]
 		raise: XMLParserException.
+	self assertIsDecodedSourceXMLDocument: document.
 	self
 		should: [
 			(SAXHandler on:
@@ -673,11 +727,15 @@ XMLEncodingTest >> testImplicitUTF16BigEndianEncodingDetection [
 
 { #category : #tests }
 XMLEncodingTest >> testImplicitUTF16LittleEndianEncodingDetection [
+	| document |
+
 	self
 		shouldnt: [
-			SAXHandler parse:
-				(self asciiToUTF16LE: self sourceXML)]
+			document :=
+				XMLDOMParser parse:
+					(self asciiToUTF16LE: self sourceXML)]
 		raise: XMLParserException.
+	self assertIsDecodedSourceXMLDocument: document.
 	self
 		should: [
 			(SAXHandler on:
@@ -689,11 +747,15 @@ XMLEncodingTest >> testImplicitUTF16LittleEndianEncodingDetection [
 
 { #category : #tests }
 XMLEncodingTest >> testImplicitUTF32BigEndianEncodingDetection [
+	| document |
+
 	self
 		shouldnt: [
-			SAXHandler parse:
-				(self asciiToUTF32BE: self sourceXML)]
+			document :=
+				XMLDOMParser parse:
+					(self asciiToUTF32BE: self sourceXML)]
 		raise: XMLParserException.
+	self assertIsDecodedSourceXMLDocument: document.
 	self
 		should: [
 			(SAXHandler on:
@@ -705,11 +767,15 @@ XMLEncodingTest >> testImplicitUTF32BigEndianEncodingDetection [
 
 { #category : #tests }
 XMLEncodingTest >> testImplicitUTF32LittleEndianEncodingDetection [
+	| document |
+
 	self
 		shouldnt: [
-			SAXHandler parse:
-				(self asciiToUTF32LE: self sourceXML)]
+			document :=
+				XMLDOMParser parse:
+					(self asciiToUTF32LE: self sourceXML)]
 		raise: XMLParserException.
+	self assertIsDecodedSourceXMLDocument: document.
 	self
 		should: [
 			(SAXHandler on:
@@ -721,6 +787,8 @@ XMLEncodingTest >> testImplicitUTF32LittleEndianEncodingDetection [
 
 { #category : #tests }
 XMLEncodingTest >> testUTF16BigEndianByteOrderMarkDetection [
+	| document |
+
 	self
 		should: [
 			SAXHandler parse:
@@ -743,9 +811,11 @@ XMLEncodingTest >> testUTF16BigEndianByteOrderMarkDetection [
 		raise: XMLParserException.
 	self
 		shouldnt: [
-			SAXHandler parse:
-				self utf16BigEndianBOM, (self asciiToUTF16BE: self sourceXML)]
+			document :=
+				XMLDOMParser parse:
+					self utf16BigEndianBOM, (self asciiToUTF16BE: self sourceXML)]
 		raise: XMLParserException.
+	self assertIsDecodedSourceXMLDocument: document.
 	self
 		should: [
 			(SAXHandler on:
@@ -757,6 +827,8 @@ XMLEncodingTest >> testUTF16BigEndianByteOrderMarkDetection [
 
 { #category : #tests }
 XMLEncodingTest >> testUTF16LittleEndianByteOrderMarkDetection [
+	| document |
+
 	self
 		should: [
 			SAXHandler parse:
@@ -779,9 +851,11 @@ XMLEncodingTest >> testUTF16LittleEndianByteOrderMarkDetection [
 		raise: XMLParserException.
 	self
 		shouldnt: [
-			SAXHandler parse:
-				self utf16LittleEndianBOM, (self asciiToUTF16LE: self sourceXML)]
+			document :=
+				XMLDOMParser parse:
+					self utf16LittleEndianBOM, (self asciiToUTF16LE: self sourceXML)]
 		raise: XMLParserException.
+	self assertIsDecodedSourceXMLDocument: document.
 	self
 		should: [
 			(SAXHandler on:
@@ -793,6 +867,8 @@ XMLEncodingTest >> testUTF16LittleEndianByteOrderMarkDetection [
 
 { #category : #tests }
 XMLEncodingTest >> testUTF8ByteOrderMarkDetection [
+	| document |
+
 	self
 		should: [
 			SAXHandler parse:
@@ -815,9 +891,11 @@ XMLEncodingTest >> testUTF8ByteOrderMarkDetection [
 		raise: XMLParserException.
 	self
 		shouldnt: [
-			SAXHandler parse:
-				self utf8BOM, self sourceXML]
+			document :=
+				XMLDOMParser parse:
+					self utf8BOM, self sourceXML]
 		raise: XMLParserException.
+	self assertIsDecodedSourceXMLDocument: document.
 	self
 		should: [
 			(SAXHandler on:

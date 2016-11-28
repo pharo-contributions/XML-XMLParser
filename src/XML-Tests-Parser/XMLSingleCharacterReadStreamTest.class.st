@@ -42,6 +42,17 @@ XMLSingleCharacterReadStreamTest >> testClose [
 ]
 
 { #category : #tests }
+XMLSingleCharacterReadStreamTest >> testContents [
+	| stream |
+
+	stream := self newStreamOnCharacter.
+	self assert: stream contents = self character asString.
+
+	stream next.
+	self assert: stream contents = self character asString.
+]
+
+{ #category : #tests }
 XMLSingleCharacterReadStreamTest >> testIsBinary [
 	self deny: self newStreamOnCharacter isBinary
 ]
@@ -70,4 +81,14 @@ XMLSingleCharacterReadStreamTest >> testPeek [
 
 	stream next.
 	self assert: stream peek isNil.
+]
+
+{ #category : #tests }
+XMLSingleCharacterReadStreamTest >> testUpToEnd [
+	| stream |
+
+	stream := self newStreamOnCharacter.
+	self
+		assert: stream upToEnd = self character asString;
+		assert: stream upToEnd = ''.
 ]

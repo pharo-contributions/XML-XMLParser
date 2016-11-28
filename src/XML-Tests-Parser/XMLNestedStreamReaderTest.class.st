@@ -70,40 +70,70 @@ XMLNestedStreamReaderTest >> testAtEnd [
 	self normalizedSourceXML size timesRepeat: [
 		self deny: streamReader atEnd.
 		streamReader next].
-	self assert: streamReader atEnd.
+	self
+		assert: streamReader atEnd;
+		assert: streamReader stream atEnd.
 
-	streamReader pushBack: self sourceXML.
+	streamReader pushBack: self normalizedSourceXML.
 	self normalizedSourceXML size timesRepeat: [
 		self deny: streamReader atEnd.
 		streamReader next].
+	self
+		assert: streamReader atEnd;
+		assert: streamReader stream atEnd.
 
-	self assert: streamReader atEnd.
 	streamReader pushBack: ''.
-	self assert: streamReader atEnd.
+	self
+		assert: streamReader atEnd;
+		assert: streamReader stream atEnd.
 ]
 
 { #category : #tests }
-XMLNestedStreamReaderTest >> testCallbackExceptionStreamClosing [
-	| stream streamReader evaluated |
+XMLNestedStreamReaderTest >> testCloseStreams [
+	| stream streamReader pushedBackStream evaluated |
 
 	stream := XMLExceptionRaisingReadStream on: self sourceXML.
-	streamReader := self newStreamReaderOnSourceXML.
+	streamReader := self newStreamReaderOn: stream.
+
+	pushedBackStream := XMLExceptionRaisingReadStream on: self sourceXML.	
 	evaluated := false.
 	streamReader
-		pushBackStream: stream
-		whenPoppedDo: [
-			evaluated := true.
-			Error signal].
+		pushBackStream: pushedBackStream
+		whenPoppedDo: [evaluated := true]
+		isExternal: true.
 	self
-		deny: evaluated;
-		deny: stream wasClosed.
+		assert: streamReader stream == pushedBackStream;
+		assert: streamReader hasPushedBackStreams;
+		deny: stream wasClosed;
+		deny: pushedBackStream wasClosed.
 
-	[streamReader upToEnd]
-		on: Error
-		do: [:ignored | ].
 	self
-		assert: evaluated;
-		assert: stream wasClosed.
+		assert: streamReader closeStreams == streamReader;
+		assert: streamReader atEnd;
+		deny: streamReader stream == stream;
+		deny: streamReader stream == pushedBackStream;
+		deny: streamReader hasPushedBackStreams;
+		assert: stream wasClosed;
+		assert: pushedBackStream wasClosed;
+		deny: evaluated.
+
+	self
+		shouldnt: [streamReader closeStreams]
+		raise: Error.
+]
+
+{ #category : #tests }
+XMLNestedStreamReaderTest >> testHasPushedBackStreams [
+	| streamReader |
+
+	streamReader := self newStreamReaderOnSourceXML.
+	self deny: streamReader hasPushedBackStreams.
+
+	streamReader pushBackStream: '' readStream.
+	self assert: streamReader hasPushedBackStreams.
+
+	streamReader next.
+	self deny: streamReader hasPushedBackStreams.		
 ]
 
 { #category : #tests }
@@ -122,7 +152,15 @@ XMLNestedStreamReaderTest >> testLineEndingNormalizationAcrossStreams [
 
 	streamReader := self newStreamReaderOn: (String with: self lf) readStream.
 	streamReader pushBackCharacter: self cr.
+	streamReader
+		pushBackStream: (String with: self cr with: self lf) readStream
+		whenPoppedDo: nil
+		isExternal: true.
 	self
+		assert: streamReader next = self normalizedLineEnding;
+		deny: streamReader atEnd;
+		assert: streamReader next = self cr;
+		deny: streamReader atEnd;
 		assert: streamReader next = self normalizedLineEnding;
 		assert: streamReader atEnd.
 ]
@@ -158,92 +196,6 @@ XMLNestedStreamReaderTest >> testNext [
 ]
 
 { #category : #tests }
-XMLNestedStreamReaderTest >> testNextMatchAll [
-	| streamReader readStream currentLineNumber currentColumnNumber currentPosition searchLength |
-
-	streamReader := self newStreamReaderOnSourceXML.
-	readStream := self normalizedSourceXML readStream.
-	currentLineNumber := 1.
-	currentColumnNumber := currentPosition := 0.
-	searchLength := 0.
-	[readStream atEnd]
-		whileFalse: [| search |
-			search :=
-				String streamContents: [:searchStream |
-					searchLength timesRepeat: [
-						readStream atEnd
-							ifFalse: [searchStream nextPut: readStream next]]].
-			self
-				deny: (streamReader nextMatchAll: (search copyWithFirst: self absentChar));
-				deny: (streamReader nextMatchAll: (search copyWith: self absentChar)).
-
-			"failed matches shouldn't change the position or column/line numbers"
-			self
-				assert: streamReader currentLineNumber = currentLineNumber;
-				assert: streamReader currentColumnNumber = currentColumnNumber;
-				assert: streamReader currentPosition = currentPosition.
-
-			self assert: (streamReader nextMatchAll: search).
-			(search includes: self normalizedLineEnding)
-				ifTrue: [
-					currentLineNumber :=
-						currentLineNumber + (search occurrencesOf: self normalizedLineEnding).
-					currentColumnNumber :=
-						(search copyAfterLast: self normalizedLineEnding) size]
-				ifFalse: [currentColumnNumber := currentColumnNumber + search size].
-			currentPosition := currentPosition + search size.
-			self
-				assert: streamReader currentLineNumber = currentLineNumber;
-				assert: streamReader currentColumnNumber = currentColumnNumber;
-				assert: streamReader currentPosition = currentPosition.
-
-			"try a longer match next time"
-			searchLength := searchLength + 1].
-]
-
-{ #category : #tests }
-XMLNestedStreamReaderTest >> testNextMatchFollowedBy [
-	| streamReader readStream currentLineNumber currentColumnNumber currentPosition firstChar |
-
-	streamReader := self newStreamReaderOnSourceXML.
-	readStream := self normalizedSourceXML readStream.
-	currentLineNumber := 1.
-	currentColumnNumber := currentPosition := 0.
-	[readStream atEnd
-		or: [
-			firstChar := readStream next.
-			readStream atEnd]]
-		whileFalse: [| secondChar |
-			secondChar := readStream next.
-			self
-				deny: (streamReader nextMatch: firstChar followedBy: self absentChar);
-				deny: (streamReader nextMatch: self absentChar followedBy: secondChar).
-
-			"failed matches shouldn't change the position or column/line numbers"
-			self
-				assert: streamReader currentLineNumber = currentLineNumber;
-				assert: streamReader currentColumnNumber = currentColumnNumber;
-				assert: streamReader currentPosition = currentPosition.
-
-			self assert: (streamReader nextMatch: firstChar followedBy: secondChar).
-			firstChar = self normalizedLineEnding
-				ifTrue: [
-					currentLineNumber := currentLineNumber + 1.
-					currentColumnNumber := 0]
-				ifFalse: [currentColumnNumber := currentColumnNumber + 1].
-			secondChar = self normalizedLineEnding
-				ifTrue: [
-					currentLineNumber := currentLineNumber + 1.
-					currentColumnNumber := 0]
-				ifFalse: [currentColumnNumber := currentColumnNumber + 1].
-			currentPosition := currentPosition + 2.
-			self
-				assert: streamReader currentLineNumber = currentLineNumber;
-				assert: streamReader currentColumnNumber = currentColumnNumber;
-				assert: streamReader currentPosition = currentPosition].
-]
-
-{ #category : #tests }
 XMLNestedStreamReaderTest >> testNormalizedLineEndingChar [
 	| streamReader |
 
@@ -255,22 +207,54 @@ XMLNestedStreamReaderTest >> testNormalizedLineEndingChar [
 ]
 
 { #category : #tests }
-XMLNestedStreamReaderTest >> testPushBackStreamWhenPoppedDo [
-	| streamReader closed |
+XMLNestedStreamReaderTest >> testPushBackStreamWhenPoppedDoIsExternal [
+	| streamReader evaluated |
 
 	streamReader := XMLNestedStreamReader on: '' readStream.
-	closed := false.
-	streamReader
-		pushBackStream: self sourceXML readStream
-		whenPoppedDo: [closed := true].
+	evaluated := false.
+	self assert:
+		(streamReader
+			pushBackStream: self sourceXML readStream
+			whenPoppedDo: [evaluated := true]
+			isExternal: true) == streamReader.
 	self normalizedSourceXML do: [:each |
 		self
 			assert: streamReader peek = each;
 			assert: streamReader next = each;
-			deny: closed].
+			deny: evaluated].
 	self
 		assert: streamReader next isNil;
-		assert: closed.
+		assert: evaluated.
+]
+
+{ #category : #tests }
+XMLNestedStreamReaderTest >> testPushBackStreamWhenPoppedDoIsExternalException [
+	"ensure that throwing an exception from the callback doesn't stop
+	the stream from being closed or getting popped"
+
+	| stream streamReader evaluated |
+
+	stream := XMLExceptionRaisingReadStream on: self sourceXML.
+	streamReader := self newStreamReaderOnSourceXML.
+	evaluated := false.
+	streamReader
+		pushBackStream: stream
+		whenPoppedDo: [
+			evaluated := true.
+			Error signal]
+		isExternal: true.
+	self
+		assert: streamReader stream == stream;
+		deny: evaluated;
+		deny: stream wasClosed.
+
+	self
+		should: [streamReader upToEnd]
+		raise: Error.
+	self
+		deny: streamReader stream == stream;
+		assert: evaluated;
+		assert: stream wasClosed.
 ]
 
 { #category : #tests }
@@ -311,9 +295,11 @@ XMLNestedStreamReaderTest >> testStreamPushbackPortability [
 	| streamReader output lastPeek lastNext |
 
 	streamReader := self newStreamReaderOn: '' readStream.
-	self sourceXML reverseDo: [:each |
-		streamReader pushBackStream:
-			(XMLExceptionRaisingReadStream on: (String with: each))].
+	streamReader
+		pushBackStream:
+			(XMLExceptionRaisingReadStream on: self sourceXML)
+		whenPoppedDo: nil
+		isExternal: true.
 	output := String new writeStream.
 	self
 		shouldnt: [
@@ -355,7 +341,8 @@ XMLNestedStreamReaderTest >> testStreamReadingPortability [
 		assert: lastNext isNil;
 		assert: streamReader atEnd.
 
-	self assert: stream atEnd.
+	self assert: stream wasClosed.
+	self should: [stream atEnd] raise: Error.
 	self should: [stream peek] raise: Error.
 	self should: [stream next] raise: Error.
 ]

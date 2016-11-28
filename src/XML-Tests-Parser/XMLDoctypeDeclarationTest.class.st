@@ -135,7 +135,7 @@ XMLDoctypeDeclarationTest >> testWriteXMLOn [
 	doctype root: 'one'.
 	self assert: doctype printString = '<!DOCTYPE one>'.
 	doctype publicID: 'two'.
-	self assert: doctype printString = '<!DOCTYPE one PUBLIC "two">'.
+	self assert: doctype printString = '<!DOCTYPE one PUBLIC "two" "">'.
 	doctype systemID: 'three'.
 	self assert: doctype printString = '<!DOCTYPE one PUBLIC "two" "three">'.
 

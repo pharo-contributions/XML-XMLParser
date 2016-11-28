@@ -56,6 +56,20 @@ XMLPITest >> testData [
 ]
 
 { #category : #tests }
+XMLPITest >> testHasData [
+	| pi |
+
+	pi := self newNode.
+	self deny: pi hasData.
+
+	pi data: 'data'.
+	self assert: pi hasData.
+
+	pi data: ''.
+	self deny: pi hasData.
+]
+
+{ #category : #tests }
 XMLPITest >> testIsPI [
 	self assert: self newNode isPI
 ]

@@ -5,13 +5,13 @@ Class {
 }
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterByteTest >> encodedInvalidCharacters [
-	^ self stringFrom: #(16r0100)
+XMLDecodingReadStreamAdapterByteTest >> inputCollection [
+	^ self encodedByteString
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterByteTest >> inputCollection [
-	^ self encodedByteString
+XMLDecodingReadStreamAdapterByteTest >> invalidEncodedInputCollection [
+	^ self stringFrom: #(16r0100)
 ]
 
 { #category : #accessing }

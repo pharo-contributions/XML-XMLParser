@@ -169,30 +169,35 @@ XMLDOMParserTest >> testAttributesIncludingDeclarations [
 
 { #category : #tests }
 XMLDOMParserTest >> testCDataSection [
-	| document element unescaped escaped xml |
+	#('' ']' ']]' ']]]' ']>' ']>]' ']>]>]')
+		with: #('' ']' ']]' ']]]' ']&gt;' ']&gt;]' ']&gt;]&gt;]')
+		do: [:suffix :escapedSuffix | | document element unescaped escaped xml |
+			unescaped :=
+				'this is CDATA test content 1 < 2 & 5 > 3', suffix.
+			escaped :=
+				'this is CDATA test content 1 &lt; 2 &amp; 5 &gt; 3', escapedSuffix.
+			xml :=
+				'<?xml version="1.0" encoding="UTF-8"?>
+				<test-data>test<![CDATA[', unescaped, ']]>test</test-data>'.
+			document := XMLDOMParser parse: xml.
+			element := document findElementNamed: 'test-data'.
+			self
+				assert: element nodes size = 1;
+				assert: element firstNode isStringNode;
+				assert: element firstNode printString = ('test', escaped, 'test').
 
-	unescaped := 'this is CDATA test content 1 < 2 & 5 > 3'.
-	escaped := 'this is CDATA test content 1 &lt; 2 &amp; 5 &gt; 3'.
-	xml := 
-		'<?xml version="1.0" encoding="UTF-8"?>
-		<test-data>test<![CDATA[', unescaped, ']]>test</test-data>'.
-	document := XMLDOMParser parse: xml.
-	element := document findElementNamed: 'test-data'.
-	self
-		assert: element nodes size = 1;
-		assert: element firstNode isStringNode;
-		assert: element firstNode printString = ('test', escaped, 'test').
-
-	document :=
-		(XMLDOMParser on: xml)
-			preservesCDataNodes: true;
-			parseDocument.
-	element := document findElementNamed: 'test-data'.
-	self
-		assert: element nodes size = 3;
-		assert: element nodes second isCData;
-		assert: element nodes second printString = ('<![CDATA[', unescaped, ']]>');
-		assert: element strings asArray = (Array with: 'test' with: unescaped with: 'test').
+			document :=
+				(XMLDOMParser on: xml)
+					preservesCDataNodes: true;
+					parseDocument.
+			element := document findElementNamed: 'test-data'.
+			self
+				assert: element nodes size = 3;
+				assert: element nodes second isCData;
+				assert: element nodes second printString =
+					('<![CDATA[', unescaped, ']]>');
+				assert: element strings asArray =
+					(Array with: 'test' with: unescaped with: 'test')].
 ]
 
 { #category : #tests }
@@ -531,10 +536,10 @@ XMLDOMParserTest >> testInnerXMLEntities [
 
 	self
 		should: [document innerXML: '<test name="&undeclared;"></test>']
-		raise: XMLValidationException.
+		raise: XMLWellFormednessException.
 	self
 		should: [document innerXML: '<test name="">&undeclared;</test>']
-		raise: XMLValidationException.
+		raise: XMLWellFormednessException.
 	self
 		should: [document innerXML: '&three;<test/>']
 		raise: XMLWellFormednessException.
@@ -1058,6 +1063,7 @@ XMLDOMParserTest >> testUnreplacedEntityRererencePrinting [
 	| xml |
 
 	xml :=
+		'<!DOCTYPE one [<!ENTITY three "three">]>',
 		'<one two="&quot;&three;&quot;">',
 		'&lt;four five=&#34;&amp;six;&#34;/&gt;',
 		'</one>'.
