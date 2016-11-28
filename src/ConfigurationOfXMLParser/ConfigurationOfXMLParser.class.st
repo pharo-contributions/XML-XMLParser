@@ -809,6 +809,22 @@ ConfigurationOfXMLParser >> baseline295: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.39' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline297: spec [
+	<version: '2.9.7-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.7.4'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.22' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.40' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParser >> customProjectAttributes [
     "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -823,7 +839,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.9.5-baseline'.
+	spec for: #'common' version: '2.9.7-baseline'.
 
 ]
 
@@ -849,6 +865,8 @@ ConfigurationOfXMLParser >> forceInitializationOfClassAndClassInstanceVariables 
 		preferredClasses;
 		encodingNames;
 		allSubclassesDo: [:each | each encodingNames].
+	XMLTokenContext allSubclassesDo: [:each |
+		each instance].
 	XMLParserLimits defaultDocumentReadLimit.
 	DTDCachingExternalEntityResolver entityCache.
 	XMLFileHandle xmlDocumentFileExtensions.
@@ -1029,6 +1047,14 @@ ConfigurationOfXMLParser >> release295: spec [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release297: spec [
+	<symbolicVersion: #'release-2.9.7'>
+
+	"Users should prefer #stable unless they rely on XMLParser internals"
+	spec for: #'common' version: '2.9.7'.
+]
+
+{ #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> release29: spec [
 	<symbolicVersion: #'release-2.9'>
 
@@ -1050,7 +1076,7 @@ ConfigurationOfXMLParser >> stable: spec [
 
 	"Users should prefer #stable unless they rely on XMLParser internals,
 	but it will delegate to a specific #release version from now on."
-	spec for: #'common' version: #'release-2.9.5'.
+	spec for: #'common' version: #'release-2.9.7'.
 ]
 
 { #category : #versions }
@@ -3179,5 +3205,16 @@ ConfigurationOfXMLParser >> version296: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.379'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.188'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version297: spec [ 
+        <version: '2.9.7' imports: #('2.9.7-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.380'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.189'.
                 ].
 ]
