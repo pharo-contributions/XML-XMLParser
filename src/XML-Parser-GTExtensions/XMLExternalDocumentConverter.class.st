@@ -66,7 +66,7 @@ XMLExternalDocumentConverter >> contents [
 { #category : #converting }
 XMLExternalDocumentConverter >> convert [
 	^ self
-		detectCurrentEncoding;
+		detectEncoding;
 		nextXMLDeclaration;
 		skipToEnd;
 		close;
@@ -74,8 +74,8 @@ XMLExternalDocumentConverter >> convert [
 ]
 
 { #category : #'private ' }
-XMLExternalDocumentConverter >> detectCurrentEncoding [
-	streamReader detectCurrentEncoding
+XMLExternalDocumentConverter >> detectEncoding [
+	streamReader detectEncoding
 
 ]
 

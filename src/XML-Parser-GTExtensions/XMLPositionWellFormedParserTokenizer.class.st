@@ -26,11 +26,11 @@ XMLPositionWellFormedParserTokenizer >> nextCDataSection [
 ]
 
 { #category : #tokenizing }
-XMLPositionWellFormedParserTokenizer >> nextCharacterReferenceOnWriteStream [
+XMLPositionWellFormedParserTokenizer >> nextCharacterReferenceOnCharacterDataStream [
 	| result |
 
 	driver handleStartEntityReferencePosition: self currentPosition.
-	result := super nextCharacterReferenceOnWriteStream.
+	result := super nextCharacterReferenceOnCharacterDataStream.
 	driver handleEndEntityReferencePosition: self currentPosition.
 
 	^ result.
@@ -67,7 +67,7 @@ XMLPositionWellFormedParserTokenizer >> nextEntityValue [
 ]
 
 { #category : #tokenizing }
-XMLPositionWellFormedParserTokenizer >> nextGeneralEntityReferenceOnWriteStream [
+XMLPositionWellFormedParserTokenizer >> nextGeneralEntityReferenceOnCharacterDataStream [
 	driver handleStartEntityReferencePosition: self currentPosition.
 	self nextName.
 	driver handleEndEntityReferencePosition: self currentPosition + 1.
@@ -98,7 +98,7 @@ XMLPositionWellFormedParserTokenizer >> nextParameterEntityReferenceInDeclaratio
 ]
 
 { #category : #'tokenizing - dtd' }
-XMLPositionWellFormedParserTokenizer >> nextParameterEntityReferenceOnWriteStream [
+XMLPositionWellFormedParserTokenizer >> nextParameterEntityReferenceOnCharacterDataStream [
 	^ self nextParameterEntityReference
 ]
 
