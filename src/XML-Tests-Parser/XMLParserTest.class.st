@@ -2210,12 +2210,12 @@ XMLParserTest >> testConditionalSectionInInternalSubsetExternallyDefined [
 						(Array with: 'extern.ent' -> conditionalSections));
 				resolvesExternalEntities: true;
 				parseDocument]
-		raise: XMLValidationException.
+		raise: XMLWellFormednessException.
 	self
-		shouldnt: [| entityReplacementMixedSections |
+		should: [| entityReplacementMixedSections |
 			"the rule against internal subset include/ignore sections
-			shouldn't apply to internal entities included in the subset
-			if they're internal to an external entity"
+			should apply to internal entities included in the subset
+			if they're internal even to an external entity"
 			entityReplacementMixedSections :=
 				'<!ENTITY % extern2 "', conditionalSections, '">'.
 			(SAXHandler on: '
@@ -2231,7 +2231,7 @@ XMLParserTest >> testConditionalSectionInInternalSubsetExternallyDefined [
 						(Array with: 'extern.ent' -> entityReplacementMixedSections));
 				resolvesExternalEntities: true;
 				parseDocument]
-		raise: XMLValidationException.
+		raise: XMLWellFormednessException.
 ]
 
 { #category : #tests }
@@ -2328,7 +2328,7 @@ XMLParserTest >> testConditionalSectionMixedIncludeIgnore [
 						(Array with: 'extern.dtd' -> dtd));
 				resolvesExternalEntities: true;
 				parseDocument]
-		raise: XMLValidationException.
+		raise: XMLWellFormednessException.
 ]
 
 { #category : #tests }
@@ -2390,7 +2390,7 @@ XMLParserTest >> testConditionalSectionNestedInclude [
 						(Array with: 'extern.dtd' -> dtd));
 				resolvesExternalEntities: true;
 				parseDocument]
-		raise: XMLValidationException.
+		raise: XMLWellFormednessException.
 ]
 
 { #category : #tests }
@@ -4425,10 +4425,10 @@ XMLParserTest >> testEntityReferenceInternalDeclarationExternallyDefined [
 				parseDocument]
 		raise: XMLWellFormednessException.
 	self
-		shouldnt: [
+		should: [
 			"the rule against param entity refs in internal declarations
-			shouldn't apply to declarations in internal entities included
-			in the subset if they're internal to an external entity"
+			should apply to declarations in internal entities included
+			in the subset even if they're internal to an external entity"
 			declarations :=
 				'<!ENTITY % extern2 "
 					<!ENTITY &#37; name &#34;test&#34;>

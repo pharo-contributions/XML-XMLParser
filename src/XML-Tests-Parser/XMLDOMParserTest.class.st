@@ -347,22 +347,6 @@ XMLDOMParserTest >> testDocumentInternalSubset [
 ]
 
 { #category : #tests }
-XMLDOMParserTest >> testDocumentRoot [
-	| document root  |
-
-	document := XMLDOMParser parse: self addressBookXML.
-	self assert: document class == XMLDocument.
-	root := document root.
-	self assert: (root class == XMLElement).
-
-	self assert:
-		(root allNodesDetect: [:each |
-			each isElement
-				and: [each isNamedAny: #('AddressBook' 'addressbook')]]) == root.
-	self assert: (root findElementNamed: 'addressbook') == root.
-]
-
-{ #category : #tests }
 XMLDOMParserTest >> testElementMixedContent [
 	| xml mixedContent |
 
@@ -1056,6 +1040,22 @@ XMLDOMParserTest >> testProcessingInstructionEntityReplacement [
 		assert: root firstNode isPI;
 		assert: root firstNode target = 'secondTarget';
 		assert: root firstNode data = 'second?Data'.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testRootElement [
+	| document root  |
+
+	document := XMLDOMParser parse: self addressBookXML.
+	self assert: document class == XMLDocument.
+	root := document root.
+	self assert: (root class == XMLElement).
+
+	self assert:
+		(root allNodesDetect: [:each |
+			each isElement
+				and: [each isNamedAny: #('AddressBook' 'addressbook')]]) == root.
+	self assert: (root findElementNamed: 'addressbook') == root.
 ]
 
 { #category : #tests }

@@ -260,6 +260,14 @@ XMLNodeTest >> testDocument [
 ]
 
 { #category : #tests }
+XMLNodeTest >> testDocumentRoot [
+	| node |
+
+	node := self newNode.
+	self assert: node documentRoot == node.
+]
+
+{ #category : #tests }
 XMLNodeTest >> testHasChildren [
 	self deny: self newNode hasChildren
 ]
