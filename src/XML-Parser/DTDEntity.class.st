@@ -58,11 +58,6 @@ DTDEntity >> isExternal [
 ]
 
 { #category : #testing }
-DTDEntity >> isInternalTo: aURI [
-	^ false
-]
-
-{ #category : #testing }
 DTDEntity >> isParameter [
 	^ false
 ]

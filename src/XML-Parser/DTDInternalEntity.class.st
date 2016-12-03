@@ -6,8 +6,3 @@ Class {
 	#superclass : #DTDEntity,
 	#category : #'XML-Parser-DTD'
 }
-
-{ #category : #testing }
-DTDInternalEntity >> isInternalTo: aURI [
-	^ self uri = aURI
-]

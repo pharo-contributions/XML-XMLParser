@@ -46,11 +46,6 @@ XMLPushedBackEntity >> isExternal [
 ]
 
 { #category : #testing }
-XMLPushedBackEntity >> isInternalTo: aURI [
-	^ entity isInternalTo: aURI
-]
-
-{ #category : #testing }
 XMLPushedBackEntity >> isParameter [
 	^ false
 ]

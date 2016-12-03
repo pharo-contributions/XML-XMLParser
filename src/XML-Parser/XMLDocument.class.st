@@ -61,6 +61,12 @@ XMLDocument >> document [
 ]
 
 { #category : #accessing }
+XMLDocument >> documentRoot [
+	"returns the root of the DOM tree"
+	^ self
+]
+
+{ #category : #accessing }
 XMLDocument >> encoding [	
 	^ encoding ifNil: [encoding := '']
 ]

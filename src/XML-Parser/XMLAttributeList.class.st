@@ -327,13 +327,13 @@ XMLAttributeList >> writeCanonicalAttributesOn: aWriter [
 	| sortedAttributes |
 
 	sortedAttributes :=
-		self sorted: [:a :b | | aNamespaceURI bNamespaceURI |
+		self sorted: [:a :b | | namespaceURIOfA namespaceURIOfB |
 			"the namespace URI is the primary key and
 			the local name is the secondary key"
-			aNamespaceURI := a namespaceURI.
-			bNamespaceURI := b namespaceURI.
-			aNamespaceURI < bNamespaceURI
-				or: [aNamespaceURI = bNamespaceURI
+			namespaceURIOfA := a namespaceURI.
+			namespaceURIOfB := b namespaceURI.
+			namespaceURIOfA < namespaceURIOfB
+				or: [namespaceURIOfA = namespaceURIOfB
 					and: [a localName <= b localName]]].
 
 	"use to:do: for fast writing"

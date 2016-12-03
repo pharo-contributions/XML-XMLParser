@@ -716,19 +716,17 @@ XMLWellFormedParserTokenizer >> hasPushedBackEntityNamed: aName [
 ]
 
 { #category : #testing }
-XMLWellFormedParserTokenizer >> isInExternalSubsetOrExternallyDefinedEntity [
-	"this is used to check for conditional sections and
-	parameter entity refs within declarations within the
-	internal subset, which are disallowed"
+XMLWellFormedParserTokenizer >> isInExternalSubsetOrExternalEntity [
+	"This is used to check for conditional sections and parameter entity
+	refs within declarations in the internal subset, which is disallowed.
+	
+	The way the spec is written and the way Xerces behaves, internal
+	entities defined in external entities DO NOT count as 'external'
+	for this purpose, even though they were defined externally to
+	the document."
 
-	context isExternalSubsetContext
-		ifTrue: [^ true].
-	self hasPushedBackEntities
-		ifTrue: [
-			self pushedBackEntities do: [:each |
-				(each isInternalTo: driver documentURI)
-					ifFalse: [^ true]]].
-	^ false.
+	^ context isExternalSubsetContext
+		or: [self topPushedBackExternalEntity notNil]
 ]
 
 { #category : #accessing }
@@ -1258,7 +1256,7 @@ XMLWellFormedParserTokenizer >> nextEntityDeclaration [
 		expectNextAll: 'ENTITY'
 		startingAt: 2. "the 'E' was already read"
 
-	context isExternalSubsetContext
+	self isInExternalSubsetOrExternalEntity
 		ifTrue: [
 			"this is to distinguish a parameter reference from declaration"
 			[isParameterEntity isNil]
@@ -1320,7 +1318,7 @@ XMLWellFormedParserTokenizer >> nextEntityValue [
 				ifFalse: [
 					nextChar == $%
 						ifTrue: [
-							self isInExternalSubsetOrExternallyDefinedEntity
+							self isInExternalSubsetOrExternalEntity
 								ifFalse: [
 									self
 										errorInternalDeclarationParameterEntityReference].
@@ -1756,7 +1754,7 @@ XMLWellFormedParserTokenizer >> nextParameterEntityReference [
 
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextParameterEntityReferenceInDeclaration [
-	self isInExternalSubsetOrExternallyDefinedEntity
+	self isInExternalSubsetOrExternalEntity
 		ifFalse: [self errorInternalDeclarationParameterEntityReference].
 	self nextParameterEntityReference.
 ]
@@ -1908,7 +1906,7 @@ XMLWellFormedParserTokenizer >> nextSubsetMarkupToken [
 				ifFalse: [
 					streamReader peek == $[
 						ifTrue: [
-							self isInExternalSubsetOrExternallyDefinedEntity
+							self isInExternalSubsetOrExternalEntity
 								ifFalse: [self errorInternalSubsetConditionalSection].
 							self nextConditionalSectionFromEntity:
 								pushedBackParameterEntity]

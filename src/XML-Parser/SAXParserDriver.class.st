@@ -507,12 +507,12 @@ SAXParserDriver >> hasSkippedParameterEntityReferences [
 	^ hasSkippedParameterEntityReferences
 ]
 
-{ #category : #private }
+{ #category : #testing }
 SAXParserDriver >> hasUnhandledReservedAttributes [
 	^ hasUnhandledReservedAttributes
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 SAXParserDriver >> haveNoUnhandledReservedAttributes [
 	hasUnhandledReservedAttributes := false
 ]
@@ -527,7 +527,7 @@ SAXParserDriver >> haveSkippedParameterEntityReferences [
 	hasSkippedParameterEntityReferences := true
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 SAXParserDriver >> haveUnhandledReservedAttributes [
 	hasUnhandledReservedAttributes := true
 ]

@@ -409,10 +409,8 @@ XMLNestedStreamReader >> setStream: aStream readLimit: aReadLimit [
 XMLNestedStreamReader >> setStreamToNull [
 	stream := NullReadStream.
 	whenPoppedDo := nil.
-	isExternal := false.
-	currentPosition := 0.
-	currentLineNumber := 1.
-	currentLineStartPosition := 0.
+	"do not reset the other stream properties, including position
+	and line number, so error messages will be accurate"
 ]
 
 { #category : #positioning }
