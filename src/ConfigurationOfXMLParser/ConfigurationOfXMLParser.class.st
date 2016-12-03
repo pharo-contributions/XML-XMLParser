@@ -265,11 +265,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				with: [ spec includes: 'XML-Parser-GemstoneCompatibility' ].
 			spec
 				package: 'XML-Parser-GemstoneCompatibility'
-				with: [ spec requires: 'XML-Parser' ].
-
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #forceInitializationOfClassAndClassInstanceVariables. ].
+				with: [ spec requires: 'XML-Parser' ]. ].
 
 	"load GT extension methods"
 	spec
@@ -816,10 +812,14 @@ ConfigurationOfXMLParser >> baseline297: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.7.4'. ].
+			spec project: 'XMLWriter' with: '2.7.5'. ].
 	spec
 		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.22' ].
+		do: [
+			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.22'.
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline297. ].
 	spec
 		for: #gt
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.40' ]
@@ -844,7 +844,7 @@ ConfigurationOfXMLParser >> development: spec [
 ]
 
 { #category : #doits }
-ConfigurationOfXMLParser >> forceInitializationOfClassAndClassInstanceVariables [
+ConfigurationOfXMLParser >> initializeClassesForGSBaseline297 [
 	"All lazily initialized class and class instance variables must be
 	explicitly initialized on GS during installation to prevent write
 	conflicts between Gems later on. 
@@ -1055,6 +1055,14 @@ ConfigurationOfXMLParser >> release297: spec [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release298: spec [
+	<symbolicVersion: #'release-2.9.8'>
+
+	"Users should prefer #stable unless they rely on XMLParser internals"
+	spec for: #'common' version: '2.9.8'.
+]
+
+{ #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> release29: spec [
 	<symbolicVersion: #'release-2.9'>
 
@@ -1076,7 +1084,7 @@ ConfigurationOfXMLParser >> stable: spec [
 
 	"Users should prefer #stable unless they rely on XMLParser internals,
 	but it will delegate to a specific #release version from now on."
-	spec for: #'common' version: #'release-2.9.7'.
+	spec for: #'common' version: #'release-2.9.8'.
 ]
 
 { #category : #versions }
@@ -3216,5 +3224,16 @@ ConfigurationOfXMLParser >> version297: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.380'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.189'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version298: spec [ 
+        <version: '2.9.8' imports: #('2.9.7-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.381'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.190'.
                 ].
 ]
