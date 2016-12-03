@@ -194,12 +194,12 @@ ConfigurationOfXMLParserHTML >> baseline114: spec [
 	<version: '1.1.4-baseline' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
-		do: [ spec project: 'XMLParser' with: #'release-2.5' ].
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.5' ].
 	spec
 		for: #gemstone
-		do: [ 
-			spec blessing: #baseline.
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
 ]
 
 { #category : #baselines }
@@ -207,12 +207,12 @@ ConfigurationOfXMLParserHTML >> baseline122: spec [
 	<version: '1.2.2-baseline' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
-		do: [ spec project: 'XMLParser' with: #'release-2.6.5' ].
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.6.5' ].
 	spec
 		for: #gemstone
-		do: [ 
-			spec blessing: #baseline.
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
 ]
 
 { #category : #baselines }
@@ -220,12 +220,12 @@ ConfigurationOfXMLParserHTML >> baseline124: spec [
 	<version: '1.2.4-baseline' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
-		do: [ spec project: 'XMLParser' with: #'release-2.6.8' ].
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.6.8' ].
 	spec
 		for: #gemstone
-		do: [ 
-			spec blessing: #baseline.
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
 ]
 
 { #category : #baselines }
@@ -233,12 +233,12 @@ ConfigurationOfXMLParserHTML >> baseline125: spec [
 	<version: '1.2.5-baseline' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
-		do: [ spec project: 'XMLParser' with: #'release-2.7.3' ].
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.7.3' ].
 	spec
 		for: #gemstone
-		do: [ 
-			spec blessing: #baseline.
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
 ]
 
 { #category : #baselines }
@@ -246,12 +246,12 @@ ConfigurationOfXMLParserHTML >> baseline126: spec [
 	<version: '1.2.6-baseline' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
-		do: [ spec project: 'XMLParser' with: #'release-2.7.4' ].
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.7.4' ].
 	spec
 		for: #gemstone
-		do: [ 
-			spec blessing: #baseline.
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
 ]
 
 { #category : #baselines }
@@ -259,12 +259,12 @@ ConfigurationOfXMLParserHTML >> baseline127: spec [
 	<version: '1.2.7-baseline' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
-		do: [ spec project: 'XMLParser' with: #'release-2.7.6' ].
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.7.6' ].
 	spec
 		for: #gemstone
-		do: [ 
-			spec blessing: #baseline.
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
 ]
 
 { #category : #baselines }
@@ -272,12 +272,12 @@ ConfigurationOfXMLParserHTML >> baseline128: spec [
 	<version: '1.2.8-baseline' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
-		do: [ spec project: 'XMLParser' with: #'release-2.8.1' ].
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.8.1' ].
 	spec
 		for: #gemstone
-		do: [ 
-			spec blessing: #baseline.
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
 ]
 
 { #category : #baselines }
@@ -285,12 +285,12 @@ ConfigurationOfXMLParserHTML >> baseline129: spec [
 	<version: '1.2.9-baseline' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
-		do: [ spec project: 'XMLParser' with: #'release-2.8.9' ].
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.8.9' ].
 	spec
 		for: #gemstone
-		do: [ 
-			spec blessing: #baseline.
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
 ]
 
 { #category : #baselines }
@@ -298,12 +298,12 @@ ConfigurationOfXMLParserHTML >> baseline130: spec [
 	<version: '1.3.0-baseline' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
-		do: [ spec project: 'XMLParser' with: #'release-2.9.2' ].
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.2' ].
 	spec
 		for: #gemstone
-		do: [ 
-			spec blessing: #baseline.
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
 ]
 
 { #category : #baselines }
@@ -311,12 +311,12 @@ ConfigurationOfXMLParserHTML >> baseline131: spec [
 	<version: '1.3.1-baseline' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
-		do: [ spec project: 'XMLParser' with: #'release-2.9.5' ].
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.5' ].
 	spec
 		for: #gemstone
-		do: [ 
-			spec blessing: #baseline.
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
 ]
 
 { #category : #baselines }
@@ -324,12 +324,17 @@ ConfigurationOfXMLParserHTML >> baseline132: spec [
 	<version: '1.3.2-baseline' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
-		do: [ spec project: 'XMLParser' with: #'release-2.9.7' ].
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.8' ].
 	spec
 		for: #gemstone
 		do: [ 
-			spec blessing: #baseline.
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
+
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline132. ]
 ]
 
 { #category : #accessing }
@@ -348,7 +353,7 @@ ConfigurationOfXMLParserHTML >> development: spec [
 ]
 
 { #category : #doits }
-ConfigurationOfXMLParserHTML >> forceInitializationOfClassAndClassInstanceVariables [
+ConfigurationOfXMLParserHTML >> initializeClassesForGSBaseline132 [
 	"All lazily initialized class and class instance variables must be
 	explicitly initialized on GS during installation to prevent write
 	conflicts between Gems later on. 
