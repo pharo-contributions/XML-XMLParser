@@ -60,7 +60,8 @@ XMLWriteStreamAdapterTest >> testNextPut [
 
 	adapter := self newStreamAdapter.
 	self inputCollection do: [:each |
-		self assert: (adapter nextPut: each) == each].
+		"use #= because wide chars aren't #== pre-Spur"
+		self assert: (adapter nextPut: each) = each].
 	self assert: adapter contents = self outputCollection.
 ]
 

@@ -46,11 +46,12 @@ XMLReadStreamAdapterTest >> testContents [
 
 	adapter := self newStreamAdapter.
 	self outputCollection do: [:each |
+		"use #= because wide chars aren't #== pre-Spur"
 		self
-			assert: adapter peek == each;
+			assert: adapter peek = each;
 			assert: adapter contents = self outputCollection;
-			assert: adapter peek == each;
-			assert: adapter next == each].
+			assert: adapter peek = each;
+			assert: adapter next = each].
 	self assert: adapter contents = self outputCollection.
 ]
 
@@ -60,6 +61,7 @@ XMLReadStreamAdapterTest >> testNext [
 
 	adapter := self newStreamAdapter.
 	self outputCollection do: [:each |
+		"use #= because wide chars aren't #== pre-Spur"
 		self assert: adapter next = each].
 	self assert: adapter next isNil.
 
@@ -79,6 +81,7 @@ XMLReadStreamAdapterTest >> testPeek [
 
 	adapter := self newStreamAdapter.
 	self outputCollection do: [:each |
+		"use #= because wide chars aren't #== pre-Spur"
 		self assert: adapter peek = each.
 		adapter next].
 	self assert: adapter peek isNil.
@@ -107,6 +110,7 @@ XMLReadStreamAdapterTest >> testPosition [
 	self outputCollection do: [:each |
 		self
 			assert: adapter position = position;
+			"use #= because wide chars aren't #== pre-Spur"
 			assert: adapter peek = each;
 			assert: adapter position = position;
 			assert: adapter next = each;
@@ -135,8 +139,9 @@ XMLReadStreamAdapterTest >> testReset [
 	self
 		assert: adapter reset == adapter;
 		assert: adapter position = startPosition;
-		assert: adapter peek == self outputCollection first;
-		assert: adapter next == self outputCollection first.
+		"use #= because wide chars aren't #== pre-Spur"
+		assert: adapter peek = self outputCollection first;
+		assert: adapter next = self outputCollection first.
 ]
 
 { #category : #tests }
