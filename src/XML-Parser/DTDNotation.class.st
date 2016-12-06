@@ -3,7 +3,7 @@ A class for notation declarations.
 "
 Class {
 	#name : #DTDNotation,
-	#superclass : #XMLDocumentValidator,
+	#superclass : #Object,
 	#instVars : [
 		'name',
 		'publicID',

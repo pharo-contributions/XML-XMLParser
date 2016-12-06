@@ -12,27 +12,26 @@ Class {
 
 { #category : #accessing }
 XMLNamespaceScopeAllocator >> currentScope [
-	^ self scopes xmlLastOrNil ifNil: [self emptyScope]
+	| totalScopes |
+
+	(totalScopes := scopes size) > 0
+		ifTrue: [^ scopes at: totalScopes]
+		ifFalse: [^ self newEmptyScope]
 ]
 
 { #category : #accessing }
 XMLNamespaceScopeAllocator >> currentScope: aScope [
-	self scopes addLast: aScope
+	scopes addLast: aScope
 ]
 
-{ #category : #private }
-XMLNamespaceScopeAllocator >> emptyScope [
-	^ XMLNamespaceScope new
-]
-
-{ #category : #scope }
+{ #category : #allocating }
 XMLNamespaceScopeAllocator >> enterScope [
-	^ self scopes addLast: self currentScope copy
+	^ scopes addLast: self currentScope copy
 ]
 
-{ #category : #scope }
+{ #category : #allocating }
 XMLNamespaceScopeAllocator >> exitScope [
-	^ self scopes removeLast
+	^ scopes removeLast
 ]
 
 { #category : #testing }
@@ -43,7 +42,13 @@ XMLNamespaceScopeAllocator >> hasCurentScope [
 { #category : #initialization }
 XMLNamespaceScopeAllocator >> initialize [
 	super initialize.
+
 	scopes := OrderedCollection new: 10.
+]
+
+{ #category : #'instance creation' }
+XMLNamespaceScopeAllocator >> newEmptyScope [
+	^ XMLNamespaceScope new
 ]
 
 { #category : #printing }
@@ -57,7 +62,7 @@ XMLNamespaceScopeAllocator >> printOn: aStream [
 				nextPut: $)].
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLNamespaceScopeAllocator >> scopes [
 	^ scopes
 ]

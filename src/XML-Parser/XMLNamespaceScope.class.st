@@ -411,15 +411,14 @@ XMLNamespaceScope >> validatePrefix: aPrefix beforeMappingTo: aURI [
 ]
 
 { #category : #validating }
-XMLNamespaceScope >> validatePrefix: aPrefix ofAttribute: anAttribute hasNoAliasesin: aDictionaryOrSet [
+XMLNamespaceScope >> validatePrefix: aPrefix ofAttribute: anAttribute hasNoAliasesin: aSet [
 	| namespace oldSize |
 
 	namespace := self validateAndResolvePrefix: aPrefix.
 
-	"#add: and a #size check after is faster than #includes: or #includesKey:
-	and works for both Sets and Dictionaries"
-	oldSize := aDictionaryOrSet size.
-	(aDictionaryOrSet
+	"a #size check after is faster than #includes:"
+	oldSize := aSet size.
+	(aSet
 		add: (anAttribute xmlLocalNameAfterPrefix: aPrefix) -> namespace;
 		size) > oldSize
 		ifFalse: [

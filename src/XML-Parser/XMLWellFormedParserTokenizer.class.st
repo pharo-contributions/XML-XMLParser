@@ -614,6 +614,7 @@ XMLWellFormedParserTokenizer >> errorXMLDeclarationNotAtStart [
 XMLWellFormedParserTokenizer >> expectNext: aCharacter [
 	| nextChar |
 
+	"use #= for pre-SpurVM compatibility where wide chars aren't #=="
 	(nextChar := streamReader next) = aCharacter
 		ifFalse: [
 			self
@@ -624,9 +625,10 @@ XMLWellFormedParserTokenizer >> expectNext: aCharacter [
 
 { #category : #'tokenizing - expecting' }
 XMLWellFormedParserTokenizer >> expectNextAll: aString [
-	"uses to:do: and not implemented in terms of expectNextAll:startingAt:
+	"uses to:do: and not implemented in terms of #expectNextAll:startingAt:
 	for speed"
 	1 to: aString size do: [:i | | nextChar |
+		"use #= for pre-SpurVM compatibility where wide chars aren't #=="
 		(nextChar := streamReader next) = (aString at: i)
 			ifFalse: [
 				self
@@ -640,6 +642,7 @@ XMLWellFormedParserTokenizer >> expectNextAll: aString [
 XMLWellFormedParserTokenizer >> expectNextAll: aString startingAt: aPosition [
 	"to:do: for speed"
 	aPosition to: aString size do: [:i | | nextChar |
+		"use #= for pre-SpurVM compatibility where wide chars aren't #=="
 		(nextChar := streamReader next) = (aString at: i)
 			ifFalse: [
 				self
@@ -2016,7 +2019,7 @@ XMLWellFormedParserTokenizer >> nextTag [
 							attributeName isXMLReservedAttributeName
 								ifTrue: [driver haveUnhandledReservedAttributes]]]].
 
-	elementNester wasRootElementClosed
+	elementNester wasRootElementEnded
 		ifTrue: [self errorMultipleDocumentRootElements].
 	elementNester startElement: tagName.
 	driver

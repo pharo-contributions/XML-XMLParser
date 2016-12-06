@@ -365,12 +365,6 @@ DTDDoctypeDefinition >> hasUnparsedEntities [
 		and: [unparsedEntities notEmpty]
 ]
 
-{ #category : #testing }
-DTDDoctypeDefinition >> hasValidators [
-	^ self hasElementValidators
-		or: [self hasAttributeValidators]
-]
-
 { #category : #'instance creation' }
 DTDDoctypeDefinition >> newValidator [
 	^ DTDDocumentValidator doctypeDefinition: self

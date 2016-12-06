@@ -18,6 +18,11 @@ XMLDFAElementValidator class >> element: anElement dfa: aDFA [
 		dfa: aDFA
 ]
 
+{ #category : #converting }
+XMLDFAElementValidator >> asReadyElementValidator [
+	^ self copy
+]
+
 { #category : #testing }
 XMLDFAElementValidator >> atEnd [
 	^ currentState isAccepting
@@ -44,6 +49,11 @@ XMLDFAElementValidator >> errorNonDeterminismInContentModelAfter: anElement [
 		with: anElement
 		with: '(a,(b|c))'
 		with: '((a,b)|(a,c))'
+]
+
+{ #category : #copying }
+XMLDFAElementValidator >> postCopy [
+	currentState := dfa
 ]
 
 { #category : #initialization }

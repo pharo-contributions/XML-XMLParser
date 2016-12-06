@@ -13,15 +13,14 @@ Class {
 
 { #category : #accessing }
 XMLDocumentValidator >> attributeValidatorsFor: anElement [
-	self subclassResponsibility
+	^ self
+		attributeValidatorsFor: anElement
+		ifNone: [nil]
 ]
 
-{ #category : #testing }
-XMLDocumentValidator >> currentElementIgnoresWhitespace [
-	self currentElementValidator
-		ifNotNil: [:elementValidator |
-			^ elementValidator ignoresWhitespace].
-	^ false.
+{ #category : #accessing }
+XMLDocumentValidator >> attributeValidatorsFor: anElement ifNone: aBlock [
+	self subclassResponsibility
 ]
 
 { #category : #accessing }
@@ -52,6 +51,13 @@ XMLDocumentValidator >> defaultXMLIDValidator [
 
 { #category : #accessing }
 XMLDocumentValidator >> elementValidatorFor: anElement [
+	^ self
+		elementValidatorFor: anElement
+		ifNone: [nil]
+]
+
+{ #category : #accessing }
+XMLDocumentValidator >> elementValidatorFor: anElement ifNone: aBlock [
 	self subclassResponsibility
 ]
 
@@ -74,7 +80,10 @@ XMLDocumentValidator >> hasAttributeValidators [
 
 { #category : #testing }
 XMLDocumentValidator >> hasCurrentElementValidator [
-	^ self currentElementValidator notNil
+	"optimized to avoid lazy initialization"
+	elementValidatorStack == nil
+		ifTrue: [^ false].
+	^ elementValidatorStack size > 0.
 ]
 
 { #category : #testing }
@@ -83,9 +92,9 @@ XMLDocumentValidator >> hasElementValidators [
 ]
 
 { #category : #testing }
-XMLDocumentValidator >> hasValidators [
-	^ self hasElementValidators
-		or: [self hasAttributeValidators]
+XMLDocumentValidator >> isCurrentElementWhitespaceIgnorable [
+	^ self hasCurrentElementValidator
+		and: [self currentElementValidator ignoresWhitespace]
 ]
 
 { #category : #printing }
@@ -100,38 +109,54 @@ XMLDocumentValidator >> printOn: aStream [
 ]
 
 { #category : #validating }
-XMLDocumentValidator >> unvalidatedAttributes: anAttributeCollection [
+XMLDocumentValidator >> unvalidatedAttributes: anAttributeCollection inElement: anElement [
+	"sent when at least one attribute of an element wasn't validated by an
+	attribute validator and there are element or attribute validators defined"
 ]
 
 { #category : #validating }
 XMLDocumentValidator >> unvalidatedElement: anElement [
+	"sent when an element was not validated by an element validator
+	and there are element or attribute validators defined"
 ]
 
 { #category : #validating }
-XMLDocumentValidator >> validateAttributes: anAttributeDictionary with: aValidatorDictionary [
-	| unvalidatedAttributes |
+XMLDocumentValidator >> validateAttributes: aDictionary withAttributeValidatorsFor: anElement [
+	| totalUnvalidatedAttributes validatedAttributes |
 
-	unvalidatedAttributes := Set new: anAttributeDictionary size.
-	anAttributeDictionary keysDo: [:each | unvalidatedAttributes add: each].
-	aValidatorDictionary
-		ifNotNil: [
-			aValidatorDictionary keysAndValuesDo: [:attribute :validator |
-				validator validateAttributes: anAttributeDictionary.
-				unvalidatedAttributes
-					remove: attribute
-					ifAbsent: nil]].
+	totalUnvalidatedAttributes := aDictionary size.
+	(self attributeValidatorsFor: anElement)
+		ifNotNil: [:attributeValidators |
+			attributeValidators keysAndValuesDo: [:attribute :validator |
+				(aDictionary includesKey: attribute)
+					ifTrue: [
+						"only initialize if needed, and as an OrderedCollection that
+						is only converted to a Set later if needed, for permformance"
+						(validatedAttributes
+							ifNil: [
+								validatedAttributes :=
+									OrderedCollection new: totalUnvalidatedAttributes])
+							addLast: attribute.
+						totalUnvalidatedAttributes := totalUnvalidatedAttributes - 1].
+				validator validateAttributes: aDictionary]].
 
-	unvalidatedAttributes size > 0
-		ifTrue: [self unvalidatedAttributes: unvalidatedAttributes].
+	totalUnvalidatedAttributes > 0
+		ifTrue: [
+			self
+				unvalidatedAttributes:
+					(validatedAttributes
+						ifNil: [aDictionary keys]
+						ifNotNil: [| validatedAttributesSet |
+							validatedAttributesSet := validatedAttributes asSet.
+							aDictionary keys reject: [:each |
+								validatedAttributesSet includes: each]])
+				inElement: anElement].
 ]
 
 { #category : #validating }
 XMLDocumentValidator >> validateComment: aString [
-	self hasElementValidators
-		ifTrue: [
-			self currentElementValidator
-				ifNotNil: [:elementValidator |
-					elementValidator validateComment: aString]]
+	self hasCurrentElementValidator
+		ifTrue: [self currentElementValidator validateComment: aString]
 ]
 
 { #category : #validating }
@@ -141,13 +166,11 @@ XMLDocumentValidator >> validateEndDocument [
 
 { #category : #validating }
 XMLDocumentValidator >> validateEndTag: anElement [
-	self hasElementValidators
+	self hasCurrentElementValidator
 		ifTrue: [
-			self currentElementValidator
-				ifNotNil: [:elementValidator |
-					elementValidator atEnd
-						ifFalse: [self errorUnexpectEndOfElement: anElement].
-					self elementValidatorStack removeLast]]
+			self currentElementValidator atEnd
+				ifFalse: [self errorUnexpectEndOfElement: anElement].
+			self elementValidatorStack removeLast]
 ]
 
 { #category : #validating }
@@ -157,19 +180,17 @@ XMLDocumentValidator >> validateIDReferences [
 
 { #category : #validating }
 XMLDocumentValidator >> validatePCData: aString [
-	self hasElementValidators
+	self hasCurrentElementValidator
 		ifTrue: [self currentElementValidator validatePCData: aString]
 ]
 
 { #category : #validating }
 XMLDocumentValidator >> validatePI: aTargetString data: aDataString [
-	self hasElementValidators
+	self hasCurrentElementValidator
 		ifTrue: [
 			self currentElementValidator
-				ifNotNil: [:elementValidator |
-					elementValidator
-						validatePI: aTargetString
-						data: aDataString]]
+				validatePI: aTargetString
+				data: aDataString]
 ]
 
 { #category : #validating }
@@ -183,11 +204,12 @@ XMLDocumentValidator >> validateStartTag: anElement [
 			elementValidator validateStartTag: anElement].
 
 	self elementValidatorStack addLast:
-		((self elementValidatorFor: anElement)
-			ifNil: [
+		(self
+			elementValidatorFor: anElement
+			ifNone: [
 				self
 					unvalidatedElement: anElement;
-					defaultElementValidatorFor: anElement]).
+					defaultElementValidatorFor: anElement]) asReadyElementValidator.
 ]
 
 { #category : #validating }
@@ -198,7 +220,7 @@ XMLDocumentValidator >> validateStartTag: anElement attributes: aDictionary [
 			self validateStartTag: anElement.
 			self
 				validateAttributes: aDictionary
-				with: (self attributeValidatorsFor: anElement)]
+				withAttributeValidatorsFor: anElement]
 ]
 
 { #category : #validating }

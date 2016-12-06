@@ -15,6 +15,11 @@ XMLElementValidator class >> element: anElement [
 	^ self new element: anElement
 ]
 
+{ #category : #converting }
+XMLElementValidator >> asReadyElementValidator [
+	^ self
+]
+
 { #category : #testing }
 XMLElementValidator >> atEnd [
 	self subclassResponsibility

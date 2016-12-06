@@ -16,10 +16,10 @@ DTDDocumentValidator class >> doctypeDefinition: aDoctypeDefinition [
 ]
 
 { #category : #accessing }
-DTDDocumentValidator >> attributeValidatorsFor: anElement [
+DTDDocumentValidator >> attributeValidatorsFor: anElement ifNone: aBlock [
 	^ self doctypeDefinition
 		attributeValidatorsAt: anElement
-		ifAbsent: [nil]
+		ifAbsent: aBlock
 ]
 
 { #category : #accessing }
@@ -33,10 +33,10 @@ DTDDocumentValidator >> doctypeDefinition: aDoctypeDefinition [
 ]
 
 { #category : #accessing }
-DTDDocumentValidator >> elementValidatorFor: anElement [
-	^ (self doctypeDefinition
+DTDDocumentValidator >> elementValidatorFor: anElement ifNone: aBlock [
+	^ self doctypeDefinition
 		elementValidatorsAt: anElement
-		ifAbsent: [nil]) copy
+		ifAbsent: aBlock
 ]
 
 { #category : #private }
@@ -59,10 +59,11 @@ DTDDocumentValidator >> hasElementValidators [
 ]
 
 { #category : #validating }
-DTDDocumentValidator >> unvalidatedAttributes: anAttributeCollection [
+DTDDocumentValidator >> unvalidatedAttributes: anAttributeCollection inElement: anElement [
 	XMLValidationException
-		formatSignal: 'Undeclared attribute "{1}"'
+		formatSignal: 'Undeclared attribute "{1}" in element <{2}>'
 		with: anAttributeCollection anyOne
+		with: anElement
 ]
 
 { #category : #validating }

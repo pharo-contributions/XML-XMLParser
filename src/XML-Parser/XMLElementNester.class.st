@@ -7,8 +7,10 @@ Class {
 	#instVars : [
 		'openElements',
 		'rootElement',
+		'scopedAttributes',
 		'hasExternalRootElement',
-		'scopedAttributes'
+		'wasRootElementEnded',
+		'isInElement'
 	],
 	#category : #'XML-Parser-Drivers'
 }
@@ -43,7 +45,12 @@ XMLElementNester >> elementPrintLimit [
 
 { #category : #nesting }
 XMLElementNester >> endElement: anElement [
-	self openElements removeLast.
+	(self openElements
+		removeLast;
+		size) > 0
+		ifFalse: [
+			isInElement := hasExternalRootElement.
+			wasRootElementEnded := hasExternalRootElement not].
 	self hasScopedAttributes
 		ifTrue: [self endScopedAttributes].
 ]
@@ -82,12 +89,13 @@ XMLElementNester >> initialize [
 
 	openElements := OrderedCollection new: 10.
 	hasExternalRootElement := false.
+	wasRootElementEnded := false.
+	isInElement := false.
 ]
 
 { #category : #testing }
 XMLElementNester >> isInElement [
-	^ self openElements size > 0
-		or: [self hasExternalRootElement]
+	^ isInElement
 ]
 
 { #category : #accessing }
@@ -201,6 +209,7 @@ XMLElementNester >> scopedAttributes [
 XMLElementNester >> setExternalRootElement: anElement [
 	rootElement := anElement.
 	hasExternalRootElement := true.
+	isInElement := true.
 ]
 
 { #category : #accessing }
@@ -219,9 +228,11 @@ XMLElementNester >> setScopedAttributesNamed: anAttributeCollection from: aDicti
 
 { #category : #nesting }
 XMLElementNester >> startElement: anElement [
+	self openElements addLast: anElement.
 	rootElement
 		ifNil: [rootElement := anElement].
-	self openElements addLast: anElement.
+	isInElement
+		ifFalse: [isInElement := true].
 	self hasScopedAttributes
 		ifTrue: [self startScopedAttributes].
 ]
@@ -237,12 +248,6 @@ XMLElementNester >> totalOpenElements [
 ]
 
 { #category : #testing }
-XMLElementNester >> wasRootElementClosed [
-	self openElements size > 0
-		ifTrue: [^ false].
-	self rootElement
-		ifNil: [^ false].
-	self hasExternalRootElement
-		ifTrue: [^ false].
-	^ true.
+XMLElementNester >> wasRootElementEnded [
+	^ wasRootElementEnded
 ]

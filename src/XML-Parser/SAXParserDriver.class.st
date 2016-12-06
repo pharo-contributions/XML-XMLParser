@@ -465,10 +465,9 @@ SAXParserDriver >> handleUnreplacedGeneralEntityReference: aName [
 
 { #category : #handling }
 SAXParserDriver >> handleWhitespace: aString [
-	(self isValidating
-		and: [self validator hasElementValidators])
+	self isValidating
 		ifTrue: [
-			self validator currentElementIgnoresWhitespace
+			self validator isCurrentElementWhitespaceIgnorable
 				ifTrue: [
 					(self elementNester hasScopedAttributes
 						and: [
@@ -476,8 +475,10 @@ SAXParserDriver >> handleWhitespace: aString [
 								'preserve'])
 						ifTrue: [self saxHandler characters: aString]
 						ifFalse: [self saxHandler ignorableWhitespace: aString].
-					^ self].
-			self validator validatePCData: aString].
+					^ self]
+				ifFalse: [
+					"only validate if it's not ignorable"
+					self validator validatePCData: aString]].
 	self saxHandler characters: aString.
 ]
 
@@ -664,9 +665,11 @@ SAXParserDriver >> usesNamespaces [
 
 { #category : #private }
 SAXParserDriver >> validateRootElement: anElement [
-	(self saxHandler requiresDocumentConstraints
-		and: [self validator hasElementValidators not])
-		ifTrue: [self errorDocumentConstraintsRequired].
+	self saxHandler requiresDocumentConstraints
+		ifTrue: [
+			(self validator hasElementValidators
+				or: [self validator hasAttributeValidators])
+				ifFalse: [self errorDocumentConstraintsRequired]].
 
 	self validator validateRootElement: anElement.
 ]
