@@ -185,7 +185,7 @@ ConfigurationOfXMLTestsConformance >> project [
 ConfigurationOfXMLTestsConformance >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.1.5'.
+	spec for: #'common' version: '1.1.6'.
 ]
 
 { #category : #versions }
@@ -345,5 +345,15 @@ ConfigurationOfXMLTestsConformance >> version115: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Tests-Conformance' with: 'XML-Tests-Conformance-monty.27'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLTestsConformance >> version116: spec [ 
+        <version: '1.1.6' imports: #('1.0.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Tests-Conformance' with: 'XML-Tests-Conformance-monty.28'.
                 ].
 ]
