@@ -22,7 +22,7 @@ Class {
 
 { #category : #visiting }
 XMLNodeWithElements >> acceptNodeVisitor: aNodeVisitor [
-	aNodeVisitor visitNodeWithElements: self
+	^ aNodeVisitor visitNodeWithElements: self
 ]
 
 { #category : #adding }

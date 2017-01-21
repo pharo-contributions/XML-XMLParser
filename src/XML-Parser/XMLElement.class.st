@@ -117,7 +117,7 @@ XMLElement class >> named: aLocalName [
 
 { #category : #visiting }
 XMLElement >> acceptNodeVisitor: aNodeVisitor [
-	aNodeVisitor visitElement: self
+	^ aNodeVisitor visitElement: self
 ]
 
 { #category : #adding }

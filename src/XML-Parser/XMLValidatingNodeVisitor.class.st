@@ -27,7 +27,8 @@ XMLValidatingNodeVisitor >> validator: aValidator [
 
 { #category : #visiting }
 XMLValidatingNodeVisitor >> visitComment: aComment [
-	self validator validateComment: aComment
+	self validator validateComment: aComment.
+	^ aComment.
 ]
 
 { #category : #visiting }
@@ -37,6 +38,7 @@ XMLValidatingNodeVisitor >> visitDocument: aDocument [
 			self validator validateRootElement: rootElement name].
 	super visitDocument: aDocument.
 	self validator validateEndDocument.
+	^ aDocument.
 ]
 
 { #category : #visiting }
@@ -57,16 +59,19 @@ XMLValidatingNodeVisitor >> visitElement: anElement [
 	super visitElement: anElement.
 
 	self validator validateEndTag: anElement name.
+	^ anElement.
 ]
 
 { #category : #visiting }
 XMLValidatingNodeVisitor >> visitPI: aPI [
 	self validator
 		validatePI: aPI target
-		data: aPI data
+		data: aPI data.
+	^ aPI.
 ]
 
 { #category : #visiting }
 XMLValidatingNodeVisitor >> visitStringNode: aStringNode [
-	self validator validatePCData: aStringNode string
+	self validator validatePCData: aStringNode string.
+	^ aStringNode.
 ]

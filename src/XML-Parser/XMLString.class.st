@@ -19,7 +19,7 @@ XMLString class >> string: aString [
 
 { #category : #visiting }
 XMLString >> acceptNodeVisitor: aNodeVisitor [
-	aNodeVisitor visitStringNode: self
+	^ aNodeVisitor visitStringNode: self
 ]
 
 { #category : #deprecated }

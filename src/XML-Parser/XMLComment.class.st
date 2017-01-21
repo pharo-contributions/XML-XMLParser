@@ -17,7 +17,7 @@ XMLComment class >> string: aString [
 
 { #category : #visiting }
 XMLComment >> acceptNodeVisitor: aNodeVisitor [
-	aNodeVisitor visitComment: self
+	^ aNodeVisitor visitComment: self
 ]
 
 { #category : #testing }

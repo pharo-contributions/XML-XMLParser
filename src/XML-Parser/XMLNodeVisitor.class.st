@@ -9,38 +9,44 @@ Class {
 
 { #category : #visiting }
 XMLNodeVisitor >> visitCData: aCData [
-	self visitStringNode: aCData
+	^ self visitStringNode: aCData
 ]
 
 { #category : #visiting }
 XMLNodeVisitor >> visitComment: aComment [
+	^ aComment
 ]
 
 { #category : #visiting }
 XMLNodeVisitor >> visitDocument: aDocument [
-	self visitNodeWithElements: aDocument
+	^ self visitNodeWithElements: aDocument
 ]
 
 { #category : #visiting }
 XMLNodeVisitor >> visitElement: anElement [
-	self visitNodeWithElements: anElement
+	^ self visitNodeWithElements: anElement
 ]
 
 { #category : #visiting }
 XMLNodeVisitor >> visitNode: aNode [
-	aNode acceptNodeVisitor: self
+	^ aNode acceptNodeVisitor: self
 ]
 
 { #category : #visiting }
-XMLNodeVisitor >> visitNodeWithElements: aNode [
-	aNode hasChildren
-		ifTrue: [aNode nodesDo: [:each | each acceptNodeVisitor: self]]
+XMLNodeVisitor >> visitNodeWithElements: aNodeWithElements [
+	aNodeWithElements hasChildren
+		ifTrue: [
+			aNodeWithElements nodesDo: [:each |
+				each acceptNodeVisitor: self]].
+	^ aNodeWithElements.
 ]
 
 { #category : #visiting }
 XMLNodeVisitor >> visitPI: aPI [
+	^ aPI
 ]
 
 { #category : #visiting }
 XMLNodeVisitor >> visitStringNode: aStringNode [
+	^ aStringNode
 ]

@@ -9,7 +9,7 @@ Class {
 
 { #category : #visiting }
 XMLCData >> acceptNodeVisitor: aNodeVisitor [
-	aNodeVisitor visitCData: self
+	^ aNodeVisitor visitCData: self
 ]
 
 { #category : #testing }

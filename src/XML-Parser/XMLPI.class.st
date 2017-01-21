@@ -21,7 +21,7 @@ XMLPI class >> target: aTargetString data: aDataString [
 
 { #category : #visiting }
 XMLPI >> acceptNodeVisitor: aNodeVisitor [
-	aNodeVisitor visitPI: self
+	^ aNodeVisitor visitPI: self
 ]
 
 { #category : #accessing }

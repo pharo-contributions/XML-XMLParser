@@ -21,7 +21,7 @@ XMLDocument class >> root: aRoot [
 
 { #category : #visiting }
 XMLDocument >> acceptNodeVisitor: aNodeVisitor [
-	aNodeVisitor visitDocument: self
+	^ aNodeVisitor visitDocument: self
 ]
 
 { #category : #accessing }

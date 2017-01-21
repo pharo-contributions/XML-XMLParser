@@ -12,6 +12,7 @@ Class {
 
 { #category : #visiting }
 XMLNode >> acceptNodeVisitor: aNodeVisitor [
+	^ self
 ]
 
 { #category : #deprecated }

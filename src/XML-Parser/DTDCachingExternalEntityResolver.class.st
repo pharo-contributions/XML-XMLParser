@@ -26,7 +26,9 @@ DTDCachingExternalEntityResolver class >> entityCache [
 
 { #category : #accessing }
 DTDCachingExternalEntityResolver class >> entityCacheAtURI: anXMLURIOrURIString [
-	^ self entityCache at: anXMLURIOrURIString asXMLURI
+	^ self entityCache
+		at: anXMLURIOrURIString asXMLURI
+		ifAbsent: [nil]
 ]
 
 { #category : #accessing }
@@ -65,13 +67,18 @@ DTDCachingExternalEntityResolver >> cachingResolveEntityURI: anXMLURIOrURIString
 	| uri |
 
 	uri := anXMLURIOrURIString asXMLURI.
-	^ self class
-		entityCacheAtURI: uri
-		ifAbsentPut: [
-			self resolveExternalEntityWith: [:maxSize |
-				uri
-					getUpToLimit: maxSize
-					decoding: false]]
+	"avoid #entityCacheAtURI:ifAbsent: and #entityCacheAtURI:ifAbsentPut:
+	so the cache isn't locked during resolution which could stall other
+	processes"
+	^ (self class entityCacheAtURI: uri)
+		ifNil: [
+			self class
+				entityCacheAtURI: uri
+				put: 
+					(self resolveExternalEntityWith: [:maxSize |
+						uri
+							getUpToLimit: maxSize
+							decoding: false])].
 ]
 
 { #category : #private }
