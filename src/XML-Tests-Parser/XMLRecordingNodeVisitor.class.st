@@ -22,7 +22,7 @@ XMLRecordingNodeVisitor >> visitCData: aCData [
 		selector: #visitCData:
 		argument: aCData.
 
-	super visitCData: aCData.
+	^ super visitCData: aCData.
 ]
 
 { #category : #visiting }
@@ -32,7 +32,7 @@ XMLRecordingNodeVisitor >> visitComment: aComment [
 		selector: #visitComment:
 		argument: aComment.
 
-	super visitComment: aComment.
+	^ super visitComment: aComment.
 ]
 
 { #category : #visiting }
@@ -42,7 +42,7 @@ XMLRecordingNodeVisitor >> visitDocument: aDocument [
 		selector: #visitDocument:
 		argument: aDocument.
 
-	super visitDocument: aDocument.
+	^ super visitDocument: aDocument.
 ]
 
 { #category : #visiting }
@@ -52,17 +52,17 @@ XMLRecordingNodeVisitor >> visitElement: anElement [
 		selector: #visitElement:
 		argument: anElement.
 
-	super visitElement: anElement.
+	^ super visitElement: anElement.
 ]
 
 { #category : #visiting }
-XMLRecordingNodeVisitor >> visitNodeWithElements: aNode [
+XMLRecordingNodeVisitor >> visitNodeWithElements: aNodeWithElements [
 	self messageRecorder
 		recordMessageReceiver: self
 		selector: #visitNodeWithElements:
-		argument: aNode.
+		argument: aNodeWithElements.
 
-	super visitNodeWithElements: aNode.
+	^ super visitNodeWithElements: aNodeWithElements.
 ]
 
 { #category : #visiting }
@@ -72,7 +72,7 @@ XMLRecordingNodeVisitor >> visitPI: aPI [
 		selector: #visitPI:
 		argument: aPI.
 
-	super visitPI: aPI.
+	^ super visitPI: aPI.
 ]
 
 { #category : #visiting }
@@ -82,5 +82,5 @@ XMLRecordingNodeVisitor >> visitStringNode: aStringNode [
 		selector: #visitStringNode:
 		argument: aStringNode.
 
-	super visitStringNode: aStringNode.
+	^ super visitStringNode: aStringNode.
 ]
