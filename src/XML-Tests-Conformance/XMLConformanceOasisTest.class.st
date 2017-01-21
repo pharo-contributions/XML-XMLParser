@@ -136,7 +136,7 @@ XMLConformanceOasisTest class >> sourcep01pass3xml [
 XMLConformanceOasisTest class >> sourcep02fail10xml [
 	"Source file: oasis/p02fail10.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16rB asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
@@ -150,210 +150,210 @@ XMLConformanceOasisTest class >> sourcep02fail11xml [
 XMLConformanceOasisTest class >> sourcep02fail12xml [
 	"Source file: oasis/p02fail12.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16rE asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail13xml [
 	"Source file: oasis/p02fail13.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16rF asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail14xml [
 	"Source file: oasis/p02fail14.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r10 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail15xml [
 	"Source file: oasis/p02fail15.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r11 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail16xml [
 	"Source file: oasis/p02fail16.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r12 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail17xml [
 	"Source file: oasis/p02fail17.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r13 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail18xml [
 	"Source file: oasis/p02fail18.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r14 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail19xml [
 	"Source file: oasis/p02fail19.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r15 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail1xml [
 	"Source file: oasis/p02fail1.xml"
 
-	^ '<doc> </doc>'
+	^ '<doc>', 16r0 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail20xml [
 	"Source file: oasis/p02fail20.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r16 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail21xml [
 	"Source file: oasis/p02fail21.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r17 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail22xml [
 	"Source file: oasis/p02fail22.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r18 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail23xml [
 	"Source file: oasis/p02fail23.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r19 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail24xml [
 	"Source file: oasis/p02fail24.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r1A asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail25xml [
 	"Source file: oasis/p02fail25.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r1B asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail26xml [
 	"Source file: oasis/p02fail26.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r1C asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail27xml [
 	"Source file: oasis/p02fail27.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r1D asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail28xml [
 	"Source file: oasis/p02fail28.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r1E asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail29xml [
 	"Source file: oasis/p02fail29.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r1F asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail2xml [
 	"Source file: oasis/p02fail2.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r1 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail30xml [
 	"Source file: oasis/p02fail30.xml"
 
-	^ '<doc>￾</doc>'
+	^ '<doc>', 16rFFFE asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail31xml [
 	"Source file: oasis/p02fail31.xml"
 
-	^ '<doc>￿</doc>'
+	^ '<doc>', 16rFFFF asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail3xml [
 	"Source file: oasis/p02fail3.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r2 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail4xml [
 	"Source file: oasis/p02fail4.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r3 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail5xml [
 	"Source file: oasis/p02fail5.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r4 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail6xml [
 	"Source file: oasis/p02fail6.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r5 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail7xml [
 	"Source file: oasis/p02fail7.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r6 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail8xml [
 	"Source file: oasis/p02fail8.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r7 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep02fail9xml [
 	"Source file: oasis/p02fail9.xml"
 
-	^ '<doc></doc>'
+	^ '<doc>', 16r8 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail10xml [
 	"Source file: oasis/p03fail10.xml"
 
-	^ '<doc/>'
+	^ '', 16rB asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
@@ -367,175 +367,175 @@ XMLConformanceOasisTest class >> sourcep03fail11xml [
 XMLConformanceOasisTest class >> sourcep03fail12xml [
 	"Source file: oasis/p03fail12.xml"
 
-	^ '<doc/>'
+	^ '', 16rE asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail13xml [
 	"Source file: oasis/p03fail13.xml"
 
-	^ '<doc/>'
+	^ '', 16rF asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail14xml [
 	"Source file: oasis/p03fail14.xml"
 
-	^ '<doc/>'
+	^ '', 16r10 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail15xml [
 	"Source file: oasis/p03fail15.xml"
 
-	^ '<doc/>'
+	^ '', 16r11 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail16xml [
 	"Source file: oasis/p03fail16.xml"
 
-	^ '<doc/>'
+	^ '', 16r12 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail17xml [
 	"Source file: oasis/p03fail17.xml"
 
-	^ '<doc/>'
+	^ '', 16r13 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail18xml [
 	"Source file: oasis/p03fail18.xml"
 
-	^ '<doc/>'
+	^ '', 16r14 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail19xml [
 	"Source file: oasis/p03fail19.xml"
 
-	^ '<doc/>'
+	^ '', 16r15 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail20xml [
 	"Source file: oasis/p03fail20.xml"
 
-	^ '<doc/>'
+	^ '', 16r16 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail21xml [
 	"Source file: oasis/p03fail21.xml"
 
-	^ '<doc/>'
+	^ '', 16r17 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail22xml [
 	"Source file: oasis/p03fail22.xml"
 
-	^ '<doc/>'
+	^ '', 16r18 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail23xml [
 	"Source file: oasis/p03fail23.xml"
 
-	^ '<doc/>'
+	^ '', 16r19 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail24xml [
 	"Source file: oasis/p03fail24.xml"
 
-	^ '<doc/>'
+	^ '', 16r1A asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail25xml [
 	"Source file: oasis/p03fail25.xml"
 
-	^ '<doc/>'
+	^ '', 16r1B asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail26xml [
 	"Source file: oasis/p03fail26.xml"
 
-	^ '<doc/>'
+	^ '', 16r1C asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail27xml [
 	"Source file: oasis/p03fail27.xml"
 
-	^ '<doc/>'
+	^ '', 16r1D asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail28xml [
 	"Source file: oasis/p03fail28.xml"
 
-	^ '<doc/>'
+	^ '', 16r1E asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail29xml [
 	"Source file: oasis/p03fail29.xml"
 
-	^ '<doc/>'
+	^ '', 16r1F asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail2xml [
 	"Source file: oasis/p03fail2.xml"
 
-	^ '<doc/>'
+	^ '', 16r1 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail3xml [
 	"Source file: oasis/p03fail3.xml"
 
-	^ '<doc/>'
+	^ '', 16r2 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail4xml [
 	"Source file: oasis/p03fail4.xml"
 
-	^ '<doc/>'
+	^ '', 16r3 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail5xml [
 	"Source file: oasis/p03fail5.xml"
 
-	^ '<doc/>'
+	^ '', 16r4 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail7xml [
 	"Source file: oasis/p03fail7.xml"
 
-	^ '<doc/>'
+	^ '', 16r6 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail8xml [
 	"Source file: oasis/p03fail8.xml"
 
-	^ '<doc/>'
+	^ '', 16r7 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep03fail9xml [
 	"Source file: oasis/p03fail9.xml"
 
-	^ '<doc/>'
+	^ '', 16r8 asCharacter asString, '<doc/>'
 ]
 
 { #category : #'xml source' }
@@ -578,7 +578,7 @@ XMLConformanceOasisTest class >> sourcep04pass1xml [
 <abcdefghijklmnopqrstuvwxyz/>
 <ABCDEFGHIJKLMNOPQRSTUVWXYZ/>
 <A01234567890/>
-<A.-:̀·/>
+<A.-:', 16r300 asCharacter asString, 16rB7 asCharacter asString, '/>
 </doc>'
 ]
 
@@ -607,14 +607,14 @@ XMLConformanceOasisTest class >> sourcep05fail3xml [
 XMLConformanceOasisTest class >> sourcep05fail4xml [
 	"Source file: oasis/p05fail4.xml"
 
-	^ '<̀A/>'
+	^ '<', 16r300 asCharacter asString, 'A/>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceOasisTest class >> sourcep05fail5xml [
 	"Source file: oasis/p05fail5.xml"
 
-	^ '<·A/>'
+	^ '<', 16rB7 asCharacter asString, 'A/>'
 ]
 
 { #category : #'xml source' }

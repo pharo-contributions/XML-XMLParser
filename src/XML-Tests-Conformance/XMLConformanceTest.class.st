@@ -102,7 +102,7 @@ XMLConformanceTest class >> buildSkippableTestsMethodsFromFailures [
 
 { #category : #'building subclasses' }
 XMLConformanceTest class >> buildSourceFileClassMethodFor: aFileReference in: aClass [
-	| sourceSelector pathString sourceStream |
+	| sourceSelector pathString sourceStream isInString |
 
 	sourceSelector := self sourceSelectorFor: aFileReference.
 	pathString := self relativePathStringFor: aFileReference.
@@ -111,12 +111,37 @@ XMLConformanceTest class >> buildSourceFileClassMethodFor: aFileReference in: aC
 	"Use XMLFileHandle to get proper (inferred from BOMs) decoding of both
 	UTF-8 and UTF-16. This makes it harder to test for invalid UTF in source
 	but easier to get the xml source into the image."
+	isInString := true.
 	aFileReference fullName asXMLFileHandle readStreamDo: [:readStream |
 		[readStream atEnd]
 			whileFalse: [
 				readStream peek == $'
-					ifTrue: [sourceStream nextPut: $'].
-				sourceStream nextPut: readStream next]].
+					ifTrue: [
+						isInString
+							ifFalse: [
+								sourceStream nextPutAll: ', '''.
+								isInString := true].
+						sourceStream
+							nextPut: $'; "escape it"
+							nextPut: readStream next]
+					ifFalse: [
+						(readStream peek isSeparator
+							or: [readStream peek asciiValue between: 32 and: 126])
+							ifTrue: [
+								isInString
+									ifFalse: [
+										sourceStream nextPutAll: ', '''.
+										isInString := true].
+								sourceStream nextPut: readStream next]
+							ifFalse: [
+								isInString
+									ifTrue: [
+										sourceStream nextPut: $'.
+										isInString := false].
+								sourceStream
+									nextPutAll: ', 16r';
+									nextPutAll: readStream next asciiValue printStringHex;
+									nextPutAll: ' asCharacter asString']]]].
 
 	aClass class
 		compile:

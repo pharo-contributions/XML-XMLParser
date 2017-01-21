@@ -614,7 +614,7 @@ XMLConformanceExpatTest class >> sourcenotwfsa032xml [
 XMLConformanceExpatTest class >> sourcenotwfsa033xml [
 	"Source file: xmltest/not-wf/sa/033.xml"
 
-	^ '<doc>abcdef</doc>
+	^ '<doc>abc', 16r1B asCharacter asString, 'def</doc>
 '
 ]
 
@@ -2031,7 +2031,7 @@ XMLConformanceExpatTest class >> sourcenotwfsa165xml [
 XMLConformanceExpatTest class >> sourcenotwfsa166xml [
 	"Source file: xmltest/not-wf/sa/166.xml"
 
-	^ '<doc>￿</doc>
+	^ '<doc>', 16rFFFF asCharacter asString, '</doc>
 '
 ]
 
@@ -2039,7 +2039,7 @@ XMLConformanceExpatTest class >> sourcenotwfsa166xml [
 XMLConformanceExpatTest class >> sourcenotwfsa167xml [
 	"Source file: xmltest/not-wf/sa/167.xml"
 
-	^ '<doc>￾</doc>
+	^ '<doc>', 16rFFFE asCharacter asString, '</doc>
 '
 ]
 
@@ -2047,7 +2047,7 @@ XMLConformanceExpatTest class >> sourcenotwfsa167xml [
 XMLConformanceExpatTest class >> sourcenotwfsa168xml [
 	"Source file: xmltest/not-wf/sa/168.xml"
 
-	^ '<doc>́</doc>
+	^ '<doc>', 16rD800 asCharacter asString, '</doc>
 '
 ]
 
@@ -2055,7 +2055,7 @@ XMLConformanceExpatTest class >> sourcenotwfsa168xml [
 XMLConformanceExpatTest class >> sourcenotwfsa169xml [
 	"Source file: xmltest/not-wf/sa/169.xml"
 
-	^ '<doc>́</doc>
+	^ '<doc>', 16rDC00 asCharacter asString, '</doc>
 '
 ]
 
@@ -2063,7 +2063,7 @@ XMLConformanceExpatTest class >> sourcenotwfsa169xml [
 XMLConformanceExpatTest class >> sourcenotwfsa171xml [
 	"Source file: xmltest/not-wf/sa/171.xml"
 
-	^ '<!-- ￿ -->
+	^ '<!-- ', 16rFFFF asCharacter asString, ' -->
 <doc></doc>
 '
 ]
@@ -2072,7 +2072,7 @@ XMLConformanceExpatTest class >> sourcenotwfsa171xml [
 XMLConformanceExpatTest class >> sourcenotwfsa172xml [
 	"Source file: xmltest/not-wf/sa/172.xml"
 
-	^ '<?pi ￿?>
+	^ '<?pi ', 16rFFFF asCharacter asString, '?>
 <doc></doc>
 '
 ]
@@ -2081,7 +2081,7 @@ XMLConformanceExpatTest class >> sourcenotwfsa172xml [
 XMLConformanceExpatTest class >> sourcenotwfsa173xml [
 	"Source file: xmltest/not-wf/sa/173.xml"
 
-	^ '<doc a="￿"></doc>
+	^ '<doc a="', 16rFFFF asCharacter asString, '"></doc>
 '
 ]
 
@@ -2089,7 +2089,7 @@ XMLConformanceExpatTest class >> sourcenotwfsa173xml [
 XMLConformanceExpatTest class >> sourcenotwfsa174xml [
 	"Source file: xmltest/not-wf/sa/174.xml"
 
-	^ '<doc><![CDATA[￿]]></doc>
+	^ '<doc><![CDATA[', 16rFFFF asCharacter asString, ']]></doc>
 '
 ]
 
@@ -2099,7 +2099,7 @@ XMLConformanceExpatTest class >> sourcenotwfsa175xml [
 
 	^ '<!DOCTYPE doc [
 <!ELEMENT doc (#PCDATA)>
-<!ENTITY % e "￿">
+<!ENTITY % e "', 16rFFFF asCharacter asString, '">
 ]>
 <doc></doc>
 '
@@ -2123,7 +2123,7 @@ XMLConformanceExpatTest class >> sourcenotwfsa177xml [
 	^ '<!DOCTYPE doc [
 <!ELEMENT doc (#PCDATA)>
 ]>
-<doc>A￿</doc>
+<doc>A', 16rFFFF asCharacter asString, '</doc>
 '
 ]
 
@@ -2519,7 +2519,7 @@ XMLConformanceExpatTest class >> sourcevalidextsa013xml [
 XMLConformanceExpatTest class >> sourcevalidextsa014ent [
 	"Source file: xmltest/valid/ext-sa/014.ent"
 
-	^ 'data'
+	^ '', 16rFEFF asCharacter asString, 'data'
 ]
 
 { #category : #'xml source' }
@@ -2629,7 +2629,7 @@ XMLConformanceExpatTest class >> sourcevalidextsaout013xml [
 XMLConformanceExpatTest class >> sourcevalidextsaout014xml [
 	"Source file: xmltest/valid/ext-sa/out/014.xml"
 
-	^ '<doc>data</doc>'
+	^ '<doc>', 16rFEFF asCharacter asString, 'data</doc>'
 ]
 
 { #category : #'xml source' }
@@ -4060,7 +4060,7 @@ XMLConformanceExpatTest class >> sourcevalidsa049xml [
 	^ '<!DOCTYPE doc [
 <!ELEMENT doc (#PCDATA)>
 ]>
-<doc>£</doc>
+<doc>', 16rA3 asCharacter asString, '</doc>
 '
 ]
 
@@ -4071,7 +4071,7 @@ XMLConformanceExpatTest class >> sourcevalidsa050xml [
 	^ '<!DOCTYPE doc [
 <!ELEMENT doc (#PCDATA)>
 ]>
-<doc>เจมส์</doc>
+<doc>', 16rE40 asCharacter asString, 16rE08 asCharacter asString, 16rE21 asCharacter asString, 16rE2A asCharacter asString, 16rE4C asCharacter asString, '</doc>
 '
 ]
 
@@ -4079,10 +4079,10 @@ XMLConformanceExpatTest class >> sourcevalidsa050xml [
 XMLConformanceExpatTest class >> sourcevalidsa051xml [
 	"Source file: xmltest/valid/sa/051.xml"
 
-	^ '<!DOCTYPE เจมส์ [
-<!ELEMENT เจมส์  (#PCDATA)>
+	^ '<!DOCTYPE ', 16rE40 asCharacter asString, 16rE08 asCharacter asString, 16rE21 asCharacter asString, 16rE2A asCharacter asString, 16rE4C asCharacter asString, ' [
+<!ELEMENT ', 16rE40 asCharacter asString, 16rE08 asCharacter asString, 16rE21 asCharacter asString, 16rE2A asCharacter asString, 16rE4C asCharacter asString, '  (#PCDATA)>
 ]>
-<เจมส์></เจมส์>
+<', 16rE40 asCharacter asString, 16rE08 asCharacter asString, 16rE21 asCharacter asString, 16rE2A asCharacter asString, 16rE4C asCharacter asString, '></', 16rE40 asCharacter asString, 16rE08 asCharacter asString, 16rE21 asCharacter asString, 16rE2A asCharacter asString, 16rE4C asCharacter asString, '>
 '
 ]
 
@@ -4093,7 +4093,7 @@ XMLConformanceExpatTest class >> sourcevalidsa052xml [
 	^ '<!DOCTYPE doc [
 <!ELEMENT doc (#PCDATA)>
 ]>
-<doc>𐀀􏿽</doc>
+<doc>', 16r10000 asCharacter asString, 16r10FFFD asCharacter asString, '</doc>
 '
 ]
 
@@ -4219,7 +4219,7 @@ XMLConformanceExpatTest class >> sourcevalidsa062xml [
 	^ '<!DOCTYPE doc [
 <!ELEMENT doc (#PCDATA)>
 ]>
-<doc>&#xe40;&#xe08;&#xe21;ส์</doc>
+<doc>&#xe40;&#xe08;&#xe21;', 16rE2A asCharacter asString, 16rE4C asCharacter asString, '</doc>
 '
 ]
 
@@ -4227,10 +4227,10 @@ XMLConformanceExpatTest class >> sourcevalidsa062xml [
 XMLConformanceExpatTest class >> sourcevalidsa063xml [
 	"Source file: xmltest/valid/sa/063.xml"
 
-	^ '<!DOCTYPE เจมส์ [
-<!ELEMENT เจมส์ (#PCDATA)>
+	^ '<!DOCTYPE ', 16rE40 asCharacter asString, 16rE08 asCharacter asString, 16rE21 asCharacter asString, 16rE2A asCharacter asString, 16rE4C asCharacter asString, ' [
+<!ELEMENT ', 16rE40 asCharacter asString, 16rE08 asCharacter asString, 16rE21 asCharacter asString, 16rE2A asCharacter asString, 16rE4C asCharacter asString, ' (#PCDATA)>
 ]>
-<เจมส์></เจมส์>
+<', 16rE40 asCharacter asString, 16rE08 asCharacter asString, 16rE21 asCharacter asString, 16rE2A asCharacter asString, 16rE4C asCharacter asString, '></', 16rE40 asCharacter asString, 16rE08 asCharacter asString, 16rE21 asCharacter asString, 16rE2A asCharacter asString, 16rE4C asCharacter asString, '>
 '
 ]
 
@@ -4931,7 +4931,7 @@ XMLConformanceExpatTest class >> sourcevalidsa119xml [
 	^ '<!DOCTYPE doc [
 <!ELEMENT doc ANY>
 ]>
-<doc><!-- -á --></doc>
+<doc><!-- -', 16rE1 asCharacter asString, ' --></doc>
 '
 ]
 
@@ -5282,28 +5282,28 @@ XMLConformanceExpatTest class >> sourcevalidsaout048xml [
 XMLConformanceExpatTest class >> sourcevalidsaout049xml [
 	"Source file: xmltest/valid/sa/out/049.xml"
 
-	^ '<doc>£</doc>'
+	^ '<doc>', 16rA3 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceExpatTest class >> sourcevalidsaout050xml [
 	"Source file: xmltest/valid/sa/out/050.xml"
 
-	^ '<doc>เจมส์</doc>'
+	^ '<doc>', 16rE40 asCharacter asString, 16rE08 asCharacter asString, 16rE21 asCharacter asString, 16rE2A asCharacter asString, 16rE4C asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceExpatTest class >> sourcevalidsaout051xml [
 	"Source file: xmltest/valid/sa/out/051.xml"
 
-	^ '<เจมส์></เจมส์>'
+	^ '<', 16rE40 asCharacter asString, 16rE08 asCharacter asString, 16rE21 asCharacter asString, 16rE2A asCharacter asString, 16rE4C asCharacter asString, '></', 16rE40 asCharacter asString, 16rE08 asCharacter asString, 16rE21 asCharacter asString, 16rE2A asCharacter asString, 16rE4C asCharacter asString, '>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceExpatTest class >> sourcevalidsaout052xml [
 	"Source file: xmltest/valid/sa/out/052.xml"
 
-	^ '<doc>𐀀􏿽</doc>'
+	^ '<doc>', 16r10000 asCharacter asString, 16r10FFFD asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
@@ -5366,28 +5366,28 @@ XMLConformanceExpatTest class >> sourcevalidsaout060xml [
 XMLConformanceExpatTest class >> sourcevalidsaout061xml [
 	"Source file: xmltest/valid/sa/out/061.xml"
 
-	^ '<doc>£</doc>'
+	^ '<doc>', 16rA3 asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceExpatTest class >> sourcevalidsaout062xml [
 	"Source file: xmltest/valid/sa/out/062.xml"
 
-	^ '<doc>เจมส์</doc>'
+	^ '<doc>', 16rE40 asCharacter asString, 16rE08 asCharacter asString, 16rE21 asCharacter asString, 16rE2A asCharacter asString, 16rE4C asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceExpatTest class >> sourcevalidsaout063xml [
 	"Source file: xmltest/valid/sa/out/063.xml"
 
-	^ '<เจมส์></เจมส์>'
+	^ '<', 16rE40 asCharacter asString, 16rE08 asCharacter asString, 16rE21 asCharacter asString, 16rE2A asCharacter asString, 16rE4C asCharacter asString, '></', 16rE40 asCharacter asString, 16rE08 asCharacter asString, 16rE21 asCharacter asString, 16rE2A asCharacter asString, 16rE4C asCharacter asString, '>'
 ]
 
 { #category : #'xml source' }
 XMLConformanceExpatTest class >> sourcevalidsaout064xml [
 	"Source file: xmltest/valid/sa/out/064.xml"
 
-	^ '<doc>𐀀􏿽</doc>'
+	^ '<doc>', 16r10000 asCharacter asString, 16r10FFFD asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
@@ -5567,7 +5567,9 @@ XMLConformanceExpatTest class >> sourcevalidsaout088xml [
 
 { #category : #'xml source' }
 XMLConformanceExpatTest class >> sourcevalidsaout089xml [
-	^ '<doc>𐀀􏿽􏿿</doc>'
+	"Source file: xmltest/valid/sa/out/089.xml"
+
+	^ '<doc>', 16r10000 asCharacter asString, 16r10FFFD asCharacter asString, 16r10FFFF asCharacter asString, '</doc>'
 ]
 
 { #category : #'xml source' }
