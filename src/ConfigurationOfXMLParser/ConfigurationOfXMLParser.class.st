@@ -196,7 +196,10 @@ ConfigurationOfXMLParser class >> findLazyInitializedClassStateInPackage: aPacka
 					classesAndLazyInitializedClassState addLast:
 						classInPackage -> newClassAndClassInstVars]].
 
-	^ classesAndLazyInitializedClassState sort: [:a :b | a name <= b name].
+	^ classesAndLazyInitializedClassState sort: [:a :b |
+		(b key inheritsFrom: a key)
+			ifTrue: [true]
+			ifFalse: [a key name <= b key name]].
 ]
 
 { #category : #'metacello tool support' }
@@ -907,27 +910,23 @@ ConfigurationOfXMLParser >> initializeClassesForGSBaseline297 [
 	conflicts between Gems later on. 
 	
 	This can help identify classes that use lazy initialization:
-		(SystemNavigation default allClassesInPackageNamed: 'XML-Parser') select:
-			[:each |
-				(each classVariables notEmpty
-					or: [each class instanceVariables notEmpty])
-					and: [(each class includesSelector: #initialize) not]]
+		self findLazyInitializedClassStateInPackage: 'XML-Parser'
 	"
 
+	DTDCachingExternalEntityResolver entityCache.
 	XMLAbstractFactory allSubclassesDo: [:each |
 		each hasSupportedImplementation
 			ifTrue: [each implementation]].
+	XMLFileHandle xmlDocumentFileExtensions.
+	XMLParserLimits defaultDocumentReadLimit.
 	XMLStreamConverter
 		encodingNamesAndClassesCache;
 		preferredClasses;
 		encodingNames;
 		allSubclassesDo: [:each | each encodingNames].
+	XMLTextConverterStreamConverter encodingNamesAndTextConverterClassesCache.
 	XMLTokenContext allSubclassesDo: [:each |
 		each instance].
-	XMLParserLimits defaultDocumentReadLimit.
-	DTDCachingExternalEntityResolver entityCache.
-	XMLFileHandle xmlDocumentFileExtensions.
-	XMLTextConverterStreamConverter encodingNamesAndTextConverterClassesCache.
 ]
 
 { #category : #accessing }
@@ -1116,7 +1115,7 @@ ConfigurationOfXMLParser >> release298: spec [
 	<symbolicVersion: #'release-2.9.8'>
 
 	"Users should prefer #stable unless they rely on XMLParser internals"
-	spec for: #'common' version: '3.0.0'.
+	spec for: #'common' version: '3.0.1'.
 ]
 
 { #category : #'symbolic versions' }
@@ -3314,5 +3313,16 @@ ConfigurationOfXMLParser >> version300: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.383'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.192'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version301: spec [ 
+        <version: '3.0.1' imports: #('2.9.7-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.384'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.193'.
                 ].
 ]
