@@ -74,7 +74,7 @@ XMLNode >> ancestorNodesDo: aBlock [
 
 { #category : #converting }
 XMLNode >> asString [
-	"for compatibility with GS where Object>>asString isn't defined"
+	"for compatibility with GS where Object>>#asString isn't defined"
 	^ self printString
 ]
 

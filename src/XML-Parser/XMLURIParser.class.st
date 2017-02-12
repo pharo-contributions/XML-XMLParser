@@ -168,10 +168,10 @@ XMLURIParser >> parsePort [
 XMLURIParser >> parseQuery [
 	| query key value |
 
-	query := OrderPreservingStringDictionary new.
 	(self peekFor: $?)
-		ifFalse: [^ query].
+		ifFalse: [^ OrderedCollection new: 0].
 
+	query := OrderedCollection new.
 	[self atEnd
 		or: [(key := self nextDelimitedBy: QueryKeyDelimiters) isEmpty
 			and: [self peek == $#]]]
@@ -181,10 +181,7 @@ XMLURIParser >> parseQuery [
 				ifFalse: [value := ''].
 			(key notEmpty
 				or: [hasValue])
-				ifTrue: [
-					query
-						at: key
-						put: value].
+				ifTrue: [query addLast: key -> value].
 			self peekFor: $&].
 
 	^ query.

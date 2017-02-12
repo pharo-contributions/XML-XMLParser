@@ -172,7 +172,7 @@ XMLURI >> asRetrievableResource [
 
 { #category : #converting }
 XMLURI >> asString [
-	"for compatibility with GS where Object>>asString isn't defined"
+	"for compatibility with GS where Object>>#asString isn't defined"
 	^ self printString
 ]
 
@@ -242,7 +242,7 @@ XMLURI >> combinedWithRelativeURI: aRelativeURI [
 
 { #category : #copying }
 XMLURI >> copyWithFragment: aString [
-	^ self copy rawFragment: (self percentEncoded: aString)
+	^ self copy rawFragment: (self percentEncode: aString)
 ]
 
 { #category : #copying }
@@ -254,7 +254,7 @@ XMLURI >> copyWithHost: aString [
 		and: [aString first == $[
 			and: [aString last == $]]])
 		ifTrue: [copy rawHost: aString]
-		ifFalse: [copy rawHost: (self percentEncoded: aString)].
+		ifFalse: [copy rawHost: (self percentEncode: aString)].
 	^ copy.
 ]
 
@@ -265,7 +265,8 @@ XMLURI >> copyWithPath: aString [
 	newRawPathSegments := self rawPathSegments copyEmpty.
 	$/
 		xmlSplit: aString
-		do: [:each | newRawPathSegments addLast: (self percentEncoded: each)].
+		do: [:each |
+			newRawPathSegments addLast: (self percentEncode: each)].
 	^ self copy rawPathSegments: newRawPathSegments.
 ]
 
@@ -275,7 +276,7 @@ XMLURI >> copyWithPathSegments: aCollection [
 
 	newRawPathSegments := self rawPathSegments copyEmpty.
 	aCollection do: [:each |
-		newRawPathSegments addLast: (self percentEncoded: each)].
+		newRawPathSegments addLast: (self percentEncode: each)].
 	^ self copy rawPathSegments: newRawPathSegments.
 ]
 
@@ -285,14 +286,14 @@ XMLURI >> copyWithPort: anInteger [
 ]
 
 { #category : #copying }
-XMLURI >> copyWithQuery: aDictionary [
+XMLURI >> copyWithQuery: anAssociationCollection [
 	| newRawQuery |
 
-	newRawQuery := self rawQuery copyEmpty.
-	aDictionary keysAndValuesDo: [:key :value |
-		newRawQuery
-			at: (self percentAndPlusEncoded: key)
-			put: (self percentAndPlusEncoded: value)].
+	newRawQuery := OrderedCollection new: anAssociationCollection size.
+	anAssociationCollection associationsDo: [:each |
+		newRawQuery addLast:
+			(self percentAndPlusEncode: each key) ->
+				(self percentAndPlusEncode: each value)].
 	^ self copy rawQuery: newRawQuery.
 ]
 
@@ -307,7 +308,7 @@ XMLURI >> copyWithScheme: aString [
 
 { #category : #copying }
 XMLURI >> copyWithUserInfo: aString [
-	^ self copy rawUserInfo: (self percentEncoded: aString)
+	^ self copy rawUserInfo: (self percentEncode: aString)
 ]
 
 { #category : #accessing }
@@ -315,7 +316,7 @@ XMLURI >> fragment [
 	"Returns the percent-decoded URI fragment (everything after the '#') or
 	an empty string if there isn't one"
 
-	^ self percentDecoded: self rawFragment
+	^ self percentDecode: self rawFragment
 ]
 
 { #category : #retrieving }
@@ -433,7 +434,7 @@ XMLURI >> host [
 
 	self hasIPv6Host
 		ifTrue: [^ self rawHost]
-		ifFalse: [^ (self percentDecoded: self rawHost) asLowercase]
+		ifFalse: [^ (self percentDecode: self rawHost) asLowercase]
 ]
 
 { #category : #testing }
@@ -513,7 +514,7 @@ XMLURI >> path [
 		ifTrue: [| writeStream |
 			writeStream := (String new: self rawPathSegments size * 10) writeStream.
 			self rawPathSegments
-				do: [:each | writeStream nextPutAll: (self percentDecoded: each)]
+				do: [:each | writeStream nextPutAll: (self percentDecode: each)]
 				separatedBy: [writeStream nextPut: $/].
 			^ writeStream contents]
 		ifFalse: [^ '']
@@ -523,17 +524,17 @@ XMLURI >> path [
 XMLURI >> pathSegments [
 	"Returns a collection of percent-decoded path segments"
 
-	^ self rawPathSegments collect: [:each | self percentDecoded: each]
+	^ self rawPathSegments collect: [:each | self percentDecode: each]
 ]
 
 { #category : #enumerating }
 XMLURI >> pathSegmentsDo: aBlock [
 	self rawPathSegments do: [:each |
-		aBlock value: (self percentDecoded: each)]
+		aBlock value: (self percentDecode: each)]
 ]
 
 { #category : #private }
-XMLURI >> percentAndPlusDecoded: aString [
+XMLURI >> percentAndPlusDecode: aString [
 	| readStream writeStream |
 
 	((aString includes: $%)
@@ -557,7 +558,7 @@ XMLURI >> percentAndPlusDecoded: aString [
 ]
 
 { #category : #private }
-XMLURI >> percentAndPlusEncoded: aString [
+XMLURI >> percentAndPlusEncode: aString [
 	| writeStream |
 
 	writeStream := (String new: aString size) writeStream.
@@ -575,16 +576,7 @@ XMLURI >> percentAndPlusEncoded: aString [
 ]
 
 { #category : #private }
-XMLURI >> percentDecodeNextFrom: aReadStream on: aWriteStream [
-	| readStreamAdapter |
-
-	readStreamAdapter := XMLPercentDecodingReadStreamAdapter on: aReadStream.
-	[readStreamAdapter atEnd]
-		whileFalse: [aWriteStream nextPut: readStreamAdapter next].
-]
-
-{ #category : #private }
-XMLURI >> percentDecoded: aString [
+XMLURI >> percentDecode: aString [
 	| readStream writeStream |
 
 	(aString includes: $%)
@@ -604,7 +596,16 @@ XMLURI >> percentDecoded: aString [
 ]
 
 { #category : #private }
-XMLURI >> percentEncoded: aString [
+XMLURI >> percentDecodeNextFrom: aReadStream on: aWriteStream [
+	| readStreamAdapter |
+
+	readStreamAdapter := XMLPercentDecodingReadStreamAdapter on: aReadStream.
+	[readStreamAdapter atEnd]
+		whileFalse: [aWriteStream nextPut: readStreamAdapter next].
+]
+
+{ #category : #private }
+XMLURI >> percentEncode: aString [
 	| writeStream |
 
 	writeStream := (String new: aString size) writeStream.
@@ -722,14 +723,14 @@ XMLURI >> printQueryOn: aStream [
 	
 	aStream nextPut: $?.
 	atBeginning := true.
-	self rawQuery keysAndValuesDo: [:key :value |
+	self rawQuery do: [:each |
 		atBeginning
 			ifTrue: [atBeginning := false]
 			ifFalse: [aStream nextPut: $&].
 		aStream
-			nextPutAll: key;
+			nextPutAll: each key;
 			nextPut: $=;
-			nextPutAll: value].
+			nextPutAll: each value].
 ]
 
 { #category : #printing }
@@ -752,33 +753,33 @@ XMLURI >> printUserInfoOn: aStream [
 
 { #category : #accessing }
 XMLURI >> query [
-	"Returns a (temporary) order-preserving dictionary of percent and plus
-	decoded query string key=value pairs"
+	"Returns a (temporary) OrderedCollection of percent/plus-decoded
+	query string key=value pairs"
 
-	| query |
-
-	query := self rawQuery copyEmpty.
-	self queryKeysAndValuesDo: [:key :value |
-		query
-			at: key
-			put: value].
-	^ query.
+	^ self rawQuery collect: [:each |
+		(self percentAndPlusDecode: each key) ->
+			(self percentAndPlusDecode: each value)]
 ]
 
 { #category : #accessing }
 XMLURI >> queryAt: aKey [
-	"Returns the percent and plus decoded value of the query string parameter at
-	aKey or an empty string if there isn't one"
+	"Returns the last percent/plus-decoded value of the query string
+	parameter aKey or an empty string if there isn't one"
 
-	^ self percentAndPlusDecoded: (self rawQuery at: aKey)
+	^ self
+		queryAt: aKey
+		ifAbsent: ['']
 ]
 
 { #category : #accessing }
 XMLURI >> queryAt: aKey ifAbsent: aBlock [
-	^ self percentAndPlusDecoded:
-		(self rawQuery
-			at: aKey
-			ifAbsent: [^ aBlock value])
+	"Returns the last percent/plus-decoded value of the query string
+	parameter aKey or the value of aBlock if there isn't one"
+
+	self rawQuery reverseDo: [:each |
+		(self percentAndPlusDecode: each key) = aKey
+			ifTrue: [^ self percentAndPlusDecode: each value]].
+	^ aBlock value.
 ]
 
 { #category : #testing }
@@ -791,21 +792,68 @@ XMLURI >> queryIncludesKey: aKey [
 
 { #category : #accessing }
 XMLURI >> queryKeys [
-	^ self rawQuery keys collect: [:each | self percentAndPlusDecoded: each]
+	"Returns a SequenceableCollection of the unique percent/plus-decoded
+	query string parameter keys"
+
+	| keys |
+
+	keys := OrderedCollection new: self rawQuery size.
+	self queryKeysDo: [:each |
+		keys addLast: each].
+	^ keys.
 ]
 
 { #category : #enumerating }
 XMLURI >> queryKeysAndValuesDo: aTwoArgumentBlock [
-	self rawQuery keysAndValuesDo: [:key :value |
+	self rawQuery do: [:each |
 		aTwoArgumentBlock
-			value: (self percentAndPlusDecoded: key)
-			value: (self percentAndPlusDecoded: value)]
+			value: (self percentAndPlusDecode: each key)
+			value: (self percentAndPlusDecode: each value)]
 ]
 
 { #category : #enumerating }
 XMLURI >> queryKeysDo: aBlock [
-	self rawQuery keysDo: [:each |
-		aBlock value: (self percentAndPlusDecoded: each)]
+	| enumeratedKeys |
+
+	enumeratedKeys := Set new: self rawQuery size.
+	self rawQuery do: [:each | | decodedKey oldSize |
+		decodedKey := self percentAndPlusDecode: each key.
+		oldSize := enumeratedKeys size.
+		(enumeratedKeys
+			add: decodedKey;
+			size) > oldSize
+			ifTrue: [aBlock value: decodedKey]].
+]
+
+{ #category : #accessing }
+XMLURI >> queryValuesAt: aKey [
+	"Returns the percent/plus-decoded values of the query string parameter
+	aKey or an empty collection if there aren't any"
+
+	^ self
+		queryValuesAt: aKey
+		ifAbsent: [OrderedCollection new]
+]
+
+{ #category : #enumerating }
+XMLURI >> queryValuesAt: aKey do: aBlock [
+	self queryKeysAndValuesDo: [:key :value |
+		key = aKey
+			ifTrue: [aBlock value: value]]
+]
+
+{ #category : #accessing }
+XMLURI >> queryValuesAt: aKey ifAbsent: aBlock [
+	"Returns the percent/plus-decoded values of the query string parameter
+	aKey or the value of aBlock if there aren't any"
+
+	| values |
+
+	values := OrderedCollection new.
+	self
+		queryValuesAt: aKey
+		do: [:each | values addLast: each].
+	^ values ifEmpty: aBlock.
 ]
 
 { #category : #private }
@@ -848,8 +896,8 @@ XMLURI >> rawQuery [
 ]
 
 { #category : #private }
-XMLURI >> rawQuery: aDictionary [
-	rawQuery := aDictionary
+XMLURI >> rawQuery: anOrderedCollection [
+	rawQuery := anOrderedCollection
 ]
 
 { #category : #private }
@@ -908,5 +956,5 @@ XMLURI >> uriString: aString [
 
 { #category : #accessing }
 XMLURI >> userInfo [
-	^ self percentDecoded: self rawUserInfo
+	^ self percentDecode: self rawUserInfo
 ]
