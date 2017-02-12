@@ -1,5 +1,5 @@
 "
-This class is a parser that can extract the scheme, user info, host, port, path segments, query (as a dictionary), and fragment of a URI. It does not handle percent decoding and raises no errors.
+This class is a parser that can extract the scheme, user info, host, port, path segments, query (as an OrderedCollection of associations), and fragment of a URI. It does not handle percent decoding and raises no errors.
 "
 Class {
 	#name : #XMLURIParser,
@@ -166,6 +166,10 @@ XMLURIParser >> parsePort [
 
 { #category : #parsing }
 XMLURIParser >> parseQuery [
+	"parse the query as an OrderedCollection of name=value associations
+	to handle multiple values for the same key and different encoded keys
+	that later percent/plus decode to the same key"
+
 	| query key value |
 
 	(self peekFor: $?)

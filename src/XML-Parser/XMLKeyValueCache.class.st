@@ -160,7 +160,7 @@ XMLKeyValueCache >> keysDo: aBlock [
 
 { #category : #accessing }
 XMLKeyValueCache >> loadFactor [
-	^ self size / self maxSize
+	^ (self size / self maxSize) asFraction
 ]
 
 { #category : #accessing }
@@ -196,8 +196,16 @@ XMLKeyValueCache >> postCopy [
 
 { #category : #printing }
 XMLKeyValueCache >> printOn: aStream [
+	| loadFactor |
+
+	loadFactor := self loadFactor.
 	super printOn: aStream.
-	aStream nextPutAll: self loadFactor asFraction asString.
+	aStream
+		nextPut: $(;
+		print: loadFactor numerator;
+		nextPut: $/;
+		print: loadFactor denominator;
+		nextPut: $).
 ]
 
 { #category : #removing }
