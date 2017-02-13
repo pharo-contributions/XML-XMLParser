@@ -821,6 +821,7 @@ XMLURI >> queryKeysDo: aBlock [
 	enumeratedKeys := Set new: self rawQuery size.
 	self rawQuery do: [:each | | decodedKey oldSize |
 		decodedKey := self percentAndPlusDecode: each key.
+		"checking the size after is faster than an #includes: test before"
 		oldSize := enumeratedKeys size.
 		(enumeratedKeys
 			add: decodedKey;
@@ -852,11 +853,13 @@ XMLURI >> queryValuesAt: aKey ifAbsent: aBlock [
 
 	| values |
 
-	values := OrderedCollection new.
 	self
 		queryValuesAt: aKey
-		do: [:each | values addLast: each].
-	^ values ifEmpty: aBlock.
+		do: [:each |
+			"only initialize if needed"
+			(values ifNil: [values := OrderedCollection new])
+				addLast: each].
+	^ values ifNil: [aBlock value].
 ]
 
 { #category : #private }

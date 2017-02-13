@@ -44,6 +44,7 @@ DTDEnumerationListParser >> parse [
 
 	listStartIndex := 1 + self listStartOffset.
 	listEndIndex := listString size - self listEndOffset.
+	"count the values to preallocate an Array"
 	totalListValues := 1.
 	listStartIndex to: listEndIndex do: [:i |
 		(listString at: i) == $|

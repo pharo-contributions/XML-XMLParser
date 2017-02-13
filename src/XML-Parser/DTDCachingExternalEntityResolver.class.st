@@ -46,10 +46,10 @@ DTDCachingExternalEntityResolver class >> entityCacheAtURI: anXMLURIOrURIString 
 ]
 
 { #category : #accessing }
-DTDCachingExternalEntityResolver class >> entityCacheAtURI: anXMLURIOrURIString put: aReplacement [
+DTDCachingExternalEntityResolver class >> entityCacheAtURI: anXMLURIOrURIString put: aStringOrByteArray [
 	^ self entityCache
 		at: anXMLURIOrURIString asXMLURI
-		put: aReplacement
+		put: aStringOrByteArray
 ]
 
 { #category : #accessing }

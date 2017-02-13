@@ -72,6 +72,7 @@ DTDAttributeDefinitionParser >> attributeValidatorClassForType [
 			"'NMTOKENS' size < 'NOTATION (' size"
 			enumerationListParserClass := DTDNotationEnumerationListParser.
 			^ XMLNotationEnumerationAttributeValidator].
+
 	"otherwise it's a (one|two|...) enumeration attribute"
 	enumerationListParserClass := DTDEnumerationListParser.
 	^ XMLEnumerationAttributeValidator.
