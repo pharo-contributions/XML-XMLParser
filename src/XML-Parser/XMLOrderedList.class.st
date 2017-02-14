@@ -602,6 +602,12 @@ XMLOrderedList >> inspectorClass [
 ]
 
 { #category : #testing }
+XMLOrderedList >> isEmpty [
+	"Squeak's Collection>>#isEmpty is inefficient"
+	^ self size = 0
+]
+
+{ #category : #testing }
 XMLOrderedList >> isSequenceable [
 	^ true
 ]

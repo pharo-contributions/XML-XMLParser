@@ -108,6 +108,12 @@ XMLNFAStateSet >> isAccepting [
 	^ isAccepting
 ]
 
+{ #category : #testing }
+XMLNFAStateSet >> isEmpty [
+	"Squeak's Collection>>#isEmpty is inefficient"
+	^ self size = 0
+]
+
 { #category : #copying }
 XMLNFAStateSet >> postCopy [
 	set := set copy
