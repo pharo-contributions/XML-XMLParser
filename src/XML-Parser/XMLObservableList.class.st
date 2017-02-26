@@ -94,6 +94,9 @@ XMLObservableList >> afterAdding: anObject at: anIndex [
 
 { #category : #private }
 XMLObservableList >> afterAddingLast: anObject [
+	"can be used to handle appending separately and more efficiently than
+	insertion"
+
 	self
 		afterAdding: anObject
 		at: self size
@@ -101,6 +104,10 @@ XMLObservableList >> afterAddingLast: anObject [
 
 { #category : #private }
 XMLObservableList >> afterAddingToCopyLast: anObject [
+	"can be used to handle appending existing elements to a copy separately and
+	more efficiently than #afterAddingLast: so not as much checking needs to be
+	done (because no new elements are being added to the copy)"
+
 	self afterAddingLast: anObject
 ]
 
@@ -209,5 +216,6 @@ XMLObservableList >> reset [
 
 	removed := collection copy.
 	collection reset.
-	removed do: [:each | self afterRemoving: each].
+	removed reverseDo: [:each |
+		self afterRemoving: each].
 ]
