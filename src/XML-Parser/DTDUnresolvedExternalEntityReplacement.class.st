@@ -31,9 +31,9 @@ DTDUnresolvedExternalEntityReplacement >> baseURI [
 DTDUnresolvedExternalEntityReplacement >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPut: $(.
-	self publicID
-		ifEmpty: [aStream nextPutAll: 'SYSTEM']
-		ifNotEmpty: [
+	self publicID isEmpty
+		ifTrue: [aStream nextPutAll: 'SYSTEM']
+		ifFalse: [
 			aStream
 				nextPutAll: 'PUBLIC "';
 				nextPutAll: self publicID;

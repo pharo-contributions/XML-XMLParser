@@ -41,6 +41,15 @@ XMLCachingAttributeList >> afterAddingLast: aNode [
 ]
 
 { #category : #private }
+XMLCachingAttributeList >> afterAddingToCopyLast: aNode [
+	self attributeNodesByName
+		at: aNode name
+		put: aNode.
+	observer
+		ifNotNil: [observer addedAttribute: aNode].
+]
+
+{ #category : #private }
 XMLCachingAttributeList >> afterRemoving: aNode [
 	self attributeNodesByName removeKey: aNode name.
 	observer
@@ -58,6 +67,12 @@ XMLCachingAttributeList >> attributeValueAt: aName ifAbsent: aBlock [
 	^ (self attributeNodesByName
 		at: aName
 		ifAbsent: [^ aBlock value]) value
+]
+
+{ #category : #private }
+XMLCachingAttributeList >> copyClass [
+	"use the non-caching superclass for copies for performance"
+	^ XMLAttributeList
 ]
 
 { #category : #testing }

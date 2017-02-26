@@ -77,6 +77,13 @@ XMLObservableList >> addLast: anObject [
 ]
 
 { #category : #private }
+XMLObservableList >> addToCopyLast: anObject [
+	collection addLast: anObject.
+	self afterAddingToCopyLast: anObject.
+	^ anObject.
+]
+
+{ #category : #private }
 XMLObservableList >> afterAdding: anObject at: anIndex [
 	observer
 		ifNotNil: [
@@ -90,6 +97,11 @@ XMLObservableList >> afterAddingLast: anObject [
 	self
 		afterAdding: anObject
 		at: self size
+]
+
+{ #category : #private }
+XMLObservableList >> afterAddingToCopyLast: anObject [
+	self afterAddingLast: anObject
 ]
 
 { #category : #private }

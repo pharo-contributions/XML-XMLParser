@@ -79,14 +79,15 @@ XMLNamespaceScope >> errorAttribute: anAttribute aliasesNamespace: aNamespace [
 
 { #category : #private }
 XMLNamespaceScope >> errorCannotAliasXMLOrXMLNSWithPrefix: aPrefix [
-	aPrefix
-		ifEmpty: [
+	aPrefix isEmpty
+		ifTrue: [
 			XMLNamespaceException signal:
 				'Cannot use "xml" or  "xmlns" namespace URI as default namespace']
-		ifNotEmpty: [
+		ifFalse: [
 			XMLNamespaceException
 				formatSignal:
-					'Cannot alias the "xml" or "xmlns" namespace URIs with prefix "{1}"'
+					'Cannot alias the "xml" or "xmlns" namespace URIs ',
+					'with prefix "{1}"'
 				with: aPrefix]
 ]
 

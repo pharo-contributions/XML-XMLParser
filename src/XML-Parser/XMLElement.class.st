@@ -413,8 +413,9 @@ XMLElement >> defaultNamespace: aURI [
 
 { #category : #accessing }
 XMLElement >> expandedName [
-	"returns the expanded name of the element as a string in the form of either
-	'{namespaceURI}localName' (if there's a namespace URI) or 'localName'"
+	"Returns the expanded name of the element as a string in the form of
+	'{namespaceURI}localName' if there's a namespace URI or 'localName' if there
+	isn't"
 
 	^ self localName expandWithXMLNamespaceURI: self namespaceURI
 ]

@@ -49,8 +49,9 @@ XMLAttribute >> element: anElement [
 
 { #category : #accessing }
 XMLAttribute >> expandedName [
-	"returns the expanded name of the element as a string in the form of either
-	'{namespaceURI}localName' (if there's a namespace URI) or 'localName'"
+	"Returns the expanded name of the attribute as a string in the form of
+	'{namespaceURI}localName' if there's a namespace URI or 'localName' if there
+	isn't"
 
 	^ self localName expandWithXMLNamespaceURI: self namespaceURI
 ]
@@ -130,13 +131,7 @@ XMLAttribute >> name: aName [
 
 { #category : #accessing }
 XMLAttribute >> namespaceURI [
-	| prefix |
-
-	"attributes must have prefixes to be namespaced"
-	(self hasParent
-		and: [(prefix := self prefix) notEmpty])
-		ifTrue: [^ self parent resolvePrefix: prefix]
-		ifFalse: [^ '']
+	^ self resolvePrefix: self prefix
 ]
 
 { #category : #accessing }
@@ -167,6 +162,32 @@ XMLAttribute >> renameWith: aBlock [
 					renamedAttribute: self
 					from: oldName
 					to: self name].
+]
+
+{ #category : #namespacing }
+XMLAttribute >> resolvePrefix: aPrefix [
+	"This resolves the attribute prefix aPrefix or returns an empty string
+	if aPrefix is empty (attributes must be prefixed to have a namespace) or
+	undeclared"
+
+	^ self
+		resolvePrefix: aPrefix
+		ifUnresolvable: ''
+]
+
+{ #category : #namespacing }
+XMLAttribute >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
+	"This resolves the attribute prefix aPrefix or returns the result of
+	evaluated aBlock if aPrefix is empty (attributes must be prefixed to have
+	a namespace) or undeclared"
+
+	^ (self hasParent
+		and: [aPrefix size > 0]) "no default namespace for attributes"
+		ifTrue: [
+			self parent
+				resolvePrefix: aPrefix
+				ifUnresolvable: aBlock]
+		ifFalse: [aBlock value]
 ]
 
 { #category : #initialization }

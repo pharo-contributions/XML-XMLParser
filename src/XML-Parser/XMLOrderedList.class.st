@@ -61,11 +61,11 @@ XMLOrderedList class >> ofSize: aSize [
 ]
 
 { #category : #copying }
-XMLOrderedList >> , aCollection [ 
-	^ self
-		copyReplaceFrom: self size + 1
-		to: self size
-		with: aCollection
+XMLOrderedList >> , aCollection [
+	"GS doesn't define #, for non-Sequenceable collections"
+	^ self copy
+		addAll: aCollection;
+		yourself
 ]
 
 { #category : #comparing }
@@ -140,6 +140,16 @@ XMLOrderedList >> addFirst: anObject [
 
 { #category : #adding }
 XMLOrderedList >> addLast: anObject [
+	^ collection addLast: anObject
+]
+
+{ #category : #private }
+XMLOrderedList >> addToCopyLast: anObject [
+	"this is used to efficiently append to copies for methods like #copy,
+	#copyWithout:, #select:, and #reject: that create copies with no new elements
+	(only old ones) so duplicate or other constraint checking can be skipped
+	by subclasses"
+
 	^ collection addLast: anObject
 ]
 
@@ -286,9 +296,13 @@ XMLOrderedList >> collection [
 
 { #category : #copying }
 XMLOrderedList >> copy [
-	^ self copyEmpty
-		addAll: self;
-		yourself
+	| copy |
+
+	copy := self copyEmpty.
+	"#to:do: for speed with direct access"
+	1 to: collection size do: [:i |
+		copy addToCopyLast: (collection at: i)].
+	^ copy.
 ]
 
 { #category : #copying }
@@ -300,7 +314,7 @@ XMLOrderedList >> copyAfter: anObject [
 		indexOf: anObject
 		ifAbsent: [^ copy]) + 1
 			to: self size
-			do: [:i | copy addLast: (self at: i)].
+			do: [:i | copy addToCopyLast: (self at: i)].
 	^ copy.
 ]
 
@@ -313,7 +327,7 @@ XMLOrderedList >> copyAfterLast: anObject [
 		lastIndexOf: anObject
 		ifAbsent: [^ copy]) + 1
 			to: self size
-			do: [:i | copy addLast: (self at: i)].
+			do: [:i | copy addToCopyLast: (self at: i)].
 	^ copy.
 ]
 
@@ -344,7 +358,7 @@ XMLOrderedList >> copyFrom: aStart to: anEnd [
 	copy := self copyEmpty.
 	(aStart max: 1)
 		to: (anEnd min: self size)
-		do: [:i | copy addLast: (self at: i)].
+		do: [:i | copy addToCopyLast: (self at: i)].
 	^ copy.
 ]
 
@@ -371,6 +385,7 @@ XMLOrderedList >> copyReplaceAll: aSearchCollection with: aReplacementCollection
 						whileTrue: [searchCollectionIndex := searchCollectionIndex + 1].
 					searchCollectionIndex > searchCollectionSize
 						ifTrue: [
+							"found a match, add the replacement and skip the replaced"
 							copy addAll: aReplacementCollection.
 							index := index + searchCollectionSize]
 						ifFalse: [
@@ -418,7 +433,7 @@ XMLOrderedList >> copyUpTo: anObject [
 			(self
 				indexOf: anObject
 				ifAbsent: [self size + 1]) - 1
-		do: [:i | copy addLast: (self at: i)].
+		do: [:i | copy addToCopyLast: (self at: i)].
 	^ copy.
 ]
 
@@ -432,7 +447,7 @@ XMLOrderedList >> copyUpToLast: anObject [
 			(self
 				lastIndexOf: anObject
 				ifAbsent: [collection size + 1]) - 1
-		do: [:i | copy addLast: (self at: i)].
+		do: [:i | copy addToCopyLast: (self at: i)].
 	^ copy.
 ]
 
@@ -453,18 +468,18 @@ XMLOrderedList >> copyWithFirst: anObject [
 
 { #category : #copying }
 XMLOrderedList >> copyWithout: anObject [
-	^ self copy
-		remove: anObject ifAbsent: [nil];
-		yourself
+	^ self reject: [:each | each = anObject]
 ]
 
 { #category : #copying }
 XMLOrderedList >> copyWithoutAll: aCollection [
-	| copy |
+	| rejected |
 
-	copy := self copy.
-	aCollection do: [:each | copy remove: each ifAbsent: [nil]].
-	^ copy.
+	rejected :=
+		aCollection size > 5
+			ifTrue: [aCollection asSet]
+			ifFalse: [aCollection].
+	^ self reject: [:each | rejected includes: each].
 ]
 
 { #category : #private }
@@ -537,7 +552,8 @@ XMLOrderedList >> hash [
 	hash := self species hash.
 	self size > 10
 		ifFalse: [
-			self do: [:each | hash := hash bitXor: each hash]].
+			self do: [:each |
+				hash := hash bitXor: each hash]].
 	^ hash bitXor: self size hash.
 ]
 
@@ -661,7 +677,7 @@ XMLOrderedList >> reject: aBlock [
 	1 to: collection size do: [:i | | item |
 		item := collection at: i.
 		(aBlock value: item)
-			ifFalse: [selected addLast: item]].
+			ifFalse: [selected addToCopyLast: item]].
 	^ selected.
 ]
 
@@ -685,10 +701,10 @@ XMLOrderedList >> remove: anObject ifAbsent: aBlock [
 
 { #category : #removing }
 XMLOrderedList >> removeAll [
-	"Redefined because Collection>>removeAll assumes the collection can
-	be safely modified while iterating it with do:"
+	"Redefined because Collection>>#removeAll assumes the collection can
+	be safely modified while iterating it with #do:"
 
-	[self isEmpty] whileFalse: [self removeLast]
+	self size timesRepeat: [self removeLast]
 ]
 
 { #category : #removing }
@@ -769,7 +785,7 @@ XMLOrderedList >> reversed [
 	| reversed |
 
 	reversed := self copyEmpty.
-	self reverseDo: [:each | reversed addLast: each].
+	self reverseDo: [:each | reversed addToCopyLast: each].
 	^ reversed.
 ]
 
@@ -787,7 +803,7 @@ XMLOrderedList >> select: aBlock [
 	1 to: collection size do: [:i | | item |
 		item := collection at: i.
 		(aBlock value: item)
-			ifTrue: [selected addLast: item]].
+			ifTrue: [selected addToCopyLast: item]].
 	^ selected.
 ]
 

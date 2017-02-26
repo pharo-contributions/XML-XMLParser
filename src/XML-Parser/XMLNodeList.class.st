@@ -37,6 +37,12 @@ XMLNodeList >> afterAddingLast: aNode [
 ]
 
 { #category : #private }
+XMLNodeList >> afterAddingToCopyLast: aNode [
+	observer
+		ifNotNil: [observer addedNode: aNode]
+]
+
+{ #category : #private }
 XMLNodeList >> afterRemoving: aNode [
 	observer
 		ifNotNil: [observer removedNode: aNode]
@@ -177,7 +183,7 @@ XMLNodeList >> elementsDetect: aBlock ifNone: anExceptionBlock [
 
 { #category : #enumerating }
 XMLNodeList >> elementsDo: aBlock [
-	"to:do: for performance, because so many methods rely on this"
+	"#to:do: for performance, because so many methods rely on this"
 	1 to: collection size do: [:i | | node |
 		(node := collection at: i) isElement
 			ifTrue: [aBlock value: node]]
@@ -192,7 +198,7 @@ XMLNodeList >> elementsSelect: aBlock [
 	selectedElements := self copyEmpty.
 	self elementsDo: [:each |
 		(aBlock value: each)
-			ifTrue: [selectedElements addLast: each]].
+			ifTrue: [selectedElements addToCopyLast: each]].
 	^ selectedElements.
 ]
 

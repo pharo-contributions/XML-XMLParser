@@ -54,6 +54,14 @@ XMLCachingNodeList >> afterAddingLast: aNode [
 ]
 
 { #category : #private }
+XMLCachingNodeList >> afterAddingToCopyLast: aNode [
+	aNode isElement
+		ifTrue: [self cacheElementAddedLast: aNode].
+	observer
+		ifNotNil: [observer addedNode: aNode].
+]
+
+{ #category : #private }
 XMLCachingNodeList >> afterRemoving: aNode [
 	aNode isElement
 		ifTrue: [self uncacheElement: aNode].
@@ -161,7 +169,7 @@ XMLCachingNodeList >> cachedElementsByNameAt: aName remove: anElement [
 
 { #category : #private }
 XMLCachingNodeList >> copyClass [
-	"use superclass for copies for performance"
+	"use the non-caching superclass for copies for performance"
 	^ XMLNodeList
 ]
 
@@ -193,8 +201,11 @@ XMLCachingNodeList >> elementsAt: aName [
 		self cachedElementsByName
 			at: aName
 			ifAbsent: [^ copiedElements]) isCollection
-		ifTrue: [copiedElements addAll: elementsWithName]
-		ifFalse: [copiedElements addLast: elementsWithName].
+		ifTrue: [
+			elementsWithName do: [:each |
+				copiedElements addToCopyLast: each]]
+		ifFalse: [
+			copiedElements addToCopyLast: elementsWithName].
 	^ copiedElements.
 ]
 

@@ -32,6 +32,12 @@ XMLInternalSubsetList >> afterAddingLast: aNode [
 ]
 
 { #category : #private }
+XMLInternalSubsetList >> afterAddingToCopyLast: aNode [
+	observer
+		ifNotNil: [observer addedNode: aNode]
+]
+
+{ #category : #private }
 XMLInternalSubsetList >> afterRemoving: aNode [
 	observer ifNotNil: [observer removedNode: aNode]
 ]

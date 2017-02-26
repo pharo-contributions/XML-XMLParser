@@ -59,6 +59,12 @@ XMLAttributeList >> afterAddingLast: aNode [
 ]
 
 { #category : #private }
+XMLAttributeList >> afterAddingToCopyLast: aNode [
+	observer
+		ifNotNil: [observer addedAttribute: aNode]
+]
+
+{ #category : #private }
 XMLAttributeList >> afterRemoving: aNode [
 	observer
 		ifNotNil: [observer removedAttribute: aNode].
@@ -326,15 +332,24 @@ XMLAttributeList >> writeAttributesOn: aWriter [
 XMLAttributeList >> writeCanonicalAttributesOn: aWriter [
 	| sortedAttributes |
 
-	sortedAttributes :=
-		self sorted: [:a :b | | namespaceURIOfA namespaceURIOfB |
-			"the namespace URI is the primary key and
-			the local name is the secondary key"
-			namespaceURIOfA := a namespaceURI.
-			namespaceURIOfB := b namespaceURI.
-			namespaceURIOfA < namespaceURIOfB
-				or: [namespaceURIOfA = namespaceURIOfB
-					and: [a localName <= b localName]]].
+	(sortedAttributes := self asArray) sort: [:a :b | | prefixOfA prefixOfB |
+		prefixOfA := a prefix.
+		prefixOfB := b prefix.
+		prefixOfA = prefixOfB
+			ifTrue: [
+				(a name xmlLocalNameAfterPrefix: prefixOfA)
+					<= (b name xmlLocalNameAfterPrefix: prefixOfB)]
+			ifFalse: [| uriOfA uriOfB |
+				"the namespace URI is the primary key and
+				the local name is the secondary key"
+				uriOfA := a resolvePrefix: prefixOfA.
+				uriOfB := b resolvePrefix: prefixOfB.
+				uriOfA < uriOfB
+					or: [
+						uriOfA = uriOfB
+							and: [
+								(a name xmlLocalNameAfterPrefix: prefixOfA)
+									<= (b name xmlLocalNameAfterPrefix: prefixOfB)]]]].
 
 	"use to:do: for fast writing"
 	1 to: sortedAttributes size do: [:i | | attribute |
