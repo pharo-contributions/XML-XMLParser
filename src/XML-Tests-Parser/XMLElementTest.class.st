@@ -1431,7 +1431,7 @@ XMLElementTest >> testResolvePrefixIfUnresolvable [
 		self assert:
 			(element
 				resolvePrefix: prefix
-				ifUnresolvable: [#absent]) = #absent.
+				ifUnresolvable: [#unresolvable]) = #unresolvable.
 		element declarePrefix: prefix uri: uri.
 		self assert:
 			(element
@@ -1442,8 +1442,7 @@ XMLElementTest >> testResolvePrefixIfUnresolvable [
 		(element
 			resolvePrefix: 'xml'
 			ifUnresolvable: [self fail]) = XMLNamespaceScope xmlNamespaceURI.
-	
-	self assert:
+	self  assert:
 		(element
 			resolvePrefix: 'xmlns'
 			ifUnresolvable: [self fail]) = XMLNamespaceScope xmlnsNamespaceURI.

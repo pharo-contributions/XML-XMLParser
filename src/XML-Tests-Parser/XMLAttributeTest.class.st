@@ -293,6 +293,54 @@ XMLAttributeTest >> testPrefix [
 ]
 
 { #category : #tests }
+XMLAttributeTest >> testResolvePrefix [
+	| element attribute|
+
+	element := self newElementWithAttributes.
+	attribute := element attributeNodes first.
+	self namespaces keysAndValuesDo: [:prefix :uri |
+		"no default namespace for attributes"
+		prefix = ''
+			ifTrue: [self assert: (attribute resolvePrefix: prefix) = '']
+			ifFalse: [self assert: (attribute resolvePrefix: prefix) = uri]].
+
+	self assert:
+		(attribute resolvePrefix: 'xml') = XMLNamespaceScope xmlNamespaceURI.
+	self  assert:
+		(attribute resolvePrefix: 'xmlns') = XMLNamespaceScope xmlnsNamespaceURI.
+]
+
+{ #category : #tests }
+XMLAttributeTest >> testResolvePrefixIfUnresolvable [
+	| element attribute|
+
+	element := self newElementWithAttributes.
+	attribute := element attributeNodes first.
+	self namespaces keysAndValuesDo: [:prefix :uri |
+		prefix = ''
+			ifTrue: [
+				"no default namespace for attributes"
+				self assert:
+					(attribute
+						resolvePrefix: prefix
+						ifUnresolvable: [#unresolvable]) = #unresolvable]
+			ifFalse: [
+				self assert:
+					(attribute
+						resolvePrefix: prefix
+						ifUnresolvable: [self fail]) = uri]].
+
+	self assert:
+		(attribute
+			resolvePrefix: 'xml'
+			ifUnresolvable: [self fail]) = XMLNamespaceScope xmlNamespaceURI.
+	self  assert:
+		(attribute
+			resolvePrefix: 'xmlns'
+			ifUnresolvable: [self fail]) = XMLNamespaceScope xmlnsNamespaceURI.
+]
+
+{ #category : #tests }
 XMLAttributeTest >> testSortKey [
 	self assert: (self newNode name: 'test') sortKey = 'test'
 ]

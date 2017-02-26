@@ -111,5 +111,5 @@ XMLAttributeDeclarationTest >> testWriteXMLOn [
 			attribute: 'two'
 			type: '(three|four)'
 			defaultPragma: '#IMPLIED'
-			defaultValue: 'four') printString = '<!ATTLIST one two (three|four) #IMPLIED "four">'.
+			defaultValue: 'four') printString = '<!ATTLIST one two (three|four) #IMPLIED>'.
 ]

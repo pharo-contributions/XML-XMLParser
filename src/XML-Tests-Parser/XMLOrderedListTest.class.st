@@ -142,7 +142,9 @@ XMLOrderedListTest >> listCopyClass [
 
 { #category : #accessing }
 XMLOrderedListTest >> listItems [
-	^ #('one' 'two' 'three' 'four' 'five' 'six' 'seven' 'eight' 'nine') copy
+	^ #('one' 'two' 'three' 'four' 'five'
+		'six' 'seven' 'eight' 'nine' 'ten'
+		'eleven') copy
 ]
 
 { #category : #accessing }
@@ -922,40 +924,45 @@ XMLOrderedListTest >> testCopyWithFirst [
 
 { #category : #tests }
 XMLOrderedListTest >> testCopyWithout [
-	| list |
+	self listItems do: [:each | | list |
+		list := self emptyList.
+		self
+			assertList: (list copyWithout: each)
+			copiedFrom: list
+			equals: self emptyList.
 
-	list := self emptyList.
-	self
-		assertList: (list copyWithout: self singleListItem)
-		copiedFrom: list
-		equals: self emptyList.
-
-	list := self listWithItems.
-	self
-		assertList: (list copyWithout: self singleListItem)
-		copiedFrom: list
-		equals: (self listClass newFrom: (self listItems copyWithout: self singleListItem)).
+		list := self listWithItems.
+		self
+			assertList: (list copyWithout: self absentListItem)
+			copiedFrom: list
+			equals: self listWithItems.
+		self
+			assertList: (list copyWithout: each)
+			copiedFrom: list
+			equals: (self listClass newFrom: (self listItems copyWithout: each))]
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testCopyWithoutAll [
-	| list |
+	1 to: self listItems size do: [:i | | itemsToRemove list |
+		itemsToRemove := self listItems copyFrom: 1 to: i.
+		list := self emptyList.
+		self
+			assertList: (list copyWithoutAll: itemsToRemove)
+			copiedFrom: list
+			equals: self emptyList.
 
-	list := self emptyList.
-	self
-		assertList: (list copyWithoutAll: self listItems)
-		copiedFrom: list
-		equals: self emptyList.
-
-	list := self listWithItems.
-	self
-		assertList: (list copyWithoutAll: (Array with: self absentListItem))
-		copiedFrom: list
-		equals: self listWithItems.
-	self
-		assertList: (list copyWithoutAll: self listItems)
-		copiedFrom: list
-		equals: self emptyList.
+		list := self listWithItems.
+		self
+			assertList: (list copyWithoutAll: (Array with: self absentListItem))
+			copiedFrom: list
+			equals: self listWithItems.
+		self
+			assertList: (list copyWithoutAll: itemsToRemove)
+			copiedFrom: list
+			equals:
+				(self listClass newFrom:
+					(self listItems copyWithoutAll: itemsToRemove))]
 ]
 
 { #category : #tests }
@@ -1276,6 +1283,14 @@ XMLOrderedListTest >> testIndexOfSubCollectionStartingAtIfAbsent [
 ]
 
 { #category : #tests }
+XMLOrderedListTest >> testIsEmpty [
+	self
+		assert: self emptyList isEmpty;
+		deny: self listWithSingleItem isEmpty;
+		deny: self listWithItems isEmpty
+]
+
+{ #category : #tests }
 XMLOrderedListTest >> testLast [
 	self
 		assert: self emptyList last = self defaultValue;
@@ -1441,7 +1456,9 @@ XMLOrderedListTest >> testRemoveAll [
 
 	list := self listWithItems.
 	self
-		assert: (list removeAll) == list;
+		assert: list removeAll == list;
+		assert: list isEmpty;
+		assert: list removeAll == list;
 		assert: list isEmpty.
 ]
 
