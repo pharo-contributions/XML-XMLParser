@@ -528,6 +528,6 @@ XMLObservableListTest >> testReset [
 	list := self listWithItems.
 	self
 		should: [list reset]
-		removeAll: self listItems
+		removeAll: self listItems reversed
 		fromAndNotify: list.
 ]
