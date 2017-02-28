@@ -19,7 +19,7 @@ XMLKeyValueCache class >> defaultMaxSize [
 
 { #category : #private }
 XMLKeyValueCache class >> errorNoSupportedImplementation [
-	Error signal: 'No supported key-value cache class'
+	Error signal: 'No supported key-value cache class available'
 ]
 
 { #category : #'instance creation' }

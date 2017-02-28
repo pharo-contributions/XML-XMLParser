@@ -540,11 +540,6 @@ XMLOrderedList >> fourth [
 	^ self at: 4
 ]
 
-{ #category : #copying }
-XMLOrderedList >> grownBy: aSize [
-	^ self copyClass collection: (collection grownBy: aSize)
-]
-
 { #category : #comparing }
 XMLOrderedList >> hash [
 	| hash|
@@ -665,7 +660,8 @@ XMLOrderedList >> pairsDo: aBlock [
 
 { #category : #converting }
 XMLOrderedList >> readStream [
-	^ ReadStream on: self
+	"use #readStream to get a 0-based position stream on GS"
+	^ collection readStream
 ]
 
 { #category : #enumerating }
@@ -769,8 +765,8 @@ XMLOrderedList >> reset [
 
 { #category : #converting }
 XMLOrderedList >> reverse [
-	"despite its name, this returns a reversed copy rather than doing in-place
-	reversal. Same as SequenceableCollection's reverse"
+	"returns a copy like #reversed instead of doing in-place reversal to
+	be compatible with SequenceableCollection>>#reverse"
 
 	^ self reversed
 ]
@@ -926,7 +922,12 @@ XMLOrderedList >> withIndexDo: aBlock [
 
 { #category : #converting }
 XMLOrderedList >> writeStream [
-	^ WriteStream on: self
+	"This is not supported because the collection already supports WriteStream
+	behavior with #addLast: and the Pharo/Squeak WriteStream works by expanding
+	its collection with #grownBy:, which should fill the new space with nils,
+	but some subclasses cannot contain nil"
+
+	self shouldNotImplement
 ]
 
 { #category : #accessing }
