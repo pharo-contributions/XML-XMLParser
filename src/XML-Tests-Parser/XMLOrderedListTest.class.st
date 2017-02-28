@@ -1409,16 +1409,21 @@ XMLOrderedListTest >> testPairsDo [
 
 { #category : #tests }
 XMLOrderedListTest >> testReadStream [
-	| list stream elements |
+	| list stream position |
 
 	list := self listWithItems.
 	stream := list readStream.
-	self assert: (stream isKindOf: ReadStream).
-
-	elements := self listItems asOrderedCollection.
-	[stream atEnd]
-		whileFalse: [self assert: stream next = elements removeFirst].
-	self assert: elements isEmpty.
+	position := 0.
+	self
+		assert: stream isStream;
+		assert: stream position = 0.
+	self listItems do: [:each |
+		self
+			deny: stream atEnd;
+			assert: stream next = each.
+		position := position + 1.
+		self assert: stream position = position].
+	self assert: stream atEnd.
 ]
 
 { #category : #tests }
@@ -1862,16 +1867,9 @@ XMLOrderedListTest >> testWithIndexDo [
 
 { #category : #tests }
 XMLOrderedListTest >> testWriteStream [
-	| list stream |
-
-	list := self emptyList.
-	stream := list writeStream.
-	self assert: (stream isKindOf: WriteStream).
-
-	self listItems do: [:each | stream nextPut: each].
-	self assert:
-		(stream contents) asOrderedCollection =
-			self listItems asOrderedCollection.
+	self
+		should: [self emptyList writeStream]
+		raise: Error
 ]
 
 { #category : #tests }
