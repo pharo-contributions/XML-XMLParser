@@ -15,7 +15,7 @@ Class {
 XMLHighlightingParser >> asHighlightedText [
 	| text |
 
-	text := self inputText.
+	text := self input asString asText.
 	highlighter highlightText: text.
 	^ text.
 ]
@@ -87,16 +87,11 @@ XMLHighlightingParser >> highlighter [
 	^ highlighter
 ]
 
-{ #category : #private }
-XMLHighlightingParser >> inputText [
-	^ self input asString asText
-]
-
 { #category : #initialization }
 XMLHighlightingParser >> on: aStringOrStream [
 	super on: aStringOrStream.
 
-	highlighter := XMLHighlighter new.
+	highlighter := XMLDocumentHighlighter new.
 	encoding := ''.
 ]
 

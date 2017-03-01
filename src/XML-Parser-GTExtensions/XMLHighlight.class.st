@@ -20,7 +20,7 @@ XMLHighlight >> applyToText: aText [
 	being highlighted was truncated by printString/asString"
 	attributeStart := self start ifNil: [1].
 	attributeEnd := (self end ifNil: [aText size]) min: aText size.
-	attributeStart < attributeEnd
+	attributeStart <= attributeEnd
 		ifTrue: [
 			aText
 				addAttribute: self color

@@ -35,7 +35,7 @@ XMLHighlightingWriter >> highlighter [
 XMLHighlightingWriter >> initialize [
 	super initialize.
 
-	highlighter := XMLHighlighter new.
+	highlighter := XMLDocumentHighlighter new.
 ]
 
 { #category : #accessing }
