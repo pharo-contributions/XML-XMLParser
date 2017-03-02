@@ -16,7 +16,7 @@ FileReference >> gtInspectorXMLFileIn: aComposite [
 			editingMode: [
 				"saved to get the encoding later"
 				currentTextStylerDecorator :=
-					GLMXMLHighlighterTextStylerDecorator new.
+					GLMXMLDocumentHighlighterTextStylerDecorator new.
 				GLMHighlighterTextRubEditingMode withStylerDecorator:
 					currentTextStylerDecorator];
 			display: [

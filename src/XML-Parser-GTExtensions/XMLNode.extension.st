@@ -24,17 +24,17 @@ XMLNode classSide >> gtExampleNodeWithParent [
 
 { #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> gtInspectorSourceIn: composite [
-	<gtInspectorPresentationOrder: 9>
+	<gtInspectorPresentationOrder: 6>
 
 	"removed unfinished source panel editing support for now"
-	composite text 
+	composite text
 		title: 'Source';
 		format: #asHighlightedText
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> gtInspectorTreeIn: composite [
-	<gtInspectorPresentationOrder: 8>
+	<gtInspectorPresentationOrder: 5>
 	^ composite tree
 		title: 'Tree';
 		display: [ {self} ];

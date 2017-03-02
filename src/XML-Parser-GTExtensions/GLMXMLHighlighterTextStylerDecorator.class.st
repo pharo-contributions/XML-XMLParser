@@ -49,6 +49,11 @@ GLMXMLHighlighterTextStylerDecorator >> highlightableLengthLimit: aLimit [
 	highlightableLengthLimit := aLimit
 ]
 
+{ #category : #private }
+GLMXMLHighlighterTextStylerDecorator >> highlightingParse: aString onSuccess: aOneArgumentBlock onError: aTwoArgumentBlock [
+	self subclassResponsibility
+]
+
 { #category : #initialization }
 GLMXMLHighlighterTextStylerDecorator >> initialize [
 	super initialize.
@@ -60,25 +65,25 @@ GLMXMLHighlighterTextStylerDecorator >> initialize [
 
 { #category : #parsing }
 GLMXMLHighlighterTextStylerDecorator >> parse: aString onError: anError [
-	| highlightingParser parser highlightedText |
+	| highlightedText |
 
 	aString size > self highlightableLengthLimit
 		ifTrue: [^ aString asText].
 
-	highlightingParser := XMLHighlightingParser on: aString.
-	parser := highlightingParser parser. "used to get position on error"
-	[parser parseDocument.
-		highlightedText := highlightingParser asHighlightedText]
-		on: XMLParserException
-		do: [:error |
+	self
+		highlightingParse: aString
+		onSuccess: [:highlightingParser |
+			highlightedText := highlightingParser asHighlightedText.
+			encoding := highlightingParser encoding]
+		onError: [:highlightingParser :position |
 			highlightedText :=
 				highlightingParser
 					asHighlightedTextWithRemainderColored: self errorColor
 					startingAt:
-						(parser currentPosition >= aString size
+						(position >= aString size
 							ifTrue: [1]
-							ifFalse: [parser currentPosition])].
-	encoding := highlightingParser encoding.
+							ifFalse: [position]).
+			encoding := highlightingParser encoding].
 
 	^ highlightedText.
 ]
