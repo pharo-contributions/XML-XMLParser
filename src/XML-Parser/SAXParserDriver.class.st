@@ -55,6 +55,21 @@ SAXParserDriver >> currentElement [
 	^ self elementNester currentElement
 ]
 
+{ #category : #accessing }
+SAXParserDriver >> currentElement: anElement [
+	self elementNester currentElement: anElement
+]
+
+{ #category : #accessing }
+SAXParserDriver >> currentScope [
+	^ self scopeAllocator currentScope
+]
+
+{ #category : #accessing }
+SAXParserDriver >> currentScope: aNamespaceScope [
+	self scopeAllocator currentScope: aNamespaceScope
+]
+
 { #category : #private }
 SAXParserDriver >> declareNamespaces: aSequenceableCollection inScope: aScope [
 	1 to: aSequenceableCollection size do: [:i | | association |
@@ -543,6 +558,11 @@ SAXParserDriver >> isStandalone [
 	^ isStandalone
 ]
 
+{ #category : #accessing }
+SAXParserDriver >> isStandalone: aBoolean [
+	isStandalone := aBoolean
+]
+
 { #category : #testing }
 SAXParserDriver >> isStandaloneExternal [
 	^ self isStandalone
@@ -624,13 +644,6 @@ SAXParserDriver >> scopeAllocator [
 SAXParserDriver >> scopedAttributeNames [
 	"the scoped attributes tracked by this driver"
 	^ #('xml:space' 'xml:base')
-]
-
-{ #category : #accessing }
-SAXParserDriver >> setRootElement: anElement currentScope: aNamespaceScope [
-	self elementNester setExternalRootElement: anElement.
-	self usesNamespaces
-		ifTrue: [self scopeAllocator currentScope: aNamespaceScope].
 ]
 
 { #category : #initialization }

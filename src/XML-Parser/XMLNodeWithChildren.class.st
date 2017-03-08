@@ -384,11 +384,6 @@ XMLNodeWithChildren >> nodesSelect: aBlock [
 	^ self nodes select: aBlock
 ]
 
-{ #category : #private }
-XMLNodeWithChildren >> parserHandlerClass [
-	^ XMLDOMParser
-]
-
 { #category : #copying }
 XMLNodeWithChildren >> postCopy [
 	super postCopy.

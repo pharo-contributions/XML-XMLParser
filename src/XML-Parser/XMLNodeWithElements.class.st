@@ -596,6 +596,11 @@ XMLNodeWithElements >> elementsSelect: aBlock [
 ]
 
 { #category : #private }
+XMLNodeWithElements >> errorOuterXMLForAbsentNode [
+	XMLDOMException signal: 'Cannot change outer XML for absent node'
+]
+
+{ #category : #private }
 XMLNodeWithElements >> escapesContentEntitiesWhenWriting [
 	"avoid initializing config; defualt to true"
 	^ configuration isNil
@@ -796,6 +801,39 @@ XMLNodeWithElements >> nodeFactory: aNodeFactory [
 { #category : #private }
 XMLNodeWithElements >> nodeListClass [
 	^ self configuration nodeFactory nodeListClass
+]
+
+{ #category : #parsing }
+XMLNodeWithElements >> outerXML: aStringOrStream forNode: aNode [
+	self
+		outerXMLForNode: aNode
+		parsedWith: (self parserHandlerClass on: aStringOrStream)
+]
+
+{ #category : #parsing }
+XMLNodeWithElements >> outerXMLForNode: aNode parsedWith: aParser [
+	| indexOfNode removedNodes |
+
+	indexOfNode :=
+		self nodes
+			indexOf: aNode
+			ifAbsent: [self errorOuterXMLForAbsentNode].
+	removedNodes :=
+		self nodes
+			copyFrom: indexOfNode
+			to: self nodes size.
+	self removeNodes: removedNodes.
+	[aParser
+		pushInnerXMLRootNode: self;
+		parseDocument]
+		on: Error
+		do: [:error |
+			[self nodes size >= indexOfNode]
+				whileTrue: [self nodes removeLast].
+			self addNodes: removedNodes.
+			error pass].
+	2 to: removedNodes size do: [:i |
+		self addNode: (removedNodes at: i)].
 ]
 
 { #category : #private }

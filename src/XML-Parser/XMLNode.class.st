@@ -435,6 +435,13 @@ XMLNode >> parent: aNode [
 	parent := aNode
 ]
 
+{ #category : #private }
+XMLNode >> parserHandlerClass [
+	^ self configuration
+		ifNil: [XMLDOMParser]
+		ifNotNil: [:config | config parserHandlerClass]
+]
+
 { #category : #copying }
 XMLNode >> postCopy [
 	super postCopy.

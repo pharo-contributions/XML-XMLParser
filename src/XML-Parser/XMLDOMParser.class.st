@@ -270,10 +270,11 @@ XMLDOMParser >> pushNode: aNode [
 
 { #category : #private }
 XMLDOMParser >> setupInnerXMLDocumentForParser: aParser [
+	aParser driver isStandalone: self document isStandalone.
 	self document hasDoctypeDefinition
 		ifTrue: [
 			aParser driver doctypeDefinition addGeneralEntitiesFrom:
-				self document doctypeDefinition]
+				self document doctypeDefinition].
 ]
 
 { #category : #private }
@@ -332,9 +333,9 @@ XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName
 
 { #category : #private }
 XMLDOMParser >> startInnerXMLElement: anElement forParser: aParser [
-	aParser driver
-		setRootElement: anElement name
-		currentScope: anElement namespaceScope
+	aParser driver currentElement: anElement name.
+	anElement hasNamespaces
+		ifTrue: [aParser driver currentScope: anElement namespaceScope].
 ]
 
 { #category : #private }

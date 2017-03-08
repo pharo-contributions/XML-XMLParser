@@ -34,6 +34,16 @@ XMLElementNester >> currentElement [
 ]
 
 { #category : #accessing }
+XMLElementNester >> currentElement: anElement [
+	self hasOpenElements
+		ifTrue: [
+			self openElements
+				at: self totalOpenElements
+				put: anElement]
+		ifFalse: [self setExternalRootElement: anElement]
+]
+
+{ #category : #accessing }
 XMLElementNester >> currentScopedAttributes [
 	^ self scopedAttributes xmlLastOrNil
 ]
