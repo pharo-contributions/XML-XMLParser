@@ -142,6 +142,11 @@ XMLNodeTest >> nodeClass [
 ]
 
 { #category : #accessing }
+XMLNodeTest >> nodeFactoryClass [
+	^ XMLNodeFactory
+]
+
+{ #category : #accessing }
 XMLNodeTest >> otherAttributeListClass [
 	"must be different from attributeListClass"
 	^ XMLFAttributeList
@@ -503,6 +508,11 @@ XMLNodeTest >> testNewStringNode [
 { #category : #tests }
 XMLNodeTest >> testNextNode [
 	self assert: self newNode nextNode isNil
+]
+
+{ #category : #tests }
+XMLNodeTest >> testNodeFactory [
+	self assert: self newNode nodeFactory class == self nodeFactoryClass
 ]
 
 { #category : #tests }
