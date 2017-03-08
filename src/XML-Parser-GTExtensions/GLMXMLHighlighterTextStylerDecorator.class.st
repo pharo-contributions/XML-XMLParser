@@ -1,5 +1,5 @@
 "
-A highlighter text styler decorator for XML source code.
+An abstract base class for XML highlighter text styler decorators. Subclasses need to implement #highlightingParse:onSuccess:onError: .
 "
 Class {
 	#name : #GLMXMLHighlighterTextStylerDecorator,

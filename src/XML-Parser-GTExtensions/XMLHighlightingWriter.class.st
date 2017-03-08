@@ -10,11 +10,6 @@ Class {
 	#category : #'XML-Parser-GTExtensions-Highlighting-Writer'
 }
 
-{ #category : #'instance creation' }
-XMLHighlightingWriter class >> on: aStream [
-	^ (super on: aStream) formatter: XMLHighlightingPrettyPrintingWriterFormatter new
-]
-
 { #category : #converting }
 XMLHighlightingWriter >> asHighlightedText [
 	| text |
@@ -24,6 +19,11 @@ XMLHighlightingWriter >> asHighlightedText [
 	text := self contents asText.
 	self highlighter highlightText: text.
 	^ text.
+]
+
+{ #category : #private }
+XMLHighlightingWriter >> canonicalWriterFormatterClass [
+	^ XMLHighlightingCanonicalWriterFormatter
 ]
 
 { #category : #accessing }
@@ -36,9 +36,10 @@ XMLHighlightingWriter >> initialize [
 	super initialize.
 
 	highlighter := XMLDocumentHighlighter new.
+	self formatter: XMLHighlightingWriterFormatter new.
 ]
 
-{ #category : #accessing }
-XMLHighlightingWriter >> position [
-	^ stream position
+{ #category : #private }
+XMLHighlightingWriter >> prettyPrintingWriterFormatterClass [
+	^ XMLHighlightingPrettyPrintingWriterFormatter
 ]

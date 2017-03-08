@@ -1,178 +1,208 @@
 "
-This formatter adds highlights to pretty printed XMLHighlightingWriter output.
-
-(Generated from XMLHighlightingWriterFormatter.)
+This formatter adds highlights to XMLHighlightingWriter output.
 "
 Class {
-	#name : #XMLHighlightingPrettyPrintingWriterFormatter,
-	#superclass : #XMLPrettyPrintingWriterFormatter,
+	#name : #XMLHighlightingWriterFormatter,
+	#superclass : #XMLWriterFormatter,
 	#instVars : [
 		'highlighter'
 	],
 	#category : #'XML-Parser-GTExtensions-Highlighting-Writer'
 }
 
+{ #category : #private }
+XMLHighlightingWriterFormatter class >> generateHighlightingSubclassOf: aFormatterClass named: aName inCategory: aCategory [
+	| newSubclass |
+
+	(aFormatterClass == self
+		or: [aFormatterClass class inheritsFrom: self])
+		ifTrue: [
+			^ aFormatterClass
+				subclass: aName asSymbol
+				instanceVariableNames: ''
+				classVariableNames: ''
+				category: aCategory asSymbol].
+
+	newSubclass :=
+		aFormatterClass
+			subclass: aName asSymbol
+			instanceVariableNames: 'highlighter'
+			classVariableNames: ''
+			category: aCategory asSymbol.
+	self selectors do: [:each |
+		newSubclass
+			compile: (self sourceCodeAt: each)
+			classified: (self whichCategoryIncludesSelector: each)].
+
+	^ newSubclass.
+]
+
+{ #category : #private }
+XMLHighlightingWriterFormatter >> endPosition [
+	^ self writer position
+]
+
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterCData: aCDataWriter [
+XMLHighlightingWriterFormatter >> formatAfterCData: aCDataWriter [
 	highlighter endCDataHighlightPosition: self endPosition.
 
 	super formatAfterCData: aCDataWriter.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterCharacterEscape: aCharacterEscape [
+XMLHighlightingWriterFormatter >> formatAfterCharacterEscape: aCharacterEscape [
 	highlighter endEntityReferenceHighlightPosition: self endPosition.
 
 	super formatAfterCharacterEscape: aCharacterEscape.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterComment: aCommentWriter [
+XMLHighlightingWriterFormatter >> formatAfterComment: aCommentWriter [
 	highlighter endCommentHighlightPosition: self endPosition.
 
 	super formatAfterComment: aCommentWriter.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterDeclaration: aDeclarationWriter [
+XMLHighlightingWriterFormatter >> formatAfterDeclaration: aDeclarationWriter [
 	highlighter endDeclarationHighlightPosition: self endPosition.
 
 	super formatAfterDeclaration: aDeclarationWriter.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterDoctypeDeclaration: aDoctypeDeclarationWriter [
+XMLHighlightingWriterFormatter >> formatAfterDoctypeDeclaration: aDoctypeDeclarationWriter [
 	highlighter endDoctypeDeclarationHighlightPosition: self endPosition.
 
 	super formatAfterDoctypeDeclaration: aDoctypeDeclarationWriter.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterEndTag: aTagWriter [
+XMLHighlightingWriterFormatter >> formatAfterEndTag: aTagWriter [
 	highlighter endTagHighlightPosition: self endPosition.
 
 	super formatAfterEndTag: aTagWriter.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterEntityReference: anEntityReferenceWriter [
+XMLHighlightingWriterFormatter >> formatAfterEntityReference: anEntityReferenceWriter [
 	highlighter endEntityReferenceHighlightPosition: self endPosition.
 
 	super formatAfterEntityReference: anEntityReferenceWriter.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterPI: aPIWriter [
+XMLHighlightingWriterFormatter >> formatAfterPI: aPIWriter [
 	highlighter endPIHighlightPosition: self endPosition.
 
 	super formatAfterPI: aPIWriter.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterQuotedStringValue: aString [
+XMLHighlightingWriterFormatter >> formatAfterQuotedStringValue: aString [
 	highlighter endQuotedStringValueHighlightPosition: self endPosition + 1.
 
 	super formatAfterQuotedStringValue: aString.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterStartTag: aTagWriter [
+XMLHighlightingWriterFormatter >> formatAfterStartTag: aTagWriter [
 	highlighter endTagHighlightPosition: self endPosition.
 
 	super formatAfterStartTag: aTagWriter.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterXMLDeclaration: anXMLDeclarationWriter [
+XMLHighlightingWriterFormatter >> formatAfterXMLDeclaration: anXMLDeclarationWriter [
 	highlighter endXMLDeclarationHighlightPosition: self endPosition.
 
 	super formatAfterXMLDeclaration: anXMLDeclarationWriter.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforeCData: aCDataWriter [
+XMLHighlightingWriterFormatter >> formatBeforeCData: aCDataWriter [
 	super formatBeforeCData: aCDataWriter.
 
 	highlighter startCDataHighlightPosition: self startPosition.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforeCharacterEscape: aCharacterEscape [
+XMLHighlightingWriterFormatter >> formatBeforeCharacterEscape: aCharacterEscape [
 	super formatBeforeCharacterEscape: aCharacterEscape.
 
 	highlighter startEntityReferenceHighlightPosition: self startPosition.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforeComment: aCommentWriter [
+XMLHighlightingWriterFormatter >> formatBeforeComment: aCommentWriter [
 	super formatBeforeComment: aCommentWriter.
 
 	highlighter startCommentHighlightPosition: self startPosition.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforeDeclaration: aDeclarationWriter [
+XMLHighlightingWriterFormatter >> formatBeforeDeclaration: aDeclarationWriter [
 	super formatBeforeDeclaration: aDeclarationWriter.
 
 	highlighter startDeclarationHighlightPosition: self startPosition.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforeDoctypeDeclaration: aDoctypeDeclarationWriter [
+XMLHighlightingWriterFormatter >> formatBeforeDoctypeDeclaration: aDoctypeDeclarationWriter [
 	super formatBeforeDoctypeDeclaration: aDoctypeDeclarationWriter.
 
 	highlighter startDoctypeDeclarationHighlightPosition: self startPosition.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforeEndTag: aTagWriter [
+XMLHighlightingWriterFormatter >> formatBeforeEndTag: aTagWriter [
 	super formatBeforeEndTag: aTagWriter.
 
 	highlighter startTagHighlightPosition: self startPosition.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforeEntityReference: anEntityReferenceWriter [
+XMLHighlightingWriterFormatter >> formatBeforeEntityReference: anEntityReferenceWriter [
 	super formatBeforeEntityReference: anEntityReferenceWriter.
 
 	highlighter startEntityReferenceHighlightPosition: self startPosition.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforePI: aPIWriter [
+XMLHighlightingWriterFormatter >> formatBeforePI: aPIWriter [
 	super formatBeforePI: aPIWriter.
 
 	highlighter startPIHighlightPosition: self startPosition.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforeQuotedStringValue: aString [
+XMLHighlightingWriterFormatter >> formatBeforeQuotedStringValue: aString [
 	super formatBeforeQuotedStringValue: aString.
 
 	highlighter startQuotedStringValueHighlightPosition: self startPosition - 1.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforeStartTag: aTagWriter [
+XMLHighlightingWriterFormatter >> formatBeforeStartTag: aTagWriter [
 	super formatBeforeStartTag: aTagWriter.
 
 	highlighter startTagHighlightPosition: self startPosition.
 ]
 
 { #category : #formatting }
-XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforeXMLDeclaration: anXMLDeclarationWriter [
+XMLHighlightingWriterFormatter >> formatBeforeXMLDeclaration: anXMLDeclarationWriter [
 	super formatBeforeXMLDeclaration: anXMLDeclarationWriter.
 
 	highlighter startXMLDeclarationHighlightPosition: self startPosition.
 ]
 
 { #category : #private }
-XMLHighlightingPrettyPrintingWriterFormatter >> startPosition [
+XMLHighlightingWriterFormatter >> startPosition [
 	^ self writer position + 1
 ]
 
 { #category : #accessing }
-XMLHighlightingPrettyPrintingWriterFormatter >> writer: aWriter [
+XMLHighlightingWriterFormatter >> writer: aWriter [
 	super writer: aWriter.
 
 	highlighter := aWriter highlighter.

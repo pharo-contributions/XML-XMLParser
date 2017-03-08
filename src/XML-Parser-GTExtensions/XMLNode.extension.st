@@ -2,7 +2,8 @@ Extension { #name : #XMLNode }
 
 { #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> asHighlightedText [
-	^ self asHighlightedTextWrittenWith: [:writer | self writeXMLOn: writer]
+	^ self asHighlightedTextWrittenWith: [:writer |
+		self writeXMLOn: writer]
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
@@ -23,19 +24,54 @@ XMLNode classSide >> gtExampleNodeWithParent [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNode >> gtInspectorSourceIn: composite [
+XMLNode >> gtInspectorSourceIn: aComposite [
 	<gtInspectorPresentationOrder: 6>
 
-	"removed unfinished source panel editing support for now"
-	composite text
-		title: 'Source';
-		format: #asHighlightedText
+	aComposite custom:
+		(self supportsSourceEditing
+			ifTrue: [
+				GLMRubricHighlightedTextPresentation new
+					title: 'Source';
+					editingMode: [
+						GLMHighlighterTextRubEditingMode withStylerDecorator:
+							self newSourceEditorTextStylerDecorator];
+					display: [self asHighlightedText];
+					withLineNumbers: true;
+					act: [:presentation |
+						| newOuterXMLNode currentPane browser |
+						newOuterXMLNode :=
+							self outerXMLFromEditedSource:
+								presentation text asString.
+						currentPane := aComposite pane.
+						browser := currentPane browser.
+						(browser panes copyUpTo: currentPane)
+							ifEmpty: [
+								"no previous panes; change the first pane to inspect
+								newOuterXMLNode somehow (this does not work)"
+								browser selection: newOuterXMLNode]
+							ifNotEmpty: [:previousPanes |
+								previousPanes do: [:each | each update].
+								previousPanes last presentations first
+									selection: newOuterXMLNode]]
+						icon: GLMUIThemeExtraIcons glamorousAccept
+						on: $s
+						entitled: 'Save']
+			ifFalse: [
+				GLMXMLDisabledRubricHighlightedTextPresentation new
+					title: 'Source';
+					editingMode: [
+						GLMHighlighterTextRubEditingMode withStylerDecorator:
+							(GLMXMLDisabledDocumentHighlighterTextStylerDecorator
+								disabledText: self asHighlightedText)];
+					display: [self asHighlightedText];
+					withLineNumbers: true])
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNode >> gtInspectorTreeIn: composite [
+XMLNode >> gtInspectorTreeIn: aComposite [
 	<gtInspectorPresentationOrder: 5>
-	^ composite tree
+
+	^ aComposite tree
 		title: 'Tree';
 		display: [ {self} ];
 		children: #treeViewChildren;
@@ -45,9 +81,35 @@ XMLNode >> gtInspectorTreeIn: composite [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
+XMLNode >> newSourceEditorTextStylerDecorator [
+	^ GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator outerXMLNode: self
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLNode >> outerXMLFromEditedSource: aString [
+	| oldParent oldPosition oldSize |
+
+	oldParent := self parent.
+	oldPosition := oldParent nodes indexOf: self.
+	oldSize := oldParent nodes size.
+	oldParent
+		outerXML: aString
+		forNode: self.
+	^ oldParent nodes size = oldSize
+		ifTrue: [oldParent nodes at: oldPosition]
+		ifFalse: [oldParent].
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> requiresTreeView [
 	"returns true if this node needs a tree view tab when inspected"
 	^ false
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLNode >> supportsSourceEditing [
+	^ self hasParent
+		and: [self parent isDocument not]
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }

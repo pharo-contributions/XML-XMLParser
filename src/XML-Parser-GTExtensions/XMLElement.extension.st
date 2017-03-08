@@ -39,6 +39,11 @@ XMLElement >> gtInspectorImageIn: composite inContext: aGTInspector [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
+XMLElement >> supportsSourceEditing [
+	^ self hasParent
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
 XMLElement >> writeTreeViewLabelXMLOn: aWriter [
 	self requiresTreeView
 		ifTrue: [
