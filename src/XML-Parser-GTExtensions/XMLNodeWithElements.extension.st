@@ -57,13 +57,3 @@ XMLNodeWithElements >> spotterPreviewSourceIn: aComposite [
 				self writeXMLOn: writer]];
 		entity: self
 ]
-
-{ #category : #'*XML-Parser-GTExtensions' }
-XMLNodeWithElements >> treeViewChildren [
-	self requiresTreeView
-		ifTrue: [| treeViewChildren |
-			treeViewChildren := OrderedCollection new: self nodes size.
-			self addTreeViewChildrenTo: treeViewChildren.
-			^ treeViewChildren]
-		ifFalse: [^ #()]
-]

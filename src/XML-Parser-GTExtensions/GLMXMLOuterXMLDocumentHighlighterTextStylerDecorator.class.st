@@ -14,7 +14,7 @@ GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator class >> outerXMLNode: aNod
 
 { #category : #private }
 GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> newHighlightingParserFromHandler: aHighlightingParserHandler [
-	| parser rootElement |
+	| parser rootElement context |
 
 	parser := super newHighlightingParserFromHandler: aHighlightingParserHandler.
 
@@ -37,6 +37,10 @@ GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> newHighlightingParserFro
 			parser driver currentElement: rootElement name.
 			rootElement hasNamespaces
 				ifTrue: [parser driver currentScope: rootElement namespaceScope]].
+
+	(context := self outerXMLNode parent newInnerXMLContext) isContentContext
+		ifTrue: [aHighlightingParserHandler startContent].
+	parser context: context.
 
 	^ parser.
 ]
