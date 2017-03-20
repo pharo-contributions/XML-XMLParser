@@ -659,29 +659,22 @@ XMLNodeWithElements >> findElementWithID: anID [
 		and: [(doctypeDefinition := document doctypeDefinition) notNil
 			and: [doctypeDefinition hasAttributeValidators]])
 		ifTrue: [
-			self allElementsDo: [:element |
-				element hasAttributes
-					ifTrue: [| attributeValidators |
-						attributeValidators :=
-							doctypeDefinition attributeValidatorsAt: element name.
-						element attributeNodesDo: [:attribute | | attributeValidator |
-							(attributeValidators notNil
-								and: [
-									(attributeValidator :=
-										attributeValidators at: attribute name) notNil])
-								ifTrue: [
-									(attributeValidator isID
-										and: [attribute value = anID])
-										ifTrue: [^ element]]
-								ifFalse: [
-									(attribute name = 'xml:id'
-										and: [attribute value = anID])
-										ifTrue: [^ element]]]]]]
+			self allElementsDo: [:each |
+				each hasAttributes
+					ifTrue: [
+						(doctypeDefinition attributeValidatorsAt: each name)
+							ifNil: [
+								(each hasUndeclaredID: anID)
+									ifTrue: [^ each]]
+							ifNotNil: [:attributeValidators |
+								(each
+									hasUndeclaredOrDeclaredID: anID
+									declaredWith: attributeValidators)
+									ifTrue: [^ each]]]]]
 		ifFalse: [
-			"default to just looking for xml:id attributes"
 			self allElementsDo: [:each |
 				(each hasAttributes
-					and: [(each attributeAt: 'xml:id') = anID])
+					and: [each hasUndeclaredID: anID])
 					ifTrue: [^ each]]].
 	^ nil.
 ]

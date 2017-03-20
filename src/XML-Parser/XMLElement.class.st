@@ -431,6 +431,26 @@ XMLElement >> hasAttributes [
 ]
 
 { #category : #testing }
+XMLElement >> hasID: anID [
+	| document doctypeDefinition attributeValidators |
+
+	self hasAttributes
+		ifFalse: [^ false].
+
+	((document := self document) notNil
+		and: [(doctypeDefinition := document doctypeDefinition) notNil
+			and: [doctypeDefinition hasAttributeValidators
+				and: [
+					(attributeValidators :=
+						doctypeDefinition attributeValidatorsAt: self name) notNil]]])
+		ifTrue: [
+			^ self
+				hasUndeclaredOrDeclaredID: anID
+				declaredWith: attributeValidators]
+		ifFalse: [^ self hasUndeclaredID: anID].
+]
+
+{ #category : #testing }
 XMLElement >> hasNamespaceURI [
 	^ self namespaceURI notEmpty
 ]
@@ -452,14 +472,38 @@ XMLElement >> hasPrefix [
 	^ self name size > self localName size
 ]
 
+{ #category : #private }
+XMLElement >> hasUndeclaredID: anID [
+	"just look for an 'xml:id' attribute if there were no declarations"
+	^ (self
+		attributeAt: 'xml:id'
+		ifAbsent: [^ false]) = anID
+]
+
+{ #category : #private }
+XMLElement >> hasUndeclaredOrDeclaredID: anID declaredWith: anAttributeValidatorDictionary [
+	self attributeNamesAndValuesDo: [:attributeName :attributeValue |
+		"only check its value if it's been declared as an ID attribute
+		or if it's named 'xml:id'"
+		((anAttributeValidatorDictionary
+			at: attributeName
+			ifAbsent: [nil])
+				ifNil: [attributeName = 'xml:id']
+				ifNotNil: [:attributeValidator | attributeValidator isID])
+			ifTrue: [
+				attributeValue = anID
+					ifTrue: [^ true]]].
+	^ false.
+]
+
 { #category : #testing }
 XMLElement >> includesAttribute: aName [
-	^ self attributeNodes includesAttribute: aName.
+	^ self attributeNodes includesAttribute: aName
 ]
 
 { #category : #testing }
 XMLElement >> includesAttributeNode: aName [
-	^ self attributeNodes includesAttributeNode: aName.
+	^ self attributeNodes includesAttributeNode: aName
 ]
 
 { #category : #testing }
