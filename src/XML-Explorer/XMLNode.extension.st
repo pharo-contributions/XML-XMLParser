@@ -1,6 +1,11 @@
 Extension { #name : #XMLNode }
 
 { #category : #'*XML-Explorer' }
+XMLNode >> explorerContents [
+	^ #()
+]
+
+{ #category : #'*XML-Explorer' }
 XMLNode >> explorerLabel [
 	^ XMLWriter writeWith: [:writer |
 		self writeExplorerLabelXMLOn: writer]
