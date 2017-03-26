@@ -1,19 +1,19 @@
 Extension { #name : #XMLNodeWithChildren }
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNodeWithChildren >> addTreeViewChildrenTo: aSequenceableCollection [
+XMLNodeWithChildren >> addTreeViewChildrenTo: anOrderedCollection [
 	self nodesDo: [:each |
-		aSequenceableCollection addLast: each]
+		anOrderedCollection addLast: each]
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNodeWithChildren >> requiresTreeView [
+XMLNodeWithChildren >> supportsTreeView [
 	^ self hasChildren
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
 XMLNodeWithChildren >> treeViewChildren [
-	self requiresTreeView
+	self supportsTreeView
 		ifTrue: [| treeViewChildren |
 			treeViewChildren := OrderedCollection new: self nodes size.
 			self addTreeViewChildrenTo: treeViewChildren.

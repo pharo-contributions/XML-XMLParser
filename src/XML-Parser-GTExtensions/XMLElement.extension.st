@@ -45,8 +45,10 @@ XMLElement >> supportsSourceEditing [
 
 { #category : #'*XML-Parser-GTExtensions' }
 XMLElement >> writeTreeViewLabelXMLOn: aWriter [
-	self requiresTreeView
+	self supportsTreeView
 		ifTrue: [
+			"write just an unclosed start tag if the element can be expanded
+			to display tree view children"
 			aWriter startTag
 				name: self name;
 				"uses setAttributes: for performance"
@@ -56,8 +58,10 @@ XMLElement >> writeTreeViewLabelXMLOn: aWriter [
 				name: self name;
 				"uses setAttributes: for performance"
 				setAttributes: attributes.
+			"a non-expandable element can still have chilren (string nodes) that
+			need to be written"
 			self hasChildren
 				ifTrue: [
 					tagWriter with: [
-						self writeInnerXMLOn: aWriter]]].
+						self writeInnerXMLOn: aWriter]]]
 ]

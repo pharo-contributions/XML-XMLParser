@@ -24,7 +24,7 @@ XMLNode classSide >> gtExampleNodeWithParent [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNode >> gtInspectorSourceIn: aComposite [
+XMLNode >> gtInspectorSourceIn: aComposite inContext: aGTInspector [
 	<gtInspectorPresentationOrder: 6>
 
 	aComposite custom:
@@ -38,18 +38,21 @@ XMLNode >> gtInspectorSourceIn: aComposite [
 					display: [self asHighlightedText];
 					withLineNumbers: true;
 					act: [:presentation |
-						| newOuterXMLNode currentPane browser |
+						| newOuterXMLNode currentPane |
 						newOuterXMLNode :=
 							self outerXMLFromEditedSource:
 								presentation text asString.
 						currentPane := aComposite pane.
-						browser := currentPane browser.
-						(browser panes copyUpTo: currentPane)
+						(aGTInspector panes copyUpTo: currentPane)
 							ifEmpty: [
-								"no previous panes; change the first pane to inspect
-								newOuterXMLNode somehow (this does not work)"
-								browser selection: newOuterXMLNode]
+								"no previous panes; delete any panes after the current
+								and make its selection the new outer XML node (closing
+								and reopening is a hack but it works for now)"
+								aGTInspector browser close.
+								aGTInspector openOn: newOuterXMLNode]
 							ifNotEmpty: [:previousPanes |
+								"update all previous panes and replace the current
+								pane one selecting the new outer XML node"
 								previousPanes do: [:each | each update].
 								previousPanes last presentations first
 									selection: newOuterXMLNode]]
@@ -76,7 +79,7 @@ XMLNode >> gtInspectorTreeIn: aComposite [
 		display: [ {self} ];
 		children: #treeViewChildren;
 		format: #treeViewLabelText;
-		when: [self requiresTreeView];
+		when: [self supportsTreeView];
 		rootsExpanded
 ]
 
@@ -101,15 +104,15 @@ XMLNode >> outerXMLFromEditedSource: aString [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNode >> requiresTreeView [
-	"returns true if this node needs a tree view tab when inspected"
-	^ false
-]
-
-{ #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> supportsSourceEditing [
 	^ self hasParent
 		and: [self parent isDocument not]
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLNode >> supportsTreeView [
+	"returns true if this node needs a tree view tab when inspected"
+	^ false
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }

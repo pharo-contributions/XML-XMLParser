@@ -1,10 +1,10 @@
 Extension { #name : #XMLDocument }
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLDocument >> addTreeViewChildrenTo: aSequenceableCollection [
+XMLDocument >> addTreeViewChildrenTo: anOrderedCollection [
 	self hasDoctypeDeclaration
-		ifTrue: [aSequenceableCollection addLast: self doctypeDeclaration].
-	super addTreeViewChildrenTo: aSequenceableCollection.
+		ifTrue: [anOrderedCollection addLast: self doctypeDeclaration].
+	super addTreeViewChildrenTo: anOrderedCollection.
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
@@ -44,14 +44,14 @@ XMLDocument >> outerXMLFromEditedSource: aString [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLDocument >> requiresTreeView [
-	^ self hasDoctypeDeclaration
-		or: [super requiresTreeView]
+XMLDocument >> supportsSourceEditing [
+	^ true
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLDocument >> supportsSourceEditing [
-	^ true
+XMLDocument >> supportsTreeView [
+	^ self hasDoctypeDeclaration
+		or: [super supportsTreeView]
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }

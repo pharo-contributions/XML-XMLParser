@@ -1,12 +1,13 @@
 Extension { #name : #ZnStringEntity }
 
 { #category : #'*XML-Parser-GTExtensions' }
-ZnStringEntity >> gtInspectorXmlIn: composite [
+ZnStringEntity >> gtInspectorXMLIn: composite [
 	<gtInspectorPresentationOrder: 40>
-	| xml |
-	xml := [XMLDOMParser parse: self string]
+	| document |
+
+	[document := XMLDOMParser parse: self string]
 		on: XMLParserException
-		do: [ ^ self ].
-	(xml gtInspectorTreeIn: composite)
+		do: [^ self].
+	(document gtInspectorTreeIn: composite)
 		title: 'XML'
 ]
