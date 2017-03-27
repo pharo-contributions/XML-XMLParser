@@ -1,6 +1,12 @@
 Extension { #name : #XMLElement }
 
 { #category : #'*XML-Parser-GTExtensions' }
+XMLElement >> canRemoveFromParent [
+	^ self hasParent
+		and: [self parent isDocument not]
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
 XMLElement >> formForImageEntity: imageEntity [
   | imageType parserClassName parserClass parser |
   imageType := imageEntity contentType sub.

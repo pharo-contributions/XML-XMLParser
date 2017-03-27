@@ -1,6 +1,25 @@
 Extension { #name : #XMLNode }
 
 { #category : #'*XML-Parser-GTExtensions' }
+XMLNode >> addRemoveActionTo: aPresentation in: aComposite inContext: aGTInspector [
+	(self canRemoveFromParent
+		and: [aGTInspector panes size > 1
+			and: [aGTInspector panes first ~= aComposite pane]])
+		ifTrue: [
+			aPresentation
+				act: [| currentPane |
+					self removeFromParent.
+					currentPane := aComposite pane.
+					[aGTInspector panes last = currentPane]
+						whileFalse: [aGTInspector removeLastPane].
+					aGTInspector removeLastPane.
+					aGTInspector panes do: [:each | each update]]
+				icon: GLMUIThemeExtraIcons glamorousRemove
+				on: $r
+				entitled: 'Remove']
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> asHighlightedText [
 	^ self asHighlightedTextWrittenWith: [:writer |
 		self writeXMLOn: writer]
@@ -18,6 +37,11 @@ XMLNode >> asHighlightedTextWrittenWith: aBlock [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
+XMLNode >> canRemoveFromParent [
+	^ self hasParent
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
 XMLNode classSide >> gtExampleNodeWithParent [
 	<gtExample>
 	^ self new parent: self new
@@ -27,60 +51,68 @@ XMLNode classSide >> gtExampleNodeWithParent [
 XMLNode >> gtInspectorSourceIn: aComposite inContext: aGTInspector [
 	<gtInspectorPresentationOrder: 6>
 
-	aComposite custom:
-		(self supportsSourceEditing
-			ifTrue: [
-				GLMRubricHighlightedTextPresentation new
-					title: 'Source';
-					editingMode: [
-						GLMHighlighterTextRubEditingMode withStylerDecorator:
-							self newSourceEditorTextStylerDecorator];
-					display: [self asHighlightedText];
-					withLineNumbers: true;
-					act: [:presentation |
-						| newOuterXMLNode currentPane |
-						newOuterXMLNode :=
-							self outerXMLFromEditedSource:
-								presentation text asString.
-						currentPane := aComposite pane.
-						(aGTInspector panes copyUpTo: currentPane)
-							ifEmpty: [
-								"no previous panes; delete any panes after the current
-								and make its selection the new outer XML node (closing
-								and reopening is a hack but it works for now)"
-								aGTInspector browser close.
-								aGTInspector openOn: newOuterXMLNode]
-							ifNotEmpty: [:previousPanes |
-								"update all previous panes and replace the current
-								pane one selecting the new outer XML node"
-								previousPanes do: [:each | each update].
-								previousPanes last presentations first
-									selection: newOuterXMLNode]]
-						icon: GLMUIThemeExtraIcons glamorousAccept
-						on: $s
-						entitled: 'Save']
-			ifFalse: [
-				GLMXMLDisabledRubricHighlightedTextPresentation new
-					title: 'Source';
-					editingMode: [
-						GLMHighlighterTextRubEditingMode withStylerDecorator:
-							(GLMXMLDisabledDocumentHighlighterTextStylerDecorator
-								disabledText: self asHighlightedText)];
-					display: [self asHighlightedText];
-					withLineNumbers: true])
+	self
+		addRemoveActionTo:
+			(aComposite custom: 
+				(self supportsSourceEditing
+					ifTrue: [
+						GLMRubricHighlightedTextPresentation new
+							title: 'Source';
+							editingMode: [
+								GLMHighlighterTextRubEditingMode withStylerDecorator:
+									self newSourceEditorTextStylerDecorator];
+							display: [self asHighlightedText];
+							withLineNumbers: true;
+							act: [:presentation |
+								| newOuterXMLNode currentPane |
+								newOuterXMLNode :=
+									self outerXMLFromEditedSource:
+										presentation text asString.
+								currentPane := aComposite pane.
+								(aGTInspector panes copyUpTo: currentPane)
+									ifEmpty: [
+										"no previous panes; delete any panes after the current
+										and make its selection the new outer XML node (closing
+										and reopening is a hack but it works for now)"
+										aGTInspector browser close.
+										aGTInspector openOn: newOuterXMLNode]
+									ifNotEmpty: [:previousPanes |
+										"update all previous panes and replace the current
+										pane one selecting the new outer XML node"
+										previousPanes do: [:each | each update].
+										previousPanes last presentations first
+											selection: newOuterXMLNode]]
+								icon: GLMUIThemeExtraIcons glamorousAccept
+								on: $s
+								entitled: 'Save']
+					ifFalse: [
+						GLMXMLDisabledRubricHighlightedTextPresentation new
+							title: 'Source';
+							editingMode: [
+								GLMHighlighterTextRubEditingMode withStylerDecorator:
+									(GLMXMLDisabledDocumentHighlighterTextStylerDecorator
+										disabledText: self asHighlightedText)];
+							display: [self asHighlightedText];
+							withLineNumbers: true]))
+		in: aComposite
+		inContext: aGTInspector
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNode >> gtInspectorTreeIn: aComposite [
+XMLNode >> gtInspectorTreeIn: aComposite inContext: aGTInspector [
 	<gtInspectorPresentationOrder: 5>
 
-	^ aComposite tree
-		title: 'Tree';
-		display: [ {self} ];
-		children: #treeViewChildren;
-		format: #treeViewLabelText;
-		when: [self supportsTreeView];
-		rootsExpanded
+	self
+		addRemoveActionTo:
+			(aComposite tree
+				title: 'Tree';
+				display: [ {self} ];
+				children: [:each | each treeViewChildren];
+				format: [:each | each treeViewLabelText];
+				when: [self supportsTreeView];
+				rootsExpanded)
+		in: aComposite
+		inContext: aGTInspector
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
@@ -101,6 +133,11 @@ XMLNode >> outerXMLFromEditedSource: aString [
 	^ oldParent nodes size = oldSize
 		ifTrue: [oldParent nodes at: oldPosition]
 		ifFalse: [oldParent].
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLNode >> removeFromParent [
+	self parent removeNode: self
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }

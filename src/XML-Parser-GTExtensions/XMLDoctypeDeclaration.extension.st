@@ -1,6 +1,11 @@
 Extension { #name : #XMLDoctypeDeclaration }
 
 { #category : #'*XML-Parser-GTExtensions' }
+XMLDoctypeDeclaration >> removeFromParent [
+	self parent doctypeDeclaration: nil
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
 XMLDoctypeDeclaration >> supportsSourceEditing [
 	^ false
 ]
