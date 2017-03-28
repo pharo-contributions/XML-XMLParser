@@ -2,7 +2,7 @@ Extension { #name : #XMLNode }
 
 { #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> addRemoveActionTo: aPresentation in: aComposite inContext: aGTInspector [
-	(self canRemoveFromParent
+	(self supportsRemoveAction
 		and: [aGTInspector panes size > 1
 			and: [aGTInspector panes first ~= aComposite pane]])
 		ifTrue: [
@@ -44,11 +44,6 @@ XMLNode >> asHighlightedTextWrittenWith: aBlock [
 		ifFalse: [writer escapesContentEntityReferences: false].
 	aBlock value: writer.
 	^ writer asHighlightedText.
-]
-
-{ #category : #'*XML-Parser-GTExtensions' }
-XMLNode >> canRemoveFromParent [
-	^ self hasParent
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
@@ -153,6 +148,11 @@ XMLNode >> outerXMLFromEditedSource: aString [
 { #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> removeFromParent [
 	self parent removeNode: self
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLNode >> supportsRemoveAction [
+	^ self hasParent
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
