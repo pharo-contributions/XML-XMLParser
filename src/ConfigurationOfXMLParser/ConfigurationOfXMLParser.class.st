@@ -892,7 +892,7 @@ ConfigurationOfXMLParser >> baseline302: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.7.7'. ].
+			spec project: 'XMLWriter' with: '2.7.8'. ].
 	spec
 		for: #gemstone
 		do: [
@@ -902,7 +902,7 @@ ConfigurationOfXMLParser >> baseline302: spec [
 			spec postLoadDoIt: #initializeClassesForGSBaseline297. ].
 	spec
 		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.46' ]
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.47' ]
 ]
 
 { #category : #accessing }
