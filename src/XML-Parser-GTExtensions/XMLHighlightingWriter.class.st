@@ -43,3 +43,8 @@ XMLHighlightingWriter >> initialize [
 XMLHighlightingWriter >> prettyPrintingWriterFormatterClass [
 	^ XMLHighlightingPrettyPrintingWriterFormatter
 ]
+
+{ #category : #private }
+XMLHighlightingWriter >> prologPrettyPrintingWriterFormatterClass [
+	^ XMLHighlightingPrologPrettyPrintingWriterFormatter
+]
