@@ -9,7 +9,16 @@ Class {
 
 { #category : #'instance creation' }
 GLMXMLDisabledDocumentHighlighterTextStylerDecorator class >> disabledText: aStringOrText [
-	^ self new disabledText: aStringOrText
+	^ self
+		disabledText: aStringOrText
+		encoding: ''
+]
+
+{ #category : #'instance creation' }
+GLMXMLDisabledDocumentHighlighterTextStylerDecorator class >> disabledText: aStringOrText encoding: anEncodingName [
+	^ self new
+		disabledText: aStringOrText;
+		encoding: anEncodingName
 ]
 
 { #category : #accessing }

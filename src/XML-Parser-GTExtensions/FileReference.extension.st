@@ -22,18 +22,9 @@ FileReference >> gtInspectorXMLFileIn: aComposite [
 			display: [
 				XMLExternalDocumentConverter convert: xmlFileHandle rawReadStream];
 			withLineNumbers: true;
-			act: [:presentation | | sourceToSave streamConverter |
-				sourceToSave := presentation text asString.
-				streamConverter :=
-					currentTextStylerDecorator hasEncoding
-						ifTrue: [currentTextStylerDecorator encoding asXMLStreamConverter]
-						ifFalse: [XMLStreamConverter default].
-				xmlFileHandle writeStreamDo: [:writeStream |
-					writeStream
-						streamConverter: streamConverter;
-						nextPutByteOrderMark;
-						nextPutAll: sourceToSave].
-				presentation clearUserEdits]
+			act: [:presentation |
+				currentTextStylerDecorator saveToFile: xmlFileHandle.
+				presentation pane update]
 				icon: GLMUIThemeExtraIcons glamorousSave
 				on: $s
 				entitled: 'Save').

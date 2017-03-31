@@ -25,6 +25,11 @@ GLMXMLHighlighterTextStylerDecorator >> encoding [
 ]
 
 { #category : #accessing }
+GLMXMLHighlighterTextStylerDecorator >> encoding: anEncodingName [
+	encoding := anEncodingName
+]
+
+{ #category : #accessing }
 GLMXMLHighlighterTextStylerDecorator >> errorColor [
 	^ errorColor
 ]
@@ -91,4 +96,20 @@ GLMXMLHighlighterTextStylerDecorator >> parse: aString onError: anError [
 { #category : #parsing }
 GLMXMLHighlighterTextStylerDecorator >> parser [
 	^ self
+]
+
+{ #category : #files }
+GLMXMLHighlighterTextStylerDecorator >> saveToFile: anXMLFileHandleOrFileName [
+	| sourceToSave streamConverter |
+
+	sourceToSave := self text asString.
+	streamConverter :=
+		self hasEncoding
+			ifTrue: [self encoding asXMLStreamConverter]
+			ifFalse: [XMLStreamConverter default].
+	anXMLFileHandleOrFileName asXMLFileHandle writeStreamDo: [:writeStream |
+		writeStream
+			streamConverter: streamConverter;
+			nextPutByteOrderMark;
+			nextPutAll: sourceToSave].
 ]
