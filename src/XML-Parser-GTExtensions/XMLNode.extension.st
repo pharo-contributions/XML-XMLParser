@@ -85,7 +85,7 @@ XMLNode >> gtInspectorSourceIn: aComposite inContext: aGTInspector [
 						act: [:presentation | | newOuterXMLNode |
 							newOuterXMLNode :=
 								self outerXMLFromEditedSource:
-									presentation text asString.
+									currentTextStylerDecorator text asString.
 
 							"find the previous panes of the first pane inspecting
 							the receiver (not necessarily the current pane)"
