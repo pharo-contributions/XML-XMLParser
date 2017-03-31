@@ -1,5 +1,5 @@
 "
-This is base class for highlighters that highlight Text objects using XMLHighlights.
+This is a base class for highlighters that highlight Text objects using XMLHighlights.
 "
 Class {
 	#name : #XMLHighlighter,
