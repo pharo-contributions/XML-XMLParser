@@ -1,6 +1,36 @@
 Extension { #name : #XMLNode }
 
 { #category : #'*XML-Parser-GTExtensions' }
+XMLNode >> acceptEditedSource: aSourceTextOrString inContext: aGTInspector [
+	| newOuterXMLNode |
+
+	newOuterXMLNode :=
+		self setOuterXMLFromEditedSource: aSourceTextOrString asString.
+
+	"find the previous panes of the first pane inspecting
+	the receiver (not necessarily the current pane)"
+	(aGTInspector panes
+		copyFrom: 1
+		to:
+			(aGTInspector panes findFirst: [:each |
+				(each port: #entity) value = self]) - 1)
+		ifEmpty: [
+			"no previous panes; delete any panes after the
+			current and make its selection the new outer XML
+			node (closing and reopening is a hack to do this,
+			but it works for now)"
+			aGTInspector browser close.
+			aGTInspector openOn: newOuterXMLNode]
+		ifNotEmpty: [:previousPanes |
+			"update all previous panes and replace the first
+			pane inspecting the receiver with one inspecting
+			the new outer XML node"
+			previousPanes do: [:each | each update].
+			previousPanes last presentations first
+				selection: newOuterXMLNode].
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> addRemoveActionTo: aPresentation in: aComposite inContext: aGTInspector [
 	(self supportsRemoveAction not
 		or: [aGTInspector panes size <= 1
@@ -74,40 +104,15 @@ XMLNode >> gtInspectorSourceIn: aComposite inContext: aGTInspector [
 			(self supportsSourceEditing
 				ifTrue: [
 					GLMRubricHighlightedTextPresentation new
-						title: 'Source';
 						editingMode: [
 							currentTextStylerDecorator :=
 								self newSourceEditorTextStylerDecorator.
 							GLMHighlighterTextRubEditingMode withStylerDecorator:
 								currentTextStylerDecorator];
-						display: [self asHighlightedSourceText];
-						withLineNumbers: true;
-						act: [:presentation | | newOuterXMLNode |
-							newOuterXMLNode :=
-								self outerXMLFromEditedSource:
-									currentTextStylerDecorator text asString.
-
-							"find the previous panes of the first pane inspecting
-							the receiver (not necessarily the current pane)"
-							(aGTInspector panes
-								copyFrom: 1
-								to:
-									(aGTInspector panes findFirst: [:each |
-										(each port: #entity) value = self]) - 1)
-								ifEmpty: [
-									"no previous panes; delete any panes after the
-									current and make its selection the new outer XML
-									node (closing and reopening is a hack to do this,
-									but it works for now)"
-									aGTInspector browser close.
-									aGTInspector openOn: newOuterXMLNode]
-								ifNotEmpty: [:previousPanes |
-									"update all previous panes and replace the first
-									pane inspecting the receiver with one inspecting
-									the new outer XML node"
-									previousPanes do: [:each | each update].
-									previousPanes last presentations first
-										selection: newOuterXMLNode]]
+						act: [
+							self
+								acceptEditedSource: currentTextStylerDecorator text
+								inContext: aGTInspector]
 							icon: GLMUIThemeExtraIcons glamorousAccept
 							on: $s
 							entitled: 'Accept';
@@ -115,10 +120,20 @@ XMLNode >> gtInspectorSourceIn: aComposite inContext: aGTInspector [
 							presentation update]
 							icon: GLMUIThemeExtraIcons glamorousUndo
 							on: $Z
-							entitled: 'Revert']
+							entitled: 'Revert';
+						act: [
+							self promptForSourceSaveFileName
+								ifNotEmpty: [:fileName |
+									"save it first to allow saving arbitrary
+									source to a file"
+									currentTextStylerDecorator saveToFile: fileName.
+									self
+										acceptEditedSource: currentTextStylerDecorator text
+										inContext: aGTInspector]]
+							icon: GLMUIThemeExtraIcons glamorousSave
+							entitled: 'Save']
 				ifFalse: [
 					GLMXMLDisabledRubricHighlightedTextPresentation new
-						title: 'Source';
 						editingMode: [
 							currentTextStylerDecorator :=
 								GLMXMLDisabledDocumentHighlighterTextStylerDecorator
@@ -129,19 +144,17 @@ XMLNode >> gtInspectorSourceIn: aComposite inContext: aGTInspector [
 											ifNotNil: [:document | document encoding]).
 							GLMHighlighterTextRubEditingMode withStylerDecorator:
 								currentTextStylerDecorator];
-						display: [self asHighlightedSourceText];
-						withLineNumbers: true]).
+						act: [
+							self promptForSourceSaveFileName
+								ifNotEmpty: [:fileName |
+									currentTextStylerDecorator saveToFile: fileName]]
+							icon: GLMUIThemeExtraIcons glamorousSave
+							entitled: 'Save']).
 
 	sourceEditor
-		act: [
-			"save the source as-is to a file, but don't accept it
-			as the edited source of the node unless the user invokes
-			the accept action"
-			self promptForSourceSaveFileName
-				ifNotEmpty: [:fileName |
-					currentTextStylerDecorator saveToFile: fileName]]
-		icon: GLMUIThemeExtraIcons glamorousSave
-		entitled: 'Save'.
+		title: 'Source';
+		display: [self asHighlightedSourceText];
+		withLineNumbers: true.
 
 	self
 		addRemoveActionTo: sourceEditor
@@ -176,21 +189,6 @@ XMLNode >> newSourceEditorTextStylerDecorator [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNode >> outerXMLFromEditedSource: aString [
-	| oldParent oldPosition oldSize |
-
-	oldParent := self parent.
-	oldPosition := oldParent nodes indexOf: self.
-	oldSize := oldParent nodes size.
-	oldParent
-		outerXML: aString
-		forNode: self.
-	^ oldParent nodes size = oldSize
-		ifTrue: [oldParent nodes at: oldPosition]
-		ifFalse: [oldParent].
-]
-
-{ #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> promptForSourceSaveFileName [
 	^ (UITheme builder
 		fileSave: 'Save XML source to file'
@@ -205,6 +203,21 @@ XMLNode >> promptForSourceSaveFileName [
 { #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> removeFromParent [
 	self parent removeNode: self
+]
+
+{ #category : #'*XML-Parser-GTExtensions' }
+XMLNode >> setOuterXMLFromEditedSource: aString [
+	| oldParent oldPosition oldSize |
+
+	oldParent := self parent.
+	oldPosition := oldParent nodes indexOf: self.
+	oldSize := oldParent nodes size.
+	oldParent
+		outerXML: aString
+		forNode: self.
+	^ oldParent nodes size = oldSize
+		ifTrue: [oldParent nodes at: oldPosition]
+		ifFalse: [oldParent].
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }

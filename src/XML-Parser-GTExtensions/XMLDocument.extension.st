@@ -19,7 +19,7 @@ XMLDocument >> newSourceEditorTextStylerDecorator [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLDocument >> outerXMLFromEditedSource: aString [
+XMLDocument >> setOuterXMLFromEditedSource: aString [
 	| newDocument |
 
 	[newDocument :=
