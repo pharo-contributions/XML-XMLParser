@@ -11,9 +11,9 @@ Class {
 XMLPositionWellFormedParserTokenizer >> nextAttributeValue [
 	| attributeValue |
 
-	driver handleStartQuotedStringValuePosition: self currentPosition + 1.
+	driver handleStartQuotedStringPosition: self currentPosition + 1.
 	attributeValue := super nextAttributeValue.
-	driver handleEndQuotedStringValuePosition: self currentPosition.
+	driver handleEndQuotedStringPosition: self currentPosition.
 
 	^ attributeValue.
 ]
@@ -59,9 +59,9 @@ XMLPositionWellFormedParserTokenizer >> nextEndDoctypeDeclaration [
 XMLPositionWellFormedParserTokenizer >> nextEntityValue [
 	| entityValue |
 
-	driver handleStartQuotedStringValuePosition: self currentPosition + 1.
+	driver handleStartQuotedStringPosition: self currentPosition + 1.
 	entityValue := super nextEntityValue.
-	driver handleEndQuotedStringValuePosition: self currentPosition.
+	driver handleEndQuotedStringPosition: self currentPosition.
 
 	^ entityValue.
 ]
@@ -74,6 +74,36 @@ XMLPositionWellFormedParserTokenizer >> nextGeneralEntityReferenceOnCharacterDat
 	self expectNext: $;.
 
 	^ false.
+]
+
+{ #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextPIData [
+	| nextChar quotedStringStart quote |
+
+	characterDataStream reset.
+	[(nextChar := streamReader next) == nil
+		or: [nextChar == $?
+			and: [streamReader peek == $>]]]
+		whileFalse: [
+			nextChar isXMLChar
+				ifFalse: [self errorNonCharInPIValue: nextChar].
+			quotedStringStart
+				ifNil: [
+					(nextChar == $"
+						or: [nextChar == $'])
+						ifTrue: [
+							quote := nextChar.
+							quotedStringStart := self currentPosition]]
+				ifNotNil: [
+					nextChar == quote
+						ifTrue: [
+							driver
+								handleStartQuotedStringPosition: quotedStringStart;
+								handleEndQuotedStringPosition: self currentPosition.
+							quotedStringStart := nil]].
+			characterDataStream nextPut: nextChar].
+	self expectTerminator.
+	^ characterDataStream contents.
 ]
 
 { #category : #tokenizing }
@@ -106,9 +136,9 @@ XMLPositionWellFormedParserTokenizer >> nextParameterEntityReferenceOnCharacterD
 XMLPositionWellFormedParserTokenizer >> nextPublicIDLiteral [
 	| publicID |
 
-	driver handleStartQuotedStringValuePosition: self currentPosition + 1.
+	driver handleStartQuotedStringPosition: self currentPosition + 1.
 	publicID := super nextPublicIDLiteral.
-	driver handleEndQuotedStringValuePosition: self currentPosition.
+	driver handleEndQuotedStringPosition: self currentPosition.
 
 	^ publicID.
 ]
@@ -124,9 +154,9 @@ XMLPositionWellFormedParserTokenizer >> nextSubsetDeclaration [
 XMLPositionWellFormedParserTokenizer >> nextSystemIDLiteral [
 	| systemID |
 
-	driver handleStartQuotedStringValuePosition: self currentPosition + 1.
+	driver handleStartQuotedStringPosition: self currentPosition + 1.
 	systemID := super nextSystemIDLiteral.
-	driver handleEndQuotedStringValuePosition: self currentPosition.
+	driver handleEndQuotedStringPosition: self currentPosition.
 
 	^ systemID.
 ]
@@ -135,9 +165,9 @@ XMLPositionWellFormedParserTokenizer >> nextSystemIDLiteral [
 XMLPositionWellFormedParserTokenizer >> nextSystemIDLiteralWithoutURIFragment [
 	| systemID |
 
-	driver handleStartQuotedStringValuePosition: self currentPosition + 1.
+	driver handleStartQuotedStringPosition: self currentPosition + 1.
 	systemID := super nextSystemIDLiteralWithoutURIFragment.
-	driver handleEndQuotedStringValuePosition: self currentPosition.
+	driver handleEndQuotedStringPosition: self currentPosition.
 
 	^ systemID.
 ]
@@ -160,9 +190,9 @@ XMLPositionWellFormedParserTokenizer >> nextXMLDeclaration [
 XMLPositionWellFormedParserTokenizer >> nextXMLEncodingAttributeValue [
 	| encoding |
 
-	driver handleStartQuotedStringValuePosition: self currentPosition + 1.
+	driver handleStartQuotedStringPosition: self currentPosition + 1.
 	encoding := super nextXMLEncodingAttributeValue.
-	driver handleEndQuotedStringValuePosition: self currentPosition.
+	driver handleEndQuotedStringPosition: self currentPosition.
 
 	^ encoding.
 ]
@@ -171,9 +201,9 @@ XMLPositionWellFormedParserTokenizer >> nextXMLEncodingAttributeValue [
 XMLPositionWellFormedParserTokenizer >> nextXMLStandaloneAttributeValue [
 	| yesOrNo |
 
-	driver handleStartQuotedStringValuePosition: self currentPosition + 1.
+	driver handleStartQuotedStringPosition: self currentPosition + 1.
 	yesOrNo := super nextXMLStandaloneAttributeValue.
-	driver handleEndQuotedStringValuePosition: self currentPosition.
+	driver handleEndQuotedStringPosition: self currentPosition.
 
 	^ yesOrNo.
 ]
@@ -182,9 +212,9 @@ XMLPositionWellFormedParserTokenizer >> nextXMLStandaloneAttributeValue [
 XMLPositionWellFormedParserTokenizer >> nextXMLVersionAttributeValue [
 	| version |
 
-	driver handleStartQuotedStringValuePosition: self currentPosition + 1.
+	driver handleStartQuotedStringPosition: self currentPosition + 1.
 	version := super nextXMLVersionAttributeValue.
-	driver handleEndQuotedStringValuePosition: self currentPosition.
+	driver handleEndQuotedStringPosition: self currentPosition.
 
 	^ version.
 ]

@@ -37,7 +37,7 @@ SAXPositionHandler >> endPIPosition: aPosition [
 ]
 
 { #category : #'handling - positions' }
-SAXPositionHandler >> endQuotedStringValuePosition: aPosition [
+SAXPositionHandler >> endQuotedStringPosition: aPosition [
 ]
 
 { #category : #'handling - positions' }
@@ -73,7 +73,7 @@ SAXPositionHandler >> startPIPosition: aPosition [
 ]
 
 { #category : #'handling - positions' }
-SAXPositionHandler >> startQuotedStringValuePosition: aPosition [
+SAXPositionHandler >> startQuotedStringPosition: aPosition [
 ]
 
 { #category : #'handling - positions' }

@@ -5,12 +5,12 @@ Class {
 	#name : #XMLDocumentHighlightDefaults,
 	#superclass : #XMLHighlightDefaults,
 	#classInstVars : [
-		'defaultCDataColor',
-		'defaultCommentColor',
-		'defaultEntityReferenceColor',
 		'defaultPrimaryMarkupColor',
-		'defaultQuotedStringValueColor',
-		'defaultSecondaryMarkupColor'
+		'defaultSecondaryMarkupColor',
+		'defaultQuotedStringColor',
+		'defaultEntityReferenceColor',
+		'defaultCommentColor',
+		'defaultCDataColor'
 	],
 	#category : #'XML-Parser-GTExtensions-Highlighting'
 }
@@ -60,14 +60,14 @@ XMLDocumentHighlightDefaults class >> defaultPrimaryMarkupColor: aTextColor [
 ]
 
 { #category : #accessing }
-XMLDocumentHighlightDefaults class >> defaultQuotedStringValueColor [
-	^ defaultQuotedStringValueColor
-		ifNil: [defaultQuotedStringValueColor := self textColorForShoutProperty: #string]
+XMLDocumentHighlightDefaults class >> defaultQuotedStringColor [
+	^ defaultQuotedStringColor
+		ifNil: [defaultQuotedStringColor := self textColorForShoutProperty: #string]
 ]
 
 { #category : #accessing }
-XMLDocumentHighlightDefaults class >> defaultQuotedStringValueColor: aTextColor [
-	defaultQuotedStringValueColor := aTextColor
+XMLDocumentHighlightDefaults class >> defaultQuotedStringColor: aTextColor [
+	defaultQuotedStringColor := aTextColor
 ]
 
 { #category : #accessing }
@@ -88,7 +88,7 @@ XMLDocumentHighlightDefaults class >> initialize [
 	defaultDefaultColor := nil.
 	defaultPrimaryMarkupColor := nil.
 	defaultSecondaryMarkupColor := nil.
-	defaultQuotedStringValueColor := nil.
+	defaultQuotedStringColor := nil.
 	defaultEntityReferenceColor := nil.
 	defaultCommentColor := nil.
 	defaultCDataColor := nil.

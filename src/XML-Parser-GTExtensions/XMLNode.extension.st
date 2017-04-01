@@ -124,12 +124,10 @@ XMLNode >> gtInspectorSourceIn: aComposite inContext: aGTInspector [
 						act: [
 							self promptForSourceSaveFileName
 								ifNotEmpty: [:fileName |
-									"save it first to allow saving arbitrary
-									source to a file"
-									currentTextStylerDecorator saveToFile: fileName.
 									self
 										acceptEditedSource: currentTextStylerDecorator text
-										inContext: aGTInspector]]
+										inContext: aGTInspector.
+									currentTextStylerDecorator saveToFile: fileName]]
 							icon: GLMUIThemeExtraIcons glamorousSave
 							entitled: 'Save']
 				ifFalse: [

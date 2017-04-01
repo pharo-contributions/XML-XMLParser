@@ -43,8 +43,8 @@ SAXPositionParserDriver >> handleEndPIPosition: aPosition [
 ]
 
 { #category : #'handling - positions' }
-SAXPositionParserDriver >> handleEndQuotedStringValuePosition: aPosition [
-	self saxHandler endQuotedStringValuePosition: aPosition
+SAXPositionParserDriver >> handleEndQuotedStringPosition: aPosition [
+	self saxHandler endQuotedStringPosition: aPosition
 ]
 
 { #category : #'handling - positions' }
@@ -88,8 +88,8 @@ SAXPositionParserDriver >> handleStartPIPosition: aPosition [
 ]
 
 { #category : #'handling - positions' }
-SAXPositionParserDriver >> handleStartQuotedStringValuePosition: aPosition [
-	self saxHandler startQuotedStringValuePosition: aPosition
+SAXPositionParserDriver >> handleStartQuotedStringPosition: aPosition [
+	self saxHandler startQuotedStringPosition: aPosition
 ]
 
 { #category : #'handling - positions' }

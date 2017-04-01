@@ -106,7 +106,7 @@ XMLHighlightingWriterFormatter >> formatAfterPI: aPIWriter [
 
 { #category : #formatting }
 XMLHighlightingWriterFormatter >> formatAfterQuotedStringValue: aString [
-	highlighter endQuotedStringValueHighlightPosition: self endPosition + 1.
+	highlighter endQuotedStringHighlightPosition: self endPosition + 1.
 
 	super formatAfterQuotedStringValue: aString.
 ]
@@ -185,7 +185,7 @@ XMLHighlightingWriterFormatter >> formatBeforePI: aPIWriter [
 XMLHighlightingWriterFormatter >> formatBeforeQuotedStringValue: aString [
 	super formatBeforeQuotedStringValue: aString.
 
-	highlighter startQuotedStringValueHighlightPosition: self startPosition - 1.
+	highlighter startQuotedStringHighlightPosition: self startPosition - 1.
 ]
 
 { #category : #formatting }

@@ -13,7 +13,7 @@ Class {
 		'commentColor',
 		'tagColor',
 		'cdataColor',
-		'quotedStringValueColor',
+		'quotedStringColor',
 		'xmlDeclarationHighlight',
 		'doctypeDeclarationHighlight',
 		'declarationHighlight',
@@ -22,7 +22,7 @@ Class {
 		'commentHighlight',
 		'tagHighlight',
 		'cdataHighlight',
-		'quotedStringValueHighlight'
+		'quotedStringHighlight'
 	],
 	#category : #'XML-Parser-GTExtensions-Highlighting'
 }
@@ -115,9 +115,9 @@ XMLDocumentHighlighter >> endPIHighlightPosition: aPosition [
 ]
 
 { #category : #'highlighting - positions' }
-XMLDocumentHighlighter >> endQuotedStringValueHighlightPosition: aPosition [
+XMLDocumentHighlighter >> endQuotedStringHighlightPosition: aPosition [
 	self
-		endHighlight: quotedStringValueHighlight
+		endHighlight: quotedStringHighlight
 		position: aPosition
 ]
 
@@ -154,7 +154,7 @@ XMLDocumentHighlighter >> initializeColors [
 		piColor: self defaults defaultSecondaryMarkupColor;
 		declarationColor: self defaults defaultPrimaryMarkupColor;
 		tagColor: self defaults defaultPrimaryMarkupColor;
-		quotedStringValueColor: self defaults defaultQuotedStringValueColor;
+		quotedStringColor: self defaults defaultQuotedStringColor;
 		entityReferenceColor: self defaults defaultEntityReferenceColor;
 		commentColor: self defaults defaultCommentColor;
 		cdataColor: self defaults defaultCDataColor.
@@ -171,13 +171,13 @@ XMLDocumentHighlighter >> piColor: aTextColor [
 ]
 
 { #category : #accessing }
-XMLDocumentHighlighter >> quotedStringValueColor [
-	^ quotedStringValueColor
+XMLDocumentHighlighter >> quotedStringColor [
+	^ quotedStringColor
 ]
 
 { #category : #accessing }
-XMLDocumentHighlighter >> quotedStringValueColor: aTextColor [
-	quotedStringValueColor := aTextColor
+XMLDocumentHighlighter >> quotedStringColor: aTextColor [
+	quotedStringColor := aTextColor
 ]
 
 { #category : #'highlighting - positions' }
@@ -229,10 +229,10 @@ XMLDocumentHighlighter >> startPIHighlightPosition: aPosition [
 ]
 
 { #category : #'highlighting - positions' }
-XMLDocumentHighlighter >> startQuotedStringValueHighlightPosition: aPosition [
-	quotedStringValueHighlight :=
+XMLDocumentHighlighter >> startQuotedStringHighlightPosition: aPosition [
+	quotedStringHighlight :=
 		self
-			newHighlightColor: self quotedStringValueColor
+			newHighlightColor: self quotedStringColor
 			position: aPosition
 ]
 

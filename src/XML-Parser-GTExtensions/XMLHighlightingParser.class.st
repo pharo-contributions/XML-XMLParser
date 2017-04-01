@@ -68,8 +68,8 @@ XMLHighlightingParser >> endPIPosition: aPosition [
 ]
 
 { #category : #'handling - positions' }
-XMLHighlightingParser >> endQuotedStringValuePosition: aPosition [
-	highlighter endQuotedStringValueHighlightPosition: aPosition
+XMLHighlightingParser >> endQuotedStringPosition: aPosition [
+	highlighter endQuotedStringHighlightPosition: aPosition
 ]
 
 { #category : #'handling - positions' }
@@ -131,8 +131,8 @@ XMLHighlightingParser >> startPIPosition: aPosition [
 ]
 
 { #category : #'handling - positions' }
-XMLHighlightingParser >> startQuotedStringValuePosition: aPosition [
-	highlighter startQuotedStringValueHighlightPosition: aPosition
+XMLHighlightingParser >> startQuotedStringPosition: aPosition [
+	highlighter startQuotedStringHighlightPosition: aPosition
 ]
 
 { #category : #'handling - positions' }

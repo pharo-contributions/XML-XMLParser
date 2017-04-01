@@ -75,7 +75,7 @@ XMLHighlightingCanonicalWriterFormatter >> formatAfterPI: aPIWriter [
 
 { #category : #formatting }
 XMLHighlightingCanonicalWriterFormatter >> formatAfterQuotedStringValue: aString [
-	highlighter endQuotedStringValueHighlightPosition: self endPosition + 1.
+	highlighter endQuotedStringHighlightPosition: self endPosition + 1.
 
 	super formatAfterQuotedStringValue: aString.
 ]
@@ -154,7 +154,7 @@ XMLHighlightingCanonicalWriterFormatter >> formatBeforePI: aPIWriter [
 XMLHighlightingCanonicalWriterFormatter >> formatBeforeQuotedStringValue: aString [
 	super formatBeforeQuotedStringValue: aString.
 
-	highlighter startQuotedStringValueHighlightPosition: self startPosition - 1.
+	highlighter startQuotedStringHighlightPosition: self startPosition - 1.
 ]
 
 { #category : #formatting }
