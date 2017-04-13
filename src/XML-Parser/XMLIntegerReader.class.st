@@ -48,6 +48,7 @@ XMLIntegerReader class >> initializeCharacterDigitValues [
 
 { #category : #'class initialization' }
 XMLIntegerReader class >> initializeMaxIntegerValue [
+	"'SmallInteger maxVal' is large enough for char codes and port numbers"
 	MaxIntegerValue := SmallInteger maxVal
 ]
 

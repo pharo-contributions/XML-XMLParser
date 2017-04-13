@@ -1,5 +1,5 @@
 "
-A class to wrap a nested stream and callback for XMLNestedStreamReader and record the line number, position, and line start position of the current external stream.
+A base class to wrap a nested stream and callback for XMLNestedStreamReader and record the line number, position, and line start position of the current external stream.
 "
 Class {
 	#name : #XMLPushedBackStream,
@@ -11,7 +11,7 @@ Class {
 		'currentLineNumber',
 		'currentLineStartPosition'
 	],
-	#category : #'XML-Parser-Streams'
+	#category : #'XML-Parser-Drivers'
 }
 
 { #category : #'instance creation' }
@@ -42,6 +42,15 @@ XMLPushedBackStream >> currentPosition [
 { #category : #testing }
 XMLPushedBackStream >> isExternal [
 	^ false
+]
+
+{ #category : #printing }
+XMLPushedBackStream >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: self stream;
+		nextPut: $).
 ]
 
 { #category : #initialization }

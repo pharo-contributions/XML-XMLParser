@@ -1,5 +1,5 @@
 "
-This class is an event-handling XML parser. To use it, subclass it and override event handlers in the ""handling"" categories, such as startDocument, startElement:attributes:, endElement:, and endDocument.
+This class is an event-handling XML parser. To use it, subclass it and override event handlers in the ""handling"" categories, such as #startDocument, #startElement:attributes:, #endElement:, and #endDocument.
 
 By default XML namespace support and validation are enabled but not external entity resolution.
 

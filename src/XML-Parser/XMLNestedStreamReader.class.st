@@ -361,7 +361,7 @@ XMLNestedStreamReader >> pushBackStream: aStream whenPoppedDo: aBlock isExternal
 	self nestedStreamsAddLast:
 		((isExternal
 			ifTrue: [XMLPushedBackExternalStream]
-			ifFalse: [XMLPushedBackStream])
+			ifFalse: [XMLPushedBackInternalStream])
 				stream: stream
 				whenPoppedDo: whenPoppedDo
 				currentPosition: currentPosition
@@ -371,7 +371,7 @@ XMLNestedStreamReader >> pushBackStream: aStream whenPoppedDo: aBlock isExternal
 	peekChar
 		ifNotNil: [
 			self nestedStreamsAddLast:
-				(XMLPushedBackStream
+				(XMLPushedBackInternalStream
 					stream: (XMLSingleCharacterReadStream on: peekChar)
 					whenPoppedDo: nil
 					currentPosition: currentPosition

@@ -186,8 +186,7 @@ String >> xmlLocalNameAfterPrefix: aPrefix [
 
 { #category : #'*XML-Parser' }
 String >> xmlPrefixBeforeLocalName [
-	"Split the name into namespace prefix
-	(Optimized code)"
+	"optimized"
 	| i |
 
 	i := self size.

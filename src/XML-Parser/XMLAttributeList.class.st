@@ -320,7 +320,7 @@ XMLAttributeList >> sort [
 
 { #category : #private }
 XMLAttributeList >> writeAttributesOn: aWriter [
-	"use to:do: for fast writing"
+	"use #to:do: with direct access for fast writing"
 	1 to: collection size do: [:i | | attribute |
 		attribute := collection at: i.
 		aWriter

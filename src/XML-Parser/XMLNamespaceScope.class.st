@@ -246,7 +246,8 @@ XMLNamespaceScope >> prefixMappingAt: aPrefix ifAbsent: aBlock [
 
 { #category : #private }
 XMLNamespaceScope >> prefixMappings [
-	^ prefixMappings ifNil: [prefixMappings := OrderPreservingStringDictionary new: 5]
+	^ prefixMappings
+		ifNil: [prefixMappings := OrderPreservingStringDictionary new: 5]
 ]
 
 { #category : #enumerating }

@@ -12,8 +12,8 @@ Class {
 		'elementNester',
 		'streamReader',
 		'nameStream',
-		'declarationStream',
-		'characterDataStream'
+		'xmlDeclarationStream',
+		'characterStream'
 	],
 	#classVars : [
 		'PredefinedEntities'
@@ -254,7 +254,7 @@ XMLParserTokenizer >> nextDoctypeDeclaration [
 		expectNextAll: 'DOCTYPE';
 		expectSeparators.
 
-	root := self nextName.
+	root := self nextElementName.
 	(streamReader peek == $[
 		or: [streamReader peek == $>])
 		ifFalse: [
@@ -276,6 +276,11 @@ XMLParserTokenizer >> nextDoctypeDeclaration [
 	streamReader peek == $[
 		ifTrue: [self nextStartInternalSubset]
 		ifFalse: [self nextEndDoctypeDeclaration].
+]
+
+{ #category : #tokenizing }
+XMLParserTokenizer >> nextElementName [
+	self subclassResponsibility
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -314,11 +319,6 @@ XMLParserTokenizer >> nextInternalSubsetToken [
 	streamReader peek == $]
 		ifTrue: [^ self nextEndInternalSubset].
 	self nextSubsetMarkupToken.
-]
-
-{ #category : #tokenizing }
-XMLParserTokenizer >> nextName [
-	self subclassResponsibility
 ]
 
 { #category : #tokenizing }
@@ -579,8 +579,13 @@ XMLParserTokenizer >> setDriver: aDriver stream: aStream readLimit: aReadLimit [
 	"must use #writeStream instead of 'WriteStream on:' to get 0-based
 	streams on Gemstone"
 	nameStream := (String new: 16) writeStream.
-	declarationStream := (String new: 32) writeStream.
-	characterDataStream := (String new: 128) writeStream.
+	"this separate stream is needed because XML text delcarations can occur
+	in the replacement of external general entity references in PCDATA and
+	external parameter entity references within declarations in the external
+	subset or external entities, and characterStream would already be in use
+	in both cases"
+	xmlDeclarationStream := (String new: 8) writeStream.
+	characterStream := (String new: 128) writeStream.
 ]
 
 { #category : #accessing }
