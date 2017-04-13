@@ -25,19 +25,8 @@ XMLDOMParserTest >> addressBookXMLWithDTD [
 ]
 
 { #category : #source }
-XMLDOMParserTest >> internalSubsetWithDeclarations [
-	^ '<!DOCTYPE root PUBLIC "pubid" "external.dtd" [
-			<!ELEMENT root ( #PCDATA | one | two)* >
-			<!ATTLIST root
-						name CDATA #IMPLIED
-						number ( one | two | three ) "three">
-			<!ENTITY general "replacement">
-			<!ENTITY externalGeneral PUBLIC "pubid2" "external1.dtd">
-			<!ENTITY % parameter "replacement">
-			<!ENTITY % externalParameter SYSTEM "external2.dtd">
-			<!NOTATION notation SYSTEM "note.doc">
-		]>
-		<root>test</root>'
+XMLDOMParserTest >> internalSubsetXMLWithDeclarations [
+	^ XMLParserTest internalSubsetXMLWithDeclarations
 ]
 
 { #category : #accessing }
@@ -305,7 +294,7 @@ XMLDOMParserTest >> testDoctypeDeclaration [
 
 	doctype :=
 		(XMLDOMParser
-			parse: self internalSubsetWithDeclarations
+			parse: self internalSubsetXMLWithDeclarations
 			usingNamespaces: true
 			validation: true
 			externalEntities: false) doctypeDeclaration.
@@ -336,7 +325,7 @@ XMLDOMParserTest >> testDocument [
 XMLDOMParserTest >> testDocumentInternalSubset [
 	| document doctypeDeclaration |
 
-	document := XMLDOMParser parse: self internalSubsetWithDeclarations.
+	document := XMLDOMParser parse: self internalSubsetXMLWithDeclarations.
 	doctypeDeclaration := document doctypeDeclaration.
 	doctypeDeclaration allNodesDo: [:each |
 		self assert: each document == document].
@@ -538,7 +527,7 @@ XMLDOMParserTest >> testInternalAttributeDeclarations [
 
 	doctype :=
 		(XMLDOMParser
-			parse: self internalSubsetWithDeclarations
+			parse: self internalSubsetXMLWithDeclarations
 			usingNamespaces: true
 			validation: true
 			externalEntities: false) doctypeDeclaration.
@@ -566,7 +555,7 @@ XMLDOMParserTest >> testInternalElementDeclaration [
 
 	doctype :=
 		(XMLDOMParser
-			parse: self internalSubsetWithDeclarations
+			parse: self internalSubsetXMLWithDeclarations
 			usingNamespaces: true
 			validation: true
 			externalEntities: false) doctypeDeclaration.
@@ -582,7 +571,7 @@ XMLDOMParserTest >> testInternalGeneralEntityDeclarations [
 
 	doctype :=
 		(XMLDOMParser
-			parse: self internalSubsetWithDeclarations
+			parse: self internalSubsetXMLWithDeclarations
 			usingNamespaces: true
 			validation: true
 			externalEntities: false) doctypeDeclaration.
@@ -612,7 +601,7 @@ XMLDOMParserTest >> testInternalNotationDeclarations [
 
 	doctype :=
 		(XMLDOMParser
-			parse: self internalSubsetWithDeclarations
+			parse: self internalSubsetXMLWithDeclarations
 			usingNamespaces: true
 			validation: true
 			externalEntities: false) doctypeDeclaration.
@@ -630,7 +619,7 @@ XMLDOMParserTest >> testInternalParameterEntityDeclarations [
 
 	doctype :=
 		(XMLDOMParser
-			parse: self internalSubsetWithDeclarations
+			parse: self internalSubsetXMLWithDeclarations
 			usingNamespaces: true
 			validation: true
 			externalEntities: false) doctypeDeclaration.

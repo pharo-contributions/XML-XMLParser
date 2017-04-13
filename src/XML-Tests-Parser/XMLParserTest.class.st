@@ -200,6 +200,22 @@ XMLParserTest class >> addressBookXMLWithDTD [
 ]
 
 { #category : #source }
+XMLParserTest class >> internalSubsetXMLWithDeclarations [
+	^ '<!DOCTYPE root PUBLIC "pubid" "external.dtd" [
+			<!ELEMENT root ( #PCDATA | one | two)* >
+			<!ATTLIST root
+						name CDATA #IMPLIED
+						number ( one | two | three ) "three">
+			<!ENTITY general "replacement">
+			<!ENTITY externalGeneral PUBLIC "pubid2" "external1.dtd">
+			<!ENTITY % parameter "replacement">
+			<!ENTITY % externalParameter SYSTEM "external2.dtd">
+			<!NOTATION notation SYSTEM "note.doc">
+		]>
+		<root>test</root>'
+]
+
+{ #category : #source }
 XMLParserTest >> addressBookNamespacePrefixedXML [
 	^ self class addressBookNamespacePrefixedXML
 ]
@@ -348,6 +364,11 @@ XMLParserTest >> elementDeclarationsNamed: aNameCollection [
 			nextPutAll: ' EMPTY>';
 			cr].
 	^ stream contents.
+]
+
+{ #category : #source }
+XMLParserTest >> internalSubsetXMLWithDeclarations [
+	^ self class internalSubsetXMLWithDeclarations
 ]
 
 { #category : #accessing }
@@ -3586,6 +3607,54 @@ XMLParserTest >> testEntityExternalResolutionParameter [
 					parseDocument]
 		raise: XMLParserException.
 	self assert: document root contentString = 'test'.
+]
+
+{ #category : #tests }
+XMLParserTest >> testEntityExternalResolutionParameterInDeclaration [
+	"test the handling of external parameter entity references in declarations"
+	| invalidXML validXML resolver |
+
+	invalidXML := '
+		<!DOCTYPE one SYSTEM "extern.dtd">
+		<one><two/><four/></one>'.
+	validXML := '
+		<!DOCTYPE one SYSTEM "extern.dtd">
+		<one><two/><three/><four/></one>'.
+	(resolver := DTDStaticExternalEntityResolver new)
+		externalEntityAtURI: 'extern.dtd'
+		put:
+			'<!ENTITY % two SYSTEM "two.ent">
+			<!ENTITY % three SYSTEM "three.ent">
+			<!ENTITY % four SYSTEM "four.ent">
+			<!ELEMENT one (%two; , %three; , %four;)>
+			<!ELEMENT two EMPTY>
+			<!ELEMENT three EMPTY>
+			<!ELEMENT four EMPTY>'.
+	resolver
+		externalEntityAtURI: 'two.ent'
+		put:
+			'<?xml encoding="UTF-8"?>
+			two'.
+	resolver
+		externalEntityAtURI: 'three.ent'
+		put: 'three'.
+	resolver
+		externalEntityAtURI: 'four.ent'
+		put: '<?xml encoding="UTF-8"?>four'.
+	self
+		should: [
+			(SAXHandler on: invalidXML)
+				externalEntityResolver: resolver copy;
+				resolvesExternalEntities: true;
+				parseDocument]
+		raise: XMLValidationException.
+	self
+		shouldnt: [
+			(SAXHandler on: validXML)
+				externalEntityResolver: resolver copy;
+				resolvesExternalEntities: true;
+				parseDocument]
+		raise: XMLValidationException.
 ]
 
 { #category : #tests }

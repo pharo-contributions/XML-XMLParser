@@ -35,6 +35,12 @@ XMLExternalEntityTest class >> skippableTests [
 ]
 
 { #category : #accessing }
+XMLExternalEntityTest >> defaultTimeLimit [
+	"needed for Pharo5"
+	^ self defaultTimeout seconds
+]
+
+{ #category : #accessing }
 XMLExternalEntityTest >> defaultTimeout [
 	"this is needed for Squeak to prevent it from timing out
 	the long-running HTTP tests when skipping is disabled"
