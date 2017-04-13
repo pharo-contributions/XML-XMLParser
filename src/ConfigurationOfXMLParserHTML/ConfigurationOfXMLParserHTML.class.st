@@ -168,10 +168,15 @@ ConfigurationOfXMLParserHTML >> baseline100: spec [
 					spec
 						className: 'ConfigurationOfXMLParser';
 						versionString: #stable;
-						loads: #('default');
+						loads: #('Core');
 						repository: 'http://smalltalkhub.com/mc/PharoExtras/XMLParser/main' ].
+			spec
+				project: 'XMLParserTests'
+				copyFrom: 'XMLParser'
+				with: [ spec loads: #('Tests') ].
 			spec package: 'XML-Parser-HTML-Core' with: [ spec requires: 'XMLParser' ].
-			spec package: 'XML-Parser-HTML-Tests' with: [ spec requires: 'XML-Parser-HTML-Core' ].
+			spec package: 'XML-Parser-HTML-Tests' with: [
+				spec requires: #('XML-Parser-HTML-Core' 'XMLParserTests') ].
 			spec
 				group: 'default' with: #('Core' 'Tests');
 				group: 'Core' with: #('XML-Parser-HTML-Core');
@@ -337,6 +342,24 @@ ConfigurationOfXMLParserHTML >> baseline132: spec [
 			spec postLoadDoIt: #initializeClassesForGSBaseline132. ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline134: spec [
+	<version: '1.3.4-baseline' imports: #('1.0.0-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.0.6' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
+
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline132. ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParserHTML >> customProjectAttributes [
 	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -349,7 +372,7 @@ ConfigurationOfXMLParserHTML >> customProjectAttributes [
 ConfigurationOfXMLParserHTML >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.3.2-baseline'.
+	spec for: #'common' version: '1.3.4-baseline'.
 ]
 
 { #category : #doits }
@@ -389,7 +412,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.3.3'.
+	spec for: #'common' version: '1.3.4'.
 
 ]
 
@@ -763,6 +786,17 @@ ConfigurationOfXMLParserHTML >> version133: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.44'.
+			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.23'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version134: spec [ 
+        <version: '1.3.4' imports: #('1.3.4-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.45'.
 			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.23'.
                 ].
 ]
