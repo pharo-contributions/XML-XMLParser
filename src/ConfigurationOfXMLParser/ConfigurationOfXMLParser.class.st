@@ -9,7 +9,7 @@ The loadable groups are:
 Users should prefer #stable unless they rely on XMLParser internals,
 but it will delegate to a specific #release version from now on:
 
-	(ConfigurationOfXMLParser project version: #stable) load: 'default'
+	(ConfigurationOfXMLParser project version: #stable) load: #('default')
 "
 Class {
 	#name : #ConfigurationOfXMLParser,
@@ -281,15 +281,20 @@ ConfigurationOfXMLParser >> baseline10: spec [
 					spec 
 						className: 'ConfigurationOfXMLWriter';
 						versionString: #stable;
-						loads: 'default'; 
+						loads: #('Core'); 
 						repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLWriter/main'.].
+			spec
+				project: 'XMLWriterTests'
+				copyFrom: 'XMLWriter'
+				with: [ spec loads: #('Tests') ].
+
 			spec
 				project: 'BitmapCharacterSet'
 				with: [
 					spec 
 						className: 'ConfigurationOfBitmapCharacterSet';
 						versionString: #stable;
-						loads: 'Core'; 
+						loads: #('Core'); 
 						repository: 'http://www.smalltalkhub.com/mc/PharoExtras/BitmapCharacterSet/main'.].
 
 			"#stable is fine, the public API doesn't change to backwards incompatible"
@@ -299,7 +304,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 					spec 
 						className: 'ConfigurationOfOrderPreservingDictionary';
 						versionString: #stable; 
-						loads: 'Core'; 
+						loads: #('Core'); 
 						repository: 'http://smalltalkhub.com/mc/PharoExtras/OrderPreservingDictionary/main'].	
 
 			spec 
@@ -307,7 +312,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				with: [spec requires: #('BitmapCharacterSet' 'OrderPreservingDictionary')].
 			spec
 				package: 'XML-Tests-Parser'
-				with: [ spec requires: #('XML-Parser' 'XMLWriter') ].
+				with: [ spec requires: #('XML-Parser' 'XMLWriterTests') ].
 			
 			"Core was made to only load XMLParser, CoreWithWriting loads XMLParser and XMLWriter"
 			spec
@@ -331,7 +336,8 @@ ConfigurationOfXMLParser >> baseline10: spec [
 	spec
 		for: #gt
 		do: [
-			spec "the extensions require XMLWriter"
+			"the extensions require XMLWriter"
+			spec
 				group: 'default' with: #('Core' 'Tests' 'XML-Parser-GTExtensions');
 				group: 'CoreWithWriting' with: #('XML-Parser' 'XMLWriter' 'XML-Parser-GTExtensions').
 			spec
@@ -905,6 +911,32 @@ ConfigurationOfXMLParser >> baseline302: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.53' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline306: spec [
+	<version: '3.0.6-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.8.0'. ].
+	"need a newer version for the Lazy classes"
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'OrderPreservingDictionary' with: '1.3.7'. ].
+	spec
+		for: #gemstone
+		do: [
+			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.22'.
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline297. ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.54' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParser >> customProjectAttributes [
     "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -919,7 +951,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '3.0.2-baseline'.
+	spec for: #'common' version: '3.0.6-baseline'.
 
 ]
 
@@ -1155,6 +1187,14 @@ ConfigurationOfXMLParser >> release2: spec [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release306: spec [
+	<symbolicVersion: #'release-3.0.6'>
+
+	"Users should prefer #stable unless they rely on XMLParser internals"
+	spec for: #'common' version: '3.0.6'.
+]
+
+{ #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> release3: spec [
 	<symbolicVersion: #'release-3'>
 
@@ -1168,7 +1208,7 @@ ConfigurationOfXMLParser >> stable: spec [
 
 	"Users should prefer #stable unless they rely on XMLParser internals,
 	but it will delegate to a specific #release version from now on."
-	spec for: #'common' version: #'release-3'.
+	spec for: #'common' version: #'release-3.0.6'.
 ]
 
 { #category : #versions }
@@ -3396,5 +3436,16 @@ ConfigurationOfXMLParser >> version305: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.393'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.198'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version306: spec [ 
+        <version: '3.0.6' imports: #('3.0.6-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.394'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.199'.
                 ].
 ]
