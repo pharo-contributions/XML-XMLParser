@@ -33,7 +33,15 @@ SAXPositionHandler >> endEntityReferencePosition: aPosition [
 ]
 
 { #category : #'handling - positions' }
+SAXPositionHandler >> endNamePosition: aPosition [
+]
+
+{ #category : #'handling - positions' }
 SAXPositionHandler >> endPIPosition: aPosition [
+]
+
+{ #category : #'handling - positions' }
+SAXPositionHandler >> endQuotedStringNamePosition: aPosition [
 ]
 
 { #category : #'handling - positions' }
@@ -69,7 +77,15 @@ SAXPositionHandler >> startEntityReferencePosition: aPosition [
 ]
 
 { #category : #'handling - positions' }
+SAXPositionHandler >> startNamePosition: aPosition [
+]
+
+{ #category : #'handling - positions' }
 SAXPositionHandler >> startPIPosition: aPosition [
+]
+
+{ #category : #'handling - positions' }
+SAXPositionHandler >> startQuotedStringNamePosition: aPosition [
 ]
 
 { #category : #'handling - positions' }

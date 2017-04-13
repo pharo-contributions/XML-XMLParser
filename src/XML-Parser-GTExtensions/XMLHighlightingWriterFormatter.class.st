@@ -14,9 +14,17 @@ Class {
 XMLHighlightingWriterFormatter class >> generateHighlightingSubclassOf: aFormatterClass named: aName inCategory: aCategory [
 	"
 	self
-		generateHighlightingSubclassOf: XMLWriterFormatter
-		named: #XMLHighlightingWriterFormatter
-		inCategory: self category
+		generateHighlightingSubclassOf: XMLPrologPrettyPrintingWriterFormatter
+		named: #XMLHighlightingPrologPrettyPrintingWriterFormatter
+		inCategory: self category.
+	self
+		generateHighlightingSubclassOf: XMLPrettyPrintingWriterFormatter
+		named: #XMLHighlightingPrettyPrintingWriterFormatter
+		inCategory: self category.
+	self
+		generateHighlightingSubclassOf: XMLCanonicalWriterFormatter
+		named: #XMLHighlightingCanonicalWriterFormatter
+		inCategory: self category.
 	"
 	| newSubclass |
 
@@ -98,10 +106,24 @@ XMLHighlightingWriterFormatter >> formatAfterEntityReference: anEntityReferenceW
 ]
 
 { #category : #formatting }
+XMLHighlightingWriterFormatter >> formatAfterName: aName [
+	highlighter endNameHighlightPosition: self endPosition.
+
+	super formatAfterName: aName.
+]
+
+{ #category : #formatting }
 XMLHighlightingWriterFormatter >> formatAfterPI: aPIWriter [
 	highlighter endPIHighlightPosition: self endPosition.
 
 	super formatAfterPI: aPIWriter.
+]
+
+{ #category : #formatting }
+XMLHighlightingWriterFormatter >> formatAfterQuotedStringName: aName [
+	highlighter endQuotedStringNameHighlightPosition: self endPosition.
+
+	super formatAfterQuotedStringName: aName.
 ]
 
 { #category : #formatting }
@@ -175,10 +197,24 @@ XMLHighlightingWriterFormatter >> formatBeforeEntityReference: anEntityReference
 ]
 
 { #category : #formatting }
+XMLHighlightingWriterFormatter >> formatBeforeName: aName [
+	highlighter startNameHighlightPosition: self startPosition.
+
+	super formatBeforeName: aName.
+]
+
+{ #category : #formatting }
 XMLHighlightingWriterFormatter >> formatBeforePI: aPIWriter [
 	super formatBeforePI: aPIWriter.
 
 	highlighter startPIHighlightPosition: self startPosition.
+]
+
+{ #category : #formatting }
+XMLHighlightingWriterFormatter >> formatBeforeQuotedStringName: aName [
+	highlighter startQuotedStringNameHighlightPosition: self startPosition.
+
+	super formatBeforeQuotedStringName: aName.
 ]
 
 { #category : #formatting }

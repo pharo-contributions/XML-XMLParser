@@ -38,8 +38,18 @@ SAXPositionParserDriver >> handleEndEntityReferencePosition: aPosition [
 ]
 
 { #category : #'handling - positions' }
+SAXPositionParserDriver >> handleEndNamePosition: aPosition [
+	self saxHandler endNamePosition: aPosition
+]
+
+{ #category : #'handling - positions' }
 SAXPositionParserDriver >> handleEndPIPosition: aPosition [
 	self saxHandler endPIPosition: aPosition
+]
+
+{ #category : #'handling - positions' }
+SAXPositionParserDriver >> handleEndQuotedStringNamePosition: aPosition [
+	self saxHandler endQuotedStringNamePosition: aPosition
 ]
 
 { #category : #'handling - positions' }
@@ -83,8 +93,18 @@ SAXPositionParserDriver >> handleStartEntityReferencePosition: aPosition [
 ]
 
 { #category : #'handling - positions' }
+SAXPositionParserDriver >> handleStartNamePosition: aPosition [
+	self saxHandler startNamePosition: aPosition
+]
+
+{ #category : #'handling - positions' }
 SAXPositionParserDriver >> handleStartPIPosition: aPosition [
 	self saxHandler startPIPosition: aPosition
+]
+
+{ #category : #'handling - positions' }
+SAXPositionParserDriver >> handleStartQuotedStringNamePosition: aPosition [
+	self saxHandler startQuotedStringNamePosition: aPosition
 ]
 
 { #category : #'handling - positions' }

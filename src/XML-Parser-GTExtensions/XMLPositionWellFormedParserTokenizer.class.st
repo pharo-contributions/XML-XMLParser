@@ -4,18 +4,46 @@ This class is a tokenizer for well-formed XML that tracks token start/end positi
 Class {
 	#name : #XMLPositionWellFormedParserTokenizer,
 	#superclass : #XMLWellFormedParserTokenizer,
+	#instVars : [
+		'isInEntityReference',
+		'isInAttlistDeclaration'
+	],
 	#category : #'XML-Parser-GTExtensions-Highlighting-Parser'
 }
 
+{ #category : #'tokenizing - dtd' }
+XMLPositionWellFormedParserTokenizer >> nextAttlistDeclaration [
+	isInAttlistDeclaration := true.
+	super nextAttlistDeclaration.
+	isInAttlistDeclaration := false.
+]
+
+{ #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextAttributeName [
+	| name |
+
+	isInAttlistDeclaration
+		ifTrue: [
+			driver handleStartNamePosition: self currentPosition + 1.
+			name := super nextAttributeName.
+			driver handleEndNamePosition: self currentPosition]
+		ifFalse: [
+			driver handleStartQuotedStringNamePosition: self currentPosition + 1.
+			name := super nextAttributeName.
+			driver handleEndQuotedStringNamePosition: self currentPosition].
+
+	^ name.
+]
+
 { #category : #tokenizing }
 XMLPositionWellFormedParserTokenizer >> nextAttributeValue [
-	| attributeValue |
+	| value |
 
 	driver handleStartQuotedStringPosition: self currentPosition + 1.
-	attributeValue := super nextAttributeValue.
+	value := super nextAttributeValue.
 	driver handleEndQuotedStringPosition: self currentPosition.
 
-	^ attributeValue.
+	^ value.
 ]
 
 { #category : #tokenizing }
@@ -26,11 +54,11 @@ XMLPositionWellFormedParserTokenizer >> nextCDataSection [
 ]
 
 { #category : #tokenizing }
-XMLPositionWellFormedParserTokenizer >> nextCharacterReferenceOnCharacterDataStream [
+XMLPositionWellFormedParserTokenizer >> nextCharacterReferenceOnCharacterStream [
 	| result |
 
 	driver handleStartEntityReferencePosition: self currentPosition.
-	result := super nextCharacterReferenceOnCharacterDataStream.
+	result := super nextCharacterReferenceOnCharacterStream.
 	driver handleEndEntityReferencePosition: self currentPosition.
 
 	^ result.
@@ -49,38 +77,105 @@ XMLPositionWellFormedParserTokenizer >> nextDoctypeDeclaration [
 	super nextDoctypeDeclaration.
 ]
 
+{ #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextElementName [
+	| name |
+
+	driver handleStartNamePosition: self currentPosition + 1.
+	name := super nextElementName.
+	driver handleEndNamePosition: self currentPosition.
+
+	^ name.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLPositionWellFormedParserTokenizer >> nextElementNameOnCharacterStream [
+	driver handleStartNamePosition: self currentPosition + 1.
+	super nextElementNameOnCharacterStream.
+	driver handleEndNamePosition: self currentPosition.
+]
+
 { #category : #'tokenizing - dtd' }
 XMLPositionWellFormedParserTokenizer >> nextEndDoctypeDeclaration [
 	super nextEndDoctypeDeclaration.
 	driver handleEndDoctypeDeclarationPosition: self currentPosition.
 ]
 
-{ #category : #'tokenizing - dtd' }
-XMLPositionWellFormedParserTokenizer >> nextEntityValue [
-	| entityValue |
+{ #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextEndTag [
+	| startPosition |
 
-	driver handleStartQuotedStringPosition: self currentPosition + 1.
-	entityValue := super nextEntityValue.
-	driver handleEndQuotedStringPosition: self currentPosition.
-
-	^ entityValue.
+	startPosition := self currentPosition + 2.
+	super nextEndTag.
+	driver
+		handleStartNamePosition: startPosition;
+		handleEndNamePosition: self currentPosition - 1.
 ]
 
 { #category : #tokenizing }
-XMLPositionWellFormedParserTokenizer >> nextGeneralEntityReferenceOnCharacterDataStream [
+XMLPositionWellFormedParserTokenizer >> nextEntityName [
+	isInEntityReference
+		ifTrue: [^ super nextEntityName]
+		ifFalse: [| entityName |
+			driver handleStartNamePosition: self currentPosition + 1.
+			entityName := super nextEntityName.
+			driver handleEndNamePosition: self currentPosition.
+			^ entityName]
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLPositionWellFormedParserTokenizer >> nextEntityValue [
+	| value |
+
+	driver handleStartQuotedStringPosition: self currentPosition + 1.
+	value := super nextEntityValue.
+	driver handleEndQuotedStringPosition: self currentPosition.
+
+	^ value.
+]
+
+{ #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextGeneralEntityReferenceOnCharacterStream [
+	isInEntityReference := true.
 	driver handleStartEntityReferencePosition: self currentPosition.
-	self nextName.
+	self nextEntityName.
 	driver handleEndEntityReferencePosition: self currentPosition + 1.
 	self expectNext: $;.
+	isInEntityReference := false.
 
-	^ false.
+	^ nil.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLPositionWellFormedParserTokenizer >> nextNmtokenOnCharacterStream [
+	driver handleStartNamePosition: self currentPosition + 1.
+	super nextNmtokenOnCharacterStream.
+	driver handleEndNamePosition: self currentPosition.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLPositionWellFormedParserTokenizer >> nextNotationName [
+	| name |
+
+	driver handleStartNamePosition: self currentPosition + 1.
+	name := super nextNotationName.
+	driver handleEndNamePosition: self currentPosition.
+
+	^ name.
+]
+
+{ #category : #'tokenizing - dtd' }
+XMLPositionWellFormedParserTokenizer >> nextNotationNameOnCharacterStream [
+	driver handleStartNamePosition: self currentPosition + 1.
+	super nextNotationNameOnCharacterStream.
+	driver handleEndNamePosition: self currentPosition.
 ]
 
 { #category : #tokenizing }
 XMLPositionWellFormedParserTokenizer >> nextPIData [
-	| nextChar quotedStringStart quote |
+	| nextChar quotedStringNameStart quotedStringStart quote |
 
-	characterDataStream reset.
+	characterStream reset.
 	[(nextChar := streamReader next) == nil
 		or: [nextChar == $?
 			and: [streamReader peek == $>]]]
@@ -89,21 +184,46 @@ XMLPositionWellFormedParserTokenizer >> nextPIData [
 				ifFalse: [self errorNonCharInPIValue: nextChar].
 			quotedStringStart
 				ifNil: [
-					(nextChar == $"
-						or: [nextChar == $'])
-						ifTrue: [
-							quote := nextChar.
-							quotedStringStart := self currentPosition]]
+					quotedStringNameStart
+						ifNil: [
+							nextChar isXMLNameStartChar
+								ifTrue: [quotedStringNameStart := self currentPosition]
+								ifFalse: [
+									(nextChar == $"
+										or: [nextChar == $'])
+										ifTrue: [
+											quote := nextChar.
+											quotedStringStart := self currentPosition]]]
+						ifNotNil: [
+							nextChar isXMLNameChar
+								ifFalse: [
+									driver
+										handleStartQuotedStringNamePosition:
+											quotedStringNameStart;
+										handleEndQuotedStringNamePosition:
+											self currentPosition - 1.
+									quotedStringNameStart := nil.
+									(nextChar == $"
+										or: [nextChar == $'])
+										ifTrue: [
+											quote := nextChar.
+											quotedStringStart := self currentPosition]]]]
 				ifNotNil: [
 					nextChar == quote
 						ifTrue: [
 							driver
 								handleStartQuotedStringPosition: quotedStringStart;
 								handleEndQuotedStringPosition: self currentPosition.
-							quotedStringStart := nil]].
-			characterDataStream nextPut: nextChar].
+							quotedStringStart := nil]]].
+	"ignore unterminated strings, but handle terminating names"
+	quotedStringNameStart
+		ifNotNil: [
+			driver
+				handleStartQuotedStringNamePosition: quotedStringNameStart;
+				handleEndQuotedStringNamePosition: self currentPosition - 1].
+
 	self expectTerminator.
-	^ characterDataStream contents.
+	^ characterStream contents.
 ]
 
 { #category : #tokenizing }
@@ -115,11 +235,12 @@ XMLPositionWellFormedParserTokenizer >> nextPIWithTarget: aTarget [
 
 { #category : #'tokenizing - dtd' }
 XMLPositionWellFormedParserTokenizer >> nextParameterEntityReference [
+	isInEntityReference := true.
 	driver handleStartEntityReferencePosition: self currentPosition.
-	self nextName.
+	self nextEntityName.
 	driver handleEndEntityReferencePosition: self currentPosition + 1.
 	self expectNext: $;.
-	^ false.
+	isInEntityReference := false.
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -128,7 +249,7 @@ XMLPositionWellFormedParserTokenizer >> nextParameterEntityReferenceInDeclaratio
 ]
 
 { #category : #'tokenizing - dtd' }
-XMLPositionWellFormedParserTokenizer >> nextParameterEntityReferenceOnCharacterDataStream [
+XMLPositionWellFormedParserTokenizer >> nextParameterEntityReferenceOnCharacterStream [
 	^ self nextParameterEntityReference
 ]
 
@@ -180,6 +301,16 @@ XMLPositionWellFormedParserTokenizer >> nextTag [
 ]
 
 { #category : #tokenizing }
+XMLPositionWellFormedParserTokenizer >> nextXMLAttributeName: aName [
+	| startPosition |
+
+	startPosition := self currentPosition + 1.
+	driver handleStartQuotedStringNamePosition: startPosition.
+	super nextXMLAttributeName: aName.
+	driver handleEndQuotedStringNamePosition: startPosition + aName size - 1.
+]
+
+{ #category : #tokenizing }
 XMLPositionWellFormedParserTokenizer >> nextXMLDeclaration [
 	driver handleStartXMLDeclarationPosition: self currentPosition - 4. "'<?xml' size"
 	super nextXMLDeclaration.
@@ -217,4 +348,15 @@ XMLPositionWellFormedParserTokenizer >> nextXMLVersionAttributeValue [
 	driver handleEndQuotedStringPosition: self currentPosition.
 
 	^ version.
+]
+
+{ #category : #initialization }
+XMLPositionWellFormedParserTokenizer >> setDriver: aDriver stream: aStream readLimit: aReadLimit [
+	super
+		setDriver: aDriver
+		stream: aStream
+		readLimit: aReadLimit.
+
+	isInAttlistDeclaration := false.
+	isInEntityReference := false.
 ]

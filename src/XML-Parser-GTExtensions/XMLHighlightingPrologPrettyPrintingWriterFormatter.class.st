@@ -67,10 +67,24 @@ XMLHighlightingPrologPrettyPrintingWriterFormatter >> formatAfterEntityReference
 ]
 
 { #category : #formatting }
+XMLHighlightingPrologPrettyPrintingWriterFormatter >> formatAfterName: aName [
+	highlighter endNameHighlightPosition: self endPosition.
+
+	super formatAfterName: aName.
+]
+
+{ #category : #formatting }
 XMLHighlightingPrologPrettyPrintingWriterFormatter >> formatAfterPI: aPIWriter [
 	highlighter endPIHighlightPosition: self endPosition.
 
 	super formatAfterPI: aPIWriter.
+]
+
+{ #category : #formatting }
+XMLHighlightingPrologPrettyPrintingWriterFormatter >> formatAfterQuotedStringName: aName [
+	highlighter endQuotedStringNameHighlightPosition: self endPosition.
+
+	super formatAfterQuotedStringName: aName.
 ]
 
 { #category : #formatting }
@@ -144,10 +158,24 @@ XMLHighlightingPrologPrettyPrintingWriterFormatter >> formatBeforeEntityReferenc
 ]
 
 { #category : #formatting }
+XMLHighlightingPrologPrettyPrintingWriterFormatter >> formatBeforeName: aName [
+	highlighter startNameHighlightPosition: self startPosition.
+
+	super formatBeforeName: aName.
+]
+
+{ #category : #formatting }
 XMLHighlightingPrologPrettyPrintingWriterFormatter >> formatBeforePI: aPIWriter [
 	super formatBeforePI: aPIWriter.
 
 	highlighter startPIHighlightPosition: self startPosition.
+]
+
+{ #category : #formatting }
+XMLHighlightingPrologPrettyPrintingWriterFormatter >> formatBeforeQuotedStringName: aName [
+	highlighter startQuotedStringNameHighlightPosition: self startPosition.
+
+	super formatBeforeQuotedStringName: aName.
 ]
 
 { #category : #formatting }

@@ -67,10 +67,24 @@ XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterEntityReference: anEn
 ]
 
 { #category : #formatting }
+XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterName: aName [
+	highlighter endNameHighlightPosition: self endPosition.
+
+	super formatAfterName: aName.
+]
+
+{ #category : #formatting }
 XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterPI: aPIWriter [
 	highlighter endPIHighlightPosition: self endPosition.
 
 	super formatAfterPI: aPIWriter.
+]
+
+{ #category : #formatting }
+XMLHighlightingPrettyPrintingWriterFormatter >> formatAfterQuotedStringName: aName [
+	highlighter endQuotedStringNameHighlightPosition: self endPosition.
+
+	super formatAfterQuotedStringName: aName.
 ]
 
 { #category : #formatting }
@@ -144,10 +158,24 @@ XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforeEntityReference: anE
 ]
 
 { #category : #formatting }
+XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforeName: aName [
+	highlighter startNameHighlightPosition: self startPosition.
+
+	super formatBeforeName: aName.
+]
+
+{ #category : #formatting }
 XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforePI: aPIWriter [
 	super formatBeforePI: aPIWriter.
 
 	highlighter startPIHighlightPosition: self startPosition.
+]
+
+{ #category : #formatting }
+XMLHighlightingPrettyPrintingWriterFormatter >> formatBeforeQuotedStringName: aName [
+	highlighter startQuotedStringNameHighlightPosition: self startPosition.
+
+	super formatBeforeQuotedStringName: aName.
 ]
 
 { #category : #formatting }

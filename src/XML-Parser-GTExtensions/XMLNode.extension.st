@@ -95,8 +95,8 @@ XMLNode classSide >> gtExampleNodeWithParent [
 
 { #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> gtInspectorSourceIn: aComposite inContext: aGTInspector [
-	<gtInspectorPresentationOrder: 6>
-	
+	<gtInspectorPresentationOrder: 2>
+
 	| sourceEditor currentTextStylerDecorator |
 
 	sourceEditor :=
@@ -162,7 +162,7 @@ XMLNode >> gtInspectorSourceIn: aComposite inContext: aGTInspector [
 
 { #category : #'*XML-Parser-GTExtensions' }
 XMLNode >> gtInspectorTreeIn: aComposite inContext: aGTInspector [
-	<gtInspectorPresentationOrder: 5>
+	<gtInspectorPresentationOrder: 1>
 
 	| treeView |
 

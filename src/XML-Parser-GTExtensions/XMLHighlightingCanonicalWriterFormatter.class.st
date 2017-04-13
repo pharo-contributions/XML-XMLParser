@@ -67,10 +67,24 @@ XMLHighlightingCanonicalWriterFormatter >> formatAfterEntityReference: anEntityR
 ]
 
 { #category : #formatting }
+XMLHighlightingCanonicalWriterFormatter >> formatAfterName: aName [
+	highlighter endNameHighlightPosition: self endPosition.
+
+	super formatAfterName: aName.
+]
+
+{ #category : #formatting }
 XMLHighlightingCanonicalWriterFormatter >> formatAfterPI: aPIWriter [
 	highlighter endPIHighlightPosition: self endPosition.
 
 	super formatAfterPI: aPIWriter.
+]
+
+{ #category : #formatting }
+XMLHighlightingCanonicalWriterFormatter >> formatAfterQuotedStringName: aName [
+	highlighter endQuotedStringNameHighlightPosition: self endPosition.
+
+	super formatAfterQuotedStringName: aName.
 ]
 
 { #category : #formatting }
@@ -144,10 +158,24 @@ XMLHighlightingCanonicalWriterFormatter >> formatBeforeEntityReference: anEntity
 ]
 
 { #category : #formatting }
+XMLHighlightingCanonicalWriterFormatter >> formatBeforeName: aName [
+	highlighter startNameHighlightPosition: self startPosition.
+
+	super formatBeforeName: aName.
+]
+
+{ #category : #formatting }
 XMLHighlightingCanonicalWriterFormatter >> formatBeforePI: aPIWriter [
 	super formatBeforePI: aPIWriter.
 
 	highlighter startPIHighlightPosition: self startPosition.
+]
+
+{ #category : #formatting }
+XMLHighlightingCanonicalWriterFormatter >> formatBeforeQuotedStringName: aName [
+	highlighter startQuotedStringNameHighlightPosition: self startPosition.
+
+	super formatBeforeQuotedStringName: aName.
 ]
 
 { #category : #formatting }

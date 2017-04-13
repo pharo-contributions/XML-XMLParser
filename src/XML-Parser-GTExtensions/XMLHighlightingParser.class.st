@@ -63,8 +63,18 @@ XMLHighlightingParser >> endEntityReferencePosition: aPosition [
 ]
 
 { #category : #'handling - positions' }
+XMLHighlightingParser >> endNamePosition: aPosition [
+	highlighter endNameHighlightPosition: aPosition
+]
+
+{ #category : #'handling - positions' }
 XMLHighlightingParser >> endPIPosition: aPosition [
 	highlighter endPIHighlightPosition: aPosition
+]
+
+{ #category : #'handling - positions' }
+XMLHighlightingParser >> endQuotedStringNamePosition: aPosition [
+	highlighter endQuotedStringNameHighlightPosition: aPosition
 ]
 
 { #category : #'handling - positions' }
@@ -126,8 +136,18 @@ XMLHighlightingParser >> startEntityReferencePosition: aPosition [
 ]
 
 { #category : #'handling - positions' }
+XMLHighlightingParser >> startNamePosition: aPosition [
+	highlighter startNameHighlightPosition: aPosition
+]
+
+{ #category : #'handling - positions' }
 XMLHighlightingParser >> startPIPosition: aPosition [
 	highlighter startPIHighlightPosition: aPosition
+]
+
+{ #category : #'handling - positions' }
+XMLHighlightingParser >> startQuotedStringNamePosition: aPosition [
+	highlighter startQuotedStringNameHighlightPosition: aPosition
 ]
 
 { #category : #'handling - positions' }
