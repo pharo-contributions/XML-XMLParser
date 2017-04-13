@@ -164,14 +164,20 @@ ConfigurationOfXMLParserStAX >> baseline100: spec [
 		spec blessing: #'baseline'.
 		"migrated to PharoExtras/XMLParserStAX from PharoExtras/XMLParser"
 		spec repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLParserStAX/main'.
-		spec project: 'XMLParser' with: [ 
 			spec
-				className: 'ConfigurationOfXMLParser';
-				loads: #('default');	
-				versionString: #'stable';
-				repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLParser/main' ].
+				project: 'XMLParser'
+				with: [ 
+					spec
+						className: 'ConfigurationOfXMLParser';
+						versionString: #stable;
+						loads: #('Core');
+						repository: 'http://smalltalkhub.com/mc/PharoExtras/XMLParser/main' ].
+			spec
+				project: 'XMLParserTests'
+				copyFrom: 'XMLParser'
+				with: [ spec loads: #('Tests') ].
 		spec package: 'XML-Parser-StAX-Core' with: [ spec requires: 'XMLParser' ].
-		spec package: 'XML-Parser-StAX-Tests' with: [ spec requires: 'XML-Parser-StAX-Core' ].
+		spec package: 'XML-Parser-StAX-Tests' with: [ spec requires: #('XML-Parser-StAX-Core' 'XMLParserTests') ].
 		spec
 			group: 'default' with: #('Core' 'Tests');
 			group: 'Core' with: #('XML-Parser-StAX-Core');
@@ -275,7 +281,7 @@ ConfigurationOfXMLParserStAX >> baseline126: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3' ]
+			spec project: 'XMLParser' with: #'release-3.0.6' ]
 ]
 
 { #category : #accessing }
