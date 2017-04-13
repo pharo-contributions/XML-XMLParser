@@ -9,5 +9,7 @@ Class {
 
 { #category : #testing }
 XMLConformanceNotationDeclarationWriter >> isOmittable [
-	^ false
+	"unlike standard canonical XML, notation declarations are never omittable
+	for conformance canonical XML"
+	^ self isCanonical not
 ]

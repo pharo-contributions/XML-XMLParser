@@ -7,11 +7,9 @@ Class {
 	#category : #'XML-Tests-Conformance-Writer'
 }
 
-{ #category : #private }
-XMLConformancePIWriter >> writeBody [
-	self isOmittable
-		ifFalse: [
-			self writer
-				space;
-				nextPutAll: self data]
+{ #category : #testing }
+XMLConformancePIWriter >> isDataOmittable [
+	"unlike standard canonical XML, PI data is never omittable
+	for conformance canonical XML"
+	^ self isCanonical not
 ]

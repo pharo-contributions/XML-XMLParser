@@ -42,6 +42,21 @@ XMLConformanceWriter class >> initializeContentStringConformanceCanonicalEscapes
 			yourself
 ]
 
+{ #category : #private }
+XMLConformanceWriter >> canonicalWriterFormatterClass [
+	^ XMLConformanceCanonicalWriterFormatter
+]
+
+{ #category : #private }
+XMLConformanceWriter >> contentCanonicalEscapes [
+	^ ContentConformanceCanonicalEscapes
+]
+
+{ #category : #private }
+XMLConformanceWriter >> contentStringCanonicalEscapes [
+	^ ContentStringConformanceCanonicalEscapes
+]
+
 { #category : #writing }
 XMLConformanceWriter >> doctypeDeclaration [
 	^ self pushNewMarkupWriter: XMLConformanceDoctypeDeclarationWriter
@@ -52,17 +67,6 @@ XMLConformanceWriter >> notationDeclaration [
 	^ self pushNewMarkupWriter: XMLConformanceNotationDeclarationWriter
 ]
 
-{ #category : #initialization }
-XMLConformanceWriter >> on: aStream [
-	super on: aStream.
-
-	self
-		isCanonical: true;
-		formatter: XMLConformanceCanonicalWriterFormatter new;
-		contentEscapes: ContentConformanceCanonicalEscapes;
-		contentStringEscapes: ContentStringConformanceCanonicalEscapes.
-]
-
 { #category : #writing }
 XMLConformanceWriter >> pi [
 	^ self pushNewMarkupWriter: XMLConformancePIWriter
@@ -70,13 +74,8 @@ XMLConformanceWriter >> pi [
 
 { #category : #private }
 XMLConformanceWriter >> writeUnescapedString: aString [
+	"conformance canonical XML requires single quotes for these strings"
 	self
-		nextPut: $';
-		formatBeforeQuotedStringValue: aString.
-	aString do: [:each |
-		each == $'
-			ifFalse: [self nextPut: each]].
-	self	
-		formatAfterQuotedStringValue: aString;
-		nextPut: $'.
+		writeUnescapedString: aString
+		quotedBy: $'
 ]

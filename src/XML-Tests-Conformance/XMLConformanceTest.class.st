@@ -389,7 +389,8 @@ XMLConformanceTest >> assertDocument: aDocument canonicallyEquals: aString [
 XMLConformanceTest >> canonicalOutputFromDocument: aDocument [
 	| writer |
 
-	writer := XMLConformanceWriter new.
+	(writer := XMLConformanceWriter new)
+		isCanonical: true.
 	aDocument hasDoctypeDefinition
 		ifTrue: [| doctypeDefinition |
 			doctypeDefinition := aDocument doctypeDefinition.
@@ -400,11 +401,13 @@ XMLConformanceTest >> canonicalOutputFromDocument: aDocument [
 						publicID: aDocument doctypeDeclaration publicID;
 						systemID: aDocument doctypeDeclaration systemID;
 						with: [
-							(referencedNotations sorted: [:a :b | a name <= b name]) do: [:each |
-								writer notationDeclaration
-									name: each name;
-									publicID: each publicID;
-									systemID: each systemID]]]].
+							referencedNotations asArray
+								sort: [:a :b | a name <= b name];
+								do: [:each |
+									writer notationDeclaration
+										name: each name;
+										publicID: each publicID;
+										systemID: each systemID]]]].
 
 	aDocument writeInnerXMLOn: writer.
 
