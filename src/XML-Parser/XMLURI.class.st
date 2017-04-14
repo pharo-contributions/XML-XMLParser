@@ -83,23 +83,57 @@ XMLURI >> = anObject [
 
 	self scheme = anObject scheme
 		ifFalse: [^ false].
-	((self hasUserInfo = anObject hasUserInfo)
-		and: [self userInfo = anObject userInfo])
-		ifFalse: [^ false].
-	((self hasHost = anObject hasHost)
-		and: [self host = anObject host])
-		ifFalse: [^ false].
+
+	"#has* tests are used as an optimization to skip direclty comparing
+	components unless needed when doing so would require additional
+	decoding of the raw components"
+	self hasUserInfo
+		ifTrue: [
+			(anObject hasUserInfo
+				and: [self userInfo = anObject userInfo])
+				ifFalse: [^ false]]
+		ifFalse: [
+			anObject hasUserInfo
+				ifTrue: [^ false]].
+
+	self hasHost
+		ifTrue: [
+			(anObject hasHost
+				and: [self host = anObject host])
+				ifFalse: [^ false]]
+		ifFalse: [
+			anObject hasHost
+				ifTrue: [^ false]].
+
 	self port = anObject port
 		ifFalse: [^ false].
-	(self hasPath = anObject hasPath
-		and: [self pathSegments = anObject pathSegments])
-		ifFalse: [^ false].
-	((self hasQuery = anObject hasQuery)
-		and: [self query = anObject query])
-		ifFalse: [^ false].
-	((self hasFragment = anObject hasFragment)
-		and: [self fragment = anObject fragment])
-		ifFalse: [^ false].
+
+	self hasPath
+		ifTrue: [
+			(anObject hasPath
+				and: [self pathSegments = anObject pathSegments])
+				ifFalse: [^ false]]
+		ifFalse: [
+			anObject hasPath
+				ifTrue: [^ false]].
+
+	self hasQuery
+		ifTrue: [
+			(anObject hasQuery
+				and: [self query = anObject query])
+				ifFalse: [^ false]]
+		ifFalse: [
+			anObject hasQuery
+				ifTrue: [^ false]].
+
+	self hasFragment
+		ifTrue: [
+			(anObject hasFragment
+				and: [self fragment = anObject fragment])
+				ifFalse: [^ false]]
+		ifFalse: [
+			anObject hasFragment
+				ifTrue: [^ false]].
 
 	^ true.
 ]
@@ -174,8 +208,22 @@ XMLURI >> asRetrievableResource [
 
 { #category : #converting }
 XMLURI >> asString [
-	"for compatibility with GS where Object>>#asString isn't defined"
-	^ self printString
+	"Returns the full, untruncated URI string, unlike #printString, which
+	may truncate"
+
+	^ self uriString
+		ifNil: [| writeStream |
+			writeStream := (String new: 64) writeStream.
+			self
+				printSchemeOn: writeStream;
+				printAuthorityPrefixOn: writeStream;
+				printAuthorityOn: writeStream;
+				printPathPrefixOn: writeStream;
+				printPathOn: writeStream;
+				printQueryOn: writeStream;
+				printFragmentOn: writeStream;
+				uriString: writeStream contents;
+				uriString]
 ]
 
 { #category : #converting }
@@ -679,19 +727,7 @@ XMLURI >> printHostOn: aStream [
 
 { #category : #printing }
 XMLURI >> printOn: aStream [
-	self uriString
-		ifNil: [| writeStream |
-			writeStream := (String new: 64) writeStream.
-			self
-				printSchemeOn: writeStream;
-				printAuthorityPrefixOn: writeStream;
-				printAuthorityOn: writeStream;
-				printPathPrefixOn: writeStream;
-				printPathOn: writeStream;
-				printQueryOn: writeStream;
-				printFragmentOn: writeStream.
-			self uriString: writeStream contents].
-	aStream nextPutAll: self uriString.
+	aStream nextPutAll: self asString
 ]
 
 { #category : #printing }
