@@ -44,9 +44,12 @@ DTDAttributeDefinitionParser class >> element: anElement attribute: anAttribute 
 DTDAttributeDefinitionParser >> attributeValidatorClassForType [
 	"the tokenizer should have checked the type for well-formedness
 	so it's only one of CDATA, ID, IDREF, IDREFS, etc"
-	(type at: 1) == $C
+	
+	| nextChar |
+
+	(nextChar := type at: 1) == $C
 		ifTrue: [^ XMLCDataAttributeValidator].
-	(type at: 1) == $I
+	nextChar == $I
 		ifTrue: [
 			type size = 2 "'ID' size"
 				ifTrue: [
@@ -57,13 +60,13 @@ DTDAttributeDefinitionParser >> attributeValidatorClassForType [
 				ifTrue: [^ XMLIDRefAttributeValidator].
 			"'IDREF' size < 'IDREFS' size"
 			^ XMLIDRefsAttributeValidator].
-	(type at: 1) == $E
+	nextChar == $E
 		ifTrue: [
 			type size = 6 "'ENTITY' size"
 				ifTrue: [^ XMLEntityAttributeValidator].
 			"'ENTITY' size < 'ENTITIES' size"
 			^ XMLEntitiesAttributeValidator].
-	(type at: 1) == $N
+	nextChar == $N
 		ifTrue: [
 			type size = 7 "'NMTOKEN' size"
 				ifTrue: [^ XMLNmtokenAttributeValidator].

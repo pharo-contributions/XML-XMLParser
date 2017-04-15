@@ -467,8 +467,13 @@ XMLURI >> hasUserInfo [
 
 { #category : #comparing }
 XMLURI >> hash [
-	^ (self species hash bitXor: self host hash)
-		bitXor: self pathSegments hash
+	"ignores user-info and ports"
+	^ ((((self species hash bitXor:
+		self scheme hash) bitXor:
+			self host hash) bitXor:
+				self pathSegments hash) bitXor:
+					self query hash) bitXor:
+						self fragment hash
 ]
 
 { #category : #private }
@@ -573,7 +578,7 @@ XMLURI >> path [
 
 { #category : #accessing }
 XMLURI >> pathSegments [
-	"Returns a collection of percent-decoded path segments"
+	"Returns a temporary OrderedCollection of percent-decoded path segments"
 
 	^ self rawPathSegments collect: [:each | self percentDecode: each]
 ]
@@ -792,7 +797,7 @@ XMLURI >> printUserInfoOn: aStream [
 
 { #category : #accessing }
 XMLURI >> query [
-	"Returns a (temporary) OrderedCollection of percent/plus-decoded
+	"Returns a temporary OrderedCollection of percent/plus-decoded
 	query string key=value pairs"
 
 	^ self rawQuery collect: [:each |
@@ -898,8 +903,11 @@ XMLURI >> queryValuesAt: aKey ifAbsent: aBlock [
 	^ values ifNil: [aBlock value].
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLURI >> rawFragment [
+	"Returns the raw URI fragment (everything after the '#') without
+	percent-decoding or an empty string if there isn't one"
+
 	self parseURIStringIfUnparsed.
 	^ rawFragment.
 ]
@@ -909,8 +917,11 @@ XMLURI >> rawFragment: aString [
 	rawFragment := aString
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLURI >> rawHost [
+	"Returns the raw host without percent-decoding or the IPv6-style host
+	or an empty string if there isn't one"
+
 	self parseURIStringIfUnparsed.
 	^ rawHost.
 ]
@@ -920,8 +931,11 @@ XMLURI >> rawHost: aString [
 	rawHost := aString
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLURI >> rawPathSegments [
+	"Returns an OrderedCollection of raw path segments without
+	percent-decoding"
+
 	self parseURIStringIfUnparsed.
 	^ rawPathSegments.
 ]
@@ -931,8 +945,11 @@ XMLURI >> rawPathSegments: aPathSegmentCollection [
 	rawPathSegments := aPathSegmentCollection
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLURI >> rawQuery [
+	"Returns an OrderedCollection of raw query string key=value pairs
+	without percent/plus-decoding"
+
 	self parseURIStringIfUnparsed.
 	^ rawQuery.
 ]
@@ -942,7 +959,7 @@ XMLURI >> rawQuery: anOrderedCollection [
 	rawQuery := anOrderedCollection
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLURI >> rawUserInfo [
 	self parseURIStringIfUnparsed.
 	^ rawUserInfo.
