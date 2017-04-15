@@ -2,11 +2,12 @@ Class {
 	#name : #XMLURITest,
 	#superclass : #TestCase,
 	#instVars : [
+		'asciiCharacters',
 		'reservedCharacters',
 		'unreservedCharacters',
-		'asciiCharacters',
 		'percentEncodedASCIICharacters',
-		'percentEncodedReservedCharacters'
+		'percentEncodedReservedCharacters',
+		'percentEncodedAlphaNumericCharacters'
 	],
 	#category : #'XML-Tests-Parser-URI'
 }
@@ -283,15 +284,28 @@ XMLURITest >> percentEncodeCharacter: aCharacter [
 	^ XMLStreamAdapterTest percentEncodeCharacter: aCharacter
 ]
 
+{ #category : #converting }
+XMLURITest >> percentEncodeCharacters: aCharacterCollection [
+	^ String streamContents: [:stream |
+		aCharacterCollection do: [:each |
+			stream nextPutAll:
+				(self percentEncodeCharacter: each)]]
+]
+
 { #category : #accessing }
 XMLURITest >> percentEncodedASCIICharacters [
-	percentEncodedASCIICharacters ifNil: [
-		percentEncodedASCIICharacters :=
-			String streamContents: [:stream |
-				self asciiCharacters do: [:each |
-					stream nextPutAll:
-						(self percentEncodeCharacter: each)]]].
-	^ percentEncodedASCIICharacters.
+	^ percentEncodedASCIICharacters
+		ifNil: [
+			percentEncodedASCIICharacters :=
+				self percentEncodeCharacters: self asciiCharacters]
+]
+
+{ #category : #accessing }
+XMLURITest >> percentEncodedAlphaNumericCharacters [
+	^ percentEncodedAlphaNumericCharacters
+		ifNil: [
+			percentEncodedAlphaNumericCharacters :=
+				self percentEncodeCharacters: self alphaNumericCharacters]
 ]
 
 { #category : #accessing }
@@ -1273,6 +1287,21 @@ XMLURITest >> testHash [
 	because #hash is non-cryptographic and has collisions."
 	self allURIStringsDo: [:each |
 		self assert: each asXMLURI hash = each asXMLURI hash]
+]
+
+{ #category : #tests }
+XMLURITest >> testHashPercentEncoding [
+	| uriTemplate unencodedURI encodedURI |
+
+	uriTemplate :=
+		'http://{1}@{1}:80/{1}/{1}?{1}={1}&{1}={1}#{1}'.
+	unencodedURI :=
+		(uriTemplate format:
+			(Array with: self alphaNumericCharacters)) asXMLURI.
+	encodedURI :=
+		(uriTemplate format:
+			(Array with: self percentEncodedAlphaNumericCharacters)) asXMLURI.
+	self assert: unencodedURI hash = unencodedURI hash.
 ]
 
 { #category : #tests }
