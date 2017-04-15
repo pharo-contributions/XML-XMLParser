@@ -934,7 +934,7 @@ ConfigurationOfXMLParser >> baseline306: spec [
 			spec postLoadDoIt: #initializeClassesForGSBaseline297. ].
 	spec
 		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.54' ]
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.55' ]
 ]
 
 { #category : #accessing }
@@ -1191,7 +1191,7 @@ ConfigurationOfXMLParser >> release306: spec [
 	<symbolicVersion: #'release-3.0.6'>
 
 	"Users should prefer #stable unless they rely on XMLParser internals"
-	spec for: #'common' version: '3.0.7'.
+	spec for: #'common' version: '3.0.8'.
 ]
 
 { #category : #'symbolic versions' }
@@ -3458,5 +3458,16 @@ ConfigurationOfXMLParser >> version307: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.395'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.199'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version308: spec [ 
+        <version: '3.0.8' imports: #('3.0.6-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.396'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.200'.
                 ].
 ]
