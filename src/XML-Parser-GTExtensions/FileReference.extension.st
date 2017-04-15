@@ -23,12 +23,6 @@ FileReference >> gtInspectorXMLFileIn: aComposite [
 				XMLExternalDocumentConverter convert: xmlFileHandle rawReadStream];
 			withLineNumbers: true;
 			act: [:presentation |
-				presentation selection:
-					(XMLDOMParser parse: presentation text asString)]
-				icon: GLMUIThemeExtraIcons glamorousGo
-				on: $g
-				entitled: 'Go';
-			act: [:presentation |
 				currentTextStylerDecorator saveToFile: xmlFileHandle.
 				presentation pane update]
 				icon: GLMUIThemeExtraIcons glamorousSave
@@ -37,7 +31,20 @@ FileReference >> gtInspectorXMLFileIn: aComposite [
 			act: [:presentation | presentation pane update]
 				icon: GLMUIThemeExtraIcons glamorousUndo
 				on: $Z
-				entitled: 'Revert').
+				entitled: 'Revert';
+			selectionAct: [:presentation |
+				presentation selection:
+					(XMLDOMParser parse:
+						(presentation selectedText asString
+							ifEmpty: [presentation text asString]))]
+				on: $g
+				entitled: 'Parse and go';
+			act: [:presentation |
+				presentation selection:
+					(XMLDOMParser parse: presentation text asString)]
+				icon: GLMUIThemeExtraIcons glamorousGo
+				on: $G
+				entitled: 'Parse all and go').
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
