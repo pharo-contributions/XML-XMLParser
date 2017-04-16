@@ -61,8 +61,8 @@ XMLDocumentHighlighter >> declarationColor: aTextColor [
 	declarationColor := aTextColor
 ]
 
-{ #category : #accessing }
-XMLDocumentHighlighter >> defaults [
+{ #category : #private }
+XMLDocumentHighlighter >> defaultsClass [
 	^ XMLDocumentHighlightDefaults
 ]
 
@@ -164,20 +164,21 @@ XMLDocumentHighlighter >> entityReferenceColor: aTextColor [
 ]
 
 { #category : #initialization }
-XMLDocumentHighlighter >> initializeColors [
-	super initializeColors.
+XMLDocumentHighlighter >> initializeColorsWithDefaults: aDefaults [
+	super initializeColorsWithDefaults: aDefaults.
+
 	self
-		xmlDeclarationColor: self defaults defaultXMLDeclarationColor;
-		doctypeDeclarationColor: self defaults defaultDoctypeDeclarationColor;
-		piColor: self defaults defaultPIColor;
-		declarationColor: self defaults defaultDeclarationColor;
-		tagColor: self defaults defaultTagColor;
-		nameColor: self defaults defaultNameColor;
-		quotedStringNameColor: self defaults defaultQuotedStringNameColor;
-		quotedStringColor: self defaults defaultQuotedStringColor;
-		entityReferenceColor: self defaults defaultEntityReferenceColor;
-		commentColor: self defaults defaultCommentColor;
-		cdataColor: self defaults defaultCDataColor.
+		xmlDeclarationColor: aDefaults xmlDeclarationColor;
+		doctypeDeclarationColor: aDefaults doctypeDeclarationColor;
+		piColor: aDefaults piColor;
+		declarationColor: aDefaults declarationColor;
+		tagColor: aDefaults tagColor;
+		nameColor: aDefaults nameColor;
+		quotedStringNameColor: aDefaults quotedStringNameColor;
+		quotedStringColor: aDefaults quotedStringColor;
+		entityReferenceColor: aDefaults entityReferenceColor;
+		commentColor: aDefaults commentColor;
+		cdataColor: aDefaults cdataColor.
 ]
 
 { #category : #accessing }

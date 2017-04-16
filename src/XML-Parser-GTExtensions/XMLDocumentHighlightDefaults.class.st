@@ -163,10 +163,9 @@ XMLDocumentHighlightDefaults class >> defaultXMLDeclarationColor: aTextColor [
 ]
 
 { #category : #'class initialization' }
-XMLDocumentHighlightDefaults class >> initialize [
-	"self initialize"
+XMLDocumentHighlightDefaults class >> resetDefaults [
+	super resetDefaults.
 
-	defaultDefaultColor := nil.
 	defaultXMLDeclarationColor := nil.
 	defaultDoctypeDeclarationColor := nil.
 	defaultPIColor := nil.
@@ -178,4 +177,59 @@ XMLDocumentHighlightDefaults class >> initialize [
 	defaultEntityReferenceColor := nil.
 	defaultCommentColor := nil.
 	defaultCDataColor := nil.
+]
+
+{ #category : #accessing }
+XMLDocumentHighlightDefaults >> cdataColor [
+	^ self class defaultCDataColor
+]
+
+{ #category : #accessing }
+XMLDocumentHighlightDefaults >> commentColor [
+	^ self class defaultCommentColor
+]
+
+{ #category : #accessing }
+XMLDocumentHighlightDefaults >> declarationColor [
+	^ self class defaultDeclarationColor
+]
+
+{ #category : #accessing }
+XMLDocumentHighlightDefaults >> doctypeDeclarationColor [
+	^ self class defaultDoctypeDeclarationColor
+]
+
+{ #category : #accessing }
+XMLDocumentHighlightDefaults >> entityReferenceColor [
+	^ self class defaultEntityReferenceColor
+]
+
+{ #category : #accessing }
+XMLDocumentHighlightDefaults >> nameColor [
+	^ self class defaultNameColor
+]
+
+{ #category : #accessing }
+XMLDocumentHighlightDefaults >> piColor [
+	^ self class defaultPIColor
+]
+
+{ #category : #accessing }
+XMLDocumentHighlightDefaults >> quotedStringColor [
+	^ self class defaultQuotedStringColor
+]
+
+{ #category : #accessing }
+XMLDocumentHighlightDefaults >> quotedStringNameColor [
+	^ self class defaultQuotedStringNameColor
+]
+
+{ #category : #accessing }
+XMLDocumentHighlightDefaults >> tagColor [
+	^ self class defaultTagColor
+]
+
+{ #category : #accessing }
+XMLDocumentHighlightDefaults >> xmlDeclarationColor [
+	^ self class defaultXMLDeclarationColor
 ]

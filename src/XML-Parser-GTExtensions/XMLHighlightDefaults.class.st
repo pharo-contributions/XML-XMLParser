@@ -5,7 +5,8 @@ Class {
 	#name : #XMLHighlightDefaults,
 	#superclass : #Object,
 	#classInstVars : [
-		'defaultDefaultColor'
+		'defaultDefaultColor',
+		'uiTheme'
 	],
 	#category : #'XML-Parser-GTExtensions-Highlighting'
 }
@@ -21,10 +22,46 @@ XMLHighlightDefaults class >> defaultDefaultColor: aTextColor [
 	defaultDefaultColor := aTextColor
 ]
 
+{ #category : #'class initialization' }
+XMLHighlightDefaults class >> initialize [
+	"self initialize"
+
+	self resetDefaults
+]
+
+{ #category : #'instance creation' }
+XMLHighlightDefaults class >> new [
+	"if the theme was changed since last initialization, reset the defaults"
+	self uiTheme = Smalltalk ui theme
+		ifFalse: [self resetDefaults].
+
+	^ super new.
+]
+
+{ #category : #'class initialization' }
+XMLHighlightDefaults class >> resetDefaults [
+	defaultDefaultColor := nil
+]
+
 { #category : #private }
 XMLHighlightDefaults class >> textColorForShoutProperty: aShoutProperty [
 	^ TextColor color:
 		(((SHTextStylerST80 new attributesFor: aShoutProperty)
 			detect: [:each | each respondsTo: #color]
 			ifNone: [^ nil]) color)
+]
+
+{ #category : #accessing }
+XMLHighlightDefaults class >> uiTheme [
+	^ uiTheme ifNil: [uiTheme := Smalltalk ui theme]
+]
+
+{ #category : #accessing }
+XMLHighlightDefaults class >> uiTheme: aUITheme [
+	uiTheme := aUITheme
+]
+
+{ #category : #accessing }
+XMLHighlightDefaults >> defaultColor [
+	^ self class defaultDefaultColor
 ]

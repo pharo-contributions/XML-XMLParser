@@ -23,7 +23,12 @@ XMLHighlighter >> defaultColor: aTextColor [
 
 { #category : #accessing }
 XMLHighlighter >> defaults [
-	self subclassResponsibility
+	^ self defaultsClass new
+]
+
+{ #category : #private }
+XMLHighlighter >> defaultsClass [
+	^ XMLHighlightDefaults
 ]
 
 { #category : #private }
@@ -51,12 +56,12 @@ XMLHighlighter >> initialize [
 
 	self
 		initializeHighlights;
-		initializeColors.
+		initializeColorsWithDefaults: self defaults.
 ]
 
 { #category : #initialization }
-XMLHighlighter >> initializeColors [
-	self defaultColor: self defaults defaultDefaultColor
+XMLHighlighter >> initializeColorsWithDefaults: aDefaults [
+	self defaultColor: aDefaults defaultColor
 ]
 
 { #category : #initialization }
