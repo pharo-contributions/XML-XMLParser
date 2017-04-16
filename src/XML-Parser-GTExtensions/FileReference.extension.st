@@ -20,31 +20,35 @@ FileReference >> gtInspectorXMLFileIn: aComposite [
 				GLMHighlighterTextRubEditingMode withStylerDecorator:
 					currentTextStylerDecorator];
 			display: [
-				XMLExternalDocumentConverter convert: xmlFileHandle rawReadStream];
+				XMLExternalDocumentConverter convert:
+					xmlFileHandle rawReadStream];
 			withLineNumbers: true;
 			act: [:presentation |
 				currentTextStylerDecorator saveToFile: xmlFileHandle.
+				"update the entire pane, not just this presentation,
+				because the file contents have changed"
 				presentation pane update]
 				icon: GLMUIThemeExtraIcons glamorousSave
 				on: $s
 				entitled: 'Save';
-			act: [:presentation | presentation pane update]
+			act: [:presentation |
+				"revert edits only in this presentation"
+				presentation update]
 				icon: GLMUIThemeExtraIcons glamorousUndo
 				on: $Z
 				entitled: 'Revert';
-			selectionAct: [:presentation |
+			"the selection action was removed because it reports the
+			wrong #selectionText if the previous presentation viewed
+			was a text presentation with a selection"
+			act: [:presentation |
+				"do not clear user edits because the source hasn't
+				been accepted/saved"
 				presentation selection:
 					(XMLDOMParser parse:
-						(presentation selectedText asString
-							ifEmpty: [presentation text asString]))]
-				on: $g
-				entitled: 'Parse and go';
-			act: [:presentation |
-				presentation selection:
-					(XMLDOMParser parse: presentation text asString)]
+						currentTextStylerDecorator text asString)]
 				icon: GLMUIThemeExtraIcons glamorousGo
-				on: $G
-				entitled: 'Parse all and go').
+				on: $g
+				entitled: 'Parse and go').
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
@@ -60,7 +64,8 @@ FileReference >> spotterForXMLFileFor: aStep [
 	aStep listProcessor
 		title: 'XML Document';
 		allCandidates: [
-			(XMLDOMParser parse: xmlFileHandle rawReadStream) allElements];
+			(XMLDOMParser parseFileNamed: xmlFileHandle path)
+				allElements];
 		itemName: #gtDisplayString;
 		filter: GTFilterSubstring;
 		wantsToDisplayOnEmptyQuery: true.
@@ -81,6 +86,7 @@ FileReference >> spotterPreviewXMLFileIn: aComposite [
 		display: [
 			"the source is converted to a decoded string and then highlighted"
 			XMLHighlightingParser parse:
-				(XMLExternalDocumentConverter convert: xmlFileHandle rawReadStream)];
+				(XMLExternalDocumentConverter convert:
+					xmlFileHandle rawReadStream)];
 		entity: self.
 ]

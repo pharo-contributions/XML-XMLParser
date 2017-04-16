@@ -21,7 +21,7 @@ XMLHighlightingParser >> asHighlightedText [
 ]
 
 { #category : #converting }
-XMLHighlightingParser >> asHighlightedTextWithRemainderColored: aTextColor startingAt: aPosition [
+XMLHighlightingParser >> asHighlightedTextColored: aTextColor startingAt: aPosition [
 	| text |
 
 	text := self asHighlightedText.

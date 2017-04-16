@@ -8,18 +8,49 @@ Class {
 }
 
 { #category : #private }
-GLMXMLDocumentHighlighterTextStylerDecorator >> highlightingParse: aString onSuccess: aOneArgumentBlock onError: aTwoArgumentBlock [
+GLMXMLDocumentHighlighterTextStylerDecorator >> defaultEncoding [
+	^ ''
+]
+
+{ #category : #accessing }
+GLMXMLDocumentHighlighterTextStylerDecorator >> encoding [
+	^ encoding
+]
+
+{ #category : #accessing }
+GLMXMLDocumentHighlighterTextStylerDecorator >> encoding: anEncodingName [
+	encoding := anEncodingName
+]
+
+{ #category : #parsing }
+GLMXMLDocumentHighlighterTextStylerDecorator >> highlightingParse: aString onError: aBlock [
 	| highlightingParserHandler highlightingParser |
 
-	highlightingParserHandler := self newHighlightingParserHandlerOn: aString.
-	highlightingParser := self newHighlightingParserFromHandler: highlightingParserHandler.
+	highlightingParserHandler :=
+		self newHighlightingParserHandlerOn: aString.
+	highlightingParser :=
+		self newHighlightingParserFromHandler: highlightingParserHandler.
 	[highlightingParser parseDocument]
 		on: XMLParserException
 		do: [:error |
-			^ aTwoArgumentBlock
-				value: highlightingParserHandler
-				value: highlightingParser currentPosition].
-	^ aOneArgumentBlock value: highlightingParserHandler.
+			aBlock cull: error.
+			self encoding: highlightingParserHandler encoding.
+			^ highlightingParserHandler
+				asHighlightedTextColored: self errorColor
+				startingAt:
+					(self
+						highlightStartPositionForErrorAt:
+							highlightingParser currentPosition
+						in: aString)].
+	self encoding: highlightingParserHandler encoding.
+	^ highlightingParserHandler asHighlightedText.
+]
+
+{ #category : #initialization }
+GLMXMLDocumentHighlighterTextStylerDecorator >> initialize [
+	super initialize.
+
+	encoding := self defaultEncoding.
 ]
 
 { #category : #private }

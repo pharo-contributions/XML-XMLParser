@@ -13,20 +13,20 @@ Class {
 }
 
 { #category : #accessing }
+GLMXMLHighlighterTextStylerDecorator >> defaultErrorColor [
+	^ TextColor red
+]
+
+{ #category : #accessing }
+GLMXMLHighlighterTextStylerDecorator >> defaultHighlightableLengthLimit [
+	^ 100000
+]
+
+{ #category : #accessing }
 GLMXMLHighlighterTextStylerDecorator >> defaultStyler [
 	^ GLMHighlighterTextParserStyler new
 		view: self;
 		parser: self
-]
-
-{ #category : #accessing }
-GLMXMLHighlighterTextStylerDecorator >> encoding [
-	^ encoding
-]
-
-{ #category : #accessing }
-GLMXMLHighlighterTextStylerDecorator >> encoding: anEncodingName [
-	encoding := anEncodingName
 ]
 
 { #category : #accessing }
@@ -44,6 +44,15 @@ GLMXMLHighlighterTextStylerDecorator >> hasEncoding [
 	^ self encoding notEmpty
 ]
 
+{ #category : #private }
+GLMXMLHighlighterTextStylerDecorator >> highlightStartPositionForErrorAt: aPosition in: aString [
+	"color all of it if the error occurred at the end of the
+	input, otherwise there would be no error coloring at all"
+	^ aPosition >= aString size
+		ifTrue: [1]
+		ifFalse: [aPosition]
+]
+
 { #category : #accessing }
 GLMXMLHighlighterTextStylerDecorator >> highlightableLengthLimit [
 	^ highlightableLengthLimit
@@ -54,8 +63,8 @@ GLMXMLHighlighterTextStylerDecorator >> highlightableLengthLimit: aLimit [
 	highlightableLengthLimit := aLimit
 ]
 
-{ #category : #private }
-GLMXMLHighlighterTextStylerDecorator >> highlightingParse: aString onSuccess: aOneArgumentBlock onError: aTwoArgumentBlock [
+{ #category : #parsing }
+GLMXMLHighlighterTextStylerDecorator >> highlightingParse: aString onError: aBlock [
 	self subclassResponsibility
 ]
 
@@ -63,34 +72,18 @@ GLMXMLHighlighterTextStylerDecorator >> highlightingParse: aString onSuccess: aO
 GLMXMLHighlighterTextStylerDecorator >> initialize [
 	super initialize.
 
-	highlightableLengthLimit := 100000.
-	errorColor := TextColor red.
-	encoding := ''.
+	highlightableLengthLimit := self defaultHighlightableLengthLimit.
+	errorColor := self defaultErrorColor.
 ]
 
 { #category : #parsing }
-GLMXMLHighlighterTextStylerDecorator >> parse: aString onError: anError [
-	| highlightedText |
-
-	aString size > self highlightableLengthLimit
-		ifTrue: [^ aString asText].
-
-	self
-		highlightingParse: aString
-		onSuccess: [:highlightingParser |
-			highlightedText := highlightingParser asHighlightedText.
-			encoding := highlightingParser encoding]
-		onError: [:highlightingParser :position |
-			highlightedText :=
-				highlightingParser
-					asHighlightedTextWithRemainderColored: self errorColor
-					startingAt:
-						(position >= aString size
-							ifTrue: [1]
-							ifFalse: [position]).
-			encoding := highlightingParser encoding].
-
-	^ highlightedText.
+GLMXMLHighlighterTextStylerDecorator >> parse: aString onError: aBlock [
+	aString size <= self highlightableLengthLimit
+		ifTrue: [
+			^ self
+				highlightingParse: aString
+				onError: aBlock]
+		ifFalse: [^ self text]
 ]
 
 { #category : #parsing }

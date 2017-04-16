@@ -35,6 +35,6 @@ GLMXMLDisabledDocumentHighlighterTextStylerDecorator >> disabledText: aStringOrT
 ]
 
 { #category : #parsing }
-GLMXMLDisabledDocumentHighlighterTextStylerDecorator >> parse: aString onError: anError [
+GLMXMLDisabledDocumentHighlighterTextStylerDecorator >> highlightingParse: aString onError: aBlock [
 	^ self disabledText
 ]
