@@ -934,7 +934,7 @@ ConfigurationOfXMLParser >> baseline306: spec [
 			spec postLoadDoIt: #initializeClassesForGSBaseline297. ].
 	spec
 		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.57' ]
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.58' ]
 ]
 
 { #category : #accessing }
@@ -3467,7 +3467,7 @@ ConfigurationOfXMLParser >> version308: spec [
 
         spec for: #common do: [
                 spec blessing: #release.
-			spec package: 'XML-Parser' with: 'XML-Parser-monty.396'.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.397'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.200'.
                 ].
 ]
