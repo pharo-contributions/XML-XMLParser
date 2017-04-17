@@ -48,12 +48,6 @@ GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> newHighlightingParserFro
 	^ parser.
 ]
 
-{ #category : #private }
-GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> newHighlightingParserHandlerOn: aString [
-	^ (super newHighlightingParserHandlerOn: aString)
-		configuration: self outerXMLNode configuration copy
-]
-
 { #category : #accessing }
 GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> outerXMLNode [
 	^ outerXMLNode
@@ -61,5 +55,6 @@ GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> outerXMLNode [
 
 { #category : #accessing }
 GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> outerXMLNode: aNode [
-	outerXMLNode := aNode
+	outerXMLNode := aNode.
+	self configuration: aNode configuration.
 ]

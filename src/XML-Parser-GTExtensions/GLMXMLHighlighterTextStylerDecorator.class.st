@@ -6,8 +6,7 @@ Class {
 	#superclass : #GLMHighlighterTextStylerDecorator,
 	#instVars : [
 		'highlightableLengthLimit',
-		'errorColor',
-		'encoding'
+		'errorColor'
 	],
 	#category : #'XML-Parser-GTExtensions-Highlighting-Parser'
 }

@@ -16,6 +16,7 @@ XMLDocument classSide >> gtExampleXmlNode [
 { #category : #'*XML-Parser-GTExtensions' }
 XMLDocument >> newSourceEditorTextStylerDecorator [
 	^ GLMXMLDocumentHighlighterTextStylerDecorator new
+		configuration: self configuration
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
@@ -33,12 +34,13 @@ XMLDocument >> setOuterXMLFromEditedSource: aString [
 	newDocument
 		ifNotNil: [
 			self
+				removeNodes;
+				configuration: newDocument configuration;
 				version: newDocument version;
 				encoding: newDocument encoding;
 				isStandalone: newDocument isStandalone;
 				doctypeDeclaration: newDocument doctypeDeclaration;
 				doctypeDefinition: newDocument doctypeDefinition;
-				removeNodes;
 				addNodes: newDocument nodes copy].
 	^ self.
 ]

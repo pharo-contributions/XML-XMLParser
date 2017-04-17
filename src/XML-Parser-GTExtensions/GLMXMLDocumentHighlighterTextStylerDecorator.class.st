@@ -4,8 +4,22 @@ A highlighting XML document text style decorator.
 Class {
 	#name : #GLMXMLDocumentHighlighterTextStylerDecorator,
 	#superclass : #GLMXMLHighlighterTextStylerDecorator,
+	#instVars : [
+		'encoding',
+		'configuration'
+	],
 	#category : #'XML-Parser-GTExtensions-Highlighting-Parser'
 }
+
+{ #category : #accessing }
+GLMXMLDocumentHighlighterTextStylerDecorator >> configuration [
+	^ configuration
+]
+
+{ #category : #accessing }
+GLMXMLDocumentHighlighterTextStylerDecorator >> configuration: aConfiguration [
+	configuration := aConfiguration
+]
 
 { #category : #private }
 GLMXMLDocumentHighlighterTextStylerDecorator >> defaultEncoding [
@@ -60,5 +74,10 @@ GLMXMLDocumentHighlighterTextStylerDecorator >> newHighlightingParserFromHandler
 
 { #category : #private }
 GLMXMLDocumentHighlighterTextStylerDecorator >> newHighlightingParserHandlerOn: aString [
-	^ XMLHighlightingParser on: aString
+	| parserHandler |
+
+	parserHandler := XMLHighlightingParser on: aString.
+	self configuration
+		ifNotNil: [parserHandler configuration: self configuration copy].
+	^ parserHandler.
 ]
