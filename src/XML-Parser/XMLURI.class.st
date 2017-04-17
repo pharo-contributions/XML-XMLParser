@@ -781,7 +781,7 @@ XMLURI >> printQueryOn: aStream [
 XMLURI >> printSchemeOn: aStream [
 	self hasScheme
 		ifTrue: [
-			aStream "do not percent encode scheme"
+			aStream
 				nextPutAll: self scheme;
 				nextPut: $:]
 ]
@@ -982,6 +982,8 @@ XMLURI >> removeRawPathSegments [
 
 { #category : #accessing }
 XMLURI >> scheme [
+	"Returns the URI scheme or an empty string if there isn't one"
+
 	self parseURIStringIfUnparsed.
 	^ scheme.
 ]

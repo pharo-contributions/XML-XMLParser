@@ -847,9 +847,11 @@ XMLNodeWithElements >> printRawContentOn: aStream [
 
 { #category : #accessing }
 XMLNodeWithElements >> rawContentStringAt: aName [
-	"returns the raw content string (without space inserted) of the first
+	"Returns the raw content string (without space inserted) of the first
 	element child of the receiver whose qualified or local name matches aName
-	or an empty string if there isn't one"
+	or an empty string if there isn't one.
+
+	See also #contentStringAt:"
 
 	^ self nodes rawContentStringAt: aName
 ]

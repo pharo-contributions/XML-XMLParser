@@ -385,7 +385,7 @@ XMLElement >> declaresDefaultNamespace [
 
 { #category : #testing }
 XMLElement >> declaresPrefix: aPrefix uri: aURI [
-	"Did the receiver declare a new prefix/uri pair rather than inheriting one?"
+	"Did the receiver declare a new prefix/uri pair rather than inheriting it?"
 
 	^ (self isDeclaredPrefix: aPrefix uri: aURI)
 		and: [self isRoot
@@ -566,7 +566,7 @@ XMLElement >> isInLanguage: aLanguage [
 
 { #category : #testing }
 XMLElement >> isNamed: aName [
-	"Does the receiver's qualified or local name match the argument?"
+	"Does the receiver's qualified or local name match aName?"
 
 	^ self name isXMLQualifiedOrLocalName: aName
 ]

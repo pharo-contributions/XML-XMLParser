@@ -104,7 +104,7 @@ XMLNode >> canonicallyPrintOn: aStream [
 
 { #category : #printing }
 XMLNode >> canonicallyPrintToFileNamed: aFileName [
- 	"Prints to specified file as canonical XML (http://www.w3.org/TR/xml-c14n)"
+ 	"Prints to the file aFileName as canonical XML (http://www.w3.org/TR/xml-c14n)"
 
 	self
 		printToFileNamed: aFileName
@@ -464,7 +464,7 @@ XMLNode >> prettyPrintOn: aStream [
 
 { #category : #printing }
 XMLNode >> prettyPrintToFileNamed: aFileName [
- 	"Prints XML to specified file with whitespace formatting for readability"
+ 	"Prints XML to the file aFileName with whitespace formatting for readability"
 
 	self
 		printToFileNamed: aFileName
@@ -488,8 +488,11 @@ XMLNode >> previousNode [
 
 { #category : #printing }
 XMLNode >> printContentOn: aStream [
- 	"Prints the combined content strings of all descendants with space inserted
-	when one string has no trailing space and the next has no leading space"
+ 	"Prints on aStream the combined content strings of all descendants with
+	space inserted when one string has no trailing space and the next has
+	no leading space.
+
+	See also #printRawContentOn:"
 
 	self printRawContentOn: (XMLNodeContentWriteStreamAdapter on: aStream)
 ]
@@ -524,12 +527,15 @@ XMLNode >> printOn: aStream beforeWritingDo: aBlock [
 
 { #category : #printing }
 XMLNode >> printRawContentOn: aStream [ 
- 	"Prints on aStream the content strings of all descendants without spaces inserted."
+ 	"Prints on aStream the content strings of all descendants
+	without spaces inserted.
+
+	See also #printContentOn:"
 ]
 
 { #category : #printing }
 XMLNode >> printToFileNamed: aFileName [
-	"Prints XML to specified file. Uses the encoding specified in the
+	"Prints XML to the file aFileName. Uses the encoding specified in the
 	document's encoding attribute if supported or UTF-8 otherwise."
 
 	self
@@ -544,7 +550,7 @@ XMLNode >> printToFileNamed: aFileName [
 
 { #category : #printing }
 XMLNode >> printToFileNamed: aFileName beforeWritingDo: aBlock [
-	"Prints XML to specified file after evaluating aBlock with the XMLWriter.
+	"Prints XML to the file aFileName after evaluating aBlock with the XMLWriter.
 	Uses the encoding specified in the document's encoding attribute if
 	supported or UTF-8 otherwise."
 
@@ -561,6 +567,9 @@ XMLNode >> printToFileNamed: aFileName beforeWritingDo: aBlock [
 
 { #category : #printing }
 XMLNode >> printWithoutSelfClosingTagsOn: aStream [
+	"Prints XML on aStream with empty elements rendered as '<empty></empty>'
+	instead of self-closing '<empty />' tags"
+
 	self
 		printOn: aStream
 		beforeWritingDo: [:writer | writer outputsSelfClosingTags: false]
@@ -568,6 +577,9 @@ XMLNode >> printWithoutSelfClosingTagsOn: aStream [
 
 { #category : #printing }
 XMLNode >> printWithoutSelfClosingTagsToFileNamed: aFileName [
+	"Prints XML to the file aFileName with empty elements rendered
+	as '<empty></empty>' instead of self-closing '<empty />' tags"
+
 	self
 		printToFileNamed: aFileName
 		beforeWritingDo: [:writer | writer outputsSelfClosingTags: false]
@@ -575,13 +587,18 @@ XMLNode >> printWithoutSelfClosingTagsToFileNamed: aFileName [
 
 { #category : #printing }
 XMLNode >> printedWithoutSelfClosingTags [
+	"Prints XML with empty elements rendered as '<empty></empty>' instead
+	of self-closing '<empty />' tags"
+
 	^ String streamContents: [:stream | self printWithoutSelfClosingTagsOn: stream]
 ]
 
 { #category : #accessing }
 XMLNode >> rawContentString [
  	"Returns the combined content string of all descendants without
-	spaces inserted."
+	spaces inserted.
+	
+	See also #contentString"
 
 	^ String streamContents: [:stream | self printRawContentOn: stream]
 ]
