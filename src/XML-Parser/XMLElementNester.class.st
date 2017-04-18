@@ -54,7 +54,7 @@ XMLElementNester >> elementPrintLimit [
 ]
 
 { #category : #nesting }
-XMLElementNester >> endElement: anElement [
+XMLElementNester >> endCurrentElement [
 	(self openElements
 		removeLast;
 		size) > 0
@@ -63,6 +63,11 @@ XMLElementNester >> endElement: anElement [
 			wasRootElementEnded := hasExternalRootElement not].
 	self hasScopedAttributes
 		ifTrue: [self endScopedAttributes].
+]
+
+{ #category : #nesting }
+XMLElementNester >> endElement: anElement [
+	self endCurrentElement
 ]
 
 { #category : #private }

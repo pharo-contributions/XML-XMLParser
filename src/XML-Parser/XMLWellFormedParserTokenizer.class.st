@@ -1101,7 +1101,7 @@ XMLWellFormedParserTokenizer >> nextContentMarkupToken [
 					self errorUnexpectedMarkupDeclarationInContent].
 			self nextTag]
 		ifNotNil: [:pushedBackGeneralEntity |
-			self nextContentMarkupTokenFromEntity: pushedBackGeneralEntity].
+			self nextContentMarkupTokenFromEntity: pushedBackGeneralEntity]
 ]
 
 { #category : #tokenizing }
@@ -1333,7 +1333,7 @@ XMLWellFormedParserTokenizer >> nextEndTag [
 					errorExpectedEndTag: tagName
 					butGot: nextChar
 					at: i]].
-	elementNester endElement: tagName.
+	elementNester endCurrentElement.
 	driver handleEndTag: tagName.
 	streamReader skipSeparators.
 	self expectTerminator.
@@ -1681,8 +1681,8 @@ XMLWellFormedParserTokenizer >> nextNonElementWhitespace [
 	"nil understands isXMLSeparator so it is not tested for first"
 	[(nextChar := streamReader peek) isXMLSeparator]
 		whileTrue: [streamReader next].
-	(nextChar == nil
-		or: [nextChar == $<])
+	(nextChar == $<
+		or: [nextChar == nil])
 		ifFalse: [self errorNonElementPCDataCharacter: streamReader next].
 ]
 
@@ -2158,7 +2158,7 @@ XMLWellFormedParserTokenizer >> nextTag [
 	nextChar == $/
 		ifTrue: [
 			streamReader next.
-			elementNester endElement: tagName.
+			elementNester endCurrentElement.
 			driver handleEndTag: tagName].
 
 	self expectTerminator.

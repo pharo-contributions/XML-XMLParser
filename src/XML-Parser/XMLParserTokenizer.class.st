@@ -490,7 +490,7 @@ XMLParserTokenizer >> nextXMLDeclarationOrPrologToken [
 			^ self nextNonPIPrologOrContentMarkupToken].
 
 	"other prolog tokens can have whitespace before them, so the doc
-	does not need to start with an < for them"
+	does not need to start with an '<' for them"
 	context := context prologContext.
 	self nextPrologToken.
 ]
