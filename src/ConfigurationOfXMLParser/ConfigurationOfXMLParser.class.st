@@ -256,6 +256,20 @@ ConfigurationOfXMLParser class >> unloadMetacello [
 	Smalltalk at: #ConfigurationOfMetacello ifPresent: [:cls | cls unloadMetacello ]
 ]
 
+{ #category : #'development support' }
+ConfigurationOfXMLParser class >> validate [
+	"Check the configuration for Errors, Critical Warnings, and Warnings (see class comment for MetacelloMCVersionValidator for more information). 
+	Errors identify specification issues that will result in unexpected behaviour when you load the configuration. 
+	Critical Warnings identify specification issues that may result in unexpected behavior when you load the configuration.
+	Warnings identify specification issues that are technically correct, but are worth take a look at."
+
+	"self validate"
+
+	<apiDocumentation>
+	self ensureMetacello.
+	^ ((Smalltalk at: #MetacelloToolBox) validateConfiguration: self debug: #() recurse: false) explore
+]
+
 { #category : #baselines }
 ConfigurationOfXMLParser >> baseline10: spec [
 	<version: '1.0-baseline'>
@@ -312,13 +326,13 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				with: [spec requires: #('BitmapCharacterSet' 'OrderPreservingDictionary')].
 			spec
 				package: 'XML-Tests-Parser'
-				with: [ spec requires: #('XML-Parser' 'XMLWriterTests') ].
+				with: [ spec requires: #('XMLWriterTests' 'XML-Parser') ].
 			
 			"Core was made to only load XMLParser, CoreWithWriting loads XMLParser and XMLWriter"
 			spec
 				group: 'default' with: #('Core' 'Tests');
 				group: 'Core' with: #('XML-Parser');
-				group: 'CoreWithWriting' with: #('XML-Parser' 'XMLWriter');
+				group: 'CoreWithWriting' with: #('XMLWriter' 'XML-Parser');
 				group: 'Tests' with: #('XML-Tests-Parser') ].
 
 	spec
@@ -339,7 +353,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 			"the extensions require XMLWriter"
 			spec
 				group: 'default' with: #('Core' 'Tests' 'XML-Parser-GTExtensions');
-				group: 'CoreWithWriting' with: #('XML-Parser' 'XMLWriter' 'XML-Parser-GTExtensions').
+				group: 'CoreWithWriting' with: #('XMLWriter' 'XML-Parser' 'XML-Parser-GTExtensions').
 			spec
 				package: 'XML-Parser-GTExtensions'
 				with: [ spec requires: 'XML-Parser' ]. ].
@@ -934,7 +948,7 @@ ConfigurationOfXMLParser >> baseline306: spec [
 			spec postLoadDoIt: #initializeClassesForGSBaseline297. ].
 	spec
 		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.58' ]
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.59' ]
 ]
 
 { #category : #accessing }
