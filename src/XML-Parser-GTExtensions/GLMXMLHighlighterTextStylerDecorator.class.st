@@ -38,11 +38,6 @@ GLMXMLHighlighterTextStylerDecorator >> errorColor: aTextColor [
 	errorColor := aTextColor
 ]
 
-{ #category : #testing }
-GLMXMLHighlighterTextStylerDecorator >> hasEncoding [
-	^ self encoding notEmpty
-]
-
 { #category : #private }
 GLMXMLHighlighterTextStylerDecorator >> highlightStartPositionForErrorAt: aPosition in: aString [
 	"color all of it if the error occurred at the end of the
@@ -88,20 +83,4 @@ GLMXMLHighlighterTextStylerDecorator >> parse: aString onError: aBlock [
 { #category : #parsing }
 GLMXMLHighlighterTextStylerDecorator >> parser [
 	^ self
-]
-
-{ #category : #files }
-GLMXMLHighlighterTextStylerDecorator >> saveToFile: anXMLFileHandleOrFileName [
-	| sourceToSave streamConverter |
-
-	sourceToSave := self text asString.
-	streamConverter :=
-		self hasEncoding
-			ifTrue: [self encoding asXMLStreamConverter]
-			ifFalse: [XMLStreamConverter default].
-	anXMLFileHandleOrFileName asXMLFileHandle writeStreamDo: [:writeStream |
-		writeStream
-			streamConverter: streamConverter;
-			nextPutByteOrderMark;
-			nextPutAll: sourceToSave].
 ]

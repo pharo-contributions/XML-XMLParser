@@ -5,7 +5,8 @@ Class {
 	#name : #GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator,
 	#superclass : #GLMXMLDocumentHighlighterTextStylerDecorator,
 	#instVars : [
-		'outerXMLNode'
+		'outerXMLNode',
+		'document'
 	],
 	#category : #'XML-Parser-GTExtensions-Highlighting-Parser'
 }
@@ -13,6 +14,25 @@ Class {
 { #category : #private }
 GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator class >> outerXMLNode: aNode [
 	^ self new outerXMLNode: aNode
+]
+
+{ #category : #accessing }
+GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> document [
+	^ document
+]
+
+{ #category : #accessing }
+GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> document: aDocument [
+	document := aDocument
+]
+
+{ #category : #accessing }
+GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> encoding [
+	^ super encoding
+		ifEmpty: [
+			self document
+				ifNil: ['']
+				ifNotNil: [:node | node encoding]]
 ]
 
 { #category : #private }
@@ -56,5 +76,10 @@ GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> outerXMLNode [
 { #category : #accessing }
 GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> outerXMLNode: aNode [
 	outerXMLNode := aNode.
-	self configuration: aNode configuration.
+	"the document is saved because this node will be replaced and removed
+	from it when the edited source is accepted, and the encoding is needed
+	from it if the source is being saved to a file"
+	self
+		configuration: aNode configuration;
+		document: aNode document.
 ]

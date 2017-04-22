@@ -36,6 +36,11 @@ GLMXMLDocumentHighlighterTextStylerDecorator >> encoding: anEncodingName [
 	encoding := anEncodingName
 ]
 
+{ #category : #testing }
+GLMXMLDocumentHighlighterTextStylerDecorator >> hasEncoding [
+	^ self encoding notEmpty
+]
+
 { #category : #parsing }
 GLMXMLDocumentHighlighterTextStylerDecorator >> highlightingParse: aString onError: aBlock [
 	| highlightingParserHandler highlightingParser |
@@ -80,4 +85,20 @@ GLMXMLDocumentHighlighterTextStylerDecorator >> newHighlightingParserHandlerOn: 
 	self configuration
 		ifNotNil: [parserHandler configuration: self configuration copy].
 	^ parserHandler.
+]
+
+{ #category : #files }
+GLMXMLDocumentHighlighterTextStylerDecorator >> saveToFile: anXMLFileHandleOrFileName [
+	| sourceToSave streamConverter |
+
+	sourceToSave := self text asString.
+	streamConverter :=
+		self hasEncoding
+			ifTrue: [self encoding asXMLStreamConverter]
+			ifFalse: [XMLStreamConverter default].
+	anXMLFileHandleOrFileName asXMLFileHandle writeStreamDo: [:writeStream |
+		writeStream
+			streamConverter: streamConverter;
+			nextPutByteOrderMark;
+			nextPutAll: sourceToSave].
 ]
