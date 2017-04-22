@@ -1,6 +1,11 @@
 "
-(ConfigurationOfXMLParserHTML project version: #stable) load
- 
+Loads the XMLParserHTML library and related packages:
+	(ConfigurationOfXMLParserHTML project version: #stable) load: #('default')
+
+The loadable groups are:
+	default - XMLParserHTML, XMLParser, and XMLWriter with tests.
+	Core - XMLParserHTML and XMLParser without XMLWriter  or tests.
+	CoreWithWriting - XMLParserHTML, XMLParser, and XMLWriter without tests.
 "
 Class {
 	#name : #ConfigurationOfXMLParserHTML,
@@ -171,15 +176,20 @@ ConfigurationOfXMLParserHTML >> baseline100: spec [
 						loads: #('Core');
 						repository: 'http://smalltalkhub.com/mc/PharoExtras/XMLParser/main' ].
 			spec
+				project: 'XMLParserCoreWithWriting'
+				copyFrom: 'XMLParser'
+				with: [ spec loads: #('CoreWithWriting') ].
+			spec
 				project: 'XMLParserTests'
 				copyFrom: 'XMLParser'
 				with: [ spec loads: #('Tests') ].
 			spec package: 'XML-Parser-HTML-Core' with: [ spec requires: 'XMLParser' ].
 			spec package: 'XML-Parser-HTML-Tests' with: [
-				spec requires: #('XML-Parser-HTML-Core' 'XMLParserTests') ].
+				spec requires: #('XMLParserTests' 'XML-Parser-HTML-Core') ].
 			spec
 				group: 'default' with: #('Core' 'Tests');
 				group: 'Core' with: #('XML-Parser-HTML-Core');
+				group: 'CoreWithWriting' with: #('XMLParserCoreWithWriting' 'XML-Parser-HTML-Core');
 				group: 'Tests' with: #('XML-Parser-HTML-Tests')].
 
 	"load gemstone methods"
