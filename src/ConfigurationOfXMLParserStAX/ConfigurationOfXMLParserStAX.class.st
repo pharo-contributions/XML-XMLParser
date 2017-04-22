@@ -1,6 +1,11 @@
 "
-ConfigurationOfXMLParserStAX load
- 
+Loads the XMLParserStAX library and related packages:
+	(ConfigurationOfXMLParserStAX project version: #stable) load: #('default')
+
+The loadable groups are:
+	default - XMLParserStAX, XMLParser, and XMLWriter with tests.
+	Core - XMLParserStAX and XMLParser without XMLWriter  or tests.
+	CoreWithWriting - XMLParserStAX, XMLParser, and XMLWriter without tests.
 "
 Class {
 	#name : #ConfigurationOfXMLParserStAX,
@@ -173,14 +178,20 @@ ConfigurationOfXMLParserStAX >> baseline100: spec [
 						loads: #('Core');
 						repository: 'http://smalltalkhub.com/mc/PharoExtras/XMLParser/main' ].
 			spec
+				project: 'XMLParserCoreWithWriting'
+				copyFrom: 'XMLParser'
+				with: [ spec loads: #('CoreWithWriting') ].
+			spec
 				project: 'XMLParserTests'
 				copyFrom: 'XMLParser'
 				with: [ spec loads: #('Tests') ].
 		spec package: 'XML-Parser-StAX-Core' with: [ spec requires: 'XMLParser' ].
-		spec package: 'XML-Parser-StAX-Tests' with: [ spec requires: #('XML-Parser-StAX-Core' 'XMLParserTests') ].
+		spec package: 'XML-Parser-StAX-Tests' with: [
+			spec requires: #('XMLParserTests' 'XML-Parser-StAX-Core') ].
 		spec
 			group: 'default' with: #('Core' 'Tests');
 			group: 'Core' with: #('XML-Parser-StAX-Core');
+			group: 'CoreWithWriting' with: #('XMLParserCoreWithWriting' 'XML-Parser-StAX-Core');
 			group: 'Tests' with: #('XML-Parser-StAX-Tests')]
 ]
 
