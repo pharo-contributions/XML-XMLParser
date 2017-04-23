@@ -78,7 +78,16 @@ DTDCachingExternalEntityResolver >> cachingResolveEntityURI: anXMLURIOrURIString
 					(self resolveExternalEntityWith: [:maxSize |
 						uri
 							getUpToLimit: maxSize
-							decoding: false])].
+							decoding: false])]
+		ifNotNil: [:cachedEntity |
+			"the limit should be enforced regardless, otherwise the same
+			code could unpredictably fail depending on the state of the
+			cache, so act like it was resolved even though it was cached
+			and check the limit the way #resolveExternalEntityWith: does"
+			self
+				checkExternalEntityLimit;
+				incrementTotalResolvedExternalEntities.
+			cachedEntity].
 ]
 
 { #category : #private }
