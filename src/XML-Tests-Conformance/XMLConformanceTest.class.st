@@ -155,33 +155,35 @@ XMLConformanceTest class >> buildSourceFileClassMethodFor: aFileReference in: aC
 
 { #category : #'building subclasses' }
 XMLConformanceTest class >> buildTestCaseForSuite: aSuite [
-	| testCaseClass fileVisitor badSourceFiles |
+	| testCaseClass fileFinder badSourceFiles |
 
 	testCaseClass := self createSubclassForSuite: aSuite.
-	fileVisitor :=
-		XMLConformanceFileVisitor
+	fileFinder :=
+		XMLConformanceFileFinder
 			suite: aSuite
-			skipFilesInBase: (self suitesWithSkippableBases includes: aSuite).
-	(PreorderGuide for: fileVisitor) show: (self fileReferenceForSuite: aSuite).
+			root: (self fileReferenceForSuite: aSuite).
+	(self suitesWithSkippableBases includes: aSuite)
+		ifTrue: [fileFinder findFilesSkippingBase]
+		ifFalse: [fileFinder findFiles].
 
 	badSourceFiles := Set new.
-	(fileVisitor passingTestFiles,
-		fileVisitor passingTestOutputFiles,
-		fileVisitor failingTestFiles,
-		fileVisitor entityFiles) do: [:each |
+	(fileFinder passingTestFiles,
+		fileFinder passingTestOutputFiles,
+		fileFinder failingTestFiles,
+		fileFinder entityFiles) do: [:each |
 			[self
 				buildSourceFileClassMethodFor: each
 				in: testCaseClass]
 				on: Error
 				do: [:error | badSourceFiles add: each]].
 
-	fileVisitor passingTestFiles do: [:each |
+	fileFinder passingTestFiles do: [:each |
 		(badSourceFiles includes: each)
 			ifFalse: [
 				self
 					buildPassingTestMethodFor: each
 					in: testCaseClass]].
-	fileVisitor failingTestFiles do: [:each |
+	fileFinder failingTestFiles do: [:each |
 		(badSourceFiles includes: each)
 			ifFalse: [
 				self

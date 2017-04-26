@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'virtualFileClass'
 	],
-	#category : #'XML-Tests-Conformance'
+	#category : #'XML-Tests-Conformance-Files'
 }
 
 { #category : #'instance creation' }
