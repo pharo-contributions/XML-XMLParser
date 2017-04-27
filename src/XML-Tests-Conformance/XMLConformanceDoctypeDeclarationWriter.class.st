@@ -18,5 +18,5 @@ XMLConformanceDoctypeDeclarationWriter >> isExternalIDOmittable [
 XMLConformanceDoctypeDeclarationWriter >> isOmittable [
 	"unlike standard canonical XML, doctypes are never omittable
 	for conformance canonical XML"
-	^ self isCanonical not
+	^ false
 ]

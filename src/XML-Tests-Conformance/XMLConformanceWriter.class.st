@@ -74,8 +74,11 @@ XMLConformanceWriter >> pi [
 
 { #category : #private }
 XMLConformanceWriter >> writeUnescapedString: aString [
-	"conformance canonical XML requires single quotes for these strings"
-	self
-		writeUnescapedString: aString
-		quotedBy: $'
+	self isCanonical
+		ifTrue: [
+			"conformance canonical XML requires single quotes for these strings"
+			self
+				writeUnescapedString: aString
+				quotedBy: $']
+		ifFalse: [super writeUnescapedString: aString]
 ]

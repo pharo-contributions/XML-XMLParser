@@ -11,5 +11,5 @@ Class {
 XMLConformanceNotationDeclarationWriter >> isOmittable [
 	"unlike standard canonical XML, notation declarations are never omittable
 	for conformance canonical XML"
-	^ self isCanonical not
+	^ false
 ]
