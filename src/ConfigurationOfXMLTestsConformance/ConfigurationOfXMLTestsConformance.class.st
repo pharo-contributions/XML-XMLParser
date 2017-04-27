@@ -377,3 +377,13 @@ ConfigurationOfXMLTestsConformance >> version118: spec [
 			spec package: 'XML-Tests-Conformance' with: 'XML-Tests-Conformance-monty.30'.
                 ].
 ]
+
+{ #category : #versions }
+ConfigurationOfXMLTestsConformance >> version119: spec [ 
+        <version: '1.1.9' imports: #('1.0.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Tests-Conformance' with: 'XML-Tests-Conformance-monty.31'.
+                ].
+]
