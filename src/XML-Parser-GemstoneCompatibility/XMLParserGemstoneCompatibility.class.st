@@ -2,13 +2,13 @@
 Used in development to copy String extension methods to CharacterCollection.
 "
 Class {
-	#name : #XMLGemstoneCompatibility,
+	#name : #XMLParserGemstoneCompatibility,
 	#superclass : #Object,
 	#category : #'XML-Parser-GemstoneCompatibility'
 }
 
 { #category : #private }
-XMLGemstoneCompatibility class >> copyXMLGSExtensionMethods [
+XMLParserGemstoneCompatibility class >> copyXMLGSExtensionMethods [
 	"
 	self copyXMLGSExtensionMethods
 	"
