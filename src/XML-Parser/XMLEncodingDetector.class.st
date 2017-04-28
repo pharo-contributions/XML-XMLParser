@@ -154,8 +154,11 @@ XMLEncodingDetector >> handleLittleEndianUTF16BOMOrUTF32BOM [
 		handleBOM: UTF32LittleEndianBOM
 		forConverterClass: XMLUTF32LittleEndianStreamConverter
 		ifUnmatched: [:matchedPortion | | converter |
-			matchedPortion = UTF16LittleEndianBOM
-				ifTrue: [converter := XMLUTF16LittleEndianStreamConverter new]
+			matchedPortion size >= 2
+				ifTrue: [
+					"the UTF-16 BE BOM is the first two bytes of the UTF-32 BE BOM"
+					converter := XMLUTF16LittleEndianStreamConverter new.
+					stream position: startPosition + 2]
 				ifFalse: [self resetStreamToStartPosition].
 			converter]
 ]

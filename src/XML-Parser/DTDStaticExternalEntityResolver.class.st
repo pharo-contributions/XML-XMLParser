@@ -83,7 +83,7 @@ DTDStaticExternalEntityResolver >> includesExternalEntityURI: anXMLURIOrURIStrin
 	^ self externalEntities includesKey: anXMLURIOrURIString asXMLURI
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #copying }
 DTDStaticExternalEntityResolver >> postCopy [
 	super postCopy.
 

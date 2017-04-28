@@ -994,19 +994,20 @@ XMLWellFormedParserTokenizer >> nextCDataSection [
 	characterStream reset.
 	closingBracketsRead := 0.
 	[(nextChar := streamReader next) == nil
-		or: [closingBracketsRead = 2
+		or: [closingBracketsRead == 2
 			and: [nextChar == $>]]]
 		whileFalse: [
 			nextChar == $]
 				ifTrue: [
-					closingBracketsRead = 2
+					closingBracketsRead == 2
 						ifTrue: [characterStream nextPut: $]]
 						ifFalse: [closingBracketsRead := closingBracketsRead + 1]]
 				ifFalse: [
-					closingBracketsRead > 0
-						ifTrue: [
-							1 to: closingBracketsRead do: [:i |
-								characterStream nextPut: $]].
+					closingBracketsRead == 0
+						ifFalse: [
+							characterStream nextPut: $].
+							closingBracketsRead == 2
+								ifTrue: [characterStream nextPut: $]].
 							closingBracketsRead := 0].
 					nextChar isXMLChar
 						ifFalse: [self errorNonCharInCDataSection: nextChar].
@@ -1325,8 +1326,8 @@ XMLWellFormedParserTokenizer >> nextEndTag [
 	(tagName := elementNester currentElement)
 		ifNil: [self errorUnexpectedEndTag: self nextElementName].
 	1 to: tagName size do: [:i | | nextChar |
-		"can't use == here because wide chars with the same value
-		aren't identical in pre-Spur VMs"
+		"can't use #== here because wide chars aren't an immediate type
+		in pre-Spur VMs"
 		(nextChar := streamReader next) = (tagName at: i)
 			ifFalse: [
 				self
@@ -1592,7 +1593,7 @@ XMLWellFormedParserTokenizer >> nextIgnoreSectionFromEntity: aPushedBackParamete
 	conditional section end is found. Parameter entity references MUST
 	NOT be recognized in this process."
 	openSections := 1.
-	[openSections = 0
+	[openSections == 0
 		or: [(nextChar := streamReader next) == nil]]
 		whileFalse: [
 			nextChar == $>
@@ -1609,7 +1610,7 @@ XMLWellFormedParserTokenizer >> nextIgnoreSectionFromEntity: aPushedBackParamete
 			firstChar := secondChar.
 			secondChar := nextChar].
 
-	openSections = 0
+	openSections == 0
 		ifFalse: [self errorUnterminatedIgnoreSections].
 ]
 
@@ -1779,8 +1780,8 @@ XMLWellFormedParserTokenizer >> nextPCDataToken [
 									isWhitespace := false.
 									closingBracketsRead := closingBracketsRead + 1]
 								ifFalse: [
-									closingBracketsRead > 0
-										ifTrue: [
+									closingBracketsRead == 0
+										ifFalse: [
 											(closingBracketsRead >= 2
 												and: [nextChar == $>])
 												ifTrue: [
@@ -1791,8 +1792,8 @@ XMLWellFormedParserTokenizer >> nextPCDataToken [
 					characterStream nextPut: nextChar]].
 	isWhitespace
 		ifTrue: [
-			characterStream position > 0
-				ifTrue: [driver handleWhitespace: characterStream contents]]
+			characterStream position == 0
+				ifFalse: [driver handleWhitespace: characterStream contents]]
 		ifFalse: [driver handlePCData: characterStream contents].
 ]
 
@@ -1854,7 +1855,7 @@ XMLWellFormedParserTokenizer >> nextPITarget [
 			nameStream nextPut: nextChar].
 	
 	(isReservedTarget
-		and: [length = 3])
+		and: [length == 3])
 		ifTrue: [
 			isLowercaseReservedTarget
 				ifTrue: [

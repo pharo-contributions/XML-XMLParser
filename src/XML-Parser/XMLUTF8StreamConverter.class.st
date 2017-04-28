@@ -1,5 +1,5 @@
 "
-A stream converter for UTF-8 streams. (accepts overlong encodings)
+A stream converter for UTF-8 streams. (Rejects overlong encodings.)
 "
 Class {
 	#name : #XMLUTF8StreamConverter,
@@ -17,67 +17,115 @@ XMLUTF8StreamConverter class >> byteOrderMarkBytes [
 	^ #(16rEF 16rBB 16rBF)
 ]
 
+{ #category : #private }
+XMLUTF8StreamConverter >> errorOverlongCodePoint: aCodePoint [
+	XMLEncodingException
+		formatSignal: 'Illegal overlong UTF-8 encoding for U+{1} code point'
+		with: aCodePoint printStringHex
+]
+
 { #category : #decoding }
 XMLUTF8StreamConverter >> nextFromStream: aStream [
-	| firstChar firstByte secondByte thirdByte |
+	| firstByte secondByte thirdByte codePoint |
 
-	((firstChar := aStream basicNext) == nil
-		or: [(firstByte := firstChar asciiValue) < 16r80]) "single byte character"
-		ifTrue: [^ firstChar].
-
-	firstByte < 16rC0 "second bit must be set"
-		ifTrue: [self errorBadCharacterEncoding].
+	aStream basicNext
+		ifNil: [^ nil]
+		ifNotNil: [:firstChar |
+			(firstByte := firstChar asciiValue) < 16r80 "single byte character"
+				ifTrue: [^ firstChar]].
 
 	secondByte :=
 		(aStream basicNext
 			ifNil: [self errorBadCharacterEncoding]) asciiValue.
-	(firstByte bitAnd: 16rF0) < 16rE0 "two bytes"
+	(secondByte bitAnd: 16rC0) == 16r80
+		ifFalse: [self errorBadCharacterEncoding].
+	(firstByte bitAnd: 16rE0) == 16rC0 "two bytes"
 		ifTrue: [
-			^ self characterFromCodePoint: 
+			codePoint :=
 				((firstByte bitAnd: 16r1F) bitShift: 6) +
-				(secondByte bitAnd: 16r3F)].
+				(secondByte bitAnd: 16r3F).
+			codePoint >= 16r80
+				ifFalse: [self errorOverlongCodePoint: codePoint].
+			^ Character value: codePoint].
 
 	thirdByte :=
 		(aStream basicNext
 			ifNil: [self errorBadCharacterEncoding]) asciiValue.
-	(firstByte bitAnd: 16rF0) = 16rE0 "three bytes"
+	(thirdByte bitAnd: 16rC0) == 16r80
+		ifFalse: [self errorBadCharacterEncoding].
+	(firstByte bitAnd: 16rF0) == 16rE0 "three bytes"
 		ifTrue: [
-			^ self characterFromCodePoint: 
+			codePoint :=
 				((firstByte bitAnd: 16r0F) bitShift: 12) +
 				((secondByte bitAnd: 16r3F) bitShift: 6) +
-				(thirdByte bitAnd: 16r3F)].
+				(thirdByte bitAnd: 16r3F).
+			"check for the reserved surrogate pair code points"
+			codePoint >= 16rD800
+				ifTrue: [
+					codePoint <= 16rDFFF
+						ifTrue: [self errorBadCharacterValue: codePoint]]
+				ifFalse: [
+					codePoint >= 16r800
+						ifFalse: [self errorOverlongCodePoint: codePoint]].
+			^ Character value: codePoint].
 
-	^ self characterFromCodePoint: "four"
-		((firstByte bitAnd: 16r07) bitShift: 18) +
-		((secondByte bitAnd: 16r3F) bitShift: 12) +
-		((thirdByte bitAnd: 16r3F) bitShift: 6) +
-		((aStream basicNext
-			ifNil: [self errorBadCharacterEncoding]) asciiValue bitAnd: 16r3F).
+	(firstByte bitAnd: 16rF8) == 16rF0
+		ifTrue: [| fourthByte |
+			fourthByte :=
+				(aStream basicNext
+					ifNil: [self errorBadCharacterEncoding]) asciiValue.
+			(fourthByte bitAnd: 16rC0) == 16r80
+				ifFalse: [self errorBadCharacterEncoding].
+			codePoint :=
+				((firstByte bitAnd: 16r07) bitShift: 18) +
+				((secondByte bitAnd: 16r3F) bitShift: 12) +
+				((thirdByte bitAnd: 16r3F) bitShift: 6) +
+				(fourthByte bitAnd: 16r3F).
+			codePoint > 16r10FFFF "max code point"
+				ifTrue: [self errorBadCharacterValue: codePoint].
+			codePoint >= 16r10000
+				ifFalse: [self errorOverlongCodePoint: codePoint].
+			^ Character value: codePoint].
+
+	self errorBadCharacterEncoding.
 ]
 
 { #category : #encoding }
 XMLUTF8StreamConverter >> nextPut: aCharacter toStream: aStream [
 	| codePoint |
 
-	(codePoint := self codePointFromCharacter: aCharacter) < 16r80
-		ifTrue: [^ aStream basicNextPut: aCharacter].
-
-	codePoint < 16r0800
+	(codePoint := aCharacter asciiValue) < 16r80
 		ifTrue: [
-			^ aStream
+			aStream basicNextPut: aCharacter.
+			^ self].
+
+	codePoint < 16r800
+		ifTrue: [
+			aStream
 				basicNextPutByte: 16rC0 + (codePoint bitShift: -6);
-				basicNextPutByte: 16r80 + (codePoint bitAnd: 16r003F)].
+				basicNextPutByte: 16r80 + (codePoint bitAnd: 16r003F).
+			^ self].
 
-	codePoint < 16r010000
+	codePoint < 16r10000
 		ifTrue: [
-			^ aStream
+			"check for the reserved surrogate pair code points"
+			(codePoint >= 16rD800
+				and: [codePoint <= 16rDFFF])
+				ifTrue: [self errorBadCharacterValue: codePoint].
+			aStream
 				basicNextPutByte: 16rE0 + (codePoint bitShift: -12);
 				basicNextPutByte: 16r80 + ((codePoint bitShift: -6) bitAnd: 16r3F);
-				basicNextPutByte: 16r80 + (codePoint bitAnd: 16r3F)].
+				basicNextPutByte: 16r80 + (codePoint bitAnd: 16r3F).
+			^ self].
 
-	aStream
-		basicNextPutByte: 16rF0 + (codePoint bitShift: -18);
-		basicNextPutByte: 16r80 + ((codePoint bitShift: -12) bitAnd: 16r3F);
-		basicNextPutByte: 16r80 + ((codePoint bitShift: -6) bitAnd: 16r3F);
-		basicNextPutByte: 16r80 + (codePoint bitAnd: 16r3F).
+	codePoint <= 16r10FFFF  "max code point"
+		ifTrue: [
+			aStream
+				basicNextPutByte: 16rF0 + (codePoint bitShift: -18);
+				basicNextPutByte: 16r80 + ((codePoint bitShift: -12) bitAnd: 16r3F);
+				basicNextPutByte: 16r80 + ((codePoint bitShift: -6) bitAnd: 16r3F);
+				basicNextPutByte: 16r80 + (codePoint bitAnd: 16r3F).
+			^ self].
+
+	self errorBadCharacterValue: codePoint.
 ]

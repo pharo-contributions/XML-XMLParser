@@ -25,11 +25,11 @@ Character >> isXMLChar [
 				ifFalse: [^ false].
 			^ tempValue <= 16r10FFFF].
 
-	tempValue = 16r9
+	tempValue == 16r9
 		ifTrue: [^ true].
-	tempValue = 16rA
+	tempValue == 16rA
 		ifTrue: [^ true].
-	^ tempValue = 16rD.
+	^ tempValue == 16rD.
 ]
 
 { #category : #'*XML-Parser' }
@@ -47,17 +47,17 @@ Character >> isXMLNCNameChar [
 				ifTrue: [
 					tempValue <= 16r5A "$Z asciiValue hex"
 						ifTrue: [^ true].
-					^ tempValue = 16r5F]. "$_ asciiValue hex"
+					^ tempValue == 16r5F]. "$_ asciiValue hex"
 
 			tempValue >= 16r30 "$0 asciiValue hex"
 				ifTrue: [^ tempValue <= 16r39]. "$9 asciiValue hex; no $: test"
 
-			tempValue = 16r2E "$. asciiValue hex"
+			tempValue == 16r2E "$. asciiValue hex"
 				ifTrue: [^ true].
-			^ tempValue = 16r2D]. "$- asciiValue hex"
+			^ tempValue == 16r2D]. "$- asciiValue hex"
 
 	tempValue >= 16rC0
-		ifFalse: [^ tempValue = 16rB7].
+		ifFalse: [^ tempValue == 16rB7].
 	tempValue <= 16rD6
 		ifTrue: [^ true].
 
@@ -142,7 +142,7 @@ Character >> isXMLNCNameStartChar [
 			tempValue <= 16r5A "$Z asciiValue hex"
 				ifTrue: [^ true].
 
-			^ tempValue = 16r5F]. "$_ asciiValue hex; no $: test"
+			^ tempValue == 16r5F]. "$_ asciiValue hex; no $: test"
 
 	tempValue >= 16rC0
 		ifFalse: [^ false].
@@ -230,20 +230,20 @@ Character >> isXMLNameChar [
 				ifTrue: [
 					tempValue <= 16r5A "$Z asciiValue hex"
 						ifTrue: [^ true].
-					^ tempValue = 16r5F]. "$_ asciiValue hex"
+					^ tempValue == 16r5F]. "$_ asciiValue hex"
 
 			tempValue >= 16r30 "$0 asciiValue hex"
 				ifTrue: [
 					tempValue <= 16r39 "$9 asciiValue hex"
 						ifTrue: [^ true].
-					^ tempValue = 16r3A]. "$: asciiValue hex"
+					^ tempValue == 16r3A]. "$: asciiValue hex"
 
-			tempValue = 16r2E "$. asciiValue hex"
+			tempValue == 16r2E "$. asciiValue hex"
 				ifTrue: [^ true].
-			^ tempValue = 16r2D]. "$- asciiValue hex"
+			^ tempValue == 16r2D]. "$- asciiValue hex"
 
 	tempValue >= 16rC0
-		ifFalse: [^ tempValue = 16rB7].
+		ifFalse: [^ tempValue == 16rB7].
 	tempValue <= 16rD6
 		ifTrue: [^ true].
 
@@ -335,9 +335,9 @@ Character >> isXMLNameStartChar [
 				ifTrue: [
 					tempValue <= 16r5A "$Z asciiValue hex"
 						ifTrue: [^ true].
-					^ tempValue = 16r5F]. "$_ asciiValue hex"
+					^ tempValue == 16r5F]. "$_ asciiValue hex"
 	
-			^ tempValue = 16r3A]. "$: asciiValue hex"
+			^ tempValue == 16r3A]. "$: asciiValue hex"
 
 	tempValue >= 16rC0
 		ifFalse: [^ false].
@@ -405,13 +405,13 @@ Character >> isXMLSeparator [
 	has no 'value' inst var"
 	| tempValue |
 
-	(tempValue := self asciiValue) = 32 "space"
+	(tempValue := self asciiValue) == 32 "space"
 		ifTrue: [^ true].
-	tempValue = 10 "line feed"
+	tempValue == 10 "line feed"
 		ifTrue: [^ true].
-	tempValue = 9 "tab"
+	tempValue == 9 "tab"
 		ifTrue: [^ true].
-	^ tempValue = 13. "carriage return; no form feeds"
+	^ tempValue == 13. "carriage return; no form feeds"
 ]
 
 { #category : #'*XML-Parser' }
@@ -420,15 +420,15 @@ Character >> isXMLWhitespace [
 	has no 'value' inst var"
 	| tempValue |
 
-	(tempValue := self asciiValue) = 32 "space"
+	(tempValue := self asciiValue) == 32 "space"
 		ifTrue: [^ true].
-	tempValue = 10 "line feed"
+	tempValue == 10 "line feed"
 		ifTrue: [^ true].
-	tempValue = 9 "tab"
+	tempValue == 9 "tab"
 		ifTrue: [^ true].
-	tempValue = 13 "carriage return"
+	tempValue == 13 "carriage return"
 		ifTrue: [^ true].
-	^ tempValue = 12. "form feed"
+	^ tempValue == 12. "form feed"
 ]
 
 { #category : #'*XML-Parser' }
@@ -459,6 +459,8 @@ Character >> xmlSplit: aString do: aBlock [
 
 	start := 1.
 	1 to: aString size do: [:end |
+		"avoid #== for compatibility with pre-Spur VMs where wide chars
+		aren't an immediate type"
 		(aString at: end) = self
 			ifTrue: [
 				aBlock value: (aString copyFrom: start to: end - 1).

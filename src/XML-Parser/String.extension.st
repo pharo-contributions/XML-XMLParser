@@ -54,16 +54,17 @@ String >> asXMLURI [
 
 { #category : #'*XML-Parser' }
 String >> expandWithXMLNamespaceURI: aURI [
-	aURI size > 0
-		ifTrue: [^ 'Q{', aURI, '}', self]
-		ifFalse: [^ self]
+	"optimized"
+	aURI size == 0
+		ifTrue: [^ self]
+		ifFalse: [^ 'Q{', aURI, '}', self]
 ]
 
 { #category : #'*XML-Parser' }
 String >> isXMLNCName [
 	"optimized"
-	self size > 0
-		ifFalse: [^ false].
+	self size == 0
+		ifTrue: [^ false].
 	(self at: 1) isXMLNCNameStartChar
 		ifFalse: [^ false].
 	2 to: self size do: [:i |
@@ -87,7 +88,7 @@ String >> isXMLNSAttributeName [
 		ifFalse: [^ false].
 	(self at: 5) == $s
 		ifFalse: [^ false].
-	self size = 5
+	self size == 5
 		ifTrue: [^ true].
 	^ (self at: 6) == $:.
 ]
@@ -95,8 +96,8 @@ String >> isXMLNSAttributeName [
 { #category : #'*XML-Parser' }
 String >> isXMLName [
 	"optimized"
-	self size > 0
-		ifFalse: [^ false].
+	self size == 0
+		ifTrue: [^ false].
 	(self at: 1) isXMLNameStartChar
 		ifFalse: [^ false].
 	2 to: self size do: [:i |
@@ -108,8 +109,8 @@ String >> isXMLName [
 { #category : #'*XML-Parser' }
 String >> isXMLNmtoken [
 	"optimized"
-	self size > 0
-		ifFalse: [^ false].
+	self size == 0
+		ifTrue: [^ false].
 	1 to: self size do: [:i |
 		(self at: i) isXMLNameChar
 			ifFalse: [^ false]].
@@ -125,8 +126,10 @@ String >> isXMLQualifiedOrLocalName: aQualifiedOrLocalName [
 
 	i := aQualifiedOrLocalName size.
 	self size to: 1 by: -1 do: [:j |
-		i > 0
-			ifFalse: [^ (self at: j) == $:].
+		i == 0
+			ifTrue: [^ (self at: j) == $:].
+		"avoid #== for compatibility with pre-Spur VMs where wide chars
+		aren't an immediate type"
 		(aQualifiedOrLocalName at: i) = (self at: j)
 			ifFalse: [^ false].
 		i := i - 1].
@@ -148,8 +151,8 @@ String >> isXMLReservedAttributeName [
 { #category : #'*XML-Parser' }
 String >> isXMLWhitespace [
 	"optimized"
-	self size > 0
-		ifFalse: [^ false].
+	self size == 0
+		ifTrue: [^ false].
 	1 to: self size do: [:i |
 		(self at: i) isXMLWhitespace
 			ifFalse: [^ false]].
@@ -164,9 +167,9 @@ String >> parseXML [
 { #category : #'*XML-Parser' }
 String >> qualifyWithXMLPrefix: aPrefix [
 	"optimized"
-	aPrefix size > 0
-		ifTrue: [^ (aPrefix copyWith: $:), self]
-		ifFalse: [^ self]
+	aPrefix size == 0
+		ifTrue: [^ self]
+		ifFalse: [^ (aPrefix copyWith: $:), self]
 ]
 
 { #category : #'*XML-Parser' }
@@ -179,9 +182,9 @@ String >> xmlLocalNameAfterPrefix: aPrefix [
 	"optimized"
 	| prefixSize |
 
-	(prefixSize := aPrefix size) > 0
-		ifTrue: [^ self copyFrom: prefixSize + 2 to: self size]
-		ifFalse: [^ self]
+	(prefixSize := aPrefix size) == 0
+		ifTrue: [^ self]
+		ifFalse: [^ self copyFrom: prefixSize + 2 to: self size]
 ]
 
 { #category : #'*XML-Parser' }
@@ -190,8 +193,8 @@ String >> xmlPrefixBeforeLocalName [
 	| i |
 
 	i := self size.
-	[i > 1]
-		whileTrue: [
+	[i == 0]
+		whileFalse: [
 			((self at: i) == $:)
 				ifTrue: [^ (self copyFrom: 1 to: i - 1)].
 			i := i - 1].

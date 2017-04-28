@@ -7,11 +7,6 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
-{ #category : #private }
-XMLUTF16StreamConverter >> codePointFromFirstByte: aFirstByte secondByte: aSecondByte [
-	self subclassResponsibility
-]
-
 { #category : #testing }
 XMLUTF16StreamConverter >> isBigEndian [
 	self subclassResponsibility
@@ -21,67 +16,64 @@ XMLUTF16StreamConverter >> isBigEndian [
 XMLUTF16StreamConverter >> nextFromStream: aStream [
 	| codePoint |
 
-	codePoint :=
-		self
-			codePointFromFirstByte:
-				(aStream basicNext
-					ifNil: [^ nil]) asciiValue
-			secondByte:
-				(aStream basicNext
-					ifNil: [self errorBadCharacterEncoding]) asciiValue.
+	(codePoint := self nextTwoBytesFromStream: aStream)
+		ifNil: [^ nil].
 
-	(codePoint < 16rD800 or: [codePoint > 16rDBFF])
-		ifTrue: [^ self characterFromCodePoint: codePoint]
-		ifFalse: [
-			^ self
-				surrogatePairFromStream: aStream
-				withHighSurrogate: codePoint]
+	"code points U+10000 to U+10FFFF are encoded with surrogate pairs,
+	while those < U+10000 are encoded directly"
+	(codePoint < 16rD800
+		or: [codePoint > 16rDFFF])
+		ifTrue: [^ Character value: codePoint]
+		ifFalse: [| lowSurrogate |
+			codePoint > 16rDBFF
+				ifTrue: [self errorBadCharacterEncoding].
+			(lowSurrogate := self nextTwoBytesFromStream: aStream)
+				ifNil: [self errorBadCharacterEncoding].
+			(lowSurrogate < 16rDC00
+				or: [lowSurrogate > 16rDFFF])
+				ifTrue: [self errorBadCharacterEncoding].
+			"A code point > U+10FFFF isn't checked for here because it can't
+			be encoded with UTF-16. The maximum surrogate pairs can encode is:
+				16r10000 + (16r3FF bitShift: 10) + 16r3FF = 16r10FFFF"
+			^ Character value:
+				((codePoint bitAnd: 16r3FF) bitShift: 10) +
+				(lowSurrogate bitAnd: 16r3FF) +
+				16r10000].
 ]
 
 { #category : #encoding }
 XMLUTF16StreamConverter >> nextPut: aCharacter toStream: aStream [
 	| codePoint |
 
-	(codePoint := self codePointFromCharacter: aCharacter) < 16r10000
+	(codePoint := aCharacter asciiValue) < 16r10000
 		ifTrue: [
+			"check for the reserved surrogate pair code points"
+			(codePoint >= 16rD800
+				and: [codePoint <= 16rDFFF])
+				ifTrue: [self errorBadCharacterValue: codePoint].
 			self
-				nextPutFirstByte: ((codePoint bitShift: -8) bitAnd: 16rFF)
-				secondByte: (codePoint bitAnd: 16rFF)
+				nextPutTwoBytes: codePoint
 				toStream: aStream]
-		ifFalse: [| difference |
-			difference := codePoint - 16r10000.
-			"the 10 high-order bits (2 + 16rD8 then the next 8 high-order bits)"
+		ifFalse: [
+			codePoint > 16r10FFFF "max code point"
+				ifTrue: [self errorBadCharacterValue: codePoint].
+			codePoint := codePoint - 16r10000.
+			"the 10 high-order bits"
 			self
-				nextPutFirstByte: 16rD8 + ((difference bitShift: -18) bitAnd: 16r03)
-				secondByte: ((difference bitShift: -10) bitAnd: 16rFF)
+				nextPutTwoBytes: 16rD800 + ((codePoint bitShift: -10) bitAnd: 16r3FF)
 				toStream: aStream.
-			"the 10 low-order bits (2 + 16rDC then the next 8 low-order bits)"
+			"the 10 low-order bits"
 			self
-				nextPutFirstByte: 16rDC + ((difference bitShift: -8) bitAnd: 16r03)
-				secondByte: (difference bitAnd: 16rFF)
+				nextPutTwoBytes: 16rDC00 + (codePoint bitAnd: 16r3FF)
 				toStream: aStream]
 ]
 
 { #category : #private }
-XMLUTF16StreamConverter >> nextPutFirstByte: aFirstByte secondByte: aSecondByte toStream: aStream [
+XMLUTF16StreamConverter >> nextPutTwoBytes: anInteger toStream: aStream [
 	self subclassResponsibility
 ]
 
 { #category : #private }
-XMLUTF16StreamConverter >> surrogatePairFromStream: aStream withHighSurrogate: aHighSurrogate [
-	| lowSurrogate |
-
-	lowSurrogate :=
-		self
-			codePointFromFirstByte:
-				(aStream basicNext
-					ifNil: [self errorBadCharacterEncoding]) asciiValue
-			secondByte:
-				(aStream basicNext
-					ifNil: [self errorBadCharacterEncoding]) asciiValue.
-
-	^ self characterFromCodePoint:
-		((aHighSurrogate bitAnd: 16r3FF) bitShift: 10) +
-		(lowSurrogate bitAnd: 16r3FF) +
-		16r10000.
+XMLUTF16StreamConverter >> nextTwoBytesFromStream: aStream [
+	self subclassResponsibility
 ]

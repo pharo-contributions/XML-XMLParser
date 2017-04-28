@@ -17,19 +17,22 @@ XMLUTF16BigEndianStreamConverter class >> byteOrderMarkBytes [
 	^ #(16rFE 16rFF)
 ]
 
-{ #category : #private }
-XMLUTF16BigEndianStreamConverter >> codePointFromFirstByte: aFirstByte secondByte: aSecondByte [
-	^ (aFirstByte bitShift: 8) + aSecondByte
-]
-
 { #category : #testing }
 XMLUTF16BigEndianStreamConverter >> isBigEndian [
 	^ true
 ]
 
 { #category : #private }
-XMLUTF16BigEndianStreamConverter >> nextPutFirstByte: aFirstByte secondByte: aSecondByte toStream: aStream [
+XMLUTF16BigEndianStreamConverter >> nextPutTwoBytes: anInteger toStream: aStream [
 	aStream
-		basicNextPutByte: aFirstByte;
-		basicNextPutByte: aSecondByte
+		basicNextPutByte: ((anInteger bitShift: -8) bitAnd: 16rFF);
+		basicNextPutByte: (anInteger bitAnd: 16rFF)
+]
+
+{ #category : #private }
+XMLUTF16BigEndianStreamConverter >> nextTwoBytesFromStream: aStream [
+	^ ((aStream basicNext
+			ifNil: [^ nil]) asciiValue bitShift: 8) +
+		(aStream basicNext
+			ifNil: [self errorBadCharacterEncoding]) asciiValue
 ]
