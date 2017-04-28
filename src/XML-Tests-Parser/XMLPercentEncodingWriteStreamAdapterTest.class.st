@@ -15,6 +15,11 @@ XMLPercentEncodingWriteStreamAdapterTest >> inputCollection [
 ]
 
 { #category : #accessing }
+XMLPercentEncodingWriteStreamAdapterTest >> invalidStreamCollections [
+	^ self invalidInputCollections
+]
+
+{ #category : #accessing }
 XMLPercentEncodingWriteStreamAdapterTest >> outputCollection [
 	^ self percentEncodedUTF8String
 ]

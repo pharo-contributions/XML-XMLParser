@@ -10,8 +10,8 @@ XMLDecodingReadStreamAdapterByteTest >> inputCollection [
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterByteTest >> invalidEncodedInputCollection [
-	^ self stringFrom: #(16r0100)
+XMLDecodingReadStreamAdapterByteTest >> invalidEncodedInputCollections [
+	^ Array with: (self stringFrom: #(16r100))
 ]
 
 { #category : #accessing }

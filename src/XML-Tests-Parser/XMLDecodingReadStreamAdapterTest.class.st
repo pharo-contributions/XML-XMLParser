@@ -10,18 +10,19 @@ XMLDecodingReadStreamAdapterTest >> inputCollectionWithBOM [
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterTest >> invalidEncodedInputCollection [
-	^ ''
+XMLDecodingReadStreamAdapterTest >> invalidEncodedInputCollections [
+	^ #('')
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterTest >> invalidEncodedInputCollectionWithBOM [
-	^ self streamConverterClass byteOrderMark, self invalidEncodedInputCollection
+XMLDecodingReadStreamAdapterTest >> invalidEncodedInputCollectionsWithBOM [
+	^ self invalidEncodedInputCollections collect: [:each |
+		self streamConverterClass byteOrderMark, each]
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterTest >> invalidStreamCollection [
-	^ self invalidEncodedInputCollection
+XMLDecodingReadStreamAdapterTest >> invalidStreamCollections [
+	^ self invalidEncodedInputCollections
 ]
 
 { #category : #testing }
@@ -69,17 +70,14 @@ XMLDecodingReadStreamAdapterTest >> testHasNullStreamConverter [
 
 { #category : #tests }
 XMLDecodingReadStreamAdapterTest >> testInvalidCharacters [
-	| streamAdapter |
-
-	streamAdapter :=
-		self newStreamAdapterOn:
-			self invalidStreamCollection readStream.
-	[streamAdapter atEnd]
-		whileFalse: [
-			self
-				should: [streamAdapter next]
-				raise: XMLEncodingException].
-	self assert: streamAdapter atEnd.
+	self invalidStreamCollections do: [:each | | streamAdapter |
+		streamAdapter := self newStreamAdapterOn: each readStream.
+		[streamAdapter atEnd]
+			whileFalse: [
+				self
+					should: [streamAdapter next]
+					raise: XMLEncodingException].
+		self assert: streamAdapter atEnd]
 ]
 
 { #category : #tests }

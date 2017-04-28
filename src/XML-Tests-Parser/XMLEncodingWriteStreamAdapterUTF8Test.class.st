@@ -10,6 +10,11 @@ XMLEncodingWriteStreamAdapterUTF8Test >> inputCollection [
 ]
 
 { #category : #accessing }
+XMLEncodingWriteStreamAdapterUTF8Test >> invalidStreamCollections [
+	^ self invalidInputCollections
+]
+
+{ #category : #accessing }
 XMLEncodingWriteStreamAdapterUTF8Test >> outputCollection [
 	^ self encodedUTF8String
 ]

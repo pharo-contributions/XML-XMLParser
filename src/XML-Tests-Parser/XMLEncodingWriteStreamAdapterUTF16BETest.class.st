@@ -15,6 +15,11 @@ XMLEncodingWriteStreamAdapterUTF16BETest >> inputCollection [
 ]
 
 { #category : #accessing }
+XMLEncodingWriteStreamAdapterUTF16BETest >> invalidStreamCollections [
+	^ self invalidInputCollections
+]
+
+{ #category : #accessing }
 XMLEncodingWriteStreamAdapterUTF16BETest >> outputCollection [
 	^ self encodedUTF16BEString
 ]

@@ -5,8 +5,8 @@ Class {
 }
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterUTF32LEBOMTest >> invalidStreamCollection [
-	^ self invalidEncodedInputCollectionWithBOM
+XMLDecodingReadStreamAdapterUTF32LEBOMTest >> invalidStreamCollections [
+	^ self invalidEncodedInputCollectionsWithBOM
 ]
 
 { #category : #testing }

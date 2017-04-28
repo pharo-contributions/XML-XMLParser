@@ -10,6 +10,11 @@ XMLEncodingWriteStreamAdapterByteTest >> inputCollection [
 ]
 
 { #category : #accessing }
+XMLEncodingWriteStreamAdapterByteTest >> invalidStreamCollections [
+	^ self invalidInputCollections
+]
+
+{ #category : #accessing }
 XMLEncodingWriteStreamAdapterByteTest >> outputCollection [
 	^ self encodedByteString
 ]
