@@ -976,6 +976,32 @@ ConfigurationOfXMLParser >> baseline311: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-PavelKrivanek.60' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline312: spec [
+	<version: '3.1.2-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.8.1'. ].
+	"need a newer version for the Lazy classes"
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'OrderPreservingDictionary' with: '1.3.7'. ].
+	spec
+		for: #gemstone
+		do: [
+			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.24'.
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline312. ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-PavelKrivanek.60' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParser >> customProjectAttributes [
     "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -990,7 +1016,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '3.1.1-baseline'.
+	spec for: #'common' version: '3.1.2-baseline'.
 
 ]
 
@@ -1010,6 +1036,34 @@ ConfigurationOfXMLParser >> initializeClassesForGSBaseline297 [
 			ifTrue: [each implementation]].
 	XMLFileHandle xmlDocumentFileExtensions.
 	XMLParserLimits defaultDocumentReadLimit.
+	XMLStreamConverter
+		encodingNamesAndClassesCache;
+		preferredClasses;
+		encodingNames;
+		allSubclassesDo: [:each | each encodingNames].
+	XMLTextConverterStreamConverter encodingNamesAndTextConverterClassesCache.
+	XMLTokenContext allSubclassesDo: [:each |
+		each instance].
+]
+
+{ #category : #doits }
+ConfigurationOfXMLParser >> initializeClassesForGSBaseline312 [
+	"All lazily initialized class and class instance variables must be
+	explicitly initialized on GS during installation to prevent write
+	conflicts between Gems later on. 
+	
+	This can help identify classes that use lazy initialization:
+		self findLazyInitializedClassStateInPackage: 'XML-Parser'
+	"
+
+	DTDCachingExternalEntityResolver entityCache.
+	XMLAbstractFactory allSubclassesDo: [:each |
+		each hasSupportedImplementation
+			ifTrue: [each implementation]].
+	XMLFileHandle xmlDocumentFileExtensions.
+	XMLParserLimits defaultDocumentReadLimit.
+	XMLStatelessStreamConverter allSubclassesDo: [:each |
+		each instance].
 	XMLStreamConverter
 		encodingNamesAndClassesCache;
 		preferredClasses;
@@ -1230,7 +1284,7 @@ ConfigurationOfXMLParser >> release306: spec [
 	<symbolicVersion: #'release-3.0.6'>
 
 	"Users should prefer #stable unless they rely on XMLParser internals"
-	spec for: #'common' version: '3.1.1'.
+	spec for: #'common' version: '3.1.2'.
 ]
 
 { #category : #'symbolic versions' }
@@ -3541,5 +3595,16 @@ ConfigurationOfXMLParser >> version311: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.400'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.202'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version312: spec [ 
+        <version: '3.1.2' imports: #('3.1.2-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.401'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.203'.
                 ].
 ]
