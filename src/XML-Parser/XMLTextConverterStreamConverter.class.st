@@ -48,10 +48,18 @@ XMLTextConverterStreamConverter class >> textConverterClassForEncoding: anEncodi
 ]
 
 { #category : #accessing }
-XMLTextConverterStreamConverter >> encoding: anEncodingName [
-	super encoding: anEncodingName.
-	self textConverter:
-		(self class textConverterClassForEncoding: anEncodingName) new.
+XMLTextConverterStreamConverter >> encoding [
+	^ encoding
+]
+
+{ #category : #initialization }
+XMLTextConverterStreamConverter >> initializeForEncoding: anEncodingName [
+	super initializeForEncoding: anEncodingName.
+ 
+	self
+		setEncoding: anEncodingName
+		textConverter:
+			(self class textConverterClassForEncoding: anEncodingName) new.
 ]
 
 { #category : #decoding }
@@ -66,12 +74,13 @@ XMLTextConverterStreamConverter >> nextPut: aCharacter toStream: aStream [
 		toStream: aStream
 ]
 
-{ #category : #accessing }
-XMLTextConverterStreamConverter >> textConverter [
-	^ textConverter
+{ #category : #initialization }
+XMLTextConverterStreamConverter >> setEncoding: anEncodingName textConverter: aTextConverter [
+	encoding := anEncodingName.
+	textConverter := aTextConverter.
 ]
 
 { #category : #accessing }
-XMLTextConverterStreamConverter >> textConverter: aTextConverter [
-	textConverter := aTextConverter
+XMLTextConverterStreamConverter >> textConverter [
+	^ textConverter
 ]

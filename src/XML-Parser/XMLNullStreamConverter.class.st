@@ -3,7 +3,7 @@ A stream converter that does no encoding or decoding.
 "
 Class {
 	#name : #XMLNullStreamConverter,
-	#superclass : #XMLStreamConverter,
+	#superclass : #XMLStatelessStreamConverter,
 	#category : #'XML-Parser-Streams'
 }
 

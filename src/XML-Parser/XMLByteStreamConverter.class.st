@@ -3,13 +3,13 @@ A stream converter for ISO Latin-1, ASCII,  and other compatible byte character 
 "
 Class {
 	#name : #XMLByteStreamConverter,
-	#superclass : #XMLStreamConverter,
+	#superclass : #XMLStatelessStreamConverter,
 	#category : #'XML-Parser-Streams'
 }
 
 { #category : #private }
 XMLByteStreamConverter class >> basicEncodingNames [
-	^ #('ASCII' 'Latin-1' 'Latin1' 'CP819' 'IBM819' 'ISO-8859-1' 'ISO-IR-100' 'L1' 'csISOLatin1')
+	^ #('Latin-1' 'Latin1' 'CP819' 'IBM819' 'ISO-8859-1' 'ISO-IR-100' 'L1' 'csISOLatin1' 'ASCII')
 ]
 
 { #category : #decoding }

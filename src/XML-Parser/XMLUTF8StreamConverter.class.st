@@ -24,9 +24,19 @@ XMLUTF8StreamConverter >> errorOverlongCodePoint: aCodePoint [
 		with: aCodePoint printStringHex
 ]
 
+{ #category : #private }
+XMLUTF8StreamConverter >> nextCodePointFromStream: aStream [
+	self shouldNotImplement
+]
+
 { #category : #decoding }
 XMLUTF8StreamConverter >> nextFromStream: aStream [
-	| firstByte secondByte thirdByte codePoint |
+	"an attempt was made at porting Bjoern Hoehrmann's DFA-based decoder
+	(with transitions pre-multiplied by 16), but it was slightly slower
+	than this implementation and needed significant modification to report
+	errors the same way, so it was scrapped"
+
+	| firstByte codePoint |
 
 	aStream basicNext
 		ifNil: [^ nil]
@@ -34,29 +44,52 @@ XMLUTF8StreamConverter >> nextFromStream: aStream [
 			(firstByte := firstChar asciiValue) < 16r80 "single byte character"
 				ifTrue: [^ firstChar]].
 
+	codePoint :=
+		self
+			nextMultiByteCodePointStartingWith: firstByte
+			fromStream: aStream.
+	[codePoint == 16rFEFF] "the BOM code point"
+		whileTrue: [
+			aStream basicNext
+				ifNil: [^ nil]
+				ifNotNil: [:firstChar |
+					(firstByte := firstChar asciiValue) < 16r80 "single byte character"
+						ifTrue: [^ firstChar]].
+			codePoint :=
+				self
+					nextMultiByteCodePointStartingWith: firstByte
+					fromStream: aStream].
+
+	^ Character value: codePoint.
+]
+
+{ #category : #private }
+XMLUTF8StreamConverter >> nextMultiByteCodePointStartingWith: aFirstByte fromStream: aStream [
+	| secondByte thirdByte codePoint |
+
 	secondByte :=
 		(aStream basicNext
 			ifNil: [self errorBadCharacterEncoding]) asciiValue.
 	(secondByte bitAnd: 16rC0) == 16r80
 		ifFalse: [self errorBadCharacterEncoding].
-	(firstByte bitAnd: 16rE0) == 16rC0 "two bytes"
+	(aFirstByte bitAnd: 16rE0) == 16rC0 "two bytes"
 		ifTrue: [
 			codePoint :=
-				((firstByte bitAnd: 16r1F) bitShift: 6) +
+				((aFirstByte bitAnd: 16r1F) bitShift: 6) +
 				(secondByte bitAnd: 16r3F).
 			codePoint >= 16r80
 				ifFalse: [self errorOverlongCodePoint: codePoint].
-			^ Character value: codePoint].
+			^ codePoint].
 
 	thirdByte :=
 		(aStream basicNext
 			ifNil: [self errorBadCharacterEncoding]) asciiValue.
 	(thirdByte bitAnd: 16rC0) == 16r80
 		ifFalse: [self errorBadCharacterEncoding].
-	(firstByte bitAnd: 16rF0) == 16rE0 "three bytes"
+	(aFirstByte bitAnd: 16rF0) == 16rE0 "three bytes"
 		ifTrue: [
 			codePoint :=
-				((firstByte bitAnd: 16r0F) bitShift: 12) +
+				((aFirstByte bitAnd: 16r0F) bitShift: 12) +
 				((secondByte bitAnd: 16r3F) bitShift: 6) +
 				(thirdByte bitAnd: 16r3F).
 			"check for the reserved surrogate pair code points"
@@ -67,9 +100,9 @@ XMLUTF8StreamConverter >> nextFromStream: aStream [
 				ifFalse: [
 					codePoint >= 16r800
 						ifFalse: [self errorOverlongCodePoint: codePoint]].
-			^ Character value: codePoint].
+			^ codePoint].
 
-	(firstByte bitAnd: 16rF8) == 16rF0
+	(aFirstByte bitAnd: 16rF8) == 16rF0
 		ifTrue: [| fourthByte |
 			fourthByte :=
 				(aStream basicNext
@@ -77,7 +110,7 @@ XMLUTF8StreamConverter >> nextFromStream: aStream [
 			(fourthByte bitAnd: 16rC0) == 16r80
 				ifFalse: [self errorBadCharacterEncoding].
 			codePoint :=
-				((firstByte bitAnd: 16r07) bitShift: 18) +
+				((aFirstByte bitAnd: 16r07) bitShift: 18) +
 				((secondByte bitAnd: 16r3F) bitShift: 12) +
 				((thirdByte bitAnd: 16r3F) bitShift: 6) +
 				(fourthByte bitAnd: 16r3F).
@@ -85,8 +118,9 @@ XMLUTF8StreamConverter >> nextFromStream: aStream [
 				ifTrue: [self errorBadCharacterValue: codePoint].
 			codePoint >= 16r10000
 				ifFalse: [self errorOverlongCodePoint: codePoint].
-			^ Character value: codePoint].
+			^ codePoint].
 
+	"the first byte is malformed"
 	self errorBadCharacterEncoding.
 ]
 

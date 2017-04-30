@@ -21,13 +21,6 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
-{ #category : #accessing }
-XMLStreamConverter class >> anyEncodingName [
-	^ self basicEncodingNames
-		at: 1
-		ifAbsent: ['']
-]
-
 { #category : #private }
 XMLStreamConverter class >> basicEncodingNames [
 	"encodingNames will have these names + upper/lowercase versions"
@@ -143,7 +136,7 @@ XMLStreamConverter class >> newForEncoding: anEncodingName [
 	(self classForEncoding: anEncodingName)
 		ifNil: [^ self null]
 		ifNotNil: [:converterClass |
-			^ converterClass new encoding: anEncodingName]
+			^ converterClass new initializeForEncoding: anEncodingName]
 ]
 
 { #category : #'instance creation' }
@@ -172,6 +165,13 @@ XMLStreamConverter class >> preferredClasses: aCollectionOrNil [
 			ifNotNil: [aCollectionOrNil asSet]
 ]
 
+{ #category : #accessing }
+XMLStreamConverter class >> primaryEncodingName [
+	^ self basicEncodingNames
+		at: 1
+		ifAbsent: ['']
+]
+
 { #category : #converting }
 XMLStreamConverter >> asXMLStreamConverter [
 	^ self
@@ -179,18 +179,13 @@ XMLStreamConverter >> asXMLStreamConverter [
 
 { #category : #accessing }
 XMLStreamConverter >> encoding [
-	^ encoding ifNil: [encoding := self class anyEncodingName]
-]
-
-{ #category : #accessing }
-XMLStreamConverter >> encoding: anEncodingName [
-	encoding := anEncodingName
+	^ self class primaryEncodingName
 ]
 
 { #category : #private }
 XMLStreamConverter >> errorBadCharacterEncoding [
 	XMLEncodingException
-		formatSignal: 'Invalid {1} character encoding'
+		formatSignal: 'Invalid {1} encoding for character'
 		with: self encoding
 ]
 
@@ -200,6 +195,10 @@ XMLStreamConverter >> errorBadCharacterValue: aValue [
 		formatSignal: 'Invalid character 0x{1} for {2} encoding'
 		with: aValue printStringHex
 		with: self encoding
+]
+
+{ #category : #initialization }
+XMLStreamConverter >> initializeForEncoding: anEncodingName [
 ]
 
 { #category : #testing }
@@ -224,7 +223,8 @@ XMLStreamConverter >> nextPut: aCharacter toStream: aStream [
 
 { #category : #encoding }
 XMLStreamConverter >> nextPutByteOrderMarkToStream: aStream [
-	self class byteOrderMarkBytes do: [:each | aStream basicNextPutByte: each]
+	self class byteOrderMarkBytes do: [:each |
+		aStream basicNextPutByte: each]
 ]
 
 { #category : #printing }

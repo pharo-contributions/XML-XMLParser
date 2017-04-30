@@ -9,7 +9,6 @@ Class {
 	#instVars : [
 		'peekChar',
 		'prePeekStreamPosition',
-		'postByteOrderMarkStreamPosition',
 		'streamConverter'
 	],
 	#category : #'XML-Parser-Streams'
@@ -58,22 +57,12 @@ XMLDecodingReadStreamAdapter >> atEnd [
 
 { #category : #decoding }
 XMLDecodingReadStreamAdapter >> detectEncoding [
-	| preDetectPosition |
-
 	prePeekStreamPosition := nil.
 	peekChar := nil.
-	postByteOrderMarkStreamPosition := nil.
-
-	"can be 0 or 1 on GS depending on the wrapped stream type"
-	preDetectPosition :=
-		stream
-			reset;
-			position.
+	stream reset.
 	(XMLEncodingDetector on: stream) streamConverterForEncoding
 		ifNotNil: [:converter |
-			self streamConverter: converter.
-			stream position > preDetectPosition
-				ifTrue: [postByteOrderMarkStreamPosition := stream position]].
+			self streamConverter: converter].
 ]
 
 { #category : #testing }
@@ -134,9 +123,7 @@ XMLDecodingReadStreamAdapter >> printOn: aStream [
 XMLDecodingReadStreamAdapter >> reset [
 	prePeekStreamPosition := nil.
 	peekChar := nil.
-	postByteOrderMarkStreamPosition
-		ifNil: [stream reset]
-		ifNotNil: [stream position: postByteOrderMarkStreamPosition].
+	stream reset.
 ]
 
 { #category : #accessing }
