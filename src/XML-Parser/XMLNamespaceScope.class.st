@@ -223,7 +223,7 @@ XMLNamespaceScope >> mapPrefixesAndURIs: anAssociationCollection [
 { #category : #accessing }
 XMLNamespaceScope >> mappedPrefixes [
 	^ prefixMappings
-		ifNil: [Array new]
+		ifNil: [#()]
 		ifNotNil: [prefixMappings keys]
 ]
 

@@ -12,7 +12,6 @@ Class {
 		'EncodingHandlerTable',
 		'NullCharacter',
 		'UTF16BigEndianBOM',
-		'UTF16LittleEndianBOM',
 		'UTF32BigEndianBOM',
 		'UTF32LittleEndianBOM',
 		'UTF8BOM'
@@ -47,9 +46,9 @@ XMLEncodingDetector class >> initialize [
 
 { #category : #'class initialization' }
 XMLEncodingDetector class >> initializeByteOrderMarks [
+	"cached in class vars for faster access"
 	UTF8BOM := XMLUTF8StreamConverter byteOrderMark.
 	UTF16BigEndianBOM := XMLUTF16BigEndianStreamConverter byteOrderMark.
-	UTF16LittleEndianBOM := XMLUTF16LittleEndianStreamConverter byteOrderMark.
 	UTF32BigEndianBOM := XMLUTF32BigEndianStreamConverter byteOrderMark.
 	UTF32LittleEndianBOM := XMLUTF32LittleEndianStreamConverter byteOrderMark.
 ]
@@ -90,7 +89,7 @@ XMLEncodingDetector >> handleBOM: aByteOrderMark forConverterClass: aConverterCl
 	^ self
 		handleBOM: aByteOrderMark
 		forConverterClass: aConverterClass
-		ifUnmatched: [:matchedPortion |
+		ifUnmatched: [:totalMatched |
 			self resetStreamToStartPosition.
 			nil]
 ]
@@ -100,8 +99,7 @@ XMLEncodingDetector >> handleBOM: aByteOrderMark forConverterClass: aConverterCl
 	"to:do: for speed"
 	1 to: aByteOrderMark size do: [:i |
 		self peek = (aByteOrderMark at: i)
-			ifFalse: [
-				^ aBlock value: (aByteOrderMark copyFrom: 1 to: i - 1)].
+			ifFalse: [^ aBlock value: i - 1].
 		self next].
 
 	^ aConverterClass new.
@@ -119,15 +117,20 @@ XMLEncodingDetector >> handleBigEndianUTF32BOMOrImplicitEncoding [
 	^ self
 		handleBOM: UTF32BigEndianBOM
 		forConverterClass: XMLUTF32BigEndianStreamConverter
-		ifUnmatched: [:matchedPortion | | converter |
-			(matchedPortion size = 1 "one null char"
+		ifUnmatched: [:totalMatched | | converter |
+			(totalMatched = 1 "(UTF32BigEndianBOM at: 1) == NullCharacter"
 				and: [self peekForASCII])
-				ifTrue: [converter := XMLUTF16BigEndianStreamConverter new]
+				ifTrue: [
+					"null char followed by an ASCII char; implicit UTF-16 BE"
+					converter := XMLUTF16BigEndianStreamConverter new]
 				ifFalse: [
-					(matchedPortion size = 2  "two null chars"
-						and: [self peekForNull "three null chars"
+					(totalMatched = 2  "(UTF32BigEndianBOM at: 2) == NullCharacter"
+						and: [self peekForNull
 							and: [self peekForASCII]]) 
-						ifTrue: [converter := XMLUTF32BigEndianStreamConverter new]].
+						ifTrue: [
+							"three null chars followed by an ASCII char;
+							implicit UTF-32 BE"
+							converter := XMLUTF32BigEndianStreamConverter new]].
 			self resetStreamToStartPosition.
 			converter]
 ]
@@ -153,10 +156,12 @@ XMLEncodingDetector >> handleLittleEndianUTF16BOMOrUTF32BOM [
 	^ self
 		handleBOM: UTF32LittleEndianBOM
 		forConverterClass: XMLUTF32LittleEndianStreamConverter
-		ifUnmatched: [:matchedPortion | | converter |
-			matchedPortion size >= 2
+		ifUnmatched: [:totalMatched | | converter |
+			totalMatched >= 2
 				ifTrue: [
-					"the UTF-16 BE BOM is the first two bytes of the UTF-32 BE BOM"
+					"the 2 byte UTF-16 BOM starts the 4 byte UTF-32 BOM:
+						UTF32LittleEndianBOM beginsWith:
+							XMLUTF16LittleEndianStreamConverter byteOrderMark"
 					converter := XMLUTF16LittleEndianStreamConverter new.
 					stream position: startPosition + 2]
 				ifFalse: [self resetStreamToStartPosition].
