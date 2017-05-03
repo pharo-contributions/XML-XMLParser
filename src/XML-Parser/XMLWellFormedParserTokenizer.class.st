@@ -104,7 +104,7 @@ XMLWellFormedParserTokenizer class >> initializeVersionDigitChars [
 
 { #category : #'entity replacing' }
 XMLWellFormedParserTokenizer >> addPushedBackEntity: aPushedBackEntity [
-	(self hasPushedBackEntityNamed: aPushedBackEntity name)
+	(self hasPushedBackEntity: aPushedBackEntity)
 		ifTrue: [self errorSelfReferentialEntity: aPushedBackEntity].
 
 	self maxEntityReplacementDepth
@@ -739,11 +739,11 @@ XMLWellFormedParserTokenizer >> hasPushedBackEntities [
 ]
 
 { #category : #testing }
-XMLWellFormedParserTokenizer >> hasPushedBackEntityNamed: aName [
+XMLWellFormedParserTokenizer >> hasPushedBackEntity: aPushedBackEntity [
 	self hasPushedBackEntities
 		ifFalse: [^ false].
-	self pushedBackEntities reverseDo: [:each |
-		each name = aName
+	self pushedBackEntities do: [:each |
+		each entity = aPushedBackEntity entity
 			ifTrue: [^ true]].
 	^ false.
 ]
@@ -2131,8 +2131,7 @@ XMLWellFormedParserTokenizer >> nextTag [
 			streamReader skipSeparators.
 
 			"delay initializing attributes until now to know for sure if it
-			needs a non-zero capacity, otherwise default initialize to zero
-			later for performance"
+			needs a non-zero capacity, otherwise use the lazy version"
 			((attributes
 				ifNil: [attributes := OrderPreservingStringDictionary new: 10])
 				xmlAt: attributeName
