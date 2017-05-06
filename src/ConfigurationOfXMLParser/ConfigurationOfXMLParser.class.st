@@ -983,7 +983,7 @@ ConfigurationOfXMLParser >> baseline312: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.8.1'. ].
+			spec project: 'XMLWriter' with: '2.8.2'. ].
 	"need a newer version for the Lazy classes"
 	spec
 		for: #common
@@ -1284,7 +1284,7 @@ ConfigurationOfXMLParser >> release306: spec [
 	<symbolicVersion: #'release-3.0.6'>
 
 	"Users should prefer #stable unless they rely on XMLParser internals"
-	spec for: #'common' version: '3.1.2'.
+	spec for: #'common' version: '3.1.3'.
 ]
 
 { #category : #'symbolic versions' }
@@ -3606,5 +3606,16 @@ ConfigurationOfXMLParser >> version312: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.404'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.203'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version313: spec [ 
+        <version: '3.1.3' imports: #('3.1.2-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.405'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.204'.
                 ].
 ]
