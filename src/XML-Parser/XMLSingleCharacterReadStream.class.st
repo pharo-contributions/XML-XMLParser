@@ -21,7 +21,7 @@ XMLSingleCharacterReadStream >> atEnd [
 	^ atEnd
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLSingleCharacterReadStream >> basicNext [
 	^ self next
 ]

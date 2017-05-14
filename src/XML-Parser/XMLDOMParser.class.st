@@ -338,7 +338,7 @@ XMLDOMParser >> startInnerXMLElement: anElement forParser: aParser [
 		ifTrue: [aParser driver currentScope: anElement namespaceScope].
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLDOMParser >> topNode [
 	^ self nodeStack xmlLastOrNil
 ]

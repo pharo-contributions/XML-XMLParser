@@ -55,11 +55,11 @@ XMLNestedStreamReader class >> on: aStream readLimit: aReadLimit [
 
 { #category : #testing }
 XMLNestedStreamReader >> atEnd [
-	peekChar == nil
-		ifFalse: [^ false].
+	peekChar
+		ifNotNil: [^ false].
 	stream atEnd
 		ifFalse: [^ false].
-	"to:do: for speed"
+	"use #to:do: for speed"
 	1 to: nestedStreams size do: [:i |
 		(nestedStreams at: i) stream atEnd
 			ifFalse: [^ false]].
@@ -74,31 +74,7 @@ XMLNestedStreamReader >> atQuote [
 
 { #category : #private }
 XMLNestedStreamReader >> basicNext [
-	"Returns the next character in the stream for #next and #peek with CR/LF/CRLF
-	line endings normalized (to LF by default) for external streams."
-	| nextChar |
-
-	stream atEnd
-		ifTrue: [
-			self popCurrentStream.
-			[stream atEnd]
-				whileTrue: [
-					nestedStreams size > 0
-						ifFalse: [^ nil].
-					self popCurrentStream]].
-	nextChar := stream next.
-	isExternal
-		ifTrue: [
-			nextChar == LFCharacter
-				ifTrue: [^ normalizedLineEndingChar].
-			nextChar == CRCharacter
-				ifTrue: [
-					stream atEnd
-						ifFalse: [
-							stream peek == LFCharacter
-								ifTrue: [stream next]].
-					^ normalizedLineEndingChar]].
-	^ nextChar.
+	^ self next
 ]
 
 { #category : #private }
@@ -187,6 +163,19 @@ XMLNestedStreamReader >> errorReadLimitExceeded [
 		'to persistently change/disable it'
 ]
 
+{ #category : #private }
+XMLNestedStreamReader >> hasNextAfterPoppingStreamsAtEnd [
+	"always pop at least one stream, which makes the new current stream
+	the null stream if there aren't any nested streams"
+	self popCurrentStream.
+	[stream atEnd]
+		whileTrue: [
+			nestedStreams size > 0
+				ifFalse: [^ false].
+			self popCurrentStream].
+	^ true.
+]
+
 { #category : #testing }
 XMLNestedStreamReader >> hasPushedBackStreams [
 	^ nestedStreams size > 0
@@ -224,22 +213,45 @@ XMLNestedStreamReader >> next [
 	| nextChar |
 
 	peekChar
-		ifNil: [nextChar := self basicNext]
+		ifNil: [
+			stream atEnd
+				ifTrue: [
+					self hasNextAfterPoppingStreamsAtEnd
+						ifFalse: [^ nil]].
+			nextChar := stream next.
+			isExternal
+				ifTrue: [
+					currentPosition := currentPosition + 1.
+					nextChar == LFCharacter
+						ifTrue: [
+							nextChar := normalizedLineEndingChar.
+							currentLineNumber := currentLineNumber + 1.
+							currentLineStartPosition := currentPosition]
+						ifFalse: [
+							nextChar == CRCharacter
+								ifTrue: [
+									stream atEnd
+										ifFalse: [
+											stream peek == LFCharacter
+												ifTrue: [stream next]].
+									nextChar := normalizedLineEndingChar.
+									currentLineNumber := currentLineNumber + 1.
+									currentLineStartPosition := currentPosition]]]]
 		ifNotNil: [
 			nextChar := peekChar.
-			peekChar := nil].
+			peekChar := nil.
+			isExternal
+				ifTrue: [
+					currentPosition := currentPosition + 1.
+					nextChar == normalizedLineEndingChar
+						ifTrue: [
+							currentLineNumber := currentLineNumber + 1.
+							currentLineStartPosition := currentPosition]]].
 
 	readLimit
 		ifNotNil: [
 			(readLimit := readLimit - 1) >= 0
 				ifFalse: [self errorReadLimitExceeded]].
-	isExternal
-		ifTrue: [
-			currentPosition := currentPosition + 1.
-			nextChar == normalizedLineEndingChar
-				ifTrue: [
-					currentLineNumber := currentLineNumber + 1.
-					currentLineStartPosition := currentPosition]].
 
 	^ nextChar.
 ]
@@ -282,7 +294,26 @@ XMLNestedStreamReader >> normalizedLineEndingChar: aCharacter [
 
 { #category : #accessing }
 XMLNestedStreamReader >> peek [
-	^ peekChar ifNil: [peekChar := self basicNext]
+	peekChar
+		ifNotNil: [^ peekChar].
+
+	stream atEnd
+		ifTrue: [
+			self hasNextAfterPoppingStreamsAtEnd
+				ifFalse: [^ nil]].
+	peekChar := stream next.
+	isExternal
+		ifTrue: [
+			peekChar == LFCharacter
+				ifTrue: [^ peekChar := normalizedLineEndingChar].
+			peekChar == CRCharacter
+				ifTrue: [
+					stream atEnd
+						ifFalse: [
+							stream peek == LFCharacter
+								ifTrue: [stream next]].
+					^ peekChar := normalizedLineEndingChar]].
+	^ peekChar.
 ]
 
 { #category : #accessing }
@@ -423,25 +454,55 @@ XMLNestedStreamReader >> skip: anInteger [
 
 { #category : #positioning }
 XMLNestedStreamReader >> skipSeparators [
-	"nil understands isXMLSeparator so the result of the inlined #peek
-	does not need to be tested for nil first"
-	[(peekChar ifNil: [peekChar := self basicNext]) "inlined #peek"
-		isXMLSeparator]
+	| isExternalNormalizedLineEnding |
+
+	[peekChar
+		ifNil: [
+			stream atEnd
+				ifTrue: [
+					self hasNextAfterPoppingStreamsAtEnd
+						ifFalse: [^ self]].
+			peekChar := stream next.
+			isExternal
+				ifTrue: [
+					peekChar == LFCharacter
+						ifTrue: [isExternalNormalizedLineEnding := true]
+						ifFalse: [
+							peekChar == CRCharacter
+								ifTrue: [
+									stream atEnd
+										ifFalse: [
+											stream peek == LFCharacter
+												ifTrue: [stream next]].
+									isExternalNormalizedLineEnding := true]
+								ifFalse: [
+									isExternalNormalizedLineEnding := false.
+									"nil understands #isXMLSeparator, so it
+									isn't tested for first"
+									peekChar isXMLSeparator]]]
+				ifFalse: [
+					"nil understands #isXMLSeparator, so it isn't tested for first"
+					peekChar isXMLSeparator]]
+			ifNotNil: [
+				isExternal
+					ifTrue: [
+						isExternalNormalizedLineEnding :=
+							peekChar == normalizedLineEndingChar].
+				peekChar isXMLSeparator]]
 		whileTrue: [
 			"inlined from #next"
-			readLimit
-				ifNotNil: [
-					(readLimit := readLimit - 1) >= 0
-						ifFalse: [self errorReadLimitExceeded]].
+			peekChar := nil.
 			isExternal
 				ifTrue: [
 					currentPosition := currentPosition + 1.
-					peekChar == normalizedLineEndingChar
+					isExternalNormalizedLineEnding
 						ifTrue: [
 							currentLineNumber := currentLineNumber + 1.
-							currentLineStartPosition := currentPosition]].
-
-			peekChar := nil]
+							currentLineStartPosition := currentPosition].
+			readLimit
+				ifNotNil: [
+					(readLimit := readLimit - 1) >= 0
+						ifFalse: [self errorReadLimitExceeded]]]]
 ]
 
 { #category : #positioning }

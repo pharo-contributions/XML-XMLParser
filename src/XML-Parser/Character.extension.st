@@ -80,27 +80,27 @@ Character >> isXMLNCNameChar [
 								ifTrue: [^ tempValue >= 16r200C].
 							^ tempValue >= 16r203F]]]
 	ifFalse: [
-			tempValue <= 16rD7FF
-				ifTrue: [
-					tempValue >= 16r2C00
-						ifTrue: [
-							tempValue >= 16r3001
-								ifTrue: [^ true].
-							^ tempValue <= 16r2FEF]
-						ifFalse: [
-							tempValue <= 16r218F
-								ifFalse: [^ false].
-							^ tempValue >= 16r2070]]
-				ifFalse: [
-					tempValue <= 16rFFFD
-						ifTrue: [
-							tempValue <= 16rFDCF
-								ifTrue: [^ tempValue >= 16rF900].
-							^ tempValue >= 16rFDF0]
-						ifFalse: [
-							tempValue >= 16r10000
-								ifFalse: [^ false].
-							^ tempValue <= 16rEFFFF]]].
+		tempValue <= 16rD7FF
+			ifTrue: [
+				tempValue >= 16r2C00
+					ifTrue: [
+						tempValue >= 16r3001
+							ifTrue: [^ true].
+						^ tempValue <= 16r2FEF]
+					ifFalse: [
+						tempValue <= 16r218F
+							ifFalse: [^ false].
+						^ tempValue >= 16r2070]]
+			ifFalse: [
+				tempValue <= 16rFFFD
+					ifTrue: [
+						tempValue <= 16rFDCF
+							ifTrue: [^ tempValue >= 16rF900].
+						^ tempValue >= 16rFDF0]
+					ifFalse: [
+						tempValue >= 16r10000
+							ifFalse: [^ false].
+						^ tempValue <= 16rEFFFF]]].
 ]
 
 { #category : #'*XML-Parser' }
@@ -230,27 +230,27 @@ Character >> isXMLNameChar [
 								ifTrue: [^ tempValue >= 16r200C].
 							^ tempValue >= 16r203F]]]
 	ifFalse: [
-			tempValue <= 16rD7FF
-				ifTrue: [
-					tempValue >= 16r2C00
-						ifTrue: [
-							tempValue >= 16r3001
-								ifTrue: [^ true].
-							^ tempValue <= 16r2FEF]
-						ifFalse: [
-							tempValue <= 16r218F
-								ifFalse: [^ false].
-							^ tempValue >= 16r2070]]
-				ifFalse: [
-					tempValue <= 16rFFFD
-						ifTrue: [
-							tempValue <= 16rFDCF
-								ifTrue: [^ tempValue >= 16rF900].
-							^ tempValue >= 16rFDF0]
-						ifFalse: [
-							tempValue >= 16r10000
-								ifFalse: [^ false].
-							^ tempValue <= 16rEFFFF]]].
+		tempValue <= 16rD7FF
+			ifTrue: [
+				tempValue >= 16r2C00
+					ifTrue: [
+						tempValue >= 16r3001
+							ifTrue: [^ true].
+						^ tempValue <= 16r2FEF]
+					ifFalse: [
+						tempValue <= 16r218F
+							ifFalse: [^ false].
+						^ tempValue >= 16r2070]]
+			ifFalse: [
+				tempValue <= 16rFFFD
+					ifTrue: [
+						tempValue <= 16rFDCF
+							ifTrue: [^ tempValue >= 16rF900].
+						^ tempValue >= 16rFDF0]
+					ifFalse: [
+						tempValue >= 16r10000
+							ifFalse: [^ false].
+						^ tempValue <= 16rEFFFF]]].
 ]
 
 { #category : #'*XML-Parser' }

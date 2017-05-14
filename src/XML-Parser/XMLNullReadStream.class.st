@@ -12,7 +12,7 @@ XMLNullReadStream >> atEnd [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLNullReadStream >> basicNext [
 	^ nil
 ]
