@@ -33,6 +33,14 @@ XMLTextConverterStreamConverter class >> findTextConverterClassForEncoding: anEn
 			defaultConverterClassForEncoding: anEncoding asLowercase
 ]
 
+{ #category : #'class initialization' }
+XMLTextConverterStreamConverter class >> initialize [
+	"self initialize"
+
+	"reset to nil instead of just clearing to get full reinitialization"
+	EncodingNamesAndTextConverterClassesCache := nil
+]
+
 { #category : #accessing }
 XMLTextConverterStreamConverter class >> textConverterClassForEncoding: anEncodingName [
 	"avoid #at:ifAbsent: and #at:ifAbsentPut: so the cache isn't locked

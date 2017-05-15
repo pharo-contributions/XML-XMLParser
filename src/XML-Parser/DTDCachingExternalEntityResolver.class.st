@@ -52,6 +52,14 @@ DTDCachingExternalEntityResolver class >> entityCacheAtURI: anXMLURIOrURIString 
 		put: aStringOrByteArray
 ]
 
+{ #category : #'class initialization' }
+DTDCachingExternalEntityResolver class >> initialize [
+	"self initialize"
+
+	"reset to nil instead of just clearing to get full reinitialization"
+	EntityCache := nil
+]
+
 { #category : #accessing }
 DTDCachingExternalEntityResolver class >> maxCachedEntities [
 	^ self entityCache maxSize

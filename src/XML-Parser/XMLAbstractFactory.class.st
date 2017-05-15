@@ -16,8 +16,9 @@ Class {
 XMLAbstractFactory class >> clearAllImplementations [
 	"self clearImplementations"
 
-	self implementation: nil.
-	self allSubclassesDo: [:each | each implementation: nil]
+	self
+		implementation: nil;
+		allSubclassesDo: [:each | each implementation: nil]
 ]
 
 { #category : #private }
@@ -66,7 +67,7 @@ XMLAbstractFactory class >> implementation: aClassOrNil [
 XMLAbstractFactory class >> initialize [
 	"self initialize"
 
-	self clearAllImplementations
+	self clearAllImplementations.
 ]
 
 { #category : #testing }

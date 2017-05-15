@@ -115,6 +115,15 @@ XMLStreamConverter class >> findClassForEncoding: anEncodingName [
 	^ nil.
 ]
 
+{ #category : #'class initialization' }
+XMLStreamConverter class >> initialize [
+	"self initialize"
+
+	PreferredClasses := nil.
+	"reset to nil instead of just clearing to get full reinitialization"
+	EncodingNamesAndClassesCache := nil.
+]
+
 { #category : #testing }
 XMLStreamConverter class >> isDefaultClass [
 	^ self == self defaultClass
