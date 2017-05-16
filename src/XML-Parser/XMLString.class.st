@@ -1,7 +1,7 @@
 "
-This class represents string (character data) nodes. Instances are mutable, but the string is treated as immutable. String nodes can be created using the class-side #string: message or by sending a String #asXMLStringNode. 
+This class represents a string (character data) node. Instances are mutable, but the string is treated as immutable. String nodes can be created using the class-side #string: message or by sending a String #asXMLStringNode. 
 
-When printing, special characters XML-escaped.
+When printing, XML-escaping of special characters is done.
 "
 Class {
 	#name : #XMLString,
@@ -110,9 +110,11 @@ XMLString >> isEmpty [
 	^ self string isEmpty
 ]
 
-{ #category : #testing }
+{ #category : #deprecated }
 XMLString >> isString: aStringOrStringNode [
-	^ self string = aStringOrStringNode asString
+	"will be deprecated; use #isStringNode: instead"
+
+	^ self isStringNode: aStringOrStringNode
 ]
 
 { #category : #testing }
@@ -122,7 +124,7 @@ XMLString >> isStringNode [
 
 { #category : #testing }
 XMLString >> isStringNode: aStringOrStringNode [
-	^ self isString: aStringOrStringNode
+	^ self string = aStringOrStringNode asString
 ]
 
 { #category : #testing }

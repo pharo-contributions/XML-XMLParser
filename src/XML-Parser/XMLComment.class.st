@@ -1,5 +1,5 @@
 "
-This class represents comment nodes. Comments are ignored during parsing by default. If you want them preserved as comment nodes, use #preservesCommentNodes: with the DOM parser before parsing.
+This class represents a comment node. Comments are ignored during parsing by default. If you want them preserved as comment nodes, use #preservesCommentNodes: with the DOM parser before parsing.
 "
 Class {
 	#name : #XMLComment,
