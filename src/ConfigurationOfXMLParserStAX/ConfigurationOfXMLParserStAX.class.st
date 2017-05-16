@@ -295,6 +295,23 @@ ConfigurationOfXMLParserStAX >> baseline126: spec [
 			spec project: 'XMLParser' with: #'release-3.0.6' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baseline127: spec [
+	<version: '1.2.7-baseline' imports: #('1.0.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.0.6' ].
+
+	spec
+		for: #gemstone
+		do: [
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline127. ].
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParserStAX >> customProjectAttributes [
 	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -307,7 +324,13 @@ ConfigurationOfXMLParserStAX >> customProjectAttributes [
 ConfigurationOfXMLParserStAX >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.2.6-baseline'.
+	spec for: #'common' version: '1.2.7-baseline'.
+]
+
+{ #category : #doits }
+ConfigurationOfXMLParserStAX >> initializeClassesForGSBaseline127 [
+	StAXStatelessEvent allSubclassesDo: [:each |
+		each instance]
 ]
 
 { #category : #accessing }
@@ -327,7 +350,7 @@ ConfigurationOfXMLParserStAX >> project [
 ConfigurationOfXMLParserStAX >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.2.6'.
+	spec for: #'common' version: '1.2.7'.
 
 ]
 
@@ -625,5 +648,16 @@ ConfigurationOfXMLParserStAX >> version126: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.29'.
 			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.19'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserStAX >> version127: spec [ 
+        <version: '1.2.7' imports: #('1.2.7-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.30'.
+			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.20'.
                 ].
 ]
