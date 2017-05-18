@@ -105,7 +105,7 @@ XMLExternalEntityTest >> encodingNames [
 
 { #category : #accessing }
 XMLExternalEntityTest >> feedURL [
-	^ 'http://pharo.org/news/atom.xml'
+	^ 'http://www.squeaksource.com/feed.rss'
 ]
 
 { #category : #source }
@@ -484,30 +484,6 @@ XMLExternalEntityTest >> testParsingFile [
 ]
 
 { #category : #tests }
-XMLExternalEntityTest >> testParsingRetrievedURL [
-	"This uses HTTP so is skipped by default"
-	| source |
-
-	self
-		skipOrReturnWith: [^ self]
-		ifSkippable: #testParsingRetrievedURL.
-
-	source := self feedURL asXMLURI get.
-	self assert: source isString.
-	self
-		shouldnt: [SAXHandler parse: source]
-		raise: XMLParserException.
-
-	source := self feedURL asXMLURI streamGet.
-	self
-		assert: source isStream;
-		assert: source peek isCharacter.
-	self
-		shouldnt: [SAXHandler parse: source]
-		raise: XMLParserException.
-]
-
-{ #category : #tests }
 XMLExternalEntityTest >> testParsingURL [
 	"This uses HTTP so is skipped by default"
 	| doc |
@@ -519,7 +495,7 @@ XMLExternalEntityTest >> testParsingURL [
 	self
 		shouldnt: [doc := XMLDOMParser parseURL: self feedURL]
 		raise: XMLHTTPException.
-	self assert: (doc root isNamed: 'feed').
+	self assert: (doc root isNamed: 'rss').
 ]
 
 { #category : #source }
