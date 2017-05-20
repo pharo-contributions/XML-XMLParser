@@ -370,6 +370,24 @@ ConfigurationOfXMLParserHTML >> baseline134: spec [
 			spec postLoadDoIt: #initializeClassesForGSBaseline132. ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline136: spec [
+	<version: '1.3.6-baseline' imports: #('1.0.0-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.1.7' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
+
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline132. ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParserHTML >> customProjectAttributes [
 	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -382,7 +400,7 @@ ConfigurationOfXMLParserHTML >> customProjectAttributes [
 ConfigurationOfXMLParserHTML >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.3.4-baseline'.
+	spec for: #'common' version: '1.3.6-baseline'.
 ]
 
 { #category : #doits }
@@ -422,7 +440,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.3.5'.
+	spec for: #'common' version: '1.3.6'.
 
 ]
 
@@ -818,6 +836,17 @@ ConfigurationOfXMLParserHTML >> version135: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.46'.
+			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.24'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version136: spec [ 
+        <version: '1.3.6' imports: #('1.3.6-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.47'.
 			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.24'.
                 ].
 ]
