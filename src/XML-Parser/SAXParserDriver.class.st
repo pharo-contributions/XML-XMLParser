@@ -12,7 +12,6 @@ Class {
 		'externalSubsetSystemID',
 		'externalSubsetPublicID',
 		'isStandalone',
-		'isHandlingDTD',
 		'hasParameterEntityReferences',
 		'hasSkippedParameterEntityReferences',
 		'hasUnhandledReservedAttributes'
@@ -240,7 +239,6 @@ SAXParserDriver >> handleEndDTD [
 		ifTrue: [self parseExternalSubset].
 	self isValidating
 		ifTrue: [self doctypeDefinition validateCompletedDefinition].
-	isHandlingDTD := false.
 
 	self saxHandler
 		doctypeDefinition: self doctypeDefinition;
@@ -397,7 +395,6 @@ SAXParserDriver >> handleStartContentEntityReplacement: aName [
 SAXParserDriver >> handleStartDTD: aRoot publicID: aPublicID systemID: aSystemID [
 	externalSubsetPublicID := aPublicID.
 	externalSubsetSystemID := aSystemID.
-	isHandlingDTD := true.
 
 	self doctypeDefinition root: aRoot.
 	self saxHandler
@@ -549,8 +546,17 @@ SAXParserDriver >> haveUnhandledReservedAttributes [
 ]
 
 { #category : #testing }
-SAXParserDriver >> isHandlingDTD [
-	^ isHandlingDTD
+SAXParserDriver >> isExternal [
+	"Definition: An external markup declaration is defined as a markup
+	declaration occurring in the external subset or in a parameter entity
+	(external or internal, the latter being included because non-validating
+	processors are not required to read them)"
+
+	"returning #isParameter instead of 'self currentEntity notNil'
+	ensures the correct result when parsing content"
+	^ self currentEntity
+		ifNil: [false]
+		ifNotNil: [:entity | entity isParameter]
 ]
 
 { #category : #testing }
@@ -561,12 +567,6 @@ SAXParserDriver >> isStandalone [
 { #category : #accessing }
 SAXParserDriver >> isStandalone: aBoolean [
 	isStandalone := aBoolean
-]
-
-{ #category : #testing }
-SAXParserDriver >> isStandaloneExternal [
-	^ self isStandalone
-		and: [self currentEntity notNil]
 ]
 
 { #category : #testing }
@@ -655,7 +655,6 @@ SAXParserDriver >> setSAXHandler: aSAXHandler [
 	externalSubsetPublicID := ''.
 	externalSubsetSystemID := ''.
 	isStandalone := false.
-	isHandlingDTD := false.
 	hasParameterEntityReferences := false.
 	hasSkippedParameterEntityReferences := false.
 	hasUnhandledReservedAttributes := false.

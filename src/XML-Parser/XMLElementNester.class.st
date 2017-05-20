@@ -65,11 +65,6 @@ XMLElementNester >> endCurrentElement [
 		ifTrue: [self endScopedAttributes].
 ]
 
-{ #category : #nesting }
-XMLElementNester >> endElement: anElement [
-	self endCurrentElement
-]
-
 { #category : #private }
 XMLElementNester >> endScopedAttributes [
 	scopedAttributes removeLast
@@ -127,13 +122,8 @@ XMLElementNester >> openElementsDo: aBlock [
 XMLElementNester >> openElementsReverseDo: aBlock [
 	"implemented for XMLParserHTML so it's always safe to remove at
 	the end while scanning backwards"
-	| i |
-
-	i := self openElements size.
-	[i > 0]
-		whileTrue: [
-			aBlock value: (self openElements at: i).
-			i := i - 1].
+	self openElements size to: 1 by: -1 do: [:i |
+			aBlock value: (self openElements at: i)]
 ]
 
 { #category : #printing }
