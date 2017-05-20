@@ -1100,7 +1100,7 @@ XMLParserTest >> testAttributeDefaultFixedValueEntityReference [
 		self
 			should: [
 				SAXHandler parse: '<!DOCTYPE root [', badSubset, ']>', goodContent]
-			raise: XMLValidationException.
+			raise: XMLWellFormednessException.
 		self
 			should: [
 				(SAXHandler on: '<!DOCTYPE root SYSTEM "extern.dtd">', goodContent)
@@ -1111,16 +1111,6 @@ XMLParserTest >> testAttributeDefaultFixedValueEntityReference [
 					parseDocument]
 			raise: XMLValidationException.
 
-		self
-			shouldnt: [
-				document :=
-					(XMLDOMParser on: '<!DOCTYPE root [', badSubset, ']>', goodContent)
-						isValidating: false;
-						parseDocument]
-			raise: XMLValidationException.
-		self
-			assert: ((document root elementAt: 'one') attributeAt: 'one') = '';
-			assert: ((document root elementAt: 'two') attributeAt: 'two') = 'value'.
 		self
 			shouldnt: [
 				document :=
@@ -1453,7 +1443,7 @@ XMLParserTest >> testAttributeDefaultValueEntityReference [
 
 		self
 			should: [SAXHandler parse: '<!DOCTYPE root [', badSubset, ']>', content]
-			raise: XMLValidationException.
+			raise: XMLWellFormednessException.
 		self
 			should: [
 				(SAXHandler on: '<!DOCTYPE root SYSTEM "extern.dtd">', content)
@@ -1464,16 +1454,6 @@ XMLParserTest >> testAttributeDefaultValueEntityReference [
 					parseDocument]
 			raise: XMLValidationException.
 
-		self
-			shouldnt: [
-				document :=
-					(XMLDOMParser on: '<!DOCTYPE root [', badSubset, ']>', content)
-						isValidating: false;
-						parseDocument]
-			raise: XMLValidationException.
-		self
-			assert: ((document root elementAt: 'one') attributeAt: 'one') = '';
-			assert: ((document root elementAt: 'two') attributeAt: 'two') = 'value'.
 		self
 			shouldnt: [
 				document :=
@@ -6180,9 +6160,6 @@ XMLParserTest >> testStandaloneExternalInternalEntityAttributeDefaultValue [
 			<!ATTLIST test name CDATA "&name;">
 			<!ENTITY otherName "otherValue">
 		]>'.
-	"Xerces does not flag this, but since the reference is in the literal
-	attribute value and not just its default value declaration, it should
-	probably count"
 	self
 		should: [SAXHandler parse: standaloneDTD, '<test name="&name;"/>']
 		raise: XMLValidationException.
@@ -6194,10 +6171,19 @@ XMLParserTest >> testStandaloneExternalInternalEntityAttributeDefaultValue [
 					parseDocument]
 		raise: XMLValidationException.
 	self assert: (document root attributeAt: 'name') = 'value'.
+
+	"Xerces doesn't flag this because the reference is only in the default
+	value declaration, but it probably should count because it's still an
+	internal (to the document) reference to an external standalone entity"
+	self
+		should: [XMLDOMParser parse: standaloneDTD, '<test/>']
+		raise: XMLValidationException.
 	self
 		shouldnt: [
 			document :=
-				XMLDOMParser parse: standaloneDTD, '<test/>']
+				(XMLDOMParser on: standaloneDTD, '<test/>')
+					isValidating: false;
+					parseDocument]
 		raise: XMLValidationException.
 	self assert: (document root attributeAt: 'name') = 'value'.
 ]
