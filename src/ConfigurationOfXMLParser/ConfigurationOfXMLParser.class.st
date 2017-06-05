@@ -329,7 +329,7 @@ ConfigurationOfXMLParser >> baseline10: spec [
 			
 			"Core was made to only load XMLParser, CoreWithWriting loads XMLParser and XMLWriter"
 			spec
-				group: 'default' with: #('Core' 'Tests');
+				group: 'default' with: #('CoreWithWriting' 'Tests');
 				group: 'Core' with: #('XML-Parser');
 				group: 'CoreWithWriting' with: #('XMLWriter' 'XML-Parser');
 				group: 'Tests' with: #('XML-Tests-Parser') ].
@@ -351,8 +351,8 @@ ConfigurationOfXMLParser >> baseline10: spec [
 		do: [
 			"the extensions require XMLWriter"
 			spec
-				group: 'default' with: #('Core' 'Tests' 'XML-Parser-GTExtensions');
-				group: 'CoreWithWriting' with: #('XMLWriter' 'XML-Parser' 'XML-Parser-GTExtensions').
+				group: 'CoreWithWriting' with: #('XMLWriter' 'XML-Parser' 'XML-Parser-GTExtensions');
+				group: 'Tests' with: #('XML-Tests-Parser' 'XML-Parser-GTExtensions').
 			spec
 				package: 'XML-Parser-GTExtensions'
 				with: [ spec requires: 'XML-Parser' ]. ].
@@ -1292,7 +1292,7 @@ ConfigurationOfXMLParser >> release317: spec [
 	<symbolicVersion: #'release-3.1.7'>
 
 	"Users should prefer #stable unless they rely on XMLParser internals"
-	spec for: #'common' version: '3.1.7'.
+	spec for: #'common' version: '3.1.8'.
 ]
 
 { #category : #'symbolic versions' }
@@ -3668,6 +3668,17 @@ ConfigurationOfXMLParser >> version317: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.409'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.207'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version318: spec [ 
+        <version: '3.1.8' imports: #('3.1.2-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.410'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.207'.
                 ].
 ]
