@@ -13,6 +13,11 @@ Class {
 }
 
 { #category : #'instance creation' }
+DTDEntity class >> name: aName [
+	^ self named: aName
+]
+
+{ #category : #'instance creation' }
 DTDEntity class >> name: aName replacement: aReplacementString [
 	^ self
 		name: aName

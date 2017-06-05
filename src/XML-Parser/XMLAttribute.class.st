@@ -13,10 +13,8 @@ Class {
 	#category : #'XML-Parser-DOM'
 }
 
-{ #category : #deprecated }
+{ #category : #'instance creation' }
 XMLAttribute class >> name: aName [
-	"will be deprecated; defined here just to avoid accidentally renaming the class"
-
 	^ self named: aName
 ]
 
