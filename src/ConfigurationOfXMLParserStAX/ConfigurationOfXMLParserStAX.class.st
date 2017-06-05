@@ -189,7 +189,7 @@ ConfigurationOfXMLParserStAX >> baseline100: spec [
 		spec package: 'XML-Parser-StAX-Tests' with: [
 			spec requires: #('XMLParserTests' 'XML-Parser-StAX-Core') ].
 		spec
-			group: 'default' with: #('Core' 'Tests');
+			group: 'default' with: #('CoreWithWriting' 'Tests');
 			group: 'Core' with: #('XML-Parser-StAX-Core');
 			group: 'CoreWithWriting' with: #('XMLParserCoreWithWriting' 'XML-Parser-StAX-Core');
 			group: 'Tests' with: #('XML-Parser-StAX-Tests')]
@@ -350,7 +350,7 @@ ConfigurationOfXMLParserStAX >> project [
 ConfigurationOfXMLParserStAX >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.2.7'.
+	spec for: #'common' version: '1.2.8'.
 
 ]
 
@@ -658,6 +658,17 @@ ConfigurationOfXMLParserStAX >> version127: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.30'.
+			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.20'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserStAX >> version128: spec [ 
+        <version: '1.2.8' imports: #('1.2.7-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.31'.
 			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.20'.
                 ].
 ]
