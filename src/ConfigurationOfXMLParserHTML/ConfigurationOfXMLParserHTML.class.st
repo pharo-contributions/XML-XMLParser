@@ -187,7 +187,7 @@ ConfigurationOfXMLParserHTML >> baseline100: spec [
 			spec package: 'XML-Parser-HTML-Tests' with: [
 				spec requires: #('XMLParserTests' 'XML-Parser-HTML-Core') ].
 			spec
-				group: 'default' with: #('Core' 'Tests');
+				group: 'default' with: #('CoreWithWriting' 'Tests');
 				group: 'Core' with: #('XML-Parser-HTML-Core');
 				group: 'CoreWithWriting' with: #('XMLParserCoreWithWriting' 'XML-Parser-HTML-Core');
 				group: 'Tests' with: #('XML-Parser-HTML-Tests')].
@@ -440,7 +440,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.3.6'.
+	spec for: #'common' version: '1.3.7'.
 
 ]
 
@@ -847,6 +847,17 @@ ConfigurationOfXMLParserHTML >> version136: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.47'.
+			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.24'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version137: spec [ 
+        <version: '1.3.7' imports: #('1.3.6-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.48'.
 			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.24'.
                 ].
 ]
