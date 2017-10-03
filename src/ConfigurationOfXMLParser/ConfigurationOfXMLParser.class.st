@@ -310,7 +310,6 @@ ConfigurationOfXMLParser >> baseline10: spec [
 						loads: #('Core'); 
 						repository: 'http://www.smalltalkhub.com/mc/PharoExtras/BitmapCharacterSet/main'.].
 
-			"#stable is fine, the public API doesn't change to backwards incompatible"
 			spec
 				project: 'OrderPreservingDictionary'
 				with: [
@@ -318,14 +317,19 @@ ConfigurationOfXMLParser >> baseline10: spec [
 						className: 'ConfigurationOfOrderPreservingDictionary';
 						versionString: #stable; 
 						loads: #('Core'); 
-						repository: 'http://smalltalkhub.com/mc/PharoExtras/OrderPreservingDictionary/main'].	
+						repository: 'http://smalltalkhub.com/mc/PharoExtras/OrderPreservingDictionary/main'].
+			spec
+				project: 'OrderPreservingDictionaryTests'
+				copyFrom: 'OrderPreservingDictionary'
+				with: [ spec loads: #('Tests') ].
 
 			spec 
 				package: 'XML-Parser' 
 				with: [spec requires: #('BitmapCharacterSet' 'OrderPreservingDictionary')].
+			"some XML-Tests-Parser TestCases inherit from OrderPreservingDictionary TestCases"
 			spec
 				package: 'XML-Tests-Parser'
-				with: [ spec requires: #('XMLWriterTests' 'XML-Parser') ].
+				with: [ spec requires: #('OrderPreservingDictionaryTests' 'XMLWriterTests' 'XML-Parser') ].
 			
 			"Core was made to only load XMLParser, CoreWithWriting loads XMLParser and XMLWriter"
 			spec
@@ -1002,6 +1006,31 @@ ConfigurationOfXMLParser >> baseline312: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-PavelKrivanek.60' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline319: spec [
+	<version: '3.1.9-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.8.3'. ].
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'OrderPreservingDictionary' with: '1.3.8'. ].
+	spec
+		for: #gemstone
+		do: [
+			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.25'.
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline312. ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.61' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParser >> customProjectAttributes [
     "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -1016,7 +1045,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '3.1.2-baseline'.
+	spec for: #'common' version: '3.1.9-baseline'.
 
 ]
 
@@ -1296,6 +1325,14 @@ ConfigurationOfXMLParser >> release317: spec [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release319: spec [
+	<symbolicVersion: #'release-3.1.9'>
+
+	"Users should prefer #stable unless they rely on XMLParser internals"
+	spec for: #'common' version: '3.1.9'.
+]
+
+{ #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> release3: spec [
 	<symbolicVersion: #'release-3'>
 
@@ -1309,7 +1346,7 @@ ConfigurationOfXMLParser >> stable: spec [
 
 	"Users should prefer #stable unless they rely on XMLParser internals,
 	but it will delegate to a specific #release version from now on."
-	spec for: #'common' version: #'release-3.1.7'.
+	spec for: #'common' version: #'release-3.1.9'.
 ]
 
 { #category : #versions }
@@ -3680,5 +3717,16 @@ ConfigurationOfXMLParser >> version318: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.410'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.207'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version319: spec [ 
+        <version: '3.1.9' imports: #('3.1.9-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.411'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.208'.
                 ].
 ]
