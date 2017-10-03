@@ -9,8 +9,9 @@ Class {
 
 { #category : #testing }
 XMLPercentDecodingReadStreamAdapter >> atEnd [
-	^ super atEnd
-		or: [stream peek ~~ $%]
+	^ peekChar == nil
+		and: [stream atEnd
+			or: [stream peek ~~ $%]]
 ]
 
 { #category : #private }

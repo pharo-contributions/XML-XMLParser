@@ -118,29 +118,6 @@ XMLElement >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitElement: self
 ]
 
-{ #category : #adding }
-XMLElement >> addElementNamed: aName [
-	"added first to inherit the config and namespaces before setting the name"
-	^ (self addNode: 
-		(self nodeFactory
-			classForElement: aName
-			namespaceURI: (self resolvePrefix: aName xmlPrefixBeforeLocalName)) new)
-				name: aName
-]
-
-{ #category : #adding }
-XMLElement >> addElementNamed: aName attributes: anAssociationCollection [
-	"added first to inherit the config and namespaces before setting the name
-	and attributes"
-	^ (self addNode:
-		(self nodeFactory
-			classForElement: aName
-			namespaceURI: (self resolvePrefix: aName xmlPrefixBeforeLocalName)
-			attributes: anAssociationCollection) new)
-				name: aName;
-				setAttributes: anAssociationCollection
-]
-
 { #category : #notifying }
 XMLElement >> addedAttribute: anAttribute [
 	anAttribute element
@@ -251,7 +228,7 @@ XMLElement >> attributeAt: aName put: aValue [
 		put: aValue
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLElement >> attributeListClass [
 	^ self configuration nodeFactory attributeListClass
 ]
@@ -337,6 +314,7 @@ XMLElement >> attributes [
 
 { #category : #namespacing }
 XMLElement >> declareNamespaces: anAssociationCollection [
+	self ensureUsesNamespaces.
 	anAssociationCollection associationsDo: [:each |
 		self
 			declarePrefix: each key
@@ -347,6 +325,7 @@ XMLElement >> declareNamespaces: anAssociationCollection [
 XMLElement >> declarePrefix: aPrefix uri: aURI [
 	| oldMapping |
 
+	self ensureUsesNamespaces.
 	oldMapping :=
 		self namespaceScope
 			prefixMappingAt: aPrefix
@@ -364,12 +343,14 @@ XMLElement >> declarePrefix: aPrefix uri: aURI [
 						or: [
 							scope
 								includesPrefix: aPrefix
-								mappedTo: oldMapping]]]
+								mappedTo: oldMapping]]].
 ]
 
 { #category : #namespacing }
 XMLElement >> declaredPrefixes [
-	^ self namespaceScope mappedPrefixes
+	^ self usesNamespaces "avoid lazy initializing the scope"
+		ifTrue: [self namespaceScope mappedPrefixes]
+		ifFalse: [#()]
 ]
 
 { #category : #testing }
@@ -392,7 +373,9 @@ XMLElement >> declaresPrefix: aPrefix uri: aURI [
 
 { #category : #namespacing }
 XMLElement >> defaultNamespace [
-	^ self namespaceScope defaultNamespace
+	^ self usesNamespaces "avoid lazy initializing the scope"
+		ifTrue: [self namespaceScope defaultNamespace]
+		ifFalse: ['']
 ]
 
 { #category : #namespacing }
@@ -401,6 +384,7 @@ XMLElement >> defaultNamespace: aURI [
 	inherited default namesapce"
 	| oldNamespace |
 
+	self ensureUsesNamespaces.
 	oldNamespace := self defaultNamespace.
 	self
 		allNamespaceScopesDo: [:scope |
@@ -515,7 +499,8 @@ XMLElement >> includesAttributeNode: aName namespaceURI: aURI [
 XMLElement >> isDeclaredPrefix: aPrefix [
 	"is the namespace prefix aPrefix declared for the receiver and its descendants?"
 
-	^ self namespaceScope includesPrefix: aPrefix
+	^ self usesNamespaces
+		and: [self namespaceScope includesPrefix: aPrefix]
 ]
 
 { #category : #testing }
@@ -523,9 +508,11 @@ XMLElement >> isDeclaredPrefix: aPrefix uri: aURI [
 	"is the namespace prefix aPrefix mapped to aURI for the receiver and
 	its descendants?"
 
-	^ self namespaceScope
-		includesPrefix: aPrefix
-		mappedTo: aURI
+	^ self usesNamespaces
+		and: [
+			self namespaceScope
+				includesPrefix: aPrefix
+				mappedTo: aURI]
 ]
 
 { #category : #testing }
@@ -630,6 +617,13 @@ XMLElement >> namespaceScope [
 { #category : #accessing }
 XMLElement >> namespaceURI [
 	^ self resolvePrefix: self prefix
+]
+
+{ #category : #private }
+XMLElement >> newNamespaceScopeForAddedElement [
+	^ self usesNamespaces
+		ifTrue: [self namespaceScope copy]
+		ifFalse: [nil]
 ]
 
 { #category : #accessing }
@@ -769,18 +763,20 @@ XMLElement >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 	is empty), including the predefined 'xml' and 'xmlns' prefixes. Returns the
 	value of aBlock if aPrefix is unresolvable."
 
-	self hasNamespaces "avoid lazy initializing the scope"
+	^ self hasNamespaces "avoid lazy initializing the scope"
 		ifTrue: [
-			^ self namespaceScope
+			self namespaceScope
 				resolvePrefix: aPrefix
 				ifUnresolvable: aBlock]
-		ifFalse: [^ aBlock value]
+		ifFalse: [aBlock value]
 ]
 
 { #category : #namespacing }
 XMLElement >> resolvePrefixesOfNamespaceURI: aURI [
 	"returns a set of all the namespace prefixes of aURI"
-	^ self namespaceScope resolvePrefixesOfNamespaceURI: aURI
+	^ self usesNamespaces
+		ifTrue: [self namespaceScope resolvePrefixesOfNamespaceURI: aURI]
+		ifFalse: [Set new]
 ]
 
 { #category : #initialization }
@@ -789,21 +785,22 @@ XMLElement >> setAttributes: anAssociationCollection [
 ]
 
 { #category : #private }
-XMLElement >> setConfiguration: aConfiguration name: aName localName: aLocalName attributes: anOrderPreservingDictionary [
+XMLElement >> setConfiguration: aConfiguration name: aName localName: aLocalName attributes: anAttributeDictionary namespaceScope: aNamespaceScope [
 	"This should only be sent by DOM parsers/builders, not public API users"
 
 	configuration := aConfiguration.
 	name := aName.
 	localName := aLocalName.
-	anOrderPreservingDictionary size > 0 "optimization"
+	anAttributeDictionary size > 0 "optimization"
 		ifTrue: [
-			"This consumes anOrderPreservingDictionary, so it can never be used
+			"This consumes anAttributeDictionary, so it can never be used
 			again safely"
 			(attributes :=
-				self attributeListClass new: anOrderPreservingDictionary size)
+				self attributeListClass new: anAttributeDictionary size)
 				observer: self;
 				setAttributesFromOrderPreservingDictionary: 
-					anOrderPreservingDictionary].
+					anAttributeDictionary].
+	namespaceScope := aNamespaceScope.
 ]
 
 { #category : #private }
@@ -811,7 +808,7 @@ XMLElement >> setNamespaceScope: aNamespaceScope [
 	namespaceScope := aNamespaceScope
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLElement >> sortKey [
 	^ self name
 ]
@@ -825,6 +822,7 @@ XMLElement >> undeclareDefaultNamespace [
 XMLElement >> undeclarePrefix: aPrefix [
 	| currentNamespaceURI |
 
+	self ensureUsesNamespaces.
 	currentNamespaceURI :=
 		self namespaceScope
 			prefixMappingAt: aPrefix
@@ -840,8 +838,9 @@ XMLElement >> undeclarePrefix: aPrefix [
 
 { #category : #namespacing }
 XMLElement >> undeclarePrefixes [
+	self ensureUsesNamespaces.
 	self declaredPrefixes do: [:each |
-		self undeclarePrefix: each]
+		self undeclarePrefix: each].
 ]
 
 { #category : #private }
@@ -850,26 +849,15 @@ XMLElement >> validateAttributeNamespacePrefixes [
 	a collection of XMLAttributes instead of attribute names.
 
 	Not performance critical because it's only used after parsing when
-	an attribute is added or renamed to a parsed DOM tree."
-
-	| attributeLocalNamesAndURIs |
+	an attribute is added or renamed in a parsed DOM tree."
 
 	self usesNamespaces
-		ifFalse: [^ self].
-
-	self attributeNodesDo: [:attribute | | prefix |
-		(prefix := attribute prefix) notEmpty
-			ifTrue: [
-				"not initialized unless needed"
-				attributeLocalNamesAndURIs
-					ifNil: [
-						attributeLocalNamesAndURIs :=
-							Set new: self attributeNodes size].
-				self namespaceScope
-					validatePrefix: prefix
-					ofAttribute: attribute name
-					hasNoAliasesin: attributeLocalNamesAndURIs]
-			ifFalse: [self namespaceScope validateUnprefixedName: attribute name]].
+		ifTrue: [| attributeLocalNamesAndURIs |
+			self attributeNodesDo: [:attribute |
+				attributeLocalNamesAndURIs := 
+					self namespaceScope
+						validatePrefixesAttribute: attribute name
+						hasNoAliasIn: attributeLocalNamesAndURIs]]
 ]
 
 { #category : #private }

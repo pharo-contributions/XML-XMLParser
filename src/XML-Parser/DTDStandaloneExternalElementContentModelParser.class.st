@@ -7,7 +7,7 @@ Class {
 	#category : #'XML-Parser-DTD-Standalone'
 }
 
-{ #category : #private }
+{ #category : #defaults }
 DTDStandaloneExternalElementContentModelParser >> elementValidatorClass [
 	^ XMLStandaloneExternalDFAElementContentElementValidator
 ]

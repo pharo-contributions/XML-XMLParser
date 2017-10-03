@@ -7,7 +7,7 @@ Class {
 	#category : #'XML-Parser-Files'
 }
 
-{ #category : #'instance creation' }
+{ #category : #basic }
 XMLStandardFileStreamReadStreamFactory class >> basicOnPath: aPathString [
 	^ (XMLClassFinder classNamed: #StandardFileStream)
 		readOnlyFileNamed: aPathString

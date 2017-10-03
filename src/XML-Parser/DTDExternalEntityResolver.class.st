@@ -9,8 +9,7 @@ Class {
 	#name : #DTDExternalEntityResolver,
 	#superclass : #Object,
 	#instVars : [
-		'externalEntityLimits',
-		'totalResolvedExternalEntities'
+		'externalEntityLimits'
 	],
 	#category : #'XML-Parser-DTD'
 }
@@ -26,21 +25,10 @@ DTDExternalEntityResolver class >> defaultClass [
 ]
 
 { #category : #private }
-DTDExternalEntityResolver >> checkExternalEntityLimit [
-	(self maxExternalEntities notNil
-		and: [self totalResolvedExternalEntities >= self maxExternalEntities])
-		ifTrue: [self erorrExternalEntityLimitExceeded]
-]
-
-{ #category : #private }
-DTDExternalEntityResolver >> erorrExternalEntityLimitExceeded [
-	XMLLimitException signal: 'External entity limit exceeded; use #maxExternalEntities: to change'
-]
-
-{ #category : #private }
 DTDExternalEntityResolver >> errorLocalFromNonLocal [
 	XMLLimitException signal:
-		'Local URI referenced from non-local URI; use #resolvesLocalFromNonLocal: to change'
+		'Local URI referenced from non-local URI; ',
+		'use #resolvesLocalFromNonLocal: to change'
 ]
 
 { #category : #configuring }
@@ -88,22 +76,14 @@ DTDExternalEntityResolver >> externalSubsetReadLimit: anInteger [
 	self externalEntityLimits externalSubsetReadLimit: anInteger
 ]
 
-{ #category : #private }
-DTDExternalEntityResolver >> incrementTotalResolvedExternalEntities [
-	totalResolvedExternalEntities :=
-		totalResolvedExternalEntities
-			ifNil: [1]
-			ifNotNil: [totalResolvedExternalEntities + 1]
-]
-
 { #category : #configuring }
 DTDExternalEntityResolver >> maxExternalEntities [
 	^ self externalEntityLimits maxExternalEntities
 ]
 
 { #category : #configuring }
-DTDExternalEntityResolver >> maxExternalEntities: aLimit [
-	self externalEntityLimits maxExternalEntities: aLimit
+DTDExternalEntityResolver >> maxExternalEntities: anInteger [
+	self externalEntityLimits maxExternalEntities: anInteger
 ]
 
 { #category : #configuring }
@@ -112,15 +92,14 @@ DTDExternalEntityResolver >> maxExternalEntitySize [
 ]
 
 { #category : #configuring }
-DTDExternalEntityResolver >> maxExternalEntitySize: aLimit [
-	self externalEntityLimits maxExternalEntitySize: aLimit
+DTDExternalEntityResolver >> maxExternalEntitySize: anInteger [
+	self externalEntityLimits maxExternalEntitySize: anInteger
 ]
 
 { #category : #copying }
 DTDExternalEntityResolver >> postCopy [
 	super postCopy.
 
-	totalResolvedExternalEntities := 0.
 	externalEntityLimits
 		ifNotNil: [externalEntityLimits := externalEntityLimits copy].
 ]
@@ -132,21 +111,9 @@ DTDExternalEntityResolver >> removeLimits [
 
 { #category : #resolving }
 DTDExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString [
-	^ self resolveExternalEntityWith: [:maxSize |
-		anXMLURIOrURIString asXMLURI
-			getUpToLimit: maxSize
-			decoding: false]
-]
-
-{ #category : #private }
-DTDExternalEntityResolver >> resolveExternalEntityWith: aBlock [
-	| result |
-
-	self checkExternalEntityLimit.
-	result := aBlock value: self maxExternalEntitySize.
-	self incrementTotalResolvedExternalEntities.
-
-	^ result.
+	^ anXMLURIOrURIString asXMLURI
+		getUpToLimit: self maxExternalEntitySize
+		decoding: false
 ]
 
 { #category : #configuring }
@@ -164,13 +131,7 @@ DTDExternalEntityResolver >> resolvesLocalFromNonLocal: aBoolean [
 
 { #category : #resolving }
 DTDExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString [
-	^ self resolveExternalEntityWith: [:maxSize |
-		anXMLURIOrURIString asXMLURI
-			streamGetUpToLimit: maxSize
-			decoding: false]
-]
-
-{ #category : #accessing }
-DTDExternalEntityResolver >> totalResolvedExternalEntities [
-	^ totalResolvedExternalEntities ifNil: [totalResolvedExternalEntities := 0]
+	^ anXMLURIOrURIString asXMLURI
+		streamGetUpToLimit: self maxExternalEntitySize
+		decoding: false
 ]

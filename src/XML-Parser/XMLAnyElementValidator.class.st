@@ -17,7 +17,7 @@ XMLAnyElementValidator >> isAny [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLAnyElementValidator >> typeName [
 	^ 'ANY'
 ]

@@ -12,12 +12,12 @@ Class {
 	#category : #'XML-Parser-HTTP'
 }
 
-{ #category : #private }
-XMLHTTPRequest class >> errorNoSupportedImplementation [
+{ #category : #finding }
+XMLHTTPRequest class >> noSupportedImplementationFound [
 	XMLHTTPException signal: 'HTTP unsupported; install Zinc or WebClient'
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLHTTPRequest class >> preferredImplementation [
 	^ XMLZincHTTPRequest
 ]
@@ -32,12 +32,12 @@ XMLHTTPRequest >> asXMLHTTPRequest [
 	^ self
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLHTTPRequest >> basicGetUpToLimit: aMaxSize decoding: aBoolean [
 	self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLHTTPRequest >> defaultTimeout [
 	^ 30
 ]
@@ -71,7 +71,7 @@ XMLHTTPRequest >> getUpToLimit: aMaxSize decoding: aBoolean [
 					ifFalse: [self errorHTTPException: error]]
 ]
 
-{ #category : #private }
+{ #category : #testing }
 XMLHTTPRequest >> isMaxSizeException: anException [
 	^ anException class == XMLLimitException
 ]

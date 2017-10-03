@@ -10,7 +10,7 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLIDAttributeValidator class >> standaloneExternalClass [
 	^ XMLStandaloneExternalIDAttributeValidator
 ]

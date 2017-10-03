@@ -58,7 +58,7 @@ DTDElementContentModelParser class >> initializeSpecialCharacterParsers [
 			yourself
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 DTDElementContentModelParser class >> standaloneExternalClass [
 	^ DTDStandaloneExternalElementContentModelParser
 ]
@@ -73,7 +73,7 @@ DTDElementContentModelParser >> applyOperator: aCharacter [
 	nfaBuilder perform: (OperatorApplicators at: aCharacter asciiValue)
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 DTDElementContentModelParser >> elementValidatorClass [
 	^ XMLDFAElementContentElementValidator
 ]

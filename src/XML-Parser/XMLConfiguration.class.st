@@ -26,7 +26,7 @@ XMLConfiguration >> decodesCharacters: aBoolean [
 	decodesCharacters := aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLConfiguration >> defaultParserHandlerClass [
 	^ SAXHandler
 ]

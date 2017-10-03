@@ -15,7 +15,7 @@ XMLUTFStreamConverter >> errorBadCharacterValue: aValue [
 		with: aValue printStringHex
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLUTFStreamConverter >> nextCodePointFromStream: aStream [
 	self subclassResponsibility
 ]

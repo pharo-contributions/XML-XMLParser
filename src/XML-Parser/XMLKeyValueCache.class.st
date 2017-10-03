@@ -12,14 +12,9 @@ Class {
 	#category : #'XML-Parser-Utils'
 }
 
-{ #category : #private }
+{ #category : #defaults }
 XMLKeyValueCache class >> defaultMaxSize [
 	^ 32
-]
-
-{ #category : #private }
-XMLKeyValueCache class >> errorNoSupportedImplementation [
-	Error signal: 'No supported key-value cache class available'
 ]
 
 { #category : #'instance creation' }
@@ -32,7 +27,12 @@ XMLKeyValueCache class >> new [
 	^ self maxSize: self defaultMaxSize
 ]
 
-{ #category : #accessing }
+{ #category : #finding }
+XMLKeyValueCache class >> noSupportedImplementationFound [
+	Error signal: 'No supported key-value cache class available'
+]
+
+{ #category : #defaults }
 XMLKeyValueCache class >> preferredImplementation [
 	^ XMLStandardKeyValueCache
 ]
@@ -116,7 +116,7 @@ XMLKeyValueCache >> collection [
 	self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLKeyValueCache >> collectionClass [
 	^ Dictionary
 ]

@@ -21,7 +21,17 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
-{ #category : #private }
+{ #category : #basic }
+XMLStreamConverter class >> basicByteOrderMarkBytes [
+	^ #()
+]
+
+{ #category : #basic }
+XMLStreamConverter class >> basicCanConvertEncoding: anEncodingName [
+	^ self encodingNames includes: anEncodingName
+]
+
+{ #category : #basic }
 XMLStreamConverter class >> basicEncodingNames [
 	"encodingNames will have these names + upper/lowercase versions"
 	^ #()
@@ -30,17 +40,19 @@ XMLStreamConverter class >> basicEncodingNames [
 { #category : #accessing }
 XMLStreamConverter class >> byteOrderMark [
 	"avoid #asString and #newFrom: for GS portability"
-	^ String withAll: (self byteOrderMarkBytes collect: [:each | each asCharacter])
-]
-
-{ #category : #private }
-XMLStreamConverter class >> byteOrderMarkBytes [
-	^ #()
+	^ String withAll: (self basicByteOrderMarkBytes collect: [:each | each asCharacter])
 ]
 
 { #category : #testing }
 XMLStreamConverter class >> canConvertEncoding: anEncodingName [
-	^ self encodingNames includes: anEncodingName
+	"Returns true if the receiver can decode the encoding anEncodingName.
+	Lookup is case-insensitive."
+
+	"we could remove whitespace from anEncodingName too, but the
+	production rule for <?xml ...?> 'encoding' attributes disallows
+	whitespace, and the HTML parser removes it from <meta> charset
+	attributes before converting, so we just convert it to lowercase"
+	^ self basicCanConvertEncoding: anEncodingName asLowercase
 ]
 
 { #category : #accessing }
@@ -62,7 +74,7 @@ XMLStreamConverter class >> default [
 	^ self defaultClass new
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLStreamConverter class >> defaultClass [
 	^ XMLUTF8StreamConverter
 ]
@@ -150,7 +162,12 @@ XMLStreamConverter class >> newForEncoding: anEncodingName [
 
 { #category : #'instance creation' }
 XMLStreamConverter class >> null [
-	^ XMLNullStreamConverter new
+	^ self nullClass new
+]
+
+{ #category : #defaults }
+XMLStreamConverter class >> nullClass [
+	^ XMLNullStreamConverter
 ]
 
 { #category : #accessing }
@@ -232,7 +249,7 @@ XMLStreamConverter >> nextPut: aCharacter toStream: aStream [
 
 { #category : #encoding }
 XMLStreamConverter >> nextPutByteOrderMarkToStream: aStream [
-	self class byteOrderMarkBytes do: [:each |
+	self class basicByteOrderMarkBytes do: [:each |
 		aStream basicNextPutByte: each]
 ]
 

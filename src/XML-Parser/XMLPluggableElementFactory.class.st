@@ -63,17 +63,17 @@ XMLPluggableElementFactory >> classForElement: aQualifiedName namespaceURI: aURI
 		ifNone: [self elementClass]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLPluggableElementFactory >> elementClassMapper [
 	^ elementClassMapper
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLPluggableElementFactory >> elementClassMapper: anElementClassMapper [
 	elementClassMapper := anElementClassMapper
 ]
 
-{ #category : #'private ' }
+{ #category : #defaults }
 XMLPluggableElementFactory >> elementClassMapperClass [
 	^ XMLBasicElementClassMapper
 ]
@@ -160,7 +160,7 @@ XMLPluggableElementFactory >> handleElementsMatchingClasses: aClassCollection [
 		ignoringSuffixes: self ignorableClassNameSuffixes
 ]
 
-{ #category : #'private ' }
+{ #category : #defaults }
 XMLPluggableElementFactory >> ignorableClassNameSuffixes [
 	^ #('Element')
 ]

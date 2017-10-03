@@ -14,12 +14,12 @@ Class {
 	#category : #'XML-Parser'
 }
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLParserLimits class >> defaultDocumentReadLimit [
 	^ self defaultReadLimit
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLParserLimits class >> defaultMaxEntityReplacementDepth [
 	^ 10
 ]

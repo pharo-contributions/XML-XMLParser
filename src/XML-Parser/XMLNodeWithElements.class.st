@@ -57,25 +57,49 @@ XMLNodeWithElements >> addElement: anElement [
 XMLNodeWithElements >> addElementNamed: aName [
 	"adds and returns a new element with the specified name"
 
-	"added first to inherit the config and namespaces
-	before setting the name"
-	^ (self addNode:
-		(self nodeFactory classForElement: aName) new)
-			name: aName
+	| addedElementNamespaceScope addedElementNamespaceURI addedElement |
+
+	addedElementNamespaceScope := self newNamespaceScopeForAddedElement.
+	addedElementNamespaceURI :=
+		self
+			namespaceURIOfAddedElementNamed: aName
+			withScope: addedElementNamespaceScope.
+	"added first to inherit the config before setting the name"
+	addedElement :=
+		self addNode:
+			((self nodeFactory
+				classForElement: aName
+				namespaceURI: addedElementNamespaceURI) new
+				setNamespaceScope: addedElementNamespaceScope).
+	^ addedElement name: aName.
 ]
 
 { #category : #adding }
 XMLNodeWithElements >> addElementNamed: aName attributes: anAssociationCollection [
 	"adds and returns a new element with the specified name and attributes"
 
-	"added first to inherit the config and namespaces
-	before setting the name and attributes"
-	^ (self addNode:
-		(self nodeFactory
-			classForElement: aName
-			attributes: anAssociationCollection) new)
-				name: aName;
-				setAttributes: anAssociationCollection
+	| addedElementNamespaceScope addedElementNamespaceURI addedElementAttributeDictionary addedElement |
+
+	addedElementNamespaceScope := self newNamespaceScopeForAddedElement.
+	addedElementNamespaceURI :=
+		self
+			namespaceURIOfAddedElementNamed: aName
+			withScope: addedElementNamespaceScope.
+	addedElementAttributeDictionary :=
+		self
+			newAttributeDictionaryFrom: anAssociationCollection
+			forAddedElementWithScope: addedElementNamespaceScope.
+	"added first to inherit the config before setting the name and attributes"
+	addedElement :=
+		self addNode:
+			((self nodeFactory
+				classForElement: aName
+				namespaceURI: addedElementNamespaceURI
+				attributes: addedElementAttributeDictionary) new
+				setNamespaceScope: addedElementNamespaceScope).
+	^ addedElement
+		name: aName;
+		setAttributes: addedElementAttributeDictionary.
 ]
 
 { #category : #adding }
@@ -83,30 +107,48 @@ XMLNodeWithElements >> addElementNamed: aName namespaceURI: aURI [
 	"adds and returns a new element with the specified name and namespace
 	URI"
 
-	"added first to inherit the config and namespaces
-	before setting the name and namespace URI"
-	^ (self addNode:
-		(self nodeFactory
-			classForElement: aName
-			namespaceURI: aURI) new)
-				name: aName
-				namespaceURI: aURI
+	| addedElementNamespaceScope addedElement |
+
+	addedElementNamespaceScope :=
+		self
+			newNamespaceScopeForAddedElementNamed: aName
+			namespaceURI: aURI.
+	"added first to inherit the config before setting the name"
+	addedElement :=
+		self addNode:
+			((self nodeFactory
+				classForElement: aName
+				namespaceURI: aURI) new
+				setNamespaceScope: addedElementNamespaceScope).
+	^ addedElement name: aName.
 ]
 
 { #category : #adding }
 XMLNodeWithElements >> addElementNamed: aName namespaceURI: aURI attributes: anAssociationCollection [
-	"adds and returns a new element with the specified name, namespace URI
+	"adds and returns a new element with the specified name, namespace URI,
 	and attributes"
 
-	"added first to inherit the config and namespaces
-	before setting the name, namespace URI, and attributes"
-	^ (self addNode:
-		(self nodeFactory
-			classForElement: aName
-			namespaceURI: aURI
-			attributes: anAssociationCollection) new)
-				name: aName namespaceURI: aURI;
-				setAttributes: anAssociationCollection
+	| addedElementNamespaceScope addedElementAttributeDictionary addedElement |
+
+	addedElementNamespaceScope :=
+		self
+			newNamespaceScopeForAddedElementNamed: aName
+			namespaceURI: aURI.
+	addedElementAttributeDictionary :=
+		self
+			newAttributeDictionaryFrom: anAssociationCollection
+			forAddedElementWithScope: addedElementNamespaceScope.
+	"added first to inherit the config before setting the name and attributes"
+	addedElement :=
+		self addNode:
+			((self nodeFactory
+				classForElement: aName
+				namespaceURI: aURI
+				attributes: addedElementAttributeDictionary) new
+				setNamespaceScope: addedElementNamespaceScope).
+	^ addedElement
+		name: aName;
+		setAttributes: addedElementAttributeDictionary.
 ]
 
 { #category : #adding }
@@ -248,7 +290,7 @@ XMLNodeWithElements >> configuration: aConfiguration [
 				each configuration: aConfiguration]].
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLNodeWithElements >> configurationClass [
 	^ XMLDOMConfiguration
 ]
@@ -596,6 +638,11 @@ XMLNodeWithElements >> elementsSelect: aBlock [
 ]
 
 { #category : #private }
+XMLNodeWithElements >> ensureUsesNamespaces [
+	self usesNamespaces: true
+]
+
+{ #category : #private }
 XMLNodeWithElements >> errorOuterXMLForAbsentNode [
 	XMLDOMException signal: 'Cannot change outer XML for absent node'
 ]
@@ -746,7 +793,7 @@ XMLNodeWithElements >> innerXMLParsedWith: aParser [
 	removedNodes := self nodes asArray.
 	self removeNodes.
 	[aParser
-		pushInnerXMLRootNode: self;
+		innerXMLRootNode: self;
 		parseDocument]
 		on: Error
 		do: [:error |
@@ -770,8 +817,40 @@ XMLNodeWithElements >> lastElement [
 ]
 
 { #category : #private }
+XMLNodeWithElements >> namespaceURIOfAddedElementNamed: aName withScope: aNamespaceScope [
+	^ self usesNamespaces
+		ifTrue: [aNamespaceScope resolvePrefix: aName xmlPrefixBeforeLocalName]
+		ifFalse: ['']
+]
+
+{ #category : #private }
+XMLNodeWithElements >> newAttributeDictionaryFrom: anAssociationCollection forAddedElementWithScope: aNamespaceScope [
+	^ self usesNamespaces
+		ifTrue: [
+			(XMLNamespacedAttributeDictionary newFrom: anAssociationCollection)
+				setNamespaceScope: aNamespaceScope]
+		ifFalse: [XMLAttributeDictionary newFrom: anAssociationCollection]
+]
+
+{ #category : #private }
 XMLNodeWithElements >> newInnerXMLContext [
 	^ self innerXMLContextClass new
+]
+
+{ #category : #private }
+XMLNodeWithElements >> newNamespaceScopeForAddedElement [
+	^ self usesNamespaces
+		ifTrue: [XMLNamespaceScope new]
+		ifFalse: [nil]
+]
+
+{ #category : #private }
+XMLNodeWithElements >> newNamespaceScopeForAddedElementNamed: aName namespaceURI: aURI [
+	self ensureUsesNamespaces.
+
+	^ self newNamespaceScopeForAddedElement
+		mapPrefix: aName xmlPrefixBeforeLocalName to: aURI;
+		yourself.
 ]
 
 { #category : #deprecated }
@@ -791,7 +870,7 @@ XMLNodeWithElements >> nodeFactory: aNodeFactory [
 	self configuration nodeFactory: aNodeFactory
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLNodeWithElements >> nodeListClass [
 	^ self configuration nodeFactory nodeListClass
 ]
@@ -817,7 +896,7 @@ XMLNodeWithElements >> outerXMLForNode: aNode parsedWith: aParser [
 			to: self nodes size.
 	self removeNodes: removedNodes.
 	[aParser
-		pushInnerXMLRootNode: self;
+		innerXMLRootNode: self;
 		parseDocument]
 		on: Error
 		do: [:error |
@@ -829,7 +908,7 @@ XMLNodeWithElements >> outerXMLForNode: aNode parsedWith: aParser [
 		self addNode: (removedNodes at: i)].
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLNodeWithElements >> parserHandlerClass [
 	^ self configuration parserHandlerClass
 ]

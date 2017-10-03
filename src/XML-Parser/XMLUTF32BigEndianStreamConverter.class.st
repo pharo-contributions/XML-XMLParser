@@ -7,14 +7,15 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
-{ #category : #private }
-XMLUTF32BigEndianStreamConverter class >> basicEncodingNames [
-	^ #('UTF-32' 'UTF-32BE' 'UTF-32-BE' 'UTF32' 'UTF32-BE' 'UTF32BE')
+{ #category : #basic }
+XMLUTF32BigEndianStreamConverter class >> basicByteOrderMarkBytes [
+	^ #(16r00 16r00 16rFE 16rFF)
 ]
 
-{ #category : #private }
-XMLUTF32BigEndianStreamConverter class >> byteOrderMarkBytes [
-	^ #(16r00 16r00 16rFE 16rFF)
+{ #category : #basic }
+XMLUTF32BigEndianStreamConverter class >> basicEncodingNames [
+	^ #('UTF-32' 'UTF32'
+			'UTF-32-BE' 'UTF32-BE' 'UTF-32BE' 'UTF32BE')
 ]
 
 { #category : #testing }
@@ -22,7 +23,7 @@ XMLUTF32BigEndianStreamConverter >> isBigEndian [
 	^ true
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLUTF32BigEndianStreamConverter >> nextFourBytesFromStream: aStream [
 	^ ((aStream basicNext
 			ifNil: [^ nil]) asciiValue bitShift: 24) +
@@ -34,7 +35,7 @@ XMLUTF32BigEndianStreamConverter >> nextFourBytesFromStream: aStream [
 			ifNil: [self errorBadCharacterEncoding]) asciiValue
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLUTF32BigEndianStreamConverter >> nextPutFourBytes: anInteger toStream: aStream [
 	aStream
 		basicNextPutByte: ((anInteger bitShift: -24) bitAnd: 16rFF);

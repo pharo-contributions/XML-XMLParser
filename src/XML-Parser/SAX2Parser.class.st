@@ -127,19 +127,25 @@ SAX2Parser >> declarationHandler: aDeclarationHandler [
 			parser: self
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 SAX2Parser >> defaultContentHandlerClass [
 	^ SAX2ContentHandler
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 SAX2Parser >> defaultDeclarationHandlerClass [
 	^ SAX2DeclarationHandler
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 SAX2Parser >> defaultLexicalHandlerClass [
 	^ SAX2LexicalHandler
+]
+
+{ #category : #defaults }
+SAX2Parser >> defaultParsingResult [
+	"the default parsing result of SAXHandler"
+	^ self
 ]
 
 { #category : #'handling - declaration' }
@@ -231,9 +237,7 @@ SAX2Parser >> on: aStringOrStream [
 	contentHandler := self defaultContentHandlerClass parser: self.
 	lexicalHandler := self defaultLexicalHandlerClass parser: self.
 	declarationHandler := self defaultDeclarationHandlerClass parser: self.
-	
-	"self is the returns parsing result SAXHandler returns"
-	parsingResult := self.
+	parsingResult := self defaultParsingResult.
 ]
 
 { #category : #'handling - declaration' }

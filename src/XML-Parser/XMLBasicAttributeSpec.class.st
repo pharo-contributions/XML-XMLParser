@@ -42,20 +42,26 @@ XMLBasicAttributeSpec >> initialize [
 ]
 
 { #category : #matching }
-XMLBasicAttributeSpec >> matchesAttributes: aDictionary [
+XMLBasicAttributeSpec >> matchesAttributes: anAttributeDictionary [
 	attributeSpec keysAndValuesDo: [:specName :specValue |
 		specValue
 			ifNil: [
 				"nil values mean the attribute has to be present and can have
 				any value"
-				(aDictionary includesKey: specName)
+				(anAttributeDictionary includesKey: specName)
 					ifFalse: [^ false]]
 			ifNotNil: [
 				(specValue isBlock
 					ifTrue: [
-						specValue value: (aDictionary at: specName ifAbsent: [^ false])]
+						specValue value:
+							(anAttributeDictionary
+								at: specName
+								ifAbsent: [^ false])]
 					ifFalse: [
-						specValue = (aDictionary at: specName ifAbsent: [^ false])])
+						specValue =
+							(anAttributeDictionary
+								at: specName
+								ifAbsent: [^ false])])
 							ifFalse: [^ false]]].
 	^ true.
 ]

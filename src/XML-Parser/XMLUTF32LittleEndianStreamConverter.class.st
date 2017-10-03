@@ -7,14 +7,14 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
-{ #category : #private }
-XMLUTF32LittleEndianStreamConverter class >> basicEncodingNames [
-	^ #('UTF-32LE' 'UTF-32-LE' 'UTF32-LE' 'UTF32LE')
+{ #category : #basic }
+XMLUTF32LittleEndianStreamConverter class >> basicByteOrderMarkBytes [
+	^ #(16rFF 16rFE 16r00 16r00)
 ]
 
-{ #category : #private }
-XMLUTF32LittleEndianStreamConverter class >> byteOrderMarkBytes [
-	^ #(16rFF 16rFE 16r00 16r00)
+{ #category : #basic }
+XMLUTF32LittleEndianStreamConverter class >> basicEncodingNames [
+	^ #('UTF-32-LE' 'UTF32-LE' 'UTF-32LE' 'UTF32LE')
 ]
 
 { #category : #testing }
@@ -22,7 +22,7 @@ XMLUTF32LittleEndianStreamConverter >> isBigEndian [
 	^ false
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLUTF32LittleEndianStreamConverter >> nextFourBytesFromStream: aStream [
 	^ (aStream basicNext
 			ifNil: [^ nil]) asciiValue +
@@ -34,7 +34,7 @@ XMLUTF32LittleEndianStreamConverter >> nextFourBytesFromStream: aStream [
 			ifNil: [self errorBadCharacterEncoding]) asciiValue bitShift: 24)
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLUTF32LittleEndianStreamConverter >> nextPutFourBytes: anInteger toStream: aStream [
 	aStream
 		basicNextPutByte: (anInteger bitAnd: 16rFF);

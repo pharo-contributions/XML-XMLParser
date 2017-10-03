@@ -17,7 +17,7 @@ XMLDFAElementContentElementValidator >> isElementContent [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLDFAElementContentElementValidator >> typeName [
 	^ 'element content'
 ]

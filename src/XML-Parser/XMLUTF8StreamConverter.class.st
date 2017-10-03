@@ -7,14 +7,14 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
-{ #category : #private }
-XMLUTF8StreamConverter class >> basicEncodingNames [
-	^ #('UTF-8' 'UTF8')
+{ #category : #basic }
+XMLUTF8StreamConverter class >> basicByteOrderMarkBytes [
+	^ #(16rEF 16rBB 16rBF)
 ]
 
-{ #category : #private }
-XMLUTF8StreamConverter class >> byteOrderMarkBytes [
-	^ #(16rEF 16rBB 16rBF)
+{ #category : #basic }
+XMLUTF8StreamConverter class >> basicEncodingNames [
+	^ #('UTF-8' 'UTF8')
 ]
 
 { #category : #private }
@@ -24,7 +24,7 @@ XMLUTF8StreamConverter >> errorOverlongCodePoint: aCodePoint [
 		with: aCodePoint printStringHex
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLUTF8StreamConverter >> nextCodePointFromStream: aStream [
 	self shouldNotImplement
 ]
@@ -63,7 +63,7 @@ XMLUTF8StreamConverter >> nextFromStream: aStream [
 	^ Character value: codePoint.
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLUTF8StreamConverter >> nextMultiByteCodePointStartingWith: aFirstByte fromStream: aStream [
 	| secondByte thirdByte codePoint |
 

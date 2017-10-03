@@ -58,7 +58,7 @@ DTDExternalSubsetParserDriver >> haveSkippedParameterEntityReferences [
 	self saxDriver haveSkippedParameterEntityReferences
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 DTDExternalSubsetParserDriver >> initialContextClass [
 	^ XMLExternalSubsetTextDeclarationContext
 ]

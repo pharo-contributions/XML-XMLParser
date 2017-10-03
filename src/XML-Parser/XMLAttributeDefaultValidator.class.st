@@ -24,7 +24,7 @@ XMLAttributeDefaultValidator class >> attribute: anAttribute value: aDefaultValu
 		value: aDefaultValue
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLAttributeDefaultValidator class >> standaloneExternalClass [
 	^ self
 ]

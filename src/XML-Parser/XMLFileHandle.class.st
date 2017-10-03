@@ -17,7 +17,7 @@ Class {
 	#category : #'XML-Parser-Files'
 }
 
-{ #category : #private }
+{ #category : #basic }
 XMLFileHandle class >> basicCurrentWorkingDirectory [
 	self subclassResponsibility
 ]
@@ -29,8 +29,8 @@ XMLFileHandle class >> currentWorkingDirectory [
 	^ self implementation basicCurrentWorkingDirectory
 ]
 
-{ #category : #private }
-XMLFileHandle class >> errorNoSupportedImplementation [
+{ #category : #finding }
+XMLFileHandle class >> noSupportedImplementationFound [
 	XMLFileException signal: 'File IO unsupported'
 ]
 
@@ -39,7 +39,7 @@ XMLFileHandle class >> path: aPathString [
 	^ self new path: aPathString
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLFileHandle class >> preferredImplementation [
 	^ XMLFileSystemFileHandle
 ]
@@ -85,12 +85,12 @@ XMLFileHandle >> asXMLFileHandle [
 	^ self
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLFileHandle >> basicDelete [
 	self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLFileHandle >> basicFileSize [
 	"This is named #basicFileSize instead of #basicSize to avoid conflicting
 	with the Object>>#basicSize primitive"
@@ -198,12 +198,12 @@ XMLFileHandle >> isXMLDocumentFile [
 	^ self class xmlDocumentFileExtensions includes: self extension asLowercase
 ]
 
-{ #category : #private }
+{ #category : #'instance creation' }
 XMLFileHandle >> newFileReadStreamOnPath [
 	^ XMLFileReadStreamFactory onPath: self path
 ]
 
-{ #category : #private }
+{ #category : #'instance creation' }
 XMLFileHandle >> newFileWriteStreamOnPath [
 	^ XMLFileWriteStreamFactory onPath: self path
 ]

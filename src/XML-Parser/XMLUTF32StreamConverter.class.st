@@ -12,7 +12,7 @@ XMLUTF32StreamConverter >> isBigEndian [
 	self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLUTF32StreamConverter >> nextCodePointFromStream: aStream [
 	| codePoint |
 
@@ -30,7 +30,7 @@ XMLUTF32StreamConverter >> nextCodePointFromStream: aStream [
 	^ codePoint.
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLUTF32StreamConverter >> nextFourBytesFromStream: aStream [
 	self subclassResponsibility
 ]
@@ -51,7 +51,7 @@ XMLUTF32StreamConverter >> nextPut: aCharacter toStream: aStream [
 		toStream: aStream.
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLUTF32StreamConverter >> nextPutFourBytes: anInteger toStream: aStream [
 	self subclassResponsibility
 ]

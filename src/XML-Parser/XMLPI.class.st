@@ -43,7 +43,7 @@ XMLPI >> isPI [
 	^ true
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLPI >> sortKey [
 	^ self target
 ]

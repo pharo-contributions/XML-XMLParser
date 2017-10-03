@@ -34,44 +34,47 @@ XMLBasicElementClassMapper >> classForElement: aQualifiedName ifNone: aBlock [
 	^ self
 		classForElement: aQualifiedName
 		namespaceURI: ''
-		attributes: #()
+		attributes: XMLLazyAttributeDictionary  new
 		ifNone: aBlock
 ]
 
 { #category : #accessing }
 XMLBasicElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI attributes: anAssociationCollection ifNone: aBlock [
-	| localName |
+	| localName attributeDictionary |
 
+	attributeDictionary := anAssociationCollection asXMLAttributeDictionary.
 	aURI size > 0 "optimization"
 		ifTrue: [
 			(self
 				elementClassMapAt: aQualifiedName -> aURI
-				attributes: anAssociationCollection)
+				attributes: attributeDictionary)
 				ifNotNil: [:class | ^ class].
 			(self
 				elementClassMapAt: aQualifiedName
-				attributes: anAssociationCollection)
+				attributes: attributeDictionary)
 				ifNotNil: [:class | ^ class].
-			(localName := aQualifiedName xmlLocalNameAfterPrefix) size < aQualifiedName size
+			(localName := aQualifiedName xmlLocalNameAfterPrefix) size <
+				aQualifiedName size
 				ifTrue: [
 					(self
 						elementClassMapAt: localName -> aURI
-						attributes: anAssociationCollection)
+						attributes: attributeDictionary)
 						ifNotNil: [:class | ^ class].
 					(self
 						elementClassMapAt: localName
-						attributes: anAssociationCollection)
+						attributes: attributeDictionary)
 						ifNotNil: [:class | ^ class]]]
 		ifFalse: [
 			(self
 				elementClassMapAt: aQualifiedName
-				attributes: anAssociationCollection)
+				attributes: attributeDictionary)
 				ifNotNil: [:class | ^ class].
-			(localName := aQualifiedName xmlLocalNameAfterPrefix) size < aQualifiedName size
+			(localName := aQualifiedName xmlLocalNameAfterPrefix) size <
+				aQualifiedName size
 				ifTrue: [
 					(self
 						elementClassMapAt: localName
-						attributes: anAssociationCollection)
+						attributes: attributeDictionary)
 						ifNotNil: [:class | ^ class]]].
 
 	^ aBlock value.
@@ -82,42 +85,45 @@ XMLBasicElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI
 	^ self
 		classForElement: aQualifiedName
 		namespaceURI: aURI
-		attributes: #()
+		attributes: XMLLazyAttributeDictionary new
 		ifNone: aBlock
 ]
 
 { #category : #accessing }
 XMLBasicElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI localName: aLocalName attributes: anAssociationCollection ifNone: aBlock [
+	| attributeDictionary |
+
+	attributeDictionary := anAssociationCollection.
 	aURI size > 0 "optimization"
 		ifTrue: [
 			(self
 				elementClassMapAt: aQualifiedName -> aURI
-				attributes: anAssociationCollection)
+				attributes: attributeDictionary)
 				ifNotNil: [:class | ^ class].
 			(self
 				elementClassMapAt: aQualifiedName
-				attributes: anAssociationCollection)
+				attributes: attributeDictionary)
 				ifNotNil: [:class | ^ class].
 			aLocalName size < aQualifiedName size
 				ifTrue: [
 					(self
 						elementClassMapAt: aLocalName -> aURI
-						attributes: anAssociationCollection)
+						attributes: attributeDictionary)
 						ifNotNil: [:class | ^ class].
 					(self
 						elementClassMapAt: aLocalName
-						attributes: anAssociationCollection)
+						attributes: attributeDictionary)
 						ifNotNil: [:class | ^ class]]]
 		ifFalse: [
 			(self
 				elementClassMapAt: aQualifiedName
-				attributes: anAssociationCollection)
+				attributes: attributeDictionary)
 				ifNotNil: [:class | ^ class].
 			aLocalName size < aQualifiedName size
 				ifTrue: [
 					(self
 						elementClassMapAt: aLocalName
-						attributes: anAssociationCollection)
+						attributes: attributeDictionary)
 						ifNotNil: [:class | ^ class]]].
 
 	^ aBlock value.
@@ -129,7 +135,7 @@ XMLBasicElementClassMapper >> elementClassMap [
 ]
 
 { #category : #private }
-XMLBasicElementClassMapper >> elementClassMapAt: aKey attributes: anAssociationCollection [
+XMLBasicElementClassMapper >> elementClassMapAt: aKey attributes: anAttributeDictionary [
 	| classOrCollection |
 
 	classOrCollection :=
@@ -142,7 +148,7 @@ XMLBasicElementClassMapper >> elementClassMapAt: aKey attributes: anAssociationC
 			"to:do: for speed"
 			1 to: classOrCollection size - 1 do: [:i |
 				((classOrCollection at: i) key
-					matchesAttributeAssociations: anAssociationCollection)
+					matchesAttributes: anAttributeDictionary)
 					ifTrue: [^ (classOrCollection at: i) value]].
 			^ classOrCollection last]
 		ifFalse: [^ classOrCollection].

@@ -24,12 +24,12 @@ XMLDOMConfiguration >> attributeListClass: aClass [
 		(self nodeFactory asPluggableNodeFactory attributeListClass: aClass)
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLDOMConfiguration >> defaultNodeFactoryClass [
 	^ XMLNodeFactory
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLDOMConfiguration >> defaultParserHandlerClass [
 	^ XMLDOMParser
 ]

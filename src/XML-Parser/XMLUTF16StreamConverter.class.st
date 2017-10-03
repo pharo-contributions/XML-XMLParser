@@ -12,7 +12,7 @@ XMLUTF16StreamConverter >> isBigEndian [
 	self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLUTF16StreamConverter >> nextCodePointFromStream: aStream [
 	| codePoint lowSurrogate |
 
@@ -68,12 +68,12 @@ XMLUTF16StreamConverter >> nextPut: aCharacter toStream: aStream [
 				toStream: aStream]
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLUTF16StreamConverter >> nextPutTwoBytes: anInteger toStream: aStream [
 	self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLUTF16StreamConverter >> nextTwoBytesFromStream: aStream [
 	self subclassResponsibility
 ]

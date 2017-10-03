@@ -69,7 +69,7 @@ XMLCachingAttributeList >> attributeValueAt: aName ifAbsent: aBlock [
 		ifAbsent: [^ aBlock value]) value
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLCachingAttributeList >> copyClass [
 	"use the non-caching superclass for copies for performance"
 	^ XMLAttributeList

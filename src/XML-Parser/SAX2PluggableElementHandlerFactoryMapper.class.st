@@ -17,7 +17,7 @@ Class {
 	#category : #'XML-Parser'
 }
 
-{ #category : #private }
+{ #category : #defaults }
 SAX2PluggableElementHandlerFactoryMapper >> defaultElementHandlerFactoryClass [
 	^ SAX2ElementHandlerFactory
 ]
@@ -29,6 +29,7 @@ SAX2PluggableElementHandlerFactoryMapper >> elementHandlerFactory [
 
 { #category : #accessing }
 SAX2PluggableElementHandlerFactoryMapper >> elementHandlerFactory: anElementHandlerFactory [
+	"set the default element handler factory"
 	elementHandlerFactory := anElementHandlerFactory
 ]
 

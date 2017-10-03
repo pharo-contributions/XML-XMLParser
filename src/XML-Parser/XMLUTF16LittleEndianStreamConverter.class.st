@@ -7,14 +7,14 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
-{ #category : #private }
-XMLUTF16LittleEndianStreamConverter class >> basicEncodingNames [
-	^ #('UTF-16LE' 'UTF-16-LE' 'UTF16-LE' 'UTF16LE')
+{ #category : #basic }
+XMLUTF16LittleEndianStreamConverter class >> basicByteOrderMarkBytes [
+	^ #(16rFF 16rFE)
 ]
 
-{ #category : #private }
-XMLUTF16LittleEndianStreamConverter class >> byteOrderMarkBytes [
-	^ #(16rFF 16rFE)
+{ #category : #basic }
+XMLUTF16LittleEndianStreamConverter class >> basicEncodingNames [
+	^ #('UTF-16-LE' 'UTF16-LE' 'UTF-16LE' 'UTF16LE')
 ]
 
 { #category : #testing }
@@ -22,14 +22,14 @@ XMLUTF16LittleEndianStreamConverter >> isBigEndian [
 	^ false
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLUTF16LittleEndianStreamConverter >> nextPutTwoBytes: anInteger toStream: aStream [
 	aStream
 		basicNextPutByte: (anInteger bitAnd: 16rFF);
 		basicNextPutByte: ((anInteger bitShift: -8) bitAnd: 16rFF)
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLUTF16LittleEndianStreamConverter >> nextTwoBytesFromStream: aStream [
 	^ ((aStream basicNext
 			ifNil: [^ nil]) asciiValue) +

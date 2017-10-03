@@ -24,17 +24,17 @@ SAX2PluggableElementHandlerFactory >> classForElement: aQualifiedName namespaceU
 		ifNone: [self elementHandlerClass]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 SAX2PluggableElementHandlerFactory >> elementClassMapper [
 	^ elementClassMapper
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 SAX2PluggableElementHandlerFactory >> elementClassMapper: anElementClassMapper [
 	elementClassMapper := anElementClassMapper
 ]
 
-{ #category : #'private ' }
+{ #category : #defaults }
 SAX2PluggableElementHandlerFactory >> elementClassMapperClass [
 	^ XMLBasicElementClassMapper
 ]
@@ -46,6 +46,7 @@ SAX2PluggableElementHandlerFactory >> elementHandlerClass [
 
 { #category : #accessing }
 SAX2PluggableElementHandlerFactory >> elementHandlerClass: aClass [
+	"set the default element handler class"
 	elementHandlerClass := aClass
 ]
 
@@ -132,7 +133,7 @@ SAX2PluggableElementHandlerFactory >> handleElementsMatchingClasses: aClassColle
 		ignoringSuffixes: self ignorableClassNameSuffixes
 ]
 
-{ #category : #'private ' }
+{ #category : #defaults }
 SAX2PluggableElementHandlerFactory >> ignorableClassNameSuffixes [
 	^ #('Element' 'ElementHandler')
 ]

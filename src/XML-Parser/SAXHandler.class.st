@@ -46,6 +46,7 @@ Class {
 		'input',
 		'documentURI',
 		'configuration',
+		'hasParser',
 		'isInContent',
 		'isInCDataSection'
 	],
@@ -249,13 +250,9 @@ SAXHandler >> configuration: aConfiguration [
 	(configuration := aConfiguration) parserHandlerClass: self class
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 SAXHandler >> configurationClass [
 	^ XMLConfiguration
-]
-
-{ #category : #private }
-SAXHandler >> currentScope: aNamespaceScope [
 ]
 
 { #category : #configuring }
@@ -275,7 +272,7 @@ SAXHandler >> decodesCharacters: aBoolean [
 	self configuration decodesCharacters: aBoolean
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 SAXHandler >> defaultDocumentURI [
 	^ ''
 ]
@@ -308,7 +305,7 @@ SAXHandler >> documentURI: aURIString [
 	documentURI := aURIString
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 SAXHandler >> driverClass [
 	^ SAXParserDriver
 ]
@@ -384,6 +381,13 @@ SAXHandler >> endPrefixMapping: aPrefix [
 	and never unmapped."
 ]
 
+{ #category : #private }
+SAXHandler >> errorInstancesCannotHaveMultipleParsers [
+	XMLParserException
+		formatSignal: 'Instances of {1} cannot have multiple parsers'
+		with: self class name
+]
+
 { #category : #configuring }
 SAXHandler >> externalEntityResolver [
 	^ self configuration externalEntityResolver
@@ -402,6 +406,11 @@ SAXHandler >> generalEntityDeclaration: aName publicID: aPublicID systemID: aSys
 
 { #category : #'handling - declaration' }
 SAXHandler >> generalEntityDeclaration: aName replacement: aReplacement [
+]
+
+{ #category : #testing }
+SAXHandler >> hasParser [
+	^ hasParser
 ]
 
 { #category : #'handling - content' }
@@ -429,8 +438,13 @@ SAXHandler >> ignorableWhitespace: aString [
 	declarations."
 ]
 
-{ #category : #private }
+{ #category : #initialization }
+SAXHandler >> initializeParser: aParser [
+]
+
+{ #category : #accessing }
 SAXHandler >> input [
+	"the input being parsed or to be parsed"
 	^ input
 ]
 
@@ -511,14 +525,15 @@ SAXHandler >> notationDeclaration: aName publicID: aPublicID systemID: aSystemID
 SAXHandler >> on: aStringOrStream [
 	input := aStringOrStream.
 
-	"a single instance can parse multiple documents with on:,
-	so all these values must be reset"
+	"a single instance can parse multiple documents with #on:,
+	so each variable must be reset"
 	documentURI := nil.
-	isInContent := false.
-	isInCDataSection := false.
 	configuration
 		ifNil: [self configuration: self configurationClass new]
 		ifNotNil: [self configuration: configuration copy].
+	hasParser := false.
+	isInContent := false.
+	isInCDataSection := false.
 ]
 
 { #category : #configuring }
@@ -570,12 +585,22 @@ SAXHandler >> parseDocumentWhile: aBlock [
 SAXHandler >> parser [
 	"returns a new XMLParser object for this handler"
 
-	^ self parserClass
-		driver: (self driverClass saxHandler: self)
-		on: self input
+	| parser |
+
+	hasParser
+		ifTrue: [self errorInstancesCannotHaveMultipleParsers].
+	hasParser := true.
+
+	parser :=
+		self parserClass
+			driver: (self driverClass saxHandler: self)
+			on: self input.
+	self initializeParser: parser.
+
+	^ parser.
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 SAXHandler >> parserClass [
 	^ XMLParser
 ]
@@ -698,17 +723,17 @@ SAXHandler >> startDocument [
 ]
 
 { #category : #'handling - content' }
-SAXHandler >> startElement: aQualifiedName attributes: aDictionary [
+SAXHandler >> startElement: aQualifiedName attributes: anAttributeDictionary [
 	"Handles the start of an element if a subclass doesn't implement
 	startElement:prefix:uri:localName:attributes: or
 	startElement:prefix:uri:attributes:.
 
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
-	aDictionary - an OrderPreservingStringDictionary of attributes"
+	anAttributeDictionary - an XMLAttributeDictionary of attributes"
 ]
 
 { #category : #'handling - content' }
-SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes: aDictionary [
+SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes: anAttributeDictionary [
 	"Handles the start of an element if a subclass doesn't implement
 	startElement:prefix:uri:localName:attributes:. By default it forwards
 	to a simpler handler, startElement:attributes:.
@@ -716,15 +741,15 @@ SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes:
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	aPrefix - the prefix of the qualified name or an empty string
 	aURI - the namespace URI of the element or an empty string
-	aDictionary - an OrderPreservingStringDictionary of attributes"
+	anAttributeDictionary - an XMLAttributeDictionary of attributes"
 
 	self
 		startElement: aQualifiedName
-		attributes: aDictionary
+		attributes: anAttributeDictionary
 ]
 
 { #category : #'handling - content' }
-SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: aDictionary [
+SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: anAttributeDictionary [
 	"Handles the start of an element, either a start tag like '<start>' or a
 	self-closed tag like '<empty/>'. By default it forwards to a simpler handler,
 	startElement:prefix:uri:attributes:.
@@ -733,13 +758,13 @@ SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: 
 	aPrefix - the prefix of the qualified name or an empty string
 	aURI - the namespace URI of the element or an empty string
 	aLocalName - the local part of the qualified name
-	aDictionary - an OrderPreservingStringDictionary of attributes"
+	anAttributeDictionary - an XMLAttributeDictionary of attributes"
 
 	self
 		startElement: aQualifiedName
 		prefix: aPrefix
 		uri: aURI
-		attributes: aDictionary
+		attributes: anAttributeDictionary
 ]
 
 { #category : #'handling - lexical' }
@@ -756,6 +781,10 @@ SAXHandler >> startPrefixMapping: aPrefix uri: aURI [
 
 	aPrefix - the prefix of the namespace (empty for the default namesapce)
 	aURI - the namespace URI"
+]
+
+{ #category : #private }
+SAXHandler >> startScope: aNamespaceScope [
 ]
 
 { #category : #configuring }

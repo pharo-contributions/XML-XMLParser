@@ -51,7 +51,7 @@ XMLMixedContentElementValidator >> setElement: anElement allowedContent: anAllow
 	allowedContent := anAllowedContentCollection.
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLMixedContentElementValidator >> typeName [
 	^ 'mixed content'
 ]

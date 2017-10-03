@@ -7,12 +7,12 @@ Class {
 	#category : #'XML-Parser-Utils'
 }
 
-{ #category : #private }
-XMLReentrantMutex class >> errorNoSupportedImplementation [
+{ #category : #finding }
+XMLReentrantMutex class >> noSupportedImplementationFound [
 	Error signal: 'No supported reentrant mutex class available'
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLReentrantMutex class >> preferredImplementation [
 	"Prefer the Pharo/Squeak Mutex-based implementation"
 	^ XMLStandardReentrantMutex

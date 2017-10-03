@@ -379,13 +379,13 @@ XMLNode >> newElementNamed: aName namespaceURI: aURI attributes: anAssociationCo
 			setAttributes: anAssociationCollection
 ]
 
-{ #category : #private }
+{ #category : #'instance creation' }
 XMLNode >> newListForCollect [
 	"collect can return non-nodes, so a basic ordered list is used"
 	^ XMLOrderedList new: 10
 ]
 
-{ #category : #private }
+{ #category : #'instance creation' }
 XMLNode >> newListForSelect [
 	"select returns only nodes, so a node list is used"
 	^ XMLNodeList new: 10
@@ -435,7 +435,7 @@ XMLNode >> parent: aNode [
 	parent := aNode
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLNode >> parserHandlerClass [
 	^ self configuration
 		ifNil: [XMLDOMParser]
@@ -603,7 +603,7 @@ XMLNode >> rawContentString [
 	^ String streamContents: [:stream | self printRawContentOn: stream]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLNode >> sortKey [
 	"used to compare nodes when sorting"
 
@@ -659,7 +659,7 @@ XMLNode >> writeXMLOn: aWriter [
 	to customize printing, but #printOn:beforeWritingDo: should be preferred."
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLNode >> xmlWriterClassOrNil [
 	"can be overridden to return a custom XMLWriter subclass"
 

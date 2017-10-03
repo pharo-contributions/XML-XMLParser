@@ -140,17 +140,17 @@ SAX2ContentHandler >> startDocument [
 ]
 
 { #category : #'handling - content' }
-SAX2ContentHandler >> startElement: aQualifiedName attributes: aDictionary [
+SAX2ContentHandler >> startElement: aQualifiedName attributes: anAttributeDictionary [
 	"Handles the start of an element if a subclass doesn't implement
 	startElement:prefix:uri:localName:attributes: or
 	startElement:prefix:uri:attributes:.
 
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
-	aDictionary - an OrderPreservingStringDictionary of attributes"
+	anAttributeDictionary - an XMLAttributeDictionary of attributes"
 ]
 
 { #category : #'handling - content' }
-SAX2ContentHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes: aDictionary [
+SAX2ContentHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes: anAttributeDictionary [
 	"Handles the start of an element if a subclass doesn't implement
 	startElement:prefix:uri:localName:attributes:. By default it forwards
 	to a simpler handler, startElement:attributes:.
@@ -158,15 +158,15 @@ SAX2ContentHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI att
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	aPrefix - the prefix of the qualified name or an empty string
 	aURI - the namespace URI of the element or an empty string
-	aDictionary - an OrderPreservingStringDictionary of attributes"
+	anAttributeDictionary - an XMLAttributeDictionary of attributes"
 
 	self
 		startElement: aQualifiedName
-		attributes: aDictionary
+		attributes: anAttributeDictionary
 ]
 
 { #category : #'handling - content' }
-SAX2ContentHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: aDictionary [
+SAX2ContentHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: anAttributeDictionary [
 	"Handles the start of an element, either a start tag like '<start>' or a
 	self-closed tag like '<empty/>'. By default it forwards to a simpler handler,
 	startElement:prefix:uri:attributes:.
@@ -175,13 +175,13 @@ SAX2ContentHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI loc
 	aPrefix - the prefix of the qualified name or an empty string
 	aURI - the namespace URI of the element or an empty string
 	aLocalName - the local part of the qualified name
-	aDictionary - an OrderPreservingStringDictionary of attributes"
+	anAttributeDictionary - an XMLAttributeDictionary of attributes"
 
 	self
 		startElement: aQualifiedName
 		prefix: aPrefix
 		uri: aURI
-		attributes: aDictionary
+		attributes: anAttributeDictionary
 ]
 
 { #category : #'handling - content' }

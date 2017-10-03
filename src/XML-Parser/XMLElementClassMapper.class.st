@@ -80,7 +80,7 @@ XMLElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI loca
 ]
 
 { #category : #accessing }
-XMLElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI localName: aLocalName attributes: aDictionary ifNone: aBlock [
+XMLElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI localName: aLocalName attributes: anAssociationCollection ifNone: aBlock [
 	self subclassResponsibility
 ]
 

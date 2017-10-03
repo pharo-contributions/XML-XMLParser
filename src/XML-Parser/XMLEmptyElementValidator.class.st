@@ -17,7 +17,7 @@ XMLEmptyElementValidator >> isEmpty [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLEmptyElementValidator >> typeName [
 	^ 'EMPTY'
 ]

@@ -10,7 +10,7 @@ Class {
 	#category : #'XML-Parser-Validation'
 }
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLEntityAttributeValidator class >> standaloneExternalClass [
 	^ XMLStandaloneExternalEntityAttributeValidator
 ]

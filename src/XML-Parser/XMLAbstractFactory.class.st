@@ -12,21 +12,16 @@ Class {
 	#category : #'XML-Parser-Utils'
 }
 
-{ #category : #private }
+{ #category : #clearing }
 XMLAbstractFactory class >> clearAllImplementations [
-	"self clearImplementations"
+	"self clearAllImplementations"
 
 	self
 		implementation: nil;
 		allSubclassesDo: [:each | each implementation: nil]
 ]
 
-{ #category : #private }
-XMLAbstractFactory class >> errorNoSupportedImplementation [
-	self subclassResponsibility
-]
-
-{ #category : #private }
+{ #category : #finding }
 XMLAbstractFactory class >> findSupportedImplementation [
 	self isSupportedImplementation
 		ifTrue: [^ self].
@@ -52,7 +47,7 @@ XMLAbstractFactory class >> implementation [
 			"avoid assigning to the class inst var unless an implementation
 			was found to minimize write conflicts on GS"
 			self findSupportedImplementation
-				ifNil: [self errorNoSupportedImplementation]
+				ifNil: [self noSupportedImplementationFound]
 				ifNotNil: [:supportedImplementation |
 					implementation := supportedImplementation].
 			implementation]
@@ -67,7 +62,7 @@ XMLAbstractFactory class >> implementation: aClassOrNil [
 XMLAbstractFactory class >> initialize [
 	"self initialize"
 
-	self clearAllImplementations.
+	self clearAllImplementations
 ]
 
 { #category : #testing }
@@ -80,7 +75,12 @@ XMLAbstractFactory class >> new [
 	^ self implementation basicNew initialize
 ]
 
-{ #category : #accessing }
+{ #category : #finding }
+XMLAbstractFactory class >> noSupportedImplementationFound [
+	self subclassResponsibility
+]
+
+{ #category : #defaults }
 XMLAbstractFactory class >> preferredImplementation [
 	self subclassResponsibility
 ]

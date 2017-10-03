@@ -11,10 +11,13 @@ Class {
 		'validator',
 		'externalSubsetSystemID',
 		'externalSubsetPublicID',
+		'isValidating',
+		'usesNamespaces',
 		'isStandalone',
 		'hasParameterEntityReferences',
 		'hasSkippedParameterEntityReferences',
-		'hasUnhandledReservedAttributes'
+		'hasUnhandledReservedAttributes',
+		'externalEntityResolver'
 	],
 	#category : #'XML-Parser-Drivers'
 }
@@ -86,7 +89,7 @@ SAXParserDriver >> decodesCharacters [
 	^ self saxHandler decodesCharacters
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 SAXParserDriver >> doctypeDefinitionClass [
 	^ DTDDoctypeDefinition
 ]
@@ -113,7 +116,11 @@ SAXParserDriver >> errorDocumentConstraintsRequired [
 
 { #category : #accessing }
 SAXParserDriver >> externalEntityResolver [
-	^ self saxHandler externalEntityResolver
+	^ externalEntityResolver
+		ifNil: [
+			externalEntityResolver :=
+				DTDLimitedExternalEntityResolverAdapter externalEntityResolver:
+					self saxHandler externalEntityResolver]
 ]
 
 { #category : #private }
@@ -270,9 +277,10 @@ SAXParserDriver >> handleEndTag: anElement [
 				ifFalse: [''])
 		localName: (anElement xmlLocalNameAfterPrefix: prefix).
 
-	currentScope ifNotNil: [
-		currentScope hasNamespaces
-			ifTrue: [self undeclareNamespacesInScope: currentScope]].
+	self usesNamespaces
+		ifTrue: [
+			currentScope hasNamespaces
+				ifTrue: [self undeclareNamespacesInScope: currentScope]].
 	self isValidating
 		ifTrue: [self validator validateEndTag: anElement].
 ]
@@ -409,65 +417,65 @@ SAXParserDriver >> handleStartDocument [
 ]
 
 { #category : #handling }
-SAXParserDriver >> handleStartTag: anElement attributes: aDictionary [
+SAXParserDriver >> handleStartTag: anElement attributes: anAttributeDictionary [
 	"performance critical method"
 	| prefix totalAttributes namespaceURI currentScope |
 
 	prefix := anElement xmlPrefixBeforeLocalName.
-	totalAttributes := aDictionary size.
+	totalAttributes := anAttributeDictionary size.
 	self isValidating
 		ifTrue: [
 			self elementNester totalOpenElements > 1
 				ifFalse: [self validateRootElement: anElement].
 			self validator
 				validateStartTag: anElement
-				attributes: aDictionary]
+				attributes: anAttributeDictionary]
 		ifFalse: [
 			self doctypeDefinition
 				processStartTag: anElement
-				attributes: aDictionary].
+				attributes: anAttributeDictionary].
 	"validation and processing can add attributes"
-	aDictionary size > totalAttributes
+	anAttributeDictionary size > totalAttributes
 		ifTrue: [
 			self
-				checkForReservedAttributesIn: aDictionary
+				checkForReservedAttributesIn: anAttributeDictionary
 				afterIndex: totalAttributes.
-			totalAttributes := aDictionary size].
+			totalAttributes := anAttributeDictionary size].
 	self usesNamespaces
 		ifTrue: [
-			currentScope := self scopeAllocator enterScope.
+			anAttributeDictionary setNamespaceScope:
+				(currentScope := self scopeAllocator enterScope).
 			self hasUnhandledReservedAttributes
 				ifTrue: [
-					(self extractNamespacesFromAttributes: aDictionary)
+					(self extractNamespacesFromAttributes: anAttributeDictionary)
 						ifNotNil: [:namespaces |
 							self
 								declareNamespaces: namespaces
 								inScope: currentScope.
-							totalAttributes := aDictionary size]].
+							totalAttributes := anAttributeDictionary size]].
+			self saxHandler startScope: currentScope.
 			namespaceURI :=
 				currentScope
 					validateAndResolvePrefix: prefix
 					ofElement: anElement.
 			totalAttributes > 0
 				ifTrue: [
-					"aDictionary is an OrderPreservingStringDictionary, so use
-					its internal #orderedKeys over #keys for speed"
+					"anAttributeDictionary is an XMLAttributeDictionary, which
+					is an OrderPreservingStringDictionary, so use its internal
+					#orderedKeys over #keys for speed"
 					currentScope
-						validatePrefixesOfAttributes: aDictionary orderedKeys
+						validatePrefixesOfAttributes: anAttributeDictionary orderedKeys
 						from: 1
 						to: totalAttributes]].
 	self hasUnhandledReservedAttributes
-		ifTrue: [self handleReservedAttributes: aDictionary].
+		ifTrue: [self handleReservedAttributes: anAttributeDictionary].
 
 	self saxHandler
 		startElement: anElement
 		prefix: prefix
 		uri: (namespaceURI ifNil: [''])
 		localName: (anElement xmlLocalNameAfterPrefix: prefix)
-		attributes: aDictionary.
-
-	currentScope
-		ifNotNil: [self saxHandler currentScope: currentScope].
+		attributes: anAttributeDictionary.
 ]
 
 { #category : #handling }
@@ -571,7 +579,7 @@ SAXParserDriver >> isStandalone: aBoolean [
 
 { #category : #testing }
 SAXParserDriver >> isValidating [
-	^ self saxHandler isValidating
+	^ isValidating
 ]
 
 { #category : #accessing }
@@ -580,8 +588,17 @@ SAXParserDriver >> maxEntityReplacementDepth [
 ]
 
 { #category : #'instance creation' }
-SAXParserDriver >> newElementNester [
-	^ elementNester
+SAXParserDriver >> newAttributeDictionary [
+	^ (self usesNamespaces
+		ifTrue: [XMLNamespacedAttributeDictionary]
+		ifFalse: [XMLAttributeDictionary]) new
+]
+
+{ #category : #'instance creation' }
+SAXParserDriver >> newEmptyAttributeDictionary [
+	^ (self usesNamespaces
+		ifTrue: [XMLLazyNamespacedAttributeDictionary]
+		ifFalse: [XMLLazyAttributeDictionary]) new
 ]
 
 { #category : #private }
@@ -651,9 +668,12 @@ SAXParserDriver >> setSAXHandler: aSAXHandler [
 	saxHandler := aSAXHandler.
 	doctypeDefinition := self doctypeDefinitionClass new.
 	validator := (aSAXHandler schema ifNil: [doctypeDefinition]) newValidator.
-	elementNester := self elementNesterClass new.
+	elementNester := self newElementNester.
 	externalSubsetPublicID := ''.
 	externalSubsetSystemID := ''.
+	"these are copied to inst vars for faster access"
+	isValidating := aSAXHandler isValidating.
+	usesNamespaces := aSAXHandler usesNamespaces.
 	isStandalone := false.
 	hasParameterEntityReferences := false.
 	hasSkippedParameterEntityReferences := false.
@@ -672,7 +692,7 @@ SAXParserDriver >> undeclareNamespacesInScope: anExitedScope [
 
 { #category : #testing }
 SAXParserDriver >> usesNamespaces [
-	^ self saxHandler usesNamespaces
+	^ usesNamespaces
 ]
 
 { #category : #private }

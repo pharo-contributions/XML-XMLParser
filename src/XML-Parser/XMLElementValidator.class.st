@@ -102,7 +102,7 @@ XMLElementValidator >> printOn: aStream [
 		nextPutAll: '>)'.
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLElementValidator >> typeName [
 	self subclassResponsibility
 ]

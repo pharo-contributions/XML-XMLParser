@@ -167,7 +167,7 @@ XMLCachingNodeList >> cachedElementsByNameAt: aName remove: anElement [
 		ifFalse: [self cachedElementsByName removeKey: aName]
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLCachingNodeList >> copyClass [
 	"use the non-caching superclass for copies for performance"
 	^ XMLNodeList

@@ -29,6 +29,12 @@ XMLEntityDeclaration class >> name: aName replacement: aReplacement [
 ]
 
 { #category : #testing }
+XMLEntityDeclaration >> isExternal [
+	^ self systemID notEmpty
+		or: [self publicID notEmpty]
+]
+
+{ #category : #testing }
 XMLEntityDeclaration >> isParameter [
 	^ false
 ]

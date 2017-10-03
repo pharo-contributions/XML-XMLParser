@@ -195,7 +195,7 @@ XMLAttribute >> setName: aName value: aValue element: anElement [
 	parent := anElement.
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLAttribute >> sortKey [
 	^ self name
 ]

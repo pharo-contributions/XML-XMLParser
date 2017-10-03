@@ -10,7 +10,7 @@ Class {
 	#category : #'XML-Parser-Files'
 }
 
-{ #category : #private }
+{ #category : #basic }
 XMLFileSystemFileHandle class >> basicCurrentWorkingDirectory [
 	^ String streamContents: [:stream |
 		"the class-side workingDirectory isn't used for backwards compatibility"
@@ -31,12 +31,12 @@ XMLFileSystemFileHandle class >> isSupportedImplementation [
 	^ XMLClassFinder hasClassNamed: #FileSystem
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLFileSystemFileHandle >> basicDelete [
 	self fileReference delete
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLFileSystemFileHandle >> basicFileSize [
 	^ self fileReference size
 ]
@@ -62,7 +62,7 @@ XMLFileSystemFileHandle >> isFile [
 	^ self fileReference isFile
 ]
 
-{ #category : #private }
+{ #category : #'instance creation' }
 XMLFileSystemFileHandle >> newFileReadStreamOnPath [
 	"memory file references need special handling"
 	self usesMemoryStore
@@ -70,7 +70,7 @@ XMLFileSystemFileHandle >> newFileReadStreamOnPath [
 	^ super newFileReadStreamOnPath.
 ]
 
-{ #category : #private }
+{ #category : #'instance creation' }
 XMLFileSystemFileHandle >> newFileWriteStreamOnPath [
 	"memory file references need special handling"
 	self usesMemoryStore
@@ -78,7 +78,7 @@ XMLFileSystemFileHandle >> newFileWriteStreamOnPath [
 	^ super newFileWriteStreamOnPath.
 ]
 
-{ #category : #private }
+{ #category : #testing }
 XMLFileSystemFileHandle >> usesMemoryStore [
 	"Pharo 3.0 has memory stores but lacks #isMemoryFileSystem, so
 	this test is used instead for backwards compatibility"

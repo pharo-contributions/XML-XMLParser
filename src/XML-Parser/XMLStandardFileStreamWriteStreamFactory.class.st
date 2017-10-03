@@ -7,7 +7,7 @@ Class {
 	#category : #'XML-Parser-Files'
 }
 
-{ #category : #'instance creation' }
+{ #category : #basic }
 XMLStandardFileStreamWriteStreamFactory class >> basicOnPath: aPathString [
 	"use forceNewFileNamed: to ensure truncation of existing files before writing"
 	^ (XMLClassFinder classNamed: #StandardFileStream)

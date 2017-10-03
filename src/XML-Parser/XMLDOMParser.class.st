@@ -15,7 +15,8 @@ Class {
 	#superclass : #SAXHandler,
 	#instVars : [
 		'document',
-		'nodeStack'
+		'nodeStack',
+		'currentScope'
 	],
 	#category : #'XML-Parser'
 }
@@ -45,14 +46,9 @@ XMLDOMParser >> comment: aString [
 		ifTrue: [self topNode addNode: (self nodeFactory newComment: aString)]
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLDOMParser >> configurationClass [
 	^ XMLDOMConfiguration
-]
-
-{ #category : #private }
-XMLDOMParser >> currentScope: aNamespaceScope [
-	self topNode setNamespaceScope: aNamespaceScope
 ]
 
 { #category : #private }
@@ -84,6 +80,13 @@ XMLDOMParser >> endDTD [
 ]
 
 { #category : #'handling - content' }
+XMLDOMParser >> endDocument [
+	"nodeStack is not popped here for efficiency because #document keeps
+	a reference to the root too, and there may not be a root to pop
+	anyway if it's an inner XML parser"
+]
+
+{ #category : #'handling - content' }
 XMLDOMParser >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName [
 	self popNode
 ]
@@ -110,6 +113,44 @@ XMLDOMParser >> generalEntityDeclaration: aName replacement: aReplacement [
 XMLDOMParser >> ignorableWhitespace: aString [
 	self preservesIgnorableWhitespace
 		ifTrue: [self characters: aString]
+]
+
+{ #category : #initialization }
+XMLDOMParser >> initializeInnerXMLParser: aParser [
+	self document
+		ifNotNil: [
+			aParser driver isStandalone: self document isStandalone.
+			self document hasDoctypeDefinition
+				ifTrue: [
+					aParser driver doctypeDefinition addGeneralEntitiesFrom:
+						self document doctypeDefinition]].
+
+	self nodeStack do: [:each |
+		each isElement
+			ifTrue: [
+				self
+					startInnerXMLElement: each
+					forParser: aParser]].
+
+	aParser context: self topNode newInnerXMLContext.
+	aParser context isContentContext
+		ifTrue: [self startContent].
+]
+
+{ #category : #initialization }
+XMLDOMParser >> initializeParser: aParser [
+	super initializeParser: aParser.
+
+	self nodeStack size > 0
+		ifTrue: [self initializeInnerXMLParser: aParser].
+]
+
+{ #category : #private }
+XMLDOMParser >> innerXMLRootNode: aRootNode [
+	self
+		configuration: aRootNode configuration;
+		document: aRootNode document;
+		pushNode: aRootNode
 ]
 
 { #category : #configuring }
@@ -152,7 +193,9 @@ XMLDOMParser >> notationDeclaration: aName publicID: aPublicID systemID: aSystem
 XMLDOMParser >> on: aStringOrStream [
 	super on: aStringOrStream.
 
+	document := nil.
 	nodeStack := OrderedCollection new: 10.
+	currentScope := nil.
 ]
 
 { #category : #configuring }
@@ -178,18 +221,6 @@ XMLDOMParser >> parameterEntityDeclaration: aName replacement: aReplacement [
 		(self nodeFactory parameterEntityDeclarationClass
 			name: aName
 			replacement: aReplacement)
-]
-
-{ #category : #parsing }
-XMLDOMParser >> parser [
-	| parser |
-
-	parser := super parser.
-	self document
-		ifNotNil: [self setupInnerXMLDocumentForParser: parser].
-	self nodeStack size > 0
-		ifTrue: [self setupInnerXMLNodesForParser: parser].
-	^ parser.
 ]
 
 { #category : #parsing }
@@ -255,42 +286,9 @@ XMLDOMParser >> pushElement: anElement [
 ]
 
 { #category : #private }
-XMLDOMParser >> pushInnerXMLRootNode: aRootNode [
-	self
-		configuration: aRootNode configuration;
-		document: aRootNode document;
-		pushNode: aRootNode
-]
-
-{ #category : #private }
 XMLDOMParser >> pushNode: aNode [
 	^ self nodeStack addLast: aNode
 
-]
-
-{ #category : #private }
-XMLDOMParser >> setupInnerXMLDocumentForParser: aParser [
-	aParser driver isStandalone: self document isStandalone.
-	self document hasDoctypeDefinition
-		ifTrue: [
-			aParser driver doctypeDefinition addGeneralEntitiesFrom:
-				self document doctypeDefinition].
-]
-
-{ #category : #private }
-XMLDOMParser >> setupInnerXMLNodesForParser: aParser [
-	| context |
-
-	self nodeStack do: [:each |
-		each isElement
-			ifTrue: [
-				self
-					startInnerXMLElement: each
-					forParser: aParser]].
-
-	(context := self topNode newInnerXMLContext) isContentContext
-		ifTrue: [self startContent].
-	aParser context: context.
 ]
 
 { #category : #'handling - lexical' }
@@ -308,27 +306,29 @@ XMLDOMParser >> startDTD: aRootElementName publicID: aPublicID systemID: aSystem
 
 { #category : #'handling - content' }
 XMLDOMParser >> startDocument [
-	self topNode ifNotNil: [^ self].
+	"inner XML parsers should ignore this event"
+	self nodeStack size > 0
+		ifFalse: [
+			self
+				document: self nodeFactory newDocument;
+				pushNode: self document.
 
-	self
-		document: self nodeFactory newDocument;
-		pushNode: self document.
-
-	self document configuration: self configuration.
+			self document configuration: self configuration]
 ]
 
 { #category : #'handling - content' }
-XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: aDictionary [
+XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: anAttributeDictionary [
 	self pushElement:
 		((self nodeFactory
 			classForElement: aQualifiedName
 			namespaceURI: aURI
 			localName: aLocalName
-			attributes: aDictionary) new
+			attributes: anAttributeDictionary) new
 				setConfiguration: self configuration
 				name: aQualifiedName
 				localName: aLocalName
-				attributes: aDictionary)
+				attributes: anAttributeDictionary
+				namespaceScope: currentScope)
 ]
 
 { #category : #private }
@@ -336,6 +336,11 @@ XMLDOMParser >> startInnerXMLElement: anElement forParser: aParser [
 	aParser driver currentElement: anElement name.
 	anElement hasNamespaces
 		ifTrue: [aParser driver currentScope: anElement namespaceScope].
+]
+
+{ #category : #private }
+XMLDOMParser >> startScope: aNamespaceScope [
+	currentScope := aNamespaceScope
 ]
 
 { #category : #accessing }

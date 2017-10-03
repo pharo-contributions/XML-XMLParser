@@ -42,7 +42,12 @@ XMLParserDriver >> documentURI [
 	^ nil
 ]
 
-{ #category : #private }
+{ #category : #accessing }
+XMLParserDriver >> elementNester [
+	^ self newElementNester
+]
+
+{ #category : #defaults }
 XMLParserDriver >> elementNesterClass [
 	^ XMLElementNester
 ]
@@ -139,7 +144,7 @@ XMLParserDriver >> handleStartDocument [
 ]
 
 { #category : #handling }
-XMLParserDriver >> handleStartTag: anElementName attributes: aDictionary [
+XMLParserDriver >> handleStartTag: anElement attributes: anAttributeDictionary [
 ]
 
 { #category : #handling }
@@ -154,7 +159,7 @@ XMLParserDriver >> handleWhitespace: aString [
 XMLParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: aYesOrNo [
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLParserDriver >> initialContextClass [
 	^ XMLXMLDeclarationContext
 ]
@@ -182,7 +187,7 @@ XMLParserDriver >> readLimit [
 	^ nil
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLParserDriver >> tokenizerClass [
 	^ XMLWellFormedParserTokenizer
 ]

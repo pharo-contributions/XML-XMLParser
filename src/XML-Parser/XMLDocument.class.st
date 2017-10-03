@@ -131,18 +131,25 @@ XMLDocument >> postCopy [
 
 { #category : #accessing }
 XMLDocument >> root [
-	"returns root element or nil"
+	"Returns the current root element or nil if there isn't one"
+
 	^ self firstElement
 ]
 
 { #category : #accessing }
 XMLDocument >> root: anElement [
-	"replaces root element with new element"
+	"Replaces the current root element (if any) with anElement,
+	leaving all other nodes in place"
+
 	anElement isElement
 		ifFalse: [self errorCannotHaveNonElementRoot].
-	self hasChildren
-		ifTrue: [self removeNodes: self elements].
-	self addNode: anElement.
+
+	self firstElement
+		ifNil: [self addNode: anElement]
+		ifNotNil: [:firstElement |
+			self
+				replaceNode: firstElement
+				with: anElement].
 ]
 
 { #category : #validating }

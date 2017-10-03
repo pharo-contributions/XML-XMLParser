@@ -48,11 +48,11 @@ XMLSingleCharacterReadStream >> isStream [
 
 { #category : #accessing }
 XMLSingleCharacterReadStream >> next [
-	^ atEnd
-		ifTrue: [nil]
+	atEnd
+		ifTrue: [^ nil]
 		ifFalse: [
 			atEnd := true.
-			character]
+			^ character]
 ]
 
 { #category : #initialization }
@@ -63,9 +63,9 @@ XMLSingleCharacterReadStream >> on: aCharacter [
 
 { #category : #accessing }
 XMLSingleCharacterReadStream >> peek [
-	^ atEnd
-		ifTrue: [nil]
-		ifFalse: [character]
+	atEnd
+		ifTrue: [^ nil]
+		ifFalse: [^ character]
 ]
 
 { #category : #positioning }

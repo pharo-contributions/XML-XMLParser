@@ -203,7 +203,7 @@ XMLString >> size [
 	^ self string size
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLString >> sortKey [
 	^ self string
 ]

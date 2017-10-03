@@ -10,7 +10,7 @@ Class {
 	#category : #'XML-Parser-Files'
 }
 
-{ #category : #private }
+{ #category : #basic }
 XMLFileDirectoryFileHandle class >> basicCurrentWorkingDirectory [
 	^ (XMLClassFinder classNamed: #FileDirectory) default pathName
 ]
@@ -20,14 +20,14 @@ XMLFileDirectoryFileHandle class >> isSupportedImplementation [
 	^ XMLClassFinder hasClassNamed: #FileDirectory
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLFileDirectoryFileHandle >> basicDelete [
 	"FileDirectory's deleteFileNamed: is used because DirectoryEntry
 	doesn't understand #delete on GS"
 	self fileDirectory deleteFileNamed: self path
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLFileDirectoryFileHandle >> basicFileSize [
 	^ self directoryEntry fileSize
 ]

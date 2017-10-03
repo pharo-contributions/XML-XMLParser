@@ -78,18 +78,27 @@ XMLIntegerReader class >> readFrom: aStream withBase: aBase [
 ]
 
 { #category : #reading }
-XMLIntegerReader class >> readFrom: aStream withBase: aFirstBase startingWithAny: aCharacterCollection orBase: aSecondBase [
+XMLIntegerReader class >> readFrom: aStream withBase: aFirstBase andPrefixes: aCharacterCollection orBase: aSecondBase [
 	^ (self on: aStream)
 		nextIntegerWithBase: aFirstBase
-		startingWithAny: aCharacterCollection
+		andPrefixes: aCharacterCollection
 		orBase: aSecondBase
 ]
 
 { #category : #reading }
-XMLIntegerReader class >> readFrom: aStream withBase: aBase upTo: anInteger [
+XMLIntegerReader class >> readFrom: aStream withBase: aFirstBase andPrefixes: aCharacterCollection orBase: aSecondBase upTo: aReadLimit [
+	^ (self on: aStream)
+		nextIntegerWithBase: aFirstBase
+		andPrefixes: aCharacterCollection
+		orBase: aSecondBase
+		upTo: aReadLimit
+]
+
+{ #category : #reading }
+XMLIntegerReader class >> readFrom: aStream withBase: aBase upTo: aReadLimit [
 	^ (self on: aStream)
 		nextIntegerWithBase: aBase
-		upTo: anInteger
+		upTo: aReadLimit
 ]
 
 { #category : #testing }
@@ -135,23 +144,39 @@ XMLIntegerReader >> nextInteger [
 
 { #category : #reading }
 XMLIntegerReader >> nextIntegerWithBase: aBase [
-	^ self nextIntegerWithBase: aBase upTo: nil
+	^ self
+		nextIntegerWithBase: aBase
+		upTo: nil
 ]
 
 { #category : #reading }
-XMLIntegerReader >> nextIntegerWithBase: aFirstBase startingWithAny: aCharacterCollection orBase: aSecondBase [
-	(aCharacterCollection includes: self peek)
-		ifTrue: [
-			self next.
-			^ self nextIntegerWithBase: aFirstBase]
-		ifFalse: [^ self nextIntegerWithBase: aSecondBase]
+XMLIntegerReader >> nextIntegerWithBase: aFirstBase andPrefixes: aCharacterCollection orBase: aSecondBase [
+	^ self
+		nextIntegerWithBase: aFirstBase
+		andPrefixes: aCharacterCollection
+		orBase: aSecondBase
+		upTo: nil
+]
+
+{ #category : #reading }
+XMLIntegerReader >> nextIntegerWithBase: aFirstBase andPrefixes: aCharacterCollection orBase: aSecondBase upTo: aReadLimit [
+	^ self
+		nextIntegerWithBase:
+			((self atEnd not
+				and: [aCharacterCollection includes: self peek])
+				ifTrue: [
+					self next.
+					aFirstBase]
+				ifFalse: [aSecondBase])
+		upTo: aReadLimit
 ]
 
 { #category : #reading }
 XMLIntegerReader >> nextIntegerWithBase: aBase upTo: aReadLimit [
 	| integer maxValue maxBaseValue digitValue readLimit |
 
-	(aBase > 1 and: [aBase <= self class maxBase])
+	(aBase > 1
+		and: [aBase <= self class maxBase])
 		ifFalse: [self errorUnsupportedBase: aBase].
 
 	maxValue := self class maxIntegerValue.

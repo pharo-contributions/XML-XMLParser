@@ -31,7 +31,7 @@ XMLAttributeValidator class >> initialize [
 	NormalizedSpace := Character space
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLAttributeValidator class >> standaloneExternalClass [
 	^ self
 ]

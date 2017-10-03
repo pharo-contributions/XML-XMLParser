@@ -30,7 +30,7 @@ DTDContentModelParser class >> parserClassForContentModel: aContentModel [
 		ifFalse: [^ DTDLiteralContentModelParser]
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 DTDContentModelParser class >> standaloneExternalClass [
 	^ self
 ]

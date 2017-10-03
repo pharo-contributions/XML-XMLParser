@@ -23,12 +23,12 @@ SAX2ElementParser >> characters: aString [
 	self elementHandler characters: aString
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 SAX2ElementParser >> defaultElementHandlerFactoryClass [
 	^ SAX2ElementHandlerFactory
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 SAX2ElementParser >> defaultElementHandlerFactoryMapperClass [
 	^ SAX2ElementHandlerFactoryMapper
 ]
@@ -86,7 +86,7 @@ SAX2ElementParser >> on: aStringOrStream [
 ]
 
 { #category : #'handling - content' }
-SAX2ElementParser >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: aDictionary [
+SAX2ElementParser >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: anAttributeDictionary [
 	| newElementHandler |
 
 	newElementHandler :=
@@ -94,7 +94,7 @@ SAX2ElementParser >> startElement: aQualifiedName prefix: aPrefix uri: aURI loca
 			classForElement: aQualifiedName
 			namespaceURI: aURI
 			localName: aLocalName
-			attributes: aDictionary)
+			attributes: anAttributeDictionary)
 				parser: self
 				parent: self elementHandler
 				parentFactory: self elementHandlerFactory.
@@ -110,5 +110,5 @@ SAX2ElementParser >> startElement: aQualifiedName prefix: aPrefix uri: aURI loca
 		prefix: aPrefix
 		uri: aURI
 		localName: aLocalName
-		attributes: aDictionary.
+		attributes: anAttributeDictionary.
 ]

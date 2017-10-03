@@ -9,13 +9,13 @@ Class {
 	#category : #'XML-Parser-Files'
 }
 
-{ #category : #'instance creation' }
+{ #category : #basic }
 XMLFileReadStreamFactory class >> basicOnPath: aPathString [
 	self subclassResponsibility
 ]
 
-{ #category : #private }
-XMLFileReadStreamFactory class >> errorNoSupportedImplementation [
+{ #category : #finding }
+XMLFileReadStreamFactory class >> noSupportedImplementationFound [
 	XMLFileException signal: 'File reading unsupported'
 ]
 
@@ -24,7 +24,7 @@ XMLFileReadStreamFactory class >> onPath: aPathString [
 	^ self implementation basicOnPath: aPathString
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLFileReadStreamFactory class >> preferredImplementation [
 	^ XMLStandardFileStreamReadStreamFactory
 ]

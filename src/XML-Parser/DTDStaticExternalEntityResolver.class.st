@@ -30,7 +30,7 @@ DTDStaticExternalEntityResolver >> errorUnresolvableExternalEntityURI: anXMLURIO
 		with: anXMLURIOrURIString asString
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 DTDStaticExternalEntityResolver >> externalEntities [
 	^ externalEntities ifNil: [externalEntities := Dictionary new]
 ]
@@ -110,18 +110,22 @@ DTDStaticExternalEntityResolver >> removeExternalEntityURI: anXMLURIOrURIString 
 
 { #category : #resolving }
 DTDStaticExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString [
-	^ self resolveExternalEntityWith: [:maxSize | | replacement |
-		replacement :=
+	| replacement maxSize |
+
+	replacement :=
+		self
+			externalEntityAtURI: anXMLURIOrURIString
+			ifAbsent: [
+				self errorUnresolvableExternalEntityURI: anXMLURIOrURIString].
+
+	((maxSize := self maxExternalEntitySize) notNil
+		and: [replacement size > maxSize])
+		ifTrue: [
 			self
-				externalEntityAtURI: anXMLURIOrURIString
-				ifAbsent: [self errorUnresolvableExternalEntityURI: anXMLURIOrURIString].
-		(maxSize notNil
-			and: [replacement size > maxSize])
-			ifTrue: [
-				self
-					errorMaxExternalEntitySize: maxSize
-					exceededByURI: anXMLURIOrURIString].
-		replacement]
+				errorMaxExternalEntitySize: maxSize
+				exceededByURI: anXMLURIOrURIString].
+	
+	^ replacement.
 ]
 
 { #category : #resolving }

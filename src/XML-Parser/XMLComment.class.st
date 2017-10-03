@@ -25,7 +25,7 @@ XMLComment >> isComment [
 	^ true
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XMLComment >> sortKey [
 	^ self string
 ]

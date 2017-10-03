@@ -20,12 +20,12 @@ XMLDoctypeDeclaration class >> root: aRootElementName publicID: aPublicID system
 		systemID: aSystemID
 ]
 
-{ #category : #private }
+{ #category : #'instance creation' }
 XMLDoctypeDeclaration >> newListForSelect [
 	^ XMLInternalSubsetList new: 10
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLDoctypeDeclaration >> nodeListClass [
 	^ XMLInternalSubsetList
 ]

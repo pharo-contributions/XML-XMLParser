@@ -17,7 +17,7 @@ XMLOrderedList class >> collection: aCollection [
 	^ self basicNew setCollection: aCollection
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLOrderedList class >> collectionClass [
 	^ OrderedCollection
 ]
@@ -331,7 +331,7 @@ XMLOrderedList >> copyAfterLast: anObject [
 	^ copy.
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLOrderedList >> copyClass [
 	"the class to use for copies"
 	^ self class
@@ -482,7 +482,7 @@ XMLOrderedList >> copyWithoutAll: aCollection [
 	^ self reject: [:each | rejected includes: each].
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLOrderedList >> defaultValue [
 	^ nil
 ]
@@ -865,6 +865,9 @@ XMLOrderedList >> species [
 
 { #category : #accessing }
 XMLOrderedList >> swap: aFirstIndex with: aSecondIndex [
+	"swap positions of the objects at aFirstIndex and aSecondIndex,
+	raising an error if either index is out of bounds"
+
 	| temp |
 
 	temp := collection at: aFirstIndex.

@@ -30,14 +30,14 @@ XMLParserTokenizer class >> driver: aDriver on: aStringOrStream [
 ]
 
 { #category : #'instance creation' }
-XMLParserTokenizer class >> driver: aDriver on: aStringOrStream readLimit: aReadLimit [
+XMLParserTokenizer class >> driver: aDriver on: aStringOrStream readLimit: anInteger [
 	^self new
 		setDriver: aDriver
 		stream:
 			(aStringOrStream isStream
 				ifTrue: [aStringOrStream]
 				ifFalse: [aStringOrStream readStream])
-		readLimit: aReadLimit
+		readLimit: anInteger
 ]
 
 { #category : #'class initialization' }
@@ -91,7 +91,7 @@ XMLParserTokenizer >> context [
 { #category : #accessing }
 XMLParserTokenizer >> context: aTokenContext [
 	(context := aTokenContext) isContentContext
-		ifTrue: [elementNester := driver newElementNester].
+		ifTrue: [elementNester := driver elementNester].
 	driver decodesCharacters
 		ifTrue: [
 			context supportsEncodingDetection
@@ -397,7 +397,7 @@ XMLParserTokenizer >> nextPublicIDLiteral [
 { #category : #tokenizing }
 XMLParserTokenizer >> nextStartContent [
 	context := context contentContext.
-	elementNester := driver newElementNester.
+	elementNester := driver elementNester.
 	driver handleStartContent.
 ]
 
@@ -568,13 +568,13 @@ XMLParserTokenizer >> printOn: aStream [
 ]
 
 { #category : #initialization }
-XMLParserTokenizer >> setDriver: aDriver stream: aStream readLimit: aReadLimit [
+XMLParserTokenizer >> setDriver: aDriver stream: aStream readLimit: anInteger [
 	context := XMLUnitializedContext new.
 	driver := aDriver.
 	streamReader :=
-		(XMLNestedStreamReader
+		self streamReaderClass
 			on: aStream
-			readLimit: aReadLimit).
+			readLimit: anInteger.
 
 	"must use #writeStream instead of 'WriteStream on:' to get 0-based
 	streams on Gemstone"
@@ -591,4 +591,9 @@ XMLParserTokenizer >> setDriver: aDriver stream: aStream readLimit: aReadLimit [
 { #category : #accessing }
 XMLParserTokenizer >> streamReader [
 	^ streamReader
+]
+
+{ #category : #defaults }
+XMLParserTokenizer >> streamReaderClass [
+	^ XMLNestedStreamReader
 ]

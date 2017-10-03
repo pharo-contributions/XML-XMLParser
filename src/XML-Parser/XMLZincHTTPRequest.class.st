@@ -12,7 +12,7 @@ XMLZincHTTPRequest class >> isSupportedImplementation [
 	^ XMLClassFinder hasClassNamed: #ZnClient
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLZincHTTPRequest >> basicGetUpToLimit: aMaxSize decoding: aBoolean [
 	"value:during: on GS doesn't return the result of evaluating its second
 	argument, so instead the value:during: block is returned from"
@@ -31,7 +31,7 @@ XMLZincHTTPRequest >> basicGetUpToLimit: aMaxSize decoding: aBoolean [
 				entity) contents]
 ]
 
-{ #category : #private }
+{ #category : #testing }
 XMLZincHTTPRequest >> isMaxSizeException: anException [
 	^ anException class == (XMLClassFinder classNamed: #ZnEntityTooLarge)
 ]

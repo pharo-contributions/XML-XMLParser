@@ -13,8 +13,8 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
-{ #category : #testing }
-XMLTextConverterStreamConverter class >> canConvertEncoding: anEncodingName [
+{ #category : #basic }
+XMLTextConverterStreamConverter class >> basicCanConvertEncoding: anEncodingName [
 	^ (self textConverterClassForEncoding: anEncodingName) notNil
 ]
 
@@ -27,6 +27,7 @@ XMLTextConverterStreamConverter class >> encodingNamesAndTextConverterClassesCac
 
 { #category : #private }
 XMLTextConverterStreamConverter class >> findTextConverterClassForEncoding: anEncoding [
+	"#defaultConverterClassForEncoding: expects the name to be in lowercase"
 	^ (XMLClassFinder
 		classNamed: #TextConverter
 		ifAbsent: [^ nil])
@@ -43,6 +44,8 @@ XMLTextConverterStreamConverter class >> initialize [
 
 { #category : #accessing }
 XMLTextConverterStreamConverter class >> textConverterClassForEncoding: anEncodingName [
+	"Returns the TextConverter class for anEncodingName (case insensitive)"
+
 	"avoid #at:ifAbsent: and #at:ifAbsentPut: so the cache isn't locked
 	during the class lookup, which could stall other processes"
 	self encodingNamesAndTextConverterClassesCache

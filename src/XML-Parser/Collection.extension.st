@@ -1,6 +1,11 @@
 Extension { #name : #Collection }
 
 { #category : #'*XML-Parser' }
+Collection >> asXMLAttributeDictionary [
+	^ XMLAttributeDictionary newFrom: self
+]
+
+{ #category : #'*XML-Parser' }
 Collection >> asXMLAttributeSpec [
 	^ XMLBasicAttributeSpec attributes: self
 ]

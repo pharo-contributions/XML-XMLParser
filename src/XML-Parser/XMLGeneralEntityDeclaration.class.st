@@ -1,5 +1,5 @@
 "
-This is a class for internal/external parsed/unparsed general <!ENTITY> declarations.
+This is a class for general <!ENTITY> declarations.
 "
 Class {
 	#name : #XMLGeneralEntityDeclaration,

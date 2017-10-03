@@ -47,10 +47,10 @@ XMLNestedStreamReader class >> on: aStream [
 ]
 
 { #category : #'instance creation' }
-XMLNestedStreamReader class >> on: aStream readLimit: aReadLimit [
+XMLNestedStreamReader class >> on: aStream readLimit: anInteger [
 	^ self new
 		setStream: aStream
-		readLimit: aReadLimit
+		readLimit: anInteger
 ]
 
 { #category : #testing }
@@ -181,6 +181,11 @@ XMLNestedStreamReader >> hasPushedBackStreams [
 	^ nestedStreams size > 0
 ]
 
+{ #category : #defaults }
+XMLNestedStreamReader >> hexIntegerPrefixes [
+	^ 'x'
+]
+
 { #category : #testing }
 XMLNestedStreamReader >> isBinary [
 	^ false
@@ -279,7 +284,9 @@ XMLNestedStreamReader >> nextInteger [
 XMLNestedStreamReader >> nextIntegerPrintedOn: aStream [
 	^ (XMLIntegerReader on: self)
 		printStream: aStream;
-		nextIntegerWithBase: 16 startingWithAny: 'x' orBase: 10
+		nextIntegerWithBase: 16
+			andPrefixes: self hexIntegerPrefixes
+			orBase: 10
 ]
 
 { #category : #accessing }
@@ -318,7 +325,8 @@ XMLNestedStreamReader >> peek [
 
 { #category : #accessing }
 XMLNestedStreamReader >> peekFor: aCharacter [
-	self peek = aCharacter
+	(self atEnd not
+		and: [self peek = aCharacter])
 		ifTrue: [
 			self next.
 			^ true]
@@ -425,14 +433,14 @@ XMLNestedStreamReader >> readLimit [
 ]
 
 { #category : #initialization }
-XMLNestedStreamReader >> setStream: aStream readLimit: aReadLimit [
+XMLNestedStreamReader >> setStream: aStream readLimit: anInteger [
 	self stream: aStream.
 	isExternal := true.
 	currentPosition := 0.
 	currentLineNumber := 1.
 	currentLineStartPosition := 0.
 	nestedStreams := OrderedCollection new: 5.
-	readLimit := aReadLimit.
+	readLimit := anInteger.
 	normalizedLineEndingChar := LFCharacter.
 ]
 
@@ -454,6 +462,8 @@ XMLNestedStreamReader >> skip: anInteger [
 
 { #category : #positioning }
 XMLNestedStreamReader >> skipSeparators [
+	"This code is heavily optimized."
+
 	| isExternalNormalizedLineEnding |
 
 	[peekChar
@@ -549,7 +559,7 @@ XMLNestedStreamReader >> upToEnd [
 	^ writeStream contents.
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLNestedStreamReader >> writeStreamCollectionClass [
 	^ String
 ]

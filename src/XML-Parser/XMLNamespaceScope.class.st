@@ -10,12 +10,12 @@ Class {
 	#category : #'XML-Parser-Namespaces'
 }
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLNamespaceScope class >> xmlNamespaceURI [
 	^ 'http://www.w3.org/XML/1998/namespace'
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLNamespaceScope class >> xmlnsNamespaceURI [
 	^ 'http://www.w3.org/2000/xmlns/'
 ]
@@ -70,11 +70,11 @@ XMLNamespaceScope >> defaultNamespace: aURI [
 ]
 
 { #category : #private }
-XMLNamespaceScope >> errorAttribute: anAttribute aliasesNamespace: aNamespace [
+XMLNamespaceScope >> errorAttribute: anAttribute aliasesURI: aURI [
 	XMLNamespaceException
-		formatSignal: 'Attribute "{1}" has alias for namespace "{2}"'
+		formatSignal: 'Attribute "{1}" has alias for namespace URI "{2}"'
 		with: anAttribute
-		with: aNamespace
+		with: aURI
 ]
 
 { #category : #private }
@@ -115,11 +115,6 @@ XMLNamespaceScope >> errorCannotUnmapPrefix: aPrefix [
 ]
 
 { #category : #private }
-XMLNamespaceScope >> errorCannotUseXMLNSPrefix [	
-	XMLNamespaceException signal: 'Cannot use reserved "xmlns" prefix for elements or attributes'
-]
-
-{ #category : #private }
 XMLNamespaceScope >> errorInvalidPrefix: aPrefix [	
 	XMLNamespaceException
 		formatSignal: 'Prefix "{1}" contains ":" character'
@@ -127,17 +122,47 @@ XMLNamespaceScope >> errorInvalidPrefix: aPrefix [
 ]
 
 { #category : #private }
-XMLNamespaceScope >> errorInvalidUnprefixedName: aName [
+XMLNamespaceScope >> errorInvalidUnprefixedAttribute: anAttribute [
 	XMLNamespaceException
-		formatSignal: 'Name "{1}" contains ":" character'
-		with: aName
+		formatSignal: 'Unprefixed attribute "{1}" contains ":" character'
+		with: anAttribute
 ]
 
 { #category : #private }
-XMLNamespaceScope >> errorUnmappedPrefix: aPrefix [
+XMLNamespaceScope >> errorInvalidUnprefixedElement: anElement [
 	XMLNamespaceException
-		formatSignal: 'Unmapped namespace prefix "{1}" in name'
+		formatSignal: 'Unprefixed element <{1}> contains ":" character'
+		with: anElement
+]
+
+{ #category : #private }
+XMLNamespaceScope >> errorUnmappedPrefix: aPrefix inAttribute: anAttribute [
+	XMLNamespaceException
+		formatSignal: 'Unmapped namespace prefix "{1}" in "{2}" attribute'
 		with: aPrefix
+		with: anAttribute
+]
+
+{ #category : #private }
+XMLNamespaceScope >> errorUnmappedPrefix: aPrefix inElement: anElement [
+	XMLNamespaceException
+		formatSignal: 'Unmapped namespace prefix "{1}" in <{2}> element'
+		with: aPrefix
+		with: anElement
+]
+
+{ #category : #private }
+XMLNamespaceScope >> errorXMLNSPrefixInAttribute: anAttribute [
+	XMLNamespaceException
+		formatSignal: 'Attribute "{1}" uses reserved "xmlns" namespace prefix'
+		with: anAttribute
+]
+
+{ #category : #private }
+XMLNamespaceScope >> errorXMLNSPrefixInElement: anElement [
+	XMLNamespaceException
+		formatSignal: 'Element <{1}> uses reserved "xmlns" namespace prefix'
+		with: anElement
 ]
 
 { #category : #testing }
@@ -366,26 +391,28 @@ XMLNamespaceScope >> unmapPrefixes [
 			self copiedPrefixMappings removeAll]
 ]
 
-{ #category : #private }
-XMLNamespaceScope >> validateAndResolvePrefix: aPrefix [
-	^ self
-		prefixMappingAt: aPrefix
-		ifAbsent: [
-			aPrefix = 'xml'
-				ifTrue: [self xmlNamespaceURI]
-				ifFalse: [					
-					(aPrefix = 'xmlns'
-						ifTrue: [self errorCannotUseXMLNSPrefix]
-						ifFalse: [self errorUnmappedPrefix: aPrefix])]]
-]
-
 { #category : #validating }
-XMLNamespaceScope >> validateAndResolvePrefix: aPrefix ofElement: aName [
-	aPrefix size = 0 "optimization"
+XMLNamespaceScope >> validateAndResolvePrefix: aPrefix ofElement: anElement [
+	aPrefix size > 0 "optimization"
 		ifTrue: [
-			self validateUnprefixedName: aName.
+			^ self
+				prefixMappingAt: aPrefix
+				ifAbsent: [
+					aPrefix = 'xml'
+						ifTrue: [self xmlNamespaceURI]
+						ifFalse: [					
+							aPrefix = 'xmlns'
+								ifTrue: [self errorXMLNSPrefixInElement: anElement]
+								ifFalse: [
+									self
+										errorUnmappedPrefix: aPrefix
+										inElement: anElement]]]]
+		ifFalse: [
+			"catch names like ':name' with an empty prefix"
+			(anElement size > 0
+				and: [(anElement at: 1) == $:])
+				ifTrue: [self errorInvalidUnprefixedElement: anElement].
 			^ self defaultNamespace]
-		ifFalse: [^ self validateAndResolvePrefix: aPrefix]
 ]
 
 { #category : #private }
@@ -413,20 +440,54 @@ XMLNamespaceScope >> validatePrefix: aPrefix beforeMappingTo: aURI [
 ]
 
 { #category : #validating }
-XMLNamespaceScope >> validatePrefix: aPrefix ofAttribute: anAttribute hasNoAliasesin: aSet [
-	| namespace oldSize |
+XMLNamespaceScope >> validatePrefixesAttribute: anAttribute hasNoAliasIn: anAssociationSetOrNil [
+	"performance critical method"
+	| prefix |
 
-	namespace := self validateAndResolvePrefix: aPrefix.
+	(prefix := anAttribute xmlPrefixBeforeLocalName) size > 0 "optimization"
+		ifTrue: [| attributeLocalNamesAndURIs uri oldSize |
+			"not initialized unless needed"
+			attributeLocalNamesAndURIs :=
+				anAssociationSetOrNil
+					ifNil: [attributeLocalNamesAndURIs := Set new].
 
-	"a #size check after is faster than #includes:"
-	oldSize := aSet size.
-	(aSet
-		add: (anAttribute xmlLocalNameAfterPrefix: aPrefix) -> namespace;
-		size) > oldSize
+			uri :=
+				self
+					prefixMappingAt: prefix
+					ifAbsent: [
+						prefix = 'xml'
+							ifTrue: [self xmlNamespaceURI]
+							ifFalse: [					
+								prefix = 'xmlns'
+									ifTrue: [
+										"this can't happen during parsing, because
+										'xmlns' attributes are treated as namespace
+										declarations, but it can happen through DOM tree
+										manipulation, for example:
+											attributeNode prefix: 'xmlns'
+										"
+										self errorXMLNSPrefixInAttribute: anAttribute]
+									ifFalse: [
+										self
+											errorUnmappedPrefix: prefix
+											inAttribute: anAttribute]]].
+
+			"a #size check after is faster than #includes:"
+			oldSize := attributeLocalNamesAndURIs size.
+			(attributeLocalNamesAndURIs
+				add: (anAttribute xmlLocalNameAfterPrefix: prefix) -> uri;
+				size) > oldSize
+				ifFalse: [
+					self
+						errorAttribute: anAttribute
+						aliasesURI: uri].
+			^ attributeLocalNamesAndURIs]
 		ifFalse: [
-			self
-				errorAttribute: anAttribute
-				aliasesNamespace: namespace]
+			"catch names like ':name' with an empty prefix"
+			(anAttribute size > 0
+				and: [(anAttribute at: 1) == $:])
+				ifTrue: [self errorInvalidUnprefixedAttribute: anAttribute].
+			^ anAssociationSetOrNil].
 ]
 
 { #category : #validating }
@@ -442,37 +503,20 @@ XMLNamespaceScope >> validatePrefixesOfAttributes: anAttributeCollection from: a
 	"performance critical method"
 	| attributeLocalNamesAndURIs |
 
-	"to:do: for speed"
-	aStart to: aStop do: [:i | | attribute prefix |
-		attribute := anAttributeCollection at: i.
-		(prefix := attribute xmlPrefixBeforeLocalName) size > 0 "optimization"
-			ifTrue: [
-				"not initialized unless needed"
-				attributeLocalNamesAndURIs
-					ifNil: [
-						attributeLocalNamesAndURIs :=
-							Set new: anAttributeCollection size].
-				self
-					validatePrefix: prefix
-					ofAttribute: attribute
-					hasNoAliasesin: attributeLocalNamesAndURIs]
-			ifFalse: [self validateUnprefixedName: attribute]]
+	"#to:do: for speed"
+	aStart to: aStop do: [:i |
+		attributeLocalNamesAndURIs :=
+			self
+				validatePrefixesAttribute: (anAttributeCollection at: i)
+				hasNoAliasIn: attributeLocalNamesAndURIs]
 ]
 
-{ #category : #private }
-XMLNamespaceScope >> validateUnprefixedName: aName [
-	"catch names like ':name' with an empty prefix"
-	(aName size > 0
-		and: [(aName at: 1) == $:])
-		ifTrue: [self errorInvalidUnprefixedName: aName]
-]
-
-{ #category : #accessing }
+{ #category : #defaults }
 XMLNamespaceScope >> xmlNamespaceURI [
 	^ self class xmlNamespaceURI
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLNamespaceScope >> xmlnsNamespaceURI [
 	^ self class xmlnsNamespaceURI
 ]

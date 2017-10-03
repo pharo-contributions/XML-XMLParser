@@ -12,7 +12,7 @@ XMLWebClientHTTPRequest class >> isSupportedImplementation [
 	^ XMLClassFinder hasClassNamed: #WebClient
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLWebClientHTTPRequest >> basicGetUpToLimit: aMaxSize decoding: aBoolean [
 	| response |
 
