@@ -37,17 +37,17 @@ GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> encoding [
 
 { #category : #private }
 GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> newHighlightingParserFromHandler: aHighlightingParserHandler [
-	| parser rootElement context |
+	| parser rootElement |
 
 	parser := super newHighlightingParserFromHandler: aHighlightingParserHandler.
 
-	self outerXMLNode document
-		ifNotNil: [:document |
-			parser driver isStandalone: document isStandalone.
-			document hasDoctypeDefinition
+	self document
+		ifNotNil: [
+			parser driver isStandalone: self document isStandalone.
+			self document hasDoctypeDefinition
 				ifTrue: [
 					parser driver doctypeDefinition
-						addGeneralEntitiesFrom: document doctypeDefinition]].
+						addGeneralEntitiesFrom: self document doctypeDefinition]].
 
 	self outerXMLNode isElement
 		ifTrue: [rootElement := self outerXMLNode]
@@ -61,9 +61,9 @@ GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> newHighlightingParserFro
 			rootElement hasNamespaces
 				ifTrue: [parser driver currentScope: rootElement namespaceScope]].
 
-	(context := self outerXMLNode parent newInnerXMLContext) isContentContext
+	parser context: self outerXMLNode parent newInnerXMLContext.
+	parser context isContentContext
 		ifTrue: [aHighlightingParserHandler startContent].
-	parser context: context.
 
 	^ parser.
 ]
@@ -81,5 +81,5 @@ GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> outerXMLNode: aNode [
 	from it if the source is being saved to a file"
 	self
 		configuration: aNode configuration;
-		document: aNode document.
+		document: aNode document
 ]

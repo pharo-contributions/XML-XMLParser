@@ -351,11 +351,11 @@ XMLPositionWellFormedParserTokenizer >> nextXMLVersionAttributeValue [
 ]
 
 { #category : #initialization }
-XMLPositionWellFormedParserTokenizer >> setDriver: aDriver stream: aStream readLimit: aReadLimit [
+XMLPositionWellFormedParserTokenizer >> setDriver: aDriver stream: aStream readLimit: anInteger [
 	super
 		setDriver: aDriver
 		stream: aStream
-		readLimit: aReadLimit.
+		readLimit: anInteger.
 
 	isInAttlistDeclaration := false.
 	isInEntityReference := false.

@@ -127,7 +127,7 @@ SAXPositionParserDriver >> isValidating [
 	^ false
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 SAXPositionParserDriver >> tokenizerClass [
 	^ XMLPositionWellFormedParserTokenizer
 ]

@@ -51,17 +51,12 @@ XMLHighlightDefaults class >> textColorForShoutProperty: aShoutProperty [
 			ifNone: [^ nil]) color)
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XMLHighlightDefaults class >> uiTheme [
 	^ uiTheme ifNil: [uiTheme := Smalltalk ui theme]
 ]
 
-{ #category : #accessing }
-XMLHighlightDefaults class >> uiTheme: aUITheme [
-	uiTheme := aUITheme
-]
-
-{ #category : #accessing }
+{ #category : #defaults }
 XMLHighlightDefaults >> defaultColor [
 	^ self class defaultDefaultColor
 ]

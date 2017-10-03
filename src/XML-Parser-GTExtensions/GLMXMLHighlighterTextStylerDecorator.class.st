@@ -53,8 +53,8 @@ GLMXMLHighlighterTextStylerDecorator >> highlightableLengthLimit [
 ]
 
 { #category : #accessing }
-GLMXMLHighlighterTextStylerDecorator >> highlightableLengthLimit: aLimit [
-	highlightableLengthLimit := aLimit
+GLMXMLHighlighterTextStylerDecorator >> highlightableLengthLimit: anInteger [
+	highlightableLengthLimit := anInteger
 ]
 
 { #category : #parsing }

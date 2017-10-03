@@ -21,12 +21,12 @@ XMLHighlighter >> defaultColor: aTextColor [
 	defaultHighlight color: aTextColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLHighlighter >> defaults [
 	^ self defaultsClass new
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLHighlighter >> defaultsClass [
 	^ XMLHighlightDefaults
 ]

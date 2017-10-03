@@ -21,7 +21,7 @@ XMLHighlightingWriter >> asHighlightedText [
 	^ text.
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLHighlightingWriter >> canonicalWriterFormatterClass [
 	^ XMLHighlightingCanonicalWriterFormatter
 ]
@@ -32,19 +32,19 @@ XMLHighlightingWriter >> highlighter [
 ]
 
 { #category : #initialization }
-XMLHighlightingWriter >> initialize [
-	super initialize.
+XMLHighlightingWriter >> on: aStream [
+	super on: aStream.
 
 	highlighter := XMLDocumentHighlighter new.
 	self formatter: XMLHighlightingWriterFormatter new.
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLHighlightingWriter >> prettyPrintingWriterFormatterClass [
 	^ XMLHighlightingPrettyPrintingWriterFormatter
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLHighlightingWriter >> prologPrettyPrintingWriterFormatterClass [
 	^ XMLHighlightingPrologPrettyPrintingWriterFormatter
 ]

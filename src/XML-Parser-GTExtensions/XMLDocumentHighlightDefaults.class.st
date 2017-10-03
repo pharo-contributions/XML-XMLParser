@@ -179,57 +179,57 @@ XMLDocumentHighlightDefaults class >> resetDefaults [
 	defaultCDataColor := nil.
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLDocumentHighlightDefaults >> cdataColor [
 	^ self class defaultCDataColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLDocumentHighlightDefaults >> commentColor [
 	^ self class defaultCommentColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLDocumentHighlightDefaults >> declarationColor [
 	^ self class defaultDeclarationColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLDocumentHighlightDefaults >> doctypeDeclarationColor [
 	^ self class defaultDoctypeDeclarationColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLDocumentHighlightDefaults >> entityReferenceColor [
 	^ self class defaultEntityReferenceColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLDocumentHighlightDefaults >> nameColor [
 	^ self class defaultNameColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLDocumentHighlightDefaults >> piColor [
 	^ self class defaultPIColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLDocumentHighlightDefaults >> quotedStringColor [
 	^ self class defaultQuotedStringColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLDocumentHighlightDefaults >> quotedStringNameColor [
 	^ self class defaultQuotedStringNameColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLDocumentHighlightDefaults >> tagColor [
 	^ self class defaultTagColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLDocumentHighlightDefaults >> xmlDeclarationColor [
 	^ self class defaultXMLDeclarationColor
 ]

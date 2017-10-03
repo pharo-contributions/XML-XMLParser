@@ -61,7 +61,7 @@ XMLDocumentHighlighter >> declarationColor: aTextColor [
 	declarationColor := aTextColor
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLDocumentHighlighter >> defaultsClass [
 	^ XMLDocumentHighlightDefaults
 ]

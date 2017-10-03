@@ -37,13 +37,13 @@ XMLExternalDocumentConverter class >> on: aStringOrStream [
 ]
 
 { #category : #'instance creation' }
-XMLExternalDocumentConverter class >> on: aStringOrStream readLimit: aReadLimit [
+XMLExternalDocumentConverter class >> on: aStringOrStream readLimit: anInteger [
 	^ self new
 		setStream:
 			(aStringOrStream isStream
 				ifTrue: [aStringOrStream]
 				ifFalse: [aStringOrStream readStream])
-		readLimit: aReadLimit
+		readLimit: anInteger
 ]
 
 { #category : #'instance creation' }
@@ -82,7 +82,8 @@ XMLExternalDocumentConverter >> detectEncoding [
 { #category : #'private ' }
 XMLExternalDocumentConverter >> expectNextAll: aString [
 	aString do: [:each |
-		self next == each
+		"use #= for pre-SpurVM compatibility where wide chars aren't #=="
+		self next = each
 			ifFalse: [^ nil]].
 	^ aString.
 ]
@@ -143,14 +144,14 @@ XMLExternalDocumentConverter >> peek [
 ]
 
 { #category : #initialization }
-XMLExternalDocumentConverter >> setStream: aStream readLimit: aReadLimit [
+XMLExternalDocumentConverter >> setStream: aStream readLimit: anInteger [
 	streamReader :=
 		XMLNestedStreamReader
 			on:
 				(aStream isXMLConvertingStreamAdapter
 					ifTrue: [aStream]
 					ifFalse: [XMLDecodingReadStreamAdapter on: aStream])
-			readLimit: aReadLimit.
+			readLimit: anInteger.
 
 	"this is the preferred LE char for Pharo/Squeak"
 	streamReader normalizedLineEndingChar: Character cr.

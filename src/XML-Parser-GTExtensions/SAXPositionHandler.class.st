@@ -7,7 +7,7 @@ Class {
 	#category : #'XML-Parser-GTExtensions-Highlighting-Parser'
 }
 
-{ #category : #private }
+{ #category : #defaults }
 SAXPositionHandler >> driverClass [
 	^ SAXPositionParserDriver
 ]
