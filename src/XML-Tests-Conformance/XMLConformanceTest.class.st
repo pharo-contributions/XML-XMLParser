@@ -426,7 +426,7 @@ XMLConformanceTest >> domParse: aString documentURI: aURIString [
 			parseDocument
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLConformanceTest >> domParserClass [
 	^ XMLDOMParser
 ]
@@ -443,7 +443,7 @@ XMLConformanceTest >> isIgnorableParserException: anError [
 		and: [self ignorableParserExceptions handles: anError]
 ]
 
-{ #category : #accessing }
+{ #category : #'instance creation' }
 XMLConformanceTest >> newVirtualFileExternalEntityResolver [
 	^ XMLConformanceVirtualFileExternalEntityResolver virtualFileClass: self class
 ]
@@ -464,7 +464,7 @@ XMLConformanceTest >> parse: aString documentURI: aURIString [
 			parseDocument
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XMLConformanceTest >> parserClass [
 	^ SAXHandler
 ]

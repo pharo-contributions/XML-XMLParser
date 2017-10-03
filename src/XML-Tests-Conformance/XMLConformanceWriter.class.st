@@ -42,17 +42,17 @@ XMLConformanceWriter class >> initializeContentStringConformanceCanonicalEscapes
 			yourself
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLConformanceWriter >> canonicalWriterFormatterClass [
 	^ XMLConformanceCanonicalWriterFormatter
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLConformanceWriter >> contentCanonicalEscapes [
 	^ ContentConformanceCanonicalEscapes
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XMLConformanceWriter >> contentStringCanonicalEscapes [
 	^ ContentStringConformanceCanonicalEscapes
 ]
