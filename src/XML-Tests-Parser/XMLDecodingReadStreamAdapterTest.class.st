@@ -71,7 +71,7 @@ XMLDecodingReadStreamAdapterTest >> testHasNullStreamConverter [
 { #category : #tests }
 XMLDecodingReadStreamAdapterTest >> testInvalidCharacters [
 	self invalidStreamCollections do: [:each | | streamAdapter |
-		streamAdapter := self newStreamAdapterOn: each readStream.
+		streamAdapter := self newStreamAdapterOn: (self newStreamOn: each).
 		[streamAdapter atEnd]
 			whileFalse: [
 				self
@@ -91,7 +91,7 @@ XMLDecodingReadStreamAdapterTest >> testOn [
 
 	super testOn.
 
-	stream := #(1) readStream.
+	stream := self newStreamOn: #(1).
 	adapter := self newStreamAdapterOn: stream.
 	self
 		assert: adapter class == self streamAdapterClass;
@@ -103,19 +103,19 @@ XMLDecodingReadStreamAdapterTest >> testOn [
 XMLDecodingReadStreamAdapterTest >> testOnStreamIfBinary [
 	| stream adapter |
 
-	stream := '1' readStream.
+	stream := self newStreamOn: '1'.
 	self assert: (self streamAdapterClass onStreamIfBinary: stream) == stream.
 
-	stream upToEnd.
+	stream next.
 	self assert: (self streamAdapterClass onStreamIfBinary: stream) == stream.
 
-	stream := #(1) readStream.
+	stream := self newStreamOn: #(1).
 	adapter := self streamAdapterClass onStreamIfBinary: stream.
 	self
 		assert: adapter class == self streamAdapterClass;
 		assert: adapter hasDefaultStreamConverter.
 
-	stream upToEnd.
+	stream next.
 	self assert: (self streamAdapterClass onStreamIfBinary: stream) == stream.
 ]
 

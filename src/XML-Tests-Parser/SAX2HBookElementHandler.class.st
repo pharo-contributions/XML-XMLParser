@@ -8,6 +8,6 @@ Class {
 }
 
 { #category : #'handling - content' }
-SAX2HBookElementHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: aDictionary [
+SAX2HBookElementHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: anAttributeDictionary [
 	self parser parsingResult addLast: SAX2SampleBook new
 ]

@@ -8,6 +8,6 @@ Class {
 }
 
 { #category : #'handling - content' }
-SAX2HEmailElementHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: aDictionary [
-	self parser parsingResult addEmailAddress: (aDictionary at: 'address')
+SAX2HEmailElementHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: anAttributeDictionary [
+	self parser parsingResult addEmailAddress: (anAttributeDictionary at: 'address')
 ]

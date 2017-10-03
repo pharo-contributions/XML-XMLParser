@@ -15,6 +15,13 @@ XMLGeneralEntityDeclarationTest >> nodeClass [
 ]
 
 { #category : #tests }
+XMLGeneralEntityDeclarationTest >> testIsUnparsed [
+	super testIsUnparsed.
+
+	self assert: (self newNode ndata: 'test') isUnparsed.
+]
+
+{ #category : #tests }
 XMLGeneralEntityDeclarationTest >> testNData [
 	| declaration |
 

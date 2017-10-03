@@ -14,6 +14,16 @@ DTDExternalEntityResolverTest >> entityLimitsClass [
 	^ DTDExternalEntityLimits
 ]
 
+{ #category : #testing }
+DTDExternalEntityResolverTest >> isTestingLimitedAdapterClass [
+	^ false
+]
+
+{ #category : #accessing }
+DTDExternalEntityResolverTest >> limitedAdapterClass [
+	^ DTDLimitedExternalEntityResolverAdapter
+]
+
 { #category : #'instance creation' }
 DTDExternalEntityResolverTest >> newEntityLimits [
 	^ self entityLimitsClass new
@@ -21,7 +31,12 @@ DTDExternalEntityResolverTest >> newEntityLimits [
 
 { #category : #'instance creation' }
 DTDExternalEntityResolverTest >> newResolver [
-	^ self resolverClass new
+	| resolver |
+
+	resolver := self resolverClass new.
+	^ self isTestingLimitedAdapterClass
+		ifTrue: [self limitedAdapterClass externalEntityResolver: resolver]
+		ifFalse: [resolver]
 ]
 
 { #category : #accessing }
@@ -37,18 +52,23 @@ DTDExternalEntityResolverTest >> testCopy [
 		externalSubsetReadLimit: 1000000;
 		maxExternalEntities: 10;
 		maxExternalEntitySize: 10000;
-		resolvesLocalFromNonLocal: true;
-		incrementTotalResolvedExternalEntities.
+		resolvesLocalFromNonLocal: true.
+
 	copy := resolver copy.
 	self
 		deny: copy == resolver;
-		assert: copy totalResolvedExternalEntities = 0;
-		assert: resolver totalResolvedExternalEntities = 1;
-		deny: copy externalEntityLimits == resolver externalEntityLimits;
 		assert: copy externalSubsetReadLimit = 1000000;
 		assert: copy maxExternalEntities = 10;
 		assert: copy maxExternalEntitySize = 10000;
 		assert: copy resolvesLocalFromNonLocal.
+
+	self isTestingLimitedAdapterClass
+		ifTrue: [
+			self
+				assert: copy externalEntityResolver == resolver externalEntityResolver;
+				assert: copy externalEntityLimits == resolver externalEntityLimits]
+		ifFalse: [
+			self deny: copy externalEntityLimits == resolver externalEntityLimits]
 ]
 
 { #category : #tests }
@@ -149,6 +169,9 @@ DTDExternalEntityResolverTest >> testResolvesLocalFromNonLocal [
 { #category : #tests }
 DTDExternalEntityResolverTest >> testTotalResolvedExternalEntities [
 	| resolver |
+
+	self isTestingLimitedAdapterClass
+		ifFalse: [^ self].
 
 	resolver := self newResolver.
 	self assert: resolver totalResolvedExternalEntities = 0.

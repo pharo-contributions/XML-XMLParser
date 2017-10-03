@@ -7,11 +7,6 @@ Class {
 	#category : #'XML-Tests-Parser-DOM'
 }
 
-{ #category : #testing }
-XMLNodeWithElementsTest class >> isAbstract [
-	^ true
-]
-
 { #category : #asserting }
 XMLNodeWithElementsTest >> assertElements: aPrettyPrintFormattedElementCollection werePrettyPrintFormattedFrom: anElementCollection [
 	anElementCollection
@@ -304,13 +299,22 @@ XMLNodeWithElementsTest >> testAddElementNamedNamespaceURIAttributes [
 				attributes: self attributeAssociations]
 		raise: XMLNamespaceException.
 
+	"this forces namespace support"
 	nodeWithElements := self newNode.
 	nodeWithElements usesNamespaces: false.
 	self
 		shouldnt: [
 			nodeWithElements
 				addElementNamed: 'three'
-				namespaceURI: 'defaultNS'
+				namespaceURI: ''
+				attributes: self unprefixedAttributeAssociations]
+		raise: XMLNamespaceException.
+	nodeWithElements usesNamespaces: false.
+	self
+		should: [
+			nodeWithElements
+				addElementNamed: 'four'
+				namespaceURI: ''
 				attributes: self attributeAssociations]
 		raise: XMLNamespaceException.
 ]
@@ -2153,12 +2157,22 @@ XMLNodeWithElementsTest >> testUsesNamespaces [
 	nodeWithElements allElementsDo: [:each |
 		self assert: each usesNamespaces].
 
-	nodeWithElements usesNamespaces: false.
-	self deny: nodeWithElements usesNamespaces.
+	self
+		assert: (nodeWithElements usesNamespaces: false) == nodeWithElements;
+		deny: nodeWithElements usesNamespaces.
 	nodeWithElements allElementsDo: [:each |
 		self deny: each usesNamespaces.
 		self
 			shouldnt: [each prefix: 'undeclared']
+			raise: XMLNamespaceException].
+
+	self
+		assert: (nodeWithElements usesNamespaces: true) == nodeWithElements;
+		assert: nodeWithElements usesNamespaces.
+	nodeWithElements allElementsDo: [:each |
+		self assert: each usesNamespaces.
+		self
+			should: [each prefix: 'undeclaredTwo']
 			raise: XMLNamespaceException].
 ]
 

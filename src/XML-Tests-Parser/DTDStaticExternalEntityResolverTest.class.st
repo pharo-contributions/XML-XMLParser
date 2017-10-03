@@ -53,6 +53,9 @@ DTDStaticExternalEntityResolverTest >> testCopy [
 
 	super testCopy.
 
+	self isTestingLimitedAdapterClass
+		ifTrue: [^ self].
+
 	resolver := self newResolverWithEntities.
 	copy := resolver copy.
 	self
@@ -64,6 +67,9 @@ DTDStaticExternalEntityResolverTest >> testCopy [
 { #category : #tests }
 DTDStaticExternalEntityResolverTest >> testExternalEntities [
 	| resolver replacementAssociation |
+
+	self isTestingLimitedAdapterClass
+		ifTrue: [^ self].
 
 	resolver := self newResolver.
 	self
@@ -87,6 +93,9 @@ DTDStaticExternalEntityResolverTest >> testExternalEntities [
 DTDStaticExternalEntityResolverTest >> testExternalEntityAtURI [
 	| resolver |
 
+	self isTestingLimitedAdapterClass
+		ifTrue: [^ self].
+
 	resolver := self newResolver.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement |
 		self
@@ -104,6 +113,9 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURI [
 { #category : #tests }
 DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsent [
 	| resolver |
+
+	self isTestingLimitedAdapterClass
+		ifTrue: [^ self].
 
 	resolver := self newResolver.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement |
@@ -133,6 +145,9 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsent [
 DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsentPut [
 	| resolver |
 
+	self isTestingLimitedAdapterClass
+		ifTrue: [^ self].
+
 	resolver := self newResolver.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement |
 		self assert:
@@ -150,6 +165,9 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsentPut [
 { #category : #tests }
 DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIPut [
 	| resolver |
+
+	self isTestingLimitedAdapterClass
+		ifTrue: [^ self].
 
 	resolver := self newResolver.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement |
@@ -169,6 +187,9 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIPut [
 
 { #category : #tests }
 DTDStaticExternalEntityResolverTest >> testHasExternalEntities [
+	self isTestingLimitedAdapterClass
+		ifTrue: [^ self].
+
 	self
 		deny: self newResolver hasExternalEntities;
 		assert: self newResolverWithEntities hasExternalEntities
@@ -177,6 +198,9 @@ DTDStaticExternalEntityResolverTest >> testHasExternalEntities [
 { #category : #tests }
 DTDStaticExternalEntityResolverTest >> testIncludesExternalEntityURI [
 	| resolver |
+
+	self isTestingLimitedAdapterClass
+		ifTrue: [^ self].
 
 	resolver := self newResolver.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement |
@@ -196,6 +220,9 @@ DTDStaticExternalEntityResolverTest >> testIncludesExternalEntityURI [
 DTDStaticExternalEntityResolverTest >> testRemoveExternalEntities [
 	| resolver |
 
+	self isTestingLimitedAdapterClass
+		ifTrue: [^ self].
+
 	resolver := self newResolverWithEntities.
 	self
 		assert: resolver removeExternalEntities == resolver;
@@ -205,6 +232,9 @@ DTDStaticExternalEntityResolverTest >> testRemoveExternalEntities [
 { #category : #tests }
 DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURI [
 	| resolver |
+
+	self isTestingLimitedAdapterClass
+		ifTrue: [^ self].
 
 	resolver := self newResolverWithEntities.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement |
@@ -222,6 +252,9 @@ DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURI [
 { #category : #tests }
 DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURIIfAbsent [
 	| resolver |
+
+	self isTestingLimitedAdapterClass
+		ifTrue: [^ self].
 
 	resolver := self newResolverWithEntities.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement |
@@ -243,6 +276,9 @@ DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURIIfAbsent [
 { #category : #tests }
 DTDStaticExternalEntityResolverTest >> testResolveExternalEntityURI [
 	| resolver |
+
+	self isTestingLimitedAdapterClass
+		ifTrue: [^ self].
 
 	resolver := self newResolver.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement |
@@ -273,6 +309,9 @@ DTDStaticExternalEntityResolverTest >> testResolveExternalEntityURI [
 { #category : #tests }
 DTDStaticExternalEntityResolverTest >> testStreamResolveExternalEntityURI [
 	| resolver |
+
+	self isTestingLimitedAdapterClass
+		ifTrue: [^ self].
 
 	resolver := self newResolver.
 	self entityURIStringsAndReplacementsDo: [:uriString :replacement | | stream |

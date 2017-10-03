@@ -7,7 +7,7 @@ Class {
 	#category : #'XML-Tests-Parser-DOM'
 }
 
-{ #category : #private }
+{ #category : #defaults }
 XMLDocumentWithCachingNodeList >> nodeListClass [
 	^ XMLCachingNodeList
 ]

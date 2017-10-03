@@ -7,19 +7,39 @@ Class {
 	#category : #'XML-Tests-Parser-DOM'
 }
 
-{ #category : #testing }
-XMLEntityDeclarationTest class >> isAbstract [
-	^ true
-]
-
 { #category : #accessing }
 XMLEntityDeclarationTest >> nodeClass [
 	^ XMLEntityDeclaration
 ]
 
 { #category : #tests }
+XMLEntityDeclarationTest >> testIsExternal [
+	| declaration |
+
+	declaration := self newNode.
+	self deny: declaration isExternal.
+
+	declaration systemID: 'test'.
+	self assert: declaration isExternal.
+
+	declaration publicID: 'test'.
+	self assert: declaration isExternal.
+
+	declaration systemID: ''.
+	self assert: declaration isExternal.
+
+	declaration publicID: ''.
+	self deny: declaration isExternal.
+]
+
+{ #category : #tests }
 XMLEntityDeclarationTest >> testIsParameter [
 	self deny: self newNode isParameter
+]
+
+{ #category : #tests }
+XMLEntityDeclarationTest >> testIsUnparsed [
+	self deny: self newNode isUnparsed
 ]
 
 { #category : #tests }

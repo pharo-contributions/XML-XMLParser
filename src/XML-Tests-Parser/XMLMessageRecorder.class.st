@@ -25,6 +25,11 @@ XMLMessageRecorder >> messageQueue [
 	^ messageQueue ifNil: [messageQueue := OrderedCollection new]
 ]
 
+{ #category : #accessing }
+XMLMessageRecorder >> messages [
+	^ messageQueue copy
+]
+
 { #category : #enumerating }
 XMLMessageRecorder >> messagesCollect: aBlock [
 	^ self messageQueue collect: aBlock

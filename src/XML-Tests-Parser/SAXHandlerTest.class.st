@@ -40,20 +40,30 @@ SAXHandlerTest >> generalEntityXMLSourceSelectors [
 
 { #category : #accessing }
 SAXHandlerTest >> prefixedXMLAttributes [
-	^ OrderPreservingDictionary with: 'name' -> 'value'
+	^ (XMLNamespacedAttributeDictionary
+		with: 'name' -> 'value'
+		with: 'prefix:name' -> 'prefixValue')
+			setNamespaceScope:
+				(XMLNamespaceScope new
+					defaultNamespace: 'defaultNS';
+					mapPrefix: 'prefix' to: 'prefixNS')
 ]
 
 { #category : #accessing }
 SAXHandlerTest >> prefixedXMLAttributesNamespacesDisabled [
-	^ OrderPreservingStringDictionary
+	^ XMLAttributeDictionary
 		with: 'xmlns:prefix' -> 'prefixNS'
 		with: 'xmlns' -> 'defaultNS'
 		with: 'name' -> 'value'
+		with: 'prefix:name' -> 'prefixValue'
 ]
 
 { #category : #source }
 SAXHandlerTest >> prefixedXMLSource [
-	^ '<prefix:test xmlns:prefix="prefixNS" xmlns="defaultNS" name="value">test</prefix:test>'
+	^ '<prefix:test xmlns:prefix="prefixNS" xmlns="defaultNS" ',
+		'name="value" prefix:name="prefixValue">',
+		'test',
+		'</prefix:test>'
 ]
 
 { #category : #accessing }
@@ -460,6 +470,21 @@ SAXHandlerTest >> testExternalEntityResolver [
 ]
 
 { #category : #tests }
+SAXHandlerTest >> testHasParser [
+	| parser |
+
+	parser := SAXTestingMessageRecordingHandler on: self prefixedXMLSource.
+	self deny: parser hasParser.
+	parser parseDocument.
+
+	parser hasParserResults do: [:each |
+		self assert: each].
+
+	parser on: self prefixedXMLSource.
+	self deny: parser hasParser.
+]
+
+{ #category : #tests }
 SAXHandlerTest >> testIgnorableWhitespace [
 	| dtd xml parser |
 
@@ -545,6 +570,58 @@ SAXHandlerTest >> testInterruptParsing [
 		self assert:
 			(parser wasSentSelectors:
 				((self prefixedXMLSourcePrefixURILocalNameSelectors copyUpTo: each) copyWith: each))].
+]
+
+{ #category : #tests }
+SAXHandlerTest >> testIsInCDataSection [
+	| xml parser |
+
+	xml := '<test>one<![CDATA[two]]>three<![CDATA[four]]></test>'.
+	parser := SAXTestingMessageRecordingHandler on: xml.
+	self deny: parser isInCDataSection.
+	parser parseDocument.
+
+	parser allSentMessages
+		with: parser isInCDataSectionResults
+		do: [:message :result |
+			((#(startCData #endCData) includes: message selector)
+				or: [message selector == #characters:
+					and: [#('two' 'four') includes: message arguments first]])
+				ifTrue: [self assert: result]
+				ifFalse: [self deny: result]].
+	
+	parser isInCDataSection: true.
+	self assert: parser isInCDataSection.
+	parser on: xml.
+	self deny: parser isInCDataSection.
+]
+
+{ #category : #tests }
+SAXHandlerTest >> testIsInContent [
+	| xml parser seenElement |
+
+	xml := '<?xml version="1.0"?>
+	<!--comment-->
+	<?target data?>',
+	self generalEntityXMLSource,
+	'<?target data?>
+	<!--comment-->'.
+	parser := SAXTestingMessageRecordingHandler on: xml.
+	self deny: parser isInContent.
+	parser parseDocument.
+
+	seenElement := false.
+	parser allSentSelectors
+		with: parser isInContentResults
+		do: [:selector :result |
+			(seenElement
+				or: [seenElement := selector asString beginsWith: 'startElement'])
+				ifTrue: [self assert: result]
+				ifFalse: [self deny: result]].
+	
+	self assert: parser isInContent.
+	parser on: xml.
+	self deny: parser isInContent.
 ]
 
 { #category : #tests }

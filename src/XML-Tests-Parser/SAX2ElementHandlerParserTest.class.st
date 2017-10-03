@@ -4,7 +4,7 @@ Class {
 	#category : #'XML-Tests-Parser-ElementHandlers'
 }
 
-{ #category : #'source XML' }
+{ #category : #source }
 SAX2ElementHandlerParserTest >> sampleBooksXML [
 	^ '
 		<books>
@@ -32,7 +32,7 @@ SAX2ElementHandlerParserTest >> sampleBooksXML [
 	'
 ]
 
-{ #category : #'source XML' }
+{ #category : #source }
 SAX2ElementHandlerParserTest >> samplePersonXML [
 	^ '
 		<person>

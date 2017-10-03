@@ -910,7 +910,7 @@ XMLParserTest >> testAttributeDeclarationRedundance [
 		do: [:each |
 			self
 				shouldnt: [
-					(SAXHandler parse: dtd, each)
+					(SAXHandler on: dtd, each)
 						externalEntityResolver: resolver;
 						resolvesExternalEntities: true;
 						parseDocument]

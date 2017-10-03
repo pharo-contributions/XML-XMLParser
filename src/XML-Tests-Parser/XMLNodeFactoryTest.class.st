@@ -18,7 +18,7 @@ XMLNodeFactoryTest >> attributeAssociations [
 
 { #category : #accessing }
 XMLNodeFactoryTest >> attributes [
-	^ OrderPreservingStringDictionary newFrom: self attributeAssociations
+	^ XMLAttributeDictionary newFrom: self attributeAssociations
 ]
 
 { #category : #accessing }
@@ -36,7 +36,7 @@ XMLNodeFactoryTest >> pluggableFactoryClass [
 	^ XMLPluggableNodeFactory 
 ]
 
-{ #category : #'source XML' }
+{ #category : #source }
 XMLNodeFactoryTest >> sampleUserXML [
 	^
 	XMLWriter new

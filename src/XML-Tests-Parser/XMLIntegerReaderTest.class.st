@@ -4,49 +4,60 @@ Class {
 	#category : #'XML-Tests-Parser-Utils'
 }
 
-{ #category : #private }
+{ #category : #accessing }
 XMLIntegerReaderTest >> maxBase [
 	^ XMLIntegerReader maxBase
+]
+
+{ #category : #'instance creation' }
+XMLIntegerReaderTest >> newStreamOn: aCollection [
+	^ XMLExceptionRaisingReadStream on: aCollection
 ]
 
 { #category : #tests }
 XMLIntegerReaderTest >> testBaseMarker [
 	2 to: self maxBase do: [:base | | stream defaultBase |
 		defaultBase := (base - 1) max: 2.
-		stream := ((base printStringBase: base) copyWithFirst: $#) readStream.
+		stream := self newStreamOn: ((base printStringBase: base) copyWithFirst: $#).
 		self
 			assert:
 				(XMLIntegerReader
 					readFrom: stream
 					withBase: base
-					startingWithAny: '@#$'
+					andPrefixes: '@#$'
 					orBase: defaultBase) = base;
 			assert: stream atEnd.
 
-		stream := (base printStringBase: defaultBase) readStream.
+		stream := self newStreamOn: (base printStringBase: defaultBase).
 		self
 			assert:
 				(XMLIntegerReader
 					readFrom: stream
 					withBase: base
-					startingWithAny: '@#$'
+					andPrefixes: '@#$'
 					orBase: defaultBase) = base;
-			assert: stream atEnd].
+			assert: stream atEnd]
 ]
 
 { #category : #tests }
 XMLIntegerReaderTest >> testBases [
 	2 to: self maxBase do: [:base | | stream |
 		(0 to: base), (base + 1 to: base * 10 by: base) do: [:i |
-			stream := (i printStringBase: base) readStream.
+			stream := self newStreamOn: (i printStringBase: base).
 			self
 				assert: (XMLIntegerReader readFrom: stream withBase: base) = i;
 				assert: stream atEnd]].
 	self
-		should: [XMLIntegerReader readFrom: '1' readStream withBase: 1]
+		should: [
+			XMLIntegerReader
+				readFrom: (self newStreamOn: '1')
+				withBase: 1]
 		raise: Error.
 	self
-		should: [XMLIntegerReader readFrom: '1' readStream withBase: self maxBase + 1]
+		should: [
+			XMLIntegerReader
+				readFrom: (self newStreamOn: '1')
+				withBase: self maxBase + 1]
 		raise: Error.
 ]
 
@@ -58,12 +69,12 @@ XMLIntegerReaderTest >> testMaxIntegerValue [
 	2 to: self maxBase do: [:base |
 		self assert:
 			(XMLIntegerReader
-				readFrom: (maxValue printStringBase: base) readStream
+				readFrom: (self newStreamOn: (maxValue printStringBase: base))
 				withBase: base) = maxValue.
 		1 to: base do: [:i |
 			self  assert:
 				(XMLIntegerReader
-					readFrom: ((maxValue + i) printStringBase: base) readStream
+					readFrom: (self newStreamOn: ((maxValue + i) printStringBase: base))
 					withBase: base) = maxValue]].
 ]
 
@@ -81,7 +92,7 @@ XMLIntegerReaderTest >> testNonDigit [
 				uppercaseLetterInterval := #()].
 		0 to: 256 do: [:each | | char reader |
 			char := each asCharacter.
-			reader := XMLIntegerReader on: char asString readStream.
+			reader := XMLIntegerReader on: (self newStreamOn: char asString).
 			((digitInterval includes: each)
 				or: [(letterInterval includes: each)
 					or: [uppercaseLetterInterval includes: each]])
@@ -102,13 +113,16 @@ XMLIntegerReaderTest >> testPositioning [
 	| reader string |
 
 	string := 'test'.
-	reader := XMLIntegerReader on: string readStream.
+	reader := XMLIntegerReader on: (self newStreamOn: string).
 	string do: [:each |
 		self
 			deny: reader atEnd;
 			assert: reader peek = each;
 			assert: reader next = each].
-	self assert: reader atEnd.
+	self
+		assert: reader atEnd;
+		assert: reader peek isNil;
+		assert: reader next isNil.
 ]
 
 { #category : #tests }
@@ -116,19 +130,19 @@ XMLIntegerReaderTest >> testPrintStream [
 	| printStream reader |
 
 	printStream := String new writeStream.
-	(reader := XMLIntegerReader on: '123xABChdefO11' readStream)
+	(reader := XMLIntegerReader on: (self newStreamOn: '123xABChdefO11'))
 		printStream: printStream.
 	self
 		assert: (reader nextIntegerWithBase: 10) = 123;
 		assert: printStream contents = '123';
-		assert: (reader nextIntegerWithBase: 16 startingWithAny: 'x' orBase: 10) = 2748;
+		assert: (reader nextIntegerWithBase: 16 andPrefixes: 'x' orBase: 10) = 2748;
 		assert: printStream contents = '123xABC';
-		assert: (reader nextIntegerWithBase: 16 startingWithAny: 'h' orBase: 10) = 3567;
+		assert: (reader nextIntegerWithBase: 16 andPrefixes: 'h' orBase: 10) = 3567;
 		assert: printStream contents = '123xABChdef'.
 
 	reader printStream: nil.
 	self
-		assert: (reader nextIntegerWithBase: 8 startingWithAny: 'oO' orBase: 10) = 9;
+		assert: (reader nextIntegerWithBase: 8 andPrefixes: 'oO' orBase: 10) = 9;
 		assert: printStream contents = '123xABChdef';
 		assert: reader atEnd.
 ]
@@ -137,34 +151,9 @@ XMLIntegerReaderTest >> testPrintStream [
 XMLIntegerReaderTest >> testReadLimit [
 	2 to: self maxBase do: [:base | | stream |
 		"101 regardless of base"
-		stream := (base * base + 1 printStringBase: base) readStream.
+		stream := self newStreamOn: (base * base + 1 printStringBase: base).
 		self
 			assert: (XMLIntegerReader readFrom: stream withBase: base upTo: 2) = base;
 			deny: stream atEnd;
 			assert: stream next == $1]
-]
-
-{ #category : #tests }
-XMLIntegerReaderTest >> testStreamReadingPortability [
-	| stream integerReader |
-
-	stream := XMLExceptionRaisingReadStream on: '123abc'.
-	integerReader := XMLIntegerReader on: stream.
-	self
-		assert: (integerReader nextIntegerWithBase: 16) = 16r123ABC;
-		assert: integerReader atEnd.
-	self
-		shouldnt: [
-			integerReader
-				nextInteger;
-				nextIntegerWithBase: 16;
-				nextIntegerWithBase: 16 upTo: 1;
-				nextIntegerWithBase: 16 startingWithAny: 'x' orBase: 10;
-				peek;
-				next]
-		raise: Error.
-
-	self assert: stream atEnd.
-	self should: [stream peek] raise: Error.
-	self should: [stream next] raise: Error.
 ]

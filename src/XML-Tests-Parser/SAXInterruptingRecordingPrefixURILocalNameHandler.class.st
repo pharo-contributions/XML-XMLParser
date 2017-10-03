@@ -279,35 +279,35 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> startDocument [
 ]
 
 { #category : #'handling - content' }
-SAXInterruptingRecordingPrefixURILocalNameHandler >> startElement: aQualifiedName attributes: aDictionary [
+SAXInterruptingRecordingPrefixURILocalNameHandler >> startElement: aQualifiedName attributes: anAttributeDictionary [
 	super
 		startElement: aQualifiedName
-		attributes: aDictionary.
+		attributes: anAttributeDictionary.
 
 	self interruptOn = #startElement:attributes:
 		ifTrue: [self interruptParsing].
 ]
 
 { #category : #'handling - content' }
-SAXInterruptingRecordingPrefixURILocalNameHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes: aDictionary [
+SAXInterruptingRecordingPrefixURILocalNameHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes: anAttributeDictionary [
 	super
 		startElement: aQualifiedName
 		prefix: aPrefix
 		uri: aURI
-		attributes: aDictionary.
+		attributes: anAttributeDictionary.
 
 	self interruptOn = #startElement:prefix:uri:attributes:
 		ifTrue: [self interruptParsing].
 ]
 
 { #category : #'handling - content' }
-SAXInterruptingRecordingPrefixURILocalNameHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: aDictionary [
+SAXInterruptingRecordingPrefixURILocalNameHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: anAttributeDictionary [
 	super
 		startElement: aQualifiedName
 		prefix: aPrefix
 		uri: aURI
 		localName: aLocalName
-		attributes: aDictionary.
+		attributes: anAttributeDictionary.
 
 	self interruptOn = #startElement:prefix:uri:localName:attributes:
 		ifTrue: [self interruptParsing].

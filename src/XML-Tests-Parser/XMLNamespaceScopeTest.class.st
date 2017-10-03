@@ -360,7 +360,6 @@ XMLNamespaceScopeTest >> testResolvePrefix [
 
 	self assert:
 		(scope resolvePrefix: 'xml') = scope xmlNamespaceURI.
-
 	self assert:
 		(scope resolvePrefix: 'xmlns') = scope xmlnsNamespaceURI.
 ]
@@ -374,7 +373,7 @@ XMLNamespaceScopeTest >> testResolvePrefixIfUnresolvable [
 		self assert:
 			(scope
 				resolvePrefix: prefix
-				ifUnresolvable: [#unresolvable]) = #unresolvable.
+				ifUnresolvable: ['unresolvable']) = 'unresolvable'.
 		scope mapPrefix: prefix to: uri.
 		self assert:
 			(scope

@@ -274,21 +274,6 @@ XMLDOMParserTest >> testDeclaringXMLNamespace [
 ]
 
 { #category : #tests }
-XMLDOMParserTest >> testDisabledNamespacesAttributes [
-	| document |
-
-	document :=
-		XMLDOMParser
-			parse: '<root xmlns:prefix="prefixNS" xmlns="defaultNS" name="value"/>'
-			usingNamespaces: false.
-	self
-		assert: document root attributeNames asArray = #('xmlns:prefix' 'xmlns' 'name');
-		assert: (document root attributeAt: 'xmlns:prefix') = 'prefixNS';
-		assert: (document root attributeAt: 'xmlns') = 'defaultNS';
-		assert: (document root attributeAt: 'name') = 'value'.
-]
-
-{ #category : #tests }
 XMLDOMParserTest >> testDoctypeDeclaration [
 	| doctype |
 
@@ -308,17 +293,28 @@ XMLDOMParserTest >> testDoctypeDeclaration [
 
 { #category : #tests }
 XMLDOMParserTest >> testDocument [
-	| document root |
+	| parser document root |
 
-	document := XMLDOMParser parse: self addressBookXML.
-	document allNodesDo: [:each | self assert: each document == document].
+	parser := XMLDOMParser on: self addressBookXML.
+	self assert: parser document isNil.
+
+	document := parser parseDocument.
+	self assert: parser document == document.
+
+	parser on: self addressBookXML.
+	self assert: parser document isNil.
+
+	document allNodesDo: [:each |
+		self assert: each document == document].
 
 	root := document root.
 	root innerXML: self addressBookXML.
-	document allNodesDo: [:each | self assert: each document == document].
+	document allNodesDo: [:each |
+		self assert: each document == document].
 
 	document removeNode: root.
-	root allNodesDo: [:each | self assert: each document isNil].
+	root allNodesDo: [:each |
+		self assert: each document isNil].
 ]
 
 { #category : #tests }
@@ -750,6 +746,61 @@ XMLDOMParserTest >> testNamespacesDisabled [
 ]
 
 { #category : #tests }
+XMLDOMParserTest >> testNamespacesDisabledAttributes [
+	| document |
+
+	document :=
+		XMLDOMParser
+			parse: '<root xmlns:prefix="prefixNS" xmlns="defaultNS" name="value"/>'
+			usingNamespaces: false.
+	self
+		assert: document root attributeNames asArray = #('xmlns:prefix' 'xmlns' 'name');
+		assert: (document root attributeAt: 'xmlns:prefix') = 'prefixNS';
+		assert: (document root attributeAt: 'xmlns') = 'defaultNS';
+		assert: (document root attributeAt: 'name') = 'value'.
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testNamespacesDisabledReuse [
+	| parser document oldRootScope newRootScope |
+
+	parser := XMLDOMParser on: self addressBookNamespacedXML.
+	document :=
+		parser
+			usesNamespaces: true;
+			parseDocument.
+	oldRootScope := document root namespaceScope.
+	self assert: oldRootScope hasNamespaces.
+
+	document :=
+		parser
+			on: self addressBookNamespacedXML;
+			usesNamespaces: false;
+			parseDocument.
+	newRootScope := document root namespaceScope.
+	self
+		deny: newRootScope = oldRootScope;
+		deny: newRootScope hasNamespaces.
+
+	self
+		should: [
+			parser
+				on: '<test xmlns:unused="unusedNS"><used:test/></test>';
+				usesNamespaces: true;
+				parseDocument]
+		raise: XMLNamespaceException.
+	self
+		shouldnt: [
+			document :=
+				parser
+					on: '<test xmlns:unused="unusedNS"><used:test/></test>';
+					usesNamespaces: false;
+					parseDocument]
+		raise: XMLNamespaceException.
+	self deny: document root hasNamespaces.
+]
+
+{ #category : #tests }
 XMLDOMParserTest >> testNamespacesResolving [
 	| document |
 
@@ -842,6 +893,21 @@ XMLDOMParserTest >> testNodeParent [
 					self
 						assert: each hasParent;
 						assert: each parent == node]]]
+]
+
+{ #category : #tests }
+XMLDOMParserTest >> testNodeStack [
+	| parser  |
+
+	parser := XMLDOMParser on: self addressBookXML.
+	self assert: parser nodeStack isEmpty.
+
+	parser := XMLDOMParser on: self addressBookXML.
+	parser parser parseToken.
+	self deny: parser nodeStack isEmpty.
+
+	parser on: self addressBookXML.
+	self assert: parser nodeStack isEmpty.
 ]
 
 { #category : #tests }

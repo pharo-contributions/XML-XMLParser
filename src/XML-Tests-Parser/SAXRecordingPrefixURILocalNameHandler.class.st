@@ -9,7 +9,7 @@ Class {
 
 { #category : #'handling - content' }
 SAXRecordingPrefixURILocalNameHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #endElement:prefix:uri:localName:
 		arguments:
@@ -22,8 +22,8 @@ SAXRecordingPrefixURILocalNameHandler >> endElement: aQualifiedName prefix: aPre
 ]
 
 { #category : #'handling - content' }
-SAXRecordingPrefixURILocalNameHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: aDictionary [
-	self messageRecorder
+SAXRecordingPrefixURILocalNameHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: anAttributeDictionary [
+	self
 		recordMessageReceiver: self
 		selector: #startElement:prefix:uri:localName:attributes:
 		arguments:
@@ -32,6 +32,6 @@ SAXRecordingPrefixURILocalNameHandler >> startElement: aQualifiedName prefix: aP
 				addLast: aPrefix;
 				addLast: aURI;
 				addLast: aLocalName;
-				addLast: aDictionary;
+				addLast: anAttributeDictionary;
 				yourself)
 ]

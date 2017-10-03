@@ -25,6 +25,11 @@ XMLReadStreamAdapterTest >> streamAdapterClass [
 ]
 
 { #category : #accessing }
+XMLReadStreamAdapterTest >> streamClass [
+	^ XMLExceptionRaisingReadStream
+]
+
+{ #category : #accessing }
 XMLReadStreamAdapterTest >> streamCollection [
 	^ self inputCollection
 ]
@@ -95,9 +100,13 @@ XMLReadStreamAdapterTest >> testPeekFor [
 	self outputCollection do: [:each |
 		self
 			deny: (adapter peekFor: #absent);
+			deny: (adapter peekFor: nil);
 			assert: (adapter peekFor: each);
-			deny: (adapter peekFor: #absent)].
-	self deny: (adapter peekFor: #absent).
+			deny: (adapter peekFor: #absent);
+			deny: (adapter peekFor: nil)].
+	self
+		deny: (adapter peekFor: #absent);
+		deny: (adapter peekFor: nil).
 ]
 
 { #category : #tests }
@@ -170,33 +179,6 @@ XMLReadStreamAdapterTest >> testSkipTo [
 	self
 		deny: (adapter skipTo: #absent);
 		assert: adapter atEnd.
-]
-
-{ #category : #tests }
-XMLReadStreamAdapterTest >> testStreamReadingPortability [
-	| stream adapter |
-
-	stream := XMLExceptionRaisingReadStream on: self streamCollection.
-	adapter := self newStreamAdapterOn: stream.
-	self outputCollection do: [:each |
-		self
-			deny: adapter atEnd;
-			assert: adapter peek = each;
-			assert: adapter next = each].
-	self assert: adapter atEnd.
-	self
-		shouldnt: [
-			adapter
-				peek;
-				next]
-		raise: Error.
-	self
-		assert: adapter peek isNil;
-		assert: adapter next isNil.
-
-	self assert: stream atEnd.
-	self should: [stream peek] raise: Error.
-	self should: [stream next] raise: Error.
 ]
 
 { #category : #tests }

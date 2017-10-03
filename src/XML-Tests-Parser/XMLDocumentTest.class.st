@@ -186,7 +186,7 @@ XMLDocumentTest >> testIsStandalone [
 
 { #category : #tests }
 XMLDocumentTest >> testRoot [
-	| document documentNodes newRoot |
+	| document newRoot |
 
 	newRoot := self newElementWithAttributes.
 	document := self nodeClass root: newRoot.
@@ -197,19 +197,21 @@ XMLDocumentTest >> testRoot [
 	self assert: self newNode root isNil.
 
 	document := self newNodeWithElements.
-	documentNodes := document nodes.
 	self
-		assert: documentNodes size = 3;
-		assert: documentNodes first isComment;
-		assert: (documentNodes second isElementNamed: 'zero');
-		assert: documentNodes third isComment;
-		assert: document root == documentNodes second.
+		assert: document root == document nodes second;
+		assert: document nodes size = 3;
+		assert: document nodes first isComment;
+		assert: (document nodes second isElementNamed: 'zero');
+		assert: document nodes third isComment.
 
 	newRoot := self elementClass named: 'new-root'.
 	self
 		assert: (document root: newRoot) == document;
 		assert: document root == newRoot;
-		assert: document nodes = documentNodes.
+		assert: document nodes size = 3;
+		assert: document nodes first isComment;
+		assert: document nodes second == newRoot;
+		assert: document nodes third isComment.
 
 	document removeNodes.
 	self assert: document root isNil.

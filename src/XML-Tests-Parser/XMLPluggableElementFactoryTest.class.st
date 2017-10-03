@@ -29,7 +29,7 @@ XMLPluggableElementFactoryTest >> realNameElementClass [
 	^ XMLFRealNameElement
 ]
 
-{ #category : #'source XML' }
+{ #category : #source }
 XMLPluggableElementFactoryTest >> sampleUsersXML [
 	^
 		'<users>

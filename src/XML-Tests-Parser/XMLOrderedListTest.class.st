@@ -1788,7 +1788,13 @@ XMLOrderedListTest >> testSwapWith [
 		should: [list swap: 0 with: 1]
 		raise: Error.
 	self
+		should: [list swap: 1 with: 0]
+		raise: Error.
+	self
 		should: [list swap: list size + 1 with: list size]
+		raise: Error.
+	self
+		should: [list swap: list size with: list size + 1]
 		raise: Error.
 	self assert: list = self listWithItems.
 ]

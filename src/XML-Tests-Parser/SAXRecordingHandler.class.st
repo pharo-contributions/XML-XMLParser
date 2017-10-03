@@ -51,13 +51,20 @@ SAXRecordingHandler class >> generateRecordingHandlerMethods [
 ]
 
 { #category : #accessing }
+SAXRecordingHandler >> allSentMessages [
+	^ self messageRecorder messages asArray
+]
+
+{ #category : #accessing }
 SAXRecordingHandler >> allSentMessagesNamed: aName [
-	^ self messageRecorder messagesSelect: [:each | each selector = aName asSymbol]
+	^ (self messageRecorder messagesSelect: [:each |
+		each selector = aName asSymbol]) asArray
 ]
 
 { #category : #accessing }
 SAXRecordingHandler >> allSentSelectors [
-	^ (self messageRecorder messagesCollect: [:each | each selector]) asArray
+	^ (self messageRecorder messagesCollect: [:each |
+		each selector]) asArray
 ]
 
 { #category : #accessing }
@@ -70,7 +77,7 @@ SAXRecordingHandler >> argumentsSentWith: aSelector [
 
 { #category : #'handling - declaration' }
 SAXRecordingHandler >> attributeDeclaration: anElementName name: anAttributeName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #attributeDeclaration:name:type:defaultPragma:defaultValue:
 		arguments:
@@ -85,7 +92,7 @@ SAXRecordingHandler >> attributeDeclaration: anElementName name: anAttributeName
 
 { #category : #'handling - content' }
 SAXRecordingHandler >> characters: aString [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #characters:
 		arguments:
@@ -96,7 +103,7 @@ SAXRecordingHandler >> characters: aString [
 
 { #category : #'handling - lexical' }
 SAXRecordingHandler >> comment: aString [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #comment:
 		arguments:
@@ -107,7 +114,7 @@ SAXRecordingHandler >> comment: aString [
 
 { #category : #'handling - declaration' }
 SAXRecordingHandler >> elementDeclaration: anElementName contentModel: aContentModel [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #elementDeclaration:contentModel:
 		arguments:
@@ -119,28 +126,28 @@ SAXRecordingHandler >> elementDeclaration: anElementName contentModel: aContentM
 
 { #category : #'handling - lexical' }
 SAXRecordingHandler >> endCData [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #endCData
 ]
 
 { #category : #'handling - lexical' }
 SAXRecordingHandler >> endDTD [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #endDTD
 ]
 
 { #category : #'handling - content' }
 SAXRecordingHandler >> endDocument [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #endDocument
 ]
 
 { #category : #'handling - content' }
 SAXRecordingHandler >> endElement: aQualifiedName [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #endElement:
 		arguments:
@@ -151,7 +158,7 @@ SAXRecordingHandler >> endElement: aQualifiedName [
 
 { #category : #'handling - lexical' }
 SAXRecordingHandler >> endEntity: anEntityName [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #endEntity:
 		arguments:
@@ -162,7 +169,7 @@ SAXRecordingHandler >> endEntity: anEntityName [
 
 { #category : #'handling - content' }
 SAXRecordingHandler >> endPrefixMapping: aPrefix [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #endPrefixMapping:
 		arguments:
@@ -173,7 +180,7 @@ SAXRecordingHandler >> endPrefixMapping: aPrefix [
 
 { #category : #'handling - declaration' }
 SAXRecordingHandler >> generalEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotationName [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #generalEntityDeclaration:publicID:systemID:ndata:
 		arguments:
@@ -187,7 +194,7 @@ SAXRecordingHandler >> generalEntityDeclaration: aName publicID: aPublicID syste
 
 { #category : #'handling - declaration' }
 SAXRecordingHandler >> generalEntityDeclaration: aName replacement: aReplacement [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #generalEntityDeclaration:replacement:
 		arguments:
@@ -199,7 +206,7 @@ SAXRecordingHandler >> generalEntityDeclaration: aName replacement: aReplacement
 
 { #category : #'handling - content' }
 SAXRecordingHandler >> ignorableWhitespace: aString [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #ignorableWhitespace:
 		arguments:
@@ -215,7 +222,7 @@ SAXRecordingHandler >> messageRecorder [
 
 { #category : #'handling - declaration' }
 SAXRecordingHandler >> notationDeclaration: aName publicID: aPublicID systemID: aSystemID [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #notationDeclaration:publicID:systemID:
 		arguments:
@@ -228,7 +235,7 @@ SAXRecordingHandler >> notationDeclaration: aName publicID: aPublicID systemID: 
 
 { #category : #'handling - declaration' }
 SAXRecordingHandler >> parameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #parameterEntityDeclaration:publicID:systemID:
 		arguments:
@@ -241,7 +248,7 @@ SAXRecordingHandler >> parameterEntityDeclaration: aName publicID: aPublicID sys
 
 { #category : #'handling - declaration' }
 SAXRecordingHandler >> parameterEntityDeclaration: aName replacement: aReplacement [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #parameterEntityDeclaration:replacement:
 		arguments:
@@ -253,7 +260,7 @@ SAXRecordingHandler >> parameterEntityDeclaration: aName replacement: aReplaceme
 
 { #category : #'handling - content' }
 SAXRecordingHandler >> processingInstruction: aTargetString data: aDataString [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #processingInstruction:data:
 		arguments:
@@ -263,9 +270,37 @@ SAXRecordingHandler >> processingInstruction: aTargetString data: aDataString [
 				yourself)
 ]
 
+{ #category : #recording }
+SAXRecordingHandler >> recordMessage: aMessage [
+	self messageRecorder recordMessage: aMessage
+]
+
+{ #category : #recording }
+SAXRecordingHandler >> recordMessageReceiver: anObject selector: aSelector [
+	self messageRecorder
+		recordMessageReceiver: anObject
+		selector: aSelector
+]
+
+{ #category : #recording }
+SAXRecordingHandler >> recordMessageReceiver: anObject selector: aSelector argument: anArgument [
+	self messageRecorder
+		recordMessageReceiver: anObject
+		selector: aSelector
+		argument: anArgument
+]
+
+{ #category : #recording }
+SAXRecordingHandler >> recordMessageReceiver: anObject selector: aSelector arguments: aSequenceableCollection [
+	self messageRecorder
+		recordMessageReceiver: anObject
+		selector: aSelector
+		arguments: aSequenceableCollection
+]
+
 { #category : #'handling - content' }
 SAXRecordingHandler >> skippedEntity: anEntityName [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #skippedEntity:
 		arguments:
@@ -276,14 +311,14 @@ SAXRecordingHandler >> skippedEntity: anEntityName [
 
 { #category : #'handling - lexical' }
 SAXRecordingHandler >> startCData [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #startCData
 ]
 
 { #category : #'handling - lexical' }
 SAXRecordingHandler >> startDTD: aRootElementName publicID: aPublicID systemID: aSystemID [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #startDTD:publicID:systemID:
 		arguments:
@@ -296,26 +331,26 @@ SAXRecordingHandler >> startDTD: aRootElementName publicID: aPublicID systemID: 
 
 { #category : #'handling - content' }
 SAXRecordingHandler >> startDocument [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #startDocument
 ]
 
 { #category : #'handling - content' }
-SAXRecordingHandler >> startElement: aQualifiedName attributes: aDictionary [
-	self messageRecorder
+SAXRecordingHandler >> startElement: aQualifiedName attributes: anAttributeDictionary [
+	self
 		recordMessageReceiver: self
 		selector: #startElement:attributes:
 		arguments:
 			(OrderedCollection new
 				addLast: aQualifiedName;
-				addLast: aDictionary;
+				addLast: anAttributeDictionary;
 				yourself)
 ]
 
 { #category : #'handling - lexical' }
 SAXRecordingHandler >> startEntity: anEntityName [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #startEntity:
 		arguments:
@@ -326,7 +361,7 @@ SAXRecordingHandler >> startEntity: anEntityName [
 
 { #category : #'handling - content' }
 SAXRecordingHandler >> startPrefixMapping: aPrefix uri: aURI [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #startPrefixMapping:uri:
 		arguments:
@@ -348,7 +383,7 @@ SAXRecordingHandler >> wasSentSelectors: aSelectorArray [
 
 { #category : #'handling - lexical' }
 SAXRecordingHandler >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
-	self messageRecorder
+	self
 		recordMessageReceiver: self
 		selector: #xmlVersion:encoding:standalone:
 		arguments:

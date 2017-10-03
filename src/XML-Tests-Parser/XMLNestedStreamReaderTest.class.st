@@ -4,6 +4,11 @@ Class {
 	#category : #'XML-Tests-Parser-Streams'
 }
 
+{ #category : #asserting }
+XMLNestedStreamReaderTest class >> shouldInheritTests [
+	^ true
+]
+
 { #category : #accessing }
 XMLNestedStreamReaderTest >> absentChar [
 	^ $!
@@ -20,13 +25,30 @@ XMLNestedStreamReaderTest >> lf [
 ]
 
 { #category : #'instance creation' }
+XMLNestedStreamReaderTest >> newStreamOn: aCollection [
+	^ XMLExceptionRaisingReadStream on: aCollection
+]
+
+{ #category : #'instance creation' }
+XMLNestedStreamReaderTest >> newStreamOnSourceXML [
+	^ self newStreamOn: self sourceXML
+]
+
+{ #category : #'instance creation' }
 XMLNestedStreamReaderTest >> newStreamReaderOn: aStream [
-	^ XMLNestedStreamReader on: aStream
+	^ self streamReaderClass on: aStream
 ]
 
 { #category : #'instance creation' }
 XMLNestedStreamReaderTest >> newStreamReaderOnSourceXML [
-	^ self newStreamReaderOn: self sourceXML readStream
+	^ self newStreamReaderOn: self newStreamOnSourceXML
+]
+
+{ #category : #accessing }
+XMLNestedStreamReaderTest >> nonLineEndingSeparators [
+	^ self separators reject: [:each |
+		each = self cr
+			or: [each = self lf]]
 ]
 
 { #category : #accessing }
@@ -39,12 +61,18 @@ XMLNestedStreamReaderTest >> normalizedSourceXML [
 	^ self sourceXMLNormalizedWith: self normalizedLineEnding
 ]
 
+{ #category : #accessing }
+XMLNestedStreamReaderTest >> separators [
+	^ Character xmlSeparators
+]
+
 { #category : #source }
 XMLNestedStreamReaderTest >> sourceXML [
 	^ self sourceXMLTemplate format:
 		(Array
 			with: self lf
 			with: (String with: self cr with: self lf)
+			with: (String withAll: self nonLineEndingSeparators)
 			with: self cr)
 ]
 
@@ -54,12 +82,18 @@ XMLNestedStreamReaderTest >> sourceXMLNormalizedWith: aCharacter [
 		(Array
 			with: aCharacter
 			with: aCharacter
+			with: (String withAll: self nonLineEndingSeparators)
 			with: aCharacter)
 ]
 
 { #category : #source }
 XMLNestedStreamReaderTest >> sourceXMLTemplate [
-	^ '{1}	<test>{2}	   test{3}	</test>'
+	^ '{1}	<test>{2}	   test{3}test{4}</test>'
+]
+
+{ #category : #accessing }
+XMLNestedStreamReaderTest >> streamReaderClass [
+	^ XMLNestedStreamReader
 ]
 
 { #category : #tests }
@@ -92,10 +126,10 @@ XMLNestedStreamReaderTest >> testAtEnd [
 XMLNestedStreamReaderTest >> testCloseStreams [
 	| stream streamReader pushedBackStream evaluated |
 
-	stream := XMLExceptionRaisingReadStream on: self sourceXML.
+	stream := self newStreamOnSourceXML.
 	streamReader := self newStreamReaderOn: stream.
 
-	pushedBackStream := XMLExceptionRaisingReadStream on: self sourceXML.	
+	pushedBackStream := self newStreamOnSourceXML.
 	evaluated := false.
 	streamReader
 		pushBackStream: pushedBackStream
@@ -129,11 +163,11 @@ XMLNestedStreamReaderTest >> testHasPushedBackStreams [
 	streamReader := self newStreamReaderOnSourceXML.
 	self deny: streamReader hasPushedBackStreams.
 
-	streamReader pushBackStream: '' readStream.
+	streamReader pushBackStream: (self newStreamOn: '').
 	self assert: streamReader hasPushedBackStreams.
 
 	streamReader next.
-	self deny: streamReader hasPushedBackStreams.		
+	self deny: streamReader hasPushedBackStreams.
 ]
 
 { #category : #tests }
@@ -150,10 +184,14 @@ XMLNestedStreamReaderTest >> testIsStream [
 XMLNestedStreamReaderTest >> testLineEndingNormalizationAcrossStreams [
 	| streamReader |
 
-	streamReader := self newStreamReaderOn: (String with: self lf) readStream.
+	streamReader :=
+		self newStreamReaderOn:
+			(self newStreamOn: (String with: self lf)).
 	streamReader pushBackCharacter: self cr.
 	streamReader
-		pushBackStream: (String with: self cr with: self lf) readStream
+		pushBackStream:
+			(self newStreamOn:
+				(String with: self cr with: self lf))
 		whenPoppedDo: nil
 		isExternal: true.
 	self
@@ -207,14 +245,58 @@ XMLNestedStreamReaderTest >> testNormalizedLineEndingChar [
 ]
 
 { #category : #tests }
+XMLNestedStreamReaderTest >> testPeek [
+	| streamReader currentLineNumber currentColumnNumber currentPosition |
+
+	streamReader := self newStreamReaderOnSourceXML.
+	currentLineNumber := 1.
+	currentColumnNumber := currentPosition := 0.
+	self normalizedSourceXML do: [:each |
+		self
+			assert: streamReader peek = each;
+			assert: streamReader currentLineNumber = currentLineNumber;
+			assert: streamReader currentColumnNumber = currentColumnNumber.
+
+		streamReader next.
+		each = self normalizedLineEnding
+			ifTrue: [
+				currentLineNumber := currentLineNumber + 1.
+				currentColumnNumber := 0]
+			ifFalse: [currentColumnNumber := currentColumnNumber + 1].
+		currentPosition := currentPosition + 1.
+		self
+			assert: streamReader currentLineNumber = currentLineNumber;
+			assert: streamReader currentColumnNumber = currentColumnNumber;
+			assert: streamReader currentPosition = currentPosition].
+	self assert: streamReader peek isNil.
+]
+
+{ #category : #tests }
+XMLNestedStreamReaderTest >> testPeekFor [
+	| streamReader |
+
+	streamReader := self newStreamReaderOnSourceXML.
+	self normalizedSourceXML do: [:each |
+		self
+			deny: (streamReader peekFor: #absent);
+			deny: (streamReader peekFor: nil);
+			assert: (streamReader peekFor: each);
+			deny: (streamReader peekFor: #absent);
+			deny: (streamReader peekFor: nil)].
+	self
+		deny: (streamReader peekFor: #absent);
+		deny: (streamReader peekFor: nil).
+]
+
+{ #category : #tests }
 XMLNestedStreamReaderTest >> testPushBackStreamWhenPoppedDoIsExternal [
 	| streamReader evaluated |
 
-	streamReader := XMLNestedStreamReader on: '' readStream.
+	streamReader := self newStreamReaderOn: (self newStreamOn: '').
 	evaluated := false.
 	self assert:
 		(streamReader
-			pushBackStream: self sourceXML readStream
+			pushBackStream: self newStreamReaderOnSourceXML
 			whenPoppedDo: [evaluated := true]
 			isExternal: true) == streamReader.
 	self normalizedSourceXML do: [:each |
@@ -234,7 +316,7 @@ XMLNestedStreamReaderTest >> testPushBackStreamWhenPoppedDoIsExternalException [
 
 	| stream streamReader evaluated |
 
-	stream := XMLExceptionRaisingReadStream on: self sourceXML.
+	stream := self newStreamOnSourceXML.
 	streamReader := self newStreamReaderOnSourceXML.
 	evaluated := false.
 	streamReader
@@ -259,18 +341,18 @@ XMLNestedStreamReaderTest >> testPushBackStreamWhenPoppedDoIsExternalException [
 
 { #category : #tests }
 XMLNestedStreamReaderTest >> testSkipSeparators [
-	| streamReader readStream currentLineNumber currentColumnNumber currentPosition |
+	| streamReader stream currentLineNumber currentColumnNumber currentPosition |
 
 	streamReader := self newStreamReaderOnSourceXML.
-	readStream := self normalizedSourceXML readStream.
+	stream := self newStreamOn: self normalizedSourceXML.
 	currentLineNumber := 1.
 	currentColumnNumber := currentPosition := 0.
-	[readStream atEnd]
+	[stream atEnd]
 		whileFalse: [| totalSeparatorsSkipped |
 			totalSeparatorsSkipped := 0.
-			[readStream peek isXMLSeparator]
+			[self separators includes: stream peek]
 				whileTrue: [
-					readStream next = self normalizedLineEnding
+					stream next = self normalizedLineEnding
 						ifTrue: [
 							currentLineNumber := currentLineNumber + 1.
 							currentColumnNumber := 0]
@@ -284,7 +366,7 @@ XMLNestedStreamReaderTest >> testSkipSeparators [
 				assert: streamReader currentPosition = currentPosition.
 			totalSeparatorsSkipped > 0
 				ifFalse: [
-					readStream next.
+					stream next.
 					streamReader next.
 					currentColumnNumber := currentColumnNumber + 1.
 					currentPosition := currentPosition + 1]].
@@ -294,10 +376,9 @@ XMLNestedStreamReaderTest >> testSkipSeparators [
 XMLNestedStreamReaderTest >> testStreamPushbackPortability [
 	| streamReader output lastPeek lastNext |
 
-	streamReader := self newStreamReaderOn: '' readStream.
+	streamReader := self newStreamReaderOn: (self newStreamOn: '').
 	streamReader
-		pushBackStream:
-			(XMLExceptionRaisingReadStream on: self sourceXML)
+		pushBackStream: self newStreamOnSourceXML
 		whenPoppedDo: nil
 		isExternal: true.
 	output := String new writeStream.
@@ -316,35 +397,6 @@ XMLNestedStreamReaderTest >> testStreamPushbackPortability [
 		assert: lastPeek isNil;
 		assert: lastNext isNil;
 		assert: streamReader atEnd.
-]
-
-{ #category : #tests }
-XMLNestedStreamReaderTest >> testStreamReadingPortability [
-	| streamReader stream output lastPeek lastNext |
-
-	stream := XMLExceptionRaisingReadStream on: self sourceXML.
-	streamReader := self newStreamReaderOn: stream.
-	output := String new writeStream.
-	self
-		shouldnt: [
-			self normalizedSourceXML size timesRepeat: [
-				output nextPut:
-					(streamReader
-						peek;
-						next)].
-			lastPeek := streamReader peek.
-			lastNext := streamReader next]
-		raise: Error.
-	self
-		assert: output contents = self normalizedSourceXML;
-		assert: lastPeek isNil;
-		assert: lastNext isNil;
-		assert: streamReader atEnd.
-
-	self assert: stream wasClosed.
-	self should: [stream atEnd] raise: Error.
-	self should: [stream peek] raise: Error.
-	self should: [stream next] raise: Error.
 ]
 
 { #category : #tests }

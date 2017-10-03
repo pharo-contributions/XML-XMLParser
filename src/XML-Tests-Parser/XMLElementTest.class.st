@@ -497,37 +497,65 @@ XMLElementTest >> testDeclareNamespaces [
 	| element |
 
 	element := self newNode.
-	element declareNamespaces: self namespaces.
+	self assert: (element declareNamespaces: self namespaces) == element.
 	self namespaces keysAndValuesDo: [:prefix :uri |
 		self assert: (element isDeclaredPrefix: prefix uri: uri)].
 
 	element := self newNode.
-	element declareNamespaces: self namespaces associations.
+	self assert: (element declareNamespaces: self namespaces associations) == element.
 	self namespaces keysAndValuesDo: [:prefix :uri |
-		self assert: (element isDeclaredPrefix: prefix uri: uri)]
+		self assert: (element isDeclaredPrefix: prefix uri: uri)].
+
+	(element := self newNode) usesNamespaces: false.
+	self
+		assert: (element declareNamespaces: #()) == element;
+		assert: element usesNamespaces.
 ]
 
 { #category : #tests }
 XMLElementTest >> testDeclarePrefixURI [
 	| element elementsWithDeclaredPrefix |
 
-	(element := self newNodeWithElements)
-		declarePrefix: 'newPrefix' uri: 'prefixNS';
-		allElementsDo: [:each | self assert: (each isDeclaredPrefix: 'newPrefix' uri: 'prefixNS')];
-		declarePrefix: 'newPrefix' uri: 'newPrefixNS';
-		allElementsDo: [:each | self assert: (each isDeclaredPrefix: 'newPrefix' uri: 'newPrefixNS')].
+	element := self newNodeWithElements.
+	self assert:
+		(element
+			declarePrefix: 'newPrefix'
+			uri: 'prefixNS') == element.
+	element allElementsDo: [:each |
+		self assert:
+			(each
+				isDeclaredPrefix: 'newPrefix'
+				uri: 'prefixNS')].
+	self assert:
+		(element
+			declarePrefix: 'newPrefix'
+			uri: 'newPrefixNS') == element.
+	element allElementsDo: [:each |
+		self assert:
+			(each
+				isDeclaredPrefix: 'newPrefix'
+				uri: 'newPrefixNS')].
 
 	elementsWithDeclaredPrefix :=
 		element allElementsSelect: [:each | each prefix = 'prefix'].
-	element
-		declarePrefix: 'prefix' uri: 'newPrefixNS';
-		allElementsDo: [:each |
-			(elementsWithDeclaredPrefix includes: each)
-				ifTrue: [
-					self
-						assert: (each isDeclaredPrefix: 'prefix');
-						deny: (each isDeclaredPrefix: 'prefix' uri: 'newPrefixNS')]
-				ifFalse: [self assert: (each isDeclaredPrefix: 'prefix' uri: 'newPrefixNS')]].
+	self assert:
+		(element
+			declarePrefix: 'prefix'
+			uri: 'newPrefixNS') == element.
+	element allElementsDo: [:each |
+		(elementsWithDeclaredPrefix includes: each)
+			ifTrue: [
+				self
+					assert: (each isDeclaredPrefix: 'prefix');
+					deny:
+						(each
+							isDeclaredPrefix: 'prefix'
+							uri: 'newPrefixNS')]
+				ifFalse: [
+					self assert:
+						(each
+							isDeclaredPrefix: 'prefix'
+							uri: 'newPrefixNS')]].
 
 	self
 		should: [element declarePrefix: 'nonDefault' uri: '']
@@ -540,6 +568,13 @@ XMLElementTest >> testDeclarePrefixURI [
 	self
 		should: [element declarePrefix: 'xmlns' uri: XMLNamespaceScope xmlnsNamespaceURI]
 		raise: XMLNamespaceException.
+
+	(element := self newNode) usesNamespaces: false.
+	self assert:
+		(element
+			declarePrefix: 'prefix'
+			uri: 'prefixNS') == element.
+	self assert: element usesNamespaces.
 ]
 
 { #category : #tests }
@@ -554,6 +589,11 @@ XMLElementTest >> testDeclaredPrefixes [
 			uri: uri.
 		prefixes addLast: prefix.
 		self assert: element declaredPrefixes = prefixes asArray].
+
+	(element := self newNode) usesNamespaces: false.
+	self
+		assert: element declaredPrefixes isEmpty;
+		deny: element usesNamespaces.
 ]
 
 { #category : #tests }
@@ -577,6 +617,11 @@ XMLElementTest >> testDeclaresDefaultNamespace [
 	self deny: element declaresDefaultNamespace.
 	element elementsDo: [:each |
 		self assert: each declaresDefaultNamespace].
+
+	(element := self newNode) usesNamespaces: false.
+	self
+		deny: element declaresDefaultNamespace;
+		deny: element usesNamespaces.
 ]
 
 { #category : #tests }
@@ -586,20 +631,49 @@ XMLElementTest >> testDeclaresPrefixURI [
 	element := self newNodeWithElements.
 	self deny: element declaresDefaultNamespace.
 
-	element declarePrefix: 'prefix' uri: 'prefixNS'.
-	self assert: (element declaresPrefix: 'prefix' uri: 'prefixNS').
+	element
+		declarePrefix: 'prefix'
+		uri: 'prefixNS'.
+	self assert:
+		(element
+			declaresPrefix: 'prefix'
+			uri: 'prefixNS').
 	element elementsDo: [:each |
-		self deny: (each declaresPrefix: 'prefix' uri: 'prefixNS')].
+		self deny:
+			(each
+				declaresPrefix: 'prefix'
+				uri: 'prefixNS')].
 
 	element elementsDo: [:each |
-		each declarePrefix: 'prefix' uri: 'newPrefixNS'.
-		self assert: (each declaresPrefix: 'prefix' uri: 'newPrefixNS')].
+		each
+			declarePrefix: 'prefix'
+			uri: 'newPrefixNS'.
+		self assert:
+			(each
+				declaresPrefix: 'prefix'
+				uri: 'newPrefixNS')].
 
-	self assert: (element declaresPrefix: 'prefix' uri: 'prefixNS').
+	self assert:
+		(element
+			declaresPrefix: 'prefix'
+			uri: 'prefixNS').
 	element undeclarePrefix: 'prefix'.
-	self deny: (element declaresPrefix: 'prefix' uri: 'prefixNS').
+	self deny:
+		(element
+			declaresPrefix: 'prefix'
+			uri: 'prefixNS').
 	element elementsDo: [:each |
-		self assert: (each declaresPrefix: 'prefix' uri: 'newPrefixNS')].
+		self assert:
+			(each
+				declaresPrefix: 'prefix'
+				uri: 'newPrefixNS')].
+
+	(element := self newNode) usesNamespaces: false.
+	self deny:
+		(element
+			declaresPrefix: 'prefix'
+			uri: 'prefixNS').
+	self deny: element usesNamespaces.
 ]
 
 { #category : #tests }
@@ -611,19 +685,24 @@ XMLElementTest >> testDefaultNamespace [
 		element allElementsSelect: [:each |
 			each defaultNamespace notEmpty].
 
-	element
-		defaultNamespace: 'newDefaultNS';
-		allElementsDo: [:each |
-			(elementsWithDefaultNamespace includes: each)
-				ifTrue: [self deny: (each defaultNamespace = 'newDefaultNS')]
-				ifFalse: [self assert: (each defaultNamespace = 'newDefaultNS')]].
+	self assert: (element defaultNamespace: 'newDefaultNS') == element.
+	element allElementsDo: [:each |
+		(elementsWithDefaultNamespace includes: each)
+			ifTrue: [self deny: (each defaultNamespace = 'newDefaultNS')]
+			ifFalse: [self assert: (each defaultNamespace = 'newDefaultNS')]].
 
-	element
-		defaultNamespace: '';
-		allElementsDo: [:each |
-			(elementsWithDefaultNamespace includes: each)
-				ifTrue: [self deny: each defaultNamespace = '']
-				ifFalse: [self assert: each defaultNamespace = '']].
+	self assert: (element defaultNamespace: '') == element.
+	element allElementsDo: [:each |
+		(elementsWithDefaultNamespace includes: each)
+			ifTrue: [self deny: each defaultNamespace = '']
+			ifFalse: [self assert: each defaultNamespace = '']].
+
+	(element := self newNode) usesNamespaces: false.
+	self
+		assert: element defaultNamespace = '';
+		deny: element usesNamespaces;
+		assert: (element defaultNamespace: '') == element;
+		assert: element usesNamespaces.
 ]
 
 { #category : #tests }
@@ -786,8 +865,8 @@ XMLElementTest >> testIsDeclaredPrefix [
 
 	element := self newNodeWithElements.
 	elementsWithDeclaredPrefix :=
-		element allElementsSelect: [:each | each isDeclaredPrefix: 'prefix'].
-	self assert: elementsWithDeclaredPrefix size = 2.
+		element allElementsSelect: [:each |
+			each isDeclaredPrefix: 'prefix'].
 
 	element allElementsDo: [:each |
 		(elementsWithDeclaredPrefix includes: each )
@@ -801,32 +880,57 @@ XMLElementTest >> testIsDeclaredPrefix [
 		(elementsWithDeclaredPrefix includes: each )
 			ifTrue: [self assert: (each isDeclaredPrefix: 'prefix')]
 			ifFalse: [self deny: (each isDeclaredPrefix: 'prefix')]].
+
+	(element := self newNode) usesNamespaces: false.
+	self
+		deny: (element isDeclaredPrefix: 'prefix');
+		deny: element usesNamespaces.
 ]
 
 { #category : #tests }
 XMLElementTest >> testIsDeclaredPrefixURI [
-	| element elementsWithDeclaredPrefix oldNamespace |
+	| element elementsWithDeclaredPrefix |
 
 	element := self newNodeWithElements.
 	elementsWithDeclaredPrefix :=
-		element allElementsSelect: [:each | each isDeclaredPrefix: 'prefix'].
-	oldNamespace := elementsWithDeclaredPrefix anyOne resolvePrefix: 'prefix'.
-	self assert: elementsWithDeclaredPrefix size = 2.
+		element allElementsSelect: [:each |
+			each isDeclaredPrefix: 'prefix'].
 
 	element allElementsDo: [:each |
-		self deny: (each isDeclaredPrefix: 'prefix' uri: 'newPrefixNS')].
+		self deny:
+			(each
+				isDeclaredPrefix: 'prefix'
+				uri: 'newPrefixNS')].
 
-	element declarePrefix: 'prefix' uri: 'newPrefixNS'.
+	element
+		declarePrefix: 'prefix'
+		uri: 'newPrefixNS'.
 	element allElementsDo: [:each |
 		(elementsWithDeclaredPrefix includes: each )
-			ifTrue: [self assert: (each isDeclaredPrefix: 'prefix' uri: oldNamespace)]
-			ifFalse: [self assert: (each isDeclaredPrefix: 'prefix' uri: 'newPrefixNS')]].
+			ifTrue: [
+				self assert: (each isDeclaredPrefix: 'prefix').
+				self deny:
+					(each
+						isDeclaredPrefix: 'prefix'
+						uri: 'newPrefixNS')]
+			ifFalse: [
+				self assert:
+					(each
+						isDeclaredPrefix: 'prefix'
+						uri: 'newPrefixNS')]].
 
 	element undeclarePrefix: 'prefix'.
 	element allElementsDo: [:each |
 		(elementsWithDeclaredPrefix includes: each )
-			ifTrue: [self assert: (each isDeclaredPrefix: 'prefix' uri: oldNamespace)]
+			ifTrue: [self assert: (each isDeclaredPrefix: 'prefix')]
 			ifFalse: [self deny: (each isDeclaredPrefix: 'prefix')]].
+
+	(element := self newNode) usesNamespaces: false.
+	self deny:
+		(element
+			isDeclaredPrefix: 'prefix'
+			uri: 'prefixNS').
+	self deny: element usesNamespaces.
 ]
 
 { #category : #tests }
@@ -1075,6 +1179,16 @@ XMLElementTest >> testNameNamespaceURI [
 				name: 'prefix:three'
 				namespaceURI: '']
 		raise: XMLNamespaceException.
+
+	(element := self newNode) usesNamespaces: false.
+	self assert:
+		(element
+			name: 'four'
+			namespaceURI: 'defaultNS') == element.
+	self
+		assert: element name = 'four';
+		assert: element namespaceURI = 'defaultNS';
+		assert: element usesNamespaces.
 ]
 
 { #category : #tests }
@@ -1454,9 +1568,14 @@ XMLElementTest >> testResolvePrefix [
 
 	self assert:
 		(element resolvePrefix: 'xml') = XMLNamespaceScope xmlNamespaceURI.
-
 	self assert:
 		(element resolvePrefix: 'xmlns') = XMLNamespaceScope xmlnsNamespaceURI.
+
+	(element := self newNode) usesNamespaces: false.
+	self
+		assert: (element resolvePrefix: 'xml') = '';
+		assert: (element resolvePrefix: 'xmlns') = '';
+		deny: element usesNamespaces.
 ]
 
 { #category : #tests }
@@ -1468,7 +1587,7 @@ XMLElementTest >> testResolvePrefixIfUnresolvable [
 		self assert:
 			(element
 				resolvePrefix: prefix
-				ifUnresolvable: [#unresolvable]) = #unresolvable.
+				ifUnresolvable: ['unresolvable']) = 'unresolvable'.
 		element declarePrefix: prefix uri: uri.
 		self assert:
 			(element
@@ -1483,6 +1602,17 @@ XMLElementTest >> testResolvePrefixIfUnresolvable [
 		(element
 			resolvePrefix: 'xmlns'
 			ifUnresolvable: [self fail]) = XMLNamespaceScope xmlnsNamespaceURI.
+
+	(element := self newNode) usesNamespaces: false.
+	self assert:
+		(element
+			resolvePrefix: 'xml'
+			ifUnresolvable: ['unresolvable']) = 'unresolvable'.
+	self  assert:
+		(element
+			resolvePrefix: 'xmlns'
+			ifUnresolvable: ['unresolvable']) = 'unresolvable'.
+	self deny: element usesNamespaces.
 ]
 
 { #category : #tests }
@@ -1511,11 +1641,19 @@ XMLElementTest >> testResolvePrefixesOfNamespaceURI [
 		(element resolvePrefixesOfNamespaceURI:
 			XMLNamespaceScope xmlNamespaceURI) =
 				(Set with: 'xml').
-
 	self assert:
 		(element resolvePrefixesOfNamespaceURI:
 			XMLNamespaceScope xmlnsNamespaceURI) =
 				(Set with: 'xmlns').
+
+	(element := self newNode) usesNamespaces: false.
+	self assert:
+		(element resolvePrefixesOfNamespaceURI:
+			XMLNamespaceScope xmlNamespaceURI) isEmpty.
+	self assert:
+		(element resolvePrefixesOfNamespaceURI:
+			XMLNamespaceScope xmlnsNamespaceURI) isEmpty.
+	self deny: element usesNamespaces.
 ]
 
 { #category : #tests }
@@ -1542,19 +1680,31 @@ XMLElementTest >> testSortKey [
 
 { #category : #tests }
 XMLElementTest >> testUndeclareDefaultNamespace [
-	| element elementsWithDefaultNamespace |
+	| element oldRootDefaultNamespace elementsWithCustomDefaultNamespace |
 
 	element := self newNodeWithElements.
-	elementsWithDefaultNamespace :=
-		element allElementsSelect: [:each | each defaultNamespace notEmpty].
+	oldRootDefaultNamespace := element defaultNamespace.
+	elementsWithCustomDefaultNamespace :=
+		element descendantElementsSelect: [:each |
+			each defaultNamespace notEmpty
+				and: [each defaultNamespace ~= oldRootDefaultNamespace]].
 
 	element
-		defaultNamespace: 'defaultNS';
+		defaultNamespace: 'newDefaultNS';
 		undeclareDefaultNamespace;
 		allElementsDo: [:each |
-			(elementsWithDefaultNamespace includes: each)
-				ifTrue: [self assert: each defaultNamespace notEmpty]
+			(elementsWithCustomDefaultNamespace includes: each)
+				ifTrue: [
+					self
+						assert: each defaultNamespace notEmpty;
+						deny: each defaultNamespace = oldRootDefaultNamespace;
+						deny: each defaultNamespace = 'newDefaultNS']
 				ifFalse: [self assert: each defaultNamespace isEmpty]].
+
+	(element := self newNode) usesNamespaces: false.
+	self
+		assert: element undeclareDefaultNamespace == element;
+		assert: element usesNamespaces.
 ]
 
 { #category : #tests }
@@ -1562,18 +1712,37 @@ XMLElementTest >> testUndeclarePrefix [
 	| element |
 
 	element := self newElementWithAttributes.
-	element addElementNamed: 'prefix:inner'.
+	element
+		declarePrefix: 'unused'
+		uri: 'unusedNS'.
+	element addElementNamed: 'prefixTwo:inner'.
 
 	self
 		assert: (element undeclarePrefix: '') == element;
-		assert: (element undeclarePrefix: 'prefixTwo') == element.
+		assert: (element undeclarePrefix: 'unused') == element.
 	element allElementsDo: [:each |
 		self
 			deny: (each isDeclaredPrefix: '');
-			deny: (each isDeclaredPrefix: 'prefixTwo')].
+			deny: (each isDeclaredPrefix: 'unusused');
+			assert: (each isDeclaredPrefix: 'prefixTwo')].
+
+	"this prefix is used by the subelement so it can't be undeclared"
 	self
-		should: [element undeclarePrefix: 'prefix']
+		should: [element undeclarePrefix: 'prefixTwo']
 		raise: XMLNamespaceException.
+
+	(element := self newElementWithAttributes)
+		attributeAt: 'prefixTwo:name'
+		put: 'value'.
+	"this prefix is used by an attribute so it can't be undeclared"
+	self
+		should: [element undeclarePrefix: 'prefixTwo']
+		raise: XMLNamespaceException.
+
+	(element := self newNode) usesNamespaces: false.
+	self
+		assert: (element undeclarePrefix: '') == element;
+		assert: element usesNamespaces.
 ]
 
 { #category : #tests }
@@ -1599,22 +1768,11 @@ XMLElementTest >> testUndeclarePrefixes [
 	self
 		should: [innerElement undeclarePrefixes]
 		raise: XMLNamespaceException.
-]
 
-{ #category : #tests }
-XMLElementTest >> testUndeclaringAttributePrefixes [
-	| element |
-
-	element := self newElementWithAttributes.
+	(element := self newNode) usesNamespaces: false.
 	self
-		shouldnt: [element undeclarePrefix: '']
-		raise: XMLNamespaceException.
-	self
-		shouldnt: [element undeclarePrefix: 'prefixTwo']
-		raise: XMLNamespaceException.
-	self
-		should: [element undeclarePrefix: 'prefix']
-		raise: XMLNamespaceException.
+		assert: element undeclarePrefixes == element;
+		assert: element usesNamespaces.
 ]
 
 { #category : #tests }
