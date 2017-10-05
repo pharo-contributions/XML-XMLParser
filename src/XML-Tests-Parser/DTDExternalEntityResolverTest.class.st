@@ -15,13 +15,8 @@ DTDExternalEntityResolverTest >> entityLimitsClass [
 ]
 
 { #category : #testing }
-DTDExternalEntityResolverTest >> isTestingLimitedAdapterClass [
+DTDExternalEntityResolverTest >> isTestingLimiting [
 	^ false
-]
-
-{ #category : #accessing }
-DTDExternalEntityResolverTest >> limitedAdapterClass [
-	^ DTDLimitedExternalEntityResolverAdapter
 ]
 
 { #category : #'instance creation' }
@@ -31,12 +26,9 @@ DTDExternalEntityResolverTest >> newEntityLimits [
 
 { #category : #'instance creation' }
 DTDExternalEntityResolverTest >> newResolver [
-	| resolver |
-
-	resolver := self resolverClass new.
-	^ self isTestingLimitedAdapterClass
-		ifTrue: [self limitedAdapterClass externalEntityResolver: resolver]
-		ifFalse: [resolver]
+	^ self isTestingLimiting
+		ifTrue: [self resolverClass new asLimitingExternalEntityResolver]
+		ifFalse: [self resolverClass new]
 ]
 
 { #category : #accessing }
@@ -62,7 +54,7 @@ DTDExternalEntityResolverTest >> testCopy [
 		assert: copy maxExternalEntitySize = 10000;
 		assert: copy resolvesLocalFromNonLocal.
 
-	self isTestingLimitedAdapterClass
+	self isTestingLimiting
 		ifTrue: [
 			self
 				assert: copy externalEntityResolver == resolver externalEntityResolver;
@@ -170,7 +162,7 @@ DTDExternalEntityResolverTest >> testResolvesLocalFromNonLocal [
 DTDExternalEntityResolverTest >> testTotalResolvedExternalEntities [
 	| resolver |
 
-	self isTestingLimitedAdapterClass
+	self isTestingLimiting
 		ifFalse: [^ self].
 
 	resolver := self newResolver.

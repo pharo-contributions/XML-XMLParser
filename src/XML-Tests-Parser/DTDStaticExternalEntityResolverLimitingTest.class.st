@@ -1,10 +1,10 @@
 Class {
-	#name : #DTDLimitedStaticExternalEntityResolverTest,
+	#name : #DTDStaticExternalEntityResolverLimitingTest,
 	#superclass : #DTDStaticExternalEntityResolverTest,
 	#category : #'XML-Tests-Parser-DTD'
 }
 
 { #category : #testing }
-DTDLimitedStaticExternalEntityResolverTest >> isTestingLimitedAdapterClass [
+DTDStaticExternalEntityResolverLimitingTest >> isTestingLimiting [
 	^ true
 ]

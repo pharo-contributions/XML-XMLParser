@@ -53,7 +53,7 @@ DTDStaticExternalEntityResolverTest >> testCopy [
 
 	super testCopy.
 
-	self isTestingLimitedAdapterClass
+	self isTestingLimiting
 		ifTrue: [^ self].
 
 	resolver := self newResolverWithEntities.
@@ -68,7 +68,7 @@ DTDStaticExternalEntityResolverTest >> testCopy [
 DTDStaticExternalEntityResolverTest >> testExternalEntities [
 	| resolver replacementAssociation |
 
-	self isTestingLimitedAdapterClass
+	self isTestingLimiting
 		ifTrue: [^ self].
 
 	resolver := self newResolver.
@@ -93,7 +93,7 @@ DTDStaticExternalEntityResolverTest >> testExternalEntities [
 DTDStaticExternalEntityResolverTest >> testExternalEntityAtURI [
 	| resolver |
 
-	self isTestingLimitedAdapterClass
+	self isTestingLimiting
 		ifTrue: [^ self].
 
 	resolver := self newResolver.
@@ -114,7 +114,7 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURI [
 DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsent [
 	| resolver |
 
-	self isTestingLimitedAdapterClass
+	self isTestingLimiting
 		ifTrue: [^ self].
 
 	resolver := self newResolver.
@@ -145,7 +145,7 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsent [
 DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsentPut [
 	| resolver |
 
-	self isTestingLimitedAdapterClass
+	self isTestingLimiting
 		ifTrue: [^ self].
 
 	resolver := self newResolver.
@@ -166,7 +166,7 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsentPut [
 DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIPut [
 	| resolver |
 
-	self isTestingLimitedAdapterClass
+	self isTestingLimiting
 		ifTrue: [^ self].
 
 	resolver := self newResolver.
@@ -187,7 +187,7 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIPut [
 
 { #category : #tests }
 DTDStaticExternalEntityResolverTest >> testHasExternalEntities [
-	self isTestingLimitedAdapterClass
+	self isTestingLimiting
 		ifTrue: [^ self].
 
 	self
@@ -199,7 +199,7 @@ DTDStaticExternalEntityResolverTest >> testHasExternalEntities [
 DTDStaticExternalEntityResolverTest >> testIncludesExternalEntityURI [
 	| resolver |
 
-	self isTestingLimitedAdapterClass
+	self isTestingLimiting
 		ifTrue: [^ self].
 
 	resolver := self newResolver.
@@ -220,7 +220,7 @@ DTDStaticExternalEntityResolverTest >> testIncludesExternalEntityURI [
 DTDStaticExternalEntityResolverTest >> testRemoveExternalEntities [
 	| resolver |
 
-	self isTestingLimitedAdapterClass
+	self isTestingLimiting
 		ifTrue: [^ self].
 
 	resolver := self newResolverWithEntities.
@@ -233,7 +233,7 @@ DTDStaticExternalEntityResolverTest >> testRemoveExternalEntities [
 DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURI [
 	| resolver |
 
-	self isTestingLimitedAdapterClass
+	self isTestingLimiting
 		ifTrue: [^ self].
 
 	resolver := self newResolverWithEntities.
@@ -253,7 +253,7 @@ DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURI [
 DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURIIfAbsent [
 	| resolver |
 
-	self isTestingLimitedAdapterClass
+	self isTestingLimiting
 		ifTrue: [^ self].
 
 	resolver := self newResolverWithEntities.
@@ -277,7 +277,7 @@ DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURIIfAbsent [
 DTDStaticExternalEntityResolverTest >> testResolveExternalEntityURI [
 	| resolver |
 
-	self isTestingLimitedAdapterClass
+	self isTestingLimiting
 		ifTrue: [^ self].
 
 	resolver := self newResolver.
@@ -310,7 +310,7 @@ DTDStaticExternalEntityResolverTest >> testResolveExternalEntityURI [
 DTDStaticExternalEntityResolverTest >> testStreamResolveExternalEntityURI [
 	| resolver |
 
-	self isTestingLimitedAdapterClass
+	self isTestingLimiting
 		ifTrue: [^ self].
 
 	resolver := self newResolver.
