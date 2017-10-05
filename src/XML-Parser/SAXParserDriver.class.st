@@ -119,8 +119,8 @@ SAXParserDriver >> externalEntityResolver [
 	^ externalEntityResolver
 		ifNil: [
 			externalEntityResolver :=
-				DTDLimitedExternalEntityResolverAdapter externalEntityResolver:
-					self saxHandler externalEntityResolver]
+				self saxHandler externalEntityResolver
+					asLimitingExternalEntityResolver]
 ]
 
 { #category : #private }

@@ -878,14 +878,15 @@ XMLWellFormedParserTokenizer >> nextAttributeIDOrIDRefType [
 XMLWellFormedParserTokenizer >> nextAttributeName [
 	| nextChar |
 
-	nameStream reset.
-	"nil understands isXMLNameStartChar so it does not need to be tested for"
+	"nil understands #isXMLNameStartChar so it does not need to be tested for"
 	(nextChar := streamReader next) isXMLNameStartChar
 		ifFalse: [self errorExpectedAttributeName].
-	nameStream nextPut: nextChar.
+	nameStream
+		reset;
+		nextPut: nextChar.
 
-	"nil understands isXMLNameChar so it does not need to be tested for"
-	[(nextChar := streamReader peek) isXMLNameChar]
+	"nil understands #isXMLNameChar so it does not need to be tested for"
+	[streamReader peek isXMLNameChar]
 		whileTrue: [nameStream nextPut: streamReader next].
 	^ nameStream contents.
 ]
@@ -1252,14 +1253,15 @@ XMLWellFormedParserTokenizer >> nextElementDeclaration [
 XMLWellFormedParserTokenizer >> nextElementName [
 	| nextChar |
 
-	nameStream reset.
-	"nil understands isXMLNameStartChar so it does not need to be tested for"
+	"nil understands #isXMLNameStartChar so it does not need to be tested for"
 	(nextChar := streamReader next) isXMLNameStartChar
 		ifFalse: [self errorExpectedElementName].
-	nameStream nextPut: nextChar.
+	nameStream
+		reset;
+		nextPut: nextChar.
 
-	"nil understands isXMLNameChar so it does not need to be tested for"
-	[(nextChar := streamReader peek) isXMLNameChar]
+	"nil understands #isXMLNameChar so it does not need to be tested for"
+	[streamReader peek isXMLNameChar]
 		whileTrue: [nameStream nextPut: streamReader next].
 	^ nameStream contents.
 ]
@@ -1268,13 +1270,13 @@ XMLWellFormedParserTokenizer >> nextElementName [
 XMLWellFormedParserTokenizer >> nextElementNameOnCharacterStream [
 	| nextChar |
 
-	"nil understands isXMLNameStartChar so it does not need to be tested for"
+	"nil understands #isXMLNameStartChar so it does not need to be tested for"
 	(nextChar := streamReader next) isXMLNameStartChar
 		ifFalse: [self errorExpectedElementName].
 	characterStream nextPut: nextChar.
 
-	"nil understands isXMLNameChar so it does not need to be tested for"
-	[(nextChar := streamReader peek) isXMLNameChar]
+	"nil understands #isXMLNameChar so it does not need to be tested for"
+	[streamReader peek isXMLNameChar]
 		whileTrue: [characterStream nextPut: streamReader next].
 ]
 
@@ -1390,14 +1392,15 @@ XMLWellFormedParserTokenizer >> nextEntityDeclaration [
 XMLWellFormedParserTokenizer >> nextEntityName [
 	| nextChar |
 
-	nameStream reset.
-	"nil understands isXMLNameStartChar so it does not need to be tested for"
+	"nil understands #isXMLNameStartChar so it does not need to be tested for"
 	(nextChar := streamReader next) isXMLNameStartChar
 		ifFalse: [self errorExpectedEntityName].
-	nameStream nextPut: nextChar.
+	nameStream
+		reset;
+		nextPut: nextChar.
 
-	"nil understands isXMLNameChar so it does not need to be tested for"
-	[(nextChar := streamReader peek) isXMLNameChar]
+	"nil understands #isXMLNameChar so it does not need to be tested for"
+	[streamReader peek isXMLNameChar]
 		whileTrue: [nameStream nextPut: streamReader next].
 	^ nameStream contents.
 ]
@@ -1406,13 +1409,13 @@ XMLWellFormedParserTokenizer >> nextEntityName [
 XMLWellFormedParserTokenizer >> nextEntityNameOnCharacterStream [
 	| nextChar |
 
-	"nil understands isXMLNameStartChar so it does not need to be tested for"
+	"nil understands #isXMLNameStartChar so it does not need to be tested for"
 	(nextChar := streamReader next) isXMLNameStartChar
 		ifFalse: [self errorExpectedEntityName].
 	characterStream nextPut: nextChar.
 
-	"nil understands isXMLNameChar so it does not need to be tested for"
-	[(nextChar := streamReader peek) isXMLNameChar]
+	"nil understands #isXMLNameChar so it does not need to be tested for"
+	[streamReader peek isXMLNameChar]
 		whileTrue: [characterStream nextPut: streamReader next].
 ]
 
@@ -1667,13 +1670,13 @@ XMLWellFormedParserTokenizer >> nextNmtokenOnCharacterStream [
 	"matches the Nmtoken production"
 	| nextChar |
 
-	"nil understands isXMLNameChar so it does not need to be tested for"
+	"nil understands #isXMLNameChar so it does not need to be tested for"
 	(nextChar := streamReader next) isXMLNameChar
 		ifFalse: [self errorExpectedNmtoken].
 	characterStream nextPut: nextChar.
 
-	"nil understands isXMLNameChar so it does not need to be tested for"
-	[(nextChar := streamReader peek) isXMLNameChar]
+	"nil understands #isXMLNameChar so it does not need to be tested for"
+	[streamReader peek isXMLNameChar]
 		whileTrue: [characterStream nextPut: streamReader next].
 ]
 
@@ -1731,14 +1734,15 @@ XMLWellFormedParserTokenizer >> nextNotationDeclaration [
 XMLWellFormedParserTokenizer >> nextNotationName [
 	| nextChar |
 
-	nameStream reset.
-	"nil understands isXMLNameStartChar so it does not need to be tested for"
+	"nil understands #isXMLNameStartChar so it does not need to be tested for"
 	(nextChar := streamReader next) isXMLNameStartChar
 		ifFalse: [self errorExpectedNotationName].
-	nameStream nextPut: nextChar.
+	nameStream
+		reset;
+		nextPut: nextChar.
 
-	"nil understands isXMLNameChar so it does not need to be tested for"
-	[(nextChar := streamReader peek) isXMLNameChar]
+	"nil understands #isXMLNameChar so it does not need to be tested for"
+	[streamReader peek isXMLNameChar]
 		whileTrue: [nameStream nextPut: streamReader next].
 	^ nameStream contents.
 ]
@@ -1747,13 +1751,13 @@ XMLWellFormedParserTokenizer >> nextNotationName [
 XMLWellFormedParserTokenizer >> nextNotationNameOnCharacterStream [
 	| nextChar |
 
-	"nil understands isXMLNameStartChar so it does not need to be tested for"
+	"nil understands #isXMLNameStartChar so it does not need to be tested for"
 	(nextChar := streamReader next) isXMLNameStartChar
 		ifFalse: [self errorExpectedNotationName].
 	characterStream nextPut: nextChar.
 
-	"nil understands isXMLNameChar so it does not need to be tested for"
-	[(nextChar := streamReader peek) isXMLNameChar]
+	"nil understands #isXMLNameChar so it does not need to be tested for"
+	[streamReader peek isXMLNameChar]
 		whileTrue: [characterStream nextPut: streamReader next].
 ]
 
@@ -1829,7 +1833,7 @@ XMLWellFormedParserTokenizer >> nextPITarget [
 			nextChar == $X
 				ifTrue: [isReservedTarget := true]
 				ifFalse: [
-					"nil understands isXMLNameStartChar so it does
+					"nil understands #isXMLNameStartChar so it does
 					not need to be tested for"
 					nextChar isXMLNameStartChar
 						ifFalse: [self errorExpectedPITarget].
@@ -1838,8 +1842,8 @@ XMLWellFormedParserTokenizer >> nextPITarget [
 	nameStream nextPut: nextChar.
 	length := 1.
 
-	"nil understands isXMLNameChar so it does not need to be tested for"
-	[(nextChar := streamReader peek) isXMLNameChar]
+	"nil understands #isXMLNameChar so it does not need to be tested for"
+	[streamReader peek isXMLNameChar]
 		whileTrue: [
 			nextChar := streamReader next.
 			length := length + 1.
@@ -1857,7 +1861,7 @@ XMLWellFormedParserTokenizer >> nextPITarget [
 			nameStream nextPut: nextChar].
 	
 	(isReservedTarget
-		and: [length == 3])
+		and: [length = 3])
 		ifTrue: [
 			isLowercaseReservedTarget
 				ifTrue: [

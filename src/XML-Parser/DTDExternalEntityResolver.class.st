@@ -24,6 +24,11 @@ DTDExternalEntityResolver class >> defaultClass [
 	^ DTDCachingExternalEntityResolver
 ]
 
+{ #category : #converting }
+DTDExternalEntityResolver >> asLimitingExternalEntityResolver [
+	^ DTDExternalEntityResolverLimitingDecorator externalEntityResolver: self
+]
+
 { #category : #private }
 DTDExternalEntityResolver >> errorLocalFromNonLocal [
 	XMLLimitException signal:
