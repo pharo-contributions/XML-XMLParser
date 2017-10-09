@@ -406,6 +406,24 @@ ConfigurationOfXMLParserHTML >> baseline138: spec [
 			spec postLoadDoIt: #initializeClassesForGSBaseline132. ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline139: spec [
+	<version: '1.3.9-baseline' imports: #('1.0.0-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.2.1' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
+
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline139. ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParserHTML >> customProjectAttributes [
 	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -418,7 +436,7 @@ ConfigurationOfXMLParserHTML >> customProjectAttributes [
 ConfigurationOfXMLParserHTML >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.3.8-baseline'.
+	spec for: #'common' version: '1.3.9-baseline'.
 ]
 
 { #category : #doits }
@@ -434,10 +452,27 @@ ConfigurationOfXMLParserHTML >> initializeClassesForGSBaseline132 [
 					or: [each class instanceVariables notEmpty])
 					and: [(each class includesSelector: #initialize) not]]
 	"
+
+	"renamed"
+	(XMLClassFinder classNamed: #XMLHTMLNonHTMLSectionContext) allSubclassesDo: [:each |
+		each instance]
+]
+
+{ #category : #doits }
+ConfigurationOfXMLParserHTML >> initializeClassesForGSBaseline139 [
+	"All lazily initialized class and class instance variables must be
+	explicitly initialized on GS during installation to prevent write
+	conflicts between Gems later on. 
 	
-	"This project adds custom context subclasses with lazy initialized
-	singletons that need explicit initialization on GS"
-	XMLTokenContext allSubclassesDo: [:each |
+	This can help identify classes that use lazy initialization:
+		(SystemNavigation default allClassesInPackageNamed: 'XML-Parser-HTML') select:
+			[:each |
+				(each classVariables notEmpty
+					or: [each class instanceVariables notEmpty])
+					and: [(each class includesSelector: #initialize) not]]
+	"
+
+	XMLHTMLNonHTMLSectionState allSubclassesDo: [:each |
 		each instance]
 ]
 
@@ -458,7 +493,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.3.8'.
+	spec for: #'common' version: '1.3.9'.
 
 ]
 
@@ -887,6 +922,17 @@ ConfigurationOfXMLParserHTML >> version138: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.49'.
+			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.25'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version139: spec [ 
+        <version: '1.3.9' imports: #('1.3.9-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.50'.
 			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.25'.
                 ].
 ]
