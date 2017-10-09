@@ -1031,6 +1031,31 @@ ConfigurationOfXMLParser >> baseline319: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.61' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline321: spec [
+	<version: '3.2.1-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.8.3'. ].
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'OrderPreservingDictionary' with: '1.3.8'. ].
+	spec
+		for: #gemstone
+		do: [
+			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.25'.
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline321. ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.62' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParser >> customProjectAttributes [
     "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -1045,7 +1070,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '3.1.9-baseline'.
+	spec for: #'common' version: '3.2.1-baseline'.
 
 ]
 
@@ -1071,7 +1096,8 @@ ConfigurationOfXMLParser >> initializeClassesForGSBaseline297 [
 		encodingNames;
 		allSubclassesDo: [:each | each encodingNames].
 	XMLTextConverterStreamConverter encodingNamesAndTextConverterClassesCache.
-	XMLTokenContext allSubclassesDo: [:each |
+	"renamed"
+	(XMLClassFinder classNamed: #XMLTokenContext) allSubclassesDo: [:each |
 		each instance].
 ]
 
@@ -1099,7 +1125,36 @@ ConfigurationOfXMLParser >> initializeClassesForGSBaseline312 [
 		encodingNames;
 		allSubclassesDo: [:each | each encodingNames].
 	XMLTextConverterStreamConverter encodingNamesAndTextConverterClassesCache.
-	XMLTokenContext allSubclassesDo: [:each |
+	"renamed"
+	(XMLClassFinder classNamed: #XMLTokenContext) allSubclassesDo: [:each |
+		each instance].
+]
+
+{ #category : #doits }
+ConfigurationOfXMLParser >> initializeClassesForGSBaseline321 [
+	"All lazily initialized class and class instance variables must be
+	explicitly initialized on GS during installation to prevent write
+	conflicts between Gems later on. 
+	
+	This can help identify classes that use lazy initialization:
+		self findLazyInitializedClassStateInPackage: 'XML-Parser'
+	"
+
+	DTDCachingExternalEntityResolver entityCache.
+	XMLAbstractFactory allSubclassesDo: [:each |
+		each hasSupportedImplementation
+			ifTrue: [each implementation]].
+	XMLFileHandle xmlDocumentFileExtensions.
+	XMLParserLimits defaultDocumentReadLimit.
+	XMLStatelessStreamConverter allSubclassesDo: [:each |
+		each instance].
+	XMLStreamConverter
+		encodingNamesAndClassesCache;
+		preferredClasses;
+		encodingNames;
+		allSubclassesDo: [:each | each encodingNames].
+	XMLTextConverterStreamConverter encodingNamesAndTextConverterClassesCache.
+	XMLTokenizerState allSubclassesDo: [:each |
 		each instance].
 ]
 
@@ -1333,6 +1388,14 @@ ConfigurationOfXMLParser >> release319: spec [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release321: spec [
+	<symbolicVersion: #'release-3.2.1'>
+
+	"Users should prefer #stable unless they rely on XMLParser internals"
+	spec for: #'common' version: '3.2.1'.
+]
+
+{ #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> release3: spec [
 	<symbolicVersion: #'release-3'>
 
@@ -1346,7 +1409,7 @@ ConfigurationOfXMLParser >> stable: spec [
 
 	"Users should prefer #stable unless they rely on XMLParser internals,
 	but it will delegate to a specific #release version from now on."
-	spec for: #'common' version: #'release-3.1.9'.
+	spec for: #'common' version: #'release-3.2.1'.
 ]
 
 { #category : #versions }
@@ -3738,6 +3801,17 @@ ConfigurationOfXMLParser >> version320: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.412'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.209'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version321: spec [ 
+        <version: '3.2.1' imports: #('3.2.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.413'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.209'.
                 ].
 ]
