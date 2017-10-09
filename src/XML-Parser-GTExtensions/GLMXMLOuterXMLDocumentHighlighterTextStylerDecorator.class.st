@@ -61,8 +61,8 @@ GLMXMLOuterXMLDocumentHighlighterTextStylerDecorator >> newHighlightingParserFro
 			rootElement hasNamespaces
 				ifTrue: [parser driver currentScope: rootElement namespaceScope]].
 
-	parser context: self outerXMLNode parent newInnerXMLContext.
-	parser context isContentContext
+	parser state: self outerXMLNode parent newInnerXMLState.
+	parser state isContentState
 		ifTrue: [aHighlightingParserHandler startContent].
 
 	^ parser.
