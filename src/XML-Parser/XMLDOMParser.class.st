@@ -132,8 +132,8 @@ XMLDOMParser >> initializeInnerXMLParser: aParser [
 					startInnerXMLElement: each
 					forParser: aParser]].
 
-	aParser context: self topNode newInnerXMLContext.
-	aParser context isContentContext
+	aParser state: self topNode newInnerXMLState.
+	aParser state isContentState
 		ifTrue: [self startContent].
 ]
 

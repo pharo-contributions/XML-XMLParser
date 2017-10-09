@@ -131,21 +131,7 @@ XMLWellFormedParserTokenizer >> characterFromCodePoint: aCodePoint [
 ]
 
 { #category : #'entity replacing' }
-XMLWellFormedParserTokenizer >> constructReplacementForGeneralEntity: anEntity [
-	isInLiteralValue
-		ifTrue: [
-			anEntity isExternal
-				ifTrue: [self errorLiteralContextExternalEntity: anEntity].
-			self constructReplacementForLiteralContextEntity: anEntity]
-		ifFalse: [
-			driver handleStartContentEntityReplacement: anEntity name.
-			self
-				pushBackEntity: anEntity
-				whenPoppedDo: [driver handleEndContentEntityReplacement: anEntity name]]
-]
-
-{ #category : #'entity replacing' }
-XMLWellFormedParserTokenizer >> constructReplacementForLiteralContextEntity: anEntity [
+XMLWellFormedParserTokenizer >> constructLiteralReplacementForEntity: anEntity [
 	| wasIgnoringLiteralValueTerminator |
 
 	wasIgnoringLiteralValueTerminator := isIgnoringLiteralValueTerminator.
@@ -157,9 +143,23 @@ XMLWellFormedParserTokenizer >> constructReplacementForLiteralContextEntity: anE
 ]
 
 { #category : #'entity replacing' }
+XMLWellFormedParserTokenizer >> constructReplacementForGeneralEntity: anEntity [
+	isInLiteralValue
+		ifTrue: [
+			anEntity isExternal
+				ifTrue: [self errorLiteralReferenceToExternalGeneralEntity: anEntity].
+			self constructLiteralReplacementForEntity: anEntity]
+		ifFalse: [
+			driver handleStartContentEntityReplacement: anEntity name.
+			self
+				pushBackEntity: anEntity
+				whenPoppedDo: [driver handleEndContentEntityReplacement: anEntity name]]
+]
+
+{ #category : #'entity replacing' }
 XMLWellFormedParserTokenizer >> constructReplacementForParameterEntity: anEntity [
 	isInLiteralValue
-		ifTrue: [self constructReplacementForLiteralContextEntity: anEntity]
+		ifTrue: [self constructLiteralReplacementForEntity: anEntity]
 		ifFalse: [
 			"the trailing space"
 			streamReader pushBackCharacter: NormalizedSpace.
@@ -306,7 +306,7 @@ XMLWellFormedParserTokenizer >> errorExpectedNotationName [
 { #category : #errors }
 XMLWellFormedParserTokenizer >> errorExpectedPITarget [
 	self errorExpected:
-		(context isXMLDeclarationContext
+		(state isXMLDeclarationState
 			ifTrue: ['xml declaration name or processing instruction target']
 			ifFalse: ['processing instruction target'])
 ]
@@ -463,9 +463,10 @@ XMLWellFormedParserTokenizer >> errorInvalidCharacterReferenceCodePoint: aCodePo
 ]
 
 { #category : #errors }
-XMLWellFormedParserTokenizer >> errorLiteralContextExternalEntity: anEntity [
+XMLWellFormedParserTokenizer >> errorLiteralReferenceToExternalGeneralEntity: anEntity [
 	self
-		formatParseError: 'External general entity reference {1} in literal context'
+		formatParseError:
+			'External general entity reference {1} in attribute value'
 		with: anEntity asReference
 ]
 
@@ -760,7 +761,7 @@ XMLWellFormedParserTokenizer >> isInExternalSubsetOrExternalEntity [
 	for this purpose, even though they were defined externally to
 	the document."
 
-	^ context isExternalSubsetContext
+	^ state isExternalSubsetState
 		or: [self topPushedBackExternalEntity notNil]
 ]
 
@@ -811,17 +812,17 @@ XMLWellFormedParserTokenizer >> nextAttributeDefaultPragma [
 
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextAttributeDefaultValueForPragma: aPragma [
-	| previousContext attributeValue |
+	| previousState attributeValue |
 
 	aPragma isEmpty
 		ifFalse: [
 			(aPragma first == $F) "FIXED"
 				ifFalse: [^ ''].
 			self expectSeparatorsInDeclaration].
-	previousContext := context.
-	context := context contentContext.
+	previousState := state.
+	state := state contentState.
 	attributeValue := self nextAttributeValue.
-	context := previousContext.
+	state := previousState.
 	^ attributeValue.
 ]
 
@@ -1028,7 +1029,7 @@ XMLWellFormedParserTokenizer >> nextCharacterReferenceOnCharacterStream [
 
 	"skip #"
 	streamReader next.
-	(context isContentContext
+	(state isContentState
 		and: [driver replacesContentEntityReferences not])
 		ifTrue: [
 			nameStream reset.
@@ -1229,7 +1230,7 @@ XMLWellFormedParserTokenizer >> nextDoctypeDeclarationOrComment [
 	streamReader next.
 	streamReader peek == $-
 		ifTrue: [^ self nextComment].
-	context isPostDoctypeDeclarationContext
+	state isPostDoctypeDeclarationState
 		ifTrue: [self errorMultipleDoctypeDeclarations].
 	self nextDoctypeDeclaration.
 ]
@@ -1282,9 +1283,9 @@ XMLWellFormedParserTokenizer >> nextElementNameOnCharacterStream [
 
 { #category : #tokenizing }
 XMLWellFormedParserTokenizer >> nextEndDocument [
-	context canTerminateInput
+	state canTerminateInput
 		ifFalse: [self errorInputTerminatedPrematurely].
-	context isContentContext
+	state isContentState
 		ifTrue: [
 			elementNester hasOpenElements
 				ifTrue: [self errorUnterminatedElements]]
@@ -1865,7 +1866,7 @@ XMLWellFormedParserTokenizer >> nextPITarget [
 		ifTrue: [
 			isLowercaseReservedTarget
 				ifTrue: [
-					context isXMLDeclarationContext
+					state isXMLDeclarationState
 						ifFalse: [self errorXMLDeclarationNotAtStart].
 					"return nil to indicate it's an XML declaration, not a PI"
 					^ nil].
@@ -1989,7 +1990,7 @@ XMLWellFormedParserTokenizer >> nextStartExternalEntity [
 { #category : #'tokenizing - dtd' }
 XMLWellFormedParserTokenizer >> nextStartExternalSubset [
 	self nextXMLTextDeclaration.
-	context := context externalSubsetContext.
+	state := state externalSubsetState.
 ]
 
 { #category : #'tokenizing - dtd' }

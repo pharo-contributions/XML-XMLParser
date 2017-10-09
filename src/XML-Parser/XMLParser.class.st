@@ -29,16 +29,6 @@ XMLParser >> baseURI [
 ]
 
 { #category : #accessing }
-XMLParser >> context [
-	^ self tokenizer context
-]
-
-{ #category : #accessing }
-XMLParser >> context: aTokenContext [
-	self tokenizer context: aTokenContext
-]
-
-{ #category : #accessing }
 XMLParser >> currentColumnNumber [
 	^ self tokenizer currentColumnNumber
 ]
@@ -114,6 +104,16 @@ XMLParser >> parseToken [
 XMLParser >> setDriver: aDriver tokenizer: aTokenizer [
 	driver := aDriver.
 	tokenizer := aTokenizer.
+]
+
+{ #category : #accessing }
+XMLParser >> state [
+	^ self tokenizer state
+]
+
+{ #category : #accessing }
+XMLParser >> state: aTokenState [
+	self tokenizer state: aTokenState
 ]
 
 { #category : #accessing }

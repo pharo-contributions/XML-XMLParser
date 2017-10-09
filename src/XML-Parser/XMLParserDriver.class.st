@@ -160,8 +160,8 @@ XMLParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: a
 ]
 
 { #category : #defaults }
-XMLParserDriver >> initialContextClass [
-	^ XMLXMLDeclarationContext
+XMLParserDriver >> initialStateClass [
+	^ XMLXMLDeclarationState
 ]
 
 { #category : #'instance creation' }
@@ -170,8 +170,8 @@ XMLParserDriver >> newElementNester [
 ]
 
 { #category : #'instance creation' }
-XMLParserDriver >> newInitialContext [
-	^ self initialContextClass new
+XMLParserDriver >> newInitialState [
+	^ self initialStateClass new
 ]
 
 { #category : #'instance creation' }

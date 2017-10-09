@@ -1,5 +1,5 @@
 "
-This is a base class for parser tokenizers that read tokens from a stream using an XMLNestedStreamReader and context objects. Sending #nextToken causes a token to be read and handler messages to be sent to a driver.
+This is a base class for parser tokenizers that read tokens from a stream using an XMLNestedStreamReader and state objects. Sending #nextToken causes a token to be read and handler messages to be sent to a driver.
 
 Be careful changing the code in this class or subclasses because it's optimized.
 "
@@ -7,7 +7,7 @@ Class {
 	#name : #XMLParserTokenizer,
 	#superclass : #Object,
 	#instVars : [
-		'context',
+		'state',
 		'driver',
 		'elementNester',
 		'streamReader',
@@ -63,7 +63,7 @@ XMLParserTokenizer class >> predefinedEntities [
 
 { #category : #testing }
 XMLParserTokenizer >> atEnd [
-	^ context isTerminatedContext
+	^ state isTerminatedState
 ]
 
 { #category : #decoding }
@@ -81,22 +81,6 @@ XMLParserTokenizer >> characterFromCodePoint: aCodePoint [
 { #category : #closing }
 XMLParserTokenizer >> closeStreams [
 	streamReader closeStreams
-]
-
-{ #category : #accessing }
-XMLParserTokenizer >> context [
-	^ context
-]
-
-{ #category : #accessing }
-XMLParserTokenizer >> context: aTokenContext [
-	(context := aTokenContext) isContentContext
-		ifTrue: [elementNester := driver elementNester].
-	driver decodesCharacters
-		ifTrue: [
-			context supportsEncodingDetection
-				ifTrue: [streamReader detectEncoding]]
-		ifFalse: [streamReader decodeStreamWithNullConverter].
 ]
 
 { #category : #decoding }
@@ -249,7 +233,7 @@ XMLParserTokenizer >> nextContentToken [
 XMLParserTokenizer >> nextDoctypeDeclaration [
 	| root publicID systemID |
 
-	context := context doctypeDeclarationContext.
+	state := state doctypeDeclarationState.
 	self
 		expectNextAll: 'DOCTYPE';
 		expectSeparators.
@@ -286,17 +270,17 @@ XMLParserTokenizer >> nextElementName [
 { #category : #'tokenizing - dtd' }
 XMLParserTokenizer >> nextEndDoctypeDeclaration [
 	self expectTerminator.
-	context := context postDoctypeDeclarationContext.
+	state := state postDoctypeDeclarationState.
 
 	driver handleEndDTD.
 ]
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextEndDocument [
-	context isTerminatedContext
+	state isTerminatedState
 		ifFalse: [
 			self closeStreams.
-			context := context terminatedContext.
+			state := state terminatedState.
 			driver handleEndDocument]
 ]
 
@@ -396,14 +380,14 @@ XMLParserTokenizer >> nextPublicIDLiteral [
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextStartContent [
-	context := context contentContext.
+	state := state contentState.
 	elementNester := driver elementNester.
 	driver handleStartContent.
 ]
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextStartDocument [
-	self context: driver newInitialContext.
+	self state: driver newInitialState.
 	driver handleStartDocument.
 ]
 
@@ -411,7 +395,7 @@ XMLParserTokenizer >> nextStartDocument [
 XMLParserTokenizer >> nextStartInternalSubset [
 	"skip ["
 	streamReader next.
-	context := context internalSubsetContext.
+	state := state internalSubsetState.
 ]
 
 { #category : #'tokenizing - dtd' }
@@ -435,9 +419,9 @@ XMLParserTokenizer >> nextSystemIDLiteral [
 { #category : #tokenizing }
 XMLParserTokenizer >> nextToken [
 	(streamReader atEnd
-		and: [context isInitializedContext])
+		and: [state isInitializedState])
 		ifTrue: [^ self nextEndDocument].
-	context nextTokenFrom: self.
+	state nextTokenFrom: self.
 ]
 
 { #category : #tokenizing }
@@ -470,7 +454,7 @@ XMLParserTokenizer >> nextXMLDeclaration [
 		expectNext: $?;
 		expectTerminator.
 
-	context := context prologContext.
+	state := state prologState.
 ]
 
 { #category : #tokenizing }
@@ -484,14 +468,14 @@ XMLParserTokenizer >> nextXMLDeclarationOrPrologToken [
 					self nextPITarget
 						ifNil: [^ self nextXMLDeclaration]
 						ifNotNil: [:target |
-							context := context prologContext.
+							state := state prologState.
 							^ self nextPIWithTarget: target]].
-			context := context prologContext.
+			state := state prologState.
 			^ self nextNonPIPrologOrContentMarkupToken].
 
 	"other prolog tokens can have whitespace before them, so the doc
 	does not need to start with an '<' for them"
-	context := context prologContext.
+	state := state prologState.
 	self nextPrologToken.
 ]
 
@@ -561,7 +545,7 @@ XMLParserTokenizer >> printOn: aStream [
 	super printOn: aStream.
 	aStream
 		nextPut: $(;
-		print: context;
+		print: state;
 		nextPutAll: '; ';
 		print: streamReader;
 		nextPut: $).
@@ -569,7 +553,7 @@ XMLParserTokenizer >> printOn: aStream [
 
 { #category : #initialization }
 XMLParserTokenizer >> setDriver: aDriver stream: aStream readLimit: anInteger [
-	context := XMLUnitializedContext new.
+	state := XMLUninitializedState new.
 	driver := aDriver.
 	streamReader :=
 		self streamReaderClass
@@ -586,6 +570,22 @@ XMLParserTokenizer >> setDriver: aDriver stream: aStream readLimit: anInteger [
 	in both cases"
 	xmlDeclarationStream := (String new: 8) writeStream.
 	characterStream := (String new: 128) writeStream.
+]
+
+{ #category : #accessing }
+XMLParserTokenizer >> state [
+	^ state
+]
+
+{ #category : #accessing }
+XMLParserTokenizer >> state: aTokenState [
+	(state := aTokenState) isContentState
+		ifTrue: [elementNester := driver elementNester].
+	driver decodesCharacters
+		ifTrue: [
+			state supportsEncodingDetection
+				ifTrue: [streamReader detectEncoding]]
+		ifFalse: [streamReader decodeStreamWithNullConverter].
 ]
 
 { #category : #accessing }

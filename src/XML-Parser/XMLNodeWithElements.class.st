@@ -781,11 +781,6 @@ XMLNodeWithElements >> innerXML: aStringOrStream [
 	self innerXMLParsedWith: (self parserHandlerClass on: aStringOrStream)
 ]
 
-{ #category : #private }
-XMLNodeWithElements >> innerXMLContextClass [
-	^ XMLContentContext
-]
-
 { #category : #parsing }
 XMLNodeWithElements >> innerXMLParsedWith: aParser [
 	| removedNodes |
@@ -801,6 +796,11 @@ XMLNodeWithElements >> innerXMLParsedWith: aParser [
 				removeNodes;
 				addNodes: removedNodes.
 			error pass].
+]
+
+{ #category : #private }
+XMLNodeWithElements >> innerXMLStateClass [
+	^ XMLContentState
 ]
 
 { #category : #testing }
@@ -833,8 +833,8 @@ XMLNodeWithElements >> newAttributeDictionaryFrom: anAssociationCollection forAd
 ]
 
 { #category : #private }
-XMLNodeWithElements >> newInnerXMLContext [
-	^ self innerXMLContextClass new
+XMLNodeWithElements >> newInnerXMLState [
+	^ self innerXMLStateClass new
 ]
 
 { #category : #private }
