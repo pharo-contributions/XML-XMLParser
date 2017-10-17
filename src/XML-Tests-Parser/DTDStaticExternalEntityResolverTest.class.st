@@ -294,8 +294,8 @@ DTDStaticExternalEntityResolverTest >> testResolveExternalEntityURI [
 			externalEntityAtURI: uriString
 			put: replacement.
 		self
-			assert: (resolver resolveExternalEntityURI: uriString) = replacement;
-			assert: (resolver resolveExternalEntityURI: uriString asXMLURI) = replacement.
+			assert: (resolver resolveExternalEntityURI: uriString) contents = replacement;
+			assert: (resolver resolveExternalEntityURI: uriString asXMLURI) contents = replacement.
 
 		resolver maxExternalEntitySize: replacement size - 1.
 		self
@@ -328,11 +328,11 @@ DTDStaticExternalEntityResolverTest >> testStreamResolveExternalEntityURI [
 			put: replacement.
 		stream := resolver streamResolveExternalEntityURI: uriString.
 		self
-			assert: (stream isKindOf: ReadStream);
+			assert: (stream isKindOf: XMLDecodingReadStreamAdapter);
 			assert: stream contents = replacement.
 		stream := resolver streamResolveExternalEntityURI: uriString asXMLURI.
 		self
-			assert: (stream isKindOf: ReadStream);
+			assert: (stream isKindOf: XMLDecodingReadStreamAdapter);
 			assert: stream contents = replacement.
 
 		resolver maxExternalEntitySize: replacement size - 1.
