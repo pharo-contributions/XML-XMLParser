@@ -54,7 +54,7 @@ XMLFileSystemFileHandle >> fileReference [
 { #category : #accessing }
 XMLFileSystemFileHandle >> fileReference: aFileReference [
 	fileReference := aFileReference.
-	self path: aFileReference fullName.
+	self setPath: aFileReference fullName.
 ]
 
 { #category : #testing }
