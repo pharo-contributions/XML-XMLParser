@@ -26,9 +26,17 @@ XMLConformanceVirtualFileExternalEntityResolver >> errorCannotResolveVirtualFile
 		with: 'message not understood'
 ]
 
+{ #category : #private }
+XMLConformanceVirtualFileExternalEntityResolver >> errorVirtualFilePath: aPath exceedsMazSize: aMaxSize [
+	XMLFileException
+		formatSignal: 'Virtual file at "{1}" exceeds max size of {2} bytes'
+		with: aPath
+		with: aMaxSize
+]
+
 { #category : #resolving }
-XMLConformanceVirtualFileExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString [
-	| path sourceSelector |
+XMLConformanceVirtualFileExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
+	| path sourceSelector contents |
 
 	path := anXMLURIOrURIString asXMLURI path.
 	sourceSelector := self virtualFileClass sourceSelectorForPath: path.
@@ -37,12 +45,23 @@ XMLConformanceVirtualFileExternalEntityResolver >> resolveExternalEntityURI: anX
 			self
 				errorCannotResolveVirtualFilePath: path
 				withSelector: sourceSelector].
-	^ self virtualFileClass perform: sourceSelector.
+
+	contents := self virtualFileClass perform: sourceSelector.
+	(aMaxSize notNil
+		and: [contents size > aMaxSize])
+		ifTrue: [
+			self
+				errorVirtualFilePath: path
+				exceedsMazSize: aMaxSize].
+
+	^ DTDDecodedResolvedExternalParsedEntityReplacement contents: contents.
 ]
 
 { #category : #resolving }
-XMLConformanceVirtualFileExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString [
-	^ (self resolveExternalEntityURI: anXMLURIOrURIString) readStream
+XMLConformanceVirtualFileExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
+	^ (self
+		resolveExternalEntityURI: anXMLURIOrURIString
+		upToLimit: aMaxSize) readStream
 ]
 
 { #category : #accessing }
