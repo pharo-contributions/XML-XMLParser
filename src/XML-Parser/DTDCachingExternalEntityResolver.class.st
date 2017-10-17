@@ -56,7 +56,7 @@ DTDCachingExternalEntityResolver class >> entityCacheAtURI: anXMLURIOrURIString 
 DTDCachingExternalEntityResolver class >> initialize [
 	"self initialize"
 
-	"reset to nil instead of just clearing to get full reinitialization"
+	"reset to nil instead of just clearing to force reinitialization"
 	EntityCache := nil
 ]
 
@@ -68,29 +68,6 @@ DTDCachingExternalEntityResolver class >> maxCachedEntities [
 { #category : #accessing }
 DTDCachingExternalEntityResolver class >> maxCachedEntities: anInteger [
 	self entityCache maxSize: anInteger
-]
-
-{ #category : #private }
-DTDCachingExternalEntityResolver >> cachingResolveEntityURI: anXMLURIOrURIString [
-	| uri |
-
-	uri := anXMLURIOrURIString asXMLURI.
-	"avoid #entityCacheAtURI:ifAbsent: and #entityCacheAtURI:ifAbsentPut:
-	so the cache isn't locked during resolution which could stall other
-	processes"
-	^ (self class entityCacheAtURI: uri)
-		ifNil: [
-			self class
-				entityCacheAtURI: uri
-				put: 
-					(uri
-						getUpToLimit: self maxExternalEntitySize
-						decoding: false)].
-]
-
-{ #category : #private }
-DTDCachingExternalEntityResolver >> cachingStreamResolveEntityURI: anXMLURIOrURIString [
-	^ (self cachingResolveEntityURI: anXMLURIOrURIString) readStream
 ]
 
 { #category : #clearing }
@@ -108,24 +85,20 @@ DTDCachingExternalEntityResolver >> maxCachedEntities: anInteger [
 	self class maxCachedEntities: anInteger
 ]
 
-{ #category : #resolving }
-DTDCachingExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString [
+{ #category : #private }
+DTDCachingExternalEntityResolver >> resolveNonLocalExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
 	| uri |
 
-	(uri := anXMLURIOrURIString asXMLURI) isLocalURI
-		ifTrue: [^ super resolveExternalEntityURI: uri]
-		ifFalse: [
-			"non-local entities are cached"
-			^ self cachingResolveEntityURI: uri]
-]
-
-{ #category : #resolving }
-DTDCachingExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString [
-	| uri |
-
-	(uri := anXMLURIOrURIString asXMLURI) isLocalURI
-		ifTrue: [^ super streamResolveExternalEntityURI: uri]
-		ifFalse: [
-			"non-local entities are cached"
-			^ self cachingStreamResolveEntityURI: uri]
+	uri := anXMLURIOrURIString asXMLURI.
+	"avoid #entityCacheAtURI:ifAbsent: and #entityCacheAtURI:ifAbsentPut:
+	so the cache isn't locked during resolution which could stall other
+	processes"
+	^ (self class entityCacheAtURI: uri)
+		ifNil: [
+			self class
+				entityCacheAtURI: uri
+				put:
+					(super
+						resolveNonLocalExternalEntityURI: uri
+						upToLimit: aMaxSize)].
 ]

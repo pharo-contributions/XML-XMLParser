@@ -1,5 +1,5 @@
 "
-A base class for HTTP requests. Subclasses need to implement #basicGetUpToLimit:decoding: to return the HTTP response as a string or raise an exception if an HTTP/network error happens or the response is too large.
+This is an abstract base class for HTTP requests. Subclasses need to implement #basicGetResponseUpToLimit:decoding: to return the correct XMLHTTPResponse object or raise an exception if an HTTP/network error happens or if the response is too large.
 
 These classes implement the #get/#getUpToLimit:decoding: and #streamGet/#streamGetUpToLimit:decoding: interface of XMLURI.
 "
@@ -23,8 +23,8 @@ XMLHTTPRequest class >> preferredImplementation [
 ]
 
 { #category : #'instance creation' }
-XMLHTTPRequest class >> url: aURL [
-	^ self new url: aURL
+XMLHTTPRequest class >> url: aURLString [
+	^ self new setURL: aURLString
 ]
 
 { #category : #converting }
@@ -33,7 +33,7 @@ XMLHTTPRequest >> asXMLHTTPRequest [
 ]
 
 { #category : #basic }
-XMLHTTPRequest >> basicGetUpToLimit: aMaxSize decoding: aBoolean [
+XMLHTTPRequest >> basicGetResponseUpToLimit: aMaxSize decoding: aBoolean [
 	self subclassResponsibility
 ]
 
@@ -60,9 +60,16 @@ XMLHTTPRequest >> get [
 ]
 
 { #category : #retrieving }
-XMLHTTPRequest >> getUpToLimit: aMaxSize decoding: aBoolean [
+XMLHTTPRequest >> getResponse [
+	^ self
+		getResponseUpToLimit: nil
+		decoding: true
+]
+
+{ #category : #retrieving }
+XMLHTTPRequest >> getResponseUpToLimit: aMaxSize decoding: aBoolean [
 	^ [self
-			basicGetUpToLimit: aMaxSize
+			basicGetResponseUpToLimit: aMaxSize
 			decoding: aBoolean]
 			on: Error
 			do: [:error |
@@ -71,9 +78,21 @@ XMLHTTPRequest >> getUpToLimit: aMaxSize decoding: aBoolean [
 					ifFalse: [self errorHTTPException: error]]
 ]
 
+{ #category : #retrieving }
+XMLHTTPRequest >> getUpToLimit: aMaxSize decoding: aBoolean [
+	^ (self
+		getResponseUpToLimit: aMaxSize
+		decoding: aBoolean) content
+]
+
 { #category : #testing }
 XMLHTTPRequest >> isMaxSizeException: anException [
 	^ anException class == XMLLimitException
+]
+
+{ #category : #'instance creation' }
+XMLHTTPRequest >> newResponse [
+	^ self responseClass request: self
 ]
 
 { #category : #printing }
@@ -83,6 +102,16 @@ XMLHTTPRequest >> printOn: aStream [
 		nextPut: $(;
 		nextPutAll: self url;
 		nextPut: $).
+]
+
+{ #category : #defaults }
+XMLHTTPRequest >> responseClass [
+	self subclassResponsibility
+]
+
+{ #category : #initialization }
+XMLHTTPRequest >> setURL: aURLString [
+	url := aURLString
 ]
 
 { #category : #retrieving }
@@ -105,10 +134,5 @@ XMLHTTPRequest >> streamGetUpToLimit: aMaxSize decoding: aBoolean [
 
 { #category : #accessing }
 XMLHTTPRequest >> url [
-	^ url
-]
-
-{ #category : #accessing }
-XMLHTTPRequest >> url: aURL [
-	url := aURL
+	^ url ifNil: [url := '']
 ]

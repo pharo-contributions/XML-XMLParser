@@ -1,12 +1,11 @@
 "
-This is an abstract class for internal and external parsed entities with replacements that can be inserted into an XML document.
+This is an abstract base class for internal and external parsed entities with replacements that can be inserted into an XML document.
 "
 Class {
 	#name : #DTDEntity,
 	#superclass : #Object,
 	#instVars : [
 		'name',
-		'replacement',
 		'uri'
 	],
 	#category : #'XML-Parser-DTD'
@@ -18,43 +17,13 @@ DTDEntity class >> name: aName [
 ]
 
 { #category : #'instance creation' }
-DTDEntity class >> name: aName replacement: aReplacementString [
-	^ self
-		name: aName
-		replacement: aReplacementString
-		uri: ''
-]
-
-{ #category : #'instance creation' }
-DTDEntity class >> name: aName replacement: aReplacementString uri: aURIString [
-	^ self new
-		setName: aName
-		replacement: aReplacementString
-		uri: aURIString
-]
-
-{ #category : #'instance creation' }
 DTDEntity class >> named: aName [
-	^ self
-		name: aName
-		replacement: ''
-]
-
-{ #category : #converting }
-DTDEntity >> asPushedBackEntity [
-	^ self isParameter
-		ifTrue: [XMLPushedBackParameterEntity entity: self]
-		ifFalse: [XMLPushedBackGeneralEntity entity: self]
+	^ self new name: aName
 ]
 
 { #category : #converting }
 DTDEntity >> asReference [
 	^ String streamContents: [:stream | self printReferenceOn: stream]
-]
-
-{ #category : #testing }
-DTDEntity >> hasReplacement [
-	^ self replacement notEmpty
 ]
 
 { #category : #testing }
@@ -113,28 +82,6 @@ DTDEntity >> referencePrefix [
 	^ self isParameter
 		ifTrue: [$%]
 		ifFalse: [$&]
-]
-
-{ #category : #accessing }
-DTDEntity >> replacement [
-	^ replacement ifNil: [replacement := '']
-]
-
-{ #category : #accessing }
-DTDEntity >> replacement: aReplacementString [
-	replacement := aReplacementString
-]
-
-{ #category : #accessing }
-DTDEntity >> replacementStream [
-	^ self replacement readStream
-]
-
-{ #category : #initialization }
-DTDEntity >> setName: aName replacement: aReplacementString uri: aURIString [
-	name := aName.
-	replacement := aReplacementString.
-	uri := aURIString.
 ]
 
 { #category : #accessing }

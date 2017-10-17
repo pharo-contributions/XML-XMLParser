@@ -109,8 +109,8 @@ DTDStaticExternalEntityResolver >> removeExternalEntityURI: anXMLURIOrURIString 
 ]
 
 { #category : #resolving }
-DTDStaticExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString [
-	| replacement maxSize |
+DTDStaticExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
+	| replacement |
 
 	replacement :=
 		self
@@ -118,17 +118,19 @@ DTDStaticExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString
 			ifAbsent: [
 				self errorUnresolvableExternalEntityURI: anXMLURIOrURIString].
 
-	((maxSize := self maxExternalEntitySize) notNil
-		and: [replacement size > maxSize])
+	(aMaxSize notNil
+		and: [replacement size > aMaxSize])
 		ifTrue: [
 			self
-				errorMaxExternalEntitySize: maxSize
+				errorMaxExternalEntitySize: aMaxSize
 				exceededByURI: anXMLURIOrURIString].
 	
-	^ replacement.
+	^ DTDUndecodedResolvedExternalParsedEntityReplacement rawContents: replacement.
 ]
 
 { #category : #resolving }
-DTDStaticExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString [
-	^ (self resolveExternalEntityURI: anXMLURIOrURIString) readStream
+DTDStaticExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
+	^ (self
+		resolveExternalEntityURI: anXMLURIOrURIString
+		upToLimit: aMaxSize) readStream
 ]

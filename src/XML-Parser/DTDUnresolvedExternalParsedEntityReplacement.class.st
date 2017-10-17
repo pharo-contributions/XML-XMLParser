@@ -2,7 +2,7 @@
 This class stores an entity resolver and the public ID, system ID, and base URI of an external entity so its replacement can be lazily resolved only if the entity is referenced.
 "
 Class {
-	#name : #DTDUnresolvedExternalEntityReplacement,
+	#name : #DTDUnresolvedExternalParsedEntityReplacement,
 	#superclass : #Object,
 	#instVars : [
 		'resolver',
@@ -14,7 +14,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-DTDUnresolvedExternalEntityReplacement class >> resolver: aResolver publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
+DTDUnresolvedExternalParsedEntityReplacement class >> resolver: aResolver publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
 	^ self new
 		setResolver: aResolver
 		publicID: aPublicID
@@ -23,12 +23,12 @@ DTDUnresolvedExternalEntityReplacement class >> resolver: aResolver publicID: aP
 ]
 
 { #category : #accessing }
-DTDUnresolvedExternalEntityReplacement >> baseURI [
+DTDUnresolvedExternalParsedEntityReplacement >> baseURI [
 	^ baseURI ifNil: [baseURI := '']
 ]
 
 { #category : #printing }
-DTDUnresolvedExternalEntityReplacement >> printOn: aStream [
+DTDUnresolvedExternalParsedEntityReplacement >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPut: $(.
 	self publicID isEmpty
@@ -45,12 +45,12 @@ DTDUnresolvedExternalEntityReplacement >> printOn: aStream [
 ]
 
 { #category : #accessing }
-DTDUnresolvedExternalEntityReplacement >> publicID [
+DTDUnresolvedExternalParsedEntityReplacement >> publicID [
 	^ publicID ifNil: [publicID := '']
 ]
 
 { #category : #resolving }
-DTDUnresolvedExternalEntityReplacement >> resolveForExternalEntity: anExternalEntity [
+DTDUnresolvedExternalParsedEntityReplacement >> resolveForExternalEntity: anExternalEntity [
 	| externalEntityURI |
 
 	externalEntityURI :=
@@ -60,18 +60,18 @@ DTDUnresolvedExternalEntityReplacement >> resolveForExternalEntity: anExternalEn
 			baseURI: self baseURI.
 
 	anExternalEntity
-		replacement: (self resolver resolveExternalEntityURI: externalEntityURI);
+		resolvedReplacement: (self resolver resolveExternalEntityURI: externalEntityURI);
 		uri: externalEntityURI asString;
 		unresolvedReplacement: nil.
 ]
 
 { #category : #accessing }
-DTDUnresolvedExternalEntityReplacement >> resolver [
+DTDUnresolvedExternalParsedEntityReplacement >> resolver [
 	^ resolver ifNil: [resolver := DTDExternalEntityResolver default]
 ]
 
 { #category : #initialization }
-DTDUnresolvedExternalEntityReplacement >> setResolver: aResolver publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
+DTDUnresolvedExternalParsedEntityReplacement >> setResolver: aResolver publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
 	resolver := aResolver.
 	publicID := aPublicID.
 	systemID := aSystemID.
@@ -79,6 +79,6 @@ DTDUnresolvedExternalEntityReplacement >> setResolver: aResolver publicID: aPubl
 ]
 
 { #category : #accessing }
-DTDUnresolvedExternalEntityReplacement >> systemID [
+DTDUnresolvedExternalParsedEntityReplacement >> systemID [
 	^ systemID ifNil: [systemID := '']
 ]

@@ -202,8 +202,8 @@ XMLURI >> addRawPathSegmentsFrom: aURI [
 { #category : #converting }
 XMLURI >> asRetrievableResource [
 	^ self isLocalURI
-		ifTrue: [self path asXMLFileHandle]
-		ifFalse: [self asString asXMLHTTPRequest]
+		ifTrue: [self asXMLFileHandle]
+		ifFalse: [self asXMLHTTPRequest]
 ]
 
 { #category : #converting }
@@ -224,6 +224,16 @@ XMLURI >> asString [
 				printFragmentOn: writeStream;
 				uriString: writeStream contents;
 				uriString]
+]
+
+{ #category : #converting }
+XMLURI >> asXMLFileHandle [
+	^ self path asXMLFileHandle 
+]
+
+{ #category : #converting }
+XMLURI >> asXMLHTTPRequest [
+	^ self asString asXMLHTTPRequest
 ]
 
 { #category : #converting }

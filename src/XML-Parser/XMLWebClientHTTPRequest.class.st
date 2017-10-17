@@ -13,15 +13,16 @@ XMLWebClientHTTPRequest class >> isSupportedImplementation [
 ]
 
 { #category : #basic }
-XMLWebClientHTTPRequest >> basicGetUpToLimit: aMaxSize decoding: aBoolean [
+XMLWebClientHTTPRequest >> basicGetResponseUpToLimit: aMaxSize decoding: aBoolean [
 	| response |
 
-	response :=
-		(XMLClassFinder classNamed: #WebClient) new
-			timeout: self defaultTimeout;
-			httpGet: self url.
+	(response := self newResponse)
+		setWebClientResponse:
+			((XMLClassFinder classNamed: #WebClient) new
+				timeout: self defaultTimeout;
+				httpGet: self url).
 	response isSuccess
-		ifFalse: [XMLHTTPException signal: response status].
+		ifFalse: [XMLHTTPException signal: response statusLine].
 	aMaxSize
 		ifNotNil: [
 			response contentLength
@@ -31,5 +32,12 @@ XMLWebClientHTTPRequest >> basicGetUpToLimit: aMaxSize decoding: aBoolean [
 				ifNotNil: [
 					response contentLength > aMaxSize
 						ifTrue: [XMLLimitException signal]]].
-	^ response content.
+	aBoolean
+		ifTrue: [response decodeContent].
+	^ response.
+]
+
+{ #category : #defaults }
+XMLWebClientHTTPRequest >> responseClass [
+	^ XMLWebClientHTTPResponse
 ]

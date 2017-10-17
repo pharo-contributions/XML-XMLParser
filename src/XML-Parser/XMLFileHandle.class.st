@@ -36,7 +36,7 @@ XMLFileHandle class >> noSupportedImplementationFound [
 
 { #category : #'instance creation' }
 XMLFileHandle class >> path: aPathString [
-	^ self new path: aPathString
+	^ self new setPath: aPathString
 ]
 
 { #category : #defaults }
@@ -210,12 +210,7 @@ XMLFileHandle >> newFileWriteStreamOnPath [
 
 { #category : #accessing }
 XMLFileHandle >> path [
-	^ path
-]
-
-{ #category : #accessing }
-XMLFileHandle >> path: aPathString [
-	path := aPathString
+	^ path ifNil: [path := '']
 ]
 
 { #category : #printing }
@@ -268,6 +263,11 @@ XMLFileHandle >> readStreamDo: aBlock [
 	readStream := self readStream.
 	^ [aBlock value: readStream]
 		ensure: [readStream close].
+]
+
+{ #category : #initialization }
+XMLFileHandle >> setPath: aPathString [
+	path := aPathString
 ]
 
 { #category : #accessing }

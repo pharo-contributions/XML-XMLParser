@@ -25,7 +25,7 @@ DTDDoctypeDefinition >> addExternalGeneralEntity: aName resolver: aResolver publ
 	^ self generalEntities
 		at: aName
 		put:
-			(DTDExternalGeneralEntity
+			(DTDExternalGeneralParsedEntity
 				name: aName
 				resolver: aResolver
 				publicID: aPublicID
@@ -40,7 +40,7 @@ DTDDoctypeDefinition >> addExternalParameterEntity: aName resolver: aResolver pu
 	^ self parameterEntities
 		at: aName
 		put:
-			(DTDExternalParameterEntity
+			(DTDExternalParameterParsedEntity
 				name: aName
 				resolver: aResolver
 				publicID: aPublicID
@@ -63,7 +63,7 @@ DTDDoctypeDefinition >> addInternalGeneralEntity: aName replacement: aReplacemen
 	^ self generalEntities
 		at: aName
 		put:
-			(DTDInternalGeneralEntity 
+			(DTDInternalGeneralParsedEntity 
 				name: aName
 				replacement: aReplacement
 				uri: aBaseURIString).
@@ -76,7 +76,7 @@ DTDDoctypeDefinition >> addInternalParameterEntity: aName replacement: aReplacem
 	^ self parameterEntities
 		at: aName
 		put:
-			(DTDInternalParameterEntity
+			(DTDInternalParameterParsedEntity
 				name: aName
 				replacement: aReplacement
 				uri: aBaseURIString).
@@ -102,7 +102,7 @@ DTDDoctypeDefinition >> addStandaloneExternalExternalGeneralEntity: aName resolv
 	^ self generalEntities
 		at: aName
 		put:
-			(DTDStandaloneExternalExternalGeneralEntity
+			(DTDStandaloneExternalExternalGeneralParsedEntity
 				name: aName
 				resolver: aResolver
 				publicID: aPublicID
@@ -117,7 +117,7 @@ DTDDoctypeDefinition >> addStandaloneExternalInternalGeneralEntity: aName replac
 	^ self generalEntities
 		at: aName
 		put:
-			(DTDStandaloneExternalInternalGeneralEntity 
+			(DTDStandaloneExternalInternalGeneralParsedEntity 
 				name: aName
 				replacement: aReplacement
 				uri: aBaseURIString).
@@ -181,7 +181,7 @@ DTDDoctypeDefinition >> addUnresolvableExternalGeneralEntity: aName [
 		ifTrue: [^ nil].
 	^ self generalEntities
 		at: aName
-		put: (DTDUnresolvableExternalGeneralEntity named: aName).
+		put: (DTDUnresolvableExternalGeneralParsedEntity named: aName).
 ]
 
 { #category : #adding }
@@ -190,7 +190,7 @@ DTDDoctypeDefinition >> addUnresolvableExternalParameterEntity: aName [
 		ifTrue: [^ nil].
 	^ self parameterEntities
 		at: aName
-		put: (DTDUnresolvableExternalParameterEntity named: aName).
+		put: (DTDUnresolvableExternalParameterParsedEntity named: aName).
 ]
 
 { #category : #adding }
