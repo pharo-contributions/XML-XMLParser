@@ -23,7 +23,7 @@ XMLFileSystemFileHandle class >> basicCurrentWorkingDirectory [
 
 { #category : #'instance creation' }
 XMLFileSystemFileHandle class >> fileReference: aFileReference [
-	^ self new fileReference: aFileReference
+	^ self new setFileReference: aFileReference
 ]
 
 { #category : #testing }
@@ -51,12 +51,6 @@ XMLFileSystemFileHandle >> fileReference [
 	^ fileReference ifNil: [fileReference := self path asFileReference]
 ]
 
-{ #category : #accessing }
-XMLFileSystemFileHandle >> fileReference: aFileReference [
-	fileReference := aFileReference.
-	self setPath: aFileReference fullName.
-]
-
 { #category : #testing }
 XMLFileSystemFileHandle >> isFile [
 	^ self fileReference isFile
@@ -76,6 +70,12 @@ XMLFileSystemFileHandle >> newFileWriteStreamOnPath [
 	self usesMemoryStore
 		ifTrue: [^ self fileReference writeStream].
 	^ super newFileWriteStreamOnPath.
+]
+
+{ #category : #initialization }
+XMLFileSystemFileHandle >> setFileReference: aFileReference [
+	fileReference := aFileReference.
+	self setPath: aFileReference fullName.
 ]
 
 { #category : #testing }
