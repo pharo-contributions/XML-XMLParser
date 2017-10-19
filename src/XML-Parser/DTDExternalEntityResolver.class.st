@@ -38,7 +38,8 @@ DTDExternalEntityResolver >> errorLocalFromNonLocal [
 
 { #category : #configuring }
 DTDExternalEntityResolver >> externalEntityLimits [
-	^ externalEntityLimits ifNil: [externalEntityLimits := DTDExternalEntityLimits new]
+	^ externalEntityLimits
+		ifNil: [externalEntityLimits := DTDExternalEntityLimits new]
 ]
 
 { #category : #configuring }

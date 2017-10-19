@@ -110,6 +110,15 @@ DTDExternalEntityResolverLimitingDecorator >> maxExternalEntitySize: anInteger [
 	self externalEntityResolver maxExternalEntitySize: anInteger
 ]
 
+{ #category : #printing }
+DTDExternalEntityResolverLimitingDecorator >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: self externalEntityResolver;
+		nextPut: $).
+]
+
 { #category : #configuring }
 DTDExternalEntityResolverLimitingDecorator >> removeLimits [
 	self externalEntityResolver removeLimits
@@ -120,6 +129,14 @@ DTDExternalEntityResolverLimitingDecorator >> resolveExternalEntityURI: anXMLURI
 	^ self resolveExternalEntityWith: [
 		self externalEntityResolver resolveExternalEntityURI:
 			anXMLURIOrURIString]
+]
+
+{ #category : #resolving }
+DTDExternalEntityResolverLimitingDecorator >> resolveExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
+	^ self resolveExternalEntityWith: [
+		self externalEntityResolver
+			resolveExternalEntityURI: anXMLURIOrURIString
+			upToLimit: aMaxSize]
 ]
 
 { #category : #private }
@@ -148,6 +165,14 @@ DTDExternalEntityResolverLimitingDecorator >> streamResolveExternalEntityURI: an
 	^ self resolveExternalEntityWith: [
 		self externalEntityResolver streamResolveExternalEntityURI:
 			anXMLURIOrURIString]
+]
+
+{ #category : #resolving }
+DTDExternalEntityResolverLimitingDecorator >> streamResolveExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
+	^ self resolveExternalEntityWith: [
+		self externalEntityResolver
+			streamResolveExternalEntityURI: anXMLURIOrURIString
+			upToLimit: aMaxSize]
 ]
 
 { #category : #accessing }
