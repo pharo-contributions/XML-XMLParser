@@ -429,9 +429,7 @@ XMLAttributeDictionaryTest >> testAtNameNamespaceURIIfAbsent [
 ]
 
 { #category : #tests }
-XMLAttributeDictionaryTest >> testLazyDictionary [
-	| dictionary |
-
+XMLAttributeDictionaryTest >> testLazyDictionaryEmptyAttributeDictionary [
 	self isTestingLazyDictionary
 		ifFalse: [^ self].
 
@@ -440,6 +438,14 @@ XMLAttributeDictionaryTest >> testLazyDictionary [
 			self dictionaryClass emptyAttributeDictionary.
 	self assert:
 		self dictionaryClass emptyAttributeDictionary isEmpty.
+]
+
+{ #category : #tests }
+XMLAttributeDictionaryTest >> testLazyDictionaryInterfaceCompatibility [
+	| dictionary |
+
+	self isTestingLazyDictionary
+		ifFalse: [^ self].
 
 	"protocols must be the same as the non-lazy dictionaries"
 	dictionary := self emptyDictionary.
