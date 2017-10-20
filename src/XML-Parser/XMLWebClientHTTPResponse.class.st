@@ -31,11 +31,11 @@ XMLWebClientHTTPResponse >> decodeContent [
 			behavior more consistent with it, we use #detectEncoding before
 			converting"
 			self webClientResponse content:
-				(XMLDecodingReadStreamAdapter
-					on: self content
+				((XMLDecodingReadStreamAdapter
+					on: self content readStream
 					streamConverter: converter)
 						detectEncoding;
-						upToEnd]
+						upToEnd)]
 ]
 
 { #category : #accessing }
@@ -83,7 +83,7 @@ XMLWebClientHTTPResponse >> status [
 
 { #category : #accessing }
 XMLWebClientHTTPResponse >> statusLine [
-	^ self webClientResponse status
+	^ self webClientResponse status ifNil: ['']
 ]
 
 { #category : #'private ' }

@@ -38,16 +38,22 @@ XMLHTTPResponse class >> request: aRequest [
 
 { #category : #accessing }
 XMLHTTPResponse >> content [
+	"Returns the response content as a string"
+
 	self subclassResponsibility
 ]
 
 { #category : #accessing }
 XMLHTTPResponse >> contentCharacterEncoding [
+	"Returns the response content character encoding name as a string"
+
 	^ self class charsetFromContentType: self contentType
 ]
 
 { #category : #accessing }
 XMLHTTPResponse >> contentLength [
+	"Returns the content length in bytes or nil if absent"
+
 	self subclassResponsibility
 ]
 
@@ -110,6 +116,8 @@ XMLHTTPResponse >> isSuccess [
 
 { #category : #accessing }
 XMLHTTPResponse >> request [
+	"Returns the XMLHTTPRequest object that created this response"
+
 	^ request
 ]
 
@@ -120,10 +128,14 @@ XMLHTTPResponse >> setRequest: aRequest [
 
 { #category : #accessing }
 XMLHTTPResponse >> status [
+	"Returns the status code as an integer"
+
 	self subclassResponsibility
 ]
 
 { #category : #accessing }
 XMLHTTPResponse >> statusLine [
+	"Returns the status line as a string"
+
 	self subclassResponsibility
 ]

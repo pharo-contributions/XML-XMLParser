@@ -72,7 +72,9 @@ XMLZincHTTPResponse >> status [
 
 { #category : #accessing }
 XMLZincHTTPResponse >> statusLine [
-	^ self zincResponse statusLine ifNil: ['']
+	^ self zincResponse statusLine
+		ifNil: ['']
+		ifNotNil: [:statusLine | statusLine printString]
 ]
 
 { #category : #private }
