@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLParserExceptionTest,
-	#superclass : #TestCase,
-	#category : #'XML-Tests-Parser'
+	#superclass : #XMLExceptionTest,
+	#category : #'XML-Tests-Parser-Exceptions'
 }
 
 { #category : #accessing }
@@ -15,57 +15,47 @@ XMLParserExceptionTest >> columnNumber [
 ]
 
 { #category : #accessing }
-XMLParserExceptionTest >> errorMessage [
-	^ 'an error occurred'
-]
-
-{ #category : #accessing }
 XMLParserExceptionTest >> errorMessageWithBaseURI [
-	^ '{1} (in {2})'
-		format:
-			(Array
-				with: self errorMessage
-				with: self baseURI)
+	^ '{1} (in {2})' format:
+		(Array
+			with: self errorMessage
+			with: self baseURI)
 ]
 
 { #category : #accessing }
 XMLParserExceptionTest >> errorMessageWithLineAndColumnNumber [
-	^ '{1} (near line {2}, column {3})'
-		format:
-			(Array
-				with: self errorMessage
-				with: self lineNumber
-				with: self columnNumber)
+	^ '{1} (near line {2}, column {3})' format:
+		(Array
+			with: self errorMessage
+			with: self lineNumber
+			with: self columnNumber)
 ]
 
 { #category : #accessing }
 XMLParserExceptionTest >> errorMessageWithLineAndColumnNumberAndBaseURI [
-	^ '{1} (near line {2}, column {3} in {4})'
-		format:
-			(Array
-				with: self errorMessage
-				with: self lineNumber
-				with: self columnNumber
-				with: self baseURI)
+	^ '{1} (near line {2}, column {3} in {4})' format:
+		(Array
+			with: self errorMessage
+			with: self lineNumber
+			with: self columnNumber
+			with: self baseURI)
 ]
 
 { #category : #accessing }
 XMLParserExceptionTest >> errorMessageWithLineNumber [
-	^ '{1} (near line {2})'
-		format:
-			(Array
-				with: self errorMessage
-				with: self lineNumber)
+	^ '{1} (near line {2})' format:
+		(Array
+			with: self errorMessage
+			with: self lineNumber)
 ]
 
 { #category : #accessing }
 XMLParserExceptionTest >> errorMessageWithLineNumberAndBaseURI [
-	^ '{1} (near line {2} in {3})'
-		format:
-			(Array
-				with: self errorMessage
-				with: self lineNumber
-				with: self baseURI)
+	^ '{1} (near line {2} in {3})' format:
+		(Array
+			with: self errorMessage
+			with: self lineNumber
+			with: self baseURI)
 ]
 
 { #category : #accessing }
@@ -76,18 +66,6 @@ XMLParserExceptionTest >> exceptionClass [
 { #category : #accessing }
 XMLParserExceptionTest >> lineNumber [
 	^ 100
-]
-
-{ #category : #'instance creation' }
-XMLParserExceptionTest >> newException [
-	^ self exceptionClass new
-]
-
-{ #category : #'instance creation' }
-XMLParserExceptionTest >> newExceptionWithErrorMessage [
-	^ self newException
-		messageText: self errorMessage;
-		yourself
 ]
 
 { #category : #tests }
