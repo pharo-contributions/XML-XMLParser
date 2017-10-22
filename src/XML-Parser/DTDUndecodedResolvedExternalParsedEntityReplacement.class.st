@@ -40,6 +40,15 @@ DTDUndecodedResolvedExternalParsedEntityReplacement >> isEmpty [
 	^ self rawContents isEmpty
 ]
 
+{ #category : #printing }
+DTDUndecodedResolvedExternalParsedEntityReplacement >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		nextPutAll: self encoding;
+		nextPut: $).
+]
+
 { #category : #accessing }
 DTDUndecodedResolvedExternalParsedEntityReplacement >> rawContents [
 	^ rawContents

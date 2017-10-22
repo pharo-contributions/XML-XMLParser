@@ -54,7 +54,10 @@ XMLNamespaceScope >> copy [
 XMLNamespaceScope >> defaultNamespace [
 	^ prefixMappings
 		ifNil: ['']
-		ifNotNil: [prefixMappings at: '' ifAbsent: ['']]
+		ifNotNil: [
+			prefixMappings
+				at: ''
+				ifAbsent: ['']]
 ]
 
 { #category : #mapping }
@@ -187,7 +190,9 @@ XMLNamespaceScope >> hash [
 
 { #category : #testing }
 XMLNamespaceScope >> includesPrefix: aPrefix [
-	self prefixMappingAt: aPrefix ifAbsent: [^ false].
+	self
+		prefixMappingAt: aPrefix
+		ifAbsent: [^ false].
 	^ true.
 ]
 

@@ -30,6 +30,7 @@ DTDUnresolvedExternalParsedEntityReplacement >> baseURI [
 { #category : #printing }
 DTDUnresolvedExternalParsedEntityReplacement >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream nextPut: $(.
 	self publicID isEmpty
 		ifTrue: [aStream nextPutAll: 'SYSTEM']
@@ -38,6 +39,7 @@ DTDUnresolvedExternalParsedEntityReplacement >> printOn: aStream [
 				nextPutAll: 'PUBLIC "';
 				nextPutAll: self publicID;
 				nextPut: $"].
+
 	aStream
 		nextPutAll: ' "';
 		nextPutAll: self systemID;

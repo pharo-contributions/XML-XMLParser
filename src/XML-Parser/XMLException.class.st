@@ -9,29 +9,82 @@ Class {
 
 { #category : #signalling }
 XMLException class >> formatSignal: aString with: aFirstValue [
-	^ self
+	^ self new
 		formatSignal: aString
-		withArguments: (Array with: aFirstValue)
+		with: aFirstValue
 ]
 
 { #category : #signalling }
 XMLException class >> formatSignal: aString with: aFirstValue with: aSecondValue [
-	^ self
+	^ self new
 		formatSignal: aString
-		withArguments: (Array with: aFirstValue with: aSecondValue)
+		with: aFirstValue
+		with: aSecondValue
 ]
 
 { #category : #signalling }
 XMLException class >> formatSignal: aString with: aFirstValue with: aSecondValue with: aThirdValue [
-	^ self
+	^ self new
 		formatSignal: aString
-		withArguments: (Array with: aFirstValue with: aSecondValue with: aThirdValue)
+		with: aFirstValue
+		with: aSecondValue
+		with: aThirdValue
 ]
 
 { #category : #signalling }
 XMLException class >> formatSignal: aString with: aFirstValue with: aSecondValue with: aThirdValue with: aFourthValue [
-	^ self
+	^ self new
 		formatSignal: aString
+		with: aFirstValue
+		with: aSecondValue
+		with: aThirdValue
+		with: aFourthValue
+]
+
+{ #category : #signalling }
+XMLException class >> formatSignal: aString withArguments: anArray [
+	^ self new
+		formatSignal: aString
+		withArguments: anArray
+]
+
+{ #category : #signalling }
+XMLException class >> signalMessageFrom: anException [
+	^ self new signalMessageFrom: anException
+]
+
+{ #category : #accessing }
+XMLException >> formatMessage: aString with: aFirstValue [
+	self
+		formatMessage: aString
+		withArguments: (Array with: aFirstValue)
+]
+
+{ #category : #accessing }
+XMLException >> formatMessage: aString with: aFirstValue with: aSecondValue [
+	self
+		formatMessage: aString
+		withArguments:
+			(Array
+				with: aFirstValue
+				with: aSecondValue)
+]
+
+{ #category : #accessing }
+XMLException >> formatMessage: aString with: aFirstValue with: aSecondValue with: aThirdValue [
+	self
+		formatMessage: aString
+		withArguments:
+			(Array
+				with: aFirstValue
+				with: aSecondValue
+				with: aThirdValue)
+]
+
+{ #category : #accessing }
+XMLException >> formatMessage: aString with: aFirstValue with: aSecondValue with: aThirdValue with: aFourthValue [
+	self
+		formatMessage: aString
 		withArguments:
 			(Array
 				with: aFirstValue
@@ -40,15 +93,67 @@ XMLException class >> formatSignal: aString with: aFirstValue with: aSecondValue
 				with: aFourthValue)
 ]
 
-{ #category : #signalling }
-XMLException class >> formatSignal: aString withArguments: anArray [
-	^ self signal: (aString format: anArray)
+{ #category : #accessing }
+XMLException >> formatMessage: aString withArguments: anArray [
+	self messageText: (aString format: anArray)
 ]
 
-{ #category : #signalling }
-XMLException class >> signalMessageFrom: anException [
-	^ self
-		formatSignal: '({1}) {2}'
+{ #category : #signaling }
+XMLException >> formatSignal: aString with: aFirstValue [
+	self
+		formatMessage: aString
+		with: aFirstValue.
+	^ self signal.
+]
+
+{ #category : #signaling }
+XMLException >> formatSignal: aString with: aFirstValue with: aSecondValue [
+	self
+		formatMessage: aString
+		with: aFirstValue
+		with: aSecondValue.
+	^ self signal.
+]
+
+{ #category : #signaling }
+XMLException >> formatSignal: aString with: aFirstValue with: aSecondValue with: aThirdValue [
+	self
+		formatMessage: aString
+		with: aFirstValue
+		with: aSecondValue
+		with: aThirdValue.
+	^ self signal.
+]
+
+{ #category : #signaling }
+XMLException >> formatSignal: aString with: aFirstValue with: aSecondValue with: aThirdValue with: aFourthValue [
+	self
+		formatMessage: aString
+		with: aFirstValue
+		with: aSecondValue
+		with: aThirdValue
+		with: aFourthValue.
+	^ self signal.
+]
+
+{ #category : #signaling }
+XMLException >> formatSignal: aString withArguments: anArray [
+	self
+		formatMessage: aString
+		withArguments: anArray.
+	^ self signal.
+]
+
+{ #category : #accessing }
+XMLException >> inheritMessageFrom: anException [
+	self
+		formatMessage: '({1}) {2}'
 		with: anException class name
 		with: anException messageText
+]
+
+{ #category : #signaling }
+XMLException >> signalMessageFrom: anException [
+	self inheritMessageFrom: anException.
+	^  self signal.
 ]

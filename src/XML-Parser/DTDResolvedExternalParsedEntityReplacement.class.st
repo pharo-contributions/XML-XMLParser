@@ -7,6 +7,11 @@ Class {
 	#category : #'XML-Parser-DTD'
 }
 
+{ #category : #converting }
+DTDResolvedExternalParsedEntityReplacement >> asString [
+	^ self contents
+]
+
 { #category : #accessing }
 DTDResolvedExternalParsedEntityReplacement >> contents [
 	self subclassResponsibility

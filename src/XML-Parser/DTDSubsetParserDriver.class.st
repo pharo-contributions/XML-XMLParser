@@ -76,7 +76,7 @@ DTDSubsetParserDriver >> externalEntityResolver [
 DTDSubsetParserDriver >> handleAttributeDeclaration: anElement name: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	| newAttributeValidator |
 
-	self mustNotProcessEntityOrAttributeDeclaration
+	self mustSkipEntityAndAttributeDeclarations
 		ifTrue: [^ self].
 
 	newAttributeValidator :=
@@ -125,7 +125,7 @@ DTDSubsetParserDriver >> handleElementDeclaration: aName contentModel: aContentM
 
 { #category : #'handling - dtd' }
 DTDSubsetParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotation [
-	self mustNotProcessEntityOrAttributeDeclaration
+	self mustSkipEntityAndAttributeDeclarations
 		ifTrue: [^ self].
 
 	aNotation isEmpty
@@ -162,7 +162,7 @@ DTDSubsetParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublic
 
 { #category : #'handling - dtd' }
 DTDSubsetParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplacement [
-	self mustNotProcessEntityOrAttributeDeclaration
+	self mustSkipEntityAndAttributeDeclarations
 		ifTrue: [^ self].
 
 	self isStandaloneExternal
@@ -238,7 +238,7 @@ DTDSubsetParserDriver >> handleNotationDeclaration: aName publicID: aPublicID sy
 
 { #category : #'handling - dtd' }
 DTDSubsetParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
-	self mustNotProcessEntityOrAttributeDeclaration
+	self mustSkipEntityAndAttributeDeclarations
 		ifFalse: [
 			self resolvesExternalEntities
 				ifTrue: [
@@ -257,7 +257,7 @@ DTDSubsetParserDriver >> handleParameterEntityDeclaration: aName publicID: aPubl
 
 { #category : #'handling - dtd' }
 DTDSubsetParserDriver >> handleParameterEntityDeclaration: aName replacement: aReplacement [
-	self mustNotProcessEntityOrAttributeDeclaration
+	self mustSkipEntityAndAttributeDeclarations
 		ifFalse: [
 			self doctypeDefinition
 				addInternalParameterEntity: aName
@@ -309,10 +309,10 @@ DTDSubsetParserDriver >> haveSkippedParameterEntityReferences [
 
 { #category : #testing }
 DTDSubsetParserDriver >> isExternal [
-	"'[Definition: An external markup declaration is defined as a markup
+	"Definition: An external markup declaration is defined as a markup
 	declaration occurring in the external subset or in a parameter entity
 	(external or internal, the latter being included because non-validating
-	processors are not required to read them).]'"
+	processors are not required to read them)"
 
 	self subclassResponsibility
 ]
@@ -339,7 +339,7 @@ DTDSubsetParserDriver >> maxEntityReplacementDepth [
 ]
 
 { #category : #testing }
-DTDSubsetParserDriver >> mustNotProcessEntityOrAttributeDeclaration [
+DTDSubsetParserDriver >> mustSkipEntityAndAttributeDeclarations [
 	"'Except when standalone=''yes'', they (non-validating parsers) MUST NOT
 	process entity declarations or attribute-list declarations encountered
 	after a reference to a parameter entity that is not read...'"

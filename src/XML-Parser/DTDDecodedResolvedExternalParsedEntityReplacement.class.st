@@ -25,6 +25,15 @@ DTDDecodedResolvedExternalParsedEntityReplacement >> isEmpty [
 	^ self contents isEmpty
 ]
 
+{ #category : #printing }
+DTDDecodedResolvedExternalParsedEntityReplacement >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		nextPutAll: self contents;
+		nextPut: $).
+]
+
 { #category : #accessing }
 DTDDecodedResolvedExternalParsedEntityReplacement >> readStream [
 	^ self contents readStream

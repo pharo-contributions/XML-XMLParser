@@ -1,5 +1,5 @@
 "
-This class uses the Squeak WebClient library, but does not refer to WebClient classes directly to avoid compile errors on platforms without it.
+This class uses the WebClient library to implement HTTP requests. This is used on Squeak when Zinc isn't installed.
 "
 Class {
 	#name : #XMLWebClientHTTPRequest,
