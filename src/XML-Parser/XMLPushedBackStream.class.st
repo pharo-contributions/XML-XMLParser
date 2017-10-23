@@ -1,5 +1,5 @@
 "
-A base class to wrap a nested stream and callback for XMLNestedStreamReader and record the line number, position, and line start position of the current external stream.
+A base class to store a nested stream for XMLNestedStreamReader, along with its callback and the current position, line number, and line start position of the current external stream.
 "
 Class {
 	#name : #XMLPushedBackStream,

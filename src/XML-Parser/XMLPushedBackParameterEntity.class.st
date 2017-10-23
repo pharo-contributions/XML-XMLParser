@@ -1,5 +1,5 @@
 "
-An abstract class to wrap pushed-back parameter entities to keep track of the nesting of include sections within entity replacements.
+A class to decorate pushed-back parameter entities to keep track of the nesting of include sections within entity replacements.
 "
 Class {
 	#name : #XMLPushedBackParameterEntity,
@@ -13,11 +13,6 @@ Class {
 { #category : #nesting }
 XMLPushedBackParameterEntity >> endIncludeSection [
 	totalOpenIncludeSections := self totalOpenIncludeSections - 1
-]
-
-{ #category : #testing }
-XMLPushedBackParameterEntity >> isParameter [
-	^ true
 ]
 
 { #category : #nesting }

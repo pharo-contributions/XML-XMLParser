@@ -1,7 +1,7 @@
 "
 An abstract class for dynamically choosing a supported concrete implementation from a class hierarchy for this platform.
 
-Each root subclass needs to override preferredImplementation to return the preferred subclass and errorNoSupportedImplementation to signal an error if none are supported, and then each subclass of the root needs to define isSupportedImplementation to return true if it supports this platform.
+Each root subclass needs to override #preferredImplementation to return the preferred subclass and #noSupportedImplementationFound to signal an error if none are supported, and then each subclass of the root needs to define #isSupportedImplementation to return true if it supports this platform.
 "
 Class {
 	#name : #XMLAbstractFactory,

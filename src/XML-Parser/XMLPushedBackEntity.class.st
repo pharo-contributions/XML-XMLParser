@@ -1,5 +1,5 @@
 "
-An abstract class to wrap pushed-back entities to keep track of the nesting of markup within entity replacements.
+An abstract base class for decorating pushed-back entities to keep track of the nesting of markup within entity replacements.
 "
 Class {
 	#name : #XMLPushedBackEntity,
@@ -47,7 +47,7 @@ XMLPushedBackEntity >> isExternal [
 
 { #category : #testing }
 XMLPushedBackEntity >> isParameter [
-	^ false
+	^ entity isParameter
 ]
 
 { #category : #testing }

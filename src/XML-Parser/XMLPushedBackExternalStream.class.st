@@ -1,5 +1,5 @@
 "
-A class to wrap a nested external stream for XMLNestedStreamReader.
+A class to store a nested external stream for XMLNestedStreamReader.
 "
 Class {
 	#name : #XMLPushedBackExternalStream,
