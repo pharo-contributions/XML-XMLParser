@@ -10,6 +10,11 @@ XMLUTF32LittleEndianStreamConverterTest class >> isAbstract [
 ]
 
 { #category : #accessing }
+XMLUTF32LittleEndianStreamConverterTest >> primaryEncodingName [
+	^ 'UTF-32-LE'
+]
+
+{ #category : #accessing }
 XMLUTF32LittleEndianStreamConverterTest >> streamConverterClass [
 	^ XMLUTF32LittleEndianStreamConverter
 ]

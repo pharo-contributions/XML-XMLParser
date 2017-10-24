@@ -10,11 +10,11 @@ XMLUTF8StreamConverterTest class >> isAbstract [
 ]
 
 { #category : #accessing }
-XMLUTF8StreamConverterTest >> streamConverterClass [
-	^ XMLUTF8StreamConverter
+XMLUTF8StreamConverterTest >> primaryEncodingName [
+	^ 'UTF-8'
 ]
 
-{ #category : #tests }
-XMLUTF8StreamConverterTest >> testIsDefault [
-	self assert: self newStreamConverter isDefault
+{ #category : #accessing }
+XMLUTF8StreamConverterTest >> streamConverterClass [
+	^ XMLUTF8StreamConverter
 ]

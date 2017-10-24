@@ -10,6 +10,11 @@ XMLByteStreamConverterTest class >> isAbstract [
 ]
 
 { #category : #accessing }
+XMLByteStreamConverterTest >> primaryEncodingName [
+	^ 'Latin-1'
+]
+
+{ #category : #accessing }
 XMLByteStreamConverterTest >> streamConverterClass [
 	^ XMLByteStreamConverter
 ]

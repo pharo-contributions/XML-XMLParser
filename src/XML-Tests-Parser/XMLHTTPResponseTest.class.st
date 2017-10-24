@@ -42,5 +42,6 @@ XMLHTTPResponseTest >> testCharsetFromContentType [
 				''
 				'')
 		do: [:contentType :encoding |
-			self assert: (XMLHTTPResponse charsetFromContentType: contentType) = encoding]
+			self assert:
+				(XMLHTTPResponse charsetFromContentType: contentType) = encoding]
 ]

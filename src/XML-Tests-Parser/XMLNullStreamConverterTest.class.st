@@ -13,8 +13,3 @@ XMLNullStreamConverterTest class >> isAbstract [
 XMLNullStreamConverterTest >> streamConverterClass [
 	^ XMLNullStreamConverter
 ]
-
-{ #category : #tests }
-XMLNullStreamConverterTest >> testIsNull [
-	self assert: self newStreamConverter isNull
-]

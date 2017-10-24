@@ -10,6 +10,11 @@ XMLUTF32BigEndianStreamConverterTest class >> isAbstract [
 ]
 
 { #category : #accessing }
+XMLUTF32BigEndianStreamConverterTest >> primaryEncodingName [
+	^ 'UTF-32'
+]
+
+{ #category : #accessing }
 XMLUTF32BigEndianStreamConverterTest >> streamConverterClass [
 	^ XMLUTF32BigEndianStreamConverter
 ]

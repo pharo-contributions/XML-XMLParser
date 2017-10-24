@@ -32,6 +32,11 @@ XMLStreamConverterTest >> caseInvertedEncodingNameFrom: anEncodingName [
 ]
 
 { #category : #accessing }
+XMLStreamConverterTest >> defaultClass [
+	^ XMLUTF8StreamConverter
+]
+
+{ #category : #accessing }
 XMLStreamConverterTest >> encodingNames [
 	^ self streamConverterClass encodingNames
 ]
@@ -56,6 +61,16 @@ XMLStreamConverterTest >> newStreamConverter [
 ]
 
 { #category : #accessing }
+XMLStreamConverterTest >> nullClass [
+	^ XMLNullStreamConverter
+]
+
+{ #category : #accessing }
+XMLStreamConverterTest >> primaryEncodingName [
+	^ ''
+]
+
+{ #category : #accessing }
 XMLStreamConverterTest >> streamConverterClass [
 	^ XMLStreamConverter
 ]
@@ -77,23 +92,73 @@ XMLStreamConverterTest >> testCanConvertEncoding [
 ]
 
 { #category : #tests }
+XMLStreamConverterTest >> testDefault [
+	self assert: self streamConverterClass default class == self defaultClass
+]
+
+{ #category : #tests }
+XMLStreamConverterTest >> testDefaultClass [
+	self assert: self streamConverterClass defaultClass == self defaultClass
+]
+
+{ #category : #tests }
+XMLStreamConverterTest >> testDefaultEncoding [
+	self assert:
+		self streamConverterClass defaultEncoding =
+			self defaultClass primaryEncodingName
+]
+
+{ #category : #tests }
 XMLStreamConverterTest >> testEncoding [
-	self encodingNamesWithCaseInversions do: [:each | | streamConverter |
-		streamConverter := XMLStreamConverter newForEncoding: each.
-		self assert: streamConverter class == self streamConverterClass.
+	self encodingNamesWithCaseInversions do: [:each |
 		self assert:
-			streamConverter encoding =
-				self streamConverterClass primaryEncodingName]
+			(XMLStreamConverter newForEncoding: each) encoding =
+				self primaryEncodingName]
 ]
 
 { #category : #tests }
 XMLStreamConverterTest >> testIsDefault [
-	self deny: self newStreamConverter isDefault
+	self streamConverterClass == self defaultClass
+		ifTrue: [self assert: self newStreamConverter isDefault]
+		ifFalse: [self deny: self newStreamConverter isDefault]
+]
+
+{ #category : #tests }
+XMLStreamConverterTest >> testIsDefaultClass [
+	self streamConverterClass == self defaultClass
+		ifTrue: [self assert: self streamConverterClass isDefaultClass]
+		ifFalse: [self deny: self streamConverterClass isDefaultClass]
 ]
 
 { #category : #tests }
 XMLStreamConverterTest >> testIsNull [
-	self deny: self newStreamConverter isNull
+	self streamConverterClass == self nullClass
+		ifTrue: [self assert: self newStreamConverter isNull]
+		ifFalse: [self deny: self newStreamConverter isNull]
+]
+
+{ #category : #tests }
+XMLStreamConverterTest >> testNewForEncoding [
+	self encodingNamesWithCaseInversions do: [:each |
+		(XMLStreamConverter newForEncoding: each) class ==
+			self streamConverterClass]
+]
+
+{ #category : #tests }
+XMLStreamConverterTest >> testNull [
+	self assert: self streamConverterClass null class == self nullClass
+]
+
+{ #category : #tests }
+XMLStreamConverterTest >> testNullClass [
+	self assert: self streamConverterClass nullClass == self nullClass
+]
+
+{ #category : #tests }
+XMLStreamConverterTest >> testPrimaryEncodingName [
+	self assert:
+		self streamConverterClass primaryEncodingName =
+			self primaryEncodingName
 ]
 
 { #category : #accessing }
