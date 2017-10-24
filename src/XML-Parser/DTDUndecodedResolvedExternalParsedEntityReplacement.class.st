@@ -15,7 +15,7 @@ Class {
 DTDUndecodedResolvedExternalParsedEntityReplacement class >> rawContents: aRawContentsString [
 	^ self
 		rawContents: aRawContentsString
-		encoding: 'UTF-8'
+		encoding: XMLStreamConverter defaultEncoding
 ]
 
 { #category : #'instance creation' }

@@ -79,6 +79,11 @@ XMLStreamConverter class >> defaultClass [
 	^ XMLUTF8StreamConverter
 ]
 
+{ #category : #defaults }
+XMLStreamConverter class >> defaultEncoding [
+	^ self defaultClass primaryEncodingName
+]
+
 { #category : #accessing }
 XMLStreamConverter class >> encodingNames [
 	^ encodingNames

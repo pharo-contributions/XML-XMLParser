@@ -47,7 +47,11 @@ XMLHTTPResponse >> content [
 XMLHTTPResponse >> contentCharacterEncoding [
 	"Returns the response content character encoding name as a string"
 
-	^ self class charsetFromContentType: self contentType
+	| encoding |
+
+	^ (encoding := self class charsetFromContentType: self contentType) isEmpty
+		ifTrue: [self defaultContentCharacterEncoding]
+		ifFalse: [encoding]
 ]
 
 { #category : #accessing }
@@ -60,6 +64,13 @@ XMLHTTPResponse >> contentLength [
 { #category : #accessing }
 XMLHTTPResponse >> contentType [
 	^ self headerAt: 'Content-Type'
+]
+
+{ #category : #defaults }
+XMLHTTPResponse >> defaultContentCharacterEncoding [
+	"'...media subtypes of the 'text' type are defined to have a default
+	charset value of 'ISO-8859-1' when received via HTTP.'"
+	^ 'ISO-8859-1'
 ]
 
 { #category : #accessing }
