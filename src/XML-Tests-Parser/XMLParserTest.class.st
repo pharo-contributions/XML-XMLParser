@@ -4424,7 +4424,7 @@ XMLParserTest >> testEntityReferenceInternalDeclaration [
 			<!ENTITY % name "root">
 			<!ENTITY % contentModel "EMPTY">
 			<!ELEMENT %name; %contentModel;>
-		]><root/>',
+		]><root/>'
 		'<!DOCTYPE root [
 			<!ENTITY % name "value">
 			<!ENTITY % name2 "%name;">
@@ -4774,7 +4774,7 @@ XMLParserTest >> testEntityReferenceUnterminatedInEntityValue [
 	#('<!DOCTYPE test [
 			<!ENTITY name "value">
 			<!ENTITY param "&">
-		]><test/>',
+		]><test/>'
 		'<!DOCTYPE test [
 			<!ENTITY name "value">
 			<!ENTITY param "&name">
