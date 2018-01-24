@@ -249,7 +249,7 @@ XMLFileHandle >> rawWriteStream [
 XMLFileHandle >> readStream [
 	"returns a file read stream with decoding"
 
-	^ (XMLDecodingReadStreamAdapter on: self rawReadStream)
+	^ (XMLDecodingReadStreamAdapter nonDecodingOn: self rawReadStream)
 		detectEncoding
 ]
 

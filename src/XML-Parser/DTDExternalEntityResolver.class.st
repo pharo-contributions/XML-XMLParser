@@ -62,8 +62,8 @@ DTDExternalEntityResolver >> externalEntityURIFromPublicID: aPublicID systemID: 
 			(self
 				externalEntityURIFromPublicID: aPublicID
 				systemID: aSystemID).
-	(externalEntityURI isLocalURI
-		and: [baseURI isLocalURI not
+	(externalEntityURI isLocal
+		and: [baseURI isLocal not
 			and: [self resolvesLocalFromNonLocal not]])
 		ifTrue: [self errorLocalFromNonLocal].
 
@@ -126,7 +126,7 @@ DTDExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString [
 DTDExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
 	| uri |
 
-	^ (uri := anXMLURIOrURIString asXMLURI) isLocalURI
+	^ (uri := anXMLURIOrURIString asXMLURI) isLocal
 		ifTrue: [
 			self
 				resolveLocalExternalEntityURI: uri
@@ -151,12 +151,14 @@ DTDExternalEntityResolver >> resolveNonLocalExternalEntityURI: anXMLURIOrURIStri
 
 	response :=
 		anXMLURIOrURIString asXMLHTTPRequest
-			getResponseUpToLimit: aMaxSize
+			resolveUpToLimit: aMaxSize
 			decoding: false.
 
+	"saves the undecoded replacement with its Content-Type
+	charset encoding tag for later decoding (if needed)"
 	^ DTDUndecodedResolvedExternalParsedEntityReplacement
 		rawContents: response content
-		encoding: response contentCharacterEncoding.
+		encoding: response contentCharset.
 ]
 
 { #category : #configuring }
@@ -183,7 +185,7 @@ DTDExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString
 DTDExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
 	| uri |
 
-	^ (uri := anXMLURIOrURIString asXMLURI) isLocalURI
+	^ (uri := anXMLURIOrURIString asXMLURI) isLocal
 		ifTrue: [
 			self
 				streamResolveLocalExternalEntityURI: uri
@@ -196,7 +198,9 @@ DTDExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString
 
 { #category : #private }
 DTDExternalEntityResolver >> streamResolveLocalExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
-	^ XMLDecodingReadStreamAdapter on:
+	"return our own decoding adapter on the raw, undecoded stream
+	to avoid looking for any byte-order mark until later"
+	^ XMLDecodingReadStreamAdapter nonDecodingOn:
 		(anXMLURIOrURIString asXMLFileHandle
 			streamGetUpToLimit: aMaxSize
 			decoding: false)

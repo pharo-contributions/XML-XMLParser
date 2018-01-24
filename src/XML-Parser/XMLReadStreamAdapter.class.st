@@ -8,11 +8,26 @@ Class {
 }
 
 { #category : #testing }
+XMLReadStreamAdapter class >> isBinary: aStream [
+	"consider any stream that returns ints to be binary, because not every
+	stream implements #isBinary and it isn't portable to GS"
+	^ aStream atEnd not
+		and: [aStream peek isInteger]
+]
+
+{ #category : #'instance creation' }
+XMLReadStreamAdapter class >> onIfBinary: aStream [
+	^ (self isBinary: aStream)
+		ifTrue: [self on: aStream]
+		ifFalse: [nil]
+]
+
+{ #category : #testing }
 XMLReadStreamAdapter >> atEnd [
 	^ stream atEnd
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLReadStreamAdapter >> basicNext [
 	stream atEnd
 		ifTrue: [^ nil]
@@ -100,8 +115,7 @@ XMLReadStreamAdapter >> skip: anInteger [
 { #category : #positioning }
 XMLReadStreamAdapter >> skipSeparators [
 	"we use #isXMLWhitespace instead of the narrower, XML-specific
-	#isXMLSeparator, because this class can be used for non-XML
-	streams too"
+	#isXMLSeparator, because this class supports non-XML input too"
 	[self atEnd not
 		and: [self peek isXMLWhitespace]]
 		whileTrue: [self next]

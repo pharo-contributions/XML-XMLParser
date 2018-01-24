@@ -76,7 +76,7 @@ XMLStreamConverter class >> default [
 
 { #category : #defaults }
 XMLStreamConverter class >> defaultClass [
-	^ XMLUTF8StreamConverter
+	^ XMLImplicitUTF8StreamConverter
 ]
 
 { #category : #defaults }
@@ -235,6 +235,11 @@ XMLStreamConverter >> initializeForEncoding: anEncodingName [
 { #category : #testing }
 XMLStreamConverter >> isDefault [
 	^ self class isDefaultClass
+]
+
+{ #category : #testing }
+XMLStreamConverter >> isImplicit [
+	^ false
 ]
 
 { #category : #testing }

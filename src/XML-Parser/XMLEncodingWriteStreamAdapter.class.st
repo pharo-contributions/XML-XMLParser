@@ -19,8 +19,7 @@ XMLEncodingWriteStreamAdapter class >> on: aStream [
 
 { #category : #'instance creation' }
 XMLEncodingWriteStreamAdapter class >> on: aStream streamConverter: aStreamConverter [
-	^ self new
-		on: aStream;
+	^ (self basicOn: aStream)
 		streamConverter: aStreamConverter
 ]
 
@@ -37,6 +36,11 @@ XMLEncodingWriteStreamAdapter >> basicNextPutByte: aByteValue [
 { #category : #testing }
 XMLEncodingWriteStreamAdapter >> hasDefaultStreamConverter [
 	^ streamConverter isDefault
+]
+
+{ #category : #testing }
+XMLEncodingWriteStreamAdapter >> hasImplicitStreamConverter [
+	^ streamConverter isImplicit
 ]
 
 { #category : #testing }

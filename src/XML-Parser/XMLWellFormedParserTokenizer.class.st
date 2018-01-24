@@ -1033,7 +1033,7 @@ XMLWellFormedParserTokenizer >> nextCharacterReferenceOnCharacterStream [
 		and: [driver replacesContentEntityReferences not])
 		ifTrue: [
 			nameStream reset.
-			(codePoint := streamReader nextIntegerPrintedOn: nameStream)
+			(codePoint := self nextCharacterValueLiteralPrintedOn: nameStream)
 				ifNil: [self errorExpectedIntegerCharacterReference].
 			(self characterFromCodePoint: codePoint)
 				ifNil: [self errorInvalidCharacterReferenceCodePoint: codePoint].
@@ -1044,7 +1044,7 @@ XMLWellFormedParserTokenizer >> nextCharacterReferenceOnCharacterStream [
 				nextPut: $;.
 			^ $&]
 		ifFalse: [| character |
-			(codePoint := streamReader nextInteger)
+			(codePoint := self nextCharacterValueLiteral)
 				ifNil: [self errorExpectedIntegerCharacterReference].
 			(character := self characterFromCodePoint: codePoint)
 				ifNil: [self errorInvalidCharacterReferenceCodePoint: codePoint].
@@ -1982,8 +1982,7 @@ XMLWellFormedParserTokenizer >> nextPublicIDLiteral [
 { #category : #tokenizing }
 XMLWellFormedParserTokenizer >> nextStartExternalEntity [
 	driver decodesCharacters
-		ifTrue: [streamReader detectEncoding]
-		ifFalse: [streamReader decodeStreamWithNullConverter].
+		ifTrue: [streamReader detectEncoding].
 	self nextXMLTextDeclaration.
 ]
 

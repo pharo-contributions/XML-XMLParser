@@ -54,13 +54,20 @@ Class {
 }
 
 { #category : #'instance creation' }
+SAXHandler class >> new [
+	Error signal:
+		'Parsers should be created with #on: or ',
+		'some other "instance creation" message'
+]
+
+{ #category : #'instance creation' }
 SAXHandler class >> on: aStringOrStream [
 	"Returns a new parser on the string or stream argument but doesn't parse it.
 
 	Can be used to configure a parser with 'configuring' messages before
 	parsing with parseDocument."
 
-	^ self new on: aStringOrStream
+	^ self basicNew initialize on: aStringOrStream
 ]
 
 { #category : #'instance creation' }
@@ -88,7 +95,7 @@ SAXHandler class >> onFileNamed: aFileName [
 			"return an XMLDecodingReadStreamAdapter on the undecoded file
 			stream so we can do our own decoding looking at byte order
 			marks and <?xml ...?> encoding attributes"
-			(XMLDecodingReadStreamAdapter on:
+			(XMLDecodingReadStreamAdapter nonDecodingOn:
 				aFileName asXMLFileHandle rawReadStream)
 		documentURI: aFileName
 ]
@@ -259,12 +266,11 @@ SAXHandler >> decodesCharacters [
 
 { #category : #configuring }
 SAXHandler >> decodesCharacters: aBoolean [
-	"When enabled, character decoding will be tried if the input is binary, if
-	it starts with a byte order mark (BOM) sequence, if the input looks like
-	undecoded UTF-16 or UTF-32 (because of null chars before or after the first
-	non-null ASCII char), or if the input is an XMLDecodingReadStreamAdapter,
-	and when decoding is being done and an <?xml ...?> declarations is parsed,
-	its encoding attribute will be obeyed. (default)"
+	"When enabled, character decoding will be tried if:
+		1) the input stream or string is in binary
+		2) if it starts with a byte-order mark (BOM) byte sequence
+		3) if the input is wrapped with an XMLDecodingReadStreamAdapter
+	(Default.)"
 
 	self configuration decodesCharacters: aBoolean
 ]

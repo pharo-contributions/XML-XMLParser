@@ -3,32 +3,16 @@ This is an abstract base class for HTTP responses.
 "
 Class {
 	#name : #XMLHTTPResponse,
-	#superclass : #Object,
+	#superclass : #XMLHTTPMessage,
 	#instVars : [
 		'request'
 	],
 	#category : #'XML-Parser-HTTP'
 }
 
-{ #category : #parsing }
-XMLHTTPResponse class >> charsetFromContentType: aContentTypeString [
-	"Implemented here so the HTML tokenizer can access it when parsing
-	<meta> attributes"
-	$;
-		xmlSplit: aContentTypeString
-		do: [:contentTypeField | | contentTypeFieldWithoutWhitespace i | 
-			contentTypeFieldWithoutWhitespace :=
-				contentTypeField reject: [:each | each isXMLWhitespace].
-			(i := contentTypeFieldWithoutWhitespace indexOf: $=) > 0
-				ifTrue: [
-					(contentTypeFieldWithoutWhitespace
-						copyFrom: 1
-						to: i - 1) = 'charset'
-						ifTrue: [
-							^ contentTypeFieldWithoutWhitespace
-								copyFrom: i + 1
-								to: contentTypeFieldWithoutWhitespace size]]].
-	^ ''.
+{ #category : #defaults }
+XMLHTTPResponse class >> preferredImplementation [
+	^ XMLHTTPZincResponse
 ]
 
 { #category : #'instance creation' }
@@ -36,93 +20,74 @@ XMLHTTPResponse class >> request: aRequest [
 	^ self new setRequest: aRequest
 ]
 
-{ #category : #accessing }
-XMLHTTPResponse >> content [
-	"Returns the response content as a string"
-
+{ #category : #defaults }
+XMLHTTPResponse >> contentReaderClass [
 	self subclassResponsibility
-]
-
-{ #category : #accessing }
-XMLHTTPResponse >> contentCharacterEncoding [
-	"Returns the response content character encoding name as a string"
-
-	| encoding |
-
-	^ (encoding := self class charsetFromContentType: self contentType) isEmpty
-		ifTrue: [self defaultContentCharacterEncoding]
-		ifFalse: [encoding]
-]
-
-{ #category : #accessing }
-XMLHTTPResponse >> contentLength [
-	"Returns the content length in bytes or nil if absent"
-
-	self subclassResponsibility
-]
-
-{ #category : #accessing }
-XMLHTTPResponse >> contentType [
-	^ self headerAt: 'Content-Type'
 ]
 
 { #category : #defaults }
-XMLHTTPResponse >> defaultContentCharacterEncoding [
-	"'...media subtypes of the 'text' type are defined to have a default
-	charset value of 'ISO-8859-1' when received via HTTP.'"
-	^ 'ISO-8859-1'
+XMLHTTPResponse >> defaultProtocol [
+	^ 'HTTP/1.1'
 ]
 
-{ #category : #accessing }
-XMLHTTPResponse >> headerAt: aKey [
-	^ self
-		headerAt: aKey
-		ifAbsent: ['']
-]
-
-{ #category : #accessing }
-XMLHTTPResponse >> headerAt: aKey ifAbsent: aBlock [
-	self subclassResponsibility
-]
-
-{ #category : #enumerating }
-XMLHTTPResponse >> headerKeysAndValuesDo: aTwoArgumentBlock [
-	self subclassResponsibility
-]
-
-{ #category : #enumerating }
-XMLHTTPResponse >> headerKeysDo: aBlock [
-	self headerKeysAndValuesDo: [:key :value |
-		aBlock value: key]
-]
-
-{ #category : #accessing }
-XMLHTTPResponse >> headerValuesAt: aKey [
-	| values |
-
-	values := OrderedCollection new.
-	self
-		headerValuesAt: aKey
-		do: [:each | values addLast: each].
-	^ values.
-]
-
-{ #category : #enumerating }
-XMLHTTPResponse >> headerValuesAt: aKey do: aBlock [
-	self subclassResponsibility
+{ #category : #defaults }
+XMLHTTPResponse >> defaultStatusCode [
+	^ 200
 ]
 
 { #category : #testing }
-XMLHTTPResponse >> includesHeaderKey: aKey [
-	self
-		headerAt: aKey
-		ifAbsent: [^ false].
-	^ true.
+XMLHTTPResponse >> isChunked [
+	| transferEncoding |
+
+	transferEncoding :=
+		self
+			headerAt: 'Transfer-Encoding'
+			ifAbsent: [^ false].
+	^ transferEncoding beginsWith: 'chunked'.
 ]
 
 { #category : #testing }
 XMLHTTPResponse >> isSuccess [
 	self subclassResponsibility
+]
+
+{ #category : #'instance creation' }
+XMLHTTPResponse >> newContentReader [
+	^ self contentReaderClass response: self
+]
+
+{ #category : #printing }
+XMLHTTPResponse >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		nextPutAll: self statusLine;
+		nextPut: $).
+]
+
+{ #category : #accessing }
+XMLHTTPResponse >> protocol [
+	self subclassResponsibility
+]
+
+{ #category : #accessing }
+XMLHTTPResponse >> protocol: aString [
+	self
+		setProtocol: aString
+		statusCode: self statusCode
+]
+
+{ #category : #reading }
+XMLHTTPResponse >> readContentUpToLimit: aMaxSize decoding: aBoolean [
+	self content:
+		(self newContentReader
+			readUpToLimit: aMaxSize
+			decoding: aBoolean)
+]
+
+{ #category : #converting }
+XMLHTTPResponse >> readStream [
+	^ self content readStream
 ]
 
 { #category : #accessing }
@@ -133,14 +98,31 @@ XMLHTTPResponse >> request [
 ]
 
 { #category : #initialization }
+XMLHTTPResponse >> setProtocol: aString statusCode: anInteger [
+	self subclassResponsibility
+]
+
+{ #category : #initialization }
 XMLHTTPResponse >> setRequest: aRequest [
 	request := aRequest
 ]
 
 { #category : #accessing }
-XMLHTTPResponse >> status [
+XMLHTTPResponse >> statusCode [
 	"Returns the status code as an integer"
 
+	self subclassResponsibility
+]
+
+{ #category : #accessing }
+XMLHTTPResponse >> statusCode: anInteger [
+	self
+		setProtocol: self protocol
+		statusCode: anInteger
+]
+
+{ #category : #accessing }
+XMLHTTPResponse >> statusDescription [
 	self subclassResponsibility
 ]
 

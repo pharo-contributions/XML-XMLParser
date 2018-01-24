@@ -72,7 +72,7 @@ XMLNestedStreamReader >> atQuote [
 		or: [peekChar == $']
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLNestedStreamReader >> basicNext [
 	^ self next
 ]
@@ -98,9 +98,22 @@ XMLNestedStreamReader >> closeStreams [
 
 { #category : #decoding }
 XMLNestedStreamReader >> convertFromEncoding: anEncodingName [
-	"encoding attributes are ignored unless we are already decoding"
-	stream isXMLConvertingStreamAdapter
-		ifTrue: [self decodeStreamWithConverter: anEncodingName asXMLStreamConverter]
+	"Encoding attributes are ignored unless the stream is a converting adapter
+	that has a null/implicit converter.
+	
+	This is the safest approach, because the encoding of a file can be easily
+	changed by a text editor or utility without automatically updating the
+	<?xml ...?> encoding attribute.
+	
+	The BOM and out-of-band info (like HTTP headers) should be given precedence."
+
+	(stream isXMLConvertingStreamAdapter
+		and: [stream hasNullStreamConverter
+			or: [stream hasImplicitStreamConverter]])
+		ifTrue: [| streamConverter |
+			(streamConverter := anEncodingName asXMLStreamConverter) isNull
+				ifTrue: [self errorUnsupportedEncoding: anEncodingName].
+			self decodeStreamWithConverter: streamConverter]
 ]
 
 { #category : #accessing }
@@ -134,16 +147,13 @@ XMLNestedStreamReader >> decodeStreamWithConverter: aStreamConverter [
 ]
 
 { #category : #decoding }
-XMLNestedStreamReader >> decodeStreamWithNullConverter [
-	stream isXMLConvertingStreamAdapter
-		ifTrue: [stream streamConverter: XMLStreamConverter null]
-]
-
-{ #category : #decoding }
 XMLNestedStreamReader >> detectEncoding [
 	stream isXMLConvertingStreamAdapter
 		ifTrue: [stream detectEncoding]
 		ifFalse: [
+			"if it's not already an XMLDecodingReadStreamAdapter, just look
+			for an obvious leading byte-order mark and convert it if found,
+			and otherwise just leave it alone"
 			(XMLEncodingDetector on: stream) streamConverterForEncoding
 				ifNotNil: [:converter |
 					self decodeStreamWithConverter: converter]]
@@ -164,6 +174,13 @@ XMLNestedStreamReader >> errorReadLimitExceeded [
 ]
 
 { #category : #private }
+XMLNestedStreamReader >> errorUnsupportedEncoding: anEncodingName [
+	XMLEncodingException
+		formatSignal: 'Encoding "{1}" is unsupported'
+		with: anEncodingName
+]
+
+{ #category : #private }
 XMLNestedStreamReader >> hasNextAfterPoppingStreamsAtEnd [
 	"always pop at least one stream, which makes the new current stream
 	the null stream if there aren't any nested streams"
@@ -179,11 +196,6 @@ XMLNestedStreamReader >> hasNextAfterPoppingStreamsAtEnd [
 { #category : #testing }
 XMLNestedStreamReader >> hasPushedBackStreams [
 	^ nestedStreams size > 0
-]
-
-{ #category : #defaults }
-XMLNestedStreamReader >> hexIntegerPrefixes [
-	^ 'x'
 ]
 
 { #category : #testing }
@@ -273,20 +285,6 @@ XMLNestedStreamReader >> next: anInteger [
 			writeStream nextPut: self next.
 			i := i + 1].
 	^ writeStream contents.
-]
-
-{ #category : #accessing }
-XMLNestedStreamReader >> nextInteger [
-	^ self nextIntegerPrintedOn: nil
-]
-
-{ #category : #accessing }
-XMLNestedStreamReader >> nextIntegerPrintedOn: aStream [
-	^ (XMLIntegerReader on: self)
-		printStream: aStream;
-		nextIntegerWithBase: 16
-			andPrefixes: self hexIntegerPrefixes
-			orBase: 10
 ]
 
 { #category : #accessing }
@@ -533,9 +531,12 @@ XMLNestedStreamReader >> stream [
 XMLNestedStreamReader >> stream: aStream [
 	"if the stream is not already a decoding adapter,
 	then only assume it needs one if it's binary"
-	aStream isXMLConvertingStreamAdapter
-		ifTrue: [stream := aStream]
-		ifFalse: [stream := XMLDecodingReadStreamAdapter onStreamIfBinary: aStream]
+	stream := 
+		aStream isXMLConvertingStreamAdapter
+			ifTrue: [aStream]
+			ifFalse: [
+				(XMLDecodingReadStreamAdapter nonDecodingOnIfBinary: aStream)
+					ifNil: [aStream]]
 ]
 
 { #category : #accessing }

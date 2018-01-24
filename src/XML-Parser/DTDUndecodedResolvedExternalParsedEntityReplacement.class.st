@@ -12,10 +12,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-DTDUndecodedResolvedExternalParsedEntityReplacement class >> rawContents: aRawContentsString [
+DTDUndecodedResolvedExternalParsedEntityReplacement class >> rawContents: aString [
 	^ self
-		rawContents: aRawContentsString
-		encoding: XMLStreamConverter defaultEncoding
+		rawContents: aString
+		encoding: ''
 ]
 
 { #category : #'instance creation' }

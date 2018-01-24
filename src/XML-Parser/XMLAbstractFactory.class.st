@@ -58,6 +58,11 @@ XMLAbstractFactory class >> implementation: aClassOrNil [
 	implementation := aClassOrNil
 ]
 
+{ #category : #'instance creation' }
+XMLAbstractFactory class >> implementationNew [
+	^ self implementation basicNew initialize
+]
+
 { #category : #'class initialization' }
 XMLAbstractFactory class >> initialize [
 	"self initialize"
@@ -72,7 +77,7 @@ XMLAbstractFactory class >> isSupportedImplementation [
 
 { #category : #'instance creation' }
 XMLAbstractFactory class >> new [
-	^ self implementation basicNew initialize
+	^ self implementationNew
 ]
 
 { #category : #finding }

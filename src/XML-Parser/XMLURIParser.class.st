@@ -3,11 +3,7 @@ This class is a parser that can extract the scheme, user info, host, port, path 
 "
 Class {
 	#name : #XMLURIParser,
-	#superclass : #Object,
-	#instVars : [
-		'writeStream',
-		'readStream'
-	],
+	#superclass : #XMLAbstractReadStreamParser,
 	#classVars : [
 		'HostDelimiters',
 		'PathDelimiters',
@@ -63,57 +59,22 @@ XMLURIParser class >> initializeUserInfoDelimiters [
 	UserInfoDelimiters := BitmapCharacterSet newFrom: '@/?#'
 ]
 
-{ #category : #'instance creation' }
-XMLURIParser class >> on: aStringOrStream [
-	^ self new on: aStringOrStream
-]
-
-{ #category : #private }
-XMLURIParser >> atEnd [
-	^ readStream atEnd
-]
-
-{ #category : #private }
-XMLURIParser >> next [
-	self atEnd
-		ifTrue: [^ nil]
-		ifFalse: [^ readStream next]
-]
-
-{ #category : #private }
-XMLURIParser >> nextDelimitedBy: aCollection [
-	writeStream reset.
-	[self atEnd
-		or: [aCollection includes: self peek]]
-		whileFalse: [writeStream nextPut: self next].
-	^ writeStream contents.
-]
-
-{ #category : #initialization }
-XMLURIParser >> on: aStringOrStream [
-	readStream :=
-		aStringOrStream isStream
-			ifTrue: [aStringOrStream]
-			ifFalse: [aStringOrStream readStream].
-	writeStream := (String new: 64) writeStream.
-]
-
 { #category : #parsing }
 XMLURIParser >> parseAuthorityPrefix [
 	| oldPosition |
 
-	oldPosition := self position.
-	((self peekFor: $/)
-		and: [self peekFor: $/])
+	oldPosition := readStream position.
+	((readStream peekFor: $/)
+		and: [readStream peekFor: $/])
 		ifTrue: [^ true]
 		ifFalse: [
-			self position: oldPosition.
+			readStream position: oldPosition.
 			^ false].
 ]
 
 { #category : #parsing }
 XMLURIParser >> parseFragment [
-	(self peekFor: $#)
+	(readStream peekFor: $#)
 		ifTrue: [^ readStream upToEnd]
 		ifFalse: [^ '']
 ]
@@ -122,11 +83,11 @@ XMLURIParser >> parseFragment [
 XMLURIParser >> parseHost [
 	| host |
 
-	self peek == $[
+	readStream peek == $[
 		ifTrue: [
-			host := (self nextDelimitedBy: ']') copyWith: $].
-			self peekFor: $]]
-		ifFalse: [host := self nextDelimitedBy: HostDelimiters].
+			host := (self nextDelimitedBy: $]) copyWith: $].
+			readStream peekFor: $]]
+		ifFalse: [host := self nextDelimitedByAny: HostDelimiters].
 	^ host.
 ]
 
@@ -136,11 +97,11 @@ XMLURIParser >> parsePathSegments [
 
 	pathSegments := OrderedCollection new.
 
-	segment := self nextDelimitedBy: PathDelimiters.
-	[self peekFor: $/]
+	segment := self nextDelimitedByAny: PathDelimiters.
+	[readStream peekFor: $/]
 		whileTrue: [
 			pathSegments addLast: segment.
-			segment := self nextDelimitedBy: PathDelimiters].
+			segment := self nextDelimitedByAny: PathDelimiters].
 	(pathSegments isEmpty
 		and: [segment isEmpty])
 		ifFalse: [pathSegments addLast: segment].
@@ -152,15 +113,18 @@ XMLURIParser >> parsePathSegments [
 XMLURIParser >> parsePort [
 	| port |
 
-	(self peekFor: $:)
+	(readStream peekFor: $:)
 		ifTrue: [
+			"do not limit the number of chars read, because port
+			number literals can have an arbitrary number of
+			leading zeros"
 			port :=
-				XMLIntegerReader
+				XMLSmallIntegerReader
 					readFrom: readStream
 					withBase: 10.
-			[self atEnd
-				or: [PathDelimiters includes: self peek]]
-				whileFalse: [self next]].
+			[readStream atEnd
+				or: [PathDelimiters includes: readStream peek]]
+				whileFalse: [readStream next]].
 	^ port.
 ]
 
@@ -172,21 +136,21 @@ XMLURIParser >> parseQuery [
 
 	| query key value |
 
-	(self peekFor: $?)
+	(readStream peekFor: $?)
 		ifFalse: [^ OrderedCollection new: 0].
 
 	query := OrderedCollection new.
-	[self atEnd
-		or: [(key := self nextDelimitedBy: QueryKeyDelimiters) isEmpty
-			and: [self peek == $#]]]
+	[readStream atEnd
+		or: [(key := self nextDelimitedByAny: QueryKeyDelimiters) isEmpty
+			and: [readStream peek == $#]]]
 		whileFalse: [| hasValue |
-			(hasValue := self peekFor: $=)
-				ifTrue: [value := self nextDelimitedBy: QueryValueDelimiters]
+			(hasValue := readStream peekFor: $=)
+				ifTrue: [value := self nextDelimitedByAny: QueryValueDelimiters]
 				ifFalse: [value := ''].
 			(key notEmpty
 				or: [hasValue])
 				ifTrue: [query addLast: key -> value].
-			self peekFor: $&].
+			readStream peekFor: $&].
 
 	^ query.
 ]
@@ -195,12 +159,12 @@ XMLURIParser >> parseQuery [
 XMLURIParser >> parseScheme [
 	| oldPosition scheme |
 
-	oldPosition := self position.
-	scheme := self nextDelimitedBy: SchemeDelimiters.
-	(self peekFor: $:)
+	oldPosition := readStream position.
+	scheme := self nextDelimitedByAny: SchemeDelimiters.
+	(readStream peekFor: $:)
 		ifTrue: [^ scheme asLowercase]
 		ifFalse: [
-			self position: oldPosition.
+			readStream position: oldPosition.
 			^ ''].
 ]
 
@@ -208,38 +172,11 @@ XMLURIParser >> parseScheme [
 XMLURIParser >> parseUserInfo [
 	| userInfo oldPosition |
 
-	oldPosition := self position.
-	userInfo := self nextDelimitedBy: UserInfoDelimiters.
-	(self peekFor: $@)
+	oldPosition := readStream position.
+	userInfo := self nextDelimitedByAny: UserInfoDelimiters.
+	(readStream peekFor: $@)
 		ifTrue: [^ userInfo]
 		ifFalse: [
-			self position: oldPosition.
+			readStream position: oldPosition.
 			^ ''].
-]
-
-{ #category : #private }
-XMLURIParser >> peek [
-	self atEnd
-		ifTrue: [^ nil]
-		ifFalse: [^ readStream peek]
-]
-
-{ #category : #private }
-XMLURIParser >> peekFor: aCharacter [
-	(self atEnd not
-		and: [self peek = aCharacter])
-		ifTrue: [
-			self next.
-			^ true]
-		ifFalse: [^ false]
-]
-
-{ #category : #private }
-XMLURIParser >> position [
-	^ readStream position
-]
-
-{ #category : #private }
-XMLURIParser >> position: anInteger [
-	readStream position: anInteger
 ]

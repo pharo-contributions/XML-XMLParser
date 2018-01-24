@@ -935,6 +935,52 @@ XMLNodeWithElements >> rawContentStringAt: aName [
 	^ self nodes rawContentStringAt: aName
 ]
 
+{ #category : #removing }
+XMLNodeWithElements >> removeAllFormattingNodes [
+	"This is a convenience method to remove formatting string nodes from the
+	receiver and descendant elements. Empty/whitespace string nodes with
+	element siblings are assumed to be formatting, unless they have at least
+	one non-empty/non-whitespace sibling string node.
+
+	WARNING: documents with 'mixed content' elements that have string and element
+	children intersperesed, like this:
+		<row>one<sep/>two<sep/>three</row>
+	arent recognized when all of the string nodes are whitespace, so this:
+		<row> <sep/> <sep/> </row>
+	will become:
+		<row><sep/><sep/></row>
+	which might not be correct."
+
+	| hasFormattingStringNodes hasElements |
+
+	hasFormattingStringNodes := false.
+	hasElements := false.
+	self nodesDo: [:each |
+		each isStringNode
+			ifTrue: [
+				(hasFormattingStringNodes :=
+					each isWhitespace
+						or: [each isEmpty])
+					ifFalse: [^ self]]
+			ifFalse: [
+				hasElements
+					ifFalse: [hasElements := each isElement]]].
+
+	(hasFormattingStringNodes
+		and: [hasElements])
+		ifTrue: [| nodeList |
+			nodeList := self nodes.
+			nodeList size to: 1 by: -1 do: [:i | | node |
+				((node := nodeList at: i) isStringNode
+					and: [node isWhitespace
+						or: [node isEmpty]])
+					ifTrue: [nodeList removeAt: i]]].
+	hasElements
+		ifTrue: [
+			self elementsDo: [:each |
+				each removeAllFormattingNodes]].
+]
+
 { #category : #notifying }
 XMLNodeWithElements >> renamedElement: anElement from: anOldName to: aNewName [
 	self nodes

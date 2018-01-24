@@ -7,6 +7,11 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
+{ #category : #defaults }
+XMLPercentDecodingReadStreamAdapter class >> binaryReadStreamAdapterClass [
+	^ XMLBinaryPercentDecodingReadStreamAdapter
+]
+
 { #category : #testing }
 XMLPercentDecodingReadStreamAdapter >> atEnd [
 	^ peekChar == nil
@@ -14,7 +19,7 @@ XMLPercentDecodingReadStreamAdapter >> atEnd [
 			or: [stream peek ~~ $%]]
 ]
 
-{ #category : #private }
+{ #category : #basic }
 XMLPercentDecodingReadStreamAdapter >> basicNext [
 	| byteValue |
 
@@ -24,9 +29,9 @@ XMLPercentDecodingReadStreamAdapter >> basicNext [
 	stream next.
 
 	byteValue :=
-		XMLIntegerReader
+		XMLSmallIntegerReader
 			readFrom: stream
 			withBase: 16
-			upTo: 2.
+			upToLimit: 2.
 	^ (byteValue ifNil: [$%]) asCharacter.
 ]

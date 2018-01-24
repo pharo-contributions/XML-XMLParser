@@ -20,7 +20,7 @@ DTDDecodedResolvedExternalParsedEntityReplacement >> contents [
 	^ contents
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 DTDDecodedResolvedExternalParsedEntityReplacement >> isEmpty [
 	^ self contents isEmpty
 ]

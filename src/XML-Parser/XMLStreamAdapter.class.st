@@ -10,9 +10,19 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
+{ #category : #basic }
+XMLStreamAdapter class >> basicOn: aStream [
+	^ self basicNew initialize on: aStream
+]
+
+{ #category : #'instance creation' }
+XMLStreamAdapter class >> new [
+	self shouldNotImplement
+]
+
 { #category : #'instance creation' }
 XMLStreamAdapter class >> on: aStream [
-	^ self new on: aStream
+	^ self basicOn: aStream
 ]
 
 { #category : #closing }

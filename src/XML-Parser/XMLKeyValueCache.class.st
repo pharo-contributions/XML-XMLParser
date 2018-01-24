@@ -19,7 +19,7 @@ XMLKeyValueCache class >> defaultMaxSize [
 
 { #category : #'instance creation' }
 XMLKeyValueCache class >> maxSize: anInteger [
-	^ self implementation basicNew initialize setMaxSize: anInteger
+	^ self implementationNew setMaxSize: anInteger
 ]
 
 { #category : #'instance creation' }
