@@ -20,8 +20,8 @@ FileReference >> gtInspectorXMLFileIn: aComposite [
 				GLMHighlighterTextRubEditingMode withStylerDecorator:
 					currentTextStylerDecorator];
 			display: [
-				XMLExternalDocumentConverter convert:
-					xmlFileHandle rawReadStream];
+				XMLExternalDocumentConverter convertFileNamed:
+					xmlFileHandle path];
 			withLineNumbers: true;
 			act: [:presentation |
 				currentTextStylerDecorator saveToFile: xmlFileHandle.
@@ -86,7 +86,7 @@ FileReference >> spotterPreviewXMLFileIn: aComposite [
 		display: [
 			"the source is converted to a decoded string and then highlighted"
 			XMLHighlightingParser parse:
-				(XMLExternalDocumentConverter convert:
-					xmlFileHandle rawReadStream)];
+				(XMLExternalDocumentConverter convertFileNamed:
+					xmlFileHandle path)];
 		entity: self.
 ]

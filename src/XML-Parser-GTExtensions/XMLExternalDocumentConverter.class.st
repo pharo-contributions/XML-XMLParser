@@ -49,7 +49,7 @@ XMLExternalDocumentConverter class >> on: aStringOrStream readLimit: anInteger [
 { #category : #'instance creation' }
 XMLExternalDocumentConverter class >> onFileNamed: aFileName [
 	^ self on:
-		(XMLDecodingReadStreamAdapter on:
+		(XMLDecodingReadStreamAdapter nonDecodingOn:
 			aFileName asXMLFileHandle rawReadStream)
 ]
 
@@ -150,7 +150,9 @@ XMLExternalDocumentConverter >> setStream: aStream readLimit: anInteger [
 			on:
 				(aStream isXMLConvertingStreamAdapter
 					ifTrue: [aStream]
-					ifFalse: [XMLDecodingReadStreamAdapter on: aStream])
+					ifFalse: [
+						XMLDecodingReadStreamAdapter nonDecodingOnIfBinary:
+							aStream])
 			readLimit: anInteger.
 
 	"this is the preferred LE char for Pharo/Squeak"
