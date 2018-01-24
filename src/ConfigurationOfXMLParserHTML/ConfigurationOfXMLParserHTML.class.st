@@ -424,6 +424,24 @@ ConfigurationOfXMLParserHTML >> baseline139: spec [
 			spec postLoadDoIt: #initializeClassesForGSBaseline139. ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline141: spec [
+	<version: '1.4.1-baseline' imports: #('1.0.0-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.2.9' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
+
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline139. ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParserHTML >> customProjectAttributes [
 	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -436,7 +454,7 @@ ConfigurationOfXMLParserHTML >> customProjectAttributes [
 ConfigurationOfXMLParserHTML >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.3.9-baseline'.
+	spec for: #'common' version: '1.4.1-baseline'.
 ]
 
 { #category : #doits }
@@ -446,11 +464,8 @@ ConfigurationOfXMLParserHTML >> initializeClassesForGSBaseline132 [
 	conflicts between Gems later on. 
 	
 	This can help identify classes that use lazy initialization:
-		(SystemNavigation default allClassesInPackageNamed: 'XML-Parser-HTML') select:
-			[:each |
-				(each classVariables notEmpty
-					or: [each class instanceVariables notEmpty])
-					and: [(each class includesSelector: #initialize) not]]
+		ConfigurationOfXMLParser findLazyInitializedClassStateInPackage:
+			'XML-Parser-HTML'
 	"
 
 	"renamed"
@@ -465,11 +480,8 @@ ConfigurationOfXMLParserHTML >> initializeClassesForGSBaseline139 [
 	conflicts between Gems later on. 
 	
 	This can help identify classes that use lazy initialization:
-		(SystemNavigation default allClassesInPackageNamed: 'XML-Parser-HTML') select:
-			[:each |
-				(each classVariables notEmpty
-					or: [each class instanceVariables notEmpty])
-					and: [(each class includesSelector: #initialize) not]]
+		ConfigurationOfXMLParser findLazyInitializedClassStateInPackage:
+			'XML-Parser-HTML'
 	"
 
 	XMLHTMLNonHTMLSectionState allSubclassesDo: [:each |
@@ -493,7 +505,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.4.0'.
+	spec for: #'common' version: '1.4.1'.
 
 ]
 
@@ -944,6 +956,17 @@ ConfigurationOfXMLParserHTML >> version140: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.51'.
+			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.25'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version141: spec [ 
+        <version: '1.4.1' imports: #('1.4.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.52'.
 			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.25'.
                 ].
 ]
