@@ -116,7 +116,8 @@ XMLHTTPWebClientRequest >> webClientClient [
 XMLHTTPWebClientRequest >> webClientRequest [
 	^ webClientRequest
 		ifNil: [
-			(webClientRequest := (XMLClassFinder classNamed: #WebRequest) new)
-				initializeFromUrl: self url;
-				yourself]
+			webClientRequest :=
+				(XMLClassFinder classNamed: #WebRequest) new
+					initializeFromUrl: self url;
+					yourself]
 ]

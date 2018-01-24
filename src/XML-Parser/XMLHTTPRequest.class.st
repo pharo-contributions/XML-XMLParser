@@ -32,18 +32,6 @@ XMLHTTPRequest class >> url: aURLString [
 	^ self implementationNew setURL: aURLString
 ]
 
-{ #category : #accessing }
-XMLHTTPRequest >> acceptEncoding [
-	^ self encodingNamesFromHeaderValuesAt: 'Accept-Encoding'
-]
-
-{ #category : #accessing }
-XMLHTTPRequest >> acceptEncoding: aStringOrCollection [
-	self
-		encodingNamesFromHeaderValuesAt: 'Accept-Encoding'
-		put: aStringOrCollection
-]
-
 { #category : #converting }
 XMLHTTPRequest >> asXMLHTTPRequest [
 	^ self
@@ -61,7 +49,8 @@ XMLHTTPRequest >> basicSend [
 
 { #category : #defaults }
 XMLHTTPRequest >> defaultAcceptEncoding [
-	^ XMLHTTPDecompressingReadStreamAdapterFactory supportedCompressionSchemes
+	"we don't support compression yet"
+	^ ''
 ]
 
 { #category : #defaults }
@@ -158,11 +147,14 @@ XMLHTTPRequest >> setURL: aURLString [
 	url := aURLString.
 	self
 		timeout: self defaultTimeout;
-		method: self defaultMethod;
-		"#defaultAcceptEncoding can be overridden to return an empty collection,
-		but #acceptEncoding: still must sent here to override any default setting
-		used by the underlying HTTP library"
-		acceptEncoding: self defaultAcceptEncoding.
+		method: self defaultMethod.
+	
+	"#defaultAcceptEncoding can be overridden to return an empty collection,
+	but #acceptEncoding: still must sent here to override any default setting
+	used by the underlying HTTP library"
+	self
+		headerAt: 'Accept-Encoding'
+		put: self defaultAcceptEncoding.
 ]
 
 { #category : #retrieving }

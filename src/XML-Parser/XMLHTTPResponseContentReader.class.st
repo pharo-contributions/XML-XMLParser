@@ -1,5 +1,5 @@
 "
-This is an abstract base class for response content readers. The #readUpToLimit:decoding: message returns the entire decompressed and possibly decoded (if enabled) response content, raising an XMLLimitException if it exceeds the specified limit.
+This is an abstract base class for response content readers. The #readUpToLimit:decoding: message returns the entire  decoded (if enabled) response content, raising an XMLLimitException if it exceeds the specified limit.
 
 Subclasses need to implement #rawReadWithLength:upToLimit: to read and return the raw response content and signal an error if it exceeds the limit.
 "
@@ -10,8 +10,7 @@ Class {
 		'response',
 		'rawContent',
 		'contentReadStream',
-		'limitedContentReadStream',
-		'isDecompressing'
+		'limitedContentReadStream'
 	],
 	#category : #'XML-Parser-HTTP'
 }
@@ -72,23 +71,6 @@ XMLHTTPResponseContentReader >> errorUnrecognizedContentTypeCharset: aCharset [
 		with: aCharset
 ]
 
-{ #category : #testing }
-XMLHTTPResponseContentReader >> handlesDecompression [
-	^ true
-]
-
-{ #category : #initialization }
-XMLHTTPResponseContentReader >> initializeDecompressionSquence: aSequenceableSchemeCollection upToLimit: aMaxSize [
-	isDecompressing := true.
-	aSequenceableSchemeCollection reverseDo: [:each |
-		contentReadStream :=
-			XMLHTTPDecompressingReadStreamAdapterFactory
-				on: contentReadStream
-				compression: each].
-	aMaxSize
-		ifNotNil: [self limitContentReadStreamUpToLimit: aMaxSize].
-]
-
 { #category : #accessing }
 XMLHTTPResponseContentReader >> limitContentReadStreamUpToLimit: aMaxSize [
 	limitedContentReadStream :=
@@ -110,7 +92,7 @@ XMLHTTPResponseContentReader >> rawReadWithLength: aContentLength upToLimit: aMa
 
 { #category : #reading }
 XMLHTTPResponseContentReader >> readUpToLimit: aMaxSize decoding: aBoolean [
-	| contentLength compressionSchemes contentType charset content |
+	| contentLength contentType charset content |
 
 	contentLength := response contentLength.
 	(response isChunked
@@ -128,13 +110,6 @@ XMLHTTPResponseContentReader >> readUpToLimit: aMaxSize decoding: aBoolean [
 			upToLimit: aMaxSize.
 	contentReadStream := rawContent readStream.
 
-	(self handlesDecompression
-		and: [(compressionSchemes := response contentEncoding) notEmpty])
-		ifTrue: [
-			self
-				initializeDecompressionSquence: compressionSchemes
-				upToLimit: aMaxSize].
-		
 	(aBoolean
 		and: [(contentType := response contentType) notNil
 			and: [(charset := contentType charset) ~= contentType defaultCharset]])
@@ -149,14 +124,12 @@ XMLHTTPResponseContentReader >> readUpToLimit: aMaxSize decoding: aBoolean [
 
 { #category : #initialization }
 XMLHTTPResponseContentReader >> setResponse: aResponse [
-	response := aResponse.
-	isDecompressing := false.
+	response := aResponse
 ]
 
 { #category : #private }
 XMLHTTPResponseContentReader >> undecodedContentReadStreamUpToEnd [
-	^ (isDecompressing
-		or: [limitedContentReadStream notNil])
-		ifTrue: [self contentReadStreamUpToEnd]
-		ifFalse: [rawContent]
+	^ limitedContentReadStream
+		ifNil: [rawContent]
+		ifNotNil: [self contentReadStreamUpToEnd]
 ]

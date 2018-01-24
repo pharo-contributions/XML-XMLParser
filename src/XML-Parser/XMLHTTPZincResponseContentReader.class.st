@@ -7,21 +7,15 @@ Class {
 	#category : #'XML-Parser-HTTP'
 }
 
-{ #category : #testing }
-XMLHTTPZincResponseContentReader >> handlesDecompression [
-	"Zinc does this internally"
-	^ false
-]
-
 { #category : #reading }
 XMLHTTPZincResponseContentReader >> rawReadWithLength: aContentLength upToLimit: aMaxSize [
-	^ [
-		ZnUtils
-			readUpToEnd:
-				(response zincResponse entity stream
-					ascii;
-					yourself)
-			limit: aMaxSize]
+	^ [| entityStream |
+		entityStream := response zincResponse entity stream.
+		(entityStream respondsTo: #ascii)
+			ifTrue: [entityStream ascii].
+		(ZnUtils
+			readUpToEnd: entityStream
+			limit: aMaxSize) asString]
 		on: ZnEntityTooLarge
 		do: [:error | self errorContentLimitExceeded]
 ]

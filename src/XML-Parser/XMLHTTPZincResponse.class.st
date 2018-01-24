@@ -131,8 +131,10 @@ XMLHTTPZincResponse >> zincResponse [
 	^ zincResponse
 		ifNil: [
 			zincResponse :=
-				(XMLClassFinder classNamed: #ZnResponse) statusLine:
-					((ZnStatusLine code: self defaultStatusCode)
-						version: self defaultProtocol;
-						yourself)]
+				(XMLClassFinder classNamed: #ZnResponse) new
+					statusLine:
+						((ZnStatusLine code: self defaultStatusCode)
+							version: self defaultProtocol;
+							yourself);
+					yourself]
 ]

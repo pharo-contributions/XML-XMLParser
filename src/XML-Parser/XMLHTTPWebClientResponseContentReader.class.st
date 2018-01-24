@@ -9,18 +9,16 @@ Class {
 
 { #category : #reading }
 XMLHTTPWebClientResponseContentReader >> rawReadWithLength: aContentLength upToLimit: aMaxSize [
-	| rawContentWriteStream |
+	| socketStream rawContentWriteStream |
 
+	(socketStream := response webClientResponse stream) ascii.
 	rawContentWriteStream :=
 		(String new:
 			(aContentLength
 				ifNil: [aMaxSize
 					ifNil: [1024]])) writeStream.
 	response webClientResponse
-		streamFrom:
-			(response webClientResponse stream
-				ascii;
-				yourself)
+		streamFrom: socketStream
 		to: rawContentWriteStream
 		size: aContentLength
 		progress:

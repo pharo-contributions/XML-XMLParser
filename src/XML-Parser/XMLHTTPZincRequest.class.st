@@ -32,13 +32,6 @@ XMLHTTPZincRequest >> basicSend [
 				response)
 ]
 
-{ #category : #defaults }
-XMLHTTPZincRequest >> defaultAcceptEncoding [
-	"Zinc handles response decompression internally, and it only
-	supports GZip at the moment"
-	^ super defaultAcceptEncoding select: [:each | each = 'gzip']
-]
-
 { #category : #accessing }
 XMLHTTPZincRequest >> headerAt: aKey ifAbsent: aBlock [
 	self zincRequest headers
