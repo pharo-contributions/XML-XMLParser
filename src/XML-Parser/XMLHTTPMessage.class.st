@@ -10,6 +10,11 @@ Class {
 	#category : #'XML-Parser-HTTP'
 }
 
+{ #category : #testing }
+XMLHTTPMessage class >> hasSupportedImplementation [
+	^ false
+]
+
 { #category : #adding }
 XMLHTTPMessage >> addHeader: anAssociation [
 	self
