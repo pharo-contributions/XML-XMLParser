@@ -10,6 +10,11 @@ Class {
 	#category : #'XML-Parser-HTTP'
 }
 
+{ #category : #finding }
+XMLHTTPResponse class >> noSupportedImplementationFound [
+	XMLHTTPRequest noSupportedImplementationFound
+]
+
 { #category : #defaults }
 XMLHTTPResponse class >> preferredImplementation [
 	^ XMLHTTPZincResponse

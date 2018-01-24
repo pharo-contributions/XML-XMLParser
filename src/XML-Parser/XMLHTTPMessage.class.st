@@ -10,9 +10,9 @@ Class {
 	#category : #'XML-Parser-HTTP'
 }
 
-{ #category : #testing }
-XMLHTTPMessage class >> hasSupportedImplementation [
-	^ false
+{ #category : #defaults }
+XMLHTTPMessage class >> preferredImplementation [
+	^ nil
 ]
 
 { #category : #adding }

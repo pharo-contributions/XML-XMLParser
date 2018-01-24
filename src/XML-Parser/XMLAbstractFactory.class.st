@@ -26,6 +26,8 @@ XMLAbstractFactory class >> findSupportedImplementation [
 	self isSupportedImplementation
 		ifTrue: [^ self].
 
+	self preferredImplementation
+		ifNil: [^ nil].
 	self preferredImplementation isSupportedImplementation
 		ifTrue: [^ self preferredImplementation].
 	self allSubclassesDo: [:each |
@@ -82,7 +84,6 @@ XMLAbstractFactory class >> new [
 
 { #category : #finding }
 XMLAbstractFactory class >> noSupportedImplementationFound [
-	self subclassResponsibility
 ]
 
 { #category : #defaults }
