@@ -330,14 +330,14 @@ XMLAttributeListTest >> testAttributeNamesAndValuesDo [
 
 	list := self emptyList.
 	self
-		should: [:twoArgumentBlock |
+		xmlShould: [:twoArgumentBlock |
 			list attributeNamesAndValuesDo: twoArgumentBlock]
 		enumerate: #()
 		and: #().
 
 	list := self listWithItems.
 	self
-		should: [:twoArgumentBlock |
+		xmlShould: [:twoArgumentBlock |
 			list attributeNamesAndValuesDo: twoArgumentBlock]
 		enumerate: self attributeNames
 		and: self attributeValues.
@@ -349,12 +349,12 @@ XMLAttributeListTest >> testAttributeNamesDo [
 
 	list := self emptyList.
 	self
-		should: [:block | list attributeNamesDo: block]
+		xmlShould: [:block | list attributeNamesDo: block]
 		enumerate: #().
 
 	list := self listWithItems.
 	self
-		should: [:each | list attributeNamesDo: each]
+		xmlShould: [:each | list attributeNamesDo: each]
 		enumerate: self attributeNames.
 ]
 

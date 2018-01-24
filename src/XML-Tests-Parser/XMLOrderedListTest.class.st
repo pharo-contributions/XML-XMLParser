@@ -194,29 +194,6 @@ XMLOrderedListTest >> reverseSortBlock [
 	^ [:a :b | a > b]
 ]
 
-{ #category : #assertions }
-XMLOrderedListTest >> should: aBlock enumerate: aCollection [
-	| enumerated |
-
-	enumerated := OrderedCollection new.
-	aBlock value: [:each | enumerated add: each].
-	self assert: enumerated = aCollection asOrderedCollection.
-]
-
-{ #category : #assertions }
-XMLOrderedListTest >> should: aBlock enumerate: aFirstCollection and: aSecondCollection [
-	| firstEnumerated secondEnumerated |
-
-	firstEnumerated := OrderedCollection new.
-	secondEnumerated := OrderedCollection new.
-	aBlock value: [:first :second |
-		firstEnumerated addLast: first.
-		secondEnumerated addLast: second].
-	self
-		assert: firstEnumerated = aFirstCollection asOrderedCollection;
-		assert: secondEnumerated = aSecondCollection asOrderedCollection.
-]
-
 { #category : #accessing }
 XMLOrderedListTest >> singleListItem [
 	^ self listItems first
@@ -415,10 +392,10 @@ XMLOrderedListTest >> testAllButFirst [
 { #category : #tests }
 XMLOrderedListTest >> testAllButFirstDo [
 	self
-		should: [:block | self emptyList allButFirstDo: block]
+		xmlShould: [:block | self emptyList allButFirstDo: block]
 		enumerate: #().
 	self
-		should: [:block | self listWithItems allButFirstDo: block]
+		xmlShould: [:block | self listWithItems allButFirstDo: block]
 		enumerate: self listItems allButFirst.
 ]
 
@@ -463,10 +440,10 @@ XMLOrderedListTest >> testAllButLast [
 { #category : #tests }
 XMLOrderedListTest >> testAllButLastDo [
 	self
-		should: [:block | self emptyList allButLastDo: block]
+		xmlShould: [:block | self emptyList allButLastDo: block]
 		enumerate: #().
 	self
-		should: [:block | self listWithItems allButLastDo: block]
+		xmlShould: [:block | self listWithItems allButLastDo: block]
 		enumerate: self listItems allButLast.
 ]
 
@@ -999,8 +976,8 @@ XMLOrderedListTest >> testDetectIfNone [
 { #category : #tests }
 XMLOrderedListTest >> testDo [
 	self
-		should: [:block | self emptyList do: block] enumerate: #();
-		should: [:block | self listWithItems do: block] enumerate: self listItems
+		xmlShould: [:block | self emptyList do: block] enumerate: #();
+		xmlShould: [:block | self listWithItems do: block] enumerate: self listItems
 ]
 
 { #category : #tests }
@@ -1402,7 +1379,7 @@ XMLOrderedListTest >> testPairsDo [
 						ifTrue: [odd addLast: each]]
 				ifFalse: [even addLast: each]].
 		self
-			should: [:twoArgumentBlock | list pairsDo: twoArgumentBlock]
+			xmlShould: [:twoArgumentBlock | list pairsDo: twoArgumentBlock]
 			enumerate: odd
 			and: even]
 ]
@@ -1651,8 +1628,8 @@ XMLOrderedListTest >> testReverse [
 { #category : #tests }
 XMLOrderedListTest >> testReverseDo [
 	self
-		should: [:block | self emptyList reverseDo: block] enumerate: #();
-		should: [:block | self listWithItems reverseDo: block] enumerate: self listItems reversed.
+		xmlShould: [:block | self emptyList reverseDo: block] enumerate: #();
+		xmlShould: [:block | self listWithItems reverseDo: block] enumerate: self listItems reversed.
 ]
 
 { #category : #tests }

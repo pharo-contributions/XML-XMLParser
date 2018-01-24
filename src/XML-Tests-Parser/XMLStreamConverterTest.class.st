@@ -33,7 +33,7 @@ XMLStreamConverterTest >> caseInvertedEncodingNameFrom: anEncodingName [
 
 { #category : #accessing }
 XMLStreamConverterTest >> defaultClass [
-	^ XMLUTF8StreamConverter
+	^ XMLImplicitUTF8StreamConverter
 ]
 
 { #category : #accessing }
@@ -53,6 +53,11 @@ XMLStreamConverterTest >> encodingNamesWithCaseInversions [
 				(encodingNamesWithCaseInversions add:
 					(self caseInvertedEncodingNameFrom: each)))].
 	^ encodingNamesWithCaseInversions.
+]
+
+{ #category : #testing }
+XMLStreamConverterTest >> isImplicit [
+	^ false
 ]
 
 { #category : #'instance creation' }
@@ -93,7 +98,13 @@ XMLStreamConverterTest >> testCanConvertEncoding [
 
 { #category : #tests }
 XMLStreamConverterTest >> testDefault [
-	self assert: self streamConverterClass default class == self defaultClass
+	| streamConverter |
+
+	streamConverter := self streamConverterClass default.
+	self
+		assert: streamConverter class == self defaultClass;
+		assert: streamConverter isDefault;
+		assert: streamConverter isImplicit.
 ]
 
 { #category : #tests }
@@ -128,6 +139,13 @@ XMLStreamConverterTest >> testIsDefaultClass [
 	self streamConverterClass == self defaultClass
 		ifTrue: [self assert: self streamConverterClass isDefaultClass]
 		ifFalse: [self deny: self streamConverterClass isDefaultClass]
+]
+
+{ #category : #tests }
+XMLStreamConverterTest >> testIsImplicit [
+	self isImplicit
+		ifTrue: [self assert: self newStreamConverter isImplicit]
+		ifFalse: [self deny: self newStreamConverter isImplicit]
 ]
 
 { #category : #tests }

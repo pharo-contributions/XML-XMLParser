@@ -91,8 +91,10 @@ XMLStringMethodsTest >> testAsXMLHTTPRequest [
 { #category : #tests }
 XMLStringMethodsTest >> testAsXMLStreamConverter [
 	XMLStreamConverter allSubclassesDo: [:class |
-		class encodingNames do: [:each |
-			self assert: each asXMLStreamConverter class == class]]
+		(class class includesSelector: #encodingNames)
+			ifTrue: [
+				class encodingNames do: [:each |
+					self assert: each asXMLStreamConverter class == class]]]
 ]
 
 { #category : #tests }
@@ -116,8 +118,8 @@ XMLStringMethodsTest >> testIsXMLNSAttributeName [
 	self
 		deny: '' isXMLNSAttributeName;
 		deny: 'name' isXMLNSAttributeName;
-		deny: 'name:xml' isXMLReservedAttributeName;
-		deny: 'name:xmlns' isXMLReservedAttributeName;
+		deny: 'name:xml' isXMLNSAttributeName;
+		deny: 'name:xmlns' isXMLNSAttributeName;
 		deny: 'xml:base' isXMLNSAttributeName;
 		deny: 'xml:space' isXMLNSAttributeName;
 		assert: 'xmlns' isXMLNSAttributeName;

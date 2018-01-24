@@ -39,7 +39,7 @@ BitmapCharacterSet class >> nextXMLBNFCharFrom: aStream [
 		ifTrue: [^ (aStream upTo: aStream next) first].
 	(aStream peekFor: $#)
 		ifTrue: [
-			^ (XMLIntegerReader
+			^ (XMLSmallIntegerReader
 				readFrom: aStream
 				withBase: 16
 				andPrefixes: 'xX'

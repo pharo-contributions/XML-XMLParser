@@ -31,7 +31,7 @@ XMLEncodingTest >> assertIsDecodedSourceXMLDocument: aDocument [
 
 { #category : #converting }
 XMLEncodingTest >> convertableStreamOn: aString [
-	^ XMLDecodingReadStreamAdapter on: aString readStream
+	^ XMLDecodingReadStreamAdapter nonDecodingOn: aString readStream
 ]
 
 { #category : #asserting }
@@ -109,7 +109,7 @@ XMLEncodingTest >> testDecodingBinary [
 	stream := parser tokenizer streamReader stream.
 	self
 		assert: stream isXMLConvertingStreamAdapter;
-		assert: stream hasDefaultStreamConverter;
+		assert: stream hasNullStreamConverter;
 		assert: stream upToEnd = source.
 ]
 
@@ -175,10 +175,16 @@ XMLEncodingTest >> testEncodingDeclarationLatin1 [
 					self utf8BOM, (self encodingDeclaration: 'UTF-8'), xml)]
 		raise: XMLEncodingException.
 	self
-		shouldnt: [
+		should: [
 			SAXHandler parse:
 				(self convertableStreamOn:
 					self utf8BOM, (self encodingDeclaration: 'latin-1'), xml)]
+		raise: XMLEncodingException.
+	self
+		shouldnt: [
+			SAXHandler parse:
+				(self convertableStreamOn:
+					(self encodingDeclaration: 'latin-1'), xml)]
 		raise: XMLEncodingException.
 ]
 
@@ -484,18 +490,7 @@ XMLEncodingTest >> testExternalEntityByteOrderMarkDetection [
 							resolvesExternalEntities: true;
 							parseDocument]
 				raise: XMLParserException.
-			self assertIsDecodedSourceXMLDocument: document.
-			[
-				document :=
-					(XMLDOMParser on: content)
-						externalEntityResolver: resolver copy;
-						resolvesExternalEntities: true;
-						decodesCharacters: false;
-						parseDocument]
-				on: XMLParserException
-				do: [:error | document := nil].
-			document
-				ifNotNil: [self denyIsDecodedSourceXMLDocument: document]].
+			self assertIsDecodedSourceXMLDocument: document].
 ]
 
 { #category : #tests }
@@ -610,15 +605,7 @@ XMLEncodingTest >> testExternalSubsetByteOrderMarkDetection [
 							resolvesExternalEntities: true;
 							parseDocument]
 				raise: XMLParserException.
-			self assertIsDecodedSourceXMLDocument: document.
-			self
-				should: [
-					(SAXHandler on: content)
-						externalEntityResolver: resolver copy;
-						resolvesExternalEntities: true;
-						decodesCharacters: false;
-						parseDocument]
-				raise: XMLParserException].
+			self assertIsDecodedSourceXMLDocument: document].
 ]
 
 { #category : #tests }
@@ -713,13 +700,15 @@ XMLEncodingTest >> testImplicitUTF16BigEndianEncodingDetection [
 		shouldnt: [
 			document :=
 				XMLDOMParser parse:
-					(self asciiToUTF16BE: self sourceXML)]
+					(self convertableStreamOn:
+						(self asciiToUTF16BE: self sourceXML))]
 		raise: XMLParserException.
 	self assertIsDecodedSourceXMLDocument: document.
 	self
 		should: [
 			(SAXHandler on:
-				(self asciiToUTF16BE: self sourceXML))
+				(self convertableStreamOn:
+					(self asciiToUTF16BE: self sourceXML)))
 					decodesCharacters: false;
 					parseDocument]
 		raise: XMLParserException.
@@ -733,13 +722,15 @@ XMLEncodingTest >> testImplicitUTF16LittleEndianEncodingDetection [
 		shouldnt: [
 			document :=
 				XMLDOMParser parse:
-					(self asciiToUTF16LE: self sourceXML)]
+					(self convertableStreamOn:
+						(self asciiToUTF16LE: self sourceXML))]
 		raise: XMLParserException.
 	self assertIsDecodedSourceXMLDocument: document.
 	self
 		should: [
 			(SAXHandler on:
-				(self asciiToUTF16LE: self sourceXML))
+				(self convertableStreamOn:
+					(self asciiToUTF16LE: self sourceXML)))
 					decodesCharacters: false;
 					parseDocument]
 		raise: XMLParserException.
@@ -753,13 +744,15 @@ XMLEncodingTest >> testImplicitUTF32BigEndianEncodingDetection [
 		shouldnt: [
 			document :=
 				XMLDOMParser parse:
-					(self asciiToUTF32BE: self sourceXML)]
+					(self convertableStreamOn:
+						(self asciiToUTF32BE: self sourceXML))]
 		raise: XMLParserException.
 	self assertIsDecodedSourceXMLDocument: document.
 	self
 		should: [
 			(SAXHandler on:
-				(self asciiToUTF32BE: self sourceXML))
+				(self convertableStreamOn:
+					(self asciiToUTF32BE: self sourceXML)))
 					decodesCharacters: false;
 					parseDocument]
 		raise: XMLParserException.
@@ -773,13 +766,15 @@ XMLEncodingTest >> testImplicitUTF32LittleEndianEncodingDetection [
 		shouldnt: [
 			document :=
 				XMLDOMParser parse:
-					(self asciiToUTF32LE: self sourceXML)]
+					(self convertableStreamOn:
+						(self asciiToUTF32LE: self sourceXML))]
 		raise: XMLParserException.
 	self assertIsDecodedSourceXMLDocument: document.
 	self
 		should: [
 			(SAXHandler on:
-				(self asciiToUTF32LE: self sourceXML))
+				(self convertableStreamOn:
+					(self asciiToUTF32LE: self sourceXML)))
 					decodesCharacters: false;
 					parseDocument]
 		raise: XMLParserException.

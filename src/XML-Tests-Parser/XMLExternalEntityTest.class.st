@@ -207,7 +207,7 @@ XMLExternalEntityTest >> testOnFileNamed [
 			raise: XMLFileException.
 		self
 			assert: parser documentURI = fileHandle path;
-			assert: parser documentURI asXMLURI isLocalURI].
+			assert: parser documentURI asXMLURI isLocal].
 ]
 
 { #category : #tests }
@@ -223,7 +223,7 @@ XMLExternalEntityTest >> testOnURL [
 		raise: XMLHTTPException.
 	self
 		assert: parser documentURI = self feedURL;
-		deny: parser documentURI asXMLURI isLocalURI.
+		deny: parser documentURI asXMLURI isLocal.
 ]
 
 { #category : #tests }

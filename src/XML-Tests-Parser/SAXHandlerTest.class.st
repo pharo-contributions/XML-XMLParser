@@ -653,6 +653,13 @@ SAXHandlerTest >> testMaxEntityReplacementDepth [
 ]
 
 { #category : #tests }
+SAXHandlerTest >> testNew [
+	self
+		should: [SAXHandler new]
+		raise: Error
+]
+
+{ #category : #tests }
 SAXHandlerTest >> testOn [
 	| parser oldConfiguraiton |
 

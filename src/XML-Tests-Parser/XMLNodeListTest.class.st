@@ -121,12 +121,12 @@ XMLNodeListTest >> testContentNodesDo [
 
 	list := self emptyList.
 	self
-		should: [:block | list contentNodesDo: block ]
+		xmlShould: [:block | list contentNodesDo: block ]
 		enumerate: #().
 
 	list addAll: self listItems.
 	self
-		should: [:block | list contentNodesDo: block ]
+		xmlShould: [:block | list contentNodesDo: block ]
 		enumerate: self listContentNodes.
 ]
 
@@ -271,12 +271,12 @@ XMLNodeListTest >> testElementsDo [
 
 	list := self emptyList.
 	self
-		should: [:block | list elementsDo: block ]
+		xmlShould: [:block | list elementsDo: block ]
 		enumerate: #().
 
 	list addAll: self listItems.
 	self
-		should: [:block | list elementsDo: block ]
+		xmlShould: [:block | list elementsDo: block ]
 		enumerate: self listElements.
 ]
 
@@ -386,12 +386,12 @@ XMLNodeListTest >> testStringNodesDo [
 
 	list := self emptyList.
 	self
-		should: [:block | list stringNodesDo: block ]
+		xmlShould: [:block | list stringNodesDo: block ]
 		enumerate: #().
 
 	list addAll: self listItems.
 	self
-		should: [:block | list stringNodesDo: block ]
+		xmlShould: [:block | list stringNodesDo: block ]
 		enumerate: self listStringNodes.
 ]
 
@@ -412,11 +412,11 @@ XMLNodeListTest >> testStringsDo [
 
 	list := self emptyList.
 	self
-		should: [:block | list stringsDo: block ]
+		xmlShould: [:block | list stringsDo: block ]
 		enumerate: #().
 
 	list addAll: self listItems.
 	self
-		should: [:block | list stringsDo: block ]
+		xmlShould: [:block | list stringsDo: block ]
 		enumerate: self listStrings.
 ]

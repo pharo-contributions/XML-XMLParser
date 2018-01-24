@@ -13,8 +13,3 @@ XMLDecodingReadStreamAdapterUTF32LEBOMTest >> invalidStreamCollections [
 XMLDecodingReadStreamAdapterUTF32LEBOMTest >> isDetecting [
 	^ true
 ]
-
-{ #category : #accessing }
-XMLDecodingReadStreamAdapterUTF32LEBOMTest >> streamCollection [
-	^ self inputCollectionWithBOM
-]

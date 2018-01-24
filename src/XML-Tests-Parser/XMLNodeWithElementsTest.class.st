@@ -563,12 +563,12 @@ XMLNodeWithElementsTest >> testAllElementsDo [
 	nodeWithElements := self newNodeWithElements.
 	allElements := nodeWithElements allElements.
 	self
-		should: [:block | nodeWithElements allElementsDo: block]
+		xmlShould: [:block | nodeWithElements allElementsDo: block]
 		enumerate: allElements.
 
 	allElements do: [:element |
 		self
-			should: [:block | element allElementsDo: block]
+			xmlShould: [:block | element allElementsDo: block]
 			enumerate: element allElements].
 ]
 
@@ -592,13 +592,13 @@ XMLNodeWithElementsTest >> testAllElementsNamedDo [
 
 	nodeWithElements := self newNodeWithElements.
 	self
-		should: [:block | nodeWithElements allElementsNamed: 'absent' do: block]
+		xmlShould: [:block | nodeWithElements allElementsNamed: 'absent' do: block]
 		enumerate: #().
 
 	allElements := nodeWithElements allElements.
 	namedElements := nodeWithElements allElementsNamed: 'four'. 
 	self
-		should: [:block | nodeWithElements allElementsNamed: 'four' do: block]
+		xmlShould: [:block | nodeWithElements allElementsNamed: 'four' do: block]
 		enumerate: namedElements.
 ]
 
@@ -699,7 +699,7 @@ XMLNodeWithElementsTest >> testAncestorElementsDo [
 	nodeWithElements := self newNodeWithElements.
 	nodeWithElements allNodesDo: [:each |
 		self
-			should: [:block | each ancestorElementsDo: block]
+			xmlShould: [:block | each ancestorElementsDo: block]
 			enumerate: each ancestorElements].
 ]
 
@@ -745,11 +745,11 @@ XMLNodeWithElementsTest >> testContentNodesDo [
 
 	nodeWithElements := self newNodeWithElements.
 	self
-		should: [:block | nodeWithElements contentNodesDo: block]
+		xmlShould: [:block | nodeWithElements contentNodesDo: block]
 		enumerate: nodeWithElements contentNodes.
 	nodeWithElements allElementsDo: [:each |
 		self
-			should: [:block | each contentNodesDo: block]
+			xmlShould: [:block | each contentNodesDo: block]
 			enumerate: each contentNodes].
 ]
 
@@ -839,12 +839,12 @@ XMLNodeWithElementsTest >> testDescendantElementsDo [
 	nodeWithElements := self newNodeWithElements.
 	descendantElements := nodeWithElements descendantElements.
 	self
-		should: [:block | nodeWithElements descendantElementsDo: block]
+		xmlShould: [:block | nodeWithElements descendantElementsDo: block]
 		enumerate: descendantElements.
 
 	descendantElements do: [:element |
 		self
-			should: [:block | element descendantElementsDo: block]
+			xmlShould: [:block | element descendantElementsDo: block]
 			enumerate: element descendantElements].
 ]
 
@@ -872,12 +872,12 @@ XMLNodeWithElementsTest >> testDescendantElementsNamedDo [
 
 	nodeWithElements := self newNodeWithElements.
 	self
-		should: [:block | nodeWithElements descendantElementsNamed: 'absent' do: block]
+		xmlShould: [:block | nodeWithElements descendantElementsNamed: 'absent' do: block]
 		enumerate: #().
 
 	namedElements := nodeWithElements descendantElementsNamed: 'four'. 
 	self
-		should: [:block | nodeWithElements descendantElementsNamed: 'four' do: block]
+		xmlShould: [:block | nodeWithElements descendantElementsNamed: 'four' do: block]
 		enumerate: namedElements.
 ]
 
@@ -1285,22 +1285,22 @@ XMLNodeWithElementsTest >> testElementsAtDo [
 						thenCollect: [:each | each name]) asSet.
 				localNames do: [:localName |
 					self
-						should: [:block | node elementsAt: localName do: block]
+						xmlShould: [:block | node elementsAt: localName do: block]
 						enumerate:
 							(elements select: [:each |
 								each localName = localName]).
 					self
-						should: [:block | node elementsAt: 'absent:', localName do: block]
+						xmlShould: [:block | node elementsAt: 'absent:', localName do: block]
 						enumerate: #()].
 				qualifiedNames do: [:qualifiedName |
 					self
-						should: [:block | node elementsAt: qualifiedName do: block]
+						xmlShould: [:block | node elementsAt: qualifiedName do: block]
 						enumerate:
 							(elements select: [:each |
 								each hasPrefix
 									and: [each name = qualifiedName]])].
 			self
-				should: [:block | node elementsAt: 'absent' do: block]
+				xmlShould: [:block | node elementsAt: 'absent' do: block]
 				enumerate: #()]]
 ]
 
@@ -1417,11 +1417,11 @@ XMLNodeWithElementsTest >> testElementsDo [
 
 	nodeWithElements := self newNodeWithElements.
 	self
-		should: [:block | nodeWithElements elementsDo: block]
+		xmlShould: [:block | nodeWithElements elementsDo: block]
 		enumerate: nodeWithElements elements.
 	nodeWithElements allElementsDo: [:each |
 		self
-			should: [:block | each elementsDo: block]
+			xmlShould: [:block | each elementsDo: block]
 			enumerate: each elements].
 ]
 
@@ -2093,6 +2093,43 @@ XMLNodeWithElementsTest >> testRawContentStringAt [
 ]
 
 { #category : #tests }
+XMLNodeWithElementsTest >> testRemoveAllFormattingNodes [
+	| nodeWithElements |
+
+	nodeWithElements := self newNode.
+	nodeWithElements innerXML:
+		'<a>
+			<b> </b>
+			<b>
+				<c>
+					<d/>
+				</c>
+			</b>
+			<b> one </b>
+			<b>
+				one
+				<c> </c>
+				<c>
+					two <d> </d> three
+				</c>
+				four
+			</b>
+		</a>'.
+
+	self
+		assert: nodeWithElements removeAllFormattingNodes == nodeWithElements;
+		assert: nodeWithElements innerXML =
+			'<a><b> </b><b><c><d /></c></b><b> one </b><b>
+				one
+				<c> </c>
+				<c>
+					two <d> </d> three
+				</c>
+				four
+			</b></a>'.
+]
+
+{ #category : #tests }
 XMLNodeWithElementsTest >> testStringNodes [
 	| nodeWithElements |
 
@@ -2112,11 +2149,11 @@ XMLNodeWithElementsTest >> testStringNodesDo [
 
 	nodeWithElements := self newNodeWithElements.
 	self
-		should: [:block | nodeWithElements stringNodesDo: block]
+		xmlShould: [:block | nodeWithElements stringNodesDo: block]
 		enumerate: nodeWithElements stringNodes.
 	nodeWithElements allElementsDo: [:each |
 		self
-			should: [:block | each stringNodesDo: block]
+			xmlShould: [:block | each stringNodesDo: block]
 			enumerate: each stringNodes].
 ]
 
@@ -2140,11 +2177,11 @@ XMLNodeWithElementsTest >> testStringsDo [
 
 	nodeWithElements := self newNodeWithElements.
 	self
-		should: [:block | nodeWithElements stringsDo: block]
+		xmlShould: [:block | nodeWithElements stringsDo: block]
 		enumerate: nodeWithElements strings.
 	nodeWithElements allElementsDo: [:each |
 		self
-			should: [:block | each stringsDo: block]
+			xmlShould: [:block | each stringsDo: block]
 			enumerate: each strings].
 ]
 

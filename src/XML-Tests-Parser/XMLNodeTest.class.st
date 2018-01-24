@@ -163,29 +163,6 @@ XMLNodeTest >> selectListClass [
 	^ XMLNodeList
 ]
 
-{ #category : #assertions }
-XMLNodeTest >> should: aBlock enumerate: aCollection [
-	| enumerated |
-
-	enumerated := OrderedCollection new.
-	aBlock value: [:each | enumerated add: each].
-	self assert: enumerated = aCollection asOrderedCollection.
-]
-
-{ #category : #assertions }
-XMLNodeTest >> should: aBlock enumerate: aFirstCollection and: aSecondCollection [
-	| firstEnumerated secondEnumerated |
-
-	firstEnumerated := OrderedCollection new.
-	secondEnumerated := OrderedCollection new.
-	aBlock value: [:first :second |
-		firstEnumerated addLast: first.
-		secondEnumerated addLast: second].
-	self
-		assert: firstEnumerated = aFirstCollection asOrderedCollection;
-		assert: secondEnumerated = aSecondCollection asOrderedCollection.
-]
-
 { #category : #tests }
 XMLNodeTest >> testAcceptNodeVisitor [
 	| visitor node |
@@ -208,7 +185,7 @@ XMLNodeTest >> testAncestorElementsDo [
 
 	node := self newNode.
 	self
-		should: [:block |  node ancestorElementsDo: block]
+		xmlShould: [:block |  node ancestorElementsDo: block]
 		enumerate: #().
 ]
 
@@ -223,7 +200,7 @@ XMLNodeTest >> testAncestorNodesDo [
 
 	node := self newNode.
 	self
-		should: [:block |  node ancestorNodesDo: block]
+		xmlShould: [:block |  node ancestorNodesDo: block]
 		enumerate: #().
 ]
 

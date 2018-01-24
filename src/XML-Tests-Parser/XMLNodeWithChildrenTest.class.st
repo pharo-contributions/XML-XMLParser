@@ -302,14 +302,14 @@ XMLNodeWithChildrenTest >> testAllNodesDo [
 	nodeWithNodes := self newNodeWithNodes.
 	allNodes := nodeWithNodes allNodes.
 	self
-		should: [:block | nodeWithNodes allNodesDo: block]
+		xmlShould: [:block | nodeWithNodes allNodesDo: block]
 		enumerate: allNodes.
 
 	allNodes do: [:node |
 		node canHaveChildren
 			ifTrue: [
 				self
-					should: [:block | node allNodesDo: block]
+					xmlShould: [:block | node allNodesDo: block]
 					enumerate: node allNodes]].
 ]
 
@@ -358,7 +358,7 @@ XMLNodeWithChildrenTest >> testAncestorNodesDo [
 	nodeWithNodes := self newNodeWithNodes.
 	nodeWithNodes allNodesDo: [:each |
 		self
-			should: [:block | each ancestorNodesDo: block]
+			xmlShould: [:block | each ancestorNodesDo: block]
 			enumerate: each ancestorNodes].
 ]
 
@@ -496,14 +496,14 @@ XMLNodeWithChildrenTest >> testDescendantNodesDo [
 	nodeWithNodes := self newNodeWithNodes.
 	descendantNodes := nodeWithNodes descendantNodes.
 	self
-		should: [:block | nodeWithNodes descendantNodesDo: block]
+		xmlShould: [:block | nodeWithNodes descendantNodesDo: block]
 		enumerate: descendantNodes.
 
 	descendantNodes do: [:node |
 		node canHaveChildren
 			ifTrue: [
 				self
-					should: [:block | node descendantNodesDo: block]
+					xmlShould: [:block | node descendantNodesDo: block]
 					enumerate: node descendantNodes]].
 ]
 
@@ -751,12 +751,12 @@ XMLNodeWithChildrenTest >> testNodesDo [
 
 	node := self newNode.
 	self
-		should: [:block | node nodesDo: block]
+		xmlShould: [:block | node nodesDo: block]
 		enumerate: #().
 
 	node := self newNodeWithNodes.
 	self
-		should: [:block | node nodesDo: block]
+		xmlShould: [:block | node nodesDo: block]
 		enumerate: node nodes.
 ]
 

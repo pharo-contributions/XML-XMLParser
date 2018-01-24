@@ -386,16 +386,22 @@ XMLURITest >> testAsRetrievableResource [
 
 	self allURIStringsDo: [:each | | uri retrievableResource |
 		uri := each asXMLURI.
-		retrievableResource := uri asRetrievableResource.
-		uri isLocalURI
+		"other types of URIs may not be retrievable"
+		(uri isLocal
+			or: [uri isHTTP])
 			ifTrue: [
-				self
-					assert: retrievableResource class == XMLFileHandle implementation;
-					assert: retrievableResource path = uri path]
-			ifFalse: [
-				self
-					assert: retrievableResource class == XMLHTTPRequest implementation;
-					assert: retrievableResource url = uri printString]]
+				retrievableResource := uri asRetrievableResource.
+				uri isLocal
+					ifTrue: [
+						self assert:
+							retrievableResource class ==
+								XMLFileHandle implementation.
+						self assert: retrievableResource path = uri path]
+					ifFalse: [
+						self assert:
+							retrievableResource class ==
+								XMLHTTPRequest implementation.
+						self assert: retrievableResource url = uri printString]]].
 ]
 
 { #category : #tests }
@@ -403,6 +409,48 @@ XMLURITest >> testAsString [
 	self allURIStringsDo: [:each | | uri |
 		uri := each asXMLURI.
 		self assert: uri asString = uri printString]
+]
+
+{ #category : #tests }
+XMLURITest >> testAsXMLFileHandle [
+	XMLFileHandle hasSupportedImplementation
+		ifFalse: [^ self].
+
+	self allURIStringsDo: [:each | | uri fileHandle |
+		uri := each asXMLURI.
+		uri isLocal
+			ifTrue: [
+				fileHandle := uri asXMLFileHandle.
+				self
+					assert: fileHandle class == XMLFileHandle implementation;
+					assert: fileHandle path = uri path]
+			ifFalse: [
+				self
+					should: [uri asXMLFileHandle]
+					raise: XMLFileException]].
+]
+
+{ #category : #tests }
+XMLURITest >> testAsXMLHTTPRequest [
+	XMLHTTPRequest hasSupportedImplementation
+		ifFalse: [^ self].
+
+	self allURIStringsDo: [:each | | uri request |
+		uri := each asXMLURI.
+		(uri isRelative
+			or: [uri isHTTP])
+			ifTrue: [
+				request := uri asXMLHTTPRequest.
+				self
+					assert: request class == XMLHTTPRequest implementation;
+					assert: request url = uri printString]
+			ifFalse: [
+				"do not assume HTTPS is supported even if HTTP is"
+				uri isHTTPS
+					ifFalse: [
+						self
+							should: [uri asXMLHTTPRequest]
+							raise: XMLHTTPException]]].
 ]
 
 { #category : #tests }
@@ -1464,36 +1512,54 @@ XMLURITest >> testIsEmpty [
 ]
 
 { #category : #tests }
-XMLURITest >> testIsFileURI [
+XMLURITest >> testIsFile [
 	self allURIStringsDo: [:each | | uri |
 		uri := each asXMLURI.
 		uri scheme = 'file'
-			ifTrue: [self assert: uri isFileURI]
-			ifFalse: [self deny: uri isFileURI]]
+			ifTrue: [self assert: uri isFile]
+			ifFalse: [self deny: uri isFile]]
 ]
 
 { #category : #tests }
-XMLURITest >> testIsLocalURI [
+XMLURITest >> testIsHTTP [
+	self allURIStringsDo: [:each | | uri |
+		uri := each asXMLURI.
+		uri scheme = 'http'
+			ifTrue: [self assert: uri isHTTP]
+			ifFalse: [self deny: uri isHTTP]]
+]
+
+{ #category : #tests }
+XMLURITest >> testIsHTTPS [
+	self allURIStringsDo: [:each | | uri |
+		uri := each asXMLURI.
+		uri scheme = 'https'
+			ifTrue: [self assert: uri isHTTPS]
+			ifFalse: [self deny: uri isHTTPS]]
+]
+
+{ #category : #tests }
+XMLURITest >> testIsLocal [
 	self
-		assert: '' asXMLURI isLocalURI;
-		assert: '/' asXMLURI isLocalURI;
-		assert: self absolute asXMLURI isLocalURI;
-		assert: self absoluteDir asXMLURI isLocalURI;
-		assert: self absoluteDirRelativeCombined asXMLURI isLocalURI;
-		assert: self absoluteRelativeCombined asXMLURI isLocalURI;
-		deny: self domainURIString asXMLURI isLocalURI;
-		deny: self domainURIWithPortString asXMLURI isLocalURI;
-		deny: self emailURIString asXMLURI isLocalURI;
-		assert: self fileURIWithHostString asXMLURI isLocalURI;
-		assert: self fileURIString asXMLURI isLocalURI;
-		assert: self fragmentURIString asXMLURI isLocalURI;
-		deny: self fullURIString asXMLURI isLocalURI;
-		deny: self fullURIWithPortString asXMLURI isLocalURI;
-		assert: self queryURIString asXMLURI isLocalURI;
-		assert: self relative asXMLURI isLocalURI;
-		assert: self relativeAbsoluteCombined asXMLURI isLocalURI;
-		deny: self schemelessURIString asXMLURI isLocalURI;
-		deny: self schemelessURIWithPortString asXMLURI isLocalURI
+		assert: '' asXMLURI isLocal;
+		assert: '/' asXMLURI isLocal;
+		assert: self absolute asXMLURI isLocal;
+		assert: self absoluteDir asXMLURI isLocal;
+		assert: self absoluteDirRelativeCombined asXMLURI isLocal;
+		assert: self absoluteRelativeCombined asXMLURI isLocal;
+		deny: self domainURIString asXMLURI isLocal;
+		deny: self domainURIWithPortString asXMLURI isLocal;
+		deny: self emailURIString asXMLURI isLocal;
+		assert: self fileURIWithHostString asXMLURI isLocal;
+		assert: self fileURIString asXMLURI isLocal;
+		assert: self fragmentURIString asXMLURI isLocal;
+		deny: self fullURIString asXMLURI isLocal;
+		deny: self fullURIWithPortString asXMLURI isLocal;
+		assert: self queryURIString asXMLURI isLocal;
+		assert: self relative asXMLURI isLocal;
+		assert: self relativeAbsoluteCombined asXMLURI isLocal;
+		deny: self schemelessURIString asXMLURI isLocal;
+		deny: self schemelessURIWithPortString asXMLURI isLocal
 ]
 
 { #category : #tests }
@@ -1759,7 +1825,7 @@ XMLURITest >> testQueryAt [
 	self allURIStringsDo: [:uriString | | uri visitedKeys |
 		uri := uriString asXMLURI.
 		visitedKeys := Set new.
-		uri query reverseDo: [:each |
+		uri query do: [:each |
 			(visitedKeys includes: each key)
 				ifFalse: [
 					self assert:
@@ -1773,7 +1839,7 @@ XMLURITest >> testQueryAtIfAbsent [
 	self allURIStringsDo: [:uriString | | uri visitedKeys |
 		uri := uriString asXMLURI.
 		visitedKeys := Set new.
-		uri query reverseDo: [:each |
+		uri query do: [:each |
 			(visitedKeys includes: each key)
 				ifFalse: [
 					self assert:
@@ -1798,13 +1864,11 @@ XMLURITest >> testQueryIncludesKey [
 
 { #category : #tests }
 XMLURITest >> testQueryKeys [
-	self allURIStringsDo: [:uriString | | uri uniqueQueryKeys |
+	self allURIStringsDo: [:uriString | | uri |
 		uri := uriString asXMLURI.
-		uniqueQueryKeys := OrderedCollection new.
-		uri query do: [:each |
-			(uniqueQueryKeys includes: each key)
-				ifFalse: [uniqueQueryKeys addLast: each key]].
-		self assert: uri queryKeys = uniqueQueryKeys]
+		self assert:
+			uri queryKeys =
+				(uri query collect: [:each | each key])]
 ]
 
 { #category : #tests }
@@ -1941,7 +2005,7 @@ XMLURITest >> testQueryValuesAtIfAbsent [
 		self assert:
 			(uri
 				queryValuesAt: 'absent'
-				ifAbsent: [#()]) = #()]
+				ifAbsent: [#absent]) = #absent]
 ]
 
 { #category : #tests }

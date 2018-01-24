@@ -187,14 +187,14 @@ XMLElementTest >> testAttributeNamesAndValuesDo [
 
 	element := self newNode.
 	self
-		should: [:twoArgumentBlock |
+		xmlShould: [:twoArgumentBlock |
 			element attributeNamesAndValuesDo: twoArgumentBlock]
 		enumerate: #()
 		and: #().
 
 	element := self newElementWithAttributes.
 	self
-		should: [:twoArgumentBlock |
+		xmlShould: [:twoArgumentBlock |
 			element attributeNamesAndValuesDo: twoArgumentBlock]
 		enumerate: self attributeNames
 		and: self attributeValues.
@@ -206,12 +206,12 @@ XMLElementTest >> testAttributeNamesDo [
 
 	element := self newNode.
 	self
-		should: [:block | element attributeNamesDo: block]
+		xmlShould: [:block | element attributeNamesDo: block]
 		enumerate: #().
 
 	element := self newElementWithAttributes.
 	self
-		should: [:block | element attributeNamesDo: block]
+		xmlShould: [:block | element attributeNamesDo: block]
 		enumerate: element attributeNames.
 ]
 
@@ -339,12 +339,12 @@ XMLElementTest >> testAttributeNodesDo [
 
 	element := self newNode.
 	self
-		should: [:block | element attributeNodesDo: block]
+		xmlShould: [:block | element attributeNodesDo: block]
 		enumerate: #().
 
 	element := self newElementWithAttributes.
 	self
-		should: [:block | element attributeNodesDo: block]
+		xmlShould: [:block | element attributeNodesDo: block]
 		enumerate: element attributeNodes.
 ]
 
