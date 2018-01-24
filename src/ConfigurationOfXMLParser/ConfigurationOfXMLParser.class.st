@@ -1056,6 +1056,31 @@ ConfigurationOfXMLParser >> baseline321: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.62' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline329: spec [
+	<version: '3.2.9-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.8.3'. ].
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'OrderPreservingDictionary' with: '1.3.8'. ].
+	spec
+		for: #gemstone
+		do: [
+			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.25'.
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline321. ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.63' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXMLParser >> customProjectAttributes [
     "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -1070,7 +1095,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '3.2.1-baseline'.
+	spec for: #'common' version: '3.2.9-baseline'.
 
 ]
 
@@ -1404,6 +1429,14 @@ ConfigurationOfXMLParser >> release322: spec [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release329: spec [
+	<symbolicVersion: #'release-3.2.9'>
+
+	"Users should prefer #stable unless they rely on XMLParser internals"
+	spec for: #'common' version: '3.2.9'.
+]
+
+{ #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> release3: spec [
 	<symbolicVersion: #'release-3'>
 
@@ -1417,7 +1450,7 @@ ConfigurationOfXMLParser >> stable: spec [
 
 	"Users should prefer #stable unless they rely on XMLParser internals,
 	but it will delegate to a specific #release version from now on."
-	spec for: #'common' version: #'release-3.2.2'.
+	spec for: #'common' version: #'release-3.2.9'.
 ]
 
 { #category : #versions }
@@ -3898,5 +3931,16 @@ ConfigurationOfXMLParser >> version328: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.421'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.214'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version329: spec [ 
+        <version: '3.2.9' imports: #('3.2.9-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.422'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.215'.
                 ].
 ]
