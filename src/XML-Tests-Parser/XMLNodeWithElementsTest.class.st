@@ -2094,39 +2094,39 @@ XMLNodeWithElementsTest >> testRawContentStringAt [
 
 { #category : #tests }
 XMLNodeWithElementsTest >> testRemoveAllFormattingNodes [
-	| nodeWithElements |
+	| nodeWithElements nonFormattingStringNodes |
 
 	nodeWithElements := self newNode.
 	nodeWithElements innerXML:
 		'<a>
-			<b> </b>
+			<non-formatting> </non-formatting>
 			<b>
 				<c>
 					<d/>
 				</c>
 			</b>
-			<b> one </b>
-			<b>
+			<non-formatting> one </non-formatting>
+			<non-formatting>
 				one
 				<c> </c>
 				<c>
 					two <d> </d> three
 				</c>
 				four
-			</b>
+			</non-formatting>
 		</a>'.
+	nonFormattingStringNodes :=
+		nodeWithElements allNodesSelect: [:node |
+			node isStringNode
+				and: [
+					node ancestorElements anySatisfy: [:each |
+						each isNamed: 'non-formatting']]].
 
 	self
 		assert: nodeWithElements removeAllFormattingNodes == nodeWithElements;
-		assert: nodeWithElements innerXML =
-			'<a><b> </b><b><c><d /></c></b><b> one </b><b>
-				one
-				<c> </c>
-				<c>
-					two <d> </d> three
-				</c>
-				four
-			</b></a>'.
+		assert:
+			(nodeWithElements allNodesSelect: [ :each | each isStringNode]) =
+				nonFormattingStringNodes.
 ]
 
 { #category : #tests }
