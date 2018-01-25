@@ -1078,7 +1078,7 @@ ConfigurationOfXMLParser >> baseline329: spec [
 			spec postLoadDoIt: #initializeClassesForGSBaseline321. ].
 	spec
 		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.63' ]
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.64' ]
 ]
 
 { #category : #accessing }
