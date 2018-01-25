@@ -135,7 +135,9 @@ XMLExternalDocumentConverter >> nextXMLDeclaration [
 
 	self skipSeparators.
 	(self nextXMLAttributeNamed: 'encoding')
-		ifNotNil: [:encodingName | streamReader convertFromEncoding: encodingName].
+		ifNotNil: [:encodingName |
+			encodingName asXMLStreamConverter isNull
+				ifFalse: [streamReader convertFromEncoding: encodingName]].
 ]
 
 { #category : #'private ' }
