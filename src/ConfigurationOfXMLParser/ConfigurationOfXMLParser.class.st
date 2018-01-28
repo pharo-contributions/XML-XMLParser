@@ -3,9 +3,9 @@ Loads the XMLParser library and related packages:
 	(ConfigurationOfXMLParser project version: #stable) load: #('default')
 
 The loadable groups are:
-	default - XMLParser and XMLWriter with tests.
-	Core - XMLParser without XMLWriter or tests.
-	CoreWithWriting - XMLParser and XMLWriter without tests.
+	'default' - XMLParser, XMLWriter, and tests.
+	'Core' - XMLParser without XMLWriter or tests.
+	'CoreWithWriting' - XMLParser and XMLWriter, but without tests.
 
 Users should prefer #stable unless they rely on XMLParser internals,
 but it will delegate to a specific #release version from now on.
@@ -270,8 +270,779 @@ ConfigurationOfXMLParser class >> validate [
 ]
 
 { #category : #baselines }
-ConfigurationOfXMLParser >> baseline10: spec [
-	<version: '1.0-baseline'>
+ConfigurationOfXMLParser >> baseline100: spec [
+	<version: '1.0.0-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.4.5' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline183: spec [
+	<version: '1.8.3-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.4.6' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline187: spec [
+	<version: '1.8.7-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.4.7' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline188: spec [
+	<version: '1.8.8-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.4.8' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline191: spec [
+	<version: '1.9.1-baseline' imports: #('1.9-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.4.8' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.1' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline193: spec [
+	<version: '1.9.3-baseline' imports: #('1.9-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.4.8' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.2' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline194: spec [
+	<version: '1.9.4-baseline' imports: #('1.9-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.5.2' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.3' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline196: spec [
+	<version: '1.9.6-baseline' imports: #('1.9-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.5.2' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.4' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline198: spec [
+	<version: '1.9.8-baseline' imports: #('1.9-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.5.2' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.5' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline200: spec [
+	<version: '2.0.0-baseline' imports: #('1.9-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.5.3' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.6' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline201: spec [
+	<version: '2.0.1-baseline' imports: #('1.9-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.5.4' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.6' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline205: spec [
+	<version: '2.0.5-baseline' imports: #('1.9-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.5.4' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.7' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline213: spec [
+	<version: '2.1.3-baseline' imports: #('1.9-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.5.5' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.7' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline216: spec [
+	<version: '2.1.6-baseline' imports: #('1.9-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.5.6' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.8' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline221: spec [
+	<version: '2.2.1-baseline' imports: #('1.9-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.5.6' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.9' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline231: spec [
+	<version: '2.3.1-baseline' imports: #('1.9-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.5.6'.
+			"requires concrete versions from now on"
+			spec project: 'BitmapCharacterSet' with: '1.1.5' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.10' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline239: spec [
+	<version: '2.3.9-baseline' imports: #('1.9-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.5.9'.
+			spec project: 'BitmapCharacterSet' with: '1.1.5' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.10' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline241: spec [
+	<version: '2.4.1-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.0'.
+			spec project: 'BitmapCharacterSet' with: '1.1.5' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.10' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.1' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline244: spec [
+	<version: '2.4.4-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.3'.
+			spec project: 'BitmapCharacterSet' with: '1.1.5' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.10' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.1' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline248: spec [
+	<version: '2.4.8-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.3'.
+			spec project: 'BitmapCharacterSet' with: '1.1.5' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.10' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-AndreiChis.7' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline250: spec [
+	<version: '2.5.0-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.4'.
+			"#stable BitmapCharacterSet is ok now because XMLParser isn't extending it anymore" ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.11' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.8' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline251: spec [
+	<version: '2.5.1-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.5'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.11' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.24' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline253: spec [
+	<version: '2.5.3-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.6'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.11' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.29' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline260: spec [
+	<version: '2.6.0-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.6'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.12' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.30' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline263: spec [
+	<version: '2.6.3-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.8'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.14' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.30' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline266: spec [
+	<version: '2.6.6-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.8'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.15' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.31' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline268: spec [
+	<version: '2.6.8-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.9'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.16' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.32' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline270: spec [
+	<version: '2.7.0-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.9'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.16' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.33' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline273: spec [
+	<version: '2.7.3-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.9'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.17' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.33' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline274: spec [
+	<version: '2.7.4-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.6.9'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.18' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.34' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline276: spec [
+	<version: '2.7.6-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.7.0'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.19' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.36' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline277: spec [
+	<version: '2.7.7-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.7.2'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.19' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.36' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline283: spec [
+	<version: '2.8.3-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.7.2'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.20' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.36' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline288: spec [
+	<version: '2.8.8-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.7.2'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.21' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.36' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline291: spec [
+	<version: '2.9.1-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.7.2'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.21' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.37' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline294: spec [
+	<version: '2.9.4-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.7.2'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.22' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.38' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline295: spec [
+	<version: '2.9.5-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.7.2'. ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.22' ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.39' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline297: spec [
+	<version: '2.9.7-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.7.5'. ].
+	spec
+		for: #gemstone
+		do: [
+			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.22'.
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline297. ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.40' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline302: spec [
+	<version: '3.0.2-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.7.9'. ].
+	spec
+		for: #gemstone
+		do: [
+			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.22'.
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline297. ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.53' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline306: spec [
+	<version: '3.0.6-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.8.0'. ].
+	"need a newer version for the Lazy classes"
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'OrderPreservingDictionary' with: '1.3.7'. ].
+	spec
+		for: #gemstone
+		do: [
+			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.22'.
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline297. ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.59' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline311: spec [
+	<version: '3.1.1-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.8.1'. ].
+	"need a newer version for the Lazy classes"
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'OrderPreservingDictionary' with: '1.3.7'. ].
+	spec
+		for: #gemstone
+		do: [
+			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.24'.
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline297. ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-PavelKrivanek.60' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline312: spec [
+	<version: '3.1.2-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.8.2'. ].
+	"need a newer version for the Lazy classes"
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'OrderPreservingDictionary' with: '1.3.7'. ].
+	spec
+		for: #gemstone
+		do: [
+			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.24'.
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline312. ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-PavelKrivanek.60' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline319: spec [
+	<version: '3.1.9-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.8.3'. ].
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'OrderPreservingDictionary' with: '1.3.8'. ].
+	spec
+		for: #gemstone
+		do: [
+			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.25'.
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline312. ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.61' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline321: spec [
+	<version: '3.2.1-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.8.3'. ].
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'OrderPreservingDictionary' with: '1.3.8'. ].
+	spec
+		for: #gemstone
+		do: [
+			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.25'.
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline321. ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.62' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline329: spec [
+	<version: '3.2.9-baseline' imports: #('2.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.8.3'. ].
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'OrderPreservingDictionary' with: '1.3.8'. ].
+	spec
+		for: #gemstone
+		do: [
+			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.25'.
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline321. ].
+	spec
+		for: #gt
+		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.64' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baseline330: spec [
+	<version: '3.3.0-baseline' imports: #('3.3-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.8.3'. ].
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'OrderPreservingDictionary' with: '1.3.9'. ].
+	spec
+		for: #gemstone
+		do: [
+			spec package: 'XML-ParserGemstoneCompatibility' with: 'XML-ParserGemstoneCompatibility-monty.1'.
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline321. ].
+	spec
+		for: #gt
+		do: [
+			spec package: 'XML-ParserGTExtensions' with: 'XML-ParserGTExtensions-monty.1' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baselineMaster19: spec [
+	<version: '1.9-master-baseline' imports: #('1-master-baseline')>
+
+	spec
+		for: #gemstone
+		do: [
+			"load gemstone compatibility methods"
+			spec
+				package: 'XML-Parser'
+				with: [ spec includes: 'XML-Parser-GemstoneCompatibility' ].
+			spec
+				package: 'XML-Parser-GemstoneCompatibility'
+				with: [ spec requires: 'XML-Parser' ]. ].
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baselineMaster1: spec [
+	<version: '1-master-baseline'>
 
 	"default baseline inherited by others, describes basic dependencies.
 	other baselines that inherit pick concrete project versions
@@ -337,17 +1108,11 @@ ConfigurationOfXMLParser >> baseline10: spec [
 				group: 'Core' with: #('XML-Parser');
 				group: 'CoreWithWriting' with: #('XMLWriter' 'XML-Parser');
 				group: 'Tests' with: #('XML-Tests-Parser') ].
+]
 
-	spec
-		for: #gemstone
-		do: [
-			"load gemstone compatibility methods"
-			spec
-				package: 'XML-Parser'
-				with: [ spec includes: 'XML-Parser-GemstoneCompatibility' ].
-			spec
-				package: 'XML-Parser-GemstoneCompatibility'
-				with: [ spec requires: 'XML-Parser' ]. ].
+{ #category : #baselines }
+ConfigurationOfXMLParser >> baselineMaster24: spec [
+	<version: '2.4-master-baseline' imports: #('1.9-master-baseline')>
 
 	"load GT extension methods"
 	spec
@@ -363,722 +1128,33 @@ ConfigurationOfXMLParser >> baseline10: spec [
 ]
 
 { #category : #baselines }
-ConfigurationOfXMLParser >> baseline183: spec [
-	<version: '1.8.3-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.4.6' ]
-]
+ConfigurationOfXMLParser >> baselineMaster33: spec [
+	<version: '3.3-master-baseline' imports: #('1-master-baseline')>
 
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline187: spec [
-	<version: '1.8.7-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.4.7' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline188: spec [
-	<version: '1.8.8-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.4.8' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline191: spec [
-	<version: '1.9.1-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.4.8' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.1' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline193: spec [
-	<version: '1.9.3-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.4.8' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.2' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline194: spec [
-	<version: '1.9.4-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.5.2' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.3' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline196: spec [
-	<version: '1.9.6-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.5.2' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.4' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline198: spec [
-	<version: '1.9.8-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.5.2' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.5' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline200: spec [
-	<version: '2.0.0-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.5.3' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.6' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline201: spec [
-	<version: '2.0.1-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.5.4' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.6' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline205: spec [
-	<version: '2.0.5-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.5.4' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.7' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline213: spec [
-	<version: '2.1.3-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.5.5' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.7' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline216: spec [
-	<version: '2.1.6-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.5.6' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.8' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline221: spec [
-	<version: '2.2.1-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.5.6' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.9' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline231: spec [
-	<version: '2.3.1-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.5.6'.
-			"requires concrete versions from now on"
-			spec project: 'BitmapCharacterSet' with: '1.1.5' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.10' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline239: spec [
-	<version: '2.3.9-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.5.9'.
-			spec project: 'BitmapCharacterSet' with: '1.1.5' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.10' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline241: spec [
-	<version: '2.4.1-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.0'.
-			spec project: 'BitmapCharacterSet' with: '1.1.5' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.10' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.1' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline244: spec [
-	<version: '2.4.4-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.3'.
-			spec project: 'BitmapCharacterSet' with: '1.1.5' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.10' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.1' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline248: spec [
-	<version: '2.4.8-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.3'.
-			spec project: 'BitmapCharacterSet' with: '1.1.5' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.10' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-AndreiChis.7' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline250: spec [
-	<version: '2.5.0-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.4'.
-			"#stable BitmapCharacterSet is ok now because XMLParser isn't extending it anymore" ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.11' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.8' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline251: spec [
-	<version: '2.5.1-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.5'. ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.11' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.24' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline253: spec [
-	<version: '2.5.3-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.6'. ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.11' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.29' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline260: spec [
-	<version: '2.6.0-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.6'. ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.12' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.30' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline263: spec [
-	<version: '2.6.3-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.8'. ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.14' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.30' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline266: spec [
-	<version: '2.6.6-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.8'. ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.15' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.31' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline268: spec [
-	<version: '2.6.8-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.9'. ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.16' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.32' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline270: spec [
-	<version: '2.7.0-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.9'. ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.16' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.33' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline273: spec [
-	<version: '2.7.3-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.9'. ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.17' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.33' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline274: spec [
-	<version: '2.7.4-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.6.9'. ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.18' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.34' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline276: spec [
-	<version: '2.7.6-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.7.0'. ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.19' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.36' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline277: spec [
-	<version: '2.7.7-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.7.2'. ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.19' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.36' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline283: spec [
-	<version: '2.8.3-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.7.2'. ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.20' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.36' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline288: spec [
-	<version: '2.8.8-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.7.2'. ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.21' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.36' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline291: spec [
-	<version: '2.9.1-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.7.2'. ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.21' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.37' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline294: spec [
-	<version: '2.9.4-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.7.2'. ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.22' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.38' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline295: spec [
-	<version: '2.9.5-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.7.2'. ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.22' ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.39' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline297: spec [
-	<version: '2.9.7-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.7.5'. ].
 	spec
 		for: #gemstone
 		do: [
-			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.22'.
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #initializeClassesForGSBaseline297. ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.40' ]
-]
+			"load gemstone compatibility methods"
+			spec
+				package: 'XML-Parser'
+				with: [ spec includes: 'XML-ParserGemstoneCompatibility' ].
+			"renamed from 'XML-Parser-GemstoneCompatibility'"
+			spec
+				package: 'XML-ParserGemstoneCompatibility'
+				with: [ spec requires: 'XML-Parser' ]. ].
 
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline302: spec [
-	<version: '3.0.2-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.7.9'. ].
-	spec
-		for: #gemstone
-		do: [
-			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.22'.
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #initializeClassesForGSBaseline297. ].
+	"load GT extension methods"
 	spec
 		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.53' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline306: spec [
-	<version: '3.0.6-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.8.0'. ].
-	"need a newer version for the Lazy classes"
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'OrderPreservingDictionary' with: '1.3.7'. ].
-	spec
-		for: #gemstone
 		do: [
-			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.22'.
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #initializeClassesForGSBaseline297. ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.59' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline311: spec [
-	<version: '3.1.1-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.8.1'. ].
-	"need a newer version for the Lazy classes"
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'OrderPreservingDictionary' with: '1.3.7'. ].
-	spec
-		for: #gemstone
-		do: [
-			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.24'.
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #initializeClassesForGSBaseline297. ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-PavelKrivanek.60' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline312: spec [
-	<version: '3.1.2-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.8.2'. ].
-	"need a newer version for the Lazy classes"
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'OrderPreservingDictionary' with: '1.3.7'. ].
-	spec
-		for: #gemstone
-		do: [
-			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.24'.
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #initializeClassesForGSBaseline312. ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-PavelKrivanek.60' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline319: spec [
-	<version: '3.1.9-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.8.3'. ].
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'OrderPreservingDictionary' with: '1.3.8'. ].
-	spec
-		for: #gemstone
-		do: [
-			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.25'.
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #initializeClassesForGSBaseline312. ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.61' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline321: spec [
-	<version: '3.2.1-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.8.3'. ].
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'OrderPreservingDictionary' with: '1.3.8'. ].
-	spec
-		for: #gemstone
-		do: [
-			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.25'.
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #initializeClassesForGSBaseline321. ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.62' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParser >> baseline329: spec [
-	<version: '3.2.9-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLWriter' with: '2.8.3'. ].
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'OrderPreservingDictionary' with: '1.3.8'. ].
-	spec
-		for: #gemstone
-		do: [
-			spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.25'.
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #initializeClassesForGSBaseline321. ].
-	spec
-		for: #gt
-		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.64' ]
+			"the extensions require XMLWriter"
+			spec
+				group: 'CoreWithWriting' with: #('XMLWriter' 'XML-Parser' 'XML-ParserGTExtensions');
+				group: 'Tests' with: #('XML-Tests-Parser' 'XML-ParserGTExtensions').
+			"renamed from 'XML-Parser-GTExtensions'"
+			spec
+				package: 'XML-ParserGTExtensions'
+				with: [ spec requires: 'XML-Parser' ]. ].
 ]
 
 { #category : #accessing }
@@ -1095,7 +1171,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '3.2.9-baseline'.
+	spec for: #'common' version: '3.3.0-baseline'.
 
 ]
 
@@ -1437,6 +1513,14 @@ ConfigurationOfXMLParser >> release329: spec [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release33: spec [
+	<symbolicVersion: #'release-3.3'>
+
+	"Users should prefer #stable unless they rely on XMLParser internals"
+	spec for: #'common' version: '3.3.0'.
+]
+
+{ #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> release3: spec [
 	<symbolicVersion: #'release-3'>
 
@@ -1450,12 +1534,12 @@ ConfigurationOfXMLParser >> stable: spec [
 
 	"Users should prefer #stable unless they rely on XMLParser internals,
 	but it will delegate to a specific #release version from now on."
-	spec for: #'common' version: #'release-3.2.9'.
+	spec for: #'common' version: #'release-3.3'.
 ]
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version100: spec [
-	<version: '1.0' imports: #('1.0-baseline')>
+	<version: '1.0.0' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1470,7 +1554,7 @@ ConfigurationOfXMLParser >> version100: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version101: spec [
-	<version: '1.1' imports: #('1.0-baseline')>
+	<version: '1.0.1' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1485,7 +1569,7 @@ ConfigurationOfXMLParser >> version101: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version102: spec [
-	<version: '1.2' imports: #('1.0-baseline')>
+	<version: '1.0.2' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1500,7 +1584,7 @@ ConfigurationOfXMLParser >> version102: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version130: spec [
-	<version: '1.3' imports: #('1.0-baseline')>
+	<version: '1.3.0' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1518,7 +1602,7 @@ I had to largely rewrite the tokenizer to make everything work, but I followed t
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version131: spec [
-	<version: '1.3.1' imports: #('1.0-baseline')>
+	<version: '1.3.1' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1533,7 +1617,7 @@ ConfigurationOfXMLParser >> version131: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version132: spec [
-	<version: '1.3.2' imports: #('1.0-baseline')>
+	<version: '1.3.2' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1548,7 +1632,7 @@ ConfigurationOfXMLParser >> version132: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version133: spec [
-	<version: '1.3.3' imports: #('1.0-baseline')>
+	<version: '1.3.3' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1563,7 +1647,7 @@ ConfigurationOfXMLParser >> version133: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version134: spec [
-	<version: '1.3.4' imports: #('1.0-baseline')>
+	<version: '1.3.4' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1578,7 +1662,7 @@ ConfigurationOfXMLParser >> version134: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version135: spec [
-	<version: '1.3.5' imports: #('1.0-baseline')>
+	<version: '1.3.5' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1593,7 +1677,7 @@ ConfigurationOfXMLParser >> version135: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version136: spec [
-	<version: '1.3.6' imports: #('1.0-baseline')>
+	<version: '1.3.6' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1608,7 +1692,7 @@ ConfigurationOfXMLParser >> version136: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version137: spec [
-	<version: '1.3.7' imports: #('1.0-baseline')>
+	<version: '1.3.7' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1623,7 +1707,7 @@ ConfigurationOfXMLParser >> version137: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version138: spec [
-	<version: '1.3.8' imports: #('1.0-baseline')>
+	<version: '1.3.8' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1638,7 +1722,7 @@ ConfigurationOfXMLParser >> version138: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version139: spec [
-	<version: '1.3.9' imports: #('1.0-baseline')>
+	<version: '1.3.9' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1652,7 +1736,7 @@ ConfigurationOfXMLParser >> version139: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version140: spec [
-	<version: '1.4.0' imports: #('1.0-baseline')>
+	<version: '1.4.0' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1666,7 +1750,7 @@ ConfigurationOfXMLParser >> version140: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version141: spec [
-	<version: '1.4.1' imports: #('1.0-baseline')>
+	<version: '1.4.1' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1680,7 +1764,7 @@ ConfigurationOfXMLParser >> version141: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version142: spec [
-	<version: '1.4.2' imports: #('1.0-baseline')>
+	<version: '1.4.2' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1694,7 +1778,7 @@ ConfigurationOfXMLParser >> version142: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version143: spec [
-	<version: '1.4.3' imports: #('1.0-baseline')>
+	<version: '1.4.3' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1708,7 +1792,7 @@ ConfigurationOfXMLParser >> version143: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version144: spec [
-	<version: '1.4.4' imports: #('1.0-baseline')>
+	<version: '1.4.4' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1722,7 +1806,7 @@ ConfigurationOfXMLParser >> version144: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version145: spec [
-	<version: '1.4.5' imports: #('1.0-baseline')>
+	<version: '1.4.5' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1736,7 +1820,7 @@ ConfigurationOfXMLParser >> version145: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version146: spec [
-	<version: '1.4.6' imports: #('1.0-baseline')>
+	<version: '1.4.6' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1750,7 +1834,7 @@ ConfigurationOfXMLParser >> version146: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version147: spec [
-	<version: '1.4.7' imports: #('1.0-baseline')>
+	<version: '1.4.7' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1764,7 +1848,7 @@ ConfigurationOfXMLParser >> version147: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version148: spec [
-	<version: '1.4.8' imports: #('1.0-baseline')>
+	<version: '1.4.8' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1778,7 +1862,7 @@ ConfigurationOfXMLParser >> version148: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version149: spec [
-	<version: '1.4.9' imports: #('1.0-baseline')>
+	<version: '1.4.9' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1792,7 +1876,7 @@ ConfigurationOfXMLParser >> version149: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version150: spec [
-	<version: '1.5.0' imports: #('1.0-baseline')>
+	<version: '1.5.0' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1806,7 +1890,7 @@ ConfigurationOfXMLParser >> version150: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version151: spec [
-	<version: '1.5.1' imports: #('1.0-baseline')>
+	<version: '1.5.1' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1820,7 +1904,7 @@ ConfigurationOfXMLParser >> version151: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version152: spec [
-	<version: '1.5.2' imports: #('1.0-baseline')>
+	<version: '1.5.2' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1834,7 +1918,7 @@ ConfigurationOfXMLParser >> version152: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version153: spec [
-	<version: '1.5.3' imports: #('1.0-baseline')>
+	<version: '1.5.3' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1848,7 +1932,7 @@ ConfigurationOfXMLParser >> version153: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version154: spec [
-	<version: '1.5.4' imports: #('1.0-baseline')>
+	<version: '1.5.4' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1862,7 +1946,7 @@ ConfigurationOfXMLParser >> version154: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version155: spec [
-	<version: '1.5.5' imports: #('1.0-baseline')>
+	<version: '1.5.5' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1876,7 +1960,7 @@ ConfigurationOfXMLParser >> version155: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version156: spec [
-	<version: '1.5.6' imports: #('1.0-baseline')>
+	<version: '1.5.6' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1890,7 +1974,7 @@ ConfigurationOfXMLParser >> version156: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version157: spec [
-	<version: '1.5.7' imports: #('1.0-baseline')>
+	<version: '1.5.7' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1904,7 +1988,7 @@ ConfigurationOfXMLParser >> version157: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version158: spec [
-	<version: '1.5.8' imports: #('1.0-baseline')>
+	<version: '1.5.8' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1918,7 +2002,7 @@ ConfigurationOfXMLParser >> version158: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version159: spec [
-	<version: '1.5.9' imports: #('1.0-baseline')>
+	<version: '1.5.9' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1932,7 +2016,7 @@ ConfigurationOfXMLParser >> version159: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version160: spec [
-	<version: '1.6.0' imports: #('1.0-baseline')>
+	<version: '1.6.0' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1946,7 +2030,7 @@ ConfigurationOfXMLParser >> version160: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version161: spec [
-	<version: '1.6.1' imports: #('1.0-baseline')>
+	<version: '1.6.1' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1960,7 +2044,7 @@ ConfigurationOfXMLParser >> version161: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version162: spec [
-	<version: '1.6.2' imports: #('1.0-baseline')>
+	<version: '1.6.2' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1974,7 +2058,7 @@ ConfigurationOfXMLParser >> version162: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version163: spec [
-	<version: '1.6.3' imports: #('1.0-baseline')>
+	<version: '1.6.3' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -1988,7 +2072,7 @@ ConfigurationOfXMLParser >> version163: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version164: spec [
-	<version: '1.6.4' imports: #('1.0-baseline')>
+	<version: '1.6.4' imports: #('1.0.0-baseline')>
 	spec
 		for: #common
 		do: [ 
@@ -2006,7 +2090,7 @@ ConfigurationOfXMLParser >> version164: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version165: spec [
-	<version: '1.6.5' imports: #('1.0-baseline' )>
+	<version: '1.6.5' imports: #('1.0.0-baseline')>
 
 	spec for: #'common' do: [
 		spec blessing: #release.
@@ -2030,7 +2114,7 @@ ConfigurationOfXMLParser >> version165: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version166: spec [
-	<version: '1.6.6' imports: #('1.0-baseline' )>
+	<version: '1.6.6' imports: #('1.0.0-baseline')>
 
 	spec for: #'common' do: [
 		spec blessing: #release.
@@ -2052,7 +2136,7 @@ ConfigurationOfXMLParser >> version166: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version167: spec [
-	<version: '1.6.7' imports: #('1.0-baseline' )>
+	<version: '1.6.7' imports: #('1.0.0-baseline')>
 
 	spec for: #'common' do: [
 		spec blessing: #release.
@@ -2074,7 +2158,7 @@ ConfigurationOfXMLParser >> version167: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version168: spec [
-	<version: '1.6.8' imports: #('1.0-baseline' )>
+	<version: '1.6.8' imports: #('1.0.0-baseline')>
 
 	spec for: #'common' do: [
 		spec blessing: #release.
@@ -2096,7 +2180,7 @@ ConfigurationOfXMLParser >> version168: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version169: spec [
-	<version: '1.6.9' imports: #('1.0-baseline' )>
+	<version: '1.6.9' imports: #('1.0.0-baseline')>
 
 	spec for: #'common' do: [
 		spec blessing: #release.
@@ -2117,7 +2201,7 @@ ConfigurationOfXMLParser >> version169: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version170: spec [
-	<version: '1.7.0' imports: #('1.0-baseline' )>
+	<version: '1.7.0' imports: #('1.0.0-baseline')>
 
 	spec for: #'common' do: [
 		spec blessing: #release.
@@ -2138,7 +2222,7 @@ ConfigurationOfXMLParser >> version170: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version171: spec [
-	<version: '1.7.1' imports: #('1.0-baseline' )>
+	<version: '1.7.1' imports: #('1.0.0-baseline')>
 
 	spec for: #'common' do: [
 		spec blessing: #release.
@@ -2159,7 +2243,7 @@ ConfigurationOfXMLParser >> version171: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version172: spec [
-	<version: '1.7.2' imports: #('1.0-baseline' )>
+	<version: '1.7.2' imports: #('1.0.0-baseline')>
 
 	spec for: #'common' do: [
 		spec blessing: #release.
@@ -2180,7 +2264,7 @@ ConfigurationOfXMLParser >> version172: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version173: spec [
-	<version: '1.7.3' imports: #('1.0-baseline' )>
+	<version: '1.7.3' imports: #('1.0.0-baseline')>
 
 	spec for: #'common' do: [
 		spec blessing: #release.
@@ -2201,7 +2285,7 @@ ConfigurationOfXMLParser >> version173: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version174: spec [
-	<version: '1.7.4' imports: #('1.0-baseline' )>
+	<version: '1.7.4' imports: #('1.0.0-baseline')>
 
 	spec for: #'common' do: [
 		spec blessing: #release.
@@ -2222,7 +2306,7 @@ ConfigurationOfXMLParser >> version174: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version175: spec [
-	<version: '1.7.5' imports: #('1.0-baseline' )>
+	<version: '1.7.5' imports: #('1.0.0-baseline')>
 
 	spec for: #'common' do: [
 		spec blessing: #release.
@@ -2240,7 +2324,7 @@ ConfigurationOfXMLParser >> version175: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version176: spec [
-	<version: '1.7.6' imports: #('1.0-baseline' )>
+	<version: '1.7.6' imports: #('1.0.0-baseline')>
 
 	spec for: #'common' do: [
 		spec blessing: #release.
@@ -2258,7 +2342,7 @@ ConfigurationOfXMLParser >> version176: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version177: spec [
-	<version: '1.7.7' imports: #('1.0-baseline' )>
+	<version: '1.7.7' imports: #('1.0.0-baseline')>
 
 	spec for: #'common' do: [
 		spec blessing: #release.
@@ -2270,7 +2354,7 @@ ConfigurationOfXMLParser >> version177: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version178: spec [ 
-        <version: '1.7.8' imports: #('1.0-baseline')>
+        <version: '1.7.8' imports: #('1.0.0-baseline')>
 
         spec for: #common do: [
                 spec blessing: #release.
@@ -2282,7 +2366,7 @@ ConfigurationOfXMLParser >> version178: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version179: spec [ 
-        <version: '1.7.9' imports: #('1.0-baseline')>
+        <version: '1.7.9' imports: #('1.0.0-baseline')>
 
         spec for: #common do: [
                 spec blessing: #release.
@@ -2294,7 +2378,7 @@ ConfigurationOfXMLParser >> version179: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version180: spec [ 
-        <version: '1.8.0' imports: #('1.0-baseline')>
+        <version: '1.8.0' imports: #('1.0.0-baseline')>
 
         spec for: #common do: [
                 spec blessing: #release.
@@ -2306,7 +2390,7 @@ ConfigurationOfXMLParser >> version180: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version181: spec [ 
-        <version: '1.8.1' imports: #('1.0-baseline')>
+        <version: '1.8.1' imports: #('1.0.0-baseline')>
 
         spec for: #common do: [
                 spec blessing: #release.
@@ -2318,7 +2402,7 @@ ConfigurationOfXMLParser >> version181: spec [
 
 { #category : #versions }
 ConfigurationOfXMLParser >> version182: spec [ 
-        <version: '1.8.2' imports: #('1.0-baseline')>
+        <version: '1.8.2' imports: #('1.0.0-baseline')>
 
         spec for: #common do: [
                 spec blessing: #release.
@@ -3937,6 +4021,17 @@ ConfigurationOfXMLParser >> version328: spec [
 { #category : #versions }
 ConfigurationOfXMLParser >> version329: spec [ 
         <version: '3.2.9' imports: #('3.2.9-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.425'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.216'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version330: spec [ 
+        <version: '3.3.0' imports: #('3.3.0-baseline')>
 
         spec for: #common do: [
                 spec blessing: #release.
