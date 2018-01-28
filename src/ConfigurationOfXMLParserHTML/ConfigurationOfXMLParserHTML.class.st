@@ -158,7 +158,335 @@ ConfigurationOfXMLParserHTML class >> validate [
 
 { #category : #baselines }
 ConfigurationOfXMLParserHTML >> baseline100: spec [
-	<version: '1.0.0-baseline'>
+	<version: '1.0.0-baseline' imports: #('1-master-baseline')>
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline114: spec [
+	<version: '1.1.4-baseline' imports: #('1.4-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.5' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline122: spec [
+	<version: '1.2.2-baseline' imports: #('1.4-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.6.5' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline124: spec [
+	<version: '1.2.4-baseline' imports: #('1.4-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.6.8' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline125: spec [
+	<version: '1.2.5-baseline' imports: #('1.4-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.7.3' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline126: spec [
+	<version: '1.2.6-baseline' imports: #('1.4-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.7.4' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline127: spec [
+	<version: '1.2.7-baseline' imports: #('1.4-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.7.6' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline128: spec [
+	<version: '1.2.8-baseline' imports: #('1.4-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.8.1' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline129: spec [
+	<version: '1.2.9-baseline' imports: #('1.4-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.8.9' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline130: spec [
+	<version: '1.3.0-baseline' imports: #('1.4-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.2' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline131: spec [
+	<version: '1.3.1-baseline' imports: #('1.4-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.5' ].
+	spec
+		for: #gemstone
+		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline132: spec [
+	<version: '1.3.2-baseline' imports: #('1.4-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
+
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline132. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline134: spec [
+	<version: '1.3.4-baseline' imports: #('1.4-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.0.6' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
+
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline132. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline136: spec [
+	<version: '1.3.6-baseline' imports: #('1.4-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.1.7' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
+
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline132. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline138: spec [
+	<version: '1.3.8-baseline' imports: #('1.4-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.1.9' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
+
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline132. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline139: spec [
+	<version: '1.3.9-baseline' imports: #('1.4-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.2.2' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
+
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline139. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline141: spec [
+	<version: '1.4.1-baseline' imports: #('1.4-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.2.9' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
+
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline139. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline150: spec [
+	<version: '1.5.0-baseline' imports: #('1.5-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.3' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec package: 'XML-ParserHTML-GemstoneCompatibility' with: 'XML-ParserHTML-GemstoneCompatibility-monty.1'.
+
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline139. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baselineMaster14: spec [
+	<version: '1.4-master-baseline' imports: #('1-master-baseline')>
+
+	"load gemstone methods"
+	spec
+		for: #'gemstone'
+		do: [
+			spec
+				package: 'XML-Parser-HTML-Core'
+				with: [ spec includes: 'XML-Parser-HTML-GemstoneCompatibility' ].
+			spec
+				package: 'XML-Parser-HTML-GemstoneCompatibility'
+				with: [ spec requires: 'XML-Parser-HTML-Core' ]. ].
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baselineMaster15: spec [
+	<version: '1.5-master-baseline'>
+
+	"renamed packages from 'Parser-HTML' to 'ParserHTML' for portability"
+	spec
+		for: #common
+		do: [ 
+			spec
+				blessing: #baseline;
+				description: 'XML-ParserHTML baseline';
+				"migrated from PharoExtras/XMLParser to PharoExtras/XMLParserHTML"
+				repository: 'http://smalltalkhub.com/mc/PharoExtras/XMLParserHTML/main'.
+			spec
+				project: 'XMLParser'
+				with: [ 
+					spec
+						className: 'ConfigurationOfXMLParser';
+						versionString: #stable;
+						loads: #('Core');
+						repository: 'http://smalltalkhub.com/mc/PharoExtras/XMLParser/main' ].
+			spec
+				project: 'XMLParserCoreWithWriting'
+				copyFrom: 'XMLParser'
+				with: [ spec loads: #('CoreWithWriting') ].
+			spec
+				project: 'XMLParserTests'
+				copyFrom: 'XMLParser'
+				with: [ spec loads: #('Tests') ].
+			spec package: 'XML-ParserHTML-Core' with: [ spec requires: 'XMLParser' ].
+			spec package: 'XML-ParserHTML-Tests' with: [
+				spec requires: #('XMLParserTests' 'XML-ParserHTML-Core') ].
+			spec
+				group: 'default' with: #('CoreWithWriting' 'Tests');
+				group: 'Core' with: #('XML-ParserHTML-Core');
+				group: 'CoreWithWriting' with: #('XMLParserCoreWithWriting' 'XML-ParserHTML-Core');
+				group: 'Tests' with: #('XML-ParserHTML-Tests')].
+
+	"load gemstone methods"
+	spec
+		for: #'gemstone'
+		do: [
+			spec
+				package: 'XML-ParserHTML-Core'
+				with: [ spec includes: 'XML-ParserHTML-GemstoneCompatibility' ].
+			spec
+				package: 'XML-ParserHTML-GemstoneCompatibility'
+				with: [ spec requires: 'XML-ParserHTML-Core' ]. ].
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserHTML >> baselineMaster1: spec [
+	<version: '1-master-baseline'>
+
 	spec
 		for: #common
 		do: [ 
@@ -191,255 +519,6 @@ ConfigurationOfXMLParserHTML >> baseline100: spec [
 				group: 'Core' with: #('XML-Parser-HTML-Core');
 				group: 'CoreWithWriting' with: #('XMLParserCoreWithWriting' 'XML-Parser-HTML-Core');
 				group: 'Tests' with: #('XML-Parser-HTML-Tests')].
-
-	"load gemstone methods"
-	spec
-		for: #'gemstone'
-		do: [
-			spec
-				package: 'XML-Parser-HTML-Core'
-				with: [ spec includes: 'XML-Parser-HTML-GemstoneCompatibility' ].
-			spec
-				package: 'XML-Parser-HTML-GemstoneCompatibility'
-				with: [ spec requires: 'XML-Parser-HTML-Core' ]. ].
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserHTML >> baseline114: spec [
-	<version: '1.1.4-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.5' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserHTML >> baseline122: spec [
-	<version: '1.2.2-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.6.5' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserHTML >> baseline124: spec [
-	<version: '1.2.4-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.6.8' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserHTML >> baseline125: spec [
-	<version: '1.2.5-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.7.3' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserHTML >> baseline126: spec [
-	<version: '1.2.6-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.7.4' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserHTML >> baseline127: spec [
-	<version: '1.2.7-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.7.6' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserHTML >> baseline128: spec [
-	<version: '1.2.8-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.8.1' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserHTML >> baseline129: spec [
-	<version: '1.2.9-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.8.9' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserHTML >> baseline130: spec [
-	<version: '1.3.0-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.9.2' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserHTML >> baseline131: spec [
-	<version: '1.3.1-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.9.5' ].
-	spec
-		for: #gemstone
-		do: [ spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserHTML >> baseline132: spec [
-	<version: '1.3.2-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3' ].
-	spec
-		for: #gemstone
-		do: [ 
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
-
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #initializeClassesForGSBaseline132. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserHTML >> baseline134: spec [
-	<version: '1.3.4-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3.0.6' ].
-	spec
-		for: #gemstone
-		do: [ 
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
-
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #initializeClassesForGSBaseline132. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserHTML >> baseline136: spec [
-	<version: '1.3.6-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3.1.7' ].
-	spec
-		for: #gemstone
-		do: [ 
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
-
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #initializeClassesForGSBaseline132. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserHTML >> baseline138: spec [
-	<version: '1.3.8-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3.1.9' ].
-	spec
-		for: #gemstone
-		do: [ 
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
-
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #initializeClassesForGSBaseline132. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserHTML >> baseline139: spec [
-	<version: '1.3.9-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3.2.2' ].
-	spec
-		for: #gemstone
-		do: [ 
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
-
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #initializeClassesForGSBaseline139. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserHTML >> baseline141: spec [
-	<version: '1.4.1-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3.2.9' ].
-	spec
-		for: #gemstone
-		do: [ 
-			spec package: 'XML-Parser-HTML-GemstoneCompatibility' with: 'XML-Parser-HTML-GemstoneCompatibility-monty.1'.
-
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #initializeClassesForGSBaseline139. ]
 ]
 
 { #category : #accessing }
@@ -454,7 +533,7 @@ ConfigurationOfXMLParserHTML >> customProjectAttributes [
 ConfigurationOfXMLParserHTML >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.4.1-baseline'.
+	spec for: #'common' version: '1.5.0-baseline'.
 ]
 
 { #category : #doits }
@@ -465,7 +544,7 @@ ConfigurationOfXMLParserHTML >> initializeClassesForGSBaseline132 [
 	
 	This can help identify classes that use lazy initialization:
 		ConfigurationOfXMLParser findLazyInitializedClassStateInPackage:
-			'XML-Parser-HTML'
+			'XML-ParserHTML-Core'
 	"
 
 	"renamed"
@@ -481,7 +560,7 @@ ConfigurationOfXMLParserHTML >> initializeClassesForGSBaseline139 [
 	
 	This can help identify classes that use lazy initialization:
 		ConfigurationOfXMLParser findLazyInitializedClassStateInPackage:
-			'XML-Parser-HTML'
+			'XML-ParserHTML-Core'
 	"
 
 	XMLHTMLNonHTMLSectionState allSubclassesDo: [:each |
@@ -505,7 +584,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.4.1'.
+	spec for: #'common' version: '1.5.0'.
 
 ]
 
@@ -968,5 +1047,16 @@ ConfigurationOfXMLParserHTML >> version141: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser-HTML-Core' with: 'XML-Parser-HTML-Core-monty.52'.
 			spec package: 'XML-Parser-HTML-Tests' with: 'XML-Parser-HTML-Tests-monty.25'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version150: spec [ 
+        <version: '1.5.0' imports: #('1.5.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-ParserHTML-Core' with: 'XML-ParserHTML-Core-monty.1'.
+			spec package: 'XML-ParserHTML-Tests' with: 'XML-ParserHTML-Tests-monty.1'.
                 ].
 ]
