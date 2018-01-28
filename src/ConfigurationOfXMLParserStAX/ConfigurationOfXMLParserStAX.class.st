@@ -163,7 +163,198 @@ ConfigurationOfXMLParserStAX class >> validate [
 
 { #category : #baselines }
 ConfigurationOfXMLParserStAX >> baseline100: spec [ 
-	<version: '1.0.0-baseline'>
+	<version: '1.0.0-baseline' imports: #('1-master-baseline')>
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baseline112: spec [
+	<version: '1.1.2-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.4' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baseline117: spec [
+	<version: '1.1.7-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.6.5' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baseline118: spec [
+	<version: '1.1.8-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.7.3' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baseline120: spec [
+	<version: '1.2.0-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.7.4' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baseline121: spec [
+	<version: '1.2.1-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.7.6' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baseline122: spec [
+	<version: '1.2.2-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.8.1' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baseline123: spec [
+	<version: '1.2.3-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.8.3' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baseline124: spec [
+	<version: '1.2.4-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.8.6' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baseline125: spec [
+	<version: '1.2.5-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.8.7' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baseline126: spec [
+	<version: '1.2.6-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.0.6' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baseline127: spec [
+	<version: '1.2.7-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.1.7' ].
+
+	spec
+		for: #gemstone
+		do: [
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline127. ].
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baseline129: spec [
+	<version: '1.2.9-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.2.9' ].
+
+	spec
+		for: #gemstone
+		do: [
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline127. ].
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baseline130: spec [
+	<version: '1.3.0-baseline' imports: #('1.3-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.3' ].
+
+	spec
+		for: #gemstone
+		do: [
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline127. ].
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baselineMaster13: spec [ 
+	<version: '1.3-master-baseline'>
+
+	"renamed packages from 'Parser-StAX' to 'ParserStAX' for portability"
+	spec for: #'common' do: [
+		spec blessing: #'baseline'.
+		"migrated to PharoExtras/XMLParserStAX from PharoExtras/XMLParser"
+		spec repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLParserStAX/main'.
+			spec
+				project: 'XMLParser'
+				with: [ 
+					spec
+						className: 'ConfigurationOfXMLParser';
+						versionString: #stable;
+						loads: #('Core');
+						repository: 'http://smalltalkhub.com/mc/PharoExtras/XMLParser/main' ].
+			spec
+				project: 'XMLParserCoreWithWriting'
+				copyFrom: 'XMLParser'
+				with: [ spec loads: #('CoreWithWriting') ].
+			spec
+				project: 'XMLParserTests'
+				copyFrom: 'XMLParser'
+				with: [ spec loads: #('Tests') ].
+		spec package: 'XML-ParserStAX-Core' with: [ spec requires: 'XMLParser' ].
+		spec package: 'XML-ParserStAX-Tests' with: [
+			spec requires: #('XMLParserTests' 'XML-ParserStAX-Core') ].
+		spec
+			group: 'default' with: #('CoreWithWriting' 'Tests');
+			group: 'Core' with: #('XML-ParserStAX-Core');
+			group: 'CoreWithWriting' with: #('XMLParserCoreWithWriting' 'XML-ParserStAX-Core');
+			group: 'Tests' with: #('XML-ParserStAX-Tests')]
+]
+
+{ #category : #baselines }
+ConfigurationOfXMLParserStAX >> baselineMaster1: spec [ 
+	<version: '1-master-baseline'>
 
 	spec for: #'common' do: [
 		spec blessing: #'baseline'.
@@ -195,140 +386,6 @@ ConfigurationOfXMLParserStAX >> baseline100: spec [
 			group: 'Tests' with: #('XML-Parser-StAX-Tests')]
 ]
 
-{ #category : #baselines }
-ConfigurationOfXMLParserStAX >> baseline112: spec [
-	<version: '1.1.2-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.4' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserStAX >> baseline117: spec [
-	<version: '1.1.7-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.6.5' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserStAX >> baseline118: spec [
-	<version: '1.1.8-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.7.3' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserStAX >> baseline120: spec [
-	<version: '1.2.0-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.7.4' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserStAX >> baseline121: spec [
-	<version: '1.2.1-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.7.6' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserStAX >> baseline122: spec [
-	<version: '1.2.2-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.8.1' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserStAX >> baseline123: spec [
-	<version: '1.2.3-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.8.3' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserStAX >> baseline124: spec [
-	<version: '1.2.4-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.8.6' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserStAX >> baseline125: spec [
-	<version: '1.2.5-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.8.7' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserStAX >> baseline126: spec [
-	<version: '1.2.6-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3.0.6' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserStAX >> baseline127: spec [
-	<version: '1.2.7-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3.1.7' ].
-
-	spec
-		for: #gemstone
-		do: [
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #initializeClassesForGSBaseline127. ].
-]
-
-{ #category : #baselines }
-ConfigurationOfXMLParserStAX >> baseline129: spec [
-	<version: '1.2.9-baseline' imports: #('1.0.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3.2.9' ].
-
-	spec
-		for: #gemstone
-		do: [
-			"force initialization of lazy-initialized class and class isnt
-			vars to avoid write conflicts on GS"
-			spec postLoadDoIt: #initializeClassesForGSBaseline127. ].
-]
-
 { #category : #accessing }
 ConfigurationOfXMLParserStAX >> customProjectAttributes [
 	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -341,7 +398,7 @@ ConfigurationOfXMLParserStAX >> customProjectAttributes [
 ConfigurationOfXMLParserStAX >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.2.9-baseline'.
+	spec for: #'common' version: '1.3.0-baseline'.
 ]
 
 { #category : #doits }
@@ -367,7 +424,7 @@ ConfigurationOfXMLParserStAX >> project [
 ConfigurationOfXMLParserStAX >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.2.9'.
+	spec for: #'common' version: '1.3.0'.
 
 ]
 
@@ -698,5 +755,16 @@ ConfigurationOfXMLParserStAX >> version129: spec [
                 spec blessing: #release.
 			spec package: 'XML-Parser-StAX-Core' with: 'XML-Parser-StAX-Core-monty.32'.
 			spec package: 'XML-Parser-StAX-Tests' with: 'XML-Parser-StAX-Tests-monty.21'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserStAX >> version130: spec [ 
+        <version: '1.3.0' imports: #('1.3.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-ParserStAX-Core' with: 'XML-ParserStAX-Core-monty.1'.
+			spec package: 'XML-ParserStAX-Tests' with: 'XML-ParserStAX-Tests-monty.1'.
                 ].
 ]
