@@ -1010,7 +1010,7 @@ ConfigurationOfXMLParser >> baseline330: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'OrderPreservingDictionary' with: '1.3.9'. ].
+			spec project: 'OrderPreservingDictionary' with: '1.4.0'. ].
 	spec
 		for: #gemstone
 		do: [
