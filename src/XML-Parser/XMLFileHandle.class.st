@@ -22,6 +22,11 @@ XMLFileHandle class >> basicCurrentWorkingDirectory [
 	self subclassResponsibility
 ]
 
+{ #category : #testing }
+XMLFileHandle class >> canBeImplemented [
+	^ true
+]
+
 { #category : #accessing }
 XMLFileHandle class >> currentWorkingDirectory [
 	"returns a path string for the current working directory"

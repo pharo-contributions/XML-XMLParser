@@ -14,6 +14,11 @@ XMLFileReadStreamFactory class >> basicOnPath: aPathString [
 	self subclassResponsibility
 ]
 
+{ #category : #testing }
+XMLFileReadStreamFactory class >> canBeImplemented [
+	^ true
+]
+
 { #category : #finding }
 XMLFileReadStreamFactory class >> noSupportedImplementationFound [
 	XMLFileException signal: 'File reading unsupported'

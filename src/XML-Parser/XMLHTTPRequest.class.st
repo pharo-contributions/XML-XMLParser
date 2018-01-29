@@ -12,6 +12,11 @@ Class {
 	#category : #'XML-Parser-HTTP'
 }
 
+{ #category : #testing }
+XMLHTTPRequest class >> canBeImplemented [
+	^ true
+]
+
 { #category : #'instance creation' }
 XMLHTTPRequest class >> new [
 	^ self url: ''

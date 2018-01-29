@@ -7,6 +7,11 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
+{ #category : #defaults }
+XMLUTF16StreamConverter class >> abstractClass [
+	^ XMLUTF16StreamConverter
+]
+
 { #category : #testing }
 XMLUTF16StreamConverter >> isBigEndian [
 	self subclassResponsibility

@@ -14,6 +14,11 @@ XMLFileWriteStreamFactory class >> basicOnPath: aPathString [
 	self subclassResponsibility
 ]
 
+{ #category : #testing }
+XMLFileWriteStreamFactory class >> canBeImplemented [
+	^ true
+]
+
 { #category : #finding }
 XMLFileWriteStreamFactory class >> noSupportedImplementationFound [
 	XMLFileException signal: 'File writing unsupported'

@@ -10,6 +10,11 @@ Class {
 	#category : #'XML-Parser-HTTP'
 }
 
+{ #category : #testing }
+XMLHTTPResponse class >> canBeImplemented [
+	^ true
+]
+
 { #category : #finding }
 XMLHTTPResponse class >> noSupportedImplementationFound [
 	XMLHTTPRequest noSupportedImplementationFound

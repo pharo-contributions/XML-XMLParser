@@ -7,6 +7,11 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
+{ #category : #defaults }
+XMLUTFStreamConverter class >> abstractClass [
+	^ XMLUTFStreamConverter
+]
+
 { #category : #private }
 XMLUTFStreamConverter >> errorBadCharacterValue: aValue [
 	XMLEncodingException

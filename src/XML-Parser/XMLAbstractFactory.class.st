@@ -12,6 +12,11 @@ Class {
 	#category : #'XML-Parser-Utils'
 }
 
+{ #category : #testing }
+XMLAbstractFactory class >> canBeImplemented [
+	^ false
+]
+
 { #category : #clearing }
 XMLAbstractFactory class >> clearAllImplementations [
 	"self clearAllImplementations"
@@ -23,16 +28,17 @@ XMLAbstractFactory class >> clearAllImplementations [
 
 { #category : #finding }
 XMLAbstractFactory class >> findSupportedImplementation [
-	self isSupportedImplementation
-		ifTrue: [^ self].
+	self canBeImplemented
+		ifTrue: [
+			self isSupportedImplementation
+				ifTrue: [^ self].
 
-	self preferredImplementation
-		ifNil: [^ nil].
-	self preferredImplementation isSupportedImplementation
-		ifTrue: [^ self preferredImplementation].
-	self allSubclassesDo: [:each |
-		each isSupportedImplementation
-			ifTrue: [^ each]].
+			(self preferredImplementation notNil
+				and: [self preferredImplementation isSupportedImplementation])
+				ifTrue: [^ self preferredImplementation].
+			self allSubclassesDo: [:each |
+				each isSupportedImplementation
+					ifTrue: [^ each]]].
 
 	^ nil.
 ]
@@ -84,9 +90,10 @@ XMLAbstractFactory class >> new [
 
 { #category : #finding }
 XMLAbstractFactory class >> noSupportedImplementationFound [
+	Error signal: 'No implementation available'
 ]
 
 { #category : #defaults }
 XMLAbstractFactory class >> preferredImplementation [
-	self subclassResponsibility
+	^ nil
 ]

@@ -10,11 +10,6 @@ Class {
 	#category : #'XML-Parser-HTTP'
 }
 
-{ #category : #defaults }
-XMLHTTPMessage class >> preferredImplementation [
-	^ nil
-]
-
 { #category : #adding }
 XMLHTTPMessage >> addHeader: anAssociation [
 	self

@@ -12,6 +12,11 @@ Class {
 	#category : #'XML-Parser-Utils'
 }
 
+{ #category : #testing }
+XMLKeyValueCache class >> canBeImplemented [
+	^ true
+]
+
 { #category : #defaults }
 XMLKeyValueCache class >> defaultMaxSize [
 	^ 32

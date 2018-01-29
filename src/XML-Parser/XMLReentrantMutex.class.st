@@ -7,6 +7,11 @@ Class {
 	#category : #'XML-Parser-Utils'
 }
 
+{ #category : #testing }
+XMLReentrantMutex class >> canBeImplemented [
+	^ true
+]
+
 { #category : #finding }
 XMLReentrantMutex class >> noSupportedImplementationFound [
 	Error signal: 'No supported reentrant mutex class available'

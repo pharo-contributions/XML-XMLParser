@@ -10,6 +10,11 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
+{ #category : #defaults }
+XMLStatelessStreamConverter class >> abstractClass [
+	^ XMLStatelessStreamConverter
+]
+
 { #category : #accessing }
 XMLStatelessStreamConverter class >> instance [
 	^ instance ifNil: [instance := self basicNew initialize]

@@ -21,6 +21,11 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
+{ #category : #defaults }
+XMLStreamConverter class >> abstractClass [
+	^ XMLStreamConverter
+]
+
 { #category : #basic }
 XMLStreamConverter class >> basicByteOrderMarkBytes [
 	^ #()
@@ -52,7 +57,8 @@ XMLStreamConverter class >> canConvertEncoding: anEncodingName [
 	production rule for <?xml ...?> 'encoding' attributes disallows
 	whitespace, and the HTML parser removes it from <meta> charset
 	attributes before converting, so we just convert it to lowercase"
-	^ self basicCanConvertEncoding: anEncodingName asLowercase
+	^ self isAbstractClass not
+		and: [self basicCanConvertEncoding: anEncodingName asLowercase]
 ]
 
 { #category : #accessing }
@@ -142,6 +148,11 @@ XMLStreamConverter class >> initialize [
 ]
 
 { #category : #testing }
+XMLStreamConverter class >> isAbstractClass [
+	^ self == self abstractClass
+]
+
+{ #category : #testing }
 XMLStreamConverter class >> isDefaultClass [
 	^ self == self defaultClass
 ]
@@ -184,7 +195,9 @@ XMLStreamConverter class >> preferredClasses [
 		ifNil: [
 			PreferredClasses :=
 				IdentitySet new
-					addAll: XMLUTFStreamConverter allSubclasses;
+					addAll:
+						(XMLUTFStreamConverter allSubclasses reject: [:each |
+							each isAbstractClass]);
 					add: XMLByteStreamConverter;
 					yourself]
 ]
