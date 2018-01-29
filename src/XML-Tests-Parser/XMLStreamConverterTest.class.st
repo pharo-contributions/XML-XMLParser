@@ -81,6 +81,18 @@ XMLStreamConverterTest >> streamConverterClass [
 ]
 
 { #category : #tests }
+XMLStreamConverterTest >> testAbstractClass [
+	| streamConverterClass |
+
+	streamConverterClass := self streamConverterClass.
+	self assert:
+		streamConverterClass abstractClass ==
+			(self isImplicit
+				ifTrue: [streamConverterClass superclass superclass]
+				ifFalse: [streamConverterClass superclass])
+]
+
+{ #category : #tests }
 XMLStreamConverterTest >> testAsXMLStreamConverter [
 	| streamConverter |
 
@@ -125,6 +137,20 @@ XMLStreamConverterTest >> testEncoding [
 		self assert:
 			(XMLStreamConverter newForEncoding: each) encoding =
 				self primaryEncodingName]
+]
+
+{ #category : #tests }
+XMLStreamConverterTest >> testIsAbstractClass [
+	| streamConverterClass |
+
+	streamConverterClass := self streamConverterClass.
+	self deny: streamConverterClass isAbstractClass.
+	self isImplicit
+		ifTrue: [streamConverterClass := streamConverterClass superclass].
+	[streamConverterClass == XMLStreamConverter]
+		whileFalse: [
+			streamConverterClass := streamConverterClass superclass.
+			self assert: streamConverterClass isAbstractClass].
 ]
 
 { #category : #tests }
