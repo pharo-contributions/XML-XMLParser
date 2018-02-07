@@ -163,14 +163,11 @@ XMLHTTPRequest >> setURL: aURLString [
 	url := aURLString.
 	self
 		timeout: self defaultTimeout;
-		method: self defaultMethod.
-	
-	"#defaultAcceptEncoding can be overridden to return an empty collection,
-	but #acceptEncoding: still must sent here to override any default setting
-	used by the underlying HTTP library"
-	self
-		headerAt: 'Accept-Encoding'
-		put: self defaultAcceptEncoding.
+		method: self defaultMethod;
+		"even if #defaultAcceptEncoding returns an empty collection,
+		#acceptEncoding: must still be sent here to override any default
+		setting of the underlying HTTP library that we don't support"
+		acceptEncoding: self defaultAcceptEncoding.
 ]
 
 { #category : #retrieving }
