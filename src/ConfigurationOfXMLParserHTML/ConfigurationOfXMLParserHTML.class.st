@@ -418,6 +418,24 @@ ConfigurationOfXMLParserHTML >> baseline150: spec [
 ]
 
 { #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline152: spec [
+	<version: '1.5.2-baseline' imports: #('1.5-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.3.2' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec package: 'XML-ParserHTML-GemstoneCompatibility' with: 'XML-ParserHTML-GemstoneCompatibility-monty.1'.
+
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline139. ]
+]
+
+{ #category : #baselines }
 ConfigurationOfXMLParserHTML >> baselineMaster14: spec [
 	<version: '1.4-master-baseline' imports: #('1-master-baseline')>
 
@@ -533,7 +551,7 @@ ConfigurationOfXMLParserHTML >> customProjectAttributes [
 ConfigurationOfXMLParserHTML >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.5.0-baseline'.
+	spec for: #'common' version: '1.5.2-baseline'.
 ]
 
 { #category : #doits }
@@ -584,7 +602,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.5.1'.
+	spec for: #'common' version: '1.5.2'.
 ]
 
 { #category : #versions }
@@ -1067,6 +1085,17 @@ ConfigurationOfXMLParserHTML >> version151: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-ParserHTML-Core' with: 'XML-ParserHTML-Core-monty.2'.
+			spec package: 'XML-ParserHTML-Tests' with: 'XML-ParserHTML-Tests-monty.1'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version152: spec [ 
+        <version: '1.5.2' imports: #('1.5.2-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-ParserHTML-Core' with: 'XML-ParserHTML-Core-monty.3'.
 			spec package: 'XML-ParserHTML-Tests' with: 'XML-ParserHTML-Tests-monty.1'.
                 ].
 ]
