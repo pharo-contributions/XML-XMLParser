@@ -1047,7 +1047,7 @@ ConfigurationOfXMLParser >> baseline332: spec [
 	spec
 		for: #gt
 		do: [
-			spec package: 'XML-ParserGTExtensions' with: 'XML-ParserGTExtensions-monty.1' ]
+			spec package: 'XML-ParserGTExtensions' with: 'XML-ParserGTExtensions-monty.2' ]
 ]
 
 { #category : #baselines }
