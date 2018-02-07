@@ -286,10 +286,7 @@ XMLURITest >> percentEncodeCharacter: aCharacter [
 
 { #category : #converting }
 XMLURITest >> percentEncodeCharacters: aCharacterCollection [
-	^ String streamContents: [:stream |
-		aCharacterCollection do: [:each |
-			stream nextPutAll:
-				(self percentEncodeCharacter: each)]]
+	^ XMLStreamAdapterTest percentEncodeCharacters: aCharacterCollection
 ]
 
 { #category : #accessing }

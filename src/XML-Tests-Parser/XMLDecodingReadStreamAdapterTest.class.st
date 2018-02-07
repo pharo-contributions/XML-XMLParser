@@ -5,34 +5,55 @@ Class {
 }
 
 { #category : #accessing }
+XMLDecodingReadStreamAdapterTest >> binaryInputCollection [
+	^ self binaryFrom: 'test'
+]
+
+{ #category : #accessing }
 XMLDecodingReadStreamAdapterTest >> binaryInputCollectionWithBOM [
-	^ self binaryFrom: self inputCollectionWithBOM
+	^ self streamConverterClass byteOrderMarkBytes, self binaryInputCollection
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterTest >> binaryReadStreamAdapterClass [
-	^ self streamAdapterClass binaryReadStreamAdapterClass
+XMLDecodingReadStreamAdapterTest >> binaryInvalidInputCollections [
+	^ #()
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterTest >> inputCollectionWithBOM [
-	^ self streamConverterClass byteOrderMark, self inputCollection
+XMLDecodingReadStreamAdapterTest >> binaryInvalidInputCollectionsWithBOM [
+	^ self binaryInvalidInputCollections collect: [:each |
+		self streamConverterClass byteOrderMarkBytes, each]
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterTest >> invalidEncodedInputCollections [
-	^ #('')
+XMLDecodingReadStreamAdapterTest >> inputCollection [
+	^ self isDetecting
+		ifTrue: [
+			self isBinary
+				ifTrue: [self binaryInputCollectionWithBOM]
+				ifFalse: [self stringInputCollectionWithBOM]]
+		ifFalse: [
+			self isBinary
+				ifTrue: [self binaryInputCollection]
+				ifFalse: [self stringInputCollection]]
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterTest >> invalidEncodedInputCollectionsWithBOM [
-	^ self invalidEncodedInputCollections collect: [:each |
-		self streamConverterClass byteOrderMark, each]
+XMLDecodingReadStreamAdapterTest >> invalidInputCollections [
+	^ self isDetecting
+		ifTrue: [
+			self isBinary
+				ifTrue: [self binaryInvalidInputCollectionsWithBOM]
+				ifFalse: [self stringInvalidInputCollectionsWithBOM]]
+		ifFalse: [
+			self isBinary
+				ifTrue: [self binaryInvalidInputCollections]
+				ifFalse: [self stringInvalidInputCollections]]
 ]
 
-{ #category : #accessing }
-XMLDecodingReadStreamAdapterTest >> invalidStreamCollections [
-	^ self invalidEncodedInputCollections
+{ #category : #testing }
+XMLDecodingReadStreamAdapterTest >> isBinary [
+	^ true
 ]
 
 { #category : #testing }
@@ -62,16 +83,38 @@ XMLDecodingReadStreamAdapterTest >> streamCollection [
 		ifTrue: [
 			self isBinary
 				ifTrue: [self binaryInputCollectionWithBOM]
-				ifFalse: [self inputCollectionWithBOM]]
+				ifFalse: [self stringInputCollectionWithBOM]]
 		ifFalse: [
 			self isBinary
-				ifTrue: [self binaryInputCollection]
-				ifFalse: [self inputCollection]]
+				ifTrue: [self inputCollection]
+				ifFalse: [self stringInputCollection]]
 ]
 
 { #category : #accessing }
 XMLDecodingReadStreamAdapterTest >> streamConverterClass [
 	^ XMLNullStreamConverter
+]
+
+{ #category : #accessing }
+XMLDecodingReadStreamAdapterTest >> stringInputCollection [
+	^ self stringFrom: self binaryInputCollection
+]
+
+{ #category : #accessing }
+XMLDecodingReadStreamAdapterTest >> stringInputCollectionWithBOM [
+	^ self stringFrom: self binaryInputCollectionWithBOM
+]
+
+{ #category : #accessing }
+XMLDecodingReadStreamAdapterTest >> stringInvalidInputCollections [
+	^ self binaryInvalidInputCollections collect: [:each |
+		self stringFrom: each]
+]
+
+{ #category : #accessing }
+XMLDecodingReadStreamAdapterTest >> stringInvalidInputCollectionsWithBOM [
+	^ self binaryInvalidInputCollectionsWithBOM collect: [:each |
+		self stringFrom: each]
 ]
 
 { #category : #tests }
@@ -102,7 +145,7 @@ XMLDecodingReadStreamAdapterTest >> testHasNullStreamConverter [
 
 { #category : #tests }
 XMLDecodingReadStreamAdapterTest >> testInvalidCharacters [
-	self invalidStreamCollections do: [:each | | streamAdapter |
+	self invalidInputCollections do: [:each | | streamAdapter |
 		streamAdapter := self newStreamAdapterOn: (self newStreamOn: each).
 		[streamAdapter atEnd]
 			whileFalse: [
@@ -133,7 +176,7 @@ XMLDecodingReadStreamAdapterTest >> testNonDecodingOnIfBinary [
 	stream := self newStreamOn: #(1).
 	adapter := self streamAdapterClass nonDecodingOnIfBinary: stream.
 	self
-		assert: adapter class == self binaryReadStreamAdapterClass;
+		assert: adapter class == self streamAdapterClass;
 		assert: adapter hasNullStreamConverter.
 ]
 
@@ -157,7 +200,7 @@ XMLDecodingReadStreamAdapterTest >> testOnIfBinary [
 	stream := self newStreamOn: #(1).
 	adapter := self streamAdapterClass onIfBinary: stream.
 	self
-		assert: adapter class == self binaryReadStreamAdapterClass;
+		assert: adapter class == self streamAdapterClass;
 		assert: adapter hasDefaultStreamConverter.
 ]
 

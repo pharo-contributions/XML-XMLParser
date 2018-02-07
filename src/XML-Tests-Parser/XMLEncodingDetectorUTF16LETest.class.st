@@ -10,17 +10,17 @@ XMLEncodingDetectorUTF16LETest class >> isAbstract [
 ]
 
 { #category : #accessing }
-XMLEncodingDetectorUTF16LETest >> explicitStreamConverterClass [
-	^ XMLUTF16LittleEndianStreamConverter
+XMLEncodingDetectorUTF16LETest >> binaryImplicitEncodedCollections [
+	^ #(
+		#(16r01 16r00)
+		#(16r0F 16r00)
+		#(16r7F 16r00)
+	) collect: [:each | each asByteArray]
 ]
 
 { #category : #accessing }
-XMLEncodingDetectorUTF16LETest >> implicitEncodedStrings [
-	^ self stringsFromAll:
-		#(
-			#(16r01 16r00)
-			#(16r0F 16r00)
-			#(16r7F 16r00))
+XMLEncodingDetectorUTF16LETest >> explicitStreamConverterClass [
+	^ XMLUTF16LittleEndianStreamConverter
 ]
 
 { #category : #accessing }

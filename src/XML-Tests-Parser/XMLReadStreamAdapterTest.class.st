@@ -15,8 +15,8 @@ XMLReadStreamAdapterTest >> binaryInputCollection [
 ]
 
 { #category : #accessing }
-XMLReadStreamAdapterTest >> binaryReadStreamAdapterClass [
-	^ self streamAdapterClass
+XMLReadStreamAdapterTest >> emptyOutputCollection [
+	^ self outputCollection copyEmpty
 ]
 
 { #category : #accessing }
@@ -24,14 +24,9 @@ XMLReadStreamAdapterTest >> inputCollection [
 	^ 'test'
 ]
 
-{ #category : #testing }
-XMLReadStreamAdapterTest >> isBinary [
-	^ false
-]
-
 { #category : #accessing }
 XMLReadStreamAdapterTest >> outputCollection [
-	^ self inputCollection
+	^ 'test'
 ]
 
 { #category : #accessing }
@@ -46,9 +41,7 @@ XMLReadStreamAdapterTest >> streamClass [
 
 { #category : #accessing }
 XMLReadStreamAdapterTest >> streamCollection [
-	^ self isBinary
-		ifTrue: [self binaryInputCollection]
-		ifFalse: [self inputCollection]
+	^ self inputCollection
 ]
 
 { #category : #tests }
@@ -101,17 +94,6 @@ XMLReadStreamAdapterTest >> testNext [
 ]
 
 { #category : #tests }
-XMLReadStreamAdapterTest >> testOn [
-	| stream adapter |
-
-	stream := self newStream.
-	adapter := self newStreamAdapterOn: stream.
-	self isBinary
-		ifTrue: [self assert: adapter class == self binaryReadStreamAdapterClass]
-		ifFalse: [self assert: adapter class == self streamAdapterClass].
-]
-
-{ #category : #tests }
 XMLReadStreamAdapterTest >> testOnIfBinary [
 	| stream adapter |
 
@@ -123,7 +105,7 @@ XMLReadStreamAdapterTest >> testOnIfBinary [
 
 	stream := self newStreamOn: #(1).
 	adapter := self streamAdapterClass onIfBinary: stream.
-	self assert: adapter class == self binaryReadStreamAdapterClass.
+	self assert: adapter class == self streamAdapterClass.
 
 	stream next.
 	self assert: (self streamAdapterClass onIfBinary: stream) isNil.
@@ -257,10 +239,10 @@ XMLReadStreamAdapterTest >> testUpToEnd [
 		adapter skip: i.
 		self
 			assert: adapter upToEnd = (self outputCollection allButFirst: i);
-			assert: adapter upToEnd = ''].
+			assert: adapter upToEnd = self emptyOutputCollection].
 
 	adapter := self newStreamAdapter.
 	self
 		assert: adapter upToEnd = self outputCollection;
-		assert: adapter upToEnd = ''.
+		assert: adapter upToEnd = self emptyOutputCollection.
 ]

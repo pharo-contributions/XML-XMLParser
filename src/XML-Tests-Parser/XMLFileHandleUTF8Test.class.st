@@ -11,7 +11,7 @@ XMLFileHandleUTF8Test >> decodedFileContents [
 
 { #category : #accessing }
 XMLFileHandleUTF8Test >> encodedFileContents [
-	^ XMLStreamAdapterTest encodedUTF8String
+	^ XMLStreamAdapterTest encodedUTF8Binary
 ]
 
 { #category : #accessing }

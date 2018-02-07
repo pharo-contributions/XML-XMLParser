@@ -11,7 +11,7 @@ XMLFileHandleUTF32LETest >> decodedFileContents [
 
 { #category : #accessing }
 XMLFileHandleUTF32LETest >> encodedFileContents [
-	^ XMLStreamAdapterTest encodedUTF32LEString
+	^ XMLStreamAdapterTest encodedUTF32LEBinary
 ]
 
 { #category : #accessing }

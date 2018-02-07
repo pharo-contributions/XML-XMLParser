@@ -56,7 +56,7 @@ XMLConfigurationTest >> testCopy [
 		assert: copy isValidating = configuration isValidating;
 		assert: copy usesNamespaces = configuration usesNamespaces;
 		assert: copy decodesCharacters = configuration decodesCharacters;
-		assert: copy requiresDocumentConstraints = configuration requiresDocumentConstraints;
+		assert: copy requiresSchema = configuration requiresSchema;
 		assert: copy parserHandlerClass == configuration parserHandlerClass.
 
 	self
@@ -218,22 +218,22 @@ XMLConfigurationTest >> testReplacesContentEntityReferences [
 ]
 
 { #category : #tests }
-XMLConfigurationTest >> testRequiresDocumentConstraints [
+XMLConfigurationTest >> testRequiresSchema [
 	| configuration |
 
 	(configuration := self newConfiguration) isValidating: false.
-	self deny: configuration requiresDocumentConstraints.
+	self deny: configuration requiresSchema.
 
 	"enabling should force validation"
 	self
-		assert: (configuration requiresDocumentConstraints: true) == configuration;
-		assert: configuration requiresDocumentConstraints;
+		assert: (configuration requiresSchema: true) == configuration;
+		assert: configuration requiresSchema;
 		assert: configuration isValidating.
 
 	self
 		assert: (configuration isValidating: false) == configuration;
 		deny: configuration isValidating;
-		deny: configuration requiresDocumentConstraints.
+		deny: configuration requiresSchema.
 ]
 
 { #category : #tests }

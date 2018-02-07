@@ -4,11 +4,6 @@ Class {
 	#category : #'XML-Tests-Parser-Streams'
 }
 
-{ #category : #accessing }
-XMLDecodingReadStreamAdapterUTF16LEBOMTest >> invalidStreamCollections [
-	^ self invalidEncodedInputCollectionsWithBOM
-]
-
 { #category : #testing }
 XMLDecodingReadStreamAdapterUTF16LEBOMTest >> isDetecting [
 	^ true

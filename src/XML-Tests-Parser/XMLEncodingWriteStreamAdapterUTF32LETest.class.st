@@ -4,9 +4,9 @@ Class {
 	#category : #'XML-Tests-Parser-Streams'
 }
 
-{ #category : #converting }
-XMLEncodingWriteStreamAdapterUTF32LETest >> contentsFromCharacter: aCharacter [
-	^ self class asciiToUTF32LE: aCharacter asString
+{ #category : #accessing }
+XMLEncodingWriteStreamAdapterUTF32LETest >> binaryOutputCollection [
+	^ self encodedUTF32LEBinary
 ]
 
 { #category : #accessing }
@@ -15,16 +15,11 @@ XMLEncodingWriteStreamAdapterUTF32LETest >> inputCollection [
 ]
 
 { #category : #accessing }
-XMLEncodingWriteStreamAdapterUTF32LETest >> invalidStreamCollections [
-	^ self invalidInputCollections
-]
-
-{ #category : #accessing }
-XMLEncodingWriteStreamAdapterUTF32LETest >> outputCollection [
-	^ self encodedUTF32LEString
-]
-
-{ #category : #accessing }
 XMLEncodingWriteStreamAdapterUTF32LETest >> streamConverterClass [
 	^ XMLUTF32LittleEndianStreamConverter
+]
+
+{ #category : #accessing }
+XMLEncodingWriteStreamAdapterUTF32LETest >> stringInvalidInputCollections [
+	^ self stringInvalidUTFInputCollections
 ]

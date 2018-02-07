@@ -6,22 +6,30 @@ Class {
 
 { #category : #converting }
 XMLEncodingTest >> asciiToUTF16BE: anASCIIString [
-	^ XMLStreamAdapterTest asciiToUTF16BE: anASCIIString
+	^ self
+		encodeString: anASCIIString
+		with: XMLUTF16BigEndianStreamConverter new
 ]
 
 { #category : #converting }
 XMLEncodingTest >> asciiToUTF16LE: anASCIIString [
-	^ XMLStreamAdapterTest asciiToUTF16LE: anASCIIString
+	^ self
+		encodeString: anASCIIString
+		with: XMLUTF16LittleEndianStreamConverter new
 ]
 
 { #category : #converting }
 XMLEncodingTest >> asciiToUTF32BE: anASCIIString [
-	^ XMLStreamAdapterTest asciiToUTF32BE: anASCIIString
+	^ self
+		encodeString: anASCIIString
+		with: XMLUTF32BigEndianStreamConverter new
 ]
 
 { #category : #converting }
 XMLEncodingTest >> asciiToUTF32LE: anASCIIString [
-	^ XMLStreamAdapterTest asciiToUTF32LE: anASCIIString
+	^ self
+		encodeString: anASCIIString
+		with: XMLUTF32LittleEndianStreamConverter new
 ]
 
 { #category : #asserting }
@@ -37,6 +45,15 @@ XMLEncodingTest >> convertableStreamOn: aString [
 { #category : #asserting }
 XMLEncodingTest >> denyIsDecodedSourceXMLDocument: aDocument [
 	self deny: (self isDecodedSourceXMLDocument: aDocument)
+]
+
+{ #category : #converting }
+XMLEncodingTest >> encodeString: anASCIIString with: aStreamConverter [
+	^ (XMLEncodingWriteStreamAdapter
+		on: String new writeStream
+		streamConverter: aStreamConverter)
+			nextPutAll: anASCIIString;
+			contents
 ]
 
 { #category : #source }

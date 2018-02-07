@@ -1,5 +1,5 @@
 "
-An abstract class for TestCases with skippable tests.
+An abstract class for TestCases with skippable tests, which are usually skipped by default but can be selectively enabled.
 "
 Class {
 	#name : #XMLSkippableTest,

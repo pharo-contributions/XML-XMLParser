@@ -4,18 +4,41 @@ Class {
 	#category : #'XML-Tests-Parser-Streams'
 }
 
-{ #category : #accessing }
-XMLEncodingWriteStreamAdapterTest >> invalidInputCollections [
-	"code points greater than U+10FFFF aren't tested for because Characters on GS
-	can only contain values in the range of 0-10FFFF"
-	^ Array
-		with: (String with: 16rD800 asCharacter) "first surrogate code point"
-		with: (String with: 16rDFFF asCharacter) "last surrogate code point"
+{ #category : #converting }
+XMLEncodingWriteStreamAdapterTest >> binaryContentsFrom: aCharacter [
+	^ ByteArray streamContents: [:stream |
+		self streamConverterClass new
+			nextPut: aCharacter
+			toStream: stream]
 ]
 
 { #category : #accessing }
-XMLEncodingWriteStreamAdapterTest >> invalidStreamCollections [
-	^ #()
+XMLEncodingWriteStreamAdapterTest >> binaryOutputCollection [
+	^ self binaryFrom: 'test'
+]
+
+{ #category : #converting }
+XMLEncodingWriteStreamAdapterTest >> contentsFromByteOrderMark [
+	^ self isBinary
+		ifTrue: [self streamConverterClass byteOrderMarkBytes]
+		ifFalse: [self streamConverterClass byteOrderMark]
+]
+
+{ #category : #converting }
+XMLEncodingWriteStreamAdapterTest >> contentsFromCharacter: aCharacter [
+	^ self isBinary
+		ifTrue: [self binaryContentsFrom: aCharacter]
+		ifFalse: [self stringContentsFrom: aCharacter]
+]
+
+{ #category : #accessing }
+XMLEncodingWriteStreamAdapterTest >> invalidInputCollections [
+	^ self stringInvalidInputCollections
+]
+
+{ #category : #testing }
+XMLEncodingWriteStreamAdapterTest >> isBinary [
+	^ true
 ]
 
 { #category : #'instance creation' }
@@ -25,13 +48,61 @@ XMLEncodingWriteStreamAdapterTest >> newStreamAdapterOn: aStream [
 ]
 
 { #category : #accessing }
+XMLEncodingWriteStreamAdapterTest >> outputCollection [
+	^ self isBinary
+		ifTrue: [self binaryOutputCollection]
+		ifFalse: [self stringOutputCollection]
+]
+
+{ #category : #accessing }
 XMLEncodingWriteStreamAdapterTest >> streamAdapterClass [
 	^ XMLEncodingWriteStreamAdapter
 ]
 
 { #category : #accessing }
+XMLEncodingWriteStreamAdapterTest >> streamCollection [
+	^ self isBinary
+		ifTrue: [ByteArray new]
+		ifFalse: [String new]
+]
+
+{ #category : #accessing }
 XMLEncodingWriteStreamAdapterTest >> streamConverterClass [
 	^ XMLNullStreamConverter
+]
+
+{ #category : #converting }
+XMLEncodingWriteStreamAdapterTest >> stringContentsFrom: aCharacter [
+	^ self stringFrom: (self binaryContentsFrom: aCharacter)
+]
+
+{ #category : #accessing }
+XMLEncodingWriteStreamAdapterTest >> stringInvalidInputCollections [
+	^ #()
+]
+
+{ #category : #accessing }
+XMLEncodingWriteStreamAdapterTest >> stringInvalidLatin1InputCollections [
+	^ self stringInvalidUTFInputCollections,
+		(Array
+			with: (String with: 16r000100 asCharacter)
+			with: (String with: 16r001000 asCharacter)
+			with: (String with: 16r010000 asCharacter)
+			with: (String with: 16r100000 asCharacter))
+]
+
+{ #category : #accessing }
+XMLEncodingWriteStreamAdapterTest >> stringInvalidUTFInputCollections [
+	"code points greater than U+10FFFF aren't tested for because GS Characters
+	can only contain values in the range of U+0-10FFFF"
+	^ Array
+		with: (String with: 16rD800 asCharacter) "first surrogate code point"
+		with: (String with: 16rDFFF asCharacter) "last surrogate code point"
+]
+
+{ #category : #accessing }
+XMLEncodingWriteStreamAdapterTest >> stringOutputCollection [
+	^ self stringFrom: self binaryOutputCollection
 ]
 
 { #category : #tests }
@@ -53,7 +124,7 @@ XMLEncodingWriteStreamAdapterTest >> testHasNullStreamConverter [
 
 { #category : #tests }
 XMLEncodingWriteStreamAdapterTest >> testInvalidCharacters [
-	self invalidStreamCollections do: [:each | | streamAdapter |
+	self invalidInputCollections do: [:each | | streamAdapter |
 		streamAdapter := self newStreamAdapter.
 		self
 			should: [streamAdapter nextPutAll: each]
@@ -72,7 +143,21 @@ XMLEncodingWriteStreamAdapterTest >> testNextPutByteOrderMark [
 	adapter := self newStreamAdapter.
 	self
 		assert: adapter nextPutByteOrderMark == adapter;
-		assert: adapter contents = self streamConverterClass byteOrderMark.
+		assert: adapter contents = self contentsFromByteOrderMark.
+]
+
+{ #category : #tests }
+XMLEncodingWriteStreamAdapterTest >> testOn [
+	| stream adapter |
+
+	stream := self newStream.
+	adapter := self newStreamAdapterOn: stream.
+	self
+		assert: adapter class == self streamAdapterClass;
+		assert:
+			(self isBinary
+				ifTrue: [adapter stream == stream]
+				ifFalse: [adapter stream stream == stream]).
 ]
 
 { #category : #tests }

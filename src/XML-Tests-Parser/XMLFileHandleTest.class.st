@@ -31,6 +31,20 @@ XMLFileHandleTest class >> skippableTests [
 		#testWriteStream #testWriteStreamDo)
 ]
 
+{ #category : #asserting }
+XMLFileHandleTest >> assertIsDecodedFileContents: aCollection [
+	self
+		assert: aCollection isString;
+		assert: aCollection = self decodedFileContents
+]
+
+{ #category : #asserting }
+XMLFileHandleTest >> assertIsEncodedFileContentsWithBOM: aCollection [
+	^ self assert:
+		aCollection asByteArray =
+			self encodedFileContentsWithByteOrderMark asByteArray
+]
+
 { #category : #accessing }
 XMLFileHandleTest >> currentWorkingDirectoryFileHandle [
 	^ currentWorkingDirectoryFileHandle
@@ -46,12 +60,13 @@ XMLFileHandleTest >> decodedFileContents [
 
 { #category : #accessing }
 XMLFileHandleTest >> encodedFileContents [
-	^ 'test'
+	^ XMLStreamAdapterTest binaryFrom: 'test'
 ]
 
 { #category : #accessing }
 XMLFileHandleTest >> encodedFileContentsWithByteOrderMark [
-	^ self streamConverterClass byteOrderMark, self encodedFileContents
+	^ (self streamConverterClass byteOrderMarkBytes, self encodedFileContents)
+		asByteArray
 ]
 
 { #category : #accessing }
@@ -95,7 +110,7 @@ XMLFileHandleTest >> testContents [
 			raise: XMLFileException.
 
 		self tempFileManager createFileWithContentsForHandle: fileHandle.
-		self assert: fileHandle contents = self decodedFileContents].
+		self assertIsDecodedFileContents: fileHandle contents].
 ]
 
 { #category : #tests }
@@ -169,7 +184,7 @@ XMLFileHandleTest >> testGet [
 			raise: XMLFileException.
 
 		self tempFileManager createFileWithContentsForHandle: fileHandle.
-		self assert: fileHandle get = self decodedFileContents].
+		self assertIsDecodedFileContents: fileHandle get].
 ]
 
 { #category : #tests }
@@ -188,23 +203,23 @@ XMLFileHandleTest >> testGetUpToLimitDecoding [
 
 		self tempFileManager createFileWithContentsForHandle: fileHandle.
 
-		self assert:
+		self assertIsDecodedFileContents:
 			(fileHandle
 				getUpToLimit: nil
-				decoding: true) = self decodedFileContents.
-		self assert:
+				decoding: true).
+		self assertIsEncodedFileContentsWithBOM:
 			(fileHandle
 				getUpToLimit: nil
-				decoding: false) = self encodedFileContentsWithByteOrderMark.
+				decoding: false).
 
-		self assert:
+		self assertIsDecodedFileContents:
 			(fileHandle
 				getUpToLimit: self encodedFileContentsWithByteOrderMark size
-				decoding: true) = self decodedFileContents.
-		self assert:
+				decoding: true).
+		self assertIsEncodedFileContentsWithBOM:
 			(fileHandle
 				getUpToLimit: self encodedFileContentsWithByteOrderMark size
-				decoding: false) = self encodedFileContentsWithByteOrderMark.
+				decoding: false).
 
 		self
 			should: [
@@ -281,7 +296,7 @@ XMLFileHandleTest >> testRawReadStream [
 		readStream := fileHandle rawReadStream.
 		self
 			deny: readStream isXMLConvertingStreamAdapter;
-			assert: readStream upToEnd = self encodedFileContentsWithByteOrderMark.
+			assertIsEncodedFileContentsWithBOM: readStream upToEnd.
 		readStream close].
 ]
 
@@ -300,7 +315,7 @@ XMLFileHandleTest >> testRawWriteStream [
 			writeStream
 				nextPutAll: self encodedFileContentsWithByteOrderMark;
 				close.
-			self assert: fileHandle contents = self decodedFileContents]].
+			self assertIsDecodedFileContents: fileHandle contents]].
 ]
 
 { #category : #tests }
@@ -318,7 +333,7 @@ XMLFileHandleTest >> testReadStream [
 		readStream := fileHandle readStream.
 		self
 			assert: readStream isXMLConvertingStreamAdapter;
-			assert: readStream upToEnd = self decodedFileContents.
+			assertIsDecodedFileContents: readStream upToEnd.
 		readStream close].
 ]
 
@@ -338,7 +353,7 @@ XMLFileHandleTest >> testReadStreamDo [
 			self assert: readStream isXMLConvertingStreamAdapter.
 			"saved to a temp to ensure the block was evaluated"
 			contents := readStream upToEnd].
-		self assert: contents = self decodedFileContents].
+		self assertIsDecodedFileContents: contents].
 ]
 
 { #category : #tests }
@@ -373,7 +388,7 @@ XMLFileHandleTest >> testStreamGet [
 		readStream := fileHandle streamGet.
 		self
 			assert: readStream isXMLConvertingStreamAdapter;
-			assert: readStream upToEnd = self decodedFileContents.
+			assertIsDecodedFileContents: readStream upToEnd.
 		readStream close].
 ]
 
@@ -399,7 +414,7 @@ XMLFileHandleTest >> testStreamGetUpToLimitDecoding [
 				decoding: true.
 		self
 			assert: readStream isXMLConvertingStreamAdapter;
-			assert: readStream upToEnd = self decodedFileContents.
+			assertIsDecodedFileContents: readStream upToEnd.
 		readStream close.
 		readStream :=
 			fileHandle
@@ -407,7 +422,7 @@ XMLFileHandleTest >> testStreamGetUpToLimitDecoding [
 				decoding: false.
 		self
 			deny: readStream isXMLConvertingStreamAdapter;
-			assert: readStream upToEnd = self encodedFileContentsWithByteOrderMark.
+			assertIsEncodedFileContentsWithBOM: readStream upToEnd.
 		readStream close.
 
 		readStream :=
@@ -416,7 +431,7 @@ XMLFileHandleTest >> testStreamGetUpToLimitDecoding [
 				decoding: true.
 		self
 			assert: readStream isXMLConvertingStreamAdapter;
-			assert: readStream upToEnd = self decodedFileContents.
+			assertIsDecodedFileContents: readStream upToEnd.
 		readStream close.
 		readStream :=
 			fileHandle
@@ -424,7 +439,7 @@ XMLFileHandleTest >> testStreamGetUpToLimitDecoding [
 				decoding: false.
 		self
 			deny: readStream isXMLConvertingStreamAdapter;
-			assert: readStream upToEnd = self encodedFileContentsWithByteOrderMark.
+			assertIsEncodedFileContentsWithBOM: readStream upToEnd.
 		readStream close.
 
 		self
@@ -462,7 +477,7 @@ XMLFileHandleTest >> testWriteStream [
 				nextPutByteOrderMark;
 				nextPutAll: self decodedFileContents;
 				close.
-			self assert: fileHandle contents = self decodedFileContents]].
+			self assertIsDecodedFileContents: fileHandle contents]].
 ]
 
 { #category : #tests }
@@ -483,5 +498,5 @@ XMLFileHandleTest >> testWriteStreamDo [
 					streamConverter: self streamConverterClass new;
 					nextPutByteOrderMark;
 					nextPutAll: self decodedFileContents].
-			self assert: fileHandle contents = self decodedFileContents]].
+			self assertIsDecodedFileContents: fileHandle contents]].
 ]

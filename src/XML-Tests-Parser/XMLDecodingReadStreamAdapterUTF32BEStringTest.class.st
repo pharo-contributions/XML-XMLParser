@@ -1,10 +1,10 @@
 Class {
-	#name : #XMLBinaryDecodingReadStreamAdapterUTF32BETest,
+	#name : #XMLDecodingReadStreamAdapterUTF32BEStringTest,
 	#superclass : #XMLDecodingReadStreamAdapterUTF32BETest,
 	#category : #'XML-Tests-Parser-Streams'
 }
 
 { #category : #testing }
-XMLBinaryDecodingReadStreamAdapterUTF32BETest >> isBinary [
-	^ true
+XMLDecodingReadStreamAdapterUTF32BEStringTest >> isBinary [
+	^ false
 ]
