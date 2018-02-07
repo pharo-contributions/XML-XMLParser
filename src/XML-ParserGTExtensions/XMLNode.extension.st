@@ -173,6 +173,15 @@ XMLNode >> gtInspectorTreeIn: aComposite inContext: aGTInspector [
 			children: [:each | each treeViewChildren];
 			format: [:each | each treeViewLabelText];
 			when: [self supportsTreeView];
+			act: [
+				self promptForSourceSaveFileName
+					ifNotEmpty: [:fileName |
+						self
+							printToFileNamed: fileName
+							beforeWritingDo: [:writer |
+								writer enablePrologPrettyPrinting]]]
+				icon: GLMUIThemeExtraIcons glamorousSave
+				entitled: 'Save as';
 			rootsExpanded.
 
 	self
