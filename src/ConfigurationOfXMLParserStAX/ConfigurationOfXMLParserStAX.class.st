@@ -318,6 +318,23 @@ ConfigurationOfXMLParserStAX >> baseline130: spec [
 ]
 
 { #category : #baselines }
+ConfigurationOfXMLParserStAX >> baseline132: spec [
+	<version: '1.3.2-baseline' imports: #('1.3-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.3.2' ].
+
+	spec
+		for: #gemstone
+		do: [
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline127. ].
+]
+
+{ #category : #baselines }
 ConfigurationOfXMLParserStAX >> baselineMaster13: spec [ 
 	<version: '1.3-master-baseline'>
 
@@ -398,7 +415,7 @@ ConfigurationOfXMLParserStAX >> customProjectAttributes [
 ConfigurationOfXMLParserStAX >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.3.0-baseline'.
+	spec for: #'common' version: '1.3.2-baseline'.
 ]
 
 { #category : #doits }
@@ -424,7 +441,7 @@ ConfigurationOfXMLParserStAX >> project [
 ConfigurationOfXMLParserStAX >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.3.1'.
+	spec for: #'common' version: '1.3.2'.
 ]
 
 { #category : #versions }
@@ -776,5 +793,16 @@ ConfigurationOfXMLParserStAX >> version131: spec [
                 spec blessing: #release.
 			spec package: 'XML-ParserStAX-Core' with: 'XML-ParserStAX-Core-monty.2'.
 			spec package: 'XML-ParserStAX-Tests' with: 'XML-ParserStAX-Tests-monty.1'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserStAX >> version132: spec [ 
+        <version: '1.3.2' imports: #('1.3.2-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-ParserStAX-Core' with: 'XML-ParserStAX-Core-monty.3'.
+			spec package: 'XML-ParserStAX-Tests' with: 'XML-ParserStAX-Tests-monty.2'.
                 ].
 ]
