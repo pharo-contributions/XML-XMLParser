@@ -9,7 +9,7 @@ Class {
 
 { #category : #basic }
 XMLUTF16BigEndianStreamConverter class >> basicByteOrderMarkBytes [
-	^ #(16rFE 16rFF)
+	^ #[16rFE 16rFF]
 ]
 
 { #category : #basic }
@@ -26,14 +26,17 @@ XMLUTF16BigEndianStreamConverter >> isBigEndian [
 { #category : #basic }
 XMLUTF16BigEndianStreamConverter >> nextPutTwoBytes: anInteger toStream: aStream [
 	aStream
-		basicNextPutByte: ((anInteger bitShift: -8) bitAnd: 16rFF);
-		basicNextPutByte: (anInteger bitAnd: 16rFF)
+		nextPut: ((anInteger bitShift: -8) bitAnd: 16rFF);
+		nextPut: (anInteger bitAnd: 16rFF)
 ]
 
 { #category : #basic }
 XMLUTF16BigEndianStreamConverter >> nextTwoBytesFromStream: aStream [
-	^ ((aStream basicNext
-			ifNil: [^ nil]) asciiValue bitShift: 8) +
-		(aStream basicNext
-			ifNil: [self errorBadCharacterEncoding]) asciiValue
+	| firstByte |
+
+	firstByte := aStream next asInteger bitShift: 8.
+
+	aStream atEnd
+		ifTrue: [self errorBadCharacterEncoding].
+	^ firstByte + aStream next asInteger.
 ]

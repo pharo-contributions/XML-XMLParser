@@ -692,7 +692,7 @@ SAXParserDriver >> usesNamespaces [
 
 { #category : #private }
 SAXParserDriver >> validateRootElement: anElement [
-	self saxHandler requiresDocumentConstraints
+	self saxHandler requiresSchema
 		ifTrue: [
 			(self validator hasElementValidators
 				or: [self validator hasAttributeValidators])

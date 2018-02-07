@@ -27,13 +27,6 @@ XMLReadStreamAdapter >> atEnd [
 	^ stream atEnd
 ]
 
-{ #category : #basic }
-XMLReadStreamAdapter >> basicNext [
-	stream atEnd
-		ifTrue: [^ nil]
-		ifFalse: [^ stream next]
-]
-
 { #category : #accessing }
 XMLReadStreamAdapter >> contents [
 	| oldPosition contents |

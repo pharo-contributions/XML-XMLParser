@@ -101,15 +101,6 @@ XMLHTTPWebClientResponse >> statusCode [
 ]
 
 { #category : #accessing }
-XMLHTTPWebClientResponse >> statusDescription [
-	| delimiter |
-
-	delimiter := Character space.
-	^ (self statusLine copyAfter: delimiter)
-		copyAfter: delimiter
-]
-
-{ #category : #accessing }
 XMLHTTPWebClientResponse >> statusLine [
 	^ self webClientResponse status
 ]

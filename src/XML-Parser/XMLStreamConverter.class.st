@@ -28,7 +28,7 @@ XMLStreamConverter class >> abstractClass [
 
 { #category : #basic }
 XMLStreamConverter class >> basicByteOrderMarkBytes [
-	^ #()
+	^ #[]
 ]
 
 { #category : #basic }
@@ -45,7 +45,14 @@ XMLStreamConverter class >> basicEncodingNames [
 { #category : #accessing }
 XMLStreamConverter class >> byteOrderMark [
 	"avoid #asString and #newFrom: for GS portability"
-	^ String withAll: (self basicByteOrderMarkBytes collect: [:each | each asCharacter])
+	^ String streamContents: [:stream |
+		self byteOrderMarkBytes do: [:each |
+			stream nextPut: each asCharacter]]
+]
+
+{ #category : #accessing }
+XMLStreamConverter class >> byteOrderMarkBytes [
+	^ self basicByteOrderMarkBytes asByteArray
 ]
 
 { #category : #testing }
@@ -198,7 +205,8 @@ XMLStreamConverter class >> preferredClasses [
 					addAll:
 						(XMLUTFStreamConverter allSubclasses reject: [:each |
 							each isAbstractClass]);
-					add: XMLByteStreamConverter;
+					add: XMLLatin1StreamConverter;
+					add: XMLASCIIStreamConverter;
 					yourself]
 ]
 
@@ -272,8 +280,8 @@ XMLStreamConverter >> nextPut: aCharacter toStream: aStream [
 
 { #category : #encoding }
 XMLStreamConverter >> nextPutByteOrderMarkToStream: aStream [
-	self class basicByteOrderMarkBytes do: [:each |
-		aStream basicNextPutByte: each]
+	self class byteOrderMarkBytes do: [:each |
+		aStream nextPut: each]
 ]
 
 { #category : #printing }

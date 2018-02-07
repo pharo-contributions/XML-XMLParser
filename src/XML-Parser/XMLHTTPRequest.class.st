@@ -37,6 +37,18 @@ XMLHTTPRequest class >> url: aURLString [
 	^ self implementationNew setURL: aURLString
 ]
 
+{ #category : #accessing }
+XMLHTTPRequest >> acceptEncoding [
+	^ self encodingNamesFromHeaderValuesAt: 'Accept-Encoding'
+]
+
+{ #category : #accessing }
+XMLHTTPRequest >> acceptEncoding: aStringOrCollection [
+	self
+		encodingNamesFromHeaderValuesAt: 'Accept-Encoding'
+		put: aStringOrCollection
+]
+
 { #category : #converting }
 XMLHTTPRequest >> asXMLHTTPRequest [
 	^ self
@@ -54,8 +66,7 @@ XMLHTTPRequest >> basicSend [
 
 { #category : #defaults }
 XMLHTTPRequest >> defaultAcceptEncoding [
-	"we don't support compression yet"
-	^ ''
+	^ #()
 ]
 
 { #category : #defaults }

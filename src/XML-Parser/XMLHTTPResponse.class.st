@@ -133,7 +133,11 @@ XMLHTTPResponse >> statusCode: anInteger [
 
 { #category : #accessing }
 XMLHTTPResponse >> statusDescription [
-	self subclassResponsibility
+	| delimiter |
+
+	delimiter := Character space.
+	^ (self statusLine copyAfter: delimiter)
+		copyAfter: delimiter
 ]
 
 { #category : #accessing }

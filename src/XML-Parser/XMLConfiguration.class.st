@@ -8,7 +8,7 @@ Class {
 		'isValidating',
 		'usesNamespaces',
 		'decodesCharacters',
-		'requiresDocumentConstraints',
+		'requiresSchema',
 		'parserHandlerClass',
 		'parserLimits',
 		'entityConfiguration'
@@ -69,7 +69,7 @@ XMLConfiguration >> initialize [
 	isValidating := true.
 	usesNamespaces := true.
 	decodesCharacters := true.
-	requiresDocumentConstraints := false.
+	requiresSchema := false.
 	parserLimits := XMLParserLimits new.
 ]
 
@@ -82,7 +82,7 @@ XMLConfiguration >> isValidating [
 XMLConfiguration >> isValidating: aBoolean [
 	(isValidating := aBoolean)
 		ifTrue: [self preservesUndeclaredEntityReferences: false]
-		ifFalse: [self requiresDocumentConstraints: false]
+		ifFalse: [self requiresSchema: false]
 ]
 
 { #category : #accessing }
@@ -152,14 +152,25 @@ XMLConfiguration >> replacesContentEntityReferences: aBoolean [
 	self entityConfiguration replacesContentEntityReferences: aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : #deprecated }
 XMLConfiguration >> requiresDocumentConstraints [
-	^ requiresDocumentConstraints
+	^ self requiresSchema
+]
+
+{ #category : #deprecated }
+XMLConfiguration >> requiresDocumentConstraints: aBoolean [
+	"will be deprecated; use #requiresSchema: instead"
+	self requiresSchema: aBoolean
 ]
 
 { #category : #accessing }
-XMLConfiguration >> requiresDocumentConstraints: aBoolean [
-	(requiresDocumentConstraints := aBoolean)
+XMLConfiguration >> requiresSchema [
+	^ requiresSchema
+]
+
+{ #category : #accessing }
+XMLConfiguration >> requiresSchema: aBoolean [
+	(requiresSchema := aBoolean)
 		ifTrue: [self isValidating: true]
 ]
 

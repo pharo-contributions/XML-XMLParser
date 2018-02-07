@@ -72,11 +72,6 @@ XMLNestedStreamReader >> atQuote [
 		or: [peekChar == $']
 ]
 
-{ #category : #basic }
-XMLNestedStreamReader >> basicNext [
-	^ self next
-]
-
 { #category : #private }
 XMLNestedStreamReader >> closeStream: aStream [
 	"must use respondsTo: to support streams only implementing the basic protocol"

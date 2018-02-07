@@ -14,10 +14,12 @@ XMLNullStreamConverter >> isNull [
 
 { #category : #decoding }
 XMLNullStreamConverter >> nextFromStream: aStream [
-	^ aStream basicNext
+	aStream atEnd
+		ifTrue: [^ nil]
+		ifFalse: [^ aStream next asCharacter]
 ]
 
 { #category : #encoding }
 XMLNullStreamConverter >> nextPut: aCharacter toStream: aStream [
-	aStream basicNextPut: aCharacter
+	aStream nextPut: aCharacter asInteger
 ]

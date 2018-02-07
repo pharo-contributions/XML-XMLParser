@@ -173,6 +173,11 @@ String >> qualifyWithXMLPrefix: aPrefix [
 ]
 
 { #category : #'*XML-Parser' }
+String >> xmlCopyWithoutWhitespace [
+	^ self reject: [:each | each isXMLWhitespace]
+]
+
+{ #category : #'*XML-Parser' }
 String >> xmlLocalNameAfterPrefix [
 	^ self xmlLocalNameAfterPrefix: self xmlPrefixBeforeLocalName
 ]

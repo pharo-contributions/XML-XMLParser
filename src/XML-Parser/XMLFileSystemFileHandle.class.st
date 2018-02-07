@@ -12,13 +12,8 @@ Class {
 
 { #category : #basic }
 XMLFileSystemFileHandle class >> basicCurrentWorkingDirectory [
-	^ String streamContents: [:stream |
-		"the class-side workingDirectory isn't used for backwards compatibility"
-		(XMLClassFinder classNamed: #FileSystem) disk workingDirectory
-			path segments do: [:each |
-				stream
-					nextPut: $/;
-					nextPutAll: each]].
+	"avoid the class #workingDirectory message for Pharo1x compatibility"
+	^ (XMLClassFinder classNamed: #FileSystem) disk workingDirectory pathString
 ]
 
 { #category : #'instance creation' }

@@ -9,7 +9,7 @@ Class {
 
 { #category : #basic }
 XMLUTF8StreamConverter class >> basicByteOrderMarkBytes [
-	^ #(16rEF 16rBB 16rBF)
+	^ #[16rEF 16rBB 16rBF]
 ]
 
 { #category : #basic }
@@ -38,11 +38,10 @@ XMLUTF8StreamConverter >> nextFromStream: aStream [
 
 	| firstByte codePoint |
 
-	aStream basicNext
-		ifNil: [^ nil]
-		ifNotNil: [:firstChar |
-			(firstByte := firstChar asciiValue) < 16r80 "single byte character"
-				ifTrue: [^ firstChar]].
+	aStream atEnd
+		ifTrue: [^ nil].
+	(firstByte := aStream next asInteger) < 16r80 "single byte character"
+		ifTrue: [^ firstByte asCharacter].
 
 	codePoint :=
 		self
@@ -50,26 +49,25 @@ XMLUTF8StreamConverter >> nextFromStream: aStream [
 			fromStream: aStream.
 	[codePoint == 16rFEFF] "the BOM code point"
 		whileTrue: [
-			aStream basicNext
-				ifNil: [^ nil]
-				ifNotNil: [:firstChar |
-					(firstByte := firstChar asciiValue) < 16r80 "single byte character"
-						ifTrue: [^ firstChar]].
+			aStream atEnd
+				ifTrue: [^ nil].
+			(firstByte := aStream next asInteger) < 16r80 "single byte character"
+				ifTrue: [^ firstByte asCharacter].
 			codePoint :=
 				self
 					nextMultiByteCodePointStartingWith: firstByte
 					fromStream: aStream].
 
-	^ Character value: codePoint.
+	^ codePoint asCharacter.
 ]
 
 { #category : #basic }
 XMLUTF8StreamConverter >> nextMultiByteCodePointStartingWith: aFirstByte fromStream: aStream [
 	| secondByte thirdByte codePoint |
 
-	secondByte :=
-		(aStream basicNext
-			ifNil: [self errorBadCharacterEncoding]) asciiValue.
+	aStream atEnd
+		ifTrue: [self errorBadCharacterEncoding].
+	secondByte := aStream next asInteger.
 	(secondByte bitAnd: 16rC0) == 16r80
 		ifFalse: [self errorBadCharacterEncoding].
 	(aFirstByte bitAnd: 16rE0) == 16rC0 "two bytes"
@@ -81,9 +79,9 @@ XMLUTF8StreamConverter >> nextMultiByteCodePointStartingWith: aFirstByte fromStr
 				ifFalse: [self errorOverlongCodePoint: codePoint].
 			^ codePoint].
 
-	thirdByte :=
-		(aStream basicNext
-			ifNil: [self errorBadCharacterEncoding]) asciiValue.
+	aStream atEnd
+		ifTrue: [self errorBadCharacterEncoding].
+	thirdByte := aStream next asInteger.
 	(thirdByte bitAnd: 16rC0) == 16r80
 		ifFalse: [self errorBadCharacterEncoding].
 	(aFirstByte bitAnd: 16rF0) == 16rE0 "three bytes"
@@ -104,9 +102,9 @@ XMLUTF8StreamConverter >> nextMultiByteCodePointStartingWith: aFirstByte fromStr
 
 	(aFirstByte bitAnd: 16rF8) == 16rF0
 		ifTrue: [| fourthByte |
-			fourthByte :=
-				(aStream basicNext
-					ifNil: [self errorBadCharacterEncoding]) asciiValue.
+			aStream atEnd
+				ifTrue: [self errorBadCharacterEncoding].
+			fourthByte := aStream next asInteger.
 			(fourthByte bitAnd: 16rC0) == 16r80
 				ifFalse: [self errorBadCharacterEncoding].
 			codePoint :=
@@ -128,16 +126,16 @@ XMLUTF8StreamConverter >> nextMultiByteCodePointStartingWith: aFirstByte fromStr
 XMLUTF8StreamConverter >> nextPut: aCharacter toStream: aStream [
 	| codePoint |
 
-	(codePoint := aCharacter asciiValue) < 16r80
+	(codePoint := aCharacter asInteger) < 16r80
 		ifTrue: [
-			aStream basicNextPut: aCharacter.
+			aStream nextPut: codePoint.
 			^ self].
 
 	codePoint < 16r800
 		ifTrue: [
 			aStream
-				basicNextPutByte: 16rC0 + (codePoint bitShift: -6);
-				basicNextPutByte: 16r80 + (codePoint bitAnd: 16r003F).
+				nextPut: 16rC0 + (codePoint bitShift: -6);
+				nextPut: 16r80 + (codePoint bitAnd: 16r003F).
 			^ self].
 
 	codePoint < 16r10000
@@ -147,18 +145,18 @@ XMLUTF8StreamConverter >> nextPut: aCharacter toStream: aStream [
 				and: [codePoint <= 16rDFFF])
 				ifTrue: [self errorBadCharacterValue: codePoint].
 			aStream
-				basicNextPutByte: 16rE0 + (codePoint bitShift: -12);
-				basicNextPutByte: 16r80 + ((codePoint bitShift: -6) bitAnd: 16r3F);
-				basicNextPutByte: 16r80 + (codePoint bitAnd: 16r3F).
+				nextPut: 16rE0 + (codePoint bitShift: -12);
+				nextPut: 16r80 + ((codePoint bitShift: -6) bitAnd: 16r3F);
+				nextPut: 16r80 + (codePoint bitAnd: 16r3F).
 			^ self].
 
 	codePoint <= 16r10FFFF  "max code point"
 		ifTrue: [
 			aStream
-				basicNextPutByte: 16rF0 + (codePoint bitShift: -18);
-				basicNextPutByte: 16r80 + ((codePoint bitShift: -12) bitAnd: 16r3F);
-				basicNextPutByte: 16r80 + ((codePoint bitShift: -6) bitAnd: 16r3F);
-				basicNextPutByte: 16r80 + (codePoint bitAnd: 16r3F).
+				nextPut: 16rF0 + (codePoint bitShift: -18);
+				nextPut: 16r80 + ((codePoint bitShift: -12) bitAnd: 16r3F);
+				nextPut: 16r80 + ((codePoint bitShift: -6) bitAnd: 16r3F);
+				nextPut: 16r80 + (codePoint bitAnd: 16r3F).
 			^ self].
 
 	self errorBadCharacterValue: codePoint.

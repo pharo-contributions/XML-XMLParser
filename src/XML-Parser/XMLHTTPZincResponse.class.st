@@ -110,11 +110,6 @@ XMLHTTPZincResponse >> statusCode [
 ]
 
 { #category : #accessing }
-XMLHTTPZincResponse >> statusDescription [
-	^ self zincResponse statusLine reason
-]
-
-{ #category : #accessing }
 XMLHTTPZincResponse >> statusLine [
 	| statusLine |
 	

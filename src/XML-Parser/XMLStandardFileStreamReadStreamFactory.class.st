@@ -9,8 +9,10 @@ Class {
 
 { #category : #basic }
 XMLStandardFileStreamReadStreamFactory class >> basicOnPath: aPathString [
-	^ (XMLClassFinder classNamed: #StandardFileStream)
-		readOnlyFileNamed: aPathString
+	^ ((XMLClassFinder classNamed: #StandardFileStream)
+		readOnlyFileNamed: aPathString)
+			binary;
+			yourself
 ]
 
 { #category : #testing }

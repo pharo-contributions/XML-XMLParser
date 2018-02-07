@@ -27,11 +27,6 @@ XMLAbstractReadStream >> atEnd [
 	self subclassResponsibility
 ]
 
-{ #category : #basic }
-XMLAbstractReadStream >> basicNext [
-	^ self next
-]
-
 { #category : #closing }
 XMLAbstractReadStream >> close [
 ]

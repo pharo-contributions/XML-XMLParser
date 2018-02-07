@@ -9,7 +9,7 @@ Class {
 
 { #category : #basic }
 XMLUTF32BigEndianStreamConverter class >> basicByteOrderMarkBytes [
-	^ #(16r00 16r00 16rFE 16rFF)
+	^ #[16r00 16r00 16rFE 16rFF]
 ]
 
 { #category : #basic }
@@ -25,21 +25,28 @@ XMLUTF32BigEndianStreamConverter >> isBigEndian [
 
 { #category : #basic }
 XMLUTF32BigEndianStreamConverter >> nextFourBytesFromStream: aStream [
-	^ ((aStream basicNext
-			ifNil: [^ nil]) asciiValue bitShift: 24) +
-		((aStream basicNext
-			ifNil: [self errorBadCharacterEncoding]) asciiValue bitShift: 16) +
-		((aStream basicNext
-			ifNil: [self errorBadCharacterEncoding]) asciiValue bitShift: 8) +
-		(aStream basicNext
-			ifNil: [self errorBadCharacterEncoding]) asciiValue
+	| firstByte secondByte thirdByte |
+
+	firstByte := aStream next asInteger bitShift: 24.
+
+	aStream atEnd
+		ifTrue: [self errorBadCharacterEncoding].
+	secondByte := aStream next asInteger bitShift: 16.
+
+	aStream atEnd
+		ifTrue: [self errorBadCharacterEncoding].
+	thirdByte := aStream next asInteger bitShift: 8.
+
+	aStream atEnd
+		ifTrue: [self errorBadCharacterEncoding].
+	^ firstByte + secondByte + thirdByte + aStream next asInteger.
 ]
 
 { #category : #basic }
 XMLUTF32BigEndianStreamConverter >> nextPutFourBytes: anInteger toStream: aStream [
 	aStream
-		basicNextPutByte: ((anInteger bitShift: -24) bitAnd: 16rFF);
-		basicNextPutByte: ((anInteger bitShift: -16) bitAnd: 16rFF);
-		basicNextPutByte: ((anInteger bitShift: -8) bitAnd: 16rFF);
-		basicNextPutByte: (anInteger bitAnd: 16rFF)
+		nextPut: ((anInteger bitShift: -24) bitAnd: 16rFF);
+		nextPut: ((anInteger bitShift: -16) bitAnd: 16rFF);
+		nextPut: ((anInteger bitShift: -8) bitAnd: 16rFF);
+		nextPut: (anInteger bitAnd: 16rFF)
 ]

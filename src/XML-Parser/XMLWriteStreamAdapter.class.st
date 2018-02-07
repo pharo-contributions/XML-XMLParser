@@ -24,6 +24,21 @@ XMLWriteStreamAdapter class >> initialize [
 	LFCharacter := Character lf.
 ]
 
+{ #category : #testing }
+XMLWriteStreamAdapter class >> isBinary: aStream [
+	(aStream respondsTo: #isBinary)
+		ifTrue: [^ aStream isBinary].
+	"on Gs, external streams can be written to as if they're binary"
+	(aStream respondsTo: #isExternal)
+		ifTrue: [^ aStream isExternal].
+	^ false.
+]
+
+{ #category : #basic }
+XMLWriteStreamAdapter >> basicNextPut: anObject [ 
+	^ self nextPut: anObject
+]
+
 { #category : #accessing }
 XMLWriteStreamAdapter >> contents [
 	^ stream contents

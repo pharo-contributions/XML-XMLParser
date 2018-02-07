@@ -62,6 +62,19 @@ XMLStreamAdapter >> position: anInteger [
 	self subclassResponsibility
 ]
 
+{ #category : #printing }
+XMLStreamAdapter >> printOn: aStream [
+	super printOn: aStream.
+	aStream nextPut: $(.
+	self printStreamOn: aStream.
+	aStream nextPut: $).
+]
+
+{ #category : #printing }
+XMLStreamAdapter >> printStreamOn: aStream [
+	aStream print: stream
+]
+
 { #category : #positioning }
 XMLStreamAdapter >> reset [
 	self subclassResponsibility

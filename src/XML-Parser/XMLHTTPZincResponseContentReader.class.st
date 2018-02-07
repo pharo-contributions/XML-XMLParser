@@ -11,11 +11,11 @@ Class {
 XMLHTTPZincResponseContentReader >> rawReadWithLength: aContentLength upToLimit: aMaxSize [
 	^ [| entityStream |
 		entityStream := response zincResponse entity stream.
-		(entityStream respondsTo: #ascii)
-			ifTrue: [entityStream ascii].
+		(entityStream respondsTo: #binary)
+			ifTrue: [entityStream binary].
 		(ZnUtils
 			readUpToEnd: entityStream
-			limit: aMaxSize) asString]
+			limit: aMaxSize) asByteArray]
 		on: ZnEntityTooLarge
 		do: [:error | self errorContentLimitExceeded]
 ]

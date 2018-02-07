@@ -20,15 +20,15 @@ XMLHTTPMessage >> addHeader: anAssociation [
 
 { #category : #accessing }
 XMLHTTPMessage >> content [
-	"Returns the response content as a string"
+	"Returns the response content as a String or ByteArray"
 
 	"Requests with content aren't supported yet"
 	^ content ifNil: [content := '']
 ]
 
 { #category : #accessing }
-XMLHTTPMessage >> content: aString [
-	content := aString
+XMLHTTPMessage >> content: aStringOrByteArray [
+	content := aStringOrByteArray
 ]
 
 { #category : #accessing }
@@ -39,6 +39,21 @@ XMLHTTPMessage >> contentCharset [
 		or: [(charset := contentType charset) isEmpty])
 		ifTrue: [self defaultContentCharset]
 		ifFalse: [charset]
+]
+
+{ #category : #accessing }
+XMLHTTPMessage >> contentEncoding [
+	"Returns the non-identity content encoding compression schemes
+	in the order they were applied"
+
+	^ self encodingNamesFromHeaderValuesAt: 'Content-Encoding'
+]
+
+{ #category : #accessing }
+XMLHTTPMessage >> contentEncoding: aStringOrCollection [
+	self
+		encodingNamesFromHeaderValuesAt: 'Content-Encoding'
+		put: aStringOrCollection
 ]
 
 { #category : #accessing }
@@ -90,6 +105,49 @@ XMLHTTPMessage >> contentType: aMIMETypeOrString [
 { #category : #defaults }
 XMLHTTPMessage >> defaultContentCharset [
 	^ XMLHTTPMIMEType defaultCharset
+]
+
+{ #category : #private }
+XMLHTTPMessage >> encodingNamesFromHeaderValuesAt: aKey [
+	"Returns the non-identity encoding compression schemes
+	in the order they were applied from the value(s) of the
+	specified header"
+
+	| encodingNames |
+
+	encodingNames := OrderedCollection new.
+	self
+		headerValuesAt: aKey
+		do: [:headerValue |
+			$,
+				xmlSplit: headerValue
+				do: [:headerValueField | | encodingName |
+					encodingName :=
+						headerValueField xmlCopyWithoutWhitespace asLowercase.
+					(encodingName isEmpty
+						or: [encodingName = 'identity'])
+						ifFalse: [encodingNames addLast: encodingName]]].
+	^ encodingNames.
+]
+
+{ #category : #private }
+XMLHTTPMessage >> encodingNamesFromHeaderValuesAt: aKey put: aStringOrCollection [
+	aStringOrCollection isEmpty
+		ifTrue: [
+			self
+				removeHeaderAt: aKey
+				ifAbsent: []]
+		ifFalse: [
+			self
+				headerAt: aKey
+				put:
+					(aStringOrCollection isString
+						ifTrue: [aStringOrCollection]
+						ifFalse: [
+							String streamContents: [:stream |
+								aStringOrCollection
+									do: [:each | stream nextPutAll: each]
+									separatedBy: [stream nextPutAll: ', ']]])]
 ]
 
 { #category : #private }

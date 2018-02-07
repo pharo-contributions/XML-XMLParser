@@ -21,12 +21,12 @@ XMLUTF32StreamConverter >> isBigEndian [
 XMLUTF32StreamConverter >> nextCodePointFromStream: aStream [
 	| codePoint |
 
-	(codePoint := self nextFourBytesFromStream: aStream)
-		ifNil: [^ nil].
+	aStream atEnd
+		ifTrue: [^ nil].
 
 	"check for the reserved surrogate pair code points and code points
 	greater than the max code point"
-	codePoint >= 16rD800
+	(codePoint := self nextFourBytesFromStream: aStream) >= 16rD800
 		ifTrue: [
 			(codePoint <= 16rDFFF
 				or: [codePoint > 16r10FFFF])
@@ -44,7 +44,7 @@ XMLUTF32StreamConverter >> nextFourBytesFromStream: aStream [
 XMLUTF32StreamConverter >> nextPut: aCharacter toStream: aStream [
 	| codePoint |
 
-	codePoint := aCharacter asciiValue.
+	codePoint := aCharacter asInteger.
 	"check for the reserved surrogate pair code points and code points
 	greater than the max code point"
 	(codePoint >= 16rD800

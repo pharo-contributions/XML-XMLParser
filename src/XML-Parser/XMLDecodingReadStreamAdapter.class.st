@@ -14,11 +14,6 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
-{ #category : #defaults }
-XMLDecodingReadStreamAdapter class >> binaryReadStreamAdapterClass [
-	^ XMLBinaryDecodingReadStreamAdapter
-]
-
 { #category : #'instance creation' }
 XMLDecodingReadStreamAdapter class >> nonDecodingOn: aStream [
 	^ self
@@ -45,15 +40,8 @@ XMLDecodingReadStreamAdapter class >> on: aStream [
 
 { #category : #'instance creation' }
 XMLDecodingReadStreamAdapter class >> on: aStream streamConverter: aStreamConverter [
-	| binaryReadStreamAdapterClass |
-
-	binaryReadStreamAdapterClass := self binaryReadStreamAdapterClass.
-	^ (((aStream class == binaryReadStreamAdapterClass
-		or: [self isBinary: aStream])
-		ifTrue: [binaryReadStreamAdapterClass]
-		ifFalse: [self])
-			basicOn: aStream)
-				streamConverter: aStreamConverter.
+	^ (self basicOn: aStream)
+		streamConverter: aStreamConverter
 ]
 
 { #category : #testing }
@@ -100,7 +88,7 @@ XMLDecodingReadStreamAdapter >> isXMLConvertingStreamAdapter [
 { #category : #accessing }
 XMLDecodingReadStreamAdapter >> next [
 	peekChar
-		ifNil: [^ streamConverter nextFromStream: self]
+		ifNil: [^ streamConverter nextFromStream: stream]
 		ifNotNil: [:nextChar |
 			prePeekStreamPosition := nil.
 			peekChar := nil.
@@ -112,7 +100,7 @@ XMLDecodingReadStreamAdapter >> peek [
 	^ peekChar
 		ifNil: [
 			prePeekStreamPosition := stream position.
-			peekChar := streamConverter nextFromStream: self]
+			peekChar := streamConverter nextFromStream: stream]
 ]
 
 { #category : #positioning }
@@ -134,6 +122,14 @@ XMLDecodingReadStreamAdapter >> printOn: aStream [
 		nextPut: $(;
 		print: streamConverter;
 		nextPut: $).
+]
+
+{ #category : #printing }
+XMLDecodingReadStreamAdapter >> printStreamOn: aStream [
+	super printStreamOn: aStream.
+	aStream
+		nextPutAll: ', ';
+		print: streamConverter.
 ]
 
 { #category : #positioning }

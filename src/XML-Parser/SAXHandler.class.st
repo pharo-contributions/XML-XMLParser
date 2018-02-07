@@ -65,7 +65,7 @@ SAXHandler class >> on: aStringOrStream [
 	"Returns a new parser on the string or stream argument but doesn't parse it.
 
 	Can be used to configure a parser with 'configuring' messages before
-	parsing with parseDocument."
+	parsing with #parseDocument."
 
 	^ self basicNew initialize on: aStringOrStream
 ]
@@ -76,7 +76,7 @@ SAXHandler class >> on: aStringOrStream documentURI: aURIString [
 	specified URI as the base URI of the document but doesn't parse it.
 
 	Can be used to configure a parser with 'configuring' messages before
-	parsing with parseDocument."
+	parsing with #parseDocument."
 
 	^ (self on: aStringOrStream) documentURI: aURIString
 ]
@@ -88,7 +88,7 @@ SAXHandler class >> onFileNamed: aFileName [
 	the current working directory.
 
 	Can be used to configure file parsers with 'configuring' messages before
-	parsing with parseDocument."
+	parsing with #parseDocument."
 
 	^ self
 		on:
@@ -106,7 +106,7 @@ SAXHandler class >> onURL: aURLString [
 	parse it. If the URL has no scheme, it will be treated as a file path.
 
 	Can be used to configure URL parsers with 'configuring' messages before
-	parsing with parseDocument."
+	parsing with #parseDocument."
 
 	^ self
 		onURL: aURLString
@@ -120,7 +120,7 @@ SAXHandler class >> onURL: aURLString upToLimit: aMaxSize [
 	no scheme, it will be treated as a file path.
 
 	Can be used to configure limited URL parsers with 'configuring' messages
-	before parsing with parseDocument."
+	before parsing with #parseDocument."
 
 	^ (self
 		on:
@@ -660,18 +660,32 @@ SAXHandler >> replacesContentEntityReferences: aBoolean [
 	self configuration replacesContentEntityReferences: aBoolean
 ]
 
-{ #category : #configuring }
+{ #category : #deprecated }
 SAXHandler >> requiresDocumentConstraints [
-	^ self configuration requiresDocumentConstraints
+	"will be deprecated; use #requiresSchema instead"
+	^ self requiresSchema
+]
+
+{ #category : #deprecated }
+SAXHandler >> requiresDocumentConstraints: aBoolean [
+	"will be deprecated; use #requiresSchema: instead"
+	self requiresSchema: aBoolean
 ]
 
 { #category : #configuring }
-SAXHandler >> requiresDocumentConstraints: aBoolean [
-	"If true, constraints on elements and attributes (in a DTD)
-	will be required (not default).
-	Enables validation."
+SAXHandler >> requiresSchema [
+	^ self configuration requiresSchema
+]
 
-	self configuration requiresDocumentConstraints: aBoolean
+{ #category : #configuring }
+SAXHandler >> requiresSchema: aBoolean [
+	"If true, a schema containing constraints on elements and attributes
+	(like a DTD with ELEMENT and ATTLIST declarations) will be required.
+	Enables validation.
+
+	(Not default)."
+
+	self configuration requiresSchema: aBoolean
 ]
 
 { #category : #configuring }

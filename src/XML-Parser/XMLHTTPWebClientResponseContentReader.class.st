@@ -7,13 +7,18 @@ Class {
 	#category : #'XML-Parser-HTTP'
 }
 
+{ #category : #testing }
+XMLHTTPWebClientResponseContentReader >> handlesDecompression [
+	^ true
+]
+
 { #category : #reading }
 XMLHTTPWebClientResponseContentReader >> rawReadWithLength: aContentLength upToLimit: aMaxSize [
 	| socketStream rawContentWriteStream |
 
-	(socketStream := response webClientResponse stream) ascii.
+	(socketStream := response webClientResponse stream) binary.
 	rawContentWriteStream :=
-		(String new:
+		(ByteArray new:
 			(aContentLength
 				ifNil: [aMaxSize
 					ifNil: [1024]])) writeStream.

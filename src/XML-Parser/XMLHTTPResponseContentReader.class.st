@@ -10,7 +10,8 @@ Class {
 		'response',
 		'rawContent',
 		'contentReadStream',
-		'limitedContentReadStream'
+		'limitedContentReadStream',
+		'isDecompressing'
 	],
 	#category : #'XML-Parser-HTTP'
 }
@@ -71,6 +72,23 @@ XMLHTTPResponseContentReader >> errorUnrecognizedContentTypeCharset: aCharset [
 		with: aCharset
 ]
 
+{ #category : #testing }
+XMLHTTPResponseContentReader >> handlesDecompression [
+	^ false
+]
+
+{ #category : #initialization }
+XMLHTTPResponseContentReader >> initializeDecompressionWithSchemes: aCompressionSchemeSequence upToLimit: aMaxSize [
+	isDecompressing := true.
+	aCompressionSchemeSequence reverseDo: [:each |
+		contentReadStream :=
+			XMLHTTPDecompressingReadStreamAdapterFactory
+				on: contentReadStream
+				compression: each].
+	aMaxSize
+		ifNotNil: [self limitContentReadStreamUpToLimit: aMaxSize].
+]
+
 { #category : #accessing }
 XMLHTTPResponseContentReader >> limitContentReadStreamUpToLimit: aMaxSize [
 	limitedContentReadStream :=
@@ -92,7 +110,7 @@ XMLHTTPResponseContentReader >> rawReadWithLength: aContentLength upToLimit: aMa
 
 { #category : #reading }
 XMLHTTPResponseContentReader >> readUpToLimit: aMaxSize decoding: aBoolean [
-	| contentLength contentType charset content |
+	| contentLength contentType compressionSchemes charset content |
 
 	contentLength := response contentLength.
 	(response isChunked
@@ -110,6 +128,13 @@ XMLHTTPResponseContentReader >> readUpToLimit: aMaxSize decoding: aBoolean [
 			upToLimit: aMaxSize.
 	contentReadStream := rawContent readStream.
 
+	(self handlesDecompression
+		and: [(compressionSchemes := response contentEncoding) notEmpty])
+		ifTrue: [
+			self
+				initializeDecompressionWithSchemes: compressionSchemes
+				upToLimit: aMaxSize].
+
 	(aBoolean
 		and: [(contentType := response contentType) notNil
 			and: [(charset := contentType charset) ~= contentType defaultCharset]])
@@ -124,12 +149,14 @@ XMLHTTPResponseContentReader >> readUpToLimit: aMaxSize decoding: aBoolean [
 
 { #category : #initialization }
 XMLHTTPResponseContentReader >> setResponse: aResponse [
-	response := aResponse
+	response := aResponse.
+	isDecompressing := false.
 ]
 
-{ #category : #private }
+{ #category : #streaming }
 XMLHTTPResponseContentReader >> undecodedContentReadStreamUpToEnd [
-	^ limitedContentReadStream
-		ifNil: [rawContent]
-		ifNotNil: [self contentReadStreamUpToEnd]
+	^ (isDecompressing
+		or: [limitedContentReadStream notNil])
+		ifTrue: [self contentReadStreamUpToEnd]
+		ifFalse: [rawContent]
 ]
