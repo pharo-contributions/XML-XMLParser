@@ -173,6 +173,11 @@ CharacterCollection >> qualifyWithXMLPrefix: aPrefix [
 ]
 
 { #category : #'*XML-ParserGemstoneCompatibility' }
+CharacterCollection >> xmlCopyWithoutWhitespace [
+	^ self reject: [:each | each isXMLWhitespace]
+]
+
+{ #category : #'*XML-ParserGemstoneCompatibility' }
 CharacterCollection >> xmlLocalNameAfterPrefix [
 	^ self xmlLocalNameAfterPrefix: self xmlPrefixBeforeLocalName
 ]
