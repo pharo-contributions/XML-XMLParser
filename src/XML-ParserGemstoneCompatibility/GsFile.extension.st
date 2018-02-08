@@ -7,6 +7,11 @@ GsFile >> isStream [
 ]
 
 { #category : #'*XML-ParserGemstoneCompatibility' }
+GsFile >> isXMLBinaryOrExternalStream [
+	^ self isExternal
+]
+
+{ #category : #'*XML-ParserGemstoneCompatibility' }
 GsFile >> upToEnd [
 	"needed for compatibility with XMLReadStreamAdapter
 	(GsFile>>#contents works like #upToEnd, so this is OK)"
