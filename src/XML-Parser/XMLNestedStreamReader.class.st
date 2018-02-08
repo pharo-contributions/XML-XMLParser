@@ -203,6 +203,11 @@ XMLNestedStreamReader >> isStream [
 	^ true
 ]
 
+{ #category : #testing }
+XMLNestedStreamReader >> isXMLBinaryOrExternalStream [
+	^ self isBinary
+]
+
 { #category : #private }
 XMLNestedStreamReader >> maxNestedStreams [
 	^ 32
@@ -328,14 +333,14 @@ XMLNestedStreamReader >> peekFor: aCharacter [
 
 { #category : #private }
 XMLNestedStreamReader >> popCurrentStream [
-	| previousWhenPoppedDo |
+	| callbackOfPoppedStream |
 
 	"close the stream first and pop it before evaluating the callback so any
 	exception it raises won't cause us to leak file streams or double close a
 	stream when XMLParser>>#handleParserError: sends #closeStreams"
 	self closeStream: stream.
-	previousWhenPoppedDo := whenPoppedDo.
-	nestedStreams size > 0 "optimization"
+	callbackOfPoppedStream := whenPoppedDo.
+	nestedStreams size > 0
 		ifTrue: [| pushedBackStream |
 			pushedBackStream := nestedStreams removeLast.
 			stream := pushedBackStream stream.
@@ -347,8 +352,8 @@ XMLNestedStreamReader >> popCurrentStream [
 		ifFalse: [self setStreamToNull].
 
 	"now it's safe to evaluate the callback"
-	previousWhenPoppedDo
-		ifNotNil: [previousWhenPoppedDo value].
+	callbackOfPoppedStream
+		ifNotNil: [callbackOfPoppedStream value].
 ]
 
 { #category : #printing }
@@ -530,7 +535,7 @@ XMLNestedStreamReader >> stream: aStream [
 		aStream isXMLConvertingStreamAdapter
 			ifTrue: [aStream]
 			ifFalse: [
-				(XMLDecodingReadStreamAdapter nonDecodingOnIfBinary: aStream)
+				(XMLDecodingReadStreamAdapter nonDecodingOnIfBinaryOrExternal: aStream)
 					ifNil: [aStream]]
 ]
 

@@ -22,8 +22,8 @@ XMLDecodingReadStreamAdapter class >> nonDecodingOn: aStream [
 ]
 
 { #category : #'instance creation' }
-XMLDecodingReadStreamAdapter class >> nonDecodingOnIfBinary: aStream [
-	^ (self isBinary: aStream)
+XMLDecodingReadStreamAdapter class >> nonDecodingOnIfBinaryOrExternal: aStream [
+	^ aStream isXMLBinaryOrExternalStream
 		ifTrue: [
 			self
 				on: aStream

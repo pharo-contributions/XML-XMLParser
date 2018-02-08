@@ -20,7 +20,7 @@ XMLEncodingWriteStreamAdapter class >> on: aStream [
 { #category : #'instance creation' }
 XMLEncodingWriteStreamAdapter class >> on: aStream streamConverter: aStreamConverter [
 	^ (self basicOn:
-		((self isBinary: aStream)
+		(aStream isXMLBinaryOrExternalStream
 			ifTrue: [aStream]
 			ifFalse: [XMLStringWriteStreamAdapter on: aStream]))
 		streamConverter: aStreamConverter

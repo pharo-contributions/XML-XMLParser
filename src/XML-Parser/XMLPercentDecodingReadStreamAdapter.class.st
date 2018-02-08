@@ -2,19 +2,27 @@
 This class percent decodes octets for URIs.
 "
 Class {
-	#name : #XMLPercentReadStreamAdapter,
+	#name : #XMLPercentDecodingReadStreamAdapter,
 	#superclass : #XMLReadStreamAdapter,
 	#category : #'XML-Parser-Streams'
 }
 
 { #category : #testing }
-XMLPercentReadStreamAdapter >> atEnd [
+XMLPercentDecodingReadStreamAdapter >> atEnd [
 	^ stream atEnd
 		or: [stream peek ~~ $%]
 ]
 
+{ #category : #testing }
+XMLPercentDecodingReadStreamAdapter >> isBinary [
+	"this stream is binary, because it reads percent-encoded octets
+	character sequences like '%HH' and returns the octet values as
+	SmallIntegers"
+	^ true
+]
+
 { #category : #accessing }
-XMLPercentReadStreamAdapter >> next [
+XMLPercentDecodingReadStreamAdapter >> next [
 	| byte |
 
 	(stream atEnd not
@@ -31,7 +39,7 @@ XMLPercentReadStreamAdapter >> next [
 ]
 
 { #category : #accessing }
-XMLPercentReadStreamAdapter >> peek [
+XMLPercentDecodingReadStreamAdapter >> peek [
 	| byte |
 
 	stream atEnd
@@ -43,6 +51,6 @@ XMLPercentReadStreamAdapter >> peek [
 ]
 
 { #category : #defaults }
-XMLPercentReadStreamAdapter >> writeStreamCollectionClass [
+XMLPercentDecodingReadStreamAdapter >> writeStreamCollectionClass [
 	^ ByteArray
 ]

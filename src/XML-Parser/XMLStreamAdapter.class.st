@@ -47,6 +47,11 @@ XMLStreamAdapter >> isStream [
 	^ true
 ]
 
+{ #category : #testing }
+XMLStreamAdapter >> isXMLBinaryOrExternalStream [
+	^ self isBinary
+]
+
 { #category : #initialization }
 XMLStreamAdapter >> on: aStream [
 	stream := aStream

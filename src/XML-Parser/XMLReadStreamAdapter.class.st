@@ -7,17 +7,9 @@ Class {
 	#category : #'XML-Parser-Streams'
 }
 
-{ #category : #testing }
-XMLReadStreamAdapter class >> isBinary: aStream [
-	"consider any stream that returns ints to be binary, because not every
-	stream implements #isBinary and it isn't portable to GS"
-	^ aStream atEnd not
-		and: [aStream peek isInteger]
-]
-
 { #category : #'instance creation' }
-XMLReadStreamAdapter class >> onIfBinary: aStream [
-	^ (self isBinary: aStream)
+XMLReadStreamAdapter class >> onIfBinaryOrExternal: aStream [
+	^ aStream isXMLBinaryOrExternalStream
 		ifTrue: [self on: aStream]
 		ifFalse: [nil]
 ]

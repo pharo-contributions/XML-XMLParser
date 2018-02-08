@@ -681,7 +681,7 @@ XMLURI >> percentAndPlusEncode: aString [
 					ifFalse: [writeStream nextPut: nextChar]]
 			ifFalse: [
 				(XMLEncodingWriteStreamAdapter on:
-					(XMLPercentWriteStreamAdapter on: writeStream))
+					(XMLPercentEncodingWriteStreamAdapter on: writeStream))
 						nextPut: nextChar]].
 	^ writeStream contents.
 ]
@@ -712,7 +712,7 @@ XMLURI >> percentDecodeNextFrom: aReadStream on: aWriteStream [
 
 	readStreamAdapter :=
 		XMLDecodingReadStreamAdapter
-			on: (XMLPercentReadStreamAdapter on: aReadStream).
+			on: (XMLPercentDecodingReadStreamAdapter on: aReadStream).
 	[readStreamAdapter atEnd]
 		whileFalse: [aWriteStream nextPut: readStreamAdapter next].
 ]
@@ -728,7 +728,7 @@ XMLURI >> percentEncode: aString [
 			ifTrue: [writeStream nextPut: nextChar]
 			ifFalse: [
 				(XMLEncodingWriteStreamAdapter on:
-					(XMLPercentWriteStreamAdapter on: writeStream))
+					(XMLPercentEncodingWriteStreamAdapter on: writeStream))
 					nextPut: nextChar]].
 	^ writeStream contents.
 ]

@@ -2,13 +2,20 @@
 A write stream adapter for percent encoding octets for URIs.
 "
 Class {
-	#name : #XMLPercentWriteStreamAdapter,
+	#name : #XMLPercentEncodingWriteStreamAdapter,
 	#superclass : #XMLWriteStreamAdapter,
 	#category : #'XML-Parser-Streams'
 }
 
+{ #category : #testing }
+XMLPercentEncodingWriteStreamAdapter >> isBinary [
+	"this stream is binary, because it accepts binary octet values
+	and percent-encodes them as '%HH' character sequences"
+	^ true
+]
+
 { #category : #accessing }
-XMLPercentWriteStreamAdapter >> nextPut: anObject [
+XMLPercentEncodingWriteStreamAdapter >> nextPut: anObject [
 	| byte |
 
 	stream nextPut: $%.
@@ -17,7 +24,7 @@ XMLPercentWriteStreamAdapter >> nextPut: anObject [
 	(byte := anObject asInteger) < 16r10
 		ifTrue: [stream nextPut: $0].
 
-	"printOn:base: on GS shows the radix, so printOn:base:showRadix:
+	"On GS, #printOn:base: shows the radix, so #printOn:base:showRadix:
 	is used instead"
 	byte
 		printOn: stream
@@ -27,7 +34,7 @@ XMLPercentWriteStreamAdapter >> nextPut: anObject [
 ]
 
 { #category : #accessing }
-XMLPercentWriteStreamAdapter >> nextPutAll: aCollection [
+XMLPercentEncodingWriteStreamAdapter >> nextPutAll: aCollection [
 	aCollection do: [:each |
 		self nextPut: each].
 	^ aCollection.

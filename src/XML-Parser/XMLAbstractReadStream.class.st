@@ -46,6 +46,11 @@ XMLAbstractReadStream >> isStream [
 	^ true
 ]
 
+{ #category : #testing }
+XMLAbstractReadStream >> isXMLBinaryOrExternalStream [
+	^ self isBinary
+]
+
 { #category : #'instance creation' }
 XMLAbstractReadStream >> newWriteStream [
 	^ (self writeStreamCollectionClass new: 128) writeStream
