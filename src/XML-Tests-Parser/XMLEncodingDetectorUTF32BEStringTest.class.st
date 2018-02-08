@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #testing }
-XMLEncodingDetectorUTF32BEStringTest >> isBinary [
+XMLEncodingDetectorUTF32BEStringTest >> detectsBinaryInput [
 	^ false
 ]

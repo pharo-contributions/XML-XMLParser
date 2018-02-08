@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #testing }
-XMLDecodingReadStreamAdapterLatin1StringTest >> isBinary [
+XMLDecodingReadStreamAdapterLatin1StringTest >> decodesBinaryInput [
 	^ false
 ]

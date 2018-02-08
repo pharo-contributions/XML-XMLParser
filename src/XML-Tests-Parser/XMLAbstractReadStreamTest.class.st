@@ -89,6 +89,14 @@ XMLAbstractReadStreamTest >> testIsStream [
 ]
 
 { #category : #tests }
+XMLAbstractReadStreamTest >> testIsXMLBinaryOrExternalStream [
+	| stream |
+
+	stream := self newStream.
+	self assert: stream isXMLBinaryOrExternalStream = stream isBinary.
+]
+
+{ #category : #tests }
 XMLAbstractReadStreamTest >> testNew [
 	self
 		should: [self streamClass new]

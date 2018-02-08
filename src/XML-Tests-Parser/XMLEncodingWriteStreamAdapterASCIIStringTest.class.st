@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #testing }
-XMLEncodingWriteStreamAdapterASCIIStringTest >> isBinary [
+XMLEncodingWriteStreamAdapterASCIIStringTest >> encodesBinaryOutput [
 	^ false
 ]

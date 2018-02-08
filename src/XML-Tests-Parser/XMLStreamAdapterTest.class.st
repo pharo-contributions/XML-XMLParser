@@ -205,6 +205,11 @@ XMLStreamAdapterTest >> encodedUTF8Binary [
 	^ self class encodedUTF8Binary
 ]
 
+{ #category : #testing }
+XMLStreamAdapterTest >> isBinary [
+	^ false
+]
+
 { #category : #'instance creation' }
 XMLStreamAdapterTest >> newStream [
 	^ self newStreamOn: self streamCollection
@@ -254,12 +259,20 @@ XMLStreamAdapterTest >> testClose [
 
 { #category : #tests }
 XMLStreamAdapterTest >> testIsBinary [
-	self deny: self newStreamAdapter isBinary
+	self assert: self newStreamAdapter isBinary = self isBinary
 ]
 
 { #category : #tests }
 XMLStreamAdapterTest >> testIsStream [
 	self assert: self newStreamAdapter isStream
+]
+
+{ #category : #tests }
+XMLStreamAdapterTest >> testIsXMLBinaryOrExternalStream [
+	| streamAdapter |
+
+	streamAdapter := self newStreamAdapter.
+	self assert: streamAdapter isXMLBinaryOrExternalStream = streamAdapter isBinary.
 ]
 
 { #category : #tests }

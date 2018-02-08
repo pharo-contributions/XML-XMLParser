@@ -49,6 +49,12 @@ XMLExceptionRaisingReadStream >> errorClosedStreamCannotBeSent: aSelector [
 		'Cannot send ', aSelector printString, ' on this stream when closed'
 ]
 
+{ #category : #testing }
+XMLExceptionRaisingReadStream >> isBinary [
+	^ (stream respondsTo: #isBinary)
+		and: [stream isBinary]
+]
+
 { #category : #accessing }
 XMLExceptionRaisingReadStream >> next [
 	stream atEnd
@@ -93,4 +99,11 @@ XMLExceptionRaisingReadStream >> reset [
 { #category : #testing }
 XMLExceptionRaisingReadStream >> wasClosed [
 	^ wasClosed
+]
+
+{ #category : #writing }
+XMLExceptionRaisingReadStream >> writeStreamCollectionClass [
+	^ self isBinary
+		ifTrue: [ByteArray]
+		ifFalse: [String]
 ]

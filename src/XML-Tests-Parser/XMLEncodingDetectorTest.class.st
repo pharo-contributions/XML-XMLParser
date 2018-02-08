@@ -38,6 +38,11 @@ XMLEncodingDetectorTest >> byteOrderMarkBytes [
 	^ self explicitStreamConverterClass byteOrderMarkBytes
 ]
 
+{ #category : #testing }
+XMLEncodingDetectorTest >> detectsBinaryInput [
+	^ true
+]
+
 { #category : #accessing }
 XMLEncodingDetectorTest >> encodingDetectorClass [
 	^ XMLEncodingDetector
@@ -45,7 +50,7 @@ XMLEncodingDetectorTest >> encodingDetectorClass [
 
 { #category : #accessing }
 XMLEncodingDetectorTest >> explicitEncodedCollections [
-	^ self isBinary
+	^ self detectsBinaryInput
 		ifTrue: [self binaryExplicitEncodedCollections]
 		ifFalse: [self stringExplicitEncodedCollections]
 ]
@@ -62,7 +67,7 @@ XMLEncodingDetectorTest >> explicitStreamConverterClass [
 
 { #category : #accessing }
 XMLEncodingDetectorTest >> implicitEncodedCollections [
-	^ self isBinary
+	^ self detectsBinaryInput
 		ifTrue: [self binaryImplicitEncodedCollections]
 		ifFalse: [self stringImplicitEncodedCollections]
 ]
@@ -79,14 +84,9 @@ XMLEncodingDetectorTest >> implicitStreamConverterClass [
 
 { #category : #accessing }
 XMLEncodingDetectorTest >> invalidImplicitEncodedCollections [
-	^ self isBinary
+	^ self detectsBinaryInput
 		ifTrue: [self binaryInvalidImplicitEncodedCollections]
 		ifFalse: [self stringInvalidImplicitEncodedCollections]
-]
-
-{ #category : #testing }
-XMLEncodingDetectorTest >> isBinary [
-	^ true
 ]
 
 { #category : #'instance creation' }

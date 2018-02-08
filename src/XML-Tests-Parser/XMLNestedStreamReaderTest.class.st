@@ -181,6 +181,14 @@ XMLNestedStreamReaderTest >> testIsStream [
 ]
 
 { #category : #tests }
+XMLNestedStreamReaderTest >> testIsXMLBinaryOrExternalStream [
+	| streamReader |
+
+	streamReader := self newStreamReaderOnSourceXML.
+	self assert: streamReader isXMLBinaryOrExternalStream = streamReader isBinary.
+]
+
+{ #category : #tests }
 XMLNestedStreamReaderTest >> testLineEndingNormalizationAcrossStreams [
 	| streamReader |
 

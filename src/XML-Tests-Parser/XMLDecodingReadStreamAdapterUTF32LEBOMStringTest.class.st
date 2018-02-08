@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #testing }
-XMLDecodingReadStreamAdapterUTF32LEBOMStringTest >> isBinary [
+XMLDecodingReadStreamAdapterUTF32LEBOMStringTest >> decodesBinaryInput [
 	^ false
 ]

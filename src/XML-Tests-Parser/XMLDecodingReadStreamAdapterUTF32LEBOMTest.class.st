@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #testing }
-XMLDecodingReadStreamAdapterUTF32LEBOMTest >> isDetecting [
+XMLDecodingReadStreamAdapterUTF32LEBOMTest >> detectsBOMs [
 	^ true
 ]

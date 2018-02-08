@@ -121,7 +121,7 @@ XMLEncodingTest >> testDecodingBinary [
 	| source binarySource parser stream |
 
 	source := self sourceXML.
-	binarySource := source asArray collect: [:each | each asciiValue].
+	binarySource := XMLStreamAdapterTest binaryFrom: source.
 	parser := (SAXHandler on: binarySource) parser.
 	stream := parser tokenizer streamReader stream.
 	self

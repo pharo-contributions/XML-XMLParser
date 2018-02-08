@@ -19,26 +19,26 @@ XMLEncodingWriteStreamAdapterTest >> binaryOutputCollection [
 
 { #category : #converting }
 XMLEncodingWriteStreamAdapterTest >> contentsFromByteOrderMark [
-	^ self isBinary
+	^ self encodesBinaryOutput
 		ifTrue: [self streamConverterClass byteOrderMarkBytes]
 		ifFalse: [self streamConverterClass byteOrderMark]
 ]
 
 { #category : #converting }
 XMLEncodingWriteStreamAdapterTest >> contentsFromCharacter: aCharacter [
-	^ self isBinary
+	^ self encodesBinaryOutput
 		ifTrue: [self binaryContentsFrom: aCharacter]
 		ifFalse: [self stringContentsFrom: aCharacter]
+]
+
+{ #category : #testing }
+XMLEncodingWriteStreamAdapterTest >> encodesBinaryOutput [
+	^ true
 ]
 
 { #category : #accessing }
 XMLEncodingWriteStreamAdapterTest >> invalidInputCollections [
 	^ self stringInvalidInputCollections
-]
-
-{ #category : #testing }
-XMLEncodingWriteStreamAdapterTest >> isBinary [
-	^ true
 ]
 
 { #category : #'instance creation' }
@@ -49,7 +49,7 @@ XMLEncodingWriteStreamAdapterTest >> newStreamAdapterOn: aStream [
 
 { #category : #accessing }
 XMLEncodingWriteStreamAdapterTest >> outputCollection [
-	^ self isBinary
+	^ self encodesBinaryOutput
 		ifTrue: [self binaryOutputCollection]
 		ifFalse: [self stringOutputCollection]
 ]
@@ -61,7 +61,7 @@ XMLEncodingWriteStreamAdapterTest >> streamAdapterClass [
 
 { #category : #accessing }
 XMLEncodingWriteStreamAdapterTest >> streamCollection [
-	^ self isBinary
+	^ self encodesBinaryOutput
 		ifTrue: [ByteArray new]
 		ifFalse: [String new]
 ]
@@ -155,7 +155,7 @@ XMLEncodingWriteStreamAdapterTest >> testOn [
 	self
 		assert: adapter class == self streamAdapterClass;
 		assert:
-			(self isBinary
+			(self encodesBinaryOutput
 				ifTrue: [adapter stream == stream]
 				ifFalse: [adapter stream stream == stream]).
 ]
