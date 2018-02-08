@@ -153,7 +153,7 @@ XMLExternalDocumentConverter >> setStream: aStream readLimit: anInteger [
 				(aStream isXMLConvertingStreamAdapter
 					ifTrue: [aStream]
 					ifFalse: [
-						XMLDecodingReadStreamAdapter nonDecodingOnIfBinary:
+						XMLDecodingReadStreamAdapter nonDecodingOnIfBinaryOrExternal:
 							aStream])
 			readLimit: anInteger.
 
