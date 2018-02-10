@@ -49,8 +49,3 @@ XMLPercentDecodingReadStreamAdapter >> peek [
 			stream position: oldPosition].
 	^ byte.
 ]
-
-{ #category : #defaults }
-XMLPercentDecodingReadStreamAdapter >> writeStreamCollectionClass [
-	^ ByteArray
-]

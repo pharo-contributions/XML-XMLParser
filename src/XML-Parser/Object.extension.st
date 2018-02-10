@@ -7,8 +7,8 @@ Object >> isXMLBinaryOrExternalStream [
 
 	At a minimum, these streams must accept binary objects (like SmallIntegers
 	and ByteArrays) when writing. When reading, they can return byte values
-	as SmallIntegers or Characters and collections of byte  values as
-	ByteArrays or ByteStrings."
+	as SmallIntegers or Characters and collections of byte values as ByteArrays
+	or ByteStrings."
 
 	^ self isStream
 		and: [(self respondsTo: #isBinary)

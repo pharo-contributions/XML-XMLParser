@@ -161,5 +161,7 @@ XMLAbstractReadStream >> upToEnd [
 
 { #category : #writing }
 XMLAbstractReadStream >> writeStreamCollectionClass [
-	^ String
+	self isBinary
+		ifTrue: [^ ByteArray]
+		ifFalse: [^ String]
 ]

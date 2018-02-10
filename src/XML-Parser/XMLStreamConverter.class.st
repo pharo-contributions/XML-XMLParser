@@ -8,9 +8,6 @@ The class #basicEncodingNames method should return a basic list of names for the
 Class {
 	#name : #XMLStreamConverter,
 	#superclass : #Object,
-	#instVars : [
-		'encoding'
-	],
 	#classVars : [
 		'EncodingNamesAndClassesCache',
 		'PreferredClasses'
@@ -82,6 +79,11 @@ XMLStreamConverter class >> classForEncoding: anEncodingName [
 		put: (self findClassForEncoding: anEncodingName).
 ]
 
+{ #category : #convenience }
+XMLStreamConverter class >> decode: aStringOrByteArray [
+	^ self new decode: aStringOrByteArray
+]
+
 { #category : #'instance creation' }
 XMLStreamConverter class >> default [
 	^ self defaultClass new
@@ -95,6 +97,11 @@ XMLStreamConverter class >> defaultClass [
 { #category : #defaults }
 XMLStreamConverter class >> defaultEncoding [
 	^ self defaultClass primaryEncodingName
+]
+
+{ #category : #convenience }
+XMLStreamConverter class >> encode: aString [
+	^ self new encode: aString
 ]
 
 { #category : #accessing }
@@ -227,6 +234,24 @@ XMLStreamConverter class >> primaryEncodingName [
 { #category : #converting }
 XMLStreamConverter >> asXMLStreamConverter [
 	^ self
+]
+
+{ #category : #convenience }
+XMLStreamConverter >> decode: aStringOrByteArray [
+	^ (XMLDecodingReadStreamAdapter
+		on: aStringOrByteArray readStream
+		streamConverter: self)
+			contents
+]
+
+{ #category : #convenience }
+XMLStreamConverter >> encode: aString [
+	^ (XMLEncodingWriteStreamAdapter
+		on: (ByteArray new: aString size) writeStream
+		streamConverter: self)
+			nextPutByteOrderMark;
+			nextPutAll: aString;
+			contents
 ]
 
 { #category : #accessing }

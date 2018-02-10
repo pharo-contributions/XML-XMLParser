@@ -138,5 +138,7 @@ XMLReadStreamAdapter >> upToEnd [
 
 { #category : #defaults }
 XMLReadStreamAdapter >> writeStreamCollectionClass [
-	^ String
+	self isBinary
+		ifTrue: [^ ByteArray]
+		ifFalse: [^ String]
 ]
