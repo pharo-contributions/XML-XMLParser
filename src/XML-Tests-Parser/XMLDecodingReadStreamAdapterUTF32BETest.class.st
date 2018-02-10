@@ -5,12 +5,12 @@ Class {
 }
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterUTF32BETest >> binaryInputCollection [
+XMLDecodingReadStreamAdapterUTF32BETest >> basicInputCollection [
 	^ self encodedUTF32BEBinary
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterUTF32BETest >> binaryInvalidInputCollections [
+XMLDecodingReadStreamAdapterUTF32BETest >> basicInvalidInputCollections [
 	^ #(
 		#(16r00 16r00 16rD8 16r00) "first surrogate code point"
 		#(16r00 16r00 16rDB 16rFF) "last surrogate code point"
@@ -25,7 +25,7 @@ XMLDecodingReadStreamAdapterUTF32BETest >> binaryInvalidInputCollections [
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterUTF32BETest >> outputCollection [
+XMLDecodingReadStreamAdapterUTF32BETest >> basicOutputCollection [
 	^ self decodedUTF32String
 ]
 

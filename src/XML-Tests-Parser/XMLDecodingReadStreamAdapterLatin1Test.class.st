@@ -5,12 +5,12 @@ Class {
 }
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterLatin1Test >> binaryInputCollection [
+XMLDecodingReadStreamAdapterLatin1Test >> basicInputCollection [
 	^ self encodedLatin1Binary
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterLatin1Test >> outputCollection [
+XMLDecodingReadStreamAdapterLatin1Test >> basicOutputCollection [
 	^ self decodedLatin1String
 ]
 

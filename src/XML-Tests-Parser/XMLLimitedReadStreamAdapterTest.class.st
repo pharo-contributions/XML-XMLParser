@@ -5,8 +5,15 @@ Class {
 }
 
 { #category : #accessing }
-XMLLimitedReadStreamAdapterTest >> inputCollection [
-	^ super inputCollection, super inputCollection
+XMLLimitedReadStreamAdapterTest >> basicInputCollection [
+	^ super basicInputCollection, super basicInputCollection
+]
+
+{ #category : #accessing }
+XMLLimitedReadStreamAdapterTest >> basicOutputCollection [
+	^ self basicInputCollection
+		copyFrom: 1
+		to: self inputCollectionLimit
 ]
 
 { #category : #accessing }
@@ -26,13 +33,6 @@ XMLLimitedReadStreamAdapterTest >> newStreamAdapterOn: aStream limit: aLimit [
 	^ self streamAdapterClass
 		on: aStream
 		limit: aLimit
-]
-
-{ #category : #accessing }
-XMLLimitedReadStreamAdapterTest >> outputCollection [
-	^ self inputCollection
-		copyFrom: 1
-		to: self inputCollectionLimit
 ]
 
 { #category : #accessing }

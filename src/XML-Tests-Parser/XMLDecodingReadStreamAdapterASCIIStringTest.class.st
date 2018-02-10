@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #testing }
-XMLDecodingReadStreamAdapterASCIIStringTest >> decodesBinaryInput [
+XMLDecodingReadStreamAdapterASCIIStringTest >> expectsBinaryInput [
 	^ false
 ]

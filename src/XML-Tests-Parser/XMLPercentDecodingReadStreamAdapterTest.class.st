@@ -5,21 +5,21 @@ Class {
 }
 
 { #category : #accessing }
-XMLPercentDecodingReadStreamAdapterTest >> inputCollection [
+XMLPercentDecodingReadStreamAdapterTest >> basicInputCollection [
 	^ String streamContents: [:stream |
-		super inputCollection do: [:each |
+		super basicInputCollection do: [:each |
 			stream nextPutAll:
 				(self class percentEncodeCharacter: each)]]
 ]
 
-{ #category : #testing }
-XMLPercentDecodingReadStreamAdapterTest >> isBinary [
-	^ true
+{ #category : #accessing }
+XMLPercentDecodingReadStreamAdapterTest >> basicOutputCollection [
+	^ 'test'
 ]
 
-{ #category : #accessing }
-XMLPercentDecodingReadStreamAdapterTest >> outputCollection [
-	^ 'test' asByteArray
+{ #category : #testing }
+XMLPercentDecodingReadStreamAdapterTest >> expectsBinaryOutput [
+	^ true
 ]
 
 { #category : #accessing }

@@ -4,41 +4,53 @@ Class {
 	#category : #'XML-Tests-Parser-Streams'
 }
 
-{ #category : #converting }
-XMLEncodingWriteStreamAdapterTest >> binaryContentsFrom: aCharacter [
-	^ ByteArray streamContents: [:stream |
-		self streamConverterClass new
-			nextPut: aCharacter
-			toStream: stream]
+{ #category : #accessing }
+XMLEncodingWriteStreamAdapterTest >> basicInvalidInputCollections [
+	^ #()
 ]
 
 { #category : #accessing }
-XMLEncodingWriteStreamAdapterTest >> binaryOutputCollection [
-	^ self binaryFrom: 'test'
+XMLEncodingWriteStreamAdapterTest >> basicInvalidLatin1InputCollections [
+	^ self basicInvalidUTFInputCollections,
+		(Array
+			with: (String with: 16r000100 asCharacter)
+			with: (String with: 16r001000 asCharacter)
+			with: (String with: 16r010000 asCharacter)
+			with: (String with: 16r100000 asCharacter))
+]
+
+{ #category : #accessing }
+XMLEncodingWriteStreamAdapterTest >> basicInvalidUTFInputCollections [
+	"code points greater than U+10FFFF aren't tested for because GS Characters
+	can only contain values in the range of U+0-10FFFF"
+	^ Array
+		with: (String with: 16rD800 asCharacter) "first surrogate code point"
+		with: (String with: 16rDFFF asCharacter) "last surrogate code point"
 ]
 
 { #category : #converting }
 XMLEncodingWriteStreamAdapterTest >> contentsFromByteOrderMark [
-	^ self encodesBinaryOutput
-		ifTrue: [self streamConverterClass byteOrderMarkBytes]
-		ifFalse: [self streamConverterClass byteOrderMark]
+	^ self asExpectedOutput: self streamConverterClass byteOrderMarkBytes
 ]
 
 { #category : #converting }
 XMLEncodingWriteStreamAdapterTest >> contentsFromCharacter: aCharacter [
-	^ self encodesBinaryOutput
-		ifTrue: [self binaryContentsFrom: aCharacter]
-		ifFalse: [self stringContentsFrom: aCharacter]
+	^ self asExpectedOutput:
+		(ByteArray streamContents: [:stream |
+			self streamConverterClass new
+				nextPut: aCharacter
+				toStream: stream])
 ]
 
 { #category : #testing }
-XMLEncodingWriteStreamAdapterTest >> encodesBinaryOutput [
+XMLEncodingWriteStreamAdapterTest >> expectsBinaryOutput [
 	^ true
 ]
 
 { #category : #accessing }
 XMLEncodingWriteStreamAdapterTest >> invalidInputCollections [
-	^ self stringInvalidInputCollections
+	^ self basicInvalidInputCollections collect: [:each |
+		self asExpectedInput: each]
 ]
 
 { #category : #'instance creation' }
@@ -48,20 +60,13 @@ XMLEncodingWriteStreamAdapterTest >> newStreamAdapterOn: aStream [
 ]
 
 { #category : #accessing }
-XMLEncodingWriteStreamAdapterTest >> outputCollection [
-	^ self encodesBinaryOutput
-		ifTrue: [self binaryOutputCollection]
-		ifFalse: [self stringOutputCollection]
-]
-
-{ #category : #accessing }
 XMLEncodingWriteStreamAdapterTest >> streamAdapterClass [
 	^ XMLEncodingWriteStreamAdapter
 ]
 
 { #category : #accessing }
 XMLEncodingWriteStreamAdapterTest >> streamCollection [
-	^ self encodesBinaryOutput
+	^ self expectsBinaryOutput
 		ifTrue: [ByteArray new]
 		ifFalse: [String new]
 ]
@@ -69,40 +74,6 @@ XMLEncodingWriteStreamAdapterTest >> streamCollection [
 { #category : #accessing }
 XMLEncodingWriteStreamAdapterTest >> streamConverterClass [
 	^ XMLNullStreamConverter
-]
-
-{ #category : #converting }
-XMLEncodingWriteStreamAdapterTest >> stringContentsFrom: aCharacter [
-	^ self stringFrom: (self binaryContentsFrom: aCharacter)
-]
-
-{ #category : #accessing }
-XMLEncodingWriteStreamAdapterTest >> stringInvalidInputCollections [
-	^ #()
-]
-
-{ #category : #accessing }
-XMLEncodingWriteStreamAdapterTest >> stringInvalidLatin1InputCollections [
-	^ self stringInvalidUTFInputCollections,
-		(Array
-			with: (String with: 16r000100 asCharacter)
-			with: (String with: 16r001000 asCharacter)
-			with: (String with: 16r010000 asCharacter)
-			with: (String with: 16r100000 asCharacter))
-]
-
-{ #category : #accessing }
-XMLEncodingWriteStreamAdapterTest >> stringInvalidUTFInputCollections [
-	"code points greater than U+10FFFF aren't tested for because GS Characters
-	can only contain values in the range of U+0-10FFFF"
-	^ Array
-		with: (String with: 16rD800 asCharacter) "first surrogate code point"
-		with: (String with: 16rDFFF asCharacter) "last surrogate code point"
-]
-
-{ #category : #accessing }
-XMLEncodingWriteStreamAdapterTest >> stringOutputCollection [
-	^ self stringFrom: self binaryOutputCollection
 ]
 
 { #category : #tests }
@@ -155,7 +126,7 @@ XMLEncodingWriteStreamAdapterTest >> testOn [
 	self
 		assert: adapter class == self streamAdapterClass;
 		assert:
-			(self encodesBinaryOutput
+			(self expectsBinaryOutput
 				ifTrue: [adapter stream == stream]
 				ifFalse: [adapter stream stream == stream]).
 ]

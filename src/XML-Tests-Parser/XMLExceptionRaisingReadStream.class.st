@@ -100,10 +100,3 @@ XMLExceptionRaisingReadStream >> reset [
 XMLExceptionRaisingReadStream >> wasClosed [
 	^ wasClosed
 ]
-
-{ #category : #writing }
-XMLExceptionRaisingReadStream >> writeStreamCollectionClass [
-	^ self isBinary
-		ifTrue: [ByteArray]
-		ifFalse: [String]
-]

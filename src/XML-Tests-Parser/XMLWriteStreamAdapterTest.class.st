@@ -14,14 +14,9 @@ XMLWriteStreamAdapterTest >> contentsFromCharacter: aCharacter [
 	^ aCharacter asString
 ]
 
-{ #category : #accessing }
-XMLWriteStreamAdapterTest >> inputCollection [
-	^ 'test'
-]
-
-{ #category : #accessing }
-XMLWriteStreamAdapterTest >> outputCollection [
-	^ 'test'
+{ #category : #testing }
+XMLWriteStreamAdapterTest >> isBinary [
+	^ self expectsBinaryInput
 ]
 
 { #category : #accessing }

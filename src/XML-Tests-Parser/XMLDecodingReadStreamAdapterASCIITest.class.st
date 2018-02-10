@@ -5,17 +5,17 @@ Class {
 }
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterASCIITest >> binaryInputCollection [
+XMLDecodingReadStreamAdapterASCIITest >> basicInputCollection [
 	^ self encodedASCIIBinary
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterASCIITest >> binaryInvalidInputCollections [
+XMLDecodingReadStreamAdapterASCIITest >> basicInvalidInputCollections [
 	^ (16r80 to: 16rFF) asArray collect: [:each | ByteArray with: each]
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterASCIITest >> outputCollection [
+XMLDecodingReadStreamAdapterASCIITest >> basicOutputCollection [
 	^ self decodedASCIIString
 ]
 

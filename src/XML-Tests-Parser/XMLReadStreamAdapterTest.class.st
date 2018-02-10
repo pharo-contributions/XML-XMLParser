@@ -9,24 +9,9 @@ XMLReadStreamAdapterTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
-XMLReadStreamAdapterTest >> binaryInputCollection [
-	^ self binaryFrom: self inputCollection
-]
-
-{ #category : #accessing }
-XMLReadStreamAdapterTest >> emptyOutputCollection [
-	^ self outputCollection copyEmpty
-]
-
-{ #category : #accessing }
-XMLReadStreamAdapterTest >> inputCollection [
-	^ 'test'
-]
-
-{ #category : #accessing }
-XMLReadStreamAdapterTest >> outputCollection [
-	^ 'test'
+{ #category : #testing }
+XMLReadStreamAdapterTest >> isBinary [
+	^ self expectsBinaryOutput
 ]
 
 { #category : #accessing }
@@ -42,11 +27,6 @@ XMLReadStreamAdapterTest >> streamClass [
 { #category : #accessing }
 XMLReadStreamAdapterTest >> streamCollection [
 	^ self inputCollection
-]
-
-{ #category : #accessing }
-XMLReadStreamAdapterTest >> stringInputCollection [
-	^ self stringFrom: self binaryInputCollection
 ]
 
 { #category : #tests }
@@ -100,13 +80,14 @@ XMLReadStreamAdapterTest >> testNext [
 
 { #category : #tests }
 XMLReadStreamAdapterTest >> testOnIfBinaryOrExternal [
-	| stream adapter |
+	| basicInputCollection stream adapter |
 
-	stream := self newStreamOn: self binaryInputCollection.
+	basicInputCollection := self basicInputCollection.
+	stream := self newStreamOn: (self binaryFrom: basicInputCollection).
 	adapter := self streamAdapterClass onIfBinaryOrExternal: stream.
 	self assert: adapter class == self streamAdapterClass.
 
-	stream := self newStreamOn: self stringInputCollection.
+	stream := self newStreamOn: (self stringFrom: basicInputCollection).
 	self assert: (self streamAdapterClass onIfBinaryOrExternal: stream) isNil.
 	[stream atEnd]
 		whileFalse: [

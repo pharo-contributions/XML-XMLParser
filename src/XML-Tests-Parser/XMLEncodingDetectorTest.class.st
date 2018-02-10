@@ -17,25 +17,21 @@ XMLEncodingDetectorTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : #accessing }
-XMLEncodingDetectorTest >> binaryExplicitEncodedCollections [
-	^ self binaryImplicitEncodedCollections collect: [:each |
-		self byteOrderMarkBytes, each]
+{ #category : #converting }
+XMLEncodingDetectorTest >> asExpectedInput: anInputCollections [
+	^ self detectsBinaryInput
+		ifTrue: [XMLStreamAdapterTest binaryFrom: anInputCollections]
+		ifFalse: [XMLStreamAdapterTest stringFrom: anInputCollections]
 ]
 
 { #category : #accessing }
-XMLEncodingDetectorTest >> binaryImplicitEncodedCollections [
+XMLEncodingDetectorTest >> basicImplicitEncodedInputCollections [
 	^ #()
 ]
 
 { #category : #accessing }
-XMLEncodingDetectorTest >> binaryInvalidImplicitEncodedCollections [
+XMLEncodingDetectorTest >> basicInvalidImplicitEncodedInputCollections [
 	^ #()
-]
-
-{ #category : #accessing }
-XMLEncodingDetectorTest >> byteOrderMarkBytes [
-	^ self explicitStreamConverterClass byteOrderMarkBytes
 ]
 
 { #category : #testing }
@@ -49,10 +45,9 @@ XMLEncodingDetectorTest >> encodingDetectorClass [
 ]
 
 { #category : #accessing }
-XMLEncodingDetectorTest >> explicitEncodedCollections [
-	^ self detectsBinaryInput
-		ifTrue: [self binaryExplicitEncodedCollections]
-		ifFalse: [self stringExplicitEncodedCollections]
+XMLEncodingDetectorTest >> explicitEncodedInputCollections [
+	^ self implicitEncodedInputCollections collect: [:each |
+		self inputCollectionByteOrderMark, each]
 ]
 
 { #category : #accessing }
@@ -66,10 +61,9 @@ XMLEncodingDetectorTest >> explicitStreamConverterClass [
 ]
 
 { #category : #accessing }
-XMLEncodingDetectorTest >> implicitEncodedCollections [
-	^ self detectsBinaryInput
-		ifTrue: [self binaryImplicitEncodedCollections]
-		ifFalse: [self stringImplicitEncodedCollections]
+XMLEncodingDetectorTest >> implicitEncodedInputCollections [
+	^ self basicImplicitEncodedInputCollections collect: [:each |
+		self asExpectedInput: each]
 ]
 
 { #category : #accessing }
@@ -83,10 +77,14 @@ XMLEncodingDetectorTest >> implicitStreamConverterClass [
 ]
 
 { #category : #accessing }
-XMLEncodingDetectorTest >> invalidImplicitEncodedCollections [
-	^ self detectsBinaryInput
-		ifTrue: [self binaryInvalidImplicitEncodedCollections]
-		ifFalse: [self stringInvalidImplicitEncodedCollections]
+XMLEncodingDetectorTest >> inputCollectionByteOrderMark [
+	^ self asExpectedInput: self explicitStreamConverterClass byteOrderMarkBytes
+]
+
+{ #category : #accessing }
+XMLEncodingDetectorTest >> invalidImplicitEncodedInputCollections [
+	^ self basicInvalidImplicitEncodedInputCollections collect: [:each |
+		self asExpectedInput: each]
 ]
 
 { #category : #'instance creation' }
@@ -104,30 +102,9 @@ XMLEncodingDetectorTest >> newStreamOn: aString [
 	^ aString readStream
 ]
 
-{ #category : #accessing }
-XMLEncodingDetectorTest >> stringExplicitEncodedCollections [
-	^ self stringsFromAll: self binaryExplicitEncodedCollections
-]
-
-{ #category : #accessing }
-XMLEncodingDetectorTest >> stringImplicitEncodedCollections [
-	^ self stringsFromAll: self binaryImplicitEncodedCollections
-]
-
-{ #category : #accessing }
-XMLEncodingDetectorTest >> stringInvalidImplicitEncodedCollections [
-	^ self stringsFromAll: self binaryInvalidImplicitEncodedCollections
-]
-
-{ #category : #converting }
-XMLEncodingDetectorTest >> stringsFromAll: aCollectionOfByteCollection [
-	^ aCollectionOfByteCollection collect: [:each |
-		XMLStreamAdapterTest stringFrom: each]
-]
-
 { #category : #tests }
 XMLEncodingDetectorTest >> testStreamConverterForEncoding [
-	self explicitEncodedCollections do: [:each |
+	self explicitEncodedInputCollections do: [:each |
 		| stream startPosition streamConverter |
 	
 		stream := self newStreamOn: each.
@@ -141,9 +118,9 @@ XMLEncodingDetectorTest >> testStreamConverterForEncoding [
 			deny: streamConverter isImplicit;
 			assert:
 				stream position =
-					(startPosition + self byteOrderMarkBytes size)].
+					(startPosition + self inputCollectionByteOrderMark size)].
 
-	self implicitEncodedCollections do: [:each |
+	self implicitEncodedInputCollections do: [:each |
 		| stream startPosition streamConverter |
 	
 		stream := self newStreamOn: each.
@@ -166,7 +143,7 @@ XMLEncodingDetectorTest >> testStreamConverterForEncoding [
 			assert: streamConverter isImplicit;
 			assert: stream position = startPosition].
 
-	self invalidImplicitEncodedCollections do: [:each |
+	self invalidImplicitEncodedInputCollections do: [:each |
 		| stream startPosition streamConverter |
 
 		stream := self newStreamOn: each.

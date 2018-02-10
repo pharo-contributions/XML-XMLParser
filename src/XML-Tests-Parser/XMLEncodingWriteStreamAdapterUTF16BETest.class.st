@@ -5,21 +5,21 @@ Class {
 }
 
 { #category : #accessing }
-XMLEncodingWriteStreamAdapterUTF16BETest >> binaryOutputCollection [
-	^ self encodedUTF16BEBinary
+XMLEncodingWriteStreamAdapterUTF16BETest >> basicInputCollection [
+	^ self decodedUTF16String
 ]
 
 { #category : #accessing }
-XMLEncodingWriteStreamAdapterUTF16BETest >> inputCollection [
-	^ self decodedUTF16String
+XMLEncodingWriteStreamAdapterUTF16BETest >> basicInvalidInputCollections [
+	^ self basicInvalidUTFInputCollections
+]
+
+{ #category : #accessing }
+XMLEncodingWriteStreamAdapterUTF16BETest >> basicOutputCollection [
+	^ self encodedUTF16BEBinary
 ]
 
 { #category : #accessing }
 XMLEncodingWriteStreamAdapterUTF16BETest >> streamConverterClass [
 	^ XMLUTF16BigEndianStreamConverter
-]
-
-{ #category : #accessing }
-XMLEncodingWriteStreamAdapterUTF16BETest >> stringInvalidInputCollections [
-	^ self stringInvalidUTFInputCollections
 ]

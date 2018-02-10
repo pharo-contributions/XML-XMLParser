@@ -5,12 +5,12 @@ Class {
 }
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterUTF8Test >> binaryInputCollection [
+XMLDecodingReadStreamAdapterUTF8Test >> basicInputCollection [
 	^ self encodedUTF8Binary
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterUTF8Test >> binaryInvalidInputCollections [
+XMLDecodingReadStreamAdapterUTF8Test >> basicInvalidInputCollections [
 	^ #(
 		#(16rC0 16r80) "first two byte overlong"
 		#(16rC1 16rBF) "last two byte overlong"
@@ -45,7 +45,7 @@ XMLDecodingReadStreamAdapterUTF8Test >> binaryInvalidInputCollections [
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterUTF8Test >> outputCollection [
+XMLDecodingReadStreamAdapterUTF8Test >> basicOutputCollection [
 	^ self decodedUTF8String
 ]
 

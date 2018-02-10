@@ -10,7 +10,7 @@ XMLEncodingDetectorUTF8Test class >> isAbstract [
 ]
 
 { #category : #accessing }
-XMLEncodingDetectorUTF8Test >> binaryImplicitEncodedCollections [
+XMLEncodingDetectorUTF8Test >> basicImplicitEncodedInputCollections [
 	^ #(
 		#(16r01)
 		#(16r0F)
@@ -47,7 +47,7 @@ XMLEncodingDetectorUTF8Test >> binaryImplicitEncodedCollections [
 ]
 
 { #category : #accessing }
-XMLEncodingDetectorUTF8Test >> binaryInvalidImplicitEncodedCollections [
+XMLEncodingDetectorUTF8Test >> basicInvalidImplicitEncodedInputCollections [
 	^ #(
 		#(16r80)
 		#(16rBF)

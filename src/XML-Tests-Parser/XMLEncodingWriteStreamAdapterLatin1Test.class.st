@@ -5,21 +5,21 @@ Class {
 }
 
 { #category : #accessing }
-XMLEncodingWriteStreamAdapterLatin1Test >> binaryOutputCollection [
-	^ self encodedLatin1Binary
+XMLEncodingWriteStreamAdapterLatin1Test >> basicInputCollection [
+	^ self decodedLatin1String
 ]
 
 { #category : #accessing }
-XMLEncodingWriteStreamAdapterLatin1Test >> inputCollection [
-	^ self decodedLatin1String
+XMLEncodingWriteStreamAdapterLatin1Test >> basicInvalidInputCollections [
+	^ self basicInvalidLatin1InputCollections
+]
+
+{ #category : #accessing }
+XMLEncodingWriteStreamAdapterLatin1Test >> basicOutputCollection [
+	^ self encodedLatin1Binary
 ]
 
 { #category : #accessing }
 XMLEncodingWriteStreamAdapterLatin1Test >> streamConverterClass [
 	^ XMLLatin1StreamConverter
-]
-
-{ #category : #accessing }
-XMLEncodingWriteStreamAdapterLatin1Test >> stringInvalidInputCollections [
-	^ self stringInvalidLatin1InputCollections
 ]

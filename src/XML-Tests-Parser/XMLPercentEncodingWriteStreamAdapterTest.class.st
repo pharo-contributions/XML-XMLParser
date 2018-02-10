@@ -4,22 +4,22 @@ Class {
 	#category : #'XML-Tests-Parser-Streams'
 }
 
+{ #category : #accessing }
+XMLPercentEncodingWriteStreamAdapterTest >> basicOutputCollection [
+	^ String streamContents: [:stream |
+		super basicOutputCollection do: [:each |
+			stream nextPutAll:
+				(self class percentEncodeCharacter: each)]]
+]
+
 { #category : #converting }
 XMLPercentEncodingWriteStreamAdapterTest >> contentsFromCharacter: aCharacter [
 	^ self class percentEncodeCharacter: aCharacter
 ]
 
 { #category : #testing }
-XMLPercentEncodingWriteStreamAdapterTest >> isBinary [
+XMLPercentEncodingWriteStreamAdapterTest >> expectsBinaryInput [
 	^ true
-]
-
-{ #category : #accessing }
-XMLPercentEncodingWriteStreamAdapterTest >> outputCollection [
-	^ String streamContents: [:stream |
-		super outputCollection do: [:each |
-			stream nextPutAll:
-				(self class percentEncodeCharacter: each)]]
 ]
 
 { #category : #accessing }

@@ -5,12 +5,12 @@ Class {
 }
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterUTF16BETest >> binaryInputCollection [
+XMLDecodingReadStreamAdapterUTF16BETest >> basicInputCollection [
 	^ self encodedUTF16BEBinary
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterUTF16BETest >> binaryInvalidInputCollections [
+XMLDecodingReadStreamAdapterUTF16BETest >> basicInvalidInputCollections [
 	"code points greater than U+10FFFF can't be encoded using UTF-16, so
 	they aren't tested for here"
 	^ #(
@@ -26,7 +26,7 @@ XMLDecodingReadStreamAdapterUTF16BETest >> binaryInvalidInputCollections [
 ]
 
 { #category : #accessing }
-XMLDecodingReadStreamAdapterUTF16BETest >> outputCollection [
+XMLDecodingReadStreamAdapterUTF16BETest >> basicOutputCollection [
 	^ self decodedUTF16String
 ]
 

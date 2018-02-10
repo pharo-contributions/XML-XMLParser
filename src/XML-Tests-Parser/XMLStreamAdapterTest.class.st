@@ -9,9 +9,12 @@ Class {
 
 { #category : #converting }
 XMLStreamAdapterTest class >> binaryFrom: aCollection [
-	^ ByteArray streamContents: [:stream |
-		aCollection do: [:each |
-			stream nextPut: each asInteger]]
+	aCollection class == ByteArray
+		ifTrue: [^ aCollection]
+		ifFalse: [
+			^ ByteArray streamContents: [:stream |
+				aCollection do: [:each |
+					stream nextPut: each asInteger]]]
 ]
 
 { #category : #accessing }
@@ -114,7 +117,7 @@ XMLStreamAdapterTest class >> isAbstract [
 XMLStreamAdapterTest class >> percentEncodeCharacter: aCharacter [
 	| hexString |
 
-	(hexString := aCharacter asciiValue printStringHex asUppercase) size > 1
+	(hexString := aCharacter asInteger printStringHex asUppercase) size > 1
 		ifTrue: [^ '%', hexString]
 		ifFalse: [^ '%0', hexString]
 ]
@@ -134,10 +137,37 @@ XMLStreamAdapterTest class >> shouldInheritSelectors [
 
 { #category : #converting }
 XMLStreamAdapterTest class >> stringFrom: aCollection [
-	"avoid #asString for GS portability"
-	^ String streamContents: [:stream |
-		aCollection do: [:each |
-			stream nextPut: each asCharacter]]
+	aCollection isString
+		ifTrue: [^ aCollection]
+		ifFalse: [
+			"avoid #asString for GS portability"
+			^ String streamContents: [:stream |
+				aCollection do: [:each |
+					stream nextPut: each asCharacter]]]
+]
+
+{ #category : #converting }
+XMLStreamAdapterTest >> asExpectedInput: aCollection [
+	^ self expectsBinaryInput
+		ifTrue: [self binaryFrom: aCollection]
+		ifFalse: [self stringFrom: aCollection]
+]
+
+{ #category : #converting }
+XMLStreamAdapterTest >> asExpectedOutput: aCollection [
+	^ self expectsBinaryOutput
+		ifTrue: [self binaryFrom: aCollection]
+		ifFalse: [self stringFrom: aCollection]
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest >> basicInputCollection [
+	^ 'test'
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest >> basicOutputCollection [
+	^ self basicInputCollection
 ]
 
 { #category : #converting }
@@ -168,6 +198,11 @@ XMLStreamAdapterTest >> decodedUTF32String [
 { #category : #accessing }
 XMLStreamAdapterTest >> decodedUTF8String [
 	^ self class decodedUTF8String
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest >> emptyOutputCollection [
+	^ self outputCollection copyEmpty
 ]
 
 { #category : #accessing }
@@ -206,6 +241,21 @@ XMLStreamAdapterTest >> encodedUTF8Binary [
 ]
 
 { #category : #testing }
+XMLStreamAdapterTest >> expectsBinaryInput [
+	^ false
+]
+
+{ #category : #testing }
+XMLStreamAdapterTest >> expectsBinaryOutput [
+	^ false
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest >> inputCollection [
+	^ self asExpectedInput: self basicInputCollection
+]
+
+{ #category : #testing }
 XMLStreamAdapterTest >> isBinary [
 	^ false
 ]
@@ -228,6 +278,11 @@ XMLStreamAdapterTest >> newStreamAdapterOn: aStream [
 { #category : #'instance creation' }
 XMLStreamAdapterTest >> newStreamOn: aCollection [
 	^ self streamClass on: aCollection
+]
+
+{ #category : #accessing }
+XMLStreamAdapterTest >> outputCollection [
+	^ self asExpectedOutput: self basicOutputCollection
 ]
 
 { #category : #accessing }

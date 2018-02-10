@@ -10,7 +10,7 @@ XMLEncodingDetectorUTF16LETest class >> isAbstract [
 ]
 
 { #category : #accessing }
-XMLEncodingDetectorUTF16LETest >> binaryImplicitEncodedCollections [
+XMLEncodingDetectorUTF16LETest >> basicImplicitEncodedInputCollections [
 	^ #(
 		#(16r01 16r00)
 		#(16r0F 16r00)
