@@ -1073,7 +1073,7 @@ ConfigurationOfXMLParser >> baseline333: spec [
 	spec
 		for: #gt
 		do: [
-			spec package: 'XML-ParserGTExtensions' with: 'XML-ParserGTExtensions-monty.3' ]
+			spec package: 'XML-ParserGTExtensions' with: 'XML-ParserGTExtensions-monty.4' ]
 ]
 
 { #category : #baselines }
@@ -4180,7 +4180,7 @@ ConfigurationOfXMLParser >> version334: spec [
 
         spec for: #common do: [
                 spec blessing: #release.
-			spec package: 'XML-Parser' with: 'XML-Parser-monty.430'.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.431'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.220'.
                 ].
 ]
