@@ -236,7 +236,7 @@ SAXHandler >> characters: aString [
 	in a single element if they're separated by other nodes or entity
 	references like in '<characters>one<!--comment-->two</characters>'.
 	
-	See isInCDataSection and ignorableWhitespace:"
+	See #isInCDataSection and #ignorableWhitespace:"
 ]
 
 { #category : #'handling - lexical' }
@@ -266,10 +266,11 @@ SAXHandler >> decodesCharacters [
 
 { #category : #configuring }
 SAXHandler >> decodesCharacters: aBoolean [
-	"When enabled, character decoding will be tried if:
-		1) the input stream or string is in binary
-		2) if it starts with a byte-order mark (BOM) byte sequence
-		3) if the input is wrapped with an XMLDecodingReadStreamAdapter
+	"When enabled, encoding detection and character decoding will be attemped if:
+		1) the input stream or string is binary/external
+		2) it starts with a byte-order mark (BOM) byte sequence
+		3) the input is wrapped with an XMLDecodingReadStreamAdapter that has
+			a null or implicit stream converter
 	(Default.)"
 
 	self configuration decodesCharacters: aBoolean
@@ -336,14 +337,14 @@ SAXHandler >> endDocument [
 { #category : #'handling - content' }
 SAXHandler >> endElement: aQualifiedName [
 	"Handles the end of an element if a subclass doesn't implement
-	endElement:prefix:uri:localName: or endElement:prefix:uri:."
+	#endElement:prefix:uri:localName: or #endElement:prefix:uri:."
 ]
 
 { #category : #'handling - content' }
 SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI [
 	"Handles the end of an element if a subclass doesn't implement
-	endElement:prefix:uri:localName:. By default it forwards to a simpler
-	handler, endElement:.
+	#endElement:prefix:uri:localName:. By default it forwards to a simpler
+	handler, #endElement:.
 	
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	aPrefix - the prefix of the qualified name or an empty string
@@ -356,7 +357,7 @@ SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI [
 SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName [
 	"Handles the end of an element, either an end tag like '</end>' or a
 	self-closed tag like '<empty/>'. By default it forwards to a simpler handler,
-	endElement:prefix:uri:.
+	#endElement:prefix:uri:.
 	
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	aPrefix - the prefix of the qualified name or an empty string
@@ -418,7 +419,7 @@ SAXHandler >> hasParser [
 
 { #category : #'handling - content' }
 SAXHandler >> ignorableWhitespace: aString [
-	"When validation is enabled and a DTD with element declarations is
+	"When validation is enabled and a DTD with ELEMENT declarations is
 	present, this can be used to handle ignorable whitespace in elements
 	with 'element content' (meaning they can only contain other elements
 	and no PCDATA), such as between '<element-content>' and '<mixed-content>'
@@ -461,7 +462,7 @@ SAXHandler >> input: aStringOrStream [
 { #category : #parsing }
 SAXHandler >> interruptParsing [
 	"Can be sent within a handler to stop parsing;
-	will be silently caught within parseDocument or other parsing methods"
+	will be silently caught within #parseDocument or other parsing methods"
 
 	XMLParsingInterruptException signal
 ]
@@ -559,7 +560,7 @@ SAXHandler >> parameterEntityDeclaration: aName replacement: aReplacement [
 
 { #category : #parsing }
 SAXHandler >> parseDocument [
-	"parser the entire input document"
+	"Parse the entire input string or stream and return the result"
 
 	self parser parseDocument.
 
@@ -568,7 +569,8 @@ SAXHandler >> parseDocument [
 
 { #category : #parsing }
 SAXHandler >> parseDocumentUntil: aBlock [
-	"parse the input document until aBlock is true"
+	"Parse the input string or stream only until aBlock evalautes as true
+	and return the result"
 
 	self parser parseDocumentUntil: aBlock.
 
@@ -577,7 +579,8 @@ SAXHandler >> parseDocumentUntil: aBlock [
 
 { #category : #parsing }
 SAXHandler >> parseDocumentWhile: aBlock [
-	"parse the input document while aBlock is true"
+	"Parse the input string or stream only as long as aBlock evalautes as true
+	and return the result"
 
 	self parser parseDocumentWhile: aBlock.
 
@@ -637,7 +640,7 @@ SAXHandler >> processingInstruction: aTargetString data: aDataString [
 	the target and 'value' is the data.
 	
 	XML declarations may look like PIs but are different and are handled
-	with xmlVersion:encoding:standalone: instead."
+	with #xmlVersion:encoding:standalone: instead."
 ]
 
 { #category : #configuring }
@@ -726,7 +729,7 @@ SAXHandler >> startContent [
 { #category : #'handling - lexical' }
 SAXHandler >> startDTD: aRootElementName publicID: aPublicID systemID: aSystemID [
 	"Handles the start of a '<!DOCTYPE ...>' declaration. Any events
-	after this and until endDTD is sent are part of the internal subset
+	after this and until #endDTD is sent are part of the internal subset
 	of the DTD.
 	
 	aRootElementName - the expected name of the document's root element
@@ -742,8 +745,8 @@ SAXHandler >> startDocument [
 { #category : #'handling - content' }
 SAXHandler >> startElement: aQualifiedName attributes: anAttributeDictionary [
 	"Handles the start of an element if a subclass doesn't implement
-	startElement:prefix:uri:localName:attributes: or
-	startElement:prefix:uri:attributes:.
+	#startElement:prefix:uri:localName:attributes: or
+	#startElement:prefix:uri:attributes:.
 
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	anAttributeDictionary - an XMLAttributeDictionary of attributes"
@@ -752,8 +755,8 @@ SAXHandler >> startElement: aQualifiedName attributes: anAttributeDictionary [
 { #category : #'handling - content' }
 SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes: anAttributeDictionary [
 	"Handles the start of an element if a subclass doesn't implement
-	startElement:prefix:uri:localName:attributes:. By default it forwards
-	to a simpler handler, startElement:attributes:.
+	#startElement:prefix:uri:localName:attributes:. By default it forwards
+	to a simpler handler, #startElement:attributes:.
 	
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	aPrefix - the prefix of the qualified name or an empty string
@@ -769,7 +772,7 @@ SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes:
 SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: anAttributeDictionary [
 	"Handles the start of an element, either a start tag like '<start>' or a
 	self-closed tag like '<empty/>'. By default it forwards to a simpler handler,
-	startElement:prefix:uri:attributes:.
+	#startElement:prefix:uri:attributes:.
 	
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	aPrefix - the prefix of the qualified name or an empty string

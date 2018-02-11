@@ -125,8 +125,9 @@ XMLNode >> configuration [
 
 { #category : #accessing }
 XMLNode >> contentString [
- 	"Returns the combined content strings of all descendants with space inserted
-	when one string has no trailing space and the next has no leading space.
+ 	"Returns a combined string of all descendant string values with spaces inserted
+	for readability when one string has no trailing space and the next has no
+	leading space.
 
 	See also #rawContentString."
 
@@ -595,8 +596,8 @@ XMLNode >> printedWithoutSelfClosingTags [
 
 { #category : #accessing }
 XMLNode >> rawContentString [
- 	"Returns the combined content string of all descendants without
-	spaces inserted.
+ 	"Returns a combined string of all descendant string values without any spaces
+	inserted for readability.
 	
 	See also #contentString"
 

@@ -4,7 +4,7 @@ This class is an XML parser that parses XML into a tree of nodes with an XMLDocu
 
 See the XML-Parser-DOM category for info on the node classes.
 
-By default, XML comments are ignored during parsing and ""<![CDATA[...]]>"" sections are merged with adjacent character data as XMLString nodes. Use #preservesCommentNodes: or #preservesCDataNodes: before parsing to change this. You can also use #preservesIgnorableWhitespace: to preserve ignorable whitespace as XMLString nodes.
+By default, XML comments are ignored during parsing and ""<![CDATA[...]]>"" sections are merged with adjacent character data as XMLString nodes. Use #preservesCommentNodes: or #preservesCDataNodes: before parsing to change this. You can also use #preservesIgnorableWhitespace: to preserve ignorable whitespace as XMLString nodes, but this requires a DTD with <!ELEMENT> declarations to distinguish ignorable and unignorable whitespace.
 
 To control what node classes the parser uses to construct the tree, inject a custom node factory with #nodeFactory: prior to parsing. See XMLNodeFactory.
 

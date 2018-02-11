@@ -83,14 +83,14 @@ SAX2ElementHandler >> elementHandlerFactory [
 { #category : #'handling - content' }
 SAX2ElementHandler >> endElement: aQualifiedName [
 	"Handles the end of an element if a subclass doesn't implement
-	endElement:prefix:uri:localName: or endElement:prefix:uri:."
+	#endElement:prefix:uri:localName: or #endElement:prefix:uri:."
 ]
 
 { #category : #'handling - content' }
 SAX2ElementHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI [
 	"Handles the end of an element if a subclass doesn't implement
-	endElement:prefix:uri:localName:. By default it forwards to a simpler
-	handler, endElement:.
+	#endElement:prefix:uri:localName:. By default it forwards to a simpler
+	handler, #endElement:.
 	
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	aPrefix - the prefix of the qualified name or an empty string
@@ -103,7 +103,7 @@ SAX2ElementHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI [
 SAX2ElementHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName [
 	"Handles the end of an element, either an end tag like '</end>' or a
 	self-closed tag like '<empty/>'. By default it forwards to a simpler handler,
-	endElement:prefix:uri:.
+	#endElement:prefix:uri:.
 	
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	aPrefix - the prefix of the qualified name or an empty string
@@ -156,8 +156,8 @@ SAX2ElementHandler >> setParser: aParser parent: anElementHandler parentFactory:
 { #category : #'handling - content' }
 SAX2ElementHandler >> startElement: aQualifiedName attributes: anAttributeDictionary [
 	"Handles the start of an element if a subclass doesn't implement
-	startElement:prefix:uri:localName:attributes: or
-	startElement:prefix:uri:attributes:.
+	#startElement:prefix:uri:localName:attributes: or
+	#startElement:prefix:uri:attributes:.
 
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	anAttributeDictionary - an XMLAttributeDictionary of attributes"
@@ -166,8 +166,8 @@ SAX2ElementHandler >> startElement: aQualifiedName attributes: anAttributeDictio
 { #category : #'handling - content' }
 SAX2ElementHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes: anAttributeDictionary [
 	"Handles the start of an element if a subclass doesn't implement
-	startElement:prefix:uri:localName:attributes:. By default it forwards
-	to a simpler handler, startElement:attributes:.
+	#startElement:prefix:uri:localName:attributes:. By default it forwards
+	to a simpler handler, #startElement:attributes:.
 	
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	aPrefix - the prefix of the qualified name or an empty string
@@ -183,7 +183,7 @@ SAX2ElementHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI att
 SAX2ElementHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: anAttributeDictionary [
 	"Handles the start of an element, either a start tag like '<start>' or a
 	self-closed tag like '<empty/>'. By default it forwards to a simpler handler,
-	startElement:prefix:uri:attributes:.
+	#startElement:prefix:uri:attributes:.
 	
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	aPrefix - the prefix of the qualified name or an empty string
