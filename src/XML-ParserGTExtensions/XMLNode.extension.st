@@ -39,21 +39,23 @@ XMLNode >> addRemoveActionTo: aPresentation in: aComposite inContext: aGTInspect
 
 	aPresentation
 		act: [| removeStartIndex |
-			self removeFromParent.
+			(UIManager default confirm: 'Remove node from DOM tree?')
+				ifTrue: [
+					self removeFromParent.
 
-			"remove all panes starting with the first pane inspecting
-			the receiver (not necessarily the current pane)"
-			removeStartIndex :=
-				aGTInspector panes findFirst: [:each |
-					(each port: #entity) value = self].
-			removeStartIndex
-				to: aGTInspector panes size
-				do: [:i |
-					aGTInspector removeLastPane].
+					"remove all panes starting with the first pane inspecting
+					the receiver (not necessarily the current pane)"
+					removeStartIndex :=
+						aGTInspector panes findFirst: [:each |
+							(each port: #entity) value = self].
+					removeStartIndex
+						to: aGTInspector panes size
+						do: [:i |
+							aGTInspector removeLastPane].
 
-			"update the remaining panes"
-			aGTInspector panes do: [:each |
-				each update]]
+					"update the remaining panes"
+					aGTInspector panes do: [:each |
+						each update]]]
 		icon: GLMUIThemeExtraIcons glamorousRemove
 		on: $X
 		entitled: 'Remove'.
@@ -116,6 +118,13 @@ XMLNode >> gtInspectorSourceIn: aComposite inContext: aGTInspector [
 							icon: GLMUIThemeExtraIcons glamorousAccept
 							on: $s
 							entitled: 'Accept';
+						act: [:presentation |
+							(presentation hasUnacceptedEdits not
+								or: [UIManager default confirm: 'Revert source edits?'])
+								ifTrue: [presentation update]]
+							icon: GLMUIThemeExtraIcons glamorousUndo
+							on: $Z
+							entitled: 'Revert';
 						act: [
 							self promptForSourceSaveFileName
 								ifNotEmpty: [:fileName |
@@ -124,12 +133,7 @@ XMLNode >> gtInspectorSourceIn: aComposite inContext: aGTInspector [
 										inContext: aGTInspector.
 									currentTextStylerDecorator saveToFile: fileName]]
 							icon: GLMUIThemeExtraIcons glamorousSave
-							entitled: 'Save as';
-						act: [:presentation |
-							presentation update]
-							icon: GLMUIThemeExtraIcons glamorousUndo
-							on: $Z
-							entitled: 'Revert']
+							entitled: 'Save as']
 				ifFalse: [
 					GLMXMLDisabledRubricHighlightedTextPresentation new
 						editingMode: [
@@ -201,8 +205,10 @@ XMLNode >> promptForSourceSaveFileName [
 		fileSave: 'Save XML source to file'
 		extensions:
 			"'xml' must come first so it's the default extension"
-			((XMLFileHandle xmlDocumentFileExtensions asArray copyWithout: 'xml')
-				copyWithFirst: 'xml'))
+			(XMLFileHandle xmlDocumentFileExtensions sorted: [:a :b |
+				a = 'xml'
+					or: [b ~= 'xml'
+						and: [a <= b]]]))
 			ifNil: ['']
 			ifNotNil: [:reference | reference fullName]
 ]
