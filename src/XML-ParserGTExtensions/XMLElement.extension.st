@@ -17,6 +17,18 @@ XMLElement classSide >> gtExampleXmlNode [
 ]
 
 { #category : #'*XML-ParserGTExtensions' }
+XMLElement >> gtInspectorAttributesIn: aComposite inContext: aGTInspector [
+	<gtInspectorPresentationOrder: 3>
+	
+	aComposite table
+		when: [ self hasAttributes ];
+		title: 'Attributes';
+		display: [ self attributeNodes ];
+		column: 'Name' evaluated: #name;
+		column: 'Value' evaluated: #value
+]
+
+{ #category : #'*XML-ParserGTExtensions' }
 XMLElement >> gtInspectorImageIn: composite inContext: aGTInspector [
 	<gtInspectorPresentationOrder: 40>
 	| client url |
