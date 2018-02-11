@@ -1073,7 +1073,7 @@ ConfigurationOfXMLParser >> baseline333: spec [
 	spec
 		for: #gt
 		do: [
-			spec package: 'XML-ParserGTExtensions' with: 'XML-ParserGTExtensions-monty.4' ]
+			spec package: 'XML-ParserGTExtensions' with: 'XML-ParserGTExtensions-TorstenBergmann.5' ]
 ]
 
 { #category : #baselines }
