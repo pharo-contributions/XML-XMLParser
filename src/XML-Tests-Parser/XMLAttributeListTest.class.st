@@ -5,8 +5,7 @@ Class {
 		'attributes',
 		'newAttribute',
 		'absentAttribute',
-		'changedAttributes',
-		'prefixedAttribute'
+		'changedAttributes'
 	],
 	#category : #'XML-Tests-Parser-DOM'
 }
@@ -80,10 +79,19 @@ XMLAttributeListTest >> listClass [
 XMLAttributeListTest >> listItems [
 	attributes ifNil: [
 		attributes :=
-			super listItems collect: [:each |
-				self attributeClass
-					name: each
-					value: each]].
+			Array streamContents: [:stream |
+				super listItems do: [:each |
+					"have the prefixed attributes come before the non-prefixed
+					versions to better test #isNamed: local name matching"
+					stream
+						nextPut:
+							(self attributeClass
+								name: 'prefix:', each
+								value: 'prefixed', each);
+						nextPut:
+							(self attributeClass
+								name: each
+								value: each)]]].
 	^ attributes copy.
 ]
 
@@ -103,12 +111,6 @@ XMLAttributeListTest >> observerClass [
 ]
 
 { #category : #accessing }
-XMLAttributeListTest >> prefixedAttribute [
-	^ prefixedAttribute
-		ifNil: [prefixedAttribute := self newListItem copy prefix: 'prefix']
-]
-
-{ #category : #accessing }
 XMLAttributeListTest >> reverseSortBlock [
 	^ [:a :b | a sortKey > b sortKey]
 ]
@@ -124,13 +126,12 @@ XMLAttributeListTest >> testAddAttributeAssociation [
 
 	list := self emptyList.
 	self listItems do: [:each | | attribute |
-		self assert: (list attributeNodeAt: each name) = self defaultValue.
 		attribute := list addAttributeAssociation: each name -> each value.
 		self
 			assert: attribute class == self attributeClass;
 			assert: attribute name = each name;
 			assert: attribute value = each value;
-			assert: (list attributeNodeAt: each name) = attribute].
+			assert: list last = attribute].
 ]
 
 { #category : #tests }
@@ -139,7 +140,6 @@ XMLAttributeListTest >> testAddAttributeNameValue [
 
 	list := self emptyList.
 	self listItems do: [:each | | attribute |
-		self assert: (list attributeNodeAt: each name)  = self defaultValue.
 		attribute :=
 			list
 				addAttributeName: each name
@@ -148,7 +148,7 @@ XMLAttributeListTest >> testAddAttributeNameValue [
 			assert: attribute class == self attributeClass;
 			assert: attribute name = each name;
 			assert: attribute value = each value;
-			assert: (list attributeNodeAt: each name) = attribute].
+			assert: list last = attribute].
 ]
 
 { #category : #tests }
@@ -180,23 +180,19 @@ XMLAttributeListTest >> testAttributeAt [
 	| list |
 
 	list := self emptyList.
-	self listItems do: [:each |
-		self assert: (list attributeAt: each name) = ''.
+	1 to: 2 do: [:i |
+		self listItems do: [:each |
+			self assert:
+				(list attributeAt: each name) =
+					(i > 1
+						ifTrue: [each value]
+						ifFalse: ['']).
 	
-		list add: each.
+			list add: each.
+			self assert: (list attributeAt: each name) = each value]].
+
+	self listItems do: [:each |
 		self assert: (list attributeAt: each name) = each value].
-
-	self
-		assert: (list attributeAt: self prefixedAttribute name) = '';
-		assert: (list attributeAt: self prefixedAttribute localName) = ''.
-
-	list add: self prefixedAttribute.
-	self assert:
-		(list attributeAt: self prefixedAttribute name) =
-			self prefixedAttribute value.
-	self assert:
-		(list attributeAt: self prefixedAttribute localName) =
-			''.
 ]
 
 { #category : #tests }
@@ -204,36 +200,30 @@ XMLAttributeListTest >> testAttributeAtIfAbsent [
 	| list |
 
 	list := self emptyList.
+	1 to: 2 do: [:i |
+		self listItems do: [:each |
+			self assert:
+				(list
+					attributeAt: each name
+					ifAbsent: [
+						i > 1
+							ifTrue: [self fail]
+							ifFalse: [self absentListItem value]]) =
+					(i > 1
+						ifTrue: [each value]
+						ifFalse: [self absentListItem value]).
+	
+			list add: each.
+			self assert:
+				(list
+					attributeAt: each name
+					ifAbsent: [self fail]) = each value]].
+
 	self listItems do: [:each |
 		self assert:
 			(list
 				attributeAt: each name
-				ifAbsent: [self absentListItem value]) = self absentListItem value.
-	
-		list add: each.
-		self assert:
-			(list
-				attributeAt: each name
 				ifAbsent: [self fail]) = each value].
-
-	self assert:
-		(list
-			attributeAt: self prefixedAttribute name
-			ifAbsent: [self absentListItem value]) = self absentListItem value.
-	self assert:
-		(list
-			attributeAt: self prefixedAttribute localName
-			ifAbsent: [self absentListItem value]) = self absentListItem value.
-
-	list add: self prefixedAttribute.
-	self assert:
-		(list
-			attributeAt: self prefixedAttribute name
-			ifAbsent: [self fail]) = self prefixedAttribute value.
-	self assert:
-		(list
-			attributeAt: self prefixedAttribute localName
-			ifAbsent: [self absentListItem value]) = self absentListItem value.
 ]
 
 { #category : #tests }
@@ -241,48 +231,27 @@ XMLAttributeListTest >> testAttributeAtIfAbsentPut [
 	| list |
 
 	list := self emptyList.
+	1 to: 2 do: [:i |
+		self listItems do: [:each |
+			self assert:
+				(list
+					attributeAt: each name
+					ifAbsentPut: [
+						i > 1
+							ifTrue: [self fail]
+							ifFalse: [each value]]) = each value.
+	
+			list add: each.
+			self assert:
+				(list
+					attributeAt: each name
+					ifAbsentPut: [self fail]) = each value]].
+
 	self listItems do: [:each |
 		self assert:
 			(list
 				attributeAt: each name
-				ifAbsentPut: [each value]) = each value.
-		self assert: (list attributeAt: each name) = each value.
-
-		self assert:
-			(list
-				attributeAt: each name
-				ifAbsentPut: [self fail]) = each value.
-		self assert: (list attributeAt: each name) = each value].
-
-	self assert:
-		(list
-			attributeAt: self prefixedAttribute name
-			ifAbsentPut: [self prefixedAttribute value]) = self prefixedAttribute value.
-	self assert:
-		(list
-			attributeAt: self prefixedAttribute localName
-			ifAbsentPut: [self newListItem value]) = self newListItem value.
-	self assert:
-		(list attributeAt: self prefixedAttribute name) =
-			self prefixedAttribute value.
-	self assert:
-		(list attributeAt: self prefixedAttribute localName) =
-			self newListItem value.
-
-	self assert:
-		(list
-			attributeAt: self prefixedAttribute name
-			ifAbsentPut: [self fail]) = self prefixedAttribute value.
-	self assert:
-		(list
-			attributeAt: self prefixedAttribute localName
-			ifAbsentPut: [self fail]) = self newListItem value.
-	self assert:
-		(list attributeAt: self prefixedAttribute name) =
-			self prefixedAttribute value.
-	self assert:
-		(list attributeAt: self prefixedAttribute localName) =
-			self newListItem value.
+				ifAbsentPut: [self fail]) = each value].
 ]
 
 { #category : #tests }
@@ -290,27 +259,22 @@ XMLAttributeListTest >> testAttributeAtPut [
 	| list |
 
 	list := self emptyList.
-	self listItems do: [:each |
-		self assert:
-			(list
-				attributeAt: each name
-				put: each value) = each value.
-		self assert: (list attributeAt: each name) = each value].
+	1 to: 2 do: [:i |
+		self listItems do: [:each |
+			self assert:
+				(list attributeAt: each name) =
+					(i > 1
+						ifTrue: [each value]
+						ifFalse: ['']).
 
-	self assert:
-		(list
-			attributeAt: self prefixedAttribute name
-			put: self prefixedAttribute value) = self prefixedAttribute value.
-	self assert:
-		(list
-			attributeAt: self prefixedAttribute localName
-			put: self newListItem value) = self newListItem value.
-	self assert:
-		(list attributeAt: self prefixedAttribute name) =
-			self prefixedAttribute value.
-	self assert:
-		(list attributeAt: self prefixedAttribute localName) =
-			self newListItem value.
+			self assert:
+				(list
+					attributeAt: each name
+					put: each value) = each value.
+			self assert: (list attributeAt: each name) = each value]].
+
+	self listItems do: [:each |
+		self assert: (list attributeAt: each name) = each value].
 ]
 
 { #category : #tests }
@@ -363,20 +327,21 @@ XMLAttributeListTest >> testAttributeNodeAt [
 	| list |
 
 	list := self emptyList.
-	self listItems do: [:each |
-		self assert: (list attributeNodeAt: each name) = self defaultValue.
+	self listItems withIndexDo: [:attribute :i | | firstMatchingAttribute |
+		firstMatchingAttribute :=
+			(self listItems copyFrom: 1 to: i - 1)
+				detect: [:each | each isNamed: attribute name]
+				ifNone: [nil].
+		self assert:
+			(list attributeNodeAt: attribute name) =
+				(firstMatchingAttribute
+					ifNil: [self defaultValue]).
 	
-		list add: each.
-		self assert: (list attributeNodeAt: each name) = each].
-
-	self
-		assert: (list attributeNodeAt: self prefixedAttribute name) = self defaultValue;
-		assert: (list attributeNodeAt: self prefixedAttribute localName) = self defaultValue.
-
-	list add: self prefixedAttribute.
-	self
-		assert: (list attributeNodeAt: self prefixedAttribute name) = self prefixedAttribute;
-		assert: (list attributeNodeAt: self prefixedAttribute localName) = self prefixedAttribute.
+		list add: attribute.
+		self assert:
+			(list attributeNodeAt: attribute name) =
+				(firstMatchingAttribute
+					ifNil: [attribute])].
 ]
 
 { #category : #tests }
@@ -384,36 +349,27 @@ XMLAttributeListTest >> testAttributeNodeAtIfAbsent [
 	| list |
 
 	list := self emptyList.
-	self listItems do: [:each |
+	self listItems withIndexDo: [:attribute :i | | firstMatchingAttribute |
+		firstMatchingAttribute :=
+			(self listItems copyFrom: 1 to: i - 1)
+				detect: [:each | each isNamed: attribute name]
+				ifNone: [nil].
 		self assert:
 			(list
-				attributeNodeAt: each name
-				ifAbsent: [self absentListItem]) = self absentListItem.
+				attributeNodeAt: attribute name
+				ifAbsent: [
+					firstMatchingAttribute
+						ifNil: [self absentListItem]]) =
+				(firstMatchingAttribute
+					ifNil: [self absentListItem]).
 	
-		list add: each.
+		list add: attribute.
 		self assert:
 			(list
-				attributeNodeAt: each name
-				ifAbsent: [self fail]) = each].
-
-	self assert:
-		(list
-			attributeNodeAt: self prefixedAttribute name
-			ifAbsent: [self absentListItem]) = self absentListItem.
-	self assert:
-		(list
-			attributeNodeAt: self prefixedAttribute localName
-			ifAbsent: [self absentListItem]) = self absentListItem.
-
-	list add: self prefixedAttribute.
-	self assert:
-		(list
-			attributeNodeAt: self prefixedAttribute name
-			ifAbsent: [self fail]) = self prefixedAttribute.
-	self assert:
-		(list
-			attributeNodeAt: self prefixedAttribute localName
-			ifAbsent: [self fail]) = self prefixedAttribute.
+				attributeNodeAt: attribute name
+				ifAbsent: [self fail]) =
+				(firstMatchingAttribute
+					ifNil: [attribute])].
 ]
 
 { #category : #tests }
@@ -421,23 +377,19 @@ XMLAttributeListTest >> testAttributeValueAt [
 	| list |
 
 	list := self emptyList.
-	self listItems do: [:each |
-		self assert: (list attributeValueAt: each name) = ''.
+	1 to: 2 do: [:i |
+		self listItems do: [:each |
+			self assert:
+				(list attributeValueAt: each name) =
+					(i > 1
+						ifTrue: [each value]
+						ifFalse: ['']).
 	
-		list add: each.
+			list add: each.
+			self assert: (list attributeValueAt: each name) = each value]].
+
+	self listItems do: [:each |
 		self assert: (list attributeValueAt: each name) = each value].
-
-	self
-		assert: (list attributeValueAt: self prefixedAttribute name) = '';
-		assert: (list attributeValueAt: self prefixedAttribute localName) = ''.
-
-	list add: self prefixedAttribute.
-	self assert:
-		(list attributeValueAt: self prefixedAttribute name) =
-			self prefixedAttribute value.
-	self assert:
-		(list attributeValueAt: self prefixedAttribute localName) =
-			''.
 ]
 
 { #category : #tests }
@@ -445,36 +397,30 @@ XMLAttributeListTest >> testAttributeValueAtIfAbsent [
 	| list |
 
 	list := self emptyList.
+	1 to: 2 do: [:i |
+		self listItems do: [:each |
+			self assert:
+				(list
+					attributeValueAt: each name
+					ifAbsent: [
+						i > 1
+							ifTrue: [self fail]
+							ifFalse: [self absentListItem value]]) =
+					(i > 1
+						ifTrue: [each value]
+						ifFalse: [self absentListItem value]).
+	
+			list add: each.
+			self assert:
+				(list
+					attributeValueAt: each name
+					ifAbsent: [self fail]) = each value]].
+
 	self listItems do: [:each |
 		self assert:
 			(list
 				attributeValueAt: each name
-				ifAbsent: [self absentListItem value]) = self absentListItem value.
-	
-		list add: each.
-		self assert:
-			(list
-				attributeValueAt: each name
 				ifAbsent: [self fail]) = each value].
-
-	self assert:
-		(list
-			attributeValueAt: self prefixedAttribute name
-			ifAbsent: [self absentListItem value]) = self absentListItem value.
-	self assert:
-		(list
-			attributeValueAt: self prefixedAttribute localName
-			ifAbsent: [self absentListItem value]) = self absentListItem value.
-
-	list add: self prefixedAttribute.
-	self assert:
-		(list
-			attributeValueAt: self prefixedAttribute name
-			ifAbsent: [self fail]) = self prefixedAttribute value.
-	self assert:
-		(list
-			attributeValueAt: self prefixedAttribute localName
-			ifAbsent: [self absentListItem value]) = self absentListItem value.
 ]
 
 { #category : #tests }
@@ -482,48 +428,27 @@ XMLAttributeListTest >> testAttributeValueAtIfAbsentPut [
 	| list |
 
 	list := self emptyList.
+	1 to: 2 do: [:i |
+		self listItems do: [:each |
+			self assert:
+				(list
+					attributeValueAt: each name
+					ifAbsentPut: [
+						i > 1
+							ifTrue: [self fail]
+							ifFalse: [each value]]) = each value.
+	
+			list add: each.
+			self assert:
+				(list
+					attributeValueAt: each name
+					ifAbsentPut: [self fail]) = each value]].
+
 	self listItems do: [:each |
 		self assert:
 			(list
 				attributeValueAt: each name
-				ifAbsentPut: [each value]) = each value.
-		self assert: (list attributeValueAt: each name) = each value.
-
-		self assert:
-			(list
-				attributeValueAt: each name
-				ifAbsentPut: [self fail]) = each value.
-		self assert: (list attributeValueAt: each name) = each value].
-
-	self assert:
-		(list
-			attributeValueAt: self prefixedAttribute name
-			ifAbsentPut: [self prefixedAttribute value]) = self prefixedAttribute value.
-	self assert:
-		(list
-			attributeValueAt: self prefixedAttribute localName
-			ifAbsentPut: [self newListItem value]) = self newListItem value.
-	self assert:
-		(list attributeValueAt: self prefixedAttribute name) =
-			self prefixedAttribute value.
-	self assert:
-		(list attributeValueAt: self prefixedAttribute localName) =
-			self newListItem value.
-
-	self assert:
-		(list
-			attributeValueAt: self prefixedAttribute name
-			ifAbsentPut: [self fail]) = self prefixedAttribute value.
-	self assert:
-		(list
-			attributeValueAt: self prefixedAttribute localName
-			ifAbsentPut: [self fail]) = self newListItem value.
-	self assert:
-		(list attributeValueAt: self prefixedAttribute name) =
-			self prefixedAttribute value.
-	self assert:
-		(list attributeValueAt: self prefixedAttribute localName) =
-			self newListItem value.
+				ifAbsentPut: [self fail]) = each value].
 ]
 
 { #category : #tests }
@@ -531,27 +456,22 @@ XMLAttributeListTest >> testAttributeValueAtPut [
 	| list |
 
 	list := self emptyList.
-	self listItems do: [:each |
-		self assert:
-			(list
-				attributeValueAt: each name
-				put: each value) = each value.
-		self assert: (list attributeValueAt: each name) = each value].
+	1 to: 2 do: [:i |
+		self listItems do: [:each |
+			self assert:
+				(list attributeValueAt: each name) =
+					(i > 1
+						ifTrue: [each value]
+						ifFalse: ['']).
 
-	self assert:
-		(list
-			attributeValueAt: self prefixedAttribute name
-			put: self prefixedAttribute value) = self prefixedAttribute value.
-	self assert:
-		(list
-			attributeValueAt: self prefixedAttribute localName
-			put: self newListItem value) = self newListItem value.
-	self assert:
-		(list attributeValueAt: self prefixedAttribute name) =
-			self prefixedAttribute value.
-	self assert:
-		(list attributeValueAt: self prefixedAttribute localName) =
-			self newListItem value.
+			self assert:
+				(list
+					attributeValueAt: each name
+					put: each value) = each value.
+			self assert: (list attributeValueAt: each name) = each value]].
+
+	self listItems do: [:each |
+		self assert: (list attributeValueAt: each name) = each value].
 ]
 
 { #category : #tests }
@@ -577,15 +497,6 @@ XMLAttributeListTest >> testIncludesAttribute [
 
 		list add: each.
 		self assert: (list includesAttribute: each name)].
-
-	self
-		deny: (list includesAttribute: self prefixedAttribute name);
-		deny: (list includesAttribute: self prefixedAttribute localName).
-
-	list add: self prefixedAttribute.
-	self
-		assert: (list includesAttribute: self prefixedAttribute name);
-		deny: (list includesAttribute: self prefixedAttribute localName).
 ]
 
 { #category : #tests }
@@ -593,20 +504,18 @@ XMLAttributeListTest >> testIncludesAttributeNode [
 	| list |
 
 	list := self emptyList.
-	self listItems do: [:each |
-		self deny: (list includesAttributeNode: each name).
+	self listItems withIndexDo: [:attribute :i | | included |
+		included :=
+			(self listItems
+				copyFrom: 1
+				to: i - 1) anySatisfy: [:each |
+				each isNamed: attribute name].
+		self assert:
+			(list includesAttributeNode: attribute name) =
+				included.
 
-		list add: each.
-		self assert: (list includesAttributeNode: each name)].
-
-	self
-		deny: (list includesAttributeNode: self prefixedAttribute name);
-		deny: (list includesAttributeNode: self prefixedAttribute localName).
-
-	list add: self prefixedAttribute.
-	self
-		assert: (list includesAttributeNode: self prefixedAttribute name);
-		assert: (list includesAttributeNode: self prefixedAttribute localName).
+		list add: attribute.
+		self assert: (list includesAttributeNode: attribute name)].
 ]
 
 { #category : #tests }
@@ -629,96 +538,49 @@ XMLAttributeListTest >> testIncludesAttributeNodeNamespaceURI [
 			(list
 				includesAttributeNode: each name
 				namespaceURI: '')].
-
-	self deny:
-		(list
-			includesAttributeNode: self prefixedAttribute name
-			namespaceURI: 'defaultNS').
-	self deny:
-		(list
-			includesAttributeNode: self prefixedAttribute localName
-			namespaceURI: 'defaultNS').
-	self deny:
-		(list
-			includesAttributeNode: self prefixedAttribute name
-			namespaceURI: '').
-	self deny:
-		(list
-			includesAttributeNode: self prefixedAttribute localName
-			namespaceURI: '').
-
-	list add: self prefixedAttribute.
-	self deny:
-		(list
-			includesAttributeNode: self prefixedAttribute name
-			namespaceURI: 'defaultNS').
-	self deny:
-		(list
-			includesAttributeNode: self prefixedAttribute localName
-			namespaceURI: 'defaultNS').
-	self assert:
-		(list
-			includesAttributeNode: self prefixedAttribute name
-			namespaceURI: '').
-	self assert:
-		(list
-			includesAttributeNode: self prefixedAttribute localName
-			namespaceURI: '').
 ]
 
 { #category : #tests }
 XMLAttributeListTest >> testRemoveAttribute [
-	| list |
+	(Array
+		with: self listWithItems
+		with: self listWithItems reversed)
+		do: [:list | | copy |
+			copy := list copy.
+			copy withIndexDo: [:each :i |
+				self
+					assert: (list removeAttribute: each name) = each value;
+					deny: (list includes: each).
+				self
+					assertList: list
+					equals: (copy allButFirst: i).
 
-	list := self listWithItems.
-	self listItems do: [:each |
-		self
-			assert: (list removeAttribute: each name) = each value;
-			deny: (list includes: each).
-	
-		self
-			should: [list removeAttribute: each name]
-			raise: Error].
-
-	list add: self prefixedAttribute.
-	self
-		should: [list removeAttribute: self prefixedAttribute localName]
-		raise: Error.
-	self assert: (list includes: self prefixedAttribute).
-	self assert:
-		(list removeAttribute: self prefixedAttribute name) =
-			self prefixedAttribute value.
-	self deny: (list includes: self prefixedAttribute).
+				self
+					should: [list removeAttribute: each name]
+					raise: Error]].
 ]
 
 { #category : #tests }
 XMLAttributeListTest >> testRemoveAttributeIfAbsent [
-	| list |
+	(Array
+		with: self listWithItems
+		with: self listWithItems reversed)
+		do: [:list | | copy |
+			copy := list copy.
+			copy withIndexDo: [:each :i |
+				self assert:
+					(list
+						removeAttribute: each name
+						ifAbsent: [self fail]) = each value;
+					deny: (list includes: each).
+				self
+					assertList: list
+					equals: (copy allButFirst: i).
 
-	list := self listWithItems.
-	self listItems do: [:each |
-		self assert:
-			(list
-				removeAttribute: each name
-				ifAbsent: [self fail]) = each value.
-		self deny: (list includes: each).
-	
-		self assert:
-			(list
-				removeAttribute: each name
-				ifAbsent: [self absentListItem value]) = self absentListItem value].
-
-	list add: self prefixedAttribute.
-	self assert:
-		(list
-			removeAttribute: self prefixedAttribute localName
-			ifAbsent: [self absentListItem value]) = self absentListItem value.
-	self assert: (list includes: self prefixedAttribute).
-	self assert:
-		(list
-			removeAttribute: self prefixedAttribute name
-			ifAbsent: [self fail]) = self prefixedAttribute value.
-	self deny: (list includes: self prefixedAttribute).
+				self assert:
+					(list
+						removeAttribute: each name
+						ifAbsent: [self absentListItem value]) = self absentListItem value]].
 ]
 
 { #category : #tests }
