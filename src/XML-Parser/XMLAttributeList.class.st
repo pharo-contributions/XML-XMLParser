@@ -173,9 +173,11 @@ XMLAttributeList >> attributeValueAt: aName [
 
 { #category : #private }
 XMLAttributeList >> attributeValueAt: aName ifAbsent: aBlock [
-	^ (self
-		at: (self indexOfAttribute: aName)
-		ifAbsent: [^ aBlock value]) value
+	| i |
+
+	^ (i := self indexOfAttribute: aName) > 0
+		ifTrue: [(self at: i) value]
+		ifFalse: [aBlock value]
 ]
 
 { #category : #private }
@@ -183,16 +185,25 @@ XMLAttributeList >> attributeValueAt: aName ifAbsentPut: aBlock [
 	^ self
 		attributeValueAt: aName
 		ifAbsent: [
-			self
-				attributeValueAt: aName
-				put: aBlock value]
+			"use #addToCopyLast:, since we know it's not in the collection"
+			(self addToCopyLast:
+				(self attributeClass
+					name: aName
+					value: aBlock value)) value]
 ]
 
 { #category : #private }
 XMLAttributeList >> attributeValueAt: aName put: aValue [
-	(self includesAttribute: aName)
-		ifTrue: [(self attributeNodeAt: aName) value: aValue]
-		ifFalse: [self addAttributeName: aName value: aValue].
+	| i |
+
+	(i := self indexOfAttribute: aName) > 0
+		ifTrue: [(self at: i) value: aValue]
+		ifFalse: [
+			"use #addToCopyLast: since we know it's not already in the collection"
+			self addToCopyLast:
+				(self attributeClass
+					name: aName
+					value: aValue)].
 	^ aValue.
 ]
 
@@ -255,6 +266,8 @@ XMLAttributeList >> includesAttributeNode: aName namespaceURI: aURI [
 
 { #category : #private }
 XMLAttributeList >> indexOfAttribute: aName [
+	"Returns the index of the attribute with the exact name of aName"
+
 	"to:do: for speed, because this is used for attribute lookup"
 	1 to: collection size do: [:i | | node |
 		(node := collection at: i) name = aName

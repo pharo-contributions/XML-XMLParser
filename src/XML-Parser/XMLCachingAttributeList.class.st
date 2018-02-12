@@ -69,6 +69,20 @@ XMLCachingAttributeList >> attributeValueAt: aName ifAbsent: aBlock [
 		ifAbsent: [^ aBlock value]) value
 ]
 
+{ #category : #private }
+XMLCachingAttributeList >> attributeValueAt: aName put: aValue [
+	(self attributeNodesByName
+		at: aName
+		ifAbsent: [
+			"use #addToCopyLast: since we know it's not already in the collection"
+			self addToCopyLast:
+				(self attributeClass
+					name: aName
+					value: aValue).
+			^ aValue]) value: aValue.
+	^ aValue.
+]
+
 { #category : #defaults }
 XMLCachingAttributeList >> copyClass [
 	"use the non-caching superclass for copies for performance"
@@ -87,6 +101,13 @@ XMLCachingAttributeList >> includes: aNode [
 { #category : #testing }
 XMLCachingAttributeList >> includesAttribute: aName [
 	^ self attributeNodesByName includesKey: aName
+]
+
+{ #category : #private }
+XMLCachingAttributeList >> indexOfAttribute: aName [
+	^ (self attributeNodesByName includesKey: aName)
+		ifTrue: [super indexOfAttribute: aName]
+		ifFalse: [0]
 ]
 
 { #category : #removing }
