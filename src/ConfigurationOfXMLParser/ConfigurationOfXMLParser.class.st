@@ -4213,7 +4213,7 @@ ConfigurationOfXMLParser >> version337: spec [
 
         spec for: #common do: [
                 spec blessing: #release.
-			spec package: 'XML-Parser' with: 'XML-Parser-monty.434'.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.435'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.223'.
                 ].
 ]
