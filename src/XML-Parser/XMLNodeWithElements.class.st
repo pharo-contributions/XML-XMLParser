@@ -942,14 +942,15 @@ XMLNodeWithElements >> removeAllFormattingNodes [
 	element siblings are assumed to be formatting, unless they have at least
 	one non-empty/non-whitespace sibling string node.
 
-	WARNING: documents with 'mixed content' elements that have string and element
-	children intersperesed, like this:
-		<row>one<sep/>two<sep/>three</row>
-	arent recognized when all of the string nodes are whitespace, so this:
+	WARNING: 'mixed content' elements that can have both string and element
+	children, like this:
+		<row>one<sep/> <sep/>three</row>
+	aren't properly recognized when all of the string nodes are whitespace,
+	so this:
 		<row> <sep/> <sep/> </row>
-	will become:
+	will become this:
 		<row><sep/><sep/></row>
-	which might not be correct."
+	which might not be acceptable."
 
 	| hasFormattingStringNodes hasElements |
 

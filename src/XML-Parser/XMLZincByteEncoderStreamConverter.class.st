@@ -6,8 +6,7 @@ Class {
 	#superclass : #XMLStreamConverter,
 	#instVars : [
 		'zincByteEncoder',
-		'stringReadStreamAdapter',
-		'nullStream'
+		'stringReadStreamAdapter'
 	],
 	#classVars : [
 		'NullReadStream'
