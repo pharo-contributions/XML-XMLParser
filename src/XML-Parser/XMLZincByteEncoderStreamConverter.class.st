@@ -9,6 +9,9 @@ Class {
 		'stringReadStreamAdapter',
 		'nullStream'
 	],
+	#classVars : [
+		'NullReadStream'
+	],
 	#category : #'XML-Parser-Streams'
 }
 
@@ -21,6 +24,13 @@ XMLZincByteEncoderStreamConverter class >> basicCanConvertEncoding: anEncodingNa
 		ifAbsent: [false]
 ]
 
+{ #category : #'class initialization' }
+XMLZincByteEncoderStreamConverter class >> initialize [
+	"self initialize"
+
+	NullReadStream := XMLNullReadStream new
+]
+
 { #category : #initialization }
 XMLZincByteEncoderStreamConverter >> initializeForEncoding: anEncodingName [
 	zincByteEncoder :=
@@ -30,11 +40,10 @@ XMLZincByteEncoderStreamConverter >> initializeForEncoding: anEncodingName [
 	character streams for ZnByteEncoder, which exepcts binary streams, and
 	since it's only ever set to a non-null stream during #nextFromStream:,
 	instances can still be shared by multiple streams, just not re-entrently,
-	which is OK since this class is explicitly stateful and doesn't promise
-	thread-safety."
-	nullStream := XMLNullReadStream new.
+	which is OK since this class is explicitly stateful and so not
+	automatically thread-safe."
 	stringReadStreamAdapter :=
-		XMLStringReadStreamAdapter on: nullStream.
+		XMLStringReadStreamAdapter on: NullReadStream.
 ]
 
 { #category : #decoding }
@@ -46,7 +55,7 @@ XMLZincByteEncoderStreamConverter >> nextFromStream: aStream [
 			nextChar :=
 				zincByteEncoder nextFromStream:
 					(stringReadStreamAdapter on: aStream).
-			stringReadStreamAdapter on: nullStream.
+			stringReadStreamAdapter on: NullReadStream.
 			^ nextChar]
 ]
 

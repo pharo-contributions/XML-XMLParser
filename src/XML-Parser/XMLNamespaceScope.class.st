@@ -397,6 +397,38 @@ XMLNamespaceScope >> unmapPrefixes [
 ]
 
 { #category : #validating }
+XMLNamespaceScope >> validateAndResolvePrefix: aPrefix ofAttribute: anAttribute [
+	"performance critical method"
+	aPrefix size > 0 "optimization"
+		ifTrue: [
+			^ self
+				prefixMappingAt: aPrefix
+				ifAbsent: [
+					aPrefix = 'xml'
+						ifTrue: [self xmlNamespaceURI]
+						ifFalse: [					
+							aPrefix = 'xmlns'
+								ifTrue: [
+									"this can't happen during parsing, because
+									'xmlns' attributes are treated as namespace
+									declarations, but it can happen through DOM tree
+									manipulation, for example:
+										attributeNode prefix: 'xmlns'
+									"
+									self errorXMLNSPrefixInAttribute: anAttribute]
+								ifFalse: [
+									self
+										errorUnmappedPrefix: aPrefix
+										inAttribute: anAttribute]]]]
+		ifFalse: [
+			"catch names like ':name' with an empty prefix"
+			(anAttribute size > 0
+				and: [(anAttribute at: 1) == $:])
+				ifTrue: [self errorInvalidUnprefixedAttribute: anAttribute].
+			^ '']
+]
+
+{ #category : #validating }
 XMLNamespaceScope >> validateAndResolvePrefix: aPrefix ofElement: anElement [
 	aPrefix size > 0 "optimization"
 		ifTrue: [
@@ -445,57 +477,6 @@ XMLNamespaceScope >> validatePrefix: aPrefix beforeMappingTo: aURI [
 ]
 
 { #category : #validating }
-XMLNamespaceScope >> validatePrefixesAttribute: anAttribute hasNoAliasIn: anAssociationSetOrNil [
-	"performance critical method"
-	| prefix |
-
-	(prefix := anAttribute xmlPrefixBeforeLocalName) size > 0 "optimization"
-		ifTrue: [| attributeLocalNamesAndURIs uri oldSize |
-			"not initialized unless needed"
-			attributeLocalNamesAndURIs :=
-				anAssociationSetOrNil
-					ifNil: [attributeLocalNamesAndURIs := Set new].
-
-			uri :=
-				self
-					prefixMappingAt: prefix
-					ifAbsent: [
-						prefix = 'xml'
-							ifTrue: [self xmlNamespaceURI]
-							ifFalse: [					
-								prefix = 'xmlns'
-									ifTrue: [
-										"this can't happen during parsing, because
-										'xmlns' attributes are treated as namespace
-										declarations, but it can happen through DOM tree
-										manipulation, for example:
-											attributeNode prefix: 'xmlns'
-										"
-										self errorXMLNSPrefixInAttribute: anAttribute]
-									ifFalse: [
-										self
-											errorUnmappedPrefix: prefix
-											inAttribute: anAttribute]]].
-
-			"a #size check after is faster than #includes:"
-			oldSize := attributeLocalNamesAndURIs size.
-			(attributeLocalNamesAndURIs
-				add: (anAttribute xmlLocalNameAfterPrefix: prefix) -> uri;
-				size) > oldSize
-				ifFalse: [
-					self
-						errorAttribute: anAttribute
-						aliasesURI: uri].
-			^ attributeLocalNamesAndURIs]
-		ifFalse: [
-			"catch names like ':name' with an empty prefix"
-			(anAttribute size > 0
-				and: [(anAttribute at: 1) == $:])
-				ifTrue: [self errorInvalidUnprefixedAttribute: anAttribute].
-			^ anAssociationSetOrNil].
-]
-
-{ #category : #validating }
 XMLNamespaceScope >> validatePrefixesOfAttributes: anAttributeCollection [
 	^ self
 		validatePrefixesOfAttributes: anAttributeCollection asArray
@@ -509,11 +490,26 @@ XMLNamespaceScope >> validatePrefixesOfAttributes: anAttributeCollection from: a
 	| attributeLocalNamesAndURIs |
 
 	"#to:do: for speed"
-	aStart to: aStop do: [:i |
-		attributeLocalNamesAndURIs :=
+	aStart to: aStop do: [:i | | attribute prefix uri |
+		attribute := anAttributeCollection at: i.
+		prefix := attribute xmlPrefixBeforeLocalName.
+		(uri :=
 			self
-				validatePrefixesAttribute: (anAttributeCollection at: i)
-				hasNoAliasIn: attributeLocalNamesAndURIs]
+				validateAndResolvePrefix: prefix
+				ofAttribute: attribute) size > 0 "optimization"
+			ifTrue: [| oldSize |
+				oldSize :=
+					(attributeLocalNamesAndURIs
+						ifNil: [
+							"not initialized unless needed"
+							attributeLocalNamesAndURIs := Set new]) size.
+				(attributeLocalNamesAndURIs
+					add: (attribute xmlLocalNameAfterPrefix: prefix) -> uri;
+					size) > oldSize
+					ifFalse: [
+						self
+							errorAttribute: attribute xmlLocalNameAfterPrefix
+							aliasesURI: uri]]]
 ]
 
 { #category : #defaults }

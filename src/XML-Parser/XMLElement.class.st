@@ -125,7 +125,7 @@ XMLElement >> addedAttribute: anAttribute [
 			element == self
 				ifFalse: [element removeAttributeNode: anAttribute]].
 	anAttribute element: self.
-	self validateAttributeNamespacePrefixes.
+	self validateNamespacePrefixOfAttribute: anAttribute.
 ]
 
 { #category : #private }
@@ -133,8 +133,8 @@ XMLElement >> addedElement: anElement [
 	(self hasNamespaces
 		and: [self namespaceScope ~= anElement namespaceScope])
 		ifTrue: [
-			anElement allNamespaceScopesDo: [:each |
-				each inheritMappingsFrom: self namespaceScope]]
+			anElement allElementsDo: [:each |
+				each namespaceScope inheritMappingsFrom: self namespaceScope]]
 ]
 
 { #category : #enumerating }
@@ -147,40 +147,39 @@ XMLElement >> allElementsDo: aBlock [
 ]
 
 { #category : #private }
-XMLElement >> allNamespaceScopesDo: aBlock [
-	self allElementsDo: [:each |
-		aBlock value: each namespaceScope]
-]
-
-{ #category : #private }
-XMLElement >> allNamespaceScopesDo: aBlock whileTrue: aConditionalBlock [
-	"Updates the receiver's scope and the scopes of all descendants with aBlock
-	where aConditional is true but does not validate the namespaces after"
-
-	(aConditionalBlock value: self namespaceScope)
+XMLElement >> allNamespaceScopesRemapPrefix: aPrefix from: anOldURIOrNil to: aNewURI [
+	((self namespaceScope includesPrefix: aPrefix) not
+		or: [
+			anOldURIOrNil notNil
+				and: [
+					self namespaceScope
+						includesPrefix: aPrefix
+						mappedTo: anOldURIOrNil]])
 		ifTrue: [
-			aBlock value: self namespaceScope.
+			self namespaceScope
+				mapPrefix: aPrefix
+				to: aNewURI.
 			self elementsDo: [:each |
 				each
-					allNamespaceScopesDo: aBlock
-					whileTrue: aConditionalBlock]]
+					allNamespaceScopesRemapPrefix: aPrefix
+					from: anOldURIOrNil
+					to: aNewURI]]
 ]
 
 { #category : #private }
-XMLElement >> allNamespaceScopesWithValidationDo: aBlock whileTrue: aConditionalBlock [
-	"Updates the receiver's scope and the scopes of all descendants with aBlock
-	where aConditional is true and validates the namespaces after"
-
-	(aConditionalBlock value: self namespaceScope)
+XMLElement >> allNamespaceScopesUnmapPrefix: aPrefix mappedTo: aURI [
+	(self namespaceScope
+		includesPrefix: aPrefix
+		mappedTo: aURI)
 		ifTrue: [
-			aBlock value: self namespaceScope.
+			self namespaceScope unmapPrefix: aPrefix.
 			self
 				validateNamespacePrefix;
-				validateAttributeNamespacePrefixes.
+				validateNamespacePrefixesOfAttributes.
 			self elementsDo: [:each |
 				each
-					allNamespaceScopesWithValidationDo: aBlock
-					whileTrue: aConditionalBlock]]
+					allNamespaceScopesUnmapPrefix: aPrefix
+					mappedTo: aURI]]
 ]
 
 { #category : #accessing }
@@ -323,27 +322,14 @@ XMLElement >> declareNamespaces: anAssociationCollection [
 
 { #category : #namespacing }
 XMLElement >> declarePrefix: aPrefix uri: aURI [
-	| oldMapping |
-
 	self ensureUsesNamespaces.
-	oldMapping :=
-		self namespaceScope
-			prefixMappingAt: aPrefix
-			ifAbsent: [nil].
-	(oldMapping notNil
-		and: [oldMapping = aURI])
-		ifFalse: [
-			self
-				allNamespaceScopesDo: [:scope |
-					scope
-						mapPrefix: aPrefix
-						to: aURI]
-				whileTrue: [:scope |
-					(scope includesPrefix: aPrefix) not
-						or: [
-							scope
-								includesPrefix: aPrefix
-								mappedTo: oldMapping]]].
+	self
+		allNamespaceScopesRemapPrefix: aPrefix
+		from:
+			(self namespaceScope
+				prefixMappingAt: aPrefix
+				ifAbsent: [nil])
+		to: aURI.
 ]
 
 { #category : #namespacing }
@@ -380,17 +366,9 @@ XMLElement >> defaultNamespace [
 
 { #category : #namespacing }
 XMLElement >> defaultNamespace: aURI [
-	"unlike non-default namespaces, the uri can be empty to shadow an
-	inherited default namesapce"
-	| oldNamespace |
-
-	self ensureUsesNamespaces.
-	oldNamespace := self defaultNamespace.
 	self
-		allNamespaceScopesDo: [:scope |
-			scope defaultNamespace: aURI]
-		whileTrue: [:scope |
-			scope defaultNamespace = oldNamespace].
+		declarePrefix: ''
+		uri: aURI
 ]
 
 { #category : #accessing }
@@ -743,7 +721,7 @@ XMLElement >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 		renamedAttribute: anAttribute
 		from: anOldName
 		to: aNewName.
-	self validateAttributeNamespacePrefixes.
+	self validateNamespacePrefixOfAttribute: anAttribute.
 ]
 
 { #category : #namespacing }
@@ -820,20 +798,13 @@ XMLElement >> undeclareDefaultNamespace [
 
 { #category : #namespacing }
 XMLElement >> undeclarePrefix: aPrefix [
-	| currentNamespaceURI |
-
 	self ensureUsesNamespaces.
-	currentNamespaceURI :=
-		self namespaceScope
-			prefixMappingAt: aPrefix
-			ifAbsent: [^ self].
 	self
-		allNamespaceScopesWithValidationDo: [:scope |
-			scope unmapPrefix: aPrefix]
-		whileTrue: [:scope |
-			scope
-				includesPrefix: aPrefix
-				mappedTo: currentNamespaceURI].
+		allNamespaceScopesUnmapPrefix: aPrefix
+		mappedTo:
+			(self namespaceScope
+				prefixMappingAt: aPrefix
+				ifAbsent: [^ self]).
 ]
 
 { #category : #namespacing }
@@ -844,23 +815,6 @@ XMLElement >> undeclarePrefixes [
 ]
 
 { #category : #private }
-XMLElement >> validateAttributeNamespacePrefixes [
-	"This is similar to #validatePrefixesOfAttributes:from:to:, but for
-	a collection of XMLAttributes instead of attribute names.
-
-	Not performance critical because it's only used after parsing when
-	an attribute is added or renamed in a parsed DOM tree."
-
-	self usesNamespaces
-		ifTrue: [| attributeLocalNamesAndURIs |
-			self attributeNodesDo: [:attribute |
-				attributeLocalNamesAndURIs := 
-					self namespaceScope
-						validatePrefixesAttribute: attribute name
-						hasNoAliasIn: attributeLocalNamesAndURIs]]
-]
-
-{ #category : #private }
 XMLElement >> validateNamespacePrefix [
 	(self usesNamespaces
 		and: [self hasPrefix])
@@ -868,6 +822,47 @@ XMLElement >> validateNamespacePrefix [
 			self namespaceScope
 				validateAndResolvePrefix: self prefix
 				ofElement: self name]
+]
+
+{ #category : #private }
+XMLElement >> validateNamespacePrefixOfAttribute: anAttribute [
+	| attributePrefix attributeLocalName attributeNamespaceURI |
+
+	self usesNamespaces
+		ifFalse: [^ self].
+
+	attributePrefix := anAttribute prefix.
+	"send #validateAndResolvePrefix:ofAttribute: even if attributePrefix is
+	empty, to catch names like ':name', and return if the resolved URI is empty,
+	since non-default namespace URIs can't be empty, and attribute namespaces
+	are always non-default"
+	(attributeNamespaceURI :=
+		self namespaceScope
+			validateAndResolvePrefix: attributePrefix
+			ofAttribute: anAttribute name) size > 0
+		ifFalse: [^ self].
+	attributeLocalName :=
+		anAttribute name xmlLocalNameAfterPrefix: attributePrefix.
+	self attributeNodesDo: [:each | | eachLocalName |
+		(each ~= anAttribute
+			and: [(eachLocalName := each localName) = attributeLocalName])
+			ifTrue: [
+				(self namespaceScope resolvePrefix:
+					(each name xmlPrefixBeforeLocalName: eachLocalName)) =
+						attributeNamespaceURI
+					ifTrue: [
+						self namespaceScope
+							errorAttribute: each
+							aliasesURI: attributeNamespaceURI]]].
+]
+
+{ #category : #private }
+XMLElement >> validateNamespacePrefixesOfAttributes [
+	(self usesNamespaces
+		and: [self hasAttributes])
+		ifTrue: [
+			self namespaceScope validatePrefixesOfAttributes:
+				self attributeNames]
 ]
 
 { #category : #printing }
