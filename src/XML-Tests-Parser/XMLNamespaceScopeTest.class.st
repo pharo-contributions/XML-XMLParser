@@ -130,12 +130,16 @@ XMLNamespaceScopeTest >> testIncludesPrefix [
 		deny: (scope includesPrefix: 'xmlns').
 
 	"cannot map xmlns prefix, but can map xml"
-	scope mapPrefix: 'xml' to: XMLNamespaceScope xmlNamespaceURI.
+	scope
+		mapPrefix: 'xml'
+		to: scope xmlNamespaceURI.
 	self assert: (scope includesPrefix: 'xml').
 
 	self namespaces keysAndValuesDo: [:prefix :uri |
 		self deny: (scope includesPrefix: prefix).
-		scope mapPrefix: prefix to: uri.
+		scope
+			mapPrefix: prefix
+			to: uri.
 		self assert: (scope includesPrefix: prefix)].
 ]
 
@@ -144,18 +148,37 @@ XMLNamespaceScopeTest >> testIncludesPrefixMappedTo [
 	| scope |
 
 	scope := self newNamespaceScope.
-	self
-		deny: (scope includesPrefix: 'xml' mappedTo: XMLNamespaceScope xmlNamespaceURI);
-		deny: (scope includesPrefix: 'xmlns' mappedTo: XMLNamespaceScope xmlnsNamespaceURI).
+	"these are not mapped by default, but are still resolvable"
+	self deny:
+		(scope
+			includesPrefix: 'xml'
+			mappedTo: scope xmlNamespaceURI).
+	self deny:
+		(scope
+			includesPrefix: 'xmlns'
+			mappedTo: scope xmlnsNamespaceURI).
 
 	"cannot map xmlns prefix, but can map xml"
-	scope mapPrefix: 'xml' to: XMLNamespaceScope xmlNamespaceURI.
-	self assert: (scope includesPrefix: 'xml' mappedTo: XMLNamespaceScope xmlNamespaceURI).
+	scope
+		mapPrefix: 'xml'
+		to: scope xmlNamespaceURI.
+	self assert:
+		(scope
+			includesPrefix: 'xml'
+			mappedTo: scope xmlNamespaceURI).
 
 	self namespaces keysAndValuesDo: [:prefix :uri |
-		self deny: (scope includesPrefix: prefix mappedTo: uri).
-		scope mapPrefix: prefix to: uri.
-		self assert: (scope includesPrefix: prefix mappedTo: uri)].
+		self deny:
+			(scope
+				includesPrefix: prefix
+				mappedTo: uri).
+		scope
+			mapPrefix: prefix
+			to: uri.
+		self assert:
+			(scope
+				includesPrefix: prefix
+				mappedTo: uri)].
 ]
 
 { #category : #tests }
@@ -232,7 +255,7 @@ XMLNamespaceScopeTest >> testMapPrefixTo [
 				to: scope xmlnsNamespaceURI]
 		raise: XMLNamespaceException.
 
-	"cannot bind a new prefix to the xml, xmlns, or empty namespace URI"
+	"cannot bind a new prefix to the xml, xmlns, or empty namespace URIs"
 	(Array
 		with: scope xmlNamespaceURI
 		with: scope xmlnsNamespaceURI
@@ -522,15 +545,109 @@ XMLNamespaceScopeTest >> testUnmapPrefixes [
 ]
 
 { #category : #tests }
+XMLNamespaceScopeTest >> testValidateAndResolvePrefixOfAttribute [
+	| scope |
+
+	scope := self newNamespaceScope.
+	self namespaces keysAndValuesDo: [:prefix :uri | | attribute |
+		attribute := 'name' qualifyWithXMLPrefix: prefix.
+		"unprefixed attributes have no namespace URI"
+		prefix
+			ifEmpty: [
+				scope
+					mapPrefix: prefix
+					to: uri.
+				self assert:
+					(scope
+						validateAndResolvePrefix: prefix
+						ofAttribute: attribute) = '']
+			ifNotEmpty: [
+				self
+					should: [
+						scope
+							validateAndResolvePrefix: prefix
+							ofAttribute: attribute]
+					raise: XMLNamespaceException.
+				scope
+					mapPrefix: prefix
+					to: uri.
+				self assert:
+					(scope
+						validateAndResolvePrefix: prefix
+						ofAttribute: attribute) = uri]].
+
+	self assert:
+		(scope
+			validateAndResolvePrefix: 'xml'
+			ofAttribute: ('name' qualifyWithXMLPrefix: 'xml')) =
+				scope xmlNamespaceURI.
+	"cannot use 'xmlns' as an attribute prefix, since it is reserved for
+	namespace declarations"
+	self
+		should: [
+			scope
+				validateAndResolvePrefix: 'xmlns'
+				ofAttribute: ('name' qualifyWithXMLPrefix: 'xmlns')]
+		raise: XMLNamespaceException.
+	self
+		should: [
+			scope
+				validateAndResolvePrefix: ''
+				ofAttribute: ':name']
+		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
+XMLNamespaceScopeTest >> testValidateAndResolvePrefixOfElement [
+	| scope |
+
+	scope := self newNamespaceScope.
+	self namespaces keysAndValuesDo: [:prefix :uri | | element |
+		element := 'name' qualifyWithXMLPrefix: prefix.
+		prefix
+			ifNotEmpty: [
+				self
+					should: [
+						scope
+							validateAndResolvePrefix: prefix
+							ofElement: element]
+					raise: XMLNamespaceException].
+		scope
+			mapPrefix: prefix
+			to: uri.
+		self assert:
+			(scope
+				validateAndResolvePrefix: prefix
+				ofElement: element) = uri].
+
+	self assert:
+		(scope
+			validateAndResolvePrefix: 'xml'
+			ofElement: ('name' qualifyWithXMLPrefix: 'xml')) =
+				scope xmlNamespaceURI.
+	"cannot use 'xmlns' as an element prefix either"
+	self
+		should: [
+			scope
+				validateAndResolvePrefix: 'xmlns'
+				ofElement: ('name' qualifyWithXMLPrefix: 'xmlns')]
+		raise: XMLNamespaceException.
+	self
+		should: [
+			scope
+				validateAndResolvePrefix: ''
+				ofElement: ':name']
+		raise: XMLNamespaceException.
+]
+
+{ #category : #tests }
 XMLNamespaceScopeTest >> testValidatePrefixesOfAttributes [
 	| scope attributes |
 
 	scope := self newNamespaceScopeWithNamespaces.
 	attributes :=
 		self namespaces keys collect: [:each |
-			each = ''
-				ifTrue: ['name']
-				ifFalse: [each, ':name']].
+			'name' qualifyWithXMLPrefix: each].
 	self
 		shouldnt: [
 			scope validatePrefixesOfAttributes: attributes]
@@ -538,7 +655,7 @@ XMLNamespaceScopeTest >> testValidatePrefixesOfAttributes [
 	self
 		should: [
 			scope validatePrefixesOfAttributes:
-				(attributes copyWith: 'undeclared:name')]
+				(attributes copyWith: ('name' qualifyWithXMLPrefix: 'undeclared'))]
 		raise: XMLNamespaceException.
 	self
 		should: [
@@ -546,11 +663,12 @@ XMLNamespaceScopeTest >> testValidatePrefixesOfAttributes [
 				(attributes copyWith: ':name')]
 		raise: XMLNamespaceException.
 
-	self namespaces keysAndValuesDo: [:prefix :uri | | attribute |
+	self namespaces keysAndValuesDo: [:prefix :uri | | aliasPrefix attribute |
+		aliasPrefix := 'alias', prefix.
 		scope
-			mapPrefix: 'alias', prefix
+			mapPrefix: aliasPrefix
 			to: uri.
-		attribute := 'alias', prefix, ':name'.
+		attribute := 'name' qualifyWithXMLPrefix: aliasPrefix.
 		prefix = ''
 			ifTrue: [
 				self
