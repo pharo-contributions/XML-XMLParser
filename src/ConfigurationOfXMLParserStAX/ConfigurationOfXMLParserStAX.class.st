@@ -324,7 +324,7 @@ ConfigurationOfXMLParserStAX >> baseline132: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3.3.4' ].
+			spec project: 'XMLParser' with: #'release-3.3.8' ].
 
 	spec
 		for: #gemstone
