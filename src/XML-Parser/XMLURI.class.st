@@ -399,12 +399,12 @@ XMLURI >> fragment [
 	^ self percentDecode: self rawFragment
 ]
 
-{ #category : #retrieving }
+{ #category : #resolving }
 XMLURI >> get [
 	^ self asRetrievableResource get
 ]
 
-{ #category : #retrieving }
+{ #category : #resolving }
 XMLURI >> getUpToLimit: aMaxSize decoding: aBoolean [
 	^ self asRetrievableResource
 		getUpToLimit: aMaxSize
@@ -1042,12 +1042,12 @@ XMLURI >> scheme: aString [
 	scheme := aString
 ]
 
-{ #category : #retrieving }
+{ #category : #resolving }
 XMLURI >> streamGet [
 	^ self asRetrievableResource streamGet
 ]
 
-{ #category : #retrieving }
+{ #category : #resolving }
 XMLURI >> streamGetUpToLimit: aMaxSize decoding: aBoolean [
 	^ self asRetrievableResource
 		streamGetUpToLimit: aMaxSize

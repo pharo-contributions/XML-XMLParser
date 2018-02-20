@@ -175,7 +175,7 @@ XMLAttributeList >> attributeValueAt: aName [
 XMLAttributeList >> attributeValueAt: aName ifAbsent: aBlock [
 	| i |
 
-	^ (i := self indexOfAttribute: aName) > 0
+	^ (i := self indexOfAttributeValueAt: aName) > 0
 		ifTrue: [(self at: i) value]
 		ifFalse: [aBlock value]
 ]
@@ -196,7 +196,7 @@ XMLAttributeList >> attributeValueAt: aName ifAbsentPut: aBlock [
 XMLAttributeList >> attributeValueAt: aName put: aValue [
 	| i |
 
-	(i := self indexOfAttribute: aName) > 0
+	(i := self indexOfAttributeValueAt: aName) > 0
 		ifTrue: [(self at: i) value: aValue]
 		ifFalse: [
 			"use #addToCopyLast: since we know it's not already in the collection"
@@ -244,7 +244,7 @@ XMLAttributeList >> duplicateIndexOf: aNode notAt: anIndex [
 
 { #category : #testing }
 XMLAttributeList >> includesAttribute: aName [
-	^ (self indexOfAttribute: aName) > 0
+	^ (self indexOfAttributeValueAt: aName) > 0
 ]
 
 { #category : #testing }
@@ -265,10 +265,11 @@ XMLAttributeList >> includesAttributeNode: aName namespaceURI: aURI [
 ]
 
 { #category : #private }
-XMLAttributeList >> indexOfAttribute: aName [
-	"Returns the index of the attribute with the exact name of aName"
+XMLAttributeList >> indexOfAttributeValueAt: aName [
+	"Returns the index of the attribute value with the exact name of aName"
 
-	"to:do: for speed, because this is used for attribute lookup"
+	"this needs to be fast, for #attributeValueAt:... methods, so
+	use #to:do: for speed"
 	1 to: collection size do: [:i | | node |
 		(node := collection at: i) name = aName
 			ifTrue: [^ i]].
@@ -277,14 +278,14 @@ XMLAttributeList >> indexOfAttribute: aName [
 
 { #category : #removing }
 XMLAttributeList >> removeAttribute: aName [
-	^ (self removeAt: (self indexOfAttribute: aName)) value
+	^ (self removeAt: (self indexOfAttributeValueAt: aName)) value
 ]
 
 { #category : #removing }
 XMLAttributeList >> removeAttribute: aName ifAbsent: aBlock [
 	| i |
 
-	(i := self indexOfAttribute: aName) > 0
+	(i := self indexOfAttributeValueAt: aName) > 0
 		ifTrue: [^ (self removeAt: i) value]
 		ifFalse: [^ aBlock value].
 ]

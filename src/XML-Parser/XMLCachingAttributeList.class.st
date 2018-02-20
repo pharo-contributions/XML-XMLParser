@@ -104,9 +104,9 @@ XMLCachingAttributeList >> includesAttribute: aName [
 ]
 
 { #category : #private }
-XMLCachingAttributeList >> indexOfAttribute: aName [
+XMLCachingAttributeList >> indexOfAttributeValueAt: aName [
 	^ (self attributeNodesByName includesKey: aName)
-		ifTrue: [super indexOfAttribute: aName]
+		ifTrue: [super indexOfAttributeValueAt: aName]
 		ifFalse: [0]
 ]
 

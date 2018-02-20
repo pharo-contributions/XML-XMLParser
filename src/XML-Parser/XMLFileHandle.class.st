@@ -162,14 +162,14 @@ XMLFileHandle >> extension [
 		ifFalse: [self path]) copyAfter: $.
 ]
 
-{ #category : #retrieving }
+{ #category : #resolving }
 XMLFileHandle >> get [
 	^ self
 		getUpToLimit: nil
 		decoding: true
 ]
 
-{ #category : #retrieving }
+{ #category : #resolving }
 XMLFileHandle >> getUpToLimit: aMaxSize decoding: aBoolean [
 	| stream contents |
 
@@ -283,14 +283,14 @@ XMLFileHandle >> size [
 	^ self basicFileSize.
 ]
 
-{ #category : #retrieving }
+{ #category : #resolving }
 XMLFileHandle >> streamGet [
 	^ self
 		streamGetUpToLimit: nil
 		decoding: true
 ]
 
-{ #category : #retrieving }
+{ #category : #resolving }
 XMLFileHandle >> streamGetUpToLimit: aMaxSize decoding: aBoolean [
 	(aMaxSize notNil
 		and: [self size > aMaxSize])

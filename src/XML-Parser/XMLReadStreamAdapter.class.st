@@ -1,5 +1,5 @@
 "
-A base class for read stream adapters for basic streams that support #next, #peek, #atEnd, #position, #position:, and #reset. It adds support for skipping and reading upto a character or the end of the stream.
+A base class for read stream adapters for basic streams that support #next, #peek, #atEnd, #position, #position:, and #reset. It adds support for skipping and reading upto a character or the end of the stream, and ensures #next and #peek return nil when the stream is #atEnd instead of raising an error.
 "
 Class {
 	#name : #XMLReadStreamAdapter,

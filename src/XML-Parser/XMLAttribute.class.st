@@ -55,15 +55,6 @@ XMLAttribute >> expandedName [
 ]
 
 { #category : #testing }
-XMLAttribute >> hasLanguage: aLanguage [
-	| language xmlLang |
-
-	language := aLanguage asLowercase.
-	^ (xmlLang := self value asLowercase) = language
-		or: [(xmlLang copyUpTo: $-) = language].
-]
-
-{ #category : #testing }
 XMLAttribute >> hasNamespaceURI [
 	^ self namespaceURI notEmpty
 ]
@@ -81,15 +72,16 @@ XMLAttribute >> isAttribute [
 ]
 
 { #category : #testing }
-XMLAttribute >> isInLanguage: aLanguage [
+XMLAttribute >> isInLanguage: aLanguageTag [
 	"Returns true if the receiver is an xml:lang attribute or if its element
 	or an ancestor element has an xml:lang attribute, and if the value is an IETF
-	language tag that matches aLanguage or if its first ('-' separated) subtag
-	matches aLanguage."
+	language tag, like 'en-US', that matches aLanguageTag. Matching is
+	case-insensitive, and aLanguageTag can be partial, like 'en', and use
+	wildcards, like 'en-*'"
 
 	self name = 'xml:lang'
-		ifTrue: [^ self hasLanguage: aLanguage]
-		ifFalse: [^ super isInLanguage: aLanguage]
+		ifTrue: [^ self matchesLanguage: aLanguageTag]
+		ifFalse: [^ super isInLanguage: aLanguageTag]
 ]
 
 { #category : #testing }
@@ -115,6 +107,37 @@ XMLAttribute >> localName [
 	"this is recomputed from the name to save memory instead of
 	being stored in an inst var like it is for XMLElement"
 	^ self name xmlLocalNameAfterPrefix
+]
+
+{ #category : #testing }
+XMLAttribute >> matchesLanguage: aLanguageTag [
+	"Returns true if the value is an IETF language tag that matches aLanguageTag.
+	Matching is case-insensitive, and aLanguageTag can be partial, like 'en',
+	and use wildcards, like 'en-*'"
+
+	| sourceLanguageTag targetLanguageTag i |
+
+	((sourceLanguageTag := self value asLowercase) isEmpty
+		or: [(targetLanguageTag := aLanguageTag asLowercase) isEmpty])
+		ifTrue: [^ false].
+
+	sourceLanguageTag = targetLanguageTag
+		ifTrue: [^ true].
+
+	sourceLanguageTag := $- xmlSplit: sourceLanguageTag.
+	i := 0.
+	$-
+		xmlSplit: targetLanguageTag
+		do: [:each | | sourceLanguageSubTag |
+			sourceLanguageSubTag :=
+				sourceLanguageTag
+					at: (i := i + 1)
+					ifAbsent: [^ false].
+			(sourceLanguageSubTag = each
+				or: [each = '*'])
+				ifFalse: [^ false]].
+
+	^ true.
 ]
 
 { #category : #accessing }

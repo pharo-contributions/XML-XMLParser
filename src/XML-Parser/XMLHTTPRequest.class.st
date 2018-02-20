@@ -87,14 +87,14 @@ XMLHTTPRequest >> errorBadResponse: aResponse [
 		with: aResponse statusCode
 ]
 
-{ #category : #retrieving }
+{ #category : #resolving }
 XMLHTTPRequest >> get [
 	^ self
 		getUpToLimit: nil
 		decoding: true
 ]
 
-{ #category : #retrieving }
+{ #category : #resolving }
 XMLHTTPRequest >> getUpToLimit: aMaxSize decoding: aBoolean [
 	self method: 'GET'.
 	^ (self
@@ -123,7 +123,7 @@ XMLHTTPRequest >> printOn: aStream [
 		nextPut: $).
 ]
 
-{ #category : #retrieving }
+{ #category : #'resolving - response' }
 XMLHTTPRequest >> resolve [
 	"Sends and retrieves the response as an XMLHTTPResponse object."
 
@@ -132,7 +132,7 @@ XMLHTTPRequest >> resolve [
 		decoding: true
 ]
 
-{ #category : #retrieving }
+{ #category : #'resolving - response' }
 XMLHTTPRequest >> resolveUpToLimit: aMaxSize decoding: aBoolean [
 	| response |
 
@@ -170,14 +170,14 @@ XMLHTTPRequest >> setURL: aURLString [
 		acceptEncoding: self defaultAcceptEncoding.
 ]
 
-{ #category : #retrieving }
+{ #category : #resolving }
 XMLHTTPRequest >> streamGet [
 	^ self
 		streamGetUpToLimit: nil
 		decoding: true
 ]
 
-{ #category : #retrieving }
+{ #category : #resolving }
 XMLHTTPRequest >> streamGetUpToLimit: aMaxSize decoding: aBoolean [
 	"must be implemented using getUpToLimit:decoding: rather than the other
 	way around like XMLFileHandle does, because HTTP responses must be read
