@@ -1002,25 +1002,38 @@ XMLElementTest >> testIsInLanguage [
 	| nodeWithElements |
 
 	super testIsInLanguage.
-	nodeWithElements := self newNodeWithElements.
-	nodeWithElements allNodesDo: [:each |
-		self
-			deny: (each isInLanguage: 'en-us');
-			deny: (each isInLanguage: 'EN-US');
-			deny: (each isInLanguage: 'En');
-			deny: (each isInLanguage: 'de-de');
-			deny: (each isInLanguage: 'DE-DE');
-			deny: (each isInLanguage: 'De')].
 
-	nodeWithElements attributeAt: 'xml:lang' put: 'En-Us'.
-	nodeWithElements allNodesDo: [:each |
-		self
-			assert: (each isInLanguage: 'en-us');
-			assert: (each isInLanguage: 'EN-US');
-			assert: (each isInLanguage: 'En');
-			deny: (each isInLanguage: 'de-de');
-			deny: (each isInLanguage: 'DE-DE');
-			deny: (each isInLanguage: 'De')].
+	nodeWithElements := self newNodeWithElements.
+	self languageTagsAndFilters do: [:tagAndFilters |
+		| tag matchingFilters nonMatchingFilters |
+		
+		tag := tagAndFilters first.
+		matchingFilters := tagAndFilters second.
+		nonMatchingFilters := tagAndFilters third.
+		nodeWithElements allElementsDo: [:element |
+			(matchingFilters, nonMatchingFilters) do: [:each |
+				self deny: (element isInLanguage: each)]].
+		
+		nodeWithElements
+			attributeAt: 'xml:lang'
+			put: tag.
+		nodeWithElements allElementsDo: [:element |
+			matchingFilters do: [:each |
+				self assert: (element isInLanguage: each)].
+			nonMatchingFilters do: [:each |
+				self deny: (element isInLanguage: each)].
+
+			element = nodeWithElements
+				ifFalse: [
+					"ensure it can be shadowed"
+					element
+						attributeAt: 'xml:lang'
+						put: ''.
+					(matchingFilters, nonMatchingFilters) do: [:each |
+						self deny: (element isInLanguage: each)].
+					element removeAttribute: 'xml:lang']].
+		
+		nodeWithElements removeAttribute: 'xml:lang'].
 ]
 
 { #category : #tests }

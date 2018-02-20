@@ -68,30 +68,6 @@ XMLAttributeTest >> testExpandedName [
 ]
 
 { #category : #tests }
-XMLAttributeTest >> testHasLanguage [
-	| attribute |
-
-	attribute := self newNode.
-	attribute name: 'xml:lang'.
-	self
-		deny: (attribute hasLanguage: 'en-us');
-		deny: (attribute hasLanguage: 'EN-US');
-		deny: (attribute hasLanguage: 'En');
-		deny: (attribute hasLanguage: 'de-de');
-		deny: (attribute hasLanguage: 'DE-DE');
-		deny: (attribute hasLanguage: 'De').
-
-	attribute value: 'En-Us'.
-	self
-		assert: (attribute hasLanguage: 'en-us');
-		assert: (attribute hasLanguage: 'EN-US');
-		assert: (attribute hasLanguage: 'En');
-		deny: (attribute hasLanguage: 'de-de');
-		deny: (attribute hasLanguage: 'DE-DE');
-		deny: (attribute hasLanguage: 'De').
-]
-
-{ #category : #tests }
 XMLAttributeTest >> testHasNamespaceURI [
 	| element attribute |
 
@@ -142,25 +118,28 @@ XMLAttributeTest >> testIsInLanguage [
 	| element |
 
 	super testIsInLanguage.
-	element := self newElementWithAttributes.	
-	element attributeNodesDo: [:each |
-		self
-			deny: (each isInLanguage: 'en');
-			deny: (each isInLanguage: 'EN');
-			deny: (each isInLanguage: 'En');
-			deny: (each isInLanguage: 'en-us');
-			deny: (each isInLanguage: 'EN-US');
-			deny: (each isInLanguage: 'En-Us')].
 
-	element attributeAt: 'xml:lang' put: 'En'.
-	element attributeNodesDo: [:each |
-		self
-			assert: (each isInLanguage: 'en');
-			assert: (each isInLanguage: 'EN');
-			assert: (each isInLanguage: 'En');
-			deny: (each isInLanguage: 'en-us');
-			deny: (each isInLanguage: 'EN-US');
-			deny: (each isInLanguage: 'En-Us')].
+	element := self newElementWithAttributes.	
+	self languageTagsAndFilters do: [:tagAndFilters |
+		| tag matchingFilters nonMatchingFilters |
+		
+		tag := tagAndFilters first.
+		matchingFilters := tagAndFilters second.
+		nonMatchingFilters := tagAndFilters third.
+		element attributeNodesDo: [:attributeNode |
+			(matchingFilters, nonMatchingFilters) do: [:each |
+				self deny: (attributeNode isInLanguage: each)]].
+		
+		element
+			attributeAt: 'xml:lang'
+			put: tag.
+		element attributeNodesDo: [:attributeNode |
+			matchingFilters do: [:each |
+				self assert: (attributeNode isInLanguage: each)].
+			nonMatchingFilters do: [:each |
+				self deny: (attributeNode isInLanguage: each)]].
+		
+		element removeAttribute: 'xml:lang'].
 ]
 
 { #category : #tests }
@@ -214,6 +193,29 @@ XMLAttributeTest >> testLocalName [
 
 	attribute name: 'four'.
 	self assert: attribute localName = 'four'.
+]
+
+{ #category : #tests }
+XMLAttributeTest >> testMatchesLanguage [
+	| attribute |
+
+	attribute := self nodeClass named: 'xml:lang'.	
+	self languageTagsAndFilters do: [:tagAndFilters |
+		| tag matchingFilters nonMatchingFilters |
+		
+		tag := tagAndFilters first.
+		matchingFilters := tagAndFilters second.
+		nonMatchingFilters := tagAndFilters third.
+		(matchingFilters, nonMatchingFilters) do: [:each |
+			self deny: (attribute matchesLanguage: each)].
+		
+		attribute value: tag.
+		matchingFilters do: [:each |
+			self assert: (attribute matchesLanguage: each)].
+		nonMatchingFilters do: [:each |
+			self deny: (attribute matchesLanguage: each)].
+		
+		attribute value: ''].
 ]
 
 { #category : #tests }
