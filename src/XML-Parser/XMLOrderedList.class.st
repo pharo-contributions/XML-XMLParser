@@ -270,7 +270,7 @@ XMLOrderedList >> collect: aBlock [
 	| collected |
 
 	collected := self copyEmptyForCollect.
-	"use to:do: for speed"
+	"use #to:do: for speed"
 	1 to: collection size do: [:i |
 		collected addLast: (aBlock value: (collection at: i))].
 	^ collected.
@@ -281,7 +281,7 @@ XMLOrderedList >> collect: aCollectBlock thenSelect: aSelectBlock [
 	| selected |
 
 	selected := self copyEmpty.
-	"use to:do: for speed"
+	"use #to:do: for speed"
 	1 to: collection size do: [:i | | item |
 		item := aCollectBlock value: (collection at: i).
 		(aSelectBlock value: item)
@@ -299,7 +299,7 @@ XMLOrderedList >> copy [
 	| copy |
 
 	copy := self copyEmpty.
-	"#to:do: for speed with direct access"
+	"use #to:do: for speed with direct access"
 	1 to: collection size do: [:i |
 		copy addToCopyLast: (collection at: i)].
 	^ copy.
@@ -669,7 +669,7 @@ XMLOrderedList >> reject: aBlock [
 	| selected |
 
 	selected := self copyEmpty.
-	"use to:do: for speed"
+	"use #to:do: for speed"
 	1 to: collection size do: [:i | | item |
 		item := collection at: i.
 		(aBlock value: item)
@@ -682,7 +682,7 @@ XMLOrderedList >> reject: aRejectBlock thenCollect: aCollectBlock [
 	| collected |
 
 	collected := self copyEmptyForCollect.
-	"use to:do: for speed"
+	"use #to:do: for speed"
 	1 to: collection size do: [:i | | item |
 		item := collection at: i.
 		(aRejectBlock value: item)
@@ -795,7 +795,7 @@ XMLOrderedList >> select: aBlock [
 	| selected |
 
 	selected := self copyEmpty.
-	"use to:do: for speed"
+	"use #to:do: for speed"
 	1 to: collection size do: [:i | | item |
 		item := collection at: i.
 		(aBlock value: item)
@@ -808,7 +808,7 @@ XMLOrderedList >> select: aSelectBlock thenCollect: aCollectBlock [
 	| collected |
 
 	collected := self copyEmptyForCollect.
-	"use to:do: for speed"
+	"use #to:do: for speed"
 	1 to: collection size do: [:i | | item |
 		item := collection at: i.
 		(aSelectBlock value: item)

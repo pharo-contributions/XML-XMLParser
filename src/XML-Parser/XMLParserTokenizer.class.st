@@ -120,11 +120,11 @@ XMLParserTokenizer >> errorExpected: aDescription [
 ]
 
 { #category : #errors }
-XMLParserTokenizer >> errorExpected: aDescription butGot: aCharacter [
+XMLParserTokenizer >> errorExpected: aDescription butGot: aCharacterOrString [
 	self
-		formatParseError: 'Expected {1} but got "{2}"'
+		formatParseError: 'Expected {1} but got "{2}" instead'
 		with: aDescription
-		with: (aCharacter ifNil: [''])
+		with: aCharacterOrString
 ]
 
 { #category : #errors }
@@ -137,9 +137,9 @@ XMLParserTokenizer >> errorExpectedLiteral: aCharacterOrString [
 { #category : #errors }
 XMLParserTokenizer >> errorExpectedLiteral: anExpectedCharacterOrString butGot: aReceivedCharacterOrString [
 	self
-		formatParseError: 'Expected "{1}" but got "{2}"' 
+		formatParseError: 'Expected "{1}" but got "{2}" instead' 
 		with: anExpectedCharacterOrString
-		with: (aReceivedCharacterOrString ifNil: [''])
+		with: aReceivedCharacterOrString
 ]
 
 { #category : #'tokenizing - expecting' }
@@ -149,16 +149,6 @@ XMLParserTokenizer >> expectNext: aCharacter [
 
 { #category : #'tokenizing - expecting' }
 XMLParserTokenizer >> expectNextAll: aString [
-	self subclassResponsibility
-]
-
-{ #category : #'tokenizing - expecting' }
-XMLParserTokenizer >> expectSeparators [
-	self subclassResponsibility
-]
-
-{ #category : #'tokenizing - expecting' }
-XMLParserTokenizer >> expectTerminator [
 	self subclassResponsibility
 ]
 
@@ -204,7 +194,12 @@ XMLParserTokenizer >> formatParseError: aString with: aFirstValue with: aSecondV
 
 { #category : #errors }
 XMLParserTokenizer >> formatParseError: aString withArguments: aValueCollection [
-	self parseError: (aString format: aValueCollection)
+	self parseError:
+		(aString format:
+			"convert nils to empty strings, so nil values are
+			not printed as 'nil' in error messsages"
+			(aValueCollection collect: [:each |
+				each ifNil: ['']]))
 ]
 
 { #category : #defaults }
@@ -257,17 +252,17 @@ XMLParserTokenizer >> nextDoctypeDeclaration [
 	state := state doctypeDeclarationState.
 	self
 		expectNextAll: 'DOCTYPE';
-		expectSeparators.
+		nextSeparators.
 
 	root := self nextElementName.
 	(streamReader peek == $[
 		or: [streamReader peek == $>])
 		ifFalse: [
-			self expectSeparators.
+			self nextSeparators.
 			streamReader peek == $P
 				ifTrue: [
 					publicID := self nextPublicID.
-					self expectSeparators.
+					self nextSeparators.
 					systemID := self nextSystemIDLiteral]
 				ifFalse: [
 					streamReader peek == $S
@@ -283,6 +278,11 @@ XMLParserTokenizer >> nextDoctypeDeclaration [
 		ifFalse: [self nextEndDoctypeDeclaration].
 ]
 
+{ #category : #'tokenizing - dtd' }
+XMLParserTokenizer >> nextDoctypeDeclarationTerminator [
+	self expectNext: $>
+]
+
 { #category : #tokenizing }
 XMLParserTokenizer >> nextElementName [
 	self subclassResponsibility
@@ -290,7 +290,7 @@ XMLParserTokenizer >> nextElementName [
 
 { #category : #'tokenizing - dtd' }
 XMLParserTokenizer >> nextEndDoctypeDeclaration [
-	self expectTerminator.
+	self nextDoctypeDeclarationTerminator.
 	state := state postDoctypeDeclarationState.
 
 	driver handleEndDTD.
@@ -361,16 +361,21 @@ XMLParserTokenizer >> nextPITarget [
 ]
 
 { #category : #tokenizing }
+XMLParserTokenizer >> nextPITerminator [
+	self expectNext: $>
+]
+
+{ #category : #tokenizing }
 XMLParserTokenizer >> nextPIWithTarget: aTarget [
 	streamReader peek == $?
 		ifTrue: [
 			streamReader next.
-			self expectTerminator.
+			self nextPITerminator.
 			driver
 				handlePI: aTarget
 				data: '']
 		ifFalse: [
-			self expectSeparators.
+			self nextSeparators.
 			driver
 				handlePI: aTarget
 				data: self nextPIData].
@@ -390,12 +395,17 @@ XMLParserTokenizer >> nextPrologToken [
 XMLParserTokenizer >> nextPublicID [
 	^ self
 		expectNextAll: 'PUBLIC';
-		expectSeparators;
+		nextSeparators;
 		nextPublicIDLiteral
 ]
 
 { #category : #'tokenizing - dtd' }
 XMLParserTokenizer >> nextPublicIDLiteral [
+	self subclassResponsibility
+]
+
+{ #category : #tokenizing }
+XMLParserTokenizer >> nextSeparators [
 	self subclassResponsibility
 ]
 
@@ -428,7 +438,7 @@ XMLParserTokenizer >> nextSubsetMarkupToken [
 XMLParserTokenizer >> nextSystemID [
 	^ self
 		expectNextAll: 'SYSTEM';
-		expectSeparators;
+		nextSeparators;
 		nextSystemIDLiteral
 ]
 
@@ -446,34 +456,36 @@ XMLParserTokenizer >> nextToken [
 ]
 
 { #category : #tokenizing }
-XMLParserTokenizer >> nextXMLAttributeName: aName [
-	self expectNextAll: aName.
+XMLParserTokenizer >> nextXMLAttributeEqualsSeparator [
 	streamReader skipSeparators.
 	self expectNext: $=.
 	streamReader skipSeparators.
 ]
 
 { #category : #tokenizing }
+XMLParserTokenizer >> nextXMLAttributeName: aName [
+	self expectNextAll: aName
+]
+
+{ #category : #tokenizing }
 XMLParserTokenizer >> nextXMLDeclaration [
 	| version encoding |
 
-	self expectSeparators.
+	self nextSeparators.
 	version := self nextXMLVersionAttributeRequired: true.
 	streamReader peek == $?
-		ifFalse: [self expectSeparators].
+		ifFalse: [self nextSeparators].
 	(encoding := self nextXMLEncodingAttributeRequired: false) isEmpty
 		ifFalse: [
 			self convertFromEncoding: encoding.
 			streamReader peek == $?
-				ifFalse: [self expectSeparators]].
+				ifFalse: [self nextSeparators]].
 	driver
 		handleXMLVersion: version
 		encoding: encoding
 		standalone: self nextXMLStandaloneAttribute.
 	streamReader skipSeparators.
-	self
-		expectNext: $?;
-		expectTerminator.
+	self nextXMLDeclarationTerminator.
 
 	state := state prologState.
 ]
@@ -501,11 +513,18 @@ XMLParserTokenizer >> nextXMLDeclarationOrPrologToken [
 ]
 
 { #category : #tokenizing }
+XMLParserTokenizer >> nextXMLDeclarationTerminator [
+	self expectNextAll: '?>'
+]
+
+{ #category : #tokenizing }
 XMLParserTokenizer >> nextXMLEncodingAttributeRequired: aBoolean [
-	(aBoolean or: [streamReader peek == $e])
+	(aBoolean
+		or: [streamReader peek == $e])
 		ifTrue: [	
 			^ self
 				nextXMLAttributeName: 'encoding';
+				nextXMLAttributeEqualsSeparator;
 				nextXMLEncodingAttributeValue]
 		ifFalse: [^ '']
 ]
@@ -522,6 +541,7 @@ XMLParserTokenizer >> nextXMLStandaloneAttribute [
 		ifTrue: [
 			^ self
 				nextXMLAttributeName: 'standalone';
+				nextXMLAttributeEqualsSeparator;
 				nextXMLStandaloneAttributeValue]
 		ifFalse: [^ '']
 ]
@@ -533,10 +553,12 @@ XMLParserTokenizer >> nextXMLStandaloneAttributeValue [
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextXMLVersionAttributeRequired: aBoolean [
-	(aBoolean or: [streamReader peek == $v])
+	(aBoolean
+		or: [streamReader peek == $v])
 		ifTrue: [
 			^ self
 				nextXMLAttributeName: 'version';
+				nextXMLAttributeEqualsSeparator;
 				nextXMLVersionAttributeValue]
 		ifFalse: [^ '']
 ]

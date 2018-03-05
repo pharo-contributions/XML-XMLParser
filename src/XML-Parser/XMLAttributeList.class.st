@@ -366,7 +366,7 @@ XMLAttributeList >> writeCanonicalAttributesOn: aWriter [
 								(a name xmlLocalNameAfterPrefix: prefixOfA)
 									<= (b name xmlLocalNameAfterPrefix: prefixOfB)]]]].
 
-	"use to:do: for fast writing"
+	"use #to:do: for fast writing"
 	1 to: sortedAttributes size do: [:i | | attribute |
 		attribute := sortedAttributes at: i.
 		aWriter

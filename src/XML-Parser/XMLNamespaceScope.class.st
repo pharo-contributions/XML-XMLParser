@@ -81,17 +81,35 @@ XMLNamespaceScope >> errorAttribute: anAttribute aliasesURI: aURI [
 ]
 
 { #category : #private }
-XMLNamespaceScope >> errorCannotAliasXMLOrXMLNSWithPrefix: aPrefix [
-	aPrefix isEmpty
+XMLNamespaceScope >> errorCannotAliasPrefix: aFirstPrefix with: aSecondPrefix [
+	aSecondPrefix isEmpty
 		ifTrue: [
-			XMLNamespaceException signal:
-				'Cannot use "xml" or  "xmlns" namespace URI as default namespace']
+			XMLNamespaceException
+				formatSignal:
+					'Cannot use the "{1}" namespace URI as a ',
+					'default namespace URI'
+				with: aFirstPrefix]
 		ifFalse: [
 			XMLNamespaceException
 				formatSignal:
-					'Cannot alias the "xml" or "xmlns" namespace URIs ',
-					'with prefix "{1}"'
-				with: aPrefix]
+					'Cannot alias the "{1}" namespace URI ',
+					'with the "{2}" prefix'
+				with: aFirstPrefix
+				with: aSecondPrefix]
+]
+
+{ #category : #private }
+XMLNamespaceScope >> errorCannotAliasXMLNSPrefixWith: aPrefix [
+	self
+		errorCannotAliasPrefix: 'xmlns'
+		with: aPrefix
+]
+
+{ #category : #private }
+XMLNamespaceScope >> errorCannotAliasXMLPrefixWith: aPrefix [
+	self
+		errorCannotAliasPrefix: 'xml'
+		with: aPrefix
 ]
 
 { #category : #private }
@@ -471,9 +489,10 @@ XMLNamespaceScope >> validatePrefix: aPrefix beforeMappingTo: aURI [
 				ifFalse: [self errorCannotMapPrefixToEmptyURI]].
 
 	"these URIs cannot be aliased, even by the default namespace"
-	(aURI = self xmlNamespaceURI
-		or: [aURI = self xmlnsNamespaceURI])
-		ifTrue: [self errorCannotAliasXMLOrXMLNSWithPrefix: aPrefix].
+	aURI = self xmlNamespaceURI
+		ifTrue: [self errorCannotAliasXMLPrefixWith: aPrefix].
+	aURI = self xmlnsNamespaceURI
+		ifTrue: [self errorCannotAliasXMLNSPrefixWith: aPrefix].
 ]
 
 { #category : #validating }

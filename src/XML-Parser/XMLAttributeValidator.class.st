@@ -101,7 +101,7 @@ XMLAttributeValidator >> furtherNormalizeAttributeValue: aSemiNormalizedAttribut
 	on Gemstone"
 	writeStream := (String new: aSemiNormalizedAttributeValue size) writeStream.
 	isInWhitespace := false.
-	"to:do: for speed"
+	"use #to:do: for speed"
 	1 to: aSemiNormalizedAttributeValue size do: [:i | | nextChar |
 		(nextChar := aSemiNormalizedAttributeValue at: i) == NormalizedSpace
 			ifTrue: [
