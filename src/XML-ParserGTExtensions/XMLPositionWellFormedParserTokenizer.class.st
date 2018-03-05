@@ -140,7 +140,7 @@ XMLPositionWellFormedParserTokenizer >> nextGeneralEntityReferenceOnCharacterStr
 	driver handleStartEntityReferencePosition: self currentPosition.
 	self nextEntityName.
 	driver handleEndEntityReferencePosition: self currentPosition + 1.
-	self expectNext: $;.
+	self nextEntityReferenceTerminator.
 	isInEntityReference := false.
 
 	^ nil.
@@ -222,7 +222,7 @@ XMLPositionWellFormedParserTokenizer >> nextPIData [
 				handleStartQuotedStringNamePosition: quotedStringNameStart;
 				handleEndQuotedStringNamePosition: self currentPosition - 1].
 
-	self expectTerminator.
+	self nextPITerminator.
 	^ characterStream contents.
 ]
 
@@ -239,7 +239,7 @@ XMLPositionWellFormedParserTokenizer >> nextParameterEntityReference [
 	driver handleStartEntityReferencePosition: self currentPosition.
 	self nextEntityName.
 	driver handleEndEntityReferencePosition: self currentPosition + 1.
-	self expectNext: $;.
+	self nextEntityReferenceTerminator.
 	isInEntityReference := false.
 ]
 
