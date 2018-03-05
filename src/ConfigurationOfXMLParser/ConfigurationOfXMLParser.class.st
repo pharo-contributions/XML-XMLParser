@@ -1077,6 +1077,32 @@ ConfigurationOfXMLParser >> baseline333: spec [
 ]
 
 { #category : #baselines }
+ConfigurationOfXMLParser >> baseline339: spec [
+	<version: '3.3.9-baseline' imports: #('3.3-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLWriter' with: '2.8.3'. ].
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'OrderPreservingDictionary' with: '1.4.0'. ].
+	spec
+		for: #gemstone
+		do: [
+			spec package: 'XML-ParserGemstoneCompatibility' with: 'XML-ParserGemstoneCompatibility-monty.3'.
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline332. ].
+	spec
+		for: #gt
+		do: [
+			spec package: 'XML-ParserGTExtensions' with: 'XML-ParserGTExtensions-monty.6' ]
+]
+
+{ #category : #baselines }
 ConfigurationOfXMLParser >> baselineMaster19: spec [
 	<version: '1.9-master-baseline' imports: #('1-master-baseline')>
 
@@ -1223,7 +1249,7 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '3.3.3-baseline'.
+	spec for: #'common' version: '3.3.9-baseline'.
 
 ]
 
@@ -1622,6 +1648,14 @@ ConfigurationOfXMLParser >> release338: spec [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> release339: spec [
+	<symbolicVersion: #'release-3.3.9'>
+
+	"Users should prefer #stable unless they rely on XMLParser internals"
+	spec for: #'common' version: '3.3.9'.
+]
+
+{ #category : #'symbolic versions' }
 ConfigurationOfXMLParser >> release33: spec [
 	<symbolicVersion: #'release-3.3'>
 
@@ -1643,7 +1677,7 @@ ConfigurationOfXMLParser >> stable: spec [
 
 	"Users should prefer #stable unless they rely on XMLParser internals,
 	but it will delegate to a specific #release version from now on."
-	spec for: #'common' version: #'release-3.3.8'.
+	spec for: #'common' version: #'release-3.3.9'.
 ]
 
 { #category : #versions }
@@ -4233,6 +4267,17 @@ ConfigurationOfXMLParser >> version338: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-Parser' with: 'XML-Parser-monty.437'.
+			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.224'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParser >> version339: spec [ 
+        <version: '3.3.9' imports: #('3.3.9-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-Parser' with: 'XML-Parser-monty.438'.
 			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.224'.
                 ].
 ]
