@@ -324,7 +324,7 @@ ConfigurationOfXMLParserStAX >> baseline132: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3.3.8' ].
+			spec project: 'XMLParser' with: #'release-3.3.9' ].
 
 	spec
 		for: #gemstone
@@ -441,7 +441,7 @@ ConfigurationOfXMLParserStAX >> project [
 ConfigurationOfXMLParserStAX >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.3.2'.
+	spec for: #'common' version: '1.3.3'.
 ]
 
 { #category : #versions }
@@ -803,6 +803,17 @@ ConfigurationOfXMLParserStAX >> version132: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-ParserStAX-Core' with: 'XML-ParserStAX-Core-monty.3'.
+			spec package: 'XML-ParserStAX-Tests' with: 'XML-ParserStAX-Tests-monty.2'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserStAX >> version133: spec [ 
+        <version: '1.3.3' imports: #('1.3.2-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-ParserStAX-Core' with: 'XML-ParserStAX-Core-monty.4'.
 			spec package: 'XML-ParserStAX-Tests' with: 'XML-ParserStAX-Tests-monty.2'.
                 ].
 ]
