@@ -11,7 +11,7 @@ Class {
 
 { #category : #tokenizing }
 XMLExternalSubsetTextDeclarationState >> nextTokenFrom: aTokenizer [
-	aTokenizer nextStartExternalSubset
+	^ aTokenizer nextStartExternalSubset
 ]
 
 { #category : #testing }

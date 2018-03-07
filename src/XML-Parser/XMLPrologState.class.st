@@ -19,5 +19,5 @@ XMLPrologState >> isPrologState [
 
 { #category : #tokenizing }
 XMLPrologState >> nextTokenFrom: aTokenizer [
-	aTokenizer nextPrologToken
+	^ aTokenizer nextPrologToken
 ]

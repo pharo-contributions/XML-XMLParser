@@ -14,5 +14,5 @@ XMLUninitializedState >> isInitializedState [
 
 { #category : #tokenizing }
 XMLUninitializedState >> nextTokenFrom: aTokenizer [
-	aTokenizer nextStartDocument
+	^ aTokenizer nextStartDocument
 ]

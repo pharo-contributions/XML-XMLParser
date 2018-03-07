@@ -23,7 +23,7 @@ Class {
 
 { #category : #'handling - declaration' }
 XMLDOMParser >> attributeDeclaration: anElementName name: anAttributeName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
-	self topNode addNode:
+	self topNodeAdd:
 		(self nodeFactory attributeDeclarationClass
 			element: anElementName
 			attribute: anAttributeName
@@ -36,14 +36,14 @@ XMLDOMParser >> attributeDeclaration: anElementName name: anAttributeName type: 
 XMLDOMParser >> characters: aString [
 	(self isInCDataSection
 		and: [self preservesCDataNodes])
-		ifTrue: [self topNode addNode: (self nodeFactory newCData: aString)]
-		ifFalse: [self topNode addString: aString]
+		ifTrue: [self topNodeAdd: (self nodeFactory newCData: aString)]
+		ifFalse: [self topNodeAddString: aString]
 ]
 
 { #category : #'handling - lexical' }
 XMLDOMParser >> comment: aString [
 	self preservesCommentNodes
-		ifTrue: [self topNode addNode: (self nodeFactory newComment: aString)]
+		ifTrue: [self topNodeAdd: (self nodeFactory newComment: aString)]
 ]
 
 { #category : #defaults }
@@ -68,7 +68,7 @@ XMLDOMParser >> document: aDocument [
 
 { #category : #'handling - declaration' }
 XMLDOMParser >> elementDeclaration: anElementName contentModel: aContentModel [
-	self topNode addNode:
+	self topNodeAdd:
 		(self nodeFactory elementDeclarationClass
 			element: anElementName
 			contentModel: aContentModel)
@@ -93,7 +93,7 @@ XMLDOMParser >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: 
 
 { #category : #'handling - declaration' }
 XMLDOMParser >> generalEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotationName [
-	self topNode addNode:
+	self topNodeAdd:
 		(self nodeFactory generalEntityDeclarationClass
 			name: aName
 			publicID: aPublicID
@@ -103,7 +103,7 @@ XMLDOMParser >> generalEntityDeclaration: aName publicID: aPublicID systemID: aS
 
 { #category : #'handling - declaration' }
 XMLDOMParser >> generalEntityDeclaration: aName replacement: aReplacement [
-	self topNode addNode:
+	self topNodeAdd:
 		(self nodeFactory generalEntityDeclarationClass
 			name: aName
 			replacement: aReplacement)
@@ -182,7 +182,7 @@ XMLDOMParser >> nodeStack [
 
 { #category : #'handling - declaration' }
 XMLDOMParser >> notationDeclaration: aName publicID: aPublicID systemID: aSystemID [
-	self topNode addNode:
+	self topNodeAdd:
 		(self nodeFactory notationDeclarationClass
 			name: aName
 			publicID: aPublicID
@@ -208,7 +208,7 @@ XMLDOMParser >> optimizeForLargeDocuments [
 
 { #category : #'handling - declaration' }
 XMLDOMParser >> parameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
-	self topNode addNode:
+	self topNodeAdd:
 		(self nodeFactory parameterEntityDeclarationClass
 			name: aName
 			publicID: aPublicID
@@ -217,7 +217,7 @@ XMLDOMParser >> parameterEntityDeclaration: aName publicID: aPublicID systemID: 
 
 { #category : #'handling - declaration' }
 XMLDOMParser >> parameterEntityDeclaration: aName replacement: aReplacement [
-	self topNode addNode:
+	self topNodeAdd:
 		(self nodeFactory parameterEntityDeclarationClass
 			name: aName
 			replacement: aReplacement)
@@ -273,7 +273,7 @@ XMLDOMParser >> preservesIgnorableWhitespace: aBoolean [
 
 { #category : #'handling - content' }
 XMLDOMParser >> processingInstruction: aTargetString data: aDataString [
-	self topNode addNode:
+	self topNodeAdd:
 		(self nodeFactory newPI
 			target: aTargetString;
 			data: aDataString)
@@ -281,7 +281,7 @@ XMLDOMParser >> processingInstruction: aTargetString data: aDataString [
 
 { #category : #private }
 XMLDOMParser >> pushElement: anElement [
-	self topNode addNode: anElement.
+	self topNodeAdd: anElement.
 	^ self pushNode: anElement.
 ]
 
@@ -346,6 +346,16 @@ XMLDOMParser >> startScope: aNamespaceScope [
 { #category : #accessing }
 XMLDOMParser >> topNode [
 	^ self nodeStack xmlLastOrNil
+]
+
+{ #category : #private }
+XMLDOMParser >> topNodeAdd: aNode [
+	^ self nodeStack last addNode: aNode
+]
+
+{ #category : #private }
+XMLDOMParser >> topNodeAddString: aString [
+	^ self nodeStack last addString: aString
 ]
 
 { #category : #'handling - lexical' }

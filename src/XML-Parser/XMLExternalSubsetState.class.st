@@ -14,5 +14,5 @@ XMLExternalSubsetState >> isExternalSubsetState [
 
 { #category : #tokenizing }
 XMLExternalSubsetState >> nextTokenFrom: aTokenizer [
-	aTokenizer nextExternalSubsetToken
+	^ aTokenizer nextExternalSubsetToken
 ]

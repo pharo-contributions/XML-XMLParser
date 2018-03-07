@@ -14,7 +14,7 @@ XMLXMLDeclarationState >> isXMLDeclarationState [
 
 { #category : #tokenizing }
 XMLXMLDeclarationState >> nextTokenFrom: aTokenizer [
-	aTokenizer nextXMLDeclarationOrPrologToken
+	^ aTokenizer nextXMLDeclarationOrPrologToken
 ]
 
 { #category : #testing }

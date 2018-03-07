@@ -14,5 +14,5 @@ XMLInternalSubsetState >> isInternalSubsetState [
 
 { #category : #tokenizing }
 XMLInternalSubsetState >> nextTokenFrom: aTokenizer [
-	aTokenizer nextInternalSubsetToken
+	^ aTokenizer nextInternalSubsetToken
 ]

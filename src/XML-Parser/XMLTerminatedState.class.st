@@ -14,5 +14,5 @@ XMLTerminatedState >> isTerminatedState [
 
 { #category : #tokenizing }
 XMLTerminatedState >> nextTokenFrom: aTokenizer [
-	aTokenizer nextEndDocument
+	^ aTokenizer nextEndDocument
 ]

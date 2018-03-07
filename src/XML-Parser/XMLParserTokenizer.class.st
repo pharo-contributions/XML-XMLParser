@@ -449,10 +449,11 @@ XMLParserTokenizer >> nextSystemIDLiteral [
 
 { #category : #tokenizing }
 XMLParserTokenizer >> nextToken [
-	(streamReader atEnd
-		and: [state isInitializedState])
-		ifTrue: [^ self nextEndDocument].
-	state nextTokenFrom: self.
+	streamReader atEnd
+		ifTrue: [
+			state isInitializedState
+				ifTrue: [^ self nextEndDocument]].
+	^ state nextTokenFrom: self.
 ]
 
 { #category : #tokenizing }

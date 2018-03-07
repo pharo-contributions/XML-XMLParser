@@ -14,5 +14,5 @@ XMLContentState >> isContentState [
 
 { #category : #tokenizing }
 XMLContentState >> nextTokenFrom: aTokenizer [
-	aTokenizer nextContentToken
+	^ aTokenizer nextContentToken
 ]
