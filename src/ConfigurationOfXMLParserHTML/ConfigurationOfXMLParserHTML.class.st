@@ -436,6 +436,24 @@ ConfigurationOfXMLParserHTML >> baseline152: spec [
 ]
 
 { #category : #baselines }
+ConfigurationOfXMLParserHTML >> baseline153: spec [
+	<version: '1.5.3-baseline' imports: #('1.5-master-baseline')>
+	spec
+		for: #common
+		do: [
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.3.9' ].
+	spec
+		for: #gemstone
+		do: [ 
+			spec package: 'XML-ParserHTML-GemstoneCompatibility' with: 'XML-ParserHTML-GemstoneCompatibility-monty.1'.
+
+			"force initialization of lazy-initialized class and class isnt
+			vars to avoid write conflicts on GS"
+			spec postLoadDoIt: #initializeClassesForGSBaseline139. ]
+]
+
+{ #category : #baselines }
 ConfigurationOfXMLParserHTML >> baselineMaster14: spec [
 	<version: '1.4-master-baseline' imports: #('1-master-baseline')>
 
@@ -551,7 +569,7 @@ ConfigurationOfXMLParserHTML >> customProjectAttributes [
 ConfigurationOfXMLParserHTML >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.5.2-baseline'.
+	spec for: #'common' version: '1.5.3-baseline'.
 ]
 
 { #category : #doits }
@@ -602,7 +620,7 @@ ConfigurationOfXMLParserHTML >> project [
 ConfigurationOfXMLParserHTML >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.5.2'.
+	spec for: #'common' version: '1.5.4'.
 ]
 
 { #category : #versions }
@@ -1096,6 +1114,28 @@ ConfigurationOfXMLParserHTML >> version152: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XML-ParserHTML-Core' with: 'XML-ParserHTML-Core-monty.3'.
+			spec package: 'XML-ParserHTML-Tests' with: 'XML-ParserHTML-Tests-monty.1'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version153: spec [ 
+        <version: '1.5.3' imports: #('1.5.3-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-ParserHTML-Core' with: 'XML-ParserHTML-Core-monty.4'.
+			spec package: 'XML-ParserHTML-Tests' with: 'XML-ParserHTML-Tests-monty.1'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXMLParserHTML >> version154: spec [ 
+        <version: '1.5.4' imports: #('1.5.3-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XML-ParserHTML-Core' with: 'XML-ParserHTML-Core-monty.5'.
 			spec package: 'XML-ParserHTML-Tests' with: 'XML-ParserHTML-Tests-monty.1'.
                 ].
 ]
