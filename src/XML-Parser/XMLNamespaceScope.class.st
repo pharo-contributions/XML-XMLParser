@@ -31,9 +31,11 @@ XMLNamespaceScope >> = anObject [
 	self hasNamespaces
 		ifFalse: [^ anObject hasNamespaces not].
 
-	"use hasNamespaces first to avoid initializing anObject's prefixMappings"
-	^ anObject hasNamespaces
-		and: [prefixMappings = anObject prefixMappings].
+	"use #hasNamespaces first to avoid initializing anObject's prefixMappings"
+	anObject hasNamespaces
+		ifFalse: [^ false].
+
+	^ prefixMappings = anObject prefixMappings.
 ]
 
 { #category : #private }
@@ -50,7 +52,7 @@ XMLNamespaceScope >> copy [
 	^ self shallowCopy
 ]
 
-{ #category : #mapping }
+{ #category : #accessing }
 XMLNamespaceScope >> defaultNamespace [
 	^ prefixMappings
 		ifNil: ['']
@@ -60,7 +62,7 @@ XMLNamespaceScope >> defaultNamespace [
 				ifAbsent: ['']]
 ]
 
-{ #category : #mapping }
+{ #category : #accessing }
 XMLNamespaceScope >> defaultNamespace: aURI [
 	self
 		validatePrefix: ''
@@ -221,7 +223,7 @@ XMLNamespaceScope >> includesPrefix: aPrefix mappedTo: aURI [
 		ifAbsent: [^ false]) = aURI
 ]
 
-{ #category : #mapping }
+{ #category : #accessing }
 XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope [
 	anEnclosingScope hasNamespaces
 		ifFalse: [^ self].
@@ -241,7 +243,7 @@ XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope [
 			prefixMappings := anEnclosingScope prefixMappings].
 ]
 
-{ #category : #mapping }
+{ #category : #accessing }
 XMLNamespaceScope >> mapPrefix: aPrefix to: aURI [
 	self
 		validatePrefix: aPrefix
@@ -253,7 +255,7 @@ XMLNamespaceScope >> mapPrefix: aPrefix to: aURI [
 		put: aURI.
 ]
 
-{ #category : #mapping }
+{ #category : #accessing }
 XMLNamespaceScope >> mapPrefixesAndURIs: anAssociationCollection [
 	| copiedPrefixMappings |
 
@@ -351,13 +353,14 @@ XMLNamespaceScope >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 	is empty), including the predefined 'xml' and 'xmlns' prefixes. Returns the
 	value of aBlock if aPrefix is unresolvable."
 
-	(aPrefix size > 0 "optimization"
-		and: [(aPrefix at: 1) == $x]) "optimization"
+	aPrefix size > 0 "optimization"
 		ifTrue: [
-			aPrefix = 'xml'
-				ifTrue: [^ self xmlNamespaceURI].
-			aPrefix = 'xmlns'
-				ifTrue: [^ self xmlnsNamespaceURI]].
+			(aPrefix at: 1) == $x "optimization"
+				ifTrue: [
+					aPrefix = 'xml'
+						ifTrue: [^ self xmlNamespaceURI].
+					aPrefix = 'xmlns'
+						ifTrue: [^ self xmlnsNamespaceURI]]].
 
 	^ self
 		prefixMappingAt: aPrefix
@@ -368,7 +371,7 @@ XMLNamespaceScope >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 XMLNamespaceScope >> resolvePrefixesOfNamespaceURI: aURI [
 	| prefixes |
 
-	"the xml and xmlns namespaces URIs can't be aliased"
+	"the 'xml' and 'xmlns' namespaces URIs can't be aliased"
 	aURI = self xmlNamespaceURI
 		ifTrue: [^ Set with: 'xml'].
 	aURI = self xmlnsNamespaceURI

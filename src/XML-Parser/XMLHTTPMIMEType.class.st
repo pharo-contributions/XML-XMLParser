@@ -19,16 +19,13 @@ XMLHTTPMIMEType class >> defaultCharset [
 
 { #category : #'instance creation' }
 XMLHTTPMIMEType class >> fromString: aString [
-	| parser mainType subType parameters |
+	| parser |
 
 	parser := XMLHTTPMIMETypeParser on: aString.
-	mainType := parser parseMainType.
-	subType := parser parseSubType.
-	parameters := parser parseParameters.
 	^ self new
-		setMainType: mainType
-		subType: subType
-		parameters: parameters.
+		setMainType: parser parseMainType
+		subType: parser parseSubType
+		parameters: parser parseParameters.
 ]
 
 { #category : #'instance creation' }

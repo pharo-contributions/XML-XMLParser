@@ -9,6 +9,8 @@ Class {
 
 { #category : #testing }
 XMLHTTPWebClientResponseContentReader >> handlesDecompression [
+	"this class needs to handle decompression, since it uses the lower-level
+	WebClient #streamFrom:to:size:progress: interface"
 	^ true
 ]
 
@@ -21,7 +23,7 @@ XMLHTTPWebClientResponseContentReader >> rawReadWithLength: aContentLength upToL
 		(ByteArray new:
 			(aContentLength
 				ifNil: [aMaxSize
-					ifNil: [1024]])) writeStream.
+					ifNil: [4096]])) writeStream.
 	response webClientResponse
 		streamFrom: socketStream
 		to: rawContentWriteStream
