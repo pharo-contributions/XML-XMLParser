@@ -2745,29 +2745,56 @@ XMLParserTest >> testElementContentModelBranching [
 		(self elementDeclarationsNamed: #('one' 'two' 'three' 'four' 'five')),
 		'<!ELEMENT root ((one|two),(three|four|five))>]>'.
 
-	self
-		shouldnt: [
-			SAXHandler
-				parse: dtd, '<root><one/><three/></root>';
-				parse: dtd, '<root><one/><four/></root>';
-				parse: dtd, '<root><one/><five/></root>';
-				parse: dtd, '<root><two/><three/></root>';
-				parse: dtd, '<root><two/><four/></root>';
-				parse: dtd, '<root><two/><five/></root>']
-		raise: XMLValidationException.
+	#('<root><one/><three/></root>'
+		'<root><one/><four/></root>'
+		'<root><one/><five/></root>'
+		'<root><two/><three/></root>'
+		'<root><two/><four/></root>'
+		'<root><two/><five/></root>')
+		do: [:each |
+			self
+				shouldnt: [SAXHandler parse: dtd, each]
+				raise: XMLValidationException].
 
-	self
-		should: [SAXHandler parse: dtd, '<root><one/><two/><three/></root>']
-		raise: XMLValidationException.
-	self
-		should: [SAXHandler parse: dtd, '<root><one/><three/><four/><five/></root>']
-		raise: XMLValidationException.
-	self
-		should: [SAXHandler parse: dtd, '<root><one/></root>']
-		raise: XMLValidationException.
-	self
-		should: [SAXHandler parse: dtd, '<root><four/></root>']
-		raise: XMLValidationException.
+	#('<root><one/><two/><three/></root>'
+		'<root><one/><three/><four/><five/></root>'
+		'<root><one/></root>'
+		'<root><four/></root>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: dtd, each]
+				raise: XMLValidationException].
+]
+
+{ #category : #tests }
+XMLParserTest >> testElementContentModelCycles [
+	| dtd |
+
+	"this content model produces an NFA with cycles, to ensure
+	they're handled correctly"
+	dtd := '<!DOCTYPE root [',
+		(self elementDeclarationsNamed: #('one' 'two' 'three')),
+		'<!ELEMENT root (one*,two?)+>]>'.
+
+	#('<root><one/><two/></root>'
+		'<root><one/><two/><one/><two/></root>'
+		'<root><one/><two/><two/><one/></root>'
+		'<root><two/><one/><one/><two/></root>'
+		'<root><one/></root>'
+		'<root><two/></root>'
+		'<root></root>')
+		do: [:each |
+			self
+				shouldnt: [SAXHandler parse: dtd, each]
+				raise: XMLValidationException].
+
+	#('<root><one/><two/><three/></root>'
+		'<root><one/><three/><two/></root>'
+		'<root><three/></root>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: dtd, each]
+				raise: XMLValidationException].
 ]
 
 { #category : #tests }
