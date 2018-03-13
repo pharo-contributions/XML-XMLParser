@@ -331,6 +331,7 @@ XMLNamespaceScope >> printDeclarationsOn: aStream [
 { #category : #printing }
 XMLNamespaceScope >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream nextPut: $(.
 	self printDeclarationsOn: aStream.
 	aStream nextPut: $).

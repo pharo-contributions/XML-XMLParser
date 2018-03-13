@@ -14,7 +14,7 @@ Class {
 XMLNFAState >> addTo: aStateSet [
 	lastAddedTo == aStateSet
 		ifFalse: [
-			"This avoids getting caught in a loop"
+			"to detect and handle cycles"
 			lastAddedTo := aStateSet.
 
 			aStateSet add: self]
@@ -41,4 +41,13 @@ XMLNFAState >> isAccepting [
 { #category : #testing }
 XMLNFAState >> matches: anObject [
 	^ false
+]
+
+{ #category : #enumerating }
+XMLNFAState >> nextStatesDo: aBlock [
+]
+
+{ #category : #printing }
+XMLNFAState >> printLabelOn: aStream [
+	aStream print: self identityHash
 ]

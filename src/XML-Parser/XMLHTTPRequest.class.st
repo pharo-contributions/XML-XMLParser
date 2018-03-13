@@ -115,6 +115,7 @@ XMLHTTPRequest >> method: aString [
 { #category : #printing }
 XMLHTTPRequest >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
 		nextPutAll: self method;

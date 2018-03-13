@@ -10,9 +10,24 @@ Class {
 	#category : #'XML-Parser-Validation-DFA'
 }
 
-{ #category : #building }
+{ #category : #applying }
+XMLNFABuilder >> applyAccepting [
+	| totalFragments |
+
+	(totalFragments := self totalFragments) > 0
+		ifTrue: [
+			1 to: totalFragments - 1 do: [:i |
+				self applyConcatenation].
+			self topFragment connectToState:
+				XMLNFAAcceptingState new]
+		ifFalse: [
+			self pushFragment:
+				(XMLNFAFragment firstState: XMLNFAAcceptingState new)]
+]
+
+{ #category : #applying }
 XMLNFABuilder >> applyBranch [
-	| branchState leftFragment  rightFragment |
+	| leftFragment rightFragment branchState |
 
 	leftFragment := self popFragment.
 	rightFragment := self popFragment.
@@ -24,22 +39,22 @@ XMLNFABuilder >> applyBranch [
 	self pushFragment:
 		(XMLNFAFragment
 			firstState: branchState
-			terminalStates: (leftFragment combinedTerminalStatesFrom: rightFragment)).
+			terminalStates:
+				(leftFragment terminalStatesWithAllFrom: rightFragment)).
 ]
 
-{ #category : #building }
+{ #category : #applying }
 XMLNFABuilder >> applyConcatenation [
 	| firstFragment secondFragment |
 
 	secondFragment := self popFragment.
 	firstFragment := self popFragment.
-
 	firstFragment connectToFragment: secondFragment.
 
 	self pushFragment: firstFragment.
 ]
 
-{ #category : #building }
+{ #category : #applying }
 XMLNFABuilder >> applyOptional [
 	| optionalFragment branchingState |
 
@@ -51,21 +66,19 @@ XMLNFABuilder >> applyOptional [
 		(XMLNFAFragment
 			firstState: branchingState
 			terminalStates:
-				(optionalFragment combinedTerminalStatesWith: branchingState))
+				(optionalFragment terminalStatesWith: branchingState))
 ]
 
-{ #category : #building }
+{ #category : #applying }
 XMLNFABuilder >> applyPlus [
-	| plusFragment branchState |
+	| plusFragment |
 
 	plusFragment := self topFragment.
-	branchState := XMLNFABranchingState branch: plusFragment firstState.
-	plusFragment
-		connectToState: branchState;
-		terminalState: branchState.
+	plusFragment connectToState:
+		(XMLNFABranchingState branch: plusFragment firstState).
 ]
 
-{ #category : #building }
+{ #category : #applying }
 XMLNFABuilder >> applyStar [
 	| branchState starFragment |
 
@@ -76,16 +89,14 @@ XMLNFABuilder >> applyStar [
 	self pushFragment:
 		(XMLNFAFragment
 			firstState: branchState
-			terminalState: branchState)
+			terminalState: branchState).
 ]
 
-{ #category : #building }
-XMLNFABuilder >> buildAcceptingNFAFromFragments [
-	[self totalFragments > 1]
-		whileTrue: [self applyConcatenation].
-	^ self popFragment
-		connectToState: XMLNFAAcceptingState new;
-		firstState.
+{ #category : #converting }
+XMLNFABuilder >> asAcceptingNFA [
+	^ (self
+		applyAccepting;
+		popFragment) firstState
 ]
 
 { #category : #private }
@@ -101,6 +112,7 @@ XMLNFABuilder >> hasFragments [
 { #category : #initialization }
 XMLNFABuilder >> initialize [
 	super initialize.
+
 	fragmentStack := OrderedCollection new.
 ]
 
@@ -111,18 +123,14 @@ XMLNFABuilder >> popFragment [
 
 { #category : #accessing }
 XMLNFABuilder >> pushFragment: aFragment [
-	self fragmentStack addLast: aFragment
+	^ self fragmentStack addLast: aFragment
 ]
 
-{ #category : #building }
-XMLNFABuilder >> pushMatcher: aMatcher [
-	| firstState |
-
-	firstState := XMLNFAMatchingState matcher: aMatcher.
-	self pushFragment:
-		(XMLNFAFragment
-			firstState: firstState
-			terminalState: firstState).
+{ #category : #accessing }
+XMLNFABuilder >> pushFragmentMatching: aMatcher [
+	^ self pushFragment:
+		(XMLNFAFragment firstState:
+			(XMLNFAMatchingState matcher: aMatcher))
 ]
 
 { #category : #accessing }

@@ -55,14 +55,21 @@ XMLAttributeDefaultValidator >> isValue [
 ]
 
 { #category : #printing }
-XMLAttributeDefaultValidator >> printOn: aStream [
-	super printOn: aStream.
+XMLAttributeDefaultValidator >> printNameAndValueOn: aStream [
 	aStream
-		nextPut: $(;
 		nextPutAll: self attribute;
 		nextPutAll: '="';
 		nextPutAll: self value;
-		nextPutAll: '")'.
+		nextPut: $"
+]
+
+{ #category : #printing }
+XMLAttributeDefaultValidator >> printOn: aStream [
+	super printOn: aStream.
+
+	aStream nextPut: $(.
+	self printNameAndValueOn: aStream.
+	aStream nextPut: $).
 ]
 
 { #category : #processing }

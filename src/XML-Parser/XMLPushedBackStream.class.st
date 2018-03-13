@@ -47,9 +47,10 @@ XMLPushedBackStream >> isExternal [
 { #category : #printing }
 XMLPushedBackStream >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
-		print: self stream;
+		print: stream;
 		nextPut: $).
 ]
 

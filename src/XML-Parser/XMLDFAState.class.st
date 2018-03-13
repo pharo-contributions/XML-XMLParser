@@ -112,6 +112,7 @@ XMLDFAState >> nfaStatesDo: aBlock [
 { #category : #printing }
 XMLDFAState >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
 		print: self nfaStates;
@@ -126,6 +127,8 @@ XMLDFAState >> removeDFAStateTransitions [
 { #category : #initialization }
 XMLDFAState >> setNFAStates: anNFAStateSet dfaStateCache: aDFAStateCache [
 	nfaStates := anNFAStateSet.
-	dfaStateCache := (aDFAStateCache ifNil: [XMLDFAStateCache firstDFAState: self]).
+	dfaStateCache :=
+		aDFAStateCache	
+			ifNil: [XMLDFAStateCache firstDFAState: self].
 	hasNonDeterminism := false.
 ]

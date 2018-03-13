@@ -197,12 +197,13 @@ XMLAttributeValidator >> mustFurtherNormalizeAttributeValue [
 { #category : #printing }
 XMLAttributeValidator >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPutAll: '(<';
 		nextPutAll: self element;
-		space;
-		nextPutAll: self attribute;
-		nextPutAll: '="">)'.
+		space.
+	self defaultValidator printNameAndValueOn: aStream.
+	aStream nextPutAll: '>)'.
 ]
 
 { #category : #processing }

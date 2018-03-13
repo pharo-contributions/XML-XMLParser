@@ -70,7 +70,8 @@ DTDElementContentModelParser >> applyBinaryOperatorOnStack [
 
 { #category : #private }
 DTDElementContentModelParser >> applyOperator: aCharacter [
-	nfaBuilder perform: (OperatorApplicators at: aCharacter asciiValue)
+	nfaBuilder perform:
+		(OperatorApplicators at: aCharacter asciiValue)
 ]
 
 { #category : #defaults }
@@ -80,8 +81,8 @@ DTDElementContentModelParser >> elementValidatorClass [
 
 { #category : #private }
 DTDElementContentModelParser >> hasBinaryOperatorOnStack [
-	^ (binaryOperatorStack isEmpty
-		or: [binaryOperatorStack last == $(]) not
+	^ binaryOperatorStack size > 0
+		and: [binaryOperatorStack last ~~ $(]
 ]
 
 { #category : #parsing }
@@ -101,7 +102,7 @@ DTDElementContentModelParser >> parse [
 			ifNotNil: [:selector |
 				nameStart
 					ifNotNil: [
-						nfaBuilder pushMatcher:
+						nfaBuilder pushFragmentMatching:
 							(contentModel copyFrom: nameStart to: i - 1).
 						nameStart := nil].
 				self
@@ -111,7 +112,7 @@ DTDElementContentModelParser >> parse [
 
 	^ self elementValidatorClass
 		element: element
-		dfa: nfaBuilder buildAcceptingNFAFromFragments asDFAState.
+		dfa: nfaBuilder asAcceptingNFA asDFAState.
 ]
 
 { #category : #private }
@@ -122,7 +123,7 @@ DTDElementContentModelParser >> parseBinaryOperator: aCharacter [
 { #category : #private }
 DTDElementContentModelParser >> parseClosingParenthesis: aCharacter [
 	self popRemainingBinaryOperators.
-	(binaryOperatorStack notEmpty
+	(binaryOperatorStack size > 0
 		and: [binaryOperatorStack last == $(])
 		ifTrue: [binaryOperatorStack removeLast].
 ]

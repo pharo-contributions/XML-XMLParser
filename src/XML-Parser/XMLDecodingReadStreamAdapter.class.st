@@ -118,6 +118,7 @@ XMLDecodingReadStreamAdapter >> position: anInteger [
 { #category : #printing }
 XMLDecodingReadStreamAdapter >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
 		print: streamConverter;

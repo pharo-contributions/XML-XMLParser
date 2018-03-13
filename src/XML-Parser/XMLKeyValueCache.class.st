@@ -203,8 +203,9 @@ XMLKeyValueCache >> postCopy [
 XMLKeyValueCache >> printOn: aStream [
 	| loadFactor |
 
-	loadFactor := self loadFactor.
 	super printOn: aStream.
+
+	loadFactor := self loadFactor.
 	aStream
 		nextPut: $(;
 		print: loadFactor numerator;

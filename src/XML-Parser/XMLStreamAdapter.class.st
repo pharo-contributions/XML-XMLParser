@@ -70,6 +70,7 @@ XMLStreamAdapter >> position: anInteger [
 { #category : #printing }
 XMLStreamAdapter >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream nextPut: $(.
 	self printStreamOn: aStream.
 	aStream nextPut: $).

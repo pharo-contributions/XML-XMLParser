@@ -73,9 +73,10 @@ XMLPushedBackEntity >> poppedByTokenizer: aTokenizer [
 { #category : #printing }
 XMLPushedBackEntity >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
-		print: aStream;
+		print: entity;
 		nextPut: $).
 ]
 

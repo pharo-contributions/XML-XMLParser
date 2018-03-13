@@ -161,6 +161,7 @@ XMLElementNester >> printElementsStartingAt: aStart stoppingAt: aStop on: aStrea
 { #category : #printing }
 XMLElementNester >> printOn: aStream [
 	super printOn: aStream.
+
 	self hasOpenElements
 		ifTrue: [
 			aStream nextPut: $(.

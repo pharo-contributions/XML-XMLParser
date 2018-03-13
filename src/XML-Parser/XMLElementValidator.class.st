@@ -96,6 +96,7 @@ XMLElementValidator >> isMixedContent [
 { #category : #printing }
 XMLElementValidator >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPutAll: '(<';
 		nextPutAll: self element;

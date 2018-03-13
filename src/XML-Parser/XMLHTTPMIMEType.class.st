@@ -78,7 +78,7 @@ XMLHTTPMIMEType >> = anObject [
 
 { #category : #converting }
 XMLHTTPMIMEType >> asString [
-	"for compatibility with GS where Object>>#asString isn't defined"
+	"don't assume Object>>#asString is defined, for portability"
 	^ self printString
 ]
 

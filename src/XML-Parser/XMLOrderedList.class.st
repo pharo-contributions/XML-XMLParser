@@ -214,6 +214,12 @@ XMLOrderedList >> asOrderedCollection [
 	^ OrderedCollection withAll: collection
 ]
 
+{ #category : #converting }
+XMLOrderedList >> asString [
+	"don't assume Object>>#asString is defined, for portability"
+	^ self printString
+]
+
 { #category : #accessing }
 XMLOrderedList >> at: anIndex [
 	"optimized"

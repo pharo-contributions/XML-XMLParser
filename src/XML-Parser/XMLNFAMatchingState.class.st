@@ -18,7 +18,13 @@ XMLNFAMatchingState class >> matcher: aMatcher [
 
 { #category : #connecting }
 XMLNFAMatchingState >> connectToState: aState [
-	nextState := aState
+	nextState
+		ifNil: [nextState := aState]
+]
+
+{ #category : #accessing }
+XMLNFAMatchingState >> matcher [
+	^ matcher
 ]
 
 { #category : #accessing }
@@ -36,15 +42,30 @@ XMLNFAMatchingState >> nextState [
 	^ nextState
 ]
 
+{ #category : #enumerating }
+XMLNFAMatchingState >> nextStatesDo: aBlock [
+	nextState
+		ifNotNil: [aBlock value: nextState]
+]
+
+{ #category : #printing }
+XMLNFAMatchingState >> printLabelOn: aStream [
+	aStream
+		print: self identityHash;
+		nextPut: $(;
+		print: matcher;
+		nextPut: $)
+]
+
 { #category : #printing }
 XMLNFAMatchingState >> printOn: aStream [
 	super printOn: aStream.
-	aStream
-		nextPut: $(;
-		print: self identityHash; "only print ids to avoid loops"
-		nextPutAll: ': ';
-		print: matcher;
-		nextPutAll: ' -> ';
-		print: nextState identityHash;
-		nextPut: $).
+
+	aStream nextPut: $(.
+	self printLabelOn: aStream.
+	aStream nextPutAll: '->'.
+	nextState
+		ifNotNil: [
+			nextState printLabelOn: aStream].
+	aStream nextPut: $).
 ]

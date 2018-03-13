@@ -59,6 +59,7 @@ XMLNamespaceScopeAllocator >> newEmptyScope [
 { #category : #printing }
 XMLNamespaceScopeAllocator >> printOn: aStream [
 	super printOn: aStream.
+
 	self hasCurentScope
 		ifTrue: [
 			aStream

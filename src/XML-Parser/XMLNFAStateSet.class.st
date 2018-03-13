@@ -44,10 +44,11 @@ XMLNFAStateSet >> = anObject [
 		and: [self size = anObject size])
 		ifFalse: [^ false].
 
-	"avoid allSatisfy: for speed"
+	"use #do: instead of #allSatisfy: for speed"
 	self do: [:each |
 		(anObject includes: each)
 			ifFalse: [^ false]].
+
 	^ true.
 ]
 

@@ -312,6 +312,7 @@ XMLStreamConverter >> nextPutByteOrderMarkToStream: aStream [
 { #category : #printing }
 XMLStreamConverter >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
 		nextPutAll: self encoding;

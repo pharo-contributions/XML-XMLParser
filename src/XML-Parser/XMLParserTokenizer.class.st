@@ -587,6 +587,7 @@ XMLParserTokenizer >> parseError: aString [
 { #category : #printing }
 XMLParserTokenizer >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
 		print: state;

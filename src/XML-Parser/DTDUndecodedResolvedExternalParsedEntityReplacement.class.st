@@ -43,6 +43,7 @@ DTDUndecodedResolvedExternalParsedEntityReplacement >> isEmpty [
 { #category : #printing }
 DTDUndecodedResolvedExternalParsedEntityReplacement >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
 		nextPutAll: self encoding;

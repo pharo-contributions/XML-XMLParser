@@ -359,9 +359,10 @@ XMLNestedStreamReader >> popCurrentStream [
 { #category : #printing }
 XMLNestedStreamReader >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
-		nextPutAll: '(';
-		print: peekChar;
+		nextPut: $(;
+		print: peekChar; "can be nil"
 		nextPutAll: '; ';
 		print: stream;
 		space;

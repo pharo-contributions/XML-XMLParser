@@ -221,6 +221,7 @@ XMLFileHandle >> path [
 { #category : #printing }
 XMLFileHandle >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
 		nextPutAll: self path;
