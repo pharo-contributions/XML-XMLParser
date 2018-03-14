@@ -44,6 +44,7 @@ XMLHTTPRequest >> acceptEncoding [
 
 { #category : #accessing }
 XMLHTTPRequest >> acceptEncoding: aStringOrCollection [
+	"NOTE: only gzip is currently supported"
 	self
 		encodingNamesFromHeaderValuesAt: 'Accept-Encoding'
 		put: aStringOrCollection
@@ -56,7 +57,8 @@ XMLHTTPRequest >> asXMLHTTPRequest [
 
 { #category : #basic }
 XMLHTTPRequest >> basicCleanup [
-	self subclassResponsibility
+	"can be overridden to handle cleanup after sending the
+	request and reading the response"
 ]
 
 { #category : #basic }
@@ -77,6 +79,12 @@ XMLHTTPRequest >> defaultMethod [
 { #category : #defaults }
 XMLHTTPRequest >> defaultTimeout [
 	^ 30
+]
+
+{ #category : #accessing }
+XMLHTTPRequest >> enableCompression [
+	"NOTE: only gzip is currently supported"
+	self acceptEncoding: 'gzip'
 ]
 
 { #category : #private }

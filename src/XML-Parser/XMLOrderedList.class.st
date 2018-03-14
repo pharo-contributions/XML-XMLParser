@@ -548,7 +548,7 @@ XMLOrderedList >> fourth [
 
 { #category : #comparing }
 XMLOrderedList >> hash [
-	| hash|
+	| hash |
 
 	hash := self species hash.
 	self size > 10

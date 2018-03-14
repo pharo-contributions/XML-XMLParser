@@ -47,13 +47,9 @@ XMLHTTPResponse >> defaultStatusCode [
 
 { #category : #testing }
 XMLHTTPResponse >> isChunked [
-	| transferEncoding |
-
-	transferEncoding :=
-		self
-			headerAt: 'Transfer-Encoding'
-			ifAbsent: [^ false].
-	^ transferEncoding beginsWith: 'chunked'.
+	^ (self
+		headerAt: 'Transfer-Encoding'
+		ifAbsent: [^ false]) beginsWith: 'chunked'
 ]
 
 { #category : #testing }
