@@ -2862,24 +2862,23 @@ XMLParserTest >> testElementContentModelOptional [
 		(self elementDeclarationsNamed: #('one' 'two' 'three' 'four' 'five')),
 		'<!ELEMENT root (one?,two,three?,(four?, five)?)>]>'.
 
-	self
-		shouldnt: [
-			SAXHandler
-				parse: dtd, '<root><one/><two/><three/><four/><five/></root>';
-				parse: dtd, '<root><two/><three/></root>';
-				parse: dtd, '<root><one/><two/><three/><five/></root>';
-				parse: dtd, '<root><two/></root>';
-				parse: dtd, '<root><one/><two/></root>']
-		raise: XMLValidationException.
-	self
-		should: [SAXHandler parse: dtd, '<root><one/><three/><four/><five/></root>']
-		raise: XMLValidationException.
-	self
-		should: [SAXHandler parse: dtd, '<root><one/><two/><three/><four/></root>']
-		raise: XMLValidationException.
-	self
-		should: [SAXHandler parse: dtd, '<root><one/><two/><three/><five/><four/></root>']
-		raise: XMLValidationException.
+	#('<root><one/><two/><three/><four/><five/></root>'
+		'<root><two/><three/></root>'
+		'<root><one/><two/><three/><five/></root>'
+		'<root><two/></root>'
+		'<root><one/><two/></root>')
+		do: [:each |
+			self
+				shouldnt: [SAXHandler parse: dtd, each]
+				raise: XMLValidationException].
+
+	#('<root><one/><three/><four/><five/></root>'
+		'<root><one/><two/><three/><four/></root>'
+		'<root><one/><two/><three/><five/><four/></root>')
+		do: [:each |
+			self
+				should: [SAXHandler parse: dtd, each]
+				raise: XMLValidationException].
 ]
 
 { #category : #tests }
@@ -6555,31 +6554,49 @@ XMLParserTest >> testXMLDeclarationUnterminated [
 
 { #category : #tests }
 XMLParserTest >> testXMLDeclarationVersionAttribute [
-	#('<?xml version=""?>'
-		'<?xml version="1"?>'
-		'<?xml version="1."?>'
-		'<?xml version="1.0."?>'
-		'<?xml version="1.0.1"?>'
-		'<?xml version="10"?>'
-		'<?xml version="10."?>'
-		'<?xml version="10.00."?>'
-		'<?xml version="10.00.10"?>'
-		'<?xml version="one"?>'
-		'<?xml version="one."?>'
-		'<?xml version="one.zero."?>'
-		'<?xml version="one.zero.one"?>')
+	#(''
+		'1'
+		'1.'
+		'1.0.'
+		'1.0.1'
+		'1..'
+		'1..0'
+		'1..0..'
+		'1..0..1'
+		'.1'
+		'.1.'
+		'.1.0'
+		'.1.0.'
+		'.1.0.1'
+		' 1 '
+		' 1. '
+		' 1.0 '
+		' 1.0. '
+		' 1.0.1 '
+		'10'
+		'10.'
+		'10.00'
+		'10.00.'
+		'10.00.10'
+		'one'
+		'one.'
+		'one.zero'
+		'one.zero.'
+		'one.zero.one')
 		do: [:each |
 			self
-				should: [SAXHandler parse: each, '<test/>']
+				should: [SAXHandler parse: '<?xml version="', each, '"?><test/>']
 				raise: XMLWellFormednessException].
 
-	#('<?xml version="1.0"?>'
-		'<?xml version="1.1"?>'
-		'<?xml version="1.00"?>'
-		'<?xml version="1.10"?>')
+	#('1.0'
+		'1.1'
+		'1.00'
+		'1.10'
+		'1.000'
+		'1.100')
 		do: [:each |
 			self
-				shouldnt: [SAXHandler parse: each, '<test/>']
+				shouldnt: [SAXHandler parse: '<?xml version="', each, '"?><test/>']
 				raise: XMLWellFormednessException].
 ]
 
