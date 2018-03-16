@@ -1,5 +1,5 @@
 "
-This is a class for automatic encoding detection of streams that infers encodings from byte order marks (BOM).
+This is a class for automatic encoding detection of streams that infers encodings from a leading byte order mark (BOM) sequence.
 "
 Class {
 	#name : #XMLEncodingDetector,
@@ -42,41 +42,8 @@ XMLEncodingDetector >> atEnd [
 	^ stream atEnd
 ]
 
-{ #category : #testing }
-XMLEncodingDetector >> detectsImplicitEncodings [
-	^ false
-]
-
 { #category : #private }
-XMLEncodingDetector >> handleImplicitLittleEndianEncoding [
-	| implicitConverterClass |
-
-	self detectsImplicitEncodings
-		ifTrue: [
-			implicitConverterClass :=
-				self peekForNull
-					ifTrue: [		
-						(self peekForNull
-							and: [self peekForNull])
-							ifTrue: [
-								"a leading ASCII char followed by three nulls;
-								implicit little endian UTF-32"
-								XMLImplicitUTF32LittleEndianStreamConverter]
-							ifFalse: [
-								"a leading ASCII char followed by just one null;
-								implicit little endian UTF-16"
-								XMLImplicitUTF16LittleEndianStreamConverter]]
-					ifFalse: [
-						"an ASCII char; assume it's UTF-8"
-						XMLImplicitUTF8StreamConverter]].
-
-	self resetStreamToStartPosition.
-	^ implicitConverterClass
-		ifNotNil: [implicitConverterClass new].
-]
-
-{ #category : #private }
-XMLEncodingDetector >> handleUTF16BigEndianBOM [
+XMLEncodingDetector >> detectBigEndianUTF16BOM [
 	2 to: UTF16BigEndianBOMBytes size do: [:i |
 		self next == (UTF16BigEndianBOMBytes at: i)
 			ifFalse: [
@@ -89,7 +56,7 @@ XMLEncodingDetector >> handleUTF16BigEndianBOM [
 ]
 
 { #category : #private }
-XMLEncodingDetector >> handleUTF32BigEndianBOMOrImplicitEncoding [
+XMLEncodingDetector >> detectBigEndianUTF32BOMOrImplicitEncoding [
 	2 to: UTF32BigEndianBOMBytes size do: [:i |
 		self peek == (UTF32BigEndianBOMBytes at: i)
 			ifTrue: [self next]
@@ -130,7 +97,35 @@ XMLEncodingDetector >> handleUTF32BigEndianBOMOrImplicitEncoding [
 ]
 
 { #category : #private }
-XMLEncodingDetector >> handleUTF32OrUTF16LittleEndianBOM [
+XMLEncodingDetector >> detectLittleEndianImplicitEncoding [
+	| implicitConverterClass |
+
+	self detectsImplicitEncodings
+		ifTrue: [
+			implicitConverterClass :=
+				self peekForNull
+					ifTrue: [		
+						(self peekForNull
+							and: [self peekForNull])
+							ifTrue: [
+								"a leading ASCII char followed by three nulls;
+								implicit little endian UTF-32"
+								XMLImplicitUTF32LittleEndianStreamConverter]
+							ifFalse: [
+								"a leading ASCII char followed by just one null;
+								implicit little endian UTF-16"
+								XMLImplicitUTF16LittleEndianStreamConverter]]
+					ifFalse: [
+						"an ASCII char; assume it's UTF-8"
+						XMLImplicitUTF8StreamConverter]].
+
+	self resetStreamToStartPosition.
+	^ implicitConverterClass
+		ifNotNil: [implicitConverterClass new].
+]
+
+{ #category : #private }
+XMLEncodingDetector >> detectLittleEndianUTF32Or16BOM [
 	2 to: UTF32LittleEndianBOMBytes size do: [:i |
 		self peek == (UTF32LittleEndianBOMBytes at: i)
 			ifTrue: [self next]
@@ -152,7 +147,7 @@ XMLEncodingDetector >> handleUTF32OrUTF16LittleEndianBOM [
 ]
 
 { #category : #private }
-XMLEncodingDetector >> handleUTF8BOM [
+XMLEncodingDetector >> detectUTF8BOM [
 	2 to: UTF8BOMBytes size do: [:i |
 		self peek == (UTF8BOMBytes at: i)
 			ifTrue: [self next]
@@ -165,13 +160,18 @@ XMLEncodingDetector >> handleUTF8BOM [
 	^ XMLUTF8StreamConverter new.
 ]
 
+{ #category : #testing }
+XMLEncodingDetector >> detectsImplicitEncodings [
+	^ false
+]
+
 { #category : #private }
 XMLEncodingDetector >> isUTF8LeadingByte: aByte [
 	^ aByte < 16r80
 		or: [aByte < 16rF8
-			and: [(aByte bitAnd: 16rE0) = 16rC0
-				or: [(aByte bitAnd: 16rF0) = 16rE0
-					or: [(aByte bitAnd: 16rF8) = 16rF0]]]]
+			and: [(aByte bitAnd: 16rE0) == 16rC0
+				or: [(aByte bitAnd: 16rF0) == 16rE0
+					or: [(aByte bitAnd: 16rF8) == 16rF0]]]]
 ]
 
 { #category : #private }
@@ -199,7 +199,7 @@ XMLEncodingDetector >> peekForASCII [
 	| byte |
 
 	((byte := self peek) notNil
-		and: [byte < 128])
+		and: [byte < 16r80])
 		ifTrue: [
 			self next.
 			^ true]
@@ -253,22 +253,22 @@ XMLEncodingDetector >> streamConverterForEncoding [
 		ifNil: [^ nil].
 
 	byte == 0
-		ifTrue: [^ self handleUTF32BigEndianBOMOrImplicitEncoding].
+		ifTrue: [^ self detectBigEndianUTF32BOMOrImplicitEncoding].
 
-	byte < 128
-		ifTrue: [^ self handleImplicitLittleEndianEncoding].
+	byte < 16r80
+		ifTrue: [^ self detectLittleEndianImplicitEncoding].
 
-	"(UTF8BOMBytes at: 1) >= 128"
+	"(UTF8BOMBytes at: 1) >= 16r80"
 	byte == (UTF8BOMBytes at: 1)
-		ifTrue: [^ self handleUTF8BOM].
+		ifTrue: [^ self detectUTF8BOM].
 
-	"(UTF16BigEndianBOMBytes at: 1) >= 128"
+	"(UTF16BigEndianBOMBytes at: 1) >= 16r80"
 	byte == (UTF16BigEndianBOMBytes at: 1)
-		ifTrue: [^ self handleUTF16BigEndianBOM].
+		ifTrue: [^ self detectBigEndianUTF16BOM].
 
-	"(UTF32LittleEndianBOMBytes at: 1) >= 128"
+	"(UTF32LittleEndianBOMBytes at: 1) >= 16r80"
 	byte == (UTF32LittleEndianBOMBytes at: 1)
-		ifTrue: [^ self handleUTF32OrUTF16LittleEndianBOM].
+		ifTrue: [^ self detectLittleEndianUTF32Or16BOM].
 
 	self resetStreamToStartPosition.
 	^ (self detectsImplicitEncodings
