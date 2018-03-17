@@ -86,6 +86,15 @@ XMLEncodingWriteStreamAdapterTest >> testHasDefaultStreamConverter [
 ]
 
 { #category : #tests }
+XMLEncodingWriteStreamAdapterTest >> testHasImplicitStreamConverter [
+	| adapter |
+
+	adapter := self newStreamAdapter.
+	self assert:
+		adapter hasImplicitStreamConverter = adapter streamConverter isImplicit.
+]
+
+{ #category : #tests }
 XMLEncodingWriteStreamAdapterTest >> testHasNullStreamConverter [
 	| adapter |
 
