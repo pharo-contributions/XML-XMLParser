@@ -72,10 +72,9 @@ XMLEncodingWriteStreamAdapter >> nextPutByteOrderMark [
 
 { #category : #printing }
 XMLEncodingWriteStreamAdapter >> printStreamOn: aStream [
-	super printStreamOn: aStream.
-	aStream
-		nextPutAll: ', ';
-		print: streamConverter.
+	streamConverter
+		printWithConvertableStream: stream
+		on: aStream
 ]
 
 { #category : #accessing }

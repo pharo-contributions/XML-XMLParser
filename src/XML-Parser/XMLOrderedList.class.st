@@ -83,11 +83,12 @@ XMLOrderedList >> = anObject [
 
 	"Test each position with #= using #to:do: for speed instead of
 	just 'collection = anObject collection' because that would
-	make equality depend on the internal collections instead of
-	just their items."
+	make equality depend on the internal collection types instead
+	of just their items."
 	1 to: collection size do: [:i |
 		(collection at: i) = (anObject at: i)
 			ifFalse: [^ false]].
+
 	^ true.
 ]
 

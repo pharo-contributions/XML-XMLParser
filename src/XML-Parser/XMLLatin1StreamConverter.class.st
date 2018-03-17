@@ -35,7 +35,7 @@ XMLLatin1StreamConverter >> nextPut: aCharacter toStream: aStream [
 	| codePoint |
 
 	(codePoint := aCharacter asInteger) > 255
-		ifTrue: [self errorBadCharacterValue: aCharacter asciiValue].
+		ifTrue: [self errorBadCharacterValue: codePoint].
 
 	aStream nextPut: codePoint.
 ]
