@@ -8,6 +8,6 @@ Class {
 }
 
 { #category : #testing }
-XMLImplicitUTF32BigEndianStreamConverter >> isImplicit [
+XMLImplicitUTF32BigEndianStreamConverter class >> isImplicit [
 	^ true
 ]

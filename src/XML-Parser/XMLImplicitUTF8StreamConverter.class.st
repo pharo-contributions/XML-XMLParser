@@ -8,6 +8,6 @@ Class {
 }
 
 { #category : #testing }
-XMLImplicitUTF8StreamConverter >> isImplicit [
+XMLImplicitUTF8StreamConverter class >> isImplicit [
 	^ true
 ]

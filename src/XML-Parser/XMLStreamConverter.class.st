@@ -84,6 +84,11 @@ XMLStreamConverter class >> decode: aStringOrByteArray [
 	^ self new decode: aStringOrByteArray
 ]
 
+{ #category : #convenience }
+XMLStreamConverter class >> decodingOn: aReadStream [
+	^ self new decodingOn: aReadStream
+]
+
 { #category : #'instance creation' }
 XMLStreamConverter class >> default [
 	^ self defaultClass new
@@ -135,6 +140,11 @@ XMLStreamConverter class >> encodingNamesAndClassesCache [
 		ifNil: [EncodingNamesAndClassesCache := XMLKeyValueCache maxSize: 128]
 ]
 
+{ #category : #convenience }
+XMLStreamConverter class >> encodingOn: aReadStream [
+	^ self new encodingOn: aReadStream
+]
+
 { #category : #private }
 XMLStreamConverter class >> findClassForEncoding: anEncodingName [
 	"check preferred classes first"
@@ -169,6 +179,11 @@ XMLStreamConverter class >> isAbstractClass [
 { #category : #testing }
 XMLStreamConverter class >> isDefaultClass [
 	^ self == self defaultClass
+]
+
+{ #category : #testing }
+XMLStreamConverter class >> isImplicit [
+	^ false
 ]
 
 { #category : #testing }
@@ -211,7 +226,8 @@ XMLStreamConverter class >> preferredClasses [
 				IdentitySet new
 					addAll:
 						(XMLUTFStreamConverter allSubclasses reject: [:each |
-							each isAbstractClass]);
+							each isAbstractClass
+								or: [each isImplicit]]);
 					add: XMLLatin1StreamConverter;
 					add: XMLASCIIStreamConverter;
 					yourself]
@@ -245,18 +261,31 @@ XMLStreamConverter >> decode: aStringOrByteArray [
 ]
 
 { #category : #convenience }
+XMLStreamConverter >> decodingOn: aReadStream [
+	^ XMLDecodingReadStreamAdapter
+		on: aReadStream
+		streamConverter: self
+]
+
+{ #category : #convenience }
 XMLStreamConverter >> encode: aString [
-	^ (XMLEncodingWriteStreamAdapter
-		on: (ByteArray new: aString size) writeStream
-		streamConverter: self)
-			nextPutByteOrderMark;
-			nextPutAll: aString;
-			contents
+	^ (self encodingOn: (ByteArray new: aString size) writeStream)
+		nextPutAll: aString;
+		contents
 ]
 
 { #category : #accessing }
 XMLStreamConverter >> encoding [
 	^ self class primaryEncodingName
+]
+
+{ #category : #convenience }
+XMLStreamConverter >> encodingOn: aWriteStream [
+	^ (XMLEncodingWriteStreamAdapter
+		on: aWriteStream
+		streamConverter: self)
+			nextPutByteOrderMark;
+			yourself
 ]
 
 { #category : #private }
@@ -285,7 +314,7 @@ XMLStreamConverter >> isDefault [
 
 { #category : #testing }
 XMLStreamConverter >> isImplicit [
-	^ false
+	^ self class isImplicit
 ]
 
 { #category : #testing }
