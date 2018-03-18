@@ -1118,7 +1118,7 @@ ConfigurationOfXMLParser >> baseline342: spec [
 	spec
 		for: #gemstone
 		do: [
-			spec package: 'XML-ParserGemstoneCompatibility' with: 'XML-ParserGemstoneCompatibility-monty.3'.
+			spec package: 'XML-ParserGemstoneCompatibility' with: 'XML-ParserGemstoneCompatibility-monty.4'.
 			"force initialization of lazy-initialized class and class isnt
 			vars to avoid write conflicts on GS"
 			spec postLoadDoIt: #initializeClassesForGSBaseline332. ].
