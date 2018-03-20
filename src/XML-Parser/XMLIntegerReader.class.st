@@ -103,11 +103,6 @@ XMLIntegerReader >> errorUnsupportedBase: aBase [
 ]
 
 { #category : #private }
-XMLIntegerReader >> integerOverflow: aMaxValue [
-	^ aMaxValue
-]
-
-{ #category : #private }
 XMLIntegerReader >> next [
 	| nextChar |
 
@@ -190,13 +185,19 @@ XMLIntegerReader >> nextIntegerWithBase: aBase upToLimit: aReadLimit [
 			maxBaseValue
 				ifNotNil: [
 					integer > maxBaseValue
-						ifTrue: [^ self integerOverflow: maxValue]].
+						ifTrue: [
+							self overflowed.
+							"handle overflow with saturation"
+							^ maxValue]].
 			integer := integer * aBase.
 
 			maxValue
 				ifNotNil: [
 					integer > (maxValue - digitValue)
-						ifTrue: [^ self integerOverflow: maxValue]].
+						ifTrue: [
+							self overflowed.
+							"handle overflow with saturation"
+							^ maxValue]].
 			integer := integer + digitValue.
 			readLimit
 				ifNotNil: [readLimit := readLimit - 1]].
@@ -209,6 +210,11 @@ XMLIntegerReader >> on: aStringOrStream [
 		aStringOrStream isStream
 			ifTrue: [aStringOrStream]
 			ifFalse: [aStringOrStream readStream]
+]
+
+{ #category : #private }
+XMLIntegerReader >> overflowed [
+	"can override to raise a warning or error"
 ]
 
 { #category : #private }
