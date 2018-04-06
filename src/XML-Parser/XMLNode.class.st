@@ -570,7 +570,7 @@ XMLNode >> printToFileNamed: aFileName beforeWritingDo: aBlock [
 { #category : #printing }
 XMLNode >> printWithoutSelfClosingTagsOn: aStream [
 	"Prints XML on aStream with empty elements rendered as '<empty></empty>'
-	instead of self-closing '<empty />' tags"
+	instead of self-closing '<empty/>' tags"
 
 	self
 		printOn: aStream
@@ -580,7 +580,7 @@ XMLNode >> printWithoutSelfClosingTagsOn: aStream [
 { #category : #printing }
 XMLNode >> printWithoutSelfClosingTagsToFileNamed: aFileName [
 	"Prints XML to the file aFileName with empty elements rendered
-	as '<empty></empty>' instead of self-closing '<empty />' tags"
+	as '<empty></empty>' instead of self-closing '<empty/>' tags"
 
 	self
 		printToFileNamed: aFileName
@@ -590,7 +590,7 @@ XMLNode >> printWithoutSelfClosingTagsToFileNamed: aFileName [
 { #category : #printing }
 XMLNode >> printedWithoutSelfClosingTags [
 	"Prints XML with empty elements rendered as '<empty></empty>' instead
-	of self-closing '<empty />' tags"
+	of self-closing '<empty/>' tags"
 
 	^ String streamContents: [:stream | self printWithoutSelfClosingTagsOn: stream]
 ]
