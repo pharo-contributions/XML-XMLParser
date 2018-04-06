@@ -436,7 +436,7 @@ XMLDOMParserTest >> testInnerXML [
 		address1 := (person attributeAt: 'first-name'), '@example.com'.
 		address2 := (person attributeAt: 'first-name'), '@users.example.com'.
 		self
-			assert: (contactInfo innerXML: '<email></email><email2/>') innerXML = '<email /><email2 />';
+			assert: (contactInfo innerXML: '<email></email><email2/>') innerXML = '<email/><email2/>';
 			assert: contactInfo elements size = 2;
 			assert: (contactInfo elements first isNamed: 'email');
 			assert: (contactInfo elements second isNamed: 'email2');
@@ -454,7 +454,7 @@ XMLDOMParserTest >> testInnerXMLDocument [
 	document := XMLDOMParser parse: self addressBookXMLWithDTD.
 	self
 		assert: ((document innerXML: '<new-root/>') root isNamed: 'new-root');
-		assert: document innerXML = '<new-root />';
+		assert: document innerXML = '<new-root/>';
 		assert: ((document root innerXML: 'test') contentString = 'test');
 		assert: document root innerXML = 'test'.
 	

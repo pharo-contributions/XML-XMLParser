@@ -486,7 +486,7 @@ XMLElementTest >> testCanonicalPrinting [
 
 	self assert:
 		element printString =
-			'<test xmlns:b="ns2" xmlns:a="ns1" xmlns="default" c="3" b="2" a="1" />'.
+			'<test xmlns:b="ns2" xmlns:a="ns1" xmlns="default" c="3" b="2" a="1"/>'.
 	self assert:
 		element canonicallyPrinted =
 			'<test xmlns="default" xmlns:a="ns1" xmlns:b="ns2" a="1" b="2" c="3"></test>'.
@@ -1479,7 +1479,7 @@ XMLElementTest >> testPrintingDefaultNamespaces [
 	self assert:
 		element printString =
 			('<element xmlns="default">',
-			'<element xmlns=""><empty /></element>',
+			'<element xmlns=""><empty/></element>',
 			'</element>').
 ]
 
@@ -1498,7 +1498,7 @@ XMLElementTest >> testPrintingNonRootNamespaces [
 	self assert:
 		element printString =
 			('<element>',
-			'<used:empty xmlns="defaultNS" xmlns:used="usedNS" />',
+			'<used:empty xmlns="defaultNS" xmlns:used="usedNS"/>',
 			'</element>').
 ]
 
@@ -1515,7 +1515,7 @@ XMLElementTest >> testPrintingRootNamespaces [
 	self assert:
 		element printString =
 			('<used:element xmlns="defaultNS" xmlns:used="usedNS">',
-			'<empty />',
+			'<empty/>',
 			'</used:element>').
 ]
 
@@ -1820,7 +1820,7 @@ XMLElementTest >> testWriteXMLOn [
 	| element attributes |
 
 	element := self nodeClass named: 'element'.
-	self assert: element printString = '<element />'.
+	self assert: element printString = '<element/>'.
 	
 	element addString: 'test'.
 	self assert: element printString = '<element>test</element>'.

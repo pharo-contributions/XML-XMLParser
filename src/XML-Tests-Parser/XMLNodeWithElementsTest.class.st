@@ -2073,7 +2073,7 @@ XMLNodeWithElementsTest >> testPrintedWithoutSelfClosingTags [
 			ifFalse: [
 				printString :=
 					printString
-						copyReplaceAll: '<', each name, ' />'
+						copyReplaceAll: '<', each name, '/>'
 						with: '<', each name, '></', each name, '>']].
 	self assert: printString = printStringWithoutSelfClosingTags.
 ]
