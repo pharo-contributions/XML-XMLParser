@@ -156,10 +156,8 @@ XMLNode >> descendantNodesDo: aBlock [
 
 { #category : #deprecated }
 XMLNode >> descendentNodesDo: aBlock [
-	"less common alternate spelling, will be deprecated;
-	use #descendantNodesDo: instead"
-
-	^ self descendantNodesDo: aBlock
+	self deprecated: 'use #descendantNodesDo: instead'.
+	^ self descendantNodesDo: aBlock.
 ]
 
 { #category : #accessing }

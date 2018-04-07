@@ -202,44 +202,34 @@ XMLNodeWithChildren >> descendantNodesSelect: aBlock [
 
 { #category : #deprecated }
 XMLNodeWithChildren >> descendentNodes [
-	"less common alternate spelling, will be deprecated;
-	use #descendantNodes instead"
-
-	^ self descendantNodes
+	self deprecated: 'use #descendantNodes instead'.
+	^ self descendantNodes.
 ]
 
 { #category : #deprecated }
 XMLNodeWithChildren >> descendentNodesCollect: aBlock [
-	"less common alternate spelling, will be deprecated;
-	use #descendantNodesCollect: instead"
-
-	^ self descendantNodesCollect: aBlock
+	self deprecated: 'use #descendantNodesCollect: instead'.
+	^ self descendantNodesCollect: aBlock.
 ]
 
 { #category : #deprecated }
 XMLNodeWithChildren >> descendentNodesDetect: aBlock [
-	"less common alternate spelling, will be deprecated;
-	use #descendantNodesDetect: instead"
-
-	^ self descendantNodesDetect: aBlock
+	self deprecated: 'use #descendantNodesDetect: instead'.
+	^ self descendantNodesDetect: aBlock.
 ]
 
 { #category : #deprecated }
 XMLNodeWithChildren >> descendentNodesDetect: aBlock ifNone: anExceptionBlock [
-	"less common alternate spelling, will be deprecated;
-	use #descendantNodesDetect:ifNone: instead"
-
+	self deprecated: 'use #descendantNodesDetect:ifNone: instead'.
 	^ self
 		descendantNodesDetect: aBlock
-		ifNone: anExceptionBlock
+		ifNone: anExceptionBlock.
 ]
 
 { #category : #deprecated }
 XMLNodeWithChildren >> descendentNodesSelect: aBlock [
-	"less common alternate spelling, will be deprecated;
-	use #descendantNodesSelect: instead"
-
-	^ self descendantNodesSelect: aBlock
+	self deprecated: 'use #descendantNodesSelect: instead'.
+	^ self descendantNodesSelect: aBlock.
 ]
 
 { #category : #accessing }

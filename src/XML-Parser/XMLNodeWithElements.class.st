@@ -423,80 +423,62 @@ XMLNodeWithElements >> descendantElementsSelect: aBlock [
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElements [
-	"less common alternate spelling, will be deprecated;
-	use #descendantElements instead"
-
-	^ self descendantElements
+	self deprecated: 'use #descendantElements instead'.
+	^ self descendantElements.
 ]
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElementsCollect: aBlock [
-	"less common alternate spelling, will be deprecated;
-	use #descendantElementsCollect: instead"
-
-	^ self descendantElementsCollect: aBlock
+	self deprecated: 'use #descendantElementsCollect: instead'.
+	^ self descendantElementsCollect: aBlock.
 ]
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElementsDetect: aBlock [
-	"less common alternate spelling, will be deprecated;
-	use #descendantElementsDetect: instead"
-
-	^ self descendantElementsDetect: aBlock
+	self deprecated: 'use #descendantElementsDetect: instead'.
+	^ self descendantElementsDetect: aBlock.
 ]
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElementsDetect: aBlock ifNone: anExceptionBlock [
-	"less common alternate spelling, will be deprecated;
-	use #descendantElementsDetect:ifNone: instead"
-
+	self deprecated: 'use #descendantElementsDetect:ifNone: instead'.
 	^ self
 		descendantElementsDetect: aBlock
-		ifNone: anExceptionBlock
+		ifNone: anExceptionBlock.
 ]
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElementsDo: aBlock [
-	"less common alternate spelling, will be deprecated;
-	use #descendantElementsDo: instead"
-
-	^ self descendantElementsDo: aBlock
+	self deprecated: 'use #descendantElementsDo: instead'.
+	^ self descendantElementsDo: aBlock.
 ]
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElementsNamed: aName [
-	"less common alternate spelling, will be deprecated;
-	use #descendantElementsNamed: instead"
-
-	^ self descendantElementsNamed: aName
+	self deprecated: 'use #descendantElementsNamed: instead"'.
+	^ self descendantElementsNamed: aName.
 ]
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElementsNamed: aName do: aBlock [
-	"less common alternate spelling, will be deprecated;
-	use #descendantElementsNamed:do: instead"
-
+	self deprecated: 'use #descendantElementsNamed:do: instead'.
 	^ self
 		descendantElementsNamed: aName
-		do: aBlock
+		do: aBlock.
 ]
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElementsNamed: aName namespaceURI: aURI [
-	"less common alternate spelling, will be deprecated;
-	use #descendantElementsNamed:namespaceURI: instead"
-
+	self deprecated: 'use #descendantElementsNamed:namespaceURI: instead'.
 	^ self
 		descendantElementsNamed: aName
-		namespaceURI: aURI
+		namespaceURI: aURI.
 ]
 
 { #category : #deprecated }
 XMLNodeWithElements >> descendentElementsSelect: aBlock [
-	"less common alternate spelling, will be deprecated;
-	use #descendantElementsSelect: instead"
-
-	^ self descendantElementsSelect: aBlock
+	self deprecated: 'use #descendantElementsSelect: instead'.
+	^ self descendantElementsSelect: aBlock.
 ]
 
 { #category : #accessing }

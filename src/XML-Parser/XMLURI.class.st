@@ -546,9 +546,8 @@ XMLURI >> isFile [
 
 { #category : #deprecated }
 XMLURI >> isFileURI [
-	"will be deprecated; use #isFile instead"
-
-	^ self isFile
+	self deprecated: 'use #isFile instead'.
+	^ self isFile.
 ]
 
 { #category : #testing }
@@ -570,9 +569,8 @@ XMLURI >> isLocal [
 
 { #category : #deprecated }
 XMLURI >> isLocalURI [
-	"will be deprecated; use #isLocal instead"
-
-	^ self isLocal
+	self deprecated: 'use #isLocal instead'.
+	^ self isLocal.
 ]
 
 { #category : #testing }
