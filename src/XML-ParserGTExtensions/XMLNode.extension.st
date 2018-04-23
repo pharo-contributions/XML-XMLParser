@@ -155,7 +155,12 @@ XMLNode >> gtInspectorSourceIn: aComposite inContext: aGTInspector [
 
 	sourceEditor
 		title: 'Source';
-		display: [self asHighlightedSourceText];
+		display: [
+			String new: 10000 streamContents: [:stream |
+				self
+					printOn: stream
+					beforeWritingDo: [:writer |
+						writer enablePrologPrettyPrinting]]];
 		withLineNumbers: true.
 
 	self
