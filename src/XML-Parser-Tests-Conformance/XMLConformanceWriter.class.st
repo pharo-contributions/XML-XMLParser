@@ -8,7 +8,7 @@ Class {
 		'ContentConformanceCanonicalEscapes',
 		'ContentStringConformanceCanonicalEscapes'
 	],
-	#category : #'XML-Conformance-Tests-Writer'
+	#category : #'XML-Parser-Tests-Conformance-Writer'
 }
 
 { #category : #'class initialization' }

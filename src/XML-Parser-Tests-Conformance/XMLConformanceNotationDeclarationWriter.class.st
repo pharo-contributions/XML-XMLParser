@@ -4,7 +4,7 @@ A notation declaration writer for the XML Conformance test suite canonical XML f
 Class {
 	#name : #XMLConformanceNotationDeclarationWriter,
 	#superclass : #XMLNotationDeclarationWriter,
-	#category : #'XML-Conformance-Tests-Writer'
+	#category : #'XML-Parser-Tests-Conformance-Writer'
 }
 
 { #category : #testing }

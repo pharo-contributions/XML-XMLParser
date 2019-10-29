@@ -13,7 +13,7 @@ Class {
 	#instVars : [
 		'ignorableParserExceptions'
 	],
-	#category : #'XML-Conformance-Tests'
+	#category : #'XML-Parser-Tests-Conformance'
 }
 
 { #category : #accessing }
