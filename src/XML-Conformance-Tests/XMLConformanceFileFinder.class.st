@@ -14,7 +14,7 @@ Class {
 		'entityFiles',
 		'passingTestOutputFiles'
 	],
-	#category : #'XML-Tests-Conformance-Files'
+	#category : #'XML-Conformance-Tests-Files'
 }
 
 { #category : #'instance creation' }

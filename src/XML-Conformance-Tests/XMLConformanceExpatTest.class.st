@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLConformanceExpatTest,
 	#superclass : #XMLConformanceTest,
-	#category : #'XML-Tests-Conformance'
+	#category : #'XML-Conformance-Tests'
 }
 
 { #category : #accessing }

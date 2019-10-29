@@ -4,7 +4,7 @@ A PI writer for the XML Conformance test suite canonical XML format that always 
 Class {
 	#name : #XMLConformancePIWriter,
 	#superclass : #XMLPIWriter,
-	#category : #'XML-Tests-Conformance-Writer'
+	#category : #'XML-Conformance-Tests-Writer'
 }
 
 { #category : #testing }

@@ -4,7 +4,7 @@ A formatter for the XML Conformance test suite canonical XML format, which is di
 Class {
 	#name : #XMLConformanceCanonicalWriterFormatter,
 	#superclass : #XMLWriterFormatter,
-	#category : #'XML-Tests-Conformance-Writer'
+	#category : #'XML-Conformance-Tests-Writer'
 }
 
 { #category : #formatting }

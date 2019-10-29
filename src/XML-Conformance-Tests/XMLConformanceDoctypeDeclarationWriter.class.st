@@ -4,7 +4,7 @@ A doctype writer for the XML Conformance test suite canonical XML format that is
 Class {
 	#name : #XMLConformanceDoctypeDeclarationWriter,
 	#superclass : #XMLDoctypeDeclarationWriter,
-	#category : #'XML-Tests-Conformance-Writer'
+	#category : #'XML-Conformance-Tests-Writer'
 }
 
 { #category : #testing }
