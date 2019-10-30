@@ -11,11 +11,14 @@ BaselineOfXMLParser >> baselineOf: spec [
 	spec
 		for: #common
 		do: [
-			self orderPreservingDictionaryOn: spec.		
+			
+			self 
+				bitmapCharacterSetOn: spec;
+				orderPreservingDictionaryOn: spec.		
 			
 			"Packages"
 			spec 
-				package: 'XML-Parser' with: [ spec requires: #('OrderPreservingDictionary') ];
+				package: 'XML-Parser' with: [ spec requires: #('OrderPreservingDictionary' 'BitmapCharacterSet') ];
 				package: 'XML-Parser-Tests' with: [ spec requires: #('XML-Parser') ].
 			
 			"Groups"
@@ -26,6 +29,15 @@ BaselineOfXMLParser >> baselineOf: spec [
 				group: 'all' with: #('all')
 			
 	]
+]
+
+{ #category : #'prerequisites ' }
+BaselineOfXMLParser >> bitmapCharacterSetOn: spec [
+
+	spec
+		baseline: 'BitmapCharacterSet'
+		with: [ spec
+					repository: 'github://pharo-contributions/BitmapCharacterSet/src' ]
 ]
 
 { #category : #'prerequisites ' }
