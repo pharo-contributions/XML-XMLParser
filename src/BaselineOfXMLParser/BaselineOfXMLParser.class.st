@@ -1,0 +1,38 @@
+Class {
+	#name : #BaselineOfXMLParser,
+	#superclass : #BaselineOf,
+	#category : #BaselineOfXMLParser
+}
+
+{ #category : #baselines }
+BaselineOfXMLParser >> baselineOf: spec [
+
+	<baseline>
+	spec
+		for: #common
+		do: [
+			self orderPreservingDictionaryOn: spec.		
+			
+			"Packages"
+			spec 
+				package: 'XML-Parser' with: [ spec requires: #('OrderPreservingDictionary') ];
+				package: 'XML-Parser-Tests' with: [ spec requires: #('XML-Parser') ].
+			
+			"Groups"
+			spec
+				group: 'Core' with: #('XML-Parser');
+				group: 'Tests' with: #('XML-Parser-Tests'); 
+				group: 'default' with: #('Core' 'Tests');
+				group: 'all' with: #('all')
+			
+	]
+]
+
+{ #category : #'prerequisites ' }
+BaselineOfXMLParser >> orderPreservingDictionaryOn: spec [
+
+	spec
+		baseline: 'OrderPreservingDictionary'
+		with: [ spec
+					repository: 'github://pharo-contributions/OrderPreservingDictionary/src' ]
+]
