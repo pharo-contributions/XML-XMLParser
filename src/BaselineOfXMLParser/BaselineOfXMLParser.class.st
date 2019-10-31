@@ -23,7 +23,7 @@ BaselineOfXMLParser >> baselineOf: spec [
 			spec 
 				package: 'XML-Parser' with: [ spec requires: #('OrderPreservingDictionary' 'BitmapCharacterSet') ];
 				package: 'XML-Parser-Tests' with: [ spec requires: #('XML-Parser' 'OrderPreservingDictionary Tests' 'BitmapCharacterSet Tests') ];
-				package: 'XML-Parser-Tests-Conformance' with: [ spec requires: #('XML-Parser' 'XML-Parser-Tests') ].
+				package: 'XML-Parser-Tests-Conformance' with: [ spec requires: #('XML-Parser' 'XMLWriter' 'XML-Parser-Tests') ].
 			
 			"Groups"
 			spec
@@ -61,6 +61,21 @@ BaselineOfXMLParser >> orderPreservingDictionaryOn: spec [
 				repository: 'github://pharo-contributions/OrderPreservingDictionary:1.5.x/src' ]. 
 				
 	spec project: 'OrderPreservingDictionary Tests' copyFrom: 'OrderPreservingDictionary' with: [ spec loads: #('Tests') ] 			
+				
+	
+]
+
+{ #category : #'prerequisites ' }
+BaselineOfXMLParser >> xmlWriterOn: spec [
+
+	spec
+		baseline: 'XMLWriter'
+      with: [ 
+			spec
+				loads: #('Core');
+				repository: 'github://pharo-contributions/XML-XMLWriter:2.8.x/src' ]. 
+				
+	spec project: 'XMLWriter Tests' copyFrom: 'XMLWriter' with: [ spec loads: #('Tests') ] 			
 				
 	
 ]
