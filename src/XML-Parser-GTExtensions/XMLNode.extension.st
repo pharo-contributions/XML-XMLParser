@@ -90,7 +90,7 @@ XMLNode >> asHighlightedTextWrittenWith: aBlock [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLNode classSide >> gtExampleNodeWithParent [
+XMLNode class >> gtExampleNodeWithParent [
 	<gtExample>
 	^ self new parent: self new
 ]

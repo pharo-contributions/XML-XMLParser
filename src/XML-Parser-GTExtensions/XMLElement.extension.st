@@ -11,7 +11,7 @@ XMLElement >> formForImageEntity: imageEntity [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLElement classSide >> gtExampleXmlNode [
+XMLElement class >> gtExampleXmlNode [
 	<gtExample>
 	^ XMLDocument gtExampleXmlNode firstElement
 ]

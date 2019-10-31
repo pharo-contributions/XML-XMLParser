@@ -23,7 +23,7 @@ Class {
 { #category : #accessing }
 XMLDocumentHighlightDefaults class >> defaultCDataColor [
 	^ defaultCDataColor
-		ifNil: [defaultCDataColor := self textColorForShoutProperty: #primitive]
+		ifNil: [defaultCDataColor := TextColor color: Color gray darker ]
 ]
 
 { #category : #accessing }
@@ -34,7 +34,7 @@ XMLDocumentHighlightDefaults class >> defaultCDataColor: aTextColor [
 { #category : #accessing }
 XMLDocumentHighlightDefaults class >> defaultCommentColor [
 	^ defaultCommentColor
-		ifNil: [defaultCommentColor :=  self textColorForShoutProperty: #comment]
+		ifNil: [defaultCommentColor := TextColor color: (Color r: 0.0 g: 0.519 b: 0.0 alpha: 1.0) ]
 ]
 
 { #category : #accessing }
@@ -45,7 +45,7 @@ XMLDocumentHighlightDefaults class >> defaultCommentColor: aTextColor [
 { #category : #accessing }
 XMLDocumentHighlightDefaults class >> defaultDeclarationColor [
 	^ defaultDeclarationColor
-		ifNil: [defaultDeclarationColor := self textColorForShoutProperty: #super]
+		ifNil: [defaultDeclarationColor := TextColor color: Color blue ]
 ]
 
 { #category : #accessing }
@@ -57,8 +57,7 @@ XMLDocumentHighlightDefaults class >> defaultDeclarationColor: aTextColor [
 XMLDocumentHighlightDefaults class >> defaultDoctypeDeclarationColor [
 	^ defaultDoctypeDeclarationColor
 		ifNil: [
-			defaultDoctypeDeclarationColor :=
-				self textColorForShoutProperty: #super]
+			defaultDoctypeDeclarationColor := TextColor color: Color red ]
 ]
 
 { #category : #accessing }
@@ -70,8 +69,7 @@ XMLDocumentHighlightDefaults class >> defaultDoctypeDeclarationColor: aTextColor
 XMLDocumentHighlightDefaults class >> defaultEntityReferenceColor [
 	^ defaultEntityReferenceColor
 		ifNil: [
-			defaultEntityReferenceColor :=
-				self textColorForShoutProperty: #character]
+			defaultEntityReferenceColor := TextColor color: Color red ]
 ]
 
 { #category : #accessing }
@@ -82,7 +80,7 @@ XMLDocumentHighlightDefaults class >> defaultEntityReferenceColor: aTextColor [
 { #category : #accessing }
 XMLDocumentHighlightDefaults class >> defaultNameColor [
 	^ defaultNameColor
-		ifNil: [defaultNameColor := self textColorForShoutProperty: #instVar]
+		ifNil: [defaultNameColor := TextColor color: Color blue darker ]
 ]
 
 { #category : #accessing }
@@ -93,7 +91,7 @@ XMLDocumentHighlightDefaults class >> defaultNameColor: aTextColor [
 { #category : #accessing }
 XMLDocumentHighlightDefaults class >> defaultPIColor [
 	^ defaultPIColor
-		ifNil: [defaultPIColor := self textColorForShoutProperty: #primitive]
+		ifNil: [defaultPIColor := TextColor color: Color brown ]
 ]
 
 { #category : #accessing }
@@ -111,7 +109,7 @@ XMLDocumentHighlightDefaults class >> defaultPrimaryMarkupColor: aTextColor [
 { #category : #accessing }
 XMLDocumentHighlightDefaults class >> defaultQuotedStringColor [
 	^ defaultQuotedStringColor
-		ifNil: [defaultQuotedStringColor := self textColorForShoutProperty: #string]
+		ifNil: [defaultQuotedStringColor := TextColor color: Color purple ]
 ]
 
 { #category : #accessing }
@@ -123,8 +121,8 @@ XMLDocumentHighlightDefaults class >> defaultQuotedStringColor: aTextColor [
 XMLDocumentHighlightDefaults class >> defaultQuotedStringNameColor [
 	^ defaultQuotedStringNameColor
 		ifNil: [
-			defaultQuotedStringNameColor :=
-				self textColorForShoutProperty: #self]
+			defaultQuotedStringNameColor := TextColor color:
+				Color red ]
 ]
 
 { #category : #accessing }
@@ -143,7 +141,7 @@ XMLDocumentHighlightDefaults class >> defaultSecondaryMarkupColor: aTextColor [
 { #category : #accessing }
 XMLDocumentHighlightDefaults class >> defaultTagColor [
 	^ defaultTagColor
-		ifNil: [defaultTagColor := self textColorForShoutProperty: #instVar]
+		ifNil: [defaultTagColor := TextColor color: Color blue ]
 ]
 
 { #category : #accessing }
@@ -154,7 +152,7 @@ XMLDocumentHighlightDefaults class >> defaultTagColor: aTextColor [
 { #category : #accessing }
 XMLDocumentHighlightDefaults class >> defaultXMLDeclarationColor [
 	^ defaultXMLDeclarationColor
-		ifNil: [defaultXMLDeclarationColor := self textColorForShoutProperty: #primitive]
+		ifNil: [defaultXMLDeclarationColor := TextColor color: Color red darker ]
 ]
 
 { #category : #accessing }

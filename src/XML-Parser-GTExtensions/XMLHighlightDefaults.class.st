@@ -14,7 +14,7 @@ Class {
 { #category : #accessing }
 XMLHighlightDefaults class >> defaultDefaultColor [
 	^ defaultDefaultColor
-		ifNil: [defaultDefaultColor := self textColorForShoutProperty: #default]
+		ifNil: [defaultDefaultColor := TextColor color: Color black ]
 ]
 
 { #category : #accessing }

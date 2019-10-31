@@ -8,7 +8,7 @@ XMLDocument >> addTreeViewChildrenTo: anOrderedCollection [
 ]
 
 { #category : #'*XML-Parser-GTExtensions' }
-XMLDocument classSide >> gtExampleXmlNode [
+XMLDocument class >> gtExampleXmlNode [
 	<gtExample>
 	^ XMLDOMParser parse: '<document><a></a><b></b></document>'
 ]
