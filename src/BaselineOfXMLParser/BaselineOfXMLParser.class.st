@@ -19,7 +19,7 @@ BaselineOfXMLParser >> baselineOf: spec [
 			"Packages"
 			spec 
 				package: 'XML-Parser' with: [ spec requires: #('OrderPreservingDictionary' 'BitmapCharacterSet') ];
-				package: 'XML-Parser-Tests' with: [ spec requires: #('XML-Parser') ].
+				package: 'XML-Parser-Tests' with: [ spec requires: #('XML-Parser' 'OrderPreservingDictionary Tests' 'BitmapCharacterSet Tests') ].
 			
 			"Groups"
 			spec
@@ -33,11 +33,17 @@ BaselineOfXMLParser >> baselineOf: spec [
 
 { #category : #'prerequisites ' }
 BaselineOfXMLParser >> bitmapCharacterSetOn: spec [
-
+			
 	spec
 		baseline: 'BitmapCharacterSet'
-		with: [ spec
-					repository: 'github://pharo-contributions/BitmapCharacterSet:1.2.x/src' ]
+      with: [ 
+			spec
+				loads: #('Core');
+				repository: 'github://pharo-contributions/BitmapCharacterSet:v1.4.x/src' ]. 
+				
+	spec project: 'BitmapCharacterSet Tests' copyFrom: 'BitmapCharacterSet' with: [ spec loads: #('Tests') ] 			
+				
+			
 ]
 
 { #category : #'prerequisites ' }
@@ -45,6 +51,12 @@ BaselineOfXMLParser >> orderPreservingDictionaryOn: spec [
 
 	spec
 		baseline: 'OrderPreservingDictionary'
-		with: [ spec
-					repository: 'github://pharo-contributions/OrderPreservingDictionary:1.5.x/src' ]
+      with: [ 
+			spec
+				loads: #('Core');
+				repository: 'github://pharo-contributions/OrderPreservingDictionary:v1.4.x/src' ]. 
+				
+	spec project: 'OrderPreservingDictionary Tests' copyFrom: 'OrderPreservingDictionary' with: [ spec loads: #('Tests') ] 			
+				
+	
 ]
