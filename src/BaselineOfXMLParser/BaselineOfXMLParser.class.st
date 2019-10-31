@@ -37,7 +37,7 @@ BaselineOfXMLParser >> bitmapCharacterSetOn: spec [
 	spec
 		baseline: 'BitmapCharacterSet'
 		with: [ spec
-					repository: 'github://pharo-contributions/BitmapCharacterSet:1.2.x/src' ]
+					repository: 'github://pharo-contributions/BitmapCharacterSet:v1.2.x/src' ]
 ]
 
 { #category : #'prerequisites ' }
@@ -46,5 +46,5 @@ BaselineOfXMLParser >> orderPreservingDictionaryOn: spec [
 	spec
 		baseline: 'OrderPreservingDictionary'
 		with: [ spec
-					repository: 'github://pharo-contributions/OrderPreservingDictionary:1.5.x/src' ]
+					repository: 'github://pharo-contributions/OrderPreservingDictionary:v1.5.x/src' ]
 ]
