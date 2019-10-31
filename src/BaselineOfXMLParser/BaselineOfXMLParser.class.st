@@ -17,7 +17,8 @@ BaselineOfXMLParser >> baselineOf: spec [
 			
 			self 
 				bitmapCharacterSetOn: spec;
-				orderPreservingDictionaryOn: spec.		
+				orderPreservingDictionaryOn: spec;
+				xmlWriterOn: spec.		
 			
 			"Packages"
 			spec 
