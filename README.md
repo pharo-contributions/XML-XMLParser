@@ -1,6 +1,15 @@
 # XML-XMLParser
 XML Parser for Pharo
 
+## Installation
+
+```Smalltalk
+Metacello new
+	baseline: 'XMLParser';
+	repository: 'github://pharo-contributions/XML-XMLParser/src';
+	load.
+```	
+
 ## How to use
 
 ```Smalltalk
