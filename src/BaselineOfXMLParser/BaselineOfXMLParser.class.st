@@ -1,3 +1,6 @@
+"
+Baseline for XML Parser (https://github.com/pharo-contributions/XML-XMLParser)
+"
 Class {
 	#name : #BaselineOfXMLParser,
 	#superclass : #BaselineOf,
