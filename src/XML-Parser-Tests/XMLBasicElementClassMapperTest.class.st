@@ -919,7 +919,7 @@ XMLBasicElementClassMapperTest >> testCopy [
 	self
 		deny: mapper == copy;
 		deny: mapper elementClassMap == copy elementClassMap;
-		assert: mapper elementClassMap = copy elementClassMap.
+		assert: mapper elementClassMap equals: copy elementClassMap.
 
 	mapper elementClassMap values
 		with: copy elementClassMap values
@@ -930,7 +930,7 @@ XMLBasicElementClassMapperTest >> testCopy [
 				ifTrue: [
 					self
 						deny: classOrCollection == classOrCollectionCopy;
-						assert: classOrCollection = classOrCollectionCopy]
+						assert: classOrCollection equals: classOrCollectionCopy]
 				ifFalse: [
 					self deny: classOrCollection == classOrCollectionCopy]].
 

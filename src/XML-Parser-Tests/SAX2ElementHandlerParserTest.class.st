@@ -52,36 +52,30 @@ SAX2ElementHandlerParserTest >> testParsingSampleBooks [
 	"Basic factory-style parsing, with one factory for the entire document"
 
 	| books |
-
-	books :=
-		(SAX2ElementParser on: self sampleBooksXML)
-			elementHandlerFactory:
-				(SAX2PluggableElementHandlerFactory new
-					handleElement: 'books' withClass: SAX2HBooksElementHandler;
-					handleElement: 'book' withClass: SAX2HBookElementHandler;
-					handleElement: 'title' withClass: SAX2HTitleElementHandler;
-					handleElement: 'isbn' withClass: SAX2HISBNElementHandler;
-					handleElement: 'author' withClass: SAX2HAuthorElementHandler);
-			parseDocument.
-
+	books := (SAX2ElementParser on: self sampleBooksXML)
+		elementHandlerFactory:
+			(SAX2PluggableElementHandlerFactory new
+				handleElement: 'books' withClass: SAX2HBooksElementHandler;
+				handleElement: 'book' withClass: SAX2HBookElementHandler;
+				handleElement: 'title' withClass: SAX2HTitleElementHandler;
+				handleElement: 'isbn' withClass: SAX2HISBNElementHandler;
+				handleElement: 'author' withClass: SAX2HAuthorElementHandler);
+		parseDocument.
 	self
 		assert: books class == OrderedCollection;
-		assert: books size = 2;
+		assert: books size equals: 2;
 		assert: books first class == SAX2SampleBook;
-		assert: books first title = 'Smalltalk-80: The Language and its Implementation';
-		assert: books first isbn = '0201113716';
-		assert: books first authors asArray = #('Adele Goldberg' 'David Robson');
+		assert: books first title
+			equals: 'Smalltalk-80: The Language and its Implementation';
+		assert: books first isbn equals: '0201113716';
+		assert: books first authors asArray
+			equals: #('Adele Goldberg' 'David Robson');
 		assert: books second class == SAX2SampleBook;
-		assert: books second title = 'Pharo By Example';
-		assert: books second isbn = '3952334146';
-		assert:
-			books second authors asArray =
-				#('Andrew P. Black'
-					'Stephane Ducasse'
-					'Oscar Nierstrasz'
-					'Damien Pollet'
-					'Damien Cassou'
-					'Marcus Denker').
+		assert: books second title equals: 'Pharo By Example';
+		assert: books second isbn equals: '3952334146';
+		assert: books second authors asArray
+			equals:
+			#('Andrew P. Black' 'Stephane Ducasse' 'Oscar Nierstrasz' 'Damien Pollet' 'Damien Cassou' 'Marcus Denker')
 ]
 
 { #category : #tests }
@@ -90,34 +84,34 @@ SAX2ElementHandlerParserTest >> testParsingSamplePerson [
 	the factories mapped to them being the transitions"
 
 	| person rootFactory personFactory contactsFactory factoryMapper |
-
-	rootFactory :=
-		SAX2PluggableElementHandlerFactory new
-			handleElement: 'person' withClass: SAX2HPersonElementHandler.
-	personFactory :=
-		SAX2PluggableElementHandlerFactory new
-			handleElement: 'name' withClass: SAX2HNameElementHandler;
-			handleElement: 'date-of-birth' withClass: SAX2HDateOfBirthElementHandler;
-			handleElement: 'contacts' withClass: SAX2HContactsElementHandler;
-			handleElement: 'residence' withClass: SAX2HResidenceElementHandler.
-	contactsFactory :=
-		SAX2PluggableElementHandlerFactory new
-			handleElement: 'email' withClass: SAX2HEmailElementHandler.
-	factoryMapper :=
-		SAX2PluggableElementHandlerFactoryMapper new
-			mapElementHandlerClass: SAX2HPersonElementHandler toFactory: personFactory;
-			mapElementHandlerClass: SAX2HContactsElementHandler toFactory: contactsFactory.
-
-	person :=
-		(SAX2ElementParser on: self samplePersonXML)
-			elementHandlerFactory: rootFactory;
-			elementHandlerFactoryMapper: factoryMapper;
-			parseDocument.
-
+	rootFactory := SAX2PluggableElementHandlerFactory new
+		handleElement: 'person'
+		withClass: SAX2HPersonElementHandler.
+	personFactory := SAX2PluggableElementHandlerFactory new
+		handleElement: 'name' withClass: SAX2HNameElementHandler;
+		handleElement: 'date-of-birth'
+			withClass: SAX2HDateOfBirthElementHandler;
+		handleElement: 'contacts' withClass: SAX2HContactsElementHandler;
+		handleElement: 'residence' withClass: SAX2HResidenceElementHandler.
+	contactsFactory := SAX2PluggableElementHandlerFactory new
+		handleElement: 'email'
+		withClass: SAX2HEmailElementHandler.
+	factoryMapper := SAX2PluggableElementHandlerFactoryMapper new
+		mapElementHandlerClass: SAX2HPersonElementHandler
+			toFactory: personFactory;
+		mapElementHandlerClass: SAX2HContactsElementHandler
+			toFactory: contactsFactory.
+	person := (SAX2ElementParser on: self samplePersonXML)
+		elementHandlerFactory: rootFactory;
+		elementHandlerFactoryMapper: factoryMapper;
+		parseDocument.
 	self
 		assert: person class == SAX2SamplePerson;
-		assert: person name = 'Tim Bray';
-		assert: person dateOfBirth = (Date year: 1955 month: 6 day: 21);
-		assert: person emailAddresses asArray = #('tbray@textuality.com' 'tbray@tbray.org');
-		assert: person residence = 'Vancouver, British Columbia, Canada'.
+		assert: person name equals: 'Tim Bray';
+		assert: person dateOfBirth
+			equals: (Date year: 1955 month: 6 day: 21);
+		assert: person emailAddresses asArray
+			equals: #('tbray@textuality.com' 'tbray@tbray.org');
+		assert: person residence
+			equals: 'Vancouver, British Columbia, Canada'
 ]

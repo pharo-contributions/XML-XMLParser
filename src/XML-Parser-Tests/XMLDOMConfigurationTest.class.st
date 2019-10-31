@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLDOMConfigurationTest,
 	#superclass : #XMLConfigurationTest,
-	#category : #'XML-Parser-Tests'
+	#category : #'XML-Parser-Tests-Base'
 }
 
 { #category : #accessing }
@@ -33,11 +33,11 @@ XMLDOMConfigurationTest >> testCopy [
 		nodeFactory: nodeFactory.
 	copy := configuration copy.
 	self
-		assert: copy preservesCDataNodes = configuration preservesCDataNodes;
-		assert: copy preservesCommentNodes = configuration preservesCommentNodes;
-		assert: copy preservesIgnorableWhitespace = configuration preservesIgnorableWhitespace;
+		assert: copy preservesCDataNodes equals: configuration preservesCDataNodes;
+		assert: copy preservesCommentNodes equals: configuration preservesCommentNodes;
+		assert: copy preservesIgnorableWhitespace equals: configuration preservesIgnorableWhitespace;
 		deny: copy nodeFactory == configuration nodeFactory;
-		assert: copy nodeFactory class = configuration nodeFactory class.
+		assert: copy nodeFactory class equals: configuration nodeFactory class.
 ]
 
 { #category : #tests }

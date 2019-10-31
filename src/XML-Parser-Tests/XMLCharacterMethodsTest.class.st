@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLCharacterMethodsTest,
 	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests'
+	#category : #'XML-Parser-Tests-Base'
 }
 
 { #category : #accessing }
@@ -204,15 +204,15 @@ XMLCharacterMethodsTest >> testIsXMLWhitespace [
 { #category : #tests }
 XMLCharacterMethodsTest >> testXMLSplit [
 	self
-		assert: ($: xmlSplit: '') = (OrderedCollection with: '');
-		assert: ($: xmlSplit: 'abc') = (OrderedCollection with: 'abc');
-		assert: ($: xmlSplit: ':') = #('' '') asOrderedCollection;
-		assert: ($: xmlSplit: '::') = #('' '' '') asOrderedCollection;
-		assert: ($: xmlSplit: 'a:bc:') = #('a' 'bc' '') asOrderedCollection;
-		assert: ($: xmlSplit: ':ab:c:') = #('' 'ab' 'c' '') asOrderedCollection;
-		assert: ($: xmlSplit: 'a:bc:') = #('a' 'bc' '') asOrderedCollection;
-		assert: ($: xmlSplit: 'ab::cd::ef') = #('ab'  '' 'cd' '' 'ef') asOrderedCollection;
+		assert: ($: xmlSplit: '') equals: (OrderedCollection with: '');
+		assert: ($: xmlSplit: 'abc') equals: (OrderedCollection with: 'abc');
+		assert: ($: xmlSplit: ':') equals: #('' '') asOrderedCollection;
+		assert: ($: xmlSplit: '::') equals: #('' '' '') asOrderedCollection;
+		assert: ($: xmlSplit: 'a:bc:') equals: #('a' 'bc' '') asOrderedCollection;
+		assert: ($: xmlSplit: ':ab:c:') equals: #('' 'ab' 'c' '') asOrderedCollection;
+		assert: ($: xmlSplit: 'a:bc:') equals: #('a' 'bc' '') asOrderedCollection;
+		assert: ($: xmlSplit: 'ab::cd::ef') equals: #('ab'  '' 'cd' '' 'ef') asOrderedCollection;
 		assert:
-			($: xmlSplit: '::ab:::cd:::ef::') =
+			($: xmlSplit: '::ab:::cd:::ef::') equals:
 				#('' '' 'ab'  '' '' 'cd' '' '' 'ef' '' '') asOrderedCollection
 ]

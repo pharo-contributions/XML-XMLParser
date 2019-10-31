@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLDOMParserTest,
 	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests'
+	#category : #'XML-Parser-Tests-Base'
 }
 
 { #category : #source }
@@ -45,7 +45,7 @@ XMLDOMParserTest >> testAllElementsNamespaceURIs [
 			allElementsNamed: 'person'
 			namespaceURI: 'defaultNS'.
 	self
-		assert: people size = 4;
+		assert: people size equals: 4;
 		assert:
 			(document
 				allElementsNamed: 'person'
@@ -122,13 +122,13 @@ XMLDOMParserTest >> testAttributes [
 	document := XMLDOMParser parse: self addressBookXML.
 	firstPerson := document findElementNamed: 'person'.
 	self
-		assert: (firstPerson attributeAt: 'employee-number') = 'A0000';
-		assert: (firstPerson attributeAt: 'family-name') = 'Gates';
-		assert: (firstPerson attributeAt: 'first-name') = 'Bob';
+		assert: (firstPerson attributeAt: 'employee-number') equals: 'A0000';
+		assert: (firstPerson attributeAt: 'family-name') equals: 'Gates';
+		assert: (firstPerson attributeAt: 'first-name') equals: 'Bob';
 		assert:
-			firstPerson attributeNames asArray =
+			firstPerson attributeNames asArray equals:
 				#('employee-number' 'family-name' 'first-name');
-		assert: firstPerson attributeAssociations asArray =
+		assert: firstPerson attributeAssociations asArray equals:
 			{('employee-number'->'A0000'). ('family-name'->'Gates'). ('first-name'->'Bob').}.
 ]
 
@@ -151,9 +151,9 @@ XMLDOMParserTest >> testAttributesIncludingDeclarations [
 	root := document root.
 	self
 		assert: root hasAttributes;
-		assert: (root attributeAt: 'xmlns') = 'defaultNS';
-		assert: (root attributeAt: 'xmlns:book') = 'bookNS';
-		assert: (root attributeAt: 'xmlns:ps') = 'personNS'.
+		assert: (root attributeAt: 'xmlns') equals: 'defaultNS';
+		assert: (root attributeAt: 'xmlns:book') equals: 'bookNS';
+		assert: (root attributeAt: 'xmlns:ps') equals: 'personNS'.
 ]
 
 { #category : #tests }
@@ -171,9 +171,9 @@ XMLDOMParserTest >> testCDataSection [
 			document := XMLDOMParser parse: xml.
 			element := document findElementNamed: 'test-data'.
 			self
-				assert: element nodes size = 1;
+				assert: element nodes size equals: 1;
 				assert: element firstNode isStringNode;
-				assert: element firstNode printString = ('test', escaped, 'test').
+				assert: element firstNode printString equals: ('test', escaped, 'test').
 
 			document :=
 				(XMLDOMParser on: xml)
@@ -181,11 +181,11 @@ XMLDOMParserTest >> testCDataSection [
 					parseDocument.
 			element := document findElementNamed: 'test-data'.
 			self
-				assert: element nodes size = 3;
+				assert: element nodes size equals: 3;
 				assert: element nodes second isCData;
-				assert: element nodes second printString =
+				assert: element nodes second printString equals:
 					('<![CDATA[', unescaped, ']]>');
-				assert: element strings asArray =
+				assert: element strings asArray equals:
 					(Array with: 'test' with: unescaped with: 'test')].
 ]
 
@@ -204,9 +204,9 @@ XMLDOMParserTest >> testCDataSectionEntityReplacement [
 	document := XMLDOMParser parse: xml.
 	element := document findElementNamed: 'test-data'.
 	self
-		assert: element nodes size = 1;
+		assert: element nodes size equals: 1;
 		assert: element firstNode isStringNode;
-		assert: element firstNode printString = ('test', escaped, 'test').
+		assert: element firstNode printString equals: ('test', escaped, 'test').
 
 	document :=
 		(XMLDOMParser on: xml)
@@ -214,10 +214,10 @@ XMLDOMParserTest >> testCDataSectionEntityReplacement [
 			parseDocument.
 	element := document findElementNamed: 'test-data'.
 	self
-		assert: element nodes size = 3;
+		assert: element nodes size equals: 3;
 		assert: element nodes second isCData;
-		assert: element nodes second printString = ('<![CDATA[', unescaped, ']]>');
-		assert: element strings asArray = (Array with: 'test' with: unescaped with: 'test').
+		assert: element nodes second printString equals: ('<![CDATA[', unescaped, ']]>');
+		assert: element strings asArray equals: (Array with: 'test' with: unescaped with: 'test').
 ]
 
 { #category : #tests }
@@ -230,7 +230,7 @@ XMLDOMParserTest >> testChangingNamespaces [
 	(person := people third) prefix: 'ps'.
 	self assert: person == (document findElementNamed: 'person' namespaceURI: 'personNS').
 	self assert:
-		(people copyWithout: person) =
+		(people copyWithout: person) equals:
 			((document findElementNamed: 'addressbook') nodesSelect: [:each |
 				each isElement and: [each namespaceURI = 'defaultNS']]).
 ]
@@ -251,7 +251,7 @@ XMLDOMParserTest >> testComment [
 	comments := document allNodesSelect: [:each | each isComment].
 	self
 		assert: (comments allSatisfy: [:each | each isComment]);
-		assert: (comments collect: [:each | each string]) asArray = #('one' 'two' 'three').
+		assert: (comments collect: [:each | each string]) asArray equals: #('one' 'two' 'three').
 ]
 
 { #category : #tests }
@@ -284,9 +284,9 @@ XMLDOMParserTest >> testDoctypeDeclaration [
 			validation: true
 			externalEntities: false) doctypeDeclaration.
 	self
-		assert: doctype root = 'root';
-		assert: doctype publicID = 'pubid';
-		assert: doctype systemID = 'external.dtd';
+		assert: doctype root equals: 'root';
+		assert: doctype publicID equals: 'pubid';
+		assert: doctype systemID equals: 'external.dtd';
 		assert: doctype nodes notEmpty;
 		assert: (doctype nodes allSatisfy: [:each | each isDeclaration]).
 ]
@@ -338,7 +338,7 @@ XMLDOMParserTest >> testElementMixedContent [
 	xml := '<mixed-content> one <two/> <three/> four <five> </five> seven </mixed-content>'.
 	mixedContent := (XMLDOMParser parse: xml) root.
 	self
-		assert: mixedContent nodes size = 7;
+		assert: mixedContent nodes size equals: 7;
 		assert: (mixedContent nodes first isStringNode: ' one ');
 		assert: (mixedContent nodes second isElementNamed: 'two');
 		deny: mixedContent nodes second hasChildren;
@@ -348,7 +348,7 @@ XMLDOMParserTest >> testElementMixedContent [
 		assert: (mixedContent nodes fifth isStringNode: ' four ');
 		assert: (mixedContent nodes sixth isElementNamed: 'five');
 		assert: mixedContent nodes sixth hasChildren;
-		assert: mixedContent nodes sixth nodes size = 1;
+		assert: mixedContent nodes sixth nodes size equals: 1;
 		assert: (mixedContent nodes sixth nodes first isStringNode: ' ');
 		assert: (mixedContent nodes seventh isStringNode: ' seven ').
 ]
@@ -365,7 +365,7 @@ XMLDOMParserTest >> testElementNames [
 				and: [(each isNamedAny: #('notperson' 'person'))
 					and: [(each isNamed: 'person')
 						and: [(each name = 'person') and: [each localName = 'person']]]]].
-	self assert: persons size = 4.
+	self assert: persons size equals: 4.
 
 	root allElementsNamed: 'person' do: [:p |
 		self assert: (persons includes: p).
@@ -384,7 +384,7 @@ XMLDOMParserTest >> testElementPrefixes [
 				and: [(each isNamed: 'person')
 					and: [(each isNamed: 'ps:person')
 						and: [(each name = 'ps:person') and: [each localName = 'person']]]]]].
-	self assert: persons size = 4.
+	self assert: persons size equals: 4.
 ]
 
 { #category : #tests }
@@ -401,7 +401,7 @@ XMLDOMParserTest >> testElementPrefixesNamespacesDisabled [
 				and: [(each isNamed: 'person')
 					and: [(each isNamed: 'ps:person')
 						and: [(each name = 'ps:person') and: [each localName = 'person']]]]]].
-	self assert: persons size = 4.
+	self assert: persons size equals: 4.
 ]
 
 { #category : #tests }
@@ -430,20 +430,20 @@ XMLDOMParserTest >> testInnerXML [
 	document := XMLDOMParser parse: self addressBookXML.
 	document allElementsNamed: 'person' do: [:person | | contactInfo address1 address2 |
 		#('address' 'job-info' 'manager') do: [:each |
-			self assert: (person elementAt: each) innerXML = ''].
+			self assert: (person elementAt: each) innerXML equals: ''].
 
 		contactInfo := person elementAt: 'contact-info'.
 		address1 := (person attributeAt: 'first-name'), '@example.com'.
 		address2 := (person attributeAt: 'first-name'), '@users.example.com'.
 		self
-			assert: (contactInfo innerXML: '<email></email><email2/>') innerXML = '<email/><email2/>';
-			assert: contactInfo elements size = 2;
+			assert: (contactInfo innerXML: '<email></email><email2/>') innerXML equals: '<email/><email2/>';
+			assert: contactInfo elements size equals: 2;
 			assert: (contactInfo elements first isNamed: 'email');
 			assert: (contactInfo elements second isNamed: 'email2');
-			assert: (contactInfo firstElement innerXML: address1, '<!--ignored-->') innerXML = address1;
-			assert: (contactInfo elements second innerXML: '<![CDATA[', address2, ']]>') innerXML = address2.
+			assert: (contactInfo firstElement innerXML: address1, '<!--ignored-->') innerXML equals: address1;
+			assert: (contactInfo elements second innerXML: '<![CDATA[', address2, ']]>') innerXML equals: address2.
 		self assert:
-			contactInfo innerXML = 
+			contactInfo innerXML equals: 
 				('<email>', address1, '</email><email2>', address2, '</email2>')].
 ]
 
@@ -454,13 +454,13 @@ XMLDOMParserTest >> testInnerXMLDocument [
 	document := XMLDOMParser parse: self addressBookXMLWithDTD.
 	self
 		assert: ((document innerXML: '<new-root/>') root isNamed: 'new-root');
-		assert: document innerXML = '<new-root/>';
-		assert: ((document root innerXML: 'test') contentString = 'test');
-		assert: document root innerXML = 'test'.
+		assert: document innerXML equals: '<new-root/>';
+		assert: (document root innerXML: 'test') contentString equals: 'test';
+		assert: document root innerXML equals: 'test'.
 	
 	document := XMLDOMParser parse: self addressBookXMLWithDTD.
 	self assert:
-		(document innerXML: document innerXML) printString =
+		(document innerXML: document innerXML) printString equals:
 			(XMLDOMParser parse: self addressBookXMLWithDTD) printString.
 	self
 		should: [document innerXML: self addressBookXMLWithDTD]
@@ -487,21 +487,21 @@ XMLDOMParserTest >> testInnerXMLEntities [
 			preservesCommentNodes: true;
 			parseDocument.
 	self
-		assert: (document root attributeAt: 'name') = 'one';
-		assert: document root contentString = 'one'.
+		assert: (document root attributeAt: 'name') equals: 'one';
+		assert: document root contentString equals: 'one'.
 
 	document innerXML: '<test name="&two;">&three;</test>'.
 	self
-		assert: (document root attributeAt: 'name') = 'two';
+		assert: (document root attributeAt: 'name') equals: 'two';
 		assert: document root hasChildren;
-		assert: document root nodes size = 1;
+		assert: document root nodes size equals: 1;
 		assert: document root firstNode isComment;
-		assert: document root firstNode string = 'comment'.
+		assert: document root firstNode string equals: 'comment'.
 
 	document root innerXML: '&two;'.
 	self
-		assert: (document root attributeAt: 'name') = 'two';
-		assert: document root contentString = 'two'.
+		assert: (document root attributeAt: 'name') equals: 'two';
+		assert: document root contentString equals: 'two'.
 
 	self
 		should: [document innerXML: '<test name="&undeclared;"></test>']
@@ -530,19 +530,19 @@ XMLDOMParserTest >> testInternalAttributeDeclarations [
 
 	firstAttribute := doctype nodes second.
 	self
-		assert: firstAttribute element = 'root';
-		assert: firstAttribute attribute = 'name';
-		assert: firstAttribute type = 'CDATA';
-		assert: firstAttribute defaultPragma = 'IMPLIED';
-		assert: firstAttribute defaultValue = ''.
+		assert: firstAttribute element equals: 'root';
+		assert: firstAttribute attribute equals: 'name';
+		assert: firstAttribute type equals: 'CDATA';
+		assert: firstAttribute defaultPragma equals: 'IMPLIED';
+		assert: firstAttribute defaultValue equals: ''.
 
 	secondAttribute := doctype nodes third.
 	self
-		assert: secondAttribute element = 'root';
-		assert: secondAttribute attribute = 'number';
-		assert: secondAttribute type = '(one|two|three)';
-		assert: secondAttribute defaultPragma = '';
-		assert: secondAttribute defaultValue = 'three'.
+		assert: secondAttribute element equals: 'root';
+		assert: secondAttribute attribute equals: 'number';
+		assert: secondAttribute type equals: '(one|two|three)';
+		assert: secondAttribute defaultPragma equals: '';
+		assert: secondAttribute defaultValue equals: 'three'.
 ]
 
 { #category : #tests }
@@ -557,8 +557,8 @@ XMLDOMParserTest >> testInternalElementDeclaration [
 			externalEntities: false) doctypeDeclaration.
 	elementDeclaration := doctype nodes first.
 	self
-		assert: elementDeclaration element = 'root';
-		assert: elementDeclaration contentModel = '(#PCDATA|one|two)*'.
+		assert: elementDeclaration element equals: 'root';
+		assert: elementDeclaration contentModel equals: '(#PCDATA|one|two)*'.
 ]
 
 { #category : #tests }
@@ -575,20 +575,20 @@ XMLDOMParserTest >> testInternalGeneralEntityDeclarations [
 	firstEntity := doctype nodes fourth.
 	self
 		deny: firstEntity isParameter;
-		assert: firstEntity name = 'general';
-		assert: firstEntity replacement = 'replacement';
-		assert: firstEntity publicID = '';
-		assert: firstEntity systemID = '';
-		assert: firstEntity ndata = ''.
+		assert: firstEntity name equals: 'general';
+		assert: firstEntity replacement equals: 'replacement';
+		assert: firstEntity publicID equals: '';
+		assert: firstEntity systemID equals: '';
+		assert: firstEntity ndata equals: ''.
 
 	secondEntity := doctype nodes fifth.
 	self
 		deny: secondEntity isParameter;
-		assert: secondEntity name = 'externalGeneral';
-		assert: secondEntity replacement = '';
-		assert: secondEntity publicID = 'pubid2';
-		assert: secondEntity systemID = 'external1.dtd';
-		assert: secondEntity ndata = ''.
+		assert: secondEntity name equals: 'externalGeneral';
+		assert: secondEntity replacement equals: '';
+		assert: secondEntity publicID equals: 'pubid2';
+		assert: secondEntity systemID equals: 'external1.dtd';
+		assert: secondEntity ndata equals: ''.
 ]
 
 { #category : #tests }
@@ -604,9 +604,9 @@ XMLDOMParserTest >> testInternalNotationDeclarations [
 
 	notation := doctype nodes eighth.
 	self
-		assert: notation name = 'notation';
-		assert: notation publicID = '';
-		assert: notation systemID = 'note.doc'.
+		assert: notation name equals: 'notation';
+		assert: notation publicID equals: '';
+		assert: notation systemID equals: 'note.doc'.
 ]
 
 { #category : #tests }
@@ -623,18 +623,18 @@ XMLDOMParserTest >> testInternalParameterEntityDeclarations [
 	firstEntity := doctype nodes sixth.
 	self
 		assert: firstEntity isParameter;
-		assert: firstEntity name = 'parameter';
-		assert: firstEntity replacement = 'replacement';
-		assert: firstEntity publicID = '';
-		assert: firstEntity systemID = ''.
+		assert: firstEntity name equals: 'parameter';
+		assert: firstEntity replacement equals: 'replacement';
+		assert: firstEntity publicID equals: '';
+		assert: firstEntity systemID equals: ''.
 
 	secondEntity := doctype nodes seventh.
 	self
 		assert: secondEntity isParameter;
-		assert: secondEntity name = 'externalParameter';
-		assert: secondEntity replacement = '';
-		assert: secondEntity publicID = '';
-		assert: secondEntity systemID = 'external2.dtd'.
+		assert: secondEntity name equals: 'externalParameter';
+		assert: secondEntity replacement equals: '';
+		assert: secondEntity publicID equals: '';
+		assert: secondEntity systemID equals: 'external2.dtd'.
 ]
 
 { #category : #tests }
@@ -649,17 +649,17 @@ XMLDOMParserTest >> testNamespaces [
 				each == document root
 					ifTrue: [
 						self
-							assert: each prefix = 'book';
-							assert: each namespaceURI = 'bookNS']
+							assert: each prefix equals: 'book';
+							assert: each namespaceURI equals: 'bookNS']
 					ifFalse: [
 						self
-							assert: each prefix = 'ps';
-							assert: each namespaceURI = 'personNS']]
+							assert: each prefix equals: 'ps';
+							assert: each namespaceURI equals: 'personNS']]
 			ifFalse: [
 				self
-					assert: each namespaceURI = 'defaultNS';
+					assert: each namespaceURI equals: 'defaultNS';
 					deny: each hasPrefix;
-					assert: each prefix = '']].
+					assert: each prefix equals: '']].
 ]
 
 { #category : #tests }
@@ -675,13 +675,13 @@ XMLDOMParserTest >> testNamespacesCopyOnWrite [
 	self assert:
 		(IdentitySet withAll: "avoid newFrom: for GS portability"
 			(elements collect: [:each |
-				each namespaceScope prefixMappings])) size = 3.
+				each namespaceScope prefixMappings])) size equals: 3.
 
 	elements := (XMLDOMParser parse: xml usingNamespaces: false) allElements.
 	self assert:
 		(IdentitySet withAll: "avoid newFrom: for GS portability"
 			(elements collect: [:each |
-				each namespaceScope prefixMappings])) size = elements size.
+				each namespaceScope prefixMappings])) size equals: elements size.
 ]
 
 { #category : #tests }
@@ -731,18 +731,18 @@ XMLDOMParserTest >> testNamespacesDisabled [
 			parse: self addressBookNamespacePrefixedXML
 			usingNamespaces: false.
 	document allElementsDo: [:each |
-		self assert: each namespaceURI = ''.
+		self assert: each namespaceURI equals: ''.
 		(each == document root or: [each isNamed: 'person'])
 			ifTrue: [
 				self
 					assert: each hasPrefix;
 					assert:
-						each prefix =
+						each prefix equals:
 							((each == document root) ifTrue: ['book'] ifFalse: ['ps'])]
 			ifFalse: [
 				self
 					deny: each hasPrefix;
-					assert: each prefix = '']].
+					assert: each prefix equals: '']].
 ]
 
 { #category : #tests }
@@ -754,10 +754,10 @@ XMLDOMParserTest >> testNamespacesDisabledAttributes [
 			parse: '<root xmlns:prefix="prefixNS" xmlns="defaultNS" name="value"/>'
 			usingNamespaces: false.
 	self
-		assert: document root attributeNames asArray = #('xmlns:prefix' 'xmlns' 'name');
-		assert: (document root attributeAt: 'xmlns:prefix') = 'prefixNS';
-		assert: (document root attributeAt: 'xmlns') = 'defaultNS';
-		assert: (document root attributeAt: 'name') = 'value'.
+		assert: document root attributeNames asArray equals: #('xmlns:prefix' 'xmlns' 'name');
+		assert: (document root attributeAt: 'xmlns:prefix') equals: 'prefixNS';
+		assert: (document root attributeAt: 'xmlns') equals: 'defaultNS';
+		assert: (document root attributeAt: 'name') equals: 'value'.
 ]
 
 { #category : #tests }
@@ -807,12 +807,12 @@ XMLDOMParserTest >> testNamespacesResolving [
 	document := XMLDOMParser parse: self addressBookNamespacedXML.
 	document allElementsDo: [:each |
 		self
-			assert: each defaultNamespace = 'defaultNS';
-			assert: (each resolvePrefix: '') = 'defaultNS';
-			assert: (each resolvePrefix: 'book') = 'bookNS';
-			assert: (each resolvePrefix: 'ps') = 'personNS';
+			assert: each defaultNamespace equals: 'defaultNS';
+			assert: (each resolvePrefix: '') equals: 'defaultNS';
+			assert: (each resolvePrefix: 'book') equals: 'bookNS';
+			assert: (each resolvePrefix: 'ps') equals: 'personNS';
 			assert:
-				each namespaceURI =
+				each namespaceURI equals:
 					(each hasPrefix
 						ifTrue: [each resolvePrefix: each prefix]
 						ifFalse: [each defaultNamespace])]
@@ -828,12 +828,12 @@ XMLDOMParserTest >> testNamespacesResolvingDisabled [
 			usingNamespaces: false.
 	document allElementsDo: [:each |
 		self
-			assert: each defaultNamespace = '';
-			assert: (each resolvePrefix: '') = '';
-			assert: (each resolvePrefix: 'book') = '';
-			assert: (each resolvePrefix: 'ps') = '';
+			assert: each defaultNamespace equals: '';
+			assert: (each resolvePrefix: '') equals: '';
+			assert: (each resolvePrefix: 'book') equals: '';
+			assert: (each resolvePrefix: 'ps') equals: '';
 			assert:
-				each namespaceURI =
+				each namespaceURI equals:
 					(each hasPrefix
 						ifTrue: [each resolvePrefix: each prefix]
 						ifFalse: [each defaultNamespace])]
@@ -851,7 +851,7 @@ XMLDOMParserTest >> testNodeDetecting [
 	self assert:
 		((document findElementNamed: 'addressbook')
 			nodesDetect: [:each | each isElement and: [(each attributeAt: 'unknown') = 'Brown']]
-			ifNone: ['not found']) = 'not found'.
+			ifNone: ['not found']) equals: 'not found'.
 ]
 
 { #category : #tests }
@@ -932,10 +932,10 @@ XMLDOMParserTest >> testOverridingDefaultNamespace [
 		XMLDOMParser parse:
 			'<outer xmlns="default"><inner xmlns=""/></outer>'.
 	self
-		assert: document root namespaceURI = 'default';
-		assert: document root defaultNamespace = 'default';
-		assert: document root firstNode namespaceURI = '';
-		assert: document root firstNode defaultNamespace = ''.
+		assert: document root namespaceURI equals: 'default';
+		assert: document root defaultNamespace equals: 'default';
+		assert: document root firstNode namespaceURI equals: '';
+		assert: document root firstNode defaultNamespace equals: ''.
 ]
 
 { #category : #tests }
@@ -950,9 +950,9 @@ XMLDOMParserTest >> testParseDocumentUntil [
 					parseDocumentUntil: [(i := i + 1) > 4]]
 		raise: XMLWellFormednessException.
 	self
-		assert: document allNodes size = 4;
-		assert: (document findElementNamed: 'one') nodes size = 1;
-		assert: (document findElementNamed: 'one') contentString = 'two'.
+		assert: document allNodes size equals: 4;
+		assert: (document findElementNamed: 'one') nodes size equals: 1;
+		assert: (document findElementNamed: 'one') contentString equals: 'two'.
 	self
 		should: [
 			i := 0.
@@ -973,9 +973,9 @@ XMLDOMParserTest >> testParseDocumentWhile [
 					parseDocumentWhile: [(i := i + 1) <= 4]]
 		raise: XMLWellFormednessException.
 	self
-		assert: document allNodes size = 4;
-		assert: (document findElementNamed: 'one') nodes size = 1;
-		assert: (document findElementNamed: 'one') contentString = 'two'.
+		assert: document allNodes size equals: 4;
+		assert: (document findElementNamed: 'one') nodes size equals: 1;
+		assert: (document findElementNamed: 'one') contentString equals: 'two'.
 	self
 		should: [
 			i := 0.
@@ -990,12 +990,12 @@ XMLDOMParserTest >> testParsedElementNames [
 
 	document := XMLDOMParser parse: self addressBookNamespacePrefixedXML.
 	self assert:
-		document elementNames =
+		document elementNames equals:
 			(document elements collect: [:each | each name ]).
 
 	document allElementsDo: [:element |
 		self assert:
-			element elementNames =
+			element elementNames equals:
 				(element elements collect: [:each | each name])].
 ]
 
@@ -1055,13 +1055,13 @@ XMLDOMParserTest >> testProcessingInstruction [
 			'<root><?secondTarget second?Data?></root> '.
 
 	self
-		assert: document version = 1.1;
-		assert: document nodes size = 2;
+		assert: document version equals: 1.1;
+		assert: document nodes size equals: 2;
 		assert: document firstNode isPI;
-		assert: document firstNode target = 'firstTarget';
-		assert: document firstNode data = 'first>Data';
-		assert: document root firstNode target = 'secondTarget';
-		assert: document root firstNode data = 'second?Data'.
+		assert: document firstNode target equals: 'firstTarget';
+		assert: document firstNode data equals: 'first>Data';
+		assert: document root firstNode target equals: 'secondTarget';
+		assert: document root firstNode data equals: 'second?Data'.
 ]
 
 { #category : #tests }
@@ -1078,23 +1078,23 @@ XMLDOMParserTest >> testProcessingInstructionEntityReplacement [
 			]><root>&second;</root> '.
 
 	self
-		assert: document version = 1.1;
+		assert: document version equals: 1.1;
 		assert: document hasDoctypeDeclaration;
-		assert: document nodes size = 1.
+		assert: document nodes size equals: 1.
 
 	doctypeDeclaration := document doctypeDeclaration.
 	self
-		assert: doctypeDeclaration nodes size = 3;
+		assert: doctypeDeclaration nodes size equals: 3;
 		assert: doctypeDeclaration nodes second isPI;
-		assert: doctypeDeclaration nodes second target = 'firstTarget';
-		assert: doctypeDeclaration nodes second data = 'first>Data'.
+		assert: doctypeDeclaration nodes second target equals: 'firstTarget';
+		assert: doctypeDeclaration nodes second data equals: 'first>Data'.
 
 	root := document root.
 	self
-		assert: root nodes size = 1;
+		assert: root nodes size equals: 1;
 		assert: root firstNode isPI;
-		assert: root firstNode target = 'secondTarget';
-		assert: root firstNode data = 'second?Data'.
+		assert: root firstNode target equals: 'secondTarget';
+		assert: root firstNode data equals: 'second?Data'.
 ]
 
 { #category : #tests }
@@ -1126,7 +1126,7 @@ XMLDOMParserTest >> testUnreplacedEntityRererencePrinting [
 		((XMLDOMParser on: xml)
 			isValidating: false;
 			replacesContentEntityReferences: false;
-			parseDocument) printString = xml.
+			parseDocument) printString equals: xml.
 ]
 
 { #category : #tests }
@@ -1150,7 +1150,7 @@ XMLDOMParserTest >> testWhitespacePreservation [
 		</root>'.
 	root := (XMLDOMParser parse: xml) root.
 	self
-		assert: root nodes size = 3;
+		assert: root nodes size equals: 3;
 		assert: root nodes first isStringNode;
 		assert: root nodes first isWhitespace;
 		assert: (root nodes second isElementNamed: 'not-preserved');
@@ -1159,12 +1159,12 @@ XMLDOMParserTest >> testWhitespacePreservation [
 
 	notPreserved := root nodes second.
 	self
-		assert: notPreserved nodes size = 1;
+		assert: notPreserved nodes size equals: 1;
 		assert: (notPreserved nodes first isElementNamed: 'preserved').
 
 	preserved := notPreserved firstNode.
 	self
-		assert: preserved nodes size = 1;
+		assert: preserved nodes size equals: 1;
 		assert: preserved nodes first isStringNode;
 		assert: preserved nodes first isWhitespace.
 ]
@@ -1177,15 +1177,15 @@ XMLDOMParserTest >> testXMLDeclaration [
 		XMLDOMParser parse:
 			'<?xml version="1.0" encoding="UTF-8"?><test/>'.
 	self
-		assert: document version = 1.0;
-		assert: document encoding = 'UTF-8';
+		assert: document version equals: 1.0;
+		assert: document encoding equals: 'UTF-8';
 		deny: document isStandalone.
 
 	document :=
 		XMLDOMParser parse:
 			'<?xml version="1.1" encoding="utf-8" standalone="yes"?><test/>'.
 	self
-		assert: document version = 1.1;
-		assert: document encoding = 'utf-8';
+		assert: document version equals: 1.1;
+		assert: document encoding equals: 'utf-8';
 		assert: document isStandalone.
 ]

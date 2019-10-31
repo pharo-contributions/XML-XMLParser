@@ -79,7 +79,7 @@ XMLElementClassMapperTest >> testCamelCasedNameFromClassNameSegments [
 				'aBa')
 		do: [:segments :name |
 			self assert:
-				(mapper camelCasedNameFromClassNameSegments: segments) =
+				(mapper camelCasedNameFromClassNameSegments: segments) equals:
 					name].
 ]
 
@@ -107,7 +107,7 @@ XMLElementClassMapperTest >> testClassNameSegmentsFrom [
 				#('a' 'Ba'))
 		do: [:string :segments |
 			self assert:
-				(mapper classNameSegmentsFrom: string) =
+				(mapper classNameSegmentsFrom: string) equals:
 					segments asOrderedCollection].
 ]
 
@@ -135,7 +135,7 @@ XMLElementClassMapperTest >> testHyphenatedNameFromClassNameSegments [
 				'a-ba')
 		do: [:segments :name |
 			self assert:
-				(mapper hyphenatedNameFromClassNameSegments: segments) =
+				(mapper hyphenatedNameFromClassNameSegments: segments) equals:
 					name].
 ]
 
@@ -163,7 +163,7 @@ XMLElementClassMapperTest >> testNameFromClassNameSegments [
 				'aBa')
 		do: [:segments :name |
 			self assert:
-				(mapper nameFromClassNameSegments: segments) =
+				(mapper nameFromClassNameSegments: segments) equals:
 					name].
 ]
 
@@ -191,6 +191,6 @@ XMLElementClassMapperTest >> testUnderscoredNameFromClassNameSegments [
 				'a_ba')
 		do: [:segments :name |
 			self assert:
-				(mapper underscoredNameFromClassNameSegments: segments) =
+				(mapper underscoredNameFromClassNameSegments: segments) equals:
 					name].
 ]

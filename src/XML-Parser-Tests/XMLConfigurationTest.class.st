@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLConfigurationTest,
 	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests'
+	#category : #'XML-Parser-Tests-Base'
 }
 
 { #category : #testing }
@@ -53,22 +53,22 @@ XMLConfigurationTest >> testCopy [
 	copy := configuration copy.
 	self
 		deny: copy == configuration;
-		assert: copy isValidating = configuration isValidating;
-		assert: copy usesNamespaces = configuration usesNamespaces;
-		assert: copy decodesCharacters = configuration decodesCharacters;
-		assert: copy requiresSchema = configuration requiresSchema;
+		assert: copy isValidating equals: configuration isValidating;
+		assert: copy usesNamespaces equals: configuration usesNamespaces;
+		assert: copy decodesCharacters equals: configuration decodesCharacters;
+		assert: copy requiresSchema equals: configuration requiresSchema;
 		assert: copy parserHandlerClass == configuration parserHandlerClass.
 
 	self
 		deny: copy parserLimits == configuration parserLimits;
-		assert: copy documentReadLimit = configuration documentReadLimit;
-		assert: copy maxEntityReplacementDepth = configuration maxEntityReplacementDepth.
+		assert: copy documentReadLimit equals: configuration documentReadLimit;
+		assert: copy maxEntityReplacementDepth equals: configuration maxEntityReplacementDepth.
 
 	self
 		deny: copy entityConfiguration == configuration entityConfiguration;
-		assert: copy preservesUndeclaredEntityReferences = configuration preservesUndeclaredEntityReferences;
-		assert: copy replacesContentEntityReferences = configuration replacesContentEntityReferences;
-		assert: copy resolvesExternalEntities = configuration resolvesExternalEntities;
+		assert: copy preservesUndeclaredEntityReferences equals: configuration preservesUndeclaredEntityReferences;
+		assert: copy replacesContentEntityReferences equals: configuration replacesContentEntityReferences;
+		assert: copy resolvesExternalEntities equals: configuration resolvesExternalEntities;
 		deny: copy externalEntityResolver == configuration externalEntityResolver;
 		assert: copy externalEntityResolver class == configuration externalEntityResolver class.
 ]
@@ -146,11 +146,11 @@ XMLConfigurationTest >> testMaxEntityReplacementDepth [
 
 	configuration := self newConfiguration.
 	self assert:
-		configuration maxEntityReplacementDepth =
+		configuration maxEntityReplacementDepth equals:
 			XMLParserLimits defaultMaxEntityReplacementDepth.
 	self
 		assert: (configuration maxEntityReplacementDepth: 20) == configuration;
-		assert: configuration maxEntityReplacementDepth = 20;
+		assert: configuration maxEntityReplacementDepth equals: 20;
 		assert: (configuration maxEntityReplacementDepth: nil) == configuration;
 		assert: configuration maxEntityReplacementDepth isNil.
 ]

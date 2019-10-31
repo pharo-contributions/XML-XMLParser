@@ -23,13 +23,13 @@ XMLHTTPMIMETypeTest >> testCharset [
 	self assert:
 		(XMLHTTPMIMEType
 			mainType: 'text'
-			subType: 'plain') charset = XMLHTTPMIMEType defaultCharset.
+			subType: 'plain') charset equals: XMLHTTPMIMEType defaultCharset.
 	self assert:
 		(XMLHTTPMIMEType
 			mainType: 'text'
 			subType: 'plain'
 			parameters:
-				(OrderedCollection with: 'charset' -> 'utf8')) charset = 'utf8'.
+				(OrderedCollection with: 'charset' -> 'utf8')) charset equals: 'utf8'.
 	self assert:
 		(XMLHTTPMIMEType
 			mainType: 'text'
@@ -37,7 +37,7 @@ XMLHTTPMIMETypeTest >> testCharset [
 			parameters:
 				(OrderedCollection
 					with: 'charset' -> 'utf16'
-					with: 'charset' -> 'utf8')) charset = 'utf16'.
+					with: 'charset' -> 'utf8')) charset equals: 'utf16'.
 ]
 
 { #category : #tests }
@@ -141,7 +141,7 @@ XMLHTTPMIMETypeTest >> testHash [
 	self assert:
 		(XMLHTTPMIMEType
 			mainType: 'text'
-			subType: 'plain') hash =
+			subType: 'plain') hash equals:
 			(XMLHTTPMIMEType
 				mainType: 'Text'
 				subType: 'PLAIN') hash.
@@ -153,7 +153,7 @@ XMLHTTPMIMETypeTest >> testHash [
 			parameters:
 				(OrderedCollection
 					with: 'charset' -> 'utf-8'
-					with: 'name' -> 'value')) hash =
+					with: 'name' -> 'value')) hash equals:
 			(XMLHTTPMIMEType
 				mainType: 'Text'
 				subType: 'PLAIN'
@@ -170,7 +170,7 @@ XMLHTTPMIMETypeTest >> testHash [
 				(OrderedCollection
 					with: 'charset' -> 'utf-8'
 					with: 'charset' -> 'utf-8'
-					with: 'name' -> 'value')) hash =
+					with: 'name' -> 'value')) hash equals:
 			(XMLHTTPMIMEType
 				mainType: 'Text'
 				subType: 'PLAIN'
@@ -198,7 +198,7 @@ XMLHTTPMIMETypeTest >> testMainType [
 				do: [:values |
 					self assert:
 						(XMLHTTPMIMEType fromString:
-							(template format: values)) mainType = 'application']].
+							(template format: values)) mainType equals: 'application']].
 	#(''
 		' '
 		'/'
@@ -212,7 +212,7 @@ XMLHTTPMIMETypeTest >> testMainType [
 		'/xml;charset=utf8'
 		' / xml ; charset=utf8 ')
 		do: [:each |
-			self assert: (XMLHTTPMIMEType fromString: each) mainType = ''].
+			self assert: (XMLHTTPMIMEType fromString: each) mainType equals: ''].
 ]
 
 { #category : #tests }
@@ -257,7 +257,7 @@ XMLHTTPMIMETypeTest >> testParameters [
 							ifFalse: [
 								parameters addLast: attribute -> value.
 								attributes add: attribute]].
-					self assert: mimeType parameters = parameters]].
+					self assert: mimeType parameters equals: parameters]].
 	#(''
 		' '
 		'/'
@@ -293,13 +293,13 @@ XMLHTTPMIMETypeTest >> testPrintOn [
 	self assert:
 		(XMLHTTPMIMEType
 			mainType: 'text'
-			subType: 'plain') printString = 'text/plain'.
+			subType: 'plain') printString equals: 'text/plain'.
 	self assert:
 		(XMLHTTPMIMEType
 			mainType: 'text'
 			subType: 'plain'
 			parameters:
-				(OrderedCollection with: 'charset' -> 'utf8')) printString =
+				(OrderedCollection with: 'charset' -> 'utf8')) printString equals:
 					'text/plain; charset=utf8'.
 	self assert:
 		(XMLHTTPMIMEType
@@ -308,7 +308,7 @@ XMLHTTPMIMETypeTest >> testPrintOn [
 			parameters:
 				(OrderedCollection
 					with: 'charset' -> 'utf8'
-					with: 'name' -> 'value')) printString =
+					with: 'name' -> 'value')) printString equals:
 						'text/plain; charset=utf8; name=value'.
 ]
 
@@ -329,7 +329,7 @@ XMLHTTPMIMETypeTest >> testSubType [
 				do: [:values |
 					self assert:
 						(XMLHTTPMIMEType fromString:
-							(template format: values)) subType = 'xml']].
+							(template format: values)) subType equals: 'xml']].
 	#(''
 		' '
 		'/'

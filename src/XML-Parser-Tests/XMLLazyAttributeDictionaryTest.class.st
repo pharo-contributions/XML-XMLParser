@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLLazyAttributeDictionaryTest,
 	#superclass : #XMLAttributeDictionaryTest,
-	#category : #'XML-Parser-Tests'
+	#category : #'XML-Parser-Tests-Base'
 }
 
 { #category : #accessing }

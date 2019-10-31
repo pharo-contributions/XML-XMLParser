@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLStringMethodsTest,
 	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests'
+	#category : #'XML-Parser-Tests-Base'
 }
 
 { #category : #accessing }

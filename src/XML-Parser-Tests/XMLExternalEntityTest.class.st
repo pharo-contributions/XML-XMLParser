@@ -8,7 +8,7 @@ Class {
 	#instVars : [
 		'tempFileManager'
 	],
-	#category : #'XML-Parser-Tests'
+	#category : #'XML-Parser-Tests-Base'
 }
 
 { #category : #testing }

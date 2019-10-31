@@ -38,17 +38,17 @@ XMLDFALimitsTests >> testDFAStateCacheLimit [
 					added one transition from previousState to currentState,
 					but other transitions should be cleared"
 					each = previousState
-						ifTrue: [self assert: each dfaStateTransitions size = 1]
+						ifTrue: [self assert: each dfaStateTransitions size equals: 1]
 						ifFalse: [self assert: each dfaStateTransitions isEmpty]].
 				self
 					assert: firstState dfaStateTransitions isEmpty;
-					assert: firstState dfaStateCache cachedDFAStates size = 2;
+					assert: firstState dfaStateCache cachedDFAStates size equals: 2;
 					assert: currentState isAccepting]
 			ifFalse: [
 				visitedStates do: [:each | self deny: each dfaStateTransitions isEmpty].
 				self
 					assert: firstState dfaStateTransitions notEmpty;
-					assert: firstState dfaStateCache cachedDFAStates size = (i + 1);
+					assert: firstState dfaStateCache cachedDFAStates size equals: (i + 1);
 					deny: currentState isAccepting]].
 
 	currentState := firstState.
@@ -73,11 +73,11 @@ XMLDFALimitsTests >> testDFAStateTransitionLimit [
 		dfaState nextDFAStateMatching: elementName.
 		self
 			assert: (dfaState dfaStateTransitions includesKey: elementName);
-			assert: dfaState dfaStateTransitions size = i].
+			assert: dfaState dfaStateTransitions size equals: i].
 
 	elementName := 'test', (dfaState maxDFAStateTransitions + 1) printString.
 	dfaState nextDFAStateMatching: elementName.
 	self
 		assert: (dfaState dfaStateTransitions includesKey: elementName);
-		assert: dfaState dfaStateTransitions size = 1.
+		assert: dfaState dfaStateTransitions size equals: 1.
 ]

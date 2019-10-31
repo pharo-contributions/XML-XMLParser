@@ -39,28 +39,25 @@ DTDExternalEntityResolverTest >> resolverClass [
 { #category : #tests }
 DTDExternalEntityResolverTest >> testCopy [
 	| resolver copy |
-
 	(resolver := self newResolver)
 		externalSubsetReadLimit: 1000000;
 		maxExternalEntities: 10;
 		maxExternalEntitySize: 10000;
 		resolvesLocalFromNonLocal: true.
-
 	copy := resolver copy.
 	self
 		deny: copy == resolver;
-		assert: copy externalSubsetReadLimit = 1000000;
-		assert: copy maxExternalEntities = 10;
-		assert: copy maxExternalEntitySize = 10000;
+		assert: copy externalSubsetReadLimit equals: 1000000;
+		assert: copy maxExternalEntities equals: 10;
+		assert: copy maxExternalEntitySize equals: 10000;
 		assert: copy resolvesLocalFromNonLocal.
-
+		
 	self isTestingLimiting
-		ifTrue: [
-			self
+		ifTrue: [ self
 				assert: copy externalEntityResolver == resolver externalEntityResolver;
-				assert: copy externalEntityLimits == resolver externalEntityLimits]
-		ifFalse: [
-			self deny: copy externalEntityLimits == resolver externalEntityLimits]
+				assert: copy externalEntityLimits == resolver externalEntityLimits ]
+		ifFalse: [ self
+				deny: copy externalEntityLimits == resolver externalEntityLimits ]
 ]
 
 { #category : #tests }
@@ -98,50 +95,46 @@ DTDExternalEntityResolverTest >> testExternalEntityLimits [
 { #category : #tests }
 DTDExternalEntityResolverTest >> testExternalSubsetReadLimit [
 	| resolver |
-
 	resolver := self newResolver.
-	self assert:
-		resolver externalSubsetReadLimit =
-			DTDExternalEntityLimits defaultExternalSubsetReadLimit.
+	self
+		assert: resolver externalSubsetReadLimit
+		equals: DTDExternalEntityLimits defaultExternalSubsetReadLimit.
 	self
 		assert: (resolver externalSubsetReadLimit: 1000000) == resolver;
-		assert: resolver externalSubsetReadLimit = 1000000;
+		assert: resolver externalSubsetReadLimit equals: 1000000;
 		assert: (resolver externalSubsetReadLimit: nil) == resolver;
-		assert: resolver externalSubsetReadLimit isNil.
+		assert: resolver externalSubsetReadLimit isNil
 ]
 
 { #category : #tests }
 DTDExternalEntityResolverTest >> testMaxExternalEntities [
 	| resolver |
-
 	resolver := self newResolver.
 	self
 		assert: resolver maxExternalEntities > 0;
 		assert: (resolver maxExternalEntities: 10) == resolver;
-		assert: resolver maxExternalEntities = 10;
+		assert: resolver maxExternalEntities equals: 10;
 		assert: (resolver maxExternalEntities: nil) == resolver;
-		assert: resolver maxExternalEntities isNil.
+		assert: resolver maxExternalEntities isNil
 ]
 
 { #category : #tests }
 DTDExternalEntityResolverTest >> testMaxExternalEntitySize [
 	| resolver |
-
 	resolver := self newResolver.
-	self assert:
-		resolver maxExternalEntitySize =
-			DTDExternalEntityLimits defaultMaxExternalEntitySize.
+	self
+		assert: resolver maxExternalEntitySize
+		equals: DTDExternalEntityLimits defaultMaxExternalEntitySize.
 	self
 		assert: (resolver maxExternalEntitySize: 10000) == resolver;
-		assert: resolver maxExternalEntitySize = 10000;
+		assert: resolver maxExternalEntitySize equals: 10000;
 		assert: (resolver maxExternalEntitySize: nil) == resolver;
-		assert: resolver maxExternalEntitySize isNil.
+		assert: resolver maxExternalEntitySize isNil
 ]
 
 { #category : #tests }
 DTDExternalEntityResolverTest >> testRemoveLimits [
 	| readLimit entityLimit entitySizeLimit resolver |
-
 	readLimit := 100.
 	entityLimit := 10.
 	entitySizeLimit := 100.
@@ -151,17 +144,16 @@ DTDExternalEntityResolverTest >> testRemoveLimits [
 		maxExternalEntitySize: entitySizeLimit;
 		resolvesLocalFromNonLocal: true.
 	self
-		assert: resolver externalSubsetReadLimit = readLimit;
-		assert: resolver maxExternalEntities = entityLimit;
-		assert: resolver maxExternalEntitySize = entitySizeLimit;
+		assert: resolver externalSubsetReadLimit equals: readLimit;
+		assert: resolver maxExternalEntities equals: entityLimit;
+		assert: resolver maxExternalEntitySize equals: entitySizeLimit;
 		assert: resolver resolvesLocalFromNonLocal.
-
 	resolver removeLimits.
 	self
 		assert: resolver externalSubsetReadLimit isNil;
 		assert: resolver maxExternalEntities isNil;
 		assert: resolver maxExternalEntitySize isNil;
-		assert: resolver resolvesLocalFromNonLocal.
+		assert: resolver resolvesLocalFromNonLocal
 ]
 
 { #category : #tests }
@@ -180,18 +172,16 @@ DTDExternalEntityResolverTest >> testResolvesLocalFromNonLocal [
 { #category : #tests }
 DTDExternalEntityResolverTest >> testTotalResolvedExternalEntities [
 	| resolver |
-
 	self isTestingLimiting
-		ifFalse: [^ self].
-
+		ifFalse: [ ^ self ].
 	resolver := self newResolver.
-	self assert: resolver totalResolvedExternalEntities = 0.
-
+	self assert: resolver totalResolvedExternalEntities equals: 0.
 	resolver incrementTotalResolvedExternalEntities.
-	self assert: resolver totalResolvedExternalEntities = 1.
-
-	self assert:
-		(self newResolver
-			incrementTotalResolvedExternalEntities;
-			totalResolvedExternalEntities) = 1.
+	self assert: resolver totalResolvedExternalEntities equals: 1.
+	self
+		assert:
+			(self newResolver
+				incrementTotalResolvedExternalEntities;
+				totalResolvedExternalEntities)
+		equals: 1
 ]

@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'messageQueue'
 	],
-	#category : #'XML-Parser-Tests'
+	#category : #'XML-Parser-Tests-Base'
 }
 
 { #category : #accessing }

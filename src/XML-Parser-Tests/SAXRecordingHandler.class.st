@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'messageRecorder'
 	],
-	#category : #'XML-Parser-Tests'
+	#category : #'XML-Parser-Tests-Base'
 }
 
 { #category : #private }

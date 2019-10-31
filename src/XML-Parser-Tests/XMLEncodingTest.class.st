@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLEncodingTest,
 	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests'
+	#category : #'XML-Parser-Tests-Base'
 }
 
 { #category : #converting }
@@ -127,7 +127,7 @@ XMLEncodingTest >> testDecodingBinary [
 	self
 		assert: stream isXMLConvertingStreamAdapter;
 		assert: stream hasNullStreamConverter;
-		assert: stream upToEnd = source.
+		assert: stream upToEnd equals: source.
 ]
 
 { #category : #tests }
@@ -143,7 +143,7 @@ XMLEncodingTest >> testDecodingCharacterReferences [
 							nextPutAll: '&#';
 							nextPutAll: each asciiValue asString;
 							nextPut: $;]])).
-	self assert: document root contentString = self sourceContent.
+	self assert: document root contentString equals: self sourceContent.
 
 	document :=
 		XMLDOMParser parse:
@@ -154,7 +154,7 @@ XMLEncodingTest >> testDecodingCharacterReferences [
 							nextPutAll: '&#x';
 							nextPutAll: each asciiValue printStringHex asLowercase;
 							nextPut: $;]])).
-	self assert: document root contentString = self sourceContent.
+	self assert: document root contentString equals: self sourceContent.
 
 	document :=
 		XMLDOMParser parse:
@@ -165,7 +165,7 @@ XMLEncodingTest >> testDecodingCharacterReferences [
 							nextPutAll: '&#x';
 							nextPutAll: each asciiValue printStringHex asUppercase;
 							nextPut: $;]])).
-	self assert: document root contentString = self sourceContent.
+	self assert: document root contentString equals: self sourceContent.
 
 	#('&#0;' '&#x110000;' '&#-1;' '&#9:;' '&#xFFG;') do: [:each |
 		self
@@ -951,10 +951,10 @@ XMLEncodingTest >> testWideCharacterNames [
 		raise: XMLParserException.
 
 	self
-		assert: document root name = wideNames first;
-		assert: (document root attributeAt: wideNames fifth) = wideNames fourth;
-		assert: (document root elementNames) asOrderedCollection = (wideNames copyFrom: 2 to: 4);
-		assert: document contentString = wideNames fifth.
+		assert: document root name equals: wideNames first;
+		assert: (document root attributeAt: wideNames fifth) equals: wideNames fourth;
+		assert: (document root elementNames) asOrderedCollection equals: (wideNames copyFrom: 2 to: 4);
+		assert: document contentString equals: wideNames fifth.
 ]
 
 { #category : #accessing }

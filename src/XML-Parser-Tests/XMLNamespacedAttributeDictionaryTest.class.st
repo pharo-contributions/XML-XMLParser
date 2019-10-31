@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLNamespacedAttributeDictionaryTest,
 	#superclass : #XMLAttributeDictionaryTest,
-	#category : #'XML-Parser-Tests'
+	#category : #'XML-Parser-Tests-Base'
 }
 
 { #category : #accessing }
@@ -17,7 +17,7 @@ XMLNamespacedAttributeDictionaryTest >> testAssociationAtNameNamespaceURI [
 	self assert:
 		(dictionary
 			associationAtName: 'id'
-			namespaceURI: XMLNamespaceScope xmlNamespaceURI) = ('xml:id' -> 'id').
+			namespaceURI: XMLNamespaceScope xmlNamespaceURI) equals: ('xml:id' -> 'id').
 	self assert:
 		(dictionary
 			associationAtName: 'id'
@@ -25,7 +25,7 @@ XMLNamespacedAttributeDictionaryTest >> testAssociationAtNameNamespaceURI [
 	self assert:
 		(dictionary
 			associationAtName: 'xml:id'
-			namespaceURI: XMLNamespaceScope xmlNamespaceURI) = ('xml:id' -> 'id').
+			namespaceURI: XMLNamespaceScope xmlNamespaceURI) equals: ('xml:id' -> 'id').
 	self assert:
 		(dictionary
 			associationAtName: 'xml:id'
@@ -34,11 +34,11 @@ XMLNamespacedAttributeDictionaryTest >> testAssociationAtNameNamespaceURI [
 	self assert:
 		(dictionary
 			associationAtName: 'name'
-			namespaceURI: 'prefixNS') = ('prefix:name' -> 'prefixValue').
+			namespaceURI: 'prefixNS') equals: ('prefix:name' -> 'prefixValue').
 	self assert:
 		(dictionary
 			associationAtName: 'prefix:name'
-			namespaceURI: 'prefixNS') = ('prefix:name' -> 'prefixValue').
+			namespaceURI: 'prefixNS') equals: ('prefix:name' -> 'prefixValue').
 	self assert:
 		(dictionary
 			associationAtName: 'prefix:name'
@@ -47,11 +47,11 @@ XMLNamespacedAttributeDictionaryTest >> testAssociationAtNameNamespaceURI [
 	self assert:
 		(dictionary
 			associationAtName: 'name'
-			namespaceURI: 'otherPrefixNS')  = ('otherPrefix:name' -> 'otherPrefixValue').
+			namespaceURI: 'otherPrefixNS') equals: ('otherPrefix:name' -> 'otherPrefixValue').
 	self assert:
 		(dictionary
 			associationAtName: 'otherPrefix:name'
-			namespaceURI: 'otherPrefixNS')  = ('otherPrefix:name' -> 'otherPrefixValue').
+			namespaceURI: 'otherPrefixNS') equals: ('otherPrefix:name' -> 'otherPrefixValue').
 	self assert:
 		(dictionary
 			associationAtName: 'otherPrefix:name'
@@ -60,7 +60,7 @@ XMLNamespacedAttributeDictionaryTest >> testAssociationAtNameNamespaceURI [
 	self assert:
 		(dictionary
 			associationAtName: 'name'
-			namespaceURI: '') = ('name' -> 'value').
+			namespaceURI: '') equals: ('name' -> 'value').
 	self assert:
 		(dictionary
 			associationAtName: 'name'
@@ -76,65 +76,65 @@ XMLNamespacedAttributeDictionaryTest >> testAssociationAtNameNamespaceURIIfAbsen
 		(dictionary
 			associationAtName: 'id'
 			namespaceURI: XMLNamespaceScope xmlNamespaceURI
-			ifAbsent: [self fail]) = ('xml:id' -> 'id').
+			ifAbsent: [self fail]) equals: ('xml:id' -> 'id').
 	self assert:
 		(dictionary
 			associationAtName: 'id'
 			namespaceURI: 'defaultNS'
-			ifAbsent: [#absent]) = #absent.
+			ifAbsent: [#absent]) equals: #absent.
 	self assert:
 		(dictionary
 			associationAtName: 'xml:id'
 			namespaceURI: XMLNamespaceScope xmlNamespaceURI
-			ifAbsent: [self fail]) = ('xml:id' -> 'id').
+			ifAbsent: [self fail]) equals: ('xml:id' -> 'id').
 	self assert:
 		(dictionary
 			associationAtName: 'xml:id'
 			namespaceURI: 'defaultNS'
-			ifAbsent: [#absent]) = #absent.
+			ifAbsent: [#absent]) equals: #absent.
 
 	self assert:
 		(dictionary
 			associationAtName: 'name'
 			namespaceURI: 'prefixNS'
-			ifAbsent: [self fail]) = ('prefix:name' -> 'prefixValue').
+			ifAbsent: [self fail]) equals: ('prefix:name' -> 'prefixValue').
 	self assert:
 		(dictionary
 			associationAtName: 'prefix:name'
 			namespaceURI: 'prefixNS'
-			ifAbsent: [self fail]) = ('prefix:name' -> 'prefixValue').
+			ifAbsent: [self fail]) equals: ('prefix:name' -> 'prefixValue').
 	self assert:
 		(dictionary
 			associationAtName: 'prefix:name'
 			namespaceURI: 'defaultNS'
-			ifAbsent: [#absent]) = #absent.
+			ifAbsent: [#absent]) equals: #absent.
 
 	self assert:
 		(dictionary
 			associationAtName: 'name'
 			namespaceURI: 'otherPrefixNS'
-			ifAbsent: [self fail]) = ('otherPrefix:name' -> 'otherPrefixValue').
+			ifAbsent: [self fail]) equals: ('otherPrefix:name' -> 'otherPrefixValue').
 	self assert:
 		(dictionary
 			associationAtName: 'otherPrefix:name'
 			namespaceURI: 'otherPrefixNS'
-			ifAbsent: [self fail]) = ('otherPrefix:name' -> 'otherPrefixValue').
+			ifAbsent: [self fail]) equals: ('otherPrefix:name' -> 'otherPrefixValue').
 	self assert:
 		(dictionary
 			associationAtName: 'otherPrefix:name'
 			namespaceURI: 'defaultNS'
-			ifAbsent: [#absent]) = #absent.
+			ifAbsent: [#absent]) equals: #absent.
 
 	self assert:
 		(dictionary
 			associationAtName: 'name'
 			namespaceURI: ''
-			ifAbsent: [self fail]) = ('name' -> 'value').
+			ifAbsent: [self fail]) equals: ('name' -> 'value').
 	self assert:
 		(dictionary
 			associationAtName: 'name'
 			namespaceURI: 'defaultNS'
-			ifAbsent: [#absent]) = #absent.
+			ifAbsent: [#absent]) equals: #absent.
 ]
 
 { #category : #tests }
@@ -145,24 +145,24 @@ XMLNamespacedAttributeDictionaryTest >> testAtNameNamespaceURI [
 	self assert:
 		(dictionary
 			atName: 'id'
-			namespaceURI: XMLNamespaceScope xmlNamespaceURI) = 'id'.
+			namespaceURI: XMLNamespaceScope xmlNamespaceURI) equals: 'id'.
 	self assert:
 		(dictionary
 			atName: 'id'
-			namespaceURI: 'defaultNS') = ''.
+			namespaceURI: 'defaultNS') equals: ''.
 	self assert:
 		(dictionary
 			atName: 'xml:id'
-			namespaceURI: XMLNamespaceScope xmlNamespaceURI) = 'id'.
+			namespaceURI: XMLNamespaceScope xmlNamespaceURI) equals: 'id'.
 	self assert:
 		(dictionary
 			atName: 'xml:id'
-			namespaceURI: 'defaultNS') = ''.
+			namespaceURI: 'defaultNS') equals: ''.
 
 	self assert:
 		(dictionary
 			atName: 'name'
-			namespaceURI: 'prefixNS') = 'prefixValue'.
+			namespaceURI: 'prefixNS') equals: 'prefixValue'.
 	self assert:
 		(dictionary
 			atName: 'prefix:name'
@@ -170,29 +170,29 @@ XMLNamespacedAttributeDictionaryTest >> testAtNameNamespaceURI [
 	self assert:
 		(dictionary
 			atName: 'prefix:name'
-			namespaceURI: 'defaultNS') = ''.
+			namespaceURI: 'defaultNS') equals: ''.
 
 	self assert:
 		(dictionary
 			atName: 'name'
-			namespaceURI: 'otherPrefixNS') = 'otherPrefixValue'.
+			namespaceURI: 'otherPrefixNS') equals: 'otherPrefixValue'.
 	self assert:
 		(dictionary
 			atName: 'otherPrefix:name'
-			namespaceURI: 'otherPrefixNS') = 'otherPrefixValue'.
+			namespaceURI: 'otherPrefixNS') equals: 'otherPrefixValue'.
 	self assert:
 		(dictionary
 			atName: 'otherPrefix:name'
-			namespaceURI: 'defaultNS') = ''.
+			namespaceURI: 'defaultNS') equals: ''.
 
 	self assert:
 		(dictionary
 			atName: 'name'
-			namespaceURI: '') = 'value'.
+			namespaceURI: '') equals: 'value'.
 	self assert:
 		(dictionary
 			atName: 'name'
-			namespaceURI: 'defaultNS') = ''.
+			namespaceURI: 'defaultNS') equals: ''.
 ]
 
 { #category : #tests }
@@ -204,65 +204,65 @@ XMLNamespacedAttributeDictionaryTest >> testAtNameNamespaceURIIfAbsent [
 		(dictionary
 			atName: 'id'
 			namespaceURI: XMLNamespaceScope xmlNamespaceURI
-			ifAbsent: [self fail]) = 'id'.
+			ifAbsent: [self fail]) equals: 'id'.
 	self assert:
 		(dictionary
 			atName: 'id'
 			namespaceURI: 'defaultNS'
-			ifAbsent: ['absent']) = 'absent'.
+			ifAbsent: ['absent']) equals: 'absent'.
 	self assert:
 		(dictionary
 			atName: 'xml:id'
 			namespaceURI: XMLNamespaceScope xmlNamespaceURI
-			ifAbsent: [self fail]) = 'id'.
+			ifAbsent: [self fail]) equals: 'id'.
 	self assert:
 		(dictionary
 			atName: 'xml:id'
 			namespaceURI: 'defaultNS'
-			ifAbsent: ['absent']) = 'absent'.
+			ifAbsent: ['absent']) equals: 'absent'.
 
 	self assert:
 		(dictionary
 			atName: 'name'
 			namespaceURI: 'prefixNS'
-			ifAbsent: [self fail]) = 'prefixValue'.
+			ifAbsent: [self fail]) equals: 'prefixValue'.
 	self assert:
 		(dictionary
 			atName: 'prefix:name'
 			namespaceURI: 'prefixNS'
-			ifAbsent: [self fail]) = 'prefixValue'.
+			ifAbsent: [self fail]) equals: 'prefixValue'.
 	self assert:
 		(dictionary
 			atName: 'prefix:name'
 			namespaceURI: 'defaultNS'
-			ifAbsent: ['absent']) = 'absent'.
+			ifAbsent: ['absent']) equals: 'absent'.
 
 	self assert:
 		(dictionary
 			atName: 'name'
 			namespaceURI: 'otherPrefixNS'
-			ifAbsent: [self fail]) = 'otherPrefixValue'.
+			ifAbsent: [self fail]) equals: 'otherPrefixValue'.
 	self assert:
 		(dictionary
 			atName: 'otherPrefix:name'
 			namespaceURI: 'otherPrefixNS'
-			ifAbsent: [self fail]) = 'otherPrefixValue'.
+			ifAbsent: [self fail]) equals: 'otherPrefixValue'.
 	self assert:
 		(dictionary
 			atName: 'otherPrefix:name'
 			namespaceURI: 'defaultNS'
-			ifAbsent: ['absent']) = 'absent'.
+			ifAbsent: ['absent']) equals: 'absent'.
 
 	self assert:
 		(dictionary
 			atName: 'name'
 			namespaceURI: ''
-			ifAbsent: [self fail]) = 'value'.
+			ifAbsent: [self fail]) equals: 'value'.
 	self assert:
 		(dictionary
 			atName: 'name'
 			namespaceURI: 'defaultNS'
-			ifAbsent: ['absent']) = 'absent'.
+			ifAbsent: ['absent']) equals: 'absent'.
 ]
 
 { #category : #tests }
@@ -281,12 +281,12 @@ XMLNamespacedAttributeDictionaryTest >> testNamespaceURIOf [
 
 	dictionary := self prefixedAttributeDictionary.
 	self assert:
-		(dictionary namespaceURIOf: 'xml:id') =
+		(dictionary namespaceURIOf: 'xml:id') equals:
 			XMLNamespaceScope xmlNamespaceURI.
 	self
-		assert: (dictionary namespaceURIOf: 'prefix:name') = 'prefixNS';
-		assert: (dictionary namespaceURIOf: 'otherPrefix:name') = 'otherPrefixNS';
-		assert: (dictionary namespaceURIOf: 'name') = ''.
+		assert: (dictionary namespaceURIOf: 'prefix:name') equals: 'prefixNS';
+		assert: (dictionary namespaceURIOf: 'otherPrefix:name') equals: 'otherPrefixNS';
+		assert: (dictionary namespaceURIOf: 'name') equals: ''.
 ]
 
 { #category : #tests }

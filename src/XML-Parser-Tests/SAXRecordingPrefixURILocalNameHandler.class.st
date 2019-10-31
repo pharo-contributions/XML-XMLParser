@@ -4,7 +4,7 @@ This class records the first element events (#startElement:prefix:uri:attributes
 Class {
 	#name : #SAXRecordingPrefixURILocalNameHandler,
 	#superclass : #SAXRecordingPrefixURIHandler,
-	#category : #'XML-Parser-Tests'
+	#category : #'XML-Parser-Tests-Base'
 }
 
 { #category : #'handling - content' }

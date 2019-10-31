@@ -74,9 +74,9 @@ XMLParserExceptionTest >> testBaseURI [
 
 	exception := self newException.
 	self
-		assert: exception baseURI = '';
+		assert: exception baseURI equals: '';
 		assert: (exception baseURI: self baseURI) == exception;
-		assert: exception baseURI = self baseURI.
+		assert: exception baseURI equals: self baseURI.
 ]
 
 { #category : #tests }
@@ -87,7 +87,7 @@ XMLParserExceptionTest >> testColumnNumber [
 	self
 		assert: exception columnNumber isNil;
 		assert: (exception columnNumber: self columnNumber) == exception;
-		assert: exception columnNumber = self columnNumber.
+		assert: exception columnNumber equals: self columnNumber.
 ]
 
 { #category : #tests }
@@ -140,7 +140,7 @@ XMLParserExceptionTest >> testLineNumber [
 	self
 		assert: exception lineNumber isNil;
 		assert: (exception lineNumber: self lineNumber) == exception;
-		assert: exception lineNumber = self lineNumber.
+		assert: exception lineNumber equals: self lineNumber.
 ]
 
 { #category : #tests }
@@ -148,42 +148,42 @@ XMLParserExceptionTest >> testMessageText [
 	| exception |
 
 	exception := self newExceptionWithErrorMessage.
-	self assert: exception messageText = self errorMessage.
+	self assert: exception messageText equals: self errorMessage.
 
 	"column numbers without line numbers are ignored"
 	(exception := self newExceptionWithErrorMessage)
 		columnNumber: self columnNumber.
-	self assert: exception messageText = self errorMessage.
+	self assert: exception messageText equals: self errorMessage.
 
 	(exception := self newExceptionWithErrorMessage)
 		lineNumber: self lineNumber.
-	self assert: exception messageText = self errorMessageWithLineNumber.
+	self assert: exception messageText equals: self errorMessageWithLineNumber.
 
 	(exception := self newExceptionWithErrorMessage)
 		baseURI: self baseURI.
-	self assert: exception messageText = self errorMessageWithBaseURI.
+	self assert: exception messageText equals: self errorMessageWithBaseURI.
 
 	(exception := self newExceptionWithErrorMessage)
 		lineNumber: self lineNumber;
 		columnNumber: self columnNumber.
-	self assert: exception messageText = self errorMessageWithLineAndColumnNumber.
+	self assert: exception messageText equals: self errorMessageWithLineAndColumnNumber.
 
 	(exception := self newExceptionWithErrorMessage)
 		lineNumber: self lineNumber;
 		baseURI: self baseURI.
-	self assert: exception messageText = self errorMessageWithLineNumberAndBaseURI.
+	self assert: exception messageText equals: self errorMessageWithLineNumberAndBaseURI.
 
 	"column numbers without line numbers are ignored"
 	(exception := self newExceptionWithErrorMessage)
 		columnNumber: self columnNumber;
 		baseURI: self baseURI.
-	self assert: exception messageText = self errorMessageWithBaseURI.
+	self assert: exception messageText equals: self errorMessageWithBaseURI.
 
 	(exception := self newExceptionWithErrorMessage)
 		lineNumber: self lineNumber;
 		columnNumber: self columnNumber;
 		baseURI: self baseURI.
 	self assert:
-		exception messageText =
+		exception messageText equals:
 			self errorMessageWithLineAndColumnNumberAndBaseURI.
 ]

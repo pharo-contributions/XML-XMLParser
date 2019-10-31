@@ -1,7 +1,7 @@
 Class {
 	#name : #SAXHandlerTest,
 	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests'
+	#category : #'XML-Parser-Tests-Base'
 }
 
 { #category : #accessing }
@@ -127,48 +127,23 @@ SAXHandlerTest >> removeNamespaceSelectorsFrom: aSelectorCollection [
 { #category : #tests }
 SAXHandlerTest >> testCharacters [
 	| xml parser |
-
-	xml :=
-		'<test>one<non-empty>two</non-empty>three<!--comment-->',
-		'four<empty></empty>five<?pi pi?>six</test>'.
-
-	(parser := SAXRecordingHandler on: xml)
-		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			#(startDocument
-				startElement:attributes:
-				characters:
-				startElement:attributes:
-				characters:
-				endElement:
-				characters:
-				comment:
-				characters:
-				startElement:attributes:
-				endElement:
-				characters:
-				processingInstruction:data:
-				characters:
-				endElement:
-				endDocument)).
-
+	xml := '<test>one<non-empty>two</non-empty>three<!--comment-->'
+		, 'four<empty></empty>five<?pi pi?>six</test>'.
+	(parser := SAXRecordingHandler on: xml) parseDocument.
+	self
+		assert:
+			(parser
+				wasSentSelectors:
+					#(startDocument #startElement:attributes: characters: #startElement:attributes: characters: endElement: characters: comment: characters: #startElement:attributes: endElement: characters: #processingInstruction:data: characters: endElement: endDocument)).
 	(parser allSentMessagesNamed: #characters:)
 		with:
-			#(#('one')
-				#('two')
-				#('three')
-				#('four')
-				#('five')
-				#('six'))
-		do: [:message :arguments |
-			self assert: message arguments = arguments].
+			#(#('one') #('two') #('three') #('four') #('five') #('six'))
+		do: [ :message :arguments | self assert: message arguments equals: arguments ]
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testComment [
 	| xml parser |
-
 	xml := '
 		<!--before DTD-->
 		<!DOCTYPE test [<!--in DTD-->]>
@@ -177,34 +152,16 @@ SAXHandlerTest >> testComment [
 			<!--in element-->
 		</test>
 		<!--after element-->'.
-
-	(parser := SAXRecordingHandler on: xml)
-		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			#(startDocument
-				comment:
-				startDTD:publicID:systemID:
-				comment:
-				endDTD
-				comment:
-				startElement:attributes:
-				characters:
-				comment:
-				characters:
-				endElement:
-				comment:
-				endDocument)).
-
+	(parser := SAXRecordingHandler on: xml) parseDocument.
+	self
+		assert:
+			(parser
+				wasSentSelectors:
+					#(startDocument comment: #startDTD:publicID:systemID: comment: endDTD comment: #startElement:attributes: characters: comment: characters: endElement: comment: endDocument)).
 	(parser allSentMessagesNamed: #comment:)
 		with:
-			#(#('before DTD')
-				#('in DTD')
-				#('before element')
-				#('in element')
-				#('after element'))
-		do: [:message :arguments |
-			self assert: message arguments = arguments].
+			#(#('before DTD') #('in DTD') #('before element') #('in element') #('after element'))
+		do: [ :message :arguments | self assert: message arguments equals: arguments ]
 ]
 
 { #category : #tests }
@@ -237,63 +194,45 @@ SAXHandlerTest >> testDecodesCharacters [
 { #category : #tests }
 SAXHandlerTest >> testDocumentReadLimit [
 	| parser |
-
 	parser := SAXHandler on: self prefixedXMLSource.
 	self
-		assert: parser documentReadLimit = XMLParserLimits defaultDocumentReadLimit;
+		assert: parser documentReadLimit
+			equals: XMLParserLimits defaultDocumentReadLimit;
 		assert: (parser documentReadLimit: 100000) == parser;
-		assert: parser documentReadLimit = 100000;
+		assert: parser documentReadLimit equals: 100000;
 		assert: (parser documentReadLimit: nil) == parser;
-		assert: parser documentReadLimit isNil.
+		assert: parser documentReadLimit isNil
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testDocumentURI [
 	| xml uri newURI parser |
-
 	xml := self prefixedXMLSource.
 	uri := 'test/test.xml'.
 	newURI := 'new/new.xml'.
-	parser :=
-		SAXHandler
-			on: xml
-			documentURI: uri.
+	parser := SAXHandler on: xml documentURI: uri.
 	self
-		assert: parser documentURI = uri;
+		assert: parser documentURI equals: uri;
 		assert: (parser documentURI: newURI) == parser;
-		assert: parser documentURI = newURI.
+		assert: parser documentURI equals: newURI.
 
 	"reusing on: should clear it"
-	self assert: (SAXHandler on: xml) documentURI = ''.
+	self assert: (SAXHandler on: xml) documentURI equals: ''
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testEndCData [
 	| xml parser |
-
 	xml := '<test>one<![CDATA[two]>]]]]>three</test>'.
-
-	(parser := SAXRecordingHandler on: xml)
-		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			#(startDocument
-				startElement:attributes:
-				characters:
-				startCData
-				characters:
-				endCData
-				characters:
-				endElement:
-				endDocument)).
-
+	(parser := SAXRecordingHandler on: xml) parseDocument.
+	self
+		assert:
+			(parser
+				wasSentSelectors:
+					#(startDocument #startElement:attributes: characters: startCData characters: endCData characters: endElement: endDocument)).
 	(parser allSentMessagesNamed: #characters:)
-		with:
-			#(#('one')
-				#('two]>]]')
-				#('three'))
-		do: [:message :arguments |
-			self assert: message arguments = arguments].
+		with: #(#('one') #('two]>]]') #('three'))
+		do: [ :message :arguments | self assert: message arguments equals: arguments ]
 ]
 
 { #category : #tests }
@@ -337,122 +276,118 @@ SAXHandlerTest >> testEndDocument [
 { #category : #tests }
 SAXHandlerTest >> testEndElement [
 	| parser |
-
 	(parser := SAXRecordingHandler on: self prefixedXMLSource)
 		parseDocument.
 	self
 		assert: (parser wasSentSelectors: self prefixedXMLSourceSelectors);
-		assert: (parser argumentsSentWith: #endElement:) = #('prefix:test').
-
+		assert: (parser argumentsSentWith: #endElement:)
+			equals: #('prefix:test').
 	(parser := SAXRecordingHandler on: self prefixedXMLSource)
 		usesNamespaces: false;
 		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			self prefixedXMLSourceSelectorsNamespacesDisabled).
-	self assert: (parser argumentsSentWith: #endElement:) = #('prefix:test').
+	self
+		assert:
+			(parser
+				wasSentSelectors: self prefixedXMLSourceSelectorsNamespacesDisabled).
+	self
+		assert: (parser argumentsSentWith: #endElement:)
+		equals: #('prefix:test')
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testEndElementPrefixURI [
 	| parser |
-
 	(parser := SAXRecordingPrefixURIHandler on: self prefixedXMLSource)
 		parseDocument.
-	self assert:
-		(parser wasSentSelectors: self prefixedXMLSourcePrefixURISelectors).
-	self assert:
-		(parser argumentsSentWith: #endElement:prefix:uri:) =
-			#('prefix:test' 'prefix' 'prefixNS').
-
+	self
+		assert: (parser wasSentSelectors: self prefixedXMLSourcePrefixURISelectors).
+	self
+		assert: (parser argumentsSentWith: #endElement:prefix:uri:)
+		equals: #('prefix:test' 'prefix' 'prefixNS').
 	(parser := SAXRecordingPrefixURIHandler on: self prefixedXMLSource)
 		usesNamespaces: false;
 		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			self prefixedXMLSourcePrefixURISelectorsNamespacesDisabled).
-	self assert:
-		(parser argumentsSentWith: #endElement:prefix:uri:) =
-			#('prefix:test' 'prefix' '').
+	self
+		assert:
+			(parser
+				wasSentSelectors: self prefixedXMLSourcePrefixURISelectorsNamespacesDisabled).
+	self
+		assert: (parser argumentsSentWith: #endElement:prefix:uri:)
+		equals: #('prefix:test' 'prefix' '')
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testEndElementPrefixURILocalName [
 	| parser |
-
-	(parser := SAXRecordingPrefixURILocalNameHandler on: self prefixedXMLSource)
-		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			self prefixedXMLSourcePrefixURILocalNameSelectors).
-	self assert:
-		(parser argumentsSentWith: #endElement:prefix:uri:localName:) =
-			#('prefix:test' 'prefix' 'prefixNS' 'test').
-
-	(parser := SAXRecordingPrefixURILocalNameHandler on: self prefixedXMLSource)
+	(parser := SAXRecordingPrefixURILocalNameHandler
+		on: self prefixedXMLSource) parseDocument.
+	self
+		assert:
+			(parser
+				wasSentSelectors: self prefixedXMLSourcePrefixURILocalNameSelectors).
+	self
+		assert: (parser argumentsSentWith: #endElement:prefix:uri:localName:)
+		equals: #('prefix:test' 'prefix' 'prefixNS' 'test').
+	(parser := SAXRecordingPrefixURILocalNameHandler
+		on: self prefixedXMLSource)
 		usesNamespaces: false;
 		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			self prefixedXMLSourcePrefixURILocalNameSelectorsNamespacesDisabled).
-	self assert:
-		(parser argumentsSentWith: #endElement:prefix:uri:localName:) =
-			#('prefix:test' 'prefix' '' 'test').
+	self
+		assert:
+			(parser
+				wasSentSelectors: self prefixedXMLSourcePrefixURILocalNameSelectorsNamespacesDisabled).
+	self
+		assert: (parser argumentsSentWith: #endElement:prefix:uri:localName:)
+		equals: #('prefix:test' 'prefix' '' 'test')
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testEndEntity [
 	| parser messages |
-
-	(parser := SAXRecordingPrefixURILocalNameHandler on: self generalEntityXMLSource)
-		parseDocument.
-	self assert: (parser wasSentSelectors: self generalEntityXMLSourceSelectors).
+	(parser := SAXRecordingPrefixURILocalNameHandler
+		on: self generalEntityXMLSource) parseDocument.
+	self
+		assert: (parser wasSentSelectors: self generalEntityXMLSourceSelectors).
 	messages := parser allSentMessagesNamed: #endEntity:.
 	self
-		assert: messages first arguments = #('second');
-		assert: messages second arguments = #('first').
+		assert: messages first arguments equals: #('second');
+		assert: messages second arguments equals: #('first')
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testEndPrefixMapping [
 	| parser messages |
-
-	(parser := SAXRecordingPrefixURILocalNameHandler on: self prefixedXMLSource)
-		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			self prefixedXMLSourcePrefixURILocalNameSelectors).
+	(parser := SAXRecordingPrefixURILocalNameHandler
+		on: self prefixedXMLSource) parseDocument.
+	self
+		assert:
+			(parser
+				wasSentSelectors: self prefixedXMLSourcePrefixURILocalNameSelectors).
 	messages := parser allSentMessagesNamed: #endPrefixMapping:.
 	self
-		assert: messages size = 2;
-		assert: messages first arguments = #('prefix');
-		assert: messages second arguments = #('').
-
-	(parser :=
-		SAXRecordingPrefixURILocalNameHandler on:
-			'<one xmlns="defaultNS"><two xmlns="defaultNS"/></one>')
-		parseDocument.
-	messages := parser allSentMessagesNamed: #endPrefixMapping:.
-	self
-		assert: messages size = 1;
-		assert: messages first arguments = #('').
-
-	(parser :=
-		SAXRecordingPrefixURILocalNameHandler on:
-			'<one xmlns="defaultNS"><two xmlns="newDefaultNS"/></one>')
+		assert: messages size equals: 2;
+		assert: messages first arguments equals: #('prefix');
+		assert: messages second arguments equals: #('').
+	(parser := SAXRecordingPrefixURILocalNameHandler
+		on: '<one xmlns="defaultNS"><two xmlns="defaultNS"/></one>')
 		parseDocument.
 	messages := parser allSentMessagesNamed: #endPrefixMapping:.
 	self
-		assert: messages size = 2;
-		assert: messages first arguments = #('');
-		assert: messages second arguments = #('').
-
-	(parser :=
-		SAXRecordingPrefixURILocalNameHandler on:
-			'<one xmlns:xml="', XMLNamespaceScope xmlNamespaceURI, '"/>')
+		assert: messages size equals: 1;
+		assert: messages first arguments equals: #('').
+	(parser := SAXRecordingPrefixURILocalNameHandler
+		on: '<one xmlns="defaultNS"><two xmlns="newDefaultNS"/></one>')
 		parseDocument.
-	self assert:
-		(parser allSentMessagesNamed: #endPrefixMapping:) isEmpty.
+	messages := parser allSentMessagesNamed: #endPrefixMapping:.
+	self
+		assert: messages size equals: 2;
+		assert: messages first arguments equals: #('');
+		assert: messages second arguments equals: #('').
+	(parser := SAXRecordingPrefixURILocalNameHandler
+		on: '<one xmlns:xml="' , XMLNamespaceScope xmlNamespaceURI , '"/>')
+		parseDocument.
+	self
+		assert: (parser allSentMessagesNamed: #endPrefixMapping:) isEmpty
 ]
 
 { #category : #tests }
@@ -640,16 +575,15 @@ SAXHandlerTest >> testIsValidating [
 { #category : #tests }
 SAXHandlerTest >> testMaxEntityReplacementDepth [
 	| parser |
-
 	parser := SAXHandler on: ''.
-	self assert:
-		parser maxEntityReplacementDepth =
-			XMLParserLimits defaultMaxEntityReplacementDepth.
+	self
+		assert: parser maxEntityReplacementDepth
+		equals: XMLParserLimits defaultMaxEntityReplacementDepth.
 	self
 		assert: (parser maxEntityReplacementDepth: 20) == parser;
-		assert: parser maxEntityReplacementDepth = 20;
+		assert: parser maxEntityReplacementDepth equals: 20;
 		assert: (parser maxEntityReplacementDepth: nil) == parser;
-		assert: parser maxEntityReplacementDepth isNil.
+		assert: parser maxEntityReplacementDepth isNil
 ]
 
 { #category : #tests }
@@ -662,18 +596,14 @@ SAXHandlerTest >> testNew [
 { #category : #tests }
 SAXHandlerTest >> testOn [
 	| parser oldConfiguraiton |
-
-	parser :=
-		SAXHandler
-			on: self prefixedXMLSource
-			documentURI: 'oldURI'.
+	parser := SAXHandler on: self prefixedXMLSource documentURI: 'oldURI'.
 	oldConfiguraiton := parser configuration.
 	parser parseDocument.
 	self
 		assert: (parser on: self generalEntityXMLSource) == parser;
-		assert: parser input = self generalEntityXMLSource;
+		assert: parser input equals: self generalEntityXMLSource;
 		deny: parser documentURI = 'oldURI';
-		deny: parser configuration == oldConfiguraiton.
+		deny: parser configuration == oldConfiguraiton
 ]
 
 { #category : #tests }
@@ -753,20 +683,18 @@ SAXHandlerTest >> testProcessingInstructionData [
 { #category : #tests }
 SAXHandlerTest >> testRemoveLimits [
 	| parser readLimit depthLimit |
-
 	readLimit := 100.
 	depthLimit := 5.
 	(parser := SAXHandler on: '')
 		documentReadLimit: readLimit;
 		maxEntityReplacementDepth: depthLimit.
 	self
-		assert: parser documentReadLimit = readLimit;
-		assert: parser maxEntityReplacementDepth = depthLimit.
-
+		assert: parser documentReadLimit equals: readLimit;
+		assert: parser maxEntityReplacementDepth equals: depthLimit.
 	self
 		assert: parser removeLimits == parser;
 		assert: parser documentReadLimit isNil;
-		assert: parser maxEntityReplacementDepth isNil.
+		assert: parser maxEntityReplacementDepth isNil
 ]
 
 { #category : #tests }
@@ -818,125 +746,91 @@ SAXHandlerTest >> testResolvesExternalEntities [
 { #category : #tests }
 SAXHandlerTest >> testSkippedEntity [
 	| xml parser |
-
 	xml := '<!DOCTYPE root SYSTEM "extern.dtd"><root>&undeclared;</root>'.
 	(parser := SAXRecordingPrefixURILocalNameHandler on: xml)
 		isValidating: false;
 		parseDocument.
-	self assert:
-		(parser wasSentSelectors: 
-			#(startDocument
-				startDTD:publicID:systemID:
-				endDTD
-				startElement:prefix:uri:localName:attributes:
-				skippedEntity:
-				endElement:prefix:uri:localName:
-				endDocument)).
-	self assert: (parser argumentsSentWith: #skippedEntity:) = #('undeclared').
+	self
+		assert:
+			(parser
+				wasSentSelectors:
+					#(startDocument #startDTD:publicID:systemID: endDTD #startElement:prefix:uri:localName:attributes: skippedEntity: #endElement:prefix:uri:localName: endDocument)).
+	self
+		assert: (parser argumentsSentWith: #skippedEntity:)
+		equals: #('undeclared')
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testSkippedEntityUndeclaredPreserved [
 	| xml parser |
-
 	xml := '<!DOCTYPE root SYSTEM "extern.dtd"><root>&undeclared;</root>'.
 	(parser := SAXRecordingPrefixURILocalNameHandler on: xml)
 		isValidating: false;
 		preservesUndeclaredEntityReferences: true;
 		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			#(startDocument
-				startDTD:publicID:systemID:
-				endDTD
-				startElement:prefix:uri:localName:attributes:
-				skippedEntity:
-				characters:
-				endElement:prefix:uri:localName:
-				endDocument)).
 	self
-		assert: (parser argumentsSentWith: #skippedEntity:) = #('undeclared');
-		assert: (parser argumentsSentWith: #characters:) = #('&undeclared;').
+		assert:
+			(parser
+				wasSentSelectors:
+					#(startDocument #startDTD:publicID:systemID: endDTD #startElement:prefix:uri:localName:attributes: skippedEntity: characters: #endElement:prefix:uri:localName: endDocument)).
+	self
+		assert: (parser argumentsSentWith: #skippedEntity:)
+			equals: #('undeclared');
+		assert: (parser argumentsSentWith: #characters:)
+			equals: #('&undeclared;')
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testSkippedEntityUnreplaced [
 	| xml parser |
-
 	xml := '<!DOCTYPE root [<!ENTITY declared "replacement">]><root>&declared;</root>'.
 	(parser := SAXRecordingPrefixURILocalNameHandler on: xml)
 		isValidating: true;
 		replacesContentEntityReferences: false;
 		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			#(startDocument
-				startDTD:publicID:systemID:
-				generalEntityDeclaration:replacement:
-				endDTD
-				startElement:prefix:uri:localName:attributes:
-				skippedEntity:
-				characters:
-				endElement:prefix:uri:localName:
-				endDocument)).
 	self
-		assert: (parser argumentsSentWith: #skippedEntity:) = #('declared');
-		assert: (parser argumentsSentWith: #characters:) = #('&declared;').
+		assert:
+			(parser
+				wasSentSelectors:
+					#(startDocument #startDTD:publicID:systemID: #generalEntityDeclaration:replacement: endDTD #startElement:prefix:uri:localName:attributes: skippedEntity: characters: #endElement:prefix:uri:localName: endDocument)).
+	self
+		assert: (parser argumentsSentWith: #skippedEntity:)
+			equals: #('declared');
+		assert: (parser argumentsSentWith: #characters:)
+			equals: #('&declared;')
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testStartCData [
 	| xml parser |
-
 	xml := '<test>one<![CDATA[<![CDATA[two]]>three</test>'.
-
-	(parser := SAXRecordingHandler on: xml)
-		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			#(startDocument
-				startElement:attributes:
-				characters:
-				startCData
-				characters:
-				endCData
-				characters:
-				endElement:
-				endDocument)).
-
+	(parser := SAXRecordingHandler on: xml) parseDocument.
+	self
+		assert:
+			(parser
+				wasSentSelectors:
+					#(startDocument #startElement:attributes: characters: startCData characters: endCData characters: endElement: endDocument)).
 	(parser allSentMessagesNamed: #characters:)
-		with:
-			#(#('one')
-				#('<![CDATA[two')
-				#('three'))
-		do: [:message :arguments |
-			self assert: message arguments = arguments].
+		with: #(#('one') #('<![CDATA[two') #('three'))
+		do: [ :message :arguments | self assert: message arguments equals: arguments ]
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testStartDTDPublicIDSystemID [
-	#('<!DOCTYPE test PUBLIC "publicID" "systemID"><test/>'
-		'<!DOCTYPE test SYSTEM "systemID"><test/>'
-		'<!DOCTYPE test><test/>')
+	#('<!DOCTYPE test PUBLIC "publicID" "systemID"><test/>' '<!DOCTYPE test SYSTEM "systemID"><test/>' '<!DOCTYPE test><test/>')
 		with:
-			#(#('test' 'publicID' 'systemID')
-				#('test' '' 'systemID')
-				#('test' '' ''))
-		do: [:xml :arguments | | parser |
-			(parser := SAXRecordingHandler on: xml)
-				parseDocument.
-			self assert:
-				(parser wasSentSelectors:
-					#(startDocument
-						startDTD:publicID:systemID:
-						endDTD
-						startElement:attributes:
-						endElement:
-						endDocument)).
-
-			self assert:
-				(parser argumentsSentWith: #startDTD:publicID:systemID:) =
-					arguments].
+			#(#('test' 'publicID' 'systemID') #('test' '' 'systemID') #('test' '' ''))
+		do: [ :xml :arguments | 
+			| parser |
+			(parser := SAXRecordingHandler on: xml) parseDocument.
+			self
+				assert:
+					(parser
+						wasSentSelectors:
+							#(startDocument #startDTD:publicID:systemID: endDTD #startElement:attributes: endElement: endDocument)).
+			self
+				assert: (parser argumentsSentWith: #startDTD:publicID:systemID:)
+				equals: arguments ]
 ]
 
 { #category : #tests }
@@ -953,149 +847,148 @@ SAXHandlerTest >> testStartDocument [
 { #category : #tests }
 SAXHandlerTest >> testStartElementAttributes [
 	| parser arguments |
-
 	(parser := SAXRecordingHandler on: self prefixedXMLSource)
 		parseDocument.
-	self assert: (parser wasSentSelectors: self prefixedXMLSourceSelectors).
+	self
+		assert: (parser wasSentSelectors: self prefixedXMLSourceSelectors).
 	arguments := parser argumentsSentWith: #startElement:attributes:.
 	self
-		assert: arguments size = 2;
-		assert: arguments first = 'prefix:test';
-		assert: arguments second = self prefixedXMLAttributes.
-
+		assert: arguments size equals: 2;
+		assert: arguments first equals: 'prefix:test';
+		assert: arguments second equals: self prefixedXMLAttributes.
 	(parser := SAXRecordingHandler on: self prefixedXMLSource)
 		usesNamespaces: false;
 		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			self prefixedXMLSourceSelectorsNamespacesDisabled).
+	self
+		assert:
+			(parser
+				wasSentSelectors: self prefixedXMLSourceSelectorsNamespacesDisabled).
 	arguments := parser argumentsSentWith: #startElement:attributes:.
 	self
-		assert: arguments size = 2;
-		assert: arguments first = 'prefix:test';
-		assert: arguments second = self prefixedXMLAttributesNamespacesDisabled.
+		assert: arguments size equals: 2;
+		assert: arguments first equals: 'prefix:test';
+		assert: arguments second
+			equals: self prefixedXMLAttributesNamespacesDisabled
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testStartElementPrefixURIAttributes [
 	| parser arguments |
-
 	(parser := SAXRecordingPrefixURIHandler on: self prefixedXMLSource)
 		parseDocument.
-	self assert:
-		(parser wasSentSelectors: self prefixedXMLSourcePrefixURISelectors).
-	arguments := parser argumentsSentWith: #startElement:prefix:uri:attributes:.
 	self
-		assert: arguments size = 4;
-		assert: arguments first = 'prefix:test';
-		assert: arguments second = 'prefix';
-		assert: arguments third = 'prefixNS';
-		assert: arguments fourth = self prefixedXMLAttributes.
-
+		assert: (parser wasSentSelectors: self prefixedXMLSourcePrefixURISelectors).
+	arguments := parser
+		argumentsSentWith: #startElement:prefix:uri:attributes:.
+	self
+		assert: arguments size equals: 4;
+		assert: arguments first equals: 'prefix:test';
+		assert: arguments second equals: 'prefix';
+		assert: arguments third equals: 'prefixNS';
+		assert: arguments fourth equals: self prefixedXMLAttributes.
 	(parser := SAXRecordingPrefixURIHandler on: self prefixedXMLSource)
 		usesNamespaces: false;
 		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			self prefixedXMLSourcePrefixURISelectorsNamespacesDisabled).
-	arguments := parser argumentsSentWith: #startElement:prefix:uri:attributes:.
 	self
-		assert: arguments size = 4;
-		assert: arguments first = 'prefix:test';
-		assert: arguments second = 'prefix';
-		assert: arguments third = '';
-		assert: arguments fourth = self prefixedXMLAttributesNamespacesDisabled.
+		assert:
+			(parser
+				wasSentSelectors: self prefixedXMLSourcePrefixURISelectorsNamespacesDisabled).
+	arguments := parser
+		argumentsSentWith: #startElement:prefix:uri:attributes:.
+	self
+		assert: arguments size equals: 4;
+		assert: arguments first equals: 'prefix:test';
+		assert: arguments second equals: 'prefix';
+		assert: arguments third equals: '';
+		assert: arguments fourth
+			equals: self prefixedXMLAttributesNamespacesDisabled
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testStartElementPrefixURILocalNameAttributes [
 	| parser arguments |
-
-	(parser := SAXRecordingPrefixURILocalNameHandler on: self prefixedXMLSource)
-		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			self prefixedXMLSourcePrefixURILocalNameSelectors).
-	arguments :=
-		parser argumentsSentWith: #startElement:prefix:uri:localName:attributes:.
+	(parser := SAXRecordingPrefixURILocalNameHandler
+		on: self prefixedXMLSource) parseDocument.
 	self
-		assert: arguments size = 5;
-		assert: arguments first = 'prefix:test';
-		assert: arguments second = 'prefix';
-		assert: arguments third = 'prefixNS';
-		assert: arguments fourth = 'test';
-		assert: arguments fifth = self prefixedXMLAttributes.
-
-	(parser := SAXRecordingPrefixURILocalNameHandler on: self prefixedXMLSource)
+		assert:
+			(parser
+				wasSentSelectors: self prefixedXMLSourcePrefixURILocalNameSelectors).
+	arguments := parser
+		argumentsSentWith: #startElement:prefix:uri:localName:attributes:.
+	self
+		assert: arguments size equals: 5;
+		assert: arguments first equals: 'prefix:test';
+		assert: arguments second equals: 'prefix';
+		assert: arguments third equals: 'prefixNS';
+		assert: arguments fourth equals: 'test';
+		assert: arguments fifth equals: self prefixedXMLAttributes.
+	(parser := SAXRecordingPrefixURILocalNameHandler
+		on: self prefixedXMLSource)
 		usesNamespaces: false;
 		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			self prefixedXMLSourcePrefixURILocalNameSelectorsNamespacesDisabled).
-	arguments :=
-		parser argumentsSentWith: #startElement:prefix:uri:localName:attributes:.
 	self
-		assert: arguments size = 5;
-		assert: arguments first = 'prefix:test';
-		assert: arguments second = 'prefix';
-		assert: arguments third = '';
-		assert: arguments fourth = 'test';
-		assert: arguments fifth = self prefixedXMLAttributesNamespacesDisabled.
+		assert:
+			(parser
+				wasSentSelectors: self prefixedXMLSourcePrefixURILocalNameSelectorsNamespacesDisabled).
+	arguments := parser
+		argumentsSentWith: #startElement:prefix:uri:localName:attributes:.
+	self
+		assert: arguments size equals: 5;
+		assert: arguments first equals: 'prefix:test';
+		assert: arguments second equals: 'prefix';
+		assert: arguments third equals: '';
+		assert: arguments fourth equals: 'test';
+		assert: arguments fifth
+			equals: self prefixedXMLAttributesNamespacesDisabled
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testStartEntity [
 	| parser messages |
-
-	(parser := SAXRecordingPrefixURILocalNameHandler on: self generalEntityXMLSource)
-		parseDocument.
-	self assert: (parser wasSentSelectors: self generalEntityXMLSourceSelectors).
+	(parser := SAXRecordingPrefixURILocalNameHandler
+		on: self generalEntityXMLSource) parseDocument.
+	self
+		assert: (parser wasSentSelectors: self generalEntityXMLSourceSelectors).
 	messages := parser allSentMessagesNamed: #startEntity:.
 	self
-		assert: messages first arguments = #('first');
-		assert: messages second arguments = #('second').
+		assert: messages first arguments equals: #('first');
+		assert: messages second arguments equals: #('second')
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testStartPrefixMappingURI [
 	| parser messages |
-
-	(parser := SAXRecordingPrefixURILocalNameHandler on: self prefixedXMLSource)
-		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			self prefixedXMLSourcePrefixURILocalNameSelectors).
+	(parser := SAXRecordingPrefixURILocalNameHandler
+		on: self prefixedXMLSource) parseDocument.
+	self
+		assert:
+			(parser
+				wasSentSelectors: self prefixedXMLSourcePrefixURILocalNameSelectors).
 	messages := parser allSentMessagesNamed: #startPrefixMapping:uri:.
 	self
-		assert: messages size = 2;
-		assert: messages first arguments = #('prefix' 'prefixNS');
-		assert: messages second arguments = #('' 'defaultNS').
-
-	(parser :=
-		SAXRecordingPrefixURILocalNameHandler on:
-			'<one xmlns="defaultNS"><two xmlns="defaultNS"/></one>')
-		parseDocument.
-	messages := parser allSentMessagesNamed: #startPrefixMapping:uri:.
-	self
-		assert: messages size = 1;
-		assert: messages first arguments = #('' 'defaultNS').
-
-	(parser :=
-		SAXRecordingPrefixURILocalNameHandler on:
-			'<one xmlns="defaultNS"><two xmlns="newDefaultNS"/></one>')
+		assert: messages size equals: 2;
+		assert: messages first arguments equals: #('prefix' 'prefixNS');
+		assert: messages second arguments equals: #('' 'defaultNS').
+	(parser := SAXRecordingPrefixURILocalNameHandler
+		on: '<one xmlns="defaultNS"><two xmlns="defaultNS"/></one>')
 		parseDocument.
 	messages := parser allSentMessagesNamed: #startPrefixMapping:uri:.
 	self
-		assert: messages size = 2;
-		assert: messages first arguments = #('' 'defaultNS');
-		assert: messages second arguments = #('' 'newDefaultNS').
-
-	(parser :=
-		SAXRecordingPrefixURILocalNameHandler on:
-			'<one xmlns:xml="', XMLNamespaceScope xmlNamespaceURI, '"/>')
+		assert: messages size equals: 1;
+		assert: messages first arguments equals: #('' 'defaultNS').
+	(parser := SAXRecordingPrefixURILocalNameHandler
+		on: '<one xmlns="defaultNS"><two xmlns="newDefaultNS"/></one>')
 		parseDocument.
-	self assert:
-		(parser allSentMessagesNamed: #startPrefixMapping:uri:) isEmpty.
+	messages := parser allSentMessagesNamed: #startPrefixMapping:uri:.
+	self
+		assert: messages size equals: 2;
+		assert: messages first arguments equals: #('' 'defaultNS');
+		assert: messages second arguments equals: #('' 'newDefaultNS').
+	(parser := SAXRecordingPrefixURILocalNameHandler
+		on: '<one xmlns:xml="' , XMLNamespaceScope xmlNamespaceURI , '"/>')
+		parseDocument.
+	self
+		assert: (parser allSentMessagesNamed: #startPrefixMapping:uri:) isEmpty
 ]
 
 { #category : #tests }
@@ -1114,40 +1007,16 @@ SAXHandlerTest >> testUsesNamespaces [
 { #category : #tests }
 SAXHandlerTest >> testXMLVersionEncodingStandalone [
 	| selectors |
-
-	selectors :=
-		#(startDocument
-			xmlVersion:encoding:standalone:
-			startElement:prefix:uri:localName:attributes:
-			endElement:prefix:uri:localName:
-			endDocument).
-	#('<?xml version="1.0" encoding="UTF-8"?><test/>'
-		'<?xml version="1.00" encoding="UTF-8"?><test/>'
-		'<?xml version="1.000" encoding="UTF-8"?><test/>'
-		'<?xml version="1.1" encoding="UTF-8"?><test/>'
-		'<?xml version="1.10" encoding="UTF-8"?><test/>'
-		'<?xml version="1.100" encoding="UTF-8"?><test/>'
-		'<?xml version="1.0" encoding="UTF-16"?><test/>'
-		'<?xml version="1.0" encoding="Latin-1"?><test/>'
-		'<?xml version="1.0" encoding="UTF-8" standalone="no"?><test/>'
-		'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><test/>')
+	selectors := #(startDocument #xmlVersion:encoding:standalone: #startElement:prefix:uri:localName:attributes: #endElement:prefix:uri:localName: endDocument).
+	#('<?xml version="1.0" encoding="UTF-8"?><test/>' '<?xml version="1.00" encoding="UTF-8"?><test/>' '<?xml version="1.000" encoding="UTF-8"?><test/>' '<?xml version="1.1" encoding="UTF-8"?><test/>' '<?xml version="1.10" encoding="UTF-8"?><test/>' '<?xml version="1.100" encoding="UTF-8"?><test/>' '<?xml version="1.0" encoding="UTF-16"?><test/>' '<?xml version="1.0" encoding="Latin-1"?><test/>' '<?xml version="1.0" encoding="UTF-8" standalone="no"?><test/>' '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><test/>')
 		with:
-			#(#(1.0 'UTF-8' false)
-				#(1.0 'UTF-8' false)
-				#(1.0 'UTF-8' false)
-				#(1.1 'UTF-8' false)
-				#(1.1 'UTF-8' false)
-				#(1.1 'UTF-8' false)
-				#(1.0 'UTF-16' false)
-				#(1.0 'Latin-1' false)
-				#(1.0 'UTF-8' false)
-				#(1.0 'UTF-8' true))
-		do: [:source :arguments | | parser |
+			#(#(1.0 'UTF-8' false) #(1.0 'UTF-8' false) #(1.0 'UTF-8' false) #(1.1 'UTF-8' false) #(1.1 'UTF-8' false) #(1.1 'UTF-8' false) #(1.0 'UTF-16' false) #(1.0 'Latin-1' false) #(1.0 'UTF-8' false) #(1.0 'UTF-8' true))
+		do: [ :source :arguments | 
+			| parser |
 			(parser := SAXRecordingPrefixURILocalNameHandler on: source)
 				parseDocument.
 			self
 				assert: (parser wasSentSelectors: selectors);
-				assert:
-					(parser argumentsSentWith: #xmlVersion:encoding:standalone:) =
-						arguments].
+				assert: (parser argumentsSentWith: #xmlVersion:encoding:standalone:)
+					equals: arguments ]
 ]
