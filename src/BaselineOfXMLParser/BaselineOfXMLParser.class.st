@@ -39,7 +39,7 @@ BaselineOfXMLParser >> bitmapCharacterSetOn: spec [
       with: [ 
 			spec
 				loads: #('Core');
-				repository: 'github://pharo-contributions/BitmapCharacterSet:v1.4.x/src' ]. 
+				repository: 'github://pharo-contributions/BitmapCharacterSet:1.4.x/src' ]. 
 				
 	spec project: 'BitmapCharacterSet Tests' copyFrom: 'BitmapCharacterSet' with: [ spec loads: #('Tests') ] 			
 				
