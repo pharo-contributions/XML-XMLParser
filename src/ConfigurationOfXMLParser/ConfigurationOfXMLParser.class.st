@@ -1744,7 +1744,7 @@ ConfigurationOfXMLParser >> stable: spec [
 	spec for: #'pharo5.x' version: 'release-3.4.8'.
 	spec for: #'pharo6.x' version: 'release-3.4.8'.	
 		
-	spec for: #'common' version: #'3.5.0'.
+	spec for: #'common' version: '3.5.0'.
 ]
 
 { #category : #'obsolete - versions' }
