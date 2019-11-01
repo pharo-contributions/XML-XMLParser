@@ -269,7 +269,7 @@ ConfigurationOfXMLParser class >> validate [
 	^ ((Smalltalk at: #MetacelloToolBox) validateConfiguration: self debug: #() recurse: false) explore
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline100: spec [
 	<version: '1.0.0-baseline' imports: #('1-master-baseline')>
 	spec
@@ -279,7 +279,7 @@ ConfigurationOfXMLParser >> baseline100: spec [
 			spec project: 'XMLWriter' with: '2.4.5' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline183: spec [
 	<version: '1.8.3-baseline' imports: #('1-master-baseline')>
 	spec
@@ -289,7 +289,7 @@ ConfigurationOfXMLParser >> baseline183: spec [
 			spec project: 'XMLWriter' with: '2.4.6' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline187: spec [
 	<version: '1.8.7-baseline' imports: #('1-master-baseline')>
 	spec
@@ -299,7 +299,7 @@ ConfigurationOfXMLParser >> baseline187: spec [
 			spec project: 'XMLWriter' with: '2.4.7' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline188: spec [
 	<version: '1.8.8-baseline' imports: #('1-master-baseline')>
 	spec
@@ -309,7 +309,7 @@ ConfigurationOfXMLParser >> baseline188: spec [
 			spec project: 'XMLWriter' with: '2.4.8' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline191: spec [
 	<version: '1.9.1-baseline' imports: #('1.9-master-baseline')>
 	spec
@@ -322,7 +322,7 @@ ConfigurationOfXMLParser >> baseline191: spec [
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.1' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline193: spec [
 	<version: '1.9.3-baseline' imports: #('1.9-master-baseline')>
 	spec
@@ -335,7 +335,7 @@ ConfigurationOfXMLParser >> baseline193: spec [
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.2' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline194: spec [
 	<version: '1.9.4-baseline' imports: #('1.9-master-baseline')>
 	spec
@@ -348,7 +348,7 @@ ConfigurationOfXMLParser >> baseline194: spec [
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.3' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline196: spec [
 	<version: '1.9.6-baseline' imports: #('1.9-master-baseline')>
 	spec
@@ -361,7 +361,7 @@ ConfigurationOfXMLParser >> baseline196: spec [
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.4' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline198: spec [
 	<version: '1.9.8-baseline' imports: #('1.9-master-baseline')>
 	spec
@@ -374,7 +374,7 @@ ConfigurationOfXMLParser >> baseline198: spec [
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.5' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline200: spec [
 	<version: '2.0.0-baseline' imports: #('1.9-master-baseline')>
 	spec
@@ -387,7 +387,7 @@ ConfigurationOfXMLParser >> baseline200: spec [
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.6' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline201: spec [
 	<version: '2.0.1-baseline' imports: #('1.9-master-baseline')>
 	spec
@@ -400,7 +400,7 @@ ConfigurationOfXMLParser >> baseline201: spec [
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.6' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline205: spec [
 	<version: '2.0.5-baseline' imports: #('1.9-master-baseline')>
 	spec
@@ -413,7 +413,7 @@ ConfigurationOfXMLParser >> baseline205: spec [
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.7' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline213: spec [
 	<version: '2.1.3-baseline' imports: #('1.9-master-baseline')>
 	spec
@@ -426,7 +426,7 @@ ConfigurationOfXMLParser >> baseline213: spec [
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.7' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline216: spec [
 	<version: '2.1.6-baseline' imports: #('1.9-master-baseline')>
 	spec
@@ -439,7 +439,7 @@ ConfigurationOfXMLParser >> baseline216: spec [
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.8' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline221: spec [
 	<version: '2.2.1-baseline' imports: #('1.9-master-baseline')>
 	spec
@@ -452,7 +452,7 @@ ConfigurationOfXMLParser >> baseline221: spec [
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.9' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline231: spec [
 	<version: '2.3.1-baseline' imports: #('1.9-master-baseline')>
 	spec
@@ -467,7 +467,7 @@ ConfigurationOfXMLParser >> baseline231: spec [
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.10' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline239: spec [
 	<version: '2.3.9-baseline' imports: #('1.9-master-baseline')>
 	spec
@@ -481,7 +481,7 @@ ConfigurationOfXMLParser >> baseline239: spec [
 		do: [ spec package: 'XML-Parser-GemstoneCompatibility' with: 'XML-Parser-GemstoneCompatibility-monty.10' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline241: spec [
 	<version: '2.4.1-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -498,7 +498,7 @@ ConfigurationOfXMLParser >> baseline241: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.1' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline244: spec [
 	<version: '2.4.4-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -515,7 +515,7 @@ ConfigurationOfXMLParser >> baseline244: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.1' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline248: spec [
 	<version: '2.4.8-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -532,7 +532,7 @@ ConfigurationOfXMLParser >> baseline248: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-AndreiChis.7' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline250: spec [
 	<version: '2.5.0-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -549,7 +549,7 @@ ConfigurationOfXMLParser >> baseline250: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.8' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline251: spec [
 	<version: '2.5.1-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -565,7 +565,7 @@ ConfigurationOfXMLParser >> baseline251: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.24' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline253: spec [
 	<version: '2.5.3-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -581,7 +581,7 @@ ConfigurationOfXMLParser >> baseline253: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.29' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline260: spec [
 	<version: '2.6.0-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -597,7 +597,7 @@ ConfigurationOfXMLParser >> baseline260: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.30' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline263: spec [
 	<version: '2.6.3-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -613,7 +613,7 @@ ConfigurationOfXMLParser >> baseline263: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.30' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline266: spec [
 	<version: '2.6.6-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -629,7 +629,7 @@ ConfigurationOfXMLParser >> baseline266: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.31' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline268: spec [
 	<version: '2.6.8-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -645,7 +645,7 @@ ConfigurationOfXMLParser >> baseline268: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.32' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline270: spec [
 	<version: '2.7.0-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -661,7 +661,7 @@ ConfigurationOfXMLParser >> baseline270: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.33' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline273: spec [
 	<version: '2.7.3-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -677,7 +677,7 @@ ConfigurationOfXMLParser >> baseline273: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.33' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline274: spec [
 	<version: '2.7.4-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -693,7 +693,7 @@ ConfigurationOfXMLParser >> baseline274: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.34' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline276: spec [
 	<version: '2.7.6-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -709,7 +709,7 @@ ConfigurationOfXMLParser >> baseline276: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.36' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline277: spec [
 	<version: '2.7.7-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -725,7 +725,7 @@ ConfigurationOfXMLParser >> baseline277: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.36' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline283: spec [
 	<version: '2.8.3-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -741,7 +741,7 @@ ConfigurationOfXMLParser >> baseline283: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.36' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline288: spec [
 	<version: '2.8.8-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -757,7 +757,7 @@ ConfigurationOfXMLParser >> baseline288: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-TudorGirba.36' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline291: spec [
 	<version: '2.9.1-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -773,7 +773,7 @@ ConfigurationOfXMLParser >> baseline291: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.37' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline294: spec [
 	<version: '2.9.4-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -789,7 +789,7 @@ ConfigurationOfXMLParser >> baseline294: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.38' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline295: spec [
 	<version: '2.9.5-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -805,7 +805,7 @@ ConfigurationOfXMLParser >> baseline295: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.39' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline297: spec [
 	<version: '2.9.7-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -825,7 +825,7 @@ ConfigurationOfXMLParser >> baseline297: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.40' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline302: spec [
 	<version: '3.0.2-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -845,7 +845,7 @@ ConfigurationOfXMLParser >> baseline302: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.53' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline306: spec [
 	<version: '3.0.6-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -871,7 +871,7 @@ ConfigurationOfXMLParser >> baseline306: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.59' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline311: spec [
 	<version: '3.1.1-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -897,7 +897,7 @@ ConfigurationOfXMLParser >> baseline311: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-PavelKrivanek.60' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline312: spec [
 	<version: '3.1.2-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -923,7 +923,7 @@ ConfigurationOfXMLParser >> baseline312: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-PavelKrivanek.60' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline319: spec [
 	<version: '3.1.9-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -948,7 +948,7 @@ ConfigurationOfXMLParser >> baseline319: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.61' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline321: spec [
 	<version: '3.2.1-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -973,7 +973,7 @@ ConfigurationOfXMLParser >> baseline321: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.62' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline329: spec [
 	<version: '3.2.9-baseline' imports: #('2.4-master-baseline')>
 	spec
@@ -998,7 +998,7 @@ ConfigurationOfXMLParser >> baseline329: spec [
 		do: [ spec package: 'XML-Parser-GTExtensions' with: 'XML-Parser-GTExtensions-monty.64' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline330: spec [
 	<version: '3.3.0-baseline' imports: #('3.3-master-baseline')>
 	spec
@@ -1024,7 +1024,7 @@ ConfigurationOfXMLParser >> baseline330: spec [
 			spec package: 'XML-ParserGTExtensions' with: 'XML-ParserGTExtensions-monty.1' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline332: spec [
 	<version: '3.3.2-baseline' imports: #('3.3-master-baseline')>
 	spec
@@ -1050,7 +1050,7 @@ ConfigurationOfXMLParser >> baseline332: spec [
 			spec package: 'XML-ParserGTExtensions' with: 'XML-ParserGTExtensions-monty.2' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline333: spec [
 	<version: '3.3.3-baseline' imports: #('3.3-master-baseline')>
 	spec
@@ -1076,7 +1076,7 @@ ConfigurationOfXMLParser >> baseline333: spec [
 			spec package: 'XML-ParserGTExtensions' with: 'XML-ParserGTExtensions-TorstenBergmann.5' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline339: spec [
 	<version: '3.3.9-baseline' imports: #('3.3-master-baseline')>
 	spec
@@ -1102,7 +1102,7 @@ ConfigurationOfXMLParser >> baseline339: spec [
 			spec package: 'XML-ParserGTExtensions' with: 'XML-ParserGTExtensions-monty.6' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline342: spec [
 	<version: '3.4.2-baseline' imports: #('3.3-master-baseline')>
 	spec
@@ -1128,7 +1128,7 @@ ConfigurationOfXMLParser >> baseline342: spec [
 			spec package: 'XML-ParserGTExtensions' with: 'XML-ParserGTExtensions-monty.7' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baseline348: spec [
 	<version: '3.4.8-baseline' imports: #('3.3-master-baseline')>
 	spec
@@ -1154,7 +1154,7 @@ ConfigurationOfXMLParser >> baseline348: spec [
 			spec package: 'XML-ParserGTExtensions' with: 'XML-ParserGTExtensions-monty.8' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baselineMaster19: spec [
 	<version: '1.9-master-baseline' imports: #('1-master-baseline')>
 
@@ -1170,7 +1170,7 @@ ConfigurationOfXMLParser >> baselineMaster19: spec [
 				with: [ spec requires: 'XML-Parser' ]. ].
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baselineMaster1: spec [
 	<version: '1-master-baseline'>
 
@@ -1240,7 +1240,7 @@ ConfigurationOfXMLParser >> baselineMaster1: spec [
 				group: 'Tests' with: #('XML-Tests-Parser') ].
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baselineMaster24: spec [
 	<version: '2.4-master-baseline' imports: #('1.9-master-baseline')>
 
@@ -1257,7 +1257,7 @@ ConfigurationOfXMLParser >> baselineMaster24: spec [
 				with: [ spec requires: 'XML-Parser' ]. ].
 ]
 
-{ #category : #baselines }
+{ #category : #'obsolete - baselines' }
 ConfigurationOfXMLParser >> baselineMaster33: spec [
 	<version: '3.3-master-baseline' imports: #('1-master-baseline')>
 
@@ -1301,8 +1301,12 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ConfigurationOfXMLParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '3.4.8-baseline'.
-
+	spec for: #'common' do: [ 
+		spec
+			baseline: 'XMLWriter' with: [ 
+				spec 
+					className: 'BaselineOfXMLParser';
+					repository: 'github://pharo-contributions/XML-XMLParser:master/src' ]]
 ]
 
 { #category : #doits }
@@ -1435,7 +1439,7 @@ ConfigurationOfXMLParser >> project [
 			project ]
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release24: spec [
 	<symbolicVersion: #'release-2.4'>
 
@@ -1443,7 +1447,7 @@ ConfigurationOfXMLParser >> release24: spec [
 	spec for: #'common' version: '2.4.9'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release253: spec [
 	<symbolicVersion: #'release-2.5.3'>
 
@@ -1451,7 +1455,7 @@ ConfigurationOfXMLParser >> release253: spec [
 	spec for: #'common' version: '2.5.4'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release255: spec [
 	<symbolicVersion: #'release-2.5.5'>
 
@@ -1459,7 +1463,7 @@ ConfigurationOfXMLParser >> release255: spec [
 	spec for: #'common' version: '2.5.9'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release25: spec [
 	<symbolicVersion: #'release-2.5'>
 
@@ -1467,7 +1471,7 @@ ConfigurationOfXMLParser >> release25: spec [
 	spec for: #'common' version: '2.5.2'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release263: spec [
 	<symbolicVersion: #'release-2.6.3'>
 
@@ -1475,7 +1479,7 @@ ConfigurationOfXMLParser >> release263: spec [
 	spec for: #'common' version: '2.6.4'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release265: spec [
 	<symbolicVersion: #'release-2.6.5'>
 
@@ -1483,7 +1487,7 @@ ConfigurationOfXMLParser >> release265: spec [
 	spec for: #'common' version: '2.6.7'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release268: spec [
 	<symbolicVersion: #'release-2.6.8'>
 
@@ -1491,7 +1495,7 @@ ConfigurationOfXMLParser >> release268: spec [
 	spec for: #'common' version: '2.7.2'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release26: spec [
 	<symbolicVersion: #'release-2.6'>
 
@@ -1499,7 +1503,7 @@ ConfigurationOfXMLParser >> release26: spec [
 	spec for: #'common' version: '2.6.2'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release273: spec [
 	<symbolicVersion: #'release-2.7.3'>
 
@@ -1507,7 +1511,7 @@ ConfigurationOfXMLParser >> release273: spec [
 	spec for: #'common' version: '2.7.3'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release274: spec [
 	<symbolicVersion: #'release-2.7.4'>
 
@@ -1515,7 +1519,7 @@ ConfigurationOfXMLParser >> release274: spec [
 	spec for: #'common' version: '2.7.5'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release276: spec [
 	<symbolicVersion: #'release-2.7.6'>
 
@@ -1523,7 +1527,7 @@ ConfigurationOfXMLParser >> release276: spec [
 	spec for: #'common' version: '2.7.6'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release277: spec [
 	<symbolicVersion: #'release-2.7.7'>
 
@@ -1531,7 +1535,7 @@ ConfigurationOfXMLParser >> release277: spec [
 	spec for: #'common' version: '2.7.9'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release281: spec [
 	<symbolicVersion: #'release-2.8.1'>
 
@@ -1539,7 +1543,7 @@ ConfigurationOfXMLParser >> release281: spec [
 	spec for: #'common' version: '2.8.2'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release283: spec [
 	<symbolicVersion: #'release-2.8.3'>
 
@@ -1547,7 +1551,7 @@ ConfigurationOfXMLParser >> release283: spec [
 	spec for: #'common' version: '2.8.5'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release286: spec [
 	<symbolicVersion: #'release-2.8.6'>
 
@@ -1555,7 +1559,7 @@ ConfigurationOfXMLParser >> release286: spec [
 	spec for: #'common' version: '2.8.6'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release287: spec [
 	<symbolicVersion: #'release-2.8.7'>
 
@@ -1563,7 +1567,7 @@ ConfigurationOfXMLParser >> release287: spec [
 	spec for: #'common' version: '2.8.8'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release289: spec [
 	<symbolicVersion: #'release-2.8.9'>
 
@@ -1571,7 +1575,7 @@ ConfigurationOfXMLParser >> release289: spec [
 	spec for: #'common' version: '2.8.9'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release292: spec [
 	<symbolicVersion: #'release-2.9.2'>
 
@@ -1579,7 +1583,7 @@ ConfigurationOfXMLParser >> release292: spec [
 	spec for: #'common' version: '2.9.3'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release294: spec [
 	<symbolicVersion: #'release-2.9.4'>
 
@@ -1587,7 +1591,7 @@ ConfigurationOfXMLParser >> release294: spec [
 	spec for: #'common' version: '2.9.4'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release295: spec [
 	<symbolicVersion: #'release-2.9.5'>
 
@@ -1595,7 +1599,7 @@ ConfigurationOfXMLParser >> release295: spec [
 	spec for: #'common' version: '2.9.6'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release297: spec [
 	<symbolicVersion: #'release-2.9.7'>
 
@@ -1603,7 +1607,7 @@ ConfigurationOfXMLParser >> release297: spec [
 	spec for: #'common' version: '2.9.7'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release298: spec [
 	<symbolicVersion: #'release-2.9.8'>
 
@@ -1611,7 +1615,7 @@ ConfigurationOfXMLParser >> release298: spec [
 	spec for: #'common' version: '3.0.1'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release29: spec [
 	<symbolicVersion: #'release-2.9'>
 
@@ -1619,7 +1623,7 @@ ConfigurationOfXMLParser >> release29: spec [
 	spec for: #'common' version: '2.9.1'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release2: spec [
 	<symbolicVersion: #'release-2'>
 
@@ -1627,7 +1631,7 @@ ConfigurationOfXMLParser >> release2: spec [
 	spec for: #'common' version: '2.4.7'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release306: spec [
 	<symbolicVersion: #'release-3.0.6'>
 
@@ -1635,7 +1639,7 @@ ConfigurationOfXMLParser >> release306: spec [
 	spec for: #'common' version: '3.1.6'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release317: spec [
 	<symbolicVersion: #'release-3.1.7'>
 
@@ -1643,7 +1647,7 @@ ConfigurationOfXMLParser >> release317: spec [
 	spec for: #'common' version: '3.1.8'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release319: spec [
 	<symbolicVersion: #'release-3.1.9'>
 
@@ -1651,7 +1655,7 @@ ConfigurationOfXMLParser >> release319: spec [
 	spec for: #'common' version: '3.2.0'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release321: spec [
 	<symbolicVersion: #'release-3.2.1'>
 
@@ -1659,7 +1663,7 @@ ConfigurationOfXMLParser >> release321: spec [
 	spec for: #'common' version: '3.2.1'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release322: spec [
 	<symbolicVersion: #'release-3.2.2'>
 
@@ -1667,7 +1671,7 @@ ConfigurationOfXMLParser >> release322: spec [
 	spec for: #'common' version: '3.2.8'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release329: spec [
 	<symbolicVersion: #'release-3.2.9'>
 
@@ -1675,7 +1679,7 @@ ConfigurationOfXMLParser >> release329: spec [
 	spec for: #'common' version: '3.2.9'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release332: spec [
 	<symbolicVersion: #'release-3.3.2'>
 
@@ -1683,7 +1687,7 @@ ConfigurationOfXMLParser >> release332: spec [
 	spec for: #'common' version: '3.3.3'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release334: spec [
 	<symbolicVersion: #'release-3.3.4'>
 
@@ -1691,7 +1695,7 @@ ConfigurationOfXMLParser >> release334: spec [
 	spec for: #'common' version: '3.3.7'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release338: spec [
 	<symbolicVersion: #'release-3.3.8'>
 
@@ -1699,7 +1703,7 @@ ConfigurationOfXMLParser >> release338: spec [
 	spec for: #'common' version: '3.3.8'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release339: spec [
 	<symbolicVersion: #'release-3.3.9'>
 
@@ -1707,7 +1711,7 @@ ConfigurationOfXMLParser >> release339: spec [
 	spec for: #'common' version: '3.4.7'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release33: spec [
 	<symbolicVersion: #'release-3.3'>
 
@@ -1715,7 +1719,7 @@ ConfigurationOfXMLParser >> release33: spec [
 	spec for: #'common' version: '3.3.1'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release348: spec [
 	<symbolicVersion: #'release-3.4.8'>
 
@@ -1723,7 +1727,7 @@ ConfigurationOfXMLParser >> release348: spec [
 	spec for: #'common' version: '3.5.0'.
 ]
 
-{ #category : #'symbolic versions' }
+{ #category : #'obsolete - releases' }
 ConfigurationOfXMLParser >> release3: spec [
 	<symbolicVersion: #'release-3'>
 
@@ -1735,12 +1739,15 @@ ConfigurationOfXMLParser >> release3: spec [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	"Users should prefer #stable unless they rely on XMLParser internals,
-	but it will delegate to a specific #release version from now on."
-	spec for: #'common' version: #'release-3.4.8'.
+		"Old STHub version"
+	spec for: #'pharo4.x' version: 'release-3.4.8'.
+	spec for: #'pharo5.x' version: 'release-3.4.8'.
+	spec for: #'pharo6.x' version: 'release-3.4.8'.	
+		
+	spec for: #'common' version: #'3.5.0'.
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version100: spec [
 	<version: '1.0.0' imports: #('1.0.0-baseline')>
 	spec
@@ -1755,7 +1762,7 @@ ConfigurationOfXMLParser >> version100: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version101: spec [
 	<version: '1.0.1' imports: #('1.0.0-baseline')>
 	spec
@@ -1770,7 +1777,7 @@ ConfigurationOfXMLParser >> version101: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version102: spec [
 	<version: '1.0.2' imports: #('1.0.0-baseline')>
 	spec
@@ -1785,7 +1792,7 @@ ConfigurationOfXMLParser >> version102: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version130: spec [
 	<version: '1.3.0' imports: #('1.0.0-baseline')>
 	spec
@@ -1803,7 +1810,7 @@ I had to largely rewrite the tokenizer to make everything work, but I followed t
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version131: spec [
 	<version: '1.3.1' imports: #('1.0.0-baseline')>
 	spec
@@ -1818,7 +1825,7 @@ ConfigurationOfXMLParser >> version131: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version132: spec [
 	<version: '1.3.2' imports: #('1.0.0-baseline')>
 	spec
@@ -1833,7 +1840,7 @@ ConfigurationOfXMLParser >> version132: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version133: spec [
 	<version: '1.3.3' imports: #('1.0.0-baseline')>
 	spec
@@ -1848,7 +1855,7 @@ ConfigurationOfXMLParser >> version133: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version134: spec [
 	<version: '1.3.4' imports: #('1.0.0-baseline')>
 	spec
@@ -1863,7 +1870,7 @@ ConfigurationOfXMLParser >> version134: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version135: spec [
 	<version: '1.3.5' imports: #('1.0.0-baseline')>
 	spec
@@ -1878,7 +1885,7 @@ ConfigurationOfXMLParser >> version135: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version136: spec [
 	<version: '1.3.6' imports: #('1.0.0-baseline')>
 	spec
@@ -1893,7 +1900,7 @@ ConfigurationOfXMLParser >> version136: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version137: spec [
 	<version: '1.3.7' imports: #('1.0.0-baseline')>
 	spec
@@ -1908,7 +1915,7 @@ ConfigurationOfXMLParser >> version137: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version138: spec [
 	<version: '1.3.8' imports: #('1.0.0-baseline')>
 	spec
@@ -1923,7 +1930,7 @@ ConfigurationOfXMLParser >> version138: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version139: spec [
 	<version: '1.3.9' imports: #('1.0.0-baseline')>
 	spec
@@ -1937,7 +1944,7 @@ ConfigurationOfXMLParser >> version139: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version140: spec [
 	<version: '1.4.0' imports: #('1.0.0-baseline')>
 	spec
@@ -1951,7 +1958,7 @@ ConfigurationOfXMLParser >> version140: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version141: spec [
 	<version: '1.4.1' imports: #('1.0.0-baseline')>
 	spec
@@ -1965,7 +1972,7 @@ ConfigurationOfXMLParser >> version141: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version142: spec [
 	<version: '1.4.2' imports: #('1.0.0-baseline')>
 	spec
@@ -1979,7 +1986,7 @@ ConfigurationOfXMLParser >> version142: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version143: spec [
 	<version: '1.4.3' imports: #('1.0.0-baseline')>
 	spec
@@ -1993,7 +2000,7 @@ ConfigurationOfXMLParser >> version143: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version144: spec [
 	<version: '1.4.4' imports: #('1.0.0-baseline')>
 	spec
@@ -2007,7 +2014,7 @@ ConfigurationOfXMLParser >> version144: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version145: spec [
 	<version: '1.4.5' imports: #('1.0.0-baseline')>
 	spec
@@ -2021,7 +2028,7 @@ ConfigurationOfXMLParser >> version145: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version146: spec [
 	<version: '1.4.6' imports: #('1.0.0-baseline')>
 	spec
@@ -2035,7 +2042,7 @@ ConfigurationOfXMLParser >> version146: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version147: spec [
 	<version: '1.4.7' imports: #('1.0.0-baseline')>
 	spec
@@ -2049,7 +2056,7 @@ ConfigurationOfXMLParser >> version147: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version148: spec [
 	<version: '1.4.8' imports: #('1.0.0-baseline')>
 	spec
@@ -2063,7 +2070,7 @@ ConfigurationOfXMLParser >> version148: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version149: spec [
 	<version: '1.4.9' imports: #('1.0.0-baseline')>
 	spec
@@ -2077,7 +2084,7 @@ ConfigurationOfXMLParser >> version149: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version150: spec [
 	<version: '1.5.0' imports: #('1.0.0-baseline')>
 	spec
@@ -2091,7 +2098,7 @@ ConfigurationOfXMLParser >> version150: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version151: spec [
 	<version: '1.5.1' imports: #('1.0.0-baseline')>
 	spec
@@ -2105,7 +2112,7 @@ ConfigurationOfXMLParser >> version151: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version152: spec [
 	<version: '1.5.2' imports: #('1.0.0-baseline')>
 	spec
@@ -2119,7 +2126,7 @@ ConfigurationOfXMLParser >> version152: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version153: spec [
 	<version: '1.5.3' imports: #('1.0.0-baseline')>
 	spec
@@ -2133,7 +2140,7 @@ ConfigurationOfXMLParser >> version153: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version154: spec [
 	<version: '1.5.4' imports: #('1.0.0-baseline')>
 	spec
@@ -2147,7 +2154,7 @@ ConfigurationOfXMLParser >> version154: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version155: spec [
 	<version: '1.5.5' imports: #('1.0.0-baseline')>
 	spec
@@ -2161,7 +2168,7 @@ ConfigurationOfXMLParser >> version155: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version156: spec [
 	<version: '1.5.6' imports: #('1.0.0-baseline')>
 	spec
@@ -2175,7 +2182,7 @@ ConfigurationOfXMLParser >> version156: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version157: spec [
 	<version: '1.5.7' imports: #('1.0.0-baseline')>
 	spec
@@ -2189,7 +2196,7 @@ ConfigurationOfXMLParser >> version157: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version158: spec [
 	<version: '1.5.8' imports: #('1.0.0-baseline')>
 	spec
@@ -2203,7 +2210,7 @@ ConfigurationOfXMLParser >> version158: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version159: spec [
 	<version: '1.5.9' imports: #('1.0.0-baseline')>
 	spec
@@ -2217,7 +2224,7 @@ ConfigurationOfXMLParser >> version159: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version160: spec [
 	<version: '1.6.0' imports: #('1.0.0-baseline')>
 	spec
@@ -2231,7 +2238,7 @@ ConfigurationOfXMLParser >> version160: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version161: spec [
 	<version: '1.6.1' imports: #('1.0.0-baseline')>
 	spec
@@ -2245,7 +2252,7 @@ ConfigurationOfXMLParser >> version161: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version162: spec [
 	<version: '1.6.2' imports: #('1.0.0-baseline')>
 	spec
@@ -2259,7 +2266,7 @@ ConfigurationOfXMLParser >> version162: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version163: spec [
 	<version: '1.6.3' imports: #('1.0.0-baseline')>
 	spec
@@ -2273,7 +2280,7 @@ ConfigurationOfXMLParser >> version163: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version164: spec [
 	<version: '1.6.4' imports: #('1.0.0-baseline')>
 	spec
@@ -2291,7 +2298,7 @@ ConfigurationOfXMLParser >> version164: spec [
 	
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version165: spec [
 	<version: '1.6.5' imports: #('1.0.0-baseline')>
 
@@ -2315,7 +2322,7 @@ ConfigurationOfXMLParser >> version165: spec [
 
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version166: spec [
 	<version: '1.6.6' imports: #('1.0.0-baseline')>
 
@@ -2337,7 +2344,7 @@ ConfigurationOfXMLParser >> version166: spec [
 
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version167: spec [
 	<version: '1.6.7' imports: #('1.0.0-baseline')>
 
@@ -2359,7 +2366,7 @@ ConfigurationOfXMLParser >> version167: spec [
 
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version168: spec [
 	<version: '1.6.8' imports: #('1.0.0-baseline')>
 
@@ -2381,7 +2388,7 @@ ConfigurationOfXMLParser >> version168: spec [
 
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version169: spec [
 	<version: '1.6.9' imports: #('1.0.0-baseline')>
 
@@ -2402,7 +2409,7 @@ ConfigurationOfXMLParser >> version169: spec [
 
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version170: spec [
 	<version: '1.7.0' imports: #('1.0.0-baseline')>
 
@@ -2423,7 +2430,7 @@ ConfigurationOfXMLParser >> version170: spec [
 
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version171: spec [
 	<version: '1.7.1' imports: #('1.0.0-baseline')>
 
@@ -2444,7 +2451,7 @@ ConfigurationOfXMLParser >> version171: spec [
 
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version172: spec [
 	<version: '1.7.2' imports: #('1.0.0-baseline')>
 
@@ -2465,7 +2472,7 @@ ConfigurationOfXMLParser >> version172: spec [
 
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version173: spec [
 	<version: '1.7.3' imports: #('1.0.0-baseline')>
 
@@ -2486,7 +2493,7 @@ ConfigurationOfXMLParser >> version173: spec [
 
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version174: spec [
 	<version: '1.7.4' imports: #('1.0.0-baseline')>
 
@@ -2507,7 +2514,7 @@ ConfigurationOfXMLParser >> version174: spec [
 
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version175: spec [
 	<version: '1.7.5' imports: #('1.0.0-baseline')>
 
@@ -2525,7 +2532,7 @@ ConfigurationOfXMLParser >> version175: spec [
 
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version176: spec [
 	<version: '1.7.6' imports: #('1.0.0-baseline')>
 
@@ -2543,7 +2550,7 @@ ConfigurationOfXMLParser >> version176: spec [
 
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version177: spec [
 	<version: '1.7.7' imports: #('1.0.0-baseline')>
 
@@ -2555,7 +2562,7 @@ ConfigurationOfXMLParser >> version177: spec [
 			package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.71'.]
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version178: spec [ 
         <version: '1.7.8' imports: #('1.0.0-baseline')>
 
@@ -2567,7 +2574,7 @@ ConfigurationOfXMLParser >> version178: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version179: spec [ 
         <version: '1.7.9' imports: #('1.0.0-baseline')>
 
@@ -2579,7 +2586,7 @@ ConfigurationOfXMLParser >> version179: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version180: spec [ 
         <version: '1.8.0' imports: #('1.0.0-baseline')>
 
@@ -2591,7 +2598,7 @@ ConfigurationOfXMLParser >> version180: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version181: spec [ 
         <version: '1.8.1' imports: #('1.0.0-baseline')>
 
@@ -2603,7 +2610,7 @@ ConfigurationOfXMLParser >> version181: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version182: spec [ 
         <version: '1.8.2' imports: #('1.0.0-baseline')>
 
@@ -2615,7 +2622,7 @@ ConfigurationOfXMLParser >> version182: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version183: spec [ 
         <version: '1.8.3' imports: #('1.8.3-baseline')>
 
@@ -2626,7 +2633,7 @@ ConfigurationOfXMLParser >> version183: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version184: spec [ 
         <version: '1.8.4' imports: #('1.8.3-baseline')>
 
@@ -2637,7 +2644,7 @@ ConfigurationOfXMLParser >> version184: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version185: spec [ 
         <version: '1.8.5' imports: #('1.8.3-baseline')>
 
@@ -2648,7 +2655,7 @@ ConfigurationOfXMLParser >> version185: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version186: spec [ 
         <version: '1.8.6' imports: #('1.8.3-baseline')>
 
@@ -2659,7 +2666,7 @@ ConfigurationOfXMLParser >> version186: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version187: spec [ 
         <version: '1.8.7' imports: #('1.8.7-baseline')>
 
@@ -2670,7 +2677,7 @@ ConfigurationOfXMLParser >> version187: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version188: spec [ 
         <version: '1.8.8' imports: #('1.8.8-baseline')>
 
@@ -2681,7 +2688,7 @@ ConfigurationOfXMLParser >> version188: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version189: spec [ 
         <version: '1.8.9' imports: #('1.8.8-baseline')>
 
@@ -2692,7 +2699,7 @@ ConfigurationOfXMLParser >> version189: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version190: spec [ 
         <version: '1.9.0' imports: #('1.8.8-baseline')>
 
@@ -2703,7 +2710,7 @@ ConfigurationOfXMLParser >> version190: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version191: spec [ 
         <version: '1.9.1' imports: #('1.9.1-baseline')>
 
@@ -2714,7 +2721,7 @@ ConfigurationOfXMLParser >> version191: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version192: spec [ 
         <version: '1.9.2' imports: #('1.9.1-baseline')>
 
@@ -2725,7 +2732,7 @@ ConfigurationOfXMLParser >> version192: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version193: spec [ 
         <version: '1.9.3' imports: #('1.9.3-baseline')>
 
@@ -2736,7 +2743,7 @@ ConfigurationOfXMLParser >> version193: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version194: spec [ 
         <version: '1.9.4' imports: #('1.9.4-baseline')>
 
@@ -2747,7 +2754,7 @@ ConfigurationOfXMLParser >> version194: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version195: spec [ 
         <version: '1.9.5' imports: #('1.9.4-baseline')>
 
@@ -2758,7 +2765,7 @@ ConfigurationOfXMLParser >> version195: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version196: spec [ 
         <version: '1.9.6' imports: #('1.9.6-baseline')>
 
@@ -2769,7 +2776,7 @@ ConfigurationOfXMLParser >> version196: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version197: spec [ 
         <version: '1.9.7' imports: #('1.9.6-baseline')>
 
@@ -2780,7 +2787,7 @@ ConfigurationOfXMLParser >> version197: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version198: spec [ 
         <version: '1.9.8' imports: #('1.9.8-baseline')>
 
@@ -2791,7 +2798,7 @@ ConfigurationOfXMLParser >> version198: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version199: spec [ 
         <version: '1.9.9' imports: #('1.9.8-baseline')>
 
@@ -2802,7 +2809,7 @@ ConfigurationOfXMLParser >> version199: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version200: spec [ 
         <version: '2.0.0' imports: #('2.0.0-baseline')>
 
@@ -2813,7 +2820,7 @@ ConfigurationOfXMLParser >> version200: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version201: spec [ 
         <version: '2.0.1' imports: #('2.0.1-baseline')>
 
@@ -2824,7 +2831,7 @@ ConfigurationOfXMLParser >> version201: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version202: spec [ 
         <version: '2.0.2' imports: #('2.0.1-baseline')>
 
@@ -2835,7 +2842,7 @@ ConfigurationOfXMLParser >> version202: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version203: spec [ 
         <version: '2.0.3' imports: #('2.0.1-baseline')>
 
@@ -2846,7 +2853,7 @@ ConfigurationOfXMLParser >> version203: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version204: spec [ 
         <version: '2.0.4' imports: #('2.0.1-baseline')>
 
@@ -2857,7 +2864,7 @@ ConfigurationOfXMLParser >> version204: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version205: spec [ 
         <version: '2.0.5' imports: #('2.0.5-baseline')>
 
@@ -2868,7 +2875,7 @@ ConfigurationOfXMLParser >> version205: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version206: spec [ 
         <version: '2.0.6' imports: #('2.0.5-baseline')>
 
@@ -2879,7 +2886,7 @@ ConfigurationOfXMLParser >> version206: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version207: spec [ 
         <version: '2.0.7' imports: #('2.0.5-baseline')>
 
@@ -2890,7 +2897,7 @@ ConfigurationOfXMLParser >> version207: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version208: spec [ 
         <version: '2.0.8' imports: #('2.0.5-baseline')>
 
@@ -2901,7 +2908,7 @@ ConfigurationOfXMLParser >> version208: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version209: spec [ 
         <version: '2.0.9' imports: #('2.0.5-baseline')>
 
@@ -2912,7 +2919,7 @@ ConfigurationOfXMLParser >> version209: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version210: spec [ 
         <version: '2.1.0' imports: #('2.0.5-baseline')>
 
@@ -2923,7 +2930,7 @@ ConfigurationOfXMLParser >> version210: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version211: spec [ 
         <version: '2.1.1' imports: #('2.0.5-baseline')>
 
@@ -2934,7 +2941,7 @@ ConfigurationOfXMLParser >> version211: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version212: spec [ 
         <version: '2.1.2' imports: #('2.0.5-baseline')>
 
@@ -2945,7 +2952,7 @@ ConfigurationOfXMLParser >> version212: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version213: spec [ 
         <version: '2.1.3' imports: #('2.1.3-baseline')>
 
@@ -2956,7 +2963,7 @@ ConfigurationOfXMLParser >> version213: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version214: spec [ 
         <version: '2.1.4' imports: #('2.1.3-baseline')>
 
@@ -2967,7 +2974,7 @@ ConfigurationOfXMLParser >> version214: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version215: spec [ 
         <version: '2.1.5' imports: #('2.1.3-baseline')>
 
@@ -2978,7 +2985,7 @@ ConfigurationOfXMLParser >> version215: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version216: spec [ 
         <version: '2.1.6' imports: #('2.1.6-baseline')>
 
@@ -2989,7 +2996,7 @@ ConfigurationOfXMLParser >> version216: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version217: spec [ 
         <version: '2.1.7' imports: #('2.1.6-baseline')>
 
@@ -3000,7 +3007,7 @@ ConfigurationOfXMLParser >> version217: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version218: spec [ 
         <version: '2.1.8' imports: #('2.1.6-baseline')>
 
@@ -3011,7 +3018,7 @@ ConfigurationOfXMLParser >> version218: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version219: spec [ 
         <version: '2.1.9' imports: #('2.1.6-baseline')>
 
@@ -3022,7 +3029,7 @@ ConfigurationOfXMLParser >> version219: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version220: spec [ 
         <version: '2.2.0' imports: #('2.1.6-baseline')>
 
@@ -3033,7 +3040,7 @@ ConfigurationOfXMLParser >> version220: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version221: spec [ 
         <version: '2.2.1' imports: #('2.2.1-baseline')>
 
@@ -3044,7 +3051,7 @@ ConfigurationOfXMLParser >> version221: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version222: spec [ 
         <version: '2.2.2' imports: #('2.2.1-baseline')>
 
@@ -3055,7 +3062,7 @@ ConfigurationOfXMLParser >> version222: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version223: spec [ 
         <version: '2.2.3' imports: #('2.2.1-baseline')>
 
@@ -3066,7 +3073,7 @@ ConfigurationOfXMLParser >> version223: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version224: spec [ 
         <version: '2.2.4' imports: #('2.2.1-baseline')>
 
@@ -3077,7 +3084,7 @@ ConfigurationOfXMLParser >> version224: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version225: spec [ 
         <version: '2.2.5' imports: #('2.2.1-baseline')>
 
@@ -3088,7 +3095,7 @@ ConfigurationOfXMLParser >> version225: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version226: spec [ 
         <version: '2.2.6' imports: #('2.2.1-baseline')>
 
@@ -3099,7 +3106,7 @@ ConfigurationOfXMLParser >> version226: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version227: spec [ 
         <version: '2.2.7' imports: #('2.2.1-baseline')>
 
@@ -3110,7 +3117,7 @@ ConfigurationOfXMLParser >> version227: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version228: spec [ 
         <version: '2.2.8' imports: #('2.2.1-baseline')>
 
@@ -3121,7 +3128,7 @@ ConfigurationOfXMLParser >> version228: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version229: spec [ 
         <version: '2.2.9' imports: #('2.2.1-baseline')>
 
@@ -3132,7 +3139,7 @@ ConfigurationOfXMLParser >> version229: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version230: spec [ 
         <version: '2.3.0' imports: #('2.2.1-baseline')>
 
@@ -3143,7 +3150,7 @@ ConfigurationOfXMLParser >> version230: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version231: spec [ 
         <version: '2.3.1' imports: #('2.3.1-baseline')>
 
@@ -3154,7 +3161,7 @@ ConfigurationOfXMLParser >> version231: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version232: spec [ 
         <version: '2.3.2' imports: #('2.3.1-baseline')>
 
@@ -3165,7 +3172,7 @@ ConfigurationOfXMLParser >> version232: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version233: spec [ 
         <version: '2.3.3' imports: #('2.3.1-baseline')>
 
@@ -3176,7 +3183,7 @@ ConfigurationOfXMLParser >> version233: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version234: spec [ 
         <version: '2.3.4' imports: #('2.3.1-baseline')>
 
@@ -3187,7 +3194,7 @@ ConfigurationOfXMLParser >> version234: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version235: spec [ 
         <version: '2.3.5' imports: #('2.3.1-baseline')>
 
@@ -3198,7 +3205,7 @@ ConfigurationOfXMLParser >> version235: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version236: spec [ 
         <version: '2.3.6' imports: #('2.3.1-baseline')>
 
@@ -3209,7 +3216,7 @@ ConfigurationOfXMLParser >> version236: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version237: spec [ 
         <version: '2.3.7' imports: #('2.3.1-baseline')>
 
@@ -3220,7 +3227,7 @@ ConfigurationOfXMLParser >> version237: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version238: spec [ 
         <version: '2.3.8' imports: #('2.3.1-baseline')>
 
@@ -3231,7 +3238,7 @@ ConfigurationOfXMLParser >> version238: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version239: spec [ 
         <version: '2.3.9' imports: #('2.3.9-baseline')>
 
@@ -3242,7 +3249,7 @@ ConfigurationOfXMLParser >> version239: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version240: spec [ 
         <version: '2.4.0' imports: #('2.3.9-baseline')>
 
@@ -3253,7 +3260,7 @@ ConfigurationOfXMLParser >> version240: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version241: spec [ 
         <version: '2.4.1' imports: #('2.4.1-baseline')>
 
@@ -3264,7 +3271,7 @@ ConfigurationOfXMLParser >> version241: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version242: spec [ 
         <version: '2.4.2' imports: #('2.4.1-baseline')>
 
@@ -3275,7 +3282,7 @@ ConfigurationOfXMLParser >> version242: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version243: spec [ 
         <version: '2.4.3' imports: #('2.4.1-baseline')>
 
@@ -3286,7 +3293,7 @@ ConfigurationOfXMLParser >> version243: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version244: spec [ 
         <version: '2.4.4' imports: #('2.4.4-baseline')>
 
@@ -3297,7 +3304,7 @@ ConfigurationOfXMLParser >> version244: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version245: spec [ 
         <version: '2.4.5' imports: #('2.4.4-baseline')>
 
@@ -3308,7 +3315,7 @@ ConfigurationOfXMLParser >> version245: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version246: spec [ 
         <version: '2.4.6' imports: #('2.4.4-baseline')>
 
@@ -3319,7 +3326,7 @@ ConfigurationOfXMLParser >> version246: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version247: spec [ 
         <version: '2.4.7' imports: #('2.4.4-baseline')>
 
@@ -3330,7 +3337,7 @@ ConfigurationOfXMLParser >> version247: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version248: spec [ 
         <version: '2.4.8' imports: #('2.4.8-baseline')>
 
@@ -3341,7 +3348,7 @@ ConfigurationOfXMLParser >> version248: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version249: spec [ 
         <version: '2.4.9' imports: #('2.4.8-baseline')>
 
@@ -3352,7 +3359,7 @@ ConfigurationOfXMLParser >> version249: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version250: spec [ 
         <version: '2.5.0' imports: #('2.5.0-baseline')>
 
@@ -3363,7 +3370,7 @@ ConfigurationOfXMLParser >> version250: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version251: spec [ 
         <version: '2.5.1' imports: #('2.5.1-baseline')>
 
@@ -3374,7 +3381,7 @@ ConfigurationOfXMLParser >> version251: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version252: spec [ 
         <version: '2.5.2' imports: #('2.5.1-baseline')>
 
@@ -3385,7 +3392,7 @@ ConfigurationOfXMLParser >> version252: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version253: spec [ 
         <version: '2.5.3' imports: #('2.5.3-baseline')>
 
@@ -3396,7 +3403,7 @@ ConfigurationOfXMLParser >> version253: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version254: spec [ 
         <version: '2.5.4' imports: #('2.5.3-baseline')>
 
@@ -3407,7 +3414,7 @@ ConfigurationOfXMLParser >> version254: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version255: spec [ 
         <version: '2.5.5' imports: #('2.5.3-baseline')>
 
@@ -3418,7 +3425,7 @@ ConfigurationOfXMLParser >> version255: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version256: spec [ 
         <version: '2.5.6' imports: #('2.5.3-baseline')>
 
@@ -3429,7 +3436,7 @@ ConfigurationOfXMLParser >> version256: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version257: spec [ 
         <version: '2.5.7' imports: #('2.5.3-baseline')>
 
@@ -3440,7 +3447,7 @@ ConfigurationOfXMLParser >> version257: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version258: spec [ 
         <version: '2.5.8' imports: #('2.5.3-baseline')>
 
@@ -3451,7 +3458,7 @@ ConfigurationOfXMLParser >> version258: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version259: spec [ 
         <version: '2.5.9' imports: #('2.5.3-baseline')>
 
@@ -3462,7 +3469,7 @@ ConfigurationOfXMLParser >> version259: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version260: spec [ 
         <version: '2.6.0' imports: #('2.6.0-baseline')>
 
@@ -3473,7 +3480,7 @@ ConfigurationOfXMLParser >> version260: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version261: spec [ 
         <version: '2.6.1' imports: #('2.6.0-baseline')>
 
@@ -3484,7 +3491,7 @@ ConfigurationOfXMLParser >> version261: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version262: spec [ 
         <version: '2.6.2' imports: #('2.6.0-baseline')>
 
@@ -3495,7 +3502,7 @@ ConfigurationOfXMLParser >> version262: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version263: spec [ 
         <version: '2.6.3' imports: #('2.6.3-baseline')>
 
@@ -3506,7 +3513,7 @@ ConfigurationOfXMLParser >> version263: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version264: spec [ 
         <version: '2.6.4' imports: #('2.6.3-baseline')>
 
@@ -3517,7 +3524,7 @@ ConfigurationOfXMLParser >> version264: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version265: spec [ 
         <version: '2.6.5' imports: #('2.6.3-baseline')>
 
@@ -3528,7 +3535,7 @@ ConfigurationOfXMLParser >> version265: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version266: spec [ 
         <version: '2.6.6' imports: #('2.6.6-baseline')>
 
@@ -3539,7 +3546,7 @@ ConfigurationOfXMLParser >> version266: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version267: spec [ 
         <version: '2.6.7' imports: #('2.6.6-baseline')>
 
@@ -3550,7 +3557,7 @@ ConfigurationOfXMLParser >> version267: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version268: spec [ 
         <version: '2.6.8' imports: #('2.6.8-baseline')>
 
@@ -3561,7 +3568,7 @@ ConfigurationOfXMLParser >> version268: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version269: spec [ 
         <version: '2.6.9' imports: #('2.6.8-baseline')>
 
@@ -3572,7 +3579,7 @@ ConfigurationOfXMLParser >> version269: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version270: spec [ 
         <version: '2.7.0' imports: #('2.7.0-baseline')>
 
@@ -3583,7 +3590,7 @@ ConfigurationOfXMLParser >> version270: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version271: spec [ 
         <version: '2.7.1' imports: #('2.7.0-baseline')>
 
@@ -3594,7 +3601,7 @@ ConfigurationOfXMLParser >> version271: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version272: spec [ 
         <version: '2.7.2' imports: #('2.7.0-baseline')>
 
@@ -3605,7 +3612,7 @@ ConfigurationOfXMLParser >> version272: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version273: spec [ 
         <version: '2.7.3' imports: #('2.7.3-baseline')>
 
@@ -3616,7 +3623,7 @@ ConfigurationOfXMLParser >> version273: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version274: spec [ 
         <version: '2.7.4' imports: #('2.7.4-baseline')>
 
@@ -3627,7 +3634,7 @@ ConfigurationOfXMLParser >> version274: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version275: spec [ 
         <version: '2.7.5' imports: #('2.7.4-baseline')>
 
@@ -3638,7 +3645,7 @@ ConfigurationOfXMLParser >> version275: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version276: spec [ 
         <version: '2.7.6' imports: #('2.7.6-baseline')>
 
@@ -3649,7 +3656,7 @@ ConfigurationOfXMLParser >> version276: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version277: spec [ 
         <version: '2.7.7' imports: #('2.7.7-baseline')>
 
@@ -3660,7 +3667,7 @@ ConfigurationOfXMLParser >> version277: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version278: spec [ 
         <version: '2.7.8' imports: #('2.7.7-baseline')>
 
@@ -3671,7 +3678,7 @@ ConfigurationOfXMLParser >> version278: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version279: spec [ 
         <version: '2.7.9' imports: #('2.7.7-baseline')>
 
@@ -3682,7 +3689,7 @@ ConfigurationOfXMLParser >> version279: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version280: spec [ 
         <version: '2.8.0' imports: #('2.7.7-baseline')>
 
@@ -3693,7 +3700,7 @@ ConfigurationOfXMLParser >> version280: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version281: spec [ 
         <version: '2.8.1' imports: #('2.7.7-baseline')>
 
@@ -3704,7 +3711,7 @@ ConfigurationOfXMLParser >> version281: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version282: spec [ 
         <version: '2.8.2' imports: #('2.7.7-baseline')>
 
@@ -3715,7 +3722,7 @@ ConfigurationOfXMLParser >> version282: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version283: spec [ 
         <version: '2.8.3' imports: #('2.8.3-baseline')>
 
@@ -3726,7 +3733,7 @@ ConfigurationOfXMLParser >> version283: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version284: spec [ 
         <version: '2.8.4' imports: #('2.8.3-baseline')>
 
@@ -3737,7 +3744,7 @@ ConfigurationOfXMLParser >> version284: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version285: spec [ 
         <version: '2.8.5' imports: #('2.8.3-baseline')>
 
@@ -3748,7 +3755,7 @@ ConfigurationOfXMLParser >> version285: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version286: spec [ 
         <version: '2.8.6' imports: #('2.8.3-baseline')>
 
@@ -3759,7 +3766,7 @@ ConfigurationOfXMLParser >> version286: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version287: spec [ 
         <version: '2.8.7' imports: #('2.8.3-baseline')>
 
@@ -3770,7 +3777,7 @@ ConfigurationOfXMLParser >> version287: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version288: spec [ 
         <version: '2.8.8' imports: #('2.8.8-baseline')>
 
@@ -3781,7 +3788,7 @@ ConfigurationOfXMLParser >> version288: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version289: spec [ 
         <version: '2.8.9' imports: #('2.8.8-baseline')>
 
@@ -3792,7 +3799,7 @@ ConfigurationOfXMLParser >> version289: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version290: spec [ 
         <version: '2.9.0' imports: #('2.8.8-baseline')>
 
@@ -3803,7 +3810,7 @@ ConfigurationOfXMLParser >> version290: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version291: spec [ 
         <version: '2.9.1' imports: #('2.9.1-baseline')>
 
@@ -3814,7 +3821,7 @@ ConfigurationOfXMLParser >> version291: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version292: spec [ 
         <version: '2.9.2' imports: #('2.9.1-baseline')>
 
@@ -3825,7 +3832,7 @@ ConfigurationOfXMLParser >> version292: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version293: spec [ 
         <version: '2.9.3' imports: #('2.9.1-baseline')>
 
@@ -3836,7 +3843,7 @@ ConfigurationOfXMLParser >> version293: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version294: spec [ 
         <version: '2.9.4' imports: #('2.9.4-baseline')>
 
@@ -3847,7 +3854,7 @@ ConfigurationOfXMLParser >> version294: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version295: spec [ 
         <version: '2.9.5' imports: #('2.9.5-baseline')>
 
@@ -3858,7 +3865,7 @@ ConfigurationOfXMLParser >> version295: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version296: spec [ 
         <version: '2.9.6' imports: #('2.9.5-baseline')>
 
@@ -3869,7 +3876,7 @@ ConfigurationOfXMLParser >> version296: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version297: spec [ 
         <version: '2.9.7' imports: #('2.9.7-baseline')>
 
@@ -3880,7 +3887,7 @@ ConfigurationOfXMLParser >> version297: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version298: spec [ 
         <version: '2.9.8' imports: #('2.9.7-baseline')>
 
@@ -3891,7 +3898,7 @@ ConfigurationOfXMLParser >> version298: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version299: spec [ 
         <version: '2.9.9' imports: #('2.9.7-baseline')>
 
@@ -3902,7 +3909,7 @@ ConfigurationOfXMLParser >> version299: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version300: spec [ 
         <version: '3.0.0' imports: #('2.9.7-baseline')>
 
@@ -3913,7 +3920,7 @@ ConfigurationOfXMLParser >> version300: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version301: spec [ 
         <version: '3.0.1' imports: #('2.9.7-baseline')>
 
@@ -3924,7 +3931,7 @@ ConfigurationOfXMLParser >> version301: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version302: spec [ 
         <version: '3.0.2' imports: #('3.0.2-baseline')>
 
@@ -3935,7 +3942,7 @@ ConfigurationOfXMLParser >> version302: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version303: spec [ 
         <version: '3.0.3' imports: #('3.0.2-baseline')>
 
@@ -3946,7 +3953,7 @@ ConfigurationOfXMLParser >> version303: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version304: spec [ 
         <version: '3.0.4' imports: #('3.0.2-baseline')>
 
@@ -3957,7 +3964,7 @@ ConfigurationOfXMLParser >> version304: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version305: spec [ 
         <version: '3.0.5' imports: #('3.0.2-baseline')>
 
@@ -3968,7 +3975,7 @@ ConfigurationOfXMLParser >> version305: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version306: spec [ 
         <version: '3.0.6' imports: #('3.0.6-baseline')>
 
@@ -3979,7 +3986,7 @@ ConfigurationOfXMLParser >> version306: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version307: spec [ 
         <version: '3.0.7' imports: #('3.0.6-baseline')>
 
@@ -3990,7 +3997,7 @@ ConfigurationOfXMLParser >> version307: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version308: spec [ 
         <version: '3.0.8' imports: #('3.0.6-baseline')>
 
@@ -4001,7 +4008,7 @@ ConfigurationOfXMLParser >> version308: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version309: spec [ 
         <version: '3.0.9' imports: #('3.0.6-baseline')>
 
@@ -4012,7 +4019,7 @@ ConfigurationOfXMLParser >> version309: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version310: spec [ 
         <version: '3.1.0' imports: #('3.0.6-baseline')>
 
@@ -4023,7 +4030,7 @@ ConfigurationOfXMLParser >> version310: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version311: spec [ 
         <version: '3.1.1' imports: #('3.1.1-baseline')>
 
@@ -4034,7 +4041,7 @@ ConfigurationOfXMLParser >> version311: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version312: spec [ 
         <version: '3.1.2' imports: #('3.1.2-baseline')>
 
@@ -4045,7 +4052,7 @@ ConfigurationOfXMLParser >> version312: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version313: spec [ 
         <version: '3.1.3' imports: #('3.1.2-baseline')>
 
@@ -4056,7 +4063,7 @@ ConfigurationOfXMLParser >> version313: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version314: spec [ 
         <version: '3.1.4' imports: #('3.1.2-baseline')>
 
@@ -4067,7 +4074,7 @@ ConfigurationOfXMLParser >> version314: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version315: spec [ 
         <version: '3.1.5' imports: #('3.1.2-baseline')>
 
@@ -4078,7 +4085,7 @@ ConfigurationOfXMLParser >> version315: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version316: spec [ 
         <version: '3.1.6' imports: #('3.1.2-baseline')>
 
@@ -4089,7 +4096,7 @@ ConfigurationOfXMLParser >> version316: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version317: spec [ 
         <version: '3.1.7' imports: #('3.1.2-baseline')>
 
@@ -4100,7 +4107,7 @@ ConfigurationOfXMLParser >> version317: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version318: spec [ 
         <version: '3.1.8' imports: #('3.1.2-baseline')>
 
@@ -4111,7 +4118,7 @@ ConfigurationOfXMLParser >> version318: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version319: spec [ 
         <version: '3.1.9' imports: #('3.1.9-baseline')>
 
@@ -4122,7 +4129,7 @@ ConfigurationOfXMLParser >> version319: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version320: spec [ 
         <version: '3.2.0' imports: #('3.1.9-baseline')>
 
@@ -4133,7 +4140,7 @@ ConfigurationOfXMLParser >> version320: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version321: spec [ 
         <version: '3.2.1' imports: #('3.2.1-baseline')>
 
@@ -4144,7 +4151,7 @@ ConfigurationOfXMLParser >> version321: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version322: spec [ 
         <version: '3.2.2' imports: #('3.2.1-baseline')>
 
@@ -4155,7 +4162,7 @@ ConfigurationOfXMLParser >> version322: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version323: spec [ 
         <version: '3.2.3' imports: #('3.2.1-baseline')>
 
@@ -4166,7 +4173,7 @@ ConfigurationOfXMLParser >> version323: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version324: spec [ 
         <version: '3.2.4' imports: #('3.2.1-baseline')>
 
@@ -4177,7 +4184,7 @@ ConfigurationOfXMLParser >> version324: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version325: spec [ 
         <version: '3.2.5' imports: #('3.2.1-baseline')>
 
@@ -4188,7 +4195,7 @@ ConfigurationOfXMLParser >> version325: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version326: spec [ 
         <version: '3.2.6' imports: #('3.2.1-baseline')>
 
@@ -4199,7 +4206,7 @@ ConfigurationOfXMLParser >> version326: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version327: spec [ 
         <version: '3.2.7' imports: #('3.2.1-baseline')>
 
@@ -4210,7 +4217,7 @@ ConfigurationOfXMLParser >> version327: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version328: spec [ 
         <version: '3.2.8' imports: #('3.2.1-baseline')>
 
@@ -4221,7 +4228,7 @@ ConfigurationOfXMLParser >> version328: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version329: spec [ 
         <version: '3.2.9' imports: #('3.2.9-baseline')>
 
@@ -4232,7 +4239,7 @@ ConfigurationOfXMLParser >> version329: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version330: spec [ 
         <version: '3.3.0' imports: #('3.3.0-baseline')>
 
@@ -4243,7 +4250,7 @@ ConfigurationOfXMLParser >> version330: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version331: spec [ 
         <version: '3.3.1' imports: #('3.3.0-baseline')>
 
@@ -4254,7 +4261,7 @@ ConfigurationOfXMLParser >> version331: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version332: spec [ 
         <version: '3.3.2' imports: #('3.3.2-baseline')>
 
@@ -4265,7 +4272,7 @@ ConfigurationOfXMLParser >> version332: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version333: spec [ 
         <version: '3.3.3' imports: #('3.3.3-baseline')>
 
@@ -4276,7 +4283,7 @@ ConfigurationOfXMLParser >> version333: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version334: spec [ 
         <version: '3.3.4' imports: #('3.3.3-baseline')>
 
@@ -4287,7 +4294,7 @@ ConfigurationOfXMLParser >> version334: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version335: spec [ 
         <version: '3.3.5' imports: #('3.3.3-baseline')>
 
@@ -4298,7 +4305,7 @@ ConfigurationOfXMLParser >> version335: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version336: spec [ 
         <version: '3.3.6' imports: #('3.3.3-baseline')>
 
@@ -4309,7 +4316,7 @@ ConfigurationOfXMLParser >> version336: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version337: spec [ 
         <version: '3.3.7' imports: #('3.3.3-baseline')>
 
@@ -4320,7 +4327,7 @@ ConfigurationOfXMLParser >> version337: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version338: spec [ 
         <version: '3.3.8' imports: #('3.3.3-baseline')>
 
@@ -4331,7 +4338,7 @@ ConfigurationOfXMLParser >> version338: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version339: spec [ 
         <version: '3.3.9' imports: #('3.3.9-baseline')>
 
@@ -4342,7 +4349,7 @@ ConfigurationOfXMLParser >> version339: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version340: spec [ 
         <version: '3.4.0' imports: #('3.3.9-baseline')>
 
@@ -4353,7 +4360,7 @@ ConfigurationOfXMLParser >> version340: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version341: spec [ 
         <version: '3.4.1' imports: #('3.3.9-baseline')>
 
@@ -4364,7 +4371,7 @@ ConfigurationOfXMLParser >> version341: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version342: spec [ 
         <version: '3.4.2' imports: #('3.4.2-baseline')>
 
@@ -4375,7 +4382,7 @@ ConfigurationOfXMLParser >> version342: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version343: spec [ 
         <version: '3.4.3' imports: #('3.4.2-baseline')>
 
@@ -4386,7 +4393,7 @@ ConfigurationOfXMLParser >> version343: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version344: spec [ 
         <version: '3.4.4' imports: #('3.4.2-baseline')>
 
@@ -4397,7 +4404,7 @@ ConfigurationOfXMLParser >> version344: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version345: spec [ 
         <version: '3.4.5' imports: #('3.4.2-baseline')>
 
@@ -4408,7 +4415,7 @@ ConfigurationOfXMLParser >> version345: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version346: spec [ 
         <version: '3.4.6' imports: #('3.4.2-baseline')>
 
@@ -4419,7 +4426,7 @@ ConfigurationOfXMLParser >> version346: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version347: spec [ 
         <version: '3.4.7' imports: #('3.4.2-baseline')>
 
@@ -4430,7 +4437,7 @@ ConfigurationOfXMLParser >> version347: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version348: spec [ 
         <version: '3.4.8' imports: #('3.4.8-baseline')>
 
@@ -4441,7 +4448,7 @@ ConfigurationOfXMLParser >> version348: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'obsolete - versions' }
 ConfigurationOfXMLParser >> version349: spec [ 
         <version: '3.4.9' imports: #('3.4.8-baseline')>
 
@@ -4453,12 +4460,13 @@ ConfigurationOfXMLParser >> version349: spec [
 ]
 
 { #category : #versions }
-ConfigurationOfXMLParser >> version350: spec [ 
-        <version: '3.5.0' imports: #('3.4.8-baseline')>
+ConfigurationOfXMLParser >> version350: spec [
+	<version: '3.5.0'>
 
-        spec for: #common do: [
-                spec blessing: #release.
-			spec package: 'XML-Parser' with: 'XML-Parser-monty.449'.
-			spec package: 'XML-Tests-Parser' with: 'XML-Tests-Parser-monty.229'.
-                ].
+	spec for: #'common' do: [ 
+		spec
+			baseline: 'XMLWriter' with: [ 
+				spec 
+					className: 'BaselineOfXMLParser';
+					repository: 'github://pharo-contributions/XML-XMLParser:3.5.0/src' ]]
 ]
