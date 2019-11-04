@@ -55,3 +55,7 @@ Check (https://montyos.wordpress.com)[https://montyos.wordpress.com/] for more e
 
 ## LICENSE
 [MIT License](LICENSE)
+
+## History
+This project was migrated from [http://smalltalkhub.com/#!/~PharoExtras/XMLParser](http://smalltalkhub.com/#!/~PharoExtras/XMLParser)
+
