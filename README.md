@@ -29,11 +29,25 @@ Metacello new
 
 ## How to use
 
+Use the XMLDOMParser to parse a URL:
 ```Smalltalk
-|xml|
-xml := (ZnEasy get: 'https://gist.github.com/nathanhornby/4727009/raw/86eea19828e19455fe4082a989521f32f7006e9a/XML%2520Country%2520List') contents.
-(XMLDOMParser parse: xml) document  
+(XMLDOMParser parseURL: 'https://www.w3schools.com/xml/simple.xml') inspect
 ```
+
+or give an XML file directly:
+```Smalltalk
+|xmlString|
+xmlString := '<?xml version='1.0' encoding='UTF-8'?>
+<countries>
+  <country code='af' handle='afghanistan' continent='asia' iso='4'>Afghanistan</country>
+  <country code='al' handle='albania' continent='europe' iso='8'>Albania</country>
+  <country code='dz' handle='algeria' continent='africa' iso='12'>Algeria</country>
+</countries>'.
+
+(XMLDOMParser parse: xmlString) document  
+```
+
+Check (https://montyos.wordpress.com)[https://montyos.wordpress.com/] for more examples and descriptions.
 
 ## Screenshot
 
