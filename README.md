@@ -1,6 +1,6 @@
 # XML-XMLParser
 
-[![Build Status](https://travis-ci.org/pharo-contributions/XML-Parser.svg?branch=master)](https://travis-ci.org/pharo-contributions/XML-Parser) [![Coverage Status](https://coveralls.io/repos/github/pharo-contributions/XML-Parser/badge.svg?branch=master)](https://coveralls.io/github/pharo-contributions/XML-Parser?branch=master)
+[![Build Status](https://travis-ci.org/pharo-contributions/XML-XMLParser.svg?branch=master)](https://travis-ci.org/pharo-contributions/XML-XMLParser) [![Coverage Status](https://coveralls.io/repos/github/pharo-contributions/XML-XMLParser/badge.svg?branch=master)](https://coveralls.io/github/pharo-contributions/XML-XMLParser?branch=master)
 
 XML Parser for Pharo
 
