@@ -30,9 +30,9 @@ BaselineOfXMLParser >> baselineOf: spec [
 			"Groups"
 			spec
 				group: 'Core' with: #('XML-Parser');
-				group: 'Tests' with: #('XML-Parser-Tests' 'XML-Parser-Tests-Conformance');
-				group: 'Tools' with: #('XML-Parser-GTExtensions'); 
-				group: 'all' with: #('Core' 'Tests' 'Tools');
+				group: 'Tools' with: #(OrderPreservingDictionary Tools 'XMLWriter Tools' 'XML-Parser-GTExtensions'); 
+				group: 'Tests' with: #('XML-Parser-Tests' 'XML-Parser-Tests-Conformance');	
+				group: 'all' with: #('Core' 'Tools' 'Tests');
 				group: 'default' with: #('all')	
 	]
 ]
@@ -62,9 +62,9 @@ BaselineOfXMLParser >> orderPreservingDictionaryOn: spec [
 				loads: #('Core');
 				repository: 'github://pharo-contributions/OrderPreservingDictionary:1.5.x/src' ]. 
 				
-	spec project: 'OrderPreservingDictionary Tests' copyFrom: 'OrderPreservingDictionary' with: [ spec loads: #('Tests') ] 			
-				
-	
+	spec 
+		project: 'OrderPreservingDictionary Tests' copyFrom: 'OrderPreservingDictionary' with: [ spec loads: #('Tests') ];			
+		project: 'OrderPreservingDictionary Tools' copyFrom: 'OrderPreservingDictionary' with: [ spec loads: #('Tools') ]
 ]
 
 { #category : #'prerequisites ' }
@@ -77,7 +77,7 @@ BaselineOfXMLParser >> xmlWriterOn: spec [
 				loads: #('Core');
 				repository: 'github://pharo-contributions/XML-XMLWriter:2.8.x/src' ]. 
 				
-	spec project: 'XMLWriter Tests' copyFrom: 'XMLWriter' with: [ spec loads: #('Tests') ] 			
-				
-	
+	spec 
+		project: 'XMLWriter Tests' copyFrom: 'XMLWriter' with: [ spec loads: #('Tests') ]; 	
+		project: 'XMLWriter Tools' copyFrom: 'XMLWriter' with: [ spec loads: #('Tools') ] 
 ]
