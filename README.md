@@ -37,14 +37,14 @@ Use the XMLDOMParser to parse a URL:
 or give an XML file directly:
 ```Smalltalk
 |xmlString|
-xmlString := '<?xml version='1.0' encoding='UTF-8'?>
+xmlString := '<?xml version="1.0" encoding="UTF-8"?>
 <countries>
-  <country code='af' handle='afghanistan' continent='asia' iso='4'>Afghanistan</country>
-  <country code='al' handle='albania' continent='europe' iso='8'>Albania</country>
-  <country code='dz' handle='algeria' continent='africa' iso='12'>Algeria</country>
+  <country code="af" handle="afghanistan" continent="asia" iso="4">Afghanistan</country>
+  <country code="al" handle="albania" continent="europe" iso="8">Albania</country>
+  <country code="dz" handle="algeria" continent="africa" iso="12">Algeria</country>
 </countries>'.
 
-(XMLDOMParser parse: xmlString) document  
+(XMLDOMParser parse: xmlString) document inspect 
 ```
 
 Check (https://montyos.wordpress.com)[https://montyos.wordpress.com/] for more examples and descriptions.
