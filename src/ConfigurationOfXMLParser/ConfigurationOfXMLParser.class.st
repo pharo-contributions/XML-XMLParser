@@ -1740,18 +1740,8 @@ ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
 	"GitHub starting with Pharo 7 onwards"	
-	spec for: #'common' version: '3.5.0'.
-		
-	"Use last STHub version for elder Pharo versions"
-	spec for: #'pharo4.x' version: 'release-3.4.8'.
-	spec for: #'pharo5.x' version: 'release-3.4.8'.
-	spec for: #'pharo6.x' version: 'release-3.4.8'.	
-	
-	"Use latest Github version for more recent Pharo versions"
-	spec for: #'pharo7.x' version: '3.5.0'.
-	spec for: #'pharo8.x' version: '3.5.0'.
-	
- 
+	spec for: #'common' version: '3.5.0'
+	 
 ]
 
 { #category : #'obsolete - versions' }
