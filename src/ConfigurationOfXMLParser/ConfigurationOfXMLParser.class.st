@@ -1303,7 +1303,7 @@ ConfigurationOfXMLParser >> development: spec [
 
 	spec for: #'common' do: [ 
 		spec
-			baseline: 'XMLWriter' with: [ 
+			baseline: 'XMLParser' with: [ 
 				spec 
 					className: 'BaselineOfXMLParser';
 					repository: 'github://pharo-contributions/XML-XMLParser:master/src' ]]
