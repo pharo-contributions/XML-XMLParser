@@ -1298,8 +1298,8 @@ ConfigurationOfXMLParser >> customProjectAttributes [
 ]
 
 { #category : #'symbolic versions' }
-ConfigurationOfXMLParser >> development: spec [
-	<symbolicVersion: #'development'>
+ConfigurationOfXMLParser >> dev: spec [
+	<version: #'dev'>
 
 	spec for: #'common' do: [ 
 		spec
@@ -1307,6 +1307,13 @@ ConfigurationOfXMLParser >> development: spec [
 				spec 
 					className: 'BaselineOfXMLParser';
 					repository: 'github://pharo-contributions/XML-XMLParser:master/src' ]]
+]
+
+{ #category : #'symbolic versions' }
+ConfigurationOfXMLParser >> development: spec [
+	<symbolicVersion: #'development'>
+
+	spec for: #'common' version: 'dev'
 ]
 
 { #category : #doits }
@@ -1739,7 +1746,6 @@ ConfigurationOfXMLParser >> release3: spec [
 ConfigurationOfXMLParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	"GitHub starting with Pharo 7 onwards"	
 	spec for: #'common' version: '3.5.0'
 	 
 ]
