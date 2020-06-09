@@ -47,7 +47,7 @@ xmlString := '<?xml version="1.0" encoding="UTF-8"?>
 (XMLDOMParser parse: xmlString) document inspect 
 ```
 
-Check (https://montyos.wordpress.com)[https://montyos.wordpress.com/] for more examples and descriptions.
+Check [https://montyos.wordpress.com](https://montyos.wordpress.com) for more examples and descriptions.
 
 ## Screenshot
 
