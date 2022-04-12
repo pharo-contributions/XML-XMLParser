@@ -2,7 +2,6 @@
 
 [![Test](https://github.com/pharo-contributions/XML-XMLParser/actions/workflows/test.yml/badge.svg)](https://github.com/pharo-contributions/XML-XMLParser/actions/workflows/test.yml)
 
-
 XML Parser for [Pharo](http://www.pharo.org)
 
 ## Description
