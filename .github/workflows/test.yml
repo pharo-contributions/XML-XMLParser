@@ -9,7 +9,7 @@ jobs:
       fail-fast: false
       matrix:
         smalltalk: [ Pharo64-9.0, Pharo64-10 ]
-        os: [ windows-latest ] # macos-latest, ubuntu-latest
+        os: [ ubuntu-latest, windows-latest ] # macos-latest
         ston: [ .ci.ston ]
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.smalltalk }} on ${{ matrix.os }}
@@ -19,7 +19,7 @@ jobs:
         uses: hpi-swa/setup-smalltalkCI@v1
         with:
           smalltalk-image: ${{ matrix.smalltalk }}
-      - name: Load in New Image and Run Tests
+      - name: "Download Pharo, load code and run SUnit tests"
         run: smalltalkci -s ${{ matrix.smalltalk }} ${{ matrix.ston }}
         shell: bash
         #timeout-minutes: 10
