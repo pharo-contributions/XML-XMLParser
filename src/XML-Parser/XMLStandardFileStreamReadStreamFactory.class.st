@@ -9,13 +9,13 @@ Class {
 
 { #category : #basic }
 XMLStandardFileStreamReadStreamFactory class >> basicOnPath: aPathString [
-	^ ((XMLClassFinder classNamed: #StandardFileStream)
-		readOnlyFileNamed: aPathString)
-			binary;
-			yourself
+	"Returns a stream..."
+	^ ((XMLClassFinder classNamed: #File)
+			named: aPathString) readStream 
+		
 ]
 
 { #category : #testing }
 XMLStandardFileStreamReadStreamFactory class >> isSupportedImplementation [
-	^ XMLClassFinder hasClassNamed: #StandardFileStream
+	^ XMLClassFinder hasClassNamed: #File
 ]

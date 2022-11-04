@@ -26,6 +26,7 @@ XMLFileReadStreamFactory class >> noSupportedImplementationFound [
 
 { #category : #'instance creation' }
 XMLFileReadStreamFactory class >> onPath: aPathString [
+	
 	^ self implementation basicOnPath: aPathString
 ]
 

@@ -17,7 +17,7 @@ XMLFileDirectoryFileHandle class >> basicCurrentWorkingDirectory [
 
 { #category : #testing }
 XMLFileDirectoryFileHandle class >> isSupportedImplementation [
-	^ XMLClassFinder hasClassNamed: #FileDirectory
+	^ XMLClassFinder hasClassNamed: #FileSystem
 ]
 
 { #category : #basic }

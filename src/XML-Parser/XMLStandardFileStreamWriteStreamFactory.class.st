@@ -9,14 +9,14 @@ Class {
 
 { #category : #basic }
 XMLStandardFileStreamWriteStreamFactory class >> basicOnPath: aPathString [
-	"use forceNewFileNamed: to ensure truncation of existing files before writing"
-	^ ((XMLClassFinder classNamed: #StandardFileStream)
-		forceNewFileNamed: aPathString)
-			binary;
-			yourself
+	"Ensure that we delete the file if existingexistingContexts"
+	
+	aPathString asFileReference ensureDelete.
+	^ ((XMLClassFinder classNamed: #File)
+			named: aPathString) writeStream 
 ]
 
 { #category : #testing }
 XMLStandardFileStreamWriteStreamFactory class >> isSupportedImplementation [
-	^ XMLClassFinder hasClassNamed: #StandardFileStream
+	^ XMLClassFinder hasClassNamed: #File
 ]
