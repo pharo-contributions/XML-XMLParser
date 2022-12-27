@@ -1,0 +1,27 @@
+name: Test
+
+on: [ push, pull_request, workflow_dispatch ]
+
+jobs:
+  test:
+    strategy:
+      # Default value means that a failure in one OS cancels all jobs
+      fail-fast: false
+      matrix:
+        smalltalk: [ Pharo64-9.0, Pharo64-10 ]
+        os: [ ubuntu-latest, windows-latest ] # macos-latest
+        ston: [ .ci.ston ]
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.smalltalk }} on ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup smalltalkCI
+        uses: hpi-swa/setup-smalltalkCI@v1
+        with:
+          smalltalk-image: ${{ matrix.smalltalk }}
+      - name: "Download Pharo, load code and run SUnit tests"
+        run: smalltalkci -s ${{ matrix.smalltalk }} ${{ matrix.ston }}
+        shell: bash
+        #timeout-minutes: 10
+        #env:
+        #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
