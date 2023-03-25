@@ -101,6 +101,9 @@ XMLHTTPMessageTest >> testAddHeader [
 			assertMessage: message
 			hasHeaders: addedHeaders].
 
+	SystemVersion current major >= 10
+		ifFalse: [^ self].
+
 	self headers do: [:each |
 		self assert: (message addHeader: each) equals: each.
 		self
@@ -504,6 +507,9 @@ XMLHTTPMessageTest >> testHeaderValuesAtAdd [
 		self
 			assertMessage: message
 			hasHeaders: addedHeaders].
+
+	SystemVersion current major >= 10
+		ifFalse: [^ self].
 
 	self headers do: [:each |
 		self assert:
