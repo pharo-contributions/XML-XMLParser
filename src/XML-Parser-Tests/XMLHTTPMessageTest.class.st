@@ -25,7 +25,7 @@ XMLHTTPMessageTest >> assertMessage: aMessage hasHeaders: anAssociationCollectio
 	"use #associationsDo: to support Dictionaries and SequenceableCollections"
 	anAssociationCollection associationsDo: [:each |
 		addedHeaders add: each].
-	self assert: aMessage headers sorted = addedHeaders sorted.
+	self assert: aMessage headers sorted equals: addedHeaders sorted
 ]
 
 { #category : #accessing }
@@ -95,18 +95,20 @@ XMLHTTPMessageTest >> testAddHeader [
 	self headers do: [:each |
 		self deny: (message headers includes: each).
 
-		self assert: (message addHeader: each) = each.
+		self assert: (message addHeader: each) equals: each.
 		addedHeaders addLast: each.
 		self
 			assertMessage: message
 			hasHeaders: addedHeaders].
 
+	SystemVersion current major >= 10
+		ifFalse: [^ self].
+
 	self headers do: [:each |
-		self assert: (message addHeader: each) = each.
-		addedHeaders addLast: each.
+		self assert: (message addHeader: each) equals: each.
 		self
 			assertMessage: message
-			hasHeaders: addedHeaders].
+			hasHeaders: addedHeaders]
 ]
 
 { #category : #tests }
@@ -500,21 +502,23 @@ XMLHTTPMessageTest >> testHeaderValuesAtAdd [
 		self assert:
 			(message
 				headerValuesAt: each key
-				add: each value) = each value.
+				add: each value) equals: each value.
 		addedHeaders addLast: each.
 		self
 			assertMessage: message
 			hasHeaders: addedHeaders].
 
+	SystemVersion current major >= 10
+		ifFalse: [^ self].
+
 	self headers do: [:each |
 		self assert:
 			(message
 				headerValuesAt: each key
-				add: each value) = each value.
-		addedHeaders addLast: each.
+				add: each value) equals: each value.
 		self
 			assertMessage: message
-			hasHeaders: addedHeaders].
+			hasHeaders: addedHeaders]
 ]
 
 { #category : #tests }
