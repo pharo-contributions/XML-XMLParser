@@ -6,35 +6,37 @@ XML Parser for [Pharo](http://www.pharo.org)
 
 ## Description
 
-XMLParser provides validating SAX and DOM parsers for well-formed XML documents. It also provides a DOM API for manipulating documents, namespace support, and an optional XMLWriter for writing documents. Validation and namespace checking are enabled by default, but not resolution of external entities.
+`XMLParser` provides validating SAX and DOM parsers for well-formed XML documents.
+It also provides a DOM API for manipulating documents, namespace support, and an
+optional `XMLWriter` for writing documents. Validation and namespace checking are
+enabled by default, but not resolution of external entities.
 
 Implements:
 
-http://www.w3.org/TR/REC-xml/
-
-http://www.w3.org/TR/REC-xml-names/
-
-http://www.w3.org/TR/xml-id/
-
-http://www.w3.org/TR/xmlbase/
+- http://www.w3.org/TR/REC-xml/
+- http://www.w3.org/TR/REC-xml-names/
+- http://www.w3.org/TR/xml-id/
+- http://www.w3.org/TR/xmlbase/
 
 ## Installation
 
 ```Smalltalk
 Metacello new
-	baseline: 'XMLParser';
-	repository: 'github://pharo-contributions/XML-XMLParser/src';
-	load.
-```	
+  baseline: 'XMLParser';
+  repository: 'github://pharo-contributions/XML-XMLParser/src';
+  load.
+```
 
 ## How to use
 
-Use the XMLDOMParser to parse a URL:
+Use the `XMLDOMParser` to parse a URL:
+
 ```Smalltalk
 (XMLDOMParser parseURL: 'https://www.w3schools.com/xml/simple.xml') inspect
 ```
 
 or give an XML file directly:
+
 ```Smalltalk
 |xmlString|
 xmlString := '<?xml version="1.0" encoding="UTF-8"?>
@@ -47,15 +49,17 @@ xmlString := '<?xml version="1.0" encoding="UTF-8"?>
 (XMLDOMParser parse: xmlString) document inspect 
 ```
 
-Check [https://montyos.wordpress.com](https://montyos.wordpress.com) for more examples and descriptions.
+Check [https://montyos.wordpress.com](https://montyos.wordpress.com) for more
+examples and descriptions.
 
 ## Screenshot
 
 ![alt text](doc/images/screen001.png "Screenshot")
 
 ## LICENSE
+
 [MIT License](LICENSE)
 
 ## History
-This project was migrated from [http://smalltalkhub.com/#!/~PharoExtras/XMLParser](http://smalltalkhub.com/#!/~PharoExtras/XMLParser)
 
+This project was migrated from [http://smalltalkhub.com/#!/~PharoExtras/XMLParser](http://smalltalkhub.com/#!/~PharoExtras/XMLParser)

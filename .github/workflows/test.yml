@@ -8,13 +8,13 @@ jobs:
       # Default value means that a failure in one OS cancels all jobs
       fail-fast: false
       matrix:
-        smalltalk: [ Pharo64-9.0, Pharo64-10 ]
+        smalltalk: [ Pharo64-9.0, Pharo64-10, Pharo64-11  ]
         os: [ ubuntu-latest, windows-latest ] # macos-latest
         ston: [ .ci.ston ]
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.smalltalk }} on ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup smalltalkCI
         uses: hpi-swa/setup-smalltalkCI@v1
         with:
