@@ -49,39 +49,39 @@ DTDStaticExternalEntityResolverTest >> resolverClass [
 
 { #category : #tests }
 DTDStaticExternalEntityResolverTest >> testCopy [
+
 	| resolver copy |
 	super testCopy.
-	self isTestingLimiting
-		ifTrue: [ ^ self ].
+	self isTestingLimiting ifTrue: [ ^ self ].
 	resolver := self newResolverWithEntities.
 	copy := resolver copy.
 	self
-		deny: copy == resolver;
-		deny: copy externalEntities == resolver externalEntities;
+		deny: copy identicalTo: resolver;
+		deny: copy externalEntities identicalTo: resolver externalEntities;
 		assert: copy externalEntities equals: resolver externalEntities
 ]
 
 { #category : #tests }
 DTDStaticExternalEntityResolverTest >> testExternalEntities [
+
 	| resolver replacementAssociation |
-	self isTestingLimiting
-		ifTrue: [ ^ self ].
+	self isTestingLimiting ifTrue: [ ^ self ].
 	resolver := self newResolver.
 	self
-		assert: resolver externalEntities class == Dictionary;
+		assert: resolver externalEntities class identicalTo: Dictionary;
 		assert: resolver externalEntities isEmpty.
 	resolver externalEntities: self entityAssociations.
 	self assert: resolver externalEntities equals: self entityDictionary.
 	replacementAssociation := 'new.ent' asXMLURI
-		-> self newEntityReplacement.
+	                          -> self newEntityReplacement.
 	resolver externalEntities: (Array with: replacementAssociation).
 	self
 		assert: resolver externalEntities
 		equals: (Dictionary with: replacementAssociation).
-	resolver := self resolverClass
-		externalEntities: self entityAssociations.
+	resolver := self resolverClass externalEntities:
+		            self entityAssociations.
 	self
-		assert: resolver class == self resolverClass;
+		assert: resolver class identicalTo: self resolverClass;
 		assert: resolver externalEntities equals: self entityDictionary
 ]
 
@@ -217,14 +217,13 @@ DTDStaticExternalEntityResolverTest >> testIncludesExternalEntityURI [
 
 { #category : #tests }
 DTDStaticExternalEntityResolverTest >> testRemoveExternalEntities [
-	| resolver |
 
-	self isTestingLimiting
-		ifTrue: [^ self].
+	| resolver |
+	self isTestingLimiting ifTrue: [ ^ self ].
 
 	resolver := self newResolverWithEntities.
 	self
-		assert: resolver removeExternalEntities == resolver;
+		assert: resolver removeExternalEntities identicalTo: resolver;
 		deny: resolver hasExternalEntities
 ]
 

@@ -77,14 +77,15 @@ XMLObservableListTest >> assertList: aList receivedNotificationOfReplacing: anOl
 
 { #category : #assertions }
 XMLObservableListTest >> assertNotification: aNotification for: anObject withList: aList hasType: aSelectorCollection [
+
 	self
 		assert: aNotification notNil;
 		assert: (aSelectorCollection includes: aNotification selector).
-	self assert:
-		aNotification arguments =
-			((Array with: anObject with: aList)
-				copyFrom: 1
-				to: (aNotification selector asString occurrencesOf: $:))
+	self
+		assert: aNotification arguments
+		equals: ((Array with: anObject with: aList)
+				 copyFrom: 1
+				 to: (aNotification selector asString occurrencesOf: $:))
 ]
 
 { #category : #assertions }
@@ -423,23 +424,21 @@ XMLObservableListTest >> testRemoveFirstFew [
 
 { #category : #tests }
 XMLObservableListTest >> testRemoveIfAbsent [
-	| list |
 
+	| list |
 	super testRemoveIfAbsent.
 
 	list := self listWithItems.
 	self
 		should: [
-			list
-				remove: self singleListItem
-				ifAbsent: [self absentListItem]]
+		list remove: self singleListItem ifAbsent: [ self absentListItem ] ]
 		remove: self singleListItem
 		fromAndNotify: list.
-	self assert:
-		(list
-			remove: self singleListItem
-			ifAbsent: [self absentListItem]) = self absentListItem.
-	self deny: list observer hasNotifications.
+	self
+		assert:
+		(list remove: self singleListItem ifAbsent: [ self absentListItem ])
+		equals: self absentListItem.
+	self deny: list observer hasNotifications
 ]
 
 { #category : #tests }

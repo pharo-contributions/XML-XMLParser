@@ -113,110 +113,108 @@ XMLHTTPMessageTest >> testAddHeader [
 
 { #category : #tests }
 XMLHTTPMessageTest >> testContent [
-	| message |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
 	self
-		assert: message content = '';
-		assert: (message content: 'test') == message;
-		assert: message content = 'test'
+		assert: message content equals: '';
+		assert: (message content: 'test') identicalTo: message;
+		assert: message content equals: 'test'
 ]
 
 { #category : #tests }
 XMLHTTPMessageTest >> testContentCharset [
-	| message firstType secondType |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message firstType secondType |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
-	firstType :=
-		XMLHTTPMIMEType
-			mainType: 'application'
-			subType: 'xml'
-			parameters: (OrderedCollection with: 'charset' -> 'utf8').
-	secondType :=
-		XMLHTTPMIMEType
-			mainType: 'text'
-			subType: 'html'.
+	firstType := XMLHTTPMIMEType
+		             mainType: 'application'
+		             subType: 'xml'
+		             parameters:
+		             (OrderedCollection with: 'charset' -> 'utf8').
+	secondType := XMLHTTPMIMEType mainType: 'text' subType: 'html'.
 	self
 		assert: message contentType isNil;
-		assert: (message contentType: firstType) == message;
-		assert: message contentCharset = firstType charset;
-		assert: (message contentType: secondType) == message;
-		assert: message contentCharset = secondType charset;
-		assert: (message contentType: nil) == message;
-		assert: message contentCharset = XMLHTTPMIMEType defaultCharset.
+		assert: (message contentType: firstType) identicalTo: message;
+		assert: message contentCharset equals: firstType charset;
+		assert: (message contentType: secondType) identicalTo: message;
+		assert: message contentCharset equals: secondType charset;
+		assert: (message contentType: nil) identicalTo: message;
+		assert: message contentCharset
+		equals: XMLHTTPMIMEType defaultCharset.
 
-	message
-		headerAt: 'Content-Type'
-		put: firstType asString.
-	self assert: message contentCharset = firstType charset.
+	message headerAt: 'Content-Type' put: firstType asString.
+	self assert: message contentCharset equals: firstType charset.
 
 	message removeHeaderAt: 'Content-Type'.
-	self assert: message contentCharset = XMLHTTPMIMEType defaultCharset
+	self
+		assert: message contentCharset
+		equals: XMLHTTPMIMEType defaultCharset
 ]
 
 { #category : #tests }
 XMLHTTPMessageTest >> testContentEncoding [
-	| message defaultValue absentValue |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message defaultValue absentValue |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
 	defaultValue := OrderedCollection new.
 	absentValue := defaultValue.
 	self
-		assert: message contentEncoding = defaultValue;
-		assert: (message contentEncoding: 'one') == message;
-		assert: message contentEncoding = #('one') asOrderedCollection;
-		assert: (message contentEncoding: ' one, identity, two') == message;
-		assert: message contentEncoding = #('one' 'two') asOrderedCollection;
-		assert: (message contentEncoding: #('one')) == message;
-		assert: message contentEncoding = #('one') asOrderedCollection;
-		assert: (message contentEncoding: #('one' 'identity' 'two')) == message;
-		assert: message contentEncoding = #('one' 'two') asOrderedCollection;
-		assert: (message contentEncoding: '') == message;
-		assert: message contentEncoding = absentValue;
-		assert: (message contentEncoding: #()) == message;
-		assert: message contentEncoding = absentValue.
+		assert: message contentEncoding equals: defaultValue;
+		assert: (message contentEncoding: 'one') identicalTo: message;
+		assert: message contentEncoding
+		equals: #( 'one' ) asOrderedCollection;
+		assert: (message contentEncoding: ' one, identity, two')
+		identicalTo: message;
+		assert: message contentEncoding
+		equals: #( 'one' 'two' ) asOrderedCollection;
+		assert: (message contentEncoding: #( 'one' )) identicalTo: message;
+		assert: message contentEncoding
+		equals: #( 'one' ) asOrderedCollection;
+		assert: (message contentEncoding: #( 'one' 'identity' 'two' ))
+		identicalTo: message;
+		assert: message contentEncoding
+		equals: #( 'one' 'two' ) asOrderedCollection;
+		assert: (message contentEncoding: '') identicalTo: message;
+		assert: message contentEncoding equals: absentValue;
+		assert: (message contentEncoding: #(  )) identicalTo: message;
+		assert: message contentEncoding equals: absentValue.
 
 	message
 		headerAt: 'Content-Encoding'
 		put: 'identity,one,identity,two,identity,three,identity'.
-	self assert:
-		message contentEncoding =
-			#('one' 'two' 'three') asOrderedCollection.
+	self
+		assert: message contentEncoding
+		equals: #( 'one' 'two' 'three' ) asOrderedCollection.
 
 	message removeHeaderAt: 'Content-Encoding'.
-	self assert: message contentEncoding = absentValue
+	self assert: message contentEncoding equals: absentValue
 ]
 
 { #category : #tests }
 XMLHTTPMessageTest >> testContentLength [
-	| message |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
 	self
 		assert: message contentLength isNil;
-		assert: (message contentLength: 100) == message;
-		assert: message contentLength = 100;
-		assert: (message contentLength: nil) == message;
+		assert: (message contentLength: 100) identicalTo: message;
+		assert: message contentLength equals: 100;
+		assert: (message contentLength: nil) identicalTo: message;
 		assert: message contentLength isNil;
-		assert: (message contentLength: nil) == message;
+		assert: (message contentLength: nil) identicalTo: message;
 		assert: message contentLength isNil.
 
-	message
-		headerAt: 'Content-Length'
-		put: '200'.
-	self assert: message contentLength = 200.
+	message headerAt: 'Content-Length' put: '200'.
+	self assert: message contentLength equals: 200.
 
 	message removeHeaderAt: 'Content-Length'.
 	self assert: message contentLength isNil
@@ -224,36 +222,27 @@ XMLHTTPMessageTest >> testContentLength [
 
 { #category : #tests }
 XMLHTTPMessageTest >> testContentType [
-	| message firstType secondType |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message firstType secondType |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
-	firstType :=
-		XMLHTTPMIMEType
-			mainType: 'application'
-			subType: 'xml'.
-	secondType :=
-		XMLHTTPMIMEType
-			mainType: 'text'
-			subType: 'html'.
+	firstType := XMLHTTPMIMEType mainType: 'application' subType: 'xml'.
+	secondType := XMLHTTPMIMEType mainType: 'text' subType: 'html'.
 	self
 		assert: message contentType isNil;
-		assert: (message contentType: firstType) == message;
-		assert: message contentType = firstType;
-		deny: message contentType = secondType;
-		assert: (message contentType: nil) == message;
+		assert: (message contentType: firstType) identicalTo: message;
+		assert: message contentType equals: firstType;
+		deny: message contentType equals: secondType;
+		assert: (message contentType: nil) identicalTo: message;
 		assert: message contentType isNil;
-		assert: (message contentType: nil) == message;
+		assert: (message contentType: nil) identicalTo: message;
 		assert: message contentType isNil.
 
-	message
-		headerAt: 'Content-Type'
-		put: secondType asString.
+	message headerAt: 'Content-Type' put: secondType asString.
 	self
-		assert: message contentType = secondType;
-		deny: message contentType = firstType.
+		assert: message contentType equals: secondType;
+		deny: message contentType equals: firstType.
 
 	message removeHeaderAt: 'Content-Type'.
 	self assert: message contentType isNil
@@ -275,13 +264,12 @@ XMLHTTPMessageTest >> testHasContent [
 
 { #category : #tests }
 XMLHTTPMessageTest >> testHasHeaders [
-	| message |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
-	self assert: message hasHeaders = message headers notEmpty.
+	self assert: message hasHeaders equals: message headers notEmpty.
 
 	message removeHeaders.
 	self deny: message hasHeaders.
@@ -292,130 +280,110 @@ XMLHTTPMessageTest >> testHasHeaders [
 
 { #category : #tests }
 XMLHTTPMessageTest >> testHeaderAt [
-	| message addedHeaderDictionary |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message addedHeaderDictionary |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
 	addedHeaderDictionary := self headerDictionaryFrom: message headers.
-	self headers do: [:each |
-		self assert:
-			(message headerAt: each key) =
-				(addedHeaderDictionary
-					at: each key
-					ifAbsent: ['']).
+	self headers do: [ :each |
+		self
+			assert: (message headerAt: each key)
+			equals: (addedHeaderDictionary at: each key ifAbsent: [ '' ]).
 
-		message
-			headerAt: each key
-			put: each value.
+		message headerAt: each key put: each value.
 		addedHeaderDictionary add: each.
-		self assert: (message headerAt: each key) = each value].
+		self assert: (message headerAt: each key) equals: each value ].
 
-	self headers do: [:each |
-		message addHeader: each].
-	addedHeaderDictionary keysAndValuesDo: [:key :value |
-		self assert: (message headerAt: key) = value]
+	self headers do: [ :each | message addHeader: each ].
+	addedHeaderDictionary keysAndValuesDo: [ :key :value |
+		self assert: (message headerAt: key) equals: value ]
 ]
 
 { #category : #tests }
 XMLHTTPMessageTest >> testHeaderAtIfAbsent [
-	| message addedHeaderDictionary |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message addedHeaderDictionary |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
 	addedHeaderDictionary := self headerDictionaryFrom: message headers.
-	self headers do: [:each |
-		self assert:
-			(message
-				headerAt: each key
-				ifAbsent: [#absent]) =
-				(addedHeaderDictionary
-					at: each key
-					ifAbsent: [#absent]).
+	self headers do: [ :each |
+		self
+			assert: (message headerAt: each key ifAbsent: [ #absent ])
+			equals: (addedHeaderDictionary at: each key ifAbsent: [ #absent ]).
 
-		message
-			headerAt: each key
-			put: each value.
+		message headerAt: each key put: each value.
 		addedHeaderDictionary add: each.
-		self assert:
-			(message
-				headerAt: each key
-				ifAbsent: [self fail]) = each value].
+		self
+			assert: (message headerAt: each key ifAbsent: [ self fail ])
+			equals: each value ].
 
-	self headers do: [:each |
-		message addHeader: each].
-	addedHeaderDictionary keysAndValuesDo: [:key :value |
-		self assert:
-			(message
-				headerAt: key
-				ifAbsent: [self fail]) = value]
+	self headers do: [ :each | message addHeader: each ].
+	addedHeaderDictionary keysAndValuesDo: [ :key :value |
+		self
+			assert: (message headerAt: key ifAbsent: [ self fail ])
+			equals: value ]
 ]
 
 { #category : #tests }
 XMLHTTPMessageTest >> testHeaderAtIfAbsentPut [
-	| message addedHeaderDictionary |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message addedHeaderDictionary |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
 	addedHeaderDictionary := self headerDictionaryFrom: message headers.
-	self headers do: [:each |
-		self assert:
-			(message
-				headerAt: each key
-				ifAbsentPut: [each value]) =
-				(addedHeaderDictionary
-					at: each key
-					ifAbsentPut: [each value]).
-
-		self assert:
-			(message headerAt: each key) =
-				(addedHeaderDictionary at: each key).
+	self headers do: [ :each |
+		self
+			assert: (message headerAt: each key ifAbsentPut: [ each value ])
+			equals:
+			(addedHeaderDictionary at: each key ifAbsentPut: [ each value ]).
+		self
+			assert: (message headerAt: each key)
+			equals: (addedHeaderDictionary at: each key).
 		self
 			assertMessage: message
-			hasHeaders: addedHeaderDictionary associations]
+			hasHeaders: addedHeaderDictionary associations ]
 ]
 
 { #category : #tests }
 XMLHTTPMessageTest >> testHeaderAtPut [
-	| message addedHeaderDictionary |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message addedHeaderDictionary |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
 	addedHeaderDictionary := self headerDictionaryFrom: message headers.
-	self headers do: [:each |
-		self assert:
-			(message
-				headerAt: each key
-				put: each value) = each value.
+	self headers do: [ :each |
+		self
+			assert: (message headerAt: each key put: each value)
+			equals: each value.
 		addedHeaderDictionary add: each.
-		self assert: (message headerAt: each key) = each value.
+		self assert: (message headerAt: each key) equals: each value.
 		self
 			assertMessage: message
-			hasHeaders: addedHeaderDictionary associations]
+			hasHeaders: addedHeaderDictionary associations ]
 ]
 
 { #category : #tests }
 XMLHTTPMessageTest >> testHeaderKeys [
-	| message addedHeaderKeys |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message addedHeaderKeys |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
 	addedHeaderKeys := self headerKeysFrom: message headers.
-	self headers do: [:each |
-		self assert: message headerKeys sorted = addedHeaderKeys sorted.
+	self headers do: [ :each |
+		self
+			assert: message headerKeys sorted
+			equals: addedHeaderKeys sorted.
 
 		message addHeader: each.
 		addedHeaderKeys add: each key.
-		self assert: message headerKeys sorted = addedHeaderKeys sorted]
+		self
+			assert: message headerKeys sorted
+			equals: addedHeaderKeys sorted ]
 ]
 
 { #category : #tests }
@@ -464,27 +432,22 @@ XMLHTTPMessageTest >> testHeaderKeysDo [
 
 { #category : #tests }
 XMLHTTPMessageTest >> testHeaderValuesAt [
-	| message addedHeaders |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message addedHeaders |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
 	addedHeaders := message headers.
-	self headers do: [:each |
-		self assert:
-			(message headerValuesAt: each key) sorted =
-				(self
-					headerValuesAt: each key
-					from: addedHeaders) sorted.
+	self headers do: [ :each |
+		self
+			assert: (message headerValuesAt: each key) sorted
+			equals: (self headerValuesAt: each key from: addedHeaders) sorted.
 
 		message addHeader: each.
 		addedHeaders addLast: each.
-		self assert:
-			(message headerValuesAt: each key) sorted =
-				(self
-					headerValuesAt: each key
-					from: addedHeaders) sorted]
+		self
+			assert: (message headerValuesAt: each key) sorted
+			equals: (self headerValuesAt: each key from: addedHeaders) sorted ]
 ]
 
 { #category : #tests }
@@ -558,110 +521,92 @@ XMLHTTPMessageTest >> testHeaderValuesAtDo [
 
 { #category : #tests }
 XMLHTTPMessageTest >> testHeaders [
-	| message addedHeaders |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message addedHeaders |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
 	addedHeaders := message headers.
 	self
-		assert: addedHeaders class == OrderedCollection;
-		assert: addedHeaders = message headers;
-		deny: addedHeaders == message headers.
+		assert: addedHeaders class identicalTo: OrderedCollection;
+		assert: addedHeaders equals: message headers;
+		deny: addedHeaders identicalTo: message headers
 ]
 
 { #category : #tests }
 XMLHTTPMessageTest >> testIncludesHeaderAt [
-	| message addedHeaderKeys |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message addedHeaderKeys |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
 	addedHeaderKeys := self headerKeysFrom: message headers.
-	self headers do: [:each |
-		self assert:
-			(message includesHeaderAt: each key) =
-				(addedHeaderKeys includes: each key).
+	self headers do: [ :each |
+		self
+			assert: (message includesHeaderAt: each key)
+			equals: (addedHeaderKeys includes: each key).
 
 		message addHeader: each.
 		addedHeaderKeys add: each key.
-		self assert: (message includesHeaderAt: each key)].
+		self assert: (message includesHeaderAt: each key) ]
 ]
 
 { #category : #tests }
 XMLHTTPMessageTest >> testRemoveHeaderAt [
-	| message addedHeaders addedHeaderKeys |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message addedHeaders addedHeaderKeys |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
 	addedHeaders := message headers.
-	self headers do: [:each |
+	self headers do: [ :each |
 		message addHeader: each.
-		addedHeaders addLast: each].
-	addedHeaderKeys := (addedHeaders collect: [:each | each key]) asSet.
-	addedHeaderKeys do: [:each |
-		self assert:
-			(message removeHeaderAt: each) sorted =
-				(self
-					headerValuesAt: each
-					from: addedHeaders) sorted.
+		addedHeaders addLast: each ].
+	addedHeaderKeys := (addedHeaders collect: [ :each | each key ]) asSet.
+	addedHeaderKeys do: [ :each |
 		self
-			should: [message removeHeaderAt: each]
-			raise: XMLHTTPException].
+			assert: (message removeHeaderAt: each) sorted
+			equals: (self headerValuesAt: each from: addedHeaders) sorted.
+		self
+			should: [ message removeHeaderAt: each ]
+			raise: XMLHTTPException ]
 ]
 
 { #category : #tests }
 XMLHTTPMessageTest >> testRemoveHeaderAtIfAbsent [
-	| message addedHeaders addedHeaderKeys |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message addedHeaders addedHeaderKeys |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
 	addedHeaders := message headers.
-	self headers do: [:each |
+	self headers do: [ :each |
 		message addHeader: each.
-		addedHeaders addLast: each].
-	addedHeaderKeys := (addedHeaders collect: [:each | each key]) asSet.
-	addedHeaderKeys do: [:each |
-		self assert:
-			(message
-				removeHeaderAt: each
-				ifAbsent: [self fail]) sorted =
-					(self
-						headerValuesAt: each
-						from: addedHeaders) sorted.
-		self assert:
-			(message
-				removeHeaderAt: each
-				ifAbsent: [#absent]) = #absent].
+		addedHeaders addLast: each ].
+	addedHeaderKeys := (addedHeaders collect: [ :each | each key ]) asSet.
+	addedHeaderKeys do: [ :each |
+		self
+			assert:
+			(message removeHeaderAt: each ifAbsent: [ self fail ]) sorted
+			equals: (self headerValuesAt: each from: addedHeaders) sorted.
+		self
+			assert: (message removeHeaderAt: each ifAbsent: [ #absent ])
+			equals: #absent ]
 ]
 
 { #category : #tests }
 XMLHTTPMessageTest >> testRemoveHeaders [
-	| message empty |
 
-	self isSupported
-		ifFalse: [^ self].
+	| message empty |
+	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
 	empty := OrderedCollection new.
-	self assert: message removeHeaders == message.
-	self
-		assertMessage: message
-		hasHeaders: empty.
+	self assert: message removeHeaders identicalTo: message.
+	self assertMessage: message hasHeaders: empty.
 
-	self headers do: [:each |
-		message addHeader: each].
-	self
-		assertMessage: message
-		hasHeaders: self headers.
-	self assert: message removeHeaders == message.
-	self
-		assertMessage: message
-		hasHeaders: empty.
+	self headers do: [ :each | message addHeader: each ].
+	self assertMessage: message hasHeaders: self headers.
+	self assert: message removeHeaders identicalTo: message.
+	self assertMessage: message hasHeaders: empty
 ]

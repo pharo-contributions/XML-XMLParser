@@ -50,196 +50,184 @@ XMLExceptionTest >> otherExceptionClass [
 
 { #category : #tests }
 XMLExceptionTest >> testFormatMessageWith [
-	| exception |
 
+	| exception |
 	exception := self newException.
-	self assert:
-		(exception
-			formatMessage: '{1}'
-			with: 'one') == exception.
+	self
+		assert: (exception formatMessage: '{1}' with: 'one')
+		identicalTo: exception.
 	self assert: exception messageText equals: 'one'
 ]
 
 { #category : #tests }
 XMLExceptionTest >> testFormatMessageWithArguments [
-	| exception |
 
+	| exception |
 	exception := self newException.
-	self assert:
-		(exception
-			formatMessage: '{1} {2} {3} {4}'
-			withArguments: #('one' 2 'three' 4)) == exception.
+	self
+		assert: (exception
+				 formatMessage: '{1} {2} {3} {4}'
+				 withArguments: #( 'one' 2 'three' 4 ))
+		identicalTo: exception.
 	self assert: exception messageText equals: 'one 2 three 4'
 ]
 
 { #category : #tests }
 XMLExceptionTest >> testFormatMessageWithWith [
-	| exception |
 
+	| exception |
 	exception := self newException.
-	self assert:
-		(exception
-			formatMessage: '{1} {2}'
-			with: 'one'
-			with: 2) == exception.
+	self
+		assert: (exception formatMessage: '{1} {2}' with: 'one' with: 2)
+		identicalTo: exception.
 	self assert: exception messageText equals: 'one 2'
 ]
 
 { #category : #tests }
 XMLExceptionTest >> testFormatMessageWithWithWith [
-	| exception |
 
+	| exception |
 	exception := self newException.
-	self assert:
-		(exception
-			formatMessage: '{1} {2} {3}'
-			with: 'one'
-			with: 2
-			with: 'three') == exception.
+	self
+		assert: (exception
+				 formatMessage: '{1} {2} {3}'
+				 with: 'one'
+				 with: 2
+				 with: 'three')
+		identicalTo: exception.
 	self assert: exception messageText equals: 'one 2 three'
 ]
 
 { #category : #tests }
 XMLExceptionTest >> testFormatMessageWithWithWithWith [
-	| exception |
 
+	| exception |
 	exception := self newException.
-	self assert:
-		(exception
-			formatMessage: '{1} {2} {3} {4}'
-			with: 'one'
-			with: 2
-			with: 'three'
-			with: 4) == exception.
+	self
+		assert: (exception
+				 formatMessage: '{1} {2} {3} {4}'
+				 with: 'one'
+				 with: 2
+				 with: 'three'
+				 with: 4)
+		identicalTo: exception.
 	self assert: exception messageText equals: 'one 2 three 4'
 ]
 
 { #category : #tests }
 XMLExceptionTest >> testFormatSignalWith [
-	(Array
-		with: self exceptionClass
-		with: self newException)
-		do: [:each | | raisedException |
-			[each
-				formatSignal: '{1}'
-				with: 1]
-				on: Error
-				do: [:exception | raisedException := exception].
-			self
-				assert: raisedException notNil;
-				assert: raisedException class == self exceptionClass;
-				assert: raisedException messageText equals: '1']
+
+	(Array with: self exceptionClass with: self newException) do: [ :each |
+		| raisedException |
+		[ each formatSignal: '{1}' with: 1 ]
+			on: Error
+			do: [ :exception | raisedException := exception ].
+		self
+			assert: raisedException notNil;
+			assert: raisedException class identicalTo: self exceptionClass;
+			assert: raisedException messageText equals: '1' ]
 ]
 
 { #category : #tests }
 XMLExceptionTest >> testFormatSignalWithArguments [
-	(Array
-		with: self exceptionClass
-		with: self newException)
-		do: [:each | | raisedException |
-			[each
-				formatSignal: '{1} {2} {3} {4}'
-				withArguments: #(1 'two' 3 'four')]
-				on: Error
-				do: [:exception | raisedException := exception].
-			self
-				assert: raisedException notNil;
-				assert: raisedException class == self exceptionClass;
-				assert: raisedException messageText equals: '1 two 3 four']
+
+	(Array with: self exceptionClass with: self newException) do: [ :each |
+		| raisedException |
+		[
+		each
+			formatSignal: '{1} {2} {3} {4}'
+			withArguments: #( 1 'two' 3 'four' ) ]
+			on: Error
+			do: [ :exception | raisedException := exception ].
+		self
+			assert: raisedException notNil;
+			assert: raisedException class identicalTo: self exceptionClass;
+			assert: raisedException messageText equals: '1 two 3 four' ]
 ]
 
 { #category : #tests }
 XMLExceptionTest >> testFormatSignalWithWith [
-	(Array
-		with: self exceptionClass
-		with: self newException)
-		do: [:each | | raisedException |
-			[each
-				formatSignal: '{1} {2}'
-				with: 1
-				with: 'two']
-				on: Error
-				do: [:exception | raisedException := exception].
-			self
-				assert: raisedException notNil;
-				assert: raisedException class == self exceptionClass;
-				assert: raisedException messageText equals: '1 two']
+
+	(Array with: self exceptionClass with: self newException) do: [ :each |
+		| raisedException |
+		[ each formatSignal: '{1} {2}' with: 1 with: 'two' ]
+			on: Error
+			do: [ :exception | raisedException := exception ].
+		self
+			assert: raisedException notNil;
+			assert: raisedException class identicalTo: self exceptionClass;
+			assert: raisedException messageText equals: '1 two' ]
 ]
 
 { #category : #tests }
 XMLExceptionTest >> testFormatSignalWithWithWith [
-	(Array
-		with: self exceptionClass
-		with: self newException)
-		do: [:each | | raisedException |
-			[each
-				formatSignal: '{1} {2} {3}'
-				with: 1
-				with: 'two'
-				with: 3]
-				on: Error
-				do: [:exception | raisedException := exception].
-			self
-				assert: raisedException notNil;
-				assert: raisedException class == self exceptionClass;
-				assert: raisedException messageText equals: '1 two 3']
+
+	(Array with: self exceptionClass with: self newException) do: [ :each |
+		| raisedException |
+		[
+		each
+			formatSignal: '{1} {2} {3}'
+			with: 1
+			with: 'two'
+			with: 3 ]
+			on: Error
+			do: [ :exception | raisedException := exception ].
+		self
+			assert: raisedException notNil;
+			assert: raisedException class identicalTo: self exceptionClass;
+			assert: raisedException messageText equals: '1 two 3' ]
 ]
 
 { #category : #tests }
 XMLExceptionTest >> testFormatSignalWithWithWithWith [
-	(Array
-		with: self exceptionClass
-		with: self newException)
-		do: [:each | | raisedException |
-			[each
-				formatSignal: '{1} {2} {3} {4}'
-				with: 1
-				with: 'two'
-				with: 3
-				with: 'four']
-				on: Error
-				do: [:exception | raisedException := exception].
-			self
-				assert: raisedException notNil;
-				assert: raisedException class == self exceptionClass;
-				assert: raisedException messageText equals: '1 two 3 four']
+
+	(Array with: self exceptionClass with: self newException) do: [ :each |
+		| raisedException |
+		[
+		each
+			formatSignal: '{1} {2} {3} {4}'
+			with: 1
+			with: 'two'
+			with: 3
+			with: 'four' ]
+			on: Error
+			do: [ :exception | raisedException := exception ].
+		self
+			assert: raisedException notNil;
+			assert: raisedException class identicalTo: self exceptionClass;
+			assert: raisedException messageText equals: '1 two 3 four' ]
 ]
 
 { #category : #tests }
 XMLExceptionTest >> testInheritMessageFrom [
-	| exception otherException |
 
+	| exception otherException |
 	exception := self newException.
 	otherException := self newOtherExceptionWithErrorMessage.
 	self
-		assert: (exception inheritMessageFrom: otherException) == exception;
-		assert:
-			exception messageText equals:
-				('({1}) {2}' format:
-					(Array
-						with: self otherExceptionClass name
-						with: self errorMessage))
+		assert: (exception inheritMessageFrom: otherException)
+		identicalTo: exception;
+		assert: exception messageText equals: ('({1}) {2}' format:
+					 (Array
+						  with: self otherExceptionClass name
+						  with: self errorMessage))
 ]
 
 { #category : #tests }
 XMLExceptionTest >> testSignalMessageFrom [
-	| otherException |
 
+	| otherException |
 	otherException := self newOtherExceptionWithErrorMessage.
-	(Array
-		with: self exceptionClass
-		with: self newException)
-		do: [:each | | raisedException |
-			[each signalMessageFrom: otherException]
-				on: Error
-				do: [:exception | raisedException := exception].
-			self
-				assert: raisedException notNil;
-				assert: raisedException class == self exceptionClass;
-				assert:
-					raisedException messageText equals:
-						('({1}) {2}' format:
-							(Array
-								with: self otherExceptionClass name
-								with: self errorMessage))]
+	(Array with: self exceptionClass with: self newException) do: [ :each |
+		| raisedException |
+		[ each signalMessageFrom: otherException ]
+			on: Error
+			do: [ :exception | raisedException := exception ].
+		self
+			assert: raisedException notNil;
+			assert: raisedException class identicalTo: self exceptionClass;
+			assert: raisedException messageText equals: ('({1}) {2}' format:
+						 (Array
+							  with: self otherExceptionClass name
+							  with: self errorMessage)) ]
 ]

@@ -33,16 +33,18 @@ XMLFileHandleTest class >> skippableTests [
 
 { #category : #asserting }
 XMLFileHandleTest >> assertIsDecodedFileContents: aCollection [
+
 	self
 		assert: aCollection isString;
-		assert: aCollection = self decodedFileContents
+		assert: aCollection equals: self decodedFileContents
 ]
 
 { #category : #asserting }
 XMLFileHandleTest >> assertIsEncodedFileContentsWithBOM: aCollection [
-	^ self assert:
-		aCollection asByteArray =
-			self encodedFileContentsWithByteOrderMark asByteArray
+
+	^ self
+		  assert: aCollection asByteArray
+		  equals: self encodedFileContentsWithByteOrderMark asByteArray
 ]
 
 { #category : #accessing }

@@ -16,62 +16,68 @@ XMLNotationDeclarationTest >> nodeClass [
 
 { #category : #tests }
 XMLNotationDeclarationTest >> testName [
-	| declaration |
 
+	| declaration |
 	declaration := self newNode.
 	self
-		assert: declaration name = '';
-		assert: (declaration name: 'test') == declaration;
-		assert: declaration name = 'test'
+		assert: declaration name equals: '';
+		assert: (declaration name: 'test') identicalTo: declaration;
+		assert: declaration name equals: 'test'
 ]
 
 { #category : #tests }
 XMLNotationDeclarationTest >> testNamePublicIDSystemID [
-	| declaration |
 
-	declaration :=
-		self nodeClass
-			name: 'one'
-			publicID: 'two'
-			systemID: 'three'.
+	| declaration |
+	declaration := self nodeClass
+		               name: 'one'
+		               publicID: 'two'
+		               systemID: 'three'.
 	self
-		assert: declaration class == self nodeClass;
-		assert: declaration name = 'one';
-		assert: declaration publicID = 'two';
-		assert: declaration systemID = 'three'
+		assert: declaration class identicalTo: self nodeClass;
+		assert: declaration name equals: 'one';
+		assert: declaration publicID equals: 'two';
+		assert: declaration systemID equals: 'three'
 ]
 
 { #category : #tests }
 XMLNotationDeclarationTest >> testPublicID [
-	| declaration |
 
+	| declaration |
 	declaration := self newNode.
 	self
-		assert: declaration publicID = '';
-		assert: (declaration publicID: 'test') == declaration;
-		assert: declaration publicID = 'test'
+		assert: declaration publicID equals: '';
+		assert: (declaration publicID: 'test') identicalTo: declaration;
+		assert: declaration publicID equals: 'test'
 ]
 
 { #category : #tests }
 XMLNotationDeclarationTest >> testSystemID [
-	| declaration |
 
+	| declaration |
 	declaration := self newNode.
 	self
-		assert: declaration systemID = '';
-		assert: (declaration systemID: 'test') == declaration;
-		assert: declaration systemID = 'test'
+		assert: declaration systemID equals: '';
+		assert: (declaration systemID: 'test') identicalTo: declaration;
+		assert: declaration systemID equals: 'test'
 ]
 
 { #category : #tests }
 XMLNotationDeclarationTest >> testWriteXMLOn [
-	self assert:
-		(self nodeClass name: 'one' publicID: 'two' systemID: 'three') printString =
-			'<!NOTATION one PUBLIC "two" "three">'.
-	self assert:
-		(self nodeClass name: 'one' publicID: '' systemID: 'two') printString =
-			'<!NOTATION one SYSTEM "two">'.
-	self assert:
-		(self nodeClass name: 'one' publicID: 'two' systemID: '') printString =
-			'<!NOTATION one PUBLIC "two">'
+
+	self
+		assert:
+			(self nodeClass name: 'one' publicID: 'two' systemID: 'three')
+				printString
+		equals: '<!NOTATION one PUBLIC "two" "three">'.
+	self
+		assert:
+		(self nodeClass name: 'one' publicID: '' systemID: 'two')
+			printString
+		equals: '<!NOTATION one SYSTEM "two">'.
+	self
+		assert:
+		(self nodeClass name: 'one' publicID: 'two' systemID: '')
+			printString
+		equals: '<!NOTATION one PUBLIC "two">'
 ]

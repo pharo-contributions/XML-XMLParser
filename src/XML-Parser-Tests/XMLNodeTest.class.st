@@ -14,29 +14,34 @@ XMLNodeTest class >> shouldInheritSelectors [
 
 { #category : #assertions }
 XMLNodeTest >> assertElement: anElement hasAttributes: anAssociationCollection [
-	| attributeNodes |
 
-	self assert: anElement attributeNodes size = anAssociationCollection size.
+	| attributeNodes |
+	self
+		assert: anElement attributeNodes size
+		equals: anAssociationCollection size.
 	attributeNodes := anElement attributeNodes copy.
-	anAssociationCollection associationsDo: [:each | | attributeNode |
+	anAssociationCollection associationsDo: [ :each |
+		| attributeNode |
 		attributeNode := attributeNodes removeFirst.
 		self
-			assert: attributeNode name = each key;
-			assert: attributeNode value = each value]
+			assert: attributeNode name equals: each key;
+			assert: attributeNode value equals: each value ]
 ]
 
 { #category : #assertions }
 XMLNodeTest >> assertList: aList collects: aSecondList [
+
 	self
-		assert: aList = aSecondList;
-		assert: aList class == self collectListClass
+		assert: aList equals: aSecondList;
+		assert: aList class identicalTo: self collectListClass
 ]
 
 { #category : #assertions }
 XMLNodeTest >> assertList: aList selects: aSecondList [
+
 	self
-		assert: aList = aSecondList;
-		assert: aList class == self selectListClass
+		assert: aList equals: aSecondList;
+		assert: aList class identicalTo: self selectListClass
 ]
 
 { #category : #accessing }
@@ -220,13 +225,13 @@ XMLNodeTest >> selectListClass [
 
 { #category : #tests }
 XMLNodeTest >> testAcceptNodeVisitor [
-	| visitor node |
 
+	| visitor node |
 	visitor := XMLRecordingNodeVisitor new.
 	node := self newNode.
 	self
-		assert: (node acceptNodeVisitor: visitor) == node;
-		deny: visitor messageRecorder hasMessages.
+		assert: (node acceptNodeVisitor: visitor) identicalTo: node;
+		deny: visitor messageRecorder hasMessages
 ]
 
 { #category : #tests }
@@ -276,19 +281,19 @@ XMLNodeTest >> testConfiguration [
 
 { #category : #tests }
 XMLNodeTest >> testContentString [
-	self assert: self newNode contentString = ''
+
+	self assert: self newNode contentString equals: ''
 ]
 
 { #category : #tests }
 XMLNodeTest >> testCopy [
-	| node copy |
 
-	(node := self newNode)
-		parent: self newNode.
+	| node copy |
+	(node := self newNode) parent: self newNode.
 	copy := node copy.
 	self
-		deny: copy == node;
-		deny: copy hasParent. 
+		deny: copy identicalTo: node;
+		deny: copy hasParent
 ]
 
 { #category : #tests }
@@ -298,10 +303,10 @@ XMLNodeTest >> testDocument [
 
 { #category : #tests }
 XMLNodeTest >> testDocumentRoot [
-	| node |
 
+	| node |
 	node := self newNode.
-	self assert: node documentRoot == node.
+	self assert: node documentRoot identicalTo: node
 ]
 
 { #category : #tests }
@@ -384,128 +389,119 @@ XMLNodeTest >> testIsStringNode [
 
 { #category : #tests }
 XMLNodeTest >> testNewCData [
-	| cdata |
 
+	| cdata |
 	cdata := self newNode newCData: 'test'.
 	self
 		assert: cdata isCData;
-		assert: cdata string = 'test'.
+		assert: cdata string equals: 'test'
 ]
 
 { #category : #tests }
 XMLNodeTest >> testNewComment [
-	| comment |
 
+	| comment |
 	comment := self newNode newComment: 'test'.
 	self
 		assert: comment isComment;
-		assert: comment string = 'test'.
+		assert: comment string equals: 'test'
 ]
 
 { #category : #tests }
 XMLNodeTest >> testNewDocument [
-	| node document |
 
+	| node document |
 	node := self newNode.
 	document := node newDocument.
 	self assert: document isDocument.
-	node configuration
-		ifNotNil: [
-			self
-				assert: document configuration == node configuration;
-				assert: document nodeFactory == node nodeFactory].
+	node configuration ifNotNil: [
+		self
+			assert: document configuration identicalTo: node configuration;
+			assert: document nodeFactory identicalTo: node nodeFactory ]
 ]
 
 { #category : #tests }
 XMLNodeTest >> testNewElement [
-	| node element |
 
+	| node element |
 	node := self newNode.
 	element := node newElement.
 	self assert: element isElement.
-	node configuration
-		ifNotNil: [
-			self
-				assert: element configuration == node configuration;
-				assert: element nodeFactory == node nodeFactory].
+	node configuration ifNotNil: [
+		self
+			assert: element configuration identicalTo: node configuration;
+			assert: element nodeFactory identicalTo: node nodeFactory ]
 ]
 
 { #category : #tests }
 XMLNodeTest >> testNewElementNamed [
-	| node element |
 
+	| node element |
 	node := self newNode.
 	element := node newElementNamed: 'test'.
 	self
 		assert: element isElement;
-		assert: element name = 'test'.
-	node configuration
-		ifNotNil: [
-			self
-				assert: element configuration == node configuration;
-				assert: element nodeFactory == node nodeFactory].
+		assert: element name equals: 'test'.
+	node configuration ifNotNil: [
+		self
+			assert: element configuration identicalTo: node configuration;
+			assert: element nodeFactory identicalTo: node nodeFactory ]
 ]
 
 { #category : #tests }
 XMLNodeTest >> testNewElementNamedAttributes [
-	| node element |
 
+	| node element |
 	node := self newNode.
-	element :=
-		node
-			newElementNamed: 'test'
-			attributes: self unprefixedAttributeAssociations.
+	element := node
+		           newElementNamed: 'test'
+		           attributes: self unprefixedAttributeAssociations.
 	self
 		assert: element isElement;
-		assert: element name = 'test';
+		assert: element name equals: 'test';
 		assertElement: element hasAttributes: self unprefixedAttributes.
-	node configuration
-		ifNotNil: [
-			self
-				assert: element configuration == node configuration;
-				assert: element nodeFactory == node nodeFactory].
+	node configuration ifNotNil: [
+		self
+			assert: element configuration identicalTo: node configuration;
+			assert: element nodeFactory identicalTo: node nodeFactory ]
 ]
 
 { #category : #tests }
 XMLNodeTest >> testNewElementNamedNamespaceURI [
-	| node element |
 
+	| node element |
 	node := self newNode.
-	element :=
-		node
-			newElementNamed: 'prefix:test'
-			namespaceURI: 'prefixNS'.
+	element := node
+		           newElementNamed: 'prefix:test'
+		           namespaceURI: 'prefixNS'.
 	self
 		assert: element isElement;
-		assert: element name = 'prefix:test';
-		assert: element namespaceURI = 'prefixNS'.
-	node configuration
-		ifNotNil: [
-			self
-				assert: element configuration == node configuration;
-				assert: element nodeFactory == node nodeFactory].
+		assert: element name equals: 'prefix:test';
+		assert: element namespaceURI equals: 'prefixNS'.
+	node configuration ifNotNil: [
+		self
+			assert: element configuration identicalTo: node configuration;
+			assert: element nodeFactory identicalTo: node nodeFactory ]
 ]
 
 { #category : #tests }
 XMLNodeTest >> testNewElementNamedNamespaceURIAttributes [
-	| node element |
 
+	| node element |
 	node := self newNode.
-	element :=
-		node
-			newElementNamed: 'prefix:test'
-			namespaceURI: 'prefixNS'
-			attributes: self attributeAssociations.
+	element := node
+		           newElementNamed: 'prefix:test'
+		           namespaceURI: 'prefixNS'
+		           attributes: self attributeAssociations.
 	self
 		assert: element isElement;
-		assert: element name = 'prefix:test';
-		assert: element namespaceURI = 'prefixNS';
+		assert: element name equals: 'prefix:test';
+		assert: element namespaceURI equals: 'prefixNS';
 		assertElement: element hasAttributes: self attributes.
-	node configuration
-		ifNotNil: [
-			self
-				assert: element configuration == node configuration;
-				assert: element nodeFactory == node nodeFactory].
+	node configuration ifNotNil: [
+		self
+			assert: element configuration identicalTo: node configuration;
+			assert: element nodeFactory identicalTo: node nodeFactory ]
 ]
 
 { #category : #tests }
@@ -515,26 +511,23 @@ XMLNodeTest >> testNewPI [
 
 { #category : #tests }
 XMLNodeTest >> testNewPITargetData [
-	| pi |
 
-	pi :=
-		self newNode
-			newPITarget: 'target'
-			data: 'data'.
+	| pi |
+	pi := self newNode newPITarget: 'target' data: 'data'.
 	self
 		assert: pi isPI;
-		assert: pi target = 'target';
-		assert: pi data = 'data'.
+		assert: pi target equals: 'target';
+		assert: pi data equals: 'data'
 ]
 
 { #category : #tests }
 XMLNodeTest >> testNewStringNode [
-	| stringNode |
 
+	| stringNode |
 	stringNode := self newNode newStringNode: 'test'.
 	self
 		assert: stringNode isStringNode;
-		assert: stringNode string = 'test'.
+		assert: stringNode string equals: 'test'
 ]
 
 { #category : #tests }
@@ -544,20 +537,23 @@ XMLNodeTest >> testNextNode [
 
 { #category : #tests }
 XMLNodeTest >> testNodeFactory [
-	self assert: self newNode nodeFactory class == self nodeFactoryClass
+
+	self
+		assert: self newNode nodeFactory class
+		identicalTo: self nodeFactoryClass
 ]
 
 { #category : #tests }
 XMLNodeTest >> testParent [
-	| node parent |
 
+	| node parent |
 	node := self newNode.
 	self assert: node parent isNil.
 
 	parent := self newNode.
 	self
-		assert: (node parent: parent) == node;
-		assert: node parent == parent.
+		assert: (node parent: parent) identicalTo: node;
+		assert: node parent identicalTo: parent
 ]
 
 { #category : #tests }
@@ -567,12 +563,16 @@ XMLNodeTest >> testPreviousNode [
 
 { #category : #tests }
 XMLNodeTest >> testRawContentString [
-	self assert: self newNode rawContentString = ''
+
+	self assert: self newNode rawContentString equals: ''
 ]
 
 { #category : #tests }
 XMLNodeTest >> testSortKey [
-	self assert: self newNode sortKey = self nodeClass name asString
+
+	self
+		assert: self newNode sortKey
+		equals: self nodeClass name asString
 ]
 
 { #category : #tests }

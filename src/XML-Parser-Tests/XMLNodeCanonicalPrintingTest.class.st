@@ -11,8 +11,8 @@ XMLNodeCanonicalPrintingTest >> onCanonicalLineBreakJoin: aLineCollection [
 
 { #category : #tests }
 XMLNodeCanonicalPrintingTest >> testCharacterReferences [
-	| xml |
 
+	| xml |
 	xml := '<!DOCTYPE doc [
 <!ATTLIST normId id ID #IMPLIED>
 <!ATTLIST normNames attr NMTOKENS #IMPLIED>
@@ -26,28 +26,24 @@ XMLNodeCanonicalPrintingTest >> testCharacterReferences [
    <normNames attr=''   A   &#x20;&#13;&#xa;&#9;   B   ''/>
    <normId id='' &apos;   &#x20;&#13;&#xa;&#9;   &apos; ''/>
 </doc>'.
-
-	self assert:
-		((XMLDOMParser on: xml)
-			isValidating: false;
-			parseDocument) canonicallyPrinted =
-				(self onCanonicalLineBreakJoin:
-					#('<doc>'
-						'   <text>First line&#xD;'
-						'Second line</text>'
-						'   <value>2</value>'
-						'   <compute>value&gt;"0" &amp;&amp; value&lt;"10" ?"valid":"error"</compute>'
-						'   <compute expr="value>&quot;0&quot; &amp;&amp; value&lt;&quot;10&quot; ?&quot;valid&quot;:&quot;error&quot;">valid</compute>'
-						'   <norm attr=" ''    &#xD;&#xA;&#x9;   '' "></norm>'
-						'   <normNames attr="A &#xD;&#xA;&#x9; B"></normNames>'
-						'   <normId id="'' &#xD;&#xA;&#x9; ''"></normId>'
-						'</doc>'))
+	self
+		assert: ((XMLDOMParser on: xml)
+				 isValidating: false;
+				 parseDocument) canonicallyPrinted
+		equals: (self onCanonicalLineBreakJoin:
+				 #( '<doc>' '   <text>First line&#xD;' 'Second line</text>'
+				    '   <value>2</value>' '   <compute>value&gt;"0" &amp;&amp; value&lt;"10" ?"valid":"error"</compute>'
+				    '   <compute expr="value>&quot;0&quot; &amp;&amp; value&lt;&quot;10&quot; ?&quot;valid&quot;:&quot;error&quot;">valid</compute>'
+				    '   <norm attr=" ''    &#xD;&#xA;&#x9;   '' "></norm>'
+				    '   <normNames attr="A &#xD;&#xA;&#x9; B"></normNames>'
+				    '   <normId id="'' &#xD;&#xA;&#x9; ''"></normId>'
+				    '</doc>' ))
 ]
 
 { #category : #tests }
 XMLNodeCanonicalPrintingTest >> testEntityReferences [
-	| xml resolver |
 
+	| xml resolver |
 	xml := '<!DOCTYPE doc [
 <!ATTLIST doc attrExtEnt ENTITY #IMPLIED>
 <!ENTITY ent1 "Hello">
@@ -64,35 +60,31 @@ XMLNodeCanonicalPrintingTest >> testEntityReferences [
 	(resolver := DTDStaticExternalEntityResolver new)
 		externalEntityAtURI: 'world.txt'
 		put: 'world'.
-	self assert:
-		((XMLDOMParser on: xml)
-			externalEntityResolver: resolver copy;
-			resolvesExternalEntities: true;
-			isValidating: false;
-			parseDocument) canonicallyPrinted =
-				(self onCanonicalLineBreakJoin:
-					#('<doc attrExtEnt="entExt">'
-						'   Hello, world!'
-						'</doc>')).
-
-	self assert:
-		((XMLDOMParser on: xml)
-			externalEntityResolver: resolver copy;
-			resolvesExternalEntities: true;
-			isValidating: false;
-			preservesCommentNodes: true;
-			parseDocument) canonicallyPrinted =
-				(self onCanonicalLineBreakJoin:
-					#('<doc attrExtEnt="entExt">'
-						'   Hello, world!'
-						'</doc>'
-						'<!-- Let world.txt contain "world" (excluding the quotes) -->'))
+	self
+		assert: ((XMLDOMParser on: xml)
+				 externalEntityResolver: resolver copy;
+				 resolvesExternalEntities: true;
+				 isValidating: false;
+				 parseDocument) canonicallyPrinted
+		equals: (self onCanonicalLineBreakJoin:
+				 #( '<doc attrExtEnt="entExt">' '   Hello, world!'
+				    '</doc>' )).
+	self
+		assert: ((XMLDOMParser on: xml)
+				 externalEntityResolver: resolver copy;
+				 resolvesExternalEntities: true;
+				 isValidating: false;
+				 preservesCommentNodes: true;
+				 parseDocument) canonicallyPrinted
+		equals: (self onCanonicalLineBreakJoin:
+				 #( '<doc attrExtEnt="entExt">' '   Hello, world!'
+				    '</doc>' '<!-- Let world.txt contain "world" (excluding the quotes) -->' ))
 ]
 
 { #category : #tests }
 XMLNodeCanonicalPrintingTest >> testPIsAndComments [
-	| xml |
 
+	| xml |
 	xml := '<?xml version="1.0"?>
 
 <?xml-stylesheet   href="doc.xsl"
@@ -107,33 +99,27 @@ XMLNodeCanonicalPrintingTest >> testPIsAndComments [
 <!-- Comment 2 -->
 
 <!-- Comment 3 -->'.
-
-	self assert:
-		(XMLDOMParser parse: xml)
-			canonicallyPrinted =
-				(self onCanonicalLineBreakJoin:
-					#('<?xml-stylesheet href="doc.xsl"'
-						'   type="text/xsl"   ?>'
-						'<doc>Hello, world!</doc>'
-						'<?pi-without-data?>')).
-
-	self assert:
-		((XMLDOMParser on: xml)
-			preservesCommentNodes: true;
-			parseDocument) canonicallyPrinted =
-				(self onCanonicalLineBreakJoin:
-					#('<?xml-stylesheet href="doc.xsl"'
-						'   type="text/xsl"   ?>'
-						'<doc>Hello, world!<!-- Comment 1 --></doc>'
-						'<?pi-without-data?>'
-						'<!-- Comment 2 -->'
-						'<!-- Comment 3 -->'))
+	self
+		assert: (XMLDOMParser parse: xml) canonicallyPrinted
+		equals: (self onCanonicalLineBreakJoin:
+				 #( '<?xml-stylesheet href="doc.xsl"'
+				    '   type="text/xsl"   ?>' '<doc>Hello, world!</doc>'
+				    '<?pi-without-data?>' )).
+	self
+		assert: ((XMLDOMParser on: xml)
+				 preservesCommentNodes: true;
+				 parseDocument) canonicallyPrinted
+		equals: (self onCanonicalLineBreakJoin:
+				 #( '<?xml-stylesheet href="doc.xsl"'
+				    '   type="text/xsl"   ?>' '<doc>Hello, world!<!-- Comment 1 --></doc>'
+				    '<?pi-without-data?>' '<!-- Comment 2 -->'
+				    '<!-- Comment 3 -->' ))
 ]
 
 { #category : #tests }
 XMLNodeCanonicalPrintingTest >> testStartAndEndTags [
-	| xml |
 
+	| xml |
 	xml := '<!DOCTYPE doc [<!ATTLIST e9 attr CDATA "default">]>
 <doc>
    <e1   />
@@ -152,32 +138,24 @@ XMLNodeCanonicalPrintingTest >> testStartAndEndTags [
       </e7>
    </e6>
 </doc>'.
-
-	self assert:
-		((XMLDOMParser on: xml)
-			isValidating: false;
-			parseDocument) canonicallyPrinted =
-				(self onCanonicalLineBreakJoin:
-					#('<doc>'
-						'   <e1></e1>'
-						'   <e2></e2>'
-						'   <e3 id="elem3" name="elem3"></e3>'
-						'   <e4 id="elem4" name="elem4"></e4>'
-						'   <e5 xmlns="http://example.org" xmlns:a="http://www.w3.org" xmlns:b="http://www.ietf.org" attr="I''m" attr2="all" b:attr="sorted" a:attr="out"></e5>'
-						'   <e6 xmlns:a="http://www.w3.org">'
-						'      <e7 xmlns="http://www.ietf.org">'
-						'         <e8 xmlns="">'
-						'            <e9 xmlns:a="http://www.ietf.org" attr="default"></e9>'
-						'         </e8>'
-						'      </e7>'
-						'   </e6>'
-						'</doc>'))
+	self
+		assert: ((XMLDOMParser on: xml)
+				 isValidating: false;
+				 parseDocument) canonicallyPrinted
+		equals: (self onCanonicalLineBreakJoin:
+				 #( '<doc>' '   <e1></e1>' '   <e2></e2>' '   <e3 id="elem3" name="elem3"></e3>'
+				    '   <e4 id="elem4" name="elem4"></e4>'
+				    '   <e5 xmlns="http://example.org" xmlns:a="http://www.w3.org" xmlns:b="http://www.ietf.org" attr="I''m" attr2="all" b:attr="sorted" a:attr="out"></e5>'
+				    '   <e6 xmlns:a="http://www.w3.org">'
+				    '      <e7 xmlns="http://www.ietf.org">'
+				    '         <e8 xmlns="">' '            <e9 xmlns:a="http://www.ietf.org" attr="default"></e9>'
+				    '         </e8>' '      </e7>' '   </e6>' '</doc>' ))
 ]
 
 { #category : #tests }
 XMLNodeCanonicalPrintingTest >> testWhitespace [
-	| xml |
 
+	| xml |
 	xml := '
 <doc>
    <clean>   </clean>
@@ -191,20 +169,11 @@ XMLNodeCanonicalPrintingTest >> testWhitespace [
    </mixed>
 </doc>
 '.
-
-	self assert:
-		(XMLDOMParser parse: xml)
-			canonicallyPrinted =
-				(self onCanonicalLineBreakJoin:
-					#('<doc>'
-						'   <clean>   </clean>'
-						'   <dirty>   A   B   </dirty>'
-						'   <mixed>'
-						'      A'
-						'      <clean>   </clean>'
-						'      B'
-						'      <dirty>   A   B   </dirty>'
-						'      C'
-						'   </mixed>'
-						'</doc>'))
+	self
+		assert: (XMLDOMParser parse: xml) canonicallyPrinted
+		equals: (self onCanonicalLineBreakJoin:
+				 #( '<doc>' '   <clean>   </clean>' '   <dirty>   A   B   </dirty>'
+				    '   <mixed>' '      A' '      <clean>   </clean>'
+				    '      B' '      <dirty>   A   B   </dirty>'
+				    '      C' '   </mixed>' '</doc>' ))
 ]

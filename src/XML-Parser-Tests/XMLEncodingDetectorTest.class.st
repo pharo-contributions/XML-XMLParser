@@ -104,54 +104,49 @@ XMLEncodingDetectorTest >> newStreamOn: aString [
 
 { #category : #tests }
 XMLEncodingDetectorTest >> testStreamConverterForEncoding [
-	self explicitEncodedInputCollections do: [:each |
-		| stream startPosition streamConverter |
 
+	self explicitEncodedInputCollections do: [ :each |
+		| stream startPosition streamConverter |
 		stream := self newStreamOn: each.
 		startPosition := stream position.
-		streamConverter :=
-			(self newExplicitEncodingDetectorOn: stream)
-				streamConverterForEncoding.
+		streamConverter := (self newExplicitEncodingDetectorOn: stream)
+			                   streamConverterForEncoding.
 		self
 			deny: streamConverter isNil;
-		 	assert: streamConverter class == self explicitStreamConverterClass;
+			assert: streamConverter class
+			identicalTo: self explicitStreamConverterClass;
 			deny: streamConverter isImplicit;
-			assert:
-				stream position =
-					(startPosition + self inputCollectionByteOrderMark size)].
+			assert: stream position
+			equals: startPosition + self inputCollectionByteOrderMark size ].
 
-	self implicitEncodedInputCollections do: [:each |
+	self implicitEncodedInputCollections do: [ :each |
 		| stream startPosition streamConverter |
-
 		stream := self newStreamOn: each.
 		startPosition := stream position.
-		streamConverter :=
-			(self newExplicitEncodingDetectorOn: stream)
-				streamConverterForEncoding.
+		streamConverter := (self newExplicitEncodingDetectorOn: stream)
+			                   streamConverterForEncoding.
 		self
 			assert: streamConverter isNil;
-			assert: stream position = startPosition.
+			assert: stream position equals: startPosition.
 
 		stream := self newStreamOn: each.
 		startPosition := stream position.
-		streamConverter :=
-			(self newImplicitEncodingDetectorOn: stream)
-				streamConverterForEncoding.
+		streamConverter := (self newImplicitEncodingDetectorOn: stream)
+			                   streamConverterForEncoding.
 		self
 			deny: streamConverter isNil;
-		 	assert: streamConverter class == self implicitStreamConverterClass;
+			assert: streamConverter class
+			identicalTo: self implicitStreamConverterClass;
 			assert: streamConverter isImplicit;
-			assert: stream position = startPosition].
+			assert: stream position equals: startPosition ].
 
-	self invalidImplicitEncodedInputCollections do: [:each |
+	self invalidImplicitEncodedInputCollections do: [ :each |
 		| stream startPosition streamConverter |
-
 		stream := self newStreamOn: each.
 		startPosition := stream position.
-		streamConverter :=
-			(self newImplicitEncodingDetectorOn: stream)
-				streamConverterForEncoding.
+		streamConverter := (self newImplicitEncodingDetectorOn: stream)
+			                   streamConverterForEncoding.
 		self
 			assert: streamConverter isNil;
-			assert: stream position = startPosition]
+			assert: stream position equals: startPosition ]
 ]

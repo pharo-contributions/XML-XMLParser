@@ -11,60 +11,62 @@ XMLStringTest >> nodeClass [
 
 { #category : #tests }
 XMLStringTest >> testAcceptNodeVisitor [
-	| visitor stringNode message |
 
+	| visitor stringNode message |
 	visitor := XMLRecordingNodeVisitor new.
 	stringNode := self newNode.
 	self
-		assert: (stringNode acceptNodeVisitor: visitor) == stringNode;
+		assert: (stringNode acceptNodeVisitor: visitor)
+		identicalTo: stringNode;
 		assert: visitor messageRecorder hasMessages.
 
 	message := visitor messageRecorder nextMessage.
 	self
-		assert: message selector == #visitStringNode:;
-		assert: message arguments = (Array with: stringNode);
+		assert: message selector identicalTo: #visitStringNode:;
+		assert: message arguments equals: (Array with: stringNode);
 		deny: visitor messageRecorder hasMessages
 ]
 
 { #category : #tests }
 XMLStringTest >> testAppend [
-	| stringNode |
 
+	| stringNode |
 	stringNode := self newNode.
 	stringNode append: 'one'.
-	self assert: stringNode string = 'one'.
+	self assert: stringNode string equals: 'one'.
 
 	stringNode append: (self nodeClass string: 'two').
-	self assert: stringNode string = 'onetwo'.
+	self assert: stringNode string equals: 'onetwo'.
 
 	stringNode append: 'three'.
-	self assert: stringNode string = 'onetwothree'
+	self assert: stringNode string equals: 'onetwothree'
 ]
 
 { #category : #tests }
 XMLStringTest >> testAsString [
+
 	self
-		assert: self newNode asString = '';
-		assert: (self nodeClass string: 'test') asString = 'test'
+		assert: self newNode asString equals: '';
+		assert: (self nodeClass string: 'test') asString equals: 'test'
 ]
 
 { #category : #tests }
 XMLStringTest >> testAsXMLEscapedString [
-	| stringNode |
 
+	| stringNode |
 	stringNode := self nodeClass string: self markupString.
 	self
-		assert: stringNode string = self markupString;
-		deny: stringNode string = self escapedString;
-		assert: stringNode asXMLEscapedString = self escapedString
+		assert: stringNode string equals: self markupString;
+		deny: stringNode string equals: self escapedString;
+		assert: stringNode asXMLEscapedString equals: self escapedString
 ]
 
 { #category : #tests }
 XMLStringTest >> testAsXMLStringNode [
-	| stringNode |
 
+	| stringNode |
 	stringNode := self newNode.
-	self assert: stringNode asXMLStringNode == stringNode
+	self assert: stringNode asXMLStringNode identicalTo: stringNode
 ]
 
 { #category : #tests }
@@ -94,25 +96,25 @@ XMLStringTest >> testCanonicallyEquals [
 
 { #category : #tests }
 XMLStringTest >> testDeleteFromTo [
-	| stringNode |
 
+	| stringNode |
 	stringNode := self newNode.
 	stringNode deleteFrom: 1 to: 0.
-	self assert: stringNode string = ''.
+	self assert: stringNode string equals: ''.
 
 	stringNode append: 'onetwothree'.
 	stringNode deleteFrom: 0 to: -1.
 	stringNode deleteFrom: 12 to: 13.
-	self assert: stringNode string = 'onetwothree'.
+	self assert: stringNode string equals: 'onetwothree'.
 
 	stringNode deleteFrom: 4 to: 6.
-	self assert: stringNode string = 'onethree'.
+	self assert: stringNode string equals: 'onethree'.
 
 	stringNode deleteFrom: 4 to: 8.
-	self assert: stringNode string = 'one'.
+	self assert: stringNode string equals: 'one'.
 
 	stringNode deleteFrom: 1 to: 3.
-	self assert: stringNode string = ''
+	self assert: stringNode string equals: ''
 ]
 
 { #category : #tests }
@@ -167,24 +169,32 @@ XMLStringTest >> testIncludesSubstring [
 
 { #category : #tests }
 XMLStringTest >> testIndexOfSubstring [
-	| stringNode |
 
+	| stringNode |
 	stringNode := self newNode.
 	self
 		assert: (stringNode indexOfSubstring: 'one') isZero;
-		assert: (stringNode indexOfSubstring: (self nodeClass string: 'one')) isZero.
+		assert:
+			(stringNode indexOfSubstring: (self nodeClass string: 'one'))
+				isZero.
 	stringNode prepend: 'one'.
 	self
-		assert: (stringNode indexOfSubstring: 'one') = 1;
-		assert: (stringNode indexOfSubstring: (self nodeClass string: 'one')) = 1.
+		assert: (stringNode indexOfSubstring: 'one') equals: 1;
+		assert:
+			(stringNode indexOfSubstring: (self nodeClass string: 'one'))
+		equals: 1.
 
 	self
 		assert: (stringNode indexOfSubstring: 'two') isZero;
-		assert: (stringNode indexOfSubstring: (self nodeClass string: 'two')) isZero.
+		assert:
+			(stringNode indexOfSubstring: (self nodeClass string: 'two'))
+				isZero.
 	stringNode append: 'two'.
 	self
-		assert: (stringNode indexOfSubstring: 'two') = 4;
-		assert: (stringNode indexOfSubstring: (self nodeClass string: 'two')) = 4
+		assert: (stringNode indexOfSubstring: 'two') equals: 4;
+		assert:
+			(stringNode indexOfSubstring: (self nodeClass string: 'two'))
+		equals: 4
 ]
 
 { #category : #tests }
@@ -243,8 +253,8 @@ XMLStringTest >> testIsWhitespace [
 
 { #category : #tests }
 XMLStringTest >> testMergeAdjacent [
-	| element nodes |
 
+	| element nodes |
 	(element := self newElement)
 		addNode: (self nodeClass string: 'one');
 		addNode: (self nodeClass string: 'two');
@@ -258,23 +268,32 @@ XMLStringTest >> testMergeAdjacent [
 	element nodes second mergeAdjacent.
 	nodes := element nodes.
 	self
-		assert: nodes size = 6;
-		assert: (nodes first isStringNode and: [nodes first string = 'onetwothree']);
+		assert: nodes size equals: 6;
+		assert:
+			(nodes first isStringNode and: [
+					 nodes first string = 'onetwothree' ]);
 		assert: nodes second isComment;
-		assert: (nodes third isStringNode and: [nodes third string = 'four']);
-		assert: (nodes fourth isStringNode and: [nodes fourth string = 'five']);
+		assert:
+			(nodes third isStringNode and: [ nodes third string = 'four' ]);
+		assert:
+			(nodes fourth isStringNode and: [ nodes fourth string = 'five' ]);
 		assert: nodes fifth isComment;
-		assert: (nodes sixth isStringNode and: [nodes sixth string = 'six']).
+		assert:
+			(nodes sixth isStringNode and: [ nodes sixth string = 'six' ]).
 
 	nodes fourth mergeAdjacent.
 	nodes fifth mergeAdjacent.
 	self
-		assert: nodes size = 5;
-		assert: (nodes first isStringNode and: [nodes first string = 'onetwothree']);
+		assert: nodes size equals: 5;
+		assert:
+			(nodes first isStringNode and: [
+					 nodes first string = 'onetwothree' ]);
 		assert: nodes second isComment;
-		assert: (nodes third isStringNode and: [nodes third string = 'fourfive']);
+		assert:
+			(nodes third isStringNode and: [ nodes third string = 'fourfive' ]);
 		assert: nodes fourth isComment;
-		assert: (nodes fifth isStringNode and: [nodes fifth string = 'six'])
+		assert:
+			(nodes fifth isStringNode and: [ nodes fifth string = 'six' ])
 ]
 
 { #category : #tests }
@@ -293,94 +312,102 @@ XMLStringTest >> testNotEmpty [
 
 { #category : #tests }
 XMLStringTest >> testPrepend [
-	| stringNode |
 
+	| stringNode |
 	stringNode := self newNode.
 	stringNode prepend: 'three'.
-	self assert: stringNode string = 'three'.
+	self assert: stringNode string equals: 'three'.
 
 	stringNode prepend: (self nodeClass string: 'two').
-	self assert: stringNode string = 'twothree'.
+	self assert: stringNode string equals: 'twothree'.
 
 	stringNode prepend: 'one'.
-	self assert: stringNode string = 'onetwothree'
+	self assert: stringNode string equals: 'onetwothree'
 ]
 
 { #category : #tests }
 XMLStringTest >> testReplaceAllWith [
-	| stringNode |
 
+	| stringNode |
 	(stringNode := self newNode) replaceAll: 'old' with: 'new'.
-	self assert: stringNode string = ''.
+	self assert: stringNode string equals: ''.
 
 	stringNode string: 'one old two old three old'.
 	stringNode replaceAll: 'old' with: (self nodeClass string: 'new').
-	self assert: stringNode string = 'one new two new three new'.
+	self assert: stringNode string equals: 'one new two new three new'.
 
 	stringNode replaceAll: 'new' with: ''.
-	self assert: stringNode string = 'one  two  three '
+	self assert: stringNode string equals: 'one  two  three '
 ]
 
 { #category : #tests }
 XMLStringTest >> testReplaceFromToWith [
-	| stringNode |
 
+	| stringNode |
 	(stringNode := self newNode) replaceFrom: -1 to: -3 with: 'one'.
-	self assert: stringNode string = 'one'.
+	self assert: stringNode string equals: 'one'.
 
 	stringNode replaceFrom: 1 to: 0 with: 'zero'.
-	self assert: stringNode string = 'zeroone'.
+	self assert: stringNode string equals: 'zeroone'.
 
-	stringNode replaceFrom: 9 to: 7 with: (self nodeClass string: 'fourthree').
-	self assert: stringNode string = 'zeroonefourthree'.
+	stringNode
+		replaceFrom: 9
+		to: 7
+		with: (self nodeClass string: 'fourthree').
+	self assert: stringNode string equals: 'zeroonefourthree'.
 
 	stringNode replaceFrom: 8 to: 11 with: ' two '.
-	self assert: stringNode string = 'zeroone two three'.
+	self assert: stringNode string equals: 'zeroone two three'.
 
 	stringNode replaceFrom: 0 to: 4 with: ''.
-	self assert: stringNode string = 'one two three'.
+	self assert: stringNode string equals: 'one two three'.
 
-	stringNode replaceFrom: 14 to: 13 with: (self nodeClass string: ' four').
-	self assert: stringNode string = 'one two three four'
+	stringNode
+		replaceFrom: 14
+		to: 13
+		with: (self nodeClass string: ' four').
+	self assert: stringNode string equals: 'one two three four'
 ]
 
 { #category : #tests }
 XMLStringTest >> testSize [
+
 	self
-		assert: self newNode size = 0;
-		assert: (self nodeClass string: 'test') size = 4
+		assert: self newNode size equals: 0;
+		assert: (self nodeClass string: 'test') size equals: 4
 ]
 
 { #category : #tests }
 XMLStringTest >> testSortKey [
-	self assert: (self nodeClass string: 'test') sortKey = 'test'
+
+	self assert: (self nodeClass string: 'test') sortKey equals: 'test'
 ]
 
 { #category : #tests }
 XMLStringTest >> testSplitAt [
-	| stringNode newStringNode element |
 
+	| stringNode newStringNode element |
 	stringNode := self nodeClass string: 'onetwo'.
 	newStringNode := stringNode splitAt: 0.
 	self
-		deny: stringNode == newStringNode;
-		assert: stringNode string = '';
-		assert: newStringNode string = 'onetwo'.
+		deny: stringNode identicalTo: newStringNode;
+		assert: stringNode string equals: '';
+		assert: newStringNode string equals: 'onetwo'.
 
 	stringNode := self nodeClass string: 'onetwo'.
 	newStringNode := stringNode splitAt: 7.
 	self
-		deny: stringNode == newStringNode;
-		assert: stringNode string = 'onetwo';
-		assert: newStringNode string = ''.
+		deny: stringNode identicalTo: newStringNode;
+		assert: stringNode string equals: 'onetwo';
+		assert: newStringNode string equals: ''.
 
 	(element := self newElement) addNode: stringNode.
 	newStringNode := stringNode splitAt: 4.
 	self
-		deny: stringNode == newStringNode;
-		assert: stringNode string = 'one';
-		assert: newStringNode string = 'two';
-		assert: (element nodeAfter: stringNode) == newStringNode
+		deny: stringNode identicalTo: newStringNode;
+		assert: stringNode string equals: 'one';
+		assert: newStringNode string equals: 'two';
+		assert: (element nodeAfter: stringNode) identicalTo: newStringNode
 ]
 
 { #category : #tests }
@@ -404,8 +431,9 @@ XMLStringTest >> testString [
 
 { #category : #tests }
 XMLStringTest >> testWriteXMLOn [
-	self assert: self newNode printString = ''.
-	self assert:
-		(self nodeClass string: self markupString) printString =
-			self escapedString.
+
+	self assert: self newNode printString equals: ''.
+	self
+		assert: (self nodeClass string: self markupString) printString
+		equals: self escapedString
 ]

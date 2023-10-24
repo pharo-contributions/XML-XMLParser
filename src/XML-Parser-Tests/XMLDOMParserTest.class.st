@@ -54,16 +54,18 @@ XMLDOMParserTest >> testAllElementsNamespaceURIs [
 
 { #category : #tests }
 XMLDOMParserTest >> testAttributeListClass [
-	(Array
-		with: XMLAttributeList
-		with: XMLCachingAttributeList)
-		do: [:listClass | | document parser |
-			parser := XMLDOMParser on: self addressBookXML.
-			parser configuration attributeListClass: listClass.
-			document := parser parseDocument.
-			self assert: parser configuration attributeListClass == listClass.
-			document allElements do: [:each |
-				self assert: each attributeNodes class == listClass]]
+
+	(Array with: XMLAttributeList with: XMLCachingAttributeList) do: [
+		:listClass |
+		| document parser |
+		parser := XMLDOMParser on: self addressBookXML.
+		parser configuration attributeListClass: listClass.
+		document := parser parseDocument.
+		self
+			assert: parser configuration attributeListClass
+			identicalTo: listClass.
+		document allElements do: [ :each |
+			self assert: each attributeNodes class identicalTo: listClass ] ]
 ]
 
 { #category : #tests }
@@ -105,14 +107,14 @@ XMLDOMParserTest >> testAttributeNamespacesDisabled [
 
 { #category : #tests }
 XMLDOMParserTest >> testAttributeParent [
-	(XMLDOMParser parse: self addressBookXML) allElementsDo: [:element |
-		element hasAttributes
-			ifTrue: [
-				element attributeNodesDo: [:each |
-					self
-						assert: each hasParent;
-						assert: each parent == element;
-						assert: each element == element]]]
+
+	(XMLDOMParser parse: self addressBookXML) allElementsDo: [ :element |
+		element hasAttributes ifTrue: [
+			element attributeNodesDo: [ :each |
+				self
+					assert: each hasParent;
+					assert: each parent identicalTo: element;
+					assert: each element identicalTo: element ] ] ]
 ]
 
 { #category : #tests }
@@ -222,17 +224,23 @@ XMLDOMParserTest >> testCDataSectionEntityReplacement [
 
 { #category : #tests }
 XMLDOMParserTest >> testChangingNamespaces [
-	| document people person |
 
+	| document people person |
 	document := XMLDOMParser parse: self addressBookNamespacedXML.
 
-	people := document allElementsNamed: 'person' namespaceURI: 'defaultNS'.
+	people := document
+		          allElementsNamed: 'person'
+		          namespaceURI: 'defaultNS'.
 	(person := people third) prefix: 'ps'.
-	self assert: person == (document findElementNamed: 'person' namespaceURI: 'personNS').
-	self assert:
-		(people copyWithout: person) equals:
-			((document findElementNamed: 'addressbook') nodesSelect: [:each |
-				each isElement and: [each namespaceURI = 'defaultNS']])
+	self
+		assert: person
+		identicalTo:
+		(document findElementNamed: 'person' namespaceURI: 'personNS').
+	self
+		assert: (people copyWithout: person)
+		equals:
+			((document findElementNamed: 'addressbook') nodesSelect: [ :each |
+				 each isElement and: [ each namespaceURI = 'defaultNS' ] ])
 ]
 
 { #category : #tests }
@@ -293,42 +301,42 @@ XMLDOMParserTest >> testDoctypeDeclaration [
 
 { #category : #tests }
 XMLDOMParserTest >> testDocument [
-	| parser document root |
 
+	| parser document root |
 	parser := XMLDOMParser on: self addressBookXML.
 	self assert: parser document isNil.
 
 	document := parser parseDocument.
-	self assert: parser document == document.
+	self assert: parser document identicalTo: document.
 
 	parser on: self addressBookXML.
 	self assert: parser document isNil.
 
-	document allNodesDo: [:each |
-		self assert: each document == document].
+	document allNodesDo: [ :each |
+		self assert: each document identicalTo: document ].
 
 	root := document root.
 	root innerXML: self addressBookXML.
-	document allNodesDo: [:each |
-		self assert: each document == document].
+	document allNodesDo: [ :each |
+		self assert: each document identicalTo: document ].
 
 	document removeNode: root.
-	root allNodesDo: [:each |
-		self assert: each document isNil]
+	root allNodesDo: [ :each | self assert: each document isNil ]
 ]
 
 { #category : #tests }
 XMLDOMParserTest >> testDocumentInternalSubset [
-	| document doctypeDeclaration |
 
-	document := XMLDOMParser parse: self internalSubsetXMLWithDeclarations.
+	| document doctypeDeclaration |
+	document := XMLDOMParser parse:
+		            self internalSubsetXMLWithDeclarations.
 	doctypeDeclaration := document doctypeDeclaration.
-	doctypeDeclaration allNodesDo: [:each |
-		self assert: each document == document].
+	doctypeDeclaration allNodesDo: [ :each |
+		self assert: each document identicalTo: document ].
 
 	document doctypeDeclaration: nil.
-	doctypeDeclaration allNodesDo: [:each |
-		self assert: each document isNil]
+	doctypeDeclaration allNodesDo: [ :each |
+		self assert: each document isNil ]
 ]
 
 { #category : #tests }
@@ -406,21 +414,25 @@ XMLDOMParserTest >> testElementPrefixesNamespacesDisabled [
 
 { #category : #tests }
 XMLDOMParserTest >> testFindElementNamespaceURI [
-	| document people |
 
+	| document people |
 	document := XMLDOMParser parse: self addressBookNamespacedXML.
 
-	people := document allElementsNamed: 'person' namespaceURI: 'defaultNS'.
-	self assert:
-		(document
-			findElementNamed: 'person'
-			namespaceURI: 'defaultNS'
-			with: [:each | (each attributeAt: 'employee-number') = 'A7987']) == people last.
-	self assert:
-		(document
-			findElementNamed: 'person'
-			namespaceURI: 'defaultNS'
-			with: [:each | (each attributeAt: 'family-name') = 'Brown']) == people second.
+	people := document
+		          allElementsNamed: 'person'
+		          namespaceURI: 'defaultNS'.
+	self
+		assert: (document
+				 findElementNamed: 'person'
+				 namespaceURI: 'defaultNS'
+				 with: [ :each | (each attributeAt: 'employee-number') = 'A7987' ])
+		identicalTo: people last.
+	self
+		assert: (document
+				 findElementNamed: 'person'
+				 namespaceURI: 'defaultNS'
+				 with: [ :each | (each attributeAt: 'family-name') = 'Brown' ])
+		identicalTo: people second
 ]
 
 { #category : #tests }
@@ -762,24 +774,22 @@ XMLDOMParserTest >> testNamespacesDisabledAttributes [
 
 { #category : #tests }
 XMLDOMParserTest >> testNamespacesDisabledReuse [
-	| parser document oldRootScope newRootScope |
 
+	| parser document oldRootScope newRootScope |
 	parser := XMLDOMParser on: self addressBookNamespacedXML.
-	document :=
-		parser
-			usesNamespaces: true;
-			parseDocument.
+	document := parser
+		            usesNamespaces: true;
+		            parseDocument.
 	oldRootScope := document root namespaceScope.
 	self assert: oldRootScope hasNamespaces.
 
-	document :=
-		parser
-			on: self addressBookNamespacedXML;
-			usesNamespaces: false;
-			parseDocument.
+	document := parser
+		            on: self addressBookNamespacedXML;
+		            usesNamespaces: false;
+		            parseDocument.
 	newRootScope := document root namespaceScope.
 	self
-		deny: newRootScope = oldRootScope;
+		deny: newRootScope equals: oldRootScope;
 		deny: newRootScope hasNamespaces.
 
 	self
@@ -787,17 +797,17 @@ XMLDOMParserTest >> testNamespacesDisabledReuse [
 			parser
 				on: '<test xmlns:unused="unusedNS"><used:test/></test>';
 				usesNamespaces: true;
-				parseDocument]
+				parseDocument ]
 		raise: XMLNamespaceException.
 	self
 		shouldnt: [
-			document :=
-				parser
-					on: '<test xmlns:unused="unusedNS"><used:test/></test>';
-					usesNamespaces: false;
-					parseDocument]
+			document := parser
+				            on:
+					            '<test xmlns:unused="unusedNS"><used:test/></test>';
+				            usesNamespaces: false;
+				            parseDocument ]
 		raise: XMLNamespaceException.
-	self deny: document root hasNamespaces.
+	self deny: document root hasNamespaces
 ]
 
 { #category : #tests }
@@ -841,58 +851,62 @@ XMLDOMParserTest >> testNamespacesResolvingDisabled [
 
 { #category : #tests }
 XMLDOMParserTest >> testNodeDetecting [
-	| document people |
 
+	| document people |
 	document := XMLDOMParser parse: self addressBookXML.
 	people := document root elementsAt: 'person'.
-	self assert:
-		((document findElementNamed: 'addressbook') nodesDetect: [:each |
-			each isElement and: [(each attributeAt: 'family-name') = 'Brown']]) == people second.
-	self assert:
-		((document findElementNamed: 'addressbook')
-			nodesDetect: [:each | each isElement and: [(each attributeAt: 'unknown') = 'Brown']]
-			ifNone: ['not found']) equals: 'not found'.
+	self
+		assert:
+			((document findElementNamed: 'addressbook') nodesDetect: [ :each |
+				 each isElement and: [
+					 (each attributeAt: 'family-name') = 'Brown' ] ])
+		identicalTo: people second.
+	self
+		assert: ((document findElementNamed: 'addressbook')
+				 nodesDetect: [ :each |
+					 each isElement and: [ (each attributeAt: 'unknown') = 'Brown' ] ]
+				 ifNone: [ 'not found' ])
+		equals: 'not found'
 ]
 
 { #category : #tests }
 XMLDOMParserTest >> testNodeFactory [
-	| parser oldNodeFactory newNodeFactory |
 
+	| parser oldNodeFactory newNodeFactory |
 	parser := XMLDOMParser on: self addressBookXML.
 	oldNodeFactory := parser nodeFactory.
-	self assert: oldNodeFactory class == self nodeFactoryClass.
+	self assert: oldNodeFactory class identicalTo: self nodeFactoryClass.
 
 	newNodeFactory := self nodeFactoryClass new.
 	self
-		assert: (parser nodeFactory: newNodeFactory) == parser;
-		assert: parser nodeFactory == newNodeFactory.
+		assert: (parser nodeFactory: newNodeFactory) identicalTo: parser;
+		assert: parser nodeFactory identicalTo: newNodeFactory
 ]
 
 { #category : #tests }
 XMLDOMParserTest >> testNodeListClass [
-	(Array
-		with: XMLNodeList
-		with: XMLCachingNodeList)
-		do: [:listClass | | document parser |
-			parser := XMLDOMParser on: self addressBookXML.
-			parser configuration nodeListClass: listClass.
-			document := parser parseDocument.
-			self
-				assert: parser configuration nodeListClass == listClass;
-				assert: document nodes class == listClass.
-			document allElements do: [:each |
-				self assert: each nodes class == listClass]]
+
+	(Array with: XMLNodeList with: XMLCachingNodeList) do: [ :listClass |
+		| document parser |
+		parser := XMLDOMParser on: self addressBookXML.
+		parser configuration nodeListClass: listClass.
+		document := parser parseDocument.
+		self
+			assert: parser configuration nodeListClass identicalTo: listClass;
+			assert: document nodes class identicalTo: listClass.
+		document allElements do: [ :each |
+			self assert: each nodes class identicalTo: listClass ] ]
 ]
 
 { #category : #tests }
 XMLDOMParserTest >> testNodeParent [
-	(XMLDOMParser parse: self addressBookXML) allNodesDo: [:node |
-		node hasChildren
-			ifTrue: [
-				node nodesDo: [:each |
-					self
-						assert: each hasParent;
-						assert: each parent == node]]]
+
+	(XMLDOMParser parse: self addressBookXML) allNodesDo: [ :node |
+		node hasChildren ifTrue: [
+			node nodesDo: [ :each |
+				self
+					assert: each hasParent;
+					assert: each parent identicalTo: node ] ] ]
 ]
 
 { #category : #tests }
@@ -912,8 +926,8 @@ XMLDOMParserTest >> testNodeStack [
 
 { #category : #tests }
 XMLDOMParserTest >> testOptimizeForLargeDocuments [
-	| parser |
 
+	| parser |
 	parser := XMLDOMParser on: ''.
 
 	parser optimizeForLargeDocuments.
@@ -921,7 +935,8 @@ XMLDOMParserTest >> testOptimizeForLargeDocuments [
 		deny: parser isValidating;
 		deny: parser usesNamespaces;
 		assert: parser documentReadLimit isNil;
-		assert: parser nodeFactory attributeListClass == XMLAttributeList.
+		assert: parser nodeFactory attributeListClass
+		identicalTo: XMLAttributeList
 ]
 
 { #category : #tests }
@@ -1001,46 +1016,47 @@ XMLDOMParserTest >> testParsedElementNames [
 
 { #category : #tests }
 XMLDOMParserTest >> testPreservesCDataNodes [
-	| parser |
 
+	| parser |
 	parser := XMLDOMParser on: self addressBookXML.
 	self
 		deny: parser preservesCDataNodes;
-		assert: (parser preservesCDataNodes: true) == parser;
+		assert: (parser preservesCDataNodes: true) identicalTo: parser;
 		assert: parser preservesCDataNodes;
-		assert: (parser preservesCDataNodes: false) == parser;
-		deny: parser preservesCDataNodes.
+		assert: (parser preservesCDataNodes: false) identicalTo: parser;
+		deny: parser preservesCDataNodes
 ]
 
 { #category : #tests }
 XMLDOMParserTest >> testPreservesCommentNodes [
-	| parser |
 
+	| parser |
 	parser := XMLDOMParser on: self addressBookXML.
 	self
 		deny: parser preservesCommentNodes;
-		assert: (parser preservesCommentNodes: true) == parser;
+		assert: (parser preservesCommentNodes: true) identicalTo: parser;
 		assert: parser preservesCommentNodes;
-		assert: (parser preservesCommentNodes: false) == parser;
-		deny: parser preservesCommentNodes.
+		assert: (parser preservesCommentNodes: false) identicalTo: parser;
+		deny: parser preservesCommentNodes
 ]
 
 { #category : #tests }
 XMLDOMParserTest >> testPreservesIgnorableWhitespace [
-	| parser |
 
+	| parser |
 	parser := XMLDOMParser on: self addressBookXML.
 	parser isValidating: false.
 	"should enable validation"
 	self
 		deny: parser preservesIgnorableWhitespace;
-		assert: (parser preservesIgnorableWhitespace: true) == parser;
+		assert: (parser preservesIgnorableWhitespace: true)
+		identicalTo: parser;
 		assert: parser preservesIgnorableWhitespace;
 		assert: parser isValidating.
 
 	"disabling validation should disable it"
 	self
-		assert: (parser isValidating: false) == parser;
+		assert: (parser isValidating: false) identicalTo: parser;
 		deny: parser preservesIgnorableWhitespace;
 		deny: parser isValidating
 ]
@@ -1099,18 +1115,18 @@ XMLDOMParserTest >> testProcessingInstructionEntityReplacement [
 
 { #category : #tests }
 XMLDOMParserTest >> testRootElement [
-	| document root  |
 
+	| document root |
 	document := XMLDOMParser parse: self addressBookXML.
-	self assert: document class == XMLDocument.
+	self assert: document class identicalTo: XMLDocument.
 	root := document root.
-	self assert: (root class == XMLElement).
-
-	self assert:
-		(root allNodesDetect: [:each |
-			each isElement
-				and: [each isNamedAny: #('AddressBook' 'addressbook')]]) == root.
-	self assert: (root findElementNamed: 'addressbook') == root.
+	self assert: root class identicalTo: XMLElement.
+	self
+		assert: (root allNodesDetect: [ :each |
+				 each isElement and: [
+					 each isNamedAny: #( 'AddressBook' 'addressbook' ) ] ])
+		identicalTo: root.
+	self assert: (root findElementNamed: 'addressbook') identicalTo: root
 ]
 
 { #category : #tests }

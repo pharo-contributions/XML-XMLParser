@@ -132,79 +132,79 @@ XMLNodeListTest >> testContentNodesDo [
 
 { #category : #tests }
 XMLNodeListTest >> testContentStringAt [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	self listElements do: [:each |
-		self assert:
-			(list contentStringAt: each name) = each contentString]
+	self listElements do: [ :each |
+		self
+			assert: (list contentStringAt: each name)
+			equals: each contentString ]
 ]
 
 { #category : #tests }
 XMLNodeListTest >> testElementAfter [
-	| list elementAfter |
 
+	| list elementAfter |
 	list := self listWithItems.
 	elementAfter := nil.
-	self listElements reverseDo: [:each |
-		self assert: (list elementAfter: each) = elementAfter.
-		elementAfter := each]
+	self listElements reverseDo: [ :each |
+		self assert: (list elementAfter: each) equals: elementAfter.
+		elementAfter := each ]
 ]
 
 { #category : #tests }
 XMLNodeListTest >> testElementAt [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	self listElements do: [:each | | changedElement |
-		self assert: (list elementAt: each name) = each.
+	self listElements do: [ :each |
+		| changedElement |
+		self assert: (list elementAt: each name) equals: each.
 
 		changedElement := self changedListItem: each.
 		list addFirst: changedElement.
-		self assert: (list elementAt: each name) = changedElement.
+		self assert: (list elementAt: each name) equals: changedElement.
 
 		list
 			remove: each;
 			remove: changedElement.
-		self assert: (list elementAt: each name) = self defaultValue]
+		self assert: (list elementAt: each name) equals: self defaultValue ]
 ]
 
 { #category : #tests }
 XMLNodeListTest >> testElementAtIfAbsent [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	self listElements do: [:each | | changedElement |
-		self assert:
-			(list
-				elementAt: each name
-				ifAbsent: [self fail]) = each.
+	self listElements do: [ :each |
+		| changedElement |
+		self
+			assert: (list elementAt: each name ifAbsent: [ self fail ])
+			equals: each.
 
 		changedElement := self changedListItem: each.
 		list addFirst: changedElement.
-		self assert:
-			(list
-				elementAt: each name
-				ifAbsent: [self fail]) = changedElement.
+		self
+			assert: (list elementAt: each name ifAbsent: [ self fail ])
+			equals: changedElement.
 
 		list
 			remove: each;
 			remove: changedElement.
-		self assert:
-			(list
-				elementAt: each name
-				ifAbsent: [self newListItem]) = self newListItem]
+		self
+			assert: (list elementAt: each name ifAbsent: [ self newListItem ])
+			equals: self newListItem ]
 ]
 
 { #category : #tests }
 XMLNodeListTest >> testElementBefore [
-	| list elementBefore |
 
+	| list elementBefore |
 	list := self listWithItems.
 	elementBefore := nil.
-	self listElements do: [:each |
-		self assert: (list elementBefore: each) = elementBefore.
-		elementBefore := each]
+	self listElements do: [ :each |
+		self assert: (list elementBefore: each) equals: elementBefore.
+		elementBefore := each ]
 ]
 
 { #category : #tests }
@@ -231,27 +231,28 @@ XMLNodeListTest >> testElements [
 
 { #category : #tests }
 XMLNodeListTest >> testElementsAt [
-	self listElements do: [:element | | list elementsAt changedElement |
+
+	self listElements do: [ :element |
+		| list elementsAt changedElement |
 		list := self listWithItems.
-		elementsAt :=
-			self listElements select: [:each |
-				each isNamed: element name].
-		self assert:
-			(list elementsAt: element name) =
-				(self listClass newFrom: elementsAt).
+		elementsAt := self listElements select: [ :each |
+			              each isNamed: element name ].
+		self
+			assert: (list elementsAt: element name)
+			equals: (self listClass newFrom: elementsAt).
 
 		changedElement := self changedListItem: element.
 		list addFirst: changedElement.
 		elementsAt := elementsAt copyWithFirst: changedElement.
-		self assert:
-			(list elementsAt: element name) =
-				(self listClass newFrom: elementsAt).
+		self
+			assert: (list elementsAt: element name)
+			equals: (self listClass newFrom: elementsAt).
 
 		list remove: element.
 		elementsAt := elementsAt copyWithout: element.
-		self assert:
-			(list elementsAt: element name) =
-				(self listClass newFrom: elementsAt)]
+		self
+			assert: (list elementsAt: element name)
+			equals: (self listClass newFrom: elementsAt) ]
 ]
 
 { #category : #tests }
@@ -297,13 +298,13 @@ XMLNodeListTest >> testElementsSelect [
 
 { #category : #tests }
 XMLNodeListTest >> testFirstElement [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	self listElements do: [:each |
-		self assert: list firstElement = each.
-		list remove: each].
-	self assert: list firstElement = self defaultValue.
+	self listElements do: [ :each |
+		self assert: list firstElement equals: each.
+		list remove: each ].
+	self assert: list firstElement equals: self defaultValue
 ]
 
 { #category : #tests }
@@ -350,23 +351,24 @@ XMLNodeListTest >> testHasStringNodes [
 
 { #category : #tests }
 XMLNodeListTest >> testLastElement [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	self listElements reverseDo: [:each |
-		self assert: list lastElement = each.
-		list remove: each].
-	self assert: list lastElement = self defaultValue.
+	self listElements reverseDo: [ :each |
+		self assert: list lastElement equals: each.
+		list remove: each ].
+	self assert: list lastElement equals: self defaultValue
 ]
 
 { #category : #tests }
 XMLNodeListTest >> testRawContentStringAt [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	self listElements do: [:each |
-		self assert:
-			(list rawContentStringAt: each name) = each rawContentString].
+	self listElements do: [ :each |
+		self
+			assert: (list rawContentStringAt: each name)
+			equals: each rawContentString ]
 ]
 
 { #category : #tests }

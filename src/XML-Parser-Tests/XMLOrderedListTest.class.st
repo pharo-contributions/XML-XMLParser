@@ -16,56 +16,63 @@ XMLOrderedListTest >> allowsDuplicates [
 
 { #category : #assertions }
 XMLOrderedListTest >> assertList: aList collectedFrom: aSecondList equals: aThirdList [
+
 	self
-		assert: aList = aThirdList;
-		assert: aList class = aSecondList species;
-		deny: aList == aSecondList;
-		deny: aList collection == aSecondList collection
+		assert: aList equals: aThirdList;
+		assert: aList class equals: aSecondList species;
+		deny: aList identicalTo: aSecondList;
+		deny: aList collection identicalTo: aSecondList collection
 ]
 
 { #category : #assertions }
 XMLOrderedListTest >> assertList: aList copiedFrom: aSecondList equals: aThirdList [
+
 	self
-		assert: aList = aThirdList;
-		assert: aList class == self listCopyClass;
-		assert: aList collection class == aSecondList collection class;
-		deny: aList == aSecondList;
-		deny: aList collection == aSecondList collection
+		assert: aList equals: aThirdList;
+		assert: aList class identicalTo: self listCopyClass;
+		assert: aList collection class
+		identicalTo: aSecondList collection class;
+		deny: aList identicalTo: aSecondList;
+		deny: aList collection identicalTo: aSecondList collection
 ]
 
 { #category : #assertions }
 XMLOrderedListTest >> assertList: aFirstList equals: aSecondList [
+
 	self
-		assert: aFirstList = aFirstList;
-		assert: aSecondList = aSecondList;
-		assert: aFirstList = aSecondList;
-		assert: aSecondList = aFirstList
+		assert: aFirstList equals: aFirstList;
+		assert: aSecondList equals: aSecondList;
+		assert: aFirstList equals: aSecondList;
+		assert: aSecondList equals: aFirstList
 ]
 
 { #category : #assertions }
 XMLOrderedListTest >> assertList: aList isCopyOf: aSecondList [
+
 	self
-		assert: aList = aSecondList;
-		assert: aList class == self listCopyClass;
-		assert: aList collection class == aSecondList collection class;
-		assert: aList collection = aSecondList collection;
-		deny: aList == aSecondList;
-		deny: aList collection == aSecondList collection
+		assert: aList equals: aSecondList;
+		assert: aList class identicalTo: self listCopyClass;
+		assert: aList collection class
+		identicalTo: aSecondList collection class;
+		assert: aList collection equals: aSecondList collection;
+		deny: aList identicalTo: aSecondList;
+		deny: aList collection identicalTo: aSecondList collection
 ]
 
 { #category : #assertions }
 XMLOrderedListTest >> assertList: aList replacedItems: anOldItemCollection withItems: aNewItemCollection from: aStart to: aStop [
 	"items before aStart should not have been replaced"
-	1 to: aStart - 1 do: [:i |
-		self assert: (aList at: i) = (anOldItemCollection at: i)].
+
+	1 to: aStart - 1 do: [ :i |
+	self assert: (aList at: i) equals: (anOldItemCollection at: i) ].
 
 	"items within the range should be replaced"
-	aStart to: aStop do: [:i |
-		self assert: (aList at: i) = (aNewItemCollection at: i)].
+	aStart to: aStop do: [ :i |
+	self assert: (aList at: i) equals: (aNewItemCollection at: i) ].
 
 	"items after aStop should not have been replaced"
-	aStop + 1 to: aList size do: [:i |
-		self assert: (aList at: i) = (anOldItemCollection at: i)]
+	aStop + 1 to: aList size do: [ :i |
+	self assert: (aList at: i) equals: (anOldItemCollection at: i) ]
 ]
 
 { #category : #accessing }
@@ -114,9 +121,10 @@ XMLOrderedListTest >> defaultValue [
 
 { #category : #assertions }
 XMLOrderedListTest >> denyList: aFirstList equals: aSecondList [
+
 	self
-		deny: aFirstList = aSecondList;
-		deny: aSecondList = aFirstList
+		deny: aFirstList equals: aSecondList;
+		deny: aSecondList equals: aFirstList
 ]
 
 { #category : #accessing }
@@ -206,187 +214,202 @@ XMLOrderedListTest >> sortBlock [
 
 { #category : #tests }
 XMLOrderedListTest >> testAdd [
-	| list |
 
+	| list |
 	list := self emptyList.
 	self
-		deny: list = self listWithItems;
-		assert: (self listItems allSatisfy: [:each | (list add: each) == each]);
-		assert: (list = self listWithItems).
+		deny: list equals: self listWithItems;
+		assert:
+			(self listItems allSatisfy: [ :each | (list add: each) == each ]);
+		assert: list equals: self listWithItems
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAddAfter [
-	| list |
 
+	| list |
 	list := self listWithSingleItem.
 	self
-		assert:
-			(self listItems allButFirst reversed
-				allSatisfy: [:each | (list add: each after: self singleListItem) = each]);
-		assert: list = self listWithItems;
-		should: [list add: self newListItem after: self absentListItem] raise: Error.
+		assert: (self listItems allButFirst reversed allSatisfy: [ :each |
+					 (list add: each after: self singleListItem) = each ]);
+		assert: list equals: self listWithItems;
+		should: [ list add: self newListItem after: self absentListItem ]
+		raise: Error
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAddAfterIndex [
-	| list |
 
+	| list |
 	list := self listWithSingleItem.
 	self
-		assert:
-			(self listItems allButFirst reversed
-				allSatisfy: [:each | (list add: each afterIndex: 1) = each]);
-		assert: list = self listWithItems;
-		should: [list add: self newListItem afterIndex: self listItems size + 1] raise: Error;
-		should: [list add: self newListItem afterIndex: -1] raise: Error.
+		assert: (self listItems allButFirst reversed allSatisfy: [ :each |
+					 (list add: each afterIndex: 1) = each ]);
+		assert: list equals: self listWithItems;
+		should: [
+			list add: self newListItem afterIndex: self listItems size + 1 ]
+		raise: Error;
+		should: [ list add: self newListItem afterIndex: -1 ] raise: Error
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAddAll [
-	| list |
 
+	| list |
 	list := self emptyList.
 	self
-		deny: list = self listWithItems;
-		assert: (list addAll: self listItems) = self listItems;
-		assert: list = self listWithItems;
-		assert: (list addAll: self changedListItems) = self changedListItems;
-		assert: list = (self listClass newFrom: (self listItems, self changedListItems)).
+		deny: list equals: self listWithItems;
+		assert: (list addAll: self listItems) equals: self listItems;
+		assert: list equals: self listWithItems;
+		assert: (list addAll: self changedListItems)
+		equals: self changedListItems;
+		assert: list
+		equals:
+			(self listClass newFrom: self listItems , self changedListItems)
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAddAllFirst [
-	| list |
 
+	| list |
 	list := self emptyList.
 	self
-		assert: (list addAllFirst: self listItems) = self listItems;
-		assert: list = self listWithItems;
-		assert: (list addAllFirst: self changedListItems) = self changedListItems;
-		assert: list = (self listClass newFrom: self changedListItems, self listItems).
+		assert: (list addAllFirst: self listItems) equals: self listItems;
+		assert: list equals: self listWithItems;
+		assert: (list addAllFirst: self changedListItems)
+		equals: self changedListItems;
+		assert: list
+		equals:
+			(self listClass newFrom: self changedListItems , self listItems)
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAddAllLast [
-	| list |
 
+	| list |
 	list := self emptyList.
 	self
-		assert: (list addAllLast: self listItems) = self listItems;
-		assert: list = self listWithItems;
-		assert: (list addAllLast: self changedListItems) = self changedListItems;
-		assert: list = (self listClass newFrom: self listItems, self changedListItems).
+		assert: (list addAllLast: self listItems) equals: self listItems;
+		assert: list equals: self listWithItems;
+		assert: (list addAllLast: self changedListItems)
+		equals: self changedListItems;
+		assert: list
+		equals:
+			(self listClass newFrom: self listItems , self changedListItems)
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAddBefore [
-	| list last |
 
+	| list last |
 	last := self listItems last.
 	(list := self emptyList) add: last.
 	self
-		assert:
-			(self listItems allButLast
-				allSatisfy: [:each | (list add: each before: last) = each]);
-		assert: list = self listWithItems;
-		should: [list add: self newListItem before: self absentListItem] raise: Error.
+		assert: (self listItems allButLast allSatisfy: [ :each |
+					 (list add: each before: last) = each ]);
+		assert: list equals: self listWithItems;
+		should: [ list add: self newListItem before: self absentListItem ]
+		raise: Error
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAddBeforeIndex [
-	| list |
 
+	| list |
 	(list := self emptyList) add: self listItems last.
-	self listItems allButLast withIndexDo: [:each :i |
-		self assert: (list add: each beforeIndex: i) = each].
+	self listItems allButLast withIndexDo: [ :each :i |
+		self assert: (list add: each beforeIndex: i) equals: each ].
 	self
-		assert: list = self listWithItems;
-		should: [list add: self newListItem beforeIndex: self listItems size + 2] raise: Error;
-		should: [list add: self newListItem beforeIndex: 0] raise: Error.
+		assert: list equals: self listWithItems;
+		should: [
+			list add: self newListItem beforeIndex: self listItems size + 2 ]
+		raise: Error;
+		should: [ list add: self newListItem beforeIndex: 0 ] raise: Error
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAddFirst [
-	| list |
 
+	| list |
 	list := self emptyList.
 	self
-		assert: (self listItems reversed allSatisfy: [:each | (list addFirst: each) = each]);
-		assert: list = self listWithItems.
+		assert: (self listItems reversed allSatisfy: [ :each |
+					 (list addFirst: each) = each ]);
+		assert: list equals: self listWithItems.
 
-	self assert: (self listItems allSatisfy: [:each | (list addFirst: each) = each]).
 	self assert:
-		list =
-			(self listClass newFrom: 
-				(self allowsDuplicates
-					ifTrue: [self listItems reversed, self listItems]
-					ifFalse: [self listItems reversed])).
+		(self listItems allSatisfy: [ :each | (list addFirst: each) = each ]).
+	self
+		assert: list
+		equals: (self listClass newFrom: (self allowsDuplicates
+					  ifTrue: [ self listItems reversed , self listItems ]
+					  ifFalse: [ self listItems reversed ]))
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAddLast [
-	| list |
 
+	| list |
 	list := self emptyList.
 	self
-		assert: (self listItems allSatisfy: [:each | (list addLast: each) = each]);
-		assert: list = self listWithItems.
+		assert:
+			(self listItems allSatisfy: [ :each | (list addLast: each) = each ]);
+		assert: list equals: self listWithItems.
 
-	self assert: (self listItems allSatisfy: [:each | (list addLast: each) = each]).
 	self assert:
-		list =
-			(self listClass newFrom: 
-				(self allowsDuplicates
-					ifTrue: [self listItems, self listItems]
-					ifFalse: [self listItems])).
+		(self listItems allSatisfy: [ :each | (list addLast: each) = each ]).
+	self
+		assert: list
+		equals: (self listClass newFrom: (self allowsDuplicates
+					  ifTrue: [ self listItems , self listItems ]
+					  ifFalse: [ self listItems ]))
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAfter [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	1 to: list size - 1 do: [:i |
-		self assert:
-			(list after: (self listItems at: i)) =
-				(self listItems at: i + 1)].
+	1 to: list size - 1 do: [ :i |
+		self
+			assert: (list after: (self listItems at: i))
+			equals: (self listItems at: i + 1) ].
 	self
-		assert: (list after: self listItems last) = self defaultValue;
-		assert: (list after: self absentListItem) = self defaultValue.
+		assert: (list after: self listItems last) equals: self defaultValue;
+		assert: (list after: self absentListItem) equals: self defaultValue
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAfterIfAbsent [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	1 to: list size - 1 do: [:i |
-		self assert:
-			(list
-				after: (self listItems at: i)
-				ifAbsent: [self fail]) = (self listItems at: i + 1)].
-	self assert:
-		(list
-			after: self listItems last
-			ifAbsent: [self newListItem]) = self newListItem.
-	self assert:
-		(list
-			after: self absentListItem
-			ifAbsent: [self newListItem]) = self newListItem.
+	1 to: list size - 1 do: [ :i |
+		self
+			assert:
+			(list after: (self listItems at: i) ifAbsent: [ self fail ])
+			equals: (self listItems at: i + 1) ].
+	self
+		assert:
+		(list after: self listItems last ifAbsent: [ self newListItem ])
+		equals: self newListItem.
+	self
+		assert:
+		(list after: self absentListItem ifAbsent: [ self newListItem ])
+		equals: self newListItem
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAllButFirst [
-	| list |
 
-	self assert: self emptyList allButFirst = self emptyList.
+	| list |
+	self assert: self emptyList allButFirst equals: self emptyList.
 
 	list := self listWithItems.
 	self
 		assertList: list allButFirst
 		copiedFrom: list
-		equals: (self listClass newFrom: self listItems allButFirst).
+		equals: (self listClass newFrom: self listItems allButFirst)
 ]
 
 { #category : #tests }
@@ -401,10 +424,10 @@ XMLOrderedListTest >> testAllButFirstDo [
 
 { #category : #tests }
 XMLOrderedListTest >> testAllButFirstFew [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	1 to: list size do: [:i |
+	1 to: list size do: [ :i |
 		self
 			assertList: (list allButFirst: i)
 			copiedFrom: list
@@ -417,24 +440,21 @@ XMLOrderedListTest >> testAllButFirstFew [
 			assertList: (list allButFirst: i * -1)
 			copiedFrom: list
 			equals: list.
-		self assert: (self emptyList allButFirst: i) = self emptyList].
-	self
-		assertList: (list allButFirst: 0)
-		copiedFrom: list
-		equals: list.
+		self assert: (self emptyList allButFirst: i) equals: self emptyList ].
+	self assertList: (list allButFirst: 0) copiedFrom: list equals: list
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAllButLast [
-	| list |
 
-	self assert: self emptyList allButLast = self emptyList.
+	| list |
+	self assert: self emptyList allButLast equals: self emptyList.
 
 	list := self listWithItems.
 	self
 		assertList: list allButLast
 		copiedFrom: list
-		equals: (self listClass newFrom: self listItems allButLast).
+		equals: (self listClass newFrom: self listItems allButLast)
 ]
 
 { #category : #tests }
@@ -449,10 +469,10 @@ XMLOrderedListTest >> testAllButLastDo [
 
 { #category : #tests }
 XMLOrderedListTest >> testAllButLastFew [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	1 to: list size do: [:i |
+	1 to: list size do: [ :i |
 		self
 			assertList: (list allButLast: i)
 			copiedFrom: list
@@ -465,158 +485,172 @@ XMLOrderedListTest >> testAllButLastFew [
 			assertList: (list allButLast: i * -1)
 			copiedFrom: list
 			equals: list.
-		self assert: (self emptyList allButLast: i) = self emptyList].
-	self
-		assertList: (list allButLast: 0)
-		copiedFrom: list
-		equals: list.
+		self assert: (self emptyList allButLast: i) equals: self emptyList ].
+	self assertList: (list allButLast: 0) copiedFrom: list equals: list
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAnyOne [
+
 	self
-		assert: self emptyList anyOne = self defaultValue;
-		assert: self listWithItems anyOne = self listItems first.
+		assert: self emptyList anyOne equals: self defaultValue;
+		assert: self listWithItems anyOne equals: self listItems first
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAsArray [
+
 	self
-		assert: self emptyList asArray = #();
-		assert: self listWithItems asArray = self listItems asArray
+		assert: self emptyList asArray equals: #(  );
+		assert: self listWithItems asArray equals: self listItems asArray
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAsOrderedCollection [
-	| list |
 
+	| list |
 	list := self listWithItems.
 	self
-		assert: self emptyList asOrderedCollection = OrderedCollection new;
-		assert: list asOrderedCollection = self listItems asOrderedCollection;
-		deny: list asOrderedCollection == list collection.
+		assert: self emptyList asOrderedCollection
+		equals: OrderedCollection new;
+		assert: list asOrderedCollection
+		equals: self listItems asOrderedCollection;
+		deny: list asOrderedCollection identicalTo: list collection
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAt [
-	| list |
 
+	| list |
 	list := self listWithItems.
 	self
-		assert: ((1 to: list size) allSatisfy: [:i | (list at: i) = (self listItems at: i)]);
-		assert: (list at: 0) = self defaultValue;
-		assert: (list at: list size + 1) = self defaultValue.
+		assert: ((1 to: list size) allSatisfy: [ :i |
+					 (list at: i) = (self listItems at: i) ]);
+		assert: (list at: 0) equals: self defaultValue;
+		assert: (list at: list size + 1) equals: self defaultValue
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAtIfAbsent [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	1 to: list size do: [:i |
-		self assert:
-			(list
-				at: i
-				ifAbsent: [self fail]) = (self listItems at: i)].
+	1 to: list size do: [ :i |
+		self
+			assert: (list at: i ifAbsent: [ self fail ])
+			equals: (self listItems at: i) ].
 	self
-		assert: (list at: 0 ifAbsent: [self newListItem]) = self newListItem;
-		assert: (list at: list size + 1 ifAbsent: [self newListItem]) = self newListItem.
+		assert: (list at: 0 ifAbsent: [ self newListItem ])
+		equals: self newListItem;
+		assert: (list at: list size + 1 ifAbsent: [ self newListItem ])
+		equals: self newListItem
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAtLast [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	1 to: list size do: [:i | self assert: (list atLast: i) = (self listItems atLast: i)].
+	1 to: list size do: [ :i |
+		self assert: (list atLast: i) equals: (self listItems atLast: i) ].
 	self
-		assert: (list atLast: 0) = self defaultValue;
-		assert: (list atLast: list size + 1) = self defaultValue.
+		assert: (list atLast: 0) equals: self defaultValue;
+		assert: (list atLast: list size + 1) equals: self defaultValue
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAtLastIfAbsent [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	1 to: list size do: [:i |
-		self assert: (list atLast: i ifAbsent: [self newListItem]) = (self listItems atLast: i)].
+	1 to: list size do: [ :i |
+		self
+			assert: (list atLast: i ifAbsent: [ self newListItem ])
+			equals: (self listItems atLast: i) ].
 	self
-		assert: (list atLast: 0 ifAbsent: [self newListItem]) = self newListItem;
-		assert: (list atLast: list size + 1 ifAbsent: [self newListItem]) = self newListItem.
+		assert: (list atLast: 0 ifAbsent: [ self newListItem ])
+		equals: self newListItem;
+		assert: (list atLast: list size + 1 ifAbsent: [ self newListItem ])
+		equals: self newListItem
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testAtPut [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	1 to: list size do: [:i | | replacement |
+	1 to: list size do: [ :i |
+		| replacement |
 		replacement := list at: i.
 		self
-			assert: (list at: i put: replacement) == replacement;
-			assert: (list at: i) == replacement].
-	self assert: list = self listWithItems.
-
-	self assert: (list at: list size + 1 put: self newListItem) = self newListItem.
-	self assert:
-		list =
-			(self listClass newFrom: (self listItems copyWith: self newListItem)).
+			assert: (list at: i put: replacement) identicalTo: replacement;
+			assert: (list at: i) identicalTo: replacement ].
+	self assert: list equals: self listWithItems.
+	self
+		assert: (list at: list size + 1 put: self newListItem)
+		equals: self newListItem.
+	self
+		assert: list
+		equals:
+		(self listClass newFrom: (self listItems copyWith: self newListItem)).
 
 	list := self listWithItems.
-	1 to: list size do: [:i | | replacement |
+	1 to: list size do: [ :i |
+		| replacement |
 		replacement := self changedListItems at: i.
 		self
-			assert: (list at: i put: replacement) == replacement;
-			assert: (list at: i) == replacement].
-	self assert: list = (self listClass newFrom: self changedListItems).
+			assert: (list at: i put: replacement) identicalTo: replacement;
+			assert: (list at: i) identicalTo: replacement ].
+	self
+		assert: list
+		equals: (self listClass newFrom: self changedListItems).
 
 	list := self listWithItems.
-	self listItems do: [:each |
-		self assert: (list at: list size + 1 put: each) == each].
-	self assert:
-		list =
-			(self allowsDuplicates
-				ifTrue: [self listClass newFrom: self listItems, self listItems]
-				ifFalse: [self listWithItems]).
+	self listItems do: [ :each |
+		self assert: (list at: list size + 1 put: each) identicalTo: each ].
+	self assert: list equals: (self allowsDuplicates
+			 ifTrue: [ self listClass newFrom: self listItems , self listItems ]
+			 ifFalse: [ self listWithItems ]).
+	self should: [ list at: 0 put: self newListItem ] raise: Error.
 	self
-		should: [list at: 0 put: self newListItem]
-		raise: Error.
-	self
-		should: [list at: list size + 2 put: self newListItem]
-		raise: Error.
+		should: [ list at: list size + 2 put: self newListItem ]
+		raise: Error
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testBefore [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	2 to: list size do: [:i |
-		self assert: (list before: (self listItems at: i)) = (self listItems at: i - 1)].
+	2 to: list size do: [ :i |
+		self
+			assert: (list before: (self listItems at: i))
+			equals: (self listItems at: i - 1) ].
 	self
-		assert: (list before: self listItems first) = self defaultValue;
-		assert: (list before: self absentListItem) = self defaultValue.
+		assert: (list before: self listItems first)
+		equals: self defaultValue;
+		assert: (list before: self absentListItem)
+		equals: self defaultValue
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testBeforeIfAbsent [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	2 to: list size do: [:i |
-		self assert:
-			(list
-				before: (self listItems at: i)
-				ifAbsent: [self fail]) = (self listItems at: i - 1)].
-	self assert:
-		(list
-			before: self listItems first
-			ifAbsent: [self newListItem]) = self newListItem.
-	self assert:
-		(list
-			before: self absentListItem
-			ifAbsent: [self newListItem]) = self newListItem.
+	2 to: list size do: [ :i |
+		self
+			assert:
+			(list before: (self listItems at: i) ifAbsent: [ self fail ])
+			equals: (self listItems at: i - 1) ].
+	self
+		assert:
+		(list before: self listItems first ifAbsent: [ self newListItem ])
+		equals: self newListItem.
+	self
+		assert:
+		(list before: self absentListItem ifAbsent: [ self newListItem ])
+		equals: self newListItem
 ]
 
 { #category : #tests }
@@ -702,28 +736,31 @@ XMLOrderedListTest >> testCopy [
 
 { #category : #tests }
 XMLOrderedListTest >> testCopyAfter [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	list do: [:each |
+	list do: [ :each |
 		self
 			assertList: (list copyAfter: each)
 			copiedFrom: list
 			equals: (self listClass newFrom: (self listItems copyAfter: each)).
-		self assert: (self emptyList copyAfter: each) = self emptyList].
+		self assert: (self emptyList copyAfter: each) equals: self emptyList ]
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testCopyAfterLast [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	list do: [:each |
+	list do: [ :each |
 		self
 			assertList: (list copyAfterLast: each)
 			copiedFrom: list
-			equals: (self listClass newFrom: (self listItems copyAfterLast: each)).
-		self assert: (self emptyList copyAfterLast: each) = self emptyList].
+			equals:
+			(self listClass newFrom: (self listItems copyAfterLast: each)).
+		self
+			assert: (self emptyList copyAfterLast: each)
+			equals: self emptyList ]
 ]
 
 { #category : #tests }
@@ -944,33 +981,41 @@ XMLOrderedListTest >> testCopyWithoutAll [
 
 { #category : #tests }
 XMLOrderedListTest >> testDefaultValue [
-	self assert: self emptyList defaultValue = self defaultValue
+
+	self assert: self emptyList defaultValue equals: self defaultValue
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testDetect [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	self listItems do: [:element |
-		self assert: (list detect: [:each | each = element]) = element].
-	self assert: (list detect: [:each | each = self absentListItem]) = self defaultValue.
+	self listItems do: [ :element |
+		self
+			assert: (list detect: [ :each | each = element ])
+			equals: element ].
+	self
+		assert: (list detect: [ :each | each = self absentListItem ])
+		equals: self defaultValue
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testDetectIfNone [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	self listItems do: [:element |
-		self assert:
+	self listItems do: [ :element |
+		self
+			assert:
 			(list
-				detect: [:each | each = element]
-				ifNone: [self newListItem]) = element].
-	self assert:
-		(list
-			detect: [:each | each = self absentListItem]
-			ifNone: [self newListItem]) = self newListItem.
+				 detect: [ :each | each = element ]
+				 ifNone: [ self newListItem ])
+			equals: element ].
+	self
+		assert: (list
+				 detect: [ :each | each = self absentListItem ]
+				 ifNone: [ self newListItem ])
+		equals: self newListItem
 ]
 
 { #category : #tests }
@@ -982,22 +1027,23 @@ XMLOrderedListTest >> testDo [
 
 { #category : #tests }
 XMLOrderedListTest >> testDoWithIndex [
-	| list enumerated |
 
+	| list enumerated |
 	list := self listWithItems.
 	enumerated := OrderedCollection new.
-	list withIndexDo: [:each :i | enumerated addLast: each -> i].
-	self assert:
-		enumerated =
-			(self listItems withIndexCollect: [:each : i | each -> i ])
-				asOrderedCollection.
+	list withIndexDo: [ :each :i | enumerated addLast: each -> i ].
+	self
+		assert: enumerated
+		equals: (self listItems withIndexCollect: [ :each :i | each -> i ])
+				asOrderedCollection
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testEighth [
+
 	self
-		assert: self emptyList eighth = self defaultValue;
-		assert: self listWithItems eighth = (self listItems at: 8).
+		assert: self emptyList eighth equals: self defaultValue;
+		assert: self listWithItems eighth equals: (self listItems at: 8)
 ]
 
 { #category : #tests }
@@ -1076,16 +1122,18 @@ XMLOrderedListTest >> testEqualsSpecies [
 
 { #category : #tests }
 XMLOrderedListTest >> testFifth [
+
 	self
-		assert: self emptyList fifth = self defaultValue;
-		assert: self listWithItems fifth = (self listItems at: 5).
+		assert: self emptyList fifth equals: self defaultValue;
+		assert: self listWithItems fifth equals: (self listItems at: 5)
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testFirst [
+
 	self
-		assert: self emptyList first = self defaultValue;
-		assert: self listWithItems first = (self listItems at: 1).
+		assert: self emptyList first equals: self defaultValue;
+		assert: self listWithItems first equals: (self listItems at: 1)
 ]
 
 { #category : #tests }
@@ -1114,9 +1162,10 @@ XMLOrderedListTest >> testFirstFew [
 
 { #category : #tests }
 XMLOrderedListTest >> testFourth [
+
 	self
-		assert: self emptyList fourth = self defaultValue;
-		assert: self listWithItems fourth = (self listItems at: 4).
+		assert: self emptyList fourth equals: self defaultValue;
+		assert: self listWithItems fourth equals: (self listItems at: 4)
 ]
 
 { #category : #tests }
@@ -1124,139 +1173,157 @@ XMLOrderedListTest >> testHash [
 	"We can only safely test that equal objects have the same hash; testing
 	that different objects have different hashes would be unreliable
 	because #hash is non-cryptographic and has collisions."
+
 	self
-		assert: self emptyList hash = self emptyList hash;
-		assert: self listWithSingleItem hash = self listWithSingleItem hash;
-		assert: self listWithItems hash = self listWithItems hash;
-		assert:
-			(self listWithItems
-				removeAll;
-				hash) = self emptyList hash.
+		assert: self emptyList hash equals: self emptyList hash;
+		assert: self listWithSingleItem hash
+		equals: self listWithSingleItem hash;
+		assert: self listWithItems hash equals: self listWithItems hash;
+		assert: (self listWithItems
+				 removeAll;
+				 hash)
+		equals: self emptyList hash
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testHashCustomCollection [
-	self assert:
-		self emptyList hash = self customCollectionEmptyList hash.
-	self assert:
-		self listWithSingleItem hash =
-			self customCollectionListWithSingleItem hash.
-	self assert:
-		self listWithItems hash =
-			self customCollectionListWithItems hash.
+
+	self
+		assert: self emptyList hash
+		equals: self customCollectionEmptyList hash.
+	self
+		assert: self listWithSingleItem hash
+		equals: self customCollectionListWithSingleItem hash.
+	self
+		assert: self listWithItems hash
+		equals: self customCollectionListWithItems hash
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testIdentityIndexOf [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	1 to: list size do: [:i |
+	1 to: list size do: [ :i |
 		self
-			assert: (list identityIndexOf: (list at: i)) = i;
-			assert: (list identityIndexOf: (list at: i) copy) isZero].
+			assert: (list identityIndexOf: (list at: i)) equals: i;
+			assert: (list identityIndexOf: (list at: i) copy) isZero ]
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testIdentityIndexOfIfAbsent [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	1 to: list size do: [:i |
+	1 to: list size do: [ :i |
 		self
-			assert: (list identityIndexOf: (list at: i) ifAbsent: [-1]) = i;
-			assert: (list identityIndexOf: (list at: i) copy ifAbsent: [-1]) = -1].
+			assert: (list identityIndexOf: (list at: i) ifAbsent: [ -1 ])
+			equals: i;
+			assert: (list identityIndexOf: (list at: i) copy ifAbsent: [ -1 ])
+			equals: -1 ]
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testIndexOf [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	1 to: list size do: [:i |
+	1 to: list size do: [ :i |
 		self
-			assert: (list indexOf: (list at: i)) = i;
-			assert: (list indexOf: (self listItems at: i)) = i].
-	self assert: (list indexOf: self absentListItem) isZero.
+			assert: (list indexOf: (list at: i)) equals: i;
+			assert: (list indexOf: (self listItems at: i)) equals: i ].
+	self assert: (list indexOf: self absentListItem) isZero
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testIndexOfIfAbsent [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	1 to: list size do: [:i |
+	1 to: list size do: [ :i |
 		self
-			assert: (list indexOf: (list at: i) ifAbsent: [-1]) = i;
-			assert: (list indexOf: (self listItems at: i) ifAbsent: [-1]) = i].
-	self assert: (list indexOf: self absentListItem ifAbsent: [-1]) = -1.
+			assert: (list indexOf: (list at: i) ifAbsent: [ -1 ]) equals: i;
+			assert: (list indexOf: (self listItems at: i) ifAbsent: [ -1 ])
+			equals: i ].
+	self
+		assert: (list indexOf: self absentListItem ifAbsent: [ -1 ])
+		equals: -1
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testIndexOfStartingAt [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	1 to: list size do: [:i |
+	1 to: list size do: [ :i |
 		self
-			assert: (list indexOf: (list at: i) startingAt: i) = i;
-			assert: (list indexOf: (list at: i) startingAt: i + 1) isZero].
+			assert: (list indexOf: (list at: i) startingAt: i) equals: i;
+			assert: (list indexOf: (list at: i) startingAt: i + 1) isZero ]
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testIndexOfStartingAtIfAbsent [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	1 to: list size do: [:i |
+	1 to: list size do: [ :i |
 		self
-			assert: (list indexOf: (list at: i) startingAt: i ifAbsent: [-1]) = i;
-			assert: (list indexOf: (list at: i) startingAt: i + 1 ifAbsent: [-1]) = -1].
+			assert: (list indexOf: (list at: i) startingAt: i ifAbsent: [ -1 ])
+			equals: i;
+			assert:
+				(list indexOf: (list at: i) startingAt: i + 1 ifAbsent: [ -1 ])
+			equals: -1 ]
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testIndexOfSubCollectionStartingAt [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	1 to: self listItems size do: [:i |
-		i to: self listItems size do: [:j |
-			self assert:
-				(list
-					indexOfSubCollection: (self listItems copyFrom: i to: j)
-					startingAt: 1) = i.
-			self assert:
-				(list
-					indexOfSubCollection: (self listItems copyFrom: i to: j)
-					startingAt: i) = i.
-			self assert:
-				(list
-					indexOfSubCollection: (self listItems copyFrom: i to: j)
-					startingAt: i + 1) = 0]].
+	1 to: self listItems size do: [ :i |
+		i to: self listItems size do: [ :j |
+			self
+				assert: (list
+						 indexOfSubCollection: (self listItems copyFrom: i to: j)
+						 startingAt: 1)
+				equals: i.
+			self
+				assert: (list
+						 indexOfSubCollection: (self listItems copyFrom: i to: j)
+						 startingAt: i)
+				equals: i.
+			self
+				assert: (list
+						 indexOfSubCollection: (self listItems copyFrom: i to: j)
+						 startingAt: i + 1)
+				equals: 0 ] ]
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testIndexOfSubCollectionStartingAtIfAbsent [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	1 to: self listItems size do: [:i |
-		i to: self listItems size do: [:j |
-			self assert:
-				(list
-					indexOfSubCollection: (self listItems copyFrom: i to: j)
-					startingAt: 1
-					ifAbsent: [-1]) = i.
-			self assert:
-				(list
-					indexOfSubCollection: (self listItems copyFrom: i to: j)
-					startingAt: i
-					ifAbsent: [-1]) = i.
-			self assert:
-				(list
-					indexOfSubCollection: (self listItems copyFrom: i to: j)
-					startingAt: i + 1
-					ifAbsent: [-1]) = -1]].
+	1 to: self listItems size do: [ :i |
+		i to: self listItems size do: [ :j |
+			self
+				assert: (list
+						 indexOfSubCollection: (self listItems copyFrom: i to: j)
+						 startingAt: 1
+						 ifAbsent: [ -1 ])
+				equals: i.
+			self
+				assert: (list
+						 indexOfSubCollection: (self listItems copyFrom: i to: j)
+						 startingAt: i
+						 ifAbsent: [ -1 ])
+				equals: i.
+			self
+				assert: (list
+						 indexOfSubCollection: (self listItems copyFrom: i to: j)
+						 startingAt: i + 1
+						 ifAbsent: [ -1 ])
+				equals: -1 ] ]
 ]
 
 { #category : #tests }
@@ -1269,9 +1336,10 @@ XMLOrderedListTest >> testIsEmpty [
 
 { #category : #tests }
 XMLOrderedListTest >> testLast [
+
 	self
-		assert: self emptyList last = self defaultValue;
-		assert: self listWithItems last = self listItems last.
+		assert: self emptyList last equals: self defaultValue;
+		assert: self listWithItems last equals: self listItems last
 ]
 
 { #category : #tests }
@@ -1300,68 +1368,75 @@ XMLOrderedListTest >> testLastFew [
 
 { #category : #tests }
 XMLOrderedListTest >> testLastIndexOf [
-	| list |
 
-	list := self listClass newFrom: self listItems, self listItems.
-	list do: [:each |
-		self assert:
-			(list lastIndexOf: each) =
-				(self allowsDuplicates
-					ifTrue: [self listItems, self listItems lastIndexOf: each]
-					ifFalse: [self listItems lastIndexOf: each])].
-	self assert: (list lastIndexOf: self newListItem) isZero.
+	| list |
+	list := self listClass newFrom: self listItems , self listItems.
+	list do: [ :each |
+		self
+			assert: (list lastIndexOf: each)
+			equals: (self allowsDuplicates
+					 ifTrue: [ self listItems , self listItems lastIndexOf: each ]
+					 ifFalse: [ self listItems lastIndexOf: each ]) ].
+	self assert: (list lastIndexOf: self newListItem) isZero
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testLastIndexOfIfAbsent [
-	| list |
 
-	list := self listClass newFrom: self listItems, self listItems.
-	list do: [:each |
-		self assert:
-			(list lastIndexOf: each ifAbsent: [-1]) =
-				(self allowsDuplicates
-					ifTrue: [self listItems, self listItems lastIndexOf: each]
-					ifFalse: [self listItems lastIndexOf: each])].
-	self assert: (list lastIndexOf: self newListItem ifAbsent: [-1])  = -1.
+	| list |
+	list := self listClass newFrom: self listItems , self listItems.
+	list do: [ :each |
+		self
+			assert: (list lastIndexOf: each ifAbsent: [ -1 ])
+			equals: (self allowsDuplicates
+					 ifTrue: [ self listItems , self listItems lastIndexOf: each ]
+					 ifFalse: [ self listItems lastIndexOf: each ]) ].
+	self
+		assert: (list lastIndexOf: self newListItem ifAbsent: [ -1 ])
+		equals: -1
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testNew [
-	| list |
 
+	| list |
 	list := self listClass new: 20.
-	self assert: list = self emptyList.
-	self hasCapacity
-		ifTrue: [self assert: list capacity >= 20].
+	self assert: list equals: self emptyList.
+	self hasCapacity ifTrue: [ self assert: list capacity >= 20 ]
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testNewFrom [
-	self assert: (self listClass newFrom: self listItems) = self listWithItems
+
+	self
+		assert: (self listClass newFrom: self listItems)
+		equals: self listWithItems
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testNewWithAll [
-	| list |
 
+	| list |
 	list := self listClass new: 10 withAll: self singleListItem.
 	self allowsDuplicates
-		ifTrue: [self assert: list size = 10]
-		ifFalse: [self assert: list size = 1].
-	self assert: (list allSatisfy: [:each | each = self singleListItem]).
+		ifTrue: [ self assert: list size equals: 10 ]
+		ifFalse: [ self assert: list size equals: 1 ].
+	self assert:
+		(list allSatisfy: [ :each | each = self singleListItem ])
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testNinth [
+
 	self
-		assert: self emptyList ninth = self defaultValue;
-		assert: self listWithItems ninth = (self listItems at: 9).
+		assert: self emptyList ninth equals: self defaultValue;
+		assert: self listWithItems ninth equals: (self listItems at: 9)
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testOfSize [
-	self assert: (self listClass ofSize: 10) size = 10
+
+	self assert: (self listClass ofSize: 10) size equals: 10
 ]
 
 { #category : #tests }
@@ -1386,21 +1461,21 @@ XMLOrderedListTest >> testPairsDo [
 
 { #category : #tests }
 XMLOrderedListTest >> testReadStream [
-	| list stream position |
 
+	| list stream position |
 	list := self listWithItems.
 	stream := list readStream.
 	position := 0.
 	self
 		assert: stream isStream;
-		assert: stream position = 0.
-	self listItems do: [:each |
+		assert: stream position equals: 0.
+	self listItems do: [ :each |
 		self
 			deny: stream atEnd;
-			assert: stream next = each.
+			assert: stream next equals: each.
 		position := position + 1.
-		self assert: stream position = position].
-	self assert: stream atEnd.
+		self assert: stream position equals: position ].
+	self assert: stream atEnd
 ]
 
 { #category : #tests }
@@ -1434,108 +1509,118 @@ XMLOrderedListTest >> testRejectThenCollect [
 
 { #category : #tests }
 XMLOrderedListTest >> testRemoveAll [
-	| list |
 
+	| list |
 	list := self listWithItems.
 	self
-		assert: list removeAll == list;
+		assert: list removeAll identicalTo: list;
 		assert: list isEmpty;
-		assert: list removeAll == list;
-		assert: list isEmpty.
+		assert: list removeAll identicalTo: list;
+		assert: list isEmpty
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testRemoveAt [
-	self listItems withIndexDo: [:each :i | | list |
+
+	self listItems withIndexDo: [ :each :i |
+		| list |
 		list := self listWithItems.
 		self
-			assert: (list removeAt: i) = each;
-			assert: (list = (self listClass newFrom: (self listItems copyWithout: each)))].
+			assert: (list removeAt: i) equals: each;
+			assert: list
+			equals:
+				(self listClass newFrom: (self listItems copyWithout: each)) ].
 	self
-		should: [self listWithItems removeAt: 0] raise: Error;
-		should: [self listWithItems removeAt: self listItems size + 1] raise: Error.
+		should: [ self listWithItems removeAt: 0 ] raise: Error;
+		should: [ self listWithItems removeAt: self listItems size + 1 ]
+		raise: Error
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testRemoveFirst [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	self listItems do: [:each | 
-	self
-		assert: list removeFirst = each;
-		assert: list = (self listClass newFrom: (self listItems copyAfter: each))].
-	self should: [list removeFirst] raise: Error.
+	self listItems do: [ :each |
+		self
+			assert: list removeFirst equals: each;
+			assert: list
+			equals: (self listClass newFrom: (self listItems copyAfter: each)) ].
+	self should: [ list removeFirst ] raise: Error
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testRemoveFirstFew [
-	1 to: self listItems size do: [:i | | list removedElements |
+
+	1 to: self listItems size do: [ :i |
+		| list removedElements |
 		list := self listWithItems.
 		removedElements := list removeFirst: i.
 		self
-			assert: removedElements asArray = (self listItemsFirst: i);
-			assert: list = (self listClass newFrom: (self listItems allButFirst: i));
+			assert: removedElements asArray equals: (self listItemsFirst: i);
+			assert: list
+			equals: (self listClass newFrom: (self listItems allButFirst: i));
 			assert: (list removeFirst: 0) isEmpty;
-			should: [self emptyList removeFirst: i] raise: Error].
+			should: [ self emptyList removeFirst: i ] raise: Error ]
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testRemoveIfAbsent [
+
 	| list |
-
 	list := self listWithItems.
-	self listItems do: [:each |
-		self assert:
-			(list
-				remove: each
-				ifAbsent: [self fail]) = each.
+	self listItems do: [ :each |
+		self
+			assert: (list remove: each ifAbsent: [ self fail ])
+			equals: each.
 		self deny: (list includes: each).
-
-		self assert:
-			(list
-				remove: each
-				ifAbsent: [self absentListItem]) = self absentListItem].
+		self
+			assert: (list remove: each ifAbsent: [ self absentListItem ])
+			equals: self absentListItem ]
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testRemoveLast [
-	| list |
 
+	| list |
 	list := self listWithItems.
-	self listItems reverseDo: [:each |
+	self listItems reverseDo: [ :each |
 		self
-			assert: list removeLast = each;
-			assert: list = (self listClass newFrom: (self listItems copyUpTo: each))].
-	self should: [list removeLast] raise: Error.
+			assert: list removeLast equals: each;
+			assert: list
+			equals: (self listClass newFrom: (self listItems copyUpTo: each)) ].
+	self should: [ list removeLast ] raise: Error
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testRemoveLastFew [
-	| list removedElements |
 
-	1 to: self listItems size do: [:i |
+	| list removedElements |
+	1 to: self listItems size do: [ :i |
 		list := self listWithItems.
 		removedElements := list removeLast: i.
 		self
-			assert: removedElements asArray = (self listItemsLast: i) asArray;
-			assert: list = (self listClass newFrom: (self listItems allButLast: i));
+			assert: removedElements asArray
+			equals: (self listItemsLast: i) asArray;
+			assert: list
+			equals: (self listClass newFrom: (self listItems allButLast: i));
 			assert: (list removeLast: 0) isEmpty;
-			should: [self emptyList removeLast: i] raise: Error].
+			should: [ self emptyList removeLast: i ] raise: Error ]
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testReplaceFromToWith [
-	| list |
 
-	1 to: self listItems size do: [:start |
-		start to: self listItems size do: [:stop |
+	| list |
+	1 to: self listItems size do: [ :start |
+		start to: self listItems size do: [ :stop |
 			list := self listWithItems.
-			self assert:
-				(list
-					replaceFrom: start
-					to: stop
-					with: (self changedListItems allButFirst: start - 1)) == list.
+			self
+				assert: (list
+						 replaceFrom: start
+						 to: stop
+						 with: (self changedListItems allButFirst: start - 1))
+				identicalTo: list.
 
 			self
 				assertList: list
@@ -1548,31 +1633,29 @@ XMLOrderedListTest >> testReplaceFromToWith [
 				ifTrue: [
 					self
 						should: [
-							self emptyList
-								replaceFrom: start
-								to: stop
-								with: self listItems]
-						raise: Error]
+						self emptyList replaceFrom: start to: stop with: self listItems ]
+						raise: Error ]
 				ifFalse: [
-					self assert:
-						(self emptyList
-							replaceFrom: start
-							to: stop
-							with: self listItems) =
-								(self listClass newFrom: (self listItemsFirst: stop))]]]
+					self
+						assert:
+						(self emptyList replaceFrom: start to: stop with: self listItems)
+						equals: (self listClass newFrom: (self listItemsFirst: stop)) ] ] ]
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testReplaceFromToWithStartingAt [
-	1 to: self listItems size do: [:start |
-		start to: self listItems size do: [:stop | | list |
+
+	1 to: self listItems size do: [ :start |
+		start to: self listItems size do: [ :stop |
+			| list |
 			list := self listWithItems.
-			self assert:
-				(list
-					replaceFrom: start
-					to: stop
-					with: self changedListItems
-					startingAt: start) == list.
+			self
+				assert: (list
+						 replaceFrom: start
+						 to: stop
+						 with: self changedListItems
+						 startingAt: start)
+				identicalTo: list.
 
 			self
 				assertList: list
@@ -1589,16 +1672,16 @@ XMLOrderedListTest >> testReplaceFromToWithStartingAt [
 								replaceFrom: start
 								to: stop
 								with: self listItems
-								startingAt: start]
-						raise: Error]
+								startingAt: start ]
+						raise: Error ]
 				ifFalse: [
-					self assert:
-						(self emptyList
-							replaceFrom: start
-							to: stop
-							with: self listItems
-							startingAt: start) =
-								(self listClass newFrom: (self listItemsFirst: stop))]]]
+					self
+						assert: (self emptyList
+								 replaceFrom: start
+								 to: stop
+								 with: self listItems
+								 startingAt: start)
+						equals: (self listClass newFrom: (self listItemsFirst: stop)) ] ] ]
 ]
 
 { #category : #tests }
@@ -1645,9 +1728,10 @@ XMLOrderedListTest >> testReversed [
 
 { #category : #tests }
 XMLOrderedListTest >> testSecond [
+
 	self
-		assert: self emptyList second = self defaultValue;
-		assert: self listWithItems second = (self listItems at: 2).
+		assert: self emptyList second equals: self defaultValue;
+		assert: self listWithItems second equals: (self listItems at: 2)
 ]
 
 { #category : #tests }
@@ -1681,36 +1765,42 @@ XMLOrderedListTest >> testSelectThenCollect [
 
 { #category : #tests }
 XMLOrderedListTest >> testSeventh [
+
 	self
-		assert: self emptyList seventh = self defaultValue;
-		assert: self listWithItems seventh = (self listItems at: 7).
+		assert: self emptyList seventh equals: self defaultValue;
+		assert: self listWithItems seventh equals: (self listItems at: 7)
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testSixth [
+
 	self
-		assert: self emptyList sixth = self defaultValue;
-		assert: self listWithItems sixth = (self listItems at: 6).
+		assert: self emptyList sixth equals: self defaultValue;
+		assert: self listWithItems sixth equals: (self listItems at: 6)
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testSize [
+
 	self
 		assert: self emptyList size isZero;
-		assert: self listWithSingleItem size = 1;
-		assert: self listWithItems size = self listItems size
+		assert: self listWithSingleItem size equals: 1;
+		assert: self listWithItems size equals: self listItems size
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testSort [
-	| list |
 
+	| list |
 	list := self listWithItems.
 	self
-		assert: list sort == list;
-		assert: list = (self listClass newFrom: (self listItems copy sort: self sortBlock));
-		assert: (list sort: self reverseSortBlock) == list;
-		assert: list = (self listClass newFrom: (self listItems copy sort: self reverseSortBlock)).
+		assert: list sort identicalTo: list;
+		assert: list
+		equals:
+			(self listClass newFrom: (self listItems copy sort: self sortBlock));
+		assert: (list sort: self reverseSortBlock) identicalTo: list;
+		assert: list equals: (self listClass newFrom:
+					 (self listItems copy sort: self reverseSortBlock))
 ]
 
 { #category : #tests }
@@ -1730,57 +1820,54 @@ XMLOrderedListTest >> testSorted [
 
 { #category : #tests }
 XMLOrderedListTest >> testSpecies [
-	self
-		assert: self emptyList species = self listSpecies
+
+	self assert: self emptyList species equals: self listSpecies
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testSwapWith [
-	| list start end |
 
+	| list start end |
 	list := self listWithItems.
 
 	start := 1.
 	end := list size.
-	[start < end]
-		whileTrue: [
-			list swap: start with: end.
-			start := start + 1.
-			end := end - 1].
-	self assert: list = (self listClass newFrom: self listItems reversed).
+	[ start < end ] whileTrue: [
+		list swap: start with: end.
+		start := start + 1.
+		end := end - 1 ].
+	self
+		assert: list
+		equals: (self listClass newFrom: self listItems reversed).
 
 	start := 1.
 	end := list size.
-	[start < end]
-		whileTrue: [
-			list swap: end with: start.
-			start := start + 1.
-			end := end - 1].
-	self assert: list = self listWithItems.
+	[ start < end ] whileTrue: [
+		list swap: end with: start.
+		start := start + 1.
+		end := end - 1 ].
+	self assert: list equals: self listWithItems.
 
-	1 to: list size do: [:i | list swap: i with: i].
-	self assert: list = self listWithItems.
+	1 to: list size do: [ :i | list swap: i with: i ].
+	self assert: list equals: self listWithItems.
 
+	self should: [ list swap: 0 with: 1 ] raise: Error.
+	self should: [ list swap: 1 with: 0 ] raise: Error.
 	self
-		should: [list swap: 0 with: 1]
+		should: [ list swap: list size + 1 with: list size ]
 		raise: Error.
 	self
-		should: [list swap: 1 with: 0]
+		should: [ list swap: list size with: list size + 1 ]
 		raise: Error.
-	self
-		should: [list swap: list size + 1 with: list size]
-		raise: Error.
-	self
-		should: [list swap: list size with: list size + 1]
-		raise: Error.
-	self assert: list = self listWithItems.
+	self assert: list equals: self listWithItems
 ]
 
 { #category : #tests }
 XMLOrderedListTest >> testThird [
+
 	self
-		assert: self emptyList third = self defaultValue;
-		assert: self listWithItems third = (self listItems at: 3).
+		assert: self emptyList third equals: self defaultValue;
+		assert: self listWithItems third equals: (self listItems at: 3)
 ]
 
 { #category : #tests }
@@ -1805,23 +1892,27 @@ XMLOrderedListTest >> testWithCollect [
 
 { #category : #tests }
 XMLOrderedListTest >> testWithDo [
-	| list enumerated |
 
+	| list enumerated |
 	list := self listWithItems.
 	enumerated := OrderedCollection new.
-	list with: (1 to: list size + 1) do: [:each :i | enumerated addLast: each -> i].
-	self assert:
-		enumerated =
-			(self listItems withIndexCollect: [:each : i | each -> i ])
+	list
+		with: (1 to: list size + 1)
+		do: [ :each :i | enumerated addLast: each -> i ].
+	self
+		assert: enumerated
+		equals: (self listItems withIndexCollect: [ :each :i | each -> i ])
 				asOrderedCollection.
 
 	enumerated removeAll.
-	list with: (1 to: list size - 1) do: [:each :i | enumerated addLast: each -> i].
-	self assert:
-		enumerated =
-			(self listItems allButLast
-				withIndexCollect: [:each : i | each -> i ])
-					asOrderedCollection.
+	list
+		with: (1 to: list size - 1)
+		do: [ :each :i | enumerated addLast: each -> i ].
+	self
+		assert: enumerated
+		equals:
+			(self listItems allButLast withIndexCollect: [ :each :i |
+				 each -> i ]) asOrderedCollection
 ]
 
 { #category : #tests }
@@ -1839,13 +1930,15 @@ XMLOrderedListTest >> testWithIndexCollect [
 
 { #category : #tests }
 XMLOrderedListTest >> testWithIndexDo [
-	| enumerated |
 
+	| enumerated |
 	enumerated := OrderedCollection new.
-	self listWithItems withIndexDo: [:each :i | enumerated addLast: each -> i].
-	self assert:
-		enumerated =
-			(self listItems withIndexCollect: [:each : i | each -> i ]) asOrderedCollection.
+	self listWithItems withIndexDo: [ :each :i |
+		enumerated addLast: each -> i ].
+	self
+		assert: enumerated
+		equals: (self listItems withIndexCollect: [ :each :i | each -> i ])
+				asOrderedCollection
 ]
 
 { #category : #tests }
@@ -1857,8 +1950,10 @@ XMLOrderedListTest >> testWriteStream [
 
 { #category : #tests }
 XMLOrderedListTest >> testXMLLastOrNil [
+
 	self
-		assert: self emptyList xmlLastOrNil = self defaultValue;
-		assert: self listWithSingleItem xmlLastOrNil = self singleListItem;
-		assert: self listWithItems xmlLastOrNil = self listItems last
+		assert: self emptyList xmlLastOrNil equals: self defaultValue;
+		assert: self listWithSingleItem xmlLastOrNil
+		equals: self singleListItem;
+		assert: self listWithItems xmlLastOrNil equals: self listItems last
 ]

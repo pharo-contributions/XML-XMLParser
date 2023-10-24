@@ -11,18 +11,18 @@ XMLCommentTest >> nodeClass [
 
 { #category : #tests }
 XMLCommentTest >> testAcceptNodeVisitor [
-	| visitor comment message |
 
+	| visitor comment message |
 	visitor := XMLRecordingNodeVisitor new.
 	comment := self newNode.
 	self
-		assert: (comment acceptNodeVisitor: visitor) == comment;
+		assert: (comment acceptNodeVisitor: visitor) identicalTo: comment;
 		assert: visitor messageRecorder hasMessages.
 
 	message := visitor messageRecorder nextMessage.
 	self
-		assert: message selector == #visitComment:;
-		assert: message arguments = (Array with: comment);
+		assert: message selector identicalTo: #visitComment:;
+		assert: message arguments equals: (Array with: comment);
 		deny: visitor messageRecorder hasMessages
 ]
 
@@ -44,33 +44,34 @@ XMLCommentTest >> testIsComment [
 
 { #category : #tests }
 XMLCommentTest >> testSortKey [
-	self assert: (self nodeClass string: 'test') sortKey = 'test'
+
+	self assert: (self nodeClass string: 'test') sortKey equals: 'test'
 ]
 
 { #category : #tests }
 XMLCommentTest >> testString [
-	| comment |
 
+	| comment |
 	comment := self nodeClass string: self markupString.
 	self
-		assert: comment class == self nodeClass;
-		assert: comment string = self markupString.
+		assert: comment class identicalTo: self nodeClass;
+		assert: comment string equals: self markupString.
 
 	comment := self newNode.
-	self assert: comment string = ''.
+	self assert: comment string equals: ''.
 
 	comment string: self markupString.
-	self assert: comment string = self markupString.
+	self assert: comment string equals: self markupString.
 
 	comment string: ''.
-	self assert: comment string = ''
+	self assert: comment string equals: ''
 ]
 
 { #category : #tests }
 XMLCommentTest >> testWriteXMLOn [
+
 	self
-		assert: self newNode printString = '<!---->';
-		assert:
-			(self nodeClass string: self markupString) printString =
-				('<!--', self markupString, '-->')
+		assert: self newNode printString equals: '<!---->';
+		assert: (self nodeClass string: self markupString) printString
+		equals: '<!--' , self markupString , '-->'
 ]

@@ -64,106 +64,110 @@ XMLPluggableElementFactoryTest >> tableElementClass [
 
 { #category : #tests }
 XMLPluggableElementFactoryTest >> testAddElementNamed [
-	| element userElement dataElement |
 
+	| element userElement dataElement |
 	element := XMLElement name: 'root'.
 	element
 		defaultNamespace: 'dataNS';
 		declarePrefix: 'prefix' uri: 'prefixNS'.
-	element nodeFactory:
-		(XMLPluggableElementFactory new
-			handleElement: 'data'
-			namespaceURI: 'dataNS'
-			withClass: XMLFElement;
-			handleElement: 'user'
-			namespaceURI: 'prefixNS'
-			withClass: XMLFUserElement).
+	element nodeFactory: (XMLPluggableElementFactory new
+			 handleElement: 'data'
+			 namespaceURI: 'dataNS'
+			 withClass: XMLFElement;
+			 handleElement: 'user'
+			 namespaceURI: 'prefixNS'
+			 withClass: XMLFUserElement).
 
 	userElement := element addElementNamed: 'prefix:user'.
 	self
-		assert: userElement class == XMLFUserElement;
+		assert: userElement class identicalTo: XMLFUserElement;
 		assert: (userElement isNamed: 'prefix:user');
-		assert: userElement namespaceURI = 'prefixNS'.
+		assert: userElement namespaceURI equals: 'prefixNS'.
 
 	dataElement := element addElementNamed: 'data'.
 	self
-		assert: dataElement class == XMLFElement;
+		assert: dataElement class identicalTo: XMLFElement;
 		assert: (dataElement isNamed: 'data');
-		assert: dataElement namespaceURI = 'dataNS'.
-
-	self assert: (element addElementNamed: 'default') class == XMLElement
+		assert: dataElement namespaceURI equals: 'dataNS'.
+	self
+		assert: (element addElementNamed: 'default') class
+		identicalTo: XMLElement
 ]
 
 { #category : #tests }
 XMLPluggableElementFactoryTest >> testClassForElement [
-	| factory |
 
+	| factory |
 	(factory := self newFactoryWithClasses)
 		handleElement: 'user'
 		withClass: self userElementClass.
 	self
-		assert: (factory classForElement: 'user') == self userElementClass;
-		assert: (factory classForElement: 'prefix:user') == self userElementClass;
-		assert: (factory classForElement: 'absent') == self elementClass.
+		assert: (factory classForElement: 'user')
+		identicalTo: self userElementClass;
+		assert: (factory classForElement: 'prefix:user')
+		identicalTo: self userElementClass;
+		assert: (factory classForElement: 'absent')
+		identicalTo: self elementClass.
 
 	factory
 		handleElement: 'prefix:user'
 		withClass: self usernameElementClass.
 	self
-		assert: (factory classForElement: 'user') == self userElementClass;
-		assert: (factory classForElement: 'prefix:user') == self usernameElementClass;
-		assert: (factory classForElement: 'prefix:absent') == self elementClass
+		assert: (factory classForElement: 'user')
+		identicalTo: self userElementClass;
+		assert: (factory classForElement: 'prefix:user')
+		identicalTo: self usernameElementClass;
+		assert: (factory classForElement: 'prefix:absent')
+		identicalTo: self elementClass
 ]
 
 { #category : #tests }
 XMLPluggableElementFactoryTest >> testClassForElementNamespaceURI [
-	| factory |
 
+	| factory |
 	(factory := self newFactoryWithClasses)
 		handleElement: 'user'
 		namespaceURI: 'userNS'
 		withClass: self userElementClass.
-	self assert:
-		(factory
-			classForElement: 'user'
-			namespaceURI: 'userNS') == self userElementClass.
-	self assert:
-		(factory
-			classForElement: 'prefix:user'
-			namespaceURI: 'userNS') == self userElementClass.
-	self assert:
-		(factory
-			classForElement: 'user'
-			namespaceURI: 'absentNS') == self elementClass.
+	self
+		assert: (factory classForElement: 'user' namespaceURI: 'userNS')
+		identicalTo: self userElementClass.
+	self
+		assert:
+		(factory classForElement: 'prefix:user' namespaceURI: 'userNS')
+		identicalTo: self userElementClass.
+	self
+		assert: (factory classForElement: 'user' namespaceURI: 'absentNS')
+		identicalTo: self elementClass.
 
 	factory
 		handleElement: 'prefix:user'
 		namespaceURI: 'userNS'
 		withClass: self usernameElementClass.
-	self assert:
-		(factory
-			classForElement: 'user'
-			namespaceURI: 'userNS') == self userElementClass.
-	self assert:
-		(factory
-			classForElement: 'prefix:user'
-			namespaceURI: 'userNS') == self usernameElementClass.
-	self assert:
-		(factory
-			classForElement: 'prefix:user'
-			namespaceURI: 'absentNS') == self elementClass
+	self
+		assert: (factory classForElement: 'user' namespaceURI: 'userNS')
+		identicalTo: self userElementClass.
+	self
+		assert:
+		(factory classForElement: 'prefix:user' namespaceURI: 'userNS')
+		identicalTo: self usernameElementClass.
+	self
+		assert:
+		(factory classForElement: 'prefix:user' namespaceURI: 'absentNS')
+		identicalTo: self elementClass
 ]
 
 { #category : #tests }
 XMLPluggableElementFactoryTest >> testCopy [
-	| factory copy |
 
+	| factory copy |
 	factory := self newFactoryWithClasses.
 	factory handleElement: 'user' withClass: XMLFUserElement.
 	copy := factory copy.
 	self
-		deny: copy == factory;
-		deny: copy elementClassMapper == factory elementClassMapper
+		deny: copy identicalTo: factory;
+		deny: copy elementClassMapper
+		identicalTo: factory elementClassMapper
 ]
 
 { #category : #tests }
@@ -185,16 +189,19 @@ XMLPluggableElementFactoryTest >> testElementClassAccessor [
 
 { #category : #tests }
 XMLPluggableElementFactoryTest >> testElementClassMapper [
-	| factory oldMapper newMapper |
 
+	| factory oldMapper newMapper |
 	factory := self newFactoryWithClasses.
 	oldMapper := factory elementClassMapper.
-	self assert: oldMapper class == self elementClassMapperClass.
+	self
+		assert: oldMapper class
+		identicalTo: self elementClassMapperClass.
 
 	newMapper := self elementClassMapperClass new.
 	self
-		assert: (factory elementClassMapper: newMapper) == factory;
-		assert: factory elementClassMapper == newMapper
+		assert: (factory elementClassMapper: newMapper)
+		identicalTo: factory;
+		assert: factory elementClassMapper identicalTo: newMapper
 ]
 
 { #category : #tests }
@@ -284,44 +291,44 @@ XMLPluggableElementFactoryTest >> testElementsNameAndNamespaceMatching [
 
 { #category : #tests }
 XMLPluggableElementFactoryTest >> testHandleElementsMatchingClass [
+
 	| document |
+	document := (XMLDOMParser on: self sampleUsersXML)
+		            nodeFactory: (XMLPluggableElementFactory new
+				             handleElementsMatchingClass: XMLFUserElement;
+				             handleElementsMatchingClass: XMLFUsernameElement;
+				             handleElementsMatchingClass: XMLFRealNameElement);
+		            parseDocument.
 
-	document :=
-		(XMLDOMParser on: self sampleUsersXML)
-			nodeFactory:
-				(XMLPluggableElementFactory new
-					handleElementsMatchingClass: XMLFUserElement;
-					handleElementsMatchingClass: XMLFUsernameElement;
-					handleElementsMatchingClass: XMLFRealNameElement);
-			parseDocument.
-
-	document root elementsDo: [:element |
-			self
-				assert: (element class == XMLFUserElement);
-				assert: (element elements first class == XMLFUsernameElement);
-				assert: (element elements second class == XMLFRealNameElement)]
+	document root elementsDo: [ :element |
+		self
+			assert: element class identicalTo: XMLFUserElement;
+			assert: element elements first class
+			identicalTo: XMLFUsernameElement;
+			assert: element elements second class
+			identicalTo: XMLFRealNameElement ]
 ]
 
 { #category : #tests }
 XMLPluggableElementFactoryTest >> testHandleElementsMatchingClasses [
+
 	| document |
+	document := (XMLDOMParser on: self sampleUsersXML)
+		            nodeFactory:
+			            (XMLPluggableElementFactory new
+				             handleElementsMatchingClasses: (Array
+						              with: XMLFUserElement
+						              with: XMLFUsernameElement
+						              with: XMLFRealNameElement));
+		            parseDocument.
 
-	document :=
-		(XMLDOMParser on: self sampleUsersXML)
-			nodeFactory:
-				(XMLPluggableElementFactory new
-					handleElementsMatchingClasses:
-						(Array
-							with: XMLFUserElement
-							with: XMLFUsernameElement
-							with: XMLFRealNameElement));
-			parseDocument.
-
-	document root elementsDo: [:element |
-			self
-				assert: (element class == XMLFUserElement);
-				assert: (element elements first class == XMLFUsernameElement);
-				assert: (element elements second class == XMLFRealNameElement)]
+	document root elementsDo: [ :element |
+		self
+			assert: element class identicalTo: XMLFUserElement;
+			assert: element elements first class
+			identicalTo: XMLFUsernameElement;
+			assert: element elements second class
+			identicalTo: XMLFRealNameElement ]
 ]
 
 { #category : #accessing }

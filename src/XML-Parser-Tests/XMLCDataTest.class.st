@@ -11,24 +11,24 @@ XMLCDataTest >> nodeClass [
 
 { #category : #tests }
 XMLCDataTest >> testAcceptNodeVisitor [
-	| visitor cdata message |
 
+	| visitor cdata message |
 	visitor := XMLRecordingNodeVisitor new.
 	cdata := self newNode.
 	self
-		assert: (cdata acceptNodeVisitor: visitor) == cdata;
+		assert: (cdata acceptNodeVisitor: visitor) identicalTo: cdata;
 		assert: visitor messageRecorder hasMessages.
 
 	message := visitor messageRecorder nextMessage.
 	self
-		assert: message selector == #visitCData:;
-		assert: message arguments = (Array with: cdata);
+		assert: message selector identicalTo: #visitCData:;
+		assert: message arguments equals: (Array with: cdata);
 		assert: visitor messageRecorder hasMessages.
 
 	message := visitor messageRecorder nextMessage.
 	self
-		assert: message selector == #visitStringNode:;
-		assert: message arguments = (Array with: cdata);
+		assert: message selector identicalTo: #visitStringNode:;
+		assert: message arguments equals: (Array with: cdata);
 		deny: visitor messageRecorder hasMessages
 ]
 
@@ -39,7 +39,9 @@ XMLCDataTest >> testIsCData [
 
 { #category : #tests }
 XMLCDataTest >> testWriteXMLOn [
+
 	self
-		assert: self newNode printString = '<![CDATA[]]>';
-		assert: (self nodeClass string: self markupString) printString = ('<![CDATA[', self markupString, ']]>')
+		assert: self newNode printString equals: '<![CDATA[]]>';
+		assert: (self nodeClass string: self markupString) printString
+		equals: '<![CDATA[' , self markupString , ']]>'
 ]

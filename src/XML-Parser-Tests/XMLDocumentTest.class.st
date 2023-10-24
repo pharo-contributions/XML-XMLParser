@@ -23,24 +23,24 @@ XMLDocumentTest >> nodeClass [
 
 { #category : #tests }
 XMLDocumentTest >> testAcceptNodeVisitor [
-	| visitor document message |
 
+	| visitor document message |
 	visitor := XMLRecordingNodeVisitor new.
 	document := self newNode.
 	self
-		assert: (document acceptNodeVisitor: visitor) == document;
+		assert: (document acceptNodeVisitor: visitor) identicalTo: document;
 		assert: visitor messageRecorder hasMessages.
 
 	message := visitor messageRecorder nextMessage.
 	self
-		assert: message selector == #visitDocument:;
-		assert: message arguments = (Array with: document);
+		assert: message selector identicalTo: #visitDocument:;
+		assert: message arguments equals: (Array with: document);
 		assert: visitor messageRecorder hasMessages.
 
 	message := visitor messageRecorder nextMessage.
 	self
-		assert: message selector == #visitNodeWithElements:;
-		assert: message arguments = (Array with: document);
+		assert: message selector identicalTo: #visitNodeWithElements:;
+		assert: message arguments equals: (Array with: document);
 		deny: visitor messageRecorder hasMessages.
 
 	super testAcceptNodeVisitor
@@ -48,26 +48,29 @@ XMLDocumentTest >> testAcceptNodeVisitor [
 
 { #category : #tests }
 XMLDocumentTest >> testDoctypeDeclaration [
-	| document doctypeDeclaration newDocument |
 
+	| document doctypeDeclaration newDocument |
 	document := self newNode.
 	self assert: document doctypeDeclaration isNil.
 
 	doctypeDeclaration := XMLDoctypeDeclaration new.
 	self
-		assert: (document doctypeDeclaration: doctypeDeclaration) == document;
-		assert: document doctypeDeclaration == doctypeDeclaration;
-		assert: doctypeDeclaration parent == document.
+		assert: (document doctypeDeclaration: doctypeDeclaration)
+		identicalTo: document;
+		assert: document doctypeDeclaration identicalTo: doctypeDeclaration;
+		assert: doctypeDeclaration parent identicalTo: document.
 
 	"adding a doctypeDeclaration from another doc should remove it from the
 	other doc"
 	newDocument := self newNode.
 	self
 		assert:
-			(newDocument doctypeDeclaration: document doctypeDeclaration) ==
-				newDocument;
-		assert: newDocument doctypeDeclaration == doctypeDeclaration;
-		assert: newDocument doctypeDeclaration parent == newDocument;
+			(newDocument doctypeDeclaration: document doctypeDeclaration)
+		identicalTo: newDocument;
+		assert: newDocument doctypeDeclaration
+		identicalTo: doctypeDeclaration;
+		assert: newDocument doctypeDeclaration parent
+		identicalTo: newDocument;
 		assert: document doctypeDeclaration isNil.
 
 	newDocument doctypeDeclaration: nil.
@@ -78,39 +81,40 @@ XMLDocumentTest >> testDoctypeDeclaration [
 
 { #category : #tests }
 XMLDocumentTest >> testDoctypeDefinition [
-	| document doctypeDefinition |
 
+	| document doctypeDefinition |
 	document := self newNode.
 	self assert: document doctypeDefinition isNil.
 
 	doctypeDefinition := DTDDoctypeDefinition new.
 	self
-		assert: (document doctypeDefinition: doctypeDefinition) == document;
-		assert: document doctypeDefinition == doctypeDefinition
+		assert: (document doctypeDefinition: doctypeDefinition)
+		identicalTo: document;
+		assert: document doctypeDefinition identicalTo: doctypeDefinition
 ]
 
 { #category : #tests }
 XMLDocumentTest >> testDocument [
-	| document |
 
+	| document |
 	super testDocument.
 
 	document := self newNode.
-	self assert: document document == document.
+	self assert: document document identicalTo: document.
 
 	document := self newNodeWithElements.
-	self assert: document document == document
+	self assert: document document identicalTo: document
 ]
 
 { #category : #tests }
 XMLDocumentTest >> testEncoding [
-	| document |
 
+	| document |
 	document := self newNode.
 	self
-		assert: document encoding = '';
-		assert: (document encoding: 'UTF-8') == document;
-		assert: document encoding = 'UTF-8'
+		assert: document encoding equals: '';
+		assert: (document encoding: 'UTF-8') identicalTo: document;
+		assert: document encoding equals: 'UTF-8'
 ]
 
 { #category : #tests }
@@ -175,49 +179,49 @@ XMLDocumentTest >> testIsDocument [
 
 { #category : #tests }
 XMLDocumentTest >> testIsStandalone [
-	| document |
 
+	| document |
 	document := self newNode.
 	self
 		deny: document isStandalone;
-		assert: (document isStandalone: true) == document;
+		assert: (document isStandalone: true) identicalTo: document;
 		assert: document isStandalone
 ]
 
 { #category : #tests }
 XMLDocumentTest >> testRoot [
-	| document newRoot |
 
+	| document newRoot |
 	newRoot := self newElementWithAttributes.
 	document := self nodeClass root: newRoot.
 	self
-		assert: document class == self nodeClass;
-		assert: document root == newRoot.
+		assert: document class identicalTo: self nodeClass;
+		assert: document root identicalTo: newRoot.
 
 	self assert: self newNode root isNil.
 
 	document := self newNodeWithElements.
 	self
-		assert: document root == document nodes second;
-		assert: document nodes size = 3;
+		assert: document root identicalTo: document nodes second;
+		assert: document nodes size equals: 3;
 		assert: document nodes first isComment;
 		assert: (document nodes second isElementNamed: 'zero');
 		assert: document nodes third isComment.
 
 	newRoot := self elementClass named: 'new-root'.
 	self
-		assert: (document root: newRoot) == document;
-		assert: document root == newRoot;
-		assert: document nodes size = 3;
+		assert: (document root: newRoot) identicalTo: document;
+		assert: document root identicalTo: newRoot;
+		assert: document nodes size equals: 3;
 		assert: document nodes first isComment;
-		assert: document nodes second == newRoot;
+		assert: document nodes second identicalTo: newRoot;
 		assert: document nodes third isComment.
 
 	document removeNodes.
 	self assert: document root isNil.
 
 	self
-		should: [document root: 'test' asXMLStringNode]
+		should: [ document root: 'test' asXMLStringNode ]
 		raise: XMLDOMException
 ]
 

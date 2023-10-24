@@ -50,23 +50,25 @@ XMLDoctypeDeclarationTest >> selectListClass [
 
 { #category : #tests }
 XMLDoctypeDeclarationTest >> testAllNodes [
-	| nodeWithNodes allNodes |
 
+	| nodeWithNodes allNodes |
 	nodeWithNodes := self newNodeWithNodes.
 	allNodes := nodeWithNodes allNodes.
 	self
-		assert: allNodes size = 9;
-		assert: allNodes first == nodeWithNodes;
+		assert: allNodes size equals: 9;
+		assert: allNodes first identicalTo: nodeWithNodes;
 		assert: allNodes second isComment;
-		assert: allNodes second string = 'before';
-		assert: allNodes third class == XMLGeneralEntityDeclaration;
-		assert: allNodes fourth class == XMLParameterEntityDeclaration;
-		assert: allNodes fifth class == XMLElementDeclaration;
-		assert: allNodes sixth class == XMLAttributeDeclaration;
-		assert: allNodes seventh class == XMLNotationDeclaration;
+		assert: allNodes second string equals: 'before';
+		assert: allNodes third class
+		identicalTo: XMLGeneralEntityDeclaration;
+		assert: allNodes fourth class
+		identicalTo: XMLParameterEntityDeclaration;
+		assert: allNodes fifth class identicalTo: XMLElementDeclaration;
+		assert: allNodes sixth class identicalTo: XMLAttributeDeclaration;
+		assert: allNodes seventh class identicalTo: XMLNotationDeclaration;
 		assert: allNodes eighth isPI;
 		assert: allNodes ninth isComment;
-		assert: allNodes ninth string = 'after'
+		assert: allNodes ninth string equals: 'after'
 ]
 
 { #category : #tests }
@@ -79,73 +81,80 @@ XMLDoctypeDeclarationTest >> testCanonicallyEquals [
 
 { #category : #tests }
 XMLDoctypeDeclarationTest >> testPublicID [
-	| doctype |
 
+	| doctype |
 	doctype := self newNode.
 	self
-		assert: doctype publicID = '';
-		assert: (doctype publicID: 'test') == doctype;
-		assert: doctype publicID = 'test'
+		assert: doctype publicID equals: '';
+		assert: (doctype publicID: 'test') identicalTo: doctype;
+		assert: doctype publicID equals: 'test'
 ]
 
 { #category : #tests }
 XMLDoctypeDeclarationTest >> testRoot [
-	| doctype |
 
+	| doctype |
 	doctype := self newNode.
 	self
-		assert: doctype root = '';
-		assert: (doctype root: 'test') == doctype;
-		assert: doctype root = 'test'
+		assert: doctype root equals: '';
+		assert: (doctype root: 'test') identicalTo: doctype;
+		assert: doctype root equals: 'test'
 ]
 
 { #category : #tests }
 XMLDoctypeDeclarationTest >> testRootPublicIDSystemID [
-	| doctype |
 
-	doctype :=
-		self nodeClass
-			root: 'one'
-			publicID: 'two'
-			systemID: 'three'.
+	| doctype |
+	doctype := self nodeClass
+		           root: 'one'
+		           publicID: 'two'
+		           systemID: 'three'.
 	self
-		assert: doctype class == self nodeClass;
-		assert: doctype root = 'one';
-		assert: doctype publicID = 'two';
-		assert: doctype systemID = 'three'
+		assert: doctype class identicalTo: self nodeClass;
+		assert: doctype root equals: 'one';
+		assert: doctype publicID equals: 'two';
+		assert: doctype systemID equals: 'three'
 ]
 
 { #category : #tests }
 XMLDoctypeDeclarationTest >> testSystemID [
-	| doctype |
 
+	| doctype |
 	doctype := self newNode.
 	self
-		assert: doctype systemID = '';
-		assert: (doctype systemID: 'test') == doctype;
-		assert: doctype systemID = 'test'
+		assert: doctype systemID equals: '';
+		assert: (doctype systemID: 'test') identicalTo: doctype;
+		assert: doctype systemID equals: 'test'
 ]
 
 { #category : #tests }
 XMLDoctypeDeclarationTest >> testWriteXMLOn [
+
 	| doctype elementDeclaration |
-
 	doctype := self newNode.
-	self assert: doctype printString = '<!DOCTYPE >'.
+	self assert: doctype printString equals: '<!DOCTYPE >'.
 	doctype root: 'one'.
-	self assert: doctype printString = '<!DOCTYPE one>'.
+	self assert: doctype printString equals: '<!DOCTYPE one>'.
 	doctype publicID: 'two'.
-	self assert: doctype printString = '<!DOCTYPE one PUBLIC "two" "">'.
+	self
+		assert: doctype printString
+		equals: '<!DOCTYPE one PUBLIC "two" "">'.
 	doctype systemID: 'three'.
-	self assert: doctype printString = '<!DOCTYPE one PUBLIC "two" "three">'.
+	self
+		assert: doctype printString
+		equals: '<!DOCTYPE one PUBLIC "two" "three">'.
 
-	elementDeclaration := XMLElementDeclaration element: 'four' contentModel: '(five|six)'.
+	elementDeclaration := XMLElementDeclaration
+		                      element: 'four'
+		                      contentModel: '(five|six)'.
 	doctype addNode: elementDeclaration.
-	self assert:
-		doctype printString =
-			('<!DOCTYPE one PUBLIC "two" "three" [', elementDeclaration printString, ']>').
-
-	self assert:
-		(self nodeClass root: 'one' publicID: '' systemID: 'two') printString =
-			'<!DOCTYPE one SYSTEM "two">'
+	self
+		assert: doctype printString
+		equals: '<!DOCTYPE one PUBLIC "two" "three" ['
+			, elementDeclaration printString , ']>'.
+	self
+		assert:
+		(self nodeClass root: 'one' publicID: '' systemID: 'two')
+			printString
+		equals: '<!DOCTYPE one SYSTEM "two">'
 ]

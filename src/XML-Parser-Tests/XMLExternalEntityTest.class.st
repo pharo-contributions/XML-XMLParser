@@ -239,65 +239,53 @@ XMLExternalEntityTest >> testExternalSubsetReadLimit [
 
 { #category : #tests }
 XMLExternalEntityTest >> testOnFileNamed [
-	self
-		skipOrReturnWith: [^ self]
-		ifSkippable: #testOnFileNamed.
 
-	self tempFileManager newFileHandleDo: [:fileHandle | | parser |
+	self skipOrReturnWith: [ ^ self ] ifSkippable: #testOnFileNamed.
+
+	self tempFileManager newFileHandleDo: [ :fileHandle |
+		| parser |
 		self tempFileManager
 			createFileWithContents: '<test/>'
 			forHandle: fileHandle.
 		self
-			shouldnt: [parser := SAXHandler onFileNamed: fileHandle path]
+			shouldnt: [ parser := SAXHandler onFileNamed: fileHandle path ]
 			raise: XMLFileException.
 		self
-			assert: parser documentURI = fileHandle path;
-			assert: parser documentURI asXMLURI isLocal]
+			assert: parser documentURI equals: fileHandle path;
+			assert: parser documentURI asXMLURI isLocal ]
 ]
 
 { #category : #tests }
 XMLExternalEntityTest >> testOnURL [
+
 	| parser |
+	self skipOrReturnWith: [ ^ self ] ifSkippable: #testOnURL.
 
 	self
-		skipOrReturnWith: [^ self]
-		ifSkippable: #testOnURL.
-
-	self
-		shouldnt: [parser := SAXHandler onURL: self feedURL]
+		shouldnt: [ parser := SAXHandler onURL: self feedURL ]
 		raise: XMLHTTPException.
 	self
-		assert: parser documentURI = self feedURL;
+		assert: parser documentURI equals: self feedURL;
 		deny: parser documentURI asXMLURI isLocal
 ]
 
 { #category : #tests }
 XMLExternalEntityTest >> testOnURLUpToLimit [
+
 	| parser size |
+	self skipOrReturnWith: [ ^ self ] ifSkippable: #testOnURLUpToLimit.
 
-	self
-		skipOrReturnWith: [^ self]
-		ifSkippable: #testOnURLUpToLimit.
-
-	size :=
-		(self feedURL asXMLURI
-			getUpToLimit: nil
-			decoding: false) size.
+	size := (self feedURL asXMLURI getUpToLimit: nil decoding: false)
+		        size.
 	self
 		shouldnt: [
-			parser :=
-				SAXHandler
-					onURL: self feedURL
-					upToLimit: size]
+		parser := SAXHandler onURL: self feedURL upToLimit: size ]
 		raise: XMLLimitException.
-	self assert: parser documentReadLimit = size.
+	self assert: parser documentReadLimit equals: size.
 
 	self
 		should: [
-			(SAXHandler
-				onURL: self feedURL
-				upToLimit: size - 1)
-				parseDocument]
+		(SAXHandler onURL: self feedURL upToLimit: size - 1) parseDocument ]
 		raise: XMLLimitException
 ]
 
@@ -338,110 +326,114 @@ XMLExternalEntityTest >> testParsingDocBookExample [
 { #category : #tests }
 XMLExternalEntityTest >> testParsingEncodedFile [
 	"This test creates/deletes a file so is skipped by default"
+
 	self
-		skipOrReturnWith: [^ self]
+		skipOrReturnWith: [ ^ self ]
 		ifSkippable: #testParsingEncodedFile.
 
-	self tempFileManager newFileHandleDo: [:fileHandle |
-		self encodingNames do: [:encoding | | document documentFromFile |
+	self tempFileManager newFileHandleDo: [ :fileHandle |
+		self encodingNames do: [ :encoding |
+			| document documentFromFile |
 			document := XMLDOMParser parse: self wideCharacterXML.
-			fileHandle writeStreamDo: [:stream |
+			fileHandle writeStreamDo: [ :stream |
 				stream
 					streamConverter: encoding asXMLStreamConverter;
-					nextPutAll: document printString].
+					nextPutAll: document printString ].
 			self
 				shouldnt: [
-					documentFromFile :=
-						XMLDOMParser parseFileNamed: fileHandle path]
+				documentFromFile := XMLDOMParser parseFileNamed: fileHandle path ]
 				raise: XMLFileException.
 			self
-				assert: documentFromFile encoding = '';
-				assert: documentFromFile printString = document printString]]
+				assert: documentFromFile encoding equals: '';
+				assert: documentFromFile printString equals: document printString ] ]
 ]
 
 { #category : #tests }
 XMLExternalEntityTest >> testParsingEncodedFileWithBOM [
 	"This test creates/deletes a file so is skipped by default"
+
 	self
-		skipOrReturnWith: [^ self]
+		skipOrReturnWith: [ ^ self ]
 		ifSkippable: #testParsingEncodedFileWithBOM.
 
-	self tempFileManager newFileHandleDo: [:fileHandle |
-		self encodingNames do: [:encoding | | document documentFromFile |
+	self tempFileManager newFileHandleDo: [ :fileHandle |
+		self encodingNames do: [ :encoding |
+			| document documentFromFile |
 			document := XMLDOMParser parse: self wideCharacterXML.
-			fileHandle writeStreamDo: [:stream |
+			fileHandle writeStreamDo: [ :stream |
 				stream
 					streamConverter: encoding asXMLStreamConverter;
 					nextPutByteOrderMark;
-					nextPutAll: document printString].
+					nextPutAll: document printString ].
 			self
 				shouldnt: [
-					documentFromFile :=
-						XMLDOMParser parseFileNamed: fileHandle path]
+				documentFromFile := XMLDOMParser parseFileNamed: fileHandle path ]
 				raise: XMLFileException.
 			self
-				assert: documentFromFile encoding = '';
-				assert: documentFromFile printString = document printString]]
+				assert: documentFromFile encoding equals: '';
+				assert: documentFromFile printString equals: document printString ] ]
 ]
 
 { #category : #tests }
 XMLExternalEntityTest >> testParsingEncodedFileWithEncodingAttribute [
 	"This test creates/deletes a file so is skipped by default"
+
 	self
-		skipOrReturnWith: [^ self]
+		skipOrReturnWith: [ ^ self ]
 		ifSkippable: #testParsingEncodedFileWithEncodingAttribute.
 
-	self tempFileManager newFileHandleDo: [:fileHandle |
-		self encodingNames do: [:encoding | | document documentFromFile |
+	self tempFileManager newFileHandleDo: [ :fileHandle |
+		self encodingNames do: [ :encoding |
+			| document documentFromFile |
 			document := XMLDOMParser parse: self wideCharacterXML.
 			document encoding: encoding.
-			fileHandle writeStreamDo: [:stream |
+			fileHandle writeStreamDo: [ :stream |
 				stream
 					streamConverter: encoding asXMLStreamConverter;
-					nextPutAll: document printString].
+					nextPutAll: document printString ].
 			self
 				shouldnt: [
-					documentFromFile :=
-						XMLDOMParser parseFileNamed: fileHandle path]
+				documentFromFile := XMLDOMParser parseFileNamed: fileHandle path ]
 				raise: XMLFileException.
 			self
-				assert: documentFromFile encoding = encoding;
-				assert: documentFromFile printString = document printString]]
+				assert: documentFromFile encoding equals: encoding;
+				assert: documentFromFile printString equals: document printString ] ]
 ]
 
 { #category : #tests }
 XMLExternalEntityTest >> testParsingEncodedFileWithEncodingAttributeAndBOM [
 	"This test creates/deletes a file so is skipped by default"
+
 	self
-		skipOrReturnWith: [^ self]
+		skipOrReturnWith: [ ^ self ]
 		ifSkippable: #testParsingEncodedFileWithEncodingAttributeAndBOM.
 
-	self tempFileManager newFileHandleDo: [:fileHandle |
-		self encodingNames do: [:encoding | | document documentFromFile |
+	self tempFileManager newFileHandleDo: [ :fileHandle |
+		self encodingNames do: [ :encoding |
+			| document documentFromFile |
 			document := XMLDOMParser parse: self wideCharacterXML.
 			document encoding: encoding.
-			fileHandle writeStreamDo: [:stream |
+			fileHandle writeStreamDo: [ :stream |
 				stream
 					streamConverter: encoding asXMLStreamConverter;
 					nextPutByteOrderMark;
-					nextPutAll: document printString].
+					nextPutAll: document printString ].
 			self
 				shouldnt: [
-					documentFromFile :=
-						XMLDOMParser parseFileNamed: fileHandle path]
+				documentFromFile := XMLDOMParser parseFileNamed: fileHandle path ]
 				raise: XMLFileException.
 			self
-				assert: documentFromFile encoding = encoding;
-				assert: documentFromFile printString = document printString]]
+				assert: documentFromFile encoding equals: encoding;
+				assert: documentFromFile printString equals: document printString ] ]
 ]
 
 { #category : #tests }
 XMLExternalEntityTest >> testParsingExternalEntities [
 	"This test uses HTTP so is skipped by default."
-	| entityCacheCopy |
 
+	| entityCacheCopy |
 	self
-		skipOrReturnWith: [^ self]
+		skipOrReturnWith: [ ^ self ]
 		ifSkippable: #testParsingExternalEntities.
 
 	DTDCachingExternalEntityResolver clearEntityCache.
@@ -461,20 +453,21 @@ XMLExternalEntityTest >> testParsingExternalEntities [
 		usingNamespaces: true
 		validation: true
 		externalEntities: true.
-	DTDCachingExternalEntityResolver entityCache keysAndValuesDo: [:key :value |
-		self assert:
-			(entityCacheCopy
-				at: key
-				ifAbsent: [self fail]) == value]
+	DTDCachingExternalEntityResolver entityCache keysAndValuesDo: [
+		:key
+		:value |
+		self
+			assert: (entityCacheCopy at: key ifAbsent: [ self fail ])
+			identicalTo: value ]
 ]
 
 { #category : #tests }
 XMLExternalEntityTest >> testParsingExternalEntitiesLimit [
 	"This test uses HTTP so is skipped by default."
-	| handler parser limitedResolver totalResolvedExternalEntities |
 
+	| handler parser limitedResolver totalResolvedExternalEntities |
 	self
-		skipOrReturnWith: [^ self]
+		skipOrReturnWith: [ ^ self ]
 		ifSkippable: #testParsingExternalEntitiesLimit.
 
 	DTDCachingExternalEntityResolver clearEntityCache.
@@ -485,7 +478,8 @@ XMLExternalEntityTest >> testParsingExternalEntitiesLimit [
 	(limitedResolver := parser driver externalEntityResolver)
 		maxExternalEntities: nil.
 	parser parseDocument.
-	totalResolvedExternalEntities := limitedResolver totalResolvedExternalEntities.
+	totalResolvedExternalEntities := limitedResolver
+		                                 totalResolvedExternalEntities.
 	self assert: totalResolvedExternalEntities > 0.
 
 	"should report the same number of resolved entities each time, even if
@@ -497,18 +491,16 @@ XMLExternalEntityTest >> testParsingExternalEntitiesLimit [
 	(limitedResolver := parser driver externalEntityResolver)
 		maxExternalEntities: totalResolvedExternalEntities.
 	parser parseDocument.
-	self assert:
-		limitedResolver totalResolvedExternalEntities =
-			totalResolvedExternalEntities.
+	self
+		assert: limitedResolver totalResolvedExternalEntities
+		equals: totalResolvedExternalEntities.
 
 	(handler := SAXHandler on: self musicXMLDocument)
 		resolvesExternalEntities: true.
 	parser := handler parser.
 	(limitedResolver := parser driver externalEntityResolver)
 		maxExternalEntities: totalResolvedExternalEntities - 1.
-	self
-		should: [parser parseDocument]
-		raise: XMLLimitException
+	self should: [ parser parseDocument ] raise: XMLLimitException
 ]
 
 { #category : #tests }

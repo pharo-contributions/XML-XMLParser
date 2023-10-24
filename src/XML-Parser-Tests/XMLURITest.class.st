@@ -187,41 +187,38 @@ XMLURITest >> asciiCharacters [
 
 { #category : #asserting }
 XMLURITest >> assertURI: aFirstURI atHostEquals: aSecondURI [
-	self assert: aFirstURI host = aSecondURI host.
-	self
-		assertURI: aFirstURI
-		atPortEquals: aSecondURI
+
+	self assert: aFirstURI host equals: aSecondURI host.
+	self assertURI: aFirstURI atPortEquals: aSecondURI
 ]
 
 { #category : #asserting }
 XMLURITest >> assertURI: aFirstURI atPathEquals: aSecondURI [
-	self assert: aFirstURI pathSegments = aSecondURI pathSegments.
-	self
-		assertURI: aFirstURI
-		atQueryEquals: aSecondURI
+
+	self assert: aFirstURI pathSegments equals: aSecondURI pathSegments.
+	self assertURI: aFirstURI atQueryEquals: aSecondURI
 ]
 
 { #category : #asserting }
 XMLURITest >> assertURI: aFirstURI atPortEquals: aSecondURI [
-	self assert: aFirstURI port = aSecondURI port.
-	self
-		assertURI: aFirstURI
-		atPathEquals: aSecondURI
+
+	self assert: aFirstURI port equals: aSecondURI port.
+	self assertURI: aFirstURI atPathEquals: aSecondURI
 ]
 
 { #category : #asserting }
 XMLURITest >> assertURI: aFirstURI atQueryEquals: aSecondURI [
+
 	self
-		assert: aFirstURI query = aSecondURI query;
-		assert: aFirstURI fragment = aSecondURI fragment
+		assert: aFirstURI query equals: aSecondURI query;
+		assert: aFirstURI fragment equals: aSecondURI fragment
 ]
 
 { #category : #asserting }
 XMLURITest >> assertURI: aFirstURI atUserInfoEquals: aSecondURI [
-	self  assert: aFirstURI userInfo = aSecondURI userInfo.
-	self
-		assertURI: aFirstURI
-		atHostEquals: aSecondURI
+
+	self assert: aFirstURI userInfo equals: aSecondURI userInfo.
+	self assertURI: aFirstURI atHostEquals: aSecondURI
 ]
 
 { #category : #accessing }
@@ -430,25 +427,21 @@ XMLURITest >> testAsXMLFileHandle [
 
 { #category : #tests }
 XMLURITest >> testAsXMLHTTPRequest [
-	XMLHTTPRequest hasSupportedImplementation
-		ifFalse: [^ self].
 
-	self allURIStringsDo: [:each | | uri request |
+	XMLHTTPRequest hasSupportedImplementation ifFalse: [ ^ self ].
+
+	self allURIStringsDo: [ :each |
+		| uri request |
 		uri := each asXMLURI.
-		(uri isRelative
-			or: [uri isHTTP])
+		(uri isRelative or: [ uri isHTTP ])
 			ifTrue: [
 				request := uri asXMLHTTPRequest.
 				self
-					assert: request class == XMLHTTPRequest implementation;
-					assert: request url = uri printString]
-			ifFalse: [
-				"do not assume HTTPS is supported even if HTTP is"
-				uri isHTTPS
-					ifFalse: [
-						self
-							should: [uri asXMLHTTPRequest]
-							raise: XMLHTTPException]]].
+					assert: request class identicalTo: XMLHTTPRequest implementation;
+					assert: request url equals: uri printString ]
+			ifFalse: [ "do not assume HTTPS is supported even if HTTP is"
+				uri isHTTPS ifFalse: [
+					self should: [ uri asXMLHTTPRequest ] raise: XMLHTTPException ] ] ]
 ]
 
 { #category : #tests }
@@ -2093,41 +2086,41 @@ XMLURITest >> testQueryValuesAtDo [
 
 { #category : #tests }
 XMLURITest >> testQueryValuesAtIfAbsent [
-	self allURIStringsDo: [:uriString | | uri valuesForKeys |
+
+	self allURIStringsDo: [ :uriString |
+		| uri valuesForKeys |
 		uri := uriString asXMLURI.
 		valuesForKeys := Dictionary new.
-		uri query do: [:each |
-			(valuesForKeys
-				at: each key
-				ifAbsentPut: [OrderedCollection new])
-					addLast: each value].
-		valuesForKeys keysAndValuesDo: [:key :values |
-			self assert:
-				(uri
-					queryValuesAt: key
-					ifAbsent: [self fail]) = values].
-		self assert:
-			(uri
-				queryValuesAt: 'absent'
-				ifAbsent: [#absent]) = #absent]
+		uri query do: [ :each |
+			(valuesForKeys at: each key ifAbsentPut: [ OrderedCollection new ])
+				addLast: each value ].
+		valuesForKeys keysAndValuesDo: [ :key :values |
+			self
+				assert: (uri queryValuesAt: key ifAbsent: [ self fail ])
+				equals: values ].
+		self
+			assert: (uri queryValuesAt: 'absent' ifAbsent: [ #absent ])
+			equals: #absent ]
 ]
 
 { #category : #tests }
 XMLURITest >> testReadFrom [
-	self allURIStringsDo: [:each | | stream uri |
+
+	self allURIStringsDo: [ :each |
+		| stream uri |
 		stream := each readStream.
 		uri := XMLURI readFrom: stream.
 		self
-			assert: uri class == XMLURI;
+			assert: uri class identicalTo: XMLURI;
 			assert: uri uriString isNil;
-			assert: uri = each asXMLURI;
+			assert: uri equals: each asXMLURI;
 			assert: stream atEnd.
 
 		uri := XMLURI readFrom: each.
 		self
-			assert: uri class == XMLURI;
-			assert: uri uriString = each;
-			assert: uri = each asXMLURI]
+			assert: uri class identicalTo: XMLURI;
+			assert: uri uriString equals: each;
+			assert: uri equals: each asXMLURI ]
 ]
 
 { #category : #tests }
@@ -2157,35 +2150,37 @@ XMLURITest >> testScheme [
 
 { #category : #tests }
 XMLURITest >> testSchemeAndHostCaseInsensitivity [
-	self allURIStringsDo: [:each | | uri uppercaseURI |
+
+	self allURIStringsDo: [ :each |
+		| uri uppercaseURI |
 		uri := each asXMLURI.
 		uppercaseURI := each asUppercase asXMLURI.
 		self
-			assert: uri scheme = uppercaseURI scheme;
-			assert: uri hasAuthorityPrefix = uppercaseURI hasAuthorityPrefix.
-		uri hasUserInfo
-			ifTrue: [self deny: uri userInfo = uppercaseURI userInfo].
+			assert: uri scheme equals: uppercaseURI scheme;
+			assert: uri hasAuthorityPrefix
+			equals: uppercaseURI hasAuthorityPrefix.
+		uri hasUserInfo ifTrue: [
+			self deny: uri userInfo equals: uppercaseURI userInfo ].
 		self
-			assert: uri host = uppercaseURI host;
-			assert: uri port = uppercaseURI port.
-		(uri hasPath
-			and: [uri hasRootPath not])
-			ifTrue: [self deny: uri pathSegments = uppercaseURI pathSegments].
-		uri hasQuery
-			ifTrue: [self deny: uri query = uppercaseURI query].
-		uri hasFragment
-			ifTrue: [self deny: uri fragment = uppercaseURI fragment]]
+			assert: uri host equals: uppercaseURI host;
+			assert: uri port equals: uppercaseURI port.
+		(uri hasPath and: [ uri hasRootPath not ]) ifTrue: [
+			self deny: uri pathSegments equals: uppercaseURI pathSegments ].
+		uri hasQuery ifTrue: [
+			self deny: uri query equals: uppercaseURI query ].
+		uri hasFragment ifTrue: [
+			self deny: uri fragment equals: uppercaseURI fragment ] ]
 ]
 
 { #category : #tests }
 XMLURITest >> testSchemeCharacters [
-	| scheme uri |
 
-	scheme := self alphaNumericCharacters, '+-.'.
-	uri := (scheme, '://', self host) asXMLURI.
+	| scheme uri |
+	scheme := self alphaNumericCharacters , '+-.'.
+	uri := (scheme , '://' , self host) asXMLURI.
 	self
-		assert: uri scheme = scheme asLowercase;
-		assert: uri host = self host.
+		assert: uri scheme equals: scheme asLowercase;
+		assert: uri host equals: self host
 ]
 
 { #category : #tests }
@@ -2193,95 +2188,117 @@ XMLURITest >> testStandardURICombining [
 	"Generated from RFC 3986, page 34-36"
 
 	| baseURI |
-
 	baseURI := 'http://a/b/c/d;p?q' asXMLURI.
 	self
-		assert: (baseURI / 'g:h' asXMLURI) = 'g:h' asXMLURI;
-		assert: (baseURI / 'g' asXMLURI) = 'http://a/b/c/g' asXMLURI;
-		assert: (baseURI / './g' asXMLURI) = 'http://a/b/c/g' asXMLURI;
-		assert: (baseURI / 'g/' asXMLURI) = 'http://a/b/c/g/' asXMLURI;
-		assert: (baseURI / '/g' asXMLURI) = 'http://a/g' asXMLURI;
-		assert: (baseURI / '//g' asXMLURI) = 'http://g' asXMLURI;
-		assert: (baseURI / '?y' asXMLURI) = 'http://a/b/c/d;p?y' asXMLURI;
-		assert: (baseURI / 'g?y' asXMLURI) = 'http://a/b/c/g?y' asXMLURI;
-		assert: (baseURI / '#s' asXMLURI) = 'http://a/b/c/d;p?q#s' asXMLURI;
-		assert: (baseURI / 'g#s' asXMLURI) = 'http://a/b/c/g#s' asXMLURI;
-		assert: (baseURI / 'g?y#s' asXMLURI) = 'http://a/b/c/g?y#s' asXMLURI;
-		assert: (baseURI / ';x' asXMLURI) = 'http://a/b/c/;x' asXMLURI;
-		assert: (baseURI / 'g;x' asXMLURI) = 'http://a/b/c/g;x' asXMLURI;
-		assert: (baseURI / 'g;x?y#s' asXMLURI) = 'http://a/b/c/g;x?y#s' asXMLURI;
-		assert: (baseURI / '' asXMLURI) = 'http://a/b/c/d;p?q' asXMLURI;
-		assert: (baseURI / '.' asXMLURI) = 'http://a/b/c/' asXMLURI;
-		assert: (baseURI / './' asXMLURI) = 'http://a/b/c/' asXMLURI;
-		assert: (baseURI / '..' asXMLURI) = 'http://a/b/' asXMLURI;
-		assert: (baseURI / '../' asXMLURI) = 'http://a/b/' asXMLURI;
-		assert: (baseURI / '../g' asXMLURI) = 'http://a/b/g' asXMLURI;
-		assert: (baseURI / '../..' asXMLURI) = 'http://a/' asXMLURI;
-		assert: (baseURI / '../../' asXMLURI) = 'http://a/' asXMLURI;
-		assert: (baseURI / '../../g' asXMLURI) = 'http://a/g' asXMLURI;
-		assert: (baseURI / '../../../g' asXMLURI) = 'http://a/g' asXMLURI;
-		assert: (baseURI / '../../../../g' asXMLURI) = 'http://a/g' asXMLURI;
-		assert: (baseURI / '/./g' asXMLURI) = 'http://a/g' asXMLURI;
-		assert: (baseURI / '/../g' asXMLURI) = 'http://a/g' asXMLURI;
-		assert: (baseURI / 'g.' asXMLURI) = 'http://a/b/c/g.' asXMLURI;
-		assert: (baseURI / '.g' asXMLURI) = 'http://a/b/c/.g' asXMLURI;
-		assert: (baseURI / 'g..' asXMLURI) = 'http://a/b/c/g..' asXMLURI;
-		assert: (baseURI / '..g' asXMLURI) = 'http://a/b/c/..g' asXMLURI;
-		assert: (baseURI / './../g' asXMLURI) = 'http://a/b/g' asXMLURI;
-		assert: (baseURI / './g/.' asXMLURI) = 'http://a/b/c/g/' asXMLURI;
-		assert: (baseURI / 'g/./h' asXMLURI) = 'http://a/b/c/g/h' asXMLURI;
-		assert: (baseURI / 'g/../h' asXMLURI) = 'http://a/b/c/h' asXMLURI;
-		assert: (baseURI / 'g;x=1/./y' asXMLURI) = 'http://a/b/c/g;x=1/y' asXMLURI;
-		assert: (baseURI / 'g;x=1/../y' asXMLURI) = 'http://a/b/c/y' asXMLURI;
-		assert: (baseURI / 'g?y/./x' asXMLURI) = 'http://a/b/c/g?y/./x' asXMLURI;
-		assert: (baseURI / 'g?y/../x' asXMLURI) = 'http://a/b/c/g?y/../x' asXMLURI;
-		assert: (baseURI / 'g#s/./x' asXMLURI) = 'http://a/b/c/g#s/./x' asXMLURI;
-		assert: (baseURI / 'g#s/../x' asXMLURI) = 'http://a/b/c/g#s/../x' asXMLURI;
-		assert: (baseURI / 'http:g' asXMLURI) = 'http:g' asXMLURI
+		assert: baseURI / 'g:h' asXMLURI equals: 'g:h' asXMLURI;
+		assert: baseURI / 'g' asXMLURI equals: 'http://a/b/c/g' asXMLURI;
+		assert: baseURI / './g' asXMLURI equals: 'http://a/b/c/g' asXMLURI;
+		assert: baseURI / 'g/' asXMLURI equals: 'http://a/b/c/g/' asXMLURI;
+		assert: baseURI / '/g' asXMLURI equals: 'http://a/g' asXMLURI;
+		assert: baseURI / '//g' asXMLURI equals: 'http://g' asXMLURI;
+		assert: baseURI / '?y' asXMLURI
+		equals: 'http://a/b/c/d;p?y' asXMLURI;
+		assert: baseURI / 'g?y' asXMLURI
+		equals: 'http://a/b/c/g?y' asXMLURI;
+		assert: baseURI / '#s' asXMLURI
+		equals: 'http://a/b/c/d;p?q#s' asXMLURI;
+		assert: baseURI / 'g#s' asXMLURI
+		equals: 'http://a/b/c/g#s' asXMLURI;
+		assert: baseURI / 'g?y#s' asXMLURI
+		equals: 'http://a/b/c/g?y#s' asXMLURI;
+		assert: baseURI / ';x' asXMLURI equals: 'http://a/b/c/;x' asXMLURI;
+		assert: baseURI / 'g;x' asXMLURI
+		equals: 'http://a/b/c/g;x' asXMLURI;
+		assert: baseURI / 'g;x?y#s' asXMLURI
+		equals: 'http://a/b/c/g;x?y#s' asXMLURI;
+		assert: baseURI / '' asXMLURI equals: 'http://a/b/c/d;p?q' asXMLURI;
+		assert: baseURI / '.' asXMLURI equals: 'http://a/b/c/' asXMLURI;
+		assert: baseURI / './' asXMLURI equals: 'http://a/b/c/' asXMLURI;
+		assert: baseURI / '..' asXMLURI equals: 'http://a/b/' asXMLURI;
+		assert: baseURI / '../' asXMLURI equals: 'http://a/b/' asXMLURI;
+		assert: baseURI / '../g' asXMLURI equals: 'http://a/b/g' asXMLURI;
+		assert: baseURI / '../..' asXMLURI equals: 'http://a/' asXMLURI;
+		assert: baseURI / '../../' asXMLURI equals: 'http://a/' asXMLURI;
+		assert: baseURI / '../../g' asXMLURI equals: 'http://a/g' asXMLURI;
+		assert: baseURI / '../../../g' asXMLURI
+		equals: 'http://a/g' asXMLURI;
+		assert: baseURI / '../../../../g' asXMLURI
+		equals: 'http://a/g' asXMLURI;
+		assert: baseURI / '/./g' asXMLURI equals: 'http://a/g' asXMLURI;
+		assert: baseURI / '/../g' asXMLURI equals: 'http://a/g' asXMLURI;
+		assert: baseURI / 'g.' asXMLURI equals: 'http://a/b/c/g.' asXMLURI;
+		assert: baseURI / '.g' asXMLURI equals: 'http://a/b/c/.g' asXMLURI;
+		assert: baseURI / 'g..' asXMLURI
+		equals: 'http://a/b/c/g..' asXMLURI;
+		assert: baseURI / '..g' asXMLURI
+		equals: 'http://a/b/c/..g' asXMLURI;
+		assert: baseURI / './../g' asXMLURI equals: 'http://a/b/g' asXMLURI;
+		assert: baseURI / './g/.' asXMLURI
+		equals: 'http://a/b/c/g/' asXMLURI;
+		assert: baseURI / 'g/./h' asXMLURI
+		equals: 'http://a/b/c/g/h' asXMLURI;
+		assert: baseURI / 'g/../h' asXMLURI
+		equals: 'http://a/b/c/h' asXMLURI;
+		assert: baseURI / 'g;x=1/./y' asXMLURI
+		equals: 'http://a/b/c/g;x=1/y' asXMLURI;
+		assert: baseURI / 'g;x=1/../y' asXMLURI
+		equals: 'http://a/b/c/y' asXMLURI;
+		assert: baseURI / 'g?y/./x' asXMLURI
+		equals: 'http://a/b/c/g?y/./x' asXMLURI;
+		assert: baseURI / 'g?y/../x' asXMLURI
+		equals: 'http://a/b/c/g?y/../x' asXMLURI;
+		assert: baseURI / 'g#s/./x' asXMLURI
+		equals: 'http://a/b/c/g#s/./x' asXMLURI;
+		assert: baseURI / 'g#s/../x' asXMLURI
+		equals: 'http://a/b/c/g#s/../x' asXMLURI;
+		assert: baseURI / 'http:g' asXMLURI equals: 'http:g' asXMLURI
 ]
 
 { #category : #tests }
 XMLURITest >> testUserInfo [
-	self allURIStringsDo: [:each | | uri |
+
+	self allURIStringsDo: [ :each |
+		| uri |
 		uri := each asXMLURI.
 		uri scheme = 'mailto'
-			ifTrue: [self assert: uri userInfo = 'userName']
-			ifFalse: [self assert: uri userInfo = '']]
+			ifTrue: [ self assert: uri userInfo equals: 'userName' ]
+			ifFalse: [ self assert: uri userInfo equals: '' ] ]
 ]
 
 { #category : #tests }
 XMLURITest >> testUserInfoNonPercentEncodedCharacters [
-	| userInfo uriString uri |
 
-	userInfo := self unreservedCharacters, self subDelimiterCharacters, ':'.
-	uriString := 'mailto:', userInfo, '@', self host.
+	| userInfo uriString uri |
+	userInfo := self unreservedCharacters , self subDelimiterCharacters
+	            , ':'.
+	uriString := 'mailto:' , userInfo , '@' , self host.
 	uri := uriString asXMLURI.
 	self
-		assert: uri scheme = 'mailto';
-		assert: uri userInfo = userInfo;
-		assert: uri host = self host.
+		assert: uri scheme equals: 'mailto';
+		assert: uri userInfo equals: userInfo;
+		assert: uri host equals: self host.
 
 	uri uriString: nil.
-	self assert: uri printString = uriString.
+	self assert: uri printString equals: uriString
 ]
 
 { #category : #tests }
 XMLURITest >> testUserInfoPercentEncodedCharacters [
-	| prefix encoded decoded suffix encodedURIString uri |
 
+	| prefix encoded decoded suffix encodedURIString uri |
 	prefix := 'mailto:'.
-	encoded := self percentEncodedASCIICharacters, '+'.
-	decoded := self asciiCharacters, '+'.
-	suffix := '@', self host.
-	encodedURIString := prefix, encoded, suffix.
+	encoded := self percentEncodedASCIICharacters , '+'.
+	decoded := self asciiCharacters , '+'.
+	suffix := '@' , self host.
+	encodedURIString := prefix , encoded , suffix.
 	uri := encodedURIString asXMLURI.
 	self
-		assert: uri scheme = 'mailto';
-		assert: uri userInfo = decoded;
-		assert: uri rawUserInfo = encoded.
+		assert: uri scheme equals: 'mailto';
+		assert: uri userInfo equals: decoded;
+		assert: uri rawUserInfo equals: encoded.
 
 	uri uriString: nil.
-	self assert: uri printString = encodedURIString.
+	self assert: uri printString equals: encodedURIString
 ]
 
 { #category : #accessing }

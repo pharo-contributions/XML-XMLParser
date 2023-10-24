@@ -23,45 +23,52 @@ XMLGeneralEntityDeclarationTest >> testIsUnparsed [
 
 { #category : #tests }
 XMLGeneralEntityDeclarationTest >> testNData [
-	| declaration |
 
+	| declaration |
 	declaration := self newNode.
 	self
-		assert: declaration ndata = '';
-		assert: (declaration ndata: 'test') == declaration;
-		assert: declaration ndata = 'test'
+		assert: declaration ndata equals: '';
+		assert: (declaration ndata: 'test') identicalTo: declaration;
+		assert: declaration ndata equals: 'test'
 ]
 
 { #category : #tests }
 XMLGeneralEntityDeclarationTest >> testNamePublicIDSystemIDNdata [
-	| declaration |
 
-	declaration :=
-		self nodeClass
-			name: 'one'
-			publicID: 'two'
-			systemID: 'three'
-			ndata: 'four'.
+	| declaration |
+	declaration := self nodeClass
+		               name: 'one'
+		               publicID: 'two'
+		               systemID: 'three'
+		               ndata: 'four'.
 	self
-		assert: declaration class == self nodeClass;
-		assert: declaration name = 'one';
-		assert: declaration publicID = 'two';
-		assert: declaration systemID = 'three';
-		assert: declaration ndata = 'four'
+		assert: declaration class identicalTo: self nodeClass;
+		assert: declaration name equals: 'one';
+		assert: declaration publicID equals: 'two';
+		assert: declaration systemID equals: 'three';
+		assert: declaration ndata equals: 'four'
 ]
 
 { #category : #tests }
 XMLGeneralEntityDeclarationTest >> testWriteXMLOn [
-	self assert:
-		(self nodeClass name: 'one' replacement: 'two') printString =
-			'<!ENTITY one "two">'.
-	self assert:
-		(self nodeClass name: 'one' publicID: 'two' systemID: 'three') printString =
-			'<!ENTITY one PUBLIC "two" "three">'.
-	self assert:
-		(self nodeClass name: 'one' publicID: '' systemID: 'three') printString =
-			'<!ENTITY one SYSTEM "three">'.
-	self assert:
-		(self nodeClass name: 'one' publicID: 'two' systemID: 'three' ndata: 'four') printString =
-			'<!ENTITY one PUBLIC "two" "three" NDATA four>'
+
+	self
+		assert: (self nodeClass name: 'one' replacement: 'two') printString
+		equals: '<!ENTITY one "two">'.
+	self
+		assert:
+			(self nodeClass name: 'one' publicID: 'two' systemID: 'three')
+				printString
+		equals: '<!ENTITY one PUBLIC "two" "three">'.
+	self
+		assert: (self nodeClass name: 'one' publicID: '' systemID: 'three')
+				printString
+		equals: '<!ENTITY one SYSTEM "three">'.
+	self
+		assert: (self nodeClass
+				 name: 'one'
+				 publicID: 'two'
+				 systemID: 'three'
+				 ndata: 'four') printString
+		equals: '<!ENTITY one PUBLIC "two" "three" NDATA four>'
 ]

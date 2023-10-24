@@ -958,8 +958,8 @@ XMLParserTest >> testAttributeDeclarationWhitespace [
 
 { #category : #tests }
 XMLParserTest >> testAttributeDefaultFixedValue [
-	| dtd document root |
 
+	| dtd document root |
 	dtd := '
 		<!DOCTYPE root [
 			<!ELEMENT root EMPTY>
@@ -971,58 +971,53 @@ XMLParserTest >> testAttributeDefaultFixedValue [
 				four ID #REQUIRED >
 		]>'.
 
-	#(true false) do: [:isValidating |
-		document :=
-			(XMLDOMParser on:
-				dtd,
-				'<root ',
-				'	one=''fixedDefault'' ',
-				'	two=" fixedDefaultTwo  " ',
-				'	three="" ',
-				'four="fixedDefaultTwo"/>')
-				isValidating: isValidating;
-				parseDocument.
+	#( true false ) do: [ :isValidating |
+		document := (XMLDOMParser on:
+				             dtd , '<root ' , '	one=''fixedDefault'' '
+				             , '	two=" fixedDefaultTwo  " ' , '	three="" '
+				             , 'four="fixedDefaultTwo"/>')
+			            isValidating: isValidating;
+			            parseDocument.
 		root := document root.
 		self
-			assert: (root attributeAt: 'one') = 'fixedDefault';
-			assert: (root attributeAt: 'two') = 'fixedDefaultTwo';
+			assert: (root attributeAt: 'one') equals: 'fixedDefault';
+			assert: (root attributeAt: 'two') equals: 'fixedDefaultTwo';
 			assert: (root includesAttribute: 'three');
-			assert: (root attributeAt: 'three') = '';
-			assert: (root attributeAt: 'four') = 'fixedDefaultTwo'.
+			assert: (root attributeAt: 'three') equals: '';
+			assert: (root attributeAt: 'four') equals: 'fixedDefaultTwo'.
 
 		"attributes with fixed defaults are set automatically if not present"
-		document :=
-			(XMLDOMParser on: dtd, '<root four="fixedDefaultTwo"/>')
-				isValidating: isValidating;
-				parseDocument.
+		document := (XMLDOMParser on: dtd , '<root four="fixedDefaultTwo"/>')
+			            isValidating: isValidating;
+			            parseDocument.
 		root := document root.
 		self
-			assert: (root attributeAt: 'one') = 'fixedDefault';
-			assert: (root attributeAt: 'two') = 'fixedDefaultTwo';
+			assert: (root attributeAt: 'one') equals: 'fixedDefault';
+			assert: (root attributeAt: 'two') equals: 'fixedDefaultTwo';
 			assert: (root includesAttribute: 'three');
-			assert: (root attributeAt: 'three') = ''].
+			assert: (root attributeAt: 'three') equals: '' ].
 
 	"but if present cannot have non-default values"
-	#('one' 'two' 'three')
-		with: #('fixedDefault' 'fixedDefaultTwo' '')
-		do: [:name :fixedDefault | | xml |
-			xml := dtd, '<root ', name, '="nonDefault"/>'.
+	#( 'one' 'two' 'three' )
+		with: #( 'fixedDefault' 'fixedDefaultTwo' '' )
+		do: [ :name :fixedDefault |
+			| xml |
+			xml := dtd , '<root ' , name , '="nonDefault"/>'.
 			self
-				should: [SAXHandler parse: xml]
+				should: [ SAXHandler parse: xml ]
 				raise: XMLValidationException.
 			self
 				shouldnt: [
-					document :=
-						(XMLDOMParser on: xml)
-							isValidating: false;
-							parseDocument]
+					document := (XMLDOMParser on: xml)
+						            isValidating: false;
+						            parseDocument ]
 				raise: XMLValidationException.
 			root := document root.
 			self
-				assert: (root attributeAt: 'one') = 'fixedDefault';
-				assert: (root attributeAt: 'two') = 'fixedDefaultTwo';
+				assert: (root attributeAt: 'one') equals: 'fixedDefault';
+				assert: (root attributeAt: 'two') equals: 'fixedDefaultTwo';
 				assert: (root includesAttribute: 'three');
-				assert: (root attributeAt: 'three') = ''].
+				assert: (root attributeAt: 'three') equals: '' ]
 ]
 
 { #category : #tests }
@@ -1030,165 +1025,168 @@ XMLParserTest >> testAttributeDefaultFixedValueEntityReference [
 	"tests that general entities referenced in attribute declaration #FIXED
 	default values were declared before the declaration is parsed"
 
-	#('<!ELEMENT root (one,two)>
+	#( '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!ATTLIST one one CDATA #FIXED "&undeclared;">
 			<!ELEMENT two EMPTY>
 			<!ATTLIST two two CDATA #FIXED "value">'
-		"no ID test because they can't have default values, but IDREF/IDREFS can"
-		'<!ELEMENT root (one,two)>
+	   '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!ATTLIST one one IDREF #FIXED "&undeclared;">
 			<!ELEMENT two EMPTY>
-			<!ATTLIST two two ID #REQUIRED>'
-		'<!ELEMENT root (one,two)>
+			<!ATTLIST two two ID #REQUIRED>' '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!ATTLIST one one IDREFS #FIXED "&undeclared;">
 			<!ELEMENT two EMPTY>
-			<!ATTLIST two two ID #REQUIRED>'
-		'<!ELEMENT root (one,two)>
+			<!ATTLIST two two ID #REQUIRED>' '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!NOTATION note PUBLIC "note.txt">
 			<!ENTITY value PUBLIC "note.txt" "note.txt" NDATA note>
 			<!ATTLIST one one ENTITY #FIXED "&undeclared;">
 			<!ELEMENT two EMPTY>
 			<!ATTLIST two two CDATA #FIXED "value">'
-		'<!ELEMENT root (one,two)>
+	   '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!NOTATION note PUBLIC "note.txt">
 			<!ENTITY value PUBLIC "note.txt" "note.txt" NDATA note>
 			<!ATTLIST one one ENTITIES #FIXED "&undeclared;">
 			<!ELEMENT two EMPTY>
 			<!ATTLIST two two CDATA #FIXED "value">'
-		'<!ELEMENT root (one,two)>
+	   '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!ATTLIST one one NMTOKEN #FIXED "&undeclared;">
 			<!ELEMENT two EMPTY>
 			<!ATTLIST two two CDATA #FIXED "value">'
-		'<!ELEMENT root (one,two)>
+	   '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!ATTLIST one one NMTOKENS #FIXED "&undeclared;">
 			<!ELEMENT two EMPTY>
 			<!ATTLIST two two CDATA #FIXED "value">'
-		'<!ELEMENT root (one,two)>
+	   '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!ATTLIST one one (value) #FIXED "&undeclared;">
 			<!ELEMENT two EMPTY>
 			<!ATTLIST two two CDATA #FIXED "value">'
-		'<!ELEMENT root (one,two)>
+	   '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!NOTATION value PUBLIC "note.txt">
 			<!ATTLIST one one NOTATION (value) #FIXED "&undeclared;">
 			<!ELEMENT two EMPTY>
-			<!ATTLIST two two CDATA #FIXED "value">')
-	do: [:each | | badSubset goodSubset badContent goodContent document|
+			<!ATTLIST two two CDATA #FIXED "value">' ) do: [ :each | "no ID test because they can't have default values, but IDREF/IDREFS can"
+		| badSubset goodSubset badContent goodContent document |
 		"the 'undeclared' entity declaration must come before
 		the rest of the subset for it to be OK"
-		badSubset := each, '<!ENTITY undeclared "value">'.
-		goodSubset := '<!ENTITY undeclared "value">', each.
-		badContent :=
-			'<root>
+		badSubset := each , '<!ENTITY undeclared "value">'.
+		goodSubset := '<!ENTITY undeclared "value">' , each.
+		badContent := '<root>
 				<one one="otherValue"/><!--override the #FIXED default value-->
 				<two two="value"/><!--don''t override the #FIXED default value-->
 			</root>'.
-		goodContent :=
-			'<root>
+		goodContent := '<root>
 				<one/><!--inherit the #FIXED default value-->
 				<two two="value"/><!--don''t override the #FIXED default value-->
 			</root>'.
 
 		self
 			should: [
-				SAXHandler parse: '<!DOCTYPE root [', badSubset, ']>', goodContent]
+				SAXHandler parse:
+					'<!DOCTYPE root [' , badSubset , ']>' , goodContent ]
 			raise: XMLWellFormednessException.
 		self
 			should: [
-				(SAXHandler on: '<!DOCTYPE root SYSTEM "extern.dtd">', goodContent)
+				(SAXHandler on:
+						 '<!DOCTYPE root SYSTEM "extern.dtd">' , goodContent)
 					externalEntityResolver:
 						(DTDStaticExternalEntityResolver externalEntities:
-							(Array with: 'extern.dtd' -> badSubset));
+								 (Array with: 'extern.dtd' -> badSubset));
 					resolvesExternalEntities: true;
-					parseDocument]
+					parseDocument ]
 			raise: XMLValidationException.
 
 		self
 			shouldnt: [
-				document :=
-					(XMLDOMParser on:
-						'<!DOCTYPE root SYSTEM "extern.dtd">', goodContent)
-						externalEntityResolver:
-							(DTDStaticExternalEntityResolver externalEntities:
-								(Array with: 'extern.dtd' -> badSubset));
-						resolvesExternalEntities: true;
-						isValidating: false;
-						parseDocument]
+				document := (XMLDOMParser on:
+						             '<!DOCTYPE root SYSTEM "extern.dtd">' , goodContent)
+					            externalEntityResolver:
+						            (DTDStaticExternalEntityResolver externalEntities:
+								             (Array with: 'extern.dtd' -> badSubset));
+					            resolvesExternalEntities: true;
+					            isValidating: false;
+					            parseDocument ]
 			raise: XMLValidationException.
 		self
-			assert: ((document root elementAt: 'one') attributeAt: 'one') = '';
-			assert: ((document root elementAt: 'two') attributeAt: 'two') = 'value'.
+			assert: ((document root elementAt: 'one') attributeAt: 'one')
+			equals: '';
+			assert: ((document root elementAt: 'two') attributeAt: 'two')
+			equals: 'value'.
 
 		self
 			shouldnt: [
-				document :=
-					XMLDOMParser parse:
-						'<!DOCTYPE root [', goodSubset, ']>', goodContent]
+				document := XMLDOMParser parse:
+					            '<!DOCTYPE root [' , goodSubset , ']>' , goodContent ]
 			raise: XMLValidationException.
 		self
-			assert: ((document root elementAt: 'one') attributeAt: 'one') = 'value';
-			assert: ((document root elementAt: 'two') attributeAt: 'two') = 'value'.
+			assert: ((document root elementAt: 'one') attributeAt: 'one')
+			equals: 'value';
+			assert: ((document root elementAt: 'two') attributeAt: 'two')
+			equals: 'value'.
 
 		self
 			shouldnt: [
-				document :=
-					(XMLDOMParser on:
-						'<!DOCTYPE root SYSTEM "extern.dtd">', goodContent)
-						externalEntityResolver:
-							(DTDStaticExternalEntityResolver externalEntities:
-								(Array with: 'extern.dtd' -> goodSubset));
-						resolvesExternalEntities: true;
-						parseDocument]
+				document := (XMLDOMParser on:
+						             '<!DOCTYPE root SYSTEM "extern.dtd">' , goodContent)
+					            externalEntityResolver:
+						            (DTDStaticExternalEntityResolver externalEntities:
+								             (Array with: 'extern.dtd' -> goodSubset));
+					            resolvesExternalEntities: true;
+					            parseDocument ]
 			raise: XMLValidationException.
 		self
-			assert: ((document root elementAt: 'one') attributeAt: 'one') = 'value';
-			assert: ((document root elementAt: 'two') attributeAt: 'two') = 'value'.
+			assert: ((document root elementAt: 'one') attributeAt: 'one')
+			equals: 'value';
+			assert: ((document root elementAt: 'two') attributeAt: 'two')
+			equals: 'value'.
 
 		"#FIXED default values cannot be changed"
 		self
-			should: [SAXHandler parse: '<!DOCTYPE root [', goodSubset, ']>', badContent]
+			should: [
+				SAXHandler parse:
+					'<!DOCTYPE root [' , goodSubset , ']>' , badContent ]
 			raise: XMLValidationException.
 		self
 			should: [
-				(SAXHandler on: '<!DOCTYPE root SYSTEM "extern.dtd">', badContent)
+				(SAXHandler on: '<!DOCTYPE root SYSTEM "extern.dtd">' , badContent)
 					externalEntityResolver:
 						(DTDStaticExternalEntityResolver externalEntities:
-							(Array with: 'extern.dtd' -> goodSubset));
+								 (Array with: 'extern.dtd' -> goodSubset));
 					resolvesExternalEntities: true;
-					parseDocument]
+					parseDocument ]
 			raise: XMLValidationException.
 
 		"...unless validation is off"
 		self
 			shouldnt: [
-				(SAXHandler on: '<!DOCTYPE root [', goodSubset, ']>', badContent)
+				(SAXHandler on:
+						 '<!DOCTYPE root [' , goodSubset , ']>' , badContent)
 					isValidating: false;
-					parseDocument]
+					parseDocument ]
 			raise: XMLValidationException.
 		self
 			shouldnt: [
-				(SAXHandler on: '<!DOCTYPE root SYSTEM "extern.dtd">', badContent)
+				(SAXHandler on: '<!DOCTYPE root SYSTEM "extern.dtd">' , badContent)
 					externalEntityResolver:
 						(DTDStaticExternalEntityResolver externalEntities:
-							(Array with: 'extern.dtd' -> goodSubset));
+								 (Array with: 'extern.dtd' -> goodSubset));
 					resolvesExternalEntities: true;
 					isValidating: false;
-					parseDocument]
-			raise: XMLValidationException].
+					parseDocument ]
+			raise: XMLValidationException ]
 ]
 
 { #category : #tests }
 XMLParserTest >> testAttributeDefaultImplied [
-	| dtd document root |
 
+	| dtd document root |
 	dtd := '
 		<!DOCTYPE root [
 			<!ELEMENT root EMPTY>
@@ -1198,34 +1196,33 @@ XMLParserTest >> testAttributeDefaultImplied [
 				two CDATA #IMPLIED >
 		]>'.
 
-	document :=
-		XMLDOMParser parse:
-			dtd, '<root one=''nonDefault'' two="nonDefaultTwo" />'.
+	document := XMLDOMParser parse:
+		            dtd , '<root one=''nonDefault'' two="nonDefaultTwo" />'.
 	root := document root.
 	self
-		assert: (root attributeAt: 'one') = 'nonDefault';
-		assert: (root attributeAt: 'two') = 'nonDefaultTwo'.
+		assert: (root attributeAt: 'one') equals: 'nonDefault';
+		assert: (root attributeAt: 'two') equals: 'nonDefaultTwo'.
 
-	document := XMLDOMParser parse: dtd, '<root one='''' two="" />'.
+	document := XMLDOMParser parse: dtd , '<root one='''' two="" />'.
 	root := document root.
 	self
 		assert: (root includesAttribute: 'one');
-		assert: (root attributeAt: 'one') = '';
+		assert: (root attributeAt: 'one') equals: '';
 		assert: (root includesAttribute: 'two');
-		assert: (root attributeAt: 'two') = ''.
+		assert: (root attributeAt: 'two') equals: ''.
 
 	"implied makes them optional"
-	document := XMLDOMParser parse: dtd, '<root />'.
+	document := XMLDOMParser parse: dtd , '<root />'.
 	root := document root.
 	self
 		deny: (root includesAttribute: 'one');
-		deny: (root includesAttribute: 'two').
+		deny: (root includesAttribute: 'two')
 ]
 
 { #category : #tests }
 XMLParserTest >> testAttributeDefaultRequired [
-	| dtd document root |
 
+	| dtd document root |
 	dtd := '
 		<!DOCTYPE root [
 			<!ELEMENT root EMPTY>
@@ -1235,35 +1232,34 @@ XMLParserTest >> testAttributeDefaultRequired [
 				two CDATA #REQUIRED >
 		]>'.
 
-	document :=
-		XMLDOMParser parse:
-			dtd, '<root one=''nonDefault'' two="nonDefaultTwo" />'.
+	document := XMLDOMParser parse:
+		            dtd , '<root one=''nonDefault'' two="nonDefaultTwo" />'.
 	root := document root.
 	self
-		assert: (root attributeAt: 'one') = 'nonDefault';
-		assert: (root attributeAt: 'two') = 'nonDefaultTwo'.
+		assert: (root attributeAt: 'one') equals: 'nonDefault';
+		assert: (root attributeAt: 'two') equals: 'nonDefaultTwo'.
 
 	"empty values still count as being present"
-	document := XMLDOMParser parse: dtd, '<root one='''' two="" />'.
+	document := XMLDOMParser parse: dtd , '<root one='''' two="" />'.
 	root := document root.
 	self
 		assert: (root includesAttribute: 'one');
-		assert: (root attributeAt: 'one') = '';
+		assert: (root attributeAt: 'one') equals: '';
 		assert: (root includesAttribute: 'two');
-		assert: (root attributeAt: 'two') = ''.
+		assert: (root attributeAt: 'two') equals: ''.
 
 	"all required attributes must be present"
-	#('<root one="nonDefault" />'
-		'<root two="nonDefault" />') do: [:each |
+	#( '<root one="nonDefault" />' '<root two="nonDefault" />' ) do: [
+		:each |
 		self
-			should: [SAXHandler parse: dtd, each]
-			raise: XMLValidationException].
+			should: [ SAXHandler parse: dtd , each ]
+			raise: XMLValidationException ]
 ]
 
 { #category : #tests }
 XMLParserTest >> testAttributeDefaultValue [
-	| dtd |
 
+	| dtd |
 	dtd := '
 		<!DOCTYPE root [
 			<!ELEMENT root EMPTY>
@@ -1274,40 +1270,38 @@ XMLParserTest >> testAttributeDefaultValue [
 				three NMTOKEN " defaultThree " >
 		]>'.
 
-	#(true false) do: [:isValidating | | document root |
-		document :=
-			(XMLDOMParser on:
-				dtd,
-				'<root ',
-				'	one=''nonDefault'' ',
-				'	two="nonDefaultTwo" ',
-				'	three="nonDefaultThree"/>')
-				isValidating: isValidating;
-				parseDocument.
+	#( true false ) do: [ :isValidating |
+		| document root |
+		document := (XMLDOMParser on:
+				             dtd , '<root ' , '	one=''nonDefault'' '
+				             , '	two="nonDefaultTwo" '
+				             , '	three="nonDefaultThree"/>')
+			            isValidating: isValidating;
+			            parseDocument.
 		root := document root.
 		self
-			assert: (root attributeAt: 'one') = 'nonDefault';
-			assert: (root attributeAt: 'two') = 'nonDefaultTwo';
-			assert: (root attributeAt: 'three') = 'nonDefaultThree'.
+			assert: (root attributeAt: 'one') equals: 'nonDefault';
+			assert: (root attributeAt: 'two') equals: 'nonDefaultTwo';
+			assert: (root attributeAt: 'three') equals: 'nonDefaultThree'.
 
 		"empty but present attributes shouldn't get the default value"
-		document := XMLDOMParser parse: dtd, '<root one='''' two=""/>'.
-		root := document root.
-			self
-				assert: (root includesAttribute: 'one');
-				assert: (root attributeAt: 'one') = '';
-				assert: (root includesAttribute: 'two');
-				assert: (root attributeAt: 'two') = '';
-				assert: (root attributeAt: 'three') = 'defaultThree'.
-
-		"attributes with defaults are set automatically if not present"
-		document := XMLDOMParser parse: dtd, '<root />'.
+		document := XMLDOMParser parse: dtd , '<root one='''' two=""/>'.
 		root := document root.
 		self
-			assert: (root attributeAt: 'one') = 'default';
+			assert: (root includesAttribute: 'one');
+			assert: (root attributeAt: 'one') equals: '';
 			assert: (root includesAttribute: 'two');
-			assert: (root attributeAt: 'two') = '';
-			assert: (root attributeAt: 'three') = 'defaultThree'].
+			assert: (root attributeAt: 'two') equals: '';
+			assert: (root attributeAt: 'three') equals: 'defaultThree'.
+
+		"attributes with defaults are set automatically if not present"
+		document := XMLDOMParser parse: dtd , '<root />'.
+		root := document root.
+		self
+			assert: (root attributeAt: 'one') equals: 'default';
+			assert: (root includesAttribute: 'two');
+			assert: (root attributeAt: 'two') equals: '';
+			assert: (root attributeAt: 'three') equals: 'defaultThree' ]
 ]
 
 { #category : #tests }
@@ -1379,118 +1373,116 @@ XMLParserTest >> testAttributeDefaultValueEntityReference [
 	"tests that general entities referenced in attribute declaration default
 	values were declared before the declaration is parsed"
 
-	#('<!ELEMENT root (one,two)>
+	#( '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!ATTLIST one one CDATA "&undeclared;">
 			<!ELEMENT two EMPTY>
-			<!ATTLIST two two CDATA "otherValue">'
-		"no ID test because they can't have default values, but IDREF/IDREFS can"
-		'<!ELEMENT root (one,two)>
+			<!ATTLIST two two CDATA "otherValue">' '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!ATTLIST one one IDREF "&undeclared;">
 			<!ELEMENT two EMPTY>
-			<!ATTLIST two two ID #REQUIRED>'
-		'<!ELEMENT root (one,two)>
+			<!ATTLIST two two ID #REQUIRED>' '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!ATTLIST one one IDREFS "&undeclared;">
 			<!ELEMENT two EMPTY>
-			<!ATTLIST two two ID #REQUIRED>'
-		'<!ELEMENT root (one,two)>
+			<!ATTLIST two two ID #REQUIRED>' '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!NOTATION note PUBLIC "note.txt">
 			<!ENTITY value PUBLIC "note.txt" "note.txt" NDATA note>
 			<!ATTLIST one one ENTITY "&undeclared;">
 			<!ELEMENT two EMPTY>
-			<!ATTLIST two two CDATA "otherValue">'
-		'<!ELEMENT root (one,two)>
+			<!ATTLIST two two CDATA "otherValue">' '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!NOTATION note PUBLIC "note.txt">
 			<!ENTITY value PUBLIC "note.txt" "note.txt" NDATA note>
 			<!ATTLIST one one ENTITIES "&undeclared;">
 			<!ELEMENT two EMPTY>
-			<!ATTLIST two two CDATA "otherValue">'
-		'<!ELEMENT root (one,two)>
+			<!ATTLIST two two CDATA "otherValue">' '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!ATTLIST one one NMTOKEN "&undeclared;">
 			<!ELEMENT two EMPTY>
 			<!ATTLIST two two CDATA #FIXED "value">'
-		'<!ELEMENT root (one,two)>
+	   '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!ATTLIST one one NMTOKENS "&undeclared;">
 			<!ELEMENT two EMPTY>
-			<!ATTLIST two two CDATA "otherValue">'
-		'<!ELEMENT root (one,two)>
+			<!ATTLIST two two CDATA "otherValue">' '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!ATTLIST one one (value) "&undeclared;">
 			<!ELEMENT two EMPTY>
-			<!ATTLIST two two CDATA "otherValue">'
-		'<!ELEMENT root (one,two)>
+			<!ATTLIST two two CDATA "otherValue">' '<!ELEMENT root (one,two)>
 			<!ELEMENT one EMPTY>
 			<!NOTATION value PUBLIC "note.txt">
 			<!ATTLIST one one NOTATION (value) "&undeclared;">
 			<!ELEMENT two EMPTY>
-			<!ATTLIST two two CDATA "otherValue">')
-	do: [:each | | badSubset goodSubset content document|
+			<!ATTLIST two two CDATA "otherValue">' ) do: [ :each | "no ID test because they can't have default values, but IDREF/IDREFS can"
+		| badSubset goodSubset content document |
 		"the 'undeclared' entity declaration must come before
 		the rest of the subset for it to be OK"
-		badSubset := each, '<!ENTITY undeclared "value">'.
-		goodSubset := '<!ENTITY undeclared "value">', each.
-		content :=
-			'<root>
+		badSubset := each , '<!ENTITY undeclared "value">'.
+		goodSubset := '<!ENTITY undeclared "value">' , each.
+		content := '<root>
 				<one/><!--inherit the default value-->
 				<two two="value"/><!--override the default value-->
 			</root>'.
 
 		self
-			should: [SAXHandler parse: '<!DOCTYPE root [', badSubset, ']>', content]
+			should: [
+			SAXHandler parse: '<!DOCTYPE root [' , badSubset , ']>' , content ]
 			raise: XMLWellFormednessException.
 		self
 			should: [
-				(SAXHandler on: '<!DOCTYPE root SYSTEM "extern.dtd">', content)
+				(SAXHandler on: '<!DOCTYPE root SYSTEM "extern.dtd">' , content)
 					externalEntityResolver:
 						(DTDStaticExternalEntityResolver externalEntities:
-							(Array with: 'extern.dtd' -> badSubset));
+								 (Array with: 'extern.dtd' -> badSubset));
 					resolvesExternalEntities: true;
-					parseDocument]
+					parseDocument ]
 			raise: XMLValidationException.
 
 		self
 			shouldnt: [
-				document :=
-					(XMLDOMParser on: '<!DOCTYPE root SYSTEM "extern.dtd">', content)
-						externalEntityResolver:
-							(DTDStaticExternalEntityResolver externalEntities:
-								(Array with: 'extern.dtd' -> badSubset));
-						resolvesExternalEntities: true;
-						isValidating: false;
-						parseDocument]
+				document := (XMLDOMParser on:
+						             '<!DOCTYPE root SYSTEM "extern.dtd">' , content)
+					            externalEntityResolver:
+						            (DTDStaticExternalEntityResolver externalEntities:
+								             (Array with: 'extern.dtd' -> badSubset));
+					            resolvesExternalEntities: true;
+					            isValidating: false;
+					            parseDocument ]
 			raise: XMLValidationException.
 		self
-			assert: ((document root elementAt: 'one') attributeAt: 'one') = '';
-			assert: ((document root elementAt: 'two') attributeAt: 'two') = 'value'.
+			assert: ((document root elementAt: 'one') attributeAt: 'one')
+			equals: '';
+			assert: ((document root elementAt: 'two') attributeAt: 'two')
+			equals: 'value'.
 
 		self
 			shouldnt: [
-				document :=
-					XMLDOMParser parse: '<!DOCTYPE root [', goodSubset, ']>', content]
+				document := XMLDOMParser parse:
+					            '<!DOCTYPE root [' , goodSubset , ']>' , content ]
 			raise: XMLValidationException.
 		self
-			assert: ((document root elementAt: 'one') attributeAt: 'one') = 'value';
-			assert: ((document root elementAt: 'two') attributeAt: 'two') = 'value'.
+			assert: ((document root elementAt: 'one') attributeAt: 'one')
+			equals: 'value';
+			assert: ((document root elementAt: 'two') attributeAt: 'two')
+			equals: 'value'.
 
 		self
 			shouldnt: [
-				document :=
-					(XMLDOMParser on: '<!DOCTYPE root SYSTEM "extern.dtd">', content)
-						externalEntityResolver:
-							(DTDStaticExternalEntityResolver externalEntities:
-								(Array with: 'extern.dtd' -> goodSubset));
-						resolvesExternalEntities: true;
-						parseDocument]
+				document := (XMLDOMParser on:
+						             '<!DOCTYPE root SYSTEM "extern.dtd">' , content)
+					            externalEntityResolver:
+						            (DTDStaticExternalEntityResolver externalEntities:
+								             (Array with: 'extern.dtd' -> goodSubset));
+					            resolvesExternalEntities: true;
+					            parseDocument ]
 			raise: XMLValidationException.
 		self
-			assert: ((document root elementAt: 'one') attributeAt: 'one') = 'value';
-			assert: ((document root elementAt: 'two') attributeAt: 'two') = 'value']
+			assert: ((document root elementAt: 'one') attributeAt: 'one')
+			equals: 'value';
+			assert: ((document root elementAt: 'two') attributeAt: 'two')
+			equals: 'value' ]
 ]
 
 { #category : #tests }
@@ -1648,8 +1640,8 @@ XMLParserTest >> testAttributeDefaultValueNmtokens [
 
 { #category : #tests }
 XMLParserTest >> testAttributeDefaultValueNonProcessing [
-	| dtd document root |
 
+	| dtd document root |
 	dtd := '
 		<!DOCTYPE root [
 			<!ELEMENT root EMPTY>
@@ -1658,20 +1650,19 @@ XMLParserTest >> testAttributeDefaultValueNonProcessing [
 			<!ATTLIST root two CDATA "defaultTwo">
 		]>'.
 
-	document :=
-		(XMLDOMParser on: dtd, '<root />')
-			isValidating: false;
-			parseDocument.
+	document := (XMLDOMParser on: dtd , '<root />')
+		            isValidating: false;
+		            parseDocument.
 	root := document root.
 	self
-		assert: root attributeNodes size = 1;
-		assert: (root attributeAt: 'one') = 'default'.
+		assert: root attributeNodes size equals: 1;
+		assert: (root attributeAt: 'one') equals: 'default'
 ]
 
 { #category : #tests }
 XMLParserTest >> testAttributeDefaultValueNonProcessingStandalone [
-	| dtd document root |
 
+	| dtd document root |
 	dtd := '<?xml version="1.0" standalone="yes"?>
 		<!DOCTYPE root [
 			<!ELEMENT root EMPTY>
@@ -1680,15 +1671,14 @@ XMLParserTest >> testAttributeDefaultValueNonProcessingStandalone [
 			<!ATTLIST root two CDATA "defaultTwo">
 		]>'.
 
-	document :=
-		(XMLDOMParser on: dtd, '<root />')
-			isValidating: false;
-			parseDocument.
+	document := (XMLDOMParser on: dtd , '<root />')
+		            isValidating: false;
+		            parseDocument.
 	root := document root.
 	self
-		assert: root attributeNodes size = 2;
-		assert: (root attributeAt: 'one') = 'default';
-		assert: (root attributeAt: 'two') = 'defaultTwo'.
+		assert: root attributeNodes size equals: 2;
+		assert: (root attributeAt: 'one') equals: 'default';
+		assert: (root attributeAt: 'two') equals: 'defaultTwo'
 ]
 
 { #category : #tests }
@@ -1814,21 +1804,20 @@ XMLParserTest >> testAttributeValueExternalEntityReference [
 
 { #category : #tests }
 XMLParserTest >> testAttributeValueNormalization [
-	| separators unnormalized normalized document |
 
-	separators :=
-		String
-			with: Character space
-			with: Character tab
-			with: Character lf.
-	unnormalized := separators, 'nonspace', separators.
+	| separators unnormalized normalized document |
+	separators := String
+		              with: Character space
+		              with: Character tab
+		              with: Character lf.
+	unnormalized := separators , 'nonspace' , separators.
 	normalized := '   nonspace   '.
-	document :=
-		(XMLDOMParser parse:
-			'<root name="', unnormalized,'">', unnormalized, '</root>').
+	document := XMLDOMParser parse:
+		            '<root name="' , unnormalized , '">' , unnormalized
+		            , '</root>'.
 	self
-		assert: (document root attributeAt: 'name') = normalized;
-		assert: (document root contentString) = unnormalized.
+		assert: (document root attributeAt: 'name') equals: normalized;
+		assert: document root contentString equals: unnormalized
 ]
 
 { #category : #tests }
@@ -1846,10 +1835,9 @@ XMLParserTest >> testAttributeValueWithAngleBrackets [
 
 { #category : #tests }
 XMLParserTest >> testAttributeXMLBase [
-	| document |
 
-	document :=
-		XMLDOMParser parse: '
+	| document |
+	document := XMLDOMParser parse: '
 			<one xml:base="a/b">
 				<two xml:base="c/d">
 					<three xml:base="/e/f">test</three>
@@ -1858,30 +1846,32 @@ XMLParserTest >> testAttributeXMLBase [
 					</four>
 				</two>
 			</one>'.
-	self assert:
-		(document allElementsCollect: [:each | each attributeAt: 'xml:base']) asArray =
-			#('a/b' 'a/c/d' '/e/f' 'a/c/d' '').
-
-	"resolution should not cause decoding/encoding"
-	document :=
-		XMLDOMParser parse: '
+	self
+		assert:
+			(document allElementsCollect: [ :each |
+				 each attributeAt: 'xml:base' ]) asArray
+		equals: #( 'a/b' 'a/c/d' '/e/f' 'a/c/d' '' ).
+	document := XMLDOMParser parse: '
 			<one xml:base="[%61]/{%62}">
 				<two xml:base="{%63}/(%64)">
 					<three xml:base="/!%65!/|%66|">test</three>
 				</two>
 			</one>'.
-	self assert:
-		(document allElementsCollect: [:each | each attributeAt: 'xml:base']) asArray =
-			#('[%61]/{%62}' '[%61]/{%63}/(%64)' '/!%65!/|%66|').
+	self
+		assert:
+			(document allElementsCollect: [ :each |
+				 each attributeAt: 'xml:base' ]) asArray
+		equals: #( '[%61]/{%62}' '[%61]/{%63}/(%64)' '/!%65!/|%66|' ).
 
-	document :=
-		XMLDOMParser
-			parse:
-				'<one xml:base=""><!--resolved as inherited base-->
+	document := XMLDOMParser
+		            parse:
+			            '<one xml:base=""><!--resolved as inherited base-->
 					<two/><!--no base attribute-->
 				</one>'
-			documentURI: 'doc.xml'.
-	self assert: (document root attributeAt: 'xml:base') = 'doc.xml'.
+		            documentURI: 'doc.xml'.
+	self
+		assert: (document root attributeAt: 'xml:base')
+		equals: 'doc.xml'
 ]
 
 { #category : #tests }
@@ -1961,25 +1951,24 @@ XMLParserTest >> testAttributeXMLIDValidation [
 
 { #category : #tests }
 XMLParserTest >> testAttributeXMLReserved [
-	| xml document element |
 
+	| xml document element |
 	xml := '<a xml="one" xmll="two" xml:="three" xmlnss="four"></a>'.
 	document := XMLDOMParser parse: xml usingNamespaces: true.
 	element := document root.
 	self
-		assert: element attributes size = 4;
-		assert: (element attributeAt: 'xml') = 'one';
-		assert: (element attributeAt: 'xmll') = 'two';
-		assert: (element attributeAt: 'xml:') = 'three';
-		assert: (element attributeAt: 'xmlnss') = 'four'.
+		assert: element attributes size equals: 4;
+		assert: (element attributeAt: 'xml') equals: 'one';
+		assert: (element attributeAt: 'xmll') equals: 'two';
+		assert: (element attributeAt: 'xml:') equals: 'three';
+		assert: (element attributeAt: 'xmlnss') equals: 'four'
 ]
 
 { #category : #tests }
 XMLParserTest >> testAttributeXMLReservedNamespaces [
-	| xml xmlWithDuplicateID document element |
 
-	xml :=
-		'<test
+	| xml xmlWithDuplicateID document element |
+	xml := '<test
 			xml:id="test"
 			xmlns="defaultNS"
 			xmlns:test="testNS"
@@ -1987,33 +1976,30 @@ XMLParserTest >> testAttributeXMLReservedNamespaces [
 	document := XMLDOMParser parse: xml.
 	element := document root.
 	self
-		assert: element namespaceScope mappedPrefixes size = 2;
-		assert: element namespaceURI = 'defaultNS';
+		assert: element namespaceScope mappedPrefixes size equals: 2;
+		assert: element namespaceURI equals: 'defaultNS';
 		assert: (element declaresPrefix: '' uri: 'defaultNS');
 		assert: (element declaresPrefix: 'test' uri: 'testNS');
-		assert: element attributes size = 2;
-		assert: (element attributeAt: 'xml:id') = 'test';
-		assert: (element attributeAt: 'xname') = 'xvalue'.
+		assert: element attributes size equals: 2;
+		assert: (element attributeAt: 'xml:id') equals: 'test';
+		assert: (element attributeAt: 'xname') equals: 'xvalue'.
 
-	document :=
-		XMLDOMParser
-			parse: xml
-			usingNamespaces: false.
+	document := XMLDOMParser parse: xml usingNamespaces: false.
 	element := document root.
 	self
 		deny: element hasNamespaces;
-		assert: element attributes size = 4;
-		assert: (element attributeAt: 'xml:id') = 'test';
-		assert: (element attributeAt: 'xmlns') = 'defaultNS';
-		assert: (element attributeAt: 'xmlns:test') = 'testNS';
-		assert: (element attributeAt: 'xname') = 'xvalue'.
+		assert: element attributes size equals: 4;
+		assert: (element attributeAt: 'xml:id') equals: 'test';
+		assert: (element attributeAt: 'xmlns') equals: 'defaultNS';
+		assert: (element attributeAt: 'xmlns:test') equals: 'testNS';
+		assert: (element attributeAt: 'xname') equals: 'xvalue'.
 
 	"test that reserved attributes are still processed when namespaces
 	are present by triggering an xml:id duplicate validation exception"
-	xmlWithDuplicateID := '<test xml:id="test">', xml, '<test/>'.
+	xmlWithDuplicateID := '<test xml:id="test">' , xml , '<test/>'.
 	self
-		should: [SAXHandler parse: xmlWithDuplicateID]
-		raise: XMLValidationException.
+		should: [ SAXHandler parse: xmlWithDuplicateID ]
+		raise: XMLValidationException
 ]
 
 { #category : #tests }
@@ -3471,8 +3457,8 @@ XMLParserTest >> testEntityDeclarationWhitespace [
 
 { #category : #tests }
 XMLParserTest >> testEntityExternalResolutionGeneral [
-	| xml entities document |
 
+	| xml entities document |
 	xml := '
 		<!DOCTYPE test [
 			<!ENTITY extern SYSTEM "/base/extern.ent">
@@ -3480,49 +3466,47 @@ XMLParserTest >> testEntityExternalResolutionGeneral [
 			<!ENTITY extern3 SYSTEM "/base/extern3.ent">
 		]>
 		<test>&extern;&extern2;&extern3;</test>'.
-	entities :=
-		Array
-			with:
-				'/base/extern.ent' ->
-					'<?xml version="1.0" encoding="UTF-8"?>one'
-			with:
-				'/base/extern2.ent' ->
-					'<?xml encoding="UTF-8"?>two'
-			with: '/base/extern3.ent' -> 'three'.
-	1 to: entities size - 1 do: [:i |
+	entities := Array
+		            with:
+		            '/base/extern.ent'
+		            -> '<?xml version="1.0" encoding="UTF-8"?>one'
+		            with:
+		            '/base/extern2.ent' -> '<?xml encoding="UTF-8"?>two'
+		            with: '/base/extern3.ent' -> 'three'.
+	1 to: entities size - 1 do: [ :i |
 		self
 			should: [
 				(SAXHandler on: xml)
 					externalEntityResolver:
 						(DTDStaticExternalEntityResolver externalEntities:
-							(entities copyFrom: 1 to: i));
+								 (entities copyFrom: 1 to: i));
 					resolvesExternalEntities: true;
-					parseDocument]
-			raise: XMLParserException].
+					parseDocument ]
+			raise: XMLParserException ].
 	self
 		should: [
 			(SAXHandler on: xml)
 				externalEntityResolver:
 					(DTDStaticExternalEntityResolver externalEntities: entities);
 				resolvesExternalEntities: false;
-				parseDocument]
+				parseDocument ]
 		raise: XMLParserException.
 	self
 		shouldnt: [
-			document :=
-				(XMLDOMParser on: xml)
-					externalEntityResolver:
-						(DTDStaticExternalEntityResolver externalEntities: entities);
-					resolvesExternalEntities: true;
-					parseDocument]
+			document := (XMLDOMParser on: xml)
+				            externalEntityResolver:
+					            (DTDStaticExternalEntityResolver externalEntities:
+							             entities);
+				            resolvesExternalEntities: true;
+				            parseDocument ]
 		raise: XMLParserException.
-	self assert: document root contentString = 'onetwothree'.
+	self assert: document root contentString equals: 'onetwothree'
 ]
 
 { #category : #tests }
 XMLParserTest >> testEntityExternalResolutionParameter [
-	| xml entities document |
 
+	| xml entities document |
 	xml := '
 		<!DOCTYPE test [
 			<!ENTITY % extern SYSTEM "/base/extern.ent">
@@ -3531,40 +3515,37 @@ XMLParserTest >> testEntityExternalResolutionParameter [
 			%extern3;
 		]>
 		<test>&extern4;</test>'.
-	entities :=
-		Array
-			with:
-				'/base/extern.ent' ->
-					'<?xml version="1.0" encoding="UTF-8"?>
+	entities := Array
+		            with:
+			            '/base/extern.ent'
+			            -> '<?xml version="1.0" encoding="UTF-8"?>
 					<!ENTITY % extern2 SYSTEM "sub/extern2.ent">'
-			with:
-				'/base/sub/extern2.ent' ->
-					'<?xml encoding="UTF-8"?>
+		            with:
+			            '/base/sub/extern2.ent' -> '<?xml encoding="UTF-8"?>
 					<!ENTITY % extern3 SYSTEM "./extern3.ent">'
-			with:
-				'/base/sub/extern3.ent' ->
-					'<!ENTITY % extern5 SYSTEM "./extern5.ent">
+		            with: '/base/sub/extern3.ent'
+			            -> '<!ENTITY % extern5 SYSTEM "./extern5.ent">
 					<!ENTITY extern4 "%extern5;">'
-			with:
-				'/base/sub/extern5.ent' ->
-					'<?xml encoding="UTF-8"?>test'.
-	1 to: entities size - 1 do: [:i |
+		            with:
+		            '/base/sub/extern5.ent'
+		            -> '<?xml encoding="UTF-8"?>test'.
+	1 to: entities size - 1 do: [ :i |
 		self
 			should: [
 				(SAXHandler on: xml)
 					externalEntityResolver:
 						(DTDStaticExternalEntityResolver externalEntities:
-							(entities copyFrom: 1 to: i));
+								 (entities copyFrom: 1 to: i));
 					resolvesExternalEntities: true;
-					parseDocument]
-			raise: XMLParserException].
+					parseDocument ]
+			raise: XMLParserException ].
 	self
 		should: [
 			(SAXHandler on: xml)
 				externalEntityResolver:
 					(DTDStaticExternalEntityResolver externalEntities: entities);
 				resolvesExternalEntities: false;
-				parseDocument]
+				parseDocument ]
 		raise: XMLParserException.
 	self
 		shouldnt: [
@@ -3573,18 +3554,18 @@ XMLParserTest >> testEntityExternalResolutionParameter [
 					(DTDStaticExternalEntityResolver externalEntities: entities);
 				resolvesExternalEntities: false;
 				isValidating: false;
-				parseDocument]
+				parseDocument ]
 		raise: XMLParserException.
 	self
 		shouldnt: [
-			document :=
-				(XMLDOMParser on: xml)
-					externalEntityResolver:
-						(DTDStaticExternalEntityResolver externalEntities: entities);
-					resolvesExternalEntities: true;
-					parseDocument]
+			document := (XMLDOMParser on: xml)
+				            externalEntityResolver:
+					            (DTDStaticExternalEntityResolver externalEntities:
+							             entities);
+				            resolvesExternalEntities: true;
+				            parseDocument ]
 		raise: XMLParserException.
-	self assert: document root contentString = 'test'.
+	self assert: document root contentString equals: 'test'
 ]
 
 { #category : #tests }
@@ -3679,8 +3660,8 @@ XMLParserTest >> testEntityExternalSubsetResolution [
 
 { #category : #tests }
 XMLParserTest >> testEntityLiteralContextNesting [
-	| xml inner outer document |
 
+	| xml inner outer document |
 	xml := '<?xml version="1.0"?>
 	<!DOCTYPE entities [
 		<!ENTITY % inner " <!ENTITY inner  &#34; '' inner &#39; &#34;>">
@@ -3689,17 +3670,17 @@ XMLParserTest >> testEntityLiteralContextNesting [
 	]>
 	<entities one="&outer;" two="&inner;" three=''&outer;'' four=''&inner;''>&outer;&inner;</entities>'.
 	inner := ' '' inner '' '.
-	outer := ' '' " ', inner, ' '' " '.
+	outer := ' '' " ' , inner , ' '' " '.
 
 	self
-		shouldnt: [document := XMLDOMParser parse: xml]
+		shouldnt: [ document := XMLDOMParser parse: xml ]
 		raise: XMLWellFormednessException.
 	self
-		assert: (document root attributeAt: 'one') = outer;
-		assert: (document root attributeAt: 'two') = inner;
-		assert: (document root attributeAt: 'three') = outer;
-		assert: (document root attributeAt: 'four') = inner;
-		assert: (document root contentString) = (outer, inner).
+		assert: (document root attributeAt: 'one') equals: outer;
+		assert: (document root attributeAt: 'two') equals: inner;
+		assert: (document root attributeAt: 'three') equals: outer;
+		assert: (document root attributeAt: 'four') equals: inner;
+		assert: document root contentString equals: outer , inner
 ]
 
 { #category : #tests }
@@ -4500,29 +4481,32 @@ XMLParserTest >> testEntityReferenceInternalDeclarationExternallyDefined [
 
 { #category : #tests }
 XMLParserTest >> testEntityReferencePredefined [
-	| document references replacements |
 
+	| document references replacements |
 	references := String new writeStream.
 	replacements := String new writeStream.
-	XMLWellFormedParserTokenizer predefinedEntities keysAndValuesDo: [:name :char |
+	XMLWellFormedParserTokenizer predefinedEntities keysAndValuesDo: [
+		:name
+		:char |
 		references
 			nextPut: $&;
 			nextPutAll: name;
 			nextPut: $;.
-		replacements nextPut: char].
+		replacements nextPut: char ].
 
-	document :=
-		XMLDOMParser parse:
-			('<!DOCTYPE root [
+	document := XMLDOMParser parse: ('<!DOCTYPE root [
 				<!ENTITY nonRecursive "&amp;nonRecursive;">]>
 			<root name=''{1}''>
 				<one>{1}</one>
 				<two>&nonRecursive;</two>
 			</root>' format: (Array with: references contents)).
 	self
-		assert: (document root attributeAt: 'name') = replacements contents;
-		assert: (document root contentStringAt: 'one') = replacements contents;
-		assert: (document root contentStringAt: 'two') = '&nonRecursive;'.
+		assert: (document root attributeAt: 'name')
+		equals: replacements contents;
+		assert: (document root contentStringAt: 'one')
+		equals: replacements contents;
+		assert: (document root contentStringAt: 'two')
+		equals: '&nonRecursive;'
 ]
 
 { #category : #tests }
@@ -4619,8 +4603,8 @@ XMLParserTest >> testEntityReferenceUndeclaredInEntityValue [
 
 { #category : #tests }
 XMLParserTest >> testEntityReferenceUndeclaredPreserved [
-	| xml parser document |
 
+	| xml parser document |
 	xml := '
 		<!DOCTYPE root PUBLIC "extern" "extern.dtd" [
 			<!ENTITY unreferenced "&undeclaredOne;">
@@ -4631,12 +4615,13 @@ XMLParserTest >> testEntityReferenceUndeclaredPreserved [
 		isValidating: false;
 		preservesUndeclaredEntityReferences: true.
 	document := parser parseDocument.
-
 	self
-		assert: document doctypeDeclaration nodes size = 1;
-		assert: document doctypeDeclaration firstNode replacement = '&undeclaredOne;';
-		assert: (document root attributeAt: 'name') = '"&undeclaredOne;"';
-		assert: (document root contentString) = '<&undeclaredTwo;>'.
+		assert: document doctypeDeclaration nodes size equals: 1;
+		assert: document doctypeDeclaration firstNode replacement
+		equals: '&undeclaredOne;';
+		assert: (document root attributeAt: 'name')
+		equals: '"&undeclaredOne;"';
+		assert: document root contentString equals: '<&undeclaredTwo;>'
 ]
 
 { #category : #tests }
@@ -4670,49 +4655,50 @@ XMLParserTest >> testEntityReferenceUnexpected [
 
 { #category : #tests }
 XMLParserTest >> testEntityReferenceUnreplaced [
-	| beforeSubset subset afterSubset xml document |
 
+	| beforeSubset subset afterSubset xml document |
 	beforeSubset := '<?xml version="1.1"?> <!DOCTYPE entity ['.
-	subset :=
-		'<!ENTITY % first "<!ENTITY second &#34;replacement&#34;>">
+	subset := '<!ENTITY % first "<!ENTITY second &#34;replacement&#34;>">
 		%first;'.
 	afterSubset := ']><entity>&second;</entity>'.
-	xml := beforeSubset, subset, afterSubset.
-	self assert: (XMLDOMParser parse: xml) root contentString = 'replacement'.
-	
-	document :=
-		(XMLDOMParser on: xml)
-			replacesContentEntityReferences: false;
-			parseDocument.
-	self assert: document root contentString = '&second;'.
+	xml := beforeSubset , subset , afterSubset.
+	self
+		assert: (XMLDOMParser parse: xml) root contentString
+		equals: 'replacement'.
+
+	document := (XMLDOMParser on: xml)
+		            replacesContentEntityReferences: false;
+		            parseDocument.
+	self assert: document root contentString equals: '&second;'.
 	self
 		should: [
-			(SAXHandler on: (beforeSubset, '%first;]>'))
+			(SAXHandler on: beforeSubset , '%first;]>')
 				replacesContentEntityReferences: false;
-				parseDocument]
-		raise: XMLValidationException.
+				parseDocument ]
+		raise: XMLValidationException
 ]
 
 { #category : #tests }
 XMLParserTest >> testEntityReferenceUnreplacedInContent [
-	| xml document |
 
+	| xml document |
 	xml := '
 		<!DOCTYPE one [<!ENTITY declared "replacement">]>
 		<one two="&quot;&declared;&quot;">&#60;&declared;&#x2F;&#x3e;</one>'.
-	document :=
-		(XMLDOMParser on: xml)
-			replacesContentEntityReferences: false;
-			parseDocument.
+	document := (XMLDOMParser on: xml)
+		            replacesContentEntityReferences: false;
+		            parseDocument.
 	self
-		assert: (document root attributeAt: 'two') = '&quot;&declared;&quot;';
-		assert: document root contentString = '&#60;&declared;&#x2F;&#x3e;'.
+		assert: (document root attributeAt: 'two')
+		equals: '&quot;&declared;&quot;';
+		assert: document root contentString
+		equals: '&#60;&declared;&#x2F;&#x3e;'
 ]
 
 { #category : #tests }
 XMLParserTest >> testEntityReferenceUnreplacedInContentUndeclared [
-	| xml document |
 
+	| xml document |
 	xml := '
 		<!DOCTYPE one SYSTEM "extern.dtd" [
 			<!ENTITY declared "replacement">
@@ -4722,19 +4708,20 @@ XMLParserTest >> testEntityReferenceUnreplacedInContentUndeclared [
 		should: [
 			(SAXHandler on: xml)
 				replacesContentEntityReferences: false;
-				parseDocument]
+				parseDocument ]
 		raise: XMLValidationException.
 	self
 		shouldnt: [
-			document :=
-				(XMLDOMParser on: xml)
-					replacesContentEntityReferences: false;
-					isValidating: false;
-					parseDocument]
+			document := (XMLDOMParser on: xml)
+				            replacesContentEntityReferences: false;
+				            isValidating: false;
+				            parseDocument ]
 		raise: XMLValidationException.
 	self
-		assert: (document root attributeAt: 'two') = '&quot;&undeclared;&quot;';
-		assert: document root contentString = '&#60;&undeclared;&#62;'.
+		assert: (document root attributeAt: 'two')
+		equals: '&quot;&undeclared;&quot;';
+		assert: document root contentString
+		equals: '&#60;&undeclared;&#62;'
 ]
 
 { #category : #tests }
@@ -4794,8 +4781,8 @@ XMLParserTest >> testEntityReferenceUnterminatedInEntityValue [
 
 { #category : #tests }
 XMLParserTest >> testEntityReplacement [
-	| document |
 
+	| document |
 	document := XMLDOMParser parse: '
 		<!DOCTYPE root [
 			<!ENTITY % name1Declaration "<!ENTITY name1 &#39;replacement1&#x27;>">
@@ -4804,23 +4791,21 @@ XMLParserTest >> testEntityReplacement [
 			<!ENTITY name3 "replacement3 &name2;" >
 			<!ENTITY quotes "&#x27;quoted &#x22;value&#34;&#39;">
 		]>
-		<root name="&quotes;">&name1; &name2; &name3; ',
-		'%name1Declaration;</root>'.
-	self assert:
-		document root contentString =
-			('replacement1 ',
-			'replacement2 replacement1 ',
-			'replacement3 replacement2 replacement1 ',
-			'%name1Declaration;').
-	self assert:
-		(document root attributeAt: 'name') =
-			(('quoted "value"' copyWithFirst: $') copyWith: $').
+		<root name="&quotes;">&name1; &name2; &name3; '
+		            , '%name1Declaration;</root>'.
+	self
+		assert: document root contentString
+		equals: 'replacement1 ' , 'replacement2 replacement1 '
+			, 'replacement3 replacement2 replacement1 ' , '%name1Declaration;'.
+	self
+		assert: (document root attributeAt: 'name')
+		equals: (('quoted "value"' copyWithFirst: $') copyWith: $')
 ]
 
 { #category : #tests }
 XMLParserTest >> testEntityReplacementEmpty [
-	| xml document |
 
+	| xml document |
 	xml := '<?xml version="1.0"?>
 	<!DOCTYPE entities [
 		<!ENTITY % inner "">
@@ -4830,14 +4815,14 @@ XMLParserTest >> testEntityReplacementEmpty [
 	<entities one="&outer;" two="&inner;" three=''&outer;'' four=''&inner;''>&outer;&inner;</entities>'.
 
 	self
-		shouldnt: [document := XMLDOMParser parse: xml]
+		shouldnt: [ document := XMLDOMParser parse: xml ]
 		raise: XMLWellFormednessException.
 	self
-		assert: (document root attributeAt: 'one') = '';
-		assert: (document root attributeAt: 'two') = '';
-		assert: (document root attributeAt: 'three') = '';
-		assert: (document root attributeAt: 'four') = '';
-		assert: document root contentString = ''.
+		assert: (document root attributeAt: 'one') equals: '';
+		assert: (document root attributeAt: 'two') equals: '';
+		assert: (document root attributeAt: 'three') equals: '';
+		assert: (document root attributeAt: 'four') equals: '';
+		assert: document root contentString equals: ''
 ]
 
 { #category : #tests }
@@ -4887,8 +4872,8 @@ XMLParserTest >> testEntityReplacementSelfReferential [
 { #category : #tests }
 XMLParserTest >> testEntityReplacementStandard [
 	"this test comes from the XML spec"
-	| dtd xml doc |
 
+	| dtd xml doc |
 	dtd := '
 		<!ENTITY % pub    "&#xc9;ditions Gallimard" >
 		<!ENTITY   rights "All rights reserved" >
@@ -4896,24 +4881,25 @@ XMLParserTest >> testEntityReplacementStandard [
 	xml := '
 		<!DOCTYPE test SYSTEM ''extern.dtd''>
 		<test>&book;</test>'.
-	doc :=
-		(XMLDOMParser on: xml)
-			externalEntityResolver:
-				(DTDStaticExternalEntityResolver externalEntities:
-					(Array with: 'extern.dtd' -> dtd));
-			resolvesExternalEntities: true;
-			parseDocument.
-	self assert:
-		doc root contentString =
-			('La Peste: Albert Camus, ', 16rA9 asCharacter asString, ' 1947 ',
-				16rC9 asCharacter asString, 'ditions Gallimard. All rights reserved').
+	doc := (XMLDOMParser on: xml)
+		       externalEntityResolver:
+			       (DTDStaticExternalEntityResolver externalEntities:
+					        (Array with: 'extern.dtd' -> dtd));
+		       resolvesExternalEntities: true;
+		       parseDocument.
+	self
+		assert: doc root contentString
+		equals:
+			'La Peste: Albert Camus, ' , 16rA9 asCharacter asString , ' 1947 '
+			, 16rC9 asCharacter asString
+			, 'ditions Gallimard. All rights reserved'
 ]
 
 { #category : #tests }
 XMLParserTest >> testEntityReplacementStandardLiteral [
 	"this test comes from the XML spec"
-	| dtd xml resolver doc |
 
+	| dtd xml resolver doc |
 	dtd := '
 		<!ENTITY % YN ''"Yes"'' >
 		<!ENTITY WhatHeSaid "He said %YN;" >'.
@@ -4923,12 +4909,13 @@ XMLParserTest >> testEntityReplacementStandardLiteral [
 	(resolver := DTDStaticExternalEntityResolver new)
 		externalEntityAtURI: 'extern.dtd'
 		put: dtd.
-	doc :=
-		(XMLDOMParser on: xml)
-			externalEntityResolver: resolver;
-			resolvesExternalEntities: true;
-			parseDocument.
-	self assert: (doc root attributeAt: 'attribute') = 'He said "Yes"'.
+	doc := (XMLDOMParser on: xml)
+		       externalEntityResolver: resolver;
+		       resolvesExternalEntities: true;
+		       parseDocument.
+	self
+		assert: (doc root attributeAt: 'attribute')
+		equals: 'He said "Yes"'.
 
 	dtd := '<!ENTITY EndAttr "27''" >'.
 	xml := '
@@ -4942,8 +4929,8 @@ XMLParserTest >> testEntityReplacementStandardLiteral [
 			(SAXHandler on: xml)
 				externalEntityResolver: resolver;
 				resolvesExternalEntities: true;
-				parseDocument]
-		raise: XMLWellFormednessException.
+				parseDocument ]
+		raise: XMLWellFormednessException
 ]
 
 { #category : #tests }
@@ -4964,40 +4951,31 @@ XMLParserTest >> testEntityReplacementTerminatingInternalSubset [
 
 { #category : #tests }
 XMLParserTest >> testEntityURIInheritance [
+
 	| xml parser driver |
-
 	xml := '<!DOCTYPE root [%first;]><root xml:base="/new/xml">&second;</root>'.
-	parser :=
-		(SAXHandler
-			on: xml
-			documentURI: 'test.xml') parser.
-	(driver := parser driver)
-		doctypeDefinition parameterEntities
-			at: 'first'
-			put:
-				((DTDExternalParameterParsedEntity name: 'first')
-					resolvedReplacement:
-						(DTDDecodedResolvedExternalParsedEntityReplacement contents:
-							'<!ENTITY second "<!--comment-->">');
-					uri: 'test.ent').
+	parser := (SAXHandler on: xml documentURI: 'test.xml') parser.
+	(driver := parser driver) doctypeDefinition parameterEntities
+		at: 'first'
+		put: ((DTDExternalParameterParsedEntity name: 'first')
+				 resolvedReplacement:
+					 (DTDDecodedResolvedExternalParsedEntityReplacement contents:
+							  '<!ENTITY second "<!--comment-->">');
+				 uri: 'test.ent').
+	self assert: driver baseURI equals: 'test.xml'.
 
-	self assert: driver baseURI = 'test.xml'.
+	3 timesRepeat: [ parser parseToken ].
+	self assert: driver baseURI equals: 'test.ent'.
 
-	3 timesRepeat: [parser parseToken].
-	self assert: driver baseURI = 'test.ent'.
+	2 timesRepeat: [ parser parseToken ].
+	self assert: driver baseURI equals: 'test.xml'.
+	2 timesRepeat: [ parser parseToken ].
+	self assert: driver baseURI equals: '/new/xml'.
 
-	2 timesRepeat: [parser parseToken].
-	self assert: driver baseURI = 'test.xml'.
-	
-	"internal entities (declared in the internal subset or in an external DTD)
-	can't change abase URI according to the xml:base spec"
-	2 timesRepeat: [parser parseToken].
-	self assert: driver baseURI = '/new/xml'.
-
-	3 timesRepeat: [parser parseToken].
+	3 timesRepeat: [ parser parseToken ].
 	self
-		assert: driver baseURI = 'test.xml';
-		assert: parser atEnd.
+		assert: driver baseURI equals: 'test.xml';
+		assert: parser atEnd
 ]
 
 { #category : #tests }
@@ -5022,15 +5000,20 @@ XMLParserTest >> testIsInContent [
 
 { #category : #tests }
 XMLParserTest >> testLineEndingsDoNotMatter [
-	| source docFromSourceWithCRs docFromSourceWithLFs docFromSourceWithCRLFs |
 
+	| source docFromSourceWithCRs docFromSourceWithLFs docFromSourceWithCRLFs |
 	source := '<root>{1}one{1}two{1}</root>'.
-	docFromSourceWithCRs := XMLDOMParser parse: (source format: (Array with: String cr)).
-	docFromSourceWithLFs := XMLDOMParser parse: (source format: (Array with: String lf)).
-	docFromSourceWithCRLFs := XMLDOMParser parse: (source format: (Array with: String crlf)).
+	docFromSourceWithCRs := XMLDOMParser parse:
+		                        (source format: (Array with: String cr)).
+	docFromSourceWithLFs := XMLDOMParser parse:
+		                        (source format: (Array with: String lf)).
+	docFromSourceWithCRLFs := XMLDOMParser parse:
+		                          (source format: (Array with: String crlf)).
 	self
-		assert: (docFromSourceWithCRs root contentString) = (docFromSourceWithLFs root contentString);
-		assert: (docFromSourceWithLFs root contentString) = (docFromSourceWithCRLFs root contentString).
+		assert: docFromSourceWithCRs root contentString
+		equals: docFromSourceWithLFs root contentString;
+		assert: docFromSourceWithLFs root contentString
+		equals: docFromSourceWithCRLFs root contentString
 ]
 
 { #category : #tests }
@@ -5997,8 +5980,8 @@ XMLParserTest >> testStandaloneExternalElementDeclarartionExternalSubset [
 
 { #category : #tests }
 XMLParserTest >> testStandaloneExternalExternalEntity [
-	| standalone notStandalone dtd resolver document |
 
+	| standalone notStandalone dtd resolver document |
 	standalone := '<?xml version="1.0" standalone="yes"?>'.
 	notStandalone := '<?xml version="1.0" standalone="no"?>'.
 	dtd := '
@@ -6008,56 +5991,53 @@ XMLParserTest >> testStandaloneExternalExternalEntity [
 			%extern;
 			<!ENTITY otherName SYSTEM "otherName.ent">
 		]>'.
-	resolver :=
-		DTDStaticExternalEntityResolver externalEntities:
-			(Array
-				with: 'extern.ent' -> '<!ENTITY name SYSTEM "name.ent">'
-				with: 'name.ent' -> 'value'
-				with: 'otherName.ent' -> 'otherValue').
+	resolver := DTDStaticExternalEntityResolver externalEntities: (Array
+			             with:
+			             'extern.ent' -> '<!ENTITY name SYSTEM "name.ent">'
+			             with: 'name.ent' -> 'value'
+			             with: 'otherName.ent' -> 'otherValue').
 	self
 		should: [
-			(SAXHandler on: standalone, dtd, '<test>&name;</test>')
+			(SAXHandler on: standalone , dtd , '<test>&name;</test>')
 				externalEntityResolver: resolver copy;
 				resolvesExternalEntities: true;
-				parseDocument]
+				parseDocument ]
 		raise: XMLValidationException.
 	self
 		shouldnt: [
-			document :=
-				(XMLDOMParser on: standalone, dtd, '<test>&name;</test>')
-					externalEntityResolver: resolver copy;
-					resolvesExternalEntities: true;
-					isValidating: false;
-					parseDocument]
+			document := (XMLDOMParser on:
+					             standalone , dtd , '<test>&name;</test>')
+				            externalEntityResolver: resolver copy;
+				            resolvesExternalEntities: true;
+				            isValidating: false;
+				            parseDocument ]
 		raise: XMLParserException.
-	self assert: document contentString = 'value'.
-	"external entities only count as 'external markup declarations' in standalone
-	docs if they were defined in the external DTD subset or in a parameter entity"
+	self assert: document contentString equals: 'value'.
 	self
 		shouldnt: [
-			document :=
-				(XMLDOMParser on: standalone, dtd, '<test>&otherName;</test>')
-					externalEntityResolver: resolver copy;
-					resolvesExternalEntities: true;
-					parseDocument]
+			document := (XMLDOMParser on:
+					             standalone , dtd , '<test>&otherName;</test>')
+				            externalEntityResolver: resolver copy;
+				            resolvesExternalEntities: true;
+				            parseDocument ]
 		raise: XMLValidationException.
-	self assert: document contentString = 'otherValue'.
+	self assert: document contentString equals: 'otherValue'.
 
 	self
 		shouldnt: [
-			document :=
-				(XMLDOMParser on: notStandalone, dtd, '<test>&name;</test>')
-					externalEntityResolver: resolver copy;
-					resolvesExternalEntities: true;
-					parseDocument]
+			document := (XMLDOMParser on:
+					             notStandalone , dtd , '<test>&name;</test>')
+				            externalEntityResolver: resolver copy;
+				            resolvesExternalEntities: true;
+				            parseDocument ]
 		raise: XMLValidationException.
-	self assert: document contentString = 'value'.
+	self assert: document contentString equals: 'value'
 ]
 
 { #category : #tests }
 XMLParserTest >> testStandaloneExternalExternalEntityExternalSubset [
-	| standalone notStandalone dtd subset resolver document |
 
+	| standalone notStandalone dtd subset resolver document |
 	standalone := '<?xml version="1.0" standalone="yes"?>'.
 	notStandalone := '<?xml version="1.0" standalone="no"?>'.
 	dtd := '
@@ -6068,52 +6048,49 @@ XMLParserTest >> testStandaloneExternalExternalEntityExternalSubset [
 		<!ELEMENT test ANY>
 		<!ATTLIST test name CDATA #IMPLIED>
 		<!ENTITY name SYSTEM "name.ent">'.
-	resolver :=
-		DTDStaticExternalEntityResolver externalEntities:
-			(Array
-				with: 'extern.dtd' -> subset
-				with: 'name.ent' -> 'value'
-				with: 'otherName.ent' -> 'otherValue').
+	resolver := DTDStaticExternalEntityResolver externalEntities: (Array
+			             with: 'extern.dtd' -> subset
+			             with: 'name.ent' -> 'value'
+			             with: 'otherName.ent' -> 'otherValue').
 	self
 		should: [
-			(SAXHandler on: standalone, dtd, '<test>&name;</test>')
+			(SAXHandler on: standalone , dtd , '<test>&name;</test>')
 				externalEntityResolver: resolver copy;
 				resolvesExternalEntities: true;
-				parseDocument]
+				parseDocument ]
 		raise: XMLValidationException.
 	self
 		should: [
-			(SAXHandler on: standalone, dtd, '<test>&name;</test>')
+			(SAXHandler on: standalone , dtd , '<test>&name;</test>')
 				externalEntityResolver: resolver copy;
 				resolvesExternalEntities: true;
 				isValidating: false;
-				parseDocument]
+				parseDocument ]
 		raise: XMLWellFormednessException.
 	self
 		shouldnt: [
-			(SAXHandler on: standalone, dtd, '<test/>')
+			(SAXHandler on: standalone , dtd , '<test/>')
 				externalEntityResolver: resolver copy;
 				resolvesExternalEntities: true;
-				parseDocument]
+				parseDocument ]
 		raise: XMLValidationException.
 
 	self
 		shouldnt: [
-			document :=
-				(XMLDOMParser on: notStandalone, dtd, '<test>&name;</test>')
-					externalEntityResolver: resolver copy;
-					resolvesExternalEntities: true;
-					parseDocument]
+			document := (XMLDOMParser on:
+					             notStandalone , dtd , '<test>&name;</test>')
+				            externalEntityResolver: resolver copy;
+				            resolvesExternalEntities: true;
+				            parseDocument ]
 		raise: XMLValidationException.
-	self assert: document contentString = 'value'.
+	self assert: document contentString equals: 'value'
 ]
 
 { #category : #tests }
 XMLParserTest >> testStandaloneExternalExternalEntityRedundance [
-	| standaloneXML resolver document |
 
-	standaloneXML :=
-		'<?xml version="1.0" standalone="yes"?>
+	| standaloneXML resolver document |
+	standaloneXML := '<?xml version="1.0" standalone="yes"?>
 		<!DOCTYPE test [
 			<!ELEMENT test ANY>
 			<!ATTLIST test name CDATA #IMPLIED>
@@ -6122,20 +6099,18 @@ XMLParserTest >> testStandaloneExternalExternalEntityRedundance [
 			%extern;
 		]>
 		<test>&name;</test>'.
-	resolver :=
-		DTDStaticExternalEntityResolver externalEntities:
-			(Array
-				with: 'extern.ent' -> '<!ENTITY name SYSTEM "name.ent">'
-				with: 'name.ent' -> 'otherValue').
+	resolver := DTDStaticExternalEntityResolver externalEntities: (Array
+			             with:
+			             'extern.ent' -> '<!ENTITY name SYSTEM "name.ent">'
+			             with: 'name.ent' -> 'otherValue').
 	self
 		shouldnt: [
-			document :=
-				(XMLDOMParser on: standaloneXML)
-					externalEntityResolver: resolver copy;
-					resolvesExternalEntities: true;
-					parseDocument]
+			document := (XMLDOMParser on: standaloneXML)
+				            externalEntityResolver: resolver copy;
+				            resolvesExternalEntities: true;
+				            parseDocument ]
 		raise: XMLValidationException.
-	self assert: document contentString = 'value'.
+	self assert: document contentString equals: 'value'
 ]
 
 { #category : #tests }
@@ -6173,7 +6148,7 @@ XMLParserTest >> testStandaloneExternalInternalEntity [
 			document := XMLDOMParser parse:
 				            notStandalone , dtd , '<test>&name;</test>' ]
 		raise: XMLValidationException.
-	self assert: document contentString = 'value'
+	self assert: document contentString equals: 'value'
 ]
 
 { #category : #tests }

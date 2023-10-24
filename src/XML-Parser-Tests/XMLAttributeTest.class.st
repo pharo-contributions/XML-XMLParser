@@ -27,44 +27,43 @@ XMLAttributeTest >> testCanonicallyEquals [
 
 { #category : #tests }
 XMLAttributeTest >> testCopy [
-	| node copy |
 
-	(node := self newNode)
-		element: self newElement.
+	| node copy |
+	(node := self newNode) element: self newElement.
 	copy := node copy.
 	self
-		deny: copy == node;
+		deny: copy identicalTo: node;
 		assert: copy element isNil
 ]
 
 { #category : #tests }
 XMLAttributeTest >> testElement [
-	| attribute element |
 
+	| attribute element |
 	attribute := self newNode.
 	self assert: attribute element isNil.
 
 	element := self newElement.
 	self
-		assert: (attribute element: element) == attribute;
-		assert: attribute element == element
+		assert: (attribute element: element) identicalTo: attribute;
+		assert: attribute element identicalTo: element
 ]
 
 { #category : #tests }
 XMLAttributeTest >> testExpandedName [
-	| element attribute |
 
+	| element attribute |
 	element := self newElement.
 	attribute := self nodeClass name: 'one' value: 'two'.
 	element attributeNodes add: attribute.
-	self assert: (attribute expandedName = 'one').
+	self assert: attribute expandedName equals: 'one'.
 
 	element defaultNamespace: 'defaultNS'.
-	self assert: (attribute expandedName = 'one').
+	self assert: attribute expandedName equals: 'one'.
 
 	element declarePrefix: 'prefix' uri: 'prefixNS'.
 	attribute name: 'prefix:two'.
-	self assert: (attribute expandedName = 'Q{prefixNS}two')
+	self assert: attribute expandedName equals: 'Q{prefixNS}two'
 ]
 
 { #category : #tests }
@@ -177,22 +176,22 @@ XMLAttributeTest >> testIsNamedAny [
 
 { #category : #tests }
 XMLAttributeTest >> testLocalName [
-	| attribute |
 
+	| attribute |
 	attribute := self newNode.
-	self assert: attribute name = ''.
+	self assert: attribute name equals: ''.
 
 	attribute name: 'one'.
-	self assert: attribute localName = 'one'.
+	self assert: attribute localName equals: 'one'.
 
 	attribute name: 'two'.
-	self assert: attribute localName = 'two'.
+	self assert: attribute localName equals: 'two'.
 
 	attribute name: 'prefix:three'.
-	self assert: attribute localName = 'three'.
+	self assert: attribute localName equals: 'three'.
 
 	attribute name: 'four'.
-	self assert: attribute localName = 'four'
+	self assert: attribute localName equals: 'four'
 ]
 
 { #category : #tests }
@@ -220,151 +219,152 @@ XMLAttributeTest >> testMatchesLanguage [
 
 { #category : #tests }
 XMLAttributeTest >> testName [
+
 	| attribute |
-
 	"XMLAttribute class>>#name: is not tested here because it is soft-deprecated"
-
 	attribute := self newNode.
 	self
-		assert: attribute name = '';
-		assert: (attribute name: 'one') == attribute;
-		assert: attribute name = 'one';
-		assert: (attribute name: 'prefix:two') == attribute;
-		assert: attribute name = 'prefix:two'
+		assert: attribute name equals: '';
+		assert: (attribute name: 'one') identicalTo: attribute;
+		assert: attribute name equals: 'one';
+		assert: (attribute name: 'prefix:two') identicalTo: attribute;
+		assert: attribute name equals: 'prefix:two'
 ]
 
 { #category : #tests }
 XMLAttributeTest >> testNameValue [
-	| attribute |
 
-	attribute :=
-		self nodeClass
-			name: 'one'
-			value: 'two'.
+	| attribute |
+	attribute := self nodeClass name: 'one' value: 'two'.
 	self
-		assert: attribute class == self nodeClass;
-		assert: attribute name = 'one';
-		assert: attribute value = 'two'
+		assert: attribute class identicalTo: self nodeClass;
+		assert: attribute name equals: 'one';
+		assert: attribute value equals: 'two'
 ]
 
 { #category : #tests }
 XMLAttributeTest >> testNamed [
-	| attribute |
 
+	| attribute |
 	attribute := self nodeClass named: 'test'.
 	self
-		assert: attribute class == self nodeClass;
-		assert: attribute name = 'test'
+		assert: attribute class identicalTo: self nodeClass;
+		assert: attribute name equals: 'test'
 ]
 
 { #category : #tests }
 XMLAttributeTest >> testNamespaceURI [
-	| element attribute|
 
+	| element attribute |
 	element := self newElement.
 	attribute := self newNode.
 	element attributeNodes add: attribute.
-	self assert: attribute namespaceURI = ''.
+	self assert: attribute namespaceURI equals: ''.
 
 	element defaultNamespace: 'defaultNS'.
-	self assert: attribute namespaceURI = ''.
+	self assert: attribute namespaceURI equals: ''.
 
 	element declarePrefix: 'prefix' uri: 'prefixNS'.
 	attribute name: 'prefix:test'.
-	self assert: attribute namespaceURI = 'prefixNS'.
+	self assert: attribute namespaceURI equals: 'prefixNS'.
 
 	attribute name: 'test'.
-	self assert: attribute namespaceURI = ''
+	self assert: attribute namespaceURI equals: ''
 ]
 
 { #category : #tests }
 XMLAttributeTest >> testPrefix [
-	| attribute |
 
+	| attribute |
 	attribute := self newNode.
-	self assert: attribute prefix = ''.
+	self assert: attribute prefix equals: ''.
 
 	attribute name: 'one'.
-	self assert: attribute prefix = ''.
+	self assert: attribute prefix equals: ''.
 
 	attribute name: 'prefix:two'.
-	self assert: attribute prefix = 'prefix'.
+	self assert: attribute prefix equals: 'prefix'.
 
 	attribute name: 'three'.
-	self assert: attribute prefix = ''
+	self assert: attribute prefix equals: ''
 ]
 
 { #category : #tests }
 XMLAttributeTest >> testResolvePrefix [
-	| element attribute|
 
+	| element attribute |
 	element := self newElementWithAttributes.
 	attribute := element attributeNodes first.
-	self namespaces keysAndValuesDo: [:prefix :uri |
-		"no default namespace for attributes"
+	self namespaces keysAndValuesDo: [ :prefix :uri | "no default namespace for attributes"
 		prefix = ''
-			ifTrue: [self assert: (attribute resolvePrefix: prefix) = '']
-			ifFalse: [self assert: (attribute resolvePrefix: prefix) = uri]].
-
-	self assert:
-		(attribute resolvePrefix: 'xml') = XMLNamespaceScope xmlNamespaceURI.
-	self  assert:
-		(attribute resolvePrefix: 'xmlns') = XMLNamespaceScope xmlnsNamespaceURI
+			ifTrue: [
+			self assert: (attribute resolvePrefix: prefix) equals: '' ]
+			ifFalse: [
+			self assert: (attribute resolvePrefix: prefix) equals: uri ] ].
+	self
+		assert: (attribute resolvePrefix: 'xml')
+		equals: XMLNamespaceScope xmlNamespaceURI.
+	self
+		assert: (attribute resolvePrefix: 'xmlns')
+		equals: XMLNamespaceScope xmlnsNamespaceURI
 ]
 
 { #category : #tests }
 XMLAttributeTest >> testResolvePrefixIfUnresolvable [
-	| element attribute|
 
+	| element attribute |
 	element := self newElementWithAttributes.
 	attribute := element attributeNodes first.
-	self namespaces keysAndValuesDo: [:prefix :uri |
+	self namespaces keysAndValuesDo: [ :prefix :uri |
 		prefix = ''
-			ifTrue: [
-				"no default namespace for attributes"
-				self assert:
+			ifTrue: [ "no default namespace for attributes"
+				self
+					assert:
 					(attribute
-						resolvePrefix: prefix
-						ifUnresolvable: ['unresolvable']) = 'unresolvable']
+						 resolvePrefix: prefix
+						 ifUnresolvable: [ 'unresolvable' ])
+					equals: 'unresolvable' ]
 			ifFalse: [
-				self assert:
-					(attribute
-						resolvePrefix: prefix
-						ifUnresolvable: [self fail]) = uri]].
-
-	self assert:
-		(attribute
-			resolvePrefix: 'xml'
-			ifUnresolvable: [self fail]) = XMLNamespaceScope xmlNamespaceURI.
-	self  assert:
-		(attribute
-			resolvePrefix: 'xmlns'
-			ifUnresolvable: [self fail]) = XMLNamespaceScope xmlnsNamespaceURI
+				self
+					assert:
+					(attribute resolvePrefix: prefix ifUnresolvable: [ self fail ])
+					equals: uri ] ].
+	self
+		assert:
+		(attribute resolvePrefix: 'xml' ifUnresolvable: [ self fail ])
+		equals: XMLNamespaceScope xmlNamespaceURI.
+	self
+		assert:
+		(attribute resolvePrefix: 'xmlns' ifUnresolvable: [ self fail ])
+		equals: XMLNamespaceScope xmlnsNamespaceURI
 ]
 
 { #category : #tests }
 XMLAttributeTest >> testSortKey [
-	self assert: (self newNode name: 'test') sortKey = 'test'
+
+	self assert: (self newNode name: 'test') sortKey equals: 'test'
 ]
 
 { #category : #tests }
 XMLAttributeTest >> testValue [
-	| attribute |
 
+	| attribute |
 	attribute := self newNode.
 	self
-		assert: attribute value = '';
-		assert: (attribute value: 'test') == attribute;
-		assert: attribute value = 'test'
+		assert: attribute value equals: '';
+		assert: (attribute value: 'test') identicalTo: attribute;
+		assert: attribute value equals: 'test'
 ]
 
 { #category : #tests }
 XMLAttributeTest >> testWriteXMLOn [
+
 	self
-		assert: (self nodeClass name: 'name' value: '') printString = 'name=""';
-		assert: (self nodeClass name: 'name' value: 'value') printString = 'name="value"';
+		assert: (self nodeClass name: 'name' value: '') printString
+		equals: 'name=""';
+		assert: (self nodeClass name: 'name' value: 'value') printString
+		equals: 'name="value"';
 		assert:
-			(self nodeClass
-				name: 'name'
-				value: self markupString) printString = ('name="', self escapedString, '"')
+			(self nodeClass name: 'name' value: self markupString) printString
+		equals: 'name="' , self escapedString , '"'
 ]

@@ -82,22 +82,24 @@ XMLStreamConverterTest >> streamConverterClass [
 
 { #category : #tests }
 XMLStreamConverterTest >> testAbstractClass [
-	| streamConverterClass |
 
+	| streamConverterClass |
 	streamConverterClass := self streamConverterClass.
-	self assert:
-		streamConverterClass abstractClass ==
-			(self isImplicit
-				ifTrue: [streamConverterClass superclass superclass]
-				ifFalse: [streamConverterClass superclass])
+	self
+		assert: streamConverterClass abstractClass
+		identicalTo: (self isImplicit
+				 ifTrue: [ streamConverterClass superclass superclass ]
+				 ifFalse: [ streamConverterClass superclass ])
 ]
 
 { #category : #tests }
 XMLStreamConverterTest >> testAsXMLStreamConverter [
-	| streamConverter |
 
+	| streamConverter |
 	streamConverter := self newStreamConverter.
-	self assert: streamConverter asXMLStreamConverter == streamConverter
+	self
+		assert: streamConverter asXMLStreamConverter
+		identicalTo: streamConverter
 ]
 
 { #category : #tests }
@@ -110,33 +112,38 @@ XMLStreamConverterTest >> testCanConvertEncoding [
 
 { #category : #tests }
 XMLStreamConverterTest >> testDefault [
-	| streamConverter |
 
+	| streamConverter |
 	streamConverter := self streamConverterClass default.
 	self
-		assert: streamConverter class == self defaultClass;
+		assert: streamConverter class identicalTo: self defaultClass;
 		assert: streamConverter isDefault;
 		assert: streamConverter isImplicit
 ]
 
 { #category : #tests }
 XMLStreamConverterTest >> testDefaultClass [
-	self assert: self streamConverterClass defaultClass == self defaultClass
+
+	self
+		assert: self streamConverterClass defaultClass
+		identicalTo: self defaultClass
 ]
 
 { #category : #tests }
 XMLStreamConverterTest >> testDefaultEncoding [
-	self assert:
-		self streamConverterClass defaultEncoding =
-			self defaultClass primaryEncodingName
+
+	self
+		assert: self streamConverterClass defaultEncoding
+		equals: self defaultClass primaryEncodingName
 ]
 
 { #category : #tests }
 XMLStreamConverterTest >> testEncoding [
-	self encodingNamesWithCaseInversions do: [:each |
-		self assert:
-			(XMLStreamConverter newForEncoding: each) encoding =
-				self primaryEncodingName]
+
+	self encodingNamesWithCaseInversions do: [ :each |
+		self
+			assert: (XMLStreamConverter newForEncoding: each) encoding
+			equals: self primaryEncodingName ]
 ]
 
 { #category : #tests }
@@ -190,19 +197,26 @@ XMLStreamConverterTest >> testNewForEncoding [
 
 { #category : #tests }
 XMLStreamConverterTest >> testNull [
-	self assert: self streamConverterClass null class == self nullClass
+
+	self
+		assert: self streamConverterClass null class
+		identicalTo: self nullClass
 ]
 
 { #category : #tests }
 XMLStreamConverterTest >> testNullClass [
-	self assert: self streamConverterClass nullClass == self nullClass
+
+	self
+		assert: self streamConverterClass nullClass
+		identicalTo: self nullClass
 ]
 
 { #category : #tests }
 XMLStreamConverterTest >> testPrimaryEncodingName [
-	self assert:
-		self streamConverterClass primaryEncodingName =
-			self primaryEncodingName
+
+	self
+		assert: self streamConverterClass primaryEncodingName
+		equals: self primaryEncodingName
 ]
 
 { #category : #accessing }

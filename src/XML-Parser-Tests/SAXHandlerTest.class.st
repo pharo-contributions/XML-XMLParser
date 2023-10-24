@@ -567,28 +567,29 @@ SAXHandlerTest >> testIsInContent [
 
 { #category : #tests }
 SAXHandlerTest >> testIsValidating [
-	| parser |
 
+	| parser |
 	parser := SAXHandler on: self prefixedXMLSource.
 	self
 		assert: parser isValidating;
-		assert: (parser isValidating: false) == parser;
+		assert: (parser isValidating: false) identicalTo: parser;
 		deny: parser isValidating;
-		assert: (parser isValidating: true) == parser;
-		assert: parser isValidating.
+		assert: (parser isValidating: true) identicalTo: parser;
+		assert: parser isValidating
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testMaxEntityReplacementDepth [
+
 	| parser |
 	parser := SAXHandler on: ''.
 	self
 		assert: parser maxEntityReplacementDepth
 		equals: XMLParserLimits defaultMaxEntityReplacementDepth.
 	self
-		assert: (parser maxEntityReplacementDepth: 20) == parser;
+		assert: (parser maxEntityReplacementDepth: 20) identicalTo: parser;
 		assert: parser maxEntityReplacementDepth equals: 20;
-		assert: (parser maxEntityReplacementDepth: nil) == parser;
+		assert: (parser maxEntityReplacementDepth: nil) identicalTo: parser;
 		assert: parser maxEntityReplacementDepth isNil
 ]
 
@@ -601,15 +602,17 @@ SAXHandlerTest >> testNew [
 
 { #category : #tests }
 SAXHandlerTest >> testOn [
+
 	| parser oldConfiguraiton |
 	parser := SAXHandler on: self prefixedXMLSource documentURI: 'oldURI'.
 	oldConfiguraiton := parser configuration.
 	parser parseDocument.
 	self
-		assert: (parser on: self generalEntityXMLSource) == parser;
+		assert: (parser on: self generalEntityXMLSource)
+		identicalTo: parser;
 		assert: parser input equals: self generalEntityXMLSource;
-		deny: parser documentURI = 'oldURI';
-		deny: parser configuration == oldConfiguraiton
+		deny: parser documentURI equals: 'oldURI';
+		deny: parser configuration identicalTo: oldConfiguraiton
 ]
 
 { #category : #tests }
@@ -627,27 +630,27 @@ SAXHandlerTest >> testOptimizeForLargeDocuments [
 
 { #category : #tests }
 SAXHandlerTest >> testPreservesUndeclaredEntityReferences [
-	| parser |
 
+	| parser |
 	parser := SAXHandler on: ''.
 	self deny: parser preservesUndeclaredEntityReferences.
 
 	"enabling should disable validation"
 	self
-		assert: (parser preservesUndeclaredEntityReferences: true) == parser;
+		assert: (parser preservesUndeclaredEntityReferences: true)
+		identicalTo: parser;
 		assert: parser preservesUndeclaredEntityReferences;
 		deny: parser isValidating.
-
 	self
-		assert: (parser isValidating: true) == parser;
+		assert: (parser isValidating: true) identicalTo: parser;
 		assert: parser isValidating;
-		deny: parser preservesUndeclaredEntityReferences.
+		deny: parser preservesUndeclaredEntityReferences
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testProcessingInstructionData [
-	| xml parser |
 
+	| xml parser |
 	xml := '
 		<?before DTD?>
 		<!DOCTYPE test [<?in DTD?>]>
@@ -657,37 +660,26 @@ SAXHandlerTest >> testProcessingInstructionData [
 		</test>
 		<?after element?>'.
 
-	(parser := SAXRecordingHandler on: xml)
-		parseDocument.
-	self assert:
-		(parser wasSentSelectors:
-			#(startDocument
-				processingInstruction:data:
-				startDTD:publicID:systemID:
-				processingInstruction:data:
-				endDTD
-				processingInstruction:data:
-				startElement:attributes:
-				characters:
-				processingInstruction:data:
-				characters:
-				endElement:
-				processingInstruction:data:
-				endDocument)).
+	(parser := SAXRecordingHandler on: xml) parseDocument.
+	self assert: (parser wasSentSelectors:
+			 #( startDocument #processingInstruction:data:
+			    #startDTD:publicID:systemID: #processingInstruction:data:
+			    endDTD #processingInstruction:data:
+			    #startElement:attributes: characters: #processingInstruction:data:
+			    characters: endElement: #processingInstruction:data:
+			    endDocument )).
 
 	(parser allSentMessagesNamed: #processingInstruction:data:)
 		with:
-			#(#('before' 'DTD')
-				#('in' 'DTD')
-				#('before' 'element')
-				#('in' 'element')
-				#('after' 'element'))
-		do: [:message :arguments |
-			self assert: message arguments = arguments].
+			#( #( 'before' 'DTD' ) #( 'in' 'DTD' ) #( 'before' 'element' )
+			   #( 'in' 'element' ) #( 'after' 'element' ) )
+		do: [ :message :arguments |
+			self assert: message arguments equals: arguments ]
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testRemoveLimits [
+
 	| parser readLimit depthLimit |
 	readLimit := 100.
 	depthLimit := 5.
@@ -698,55 +690,57 @@ SAXHandlerTest >> testRemoveLimits [
 		assert: parser documentReadLimit equals: readLimit;
 		assert: parser maxEntityReplacementDepth equals: depthLimit.
 	self
-		assert: parser removeLimits == parser;
+		assert: parser removeLimits identicalTo: parser;
 		assert: parser documentReadLimit isNil;
 		assert: parser maxEntityReplacementDepth isNil
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testReplacesContentEntityReferences [
-	| parser |
 
+	| parser |
 	parser := SAXHandler on: self prefixedXMLSource.
 	self
 		assert: parser replacesContentEntityReferences;
-		assert: (parser replacesContentEntityReferences: false) == parser;
+		assert: (parser replacesContentEntityReferences: false)
+		identicalTo: parser;
 		deny: parser replacesContentEntityReferences;
-		assert: (parser replacesContentEntityReferences: true) == parser;
-		assert: parser replacesContentEntityReferences.
+		assert: (parser replacesContentEntityReferences: true)
+		identicalTo: parser;
+		assert: parser replacesContentEntityReferences
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testRequiresSchema [
-	| parser |
 
+	| parser |
 	(parser := SAXHandler on: '') isValidating: false.
 	self deny: parser requiresSchema.
 
 	"enabling should force validation"
 	self
-		assert: (parser requiresSchema: true) == parser;
+		assert: (parser requiresSchema: true) identicalTo: parser;
 		assert: parser requiresSchema;
 		assert: parser isValidating.
-
 	self
-		assert: (parser isValidating: false) == parser;
+		assert: (parser isValidating: false) identicalTo: parser;
 		deny: parser isValidating;
-		deny: parser requiresSchema.
+		deny: parser requiresSchema
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testResolvesExternalEntities [
-	| parser |
 
+	| parser |
 	parser := SAXHandler on: self prefixedXMLSource.
 	"should not resolve external entities by default for security"
 	self
 		deny: parser resolvesExternalEntities;
-		assert: (parser resolvesExternalEntities: true) == parser;
+		assert: (parser resolvesExternalEntities: true) identicalTo: parser;
 		assert: parser resolvesExternalEntities;
-		assert: (parser resolvesExternalEntities: false) == parser;
-		deny: parser resolvesExternalEntities.
+		assert: (parser resolvesExternalEntities: false)
+		identicalTo: parser;
+		deny: parser resolvesExternalEntities
 ]
 
 { #category : #tests }

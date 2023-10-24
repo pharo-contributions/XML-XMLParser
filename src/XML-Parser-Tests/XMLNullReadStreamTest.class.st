@@ -21,5 +21,6 @@ XMLNullReadStreamTest >> streamClass [
 
 { #category : #tests }
 XMLNullReadStreamTest >> testNew [
-	self assert: self streamClass new class == self streamClass
+
+	self assert: self streamClass new class identicalTo: self streamClass
 ]

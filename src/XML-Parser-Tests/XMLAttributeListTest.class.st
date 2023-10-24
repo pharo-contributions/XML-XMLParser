@@ -122,46 +122,44 @@ XMLAttributeListTest >> sortBlock [
 
 { #category : #tests }
 XMLAttributeListTest >> testAddAttributeAssociation [
-	| list |
 
+	| list |
 	list := self emptyList.
-	self listItems do: [:each | | attribute |
+	self listItems do: [ :each |
+		| attribute |
 		attribute := list addAttributeAssociation: each name -> each value.
 		self
-			assert: attribute class == self attributeClass;
-			assert: attribute name = each name;
-			assert: attribute value = each value;
-			assert: list last = attribute]
+			assert: attribute class identicalTo: self attributeClass;
+			assert: attribute name equals: each name;
+			assert: attribute value equals: each value;
+			assert: list last equals: attribute ]
 ]
 
 { #category : #tests }
 XMLAttributeListTest >> testAddAttributeNameValue [
-	| list |
 
+	| list |
 	list := self emptyList.
-	self listItems do: [:each | | attribute |
-		attribute :=
-			list
-				addAttributeName: each name
-				value: each value.
+	self listItems do: [ :each |
+		| attribute |
+		attribute := list addAttributeName: each name value: each value.
 		self
-			assert: attribute class == self attributeClass;
-			assert: attribute name = each name;
-			assert: attribute value = each value;
-			assert: list last = attribute]
+			assert: attribute class identicalTo: self attributeClass;
+			assert: attribute name equals: each name;
+			assert: attribute value equals: each value;
+			assert: list last equals: attribute ]
 ]
 
 { #category : #tests }
 XMLAttributeListTest >> testAsDictionary [
-	| list dictionary |
 
+	| list dictionary |
 	list := self listWithItems.
 	dictionary := list asDictionary.
 	self
-		assert: dictionary class == self attributesClass;
-		assert:
-			dictionary =
-				(self attributesClass newFrom: self attributeAssociations)
+		assert: dictionary class identicalTo: self attributesClass;
+		assert: dictionary
+		equals: (self attributesClass newFrom: self attributeAssociations)
 ]
 
 { #category : #tests }
@@ -177,104 +175,91 @@ XMLAttributeListTest >> testAttributeAssociations [
 
 { #category : #tests }
 XMLAttributeListTest >> testAttributeAt [
-	| list |
 
+	| list |
 	list := self emptyList.
-	1 to: 2 do: [:i |
-		self listItems do: [:each |
-			self assert:
-				(list attributeAt: each name) =
-					(i > 1
-						ifTrue: [each value]
-						ifFalse: ['']).
+	1 to: 2 do: [ :i |
+		self listItems do: [ :each |
+			self assert: (list attributeAt: each name) equals: (i > 1
+					 ifTrue: [ each value ]
+					 ifFalse: [ '' ]).
 
 			list add: each.
-			self assert: (list attributeAt: each name) = each value]].
+			self assert: (list attributeAt: each name) equals: each value ] ].
 
-	self listItems do: [:each |
-		self assert: (list attributeAt: each name) = each value]
+	self listItems do: [ :each |
+		self assert: (list attributeAt: each name) equals: each value ]
 ]
 
 { #category : #tests }
 XMLAttributeListTest >> testAttributeAtIfAbsent [
-	| list |
 
+	| list |
 	list := self emptyList.
-	1 to: 2 do: [:i |
-		self listItems do: [:each |
-			self assert:
-				(list
-					attributeAt: each name
-					ifAbsent: [
-						i > 1
-							ifTrue: [self fail]
-							ifFalse: [self absentListItem value]]) =
-					(i > 1
-						ifTrue: [each value]
-						ifFalse: [self absentListItem value]).
+	1 to: 2 do: [ :i |
+		self listItems do: [ :each |
+			self
+				assert: (list attributeAt: each name ifAbsent: [
+						 i > 1
+							 ifTrue: [ self fail ]
+							 ifFalse: [ self absentListItem value ] ])
+				equals: (i > 1
+						 ifTrue: [ each value ]
+						 ifFalse: [ self absentListItem value ]).
 
 			list add: each.
-			self assert:
-				(list
-					attributeAt: each name
-					ifAbsent: [self fail]) = each value]].
+			self
+				assert: (list attributeAt: each name ifAbsent: [ self fail ])
+				equals: each value ] ].
 
-	self listItems do: [:each |
-		self assert:
-			(list
-				attributeAt: each name
-				ifAbsent: [self fail]) = each value]
+	self listItems do: [ :each |
+		self
+			assert: (list attributeAt: each name ifAbsent: [ self fail ])
+			equals: each value ]
 ]
 
 { #category : #tests }
 XMLAttributeListTest >> testAttributeAtIfAbsentPut [
-	| list |
 
+	| list |
 	list := self emptyList.
-	1 to: 2 do: [:i |
-		self listItems do: [:each |
-			self assert:
-				(list
-					attributeAt: each name
-					ifAbsentPut: [
-						i > 1
-							ifTrue: [self fail]
-							ifFalse: [each value]]) = each value.
+	1 to: 2 do: [ :i |
+		self listItems do: [ :each |
+			self
+				assert: (list attributeAt: each name ifAbsentPut: [
+						 i > 1
+							 ifTrue: [ self fail ]
+							 ifFalse: [ each value ] ])
+				equals: each value.
 
 			list add: each.
-			self assert:
-				(list
-					attributeAt: each name
-					ifAbsentPut: [self fail]) = each value]].
+			self
+				assert: (list attributeAt: each name ifAbsentPut: [ self fail ])
+				equals: each value ] ].
 
-	self listItems do: [:each |
-		self assert:
-			(list
-				attributeAt: each name
-				ifAbsentPut: [self fail]) = each value]
+	self listItems do: [ :each |
+		self
+			assert: (list attributeAt: each name ifAbsentPut: [ self fail ])
+			equals: each value ]
 ]
 
 { #category : #tests }
 XMLAttributeListTest >> testAttributeAtPut [
+
 	| list |
-
 	list := self emptyList.
-	1 to: 2 do: [:i |
-		self listItems do: [:each |
-			self assert:
-				(list attributeAt: each name) =
-					(i > 1
-						ifTrue: [each value]
-						ifFalse: ['']).
+	1 to: 2 do: [ :i |
+		self listItems do: [ :each |
+			self assert: (list attributeAt: each name) equals: (i > 1
+					 ifTrue: [ each value ]
+					 ifFalse: [ '' ]).
+			self
+				assert: (list attributeAt: each name put: each value)
+				equals: each value.
+			self assert: (list attributeAt: each name) equals: each value ] ].
 
-			self assert:
-				(list
-					attributeAt: each name
-					put: each value) = each value.
-			self assert: (list attributeAt: each name) = each value]].
-
-	self listItems do: [:each |
-		self assert: (list attributeAt: each name) = each value]
+	self listItems do: [ :each |
+		self assert: (list attributeAt: each name) equals: each value ]
 ]
 
 { #category : #tests }
@@ -324,167 +309,151 @@ XMLAttributeListTest >> testAttributeNamesDo [
 
 { #category : #tests }
 XMLAttributeListTest >> testAttributeNodeAt [
-	| list |
 
+	| list |
 	list := self emptyList.
-	self listItems withIndexDo: [:attribute :i | | firstMatchingAttribute |
-		firstMatchingAttribute :=
-			(self listItems copyFrom: 1 to: i - 1)
-				detect: [:each | each isNamed: attribute name]
-				ifNone: [nil].
-		self assert:
-			(list attributeNodeAt: attribute name) =
-				(firstMatchingAttribute
-					ifNil: [self defaultValue]).
-	
+	self listItems withIndexDo: [ :attribute :i |
+		| firstMatchingAttribute |
+		firstMatchingAttribute := (self listItems copyFrom: 1 to: i - 1)
+			                          detect: [ :each |
+			                          each isNamed: attribute name ]
+			                          ifNone: [ nil ].
+		self
+			assert: (list attributeNodeAt: attribute name)
+			equals: (firstMatchingAttribute ifNil: [ self defaultValue ]).
+
 		list add: attribute.
-		self assert:
-			(list attributeNodeAt: attribute name) =
-				(firstMatchingAttribute
-					ifNil: [attribute])].
+		self
+			assert: (list attributeNodeAt: attribute name)
+			equals: (firstMatchingAttribute ifNil: [ attribute ]) ]
 ]
 
 { #category : #tests }
 XMLAttributeListTest >> testAttributeNodeAtIfAbsent [
-	| list |
 
+	| list |
 	list := self emptyList.
-	self listItems withIndexDo: [:attribute :i | | firstMatchingAttribute |
-		firstMatchingAttribute :=
-			(self listItems copyFrom: 1 to: i - 1)
-				detect: [:each | each isNamed: attribute name]
-				ifNone: [nil].
-		self assert:
-			(list
-				attributeNodeAt: attribute name
-				ifAbsent: [
-					firstMatchingAttribute
-						ifNil: [self absentListItem]]) =
-				(firstMatchingAttribute
-					ifNil: [self absentListItem]).
-	
+	self listItems withIndexDo: [ :attribute :i |
+		| firstMatchingAttribute |
+		firstMatchingAttribute := (self listItems copyFrom: 1 to: i - 1)
+			                          detect: [ :each |
+			                          each isNamed: attribute name ]
+			                          ifNone: [ nil ].
+		self
+			assert: (list
+					 attributeNodeAt: attribute name
+					 ifAbsent: [
+					 firstMatchingAttribute ifNil: [ self absentListItem ] ])
+			equals: (firstMatchingAttribute ifNil: [ self absentListItem ]).
+
 		list add: attribute.
-		self assert:
-			(list
-				attributeNodeAt: attribute name
-				ifAbsent: [self fail]) =
-				(firstMatchingAttribute
-					ifNil: [attribute])].
+		self
+			assert:
+			(list attributeNodeAt: attribute name ifAbsent: [ self fail ])
+			equals: (firstMatchingAttribute ifNil: [ attribute ]) ]
 ]
 
 { #category : #tests }
 XMLAttributeListTest >> testAttributeValueAt [
+
 	| list |
-
 	list := self emptyList.
-	1 to: 2 do: [:i |
-		self listItems do: [:each |
-			self assert:
-				(list attributeValueAt: each name) =
-					(i > 1
-						ifTrue: [each value]
-						ifFalse: ['']).
-	
-			list add: each.
-			self assert: (list attributeValueAt: each name) = each value]].
+	1 to: 2 do: [ :i |
+		self listItems do: [ :each |
+			self assert: (list attributeValueAt: each name) equals: (i > 1
+					 ifTrue: [ each value ]
+					 ifFalse: [ '' ]).
 
-	self listItems do: [:each |
-		self assert: (list attributeValueAt: each name) = each value].
+			list add: each.
+			self assert: (list attributeValueAt: each name) equals: each value ] ].
+
+	self listItems do: [ :each |
+		self assert: (list attributeValueAt: each name) equals: each value ]
 ]
 
 { #category : #tests }
 XMLAttributeListTest >> testAttributeValueAtIfAbsent [
+
 	| list |
-
 	list := self emptyList.
-	1 to: 2 do: [:i |
-		self listItems do: [:each |
-			self assert:
-				(list
-					attributeValueAt: each name
-					ifAbsent: [
-						i > 1
-							ifTrue: [self fail]
-							ifFalse: [self absentListItem value]]) =
-					(i > 1
-						ifTrue: [each value]
-						ifFalse: [self absentListItem value]).
-	
-			list add: each.
-			self assert:
-				(list
-					attributeValueAt: each name
-					ifAbsent: [self fail]) = each value]].
+	1 to: 2 do: [ :i |
+		self listItems do: [ :each |
+			self
+				assert: (list attributeValueAt: each name ifAbsent: [
+						 i > 1
+							 ifTrue: [ self fail ]
+							 ifFalse: [ self absentListItem value ] ])
+				equals: (i > 1
+						 ifTrue: [ each value ]
+						 ifFalse: [ self absentListItem value ]).
 
-	self listItems do: [:each |
-		self assert:
-			(list
-				attributeValueAt: each name
-				ifAbsent: [self fail]) = each value].
+			list add: each.
+			self
+				assert: (list attributeValueAt: each name ifAbsent: [ self fail ])
+				equals: each value ] ].
+
+	self listItems do: [ :each |
+		self
+			assert: (list attributeValueAt: each name ifAbsent: [ self fail ])
+			equals: each value ]
 ]
 
 { #category : #tests }
 XMLAttributeListTest >> testAttributeValueAtIfAbsentPut [
+
 	| list |
-
 	list := self emptyList.
-	1 to: 2 do: [:i |
-		self listItems do: [:each |
-			self assert:
-				(list
-					attributeValueAt: each name
-					ifAbsentPut: [
-						i > 1
-							ifTrue: [self fail]
-							ifFalse: [each value]]) = each value.
-	
-			list add: each.
-			self assert:
-				(list
-					attributeValueAt: each name
-					ifAbsentPut: [self fail]) = each value]].
+	1 to: 2 do: [ :i |
+		self listItems do: [ :each |
+			self
+				assert: (list attributeValueAt: each name ifAbsentPut: [
+						 i > 1
+							 ifTrue: [ self fail ]
+							 ifFalse: [ each value ] ])
+				equals: each value.
 
-	self listItems do: [:each |
-		self assert:
-			(list
-				attributeValueAt: each name
-				ifAbsentPut: [self fail]) = each value].
+			list add: each.
+			self
+				assert:
+				(list attributeValueAt: each name ifAbsentPut: [ self fail ])
+				equals: each value ] ].
+
+	self listItems do: [ :each |
+		self
+			assert:
+			(list attributeValueAt: each name ifAbsentPut: [ self fail ])
+			equals: each value ]
 ]
 
 { #category : #tests }
 XMLAttributeListTest >> testAttributeValueAtPut [
+
 	| list |
-
 	list := self emptyList.
-	1 to: 2 do: [:i |
-		self listItems do: [:each |
-			self assert:
-				(list attributeValueAt: each name) =
-					(i > 1
-						ifTrue: [each value]
-						ifFalse: ['']).
+	1 to: 2 do: [ :i |
+		self listItems do: [ :each |
+			self assert: (list attributeValueAt: each name) equals: (i > 1
+					 ifTrue: [ each value ]
+					 ifFalse: [ '' ]).
+			self
+				assert: (list attributeValueAt: each name put: each value)
+				equals: each value.
+			self assert: (list attributeValueAt: each name) equals: each value ] ].
 
-			self assert:
-				(list
-					attributeValueAt: each name
-					put: each value) = each value.
-			self assert: (list attributeValueAt: each name) = each value]].
-
-	self listItems do: [:each |
-		self assert: (list attributeValueAt: each name) = each value].
+	self listItems do: [ :each |
+		self assert: (list attributeValueAt: each name) equals: each value ]
 ]
 
 { #category : #tests }
 XMLAttributeListTest >> testAttributes [
-	| list dictionary |
 
+	| list dictionary |
 	list := self listWithItems.
 	dictionary := list attributes.
 	self
-		assert: dictionary class == self attributesClass;
-		assert:
-			dictionary =
-				(self attributesClass newFrom: self attributeAssociations).
+		assert: dictionary class identicalTo: self attributesClass;
+		assert: dictionary
+		equals: (self attributesClass newFrom: self attributeAssociations)
 ]
 
 { #category : #tests }
@@ -501,21 +470,19 @@ XMLAttributeListTest >> testIncludesAttribute [
 
 { #category : #tests }
 XMLAttributeListTest >> testIncludesAttributeNode [
-	| list |
 
+	| list |
 	list := self emptyList.
-	self listItems withIndexDo: [:attribute :i | | included |
-		included :=
-			(self listItems
-				copyFrom: 1
-				to: i - 1) anySatisfy: [:each |
-				each isNamed: attribute name].
-		self assert:
-			(list includesAttributeNode: attribute name) =
-				included.
+	self listItems withIndexDo: [ :attribute :i |
+		| included |
+		included := (self listItems copyFrom: 1 to: i - 1) anySatisfy: [
+			            :each | each isNamed: attribute name ].
+		self
+			assert: (list includesAttributeNode: attribute name)
+			equals: included.
 
 		list add: attribute.
-		self assert: (list includesAttributeNode: attribute name)].
+		self assert: (list includesAttributeNode: attribute name) ]
 ]
 
 { #category : #tests }
@@ -542,79 +509,77 @@ XMLAttributeListTest >> testIncludesAttributeNodeNamespaceURI [
 
 { #category : #tests }
 XMLAttributeListTest >> testRemoveAttribute [
-	(Array
-		with: self listWithItems
-		with: self listWithItems reversed)
-		do: [:list | | copy |
-			copy := list copy.
-			copy withIndexDo: [:each :i |
-				self
-					assert: (list removeAttribute: each name) = each value;
-					deny: (list includes: each).
-				self
-					assertList: list
-					equals: (copy allButFirst: i).
 
+	(Array with: self listWithItems with: self listWithItems reversed)
+		do: [ :list |
+			| copy |
+			copy := list copy.
+			copy withIndexDo: [ :each :i |
 				self
-					should: [list removeAttribute: each name]
-					raise: Error]].
+					assert: (list removeAttribute: each name) equals: each value;
+					deny: (list includes: each).
+				self assertList: list equals: (copy allButFirst: i).
+
+				self should: [ list removeAttribute: each name ] raise: Error ] ]
 ]
 
 { #category : #tests }
 XMLAttributeListTest >> testRemoveAttributeIfAbsent [
-	(Array
-		with: self listWithItems
-		with: self listWithItems reversed)
-		do: [:list | | copy |
-			copy := list copy.
-			copy withIndexDo: [:each :i |
-				self assert:
-					(list
-						removeAttribute: each name
-						ifAbsent: [self fail]) = each value;
-					deny: (list includes: each).
-				self
-					assertList: list
-					equals: (copy allButFirst: i).
 
-				self assert:
-					(list
-						removeAttribute: each name
-						ifAbsent: [self absentListItem value]) = self absentListItem value]].
+	(Array with: self listWithItems with: self listWithItems reversed)
+		do: [ :list |
+			| copy |
+			copy := list copy.
+			copy withIndexDo: [ :each :i |
+				self
+					assert: (list removeAttribute: each name ifAbsent: [ self fail ])
+					equals: each value;
+					deny: (list includes: each).
+				self assertList: list equals: (copy allButFirst: i).
+				self
+					assert: (list
+							 removeAttribute: each name
+							 ifAbsent: [ self absentListItem value ])
+					equals: self absentListItem value ] ]
 ]
 
 { #category : #tests }
 XMLAttributeListTest >> testSetAttributes [
-	| list associations |
 
+	| list associations |
 	list := self emptyList.
 	associations := self attributeAssociations.
 	self
-		assert: (list setAttributes: associations) == list;
-		assert: list attributeAssociations asArray = associations asArray.
+		assert: (list setAttributes: associations) identicalTo: list;
+		assert: list attributeAssociations asArray
+		equals: associations asArray.
 
-	associations :=
-		self changedListItems collect: [:each | each name -> each value].
+	associations := self changedListItems collect: [ :each |
+		                each name -> each value ].
 	self
-		assert: (list setAttributes: associations) == list;
-		assert: list attributeAssociations asArray = associations asArray.
+		assert: (list setAttributes: associations) identicalTo: list;
+		assert: list attributeAssociations asArray
+		equals: associations asArray
 ]
 
 { #category : #tests }
 XMLAttributeListTest >> testSetAttributesFromOrderPreservingDictionary [
-	| element list dictionary |
 
+	| element list dictionary |
 	element := XMLElement new.
 	list := self listClass observer: element.
-	dictionary := OrderPreservingDictionary newFrom: self attributeAssociations.
-	self assert:
-		(list setAttributesFromOrderPreservingDictionary: dictionary) == list.
-	self assert:
-		list attributeAssociations asArray =
-			self attributeAssociations asArray.
-	list do: [:each |
+	dictionary := OrderPreservingDictionary newFrom:
+		              self attributeAssociations.
+	self
+		assert:
+		(list setAttributesFromOrderPreservingDictionary: dictionary)
+		identicalTo: list.
+	self
+		assert: list attributeAssociations asArray
+		equals: self attributeAssociations asArray.
+	list do: [ :each |
 		self
-			assert: each class == self attributeClass;
-			assert: each parent == element;
-			assert: each element == element]
+			assert: each class identicalTo: self attributeClass;
+			assert: each parent identicalTo: element;
+			assert: each element identicalTo: element ]
 ]

@@ -70,23 +70,24 @@ XMLParserExceptionTest >> lineNumber [
 
 { #category : #tests }
 XMLParserExceptionTest >> testBaseURI [
-	| exception |
 
+	| exception |
 	exception := self newException.
 	self
 		assert: exception baseURI equals: '';
-		assert: (exception baseURI: self baseURI) == exception;
+		assert: (exception baseURI: self baseURI) identicalTo: exception;
 		assert: exception baseURI equals: self baseURI
 ]
 
 { #category : #tests }
 XMLParserExceptionTest >> testColumnNumber [
-	| exception |
 
+	| exception |
 	exception := self newException.
 	self
 		assert: exception columnNumber isNil;
-		assert: (exception columnNumber: self columnNumber) == exception;
+		assert: (exception columnNumber: self columnNumber)
+		identicalTo: exception;
 		assert: exception columnNumber equals: self columnNumber
 ]
 
@@ -134,12 +135,13 @@ XMLParserExceptionTest >> testHasLineNumber [
 
 { #category : #tests }
 XMLParserExceptionTest >> testLineNumber [
-	| exception |
 
+	| exception |
 	exception := self newException.
 	self
 		assert: exception lineNumber isNil;
-		assert: (exception lineNumber: self lineNumber) == exception;
+		assert: (exception lineNumber: self lineNumber)
+		identicalTo: exception;
 		assert: exception lineNumber equals: self lineNumber
 ]
 

@@ -21,8 +21,10 @@ XMLAttributeSpecTest >> newAttributeSpec [
 
 { #category : #tests }
 XMLAttributeSpecTest >> testAsXMLAttributeSpec [
-	| attributeSpec |
 
+	| attributeSpec |
 	attributeSpec := self newAttributeSpec.
-	self assert: attributeSpec asXMLAttributeSpec == attributeSpec
+	self
+		assert: attributeSpec asXMLAttributeSpec
+		identicalTo: attributeSpec
 ]

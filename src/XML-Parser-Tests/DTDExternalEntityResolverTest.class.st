@@ -38,6 +38,7 @@ DTDExternalEntityResolverTest >> resolverClass [
 
 { #category : #tests }
 DTDExternalEntityResolverTest >> testCopy [
+
 	| resolver copy |
 	(resolver := self newResolver)
 		externalSubsetReadLimit: 1000000;
@@ -46,18 +47,23 @@ DTDExternalEntityResolverTest >> testCopy [
 		resolvesLocalFromNonLocal: true.
 	copy := resolver copy.
 	self
-		deny: copy == resolver;
+		deny: copy identicalTo: resolver;
 		assert: copy externalSubsetReadLimit equals: 1000000;
 		assert: copy maxExternalEntities equals: 10;
 		assert: copy maxExternalEntitySize equals: 10000;
 		assert: copy resolvesLocalFromNonLocal.
 
 	self isTestingLimiting
-		ifTrue: [ self
-				assert: copy externalEntityResolver == resolver externalEntityResolver;
-				assert: copy externalEntityLimits == resolver externalEntityLimits ]
-		ifFalse: [ self
-				deny: copy externalEntityLimits == resolver externalEntityLimits ]
+		ifTrue: [
+			self
+				assert: copy externalEntityResolver
+				identicalTo: resolver externalEntityResolver;
+				assert: copy externalEntityLimits
+				identicalTo: resolver externalEntityLimits ]
+		ifFalse: [
+			self
+				deny: copy externalEntityLimits
+				identicalTo: resolver externalEntityLimits ]
 ]
 
 { #category : #tests }
@@ -81,54 +87,63 @@ DTDExternalEntityResolverTest >> testDecoratorInterfaceCompatibility [
 
 { #category : #tests }
 DTDExternalEntityResolverTest >> testExternalEntityLimits [
-	| resolver newEntityLimits |
 
+	| resolver newEntityLimits |
 	resolver := self newResolver.
-	self assert: resolver externalEntityLimits class == self entityLimitsClass.
+	self
+		assert: resolver externalEntityLimits class
+		identicalTo: self entityLimitsClass.
 
 	newEntityLimits := self newEntityLimits.
 	self
-		assert: (resolver externalEntityLimits: newEntityLimits) == resolver;
-		assert: resolver externalEntityLimits == newEntityLimits
+		assert: (resolver externalEntityLimits: newEntityLimits)
+		identicalTo: resolver;
+		assert: resolver externalEntityLimits identicalTo: newEntityLimits
 ]
 
 { #category : #tests }
 DTDExternalEntityResolverTest >> testExternalSubsetReadLimit [
+
 	| resolver |
 	resolver := self newResolver.
 	self
 		assert: resolver externalSubsetReadLimit
 		equals: DTDExternalEntityLimits defaultExternalSubsetReadLimit.
 	self
-		assert: (resolver externalSubsetReadLimit: 1000000) == resolver;
+		assert: (resolver externalSubsetReadLimit: 1000000)
+		identicalTo: resolver;
 		assert: resolver externalSubsetReadLimit equals: 1000000;
-		assert: (resolver externalSubsetReadLimit: nil) == resolver;
+		assert: (resolver externalSubsetReadLimit: nil)
+		identicalTo: resolver;
 		assert: resolver externalSubsetReadLimit isNil
 ]
 
 { #category : #tests }
 DTDExternalEntityResolverTest >> testMaxExternalEntities [
+
 	| resolver |
 	resolver := self newResolver.
 	self
 		assert: resolver maxExternalEntities > 0;
-		assert: (resolver maxExternalEntities: 10) == resolver;
+		assert: (resolver maxExternalEntities: 10) identicalTo: resolver;
 		assert: resolver maxExternalEntities equals: 10;
-		assert: (resolver maxExternalEntities: nil) == resolver;
+		assert: (resolver maxExternalEntities: nil) identicalTo: resolver;
 		assert: resolver maxExternalEntities isNil
 ]
 
 { #category : #tests }
 DTDExternalEntityResolverTest >> testMaxExternalEntitySize [
+
 	| resolver |
 	resolver := self newResolver.
 	self
 		assert: resolver maxExternalEntitySize
 		equals: DTDExternalEntityLimits defaultMaxExternalEntitySize.
 	self
-		assert: (resolver maxExternalEntitySize: 10000) == resolver;
+		assert: (resolver maxExternalEntitySize: 10000)
+		identicalTo: resolver;
 		assert: resolver maxExternalEntitySize equals: 10000;
-		assert: (resolver maxExternalEntitySize: nil) == resolver;
+		assert: (resolver maxExternalEntitySize: nil) identicalTo: resolver;
 		assert: resolver maxExternalEntitySize isNil
 ]
 
@@ -158,14 +173,16 @@ DTDExternalEntityResolverTest >> testRemoveLimits [
 
 { #category : #tests }
 DTDExternalEntityResolverTest >> testResolvesLocalFromNonLocal [
-	| resolver |
 
+	| resolver |
 	resolver := self newResolver.
 	self
 		deny: resolver resolvesLocalFromNonLocal;
-		assert: (resolver resolvesLocalFromNonLocal: false) == resolver;
+		assert: (resolver resolvesLocalFromNonLocal: false)
+		identicalTo: resolver;
 		deny: resolver resolvesLocalFromNonLocal;
-		assert: (resolver resolvesLocalFromNonLocal: true) == resolver;
+		assert: (resolver resolvesLocalFromNonLocal: true)
+		identicalTo: resolver;
 		assert: resolver resolvesLocalFromNonLocal
 ]
 

@@ -44,50 +44,50 @@ XMLNodeWithChildrenTest >> nodeListClass [
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testAddComment [
-	| nodeWithNodes comment |
 
+	| nodeWithNodes comment |
 	nodeWithNodes := self newNode.
 	comment := nodeWithNodes addComment: 'test'.
 	self
-		assert: nodeWithNodes nodes size = 1;
-		assert: nodeWithNodes firstNode == comment;
+		assert: nodeWithNodes nodes size equals: 1;
+		assert: nodeWithNodes firstNode identicalTo: comment;
 		assert: comment isComment;
-		assert: comment string = 'test'
+		assert: comment string equals: 'test'
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testAddNode [
-	| node nodesAdded nodeWithNodes |
 
+	| node nodesAdded nodeWithNodes |
 	node := self newNode.
 	nodesAdded := node nodes copyEmpty.
 	nodeWithNodes := self newNodeWithNodes.
 
 	"adding nodes from another node should remove them from the previous node"
-	nodeWithNodes nodes copy do: [:each |
+	nodeWithNodes nodes copy do: [ :each |
 		nodesAdded addLast: each.
 		self
-			assert: (node addNode: each) == each;
-			assert: node nodes = nodesAdded;
-			assert: each parent == node;
-			deny: (nodeWithNodes nodes includes: each)].
+			assert: (node addNode: each) identicalTo: each;
+			assert: node nodes equals: nodesAdded;
+			assert: each parent identicalTo: node;
+			deny: (nodeWithNodes nodes includes: each) ].
 	self deny: nodeWithNodes hasChildren.
 
 	"adding already present nodes should move them in-place"
-	node nodes copy do: [:each |
+	node nodes copy do: [ :each |
 		nodesAdded
 			remove: each;
 			addLast: each.
 		self
-			assert: (node addNode: each) == each;
-			assert: node nodes = nodesAdded;
-			assert: each parent == node]
+			assert: (node addNode: each) identicalTo: each;
+			assert: node nodes equals: nodesAdded;
+			assert: each parent identicalTo: node ]
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testAddNodeAfter [
-	| node nodesAdded nodeWithNodes nodeAfter |
 
+	| node nodesAdded nodeWithNodes nodeAfter |
 	node := self newNode.
 	nodesAdded := node nodes copyEmpty.
 	nodeWithNodes := self newNodeWithNodes.
@@ -96,33 +96,31 @@ XMLNodeWithChildrenTest >> testAddNodeAfter [
 	nodeAfter := nodeWithNodes firstNode.
 	nodesAdded addLast: nodeAfter.
 	node addNode: nodeAfter.
-	nodeWithNodes nodes reversed do: [:each |
-		nodesAdded
-			add: each
-			after: nodeAfter.
+	nodeWithNodes nodes reversed do: [ :each |
+		nodesAdded add: each after: nodeAfter.
 		self
-			assert: (node addNode: each after: nodeAfter) == each;
-			assert: node nodes = nodesAdded;
-			assert: each parent == node;
-			deny: (nodeWithNodes nodes includes: each)].
+			assert: (node addNode: each after: nodeAfter) identicalTo: each;
+			assert: node nodes equals: nodesAdded;
+			assert: each parent identicalTo: node;
+			deny: (nodeWithNodes nodes includes: each) ].
 	self deny: nodeWithNodes hasChildren.
 
 	"adding already present nodes should move them in-place"
 	nodeAfter := nodesAdded last.
-	node nodes allButLast reverseDo: [:each |
+	node nodes allButLast reverseDo: [ :each |
 		nodesAdded
 			remove: each;
 			add: each after: nodeAfter.
 		self
-			assert: (node addNode: each after: nodeAfter) == each;
-			assert: node nodes = nodesAdded;
-			assert: each parent == node]
+			assert: (node addNode: each after: nodeAfter) identicalTo: each;
+			assert: node nodes equals: nodesAdded;
+			assert: each parent identicalTo: node ]
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testAddNodeBefore [
-	| node nodesAdded nodeWithNodes nodeBefore |
 
+	| node nodesAdded nodeWithNodes nodeBefore |
 	node := self newNode.
 	nodesAdded := node nodes copyEmpty.
 	nodeWithNodes := self newNodeWithNodes.
@@ -131,56 +129,54 @@ XMLNodeWithChildrenTest >> testAddNodeBefore [
 	nodeBefore := nodeWithNodes lastNode.
 	nodesAdded addLast: nodeBefore.
 	node addNode: nodeBefore.
-	nodeWithNodes nodes copy do: [:each |
-		nodesAdded
-			add: each
-			before: nodeBefore.
+	nodeWithNodes nodes copy do: [ :each |
+		nodesAdded add: each before: nodeBefore.
 		self
-			assert: (node addNode: each before: nodeBefore) == each;
-			assert: node nodes = nodesAdded;
-			assert: each parent == node;
-			deny: (nodeWithNodes nodes includes: each)].
+			assert: (node addNode: each before: nodeBefore) identicalTo: each;
+			assert: node nodes equals: nodesAdded;
+			assert: each parent identicalTo: node;
+			deny: (nodeWithNodes nodes includes: each) ].
 	self deny: nodeWithNodes hasChildren.
 
 	"adding already present nodes should move them in-place"
 	nodeBefore := nodesAdded first.
-	node nodes allButFirst reverseDo: [:each |
+	node nodes allButFirst reverseDo: [ :each |
 		nodesAdded
 			remove: each;
 			add: each before: nodeBefore.
 		self
-			assert: (node addNode: each before: nodeBefore) == each;
-			assert: node nodes = nodesAdded;
-			assert: each parent == node]
+			assert: (node addNode: each before: nodeBefore) identicalTo: each;
+			assert: node nodes equals: nodesAdded;
+			assert: each parent identicalTo: node ]
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testAddNodeFirst [
-	| node nodesAdded nodeWithNodes |
 
+	| node nodesAdded nodeWithNodes |
 	node := self newNode.
 	nodesAdded := node nodes copyEmpty.
 	nodeWithNodes := self newNodeWithNodes.
 
 	"adding nodes from another node should remove them from the previous node"
-	nodeWithNodes nodes copy do: [:each |
+	nodeWithNodes nodes copy do: [ :each |
 		nodesAdded addFirst: each.
 		self
-			assert: (node addNodeFirst: each) == each;
-			assert: node nodes = nodesAdded;
-			assert: each parent == node;
-			deny: (nodeWithNodes nodes includes: each)].
+			assert: (node addNodeFirst: each) identicalTo: each;
+			assert: node nodes equals: nodesAdded;
+			assert: each parent identicalTo: node;
+			deny: (nodeWithNodes nodes includes: each) ].
 	self deny: nodeWithNodes hasChildren.
 
 	"adding already present nodes should move them in-place"
-	node nodes reversed do: [:each |
+	node nodes reversed do: [ :each |
 		nodesAdded
 			remove: each;
 			addFirst: each.
 		self
-			assert: (node addNodeFirst: each) == each;
-			assert: node nodes = nodesAdded;
-			assert: each parent == node]
+			assert: (node addNodeFirst: each) identicalTo: each;
+			assert: node nodes equals: nodesAdded;
+			assert: each parent identicalTo: node ]
 ]
 
 { #category : #tests }
@@ -208,40 +204,37 @@ XMLNodeWithChildrenTest >> testAddNodes [
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testAddPITargetData [
-	| nodeWithNodes pi |
 
+	| nodeWithNodes pi |
 	nodeWithNodes := self newNode.
-	pi :=
-		nodeWithNodes
-			addPITarget: 'target'
-			data: 'data'.
+	pi := nodeWithNodes addPITarget: 'target' data: 'data'.
 	self
-		assert: nodeWithNodes nodes size = 1;
-		assert: nodeWithNodes firstNode == pi;
+		assert: nodeWithNodes nodes size equals: 1;
+		assert: nodeWithNodes firstNode identicalTo: pi;
 		assert: pi isPI;
-		assert: pi target = 'target';
-		assert: pi data = 'data'
+		assert: pi target equals: 'target';
+		assert: pi data equals: 'data'
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testAllNodes [
-	| nodeWithNodes allNodes |
 
+	| nodeWithNodes allNodes |
 	nodeWithNodes := self newNodeWithNodes.
 	allNodes := nodeWithNodes allNodes.
 	self
-		assert: allNodes size = 5;
-		assert: allNodes first == nodeWithNodes;
+		assert: allNodes size equals: 5;
+		assert: allNodes first identicalTo: nodeWithNodes;
 		assert: allNodes second isComment;
-		assert: allNodes second string = 'one';
+		assert: allNodes second string equals: 'one';
 		assert: allNodes third isPI;
-		assert: allNodes third target = 'two';
-		assert: allNodes third data = 'three';
+		assert: allNodes third target equals: 'two';
+		assert: allNodes third data equals: 'three';
 		assert: allNodes fourth isComment;
-		assert: allNodes fourth string = 'four';
+		assert: allNodes fourth string equals: 'four';
 		assert: allNodes fifth isPI;
-		assert: allNodes fifth target = 'five';
-		assert: allNodes fifth data = 'six'
+		assert: allNodes fifth target equals: 'five';
+		assert: allNodes fifth data equals: 'six'
 ]
 
 { #category : #tests }
@@ -264,35 +257,37 @@ XMLNodeWithChildrenTest >> testAllNodesCollect [
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testAllNodesDetect [
-	| nodeWithNodes allNodes detectedNode |
 
+	| nodeWithNodes allNodes detectedNode |
 	nodeWithNodes := self newNodeWithNodes.
 	allNodes := nodeWithNodes allNodes.
-	detectedNode := nodeWithNodes allNodesDetect: [:each | each isPI].
+	detectedNode := nodeWithNodes allNodesDetect: [ :each | each isPI ].
 	self
 		assert: detectedNode notNil;
 		assert: detectedNode isPI;
-		assert: detectedNode = (allNodes detect: [:each | each isPI]);
-		assert: (nodeWithNodes allNodesDetect: [:each | each isElementNamed: 'absent']) isNil
+		assert: detectedNode
+		equals: (allNodes detect: [ :each | each isPI ]);
+		assert: (nodeWithNodes allNodesDetect: [ :each |
+					 each isElementNamed: 'absent' ]) isNil
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testAllNodesDetectIfNone [
-	| nodeWithNodes allNodes detectedNode |
 
+	| nodeWithNodes allNodes detectedNode |
 	nodeWithNodes := self newNodeWithNodes.
 	allNodes := nodeWithNodes allNodes.
-	detectedNode :=
-		nodeWithNodes
-			allNodesDetect: [:each | each isPI]
-			ifNone: [self fail].
+	detectedNode := nodeWithNodes
+		                allNodesDetect: [ :each | each isPI ]
+		                ifNone: [ self fail ].
 	self
 		assert: detectedNode isPI;
-		assert: detectedNode = (allNodes detect: [:each | each isPI] ifNone: [#absent]);
-		assert:
-			(nodeWithNodes
-				allNodesDetect: [:each | each isElementNamed: 'absent']
-				ifNone: [#absent]) = #absent
+		assert: detectedNode
+		equals: (allNodes detect: [ :each | each isPI ] ifNone: [ #absent ]);
+		assert: (nodeWithNodes
+				 allNodesDetect: [ :each | each isElementNamed: 'absent' ]
+				 ifNone: [ #absent ])
+		equals: #absent
 ]
 
 { #category : #tests }
@@ -333,20 +328,19 @@ XMLNodeWithChildrenTest >> testAllNodesSelect [
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testAncestorNodes [
-	| nodeWithNodes ancestorStack |
 
+	| nodeWithNodes ancestorStack |
 	super testAncestorNodes.
 
 	nodeWithNodes := self newNodeWithNodes.
 	ancestorStack := OrderedCollection new.
-	nodeWithNodes allNodesDo: [:each |
-		[ancestorStack isEmpty
-			or: [ancestorStack last == each parent]]
-			whileFalse: [ancestorStack removeLast].
-		self assert:
-			each ancestorNodes asOrderedCollection =
-				ancestorStack reversed.
-		ancestorStack addLast: each]
+	nodeWithNodes allNodesDo: [ :each |
+		[ ancestorStack isEmpty or: [ ancestorStack last == each parent ] ]
+			whileFalse: [ ancestorStack removeLast ].
+		self
+			assert: each ancestorNodes asOrderedCollection
+			equals: ancestorStack reversed.
+		ancestorStack addLast: each ]
 ]
 
 { #category : #tests }
@@ -380,44 +374,45 @@ XMLNodeWithChildrenTest >> testCopy [
 	"this traverses the object graph of each node and compares it with
 	its copy to make sure nodes and the inst vars that should be copied
 	are copied. See #copiedClasses"
-	| nodeWithNodes nodeWithNodesCopy unvisitedPairs visitedPairs copiedClasses |
 
+	| nodeWithNodes nodeWithNodesCopy unvisitedPairs visitedPairs copiedClasses |
 	super testCopy.
 
 	nodeWithNodes := self newNodeWithNodes.
 	"initialize the configuration (if it can have one)"
-	nodeWithNodes configuration
-		ifNotNil: [:config | config nodeFactory: XMLPluggableNodeFactory new].
+	nodeWithNodes configuration ifNotNil: [ :config |
+		config nodeFactory: XMLPluggableNodeFactory new ].
 
 	nodeWithNodesCopy := nodeWithNodes copy.
 	self
-		assert: nodeWithNodes printString = nodeWithNodesCopy printString;
-		assert: nodeWithNodes allNodes size = nodeWithNodesCopy allNodes size.
+		assert: nodeWithNodes printString
+		equals: nodeWithNodesCopy printString;
+		assert: nodeWithNodes allNodes size
+		equals: nodeWithNodesCopy allNodes size.
 
 	unvisitedPairs := Set new.
 	nodeWithNodes allNodes
 		with: nodeWithNodesCopy allNodes
-		do: [:node :nodeCopy | unvisitedPairs add: node -> nodeCopy].
+		do: [ :node :nodeCopy | unvisitedPairs add: node -> nodeCopy ].
 
 	visitedPairs := Set new.
-	copiedClasses :=
-		self copiedClasses collect: [:each |
-			XMLClassFinder classNamed: each].
-	[unvisitedPairs isEmpty]
-		whileFalse: [ | pair originalObject copyObject |
-			pair := unvisitedPairs remove: unvisitedPairs anyOne.
-			originalObject := pair key.
-			copyObject := pair value.
-
-			self deny: originalObject == copyObject.
-			visitedPairs add: pair.
-			1
-				to: (originalObject class instSize min: copyObject class instSize)
-				do: [:i | | newPair |
-					newPair := (originalObject instVarAt: i) -> (copyObject instVarAt: i).
-					((visitedPairs includes: newPair)
-						or: [copiedClasses noneSatisfy: [:each | newPair key isKindOf: each]])
-						ifFalse: [unvisitedPairs add: newPair]]]
+	copiedClasses := self copiedClasses collect: [ :each |
+		                 XMLClassFinder classNamed: each ].
+	[ unvisitedPairs isEmpty ] whileFalse: [
+		| pair originalObject copyObject |
+		pair := unvisitedPairs remove: unvisitedPairs anyOne.
+		originalObject := pair key.
+		copyObject := pair value.
+		self deny: originalObject identicalTo: copyObject.
+		visitedPairs add: pair.
+		1 to: (originalObject class instSize min: copyObject class instSize)
+			do: [ :i |
+				| newPair |
+				newPair := (originalObject instVarAt: i)
+				           -> (copyObject instVarAt: i).
+				((visitedPairs includes: newPair) or: [
+					 copiedClasses noneSatisfy: [ :each | newPair key isKindOf: each ] ])
+					ifFalse: [ unvisitedPairs add: newPair ] ] ]
 ]
 
 { #category : #tests }
@@ -458,35 +453,39 @@ XMLNodeWithChildrenTest >> testDescendantNodesCollect [
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testDescendantNodesDetect [
-	| nodeWithNodes descendantNodes detectedNode |
 
+	| nodeWithNodes descendantNodes detectedNode |
 	nodeWithNodes := self newNodeWithNodes.
 	descendantNodes := nodeWithNodes descendantNodes.
-	detectedNode := nodeWithNodes descendantNodesDetect: [:each | each isPI].
+	detectedNode := nodeWithNodes descendantNodesDetect: [ :each |
+		                each isPI ].
 	self
 		assert: detectedNode notNil;
 		assert: detectedNode isPI;
-		assert: detectedNode = (descendantNodes detect: [:each | each isPI]);
-		assert: (nodeWithNodes descendantNodesDetect: [:each | each isElementNamed: 'absent']) isNil
+		assert: detectedNode
+		equals: (descendantNodes detect: [ :each | each isPI ]);
+		assert: (nodeWithNodes descendantNodesDetect: [ :each |
+					 each isElementNamed: 'absent' ]) isNil
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testDescendantNodesDetectIfNone [
-	| nodeWithNodes descendantNodes detectedNode |
 
+	| nodeWithNodes descendantNodes detectedNode |
 	nodeWithNodes := self newNodeWithNodes.
 	descendantNodes := nodeWithNodes descendantNodes.
-	detectedNode :=
-		nodeWithNodes
-			descendantNodesDetect: [:each | each isPI]
-			ifNone: [self fail].
+	detectedNode := nodeWithNodes
+		                descendantNodesDetect: [ :each | each isPI ]
+		                ifNone: [ self fail ].
 	self
 		assert: detectedNode isPI;
-		assert: detectedNode = (descendantNodes detect: [:each | each isPI] ifNone: [#absent]);
-		assert:
-			(nodeWithNodes
-				descendantNodesDetect: [:each | each isElementNamed: 'absent']
-				ifNone: [#absent]) = #absent.
+		assert: detectedNode
+		equals:
+			(descendantNodes detect: [ :each | each isPI ] ifNone: [ #absent ]);
+		assert: (nodeWithNodes
+				 descendantNodesDetect: [ :each | each isElementNamed: 'absent' ]
+				 ifNone: [ #absent ])
+		equals: #absent
 ]
 
 { #category : #tests }
@@ -527,41 +526,40 @@ XMLNodeWithChildrenTest >> testDescendantNodesSelect [
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testDocument [
-	| nodeWithNodes document |
 
+	| nodeWithNodes document |
 	nodeWithNodes := self newNodeWithNodes.
 	document := nodeWithNodes document.
-	nodeWithNodes allNodesDo: [:each |
-		self assert: each document == document].
+	nodeWithNodes allNodesDo: [ :each |
+		self assert: each document identicalTo: document ].
 
-	document
-		ifNotNil: [ | root |
-			root := document root.
-			document removeNodes.
-			root allNodesDo: [:each |
-				self assert: each document isNil]].
+	document ifNotNil: [
+		| root |
+		root := document root.
+		document removeNodes.
+		root allNodesDo: [ :each | self assert: each document isNil ] ]
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testDocumentRoot [
-	| nodeWithNodes |
 
+	| nodeWithNodes |
 	super testDocumentRoot.
 
 	nodeWithNodes := self newNodeWithNodes.
-	nodeWithNodes allNodesDo: [:each |
-		self assert: each documentRoot == nodeWithNodes].
+	nodeWithNodes allNodesDo: [ :each |
+		self assert: each documentRoot identicalTo: nodeWithNodes ]
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testFirstNode [
-	| nodeWithNodes |
 
+	| nodeWithNodes |
 	nodeWithNodes := self newNodeWithNodes.
-	nodeWithNodes nodes copy do: [:each |
-		self  assert: nodeWithNodes firstNode = each.
-		nodeWithNodes removeNode: each].
-	self assert: nodeWithNodes firstNode isNil.
+	nodeWithNodes nodes copy do: [ :each |
+		self assert: nodeWithNodes firstNode equals: each.
+		nodeWithNodes removeNode: each ].
+	self assert: nodeWithNodes firstNode isNil
 ]
 
 { #category : #tests }
@@ -583,128 +581,134 @@ XMLNodeWithChildrenTest >> testIncludesNode [
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testLastNode [
+
 	| nodeWithNodes |
-
 	nodeWithNodes := self newNodeWithNodes.
-	nodeWithNodes nodes reversed do: [:each |
-		self  assert: nodeWithNodes lastNode = each.
-		nodeWithNodes removeNode: each].
+	nodeWithNodes nodes reversed do: [ :each |
+		self assert: nodeWithNodes lastNode equals: each.
+		nodeWithNodes removeNode: each ].
 
-	self assert: nodeWithNodes lastNode isNil.
+	self assert: nodeWithNodes lastNode isNil
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testNextNode [
-	| nodeWithNodes nextNode |
 
+	| nodeWithNodes nextNode |
 	super testNextNode.
 	nodeWithNodes := self newNodeWithNodes.
 	nextNode := nil.
-	nodeWithNodes nodes reverseDo: [:each |
-		self assert: each nextNode = nextNode.
-		nextNode := each].
+	nodeWithNodes nodes reverseDo: [ :each |
+		self assert: each nextNode equals: nextNode.
+		nextNode := each ]
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testNodeAfter [
-	| nodeWithNodes nodeAfter |
 
+	| nodeWithNodes nodeAfter |
 	nodeWithNodes := self newNodeWithNodes.
 	nodeAfter := nil.
-	nodeWithNodes nodes reverseDo: [:each |
-		self assert: (nodeWithNodes nodeAfter: each) = nodeAfter.
-		nodeAfter := each].
-	self assert: (nodeWithNodes nodeAfter: self newNode) isNil.
+	nodeWithNodes nodes reverseDo: [ :each |
+		self assert: (nodeWithNodes nodeAfter: each) equals: nodeAfter.
+		nodeAfter := each ].
+	self assert: (nodeWithNodes nodeAfter: self newNode) isNil
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testNodeAt [
-	| nodeWithNodes |
 
+	| nodeWithNodes |
 	nodeWithNodes := self newNodeWithNodes.
 	self assert: (nodeWithNodes nodeAt: 0) isNil.
-	1 to: nodeWithNodes nodes size do: [:i |
-		self assert: (nodeWithNodes nodeAt: i) = (nodeWithNodes nodes at: i)].
-	self assert: (nodeWithNodes nodeAt: nodeWithNodes nodes size + 1) isNil.
+	1 to: nodeWithNodes nodes size do: [ :i |
+		self
+			assert: (nodeWithNodes nodeAt: i)
+			equals: (nodeWithNodes nodes at: i) ].
+	self assert:
+		(nodeWithNodes nodeAt: nodeWithNodes nodes size + 1) isNil
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testNodeAtIfAbsent [
-	| nodeWithNodes |
 
+	| nodeWithNodes |
 	nodeWithNodes := self newNodeWithNodes.
-	1 to: nodeWithNodes nodes size do: [:i |
-		self assert:
-			(nodeWithNodes
-				nodeAt: i
-				ifAbsent: [self fail]) = (nodeWithNodes nodes at: i)].
-	self assert:
-		(nodeWithNodes
-			nodeAt: 0
-			ifAbsent: [#absent]) = #absent.
-	self assert:
-		(nodeWithNodes
-			nodeAt: nodeWithNodes nodes size + 1
-			ifAbsent: [#absent]) = #absent.
+	1 to: nodeWithNodes nodes size do: [ :i |
+		self
+			assert: (nodeWithNodes nodeAt: i ifAbsent: [ self fail ])
+			equals: (nodeWithNodes nodes at: i) ].
+	self
+		assert: (nodeWithNodes nodeAt: 0 ifAbsent: [ #absent ])
+		equals: #absent.
+	self
+		assert: (nodeWithNodes
+				 nodeAt: nodeWithNodes nodes size + 1
+				 ifAbsent: [ #absent ])
+		equals: #absent
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testNodeAtPut [
-	| nodeWithNodes newNodeClass newNode |
 
+	| nodeWithNodes newNodeClass newNode |
 	nodeWithNodes := self newNodeWithNodes.
 	newNodeClass := nodeWithNodes firstNode class.
 	self
-		should: [nodeWithNodes nodeAt: 0 put: newNodeClass new]
+		should: [ nodeWithNodes nodeAt: 0 put: newNodeClass new ]
 		raise: Error.
-	1 to: nodeWithNodes nodes size do: [:i |
+	1 to: nodeWithNodes nodes size do: [ :i |
 		newNode := newNodeClass new.
 		self
-			assert: (nodeWithNodes nodeAt: i put: newNode) == newNode;
-			assert: (nodeWithNodes nodeAt: i) == newNode].
+			assert: (nodeWithNodes nodeAt: i put: newNode)
+			identicalTo: newNode;
+			assert: (nodeWithNodes nodeAt: i) identicalTo: newNode ].
 
 	newNode := newNodeClass new.
-	self assert:
-		(nodeWithNodes
-			nodeAt: nodeWithNodes nodes size + 1
-			put: newNode) == newNode.
-	self assert: (nodeWithNodes nodeAt: nodeWithNodes nodes size) == newNode.
+	self
+		assert:
+		(nodeWithNodes nodeAt: nodeWithNodes nodes size + 1 put: newNode)
+		identicalTo: newNode.
+	self
+		assert: (nodeWithNodes nodeAt: nodeWithNodes nodes size)
+		identicalTo: newNode.
 	self
 		should: [
 			nodeWithNodes
 				nodeAt: nodeWithNodes nodes size + 2
-				put: newNodeClass new]
-		raise: Error.
+				put: newNodeClass new ]
+		raise: Error
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testNodeBefore [
-	| nodeWithNodes nodeBefore |
 
+	| nodeWithNodes nodeBefore |
 	nodeWithNodes := self newNodeWithNodes.
 	nodeBefore := nil.
-	nodeWithNodes nodes do: [:each |
-		self assert: (nodeWithNodes nodeBefore: each) = nodeBefore.
-		nodeBefore := each].
-	self assert: (nodeWithNodes nodeBefore: self newNode) isNil.
+	nodeWithNodes nodes do: [ :each |
+		self assert: (nodeWithNodes nodeBefore: each) equals: nodeBefore.
+		nodeBefore := each ].
+	self assert: (nodeWithNodes nodeBefore: self newNode) isNil
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testNodeListCopying [
-	| nodeWithNodes nodeListCopy |
 
+	| nodeWithNodes nodeListCopy |
 	nodeWithNodes := self newNodeWithNodes.
 	nodeListCopy := nodeWithNodes nodes copy.
 	self
-		assert: nodeListCopy = nodeWithNodes nodes;
-		deny: nodeListCopy == nodeWithNodes nodes;
-		assert: nodeWithNodes nodes observer == nodeWithNodes;
-		assert: nodeListCopy observer isNil.
+		assert: nodeListCopy equals: nodeWithNodes nodes;
+		deny: nodeListCopy identicalTo: nodeWithNodes nodes;
+		assert: nodeWithNodes nodes observer identicalTo: nodeWithNodes;
+		assert: nodeListCopy observer isNil
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testNodes [
-	self assert: self newNode nodes class == self nodeListClass
+
+	self assert: self newNode nodes class identicalTo: self nodeListClass
 ]
 
 { #category : #tests }
@@ -719,30 +723,32 @@ XMLNodeWithChildrenTest >> testNodesCollect [
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testNodesDetect [
-	| node detectedNode |
 
+	| node detectedNode |
 	node := self newNodeWithNodes.
-	detectedNode := node nodesDetect: [:each | each isComment].
+	detectedNode := node nodesDetect: [ :each | each isComment ].
 	self
 		assert: detectedNode notNil;
-		assert: detectedNode = (node nodes detect: [:each | each isComment]);
-		assert: (node nodesDetect: [:each | each isElementNamed: 'absent']) isNil.
+		assert: detectedNode
+		equals: (node nodes detect: [ :each | each isComment ]);
+		assert:
+			(node nodesDetect: [ :each | each isElementNamed: 'absent' ]) isNil
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testNodesDetectIfNone [
-	| node |
 
+	| node |
 	node := self newNodeWithNodes.
-	self assert:
-		(node
-			nodesDetect: [:each | each isComment]
-			ifNone: [self fail]) =
-				(node nodes detect: [:each | each isComment]).
-	self assert:
-		(node
-			nodesDetect: [:each | each isElementNamed: 'absent']
-			ifNone: [#absent]) = #absent.
+	self
+		assert:
+		(node nodesDetect: [ :each | each isComment ] ifNone: [ self fail ])
+		equals: (node nodes detect: [ :each | each isComment ]).
+	self
+		assert: (node
+				 nodesDetect: [ :each | each isElementNamed: 'absent' ]
+				 ifNone: [ #absent ])
+		equals: #absent
 ]
 
 { #category : #tests }
@@ -772,113 +778,112 @@ XMLNodeWithChildrenTest >> testNodesSelect [
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testPreviousNode [
-	| nodeWithNodes previousNode |
 
+	| nodeWithNodes previousNode |
 	super testPreviousNode.
 	nodeWithNodes := self newNodeWithNodes.
 	previousNode := nil.
-	nodeWithNodes nodes do: [:each |
-		self assert: each previousNode = previousNode.
-		previousNode := each].
+	nodeWithNodes nodes do: [ :each |
+		self assert: each previousNode equals: previousNode.
+		previousNode := each ]
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testRemoveNode [
-	| nodeWithNodes |
 
+	| nodeWithNodes |
 	nodeWithNodes := self newNodeWithNodes.
-	nodeWithNodes nodes copy do: [:each |
+	nodeWithNodes nodes copy do: [ :each |
 		self
 			assert: (nodeWithNodes includesNode: each);
-			assert: (nodeWithNodes removeNode: each) == each;
-			deny: (nodeWithNodes includesNode: each)].
+			assert: (nodeWithNodes removeNode: each) identicalTo: each;
+			deny: (nodeWithNodes includesNode: each) ].
 	self deny: nodeWithNodes hasChildren.
-	self
-		should: [nodeWithNodes removeNode: self newNode]
-		raise: Error.
+	self should: [ nodeWithNodes removeNode: self newNode ] raise: Error
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testRemoveNodeIfAbsent [
-	| nodeWithNodes |
 
+	| nodeWithNodes |
 	nodeWithNodes := self newNodeWithNodes.
-	nodeWithNodes nodes copy do: [:each |
+	nodeWithNodes nodes copy do: [ :each |
 		self assert: (nodeWithNodes includesNode: each).
-		self assert:
-			(nodeWithNodes
-				removeNode: each
-				ifAbsent: [self fail]) == each.
-		self deny: (nodeWithNodes includesNode: each)].
+		self
+			assert: (nodeWithNodes removeNode: each ifAbsent: [ self fail ])
+			identicalTo: each.
+		self deny: (nodeWithNodes includesNode: each) ].
 	self deny: nodeWithNodes hasChildren.
-	self assert:
-		(nodeWithNodes
-			removeNode: self newNode
-			ifAbsent: [#absent]) == #absent.
+	self
+		assert:
+		(nodeWithNodes removeNode: self newNode ifAbsent: [ #absent ])
+		identicalTo: #absent
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testRemoveNodes [
-	| nodeWithNodes |
 
+	| nodeWithNodes |
 	nodeWithNodes := self newNodeWithNodes.
 	self
 		assert: nodeWithNodes hasChildren;
-		assert: nodeWithNodes removeNodes == nodeWithNodes;
-		deny: nodeWithNodes hasChildren.
+		assert: nodeWithNodes removeNodes identicalTo: nodeWithNodes;
+		deny: nodeWithNodes hasChildren
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testRemoveNodesAll [
-	| nodeWithNodes |
 
+	| nodeWithNodes |
 	nodeWithNodes := self newNodeWithNodes.
-	1 to: nodeWithNodes nodes size do: [:i | | removed |
-		removed := (nodeWithNodes nodes copyFrom: 1 to: i).
+	1 to: nodeWithNodes nodes size do: [ :i |
+		| removed |
+		removed := nodeWithNodes nodes copyFrom: 1 to: i.
 		self
-			assert: (removed allSatisfy: [:each | nodeWithNodes includesNode: each]);
-			assert: (nodeWithNodes removeNodes: removed) == removed;
-			deny: (removed anySatisfy: [:each | nodeWithNodes includesNode: each]).
-		nodeWithNodes := self newNodeWithNodes].
+			assert:
+				(removed allSatisfy: [ :each | nodeWithNodes includesNode: each ]);
+			assert: (nodeWithNodes removeNodes: removed) identicalTo: removed;
+			deny:
+				(removed anySatisfy: [ :each | nodeWithNodes includesNode: each ]).
+		nodeWithNodes := self newNodeWithNodes ]
 ]
 
 { #category : #tests }
 XMLNodeWithChildrenTest >> testReplaceNodeWith [
-	| nodeWithNodes replacements nodes firstIndex secondIndex |
 
+	| nodeWithNodes replacements nodes firstIndex secondIndex |
 	nodeWithNodes := self newNodeWithNodes.
 	replacements := OrderedCollection new.
-	nodeWithNodes nodes copy do: [:each |
-		self assert:
-			(nodeWithNodes
-				replaceNode: each
-				with: (replacements add: self newNode)) == replacements last].
-	self assert: nodeWithNodes nodes asOrderedCollection = replacements.
+	nodeWithNodes nodes copy do: [ :each |
+		self
+			assert: (nodeWithNodes
+					 replaceNode: each
+					 with: (replacements add: self newNode))
+			identicalTo: replacements last ].
+	self
+		assert: nodeWithNodes nodes asOrderedCollection
+		equals: replacements.
 
 	nodeWithNodes := self newNodeWithNodes.
 	nodes := nodeWithNodes nodes copy.
-	nodes do: [:each |
-		self assert:
-			(nodeWithNodes
-				replaceNode: each
-				with: each) == each].
-	self assert: nodeWithNodes nodes = nodes.
+	nodes do: [ :each |
+		self
+			assert: (nodeWithNodes replaceNode: each with: each)
+			identicalTo: each ].
+	self assert: nodeWithNodes nodes equals: nodes.
 
 	firstIndex := 1.
 	secondIndex := nodes size.
-	[firstIndex < secondIndex]
-		whileTrue: [
-			nodeWithNodes
-				replaceNode: (nodes at: firstIndex)
-				with: (nodes at: secondIndex).
-			firstIndex := firstIndex + 1.
-			secondIndex := secondIndex - 1].
-	self assert: nodeWithNodes nodes = nodes reversed.
+	[ firstIndex < secondIndex ] whileTrue: [
+		nodeWithNodes
+			replaceNode: (nodes at: firstIndex)
+			with: (nodes at: secondIndex).
+		firstIndex := firstIndex + 1.
+		secondIndex := secondIndex - 1 ].
+	self assert: nodeWithNodes nodes equals: nodes reversed.
 
 	self
 		should: [
-			nodeWithNodes
-				replaceNode: nodes anyOne copy
-				with: self newNode]
-		raise: Error.
+		nodeWithNodes replaceNode: nodes anyOne copy with: self newNode ]
+		raise: Error
 ]

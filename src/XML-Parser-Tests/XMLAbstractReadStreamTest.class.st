@@ -55,27 +55,26 @@ XMLAbstractReadStreamTest >> testAtEnd [
 
 { #category : #tests }
 XMLAbstractReadStreamTest >> testClose [
-	| stream |
 
+	| stream |
 	stream := self newStream.
 	self
-		assert: stream close == stream;
+		assert: stream close identicalTo: stream;
 		assert: stream atEnd
 ]
 
 { #category : #tests }
 XMLAbstractReadStreamTest >> testContents [
-	| stream |
 
+	| stream |
 	stream := self newStream.
-	self outputCollection do: [:each |
-		"use #= because wide chars aren't #== pre-Spur"
+	self outputCollection do: [ :each | "use #= because wide chars aren't #== pre-Spur"
 		self
-			assert: stream peek = each;
-			assert: stream contents = self outputCollection;
-			assert: stream peek = each;
-			assert: stream next = each].
-	self assert: stream contents = self outputCollection
+			assert: stream peek equals: each;
+			assert: stream contents equals: self outputCollection;
+			assert: stream peek equals: each;
+			assert: stream next equals: each ].
+	self assert: stream contents equals: self outputCollection
 ]
 
 { #category : #tests }
@@ -90,10 +89,12 @@ XMLAbstractReadStreamTest >> testIsStream [
 
 { #category : #tests }
 XMLAbstractReadStreamTest >> testIsXMLBinaryOrExternalStream [
-	| stream |
 
+	| stream |
 	stream := self newStream.
-	self assert: stream isXMLBinaryOrExternalStream = stream isBinary
+	self
+		assert: stream isXMLBinaryOrExternalStream
+		equals: stream isBinary
 ]
 
 { #category : #tests }
@@ -105,36 +106,34 @@ XMLAbstractReadStreamTest >> testNew [
 
 { #category : #tests }
 XMLAbstractReadStreamTest >> testNext [
-	| stream |
 
+	| stream |
 	stream := self newStream.
-	self outputCollection do: [:each |
-		"use #= because wide chars aren't #== pre-Spur"
-		self assert: stream next = each].
+	self outputCollection do: [ :each | "use #= because wide chars aren't #== pre-Spur"
+		self assert: stream next equals: each ].
 	self assert: stream next isNil.
 
-	0 to: self outputCollection size do: [:i |
+	0 to: self outputCollection size do: [ :i |
 		stream := self newStream.
-		self assert:
-			(stream next: i) =
-				(self outputCollection copyFrom: 1 to: i)].
+		self
+			assert: (stream next: i)
+			equals: (self outputCollection copyFrom: 1 to: i) ].
 
 	stream := self newStream.
-	self assert:
-		(stream next: self outputCollection size + 1) =
-			self outputCollection.
+	self
+		assert: (stream next: self outputCollection size + 1)
+		equals: self outputCollection.
 	self assert: (stream next: 1) isEmpty
 ]
 
 { #category : #tests }
 XMLAbstractReadStreamTest >> testPeek [
-	| stream |
 
+	| stream |
 	stream := self newStream.
-	self outputCollection do: [:each |
-		"use #= because wide chars aren't #== pre-Spur"
-		self assert: stream peek = each.
-		stream next].
+	self outputCollection do: [ :each | "use #= because wide chars aren't #== pre-Spur"
+		self assert: stream peek equals: each.
+		stream next ].
 	self assert: stream peek isNil
 ]
 
@@ -157,74 +156,75 @@ XMLAbstractReadStreamTest >> testPeekFor [
 
 { #category : #tests }
 XMLAbstractReadStreamTest >> testPosition [
-	| stream startPosition endPosition position |
 
+	| stream startPosition endPosition position |
 	stream := self newStream.
 	startPosition := stream position. "1 or 0 depending on the stream on GS"
-	endPosition :=
-		stream
-			upToEnd;
-			position.
+	endPosition := stream
+		               upToEnd;
+		               position.
 	stream := self newStream.
 	position := startPosition.
-	self outputCollection do: [:each |
+	self outputCollection do: [ :each |
 		self
-			assert: stream position = position;
-			"use #= because wide chars aren't #== pre-Spur"
-			assert: stream peek = each;
-			assert: stream position = position;
-			assert: stream next = each;
+			assert: stream position equals: position;
+			assert: stream peek equals: each;
+			assert: stream position equals: position;
+			assert: stream next equals: each;
 			assert: stream position > position.
 
 		stream peek.
 		self
-			assert: (stream position: position) == stream;
-			assert: stream peek = each;
-			assert: stream position = position;
-			assert: stream next = each;
+			assert: (stream position: position) identicalTo: stream;
+			assert: stream peek equals: each;
+			assert: stream position equals: position;
+			assert: stream next equals: each;
 			assert: stream position > position.
-		position := stream position].
-	self assert: position = endPosition
+		position := stream position ].
+	self assert: position equals: endPosition
 ]
 
 { #category : #tests }
 XMLAbstractReadStreamTest >> testReset [
-	| stream |
 
+	| stream |
 	stream := self newStream.
 	self
-		assert: stream upToEnd = self outputCollection;
+		assert: stream upToEnd equals: self outputCollection;
 		assert: stream upToEnd isEmpty;
-		assert: stream reset == stream;
-		assert: stream upToEnd = self outputCollection;
+		assert: stream reset identicalTo: stream;
+		assert: stream upToEnd equals: self outputCollection;
 		assert: stream upToEnd isEmpty
 ]
 
 { #category : #tests }
 XMLAbstractReadStreamTest >> testSkip [
-	| stream |
 
-	0 to: self outputCollection size do: [:i |
+	| stream |
+	0 to: self outputCollection size do: [ :i |
 		stream := self newStream.
 		self
-			assert: (stream skip: i) == stream;
-			assert: stream upToEnd = (self outputCollection allButFirst: i)].
+			assert: (stream skip: i) identicalTo: stream;
+			assert: stream upToEnd
+			equals: (self outputCollection allButFirst: i) ].
 
 	stream := self newStream.
 	self
-		assert: (stream skip: self outputCollection size + 1) == stream;
+		assert: (stream skip: self outputCollection size + 1)
+		identicalTo: stream;
 		assert: stream upToEnd isEmpty
 ]
 
 { #category : #tests }
 XMLAbstractReadStreamTest >> testSkipTo [
-	| stream |
 
-	self outputCollection do: [:each |
+	| stream |
+	self outputCollection do: [ :each |
 		stream := self newStream.
 		self
 			assert: (stream skipTo: each);
-			assert: stream upToEnd = (self outputCollection copyAfter: each)].
+			assert: stream upToEnd
+			equals: (self outputCollection copyAfter: each) ].
 
 	stream := self newStream.
 	self
@@ -234,30 +234,35 @@ XMLAbstractReadStreamTest >> testSkipTo [
 
 { #category : #tests }
 XMLAbstractReadStreamTest >> testUpTo [
-	self outputCollection do: [:each | | stream |
+
+	self outputCollection do: [ :each |
+		| stream |
 		stream := self newStream.
-		self assert:
-			(stream upTo: each) =
-				(self outputCollection copyUpTo: each).
-		self assert:
-			stream upToEnd =
-				(self outputCollection copyAfter: each)].
-	self assert: (self newStream upTo: #absent) = self outputCollection
+		self
+			assert: (stream upTo: each)
+			equals: (self outputCollection copyUpTo: each).
+		self
+			assert: stream upToEnd
+			equals: (self outputCollection copyAfter: each) ].
+	self
+		assert: (self newStream upTo: #absent)
+		equals: self outputCollection
 ]
 
 { #category : #tests }
 XMLAbstractReadStreamTest >> testUpToEnd [
-	| stream |
 
-	self outputCollection withIndexDo: [:each :i |
+	| stream |
+	self outputCollection withIndexDo: [ :each :i |
 		stream := self newStream.
 		stream skip: i.
 		self
-			assert: stream upToEnd = (self outputCollection allButFirst: i);
-			assert: stream upToEnd = ''].
+			assert: stream upToEnd
+			equals: (self outputCollection allButFirst: i);
+			assert: stream upToEnd equals: '' ].
 
 	stream := self newStream.
 	self
-		assert: stream upToEnd = self outputCollection;
-		assert: stream upToEnd = ''
+		assert: stream upToEnd equals: self outputCollection;
+		assert: stream upToEnd equals: ''
 ]

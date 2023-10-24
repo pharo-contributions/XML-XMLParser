@@ -11,35 +11,39 @@ XMLBasicElementClassMapperTest >> mapperClass [
 
 { #category : #tests }
 XMLBasicElementClassMapperTest >> testClassForElement [
-	| mapper |
 
+	| mapper |
 	mapper := self newMapper.
 	self
 		assert: (mapper classForElement: 'test') isNil;
 		assert: (mapper classForElement: 'prefix:test') isNil.
 
-	mapper
-		mapElement: 'test'
-		toClass: self elementClass.
+	mapper mapElement: 'test' toClass: self elementClass.
 	self
-		assert: (mapper classForElement: 'test') == self elementClass;
-		assert: (mapper classForElement: 'prefix:test') == self elementClass.
+		assert: (mapper classForElement: 'test')
+		identicalTo: self elementClass;
+		assert: (mapper classForElement: 'prefix:test')
+		identicalTo: self elementClass.
 
 	mapper
 		mapElement: 'test'
 		attributeSpec: self attributes asXMLAttributeSpec
 		toClass: self otherElementClass.
 	self
-		assert: (mapper classForElement: 'test') == self elementClass;
-		assert: (mapper classForElement: 'prefix:test') == self elementClass.
+		assert: (mapper classForElement: 'test')
+		identicalTo: self elementClass;
+		assert: (mapper classForElement: 'prefix:test')
+		identicalTo: self elementClass.
 
 	mapper
 		mapElement: 'test'
 		namespaceURI: 'testNS'
 		toClass: self otherElementClass.
 	self
-		assert: (mapper classForElement: 'test') == self elementClass;
-		assert: (mapper classForElement: 'prefix:test') == self elementClass.
+		assert: (mapper classForElement: 'test')
+		identicalTo: self elementClass;
+		assert: (mapper classForElement: 'prefix:test')
+		identicalTo: self elementClass.
 
 	mapper
 		mapElement: 'test'
@@ -47,444 +51,419 @@ XMLBasicElementClassMapperTest >> testClassForElement [
 		attributeSpec: self attributes asXMLAttributeSpec
 		toClass: self otherElementClass.
 	self
-		assert: (mapper classForElement: 'test') == self elementClass;
-		assert: (mapper classForElement: 'prefix:test') == self elementClass.
+		assert: (mapper classForElement: 'test')
+		identicalTo: self elementClass;
+		assert: (mapper classForElement: 'prefix:test')
+		identicalTo: self elementClass.
 
 	"QName mappings should take precedence over NCName mappings"
-	mapper
-		mapElement: 'prefix:test'
-		toClass: self otherElementClass.
+	mapper mapElement: 'prefix:test' toClass: self otherElementClass.
 	self
-		assert: (mapper classForElement: 'test') == self elementClass;
-		assert: (mapper classForElement: 'prefix:test') == self otherElementClass
+		assert: (mapper classForElement: 'test')
+		identicalTo: self elementClass;
+		assert: (mapper classForElement: 'prefix:test')
+		identicalTo: self otherElementClass
 ]
 
 { #category : #tests }
 XMLBasicElementClassMapperTest >> testClassForElementAttributes [
-	| mapper |
 
+	| mapper |
 	mapper := self newMapper.
 	self assert:
-		(mapper
-			classForElement: 'test'
-			attributes: self attributes) isNil.
+		(mapper classForElement: 'test' attributes: self attributes) isNil.
 	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			attributes: self attributes) isNil.
+		(mapper classForElement: 'prefix:test' attributes: self attributes)
+			isNil.
 
-	mapper
-		mapElement: 'test'
-		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			attributes: self attributes) == self otherElementClass.
-		(mapper
-			classForElement: 'prefix:test'
-			attributes: self attributes) == self otherElementClass.
+	mapper mapElement: 'test' toClass: self otherElementClass.
+	self
+		assert: (mapper classForElement: 'test' attributes: self attributes)
+		identicalTo: self otherElementClass.
+	(mapper classForElement: 'prefix:test' attributes: self attributes)
+	== self otherElementClass.
 
 	mapper
 		mapElement: 'test'
 		attributeSpec: self attributes asXMLAttributeSpec
 		toClass: self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			attributes: self attributes) == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			attributes: self attributes) == self elementClass.
+	self
+		assert: (mapper classForElement: 'test' attributes: self attributes)
+		identicalTo: self elementClass.
+	self
+		assert:
+		(mapper classForElement: 'prefix:test' attributes: self attributes)
+		identicalTo: self elementClass.
 
 	mapper
 		mapElement: 'test'
 		namespaceURI: 'testNS'
 		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			attributes: self attributes) == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			attributes: self attributes) == self elementClass.
+	self
+		assert: (mapper classForElement: 'test' attributes: self attributes)
+		identicalTo: self elementClass.
+	self
+		assert:
+		(mapper classForElement: 'prefix:test' attributes: self attributes)
+		identicalTo: self elementClass.
 
 	mapper
 		mapElement: 'test'
 		namespaceURI: 'testNS'
 		attributeSpec: self attributes asXMLAttributeSpec
 		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			attributes: self attributes) == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			attributes: self attributes) == self elementClass.
-
-	"QName mappings should take precedence over NCName mappings"
+	self
+		assert: (mapper classForElement: 'test' attributes: self attributes)
+		identicalTo: self elementClass.
+	self
+		assert:
+		(mapper classForElement: 'prefix:test' attributes: self attributes)
+		identicalTo: self elementClass.
 	mapper
 		mapElement: 'prefix:test'
 		attributeSpec: self attributes asXMLAttributeSpec
 		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			attributes: self attributes) == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			attributes: self attributes) == self otherElementClass
+	self
+		assert: (mapper classForElement: 'test' attributes: self attributes)
+		identicalTo: self elementClass.
+	self
+		assert:
+		(mapper classForElement: 'prefix:test' attributes: self attributes)
+		identicalTo: self otherElementClass
 ]
 
 { #category : #tests }
 XMLBasicElementClassMapperTest >> testClassForElementAttributesIfNone [
+
 	| mapper |
-
 	mapper := self newMapper.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			attributes: self attributes
-			ifNone: [#none]) == #none.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			attributes: self attributes
-			ifNone: [#none]) == #none.
+	self
+		assert: (mapper
+				 classForElement: 'test'
+				 attributes: self attributes
+				 ifNone: [ #none ])
+		identicalTo: #none.
+	self
+		assert: (mapper
+				 classForElement: 'prefix:test'
+				 attributes: self attributes
+				 ifNone: [ #none ])
+		identicalTo: #none.
 
-	mapper
-		mapElement: 'test'
-		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			attributes: self attributes
-			ifNone: [self fail]) == self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			attributes: self attributes
-			ifNone: [self fail]) == self otherElementClass.
+	mapper mapElement: 'test' toClass: self otherElementClass.
+	self
+		assert: (mapper
+				 classForElement: 'test'
+				 attributes: self attributes
+				 ifNone: [ self fail ])
+		identicalTo: self otherElementClass.
+	self
+		assert: (mapper
+				 classForElement: 'prefix:test'
+				 attributes: self attributes
+				 ifNone: [ self fail ])
+		identicalTo: self otherElementClass.
 
 	mapper
 		mapElement: 'test'
 		attributeSpec: self attributes asXMLAttributeSpec
 		toClass: self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			attributes: self attributes
-			ifNone: [self fail]) == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			attributes: self attributes
-			ifNone: [self fail]) == self elementClass.
+	self
+		assert: (mapper
+				 classForElement: 'test'
+				 attributes: self attributes
+				 ifNone: [ self fail ])
+		identicalTo: self elementClass.
+	self
+		assert: (mapper
+				 classForElement: 'prefix:test'
+				 attributes: self attributes
+				 ifNone: [ self fail ])
+		identicalTo: self elementClass.
 
 	mapper
 		mapElement: 'test'
 		namespaceURI: 'testNS'
 		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			attributes: self attributes
-			ifNone: [self fail]) == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			attributes: self attributes
-			ifNone: [self fail]) == self elementClass.
+	self
+		assert: (mapper
+				 classForElement: 'test'
+				 attributes: self attributes
+				 ifNone: [ self fail ])
+		identicalTo: self elementClass.
+	self
+		assert: (mapper
+				 classForElement: 'prefix:test'
+				 attributes: self attributes
+				 ifNone: [ self fail ])
+		identicalTo: self elementClass.
 
 	mapper
 		mapElement: 'test'
 		namespaceURI: 'testNS'
 		attributeSpec: self attributes asXMLAttributeSpec
 		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			attributes: self attributes
-			ifNone: [self fail]) == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			attributes: self attributes
-			ifNone: [self fail]) == self elementClass.
-
-	"QName mappings should take precedence over NCName mappings"
+	self
+		assert: (mapper
+				 classForElement: 'test'
+				 attributes: self attributes
+				 ifNone: [ self fail ])
+		identicalTo: self elementClass.
+	self
+		assert: (mapper
+				 classForElement: 'prefix:test'
+				 attributes: self attributes
+				 ifNone: [ self fail ])
+		identicalTo: self elementClass.
 	mapper
 		mapElement: 'prefix:test'
 		attributeSpec: self attributes asXMLAttributeSpec
 		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			attributes: self attributes
-			ifNone: [self fail]) == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			attributes: self attributes
-			ifNone: [self fail]) == self otherElementClass
+	self
+		assert: (mapper
+				 classForElement: 'test'
+				 attributes: self attributes
+				 ifNone: [ self fail ])
+		identicalTo: self elementClass.
+	self
+		assert: (mapper
+				 classForElement: 'prefix:test'
+				 attributes: self attributes
+				 ifNone: [ self fail ])
+		identicalTo: self otherElementClass
 ]
 
 { #category : #tests }
 XMLBasicElementClassMapperTest >> testClassForElementIfNone [
+
 	| mapper |
-
 	mapper := self newMapper.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			ifNone: [#none]) == #none.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			ifNone: [#none]) == #none.
+	self
+		assert: (mapper classForElement: 'test' ifNone: [ #none ])
+		identicalTo: #none.
+	self
+		assert: (mapper classForElement: 'prefix:test' ifNone: [ #none ])
+		identicalTo: #none.
 
-	mapper
-		mapElement: 'test'
-		toClass: self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			ifNone: [self fail]) == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			ifNone: [self fail]) == self elementClass.
+	mapper mapElement: 'test' toClass: self elementClass.
+	self
+		assert: (mapper classForElement: 'test' ifNone: [ self fail ])
+		identicalTo: self elementClass.
+	self
+		assert:
+		(mapper classForElement: 'prefix:test' ifNone: [ self fail ])
+		identicalTo: self elementClass.
 
 	mapper
 		mapElement: 'test'
 		attributeSpec: self attributes asXMLAttributeSpec
 		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			ifNone: [self fail]) == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			ifNone: [self fail]) == self elementClass.
+	self
+		assert: (mapper classForElement: 'test' ifNone: [ self fail ])
+		identicalTo: self elementClass.
+	self
+		assert:
+		(mapper classForElement: 'prefix:test' ifNone: [ self fail ])
+		identicalTo: self elementClass.
 
 	mapper
 		mapElement: 'test'
 		namespaceURI: 'testNS'
 		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			ifNone: [self fail]) == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			ifNone: [self fail]) == self elementClass.
+	self
+		assert: (mapper classForElement: 'test' ifNone: [ self fail ])
+		identicalTo: self elementClass.
+	self
+		assert:
+		(mapper classForElement: 'prefix:test' ifNone: [ self fail ])
+		identicalTo: self elementClass.
 
 	mapper
 		mapElement: 'test'
 		namespaceURI: 'testNS'
 		attributeSpec: self attributes asXMLAttributeSpec
 		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			ifNone: [self fail]) == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			ifNone: [self fail]) == self elementClass.
-
-	"QName mappings should take precedence over NCName mappings"
-	mapper
-		mapElement: 'prefix:test'
-		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			ifNone: [self fail]) == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			ifNone: [self fail]) == self otherElementClass
+	self
+		assert: (mapper classForElement: 'test' ifNone: [ self fail ])
+		identicalTo: self elementClass.
+	self
+		assert:
+		(mapper classForElement: 'prefix:test' ifNone: [ self fail ])
+		identicalTo: self elementClass.
+	mapper mapElement: 'prefix:test' toClass: self otherElementClass.
+	self
+		assert: (mapper classForElement: 'test' ifNone: [ self fail ])
+		identicalTo: self elementClass.
+	self
+		assert:
+		(mapper classForElement: 'prefix:test' ifNone: [ self fail ])
+		identicalTo: self otherElementClass
 ]
 
 { #category : #tests }
 XMLBasicElementClassMapperTest >> testClassForElementNamespaceURI [
-	| mapper |
 
+	| mapper |
 	mapper := self newMapper.
 	self assert:
-		(mapper
-			classForElement: 'test'
-			namespaceURI: 'testNS') isNil.
+		(mapper classForElement: 'test' namespaceURI: 'testNS') isNil.
 	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			namespaceURI: 'testNS') isNil.
+		(mapper classForElement: 'prefix:test' namespaceURI: 'testNS') isNil.
 
-	mapper
-		mapElement: 'test'
-		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			namespaceURI: 'testNS') == self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			namespaceURI: 'testNS') == self otherElementClass.
+	mapper mapElement: 'test' toClass: self otherElementClass.
+	self
+		assert: (mapper classForElement: 'test' namespaceURI: 'testNS')
+		identicalTo: self otherElementClass.
+	self
+		assert:
+		(mapper classForElement: 'prefix:test' namespaceURI: 'testNS')
+		identicalTo: self otherElementClass.
 
 	mapper
 		mapElement: 'test'
 		attributeSpec: self attributes asXMLAttributeSpec
 		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			namespaceURI: 'testNS') == self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			namespaceURI: 'testNS') == self otherElementClass.
+	self
+		assert: (mapper classForElement: 'test' namespaceURI: 'testNS')
+		identicalTo: self otherElementClass.
+	self
+		assert:
+		(mapper classForElement: 'prefix:test' namespaceURI: 'testNS')
+		identicalTo: self otherElementClass.
 
 	mapper
 		mapElement: 'test'
 		namespaceURI: 'testNS'
 		toClass: self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			namespaceURI: 'testNS') == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			namespaceURI: 'testNS') == self elementClass.
+	self
+		assert: (mapper classForElement: 'test' namespaceURI: 'testNS')
+		identicalTo: self elementClass.
+	self
+		assert:
+		(mapper classForElement: 'prefix:test' namespaceURI: 'testNS')
+		identicalTo: self elementClass.
 
 	mapper
 		mapElement: 'test'
 		namespaceURI: 'testNS'
 		attributeSpec: self attributes asXMLAttributeSpec
 		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			namespaceURI: 'testNS') == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			namespaceURI: 'testNS') == self elementClass.
-
-	"QName mappings should take precedence over NCName mappings"
+	self
+		assert: (mapper classForElement: 'test' namespaceURI: 'testNS')
+		identicalTo: self elementClass.
+	self
+		assert:
+		(mapper classForElement: 'prefix:test' namespaceURI: 'testNS')
+		identicalTo: self elementClass.
 	mapper
 		mapElement: 'prefix:test'
 		namespaceURI: 'testNS'
 		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			namespaceURI: 'testNS') == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			namespaceURI: 'testNS') == self otherElementClass
+	self
+		assert: (mapper classForElement: 'test' namespaceURI: 'testNS')
+		identicalTo: self elementClass.
+	self
+		assert:
+		(mapper classForElement: 'prefix:test' namespaceURI: 'testNS')
+		identicalTo: self otherElementClass
 ]
 
 { #category : #tests }
 XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIAttributes [
+
 	| mapper |
-
 	mapper := self newMapper.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			namespaceURI: 'testNS'
-			attributes: self attributes) isNil.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			namespaceURI: 'testNS'
-			attributes: self attributes) isNil.
+	self assert: (mapper
+			 classForElement: 'test'
+			 namespaceURI: 'testNS'
+			 attributes: self attributes) isNil.
+	self assert: (mapper
+			 classForElement: 'prefix:test'
+			 namespaceURI: 'testNS'
+			 attributes: self attributes) isNil.
 
-	mapper
-		mapElement: 'test'
-		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			namespaceURI: 'testNS'
-			attributes: self attributes) == self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			namespaceURI: 'testNS'
-			attributes: self attributes) == self otherElementClass.
+	mapper mapElement: 'test' toClass: self otherElementClass.
+	self
+		assert: (mapper
+				 classForElement: 'test'
+				 namespaceURI: 'testNS'
+				 attributes: self attributes)
+		identicalTo: self otherElementClass.
+	self
+		assert: (mapper
+				 classForElement: 'prefix:test'
+				 namespaceURI: 'testNS'
+				 attributes: self attributes)
+		identicalTo: self otherElementClass.
 
 	mapper
 		mapElement: 'test'
 		attributeSpec: self attributes asXMLAttributeSpec
 		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			namespaceURI: 'testNS'
-			attributes: self attributes) == self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			namespaceURI: 'testNS'
-			attributes: self attributes) == self otherElementClass.
+	self
+		assert: (mapper
+				 classForElement: 'test'
+				 namespaceURI: 'testNS'
+				 attributes: self attributes)
+		identicalTo: self otherElementClass.
+	self
+		assert: (mapper
+				 classForElement: 'prefix:test'
+				 namespaceURI: 'testNS'
+				 attributes: self attributes)
+		identicalTo: self otherElementClass.
 
 	mapper
 		mapElement: 'test'
 		namespaceURI: 'testNS'
 		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			namespaceURI: 'testNS'
-			attributes: self attributes) == self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			namespaceURI: 'testNS'
-			attributes: self attributes) == self otherElementClass.
+	self
+		assert: (mapper
+				 classForElement: 'test'
+				 namespaceURI: 'testNS'
+				 attributes: self attributes)
+		identicalTo: self otherElementClass.
+	self
+		assert: (mapper
+				 classForElement: 'prefix:test'
+				 namespaceURI: 'testNS'
+				 attributes: self attributes)
+		identicalTo: self otherElementClass.
 
 	mapper
 		mapElement: 'test'
 		namespaceURI: 'testNS'
 		attributeSpec: self attributes asXMLAttributeSpec
 		toClass: self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			namespaceURI: 'testNS'
-			attributes: self attributes) == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			namespaceURI: 'testNS'
-			attributes: self attributes) == self elementClass.
-
-	"QName mappings should take precedence over NCName mappings"
+	self
+		assert: (mapper
+				 classForElement: 'test'
+				 namespaceURI: 'testNS'
+				 attributes: self attributes)
+		identicalTo: self elementClass.
+	self
+		assert: (mapper
+				 classForElement: 'prefix:test'
+				 namespaceURI: 'testNS'
+				 attributes: self attributes)
+		identicalTo: self elementClass.
 	mapper
 		mapElement: 'prefix:test'
 		namespaceURI: 'testNS'
 		attributeSpec: self attributes asXMLAttributeSpec
 		toClass: self otherElementClass.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			namespaceURI: 'testNS'
-			attributes: self attributes) == self elementClass.
-	self assert:
-		(mapper
-			classForElement: 'prefix:test'
-			namespaceURI: 'testNS'
-			attributes: self attributes) == self otherElementClass
+	self
+		assert: (mapper
+				 classForElement: 'test'
+				 namespaceURI: 'testNS'
+				 attributes: self attributes)
+		identicalTo: self elementClass.
+	self
+		assert: (mapper
+				 classForElement: 'prefix:test'
+				 namespaceURI: 'testNS'
+				 attributes: self attributes)
+		identicalTo: self otherElementClass
 ]
 
 { #category : #tests }
@@ -1025,44 +1004,44 @@ XMLBasicElementClassMapperTest >> testMapElementNamespaceURIAttributeSpecToClass
 
 { #category : #tests }
 XMLBasicElementClassMapperTest >> testMapElementNamespaceURIToClass [
+
 	| mapper |
-
 	mapper := self newMapper.
-	self assert:
-		(mapper
-			mapElement: 'test'
-			namespaceURI: 'testNS'
-			toClass: self elementClass) == mapper.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			namespaceURI: 'testNS') == self elementClass.
-
-	self assert:
-		(mapper
-			mapElement: 'test'
-			namespaceURI: 'testNS'
-			toClass: self otherElementClass) == mapper.
-	self assert:
-		(mapper
-			classForElement: 'test'
-			namespaceURI: 'testNS') == self otherElementClass
+	self
+		assert: (mapper
+				 mapElement: 'test'
+				 namespaceURI: 'testNS'
+				 toClass: self elementClass)
+		identicalTo: mapper.
+	self
+		assert: (mapper classForElement: 'test' namespaceURI: 'testNS')
+		identicalTo: self elementClass.
+	self
+		assert: (mapper
+				 mapElement: 'test'
+				 namespaceURI: 'testNS'
+				 toClass: self otherElementClass)
+		identicalTo: mapper.
+	self
+		assert: (mapper classForElement: 'test' namespaceURI: 'testNS')
+		identicalTo: self otherElementClass
 ]
 
 { #category : #tests }
 XMLBasicElementClassMapperTest >> testMapElementToClass [
+
 	| mapper |
-
 	mapper := self newMapper.
-	self assert:
-		(mapper
-			mapElement: 'test'
-			toClass: self elementClass) == mapper.
-	self assert: (mapper classForElement: 'test') == self elementClass.
-
-	self assert:
-		(mapper
-			mapElement: 'test'
-			toClass: self otherElementClass) == mapper.
-	self assert: (mapper classForElement: 'test') == self otherElementClass
+	self
+		assert: (mapper mapElement: 'test' toClass: self elementClass)
+		identicalTo: mapper.
+	self
+		assert: (mapper classForElement: 'test')
+		identicalTo: self elementClass.
+	self
+		assert: (mapper mapElement: 'test' toClass: self otherElementClass)
+		identicalTo: mapper.
+	self
+		assert: (mapper classForElement: 'test')
+		identicalTo: self otherElementClass
 ]
