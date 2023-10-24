@@ -53,29 +53,34 @@ SAX2ElementHandlerParserTest >> testParsingSampleBooks [
 
 	| books |
 	books := (SAX2ElementParser on: self sampleBooksXML)
-		elementHandlerFactory:
-			(SAX2PluggableElementHandlerFactory new
-				handleElement: 'books' withClass: SAX2HBooksElementHandler;
-				handleElement: 'book' withClass: SAX2HBookElementHandler;
-				handleElement: 'title' withClass: SAX2HTitleElementHandler;
-				handleElement: 'isbn' withClass: SAX2HISBNElementHandler;
-				handleElement: 'author' withClass: SAX2HAuthorElementHandler);
-		parseDocument.
+		         elementHandlerFactory:
+			         (SAX2PluggableElementHandlerFactory new
+				          handleElement: 'books'
+				          withClass: SAX2HBooksElementHandler;
+				          handleElement: 'book'
+				          withClass: SAX2HBookElementHandler;
+				          handleElement: 'title'
+				          withClass: SAX2HTitleElementHandler;
+				          handleElement: 'isbn'
+				          withClass: SAX2HISBNElementHandler;
+				          handleElement: 'author'
+				          withClass: SAX2HAuthorElementHandler);
+		         parseDocument.
 	self
-		assert: books class == OrderedCollection;
+		assert: books class identicalTo: OrderedCollection;
 		assert: books size equals: 2;
-		assert: books first class == SAX2SampleBook;
+		assert: books first class identicalTo: SAX2SampleBook;
 		assert: books first title
-			equals: 'Smalltalk-80: The Language and its Implementation';
+		equals: 'Smalltalk-80: The Language and its Implementation';
 		assert: books first isbn equals: '0201113716';
 		assert: books first authors asArray
-			equals: #('Adele Goldberg' 'David Robson');
-		assert: books second class == SAX2SampleBook;
+		equals: #( 'Adele Goldberg' 'David Robson' );
+		assert: books second class identicalTo: SAX2SampleBook;
 		assert: books second title equals: 'Pharo By Example';
 		assert: books second isbn equals: '3952334146';
 		assert: books second authors asArray
-			equals:
-			#('Andrew P. Black' 'Stephane Ducasse' 'Oscar Nierstrasz' 'Damien Pollet' 'Damien Cassou' 'Marcus Denker')
+		equals: #( 'Andrew P. Black' 'Stephane Ducasse' 'Oscar Nierstrasz'
+			   'Damien Pollet' 'Damien Cassou' 'Marcus Denker' )
 ]
 
 { #category : #tests }
