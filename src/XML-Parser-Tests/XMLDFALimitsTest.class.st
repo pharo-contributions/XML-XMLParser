@@ -1,11 +1,11 @@
 Class {
-	#name : #XMLDFALimitsTests,
+	#name : #XMLDFALimitsTest,
 	#superclass : #TestCase,
 	#category : #'XML-Parser-Tests-Validation-DFA'
 }
 
 { #category : #tests }
-XMLDFALimitsTests >> testDFAStateCacheLimit [
+XMLDFALimitsTest >> testDFAStateCacheLimit [
 	| names contentModel firstState currentState visitedStates |
 
 	names :=
@@ -61,7 +61,7 @@ XMLDFALimitsTests >> testDFAStateCacheLimit [
 ]
 
 { #category : #tests }
-XMLDFALimitsTests >> testDFAStateTransitionLimit [
+XMLDFALimitsTest >> testDFAStateTransitionLimit [
 	| dfaState elementName |
 
 	dfaState :=
