@@ -87,12 +87,13 @@ XMLFileHandleTest >> tempFileManager [
 
 { #category : #tests }
 XMLFileHandleTest >> testAsXMLFileHandle [
-	XMLFileHandle hasSupportedImplementation
-		ifTrue: [| fileHandle |
-			fileHandle := '' asXMLFileHandle.
-			self
-				assert: fileHandle class == XMLFileHandle implementation;
-				assert: fileHandle asXMLFileHandle == fileHandle]
+
+	| fileHandle |
+	XMLFileHandle hasSupportedImplementation ifFalse: [ ^ self ].
+	fileHandle := '' asXMLFileHandle.
+	self
+		assert: fileHandle class identicalTo: XMLFileHandle implementation;
+		assert: fileHandle asXMLFileHandle identicalTo: fileHandle
 ]
 
 { #category : #tests }
@@ -115,23 +116,18 @@ XMLFileHandleTest >> testContents [
 
 { #category : #tests }
 XMLFileHandleTest >> testDelete [
-	self
-		skipOrReturnWith: [^ self]
-		ifSkippable: #testDelete.
 
-	self tempFileManager newFileHandleDo: [:fileHandle |
-		self
-			should: [fileHandle delete]
-			raise: XMLFileException.
+	self skipOrReturnWith: [ ^ self ] ifSkippable: #testDelete.
+
+	self tempFileManager newFileHandleDo: [ :fileHandle |
+		self should: [ fileHandle delete ] raise: XMLFileException.
 
 		self tempFileManager createFileForHandle: fileHandle.
 		self
-			assert: fileHandle delete == fileHandle;
+			assert: fileHandle delete identicalTo: fileHandle;
 			deny: fileHandle exists.
 
-		self
-			should: [fileHandle delete]
-			raise: XMLFileException].
+		self should: [ fileHandle delete ] raise: XMLFileException ]
 ]
 
 { #category : #tests }
@@ -151,25 +147,27 @@ XMLFileHandleTest >> testExists [
 
 { #category : #tests }
 XMLFileHandleTest >> testExtension [
-	XMLFileHandle hasSupportedImplementation
-		ifFalse: [^ self].
 
+	XMLFileHandle hasSupportedImplementation ifFalse: [ ^ self ].
 	self
-		assert: '' asXMLFileHandle extension = '';
-		assert: 'one' asXMLFileHandle extension = '';
-		assert: 'one.two' asXMLFileHandle extension = 'two';
-		assert: 'one.two.three' asXMLFileHandle extension = 'two.three';
-		assert: '/' asXMLFileHandle extension = '';
-		assert: '/one' asXMLFileHandle extension = '';
-		assert: '/one.two' asXMLFileHandle extension = 'two';
-		assert: '/one.two.three' asXMLFileHandle extension = 'two.three';
-		assert: 'one/' asXMLFileHandle extension = '';
-		assert: 'one/two' asXMLFileHandle extension = '';
-		assert: 'one/two.three' asXMLFileHandle extension = 'three';
-		assert: 'one/two.three.four' asXMLFileHandle extension = 'three.four';
-		assert: 'one/two/' asXMLFileHandle extension = '';
-		assert: 'one/two.three/' asXMLFileHandle extension = '';
-		assert: 'one/two.three.four/' asXMLFileHandle extension = ''.
+		assert: '' asXMLFileHandle extension equals: '';
+		assert: 'one' asXMLFileHandle extension equals: '';
+		assert: 'one.two' asXMLFileHandle extension equals: 'two';
+		assert: 'one.two.three' asXMLFileHandle extension
+		equals: 'two.three';
+		assert: '/' asXMLFileHandle extension equals: '';
+		assert: '/one' asXMLFileHandle extension equals: '';
+		assert: '/one.two' asXMLFileHandle extension equals: 'two';
+		assert: '/one.two.three' asXMLFileHandle extension
+		equals: 'two.three';
+		assert: 'one/' asXMLFileHandle extension equals: '';
+		assert: 'one/two' asXMLFileHandle extension equals: '';
+		assert: 'one/two.three' asXMLFileHandle extension equals: 'three';
+		assert: 'one/two.three.four' asXMLFileHandle extension
+		equals: 'three.four';
+		assert: 'one/two/' asXMLFileHandle extension equals: '';
+		assert: 'one/two.three/' asXMLFileHandle extension equals: '';
+		assert: 'one/two.three.four/' asXMLFileHandle extension equals: ''
 ]
 
 { #category : #tests }
@@ -273,12 +271,13 @@ XMLFileHandleTest >> testIsXMLDocumentFile [
 
 { #category : #tests }
 XMLFileHandleTest >> testPath [
-	XMLFileHandle hasSupportedImplementation
-		ifTrue: [| fileHandle |
-			fileHandle := XMLFileHandle implementation path: 'test'.
-			self
-				assert: fileHandle class == XMLFileHandle implementation;
-				assert: fileHandle path = 'test']
+
+	| fileHandle |
+	XMLFileHandle hasSupportedImplementation ifFalse: [ ^ self ].
+	fileHandle := XMLFileHandle implementation path: 'test'.
+	self
+		assert: fileHandle class identicalTo: XMLFileHandle implementation;
+		assert: fileHandle path equals: 'test'
 ]
 
 { #category : #tests }

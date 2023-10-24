@@ -78,28 +78,32 @@ XMLEncodingWriteStreamAdapterTest >> streamConverterClass [
 
 { #category : #tests }
 XMLEncodingWriteStreamAdapterTest >> testHasDefaultStreamConverter [
-	| adapter |
 
+	| adapter |
 	adapter := self newStreamAdapter.
-	self assert:
-		adapter hasDefaultStreamConverter = adapter streamConverter isDefault.
+	self
+		assert: adapter hasDefaultStreamConverter
+		equals: adapter streamConverter isDefault
 ]
 
 { #category : #tests }
 XMLEncodingWriteStreamAdapterTest >> testHasImplicitStreamConverter [
-	| adapter |
 
+	| adapter |
 	adapter := self newStreamAdapter.
-	self assert:
-		adapter hasImplicitStreamConverter = adapter streamConverter isImplicit.
+	self
+		assert: adapter hasImplicitStreamConverter
+		equals: adapter streamConverter isImplicit
 ]
 
 { #category : #tests }
 XMLEncodingWriteStreamAdapterTest >> testHasNullStreamConverter [
-	| adapter |
 
+	| adapter |
 	adapter := self newStreamAdapter.
-	self assert: adapter hasNullStreamConverter = adapter streamConverter isNull.
+	self
+		assert: adapter hasNullStreamConverter
+		equals: adapter streamConverter isNull
 ]
 
 { #category : #tests }
@@ -118,43 +122,44 @@ XMLEncodingWriteStreamAdapterTest >> testIsXMLConvertingStreamAdapter [
 
 { #category : #tests }
 XMLEncodingWriteStreamAdapterTest >> testNextPutByteOrderMark [
-	| adapter |
 
+	| adapter |
 	adapter := self newStreamAdapter.
 	self
-		assert: adapter nextPutByteOrderMark == adapter;
-		assert: adapter contents = self contentsFromByteOrderMark.
+		assert: adapter nextPutByteOrderMark identicalTo: adapter;
+		assert: adapter contents equals: self contentsFromByteOrderMark
 ]
 
 { #category : #tests }
 XMLEncodingWriteStreamAdapterTest >> testOn [
-	| stream adapter |
 
+	| stream adapter |
 	stream := self newStream.
 	adapter := self newStreamAdapterOn: stream.
 	self
-		assert: adapter class == self streamAdapterClass;
-		assert:
-			(self expectsBinaryOutput
-				ifTrue: [adapter stream == stream]
-				ifFalse: [adapter stream stream == stream]).
+		assert: adapter class identicalTo: self streamAdapterClass;
+		assert: (self expectsBinaryOutput
+				 ifTrue: [ adapter stream == stream ]
+				 ifFalse: [ adapter stream stream == stream ])
 ]
 
 { #category : #tests }
 XMLEncodingWriteStreamAdapterTest >> testStreamConverter [
-	| adapter newConverter |
 
+	| adapter newConverter |
 	adapter := self newStreamAdapter.
 	self
 		deny: adapter streamConverter isNil;
-		assert: adapter streamConverter class == self streamConverterClass.
+		assert: adapter streamConverter class
+		identicalTo: self streamConverterClass.
 
 	newConverter := self streamConverterClass new.
 	self
-		assert: (adapter streamConverter: newConverter) == adapter;
-		assert: adapter streamConverter == newConverter.
-
+		assert: (adapter streamConverter: newConverter)
+		identicalTo: adapter;
+		assert: adapter streamConverter identicalTo: newConverter.
 	self
-		assert: (adapter streamConverter: nil) == adapter;
-		assert: adapter streamConverter class == XMLNullStreamConverter.
+		assert: (adapter streamConverter: nil) identicalTo: adapter;
+		assert: adapter streamConverter class
+		identicalTo: XMLNullStreamConverter
 ]

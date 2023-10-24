@@ -67,24 +67,25 @@ XMLLimitedReadStreamAdapterTest >> testAtLimitedEnd [
 
 { #category : #tests }
 XMLLimitedReadStreamAdapterTest >> testLimit [
-	| adapter |
 
+	| adapter |
 	adapter := self newStreamAdapter.
 	self
-		assert: adapter limit = self inputCollectionLimit;
-		assert: (adapter limit: self inputCollectionLimit + 1) == adapter;
-		assert: adapter limit = (self inputCollectionLimit + 1).
+		assert: adapter limit equals: self inputCollectionLimit;
+		assert: (adapter limit: self inputCollectionLimit + 1)
+		identicalTo: adapter;
+		assert: adapter limit equals: self inputCollectionLimit + 1
 ]
 
 { #category : #tests }
 XMLLimitedReadStreamAdapterTest >> testReset [
-	| adapter |
 
+	| adapter |
 	super testReset.
 
 	adapter := self newStreamAdapter.
 	adapter
 		upToEnd;
 		reset.
-	self assert: adapter limit = self inputCollectionLimit.
+	self assert: adapter limit equals: self inputCollectionLimit
 ]

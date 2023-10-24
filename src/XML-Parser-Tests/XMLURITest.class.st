@@ -377,54 +377,55 @@ XMLURITest >> subDelimiterCharacters [
 
 { #category : #tests }
 XMLURITest >> testAsRetrievableResource [
-	(XMLFileHandle hasSupportedImplementation
-		and: [XMLHTTPRequest hasSupportedImplementation])
-		ifFalse: [^ self].
 
-	self allURIStringsDo: [:each | | uri retrievableResource |
+	(XMLFileHandle hasSupportedImplementation and: [
+		 XMLHTTPRequest hasSupportedImplementation ]) ifFalse: [ ^ self ].
+
+	self allURIStringsDo: [ :each |
+		| uri retrievableResource |
 		uri := each asXMLURI.
 		"other types of URIs may not be retrievable"
-		(uri isLocal
-			or: [uri isHTTP])
-			ifTrue: [
-				retrievableResource := uri asRetrievableResource.
-				uri isLocal
-					ifTrue: [
-						self assert:
-							retrievableResource class ==
-								XMLFileHandle implementation.
-						self assert: retrievableResource path = uri path]
-					ifFalse: [
-						self assert:
-							retrievableResource class ==
-								XMLHTTPRequest implementation.
-						self assert: retrievableResource url = uri printString]]].
+		(uri isLocal or: [ uri isHTTP ]) ifTrue: [
+			retrievableResource := uri asRetrievableResource.
+			uri isLocal
+				ifTrue: [
+					self
+						assert: retrievableResource class
+						identicalTo: XMLFileHandle implementation.
+					self assert: retrievableResource path equals: uri path ]
+				ifFalse: [
+					self
+						assert: retrievableResource class
+						identicalTo: XMLHTTPRequest implementation.
+					self assert: retrievableResource url equals: uri printString ] ] ]
 ]
 
 { #category : #tests }
 XMLURITest >> testAsString [
-	self allURIStringsDo: [:each | | uri |
+
+	self allURIStringsDo: [ :each |
+		| uri |
 		uri := each asXMLURI.
-		self assert: uri asString = uri printString]
+		self assert: uri asString equals: uri printString ]
 ]
 
 { #category : #tests }
 XMLURITest >> testAsXMLFileHandle [
-	XMLFileHandle hasSupportedImplementation
-		ifFalse: [^ self].
 
-	self allURIStringsDo: [:each | | uri fileHandle |
+	XMLFileHandle hasSupportedImplementation ifFalse: [ ^ self ].
+
+	self allURIStringsDo: [ :each |
+		| uri fileHandle |
 		uri := each asXMLURI.
 		uri isLocal
 			ifTrue: [
 				fileHandle := uri asXMLFileHandle.
 				self
-					assert: fileHandle class == XMLFileHandle implementation;
-					assert: fileHandle path = uri path]
+					assert: fileHandle class
+					identicalTo: XMLFileHandle implementation;
+					assert: fileHandle path equals: uri path ]
 			ifFalse: [
-				self
-					should: [uri asXMLFileHandle]
-					raise: XMLFileException]].
+			self should: [ uri asXMLFileHandle ] raise: XMLFileException ] ]
 ]
 
 { #category : #tests }
@@ -452,625 +453,695 @@ XMLURITest >> testAsXMLHTTPRequest [
 
 { #category : #tests }
 XMLURITest >> testAsXMLURI [
-	self allURIStringsDo: [:each | | uri |
+
+	self allURIStringsDo: [ :each |
+		| uri |
 		uri := XMLURI fromString: each.
 		self
-			assert: uri class == XMLURI;
-			assert: uri uriString = each;
-			assert: uri asXMLURI == uri]
+			assert: uri class identicalTo: XMLURI;
+			assert: uri uriString equals: each;
+			assert: uri asXMLURI identicalTo: uri ]
 ]
 
 { #category : #tests }
 XMLURITest >> testCombining [
-	self allURIStringsDo: [:uriString | | uri |
+
+	self allURIStringsDo: [ :uriString |
+		| uri |
 		uri := uriString asXMLURI.
-		self allURIStringsDo: [:uriStringToCombineWith | | uriToCombineWith combinedURI |
+		self allURIStringsDo: [ :uriStringToCombineWith |
+			| uriToCombineWith combinedURI |
 			uriToCombineWith := uriStringToCombineWith asXMLURI.
 			combinedURI := uri / uriToCombineWith.
 			uriToCombineWith isRelative
 				ifTrue: [
-					self assert: combinedURI scheme = uri scheme.
+					self assert: combinedURI scheme equals: uri scheme.
 					uriToCombineWith hasUserInfo
 						ifTrue: [
-							self
-								assertURI: combinedURI
-								atUserInfoEquals: uriToCombineWith]
+						self assertURI: combinedURI atUserInfoEquals: uriToCombineWith ]
 						ifFalse: [
-							self assert: combinedURI userInfo = uri userInfo.
+							self assert: combinedURI userInfo equals: uri userInfo.
 							uriToCombineWith hasHost
 								ifTrue: [
-									self
-										assertURI: combinedURI
-										atHostEquals: uriToCombineWith]
+								self assertURI: combinedURI atHostEquals: uriToCombineWith ]
 								ifFalse: [
-									self assert: combinedURI host = uri host.
+									self assert: combinedURI host equals: uri host.
 									uriToCombineWith hasPort
 										ifTrue: [
-											self
-												assertURI: combinedURI
-												atPortEquals: uriToCombineWith]
+										self assertURI: combinedURI atPortEquals: uriToCombineWith ]
 										ifFalse: [
-											self assert: combinedURI port = uri port.
+											self assert: combinedURI port equals: uri port.
 											uriToCombineWith hasPath
 												ifTrue: [
 													uriToCombineWith hasAbsolutePath
 														ifTrue: [
-															self
-																assertURI: combinedURI
-																atPathEquals: uriToCombineWith]
-														ifFalse: [self deny: combinedURI = uri path]]
+														self
+															assertURI: combinedURI
+															atPathEquals: uriToCombineWith ]
+														ifFalse: [ self deny: combinedURI equals: uri path ] ]
 												ifFalse: [
-													self assert: combinedURI pathSegments = uri pathSegments.
+													self
+														assert: combinedURI pathSegments
+														equals: uri pathSegments.
 													uriToCombineWith hasQuery
 														ifTrue: [
-															self
-																assertURI: combinedURI
-																atQueryEquals: uriToCombineWith]
+														self
+															assertURI: combinedURI
+															atQueryEquals: uriToCombineWith ]
 														ifFalse: [
-															self assert: combinedURI query = uri query.
+															self assert: combinedURI query equals: uri query.
 															uriToCombineWith hasFragment
 																ifTrue: [
-																	self assert:
-																		combinedURI fragment =
-																			uriToCombineWith fragment]
+																self
+																	assert: combinedURI fragment
+																	equals: uriToCombineWith fragment ]
 																ifFalse: [
-																	self assert:
-																		combinedURI fragment =
-																			uri fragment]]]]]].
+																self assert: combinedURI fragment equals: uri fragment ] ] ] ] ] ].
 					uriToCombineWith isEmpty
-						ifTrue: [self assert: combinedURI == uri]
-						ifFalse: [self deny: combinedURI == uri]]
-				ifFalse: [
-					"if the arg was an absolute URI, it should have been returned"
-					self assert: combinedURI == uriToCombineWith].
+						ifTrue: [ self assert: combinedURI identicalTo: uri ]
+						ifFalse: [ self deny: combinedURI identicalTo: uri ] ]
+				ifFalse: [ "if the arg was an absolute URI, it should have been returned"
+					self assert: combinedURI identicalTo: uriToCombineWith ].
 			"receiver and arg should be unchanged by combining"
 			self
-				assert: uri = uriString asXMLURI;
-				assert: uriToCombineWith = uriStringToCombineWith asXMLURI]]
+				assert: uri equals: uriString asXMLURI;
+				assert: uriToCombineWith equals: uriStringToCombineWith asXMLURI ] ]
 ]
 
 { #category : #tests }
 XMLURITest >> testCombiningAbsoluteURIs [
-	| domainURI fullURI fileURI |
 
+	| domainURI fullURI fileURI |
 	domainURI := self domainURIString asXMLURI.
 	fullURI := self fullURIString asXMLURI.
 	fileURI := self fileURIString asXMLURI.
 	self
-		assert: domainURI / self fullURIString = fullURI;
-		assert: domainURI / self domainURIString = domainURI;
-		assert: domainURI / self fileURIString = fileURI;
-		assert: fullURI / self fullURIString = fullURI;
-		assert: fullURI / self domainURIString = domainURI;
-		assert: fullURI / self fileURIString = fileURI;
-		assert: fileURI / self fullURIString = fullURI;
-		assert: fileURI / self domainURIString = domainURI;
-		assert: fileURI / self fileURIString = fileURI.
+		assert: domainURI / self fullURIString equals: fullURI;
+		assert: domainURI / self domainURIString equals: domainURI;
+		assert: domainURI / self fileURIString equals: fileURI;
+		assert: fullURI / self fullURIString equals: fullURI;
+		assert: fullURI / self domainURIString equals: domainURI;
+		assert: fullURI / self fileURIString equals: fileURI;
+		assert: fileURI / self fullURIString equals: fullURI;
+		assert: fileURI / self domainURIString equals: domainURI;
+		assert: fileURI / self fileURIString equals: fileURI
 ]
 
 { #category : #tests }
 XMLURITest >> testCombiningDotPathURIs [
-	| relativePathURI absolutePathURI fullURI |
 
+	| relativePathURI absolutePathURI fullURI |
 	relativePathURI := self relative asXMLURI.
 	self
-		assert: relativePathURI / '.' = 'relative/' asXMLURI;
-		assert: relativePathURI / './.' = 'relative/' asXMLURI;
-		assert: relativePathURI / './path' = relativePathURI;
-		assert: relativePathURI / ('.' , self absolute) = self relativeAbsoluteCombined asXMLURI.
+		assert: relativePathURI / '.' equals: 'relative/' asXMLURI;
+		assert: relativePathURI / './.' equals: 'relative/' asXMLURI;
+		assert: relativePathURI / './path' equals: relativePathURI;
+		assert: relativePathURI / ('.' , self absolute)
+		equals: self relativeAbsoluteCombined asXMLURI.
 
 	absolutePathURI := self absolute asXMLURI.
 	self
-		assert: absolutePathURI / '.' = '/absolute/' asXMLURI;
-		assert: absolutePathURI / './.' = '/absolute/' asXMLURI;
-		assert: absolutePathURI / './path' = absolutePathURI;
-		assert: absolutePathURI / ('./' , self relative) = self absoluteRelativeCombined asXMLURI.
+		assert: absolutePathURI / '.' equals: '/absolute/' asXMLURI;
+		assert: absolutePathURI / './.' equals: '/absolute/' asXMLURI;
+		assert: absolutePathURI / './path' equals: absolutePathURI;
+		assert: absolutePathURI / ('./' , self relative)
+		equals: self absoluteRelativeCombined asXMLURI.
 
 	fullURI := self fullURIString asXMLURI.
 	self
-		assert: fullURI / '.' = (self domainURIString , '/absolute/') asXMLURI;
-		assert: fullURI / './.' = (self domainURIString , '/absolute/') asXMLURI;
-		assert: fullURI / './path' = (self domainURIString , self absolute) asXMLURI;
-		assert: fullURI / ('./' , self relative) = (self domainURIString , self absoluteRelativeCombined) asXMLURI.
+		assert: fullURI / '.'
+		equals: (self domainURIString , '/absolute/') asXMLURI;
+		assert: fullURI / './.'
+		equals: (self domainURIString , '/absolute/') asXMLURI;
+		assert: fullURI / './path'
+		equals: (self domainURIString , self absolute) asXMLURI;
+		assert: fullURI / ('./' , self relative)
+		equals:
+			(self domainURIString , self absoluteRelativeCombined) asXMLURI
 ]
 
 { #category : #tests }
 XMLURITest >> testCombiningDoubleDotPathURIs [
-	| relativePathURI absolutePathURI fullURI |
 
+	| relativePathURI absolutePathURI fullURI |
 	relativePathURI := self relative asXMLURI.
 	self
 		assert: (relativePathURI / '..') isEmpty;
 		assert: (relativePathURI / '../..') isEmpty;
-		assert: relativePathURI / ('..' , self absolute) = 'absolute/path' asXMLURI;
-		assert: relativePathURI / ('../..' , self absolute) = 'absolute/path' asXMLURI;
-		assert: relativePathURI / ('../..' , self absolute , '/..') = 'absolute/' asXMLURI;
-		assert: (relativePathURI / ('../..' , self absolute , '/../..')) isEmpty.
+		assert: relativePathURI / ('..' , self absolute)
+		equals: 'absolute/path' asXMLURI;
+		assert: relativePathURI / ('../..' , self absolute)
+		equals: 'absolute/path' asXMLURI;
+		assert: relativePathURI / ('../..' , self absolute , '/..')
+		equals: 'absolute/' asXMLURI;
+		assert:
+			(relativePathURI / ('../..' , self absolute , '/../..')) isEmpty.
 
 	absolutePathURI := self absolute asXMLURI.
 	self
 		assert: (absolutePathURI / '..') hasRootPath;
 		assert: (absolutePathURI / '../..') isEmpty;
-		assert: absolutePathURI / ('..' , self absolute) = absolutePathURI;
-		assert: absolutePathURI / ('../..' , self absolute) = 'absolute/path' asXMLURI;
-		assert: absolutePathURI / ('../..' , self absolute , '/..') = 'absolute/' asXMLURI;
-		assert: (absolutePathURI / ('../..' , self absolute , '/../..')) isEmpty.
+		assert: absolutePathURI / ('..' , self absolute)
+		equals: absolutePathURI;
+		assert: absolutePathURI / ('../..' , self absolute)
+		equals: 'absolute/path' asXMLURI;
+		assert: absolutePathURI / ('../..' , self absolute , '/..')
+		equals: 'absolute/' asXMLURI;
+		assert:
+			(absolutePathURI / ('../..' , self absolute , '/../..')) isEmpty.
 
 	fullURI := self fullURIString asXMLURI.
 	self
 		assert: (fullURI / '..') hasRootPath;
 		deny: (fullURI / '../..') hasPath;
-		assert: fullURI / ('..' , self absolute) = (self domainURIString , self absolute) asXMLURI;
-		assert: fullURI / ('../..' , self absolute) = (self domainURIString , self absolute) asXMLURI;
-		assert: fullURI / ('../..' , self absolute , '/..') = (self domainURIString , '/absolute/') asXMLURI;
-		assert: fullURI / ('../..' , self absolute , '/../') = (self domainURIString , '/absolute/') asXMLURI.
+		assert: fullURI / ('..' , self absolute)
+		equals: (self domainURIString , self absolute) asXMLURI;
+		assert: fullURI / ('../..' , self absolute)
+		equals: (self domainURIString , self absolute) asXMLURI;
+		assert: fullURI / ('../..' , self absolute , '/..')
+		equals: (self domainURIString , '/absolute/') asXMLURI;
+		assert: fullURI / ('../..' , self absolute , '/../')
+		equals: (self domainURIString , '/absolute/') asXMLURI
 ]
 
 { #category : #tests }
 XMLURITest >> testCombiningRelativeURIs [
-	| domainURI domainURIWithPort absolutePathURI absoluteDirPathURI |
 
+	| domainURI domainURIWithPort absolutePathURI absoluteDirPathURI |
 	domainURI := self domainURIString asXMLURI.
 	domainURIWithPort := self domainURIWithPortString asXMLURI.
 	absolutePathURI := (self domainURIString , self absolute) asXMLURI.
-	absoluteDirPathURI := (self domainURIString , self absoluteDir) asXMLURI.
+	absoluteDirPathURI := (self domainURIString , self absoluteDir)
+		                      asXMLURI.
 	self
-		assert: domainURI / self relative = (self domainURIString , '/' , self relative) asXMLURI;
-		assert: domainURI / self absolute = (self domainURIString , self absolute) asXMLURI;
-		assert: domainURI / self absoluteDir = (self domainURIString , self absoluteDir) asXMLURI;
-		assert: domainURIWithPort / self relative = (self domainURIWithPortString , '/' , self relative) asXMLURI;
-		assert: domainURIWithPort / self absolute = (self domainURIWithPortString , self absolute) asXMLURI;
-		assert: domainURIWithPort / self absoluteDir = (self domainURIWithPortString , self absoluteDir) asXMLURI;
-		assert: absolutePathURI / self relative = (self domainURIString , self absoluteRelativeCombined) asXMLURI;
-		assert: absoluteDirPathURI / self relative = (self domainURIString , self absoluteDirRelativeCombined) asXMLURI;
-		assert: absolutePathURI / self queryURIString = (self domainURIString , self absolute , self queryURIString) asXMLURI;
-		assert: absolutePathURI / self fragmentURIString = (self domainURIString , self absolute , self fragmentURIString) asXMLURI;
-		assert: domainURI / self schemelessURIString = self fullURIString asXMLURI.
+		assert: domainURI / self relative
+		equals: (self domainURIString , '/' , self relative) asXMLURI;
+		assert: domainURI / self absolute
+		equals: (self domainURIString , self absolute) asXMLURI;
+		assert: domainURI / self absoluteDir
+		equals: (self domainURIString , self absoluteDir) asXMLURI;
+		assert: domainURIWithPort / self relative
+		equals:
+			(self domainURIWithPortString , '/' , self relative) asXMLURI;
+		assert: domainURIWithPort / self absolute
+		equals: (self domainURIWithPortString , self absolute) asXMLURI;
+		assert: domainURIWithPort / self absoluteDir
+		equals: (self domainURIWithPortString , self absoluteDir) asXMLURI;
+		assert: absolutePathURI / self relative
+		equals:
+			(self domainURIString , self absoluteRelativeCombined) asXMLURI;
+		assert: absoluteDirPathURI / self relative
+		equals:
+			(self domainURIString , self absoluteDirRelativeCombined) asXMLURI;
+		assert: absolutePathURI / self queryURIString
+		equals:
+			(self domainURIString , self absolute , self queryURIString)
+				asXMLURI;
+		assert: absolutePathURI / self fragmentURIString
+		equals:
+			(self domainURIString , self absolute , self fragmentURIString)
+				asXMLURI;
+		assert: domainURI / self schemelessURIString
+		equals: self fullURIString asXMLURI
 ]
 
 { #category : #tests }
 XMLURITest >> testCopy [
-	self allURIStringsDo: [:each | | uri copy |
+
+	self allURIStringsDo: [ :each |
+		| uri copy |
 		uri := each asXMLURI.
 		copy := uri copy.
 		self
-			assert: uri uriString = each;
+			assert: uri uriString equals: each;
 			assert: copy uriString isNil;
-			assert: uri = each asXMLURI;
-			deny: uri == copy;
-			assert: uri = copy;
-			assert: uri scheme = copy scheme;
-			assert: uri hasAuthorityPrefix = copy hasAuthorityPrefix;
-			assert: uri userInfo = copy userInfo;
-			assert: uri host = copy host;
-			assert: uri port = copy port;
-			assert: uri pathSegments = copy pathSegments;
-			assert: uri query = copy query;
-			assert: uri fragment = copy fragment]
+			assert: uri equals: each asXMLURI;
+			deny: uri identicalTo: copy;
+			assert: uri equals: copy;
+			assert: uri scheme equals: copy scheme;
+			assert: uri hasAuthorityPrefix equals: copy hasAuthorityPrefix;
+			assert: uri userInfo equals: copy userInfo;
+			assert: uri host equals: copy host;
+			assert: uri port equals: copy port;
+			assert: uri pathSegments equals: copy pathSegments;
+			assert: uri query equals: copy query;
+			assert: uri fragment equals: copy fragment ]
 ]
 
 { #category : #tests }
 XMLURITest >> testCopyWithFragment [
-	self allURIStringsDo: [:each | | uri oldFragment newFragment copy |
+
+	self allURIStringsDo: [ :each |
+		| uri oldFragment newFragment copy |
 		uri := each asXMLURI.
 		oldFragment := uri fragment.
-		newFragment := oldFragment, 'new'.
+		newFragment := oldFragment , 'new'.
 		copy := uri copyWithFragment: newFragment.
 		self
-			assert: uri = each asXMLURI;
-			assert: uri uriString = each;
+			assert: uri equals: each asXMLURI;
+			assert: uri uriString equals: each;
 			assert: copy uriString isNil;
-			deny: uri == copy;
-			deny: uri = copy;
-			assert: uri scheme = copy scheme;
-			assert: uri hasAuthorityPrefix = copy hasAuthorityPrefix;
-			assert: uri userInfo = copy userInfo;
-			assert: uri host = copy host;
-			assert: uri port = copy port;
-			assert: uri pathSegments = copy pathSegments;
-			assert: uri query = copy query;
-			deny: uri fragment = copy fragment;
-			assert: uri fragment = oldFragment;
-			assert: copy fragment = newFragment]
+			deny: uri identicalTo: copy;
+			deny: uri equals: copy;
+			assert: uri scheme equals: copy scheme;
+			assert: uri hasAuthorityPrefix equals: copy hasAuthorityPrefix;
+			assert: uri userInfo equals: copy userInfo;
+			assert: uri host equals: copy host;
+			assert: uri port equals: copy port;
+			assert: uri pathSegments equals: copy pathSegments;
+			assert: uri query equals: copy query;
+			deny: uri fragment equals: copy fragment;
+			assert: uri fragment equals: oldFragment;
+			assert: copy fragment equals: newFragment ]
 ]
 
 { #category : #tests }
 XMLURITest >> testCopyWithHost [
-	self allURIStringsDo: [:each | | uri oldHost newHost copy |
+
+	self allURIStringsDo: [ :each |
+		| uri oldHost newHost copy |
 		uri := each asXMLURI.
 		oldHost := uri host.
-		newHost := oldHost, 'new'.
+		newHost := oldHost , 'new'.
 		copy := uri copyWithHost: newHost.
 		self
-			assert: uri = each asXMLURI;
-			assert: uri uriString = each;
+			assert: uri equals: each asXMLURI;
+			assert: uri uriString equals: each;
 			assert: copy uriString isNil;
-			deny: uri == copy;
-			deny: uri = copy;
-			assert: uri scheme = copy scheme;
-			assert: uri hasAuthorityPrefix = copy hasAuthorityPrefix;
-			assert: uri userInfo = copy userInfo;
-			deny: uri host = copy host;
-			assert: uri host = oldHost;
-			assert: copy host = newHost;
-			assert: uri port = copy port;
-			assert: uri pathSegments = copy pathSegments;
-			assert: uri query = copy query;
-			assert: uri fragment = copy fragment]
+			deny: uri identicalTo: copy;
+			deny: uri equals: copy;
+			assert: uri scheme equals: copy scheme;
+			assert: uri hasAuthorityPrefix equals: copy hasAuthorityPrefix;
+			assert: uri userInfo equals: copy userInfo;
+			deny: uri host equals: copy host;
+			assert: uri host equals: oldHost;
+			assert: copy host equals: newHost;
+			assert: uri port equals: copy port;
+			assert: uri pathSegments equals: copy pathSegments;
+			assert: uri query equals: copy query;
+			assert: uri fragment equals: copy fragment ]
 ]
 
 { #category : #tests }
 XMLURITest >> testCopyWithPath [
-	self allURIStringsDo: [:each | | uri oldPath newPath copy |
+
+	self allURIStringsDo: [ :each |
+		| uri oldPath newPath copy |
 		uri := each asXMLURI.
 		oldPath := uri path.
-		newPath := oldPath, '/new'.
+		newPath := oldPath , '/new'.
 		copy := uri copyWithPath: newPath.
 		self
-			assert: uri = each asXMLURI;
-			assert: uri uriString = each;
+			assert: uri equals: each asXMLURI;
+			assert: uri uriString equals: each;
 			assert: copy uriString isNil;
-			deny: uri == copy;
-			deny: uri = copy;
-			assert: uri scheme = copy scheme;
-			assert: uri hasAuthorityPrefix = copy hasAuthorityPrefix;
-			assert: uri userInfo = copy userInfo;
-			assert: uri host = copy host;
-			assert: uri port = copy port;
-			deny: uri path = copy path;
-			assert: uri path = oldPath;
-			assert: copy path = newPath;
-			assert: uri query = copy query;
-			assert: uri fragment = copy fragment]
+			deny: uri identicalTo: copy;
+			deny: uri equals: copy;
+			assert: uri scheme equals: copy scheme;
+			assert: uri hasAuthorityPrefix equals: copy hasAuthorityPrefix;
+			assert: uri userInfo equals: copy userInfo;
+			assert: uri host equals: copy host;
+			assert: uri port equals: copy port;
+			deny: uri path equals: copy path;
+			assert: uri path equals: oldPath;
+			assert: copy path equals: newPath;
+			assert: uri query equals: copy query;
+			assert: uri fragment equals: copy fragment ]
 ]
 
 { #category : #tests }
 XMLURITest >> testCopyWithPathSegments [
-	self allURIStringsDo: [:each | | uri oldPathSegments oldRawPathSegments newPathSegments newRawPathSegments copy |
+
+	self allURIStringsDo: [ :each |
+		| uri oldPathSegments oldRawPathSegments newPathSegments newRawPathSegments copy |
 		uri := each asXMLURI.
 		oldPathSegments := uri pathSegments.
 		oldRawPathSegments := uri rawPathSegments.
-		newPathSegments := oldPathSegments copyWith: 'new', self reservedCharacters.
-		newRawPathSegments :=
-			oldRawPathSegments copyWith: 'new', self percentEncodedReservedCharacters.
+		newPathSegments := oldPathSegments copyWith:
+			                   'new' , self reservedCharacters.
+		newRawPathSegments := oldRawPathSegments copyWith:
+			                      'new' , self percentEncodedReservedCharacters.
 		copy := uri copyWithPathSegments: newPathSegments.
 		self
-			assert: uri = each asXMLURI;
-			assert: uri uriString = each;
+			assert: uri equals: each asXMLURI;
+			assert: uri uriString equals: each;
 			assert: copy uriString isNil;
-			deny: uri == copy;
-			deny: uri = copy;
-			assert: uri scheme = copy scheme;
-			assert: uri hasAuthorityPrefix = copy hasAuthorityPrefix;
-			assert: uri userInfo = copy userInfo;
-			assert: uri host = copy host;
-			assert: uri port = copy port;
-			deny: uri pathSegments = copy pathSegments;
-			deny: uri rawPathSegments = copy rawPathSegments;
-			assert: uri pathSegments = oldPathSegments;
-			assert: uri rawPathSegments = oldRawPathSegments;
-			assert: copy pathSegments = newPathSegments;
-			assert: copy rawPathSegments = newRawPathSegments;
-			assert: uri query = copy query;
-			assert: uri fragment = copy fragment]
+			deny: uri identicalTo: copy;
+			deny: uri equals: copy;
+			assert: uri scheme equals: copy scheme;
+			assert: uri hasAuthorityPrefix equals: copy hasAuthorityPrefix;
+			assert: uri userInfo equals: copy userInfo;
+			assert: uri host equals: copy host;
+			assert: uri port equals: copy port;
+			deny: uri pathSegments equals: copy pathSegments;
+			deny: uri rawPathSegments equals: copy rawPathSegments;
+			assert: uri pathSegments equals: oldPathSegments;
+			assert: uri rawPathSegments equals: oldRawPathSegments;
+			assert: copy pathSegments equals: newPathSegments;
+			assert: copy rawPathSegments equals: newRawPathSegments;
+			assert: uri query equals: copy query;
+			assert: uri fragment equals: copy fragment ]
 ]
 
 { #category : #tests }
 XMLURITest >> testCopyWithPort [
-	self allURIStringsDo: [:each | | uri oldPort newPort copy |
+
+	self allURIStringsDo: [ :each |
+		| uri oldPort newPort copy |
 		uri := each asXMLURI.
 		oldPort := uri port.
-		newPort := (oldPort ifNil: [0]) + 1.
+		newPort := (oldPort ifNil: [ 0 ]) + 1.
 		copy := uri copyWithPort: newPort.
 		self
-			assert: uri = each asXMLURI;
-			assert: uri uriString = each;
+			assert: uri equals: each asXMLURI;
+			assert: uri uriString equals: each;
 			assert: copy uriString isNil;
-			deny: uri == copy;
-			deny: uri = copy;
-			assert: uri scheme = copy scheme;
-			assert: uri hasAuthorityPrefix = copy hasAuthorityPrefix;
-			assert: uri userInfo = copy userInfo;
-			assert: uri host = copy host;
-			deny: uri port = copy port;
-			assert: uri port = oldPort;
-			assert: copy port = newPort;
-			assert: uri pathSegments = copy pathSegments;
-			assert: uri query = copy query;
-			assert: uri fragment = copy fragment]
+			deny: uri identicalTo: copy;
+			deny: uri equals: copy;
+			assert: uri scheme equals: copy scheme;
+			assert: uri hasAuthorityPrefix equals: copy hasAuthorityPrefix;
+			assert: uri userInfo equals: copy userInfo;
+			assert: uri host equals: copy host;
+			deny: uri port equals: copy port;
+			assert: uri port equals: oldPort;
+			assert: copy port equals: newPort;
+			assert: uri pathSegments equals: copy pathSegments;
+			assert: uri query equals: copy query;
+			assert: uri fragment equals: copy fragment ]
 ]
 
 { #category : #tests }
 XMLURITest >> testCopyWithQuery [
-	self allURIStringsDo: [:each |
+
+	self allURIStringsDo: [ :each |
 		| uri oldQuery oldRawQuery newQuery newRawQuery copy |
 		uri := each asXMLURI.
 		oldQuery := uri query.
 		oldRawQuery := uri rawQuery.
-		newQuery :=
-			oldQuery copyWith:
-				('newKey', self reservedCharacters) ->
-					('newValue', self reservedCharacters).
-		newRawQuery :=
-			oldRawQuery copyWith:
-				('newKey', self percentEncodedReservedCharacters) ->
-					('newValue', self percentEncodedReservedCharacters).
+		newQuery := oldQuery copyWith: 'newKey' , self reservedCharacters
+			            -> ('newValue' , self reservedCharacters).
+		newRawQuery := oldRawQuery copyWith:
+			               'newKey' , self percentEncodedReservedCharacters
+			               ->
+			               ('newValue' , self percentEncodedReservedCharacters).
 		copy := uri copyWithQuery: newQuery.
 		self
-			assert: uri = each asXMLURI;
-			assert: uri uriString = each;
+			assert: uri equals: each asXMLURI;
+			assert: uri uriString equals: each;
 			assert: copy uriString isNil;
-			deny: uri == copy;
-			deny: uri = copy;
-			assert: uri scheme = copy scheme;
-			assert: uri hasAuthorityPrefix = copy hasAuthorityPrefix;
-			assert: uri userInfo = copy userInfo;
-			assert: uri host = copy host;
-			assert: uri port = copy port;
-			assert: uri pathSegments = copy pathSegments;
-			deny: uri query = copy query;
-			deny: uri rawQuery = copy rawQuery;
-			assert: uri query = oldQuery;
-			assert: uri rawQuery = oldRawQuery;
-			assert: copy query = newQuery;
-			assert: copy rawQuery = newRawQuery;
-			assert: uri fragment = copy fragment]
+			deny: uri identicalTo: copy;
+			deny: uri equals: copy;
+			assert: uri scheme equals: copy scheme;
+			assert: uri hasAuthorityPrefix equals: copy hasAuthorityPrefix;
+			assert: uri userInfo equals: copy userInfo;
+			assert: uri host equals: copy host;
+			assert: uri port equals: copy port;
+			assert: uri pathSegments equals: copy pathSegments;
+			deny: uri query equals: copy query;
+			deny: uri rawQuery equals: copy rawQuery;
+			assert: uri query equals: oldQuery;
+			assert: uri rawQuery equals: oldRawQuery;
+			assert: copy query equals: newQuery;
+			assert: copy rawQuery equals: newRawQuery;
+			assert: uri fragment equals: copy fragment ]
 ]
 
 { #category : #tests }
 XMLURITest >> testCopyWithScheme [
-	self allURIStringsDo: [:each | | uri oldScheme oldHasAuthorityPrefix newScheme copy |
+
+	self allURIStringsDo: [ :each |
+		| uri oldScheme oldHasAuthorityPrefix newScheme copy |
 		uri := each asXMLURI.
 		oldScheme := uri scheme.
 		oldHasAuthorityPrefix := uri hasAuthorityPrefix.
-		newScheme := oldScheme, 'new'.
+		newScheme := oldScheme , 'new'.
 		copy := uri copyWithScheme: newScheme.
 		self
-			assert: uri = each asXMLURI;
-			assert: uri uriString = each;
+			assert: uri equals: each asXMLURI;
+			assert: uri uriString equals: each;
 			assert: copy uriString isNil;
-			deny: uri == copy;
-			deny: uri = copy;
-			deny: uri scheme = copy scheme;
-			assert: uri scheme = oldScheme;
-			assert: copy scheme = newScheme;
-			assert: uri hasAuthorityPrefix = oldHasAuthorityPrefix.
+			deny: uri identicalTo: copy;
+			deny: uri equals: copy;
+			deny: uri scheme equals: copy scheme;
+			assert: uri scheme equals: oldScheme;
+			assert: copy scheme equals: newScheme;
+			assert: uri hasAuthorityPrefix equals: oldHasAuthorityPrefix.
 		"If the original had no scheme and no // prefix, then the copy should
 		gain one. Otherwise it should only have one if the original did."
-		(oldScheme = ''
-			and: [oldHasAuthorityPrefix not])
-			ifTrue: [self assert: copy hasAuthorityPrefix]
-			ifFalse: [self assert: copy hasAuthorityPrefix = oldHasAuthorityPrefix].
+		(oldScheme = '' and: [ oldHasAuthorityPrefix not ])
+			ifTrue: [ self assert: copy hasAuthorityPrefix ]
+			ifFalse: [
+			self assert: copy hasAuthorityPrefix equals: oldHasAuthorityPrefix ].
 		self
-			assert: uri userInfo = copy userInfo;
-			assert: uri host = copy host;
-			assert: uri port = copy port;
-			assert: uri pathSegments = copy pathSegments;
-			assert: uri query = copy query;
-			assert: uri fragment = copy fragment]
+			assert: uri userInfo equals: copy userInfo;
+			assert: uri host equals: copy host;
+			assert: uri port equals: copy port;
+			assert: uri pathSegments equals: copy pathSegments;
+			assert: uri query equals: copy query;
+			assert: uri fragment equals: copy fragment ]
 ]
 
 { #category : #tests }
 XMLURITest >> testCopyWithUserInfo [
-	self allURIStringsDo: [:each | | uri oldUserInfo oldRawUserInfo newUserInfo newRawUserInfo copy |
+
+	self allURIStringsDo: [ :each |
+		| uri oldUserInfo oldRawUserInfo newUserInfo newRawUserInfo copy |
 		uri := each asXMLURI.
 		oldUserInfo := uri userInfo.
 		oldRawUserInfo := uri rawUserInfo.
-		newUserInfo := oldUserInfo, 'new', self reservedCharacters.
-		newRawUserInfo := oldUserInfo, 'new', self percentEncodedReservedCharacters.
+		newUserInfo := oldUserInfo , 'new' , self reservedCharacters.
+		newRawUserInfo := oldUserInfo , 'new'
+		                  , self percentEncodedReservedCharacters.
 		copy := uri copyWithUserInfo: newUserInfo.
 		self
-			assert: uri = each asXMLURI;
-			assert: uri uriString = each;
+			assert: uri equals: each asXMLURI;
+			assert: uri uriString equals: each;
 			assert: copy uriString isNil;
-			deny: uri == copy;
-			deny: uri = copy;
-			assert: uri scheme = copy scheme;
-			assert: uri hasAuthorityPrefix = copy hasAuthorityPrefix;
-			deny: uri userInfo = copy userInfo;
-			deny: uri rawUserInfo = copy rawUserInfo;
-			assert: uri userInfo = oldUserInfo;
-			assert: uri rawUserInfo = oldRawUserInfo;
-			assert: copy userInfo = newUserInfo;
-			assert: copy rawUserInfo = newRawUserInfo;
-			assert: uri host = copy host;
-			assert: uri port = copy port;
-			assert: uri pathSegments = copy pathSegments;
-			assert: uri query = copy query;
-			assert: uri fragment = copy fragment]
+			deny: uri identicalTo: copy;
+			deny: uri equals: copy;
+			assert: uri scheme equals: copy scheme;
+			assert: uri hasAuthorityPrefix equals: copy hasAuthorityPrefix;
+			deny: uri userInfo equals: copy userInfo;
+			deny: uri rawUserInfo equals: copy rawUserInfo;
+			assert: uri userInfo equals: oldUserInfo;
+			assert: uri rawUserInfo equals: oldRawUserInfo;
+			assert: copy userInfo equals: newUserInfo;
+			assert: copy rawUserInfo equals: newRawUserInfo;
+			assert: uri host equals: copy host;
+			assert: uri port equals: copy port;
+			assert: uri pathSegments equals: copy pathSegments;
+			assert: uri query equals: copy query;
+			assert: uri fragment equals: copy fragment ]
 ]
 
 { #category : #tests }
 XMLURITest >> testDefaultAuthorityPrefixPrinting [
-	| uri copy |
 
+	| uri copy |
 	uri := '' asXMLURI.
 
 	copy := uri copyWithUserInfo: 'userInfo'.
-	self assert: copy printString = ('//userInfo@').
+	self assert: copy printString equals: '//userInfo@'.
 
 	copy := uri copyWithHost: self host.
-	self assert: copy printString = ('//', self host).
+	self assert: copy printString equals: '//' , self host.
 
 	copy := uri copyWithPort: 80.
-	self assert: copy printString = '//:80'.
+	self assert: copy printString equals: '//:80'.
 
 	copy := uri copyWithPath: self relative.
-	self assert: copy printString = self relative.
+	self assert: copy printString equals: self relative.
 
 	copy := uri copyWithPath: self absolute.
-	self assert: copy printString = self absolute.
+	self assert: copy printString equals: self absolute.
 
 	copy := uri copyWithQuery: self query.
-	self assert: copy printString = self queryURIString.
+	self assert: copy printString equals: self queryURIString.
 
 	copy := uri copyWithFragment: self fragment.
-	self assert: copy printString = self fragmentURIString.
+	self assert: copy printString equals: self fragmentURIString
 ]
 
 { #category : #tests }
 XMLURITest >> testDefaultPathPrefixPrinting [
-	| uri copy |
 
+	| uri copy |
 	uri := self relative asXMLURI.
 
 	copy := uri copyWithUserInfo: 'userInfo'.
-	self assert: copy printString = ('//userInfo@/', self relative).
+	self assert: copy printString equals: '//userInfo@/' , self relative.
 
 	copy := uri copyWithHost: self host.
-	self assert: copy printString = ('//', self host, '/', self relative).
+	self
+		assert: copy printString
+		equals: '//' , self host , '/' , self relative.
 
 	copy := uri copyWithPort: 80.
-	self assert: copy printString = ('//:80/', self relative).
+	self assert: copy printString equals: '//:80/' , self relative.
 
 	copy := uri copyWithScheme: 'http'.
-	self assert: copy printString = ('http:///', self relative).
+	self assert: copy printString equals: 'http:///' , self relative.
 
 	copy := uri copyWithQuery: self query.
-	self assert: copy printString = (self relative, self queryURIString).
+	self
+		assert: copy printString
+		equals: self relative , self queryURIString.
 
 	copy := uri copyWithFragment: self fragment.
-	self assert: copy printString = (self relative, self fragmentURIString).
+	self
+		assert: copy printString
+		equals: self relative , self fragmentURIString
 ]
 
 { #category : #tests }
 XMLURITest >> testEquals [
-	self allURIStringsDo: [:each | | uri otherURI |
+
+	self allURIStringsDo: [ :each |
+		| uri otherURI |
 		uri := each asXMLURI.
 
 		otherURI := each asXMLURI.
 		self
-			assert: uri = otherURI;
-			assert: otherURI = uri.
-		otherURI scheme: uri scheme, 'new'.
+			assert: uri equals: otherURI;
+			assert: otherURI equals: uri.
+		otherURI scheme: uri scheme , 'new'.
 		self
-			deny: uri = otherURI;
-			deny: otherURI = uri.
+			deny: uri equals: otherURI;
+			deny: otherURI equals: uri.
 
 		otherURI := each asXMLURI.
 		self
-			assert: uri = otherURI;
-			assert: otherURI = uri.
-		otherURI rawUserInfo: uri userInfo, 'new'.
+			assert: uri equals: otherURI;
+			assert: otherURI equals: uri.
+		otherURI rawUserInfo: uri userInfo , 'new'.
 		self
-			deny: uri = otherURI;
-			deny: otherURI = uri.
+			deny: uri equals: otherURI;
+			deny: otherURI equals: uri.
 
 		otherURI := each asXMLURI.
 		self
-			assert: uri = otherURI;
-			assert: otherURI = uri.
-		otherURI rawHost: uri host, 'new'.
+			assert: uri equals: otherURI;
+			assert: otherURI equals: uri.
+		otherURI rawHost: uri host , 'new'.
 		self
-			deny: uri = otherURI;
-			deny: otherURI = uri.
+			deny: uri equals: otherURI;
+			deny: otherURI equals: uri.
 
 		otherURI := each asXMLURI.
 		self
-			assert: uri = otherURI;
-			assert: otherURI = uri.
+			assert: uri equals: otherURI;
+			assert: otherURI equals: uri.
 		otherURI rawPathSegments: (uri pathSegments copyWith: 'new').
 		self
-			deny: uri = otherURI;
-			deny: otherURI = uri.
+			deny: uri equals: otherURI;
+			deny: otherURI equals: uri.
 
 		otherURI := each asXMLURI.
 		self
-			assert: uri = otherURI;
-			assert: otherURI = uri.
-		otherURI rawQuery:
-			(uri query copy
-				add: 'new' -> '';
-				yourself).
+			assert: uri equals: otherURI;
+			assert: otherURI equals: uri.
+		otherURI rawQuery: (uri query copy
+				 add: 'new' -> '';
+				 yourself).
 		self
-			deny: uri = otherURI;
-			deny: otherURI = uri.
+			deny: uri equals: otherURI;
+			deny: otherURI equals: uri.
 
 		otherURI := each asXMLURI.
 		self
-			assert: uri = otherURI;
-			assert: otherURI = uri.
-		otherURI rawFragment: uri fragment, 'new'.
+			assert: uri equals: otherURI;
+			assert: otherURI equals: uri.
+		otherURI rawFragment: uri fragment , 'new'.
 		self
-			deny: uri = otherURI;
-			deny: otherURI = uri]
+			deny: uri equals: otherURI;
+			deny: otherURI equals: uri ]
 ]
 
 { #category : #tests }
 XMLURITest >> testFragment [
+
 	self
-		assert: '' asXMLURI fragment = '';
-		assert: '/' asXMLURI fragment = '';
-		assert: self absolute asXMLURI fragment = '';
-		assert: self absoluteDir asXMLURI fragment = '';
-		assert: self absoluteDirRelativeCombined asXMLURI fragment = '';
-		assert: self absoluteRelativeCombined asXMLURI fragment = '';
-		assert: self domainURIString asXMLURI fragment = '';
-		assert: self domainURIWithPortString asXMLURI fragment = '';
-		assert: self emailURIString asXMLURI fragment = '';
-		assert: self fileURIWithHostString asXMLURI fragment = '';
-		assert: self fileURIString asXMLURI fragment = '';
-		assert: self fragmentURIString asXMLURI fragment = self fragment;
-		assert: self fullURIString asXMLURI fragment = self fragment;
-		assert: self fullURIWithPortString asXMLURI fragment = self fragment;
-		assert: self queryURIString asXMLURI fragment = '';
-		assert: self relative asXMLURI fragment = '';
-		assert: self relativeAbsoluteCombined asXMLURI fragment = '';
-		assert: self schemelessURIString asXMLURI fragment = self fragment;
-		assert: self schemelessURIWithPortString asXMLURI fragment = self fragment
+		assert: '' asXMLURI fragment equals: '';
+		assert: '/' asXMLURI fragment equals: '';
+		assert: self absolute asXMLURI fragment equals: '';
+		assert: self absoluteDir asXMLURI fragment equals: '';
+		assert: self absoluteDirRelativeCombined asXMLURI fragment
+		equals: '';
+		assert: self absoluteRelativeCombined asXMLURI fragment equals: '';
+		assert: self domainURIString asXMLURI fragment equals: '';
+		assert: self domainURIWithPortString asXMLURI fragment equals: '';
+		assert: self emailURIString asXMLURI fragment equals: '';
+		assert: self fileURIWithHostString asXMLURI fragment equals: '';
+		assert: self fileURIString asXMLURI fragment equals: '';
+		assert: self fragmentURIString asXMLURI fragment
+		equals: self fragment;
+		assert: self fullURIString asXMLURI fragment equals: self fragment;
+		assert: self fullURIWithPortString asXMLURI fragment
+		equals: self fragment;
+		assert: self queryURIString asXMLURI fragment equals: '';
+		assert: self relative asXMLURI fragment equals: '';
+		assert: self relativeAbsoluteCombined asXMLURI fragment equals: '';
+		assert: self schemelessURIString asXMLURI fragment
+		equals: self fragment;
+		assert: self schemelessURIWithPortString asXMLURI fragment
+		equals: self fragment
 ]
 
 { #category : #tests }
 XMLURITest >> testFragmentNonPercentEncodedCharacters [
-	| fragment uriString uri |
 
+	| fragment uriString uri |
 	fragment := self nonPercentEncodedPathCharacters , '/?'.
-	uriString := '#', fragment.
+	uriString := '#' , fragment.
 	uri := uriString asXMLURI.
 	self
-		assert: uri fragment = fragment;
-		assert: uri rawFragment = fragment.
-	
+		assert: uri fragment equals: fragment;
+		assert: uri rawFragment equals: fragment.
+
 	uri uriString: nil.
-	self assert: uri printString = uriString.
+	self assert: uri printString equals: uriString
 ]
 
 { #category : #tests }
 XMLURITest >> testFragmentPercentEncodedCharacters [
-	| encoded decoded encodedURIString uri |
 
-	encoded := self percentEncodedASCIICharacters, '+'.
-	decoded := self asciiCharacters, '+'.
-	encodedURIString := '#', encoded.
+	| encoded decoded encodedURIString uri |
+	encoded := self percentEncodedASCIICharacters , '+'.
+	decoded := self asciiCharacters , '+'.
+	encodedURIString := '#' , encoded.
 	uri := encodedURIString asXMLURI.
 	self
-		assert: uri fragment = decoded;
-		assert: uri rawFragment = encoded.
+		assert: uri fragment equals: decoded;
+		assert: uri rawFragment equals: encoded.
 
 	uri uriString: nil.
-	self assert: uri printString = encodedURIString.
+	self assert: uri printString equals: encodedURIString
 ]
 
 { #category : #tests }
 XMLURITest >> testFromStream [
-	self allURIStringsDo: [:each | | stream uri |
+
+	self allURIStringsDo: [ :each |
+		| stream uri |
 		stream := each readStream.
 		uri := XMLURI fromStream: stream.
 		self
-			assert: uri class == XMLURI;
+			assert: uri class identicalTo: XMLURI;
 			assert: uri uriString isNil;
-			assert: uri = each asXMLURI;
-			assert: stream atEnd]
+			assert: uri equals: each asXMLURI;
+			assert: stream atEnd ]
 ]
 
 { #category : #tests }
 XMLURITest >> testFromString [
-	self allURIStringsDo: [:each | | uri |
+
+	self allURIStringsDo: [ :each |
+		| uri |
 		uri := XMLURI fromString: each.
 		self
-			assert: uri class == XMLURI;
-			assert: uri uriString = each;
-			assert: uri = each asXMLURI]
+			assert: uri class identicalTo: XMLURI;
+			assert: uri uriString equals: each;
+			assert: uri equals: each asXMLURI ]
 ]
 
 { #category : #tests }
@@ -1330,157 +1401,165 @@ XMLURITest >> testHash [
 	"We can only safely test that equal objects have the same hash; testing
 	that different objects have different hashes would be unreliable
 	because #hash is non-cryptographic and has collisions."
-	self allURIStringsDo: [:each |
-		self assert: each asXMLURI hash = each asXMLURI hash]
+
+	self allURIStringsDo: [ :each |
+		self assert: each asXMLURI hash equals: each asXMLURI hash ]
 ]
 
 { #category : #tests }
 XMLURITest >> testHashPercentEncoding [
-	| uriTemplate unencodedURI encodedURI |
 
-	uriTemplate :=
-		'http://{1}@{1}:80/{1}/{1}?{1}={1}&{1}={1}#{1}'.
-	unencodedURI :=
-		(uriTemplate format:
-			(Array with: self alphaNumericCharacters)) asXMLURI.
-	encodedURI :=
-		(uriTemplate format:
-			(Array with: self percentEncodedAlphaNumericCharacters)) asXMLURI.
-	self assert: unencodedURI hash = unencodedURI hash.
+	| uriTemplate unencodedURI encodedURI |
+	uriTemplate := 'http://{1}@{1}:80/{1}/{1}?{1}={1}&{1}={1}#{1}'.
+	unencodedURI := (uriTemplate format:
+		                 (Array with: self alphaNumericCharacters)) asXMLURI.
+	encodedURI := (uriTemplate format:
+		               (Array with:
+			                self percentEncodedAlphaNumericCharacters))
+		              asXMLURI.
+	self assert: unencodedURI hash equals: unencodedURI hash
 ]
 
 { #category : #tests }
 XMLURITest >> testHost [
+
 	self
-		assert: '' asXMLURI host = '';
-		assert: '/' asXMLURI host = '';
-		assert: self absolute asXMLURI host = '';
-		assert: self absoluteDir asXMLURI host = '';
-		assert: self absoluteDirRelativeCombined asXMLURI host = '';
-		assert: self absoluteRelativeCombined asXMLURI host = '';
-		assert: self domainURIString asXMLURI host = self host;
-		assert: self domainURIWithPortString asXMLURI host = self host;
-		assert: self emailURIString asXMLURI host = self host;
-		assert: self fileURIWithHostString asXMLURI host = self host;
-		assert: self fileURIString asXMLURI host = '';
-		assert: self fragmentURIString asXMLURI host = '';
-		assert: self fullURIString asXMLURI host = self host;
-		assert: self fullURIWithPortString asXMLURI host = self host;
-		assert: self queryURIString asXMLURI host = '';
-		assert: self relative asXMLURI host = '';
-		assert: self relativeAbsoluteCombined asXMLURI host = '';
-		assert: self schemelessURIString asXMLURI host = self host;
-		assert: self schemelessURIWithPortString asXMLURI host = self host
+		assert: '' asXMLURI host equals: '';
+		assert: '/' asXMLURI host equals: '';
+		assert: self absolute asXMLURI host equals: '';
+		assert: self absoluteDir asXMLURI host equals: '';
+		assert: self absoluteDirRelativeCombined asXMLURI host equals: '';
+		assert: self absoluteRelativeCombined asXMLURI host equals: '';
+		assert: self domainURIString asXMLURI host equals: self host;
+		assert: self domainURIWithPortString asXMLURI host
+		equals: self host;
+		assert: self emailURIString asXMLURI host equals: self host;
+		assert: self fileURIWithHostString asXMLURI host equals: self host;
+		assert: self fileURIString asXMLURI host equals: '';
+		assert: self fragmentURIString asXMLURI host equals: '';
+		assert: self fullURIString asXMLURI host equals: self host;
+		assert: self fullURIWithPortString asXMLURI host equals: self host;
+		assert: self queryURIString asXMLURI host equals: '';
+		assert: self relative asXMLURI host equals: '';
+		assert: self relativeAbsoluteCombined asXMLURI host equals: '';
+		assert: self schemelessURIString asXMLURI host equals: self host;
+		assert: self schemelessURIWithPortString asXMLURI host
+		equals: self host
 ]
 
 { #category : #tests }
 XMLURITest >> testHostNonPercentEncodedCharacters [
-	| host uriString uri |
 
-	host := self unreservedCharacters, self subDelimiterCharacters.
-	uriString := 'http://', host.
+	| host uriString uri |
+	host := self unreservedCharacters , self subDelimiterCharacters.
+	uriString := 'http://' , host.
 	uri := uriString asXMLURI.
 	self
-		assert: uri scheme = 'http';
-		assert: uri host = host asLowercase;
-		assert: uri rawHost = host.
+		assert: uri scheme equals: 'http';
+		assert: uri host equals: host asLowercase;
+		assert: uri rawHost equals: host.
 
 	uri uriString: nil.
-	self assert: uri printString = uriString.
+	self assert: uri printString equals: uriString
 ]
 
 { #category : #tests }
 XMLURITest >> testHostPercentEncodedCharacters [
-	| prefix encoded decoded encodedURIString uri |
 
+	| prefix encoded decoded encodedURIString uri |
 	prefix := 'http://'.
-	encoded := self percentEncodedASCIICharacters, '+'.
-	decoded := self asciiCharacters, '+'.
-	encodedURIString := prefix, encoded.
+	encoded := self percentEncodedASCIICharacters , '+'.
+	decoded := self asciiCharacters , '+'.
+	encodedURIString := prefix , encoded.
 	uri := encodedURIString asXMLURI.
 	self
-		assert: uri scheme = 'http';
-		assert: uri host = decoded asLowercase;
-		assert: uri rawHost = encoded.
+		assert: uri scheme equals: 'http';
+		assert: uri host equals: decoded asLowercase;
+		assert: uri rawHost equals: encoded.
 
 	uri uriString: nil.
-	self assert: uri printString = encodedURIString.
+	self assert: uri printString equals: encodedURIString
 ]
 
 { #category : #tests }
 XMLURITest >> testIPv6Hosts [
+
 	| ipv6Host uriString uri |
-
 	ipv6Host := '[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]'.
-	uriString := 'http://', ipv6Host, ':80', self absolute.
+	uriString := 'http://' , ipv6Host , ':80' , self absolute.
 	uri := uriString asXMLURI.
 	self
-		assert: uri scheme = 'http';
-		assert: uri host = ipv6Host;
-		assert: uri port = 80;
-		assert: uri path = self absolute;
+		assert: uri scheme equals: 'http';
+		assert: uri host equals: ipv6Host;
+		assert: uri port equals: 80;
+		assert: uri path equals: self absolute;
 		assert: uri query isEmpty;
-		assert: uri fragment = ''.
+		assert: uri fragment equals: ''.
 	uri uriString: nil.
-	self assert: uri printString = uriString.
+	self assert: uri printString equals: uriString.
 
-	uriString := 'http://', ipv6Host, self absolute.
+	uriString := 'http://' , ipv6Host , self absolute.
 	uri := uriString asXMLURI.
 	self
-		assert: uri scheme = 'http';
-		assert: uri host = ipv6Host;
+		assert: uri scheme equals: 'http';
+		assert: uri host equals: ipv6Host;
 		assert: uri port isNil;
-		assert: uri path = self absolute;
+		assert: uri path equals: self absolute;
 		assert: uri query isEmpty;
-		assert: uri fragment = ''.
+		assert: uri fragment equals: ''.
 	uri uriString: nil.
-	self assert: uri printString = uriString.
+	self assert: uri printString equals: uriString
 ]
 
 { #category : #tests }
 XMLURITest >> testInvalidPort [
+
 	| uri |
-
-	uri := (self domainURIString, ':invalid', self absolute) asXMLURI.
+	uri := (self domainURIString , ':invalid' , self absolute) asXMLURI.
 	self
-		assert: uri host = self host;
+		assert: uri host equals: self host;
 		assert: uri port isNil;
-		assert: uri path = self absolute.
+		assert: uri path equals: self absolute.
 
-	uri := (self domainURIString, ':invalid', self queryURIString) asXMLURI.
+	uri := (self domainURIString , ':invalid' , self queryURIString)
+		       asXMLURI.
 	self
-		assert: uri host = self host;
-		assert: uri port isNil;
-		assert: uri pathSegments isEmpty.
-
-	uri := (self domainURIString, ':invalid', self fragmentURIString) asXMLURI.
-	self
-		assert: uri host = self host;
+		assert: uri host equals: self host;
 		assert: uri port isNil;
 		assert: uri pathSegments isEmpty.
+
+	uri := (self domainURIString , ':invalid' , self fragmentURIString)
+		       asXMLURI.
+	self
+		assert: uri host equals: self host;
+		assert: uri port isNil;
+		assert: uri pathSegments isEmpty
 ]
 
 { #category : #tests }
 XMLURITest >> testInvalidPortSuffix [
+
 	| uri |
-
-	uri := (self domainURIWithPortString, 'invalid', self absolute) asXMLURI.
+	uri := (self domainURIWithPortString , 'invalid' , self absolute)
+		       asXMLURI.
 	self
-		assert: uri host = self host;
-		assert: uri port = 80;
-		assert: uri path = self absolute.
+		assert: uri host equals: self host;
+		assert: uri port equals: 80;
+		assert: uri path equals: self absolute.
 
-	uri := (self domainURIWithPortString, 'invalid', self queryURIString) asXMLURI.
+	uri := (self domainURIWithPortString , 'invalid'
+	        , self queryURIString) asXMLURI.
 	self
-		assert: uri host = self host;
-		assert: uri port = 80;
+		assert: uri host equals: self host;
+		assert: uri port equals: 80;
 		assert: uri pathSegments isEmpty.
 
-	uri := (self domainURIWithPortString, 'invalid', self fragmentURIString) asXMLURI.
+	uri := (self domainURIWithPortString , 'invalid'
+	        , self fragmentURIString) asXMLURI.
 	self
-		assert: uri host = self host;
-		assert: uri port = 80;
-		assert: uri pathSegments isEmpty.
+		assert: uri host equals: self host;
+		assert: uri port equals: 80;
+		assert: uri pathSegments isEmpty
 ]
 
 { #category : #tests }
@@ -1585,12 +1664,12 @@ XMLURITest >> testIsRelative [
 
 { #category : #tests }
 XMLURITest >> testNew [
-	| uri |
 
+	| uri |
 	uri := XMLURI new.
 	self
-		assert: uri uriString = '';
-		assert: uri isEmpty.
+		assert: uri uriString equals: '';
+		assert: uri isEmpty
 ]
 
 { #category : #tests }
@@ -1620,142 +1699,160 @@ XMLURITest >> testNotEmpty [
 
 { #category : #tests }
 XMLURITest >> testParsingQueryString [
-	#('' '?' '?&' '?&&') do: [:each |
-		self assert:
-			each asXMLURI query =
-				OrderedCollection new].
 
-	#('?a=b' '?&a=b&' '?&&a=b&&') do: [:each |
-		self assert:
-			each asXMLURI query =
-				(OrderedCollection with: 'a' -> 'b')].
+	#( '' '?' '?&' '?&&' ) do: [ :each |
+		self assert: each asXMLURI query equals: OrderedCollection new ].
 
-	#('?=&a=b' '?&=&a=b' '?&&=&&a=b') do: [:each |
-		self assert:
-			each asXMLURI query =
-				(OrderedCollection
-					with: '' -> ''
-					with: 'a' -> 'b')].
+	#( '?a=b' '?&a=b&' '?&&a=b&&' ) do: [ :each |
+		self
+			assert: each asXMLURI query
+			equals: (OrderedCollection with: 'a' -> 'b') ].
 
-	#('?a=b&=' '?a=b&=&' '?a=b&&=&&') do: [:each |
-		self assert:
-			each asXMLURI query =
-				(OrderedCollection
-					with: 'a' -> 'b'
-					with: '' -> '')].
+	#( '?=&a=b' '?&=&a=b' '?&&=&&a=b' ) do: [ :each |
+		self
+			assert: each asXMLURI query
+			equals: (OrderedCollection with: '' -> '' with: 'a' -> 'b') ].
 
-	#('?c=&a=b' '?&c=&a=b' '?&&c=&&a=b') do: [:each |
-		self assert:
-			each asXMLURI query =
-				(OrderedCollection
-					with: 'c' -> ''
-					with: 'a' -> 'b')].
+	#( '?a=b&=' '?a=b&=&' '?a=b&&=&&' ) do: [ :each |
+		self
+			assert: each asXMLURI query
+			equals: (OrderedCollection with: 'a' -> 'b' with: '' -> '') ].
 
-	#('?a=b&c=' '?a=b&c=&' '?a=b&&c=&&') do: [:each |
-		self assert:
-			each asXMLURI query =
-				(OrderedCollection
-					with: 'a' -> 'b'
-					with: 'c' -> '')].
+	#( '?c=&a=b' '?&c=&a=b' '?&&c=&&a=b' ) do: [ :each |
+		self
+			assert: each asXMLURI query
+			equals: (OrderedCollection with: 'c' -> '' with: 'a' -> 'b') ].
+
+	#( '?a=b&c=' '?a=b&c=&' '?a=b&&c=&&' ) do: [ :each |
+		self
+			assert: each asXMLURI query
+			equals: (OrderedCollection with: 'a' -> 'b' with: 'c' -> '') ]
 ]
 
 { #category : #tests }
 XMLURITest >> testPath [
+
 	self
-		assert: '' asXMLURI path = '';
-		assert: '/' asXMLURI path = '/';
-		assert: self absolute asXMLURI path = self absolute;
-		assert: self absoluteDir asXMLURI path = self absoluteDir;
-		assert: self absoluteDirRelativeCombined asXMLURI path = self absoluteDirRelativeCombined;
-		assert: self absoluteRelativeCombined asXMLURI path = self absoluteRelativeCombined;
-		assert: self domainURIString asXMLURI path = '';
-		assert: self domainURIWithPortString asXMLURI path = '';
-		assert: self emailURIString asXMLURI path = '';
-		assert: self fileURIWithHostString asXMLURI path = self absolute;
-		assert: self fileURIString asXMLURI path = self absolute;
-		assert: self fragmentURIString asXMLURI path = '';
-		assert: self fullURIString asXMLURI path = self absolute;
-		assert: self fullURIWithPortString asXMLURI path = self absolute;
-		assert: self queryURIString asXMLURI path = '';
-		assert: self relative asXMLURI path = self relative;
-		assert: self relativeAbsoluteCombined asXMLURI path = self relativeAbsoluteCombined;
-		assert: self schemelessURIString asXMLURI path = self absolute;
-		assert: self schemelessURIWithPortString asXMLURI path = self absolute
+		assert: '' asXMLURI path equals: '';
+		assert: '/' asXMLURI path equals: '/';
+		assert: self absolute asXMLURI path equals: self absolute;
+		assert: self absoluteDir asXMLURI path equals: self absoluteDir;
+		assert: self absoluteDirRelativeCombined asXMLURI path
+		equals: self absoluteDirRelativeCombined;
+		assert: self absoluteRelativeCombined asXMLURI path
+		equals: self absoluteRelativeCombined;
+		assert: self domainURIString asXMLURI path equals: '';
+		assert: self domainURIWithPortString asXMLURI path equals: '';
+		assert: self emailURIString asXMLURI path equals: '';
+		assert: self fileURIWithHostString asXMLURI path
+		equals: self absolute;
+		assert: self fileURIString asXMLURI path equals: self absolute;
+		assert: self fragmentURIString asXMLURI path equals: '';
+		assert: self fullURIString asXMLURI path equals: self absolute;
+		assert: self fullURIWithPortString asXMLURI path
+		equals: self absolute;
+		assert: self queryURIString asXMLURI path equals: '';
+		assert: self relative asXMLURI path equals: self relative;
+		assert: self relativeAbsoluteCombined asXMLURI path
+		equals: self relativeAbsoluteCombined;
+		assert: self schemelessURIString asXMLURI path
+		equals: self absolute;
+		assert: self schemelessURIWithPortString asXMLURI path
+		equals: self absolute
 ]
 
 { #category : #tests }
 XMLURITest >> testPathNonPercentEncodedCharacters [
-	| firstSegment secondSegment uriString uri |
 
+	| firstSegment secondSegment uriString uri |
 	firstSegment := self nonPercentEncodedPathCharacters copyWithout: $:.
 	secondSegment := self nonPercentEncodedPathCharacters.
-	uriString := firstSegment, '/', secondSegment.
+	uriString := firstSegment , '/' , secondSegment.
 	uri := uriString asXMLURI.
-	self assert: uri path = (firstSegment, '/', secondSegment).
-	self assert:
-		uri pathSegments =
-			(OrderedCollection with: firstSegment with: secondSegment).
-	self assert:
-		uri rawPathSegments =
-			(OrderedCollection with: firstSegment with: secondSegment).
+	self assert: uri path equals: firstSegment , '/' , secondSegment.
+	self
+		assert: uri pathSegments
+		equals: (OrderedCollection with: firstSegment with: secondSegment).
+	self
+		assert: uri rawPathSegments
+		equals: (OrderedCollection with: firstSegment with: secondSegment).
 
 	uri uriString: nil.
-	self assert: uri printString = uriString.
+	self assert: uri printString equals: uriString
 ]
 
 { #category : #tests }
 XMLURITest >> testPathPercentEncodedCharacters [
-	| encoded decoded encodedURIString uri |
 
-	encoded := self percentEncodedASCIICharacters, '+'.
-	decoded := self asciiCharacters, '+'.
-	encodedURIString := encoded, '/', encoded.
+	| encoded decoded encodedURIString uri |
+	encoded := self percentEncodedASCIICharacters , '+'.
+	decoded := self asciiCharacters , '+'.
+	encodedURIString := encoded , '/' , encoded.
 	uri := encodedURIString asXMLURI.
-	self assert: uri path = (decoded, '/', decoded).
-	self assert:
-		uri pathSegments = (OrderedCollection with: decoded with: decoded).
-	self assert:
-		uri rawPathSegments = (OrderedCollection with: encoded with: encoded).
+	self assert: uri path equals: decoded , '/' , decoded.
+	self
+		assert: uri pathSegments
+		equals: (OrderedCollection with: decoded with: decoded).
+	self
+		assert: uri rawPathSegments
+		equals: (OrderedCollection with: encoded with: encoded).
 
 	uri uriString: nil.
-	self assert: uri printString = encodedURIString.
+	self assert: uri printString equals: encodedURIString
 ]
 
 { #category : #tests }
 XMLURITest >> testPathSegments [
+
 	self
 		assert: '' asXMLURI pathSegments isEmpty;
-		assert: '/' asXMLURI pathSegments = #('' '') asOrderedCollection;
-		assert: self absolute asXMLURI pathSegments = self absoluteSegments;
-		assert: self absoluteDir asXMLURI pathSegments = self absoluteDirSegments;
-		assert: self absoluteDirRelativeCombined asXMLURI pathSegments = self absoluteDirRelativeCombinedSegments;
-		assert: self absoluteRelativeCombined asXMLURI pathSegments = self absoluteRelativeCombinedSegments;
+		assert: '/' asXMLURI pathSegments
+		equals: #( '' '' ) asOrderedCollection;
+		assert: self absolute asXMLURI pathSegments
+		equals: self absoluteSegments;
+		assert: self absoluteDir asXMLURI pathSegments
+		equals: self absoluteDirSegments;
+		assert: self absoluteDirRelativeCombined asXMLURI pathSegments
+		equals: self absoluteDirRelativeCombinedSegments;
+		assert: self absoluteRelativeCombined asXMLURI pathSegments
+		equals: self absoluteRelativeCombinedSegments;
 		assert: self domainURIString asXMLURI pathSegments isEmpty;
 		assert: self domainURIWithPortString asXMLURI pathSegments isEmpty;
 		assert: self emailURIString asXMLURI pathSegments isEmpty;
-		assert: self fileURIWithHostString asXMLURI pathSegments = self absoluteSegments;
-		assert: self fileURIString asXMLURI pathSegments = self absoluteSegments;
+		assert: self fileURIWithHostString asXMLURI pathSegments
+		equals: self absoluteSegments;
+		assert: self fileURIString asXMLURI pathSegments
+		equals: self absoluteSegments;
 		assert: self fragmentURIString asXMLURI pathSegments isEmpty;
-		assert: self fullURIString asXMLURI pathSegments = self absoluteSegments;
-		assert: self fullURIWithPortString asXMLURI pathSegments = self absoluteSegments;
+		assert: self fullURIString asXMLURI pathSegments
+		equals: self absoluteSegments;
+		assert: self fullURIWithPortString asXMLURI pathSegments
+		equals: self absoluteSegments;
 		assert: self queryURIString asXMLURI pathSegments isEmpty;
-		assert: self relative asXMLURI pathSegments = self relativeSegments;
-		assert: self relativeAbsoluteCombined asXMLURI pathSegments = self relativeAbsoluteCombinedSegments;
-		assert: self schemelessURIString asXMLURI pathSegments = self absoluteSegments;
-		assert: self schemelessURIWithPortString asXMLURI pathSegments = self absoluteSegments
+		assert: self relative asXMLURI pathSegments
+		equals: self relativeSegments;
+		assert: self relativeAbsoluteCombined asXMLURI pathSegments
+		equals: self relativeAbsoluteCombinedSegments;
+		assert: self schemelessURIString asXMLURI pathSegments
+		equals: self absoluteSegments;
+		assert: self schemelessURIWithPortString asXMLURI pathSegments
+		equals: self absoluteSegments
 ]
 
 { #category : #tests }
 XMLURITest >> testPathSegmentsDo [
-	self allURIStringsDo: [:uriString | | uri visited |
+
+	self allURIStringsDo: [ :uriString |
+		| uri visited |
 		uri := uriString asXMLURI.
 		visited := OrderedCollection new.
-		uri pathSegmentsDo: [:each | visited addLast: each].
-		self assert: visited = uri pathSegments]
+		uri pathSegmentsDo: [ :each | visited addLast: each ].
+		self assert: visited equals: uri pathSegments ]
 ]
 
 { #category : #tests }
 XMLURITest >> testPort [
+
 	self
 		assert: '' asXMLURI port isNil;
 		assert: '/' asXMLURI port isNil;
@@ -1764,37 +1861,40 @@ XMLURITest >> testPort [
 		assert: self absoluteDirRelativeCombined asXMLURI port isNil;
 		assert: self absoluteRelativeCombined asXMLURI port isNil;
 		assert: self domainURIString asXMLURI port isNil;
-		assert: self domainURIWithPortString asXMLURI port = 80;
+		assert: self domainURIWithPortString asXMLURI port equals: 80;
 		assert: self emailURIString asXMLURI port isNil;
 		assert: self fileURIWithHostString asXMLURI port isNil;
 		assert: self fileURIString asXMLURI port isNil;
 		assert: self fragmentURIString asXMLURI port isNil;
 		assert: self fullURIString asXMLURI port isNil;
-		assert: self fullURIWithPortString asXMLURI port = 80;
+		assert: self fullURIWithPortString asXMLURI port equals: 80;
 		assert: self queryURIString asXMLURI port isNil;
 		assert: self relative asXMLURI port isNil;
 		assert: self relativeAbsoluteCombined asXMLURI port isNil;
 		assert: self schemelessURIString asXMLURI port isNil;
-		assert: self schemelessURIWithPortString asXMLURI port = 80
+		assert: self schemelessURIWithPortString asXMLURI port equals: 80
 ]
 
 { #category : #tests }
 XMLURITest >> testPrintOn [
-	self allURIStringsDo: [:each | | uri |
+
+	self allURIStringsDo: [ :each |
+		| uri |
 		uri := each asXMLURI.
-		self assert: uri printString = each.
+		self assert: uri printString equals: each.
 
 		uri
 			parseURIStringIfUnparsed;
 			uriString: nil.
 		self
 			assert: uri uriString isNil;
-			assert: uri printString = each;
-			assert: uri uriString = each]
+			assert: uri printString equals: each;
+			assert: uri uriString equals: each ]
 ]
 
 { #category : #tests }
 XMLURITest >> testQuery [
+
 	self
 		assert: '' asXMLURI query isEmpty;
 		assert: '/' asXMLURI query isEmpty;
@@ -1808,46 +1908,47 @@ XMLURITest >> testQuery [
 		assert: self fileURIWithHostString asXMLURI query isEmpty;
 		assert: self fileURIString asXMLURI query isEmpty;
 		assert: self fragmentURIString asXMLURI query isEmpty;
-		assert: self fullURIString asXMLURI query = self query;
-		assert: self fullURIWithPortString asXMLURI query = self query;
-		assert: self queryURIString asXMLURI query = self query;
+		assert: self fullURIString asXMLURI query equals: self query;
+		assert: self fullURIWithPortString asXMLURI query
+		equals: self query;
+		assert: self queryURIString asXMLURI query equals: self query;
 		assert: self relative asXMLURI query isEmpty;
 		assert: self relativeAbsoluteCombined asXMLURI query isEmpty;
-		assert: self schemelessURIString asXMLURI query = self query;
-		assert: self schemelessURIWithPortString asXMLURI query = self query
+		assert: self schemelessURIString asXMLURI query equals: self query;
+		assert: self schemelessURIWithPortString asXMLURI query
+		equals: self query
 ]
 
 { #category : #tests }
 XMLURITest >> testQueryAt [
-	self allURIStringsDo: [:uriString | | uri visitedKeys |
+
+	self allURIStringsDo: [ :uriString |
+		| uri visitedKeys |
 		uri := uriString asXMLURI.
 		visitedKeys := Set new.
-		uri query do: [:each |
-			(visitedKeys includes: each key)
-				ifFalse: [
-					self assert:
-						(uri queryAt: each key) = each value.
-					visitedKeys add: each key]].
-		self assert: (uri queryAt: 'absent') = '']
+		uri query do: [ :each |
+			(visitedKeys includes: each key) ifFalse: [
+				self assert: (uri queryAt: each key) equals: each value.
+				visitedKeys add: each key ] ].
+		self assert: (uri queryAt: 'absent') equals: '' ]
 ]
 
 { #category : #tests }
 XMLURITest >> testQueryAtIfAbsent [
-	self allURIStringsDo: [:uriString | | uri visitedKeys |
+
+	self allURIStringsDo: [ :uriString |
+		| uri visitedKeys |
 		uri := uriString asXMLURI.
 		visitedKeys := Set new.
-		uri query do: [:each |
-			(visitedKeys includes: each key)
-				ifFalse: [
-					self assert:
-						(uri
-							queryAt: each key
-							ifAbsent: [self fail]) = each value.
-					visitedKeys add: each key]].
-		self assert:
-			(uri
-				queryAt: 'absentKey'
-				ifAbsent: ['absentValue']) = 'absentValue']
+		uri query do: [ :each |
+			(visitedKeys includes: each key) ifFalse: [
+				self
+					assert: (uri queryAt: each key ifAbsent: [ self fail ])
+					equals: each value.
+				visitedKeys add: each key ] ].
+		self
+			assert: (uri queryAt: 'absentKey' ifAbsent: [ 'absentValue' ])
+			equals: 'absentValue' ]
 ]
 
 { #category : #tests }
@@ -1861,127 +1962,133 @@ XMLURITest >> testQueryIncludesKey [
 
 { #category : #tests }
 XMLURITest >> testQueryKeys [
-	self allURIStringsDo: [:uriString | | uri |
+
+	self allURIStringsDo: [ :uriString |
+		| uri |
 		uri := uriString asXMLURI.
-		self assert:
-			uri queryKeys =
-				(uri query collect: [:each | each key])]
+		self
+			assert: uri queryKeys
+			equals: (uri query collect: [ :each | each key ]) ]
 ]
 
 { #category : #tests }
 XMLURITest >> testQueryKeysAndValuesDo [
-	self allURIStringsDo: [:each | | uri visited |
+
+	self allURIStringsDo: [ :each |
+		| uri visited |
 		uri := each asXMLURI.
 		visited := OrderedCollection new.
-		self assert:
-			(uri queryKeysAndValuesDo: [:key :value |
-				visited addLast: key -> value]) == uri.
-		self assert: visited = uri query]
+		self
+			assert: (uri queryKeysAndValuesDo: [ :key :value |
+					 visited addLast: key -> value ])
+			identicalTo: uri.
+		self assert: visited equals: uri query ]
 ]
 
 { #category : #tests }
 XMLURITest >> testQueryKeysDo [
-	self allURIStringsDo: [:uriString | | uri visited |
+
+	self allURIStringsDo: [ :uriString |
+		| uri visited |
 		uri := uriString asXMLURI.
 		visited := OrderedCollection new.
-		self assert:
-			(uri queryKeysDo: [:each |
-				visited addLast: each]) == uri.
-		self assert: visited = uri queryKeys]
+		self
+			assert: (uri queryKeysDo: [ :each | visited addLast: each ])
+			identicalTo: uri.
+		self assert: visited equals: uri queryKeys ]
 ]
 
 { #category : #tests }
 XMLURITest >> testQueryNonPercentOrPlusEncodedCharacters [
-	| queryKey queryValue uriString uri |
 
-	queryKey :=
-		(self nonPercentEncodedPathCharacters copyWithoutAll: '=&+'), '/?'.
-	queryValue :=
-		(self nonPercentEncodedPathCharacters copyWithoutAll: '&+'), '/?'.
-	uriString := '?', queryKey, '=', queryValue.
+	| queryKey queryValue uriString uri |
+	queryKey := (self nonPercentEncodedPathCharacters copyWithoutAll:
+		             '=&+') , '/?'.
+	queryValue := (self nonPercentEncodedPathCharacters copyWithoutAll:
+		               '&+') , '/?'.
+	uriString := '?' , queryKey , '=' , queryValue.
 	uri := uriString asXMLURI.
 	self
-		assert: uri query = (OrderedCollection with: queryKey -> queryValue);
-		assert: (uri queryAt: queryKey) = queryValue;
-		assert:
-			(uri
-				queryAt: queryKey
-				ifAbsent: ['absent']) = queryValue;
-		assert:
-			(uri queryValuesAt: queryKey) = (OrderedCollection with: queryValue);
-		assert:
-			(uri
-				queryValuesAt: queryKey
-				ifAbsent: [#('absent')]) = (OrderedCollection with: queryValue);
-		assert: uri queryKeys = (OrderedCollection with: queryKey);
+		assert: uri query
+		equals: (OrderedCollection with: queryKey -> queryValue);
+		assert: (uri queryAt: queryKey) equals: queryValue;
+		assert: (uri queryAt: queryKey ifAbsent: [ 'absent' ])
+		equals: queryValue;
+		assert: (uri queryValuesAt: queryKey)
+		equals: (OrderedCollection with: queryValue);
+		assert: (uri queryValuesAt: queryKey ifAbsent: [ #( 'absent' ) ])
+		equals: (OrderedCollection with: queryValue);
+		assert: uri queryKeys equals: (OrderedCollection with: queryKey);
 		assert: (uri queryIncludesKey: queryKey);
-		assert: uri rawQuery = (OrderedCollection with: queryKey -> queryValue).
+		assert: uri rawQuery
+		equals: (OrderedCollection with: queryKey -> queryValue).
 
 	uri uriString: nil.
-	self assert: uri printString = uriString.
+	self assert: uri printString equals: uriString
 ]
 
 { #category : #tests }
 XMLURITest >> testQueryPercentOrPlusEncodedCharacters [
-	| encoded decoded encodedURIString uri |
 
-	encoded := self percentEncodedASCIICharacters, '+'.
-	decoded := self asciiCharacters, ' '.
-	encodedURIString := '?', encoded, '=', encoded.
+	| encoded decoded encodedURIString uri |
+	encoded := self percentEncodedASCIICharacters , '+'.
+	decoded := self asciiCharacters , ' '.
+	encodedURIString := '?' , encoded , '=' , encoded.
 	uri := encodedURIString asXMLURI.
 	self
-		assert: uri query = (OrderedCollection with: decoded -> decoded);
-		assert: (uri queryAt: decoded) = decoded;
-		assert:
-			(uri
-				queryAt: decoded
-				ifAbsent: ['absent']) = decoded;
-		assert: (uri queryValuesAt: decoded) = (OrderedCollection with: decoded);
-		assert:
-			(uri
-				queryValuesAt: decoded
-				ifAbsent: [#()]) = (OrderedCollection with: decoded);
-		assert: uri queryKeys = (OrderedCollection with: decoded);
+		assert: uri query
+		equals: (OrderedCollection with: decoded -> decoded);
+		assert: (uri queryAt: decoded) equals: decoded;
+		assert: (uri queryAt: decoded ifAbsent: [ 'absent' ])
+		equals: decoded;
+		assert: (uri queryValuesAt: decoded)
+		equals: (OrderedCollection with: decoded);
+		assert: (uri queryValuesAt: decoded ifAbsent: [ #(  ) ])
+		equals: (OrderedCollection with: decoded);
+		assert: uri queryKeys equals: (OrderedCollection with: decoded);
 		assert: (uri queryIncludesKey: decoded);
-		assert: uri rawQuery = (OrderedCollection with: encoded -> encoded).
+		assert: uri rawQuery
+		equals: (OrderedCollection with: encoded -> encoded).
 
 	uri uriString: nil.
-	self assert: uri printString = encodedURIString.
+	self assert: uri printString equals: encodedURIString
 ]
 
 { #category : #tests }
 XMLURITest >> testQueryValuesAt [
-	self allURIStringsDo: [:uriString | | uri valuesForKeys |
+
+	self allURIStringsDo: [ :uriString |
+		| uri valuesForKeys |
 		uri := uriString asXMLURI.
 		valuesForKeys := Dictionary new.
-		uri query do: [:each |
-			(valuesForKeys
-				at: each key
-				ifAbsentPut: [OrderedCollection new])
-					addLast: each value].
-		valuesForKeys keysAndValuesDo: [:key :values |
-			self assert: (uri queryValuesAt: key) = values].
-		self assert:
-			(uri queryValuesAt: 'absent') = OrderedCollection new]
+		uri query do: [ :each |
+			(valuesForKeys at: each key ifAbsentPut: [ OrderedCollection new ])
+				addLast: each value ].
+		valuesForKeys keysAndValuesDo: [ :key :values |
+			self assert: (uri queryValuesAt: key) equals: values ].
+		self
+			assert: (uri queryValuesAt: 'absent')
+			equals: OrderedCollection new ]
 ]
 
 { #category : #tests }
 XMLURITest >> testQueryValuesAtDo [
-	self allURIStringsDo: [:uriString | | uri valuesForKeys |
+
+	self allURIStringsDo: [ :uriString |
+		| uri valuesForKeys |
 		uri := uriString asXMLURI.
 		valuesForKeys := Dictionary new.
-		uri query do: [:each |
-			(valuesForKeys
-				at: each key
-				ifAbsentPut: [OrderedCollection new])
-					addLast: each value].
-		valuesForKeys keysAndValuesDo: [:key :values | | enumerated |
+		uri query do: [ :each |
+			(valuesForKeys at: each key ifAbsentPut: [ OrderedCollection new ])
+				addLast: each value ].
+		valuesForKeys keysAndValuesDo: [ :key :values |
+			| enumerated |
 			enumerated := OrderedCollection new.
-			self assert:
-				(uri
-					queryValuesAt: key
-					do: [:each | enumerated addLast: each]) == uri.
-			self assert: enumerated = values]]
+			self
+				assert:
+				(uri queryValuesAt: key do: [ :each | enumerated addLast: each ])
+				identicalTo: uri.
+			self assert: enumerated equals: values ] ]
 ]
 
 { #category : #tests }

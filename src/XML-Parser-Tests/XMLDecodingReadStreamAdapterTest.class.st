@@ -62,28 +62,32 @@ XMLDecodingReadStreamAdapterTest >> streamConverterClass [
 
 { #category : #tests }
 XMLDecodingReadStreamAdapterTest >> testHasDefaultStreamConverter [
-	| adapter |
 
+	| adapter |
 	adapter := self newStreamAdapter.
-	self assert:
-		adapter hasDefaultStreamConverter = adapter streamConverter isDefault.
+	self
+		assert: adapter hasDefaultStreamConverter
+		equals: adapter streamConverter isDefault
 ]
 
 { #category : #tests }
 XMLDecodingReadStreamAdapterTest >> testHasImplicitStreamConverter [
-	| adapter |
 
+	| adapter |
 	adapter := self newStreamAdapter.
-	self assert:
-		adapter hasImplicitStreamConverter = adapter streamConverter isImplicit.
+	self
+		assert: adapter hasImplicitStreamConverter
+		equals: adapter streamConverter isImplicit
 ]
 
 { #category : #tests }
 XMLDecodingReadStreamAdapterTest >> testHasNullStreamConverter [
-	| adapter |
 
+	| adapter |
 	adapter := self newStreamAdapter.
-	self assert: adapter hasNullStreamConverter = adapter streamConverter isNull.
+	self
+		assert: adapter hasNullStreamConverter
+		equals: adapter streamConverter isNull
 ]
 
 { #category : #tests }
@@ -141,32 +145,35 @@ XMLDecodingReadStreamAdapterTest >> testOn [
 
 { #category : #tests }
 XMLDecodingReadStreamAdapterTest >> testOnIfBinaryOrExternal [
-	| adapter stream |
 
+	| adapter stream |
 	super testOnIfBinaryOrExternal.
 
-	stream := self newStreamOn: (self binaryFrom: self basicInputCollection).
+	stream := self newStreamOn:
+		          (self binaryFrom: self basicInputCollection).
 	adapter := self streamAdapterClass onIfBinaryOrExternal: stream.
 	self
-		assert: adapter class == self streamAdapterClass;
-		assert: adapter hasDefaultStreamConverter.
+		assert: adapter class identicalTo: self streamAdapterClass;
+		assert: adapter hasDefaultStreamConverter
 ]
 
 { #category : #tests }
 XMLDecodingReadStreamAdapterTest >> testStreamConverter [
-	| adapter newConverter |
 
+	| adapter newConverter |
 	adapter := self newStreamAdapter.
 	self
 		deny: adapter streamConverter isNil;
-		assert: adapter streamConverter class == self streamConverterClass.
+		assert: adapter streamConverter class
+		identicalTo: self streamConverterClass.
 
 	newConverter := self streamConverterClass new.
 	self
-		assert: (adapter streamConverter: newConverter) == adapter;
-		assert: adapter streamConverter == newConverter.
-
+		assert: (adapter streamConverter: newConverter)
+		identicalTo: adapter;
+		assert: adapter streamConverter identicalTo: newConverter.
 	self
-		assert: (adapter streamConverter: nil) == adapter;
-		assert: adapter streamConverter class == XMLNullStreamConverter.
+		assert: (adapter streamConverter: nil) identicalTo: adapter;
+		assert: adapter streamConverter class
+		identicalTo: XMLNullStreamConverter
 ]

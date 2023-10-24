@@ -61,50 +61,53 @@ XMLStringMethodsTest >> nonNameNmtokens [
 
 { #category : #tests }
 XMLStringMethodsTest >> testAsXMLEscapedString [
-	self assert:
-		'<test name="&name;">''&value;''</test>' asXMLEscapedString =
-			'&lt;test name="&amp;name;"&gt;''&amp;value;''&lt;/test&gt;'
+
+	self
+		assert: '<test name="&name;">''&value;''</test>' asXMLEscapedString
+		equals: '&lt;test name="&amp;name;"&gt;''&amp;value;''&lt;/test&gt;'
 ]
 
 { #category : #tests }
 XMLStringMethodsTest >> testAsXMLFileHandle [
-	XMLFileHandle hasSupportedImplementation
-		ifTrue: [| path fileHandle |
-			path := 'test.xml'.
-			fileHandle := path asXMLFileHandle.
-			self
-				assert: fileHandle class == XMLFileHandle implementation;
-				assert: fileHandle path = path]
+
+	| path fileHandle |
+	XMLFileHandle hasSupportedImplementation ifFalse: [ ^ self ].
+	path := 'test.xml'.
+	fileHandle := path asXMLFileHandle.
+	self
+		assert: fileHandle class identicalTo: XMLFileHandle implementation;
+		assert: fileHandle path equals: path
 ]
 
 { #category : #tests }
 XMLStringMethodsTest >> testAsXMLHTTPRequest [
-	XMLHTTPRequest hasSupportedImplementation
-		ifTrue: [| url request |
-			url := 'test.xml'.
-			request := url asXMLHTTPRequest.
-			self
-				assert: request class == XMLHTTPRequest implementation;
-				assert: request url = url]
+
+	| url request |
+	XMLHTTPRequest hasSupportedImplementation ifFalse: [ ^ self ].
+	url := 'test.xml'.
+	request := url asXMLHTTPRequest.
+	self
+		assert: request class identicalTo: XMLHTTPRequest implementation;
+		assert: request url equals: url
 ]
 
 { #category : #tests }
 XMLStringMethodsTest >> testAsXMLStreamConverter [
-	XMLStreamConverter allSubclassesDo: [:class |
-		(class class includesSelector: #encodingNames)
-			ifTrue: [
-				class encodingNames do: [:each |
-					self assert: each asXMLStreamConverter class == class]]]
+
+	XMLStreamConverter allSubclassesDo: [ :class |
+		(class class includesSelector: #encodingNames) ifTrue: [
+			class encodingNames do: [ :each |
+				self assert: each asXMLStreamConverter class identicalTo: class ] ] ]
 ]
 
 { #category : #tests }
 XMLStringMethodsTest >> testAsXMLStringNode [
-	| node |
 
+	| node |
 	node := 'test' asXMLStringNode.
 	self
-		assert: node class == XMLString;
-		assert: node string = 'test'.
+		assert: node class identicalTo: XMLString;
+		assert: node string equals: 'test'
 ]
 
 { #category : #tests }
@@ -186,32 +189,40 @@ XMLStringMethodsTest >> testIsXMLReservedAttributeName [
 
 { #category : #tests }
 XMLStringMethodsTest >> testParseXML [
-	| xml |
 
+	| xml |
 	xml := XMLParserTest addressBookXML.
-	self assert: xml parseXML printString = (XMLDOMParser parse: xml) printString.
+	self
+		assert: xml parseXML printString
+		equals: (XMLDOMParser parse: xml) printString
 ]
 
 { #category : #tests }
 XMLStringMethodsTest >> testXMLLocalNameAfterPrefix [
+
 	self
-		assert: 'name' xmlLocalNameAfterPrefix = 'name';
-		assert: ':name' xmlLocalNameAfterPrefix = ':name';
-		assert: 'prefix:name' xmlLocalNameAfterPrefix = 'name';
-		assert: '::name' xmlLocalNameAfterPrefix = 'name';
-		assert: 'invalid:prefix:name' xmlLocalNameAfterPrefix = 'name';
-		assert: ':::name' xmlLocalNameAfterPrefix = 'name';
-		assert: ':invalid:prefix:name' xmlLocalNameAfterPrefix = 'name'.
+		assert: 'name' xmlLocalNameAfterPrefix equals: 'name';
+		assert: ':name' xmlLocalNameAfterPrefix equals: ':name';
+		assert: 'prefix:name' xmlLocalNameAfterPrefix equals: 'name';
+		assert: '::name' xmlLocalNameAfterPrefix equals: 'name';
+		assert: 'invalid:prefix:name' xmlLocalNameAfterPrefix
+		equals: 'name';
+		assert: ':::name' xmlLocalNameAfterPrefix equals: 'name';
+		assert: ':invalid:prefix:name' xmlLocalNameAfterPrefix
+		equals: 'name'
 ]
 
 { #category : #tests }
 XMLStringMethodsTest >> testXMLPrefixBeforeLocalName [
+
 	self
-		assert: 'name' xmlPrefixBeforeLocalName = '';
-		assert: ':name' xmlPrefixBeforeLocalName = '';
-		assert: 'prefix:name' xmlPrefixBeforeLocalName = 'prefix';
-		assert: '::name' xmlPrefixBeforeLocalName = ':';
-		assert: 'invalid:prefix:name' xmlPrefixBeforeLocalName = 'invalid:prefix';
-		assert: ':::name' xmlPrefixBeforeLocalName = '::';
-		assert: ':invalid:prefix:name' xmlPrefixBeforeLocalName = ':invalid:prefix'.
+		assert: 'name' xmlPrefixBeforeLocalName equals: '';
+		assert: ':name' xmlPrefixBeforeLocalName equals: '';
+		assert: 'prefix:name' xmlPrefixBeforeLocalName equals: 'prefix';
+		assert: '::name' xmlPrefixBeforeLocalName equals: ':';
+		assert: 'invalid:prefix:name' xmlPrefixBeforeLocalName
+		equals: 'invalid:prefix';
+		assert: ':::name' xmlPrefixBeforeLocalName equals: '::';
+		assert: ':invalid:prefix:name' xmlPrefixBeforeLocalName
+		equals: ':invalid:prefix'
 ]

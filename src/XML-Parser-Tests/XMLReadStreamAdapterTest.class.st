@@ -42,70 +42,67 @@ XMLReadStreamAdapterTest >> testAtEnd [
 
 { #category : #tests }
 XMLReadStreamAdapterTest >> testContents [
-	| adapter |
 
+	| adapter |
 	adapter := self newStreamAdapter.
-	self outputCollection do: [:each |
-		"use #= because wide chars aren't #== pre-Spur"
+	self outputCollection do: [ :each | "use #= because wide chars aren't #== pre-Spur"
 		self
-			assert: adapter peek = each;
-			assert: adapter contents = self outputCollection;
-			assert: adapter peek = each;
-			assert: adapter next = each].
-	self assert: adapter contents = self outputCollection.
+			assert: adapter peek equals: each;
+			assert: adapter contents equals: self outputCollection;
+			assert: adapter peek equals: each;
+			assert: adapter next equals: each ].
+	self assert: adapter contents equals: self outputCollection
 ]
 
 { #category : #tests }
 XMLReadStreamAdapterTest >> testNext [
-	| adapter |
 
+	| adapter |
 	adapter := self newStreamAdapter.
-	self outputCollection do: [:each |
-		"use #= because wide chars aren't #== pre-Spur"
-		self assert: adapter next = each].
+	self outputCollection do: [ :each | "use #= because wide chars aren't #== pre-Spur"
+		self assert: adapter next equals: each ].
 	self assert: adapter next isNil.
 
-	0 to: self outputCollection size do: [:i |
+	0 to: self outputCollection size do: [ :i |
 		adapter := self newStreamAdapter.
-		self assert:
-			(adapter next: i) =
-				(self outputCollection copyFrom: 1 to: i)].
+		self
+			assert: (adapter next: i)
+			equals: (self outputCollection copyFrom: 1 to: i) ].
 
 	adapter := self newStreamAdapter.
-	self assert:
-		(adapter next: self outputCollection size + 1) =
-			self outputCollection.
-	self assert: (adapter next: 1) isEmpty.
+	self
+		assert: (adapter next: self outputCollection size + 1)
+		equals: self outputCollection.
+	self assert: (adapter next: 1) isEmpty
 ]
 
 { #category : #tests }
 XMLReadStreamAdapterTest >> testOnIfBinaryOrExternal [
-	| basicInputCollection stream adapter |
 
+	| basicInputCollection stream adapter |
 	basicInputCollection := self basicInputCollection.
 	stream := self newStreamOn: (self binaryFrom: basicInputCollection).
 	adapter := self streamAdapterClass onIfBinaryOrExternal: stream.
-	self assert: adapter class == self streamAdapterClass.
+	self assert: adapter class identicalTo: self streamAdapterClass.
 
 	stream := self newStreamOn: (self stringFrom: basicInputCollection).
-	self assert: (self streamAdapterClass onIfBinaryOrExternal: stream) isNil.
-	[stream atEnd]
-		whileFalse: [
-			stream next.
-			self assert:
-				(self streamAdapterClass onIfBinaryOrExternal: stream) isNil].
+	self assert:
+		(self streamAdapterClass onIfBinaryOrExternal: stream) isNil.
+	[ stream atEnd ] whileFalse: [
+		stream next.
+		self assert:
+			(self streamAdapterClass onIfBinaryOrExternal: stream) isNil ]
 ]
 
 { #category : #tests }
 XMLReadStreamAdapterTest >> testPeek [
-	| adapter |
 
+	| adapter |
 	adapter := self newStreamAdapter.
-	self outputCollection do: [:each |
-		"use #= because wide chars aren't #== pre-Spur"
-		self assert: adapter peek = each.
-		adapter next].
-	self assert: adapter peek isNil.
+	self outputCollection do: [ :each | "use #= because wide chars aren't #== pre-Spur"
+		self assert: adapter peek equals: each.
+		adapter next ].
+	self assert: adapter peek isNil
 ]
 
 { #category : #tests }
@@ -127,107 +124,113 @@ XMLReadStreamAdapterTest >> testPeekFor [
 
 { #category : #tests }
 XMLReadStreamAdapterTest >> testPosition [
-	| adapter startPosition endPosition position |
 
+	| adapter startPosition endPosition position |
 	adapter := self newStreamAdapter.
 	startPosition := adapter position. "1 or 0 depending on the stream on GS"
-	endPosition :=
-		adapter
-			upToEnd;
-			position.
+	endPosition := adapter
+		               upToEnd;
+		               position.
 	adapter := self newStreamAdapter.
 	position := startPosition.
-	self outputCollection do: [:each |
+	self outputCollection do: [ :each |
 		self
-			assert: adapter position = position;
-			"use #= because wide chars aren't #== pre-Spur"
-			assert: adapter peek = each;
-			assert: adapter position = position;
-			assert: adapter next = each;
+			assert: adapter position equals: position;
+			assert: adapter peek equals: each;
+			assert: adapter position equals: position;
+			assert: adapter next equals: each;
 			assert: adapter position > position.
-		
+
 		adapter peek.
 		self
-			assert: (adapter position: position) == adapter;
-			assert: adapter peek = each;
-			assert: adapter position = position;
-			assert: adapter next = each;
+			assert: (adapter position: position) identicalTo: adapter;
+			assert: adapter peek equals: each;
+			assert: adapter position equals: position;
+			assert: adapter next equals: each;
 			assert: adapter position > position.
-		position := adapter position].
-	self assert: position = endPosition.
+		position := adapter position ].
+	self assert: position equals: endPosition
 ]
 
 { #category : #tests }
 XMLReadStreamAdapterTest >> testReset [
-	| adapter |
 
+	| adapter |
 	adapter := self newStreamAdapter.
 	self
-		assert: adapter upToEnd = self outputCollection;
+		assert: adapter upToEnd equals: self outputCollection;
 		assert: adapter upToEnd isEmpty;
-		assert: adapter reset == adapter;
-		assert: adapter upToEnd = self outputCollection;
-		assert: adapter upToEnd isEmpty.
+		assert: adapter reset identicalTo: adapter;
+		assert: adapter upToEnd equals: self outputCollection;
+		assert: adapter upToEnd isEmpty
 ]
 
 { #category : #tests }
 XMLReadStreamAdapterTest >> testSkip [
-	| adapter |
 
-	0 to: self outputCollection size do: [:i |
+	| adapter |
+	0 to: self outputCollection size do: [ :i |
 		adapter := self newStreamAdapter.
 		self
-			assert: (adapter skip: i) == adapter;
-			assert: adapter upToEnd = (self outputCollection allButFirst: i)].
+			assert: (adapter skip: i) identicalTo: adapter;
+			assert: adapter upToEnd
+			equals: (self outputCollection allButFirst: i) ].
 
 	adapter := self newStreamAdapter.
 	self
-		assert: (adapter skip: self outputCollection size + 1) == adapter;
-		assert: adapter upToEnd isEmpty.
+		assert: (adapter skip: self outputCollection size + 1)
+		identicalTo: adapter;
+		assert: adapter upToEnd isEmpty
 ]
 
 { #category : #tests }
 XMLReadStreamAdapterTest >> testSkipTo [
-	| adapter |
 
-	self outputCollection do: [:each |
+	| adapter |
+	self outputCollection do: [ :each |
 		adapter := self newStreamAdapter.
 		self
 			assert: (adapter skipTo: each);
-			assert: adapter upToEnd = (self outputCollection copyAfter: each)].
+			assert: adapter upToEnd
+			equals: (self outputCollection copyAfter: each) ].
 
 	adapter := self newStreamAdapter.
 	self
 		deny: (adapter skipTo: #absent);
-		assert: adapter atEnd.
+		assert: adapter atEnd
 ]
 
 { #category : #tests }
 XMLReadStreamAdapterTest >> testUpTo [
-	self outputCollection do: [:each | | adapter |
+
+	self outputCollection do: [ :each |
+		| adapter |
 		adapter := self newStreamAdapter.
-		self assert:
-			(adapter upTo: each) =
-				(self outputCollection copyUpTo: each).
-		self assert:
-			adapter upToEnd =
-				(self outputCollection copyAfter: each)].
-	self assert: (self newStreamAdapter upTo: #absent) = self outputCollection.
+		self
+			assert: (adapter upTo: each)
+			equals: (self outputCollection copyUpTo: each).
+		self
+			assert: adapter upToEnd
+			equals: (self outputCollection copyAfter: each) ].
+	self
+		assert: (self newStreamAdapter upTo: #absent)
+		equals: self outputCollection
 ]
 
 { #category : #tests }
 XMLReadStreamAdapterTest >> testUpToEnd [
-	| adapter |
 
-	self outputCollection withIndexDo: [:each :i |
+	| adapter |
+	self outputCollection withIndexDo: [ :each :i |
 		adapter := self newStreamAdapter.
 		adapter skip: i.
 		self
-			assert: adapter upToEnd = (self outputCollection allButFirst: i);
-			assert: adapter upToEnd = self emptyOutputCollection].
+			assert: adapter upToEnd
+			equals: (self outputCollection allButFirst: i);
+			assert: adapter upToEnd equals: self emptyOutputCollection ].
 
 	adapter := self newStreamAdapter.
 	self
-		assert: adapter upToEnd = self outputCollection;
-		assert: adapter upToEnd = self emptyOutputCollection.
+		assert: adapter upToEnd equals: self outputCollection;
+		assert: adapter upToEnd equals: self emptyOutputCollection
 ]

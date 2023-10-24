@@ -314,7 +314,8 @@ XMLStreamAdapterTest >> testClose [
 
 { #category : #tests }
 XMLStreamAdapterTest >> testIsBinary [
-	self assert: self newStreamAdapter isBinary = self isBinary
+
+	self assert: self newStreamAdapter isBinary equals: self isBinary
 ]
 
 { #category : #tests }
@@ -324,10 +325,12 @@ XMLStreamAdapterTest >> testIsStream [
 
 { #category : #tests }
 XMLStreamAdapterTest >> testIsXMLBinaryOrExternalStream [
-	| streamAdapter |
 
+	| streamAdapter |
 	streamAdapter := self newStreamAdapter.
-	self assert: streamAdapter isXMLBinaryOrExternalStream = streamAdapter isBinary.
+	self
+		assert: streamAdapter isXMLBinaryOrExternalStream
+		equals: streamAdapter isBinary
 ]
 
 { #category : #tests }
@@ -344,11 +347,11 @@ XMLStreamAdapterTest >> testNew [
 
 { #category : #tests }
 XMLStreamAdapterTest >> testOn [
-	| stream adapter |
 
+	| stream adapter |
 	stream := self newStream.
 	adapter := self newStreamAdapterOn: stream.
 	self
-		assert: adapter class == self streamAdapterClass;
-		assert: adapter stream == stream.
+		assert: adapter class identicalTo: self streamAdapterClass;
+		assert: adapter stream identicalTo: stream
 ]
