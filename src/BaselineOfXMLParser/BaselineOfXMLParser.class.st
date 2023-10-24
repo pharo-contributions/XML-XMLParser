@@ -24,12 +24,13 @@ BaselineOfXMLParser >> baseline: spec [
 			spec 
 				package: 'XML-Parser' with: [ spec requires: #('OrderPreservingDictionary' 'BitmapCharacterSet') ];
 				package: 'XML-Parser-Tests' with: [ spec requires: #('XML-Parser' 'OrderPreservingDictionary Tests' 'BitmapCharacterSet Tests') ];
-				package: 'XML-Parser-Tests-Conformance' with: [ spec requires: #('XML-Parser' 'XMLWriter Tests' 'XML-Parser-Tests') ].
+				package: 'XML-Parser-Tests-Conformance' with: [ spec requires: #('XML-Parser' 'XMLWriter Tests' 'XML-Parser-Tests') ];
+				package: 'XML-Parser-Tools' with: [ spec requires: #('XML-Parser') ].
 			
 			"Groups"
 			spec
 				group: 'Core' with: #('XML-Parser');
-				group: 'Tools' with: #(OrderPreservingDictionary Tools 'XMLWriter Tools'); 
+				group: 'Tools' with: #('OrderPreservingDictionary Tools' 'XMLWriter Tools' 'XML-Parser-Tools'); 
 				group: 'Tests' with: #('XML-Parser-Tests' 'XML-Parser-Tests-Conformance');	
 				group: 'all' with: #('Core' 'Tools' 'Tests');
 				group: 'default' with: #('all')	
