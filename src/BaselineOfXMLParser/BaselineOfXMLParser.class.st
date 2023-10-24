@@ -1,5 +1,5 @@
 "
-Baseline for XML Parser (https://github.com/pharo-contributions/XML-XMLParser)
+Baseline for XML Parser [https://github.com/pharo-contributions/XML-XMLParser](https://github.com/pharo-contributions/XML-XMLParser)
 "
 Class {
 	#name : #BaselineOfXMLParser,
@@ -8,9 +8,9 @@ Class {
 }
 
 { #category : #baselines }
-BaselineOfXMLParser >> baselineOf: spec [
-
+BaselineOfXMLParser >> baseline: spec [
 	<baseline>
+	
 	spec
 		for: #common
 		do: [
@@ -24,20 +24,19 @@ BaselineOfXMLParser >> baselineOf: spec [
 			spec 
 				package: 'XML-Parser' with: [ spec requires: #('OrderPreservingDictionary' 'BitmapCharacterSet') ];
 				package: 'XML-Parser-Tests' with: [ spec requires: #('XML-Parser' 'OrderPreservingDictionary Tests' 'BitmapCharacterSet Tests') ];
-				package: 'XML-Parser-Tests-Conformance' with: [ spec requires: #('XML-Parser' 'XMLWriter Tests' 'XML-Parser-Tests') ]";
-				package: 'XML-Parser-GTExtensions' with: [ spec requires: #('XML-Parser') ]".
+				package: 'XML-Parser-Tests-Conformance' with: [ spec requires: #('XML-Parser' 'XMLWriter Tests' 'XML-Parser-Tests') ].
 			
 			"Groups"
 			spec
 				group: 'Core' with: #('XML-Parser');
-				group: 'Tools' with: #(OrderPreservingDictionary Tools 'XMLWriter Tools' "'XML-Parser-GTExtensions'"); 
+				group: 'Tools' with: #(OrderPreservingDictionary Tools 'XMLWriter Tools'); 
 				group: 'Tests' with: #('XML-Parser-Tests' 'XML-Parser-Tests-Conformance');	
 				group: 'all' with: #('Core' 'Tools' 'Tests');
 				group: 'default' with: #('all')	
 	]
 ]
 
-{ #category : #'prerequisites ' }
+{ #category : #prerequisites }
 BaselineOfXMLParser >> bitmapCharacterSetOn: spec [
 			
 	spec
@@ -52,7 +51,7 @@ BaselineOfXMLParser >> bitmapCharacterSetOn: spec [
 			
 ]
 
-{ #category : #'prerequisites ' }
+{ #category : #prerequisites }
 BaselineOfXMLParser >> orderPreservingDictionaryOn: spec [
 
 	spec
@@ -67,7 +66,7 @@ BaselineOfXMLParser >> orderPreservingDictionaryOn: spec [
 		project: 'OrderPreservingDictionary Tools' copyFrom: 'OrderPreservingDictionary' with: [ spec loads: #('Tools') ]
 ]
 
-{ #category : #'prerequisites ' }
+{ #category : #prerequisites }
 BaselineOfXMLParser >> xmlWriterOn: spec [
 
 	spec
