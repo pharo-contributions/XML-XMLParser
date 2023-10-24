@@ -21,7 +21,7 @@ DTDStaticExternalEntityResolverTest >> entityDictionary [
 		entities
 			at: uriString asXMLURI
 			put: replacement].
-	^ entities.
+	^ entities
 ]
 
 { #category : #enumerating }
@@ -92,7 +92,7 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURI [
 		ifTrue: [ ^ self ].
 	resolver := self newResolver.
 	self
-		entityURIStringsAndReplacementsDo: [ :uriString :replacement | 
+		entityURIStringsAndReplacementsDo: [ :uriString :replacement |
 			self
 				assert: (resolver externalEntityAtURI: uriString) equals: '';
 				assert: (resolver externalEntityAtURI: uriString asXMLURI)
@@ -112,7 +112,7 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsent [
 		ifTrue: [ ^ self ].
 	resolver := self newResolver.
 	self
-		entityURIStringsAndReplacementsDo: [ :uriString :replacement | 
+		entityURIStringsAndReplacementsDo: [ :uriString :replacement |
 			self
 				assert: (resolver externalEntityAtURI: uriString ifAbsent: [ #absent ])
 				equals: #absent.
@@ -141,7 +141,7 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsentPut [
 		ifTrue: [ ^ self ].
 	resolver := self newResolver.
 	self
-		entityURIStringsAndReplacementsDo: [ :uriString :replacement | 
+		entityURIStringsAndReplacementsDo: [ :uriString :replacement |
 			self
 				assert: (resolver externalEntityAtURI: uriString ifAbsentPut: [ replacement ])
 				equals: replacement.
@@ -166,7 +166,7 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIPut [
 		ifTrue: [ ^ self ].
 	resolver := self newResolver.
 	self
-		entityURIStringsAndReplacementsDo: [ :uriString :replacement | 
+		entityURIStringsAndReplacementsDo: [ :uriString :replacement |
 			self
 				assert: (resolver externalEntityAtURI: uriString put: replacement)
 				equals: replacement.
@@ -212,7 +212,7 @@ DTDStaticExternalEntityResolverTest >> testIncludesExternalEntityURI [
 			put: replacement.
 		self
 			assert: (resolver includesExternalEntityURI: uriString);
-			assert: (resolver includesExternalEntityURI: uriString asXMLURI)].
+			assert: (resolver includesExternalEntityURI: uriString asXMLURI)]
 ]
 
 { #category : #tests }
@@ -225,7 +225,7 @@ DTDStaticExternalEntityResolverTest >> testRemoveExternalEntities [
 	resolver := self newResolverWithEntities.
 	self
 		assert: resolver removeExternalEntities == resolver;
-		deny: resolver hasExternalEntities.
+		deny: resolver hasExternalEntities
 ]
 
 { #category : #tests }
@@ -235,7 +235,7 @@ DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURI [
 		ifTrue: [ ^ self ].
 	resolver := self newResolverWithEntities.
 	self
-		entityURIStringsAndReplacementsDo: [ :uriString :replacement | 
+		entityURIStringsAndReplacementsDo: [ :uriString :replacement |
 			self
 				assert: (resolver removeExternalEntityURI: uriString)
 					equals: replacement;
@@ -255,7 +255,7 @@ DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURIIfAbsent [
 		ifTrue: [ ^ self ].
 	resolver := self newResolverWithEntities.
 	self
-		entityURIStringsAndReplacementsDo: [ :uriString :replacement | 
+		entityURIStringsAndReplacementsDo: [ :uriString :replacement |
 			self
 				assert: (resolver removeExternalEntityURI: uriString ifAbsent: [ self fail ])
 				equals: replacement.
@@ -278,7 +278,7 @@ DTDStaticExternalEntityResolverTest >> testResolveExternalEntityURI [
 		ifTrue: [ ^ self ].
 	resolver := self newResolver.
 	self
-		entityURIStringsAndReplacementsDo: [ :uriString :replacement | 
+		entityURIStringsAndReplacementsDo: [ :uriString :replacement |
 			self
 				should: [ resolver resolveExternalEntityURI: uriString ]
 				raise: XMLParserException.
@@ -309,7 +309,7 @@ DTDStaticExternalEntityResolverTest >> testResolveExternalEntityURIUpToLimit [
 		ifTrue: [ ^ self ].
 	resolver := self newResolver.
 	self
-		entityURIStringsAndReplacementsDo: [ :uriString :replacement | 
+		entityURIStringsAndReplacementsDo: [ :uriString :replacement |
 			self
 				should: [ resolver resolveExternalEntityURI: uriString upToLimit: nil ]
 				raise: XMLParserException.
@@ -349,7 +349,7 @@ DTDStaticExternalEntityResolverTest >> testStreamResolveExternalEntityURI [
 		ifTrue: [ ^ self ].
 	resolver := self newResolver.
 	self
-		entityURIStringsAndReplacementsDo: [ :uriString :replacement | 
+		entityURIStringsAndReplacementsDo: [ :uriString :replacement |
 			| stream |
 			self
 				should: [ resolver streamResolveExternalEntityURI: uriString ]
@@ -385,7 +385,7 @@ DTDStaticExternalEntityResolverTest >> testStreamResolveExternalEntityURIUpToLim
 		ifTrue: [ ^ self ].
 	resolver := self newResolver.
 	self
-		entityURIStringsAndReplacementsDo: [ :uriString :replacement | 
+		entityURIStringsAndReplacementsDo: [ :uriString :replacement |
 			| stream |
 			self
 				should: [ resolver streamResolveExternalEntityURI: uriString upToLimit: nil ]

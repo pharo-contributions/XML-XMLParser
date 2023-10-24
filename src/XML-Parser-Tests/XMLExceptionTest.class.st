@@ -57,7 +57,7 @@ XMLExceptionTest >> testFormatMessageWith [
 		(exception
 			formatMessage: '{1}'
 			with: 'one') == exception.
-	self assert: exception messageText equals: 'one'.
+	self assert: exception messageText equals: 'one'
 ]
 
 { #category : #tests }
@@ -69,7 +69,7 @@ XMLExceptionTest >> testFormatMessageWithArguments [
 		(exception
 			formatMessage: '{1} {2} {3} {4}'
 			withArguments: #('one' 2 'three' 4)) == exception.
-	self assert: exception messageText equals: 'one 2 three 4'.
+	self assert: exception messageText equals: 'one 2 three 4'
 ]
 
 { #category : #tests }
@@ -82,7 +82,7 @@ XMLExceptionTest >> testFormatMessageWithWith [
 			formatMessage: '{1} {2}'
 			with: 'one'
 			with: 2) == exception.
-	self assert: exception messageText equals: 'one 2'.
+	self assert: exception messageText equals: 'one 2'
 ]
 
 { #category : #tests }
@@ -96,7 +96,7 @@ XMLExceptionTest >> testFormatMessageWithWithWith [
 			with: 'one'
 			with: 2
 			with: 'three') == exception.
-	self assert: exception messageText equals: 'one 2 three'.
+	self assert: exception messageText equals: 'one 2 three'
 ]
 
 { #category : #tests }
@@ -111,7 +111,7 @@ XMLExceptionTest >> testFormatMessageWithWithWithWith [
 			with: 2
 			with: 'three'
 			with: 4) == exception.
-	self assert: exception messageText equals: 'one 2 three 4'.
+	self assert: exception messageText equals: 'one 2 three 4'
 ]
 
 { #category : #tests }
@@ -218,7 +218,7 @@ XMLExceptionTest >> testInheritMessageFrom [
 				('({1}) {2}' format:
 					(Array
 						with: self otherExceptionClass name
-						with: self errorMessage)).
+						with: self errorMessage))
 ]
 
 { #category : #tests }
@@ -241,5 +241,5 @@ XMLExceptionTest >> testSignalMessageFrom [
 						('({1}) {2}' format:
 							(Array
 								with: self otherExceptionClass name
-								with: self errorMessage))].
+								with: self errorMessage))]
 ]

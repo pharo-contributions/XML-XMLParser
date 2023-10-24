@@ -52,7 +52,7 @@ DTDNotation >> publicID: aPublicID [
 DTDNotation >> setName: aName publicID: aPublicID systemID: aSystemID [
 	name := aName.
 	publicID := aPublicID.
-	systemID := aSystemID.
+	systemID := aSystemID
 ]
 
 { #category : #accessing }

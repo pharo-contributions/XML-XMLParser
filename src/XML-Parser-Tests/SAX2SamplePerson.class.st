@@ -40,7 +40,7 @@ SAX2SamplePerson >> initialize [
 	name := ''.
 	dateOfBirth := nil.
 	emailAddresses := OrderedCollection new.
-	residence := ''.
+	residence := ''
 ]
 
 { #category : #accessing }

@@ -27,7 +27,7 @@ XMLNamespaceScopeTest >> newNamespaceScopeWithNamespaces [
 		scope
 			mapPrefix: prefix
 			to: uri].
-	^ scope.
+	^ scope
 ]
 
 { #category : #tests }
@@ -40,15 +40,15 @@ XMLNamespaceScopeTest >> testCopy [
 	self
 		deny: copy == scope;
 		assert: copy = scope;
-		assert: copy prefixMappings == oldPrefixMappings.
+		assert: copy prefixMappings == oldPrefixMappings
 ]
 
 { #category : #tests }
 XMLNamespaceScopeTest >> testDefaultNamespace [
-	| scope oldPrefixMappings |
 
+	| scope oldPrefixMappings |
 	scope := self newNamespaceScope.
-	self assert: scope defaultNamespace = ''.
+	self assert: scope defaultNamespace equals: ''.
 
 	oldPrefixMappings := scope prefixMappings.
 	scope defaultNamespace: 'test'.
@@ -58,7 +58,7 @@ XMLNamespaceScopeTest >> testDefaultNamespace [
 		deny: scope prefixMappings = oldPrefixMappings.
 
 	scope unmapPrefix: ''.
-	self assert: scope defaultNamespace = ''.
+	self assert: scope defaultNamespace = ''
 ]
 
 { #category : #tests }
@@ -84,7 +84,7 @@ XMLNamespaceScopeTest >> testHasDefaultNamespace [
 	self assert: scope hasDefaultNamespace.
 
 	scope unmapPrefix: ''.
-	self deny: scope hasDefaultNamespace.
+	self deny: scope hasDefaultNamespace
 ]
 
 { #category : #tests }
@@ -99,7 +99,7 @@ XMLNamespaceScopeTest >> testHasNamespaces [
 	self namespaces keysDo: [:each |
 		self assert: scope hasNamespaces.
 		scope unmapPrefix: each].
-	self deny: scope hasNamespaces.
+	self deny: scope hasNamespaces
 ]
 
 { #category : #tests }
@@ -117,7 +117,7 @@ XMLNamespaceScopeTest >> testHash [
 		self newNamespaceScope hash =
 			(self newNamespaceScopeWithNamespaces
 				unmapPrefixes;
-				hash).
+				hash)
 ]
 
 { #category : #tests }
@@ -140,7 +140,7 @@ XMLNamespaceScopeTest >> testIncludesPrefix [
 		scope
 			mapPrefix: prefix
 			to: uri.
-		self assert: (scope includesPrefix: prefix)].
+		self assert: (scope includesPrefix: prefix)]
 ]
 
 { #category : #tests }
@@ -178,7 +178,7 @@ XMLNamespaceScopeTest >> testIncludesPrefixMappedTo [
 		self assert:
 			(scope
 				includesPrefix: prefix
-				mappedTo: uri)].
+				mappedTo: uri)]
 ]
 
 { #category : #tests }
@@ -194,7 +194,7 @@ XMLNamespaceScopeTest >> testInheritMappingsFrom [
 	innerScope inheritMappingsFrom: outerScope.
 	self
 		assert: innerScope prefixMappings = outerScope prefixMappings;
-		deny: innerScope prefixMappings == outerScope prefixMappings.
+		deny: innerScope prefixMappings == outerScope prefixMappings
 ]
 
 { #category : #tests }
@@ -265,7 +265,7 @@ XMLNamespaceScopeTest >> testMapPrefixTo [
 				scope
 					mapPrefix: 'newPrefix'
 					to: each]
-			raise: XMLNamespaceException].
+			raise: XMLNamespaceException]
 ]
 
 { #category : #tests }
@@ -288,7 +288,7 @@ XMLNamespaceScopeTest >> testMapPrefixesAndURIs [
 	innerScope mapPrefixesAndURIs: namespaces.
 	self
 		assert: innerScope prefixMappings = outerScope prefixMappings;
-		deny: innerScope prefixMappings == outerScope prefixMappings.
+		deny: innerScope prefixMappings == outerScope prefixMappings
 ]
 
 { #category : #tests }
@@ -302,7 +302,7 @@ XMLNamespaceScopeTest >> testMappedPrefixes [
 			mapPrefix: prefix
 			to: uri.
 		prefixes addLast: prefix.
-		self assert: scope mappedPrefixes = prefixes asArray].
+		self assert: scope mappedPrefixes = prefixes asArray]
 ]
 
 { #category : #tests }
@@ -321,7 +321,7 @@ XMLNamespaceScopeTest >> testPrefixMappingAt [
 	self namespaces keysAndValuesDo: [:prefix :uri |
 		self assert: (scope prefixMappingAt: prefix) = ''.
 		scope mapPrefix: prefix to: uri.
-		self assert: (scope prefixMappingAt: prefix) = uri].
+		self assert: (scope prefixMappingAt: prefix) = uri]
 ]
 
 { #category : #tests }
@@ -354,7 +354,7 @@ XMLNamespaceScopeTest >> testPrefixMappingAtIfAbsent [
 		self assert:
 			(scope
 				prefixMappingAt: prefix
-				ifAbsent: [self fail]) = uri].
+				ifAbsent: [self fail]) = uri]
 ]
 
 { #category : #tests }
@@ -368,7 +368,7 @@ XMLNamespaceScopeTest >> testPrefixesAndURIsDo [
 
 	self newNamespaceScopeWithNamespaces prefixesAndURIsDo: [:prefix :uri |
 		associations addLast: prefix -> uri].
-	self assert: associations asArray = self namespaces associations asArray.
+	self assert: associations asArray = self namespaces associations asArray
 ]
 
 { #category : #tests }
@@ -384,7 +384,7 @@ XMLNamespaceScopeTest >> testResolvePrefix [
 	self assert:
 		(scope resolvePrefix: 'xml') = scope xmlNamespaceURI.
 	self assert:
-		(scope resolvePrefix: 'xmlns') = scope xmlnsNamespaceURI.
+		(scope resolvePrefix: 'xmlns') = scope xmlnsNamespaceURI
 ]
 
 { #category : #tests }
@@ -410,7 +410,7 @@ XMLNamespaceScopeTest >> testResolvePrefixIfUnresolvable [
 	self  assert:
 		(scope
 			resolvePrefix: 'xmlns'
-			ifUnresolvable: [self fail]) = scope xmlnsNamespaceURI.
+			ifUnresolvable: [self fail]) = scope xmlnsNamespaceURI
 ]
 
 { #category : #tests }
@@ -450,7 +450,7 @@ XMLNamespaceScopeTest >> testResolvePrefixesOfNamespaceURI [
 		to: scope xmlNamespaceURI.
 	self assert:
 		(scope resolvePrefixesOfNamespaceURI: scope xmlNamespaceURI) =
-			(Set with: 'xml').
+			(Set with: 'xml')
 ]
 
 { #category : #tests }
@@ -473,7 +473,7 @@ XMLNamespaceScopeTest >> testUnmapPrefix [
 		scope
 			mapPrefix: prefix
 			to: uri.
-	
+
 		oldPrefixMappings := scope prefixMappings.
 		self
 			assert: (scope unmapPrefix: prefix) = uri;
@@ -488,7 +488,7 @@ XMLNamespaceScopeTest >> testUnmapPrefix [
 		self
 			should: [scope unmapPrefix: prefix]
 			raise: XMLNamespaceException].
-	self assert: scope prefixMappings isEmpty.
+	self assert: scope prefixMappings isEmpty
 ]
 
 { #category : #tests }
@@ -524,7 +524,7 @@ XMLNamespaceScopeTest >> testUnmapPrefixIfAbsent [
 				(scope
 					unmapPrefix: prefix
 					ifAbsent: [#absent]) = #absent].
-	self assert: scope prefixMappings isEmpty.
+	self assert: scope prefixMappings isEmpty
 ]
 
 { #category : #tests }
@@ -541,7 +541,7 @@ XMLNamespaceScopeTest >> testUnmapPrefixes [
 	self
 		assert: oldPrefixMappings = self namespaces;
 		deny: scope prefixMappings = oldPrefixMappings;
-		deny: scope prefixMappings == oldPrefixMappings.
+		deny: scope prefixMappings == oldPrefixMappings
 ]
 
 { #category : #tests }

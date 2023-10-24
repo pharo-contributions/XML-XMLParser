@@ -186,14 +186,14 @@ SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean va
 SAXHandler class >> parseDocumentFrom: aStringOrStream [
 	self deprecated: 'Use #parse: instead'.
 
-	^ self parse: aStringOrStream.
+	^ self parse: aStringOrStream
 ]
 
 { #category : #deprecated }
 SAXHandler class >> parseDocumentFromFileNamed: aFileName [
 	self deprecated: 'Use #parseFileNamed: instead'.
 
-	^ self parseFileNamed: aFileName.
+	^ self parseFileNamed: aFileName
 ]
 
 { #category : #parsing }
@@ -231,11 +231,11 @@ SAXHandler >> attributeDeclaration: anElementName name: anAttributeName type: aT
 SAXHandler >> characters: aString [
 	"Handles character data in an element, such as the 'test' in
 	'<characters>test</characters>' or in the CDATA section '<![CDATA[test]]>'.
-	
+
 	It may be sent multiple times for different sections of character data
 	in a single element if they're separated by other nodes or entity
 	references like in '<characters>one<!--comment-->two</characters>'.
-	
+
 	See #isInCDataSection and #ignorableWhitespace:"
 ]
 
@@ -316,7 +316,6 @@ SAXHandler >> driverClass [
 
 { #category : #'handling - declaration' }
 SAXHandler >> elementDeclaration: anElementName contentModel: aContentModel [
-
 ]
 
 { #category : #'handling - lexical' }
@@ -326,7 +325,6 @@ SAXHandler >> endCData [
 
 { #category : #'handling - lexical' }
 SAXHandler >> endDTD [
-
 ]
 
 { #category : #'handling - content' }
@@ -345,7 +343,7 @@ SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI [
 	"Handles the end of an element if a subclass doesn't implement
 	#endElement:prefix:uri:localName:. By default it forwards to a simpler
 	handler, #endElement:.
-	
+
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	aPrefix - the prefix of the qualified name or an empty string
 	aURI - the namespace URI of the element or an empty string"
@@ -358,7 +356,7 @@ SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aL
 	"Handles the end of an element, either an end tag like '</end>' or a
 	self-closed tag like '<empty/>'. By default it forwards to a simpler handler,
 	#endElement:prefix:uri:.
-	
+
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	aPrefix - the prefix of the qualified name or an empty string
 	aURI - the namespace URI of the element or an empty string

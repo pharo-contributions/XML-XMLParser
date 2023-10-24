@@ -22,7 +22,7 @@ XMLElementDeclarationTest >> testContentModel [
 	self
 		assert: declaration contentModel = '';
 		assert: (declaration contentModel: '(one|two)') == declaration;
-		assert: declaration contentModel = '(one|two)'.
+		assert: declaration contentModel = '(one|two)'
 ]
 
 { #category : #tests }
@@ -33,7 +33,7 @@ XMLElementDeclarationTest >> testElement [
 	self
 		assert: declaration element = '';
 		assert: (declaration element: 'test') == declaration;
-		assert: declaration element = 'test'.
+		assert: declaration element = 'test'
 ]
 
 { #category : #tests }
@@ -59,5 +59,5 @@ XMLElementDeclarationTest >> testWriteXMLOn [
 	self assert:
 		(self nodeClass
 			element: 'one'
-			contentModel: 'EMPTY') printString = '<!ELEMENT one EMPTY>'.
+			contentModel: 'EMPTY') printString = '<!ELEMENT one EMPTY>'
 ]

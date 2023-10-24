@@ -106,7 +106,7 @@ XMLEncodingDetectorTest >> newStreamOn: aString [
 XMLEncodingDetectorTest >> testStreamConverterForEncoding [
 	self explicitEncodedInputCollections do: [:each |
 		| stream startPosition streamConverter |
-	
+
 		stream := self newStreamOn: each.
 		startPosition := stream position.
 		streamConverter :=
@@ -122,7 +122,7 @@ XMLEncodingDetectorTest >> testStreamConverterForEncoding [
 
 	self implicitEncodedInputCollections do: [:each |
 		| stream startPosition streamConverter |
-	
+
 		stream := self newStreamOn: each.
 		startPosition := stream position.
 		streamConverter :=
@@ -153,5 +153,5 @@ XMLEncodingDetectorTest >> testStreamConverterForEncoding [
 				streamConverterForEncoding.
 		self
 			assert: streamConverter isNil;
-			assert: stream position = startPosition].
+			assert: stream position = startPosition]
 ]

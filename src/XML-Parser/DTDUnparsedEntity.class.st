@@ -51,7 +51,7 @@ DTDUnparsedEntity >> setName: aName publicID: aPublicID systemID: aSystemID ndat
 	name := aName.
 	publicID := aPublicID.
 	systemID := aSystemID.
-	ndata := aNotationName.
+	ndata := aNotationName
 ]
 
 { #category : #accessing }

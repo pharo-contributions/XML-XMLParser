@@ -18,7 +18,7 @@ XMLGeneralEntityDeclarationTest >> nodeClass [
 XMLGeneralEntityDeclarationTest >> testIsUnparsed [
 	super testIsUnparsed.
 
-	self assert: (self newNode ndata: 'test') isUnparsed.
+	self assert: (self newNode ndata: 'test') isUnparsed
 ]
 
 { #category : #tests }
@@ -29,7 +29,7 @@ XMLGeneralEntityDeclarationTest >> testNData [
 	self
 		assert: declaration ndata = '';
 		assert: (declaration ndata: 'test') == declaration;
-		assert: declaration ndata = 'test'.
+		assert: declaration ndata = 'test'
 ]
 
 { #category : #tests }
@@ -47,7 +47,7 @@ XMLGeneralEntityDeclarationTest >> testNamePublicIDSystemIDNdata [
 		assert: declaration name = 'one';
 		assert: declaration publicID = 'two';
 		assert: declaration systemID = 'three';
-		assert: declaration ndata = 'four'.
+		assert: declaration ndata = 'four'
 ]
 
 { #category : #tests }
@@ -63,5 +63,5 @@ XMLGeneralEntityDeclarationTest >> testWriteXMLOn [
 			'<!ENTITY one SYSTEM "three">'.
 	self assert:
 		(self nodeClass name: 'one' publicID: 'two' systemID: 'three' ndata: 'four') printString =
-			'<!ENTITY one PUBLIC "two" "three" NDATA four>'.
+			'<!ENTITY one PUBLIC "two" "three" NDATA four>'
 ]

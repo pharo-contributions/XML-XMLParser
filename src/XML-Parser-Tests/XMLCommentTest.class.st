@@ -23,7 +23,7 @@ XMLCommentTest >> testAcceptNodeVisitor [
 	self
 		assert: message selector == #visitComment:;
 		assert: message arguments = (Array with: comment);
-		deny: visitor messageRecorder hasMessages.
+		deny: visitor messageRecorder hasMessages
 ]
 
 { #category : #tests }
@@ -34,7 +34,7 @@ XMLCommentTest >> testCanonicallyEquals [
 			(self nodeClass string: 'test')).
 	self deny:
 		((self nodeClass string: 'test') canonicallyEquals:
-			self newNode).
+			self newNode)
 ]
 
 { #category : #tests }
@@ -63,7 +63,7 @@ XMLCommentTest >> testString [
 	self assert: comment string = self markupString.
 
 	comment string: ''.
-	self assert: comment string = ''.
+	self assert: comment string = ''
 ]
 
 { #category : #tests }

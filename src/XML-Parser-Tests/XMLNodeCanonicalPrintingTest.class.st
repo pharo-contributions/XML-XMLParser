@@ -41,7 +41,7 @@ XMLNodeCanonicalPrintingTest >> testCharacterReferences [
 						'   <norm attr=" ''    &#xD;&#xA;&#x9;   '' "></norm>'
 						'   <normNames attr="A &#xD;&#xA;&#x9; B"></normNames>'
 						'   <normId id="'' &#xD;&#xA;&#x9; ''"></normId>'
-						'</doc>')).
+						'</doc>'))
 ]
 
 { #category : #tests }
@@ -86,7 +86,7 @@ XMLNodeCanonicalPrintingTest >> testEntityReferences [
 					#('<doc attrExtEnt="entExt">'
 						'   Hello, world!'
 						'</doc>'
-						'<!-- Let world.txt contain "world" (excluding the quotes) -->')).
+						'<!-- Let world.txt contain "world" (excluding the quotes) -->'))
 ]
 
 { #category : #tests }
@@ -127,7 +127,7 @@ XMLNodeCanonicalPrintingTest >> testPIsAndComments [
 						'<doc>Hello, world!<!-- Comment 1 --></doc>'
 						'<?pi-without-data?>'
 						'<!-- Comment 2 -->'
-						'<!-- Comment 3 -->')).
+						'<!-- Comment 3 -->'))
 ]
 
 { #category : #tests }
@@ -171,7 +171,7 @@ XMLNodeCanonicalPrintingTest >> testStartAndEndTags [
 						'         </e8>'
 						'      </e7>'
 						'   </e6>'
-						'</doc>')).
+						'</doc>'))
 ]
 
 { #category : #tests }
@@ -206,5 +206,5 @@ XMLNodeCanonicalPrintingTest >> testWhitespace [
 						'      <dirty>   A   B   </dirty>'
 						'      C'
 						'   </mixed>'
-						'</doc>')).
+						'</doc>'))
 ]

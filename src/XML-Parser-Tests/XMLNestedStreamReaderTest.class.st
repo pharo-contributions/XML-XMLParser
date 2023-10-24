@@ -119,7 +119,7 @@ XMLNestedStreamReaderTest >> testAtEnd [
 	streamReader pushBack: ''.
 	self
 		assert: streamReader atEnd;
-		assert: streamReader stream atEnd.
+		assert: streamReader stream atEnd
 ]
 
 { #category : #tests }
@@ -153,7 +153,7 @@ XMLNestedStreamReaderTest >> testCloseStreams [
 
 	self
 		shouldnt: [streamReader closeStreams]
-		raise: Error.
+		raise: Error
 ]
 
 { #category : #tests }
@@ -167,7 +167,7 @@ XMLNestedStreamReaderTest >> testHasPushedBackStreams [
 	self assert: streamReader hasPushedBackStreams.
 
 	streamReader next.
-	self deny: streamReader hasPushedBackStreams.
+	self deny: streamReader hasPushedBackStreams
 ]
 
 { #category : #tests }
@@ -185,7 +185,7 @@ XMLNestedStreamReaderTest >> testIsXMLBinaryOrExternalStream [
 	| streamReader |
 
 	streamReader := self newStreamReaderOnSourceXML.
-	self assert: streamReader isXMLBinaryOrExternalStream = streamReader isBinary.
+	self assert: streamReader isXMLBinaryOrExternalStream = streamReader isBinary
 ]
 
 { #category : #tests }
@@ -208,7 +208,7 @@ XMLNestedStreamReaderTest >> testLineEndingNormalizationAcrossStreams [
 		assert: streamReader next = self cr;
 		deny: streamReader atEnd;
 		assert: streamReader next = self normalizedLineEnding;
-		assert: streamReader atEnd.
+		assert: streamReader atEnd
 ]
 
 { #category : #tests }
@@ -238,7 +238,7 @@ XMLNestedStreamReaderTest >> testNext [
 		assert: streamReader currentLineNumber = currentLineNumber;
 		assert: streamReader currentColumnNumber = currentColumnNumber;
 		assert: streamReader currentPosition = currentPosition;
-		assert: (streamReader next: self normalizedSourceXML size) = ''.
+		assert: (streamReader next: self normalizedSourceXML size) = ''
 ]
 
 { #category : #tests }
@@ -249,7 +249,7 @@ XMLNestedStreamReaderTest >> testNormalizedLineEndingChar [
 	self
 		assert: (streamReader normalizedLineEndingChar: $N) == streamReader;
 		assert: (streamReader normalizedLineEndingChar) == $N;
-		assert: streamReader upToEnd = (self sourceXMLNormalizedWith: $N).
+		assert: streamReader upToEnd = (self sourceXMLNormalizedWith: $N)
 ]
 
 { #category : #tests }
@@ -276,7 +276,7 @@ XMLNestedStreamReaderTest >> testPeek [
 			assert: streamReader currentLineNumber = currentLineNumber;
 			assert: streamReader currentColumnNumber = currentColumnNumber;
 			assert: streamReader currentPosition = currentPosition].
-	self assert: streamReader peek isNil.
+	self assert: streamReader peek isNil
 ]
 
 { #category : #tests }

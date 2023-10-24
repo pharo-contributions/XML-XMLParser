@@ -23,7 +23,7 @@ XMLStringTest >> testAcceptNodeVisitor [
 	self
 		assert: message selector == #visitStringNode:;
 		assert: message arguments = (Array with: stringNode);
-		deny: visitor messageRecorder hasMessages.
+		deny: visitor messageRecorder hasMessages
 ]
 
 { #category : #tests }
@@ -38,7 +38,7 @@ XMLStringTest >> testAppend [
 	self assert: stringNode string = 'onetwo'.
 
 	stringNode append: 'three'.
-	self assert: stringNode string = 'onetwothree'.
+	self assert: stringNode string = 'onetwothree'
 ]
 
 { #category : #tests }
@@ -53,10 +53,10 @@ XMLStringTest >> testAsXMLEscapedString [
 	| stringNode |
 
 	stringNode := self nodeClass string: self markupString.
-	self	
+	self
 		assert: stringNode string = self markupString;
 		deny: stringNode string = self escapedString;
-		assert: stringNode asXMLEscapedString = self escapedString.
+		assert: stringNode asXMLEscapedString = self escapedString
 ]
 
 { #category : #tests }
@@ -64,7 +64,7 @@ XMLStringTest >> testAsXMLStringNode [
 	| stringNode |
 
 	stringNode := self newNode.
-	self assert: stringNode asXMLStringNode == stringNode.
+	self assert: stringNode asXMLStringNode == stringNode
 ]
 
 { #category : #tests }
@@ -78,7 +78,7 @@ XMLStringTest >> testBeginsWith [
 			assert: (stringNode beginsWith: prefix);
 			assert: (stringNode beginsWith: (self nodeClass string: prefix));
 			deny: (stringNode beginsWith: (prefix copyWith: $.));
-			deny: (stringNode beginsWith: (self nodeClass string: (prefix copyWith: $.)))].
+			deny: (stringNode beginsWith: (self nodeClass string: (prefix copyWith: $.)))]
 ]
 
 { #category : #tests }
@@ -89,7 +89,7 @@ XMLStringTest >> testCanonicallyEquals [
 			(self nodeClass string: 'test')).
 	self deny:
 		((self nodeClass string: 'test') canonicallyEquals:
-			self newNode).
+			self newNode)
 ]
 
 { #category : #tests }
@@ -112,7 +112,7 @@ XMLStringTest >> testDeleteFromTo [
 	self assert: stringNode string = 'one'.
 
 	stringNode deleteFrom: 1 to: 3.
-	self assert: stringNode string = ''.
+	self assert: stringNode string = ''
 ]
 
 { #category : #tests }
@@ -126,7 +126,7 @@ XMLStringTest >> testEndsWith [
 			assert: (stringNode endsWith: suffix);
 			assert: (stringNode endsWith: (self nodeClass string: suffix));
 			deny: (stringNode endsWith: (suffix copyWithFirst: $.));
-			deny: (stringNode endsWith: (self nodeClass string: (suffix copyWithFirst: $.)))].
+			deny: (stringNode endsWith: (self nodeClass string: (suffix copyWithFirst: $.)))]
 ]
 
 { #category : #tests }
@@ -162,7 +162,7 @@ XMLStringTest >> testIncludesSubstring [
 
 	self
 		assert: (stringNode includesSubstring: '');
-		assert: (stringNode includesSubstring: (self nodeClass string: '')).
+		assert: (stringNode includesSubstring: (self nodeClass string: ''))
 ]
 
 { #category : #tests }
@@ -184,7 +184,7 @@ XMLStringTest >> testIndexOfSubstring [
 	stringNode append: 'two'.
 	self
 		assert: (stringNode indexOfSubstring: 'two') = 4;
-		assert: (stringNode indexOfSubstring: (self nodeClass string: 'two')) = 4.
+		assert: (stringNode indexOfSubstring: (self nodeClass string: 'two')) = 4
 ]
 
 { #category : #tests }
@@ -203,7 +203,7 @@ XMLStringTest >> testIsEmpty [
 	self deny: node isEmpty.
 
 	node string: ''.
-	self assert: node isEmpty.
+	self assert: node isEmpty
 ]
 
 { #category : #tests }
@@ -224,7 +224,7 @@ XMLStringTest >> testIsStringNode [
 		assert: (stringNode isStringNode: 'test');
 		assert: (stringNode isStringNode: (self nodeClass string: 'test'));
 		deny: (stringNode isStringNode: '');
-		deny: (stringNode isStringNode: self newNode).
+		deny: (stringNode isStringNode: self newNode)
 ]
 
 { #category : #tests }
@@ -238,7 +238,7 @@ XMLStringTest >> testIsWhitespace [
 	self assert: stringNode isWhitespace.
 
 	stringNode append: 'non-space'.
-	self deny: stringNode isWhitespace.
+	self deny: stringNode isWhitespace
 ]
 
 { #category : #tests }
@@ -274,7 +274,7 @@ XMLStringTest >> testMergeAdjacent [
 		assert: nodes second isComment;
 		assert: (nodes third isStringNode and: [nodes third string = 'fourfive']);
 		assert: nodes fourth isComment;
-		assert: (nodes fifth isStringNode and: [nodes fifth string = 'six']).
+		assert: (nodes fifth isStringNode and: [nodes fifth string = 'six'])
 ]
 
 { #category : #tests }
@@ -288,7 +288,7 @@ XMLStringTest >> testNotEmpty [
 	self assert: node notEmpty.
 
 	node string: ''.
-	self deny: node notEmpty.
+	self deny: node notEmpty
 ]
 
 { #category : #tests }
@@ -303,7 +303,7 @@ XMLStringTest >> testPrepend [
 	self assert: stringNode string = 'twothree'.
 
 	stringNode prepend: 'one'.
-	self assert: stringNode string = 'onetwothree'.
+	self assert: stringNode string = 'onetwothree'
 ]
 
 { #category : #tests }
@@ -318,7 +318,7 @@ XMLStringTest >> testReplaceAllWith [
 	self assert: stringNode string = 'one new two new three new'.
 
 	stringNode replaceAll: 'new' with: ''.
-	self assert: stringNode string = 'one  two  three '.
+	self assert: stringNode string = 'one  two  three '
 ]
 
 { #category : #tests }
@@ -341,7 +341,7 @@ XMLStringTest >> testReplaceFromToWith [
 	self assert: stringNode string = 'one two three'.
 
 	stringNode replaceFrom: 14 to: 13 with: (self nodeClass string: ' four').
-	self assert: stringNode string = 'one two three four'.
+	self assert: stringNode string = 'one two three four'
 ]
 
 { #category : #tests }
@@ -380,7 +380,7 @@ XMLStringTest >> testSplitAt [
 		deny: stringNode == newStringNode;
 		assert: stringNode string = 'one';
 		assert: newStringNode string = 'two';
-		assert: (element nodeAfter: stringNode) == newStringNode.
+		assert: (element nodeAfter: stringNode) == newStringNode
 ]
 
 { #category : #tests }
@@ -399,7 +399,7 @@ XMLStringTest >> testString [
 	self assert: stringNode string = self markupString.
 
 	stringNode string: ''.
-	self assert: stringNode string = ''.
+	self assert: stringNode string = ''
 ]
 
 { #category : #tests }

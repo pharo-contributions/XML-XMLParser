@@ -30,7 +30,7 @@ DTDEntityConfiguration >> postCopy [
 	super postCopy.
 
 	externalEntityResolver
-		ifNotNil: [externalEntityResolver := externalEntityResolver copy].
+		ifNotNil: [externalEntityResolver := externalEntityResolver copy]
 ]
 
 { #category : #accessing }

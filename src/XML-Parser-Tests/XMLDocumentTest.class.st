@@ -43,7 +43,7 @@ XMLDocumentTest >> testAcceptNodeVisitor [
 		assert: message arguments = (Array with: document);
 		deny: visitor messageRecorder hasMessages.
 
-	super testAcceptNodeVisitor.
+	super testAcceptNodeVisitor
 ]
 
 { #category : #tests }
@@ -73,7 +73,7 @@ XMLDocumentTest >> testDoctypeDeclaration [
 	newDocument doctypeDeclaration: nil.
 	self
 		assert: newDocument doctypeDeclaration isNil;
-		assert: doctypeDeclaration parent isNil.
+		assert: doctypeDeclaration parent isNil
 ]
 
 { #category : #tests }
@@ -86,7 +86,7 @@ XMLDocumentTest >> testDoctypeDefinition [
 	doctypeDefinition := DTDDoctypeDefinition new.
 	self
 		assert: (document doctypeDefinition: doctypeDefinition) == document;
-		assert: document doctypeDefinition == doctypeDefinition.
+		assert: document doctypeDefinition == doctypeDefinition
 ]
 
 { #category : #tests }
@@ -99,7 +99,7 @@ XMLDocumentTest >> testDocument [
 	self assert: document document == document.
 
 	document := self newNodeWithElements.
-	self assert: document document == document.
+	self assert: document document == document
 ]
 
 { #category : #tests }
@@ -110,7 +110,7 @@ XMLDocumentTest >> testEncoding [
 	self
 		assert: document encoding = '';
 		assert: (document encoding: 'UTF-8') == document;
-		assert: document encoding = 'UTF-8'.
+		assert: document encoding = 'UTF-8'
 ]
 
 { #category : #tests }
@@ -120,11 +120,11 @@ XMLDocumentTest >> testHasDoctypeDeclaration [
 	document := self newNode.
 	self deny: document hasDoctypeDeclaration.
 
-	document doctypeDeclaration: XMLDoctypeDeclaration new.	
+	document doctypeDeclaration: XMLDoctypeDeclaration new.
 	self assert: document hasDoctypeDeclaration.
 
 	document doctypeDeclaration: nil.
-	self deny: document hasDoctypeDeclaration.
+	self deny: document hasDoctypeDeclaration
 ]
 
 { #category : #tests }
@@ -138,7 +138,7 @@ XMLDocumentTest >> testHasDoctypeDefinition [
 	self assert: document hasDoctypeDefinition.
 
 	document doctypeDefinition: nil.
-	self deny: document hasDoctypeDefinition.
+	self deny: document hasDoctypeDefinition
 ]
 
 { #category : #tests }
@@ -152,7 +152,7 @@ XMLDocumentTest >> testHasEncoding [
 	self assert: document hasEncoding.
 
 	document encoding: ''.
-	self deny: document hasEncoding.
+	self deny: document hasEncoding
 ]
 
 { #category : #tests }
@@ -165,7 +165,7 @@ XMLDocumentTest >> testHasRoot [
 	self assert: nodeWithElements hasRoot.
 
 	nodeWithElements removeNode: nodeWithElements root.
-	self deny: nodeWithElements hasRoot.
+	self deny: nodeWithElements hasRoot
 ]
 
 { #category : #tests }
@@ -181,7 +181,7 @@ XMLDocumentTest >> testIsStandalone [
 	self
 		deny: document isStandalone;
 		assert: (document isStandalone: true) == document;
-		assert: document isStandalone.
+		assert: document isStandalone
 ]
 
 { #category : #tests }
@@ -193,7 +193,7 @@ XMLDocumentTest >> testRoot [
 	self
 		assert: document class == self nodeClass;
 		assert: document root == newRoot.
-	 
+
 	self assert: self newNode root isNil.
 
 	document := self newNodeWithElements.
@@ -218,7 +218,7 @@ XMLDocumentTest >> testRoot [
 
 	self
 		should: [document root: 'test' asXMLStringNode]
-		raise: XMLDOMException.
+		raise: XMLDOMException
 ]
 
 { #category : #tests }
@@ -250,7 +250,7 @@ XMLDocumentTest >> testValidate [
 		shouldnt: [document validate]
 		raise: XMLValidationException.
 	self assert:
-		(document canonicallyEquals: 
+		(document canonicallyEquals:
 			((XMLDOMParser on: xml)
 				preservesCommentNodes: true;
 				parseDocument)).
@@ -324,7 +324,7 @@ XMLDocumentTest >> testValidate [
 		addElementNamed: 'four'.
 	self
 		shouldnt: [document validate]
-		raise: XMLValidationException.
+		raise: XMLValidationException
 ]
 
 { #category : #tests }
@@ -344,7 +344,7 @@ XMLDocumentTest >> testValidateNoSubset [
 		shouldnt: [document validate]
 		raise: XMLValidationException.
 	self assert:
-		(document canonicallyEquals: 
+		(document canonicallyEquals:
 			((XMLDOMParser on: xml)
 				preservesCommentNodes: true;
 				parseDocument)).
@@ -357,7 +357,7 @@ XMLDocumentTest >> testValidateNoSubset [
 	document doctypeDefinition: nil.
 	self
 		shouldnt: [document validate]
-		raise: XMLValidationException.
+		raise: XMLValidationException
 ]
 
 { #category : #tests }
@@ -368,5 +368,5 @@ XMLDocumentTest >> testVersion [
 	self
 		assert: document version isNil;
 		assert: (document version: 1.0) == document;
-		assert: document version = 1.0.
+		assert: document version = 1.0
 ]

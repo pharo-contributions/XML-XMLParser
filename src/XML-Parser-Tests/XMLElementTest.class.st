@@ -43,7 +43,7 @@ XMLElementTest >> testAcceptNodeVisitor [
 		assert: message arguments = (Array with: element);
 		deny: visitor messageRecorder hasMessages.
 
-	super testAcceptNodeVisitor.
+	super testAcceptNodeVisitor
 ]
 
 { #category : #tests }
@@ -63,7 +63,7 @@ XMLElementTest >> testAddElementNamed [
 		assert: element nodes size = 1;
 		assert: element firstNode isElement;
 		assert: element firstNode name = 'prefix:test';
-		assert: element firstNode namespaceURI = 'prefixNS'.
+		assert: element firstNode namespaceURI = 'prefixNS'
 ]
 
 { #category : #tests }
@@ -87,7 +87,7 @@ XMLElementTest >> testAddElementNamedAttributes [
 		assert: element firstNode isElement;
 		assert: element firstNode name = 'prefix:test';
 		assert: element firstNode namespaceURI = 'prefixNS';
-		assertElement: element firstNode hasAttributes: self attributes.
+		assertElement: element firstNode hasAttributes: self attributes
 ]
 
 { #category : #tests }
@@ -97,7 +97,7 @@ XMLElementTest >> testAttributeAssociations [
 	element := self newElementWithAttributes.
 	self
 		assertList: element attributeAssociations
-		collects: (element attributeNodes collect: [:each | each name -> each value]).
+		collects: (element attributeNodes collect: [:each | each name -> each value])
 ]
 
 { #category : #tests }
@@ -107,7 +107,7 @@ XMLElementTest >> testAttributeAt [
 	element := self newElementWithAttributes.
 	element attributeNodes do: [:each |
 		self assert: (element attributeAt: each name) = each value].
-	self assert: (element attributeAt: 'absent') = ''.
+	self assert: (element attributeAt: 'absent') = ''
 ]
 
 { #category : #tests }
@@ -123,7 +123,7 @@ XMLElementTest >> testAttributeAtIfAbsent [
 	self assert:
 		(element
 			attributeAt: 'absent'
-			ifAbsent: [#absent]) = #absent.
+			ifAbsent: [#absent]) = #absent
 ]
 
 { #category : #tests }
@@ -140,7 +140,7 @@ XMLElementTest >> testAttributeAtIfAbsentPut [
 		(element
 			attributeAt: 'newName'
 			ifAbsentPut: ['newValue']) = 'newValue'.
-	self assert: (element attributeAt: 'newName') = 'newValue'.
+	self assert: (element attributeAt: 'newName') = 'newValue'
 ]
 
 { #category : #tests }
@@ -155,7 +155,7 @@ XMLElementTest >> testAttributeAtPut [
 			assert: (element attributeAt: each name) = newValue].
 	self
 		assert: (element attributeAt: 'newName' put: 'newValue') = 'newValue';
-		assert: (element attributeAt: 'newName') = 'newValue'.
+		assert: (element attributeAt: 'newName') = 'newValue'
 ]
 
 { #category : #tests }
@@ -168,7 +168,7 @@ XMLElementTest >> testAttributeListCopying [
 		assert: attributeListCopy = element attributeNodes;
 		deny: attributeListCopy == element attributeNodes;
 		assert: element attributeNodes observer == element;
-		assert: attributeListCopy observer isNil.
+		assert: attributeListCopy observer isNil
 ]
 
 { #category : #tests }
@@ -197,7 +197,7 @@ XMLElementTest >> testAttributeNamesAndValuesDo [
 		xmlShould: [:twoArgumentBlock |
 			element attributeNamesAndValuesDo: twoArgumentBlock]
 		enumerate: self attributeNames
-		and: self attributeValues.
+		and: self attributeValues
 ]
 
 { #category : #tests }
@@ -212,7 +212,7 @@ XMLElementTest >> testAttributeNamesDo [
 	element := self newElementWithAttributes.
 	self
 		xmlShould: [:block | element attributeNamesDo: block]
-		enumerate: element attributeNames.
+		enumerate: element attributeNames
 ]
 
 { #category : #tests }
@@ -225,7 +225,7 @@ XMLElementTest >> testAttributeNodeAt [
 	self assert:
 		(element attributeNodeAt: 'two') = element attributeNodes second.
 	self assert:
-		(element attributeNodeAt: 'absent') isNil.
+		(element attributeNodeAt: 'absent') isNil
 ]
 
 { #category : #tests }
@@ -249,7 +249,7 @@ XMLElementTest >> testAttributeNodeAtIfAbsent [
 	self assert:
 		(element
 			attributeNodeAt: 'absent'
-			ifAbsent: [#absent]) = #absent.
+			ifAbsent: [#absent]) = #absent
 ]
 
 { #category : #tests }
@@ -264,7 +264,7 @@ XMLElementTest >> testAttributeNodeAtNamespaceURI [
 		(element attributeNodeAt: 'two' namespaceURI: 'prefixNS') =
 			(element attributeNodes third).
 	self assert:
-		(element attributeNodeAt: 'prefix:two' namespaceURI: 'absent') isNil.
+		(element attributeNodeAt: 'prefix:two' namespaceURI: 'absent') isNil
 ]
 
 { #category : #tests }
@@ -288,7 +288,7 @@ XMLElementTest >> testAttributeNodeAtNamespaceURIIfAbsent [
 		(element
 			attributeNodeAt: 'prefix:two'
 			namespaceURI: 'absent'
-			ifAbsent: [#absent]) = #absent.
+			ifAbsent: [#absent]) = #absent
 ]
 
 { #category : #tests }
@@ -300,7 +300,7 @@ XMLElementTest >> testAttributeNodes [
 	self assert: attributeNodes class == self attributeListClass.
 	self assert:
 		(attributeNodes collect: [:each | each name -> each value]) asArray
-			= self attributeAssociations asArray.
+			= self attributeAssociations asArray
 ]
 
 { #category : #tests }
@@ -345,7 +345,7 @@ XMLElementTest >> testAttributeNodesDo [
 	element := self newElementWithAttributes.
 	self
 		xmlShould: [:block | element attributeNodesDo: block]
-		enumerate: element attributeNodes.
+		enumerate: element attributeNodes
 ]
 
 { #category : #tests }
@@ -374,7 +374,7 @@ XMLElementTest >> testAttributePrefixAliasing [
 			element attributeNodes addLast:
 				(self attributeClass named: 'alias:four').
 			(element attributeNodeAt: 'two') name: 'alias:two']
-		raise: XMLNamespaceException.
+		raise: XMLNamespaceException
 ]
 
 { #category : #tests }
@@ -401,8 +401,7 @@ XMLElementTest >> testAttributePrefixUndeclared [
 			element attributeNodes add:
 				(self attributeClass named: 'undeclared:newName').
 			(element attributeNodeAt: 'one') name: 'undeclared:one']
-		raise: XMLNamespaceException.
-
+		raise: XMLNamespaceException
 ]
 
 { #category : #tests }
@@ -434,7 +433,7 @@ XMLElementTest >> testAttributeRenaming [
 			elementWithAttributes attributeNames =
 				((oldNames copyFrom: 2 to: oldNames size - 1) copyWithFirst: oldNames last);
 		deny: (elementWithAttributes includesAttribute: oldName);
-		assert: (elementWithAttributes attributeNodeAt: attributeNode name) == attributeNode.
+		assert: (elementWithAttributes attributeNodeAt: attributeNode name) == attributeNode
 ]
 
 { #category : #tests }
@@ -457,7 +456,7 @@ XMLElementTest >> testAttributeSorting [
 	element attributeNodes sort.
 	self assert: element attributeNames asArray = #('a' 'b' 'c').
 	element attributeNodes sort: [:a :b | a name > b name].
-	self assert: element attributeNames asArray = #('c' 'b' 'a').
+	self assert: element attributeNames asArray = #('c' 'b' 'a')
 ]
 
 { #category : #tests }

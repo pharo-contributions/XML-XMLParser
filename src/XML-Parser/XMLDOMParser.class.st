@@ -134,7 +134,7 @@ XMLDOMParser >> initializeInnerXMLParser: aParser [
 
 	aParser state: self topNode newInnerXMLState.
 	aParser state isContentState
-		ifTrue: [self startContent].
+		ifTrue: [self startContent]
 ]
 
 { #category : #initialization }
@@ -142,7 +142,7 @@ XMLDOMParser >> initializeParser: aParser [
 	super initializeParser: aParser.
 
 	self nodeStack size > 0
-		ifTrue: [self initializeInnerXMLParser: aParser].
+		ifTrue: [self initializeInnerXMLParser: aParser]
 ]
 
 { #category : #private }
@@ -195,7 +195,7 @@ XMLDOMParser >> on: aStringOrStream [
 
 	document := nil.
 	nodeStack := OrderedCollection new: 10.
-	currentScope := nil.
+	currentScope := nil
 ]
 
 { #category : #configuring }
@@ -203,7 +203,7 @@ XMLDOMParser >> optimizeForLargeDocuments [
 	super optimizeForLargeDocuments.
 
 	"use the non-caching attribute list class to save memory"
-	self configuration attributeListClass: XMLAttributeList.
+	self configuration attributeListClass: XMLAttributeList
 ]
 
 { #category : #'handling - declaration' }

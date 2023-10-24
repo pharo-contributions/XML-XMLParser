@@ -30,7 +30,7 @@ XMLPITest >> testAcceptNodeVisitor [
 	self
 		assert: message selector == #visitPI:;
 		assert: message arguments = (Array with: pi);
-		deny: visitor messageRecorder hasMessages.
+		deny: visitor messageRecorder hasMessages
 ]
 
 { #category : #tests }
@@ -41,7 +41,7 @@ XMLPITest >> testCanonicallyEquals [
 			self newPIWithTargetAndData).
 	self deny:
 		(self newPIWithTargetAndData canonicallyEquals:
-			self newNode).
+			self newNode)
 ]
 
 { #category : #tests }
@@ -52,7 +52,7 @@ XMLPITest >> testData [
 	self
 		assert: pi data = '';
 		assert: (pi data: 'test') == pi;
-		assert: pi data = 'test'.
+		assert: pi data = 'test'
 ]
 
 { #category : #tests }
@@ -66,7 +66,7 @@ XMLPITest >> testHasData [
 	self assert: pi hasData.
 
 	pi data: ''.
-	self deny: pi hasData.
+	self deny: pi hasData
 ]
 
 { #category : #tests }
@@ -87,7 +87,7 @@ XMLPITest >> testTarget [
 	self
 		assert: pi target = '';
 		assert: (pi target: 'test') == pi;
-		assert: pi target = 'test'.
+		assert: pi target = 'test'
 ]
 
 { #category : #tests }
@@ -101,7 +101,7 @@ XMLPITest >> testTargetData [
 	self
 		assert: pi class == self nodeClass;
 		assert: pi target = 'target';
-		assert: pi data = 'data'.
+		assert: pi data = 'data'
 ]
 
 { #category : #tests }
@@ -112,5 +112,5 @@ XMLPITest >> testWriteXMLOn [
 	self assert: pi printString = '<?target data?>'.
 
 	pi data: ' ', pi data.
-	self assert: pi printString = '<?target  data?>'.
+	self assert: pi printString = '<?target  data?>'
 ]

@@ -53,7 +53,7 @@ DTDEnumerationListParser >> parse [
 	listValues := Array new: totalListValues.
 	nextListValuesIndex := 1.
 	nextValueStartIndex := listStartIndex.
-	listStartIndex to: listEndIndex do: [:i | 
+	listStartIndex to: listEndIndex do: [:i |
 		(listString at: i) == $|
 			ifTrue: [
 				listValues
@@ -71,5 +71,5 @@ DTDEnumerationListParser >> parse [
 				copyFrom: nextValueStartIndex
 				to: listEndIndex).
 
-	^ listValues.
+	^ listValues
 ]

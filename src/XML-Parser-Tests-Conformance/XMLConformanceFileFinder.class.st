@@ -51,7 +51,7 @@ XMLConformanceFileFinder >> classifyFile: aFileReference [
 			self passingTestOutputFiles addLast: aFileReference.
 			^ self].
 
-	self passingTestFiles addLast: aFileReference.
+	self passingTestFiles addLast: aFileReference
 ]
 
 { #category : #private }
@@ -163,7 +163,7 @@ XMLConformanceFileFinder >> root [
 { #category : #initialization }
 XMLConformanceFileFinder >> setSuite: aSuite root: aFileReference [
 	suite := aSuite.
-	root := aFileReference.
+	root := aFileReference
 ]
 
 { #category : #accessing }

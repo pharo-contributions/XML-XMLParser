@@ -64,7 +64,7 @@ XMLNamespacedAttributeDictionaryTest >> testAssociationAtNameNamespaceURI [
 	self assert:
 		(dictionary
 			associationAtName: 'name'
-			namespaceURI: 'defaultNS') isNil.
+			namespaceURI: 'defaultNS') isNil
 ]
 
 { #category : #tests }
@@ -134,7 +134,7 @@ XMLNamespacedAttributeDictionaryTest >> testAssociationAtNameNamespaceURIIfAbsen
 		(dictionary
 			associationAtName: 'name'
 			namespaceURI: 'defaultNS'
-			ifAbsent: [#absent]) equals: #absent.
+			ifAbsent: [#absent]) equals: #absent
 ]
 
 { #category : #tests }
@@ -192,7 +192,7 @@ XMLNamespacedAttributeDictionaryTest >> testAtNameNamespaceURI [
 	self assert:
 		(dictionary
 			atName: 'name'
-			namespaceURI: 'defaultNS') equals: ''.
+			namespaceURI: 'defaultNS') equals: ''
 ]
 
 { #category : #tests }
@@ -262,7 +262,7 @@ XMLNamespacedAttributeDictionaryTest >> testAtNameNamespaceURIIfAbsent [
 		(dictionary
 			atName: 'name'
 			namespaceURI: 'defaultNS'
-			ifAbsent: ['absent']) equals: 'absent'.
+			ifAbsent: ['absent']) equals: 'absent'
 ]
 
 { #category : #tests }
@@ -272,7 +272,7 @@ XMLNamespacedAttributeDictionaryTest >> testCopy [
 	super testCopy.
 	dictionary := self prefixedAttributeDictionary.
 	copy := dictionary copy.
-	self assert: dictionary namespaceScope == copy namespaceScope.
+	self assert: dictionary namespaceScope == copy namespaceScope
 ]
 
 { #category : #tests }
@@ -286,7 +286,7 @@ XMLNamespacedAttributeDictionaryTest >> testNamespaceURIOf [
 	self
 		assert: (dictionary namespaceURIOf: 'prefix:name') equals: 'prefixNS';
 		assert: (dictionary namespaceURIOf: 'otherPrefix:name') equals: 'otherPrefixNS';
-		assert: (dictionary namespaceURIOf: 'name') equals: ''.
+		assert: (dictionary namespaceURIOf: 'name') equals: ''
 ]
 
 { #category : #tests }

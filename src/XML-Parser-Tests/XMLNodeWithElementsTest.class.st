@@ -23,12 +23,12 @@ XMLNodeWithElementsTest >> assertElements: aPrettyPrintFormattedElementCollectio
 								assert: prettyElement firstNode isWhitespace].
 
 					"if there were no string nodes at all, then trailing
-					whitespace formatting should have been output"	
+					whitespace formatting should have been output"
 					element hasStringNodes
 						ifFalse: [
 							self
 								assert: prettyElement lastNode isStringNode;
-								assert: prettyElement lastNode isWhitespace]]].
+								assert: prettyElement lastNode isWhitespace]]]
 ]
 
 { #category : #accessing }
@@ -44,7 +44,7 @@ XMLNodeWithElementsTest >> elementBefore [
 				elementBefore := nil.
 				node elements do: [:each |
 					self assert: (node elementBefore: each) == elementBefore.
-					elementBefore := each]]].
+					elementBefore := each]]]
 ]
 
 { #category : #'instance creation' }
@@ -76,7 +76,7 @@ XMLNodeWithElementsTest >> newNodeWithElements [
 				addNode: (self elementClass named: 'four');
 				yourself);
 		addNode: (XMLComment string: 'after');
-		yourself.
+		yourself
 ]
 
 { #category : #'instance creation' }
@@ -126,7 +126,7 @@ XMLNodeWithElementsTest >> testAcceptNodeVisitor [
 				assert: message selector = selector;
 				assert: message arguments = (Array with: node)]].
 
-	self deny: visitor messageRecorder hasMessages.
+	self deny: visitor messageRecorder hasMessages
 ]
 
 { #category : #tests }
@@ -139,7 +139,7 @@ XMLNodeWithElementsTest >> testAddCData [
 		assert: cdataNode isCData;
 		assert: cdataNode string = 'test';
 		assert: nodeWithElements nodes size = 1;
-		assert: nodeWithElements firstNode == cdataNode.
+		assert: nodeWithElements firstNode == cdataNode
 ]
 
 { #category : #tests }
@@ -157,7 +157,7 @@ XMLNodeWithElementsTest >> testAddCDataNodeFactoryUse [
 		assert: firstCDataNode class == XMLCData;
 		assert: firstCDataNode string = 'one';
 		assert: lastCDataNode class == XMLFCData;
-		assert: lastCDataNode string = 'two'.
+		assert: lastCDataNode string = 'two'
 ]
 
 { #category : #tests }
@@ -175,7 +175,7 @@ XMLNodeWithElementsTest >> testAddComment [
 		assert: nodeWithElements nodes size = 1;
 		assert: nodeWithElements firstNode == comment;
 		assert: comment class == XMLFComment;
-		assert: comment string = 'test'.
+		assert: comment string = 'test'
 ]
 
 { #category : #tests }
@@ -196,7 +196,7 @@ XMLNodeWithElementsTest >> testAddElementNamed [
 	nodeWithElements usesNamespaces: false.
 	self
 		shouldnt: [nodeWithElements addElementNamed: 'undeclared:three']
-		raise: XMLNamespaceException.
+		raise: XMLNamespaceException
 ]
 
 { #category : #tests }
@@ -234,7 +234,7 @@ XMLNodeWithElementsTest >> testAddElementNamedAttributes [
 			nodeWithElements
 				addElementNamed: 'undeclared:four'
 				attributes: self attributeAssociations]
-		raise: XMLNamespaceException.
+		raise: XMLNamespaceException
 ]
 
 { #category : #tests }
@@ -255,7 +255,7 @@ XMLNodeWithElementsTest >> testAddElementNamedAttributesNodeFactoryUse [
 		assert: nodeWithElements nodes size = 1;
 		assert: element class == self otherElementClass;
 		assert: element name = 'test';
-		assertElement: element hasAttributes: self unprefixedAttributes.
+		assertElement: element hasAttributes: self unprefixedAttributes
 ]
 
 { #category : #tests }
@@ -271,7 +271,7 @@ XMLNodeWithElementsTest >> testAddElementNamedNamespaceURI [
 		assert: nodeWithElements nodes size = 1;
 		assert: element isElement;
 		assert: element name = 'test';
-		assert: element namespaceURI = 'defaultNS'.
+		assert: element namespaceURI = 'defaultNS'
 ]
 
 { #category : #tests }
@@ -316,7 +316,7 @@ XMLNodeWithElementsTest >> testAddElementNamedNamespaceURIAttributes [
 				addElementNamed: 'four'
 				namespaceURI: ''
 				attributes: self attributeAssociations]
-		raise: XMLNamespaceException.
+		raise: XMLNamespaceException
 ]
 
 { #category : #tests }
@@ -340,7 +340,7 @@ XMLNodeWithElementsTest >> testAddElementNamedNamespaceURIAttributesNodeFactoryU
 		assert: element class == self otherElementClass;
 		assert: element name = 'prefix:test';
 		assert: element namespaceURI = 'prefixNS';
-		assertElement: element hasAttributes: self attributes.
+		assertElement: element hasAttributes: self attributes
 ]
 
 { #category : #tests }
@@ -361,7 +361,7 @@ XMLNodeWithElementsTest >> testAddElementNamedNamespaceURINodeFactoryUse [
 		assert: nodeWithElements nodes size = 1;
 		assert: element class == self otherElementClass;
 		assert: element name = 'test';
-		assert: element namespaceURI = 'defaultNS'.
+		assert: element namespaceURI = 'defaultNS'
 ]
 
 { #category : #tests }
@@ -377,8 +377,7 @@ XMLNodeWithElementsTest >> testAddElementNamedNodeFactoryUse [
 	self
 		assert: nodeWithElements nodes size = 1;
 		assert: element class == self otherElementClass;
-		assert: element name = 'test'.
-
+		assert: element name = 'test'
 ]
 
 { #category : #tests }
@@ -400,7 +399,7 @@ XMLNodeWithElementsTest >> testAddPITargetData [
 		assert: nodeWithElements firstNode == pi;
 		assert: pi class == XMLFPI;
 		assert: pi target = 'target';
-		assert: pi data = 'data'.
+		assert: pi data = 'data'
 ]
 
 { #category : #tests }
@@ -433,7 +432,7 @@ XMLNodeWithElementsTest >> testAddString [
 		assert: nodeWithElements nodes size = 3;
 		assert: nodeWithElements nodes first == firstStringNode;
 		assert: nodeWithElements nodes second == elementNode;
-		assert: nodeWithElements nodes third == lastStringNode.
+		assert: nodeWithElements nodes third == lastStringNode
 ]
 
 { #category : #tests }
@@ -479,7 +478,7 @@ XMLNodeWithElementsTest >> testAddStringNodeFactoryUse [
 		assert: nodeWithElements nodes size = 3;
 		assert: nodeWithElements nodes first == firstStringNode;
 		assert: nodeWithElements nodes second == elementNode;
-		assert: nodeWithElements nodes third == lastStringNode.
+		assert: nodeWithElements nodes third == lastStringNode
 ]
 
 { #category : #tests }
@@ -503,7 +502,7 @@ XMLNodeWithElementsTest >> testAllElements [
 		assertList: allElements fifth allElements selects: (allElements copyFrom: 5 to: 5);
 		assertList: allElements sixth allElements selects: (allElements copyFrom: 6 to: 7);
 		assertList: allElements seventh allElements selects: (allElements copyFrom: 7 to: 7);
-		assertList: allElements eighth allElements selects: (allElements copyFrom: 8 to: 8).
+		assertList: allElements eighth allElements selects: (allElements copyFrom: 8 to: 8)
 ]
 
 { #category : #tests }
@@ -519,7 +518,7 @@ XMLNodeWithElementsTest >> testAllElementsCollect [
 	allElements do: [:node |
 		self
 			assertList: (node allElementsCollect: [:each | each identityHash])
-			collects: (node allElements collect: [:each | each identityHash])].
+			collects: (node allElements collect: [:each | each identityHash])]
 ]
 
 { #category : #tests }
@@ -533,7 +532,7 @@ XMLNodeWithElementsTest >> testAllElementsDetect [
 		assert: detectedElement notNil;
 		assert: (detectedElement isNamed: 'prefix:four');
 		assert: detectedElement = (allElements detect: [:each | each isNamed: 'prefix:four']);
-		assert: (nodeWithElements allElementsDetect: [:each | each isNamed: 'absent']) isNil.
+		assert: (nodeWithElements allElementsDetect: [:each | each isNamed: 'absent']) isNil
 ]
 
 { #category : #tests }
@@ -547,13 +546,13 @@ XMLNodeWithElementsTest >> testAllElementsDetectIfNone [
 			allElementsDetect: [:each | each isNamed: 'prefix:four']
 			ifNone: [self fail].
 	self assert: (detectedElement isNamed: 'prefix:four').
-	self assert:	
+	self assert:
 		detectedElement =
 			(allElements detect: [:each | each isNamed: 'prefix:four']).
 	self assert:
 		(nodeWithElements
 			allElementsDetect: [:each | each isNamed: 'absent']
-			ifNone: [#absent]) = #absent.
+			ifNone: [#absent]) = #absent
 ]
 
 { #category : #tests }

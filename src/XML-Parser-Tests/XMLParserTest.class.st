@@ -313,7 +313,7 @@ XMLParserTest >> benchmark4 [
 			elementAt: 'contact-info';
 			elementAt: 'address';
 			elementAt: 'job-info';
-			elementAt: 'manager']] timeToRun.
+			elementAt: 'manager']] timeToRun
 ]
 
 { #category : #benchmark }
@@ -363,7 +363,7 @@ XMLParserTest >> elementDeclarationsNamed: aNameCollection [
 			nextPutAll: each;
 			nextPutAll: ' EMPTY>';
 			cr].
-	^ stream contents.
+	^ stream contents
 ]
 
 { #category : #source }
@@ -418,7 +418,7 @@ XMLParserTest >> testAttributeDeclarationEntities [
 					(SAXHandler on: dtd, each)
 						isValidating: false;
 						parseDocument]
-				raise: XMLValidationException].
+				raise: XMLValidationException]
 ]
 
 { #category : #tests }
@@ -452,7 +452,7 @@ XMLParserTest >> testAttributeDeclarationEntity [
 					(SAXHandler on: dtd, each)
 						isValidating: false;
 						parseDocument]
-				raise: XMLValidationException].
+				raise: XMLValidationException]
 ]
 
 { #category : #tests }
@@ -487,7 +487,7 @@ XMLParserTest >> testAttributeDeclarationEnumeration [
 					(SAXHandler on: dtd, each)
 						isValidating: false;
 						parseDocument]
-				raise: XMLValidationException].
+				raise: XMLValidationException]
 ]
 
 { #category : #tests }

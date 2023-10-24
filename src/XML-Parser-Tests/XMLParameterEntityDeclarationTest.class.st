@@ -29,5 +29,5 @@ XMLParameterEntityDeclarationTest >> testWriteXMLOn [
 			'<!ENTITY % one PUBLIC "two" "three">'.
 	self assert:
 		(self nodeClass name: 'one' publicID: '' systemID: 'three') printString =
-			'<!ENTITY % one SYSTEM "three">'.
+			'<!ENTITY % one SYSTEM "three">'
 ]

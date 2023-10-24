@@ -143,12 +143,12 @@ SAX2PluggableElementHandlerFactory >> initialize [
 	super initialize.
 
 	elementClassMapper := self elementClassMapperClass new.
-	elementHandlerClass := SAX2ElementHandler.
+	elementHandlerClass := SAX2ElementHandler
 ]
 
 { #category : #copying }
 SAX2PluggableElementHandlerFactory >> postCopy [
 	super postCopy.
 
-	elementClassMapper := elementClassMapper copy.
+	elementClassMapper := elementClassMapper copy
 ]

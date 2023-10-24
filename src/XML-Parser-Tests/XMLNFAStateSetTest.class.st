@@ -28,7 +28,7 @@ XMLNFAStateSetTest >> disjointSetElements [
 				Array
 					with: (XMLNFAMatchingState matcher: 'three')
 					with: (XMLNFAMatchingState matcher: 'four')].
-	^ disjointStates copy.
+	^ disjointStates copy
 ]
 
 { #category : #accessing }
@@ -46,7 +46,7 @@ XMLNFAStateSetTest >> setElements [
 					with: XMLNFAAcceptingState new
 					with: (XMLNFAMatchingState matcher: 'two')
 					with: XMLNFAAcceptingState new].
-	^ states copy.
+	^ states copy
 ]
 
 { #category : #tests }
@@ -56,7 +56,7 @@ XMLNFAStateSetTest >> testIsAccepting [
 	isAccepting := false.
 	self deny: set isAccepting.
 	self setElements
-		do: [ :each | 
+		do: [ :each |
 			set add: each.
 			each isAccepting
 				ifTrue: [ isAccepting := true.
@@ -64,7 +64,7 @@ XMLNFAStateSetTest >> testIsAccepting [
 			self assert: set isAccepting equals: isAccepting ].
 	self assert: set isAccepting.
 	self setElements
-		do: [ :each | 
+		do: [ :each |
 			set remove: each.
 			(set includes: lastAccepting)
 				ifTrue: [ self assert: set isAccepting ]

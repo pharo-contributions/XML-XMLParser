@@ -30,7 +30,7 @@ SAXTestingMessageRecordingHandler >> isInContentResults [
 { #category : #recording }
 SAXTestingMessageRecordingHandler >> recordMessage: aMessage [
 	self recordTestingMessages.
-	super recordMessage: aMessage.
+	super recordMessage: aMessage
 ]
 
 { #category : #recording }
@@ -38,7 +38,7 @@ SAXTestingMessageRecordingHandler >> recordMessageReceiver: anObject selector: a
 	self recordTestingMessages.
 	super
 		recordMessageReceiver: anObject
-		selector: aSelector.
+		selector: aSelector
 ]
 
 { #category : #recording }
@@ -47,7 +47,7 @@ SAXTestingMessageRecordingHandler >> recordMessageReceiver: anObject selector: a
 	super
 		recordMessageReceiver: anObject
 		selector: aSelector
-		argument: anArgument.
+		argument: anArgument
 ]
 
 { #category : #recording }
@@ -56,12 +56,12 @@ SAXTestingMessageRecordingHandler >> recordMessageReceiver: anObject selector: a
 	super
 		recordMessageReceiver: anObject
 		selector: aSelector
-		arguments: aSequenceableCollection.
+		arguments: aSequenceableCollection
 ]
 
 { #category : #recording }
 SAXTestingMessageRecordingHandler >> recordTestingMessages [
 	self hasParserResults addLast: self hasParser.
 	self isInCDataSectionResults addLast: self isInCDataSection.
-	self isInContentResults addLast: self isInContent.
+	self isInContentResults addLast: self isInContent
 ]

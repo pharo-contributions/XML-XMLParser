@@ -70,7 +70,7 @@ XMLConfigurationTest >> testCopy [
 		assert: copy replacesContentEntityReferences equals: configuration replacesContentEntityReferences;
 		assert: copy resolvesExternalEntities equals: configuration resolvesExternalEntities;
 		deny: copy externalEntityResolver == configuration externalEntityResolver;
-		assert: copy externalEntityResolver class == configuration externalEntityResolver class.
+		assert: copy externalEntityResolver class == configuration externalEntityResolver class
 ]
 
 { #category : #tests }
@@ -83,7 +83,7 @@ XMLConfigurationTest >> testDecodesCharacters [
 		assert: (configuration decodesCharacters: false) == configuration;
 		deny: configuration decodesCharacters;
 		assert: (configuration decodesCharacters: true) == configuration;
-		assert: configuration decodesCharacters.
+		assert: configuration decodesCharacters
 ]
 
 { #category : #tests }
@@ -96,7 +96,7 @@ XMLConfigurationTest >> testDocumentReadLimit [
 		assert: (configuration documentReadLimit: 100000) == configuration;
 		assert: configuration documentReadLimit = 100000;
 		assert: (configuration documentReadLimit: nil) == configuration;
-		assert: configuration documentReadLimit isNil.
+		assert: configuration documentReadLimit isNil
 ]
 
 { #category : #tests }
@@ -110,7 +110,7 @@ XMLConfigurationTest >> testEntityConfiguration [
 	self assert:
 		(configuration entityConfiguration: newEntityConfiguration) ==
 			configuration.
-	self assert: configuration entityConfiguration == newEntityConfiguration.
+	self assert: configuration entityConfiguration == newEntityConfiguration
 ]
 
 { #category : #tests }
@@ -124,20 +124,20 @@ XMLConfigurationTest >> testExternalEntityResolver [
 	newResolver := self externalEntityResolverClass new.
 	self
 		assert: (configuration externalEntityResolver: newResolver) == configuration;
-		assert: configuration externalEntityResolver == newResolver.
+		assert: configuration externalEntityResolver == newResolver
 ]
 
 { #category : #tests }
 XMLConfigurationTest >> testIsValidating [
 	| configuration |
-	
+
 	configuration := self newConfiguration.
 	self
 		assert: configuration isValidating;
 		assert: (configuration isValidating: false) == configuration;
 		deny: configuration isValidating;
 		assert: (configuration isValidating: true) == configuration;
-		assert: configuration isValidating.
+		assert: configuration isValidating
 ]
 
 { #category : #tests }
@@ -152,7 +152,7 @@ XMLConfigurationTest >> testMaxEntityReplacementDepth [
 		assert: (configuration maxEntityReplacementDepth: 20) == configuration;
 		assert: configuration maxEntityReplacementDepth equals: 20;
 		assert: (configuration maxEntityReplacementDepth: nil) == configuration;
-		assert: configuration maxEntityReplacementDepth isNil.
+		assert: configuration maxEntityReplacementDepth isNil
 ]
 
 { #category : #tests }
@@ -164,7 +164,7 @@ XMLConfigurationTest >> testParserHandlerClass [
 	self assert:
 		(configuration parserHandlerClass: self otherParserHandlerClass) ==
 			configuration.
-	self assert: configuration parserHandlerClass == self otherParserHandlerClass.
+	self assert: configuration parserHandlerClass == self otherParserHandlerClass
 ]
 
 { #category : #tests }
@@ -177,7 +177,7 @@ XMLConfigurationTest >> testParserLimits [
 	newParserLimits := XMLParserLimits new.
 	self
 		assert: (configuration parserLimits: newParserLimits) == configuration;
-		assert: configuration parserLimits == newParserLimits.
+		assert: configuration parserLimits == newParserLimits
 ]
 
 { #category : #tests }
@@ -198,13 +198,13 @@ XMLConfigurationTest >> testPreservesUndeclaredEntityReferences [
 	self
 		assert: (configuration isValidating: true) == configuration;
 		assert: configuration isValidating;
-		deny: configuration preservesUndeclaredEntityReferences.
+		deny: configuration preservesUndeclaredEntityReferences
 ]
 
 { #category : #tests }
 XMLConfigurationTest >> testReplacesContentEntityReferences [
 	| configuration |
-	
+
 	configuration := self newConfiguration.
 	self assert: configuration replacesContentEntityReferences.
 	self assert:
@@ -214,7 +214,7 @@ XMLConfigurationTest >> testReplacesContentEntityReferences [
 	self assert:
 		(configuration replacesContentEntityReferences: true) ==
 			configuration.
-	self assert: configuration replacesContentEntityReferences.
+	self assert: configuration replacesContentEntityReferences
 ]
 
 { #category : #tests }
@@ -233,7 +233,7 @@ XMLConfigurationTest >> testRequiresSchema [
 	self
 		assert: (configuration isValidating: false) == configuration;
 		deny: configuration isValidating;
-		deny: configuration requiresSchema.
+		deny: configuration requiresSchema
 ]
 
 { #category : #tests }
@@ -247,7 +247,7 @@ XMLConfigurationTest >> testResolvesExternalEntities [
 		assert: (configuration resolvesExternalEntities: true) == configuration;
 		assert: configuration resolvesExternalEntities;
 		assert: (configuration resolvesExternalEntities: false) == configuration;
-		deny: configuration resolvesExternalEntities.
+		deny: configuration resolvesExternalEntities
 ]
 
 { #category : #tests }
@@ -260,5 +260,5 @@ XMLConfigurationTest >> testUsesNamespaces [
 		assert: (configuration usesNamespaces: false) == configuration;
 		deny: configuration usesNamespaces;
 		assert: (configuration usesNamespaces: true) == configuration;
-		assert: configuration usesNamespaces.
+		assert: configuration usesNamespaces
 ]

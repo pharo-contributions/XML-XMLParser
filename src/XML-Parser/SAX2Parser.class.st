@@ -237,7 +237,7 @@ SAX2Parser >> on: aStringOrStream [
 	contentHandler := self defaultContentHandlerClass parser: self.
 	lexicalHandler := self defaultLexicalHandlerClass parser: self.
 	declarationHandler := self defaultDeclarationHandlerClass parser: self.
-	parsingResult := self defaultParsingResult.
+	parsingResult := self defaultParsingResult
 ]
 
 { #category : #'handling - declaration' }

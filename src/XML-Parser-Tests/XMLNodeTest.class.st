@@ -22,21 +22,21 @@ XMLNodeTest >> assertElement: anElement hasAttributes: anAssociationCollection [
 		attributeNode := attributeNodes removeFirst.
 		self
 			assert: attributeNode name = each key;
-			assert: attributeNode value = each value].
+			assert: attributeNode value = each value]
 ]
 
 { #category : #assertions }
 XMLNodeTest >> assertList: aList collects: aSecondList [
 	self
 		assert: aList = aSecondList;
-		assert: aList class == self collectListClass.
+		assert: aList class == self collectListClass
 ]
 
 { #category : #assertions }
 XMLNodeTest >> assertList: aList selects: aSecondList [
 	self
 		assert: aList = aSecondList;
-		assert: aList class == self selectListClass.
+		assert: aList class == self selectListClass
 ]
 
 { #category : #accessing }
@@ -183,7 +183,7 @@ XMLNodeTest >> newElementWithAttributes [
 			(self attributeClass
 				name: each key
 				value: each value)].
-	^ element.
+	^ element
 ]
 
 { #category : #'instance creation' }

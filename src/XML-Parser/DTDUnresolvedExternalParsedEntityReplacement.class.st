@@ -43,7 +43,7 @@ DTDUnresolvedExternalParsedEntityReplacement >> printOn: aStream [
 	aStream
 		nextPutAll: ' "';
 		nextPutAll: self systemID;
-		nextPutAll: '")'.
+		nextPutAll: '")'
 ]
 
 { #category : #accessing }
@@ -65,7 +65,7 @@ DTDUnresolvedExternalParsedEntityReplacement >> resolveForExternalEntity: anExte
 		resolvedReplacement:
 			(self resolver resolveExternalEntityURI: externalEntityURI);
 		uri: externalEntityURI asString;
-		unresolvedReplacement: nil.
+		unresolvedReplacement: nil
 ]
 
 { #category : #accessing }
@@ -78,7 +78,7 @@ DTDUnresolvedExternalParsedEntityReplacement >> setResolver: aResolver publicID:
 	resolver := aResolver.
 	publicID := aPublicID.
 	systemID := aSystemID.
-	baseURI := aBaseURIString.
+	baseURI := aBaseURIString
 ]
 
 { #category : #accessing }

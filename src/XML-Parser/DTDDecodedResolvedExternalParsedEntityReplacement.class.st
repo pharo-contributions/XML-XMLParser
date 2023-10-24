@@ -32,7 +32,7 @@ DTDDecodedResolvedExternalParsedEntityReplacement >> printOn: aStream [
 	aStream
 		nextPut: $(;
 		nextPutAll: self contents;
-		nextPut: $).
+		nextPut: $)
 ]
 
 { #category : #accessing }

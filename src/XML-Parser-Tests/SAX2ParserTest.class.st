@@ -41,7 +41,7 @@ SAX2ParserTest >> testContentHandler [
 		assert: newContentHandler parser == parser;
 		assert: (parser contentHandler: nil) == parser;
 		assert: parser contentHandler class == self contentHandlerClass;
-		assert: parser contentHandler parser == parser.
+		assert: parser contentHandler parser == parser
 ]
 
 { #category : #tests }
@@ -61,7 +61,7 @@ SAX2ParserTest >> testDeclarationHandler [
 		assert: newDeclarationHandler parser == parser;
 		assert: (parser declarationHandler: nil) == parser;
 		assert: parser declarationHandler class == self declarationHandlerClass;
-		assert: parser declarationHandler parser == parser.
+		assert: parser declarationHandler parser == parser
 ]
 
 { #category : #tests }
@@ -81,7 +81,7 @@ SAX2ParserTest >> testLexicalHandler [
 		assert: newLexicalHandler parser == parser;
 		assert: (parser lexicalHandler: nil) == parser;
 		assert: parser lexicalHandler class == self lexicalHandlerClass;
-		assert: parser lexicalHandler parser == parser.
+		assert: parser lexicalHandler parser == parser
 ]
 
 { #category : #tests }
@@ -103,5 +103,5 @@ SAX2ParserTest >> testParsingResult [
 	parser parsingResult: #result.
 	self
 		assert: parser parsingResult == #result;
-		assert: parser parseDocument == #result.
+		assert: parser parseDocument == #result
 ]

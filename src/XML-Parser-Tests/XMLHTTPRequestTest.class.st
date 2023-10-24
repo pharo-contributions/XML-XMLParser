@@ -62,7 +62,7 @@ XMLHTTPRequestTest >> testAcceptEncoding [
 			#('one' 'two' 'three') asOrderedCollection.
 
 	request removeHeaderAt: 'Accept-Encoding'.
-	self assert: request acceptEncoding = absentValue.
+	self assert: request acceptEncoding = absentValue
 ]
 
 { #category : #tests }
@@ -73,7 +73,7 @@ XMLHTTPRequestTest >> testAsXMLHTTPRequest [
 		ifFalse: [^ self].
 
 	request := self newMessage.
-	self assert: request asXMLHTTPRequest == request.
+	self assert: request asXMLHTTPRequest == request
 ]
 
 { #category : #tests }
@@ -90,7 +90,7 @@ XMLHTTPRequestTest >> testEnableCompression [
 	request acceptEncoding do: [:each |
 		self assert:
 			(XMLHTTPDecompressingReadStreamAdapterFactory
-				classForCompression: each) notNil].
+				classForCompression: each) notNil]
 ]
 
 { #category : #tests }
@@ -106,7 +106,7 @@ XMLHTTPRequestTest >> testMethod [
 		deny: request method isSymbol;
 		assert: (request method: 'POST') == request;
 		assert: request method = 'POST';
-		deny: request method isSymbol.
+		deny: request method isSymbol
 ]
 
 { #category : #tests }
@@ -120,7 +120,7 @@ XMLHTTPRequestTest >> testTimeout [
 	self
 		assert: request timeout = self defaultTimeout;
 		assert: (request timeout: self defaultTimeout + 1) == request;
-		assert: request timeout = (self defaultTimeout + 1).
+		assert: request timeout = (self defaultTimeout + 1)
 ]
 
 { #category : #tests }
@@ -128,7 +128,7 @@ XMLHTTPRequestTest >> testURL [
 	self isSupported
 		ifFalse: [^ self].
 
-	self assert: self newRequestWithURL url = self url.
+	self assert: self newRequestWithURL url = self url
 ]
 
 { #category : #accessing }

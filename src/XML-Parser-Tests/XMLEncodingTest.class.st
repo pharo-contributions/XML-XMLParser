@@ -69,7 +69,7 @@ XMLEncodingTest >> isDecodedSourceXMLDocument: aDocument [
 		ifFalse: [^ false].
 	aDocument firstNode nodes size = 1
 		ifFalse: [^ false].
-	^ aDocument firstNode firstNode isStringNode: 'encoding test'.
+	^ aDocument firstNode firstNode isStringNode: 'encoding test'
 ]
 
 { #category : #source }
@@ -127,7 +127,7 @@ XMLEncodingTest >> testDecodingBinary [
 	self
 		assert: stream isXMLConvertingStreamAdapter;
 		assert: stream hasNullStreamConverter;
-		assert: stream upToEnd equals: source.
+		assert: stream upToEnd equals: source
 ]
 
 { #category : #tests }
@@ -177,7 +177,7 @@ XMLEncodingTest >> testDecodingCharacterReferences [
 			should: [
 				XMLDOMParser parse:
 					(self sourceXMLWithContent: '&#', each asciiValue asString, ';')]
-			raise: XMLWellFormednessException].
+			raise: XMLWellFormednessException]
 ]
 
 { #category : #tests }
@@ -202,7 +202,7 @@ XMLEncodingTest >> testEncodingDeclarationLatin1 [
 			SAXHandler parse:
 				(self convertableStreamOn:
 					(self encodingDeclaration: 'latin-1'), xml)]
-		raise: XMLEncodingException.
+		raise: XMLEncodingException
 ]
 
 { #category : #tests }
@@ -259,7 +259,7 @@ XMLEncodingTest >> testEncodingDeclarationUTF16BE [
 						andASCIIContentAsUTF16BE: self sourceXML)))
 					decodesCharacters: false;
 					parseDocument]
-		raise: XMLParserException.
+		raise: XMLParserException
 ]
 
 { #category : #tests }
@@ -316,7 +316,7 @@ XMLEncodingTest >> testEncodingDeclarationUTF16LE [
 						andASCIIContentAsUTF16LE: self sourceXML)))
 					decodesCharacters: false;
 					parseDocument]
-		raise: XMLParserException.
+		raise: XMLParserException
 ]
 
 { #category : #tests }
@@ -373,7 +373,7 @@ XMLEncodingTest >> testEncodingDeclarationUTF32BE [
 						andASCIIContentAsUTF32BE: self sourceXML)))
 					decodesCharacters: false;
 					parseDocument]
-		raise: XMLParserException.
+		raise: XMLParserException
 ]
 
 { #category : #tests }
@@ -430,7 +430,7 @@ XMLEncodingTest >> testEncodingDeclarationUTF32LE [
 						andASCIIContentAsUTF32LE: self sourceXML)))
 					decodesCharacters: false;
 					parseDocument]
-		raise: XMLParserException.
+		raise: XMLParserException
 ]
 
 { #category : #tests }

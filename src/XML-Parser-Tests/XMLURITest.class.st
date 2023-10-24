@@ -42,7 +42,7 @@ XMLURITest class >> generateStandardURICombiningTest [
 
 	self
 		compile: source
-		classified: 'tests'.
+		classified: 'tests'
 ]
 
 { #category : #private }
@@ -182,7 +182,7 @@ XMLURITest >> asciiCharacters [
 				terminator"
 				1 to: 127 do: [:i |
 					stream nextPut: i asCharacter]]].
-	^ asciiCharacters.
+	^ asciiCharacters
 ]
 
 { #category : #asserting }
@@ -190,7 +190,7 @@ XMLURITest >> assertURI: aFirstURI atHostEquals: aSecondURI [
 	self assert: aFirstURI host = aSecondURI host.
 	self
 		assertURI: aFirstURI
-		atPortEquals: aSecondURI.
+		atPortEquals: aSecondURI
 ]
 
 { #category : #asserting }
@@ -198,7 +198,7 @@ XMLURITest >> assertURI: aFirstURI atPathEquals: aSecondURI [
 	self assert: aFirstURI pathSegments = aSecondURI pathSegments.
 	self
 		assertURI: aFirstURI
-		atQueryEquals: aSecondURI.
+		atQueryEquals: aSecondURI
 ]
 
 { #category : #asserting }
@@ -206,7 +206,7 @@ XMLURITest >> assertURI: aFirstURI atPortEquals: aSecondURI [
 	self assert: aFirstURI port = aSecondURI port.
 	self
 		assertURI: aFirstURI
-		atPathEquals: aSecondURI.
+		atPathEquals: aSecondURI
 ]
 
 { #category : #asserting }
@@ -221,7 +221,7 @@ XMLURITest >> assertURI: aFirstURI atUserInfoEquals: aSecondURI [
 	self  assert: aFirstURI userInfo = aSecondURI userInfo.
 	self
 		assertURI: aFirstURI
-		atHostEquals: aSecondURI.
+		atHostEquals: aSecondURI
 ]
 
 { #category : #accessing }

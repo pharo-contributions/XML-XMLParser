@@ -97,7 +97,6 @@ SAXHandlerTest >> prefixedXMLSourcePrefixURISelectors [
 { #category : #accessing }
 SAXHandlerTest >> prefixedXMLSourcePrefixURISelectorsNamespacesDisabled [
 	^ self removeNamespaceSelectorsFrom: self prefixedXMLSourcePrefixURISelectors
-
 ]
 
 { #category : #accessing }
@@ -114,14 +113,12 @@ SAXHandlerTest >> prefixedXMLSourceSelectors [
 { #category : #accessing }
 SAXHandlerTest >> prefixedXMLSourceSelectorsNamespacesDisabled [
 	^ self removeNamespaceSelectorsFrom: self prefixedXMLSourceSelectors
-
 ]
 
 { #category : #accessing }
 SAXHandlerTest >> removeNamespaceSelectorsFrom: aSelectorCollection [
 	^ aSelectorCollection reject: [:each |
 		#(startPrefixMapping:uri: endPrefixMapping:) includes: each]
-
 ]
 
 { #category : #tests }
@@ -175,7 +172,7 @@ SAXHandlerTest >> testConfiguration [
 	newConfiguration := self configurationClass new.
 	self
 		assert: (parser configuration: newConfiguration) == parser;
-		assert: parser configuration class == self configurationClass.
+		assert: parser configuration class == self configurationClass
 ]
 
 { #category : #tests }
@@ -188,7 +185,7 @@ SAXHandlerTest >> testDecodesCharacters [
 		assert: (parser decodesCharacters: false) == parser;
 		deny: parser decodesCharacters;
 		assert: (parser decodesCharacters: true) == parser;
-		assert: parser decodesCharacters.
+		assert: parser decodesCharacters
 ]
 
 { #category : #tests }
@@ -251,7 +248,7 @@ SAXHandlerTest >> testEndDTD [
 						endDTD
 						startElement:attributes:
 						endElement:
-						endDocument))].
+						endDocument))]
 ]
 
 { #category : #tests }
@@ -270,7 +267,7 @@ SAXHandlerTest >> testEndDocument [
 	parser parseToken.
 	self
 		assert: (saxHandler wasSentSelector: #endDocument);
-		assert: parser atEnd.
+		assert: parser atEnd
 ]
 
 { #category : #tests }

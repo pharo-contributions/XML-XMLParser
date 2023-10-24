@@ -43,5 +43,5 @@ DTDContentModelParser >> parse [
 { #category : #initialization }
 DTDContentModelParser >> setElement: anElement contentModel: aContentModel [
 	element := anElement.
-	contentModel := aContentModel.
+	contentModel := aContentModel
 ]

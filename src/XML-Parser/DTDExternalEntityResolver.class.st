@@ -67,7 +67,7 @@ DTDExternalEntityResolver >> externalEntityURIFromPublicID: aPublicID systemID: 
 			and: [self resolvesLocalFromNonLocal not]])
 		ifTrue: [self errorLocalFromNonLocal].
 
-	^ externalEntityURI.
+	^ externalEntityURI
 ]
 
 { #category : #configuring }
@@ -107,7 +107,7 @@ DTDExternalEntityResolver >> postCopy [
 	super postCopy.
 
 	externalEntityLimits
-		ifNotNil: [externalEntityLimits := externalEntityLimits copy].
+		ifNotNil: [externalEntityLimits := externalEntityLimits copy]
 ]
 
 { #category : #configuring }
@@ -158,7 +158,7 @@ DTDExternalEntityResolver >> resolveNonLocalExternalEntityURI: anXMLURIOrURIStri
 	charset encoding tag for later decoding (if needed)"
 	^ DTDUndecodedResolvedExternalParsedEntityReplacement
 		rawContents: response content
-		encoding: response contentCharset.
+		encoding: response contentCharset
 ]
 
 { #category : #configuring }

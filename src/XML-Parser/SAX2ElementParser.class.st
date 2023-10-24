@@ -74,7 +74,7 @@ SAX2ElementParser >> endElement: aQualifiedName prefix: aPrefix uri: aURI localN
 		localName: aLocalName.
 	self
 		elementHandler: oldElementHandler parent;
-		elementHandlerFactory: oldElementHandler parentFactory.
+		elementHandlerFactory: oldElementHandler parentFactory
 ]
 
 { #category : #initialization }
@@ -82,7 +82,7 @@ SAX2ElementParser >> on: aStringOrStream [
 	super on: aStringOrStream.
 
 	elementHandlerFactory := self defaultElementHandlerFactoryClass new.
-	elementHandlerFactoryMapper := self defaultElementHandlerFactoryMapperClass new.
+	elementHandlerFactoryMapper := self defaultElementHandlerFactoryMapperClass new
 ]
 
 { #category : #'handling - content' }
@@ -110,5 +110,5 @@ SAX2ElementParser >> startElement: aQualifiedName prefix: aPrefix uri: aURI loca
 		prefix: aPrefix
 		uri: aURI
 		localName: aLocalName
-		attributes: anAttributeDictionary.
+		attributes: anAttributeDictionary
 ]

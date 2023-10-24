@@ -30,7 +30,7 @@ DTDDoctypeDefinition >> addExternalGeneralEntity: aName resolver: aResolver publ
 				resolver: aResolver
 				publicID: aPublicID
 				systemID: aSystemID
-				baseURI: aBaseURIString).
+				baseURI: aBaseURIString)
 ]
 
 { #category : #adding }
@@ -45,7 +45,7 @@ DTDDoctypeDefinition >> addExternalParameterEntity: aName resolver: aResolver pu
 				resolver: aResolver
 				publicID: aPublicID
 				systemID: aSystemID
-				baseURI: aBaseURIString).
+				baseURI: aBaseURIString)
 ]
 
 { #category : #adding }
@@ -63,10 +63,10 @@ DTDDoctypeDefinition >> addInternalGeneralEntity: aName replacement: aReplacemen
 	^ self generalEntities
 		at: aName
 		put:
-			(DTDInternalGeneralParsedEntity 
+			(DTDInternalGeneralParsedEntity
 				name: aName
 				replacement: aReplacement
-				uri: aBaseURIString).
+				uri: aBaseURIString)
 ]
 
 { #category : #adding }
@@ -79,7 +79,7 @@ DTDDoctypeDefinition >> addInternalParameterEntity: aName replacement: aReplacem
 			(DTDInternalParameterParsedEntity
 				name: aName
 				replacement: aReplacement
-				uri: aBaseURIString).
+				uri: aBaseURIString)
 ]
 
 { #category : #adding }
@@ -92,7 +92,7 @@ DTDDoctypeDefinition >> addNotation: aName publicID: aPublicID systemID: aSystem
 			(DTDNotation
 				name: aName
 				publicID: aPublicID
-				systemID: aSystemID).
+				systemID: aSystemID)
 ]
 
 { #category : #adding }
@@ -107,7 +107,7 @@ DTDDoctypeDefinition >> addStandaloneExternalExternalGeneralEntity: aName resolv
 				resolver: aResolver
 				publicID: aPublicID
 				systemID: aSystemID
-				baseURI: aBaseURIString).
+				baseURI: aBaseURIString)
 ]
 
 { #category : #adding }
@@ -117,10 +117,10 @@ DTDDoctypeDefinition >> addStandaloneExternalInternalGeneralEntity: aName replac
 	^ self generalEntities
 		at: aName
 		put:
-			(DTDStandaloneExternalInternalGeneralParsedEntity 
+			(DTDStandaloneExternalInternalGeneralParsedEntity
 				name: aName
 				replacement: aReplacement
-				uri: aBaseURIString).
+				uri: aBaseURIString)
 ]
 
 { #category : #adding }
@@ -142,7 +142,7 @@ DTDDoctypeDefinition >> addStandaloneExternalValidatorForAttributeIn: anElement 
 				type: aType
 				defaultPragma: aDefaultPragma
 				defaultValue: aDefaultValue) parse
-					initializeWithValidatorsFrom: self).
+					initializeWithValidatorsFrom: self)
 ]
 
 { #category : #adding }
@@ -155,7 +155,7 @@ DTDDoctypeDefinition >> addStandaloneExternalValidatorForElement: anElement cont
 			((DTDContentModelParser parserClassForContentModel: aContentModel)
 				standaloneExternalClass
 					element: anElement
-					contentModel: aContentModel) parse.
+					contentModel: aContentModel) parse
 ]
 
 { #category : #adding }
@@ -172,7 +172,7 @@ DTDDoctypeDefinition >> addUnparsedEntity: aName publicID: aPublicID systemID: a
 						name: aName
 						publicID: aPublicID
 						systemID: aSystemID
-						ndata: aNotation)).
+						ndata: aNotation))
 ]
 
 { #category : #adding }
@@ -181,7 +181,7 @@ DTDDoctypeDefinition >> addUnresolvableExternalGeneralEntity: aName [
 		ifTrue: [^ nil].
 	^ self generalEntities
 		at: aName
-		put: (DTDUnresolvableExternalGeneralParsedEntity named: aName).
+		put: (DTDUnresolvableExternalGeneralParsedEntity named: aName)
 ]
 
 { #category : #adding }
@@ -190,7 +190,7 @@ DTDDoctypeDefinition >> addUnresolvableExternalParameterEntity: aName [
 		ifTrue: [^ nil].
 	^ self parameterEntities
 		at: aName
-		put: (DTDUnresolvableExternalParameterParsedEntity named: aName).
+		put: (DTDUnresolvableExternalParameterParsedEntity named: aName)
 ]
 
 { #category : #adding }
@@ -212,7 +212,7 @@ DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: anAttribute
 				type: aType
 				defaultPragma: aDefaultPragma
 				defaultValue: aDefaultValue) parse
-					initializeWithValidatorsFrom: self).
+					initializeWithValidatorsFrom: self)
 ]
 
 { #category : #adding }
@@ -224,7 +224,7 @@ DTDDoctypeDefinition >> addValidatorForElement: anElement contentModel: aContent
 		put:
 			((DTDContentModelParser parserClassForContentModel: aContentModel)
 				element: anElement
-				contentModel: aContentModel) parse.
+				contentModel: aContentModel) parse
 ]
 
 { #category : #accessing }

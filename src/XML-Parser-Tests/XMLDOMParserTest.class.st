@@ -49,7 +49,7 @@ XMLDOMParserTest >> testAllElementsNamespaceURIs [
 		assert:
 			(document
 				allElementsNamed: 'person'
-				namespaceURI: 'undeclaredNS') isEmpty.
+				namespaceURI: 'undeclaredNS') isEmpty
 ]
 
 { #category : #tests }
@@ -73,7 +73,7 @@ XMLDOMParserTest >> testAttributeNamespaces [
 	document := XMLDOMParser parse: self addressBookNamespacePrefixedXML.
 	people := document allElementsNamed: 'person' namespaceURI: 'personNS'.
 	self assert: people notEmpty.
-	
+
 	people do: [:each |
 		self
 			assert: each hasAttributes;
@@ -82,7 +82,7 @@ XMLDOMParserTest >> testAttributeNamespaces [
 				(each attributeNames allSatisfy: [:name |
 					(each attributeNodeAt: name namespaceURI: 'defaultNS') isNil]);
 			assert: (each attributeNodeAt: 'ps:family-name' namespaceURI: 'personNS') notNil;
-			assert: (each attributeNodeAt: 'ps:first-name' namespaceURI: 'personNS') notNil].
+			assert: (each attributeNodeAt: 'ps:first-name' namespaceURI: 'personNS') notNil]
 ]
 
 { #category : #tests }
@@ -100,7 +100,7 @@ XMLDOMParserTest >> testAttributeNamespacesDisabled [
 			assert: each hasAttributes;
 			deny: each attributeNames isEmpty;
 			assert: (each attributeNodeAt: 'ps:family-name' namespaceURI: 'personNS') isNil;
-			assert: (each attributeNodeAt: 'ps:first-name' namespaceURI: 'personNS') isNil].
+			assert: (each attributeNodeAt: 'ps:first-name' namespaceURI: 'personNS') isNil]
 ]
 
 { #category : #tests }
@@ -129,7 +129,7 @@ XMLDOMParserTest >> testAttributes [
 			firstPerson attributeNames asArray equals:
 				#('employee-number' 'family-name' 'first-name');
 		assert: firstPerson attributeAssociations asArray equals:
-			{('employee-number'->'A0000'). ('family-name'->'Gates'). ('first-name'->'Bob').}.
+			{('employee-number'->'A0000'). ('family-name'->'Gates'). ('first-name'->'Bob').}
 ]
 
 { #category : #tests }
@@ -137,7 +137,7 @@ XMLDOMParserTest >> testAttributesExcludingDeclarations [
 	| document   |
 
 	document := XMLDOMParser parse: self addressBookNamespacedXML.
-	self deny: document root hasAttributes.
+	self deny: document root hasAttributes
 ]
 
 { #category : #tests }
@@ -153,7 +153,7 @@ XMLDOMParserTest >> testAttributesIncludingDeclarations [
 		assert: root hasAttributes;
 		assert: (root attributeAt: 'xmlns') equals: 'defaultNS';
 		assert: (root attributeAt: 'xmlns:book') equals: 'bookNS';
-		assert: (root attributeAt: 'xmlns:ps') equals: 'personNS'.
+		assert: (root attributeAt: 'xmlns:ps') equals: 'personNS'
 ]
 
 { #category : #tests }
@@ -186,7 +186,7 @@ XMLDOMParserTest >> testCDataSection [
 				assert: element nodes second printString equals:
 					('<![CDATA[', unescaped, ']]>');
 				assert: element strings asArray equals:
-					(Array with: 'test' with: unescaped with: 'test')].
+					(Array with: 'test' with: unescaped with: 'test')]
 ]
 
 { #category : #tests }
@@ -195,7 +195,7 @@ XMLDOMParserTest >> testCDataSectionEntityReplacement [
 
 	unescaped := 'this is CDATA test content 1 < 2 & 5 > 3'.
 	escaped := 'this is CDATA test content 1 &lt; 2 &amp; 5 &gt; 3'.
-	xml := 
+	xml :=
 		'<?xml version="1.0" encoding="UTF-8"?>
 		<!DOCTYPE test-data [
 			<!ENTITY cdata "<![CDATA[this is CDATA test content 1 < 2 &#38; 5 > 3]]>">
@@ -217,7 +217,7 @@ XMLDOMParserTest >> testCDataSectionEntityReplacement [
 		assert: element nodes size equals: 3;
 		assert: element nodes second isCData;
 		assert: element nodes second printString equals: ('<![CDATA[', unescaped, ']]>');
-		assert: element strings asArray equals: (Array with: 'test' with: unescaped with: 'test').
+		assert: element strings asArray equals: (Array with: 'test' with: unescaped with: 'test')
 ]
 
 { #category : #tests }
@@ -232,7 +232,7 @@ XMLDOMParserTest >> testChangingNamespaces [
 	self assert:
 		(people copyWithout: person) equals:
 			((document findElementNamed: 'addressbook') nodesSelect: [:each |
-				each isElement and: [each namespaceURI = 'defaultNS']]).
+				each isElement and: [each namespaceURI = 'defaultNS']])
 ]
 
 { #category : #tests }
@@ -251,7 +251,7 @@ XMLDOMParserTest >> testComment [
 	comments := document allNodesSelect: [:each | each isComment].
 	self
 		assert: (comments allSatisfy: [:each | each isComment]);
-		assert: (comments collect: [:each | each string]) asArray equals: #('one' 'two' 'three').
+		assert: (comments collect: [:each | each string]) asArray equals: #('one' 'two' 'three')
 ]
 
 { #category : #tests }
@@ -270,7 +270,7 @@ XMLDOMParserTest >> testDeclaringXMLNamespace [
 	self
 		deny: (elements first declaresPrefix: 'xml' uri: xmlNamespace);
 		assert: (elements second declaresPrefix: 'xml' uri: xmlNamespace);
-		deny: (elements third declaresPrefix: 'xml' uri: xmlNamespace).
+		deny: (elements third declaresPrefix: 'xml' uri: xmlNamespace)
 ]
 
 { #category : #tests }
@@ -288,7 +288,7 @@ XMLDOMParserTest >> testDoctypeDeclaration [
 		assert: doctype publicID equals: 'pubid';
 		assert: doctype systemID equals: 'external.dtd';
 		assert: doctype nodes notEmpty;
-		assert: (doctype nodes allSatisfy: [:each | each isDeclaration]).
+		assert: (doctype nodes allSatisfy: [:each | each isDeclaration])
 ]
 
 { #category : #tests }
@@ -314,7 +314,7 @@ XMLDOMParserTest >> testDocument [
 
 	document removeNode: root.
 	root allNodesDo: [:each |
-		self assert: each document isNil].
+		self assert: each document isNil]
 ]
 
 { #category : #tests }
@@ -328,7 +328,7 @@ XMLDOMParserTest >> testDocumentInternalSubset [
 
 	document doctypeDeclaration: nil.
 	doctypeDeclaration allNodesDo: [:each |
-		self assert: each document isNil].
+		self assert: each document isNil]
 ]
 
 { #category : #tests }
@@ -350,7 +350,7 @@ XMLDOMParserTest >> testElementMixedContent [
 		assert: mixedContent nodes sixth hasChildren;
 		assert: mixedContent nodes sixth nodes size equals: 1;
 		assert: (mixedContent nodes sixth nodes first isStringNode: ' ');
-		assert: (mixedContent nodes seventh isStringNode: ' seven ').
+		assert: (mixedContent nodes seventh isStringNode: ' seven ')
 ]
 
 { #category : #tests }
@@ -370,7 +370,7 @@ XMLDOMParserTest >> testElementNames [
 	root allElementsNamed: 'person' do: [:p |
 		self assert: (persons includes: p).
 		persons remove: p].
-	self assert: persons isEmpty.
+	self assert: persons isEmpty
 ]
 
 { #category : #tests }
@@ -384,7 +384,7 @@ XMLDOMParserTest >> testElementPrefixes [
 				and: [(each isNamed: 'person')
 					and: [(each isNamed: 'ps:person')
 						and: [(each name = 'ps:person') and: [each localName = 'person']]]]]].
-	self assert: persons size equals: 4.
+	self assert: persons size equals: 4
 ]
 
 { #category : #tests }

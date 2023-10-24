@@ -24,5 +24,5 @@ XMLAttributeSpecTest >> testAsXMLAttributeSpec [
 	| attributeSpec |
 
 	attributeSpec := self newAttributeSpec.
-	self assert: attributeSpec asXMLAttributeSpec == attributeSpec.
+	self assert: attributeSpec asXMLAttributeSpec == attributeSpec
 ]

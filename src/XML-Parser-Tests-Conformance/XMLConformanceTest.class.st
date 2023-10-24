@@ -470,7 +470,7 @@ XMLConformanceTest >> parserClass [
 ]
 
 { #category : #parsing }
-XMLConformanceTest >> parserClass: aParserClass on: aString documentURI: aURIString [ 
+XMLConformanceTest >> parserClass: aParserClass on: aString documentURI: aURIString [
 	| parser |
 
 	parser :=
@@ -487,7 +487,7 @@ XMLConformanceTest >> parserClass: aParserClass on: aString documentURI: aURIStr
 		isValidating: true;
 		resolvesExternalEntities: true;
 		externalEntityResolver: self newVirtualFileExternalEntityResolver;
-		decodesCharacters: false.
+		decodesCharacters: false
 ]
 
 { #category : #accessing }

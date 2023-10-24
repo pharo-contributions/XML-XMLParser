@@ -22,7 +22,7 @@ XMLAttributeTest >> testCanonicallyEquals [
 			(self nodeClass name: 'one' value: 'two')).
 	self deny:
 		((self nodeClass name: 'one' value: 'two') canonicallyEquals:
-			self newNode).
+			self newNode)
 ]
 
 { #category : #tests }
@@ -34,7 +34,7 @@ XMLAttributeTest >> testCopy [
 	copy := node copy.
 	self
 		deny: copy == node;
-		assert: copy element isNil.
+		assert: copy element isNil
 ]
 
 { #category : #tests }
@@ -47,7 +47,7 @@ XMLAttributeTest >> testElement [
 	element := self newElement.
 	self
 		assert: (attribute element: element) == attribute;
-		assert: attribute element == element.
+		assert: attribute element == element
 ]
 
 { #category : #tests }
@@ -64,7 +64,7 @@ XMLAttributeTest >> testExpandedName [
 
 	element declarePrefix: 'prefix' uri: 'prefixNS'.
 	attribute name: 'prefix:two'.
-	self assert: (attribute expandedName = 'Q{prefixNS}two').
+	self assert: (attribute expandedName = 'Q{prefixNS}two')
 ]
 
 { #category : #tests }
@@ -88,7 +88,7 @@ XMLAttributeTest >> testHasNamespaceURI [
 	self assert: attribute hasNamespaceURI.
 
 	attribute name: 'test'.
-	self deny: attribute hasNamespaceURI.
+	self deny: attribute hasNamespaceURI
 ]
 
 { #category : #tests }
@@ -105,7 +105,7 @@ XMLAttributeTest >> testHasPrefix [
 	self assert: attribute hasPrefix.
 
 	attribute name: 'three'.
-	self deny: attribute hasPrefix.
+	self deny: attribute hasPrefix
 ]
 
 { #category : #tests }
@@ -119,17 +119,17 @@ XMLAttributeTest >> testIsInLanguage [
 
 	super testIsInLanguage.
 
-	element := self newElementWithAttributes.	
+	element := self newElementWithAttributes.
 	self languageTagsAndFilters do: [:tagAndFilters |
 		| tag matchingFilters nonMatchingFilters |
-		
+
 		tag := tagAndFilters first.
 		matchingFilters := tagAndFilters second.
 		nonMatchingFilters := tagAndFilters third.
 		element attributeNodesDo: [:attributeNode |
 			(matchingFilters, nonMatchingFilters) do: [:each |
 				self deny: (attributeNode isInLanguage: each)]].
-		
+
 		element
 			attributeAt: 'xml:lang'
 			put: tag.
@@ -138,8 +138,8 @@ XMLAttributeTest >> testIsInLanguage [
 				self assert: (attributeNode isInLanguage: each)].
 			nonMatchingFilters do: [:each |
 				self deny: (attributeNode isInLanguage: each)]].
-		
-		element removeAttribute: 'xml:lang'].
+
+		element removeAttribute: 'xml:lang']
 ]
 
 { #category : #tests }
@@ -156,7 +156,7 @@ XMLAttributeTest >> testIsNamed [
 	self
 		assert: (attribute isNamed: 'one:two');
 		assert: (attribute isNamed: 'two');
-		deny: (attribute isNamed: 'one').
+		deny: (attribute isNamed: 'one')
 ]
 
 { #category : #tests }
@@ -172,7 +172,7 @@ XMLAttributeTest >> testIsNamedAny [
 	self
 		assert: (attribute isNamedAny: #('one' 'one:two' 'three'));
 		assert: (attribute isNamedAny: #('one' 'two' 'three'));
-		deny: (attribute isNamedAny: #('one' 'three')).
+		deny: (attribute isNamedAny: #('one' 'three'))
 ]
 
 { #category : #tests }
@@ -192,30 +192,30 @@ XMLAttributeTest >> testLocalName [
 	self assert: attribute localName = 'three'.
 
 	attribute name: 'four'.
-	self assert: attribute localName = 'four'.
+	self assert: attribute localName = 'four'
 ]
 
 { #category : #tests }
 XMLAttributeTest >> testMatchesLanguage [
 	| attribute |
 
-	attribute := self nodeClass named: 'xml:lang'.	
+	attribute := self nodeClass named: 'xml:lang'.
 	self languageTagsAndFilters do: [:tagAndFilters |
 		| tag matchingFilters nonMatchingFilters |
-		
+
 		tag := tagAndFilters first.
 		matchingFilters := tagAndFilters second.
 		nonMatchingFilters := tagAndFilters third.
 		(matchingFilters, nonMatchingFilters) do: [:each |
 			self deny: (attribute matchesLanguage: each)].
-		
+
 		attribute value: tag.
 		matchingFilters do: [:each |
 			self assert: (attribute matchesLanguage: each)].
 		nonMatchingFilters do: [:each |
 			self deny: (attribute matchesLanguage: each)].
-		
-		attribute value: ''].
+
+		attribute value: '']
 ]
 
 { #category : #tests }
@@ -230,7 +230,7 @@ XMLAttributeTest >> testName [
 		assert: (attribute name: 'one') == attribute;
 		assert: attribute name = 'one';
 		assert: (attribute name: 'prefix:two') == attribute;
-		assert: attribute name = 'prefix:two'.
+		assert: attribute name = 'prefix:two'
 ]
 
 { #category : #tests }
@@ -244,7 +244,7 @@ XMLAttributeTest >> testNameValue [
 	self
 		assert: attribute class == self nodeClass;
 		assert: attribute name = 'one';
-		assert: attribute value = 'two'.
+		assert: attribute value = 'two'
 ]
 
 { #category : #tests }
@@ -254,7 +254,7 @@ XMLAttributeTest >> testNamed [
 	attribute := self nodeClass named: 'test'.
 	self
 		assert: attribute class == self nodeClass;
-		assert: attribute name = 'test'.
+		assert: attribute name = 'test'
 ]
 
 { #category : #tests }
@@ -272,9 +272,9 @@ XMLAttributeTest >> testNamespaceURI [
 	element declarePrefix: 'prefix' uri: 'prefixNS'.
 	attribute name: 'prefix:test'.
 	self assert: attribute namespaceURI = 'prefixNS'.
-	
+
 	attribute name: 'test'.
-	self assert: attribute namespaceURI = ''.
+	self assert: attribute namespaceURI = ''
 ]
 
 { #category : #tests }
@@ -291,7 +291,7 @@ XMLAttributeTest >> testPrefix [
 	self assert: attribute prefix = 'prefix'.
 
 	attribute name: 'three'.
-	self assert: attribute prefix = ''.
+	self assert: attribute prefix = ''
 ]
 
 { #category : #tests }
@@ -309,7 +309,7 @@ XMLAttributeTest >> testResolvePrefix [
 	self assert:
 		(attribute resolvePrefix: 'xml') = XMLNamespaceScope xmlNamespaceURI.
 	self  assert:
-		(attribute resolvePrefix: 'xmlns') = XMLNamespaceScope xmlnsNamespaceURI.
+		(attribute resolvePrefix: 'xmlns') = XMLNamespaceScope xmlnsNamespaceURI
 ]
 
 { #category : #tests }
@@ -339,7 +339,7 @@ XMLAttributeTest >> testResolvePrefixIfUnresolvable [
 	self  assert:
 		(attribute
 			resolvePrefix: 'xmlns'
-			ifUnresolvable: [self fail]) = XMLNamespaceScope xmlnsNamespaceURI.
+			ifUnresolvable: [self fail]) = XMLNamespaceScope xmlnsNamespaceURI
 ]
 
 { #category : #tests }
@@ -355,7 +355,7 @@ XMLAttributeTest >> testValue [
 	self
 		assert: attribute value = '';
 		assert: (attribute value: 'test') == attribute;
-		assert: attribute value = 'test'.
+		assert: attribute value = 'test'
 ]
 
 { #category : #tests }

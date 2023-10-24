@@ -150,13 +150,13 @@ XMLExternalEntityTest >> musicXMLDocument [
     </measure>
   </part>
 </score-partwise>
-'.
+'
 ]
 
 { #category : #source }
 XMLExternalEntityTest >> strictXHTMLDocumentSource [
 	^ '<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html 
+<!DOCTYPE html
      PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -173,7 +173,7 @@ XMLExternalEntityTest >> strictXHTMLDocumentSource [
 XMLExternalEntityTest >> strictXHTMLStyledDocumentSource [
 	^ '<?xml-stylesheet href="http://www.w3.org/StyleSheets/TR/W3C-REC.css" type="text/css"?>
 <?xml-stylesheet href="#internalStyle" type="text/css"?>
-<!DOCTYPE html 
+<!DOCTYPE html
      PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -189,7 +189,7 @@ XMLExternalEntityTest >> strictXHTMLStyledDocumentSource [
 </head>
 <body>
 <p>
-  This is text that uses our 
+  This is text that uses our
   <code>internal stylesheet</code>.
 </p>
 </body>
@@ -234,7 +234,7 @@ XMLExternalEntityTest >> testExternalSubsetReadLimit [
 				parser
 					resolvesExternalEntities: true;
 					parseDocument]
-			raise: XMLLimitException].
+			raise: XMLLimitException]
 ]
 
 { #category : #tests }
@@ -252,7 +252,7 @@ XMLExternalEntityTest >> testOnFileNamed [
 			raise: XMLFileException.
 		self
 			assert: parser documentURI = fileHandle path;
-			assert: parser documentURI asXMLURI isLocal].
+			assert: parser documentURI asXMLURI isLocal]
 ]
 
 { #category : #tests }
@@ -268,7 +268,7 @@ XMLExternalEntityTest >> testOnURL [
 		raise: XMLHTTPException.
 	self
 		assert: parser documentURI = self feedURL;
-		deny: parser documentURI asXMLURI isLocal.
+		deny: parser documentURI asXMLURI isLocal
 ]
 
 { #category : #tests }
@@ -298,7 +298,7 @@ XMLExternalEntityTest >> testOnURLUpToLimit [
 				onURL: self feedURL
 				upToLimit: size - 1)
 				parseDocument]
-		raise: XMLLimitException.
+		raise: XMLLimitException
 ]
 
 { #category : #tests }
@@ -315,7 +315,7 @@ XMLExternalEntityTest >> testParsingDocBookArticle [
 				resolvesExternalEntities: true;
 				removeLimits;
 				parseDocument]
-		raise: XMLParserException.
+		raise: XMLParserException
 ]
 
 { #category : #tests }
@@ -332,7 +332,7 @@ XMLExternalEntityTest >> testParsingDocBookExample [
 				resolvesExternalEntities: true;
 				removeLimits;
 				parseDocument]
-		raise: XMLParserException.
+		raise: XMLParserException
 ]
 
 { #category : #tests }
@@ -356,7 +356,7 @@ XMLExternalEntityTest >> testParsingEncodedFile [
 				raise: XMLFileException.
 			self
 				assert: documentFromFile encoding = '';
-				assert: documentFromFile printString = document printString]].
+				assert: documentFromFile printString = document printString]]
 ]
 
 { #category : #tests }
@@ -381,7 +381,7 @@ XMLExternalEntityTest >> testParsingEncodedFileWithBOM [
 				raise: XMLFileException.
 			self
 				assert: documentFromFile encoding = '';
-				assert: documentFromFile printString = document printString]].
+				assert: documentFromFile printString = document printString]]
 ]
 
 { #category : #tests }
@@ -406,7 +406,7 @@ XMLExternalEntityTest >> testParsingEncodedFileWithEncodingAttribute [
 				raise: XMLFileException.
 			self
 				assert: documentFromFile encoding = encoding;
-				assert: documentFromFile printString = document printString]].
+				assert: documentFromFile printString = document printString]]
 ]
 
 { #category : #tests }
@@ -432,7 +432,7 @@ XMLExternalEntityTest >> testParsingEncodedFileWithEncodingAttributeAndBOM [
 				raise: XMLFileException.
 			self
 				assert: documentFromFile encoding = encoding;
-				assert: documentFromFile printString = document printString]].
+				assert: documentFromFile printString = document printString]]
 ]
 
 { #category : #tests }
@@ -465,7 +465,7 @@ XMLExternalEntityTest >> testParsingExternalEntities [
 		self assert:
 			(entityCacheCopy
 				at: key
-				ifAbsent: [self fail]) == value].
+				ifAbsent: [self fail]) == value]
 ]
 
 { #category : #tests }
@@ -508,7 +508,7 @@ XMLExternalEntityTest >> testParsingExternalEntitiesLimit [
 		maxExternalEntities: totalResolvedExternalEntities - 1.
 	self
 		should: [parser parseDocument]
-		raise: XMLLimitException.
+		raise: XMLLimitException
 ]
 
 { #category : #tests }
@@ -529,7 +529,7 @@ XMLExternalEntityTest >> testParsingFile [
 		self
 			shouldnt: [document := XMLDOMParser parseFileNamed: fileHandle path]
 			raise: XMLFileException.
-		self assert: (document root isNamed: 'score-partwise')].
+		self assert: (document root isNamed: 'score-partwise')]
 ]
 
 { #category : #tests }
@@ -546,7 +546,7 @@ XMLExternalEntityTest >> testParsingStrictXHTMLDocument [
 				resolvesExternalEntities: true;
 				removeLimits;
 				parseDocument]
-		raise: XMLParserException.
+		raise: XMLParserException
 ]
 
 { #category : #tests }
@@ -563,7 +563,7 @@ XMLExternalEntityTest >> testParsingStrictXHTMLStyledDocument [
 				resolvesExternalEntities: true;
 				removeLimits;
 				parseDocument]
-		raise: XMLParserException.
+		raise: XMLParserException
 ]
 
 { #category : #tests }

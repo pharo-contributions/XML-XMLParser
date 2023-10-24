@@ -40,7 +40,7 @@ XMLAbstractFactory class >> findSupportedImplementation [
 				each isSupportedImplementation
 					ifTrue: [^ each]]].
 
-	^ nil.
+	^ nil
 ]
 
 { #category : #testing }

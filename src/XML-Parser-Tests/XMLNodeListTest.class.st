@@ -71,7 +71,7 @@ XMLNodeListTest >> listItems [
 				addString: 'nine'.
 			nodes := document root nodes asArray].
 	"return a copy of the array, but share the nodes"
-	^ nodes copy.
+	^ nodes copy
 ]
 
 { #category : #accessing }
@@ -112,7 +112,7 @@ XMLNodeListTest >> testContentNodes [
 	self
 		assertList: list contentNodes
 		copiedFrom: list
-		equals: (self listClass newFrom: self listContentNodes).
+		equals: (self listClass newFrom: self listContentNodes)
 ]
 
 { #category : #tests }
@@ -127,7 +127,7 @@ XMLNodeListTest >> testContentNodesDo [
 	list addAll: self listItems.
 	self
 		xmlShould: [:block | list contentNodesDo: block ]
-		enumerate: self listContentNodes.
+		enumerate: self listContentNodes
 ]
 
 { #category : #tests }
@@ -137,7 +137,7 @@ XMLNodeListTest >> testContentStringAt [
 	list := self listWithItems.
 	self listElements do: [:each |
 		self assert:
-			(list contentStringAt: each name) = each contentString].
+			(list contentStringAt: each name) = each contentString]
 ]
 
 { #category : #tests }
@@ -148,7 +148,7 @@ XMLNodeListTest >> testElementAfter [
 	elementAfter := nil.
 	self listElements reverseDo: [:each |
 		self assert: (list elementAfter: each) = elementAfter.
-		elementAfter := each].
+		elementAfter := each]
 ]
 
 { #category : #tests }
@@ -166,7 +166,7 @@ XMLNodeListTest >> testElementAt [
 		list
 			remove: each;
 			remove: changedElement.
-		self assert: (list elementAt: each name) = self defaultValue].
+		self assert: (list elementAt: each name) = self defaultValue]
 ]
 
 { #category : #tests }
@@ -193,7 +193,7 @@ XMLNodeListTest >> testElementAtIfAbsent [
 		self assert:
 			(list
 				elementAt: each name
-				ifAbsent: [self newListItem]) = self newListItem].
+				ifAbsent: [self newListItem]) = self newListItem]
 ]
 
 { #category : #tests }
@@ -204,7 +204,7 @@ XMLNodeListTest >> testElementBefore [
 	elementBefore := nil.
 	self listElements do: [:each |
 		self assert: (list elementBefore: each) = elementBefore.
-		elementBefore := each].
+		elementBefore := each]
 ]
 
 { #category : #tests }
@@ -215,7 +215,7 @@ XMLNodeListTest >> testElementNames [
 	self
 		assertList: list elementNames
 		collectedFrom: list
-		equals: (self listSpecies newFrom: self listElementNames).
+		equals: (self listSpecies newFrom: self listElementNames)
 ]
 
 { #category : #tests }
@@ -226,7 +226,7 @@ XMLNodeListTest >> testElements [
 	self
 		assertList: list elements
 		copiedFrom: list
-		equals: (self listClass newFrom: self listElements).
+		equals: (self listClass newFrom: self listElements)
 ]
 
 { #category : #tests }
@@ -251,7 +251,7 @@ XMLNodeListTest >> testElementsAt [
 		elementsAt := elementsAt copyWithout: element.
 		self assert:
 			(list elementsAt: element name) =
-				(self listClass newFrom: elementsAt)].
+				(self listClass newFrom: elementsAt)]
 ]
 
 { #category : #tests }

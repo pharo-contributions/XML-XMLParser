@@ -117,7 +117,7 @@ DTDExternalEntityResolverLimitingDecorator >> printOn: aStream [
 	aStream
 		nextPut: $(;
 		print: self externalEntityResolver;
-		nextPut: $).
+		nextPut: $)
 ]
 
 { #category : #configuring }
@@ -148,7 +148,7 @@ DTDExternalEntityResolverLimitingDecorator >> resolveExternalEntityWith: aBlock 
 	result := aBlock value.
 	self incrementTotalResolvedExternalEntities.
 
-	^ result.
+	^ result
 ]
 
 { #category : #configuring }

@@ -130,7 +130,7 @@ XMLCharacterMethodsTest >> testIsXMLChar [
 		self assert: each isXMLChar].
 	self allNonChars do: [:each |
 		self deny: each isXMLChar].
-	self deny: nil isXMLChar.
+	self deny: nil isXMLChar
 ]
 
 { #category : #tests }
@@ -141,7 +141,7 @@ XMLCharacterMethodsTest >> testIsXMLNCNameChar [
 			ifFalse: [self assert: each isXMLNCNameChar]].
 	self allNonNameChars do: [:each |
 		self deny: each isXMLNCNameChar].
-	self deny: nil isXMLNCNameChar.
+	self deny: nil isXMLNCNameChar
 ]
 
 { #category : #tests }
@@ -154,7 +154,7 @@ XMLCharacterMethodsTest >> testIsXMLNCNameStartChar [
 		self deny: each isXMLNCNameStartChar].
 	self allNonNameStartCharNameChars do: [:each |
 		self deny: each isXMLNCNameStartChar].
-	self deny: nil isXMLNCNameStartChar.
+	self deny: nil isXMLNCNameStartChar
 ]
 
 { #category : #tests }
@@ -163,7 +163,7 @@ XMLCharacterMethodsTest >> testIsXMLNameChar [
 		self assert: each isXMLNameChar].
 	self allNonNameChars do: [:each |
 		self deny: each isXMLNameChar].
-	self deny: nil isXMLNameChar.
+	self deny: nil isXMLNameChar
 ]
 
 { #category : #tests }
@@ -174,7 +174,7 @@ XMLCharacterMethodsTest >> testIsXMLNameStartChar [
 		self deny: each isXMLNameStartChar].
 	self allNonNameStartCharNameChars do: [:each |
 		self deny: each isXMLNameStartChar].
-	self deny: nil isXMLNameStartChar.
+	self deny: nil isXMLNameStartChar
 ]
 
 { #category : #tests }
@@ -186,7 +186,7 @@ XMLCharacterMethodsTest >> testIsXMLSeparator [
 		self assert: each isXMLSeparator].
 	separators complement do: [:each |
 		self deny: each isXMLSeparator].
-	self deny: nil isXMLSeparator.
+	self deny: nil isXMLSeparator
 ]
 
 { #category : #tests }
@@ -198,7 +198,7 @@ XMLCharacterMethodsTest >> testIsXMLWhitespace [
 		self assert: each isXMLWhitespace].
 	whitespace complement do: [:each |
 		self deny: each isXMLWhitespace].
-	self deny: nil isXMLWhitespace.
+	self deny: nil isXMLWhitespace
 ]
 
 { #category : #tests }

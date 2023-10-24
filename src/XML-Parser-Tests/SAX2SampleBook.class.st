@@ -28,7 +28,7 @@ SAX2SampleBook >> initialize [
 
 	title := ''.
 	isbn := ''.
-	authors := OrderedCollection new.
+	authors := OrderedCollection new
 ]
 
 { #category : #accessing }

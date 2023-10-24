@@ -29,7 +29,7 @@ XMLEntityDeclarationTest >> testIsExternal [
 	self assert: declaration isExternal.
 
 	declaration publicID: ''.
-	self deny: declaration isExternal.
+	self deny: declaration isExternal
 ]
 
 { #category : #tests }
@@ -50,7 +50,7 @@ XMLEntityDeclarationTest >> testName [
 	self
 		assert: declaration name = '';
 		assert: (declaration name: 'test') == declaration;
-		assert: declaration name = 'test'.
+		assert: declaration name = 'test'
 ]
 
 { #category : #tests }
@@ -66,7 +66,7 @@ XMLEntityDeclarationTest >> testNamePublicIDSystemID [
 		assert: declaration class == self nodeClass;
 		assert: declaration name = 'one';
 		assert: declaration publicID = 'two';
-		assert: declaration systemID = 'three'.
+		assert: declaration systemID = 'three'
 ]
 
 { #category : #tests }
@@ -80,7 +80,7 @@ XMLEntityDeclarationTest >> testNameReplacement [
 	self
 		assert: declaration class == self nodeClass;
 		assert: declaration name = 'one';
-		assert: declaration replacement = 'two'.
+		assert: declaration replacement = 'two'
 ]
 
 { #category : #tests }
@@ -91,7 +91,7 @@ XMLEntityDeclarationTest >> testPublicID [
 	self
 		assert: declaration publicID = '';
 		assert: (declaration publicID: 'test') == declaration;
-		assert: declaration publicID = 'test'.
+		assert: declaration publicID = 'test'
 ]
 
 { #category : #tests }
@@ -102,7 +102,7 @@ XMLEntityDeclarationTest >> testReplacement [
 	self
 		assert: declaration replacement = '';
 		assert: (declaration replacement: 'test') == declaration;
-		assert: declaration replacement = 'test'.
+		assert: declaration replacement = 'test'
 ]
 
 { #category : #tests }
@@ -113,5 +113,5 @@ XMLEntityDeclarationTest >> testSystemID [
 	self
 		assert: declaration systemID = '';
 		assert: (declaration systemID: 'test') == declaration;
-		assert: declaration systemID = 'test'.
+		assert: declaration systemID = 'test'
 ]

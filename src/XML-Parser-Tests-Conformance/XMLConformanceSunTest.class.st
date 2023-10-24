@@ -670,7 +670,7 @@ XMLConformanceSunTest class >> sourceinvalidnotsa01xml [
 	^ '<?xml version=''1.0'' standalone=''yes''?>
 
 <!DOCTYPE root SYSTEM "../valid/sa.dtd">
-    
+
 <root>
     <child>
     The whitespace before and after this element keeps
@@ -711,7 +711,7 @@ XMLConformanceSunTest class >> sourceinvalidnotsa02xml [
     idrefs =	" &internal;  &internal;    &internal;"
     entity =	" unparsed-1 "
     entities =	"unparsed-1
-    unparsed-2		
+    unparsed-2
 "
     cdata =	"nothing happens to this one!"
     />
@@ -908,7 +908,7 @@ XMLConformanceSunTest class >> sourceinvalidnotsa13xml [
     token =	"b"
     entities =	"
     unparsed-1
-    
+
     unparsed-2
 		  "
     />
@@ -922,7 +922,7 @@ XMLConformanceSunTest class >> sourceinvalidnotsa14xml [
 	^ '<?xml version=''1.0'' standalone=''yes''?>
 
 <!DOCTYPE root SYSTEM "../valid/sa.dtd">
-    
+
 <root><![CDATA[
     ]]><child>
     The whitespace before and after this element keeps
@@ -1239,7 +1239,7 @@ XMLConformanceSunTest class >> sourceinvalidrootxml [
 <!DOCTYPE attributes SYSTEM "../valid/sa.dtd">
 
 <!-- the name in the dtd must match the element type of the root element -->
-    
+
 <root/>
 '
 ]
@@ -1785,7 +1785,7 @@ XMLConformanceSunTest class >> sourcenotwfencoding06xml [
 
 	^ '<?xml version="1.0" encoding="XYZ+999"?>
 
-<!-- WF ... but illegal encoding name, also a fatal error --> 
+<!-- WF ... but illegal encoding name, also a fatal error -->
 
 <root/>
 '
@@ -2363,7 +2363,7 @@ XMLConformanceSunTest class >> sourcevalidnotsa02xml [
 <attributes
     notation =	" nonce "
     nmtoken =	" this-gets-normalized "
-    nmtokens =	" this 	
+    nmtokens =	" this
  also	 gets normalized "
     id =	"	&internal; "
     idref =	" &internal;
@@ -2371,7 +2371,7 @@ XMLConformanceSunTest class >> sourcevalidnotsa02xml [
     idrefs =	" &internal;  &internal;    &internal;"
     entity =	" unparsed-1 "
     entities =	"unparsed-1
-    unparsed-2		
+    unparsed-2
 "
     cdata =	"nothing happens to this one!"
     />
@@ -2389,7 +2389,7 @@ XMLConformanceSunTest class >> sourcevalidnotsa03xml [
 	This one is almost standalone since the values
 	are pre-normalized in this document, and the
 	defaulted attribute is explicit.
-    
+
 	BUT the entity refs are both external and need
 	normalization.
     -->
@@ -2891,7 +2891,7 @@ XMLConformanceSunTest class >> sourcevalidsa02xml [
 	entities	ENTITIES	#IMPLIED
 	cdata		CDATA		#IMPLIED
 	>
-    
+
     <!ENTITY internal " internal&number; ">
     <!ENTITY number "42">
 
@@ -2908,7 +2908,7 @@ XMLConformanceSunTest class >> sourcevalidsa02xml [
 <attributes
     notation =	" nonce "
     nmtoken =	" this-gets-normalized "
-    nmtokens =	" this	
+    nmtokens =	" this
  also	 gets normalized "
     id =	"	&internal; "
     idref =	" &internal;
@@ -2932,7 +2932,7 @@ XMLConformanceSunTest class >> sourcevalidsa03xml [
 	This one is standalone since the values are
 	pre-normalized in this document, and the
 	defaulted attribute is explicit.
-    
+
 	Similarly the entity refs are internal and
 	don''t need normalization ... the unparsed
 	entities (and entities) aren''t "references"
@@ -2968,7 +2968,7 @@ XMLConformanceSunTest class >> sourcevalidsa04xml [
 	pre-normalized in this document, except that
 	one defaulted attribute is (re)defined internally
 	and so is one normalized one.
-    
+
         Similarly the entity refs are internal.  Unparsed
         entities and notations are not listed among the
         items that must not be externally declared in
@@ -3045,7 +3045,7 @@ XMLConformanceSunTest class >> sourcevalidsadtd [
 	entities	ENTITIES	#IMPLIED
 	cdata		CDATA		#IMPLIED
 	>
-    
+
     <!-- this needs normalization when used as an ID -->
     <!ENTITY internal	" internal&number; ">
     <!ENTITY number	"42">

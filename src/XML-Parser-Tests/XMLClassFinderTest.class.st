@@ -29,7 +29,7 @@ XMLClassFinderTest >> testClassNamed [
 	self assert:
 		(self classFinder classNamed: self presentClassName) ==
 			self presentClass.
-	self assert: (self classFinder classNamed: self absentClassName) isNil.
+	self assert: (self classFinder classNamed: self absentClassName) isNil
 ]
 
 { #category : #tests }
@@ -41,7 +41,7 @@ XMLClassFinderTest >> testClassNamedIfAbsent [
 	self assert:
 		(self classFinder
 			classNamed: self absentClassName
-			ifAbsent: [#absent]) equals: #absent.
+			ifAbsent: [#absent]) equals: #absent
 ]
 
 { #category : #tests }
@@ -60,7 +60,7 @@ XMLClassFinderTest >> testClassNamedIfPresent [
 	self assert:
 		(self classFinder
 			classNamed: self absentClassName
-			ifPresent: [self fail]) isNil.
+			ifPresent: [self fail]) isNil
 ]
 
 { #category : #tests }
@@ -82,7 +82,7 @@ XMLClassFinderTest >> testClassNamedIfPresentIfAbsent [
 		(self classFinder
 			classNamed: self absentClassName
 			ifPresent: [self fail]
-			ifAbsent: [#absent]) equals: #absent.
+			ifAbsent: [#absent]) equals: #absent
 ]
 
 { #category : #tests }

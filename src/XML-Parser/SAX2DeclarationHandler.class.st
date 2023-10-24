@@ -26,7 +26,6 @@ SAX2DeclarationHandler >> attributeDeclaration: anElementName name: anAttributeN
 
 { #category : #'handling - declaration' }
 SAX2DeclarationHandler >> elementDeclaration: anElementName contentModel: aContentModel [
-
 ]
 
 { #category : #'handling - declaration' }
@@ -39,7 +38,6 @@ SAX2DeclarationHandler >> generalEntityDeclaration: aName replacement: aReplacem
 
 { #category : #'handling - declaration' }
 SAX2DeclarationHandler >> notationDeclaration: aName publicID: aPublicID systemID: aSystemID [
-
 ]
 
 { #category : #'handling - declaration' }

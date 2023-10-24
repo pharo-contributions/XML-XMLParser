@@ -135,7 +135,7 @@ XMLStringMethodsTest >> testIsXMLName [
 	self nonNCNameNames do: [:each |
 		self assert: each isXMLName].
 	self badNames do: [:each |
-		self deny: each isXMLName].
+		self deny: each isXMLName]
 ]
 
 { #category : #tests }
@@ -145,7 +145,7 @@ XMLStringMethodsTest >> testIsXMLNmtoken [
 	self nonNameNmtokens do: [:each |
 		self assert: each isXMLNmtoken].
 	self badNmtokens do: [:each |
-		self deny: each isXMLNmtoken].
+		self deny: each isXMLNmtoken]
 ]
 
 { #category : #tests }
@@ -170,7 +170,7 @@ XMLStringMethodsTest >> testIsXMLQualifiedOrLocalName [
 	self assert:
 		((String with: 16r039A asCharacter with: $: with: 16r039B asCharacter)
 			isXMLQualifiedOrLocalName:
-				(String with: 16r039B asCharacter)).
+				(String with: 16r039B asCharacter))
 ]
 
 { #category : #tests }

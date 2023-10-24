@@ -29,7 +29,7 @@ BitmapCharacterSet class >> fromXMLBNF: aString [
 						(self nextXMLBNFCharFrom: readStream)
 							ifNotNil: [:nextChar |
 								set add: nextChar]]].
-	^ set.
+	^ set
 ]
 
 { #category : #'*XML-Parser-Tests' }
@@ -46,5 +46,5 @@ BitmapCharacterSet class >> nextXMLBNFCharFrom: aStream [
 				orBase: 10) asCharacter].
 	(aStream peekFor: $|)
 		ifTrue: [^ nil].
-	^ aStream next.
+	^ aStream next
 ]

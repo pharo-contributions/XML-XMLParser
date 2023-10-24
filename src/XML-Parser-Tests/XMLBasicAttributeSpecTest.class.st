@@ -65,5 +65,5 @@ XMLBasicAttributeSpecTest >> testMatchesAttributes [
 			(XMLAttributeDictionary with: 'name3' -> 'value2')).
 	self assert:
 		(attributeSpec matchesAttributes:
-			(XMLAttributeDictionary with: 'name3' -> 'value3')).
+			(XMLAttributeDictionary with: 'name3' -> 'value3'))
 ]

@@ -65,7 +65,7 @@ XMLOrderedListTest >> assertList: aList replacedItems: anOldItemCollection withI
 
 	"items after aStop should not have been replaced"
 	aStop + 1 to: aList size do: [:i |
-		self assert: (aList at: i) = (anOldItemCollection at: i)].
+		self assert: (aList at: i) = (anOldItemCollection at: i)]
 ]
 
 { #category : #accessing }
@@ -162,7 +162,7 @@ XMLOrderedListTest >> listItemsLast: anInteger [
 		ifFalse: [^ #()].
 	^ self listItems
 		copyFrom: ((self listItems size - anInteger + 1) max: 1)
-		to: self listItems size.
+		to: self listItems size
 ]
 
 { #category : #accessing }

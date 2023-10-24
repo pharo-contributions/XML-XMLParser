@@ -28,7 +28,7 @@ XMLParserLimitsTest >> recursiveEntitiesNamed: aName depth: aLimit isParameter: 
 						nextPutAll: aName, (i + 1) printString;
 						nextPut: $;].
 		xml nextPutAll: '">'].
-	^ xml contents.
+	^ xml contents
 ]
 
 { #category : #tests }
@@ -54,7 +54,7 @@ XMLParserLimitsTest >> testDocumentReadLimit [
 			(SAXHandler on: xml)
 				documentReadLimit: nil;
 				parseDocument]
-		raise: XMLLimitException.
+		raise: XMLLimitException
 ]
 
 { #category : #tests }
@@ -72,7 +72,7 @@ XMLParserLimitsTest >> testRecursiveGeneralEntityReplacement [
 			(SAXHandler on: xml)
 				maxEntityReplacementDepth: limit;
 				parseDocument]
-		raise: XMLLimitException.
+		raise: XMLLimitException
 ]
 
 { #category : #tests }
@@ -96,7 +96,7 @@ XMLParserLimitsTest >> testRecursiveGeneralEntityReplacementPastLimit [
 			(SAXHandler on: xml)
 				maxEntityReplacementDepth: nil;
 				parseDocument]
-		raise: XMLLimitException.
+		raise: XMLLimitException
 ]
 
 { #category : #tests }
@@ -114,7 +114,7 @@ XMLParserLimitsTest >> testRecursiveParameterEntityReplacement [
 			(SAXHandler on: xml)
 				maxEntityReplacementDepth: limit;
 				parseDocument]
-		raise: XMLLimitException.
+		raise: XMLLimitException
 ]
 
 { #category : #tests }
@@ -138,7 +138,7 @@ XMLParserLimitsTest >> testRecursiveParameterEntityReplacementPastLimit [
 			(SAXHandler on: xml)
 				maxEntityReplacementDepth: nil;
 				parseDocument]
-		raise: XMLLimitException.
+		raise: XMLLimitException
 ]
 
 { #category : #tests }
@@ -155,7 +155,7 @@ XMLParserLimitsTest >> testResolvingLocalFromNonLocal [
 			parser
 				resolvesExternalEntities: true;
 				parseDocument]
-		raise: XMLLimitException.
+		raise: XMLLimitException
 ]
 
 { #category : #tests }
@@ -170,7 +170,7 @@ XMLParserLimitsTest >> testStreamReaderMaxPushBack [
 		raise: XMLLimitException.
 	self
 		should: [streamReader pushBack: 'test']
-		raise: XMLLimitException.
+		raise: XMLLimitException
 ]
 
 { #category : #source }
@@ -188,5 +188,5 @@ XMLParserLimitsTest >> xmlWithRecursiveEntitiesNamed: aName depth: aLimit isPara
 		ifTrue: [xml nextPutAll: '%', aName, '1;]><test/>']
 		ifFalse: [xml nextPutAll: ']><test>&', aName, '1;</test>'].
 
-	^ xml contents.
+	^ xml contents
 ]

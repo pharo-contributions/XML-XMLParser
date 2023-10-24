@@ -33,14 +33,14 @@ SAX2ElementHandler class >> parser: aParser parent: anElementHandler parentFacto
 ]
 
 { #category : #accessing }
-SAX2ElementHandler >> ancestors [	
+SAX2ElementHandler >> ancestors [
 	"Returns a list of all ancestor element handlers of the receiver."
 
 	| ancestors |
 
 	ancestors := XMLOrderedList new.
 	self ancestorsDo: [:each | ancestors addLast: each].
-	^ ancestors.
+	^ ancestors
 ]
 
 { #category : #enumerating }
@@ -51,7 +51,7 @@ SAX2ElementHandler >> ancestorsDo: aBlock [
 	[ancestor notNil]
 		whileTrue: [
 			aBlock value: ancestor.
-			ancestor := ancestor parent].
+			ancestor := ancestor parent]
 ]
 
 { #category : #accessing }
@@ -66,7 +66,7 @@ SAX2ElementHandler >> characters [
 SAX2ElementHandler >> characters: aString [
 	"Handles character data in an element, such as the 'test' in
 	'<characters>test</characters>' or in the CDATA section '<![CDATA[test]]>'.
-	
+
 	It may be sent multiple times for different sections of character data
 	in a single element if they're separated by other nodes or entity
 	references like in '<characters>one<!--comment-->two</characters>'."
@@ -91,7 +91,7 @@ SAX2ElementHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI [
 	"Handles the end of an element if a subclass doesn't implement
 	#endElement:prefix:uri:localName:. By default it forwards to a simpler
 	handler, #endElement:.
-	
+
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	aPrefix - the prefix of the qualified name or an empty string
 	aURI - the namespace URI of the element or an empty string"
@@ -104,7 +104,7 @@ SAX2ElementHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI local
 	"Handles the end of an element, either an end tag like '</end>' or a
 	self-closed tag like '<empty/>'. By default it forwards to a simpler handler,
 	#endElement:prefix:uri:.
-	
+
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	aPrefix - the prefix of the qualified name or an empty string
 	aURI - the namespace URI of the element or an empty string
@@ -150,7 +150,7 @@ SAX2ElementHandler >> parser [
 SAX2ElementHandler >> setParser: aParser parent: anElementHandler parentFactory: anElementHandlerFactory [
 	parser := aParser.
 	parent := anElementHandler.
-	parentFactory := anElementHandlerFactory.
+	parentFactory := anElementHandlerFactory
 ]
 
 { #category : #'handling - content' }
@@ -168,7 +168,7 @@ SAX2ElementHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI att
 	"Handles the start of an element if a subclass doesn't implement
 	#startElement:prefix:uri:localName:attributes:. By default it forwards
 	to a simpler handler, #startElement:attributes:.
-	
+
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	aPrefix - the prefix of the qualified name or an empty string
 	aURI - the namespace URI of the element or an empty string
@@ -184,7 +184,7 @@ SAX2ElementHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI loc
 	"Handles the start of an element, either a start tag like '<start>' or a
 	self-closed tag like '<empty/>'. By default it forwards to a simpler handler,
 	#startElement:prefix:uri:attributes:.
-	
+
 	aQualifiedName - the full name, including any prefix, such as 'prefix:name'
 	aPrefix - the prefix of the qualified name or an empty string
 	aURI - the namespace URI of the element or an empty string

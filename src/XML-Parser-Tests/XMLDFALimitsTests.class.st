@@ -57,7 +57,7 @@ XMLDFALimitsTests >> testDFAStateCacheLimit [
 		self deny: currentState isNil.
 		i = names size
 			ifTrue: [self assert: currentState isAccepting]
-			ifFalse: [self deny: currentState isAccepting]].
+			ifFalse: [self deny: currentState isAccepting]]
 ]
 
 { #category : #tests }
@@ -79,5 +79,5 @@ XMLDFALimitsTests >> testDFAStateTransitionLimit [
 	dfaState nextDFAStateMatching: elementName.
 	self
 		assert: (dfaState dfaStateTransitions includesKey: elementName);
-		assert: dfaState dfaStateTransitions size equals: 1.
+		assert: dfaState dfaStateTransitions size equals: 1
 ]

@@ -47,7 +47,7 @@ DTDUndecodedResolvedExternalParsedEntityReplacement >> printOn: aStream [
 	aStream
 		nextPut: $(;
 		nextPutAll: self encoding;
-		nextPut: $).
+		nextPut: $)
 ]
 
 { #category : #accessing }
@@ -65,5 +65,5 @@ DTDUndecodedResolvedExternalParsedEntityReplacement >> readStream [
 { #category : #initialization }
 DTDUndecodedResolvedExternalParsedEntityReplacement >> setRawContents: aString encoding: anEncodingName [
 	rawContents := aString.
-	encoding := anEncodingName.
+	encoding := anEncodingName
 ]

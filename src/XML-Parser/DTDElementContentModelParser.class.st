@@ -112,7 +112,7 @@ DTDElementContentModelParser >> parse [
 
 	^ self elementValidatorClass
 		element: element
-		dfa: nfaBuilder asAcceptingNFA asDFAState.
+		dfa: nfaBuilder asAcceptingNFA asDFAState
 ]
 
 { #category : #private }
@@ -125,7 +125,7 @@ DTDElementContentModelParser >> parseClosingParenthesis: aCharacter [
 	self popRemainingBinaryOperators.
 	(binaryOperatorStack size > 0
 		and: [binaryOperatorStack last == $(])
-		ifTrue: [binaryOperatorStack removeLast].
+		ifTrue: [binaryOperatorStack removeLast]
 ]
 
 { #category : #private }

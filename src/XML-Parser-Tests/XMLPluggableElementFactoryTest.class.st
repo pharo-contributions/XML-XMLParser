@@ -49,7 +49,7 @@ XMLPluggableElementFactoryTest >> sampleUsersXML [
 				<username>rsmith</username>
 				<real_name>Robert Smith</real_name>
 			</User>
-		</users>'.
+		</users>'
 ]
 
 { #category : #accessing }
@@ -91,7 +91,7 @@ XMLPluggableElementFactoryTest >> testAddElementNamed [
 		assert: (dataElement isNamed: 'data');
 		assert: dataElement namespaceURI = 'dataNS'.
 
-	self assert: (element addElementNamed: 'default') class == XMLElement.
+	self assert: (element addElementNamed: 'default') class == XMLElement
 ]
 
 { #category : #tests }
@@ -112,7 +112,7 @@ XMLPluggableElementFactoryTest >> testClassForElement [
 	self
 		assert: (factory classForElement: 'user') == self userElementClass;
 		assert: (factory classForElement: 'prefix:user') == self usernameElementClass;
-		assert: (factory classForElement: 'prefix:absent') == self elementClass.
+		assert: (factory classForElement: 'prefix:absent') == self elementClass
 ]
 
 { #category : #tests }
@@ -151,7 +151,7 @@ XMLPluggableElementFactoryTest >> testClassForElementNamespaceURI [
 	self assert:
 		(factory
 			classForElement: 'prefix:user'
-			namespaceURI: 'absentNS') == self elementClass.
+			namespaceURI: 'absentNS') == self elementClass
 ]
 
 { #category : #tests }
@@ -163,7 +163,7 @@ XMLPluggableElementFactoryTest >> testCopy [
 	copy := factory copy.
 	self
 		deny: copy == factory;
-		deny: copy elementClassMapper == factory elementClassMapper.
+		deny: copy elementClassMapper == factory elementClassMapper
 ]
 
 { #category : #tests }
@@ -180,7 +180,7 @@ XMLPluggableElementFactoryTest >> testElementClassAccessor [
 		(XMLDOMParser on: self sampleUserXML)
 			nodeFactory: (XMLPluggableElementFactory new elementClass: self defaultElementClass);
 			parseDocument.
-	self assert: (document allElementsDetect: [:each | (each isMemberOf: self defaultElementClass) not]) isNil.
+	self assert: (document allElementsDetect: [:each | (each isMemberOf: self defaultElementClass) not]) isNil
 ]
 
 { #category : #tests }
@@ -194,7 +194,7 @@ XMLPluggableElementFactoryTest >> testElementClassMapper [
 	newMapper := self elementClassMapperClass new.
 	self
 		assert: (factory elementClassMapper: newMapper) == factory;
-		assert: factory elementClassMapper == newMapper.
+		assert: factory elementClassMapper == newMapper
 ]
 
 { #category : #tests }
@@ -217,7 +217,7 @@ XMLPluggableElementFactoryTest >> testElementClassNameMatching [
 		assert: ((document root elementAt: 'real-name') isMemberOf: self realNameElementClass);
 		assert:
 			((document root elementAt: 'serializationFormat')
-				isMemberOf: self serializationFormatElementClass).
+				isMemberOf: self serializationFormatElementClass)
 ]
 
 { #category : #tests }
@@ -252,7 +252,7 @@ XMLPluggableElementFactoryTest >> testElementNameAndNamespaceMatching [
 		assert: ((root elementAt: 'date-registered') isMemberOf: self dateElementClass);
 		assert:
 			((root elements copyAfter: (root elementAt: 'date-registered'))
-				allSatisfy: [:each | each isMemberOf: self defaultElementClass]).
+				allSatisfy: [:each | each isMemberOf: self defaultElementClass])
 ]
 
 { #category : #tests }
@@ -279,7 +279,7 @@ XMLPluggableElementFactoryTest >> testElementsNameAndNamespaceMatching [
 	self
 		assert: ((root elementAt: 'date-registered') isMemberOf: self dateElementClass);
 		assert: ((root elementAt: 'date-last-active') isMemberOf: self dateElementClass);
-		assert: ((root elementAt: 'table-name') isMemberOf: self tableElementClass).
+		assert: ((root elementAt: 'table-name') isMemberOf: self tableElementClass)
 ]
 
 { #category : #tests }
@@ -299,7 +299,7 @@ XMLPluggableElementFactoryTest >> testHandleElementsMatchingClass [
 			self
 				assert: (element class == XMLFUserElement);
 				assert: (element elements first class == XMLFUsernameElement);
-				assert: (element elements second class == XMLFRealNameElement)].
+				assert: (element elements second class == XMLFRealNameElement)]
 ]
 
 { #category : #tests }
@@ -321,7 +321,7 @@ XMLPluggableElementFactoryTest >> testHandleElementsMatchingClasses [
 			self
 				assert: (element class == XMLFUserElement);
 				assert: (element elements first class == XMLFUsernameElement);
-				assert: (element elements second class == XMLFRealNameElement)].
+				assert: (element elements second class == XMLFRealNameElement)]
 ]
 
 { #category : #accessing }

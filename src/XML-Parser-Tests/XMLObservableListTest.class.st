@@ -27,7 +27,7 @@ XMLObservableListTest >> assertList: aFirstList copiedFrom: aSecondList equals: 
 		equals: aThirdList.
 	self
 		denyList: aFirstList
-		sharesObserverWith: aSecondList.
+		sharesObserverWith: aSecondList
 ]
 
 { #category : #assertions }
@@ -37,7 +37,7 @@ XMLObservableListTest >> assertList: aFirstList isCopyOf: aSecondList [
 		isCopyOf: aSecondList.
 	self
 		denyList: aFirstList
-		sharesObserverWith: aSecondList.
+		sharesObserverWith: aSecondList
 ]
 
 { #category : #assertions }
@@ -72,7 +72,7 @@ XMLObservableListTest >> assertList: aList receivedNotificationOfReplacing: anOl
 		receivedNotificationOfRemoving: anOldObject.
 	self
 		assertList: aList
-		receivedNotificationOfAfterAdding: aNewObject.
+		receivedNotificationOfAfterAdding: aNewObject
 ]
 
 { #category : #assertions }
@@ -84,7 +84,7 @@ XMLObservableListTest >> assertNotification: aNotification for: anObject withLis
 		aNotification arguments =
 			((Array with: anObject with: aList)
 				copyFrom: 1
-				to: (aNotification selector asString occurrencesOf: $:)).
+				to: (aNotification selector asString occurrencesOf: $:))
 ]
 
 { #category : #assertions }
@@ -100,7 +100,7 @@ XMLObservableListTest >> emptyList [
 
 	list := super emptyList.
 	self observerOnList: list.
-	^ list.
+	^ list
 ]
 
 { #category : #accessing }
@@ -114,7 +114,7 @@ XMLObservableListTest >> listWithItems [
 
 	list := super listWithItems.
 	self observerOnList: list.
-	^ list.
+	^ list
 ]
 
 { #category : #accessing }
@@ -123,7 +123,7 @@ XMLObservableListTest >> listWithSingleItem [
 
 	list := super listWithSingleItem.
 	self observerOnList: list.
-	^ list.
+	^ list
 ]
 
 { #category : #accessing }
@@ -137,7 +137,7 @@ XMLObservableListTest >> observerOnList: aList [
 
 	observer := self observerClass new.
 	aList observer: observer.
-	^ observer.
+	^ observer
 ]
 
 { #category : #assertions }
@@ -154,9 +154,9 @@ XMLObservableListTest >> should: aBlock addAll: aCollection toAndNotify: aList [
 	aBlock value.
 	aCollection do: [:each |
 		self assert: (aList includes: each).
-		self 
+		self
 			assertList: aList
-			receivedNotificationOfAdding: each].
+			receivedNotificationOfAdding: each]
 ]
 
 { #category : #assertions }
@@ -175,7 +175,7 @@ XMLObservableListTest >> should: aBlock removeAll: aCollection fromAndNotify: aL
 		self deny: (aList includes: each).
 		self
 			assertList: aList
-			receivedNotificationOfRemoving: each].
+			receivedNotificationOfRemoving: each]
 ]
 
 { #category : #tests }
@@ -189,7 +189,7 @@ XMLObservableListTest >> testAdd [
 		self
 			should: [list add: each]
 			add: each
-			toAndNotify: list].
+			toAndNotify: list]
 ]
 
 { #category : #tests }
@@ -203,7 +203,7 @@ XMLObservableListTest >> testAddAfter [
 		self
 			should: [list add: each after: self singleListItem]
 			add: each
-			toAndNotify: list].
+			toAndNotify: list]
 ]
 
 { #category : #tests }
@@ -217,7 +217,7 @@ XMLObservableListTest >> testAddAfterIndex [
 		self
 			should: [list add: each afterIndex: 1]
 			add: each
-			toAndNotify: list].
+			toAndNotify: list]
 ]
 
 { #category : #tests }
@@ -234,7 +234,7 @@ XMLObservableListTest >> testAddAll [
 	self
 		should: [list addAll: self changedListItems]
 		addAll: self changedListItems
-		toAndNotify: list.
+		toAndNotify: list
 ]
 
 { #category : #tests }
@@ -251,7 +251,7 @@ XMLObservableListTest >> testAddAllFirst [
 	self
 		should: [list addAllFirst: self changedListItems]
 		addAll: self changedListItems reversed
-		toAndNotify: list.
+		toAndNotify: list
 ]
 
 { #category : #tests }

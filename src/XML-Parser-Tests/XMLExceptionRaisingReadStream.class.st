@@ -27,14 +27,14 @@ XMLExceptionRaisingReadStream >> close [
 	protocol"
 	(stream respondsTo: #close)
 		ifTrue: [stream close].
-	wasClosed := true.
+	wasClosed := true
 ]
 
 { #category : #accessing }
 XMLExceptionRaisingReadStream >> contents [
 	stream atEnd
 		ifTrue: [self errorAtEndStreamCannotBeSent: #contents].
-	^ stream contents.
+	^ stream contents
 ]
 
 { #category : #private }
@@ -59,20 +59,20 @@ XMLExceptionRaisingReadStream >> isBinary [
 XMLExceptionRaisingReadStream >> next [
 	stream atEnd
 		ifTrue: [self errorAtEndStreamCannotBeSent: #next].
-	^ stream next.
+	^ stream next
 ]
 
 { #category : #initialization }
 XMLExceptionRaisingReadStream >> on: aCollection [
 	stream := aCollection readStream.
-	wasClosed := false.
+	wasClosed := false
 ]
 
 { #category : #accessing }
 XMLExceptionRaisingReadStream >> peek [
 	stream atEnd
 		ifTrue: [self errorAtEndStreamCannotBeSent: #peek].
-	^ stream peek.
+	^ stream peek
 ]
 
 { #category : #positioning }
@@ -86,14 +86,14 @@ XMLExceptionRaisingReadStream >> position [
 XMLExceptionRaisingReadStream >> position: anInteger [
 	wasClosed
 		ifTrue: [self errorClosedStreamCannotBeSent: #position:].
-	stream position: anInteger.
+	stream position: anInteger
 ]
 
 { #category : #positioning }
 XMLExceptionRaisingReadStream >> reset [
 	wasClosed
 		ifTrue: [self errorClosedStreamCannotBeSent: #reset].
-	stream reset.
+	stream reset
 ]
 
 { #category : #testing }

@@ -22,7 +22,7 @@ XMLNotationDeclarationTest >> testName [
 	self
 		assert: declaration name = '';
 		assert: (declaration name: 'test') == declaration;
-		assert: declaration name = 'test'.
+		assert: declaration name = 'test'
 ]
 
 { #category : #tests }
@@ -38,7 +38,7 @@ XMLNotationDeclarationTest >> testNamePublicIDSystemID [
 		assert: declaration class == self nodeClass;
 		assert: declaration name = 'one';
 		assert: declaration publicID = 'two';
-		assert: declaration systemID = 'three'.
+		assert: declaration systemID = 'three'
 ]
 
 { #category : #tests }
@@ -49,7 +49,7 @@ XMLNotationDeclarationTest >> testPublicID [
 	self
 		assert: declaration publicID = '';
 		assert: (declaration publicID: 'test') == declaration;
-		assert: declaration publicID = 'test'.
+		assert: declaration publicID = 'test'
 ]
 
 { #category : #tests }
@@ -60,7 +60,7 @@ XMLNotationDeclarationTest >> testSystemID [
 	self
 		assert: declaration systemID = '';
 		assert: (declaration systemID: 'test') == declaration;
-		assert: declaration systemID = 'test'.
+		assert: declaration systemID = 'test'
 ]
 
 { #category : #tests }
@@ -73,5 +73,5 @@ XMLNotationDeclarationTest >> testWriteXMLOn [
 			'<!NOTATION one SYSTEM "two">'.
 	self assert:
 		(self nodeClass name: 'one' publicID: 'two' systemID: '') printString =
-			'<!NOTATION one PUBLIC "two">'.
+			'<!NOTATION one PUBLIC "two">'
 ]

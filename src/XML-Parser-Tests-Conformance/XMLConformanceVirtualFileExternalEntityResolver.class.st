@@ -54,7 +54,7 @@ XMLConformanceVirtualFileExternalEntityResolver >> resolveExternalEntityURI: anX
 				errorVirtualFilePath: path
 				exceedsMazSize: aMaxSize].
 
-	^ DTDDecodedResolvedExternalParsedEntityReplacement contents: contents.
+	^ DTDDecodedResolvedExternalParsedEntityReplacement contents: contents
 ]
 
 { #category : #resolving }

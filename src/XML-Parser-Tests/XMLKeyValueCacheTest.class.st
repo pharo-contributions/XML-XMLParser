@@ -13,7 +13,7 @@ XMLKeyValueCacheTest >> associations [
 		associations
 			at: i
 			put: ('key', i asString) -> ('value', i asString)].
-	^ associations.
+	^ associations
 ]
 
 { #category : #accessing }
@@ -58,7 +58,7 @@ XMLKeyValueCacheTest >> newCacheWithEntries [
 		cache
 			at: key
 			put: value].
-	^ cache.
+	^ cache
 ]
 
 { #category : #asserting }
@@ -69,7 +69,7 @@ XMLKeyValueCacheTest >> should: aBlock inAnyOrderEnumerate: aCollection [
 	aBlock value: [:each | enumerated addLast: each].
 	self
 		assert: enumerated size = aCollection size;
-		assert: enumerated asSet = aCollection asSet.
+		assert: enumerated asSet = aCollection asSet
 ]
 
 { #category : #asserting }
@@ -81,7 +81,7 @@ XMLKeyValueCacheTest >> should: aBlock inAnyOrderEnumerateKeysAndValues: anAssoc
 		enumerated addLast: first -> second].
 	self
 		assert: enumerated size = anAssociationCollection size;
-		assert: enumerated asSet = anAssociationCollection asSet.
+		assert: enumerated asSet = anAssociationCollection asSet
 ]
 
 { #category : #tests }
@@ -91,7 +91,7 @@ XMLKeyValueCacheTest >> testAt [
 	cache := self newCacheWithEntries.
 	self keysAndValuesDo: [:key :value |
 		self assert: (cache at: key) = value].
-	self assert: (cache at: 'absentKey') isNil.
+	self assert: (cache at: 'absentKey') isNil
 ]
 
 { #category : #tests }
@@ -120,7 +120,7 @@ XMLKeyValueCacheTest >> testAtIfAbsent [
 					put: 'newValue']) = 'newValue'.
 	self
 		assert: cache size = 1;
-		assert: (cache at: 'newKey') = 'newValue'.
+		assert: (cache at: 'newKey') = 'newValue'
 ]
 
 { #category : #tests }
@@ -157,7 +157,7 @@ XMLKeyValueCacheTest >> testAtIfAbsentPut [
 	self
 		assert: cache size = 2;
 		assert: (cache at: 'newKey') = 'newValue';
-		assert: (cache at: 'newKeyTwo') = 'newValue'.
+		assert: (cache at: 'newKeyTwo') = 'newValue'
 ]
 
 { #category : #tests }
@@ -191,7 +191,7 @@ XMLKeyValueCacheTest >> testAtIfPresent [
 					put: 'newValue']) = 'newValue'.
 	self
 		assert: cache size = 1;
-		assert: (cache at: 'newKey') = 'newValue'.
+		assert: (cache at: 'newKey') = 'newValue'
 ]
 
 { #category : #tests }
@@ -260,7 +260,7 @@ XMLKeyValueCacheTest >> testAtIfPresentPut [
 					put: 'newValue']) = 'newValue'.
 	self
 		assert: cache size = 1;
-		assert: (cache at: self keys first) = 'newValue'.
+		assert: (cache at: self keys first) = 'newValue'
 ]
 
 { #category : #tests }
@@ -284,7 +284,7 @@ XMLKeyValueCacheTest >> testAtPut [
 			put: 'newValue') = 'newValue'.
 	self
 		assert: (cache at: 'newKey') = 'newValue';
-		assert: cache size = 1.
+		assert: cache size = 1
 ]
 
 { #category : #tests }
@@ -302,7 +302,7 @@ XMLKeyValueCacheTest >> testClear [
 	self deny: cache isEmpty.
 
 	cache clear.
-	self assert: cache isEmpty.
+	self assert: cache isEmpty
 ]
 
 { #category : #tests }
@@ -315,7 +315,7 @@ XMLKeyValueCacheTest >> testCopy [
 		deny: cache == copy;
 		assert: cache collection = copy collection;
 		deny: cache collection == copy collection;
-		deny: cache mutex == copy mutex.
+		deny: cache mutex == copy mutex
 ]
 
 { #category : #tests }
@@ -325,7 +325,7 @@ XMLKeyValueCacheTest >> testIncludesKey [
 	cache := self newCacheWithEntries.
 	self keys do: [:key |
 		self assert: (cache includesKey: key)].
-	self deny: (cache includesKey: 'absentKey').
+	self deny: (cache includesKey: 'absentKey')
 ]
 
 { #category : #tests }
@@ -350,7 +350,7 @@ XMLKeyValueCacheTest >> testKeysAndValuesDo [
 
 	self
 		should: [:block | self newCacheWithEntries keysAndValuesDo: block]
-		inAnyOrderEnumerateKeysAndValues: self associations.
+		inAnyOrderEnumerateKeysAndValues: self associations
 ]
 
 { #category : #tests }
@@ -361,7 +361,7 @@ XMLKeyValueCacheTest >> testKeysDo [
 
 	self
 		should: [:block | self newCacheWithEntries keysDo: block]
-		inAnyOrderEnumerate: self keys.
+		inAnyOrderEnumerate: self keys
 ]
 
 { #category : #tests }
@@ -386,7 +386,7 @@ XMLKeyValueCacheTest >> testMaxSize [
 	self
 		assert: (cache maxSize: 0) == cache;
 		assert: cache maxSize = 0;
-		assert: cache size = 0.
+		assert: cache size = 0
 ]
 
 { #category : #tests }

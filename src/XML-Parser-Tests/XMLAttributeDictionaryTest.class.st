@@ -38,7 +38,7 @@ XMLAttributeDictionaryTest >> testAsXMLAttributeDictionary [
 	| dictionary |
 
 	dictionary := self emptyDictionary.
-	self assert: dictionary asXMLAttributeDictionary == dictionary.
+	self assert: dictionary asXMLAttributeDictionary == dictionary
 ]
 
 { #category : #tests }
@@ -265,7 +265,7 @@ XMLAttributeDictionaryTest >> testAtName [
 		assert: (dictionary atName: 'name') equals: 'value';
 		assert: (dictionary atName: 'prefix:name') equals: 'prefixValue';
 		assert: (dictionary atName: 'otherPrefix:name') equals: 'otherPrefixValue';
-		assert: (dictionary atName: self absentKey) equals: ''.
+		assert: (dictionary atName: self absentKey) equals: ''
 ]
 
 { #category : #tests }
@@ -296,7 +296,7 @@ XMLAttributeDictionaryTest >> testAtNameIfAbsent [
 	self assert:
 		(dictionary
 			atName: self absentKey
-			ifAbsent: [self absentValue]) equals: self absentValue.
+			ifAbsent: [self absentValue]) equals: self absentValue
 ]
 
 { #category : #tests }
@@ -362,7 +362,7 @@ XMLAttributeDictionaryTest >> testAtNameNamespaceURI [
 	self assert:
 		(dictionary
 			atName: 'name'
-			namespaceURI: 'defaultNS') equals: ''.
+			namespaceURI: 'defaultNS') equals: ''
 ]
 
 { #category : #tests }
@@ -442,7 +442,7 @@ XMLAttributeDictionaryTest >> testAtNameNamespaceURIIfAbsent [
 		(dictionary
 			atName: 'name'
 			namespaceURI: 'defaultNS'
-			ifAbsent: [self absentValue]) = self absentValue.
+			ifAbsent: [self absentValue]) = self absentValue
 ]
 
 { #category : #tests }
@@ -454,7 +454,7 @@ XMLAttributeDictionaryTest >> testLazyDictionaryEmptyAttributeDictionary [
 		self emptyDictionary attributeDictionary ==
 			self dictionaryClass emptyAttributeDictionary.
 	self assert:
-		self dictionaryClass emptyAttributeDictionary isEmpty.
+		self dictionaryClass emptyAttributeDictionary isEmpty
 ]
 
 { #category : #tests }
@@ -467,7 +467,7 @@ XMLAttributeDictionaryTest >> testLazyDictionaryInterfaceCompatibility [
 	"protocols must be the same as the non-lazy dictionaries"
 	dictionary := self emptyDictionary.
 	XMLAttributeDictionary selectors do: [:each |
-		self assert: (dictionary respondsTo: each)].
+		self assert: (dictionary respondsTo: each)]
 ]
 
 { #category : #tests }
@@ -479,7 +479,7 @@ XMLAttributeDictionaryTest >> testNamespaceURIOf [
 		assert: (dictionary namespaceURIOf: 'xml:id') equals: '';
 		assert: (dictionary namespaceURIOf: 'prefix:name') equals: '';
 		assert: (dictionary namespaceURIOf: 'otherPrefix:name') equals: '';
-		assert: (dictionary namespaceURIOf: 'name') equals: ''.
+		assert: (dictionary namespaceURIOf: 'name') equals: ''
 ]
 
 { #category : #tests }

@@ -80,7 +80,7 @@ XMLAbstractSetTest >> testAdd [
 	self
 		assert: set = self setWithElements;
 		assert: (self setElements allSatisfy: [:each | (set add: each) == each]);
-		assert: set = self setWithElements.
+		assert: set = self setWithElements
 ]
 
 { #category : #tests }
@@ -90,14 +90,14 @@ XMLAbstractSetTest >> testConcatenation [
 	firstSet := self setWithElements.
 	self assert: (firstSet, self setWithElements) = self setWithElements.
 
-	secondSet := self setWithDisjointElements.	
+	secondSet := self setWithDisjointElements.
 	self
 		assert: (firstSet, secondSet) = (secondSet, firstSet);
 		deny: (firstSet, secondSet) = firstSet;
 		deny: (firstSet, secondSet) = secondSet;
 		assert:
 			(firstSet, secondSet) =
-				(self setClass newFrom: self setElements, self disjointSetElements).
+				(self setClass newFrom: self setElements, self disjointSetElements)
 ]
 
 { #category : #tests }
@@ -114,7 +114,7 @@ XMLAbstractSetTest >> testCopy [
 	self deny: set = copy.
 
 	copy addAll: self disjointSetElements.
-	self assert: set = copy.
+	self assert: set = copy
 ]
 
 { #category : #tests }
@@ -128,7 +128,7 @@ XMLAbstractSetTest >> testDo [
 	self setWithElements do: [:each | enumerated addLast: each].
 	self
 		assert: enumerated size = self setElements size;
-		assert: (self setElements allSatisfy: [:each | enumerated includes: each]).
+		assert: (self setElements allSatisfy: [:each | enumerated includes: each])
 ]
 
 { #category : #tests }
@@ -147,7 +147,7 @@ XMLAbstractSetTest >> testEquals [
 		denySet: set equals: self setWithDisjointElements.
 
 	set := self setWithDisjointElements.
-	self assertSet: set equals: self setWithDisjointElements.
+	self assertSet: set equals: self setWithDisjointElements
 ]
 
 { #category : #tests }
@@ -162,7 +162,7 @@ XMLAbstractSetTest >> testIncludes [
 	self deny: (self disjointSetElements anySatisfy: [:each | set includes: each]).
 
 	set := self setWithDisjointElements.
-	self assert: (self disjointSetElements allSatisfy: [:each | set includes: each]).
+	self assert: (self disjointSetElements allSatisfy: [:each | set includes: each])
 ]
 
 { #category : #tests }
@@ -177,7 +177,7 @@ XMLAbstractSetTest >> testRemoveAll [
 	set := self setWithElements.
 	self
 		assert: set removeAll == set;
-		assert: set isEmpty.
+		assert: set isEmpty
 ]
 
 { #category : #tests }
@@ -199,7 +199,7 @@ XMLAbstractSetTest >> testRemoveIfAbsent [
 		self
 			should: [set remove: each]
 			raise: Error].
-	self assert: set isEmpty.
+	self assert: set isEmpty
 ]
 
 { #category : #tests }
@@ -212,5 +212,5 @@ XMLAbstractSetTest >> testSize [
 	self setElements do: [:each |
 		set add: each.
 		size := size + 1.
-		self assert: set size = size].
+		self assert: set size = size]
 ]

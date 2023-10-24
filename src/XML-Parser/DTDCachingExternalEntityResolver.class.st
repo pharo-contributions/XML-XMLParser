@@ -100,5 +100,5 @@ DTDCachingExternalEntityResolver >> resolveNonLocalExternalEntityURI: anXMLURIOr
 				put:
 					(super
 						resolveNonLocalExternalEntityURI: uri
-						upToLimit: aMaxSize)].
+						upToLimit: aMaxSize)]
 ]

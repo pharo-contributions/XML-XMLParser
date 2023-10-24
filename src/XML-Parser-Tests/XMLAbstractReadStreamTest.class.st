@@ -50,7 +50,7 @@ XMLAbstractReadStreamTest >> testAtEnd [
 	self outputCollection size timesRepeat: [
 		self deny: stream atEnd.
 		stream next].
-	self assert: stream atEnd.
+	self assert: stream atEnd
 ]
 
 { #category : #tests }
@@ -60,7 +60,7 @@ XMLAbstractReadStreamTest >> testClose [
 	stream := self newStream.
 	self
 		assert: stream close == stream;
-		assert: stream atEnd.
+		assert: stream atEnd
 ]
 
 { #category : #tests }
@@ -75,7 +75,7 @@ XMLAbstractReadStreamTest >> testContents [
 			assert: stream contents = self outputCollection;
 			assert: stream peek = each;
 			assert: stream next = each].
-	self assert: stream contents = self outputCollection.
+	self assert: stream contents = self outputCollection
 ]
 
 { #category : #tests }
@@ -93,7 +93,7 @@ XMLAbstractReadStreamTest >> testIsXMLBinaryOrExternalStream [
 	| stream |
 
 	stream := self newStream.
-	self assert: stream isXMLBinaryOrExternalStream = stream isBinary.
+	self assert: stream isXMLBinaryOrExternalStream = stream isBinary
 ]
 
 { #category : #tests }
@@ -123,7 +123,7 @@ XMLAbstractReadStreamTest >> testNext [
 	self assert:
 		(stream next: self outputCollection size + 1) =
 			self outputCollection.
-	self assert: (stream next: 1) isEmpty.
+	self assert: (stream next: 1) isEmpty
 ]
 
 { #category : #tests }
@@ -135,7 +135,7 @@ XMLAbstractReadStreamTest >> testPeek [
 		"use #= because wide chars aren't #== pre-Spur"
 		self assert: stream peek = each.
 		stream next].
-	self assert: stream peek isNil.
+	self assert: stream peek isNil
 ]
 
 { #category : #tests }
@@ -152,7 +152,7 @@ XMLAbstractReadStreamTest >> testPeekFor [
 			deny: (stream peekFor: nil)].
 	self
 		deny: (stream peekFor: #absent);
-		deny: (stream peekFor: nil).
+		deny: (stream peekFor: nil)
 ]
 
 { #category : #tests }
@@ -175,7 +175,7 @@ XMLAbstractReadStreamTest >> testPosition [
 			assert: stream position = position;
 			assert: stream next = each;
 			assert: stream position > position.
-		
+
 		stream peek.
 		self
 			assert: (stream position: position) == stream;
@@ -184,7 +184,7 @@ XMLAbstractReadStreamTest >> testPosition [
 			assert: stream next = each;
 			assert: stream position > position.
 		position := stream position].
-	self assert: position = endPosition.
+	self assert: position = endPosition
 ]
 
 { #category : #tests }
@@ -197,7 +197,7 @@ XMLAbstractReadStreamTest >> testReset [
 		assert: stream upToEnd isEmpty;
 		assert: stream reset == stream;
 		assert: stream upToEnd = self outputCollection;
-		assert: stream upToEnd isEmpty.
+		assert: stream upToEnd isEmpty
 ]
 
 { #category : #tests }
@@ -213,7 +213,7 @@ XMLAbstractReadStreamTest >> testSkip [
 	stream := self newStream.
 	self
 		assert: (stream skip: self outputCollection size + 1) == stream;
-		assert: stream upToEnd isEmpty.
+		assert: stream upToEnd isEmpty
 ]
 
 { #category : #tests }
@@ -229,7 +229,7 @@ XMLAbstractReadStreamTest >> testSkipTo [
 	stream := self newStream.
 	self
 		deny: (stream skipTo: #absent);
-		assert: stream atEnd.
+		assert: stream atEnd
 ]
 
 { #category : #tests }
@@ -242,7 +242,7 @@ XMLAbstractReadStreamTest >> testUpTo [
 		self assert:
 			stream upToEnd =
 				(self outputCollection copyAfter: each)].
-	self assert: (self newStream upTo: #absent) = self outputCollection.
+	self assert: (self newStream upTo: #absent) = self outputCollection
 ]
 
 { #category : #tests }
@@ -259,5 +259,5 @@ XMLAbstractReadStreamTest >> testUpToEnd [
 	stream := self newStream.
 	self
 		assert: stream upToEnd = self outputCollection;
-		assert: stream upToEnd = ''.
+		assert: stream upToEnd = ''
 ]

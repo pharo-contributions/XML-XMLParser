@@ -46,7 +46,7 @@ DTDExternalParsedEntity >> printNameOn: aStream [
 		nextPut: ${;
 		nextPutAll: self uri;
 		nextPut: $}.
-	super printNameOn: aStream.
+	super printNameOn: aStream
 ]
 
 { #category : #accessing }
@@ -68,7 +68,7 @@ DTDExternalParsedEntity >> resolveUnresolvedReplacement [
 { #category : #accessing }
 DTDExternalParsedEntity >> resolvedReplacement [
 	self resolveUnresolvedReplacement.
-	^ resolvedReplacement.
+	^ resolvedReplacement
 ]
 
 { #category : #accessing }
@@ -79,7 +79,7 @@ DTDExternalParsedEntity >> resolvedReplacement: aResolvedReplacement [
 { #category : #initialization }
 DTDExternalParsedEntity >> setName: aName unresolvedReplacement: anUnresolvedReplacement [
 	name := aName.
-	unresolvedReplacement := anUnresolvedReplacement.
+	unresolvedReplacement := anUnresolvedReplacement
 ]
 
 { #category : #accessing }

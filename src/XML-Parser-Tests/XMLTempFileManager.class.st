@@ -78,7 +78,7 @@ XMLTempFileManager >> newFileHandleWithSuffix: aSuffix [
 		whileTrue: [
 			fileHandle :=
 				(self newUniqueFileNameWithSuffix: aSuffix) asXMLFileHandle].
-	^ fileHandle.
+	^ fileHandle
 ]
 
 { #category : #'instance creation' }
@@ -119,14 +119,14 @@ XMLTempFileManager >> newUniqueFileNameWithSuffix: aSuffix [
 						with: self identityHash asString
 						with: (0 to: 100000) atRandom asString
 						with: aSuffix)].
-	^ uniqueFileName.
+	^ uniqueFileName
 ]
 
 { #category : #initialization }
 XMLTempFileManager >> setStreamConverter: aStreamConverter fileContents: aString fileSuffix: aSuffix [
 	streamConverter := aStreamConverter.
 	fileContents := aString.
-	fileSuffix := aSuffix.
+	fileSuffix := aSuffix
 ]
 
 { #category : #accessing }

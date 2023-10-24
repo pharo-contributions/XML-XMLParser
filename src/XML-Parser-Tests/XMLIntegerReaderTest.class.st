@@ -78,7 +78,7 @@ XMLIntegerReaderTest >> testBases [
 			self integerReaderClass
 				readFrom: (self newStreamOn: '1')
 				withBase: self maxBase + 1]
-		raise: Error.
+		raise: Error
 ]
 
 { #category : #tests }
@@ -96,7 +96,7 @@ XMLIntegerReaderTest >> testMaxIntegerValue [
 			self  assert:
 				(self integerReaderClass
 					readFrom: (self newStreamOn: ((maxValue + i) printStringBase: base))
-					withBase: base) = maxValue]].
+					withBase: base) = maxValue]]
 ]
 
 { #category : #tests }
@@ -143,7 +143,7 @@ XMLIntegerReaderTest >> testPositioning [
 	self
 		assert: reader atEnd;
 		assert: reader peek isNil;
-		assert: reader next isNil.
+		assert: reader next isNil
 ]
 
 { #category : #tests }
@@ -165,7 +165,7 @@ XMLIntegerReaderTest >> testPrintStream [
 	self
 		assert: (reader nextIntegerWithBase: 8 andPrefixes: 'oO' orBase: 10) = 9;
 		assert: printStream contents = '123xABChdef';
-		assert: reader atEnd.
+		assert: reader atEnd
 ]
 
 { #category : #tests }

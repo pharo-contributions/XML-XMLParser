@@ -57,5 +57,5 @@ XMLPluggableAttributeSpecTest >> testMatchesAttributes [
 			(XMLAttributeDictionary
 				with: 'name' -> 'value'
 				with: 'name2' -> 'value2'
-				with: 'name3' -> 'value3')).
+				with: 'name3' -> 'value3'))
 ]

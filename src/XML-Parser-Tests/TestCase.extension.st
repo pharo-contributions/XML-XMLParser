@@ -6,7 +6,7 @@ TestCase >> xmlShould: aBlock enumerate: aCollection [
 
 	enumerated := OrderedCollection new.
 	aBlock value: [:each | enumerated add: each].
-	self assert: enumerated = aCollection asOrderedCollection.
+	self assert: enumerated = aCollection asOrderedCollection
 ]
 
 { #category : #'*XML-Parser-Tests' }
@@ -20,7 +20,7 @@ TestCase >> xmlShould: aBlock enumerate: aFirstCollection and: aSecondCollection
 		secondEnumerated addLast: second].
 	self
 		assert: firstEnumerated = aFirstCollection asOrderedCollection;
-		assert: secondEnumerated = aSecondCollection asOrderedCollection.
+		assert: secondEnumerated = aSecondCollection asOrderedCollection
 ]
 
 { #category : #'*XML-Parser-Tests' }
@@ -29,7 +29,7 @@ TestCase >> xmlShould: aBlock unorderedEnumerate: aCollection [
 
 	enumerated := OrderedCollection new.
 	aBlock value: [:each | enumerated add: each].
-	self assert: enumerated sorted = aCollection asOrderedCollection sorted.
+	self assert: enumerated sorted = aCollection asOrderedCollection sorted
 ]
 
 { #category : #'*XML-Parser-Tests' }
@@ -46,5 +46,5 @@ TestCase >> xmlShould: aBlock unorderedEnumerate: aFirstCollection and: aSecondC
 			aFirstCollection asOrderedCollection sorted.
 	self assert:
 		secondEnumerated sorted =
-			aSecondCollection asOrderedCollection sorted.
+			aSecondCollection asOrderedCollection sorted
 ]

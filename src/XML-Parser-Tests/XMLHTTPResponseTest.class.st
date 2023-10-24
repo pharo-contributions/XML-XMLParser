@@ -25,7 +25,7 @@ XMLHTTPResponseTest >> testProtocol [
 	self
 		assert: response protocol = 'HTTP/1.1';
 		assert: (response protocol: 'HTTP/1.0') == response;
-		assert: response protocol = 'HTTP/1.0'.
+		assert: response protocol = 'HTTP/1.0'
 ]
 
 { #category : #tests }
@@ -39,7 +39,7 @@ XMLHTTPResponseTest >> testStatusCode [
 	self
 		assert: response statusCode = 200;
 		assert: (response statusCode: 404) == response;
-		assert: response statusCode = 404.
+		assert: response statusCode = 404
 ]
 
 { #category : #tests }
@@ -51,9 +51,9 @@ XMLHTTPResponseTest >> testStatusDescription [
 
 	response := self newMessage.
 	self assert: response statusDescription = 'OK'.
-	
+
 	response statusCode: 404.
-	self assert: response statusDescription = 'Not Found'.
+	self assert: response statusDescription = 'Not Found'
 ]
 
 { #category : #tests }
@@ -70,5 +70,5 @@ XMLHTTPResponseTest >> testStatusLine [
 	self assert: response statusLine = 'HTTP/1.1 404 Not Found'.
 
 	response protocol: 'HTTP/1.0'.
-	self assert: response statusLine = 'HTTP/1.0 404 Not Found'.
+	self assert: response statusLine = 'HTTP/1.0 404 Not Found'
 ]

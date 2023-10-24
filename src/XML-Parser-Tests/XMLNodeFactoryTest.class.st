@@ -33,7 +33,7 @@ XMLNodeFactoryTest >> newFactory [
 
 { #category : #accessing }
 XMLNodeFactoryTest >> pluggableFactoryClass [
-	^ XMLPluggableNodeFactory 
+	^ XMLPluggableNodeFactory
 ]
 
 { #category : #source }
@@ -70,7 +70,7 @@ XMLNodeFactoryTest >> testAsPluggableNodeFactory [
 	self assert: pluggableFactory class == self pluggableFactoryClass.
 	factory class == self pluggableFactoryClass
 		ifTrue: [self assert: pluggableFactory == factory]
-		ifFalse: [self deny: pluggableFactory == factory].
+		ifFalse: [self deny: pluggableFactory == factory]
 ]
 
 { #category : #tests }
@@ -102,7 +102,7 @@ XMLNodeFactoryTest >> testClassForElementNamespaceURI [
 	self assert:
 		(self newFactory
 			classForElement: 'test'
-			namespaceURI: 'testNS') == XMLElement.
+			namespaceURI: 'testNS') == XMLElement
 ]
 
 { #category : #tests }
@@ -144,7 +144,7 @@ XMLNodeFactoryTest >> testNewCData [
 	cdata := self newFactory newCData: 'test'.
 	self
 		assert: cdata class == XMLCData;
-		assert: cdata string = 'test'.
+		assert: cdata string = 'test'
 ]
 
 { #category : #tests }
@@ -154,7 +154,7 @@ XMLNodeFactoryTest >> testNewComment [
 	comment := self newFactory newComment: 'test'.
 	self
 		assert: comment class == XMLComment;
-		assert: comment string = 'test'.
+		assert: comment string = 'test'
 ]
 
 { #category : #tests }
@@ -174,7 +174,7 @@ XMLNodeFactoryTest >> testNewElementNamed [
 	element := self newFactory newElementNamed: 'test'.
 	self
 		assert: element class == XMLElement;
-		assert: element name = 'test'.
+		assert: element name = 'test'
 ]
 
 { #category : #tests }
@@ -202,7 +202,7 @@ XMLNodeFactoryTest >> testNewElementNamedNamespaceURI [
 	self
 		assert: element class == XMLElement;
 		assert: element name = 'prefix:test';
-		assert: element namespaceURI = 'prefixNS'.
+		assert: element namespaceURI = 'prefixNS'
 ]
 
 { #category : #tests }

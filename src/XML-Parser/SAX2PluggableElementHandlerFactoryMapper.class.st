@@ -60,7 +60,7 @@ SAX2PluggableElementHandlerFactoryMapper >> initialize [
 	super initialize.
 
 	elementHandlerFactoryMap := IdentityDictionary new.
-	elementHandlerFactory := self defaultElementHandlerFactoryClass new.
+	elementHandlerFactory := self defaultElementHandlerFactoryClass new
 ]
 
 { #category : #mapping }
@@ -74,5 +74,5 @@ SAX2PluggableElementHandlerFactoryMapper >> mapElementHandlerClass: aClass toFac
 SAX2PluggableElementHandlerFactoryMapper >> postCopy [
 	super postCopy.
 
-	elementHandlerFactoryMap := elementHandlerFactoryMap copy.
+	elementHandlerFactoryMap := elementHandlerFactoryMap copy
 ]

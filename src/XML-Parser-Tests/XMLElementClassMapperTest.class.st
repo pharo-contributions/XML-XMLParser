@@ -18,7 +18,7 @@ XMLElementClassMapperTest >> elementClass [
 
 { #category : #acccessing }
 XMLElementClassMapperTest >> mapperClass [
-	^ XMLElementClassMapper 
+	^ XMLElementClassMapper
 ]
 
 { #category : #'instance creation' }
@@ -47,7 +47,7 @@ XMLElementClassMapperTest >> newMapperWithMappings [
 		namespaceURI: 'testNS'
 		attributeSpec: self attributes asXMLAttributeSpec
 		toClass: self elementClass.
-	^ mapper.
+	^ mapper
 ]
 
 { #category : #acccessing }
@@ -80,7 +80,7 @@ XMLElementClassMapperTest >> testCamelCasedNameFromClassNameSegments [
 		do: [:segments :name |
 			self assert:
 				(mapper camelCasedNameFromClassNameSegments: segments) equals:
-					name].
+					name]
 ]
 
 { #category : #tests }
@@ -108,7 +108,7 @@ XMLElementClassMapperTest >> testClassNameSegmentsFrom [
 		do: [:string :segments |
 			self assert:
 				(mapper classNameSegmentsFrom: string) equals:
-					segments asOrderedCollection].
+					segments asOrderedCollection]
 ]
 
 { #category : #tests }
@@ -136,7 +136,7 @@ XMLElementClassMapperTest >> testHyphenatedNameFromClassNameSegments [
 		do: [:segments :name |
 			self assert:
 				(mapper hyphenatedNameFromClassNameSegments: segments) equals:
-					name].
+					name]
 ]
 
 { #category : #tests }
@@ -164,7 +164,7 @@ XMLElementClassMapperTest >> testNameFromClassNameSegments [
 		do: [:segments :name |
 			self assert:
 				(mapper nameFromClassNameSegments: segments) equals:
-					name].
+					name]
 ]
 
 { #category : #tests }
@@ -192,5 +192,5 @@ XMLElementClassMapperTest >> testUnderscoredNameFromClassNameSegments [
 		do: [:segments :name |
 			self assert:
 				(mapper underscoredNameFromClassNameSegments: segments) equals:
-					name].
+					name]
 ]

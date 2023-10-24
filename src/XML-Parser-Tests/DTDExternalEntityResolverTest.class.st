@@ -51,7 +51,7 @@ DTDExternalEntityResolverTest >> testCopy [
 		assert: copy maxExternalEntities equals: 10;
 		assert: copy maxExternalEntitySize equals: 10000;
 		assert: copy resolvesLocalFromNonLocal.
-		
+
 	self isTestingLimiting
 		ifTrue: [ self
 				assert: copy externalEntityResolver == resolver externalEntityResolver;
@@ -76,7 +76,7 @@ DTDExternalEntityResolverTest >> testDecoratorInterfaceCompatibility [
 		((resolverBaseClass whichCategoryIncludesSelector: each)
 			asString beginsWith: 'private')
 			ifFalse: [
-				self assert: (resolver respondsTo: each)]].
+				self assert: (resolver respondsTo: each)]]
 ]
 
 { #category : #tests }
@@ -89,7 +89,7 @@ DTDExternalEntityResolverTest >> testExternalEntityLimits [
 	newEntityLimits := self newEntityLimits.
 	self
 		assert: (resolver externalEntityLimits: newEntityLimits) == resolver;
-		assert: resolver externalEntityLimits == newEntityLimits.
+		assert: resolver externalEntityLimits == newEntityLimits
 ]
 
 { #category : #tests }
@@ -166,7 +166,7 @@ DTDExternalEntityResolverTest >> testResolvesLocalFromNonLocal [
 		assert: (resolver resolvesLocalFromNonLocal: false) == resolver;
 		deny: resolver resolvesLocalFromNonLocal;
 		assert: (resolver resolvesLocalFromNonLocal: true) == resolver;
-		assert: resolver resolvesLocalFromNonLocal.
+		assert: resolver resolvesLocalFromNonLocal
 ]
 
 { #category : #tests }

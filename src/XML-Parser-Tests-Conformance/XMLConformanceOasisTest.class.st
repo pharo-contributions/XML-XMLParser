@@ -542,7 +542,7 @@ XMLConformanceOasisTest class >> sourcep03fail9xml [
 XMLConformanceOasisTest class >> sourcep03pass1xml [
 	"Source file: oasis/p03pass1.xml"
 
-	^ '	
+	^ '
  <doc/>'
 ]
 
@@ -1124,7 +1124,7 @@ XMLConformanceOasisTest class >> sourcep16pass1xml [
 	^ '<?pitarget?>
 <?xmla <!DOCTYPE <[ CDATA [</doc> &a%b&#c?>
 <?pitarget ...?>
-<?pitarget 
+<?pitarget
 	?>
 <?pitarget > ?>
 <doc/>'
@@ -1440,9 +1440,9 @@ XMLConformanceOasisTest class >> sourcep25pass2xml [
 
 	^ '<?xml version
 
-	 
+
 =
-  
+
 
 "1.0"?>
 <doc/>
@@ -1517,7 +1517,7 @@ XMLConformanceOasisTest class >> sourcep27pass3xml [
 
 	^ '<?xml version="1.0"?>
 
- 	
+
 
 <doc/>
 '
@@ -1529,12 +1529,12 @@ XMLConformanceOasisTest class >> sourcep27pass4xml [
 
 	^ '<?xml version="1.0"?><?pi?>
 
- 	
+
 
 <!--comment-->
 <?pi?>
 
- 	
+
 
 <!--comment-->
 <?pi?><doc/>
@@ -1556,7 +1556,7 @@ XMLConformanceOasisTest class >> sourcep28fail1xml [
 XMLConformanceOasisTest class >> sourcep28pass1xml [
 	"Source file: oasis/p28pass1.xml"
 
-	^ '<!DOCTYPE 
+	^ '<!DOCTYPE
 
 doc
 
@@ -1571,7 +1571,7 @@ doc
 XMLConformanceOasisTest class >> sourcep28pass2xml [
 	"Source file: oasis/p28pass2.xml"
 
-	^ '<!DOCTYPE 
+	^ '<!DOCTYPE
 
 doc
 
@@ -1942,7 +1942,7 @@ XMLConformanceOasisTest class >> sourcep40pass2xml [
 	"Source file: oasis/p40pass2.xml"
 
 	^ '<doc
- 
+
 ></doc>'
 ]
 
@@ -2039,7 +2039,7 @@ XMLConformanceOasisTest class >> sourcep42pass1xml [
 XMLConformanceOasisTest class >> sourcep42pass2xml [
 	"Source file: oasis/p42pass2.xml"
 
-	^ '<doc></doc  
+	^ '<doc></doc
 >'
 ]
 
@@ -2186,7 +2186,7 @@ XMLConformanceOasisTest class >> sourcep44pass4xml [
 	"Source file: oasis/p44pass4.xml"
 
 	^ '<doc
-  
+
 />'
 ]
 

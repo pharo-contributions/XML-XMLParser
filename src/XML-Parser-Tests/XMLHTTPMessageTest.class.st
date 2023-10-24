@@ -35,7 +35,7 @@ XMLHTTPMessageTest >> headerDictionaryFrom: aSequenceableCollection [
 	headerDictionary := Dictionary new.
 	aSequenceableCollection associationsDo: [:each |
 		headerDictionary add: each].
-	^ headerDictionary.
+	^ headerDictionary
 ]
 
 { #category : #accessing }
@@ -51,7 +51,7 @@ XMLHTTPMessageTest >> headerValuesAt: aKey from: aSequenceableCollection [
 	aSequenceableCollection do: [:each |
 		(each key = aKey)
 			ifTrue: [headerValues addLast: each value]].
-	^ headerValues.
+	^ headerValues
 ]
 
 { #category : #accessing }
@@ -122,7 +122,7 @@ XMLHTTPMessageTest >> testContent [
 	self
 		assert: message content = '';
 		assert: (message content: 'test') == message;
-		assert: message content = 'test'.
+		assert: message content = 'test'
 ]
 
 { #category : #tests }
@@ -157,7 +157,7 @@ XMLHTTPMessageTest >> testContentCharset [
 	self assert: message contentCharset = firstType charset.
 
 	message removeHeaderAt: 'Content-Type'.
-	self assert: message contentCharset = XMLHTTPMIMEType defaultCharset.
+	self assert: message contentCharset = XMLHTTPMIMEType defaultCharset
 ]
 
 { #category : #tests }
@@ -193,7 +193,7 @@ XMLHTTPMessageTest >> testContentEncoding [
 			#('one' 'two' 'three') asOrderedCollection.
 
 	message removeHeaderAt: 'Content-Encoding'.
-	self assert: message contentEncoding = absentValue.
+	self assert: message contentEncoding = absentValue
 ]
 
 { #category : #tests }
@@ -219,7 +219,7 @@ XMLHTTPMessageTest >> testContentLength [
 	self assert: message contentLength = 200.
 
 	message removeHeaderAt: 'Content-Length'.
-	self assert: message contentLength isNil.
+	self assert: message contentLength isNil
 ]
 
 { #category : #tests }
@@ -256,7 +256,7 @@ XMLHTTPMessageTest >> testContentType [
 		deny: message contentType = firstType.
 
 	message removeHeaderAt: 'Content-Type'.
-	self assert: message contentType isNil.
+	self assert: message contentType isNil
 ]
 
 { #category : #tests }
@@ -270,7 +270,7 @@ XMLHTTPMessageTest >> testHasContent [
 	self deny: message hasContent.
 
 	message content: 'test'.
-	self assert: message hasContent.
+	self assert: message hasContent
 ]
 
 { #category : #tests }
@@ -287,7 +287,7 @@ XMLHTTPMessageTest >> testHasHeaders [
 	self deny: message hasHeaders.
 
 	message addHeader: self headers first.
-	self assert: message hasHeaders.
+	self assert: message hasHeaders
 ]
 
 { #category : #tests }
@@ -315,7 +315,7 @@ XMLHTTPMessageTest >> testHeaderAt [
 	self headers do: [:each |
 		message addHeader: each].
 	addedHeaderDictionary keysAndValuesDo: [:key :value |
-		self assert: (message headerAt: key) = value].
+		self assert: (message headerAt: key) = value]
 ]
 
 { #category : #tests }
@@ -351,7 +351,7 @@ XMLHTTPMessageTest >> testHeaderAtIfAbsent [
 		self assert:
 			(message
 				headerAt: key
-				ifAbsent: [self fail]) = value].
+				ifAbsent: [self fail]) = value]
 ]
 
 { #category : #tests }
@@ -377,7 +377,7 @@ XMLHTTPMessageTest >> testHeaderAtIfAbsentPut [
 				(addedHeaderDictionary at: each key).
 		self
 			assertMessage: message
-			hasHeaders: addedHeaderDictionary associations].
+			hasHeaders: addedHeaderDictionary associations]
 ]
 
 { #category : #tests }
@@ -398,7 +398,7 @@ XMLHTTPMessageTest >> testHeaderAtPut [
 		self assert: (message headerAt: each key) = each value.
 		self
 			assertMessage: message
-			hasHeaders: addedHeaderDictionary associations].
+			hasHeaders: addedHeaderDictionary associations]
 ]
 
 { #category : #tests }
@@ -415,7 +415,7 @@ XMLHTTPMessageTest >> testHeaderKeys [
 
 		message addHeader: each.
 		addedHeaderKeys add: each key.
-		self assert: message headerKeys sorted = addedHeaderKeys sorted].
+		self assert: message headerKeys sorted = addedHeaderKeys sorted]
 ]
 
 { #category : #tests }
@@ -438,7 +438,7 @@ XMLHTTPMessageTest >> testHeaderKeysAndValuesDo [
 	self
 		xmlShould: [:block | message headerKeysAndValuesDo: block]
 		unorderedEnumerate: (self headerKeysFrom: addedHeaders)
-		and: (self headerValuesFrom: addedHeaders).
+		and: (self headerValuesFrom: addedHeaders)
 ]
 
 { #category : #tests }
@@ -459,7 +459,7 @@ XMLHTTPMessageTest >> testHeaderKeysDo [
 		addedHeaders addLast: each].
 	self
 		xmlShould: [:block | message headerKeysDo: block]
-		unorderedEnumerate: (self headerKeysFrom: addedHeaders).
+		unorderedEnumerate: (self headerKeysFrom: addedHeaders)
 ]
 
 { #category : #tests }
@@ -484,7 +484,7 @@ XMLHTTPMessageTest >> testHeaderValuesAt [
 			(message headerValuesAt: each key) sorted =
 				(self
 					headerValuesAt: each key
-					from: addedHeaders) sorted].
+					from: addedHeaders) sorted]
 ]
 
 { #category : #tests }

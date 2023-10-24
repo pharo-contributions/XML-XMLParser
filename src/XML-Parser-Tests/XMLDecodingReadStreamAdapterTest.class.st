@@ -47,7 +47,7 @@ XMLDecodingReadStreamAdapterTest >> newStreamAdapterOn: aStream [
 	self detectsBOMs
 		ifTrue: [adapter detectEncoding]
 		ifFalse: [adapter streamConverter: self streamConverterClass new].
-	^ adapter.
+	^ adapter
 ]
 
 { #category : #accessing }
@@ -113,7 +113,7 @@ XMLDecodingReadStreamAdapterTest >> testNonDecodingOn [
 
 	stream := self newStream.
 	adapter := self streamAdapterClass nonDecodingOn: stream.
-	self assert: adapter hasNullStreamConverter.
+	self assert: adapter hasNullStreamConverter
 ]
 
 { #category : #tests }
@@ -129,7 +129,7 @@ XMLDecodingReadStreamAdapterTest >> testNonDecodingOnIfBinaryOrExternal [
 
 	stream := self newStreamOn: (self stringFrom: basicInputCollection).
 	adapter := self streamAdapterClass nonDecodingOnIfBinaryOrExternal: stream.
-	self assert: adapter isNil.
+	self assert: adapter isNil
 ]
 
 { #category : #tests }
@@ -140,7 +140,7 @@ XMLDecodingReadStreamAdapterTest >> testOn [
 
 	stream := self newStream.
 	adapter := self streamAdapterClass on: stream.
-	self assert: adapter hasDefaultStreamConverter.
+	self assert: adapter hasDefaultStreamConverter
 ]
 
 { #category : #tests }

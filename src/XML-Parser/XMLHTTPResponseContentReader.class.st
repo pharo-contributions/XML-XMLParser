@@ -109,42 +109,29 @@ XMLHTTPResponseContentReader >> rawReadWithLength: aContentLength upToLimit: aMa
 ]
 
 { #category : #reading }
-XMLHTTPResponseContentReader >> readUpToLimit: aMaxSize decoding: aBoolean [
-	| contentLength contentType compressionSchemes charset content |
+XMLHTTPResponseContentReader >> readUpToLimit: arg1 decoding: arg2 [
 
-	contentLength := response contentLength.
-	(response isChunked
-		or: [contentLength isNil])
-		ifTrue: [contentLength := nil]
+	| tmp1 tmp2 tmp3 tmp4 tmp5 |
+	tmp1 := response contentLength.
+	(response isChunked or: [ tmp1 isNil ])
+		ifTrue: [ tmp1 := nil ]
 		ifFalse: [
-			contentLength > 0
-				ifFalse: [^ ''].
-			(aMaxSize notNil
-				and: [contentLength > aMaxSize])
-				ifTrue: [self errorContentLimitExceeded]].
-	rawContent :=
-		self
-			rawReadWithLength: contentLength
-			upToLimit: aMaxSize.
+			tmp1 > 0 ifFalse: [ ^ '' ].
+			(arg1 notNil and: [ tmp1 > arg1 ]) ifTrue: [
+				self errorContentLimitExceeded ] ].
+	rawContent := self rawReadWithLength: tmp1 upToLimit: arg1.
 	contentReadStream := rawContent readStream.
-
-	(self handlesDecompression
-		and: [(compressionSchemes := response contentEncoding) notEmpty])
+	(self handlesDecompression and: [
+		 (tmp3 := response contentEncoding) notEmpty ]) ifTrue: [
+		self initializeDecompressionWithSchemes: tmp3 upToLimit: arg1 ].
+	(arg2 and: [
+		 (tmp2 := response contentType) notNil and: [
+			 (tmp4 := tmp2 charset) ~= tmp2 defaultCharset ] ])
 		ifTrue: [
-			self
-				initializeDecompressionWithSchemes: compressionSchemes
-				upToLimit: aMaxSize].
-
-	(aBoolean
-		and: [(contentType := response contentType) notNil
-			and: [(charset := contentType charset) ~= contentType defaultCharset]])
-		ifTrue: [
-			content := self decodedContentReadStreamUpToEndWithCharset: charset]
-		ifFalse: [
-			content := self undecodedContentReadStreamUpToEnd].
-
+		tmp5 := self decodedContentReadStreamUpToEndWithCharset: tmp4 ]
+		ifFalse: [ tmp5 := self undecodedContentReadStreamUpToEnd ].
 	self ensureContentReadStreamWasNotLimited.
-	^ content.
+	^ tmp5
 ]
 
 { #category : #initialization }

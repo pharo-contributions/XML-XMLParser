@@ -25,7 +25,7 @@ DTDAttributeDefinitionParser class >> attributeDefaultValidatorClassForPragma: a
 			(aDefaultPragma at: 1) == $I
 				ifTrue: [^ XMLAttributeImpliedDefaultValidator].
 			^ XMLAttributeRequiredDefaultValidator].
-	^ XMLAttributeValueDefaultValidator.
+	^ XMLAttributeValueDefaultValidator
 ]
 
 { #category : #'instance creation' }
@@ -44,7 +44,7 @@ DTDAttributeDefinitionParser class >> element: anElement attribute: anAttribute 
 DTDAttributeDefinitionParser >> attributeValidatorClassForType [
 	"the tokenizer should have checked the type for well-formedness
 	so it's only one of CDATA, ID, IDREF, IDREFS, etc"
-	
+
 	| nextChar |
 
 	(nextChar := type at: 1) == $C
@@ -78,13 +78,13 @@ DTDAttributeDefinitionParser >> attributeValidatorClassForType [
 
 	"otherwise it's a (one|two|...) enumeration attribute"
 	enumerationListParserClass := DTDEnumerationListParser.
-	^ XMLEnumerationAttributeValidator.
+	^ XMLEnumerationAttributeValidator
 ]
 
 { #category : #parsing }
 DTDAttributeDefinitionParser >> parse [
 	| validator |
-	
+
 	validator :=
 		self attributeValidatorClassForType
 			element: element
@@ -96,7 +96,7 @@ DTDAttributeDefinitionParser >> parse [
 			validator allowedValues:
 				(enumerationListParserClass on: type) parse].
 
-	^ validator.
+	^ validator
 ]
 
 { #category : #initialization }
@@ -104,5 +104,5 @@ DTDAttributeDefinitionParser >> setElement: anElement attribute: anAttribute typ
 	element := anElement.
 	attribute := anAttribute.
 	type := aType.
-	defaultValidator := aDefaultValidator.
+	defaultValidator := aDefaultValidator
 ]

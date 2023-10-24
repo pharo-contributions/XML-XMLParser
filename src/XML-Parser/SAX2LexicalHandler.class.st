@@ -32,7 +32,6 @@ SAX2LexicalHandler >> endCData [
 
 { #category : #'handling - lexical' }
 SAX2LexicalHandler >> endDTD [
-
 ]
 
 { #category : #'handling - lexical' }
@@ -64,7 +63,7 @@ SAX2LexicalHandler >> startDTD: aRootElementName publicID: aPublicID systemID: a
 	"Handles the start of a '<!DOCTYPE ...>' declaration. Any events
 	after this and until endDTD is sent are part of the internal subset
 	of the DTD.
-	
+
 	aRootElementName - the expected name of the document's root element
 	aPublicID - the public ID of the external DTD subset or an empty string
 	aSystemID - the URI where the external subset can be found or an empty string"
@@ -80,7 +79,7 @@ SAX2LexicalHandler >> startEntity: anEntityName [
 { #category : #'handling - lexical' }
 SAX2LexicalHandler >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
 	"Handles the '<?xml ...?>' declaration of a document.
-	
+
 	aVersionFloat - the version of XML the document uses, usually 1.0
 	anEncoding - the name of the encoding or an empty string
 	aBoolean - true if standalone='yes'"

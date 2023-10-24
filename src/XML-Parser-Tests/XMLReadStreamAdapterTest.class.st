@@ -37,7 +37,7 @@ XMLReadStreamAdapterTest >> testAtEnd [
 	self outputCollection size timesRepeat: [
 		self deny: adapter atEnd.
 		adapter next].
-	self assert: adapter atEnd.
+	self assert: adapter atEnd
 ]
 
 { #category : #tests }
@@ -119,7 +119,7 @@ XMLReadStreamAdapterTest >> testPeekFor [
 			deny: (adapter peekFor: nil)].
 	self
 		deny: (adapter peekFor: #absent);
-		deny: (adapter peekFor: nil).
+		deny: (adapter peekFor: nil)
 ]
 
 { #category : #tests }

@@ -52,7 +52,7 @@ XMLNodeWithChildrenTest >> testAddComment [
 		assert: nodeWithNodes nodes size = 1;
 		assert: nodeWithNodes firstNode == comment;
 		assert: comment isComment;
-		assert: comment string = 'test'.
+		assert: comment string = 'test'
 ]
 
 { #category : #tests }
@@ -81,7 +81,7 @@ XMLNodeWithChildrenTest >> testAddNode [
 		self
 			assert: (node addNode: each) == each;
 			assert: node nodes = nodesAdded;
-			assert: each parent == node].
+			assert: each parent == node]
 ]
 
 { #category : #tests }
@@ -116,7 +116,7 @@ XMLNodeWithChildrenTest >> testAddNodeAfter [
 		self
 			assert: (node addNode: each after: nodeAfter) == each;
 			assert: node nodes = nodesAdded;
-			assert: each parent == node].
+			assert: each parent == node]
 ]
 
 { #category : #tests }
@@ -151,7 +151,7 @@ XMLNodeWithChildrenTest >> testAddNodeBefore [
 		self
 			assert: (node addNode: each before: nodeBefore) == each;
 			assert: node nodes = nodesAdded;
-			assert: each parent == node].
+			assert: each parent == node]
 ]
 
 { #category : #tests }
@@ -180,7 +180,7 @@ XMLNodeWithChildrenTest >> testAddNodeFirst [
 		self
 			assert: (node addNodeFirst: each) == each;
 			assert: node nodes = nodesAdded;
-			assert: each parent == node].
+			assert: each parent == node]
 ]
 
 { #category : #tests }
@@ -203,7 +203,7 @@ XMLNodeWithChildrenTest >> testAddNodes [
 	self
 		assert: (node addNodes: nodesAdded) = nodesAdded;
 		assert: node nodes = nodesAdded;
-		assert: (node nodes allSatisfy: [:each | each parent == node]).
+		assert: (node nodes allSatisfy: [:each | each parent == node])
 ]
 
 { #category : #tests }
@@ -220,7 +220,7 @@ XMLNodeWithChildrenTest >> testAddPITargetData [
 		assert: nodeWithNodes firstNode == pi;
 		assert: pi isPI;
 		assert: pi target = 'target';
-		assert: pi data = 'data'.
+		assert: pi data = 'data'
 ]
 
 { #category : #tests }
@@ -241,7 +241,7 @@ XMLNodeWithChildrenTest >> testAllNodes [
 		assert: allNodes fourth string = 'four';
 		assert: allNodes fifth isPI;
 		assert: allNodes fifth target = 'five';
-		assert: allNodes fifth data = 'six'.
+		assert: allNodes fifth data = 'six'
 ]
 
 { #category : #tests }
@@ -259,7 +259,7 @@ XMLNodeWithChildrenTest >> testAllNodesCollect [
 			ifTrue: [
 				self
 					assertList: (node allNodesCollect: [:each | each identityHash])
-					collects: (node allNodes collect: [:each | each identityHash])]].
+					collects: (node allNodes collect: [:each | each identityHash])]]
 ]
 
 { #category : #tests }
@@ -273,7 +273,7 @@ XMLNodeWithChildrenTest >> testAllNodesDetect [
 		assert: detectedNode notNil;
 		assert: detectedNode isPI;
 		assert: detectedNode = (allNodes detect: [:each | each isPI]);
-		assert: (nodeWithNodes allNodesDetect: [:each | each isElementNamed: 'absent']) isNil.
+		assert: (nodeWithNodes allNodesDetect: [:each | each isElementNamed: 'absent']) isNil
 ]
 
 { #category : #tests }
@@ -292,7 +292,7 @@ XMLNodeWithChildrenTest >> testAllNodesDetectIfNone [
 		assert:
 			(nodeWithNodes
 				allNodesDetect: [:each | each isElementNamed: 'absent']
-				ifNone: [#absent]) = #absent.
+				ifNone: [#absent]) = #absent
 ]
 
 { #category : #tests }
@@ -310,7 +310,7 @@ XMLNodeWithChildrenTest >> testAllNodesDo [
 			ifTrue: [
 				self
 					xmlShould: [:block | node allNodesDo: block]
-					enumerate: node allNodes]].
+					enumerate: node allNodes]]
 ]
 
 { #category : #tests }
@@ -328,7 +328,7 @@ XMLNodeWithChildrenTest >> testAllNodesSelect [
 			ifTrue: [
 				self
 					assertList: (node allNodesSelect: [:each | each isComment])
-					selects: (node allNodes select: [:each | each isComment])]].
+					selects: (node allNodes select: [:each | each isComment])]]
 ]
 
 { #category : #tests }
@@ -346,7 +346,7 @@ XMLNodeWithChildrenTest >> testAncestorNodes [
 		self assert:
 			each ancestorNodes asOrderedCollection =
 				ancestorStack reversed.
-		ancestorStack addLast: each].
+		ancestorStack addLast: each]
 ]
 
 { #category : #tests }
@@ -359,7 +359,7 @@ XMLNodeWithChildrenTest >> testAncestorNodesDo [
 	nodeWithNodes allNodesDo: [:each |
 		self
 			xmlShould: [:block | each ancestorNodesDo: block]
-			enumerate: each ancestorNodes].
+			enumerate: each ancestorNodes]
 ]
 
 { #category : #tests }
@@ -372,7 +372,7 @@ XMLNodeWithChildrenTest >> testCanonicallyEquals [
 	super testCanonicallyEquals.
 	self
 		assert: (self newNodeWithNodes canonicallyEquals: self newNodeWithNodes);
-		deny: (self newNodeWithNodes canonicallyEquals: self newNode).
+		deny: (self newNodeWithNodes canonicallyEquals: self newNode)
 ]
 
 { #category : #tests }
@@ -417,7 +417,7 @@ XMLNodeWithChildrenTest >> testCopy [
 					newPair := (originalObject instVarAt: i) -> (copyObject instVarAt: i).
 					((visitedPairs includes: newPair)
 						or: [copiedClasses noneSatisfy: [:each | newPair key isKindOf: each]])
-						ifFalse: [unvisitedPairs add: newPair]]].
+						ifFalse: [unvisitedPairs add: newPair]]]
 ]
 
 { #category : #tests }
@@ -435,7 +435,7 @@ XMLNodeWithChildrenTest >> testDescendantNodes [
 			ifTrue: [
 				self
 					assertList: node descendantNodes
-					selects: node allNodes allButFirst]].
+					selects: node allNodes allButFirst]]
 ]
 
 { #category : #tests }
@@ -453,7 +453,7 @@ XMLNodeWithChildrenTest >> testDescendantNodesCollect [
 			ifTrue: [
 				self
 					assertList: (node descendantNodesCollect: [:each | each identityHash])
-					collects: (node descendantNodes collect: [:each | each identityHash])]].
+					collects: (node descendantNodes collect: [:each | each identityHash])]]
 ]
 
 { #category : #tests }
@@ -467,7 +467,7 @@ XMLNodeWithChildrenTest >> testDescendantNodesDetect [
 		assert: detectedNode notNil;
 		assert: detectedNode isPI;
 		assert: detectedNode = (descendantNodes detect: [:each | each isPI]);
-		assert: (nodeWithNodes descendantNodesDetect: [:each | each isElementNamed: 'absent']) isNil.
+		assert: (nodeWithNodes descendantNodesDetect: [:each | each isElementNamed: 'absent']) isNil
 ]
 
 { #category : #tests }

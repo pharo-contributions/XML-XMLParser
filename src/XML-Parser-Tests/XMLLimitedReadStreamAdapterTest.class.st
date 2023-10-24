@@ -62,7 +62,7 @@ XMLLimitedReadStreamAdapterTest >> testAtLimitedEnd [
 		adapter next].
 	self
 		assert: adapter atEnd;
-		deny: adapter atLimitedEnd.
+		deny: adapter atLimitedEnd
 ]
 
 { #category : #tests }

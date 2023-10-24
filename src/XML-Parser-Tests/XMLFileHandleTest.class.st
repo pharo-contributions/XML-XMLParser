@@ -111,7 +111,7 @@ XMLFileHandleTest >> testContents [
 			raise: XMLFileException.
 
 		self tempFileManager createFileWithContentsForHandle: fileHandle.
-		self assertIsDecodedFileContents: fileHandle contents].
+		self assertIsDecodedFileContents: fileHandle contents]
 ]
 
 { #category : #tests }
@@ -142,7 +142,7 @@ XMLFileHandleTest >> testExists [
 			assert: self currentWorkingDirectoryFileHandle exists.
 
 		self tempFileManager createFileForHandle: fileHandle.
-		self assert: fileHandle exists].
+		self assert: fileHandle exists]
 ]
 
 { #category : #tests }
@@ -182,7 +182,7 @@ XMLFileHandleTest >> testGet [
 			raise: XMLFileException.
 
 		self tempFileManager createFileWithContentsForHandle: fileHandle.
-		self assertIsDecodedFileContents: fileHandle get].
+		self assertIsDecodedFileContents: fileHandle get]
 ]
 
 { #category : #tests }
@@ -230,7 +230,7 @@ XMLFileHandleTest >> testGetUpToLimitDecoding [
 				fileHandle
 					getUpToLimit: self encodedFileContentsWithByteOrderMark size - 1
 					decoding: false]
-			raise: XMLLimitException].
+			raise: XMLLimitException]
 ]
 
 { #category : #tests }
@@ -245,7 +245,7 @@ XMLFileHandleTest >> testIsFile [
 			deny: self currentWorkingDirectoryFileHandle isFile.
 
 		self tempFileManager createFileForHandle: fileHandle.
-		self assert: fileHandle isFile].
+		self assert: fileHandle isFile]
 ]
 
 { #category : #tests }
@@ -266,7 +266,7 @@ XMLFileHandleTest >> testIsXMLDocumentFile [
 			file := 'test.', each.
 			self
 				deny: file asXMLFileHandle isXMLDocumentFile;
-				deny: file asUppercase asXMLFileHandle isXMLDocumentFile].
+				deny: file asUppercase asXMLFileHandle isXMLDocumentFile]
 ]
 
 { #category : #tests }
@@ -296,7 +296,7 @@ XMLFileHandleTest >> testRawReadStream [
 		self
 			deny: readStream isXMLConvertingStreamAdapter;
 			assertIsEncodedFileContentsWithBOM: readStream upToEnd.
-		readStream close].
+		readStream close]
 ]
 
 { #category : #tests }
@@ -314,7 +314,7 @@ XMLFileHandleTest >> testRawWriteStream [
 			writeStream
 				nextPutAll: self encodedFileContentsWithByteOrderMark;
 				close.
-			self assertIsDecodedFileContents: fileHandle contents]].
+			self assertIsDecodedFileContents: fileHandle contents]]
 ]
 
 { #category : #tests }
@@ -333,7 +333,7 @@ XMLFileHandleTest >> testReadStream [
 		self
 			assert: readStream isXMLConvertingStreamAdapter;
 			assertIsDecodedFileContents: readStream upToEnd.
-		readStream close].
+		readStream close]
 ]
 
 { #category : #tests }
@@ -352,7 +352,7 @@ XMLFileHandleTest >> testReadStreamDo [
 			self assert: readStream isXMLConvertingStreamAdapter.
 			"saved to a temp to ensure the block was evaluated"
 			contents := readStream upToEnd].
-		self assertIsDecodedFileContents: contents].
+		self assertIsDecodedFileContents: contents]
 ]
 
 { #category : #tests }
@@ -369,7 +369,7 @@ XMLFileHandleTest >> testSize [
 		self tempFileManager createFileWithContentsForHandle: fileHandle.
 		self assert:
 			fileHandle size >=
-				self encodedFileContentsWithByteOrderMark size].
+				self encodedFileContentsWithByteOrderMark size]
 ]
 
 { #category : #tests }
@@ -388,7 +388,7 @@ XMLFileHandleTest >> testStreamGet [
 		self
 			assert: readStream isXMLConvertingStreamAdapter;
 			assertIsDecodedFileContents: readStream upToEnd.
-		readStream close].
+		readStream close]
 ]
 
 { #category : #tests }
@@ -454,7 +454,7 @@ XMLFileHandleTest >> testStreamGetUpToLimitDecoding [
 					streamGetUpToLimit:
 						self encodedFileContentsWithByteOrderMark size - 1
 					decoding: false]
-			raise: XMLLimitException].
+			raise: XMLLimitException]
 ]
 
 { #category : #tests }

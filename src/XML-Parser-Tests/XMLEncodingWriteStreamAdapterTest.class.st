@@ -112,7 +112,7 @@ XMLEncodingWriteStreamAdapterTest >> testInvalidCharacters [
 		streamAdapter := self newStreamAdapter.
 		self
 			should: [streamAdapter nextPutAll: each]
-			raise: XMLEncodingException].
+			raise: XMLEncodingException]
 ]
 
 { #category : #tests }

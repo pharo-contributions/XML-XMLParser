@@ -23,7 +23,7 @@ XMLCachingNodeListTest >> testSort [
 	list := self listWithItems.
 	cachedElements := list elements.
 	list sort: self reverseSortBlock.
-	self assert: list elements = (cachedElements sort: self reverseSortBlock).
+	self assert: list elements = (cachedElements sort: self reverseSortBlock)
 ]
 
 { #category : #tests }
@@ -41,5 +41,5 @@ XMLCachingNodeListTest >> testSwapWith [
 			list swap: start with: end.
 			start := start + 1.
 			end := end - 1].
-	self assert: list elements = cachedElements reversed.
+	self assert: list elements = cachedElements reversed
 ]

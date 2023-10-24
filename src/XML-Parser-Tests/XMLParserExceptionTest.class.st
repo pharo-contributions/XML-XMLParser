@@ -76,7 +76,7 @@ XMLParserExceptionTest >> testBaseURI [
 	self
 		assert: exception baseURI equals: '';
 		assert: (exception baseURI: self baseURI) == exception;
-		assert: exception baseURI equals: self baseURI.
+		assert: exception baseURI equals: self baseURI
 ]
 
 { #category : #tests }
@@ -87,7 +87,7 @@ XMLParserExceptionTest >> testColumnNumber [
 	self
 		assert: exception columnNumber isNil;
 		assert: (exception columnNumber: self columnNumber) == exception;
-		assert: exception columnNumber equals: self columnNumber.
+		assert: exception columnNumber equals: self columnNumber
 ]
 
 { #category : #tests }
@@ -96,12 +96,12 @@ XMLParserExceptionTest >> testHasBaseURI [
 
 	exception := self newException.
 	self deny: exception hasBaseURI.
-	
+
 	exception baseURI: self baseURI.
 	self assert: exception hasBaseURI.
 
 	exception baseURI: ''.
-	self deny: exception hasBaseURI.
+	self deny: exception hasBaseURI
 ]
 
 { #category : #tests }
@@ -110,12 +110,12 @@ XMLParserExceptionTest >> testHasColumnNumber [
 
 	exception := self newException.
 	self deny: exception hasColumnNumber.
-	
+
 	exception columnNumber: self columnNumber.
 	self assert: exception hasColumnNumber.
 
 	exception columnNumber: nil.
-	self deny: exception hasColumnNumber.
+	self deny: exception hasColumnNumber
 ]
 
 { #category : #tests }
@@ -124,12 +124,12 @@ XMLParserExceptionTest >> testHasLineNumber [
 
 	exception := self newException.
 	self deny: exception hasLineNumber.
-	
+
 	exception lineNumber: self lineNumber.
 	self assert: exception hasLineNumber.
 
 	exception lineNumber: nil.
-	self deny: exception hasLineNumber.
+	self deny: exception hasLineNumber
 ]
 
 { #category : #tests }
@@ -140,7 +140,7 @@ XMLParserExceptionTest >> testLineNumber [
 	self
 		assert: exception lineNumber isNil;
 		assert: (exception lineNumber: self lineNumber) == exception;
-		assert: exception lineNumber equals: self lineNumber.
+		assert: exception lineNumber equals: self lineNumber
 ]
 
 { #category : #tests }
@@ -185,5 +185,5 @@ XMLParserExceptionTest >> testMessageText [
 		baseURI: self baseURI.
 	self assert:
 		exception messageText equals:
-			self errorMessageWithLineAndColumnNumberAndBaseURI.
+			self errorMessageWithLineAndColumnNumberAndBaseURI
 ]

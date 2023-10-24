@@ -37,7 +37,7 @@ XMLDOMConfigurationTest >> testCopy [
 		assert: copy preservesCommentNodes equals: configuration preservesCommentNodes;
 		assert: copy preservesIgnorableWhitespace equals: configuration preservesIgnorableWhitespace;
 		deny: copy nodeFactory == configuration nodeFactory;
-		assert: copy nodeFactory class equals: configuration nodeFactory class.
+		assert: copy nodeFactory class equals: configuration nodeFactory class
 ]
 
 { #category : #tests }
@@ -51,7 +51,7 @@ XMLDOMConfigurationTest >> testNodeFactory [
 	newNodeFactory := self nodeFactoryClass new.
 	self
 		assert: (configuration nodeFactory: newNodeFactory) == configuration;
-		assert: configuration nodeFactory == newNodeFactory.
+		assert: configuration nodeFactory == newNodeFactory
 ]
 
 { #category : #tests }
@@ -64,7 +64,7 @@ XMLDOMConfigurationTest >> testPreservesCDataNodes [
 		assert: (configuration preservesCDataNodes: true) == configuration;
 		assert: configuration preservesCDataNodes;
 		assert: (configuration preservesCDataNodes: false) == configuration;
-		deny: configuration preservesCDataNodes.
+		deny: configuration preservesCDataNodes
 ]
 
 { #category : #tests }
@@ -77,7 +77,7 @@ XMLDOMConfigurationTest >> testPreservesCommentNodes [
 		assert: (configuration preservesCommentNodes: true) == configuration;
 		assert: configuration preservesCommentNodes;
 		assert: (configuration preservesCommentNodes: false) == configuration;
-		deny: configuration preservesCommentNodes.
+		deny: configuration preservesCommentNodes
 ]
 
 { #category : #tests }

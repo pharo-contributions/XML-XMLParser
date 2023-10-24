@@ -56,7 +56,7 @@ XMLBasicElementClassMapperTest >> testClassForElement [
 		toClass: self otherElementClass.
 	self
 		assert: (mapper classForElement: 'test') == self elementClass;
-		assert: (mapper classForElement: 'prefix:test') == self otherElementClass.
+		assert: (mapper classForElement: 'prefix:test') == self otherElementClass
 ]
 
 { #category : #tests }
@@ -136,7 +136,7 @@ XMLBasicElementClassMapperTest >> testClassForElementAttributes [
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
-			attributes: self attributes) == self otherElementClass.
+			attributes: self attributes) == self otherElementClass
 ]
 
 { #category : #tests }
@@ -229,7 +229,7 @@ XMLBasicElementClassMapperTest >> testClassForElementAttributesIfNone [
 		(mapper
 			classForElement: 'prefix:test'
 			attributes: self attributes
-			ifNone: [self fail]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass
 ]
 
 { #category : #tests }
@@ -309,7 +309,7 @@ XMLBasicElementClassMapperTest >> testClassForElementIfNone [
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
-			ifNone: [self fail]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass
 ]
 
 { #category : #tests }
@@ -390,7 +390,7 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURI [
 	self assert:
 		(mapper
 			classForElement: 'prefix:test'
-			namespaceURI: 'testNS') == self otherElementClass.
+			namespaceURI: 'testNS') == self otherElementClass
 ]
 
 { #category : #tests }
@@ -484,7 +484,7 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIAttributes [
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
-			attributes: self attributes) == self otherElementClass.
+			attributes: self attributes) == self otherElementClass
 ]
 
 { #category : #tests }
@@ -590,7 +590,7 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIAttributesIfNon
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
 			attributes: self attributes
-			ifNone: [self fail]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass
 ]
 
 { #category : #tests }
@@ -683,7 +683,7 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIIfNone [
 		(mapper
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
-			ifNone: [self fail]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass
 ]
 
 { #category : #tests }
@@ -789,7 +789,7 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttrib
 			classForElement: 'prefix:test'
 			namespaceURI: 'testNS'
 			localName: 'test'
-			attributes: self attributes) == self otherElementClass.
+			attributes: self attributes) == self otherElementClass
 ]
 
 { #category : #tests }
@@ -907,7 +907,7 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttrib
 			namespaceURI: 'testNS'
 			localName: 'test'
 			attributes: self attributes
-			ifNone: [self fail]) == self otherElementClass.
+			ifNone: [self fail]) == self otherElementClass
 ]
 
 { #category : #tests }
@@ -937,7 +937,7 @@ XMLBasicElementClassMapperTest >> testCopy [
 	mapper
 		mapElement: 'test'
 		toClass: self otherElementClass.
-	self deny: mapper elementClassMap = copy elementClassMap.
+	self deny: mapper elementClassMap = copy elementClassMap
 ]
 
 { #category : #tests }
@@ -963,7 +963,7 @@ XMLBasicElementClassMapperTest >> testMapElementAttributeSpecToClass [
 	self assert:
 		(mapper
 			classForElement: 'test'
-			attributes: self attributes) == self otherElementClass.
+			attributes: self attributes) == self otherElementClass
 ]
 
 { #category : #tests }
@@ -993,7 +993,7 @@ XMLBasicElementClassMapperTest >> testMapElementNamespaceURIAttributeSpecToClass
 		(mapper
 			classForElement: 'test'
 			namespaceURI: 'testNS'
-			attributes: self attributes) == self otherElementClass.
+			attributes: self attributes) == self otherElementClass
 ]
 
 { #category : #tests }
@@ -1019,7 +1019,7 @@ XMLBasicElementClassMapperTest >> testMapElementNamespaceURIToClass [
 	self assert:
 		(mapper
 			classForElement: 'test'
-			namespaceURI: 'testNS') == self otherElementClass.
+			namespaceURI: 'testNS') == self otherElementClass
 ]
 
 { #category : #tests }
@@ -1037,5 +1037,5 @@ XMLBasicElementClassMapperTest >> testMapElementToClass [
 		(mapper
 			mapElement: 'test'
 			toClass: self otherElementClass) == mapper.
-	self assert: (mapper classForElement: 'test') == self otherElementClass.
+	self assert: (mapper classForElement: 'test') == self otherElementClass
 ]

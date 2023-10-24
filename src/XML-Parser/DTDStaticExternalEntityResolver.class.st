@@ -42,7 +42,7 @@ DTDStaticExternalEntityResolver >> externalEntities: anAssociationCollection [
 	anAssociationCollection associationsDo: [:each |
 		self
 			externalEntityAtURI: each key
-			put: each value].
+			put: each value]
 ]
 
 { #category : #accessing }
@@ -88,7 +88,7 @@ DTDStaticExternalEntityResolver >> postCopy [
 	super postCopy.
 
 	externalEntities
-		ifNotNil: [externalEntities := externalEntities copy].
+		ifNotNil: [externalEntities := externalEntities copy]
 ]
 
 { #category : #removing }
@@ -124,8 +124,8 @@ DTDStaticExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString
 			self
 				errorMaxExternalEntitySize: aMaxSize
 				exceededByURI: anXMLURIOrURIString].
-	
-	^ DTDUndecodedResolvedExternalParsedEntityReplacement rawContents: replacement.
+
+	^ DTDUndecodedResolvedExternalParsedEntityReplacement rawContents: replacement
 ]
 
 { #category : #resolving }

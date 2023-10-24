@@ -29,7 +29,7 @@ XMLCDataTest >> testAcceptNodeVisitor [
 	self
 		assert: message selector == #visitStringNode:;
 		assert: message arguments = (Array with: cdata);
-		deny: visitor messageRecorder hasMessages.
+		deny: visitor messageRecorder hasMessages
 ]
 
 { #category : #tests }
@@ -41,5 +41,5 @@ XMLCDataTest >> testIsCData [
 XMLCDataTest >> testWriteXMLOn [
 	self
 		assert: self newNode printString = '<![CDATA[]]>';
-		assert: (self nodeClass string: self markupString) printString = ('<![CDATA[', self markupString, ']]>').
+		assert: (self nodeClass string: self markupString) printString = ('<![CDATA[', self markupString, ']]>')
 ]

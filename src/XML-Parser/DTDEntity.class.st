@@ -67,7 +67,7 @@ DTDEntity >> printOn: aStream [
 
 	aStream nextPut: $(.
 	self printNameOn: aStream.
-	aStream nextPut: $).
+	aStream nextPut: $)
 ]
 
 { #category : #printing }

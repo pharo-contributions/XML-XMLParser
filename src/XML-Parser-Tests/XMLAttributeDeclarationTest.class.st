@@ -22,7 +22,7 @@ XMLAttributeDeclarationTest >> testAttribute [
 	self
 		assert: declaration attribute = '';
 		assert: (declaration attribute: 'test') == declaration;
-		assert: declaration attribute = 'test'.
+		assert: declaration attribute = 'test'
 ]
 
 { #category : #tests }
@@ -33,7 +33,7 @@ XMLAttributeDeclarationTest >> testDefaultPragma [
 	self
 		assert: declaration defaultPragma = '';
 		assert: (declaration defaultPragma: 'REQUIRED') == declaration;
-		assert: declaration defaultPragma = 'REQUIRED'.
+		assert: declaration defaultPragma = 'REQUIRED'
 ]
 
 { #category : #tests }
@@ -44,7 +44,7 @@ XMLAttributeDeclarationTest >> testDefaultValue [
 	self
 		assert: declaration defaultValue = '';
 		assert: (declaration defaultValue: 'test') == declaration;
-		assert: declaration defaultValue = 'test'.
+		assert: declaration defaultValue = 'test'
 ]
 
 { #category : #tests }
@@ -55,7 +55,7 @@ XMLAttributeDeclarationTest >> testElement [
 	self
 		assert: declaration element = '';
 		assert: (declaration element: 'test') == declaration;
-		assert: declaration element = 'test'.
+		assert: declaration element = 'test'
 ]
 
 { #category : #tests }
@@ -75,7 +75,7 @@ XMLAttributeDeclarationTest >> testElementAttributeTypeDefaultPragmaDefaultValue
 		assert: declaration attribute = 'two';
 		assert: declaration type = 'CDATA';
 		assert: declaration defaultPragma = '#IMPLIED';
-		assert: declaration defaultValue = 'default'.
+		assert: declaration defaultValue = 'default'
 ]
 
 { #category : #tests }
@@ -86,7 +86,7 @@ XMLAttributeDeclarationTest >> testType [
 	self
 		assert: declaration type = '';
 		assert: (declaration type: 'CDATA') == declaration;
-		assert: declaration type = 'CDATA'.
+		assert: declaration type = 'CDATA'
 ]
 
 { #category : #tests }
@@ -111,5 +111,5 @@ XMLAttributeDeclarationTest >> testWriteXMLOn [
 			attribute: 'two'
 			type: '(three|four)'
 			defaultPragma: '#IMPLIED'
-			defaultValue: 'four') printString = '<!ATTLIST one two (three|four) #IMPLIED>'.
+			defaultValue: 'four') printString = '<!ATTLIST one two (three|four) #IMPLIED>'
 ]

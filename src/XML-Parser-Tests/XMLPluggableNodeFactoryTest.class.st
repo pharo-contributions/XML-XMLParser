@@ -74,21 +74,21 @@ XMLPluggableNodeFactoryTest >> testAttributeListClass [
 	factory := self newFactoryWithClasses.
 	self
 		assert: (factory attributeListClass: self attributeListClass) == factory;
-		assert: factory attributeListClass == self attributeListClass.
+		assert: factory attributeListClass == self attributeListClass
 ]
 
 { #category : #tests }
 XMLPluggableNodeFactoryTest >> testCDataClass [
 	super testCDataClass.
 
-	self assert: self newFactoryWithClasses cdataClass == self cdataClass.
+	self assert: self newFactoryWithClasses cdataClass == self cdataClass
 ]
 
 { #category : #tests }
 XMLPluggableNodeFactoryTest >> testClassForElement [
 	super testClassForElement.
 
-	self assert: (self newFactoryWithClasses classForElement: 'test') == self elementClass.
+	self assert: (self newFactoryWithClasses classForElement: 'test') == self elementClass
 ]
 
 { #category : #tests }
@@ -102,28 +102,28 @@ XMLPluggableNodeFactoryTest >> testClassForElementNamespaceURI [
 	self assert:
 		(self newFactoryWithClasses
 			classForElement: 'test'
-			namespaceURI: 'testNS') == self elementClass.
+			namespaceURI: 'testNS') == self elementClass
 ]
 
 { #category : #tests }
 XMLPluggableNodeFactoryTest >> testCommentClass [
 	super testCommentClass.
 
-	self assert: self newFactoryWithClasses commentClass == self commentClass.
+	self assert: self newFactoryWithClasses commentClass == self commentClass
 ]
 
 { #category : #tests }
 XMLPluggableNodeFactoryTest >> testDocumentClass [
 	super testDocumentClass.
 
-	self assert: self newFactoryWithClasses documentClass == self documentClass.
+	self assert: self newFactoryWithClasses documentClass == self documentClass
 ]
 
 { #category : #tests }
 XMLPluggableNodeFactoryTest >> testElementClass [
 	super testElementClass.
 
-	self assert: self newFactoryWithClasses elementClass == self elementClass.
+	self assert: self newFactoryWithClasses elementClass == self elementClass
 ]
 
 { #category : #tests }
@@ -135,33 +135,33 @@ XMLPluggableNodeFactoryTest >> testNewCData [
 	cdata := self newFactoryWithClasses newCData: 'test'.
 	self
 		assert: cdata class == self cdataClass;
-		assert: cdata string = 'test'.
+		assert: cdata string = 'test'
 ]
 
 { #category : #tests }
 XMLPluggableNodeFactoryTest >> testNewComment [
 	| comment |
-	
+
 	super testNewComment.
 
 	comment := self newFactoryWithClasses newComment: 'test'.
 	self
 		assert: comment class == self commentClass;
-		assert: comment string = 'test'.
+		assert: comment string = 'test'
 ]
 
 { #category : #tests }
 XMLPluggableNodeFactoryTest >> testNewDocument [
 	super testNewDocument.
 
-	self assert: self newFactoryWithClasses newDocument class == self documentClass.
+	self assert: self newFactoryWithClasses newDocument class == self documentClass
 ]
 
 { #category : #tests }
 XMLPluggableNodeFactoryTest >> testNewElement [
 	super testNewElement.
 
-	self assert: self newFactoryWithClasses newElement class == self elementClass.
+	self assert: self newFactoryWithClasses newElement class == self elementClass
 ]
 
 { #category : #tests }
@@ -173,7 +173,7 @@ XMLPluggableNodeFactoryTest >> testNewElementNamed [
 	element := self newFactoryWithClasses newElementNamed: 'test'.
 	self
 		assert: element class == self elementClass;
-		assert: element name = 'test'.
+		assert: element name = 'test'
 ]
 
 { #category : #tests }
@@ -189,14 +189,14 @@ XMLPluggableNodeFactoryTest >> testNewElementNamedNamespaceURI [
 	self
 		assert: element class == self elementClass;
 		assert: element name = 'prefix:test';
-		assert: element namespaceURI = 'prefixNS'.
+		assert: element namespaceURI = 'prefixNS'
 ]
 
 { #category : #tests }
 XMLPluggableNodeFactoryTest >> testNewPI [
 	super testNewPI.
 
-	self assert: self newFactoryWithClasses newPI class == self piClass.
+	self assert: self newFactoryWithClasses newPI class == self piClass
 ]
 
 { #category : #tests }

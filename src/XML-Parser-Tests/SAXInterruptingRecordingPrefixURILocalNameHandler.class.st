@@ -61,7 +61,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> attributeDeclaration: anEle
 		defaultValue: aDefaultValue.
 
 	self interruptOn = #attributeDeclaration:name:type:defaultPragma:defaultValue:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - content' }
@@ -69,7 +69,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> characters: aString [
 	super characters: aString.
 
 	self interruptOn = #characters:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - lexical' }
@@ -77,7 +77,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> comment: aString [
 	super comment: aString.
 
 	self interruptOn = #comment:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - declaration' }
@@ -87,7 +87,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> elementDeclaration: anEleme
 		contentModel: aContentModel.
 
 	self interruptOn = #elementDeclaration:contentModel:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - lexical' }
@@ -95,7 +95,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> endCData [
 	super endCData.
 
 	self interruptOn = #endCData
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - lexical' }
@@ -103,7 +103,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> endDTD [
 	super endDTD.
 
 	self interruptOn = #endDTD
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - content' }
@@ -111,7 +111,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> endDocument [
 	super endDocument.
 
 	self interruptOn = #endDocument
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - content' }
@@ -119,7 +119,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> endElement: aQualifiedName 
 	super endElement: aQualifiedName.
 
 	self interruptOn = #endElement:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - content' }
@@ -130,7 +130,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> endElement: aQualifiedName 
 		uri: aURI.
 
 	self interruptOn = #endElement:prefix:uri:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - content' }
@@ -142,7 +142,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> endElement: aQualifiedName 
 		localName: aLocalName.
 
 	self interruptOn = #endElement:prefix:uri:localName:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - lexical' }
@@ -150,7 +150,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> endEntity: anEntityName [
 	super endEntity: anEntityName.
 
 	self interruptOn = #endEntity:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - content' }
@@ -158,7 +158,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> endPrefixMapping: aPrefix [
 	super endPrefixMapping: aPrefix.
 
 	self interruptOn = #endPrefixMapping:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - declaration' }
@@ -170,7 +170,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> generalEntityDeclaration: a
 		ndata: aNotationName.
 
 	self interruptOn = #generalEntityDeclaration:publicID:systemID:ndata:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - declaration' }
@@ -180,7 +180,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> generalEntityDeclaration: a
 		replacement: aReplacement.
 
 	self interruptOn = #generalEntityDeclaration:replacement:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - content' }
@@ -188,7 +188,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> ignorableWhitespace: aStrin
 	super ignorableWhitespace: aString.
 
 	self interruptOn = #ignorableWhitespace:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #accessing }
@@ -209,7 +209,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> notationDeclaration: aName 
 		systemID: aSystemID.
 
 	self interruptOn = #notationDeclaration:publicID:systemID:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - declaration' }
@@ -220,7 +220,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> parameterEntityDeclaration:
 		systemID: aSystemID.
 
 	self interruptOn = #parameterEntityDeclaration:publicID:systemID:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - declaration' }
@@ -230,7 +230,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> parameterEntityDeclaration:
 		replacement: aReplacement.
 
 	self interruptOn = #parameterEntityDeclaration:replacement:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - content' }
@@ -240,7 +240,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> processingInstruction: aTar
 		data: aDataString.
 
 	self interruptOn = #processingInstruction:data:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - content' }
@@ -248,7 +248,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> skippedEntity: anEntityName
 	super skippedEntity: anEntityName.
 
 	self interruptOn = #skippedEntity:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - lexical' }
@@ -256,7 +256,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> startCData [
 	super startCData.
 
 	self interruptOn = #startCData
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - lexical' }
@@ -267,7 +267,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> startDTD: aRootElementName 
 		systemID: aSystemID.
 
 	self interruptOn = #startDTD:publicID:systemID:
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - content' }
@@ -275,7 +275,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> startDocument [
 	super startDocument.
 
 	self interruptOn = #startDocument
-		ifTrue: [self interruptParsing].
+		ifTrue: [self interruptParsing]
 ]
 
 { #category : #'handling - content' }

@@ -66,7 +66,7 @@ XMLDoctypeDeclarationTest >> testAllNodes [
 		assert: allNodes seventh class == XMLNotationDeclaration;
 		assert: allNodes eighth isPI;
 		assert: allNodes ninth isComment;
-		assert: allNodes ninth string = 'after'.
+		assert: allNodes ninth string = 'after'
 ]
 
 { #category : #tests }
@@ -85,7 +85,7 @@ XMLDoctypeDeclarationTest >> testPublicID [
 	self
 		assert: doctype publicID = '';
 		assert: (doctype publicID: 'test') == doctype;
-		assert: doctype publicID = 'test'.
+		assert: doctype publicID = 'test'
 ]
 
 { #category : #tests }
@@ -96,7 +96,7 @@ XMLDoctypeDeclarationTest >> testRoot [
 	self
 		assert: doctype root = '';
 		assert: (doctype root: 'test') == doctype;
-		assert: doctype root = 'test'.
+		assert: doctype root = 'test'
 ]
 
 { #category : #tests }
@@ -112,7 +112,7 @@ XMLDoctypeDeclarationTest >> testRootPublicIDSystemID [
 		assert: doctype class == self nodeClass;
 		assert: doctype root = 'one';
 		assert: doctype publicID = 'two';
-		assert: doctype systemID = 'three'.
+		assert: doctype systemID = 'three'
 ]
 
 { #category : #tests }
@@ -123,7 +123,7 @@ XMLDoctypeDeclarationTest >> testSystemID [
 	self
 		assert: doctype systemID = '';
 		assert: (doctype systemID: 'test') == doctype;
-		assert: doctype systemID = 'test'.
+		assert: doctype systemID = 'test'
 ]
 
 { #category : #tests }
@@ -147,5 +147,5 @@ XMLDoctypeDeclarationTest >> testWriteXMLOn [
 
 	self assert:
 		(self nodeClass root: 'one' publicID: '' systemID: 'two') printString =
-			'<!DOCTYPE one SYSTEM "two">'.
+			'<!DOCTYPE one SYSTEM "two">'
 ]
