@@ -60,7 +60,7 @@ BaselineOfXMLParser >> orderPreservingDictionaryOn: spec [
       with: [ 
 			spec
 				loads: #('Core');
-				repository: 'github://pharo-contributions/OrderPreservingDictionary:1.5.x/src' ]. 
+				repository: 'github://pharo-contributions/OrderPreservingDictionary:1.6.x/src' ]. 
 				
 	spec 
 		project: 'OrderPreservingDictionary Tests' copyFrom: 'OrderPreservingDictionary' with: [ spec loads: #('Tests') ];			
@@ -75,7 +75,7 @@ BaselineOfXMLParser >> xmlWriterOn: spec [
       with: [ 
 			spec
 				loads: #('Core');
-				repository: 'github://pharo-contributions/XML-XMLWriter:2.9.x/src' ]. 
+				repository: 'github://pharo-contributions/XML-XMLWriter:3.0.x/src' ]. 
 				
 	spec 
 		project: 'XMLWriter Tests' copyFrom: 'XMLWriter' with: [ spec loads: #('Tests') ]; 	
