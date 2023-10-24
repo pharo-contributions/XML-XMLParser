@@ -6140,8 +6140,8 @@ XMLParserTest >> testStandaloneExternalExternalEntityRedundance [
 
 { #category : #tests }
 XMLParserTest >> testStandaloneExternalInternalEntity [
-	| standalone notStandalone dtd document |
 
+	| standalone notStandalone dtd document |
 	standalone := '<?xml version="1.0" standalone="yes"?>'.
 	notStandalone := '<?xml version="1.0" standalone="no"?>'.
 	dtd := '
@@ -6152,34 +6152,35 @@ XMLParserTest >> testStandaloneExternalInternalEntity [
 			<!ENTITY otherName "otherValue">
 		]>'.
 	self
-		should: [SAXHandler parse: standalone, dtd, '<test>&name;</test>']
+		should: [
+		SAXHandler parse: standalone , dtd , '<test>&name;</test>' ]
 		raise: XMLValidationException.
 	self
 		shouldnt: [
-			document :=
-				(XMLDOMParser on: standalone, dtd, '<test>&name;</test>')
-					isValidating: false;
-					parseDocument]
+			document := (XMLDOMParser on:
+					             standalone , dtd , '<test>&name;</test>')
+				            isValidating: false;
+				            parseDocument ]
 		raise: XMLValidationException.
-	self assert: document contentString = 'value'.
+	self assert: document contentString equals: 'value'.
 	self
-		shouldnt: [SAXHandler parse: standalone, dtd, '<test>&otherName;</test>']
+		shouldnt: [
+		SAXHandler parse: standalone , dtd , '<test>&otherName;</test>' ]
 		raise: XMLValidationException.
 
 	self
 		shouldnt: [
-			document :=
-				XMLDOMParser parse: notStandalone, dtd, '<test>&name;</test>']
+			document := XMLDOMParser parse:
+				            notStandalone , dtd , '<test>&name;</test>' ]
 		raise: XMLValidationException.
-	self assert: document contentString = 'value'.
+	self assert: document contentString = 'value'
 ]
 
 { #category : #tests }
 XMLParserTest >> testStandaloneExternalInternalEntityAttributeDefaultValue [
-	| standaloneDTD document |
 
-	standaloneDTD :=
-		'<?xml version="1.0" standalone="yes"?>
+	| standaloneDTD document |
+	standaloneDTD := '<?xml version="1.0" standalone="yes"?>
 		<!DOCTYPE test [
 			<!ELEMENT test ANY>
 			<!ENTITY % entity ''<!ENTITY name "value">''>
@@ -6188,37 +6189,32 @@ XMLParserTest >> testStandaloneExternalInternalEntityAttributeDefaultValue [
 			<!ENTITY otherName "otherValue">
 		]>'.
 	self
-		should: [SAXHandler parse: standaloneDTD, '<test name="&name;"/>']
+		should: [ SAXHandler parse: standaloneDTD , '<test name="&name;"/>' ]
 		raise: XMLValidationException.
 	self
 		shouldnt: [
-			document :=
-				(XMLDOMParser on: standaloneDTD, '<test name="&name;"/>')
-					isValidating: false;
-					parseDocument]
+			document := (XMLDOMParser on:
+					             standaloneDTD , '<test name="&name;"/>')
+				            isValidating: false;
+				            parseDocument ]
 		raise: XMLValidationException.
-	self assert: (document root attributeAt: 'name') = 'value'.
-
-	"Xerces doesn't flag this because the reference is only in the default
-	value declaration, but it probably should count because it's still an
-	internal (to the document) reference to an external standalone entity"
+	self assert: (document root attributeAt: 'name') equals: 'value'.
 	self
-		should: [XMLDOMParser parse: standaloneDTD, '<test/>']
+		should: [ XMLDOMParser parse: standaloneDTD , '<test/>' ]
 		raise: XMLValidationException.
 	self
 		shouldnt: [
-			document :=
-				(XMLDOMParser on: standaloneDTD, '<test/>')
-					isValidating: false;
-					parseDocument]
+			document := (XMLDOMParser on: standaloneDTD , '<test/>')
+				            isValidating: false;
+				            parseDocument ]
 		raise: XMLValidationException.
-	self assert: (document root attributeAt: 'name') = 'value'.
+	self assert: (document root attributeAt: 'name') equals: 'value'
 ]
 
 { #category : #tests }
 XMLParserTest >> testStandaloneExternalInternalEntityExternalSubset [
-	| standalone notStandalone dtd subset resolver document |
 
+	| standalone notStandalone dtd subset resolver document |
 	standalone := '<?xml version="1.0" standalone="yes"?>'.
 	notStandalone := '<?xml version="1.0" standalone="no"?>'.
 	dtd := '<!DOCTYPE test SYSTEM "extern.dtd">'.
@@ -6226,49 +6222,47 @@ XMLParserTest >> testStandaloneExternalInternalEntityExternalSubset [
 		<!ELEMENT test ANY>
 		<!ATTLIST test name CDATA #IMPLIED>
 		<!ENTITY name "value">'.
-	resolver :=
-		DTDStaticExternalEntityResolver externalEntities:
-			(Array with: 'extern.dtd' -> subset).
+	resolver := DTDStaticExternalEntityResolver externalEntities:
+		            (Array with: 'extern.dtd' -> subset).
 	self
 		should: [
-			(SAXHandler on: standalone, dtd, '<test>&name;</test>')
+			(SAXHandler on: standalone , dtd , '<test>&name;</test>')
 				externalEntityResolver: resolver copy;
 				resolvesExternalEntities: true;
-				parseDocument]
+				parseDocument ]
 		raise: XMLValidationException.
 	self
 		should: [
-			(SAXHandler on: standalone, dtd, '<test>&name;</test>')
+			(SAXHandler on: standalone , dtd , '<test>&name;</test>')
 				externalEntityResolver: resolver copy;
 				resolvesExternalEntities: true;
 				isValidating: false;
-				parseDocument]
+				parseDocument ]
 		raise: XMLWellFormednessException.
 	self
 		shouldnt: [
-			(SAXHandler on: standalone, dtd, '<test/>')
+			(SAXHandler on: standalone , dtd , '<test/>')
 				externalEntityResolver: resolver copy;
 				resolvesExternalEntities: true;
-				parseDocument]
+				parseDocument ]
 		raise: XMLValidationException.
-	
+
 	self
 		shouldnt: [
-			document :=
-				(XMLDOMParser on: notStandalone, dtd, '<test>&name;</test>')
-					externalEntityResolver: resolver copy;
-					resolvesExternalEntities: true;
-					parseDocument]
+			document := (XMLDOMParser on:
+					             notStandalone , dtd , '<test>&name;</test>')
+				            externalEntityResolver: resolver copy;
+				            resolvesExternalEntities: true;
+				            parseDocument ]
 		raise: XMLValidationException.
-	self assert: document contentString = 'value'.
+	self assert: document contentString equals: 'value'
 ]
 
 { #category : #tests }
 XMLParserTest >> testStandaloneExternalInternalEntityRedundance [
-	| standaloneXML document |
 
-	standaloneXML :=
-		'<?xml version="1.0" standalone="yes"?>
+	| standaloneXML document |
+	standaloneXML := '<?xml version="1.0" standalone="yes"?>
 		<!DOCTYPE test [
 			<!ELEMENT test ANY>
 			<!ATTLIST test name CDATA #IMPLIED>
@@ -6278,9 +6272,9 @@ XMLParserTest >> testStandaloneExternalInternalEntityRedundance [
 		]>
 		<test>&name;</test>'.
 	self
-		shouldnt: [document := XMLDOMParser parse: standaloneXML]
+		shouldnt: [ document := XMLDOMParser parse: standaloneXML ]
 		raise: XMLValidationException.
-	self assert: document contentString = 'value'.
+	self assert: document contentString equals: 'value'
 ]
 
 { #category : #tests }

@@ -163,46 +163,52 @@ SAXHandlerTest >> testComment [
 
 { #category : #tests }
 SAXHandlerTest >> testConfiguration [
-	| parser oldConfiguration newConfiguration |
 
+	| parser oldConfiguration newConfiguration |
 	parser := SAXHandler on: self prefixedXMLSource.
 	oldConfiguration := parser configuration.
-	self assert: oldConfiguration class == self configurationClass.
+	self
+		assert: oldConfiguration class
+		identicalTo: self configurationClass.
 
 	newConfiguration := self configurationClass new.
 	self
-		assert: (parser configuration: newConfiguration) == parser;
-		assert: parser configuration class == self configurationClass
+		assert: (parser configuration: newConfiguration)
+		identicalTo: parser;
+		assert: parser configuration class
+		identicalTo: self configurationClass
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testDecodesCharacters [
-	| parser |
 
+	| parser |
 	parser := SAXHandler on: self prefixedXMLSource.
 	self
 		assert: parser decodesCharacters;
-		assert: (parser decodesCharacters: false) == parser;
+		assert: (parser decodesCharacters: false) identicalTo: parser;
 		deny: parser decodesCharacters;
-		assert: (parser decodesCharacters: true) == parser;
+		assert: (parser decodesCharacters: true) identicalTo: parser;
 		assert: parser decodesCharacters
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testDocumentReadLimit [
+
 	| parser |
 	parser := SAXHandler on: self prefixedXMLSource.
 	self
 		assert: parser documentReadLimit
-			equals: XMLParserLimits defaultDocumentReadLimit;
-		assert: (parser documentReadLimit: 100000) == parser;
+		equals: XMLParserLimits defaultDocumentReadLimit;
+		assert: (parser documentReadLimit: 100000) identicalTo: parser;
 		assert: parser documentReadLimit equals: 100000;
-		assert: (parser documentReadLimit: nil) == parser;
+		assert: (parser documentReadLimit: nil) identicalTo: parser;
 		assert: parser documentReadLimit isNil
 ]
 
 { #category : #tests }
 SAXHandlerTest >> testDocumentURI [
+
 	| xml uri newURI parser |
 	xml := self prefixedXMLSource.
 	uri := 'test/test.xml'.
@@ -210,7 +216,7 @@ SAXHandlerTest >> testDocumentURI [
 	parser := SAXHandler on: xml documentURI: uri.
 	self
 		assert: parser documentURI equals: uri;
-		assert: (parser documentURI: newURI) == parser;
+		assert: (parser documentURI: newURI) identicalTo: parser;
 		assert: parser documentURI equals: newURI.
 
 	"reusing on: should clear it"
@@ -389,16 +395,19 @@ SAXHandlerTest >> testEndPrefixMapping [
 
 { #category : #tests }
 SAXHandlerTest >> testExternalEntityResolver [
-	| parser oldResolver newResolver |
 
+	| parser oldResolver newResolver |
 	parser := SAXHandler on: self prefixedXMLSource.
 	oldResolver := parser externalEntityResolver.
-	self assert: oldResolver class == self externalEntityResolverClass.
+	self
+		assert: oldResolver class
+		identicalTo: self externalEntityResolverClass.
 
 	newResolver := self externalEntityResolverClass new.
 	self
-		assert: (parser externalEntityResolver: newResolver) == parser;
-		assert: parser externalEntityResolver == newResolver.
+		assert: (parser externalEntityResolver: newResolver)
+		identicalTo: parser;
+		assert: parser externalEntityResolver identicalTo: newResolver
 ]
 
 { #category : #tests }
@@ -990,15 +999,15 @@ SAXHandlerTest >> testStartPrefixMappingURI [
 
 { #category : #tests }
 SAXHandlerTest >> testUsesNamespaces [
-	| parser |
 
+	| parser |
 	parser := SAXHandler on: self prefixedXMLSource.
 	self
 		assert: parser usesNamespaces;
-		assert: (parser usesNamespaces: false) == parser;
+		assert: (parser usesNamespaces: false) identicalTo: parser;
 		deny: parser usesNamespaces;
-		assert: (parser usesNamespaces: true) == parser;
-		assert: parser usesNamespaces.
+		assert: (parser usesNamespaces: true) identicalTo: parser;
+		assert: parser usesNamespaces
 ]
 
 { #category : #tests }

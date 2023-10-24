@@ -362,11 +362,11 @@ XMLDocumentTest >> testValidateNoSubset [
 
 { #category : #tests }
 XMLDocumentTest >> testVersion [
-	| document |
 
+	| document |
 	document := self newNode.
 	self
 		assert: document version isNil;
-		assert: (document version: 1.0) == document;
-		assert: document version = 1.0
+		assert: (document version: 1.0) identicalTo: document;
+		assert: document version equals: 1.0
 ]

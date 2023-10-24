@@ -437,48 +437,49 @@ XMLNodeWithElementsTest >> testAddString [
 
 { #category : #tests }
 XMLNodeWithElementsTest >> testAddStringNodeFactoryUse [
-	| nodeWithElements firstStringNode elementNode lastStringNode |
 
+	| nodeWithElements firstStringNode elementNode lastStringNode |
 	nodeWithElements := self newNode.
 	firstStringNode := nodeWithElements addString: 'one'.
 	self
 		assert: (firstStringNode isStringNode: 'one');
-		assert: nodeWithElements nodes size = 1;
-		assert: nodeWithElements firstNode == firstStringNode.
+		assert: nodeWithElements nodes size equals: 1;
+		assert: nodeWithElements firstNode identicalTo: firstStringNode.
 
 	nodeWithElements nodeFactory:
-		(XMLPluggableNodeFactory new
-			stringNodeClass: XMLFString).
+		(XMLPluggableNodeFactory new stringNodeClass: XMLFString).
 	self
-		assert: (nodeWithElements addString: 'two') == firstStringNode;
+		assert: (nodeWithElements addString: 'two')
+		identicalTo: firstStringNode;
 		assert: (firstStringNode isStringNode: 'onetwo');
-		assert: nodeWithElements nodes size = 1;
-		assert: nodeWithElements nodes first == firstStringNode.
+		assert: nodeWithElements nodes size equals: 1;
+		assert: nodeWithElements nodes first identicalTo: firstStringNode.
 
-	elementNode := nodeWithElements addNode: (self elementClass named: 'three').
+	elementNode := nodeWithElements addNode:
+		               (self elementClass named: 'three').
 	self
 		assert: (elementNode isElementNamed: 'three');
-		assert: nodeWithElements nodes size = 2;
-		assert: nodeWithElements nodes first == firstStringNode;
-		assert: nodeWithElements nodes second == elementNode.
+		assert: nodeWithElements nodes size equals: 2;
+		assert: nodeWithElements nodes first identicalTo: firstStringNode;
+		assert: nodeWithElements nodes second identicalTo: elementNode.
 
 	lastStringNode := nodeWithElements addString: 'four'.
 	self
-		assert: lastStringNode class == XMLFString;
+		assert: lastStringNode class identicalTo: XMLFString;
 		assert: (lastStringNode isStringNode: 'four');
-		assert: nodeWithElements nodes size = 3;
-		assert: nodeWithElements nodes first == firstStringNode;
-		assert: nodeWithElements nodes second == elementNode;
-		assert: nodeWithElements nodes third == lastStringNode.
-
+		assert: nodeWithElements nodes size equals: 3;
+		assert: nodeWithElements nodes first identicalTo: firstStringNode;
+		assert: nodeWithElements nodes second identicalTo: elementNode;
+		assert: nodeWithElements nodes third identicalTo: lastStringNode.
 	self
-		assert: (nodeWithElements addString: 'five') == lastStringNode;
-		assert: lastStringNode class == XMLFString;
+		assert: (nodeWithElements addString: 'five')
+		identicalTo: lastStringNode;
+		assert: lastStringNode class identicalTo: XMLFString;
 		assert: (lastStringNode isStringNode: 'fourfive');
-		assert: nodeWithElements nodes size = 3;
-		assert: nodeWithElements nodes first == firstStringNode;
-		assert: nodeWithElements nodes second == elementNode;
-		assert: nodeWithElements nodes third == lastStringNode
+		assert: nodeWithElements nodes size equals: 3;
+		assert: nodeWithElements nodes first identicalTo: firstStringNode;
+		assert: nodeWithElements nodes second identicalTo: elementNode;
+		assert: nodeWithElements nodes third identicalTo: lastStringNode
 ]
 
 { #category : #tests }
@@ -958,28 +959,27 @@ XMLNodeWithElementsTest >> testElementAt [
 
 { #category : #tests }
 XMLNodeWithElementsTest >> testElementAtAddedInPlace [
-	self newNodeWithElements allNodesDo: [:node |
-		node canHaveChildren
-			ifTrue: [
-				(Array
-					with: node elements
-					with: node elements reversed) do: [:elements | | localNames qualifiedNames |
-					localNames := (elements collect: [:each | each localName]) asSet.
-					qualifiedNames :=
-						(elements
-							select: [:each | each hasPrefix]
-							thenCollect: [:each | each name]) asSet.
-					node addNodes: elements.
-					localNames do: [:localName |
-						self assert:
-							(node elementAt: localName) =
-								(elements detect: [:each | each localName = localName])].
-					qualifiedNames do: [:qualifiedName |
-						self assert:
-							(node elementAt: qualifiedName) =
-								(elements detect: [:each |
-									each hasPrefix
-										and: [each name = qualifiedName]])]]]]
+
+	self newNodeWithElements allNodesDo: [ :node |
+		node canHaveChildren ifTrue: [
+			(Array with: node elements with: node elements reversed) do: [
+				:elements |
+				| localNames qualifiedNames |
+				localNames := (elements collect: [ :each | each localName ]) asSet.
+				qualifiedNames := (elements
+					                   select: [ :each | each hasPrefix ]
+					                   thenCollect: [ :each | each name ]) asSet.
+				node addNodes: elements.
+				localNames do: [ :localName |
+					self
+						assert: (node elementAt: localName)
+						equals:
+						(elements detect: [ :each | each localName = localName ]) ].
+				qualifiedNames do: [ :qualifiedName |
+					self
+						assert: (node elementAt: qualifiedName)
+						equals: (elements detect: [ :each |
+								 each hasPrefix and: [ each name = qualifiedName ] ]) ] ] ] ]
 ]
 
 { #category : #tests }

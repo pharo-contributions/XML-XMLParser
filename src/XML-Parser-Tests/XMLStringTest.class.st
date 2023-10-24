@@ -385,21 +385,21 @@ XMLStringTest >> testSplitAt [
 
 { #category : #tests }
 XMLStringTest >> testString [
-	| stringNode |
 
+	| stringNode |
 	stringNode := self nodeClass string: self markupString.
 	self
-		assert: stringNode class == self nodeClass;
-		assert: stringNode string = self markupString.
+		assert: stringNode class identicalTo: self nodeClass;
+		assert: stringNode string equals: self markupString.
 
 	stringNode := self newNode.
-	self assert: stringNode string = ''.
+	self assert: stringNode string equals: ''.
 
 	stringNode string: self markupString.
-	self assert: stringNode string = self markupString.
+	self assert: stringNode string equals: self markupString.
 
 	stringNode string: ''.
-	self assert: stringNode string = ''
+	self assert: stringNode string equals: ''
 ]
 
 { #category : #tests }
