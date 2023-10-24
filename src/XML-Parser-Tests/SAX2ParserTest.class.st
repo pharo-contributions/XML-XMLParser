@@ -26,62 +26,72 @@ SAX2ParserTest >> lexicalHandlerClass [
 
 { #category : #tests }
 SAX2ParserTest >> testContentHandler [
-	| parser oldContentHandler newContentHandler |
 
+	| parser oldContentHandler newContentHandler |
 	parser := SAX2Parser on: self addressBookXML.
 	oldContentHandler := parser contentHandler.
 	self
-		assert: oldContentHandler class == self contentHandlerClass;
-		assert: oldContentHandler parser == parser.
+		assert: oldContentHandler class
+		identicalTo: self contentHandlerClass;
+		assert: oldContentHandler parser identicalTo: parser.
 
 	newContentHandler := self contentHandlerClass new.
 	self
-		assert: (parser contentHandler: newContentHandler) == parser;
-		assert: parser contentHandler == newContentHandler;
-		assert: newContentHandler parser == parser;
-		assert: (parser contentHandler: nil) == parser;
-		assert: parser contentHandler class == self contentHandlerClass;
-		assert: parser contentHandler parser == parser
+		assert: (parser contentHandler: newContentHandler)
+		identicalTo: parser;
+		assert: parser contentHandler identicalTo: newContentHandler;
+		assert: newContentHandler parser identicalTo: parser;
+		assert: (parser contentHandler: nil) identicalTo: parser;
+		assert: parser contentHandler class
+		identicalTo: self contentHandlerClass;
+		assert: parser contentHandler parser identicalTo: parser
 ]
 
 { #category : #tests }
 SAX2ParserTest >> testDeclarationHandler [
-	| parser oldDeclarationHandler newDeclarationHandler |
 
+	| parser oldDeclarationHandler newDeclarationHandler |
 	parser := SAX2Parser on: self addressBookXML.
 	oldDeclarationHandler := parser declarationHandler.
 	self
-		assert: oldDeclarationHandler class == self declarationHandlerClass;
-		assert: oldDeclarationHandler parser == parser.
+		assert: oldDeclarationHandler class
+		identicalTo: self declarationHandlerClass;
+		assert: oldDeclarationHandler parser identicalTo: parser.
 
 	newDeclarationHandler := self declarationHandlerClass new.
 	self
-		assert: (parser declarationHandler: newDeclarationHandler) == parser;
-		assert: parser declarationHandler == newDeclarationHandler;
-		assert: newDeclarationHandler parser == parser;
-		assert: (parser declarationHandler: nil) == parser;
-		assert: parser declarationHandler class == self declarationHandlerClass;
-		assert: parser declarationHandler parser == parser
+		assert: (parser declarationHandler: newDeclarationHandler)
+		identicalTo: parser;
+		assert: parser declarationHandler
+		identicalTo: newDeclarationHandler;
+		assert: newDeclarationHandler parser identicalTo: parser;
+		assert: (parser declarationHandler: nil) identicalTo: parser;
+		assert: parser declarationHandler class
+		identicalTo: self declarationHandlerClass;
+		assert: parser declarationHandler parser identicalTo: parser
 ]
 
 { #category : #tests }
 SAX2ParserTest >> testLexicalHandler [
-	| parser oldLexicalHandler newLexicalHandler |
 
+	| parser oldLexicalHandler newLexicalHandler |
 	parser := SAX2Parser on: self addressBookXML.
 	oldLexicalHandler := parser lexicalHandler.
 	self
-		assert: oldLexicalHandler class == self lexicalHandlerClass;
-		assert: oldLexicalHandler parser == parser.
+		assert: oldLexicalHandler class
+		identicalTo: self lexicalHandlerClass;
+		assert: oldLexicalHandler parser identicalTo: parser.
 
 	newLexicalHandler := self lexicalHandlerClass new.
 	self
-		assert: (parser lexicalHandler: newLexicalHandler) == parser;
-		assert: parser lexicalHandler == newLexicalHandler;
-		assert: newLexicalHandler parser == parser;
-		assert: (parser lexicalHandler: nil) == parser;
-		assert: parser lexicalHandler class == self lexicalHandlerClass;
-		assert: parser lexicalHandler parser == parser
+		assert: (parser lexicalHandler: newLexicalHandler)
+		identicalTo: parser;
+		assert: parser lexicalHandler identicalTo: newLexicalHandler;
+		assert: newLexicalHandler parser identicalTo: parser;
+		assert: (parser lexicalHandler: nil) identicalTo: parser;
+		assert: parser lexicalHandler class
+		identicalTo: self lexicalHandlerClass;
+		assert: parser lexicalHandler parser identicalTo: parser
 ]
 
 { #category : #tests }
@@ -95,13 +105,13 @@ SAX2ParserTest >> testParseDocument [
 
 { #category : #tests }
 SAX2ParserTest >> testParsingResult [
-	| parser |
 
+	| parser |
 	parser := SAX2Parser on: self addressBookXML.
-	self assert: parser parsingResult == parser.
+	self assert: parser parsingResult identicalTo: parser.
 
 	parser parsingResult: #result.
 	self
-		assert: parser parsingResult == #result;
-		assert: parser parseDocument == #result
+		assert: parser parsingResult identicalTo: #result;
+		assert: parser parseDocument identicalTo: #result
 ]
