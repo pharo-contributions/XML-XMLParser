@@ -45,7 +45,7 @@ BaselineOfXMLParser >> bitmapCharacterSetOn: spec [
       with: [ 
 			spec
 				loads: #('Core');
-				repository: 'github://pharo-contributions/BitmapCharacterSet:1.2.x/src' ]. 
+				repository: 'github://pharo-contributions/BitmapCharacterSet:v1.2.x/src' ]. 
 				
 	spec project: 'BitmapCharacterSet Tests' copyFrom: 'BitmapCharacterSet' with: [ spec loads: #('Tests') ] 			
 				
@@ -60,7 +60,7 @@ BaselineOfXMLParser >> orderPreservingDictionaryOn: spec [
       with: [ 
 			spec
 				loads: #('Core');
-				repository: 'github://pharo-contributions/OrderPreservingDictionary:1.6.x/src' ]. 
+				repository: 'github://pharo-contributions/OrderPreservingDictionary:v1.6.x/src' ]. 
 				
 	spec 
 		project: 'OrderPreservingDictionary Tests' copyFrom: 'OrderPreservingDictionary' with: [ spec loads: #('Tests') ];			
@@ -75,7 +75,7 @@ BaselineOfXMLParser >> xmlWriterOn: spec [
       with: [ 
 			spec
 				loads: #('Core');
-				repository: 'github://pharo-contributions/XML-XMLWriter:3.0.x/src' ]. 
+				repository: 'github://pharo-contributions/XML-XMLWriter:v3.0.x/src' ]. 
 				
 	spec 
 		project: 'XMLWriter Tests' copyFrom: 'XMLWriter' with: [ spec loads: #('Tests') ]; 	
