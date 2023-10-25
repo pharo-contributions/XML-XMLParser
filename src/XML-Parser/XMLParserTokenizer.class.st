@@ -68,7 +68,7 @@ XMLParserTokenizer >> atEnd [
 
 { #category : #decoding }
 XMLParserTokenizer >> characterFromCodePoint: aCodePoint [
-	(aCodePoint notNil
+	(aCodePoint isNotNil
 		and: [aCodePoint > 0
 			and: [aCodePoint <= 16r10FFFF]])
 		ifTrue: [

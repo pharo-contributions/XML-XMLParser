@@ -293,7 +293,7 @@ XMLFileHandle >> streamGet [
 
 { #category : #resolving }
 XMLFileHandle >> streamGetUpToLimit: aMaxSize decoding: aBoolean [
-	(aMaxSize notNil
+	(aMaxSize isNotNil
 		and: [self size > aMaxSize])
 		ifTrue: [self errorFileExceedsMaxSize: aMaxSize].
 

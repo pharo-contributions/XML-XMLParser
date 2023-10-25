@@ -83,8 +83,8 @@ XMLDOMParserTest >> testAttributeNamespaces [
 			assert:
 				(each attributeNames allSatisfy: [:name |
 					(each attributeNodeAt: name namespaceURI: 'defaultNS') isNil]);
-			assert: (each attributeNodeAt: 'ps:family-name' namespaceURI: 'personNS') notNil;
-			assert: (each attributeNodeAt: 'ps:first-name' namespaceURI: 'personNS') notNil]
+			assert: (each attributeNodeAt: 'ps:family-name' namespaceURI: 'personNS') isNotNil;
+			assert: (each attributeNodeAt: 'ps:first-name' namespaceURI: 'personNS') isNotNil]
 ]
 
 { #category : #tests }

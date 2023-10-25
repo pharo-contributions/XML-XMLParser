@@ -79,7 +79,7 @@ XMLObservableListTest >> assertList: aList receivedNotificationOfReplacing: anOl
 XMLObservableListTest >> assertNotification: aNotification for: anObject withList: aList hasType: aSelectorCollection [
 
 	self
-		assert: aNotification notNil;
+		assert: aNotification isNotNil;
 		assert: (aSelectorCollection includes: aNotification selector).
 	self
 		assert: aNotification arguments
@@ -91,7 +91,7 @@ XMLObservableListTest >> assertNotification: aNotification for: anObject withLis
 { #category : #assertions }
 XMLObservableListTest >> denyList: aFirstList sharesObserverWith: aSecondList [
 	self deny:
-		(aFirstList observer notNil
+		(aFirstList observer isNotNil
 			and: [aFirstList observer == aSecondList observer])
 ]
 

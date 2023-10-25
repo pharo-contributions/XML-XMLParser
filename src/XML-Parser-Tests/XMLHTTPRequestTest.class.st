@@ -93,7 +93,7 @@ XMLHTTPRequestTest >> testEnableCompression [
 	request acceptEncoding do: [ :each |
 		self assert:
 			(XMLHTTPDecompressingReadStreamAdapterFactory classForCompression:
-				 each) notNil ]
+				 each) isNotNil ]
 ]
 
 { #category : #tests }

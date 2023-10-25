@@ -157,7 +157,7 @@ XMLElement >> allNamespaceScopesRemapPrefix: aPrefix from: anOldURIOrNil to: aNe
 				to: aNewURI.
 			"we only need to check the attributes if we've remapped an
 			existing, non-default namespace"
-			(anOldURIOrNil notNil
+			(anOldURIOrNil isNotNil
 				and: [aPrefix size > 0])
 				ifTrue: [self validateNamespacePrefixesOfAttributes].
 			self elementsDo: [:each |
@@ -398,12 +398,12 @@ XMLElement >> hasID: anID [
 	self hasAttributes
 		ifFalse: [^ false].
 
-	((document := self document) notNil
-		and: [(doctypeDefinition := document doctypeDefinition) notNil
+	((document := self document) isNotNil
+		and: [(doctypeDefinition := document doctypeDefinition) isNotNil
 			and: [doctypeDefinition hasAttributeValidators
 				and: [
 					(attributeValidators :=
-						doctypeDefinition attributeValidatorsAt: self name) notNil]]])
+						doctypeDefinition attributeValidatorsAt: self name) isNotNil]]])
 		ifTrue: [
 			^ self
 				hasUndeclaredOrDeclaredID: anID

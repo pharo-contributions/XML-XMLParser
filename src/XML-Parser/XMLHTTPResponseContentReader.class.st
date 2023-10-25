@@ -54,7 +54,7 @@ XMLHTTPResponseContentReader >> decodedContentReadStreamUpToEndWithCharset: aCha
 
 { #category : #private }
 XMLHTTPResponseContentReader >> ensureContentReadStreamWasNotLimited [
-	(limitedContentReadStream notNil
+	(limitedContentReadStream isNotNil
 		and: [limitedContentReadStream atLimitedEnd])
 		ifTrue: [self errorContentLimitExceeded]
 ]
@@ -117,7 +117,7 @@ XMLHTTPResponseContentReader >> readUpToLimit: arg1 decoding: arg2 [
 		ifTrue: [ tmp1 := nil ]
 		ifFalse: [
 			tmp1 > 0 ifFalse: [ ^ '' ].
-			(arg1 notNil and: [ tmp1 > arg1 ]) ifTrue: [
+			(arg1 isNotNil and: [ tmp1 > arg1 ]) ifTrue: [
 				self errorContentLimitExceeded ] ].
 	rawContent := self rawReadWithLength: tmp1 upToLimit: arg1.
 	contentReadStream := rawContent readStream.
@@ -125,7 +125,7 @@ XMLHTTPResponseContentReader >> readUpToLimit: arg1 decoding: arg2 [
 		 (tmp3 := response contentEncoding) isNotEmpty ]) ifTrue: [
 		self initializeDecompressionWithSchemes: tmp3 upToLimit: arg1 ].
 	(arg2 and: [
-		 (tmp2 := response contentType) notNil and: [
+		 (tmp2 := response contentType) isNotNil and: [
 			 (tmp4 := tmp2 charset) ~= tmp2 defaultCharset ] ])
 		ifTrue: [
 		tmp5 := self decodedContentReadStreamUpToEndWithCharset: tmp4 ]
@@ -143,7 +143,7 @@ XMLHTTPResponseContentReader >> setResponse: aResponse [
 { #category : #streaming }
 XMLHTTPResponseContentReader >> undecodedContentReadStreamUpToEnd [
 	^ (isDecompressing
-		or: [limitedContentReadStream notNil])
+		or: [limitedContentReadStream isNotNil])
 		ifTrue: [self contentReadStreamUpToEnd]
 		ifFalse: [rawContent]
 ]

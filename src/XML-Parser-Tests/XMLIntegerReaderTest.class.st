@@ -132,7 +132,7 @@ XMLIntegerReaderTest >> testNonDigit [
 					 uppercaseLetterInterval includes: each ] ])
 				ifTrue: [
 					self
-						assert: (reader nextIntegerWithBase: base) notNil;
+						assert: (reader nextIntegerWithBase: base) isNotNil;
 						assert: reader atEnd ]
 				ifFalse: [
 					self

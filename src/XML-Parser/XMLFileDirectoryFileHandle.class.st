@@ -43,7 +43,7 @@ XMLFileDirectoryFileHandle >> directoryEntry [
 
 { #category : #testing }
 XMLFileDirectoryFileHandle >> exists [
-	^ self directoryEntry notNil
+	^ self directoryEntry isNotNil
 ]
 
 { #category : #accessing }

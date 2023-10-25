@@ -254,7 +254,7 @@ XMLCachingNodeList >> firstElement [
 
 { #category : #testing }
 XMLCachingNodeList >> hasElements [
-	^ cachedElements notNil and: [cachedElements isNotEmpty]
+	^ cachedElements isNotNil and: [cachedElements isNotEmpty]
 ]
 
 { #category : #testing }

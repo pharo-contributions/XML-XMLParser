@@ -47,7 +47,7 @@ XMLConformanceVirtualFileExternalEntityResolver >> resolveExternalEntityURI: anX
 				withSelector: sourceSelector].
 
 	contents := self virtualFileClass perform: sourceSelector.
-	(aMaxSize notNil
+	(aMaxSize isNotNil
 		and: [contents size > aMaxSize])
 		ifTrue: [
 			self

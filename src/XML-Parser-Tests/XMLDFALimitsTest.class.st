@@ -30,7 +30,7 @@ XMLDFALimitsTest >> testDFAStateCacheLimit [
 		visitedStates add: currentState.
 		previousState := currentState.
 		currentState := currentState nextDFAStateMatching: name.
-		self assert: currentState notNil.
+		self assert: currentState isNotNil.
 		i = names size
 			ifTrue: [
 				visitedStates do: [:each |

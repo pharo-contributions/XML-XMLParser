@@ -34,7 +34,7 @@ DTDExternalParsedEntity >> hasReplacement [
 { #category : #testing }
 DTDExternalParsedEntity >> hasUnresolvedReplacement [
 
-	^ self unresolvedReplacement notNil
+	^ self unresolvedReplacement isNotNil
 ]
 
 { #category : #testing }

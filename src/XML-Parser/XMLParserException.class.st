@@ -39,12 +39,12 @@ XMLParserException >> hasBaseURI [
 
 { #category : #testing }
 XMLParserException >> hasColumnNumber [
-	^ self columnNumber notNil
+	^ self columnNumber isNotNil
 ]
 
 { #category : #testing }
 XMLParserException >> hasLineNumber [
-	^ self lineNumber notNil
+	^ self lineNumber isNotNil
 ]
 
 { #category : #testing }

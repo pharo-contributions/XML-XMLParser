@@ -120,7 +120,7 @@ XMLIntegerReader >> nextDigitWithBase: aBase [
 
 	((asciiValue := self peek asciiValue) > 0
 		and: [asciiValue <= CharacterDigitValues size
-			and: [(digit := CharacterDigitValues at: asciiValue) notNil
+			and: [(digit := CharacterDigitValues at: asciiValue) isNotNil
 				and: [digit < aBase]]])
 				ifTrue: [
 					self next.
@@ -176,12 +176,12 @@ XMLIntegerReader >> nextIntegerWithBase: aBase upToLimit: aReadLimit [
 			maxBaseValue := (maxValue / aBase) floor].
 	readLimit := aReadLimit.
 	[self atEnd
-		or: [(readLimit notNil and: [readLimit <= 0])
+		or: [(readLimit isNotNil and: [readLimit <= 0])
 			or: [(digitValue := self nextDigitWithBase: aBase) isNil]]]
 		whileFalse: [
 			integer
 				ifNil: [integer := 0].
-	
+
 			maxBaseValue
 				ifNotNil: [
 					integer > maxBaseValue
@@ -201,7 +201,7 @@ XMLIntegerReader >> nextIntegerWithBase: aBase upToLimit: aReadLimit [
 			integer := integer + digitValue.
 			readLimit
 				ifNotNil: [readLimit := readLimit - 1]].
-	^ integer.
+	^ integer
 ]
 
 { #category : #initialization }

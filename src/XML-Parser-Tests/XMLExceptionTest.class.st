@@ -123,7 +123,7 @@ XMLExceptionTest >> testFormatSignalWith [
 			on: Error
 			do: [ :exception | raisedException := exception ].
 		self
-			assert: raisedException notNil;
+			assert: raisedException isNotNil;
 			assert: raisedException class identicalTo: self exceptionClass;
 			assert: raisedException messageText equals: '1' ]
 ]
@@ -140,7 +140,7 @@ XMLExceptionTest >> testFormatSignalWithArguments [
 			on: Error
 			do: [ :exception | raisedException := exception ].
 		self
-			assert: raisedException notNil;
+			assert: raisedException isNotNil;
 			assert: raisedException class identicalTo: self exceptionClass;
 			assert: raisedException messageText equals: '1 two 3 four' ]
 ]
@@ -154,7 +154,7 @@ XMLExceptionTest >> testFormatSignalWithWith [
 			on: Error
 			do: [ :exception | raisedException := exception ].
 		self
-			assert: raisedException notNil;
+			assert: raisedException isNotNil;
 			assert: raisedException class identicalTo: self exceptionClass;
 			assert: raisedException messageText equals: '1 two' ]
 ]
@@ -173,7 +173,7 @@ XMLExceptionTest >> testFormatSignalWithWithWith [
 			on: Error
 			do: [ :exception | raisedException := exception ].
 		self
-			assert: raisedException notNil;
+			assert: raisedException isNotNil;
 			assert: raisedException class identicalTo: self exceptionClass;
 			assert: raisedException messageText equals: '1 two 3' ]
 ]
@@ -193,7 +193,7 @@ XMLExceptionTest >> testFormatSignalWithWithWithWith [
 			on: Error
 			do: [ :exception | raisedException := exception ].
 		self
-			assert: raisedException notNil;
+			assert: raisedException isNotNil;
 			assert: raisedException class identicalTo: self exceptionClass;
 			assert: raisedException messageText equals: '1 two 3 four' ]
 ]
@@ -224,7 +224,7 @@ XMLExceptionTest >> testSignalMessageFrom [
 			on: Error
 			do: [ :exception | raisedException := exception ].
 		self
-			assert: raisedException notNil;
+			assert: raisedException isNotNil;
 			assert: raisedException class identicalTo: self exceptionClass;
 			assert: raisedException messageText equals: ('({1}) {2}' format:
 						 (Array

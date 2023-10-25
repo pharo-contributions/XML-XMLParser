@@ -522,7 +522,7 @@ XMLNodeWithElementsTest >> testAllElementsDetect [
 	detectedElement := nodeWithElements allElementsDetect: [ :each |
 		                   each isNamed: 'prefix:four' ].
 	self
-		assert: detectedElement notNil;
+		assert: detectedElement isNotNil;
 		assert: (detectedElement isNamed: 'prefix:four');
 		assert: detectedElement
 		equals:
@@ -827,7 +827,7 @@ XMLNodeWithElementsTest >> testDescendantElementsDetect [
 	detectedElement := nodeWithElements descendantElementsDetect: [ :each |
 		                   each isNamed: 'prefix:four' ].
 	self
-		assert: detectedElement notNil;
+		assert: detectedElement isNotNil;
 		assert: (detectedElement isNamed: 'prefix:four');
 		assert: detectedElement
 		equals:
@@ -1152,8 +1152,8 @@ XMLNodeWithElementsTest >> testElementRenamingToNext [
 		usesNamespaces: false;
 		allElementsDo: [ :each |
 			| parent oldName oldLocalName nextElement |
-			((parent := each parent) notNil and: [
-					 (nextElement := each nextElement) notNil ]) ifTrue: [
+			((parent := each parent) isNotNil and: [
+					 (nextElement := each nextElement) isNotNil ]) ifTrue: [
 					oldName := each name.
 					oldLocalName := each localName.
 
@@ -1180,8 +1180,8 @@ XMLNodeWithElementsTest >> testElementRenamingToPrevious [
 		usesNamespaces: false;
 		allElementsDo: [ :each |
 			| parent oldName oldLocalName previousElement |
-			((parent := each parent) notNil and: [
-					 (previousElement := each previousElement) notNil ]) ifTrue: [
+			((parent := each parent) isNotNil and: [
+					 (previousElement := each previousElement) isNotNil ]) ifTrue: [
 					oldName := each name.
 					oldLocalName := each localName.
 
@@ -1453,7 +1453,7 @@ XMLNodeWithElementsTest >> testFindElementNamed [
 	allElements := nodeWithElements allElements.
 	foundElement := nodeWithElements findElementNamed: 'four'.
 	self
-		assert: foundElement notNil;
+		assert: foundElement isNotNil;
 		assert: (foundElement isNamed: 'four');
 		assert: foundElement
 		identicalTo: (allElements detect: [ :each | each isNamed: 'four' ]);
@@ -1472,7 +1472,7 @@ XMLNodeWithElementsTest >> testFindElementNamedNamespaceURI [
 		                findElementNamed: 'four'
 		                namespaceURI: 'testNS'.
 	self
-		assert: foundElement notNil;
+		assert: foundElement isNotNil;
 		assert: (foundElement isNamed: 'four').
 	self
 		assert: foundElement
@@ -1498,7 +1498,7 @@ XMLNodeWithElementsTest >> testFindElementNamedNamespaceURIWith [
 		                namespaceURI: 'testNS'
 		                with: [ :each | each hasChildren ].
 	self
-		assert: foundElement notNil;
+		assert: foundElement isNotNil;
 		assert: (foundElement isNamed: 'prefix:four').
 	self
 		assert: foundElement
@@ -1527,7 +1527,7 @@ XMLNodeWithElementsTest >> testFindElementNamedWith [
 		                findElementNamed: 'four'
 		                with: [ :each | each hasChildren ].
 	self
-		assert: foundElement notNil;
+		assert: foundElement isNotNil;
 		assert: (foundElement isNamed: 'four').
 	self
 		assert: foundElement

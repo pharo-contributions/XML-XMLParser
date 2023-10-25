@@ -439,7 +439,7 @@ XMLConformanceTest >> ignorableParserExceptions [
 
 { #category : #testing }
 XMLConformanceTest >> isIgnorableParserException: anError [
-	^ self ignorableParserExceptions notNil
+	^ self ignorableParserExceptions isNotNil
 		and: [self ignorableParserExceptions handles: anError]
 ]
 

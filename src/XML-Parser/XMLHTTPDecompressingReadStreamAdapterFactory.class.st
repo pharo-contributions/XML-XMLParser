@@ -48,7 +48,7 @@ XMLHTTPDecompressingReadStreamAdapterFactory class >> errorUnsupportedCompressio
 
 { #category : #testing }
 XMLHTTPDecompressingReadStreamAdapterFactory class >> isSupportedImplementation [
-	^ self decompressingReadStreamAdapterClass notNil
+	^ self decompressingReadStreamAdapterClass isNotNil
 ]
 
 { #category : #'instance creation' }

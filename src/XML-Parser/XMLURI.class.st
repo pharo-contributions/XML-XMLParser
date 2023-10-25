@@ -471,7 +471,7 @@ XMLURI >> hasPath [
 
 { #category : #testing }
 XMLURI >> hasPort [
-	^ self port notNil
+	^ self port isNotNil
 ]
 
 { #category : #testing }

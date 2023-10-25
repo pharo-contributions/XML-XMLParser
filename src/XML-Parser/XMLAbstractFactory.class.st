@@ -33,7 +33,7 @@ XMLAbstractFactory class >> findSupportedImplementation [
 			self isSupportedImplementation
 				ifTrue: [^ self].
 
-			(self preferredImplementation notNil
+			(self preferredImplementation isNotNil
 				and: [self preferredImplementation isSupportedImplementation])
 				ifTrue: [^ self preferredImplementation].
 			self allSubclassesDo: [:each |
@@ -45,7 +45,7 @@ XMLAbstractFactory class >> findSupportedImplementation [
 
 { #category : #testing }
 XMLAbstractFactory class >> hasSupportedImplementation [
-	^ self findSupportedImplementation notNil
+	^ self findSupportedImplementation isNotNil
 ]
 
 { #category : #accessing }

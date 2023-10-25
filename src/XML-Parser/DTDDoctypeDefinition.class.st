@@ -335,7 +335,7 @@ DTDDoctypeDefinition >> hasAttributeValidators [
 DTDDoctypeDefinition >> hasElementIDReferences [
 	"direct access to avoid lazy initialization"
 
-	^ elementIDValidator notNil
+	^ elementIDValidator isNotNil
 		and: [elementIDValidator hasIDReferences]
 ]
 
@@ -343,7 +343,7 @@ DTDDoctypeDefinition >> hasElementIDReferences [
 DTDDoctypeDefinition >> hasElementIDs [
 	"direct access to avoid lazy initialization"
 
-	^ elementIDValidator notNil
+	^ elementIDValidator isNotNil
 		and: [elementIDValidator hasIDs]
 ]
 
@@ -368,7 +368,7 @@ DTDDoctypeDefinition >> hasEntities [
 DTDDoctypeDefinition >> hasGeneralEntities [
 	"direct access to avoid lazy initialization"
 
-	^ generalEntities notNil
+	^ generalEntities isNotNil
 		and: [generalEntities isNotEmpty]
 ]
 
@@ -383,27 +383,27 @@ DTDDoctypeDefinition >> hasNotationAttributeValidators [
 DTDDoctypeDefinition >> hasNotations [
 	"direct access to avoid lazy initialization"
 
-	^ notations notNil and: [ notations isNotEmpty ]
+	^ notations isNotNil and: [ notations isNotEmpty ]
 ]
 
 { #category : #testing }
 DTDDoctypeDefinition >> hasParameterEntities [
 	"direct access to avoid lazy initialization"
 
-	^ parameterEntities notNil and: [ parameterEntities isNotEmpty ]
+	^ parameterEntities isNotNil and: [ parameterEntities isNotEmpty ]
 ]
 
 { #category : #testing }
 DTDDoctypeDefinition >> hasRoot [
 
-	^ root notNil and: [ root isNotEmpty ]
+	^ root isNotNil and: [ root isNotEmpty ]
 ]
 
 { #category : #testing }
 DTDDoctypeDefinition >> hasUnparsedEntities [
 	"direct access to avoid lazy initialization"
 
-	^ unparsedEntities notNil and: [ unparsedEntities isNotEmpty ]
+	^ unparsedEntities isNotNil and: [ unparsedEntities isNotEmpty ]
 ]
 
 { #category : #'instance creation' }

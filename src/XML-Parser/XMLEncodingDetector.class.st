@@ -198,7 +198,7 @@ XMLEncodingDetector >> peek [
 XMLEncodingDetector >> peekForASCII [
 	| byte |
 
-	((byte := self peek) notNil
+	((byte := self peek) isNotNil
 		and: [byte < 16r80])
 		ifTrue: [
 			self next.
@@ -219,7 +219,7 @@ XMLEncodingDetector >> peekForNull [
 XMLEncodingDetector >> peekForUTF8LeadingByte [
 	| byte |
 
-	((byte := self peek) notNil
+	((byte := self peek) isNotNil
 		and: [self isUTF8LeadingByte: byte])
 		ifTrue: [
 			self next.
@@ -231,7 +231,7 @@ XMLEncodingDetector >> peekForUTF8LeadingByte [
 XMLEncodingDetector >> peekForUTF8NonLeadingByte [
 	| byte |
 
-	((byte := self peek) notNil
+	((byte := self peek) isNotNil
 		and: [byte < 16rC0
 			and: [byte > 16r80]])
 		ifTrue: [

@@ -83,12 +83,12 @@ XMLDocument >> errorCannotHaveNonElementRoot [
 
 { #category : #testing }
 XMLDocument >> hasDoctypeDeclaration [
-	^ self doctypeDeclaration notNil
+	^ self doctypeDeclaration isNotNil
 ]
 
 { #category : #testing }
 XMLDocument >> hasDoctypeDefinition [
-	^ self doctypeDefinition notNil
+	^ self doctypeDefinition isNotNil
 ]
 
 { #category : #testing }
@@ -98,7 +98,7 @@ XMLDocument >> hasEncoding [
 
 { #category : #testing }
 XMLDocument >> hasRoot [
-	^ self root notNil
+	^ self root isNotNil
 ]
 
 { #category : #private }

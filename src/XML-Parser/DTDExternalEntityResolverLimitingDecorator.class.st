@@ -27,7 +27,7 @@ DTDExternalEntityResolverLimitingDecorator >> checkExternalEntityLimit [
 
 	| maxExternalEntities |
 
-	((maxExternalEntities := self externalEntityResolver maxExternalEntities) notNil
+	((maxExternalEntities := self externalEntityResolver maxExternalEntities) isNotNil
 		and: [self totalResolvedExternalEntities >= maxExternalEntities])
 		ifTrue: [self errorExternalEntityLimitExceeded]
 ]

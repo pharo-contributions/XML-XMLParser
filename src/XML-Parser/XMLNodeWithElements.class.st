@@ -684,8 +684,8 @@ XMLNodeWithElements >> findElementWithID: anID [
 
 	| document doctypeDefinition |
 	
-	((document := self document) notNil
-		and: [(doctypeDefinition := document doctypeDefinition) notNil
+	((document := self document) isNotNil
+		and: [(doctypeDefinition := document doctypeDefinition) isNotNil
 			and: [doctypeDefinition hasAttributeValidators]])
 		ifTrue: [
 			self allElementsDo: [:each |

@@ -147,13 +147,13 @@ XMLString >> mergeAdjacent [
 
 	siblingNodes := self parent nodes.
 	selfIndex := siblingNodes indexOf: self.
-	[(adjacentNode := siblingNodes at: selfIndex + 1) notNil
+	[(adjacentNode := siblingNodes at: selfIndex + 1) isNotNil
 		and: [adjacentNode isStringNode]]
 		whileTrue: [
 			self append: adjacentNode.
 			siblingNodes removeAt: selfIndex + 1].
 
-	[(adjacentNode := siblingNodes at: selfIndex - 1) notNil
+	[(adjacentNode := siblingNodes at: selfIndex - 1) isNotNil
 		and: [adjacentNode isStringNode]]
 		whileTrue: [
 			self prepend: adjacentNode.

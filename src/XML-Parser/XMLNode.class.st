@@ -44,7 +44,7 @@ XMLNode >> ancestorElementsDo: aBlock [
 	| ancestor |
 
 	ancestor := self parent.
-	[ancestor notNil
+	[ancestor isNotNil
 		and: [ancestor isElement]]
 		whileTrue: [
 			aBlock value: ancestor.
@@ -66,7 +66,7 @@ XMLNode >> ancestorNodesDo: aBlock [
 	| ancestor |
 
 	ancestor := self parent.
-	[ancestor notNil]
+	[ancestor isNotNil]
 		whileTrue: [
 			aBlock value: ancestor.
 			ancestor := ancestor parent].
@@ -209,7 +209,7 @@ XMLNode >> hasNodeList: aNodeList [
 XMLNode >> hasParent [
 	"returns true if the receiver has a parent node"
 
-	^ parent notNil
+	^ parent isNotNil
 ]
 
 { #category : #private }
@@ -229,7 +229,7 @@ XMLNode >> initializeFileWriteStream: aWriteStream [
 
 	aWriteStream
 		streamConverter:
-			(((document := self document) notNil
+			(((document := self document) isNotNil
 				and: [document hasEncoding])
 				ifTrue: [document encoding asXMLStreamConverter]
 				ifFalse: [XMLStreamConverter default]);

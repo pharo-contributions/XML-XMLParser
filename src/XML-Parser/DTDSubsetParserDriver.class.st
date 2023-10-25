@@ -97,7 +97,7 @@ DTDSubsetParserDriver >> handleAttributeDeclaration: anElement name: anAttribute
 					defaultValue: aDefaultValue].
 
 	(self isValidating
-		and: [newAttributeValidator notNil])
+		and: [newAttributeValidator isNotNil])
 		ifTrue: [newAttributeValidator validateAttributeDeclaration].
 ]
 

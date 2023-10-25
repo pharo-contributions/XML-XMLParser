@@ -263,7 +263,7 @@ XMLNodeWithChildrenTest >> testAllNodesDetect [
 	allNodes := nodeWithNodes allNodes.
 	detectedNode := nodeWithNodes allNodesDetect: [ :each | each isPI ].
 	self
-		assert: detectedNode notNil;
+		assert: detectedNode isNotNil;
 		assert: detectedNode isPI;
 		assert: detectedNode
 		equals: (allNodes detect: [ :each | each isPI ]);
@@ -460,7 +460,7 @@ XMLNodeWithChildrenTest >> testDescendantNodesDetect [
 	detectedNode := nodeWithNodes descendantNodesDetect: [ :each |
 		                each isPI ].
 	self
-		assert: detectedNode notNil;
+		assert: detectedNode isNotNil;
 		assert: detectedNode isPI;
 		assert: detectedNode
 		equals: (descendantNodes detect: [ :each | each isPI ]);
@@ -728,7 +728,7 @@ XMLNodeWithChildrenTest >> testNodesDetect [
 	node := self newNodeWithNodes.
 	detectedNode := node nodesDetect: [ :each | each isComment ].
 	self
-		assert: detectedNode notNil;
+		assert: detectedNode isNotNil;
 		assert: detectedNode
 		equals: (node nodes detect: [ :each | each isComment ]);
 		assert:

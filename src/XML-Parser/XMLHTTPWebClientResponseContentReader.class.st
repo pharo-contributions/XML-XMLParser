@@ -30,7 +30,7 @@ XMLHTTPWebClientResponseContentReader >> rawReadWithLength: aContentLength upToL
 		size: aContentLength
 		progress:
 			((aContentLength isNil
-				and: [aMaxSize notNil])
+				and: [aMaxSize isNotNil])
 				ifTrue: [
 					[:ignored :total |
 						total > aMaxSize

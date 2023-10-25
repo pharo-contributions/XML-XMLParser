@@ -133,7 +133,7 @@ DTDStaticExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString
 			ifAbsent: [
 				self errorUnresolvableExternalEntityURI: anXMLURIOrURIString].
 
-	(aMaxSize notNil
+	(aMaxSize isNotNil
 		and: [replacement size > aMaxSize])
 		ifTrue: [
 			self

@@ -842,7 +842,7 @@ XMLWellFormedParserTokenizer >> isInExternalSubsetOrExternalEntity [
 	the document."
 
 	^ state isExternalSubsetState
-		or: [self topPushedBackExternalEntity notNil]
+		or: [self topPushedBackExternalEntity isNotNil]
 ]
 
 { #category : #accessing }
@@ -2382,7 +2382,7 @@ XMLWellFormedParserTokenizer >> nextXMLEncodingAttributeValue [
 		or: [quote == $'])
 		ifFalse: [self errorExpectedXMLEncodingValueStartButGot: quote].
 
-	((nextChar := streamReader next) notNil
+	((nextChar := streamReader next) isNotNil
 		and: [EncodingNameStartChars includes: nextChar])
 		ifFalse: [self errorExpectedEncodingName].
 
