@@ -29,11 +29,11 @@ DTDExternalEntityResolverLimitingDecorator >> checkExternalEntityLimit [
 
 	((maxExternalEntities := self externalEntityResolver maxExternalEntities) notNil
 		and: [self totalResolvedExternalEntities >= maxExternalEntities])
-		ifTrue: [self erorrExternalEntityLimitExceeded]
+		ifTrue: [self errorExternalEntityLimitExceeded]
 ]
 
 { #category : #private }
-DTDExternalEntityResolverLimitingDecorator >> erorrExternalEntityLimitExceeded [
+DTDExternalEntityResolverLimitingDecorator >> errorExternalEntityLimitExceeded [
 
 	XMLLimitException signal:
 		'External entity limit exceeded; ',
