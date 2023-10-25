@@ -30,26 +30,31 @@ DTDNotation class >> name: aName publicID: aPublicID systemID: aSystemID [
 
 { #category : #accessing }
 DTDNotation >> name [
-	^ name ifNil: [name := '']
+
+	^ name ifNil: [ name := '' ]
 ]
 
 { #category : #accessing }
 DTDNotation >> name: aName [
+
 	name := aName
 ]
 
 { #category : #accessing }
 DTDNotation >> publicID [
-	^ publicID ifNil: [publicID := '']
+
+	^ publicID ifNil: [ publicID := '' ]
 ]
 
 { #category : #accessing }
 DTDNotation >> publicID: aPublicID [
+
 	publicID := aPublicID
 ]
 
 { #category : #initialization }
 DTDNotation >> setName: aName publicID: aPublicID systemID: aSystemID [
+
 	name := aName.
 	publicID := aPublicID.
 	systemID := aSystemID
@@ -57,10 +62,12 @@ DTDNotation >> setName: aName publicID: aPublicID systemID: aSystemID [
 
 { #category : #accessing }
 DTDNotation >> systemID [
-	^ systemID ifNil: [systemID := '']
+
+	^ systemID ifNil: [ systemID := '' ]
 ]
 
 { #category : #accessing }
 DTDNotation >> systemID: aSystemID [
+
 	systemID := aSystemID
 ]

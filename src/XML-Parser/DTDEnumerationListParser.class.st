@@ -17,6 +17,7 @@ DTDEnumerationListParser class >> on: aString [
 
 { #category : #private }
 DTDEnumerationListParser >> errorDuplicateListValue: aValue [
+
 	XMLValidationException
 		formatSignal: 'Duplicate value "{1}" in list'
 		with: aValue
@@ -24,22 +25,26 @@ DTDEnumerationListParser >> errorDuplicateListValue: aValue [
 
 { #category : #private }
 DTDEnumerationListParser >> listEndOffset [
+
 	^ 1 "')' size"
 ]
 
 { #category : #private }
 DTDEnumerationListParser >> listStartOffset [
+
 	^ 1 "'(' size"
 ]
 
 { #category : #initialization }
 DTDEnumerationListParser >> on: aString [
+
 	listString := aString
 ]
 
 { #category : #parsing }
 DTDEnumerationListParser >> parse [
 	"the tokenizer removes all spaces from lists"
+
 	| listStartIndex listEndIndex totalListValues listValues nextListValuesIndex nextValueStartIndex |
 
 	listStartIndex := 1 + self listStartOffset.

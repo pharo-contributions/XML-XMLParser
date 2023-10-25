@@ -27,21 +27,25 @@ DTDExternalParsedEntity class >> name: aName resolver: aResolver publicID: aPubl
 
 { #category : #testing }
 DTDExternalParsedEntity >> hasReplacement [
+
 	^ self resolvedReplacement notEmpty
 ]
 
 { #category : #testing }
 DTDExternalParsedEntity >> hasUnresolvedReplacement [
+
 	^ self unresolvedReplacement notNil
 ]
 
 { #category : #testing }
 DTDExternalParsedEntity >> isExternal [
+
 	^ true
 ]
 
 { #category : #printing }
 DTDExternalParsedEntity >> printNameOn: aStream [
+
 	aStream
 		nextPut: ${;
 		nextPutAll: self uri;
@@ -51,43 +55,51 @@ DTDExternalParsedEntity >> printNameOn: aStream [
 
 { #category : #accessing }
 DTDExternalParsedEntity >> replacement [
+
 	^ self resolvedReplacement contents
 ]
 
 { #category : #accessing }
 DTDExternalParsedEntity >> replacementStream [
+
 	^ self resolvedReplacement readStream
 ]
 
 { #category : #resolving }
 DTDExternalParsedEntity >> resolveUnresolvedReplacement [
-	self hasUnresolvedReplacement
-		ifTrue: [self unresolvedReplacement resolveForExternalEntity: self]
+
+	self hasUnresolvedReplacement ifTrue: [
+		self unresolvedReplacement resolveForExternalEntity: self ]
 ]
 
 { #category : #accessing }
 DTDExternalParsedEntity >> resolvedReplacement [
+
 	self resolveUnresolvedReplacement.
 	^ resolvedReplacement
 ]
 
 { #category : #accessing }
 DTDExternalParsedEntity >> resolvedReplacement: aResolvedReplacement [
+
 	resolvedReplacement := aResolvedReplacement
 ]
 
 { #category : #initialization }
 DTDExternalParsedEntity >> setName: aName unresolvedReplacement: anUnresolvedReplacement [
+
 	name := aName.
 	unresolvedReplacement := anUnresolvedReplacement
 ]
 
 { #category : #accessing }
 DTDExternalParsedEntity >> unresolvedReplacement [
+
 	^ unresolvedReplacement
 ]
 
 { #category : #accessing }
 DTDExternalParsedEntity >> unresolvedReplacement: anUnresolvedReplacement [
+
 	unresolvedReplacement := anUnresolvedReplacement
 ]

@@ -17,16 +17,19 @@ DTDDecodedResolvedExternalParsedEntityReplacement class >> contents: aString [
 
 { #category : #accessing }
 DTDDecodedResolvedExternalParsedEntityReplacement >> contents [
+
 	^ contents
 ]
 
 { #category : #testing }
 DTDDecodedResolvedExternalParsedEntityReplacement >> isEmpty [
+
 	^ self contents isEmpty
 ]
 
 { #category : #printing }
 DTDDecodedResolvedExternalParsedEntityReplacement >> printOn: aStream [
+
 	super printOn: aStream.
 
 	aStream
@@ -37,10 +40,12 @@ DTDDecodedResolvedExternalParsedEntityReplacement >> printOn: aStream [
 
 { #category : #accessing }
 DTDDecodedResolvedExternalParsedEntityReplacement >> readStream [
+
 	^ self contents readStream
 ]
 
 { #category : #initialization }
 DTDDecodedResolvedExternalParsedEntityReplacement >> setContents: aString [
+
 	contents := aString
 ]

@@ -28,26 +28,31 @@ DTDInternalParsedEntity class >> name: aName replacement: aReplacementString uri
 
 { #category : #testing }
 DTDInternalParsedEntity >> hasReplacement [
+
 	^ self replacement notEmpty
 ]
 
 { #category : #accessing }
 DTDInternalParsedEntity >> replacement [
-	^ replacement ifNil: [replacement := '']
+
+	^ replacement ifNil: [ replacement := '' ]
 ]
 
 { #category : #accessing }
 DTDInternalParsedEntity >> replacement: aReplacementString [
+
 	replacement := aReplacementString
 ]
 
 { #category : #accessing }
 DTDInternalParsedEntity >> replacementStream [
+
 	^ self replacement readStream
 ]
 
 { #category : #initialization }
 DTDInternalParsedEntity >> setName: aName replacement: aReplacementString uri: aURIString [
+
 	name := aName.
 	replacement := aReplacementString.
 	uri := aURIString

@@ -9,5 +9,6 @@ Class {
 
 { #category : #testing }
 DTDInternalParameterParsedEntity >> isParameter [
+
 	^ true
 ]

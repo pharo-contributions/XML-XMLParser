@@ -17,6 +17,7 @@ DTDDocumentValidator class >> doctypeDefinition: aDoctypeDefinition [
 
 { #category : #accessing }
 DTDDocumentValidator >> attributeValidatorsFor: anElement ifNone: aBlock [
+
 	^ self doctypeDefinition
 		attributeValidatorsAt: anElement
 		ifAbsent: aBlock
@@ -24,16 +25,19 @@ DTDDocumentValidator >> attributeValidatorsFor: anElement ifNone: aBlock [
 
 { #category : #accessing }
 DTDDocumentValidator >> doctypeDefinition [
+
 	^ doctypeDefinition
 ]
 
 { #category : #accessing }
 DTDDocumentValidator >> doctypeDefinition: aDoctypeDefinition [
+
 	doctypeDefinition := aDoctypeDefinition
 ]
 
 { #category : #accessing }
 DTDDocumentValidator >> elementValidatorFor: anElement ifNone: aBlock [
+
 	^ self doctypeDefinition
 		elementValidatorsAt: anElement
 		ifAbsent: aBlock
@@ -41,6 +45,7 @@ DTDDocumentValidator >> elementValidatorFor: anElement ifNone: aBlock [
 
 { #category : #private }
 DTDDocumentValidator >> errorInvalidRootElement: anElement [
+
 	XMLValidationException
 		formatSignal:
 			'Root element must be <{1}> according to DOCTYPE declaration, not <{2}>'
@@ -50,16 +55,19 @@ DTDDocumentValidator >> errorInvalidRootElement: anElement [
 
 { #category : #testing }
 DTDDocumentValidator >> hasAttributeValidators [
+
 	^ self doctypeDefinition hasAttributeValidators
 ]
 
 { #category : #testing }
 DTDDocumentValidator >> hasElementValidators [
+
 	^ self doctypeDefinition hasElementValidators
 ]
 
 { #category : #validating }
 DTDDocumentValidator >> unvalidatedAttributes: anAttributeCollection inElement: anElement [
+
 	XMLValidationException
 		formatSignal: 'Undeclared attribute "{1}" in element <{2}>'
 		with: anAttributeCollection anyOne
@@ -68,6 +76,7 @@ DTDDocumentValidator >> unvalidatedAttributes: anAttributeCollection inElement: 
 
 { #category : #validating }
 DTDDocumentValidator >> unvalidatedElement: anElement [
+
 	XMLValidationException
 		formatSignal: 'Undeclared element <{1}>'
 		with: anElement
@@ -75,12 +84,14 @@ DTDDocumentValidator >> unvalidatedElement: anElement [
 
 { #category : #validating }
 DTDDocumentValidator >> validateIDReferences [
+
 	self doctypeDefinition hasElementIDReferences
 		ifTrue: [self doctypeDefinition elementIDValidator validateIDReferences]
 ]
 
 { #category : #validating }
 DTDDocumentValidator >> validateRootElement: anElement [
+
 	(self doctypeDefinition hasRoot
 		and: [self doctypeDefinition root ~= anElement])
 		ifTrue: [self errorInvalidRootElement: anElement]

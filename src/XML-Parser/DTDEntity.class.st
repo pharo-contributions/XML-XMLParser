@@ -23,46 +23,55 @@ DTDEntity class >> named: aName [
 
 { #category : #converting }
 DTDEntity >> asReference [
+
 	^ String streamContents: [:stream | self printReferenceOn: stream]
 ]
 
 { #category : #testing }
 DTDEntity >> isExternal [
+
 	^ false
 ]
 
 { #category : #testing }
 DTDEntity >> isParameter [
+
 	^ false
 ]
 
 { #category : #testing }
 DTDEntity >> isStandaloneExternal [
+
 	^ false
 ]
 
 { #category : #testing }
 DTDEntity >> isUnparsed [
+
 	^ false
 ]
 
 { #category : #accessing }
 DTDEntity >> name [
+
 	^ name ifNil: [name := '']
 ]
 
 { #category : #accessing }
 DTDEntity >> name: aName [
+
 	name := aName
 ]
 
 { #category : #printing }
 DTDEntity >> printNameOn: aStream [
+
 	aStream nextPutAll: self name
 ]
 
 { #category : #printing }
 DTDEntity >> printOn: aStream [
+
 	super printOn: aStream.
 
 	aStream nextPut: $(.
@@ -72,25 +81,29 @@ DTDEntity >> printOn: aStream [
 
 { #category : #printing }
 DTDEntity >> printReferenceOn: aStream [
+
 	aStream
 		nextPut: self referencePrefix;
 		nextPutAll: self name;
 		nextPut: $;
 ]
 
-{ #category : #'private ' }
+{ #category : #private }
 DTDEntity >> referencePrefix [
+
 	^ self isParameter
-		ifTrue: [$%]
-		ifFalse: [$&]
+		  ifTrue: [ $% ]
+		  ifFalse: [ $& ]
 ]
 
 { #category : #accessing }
 DTDEntity >> uri [
-	^ uri ifNil: [uri := '']
+
+	^ uri ifNil: [ uri := '' ]
 ]
 
 { #category : #accessing }
 DTDEntity >> uri: aURIString [
+
 	uri := aURIString
 ]

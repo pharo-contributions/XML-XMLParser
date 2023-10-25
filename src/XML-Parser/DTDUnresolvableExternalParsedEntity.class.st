@@ -9,30 +9,35 @@ Class {
 
 { #category : #private }
 DTDUnresolvableExternalParsedEntity >> errorUnresolvableExternalEntity [
+
 	XMLParserException
 		formatSignal:
-			'External entity {1} can''t be resolved unless resolution is ',
-			'enabled; use #resolvesExternalEntityReferences: before parsing ',
-			'to enable'
+			'External entity {1} can''t be resolved unless resolution is '
+			, 'enabled; use #resolvesExternalEntityReferences: before parsing '
+			, 'to enable'
 		with: self asReference
 ]
 
 { #category : #testing }
 DTDUnresolvableExternalParsedEntity >> hasReplacement [
+
 	^ true
 ]
 
 { #category : #testing }
 DTDUnresolvableExternalParsedEntity >> isExternal [
+
 	^ true
 ]
 
 { #category : #accessing }
 DTDUnresolvableExternalParsedEntity >> replacement [
+
 	self errorUnresolvableExternalEntity
 ]
 
 { #category : #accessing }
 DTDUnresolvableExternalParsedEntity >> replacementStream [
+
 	self errorUnresolvableExternalEntity
 ]

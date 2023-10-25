@@ -72,21 +72,25 @@ DTDCachingExternalEntityResolver class >> maxCachedEntities: anInteger [
 
 { #category : #clearing }
 DTDCachingExternalEntityResolver >> clearEntityCache [
+
 	self class clearEntityCache
 ]
 
 { #category : #accessing }
 DTDCachingExternalEntityResolver >> maxCachedEntities [
+
 	^ self class maxCachedEntities
 ]
 
 { #category : #accessing }
 DTDCachingExternalEntityResolver >> maxCachedEntities: anInteger [
+
 	self class maxCachedEntities: anInteger
 ]
 
 { #category : #private }
 DTDCachingExternalEntityResolver >> resolveNonLocalExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
+
 	| uri |
 
 	uri := anXMLURIOrURIString asXMLURI.

@@ -9,5 +9,6 @@ Class {
 
 { #category : #private }
 DTDNotationEnumerationListParser >> listStartOffset [
+
 	^ 10 "'NOTATION (' size"
 ]

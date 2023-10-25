@@ -17,6 +17,7 @@ DTDStaticExternalEntityResolver class >> externalEntities: anAssociationCollecti
 
 { #category : #private }
 DTDStaticExternalEntityResolver >> errorMaxExternalEntitySize: aMaxSize exceededByURI: anXMLURIOrURIString [
+
 	XMLLimitException
 		formatSignal: 'Entity exceeds max size of {1} bytes: {2}'
 		with: aMaxSize
@@ -25,6 +26,7 @@ DTDStaticExternalEntityResolver >> errorMaxExternalEntitySize: aMaxSize exceeded
 
 { #category : #private }
 DTDStaticExternalEntityResolver >> errorUnresolvableExternalEntityURI: anXMLURIOrURIString [
+
 	XMLParserException
 		formatSignal: 'Unresolvable external entity URI: {1}'
 		with: anXMLURIOrURIString asString
@@ -32,11 +34,13 @@ DTDStaticExternalEntityResolver >> errorUnresolvableExternalEntityURI: anXMLURIO
 
 { #category : #accessing }
 DTDStaticExternalEntityResolver >> externalEntities [
+
 	^ externalEntities ifNil: [externalEntities := Dictionary new]
 ]
 
 { #category : #accessing }
 DTDStaticExternalEntityResolver >> externalEntities: anAssociationCollection [
+
 	self hasExternalEntities
 		ifTrue: [self removeExternalEntities].
 	anAssociationCollection associationsDo: [:each |
@@ -47,6 +51,7 @@ DTDStaticExternalEntityResolver >> externalEntities: anAssociationCollection [
 
 { #category : #accessing }
 DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString [
+
 	^ self
 		externalEntityAtURI: anXMLURIOrURIString asXMLURI
 		ifAbsent: ['']
@@ -54,6 +59,7 @@ DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString [
 
 { #category : #accessing }
 DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString ifAbsent: aBlock [
+
 	^ self externalEntities
 		at: anXMLURIOrURIString asXMLURI
 		ifAbsent: aBlock
@@ -61,6 +67,7 @@ DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString ifAb
 
 { #category : #accessing }
 DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString ifAbsentPut: aBlock [
+
 	^ self externalEntities
 		at: anXMLURIOrURIString asXMLURI
 		ifAbsentPut: aBlock
@@ -68,6 +75,7 @@ DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString ifAb
 
 { #category : #accessing }
 DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString put: aReplacement [
+
 	^ self externalEntities
 		at: anXMLURIOrURIString asXMLURI
 		put: aReplacement
@@ -75,16 +83,19 @@ DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString put:
 
 { #category : #testing }
 DTDStaticExternalEntityResolver >> hasExternalEntities [
+
 	^ self externalEntities notEmpty
 ]
 
 { #category : #testing }
 DTDStaticExternalEntityResolver >> includesExternalEntityURI: anXMLURIOrURIString [
+
 	^ self externalEntities includesKey: anXMLURIOrURIString asXMLURI
 ]
 
 { #category : #copying }
 DTDStaticExternalEntityResolver >> postCopy [
+
 	super postCopy.
 
 	externalEntities
@@ -93,16 +104,19 @@ DTDStaticExternalEntityResolver >> postCopy [
 
 { #category : #removing }
 DTDStaticExternalEntityResolver >> removeExternalEntities [
+
 	self externalEntities removeAll
 ]
 
 { #category : #removing }
 DTDStaticExternalEntityResolver >> removeExternalEntityURI: anXMLURIOrURIString [
+
 	^ self externalEntities removeKey: anXMLURIOrURIString asXMLURI
 ]
 
 { #category : #removing }
 DTDStaticExternalEntityResolver >> removeExternalEntityURI: anXMLURIOrURIString ifAbsent: aBlock [
+
 	^ self externalEntities
 		removeKey: anXMLURIOrURIString asXMLURI
 		ifAbsent: aBlock
@@ -110,6 +124,7 @@ DTDStaticExternalEntityResolver >> removeExternalEntityURI: anXMLURIOrURIString 
 
 { #category : #resolving }
 DTDStaticExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
+
 	| replacement |
 
 	replacement :=
@@ -130,6 +145,7 @@ DTDStaticExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString
 
 { #category : #resolving }
 DTDStaticExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
+
 	^ (self
 		resolveExternalEntityURI: anXMLURIOrURIString
 		upToLimit: aMaxSize) readStream

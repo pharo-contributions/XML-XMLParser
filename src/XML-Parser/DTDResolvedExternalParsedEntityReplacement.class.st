@@ -9,25 +9,30 @@ Class {
 
 { #category : #converting }
 DTDResolvedExternalParsedEntityReplacement >> asString [
+
 	^ self contents
 ]
 
 { #category : #accessing }
 DTDResolvedExternalParsedEntityReplacement >> contents [
+
 	self subclassResponsibility
 ]
 
 { #category : #testing }
 DTDResolvedExternalParsedEntityReplacement >> isEmpty [
+
 	self subclassResponsibility
 ]
 
 { #category : #testing }
 DTDResolvedExternalParsedEntityReplacement >> notEmpty [
+
 	^ self isEmpty not
 ]
 
 { #category : #accessing }
 DTDResolvedExternalParsedEntityReplacement >> readStream [
+
 	self subclassResponsibility
 ]

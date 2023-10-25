@@ -65,24 +65,27 @@ DTDElementContentModelParser class >> standaloneExternalClass [
 
 { #category : #private }
 DTDElementContentModelParser >> applyBinaryOperatorOnStack [
+
 	self applyOperator: binaryOperatorStack removeLast
 ]
 
 { #category : #private }
 DTDElementContentModelParser >> applyOperator: aCharacter [
+
 	nfaBuilder perform:
 		(OperatorApplicators at: aCharacter asciiValue)
 ]
 
 { #category : #defaults }
 DTDElementContentModelParser >> elementValidatorClass [
+
 	^ XMLDFAElementContentElementValidator
 ]
 
 { #category : #private }
 DTDElementContentModelParser >> hasBinaryOperatorOnStack [
-	^ binaryOperatorStack size > 0
-		and: [binaryOperatorStack last ~~ $(]
+
+	^ binaryOperatorStack size > 0 and: [ binaryOperatorStack last ~~ $( ]
 ]
 
 { #category : #parsing }
@@ -117,11 +120,13 @@ DTDElementContentModelParser >> parse [
 
 { #category : #private }
 DTDElementContentModelParser >> parseBinaryOperator: aCharacter [
+
 	binaryOperatorStack addLast: aCharacter
 ]
 
 { #category : #private }
 DTDElementContentModelParser >> parseClosingParenthesis: aCharacter [
+
 	self popRemainingBinaryOperators.
 	(binaryOperatorStack size > 0
 		and: [binaryOperatorStack last == $(])
@@ -130,11 +135,13 @@ DTDElementContentModelParser >> parseClosingParenthesis: aCharacter [
 
 { #category : #private }
 DTDElementContentModelParser >> parseOpeningParenthesis: aCharacter [
+
 	binaryOperatorStack addLast: $(
 ]
 
 { #category : #private }
 DTDElementContentModelParser >> parseUnaryOperator: aCharacter [
+
 	self applyOperator: aCharacter
 ]
 
@@ -151,6 +158,7 @@ DTDElementContentModelParser >> parserForSpecialCharacter: aCharacter [
 
 { #category : #private }
 DTDElementContentModelParser >> popRemainingBinaryOperators [
+
 	[self hasBinaryOperatorOnStack]
 		whileTrue: [self applyBinaryOperatorOnStack]
 ]

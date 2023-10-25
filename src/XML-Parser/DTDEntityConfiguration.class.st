@@ -16,17 +16,20 @@ Class {
 { #category : #accessing }
 DTDEntityConfiguration >> externalEntityResolver [
 	"uses the caching resolver by default"
-	^ externalEntityResolver
-		ifNil: [externalEntityResolver := DTDExternalEntityResolver default]
+
+	^ externalEntityResolver ifNil: [
+		  externalEntityResolver := DTDExternalEntityResolver default ]
 ]
 
 { #category : #accessing }
 DTDEntityConfiguration >> externalEntityResolver: anExternalEntityResolver [
+
 	externalEntityResolver := anExternalEntityResolver
 ]
 
 { #category : #copying }
 DTDEntityConfiguration >> postCopy [
+
 	super postCopy.
 
 	externalEntityResolver

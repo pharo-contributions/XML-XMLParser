@@ -84,21 +84,25 @@ DTDExternalEntityResolver >> externalSubsetReadLimit: anInteger [
 
 { #category : #configuring }
 DTDExternalEntityResolver >> maxExternalEntities [
+
 	^ self externalEntityLimits maxExternalEntities
 ]
 
 { #category : #configuring }
 DTDExternalEntityResolver >> maxExternalEntities: anInteger [
+
 	self externalEntityLimits maxExternalEntities: anInteger
 ]
 
 { #category : #configuring }
 DTDExternalEntityResolver >> maxExternalEntitySize [
+
 	^ self externalEntityLimits maxExternalEntitySize
 ]
 
 { #category : #configuring }
 DTDExternalEntityResolver >> maxExternalEntitySize: anInteger [
+
 	self externalEntityLimits maxExternalEntitySize: anInteger
 ]
 
@@ -112,11 +116,13 @@ DTDExternalEntityResolver >> postCopy [
 
 { #category : #configuring }
 DTDExternalEntityResolver >> removeLimits [
+
 	self externalEntityLimits removeAll
 ]
 
 { #category : #resolving }
 DTDExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString [
+
 	^ self
 		resolveExternalEntityURI: anXMLURIOrURIString
 		upToLimit: self maxExternalEntitySize
@@ -124,6 +130,7 @@ DTDExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString [
 
 { #category : #resolving }
 DTDExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
+
 	| uri |
 
 	^ (uri := anXMLURIOrURIString asXMLURI) isLocal
@@ -139,6 +146,7 @@ DTDExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString upToL
 
 { #category : #private }
 DTDExternalEntityResolver >> resolveLocalExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
+
 	^ DTDUndecodedResolvedExternalParsedEntityReplacement rawContents:
 		(anXMLURIOrURIString asXMLFileHandle
 			getUpToLimit: aMaxSize
@@ -147,6 +155,7 @@ DTDExternalEntityResolver >> resolveLocalExternalEntityURI: anXMLURIOrURIString 
 
 { #category : #private }
 DTDExternalEntityResolver >> resolveNonLocalExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
+
 	| response |
 
 	response :=
@@ -163,6 +172,7 @@ DTDExternalEntityResolver >> resolveNonLocalExternalEntityURI: anXMLURIOrURIStri
 
 { #category : #configuring }
 DTDExternalEntityResolver >> resolvesLocalFromNonLocal [
+
 	^ self externalEntityLimits resolvesLocalFromNonLocal
 ]
 
@@ -176,6 +186,7 @@ DTDExternalEntityResolver >> resolvesLocalFromNonLocal: aBoolean [
 
 { #category : #resolving }
 DTDExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString [
+
 	^ self
 		streamResolveExternalEntityURI: anXMLURIOrURIString
 		upToLimit: self maxExternalEntitySize
@@ -183,6 +194,7 @@ DTDExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString
 
 { #category : #resolving }
 DTDExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
+
 	| uri |
 
 	^ (uri := anXMLURIOrURIString asXMLURI) isLocal
@@ -200,6 +212,7 @@ DTDExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString
 DTDExternalEntityResolver >> streamResolveLocalExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
 	"return our own decoding adapter on the raw, undecoded stream
 	to avoid looking for any byte-order mark until later"
+
 	^ XMLDecodingReadStreamAdapter nonDecodingOn:
 		(anXMLURIOrURIString asXMLFileHandle
 			streamGetUpToLimit: aMaxSize
@@ -208,6 +221,7 @@ DTDExternalEntityResolver >> streamResolveLocalExternalEntityURI: anXMLURIOrURIS
 
 { #category : #private }
 DTDExternalEntityResolver >> streamResolveNonLocalExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
+
 	^ (self
 		resolveNonLocalExternalEntityURI: anXMLURIOrURIString
 		upToLimit: aMaxSize) readStream

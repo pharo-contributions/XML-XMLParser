@@ -31,11 +31,13 @@ DTDExternalEntityLimits class >> defaultMaxExternalEntitySize [
 
 { #category : #accessing }
 DTDExternalEntityLimits >> externalSubsetReadLimit [
+
 	^ externalSubsetReadLimit
 ]
 
 { #category : #accessing }
 DTDExternalEntityLimits >> externalSubsetReadLimit: anInteger [
+
 	externalSubsetReadLimit := anInteger
 ]
 
@@ -51,26 +53,31 @@ DTDExternalEntityLimits >> initialize [
 
 { #category : #accessing }
 DTDExternalEntityLimits >> maxExternalEntities [
+
 	^ maxExternalEntities
 ]
 
 { #category : #accessing }
 DTDExternalEntityLimits >> maxExternalEntities: anInteger [
+
 	maxExternalEntities := anInteger
 ]
 
 { #category : #accessing }
 DTDExternalEntityLimits >> maxExternalEntitySize [
+
 	^ maxExternalEntitySize
 ]
 
 { #category : #accessing }
 DTDExternalEntityLimits >> maxExternalEntitySize: anInteger [
+
 	maxExternalEntitySize := anInteger
 ]
 
 { #category : #removing }
 DTDExternalEntityLimits >> removeAll [
+
 	externalSubsetReadLimit := nil.
 	maxExternalEntities := nil.
 	maxExternalEntitySize := nil.
@@ -79,10 +86,12 @@ DTDExternalEntityLimits >> removeAll [
 
 { #category : #accessing }
 DTDExternalEntityLimits >> resolvesLocalFromNonLocal [
+
 	^ resolvesLocalFromNonLocal
 ]
 
 { #category : #accessing }
 DTDExternalEntityLimits >> resolvesLocalFromNonLocal: aBoolean [
+
 	resolvesLocalFromNonLocal := aBoolean
 ]

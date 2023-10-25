@@ -9,5 +9,6 @@ Class {
 
 { #category : #testing }
 DTDUnresolvableExternalParameterParsedEntity >> isParameter [
+
 	^ true
 ]
