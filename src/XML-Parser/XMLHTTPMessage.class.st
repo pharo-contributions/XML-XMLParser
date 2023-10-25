@@ -159,7 +159,7 @@ XMLHTTPMessage >> errorRemovingAbsentHeader: aKey [
 
 { #category : #testing }
 XMLHTTPMessage >> hasContent [
-	^ self content notEmpty
+	^ self content isNotEmpty
 ]
 
 { #category : #testing }

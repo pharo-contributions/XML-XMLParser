@@ -35,7 +35,7 @@ XMLPI >> data: aString [
 
 { #category : #testing }
 XMLPI >> hasData [
-	^ self data notEmpty
+	^ self data isNotEmpty
 ]
 
 { #category : #testing }

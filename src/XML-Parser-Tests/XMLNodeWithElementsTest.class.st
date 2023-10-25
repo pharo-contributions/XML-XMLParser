@@ -118,7 +118,7 @@ XMLNodeWithElementsTest >> testAcceptNodeVisitor [
 			                      detect: [ :each | node perform: each first ]
 			                      ifNone: [ #( nil #(  ) ) ]) second.
 
-		self assert: visitingSelectors notEmpty.
+		self assert: visitingSelectors isNotEmpty.
 		visitingSelectors do: [ :selector |
 			self assert: visitor messageRecorder hasMessages.
 
@@ -1641,7 +1641,7 @@ XMLNodeWithElementsTest >> testHasContentNodes [
 	nodeWithElements allElementsDo: [ :element |
 		self
 			assert: element hasContentNodes
-			equals: element contentNodes notEmpty ]
+			equals: element contentNodes isNotEmpty ]
 ]
 
 { #category : #tests }
@@ -1661,7 +1661,7 @@ XMLNodeWithElementsTest >> testHasStringNodes [
 	nodeWithElements allElementsDo: [ :element |
 		self
 			assert: element hasStringNodes
-			equals: element stringNodes notEmpty ]
+			equals: element stringNodes isNotEmpty ]
 ]
 
 { #category : #tests }

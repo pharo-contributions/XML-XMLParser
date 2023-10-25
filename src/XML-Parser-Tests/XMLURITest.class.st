@@ -1671,23 +1671,23 @@ XMLURITest >> testNotEmpty [
 
 	self allURIStringsDo: [:each |
 		uri := each asXMLURI.
-		each notEmpty
-			ifTrue: [self assert: uri notEmpty]
-			ifFalse: [self deny: uri notEmpty].
+		each isNotEmpty
+			ifTrue: [self assert: uri isNotEmpty]
+			ifFalse: [self deny: uri isNotEmpty].
 
 		uri
 			parseURIStringIfUnparsed;
 			uriString: nil.
-		each notEmpty
-			ifTrue: [self assert: uri notEmpty]
-			ifFalse: [self deny: uri notEmpty]].
+		each isNotEmpty
+			ifTrue: [self assert: uri isNotEmpty]
+			ifFalse: [self deny: uri isNotEmpty]].
 
 	uri := '//:?#' asXMLURI.
-	self deny: uri notEmpty.
+	self deny: uri isNotEmpty.
 	uri
 		parseURIStringIfUnparsed;
 		uriString: nil.
-	self deny: uri notEmpty.
+	self deny: uri isNotEmpty.
 ]
 
 { #category : #tests }

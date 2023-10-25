@@ -61,7 +61,7 @@ XMLUnparsedEntityValidator >> errorUndeclaredUnparsedEntityReference: anEntity i
 XMLUnparsedEntityValidator >> hasNotationAttributeValidators [
 	"direct access to avoid lazy initialization"
 	^ notationAttributeValidators notNil
-		and: [notationAttributeValidators notEmpty]
+		and: [notationAttributeValidators isNotEmpty]
 ]
 
 { #category : #accessing }

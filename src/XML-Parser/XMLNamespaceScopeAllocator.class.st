@@ -41,7 +41,7 @@ XMLNamespaceScopeAllocator >> exitScope [
 
 { #category : #testing }
 XMLNamespaceScopeAllocator >> hasCurentScope [
-	^ scopes notEmpty
+	^ scopes isNotEmpty
 ]
 
 { #category : #initialization }

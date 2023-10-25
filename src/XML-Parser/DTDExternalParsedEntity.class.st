@@ -28,7 +28,7 @@ DTDExternalParsedEntity class >> name: aName resolver: aResolver publicID: aPubl
 { #category : #testing }
 DTDExternalParsedEntity >> hasReplacement [
 
-	^ self resolvedReplacement notEmpty
+	^ self resolvedReplacement isNotEmpty
 ]
 
 { #category : #testing }

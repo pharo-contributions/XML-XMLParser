@@ -93,7 +93,7 @@ XMLDocument >> hasDoctypeDefinition [
 
 { #category : #testing }
 XMLDocument >> hasEncoding [
-	^ self encoding notEmpty
+	^ self encoding isNotEmpty
 ]
 
 { #category : #testing }

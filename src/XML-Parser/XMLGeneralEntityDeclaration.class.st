@@ -21,7 +21,7 @@ XMLGeneralEntityDeclaration class >> name: aName publicID: aPublicID systemID: a
 
 { #category : #testing }
 XMLGeneralEntityDeclaration >> isUnparsed [
-	^ self ndata notEmpty
+	^ self ndata isNotEmpty
 ]
 
 { #category : #accessing }

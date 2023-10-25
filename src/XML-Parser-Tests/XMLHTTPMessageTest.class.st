@@ -269,7 +269,7 @@ XMLHTTPMessageTest >> testHasHeaders [
 	self isSupported ifFalse: [ ^ self ].
 
 	message := self newMessage.
-	self assert: message hasHeaders equals: message headers notEmpty.
+	self assert: message hasHeaders equals: message headers isNotEmpty.
 
 	message removeHeaders.
 	self deny: message hasHeaders.

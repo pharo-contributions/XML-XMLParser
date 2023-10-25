@@ -134,7 +134,7 @@ XMLAttributeDictionary >> namespaceURIOf: aKey [
 	| prefix |
 
 	^ (self usesNamespaces
-		and: [(prefix := aKey xmlPrefixBeforeLocalName) notEmpty])
+		and: [(prefix := aKey xmlPrefixBeforeLocalName) isNotEmpty])
 		ifTrue: [self resolvePrefix: prefix]
 		ifFalse: ['']
 ]

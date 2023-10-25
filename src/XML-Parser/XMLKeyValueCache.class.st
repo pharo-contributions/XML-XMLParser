@@ -148,6 +148,11 @@ XMLKeyValueCache >> isEmpty [
 	^ self size = 0
 ]
 
+{ #category : #testing }
+XMLKeyValueCache >> isNotEmpty [
+	^ self size > 0
+]
+
 { #category : #accessing }
 XMLKeyValueCache >> keys [
 	^ self critical: [self collection keys]
@@ -188,7 +193,12 @@ XMLKeyValueCache >> mutex [
 
 { #category : #testing }
 XMLKeyValueCache >> notEmpty [
-	^ self size > 0
+
+	self
+		deprecated: 'Please use #isNotEmpty instead.'
+		transformWith: '`@receiver notEmpty' -> '`@receiver isNotEmpty'.
+
+	^ self isNotEmpty
 ]
 
 { #category : #copying }

@@ -34,7 +34,7 @@ XMLParserException >> columnNumber: aColumnNumber [
 
 { #category : #testing }
 XMLParserException >> hasBaseURI [
-	^ self baseURI notEmpty
+	^ self baseURI isNotEmpty
 ]
 
 { #category : #testing }

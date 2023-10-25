@@ -74,7 +74,7 @@ XMLDOMParserTest >> testAttributeNamespaces [
 
 	document := XMLDOMParser parse: self addressBookNamespacePrefixedXML.
 	people := document allElementsNamed: 'person' namespaceURI: 'personNS'.
-	self assert: people notEmpty.
+	self assert: people isNotEmpty.
 
 	people do: [:each |
 		self
@@ -96,7 +96,7 @@ XMLDOMParserTest >> testAttributeNamespacesDisabled [
 			parse: self addressBookNamespacePrefixedXML
 			usingNamespaces: false.
 	people := document allElementsNamed: 'person'.
-	self assert: people notEmpty.
+	self assert: people isNotEmpty.
 	people do: [:each |
 		self
 			assert: each hasAttributes;
@@ -295,7 +295,7 @@ XMLDOMParserTest >> testDoctypeDeclaration [
 		assert: doctype root equals: 'root';
 		assert: doctype publicID equals: 'pubid';
 		assert: doctype systemID equals: 'external.dtd';
-		assert: doctype nodes notEmpty;
+		assert: doctype nodes isNotEmpty;
 		assert: (doctype nodes allSatisfy: [:each | each isDeclaration])
 ]
 

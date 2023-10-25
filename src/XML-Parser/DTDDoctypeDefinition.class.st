@@ -369,7 +369,7 @@ DTDDoctypeDefinition >> hasGeneralEntities [
 	"direct access to avoid lazy initialization"
 
 	^ generalEntities notNil
-		and: [generalEntities notEmpty]
+		and: [generalEntities isNotEmpty]
 ]
 
 { #category : #testing }
@@ -383,27 +383,27 @@ DTDDoctypeDefinition >> hasNotationAttributeValidators [
 DTDDoctypeDefinition >> hasNotations [
 	"direct access to avoid lazy initialization"
 
-	^ notations notNil and: [ notations notEmpty ]
+	^ notations notNil and: [ notations isNotEmpty ]
 ]
 
 { #category : #testing }
 DTDDoctypeDefinition >> hasParameterEntities [
 	"direct access to avoid lazy initialization"
 
-	^ parameterEntities notNil and: [ parameterEntities notEmpty ]
+	^ parameterEntities notNil and: [ parameterEntities isNotEmpty ]
 ]
 
 { #category : #testing }
 DTDDoctypeDefinition >> hasRoot [
 
-	^ root notNil and: [ root notEmpty ]
+	^ root notNil and: [ root isNotEmpty ]
 ]
 
 { #category : #testing }
 DTDDoctypeDefinition >> hasUnparsedEntities [
 	"direct access to avoid lazy initialization"
 
-	^ unparsedEntities notNil and: [ unparsedEntities notEmpty ]
+	^ unparsedEntities notNil and: [ unparsedEntities isNotEmpty ]
 ]
 
 { #category : #'instance creation' }

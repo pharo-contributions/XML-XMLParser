@@ -110,6 +110,11 @@ XMLString >> isEmpty [
 	^ self string isEmpty
 ]
 
+{ #category : #testing }
+XMLString >> isNotEmpty [
+	^ self string isNotEmpty
+]
+
 { #category : #deprecated }
 XMLString >> isString: aStringOrStringNode [
 	"will be deprecated; use #isStringNode: instead"
@@ -158,7 +163,12 @@ XMLString >> mergeAdjacent [
 
 { #category : #testing }
 XMLString >> notEmpty [
-	^ self string notEmpty
+
+	self
+		deprecated: 'Please use #isNotEmpty instead.'
+		transformWith: '`@receiver notEmpty' -> '`@receiver isNotEmpty'.
+
+	^ self isNotEmpty
 ]
 
 { #category : #'appending/prepending' }

@@ -413,7 +413,7 @@ XMLElement >> hasID: anID [
 
 { #category : #testing }
 XMLElement >> hasNamespaceURI [
-	^ self namespaceURI notEmpty
+	^ self namespaceURI isNotEmpty
 ]
 
 { #category : #testing }

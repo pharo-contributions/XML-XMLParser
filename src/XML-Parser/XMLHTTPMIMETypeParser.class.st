@@ -111,7 +111,7 @@ XMLHTTPMIMETypeParser >> parseParameters [
 					peekFor: $=)
 				ifTrue: [value := self nextTokenOrQuotedString]
 				ifFalse: [value := ''].
-			(attribute notEmpty
+			(attribute isNotEmpty
 				or: [hasValue])
 				ifTrue: [
 					"only initialize if needed"

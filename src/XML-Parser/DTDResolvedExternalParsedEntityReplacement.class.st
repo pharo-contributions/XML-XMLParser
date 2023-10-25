@@ -26,9 +26,19 @@ DTDResolvedExternalParsedEntityReplacement >> isEmpty [
 ]
 
 { #category : #testing }
-DTDResolvedExternalParsedEntityReplacement >> notEmpty [
+DTDResolvedExternalParsedEntityReplacement >> isNotEmpty [
 
 	^ self isEmpty not
+]
+
+{ #category : #testing }
+DTDResolvedExternalParsedEntityReplacement >> notEmpty [
+
+	self
+		deprecated: 'Please use #isNotEmpty instead.'
+		transformWith: '`@receiver notEmpty' -> '`@receiver isNotEmpty'.
+
+	^ self isNotEmpty
 ]
 
 { #category : #accessing }

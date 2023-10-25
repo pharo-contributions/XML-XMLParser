@@ -29,7 +29,7 @@ DTDInternalParsedEntity class >> name: aName replacement: aReplacementString uri
 { #category : #testing }
 DTDInternalParsedEntity >> hasReplacement [
 
-	^ self replacement notEmpty
+	^ self replacement isNotEmpty
 ]
 
 { #category : #accessing }

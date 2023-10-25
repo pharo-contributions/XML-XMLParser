@@ -443,12 +443,12 @@ XMLURI >> hasDirectoryPath [
 
 { #category : #testing }
 XMLURI >> hasFragment [
-	^ self rawFragment notEmpty
+	^ self rawFragment isNotEmpty
 ]
 
 { #category : #testing }
 XMLURI >> hasHost [
-	^ self rawHost notEmpty
+	^ self rawHost isNotEmpty
 ]
 
 { #category : #testing }
@@ -466,7 +466,7 @@ XMLURI >> hasNonDirectoryPath [
 
 { #category : #testing }
 XMLURI >> hasPath [
-	^ self rawPathSegments notEmpty
+	^ self rawPathSegments isNotEmpty
 ]
 
 { #category : #testing }
@@ -476,7 +476,7 @@ XMLURI >> hasPort [
 
 { #category : #testing }
 XMLURI >> hasQuery [
-	^ self rawQuery notEmpty
+	^ self rawQuery isNotEmpty
 ]
 
 { #category : #testing }
@@ -487,12 +487,12 @@ XMLURI >> hasRootPath [
 
 { #category : #testing }
 XMLURI >> hasScheme [
-	^ self scheme notEmpty
+	^ self scheme isNotEmpty
 ]
 
 { #category : #testing }
 XMLURI >> hasUserInfo [
-	^ self rawUserInfo notEmpty
+	^ self rawUserInfo isNotEmpty
 ]
 
 { #category : #comparing }
@@ -570,7 +570,12 @@ XMLURI >> isLocal [
 { #category : #deprecated }
 XMLURI >> isLocalURI [
 	self deprecated: 'use #isLocal instead'.
-	^ self isLocal.
+	^ self isLocal
+]
+
+{ #category : #testing }
+XMLURI >> isNotEmpty [
+	^ self isEmpty not
 ]
 
 { #category : #testing }
@@ -580,7 +585,12 @@ XMLURI >> isRelative [
 
 { #category : #testing }
 XMLURI >> notEmpty [
-	^ self isEmpty not
+
+	self
+		deprecated: 'Please use #isNotEmpty instead.'
+		transformWith: '`@receiver notEmpty' -> '`@receiver isNotEmpty'.
+
+	^ self isNotEmpty
 ]
 
 { #category : #private }

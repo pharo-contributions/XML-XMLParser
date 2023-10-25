@@ -254,7 +254,7 @@ XMLCachingNodeList >> firstElement [
 
 { #category : #testing }
 XMLCachingNodeList >> hasElements [
-	^ cachedElements notNil and: [cachedElements notEmpty]
+	^ cachedElements notNil and: [cachedElements isNotEmpty]
 ]
 
 { #category : #testing }
@@ -285,7 +285,7 @@ XMLCachingNodeList >> renamedElement: anElement from: anOldName to: aNewName [
 	self
 		cachedElementsByNameAt: anOldName
 		remove: anElement.
-	(oldPrefix := anOldName xmlPrefixBeforeLocalName) notEmpty
+	(oldPrefix := anOldName xmlPrefixBeforeLocalName) isNotEmpty
 		ifTrue: [
 			self
 				cachedElementsByNameAt: (anOldName xmlLocalNameAfterPrefix: oldPrefix)

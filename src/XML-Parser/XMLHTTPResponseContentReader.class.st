@@ -122,7 +122,7 @@ XMLHTTPResponseContentReader >> readUpToLimit: arg1 decoding: arg2 [
 	rawContent := self rawReadWithLength: tmp1 upToLimit: arg1.
 	contentReadStream := rawContent readStream.
 	(self handlesDecompression and: [
-		 (tmp3 := response contentEncoding) notEmpty ]) ifTrue: [
+		 (tmp3 := response contentEncoding) isNotEmpty ]) ifTrue: [
 		self initializeDecompressionWithSchemes: tmp3 upToLimit: arg1 ].
 	(arg2 and: [
 		 (tmp2 := response contentType) notNil and: [

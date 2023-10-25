@@ -47,7 +47,7 @@ XMLDFALimitsTest >> testDFAStateCacheLimit [
 			ifFalse: [
 				visitedStates do: [:each | self deny: each dfaStateTransitions isEmpty].
 				self
-					assert: firstState dfaStateTransitions notEmpty;
+					assert: firstState dfaStateTransitions isNotEmpty;
 					assert: firstState dfaStateCache cachedDFAStates size equals: (i + 1);
 					deny: currentState isAccepting]].
 

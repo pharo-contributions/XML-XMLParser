@@ -84,7 +84,7 @@ DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString put:
 { #category : #testing }
 DTDStaticExternalEntityResolver >> hasExternalEntities [
 
-	^ self externalEntities notEmpty
+	^ self externalEntities isNotEmpty
 ]
 
 { #category : #testing }

@@ -56,7 +56,7 @@ XMLAttribute >> expandedName [
 
 { #category : #testing }
 XMLAttribute >> hasNamespaceURI [
-	^ self namespaceURI notEmpty
+	^ self namespaceURI isNotEmpty
 ]
 
 { #category : #testing }

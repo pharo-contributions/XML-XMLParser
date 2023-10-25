@@ -30,8 +30,8 @@ XMLEntityDeclaration class >> name: aName replacement: aReplacement [
 
 { #category : #testing }
 XMLEntityDeclaration >> isExternal [
-	^ self systemID notEmpty
-		or: [self publicID notEmpty]
+	^ self systemID isNotEmpty
+		or: [self publicID isNotEmpty]
 ]
 
 { #category : #testing }

@@ -50,13 +50,13 @@ XMLElementIDValidator >> errorUnknownIDReference: anID [
 { #category : #testing }
 XMLElementIDValidator >> hasIDReferences [
 	^ idReferences notNil
-		and: [idReferences notEmpty]
+		and: [idReferences isNotEmpty]
 ]
 
 { #category : #testing }
 XMLElementIDValidator >> hasIDs [
 	^ ids notNil
-		and: [ids notEmpty]
+		and: [ids isNotEmpty]
 ]
 
 { #category : #accessing }

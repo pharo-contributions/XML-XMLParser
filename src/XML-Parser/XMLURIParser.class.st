@@ -147,7 +147,7 @@ XMLURIParser >> parseQuery [
 			(hasValue := readStream peekFor: $=)
 				ifTrue: [value := self nextDelimitedByAny: QueryValueDelimiters]
 				ifFalse: [value := ''].
-			(key notEmpty
+			(key isNotEmpty
 				or: [hasValue])
 				ifTrue: [query addLast: key -> value].
 			readStream peekFor: $&].

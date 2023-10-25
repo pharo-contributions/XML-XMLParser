@@ -710,7 +710,7 @@ XMLElementTest >> testDefaultNamespace [
 	| element elementsWithDefaultNamespace |
 	element := self newNodeWithElements.
 	elementsWithDefaultNamespace := element allElementsSelect: [ :each |
-		                                each defaultNamespace notEmpty ].
+		                                each defaultNamespace isNotEmpty ].
 	self
 		assert: (element defaultNamespace: 'newDefaultNS')
 		identicalTo: element.
@@ -1673,7 +1673,7 @@ XMLElementTest >> testUndeclareDefaultNamespace [
 		                                      descendantElementsSelect: [
 			                                      :each |
 			                                      each defaultNamespace
-				                                      notEmpty and: [
+				                                      isNotEmpty and: [
 				                                      each defaultNamespace
 				                                      ~= oldRootDefaultNamespace ] ].
 
@@ -1684,7 +1684,7 @@ XMLElementTest >> testUndeclareDefaultNamespace [
 			(elementsWithCustomDefaultNamespace includes: each)
 				ifTrue: [
 					self
-						assert: each defaultNamespace notEmpty;
+						assert: each defaultNamespace isNotEmpty;
 						deny: each defaultNamespace equals: oldRootDefaultNamespace;
 						deny: each defaultNamespace equals: 'newDefaultNS' ]
 				ifFalse: [ self assert: each defaultNamespace isEmpty ] ].

@@ -301,13 +301,13 @@ XMLStringTest >> testNotEmpty [
 	| node |
 
 	node := self newNode.
-	self deny: node notEmpty.
+	self deny: node isNotEmpty.
 
 	node string: ' '.
-	self assert: node notEmpty.
+	self assert: node isNotEmpty.
 
 	node string: ''.
-	self deny: node notEmpty
+	self deny: node isNotEmpty
 ]
 
 { #category : #tests }

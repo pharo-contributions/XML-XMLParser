@@ -357,8 +357,8 @@ XMLKeyValueCacheTest >> testMaxSize [
 { #category : #tests }
 XMLKeyValueCacheTest >> testNotEmpty [
 	self
-		deny: self newCache notEmpty;
-		assert: self newCacheWithEntries notEmpty
+		deny: self newCache isNotEmpty;
+		assert: self newCacheWithEntries isNotEmpty
 ]
 
 { #category : #tests }

@@ -17,7 +17,7 @@ XMLMessageRecorder >> clearMessages [
 
 { #category : #testing }
 XMLMessageRecorder >> hasMessages [
-	^ self messageQueue notEmpty
+	^ self messageQueue isNotEmpty
 ]
 
 { #category : #private }
