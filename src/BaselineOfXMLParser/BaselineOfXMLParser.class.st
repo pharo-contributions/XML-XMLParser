@@ -9,32 +9,45 @@ Class {
 
 { #category : #baselines }
 BaselineOfXMLParser >> baseline: spec [
+
 	<baseline>
-	
-	spec
-		for: #common
-		do: [
-			
-			self 
-				bitmapCharacterSetOn: spec;
-				orderPreservingDictionaryOn: spec;
-				xmlWriterOn: spec.		
-			
-			"Packages"
-			spec 
-				package: 'XML-Parser' with: [ spec requires: #('OrderPreservingDictionary' 'BitmapCharacterSet') ];
-				package: 'XML-Parser-Tests' with: [ spec requires: #('XML-Parser' 'OrderPreservingDictionary Tests' 'BitmapCharacterSet Tests') ];
-				package: 'XML-Parser-Tests-Conformance' with: [ spec requires: #('XML-Parser' 'XMLWriter Tests' 'XML-Parser-Tests') ];
-				package: 'XML-Parser-Tools' with: [ spec requires: #('XML-Parser') ].
-			
-			"Groups"
+	spec for: #common do: [
+		self
+			bitmapCharacterSetOn: spec;
+			orderPreservingDictionaryOn: spec;
+			xmlWriterOn: spec.
+
+		"Packages"
+		spec
+			package: 'XML-Parser' with: [
+				spec requires:
+						#( 'OrderPreservingDictionary' 'BitmapCharacterSet' ) ];
+			package: 'XML-Parser-Tests' with: [
+				spec requires: #( 'XML-Parser' 'OrderPreservingDictionary Tests'
+						   'BitmapCharacterSet Tests' ) ];
+			package: 'XML-Parser-Tests-Conformance' with: [
+				spec requires:
+						#( 'XML-Parser' 'XMLWriter Tests' 'XML-Parser-Tests' ) ];
+			package: 'XML-Parser-Tools'
+			with: [ spec requires: #( 'XMLWriter Tools' 'XML-Parser' ) ].
+
+		"Core group"
+		spec group: 'Core' with: #( 'XML-Parser' ).
+
+		"Tools group"
+		spec group: 'Tools' with: #( 'XML-Parser-Tools' ).
+		spec for: #( #'pharo8.x' #'pharo7.x' #'pharo6.x' ) do: [
 			spec
-				group: 'Core' with: #('XML-Parser');
-				group: 'Tools' with: #('OrderPreservingDictionary Tools' 'XMLWriter Tools' 'XML-Parser-Tools'); 
-				group: 'Tests' with: #('XML-Parser-Tests' 'XML-Parser-Tests-Conformance');	
-				group: 'all' with: #('Core' 'Tools' 'Tests');
-				group: 'default' with: #('all')	
-	]
+				package: 'XML-Parser-GTExtensions'
+				with: [ spec requires: #( 'XMLWriter Tools' 'XML-Parser' ) ];
+				group: 'Tools' with: #( 'XML-Parser-GTExtensions' ) ].
+
+		"Other groups"
+		spec
+			group: 'Tests'
+			with: #( 'XML-Parser-Tests' 'XML-Parser-Tests-Conformance' );
+			group: 'all' with: #( 'Core' 'Tools' 'Tests' );
+			group: 'default' with: #( 'all' ) ]
 ]
 
 { #category : #prerequisites }
@@ -75,7 +88,7 @@ BaselineOfXMLParser >> xmlWriterOn: spec [
       with: [ 
 			spec
 				loads: #('Core');
-				repository: 'github://pharo-contributions/XML-XMLWriter:v3.1.0/src' ]. 
+				repository: 'github://pharo-contributions/XML-XMLWriter:v3.1.1/src' ]. 
 				
 	spec 
 		project: 'XMLWriter Tests' copyFrom: 'XMLWriter' with: [ spec loads: #('Tests') ]; 	
