@@ -1,6 +1,6 @@
-Extension { #name : #XMLElement }
+Extension { #name : 'XMLElement' }
 
-{ #category : #'*XML-Parser-Tools' }
+{ #category : '*XML-Parser-Tools' }
 XMLElement >> inspectAttributesIn: specBuilder [
 	<inspectorPresentationOrder: 30 title: 'Attributes'>
 	

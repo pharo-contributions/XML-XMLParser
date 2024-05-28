@@ -1,6 +1,6 @@
-Extension { #name : #XMLNode }
+Extension { #name : 'XMLNode' }
 
-{ #category : #'*XML-Parser-Tools' }
+{ #category : '*XML-Parser-Tools' }
 XMLNode >> inspectSourceIn: specBuilder [
 	<inspectorPresentationOrder: 29 title: 'Source'>
 	
@@ -9,7 +9,7 @@ XMLNode >> inspectSourceIn: specBuilder [
 		yourself
 ]
 
-{ #category : #'*XML-Parser-Tools' }
+{ #category : '*XML-Parser-Tools' }
 XMLNode >> inspectTreeIn: specBuilder [
 	<inspectorPresentationOrder: 28 title: 'Tree'>
 	
@@ -21,14 +21,16 @@ XMLNode >> inspectTreeIn: specBuilder [
 			self inspectorTreeStringFor: aNode 			
 			];
 "		displayIcon: [ :aNode | aNode iconName ifNotNil: [ :aName | self iconNamed: aName ] ];"
-		children: [ :aNode |  aNode descendantElements ]
+		children: [ :aNode | 
+			aNode isContentNode ifFalse: [ aNode descendantElements ] ifTrue: [ #() ]]
 		
  
 ]
 
-{ #category : #'*XML-Parser-Tools' }
+{ #category : '*XML-Parser-Tools' }
 XMLNode >> inspectorTreeStringFor: anXMLElement [
 	| display |
+	anXMLElement isStringNode ifTrue: [ ^ anXMLElement string ].
 	display := String streamContents: [:s| 
 		s nextPutAll: anXMLElement name. 
 		anXMLElement hasAttributes ifTrue: [ 
