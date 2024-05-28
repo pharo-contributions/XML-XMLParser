@@ -79,9 +79,8 @@ DTDExternalEntityResolverTest >> testDecoratorInterfaceCompatibility [
 	resolver := self newResolver.
 	resolverBaseClass := DTDExternalEntityResolver.
 	"avoid #methodsDo: for GS compatibility"
-	resolverBaseClass selectorsDo: [:each |
-		"use #whichCategoryIncludesSelector: for backwards compatibility"
-		((resolverBaseClass whichCategoryIncludesSelector: each)
+	resolverBaseClass selectorsDo: [:each |		 
+		((self whichProtocolIn: resolverBaseClass includesSelector: each)
 			asString beginsWith: 'private')
 			ifFalse: [
 				self assert: (resolver respondsTo: each)]]
