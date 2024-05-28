@@ -1,10 +1,12 @@
 Class {
-	#name : #XMLParserTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Base'
+	#name : 'XMLParserTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #source }
+{ #category : 'source' }
 XMLParserTest class >> addressBookNamespacePrefixedXML [
 	"
 	| xmlWithPrefixes |
@@ -59,7 +61,7 @@ XMLParserTest class >> addressBookNamespacePrefixedXML [
 '
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLParserTest class >> addressBookNamespacedXML [
 	"
 	^ '<addressbook xmlns=''defaultNS'' xmlns:book=''bookNS'' xmlns:ps=''personNS''>',
@@ -108,7 +110,7 @@ XMLParserTest class >> addressBookNamespacedXML [
 '
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLParserTest class >> addressBookXML [
 	^'<addressbook>
   <person employee-number="A0000" family-name="Gates" first-name="Bob">
@@ -152,7 +154,7 @@ XMLParserTest class >> addressBookXML [
 '
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLParserTest class >> addressBookXMLWithDTD [
 	^'<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE addressbook SYSTEM "addressbook.dtd">
@@ -199,7 +201,7 @@ XMLParserTest class >> addressBookXMLWithDTD [
 '
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLParserTest class >> internalSubsetXMLWithDeclarations [
 	^ '<!DOCTYPE root PUBLIC "pubid" "external.dtd" [
 			<!ELEMENT root ( #PCDATA | one | two)* >
@@ -215,63 +217,63 @@ XMLParserTest class >> internalSubsetXMLWithDeclarations [
 		<root>test</root>'
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLParserTest >> addressBookNamespacePrefixedXML [
 	^ self class addressBookNamespacePrefixedXML
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLParserTest >> addressBookNamespacedXML [
 	^ self class addressBookNamespacedXML
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLParserTest >> addressBookXML [
 	^ self class addressBookXML
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLParserTest >> addressBookXMLWithDTD [
 	^ self class addressBookXMLWithDTD
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTest >> badNameAttributeListValues [
 	^ self badNameAttributeValues reject: [:badNameAttributeValue |
 		badNameAttributeValue allSatisfy: [:each | each isXMLWhitespace]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTest >> badNameAttributeValues [
 	^ self badNames reject: [:badName |
 		(badName includes: $<)
 			or: [badName anySatisfy: [:each | each isXMLChar not]]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTest >> badNames [
 	^ XMLStringMethodsTest badNames
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTest >> badNmtokenAttributeListValues [
 	^ self badNmtokenAttributeValues reject: [:badNmtokenAttributeValue |
 		badNmtokenAttributeValue allSatisfy: [:each | each isXMLWhitespace]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTest >> badNmtokenAttributeValues [
 	^ self badNmtokens reject: [:badName |
 		(badName includes: $<)
 			or: [badName anySatisfy: [:each | each isXMLChar not]]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTest >> badNmtokens [
 	^ XMLStringMethodsTest badNmtokens
 ]
 
-{ #category : #benchmark }
+{ #category : 'benchmark' }
 XMLParserTest >> benchmark1 [
 	"
 	XMLParserTest new benchmark1
@@ -281,7 +283,7 @@ XMLParserTest >> benchmark1 [
 	^ [4000 timesRepeat: [SAXHandler parse: self addressBookXML]] timeToRun
 ]
 
-{ #category : #benchmark }
+{ #category : 'benchmark' }
 XMLParserTest >> benchmark2 [
 	"
 	XMLParserTest new benchmark2
@@ -290,7 +292,7 @@ XMLParserTest >> benchmark2 [
 	^ [4000 timesRepeat: [XMLDOMParser parse: self addressBookXML]] timeToRun
 ]
 
-{ #category : #benchmark }
+{ #category : 'benchmark' }
 XMLParserTest >> benchmark3 [
 	"
 	XMLParserTest new benchmark3
@@ -299,7 +301,7 @@ XMLParserTest >> benchmark3 [
 	^ [4000 timesRepeat: [XMLDOMParser parse: self addressBookXMLWithDTD]] timeToRun
 ]
 
-{ #category : #benchmark }
+{ #category : 'benchmark' }
 XMLParserTest >> benchmark4 [
 	| doc |
 	"
@@ -316,7 +318,7 @@ XMLParserTest >> benchmark4 [
 			elementAt: 'manager']] timeToRun
 ]
 
-{ #category : #benchmark }
+{ #category : 'benchmark' }
 XMLParserTest >> benchmark5 [
 	"
 	XMLParserTest new benchmark5
@@ -325,7 +327,7 @@ XMLParserTest >> benchmark5 [
 	^ [4000 timesRepeat: [XMLDOMParser parse: self addressBookNamespacedXML]] timeToRun
 ]
 
-{ #category : #benchmark }
+{ #category : 'benchmark' }
 XMLParserTest >> benchmark6 [
 	"
 	XMLParserTest new benchmark6
@@ -334,7 +336,7 @@ XMLParserTest >> benchmark6 [
 	^ [4000 timesRepeat: [XMLDOMParser parse: self addressBookNamespacePrefixedXML]] timeToRun
 ]
 
-{ #category : #benchmark }
+{ #category : 'benchmark' }
 XMLParserTest >> benchmark7 [
 	"
 	XMLParserTest new benchmark7
@@ -343,7 +345,7 @@ XMLParserTest >> benchmark7 [
 	^ [4000 timesRepeat: [SAX2Parser parse: self addressBookXML]] timeToRun
 ]
 
-{ #category : #benchmark }
+{ #category : 'benchmark' }
 XMLParserTest >> benchmark8 [
 	"
 	XMLParserTest new benchmark8
@@ -352,7 +354,7 @@ XMLParserTest >> benchmark8 [
 	^ [4000 timesRepeat: [SAX2ElementParser parse: self addressBookXML]] timeToRun
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLParserTest >> elementDeclarationsNamed: aNameCollection [
 	| stream |
 
@@ -366,17 +368,17 @@ XMLParserTest >> elementDeclarationsNamed: aNameCollection [
 	^ stream contents
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLParserTest >> internalSubsetXMLWithDeclarations [
 	^ self class internalSubsetXMLWithDeclarations
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTest >> nonChars [
 	^ XMLCharacterMethodsTest nonChars
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeBadName [
 	self badNames do: [:each |
 		self
@@ -384,7 +386,7 @@ XMLParserTest >> testAttributeBadName [
 			raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationEntities [
 	| dtd |
 
@@ -421,7 +423,7 @@ XMLParserTest >> testAttributeDeclarationEntities [
 				raise: XMLValidationException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationEntity [
 	| dtd |
 
@@ -455,7 +457,7 @@ XMLParserTest >> testAttributeDeclarationEntity [
 				raise: XMLValidationException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationEnumeration [
 	| dtd |
 
@@ -490,7 +492,7 @@ XMLParserTest >> testAttributeDeclarationEnumeration [
 				raise: XMLValidationException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationEnumerationValueRedundance [
 	| xml |
 
@@ -510,7 +512,7 @@ XMLParserTest >> testAttributeDeclarationEnumerationValueRedundance [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationID [
 	| dtd |
 
@@ -567,7 +569,7 @@ XMLParserTest >> testAttributeDeclarationID [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationIDRef [
 	| dtd |
 
@@ -604,7 +606,7 @@ XMLParserTest >> testAttributeDeclarationIDRef [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationIDRefs [
 	| dtd |
 
@@ -642,7 +644,7 @@ XMLParserTest >> testAttributeDeclarationIDRefs [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationNmtoken [
 	| dtd |
 
@@ -674,7 +676,7 @@ XMLParserTest >> testAttributeDeclarationNmtoken [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationNmtokens [
 	| dtd |
 
@@ -708,7 +710,7 @@ XMLParserTest >> testAttributeDeclarationNmtokens [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationNotation [
 	| dtd |
 
@@ -740,7 +742,7 @@ XMLParserTest >> testAttributeDeclarationNotation [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationNotationDeclared [
 	| xmlTemplate |
 
@@ -768,7 +770,7 @@ XMLParserTest >> testAttributeDeclarationNotationDeclared [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationNotationRedundance [
 	"only one notation attribute is allowed per element"
 	| xml |
@@ -795,7 +797,7 @@ XMLParserTest >> testAttributeDeclarationNotationRedundance [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationNotationValueRedundance [
 	| xml |
 
@@ -818,7 +820,7 @@ XMLParserTest >> testAttributeDeclarationNotationValueRedundance [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationPrefixed [
 	| dtd |
 
@@ -858,7 +860,7 @@ XMLParserTest >> testAttributeDeclarationPrefixed [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationPrefixedDefault [
 	| dtd |
 
@@ -890,7 +892,7 @@ XMLParserTest >> testAttributeDeclarationPrefixedDefault [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationRedundance [
 	"additional declarations for the same attribute are ignored"
 
@@ -917,7 +919,7 @@ XMLParserTest >> testAttributeDeclarationRedundance [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDeclarationWhitespace [
 	#('<!DOCTYPE test [
 			<!ELEMENT test ANY>
@@ -956,7 +958,7 @@ XMLParserTest >> testAttributeDeclarationWhitespace [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDefaultFixedValue [
 
 	| dtd document root |
@@ -1020,7 +1022,7 @@ XMLParserTest >> testAttributeDefaultFixedValue [
 				assert: (root attributeAt: 'three') equals: '' ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDefaultFixedValueEntityReference [
 	"tests that general entities referenced in attribute declaration #FIXED
 	default values were declared before the declaration is parsed"
@@ -1183,7 +1185,7 @@ XMLParserTest >> testAttributeDefaultFixedValueEntityReference [
 			raise: XMLValidationException ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDefaultImplied [
 
 	| dtd document root |
@@ -1219,7 +1221,7 @@ XMLParserTest >> testAttributeDefaultImplied [
 		deny: (root includesAttribute: 'two')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDefaultRequired [
 
 	| dtd document root |
@@ -1256,7 +1258,7 @@ XMLParserTest >> testAttributeDefaultRequired [
 			raise: XMLValidationException ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDefaultValue [
 
 	| dtd |
@@ -1304,7 +1306,7 @@ XMLParserTest >> testAttributeDefaultValue [
 			assert: (root attributeAt: 'three') equals: 'defaultThree' ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDefaultValueEntities [
 	| xmlTemplate |
 
@@ -1336,7 +1338,7 @@ XMLParserTest >> testAttributeDefaultValueEntities [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDefaultValueEntity [
 	| xmlTemplate |
 
@@ -1368,7 +1370,7 @@ XMLParserTest >> testAttributeDefaultValueEntity [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDefaultValueEntityReference [
 	"tests that general entities referenced in attribute declaration default
 	values were declared before the declaration is parsed"
@@ -1485,7 +1487,7 @@ XMLParserTest >> testAttributeDefaultValueEntityReference [
 			equals: 'value' ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDefaultValueEnumeration [
 	| xmlTemplate |
 
@@ -1514,7 +1516,7 @@ XMLParserTest >> testAttributeDefaultValueEnumeration [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDefaultValueIDRef [
 	| xmlTemplate |
 
@@ -1546,7 +1548,7 @@ XMLParserTest >> testAttributeDefaultValueIDRef [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDefaultValueIDRefs [
 	| xmlTemplate |
 
@@ -1578,7 +1580,7 @@ XMLParserTest >> testAttributeDefaultValueIDRefs [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDefaultValueNmtoken [
 	| xmlTemplate |
 
@@ -1608,7 +1610,7 @@ XMLParserTest >> testAttributeDefaultValueNmtoken [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDefaultValueNmtokens [
 	| xmlTemplate |
 
@@ -1638,7 +1640,7 @@ XMLParserTest >> testAttributeDefaultValueNmtokens [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDefaultValueNonProcessing [
 
 	| dtd document root |
@@ -1659,7 +1661,7 @@ XMLParserTest >> testAttributeDefaultValueNonProcessing [
 		assert: (root attributeAt: 'one') equals: 'default'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDefaultValueNonProcessingStandalone [
 
 	| dtd document root |
@@ -1681,7 +1683,7 @@ XMLParserTest >> testAttributeDefaultValueNonProcessingStandalone [
 		assert: (root attributeAt: 'two') equals: 'defaultTwo'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeDefaultValueNotation [
 	| xmlTemplate |
 
@@ -1713,7 +1715,7 @@ XMLParserTest >> testAttributeDefaultValueNotation [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeRedundance [
 	#('<test name="value" newName="newValue" name="value" />'
 		'<test name="value" newName="newValue" name="newValue" />'
@@ -1724,7 +1726,7 @@ XMLParserTest >> testAttributeRedundance [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeUndeclared [
 	self
 		shouldnt: [
@@ -1754,7 +1756,7 @@ XMLParserTest >> testAttributeUndeclared [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeValueBadChar [
 	self nonChars do: [:each |
 		self
@@ -1762,7 +1764,7 @@ XMLParserTest >> testAttributeValueBadChar [
 			raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeValueExternalEntityReference [
 	| xmlTemplate entities xml |
 	
@@ -1802,7 +1804,7 @@ XMLParserTest >> testAttributeValueExternalEntityReference [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeValueNormalization [
 
 	| separators unnormalized normalized document |
@@ -1820,7 +1822,7 @@ XMLParserTest >> testAttributeValueNormalization [
 		assert: document root contentString equals: unnormalized
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeValueWithAngleBrackets [
 	self
 		should: [SAXHandler parse: '<test name="<test name=''value''/>"/>']
@@ -1833,7 +1835,7 @@ XMLParserTest >> testAttributeValueWithAngleBrackets [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeXMLBase [
 
 	| document |
@@ -1874,7 +1876,7 @@ XMLParserTest >> testAttributeXMLBase [
 		equals: 'doc.xml'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeXMLIDDTDValidation [
 	self
 		shouldnt: [
@@ -1929,7 +1931,7 @@ XMLParserTest >> testAttributeXMLIDDTDValidation [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeXMLIDValidation [
 	| xml xmlWithDuplicateID |
 
@@ -1949,7 +1951,7 @@ XMLParserTest >> testAttributeXMLIDValidation [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeXMLReserved [
 
 	| xml document element |
@@ -1964,7 +1966,7 @@ XMLParserTest >> testAttributeXMLReserved [
 		assert: (element attributeAt: 'xmlnss') equals: 'four'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeXMLReservedNamespaces [
 
 	| xml xmlWithDuplicateID document element |
@@ -2002,7 +2004,7 @@ XMLParserTest >> testAttributeXMLReservedNamespaces [
 		raise: XMLValidationException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testAttributeXMLSpaceValidation [
 	"xml:space must be declared an enumeration type with only 'default' and
 	'preserve' as allowed values"
@@ -2043,7 +2045,7 @@ XMLParserTest >> testAttributeXMLSpaceValidation [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testCDataBadChar [
 	self nonChars do: [:each |
 		self
@@ -2051,7 +2053,7 @@ XMLParserTest >> testCDataBadChar [
 			raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testCDataOutsideElement [
 	#('<!DOCTYPE test [ <![CDATA[test]]> ]><test/>'
 		'<![CDATA[test]]><test/>'
@@ -2064,7 +2066,7 @@ XMLParserTest >> testCDataOutsideElement [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testCDataSectionUnterminated [
 	#('<test><!['
 		'<test><![</test>'
@@ -2082,7 +2084,7 @@ XMLParserTest >> testCDataSectionUnterminated [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testCharacterReferenceUnexpected [
 	#('<!DOCTYPE test [&#32;]><test/>'
 		'&#32;<test/>'
@@ -2099,7 +2101,7 @@ XMLParserTest >> testCharacterReferenceUnexpected [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testCharacterReferenceUnterminated [
 	#('<test>&#'
 		'<test>&#</test>'
@@ -2125,7 +2127,7 @@ XMLParserTest >> testCharacterReferenceUnterminated [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testComment [
 	self
 		shouldnt: [SAXHandler parse: '<test><!-- <comment/> - - --></test>']
@@ -2136,7 +2138,7 @@ XMLParserTest >> testComment [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testCommentBadChar [
 	self nonChars do: [:each |
 		self
@@ -2144,7 +2146,7 @@ XMLParserTest >> testCommentBadChar [
 			raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testCommentUnterminated [
 	#('<!--' '<!-- comment' '<!-- comment -' '<!-- comment --')
 		do: [:each |
@@ -2162,7 +2164,7 @@ XMLParserTest >> testCommentUnterminated [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testConditionalSectionInInternalSubset [
 	#('<![INCLUDE[ <!-- comment --> ]]>'
 		'<![IGNORE[ <!-- comment --> ]]>'
@@ -2174,7 +2176,7 @@ XMLParserTest >> testConditionalSectionInInternalSubset [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testConditionalSectionInInternalSubsetExternallyDefined [
 	| conditionalSections |
 
@@ -2221,7 +2223,7 @@ XMLParserTest >> testConditionalSectionInInternalSubsetExternallyDefined [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testConditionalSectionLabelReplacementIgnore [
 	| xml dtd |
 
@@ -2252,7 +2254,7 @@ XMLParserTest >> testConditionalSectionLabelReplacementIgnore [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testConditionalSectionLabelReplacementInclude [
 	| xml dtd |
 
@@ -2288,7 +2290,7 @@ XMLParserTest >> testConditionalSectionLabelReplacementInclude [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testConditionalSectionMixedIncludeIgnore [
 	| xml dtd |
 
@@ -2318,7 +2320,7 @@ XMLParserTest >> testConditionalSectionMixedIncludeIgnore [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testConditionalSectionNestedIgnore [
 	| xml dtdTemplate dtd |
 
@@ -2354,7 +2356,7 @@ XMLParserTest >> testConditionalSectionNestedIgnore [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testConditionalSectionNestedInclude [
 	| xml dtd |
 
@@ -2380,7 +2382,7 @@ XMLParserTest >> testConditionalSectionNestedInclude [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testConditionalSectionUnterminatedIgnore [
 	| xml |
 
@@ -2401,7 +2403,7 @@ XMLParserTest >> testConditionalSectionUnterminatedIgnore [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testConditionalSectionUnterminatedInclude [
 	| xml |
 
@@ -2422,7 +2424,7 @@ XMLParserTest >> testConditionalSectionUnterminatedInclude [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testContentlessDocument [
 	#(''
 		' 	'
@@ -2443,7 +2445,7 @@ XMLParserTest >> testContentlessDocument [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testContentlessSubset [
 	#(''
 		'<?xml encoding="UTF-8"?>'
@@ -2460,7 +2462,7 @@ XMLParserTest >> testContentlessSubset [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testDoctypeDeclarationBadPublicIDChar [
 	| validChars |
 
@@ -2484,7 +2486,7 @@ XMLParserTest >> testDoctypeDeclarationBadPublicIDChar [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testDoctypeDeclarationInContent [
 	self
 		should: [SAXHandler parse: '<test><!DOCTYPE test></test>']
@@ -2494,7 +2496,7 @@ XMLParserTest >> testDoctypeDeclarationInContent [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testDoctypeDeclarationRedundance [
 	#('<!DOCTYPE test><!DOCTYPE test>'
 		'<!DOCTYPE test><!--comment--><!DOCTYPE test>'
@@ -2507,7 +2509,7 @@ XMLParserTest >> testDoctypeDeclarationRedundance [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testDoctypeDeclarationRoot [
 	| xmlWithInvalidRoot xmlWithValidRoot |
 
@@ -2528,7 +2530,7 @@ XMLParserTest >> testDoctypeDeclarationRoot [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testDoctypeDeclarationUnterminated [
 	#('<!DOCTYPE'
 		'<!DOCTYPE >'
@@ -2585,7 +2587,7 @@ XMLParserTest >> testDoctypeDeclarationUnterminated [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testDoctypeDeclarationWhitespace [
 	"whitespace is mandatory after the 'DOCTYPE', before and within any external id,
 	but is optional before the '[' and after the ']' of the interal subset"
@@ -2635,7 +2637,7 @@ XMLParserTest >> testDoctypeDeclarationWhitespace [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementAnyDeclaration [
 	self
 		shouldnt: [
@@ -2655,7 +2657,7 @@ XMLParserTest >> testElementAnyDeclaration [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementBadName [
 	self badNames do: [:each |
 		self
@@ -2663,7 +2665,7 @@ XMLParserTest >> testElementBadName [
 			raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementContentModelBadBinaryOperator [
 	#('<!DOCTYPE a [<!ELEMENT a (,b)>]>'
 		'<!DOCTYPE a [<!ELEMENT a (b,)>]>'
@@ -2684,7 +2686,7 @@ XMLParserTest >> testElementContentModelBadBinaryOperator [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementContentModelBadParenthesis [
 	#('<!DOCTYPE a [<!ELEMENT a b>]>'
 		'<!DOCTYPE a [<!ELEMENT a (b>]>'
@@ -2700,7 +2702,7 @@ XMLParserTest >> testElementContentModelBadParenthesis [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementContentModelBadUnaryOperator [
 	#('<!DOCTYPE a [<!ELEMENT a (?b)>]>'
 		'<!DOCTYPE a [<!ELEMENT a (*b)>]>'
@@ -2723,7 +2725,7 @@ XMLParserTest >> testElementContentModelBadUnaryOperator [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementContentModelBranching [
 	| dtd |
 
@@ -2752,7 +2754,7 @@ XMLParserTest >> testElementContentModelBranching [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementContentModelCycles [
 	| dtd |
 
@@ -2783,7 +2785,7 @@ XMLParserTest >> testElementContentModelCycles [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementContentModelManyBranches [
 	| dtd names |
 
@@ -2809,7 +2811,7 @@ XMLParserTest >> testElementContentModelManyBranches [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementContentModelNonDeterministic [
 	| template |
 	
@@ -2840,7 +2842,7 @@ XMLParserTest >> testElementContentModelNonDeterministic [
 			raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementContentModelOptional [
 	| dtd |
 
@@ -2867,7 +2869,7 @@ XMLParserTest >> testElementContentModelOptional [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementContentModelOptionalBranching [
 	| dtd |
 
@@ -2895,7 +2897,7 @@ XMLParserTest >> testElementContentModelOptionalBranching [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementContentModelOptionalEmpty [
 	| dtd |
 
@@ -2922,7 +2924,7 @@ XMLParserTest >> testElementContentModelOptionalEmpty [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementContentModelPlus [
 	| dtd |
 
@@ -2950,7 +2952,7 @@ XMLParserTest >> testElementContentModelPlus [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementContentModelStar [
 	| dtd |
 
@@ -2973,7 +2975,7 @@ XMLParserTest >> testElementContentModelStar [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementContentModelStarEmpty [
 	| dtd |
 
@@ -2998,7 +3000,7 @@ XMLParserTest >> testElementContentModelStarEmpty [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementContentWhitespace [
 	| xmlTemplate |
 
@@ -3051,7 +3053,7 @@ XMLParserTest >> testElementContentWhitespace [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementDeclarationMixedContent [
 	| dtd |
 
@@ -3091,7 +3093,7 @@ XMLParserTest >> testElementDeclarationMixedContent [
 			raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementDeclarationMixedContentRedundance [
 	| dtd |
 
@@ -3105,7 +3107,7 @@ XMLParserTest >> testElementDeclarationMixedContentRedundance [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementDeclarationPrefixed [
 	| dtd |
 
@@ -3124,7 +3126,7 @@ XMLParserTest >> testElementDeclarationPrefixed [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementDeclarationRedundance [
 	#('<!DOCTYPE test [<!ELEMENT test EMPTY><!ELEMENT test EMPTY>]><test/>'
 		'<!DOCTYPE test [<!ELEMENT test EMPTY><!ELEMENT test ANY>]><test/>')
@@ -3134,7 +3136,7 @@ XMLParserTest >> testElementDeclarationRedundance [
 				raise: XMLValidationException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementDeclarationWhitespace [
 	self
 		should: [
@@ -3153,7 +3155,7 @@ XMLParserTest >> testElementDeclarationWhitespace [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementEmptyDeclaration [
 	| dtd |
 
@@ -3193,7 +3195,7 @@ XMLParserTest >> testElementEmptyDeclaration [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementNesting [
 	#('<unclosed>'
 		'</unopened>'
@@ -3211,7 +3213,7 @@ XMLParserTest >> testElementNesting [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementUnmatchedEndTag [
 	#('<test></t>'
 		'<test></te>'
@@ -3225,7 +3227,7 @@ XMLParserTest >> testElementUnmatchedEndTag [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementUnterminatedEndTag [
 	#('<test><'
 		'<test><test><</test>'
@@ -3243,7 +3245,7 @@ XMLParserTest >> testElementUnterminatedEndTag [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementUnterminatedStartTag [
 	#('<'
 		'<></>'
@@ -3281,7 +3283,7 @@ XMLParserTest >> testElementUnterminatedStartTag [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementWhitespace [
 	self
 		should: [SAXHandler parse: '<root name1="value1"name2="value2"/>']
@@ -3306,7 +3308,7 @@ XMLParserTest >> testElementWhitespace [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testElementsUndeclared [
 	self
 		shouldnt: [
@@ -3335,7 +3337,7 @@ XMLParserTest >> testElementsUndeclared [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityDeclarationBadName [
 	self badNames do: [:each |
 		self
@@ -3347,7 +3349,7 @@ XMLParserTest >> testEntityDeclarationBadName [
 			raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityDeclarationUnterminated [
 	#('<!ENTITY'
 		'<!ENTITY>'
@@ -3417,7 +3419,7 @@ XMLParserTest >> testEntityDeclarationUnterminated [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityDeclarationValueBadChar [
 	self nonChars do: [:each |
 		self
@@ -3429,7 +3431,7 @@ XMLParserTest >> testEntityDeclarationValueBadChar [
 			raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityDeclarationWhitespace [
 	#('<!ENTITYname "value">'
 		'<!ENTITY name"value">'
@@ -3455,7 +3457,7 @@ XMLParserTest >> testEntityDeclarationWhitespace [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityExternalResolutionGeneral [
 
 	| xml entities document |
@@ -3503,7 +3505,7 @@ XMLParserTest >> testEntityExternalResolutionGeneral [
 	self assert: document root contentString equals: 'onetwothree'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityExternalResolutionParameter [
 
 	| xml entities document |
@@ -3568,7 +3570,7 @@ XMLParserTest >> testEntityExternalResolutionParameter [
 	self assert: document root contentString equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityExternalResolutionParameterInDeclaration [
 	"test the handling of external parameter entity references in declarations"
 	| invalidXML validXML resolver |
@@ -3616,7 +3618,7 @@ XMLParserTest >> testEntityExternalResolutionParameterInDeclaration [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityExternalSubsetResolution [
 	| xml entities |
 
@@ -3658,7 +3660,7 @@ XMLParserTest >> testEntityExternalSubsetResolution [
 		raise: XMLParserException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityLiteralContextNesting [
 
 	| xml inner outer document |
@@ -3683,7 +3685,7 @@ XMLParserTest >> testEntityLiteralContextNesting [
 		assert: document root contentString equals: outer , inner
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityNestingAttributeDeclaration [
 	| xml |
 	
@@ -3774,7 +3776,7 @@ XMLParserTest >> testEntityNestingAttributeDeclaration [
 		raise: XMLException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityNestingCharacterReference [
 	"even though general entity refs are bypassed in entity values, they are still
 	checked for well formedness (they must be complete), so the only way to have an
@@ -3833,7 +3835,7 @@ XMLParserTest >> testEntityNestingCharacterReference [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityNestingComment [
 	#('<!DOCTYPE test [
 				<!ENTITY partial "<">
@@ -3870,7 +3872,7 @@ XMLParserTest >> testEntityNestingComment [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityNestingElement [
 	self
 		shouldnt: [
@@ -3883,7 +3885,7 @@ XMLParserTest >> testEntityNestingElement [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityNestingElementDeclaration [
 	| xml |
 	
@@ -3964,7 +3966,7 @@ XMLParserTest >> testEntityNestingElementDeclaration [
 				raise: XMLException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityNestingElementPartialEndTag [
 	#('<!DOCTYPE test [
 				<!ENTITY partial "<">
@@ -3984,7 +3986,7 @@ XMLParserTest >> testEntityNestingElementPartialEndTag [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityNestingElementPartialSelfClosingTag [
 	#('<!DOCTYPE test [
 				<!ENTITY partial "<">
@@ -4016,7 +4018,7 @@ XMLParserTest >> testEntityNestingElementPartialSelfClosingTag [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityNestingElementPartialStartTag [
 	#('<!DOCTYPE test [
 				<!ENTITY partial "<">
@@ -4048,7 +4050,7 @@ XMLParserTest >> testEntityNestingElementPartialStartTag [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityNestingGeneralEntityReference [
 	"even though general entity refs are bypassed in entity values, they are still
 	checked for well formedness (they must be complete), so the only way to declare
@@ -4104,7 +4106,7 @@ XMLParserTest >> testEntityNestingGeneralEntityReference [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityNestingIgnoreSection [
 	"If any of the '<![', '[', or ']]>' of a conditional section is contained
 	in the replacement text for a parameter-entity reference, all of them
@@ -4174,7 +4176,7 @@ XMLParserTest >> testEntityNestingIgnoreSection [
 		raise: XMLException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityNestingIncludeSection [
 	"If any of the '<![', '[', or ']]>' of a conditional section is contained
 	in the replacement text for a parameter-entity reference, all of them
@@ -4248,7 +4250,7 @@ XMLParserTest >> testEntityNestingIncludeSection [
 		raise: XMLException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityNestingProcessingInstruction [
 	#('<!DOCTYPE test [
 				<!ENTITY partial "<">
@@ -4279,7 +4281,7 @@ XMLParserTest >> testEntityNestingProcessingInstruction [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityNestingSubsetComment [
 	| xml |
 	
@@ -4339,7 +4341,7 @@ XMLParserTest >> testEntityNestingSubsetComment [
 		raise: XMLException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityNestingSubsetProcessingInstruction [
 	| xml |
 	
@@ -4397,7 +4399,7 @@ XMLParserTest >> testEntityNestingSubsetProcessingInstruction [
 		raise: XMLException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReferenceInternalDeclaration [
 	#('<!DOCTYPE root [
 			<!ENTITY % name "root">
@@ -4426,7 +4428,7 @@ XMLParserTest >> testEntityReferenceInternalDeclaration [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReferenceInternalDeclarationExternallyDefined [
 	| declarations |
 
@@ -4479,7 +4481,7 @@ XMLParserTest >> testEntityReferenceInternalDeclarationExternallyDefined [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReferencePredefined [
 
 	| document references replacements |
@@ -4509,7 +4511,7 @@ XMLParserTest >> testEntityReferencePredefined [
 		equals: '&nonRecursive;'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReferenceUndeclared [
 	"it's a WFC if there's no DTD or an internal-only DTD that
 	contains no param entity refs or if it's standalone"
@@ -4560,7 +4562,7 @@ XMLParserTest >> testEntityReferenceUndeclared [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReferenceUndeclaredInEntityValue [
 	| resolver |
 
@@ -4601,7 +4603,7 @@ XMLParserTest >> testEntityReferenceUndeclaredInEntityValue [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReferenceUndeclaredPreserved [
 
 	| xml parser document |
@@ -4624,7 +4626,7 @@ XMLParserTest >> testEntityReferenceUndeclaredPreserved [
 		assert: document root contentString equals: '<&undeclaredTwo;>'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReferenceUnexpected [
 	#('<!DOCTYPE test [
 			<!ENTITY entity "<!--comment-->">
@@ -4653,7 +4655,7 @@ XMLParserTest >> testEntityReferenceUnexpected [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReferenceUnreplaced [
 
 	| beforeSubset subset afterSubset xml document |
@@ -4678,7 +4680,7 @@ XMLParserTest >> testEntityReferenceUnreplaced [
 		raise: XMLValidationException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReferenceUnreplacedInContent [
 
 	| xml document |
@@ -4695,7 +4697,7 @@ XMLParserTest >> testEntityReferenceUnreplacedInContent [
 		equals: '&#60;&declared;&#x2F;&#x3e;'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReferenceUnreplacedInContentUndeclared [
 
 	| xml document |
@@ -4724,7 +4726,7 @@ XMLParserTest >> testEntityReferenceUnreplacedInContentUndeclared [
 		equals: '&#60;&undeclared;&#62;'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReferenceUnterminated [
 	#('<!DOCTYPE test [
 			<!ENTITY % entity "<!ELEMENT test EMPTY>">
@@ -4754,7 +4756,7 @@ XMLParserTest >> testEntityReferenceUnterminated [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReferenceUnterminatedInEntityValue [
 	#('<!DOCTYPE test [
 			<!ENTITY name "value">
@@ -4779,7 +4781,7 @@ XMLParserTest >> testEntityReferenceUnterminatedInEntityValue [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReplacement [
 
 	| document |
@@ -4802,7 +4804,7 @@ XMLParserTest >> testEntityReplacement [
 		equals: (('quoted "value"' copyWithFirst: $') copyWith: $')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReplacementEmpty [
 
 	| xml document |
@@ -4825,7 +4827,7 @@ XMLParserTest >> testEntityReplacementEmpty [
 		assert: document root contentString equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReplacementSelfReferential [
 	self
 		should: [
@@ -4869,7 +4871,7 @@ XMLParserTest >> testEntityReplacementSelfReferential [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReplacementStandard [
 	"this test comes from the XML spec"
 
@@ -4895,7 +4897,7 @@ XMLParserTest >> testEntityReplacementStandard [
 			, 'ditions Gallimard. All rights reserved'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReplacementStandardLiteral [
 	"this test comes from the XML spec"
 
@@ -4933,7 +4935,7 @@ XMLParserTest >> testEntityReplacementStandardLiteral [
 		raise: XMLWellFormednessException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityReplacementTerminatingInternalSubset [
 	#('<!DOCTYPE root [<!ENTITY % end "]>">%end;'
 		'<!DOCTYPE root [<!ENTITY % end "]">%end;>')
@@ -4949,7 +4951,7 @@ XMLParserTest >> testEntityReplacementTerminatingInternalSubset [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testEntityURIInheritance [
 
 	| xml parser driver |
@@ -4978,7 +4980,7 @@ XMLParserTest >> testEntityURIInheritance [
 		assert: parser atEnd
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testIsInContent [
 	| xml handler parser |
 
@@ -4998,7 +5000,7 @@ XMLParserTest >> testIsInContent [
 	self assert: handler isInContent.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testLineEndingsDoNotMatter [
 
 	| source docFromSourceWithCRs docFromSourceWithLFs docFromSourceWithCRLFs |
@@ -5016,7 +5018,7 @@ XMLParserTest >> testLineEndingsDoNotMatter [
 		equals: docFromSourceWithCRLFs root contentString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testNamespaceAttributePrefixAliasing [
 	| xmlns |
 
@@ -5063,7 +5065,7 @@ XMLParserTest >> testNamespaceAttributePrefixAliasing [
 				raise: XMLNamespaceException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testNamespaceDeclaration [
 	self
 		shouldnt: [SAXHandler parse: '<prefix:root prefix:name="test" xmlns:prefix="NS"/>']
@@ -5076,7 +5078,7 @@ XMLParserTest >> testNamespaceDeclaration [
 		raise: XMLNamespaceException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testNamespaceDeclarationBadPrefix [
 	self
 		should: [SAXHandler parse: '<root xmlns:invalid:prefix="invalidNS"/>']
@@ -5101,7 +5103,7 @@ XMLParserTest >> testNamespaceDeclarationBadPrefix [
 		raise: XMLNamespaceException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testNamespaceDeclarationBadURI [
 	self
 		should: [SAXHandler parse: '<root xmlns:empty=""/>' usingNamespaces: true]
@@ -5130,7 +5132,7 @@ XMLParserTest >> testNamespaceDeclarationBadURI [
 		raise: XMLNamespaceException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testNamespaceDeclarationRedundance [
 	#('<test xmlns:prefix="prefixNS" xmlns:prefixTwo="prefixTwoNS" xmlns:prefix="prefixNS" />'
 		'<test xmlns:prefix="prefixNS" xmlns:prefixTwo="prefixTwoNS" xmlns:prefix="prefixTwoNS" />'
@@ -5142,7 +5144,7 @@ XMLParserTest >> testNamespaceDeclarationRedundance [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testNamespaceParsing [
 	self
 		shouldnt: [SAXHandler parse: self addressBookNamespacedXML]
@@ -5165,7 +5167,7 @@ XMLParserTest >> testNamespaceParsing [
 		raise: XMLException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testNamespacePrefixInheritance [
 	self
 		shouldnt: [
@@ -5204,7 +5206,7 @@ XMLParserTest >> testNamespacePrefixInheritance [
 				raise: XMLNamespaceException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testNamespaceUndeclared [
 	self
 		shouldnt: [SAXHandler parse: '<prefix:root prefix:name="test"/>' usingNamespaces: false]
@@ -5225,7 +5227,7 @@ XMLParserTest >> testNamespaceUndeclared [
 		raise: XMLNamespaceException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testNotationDeclarationRedundance [
 	#('<!DOCTYPE test [
 			<!NOTATION name PUBLIC "note">
@@ -5251,7 +5253,7 @@ XMLParserTest >> testNotationDeclarationRedundance [
 				raise: XMLValidationException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testNotationDeclarationUnterminated [
 	#('<!NOTATION'
 		'<!NOTATION>'
@@ -5286,7 +5288,7 @@ XMLParserTest >> testNotationDeclarationUnterminated [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testNotationDeclarationWhitespace [
 	#('<!DOCTYPE test [<!NOTATIONname PUBLIC "publicid">]>'
 		'<!DOCTYPE test [<!NOTATION name PUBLIC"publicid">]>'
@@ -5306,7 +5308,7 @@ XMLParserTest >> testNotationDeclarationWhitespace [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testPCDataBadChar [
 	self nonChars do: [:each |
 		self
@@ -5314,7 +5316,7 @@ XMLParserTest >> testPCDataBadChar [
 			raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testPCDataOutsideElement [
 	#('<!DOCTYPE test [ test ]><test/>'
 		'test<test/>'
@@ -5327,7 +5329,7 @@ XMLParserTest >> testPCDataOutsideElement [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testPCDataWithCDataTerminator [
 	self
 		should: [SAXHandler parse: '<test>test]]>test</test>']
@@ -5343,7 +5345,7 @@ XMLParserTest >> testPCDataWithCDataTerminator [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testParserLittleDocument [
 
 	| doc |
@@ -5358,7 +5360,7 @@ XMLParserTest >> testParserLittleDocument [
 </example:user>' readStream.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testProcessingInstructionBadChar [
 	self nonChars do: [:each |
 		self
@@ -5366,7 +5368,7 @@ XMLParserTest >> testProcessingInstructionBadChar [
 			raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testProcessingInstructionBadTarget [
 	self badNames, #('xml' 'XML' 'Xml' 'xML' 'XMl' 'xmL' 'XmL' 'xMl')
 		do: [:each |
@@ -5375,7 +5377,7 @@ XMLParserTest >> testProcessingInstructionBadTarget [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testProcessingInstructionUnterminated [
 	#('<?'
 		'<??'
@@ -5400,7 +5402,7 @@ XMLParserTest >> testProcessingInstructionUnterminated [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testProcessingInstructionWhitespace [
 	self
 		should: [SAXHandler parse: '<pi><?target?data?></pi>']
@@ -5410,7 +5412,7 @@ XMLParserTest >> testProcessingInstructionWhitespace [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testSchemaRequired [
 	self
 		shouldnt: [
@@ -5438,7 +5440,7 @@ XMLParserTest >> testSchemaRequired [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testStandalone [
 	| xmlWithDTD standaloneXMLWithDTD resolver |
 
@@ -5496,7 +5498,7 @@ XMLParserTest >> testStandalone [
 		raise: XMLParserException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testStandaloneExternalAttributeDefaultValue [
 	| standalone notStandalone dtdTemplate defaultValueStandaloneContent nonDefaultValueStandaloneContent |
 
@@ -5580,7 +5582,7 @@ XMLParserTest >> testStandaloneExternalAttributeDefaultValue [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testStandaloneExternalAttributeDefaultValueExternalSubset [
 	| standalone notStandalone dtdTemplate defaultValueStandaloneContent nonDefaultValueStandaloneContent |
 
@@ -5679,7 +5681,7 @@ XMLParserTest >> testStandaloneExternalAttributeDefaultValueExternalSubset [
 				raise: XMLValidationException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testStandaloneExternalAttributeNormalization [
 	| standalone notStandalone dtdTemplate dtd unnormalizedStandaloneContent normalizedStandaloneContent |
 
@@ -5773,7 +5775,7 @@ XMLParserTest >> testStandaloneExternalAttributeNormalization [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testStandaloneExternalAttributeNormalizationExternalSubset [
 	| standalone notStandalone dtdTemplate dtd unnormalizedStandaloneContent normalizedStandaloneContent resolver |
 
@@ -5888,7 +5890,7 @@ XMLParserTest >> testStandaloneExternalAttributeNormalizationExternalSubset [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testStandaloneExternalElementDeclarartion [
 	| standalone notStandalone dtd |
 
@@ -5927,7 +5929,7 @@ XMLParserTest >> testStandaloneExternalElementDeclarartion [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testStandaloneExternalElementDeclarartionExternalSubset [
 	| standalone notStandalone dtd resolver |
 
@@ -5978,7 +5980,7 @@ XMLParserTest >> testStandaloneExternalElementDeclarartionExternalSubset [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testStandaloneExternalExternalEntity [
 
 	| standalone notStandalone dtd resolver document |
@@ -6034,7 +6036,7 @@ XMLParserTest >> testStandaloneExternalExternalEntity [
 	self assert: document contentString equals: 'value'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testStandaloneExternalExternalEntityExternalSubset [
 
 	| standalone notStandalone dtd subset resolver document |
@@ -6086,7 +6088,7 @@ XMLParserTest >> testStandaloneExternalExternalEntityExternalSubset [
 	self assert: document contentString equals: 'value'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testStandaloneExternalExternalEntityRedundance [
 
 	| standaloneXML resolver document |
@@ -6113,7 +6115,7 @@ XMLParserTest >> testStandaloneExternalExternalEntityRedundance [
 	self assert: document contentString equals: 'value'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testStandaloneExternalInternalEntity [
 
 	| standalone notStandalone dtd document |
@@ -6151,7 +6153,7 @@ XMLParserTest >> testStandaloneExternalInternalEntity [
 	self assert: document contentString equals: 'value'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testStandaloneExternalInternalEntityAttributeDefaultValue [
 
 	| standaloneDTD document |
@@ -6186,7 +6188,7 @@ XMLParserTest >> testStandaloneExternalInternalEntityAttributeDefaultValue [
 	self assert: (document root attributeAt: 'name') equals: 'value'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testStandaloneExternalInternalEntityExternalSubset [
 
 	| standalone notStandalone dtd subset resolver document |
@@ -6233,7 +6235,7 @@ XMLParserTest >> testStandaloneExternalInternalEntityExternalSubset [
 	self assert: document contentString equals: 'value'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testStandaloneExternalInternalEntityRedundance [
 
 	| standaloneXML document |
@@ -6252,7 +6254,7 @@ XMLParserTest >> testStandaloneExternalInternalEntityRedundance [
 	self assert: document contentString equals: 'value'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testSystemIDBadChar [
 	self nonChars do: [:each |
 		self
@@ -6262,7 +6264,7 @@ XMLParserTest >> testSystemIDBadChar [
 			raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testSystemIDFragment [
 	#('<!DOCTYPE test [
 			<!ENTITY one SYSTEM "test#one">
@@ -6292,7 +6294,7 @@ XMLParserTest >> testSystemIDFragment [
 		raise: XMLParserException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testUnparsedEntity [
 	| dtd |
 
@@ -6311,7 +6313,7 @@ XMLParserTest >> testUnparsedEntity [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testUnparsedEntityDeclarationRedundance [
 	| dtd |
 
@@ -6331,7 +6333,7 @@ XMLParserTest >> testUnparsedEntityDeclarationRedundance [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testUnparsedEntityDeclarationUnterminated [
 	#('<!ENTITY name PUBLIC "publicid" "systemid" NDATA'
 		'<!ENTITY name PUBLIC "publicid" "systemid" NDATA>'
@@ -6357,7 +6359,7 @@ XMLParserTest >> testUnparsedEntityDeclarationUnterminated [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testUnparsedEntityReference [
 	| dtd |
 
@@ -6376,7 +6378,7 @@ XMLParserTest >> testUnparsedEntityReference [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testUnparsedEntityUndeclaredNotations [
 	| beforeNotation afterNotation |
 
@@ -6402,7 +6404,7 @@ XMLParserTest >> testUnparsedEntityUndeclaredNotations [
 		raise: XMLValidationException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testXMLDeclarationEncodingNameBadChar [
 	| validChars |
 
@@ -6417,7 +6419,7 @@ XMLParserTest >> testXMLDeclarationEncodingNameBadChar [
 					raise: XMLWellFormednessException]].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testXMLDeclarationRedundance [
 	#('
 <?xml version="1.0"?><test/>'
@@ -6434,7 +6436,7 @@ XMLParserTest >> testXMLDeclarationRedundance [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testXMLDeclarationStandaloneAttribute [
 	#('<?xml version="1.0" standalone=""?>'
 		'<?xml version="1.0" standalone="YES"?>'
@@ -6456,7 +6458,7 @@ XMLParserTest >> testXMLDeclarationStandaloneAttribute [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testXMLDeclarationUnterminated [
 	#('<?xml'
 		'<?xml ?'
@@ -6521,7 +6523,7 @@ XMLParserTest >> testXMLDeclarationUnterminated [
 				raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testXMLDeclarationVersionAttribute [
 	#(''
 		'1'
@@ -6569,7 +6571,7 @@ XMLParserTest >> testXMLDeclarationVersionAttribute [
 				raise: XMLWellFormednessException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserTest >> testXMLDeclarationWhitespace [
 	#('<? xml version="1.0" encoding="UTF-8" standalone="yes"?>'
 		'<?xml version="1.0"standalone="yes"?>'

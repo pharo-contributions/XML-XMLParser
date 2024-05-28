@@ -1,40 +1,42 @@
 Class {
-	#name : #XMLIntegerReaderTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Utils'
+	#name : 'XMLIntegerReaderTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Utils',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Utils'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLIntegerReaderTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLIntegerReaderTest >> integerReaderClass [
 	^ XMLIntegerReader
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLIntegerReaderTest >> maxBase [
 	^ self integerReaderClass maxBase
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLIntegerReaderTest >> maxIntegerValue [
 	^ self integerReaderClass maxIntegerValue
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLIntegerReaderTest >> newIntegerReaderOn: aStream [
 	^ self integerReaderClass on: aStream
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLIntegerReaderTest >> newStreamOn: aCollection [
 	^ XMLExceptionRaisingReadStream on: aCollection
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLIntegerReaderTest >> testBaseMarker [
 
 	2 to: self maxBase do: [ :base |
@@ -62,7 +64,7 @@ XMLIntegerReaderTest >> testBaseMarker [
 			assert: stream atEnd ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLIntegerReaderTest >> testBases [
 
 	2 to: self maxBase do: [ :base |
@@ -87,7 +89,7 @@ XMLIntegerReaderTest >> testBases [
 		raise: Error
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLIntegerReaderTest >> testMaxIntegerValue [
 
 	| maxValue |
@@ -107,7 +109,7 @@ XMLIntegerReaderTest >> testMaxIntegerValue [
 				equals: maxValue ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLIntegerReaderTest >> testNonDigit [
 
 	2 to: self maxBase do: [ :base |
@@ -142,7 +144,7 @@ XMLIntegerReaderTest >> testNonDigit [
 						assert: reader atEnd ] ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLIntegerReaderTest >> testPositioning [
 
 	| reader string |
@@ -159,7 +161,7 @@ XMLIntegerReaderTest >> testPositioning [
 		assert: reader next isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLIntegerReaderTest >> testPrintStream [
 
 	| printStream reader |
@@ -185,7 +187,7 @@ XMLIntegerReaderTest >> testPrintStream [
 		assert: reader atEnd
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLIntegerReaderTest >> testReadLimit [
 
 	2 to: self maxBase do: [ :base |

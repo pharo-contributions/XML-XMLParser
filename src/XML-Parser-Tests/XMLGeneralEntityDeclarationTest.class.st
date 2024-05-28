@@ -1,27 +1,29 @@
 Class {
-	#name : #XMLGeneralEntityDeclarationTest,
-	#superclass : #XMLEntityDeclarationTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLGeneralEntityDeclarationTest',
+	#superclass : 'XMLEntityDeclarationTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLGeneralEntityDeclarationTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLGeneralEntityDeclarationTest >> nodeClass [
 	^ XMLGeneralEntityDeclaration
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLGeneralEntityDeclarationTest >> testIsUnparsed [
 	super testIsUnparsed.
 
 	self assert: (self newNode ndata: 'test') isUnparsed
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLGeneralEntityDeclarationTest >> testNData [
 
 	| declaration |
@@ -32,7 +34,7 @@ XMLGeneralEntityDeclarationTest >> testNData [
 		assert: declaration ndata equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLGeneralEntityDeclarationTest >> testNamePublicIDSystemIDNdata [
 
 	| declaration |
@@ -49,7 +51,7 @@ XMLGeneralEntityDeclarationTest >> testNamePublicIDSystemIDNdata [
 		assert: declaration ndata equals: 'four'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLGeneralEntityDeclarationTest >> testWriteXMLOn [
 
 	self

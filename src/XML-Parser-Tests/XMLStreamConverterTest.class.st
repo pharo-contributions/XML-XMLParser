@@ -2,22 +2,24 @@
 Abstract, do not run.
 "
 Class {
-	#name : #XMLStreamConverterTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLStreamConverterTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamConverterTest class >> isAbstract [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamConverterTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverterTest >> caseInvertedEncodingNameFrom: anEncodingName [
 	| shouldUppercase |
 
@@ -31,17 +33,17 @@ XMLStreamConverterTest >> caseInvertedEncodingNameFrom: anEncodingName [
 				each asLowercase]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverterTest >> defaultClass [
 	^ XMLImplicitUTF8StreamConverter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverterTest >> encodingNames [
 	^ self streamConverterClass encodingNames
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverterTest >> encodingNamesWithCaseInversions [
 	| encodingNamesWithCaseInversions |
 
@@ -55,32 +57,32 @@ XMLStreamConverterTest >> encodingNamesWithCaseInversions [
 	^ encodingNamesWithCaseInversions
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamConverterTest >> isImplicit [
 	^ false
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLStreamConverterTest >> newStreamConverter [
 	^ self streamConverterClass new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverterTest >> nullClass [
 	^ XMLNullStreamConverter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverterTest >> primaryEncodingName [
 	^ ''
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverterTest >> streamConverterClass [
 	^ XMLStreamConverter
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamConverterTest >> testAbstractClass [
 
 	| streamConverterClass |
@@ -92,7 +94,7 @@ XMLStreamConverterTest >> testAbstractClass [
 				 ifFalse: [ streamConverterClass superclass ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamConverterTest >> testAsXMLStreamConverter [
 
 	| streamConverter |
@@ -102,7 +104,7 @@ XMLStreamConverterTest >> testAsXMLStreamConverter [
 		identicalTo: streamConverter
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamConverterTest >> testCanConvertEncoding [
 	self encodingNamesWithCaseInversions do: [:each |
 		self assert: (self streamConverterClass canConvertEncoding: each)].
@@ -110,7 +112,7 @@ XMLStreamConverterTest >> testCanConvertEncoding [
 		self deny: (self streamConverterClass canConvertEncoding: each)]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamConverterTest >> testDefault [
 
 	| streamConverter |
@@ -121,7 +123,7 @@ XMLStreamConverterTest >> testDefault [
 		assert: streamConverter isImplicit
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamConverterTest >> testDefaultClass [
 
 	self
@@ -129,7 +131,7 @@ XMLStreamConverterTest >> testDefaultClass [
 		identicalTo: self defaultClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamConverterTest >> testDefaultEncoding [
 
 	self
@@ -137,7 +139,7 @@ XMLStreamConverterTest >> testDefaultEncoding [
 		equals: self defaultClass primaryEncodingName
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamConverterTest >> testEncoding [
 
 	self encodingNamesWithCaseInversions do: [ :each |
@@ -146,7 +148,7 @@ XMLStreamConverterTest >> testEncoding [
 			equals: self primaryEncodingName ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamConverterTest >> testIsAbstractClass [
 	| streamConverterClass |
 
@@ -160,42 +162,42 @@ XMLStreamConverterTest >> testIsAbstractClass [
 			self assert: streamConverterClass isAbstractClass]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamConverterTest >> testIsDefault [
 	self streamConverterClass == self defaultClass
 		ifTrue: [self assert: self newStreamConverter isDefault]
 		ifFalse: [self deny: self newStreamConverter isDefault]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamConverterTest >> testIsDefaultClass [
 	self streamConverterClass == self defaultClass
 		ifTrue: [self assert: self streamConverterClass isDefaultClass]
 		ifFalse: [self deny: self streamConverterClass isDefaultClass]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamConverterTest >> testIsImplicit [
 	self isImplicit
 		ifTrue: [self assert: self newStreamConverter isImplicit]
 		ifFalse: [self deny: self newStreamConverter isImplicit]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamConverterTest >> testIsNull [
 	self streamConverterClass == self nullClass
 		ifTrue: [self assert: self newStreamConverter isNull]
 		ifFalse: [self deny: self newStreamConverter isNull]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamConverterTest >> testNewForEncoding [
 	self encodingNamesWithCaseInversions do: [:each |
 		(XMLStreamConverter newForEncoding: each) class ==
 			self streamConverterClass]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamConverterTest >> testNull [
 
 	self
@@ -203,7 +205,7 @@ XMLStreamConverterTest >> testNull [
 		identicalTo: self nullClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamConverterTest >> testNullClass [
 
 	self
@@ -211,7 +213,7 @@ XMLStreamConverterTest >> testNullClass [
 		identicalTo: self nullClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamConverterTest >> testPrimaryEncodingName [
 
 	self
@@ -219,7 +221,7 @@ XMLStreamConverterTest >> testPrimaryEncodingName [
 		equals: self primaryEncodingName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverterTest >> unconvertableEncodingNames [
 	^ #('unconvertableEncodingName')
 ]

@@ -1,20 +1,22 @@
 Class {
-	#name : #XMLHTTPResponseTest,
-	#superclass : #XMLHTTPMessageTest,
-	#category : #'XML-Parser-Tests-HTTP'
+	#name : 'XMLHTTPResponseTest',
+	#superclass : 'XMLHTTPMessageTest',
+	#category : 'XML-Parser-Tests-HTTP',
+	#package : 'XML-Parser-Tests',
+	#tag : 'HTTP'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPResponseTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPResponseTest >> messageClass [
 	^ XMLHTTPResponse
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPResponseTest >> testProtocol [
 
 	| response |
@@ -27,7 +29,7 @@ XMLHTTPResponseTest >> testProtocol [
 		assert: response protocol equals: 'HTTP/1.0'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPResponseTest >> testStatusCode [
 
 	| response |
@@ -40,7 +42,7 @@ XMLHTTPResponseTest >> testStatusCode [
 		assert: response statusCode equals: 404
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPResponseTest >> testStatusDescription [
 
 	| response |
@@ -53,7 +55,7 @@ XMLHTTPResponseTest >> testStatusDescription [
 	self assert: response statusDescription equals: 'Not Found'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPResponseTest >> testStatusLine [
 
 	| response |

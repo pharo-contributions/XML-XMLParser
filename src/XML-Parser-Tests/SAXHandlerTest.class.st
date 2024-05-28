@@ -1,20 +1,22 @@
 Class {
-	#name : #SAXHandlerTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Base'
+	#name : 'SAXHandlerTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandlerTest >> configurationClass [
 	^ XMLConfiguration
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandlerTest >> externalEntityResolverClass [
 	^ DTDCachingExternalEntityResolver
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 SAXHandlerTest >> generalEntityXMLSource [
 	^ '
 	<!DOCTYPE root [
@@ -25,7 +27,7 @@ SAXHandlerTest >> generalEntityXMLSource [
 	<root name="&second;">&first;</root>'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandlerTest >> generalEntityXMLSourceSelectors [
 	^ #(startDocument
 			startDTD:publicID:systemID:
@@ -38,7 +40,7 @@ SAXHandlerTest >> generalEntityXMLSourceSelectors [
 			endDocument)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandlerTest >> prefixedXMLAttributes [
 	^ (XMLNamespacedAttributeDictionary
 		with: 'name' -> 'value'
@@ -49,7 +51,7 @@ SAXHandlerTest >> prefixedXMLAttributes [
 					mapPrefix: 'prefix' to: 'prefixNS')
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandlerTest >> prefixedXMLAttributesNamespacesDisabled [
 	^ XMLAttributeDictionary
 		with: 'xmlns:prefix' -> 'prefixNS'
@@ -58,7 +60,7 @@ SAXHandlerTest >> prefixedXMLAttributesNamespacesDisabled [
 		with: 'prefix:name' -> 'prefixValue'
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 SAXHandlerTest >> prefixedXMLSource [
 	^ '<prefix:test xmlns:prefix="prefixNS" xmlns="defaultNS" ',
 		'name="value" prefix:name="prefixValue">',
@@ -66,7 +68,7 @@ SAXHandlerTest >> prefixedXMLSource [
 		'</prefix:test>'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandlerTest >> prefixedXMLSourcePrefixURILocalNameSelectors [
 	^ #(startDocument
 		startPrefixMapping:uri: startPrefixMapping:uri:
@@ -77,13 +79,13 @@ SAXHandlerTest >> prefixedXMLSourcePrefixURILocalNameSelectors [
 		endDocument)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandlerTest >> prefixedXMLSourcePrefixURILocalNameSelectorsNamespacesDisabled [
 	^ self removeNamespaceSelectorsFrom:
 		self prefixedXMLSourcePrefixURILocalNameSelectors
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandlerTest >> prefixedXMLSourcePrefixURISelectors [
 	^ #(startDocument
 		startPrefixMapping:uri: startPrefixMapping:uri:
@@ -94,12 +96,12 @@ SAXHandlerTest >> prefixedXMLSourcePrefixURISelectors [
 		endDocument)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandlerTest >> prefixedXMLSourcePrefixURISelectorsNamespacesDisabled [
 	^ self removeNamespaceSelectorsFrom: self prefixedXMLSourcePrefixURISelectors
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandlerTest >> prefixedXMLSourceSelectors [
 	^ #(startDocument
 		startPrefixMapping:uri: startPrefixMapping:uri:
@@ -110,18 +112,18 @@ SAXHandlerTest >> prefixedXMLSourceSelectors [
 		endDocument)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandlerTest >> prefixedXMLSourceSelectorsNamespacesDisabled [
 	^ self removeNamespaceSelectorsFrom: self prefixedXMLSourceSelectors
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandlerTest >> removeNamespaceSelectorsFrom: aSelectorCollection [
 	^ aSelectorCollection reject: [:each |
 		#(startPrefixMapping:uri: endPrefixMapping:) includes: each]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testCharacters [
 	| xml parser |
 	xml := '<test>one<non-empty>two</non-empty>three<!--comment-->'
@@ -138,7 +140,7 @@ SAXHandlerTest >> testCharacters [
 		do: [ :message :arguments | self assert: message arguments equals: arguments ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testComment [
 	| xml parser |
 	xml := '
@@ -161,7 +163,7 @@ SAXHandlerTest >> testComment [
 		do: [ :message :arguments | self assert: message arguments equals: arguments ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testConfiguration [
 
 	| parser oldConfiguration newConfiguration |
@@ -179,7 +181,7 @@ SAXHandlerTest >> testConfiguration [
 		identicalTo: self configurationClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testDecodesCharacters [
 
 	| parser |
@@ -192,7 +194,7 @@ SAXHandlerTest >> testDecodesCharacters [
 		assert: parser decodesCharacters
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testDocumentReadLimit [
 
 	| parser |
@@ -206,7 +208,7 @@ SAXHandlerTest >> testDocumentReadLimit [
 		assert: parser documentReadLimit isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testDocumentURI [
 
 	| xml uri newURI parser |
@@ -223,7 +225,7 @@ SAXHandlerTest >> testDocumentURI [
 	self assert: (SAXHandler on: xml) documentURI equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testEndCData [
 	| xml parser |
 	xml := '<test>one<![CDATA[two]>]]]]>three</test>'.
@@ -238,7 +240,7 @@ SAXHandlerTest >> testEndCData [
 		do: [ :message :arguments | self assert: message arguments equals: arguments ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testEndDTD [
 	#('<!DOCTYPE test PUBLIC "publicID" "systemID" [<!--comment-->]><test/>'
 		'<!DOCTYPE test SYSTEM "systemID" [<!--comment-->]><test/>'
@@ -257,7 +259,7 @@ SAXHandlerTest >> testEndDTD [
 						endDocument))]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testEndDocument [
 	| saxHandler parser |
 
@@ -276,7 +278,7 @@ SAXHandlerTest >> testEndDocument [
 		assert: parser atEnd
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testEndElement [
 	| parser |
 	(parser := SAXRecordingHandler on: self prefixedXMLSource)
@@ -297,7 +299,7 @@ SAXHandlerTest >> testEndElement [
 		equals: #('prefix:test')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testEndElementPrefixURI [
 	| parser |
 	(parser := SAXRecordingPrefixURIHandler on: self prefixedXMLSource)
@@ -319,7 +321,7 @@ SAXHandlerTest >> testEndElementPrefixURI [
 		equals: #('prefix:test' 'prefix' '')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testEndElementPrefixURILocalName [
 	| parser |
 	(parser := SAXRecordingPrefixURILocalNameHandler
@@ -344,7 +346,7 @@ SAXHandlerTest >> testEndElementPrefixURILocalName [
 		equals: #('prefix:test' 'prefix' '' 'test')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testEndEntity [
 	| parser messages |
 	(parser := SAXRecordingPrefixURILocalNameHandler
@@ -357,7 +359,7 @@ SAXHandlerTest >> testEndEntity [
 		assert: messages second arguments equals: #('first')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testEndPrefixMapping [
 	| parser messages |
 	(parser := SAXRecordingPrefixURILocalNameHandler
@@ -393,7 +395,7 @@ SAXHandlerTest >> testEndPrefixMapping [
 		assert: (parser allSentMessagesNamed: #endPrefixMapping:) isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testExternalEntityResolver [
 
 	| parser oldResolver newResolver |
@@ -410,7 +412,7 @@ SAXHandlerTest >> testExternalEntityResolver [
 		assert: parser externalEntityResolver identicalTo: newResolver
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testHasParser [
 	| parser |
 
@@ -425,7 +427,7 @@ SAXHandlerTest >> testHasParser [
 	self deny: parser hasParser.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testIgnorableWhitespace [
 	| dtd xml parser |
 
@@ -494,7 +496,7 @@ SAXHandlerTest >> testIgnorableWhitespace [
 		(parser allSentMessagesNamed: #characters:) last arguments first isXMLWhitespace.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testInterruptParsing [
 	| uniqueSelectors parser |
 
@@ -513,7 +515,7 @@ SAXHandlerTest >> testInterruptParsing [
 				((self prefixedXMLSourcePrefixURILocalNameSelectors copyUpTo: each) copyWith: each))].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testIsInCDataSection [
 	| xml parser |
 
@@ -537,7 +539,7 @@ SAXHandlerTest >> testIsInCDataSection [
 	self deny: parser isInCDataSection.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testIsInContent [
 	| xml parser seenElement |
 
@@ -565,7 +567,7 @@ SAXHandlerTest >> testIsInContent [
 	self deny: parser isInContent.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testIsValidating [
 
 	| parser |
@@ -578,7 +580,7 @@ SAXHandlerTest >> testIsValidating [
 		assert: parser isValidating
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testMaxEntityReplacementDepth [
 
 	| parser |
@@ -593,14 +595,14 @@ SAXHandlerTest >> testMaxEntityReplacementDepth [
 		assert: parser maxEntityReplacementDepth isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testNew [
 	self
 		should: [SAXHandler new]
 		raise: Error
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testOn [
 
 	| parser oldConfiguraiton |
@@ -615,7 +617,7 @@ SAXHandlerTest >> testOn [
 		deny: parser configuration identicalTo: oldConfiguraiton
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testOptimizeForLargeDocuments [
 	| parser |
 
@@ -628,7 +630,7 @@ SAXHandlerTest >> testOptimizeForLargeDocuments [
 		assert: parser documentReadLimit isNil.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testPreservesUndeclaredEntityReferences [
 
 	| parser |
@@ -647,7 +649,7 @@ SAXHandlerTest >> testPreservesUndeclaredEntityReferences [
 		deny: parser preservesUndeclaredEntityReferences
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testProcessingInstructionData [
 
 	| xml parser |
@@ -677,7 +679,7 @@ SAXHandlerTest >> testProcessingInstructionData [
 			self assert: message arguments equals: arguments ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testRemoveLimits [
 
 	| parser readLimit depthLimit |
@@ -695,7 +697,7 @@ SAXHandlerTest >> testRemoveLimits [
 		assert: parser maxEntityReplacementDepth isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testReplacesContentEntityReferences [
 
 	| parser |
@@ -710,7 +712,7 @@ SAXHandlerTest >> testReplacesContentEntityReferences [
 		assert: parser replacesContentEntityReferences
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testRequiresSchema [
 
 	| parser |
@@ -728,7 +730,7 @@ SAXHandlerTest >> testRequiresSchema [
 		deny: parser requiresSchema
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testResolvesExternalEntities [
 
 	| parser |
@@ -743,7 +745,7 @@ SAXHandlerTest >> testResolvesExternalEntities [
 		deny: parser resolvesExternalEntities
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testSkippedEntity [
 	| xml parser |
 	xml := '<!DOCTYPE root SYSTEM "extern.dtd"><root>&undeclared;</root>'.
@@ -760,7 +762,7 @@ SAXHandlerTest >> testSkippedEntity [
 		equals: #('undeclared')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testSkippedEntityUndeclaredPreserved [
 	| xml parser |
 	xml := '<!DOCTYPE root SYSTEM "extern.dtd"><root>&undeclared;</root>'.
@@ -780,7 +782,7 @@ SAXHandlerTest >> testSkippedEntityUndeclaredPreserved [
 			equals: #('&undeclared;')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testSkippedEntityUnreplaced [
 	| xml parser |
 	xml := '<!DOCTYPE root [<!ENTITY declared "replacement">]><root>&declared;</root>'.
@@ -800,7 +802,7 @@ SAXHandlerTest >> testSkippedEntityUnreplaced [
 			equals: #('&declared;')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testStartCData [
 	| xml parser |
 	xml := '<test>one<![CDATA[<![CDATA[two]]>three</test>'.
@@ -815,7 +817,7 @@ SAXHandlerTest >> testStartCData [
 		do: [ :message :arguments | self assert: message arguments equals: arguments ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testStartDTDPublicIDSystemID [
 	#('<!DOCTYPE test PUBLIC "publicID" "systemID"><test/>' '<!DOCTYPE test SYSTEM "systemID"><test/>' '<!DOCTYPE test><test/>')
 		with:
@@ -833,7 +835,7 @@ SAXHandlerTest >> testStartDTDPublicIDSystemID [
 				equals: arguments ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testStartDocument [
 	| saxHandler parser |
 
@@ -844,7 +846,7 @@ SAXHandlerTest >> testStartDocument [
 	self assert: (saxHandler wasSentSelector: #startDocument).
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testStartElementAttributes [
 	| parser arguments |
 	(parser := SAXRecordingHandler on: self prefixedXMLSource)
@@ -871,7 +873,7 @@ SAXHandlerTest >> testStartElementAttributes [
 			equals: self prefixedXMLAttributesNamespacesDisabled
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testStartElementPrefixURIAttributes [
 	| parser arguments |
 	(parser := SAXRecordingPrefixURIHandler on: self prefixedXMLSource)
@@ -904,7 +906,7 @@ SAXHandlerTest >> testStartElementPrefixURIAttributes [
 			equals: self prefixedXMLAttributesNamespacesDisabled
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testStartElementPrefixURILocalNameAttributes [
 	| parser arguments |
 	(parser := SAXRecordingPrefixURILocalNameHandler
@@ -942,7 +944,7 @@ SAXHandlerTest >> testStartElementPrefixURILocalNameAttributes [
 			equals: self prefixedXMLAttributesNamespacesDisabled
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testStartEntity [
 	| parser messages |
 	(parser := SAXRecordingPrefixURILocalNameHandler
@@ -955,7 +957,7 @@ SAXHandlerTest >> testStartEntity [
 		assert: messages second arguments equals: #('second')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testStartPrefixMappingURI [
 	| parser messages |
 	(parser := SAXRecordingPrefixURILocalNameHandler
@@ -991,7 +993,7 @@ SAXHandlerTest >> testStartPrefixMappingURI [
 		assert: (parser allSentMessagesNamed: #startPrefixMapping:uri:) isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testUsesNamespaces [
 
 	| parser |
@@ -1004,7 +1006,7 @@ SAXHandlerTest >> testUsesNamespaces [
 		assert: parser usesNamespaces
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAXHandlerTest >> testXMLVersionEncodingStandalone [
 	| selectors |
 	selectors := #(startDocument #xmlVersion:encoding:standalone: #startElement:prefix:uri:localName:attributes: #endElement:prefix:uri:localName: endDocument).

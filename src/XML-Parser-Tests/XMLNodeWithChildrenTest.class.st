@@ -2,17 +2,19 @@
 Abstract, do not run.
 "
 Class {
-	#name : #XMLNodeWithChildrenTest,
-	#superclass : #XMLNodeTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLNodeWithChildrenTest',
+	#superclass : 'XMLNodeTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNodeWithChildrenTest class >> isAbstract [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithChildrenTest >> copiedClasses [
 	"an object that isKindOf: any of these should be copied if it's
 	reachable from a copied node directly or through another copied object"
@@ -22,7 +24,7 @@ XMLNodeWithChildrenTest >> copiedClasses [
 		XMLConfiguration XMLNodeFactory)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNodeWithChildrenTest >> newNodeWithNodes [
 	^ self newNode
 		addNode: (XMLComment string: 'one');
@@ -32,17 +34,17 @@ XMLNodeWithChildrenTest >> newNodeWithNodes [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithChildrenTest >> nodeClass [
 	^ XMLNodeWithChildren
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithChildrenTest >> nodeListClass [
 	^ XMLNodeList
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testAddComment [
 
 	| nodeWithNodes comment |
@@ -55,7 +57,7 @@ XMLNodeWithChildrenTest >> testAddComment [
 		assert: comment string equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testAddNode [
 
 	| node nodesAdded nodeWithNodes |
@@ -84,7 +86,7 @@ XMLNodeWithChildrenTest >> testAddNode [
 			assert: each parent identicalTo: node ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testAddNodeAfter [
 
 	| node nodesAdded nodeWithNodes nodeAfter |
@@ -117,7 +119,7 @@ XMLNodeWithChildrenTest >> testAddNodeAfter [
 			assert: each parent identicalTo: node ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testAddNodeBefore [
 
 	| node nodesAdded nodeWithNodes nodeBefore |
@@ -150,7 +152,7 @@ XMLNodeWithChildrenTest >> testAddNodeBefore [
 			assert: each parent identicalTo: node ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testAddNodeFirst [
 
 	| node nodesAdded nodeWithNodes |
@@ -179,7 +181,7 @@ XMLNodeWithChildrenTest >> testAddNodeFirst [
 			assert: each parent identicalTo: node ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testAddNodes [
 
 	| node nodesAdded nodeWithNodes |
@@ -202,7 +204,7 @@ XMLNodeWithChildrenTest >> testAddNodes [
 		assert: (node nodes allSatisfy: [ :each | each parent == node ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testAddPITargetData [
 
 	| nodeWithNodes pi |
@@ -216,7 +218,7 @@ XMLNodeWithChildrenTest >> testAddPITargetData [
 		assert: pi data equals: 'data'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testAllNodes [
 
 	| nodeWithNodes allNodes |
@@ -237,7 +239,7 @@ XMLNodeWithChildrenTest >> testAllNodes [
 		assert: allNodes fifth data equals: 'six'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testAllNodesCollect [
 	| nodeWithNodes allNodes |
 
@@ -255,7 +257,7 @@ XMLNodeWithChildrenTest >> testAllNodesCollect [
 					collects: (node allNodes collect: [:each | each identityHash])]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testAllNodesDetect [
 
 	| nodeWithNodes allNodes detectedNode |
@@ -271,7 +273,7 @@ XMLNodeWithChildrenTest >> testAllNodesDetect [
 					 each isElementNamed: 'absent' ]) isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testAllNodesDetectIfNone [
 
 	| nodeWithNodes allNodes detectedNode |
@@ -290,7 +292,7 @@ XMLNodeWithChildrenTest >> testAllNodesDetectIfNone [
 		equals: #absent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testAllNodesDo [
 	| nodeWithNodes allNodes |
 
@@ -308,7 +310,7 @@ XMLNodeWithChildrenTest >> testAllNodesDo [
 					enumerate: node allNodes]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testAllNodesSelect [
 	| nodeWithNodes allNodes |
 
@@ -326,7 +328,7 @@ XMLNodeWithChildrenTest >> testAllNodesSelect [
 					selects: (node allNodes select: [:each | each isComment])]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testAncestorNodes [
 
 	| nodeWithNodes ancestorStack |
@@ -343,7 +345,7 @@ XMLNodeWithChildrenTest >> testAncestorNodes [
 		ancestorStack addLast: each ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testAncestorNodesDo [
 	| nodeWithNodes |
 
@@ -356,12 +358,12 @@ XMLNodeWithChildrenTest >> testAncestorNodesDo [
 			enumerate: each ancestorNodes]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testCanHaveChildren [
 	self assert: self newNode canHaveChildren
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testCanonicallyEquals [
 	super testCanonicallyEquals.
 	self
@@ -369,7 +371,7 @@ XMLNodeWithChildrenTest >> testCanonicallyEquals [
 		deny: (self newNodeWithNodes canonicallyEquals: self newNode)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testCopy [
 	"this traverses the object graph of each node and compares it with
 	its copy to make sure nodes and the inst vars that should be copied
@@ -415,7 +417,7 @@ XMLNodeWithChildrenTest >> testCopy [
 					ifFalse: [ unvisitedPairs add: newPair ] ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testDescendantNodes [
 	| nodeWithNodes descendantNodes |
 
@@ -433,7 +435,7 @@ XMLNodeWithChildrenTest >> testDescendantNodes [
 					selects: node allNodes allButFirst]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testDescendantNodesCollect [
 	| nodeWithNodes descendantNodes |
 
@@ -451,7 +453,7 @@ XMLNodeWithChildrenTest >> testDescendantNodesCollect [
 					collects: (node descendantNodes collect: [:each | each identityHash])]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testDescendantNodesDetect [
 
 	| nodeWithNodes descendantNodes detectedNode |
@@ -468,7 +470,7 @@ XMLNodeWithChildrenTest >> testDescendantNodesDetect [
 					 each isElementNamed: 'absent' ]) isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testDescendantNodesDetectIfNone [
 
 	| nodeWithNodes descendantNodes detectedNode |
@@ -488,7 +490,7 @@ XMLNodeWithChildrenTest >> testDescendantNodesDetectIfNone [
 		equals: #absent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testDescendantNodesDo [
 	| nodeWithNodes descendantNodes |
 
@@ -506,7 +508,7 @@ XMLNodeWithChildrenTest >> testDescendantNodesDo [
 					enumerate: node descendantNodes]].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testDescendantNodesSelect [
 	| nodeWithNodes descendantNodes |
 
@@ -524,7 +526,7 @@ XMLNodeWithChildrenTest >> testDescendantNodesSelect [
 					selects: (node descendantNodes select: [:each | each isComment])]].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testDocument [
 
 	| nodeWithNodes document |
@@ -540,7 +542,7 @@ XMLNodeWithChildrenTest >> testDocument [
 		root allNodesDo: [ :each | self assert: each document isNil ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testDocumentRoot [
 
 	| nodeWithNodes |
@@ -551,7 +553,7 @@ XMLNodeWithChildrenTest >> testDocumentRoot [
 		self assert: each documentRoot identicalTo: nodeWithNodes ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testFirstNode [
 
 	| nodeWithNodes |
@@ -562,14 +564,14 @@ XMLNodeWithChildrenTest >> testFirstNode [
 	self assert: nodeWithNodes firstNode isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testHasChildren [
 	super testHasChildren.
 
 	self assert: self newNodeWithNodes hasChildren.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testIncludesNode [
 	| nodeWithNodes |
 
@@ -579,7 +581,7 @@ XMLNodeWithChildrenTest >> testIncludesNode [
 	self deny: (nodeWithNodes includesNode: self newNode).
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testLastNode [
 
 	| nodeWithNodes |
@@ -591,7 +593,7 @@ XMLNodeWithChildrenTest >> testLastNode [
 	self assert: nodeWithNodes lastNode isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testNextNode [
 
 	| nodeWithNodes nextNode |
@@ -603,7 +605,7 @@ XMLNodeWithChildrenTest >> testNextNode [
 		nextNode := each ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testNodeAfter [
 
 	| nodeWithNodes nodeAfter |
@@ -615,7 +617,7 @@ XMLNodeWithChildrenTest >> testNodeAfter [
 	self assert: (nodeWithNodes nodeAfter: self newNode) isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testNodeAt [
 
 	| nodeWithNodes |
@@ -629,7 +631,7 @@ XMLNodeWithChildrenTest >> testNodeAt [
 		(nodeWithNodes nodeAt: nodeWithNodes nodes size + 1) isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testNodeAtIfAbsent [
 
 	| nodeWithNodes |
@@ -648,7 +650,7 @@ XMLNodeWithChildrenTest >> testNodeAtIfAbsent [
 		equals: #absent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testNodeAtPut [
 
 	| nodeWithNodes newNodeClass newNode |
@@ -680,7 +682,7 @@ XMLNodeWithChildrenTest >> testNodeAtPut [
 		raise: Error
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testNodeBefore [
 
 	| nodeWithNodes nodeBefore |
@@ -692,7 +694,7 @@ XMLNodeWithChildrenTest >> testNodeBefore [
 	self assert: (nodeWithNodes nodeBefore: self newNode) isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testNodeListCopying [
 
 	| nodeWithNodes nodeListCopy |
@@ -705,13 +707,13 @@ XMLNodeWithChildrenTest >> testNodeListCopying [
 		assert: nodeListCopy observer isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testNodes [
 
 	self assert: self newNode nodes class identicalTo: self nodeListClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testNodesCollect [
 	| node |
 
@@ -721,7 +723,7 @@ XMLNodeWithChildrenTest >> testNodesCollect [
 		collects: (node nodes collect: [:each | each identityHash]).
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testNodesDetect [
 
 	| node detectedNode |
@@ -735,7 +737,7 @@ XMLNodeWithChildrenTest >> testNodesDetect [
 			(node nodesDetect: [ :each | each isElementNamed: 'absent' ]) isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testNodesDetectIfNone [
 
 	| node |
@@ -751,7 +753,7 @@ XMLNodeWithChildrenTest >> testNodesDetectIfNone [
 		equals: #absent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testNodesDo [
 	| node |
 
@@ -766,7 +768,7 @@ XMLNodeWithChildrenTest >> testNodesDo [
 		enumerate: node nodes.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testNodesSelect [
 	| node |
 
@@ -776,7 +778,7 @@ XMLNodeWithChildrenTest >> testNodesSelect [
 		selects: (node nodes select: [:each | each hasChildren]).
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testPreviousNode [
 
 	| nodeWithNodes previousNode |
@@ -788,7 +790,7 @@ XMLNodeWithChildrenTest >> testPreviousNode [
 		previousNode := each ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testRemoveNode [
 
 	| nodeWithNodes |
@@ -802,7 +804,7 @@ XMLNodeWithChildrenTest >> testRemoveNode [
 	self should: [ nodeWithNodes removeNode: self newNode ] raise: Error
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testRemoveNodeIfAbsent [
 
 	| nodeWithNodes |
@@ -820,7 +822,7 @@ XMLNodeWithChildrenTest >> testRemoveNodeIfAbsent [
 		identicalTo: #absent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testRemoveNodes [
 
 	| nodeWithNodes |
@@ -831,7 +833,7 @@ XMLNodeWithChildrenTest >> testRemoveNodes [
 		deny: nodeWithNodes hasChildren
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testRemoveNodesAll [
 
 	| nodeWithNodes |
@@ -848,7 +850,7 @@ XMLNodeWithChildrenTest >> testRemoveNodesAll [
 		nodeWithNodes := self newNodeWithNodes ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithChildrenTest >> testReplaceNodeWith [
 
 	| nodeWithNodes replacements nodes firstIndex secondIndex |

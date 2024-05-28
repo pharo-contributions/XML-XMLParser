@@ -1,30 +1,32 @@
 Class {
-	#name : #XMLClassFinderTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Utils'
+	#name : 'XMLClassFinderTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Utils',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Utils'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLClassFinderTest >> absentClassName [
 	^ (self presentClassName asString, 'ShouldNotBePresent') asString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLClassFinderTest >> classFinder [
 	^ XMLClassFinder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLClassFinderTest >> presentClass [
 	^ self class
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLClassFinderTest >> presentClassName [
 	^ self class name asSymbol
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLClassFinderTest >> testClassNamed [
 
 	self
@@ -34,7 +36,7 @@ XMLClassFinderTest >> testClassNamed [
 		(self classFinder classNamed: self absentClassName) isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLClassFinderTest >> testClassNamedIfAbsent [
 
 	self
@@ -49,7 +51,7 @@ XMLClassFinderTest >> testClassNamedIfAbsent [
 		equals: #absent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLClassFinderTest >> testClassNamedIfPresent [
 	self assert:
 		(self classFinder
@@ -68,7 +70,7 @@ XMLClassFinderTest >> testClassNamedIfPresent [
 			ifPresent: [self fail]) isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLClassFinderTest >> testClassNamedIfPresentIfAbsent [
 	self assert:
 		(self classFinder
@@ -90,7 +92,7 @@ XMLClassFinderTest >> testClassNamedIfPresentIfAbsent [
 			ifAbsent: [#absent]) equals: #absent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLClassFinderTest >> testHasClassNamed [
 	self
 		assert: (self classFinder hasClassNamed: self presentClassName);

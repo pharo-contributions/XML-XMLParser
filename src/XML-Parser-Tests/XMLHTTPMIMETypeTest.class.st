@@ -1,10 +1,12 @@
 Class {
-	#name : #XMLHTTPMIMETypeTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-HTTP'
+	#name : 'XMLHTTPMIMETypeTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-HTTP',
+	#package : 'XML-Parser-Tests',
+	#tag : 'HTTP'
 }
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 XMLHTTPMIMETypeTest >> assertMIMEType: aFirstMIMEType doesNotEqual: aSecondMIMEType [
 
 	self
@@ -12,7 +14,7 @@ XMLHTTPMIMETypeTest >> assertMIMEType: aFirstMIMEType doesNotEqual: aSecondMIMET
 		deny: aSecondMIMEType equals: aFirstMIMEType
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 XMLHTTPMIMETypeTest >> assertMIMEType: aFirstMIMEType equals: aSecondMIMEType [
 
 	self
@@ -20,7 +22,7 @@ XMLHTTPMIMETypeTest >> assertMIMEType: aFirstMIMEType equals: aSecondMIMEType [
 		assert: aSecondMIMEType equals: aFirstMIMEType
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMIMETypeTest >> testCharset [
 	self assert:
 		(XMLHTTPMIMEType
@@ -42,7 +44,7 @@ XMLHTTPMIMETypeTest >> testCharset [
 					with: 'charset' -> 'utf8')) charset equals: 'utf16'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMIMETypeTest >> testEquals [
 	self
 		assertMIMEType:
@@ -138,7 +140,7 @@ XMLHTTPMIMETypeTest >> testEquals [
 						with: 'charset' -> 'utf-8'))
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMIMETypeTest >> testHash [
 	self assert:
 		(XMLHTTPMIMEType
@@ -183,7 +185,7 @@ XMLHTTPMIMETypeTest >> testHash [
 						with: 'charset' -> 'utf-8')) hash
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMIMETypeTest >> testMainType [
 	#('{1}'
 		' {1} '
@@ -217,7 +219,7 @@ XMLHTTPMIMETypeTest >> testMainType [
 			self assert: (XMLHTTPMIMEType fromString: each) mainType equals: '']
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMIMETypeTest >> testParameters [
 	#(';{1}={2};{3}={4}'
 		' ; {1} = {2} ; {3} = {4} '
@@ -290,7 +292,7 @@ XMLHTTPMIMETypeTest >> testParameters [
 			self assert: (XMLHTTPMIMEType fromString: each) parameters isEmpty]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMIMETypeTest >> testPrintOn [
 	self assert:
 		(XMLHTTPMIMEType
@@ -314,7 +316,7 @@ XMLHTTPMIMETypeTest >> testPrintOn [
 						'text/plain; charset=utf8; name=value'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMIMETypeTest >> testSubType [
 
 	#( '/{1}' ' / {1} ' 'application/{1}' ' application / {1} '

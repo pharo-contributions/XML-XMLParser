@@ -2,12 +2,14 @@
 This class records the second element events (#startElement:prefix:uri:attributes: and #endElement:prefix:uri:) used when the first aren't defined.
 "
 Class {
-	#name : #SAXRecordingPrefixURIHandler,
-	#superclass : #SAXRecordingHandler,
-	#category : #'XML-Parser-Tests-Base'
+	#name : 'SAXRecordingPrefixURIHandler',
+	#superclass : 'SAXRecordingHandler',
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXRecordingPrefixURIHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI [
 	self
 		recordMessageReceiver: self
@@ -20,7 +22,7 @@ SAXRecordingPrefixURIHandler >> endElement: aQualifiedName prefix: aPrefix uri: 
 				yourself)
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXRecordingPrefixURIHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes: anAttributeDictionary [
 	self
 		recordMessageReceiver: self

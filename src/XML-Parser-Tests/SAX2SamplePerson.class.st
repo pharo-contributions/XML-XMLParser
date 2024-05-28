@@ -2,38 +2,40 @@
 The sample person object parsed by the SAX2ElementParser.
 "
 Class {
-	#name : #SAX2SamplePerson,
-	#superclass : #Object,
+	#name : 'SAX2SamplePerson',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'dateOfBirth',
 		'emailAddresses',
 		'residence'
 	],
-	#category : #'XML-Parser-Tests-ElementHandlers'
+	#category : 'XML-Parser-Tests-ElementHandlers',
+	#package : 'XML-Parser-Tests',
+	#tag : 'ElementHandlers'
 }
 
-{ #category : #adding }
+{ #category : 'adding' }
 SAX2SamplePerson >> addEmailAddress: aString [
 	^ self emailAddresses addLast: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2SamplePerson >> dateOfBirth [
 	^ dateOfBirth
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2SamplePerson >> dateOfBirth: aDate [
 	dateOfBirth := aDate
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2SamplePerson >> emailAddresses [
 	^ emailAddresses
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SAX2SamplePerson >> initialize [
 	super initialize.
 
@@ -43,22 +45,22 @@ SAX2SamplePerson >> initialize [
 	residence := ''
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2SamplePerson >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2SamplePerson >> name: aString [
 	name := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2SamplePerson >> residence [
 	^ residence
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2SamplePerson >> residence: aString [
 	residence := aString
 ]

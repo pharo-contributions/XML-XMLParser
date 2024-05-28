@@ -1,25 +1,27 @@
 Class {
-	#name : #XMLAttributeSpecTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Utils'
+	#name : 'XMLAttributeSpecTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Utils',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Utils'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeSpecTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeSpecTest >> attributeSpecClass [
 	^ XMLAttributeSpec
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLAttributeSpecTest >> newAttributeSpec [
 	^ self attributeSpecClass new
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeSpecTest >> testAsXMLAttributeSpec [
 
 	| attributeSpec |

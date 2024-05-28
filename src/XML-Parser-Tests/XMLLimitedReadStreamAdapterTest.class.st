@@ -1,46 +1,48 @@
 Class {
-	#name : #XMLLimitedReadStreamAdapterTest,
-	#superclass : #XMLReadStreamAdapterTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLLimitedReadStreamAdapterTest',
+	#superclass : 'XMLReadStreamAdapterTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLLimitedReadStreamAdapterTest >> basicInputCollection [
 	^ super basicInputCollection, super basicInputCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLLimitedReadStreamAdapterTest >> basicOutputCollection [
 	^ self basicInputCollection
 		copyFrom: 1
 		to: self inputCollectionLimit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLLimitedReadStreamAdapterTest >> inputCollectionLimit [
 	^ self inputCollection size / 2
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLLimitedReadStreamAdapterTest >> newStreamAdapterOn: aStream [
 	^ self
 		newStreamAdapterOn: aStream
 		limit: self inputCollectionLimit
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLLimitedReadStreamAdapterTest >> newStreamAdapterOn: aStream limit: aLimit [
 	^ self streamAdapterClass
 		on: aStream
 		limit: aLimit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLLimitedReadStreamAdapterTest >> streamAdapterClass [
 	^ XMLLimitedReadStreamAdapter
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLLimitedReadStreamAdapterTest >> testAtLimitedEnd [
 	| adapter unlimitedOutputCollectionSize |
 
@@ -65,7 +67,7 @@ XMLLimitedReadStreamAdapterTest >> testAtLimitedEnd [
 		deny: adapter atLimitedEnd
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLLimitedReadStreamAdapterTest >> testLimit [
 
 	| adapter |
@@ -77,7 +79,7 @@ XMLLimitedReadStreamAdapterTest >> testLimit [
 		assert: adapter limit equals: self inputCollectionLimit + 1
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLLimitedReadStreamAdapterTest >> testReset [
 
 	| adapter |

@@ -1,10 +1,12 @@
 Class {
-	#name : #XMLDFALimitsTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Validation-DFA'
+	#name : 'XMLDFALimitsTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Validation-DFA',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Validation-DFA'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDFALimitsTest >> testDFAStateCacheLimit [
 	| names contentModel firstState currentState visitedStates |
 
@@ -60,7 +62,7 @@ XMLDFALimitsTest >> testDFAStateCacheLimit [
 			ifFalse: [self deny: currentState isAccepting]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDFALimitsTest >> testDFAStateTransitionLimit [
 	| dfaState elementName |
 

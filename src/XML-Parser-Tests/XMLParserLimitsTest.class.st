@@ -1,10 +1,12 @@
 Class {
-	#name : #XMLParserLimitsTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Base'
+	#name : 'XMLParserLimitsTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #source }
+{ #category : 'source' }
 XMLParserLimitsTest >> recursiveEntitiesNamed: aName depth: aLimit isParameter: aBoolean [
 	| xml |
 
@@ -31,7 +33,7 @@ XMLParserLimitsTest >> recursiveEntitiesNamed: aName depth: aLimit isParameter: 
 	^ xml contents
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserLimitsTest >> testDocumentReadLimit [
 	| xml replacement |
 
@@ -57,7 +59,7 @@ XMLParserLimitsTest >> testDocumentReadLimit [
 		raise: XMLLimitException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserLimitsTest >> testRecursiveGeneralEntityReplacement [
 	| limit xml |
 
@@ -75,7 +77,7 @@ XMLParserLimitsTest >> testRecursiveGeneralEntityReplacement [
 		raise: XMLLimitException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserLimitsTest >> testRecursiveGeneralEntityReplacementPastLimit [
 	| limit xml |
 
@@ -99,7 +101,7 @@ XMLParserLimitsTest >> testRecursiveGeneralEntityReplacementPastLimit [
 		raise: XMLLimitException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserLimitsTest >> testRecursiveParameterEntityReplacement [
 	| limit xml |
 
@@ -117,7 +119,7 @@ XMLParserLimitsTest >> testRecursiveParameterEntityReplacement [
 		raise: XMLLimitException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserLimitsTest >> testRecursiveParameterEntityReplacementPastLimit [
 	| limit xml |
 
@@ -141,7 +143,7 @@ XMLParserLimitsTest >> testRecursiveParameterEntityReplacementPastLimit [
 		raise: XMLLimitException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserLimitsTest >> testResolvingLocalFromNonLocal [
 	| parser |
 
@@ -158,7 +160,7 @@ XMLParserLimitsTest >> testResolvingLocalFromNonLocal [
 		raise: XMLLimitException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserLimitsTest >> testStreamReaderMaxPushBack [
 	| streamReader |
 
@@ -173,7 +175,7 @@ XMLParserLimitsTest >> testStreamReaderMaxPushBack [
 		raise: XMLLimitException
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLParserLimitsTest >> xmlWithRecursiveEntitiesNamed: aName depth: aLimit isParameter: aBoolean [
 	| xml |
 

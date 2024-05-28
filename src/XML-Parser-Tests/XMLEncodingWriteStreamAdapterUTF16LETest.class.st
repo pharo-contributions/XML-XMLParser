@@ -1,25 +1,27 @@
 Class {
-	#name : #XMLEncodingWriteStreamAdapterUTF16LETest,
-	#superclass : #XMLEncodingWriteStreamAdapterTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLEncodingWriteStreamAdapterUTF16LETest',
+	#superclass : 'XMLEncodingWriteStreamAdapterTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterUTF16LETest >> basicInputCollection [
 	^ self decodedUTF16String
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterUTF16LETest >> basicInvalidInputCollections [
 	^ self basicInvalidUTFInputCollections
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterUTF16LETest >> basicOutputCollection [
 	^ self encodedUTF16LEBinary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterUTF16LETest >> streamConverterClass [
 	^ XMLUTF16LittleEndianStreamConverter
 ]

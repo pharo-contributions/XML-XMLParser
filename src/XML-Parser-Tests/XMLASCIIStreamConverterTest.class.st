@@ -1,20 +1,22 @@
 Class {
-	#name : #XMLASCIIStreamConverterTest,
-	#superclass : #XMLStreamConverterTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLASCIIStreamConverterTest',
+	#superclass : 'XMLStreamConverterTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLASCIIStreamConverterTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLASCIIStreamConverterTest >> primaryEncodingName [
 	^ 'ASCII'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLASCIIStreamConverterTest >> streamConverterClass [
 	^ XMLASCIIStreamConverter
 ]

@@ -1,20 +1,22 @@
 Class {
-	#name : #XMLFileHandleUTF16BETest,
-	#superclass : #XMLFileHandleTest,
-	#category : #'XML-Parser-Tests-Files'
+	#name : 'XMLFileHandleUTF16BETest',
+	#superclass : 'XMLFileHandleTest',
+	#category : 'XML-Parser-Tests-Files',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Files'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLFileHandleUTF16BETest >> decodedFileContents [
 	^ XMLStreamAdapterTest decodedUTF16String
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLFileHandleUTF16BETest >> encodedFileContents [
 	^ XMLStreamAdapterTest encodedUTF16BEBinary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLFileHandleUTF16BETest >> streamConverterClass [
 	^ XMLUTF16BigEndianStreamConverter
 ]

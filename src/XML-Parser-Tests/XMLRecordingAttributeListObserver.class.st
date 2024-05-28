@@ -2,12 +2,14 @@
 This observer records notifications from XMLAttributeLists.
 "
 Class {
-	#name : #XMLRecordingAttributeListObserver,
-	#superclass : #XMLRecordingListObserver,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLRecordingAttributeListObserver',
+	#superclass : 'XMLRecordingListObserver',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #notifying }
+{ #category : 'notifying' }
 XMLRecordingAttributeListObserver >> addedAttribute: anAttribute [
 	self messageRecorder
 		recordMessageReceiver: self
@@ -15,7 +17,7 @@ XMLRecordingAttributeListObserver >> addedAttribute: anAttribute [
 		arguments: (Array with: anAttribute)
 ]
 
-{ #category : #notifying }
+{ #category : 'notifying' }
 XMLRecordingAttributeListObserver >> removedAttribute: anAttribute [
 	self messageRecorder
 		recordMessageReceiver: self

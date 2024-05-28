@@ -1,25 +1,27 @@
 Class {
-	#name : #XMLObservableListTest,
-	#superclass : #XMLOrderedListTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLObservableListTest',
+	#superclass : 'XMLOrderedListTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLObservableListTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLObservableListTest >> afterAddingToNotifications [
 	^ #(added:to:)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLObservableListTest >> afterRemovingFromNotifications [
 	^ #(removed:from:)
 ]
 
-{ #category : #assertions }
+{ #category : 'assertions' }
 XMLObservableListTest >> assertList: aFirstList copiedFrom: aSecondList equals: aThirdList [
 	super
 		assertList: aFirstList
@@ -30,7 +32,7 @@ XMLObservableListTest >> assertList: aFirstList copiedFrom: aSecondList equals: 
 		sharesObserverWith: aSecondList
 ]
 
-{ #category : #assertions }
+{ #category : 'assertions' }
 XMLObservableListTest >> assertList: aFirstList isCopyOf: aSecondList [
 	super
 		assertList: aFirstList
@@ -40,14 +42,14 @@ XMLObservableListTest >> assertList: aFirstList isCopyOf: aSecondList [
 		sharesObserverWith: aSecondList
 ]
 
-{ #category : #assertions }
+{ #category : 'assertions' }
 XMLObservableListTest >> assertList: aList receivedNotificationOfAdding: anObject [
 	self
 		assertList: aList
 		receivedNotificationOfAfterAdding: anObject
 ]
 
-{ #category : #assertions }
+{ #category : 'assertions' }
 XMLObservableListTest >> assertList: aList receivedNotificationOfAfterAdding: anObject [
 	self
 		assertNotification: aList observer nextNotification
@@ -56,7 +58,7 @@ XMLObservableListTest >> assertList: aList receivedNotificationOfAfterAdding: an
 		hasType: self afterAddingToNotifications
 ]
 
-{ #category : #assertions }
+{ #category : 'assertions' }
 XMLObservableListTest >> assertList: aList receivedNotificationOfRemoving: anObject [
 	self
 		assertNotification: aList observer nextNotification
@@ -65,7 +67,7 @@ XMLObservableListTest >> assertList: aList receivedNotificationOfRemoving: anObj
 		hasType: self afterRemovingFromNotifications
 ]
 
-{ #category : #assertions }
+{ #category : 'assertions' }
 XMLObservableListTest >> assertList: aList receivedNotificationOfReplacing: anOldObject with: aNewObject [
 	self
 		assertList: aList
@@ -75,7 +77,7 @@ XMLObservableListTest >> assertList: aList receivedNotificationOfReplacing: anOl
 		receivedNotificationOfAfterAdding: aNewObject
 ]
 
-{ #category : #assertions }
+{ #category : 'assertions' }
 XMLObservableListTest >> assertNotification: aNotification for: anObject withList: aList hasType: aSelectorCollection [
 
 	self
@@ -88,14 +90,14 @@ XMLObservableListTest >> assertNotification: aNotification for: anObject withLis
 				 to: (aNotification selector asString occurrencesOf: $:))
 ]
 
-{ #category : #assertions }
+{ #category : 'assertions' }
 XMLObservableListTest >> denyList: aFirstList sharesObserverWith: aSecondList [
 	self deny:
 		(aFirstList observer isNotNil
 			and: [aFirstList observer == aSecondList observer])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLObservableListTest >> emptyList [
 	| list |
 
@@ -104,12 +106,12 @@ XMLObservableListTest >> emptyList [
 	^ list
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLObservableListTest >> listClass [
 	^ XMLObservableList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLObservableListTest >> listWithItems [
 	| list |
 
@@ -118,7 +120,7 @@ XMLObservableListTest >> listWithItems [
 	^ list
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLObservableListTest >> listWithSingleItem [
 	| list |
 
@@ -127,12 +129,12 @@ XMLObservableListTest >> listWithSingleItem [
 	^ list
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLObservableListTest >> observerClass [
 	^ XMLRecordingListObserver
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLObservableListTest >> observerOnList: aList [
 	| observer |
 
@@ -141,7 +143,7 @@ XMLObservableListTest >> observerOnList: aList [
 	^ observer
 ]
 
-{ #category : #assertions }
+{ #category : 'assertions' }
 XMLObservableListTest >> should: aBlock add: anObject toAndNotify: aList [
 	self
 		should: aBlock
@@ -149,7 +151,7 @@ XMLObservableListTest >> should: aBlock add: anObject toAndNotify: aList [
 		toAndNotify: aList
 ]
 
-{ #category : #assertions }
+{ #category : 'assertions' }
 XMLObservableListTest >> should: aBlock addAll: aCollection toAndNotify: aList [
 	aList observer clearNotifications.
 	aBlock value.
@@ -160,7 +162,7 @@ XMLObservableListTest >> should: aBlock addAll: aCollection toAndNotify: aList [
 			receivedNotificationOfAdding: each]
 ]
 
-{ #category : #assertions }
+{ #category : 'assertions' }
 XMLObservableListTest >> should: aBlock remove: anObject fromAndNotify: aList [
 	self
 		should: aBlock
@@ -168,7 +170,7 @@ XMLObservableListTest >> should: aBlock remove: anObject fromAndNotify: aList [
 		fromAndNotify: aList
 ]
 
-{ #category : #assertions }
+{ #category : 'assertions' }
 XMLObservableListTest >> should: aBlock removeAll: aCollection fromAndNotify: aList [
 	aList observer clearNotifications.
 	aBlock value.
@@ -179,7 +181,7 @@ XMLObservableListTest >> should: aBlock removeAll: aCollection fromAndNotify: aL
 			receivedNotificationOfRemoving: each]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testAdd [
 	| list |
 
@@ -193,7 +195,7 @@ XMLObservableListTest >> testAdd [
 			toAndNotify: list]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testAddAfter [
 	| list |
 
@@ -207,7 +209,7 @@ XMLObservableListTest >> testAddAfter [
 			toAndNotify: list]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testAddAfterIndex [
 	| list |
 
@@ -221,7 +223,7 @@ XMLObservableListTest >> testAddAfterIndex [
 			toAndNotify: list]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testAddAll [
 	| list |
 
@@ -238,7 +240,7 @@ XMLObservableListTest >> testAddAll [
 		toAndNotify: list
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testAddAllFirst [
 	| list |
 
@@ -255,7 +257,7 @@ XMLObservableListTest >> testAddAllFirst [
 		toAndNotify: list
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testAddAllLast [
 	| list |
 
@@ -272,7 +274,7 @@ XMLObservableListTest >> testAddAllLast [
 		toAndNotify: list.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testAddBefore [
 	| list last |
 
@@ -288,7 +290,7 @@ XMLObservableListTest >> testAddBefore [
 			toAndNotify: list].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testAddBeforeIndex [
 	| list |
 
@@ -302,7 +304,7 @@ XMLObservableListTest >> testAddBeforeIndex [
 			toAndNotify: list].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testAddFirst [
 	| list |
 
@@ -316,7 +318,7 @@ XMLObservableListTest >> testAddFirst [
 			toAndNotify: list].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testAddLast [
 	| list |
 
@@ -330,7 +332,7 @@ XMLObservableListTest >> testAddLast [
 			toAndNotify: list].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testAtPut [
 	| list |
 
@@ -351,14 +353,14 @@ XMLObservableListTest >> testAtPut [
 	self deny: list observer hasNotifications.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testOfSize [
 	self
 		should: [self listClass ofSize: 10]
 		raise: Error
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testRemoveAll [
 	| list |
 
@@ -371,7 +373,7 @@ XMLObservableListTest >> testRemoveAll [
 		fromAndNotify: list.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testRemoveAt [
 	super testRemoveAt.
 
@@ -387,7 +389,7 @@ XMLObservableListTest >> testRemoveAt [
 			deny: list observer hasNotifications].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testRemoveFirst [
 	| list |
 
@@ -404,7 +406,7 @@ XMLObservableListTest >> testRemoveFirst [
 		deny: list observer hasNotifications.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testRemoveFirstFew [
 	| list |
 
@@ -422,7 +424,7 @@ XMLObservableListTest >> testRemoveFirstFew [
 		deny: list observer hasNotifications.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testRemoveIfAbsent [
 
 	| list |
@@ -441,7 +443,7 @@ XMLObservableListTest >> testRemoveIfAbsent [
 	self deny: list observer hasNotifications
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testRemoveLast [
 	| list |
 
@@ -458,7 +460,7 @@ XMLObservableListTest >> testRemoveLast [
 		deny: list observer hasNotifications.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testRemoveLastFew [
 	| list |
 	
@@ -476,7 +478,7 @@ XMLObservableListTest >> testRemoveLastFew [
 		deny: list observer hasNotifications.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testReplaceFromToWith [
 	super testReplaceFromToWith.
 
@@ -497,7 +499,7 @@ XMLObservableListTest >> testReplaceFromToWith [
 			self deny: list observer hasNotifications]].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testReplaceFromToWithStartingAt [
 	super testReplaceFromToWithStartingAt.
 
@@ -519,7 +521,7 @@ XMLObservableListTest >> testReplaceFromToWithStartingAt [
 			self deny: list observer hasNotifications]].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLObservableListTest >> testReset [
 	| list |
 

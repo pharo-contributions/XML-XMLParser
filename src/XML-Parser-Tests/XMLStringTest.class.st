@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLStringTest,
-	#superclass : #XMLNodeTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLStringTest',
+	#superclass : 'XMLNodeTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStringTest >> nodeClass [
 	^ XMLString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testAcceptNodeVisitor [
 
 	| visitor stringNode message |
@@ -27,7 +29,7 @@ XMLStringTest >> testAcceptNodeVisitor [
 		deny: visitor messageRecorder hasMessages
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testAppend [
 
 	| stringNode |
@@ -42,7 +44,7 @@ XMLStringTest >> testAppend [
 	self assert: stringNode string equals: 'onetwothree'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testAsString [
 
 	self
@@ -50,7 +52,7 @@ XMLStringTest >> testAsString [
 		assert: (self nodeClass string: 'test') asString equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testAsXMLEscapedString [
 
 	| stringNode |
@@ -61,7 +63,7 @@ XMLStringTest >> testAsXMLEscapedString [
 		assert: stringNode asXMLEscapedString equals: self escapedString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testAsXMLStringNode [
 
 	| stringNode |
@@ -69,7 +71,7 @@ XMLStringTest >> testAsXMLStringNode [
 	self assert: stringNode asXMLStringNode identicalTo: stringNode
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testBeginsWith [
 	| stringNode |
 
@@ -83,7 +85,7 @@ XMLStringTest >> testBeginsWith [
 			deny: (stringNode beginsWith: (self nodeClass string: (prefix copyWith: $.)))]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testCanonicallyEquals [
 	super testCanonicallyEquals.
 	self assert:
@@ -94,7 +96,7 @@ XMLStringTest >> testCanonicallyEquals [
 			self newNode)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testDeleteFromTo [
 
 	| stringNode |
@@ -117,7 +119,7 @@ XMLStringTest >> testDeleteFromTo [
 	self assert: stringNode string equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testEndsWith [
 	| stringNode |
 
@@ -131,7 +133,7 @@ XMLStringTest >> testEndsWith [
 			deny: (stringNode endsWith: (self nodeClass string: (suffix copyWithFirst: $.)))]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testIncludesSubstring [
 	| stringNode |
 
@@ -167,7 +169,7 @@ XMLStringTest >> testIncludesSubstring [
 		assert: (stringNode includesSubstring: (self nodeClass string: ''))
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testIndexOfSubstring [
 
 	| stringNode |
@@ -197,12 +199,12 @@ XMLStringTest >> testIndexOfSubstring [
 		equals: 4
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testIsContentNode [
 	self assert: self newNode isContentNode
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testIsEmpty [
 	| node |
 
@@ -216,7 +218,7 @@ XMLStringTest >> testIsEmpty [
 	self assert: node isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testIsStringNode [
 	| stringNode |
 
@@ -237,7 +239,7 @@ XMLStringTest >> testIsStringNode [
 		deny: (stringNode isStringNode: self newNode)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testIsWhitespace [
 	| stringNode |
 
@@ -251,7 +253,7 @@ XMLStringTest >> testIsWhitespace [
 	self deny: stringNode isWhitespace
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testMergeAdjacent [
 
 	| element nodes |
@@ -296,7 +298,7 @@ XMLStringTest >> testMergeAdjacent [
 			(nodes fifth isStringNode and: [ nodes fifth string = 'six' ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testNotEmpty [
 	| node |
 
@@ -310,7 +312,7 @@ XMLStringTest >> testNotEmpty [
 	self deny: node isNotEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testPrepend [
 
 	| stringNode |
@@ -325,7 +327,7 @@ XMLStringTest >> testPrepend [
 	self assert: stringNode string equals: 'onetwothree'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testReplaceAllWith [
 
 	| stringNode |
@@ -340,7 +342,7 @@ XMLStringTest >> testReplaceAllWith [
 	self assert: stringNode string equals: 'one  two  three '
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testReplaceFromToWith [
 
 	| stringNode |
@@ -369,7 +371,7 @@ XMLStringTest >> testReplaceFromToWith [
 	self assert: stringNode string equals: 'one two three four'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testSize [
 
 	self
@@ -377,13 +379,13 @@ XMLStringTest >> testSize [
 		assert: (self nodeClass string: 'test') size equals: 4
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testSortKey [
 
 	self assert: (self nodeClass string: 'test') sortKey equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testSplitAt [
 
 	| stringNode newStringNode element |
@@ -410,7 +412,7 @@ XMLStringTest >> testSplitAt [
 		assert: (element nodeAfter: stringNode) identicalTo: newStringNode
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testString [
 
 	| stringNode |
@@ -429,7 +431,7 @@ XMLStringTest >> testString [
 	self assert: stringNode string equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringTest >> testWriteXMLOn [
 
 	self assert: self newNode printString equals: ''.

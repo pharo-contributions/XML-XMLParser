@@ -1,20 +1,22 @@
 Class {
-	#name : #XMLNotationDeclarationTest,
-	#superclass : #XMLDeclarationNodeTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLNotationDeclarationTest',
+	#superclass : 'XMLDeclarationNodeTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNotationDeclarationTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNotationDeclarationTest >> nodeClass [
 	^ XMLNotationDeclaration
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNotationDeclarationTest >> testName [
 
 	| declaration |
@@ -25,7 +27,7 @@ XMLNotationDeclarationTest >> testName [
 		assert: declaration name equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNotationDeclarationTest >> testNamePublicIDSystemID [
 
 	| declaration |
@@ -40,7 +42,7 @@ XMLNotationDeclarationTest >> testNamePublicIDSystemID [
 		assert: declaration systemID equals: 'three'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNotationDeclarationTest >> testPublicID [
 
 	| declaration |
@@ -51,7 +53,7 @@ XMLNotationDeclarationTest >> testPublicID [
 		assert: declaration publicID equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNotationDeclarationTest >> testSystemID [
 
 	| declaration |
@@ -62,7 +64,7 @@ XMLNotationDeclarationTest >> testSystemID [
 		assert: declaration systemID equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNotationDeclarationTest >> testWriteXMLOn [
 
 	self

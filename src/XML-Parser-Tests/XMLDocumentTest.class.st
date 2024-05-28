@@ -1,27 +1,29 @@
 Class {
-	#name : #XMLDocumentTest,
-	#superclass : #XMLNodeWithElementsTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLDocumentTest',
+	#superclass : 'XMLNodeWithElementsTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDocumentTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLDocumentTest >> newNodeWithElements [
 	^ super newNodeWithElements
 		doctypeDeclaration: (XMLDoctypeDeclaration new root: 'zero');
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocumentTest >> nodeClass [
 	^ XMLDocument
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDocumentTest >> testAcceptNodeVisitor [
 
 	| visitor document message |
@@ -46,7 +48,7 @@ XMLDocumentTest >> testAcceptNodeVisitor [
 	super testAcceptNodeVisitor
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDocumentTest >> testDoctypeDeclaration [
 
 	| document doctypeDeclaration newDocument |
@@ -79,7 +81,7 @@ XMLDocumentTest >> testDoctypeDeclaration [
 		assert: doctypeDeclaration parent isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDocumentTest >> testDoctypeDefinition [
 
 	| document doctypeDefinition |
@@ -93,7 +95,7 @@ XMLDocumentTest >> testDoctypeDefinition [
 		assert: document doctypeDefinition identicalTo: doctypeDefinition
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDocumentTest >> testDocument [
 
 	| document |
@@ -106,7 +108,7 @@ XMLDocumentTest >> testDocument [
 	self assert: document document identicalTo: document
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDocumentTest >> testEncoding [
 
 	| document |
@@ -117,7 +119,7 @@ XMLDocumentTest >> testEncoding [
 		assert: document encoding equals: 'UTF-8'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDocumentTest >> testHasDoctypeDeclaration [
 	| document |
 
@@ -131,7 +133,7 @@ XMLDocumentTest >> testHasDoctypeDeclaration [
 	self deny: document hasDoctypeDeclaration
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDocumentTest >> testHasDoctypeDefinition [
 	| document |
 
@@ -145,7 +147,7 @@ XMLDocumentTest >> testHasDoctypeDefinition [
 	self deny: document hasDoctypeDefinition
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDocumentTest >> testHasEncoding [
 	| document |
 
@@ -159,7 +161,7 @@ XMLDocumentTest >> testHasEncoding [
 	self deny: document hasEncoding
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDocumentTest >> testHasRoot [
 	| nodeWithElements |
 
@@ -172,12 +174,12 @@ XMLDocumentTest >> testHasRoot [
 	self deny: nodeWithElements hasRoot
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDocumentTest >> testIsDocument [
 	self assert: self newNode isDocument
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDocumentTest >> testIsStandalone [
 
 	| document |
@@ -188,7 +190,7 @@ XMLDocumentTest >> testIsStandalone [
 		assert: document isStandalone
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDocumentTest >> testRoot [
 
 	| document newRoot |
@@ -225,7 +227,7 @@ XMLDocumentTest >> testRoot [
 		raise: XMLDOMException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDocumentTest >> testValidate [
 	| xml document |
 
@@ -331,7 +333,7 @@ XMLDocumentTest >> testValidate [
 		raise: XMLValidationException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDocumentTest >> testValidateNoSubset [
 	| xml document |
 
@@ -364,7 +366,7 @@ XMLDocumentTest >> testValidateNoSubset [
 		raise: XMLValidationException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDocumentTest >> testVersion [
 
 	| document |

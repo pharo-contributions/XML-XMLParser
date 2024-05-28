@@ -3,20 +3,22 @@ These tests use HTTP and the file system and are skipped by default. This enable
 	self stopSkipping
 "
 Class {
-	#name : #XMLExternalEntityTest,
-	#superclass : #XMLSkippableTest,
+	#name : 'XMLExternalEntityTest',
+	#superclass : 'XMLSkippableTest',
 	#instVars : [
 		'tempFileManager'
 	],
-	#category : #'XML-Parser-Tests-Base'
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLExternalEntityTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLExternalEntityTest class >> skippableTests [
 	^ #(testExternalSubsetReadLimit
 			testOnFileNamed
@@ -37,21 +39,21 @@ XMLExternalEntityTest class >> skippableTests [
 			testParsingURL)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLExternalEntityTest >> defaultTimeLimit [
 	"this is needed for Pharo5+ to prevent it from timing out
 	the long-running HTTP tests when skipping is disabled"
 	^ self defaultTimeout seconds
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLExternalEntityTest >> defaultTimeout [
 	"this is needed for Squeak to prevent it from timing out
 	the long-running HTTP tests when skipping is disabled"
 	^ 60 * 10
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLExternalEntityTest >> docBookArticleSource [
 	^ '<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://docbook.org/xml/4.5/docbookx.dtd">
@@ -85,7 +87,7 @@ XMLExternalEntityTest >> docBookArticleSource [
 </article>'
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLExternalEntityTest >> docBookExampleSource [
 	^ '<!DOCTYPE example
 	PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
@@ -101,17 +103,17 @@ XMLExternalEntityTest >> docBookExampleSource [
 	</example>'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLExternalEntityTest >> encodingNames [
 	^ #('UTF-8' 'UTF-16' 'UTF-16-LE' 'UTF-32' 'UTF-32-LE')
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLExternalEntityTest >> feedURL [
 	^ 'http://www.squeaksource.com/feed.rss'
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLExternalEntityTest >> musicXMLDocument [
 	^ '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE score-partwise PUBLIC
@@ -153,7 +155,7 @@ XMLExternalEntityTest >> musicXMLDocument [
 '
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLExternalEntityTest >> strictXHTMLDocumentSource [
 	^ '<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
@@ -169,7 +171,7 @@ XMLExternalEntityTest >> strictXHTMLDocumentSource [
 </html>'
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLExternalEntityTest >> strictXHTMLStyledDocumentSource [
 	^ '<?xml-stylesheet href="http://www.w3.org/StyleSheets/TR/W3C-REC.css" type="text/css"?>
 <?xml-stylesheet href="#internalStyle" type="text/css"?>
@@ -196,12 +198,12 @@ XMLExternalEntityTest >> strictXHTMLStyledDocumentSource [
 </html>'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLExternalEntityTest >> tempFileManager [
 	^ tempFileManager ifNil: [tempFileManager := XMLTempFileManager new]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExternalEntityTest >> testExternalSubsetReadLimit [
 	self
 		skipOrReturnWith: [^ self]
@@ -237,7 +239,7 @@ XMLExternalEntityTest >> testExternalSubsetReadLimit [
 			raise: XMLLimitException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExternalEntityTest >> testOnFileNamed [
 
 	self skipOrReturnWith: [ ^ self ] ifSkippable: #testOnFileNamed.
@@ -255,7 +257,7 @@ XMLExternalEntityTest >> testOnFileNamed [
 			assert: parser documentURI asXMLURI isLocal ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExternalEntityTest >> testOnURL [
 
 	| parser |
@@ -269,7 +271,7 @@ XMLExternalEntityTest >> testOnURL [
 		deny: parser documentURI asXMLURI isLocal
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExternalEntityTest >> testOnURLUpToLimit [
 
 	| parser size |
@@ -289,7 +291,7 @@ XMLExternalEntityTest >> testOnURLUpToLimit [
 		raise: XMLLimitException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExternalEntityTest >> testParsingDocBookArticle [
 	"This uses HTTP so is skipped by default"
 
@@ -306,7 +308,7 @@ XMLExternalEntityTest >> testParsingDocBookArticle [
 		raise: XMLParserException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExternalEntityTest >> testParsingDocBookExample [
 	"This uses HTTP so is skipped by default"
 
@@ -323,7 +325,7 @@ XMLExternalEntityTest >> testParsingDocBookExample [
 		raise: XMLParserException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExternalEntityTest >> testParsingEncodedFile [
 	"This test creates/deletes a file so is skipped by default"
 
@@ -348,7 +350,7 @@ XMLExternalEntityTest >> testParsingEncodedFile [
 				assert: documentFromFile printString equals: document printString ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExternalEntityTest >> testParsingEncodedFileWithBOM [
 	"This test creates/deletes a file so is skipped by default"
 
@@ -374,7 +376,7 @@ XMLExternalEntityTest >> testParsingEncodedFileWithBOM [
 				assert: documentFromFile printString equals: document printString ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExternalEntityTest >> testParsingEncodedFileWithEncodingAttribute [
 	"This test creates/deletes a file so is skipped by default"
 
@@ -400,7 +402,7 @@ XMLExternalEntityTest >> testParsingEncodedFileWithEncodingAttribute [
 				assert: documentFromFile printString equals: document printString ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExternalEntityTest >> testParsingEncodedFileWithEncodingAttributeAndBOM [
 	"This test creates/deletes a file so is skipped by default"
 
@@ -427,7 +429,7 @@ XMLExternalEntityTest >> testParsingEncodedFileWithEncodingAttributeAndBOM [
 				assert: documentFromFile printString equals: document printString ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExternalEntityTest >> testParsingExternalEntities [
 	"This test uses HTTP so is skipped by default."
 
@@ -461,7 +463,7 @@ XMLExternalEntityTest >> testParsingExternalEntities [
 			identicalTo: value ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExternalEntityTest >> testParsingExternalEntitiesLimit [
 	"This test uses HTTP so is skipped by default."
 
@@ -503,7 +505,7 @@ XMLExternalEntityTest >> testParsingExternalEntitiesLimit [
 	self should: [ parser parseDocument ] raise: XMLLimitException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExternalEntityTest >> testParsingFile [
 	"This test creates/deletes a file so is skipped by default"
 	self
@@ -524,7 +526,7 @@ XMLExternalEntityTest >> testParsingFile [
 		self assert: (document root isNamed: 'score-partwise')]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExternalEntityTest >> testParsingStrictXHTMLDocument [
 	"This uses HTTP so is skipped by default"
 
@@ -541,7 +543,7 @@ XMLExternalEntityTest >> testParsingStrictXHTMLDocument [
 		raise: XMLParserException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExternalEntityTest >> testParsingStrictXHTMLStyledDocument [
 	"This uses HTTP so is skipped by default"
 
@@ -558,7 +560,7 @@ XMLExternalEntityTest >> testParsingStrictXHTMLStyledDocument [
 		raise: XMLParserException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExternalEntityTest >> testParsingURL [
 	"This uses HTTP so is skipped by default"
 	| doc |
@@ -573,7 +575,7 @@ XMLExternalEntityTest >> testParsingURL [
 	self assert: (doc root isNamed: 'rss').
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLExternalEntityTest >> wideCharacterXML [
 	^ '<?xml version="1.0"?>
 		<currency>

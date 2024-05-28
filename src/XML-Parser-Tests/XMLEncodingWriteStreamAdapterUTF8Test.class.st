@@ -1,25 +1,27 @@
 Class {
-	#name : #XMLEncodingWriteStreamAdapterUTF8Test,
-	#superclass : #XMLEncodingWriteStreamAdapterTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLEncodingWriteStreamAdapterUTF8Test',
+	#superclass : 'XMLEncodingWriteStreamAdapterTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterUTF8Test >> basicInputCollection [
 	^ self decodedUTF8String
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterUTF8Test >> basicInvalidInputCollections [
 	^ self basicInvalidUTFInputCollections
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterUTF8Test >> basicOutputCollection [
 	^ self encodedUTF8Binary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterUTF8Test >> streamConverterClass [
 	^ XMLUTF8StreamConverter
 ]

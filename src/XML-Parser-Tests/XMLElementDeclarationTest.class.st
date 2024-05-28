@@ -1,20 +1,22 @@
 Class {
-	#name : #XMLElementDeclarationTest,
-	#superclass : #XMLDeclarationNodeTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLElementDeclarationTest',
+	#superclass : 'XMLDeclarationNodeTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElementDeclarationTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementDeclarationTest >> nodeClass [
 	^ XMLElementDeclaration
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementDeclarationTest >> testContentModel [
 
 	| declaration |
@@ -26,7 +28,7 @@ XMLElementDeclarationTest >> testContentModel [
 		assert: declaration contentModel equals: '(one|two)'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementDeclarationTest >> testElement [
 
 	| declaration |
@@ -37,7 +39,7 @@ XMLElementDeclarationTest >> testElement [
 		assert: declaration element equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementDeclarationTest >> testElementContentModel [
 
 	| declaration |
@@ -50,7 +52,7 @@ XMLElementDeclarationTest >> testElementContentModel [
 		assert: declaration contentModel equals: '(two|three)'
 ]
 
-{ #category : #assertions }
+{ #category : 'assertions' }
 XMLElementDeclarationTest >> testWriteXMLOn [
 
 	self

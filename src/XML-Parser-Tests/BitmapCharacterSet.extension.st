@@ -1,6 +1,6 @@
-Extension { #name : #BitmapCharacterSet }
+Extension { #name : 'BitmapCharacterSet' }
 
-{ #category : #'*XML-Parser-Tests' }
+{ #category : '*XML-Parser-Tests' }
 BitmapCharacterSet class >> fromXMLBNF: aString [
 	"parses a subset of the BNF syntax used by the XML spec for character classes"
 	| set readStream |
@@ -32,7 +32,7 @@ BitmapCharacterSet class >> fromXMLBNF: aString [
 	^ set
 ]
 
-{ #category : #'*XML-Parser-Tests' }
+{ #category : '*XML-Parser-Tests' }
 BitmapCharacterSet class >> nextXMLBNFCharFrom: aStream [
 	(aStream peek == $"
 		or: [aStream peek == $'])

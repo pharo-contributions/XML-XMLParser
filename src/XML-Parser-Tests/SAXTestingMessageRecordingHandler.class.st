@@ -2,38 +2,40 @@
 This handler records the results of testing messages from within handlers.
 "
 Class {
-	#name : #SAXTestingMessageRecordingHandler,
-	#superclass : #SAXRecordingHandler,
+	#name : 'SAXTestingMessageRecordingHandler',
+	#superclass : 'SAXRecordingHandler',
 	#instVars : [
 		'isInContentResults',
 		'isInCDataSectionResults',
 		'hasParserResults'
 	],
-	#category : #'XML-Parser-Tests-Base'
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXTestingMessageRecordingHandler >> hasParserResults [
 	^ hasParserResults ifNil: [hasParserResults := OrderedCollection new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXTestingMessageRecordingHandler >> isInCDataSectionResults [
 	^ isInCDataSectionResults ifNil: [isInCDataSectionResults := OrderedCollection new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXTestingMessageRecordingHandler >> isInContentResults [
 	^ isInContentResults ifNil: [isInContentResults := OrderedCollection new]
 ]
 
-{ #category : #recording }
+{ #category : 'recording' }
 SAXTestingMessageRecordingHandler >> recordMessage: aMessage [
 	self recordTestingMessages.
 	super recordMessage: aMessage
 ]
 
-{ #category : #recording }
+{ #category : 'recording' }
 SAXTestingMessageRecordingHandler >> recordMessageReceiver: anObject selector: aSelector [
 	self recordTestingMessages.
 	super
@@ -41,7 +43,7 @@ SAXTestingMessageRecordingHandler >> recordMessageReceiver: anObject selector: a
 		selector: aSelector
 ]
 
-{ #category : #recording }
+{ #category : 'recording' }
 SAXTestingMessageRecordingHandler >> recordMessageReceiver: anObject selector: aSelector argument: anArgument [
 	self recordTestingMessages.
 	super
@@ -50,7 +52,7 @@ SAXTestingMessageRecordingHandler >> recordMessageReceiver: anObject selector: a
 		argument: anArgument
 ]
 
-{ #category : #recording }
+{ #category : 'recording' }
 SAXTestingMessageRecordingHandler >> recordMessageReceiver: anObject selector: aSelector arguments: aSequenceableCollection [
 	self recordTestingMessages.
 	super
@@ -59,7 +61,7 @@ SAXTestingMessageRecordingHandler >> recordMessageReceiver: anObject selector: a
 		arguments: aSequenceableCollection
 ]
 
-{ #category : #recording }
+{ #category : 'recording' }
 SAXTestingMessageRecordingHandler >> recordTestingMessages [
 	self hasParserResults addLast: self hasParser.
 	self isInCDataSectionResults addLast: self isInCDataSection.

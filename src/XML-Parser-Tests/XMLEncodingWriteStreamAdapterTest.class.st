@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLEncodingWriteStreamAdapterTest,
-	#superclass : #XMLWriteStreamAdapterTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLEncodingWriteStreamAdapterTest',
+	#superclass : 'XMLWriteStreamAdapterTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterTest >> basicInvalidInputCollections [
 	^ #()
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterTest >> basicInvalidLatin1InputCollections [
 	^ self basicInvalidUTFInputCollections,
 		(Array
@@ -19,7 +21,7 @@ XMLEncodingWriteStreamAdapterTest >> basicInvalidLatin1InputCollections [
 			with: (String with: 16r100000 asCharacter))
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterTest >> basicInvalidUTFInputCollections [
 	"code points greater than U+10FFFF aren't tested for because GS Characters
 	can only contain values in the range of U+0-10FFFF"
@@ -28,12 +30,12 @@ XMLEncodingWriteStreamAdapterTest >> basicInvalidUTFInputCollections [
 		with: (String with: 16rDFFF asCharacter) "last surrogate code point"
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLEncodingWriteStreamAdapterTest >> contentsFromByteOrderMark [
 	^ self asExpectedOutput: self streamConverterClass byteOrderMarkBytes
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLEncodingWriteStreamAdapterTest >> contentsFromCharacter: aCharacter [
 	^ self asExpectedOutput:
 		(ByteArray streamContents: [:stream |
@@ -42,41 +44,41 @@ XMLEncodingWriteStreamAdapterTest >> contentsFromCharacter: aCharacter [
 				toStream: stream])
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEncodingWriteStreamAdapterTest >> expectsBinaryOutput [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterTest >> invalidInputCollections [
 	^ self basicInvalidInputCollections collect: [:each |
 		self asExpectedInput: each]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLEncodingWriteStreamAdapterTest >> newStreamAdapterOn: aStream [
 	^ (super newStreamAdapterOn: aStream)
 		streamConverter: self streamConverterClass new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterTest >> streamAdapterClass [
 	^ XMLEncodingWriteStreamAdapter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterTest >> streamCollection [
 	^ self expectsBinaryOutput
 		ifTrue: [ByteArray new]
 		ifFalse: [String new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterTest >> streamConverterClass [
 	^ XMLNullStreamConverter
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingWriteStreamAdapterTest >> testHasDefaultStreamConverter [
 
 	| adapter |
@@ -86,7 +88,7 @@ XMLEncodingWriteStreamAdapterTest >> testHasDefaultStreamConverter [
 		equals: adapter streamConverter isDefault
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingWriteStreamAdapterTest >> testHasImplicitStreamConverter [
 
 	| adapter |
@@ -96,7 +98,7 @@ XMLEncodingWriteStreamAdapterTest >> testHasImplicitStreamConverter [
 		equals: adapter streamConverter isImplicit
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingWriteStreamAdapterTest >> testHasNullStreamConverter [
 
 	| adapter |
@@ -106,7 +108,7 @@ XMLEncodingWriteStreamAdapterTest >> testHasNullStreamConverter [
 		equals: adapter streamConverter isNull
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingWriteStreamAdapterTest >> testInvalidCharacters [
 	self invalidInputCollections do: [:each | | streamAdapter |
 		streamAdapter := self newStreamAdapter.
@@ -115,12 +117,12 @@ XMLEncodingWriteStreamAdapterTest >> testInvalidCharacters [
 			raise: XMLEncodingException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingWriteStreamAdapterTest >> testIsXMLConvertingStreamAdapter [
 	self assert: self newStreamAdapter isXMLConvertingStreamAdapter
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingWriteStreamAdapterTest >> testNextPutByteOrderMark [
 
 	| adapter |
@@ -130,7 +132,7 @@ XMLEncodingWriteStreamAdapterTest >> testNextPutByteOrderMark [
 		assert: adapter contents equals: self contentsFromByteOrderMark
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingWriteStreamAdapterTest >> testOn [
 
 	| stream adapter |
@@ -143,7 +145,7 @@ XMLEncodingWriteStreamAdapterTest >> testOn [
 				 ifFalse: [ adapter stream stream == stream ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingWriteStreamAdapterTest >> testStreamConverter [
 
 	| adapter newConverter |

@@ -1,20 +1,22 @@
 Class {
-	#name : #XMLAttributeDeclarationTest,
-	#superclass : #XMLDeclarationNodeTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLAttributeDeclarationTest',
+	#superclass : 'XMLDeclarationNodeTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeDeclarationTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDeclarationTest >> nodeClass [
 	^ XMLAttributeDeclaration
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDeclarationTest >> testAttribute [
 
 	| declaration |
@@ -25,7 +27,7 @@ XMLAttributeDeclarationTest >> testAttribute [
 		assert: declaration attribute equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDeclarationTest >> testDefaultPragma [
 
 	| declaration |
@@ -37,7 +39,7 @@ XMLAttributeDeclarationTest >> testDefaultPragma [
 		assert: declaration defaultPragma equals: 'REQUIRED'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDeclarationTest >> testDefaultValue [
 
 	| declaration |
@@ -48,7 +50,7 @@ XMLAttributeDeclarationTest >> testDefaultValue [
 		assert: declaration defaultValue equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDeclarationTest >> testElement [
 
 	| declaration |
@@ -59,7 +61,7 @@ XMLAttributeDeclarationTest >> testElement [
 		assert: declaration element equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDeclarationTest >> testElementAttributeTypeDefaultPragmaDefaultValue [
 
 	| declaration |
@@ -78,7 +80,7 @@ XMLAttributeDeclarationTest >> testElementAttributeTypeDefaultPragmaDefaultValue
 		assert: declaration defaultValue equals: 'default'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDeclarationTest >> testType [
 
 	| declaration |
@@ -89,7 +91,7 @@ XMLAttributeDeclarationTest >> testType [
 		assert: declaration type equals: 'CDATA'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDeclarationTest >> testWriteXMLOn [
 
 	self

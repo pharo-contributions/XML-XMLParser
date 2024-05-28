@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLCommentTest,
-	#superclass : #XMLNodeTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLCommentTest',
+	#superclass : 'XMLNodeTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCommentTest >> nodeClass [
 	^ XMLComment
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCommentTest >> testAcceptNodeVisitor [
 
 	| visitor comment message |
@@ -26,7 +28,7 @@ XMLCommentTest >> testAcceptNodeVisitor [
 		deny: visitor messageRecorder hasMessages
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCommentTest >> testCanonicallyEquals [
 	super testCanonicallyEquals.
 	self assert:
@@ -37,18 +39,18 @@ XMLCommentTest >> testCanonicallyEquals [
 			self newNode)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCommentTest >> testIsComment [
 	self assert: self newNode isComment
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCommentTest >> testSortKey [
 
 	self assert: (self nodeClass string: 'test') sortKey equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCommentTest >> testString [
 
 	| comment |
@@ -67,7 +69,7 @@ XMLCommentTest >> testString [
 	self assert: comment string equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCommentTest >> testWriteXMLOn [
 
 	self

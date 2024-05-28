@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLPluggableAttributeSpecTest,
-	#superclass : #XMLAttributeSpecTest,
-	#category : #'XML-Parser-Tests-Utils'
+	#name : 'XMLPluggableAttributeSpecTest',
+	#superclass : 'XMLAttributeSpecTest',
+	#category : 'XML-Parser-Tests-Utils',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Utils'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableAttributeSpecTest >> attributeSpecClass [
 	^ XMLPluggableAttributeSpec
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableAttributeSpecTest >> testMatchesAttributes [
 	| attributeSpec |
 

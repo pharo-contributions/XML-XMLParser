@@ -1,16 +1,18 @@
 Class {
-	#name : #XMLAttributeListTest,
-	#superclass : #XMLObservableListTest,
+	#name : 'XMLAttributeListTest',
+	#superclass : 'XMLObservableListTest',
 	#instVars : [
 		'attributes',
 		'newAttribute',
 		'absentAttribute',
 		'changedAttributes'
 	],
-	#category : #'XML-Parser-Tests-DOM'
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeListTest >> absentListItem [
 	^ absentAttribute
 		ifNil: [
@@ -20,47 +22,47 @@ XMLAttributeListTest >> absentListItem [
 					value: 'absentValue']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeListTest >> afterAddingToNotifications [
 	^ #(addedAttribute:)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeListTest >> afterRemovingFromNotifications [
 	^ #(removedAttribute:)
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeListTest >> allowsDuplicates [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeListTest >> attributeAssociations [
 	^ self listItems collect: [:each | each name -> each value]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeListTest >> attributeClass [
 	^ XMLAttribute
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeListTest >> attributeNames [
 	^ self listItems collect: [:each | each name]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeListTest >> attributeValues [
 	^ self listItems collect: [:each | each value]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeListTest >> attributesClass [
 	^ OrderPreservingStringDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeListTest >> changedListItem: anAttribute [
 	^ (changedAttributes ifNil: [changedAttributes := IdentityDictionary new])
 		at: anAttribute
@@ -70,12 +72,12 @@ XMLAttributeListTest >> changedListItem: anAttribute [
 				value: 'new', anAttribute value]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeListTest >> listClass [
 	^ XMLAttributeList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeListTest >> listItems [
 	attributes ifNil: [
 		attributes :=
@@ -95,7 +97,7 @@ XMLAttributeListTest >> listItems [
 	^ attributes copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeListTest >> newListItem [
 	^ newAttribute
 		ifNil: [
@@ -105,22 +107,22 @@ XMLAttributeListTest >> newListItem [
 					value: 'newValue']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeListTest >> observerClass [
 	^ XMLRecordingAttributeListObserver
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeListTest >> reverseSortBlock [
 	^ [:a :b | a sortKey > b sortKey]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeListTest >> sortBlock [
 	^ [:a :b | a sortKey <= b sortKey]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAddAttributeAssociation [
 
 	| list |
@@ -135,7 +137,7 @@ XMLAttributeListTest >> testAddAttributeAssociation [
 			assert: list last equals: attribute ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAddAttributeNameValue [
 
 	| list |
@@ -150,7 +152,7 @@ XMLAttributeListTest >> testAddAttributeNameValue [
 			assert: list last equals: attribute ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAsDictionary [
 
 	| list dictionary |
@@ -162,7 +164,7 @@ XMLAttributeListTest >> testAsDictionary [
 		equals: (self attributesClass newFrom: self attributeAssociations)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAttributeAssociations [
 	| list |
 
@@ -173,7 +175,7 @@ XMLAttributeListTest >> testAttributeAssociations [
 		equals: (self listSpecies newFrom: self attributeAssociations)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAttributeAt [
 
 	| list |
@@ -191,7 +193,7 @@ XMLAttributeListTest >> testAttributeAt [
 		self assert: (list attributeAt: each name) equals: each value ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAttributeAtIfAbsent [
 
 	| list |
@@ -218,7 +220,7 @@ XMLAttributeListTest >> testAttributeAtIfAbsent [
 			equals: each value ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAttributeAtIfAbsentPut [
 
 	| list |
@@ -243,7 +245,7 @@ XMLAttributeListTest >> testAttributeAtIfAbsentPut [
 			equals: each value ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAttributeAtPut [
 
 	| list |
@@ -262,7 +264,7 @@ XMLAttributeListTest >> testAttributeAtPut [
 		self assert: (list attributeAt: each name) equals: each value ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAttributeNames [
 	| list |
 
@@ -273,7 +275,7 @@ XMLAttributeListTest >> testAttributeNames [
 		equals: (self listSpecies newFrom: self attributeNames)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAttributeNamesAndValuesDo [
 	| list |
 
@@ -292,7 +294,7 @@ XMLAttributeListTest >> testAttributeNamesAndValuesDo [
 		and: self attributeValues.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAttributeNamesDo [
 	| list |
 
@@ -307,7 +309,7 @@ XMLAttributeListTest >> testAttributeNamesDo [
 		enumerate: self attributeNames.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAttributeNodeAt [
 
 	| list |
@@ -328,7 +330,7 @@ XMLAttributeListTest >> testAttributeNodeAt [
 			equals: (firstMatchingAttribute ifNil: [ attribute ]) ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAttributeNodeAtIfAbsent [
 
 	| list |
@@ -353,7 +355,7 @@ XMLAttributeListTest >> testAttributeNodeAtIfAbsent [
 			equals: (firstMatchingAttribute ifNil: [ attribute ]) ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAttributeValueAt [
 
 	| list |
@@ -371,7 +373,7 @@ XMLAttributeListTest >> testAttributeValueAt [
 		self assert: (list attributeValueAt: each name) equals: each value ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAttributeValueAtIfAbsent [
 
 	| list |
@@ -398,7 +400,7 @@ XMLAttributeListTest >> testAttributeValueAtIfAbsent [
 			equals: each value ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAttributeValueAtIfAbsentPut [
 
 	| list |
@@ -425,7 +427,7 @@ XMLAttributeListTest >> testAttributeValueAtIfAbsentPut [
 			equals: each value ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAttributeValueAtPut [
 
 	| list |
@@ -444,7 +446,7 @@ XMLAttributeListTest >> testAttributeValueAtPut [
 		self assert: (list attributeValueAt: each name) equals: each value ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testAttributes [
 
 	| list dictionary |
@@ -456,7 +458,7 @@ XMLAttributeListTest >> testAttributes [
 		equals: (self attributesClass newFrom: self attributeAssociations)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testIncludesAttribute [
 	| list |
 
@@ -468,7 +470,7 @@ XMLAttributeListTest >> testIncludesAttribute [
 		self assert: (list includesAttribute: each name)].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testIncludesAttributeNode [
 
 	| list |
@@ -485,7 +487,7 @@ XMLAttributeListTest >> testIncludesAttributeNode [
 		self assert: (list includesAttributeNode: attribute name) ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testIncludesAttributeNodeNamespaceURI [
 	| list |
 
@@ -507,7 +509,7 @@ XMLAttributeListTest >> testIncludesAttributeNodeNamespaceURI [
 				namespaceURI: '')].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testRemoveAttribute [
 
 	(Array with: self listWithItems with: self listWithItems reversed)
@@ -523,7 +525,7 @@ XMLAttributeListTest >> testRemoveAttribute [
 				self should: [ list removeAttribute: each name ] raise: Error ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testRemoveAttributeIfAbsent [
 
 	(Array with: self listWithItems with: self listWithItems reversed)
@@ -543,7 +545,7 @@ XMLAttributeListTest >> testRemoveAttributeIfAbsent [
 					equals: self absentListItem value ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testSetAttributes [
 
 	| list associations |
@@ -562,7 +564,7 @@ XMLAttributeListTest >> testSetAttributes [
 		equals: associations asArray
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeListTest >> testSetAttributesFromOrderPreservingDictionary [
 
 	| element list dictionary |

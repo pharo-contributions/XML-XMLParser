@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLDecodingReadStreamAdapterUTF16LETest,
-	#superclass : #XMLDecodingReadStreamAdapterTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLDecodingReadStreamAdapterUTF16LETest',
+	#superclass : 'XMLDecodingReadStreamAdapterTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterUTF16LETest >> basicInputCollection [
 	^ self encodedUTF16LEBinary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterUTF16LETest >> basicInvalidInputCollections [
 	"code points greater than U+10FFFF can't be encoded using UTF-16, so
 	they aren't tested for here"
@@ -25,12 +27,12 @@ XMLDecodingReadStreamAdapterUTF16LETest >> basicInvalidInputCollections [
 	) collect: [:each | each asByteArray]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterUTF16LETest >> basicOutputCollection [
 	^ self decodedUTF16String
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterUTF16LETest >> streamConverterClass [
 	^ XMLUTF16LittleEndianStreamConverter
 ]

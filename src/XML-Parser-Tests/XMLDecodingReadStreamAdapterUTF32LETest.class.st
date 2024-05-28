@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLDecodingReadStreamAdapterUTF32LETest,
-	#superclass : #XMLDecodingReadStreamAdapterTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLDecodingReadStreamAdapterUTF32LETest',
+	#superclass : 'XMLDecodingReadStreamAdapterTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterUTF32LETest >> basicInputCollection [
 	^ self encodedUTF32LEBinary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterUTF32LETest >> basicInvalidInputCollections [
 	^ #(
 		#(16r00 16rD8 16r00 16r00) "first surrogate code point"
@@ -25,12 +27,12 @@ XMLDecodingReadStreamAdapterUTF32LETest >> basicInvalidInputCollections [
 	) collect: [:each | each asByteArray]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterUTF32LETest >> basicOutputCollection [
 	^ self decodedUTF32String
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterUTF32LETest >> streamConverterClass [
 	^ XMLUTF32LittleEndianStreamConverter
 ]

@@ -1,40 +1,42 @@
 Class {
-	#name : #XMLConfigurationTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Base'
+	#name : 'XMLConfigurationTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLConfigurationTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLConfigurationTest >> configurationClass [
 	^ XMLConfiguration
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLConfigurationTest >> externalEntityResolverClass [
 	^ DTDCachingExternalEntityResolver
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLConfigurationTest >> newConfiguration [
 	^ self configurationClass new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLConfigurationTest >> otherParserHandlerClass [
 	^ SAX2Parser
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLConfigurationTest >> parserHandlerClass [
 	^ SAXHandler
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLConfigurationTest >> testCopy [
 
 	| configuration externalEntityResolver copy |
@@ -82,7 +84,7 @@ XMLConfigurationTest >> testCopy [
 		identicalTo: configuration externalEntityResolver class
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLConfigurationTest >> testDecodesCharacters [
 
 	| configuration |
@@ -97,7 +99,7 @@ XMLConfigurationTest >> testDecodesCharacters [
 		assert: configuration decodesCharacters
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLConfigurationTest >> testDocumentReadLimit [
 
 	| configuration |
@@ -113,7 +115,7 @@ XMLConfigurationTest >> testDocumentReadLimit [
 		assert: configuration documentReadLimit isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLConfigurationTest >> testEntityConfiguration [
 
 	| configuration newEntityConfiguration |
@@ -131,7 +133,7 @@ XMLConfigurationTest >> testEntityConfiguration [
 		identicalTo: newEntityConfiguration
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLConfigurationTest >> testExternalEntityResolver [
 
 	| configuration oldResolver newResolver |
@@ -149,7 +151,7 @@ XMLConfigurationTest >> testExternalEntityResolver [
 		identicalTo: newResolver
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLConfigurationTest >> testIsValidating [
 
 	| configuration |
@@ -164,7 +166,7 @@ XMLConfigurationTest >> testIsValidating [
 		assert: configuration isValidating
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLConfigurationTest >> testMaxEntityReplacementDepth [
 
 	| configuration |
@@ -181,7 +183,7 @@ XMLConfigurationTest >> testMaxEntityReplacementDepth [
 		assert: configuration maxEntityReplacementDepth isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLConfigurationTest >> testParserHandlerClass [
 
 	| configuration |
@@ -198,7 +200,7 @@ XMLConfigurationTest >> testParserHandlerClass [
 		identicalTo: self otherParserHandlerClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLConfigurationTest >> testParserLimits [
 
 	| configuration newParserLimits |
@@ -214,7 +216,7 @@ XMLConfigurationTest >> testParserLimits [
 		assert: configuration parserLimits identicalTo: newParserLimits
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLConfigurationTest >> testPreservesUndeclaredEntityReferences [
 
 	| configuration |
@@ -235,7 +237,7 @@ XMLConfigurationTest >> testPreservesUndeclaredEntityReferences [
 		deny: configuration preservesUndeclaredEntityReferences
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLConfigurationTest >> testReplacesContentEntityReferences [
 
 	| configuration |
@@ -251,7 +253,7 @@ XMLConfigurationTest >> testReplacesContentEntityReferences [
 	self assert: configuration replacesContentEntityReferences
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLConfigurationTest >> testRequiresSchema [
 
 	| configuration |
@@ -271,7 +273,7 @@ XMLConfigurationTest >> testRequiresSchema [
 		deny: configuration requiresSchema
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLConfigurationTest >> testResolvesExternalEntities [
 
 	| configuration |
@@ -287,7 +289,7 @@ XMLConfigurationTest >> testResolvesExternalEntities [
 		deny: configuration resolvesExternalEntities
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLConfigurationTest >> testUsesNamespaces [
 
 	| configuration |

@@ -1,17 +1,19 @@
 Class {
-	#name : #XMLCharacterMethodsTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Base'
+	#name : 'XMLCharacterMethodsTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCharacterMethodsTest class >> allChars [
 	"to conserve memory, do not persistently cache this"
 	^ BitmapCharacterSet fromXMLBNF:
 		'#x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCharacterMethodsTest class >> allNameChars [
 	"to conserve memory, do not persistently cache this"
 	^ self allNameStartChars,
@@ -19,7 +21,7 @@ XMLCharacterMethodsTest class >> allNameChars [
 			'"-" | "." | [0-9] | #xB7 | [#x0300-#x036F] | [#x203F-#x2040]')
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCharacterMethodsTest class >> allNameStartChars [
 	"to conserve memory, do not persistently cache this"
 	^ BitmapCharacterSet fromXMLBNF:
@@ -29,32 +31,32 @@ XMLCharacterMethodsTest class >> allNameStartChars [
 		[#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCharacterMethodsTest class >> allNonChars [
 	"to conserve memory, do not persistently cache this"
 	^ self allChars complement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCharacterMethodsTest class >> allNonNameChars [
 	"to conserve memory, do not persistently cache this"
 	^ self allNameChars complement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCharacterMethodsTest class >> allNonNameStartCharNameChars [
 	"to conserve memory, do not persistently cache this"
 	^ (BitmapCharacterSet fromXMLBNF:
 		'"-" | "." | [0-9] | #xB7 | [#x0300-#x036F] | [#x203F-#x2040]')
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCharacterMethodsTest class >> allNonNameStartChars [
 	"to conserve memory, do not persistently cache this"
 	^ self allNameStartChars complement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCharacterMethodsTest class >> nonChars [
 	"These values are a limited selection from #allNonChars, including the
 	start and end of each char range (used for performance)"
@@ -67,7 +69,7 @@ XMLCharacterMethodsTest class >> nonChars [
 			collect: [:each | each asCharacter]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCharacterMethodsTest class >> nonNameChars [
 	"These are a limited selection of values from #allNonNameChars, including
 	the start and end of each char range (used for performance)"
@@ -84,7 +86,7 @@ XMLCharacterMethodsTest class >> nonNameChars [
 			collect: [:each | each asCharacter]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCharacterMethodsTest class >> nonNameStartCharNameChars [
 	"These are a limited selection of values from #allNonNameStartCharNameChars,
 	including the start and end of each char range (used for performance)"
@@ -94,37 +96,37 @@ XMLCharacterMethodsTest class >> nonNameStartCharNameChars [
 			collect: [:each | each asCharacter]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCharacterMethodsTest >> allChars [
 	^ self class allChars
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCharacterMethodsTest >> allNameChars [
 	^ self class allNameChars
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCharacterMethodsTest >> allNameStartChars [
 	^ self class allNameStartChars
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCharacterMethodsTest >> allNonChars [
 	^ self class allNonChars
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCharacterMethodsTest >> allNonNameChars [
 	^ self class allNonNameChars
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCharacterMethodsTest >> allNonNameStartCharNameChars [
 	^ self class allNonNameStartCharNameChars
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCharacterMethodsTest >> testIsXMLChar [
 	self allChars do: [:each |
 		self assert: each isXMLChar].
@@ -133,7 +135,7 @@ XMLCharacterMethodsTest >> testIsXMLChar [
 	self deny: nil isXMLChar
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCharacterMethodsTest >> testIsXMLNCNameChar [
 	self allNameChars do: [:each |
 		each == $:
@@ -144,7 +146,7 @@ XMLCharacterMethodsTest >> testIsXMLNCNameChar [
 	self deny: nil isXMLNCNameChar
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCharacterMethodsTest >> testIsXMLNCNameStartChar [
 	self allNameStartChars do: [:each |
 		each == $:
@@ -157,7 +159,7 @@ XMLCharacterMethodsTest >> testIsXMLNCNameStartChar [
 	self deny: nil isXMLNCNameStartChar
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCharacterMethodsTest >> testIsXMLNameChar [
 	self allNameChars do: [:each |
 		self assert: each isXMLNameChar].
@@ -166,7 +168,7 @@ XMLCharacterMethodsTest >> testIsXMLNameChar [
 	self deny: nil isXMLNameChar
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCharacterMethodsTest >> testIsXMLNameStartChar [
 	self allNameStartChars do: [:each |
 		self assert: each isXMLNameStartChar].
@@ -177,7 +179,7 @@ XMLCharacterMethodsTest >> testIsXMLNameStartChar [
 	self deny: nil isXMLNameStartChar
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCharacterMethodsTest >> testIsXMLSeparator [
 	| separators |
 
@@ -189,7 +191,7 @@ XMLCharacterMethodsTest >> testIsXMLSeparator [
 	self deny: nil isXMLSeparator
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCharacterMethodsTest >> testIsXMLWhitespace [
 	| whitespace |
 
@@ -201,7 +203,7 @@ XMLCharacterMethodsTest >> testIsXMLWhitespace [
 	self deny: nil isXMLWhitespace
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCharacterMethodsTest >> testXMLSplit [
 	self
 		assert: ($: xmlSplit: '') equals: (OrderedCollection with: '');

@@ -1,53 +1,55 @@
 Class {
-	#name : #XMLEncodingTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Base'
+	#name : 'XMLEncodingTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLEncodingTest >> asciiToUTF16BE: anASCIIString [
 	^ self
 		encodeString: anASCIIString
 		with: XMLUTF16BigEndianStreamConverter new
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLEncodingTest >> asciiToUTF16LE: anASCIIString [
 	^ self
 		encodeString: anASCIIString
 		with: XMLUTF16LittleEndianStreamConverter new
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLEncodingTest >> asciiToUTF32BE: anASCIIString [
 	^ self
 		encodeString: anASCIIString
 		with: XMLUTF32BigEndianStreamConverter new
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLEncodingTest >> asciiToUTF32LE: anASCIIString [
 	^ self
 		encodeString: anASCIIString
 		with: XMLUTF32LittleEndianStreamConverter new
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 XMLEncodingTest >> assertIsDecodedSourceXMLDocument: aDocument [
 	self assert: (self isDecodedSourceXMLDocument: aDocument)
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLEncodingTest >> convertableStreamOn: aString [
 	^ XMLDecodingReadStreamAdapter nonDecodingOn: aString readStream
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 XMLEncodingTest >> denyIsDecodedSourceXMLDocument: aDocument [
 	self deny: (self isDecodedSourceXMLDocument: aDocument)
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLEncodingTest >> encodeString: anASCIIString with: aStreamConverter [
 	^ (XMLEncodingWriteStreamAdapter
 		on: String new writeStream
@@ -56,12 +58,12 @@ XMLEncodingTest >> encodeString: anASCIIString with: aStreamConverter [
 			contents
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLEncodingTest >> encodingDeclaration: anEncoding [
 	^ '<?xml version="1.0" encoding="', anEncoding, '"?>'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEncodingTest >> isDecodedSourceXMLDocument: aDocument [
 	aDocument nodes size = 1
 		ifFalse: [^ false].
@@ -72,51 +74,51 @@ XMLEncodingTest >> isDecodedSourceXMLDocument: aDocument [
 	^ aDocument firstNode firstNode isStringNode: 'encoding test'
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLEncodingTest >> sourceContent [
 	^ 'encoding test'
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLEncodingTest >> sourceXML [
 	^ self sourceXMLWithContent: self sourceContent
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLEncodingTest >> sourceXMLWithContent: aCharacterOrString [
 	^ '<encoding-test>', aCharacterOrString asString, '</encoding-test>'
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLEncodingTest >> sourceXMLWithEncoding: anEncoding andASCIIContentAsUTF16BE: anASCIIContentString [
 	^ ((self encodingDeclaration: anEncoding) allButLast: 2),
 		(self asciiToUTF16BE: '?>', anASCIIContentString)
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLEncodingTest >> sourceXMLWithEncoding: anEncoding andASCIIContentAsUTF16LE: anASCIIContentString [
 	^ ((self encodingDeclaration: anEncoding) allButLast: 2),
 		(self asciiToUTF16LE: '?>', anASCIIContentString)
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLEncodingTest >> sourceXMLWithEncoding: anEncoding andASCIIContentAsUTF32BE: anASCIIContentString [
 	^ ((self encodingDeclaration: anEncoding) allButLast: 2),
 		(self asciiToUTF32BE: '?>', anASCIIContentString)
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLEncodingTest >> sourceXMLWithEncoding: anEncoding andASCIIContentAsUTF32LE: anASCIIContentString [
 	^ ((self encodingDeclaration: anEncoding) allButLast: 2),
 		(self asciiToUTF32LE: '?>', anASCIIContentString)
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLEncodingTest >> stringFrom: aCollection [
 	^ XMLStreamAdapterTest stringFrom: aCollection
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testDecodingBinary [
 	| source binarySource parser stream |
 
@@ -130,7 +132,7 @@ XMLEncodingTest >> testDecodingBinary [
 		assert: stream upToEnd equals: source
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testDecodingCharacterReferences [
 	| document |
 
@@ -180,7 +182,7 @@ XMLEncodingTest >> testDecodingCharacterReferences [
 			raise: XMLWellFormednessException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testEncodingDeclarationLatin1 [
 	| xml |
 
@@ -205,7 +207,7 @@ XMLEncodingTest >> testEncodingDeclarationLatin1 [
 		raise: XMLEncodingException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testEncodingDeclarationUTF16BE [
 	| document |
 
@@ -262,7 +264,7 @@ XMLEncodingTest >> testEncodingDeclarationUTF16BE [
 		raise: XMLParserException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testEncodingDeclarationUTF16LE [
 	| document |
 
@@ -319,7 +321,7 @@ XMLEncodingTest >> testEncodingDeclarationUTF16LE [
 		raise: XMLParserException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testEncodingDeclarationUTF32BE [
 	| document |
 
@@ -376,7 +378,7 @@ XMLEncodingTest >> testEncodingDeclarationUTF32BE [
 		raise: XMLParserException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testEncodingDeclarationUTF32LE [
 	| document |
 
@@ -433,7 +435,7 @@ XMLEncodingTest >> testEncodingDeclarationUTF32LE [
 		raise: XMLParserException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testEncodingDeclarationUTF8 [
 	| document |
 
@@ -480,7 +482,7 @@ XMLEncodingTest >> testEncodingDeclarationUTF8 [
 	self assertIsDecodedSourceXMLDocument: document.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testExternalEntityByteOrderMarkDetection [
 	| content entity |
 
@@ -510,7 +512,7 @@ XMLEncodingTest >> testExternalEntityByteOrderMarkDetection [
 			self assertIsDecodedSourceXMLDocument: document].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testExternalEntityImplicitEncodingDetection [
 	| content entity |
 
@@ -547,7 +549,7 @@ XMLEncodingTest >> testExternalEntityImplicitEncodingDetection [
 				raise: XMLParserException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testExternalEntityTextDeclaration [
 	| content entity |
 
@@ -596,7 +598,7 @@ XMLEncodingTest >> testExternalEntityTextDeclaration [
 				raise: XMLParserException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testExternalSubsetByteOrderMarkDetection [
 	| content subset |
 
@@ -625,7 +627,7 @@ XMLEncodingTest >> testExternalSubsetByteOrderMarkDetection [
 			self assertIsDecodedSourceXMLDocument: document].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testExternalSubsetImplicitEncodingDetection [
 	| content subset |
 
@@ -661,7 +663,7 @@ XMLEncodingTest >> testExternalSubsetImplicitEncodingDetection [
 				raise: XMLParserException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testExternalSubsetTextDeclaration [
 	| content subset |
 
@@ -709,7 +711,7 @@ XMLEncodingTest >> testExternalSubsetTextDeclaration [
 					raise: XMLParserException].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testImplicitUTF16BigEndianEncodingDetection [
 	| document |
 
@@ -731,7 +733,7 @@ XMLEncodingTest >> testImplicitUTF16BigEndianEncodingDetection [
 		raise: XMLParserException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testImplicitUTF16LittleEndianEncodingDetection [
 	| document |
 
@@ -753,7 +755,7 @@ XMLEncodingTest >> testImplicitUTF16LittleEndianEncodingDetection [
 		raise: XMLParserException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testImplicitUTF32BigEndianEncodingDetection [
 	| document |
 
@@ -775,7 +777,7 @@ XMLEncodingTest >> testImplicitUTF32BigEndianEncodingDetection [
 		raise: XMLParserException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testImplicitUTF32LittleEndianEncodingDetection [
 	| document |
 
@@ -797,7 +799,7 @@ XMLEncodingTest >> testImplicitUTF32LittleEndianEncodingDetection [
 		raise: XMLParserException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testUTF16BigEndianByteOrderMarkDetection [
 	| document |
 
@@ -837,7 +839,7 @@ XMLEncodingTest >> testUTF16BigEndianByteOrderMarkDetection [
 		raise: XMLParserException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testUTF16LittleEndianByteOrderMarkDetection [
 	| document |
 
@@ -877,7 +879,7 @@ XMLEncodingTest >> testUTF16LittleEndianByteOrderMarkDetection [
 		raise: XMLParserException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testUTF8ByteOrderMarkDetection [
 	| document |
 
@@ -917,7 +919,7 @@ XMLEncodingTest >> testUTF8ByteOrderMarkDetection [
 		raise: XMLParserException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingTest >> testWideCharacterNames [
 	| wideNames document |
 
@@ -957,27 +959,27 @@ XMLEncodingTest >> testWideCharacterNames [
 		assert: document contentString equals: wideNames fifth.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingTest >> utf16BigEndianBOM [
 	^ XMLUTF16BigEndianStreamConverter byteOrderMark
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingTest >> utf16LittleEndianBOM [
 	^ XMLUTF16LittleEndianStreamConverter byteOrderMark
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingTest >> utf32BigEndianBOM [
 	^ XMLUTF32BigEndianStreamConverter byteOrderMark
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingTest >> utf32LittleEndianBOM [
 	^ XMLUTF32LittleEndianStreamConverter byteOrderMark
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingTest >> utf8BOM [
 	^ XMLUTF8StreamConverter byteOrderMark
 ]

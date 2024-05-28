@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLNodeCanonicalPrintingTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLNodeCanonicalPrintingTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNodeCanonicalPrintingTest >> onCanonicalLineBreakJoin: aLineCollection [
 	^ XMLWriterTest onCanonicalLineBreakJoin: aLineCollection
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeCanonicalPrintingTest >> testCharacterReferences [
 
 	| xml |
@@ -40,7 +42,7 @@ XMLNodeCanonicalPrintingTest >> testCharacterReferences [
 				    '</doc>' ))
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeCanonicalPrintingTest >> testEntityReferences [
 
 	| xml resolver |
@@ -81,7 +83,7 @@ XMLNodeCanonicalPrintingTest >> testEntityReferences [
 				    '</doc>' '<!-- Let world.txt contain "world" (excluding the quotes) -->' ))
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeCanonicalPrintingTest >> testPIsAndComments [
 
 	| xml |
@@ -116,7 +118,7 @@ XMLNodeCanonicalPrintingTest >> testPIsAndComments [
 				    '<!-- Comment 3 -->' ))
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeCanonicalPrintingTest >> testStartAndEndTags [
 
 	| xml |
@@ -152,7 +154,7 @@ XMLNodeCanonicalPrintingTest >> testStartAndEndTags [
 				    '         </e8>' '      </e7>' '   </e6>' '</doc>' ))
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeCanonicalPrintingTest >> testWhitespace [
 
 	| xml |

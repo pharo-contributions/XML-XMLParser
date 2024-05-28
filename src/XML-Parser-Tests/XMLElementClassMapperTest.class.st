@@ -1,32 +1,34 @@
 Class {
-	#name : #XMLElementClassMapperTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Utils'
+	#name : 'XMLElementClassMapperTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Utils',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Utils'
 }
 
-{ #category : #acccessing }
+{ #category : 'acccessing' }
 XMLElementClassMapperTest >> attributes [
 	^ XMLAttributeDictionary
 		with: 'name' -> 'value'
 		with: 'name2' -> 'value2'
 ]
 
-{ #category : #acccessing }
+{ #category : 'acccessing' }
 XMLElementClassMapperTest >> elementClass [
 	^ XMLElement
 ]
 
-{ #category : #acccessing }
+{ #category : 'acccessing' }
 XMLElementClassMapperTest >> mapperClass [
 	^ XMLElementClassMapper
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLElementClassMapperTest >> newMapper [
 	^ self mapperClass new
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLElementClassMapperTest >> newMapperWithMappings [
 	| mapper |
 
@@ -50,12 +52,12 @@ XMLElementClassMapperTest >> newMapperWithMappings [
 	^ mapper
 ]
 
-{ #category : #acccessing }
+{ #category : 'acccessing' }
 XMLElementClassMapperTest >> otherElementClass [
 	^ XMLFElement
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementClassMapperTest >> testCamelCasedNameFromClassNameSegments [
 	| mapper |
 
@@ -83,7 +85,7 @@ XMLElementClassMapperTest >> testCamelCasedNameFromClassNameSegments [
 					name]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementClassMapperTest >> testClassNameSegmentsFrom [
 	| mapper |
 
@@ -111,7 +113,7 @@ XMLElementClassMapperTest >> testClassNameSegmentsFrom [
 					segments asOrderedCollection]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementClassMapperTest >> testHyphenatedNameFromClassNameSegments [
 	| mapper |
 
@@ -139,7 +141,7 @@ XMLElementClassMapperTest >> testHyphenatedNameFromClassNameSegments [
 					name]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementClassMapperTest >> testNameFromClassNameSegments [
 	| mapper |
 
@@ -167,7 +169,7 @@ XMLElementClassMapperTest >> testNameFromClassNameSegments [
 					name]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementClassMapperTest >> testUnderscoredNameFromClassNameSegments [
 	| mapper |
 

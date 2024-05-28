@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLLazyNamespacedAttributeDictionaryTest,
-	#superclass : #XMLNamespacedAttributeDictionaryTest,
-	#category : #'XML-Parser-Tests-Base'
+	#name : 'XMLLazyNamespacedAttributeDictionaryTest',
+	#superclass : 'XMLNamespacedAttributeDictionaryTest',
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLLazyNamespacedAttributeDictionaryTest >> dictionaryClass [
 	^ XMLLazyNamespacedAttributeDictionary
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLLazyNamespacedAttributeDictionaryTest >> isTestingLazyDictionary [
 	^ true
 ]

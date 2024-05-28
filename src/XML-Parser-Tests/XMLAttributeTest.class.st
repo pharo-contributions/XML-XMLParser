@@ -1,20 +1,22 @@
 Class {
-	#name : #XMLAttributeTest,
-	#superclass : #XMLNodeTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLAttributeTest',
+	#superclass : 'XMLNodeTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeTest >> escapedString [
 	^ '&lt;test name=&quot;&amp;name;&quot;>''&amp;value;''&lt;/test>'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeTest >> nodeClass [
 	^ XMLAttribute
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testCanonicallyEquals [
 	super testCanonicallyEquals.
 	self assert:
@@ -25,7 +27,7 @@ XMLAttributeTest >> testCanonicallyEquals [
 			self newNode)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testCopy [
 
 	| node copy |
@@ -36,7 +38,7 @@ XMLAttributeTest >> testCopy [
 		assert: copy element isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testElement [
 
 	| attribute element |
@@ -49,7 +51,7 @@ XMLAttributeTest >> testElement [
 		assert: attribute element identicalTo: element
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testExpandedName [
 
 	| element attribute |
@@ -66,7 +68,7 @@ XMLAttributeTest >> testExpandedName [
 	self assert: attribute expandedName equals: 'Q{prefixNS}two'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testHasNamespaceURI [
 	| element attribute |
 
@@ -90,7 +92,7 @@ XMLAttributeTest >> testHasNamespaceURI [
 	self deny: attribute hasNamespaceURI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testHasPrefix [
 	| attribute |
 
@@ -107,12 +109,12 @@ XMLAttributeTest >> testHasPrefix [
 	self deny: attribute hasPrefix
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testIsAttribute [
 	self assert: self newNode isAttribute
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testIsInLanguage [
 	| element |
 
@@ -141,7 +143,7 @@ XMLAttributeTest >> testIsInLanguage [
 		element removeAttribute: 'xml:lang']
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testIsNamed [
 	| attribute |
 
@@ -158,7 +160,7 @@ XMLAttributeTest >> testIsNamed [
 		deny: (attribute isNamed: 'one')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testIsNamedAny [
 	| attribute |
 
@@ -174,7 +176,7 @@ XMLAttributeTest >> testIsNamedAny [
 		deny: (attribute isNamedAny: #('one' 'three'))
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testLocalName [
 
 	| attribute |
@@ -194,7 +196,7 @@ XMLAttributeTest >> testLocalName [
 	self assert: attribute localName equals: 'four'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testMatchesLanguage [
 	| attribute |
 
@@ -217,7 +219,7 @@ XMLAttributeTest >> testMatchesLanguage [
 		attribute value: '']
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testName [
 
 	| attribute |
@@ -231,7 +233,7 @@ XMLAttributeTest >> testName [
 		assert: attribute name equals: 'prefix:two'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testNameValue [
 
 	| attribute |
@@ -242,7 +244,7 @@ XMLAttributeTest >> testNameValue [
 		assert: attribute value equals: 'two'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testNamed [
 
 	| attribute |
@@ -252,7 +254,7 @@ XMLAttributeTest >> testNamed [
 		assert: attribute name equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testNamespaceURI [
 
 	| element attribute |
@@ -272,7 +274,7 @@ XMLAttributeTest >> testNamespaceURI [
 	self assert: attribute namespaceURI equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testPrefix [
 
 	| attribute |
@@ -289,7 +291,7 @@ XMLAttributeTest >> testPrefix [
 	self assert: attribute prefix equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testResolvePrefix [
 
 	| element attribute |
@@ -309,7 +311,7 @@ XMLAttributeTest >> testResolvePrefix [
 		equals: XMLNamespaceScope xmlnsNamespaceURI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testResolvePrefixIfUnresolvable [
 
 	| element attribute |
@@ -339,13 +341,13 @@ XMLAttributeTest >> testResolvePrefixIfUnresolvable [
 		equals: XMLNamespaceScope xmlnsNamespaceURI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testSortKey [
 
 	self assert: (self newNode name: 'test') sortKey equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testValue [
 
 	| attribute |
@@ -356,7 +358,7 @@ XMLAttributeTest >> testValue [
 		assert: attribute value equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeTest >> testWriteXMLOn [
 
 	self

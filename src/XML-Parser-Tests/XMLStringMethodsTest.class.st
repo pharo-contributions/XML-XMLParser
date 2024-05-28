@@ -1,65 +1,67 @@
 Class {
-	#name : #XMLStringMethodsTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Base'
+	#name : 'XMLStringMethodsTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStringMethodsTest class >> badNCNames [
 	"all NC (non-qualified) names are names, but not all names are NC names"
 	^ self badNames, self nonNCNameNames
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStringMethodsTest class >> badNames [
 	"all names are Nmtokens, but not all Nmtokens are names"
 	^ self badNmtokens, self nonNameNmtokens
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStringMethodsTest class >> badNmtokens [
 	^ #('' ' ' '	'),
 		(XMLCharacterMethodsTest nonNameChars collect: [:each |
 			'test' copyWith: each])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStringMethodsTest class >> nonNCNameNames [
 	^ #(':' 'test:test' 'test:' ':test')
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStringMethodsTest class >> nonNameNmtokens [
 	^ XMLCharacterMethodsTest nonNameStartCharNameChars collect: [:each |
 		'test' copyWithFirst: each]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStringMethodsTest >> badNCNames [
 	^ self class badNCNames
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStringMethodsTest >> badNames [
 	^ self class badNames
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStringMethodsTest >> badNmtokens [
 	^ self class badNmtokens
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStringMethodsTest >> nonNCNameNames [
 	^ self class nonNCNameNames
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStringMethodsTest >> nonNameNmtokens [
 	^ self class nonNameNmtokens
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringMethodsTest >> testAsXMLEscapedString [
 
 	self
@@ -67,7 +69,7 @@ XMLStringMethodsTest >> testAsXMLEscapedString [
 		equals: '&lt;test name="&amp;name;"&gt;''&amp;value;''&lt;/test&gt;'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringMethodsTest >> testAsXMLFileHandle [
 
 	| path fileHandle |
@@ -79,7 +81,7 @@ XMLStringMethodsTest >> testAsXMLFileHandle [
 		assert: fileHandle path equals: path
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringMethodsTest >> testAsXMLHTTPRequest [
 
 	| url request |
@@ -91,7 +93,7 @@ XMLStringMethodsTest >> testAsXMLHTTPRequest [
 		assert: request url equals: url
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringMethodsTest >> testAsXMLStreamConverter [
 
 	XMLStreamConverter allSubclassesDo: [ :class |
@@ -100,7 +102,7 @@ XMLStringMethodsTest >> testAsXMLStreamConverter [
 				self assert: each asXMLStreamConverter class identicalTo: class ] ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringMethodsTest >> testAsXMLStringNode [
 
 	| node |
@@ -110,13 +112,13 @@ XMLStringMethodsTest >> testAsXMLStringNode [
 		assert: node string equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringMethodsTest >> testIsXMLNCName [
 	self badNCNames do: [:each |
 		self deny: each isXMLNCName]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringMethodsTest >> testIsXMLNSAttributeName [
 	self
 		deny: '' isXMLNSAttributeName;
@@ -130,7 +132,7 @@ XMLStringMethodsTest >> testIsXMLNSAttributeName [
 		assert: 'xmlns:name' isXMLNSAttributeName
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringMethodsTest >> testIsXMLName [
 	self nonNCNameNames do: [:each |
 		self assert: each isXMLName].
@@ -138,7 +140,7 @@ XMLStringMethodsTest >> testIsXMLName [
 		self deny: each isXMLName]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringMethodsTest >> testIsXMLNmtoken [
 	self nonNCNameNames do: [:each |
 		self assert: each isXMLNmtoken].
@@ -148,7 +150,7 @@ XMLStringMethodsTest >> testIsXMLNmtoken [
 		self deny: each isXMLNmtoken]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringMethodsTest >> testIsXMLQualifiedOrLocalName [
 	self
 		deny: ('' isXMLQualifiedOrLocalName: 'name');
@@ -173,7 +175,7 @@ XMLStringMethodsTest >> testIsXMLQualifiedOrLocalName [
 				(String with: 16r039B asCharacter))
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringMethodsTest >> testIsXMLReservedAttributeName [
 	self
 		deny: '' isXMLReservedAttributeName;
@@ -187,7 +189,7 @@ XMLStringMethodsTest >> testIsXMLReservedAttributeName [
 		assert: 'xmlns:name' isXMLReservedAttributeName
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringMethodsTest >> testParseXML [
 
 	| xml |
@@ -197,7 +199,7 @@ XMLStringMethodsTest >> testParseXML [
 		equals: (XMLDOMParser parse: xml) printString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringMethodsTest >> testXMLLocalNameAfterPrefix [
 
 	self
@@ -212,7 +214,7 @@ XMLStringMethodsTest >> testXMLLocalNameAfterPrefix [
 		equals: 'name'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStringMethodsTest >> testXMLPrefixBeforeLocalName [
 
 	self

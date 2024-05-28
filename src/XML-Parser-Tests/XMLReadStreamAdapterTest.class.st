@@ -1,35 +1,37 @@
 Class {
-	#name : #XMLReadStreamAdapterTest,
-	#superclass : #XMLStreamAdapterTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLReadStreamAdapterTest',
+	#superclass : 'XMLStreamAdapterTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLReadStreamAdapterTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLReadStreamAdapterTest >> isBinary [
 	^ self expectsBinaryOutput
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLReadStreamAdapterTest >> streamAdapterClass [
 	^ XMLReadStreamAdapter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLReadStreamAdapterTest >> streamClass [
 	^ XMLExceptionRaisingReadStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLReadStreamAdapterTest >> streamCollection [
 	^ self inputCollection
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLReadStreamAdapterTest >> testAtEnd [
 	| adapter |
 
@@ -40,7 +42,7 @@ XMLReadStreamAdapterTest >> testAtEnd [
 	self assert: adapter atEnd
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLReadStreamAdapterTest >> testContents [
 
 	| adapter |
@@ -54,7 +56,7 @@ XMLReadStreamAdapterTest >> testContents [
 	self assert: adapter contents equals: self outputCollection
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLReadStreamAdapterTest >> testNext [
 
 	| adapter |
@@ -76,7 +78,7 @@ XMLReadStreamAdapterTest >> testNext [
 	self assert: (adapter next: 1) isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLReadStreamAdapterTest >> testOnIfBinaryOrExternal [
 
 	| basicInputCollection stream adapter |
@@ -94,7 +96,7 @@ XMLReadStreamAdapterTest >> testOnIfBinaryOrExternal [
 			(self streamAdapterClass onIfBinaryOrExternal: stream) isNil ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLReadStreamAdapterTest >> testPeek [
 
 	| adapter |
@@ -105,7 +107,7 @@ XMLReadStreamAdapterTest >> testPeek [
 	self assert: adapter peek isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLReadStreamAdapterTest >> testPeekFor [
 	| adapter |
 
@@ -122,7 +124,7 @@ XMLReadStreamAdapterTest >> testPeekFor [
 		deny: (adapter peekFor: nil)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLReadStreamAdapterTest >> testPosition [
 
 	| adapter startPosition endPosition position |
@@ -152,7 +154,7 @@ XMLReadStreamAdapterTest >> testPosition [
 	self assert: position equals: endPosition
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLReadStreamAdapterTest >> testReset [
 
 	| adapter |
@@ -165,7 +167,7 @@ XMLReadStreamAdapterTest >> testReset [
 		assert: adapter upToEnd isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLReadStreamAdapterTest >> testSkip [
 
 	| adapter |
@@ -183,7 +185,7 @@ XMLReadStreamAdapterTest >> testSkip [
 		assert: adapter upToEnd isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLReadStreamAdapterTest >> testSkipTo [
 
 	| adapter |
@@ -200,7 +202,7 @@ XMLReadStreamAdapterTest >> testSkipTo [
 		assert: adapter atEnd
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLReadStreamAdapterTest >> testUpTo [
 
 	self outputCollection do: [ :each |
@@ -217,7 +219,7 @@ XMLReadStreamAdapterTest >> testUpTo [
 		equals: self outputCollection
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLReadStreamAdapterTest >> testUpToEnd [
 
 	| adapter |

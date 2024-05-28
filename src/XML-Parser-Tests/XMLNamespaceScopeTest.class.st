@@ -1,10 +1,12 @@
 Class {
-	#name : #XMLNamespaceScopeTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Namespaces'
+	#name : 'XMLNamespaceScopeTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Namespaces',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Namespaces'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNamespaceScopeTest >> namespaces [
 	^ OrderPreservingStringDictionary new
 		at: 'prefix1' put: 'ns1';
@@ -13,12 +15,12 @@ XMLNamespaceScopeTest >> namespaces [
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNamespaceScopeTest >> newNamespaceScope [
 	^ XMLNamespaceScope new
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNamespaceScopeTest >> newNamespaceScopeWithNamespaces [
 	| scope |
 
@@ -30,7 +32,7 @@ XMLNamespaceScopeTest >> newNamespaceScopeWithNamespaces [
 	^ scope
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testCopy [
 
 	| scope oldPrefixMappings copy |
@@ -43,7 +45,7 @@ XMLNamespaceScopeTest >> testCopy [
 		assert: copy prefixMappings identicalTo: oldPrefixMappings
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testDefaultNamespace [
 
 	| scope oldPrefixMappings |
@@ -61,7 +63,7 @@ XMLNamespaceScopeTest >> testDefaultNamespace [
 	self assert: scope defaultNamespace equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testEquals [
 
 	self
@@ -74,7 +76,7 @@ XMLNamespaceScopeTest >> testEquals [
 		equals: self newNamespaceScope
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testHasDefaultNamespace [
 	| scope |
 
@@ -91,7 +93,7 @@ XMLNamespaceScopeTest >> testHasDefaultNamespace [
 	self deny: scope hasDefaultNamespace
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testHasNamespaces [
 	| scope |
 
@@ -106,7 +108,7 @@ XMLNamespaceScopeTest >> testHasNamespaces [
 	self deny: scope hasNamespaces
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testHash [
 	"We can only safely test that equal objects have the same hash; testing
 	that different objects have different hashes would be unreliable
@@ -125,7 +127,7 @@ XMLNamespaceScopeTest >> testHash [
 				 hash)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testIncludesPrefix [
 	| scope |
 
@@ -148,7 +150,7 @@ XMLNamespaceScopeTest >> testIncludesPrefix [
 		self assert: (scope includesPrefix: prefix)]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testIncludesPrefixMappedTo [
 	| scope |
 
@@ -186,7 +188,7 @@ XMLNamespaceScopeTest >> testIncludesPrefixMappedTo [
 				mappedTo: uri)]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testInheritMappingsFrom [
 
 	| outerScope innerScope |
@@ -205,7 +207,7 @@ XMLNamespaceScopeTest >> testInheritMappingsFrom [
 		identicalTo: outerScope prefixMappings
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testMapPrefixTo [
 
 	| scope oldPrefixMappings |
@@ -261,7 +263,7 @@ XMLNamespaceScopeTest >> testMapPrefixTo [
 			raise: XMLNamespaceException ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testMapPrefixesAndURIs [
 
 	| outerScope innerScope namespaces |
@@ -286,7 +288,7 @@ XMLNamespaceScopeTest >> testMapPrefixesAndURIs [
 		identicalTo: outerScope prefixMappings
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testMappedPrefixes [
 
 	| scope prefixes |
@@ -298,7 +300,7 @@ XMLNamespaceScopeTest >> testMappedPrefixes [
 		self assert: scope mappedPrefixes equals: prefixes asArray ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testPrefixMappingAt [
 
 	| scope |
@@ -319,7 +321,7 @@ XMLNamespaceScopeTest >> testPrefixMappingAt [
 		self assert: (scope prefixMappingAt: prefix) equals: uri ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testPrefixMappingAtIfAbsent [
 
 	| scope |
@@ -345,7 +347,7 @@ XMLNamespaceScopeTest >> testPrefixMappingAtIfAbsent [
 			equals: uri ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testPrefixesAndURIsDo [
 
 	| associations |
@@ -361,7 +363,7 @@ XMLNamespaceScopeTest >> testPrefixesAndURIsDo [
 		equals: self namespaces associations asArray
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testResolvePrefix [
 
 	| scope |
@@ -378,7 +380,7 @@ XMLNamespaceScopeTest >> testResolvePrefix [
 		equals: scope xmlnsNamespaceURI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testResolvePrefixIfUnresolvable [
 
 	| scope |
@@ -400,7 +402,7 @@ XMLNamespaceScopeTest >> testResolvePrefixIfUnresolvable [
 		equals: scope xmlnsNamespaceURI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testResolvePrefixesOfNamespaceURI [
 
 	| scope |
@@ -431,7 +433,7 @@ XMLNamespaceScopeTest >> testResolvePrefixesOfNamespaceURI [
 		equals: (Set with: 'xml')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testSize [
 
 	self
@@ -440,7 +442,7 @@ XMLNamespaceScopeTest >> testSize [
 		equals: self namespaces size
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testUnmapPrefix [
 
 	| scope |
@@ -470,7 +472,7 @@ XMLNamespaceScopeTest >> testUnmapPrefix [
 	self assert: scope prefixMappings isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testUnmapPrefixIfAbsent [
 
 	| scope |
@@ -500,7 +502,7 @@ XMLNamespaceScopeTest >> testUnmapPrefixIfAbsent [
 	self assert: scope prefixMappings isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testUnmapPrefixes [
 
 	| scope oldPrefixMappings |
@@ -517,7 +519,7 @@ XMLNamespaceScopeTest >> testUnmapPrefixes [
 		deny: scope prefixMappings identicalTo: oldPrefixMappings
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testValidateAndResolvePrefixOfAttribute [
 
 	| scope |
@@ -559,7 +561,7 @@ XMLNamespaceScopeTest >> testValidateAndResolvePrefixOfAttribute [
 		raise: XMLNamespaceException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testValidateAndResolvePrefixOfElement [
 
 	| scope |
@@ -592,7 +594,7 @@ XMLNamespaceScopeTest >> testValidateAndResolvePrefixOfElement [
 		raise: XMLNamespaceException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testValidatePrefixesOfAttributes [
 	| scope attributes |
 
@@ -636,7 +638,7 @@ XMLNamespaceScopeTest >> testValidatePrefixesOfAttributes [
 					raise: XMLNamespaceException]].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testXMLNSNamespaceURI [
 
 	| namespaceURI |
@@ -647,7 +649,7 @@ XMLNamespaceScopeTest >> testXMLNSNamespaceURI [
 		assert: XMLNamespaceScope xmlnsNamespaceURI equals: namespaceURI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespaceScopeTest >> testXMLNamespaceURI [
 
 	| namespaceURI |

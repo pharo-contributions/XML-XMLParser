@@ -1,27 +1,29 @@
 Class {
-	#name : #XMLElementTest,
-	#superclass : #XMLNodeWithElementsTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLElementTest',
+	#superclass : 'XMLNodeWithElementsTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElementTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLElementTest >> newNodeWithElements [
 	^ super newNodeWithElements
 		name: 'root';
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementTest >> nodeClass [
 	^ XMLElement
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAcceptNodeVisitor [
 
 	| visitor element message |
@@ -46,7 +48,7 @@ XMLElementTest >> testAcceptNodeVisitor [
 	super testAcceptNodeVisitor
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAddElementNamed [
 
 	| element |
@@ -64,7 +66,7 @@ XMLElementTest >> testAddElementNamed [
 		assert: element firstNode namespaceURI equals: 'prefixNS'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAddElementNamedAttributes [
 
 	| element |
@@ -86,7 +88,7 @@ XMLElementTest >> testAddElementNamedAttributes [
 		assertElement: element firstNode hasAttributes: self attributes
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeAssociations [
 	| element |
 
@@ -96,7 +98,7 @@ XMLElementTest >> testAttributeAssociations [
 		collects: (element attributeNodes collect: [:each | each name -> each value])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeAt [
 
 	| element |
@@ -106,7 +108,7 @@ XMLElementTest >> testAttributeAt [
 	self assert: (element attributeAt: 'absent') equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeAtIfAbsent [
 
 	| element |
@@ -120,7 +122,7 @@ XMLElementTest >> testAttributeAtIfAbsent [
 		equals: #absent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeAtIfAbsentPut [
 
 	| element |
@@ -135,7 +137,7 @@ XMLElementTest >> testAttributeAtIfAbsentPut [
 	self assert: (element attributeAt: 'newName') equals: 'newValue'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeAtPut [
 
 	| element |
@@ -153,7 +155,7 @@ XMLElementTest >> testAttributeAtPut [
 		assert: (element attributeAt: 'newName') equals: 'newValue'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeListCopying [
 
 	| element attributeListCopy |
@@ -166,7 +168,7 @@ XMLElementTest >> testAttributeListCopying [
 		assert: attributeListCopy observer isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeNames [
 	| element |
 
@@ -176,7 +178,7 @@ XMLElementTest >> testAttributeNames [
 		collects: (element attributeNodes collect: [:each | each name])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeNamesAndValuesDo [
 	| element |
 
@@ -195,7 +197,7 @@ XMLElementTest >> testAttributeNamesAndValuesDo [
 		and: self attributeValues
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeNamesDo [
 	| element |
 
@@ -210,7 +212,7 @@ XMLElementTest >> testAttributeNamesDo [
 		enumerate: element attributeNames
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeNodeAt [
 
 	| element |
@@ -223,7 +225,7 @@ XMLElementTest >> testAttributeNodeAt [
 	self assert: (element attributeNodeAt: 'absent') isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeNodeAtIfAbsent [
 
 	| element attributeLocalNames |
@@ -247,7 +249,7 @@ XMLElementTest >> testAttributeNodeAtIfAbsent [
 		equals: #absent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeNodeAtNamespaceURI [
 
 	| element |
@@ -263,7 +265,7 @@ XMLElementTest >> testAttributeNodeAtNamespaceURI [
 		(element attributeNodeAt: 'prefix:two' namespaceURI: 'absent') isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeNodeAtNamespaceURIIfAbsent [
 
 	| element |
@@ -288,7 +290,7 @@ XMLElementTest >> testAttributeNodeAtNamespaceURIIfAbsent [
 		equals: #absent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeNodes [
 
 	| element attributeNodes |
@@ -304,7 +306,7 @@ XMLElementTest >> testAttributeNodes [
 		equals: self attributeAssociations asArray
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeNodesAdding [
 
 	| element attributesAdded elementWithAttributes |
@@ -334,7 +336,7 @@ XMLElementTest >> testAttributeNodesAdding [
 			assert: element attributeNodes equals: attributesAdded ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeNodesDo [
 	| element |
 
@@ -349,7 +351,7 @@ XMLElementTest >> testAttributeNodesDo [
 		enumerate: element attributeNodes
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributePrefixAliasing [
 	| element |
 
@@ -378,7 +380,7 @@ XMLElementTest >> testAttributePrefixAliasing [
 		raise: XMLNamespaceException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributePrefixUndeclared [
 	| element |
 
@@ -405,7 +407,7 @@ XMLElementTest >> testAttributePrefixUndeclared [
 		raise: XMLNamespaceException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeRenaming [
 
 	| elementWithAttributes attributeNodes attributeNode oldSize oldNames oldName |
@@ -441,7 +443,7 @@ XMLElementTest >> testAttributeRenaming [
 		identicalTo: attributeNode
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributeSorting [
 
 	| element |
@@ -467,7 +469,7 @@ XMLElementTest >> testAttributeSorting [
 	self assert: element attributeNames asArray equals: #( 'c' 'b' 'a' )
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testAttributes [
 
 	| element attributeDictionary |
@@ -481,7 +483,7 @@ XMLElementTest >> testAttributes [
 			 (attributeDictionary at: each name) = each value ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testCanonicalPrinting [
 
 	| element |
@@ -504,7 +506,7 @@ XMLElementTest >> testCanonicalPrinting [
 		'<test xmlns="default" xmlns:a="ns1" xmlns:b="ns2" a="1" b="2" c="3"></test>'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testDeclareNamespaces [
 
 	| element |
@@ -528,7 +530,7 @@ XMLElementTest >> testDeclareNamespaces [
 		assert: element usesNamespaces
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testDeclarePrefixURI [
 
 	| element elementsWithDeclaredPrefix |
@@ -580,7 +582,7 @@ XMLElementTest >> testDeclarePrefixURI [
 	self assert: element usesNamespaces
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testDeclarePrefixURIAttributes [
 	| element |
 
@@ -607,7 +609,7 @@ XMLElementTest >> testDeclarePrefixURIAttributes [
 		raise: XMLNamespaceException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testDeclaredPrefixes [
 
 	| element prefixes |
@@ -624,7 +626,7 @@ XMLElementTest >> testDeclaredPrefixes [
 		deny: element usesNamespaces
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testDeclaresDefaultNamespace [
 	| element |
 
@@ -652,7 +654,7 @@ XMLElementTest >> testDeclaresDefaultNamespace [
 		deny: element usesNamespaces.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testDeclaresPrefixURI [
 	| element |
 
@@ -704,7 +706,7 @@ XMLElementTest >> testDeclaresPrefixURI [
 	self deny: element usesNamespaces.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testDefaultNamespace [
 
 	| element elementsWithDefaultNamespace |
@@ -733,7 +735,7 @@ XMLElementTest >> testDefaultNamespace [
 		assert: element usesNamespaces
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testElementSorting [
 
 	| element |
@@ -763,7 +765,7 @@ XMLElementTest >> testElementSorting [
 		equals: #( 'c' 'b' 'a' )
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testExpandedName [
 
 	| element |
@@ -782,7 +784,7 @@ XMLElementTest >> testExpandedName [
 	self assert: element expandedName equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testHasAttributes [
 	self
 		deny: self newNode hasAttributes;
@@ -790,7 +792,7 @@ XMLElementTest >> testHasAttributes [
 		deny: self newElementWithAttributes removeAttributes hasAttributes
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testHasID [
 	| element document |
 
@@ -827,7 +829,7 @@ XMLElementTest >> testHasID [
 	self assert: (element hasID: 'test').
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testHasNamespaceURI [
 	| element |
 
@@ -847,7 +849,7 @@ XMLElementTest >> testHasNamespaceURI [
 	self deny: element hasNamespaceURI.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testHasNamespaces [
 	| element |
 
@@ -867,7 +869,7 @@ XMLElementTest >> testHasNamespaces [
 	self deny: element hasNamespaces.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testHasPrefix [
 	| element |
 
@@ -885,7 +887,7 @@ XMLElementTest >> testHasPrefix [
 	self deny: element hasPrefix.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testIncludesAttribute [
 	| element |
 
@@ -896,7 +898,7 @@ XMLElementTest >> testIncludesAttribute [
 		self deny: (element includesAttribute: each)].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testIsDeclaredPrefix [
 	| element elementsWithDeclaredPrefix |
 
@@ -924,7 +926,7 @@ XMLElementTest >> testIsDeclaredPrefix [
 		deny: element usesNamespaces.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testIsDeclaredPrefixURI [
 	| element elementsWithDeclaredPrefix |
 
@@ -970,12 +972,12 @@ XMLElementTest >> testIsDeclaredPrefixURI [
 	self deny: element usesNamespaces.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testIsElement [
 	self assert: self newNode isElement
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testIsElementNamed [
 	| element |
 
@@ -991,7 +993,7 @@ XMLElementTest >> testIsElementNamed [
 		deny: (element isElementNamed: 'one').
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testIsElementNamedAny [
 	| element |
 
@@ -1007,7 +1009,7 @@ XMLElementTest >> testIsElementNamedAny [
 		deny: (element isElementNamedAny: #('one' 'three')).
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testIsInLanguage [
 	| nodeWithElements |
 
@@ -1046,7 +1048,7 @@ XMLElementTest >> testIsInLanguage [
 		nodeWithElements removeAttribute: 'xml:lang'].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testIsNamed [
 	| element |
 
@@ -1062,7 +1064,7 @@ XMLElementTest >> testIsNamed [
 		deny: (element isNamed: 'one').
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testIsNamedAny [
 	| element |
 
@@ -1078,7 +1080,7 @@ XMLElementTest >> testIsNamedAny [
 		deny: (element isNamedAny: #('one' 'three')).
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testIsRoot [
 	| element |
 
@@ -1092,7 +1094,7 @@ XMLElementTest >> testIsRoot [
 		self assert: each isRoot].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testLocalName [
 
 	| element |
@@ -1112,7 +1114,7 @@ XMLElementTest >> testLocalName [
 		assert: element localName equals: 'four'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testName [
 
 	| element |
@@ -1135,7 +1137,7 @@ XMLElementTest >> testName [
 	self assert: element name equals: 'unmapped:three'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testNameAttributes [
 
 	| attributes unprefixedAttributes element |
@@ -1170,7 +1172,7 @@ XMLElementTest >> testNameAttributes [
 		raise: XMLNamespaceException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testNameNamespaceURI [
 
 	| element |
@@ -1217,7 +1219,7 @@ XMLElementTest >> testNameNamespaceURI [
 		assert: element usesNamespaces
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testNameNamespaceURIAttributes [
 
 	| attributes unprefixedAttributes element |
@@ -1268,7 +1270,7 @@ XMLElementTest >> testNameNamespaceURIAttributes [
 		raise: XMLNamespaceException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testNameNamespaces [
 
 	| element |
@@ -1307,7 +1309,7 @@ XMLElementTest >> testNameNamespaces [
 		raise: XMLNamespaceException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testNameNamespacesAttributes [
 
 	| element |
@@ -1351,7 +1353,7 @@ XMLElementTest >> testNameNamespacesAttributes [
 		raise: XMLNamespaceException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testNamed [
 
 	| element |
@@ -1364,7 +1366,7 @@ XMLElementTest >> testNamed [
 		raise: XMLNamespaceException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testNamespaceURI [
 
 	| element |
@@ -1383,7 +1385,7 @@ XMLElementTest >> testNamespaceURI [
 	self assert: element namespaceURI equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testNextElement [
 
 	| root nextElement |
@@ -1394,7 +1396,7 @@ XMLElementTest >> testNextElement [
 		nextElement := each ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testPrefix [
 
 	| element |
@@ -1421,7 +1423,7 @@ XMLElementTest >> testPrefix [
 		raise: XMLNamespaceException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testPreviousElement [
 
 	| root previousElement |
@@ -1432,7 +1434,7 @@ XMLElementTest >> testPreviousElement [
 		previousElement := each ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testPrintingDefaultNamespaces [
 
 	| element |
@@ -1447,7 +1449,7 @@ XMLElementTest >> testPrintingDefaultNamespaces [
 			, '<element xmlns=""><empty/></element>' , '</element>'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testPrintingNonRootNamespaces [
 
 	| element |
@@ -1463,7 +1465,7 @@ XMLElementTest >> testPrintingNonRootNamespaces [
 			, '</element>'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testPrintingRootNamespaces [
 
 	| element |
@@ -1479,7 +1481,7 @@ XMLElementTest >> testPrintingRootNamespaces [
 			, '</used:element>'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testRemoveAttribute [
 
 	| element |
@@ -1492,7 +1494,7 @@ XMLElementTest >> testRemoveAttribute [
 	self assert: element attributeNodes isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testRemoveAttributeIfAbsent [
 
 	| element |
@@ -1509,7 +1511,7 @@ XMLElementTest >> testRemoveAttributeIfAbsent [
 	self assert: element attributeNodes isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testRemoveAttributeNode [
 
 	| element |
@@ -1522,7 +1524,7 @@ XMLElementTest >> testRemoveAttributeNode [
 	self assert: element attributeNodes isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testRemoveAttributeNodeIfAbsent [
 
 	| element |
@@ -1538,7 +1540,7 @@ XMLElementTest >> testRemoveAttributeNodeIfAbsent [
 	self assert: element attributeNodes isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testRemoveAttributes [
 
 	| element |
@@ -1549,7 +1551,7 @@ XMLElementTest >> testRemoveAttributes [
 		deny: element hasAttributes
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testResolvePrefix [
 
 	| element |
@@ -1572,7 +1574,7 @@ XMLElementTest >> testResolvePrefix [
 		deny: element usesNamespaces
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testResolvePrefixIfUnresolvable [
 
 	| element |
@@ -1607,7 +1609,7 @@ XMLElementTest >> testResolvePrefixIfUnresolvable [
 	self deny: element usesNamespaces
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testResolvePrefixesOfNamespaceURI [
 
 	| element |
@@ -1641,7 +1643,7 @@ XMLElementTest >> testResolvePrefixesOfNamespaceURI [
 	self deny: element usesNamespaces
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testSetAttributes [
 
 	| element newAttributeAssociations |
@@ -1657,13 +1659,13 @@ XMLElementTest >> testSetAttributes [
 		equals: newAttributeAssociations
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testSortKey [
 
 	self assert: (self nodeClass named: 'test') sortKey equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testUndeclareDefaultNamespace [
 
 	| element oldRootDefaultNamespace elementsWithCustomDefaultNamespace |
@@ -1695,7 +1697,7 @@ XMLElementTest >> testUndeclareDefaultNamespace [
 		assert: element usesNamespaces
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testUndeclarePrefix [
 
 	| element |
@@ -1730,7 +1732,7 @@ XMLElementTest >> testUndeclarePrefix [
 		assert: element usesNamespaces
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testUndeclarePrefixes [
 
 	| element innerElement |
@@ -1759,7 +1761,7 @@ XMLElementTest >> testUndeclarePrefixes [
 		assert: element usesNamespaces
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLElementTest >> testWriteXMLOn [
 
 	| element attributes |

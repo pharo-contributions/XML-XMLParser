@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLNullStreamConverterTest,
-	#superclass : #XMLStreamConverterTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLNullStreamConverterTest',
+	#superclass : 'XMLStreamConverterTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNullStreamConverterTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNullStreamConverterTest >> streamConverterClass [
 	^ XMLNullStreamConverter
 ]

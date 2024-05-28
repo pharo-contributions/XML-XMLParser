@@ -1,42 +1,44 @@
 Class {
-	#name : #DTDExternalEntityResolverTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-DTD'
+	#name : 'DTDExternalEntityResolverTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-DTD',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DTD'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDExternalEntityResolverTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalEntityResolverTest >> entityLimitsClass [
 	^ DTDExternalEntityLimits
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDExternalEntityResolverTest >> isTestingLimiting [
 	^ false
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDExternalEntityResolverTest >> newEntityLimits [
 	^ self entityLimitsClass new
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDExternalEntityResolverTest >> newResolver [
 	^ self isTestingLimiting
 		ifTrue: [self resolverClass new asLimitingExternalEntityResolver]
 		ifFalse: [self resolverClass new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalEntityResolverTest >> resolverClass [
 	^ DTDExternalEntityResolver
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDExternalEntityResolverTest >> testCopy [
 
 	| resolver copy |
@@ -66,7 +68,7 @@ DTDExternalEntityResolverTest >> testCopy [
 				identicalTo: resolver externalEntityLimits ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDExternalEntityResolverTest >> testDecoratorInterfaceCompatibility [
 	| resolver resolverBaseClass |
 
@@ -85,7 +87,7 @@ DTDExternalEntityResolverTest >> testDecoratorInterfaceCompatibility [
 				self assert: (resolver respondsTo: each)]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDExternalEntityResolverTest >> testExternalEntityLimits [
 
 	| resolver newEntityLimits |
@@ -101,7 +103,7 @@ DTDExternalEntityResolverTest >> testExternalEntityLimits [
 		assert: resolver externalEntityLimits identicalTo: newEntityLimits
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDExternalEntityResolverTest >> testExternalSubsetReadLimit [
 
 	| resolver |
@@ -118,7 +120,7 @@ DTDExternalEntityResolverTest >> testExternalSubsetReadLimit [
 		assert: resolver externalSubsetReadLimit isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDExternalEntityResolverTest >> testMaxExternalEntities [
 
 	| resolver |
@@ -131,7 +133,7 @@ DTDExternalEntityResolverTest >> testMaxExternalEntities [
 		assert: resolver maxExternalEntities isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDExternalEntityResolverTest >> testMaxExternalEntitySize [
 
 	| resolver |
@@ -147,7 +149,7 @@ DTDExternalEntityResolverTest >> testMaxExternalEntitySize [
 		assert: resolver maxExternalEntitySize isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDExternalEntityResolverTest >> testRemoveLimits [
 	| readLimit entityLimit entitySizeLimit resolver |
 	readLimit := 100.
@@ -171,7 +173,7 @@ DTDExternalEntityResolverTest >> testRemoveLimits [
 		assert: resolver resolvesLocalFromNonLocal
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDExternalEntityResolverTest >> testResolvesLocalFromNonLocal [
 
 	| resolver |
@@ -186,7 +188,7 @@ DTDExternalEntityResolverTest >> testResolvesLocalFromNonLocal [
 		assert: resolver resolvesLocalFromNonLocal
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDExternalEntityResolverTest >> testTotalResolvedExternalEntities [
 	| resolver |
 	self isTestingLimiting
@@ -201,4 +203,14 @@ DTDExternalEntityResolverTest >> testTotalResolvedExternalEntities [
 				incrementTotalResolvedExternalEntities;
 				totalResolvedExternalEntities)
 		equals: 1
+]
+
+{ #category : 'utilities - compatibility' }
+DTDExternalEntityResolverTest >> whichProtocolIn: aClass includesSelector: aSelector [
+	"#whichCategoryIncludesSelector: was deprecated in Pharo 12 and removed in Pharo 13"	
+
+	^ SystemVersion current major < 13
+			ifTrue: [ aClass whichCategoryIncludesSelector: aSelector ]
+			ifFalse: [ aClass protocolNameOfSelector: aSelector ]
+		
 ]

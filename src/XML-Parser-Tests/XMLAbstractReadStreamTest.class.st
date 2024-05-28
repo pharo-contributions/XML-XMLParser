@@ -2,47 +2,49 @@
 Abstract, do not run.
 "
 Class {
-	#name : #XMLAbstractReadStreamTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLAbstractReadStreamTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAbstractReadStreamTest class >> isAbstract [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAbstractReadStreamTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractReadStreamTest >> inputCollection [
 	^ #()
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLAbstractReadStreamTest >> newStream [
 	^ self newStreamOn: self inputCollection
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLAbstractReadStreamTest >> newStreamOn: aCollection [
 	^ self streamClass on: aCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractReadStreamTest >> outputCollection [
 	^ self inputCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractReadStreamTest >> streamClass [
 	^ XMLAbstractReadStream
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractReadStreamTest >> testAtEnd [
 	| stream |
 
@@ -53,7 +55,7 @@ XMLAbstractReadStreamTest >> testAtEnd [
 	self assert: stream atEnd
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractReadStreamTest >> testClose [
 
 	| stream |
@@ -63,7 +65,7 @@ XMLAbstractReadStreamTest >> testClose [
 		assert: stream atEnd
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractReadStreamTest >> testContents [
 
 	| stream |
@@ -77,17 +79,17 @@ XMLAbstractReadStreamTest >> testContents [
 	self assert: stream contents equals: self outputCollection
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractReadStreamTest >> testIsBinary [
 	self deny: self newStream isBinary
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractReadStreamTest >> testIsStream [
 	self assert: self newStream isStream
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractReadStreamTest >> testIsXMLBinaryOrExternalStream [
 
 	| stream |
@@ -97,14 +99,14 @@ XMLAbstractReadStreamTest >> testIsXMLBinaryOrExternalStream [
 		equals: stream isBinary
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractReadStreamTest >> testNew [
 	self
 		should: [self streamClass new]
 		raise: Error
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractReadStreamTest >> testNext [
 
 	| stream |
@@ -126,7 +128,7 @@ XMLAbstractReadStreamTest >> testNext [
 	self assert: (stream next: 1) isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractReadStreamTest >> testPeek [
 
 	| stream |
@@ -137,7 +139,7 @@ XMLAbstractReadStreamTest >> testPeek [
 	self assert: stream peek isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractReadStreamTest >> testPeekFor [
 	| stream |
 
@@ -154,7 +156,7 @@ XMLAbstractReadStreamTest >> testPeekFor [
 		deny: (stream peekFor: nil)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractReadStreamTest >> testPosition [
 
 	| stream startPosition endPosition position |
@@ -184,7 +186,7 @@ XMLAbstractReadStreamTest >> testPosition [
 	self assert: position equals: endPosition
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractReadStreamTest >> testReset [
 
 	| stream |
@@ -197,7 +199,7 @@ XMLAbstractReadStreamTest >> testReset [
 		assert: stream upToEnd isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractReadStreamTest >> testSkip [
 
 	| stream |
@@ -215,7 +217,7 @@ XMLAbstractReadStreamTest >> testSkip [
 		assert: stream upToEnd isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractReadStreamTest >> testSkipTo [
 
 	| stream |
@@ -232,7 +234,7 @@ XMLAbstractReadStreamTest >> testSkipTo [
 		assert: stream atEnd
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractReadStreamTest >> testUpTo [
 
 	self outputCollection do: [ :each |
@@ -249,7 +251,7 @@ XMLAbstractReadStreamTest >> testUpTo [
 		equals: self outputCollection
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractReadStreamTest >> testUpToEnd [
 
 	| stream |

@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLCDataTest,
-	#superclass : #XMLStringTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLCDataTest',
+	#superclass : 'XMLStringTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCDataTest >> nodeClass [
 	^ XMLCData
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCDataTest >> testAcceptNodeVisitor [
 
 	| visitor cdata message |
@@ -32,12 +34,12 @@ XMLCDataTest >> testAcceptNodeVisitor [
 		deny: visitor messageRecorder hasMessages
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCDataTest >> testIsCData [
 	self assert: self newNode isCData
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCDataTest >> testWriteXMLOn [
 
 	self

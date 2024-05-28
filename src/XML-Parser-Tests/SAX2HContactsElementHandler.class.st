@@ -2,7 +2,9 @@
 Handler for the sample <person> <contacts> element.
 "
 Class {
-	#name : #SAX2HContactsElementHandler,
-	#superclass : #SAX2ElementHandler,
-	#category : #'XML-Parser-Tests-ElementHandlers'
+	#name : 'SAX2HContactsElementHandler',
+	#superclass : 'SAX2ElementHandler',
+	#category : 'XML-Parser-Tests-ElementHandlers',
+	#package : 'XML-Parser-Tests',
+	#tag : 'ElementHandlers'
 }

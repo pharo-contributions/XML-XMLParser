@@ -2,27 +2,29 @@
 An abstract and portable test case for sets.
 "
 Class {
-	#name : #XMLAbstractSetTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Base'
+	#name : 'XMLAbstractSetTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAbstractSetTest class >> isAbstract [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAbstractSetTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractSetTest >> absentSetElement [
 	self subclassResponsibility
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 XMLAbstractSetTest >> assertSet: aFirstSet equals: aSecondSet [
 
 	self
@@ -30,7 +32,7 @@ XMLAbstractSetTest >> assertSet: aFirstSet equals: aSecondSet [
 		assert: aSecondSet equals: aFirstSet
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 XMLAbstractSetTest >> denySet: aFirstSet equals: aSecondSet [
 
 	self
@@ -40,37 +42,37 @@ XMLAbstractSetTest >> denySet: aFirstSet equals: aSecondSet [
 		deny: aSecondSet identicalTo: aFirstSet
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractSetTest >> disjointSetElements [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractSetTest >> emptySet [
 	^ self setClass new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractSetTest >> setClass [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractSetTest >> setElements [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractSetTest >> setWithDisjointElements [
 	^ self setClass newFrom: self disjointSetElements
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractSetTest >> setWithElements [
 	^ self setClass newFrom: self setElements
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractSetTest >> testAdd [
 
 	| set |
@@ -86,7 +88,7 @@ XMLAbstractSetTest >> testAdd [
 		assert: set equals: self setWithElements
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractSetTest >> testConcatenation [
 
 	| firstSet secondSet |
@@ -105,7 +107,7 @@ XMLAbstractSetTest >> testConcatenation [
 			(self setClass newFrom: self setElements , self disjointSetElements)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractSetTest >> testCopy [
 
 	| set copy |
@@ -122,7 +124,7 @@ XMLAbstractSetTest >> testCopy [
 	self assert: set equals: copy
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractSetTest >> testDo [
 
 	| enumerated |
@@ -137,7 +139,7 @@ XMLAbstractSetTest >> testDo [
 			(self setElements allSatisfy: [ :each | enumerated includes: each ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractSetTest >> testEquals [
 	| set |
 
@@ -156,7 +158,7 @@ XMLAbstractSetTest >> testEquals [
 	self assertSet: set equals: self setWithDisjointElements
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractSetTest >> testIncludes [
 	| set |
 
@@ -171,7 +173,7 @@ XMLAbstractSetTest >> testIncludes [
 	self assert: (self disjointSetElements allSatisfy: [:each | set includes: each])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractSetTest >> testNewFrom [
 
 	self
@@ -179,7 +181,7 @@ XMLAbstractSetTest >> testNewFrom [
 		equals: self setWithElements
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractSetTest >> testRemoveAll [
 
 	| set |
@@ -189,7 +191,7 @@ XMLAbstractSetTest >> testRemoveAll [
 		assert: set isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractSetTest >> testRemoveIfAbsent [
 
 	| set |
@@ -206,7 +208,7 @@ XMLAbstractSetTest >> testRemoveIfAbsent [
 	self assert: set isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAbstractSetTest >> testSize [
 
 	| set size |

@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLNamespacedAttributeDictionaryTest,
-	#superclass : #XMLAttributeDictionaryTest,
-	#category : #'XML-Parser-Tests-Base'
+	#name : 'XMLNamespacedAttributeDictionaryTest',
+	#superclass : 'XMLAttributeDictionaryTest',
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNamespacedAttributeDictionaryTest >> dictionaryClass [
 	^ XMLNamespacedAttributeDictionary
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespacedAttributeDictionaryTest >> testAssociationAtNameNamespaceURI [
 	| dictionary |
 
@@ -67,7 +69,7 @@ XMLNamespacedAttributeDictionaryTest >> testAssociationAtNameNamespaceURI [
 			namespaceURI: 'defaultNS') isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespacedAttributeDictionaryTest >> testAssociationAtNameNamespaceURIIfAbsent [
 	| dictionary |
 
@@ -137,7 +139,7 @@ XMLNamespacedAttributeDictionaryTest >> testAssociationAtNameNamespaceURIIfAbsen
 			ifAbsent: [#absent]) equals: #absent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespacedAttributeDictionaryTest >> testAtNameNamespaceURI [
 
 	| dictionary |
@@ -189,7 +191,7 @@ XMLNamespacedAttributeDictionaryTest >> testAtNameNamespaceURI [
 		equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespacedAttributeDictionaryTest >> testAtNameNamespaceURIIfAbsent [
 	| dictionary |
 
@@ -259,7 +261,7 @@ XMLNamespacedAttributeDictionaryTest >> testAtNameNamespaceURIIfAbsent [
 			ifAbsent: ['absent']) equals: 'absent'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespacedAttributeDictionaryTest >> testCopy [
 
 	| dictionary copy |
@@ -271,7 +273,7 @@ XMLNamespacedAttributeDictionaryTest >> testCopy [
 		identicalTo: copy namespaceScope
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespacedAttributeDictionaryTest >> testNamespaceURIOf [
 	| dictionary |
 
@@ -285,7 +287,7 @@ XMLNamespacedAttributeDictionaryTest >> testNamespaceURIOf [
 		assert: (dictionary namespaceURIOf: 'name') equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNamespacedAttributeDictionaryTest >> testUsesNamespaces [
 	self assert: self emptyDictionary usesNamespaces
 ]

@@ -1,30 +1,32 @@
 Class {
-	#name : #XMLSingleCharacterReadStreamTest,
-	#superclass : #XMLAbstractReadStreamTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLSingleCharacterReadStreamTest',
+	#superclass : 'XMLAbstractReadStreamTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLSingleCharacterReadStreamTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLSingleCharacterReadStreamTest >> character [
 	^ $!
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLSingleCharacterReadStreamTest >> inputCollection [
 	^ self character asString
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLSingleCharacterReadStreamTest >> newStreamOn: aCollection [
 	^ self streamClass on: aCollection first
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLSingleCharacterReadStreamTest >> streamClass [
 	^ XMLSingleCharacterReadStream
 ]

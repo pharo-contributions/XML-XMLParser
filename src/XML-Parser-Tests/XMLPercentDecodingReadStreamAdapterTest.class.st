@@ -1,10 +1,12 @@
 Class {
-	#name : #XMLPercentDecodingReadStreamAdapterTest,
-	#superclass : #XMLReadStreamAdapterTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLPercentDecodingReadStreamAdapterTest',
+	#superclass : 'XMLReadStreamAdapterTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPercentDecodingReadStreamAdapterTest >> basicInputCollection [
 	^ String streamContents: [:stream |
 		super basicInputCollection do: [:each |
@@ -12,17 +14,17 @@ XMLPercentDecodingReadStreamAdapterTest >> basicInputCollection [
 				(self class percentEncodeCharacter: each)]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPercentDecodingReadStreamAdapterTest >> basicOutputCollection [
 	^ 'test'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLPercentDecodingReadStreamAdapterTest >> expectsBinaryOutput [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPercentDecodingReadStreamAdapterTest >> streamAdapterClass [
 	^ XMLPercentDecodingReadStreamAdapter
 ]

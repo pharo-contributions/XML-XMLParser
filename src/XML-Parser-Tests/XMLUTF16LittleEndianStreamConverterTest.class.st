@@ -1,20 +1,22 @@
 Class {
-	#name : #XMLUTF16LittleEndianStreamConverterTest,
-	#superclass : #XMLStreamConverterTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLUTF16LittleEndianStreamConverterTest',
+	#superclass : 'XMLStreamConverterTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLUTF16LittleEndianStreamConverterTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLUTF16LittleEndianStreamConverterTest >> primaryEncodingName [
 	^ 'UTF-16-LE'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLUTF16LittleEndianStreamConverterTest >> streamConverterClass [
 	^ XMLUTF16LittleEndianStreamConverter
 ]

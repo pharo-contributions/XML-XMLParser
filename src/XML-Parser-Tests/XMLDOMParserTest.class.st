@@ -1,40 +1,42 @@
 Class {
-	#name : #XMLDOMParserTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Base'
+	#name : 'XMLDOMParserTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #source }
+{ #category : 'source' }
 XMLDOMParserTest >> addressBookNamespacePrefixedXML [
 	^ XMLParserTest addressBookNamespacePrefixedXML
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLDOMParserTest >> addressBookNamespacedXML [
 	^ XMLParserTest addressBookNamespacedXML
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLDOMParserTest >> addressBookXML [
 	^ XMLParserTest addressBookXML
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLDOMParserTest >> addressBookXMLWithDTD [
 	^ XMLParserTest addressBookXMLWithDTD
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLDOMParserTest >> internalSubsetXMLWithDeclarations [
 	^ XMLParserTest internalSubsetXMLWithDeclarations
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMParserTest >> nodeFactoryClass [
 	^ XMLNodeFactory
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testAllElementsNamespaceURIs [
 	| document people |
 
@@ -52,7 +54,7 @@ XMLDOMParserTest >> testAllElementsNamespaceURIs [
 				namespaceURI: 'undeclaredNS') isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testAttributeListClass [
 
 	(Array with: XMLAttributeList with: XMLCachingAttributeList) do: [
@@ -68,7 +70,7 @@ XMLDOMParserTest >> testAttributeListClass [
 			self assert: each attributeNodes class identicalTo: listClass ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testAttributeNamespaces [
 	| document  people |
 
@@ -87,7 +89,7 @@ XMLDOMParserTest >> testAttributeNamespaces [
 			assert: (each attributeNodeAt: 'ps:first-name' namespaceURI: 'personNS') isNotNil]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testAttributeNamespacesDisabled [
 	| document  people |
 
@@ -105,7 +107,7 @@ XMLDOMParserTest >> testAttributeNamespacesDisabled [
 			assert: (each attributeNodeAt: 'ps:first-name' namespaceURI: 'personNS') isNil]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testAttributeParent [
 
 	(XMLDOMParser parse: self addressBookXML) allElementsDo: [ :element |
@@ -117,7 +119,7 @@ XMLDOMParserTest >> testAttributeParent [
 					assert: each element identicalTo: element ] ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testAttributes [
 	| document firstPerson  |
 
@@ -134,7 +136,7 @@ XMLDOMParserTest >> testAttributes [
 			{('employee-number'->'A0000'). ('family-name'->'Gates'). ('first-name'->'Bob').}
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testAttributesExcludingDeclarations [
 	| document   |
 
@@ -142,7 +144,7 @@ XMLDOMParserTest >> testAttributesExcludingDeclarations [
 	self deny: document root hasAttributes
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testAttributesIncludingDeclarations [
 	| document  root |
 
@@ -158,7 +160,7 @@ XMLDOMParserTest >> testAttributesIncludingDeclarations [
 		assert: (root attributeAt: 'xmlns:ps') equals: 'personNS'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testCDataSection [
 	#('' ']' ']]' ']]]' ']>' ']>]' ']>]>]')
 		with: #('' ']' ']]' ']]]' ']&gt;' ']&gt;]' ']&gt;]&gt;]')
@@ -191,7 +193,7 @@ XMLDOMParserTest >> testCDataSection [
 					(Array with: 'test' with: unescaped with: 'test')]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testCDataSectionEntityReplacement [
 	| document element unescaped escaped xml |
 
@@ -222,7 +224,7 @@ XMLDOMParserTest >> testCDataSectionEntityReplacement [
 		assert: element strings asArray equals: (Array with: 'test' with: unescaped with: 'test')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testChangingNamespaces [
 
 	| document people person |
@@ -243,7 +245,7 @@ XMLDOMParserTest >> testChangingNamespaces [
 				 each isElement and: [ each namespaceURI = 'defaultNS' ] ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testComment [
 	| xml document comments |
 
@@ -262,7 +264,7 @@ XMLDOMParserTest >> testComment [
 		assert: (comments collect: [:each | each string]) asArray equals: #('one' 'two' 'three')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testDeclaringXMLNamespace [
 	| xmlNamespace elements |
 
@@ -281,7 +283,7 @@ XMLDOMParserTest >> testDeclaringXMLNamespace [
 		deny: (elements third declaresPrefix: 'xml' uri: xmlNamespace)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testDoctypeDeclaration [
 	| doctype |
 
@@ -299,7 +301,7 @@ XMLDOMParserTest >> testDoctypeDeclaration [
 		assert: (doctype nodes allSatisfy: [:each | each isDeclaration])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testDocument [
 
 	| parser document root |
@@ -324,7 +326,7 @@ XMLDOMParserTest >> testDocument [
 	root allNodesDo: [ :each | self assert: each document isNil ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testDocumentInternalSubset [
 
 	| document doctypeDeclaration |
@@ -339,7 +341,7 @@ XMLDOMParserTest >> testDocumentInternalSubset [
 		self assert: each document isNil ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testElementMixedContent [
 	| xml mixedContent |
 
@@ -361,7 +363,7 @@ XMLDOMParserTest >> testElementMixedContent [
 		assert: (mixedContent nodes seventh isStringNode: ' seven ')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testElementNames [
 	| document root  persons |
 
@@ -381,7 +383,7 @@ XMLDOMParserTest >> testElementNames [
 	self assert: persons isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testElementPrefixes [
 	| document  persons |
 
@@ -395,7 +397,7 @@ XMLDOMParserTest >> testElementPrefixes [
 	self assert: persons size equals: 4
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testElementPrefixesNamespacesDisabled [
 	| document  persons |
 
@@ -412,7 +414,7 @@ XMLDOMParserTest >> testElementPrefixesNamespacesDisabled [
 	self assert: persons size equals: 4.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testFindElementNamespaceURI [
 
 	| document people |
@@ -435,7 +437,7 @@ XMLDOMParserTest >> testFindElementNamespaceURI [
 		identicalTo: people second
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testInnerXML [
 	| document |
 
@@ -459,7 +461,7 @@ XMLDOMParserTest >> testInnerXML [
 				('<email>', address1, '</email><email2>', address2, '</email2>')].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testInnerXMLDocument [
 	| document |
 
@@ -484,7 +486,7 @@ XMLDOMParserTest >> testInnerXMLDocument [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testInnerXMLEntities [
 	| document |
 
@@ -529,7 +531,7 @@ XMLDOMParserTest >> testInnerXMLEntities [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testInternalAttributeDeclarations [
 	| doctype firstAttribute secondAttribute |
 
@@ -557,7 +559,7 @@ XMLDOMParserTest >> testInternalAttributeDeclarations [
 		assert: secondAttribute defaultValue equals: 'three'.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testInternalElementDeclaration [
 	| doctype elementDeclaration |
 
@@ -573,7 +575,7 @@ XMLDOMParserTest >> testInternalElementDeclaration [
 		assert: elementDeclaration contentModel equals: '(#PCDATA|one|two)*'.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testInternalGeneralEntityDeclarations [
 	| doctype firstEntity secondEntity |
 
@@ -603,7 +605,7 @@ XMLDOMParserTest >> testInternalGeneralEntityDeclarations [
 		assert: secondEntity ndata equals: ''.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testInternalNotationDeclarations [
 	| doctype notation |
 
@@ -621,7 +623,7 @@ XMLDOMParserTest >> testInternalNotationDeclarations [
 		assert: notation systemID equals: 'note.doc'.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testInternalParameterEntityDeclarations [
 	| doctype firstEntity secondEntity |
 
@@ -649,7 +651,7 @@ XMLDOMParserTest >> testInternalParameterEntityDeclarations [
 		assert: secondEntity systemID equals: 'external2.dtd'.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testNamespaces [
 	| document  |
 
@@ -674,7 +676,7 @@ XMLDOMParserTest >> testNamespaces [
 					assert: each prefix equals: '']].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testNamespacesCopyOnWrite [
 	| xml elements |
 
@@ -696,7 +698,7 @@ XMLDOMParserTest >> testNamespacesCopyOnWrite [
 				each namespaceScope prefixMappings])) size equals: elements size.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testNamespacesDeclaring [
 	| document |
 
@@ -720,7 +722,7 @@ XMLDOMParserTest >> testNamespacesDeclaring [
 			assert: (each isDeclaredPrefix: 'ps' uri: 'personNS')].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testNamespacesDeclaringDisabled [
 	| document |
 
@@ -734,7 +736,7 @@ XMLDOMParserTest >> testNamespacesDeclaringDisabled [
 			deny: (each isDeclaredPrefix: 'ps' uri: 'personNS')].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testNamespacesDisabled [
 	| document |
 
@@ -757,7 +759,7 @@ XMLDOMParserTest >> testNamespacesDisabled [
 					assert: each prefix equals: '']].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testNamespacesDisabledAttributes [
 	| document |
 
@@ -772,7 +774,7 @@ XMLDOMParserTest >> testNamespacesDisabledAttributes [
 		assert: (document root attributeAt: 'name') equals: 'value'.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testNamespacesDisabledReuse [
 
 	| parser document oldRootScope newRootScope |
@@ -810,7 +812,7 @@ XMLDOMParserTest >> testNamespacesDisabledReuse [
 	self deny: document root hasNamespaces
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testNamespacesResolving [
 	| document |
 
@@ -828,7 +830,7 @@ XMLDOMParserTest >> testNamespacesResolving [
 						ifFalse: [each defaultNamespace])]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testNamespacesResolvingDisabled [
 	| document |
 
@@ -849,7 +851,7 @@ XMLDOMParserTest >> testNamespacesResolvingDisabled [
 						ifFalse: [each defaultNamespace])]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testNodeDetecting [
 
 	| document people |
@@ -869,7 +871,7 @@ XMLDOMParserTest >> testNodeDetecting [
 		equals: 'not found'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testNodeFactory [
 
 	| parser oldNodeFactory newNodeFactory |
@@ -883,7 +885,7 @@ XMLDOMParserTest >> testNodeFactory [
 		assert: parser nodeFactory identicalTo: newNodeFactory
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testNodeListClass [
 
 	(Array with: XMLNodeList with: XMLCachingNodeList) do: [ :listClass |
@@ -898,7 +900,7 @@ XMLDOMParserTest >> testNodeListClass [
 			self assert: each nodes class identicalTo: listClass ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testNodeParent [
 
 	(XMLDOMParser parse: self addressBookXML) allNodesDo: [ :node |
@@ -909,7 +911,7 @@ XMLDOMParserTest >> testNodeParent [
 					assert: each parent identicalTo: node ] ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testNodeStack [
 	| parser  |
 
@@ -924,7 +926,7 @@ XMLDOMParserTest >> testNodeStack [
 	self assert: parser nodeStack isEmpty.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testOptimizeForLargeDocuments [
 
 	| parser |
@@ -939,7 +941,7 @@ XMLDOMParserTest >> testOptimizeForLargeDocuments [
 		identicalTo: XMLAttributeList
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testOverridingDefaultNamespace [
 	| document |
 
@@ -953,7 +955,7 @@ XMLDOMParserTest >> testOverridingDefaultNamespace [
 		assert: document root firstNode defaultNamespace equals: ''.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testParseDocumentUntil [
 	| i document |
 
@@ -976,7 +978,7 @@ XMLDOMParserTest >> testParseDocumentUntil [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testParseDocumentWhile [
 	| i document |
 
@@ -999,7 +1001,7 @@ XMLDOMParserTest >> testParseDocumentWhile [
 		raise: XMLWellFormednessException.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testParsedElementNames [
 	| document |
 
@@ -1014,7 +1016,7 @@ XMLDOMParserTest >> testParsedElementNames [
 				(element elements collect: [:each | each name])].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testPreservesCDataNodes [
 
 	| parser |
@@ -1027,7 +1029,7 @@ XMLDOMParserTest >> testPreservesCDataNodes [
 		deny: parser preservesCDataNodes
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testPreservesCommentNodes [
 
 	| parser |
@@ -1040,7 +1042,7 @@ XMLDOMParserTest >> testPreservesCommentNodes [
 		deny: parser preservesCommentNodes
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testPreservesIgnorableWhitespace [
 
 	| parser |
@@ -1061,7 +1063,7 @@ XMLDOMParserTest >> testPreservesIgnorableWhitespace [
 		deny: parser isValidating
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testProcessingInstruction [
 	| document |
 
@@ -1080,7 +1082,7 @@ XMLDOMParserTest >> testProcessingInstruction [
 		assert: document root firstNode data equals: 'second?Data'.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testProcessingInstructionEntityReplacement [
 	| document doctypeDeclaration root |
 
@@ -1113,7 +1115,7 @@ XMLDOMParserTest >> testProcessingInstructionEntityReplacement [
 		assert: root firstNode data equals: 'second?Data'.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testRootElement [
 
 	| document root |
@@ -1129,7 +1131,7 @@ XMLDOMParserTest >> testRootElement [
 	self assert: (root findElementNamed: 'addressbook') identicalTo: root
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testUnreplacedEntityRererencePrinting [
 	| xml |
 
@@ -1145,7 +1147,7 @@ XMLDOMParserTest >> testUnreplacedEntityRererencePrinting [
 			parseDocument) printString equals: xml.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testWhitespacePreservation [
 	| xml root notPreserved preserved |
 
@@ -1185,7 +1187,7 @@ XMLDOMParserTest >> testWhitespacePreservation [
 		assert: preserved nodes first isWhitespace.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMParserTest >> testXMLDeclaration [
 	| document |
 

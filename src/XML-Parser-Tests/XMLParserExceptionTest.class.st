@@ -1,20 +1,22 @@
 Class {
-	#name : #XMLParserExceptionTest,
-	#superclass : #XMLExceptionTest,
-	#category : #'XML-Parser-Tests-Exceptions'
+	#name : 'XMLParserExceptionTest',
+	#superclass : 'XMLExceptionTest',
+	#category : 'XML-Parser-Tests-Exceptions',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Exceptions'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserExceptionTest >> baseURI [
 	^ 'test.xml'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserExceptionTest >> columnNumber [
 	^ 10
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserExceptionTest >> errorMessageWithBaseURI [
 	^ '{1} (in {2})' format:
 		(Array
@@ -22,7 +24,7 @@ XMLParserExceptionTest >> errorMessageWithBaseURI [
 			with: self baseURI)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserExceptionTest >> errorMessageWithLineAndColumnNumber [
 	^ '{1} (near line {2}, column {3})' format:
 		(Array
@@ -31,7 +33,7 @@ XMLParserExceptionTest >> errorMessageWithLineAndColumnNumber [
 			with: self columnNumber)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserExceptionTest >> errorMessageWithLineAndColumnNumberAndBaseURI [
 	^ '{1} (near line {2}, column {3} in {4})' format:
 		(Array
@@ -41,7 +43,7 @@ XMLParserExceptionTest >> errorMessageWithLineAndColumnNumberAndBaseURI [
 			with: self baseURI)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserExceptionTest >> errorMessageWithLineNumber [
 	^ '{1} (near line {2})' format:
 		(Array
@@ -49,7 +51,7 @@ XMLParserExceptionTest >> errorMessageWithLineNumber [
 			with: self lineNumber)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserExceptionTest >> errorMessageWithLineNumberAndBaseURI [
 	^ '{1} (near line {2} in {3})' format:
 		(Array
@@ -58,17 +60,17 @@ XMLParserExceptionTest >> errorMessageWithLineNumberAndBaseURI [
 			with: self baseURI)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserExceptionTest >> exceptionClass [
 	^ XMLParserException
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserExceptionTest >> lineNumber [
 	^ 100
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserExceptionTest >> testBaseURI [
 
 	| exception |
@@ -79,7 +81,7 @@ XMLParserExceptionTest >> testBaseURI [
 		assert: exception baseURI equals: self baseURI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserExceptionTest >> testColumnNumber [
 
 	| exception |
@@ -91,7 +93,7 @@ XMLParserExceptionTest >> testColumnNumber [
 		assert: exception columnNumber equals: self columnNumber
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserExceptionTest >> testHasBaseURI [
 	| exception |
 
@@ -105,7 +107,7 @@ XMLParserExceptionTest >> testHasBaseURI [
 	self deny: exception hasBaseURI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserExceptionTest >> testHasColumnNumber [
 	| exception |
 
@@ -119,7 +121,7 @@ XMLParserExceptionTest >> testHasColumnNumber [
 	self deny: exception hasColumnNumber
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserExceptionTest >> testHasLineNumber [
 	| exception |
 
@@ -133,7 +135,7 @@ XMLParserExceptionTest >> testHasLineNumber [
 	self deny: exception hasLineNumber
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserExceptionTest >> testLineNumber [
 
 	| exception |
@@ -145,7 +147,7 @@ XMLParserExceptionTest >> testLineNumber [
 		assert: exception lineNumber equals: self lineNumber
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParserExceptionTest >> testMessageText [
 	| exception |
 

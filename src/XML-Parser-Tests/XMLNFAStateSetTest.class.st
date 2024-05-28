@@ -1,26 +1,28 @@
 Class {
-	#name : #XMLNFAStateSetTest,
-	#superclass : #XMLAbstractSetTest,
+	#name : 'XMLNFAStateSetTest',
+	#superclass : 'XMLAbstractSetTest',
 	#instVars : [
 		'states',
 		'disjointStates',
 		'absentState'
 	],
-	#category : #'XML-Parser-Tests-Validation-DFA'
+	#category : 'XML-Parser-Tests-Validation-DFA',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Validation-DFA'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNFAStateSetTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFAStateSetTest >> absentSetElement [
 	^ absentState
 		ifNil: [absentState := XMLNFAMatchingState matcher: 'absent']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFAStateSetTest >> disjointSetElements [
 	disjointStates
 		ifNil: [
@@ -31,12 +33,12 @@ XMLNFAStateSetTest >> disjointSetElements [
 	^ disjointStates copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFAStateSetTest >> setClass [
 	^ XMLNFAStateSet
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFAStateSetTest >> setElements [
 	states
 		ifNil: [
@@ -49,7 +51,7 @@ XMLNFAStateSetTest >> setElements [
 	^ states copy
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNFAStateSetTest >> testIsAccepting [
 	| set isAccepting lastAccepting |
 	set := self emptySet.

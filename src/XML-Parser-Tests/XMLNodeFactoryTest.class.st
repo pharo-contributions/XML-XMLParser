@@ -1,42 +1,44 @@
 Class {
-	#name : #XMLNodeFactoryTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-DOM-Factories'
+	#name : 'XMLNodeFactoryTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-DOM-Factories',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM-Factories'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNodeFactoryTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeFactoryTest >> attributeAssociations [
 	^ Array
 		with: 'one' -> '1'
 		with: 'two' -> '2'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeFactoryTest >> attributes [
 	^ XMLAttributeDictionary newFrom: self attributeAssociations
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeFactoryTest >> factoryClass [
 	^ XMLNodeFactory
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNodeFactoryTest >> newFactory [
 	^ self factoryClass new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeFactoryTest >> pluggableFactoryClass [
 	^ XMLPluggableNodeFactory
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLNodeFactoryTest >> sampleUserXML [
 	^
 	XMLWriter new
@@ -61,7 +63,7 @@ XMLNodeFactoryTest >> sampleUserXML [
 		contents
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testAsPluggableNodeFactory [
 
 	| factory pluggableFactory |
@@ -75,7 +77,7 @@ XMLNodeFactoryTest >> testAsPluggableNodeFactory [
 		ifFalse: [ self deny: pluggableFactory identicalTo: factory ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testAttributeDeclarationClass [
 
 	self
@@ -83,7 +85,7 @@ XMLNodeFactoryTest >> testAttributeDeclarationClass [
 		identicalTo: XMLAttributeDeclaration
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testAttributeListClass [
 
 	self
@@ -91,13 +93,13 @@ XMLNodeFactoryTest >> testAttributeListClass [
 		identicalTo: XMLCachingAttributeList
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testCDataClass [
 
 	self assert: self newFactory cdataClass identicalTo: XMLCData
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testClassForElement [
 
 	self
@@ -105,7 +107,7 @@ XMLNodeFactoryTest >> testClassForElement [
 		identicalTo: XMLElement
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testClassForElementNamespaceURI [
 
 	self
@@ -117,13 +119,13 @@ XMLNodeFactoryTest >> testClassForElementNamespaceURI [
 		identicalTo: XMLElement
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testCommentClass [
 
 	self assert: self newFactory commentClass identicalTo: XMLComment
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testDoctypeDeclarationClass [
 
 	self
@@ -131,19 +133,19 @@ XMLNodeFactoryTest >> testDoctypeDeclarationClass [
 		identicalTo: XMLDoctypeDeclaration
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testDocumentClass [
 
 	self assert: self newFactory documentClass identicalTo: XMLDocument
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testElementClass [
 
 	self assert: self newFactory elementClass identicalTo: XMLElement
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testElementDeclarationClass [
 
 	self
@@ -151,7 +153,7 @@ XMLNodeFactoryTest >> testElementDeclarationClass [
 		identicalTo: XMLElementDeclaration
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testGeneralEntityDeclarationClass [
 
 	self
@@ -159,7 +161,7 @@ XMLNodeFactoryTest >> testGeneralEntityDeclarationClass [
 		identicalTo: XMLGeneralEntityDeclaration
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testNewCData [
 
 	| cdata |
@@ -169,7 +171,7 @@ XMLNodeFactoryTest >> testNewCData [
 		assert: cdata string equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testNewComment [
 
 	| comment |
@@ -179,7 +181,7 @@ XMLNodeFactoryTest >> testNewComment [
 		assert: comment string equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testNewDocument [
 
 	self
@@ -187,13 +189,13 @@ XMLNodeFactoryTest >> testNewDocument [
 		identicalTo: XMLDocument
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testNewElement [
 
 	self assert: self newFactory newElement class identicalTo: XMLElement
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testNewElementNamed [
 
 	| element |
@@ -203,7 +205,7 @@ XMLNodeFactoryTest >> testNewElementNamed [
 		assert: element name equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testNewElementNamedAttributes [
 
 	| element |
@@ -216,7 +218,7 @@ XMLNodeFactoryTest >> testNewElementNamedAttributes [
 		assert: element attributes equals: self attributes
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testNewElementNamedNamespaceURI [
 
 	| element |
@@ -229,7 +231,7 @@ XMLNodeFactoryTest >> testNewElementNamedNamespaceURI [
 		assert: element namespaceURI equals: 'prefixNS'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testNewElementNamedNamespaceURIAttributes [
 
 	| element |
@@ -244,13 +246,13 @@ XMLNodeFactoryTest >> testNewElementNamedNamespaceURIAttributes [
 		assert: element attributes equals: self attributes
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testNewPI [
 
 	self assert: self newFactory newPI class identicalTo: XMLPI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testNewPITargetData [
 
 	| pi |
@@ -261,7 +263,7 @@ XMLNodeFactoryTest >> testNewPITargetData [
 		assert: pi data equals: 'data'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testNewStringNode [
 
 	| cdata |
@@ -271,13 +273,13 @@ XMLNodeFactoryTest >> testNewStringNode [
 		assert: cdata string equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testNodeListClass [
 
 	self assert: self newFactory nodeListClass identicalTo: XMLNodeList
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testNotationDeclarationClass [
 
 	self
@@ -285,13 +287,13 @@ XMLNodeFactoryTest >> testNotationDeclarationClass [
 		identicalTo: XMLNotationDeclaration
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testPIClass [
 
 	self assert: self newFactory piClass identicalTo: XMLPI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testParameterEntityDeclarationClass [
 
 	self
@@ -299,7 +301,7 @@ XMLNodeFactoryTest >> testParameterEntityDeclarationClass [
 		identicalTo: XMLParameterEntityDeclaration
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeFactoryTest >> testStringNodeClass [
 
 	self assert: self newFactory stringNodeClass identicalTo: XMLString

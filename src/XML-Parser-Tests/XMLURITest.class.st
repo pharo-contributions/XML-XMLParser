@@ -1,6 +1,6 @@
 Class {
-	#name : #XMLURITest,
-	#superclass : #TestCase,
+	#name : 'XMLURITest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'asciiCharacters',
 		'reservedCharacters',
@@ -9,10 +9,12 @@ Class {
 		'percentEncodedReservedCharacters',
 		'percentEncodedAlphaNumericCharacters'
 	],
-	#category : #'XML-Parser-Tests-URI'
+	#category : 'XML-Parser-Tests-URI',
+	#package : 'XML-Parser-Tests',
+	#tag : 'URI'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURITest class >> generateStandardURICombiningTest [
 	"self generateStandardURICombiningTest"
 	| readStream isFirstTest source |
@@ -45,12 +47,12 @@ XMLURITest class >> generateStandardURICombiningTest [
 		classified: 'tests'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURITest class >> standardURICombiningTestBaseURI [
 	^ 'http://a/b/c/d;p?q'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURITest class >> standardURICombiningTestTemplate [
 	^ '
       "g:h"           =  "g:h"
@@ -104,47 +106,47 @@ XMLURITest class >> standardURICombiningTestTemplate [
 '
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> absolute [
 	^ '/absolute/path'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> absoluteDir [
 	^ '/absolute/path/'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> absoluteDirRelativeCombined [
 	^ '/absolute/path/relative/path'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> absoluteDirRelativeCombinedSegments [
 	^ #('' 'absolute' 'path' 'relative' 'path') asOrderedCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> absoluteDirSegments [
 	^ #('' 'absolute' 'path' '') asOrderedCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> absoluteRelativeCombined [
 	^ '/absolute/relative/path'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> absoluteRelativeCombinedSegments [
 	^ #('' 'absolute' 'relative' 'path') asOrderedCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> absoluteSegments [
 	^ #('' 'absolute' 'path') asOrderedCollection
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLURITest >> allURIStringsDo: aBlock [
 	aBlock
 		value: '';
@@ -168,12 +170,12 @@ XMLURITest >> allURIStringsDo: aBlock [
 		value: self schemelessURIWithPortString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> alphaNumericCharacters [
 	^ 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> asciiCharacters [
 	asciiCharacters ifNil: [
 		asciiCharacters :=
@@ -185,28 +187,28 @@ XMLURITest >> asciiCharacters [
 	^ asciiCharacters
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 XMLURITest >> assertURI: aFirstURI atHostEquals: aSecondURI [
 
 	self assert: aFirstURI host equals: aSecondURI host.
 	self assertURI: aFirstURI atPortEquals: aSecondURI
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 XMLURITest >> assertURI: aFirstURI atPathEquals: aSecondURI [
 
 	self assert: aFirstURI pathSegments equals: aSecondURI pathSegments.
 	self assertURI: aFirstURI atQueryEquals: aSecondURI
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 XMLURITest >> assertURI: aFirstURI atPortEquals: aSecondURI [
 
 	self assert: aFirstURI port equals: aSecondURI port.
 	self assertURI: aFirstURI atPathEquals: aSecondURI
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 XMLURITest >> assertURI: aFirstURI atQueryEquals: aSecondURI [
 
 	self
@@ -214,79 +216,79 @@ XMLURITest >> assertURI: aFirstURI atQueryEquals: aSecondURI [
 		assert: aFirstURI fragment equals: aSecondURI fragment
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 XMLURITest >> assertURI: aFirstURI atUserInfoEquals: aSecondURI [
 
 	self assert: aFirstURI userInfo equals: aSecondURI userInfo.
 	self assertURI: aFirstURI atHostEquals: aSecondURI
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> domainURIString [
 	^ 'http://www.example.com'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> domainURIWithPortString [
 	^ self domainURIString, ':80'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> emailURIString [
 	^ 'mailto:userName@', self host
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> fileURIString [
 	^ 'file://', self absolute
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> fileURIWithHostString [
 	^ 'file://', self host, self absolute
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> fragment [
 	^ self fragmentURIString allButFirst
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> fragmentURIString [
 	^ '#fragmentID'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> fullURIString [
 	^ self domainURIString, self absolute, self queryURIString, self fragmentURIString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> fullURIWithPortString [
 	^ self domainURIWithPortString, self absolute, self queryURIString, self fragmentURIString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> host [
 	^ self domainURIString copyAfterLast: $/
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> nonPercentEncodedPathCharacters [
 	^ self unreservedCharacters, self subDelimiterCharacters, ':@'
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLURITest >> percentEncodeCharacter: aCharacter [
 	^ XMLStreamAdapterTest percentEncodeCharacter: aCharacter
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLURITest >> percentEncodeCharacters: aCharacterCollection [
 	^ XMLStreamAdapterTest percentEncodeCharacters: aCharacterCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> percentEncodedASCIICharacters [
 	^ percentEncodedASCIICharacters
 		ifNil: [
@@ -294,7 +296,7 @@ XMLURITest >> percentEncodedASCIICharacters [
 				self percentEncodeCharacters: self asciiCharacters]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> percentEncodedAlphaNumericCharacters [
 	^ percentEncodedAlphaNumericCharacters
 		ifNil: [
@@ -302,7 +304,7 @@ XMLURITest >> percentEncodedAlphaNumericCharacters [
 				self percentEncodeCharacters: self alphaNumericCharacters]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> percentEncodedReservedCharacters [
 	percentEncodedReservedCharacters ifNil: [
 		percentEncodedReservedCharacters :=
@@ -312,7 +314,7 @@ XMLURITest >> percentEncodedReservedCharacters [
 	^ percentEncodedReservedCharacters.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> query [
 	^ OrderedCollection
 		with: 'name1' -> 'value1'
@@ -320,32 +322,32 @@ XMLURITest >> query [
 		with: 'name1' -> 'value3'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> queryURIString [
 	^ '?name1=value1&name2=value2&name1=value3'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> relative [
 	^ 'relative/path'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> relativeAbsoluteCombined [
 	^ 'relative/absolute/path'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> relativeAbsoluteCombinedSegments [
 	^ #('relative' 'absolute' 'path') asOrderedCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> relativeSegments [
 	^ #('relative' 'path') asOrderedCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> reservedCharacters [
 	reservedCharacters
 		ifNil: [
@@ -357,22 +359,22 @@ XMLURITest >> reservedCharacters [
 	^ reservedCharacters.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> schemelessURIString [
 	^ (self domainURIString copyAfter: $:), self absolute, self queryURIString, self fragmentURIString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> schemelessURIWithPortString [
 	^ (self domainURIWithPortString copyAfter: $:), self absolute, self queryURIString, self fragmentURIString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> subDelimiterCharacters [
 	^ '!$&''()*+,;='
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testAsRetrievableResource [
 
 	(XMLFileHandle hasSupportedImplementation and: [
@@ -397,7 +399,7 @@ XMLURITest >> testAsRetrievableResource [
 					self assert: retrievableResource url equals: uri printString ] ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testAsString [
 
 	self allURIStringsDo: [ :each |
@@ -406,7 +408,7 @@ XMLURITest >> testAsString [
 		self assert: uri asString equals: uri printString ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testAsXMLFileHandle [
 
 	XMLFileHandle hasSupportedImplementation ifFalse: [ ^ self ].
@@ -425,7 +427,7 @@ XMLURITest >> testAsXMLFileHandle [
 			self should: [ uri asXMLFileHandle ] raise: XMLFileException ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testAsXMLHTTPRequest [
 
 	XMLHTTPRequest hasSupportedImplementation ifFalse: [ ^ self ].
@@ -444,7 +446,7 @@ XMLURITest >> testAsXMLHTTPRequest [
 					self should: [ uri asXMLHTTPRequest ] raise: XMLHTTPException ] ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testAsXMLURI [
 
 	self allURIStringsDo: [ :each |
@@ -456,7 +458,7 @@ XMLURITest >> testAsXMLURI [
 			assert: uri asXMLURI identicalTo: uri ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testCombining [
 
 	self allURIStringsDo: [ :uriString |
@@ -521,7 +523,7 @@ XMLURITest >> testCombining [
 				assert: uriToCombineWith equals: uriStringToCombineWith asXMLURI ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testCombiningAbsoluteURIs [
 
 	| domainURI fullURI fileURI |
@@ -540,7 +542,7 @@ XMLURITest >> testCombiningAbsoluteURIs [
 		assert: fileURI / self fileURIString equals: fileURI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testCombiningDotPathURIs [
 
 	| relativePathURI absolutePathURI fullURI |
@@ -573,7 +575,7 @@ XMLURITest >> testCombiningDotPathURIs [
 			(self domainURIString , self absoluteRelativeCombined) asXMLURI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testCombiningDoubleDotPathURIs [
 
 	| relativePathURI absolutePathURI fullURI |
@@ -617,7 +619,7 @@ XMLURITest >> testCombiningDoubleDotPathURIs [
 		equals: (self domainURIString , '/absolute/') asXMLURI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testCombiningRelativeURIs [
 
 	| domainURI domainURIWithPort absolutePathURI absoluteDirPathURI |
@@ -658,7 +660,7 @@ XMLURITest >> testCombiningRelativeURIs [
 		equals: self fullURIString asXMLURI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testCopy [
 
 	self allURIStringsDo: [ :each |
@@ -681,7 +683,7 @@ XMLURITest >> testCopy [
 			assert: uri fragment equals: copy fragment ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testCopyWithFragment [
 
 	self allURIStringsDo: [ :each |
@@ -708,7 +710,7 @@ XMLURITest >> testCopyWithFragment [
 			assert: copy fragment equals: newFragment ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testCopyWithHost [
 
 	self allURIStringsDo: [ :each |
@@ -735,7 +737,7 @@ XMLURITest >> testCopyWithHost [
 			assert: uri fragment equals: copy fragment ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testCopyWithPath [
 
 	self allURIStringsDo: [ :each |
@@ -762,7 +764,7 @@ XMLURITest >> testCopyWithPath [
 			assert: uri fragment equals: copy fragment ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testCopyWithPathSegments [
 
 	self allURIStringsDo: [ :each |
@@ -796,7 +798,7 @@ XMLURITest >> testCopyWithPathSegments [
 			assert: uri fragment equals: copy fragment ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testCopyWithPort [
 
 	self allURIStringsDo: [ :each |
@@ -823,7 +825,7 @@ XMLURITest >> testCopyWithPort [
 			assert: uri fragment equals: copy fragment ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testCopyWithQuery [
 
 	self allURIStringsDo: [ :each |
@@ -859,7 +861,7 @@ XMLURITest >> testCopyWithQuery [
 			assert: uri fragment equals: copy fragment ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testCopyWithScheme [
 
 	self allURIStringsDo: [ :each |
@@ -894,7 +896,7 @@ XMLURITest >> testCopyWithScheme [
 			assert: uri fragment equals: copy fragment ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testCopyWithUserInfo [
 
 	self allURIStringsDo: [ :each |
@@ -927,7 +929,7 @@ XMLURITest >> testCopyWithUserInfo [
 			assert: uri fragment equals: copy fragment ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testDefaultAuthorityPrefixPrinting [
 
 	| uri copy |
@@ -955,7 +957,7 @@ XMLURITest >> testDefaultAuthorityPrefixPrinting [
 	self assert: copy printString equals: self fragmentURIString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testDefaultPathPrefixPrinting [
 
 	| uri copy |
@@ -986,7 +988,7 @@ XMLURITest >> testDefaultPathPrefixPrinting [
 		equals: self relative , self fragmentURIString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testEquals [
 
 	self allURIStringsDo: [ :each |
@@ -1050,7 +1052,7 @@ XMLURITest >> testEquals [
 			deny: otherURI equals: uri ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testFragment [
 
 	self
@@ -1080,7 +1082,7 @@ XMLURITest >> testFragment [
 		equals: self fragment
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testFragmentNonPercentEncodedCharacters [
 
 	| fragment uriString uri |
@@ -1095,7 +1097,7 @@ XMLURITest >> testFragmentNonPercentEncodedCharacters [
 	self assert: uri printString equals: uriString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testFragmentPercentEncodedCharacters [
 
 	| encoded decoded encodedURIString uri |
@@ -1111,7 +1113,7 @@ XMLURITest >> testFragmentPercentEncodedCharacters [
 	self assert: uri printString equals: encodedURIString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testFromStream [
 
 	self allURIStringsDo: [ :each |
@@ -1125,7 +1127,7 @@ XMLURITest >> testFromStream [
 			assert: stream atEnd ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testFromString [
 
 	self allURIStringsDo: [ :each |
@@ -1137,7 +1139,7 @@ XMLURITest >> testFromString [
 			assert: uri equals: each asXMLURI ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHasAbsolutePath [
 	self
 		deny: '' asXMLURI hasAbsolutePath;
@@ -1161,7 +1163,7 @@ XMLURITest >> testHasAbsolutePath [
 		assert: self schemelessURIWithPortString asXMLURI hasAbsolutePath
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHasAuthority [
 	self
 		deny: '' asXMLURI hasAuthority;
@@ -1185,7 +1187,7 @@ XMLURITest >> testHasAuthority [
 		assert: self schemelessURIWithPortString asXMLURI hasAuthority
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHasAuthorityPrefix [
 	self
 		deny: '' asXMLURI hasAuthorityPrefix;
@@ -1209,7 +1211,7 @@ XMLURITest >> testHasAuthorityPrefix [
 		assert: self schemelessURIWithPortString asXMLURI hasAuthorityPrefix
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHasDirectoryPath [
 	self
 		deny: '' asXMLURI hasDirectoryPath;
@@ -1233,7 +1235,7 @@ XMLURITest >> testHasDirectoryPath [
 		deny: self schemelessURIWithPortString asXMLURI hasDirectoryPath
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHasFragment [
 	self allURIStringsDo: [:each | | uri |
 		uri := each asXMLURI.
@@ -1242,7 +1244,7 @@ XMLURITest >> testHasFragment [
 			ifFalse: [self deny: uri hasFragment]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHasHost [
 	self
 		deny: '' asXMLURI hasHost;
@@ -1266,7 +1268,7 @@ XMLURITest >> testHasHost [
 		assert: self schemelessURIWithPortString asXMLURI hasHost
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHasNonDirectoryPath [
 	self
 		deny: '' asXMLURI hasNonDirectoryPath;
@@ -1290,7 +1292,7 @@ XMLURITest >> testHasNonDirectoryPath [
 		assert: self schemelessURIWithPortString asXMLURI hasNonDirectoryPath
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHasPath [
 	self
 		deny: '' asXMLURI hasPath;
@@ -1314,7 +1316,7 @@ XMLURITest >> testHasPath [
 		assert: self schemelessURIWithPortString asXMLURI hasPath
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHasPort [
 	self
 		deny: '' asXMLURI hasPort;
@@ -1338,7 +1340,7 @@ XMLURITest >> testHasPort [
 		assert: self schemelessURIWithPortString asXMLURI hasPort
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHasQuery [
 	self allURIStringsDo: [:each | | uri |
 		uri := each asXMLURI.
@@ -1347,7 +1349,7 @@ XMLURITest >> testHasQuery [
 			ifFalse: [self deny: uri hasQuery]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHasRootPath [
 	self allURIStringsDo: [:each | | uri |
 		uri := each asXMLURI.
@@ -1356,7 +1358,7 @@ XMLURITest >> testHasRootPath [
 			ifFalse: [self deny: uri hasRootPath]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHasScheme [
 	self
 		deny: '' asXMLURI hasScheme;
@@ -1380,7 +1382,7 @@ XMLURITest >> testHasScheme [
 		deny: self schemelessURIWithPortString asXMLURI hasScheme
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHasUserInfo [
 	self allURIStringsDo: [:each | | uri |
 		uri := each asXMLURI.
@@ -1389,7 +1391,7 @@ XMLURITest >> testHasUserInfo [
 			ifFalse: [self deny: uri hasUserInfo]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHash [
 	"We can only safely test that equal objects have the same hash; testing
 	that different objects have different hashes would be unreliable
@@ -1399,7 +1401,7 @@ XMLURITest >> testHash [
 		self assert: each asXMLURI hash equals: each asXMLURI hash ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHashPercentEncoding [
 
 	| uriTemplate unencodedURI encodedURI |
@@ -1413,7 +1415,7 @@ XMLURITest >> testHashPercentEncoding [
 	self assert: unencodedURI hash equals: unencodedURI hash
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHost [
 
 	self
@@ -1440,7 +1442,7 @@ XMLURITest >> testHost [
 		equals: self host
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHostNonPercentEncodedCharacters [
 
 	| host uriString uri |
@@ -1456,7 +1458,7 @@ XMLURITest >> testHostNonPercentEncodedCharacters [
 	self assert: uri printString equals: uriString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testHostPercentEncodedCharacters [
 
 	| prefix encoded decoded encodedURIString uri |
@@ -1474,7 +1476,7 @@ XMLURITest >> testHostPercentEncodedCharacters [
 	self assert: uri printString equals: encodedURIString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testIPv6Hosts [
 
 	| ipv6Host uriString uri |
@@ -1504,7 +1506,7 @@ XMLURITest >> testIPv6Hosts [
 	self assert: uri printString equals: uriString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testInvalidPort [
 
 	| uri |
@@ -1529,7 +1531,7 @@ XMLURITest >> testInvalidPort [
 		assert: uri pathSegments isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testInvalidPortSuffix [
 
 	| uri |
@@ -1555,7 +1557,7 @@ XMLURITest >> testInvalidPortSuffix [
 		assert: uri pathSegments isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testIsEmpty [
 	| uri |
 
@@ -1580,7 +1582,7 @@ XMLURITest >> testIsEmpty [
 	self assert: uri isEmpty.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testIsFile [
 	self allURIStringsDo: [:each | | uri |
 		uri := each asXMLURI.
@@ -1589,7 +1591,7 @@ XMLURITest >> testIsFile [
 			ifFalse: [self deny: uri isFile]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testIsHTTP [
 	self allURIStringsDo: [:each | | uri |
 		uri := each asXMLURI.
@@ -1598,7 +1600,7 @@ XMLURITest >> testIsHTTP [
 			ifFalse: [self deny: uri isHTTP]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testIsHTTPS [
 	self allURIStringsDo: [:each | | uri |
 		uri := each asXMLURI.
@@ -1607,7 +1609,7 @@ XMLURITest >> testIsHTTPS [
 			ifFalse: [self deny: uri isHTTPS]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testIsLocal [
 	self
 		assert: '' asXMLURI isLocal;
@@ -1631,7 +1633,7 @@ XMLURITest >> testIsLocal [
 		deny: self schemelessURIWithPortString asXMLURI isLocal
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testIsRelative [
 	self
 		assert: '' asXMLURI isRelative;
@@ -1655,7 +1657,7 @@ XMLURITest >> testIsRelative [
 		assert: self schemelessURIWithPortString asXMLURI isRelative
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testNew [
 
 	| uri |
@@ -1665,7 +1667,7 @@ XMLURITest >> testNew [
 		assert: uri isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testNotEmpty [
 	| uri |
 
@@ -1690,7 +1692,7 @@ XMLURITest >> testNotEmpty [
 	self deny: uri isNotEmpty.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testParsingQueryString [
 
 	#( '' '?' '?&' '?&&' ) do: [ :each |
@@ -1722,7 +1724,7 @@ XMLURITest >> testParsingQueryString [
 			equals: (OrderedCollection with: 'a' -> 'b' with: 'c' -> '') ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testPath [
 
 	self
@@ -1754,7 +1756,7 @@ XMLURITest >> testPath [
 		equals: self absolute
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testPathNonPercentEncodedCharacters [
 
 	| firstSegment secondSegment uriString uri |
@@ -1774,7 +1776,7 @@ XMLURITest >> testPathNonPercentEncodedCharacters [
 	self assert: uri printString equals: uriString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testPathPercentEncodedCharacters [
 
 	| encoded decoded encodedURIString uri |
@@ -1794,7 +1796,7 @@ XMLURITest >> testPathPercentEncodedCharacters [
 	self assert: uri printString equals: encodedURIString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testPathSegments [
 
 	self
@@ -1832,7 +1834,7 @@ XMLURITest >> testPathSegments [
 		equals: self absoluteSegments
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testPathSegmentsDo [
 
 	self allURIStringsDo: [ :uriString |
@@ -1843,7 +1845,7 @@ XMLURITest >> testPathSegmentsDo [
 		self assert: visited equals: uri pathSegments ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testPort [
 
 	self
@@ -1868,7 +1870,7 @@ XMLURITest >> testPort [
 		assert: self schemelessURIWithPortString asXMLURI port equals: 80
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testPrintOn [
 
 	self allURIStringsDo: [ :each |
@@ -1885,7 +1887,7 @@ XMLURITest >> testPrintOn [
 			assert: uri uriString equals: each ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testQuery [
 
 	self
@@ -1912,7 +1914,7 @@ XMLURITest >> testQuery [
 		equals: self query
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testQueryAt [
 
 	self allURIStringsDo: [ :uriString |
@@ -1926,7 +1928,7 @@ XMLURITest >> testQueryAt [
 		self assert: (uri queryAt: 'absent') equals: '' ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testQueryAtIfAbsent [
 
 	self allURIStringsDo: [ :uriString |
@@ -1944,7 +1946,7 @@ XMLURITest >> testQueryAtIfAbsent [
 			equals: 'absentValue' ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testQueryIncludesKey [
 	self allURIStringsDo: [:uriString | | uri |
 		uri := uriString asXMLURI.
@@ -1953,7 +1955,7 @@ XMLURITest >> testQueryIncludesKey [
 		self deny: (uri queryIncludesKey: 'absent')]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testQueryKeys [
 
 	self allURIStringsDo: [ :uriString |
@@ -1964,7 +1966,7 @@ XMLURITest >> testQueryKeys [
 			equals: (uri query collect: [ :each | each key ]) ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testQueryKeysAndValuesDo [
 
 	self allURIStringsDo: [ :each |
@@ -1978,7 +1980,7 @@ XMLURITest >> testQueryKeysAndValuesDo [
 		self assert: visited equals: uri query ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testQueryKeysDo [
 
 	self allURIStringsDo: [ :uriString |
@@ -1991,7 +1993,7 @@ XMLURITest >> testQueryKeysDo [
 		self assert: visited equals: uri queryKeys ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testQueryNonPercentOrPlusEncodedCharacters [
 
 	| queryKey queryValue uriString uri |
@@ -2020,7 +2022,7 @@ XMLURITest >> testQueryNonPercentOrPlusEncodedCharacters [
 	self assert: uri printString equals: uriString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testQueryPercentOrPlusEncodedCharacters [
 
 	| encoded decoded encodedURIString uri |
@@ -2047,7 +2049,7 @@ XMLURITest >> testQueryPercentOrPlusEncodedCharacters [
 	self assert: uri printString equals: encodedURIString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testQueryValuesAt [
 
 	self allURIStringsDo: [ :uriString |
@@ -2064,7 +2066,7 @@ XMLURITest >> testQueryValuesAt [
 			equals: OrderedCollection new ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testQueryValuesAtDo [
 
 	self allURIStringsDo: [ :uriString |
@@ -2084,7 +2086,7 @@ XMLURITest >> testQueryValuesAtDo [
 			self assert: enumerated equals: values ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testQueryValuesAtIfAbsent [
 
 	self allURIStringsDo: [ :uriString |
@@ -2103,7 +2105,7 @@ XMLURITest >> testQueryValuesAtIfAbsent [
 			equals: #absent ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testReadFrom [
 
 	self allURIStringsDo: [ :each |
@@ -2123,7 +2125,7 @@ XMLURITest >> testReadFrom [
 			assert: uri equals: each asXMLURI ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testScheme [
 
 	self
@@ -2148,7 +2150,7 @@ XMLURITest >> testScheme [
 		assert: self schemelessURIWithPortString asXMLURI scheme equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testSchemeAndHostCaseInsensitivity [
 
 	self allURIStringsDo: [ :each |
@@ -2172,7 +2174,7 @@ XMLURITest >> testSchemeAndHostCaseInsensitivity [
 			self deny: uri fragment equals: uppercaseURI fragment ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testSchemeCharacters [
 
 	| scheme uri |
@@ -2183,7 +2185,7 @@ XMLURITest >> testSchemeCharacters [
 		assert: uri host equals: self host
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testStandardURICombining [
 	"Generated from RFC 3986, page 34-36"
 
@@ -2254,7 +2256,7 @@ XMLURITest >> testStandardURICombining [
 		assert: baseURI / 'http:g' asXMLURI equals: 'http:g' asXMLURI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testUserInfo [
 
 	self allURIStringsDo: [ :each |
@@ -2265,7 +2267,7 @@ XMLURITest >> testUserInfo [
 			ifFalse: [ self assert: uri userInfo equals: '' ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testUserInfoNonPercentEncodedCharacters [
 
 	| userInfo uriString uri |
@@ -2282,7 +2284,7 @@ XMLURITest >> testUserInfoNonPercentEncodedCharacters [
 	self assert: uri printString equals: uriString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLURITest >> testUserInfoPercentEncodedCharacters [
 
 	| prefix encoded decoded suffix encodedURIString uri |
@@ -2301,7 +2303,7 @@ XMLURITest >> testUserInfoPercentEncodedCharacters [
 	self assert: uri printString equals: encodedURIString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURITest >> unreservedCharacters [
 	^ unreservedCharacters
 		ifNil: [unreservedCharacters := self alphaNumericCharacters, '-._~']

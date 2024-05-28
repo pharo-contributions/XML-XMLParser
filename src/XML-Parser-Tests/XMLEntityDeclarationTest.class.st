@@ -2,17 +2,19 @@
 Abstract, do not run.
 "
 Class {
-	#name : #XMLEntityDeclarationTest,
-	#superclass : #XMLDeclarationNodeTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLEntityDeclarationTest',
+	#superclass : 'XMLDeclarationNodeTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEntityDeclarationTest >> nodeClass [
 	^ XMLEntityDeclaration
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEntityDeclarationTest >> testIsExternal [
 	| declaration |
 
@@ -32,17 +34,17 @@ XMLEntityDeclarationTest >> testIsExternal [
 	self deny: declaration isExternal
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEntityDeclarationTest >> testIsParameter [
 	self deny: self newNode isParameter
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEntityDeclarationTest >> testIsUnparsed [
 	self deny: self newNode isUnparsed
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEntityDeclarationTest >> testName [
 
 	| declaration |
@@ -53,7 +55,7 @@ XMLEntityDeclarationTest >> testName [
 		assert: declaration name equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEntityDeclarationTest >> testNamePublicIDSystemID [
 
 	| declaration |
@@ -68,7 +70,7 @@ XMLEntityDeclarationTest >> testNamePublicIDSystemID [
 		assert: declaration systemID equals: 'three'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEntityDeclarationTest >> testNameReplacement [
 
 	| declaration |
@@ -79,7 +81,7 @@ XMLEntityDeclarationTest >> testNameReplacement [
 		assert: declaration replacement equals: 'two'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEntityDeclarationTest >> testPublicID [
 
 	| declaration |
@@ -90,7 +92,7 @@ XMLEntityDeclarationTest >> testPublicID [
 		assert: declaration publicID equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEntityDeclarationTest >> testReplacement [
 
 	| declaration |
@@ -101,7 +103,7 @@ XMLEntityDeclarationTest >> testReplacement [
 		assert: declaration replacement equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEntityDeclarationTest >> testSystemID [
 
 	| declaration |

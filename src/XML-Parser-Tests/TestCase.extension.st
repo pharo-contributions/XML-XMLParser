@@ -1,6 +1,6 @@
-Extension { #name : #TestCase }
+Extension { #name : 'TestCase' }
 
-{ #category : #'*XML-Parser-Tests' }
+{ #category : '*XML-Parser-Tests' }
 TestCase >> xmlShould: aBlock enumerate: aCollection [
 
 	| enumerated |
@@ -9,7 +9,7 @@ TestCase >> xmlShould: aBlock enumerate: aCollection [
 	self assert: enumerated equals: aCollection asOrderedCollection
 ]
 
-{ #category : #'*XML-Parser-Tests' }
+{ #category : '*XML-Parser-Tests' }
 TestCase >> xmlShould: aBlock enumerate: aFirstCollection and: aSecondCollection [
 
 	| firstEnumerated secondEnumerated |
@@ -25,7 +25,7 @@ TestCase >> xmlShould: aBlock enumerate: aFirstCollection and: aSecondCollection
 		equals: aSecondCollection asOrderedCollection
 ]
 
-{ #category : #'*XML-Parser-Tests' }
+{ #category : '*XML-Parser-Tests' }
 TestCase >> xmlShould: aBlock unorderedEnumerate: aCollection [
 
 	| enumerated |
@@ -36,7 +36,7 @@ TestCase >> xmlShould: aBlock unorderedEnumerate: aCollection [
 		equals: aCollection asOrderedCollection sorted
 ]
 
-{ #category : #'*XML-Parser-Tests' }
+{ #category : '*XML-Parser-Tests' }
 TestCase >> xmlShould: aBlock unorderedEnumerate: aFirstCollection and: aSecondCollection [
 
 	| firstEnumerated secondEnumerated |

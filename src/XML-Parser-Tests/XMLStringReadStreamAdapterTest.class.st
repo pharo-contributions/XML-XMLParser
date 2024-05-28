@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLStringReadStreamAdapterTest,
-	#superclass : #XMLReadStreamAdapterTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLStringReadStreamAdapterTest',
+	#superclass : 'XMLReadStreamAdapterTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStringReadStreamAdapterTest >> expectsBinaryOutput [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStringReadStreamAdapterTest >> streamAdapterClass [
 	^ XMLStringReadStreamAdapter
 ]

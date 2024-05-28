@@ -1,35 +1,37 @@
 Class {
-	#name : #XMLPluggableElementFactoryTest,
-	#superclass : #XMLPluggableNodeFactoryTest,
-	#category : #'XML-Parser-Tests-DOM-Factories'
+	#name : 'XMLPluggableElementFactoryTest',
+	#superclass : 'XMLPluggableNodeFactoryTest',
+	#category : 'XML-Parser-Tests-DOM-Factories',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM-Factories'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableElementFactoryTest >> dateElementClass [
 	^ XMLFDateElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableElementFactoryTest >> defaultElementClass [
 	^ self elementClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableElementFactoryTest >> elementClassMapperClass [
 	^ XMLBasicElementClassMapper
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableElementFactoryTest >> factoryClass [
 	^ XMLPluggableElementFactory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableElementFactoryTest >> realNameElementClass [
 	^ XMLFRealNameElement
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 XMLPluggableElementFactoryTest >> sampleUsersXML [
 	^
 		'<users>
@@ -52,17 +54,17 @@ XMLPluggableElementFactoryTest >> sampleUsersXML [
 		</users>'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableElementFactoryTest >> serializationFormatElementClass [
 	^ XMLFSerializationFormatElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableElementFactoryTest >> tableElementClass [
 	^ XMLFTableElement
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableElementFactoryTest >> testAddElementNamed [
 
 	| element userElement dataElement |
@@ -94,7 +96,7 @@ XMLPluggableElementFactoryTest >> testAddElementNamed [
 		identicalTo: XMLElement
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableElementFactoryTest >> testClassForElement [
 
 	| factory |
@@ -121,7 +123,7 @@ XMLPluggableElementFactoryTest >> testClassForElement [
 		identicalTo: self elementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableElementFactoryTest >> testClassForElementNamespaceURI [
 
 	| factory |
@@ -157,7 +159,7 @@ XMLPluggableElementFactoryTest >> testClassForElementNamespaceURI [
 		identicalTo: self elementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableElementFactoryTest >> testCopy [
 
 	| factory copy |
@@ -170,7 +172,7 @@ XMLPluggableElementFactoryTest >> testCopy [
 		identicalTo: factory elementClassMapper
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableElementFactoryTest >> testElementClassAccessor [
 	| document |
 
@@ -187,7 +189,7 @@ XMLPluggableElementFactoryTest >> testElementClassAccessor [
 	self assert: (document allElementsDetect: [:each | (each isMemberOf: self defaultElementClass) not]) isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableElementFactoryTest >> testElementClassMapper [
 
 	| factory oldMapper newMapper |
@@ -204,7 +206,7 @@ XMLPluggableElementFactoryTest >> testElementClassMapper [
 		assert: factory elementClassMapper identicalTo: newMapper
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableElementFactoryTest >> testElementClassNameMatching [
 	| document |
 
@@ -227,7 +229,7 @@ XMLPluggableElementFactoryTest >> testElementClassNameMatching [
 				isMemberOf: self serializationFormatElementClass)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableElementFactoryTest >> testElementNameAndNamespaceMatching [
 	| factory document root |
 
@@ -262,7 +264,7 @@ XMLPluggableElementFactoryTest >> testElementNameAndNamespaceMatching [
 				allSatisfy: [:each | each isMemberOf: self defaultElementClass])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableElementFactoryTest >> testElementsNameAndNamespaceMatching [
 	| factory document root |
 
@@ -289,7 +291,7 @@ XMLPluggableElementFactoryTest >> testElementsNameAndNamespaceMatching [
 		assert: ((root elementAt: 'table-name') isMemberOf: self tableElementClass)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableElementFactoryTest >> testHandleElementsMatchingClass [
 
 	| document |
@@ -309,7 +311,7 @@ XMLPluggableElementFactoryTest >> testHandleElementsMatchingClass [
 			identicalTo: XMLFRealNameElement ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableElementFactoryTest >> testHandleElementsMatchingClasses [
 
 	| document |
@@ -331,17 +333,17 @@ XMLPluggableElementFactoryTest >> testHandleElementsMatchingClasses [
 			identicalTo: XMLFRealNameElement ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableElementFactoryTest >> userElementClass [
 	^ XMLFUserElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableElementFactoryTest >> usernameElementClass [
 	^ XMLFUsernameElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableElementFactoryTest >> wrongElementClass [
 	^ XMLFWrongElement
 ]

@@ -1,37 +1,39 @@
 Class {
-	#name : #XMLDecodingReadStreamAdapterTest,
-	#superclass : #XMLReadStreamAdapterTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLDecodingReadStreamAdapterTest',
+	#superclass : 'XMLReadStreamAdapterTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterTest >> basicInvalidInputCollections [
 	^ #()
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDecodingReadStreamAdapterTest >> detectsBOMs [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDecodingReadStreamAdapterTest >> expectsBinaryInput [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterTest >> inputCollection [
 	^ self detectsBOMs
 		ifTrue: [self inputCollectionByteOrderMark, super inputCollection]
 		ifFalse: [super inputCollection]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterTest >> inputCollectionByteOrderMark [
 	^ self asExpectedInput: self streamConverterClass byteOrderMarkBytes
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterTest >> invalidInputCollections [
 	^ self basicInvalidInputCollections collect: [:each |
 		self detectsBOMs
@@ -39,7 +41,7 @@ XMLDecodingReadStreamAdapterTest >> invalidInputCollections [
 			ifFalse: [self asExpectedInput: each]]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLDecodingReadStreamAdapterTest >> newStreamAdapterOn: aStream [
 	| adapter |
 
@@ -50,17 +52,17 @@ XMLDecodingReadStreamAdapterTest >> newStreamAdapterOn: aStream [
 	^ adapter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterTest >> streamAdapterClass [
 	^ XMLDecodingReadStreamAdapter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterTest >> streamConverterClass [
 	^ XMLNullStreamConverter
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDecodingReadStreamAdapterTest >> testHasDefaultStreamConverter [
 
 	| adapter |
@@ -70,7 +72,7 @@ XMLDecodingReadStreamAdapterTest >> testHasDefaultStreamConverter [
 		equals: adapter streamConverter isDefault
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDecodingReadStreamAdapterTest >> testHasImplicitStreamConverter [
 
 	| adapter |
@@ -80,7 +82,7 @@ XMLDecodingReadStreamAdapterTest >> testHasImplicitStreamConverter [
 		equals: adapter streamConverter isImplicit
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDecodingReadStreamAdapterTest >> testHasNullStreamConverter [
 
 	| adapter |
@@ -90,7 +92,7 @@ XMLDecodingReadStreamAdapterTest >> testHasNullStreamConverter [
 		equals: adapter streamConverter isNull
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDecodingReadStreamAdapterTest >> testInvalidCharacters [
 	self invalidInputCollections do: [:each | | streamAdapter |
 		streamAdapter := self newStreamAdapterOn: (self newStreamOn: each).
@@ -102,12 +104,12 @@ XMLDecodingReadStreamAdapterTest >> testInvalidCharacters [
 		self assert: streamAdapter atEnd]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDecodingReadStreamAdapterTest >> testIsXMLConvertingStreamAdapter [
 	self assert: self newStreamAdapter isXMLConvertingStreamAdapter
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDecodingReadStreamAdapterTest >> testNonDecodingOn [
 	| adapter stream |
 
@@ -116,7 +118,7 @@ XMLDecodingReadStreamAdapterTest >> testNonDecodingOn [
 	self assert: adapter hasNullStreamConverter
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDecodingReadStreamAdapterTest >> testNonDecodingOnIfBinaryOrExternal [
 
 	| basicInputCollection adapter stream |
@@ -134,7 +136,7 @@ XMLDecodingReadStreamAdapterTest >> testNonDecodingOnIfBinaryOrExternal [
 	self assert: adapter isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDecodingReadStreamAdapterTest >> testOn [
 	| adapter stream |
 
@@ -145,7 +147,7 @@ XMLDecodingReadStreamAdapterTest >> testOn [
 	self assert: adapter hasDefaultStreamConverter
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDecodingReadStreamAdapterTest >> testOnIfBinaryOrExternal [
 
 	| adapter stream |
@@ -159,7 +161,7 @@ XMLDecodingReadStreamAdapterTest >> testOnIfBinaryOrExternal [
 		assert: adapter hasDefaultStreamConverter
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDecodingReadStreamAdapterTest >> testStreamConverter [
 
 	| adapter newConverter |

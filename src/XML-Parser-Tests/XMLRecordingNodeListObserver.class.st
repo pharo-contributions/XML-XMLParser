@@ -2,12 +2,14 @@
 This observer records notifications from XMLNodeLists.
 "
 Class {
-	#name : #XMLRecordingNodeListObserver,
-	#superclass : #XMLRecordingListObserver,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLRecordingNodeListObserver',
+	#superclass : 'XMLRecordingListObserver',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #notifying }
+{ #category : 'notifying' }
 XMLRecordingNodeListObserver >> addedNode: aNode [
 	self messageRecorder
 		recordMessageReceiver: self
@@ -15,7 +17,7 @@ XMLRecordingNodeListObserver >> addedNode: aNode [
 		arguments: (Array with: aNode)
 ]
 
-{ #category : #notifying }
+{ #category : 'notifying' }
 XMLRecordingNodeListObserver >> removedNode: aNode [
 	self messageRecorder
 		recordMessageReceiver: self

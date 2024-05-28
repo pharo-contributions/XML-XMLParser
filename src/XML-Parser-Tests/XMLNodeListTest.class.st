@@ -1,6 +1,6 @@
 Class {
-	#name : #XMLNodeListTest,
-	#superclass : #XMLObservableListTest,
+	#name : 'XMLNodeListTest',
+	#superclass : 'XMLObservableListTest',
 	#instVars : [
 		'document',
 		'nodes',
@@ -8,52 +8,54 @@ Class {
 		'absentNode',
 		'changedNodes'
 	],
-	#category : #'XML-Parser-Tests-DOM'
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeListTest >> absentListItem [
 	^ absentNode ifNil: [absentNode := super absentListItem asXMLStringNode]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeListTest >> afterAddingToNotifications [
 	^ #(addedNode:)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeListTest >> afterRemovingFromNotifications [
 	^ #(removedNode:)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeListTest >> changedListItem: anObject [
 	^ (changedNodes ifNil: [changedNodes := IdentityDictionary new])
 		at: anObject
 		ifAbsentPut: [anObject copy]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeListTest >> listClass [
 	^ XMLNodeList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeListTest >> listContentNodes [
 	^ self listItems select: [:each | each isContentNode]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeListTest >> listElementNames [
 	^ self listElements collect: [:each | each name]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeListTest >> listElements [
 	^ self listItems select: [:each | each isElement]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeListTest >> listItems [
 	nodes
 		ifNil: [
@@ -74,37 +76,37 @@ XMLNodeListTest >> listItems [
 	^ nodes copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeListTest >> listStringNodes [
 	^ self listItems select: [:each | each isStringNode]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeListTest >> listStrings [
 	^ self listStringNodes collect: [:each | each string]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeListTest >> newListItem [
 	^ newNode ifNil: [newNode := super newListItem asXMLStringNode]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeListTest >> observerClass [
 	^ XMLRecordingNodeListObserver
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeListTest >> reverseSortBlock [
 	^ [:a :b | a sortKey > b sortKey]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeListTest >> sortBlock [
 	^ [:a :b | a sortKey <= b sortKey]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testContentNodes [
 	| list |
 
@@ -115,7 +117,7 @@ XMLNodeListTest >> testContentNodes [
 		equals: (self listClass newFrom: self listContentNodes)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testContentNodesDo [
 	| list |
 
@@ -130,7 +132,7 @@ XMLNodeListTest >> testContentNodesDo [
 		enumerate: self listContentNodes
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testContentStringAt [
 
 	| list |
@@ -141,7 +143,7 @@ XMLNodeListTest >> testContentStringAt [
 			equals: each contentString ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testElementAfter [
 
 	| list elementAfter |
@@ -152,7 +154,7 @@ XMLNodeListTest >> testElementAfter [
 		elementAfter := each ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testElementAt [
 
 	| list |
@@ -171,7 +173,7 @@ XMLNodeListTest >> testElementAt [
 		self assert: (list elementAt: each name) equals: self defaultValue ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testElementAtIfAbsent [
 
 	| list |
@@ -196,7 +198,7 @@ XMLNodeListTest >> testElementAtIfAbsent [
 			equals: self newListItem ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testElementBefore [
 
 	| list elementBefore |
@@ -207,7 +209,7 @@ XMLNodeListTest >> testElementBefore [
 		elementBefore := each ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testElementNames [
 	| list |
 
@@ -218,7 +220,7 @@ XMLNodeListTest >> testElementNames [
 		equals: (self listSpecies newFrom: self listElementNames)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testElements [
 	| list |
 
@@ -229,7 +231,7 @@ XMLNodeListTest >> testElements [
 		equals: (self listClass newFrom: self listElements)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testElementsAt [
 
 	self listElements do: [ :element |
@@ -255,7 +257,7 @@ XMLNodeListTest >> testElementsAt [
 			equals: (self listClass newFrom: elementsAt) ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testElementsCollect [
 	| list |
 
@@ -266,7 +268,7 @@ XMLNodeListTest >> testElementsCollect [
 		equals: (self listSpecies newFrom: self listElementNames).
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testElementsDo [
 	| list |
 
@@ -281,7 +283,7 @@ XMLNodeListTest >> testElementsDo [
 		enumerate: self listElements.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testElementsSelect [
 	| list selectedElements |
 
@@ -296,7 +298,7 @@ XMLNodeListTest >> testElementsSelect [
 		equals: (self listClass newFrom: selectedElements).
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testFirstElement [
 
 	| list |
@@ -307,7 +309,7 @@ XMLNodeListTest >> testFirstElement [
 	self assert: list firstElement equals: self defaultValue
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testHasContentNodes [
 	| list |
 
@@ -321,7 +323,7 @@ XMLNodeListTest >> testHasContentNodes [
 	self deny: list hasContentNodes.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testHasElements [
 	| list |
 
@@ -335,7 +337,7 @@ XMLNodeListTest >> testHasElements [
 	self deny: list hasElements.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testHasStringNodes [
 	| list |
 
@@ -349,7 +351,7 @@ XMLNodeListTest >> testHasStringNodes [
 	self deny: list hasStringNodes.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testLastElement [
 
 	| list |
@@ -360,7 +362,7 @@ XMLNodeListTest >> testLastElement [
 	self assert: list lastElement equals: self defaultValue
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testRawContentStringAt [
 
 	| list |
@@ -371,7 +373,7 @@ XMLNodeListTest >> testRawContentStringAt [
 			equals: each rawContentString ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testStringNodes [
 	| list |
 
@@ -382,7 +384,7 @@ XMLNodeListTest >> testStringNodes [
 		equals: (self listClass newFrom: self listStringNodes).
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testStringNodesDo [
 	| list |
 
@@ -397,7 +399,7 @@ XMLNodeListTest >> testStringNodesDo [
 		enumerate: self listStringNodes.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testStrings [
 	| list |
 
@@ -408,7 +410,7 @@ XMLNodeListTest >> testStrings [
 		equals: (self listSpecies newFrom: self listStrings).
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeListTest >> testStringsDo [
 	| list |
 

@@ -2,27 +2,29 @@
 The sample book object parsed by the SAX2ElementParser.
 "
 Class {
-	#name : #SAX2SampleBook,
-	#superclass : #Object,
+	#name : 'SAX2SampleBook',
+	#superclass : 'Object',
 	#instVars : [
 		'title',
 		'isbn',
 		'authors'
 	],
-	#category : #'XML-Parser-Tests-ElementHandlers'
+	#category : 'XML-Parser-Tests-ElementHandlers',
+	#package : 'XML-Parser-Tests',
+	#tag : 'ElementHandlers'
 }
 
-{ #category : #adding }
+{ #category : 'adding' }
 SAX2SampleBook >> addAuthor: aString [
 	^ self authors addLast: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2SampleBook >> authors [
 	^ authors
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SAX2SampleBook >> initialize [
 	super initialize.
 
@@ -31,22 +33,22 @@ SAX2SampleBook >> initialize [
 	authors := OrderedCollection new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2SampleBook >> isbn [
 	^ isbn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2SampleBook >> isbn: aString [
 	isbn := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2SampleBook >> title [
 	^ title
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2SampleBook >> title: aString [
 	title := aString
 ]

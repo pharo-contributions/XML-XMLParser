@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLEncodingDetectorUTF8Test,
-	#superclass : #XMLEncodingDetectorTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLEncodingDetectorUTF8Test',
+	#superclass : 'XMLEncodingDetectorTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEncodingDetectorUTF8Test class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorUTF8Test >> basicImplicitEncodedInputCollections [
 	^ #(
 		#(16r01)
@@ -46,7 +48,7 @@ XMLEncodingDetectorUTF8Test >> basicImplicitEncodedInputCollections [
 	) collect: [:each | each asByteArray]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorUTF8Test >> basicInvalidImplicitEncodedInputCollections [
 	^ #(
 		#(16r80)
@@ -60,12 +62,12 @@ XMLEncodingDetectorUTF8Test >> basicInvalidImplicitEncodedInputCollections [
 	) collect: [:each | each asByteArray]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorUTF8Test >> explicitStreamConverterClass [
 	^ XMLUTF8StreamConverter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorUTF8Test >> implicitStreamConverterClass [
 	^ XMLImplicitUTF8StreamConverter
 ]

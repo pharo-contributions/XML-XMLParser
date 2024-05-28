@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLEncodingDetectorUTF16LETest,
-	#superclass : #XMLEncodingDetectorTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLEncodingDetectorUTF16LETest',
+	#superclass : 'XMLEncodingDetectorTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEncodingDetectorUTF16LETest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorUTF16LETest >> basicImplicitEncodedInputCollections [
 	^ #(
 		#(16r01 16r00)
@@ -18,12 +20,12 @@ XMLEncodingDetectorUTF16LETest >> basicImplicitEncodedInputCollections [
 	) collect: [:each | each asByteArray]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorUTF16LETest >> explicitStreamConverterClass [
 	^ XMLUTF16LittleEndianStreamConverter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorUTF16LETest >> implicitStreamConverterClass [
 	^ XMLImplicitUTF16LittleEndianStreamConverter
 ]

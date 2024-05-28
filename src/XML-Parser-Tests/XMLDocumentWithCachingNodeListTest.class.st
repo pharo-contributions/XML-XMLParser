@@ -1,20 +1,22 @@
 Class {
-	#name : #XMLDocumentWithCachingNodeListTest,
-	#superclass : #XMLDocumentTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLDocumentWithCachingNodeListTest',
+	#superclass : 'XMLDocumentTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocumentWithCachingNodeListTest >> elementClass [
 	^ XMLElementWithCachingNodeList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocumentWithCachingNodeListTest >> nodeClass [
 	^ XMLDocumentWithCachingNodeList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocumentWithCachingNodeListTest >> nodeListClass [
 	^ XMLCachingNodeList
 ]

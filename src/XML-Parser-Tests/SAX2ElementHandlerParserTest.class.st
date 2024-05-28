@@ -1,10 +1,12 @@
 Class {
-	#name : #SAX2ElementHandlerParserTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-ElementHandlers'
+	#name : 'SAX2ElementHandlerParserTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-ElementHandlers',
+	#package : 'XML-Parser-Tests',
+	#tag : 'ElementHandlers'
 }
 
-{ #category : #source }
+{ #category : 'source' }
 SAX2ElementHandlerParserTest >> sampleBooksXML [
 	^ '
 		<books>
@@ -32,7 +34,7 @@ SAX2ElementHandlerParserTest >> sampleBooksXML [
 	'
 ]
 
-{ #category : #source }
+{ #category : 'source' }
 SAX2ElementHandlerParserTest >> samplePersonXML [
 	^ '
 		<person>
@@ -47,7 +49,7 @@ SAX2ElementHandlerParserTest >> samplePersonXML [
 	'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAX2ElementHandlerParserTest >> testParsingSampleBooks [
 	"Basic factory-style parsing, with one factory for the entire document"
 
@@ -83,7 +85,7 @@ SAX2ElementHandlerParserTest >> testParsingSampleBooks [
 			   'Damien Pollet' 'Damien Cassou' 'Marcus Denker' )
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAX2ElementHandlerParserTest >> testParsingSamplePerson [
 	"FSM-style parsing, with element handlers being the states and
 	the factories mapped to them being the transitions"

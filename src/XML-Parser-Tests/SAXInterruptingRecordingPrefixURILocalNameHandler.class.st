@@ -2,15 +2,17 @@
 An interrupting version to test #interruptParsing.
 "
 Class {
-	#name : #SAXInterruptingRecordingPrefixURILocalNameHandler,
-	#superclass : #SAXRecordingPrefixURILocalNameHandler,
+	#name : 'SAXInterruptingRecordingPrefixURILocalNameHandler',
+	#superclass : 'SAXRecordingPrefixURILocalNameHandler',
 	#instVars : [
 		'interruptOn'
 	],
-	#category : #'XML-Parser-Tests-Base'
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 SAXInterruptingRecordingPrefixURILocalNameHandler class >> generateInterruptingRecordingHandlerMethods [
 	"
 	self generateInterruptingRecordingHandlerMethods
@@ -51,7 +53,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler class >> generateInterruptingR
 					classified: handlerCategory]]
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> attributeDeclaration: anElementName name: anAttributeName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	super
 		attributeDeclaration: anElementName
@@ -64,7 +66,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> attributeDeclaration: anEle
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> characters: aString [
 	super characters: aString.
 
@@ -72,7 +74,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> characters: aString [
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> comment: aString [
 	super comment: aString.
 
@@ -80,7 +82,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> comment: aString [
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> elementDeclaration: anElementName contentModel: aContentModel [
 	super
 		elementDeclaration: anElementName
@@ -90,7 +92,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> elementDeclaration: anEleme
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> endCData [
 	super endCData.
 
@@ -98,7 +100,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> endCData [
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> endDTD [
 	super endDTD.
 
@@ -106,7 +108,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> endDTD [
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> endDocument [
 	super endDocument.
 
@@ -114,7 +116,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> endDocument [
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> endElement: aQualifiedName [
 	super endElement: aQualifiedName.
 
@@ -122,7 +124,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> endElement: aQualifiedName 
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI [
 	super
 		endElement: aQualifiedName
@@ -133,7 +135,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> endElement: aQualifiedName 
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName [
 	super
 		endElement: aQualifiedName
@@ -145,7 +147,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> endElement: aQualifiedName 
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> endEntity: anEntityName [
 	super endEntity: anEntityName.
 
@@ -153,7 +155,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> endEntity: anEntityName [
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> endPrefixMapping: aPrefix [
 	super endPrefixMapping: aPrefix.
 
@@ -161,7 +163,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> endPrefixMapping: aPrefix [
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> generalEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotationName [
 	super
 		generalEntityDeclaration: aName
@@ -173,7 +175,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> generalEntityDeclaration: a
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> generalEntityDeclaration: aName replacement: aReplacement [
 	super
 		generalEntityDeclaration: aName
@@ -183,7 +185,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> generalEntityDeclaration: a
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> ignorableWhitespace: aString [
 	super ignorableWhitespace: aString.
 
@@ -191,17 +193,17 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> ignorableWhitespace: aStrin
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> interruptOn [
 	^ interruptOn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> interruptOn: aSelector [
 	interruptOn := aSelector
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> notationDeclaration: aName publicID: aPublicID systemID: aSystemID [
 	super
 		notationDeclaration: aName
@@ -212,7 +214,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> notationDeclaration: aName 
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> parameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
 	super
 		parameterEntityDeclaration: aName
@@ -223,7 +225,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> parameterEntityDeclaration:
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> parameterEntityDeclaration: aName replacement: aReplacement [
 	super
 		parameterEntityDeclaration: aName
@@ -233,7 +235,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> parameterEntityDeclaration:
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> processingInstruction: aTargetString data: aDataString [
 	super
 		processingInstruction: aTargetString
@@ -243,7 +245,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> processingInstruction: aTar
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> skippedEntity: anEntityName [
 	super skippedEntity: anEntityName.
 
@@ -251,7 +253,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> skippedEntity: anEntityName
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> startCData [
 	super startCData.
 
@@ -259,7 +261,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> startCData [
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> startDTD: aRootElementName publicID: aPublicID systemID: aSystemID [
 	super
 		startDTD: aRootElementName
@@ -270,7 +272,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> startDTD: aRootElementName 
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> startDocument [
 	super startDocument.
 
@@ -278,7 +280,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> startDocument [
 		ifTrue: [self interruptParsing]
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> startElement: aQualifiedName attributes: anAttributeDictionary [
 	super
 		startElement: aQualifiedName
@@ -288,7 +290,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> startElement: aQualifiedNam
 		ifTrue: [self interruptParsing].
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes: anAttributeDictionary [
 	super
 		startElement: aQualifiedName
@@ -300,7 +302,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> startElement: aQualifiedNam
 		ifTrue: [self interruptParsing].
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: anAttributeDictionary [
 	super
 		startElement: aQualifiedName
@@ -313,7 +315,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> startElement: aQualifiedNam
 		ifTrue: [self interruptParsing].
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> startEntity: anEntityName [
 	super startEntity: anEntityName.
 
@@ -321,7 +323,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> startEntity: anEntityName [
 		ifTrue: [self interruptParsing].
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> startPrefixMapping: aPrefix uri: aURI [
 	super
 		startPrefixMapping: aPrefix
@@ -331,7 +333,7 @@ SAXInterruptingRecordingPrefixURILocalNameHandler >> startPrefixMapping: aPrefix
 		ifTrue: [self interruptParsing].
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAXInterruptingRecordingPrefixURILocalNameHandler >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
 	super
 		xmlVersion: aVersionFloat

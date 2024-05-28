@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLEncodingDetectorUTF32BETest,
-	#superclass : #XMLEncodingDetectorTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLEncodingDetectorUTF32BETest',
+	#superclass : 'XMLEncodingDetectorTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEncodingDetectorUTF32BETest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorUTF32BETest >> basicImplicitEncodedInputCollections [
 	^ #(
 		#(16r00 16r00 16r00 16r01)
@@ -18,12 +20,12 @@ XMLEncodingDetectorUTF32BETest >> basicImplicitEncodedInputCollections [
 	) collect: [:each | each asByteArray]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorUTF32BETest >> explicitStreamConverterClass [
 	^ XMLUTF32BigEndianStreamConverter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorUTF32BETest >> implicitStreamConverterClass [
 	^ XMLImplicitUTF32BigEndianStreamConverter
 ]

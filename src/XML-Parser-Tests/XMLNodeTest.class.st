@@ -2,17 +2,19 @@
 This is a base class for node tests.
 "
 Class {
-	#name : #XMLNodeTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLNodeTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNodeTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : #assertions }
+{ #category : 'assertions' }
 XMLNodeTest >> assertElement: anElement hasAttributes: anAssociationCollection [
 
 	| attributeNodes |
@@ -28,7 +30,7 @@ XMLNodeTest >> assertElement: anElement hasAttributes: anAssociationCollection [
 			assert: attributeNode value equals: each value ]
 ]
 
-{ #category : #assertions }
+{ #category : 'assertions' }
 XMLNodeTest >> assertList: aList collects: aSecondList [
 
 	self
@@ -36,7 +38,7 @@ XMLNodeTest >> assertList: aList collects: aSecondList [
 		assert: aList class identicalTo: self collectListClass
 ]
 
-{ #category : #assertions }
+{ #category : 'assertions' }
 XMLNodeTest >> assertList: aList selects: aSecondList [
 
 	self
@@ -44,7 +46,7 @@ XMLNodeTest >> assertList: aList selects: aSecondList [
 		assert: aList class identicalTo: self selectListClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> attributeAssociations [
 	^ Array
 		with: 'one' -> '1'
@@ -53,52 +55,52 @@ XMLNodeTest >> attributeAssociations [
 		with: 'prefix:four' -> '4'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> attributeClass [
 	^ XMLAttribute
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> attributeListClass [
 	^ XMLCachingAttributeList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> attributeNames [
 	^ self attributeAssociations collect: [:each | each key]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> attributeValues [
 	^ self attributeAssociations collect: [:each | each value]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> attributes [
 	^ self attributesClass newFrom: self attributeAssociations
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> attributesClass [
 	^ OrderPreservingStringDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> collectListClass [
 	^ XMLOrderedList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> elementClass [
 	^ XMLElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> escapedString [
 	^ '&lt;test name="&amp;name;"&gt;''&amp;value;''&lt;/test&gt;'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> languageTagsAndFilters [
 	"returns an array of triplet arrays of langauge tag, matching filters,
 	and non-matching filters"
@@ -153,12 +155,12 @@ XMLNodeTest >> languageTagsAndFilters [
 				'de-*-*' '*-*-other' '*-GB-*')))
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> markupString [
 	^ '<test name="&name;">''&value;''</test>'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> namespaceAssociations [
 	^ Array
 		with: '' -> 'defaultNS'
@@ -166,19 +168,19 @@ XMLNodeTest >> namespaceAssociations [
 		with: 'prefixTwo' -> 'prefixTwoNS'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> namespaces [
 	^ self attributesClass newFrom: self namespaceAssociations
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNodeTest >> newElement [
 	^ self elementClass
 		name: 'test'
 		namespaces: self namespaceAssociations
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNodeTest >> newElementWithAttributes [
 	| element |
 
@@ -191,39 +193,39 @@ XMLNodeTest >> newElementWithAttributes [
 	^ element
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNodeTest >> newNode [
 	^ self nodeClass new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> nodeClass [
 	^ XMLNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> nodeFactoryClass [
 	^ XMLNodeFactory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> otherAttributeListClass [
 	"must be different from attributeListClass"
 	^ XMLFAttributeList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> otherElementClass [
 	"must be different from elementClass"
 	^ XMLFElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> selectListClass [
 	^ XMLNodeList
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testAcceptNodeVisitor [
 
 	| visitor node |
@@ -234,12 +236,12 @@ XMLNodeTest >> testAcceptNodeVisitor [
 		deny: visitor messageRecorder hasMessages
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testAncestorElements [
 	self assert: self newNode ancestorElements isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testAncestorElementsDo [
 	| node |
 
@@ -249,12 +251,12 @@ XMLNodeTest >> testAncestorElementsDo [
 		enumerate: #().
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testAncestorNodes [
 	self assert: self newNode ancestorNodes isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testAncestorNodesDo [
 	| node |
 
@@ -264,28 +266,28 @@ XMLNodeTest >> testAncestorNodesDo [
 		enumerate: #().
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testCanHaveChildren [
 	self deny: self newNode canHaveChildren
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testCanonicallyEquals [
 	self assert: (self newNode canonicallyEquals: self newNode)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testConfiguration [
 	self assert: self newNode configuration isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testContentString [
 
 	self assert: self newNode contentString equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testCopy [
 
 	| node copy |
@@ -296,12 +298,12 @@ XMLNodeTest >> testCopy [
 		deny: copy hasParent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testDocument [
 	self assert: self newNode document isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testDocumentRoot [
 
 	| node |
@@ -309,12 +311,12 @@ XMLNodeTest >> testDocumentRoot [
 	self assert: node documentRoot identicalTo: node
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testHasChildren [
 	self deny: self newNode hasChildren
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testHasParent [
 	| node |
 
@@ -325,69 +327,69 @@ XMLNodeTest >> testHasParent [
 	self assert: node hasParent.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testIsAttribute [
 	self deny: self newNode isAttribute
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testIsCData [
 	self deny: self newNode isCData
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testIsComment [
 	self deny: self newNode isComment
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testIsContentNode [
 	self deny: self newNode isContentNode
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testIsDeclaration [
 	self deny: self newNode isDeclaration
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testIsDocument [
 	self deny: self newNode isDocument
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testIsElement [
 	self deny: self newNode isElement
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testIsElementNamed [
 	self deny: (self newNode isElementNamed: '')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testIsElementNamedAny [
 	self deny: (self newNode isElementNamedAny: #())
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testIsInLanguage [
 	self deny: (self newNode isInLanguage: 'test')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testIsPI [
 	self deny: self newNode isPI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testIsStringNode [
 	self
 		deny: self newNode isStringNode;
 		deny: (self newNode isStringNode: '').
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testNewCData [
 
 	| cdata |
@@ -397,7 +399,7 @@ XMLNodeTest >> testNewCData [
 		assert: cdata string equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testNewComment [
 
 	| comment |
@@ -407,7 +409,7 @@ XMLNodeTest >> testNewComment [
 		assert: comment string equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testNewDocument [
 
 	| node document |
@@ -420,7 +422,7 @@ XMLNodeTest >> testNewDocument [
 			assert: document nodeFactory identicalTo: node nodeFactory ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testNewElement [
 
 	| node element |
@@ -433,7 +435,7 @@ XMLNodeTest >> testNewElement [
 			assert: element nodeFactory identicalTo: node nodeFactory ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testNewElementNamed [
 
 	| node element |
@@ -448,7 +450,7 @@ XMLNodeTest >> testNewElementNamed [
 			assert: element nodeFactory identicalTo: node nodeFactory ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testNewElementNamedAttributes [
 
 	| node element |
@@ -466,7 +468,7 @@ XMLNodeTest >> testNewElementNamedAttributes [
 			assert: element nodeFactory identicalTo: node nodeFactory ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testNewElementNamedNamespaceURI [
 
 	| node element |
@@ -484,7 +486,7 @@ XMLNodeTest >> testNewElementNamedNamespaceURI [
 			assert: element nodeFactory identicalTo: node nodeFactory ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testNewElementNamedNamespaceURIAttributes [
 
 	| node element |
@@ -504,12 +506,12 @@ XMLNodeTest >> testNewElementNamedNamespaceURIAttributes [
 			assert: element nodeFactory identicalTo: node nodeFactory ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testNewPI [
 	self assert: self newNode newPI isPI.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testNewPITargetData [
 
 	| pi |
@@ -520,7 +522,7 @@ XMLNodeTest >> testNewPITargetData [
 		assert: pi data equals: 'data'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testNewStringNode [
 
 	| stringNode |
@@ -530,12 +532,12 @@ XMLNodeTest >> testNewStringNode [
 		assert: stringNode string equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testNextNode [
 	self assert: self newNode nextNode isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testNodeFactory [
 
 	self
@@ -543,7 +545,7 @@ XMLNodeTest >> testNodeFactory [
 		identicalTo: self nodeFactoryClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testParent [
 
 	| node parent |
@@ -556,18 +558,18 @@ XMLNodeTest >> testParent [
 		assert: node parent identicalTo: parent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testPreviousNode [
 	self assert: self newNode previousNode isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testRawContentString [
 
 	self assert: self newNode rawContentString equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testSortKey [
 
 	self
@@ -575,20 +577,20 @@ XMLNodeTest >> testSortKey [
 		equals: self nodeClass name asString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeTest >> testValidate [
 	self
 		shouldnt: [self newNode validate]
 		raise: XMLValidationException
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> unprefixedAttributeAssociations [
 	^ self attributeAssociations collect: [:each |
 		each key xmlLocalNameAfterPrefix -> each value]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeTest >> unprefixedAttributes [
 	^ self attributesClass newFrom: self unprefixedAttributeAssociations
 ]

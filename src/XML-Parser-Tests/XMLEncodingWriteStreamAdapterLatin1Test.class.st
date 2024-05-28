@@ -1,25 +1,27 @@
 Class {
-	#name : #XMLEncodingWriteStreamAdapterLatin1Test,
-	#superclass : #XMLEncodingWriteStreamAdapterTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLEncodingWriteStreamAdapterLatin1Test',
+	#superclass : 'XMLEncodingWriteStreamAdapterTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterLatin1Test >> basicInputCollection [
 	^ self decodedLatin1String
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterLatin1Test >> basicInvalidInputCollections [
 	^ self basicInvalidLatin1InputCollections
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterLatin1Test >> basicOutputCollection [
 	^ self encodedLatin1Binary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingWriteStreamAdapterLatin1Test >> streamConverterClass [
 	^ XMLLatin1StreamConverter
 ]

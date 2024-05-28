@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLDoctypeDeclarationTest,
-	#superclass : #XMLNodeWithChildrenTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLDoctypeDeclarationTest',
+	#superclass : 'XMLNodeWithChildrenTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDoctypeDeclarationTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLDoctypeDeclarationTest >> newNodeWithNodes [
 	^ self newNode
 		addNode: (XMLComment string: 'before');
@@ -33,22 +35,22 @@ XMLDoctypeDeclarationTest >> newNodeWithNodes [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDoctypeDeclarationTest >> nodeClass [
 	^ XMLDoctypeDeclaration
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDoctypeDeclarationTest >> nodeListClass [
 	^ XMLInternalSubsetList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDoctypeDeclarationTest >> selectListClass [
 	^ XMLInternalSubsetList
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDoctypeDeclarationTest >> testAllNodes [
 
 	| nodeWithNodes allNodes |
@@ -71,7 +73,7 @@ XMLDoctypeDeclarationTest >> testAllNodes [
 		assert: allNodes ninth string equals: 'after'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDoctypeDeclarationTest >> testCanonicallyEquals [
 	self
 		assert: (self newNode canonicallyEquals: self newNode);
@@ -79,7 +81,7 @@ XMLDoctypeDeclarationTest >> testCanonicallyEquals [
 		assert: (self newNodeWithNodes canonicallyEquals: self newNode)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDoctypeDeclarationTest >> testPublicID [
 
 	| doctype |
@@ -90,7 +92,7 @@ XMLDoctypeDeclarationTest >> testPublicID [
 		assert: doctype publicID equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDoctypeDeclarationTest >> testRoot [
 
 	| doctype |
@@ -101,7 +103,7 @@ XMLDoctypeDeclarationTest >> testRoot [
 		assert: doctype root equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDoctypeDeclarationTest >> testRootPublicIDSystemID [
 
 	| doctype |
@@ -116,7 +118,7 @@ XMLDoctypeDeclarationTest >> testRootPublicIDSystemID [
 		assert: doctype systemID equals: 'three'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDoctypeDeclarationTest >> testSystemID [
 
 	| doctype |
@@ -127,7 +129,7 @@ XMLDoctypeDeclarationTest >> testSystemID [
 		assert: doctype systemID equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDoctypeDeclarationTest >> testWriteXMLOn [
 
 	| doctype elementDeclaration |

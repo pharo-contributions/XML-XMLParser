@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLDecodingReadStreamAdapterUTF8Test,
-	#superclass : #XMLDecodingReadStreamAdapterTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLDecodingReadStreamAdapterUTF8Test',
+	#superclass : 'XMLDecodingReadStreamAdapterTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterUTF8Test >> basicInputCollection [
 	^ self encodedUTF8Binary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterUTF8Test >> basicInvalidInputCollections [
 	^ #(
 		#(16rC0 16r80) "first two byte overlong"
@@ -44,12 +46,12 @@ XMLDecodingReadStreamAdapterUTF8Test >> basicInvalidInputCollections [
 	) collect: [:each | each asByteArray]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterUTF8Test >> basicOutputCollection [
 	^ self decodedUTF8String
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapterUTF8Test >> streamConverterClass [
 	^ XMLUTF8StreamConverter
 ]

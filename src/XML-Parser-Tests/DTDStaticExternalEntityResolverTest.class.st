@@ -1,10 +1,12 @@
 Class {
-	#name : #DTDStaticExternalEntityResolverTest,
-	#superclass : #DTDExternalEntityResolverTest,
-	#category : #'XML-Parser-Tests-DTD'
+	#name : 'DTDStaticExternalEntityResolverTest',
+	#superclass : 'DTDExternalEntityResolverTest',
+	#category : 'XML-Parser-Tests-DTD',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DTD'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDStaticExternalEntityResolverTest >> entityAssociations [
 	^ Array
 		with: 'extern.dtd' -> '<!ENTITY extern SYSTEM "extern/extern.ent">'
@@ -12,7 +14,7 @@ DTDStaticExternalEntityResolverTest >> entityAssociations [
 		with: 'extern/extern2.ent' -> '<!ELEMENT test ANY>'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDStaticExternalEntityResolverTest >> entityDictionary [
 	| entities |
 
@@ -24,7 +26,7 @@ DTDStaticExternalEntityResolverTest >> entityDictionary [
 	^ entities
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 DTDStaticExternalEntityResolverTest >> entityURIStringsAndReplacementsDo: aBlock [
 	self entityAssociations do: [:each |
 		aBlock
@@ -32,22 +34,22 @@ DTDStaticExternalEntityResolverTest >> entityURIStringsAndReplacementsDo: aBlock
 			value: each value]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDStaticExternalEntityResolverTest >> newEntityReplacement [
 	^ '<!--new replacement-->'
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDStaticExternalEntityResolverTest >> newResolverWithEntities [
 	^ self newResolver externalEntities: self entityAssociations
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDStaticExternalEntityResolverTest >> resolverClass [
 	^ DTDStaticExternalEntityResolver
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDStaticExternalEntityResolverTest >> testCopy [
 
 	| resolver copy |
@@ -61,7 +63,7 @@ DTDStaticExternalEntityResolverTest >> testCopy [
 		assert: copy externalEntities equals: resolver externalEntities
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDStaticExternalEntityResolverTest >> testExternalEntities [
 
 	| resolver replacementAssociation |
@@ -85,7 +87,7 @@ DTDStaticExternalEntityResolverTest >> testExternalEntities [
 		assert: resolver externalEntities equals: self entityDictionary
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDStaticExternalEntityResolverTest >> testExternalEntityAtURI [
 	| resolver |
 	self isTestingLimiting
@@ -105,7 +107,7 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURI [
 					equals: replacement ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsent [
 	| resolver |
 	self isTestingLimiting
@@ -134,7 +136,7 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsent [
 				equals: replacement ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsentPut [
 	| resolver |
 	self isTestingLimiting
@@ -159,7 +161,7 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIIfAbsentPut [
 				equals: replacement ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIPut [
 	| resolver |
 	self isTestingLimiting
@@ -184,7 +186,7 @@ DTDStaticExternalEntityResolverTest >> testExternalEntityAtURIPut [
 				equals: self newEntityReplacement ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDStaticExternalEntityResolverTest >> testHasExternalEntities [
 	self isTestingLimiting
 		ifTrue: [^ self].
@@ -194,7 +196,7 @@ DTDStaticExternalEntityResolverTest >> testHasExternalEntities [
 		assert: self newResolverWithEntities hasExternalEntities
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDStaticExternalEntityResolverTest >> testIncludesExternalEntityURI [
 	| resolver |
 
@@ -215,7 +217,7 @@ DTDStaticExternalEntityResolverTest >> testIncludesExternalEntityURI [
 			assert: (resolver includesExternalEntityURI: uriString asXMLURI)]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDStaticExternalEntityResolverTest >> testRemoveExternalEntities [
 
 	| resolver |
@@ -227,7 +229,7 @@ DTDStaticExternalEntityResolverTest >> testRemoveExternalEntities [
 		deny: resolver hasExternalEntities
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURI [
 	| resolver |
 	self isTestingLimiting
@@ -247,7 +249,7 @@ DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURI [
 				raise: Error ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURIIfAbsent [
 	| resolver |
 	self isTestingLimiting
@@ -270,7 +272,7 @@ DTDStaticExternalEntityResolverTest >> testRemoveExternalEntityURIIfAbsent [
 				equals: #absent ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDStaticExternalEntityResolverTest >> testResolveExternalEntityURI [
 	| resolver |
 	self isTestingLimiting
@@ -301,7 +303,7 @@ DTDStaticExternalEntityResolverTest >> testResolveExternalEntityURI [
 				raise: XMLLimitException ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDStaticExternalEntityResolverTest >> testResolveExternalEntityURIUpToLimit [
 	| resolver |
 	self isTestingLimiting
@@ -341,7 +343,7 @@ DTDStaticExternalEntityResolverTest >> testResolveExternalEntityURIUpToLimit [
 				raise: XMLLimitException ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDStaticExternalEntityResolverTest >> testStreamResolveExternalEntityURI [
 	| resolver |
 	self isTestingLimiting
@@ -377,7 +379,7 @@ DTDStaticExternalEntityResolverTest >> testStreamResolveExternalEntityURI [
 				raise: XMLLimitException ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 DTDStaticExternalEntityResolverTest >> testStreamResolveExternalEntityURIUpToLimit [
 	| resolver |
 	self isTestingLimiting

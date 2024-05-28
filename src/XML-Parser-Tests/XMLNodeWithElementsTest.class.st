@@ -2,12 +2,14 @@
 Abstract, do not run.
 "
 Class {
-	#name : #XMLNodeWithElementsTest,
-	#superclass : #XMLNodeWithChildrenTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLNodeWithElementsTest',
+	#superclass : 'XMLNodeWithChildrenTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 XMLNodeWithElementsTest >> assertElements: aPrettyPrintFormattedElementCollection werePrettyPrintFormattedFrom: anElementCollection [
 	anElementCollection
 		with: aPrettyPrintFormattedElementCollection
@@ -31,12 +33,12 @@ XMLNodeWithElementsTest >> assertElements: aPrettyPrintFormattedElementCollectio
 								assert: prettyElement lastNode isWhitespace]]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElementsTest >> configurationClass [
 	^ XMLDOMConfiguration
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> elementBefore [
 
 	self newNodeWithElements allNodesDo: [ :node |
@@ -48,7 +50,7 @@ XMLNodeWithElementsTest >> elementBefore [
 				elementBefore := each ] ] ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNodeWithElementsTest >> newNodeWithElements [
 	^ self newNode
 		addNode: (XMLComment string: 'before');
@@ -80,17 +82,17 @@ XMLNodeWithElementsTest >> newNodeWithElements [
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNodeWithElementsTest >> newNodeWithNodes [
 	^ self newNodeWithElements
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElementsTest >> nodeClass [
 	^ XMLNodeWithElements
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAcceptNodeVisitor [
 
 	| visitor nodeWithElements message |
@@ -130,7 +132,7 @@ XMLNodeWithElementsTest >> testAcceptNodeVisitor [
 	self deny: visitor messageRecorder hasMessages
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAddCData [
 
 	| nodeWithElements cdataNode |
@@ -143,7 +145,7 @@ XMLNodeWithElementsTest >> testAddCData [
 		assert: nodeWithElements firstNode identicalTo: cdataNode
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAddCDataNodeFactoryUse [
 
 	| nodeWithElements firstCDataNode lastCDataNode |
@@ -160,7 +162,7 @@ XMLNodeWithElementsTest >> testAddCDataNodeFactoryUse [
 		assert: lastCDataNode string equals: 'two'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAddComment [
 
 	| nodeWithElements comment |
@@ -176,7 +178,7 @@ XMLNodeWithElementsTest >> testAddComment [
 		assert: comment string equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAddElementNamed [
 
 	| nodeWithElements element |
@@ -197,7 +199,7 @@ XMLNodeWithElementsTest >> testAddElementNamed [
 		raise: XMLNamespaceException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAddElementNamedAttributes [
 
 	| nodeWithElements element |
@@ -233,7 +235,7 @@ XMLNodeWithElementsTest >> testAddElementNamedAttributes [
 		raise: XMLNamespaceException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAddElementNamedAttributesNodeFactoryUse [
 
 	| nodeWithElements element |
@@ -252,7 +254,7 @@ XMLNodeWithElementsTest >> testAddElementNamedAttributesNodeFactoryUse [
 		assertElement: element hasAttributes: self unprefixedAttributes
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAddElementNamedNamespaceURI [
 
 	| nodeWithElements element |
@@ -267,7 +269,7 @@ XMLNodeWithElementsTest >> testAddElementNamedNamespaceURI [
 		assert: element namespaceURI equals: 'defaultNS'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAddElementNamedNamespaceURIAttributes [
 
 	| nodeWithElements element |
@@ -310,7 +312,7 @@ XMLNodeWithElementsTest >> testAddElementNamedNamespaceURIAttributes [
 		raise: XMLNamespaceException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAddElementNamedNamespaceURIAttributesNodeFactoryUse [
 
 	| nodeWithElements element |
@@ -332,7 +334,7 @@ XMLNodeWithElementsTest >> testAddElementNamedNamespaceURIAttributesNodeFactoryU
 		assertElement: element hasAttributes: self attributes
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAddElementNamedNamespaceURINodeFactoryUse [
 
 	| nodeWithElements element |
@@ -351,7 +353,7 @@ XMLNodeWithElementsTest >> testAddElementNamedNamespaceURINodeFactoryUse [
 		assert: element namespaceURI equals: 'defaultNS'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAddElementNamedNodeFactoryUse [
 
 	| nodeWithElements element |
@@ -366,7 +368,7 @@ XMLNodeWithElementsTest >> testAddElementNamedNodeFactoryUse [
 		assert: element name equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAddPITargetData [
 
 	| nodeWithElements pi |
@@ -383,7 +385,7 @@ XMLNodeWithElementsTest >> testAddPITargetData [
 		assert: pi data equals: 'data'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAddString [
 
 	| nodeWithElements firstStringNode elementNode lastStringNode |
@@ -417,7 +419,7 @@ XMLNodeWithElementsTest >> testAddString [
 		assert: nodeWithElements nodes third identicalTo: lastStringNode
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAddStringNodeFactoryUse [
 
 	| nodeWithElements firstStringNode elementNode lastStringNode |
@@ -464,7 +466,7 @@ XMLNodeWithElementsTest >> testAddStringNodeFactoryUse [
 		assert: nodeWithElements nodes third identicalTo: lastStringNode
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAllElements [
 
 	| nodeWithElements allElements |
@@ -497,7 +499,7 @@ XMLNodeWithElementsTest >> testAllElements [
 		selects: (allElements copyFrom: 8 to: 8)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAllElementsCollect [
 	| nodeWithElements allElements |
 
@@ -513,7 +515,7 @@ XMLNodeWithElementsTest >> testAllElementsCollect [
 			collects: (node allElements collect: [:each | each identityHash])]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAllElementsDetect [
 
 	| nodeWithElements allElements detectedElement |
@@ -532,7 +534,7 @@ XMLNodeWithElementsTest >> testAllElementsDetect [
 					 each isNamed: 'absent' ]) isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAllElementsDetectIfNone [
 
 	| nodeWithElements allElements detectedElement |
@@ -554,7 +556,7 @@ XMLNodeWithElementsTest >> testAllElementsDetectIfNone [
 		equals: #absent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAllElementsDo [
 	| nodeWithElements allElements |
 
@@ -570,7 +572,7 @@ XMLNodeWithElementsTest >> testAllElementsDo [
 			enumerate: element allElements].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAllElementsNamed [
 
 	| nodeWithElements allElements namedElements |
@@ -585,7 +587,7 @@ XMLNodeWithElementsTest >> testAllElementsNamed [
 		selects: (allElements select: [ :each | each isNamed: 'four' ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAllElementsNamedDo [
 	| nodeWithElements allElements namedElements |
 
@@ -601,7 +603,7 @@ XMLNodeWithElementsTest >> testAllElementsNamedDo [
 		enumerate: namedElements.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAllElementsNamedNamespaceURI [
 
 	| nodeWithElements allElements namedElements |
@@ -620,7 +622,7 @@ XMLNodeWithElementsTest >> testAllElementsNamedNamespaceURI [
 					 (each isNamed: 'four') and: [ each namespaceURI = 'testNS' ] ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAllElementsSelect [
 	| nodeWithElements allElements |
 
@@ -636,7 +638,7 @@ XMLNodeWithElementsTest >> testAllElementsSelect [
 			selects: (node allElements select: [:each | each hasChildren])].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAllNodes [
 
 	| nodeWithElements allNodes |
@@ -679,7 +681,7 @@ XMLNodeWithElementsTest >> testAllNodes [
 		selects: (allNodes copyFrom: 15 to: 15)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAncestorElements [
 
 	| nodeWithElements ancestorStack |
@@ -696,7 +698,7 @@ XMLNodeWithElementsTest >> testAncestorElements [
 		each isElement ifTrue: [ ancestorStack addLast: each ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testAncestorElementsDo [
 	| nodeWithElements |
 
@@ -709,7 +711,7 @@ XMLNodeWithElementsTest >> testAncestorElementsDo [
 			enumerate: each ancestorElements].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testConfiguration [
 
 	| nodeWithElements configuration newConfiguration |
@@ -733,7 +735,7 @@ XMLNodeWithElementsTest >> testConfiguration [
 			self assert: each configuration identicalTo: newConfiguration ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testContentNodes [
 	| nodeWithElements |
 
@@ -747,7 +749,7 @@ XMLNodeWithElementsTest >> testContentNodes [
 			selects: (element nodes select: [:each | each isContentNode])].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testContentNodesDo [
 	| nodeWithElements |
 
@@ -761,7 +763,7 @@ XMLNodeWithElementsTest >> testContentNodesDo [
 			enumerate: each contentNodes].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testContentStringAt [
 
 	| root |
@@ -772,7 +774,7 @@ XMLNodeWithElementsTest >> testContentStringAt [
 			equals: each contentString ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testDescendantElements [
 
 	| nodeWithElements descendantElements |
@@ -802,7 +804,7 @@ XMLNodeWithElementsTest >> testDescendantElements [
 		selects: descendantElements copyEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testDescendantElementsCollect [
 	| nodeWithElements descendantElements |
 
@@ -818,7 +820,7 @@ XMLNodeWithElementsTest >> testDescendantElementsCollect [
 			collects: (node descendantElements collect: [:each | each identityHash])].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testDescendantElementsDetect [
 
 	| nodeWithElements descendantElements detectedElement |
@@ -836,7 +838,7 @@ XMLNodeWithElementsTest >> testDescendantElementsDetect [
 					 each isNamed: 'prefix:four' ]) isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testDescendantElementsDetectIfNone [
 
 	| nodeWithElements descendantElements detectedElement |
@@ -858,7 +860,7 @@ XMLNodeWithElementsTest >> testDescendantElementsDetectIfNone [
 		equals: #absent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testDescendantElementsDo [
 	| nodeWithElements descendantElements |
 
@@ -874,7 +876,7 @@ XMLNodeWithElementsTest >> testDescendantElementsDo [
 			enumerate: element descendantElements].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testDescendantElementsNamed [
 
 	| nodeWithElements descendantElements namedElements |
@@ -894,7 +896,7 @@ XMLNodeWithElementsTest >> testDescendantElementsNamed [
 		self assert: (each descendantElementsNamed: 'four') isEmpty ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testDescendantElementsNamedDo [
 	| nodeWithElements namedElements |
 
@@ -909,7 +911,7 @@ XMLNodeWithElementsTest >> testDescendantElementsNamedDo [
 		enumerate: namedElements.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testDescendantElementsNamedNamespaceURI [
 
 	| nodeWithElements descendantElements namedElements |
@@ -929,7 +931,7 @@ XMLNodeWithElementsTest >> testDescendantElementsNamedNamespaceURI [
 					 (each isNamed: 'four') and: [ each namespaceURI = 'testNS' ] ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testDescendantElementsSelect [
 	| nodeWithElements descendantElements |
 
@@ -945,7 +947,7 @@ XMLNodeWithElementsTest >> testDescendantElementsSelect [
 			selects: (node descendantElements select: [:each | each hasChildren])].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementAfter [
 
 	self newNodeWithElements allNodesDo: [ :node |
@@ -957,7 +959,7 @@ XMLNodeWithElementsTest >> testElementAfter [
 				elementAfter := each ] ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementAt [
 
 	self newNodeWithElements allNodesDo: [ :node |
@@ -981,7 +983,7 @@ XMLNodeWithElementsTest >> testElementAt [
 			self assert: (node elementAt: 'absent') isNil ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementAtAddedInPlace [
 
 	self newNodeWithElements allNodesDo: [ :node |
@@ -1006,7 +1008,7 @@ XMLNodeWithElementsTest >> testElementAtAddedInPlace [
 								 each hasPrefix and: [ each name = qualifiedName ] ]) ] ] ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementAtIfAbsent [
 
 	self newNodeWithElements allNodesDo: [ :node |
@@ -1035,7 +1037,7 @@ XMLNodeWithElementsTest >> testElementAtIfAbsent [
 				equals: #absent ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementAtNamespaceURI [
 
 	self newNodeWithElements allNodesDo: [ :node |
@@ -1067,7 +1069,7 @@ XMLNodeWithElementsTest >> testElementAtNamespaceURI [
 					(node elementAt: qualifiedName namespaceURI: 'absentNS') isNil ] ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementAtNamespaceURIIfAbsent [
 
 	self newNodeWithElements allNodesDo: [ :node |
@@ -1119,7 +1121,7 @@ XMLNodeWithElementsTest >> testElementAtNamespaceURIIfAbsent [
 					equals: #absent ] ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementBefore [
 
 	self newNodeWithElements allNodesDo: [ :node |
@@ -1131,7 +1133,7 @@ XMLNodeWithElementsTest >> testElementBefore [
 				elementBefore := each ] ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementNames [
 	| nodeWithElements |
 
@@ -1145,7 +1147,7 @@ XMLNodeWithElementsTest >> testElementNames [
 			collects: (element elements collect: [:each | each name])].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementRenamingToNext [
 
 	self newNodeWithElements
@@ -1173,7 +1175,7 @@ XMLNodeWithElementsTest >> testElementRenamingToNext [
 						equals: nextElement ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementRenamingToPrevious [
 
 	self newNodeWithElements
@@ -1201,7 +1203,7 @@ XMLNodeWithElementsTest >> testElementRenamingToPrevious [
 						equals: previousElement ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElements [
 	self newNodeWithElements allNodesDo: [:node |
 		node canHaveChildren
@@ -1211,7 +1213,7 @@ XMLNodeWithElementsTest >> testElements [
 					selects: (node nodes select: [:each | each isElement])]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementsAddedInPlace [
 	self newNodeWithElements allNodesDo: [:node |
 		node canHaveChildren
@@ -1225,7 +1227,7 @@ XMLNodeWithElementsTest >> testElementsAddedInPlace [
 						selects: elements]]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementsAt [
 	self newNodeWithElements allNodesDo: [:node |
 		node canHaveChildren
@@ -1257,7 +1259,7 @@ XMLNodeWithElementsTest >> testElementsAt [
 				selects: elements copyEmpty]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementsAtAddedInPlace [
 	self newNodeWithElements allNodesDo: [:node |
 		node canHaveChildren
@@ -1286,7 +1288,7 @@ XMLNodeWithElementsTest >> testElementsAtAddedInPlace [
 										and: [each name = qualifiedName]])]]]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementsAtDo [
 	self newNodeWithElements allNodesDo: [:node |
 		node canHaveChildren
@@ -1318,7 +1320,7 @@ XMLNodeWithElementsTest >> testElementsAtDo [
 				enumerate: #()]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementsAtNamespaceURI [
 	self newNodeWithElements allNodesDo: [:node |
 		node canHaveChildren
@@ -1367,7 +1369,7 @@ XMLNodeWithElementsTest >> testElementsAtNamespaceURI [
 						selects: elements copyEmpty]]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementsCollect [
 	| nodeWithElements |
 
@@ -1381,7 +1383,7 @@ XMLNodeWithElementsTest >> testElementsCollect [
 			collects: (element elements collect: [:each | each name])].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementsDetect [
 
 	| root element |
@@ -1397,7 +1399,7 @@ XMLNodeWithElementsTest >> testElementsDetect [
 			isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementsDetectIfNone [
 
 	| root |
@@ -1417,7 +1419,7 @@ XMLNodeWithElementsTest >> testElementsDetectIfNone [
 		equals: #absent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementsDo [
 	| nodeWithElements |
 
@@ -1431,7 +1433,7 @@ XMLNodeWithElementsTest >> testElementsDo [
 			enumerate: each elements].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testElementsSelect [
 	| nodeWithElements |
 
@@ -1445,7 +1447,7 @@ XMLNodeWithElementsTest >> testElementsSelect [
 			selects: (element elements select: [:each | each hasChildren])].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testFindElementNamed [
 
 	| nodeWithElements allElements foundElement |
@@ -1462,7 +1464,7 @@ XMLNodeWithElementsTest >> testFindElementNamed [
 		assert: (nodeWithElements findElementNamed: 'absent') isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testFindElementNamedNamespaceURI [
 
 	| nodeWithElements allElements foundElement |
@@ -1487,7 +1489,7 @@ XMLNodeWithElementsTest >> testFindElementNamedNamespaceURI [
 				isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testFindElementNamedNamespaceURIWith [
 
 	| nodeWithElements allElements foundElement |
@@ -1517,7 +1519,7 @@ XMLNodeWithElementsTest >> testFindElementNamedNamespaceURIWith [
 			 with: [ :each | false ]) isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testFindElementNamedWith [
 
 	| nodeWithElements allElements foundElement |
@@ -1543,7 +1545,7 @@ XMLNodeWithElementsTest >> testFindElementNamedWith [
 				isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testFindElementWithID [
 
 	| dtd content contentWithUndeclaredAttribute document idElement xmlIDElement |
@@ -1621,7 +1623,7 @@ XMLNodeWithElementsTest >> testFindElementWithID [
 			equals: xmlIDElement ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testFirstElement [
 
 	| root |
@@ -1632,7 +1634,7 @@ XMLNodeWithElementsTest >> testFirstElement [
 	self assert: root firstElement isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testHasContentNodes [
 
 	| nodeWithElements |
@@ -1644,7 +1646,7 @@ XMLNodeWithElementsTest >> testHasContentNodes [
 			equals: element contentNodes isNotEmpty ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testHasElements [
 	self
 		deny: self newNode hasElements;
@@ -1652,7 +1654,7 @@ XMLNodeWithElementsTest >> testHasElements [
 		deny: self newNodeWithElements removeNodes hasElements
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testHasStringNodes [
 
 	| nodeWithElements |
@@ -1664,7 +1666,7 @@ XMLNodeWithElementsTest >> testHasStringNodes [
 			equals: element stringNodes isNotEmpty ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testIncludesElement [
 	| root |
 	
@@ -1676,7 +1678,7 @@ XMLNodeWithElementsTest >> testIncludesElement [
 		self deny: (root includesElement: each name)].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testInnerXML [
 
 	| node element |
@@ -1698,7 +1700,7 @@ XMLNodeWithElementsTest >> testInnerXML [
 		assert: element firstNode innerXML equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testInnerXMLIsInContent [
 
 	| node parser |
@@ -1714,7 +1716,7 @@ XMLNodeWithElementsTest >> testInnerXMLIsInContent [
 		assert: parser isInContent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testInnerXMLPrettyPrinted [
 
 	| nodeWithElements printString prettyPrintString prettyNodeWithElements |
@@ -1737,7 +1739,7 @@ XMLNodeWithElementsTest >> testInnerXMLPrettyPrinted [
 		werePrettyPrintFormattedFrom: nodeWithElements descendantElements
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testInnerXMLResetting [
 
 	| nodeWithElements |
@@ -1759,12 +1761,12 @@ XMLNodeWithElementsTest >> testInnerXMLResetting [
 		equals: self newNodeWithNodes printString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testIsContentNode [
 	self assert: self newNode isContentNode
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testLastElement [
 
 	| root |
@@ -1775,7 +1777,7 @@ XMLNodeWithElementsTest >> testLastElement [
 	self assert: root lastElement isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testNewCData [
 
 	| nodeWithElements cdata |
@@ -1789,7 +1791,7 @@ XMLNodeWithElementsTest >> testNewCData [
 		assert: cdata string equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testNewComment [
 
 	| nodeWithElements comment |
@@ -1803,7 +1805,7 @@ XMLNodeWithElementsTest >> testNewComment [
 		assert: comment string equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testNewDocument [
 
 	| nodeWithElements document |
@@ -1820,7 +1822,7 @@ XMLNodeWithElementsTest >> testNewDocument [
 		identicalTo: nodeWithElements nodeFactory
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testNewElement [
 
 	| nodeWithElements element |
@@ -1837,7 +1839,7 @@ XMLNodeWithElementsTest >> testNewElement [
 		identicalTo: nodeWithElements nodeFactory
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testNewElementNamed [
 
 	| nodeWithElements element |
@@ -1857,7 +1859,7 @@ XMLNodeWithElementsTest >> testNewElementNamed [
 		identicalTo: nodeWithElements nodeFactory
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testNewElementNamedAttributes [
 
 	| nodeWithElements element |
@@ -1884,7 +1886,7 @@ XMLNodeWithElementsTest >> testNewElementNamedAttributes [
 		identicalTo: nodeWithElements nodeFactory
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testNewElementNamedNamespaceURI [
 
 	| nodeWithElements element |
@@ -1908,7 +1910,7 @@ XMLNodeWithElementsTest >> testNewElementNamedNamespaceURI [
 		identicalTo: nodeWithElements nodeFactory
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testNewElementNamedNamespaceURIAttributes [
 
 	| nodeWithElements element |
@@ -1938,7 +1940,7 @@ XMLNodeWithElementsTest >> testNewElementNamedNamespaceURIAttributes [
 		identicalTo: nodeWithElements nodeFactory
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testNewPI [
 
 	| nodeWithElements |
@@ -1949,7 +1951,7 @@ XMLNodeWithElementsTest >> testNewPI [
 	self assert: nodeWithElements newPI class identicalTo: XMLFPI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testNewPITargetData [
 
 	| nodeWithElements pi |
@@ -1964,7 +1966,7 @@ XMLNodeWithElementsTest >> testNewPITargetData [
 		assert: pi data equals: 'data'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testNewStringNode [
 
 	| nodeWithElements stringNode |
@@ -1978,7 +1980,7 @@ XMLNodeWithElementsTest >> testNewStringNode [
 		assert: stringNode string equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testNodeFactory [
 
 	| nodeWithElements oldNodeFactory newNodeFactory |
@@ -1993,7 +1995,7 @@ XMLNodeWithElementsTest >> testNodeFactory [
 		assert: nodeWithElements nodeFactory identicalTo: newNodeFactory
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testOuterXMLForNode [
 
 	| nodeWithElements root nodes |
@@ -2019,7 +2021,7 @@ XMLNodeWithElementsTest >> testOuterXMLForNode [
 		self assert: root nodes equals: nodes ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testOuterXMLForNodeResetting [
 
 	| nodeWithElements root |
@@ -2049,7 +2051,7 @@ XMLNodeWithElementsTest >> testOuterXMLForNodeResetting [
 		equals: self newNodeWithNodes printString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testPrettyPrinted [
 
 	| nodeWithElements printString prettyPrintString prettyNodeWithElements |
@@ -2072,7 +2074,7 @@ XMLNodeWithElementsTest >> testPrettyPrinted [
 		werePrettyPrintFormattedFrom: nodeWithElements allElements
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testPrintedWithoutSelfClosingTags [
 
 	| nodeWithElements printString printStringWithoutSelfClosingTags |
@@ -2090,7 +2092,7 @@ XMLNodeWithElementsTest >> testPrintedWithoutSelfClosingTags [
 	self assert: printString equals: printStringWithoutSelfClosingTags
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testRawContentString [
 
 	self
@@ -2098,7 +2100,7 @@ XMLNodeWithElementsTest >> testRawContentString [
 		equals: 'testing onetesting twotesting three'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testRawContentStringAt [
 
 	| root |
@@ -2109,7 +2111,7 @@ XMLNodeWithElementsTest >> testRawContentStringAt [
 			equals: each rawContentString ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testRemoveAllFormattingNodes [
 
 	| nodeWithElements nonFormattingStringNodes |
@@ -2144,7 +2146,7 @@ XMLNodeWithElementsTest >> testRemoveAllFormattingNodes [
 		equals: nonFormattingStringNodes
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testStringNodes [
 	| nodeWithElements |
 
@@ -2158,7 +2160,7 @@ XMLNodeWithElementsTest >> testStringNodes [
 			selects: (element nodes select: [:each | each isStringNode])].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testStringNodesDo [
 	| nodeWithElements |
 
@@ -2172,7 +2174,7 @@ XMLNodeWithElementsTest >> testStringNodesDo [
 			enumerate: each stringNodes].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testStrings [
 	| nodeWithElements |
 
@@ -2186,7 +2188,7 @@ XMLNodeWithElementsTest >> testStrings [
 			collects: (element stringNodes collect: [:each | each string]).].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testStringsDo [
 	| nodeWithElements |
 
@@ -2200,7 +2202,7 @@ XMLNodeWithElementsTest >> testStringsDo [
 			enumerate: each strings].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testUsesNamespaces [
 
 	| nodeWithElements |
@@ -2228,7 +2230,7 @@ XMLNodeWithElementsTest >> testUsesNamespaces [
 			raise: XMLNamespaceException ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLNodeWithElementsTest >> testValidate [
 	super testValidate.
 	self

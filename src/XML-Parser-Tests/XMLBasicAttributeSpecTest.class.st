@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLBasicAttributeSpecTest,
-	#superclass : #XMLAttributeSpecTest,
-	#category : #'XML-Parser-Tests-Utils'
+	#name : 'XMLBasicAttributeSpecTest',
+	#superclass : 'XMLAttributeSpecTest',
+	#category : 'XML-Parser-Tests-Utils',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Utils'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLBasicAttributeSpecTest >> attributeSpecClass [
 	^ XMLBasicAttributeSpec
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLBasicAttributeSpecTest >> testMatchesAttributes [
 	| attributeSpec |
 

@@ -1,15 +1,17 @@
 Class {
-	#name : #XMLBasicElementClassMapperTest,
-	#superclass : #XMLElementClassMapperTest,
-	#category : #'XML-Parser-Tests-Utils'
+	#name : 'XMLBasicElementClassMapperTest',
+	#superclass : 'XMLElementClassMapperTest',
+	#category : 'XML-Parser-Tests-Utils',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Utils'
 }
 
-{ #category : #acccessing }
+{ #category : 'acccessing' }
 XMLBasicElementClassMapperTest >> mapperClass [
 	^ XMLBasicElementClassMapper
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLBasicElementClassMapperTest >> testClassForElement [
 
 	| mapper |
@@ -65,7 +67,7 @@ XMLBasicElementClassMapperTest >> testClassForElement [
 		identicalTo: self otherElementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLBasicElementClassMapperTest >> testClassForElementAttributes [
 
 	| mapper |
@@ -132,7 +134,7 @@ XMLBasicElementClassMapperTest >> testClassForElementAttributes [
 		identicalTo: self otherElementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLBasicElementClassMapperTest >> testClassForElementAttributesIfNone [
 
 	| mapper |
@@ -233,7 +235,7 @@ XMLBasicElementClassMapperTest >> testClassForElementAttributesIfNone [
 		identicalTo: self otherElementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLBasicElementClassMapperTest >> testClassForElementIfNone [
 
 	| mapper |
@@ -300,7 +302,7 @@ XMLBasicElementClassMapperTest >> testClassForElementIfNone [
 		identicalTo: self otherElementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLBasicElementClassMapperTest >> testClassForElementNamespaceURI [
 
 	| mapper |
@@ -368,7 +370,7 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURI [
 		identicalTo: self otherElementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIAttributes [
 
 	| mapper |
@@ -466,7 +468,7 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIAttributes [
 		identicalTo: self otherElementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIAttributesIfNone [
 
 	| mapper |
@@ -580,7 +582,7 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIAttributesIfNon
 		identicalTo: self otherElementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIIfNone [
 
 	| mapper |
@@ -681,7 +683,7 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURIIfNone [
 		identicalTo: self otherElementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLBasicElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttributes [
 
 	| mapper |
@@ -791,7 +793,7 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttrib
 		identicalTo: self otherElementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLBasicElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttributesIfNone [
 
 	| mapper |
@@ -917,7 +919,7 @@ XMLBasicElementClassMapperTest >> testClassForElementNamespaceURILocalNameAttrib
 		identicalTo: self otherElementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLBasicElementClassMapperTest >> testCopy [
 
 	| mapper copy |
@@ -944,7 +946,7 @@ XMLBasicElementClassMapperTest >> testCopy [
 	self deny: mapper elementClassMap equals: copy elementClassMap
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLBasicElementClassMapperTest >> testMapElementAttributeSpecToClass [
 
 	| mapper |
@@ -969,7 +971,7 @@ XMLBasicElementClassMapperTest >> testMapElementAttributeSpecToClass [
 		identicalTo: self otherElementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLBasicElementClassMapperTest >> testMapElementNamespaceURIAttributeSpecToClass [
 
 	| mapper |
@@ -1002,7 +1004,7 @@ XMLBasicElementClassMapperTest >> testMapElementNamespaceURIAttributeSpecToClass
 		identicalTo: self otherElementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLBasicElementClassMapperTest >> testMapElementNamespaceURIToClass [
 
 	| mapper |
@@ -1027,7 +1029,7 @@ XMLBasicElementClassMapperTest >> testMapElementNamespaceURIToClass [
 		identicalTo: self otherElementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLBasicElementClassMapperTest >> testMapElementToClass [
 
 	| mapper |

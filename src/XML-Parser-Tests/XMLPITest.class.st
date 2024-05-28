@@ -1,22 +1,24 @@
 Class {
-	#name : #XMLPITest,
-	#superclass : #XMLNodeTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLPITest',
+	#superclass : 'XMLNodeTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLPITest >> newPIWithTargetAndData [
 	^ self nodeClass
 		target: 'target'
 		data: 'data'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPITest >> nodeClass [
 	^ XMLPI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPITest >> testAcceptNodeVisitor [
 
 	| visitor pi message |
@@ -33,7 +35,7 @@ XMLPITest >> testAcceptNodeVisitor [
 		deny: visitor messageRecorder hasMessages
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPITest >> testCanonicallyEquals [
 	super testCanonicallyEquals.
 	self assert:
@@ -44,7 +46,7 @@ XMLPITest >> testCanonicallyEquals [
 			self newNode)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPITest >> testData [
 
 	| pi |
@@ -55,7 +57,7 @@ XMLPITest >> testData [
 		assert: pi data equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPITest >> testHasData [
 	| pi |
 
@@ -69,18 +71,18 @@ XMLPITest >> testHasData [
 	self deny: pi hasData
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPITest >> testIsPI [
 	self assert: self newNode isPI
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPITest >> testSortKey [
 
 	self assert: self newPIWithTargetAndData sortKey equals: 'target'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPITest >> testTarget [
 
 	| pi |
@@ -91,7 +93,7 @@ XMLPITest >> testTarget [
 		assert: pi target equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPITest >> testTargetData [
 
 	| pi |
@@ -102,7 +104,7 @@ XMLPITest >> testTargetData [
 		assert: pi data equals: 'data'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPITest >> testWriteXMLOn [
 
 	| pi |

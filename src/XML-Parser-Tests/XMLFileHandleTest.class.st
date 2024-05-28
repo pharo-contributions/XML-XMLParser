@@ -1,24 +1,26 @@
 Class {
-	#name : #XMLFileHandleTest,
-	#superclass : #XMLSkippableTest,
+	#name : 'XMLFileHandleTest',
+	#superclass : 'XMLSkippableTest',
 	#instVars : [
 		'tempFileManager',
 		'currentWorkingDirectoryFileHandle'
 	],
-	#category : #'XML-Parser-Tests-Files'
+	#category : 'XML-Parser-Tests-Files',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Files'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLFileHandleTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLFileHandleTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLFileHandleTest class >> skippableTests [
 	^ #(#testContents #testDelete
 		#testExists #testExtension
@@ -31,7 +33,7 @@ XMLFileHandleTest class >> skippableTests [
 		#testWriteStream #testWriteStreamDo)
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 XMLFileHandleTest >> assertIsDecodedFileContents: aCollection [
 
 	self
@@ -39,7 +41,7 @@ XMLFileHandleTest >> assertIsDecodedFileContents: aCollection [
 		assert: aCollection equals: self decodedFileContents
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 XMLFileHandleTest >> assertIsEncodedFileContentsWithBOM: aCollection [
 
 	^ self
@@ -47,7 +49,7 @@ XMLFileHandleTest >> assertIsEncodedFileContentsWithBOM: aCollection [
 		  equals: self encodedFileContentsWithByteOrderMark asByteArray
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLFileHandleTest >> currentWorkingDirectoryFileHandle [
 	^ currentWorkingDirectoryFileHandle
 		ifNil: [
@@ -55,28 +57,28 @@ XMLFileHandleTest >> currentWorkingDirectoryFileHandle [
 				XMLFileHandle currentWorkingDirectory asXMLFileHandle]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLFileHandleTest >> decodedFileContents [
 	^ 'test'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLFileHandleTest >> encodedFileContents [
 	^ XMLStreamAdapterTest binaryFrom: 'test'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLFileHandleTest >> encodedFileContentsWithByteOrderMark [
 	^ (self streamConverterClass byteOrderMarkBytes, self encodedFileContents)
 		asByteArray
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLFileHandleTest >> streamConverterClass [
 	^ XMLNullStreamConverter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLFileHandleTest >> tempFileManager [
 	^ tempFileManager
 		ifNil: [
@@ -87,7 +89,7 @@ XMLFileHandleTest >> tempFileManager [
 					fileSuffix: '.txt']
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testAsXMLFileHandle [
 
 	| fileHandle |
@@ -98,7 +100,7 @@ XMLFileHandleTest >> testAsXMLFileHandle [
 		assert: fileHandle asXMLFileHandle identicalTo: fileHandle
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testContents [
 	self
 		skipOrReturnWith: [^ self]
@@ -116,7 +118,7 @@ XMLFileHandleTest >> testContents [
 		self assertIsDecodedFileContents: fileHandle contents]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testDelete [
 
 	self skipOrReturnWith: [ ^ self ] ifSkippable: #testDelete.
@@ -132,7 +134,7 @@ XMLFileHandleTest >> testDelete [
 		self should: [ fileHandle delete ] raise: XMLFileException ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testExists [
 	self
 		skipOrReturnWith: [^ self]
@@ -147,7 +149,7 @@ XMLFileHandleTest >> testExists [
 		self assert: fileHandle exists]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testExtension [
 
 	XMLFileHandle hasSupportedImplementation ifFalse: [ ^ self ].
@@ -172,7 +174,7 @@ XMLFileHandleTest >> testExtension [
 		assert: 'one/two.three.four/' asXMLFileHandle extension equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testGet [
 	self
 		skipOrReturnWith: [^ self]
@@ -187,7 +189,7 @@ XMLFileHandleTest >> testGet [
 		self assertIsDecodedFileContents: fileHandle get]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testGetUpToLimitDecoding [
 	self
 		skipOrReturnWith: [^ self]
@@ -235,7 +237,7 @@ XMLFileHandleTest >> testGetUpToLimitDecoding [
 			raise: XMLLimitException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testIsFile [
 	self
 		skipOrReturnWith: [^ self]
@@ -250,7 +252,7 @@ XMLFileHandleTest >> testIsFile [
 		self assert: fileHandle isFile]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testIsXMLDocumentFile [
 	XMLFileHandle hasSupportedImplementation
 		ifFalse: [^ self].
@@ -271,7 +273,7 @@ XMLFileHandleTest >> testIsXMLDocumentFile [
 				deny: file asUppercase asXMLFileHandle isXMLDocumentFile]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testPath [
 
 	| fileHandle |
@@ -282,7 +284,7 @@ XMLFileHandleTest >> testPath [
 		assert: fileHandle path equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testRawReadStream [
 	self
 		skipOrReturnWith: [^ self]
@@ -301,7 +303,7 @@ XMLFileHandleTest >> testRawReadStream [
 		readStream close]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testRawWriteStream [
 	self
 		skipOrReturnWith: [^ self]
@@ -319,7 +321,7 @@ XMLFileHandleTest >> testRawWriteStream [
 			self assertIsDecodedFileContents: fileHandle contents]]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testReadStream [
 	self
 		skipOrReturnWith: [^ self]
@@ -338,7 +340,7 @@ XMLFileHandleTest >> testReadStream [
 		readStream close]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testReadStreamDo [
 	self
 		skipOrReturnWith: [^ self]
@@ -357,7 +359,7 @@ XMLFileHandleTest >> testReadStreamDo [
 		self assertIsDecodedFileContents: contents]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testSize [
 	self
 		skipOrReturnWith: [^ self]
@@ -374,7 +376,7 @@ XMLFileHandleTest >> testSize [
 				self encodedFileContentsWithByteOrderMark size]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testStreamGet [
 	self
 		skipOrReturnWith: [^ self]
@@ -393,7 +395,7 @@ XMLFileHandleTest >> testStreamGet [
 		readStream close]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testStreamGetUpToLimitDecoding [
 	self
 		skipOrReturnWith: [^ self]
@@ -459,7 +461,7 @@ XMLFileHandleTest >> testStreamGetUpToLimitDecoding [
 			raise: XMLLimitException]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testWriteStream [
 	self
 		skipOrReturnWith: [^ self]
@@ -481,7 +483,7 @@ XMLFileHandleTest >> testWriteStream [
 			self assertIsDecodedFileContents: fileHandle contents]].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLFileHandleTest >> testWriteStreamDo [
 	self
 		skipOrReturnWith: [^ self]

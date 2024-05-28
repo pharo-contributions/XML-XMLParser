@@ -1,20 +1,22 @@
 Class {
-	#name : #XMLAttributeDictionaryTest,
-	#superclass : #OrderPreservingStringDictionaryTest,
-	#category : #'XML-Parser-Tests-Base'
+	#name : 'XMLAttributeDictionaryTest',
+	#superclass : 'OrderPreservingStringDictionaryTest',
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDictionaryTest >> dictionaryClass [
 	^ XMLAttributeDictionary
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeDictionaryTest >> isTestingLazyDictionary [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDictionaryTest >> namespaceScope [
 	^ XMLNamespaceScope new
 		mapPrefix: '' to: 'defaultNS';
@@ -23,7 +25,7 @@ XMLAttributeDictionaryTest >> namespaceScope [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDictionaryTest >> prefixedAttributeDictionary [
 	^ (self dictionaryClass new setNamespaceScope: self namespaceScope)
 		at: 'name' put: 'value';
@@ -33,7 +35,7 @@ XMLAttributeDictionaryTest >> prefixedAttributeDictionary [
 		yourself
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDictionaryTest >> testAsXMLAttributeDictionary [
 
 	| dictionary |
@@ -43,7 +45,7 @@ XMLAttributeDictionaryTest >> testAsXMLAttributeDictionary [
 		identicalTo: dictionary
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDictionaryTest >> testAssociationAtName [
 	| dictionary |
 	dictionary := self prefixedAttributeDictionary.
@@ -65,7 +67,7 @@ XMLAttributeDictionaryTest >> testAssociationAtName [
 	self assert: (dictionary associationAtName: self absentKey) isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDictionaryTest >> testAssociationAtNameIfAbsent [
 	| dictionary |
 	dictionary := self prefixedAttributeDictionary.
@@ -95,7 +97,7 @@ XMLAttributeDictionaryTest >> testAssociationAtNameIfAbsent [
 		equals: self absentValue
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDictionaryTest >> testAssociationAtNameNamespaceURI [
 	| dictionary |
 	dictionary := self prefixedAttributeDictionary.
@@ -152,7 +154,7 @@ XMLAttributeDictionaryTest >> testAssociationAtNameNamespaceURI [
 		assert: (dictionary associationAtName: 'name' namespaceURI: 'defaultNS') isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDictionaryTest >> testAssociationAtNameNamespaceURIIfAbsent [
 	| dictionary |
 	dictionary := self prefixedAttributeDictionary.
@@ -256,7 +258,7 @@ XMLAttributeDictionaryTest >> testAssociationAtNameNamespaceURIIfAbsent [
 		equals: self absentValue
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDictionaryTest >> testAtName [
 	| dictionary |
 
@@ -270,7 +272,7 @@ XMLAttributeDictionaryTest >> testAtName [
 		assert: (dictionary atName: self absentKey) equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDictionaryTest >> testAtNameIfAbsent [
 	| dictionary |
 
@@ -301,7 +303,7 @@ XMLAttributeDictionaryTest >> testAtNameIfAbsent [
 			ifAbsent: [self absentValue]) equals: self absentValue
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDictionaryTest >> testAtNameNamespaceURI [
 	| dictionary |
 
@@ -367,7 +369,7 @@ XMLAttributeDictionaryTest >> testAtNameNamespaceURI [
 			namespaceURI: 'defaultNS') equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDictionaryTest >> testAtNameNamespaceURIIfAbsent [
 
 	| dictionary |
@@ -457,7 +459,7 @@ XMLAttributeDictionaryTest >> testAtNameNamespaceURIIfAbsent [
 		equals: self absentValue
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDictionaryTest >> testLazyDictionaryEmptyAttributeDictionary [
 
 	self isTestingLazyDictionary ifFalse: [ ^ self ].
@@ -467,7 +469,7 @@ XMLAttributeDictionaryTest >> testLazyDictionaryEmptyAttributeDictionary [
 	self assert: self dictionaryClass emptyAttributeDictionary isEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDictionaryTest >> testLazyDictionaryInterfaceCompatibility [
 	| dictionary |
 
@@ -480,7 +482,7 @@ XMLAttributeDictionaryTest >> testLazyDictionaryInterfaceCompatibility [
 		self assert: (dictionary respondsTo: each)]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDictionaryTest >> testNamespaceURIOf [
 	| dictionary |
 
@@ -492,7 +494,7 @@ XMLAttributeDictionaryTest >> testNamespaceURIOf [
 		assert: (dictionary namespaceURIOf: 'name') equals: ''
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLAttributeDictionaryTest >> testUsesNamespaces [
 	self deny: self emptyDictionary usesNamespaces
 ]

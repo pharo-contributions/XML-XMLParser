@@ -2,20 +2,22 @@
 This node visitor records vititing messages sent by node accept methods using an XMLMessageRecorder.
 "
 Class {
-	#name : #XMLRecordingNodeVisitor,
-	#superclass : #XMLNodeVisitor,
+	#name : 'XMLRecordingNodeVisitor',
+	#superclass : 'XMLNodeVisitor',
 	#instVars : [
 		'messageRecorder'
 	],
-	#category : #'XML-Parser-Tests-DOM'
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLRecordingNodeVisitor >> messageRecorder [
 	^ messageRecorder ifNil: [messageRecorder := XMLMessageRecorder new]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLRecordingNodeVisitor >> visitCData: aCData [
 	self messageRecorder
 		recordMessageReceiver: self
@@ -25,7 +27,7 @@ XMLRecordingNodeVisitor >> visitCData: aCData [
 	^ super visitCData: aCData
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLRecordingNodeVisitor >> visitComment: aComment [
 	self messageRecorder
 		recordMessageReceiver: self
@@ -35,7 +37,7 @@ XMLRecordingNodeVisitor >> visitComment: aComment [
 	^ super visitComment: aComment
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLRecordingNodeVisitor >> visitDocument: aDocument [
 	self messageRecorder
 		recordMessageReceiver: self
@@ -45,7 +47,7 @@ XMLRecordingNodeVisitor >> visitDocument: aDocument [
 	^ super visitDocument: aDocument
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLRecordingNodeVisitor >> visitElement: anElement [
 	self messageRecorder
 		recordMessageReceiver: self
@@ -55,7 +57,7 @@ XMLRecordingNodeVisitor >> visitElement: anElement [
 	^ super visitElement: anElement
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLRecordingNodeVisitor >> visitNodeWithElements: aNodeWithElements [
 	self messageRecorder
 		recordMessageReceiver: self
@@ -65,7 +67,7 @@ XMLRecordingNodeVisitor >> visitNodeWithElements: aNodeWithElements [
 	^ super visitNodeWithElements: aNodeWithElements
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLRecordingNodeVisitor >> visitPI: aPI [
 	self messageRecorder
 		recordMessageReceiver: self
@@ -75,7 +77,7 @@ XMLRecordingNodeVisitor >> visitPI: aPI [
 	^ super visitPI: aPI
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLRecordingNodeVisitor >> visitStringNode: aStringNode [
 	self messageRecorder
 		recordMessageReceiver: self

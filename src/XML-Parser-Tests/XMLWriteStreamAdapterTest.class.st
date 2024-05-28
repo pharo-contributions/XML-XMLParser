@@ -1,35 +1,37 @@
 Class {
-	#name : #XMLWriteStreamAdapterTest,
-	#superclass : #XMLStreamAdapterTest,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLWriteStreamAdapterTest',
+	#superclass : 'XMLStreamAdapterTest',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLWriteStreamAdapterTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLWriteStreamAdapterTest >> contentsFromCharacter: aCharacter [
 	^ aCharacter asString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLWriteStreamAdapterTest >> isBinary [
 	^ self expectsBinaryInput
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLWriteStreamAdapterTest >> streamAdapterClass [
 	^ XMLWriteStreamAdapter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLWriteStreamAdapterTest >> streamClass [
 	^ WriteStream
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLWriteStreamAdapterTest >> testCR [
 
 	| adapter |
@@ -40,7 +42,7 @@ XMLWriteStreamAdapterTest >> testCR [
 		equals: (self contentsFromCharacter: Character cr)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLWriteStreamAdapterTest >> testLF [
 
 	| adapter |
@@ -51,7 +53,7 @@ XMLWriteStreamAdapterTest >> testLF [
 		equals: (self contentsFromCharacter: Character lf)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLWriteStreamAdapterTest >> testNextPut [
 
 	| adapter |
@@ -61,7 +63,7 @@ XMLWriteStreamAdapterTest >> testNextPut [
 		self assert: adapter contents equals: self outputCollection
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLWriteStreamAdapterTest >> testNextPutAll [
 
 	| adapter |
@@ -72,7 +74,7 @@ XMLWriteStreamAdapterTest >> testNextPutAll [
 		assert: adapter contents equals: self outputCollection
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLWriteStreamAdapterTest >> testPosition [
 
 	| adapter startPosition position |
@@ -88,7 +90,7 @@ XMLWriteStreamAdapterTest >> testPosition [
 	self assert: adapter position equals: startPosition
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLWriteStreamAdapterTest >> testReset [
 
 	| adapter startPosition |
@@ -100,7 +102,7 @@ XMLWriteStreamAdapterTest >> testReset [
 		assert: adapter position equals: startPosition
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLWriteStreamAdapterTest >> testSpace [
 
 	| adapter |
@@ -111,7 +113,7 @@ XMLWriteStreamAdapterTest >> testSpace [
 		equals: (self contentsFromCharacter: Character space)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLWriteStreamAdapterTest >> testTab [
 
 	| adapter |

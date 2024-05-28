@@ -1,25 +1,27 @@
 Class {
-	#name : #XMLDOMConfigurationTest,
-	#superclass : #XMLConfigurationTest,
-	#category : #'XML-Parser-Tests-Base'
+	#name : 'XMLDOMConfigurationTest',
+	#superclass : 'XMLConfigurationTest',
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMConfigurationTest >> configurationClass [
 	^ XMLDOMConfiguration
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMConfigurationTest >> nodeFactoryClass [
 	^ XMLNodeFactory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMConfigurationTest >> parserHandlerClass [
 	^ XMLDOMParser
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMConfigurationTest >> testCopy [
 
 	| configuration nodeFactory copy |
@@ -44,7 +46,7 @@ XMLDOMConfigurationTest >> testCopy [
 		equals: configuration nodeFactory class
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMConfigurationTest >> testNodeFactory [
 
 	| configuration oldNodeFactory newNodeFactory |
@@ -59,7 +61,7 @@ XMLDOMConfigurationTest >> testNodeFactory [
 		assert: configuration nodeFactory identicalTo: newNodeFactory
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMConfigurationTest >> testPreservesCDataNodes [
 
 	| configuration |
@@ -74,7 +76,7 @@ XMLDOMConfigurationTest >> testPreservesCDataNodes [
 		deny: configuration preservesCDataNodes
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMConfigurationTest >> testPreservesCommentNodes [
 
 	| configuration |
@@ -89,7 +91,7 @@ XMLDOMConfigurationTest >> testPreservesCommentNodes [
 		deny: configuration preservesCommentNodes
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLDOMConfigurationTest >> testPreservesIgnorableWhitespace [
 
 	| configuration |

@@ -1,20 +1,22 @@
 Class {
-	#name : #XMLCachingNodeListTest,
-	#superclass : #XMLNodeListTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLCachingNodeListTest',
+	#superclass : 'XMLNodeListTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCachingNodeListTest >> listClass [
 	^ XMLCachingNodeList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCachingNodeListTest >> listCopyClass [
 	^ XMLNodeList
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCachingNodeListTest >> testSort [
 
 	| list cachedElements |
@@ -28,7 +30,7 @@ XMLCachingNodeListTest >> testSort [
 		equals: (cachedElements sort: self reverseSortBlock)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLCachingNodeListTest >> testSwapWith [
 
 	| list cachedElements start end |

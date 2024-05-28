@@ -1,54 +1,56 @@
 Class {
-	#name : #XMLExceptionTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Exceptions'
+	#name : 'XMLExceptionTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Exceptions',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Exceptions'
 }
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 XMLExceptionTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLExceptionTest >> errorMessage [
 	^ 'an error occurred'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLExceptionTest >> exceptionClass [
 	^ XMLException
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLExceptionTest >> newException [
 	^ self exceptionClass new
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLExceptionTest >> newExceptionWithErrorMessage [
 	^ self newException
 		messageText: self errorMessage;
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLExceptionTest >> newOtherException [
 	^ self otherExceptionClass new
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLExceptionTest >> newOtherExceptionWithErrorMessage [
 	^ self newOtherException
 		messageText: self errorMessage;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLExceptionTest >> otherExceptionClass [
 	^ Error
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExceptionTest >> testFormatMessageWith [
 
 	| exception |
@@ -59,7 +61,7 @@ XMLExceptionTest >> testFormatMessageWith [
 	self assert: exception messageText equals: 'one'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExceptionTest >> testFormatMessageWithArguments [
 
 	| exception |
@@ -72,7 +74,7 @@ XMLExceptionTest >> testFormatMessageWithArguments [
 	self assert: exception messageText equals: 'one 2 three 4'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExceptionTest >> testFormatMessageWithWith [
 
 	| exception |
@@ -83,7 +85,7 @@ XMLExceptionTest >> testFormatMessageWithWith [
 	self assert: exception messageText equals: 'one 2'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExceptionTest >> testFormatMessageWithWithWith [
 
 	| exception |
@@ -98,7 +100,7 @@ XMLExceptionTest >> testFormatMessageWithWithWith [
 	self assert: exception messageText equals: 'one 2 three'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExceptionTest >> testFormatMessageWithWithWithWith [
 
 	| exception |
@@ -114,7 +116,7 @@ XMLExceptionTest >> testFormatMessageWithWithWithWith [
 	self assert: exception messageText equals: 'one 2 three 4'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExceptionTest >> testFormatSignalWith [
 
 	(Array with: self exceptionClass with: self newException) do: [ :each |
@@ -128,7 +130,7 @@ XMLExceptionTest >> testFormatSignalWith [
 			assert: raisedException messageText equals: '1' ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExceptionTest >> testFormatSignalWithArguments [
 
 	(Array with: self exceptionClass with: self newException) do: [ :each |
@@ -145,7 +147,7 @@ XMLExceptionTest >> testFormatSignalWithArguments [
 			assert: raisedException messageText equals: '1 two 3 four' ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExceptionTest >> testFormatSignalWithWith [
 
 	(Array with: self exceptionClass with: self newException) do: [ :each |
@@ -159,7 +161,7 @@ XMLExceptionTest >> testFormatSignalWithWith [
 			assert: raisedException messageText equals: '1 two' ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExceptionTest >> testFormatSignalWithWithWith [
 
 	(Array with: self exceptionClass with: self newException) do: [ :each |
@@ -178,7 +180,7 @@ XMLExceptionTest >> testFormatSignalWithWithWith [
 			assert: raisedException messageText equals: '1 two 3' ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExceptionTest >> testFormatSignalWithWithWithWith [
 
 	(Array with: self exceptionClass with: self newException) do: [ :each |
@@ -198,7 +200,7 @@ XMLExceptionTest >> testFormatSignalWithWithWithWith [
 			assert: raisedException messageText equals: '1 two 3 four' ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExceptionTest >> testInheritMessageFrom [
 
 	| exception otherException |
@@ -213,7 +215,7 @@ XMLExceptionTest >> testInheritMessageFrom [
 						  with: self errorMessage))
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLExceptionTest >> testSignalMessageFrom [
 
 	| otherException |

@@ -2,12 +2,14 @@
 Abstract, do not run.
 "
 Class {
-	#name : #XMLStreamAdapterTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLStreamAdapterTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLStreamAdapterTest class >> binaryFrom: aCollection [
 	aCollection class == ByteArray
 		ifTrue: [^ aCollection]
@@ -17,44 +19,44 @@ XMLStreamAdapterTest class >> binaryFrom: aCollection [
 					stream nextPut: each asInteger]]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest class >> decodedASCIIString [
 	^ self stringFrom: self encodedASCIIBinary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest class >> decodedLatin1String [
 	^ self stringFrom: self encodedLatin1Binary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest class >> decodedUTF16String [
 	^ self stringFrom:
 		#(16rFF 16r0100 16rD7FF 16rE000 16rFFFF 16r10000 16r10437 16r24B62 16r10FFFF)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest class >> decodedUTF32String [
 	^ self stringFrom: #(16rFE 16rD7FE 16r10FFFF)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest class >> decodedUTF8String [
 	^ self stringFrom:
 		#(16r01 16r0F 16r7F 16r80 16r7FF 16r800 16rFEFE 16rFFFF 16r10000 16r10FFFF)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest class >> encodedASCIIBinary [
 	^ (16r01 to: 16r7F) asByteArray
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest class >> encodedLatin1Binary [
 	^ (16r01 to: 16rFF) asByteArray
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest class >> encodedUTF16BEBinary [
 	^ #[16r00 16rFF
 		16r01 16r00
@@ -67,7 +69,7 @@ XMLStreamAdapterTest class >> encodedUTF16BEBinary [
 		16rDB 16rFF 16rDF 16rFF] "last surrogate pair"
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest class >> encodedUTF16LEBinary [
 	^ #[16rFF 16r00
 		16r00 16r01
@@ -80,21 +82,21 @@ XMLStreamAdapterTest class >> encodedUTF16LEBinary [
 		16rFF 16rDB 16rFF 16rDF] "last surrogate pair"
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest class >> encodedUTF32BEBinary [
 	^ #[16r00 16r00 16r00 16rFE
 		16r00 16r00 16rD7 16rFE
 		16r00 16r10 16rFF 16rFF]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest class >> encodedUTF32LEBinary [
 	^ #[16rFE 16r00 16r00 16r00
 		16rFE 16rD7 16r00 16r00
 		16rFF 16rFF 16r10 16r00]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest class >> encodedUTF8Binary [
 	^ #[16r01
 		16r0F
@@ -108,12 +110,12 @@ XMLStreamAdapterTest class >> encodedUTF8Binary [
 		16rF4 16r8F 16rBF 16rBF]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamAdapterTest class >> isAbstract [
 	^ true
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLStreamAdapterTest class >> percentEncodeCharacter: aCharacter [
 	| hexString |
 
@@ -122,7 +124,7 @@ XMLStreamAdapterTest class >> percentEncodeCharacter: aCharacter [
 		ifFalse: [^ '%0', hexString]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLStreamAdapterTest class >> percentEncodeCharacters: aCharacterCollection [
 	^ String streamContents: [:stream |
 		aCharacterCollection do: [:each |
@@ -130,12 +132,12 @@ XMLStreamAdapterTest class >> percentEncodeCharacters: aCharacterCollection [
 				(self percentEncodeCharacter: each)]]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamAdapterTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLStreamAdapterTest class >> stringFrom: aCollection [
 	aCollection isString
 		ifTrue: [^ aCollection]
@@ -146,184 +148,184 @@ XMLStreamAdapterTest class >> stringFrom: aCollection [
 					stream nextPut: each asCharacter]]]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLStreamAdapterTest >> asExpectedInput: aCollection [
 	^ self expectsBinaryInput
 		ifTrue: [self binaryFrom: aCollection]
 		ifFalse: [self stringFrom: aCollection]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLStreamAdapterTest >> asExpectedOutput: aCollection [
 	^ self expectsBinaryOutput
 		ifTrue: [self binaryFrom: aCollection]
 		ifFalse: [self stringFrom: aCollection]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> basicInputCollection [
 	^ 'test'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> basicOutputCollection [
 	^ self basicInputCollection
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLStreamAdapterTest >> binaryFrom: aCollection [
 	^ self class binaryFrom: aCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> decodedASCIIString [
 	^ self class decodedASCIIString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> decodedLatin1String [
 	^ self class decodedLatin1String
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> decodedUTF16String [
 	^ self class decodedUTF16String
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> decodedUTF32String [
 	^ self class decodedUTF32String
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> decodedUTF8String [
 	^ self class decodedUTF8String
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> emptyOutputCollection [
 	^ self outputCollection copyEmpty
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> encodedASCIIBinary [
 	^ self class encodedASCIIBinary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> encodedLatin1Binary [
 	^ self class encodedLatin1Binary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> encodedUTF16BEBinary [
 	^ self class encodedUTF16BEBinary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> encodedUTF16LEBinary [
 	^ self class encodedUTF16LEBinary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> encodedUTF32BEBinary [
 	^ self class encodedUTF32BEBinary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> encodedUTF32LEBinary [
 	^ self class encodedUTF32LEBinary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> encodedUTF8Binary [
 	^ self class encodedUTF8Binary
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamAdapterTest >> expectsBinaryInput [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamAdapterTest >> expectsBinaryOutput [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> inputCollection [
 	^ self asExpectedInput: self basicInputCollection
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamAdapterTest >> isBinary [
 	^ false
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLStreamAdapterTest >> newStream [
 	^ self newStreamOn: self streamCollection
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLStreamAdapterTest >> newStreamAdapter [
 	^ self newStreamAdapterOn: self newStream
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLStreamAdapterTest >> newStreamAdapterOn: aStream [
 	^ self streamAdapterClass on: aStream
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLStreamAdapterTest >> newStreamOn: aCollection [
 	^ self streamClass on: aCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> outputCollection [
 	^ self asExpectedOutput: self basicOutputCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> streamAdapterClass [
 	^ XMLStreamAdapter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> streamClass [
 	^ ReadStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapterTest >> streamCollection [
 	^ String new
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLStreamAdapterTest >> stringFrom: aCollection [
 	^ self class stringFrom: aCollection
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamAdapterTest >> testClose [
 	self
 		shouldnt: [self newStreamAdapter close]
 		raise: Error
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamAdapterTest >> testIsBinary [
 
 	self assert: self newStreamAdapter isBinary equals: self isBinary
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamAdapterTest >> testIsStream [
 	self assert: self newStreamAdapter isStream
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamAdapterTest >> testIsXMLBinaryOrExternalStream [
 
 	| streamAdapter |
@@ -333,19 +335,19 @@ XMLStreamAdapterTest >> testIsXMLBinaryOrExternalStream [
 		equals: streamAdapter isBinary
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamAdapterTest >> testIsXMLConvertingStreamAdapter [
 	self deny: self newStreamAdapter isXMLConvertingStreamAdapter
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamAdapterTest >> testNew [
 	self
 		should: [self streamClass new]
 		raise: Error
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLStreamAdapterTest >> testOn [
 
 	| stream adapter |

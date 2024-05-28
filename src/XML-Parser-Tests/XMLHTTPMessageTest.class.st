@@ -2,22 +2,24 @@
 Abstract; do not run.
 "
 Class {
-	#name : #XMLHTTPMessageTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-HTTP'
+	#name : 'XMLHTTPMessageTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-HTTP',
+	#package : 'XML-Parser-Tests',
+	#tag : 'HTTP'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPMessageTest class >> isAbstract [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPMessageTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 XMLHTTPMessageTest >> assertMessage: aMessage hasHeaders: anAssociationCollection [
 	| addedHeaders |
 
@@ -28,7 +30,7 @@ XMLHTTPMessageTest >> assertMessage: aMessage hasHeaders: anAssociationCollectio
 	self assert: aMessage headers sorted equals: addedHeaders sorted
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessageTest >> headerDictionaryFrom: aSequenceableCollection [
 	| headerDictionary |
 
@@ -38,12 +40,12 @@ XMLHTTPMessageTest >> headerDictionaryFrom: aSequenceableCollection [
 	^ headerDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessageTest >> headerKeysFrom: aSequenceableCollection [
 	^ aSequenceableCollection collect: [:each | each key]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessageTest >> headerValuesAt: aKey from: aSequenceableCollection [
 	| headerValues |
 
@@ -54,12 +56,12 @@ XMLHTTPMessageTest >> headerValuesAt: aKey from: aSequenceableCollection [
 	^ headerValues
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessageTest >> headerValuesFrom: aSequenceableCollection [
 	^ aSequenceableCollection collect: [:each | each value]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessageTest >> headers [
 	^ OrderedCollection
 		with: 'X-Unique-One' -> 'zero'
@@ -68,22 +70,22 @@ XMLHTTPMessageTest >> headers [
 		with: 'X-Duplicate' -> 'three'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPMessageTest >> isSupported [
 	^ self messageClass hasSupportedImplementation
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessageTest >> messageClass [
 	^ XMLHTTPMessage
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLHTTPMessageTest >> newMessage [
 	^ self messageClass new
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testAddHeader [
 	| message addedHeaders |
 
@@ -111,7 +113,7 @@ XMLHTTPMessageTest >> testAddHeader [
 			hasHeaders: addedHeaders]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testContent [
 
 	| message |
@@ -124,7 +126,7 @@ XMLHTTPMessageTest >> testContent [
 		assert: message content equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testContentCharset [
 
 	| message firstType secondType |
@@ -156,7 +158,7 @@ XMLHTTPMessageTest >> testContentCharset [
 		equals: XMLHTTPMIMEType defaultCharset
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testContentEncoding [
 
 	| message defaultValue absentValue |
@@ -197,7 +199,7 @@ XMLHTTPMessageTest >> testContentEncoding [
 	self assert: message contentEncoding equals: absentValue
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testContentLength [
 
 	| message |
@@ -220,7 +222,7 @@ XMLHTTPMessageTest >> testContentLength [
 	self assert: message contentLength isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testContentType [
 
 	| message firstType secondType |
@@ -248,7 +250,7 @@ XMLHTTPMessageTest >> testContentType [
 	self assert: message contentType isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testHasContent [
 	| message |
 
@@ -262,7 +264,7 @@ XMLHTTPMessageTest >> testHasContent [
 	self assert: message hasContent
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testHasHeaders [
 
 	| message |
@@ -278,7 +280,7 @@ XMLHTTPMessageTest >> testHasHeaders [
 	self assert: message hasHeaders
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testHeaderAt [
 
 	| message addedHeaderDictionary |
@@ -300,7 +302,7 @@ XMLHTTPMessageTest >> testHeaderAt [
 		self assert: (message headerAt: key) equals: value ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testHeaderAtIfAbsent [
 
 	| message addedHeaderDictionary |
@@ -326,7 +328,7 @@ XMLHTTPMessageTest >> testHeaderAtIfAbsent [
 			equals: value ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testHeaderAtIfAbsentPut [
 
 	| message addedHeaderDictionary |
@@ -347,7 +349,7 @@ XMLHTTPMessageTest >> testHeaderAtIfAbsentPut [
 			hasHeaders: addedHeaderDictionary associations ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testHeaderAtPut [
 
 	| message addedHeaderDictionary |
@@ -366,7 +368,7 @@ XMLHTTPMessageTest >> testHeaderAtPut [
 			hasHeaders: addedHeaderDictionary associations ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testHeaderKeys [
 
 	| message addedHeaderKeys |
@@ -386,7 +388,7 @@ XMLHTTPMessageTest >> testHeaderKeys [
 			equals: addedHeaderKeys sorted ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testHeaderKeysAndValuesDo [
 	| message addedHeaders |
 
@@ -409,7 +411,7 @@ XMLHTTPMessageTest >> testHeaderKeysAndValuesDo [
 		and: (self headerValuesFrom: addedHeaders)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testHeaderKeysDo [
 	| message addedHeaders |
 
@@ -430,7 +432,7 @@ XMLHTTPMessageTest >> testHeaderKeysDo [
 		unorderedEnumerate: (self headerKeysFrom: addedHeaders)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testHeaderValuesAt [
 
 	| message addedHeaders |
@@ -450,7 +452,7 @@ XMLHTTPMessageTest >> testHeaderValuesAt [
 			equals: (self headerValuesAt: each key from: addedHeaders) sorted ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testHeaderValuesAtAdd [
 	| message addedHeaders |
 
@@ -484,7 +486,7 @@ XMLHTTPMessageTest >> testHeaderValuesAtAdd [
 			hasHeaders: addedHeaders]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testHeaderValuesAtDo [
 	| message addedHeaders |
 
@@ -519,7 +521,7 @@ XMLHTTPMessageTest >> testHeaderValuesAtDo [
 					from: addedHeaders)].
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testHeaders [
 
 	| message addedHeaders |
@@ -533,7 +535,7 @@ XMLHTTPMessageTest >> testHeaders [
 		deny: addedHeaders identicalTo: message headers
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testIncludesHeaderAt [
 
 	| message addedHeaderKeys |
@@ -551,7 +553,7 @@ XMLHTTPMessageTest >> testIncludesHeaderAt [
 		self assert: (message includesHeaderAt: each key) ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testRemoveHeaderAt [
 
 	| message addedHeaders addedHeaderKeys |
@@ -572,7 +574,7 @@ XMLHTTPMessageTest >> testRemoveHeaderAt [
 			raise: XMLHTTPException ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testRemoveHeaderAtIfAbsent [
 
 	| message addedHeaders addedHeaderKeys |
@@ -594,7 +596,7 @@ XMLHTTPMessageTest >> testRemoveHeaderAtIfAbsent [
 			equals: #absent ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPMessageTest >> testRemoveHeaders [
 
 	| message empty |

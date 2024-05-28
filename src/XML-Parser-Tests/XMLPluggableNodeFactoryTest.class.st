@@ -1,40 +1,42 @@
 Class {
-	#name : #XMLPluggableNodeFactoryTest,
-	#superclass : #XMLNodeFactoryTest,
-	#category : #'XML-Parser-Tests-DOM-Factories'
+	#name : 'XMLPluggableNodeFactoryTest',
+	#superclass : 'XMLNodeFactoryTest',
+	#category : 'XML-Parser-Tests-DOM-Factories',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM-Factories'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactoryTest >> attributeListClass [
 	^ XMLFAttributeList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactoryTest >> cdataClass [
 	^ XMLFCData
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactoryTest >> commentClass [
 	^ XMLFComment
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactoryTest >> documentClass [
 	^ XMLFDocument
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactoryTest >> elementClass [
 	^ XMLFElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactoryTest >> factoryClass [
 	^ XMLPluggableNodeFactory
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLPluggableNodeFactoryTest >> newFactoryWithClasses [
 	^ self newFactory
 		documentClass: self documentClass;
@@ -45,27 +47,27 @@ XMLPluggableNodeFactoryTest >> newFactoryWithClasses [
 		piClass: self piClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactoryTest >> nodeListClass [
 	^ XMLFNodeList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactoryTest >> piClass [
 	^ XMLFPI
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactoryTest >> pluggableFactoryClass [
 	^ self factoryClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactoryTest >> stringNodeClass [
 	^ XMLFString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testAttributeListClass [
 
 	| factory |
@@ -79,7 +81,7 @@ XMLPluggableNodeFactoryTest >> testAttributeListClass [
 		identicalTo: self attributeListClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testCDataClass [
 
 	super testCDataClass.
@@ -88,7 +90,7 @@ XMLPluggableNodeFactoryTest >> testCDataClass [
 		identicalTo: self cdataClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testClassForElement [
 
 	super testClassForElement.
@@ -97,7 +99,7 @@ XMLPluggableNodeFactoryTest >> testClassForElement [
 		identicalTo: self elementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testClassForElementNamespaceURI [
 
 	super testClassForElementNamespaceURI.
@@ -112,7 +114,7 @@ XMLPluggableNodeFactoryTest >> testClassForElementNamespaceURI [
 		identicalTo: self elementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testCommentClass [
 
 	super testCommentClass.
@@ -121,7 +123,7 @@ XMLPluggableNodeFactoryTest >> testCommentClass [
 		identicalTo: self commentClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testDocumentClass [
 
 	super testDocumentClass.
@@ -130,7 +132,7 @@ XMLPluggableNodeFactoryTest >> testDocumentClass [
 		identicalTo: self documentClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testElementClass [
 
 	super testElementClass.
@@ -139,7 +141,7 @@ XMLPluggableNodeFactoryTest >> testElementClass [
 		identicalTo: self elementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testNewCData [
 
 	| cdata |
@@ -151,7 +153,7 @@ XMLPluggableNodeFactoryTest >> testNewCData [
 		assert: cdata string equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testNewComment [
 
 	| comment |
@@ -163,7 +165,7 @@ XMLPluggableNodeFactoryTest >> testNewComment [
 		assert: comment string equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testNewDocument [
 
 	super testNewDocument.
@@ -172,7 +174,7 @@ XMLPluggableNodeFactoryTest >> testNewDocument [
 		identicalTo: self documentClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testNewElement [
 
 	super testNewElement.
@@ -181,7 +183,7 @@ XMLPluggableNodeFactoryTest >> testNewElement [
 		identicalTo: self elementClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testNewElementNamed [
 
 	| element |
@@ -193,7 +195,7 @@ XMLPluggableNodeFactoryTest >> testNewElementNamed [
 		assert: element name equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testNewElementNamedNamespaceURI [
 
 	| element |
@@ -208,7 +210,7 @@ XMLPluggableNodeFactoryTest >> testNewElementNamedNamespaceURI [
 		assert: element namespaceURI equals: 'prefixNS'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testNewPI [
 
 	super testNewPI.
@@ -217,7 +219,7 @@ XMLPluggableNodeFactoryTest >> testNewPI [
 		identicalTo: self piClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testNewPITargetData [
 
 	| pi |
@@ -230,7 +232,7 @@ XMLPluggableNodeFactoryTest >> testNewPITargetData [
 		assert: pi data equals: 'data'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testNewStringNode [
 
 	| string |
@@ -242,7 +244,7 @@ XMLPluggableNodeFactoryTest >> testNewStringNode [
 		assert: string string equals: 'test'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testNodeListClass [
 
 	| factory |
@@ -255,7 +257,7 @@ XMLPluggableNodeFactoryTest >> testNodeListClass [
 		assert: factory nodeListClass identicalTo: self nodeListClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testPIClass [
 
 	super testPIClass.
@@ -264,7 +266,7 @@ XMLPluggableNodeFactoryTest >> testPIClass [
 		identicalTo: self piClass
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testParsingSample [
 
 	| document factory |
@@ -294,7 +296,7 @@ XMLPluggableNodeFactoryTest >> testParsingSample [
 			self assert: each class identicalTo: self piClass ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLPluggableNodeFactoryTest >> testStringNodeClass [
 
 	super testStringNodeClass.

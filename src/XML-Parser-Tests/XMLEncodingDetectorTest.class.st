@@ -2,107 +2,109 @@
 Abstract, do not run.
 "
 Class {
-	#name : #XMLEncodingDetectorTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Streams'
+	#name : 'XMLEncodingDetectorTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Streams',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEncodingDetectorTest class >> isAbstract [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEncodingDetectorTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLEncodingDetectorTest >> asExpectedInput: anInputCollections [
 	^ self detectsBinaryInput
 		ifTrue: [XMLStreamAdapterTest binaryFrom: anInputCollections]
 		ifFalse: [XMLStreamAdapterTest stringFrom: anInputCollections]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorTest >> basicImplicitEncodedInputCollections [
 	^ #()
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorTest >> basicInvalidImplicitEncodedInputCollections [
 	^ #()
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEncodingDetectorTest >> detectsBinaryInput [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorTest >> encodingDetectorClass [
 	^ XMLEncodingDetector
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorTest >> explicitEncodedInputCollections [
 	^ self implicitEncodedInputCollections collect: [:each |
 		self inputCollectionByteOrderMark, each]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorTest >> explicitEncodingDetectorClass [
 	^ XMLEncodingDetector
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorTest >> explicitStreamConverterClass [
 	^ XMLStreamConverter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorTest >> implicitEncodedInputCollections [
 	^ self basicImplicitEncodedInputCollections collect: [:each |
 		self asExpectedInput: each]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorTest >> implicitEncodingDetectorClass [
 	^ XMLImplicitEncodingDetector
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorTest >> implicitStreamConverterClass [
 	^ XMLStreamConverter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorTest >> inputCollectionByteOrderMark [
 	^ self asExpectedInput: self explicitStreamConverterClass byteOrderMarkBytes
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEncodingDetectorTest >> invalidImplicitEncodedInputCollections [
 	^ self basicInvalidImplicitEncodedInputCollections collect: [:each |
 		self asExpectedInput: each]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLEncodingDetectorTest >> newExplicitEncodingDetectorOn: aStream [
 	^ self explicitEncodingDetectorClass on: aStream
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLEncodingDetectorTest >> newImplicitEncodingDetectorOn: aStream [
 	^ self implicitEncodingDetectorClass on: aStream
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLEncodingDetectorTest >> newStreamOn: aString [
 	^ aString readStream
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLEncodingDetectorTest >> testStreamConverterForEncoding [
 
 	self explicitEncodedInputCollections do: [ :each |

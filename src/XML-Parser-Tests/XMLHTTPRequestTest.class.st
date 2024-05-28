@@ -1,35 +1,37 @@
 Class {
-	#name : #XMLHTTPRequestTest,
-	#superclass : #XMLHTTPMessageTest,
-	#category : #'XML-Parser-Tests-HTTP'
+	#name : 'XMLHTTPRequestTest',
+	#superclass : 'XMLHTTPMessageTest',
+	#category : 'XML-Parser-Tests-HTTP',
+	#package : 'XML-Parser-Tests',
+	#tag : 'HTTP'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPRequestTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPRequestTest >> defaultTimeout [
 	^ 30
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPRequestTest >> messageClass [
 	^ XMLHTTPRequest
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLHTTPRequestTest >> newMessage [
 	^ self newRequestWithURL
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLHTTPRequestTest >> newRequestWithURL [
 	^ self messageClass url: self url
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPRequestTest >> testAcceptEncoding [
 
 	| request defaultValue absentValue |
@@ -70,7 +72,7 @@ XMLHTTPRequestTest >> testAcceptEncoding [
 	self assert: request acceptEncoding equals: absentValue
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPRequestTest >> testAsXMLHTTPRequest [
 
 	| request |
@@ -80,7 +82,7 @@ XMLHTTPRequestTest >> testAsXMLHTTPRequest [
 	self assert: request asXMLHTTPRequest identicalTo: request
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPRequestTest >> testEnableCompression [
 
 	| request |
@@ -96,7 +98,7 @@ XMLHTTPRequestTest >> testEnableCompression [
 				 each) isNotNil ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPRequestTest >> testMethod [
 
 	| request |
@@ -111,7 +113,7 @@ XMLHTTPRequestTest >> testMethod [
 		deny: request method isSymbol
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPRequestTest >> testTimeout [
 
 	| request |
@@ -125,14 +127,14 @@ XMLHTTPRequestTest >> testTimeout [
 		assert: request timeout equals: self defaultTimeout + 1
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLHTTPRequestTest >> testURL [
 
 	self isSupported ifFalse: [ ^ self ].
 	self assert: self newRequestWithURL url equals: self url
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPRequestTest >> url [
 	^ 'http://pharo.org'
 ]

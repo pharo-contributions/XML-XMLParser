@@ -1,25 +1,27 @@
 Class {
-	#name : #XMLParameterEntityDeclarationTest,
-	#superclass : #XMLEntityDeclarationTest,
-	#category : #'XML-Parser-Tests-DOM'
+	#name : 'XMLParameterEntityDeclarationTest',
+	#superclass : 'XMLEntityDeclarationTest',
+	#category : 'XML-Parser-Tests-DOM',
+	#package : 'XML-Parser-Tests',
+	#tag : 'DOM'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLParameterEntityDeclarationTest class >> isAbstract [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParameterEntityDeclarationTest >> nodeClass [
 	^ XMLParameterEntityDeclaration
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParameterEntityDeclarationTest >> testIsParameter [
 	self assert: self newNode isParameter
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 XMLParameterEntityDeclarationTest >> testWriteXMLOn [
 
 	self

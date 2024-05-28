@@ -1,30 +1,32 @@
 Class {
-	#name : #SAX2ParserTest,
-	#superclass : #TestCase,
-	#category : #'XML-Parser-Tests-Base'
+	#name : 'SAX2ParserTest',
+	#superclass : 'TestCase',
+	#category : 'XML-Parser-Tests-Base',
+	#package : 'XML-Parser-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #source }
+{ #category : 'source' }
 SAX2ParserTest >> addressBookXML [
 	^ XMLParserTest addressBookXML
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2ParserTest >> contentHandlerClass [
 	^ SAX2ContentHandler
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2ParserTest >> declarationHandlerClass [
 	^ SAX2DeclarationHandler
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2ParserTest >> lexicalHandlerClass [
 	^ SAX2LexicalHandler
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAX2ParserTest >> testContentHandler [
 
 	| parser oldContentHandler newContentHandler |
@@ -47,7 +49,7 @@ SAX2ParserTest >> testContentHandler [
 		assert: parser contentHandler parser identicalTo: parser
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAX2ParserTest >> testDeclarationHandler [
 
 	| parser oldDeclarationHandler newDeclarationHandler |
@@ -71,7 +73,7 @@ SAX2ParserTest >> testDeclarationHandler [
 		assert: parser declarationHandler parser identicalTo: parser
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAX2ParserTest >> testLexicalHandler [
 
 	| parser oldLexicalHandler newLexicalHandler |
@@ -94,7 +96,7 @@ SAX2ParserTest >> testLexicalHandler [
 		assert: parser lexicalHandler parser identicalTo: parser
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAX2ParserTest >> testParseDocument [
 	self
 		shouldnt: [
@@ -103,7 +105,7 @@ SAX2ParserTest >> testParseDocument [
 		raise: XMLParserException
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SAX2ParserTest >> testParsingResult [
 
 	| parser |
