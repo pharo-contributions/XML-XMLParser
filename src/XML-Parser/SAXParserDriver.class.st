@@ -516,8 +516,8 @@ SAXParserDriver >> handleXMLVersion: aVersion encoding: anEncoding standalone: a
 
 { #category : 'testing' }
 SAXParserDriver >> hasExternalSubset [
-	^ self externalSubsetPublicID notEmpty
-		or: [self externalSubsetSystemID notEmpty]
+	^ self externalSubsetPublicID isNotEmpty
+		or: [self externalSubsetSystemID isNotEmpty]
 ]
 
 { #category : 'testing' }
