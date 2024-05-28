@@ -2,21 +2,23 @@
 This class is a resolver that caches non-local entities in a global cache so they don't have to be retrieved again (like over HTTP). This is the default resolver.
 "
 Class {
-	#name : #DTDCachingExternalEntityResolver,
-	#superclass : #DTDExternalEntityResolver,
+	#name : 'DTDCachingExternalEntityResolver',
+	#superclass : 'DTDExternalEntityResolver',
 	#classVars : [
 		'EntityCache'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #clearing }
+{ #category : 'clearing' }
 DTDCachingExternalEntityResolver class >> clearEntityCache [
 	"self clearEntityCache"
 	self entityCache clear
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDCachingExternalEntityResolver class >> entityCache [
 	"a class variable so it's shared by all subclasses, but lazy initialized
 	so it isn't initialized unless needed"
@@ -24,35 +26,35 @@ DTDCachingExternalEntityResolver class >> entityCache [
 		ifNil: [EntityCache := XMLKeyValueCache maxSize: 64]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDCachingExternalEntityResolver class >> entityCacheAtURI: anXMLURIOrURIString [
 	^ self entityCache
 		at: anXMLURIOrURIString asXMLURI
 		ifAbsent: [nil]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDCachingExternalEntityResolver class >> entityCacheAtURI: anXMLURIOrURIString ifAbsent: aBlock [
 	^ self entityCache
 		at: anXMLURIOrURIString asXMLURI
 		ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDCachingExternalEntityResolver class >> entityCacheAtURI: anXMLURIOrURIString ifAbsentPut: aBlock [
 	^ self entityCache
 		at: anXMLURIOrURIString asXMLURI
 		ifAbsentPut: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDCachingExternalEntityResolver class >> entityCacheAtURI: anXMLURIOrURIString put: aStringOrByteArray [
 	^ self entityCache
 		at: anXMLURIOrURIString asXMLURI
 		put: aStringOrByteArray
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 DTDCachingExternalEntityResolver class >> initialize [
 	"self initialize"
 
@@ -60,35 +62,35 @@ DTDCachingExternalEntityResolver class >> initialize [
 	EntityCache := nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDCachingExternalEntityResolver class >> maxCachedEntities [
 	^ self entityCache maxSize
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDCachingExternalEntityResolver class >> maxCachedEntities: anInteger [
 	self entityCache maxSize: anInteger
 ]
 
-{ #category : #clearing }
+{ #category : 'clearing' }
 DTDCachingExternalEntityResolver >> clearEntityCache [
 
 	self class clearEntityCache
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDCachingExternalEntityResolver >> maxCachedEntities [
 
 	^ self class maxCachedEntities
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDCachingExternalEntityResolver >> maxCachedEntities: anInteger [
 
 	self class maxCachedEntities: anInteger
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDCachingExternalEntityResolver >> resolveNonLocalExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
 
 	| uri |

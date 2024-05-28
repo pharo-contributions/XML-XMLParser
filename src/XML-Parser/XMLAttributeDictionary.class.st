@@ -2,24 +2,25 @@
 This class is an OrderPreservingStringDictionary for XML attributes that returns empty strings instead of raising errors when absent keys are looked up. It has messages to lookup the namespace URI of an attribute key and to lookup an attribute value or association by local or qualified name and namespace URI.
 "
 Class {
-	#name : #XMLAttributeDictionary,
-	#superclass : #OrderPreservingStringDictionary,
-	#category : #'XML-Parser'
+	#name : 'XMLAttributeDictionary',
+	#superclass : 'OrderPreservingStringDictionary',
+	#category : 'XML-Parser',
+	#package : 'XML-Parser'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLAttributeDictionary >> asXMLAttributeDictionary [
 	^ self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDictionary >> associationAtName: aQualifiedOrLocalName [
 	^ self
 		associationAtName: aQualifiedOrLocalName
 		ifAbsent: [nil]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDictionary >> associationAtName: aQualifiedOrLocalName ifAbsent: aBlock [
 	^ self
 		associationAt: aQualifiedOrLocalName
@@ -32,7 +33,7 @@ XMLAttributeDictionary >> associationAtName: aQualifiedOrLocalName ifAbsent: aBl
 			aBlock value]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDictionary >> associationAtName: aQualifiedOrLocalName namespaceURI: aURI [
 	^ self
 		associationAtName: aQualifiedOrLocalName
@@ -40,7 +41,7 @@ XMLAttributeDictionary >> associationAtName: aQualifiedOrLocalName namespaceURI:
 		ifAbsent: [nil]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDictionary >> associationAtName: aQualifiedOrLocalName namespaceURI: aURI ifAbsent: aBlock [
 	| namePrefix |
 
@@ -70,7 +71,7 @@ XMLAttributeDictionary >> associationAtName: aQualifiedOrLocalName namespaceURI:
 	^ aBlock value.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLAttributeDictionary >> at: aKey newPut: aValue [
 	"should be identical to StandardOrderedDictionary>>#at:put: except
 	it returns a boolean to tell if the key is new"
@@ -89,14 +90,14 @@ XMLAttributeDictionary >> at: aKey newPut: aValue [
 	^ false.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDictionary >> atName: aQualifiedOrLocalName [
 	^ self
 		atName: aQualifiedOrLocalName
 		ifAbsent: ['']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDictionary >> atName: aQualifiedOrLocalName ifAbsent: aBlock [
 	^ (self
 		associationAtName: aQualifiedOrLocalName
@@ -105,7 +106,7 @@ XMLAttributeDictionary >> atName: aQualifiedOrLocalName ifAbsent: aBlock [
 		ifNotNil: [:association | association value]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDictionary >> atName: aQualifiedOrLocalName namespaceURI: aURI [
 	^ self
 		atName: aQualifiedOrLocalName
@@ -113,7 +114,7 @@ XMLAttributeDictionary >> atName: aQualifiedOrLocalName namespaceURI: aURI [
 		ifAbsent: ['']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDictionary >> atName: aQualifiedOrLocalName namespaceURI: aURI ifAbsent: aBlock [
 	^ (self
 		associationAtName: aQualifiedOrLocalName
@@ -122,12 +123,12 @@ XMLAttributeDictionary >> atName: aQualifiedOrLocalName namespaceURI: aURI ifAbs
 		ifNotNil: [:association | association value]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLAttributeDictionary >> namespaceScope [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDictionary >> namespaceURIOf: aKey [
 	"Returns the namespace URI of the attribute name aKey"
 
@@ -139,23 +140,23 @@ XMLAttributeDictionary >> namespaceURIOf: aKey [
 		ifFalse: ['']
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLAttributeDictionary >> resolvePrefix: aPrefix [
 	^ self
 		resolvePrefix: aPrefix
 		ifUnresolvable: ''
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLAttributeDictionary >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 	^ aBlock value
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLAttributeDictionary >> setNamespaceScope: aNamespaceScope [
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeDictionary >> usesNamespaces [
 	^ false
 ]

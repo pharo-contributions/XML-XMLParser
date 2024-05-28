@@ -2,22 +2,24 @@
 This class is shared by attribute validators to validate element IDs and ID references, including xml:id IDs.
 "
 Class {
-	#name : #XMLElementIDValidator,
-	#superclass : #Object,
+	#name : 'XMLElementIDValidator',
+	#superclass : 'Object',
 	#instVars : [
 		'elementsAndIdAttributes',
 		'idReferences',
 		'ids'
 	],
-	#category : #'XML-Parser-Validation'
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementIDValidator >> elementsAndIDAttributes [
 	^ elementsAndIdAttributes ifNil: [elementsAndIdAttributes := Dictionary new]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementIDValidator >> errorDuplicateID: anID inAttribute: anAttribute [
 	XMLValidationException
 		formatSignal: 'Duplicate element ID "{1}" used in attribute "{2}"'
@@ -25,7 +27,7 @@ XMLElementIDValidator >> errorDuplicateID: anID inAttribute: anAttribute [
 		with: anAttribute
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementIDValidator >> errorInvalidID: anID inAttribute: anAttribute [
 	XMLValidationException
 		formatSignal: 'Invalid element ID value "{1}" in attribute "{2}"'
@@ -33,57 +35,57 @@ XMLElementIDValidator >> errorInvalidID: anID inAttribute: anAttribute [
 		with: anAttribute
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementIDValidator >> errorMultipleIDAttributesForElement: anElement [
 	XMLValidationException
 		formatSignal: 'Element <{1}> has multiple ID attributes'
 		with: anElement
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementIDValidator >> errorUnknownIDReference: anID [
 	XMLValidationException
 		formatSignal: 'Reference to unknown element ID "{1}"'
 		with: anID
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElementIDValidator >> hasIDReferences [
 	^ idReferences isNotNil
 		and: [idReferences isNotEmpty]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElementIDValidator >> hasIDs [
 	^ ids isNotNil
 		and: [ids isNotEmpty]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementIDValidator >> idReferences [
 	^ idReferences ifNil: [idReferences := Set new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementIDValidator >> ids [
 	^ ids ifNil: [ids := Set new]
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLElementIDValidator >> removeIDReferences [
 	"Gemstone's Set does not understand removeAll, so nil reassignment
 	is used instead (will be lazy initialized by accessors)"
 	idReferences := nil
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLElementIDValidator >> removeIDs [
 	"Gemstone's Set does not understand removeAll, so nil reassignment
 	is used instead (will be lazy initialized by accessors)"
 	ids := nil
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLElementIDValidator >> validateID: anID inAttribute: anAttribute [
 	anID isXMLName
 		ifFalse: [
@@ -95,7 +97,7 @@ XMLElementIDValidator >> validateID: anID inAttribute: anAttribute [
 		inAttribute: anAttribute.
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLElementIDValidator >> validateIDAttribute: anAttribute forElement: anElement [
 	| oldSize |
 
@@ -108,7 +110,7 @@ XMLElementIDValidator >> validateIDAttribute: anAttribute forElement: anElement 
 		ifFalse: [self errorMultipleIDAttributesForElement: anElement].
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLElementIDValidator >> validateIDReference: anID inAttribute: anAttribute [
 	anID isXMLName
 		ifFalse: [
@@ -118,14 +120,14 @@ XMLElementIDValidator >> validateIDReference: anID inAttribute: anAttribute [
 	self idReferences add: anID.
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLElementIDValidator >> validateIDReferences [
 	self idReferences do: [:each |
 		(self ids includes: each)
 			ifFalse: [self errorUnknownIDReference: each]]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementIDValidator >> validateUniquenessOfID: anID inAttribute: anAttribute [
 	| oldSize |
 
@@ -140,7 +142,7 @@ XMLElementIDValidator >> validateUniquenessOfID: anID inAttribute: anAttribute [
 				inAttribute: anAttribute].
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLElementIDValidator >> validateXMLID: anID [
 	anID isXMLNCName
 		ifFalse: [

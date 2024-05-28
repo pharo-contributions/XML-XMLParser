@@ -2,20 +2,22 @@
 A class to decorate pushed-back parameter entities to keep track of the nesting of include sections within entity replacements.
 "
 Class {
-	#name : #XMLPushedBackParameterEntity,
-	#superclass : #XMLPushedBackEntity,
+	#name : 'XMLPushedBackParameterEntity',
+	#superclass : 'XMLPushedBackEntity',
 	#instVars : [
 		'totalOpenIncludeSections'
 	],
-	#category : #'XML-Parser-Drivers'
+	#category : 'XML-Parser-Drivers',
+	#package : 'XML-Parser',
+	#tag : 'Drivers'
 }
 
-{ #category : #nesting }
+{ #category : 'nesting' }
 XMLPushedBackParameterEntity >> endIncludeSection [
 	totalOpenIncludeSections := self totalOpenIncludeSections - 1
 ]
 
-{ #category : #nesting }
+{ #category : 'nesting' }
 XMLPushedBackParameterEntity >> poppedByTokenizer: aTokenizer [
 	totalOpenIncludeSections
 		ifNotNil: [
@@ -23,12 +25,12 @@ XMLPushedBackParameterEntity >> poppedByTokenizer: aTokenizer [
 				ifFalse: [aTokenizer driver handleImproperParameterEntityNesting]]
 ]
 
-{ #category : #nesting }
+{ #category : 'nesting' }
 XMLPushedBackParameterEntity >> startIncludeSection [
 	totalOpenIncludeSections := self totalOpenIncludeSections + 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPushedBackParameterEntity >> totalOpenIncludeSections [
 	^ totalOpenIncludeSections ifNil: [totalOpenIncludeSections := 0]
 ]

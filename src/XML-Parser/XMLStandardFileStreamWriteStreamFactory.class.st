@@ -2,12 +2,14 @@
 A StandardFileStream write stream factory. This stream is preferred for Pharo/Squeak because it does no encoding and accepts byte characters so XMLParser can do its own encoding.
 "
 Class {
-	#name : #XMLStandardFileStreamWriteStreamFactory,
-	#superclass : #XMLFileWriteStreamFactory,
-	#category : #'XML-Parser-Files'
+	#name : 'XMLStandardFileStreamWriteStreamFactory',
+	#superclass : 'XMLFileWriteStreamFactory',
+	#category : 'XML-Parser-Files',
+	#package : 'XML-Parser',
+	#tag : 'Files'
 }
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLStandardFileStreamWriteStreamFactory class >> basicOnPath: aPathString [
 	"use forceNewFileNamed: to ensure truncation of existing files before writing"
 	^ ((XMLClassFinder classNamed: #StandardFileStream)
@@ -16,7 +18,7 @@ XMLStandardFileStreamWriteStreamFactory class >> basicOnPath: aPathString [
 			yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStandardFileStreamWriteStreamFactory class >> isSupportedImplementation [
 	^ XMLClassFinder hasClassNamed: #StandardFileStream
 ]

@@ -2,26 +2,28 @@
 This class is a generic abstract parser class for read-stream based parsers. It wraps its input stream with an XMLReadStreamAdapter and can parse tokens using #nextDelimitedBy: and #nextDelimitedByAny: and a temp write stream buffer.
 "
 Class {
-	#name : #XMLAbstractReadStreamParser,
-	#superclass : #Object,
+	#name : 'XMLAbstractReadStreamParser',
+	#superclass : 'Object',
 	#instVars : [
 		'readStream',
 		'writeStream'
 	],
-	#category : #'XML-Parser-Utils'
+	#category : 'XML-Parser-Utils',
+	#package : 'XML-Parser',
+	#tag : 'Utils'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLAbstractReadStreamParser class >> new [
 	self shouldNotImplement
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLAbstractReadStreamParser class >> on: aStringOrStream [
 	^ self basicNew initialize on: aStringOrStream
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLAbstractReadStreamParser >> nextDelimitedBy: aCharacter [
 	writeStream reset.
 	[readStream atEnd
@@ -30,7 +32,7 @@ XMLAbstractReadStreamParser >> nextDelimitedBy: aCharacter [
 	^ writeStream contents.
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLAbstractReadStreamParser >> nextDelimitedByAny: aCharacterCollection [
 	writeStream reset.
 	[readStream atEnd
@@ -39,7 +41,7 @@ XMLAbstractReadStreamParser >> nextDelimitedByAny: aCharacterCollection [
 	^ writeStream contents.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLAbstractReadStreamParser >> on: aStringOrStream [
 	readStream :=
 		XMLReadStreamAdapter on:

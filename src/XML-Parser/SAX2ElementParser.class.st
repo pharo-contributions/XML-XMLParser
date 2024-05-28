@@ -8,62 +8,63 @@ You can have multiple factories by mapping specific SAX2ElementHandlers to speci
 See #testParsingSamplePerson for an example.
 "
 Class {
-	#name : #SAX2ElementParser,
-	#superclass : #SAX2Parser,
+	#name : 'SAX2ElementParser',
+	#superclass : 'SAX2Parser',
 	#instVars : [
 		'elementHandler',
 		'elementHandlerFactory',
 		'elementHandlerFactoryMapper'
 	],
-	#category : #'XML-Parser'
+	#category : 'XML-Parser',
+	#package : 'XML-Parser'
 }
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAX2ElementParser >> characters: aString [
 	self elementHandler characters: aString
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 SAX2ElementParser >> defaultElementHandlerFactoryClass [
 	^ SAX2ElementHandlerFactory
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 SAX2ElementParser >> defaultElementHandlerFactoryMapperClass [
 	^ SAX2ElementHandlerFactoryMapper
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2ElementParser >> elementHandler [
 	^ elementHandler
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2ElementParser >> elementHandler: anElementHandler [
 	elementHandler := anElementHandler
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2ElementParser >> elementHandlerFactory [
 	^ elementHandlerFactory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2ElementParser >> elementHandlerFactory: anElementHandlerFactory [
 	elementHandlerFactory := anElementHandlerFactory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2ElementParser >> elementHandlerFactoryMapper [
 	^ elementHandlerFactoryMapper
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2ElementParser >> elementHandlerFactoryMapper: anElementHandlerFactoryMapper [
 	elementHandlerFactoryMapper := anElementHandlerFactoryMapper
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAX2ElementParser >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName [
 	| oldElementHandler |
 
@@ -77,7 +78,7 @@ SAX2ElementParser >> endElement: aQualifiedName prefix: aPrefix uri: aURI localN
 		elementHandlerFactory: oldElementHandler parentFactory
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SAX2ElementParser >> on: aStringOrStream [
 	super on: aStringOrStream.
 
@@ -85,7 +86,7 @@ SAX2ElementParser >> on: aStringOrStream [
 	elementHandlerFactoryMapper := self defaultElementHandlerFactoryMapperClass new
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAX2ElementParser >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: anAttributeDictionary [
 	| newElementHandler |
 

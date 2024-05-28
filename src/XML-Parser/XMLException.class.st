@@ -2,19 +2,21 @@
 A generic exception class that supports message formatting. Used as a base class for exceptions in XMLParser and related packages like XPath.
 "
 Class {
-	#name : #XMLException,
-	#superclass : #Error,
-	#category : #'XML-Parser-Exceptions'
+	#name : 'XMLException',
+	#superclass : 'Error',
+	#category : 'XML-Parser-Exceptions',
+	#package : 'XML-Parser',
+	#tag : 'Exceptions'
 }
 
-{ #category : #signalling }
+{ #category : 'signalling' }
 XMLException class >> formatSignal: aString with: aFirstValue [
 	^ self new
 		formatSignal: aString
 		with: aFirstValue
 ]
 
-{ #category : #signalling }
+{ #category : 'signalling' }
 XMLException class >> formatSignal: aString with: aFirstValue with: aSecondValue [
 	^ self new
 		formatSignal: aString
@@ -22,7 +24,7 @@ XMLException class >> formatSignal: aString with: aFirstValue with: aSecondValue
 		with: aSecondValue
 ]
 
-{ #category : #signalling }
+{ #category : 'signalling' }
 XMLException class >> formatSignal: aString with: aFirstValue with: aSecondValue with: aThirdValue [
 	^ self new
 		formatSignal: aString
@@ -31,7 +33,7 @@ XMLException class >> formatSignal: aString with: aFirstValue with: aSecondValue
 		with: aThirdValue
 ]
 
-{ #category : #signalling }
+{ #category : 'signalling' }
 XMLException class >> formatSignal: aString with: aFirstValue with: aSecondValue with: aThirdValue with: aFourthValue [
 	^ self new
 		formatSignal: aString
@@ -41,26 +43,26 @@ XMLException class >> formatSignal: aString with: aFirstValue with: aSecondValue
 		with: aFourthValue
 ]
 
-{ #category : #signalling }
+{ #category : 'signalling' }
 XMLException class >> formatSignal: aString withArguments: anArray [
 	^ self new
 		formatSignal: aString
 		withArguments: anArray
 ]
 
-{ #category : #signalling }
+{ #category : 'signalling' }
 XMLException class >> signalMessageFrom: anException [
 	^ self new signalMessageFrom: anException
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLException >> formatMessage: aString with: aFirstValue [
 	self
 		formatMessage: aString
 		withArguments: (Array with: aFirstValue)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLException >> formatMessage: aString with: aFirstValue with: aSecondValue [
 	self
 		formatMessage: aString
@@ -70,7 +72,7 @@ XMLException >> formatMessage: aString with: aFirstValue with: aSecondValue [
 				with: aSecondValue)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLException >> formatMessage: aString with: aFirstValue with: aSecondValue with: aThirdValue [
 	self
 		formatMessage: aString
@@ -81,7 +83,7 @@ XMLException >> formatMessage: aString with: aFirstValue with: aSecondValue with
 				with: aThirdValue)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLException >> formatMessage: aString with: aFirstValue with: aSecondValue with: aThirdValue with: aFourthValue [
 	self
 		formatMessage: aString
@@ -93,12 +95,12 @@ XMLException >> formatMessage: aString with: aFirstValue with: aSecondValue with
 				with: aFourthValue)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLException >> formatMessage: aString withArguments: anArray [
 	self messageText: (aString format: anArray)
 ]
 
-{ #category : #signaling }
+{ #category : 'signaling' }
 XMLException >> formatSignal: aString with: aFirstValue [
 	self
 		formatMessage: aString
@@ -106,7 +108,7 @@ XMLException >> formatSignal: aString with: aFirstValue [
 	^ self signal.
 ]
 
-{ #category : #signaling }
+{ #category : 'signaling' }
 XMLException >> formatSignal: aString with: aFirstValue with: aSecondValue [
 	self
 		formatMessage: aString
@@ -115,7 +117,7 @@ XMLException >> formatSignal: aString with: aFirstValue with: aSecondValue [
 	^ self signal.
 ]
 
-{ #category : #signaling }
+{ #category : 'signaling' }
 XMLException >> formatSignal: aString with: aFirstValue with: aSecondValue with: aThirdValue [
 	self
 		formatMessage: aString
@@ -125,7 +127,7 @@ XMLException >> formatSignal: aString with: aFirstValue with: aSecondValue with:
 	^ self signal.
 ]
 
-{ #category : #signaling }
+{ #category : 'signaling' }
 XMLException >> formatSignal: aString with: aFirstValue with: aSecondValue with: aThirdValue with: aFourthValue [
 	self
 		formatMessage: aString
@@ -136,7 +138,7 @@ XMLException >> formatSignal: aString with: aFirstValue with: aSecondValue with:
 	^ self signal.
 ]
 
-{ #category : #signaling }
+{ #category : 'signaling' }
 XMLException >> formatSignal: aString withArguments: anArray [
 	self
 		formatMessage: aString
@@ -144,7 +146,7 @@ XMLException >> formatSignal: aString withArguments: anArray [
 	^ self signal.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLException >> inheritMessageFrom: anException [
 	self
 		formatMessage: '({1}) {2}'
@@ -152,7 +154,7 @@ XMLException >> inheritMessageFrom: anException [
 		with: anException messageText
 ]
 
-{ #category : #signaling }
+{ #category : 'signaling' }
 XMLException >> signalMessageFrom: anException [
 	self inheritMessageFrom: anException.
 	^  self signal.

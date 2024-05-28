@@ -4,21 +4,23 @@ The class represents an attribute node stored in an attribute node list. The nam
 The element of an attribute can be accessed with #element, but also with #parent, because attributes are modeled so their element is their parent (to simplify the implementation of the XPath library).
 "
 Class {
-	#name : #XMLAttribute,
-	#superclass : #XMLNode,
+	#name : 'XMLAttribute',
+	#superclass : 'XMLNode',
 	#instVars : [
 		'name',
 		'value'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLAttribute class >> name: aName [
 	^ self named: aName
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLAttribute class >> name: aName value: aValue [
 	^ self new	
 		setName: aName
@@ -26,26 +28,26 @@ XMLAttribute class >> name: aName value: aValue [
 		element: nil
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLAttribute class >> named: aName [
 	^ self
 		name: aName
 		value: ''
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttribute >> element [
 	"reuse an inst var to save memory"
 	^ parent
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttribute >> element: anElement [
 	"reuse an inst var to save memory"
 	parent := anElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttribute >> expandedName [
 	"Returns the expanded name of the attribute as a string in the form of
 	'{namespaceURI}localName' if there's a namespace URI or 'localName' if there
@@ -54,24 +56,24 @@ XMLAttribute >> expandedName [
 	^ self localName expandWithXMLNamespaceURI: self namespaceURI
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttribute >> hasNamespaceURI [
 	^ self namespaceURI isNotEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttribute >> hasPrefix [
 	^ (self name
 		indexOf: $:
 		startingAt: 2) > 0
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttribute >> isAttribute [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttribute >> isInLanguage: aLanguageTag [
 	"Returns true if the receiver is an xml:lang attribute or if its element
 	or an ancestor element has an xml:lang attribute, and if the value is an IETF
@@ -84,14 +86,14 @@ XMLAttribute >> isInLanguage: aLanguageTag [
 		ifFalse: [^ super isInLanguage: aLanguageTag]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttribute >> isNamed: aName [
 	"Does the receiver's qualified or local name match the argument?"
 
 	^ self name isXMLQualifiedOrLocalName: aName
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttribute >> isNamedAny: aNameCollection [
 	"Does the receiver's qualified or local name match any of the names
 	in aNameCollection?"
@@ -99,7 +101,7 @@ XMLAttribute >> isNamedAny: aNameCollection [
 	^ aNameCollection includesXMLName: self name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttribute >> localName [
 	"Returns the local name of the receiver, the name minus any leading
 	prefix and colon like 'local' in 'prefix:local'"
@@ -109,7 +111,7 @@ XMLAttribute >> localName [
 	^ self name xmlLocalNameAfterPrefix
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttribute >> matchesLanguage: aLanguageTag [
 	"Returns true if the value is an IETF language tag that matches aLanguageTag.
 	Matching is case-insensitive, and aLanguageTag can be partial, like 'en',
@@ -140,22 +142,22 @@ XMLAttribute >> matchesLanguage: aLanguageTag [
 	^ true.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttribute >> name [
 	^ name ifNil: [name := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttribute >> name: aName [
 	self renameWith: [name := aName]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttribute >> namespaceURI [
 	^ self resolvePrefix: self prefix
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttribute >> prefix [
 	"Returns the prefix of the receiver's name or an empty string if there
 	isn't one."
@@ -165,12 +167,12 @@ XMLAttribute >> prefix [
 	^ self name xmlPrefixBeforeLocalName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttribute >> prefix: aPrefix [
 	self renameWith: [name := self localName qualifyWithXMLPrefix:  aPrefix]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLAttribute >> renameWith: aBlock [
 	| oldName |
 
@@ -185,7 +187,7 @@ XMLAttribute >> renameWith: aBlock [
 					to: self name].
 ]
 
-{ #category : #namespacing }
+{ #category : 'namespacing' }
 XMLAttribute >> resolvePrefix: aPrefix [
 	"This resolves the attribute prefix aPrefix or returns an empty string
 	if aPrefix is empty (attributes must be prefixed to have a namespace) or
@@ -196,7 +198,7 @@ XMLAttribute >> resolvePrefix: aPrefix [
 		ifUnresolvable: ''
 ]
 
-{ #category : #namespacing }
+{ #category : 'namespacing' }
 XMLAttribute >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 	"This resolves the attribute prefix aPrefix or returns the result of
 	evaluated aBlock if aPrefix is empty (attributes must be prefixed to have
@@ -211,29 +213,29 @@ XMLAttribute >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 		ifFalse: [aBlock value]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLAttribute >> setName: aName value: aValue element: anElement [
 	name := aName.
 	value := aValue.
 	parent := anElement.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttribute >> sortKey [
 	^ self name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttribute >> value [
 	^ value ifNil: [value := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttribute >> value: aString [
 	value := aString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLAttribute >> writeXMLOn: aWriter [
 	aWriter
 		writeStringName: self name;

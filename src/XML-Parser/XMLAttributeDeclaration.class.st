@@ -2,8 +2,8 @@
 This is a class for <!ATTLIST> declarations with definitions for single attributes. (An ATTLIST with multiple attribute defs is the same as a series of separate ATTLISTs for each def)
 "
 Class {
-	#name : #XMLAttributeDeclaration,
-	#superclass : #XMLDeclarationNode,
+	#name : 'XMLAttributeDeclaration',
+	#superclass : 'XMLDeclarationNode',
 	#instVars : [
 		'element',
 		'attribute',
@@ -11,10 +11,12 @@ Class {
 		'defaultPragma',
 		'defaultValue'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLAttributeDeclaration class >> element: anElementName attribute: anAttributeName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	^ self new
 		element: anElementName;
@@ -24,57 +26,57 @@ XMLAttributeDeclaration class >> element: anElementName attribute: anAttributeNa
 		defaultValue: aDefaultValue
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDeclaration >> attribute [
 	^ attribute ifNil: [attribute := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDeclaration >> attribute: anAttributeName [
 	attribute := anAttributeName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDeclaration >> defaultPragma [
 	^ defaultPragma ifNil: [defaultPragma := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDeclaration >> defaultPragma: aDefaultPragma [
 	defaultPragma := aDefaultPragma
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDeclaration >> defaultValue [
 	^ defaultValue ifNil: [defaultValue := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDeclaration >> defaultValue: aDefaultValue [
 	defaultValue := aDefaultValue
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDeclaration >> element [
 	^ element ifNil: [element := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDeclaration >> element: anElementName [
 	element := anElementName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDeclaration >> type [
 	^ type ifNil: [type := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeDeclaration >> type: aType [ 
 	type := aType
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLAttributeDeclaration >> writeXMLOn: aWriter [
 	aWriter attributeDeclaration
 		element: self element;

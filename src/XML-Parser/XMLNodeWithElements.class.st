@@ -12,25 +12,27 @@ Element name matching is done the qualified and local name, so 'prefix:element-n
 The inner XML can be accessed as a string using #innerXML and set (reparsed) using #innerXML:.
 "
 Class {
-	#name : #XMLNodeWithElements,
-	#superclass : #XMLNodeWithChildren,
+	#name : 'XMLNodeWithElements',
+	#superclass : 'XMLNodeWithChildren',
 	#instVars : [
 		'configuration'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLNodeWithElements >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitNodeWithElements: self
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLNodeWithElements >> addCData: aString [
 	^ self addNode: (self newCData: aString)
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLNodeWithElements >> addContent: aStringOrStringNode [
 	"will be deprecated; use #addString: instead"
 
@@ -44,7 +46,7 @@ XMLNodeWithElements >> addContent: aStringOrStringNode [
 	"returns self for backwards compatibility"
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLNodeWithElements >> addElement: anElement [
 	self deprecated:
 		'Use #addNode: with an element argument or #addElementNamed: instead'.
@@ -53,7 +55,7 @@ XMLNodeWithElements >> addElement: anElement [
 	"returns self for backwards compatibility"
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLNodeWithElements >> addElementNamed: aName [
 	"adds and returns a new element with the specified name"
 
@@ -74,7 +76,7 @@ XMLNodeWithElements >> addElementNamed: aName [
 	^ addedElement name: aName.
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLNodeWithElements >> addElementNamed: aName attributes: anAssociationCollection [
 	"adds and returns a new element with the specified name and attributes"
 
@@ -102,7 +104,7 @@ XMLNodeWithElements >> addElementNamed: aName attributes: anAssociationCollectio
 		setAttributes: addedElementAttributeDictionary.
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLNodeWithElements >> addElementNamed: aName namespaceURI: aURI [
 	"adds and returns a new element with the specified name and namespace
 	URI"
@@ -123,7 +125,7 @@ XMLNodeWithElements >> addElementNamed: aName namespaceURI: aURI [
 	^ addedElement name: aName.
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLNodeWithElements >> addElementNamed: aName namespaceURI: aURI attributes: anAssociationCollection [
 	"adds and returns a new element with the specified name, namespace URI,
 	and attributes"
@@ -151,7 +153,7 @@ XMLNodeWithElements >> addElementNamed: aName namespaceURI: aURI attributes: anA
 		setAttributes: addedElementAttributeDictionary.
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLNodeWithElements >> addString: aString [
 	"Adds a new string node for aString or just appends aString to the
 	last node if it's a coalescing string node (not CDATA).
@@ -166,11 +168,11 @@ XMLNodeWithElements >> addString: aString [
 		ifFalse: [^ self addNode: (self nodeFactory newStringNode: aString)]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNodeWithElements >> addedElement: anElement [
 ]
 
-{ #category : #notifying }
+{ #category : 'notifying' }
 XMLNodeWithElements >> addedNode: aNode [
 	super addedNode: aNode.
 	aNode isElement
@@ -179,7 +181,7 @@ XMLNodeWithElements >> addedNode: aNode [
 			self addedElement: aNode].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> allElements [
 	"returns a node list with all descendant elements (and the receiver if
 	it's an element)"
@@ -190,7 +192,7 @@ XMLNodeWithElements >> allElements [
 	^ allElements.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> allElementsCollect: aBlock [
 	"returns an ordered list of the values of evaluating all descendant
 	elements (and the receiver if it's an element) with aBlock"
@@ -201,7 +203,7 @@ XMLNodeWithElements >> allElementsCollect: aBlock [
 	^ collectedObjects.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> allElementsDetect: aBlock [
 	"Descend depth-first visiting each element with aBlock until one such evaluation
 	of aBlock with an element is true, then return that element. If no evaluation is
@@ -210,7 +212,7 @@ XMLNodeWithElements >> allElementsDetect: aBlock [
 	^ self allElementsDetect: aBlock ifNone: [nil]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> allElementsDetect: aBlock ifNone: anExceptionBlock [
 	"Descend depth-first visiting each element with aBlock until one such evaluation
 	of aBlock with an element is true, then return that element. If no evaluation is
@@ -222,7 +224,7 @@ XMLNodeWithElements >> allElementsDetect: aBlock ifNone: anExceptionBlock [
 	^ anExceptionBlock value.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> allElementsDo: aBlock [
 	"evaluates all descendant elements (and the receiver if it's an
 	element) with aBlock"
@@ -231,7 +233,7 @@ XMLNodeWithElements >> allElementsDo: aBlock [
 		ifTrue: [self elementsDo: [:each | each allElementsDo: aBlock]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> allElementsNamed: aName [
 	"returns a node list with all descendant elements (and the receiver if
 	it's an element) whose qualified or local names match aName"
@@ -239,7 +241,7 @@ XMLNodeWithElements >> allElementsNamed: aName [
 	^ self allElementsSelect: [:each | each isNamed: aName]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> allElementsNamed: aName do: aBlock [
 	"evaluates all descendant elements (and the receiver if it's an
 	element) whose qualified or local names match aName with aBlock"
@@ -249,7 +251,7 @@ XMLNodeWithElements >> allElementsNamed: aName do: aBlock [
 			ifTrue: [aBlock value: each]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> allElementsNamed: aName namespaceURI: aURI [
 	"returns a node list with all descendant elements (and the receiver if
 	it's an element) whose qualified or local names match aName and whose
@@ -260,7 +262,7 @@ XMLNodeWithElements >> allElementsNamed: aName namespaceURI: aURI [
 			and: [each namespaceURI = aURI]]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> allElementsSelect: aBlock [
 	"returns a new node list with all descendant elements (and the receiver
 	if it's an element) that aBlock evaluates true for"
@@ -274,14 +276,14 @@ XMLNodeWithElements >> allElementsSelect: aBlock [
 	^ selectedElements.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> configuration [
 	^ configuration ifNil: [
 		self configuration: self configurationClass new.
 		configuration]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> configuration: aConfiguration [
 	configuration := aConfiguration.
 	self hasChildren
@@ -290,26 +292,26 @@ XMLNodeWithElements >> configuration: aConfiguration [
 				each configuration: aConfiguration]].
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLNodeWithElements >> configurationClass [
 	^ XMLDOMConfiguration
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> contentNodes [
 	"returns a node list of the receiver's element and string node children"
 
 	^ self nodes contentNodes
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> contentNodesDo: aBlock [
 	"evaluates aBlock for all element and string node children of the receiver"
 
 	self nodes contentNodesDo: aBlock
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLNodeWithElements >> contentString: aString [
 	"will be deprecated; use #removeNodes and #addString: instead"
 
@@ -318,7 +320,7 @@ XMLNodeWithElements >> contentString: aString [
 		addString: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> contentStringAt: aName [
 	"Returns the content string of the first element child of the receiver
 	whose qualified or local name matches aName or an empty string if there
@@ -329,7 +331,7 @@ XMLNodeWithElements >> contentStringAt: aName [
 	^ self nodes contentStringAt: aName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> descendantElements [
 	"returns a node list of all descendant elements"
 	| descendentElements |
@@ -339,7 +341,7 @@ XMLNodeWithElements >> descendantElements [
 	^ descendentElements.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> descendantElementsCollect: aBlock [
 	"returns an ordered list of the values of evaluating all descendant
 	elements with aBlock"
@@ -351,7 +353,7 @@ XMLNodeWithElements >> descendantElementsCollect: aBlock [
 	^ collectedObjects.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> descendantElementsDetect: aBlock [
 	"returns the first descendant element that aBlock evaluates true for or
 	nil if there isn't one"
@@ -361,7 +363,7 @@ XMLNodeWithElements >> descendantElementsDetect: aBlock [
 		ifNone: [nil]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> descendantElementsDetect: aBlock ifNone: anExceptionBlock [
 	"returns the first descendant element that aBlock evaluates true for or
 	the value of anExceptionBlock if there isn't one"
@@ -372,7 +374,7 @@ XMLNodeWithElements >> descendantElementsDetect: aBlock ifNone: anExceptionBlock
 	^ anExceptionBlock value.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> descendantElementsDo: aBlock [
 	"evaluates all descendant elements with aBlock"
 
@@ -380,7 +382,7 @@ XMLNodeWithElements >> descendantElementsDo: aBlock [
 		ifTrue: [self elementsDo: [:each | each allElementsDo: aBlock]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> descendantElementsNamed: aName [
 	"returns a node list of all descendant elements whose qualified
 	or local names match aName"
@@ -388,7 +390,7 @@ XMLNodeWithElements >> descendantElementsNamed: aName [
 	^ self descendantElementsSelect: [:each | each isNamed: aName]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> descendantElementsNamed: aName do: aBlock [
 	"evaluates all descendant elements whose qualified or local names
 	match aName with aBlock"
@@ -398,7 +400,7 @@ XMLNodeWithElements >> descendantElementsNamed: aName do: aBlock [
 			ifTrue: [aBlock value: each]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> descendantElementsNamed: aName namespaceURI: aURI [
 	"returns a node list of all descendant elements whose qualified
 	or local names match aName and whose namespace URIs match aURI"
@@ -408,7 +410,7 @@ XMLNodeWithElements >> descendantElementsNamed: aName namespaceURI: aURI [
 			and: [each namespaceURI = aURI]]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> descendantElementsSelect: aBlock [
 	"returns a new node list with all descendant elements that aBlock
 	evaluates true for"
@@ -421,25 +423,25 @@ XMLNodeWithElements >> descendantElementsSelect: aBlock [
 	^ selectedElements.
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLNodeWithElements >> descendentElements [
 	self deprecated: 'use #descendantElements instead'.
 	^ self descendantElements.
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLNodeWithElements >> descendentElementsCollect: aBlock [
 	self deprecated: 'use #descendantElementsCollect: instead'.
 	^ self descendantElementsCollect: aBlock.
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLNodeWithElements >> descendentElementsDetect: aBlock [
 	self deprecated: 'use #descendantElementsDetect: instead'.
 	^ self descendantElementsDetect: aBlock.
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLNodeWithElements >> descendentElementsDetect: aBlock ifNone: anExceptionBlock [
 	self deprecated: 'use #descendantElementsDetect:ifNone: instead'.
 	^ self
@@ -447,19 +449,19 @@ XMLNodeWithElements >> descendentElementsDetect: aBlock ifNone: anExceptionBlock
 		ifNone: anExceptionBlock.
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLNodeWithElements >> descendentElementsDo: aBlock [
 	self deprecated: 'use #descendantElementsDo: instead'.
 	^ self descendantElementsDo: aBlock.
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLNodeWithElements >> descendentElementsNamed: aName [
 	self deprecated: 'use #descendantElementsNamed: instead"'.
 	^ self descendantElementsNamed: aName.
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLNodeWithElements >> descendentElementsNamed: aName do: aBlock [
 	self deprecated: 'use #descendantElementsNamed:do: instead'.
 	^ self
@@ -467,7 +469,7 @@ XMLNodeWithElements >> descendentElementsNamed: aName do: aBlock [
 		do: aBlock.
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLNodeWithElements >> descendentElementsNamed: aName namespaceURI: aURI [
 	self deprecated: 'use #descendantElementsNamed:namespaceURI: instead'.
 	^ self
@@ -475,13 +477,13 @@ XMLNodeWithElements >> descendentElementsNamed: aName namespaceURI: aURI [
 		namespaceURI: aURI.
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLNodeWithElements >> descendentElementsSelect: aBlock [
 	self deprecated: 'use #descendantElementsSelect: instead'.
 	^ self descendantElementsSelect: aBlock.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> elementAfter: anElement [
 	"returns the first element child of the receiver after anElement or nil if
 	there isn't one"
@@ -489,7 +491,7 @@ XMLNodeWithElements >> elementAfter: anElement [
 	^ self nodes elementAfter: anElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> elementAt: aName [
 	"returns the first element child of the receiver whose qualified or
 	local name matches aName or nil if there isn't one"
@@ -497,7 +499,7 @@ XMLNodeWithElements >> elementAt: aName [
 	^ self nodes elementAt: aName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> elementAt: aName ifAbsent: aBlock [
 	"returns the first element child of the receiver whose qualified or
 	local name matches aName or the value of aBlock if there isn't one"
@@ -507,7 +509,7 @@ XMLNodeWithElements >> elementAt: aName ifAbsent: aBlock [
 		ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> elementAt: aName namespaceURI: aURI [
 	"returns the first element child of the receiver whose qualified or
 	local name matches aName and whose namespace URI matches aURI or nil
@@ -518,7 +520,7 @@ XMLNodeWithElements >> elementAt: aName namespaceURI: aURI [
 		namespaceURI: aURI
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> elementAt: aName namespaceURI: aURI ifAbsent: aBlock [
 	"returns the first element child of the receiver whose qualified or
 	local name matches aName and whose namespace URI matches aURI or the
@@ -530,7 +532,7 @@ XMLNodeWithElements >> elementAt: aName namespaceURI: aURI ifAbsent: aBlock [
 		ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> elementBefore: anElement [
 	"returns the first element child of the receiver before anElement or
 	nil if there isn't one"
@@ -538,19 +540,19 @@ XMLNodeWithElements >> elementBefore: anElement [
 	^ self nodes elementBefore: anElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> elementNames [
 	^ self nodes elementNames
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> elements [
 	"returns a new node list of all of the receiver's elements"
 
 	^ self nodes elements
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> elementsAt: aName [
 	"returns a node list of all the receiver's elements whose qualified
 	or local names match aName"
@@ -558,7 +560,7 @@ XMLNodeWithElements >> elementsAt: aName [
 	^ self nodes elementsAt: aName
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> elementsAt: aName do: aBlock [
 	"evaluates aBlock for all element children of the receiver whose
 	qualified or local names match aName"
@@ -568,7 +570,7 @@ XMLNodeWithElements >> elementsAt: aName do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> elementsAt: aName namespaceURI: aURI [
 	"returns a node list of all the receiver's elements whose qualified
 	or local names match aName and whose namespace URIs match aURI"
@@ -578,7 +580,7 @@ XMLNodeWithElements >> elementsAt: aName namespaceURI: aURI [
 		namespaceURI: aURI
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> elementsCollect: aBlock [
 	"returns an ordered list of the values of evaluating the element
 	children of the receiver with aBlock"
@@ -586,7 +588,7 @@ XMLNodeWithElements >> elementsCollect: aBlock [
 	^ self nodes elementsCollect: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> elementsDetect: aBlock [
 	"returns the first element child of the receiver that aBlock evaluates
 	true for or nil if there isn't one"
@@ -594,7 +596,7 @@ XMLNodeWithElements >> elementsDetect: aBlock [
 	^ self nodes elementsDetect: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> elementsDetect: aBlock ifNone: anExceptionBlock [
 	"returns the first element child of the receiver that aBlock evaluates
 	true for or the value of anExceptionBlock if there isn't one"
@@ -604,14 +606,14 @@ XMLNodeWithElements >> elementsDetect: aBlock ifNone: anExceptionBlock [
 		ifNone: anExceptionBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> elementsDo: aBlock [
 	"evaluates aBlock for all element children of the receiver"
 
 	self nodes elementsDo: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> elementsSelect: aBlock [
 	"returns a node list of all element children of the receiver that
 	aBlock evaluates true for"
@@ -619,24 +621,24 @@ XMLNodeWithElements >> elementsSelect: aBlock [
 	^ self nodes elementsSelect: aBlock
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNodeWithElements >> ensureUsesNamespaces [
 	self usesNamespaces: true
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNodeWithElements >> errorOuterXMLForAbsentNode [
 	XMLDOMException signal: 'Cannot change outer XML for absent node'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNodeWithElements >> escapesContentEntitiesWhenWriting [
 	"avoid initializing config; defualt to true"
 	^ configuration isNil
 		or: [configuration replacesContentEntityReferences]
 ]
 
-{ #category : #searching }
+{ #category : 'searching' }
 XMLNodeWithElements >> findElementNamed: aName [
 	"searches the receiver and all descendants for the first element whose
 	qualified or local name matches aName"
@@ -644,7 +646,7 @@ XMLNodeWithElements >> findElementNamed: aName [
 	^ self allElementsDetect: [:each | each isNamed: aName]
 ]
 
-{ #category : #searching }
+{ #category : 'searching' }
 XMLNodeWithElements >> findElementNamed: aName namespaceURI: aURI [
 	"searches the receiver and all descendants for the first element whose
 	qualified or local name matches aName and whose namespace URI matches aURI"
@@ -654,7 +656,7 @@ XMLNodeWithElements >> findElementNamed: aName namespaceURI: aURI [
 			and: [each namespaceURI = aURI]]
 ]
 
-{ #category : #searching }
+{ #category : 'searching' }
 XMLNodeWithElements >> findElementNamed: aName namespaceURI: aURI with: aBlock [
 	"searches the receiver and all descendants for the first element whose
 	qualified or local name matches aName and whose namespace URI matches
@@ -666,7 +668,7 @@ XMLNodeWithElements >> findElementNamed: aName namespaceURI: aURI with: aBlock [
 				and: [aBlock value: each]]]
 ]
 
-{ #category : #searching }
+{ #category : 'searching' }
 XMLNodeWithElements >> findElementNamed: aName with: aBlock [
 	"searches the receiver and all descendants for the first element whose
 	qualified or local name matches aName and aBlock evaluates true for"
@@ -676,7 +678,7 @@ XMLNodeWithElements >> findElementNamed: aName with: aBlock [
 			and: [aBlock value: each]]
 ]
 
-{ #category : #searching }
+{ #category : 'searching' }
 XMLNodeWithElements >> findElementWithID: anID [
 	"Works like XML DOM Level 2's getElementByID(). It will scan attributes
 	identified as IDs by a DTD with '<!ATTLIST ...>' declarations or any
@@ -708,7 +710,7 @@ XMLNodeWithElements >> findElementWithID: anID [
 	^ nil.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> firstElement [
 	"returns the first child element of the receiver or nil if there
 	isn't one"
@@ -716,12 +718,12 @@ XMLNodeWithElements >> firstElement [
 	^ self nodes firstElement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNodeWithElements >> hasContentNodes [
 	^ self nodes hasContentNodes
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNodeWithElements >> hasElements [
 	"returns true if the receiver has element children"
 
@@ -731,12 +733,12 @@ XMLNodeWithElements >> hasElements [
 	^ nodes hasElements.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNodeWithElements >> hasStringNodes [
 	^ self nodes hasStringNodes
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNodeWithElements >> includesElement: aName [
 	"returns true if the receiver has a child element whose qualified or local name
 	matches aName"
@@ -744,7 +746,7 @@ XMLNodeWithElements >> includesElement: aName [
 	^ self nodes includesElement: aName
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNodeWithElements >> includesElement: aName namespaceURI: aURI [
 	"returns true if the receiver has a child element whose qualified or local name
 	matches aName and whose namespace URI matches aURI"
@@ -754,7 +756,7 @@ XMLNodeWithElements >> includesElement: aName namespaceURI: aURI [
 		namespaceURI: aURI
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 XMLNodeWithElements >> innerXML: aStringOrStream [
 	"Replaces the node children by parsing new inner XML from a string or stream
 	argument. By default the same parser configuration will be used to parse the
@@ -763,7 +765,7 @@ XMLNodeWithElements >> innerXML: aStringOrStream [
 	self innerXMLParsedWith: (self parserHandlerClass on: aStringOrStream)
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 XMLNodeWithElements >> innerXMLParsedWith: aParser [
 	| removedNodes |
 
@@ -780,17 +782,17 @@ XMLNodeWithElements >> innerXMLParsedWith: aParser [
 			error pass].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNodeWithElements >> innerXMLStateClass [
 	^ XMLContentState
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNodeWithElements >> isContentNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> lastElement [
 	"returns the last child element of the receiver or nil if there
 	isn't one"
@@ -798,14 +800,14 @@ XMLNodeWithElements >> lastElement [
 	^ self nodes lastElement
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNodeWithElements >> namespaceURIOfAddedElementNamed: aName withScope: aNamespaceScope [
 	^ self usesNamespaces
 		ifTrue: [aNamespaceScope resolvePrefix: aName xmlPrefixBeforeLocalName]
 		ifFalse: ['']
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNodeWithElements >> newAttributeDictionaryFrom: anAssociationCollection forAddedElementWithScope: aNamespaceScope [
 	^ self usesNamespaces
 		ifTrue: [
@@ -814,19 +816,19 @@ XMLNodeWithElements >> newAttributeDictionaryFrom: anAssociationCollection forAd
 		ifFalse: [XMLAttributeDictionary newFrom: anAssociationCollection]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNodeWithElements >> newInnerXMLState [
 	^ self innerXMLStateClass new
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNodeWithElements >> newNamespaceScopeForAddedElement [
 	^ self usesNamespaces
 		ifTrue: [XMLNamespaceScope new]
 		ifFalse: [nil]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNodeWithElements >> newNamespaceScopeForAddedElementNamed: aName namespaceURI: aURI [
 	self ensureUsesNamespaces.
 
@@ -835,36 +837,36 @@ XMLNodeWithElements >> newNamespaceScopeForAddedElementNamed: aName namespaceURI
 		yourself.
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLNodeWithElements >> newString: aString [
 	"will be deprecated; use #newStringNode: instead"
 
 	^ self newStringNode: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> nodeFactory [
 	^ self configuration nodeFactory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> nodeFactory: aNodeFactory [
 	self configuration nodeFactory: aNodeFactory
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLNodeWithElements >> nodeListClass [
 	^ self configuration nodeFactory nodeListClass
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 XMLNodeWithElements >> outerXML: aStringOrStream forNode: aNode [
 	self
 		outerXMLForNode: aNode
 		parsedWith: (self parserHandlerClass on: aStringOrStream)
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 XMLNodeWithElements >> outerXMLForNode: aNode parsedWith: aParser [
 	| indexOfNode removedNodes |
 
@@ -890,23 +892,23 @@ XMLNodeWithElements >> outerXMLForNode: aNode parsedWith: aParser [
 		self addNode: (removedNodes at: i)].
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLNodeWithElements >> parserHandlerClass [
 	^ self configuration parserHandlerClass
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLNodeWithElements >> postCopyConfiguration [
 	configuration
 		ifNotNil: [self configuration: configuration copy]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLNodeWithElements >> printRawContentOn: aStream [
 	self contentNodesDo: [:each | each printRawContentOn: aStream]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> rawContentStringAt: aName [
 	"Returns the raw content string (without space inserted) of the first
 	element child of the receiver whose qualified or local name matches aName
@@ -917,7 +919,7 @@ XMLNodeWithElements >> rawContentStringAt: aName [
 	^ self nodes rawContentStringAt: aName
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLNodeWithElements >> removeAllFormattingNodes [
 	"This is a convenience method to remove formatting string nodes from the
 	receiver and descendant elements. Empty/whitespace string nodes with
@@ -964,7 +966,7 @@ XMLNodeWithElements >> removeAllFormattingNodes [
 				each removeAllFormattingNodes]].
 ]
 
-{ #category : #notifying }
+{ #category : 'notifying' }
 XMLNodeWithElements >> renamedElement: anElement from: anOldName to: aNewName [
 	self nodes
 		renamedElement: anElement
@@ -972,28 +974,28 @@ XMLNodeWithElements >> renamedElement: anElement from: anOldName to: aNewName [
 		to: aNewName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> stringNodes [
 	"returns a new node list of all string node children of the receiver"
 
 	^ self nodes stringNodes
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> stringNodesDo: aBlock [
 	"evaluates each string node child of the receiver with aBlock"
 
 	self nodes stringNodesDo: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> strings [
 	"returns an ordered list of the strings of the string nodes of the receiver"
 
 	^ self nodes strings
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeWithElements >> stringsDo: aBlock [
 	"evaluates each string of each string node child of the receiver with
 	aBlock"
@@ -1001,7 +1003,7 @@ XMLNodeWithElements >> stringsDo: aBlock [
 	self nodes stringsDo: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNodeWithElements >> usesNamespaces [
 	"returns true if namespace checking is enabled (default)"
 
@@ -1011,7 +1013,7 @@ XMLNodeWithElements >> usesNamespaces [
 	^ configuration usesNamespaces.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeWithElements >> usesNamespaces: aBoolean [
 	"can be used to disable namespace checking, which is enabled by default"
 

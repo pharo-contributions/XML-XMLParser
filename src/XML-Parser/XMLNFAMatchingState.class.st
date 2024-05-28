@@ -2,53 +2,55 @@
 This state can pass to a next state if the input matches against an object.
 "
 Class {
-	#name : #XMLNFAMatchingState,
-	#superclass : #XMLNFAState,
+	#name : 'XMLNFAMatchingState',
+	#superclass : 'XMLNFAState',
 	#instVars : [
 		'matcher',
 		'nextState'
 	],
-	#category : #'XML-Parser-Validation-DFA'
+	#category : 'XML-Parser-Validation-DFA',
+	#package : 'XML-Parser',
+	#tag : 'Validation-DFA'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNFAMatchingState class >> matcher: aMatcher [
 	^ self new matcher: aMatcher
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 XMLNFAMatchingState >> connectToState: aState [
 	nextState
 		ifNil: [nextState := aState]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFAMatchingState >> matcher [
 	^ matcher
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFAMatchingState >> matcher: aMatcher [
 	matcher := aMatcher
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNFAMatchingState >> matches: anObject [
 	^ matcher = anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFAMatchingState >> nextState [
 	^ nextState
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNFAMatchingState >> nextStatesDo: aBlock [
 	nextState
 		ifNotNil: [aBlock value: nextState]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLNFAMatchingState >> printLabelOn: aStream [
 	aStream
 		print: self identityHash;
@@ -57,7 +59,7 @@ XMLNFAMatchingState >> printLabelOn: aStream [
 		nextPut: $)
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLNFAMatchingState >> printOn: aStream [
 	super printOn: aStream.
 

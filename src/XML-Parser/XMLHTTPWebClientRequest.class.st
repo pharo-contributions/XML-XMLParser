@@ -2,26 +2,28 @@
 This class uses the WebClient library to implement HTTP requests. This is used on Squeak when Zinc isn't installed.
 "
 Class {
-	#name : #XMLHTTPWebClientRequest,
-	#superclass : #XMLHTTPRequest,
+	#name : 'XMLHTTPWebClientRequest',
+	#superclass : 'XMLHTTPRequest',
 	#instVars : [
 		'webClientClient',
 		'webClientRequest'
 	],
-	#category : #'XML-Parser-HTTP'
+	#category : 'XML-Parser-HTTP',
+	#package : 'XML-Parser',
+	#tag : 'HTTP'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPWebClientRequest class >> isSupportedImplementation [
 	^ XMLClassFinder hasClassNamed: #WebClient
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLHTTPWebClientRequest >> basicCleanup [
 	self webClientClient close
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLHTTPWebClientRequest >> basicSend [
 	^ self responseClass
 		request: self
@@ -33,14 +35,14 @@ XMLHTTPWebClientRequest >> basicSend [
 				sendRequest: self webClientRequest)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPWebClientRequest >> headerAt: aKey ifAbsent: aBlock [
 	^ self webClientRequest
 		headerAt: aKey
 		ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPWebClientRequest >> headerAt: aKey put: aValue [
 	self webClientRequest
 		removeHeader: aKey;
@@ -48,12 +50,12 @@ XMLHTTPWebClientRequest >> headerAt: aKey put: aValue [
 	^ aValue.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLHTTPWebClientRequest >> headerKeysAndValuesDo: aTwoArgumentBlock [
 	self webClientRequest headersDo: aTwoArgumentBlock
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLHTTPWebClientRequest >> headerValuesAt: aKey add: aValue [
 	self webClientRequest
 		addHeader: aKey
@@ -61,24 +63,24 @@ XMLHTTPWebClientRequest >> headerValuesAt: aKey add: aValue [
 	^ aValue.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLHTTPWebClientRequest >> headerValuesAt: aKey do: aBlock [
 	self webClientRequest
 		headersAt: aKey
 		do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPWebClientRequest >> method [
 	^ self webClientRequest method
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPWebClientRequest >> method: aString [
 	self webClientRequest method: aString
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLHTTPWebClientRequest >> removeHeaderAt: aKey ifAbsent: aBlock [
 	| removedValues |
 
@@ -90,29 +92,29 @@ XMLHTTPWebClientRequest >> removeHeaderAt: aKey ifAbsent: aBlock [
 	^ removedValues asOrderedCollection.
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLHTTPWebClientRequest >> responseClass [
 	^ XMLHTTPWebClientResponse
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPWebClientRequest >> timeout [
 	^ self webClientClient timeout
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPWebClientRequest >> timeout: anInteger [
 	self webClientClient timeout: anInteger
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPWebClientRequest >> webClientClient [
 	^ webClientClient
 		ifNil: [
 			webClientClient := (XMLClassFinder classNamed: #WebClient) new]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPWebClientRequest >> webClientRequest [
 	^ webClientRequest
 		ifNil: [

@@ -2,12 +2,14 @@
 This class parses literal ""ANY"" and ""EMPTY"" element content models and returns XMLElementValidators accepting any content or no content (not even whitespace, comments, or PIs).
 "
 Class {
-	#name : #DTDLiteralContentModelParser,
-	#superclass : #DTDContentModelParser,
-	#category : #'XML-Parser-DTD'
+	#name : 'DTDLiteralContentModelParser',
+	#superclass : 'DTDContentModelParser',
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 DTDLiteralContentModelParser >> parse [
 	"either ANY or EMPTY"
 	

@@ -2,8 +2,8 @@
 This class represents a document node, which is often the root of a DOM tree. Nodes can access their document ancestor with #document.
 "
 Class {
-	#name : #XMLDocument,
-	#superclass : #XMLNodeWithElements,
+	#name : 'XMLDocument',
+	#superclass : 'XMLNodeWithElements',
 	#instVars : [
 		'version',
 		'encoding',
@@ -11,25 +11,27 @@ Class {
 		'doctypeDeclaration',
 		'doctypeDefinition'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLDocument class >> root: aRoot [
 	^ self new root: aRoot
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLDocument >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitDocument: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocument >> doctypeDeclaration [
 	^ doctypeDeclaration
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocument >> doctypeDeclaration: aDoctypeDeclaration [
 	doctypeDeclaration
 		ifNotNil: [doctypeDeclaration parent: nil].
@@ -45,83 +47,83 @@ XMLDocument >> doctypeDeclaration: aDoctypeDeclaration [
 	doctypeDeclaration := aDoctypeDeclaration.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocument >> doctypeDefinition [
 	^ doctypeDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocument >> doctypeDefinition: aDoctypeDefinition [
 	doctypeDefinition := aDoctypeDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocument >> document [
 	^ self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocument >> documentRoot [
 	"returns the root of the DOM tree"
 	^ self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocument >> encoding [	
 	^ encoding ifNil: [encoding := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocument >> encoding: aString [	
 	encoding := aString
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDocument >> errorCannotHaveNonElementRoot [
 	XMLDOMException signal: 'Cannot have non-element root'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDocument >> hasDoctypeDeclaration [
 	^ self doctypeDeclaration isNotNil
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDocument >> hasDoctypeDefinition [
 	^ self doctypeDefinition isNotNil
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDocument >> hasEncoding [
 	^ self encoding isNotEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDocument >> hasRoot [
 	^ self root isNotNil
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDocument >> innerXMLStateClass [
 	^ XMLPostDoctypeDeclarationState
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDocument >> isDocument [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDocument >> isStandalone [
 	^ isStandalone ifNil: [isStandalone := false]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocument >> isStandalone: aBoolean [
 	isStandalone := aBoolean
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLDocument >> postCopy [
 	super postCopy.
 
@@ -129,14 +131,14 @@ XMLDocument >> postCopy [
 		ifNotNil: [doctypeDeclaration := doctypeDeclaration copy].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocument >> root [
 	"Returns the current root element or nil if there isn't one"
 
 	^ self firstElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocument >> root: anElement [
 	"Replaces the current root element (if any) with anElement,
 	leaving all other nodes in place"
@@ -152,7 +154,7 @@ XMLDocument >> root: anElement [
 				with: anElement].
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLDocument >> validate [
 	"revalidate against the DTD it was parsed with (if any)"
 
@@ -164,30 +166,30 @@ XMLDocument >> validate [
 			self validateWith: self doctypeDefinition newValidator]
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLDocument >> validateWith: aValidator [
 	"revalidate against a custom DTD or other validator"
 
 	(XMLValidatingNodeVisitor validator: aValidator) visitDocument: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocument >> version [	
 	^ version
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDocument >> version: aVersionFloat [
 	version := aVersionFloat
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLDocument >> writeDoctypeDeclarationOn: aWriter [
 	self hasDoctypeDeclaration
 		ifTrue: [self doctypeDeclaration writeXMLOn: aWriter]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLDocument >> writeXMLDeclarationOn: aWriter [
 	self version
 		ifNotNil: [
@@ -198,7 +200,7 @@ XMLDocument >> writeXMLDeclarationOn: aWriter [
 				write]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLDocument >> writeXMLOn: aWriter [
 	self
 		writeXMLDeclarationOn: aWriter;

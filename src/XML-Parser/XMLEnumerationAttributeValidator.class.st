@@ -2,30 +2,32 @@
 This class validates attributes that can have any value taken from a list like ""(one|two|thee)"".
 "
 Class {
-	#name : #XMLEnumerationAttributeValidator,
-	#superclass : #XMLAttributeValidator,
+	#name : 'XMLEnumerationAttributeValidator',
+	#superclass : 'XMLAttributeValidator',
 	#instVars : [
 		'allowedValues'
 	],
-	#category : #'XML-Parser-Validation'
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLEnumerationAttributeValidator class >> standaloneExternalClass [
 	^ XMLStandaloneExternalEnumerationAttributeValidator
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEnumerationAttributeValidator >> allowedValues [
 	^ allowedValues ifNil: [allowedValues := Set new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEnumerationAttributeValidator >> allowedValues: anAllowedValuesCollection [
 	allowedValues := anAllowedValuesCollection
 ]
 
-{ #category : #'private ' }
+{ #category : 'private ' }
 XMLEnumerationAttributeValidator >> errorEnumerationContainsDuplicateValues [
 	XMLValidationException
 		formatSignal:
@@ -35,7 +37,7 @@ XMLEnumerationAttributeValidator >> errorEnumerationContainsDuplicateValues [
 		with: self element
 ]
 
-{ #category : #'private ' }
+{ #category : 'private ' }
 XMLEnumerationAttributeValidator >> errorInvalidValue: aValue [
 	XMLValidationException
 		formatSignal: 'Invalid value "{1}" for attribute "{2}" of element <{3}>'
@@ -44,12 +46,12 @@ XMLEnumerationAttributeValidator >> errorInvalidValue: aValue [
 		with: self element
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEnumerationAttributeValidator >> isEnumeration [
 	^ true
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLEnumerationAttributeValidator >> validateAttributeDeclaration [
 	| oldAllowedValues |
 
@@ -61,19 +63,19 @@ XMLEnumerationAttributeValidator >> validateAttributeDeclaration [
 	super validateAttributeDeclaration.
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLEnumerationAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 	(self allowedValues includes: aDefaultValue)
 		ifFalse: [self errorInvalidDefaultAttributeValue: aDefaultValue]
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLEnumerationAttributeValidator >> validateAttributeValue: aValue [
 	(self allowedValues includes: aValue)
 		ifFalse: [self errorInvalidValue: aValue]
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLEnumerationAttributeValidator >> validateXMLSpaceAttributeDeclaration [
 	self allowedValues size > 2
 		ifTrue: [self errorInvalidXMLSpaceAttributeDeclaration].

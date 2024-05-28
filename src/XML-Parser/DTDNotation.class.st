@@ -2,17 +2,19 @@
 A class for notation declarations.
 "
 Class {
-	#name : #DTDNotation,
-	#superclass : #Object,
+	#name : 'DTDNotation',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'publicID',
 		'systemID'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDNotation class >> name: aName publicID: aPublicID [
 	^ self
 		name: aName
@@ -20,7 +22,7 @@ DTDNotation class >> name: aName publicID: aPublicID [
 		systemID: ''
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDNotation class >> name: aName publicID: aPublicID systemID: aSystemID [
 	^ self new
 		setName: aName
@@ -28,31 +30,31 @@ DTDNotation class >> name: aName publicID: aPublicID systemID: aSystemID [
 		systemID: aSystemID
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDNotation >> name [
 
 	^ name ifNil: [ name := '' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDNotation >> name: aName [
 
 	name := aName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDNotation >> publicID [
 
 	^ publicID ifNil: [ publicID := '' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDNotation >> publicID: aPublicID [
 
 	publicID := aPublicID
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DTDNotation >> setName: aName publicID: aPublicID systemID: aSystemID [
 
 	name := aName.
@@ -60,13 +62,13 @@ DTDNotation >> setName: aName publicID: aPublicID systemID: aSystemID [
 	systemID := aSystemID
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDNotation >> systemID [
 
 	^ systemID ifNil: [ systemID := '' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDNotation >> systemID: aSystemID [
 
 	systemID := aSystemID

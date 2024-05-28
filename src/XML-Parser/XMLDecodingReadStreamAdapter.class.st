@@ -4,24 +4,26 @@ A read stream adapter that decodes stream contents using a stream converter. Use
 The class  #on: and #on:streamConverter: instance creation messages accept character and binary streams.
 "
 Class {
-	#name : #XMLDecodingReadStreamAdapter,
-	#superclass : #XMLReadStreamAdapter,
+	#name : 'XMLDecodingReadStreamAdapter',
+	#superclass : 'XMLReadStreamAdapter',
 	#instVars : [
 		'peekChar',
 		'prePeekStreamPosition',
 		'streamConverter'
 	],
-	#category : #'XML-Parser-Streams'
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLDecodingReadStreamAdapter class >> nonDecodingOn: aStream [
 	^ self
 		on: aStream
 		streamConverter: XMLStreamConverter null
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLDecodingReadStreamAdapter class >> nonDecodingOnIfBinaryOrExternal: aStream [
 	^ aStream isXMLBinaryOrExternalStream
 		ifTrue: [
@@ -31,26 +33,26 @@ XMLDecodingReadStreamAdapter class >> nonDecodingOnIfBinaryOrExternal: aStream [
 		ifFalse: [nil]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLDecodingReadStreamAdapter class >> on: aStream [
 	^ self
 		on: aStream
 		streamConverter: XMLStreamConverter default
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLDecodingReadStreamAdapter class >> on: aStream streamConverter: aStreamConverter [
 	^ (self basicOn: aStream)
 		streamConverter: aStreamConverter
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDecodingReadStreamAdapter >> atEnd [
 	^ peekChar == nil
 		and: [stream atEnd]
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 XMLDecodingReadStreamAdapter >> detectEncoding [
 	prePeekStreamPosition := nil.
 	peekChar := nil.
@@ -65,27 +67,27 @@ XMLDecodingReadStreamAdapter >> detectEncoding [
 					self streamConverter: converter].
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDecodingReadStreamAdapter >> hasDefaultStreamConverter [
 	^ streamConverter isDefault
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDecodingReadStreamAdapter >> hasImplicitStreamConverter [
 	^ streamConverter isImplicit
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDecodingReadStreamAdapter >> hasNullStreamConverter [
 	^ streamConverter isNull
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDecodingReadStreamAdapter >> isXMLConvertingStreamAdapter [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapter >> next [
 	peekChar
 		ifNil: [^ streamConverter nextFromStream: stream]
@@ -95,7 +97,7 @@ XMLDecodingReadStreamAdapter >> next [
 			^ nextChar]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapter >> peek [
 	^ peekChar
 		ifNil: [
@@ -103,38 +105,38 @@ XMLDecodingReadStreamAdapter >> peek [
 			peekChar := streamConverter nextFromStream: stream]
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLDecodingReadStreamAdapter >> position [
 	^ prePeekStreamPosition ifNil: [stream position]
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLDecodingReadStreamAdapter >> position: anInteger [
 	prePeekStreamPosition := nil.
 	peekChar := nil.
 	stream position: anInteger.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLDecodingReadStreamAdapter >> printStreamOn: aStream [
 	streamConverter
 		printWithConvertableStream: stream
 		on: aStream
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLDecodingReadStreamAdapter >> reset [
 	prePeekStreamPosition := nil.
 	peekChar := nil.
 	stream reset.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapter >> streamConverter [
 	^ streamConverter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDecodingReadStreamAdapter >> streamConverter: aStreamConverter [
 	streamConverter :=
 		aStreamConverter ifNil: [XMLStreamConverter null].

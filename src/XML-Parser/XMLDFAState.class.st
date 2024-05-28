@@ -2,32 +2,34 @@
 This class is a DFA state made by grouping one or more NFA states.
 "
 Class {
-	#name : #XMLDFAState,
-	#superclass : #Object,
+	#name : 'XMLDFAState',
+	#superclass : 'Object',
 	#instVars : [
 		'nfaStates',
 		'dfaStateCache',
 		'dfaStateTransitions',
 		'hasNonDeterminism'
 	],
-	#category : #'XML-Parser-Validation-DFA'
+	#category : 'XML-Parser-Validation-DFA',
+	#package : 'XML-Parser',
+	#tag : 'Validation-DFA'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLDFAState class >> nfaStates: anNFAStateSet [
 	^ self
 		nfaStates: anNFAStateSet
 		dfaStateCache: nil
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLDFAState class >> nfaStates: anNFAStateSet dfaStateCache: aDFAStateCache [
 	^ self new
 		setNFAStates: anNFAStateSet
 		dfaStateCache: aDFAStateCache
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDFAState >> addDFAStateTransitionMatching: aMatcher [
 	| matchingNFAStates totalMatched matchingDFAState |
 
@@ -54,44 +56,44 @@ XMLDFAState >> addDFAStateTransitionMatching: aMatcher [
 		put: matchingDFAState. "nil if no match"
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDFAState >> dfaStateCache [
 	^ dfaStateCache
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDFAState >> dfaStateTransitions [
 	^ dfaStateTransitions ifNil: [dfaStateTransitions := Dictionary new]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDFAState >> hasNonDeterminism [
 	^ hasNonDeterminism
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDFAState >> hasNonDeterminism: aBoolean [
 	hasNonDeterminism := aBoolean
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDFAState >> isAccepting [
 	^ nfaStates isAccepting
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDFAState >> maxDFAStateTransitions [
 	^ 64
 ]
 
-{ #category : #matching }
+{ #category : 'matching' }
 XMLDFAState >> nextDFAStateMatching: aMatcher [
 	^ self
 		nextDFAStateMatching: aMatcher
 		ifNone: [nil]
 ]
 
-{ #category : #matching }
+{ #category : 'matching' }
 XMLDFAState >> nextDFAStateMatching: aMatcher ifNone: aBlock [
 	^ (self dfaStateTransitions
 		at: aMatcher
@@ -99,17 +101,17 @@ XMLDFAState >> nextDFAStateMatching: aMatcher ifNone: aBlock [
 			ifNil: [aBlock value]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDFAState >> nfaStates [
 	^ nfaStates
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLDFAState >> nfaStatesDo: aBlock [
 	nfaStates do: aBlock
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLDFAState >> printOn: aStream [
 	super printOn: aStream.
 
@@ -119,12 +121,12 @@ XMLDFAState >> printOn: aStream [
 		nextPut: $).
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDFAState >> removeDFAStateTransitions [
 	dfaStateTransitions := nil
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLDFAState >> setNFAStates: anNFAStateSet dfaStateCache: aDFAStateCache [
 	nfaStates := anNFAStateSet.
 	dfaStateCache :=

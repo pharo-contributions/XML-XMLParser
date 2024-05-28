@@ -1,6 +1,6 @@
-Extension { #name : #Character }
+Extension { #name : 'Character' }
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Character >> isXMLChar [
 	"Range tests are faster and use less memory than a BitmapCharacterSet, and
 	a temp is used because Character in newer SpurVM images has no 'value'
@@ -30,7 +30,7 @@ Character >> isXMLChar [
 	^ tempValue == 16rD.
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Character >> isXMLNCNameChar [
 	"should be the same as isXMLNameChar except without a test for $:"
 
@@ -103,7 +103,7 @@ Character >> isXMLNCNameChar [
 						^ tempValue <= 16rEFFFF]]].
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Character >> isXMLNCNameStartChar [
 	"should be the same as isXMLNameStartChar except without a test for $:"
 
@@ -166,7 +166,7 @@ Character >> isXMLNCNameStartChar [
 						^ tempValue >= 16rF900]]].
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Character >> isXMLNameChar [
 	"Range tests are faster and use less memory than a BitmapCharacterSet, and
 	a temp is used because Character in newer SpurVM images has no 'value'
@@ -253,7 +253,7 @@ Character >> isXMLNameChar [
 						^ tempValue <= 16rEFFFF]]].
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Character >> isXMLNameStartChar [
 	"Range tests are faster and use less memory than a BitmapCharacterSet, and
 	a temp is used because Character in newer SpurVM images has no 'value'
@@ -327,7 +327,7 @@ Character >> isXMLNameStartChar [
 						^ tempValue >= 16rF900]]].
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Character >> isXMLSeparator [
 	"a temp is used because Character in newer SpurVM images
 	has no 'value' inst var"
@@ -342,7 +342,7 @@ Character >> isXMLSeparator [
 	^ tempValue == 13. "carriage return; no form feeds"
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Character >> isXMLWhitespace [
 	"a temp is used because Character in newer SpurVM images
 	has no 'value' inst var"
@@ -359,7 +359,7 @@ Character >> isXMLWhitespace [
 	^ tempValue == 12. "form feed"
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Character class >> xmlSeparators [
 	^ String
 		with: 32 asCharacter "space"
@@ -368,7 +368,7 @@ Character class >> xmlSeparators [
 		with: 13 asCharacter "cr"
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Character >> xmlSplit: aString [
 	"faster, portable version"
 	| parts |
@@ -380,7 +380,7 @@ Character >> xmlSplit: aString [
 	^ parts.
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Character >> xmlSplit: aString do: aBlock [
 	"faster, portable version"
 	| start |
@@ -400,7 +400,7 @@ Character >> xmlSplit: aString do: aBlock [
 		ifFalse: [aBlock value: (aString copyFrom: start to: aString size)].
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Character class >> xmlWhitespace [
 	^ self xmlSeparators copyWith: 12 asCharacter "form feed"
 ]

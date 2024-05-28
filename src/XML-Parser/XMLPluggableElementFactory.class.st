@@ -13,22 +13,24 @@ This class is a pluggable node factory that can also map elements to different X
 Instances can be saved and reused for performance and safely modified after copying.
 "
 Class {
-	#name : #XMLPluggableElementFactory,
-	#superclass : #XMLPluggableNodeFactory,
+	#name : 'XMLPluggableElementFactory',
+	#superclass : 'XMLPluggableNodeFactory',
 	#instVars : [
 		'elementClassMapper'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableElementFactory >> classForElement: aQualifiedName [
 	^ elementClassMapper
 		classForElement: aQualifiedName
 		ifNone: [self elementClass]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableElementFactory >> classForElement: aQualifiedName attributes: anAssociationCollection [
 	^ elementClassMapper
 		classForElement: aQualifiedName
@@ -36,7 +38,7 @@ XMLPluggableElementFactory >> classForElement: aQualifiedName attributes: anAsso
 		ifNone: [self elementClass]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableElementFactory >> classForElement: aQualifiedName namespaceURI: aURI [
 	^ elementClassMapper
 		classForElement: aQualifiedName
@@ -44,7 +46,7 @@ XMLPluggableElementFactory >> classForElement: aQualifiedName namespaceURI: aURI
 		ifNone: [self elementClass]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableElementFactory >> classForElement: aQualifiedName namespaceURI: aURI attributes: anAssociationCollection [
 	^ elementClassMapper
 		classForElement: aQualifiedName
@@ -53,7 +55,7 @@ XMLPluggableElementFactory >> classForElement: aQualifiedName namespaceURI: aURI
 		ifNone: [self elementClass]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableElementFactory >> classForElement: aQualifiedName namespaceURI: aURI localName: aLocalName attributes: anAssociationCollection [
 	^ elementClassMapper
 		classForElement: aQualifiedName
@@ -63,22 +65,22 @@ XMLPluggableElementFactory >> classForElement: aQualifiedName namespaceURI: aURI
 		ifNone: [self elementClass]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLPluggableElementFactory >> elementClassMapper [
 	^ elementClassMapper
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLPluggableElementFactory >> elementClassMapper: anElementClassMapper [
 	elementClassMapper := anElementClassMapper
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLPluggableElementFactory >> elementClassMapperClass [
 	^ XMLBasicElementClassMapper
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 XMLPluggableElementFactory >> handleElement: anElementName attributes: aCollectionOrAttributeSpec withClass: aClass [
 	"aCollectionOrAttributeSpec can be some kind of XMLAttributeSpec or a
 	collection of associations of required attribute names and values, and the
@@ -91,7 +93,7 @@ XMLPluggableElementFactory >> handleElement: anElementName attributes: aCollecti
 		toClass: aClass
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 XMLPluggableElementFactory >> handleElement: anElementName namespaceURI: aURI attributes: aCollectionOrAttributeSpec withClass: aClass [
 	"aCollectionOrAttributeSpec can be some kind of XMLAttributeSpec or a
 	collection of associations of required attribute names and values, and the
@@ -105,7 +107,7 @@ XMLPluggableElementFactory >> handleElement: anElementName namespaceURI: aURI at
 		toClass: aClass
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 XMLPluggableElementFactory >> handleElement: anElementName namespaceURI: aURI withClass: aClass [
 	elementClassMapper
 		mapElement: anElementName
@@ -113,14 +115,14 @@ XMLPluggableElementFactory >> handleElement: anElementName namespaceURI: aURI wi
 		toClass: aClass
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 XMLPluggableElementFactory >> handleElement: anElementName withClass: aClass [
 	elementClassMapper
 		mapElement: anElementName
 		toClass: aClass
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 XMLPluggableElementFactory >> handleElements: anElementNameCollection namespaceURI: aNamespaceURI withClass: aClass [
 	elementClassMapper
 		mapElements: anElementNameCollection
@@ -128,14 +130,14 @@ XMLPluggableElementFactory >> handleElements: anElementNameCollection namespaceU
 		toClass: aClass
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 XMLPluggableElementFactory >> handleElements: anElementNameCollection withClass: aClass [
 	elementClassMapper
 		mapElements: anElementNameCollection
 		toClass: aClass
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 XMLPluggableElementFactory >> handleElementsMatchingClass: aClass [
 	"This will handle all elements matching the name of a class with that
 	class, but igoring the class's prefix and any 'Element' suffix.
@@ -151,7 +153,7 @@ XMLPluggableElementFactory >> handleElementsMatchingClass: aClass [
 		ignoringSuffixes: self ignorableClassNameSuffixes
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 XMLPluggableElementFactory >> handleElementsMatchingClasses: aClassCollection [
 	"See the comment in #handleElementsMatchingClass:"
 
@@ -160,19 +162,19 @@ XMLPluggableElementFactory >> handleElementsMatchingClasses: aClassCollection [
 		ignoringSuffixes: self ignorableClassNameSuffixes
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLPluggableElementFactory >> ignorableClassNameSuffixes [
 	^ #('Element')
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLPluggableElementFactory >> initialize [
 	super initialize.
 
 	elementClassMapper := self elementClassMapperClass new.
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLPluggableElementFactory >> postCopy [
 	super postCopy.
 

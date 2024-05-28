@@ -6,8 +6,8 @@ Uses XMLURIParser to parse URIs lazily (for example, when a URI compoenent is ac
 URI components are stored internally in encoded form and decoded only when needed, because the XML standard requires delaying decoding for as long as possible.
 "
 Class {
-	#name : #XMLURI,
-	#superclass : #Object,
+	#name : 'XMLURI',
+	#superclass : 'Object',
 	#instVars : [
 		'uriString',
 		'scheme',
@@ -22,22 +22,24 @@ Class {
 	#classVars : [
 		'UnreservedCharacters'
 	],
-	#category : #'XML-Parser-URI'
+	#category : 'XML-Parser-URI',
+	#package : 'XML-Parser',
+	#tag : 'URI'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLURI class >> fromStream: aStream [
 	"streams must be parsed eagerly (because the stream might be read from
 	or closed after), unlike strings"
 	^ self basicNew initialize parseURIStream: aStream
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLURI class >> fromString: aString [
 	^ self basicNew initialize uriString: aString
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLURI class >> initialize [
 	"self initialize"
 
@@ -52,19 +54,19 @@ XMLURI class >> initialize [
 			yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLURI class >> new [
 	^ self fromString: ''
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLURI class >> readFrom: aStringOrStream [
 	aStringOrStream isStream
 		ifTrue: [^ self fromStream: aStringOrStream]
 		ifFalse: [^ self fromString: aStringOrStream]
 ]
 
-{ #category : #combining }
+{ #category : 'combining' }
 XMLURI >> / aURIOrURIString [
 	"Returns the argument URI if it is absolute or the argument resolved in the
 	context of the receiver if it is relative, to do relative path resolution
@@ -73,7 +75,7 @@ XMLURI >> / aURIOrURIString [
 	^ self combinedWith: aURIOrURIString
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 XMLURI >> = anObject [
 	self == anObject
 		ifTrue: [^ true].
@@ -138,13 +140,13 @@ XMLURI >> = anObject [
 	^ true.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> addRawDotPathSegment [
 	self hasNonDirectoryPath
 		ifTrue: [self haveDirectoryPath]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> addRawDoubleDotPathSegment [
 	self hasPath
 		ifFalse: [^ self].
@@ -163,7 +165,7 @@ XMLURI >> addRawDoubleDotPathSegment [
 						ifTrue: [self haveDirectoryPath]]].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> addRawPathSegment: aString [
 	aString = '.'
 		ifTrue: [^ self addRawDotPathSegment].
@@ -182,7 +184,7 @@ XMLURI >> addRawPathSegment: aString [
 	self rawPathSegments addLast: aString.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> addRawPathSegmentsFrom: aURI [
 	"copy before modifying"
 	self rawPathSegments: self rawPathSegments copy.
@@ -199,14 +201,14 @@ XMLURI >> addRawPathSegmentsFrom: aURI [
 	aURI rawPathSegments do: [:each | self addRawPathSegment: each].
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLURI >> asRetrievableResource [
 	^ self isLocal
 		ifTrue: [self asXMLFileHandle]
 		ifFalse: [self asXMLHTTPRequest]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLURI >> asString [
 	"Returns the full, untruncated URI string, unlike #printString, which
 	may truncate"
@@ -226,14 +228,14 @@ XMLURI >> asString [
 				uriString]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLURI >> asXMLFileHandle [
 	self isLocal
 		ifFalse: [self errorCannotConvertURIToFileHandle].
 	^ self path asXMLFileHandle.
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLURI >> asXMLHTTPRequest [
 	(self isHTTP
 		or: [self isHTTPS
@@ -242,12 +244,12 @@ XMLURI >> asXMLHTTPRequest [
 	^ self asString asXMLHTTPRequest.
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLURI >> asXMLURI [
 	^ self
 ]
 
-{ #category : #combining }
+{ #category : 'combining' }
 XMLURI >> combinedWith: aURIOrURIString [
 	"Returns the argument URI if it is absolute or the argument resolved in the
 	context of the receiver if it is relative, to do relative path resolution
@@ -262,7 +264,7 @@ XMLURI >> combinedWith: aURIOrURIString [
 				ifFalse: [^ uriToCombineWith]]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> combinedWithRelativeURI: aRelativeURI [
 	| copy |
 
@@ -306,12 +308,12 @@ XMLURI >> combinedWithRelativeURI: aRelativeURI [
 		ifTrue: [^ copy rawFragment: aRelativeURI rawFragment].
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLURI >> copyWithFragment: aString [
 	^ self copy rawFragment: (self percentEncode: aString)
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLURI >> copyWithHost: aString [
 	| copy |
 
@@ -324,7 +326,7 @@ XMLURI >> copyWithHost: aString [
 	^ copy.
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLURI >> copyWithPath: aString [
 	| newRawPathSegments |
 
@@ -336,7 +338,7 @@ XMLURI >> copyWithPath: aString [
 	^ self copy rawPathSegments: newRawPathSegments.
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLURI >> copyWithPathSegments: aCollection [
 	| newRawPathSegments |
 
@@ -346,12 +348,12 @@ XMLURI >> copyWithPathSegments: aCollection [
 	^ self copy rawPathSegments: newRawPathSegments.
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLURI >> copyWithPort: anInteger [
 	^ self copy port: anInteger
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLURI >> copyWithQuery: anAssociationCollection [
 	| newRawQuery |
 
@@ -363,7 +365,7 @@ XMLURI >> copyWithQuery: anAssociationCollection [
 	^ self copy rawQuery: newRawQuery.
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLURI >> copyWithScheme: aString [
 	^ self copy
 		scheme: aString;
@@ -372,26 +374,26 @@ XMLURI >> copyWithScheme: aString [
 				or: [self hasScheme not])
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLURI >> copyWithUserInfo: aString [
 	^ self copy rawUserInfo: (self percentEncode: aString)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> errorCannotConvertURIToFileHandle [
 	XMLFileException
 		formatSignal: 'Cannot convert non-local URI to file handle: {1}'
 		with: self asString
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> errorCannotConvertURIToHTTPRequest [
 	XMLHTTPException
 		formatSignal: 'Cannot convert URI to HTTP request: {1}'
 		with: self asString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> fragment [
 	"Returns the percent-decoded URI fragment (everything after the '#') or
 	an empty string if there isn't one"
@@ -399,103 +401,103 @@ XMLURI >> fragment [
 	^ self percentDecode: self rawFragment
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 XMLURI >> get [
 	^ self asRetrievableResource get
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 XMLURI >> getUpToLimit: aMaxSize decoding: aBoolean [
 	^ self asRetrievableResource
 		getUpToLimit: aMaxSize
 		decoding: aBoolean
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> hasAbsolutePath [
 	^ self hasPath
 		and: [self rawPathSegments first isEmpty]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> hasAuthority [
 	^ self hasUserInfo
 		or: [self hasHost
 			or: [self hasPort]]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> hasAuthorityPrefix [
 	self parseURIStringIfUnparsed.
 	^ hasAuthorityPrefix.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> hasAuthorityPrefix: aBoolean [
 	hasAuthorityPrefix := aBoolean
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> hasDirectoryPath [
 	^ self hasPath
 		and: [self rawPathSegments last isEmpty]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> hasFragment [
 	^ self rawFragment isNotEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> hasHost [
 	^ self rawHost isNotEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> hasIPv6Host [
 	^ self hasHost
 		and: [self rawHost first == $[
 			and: [self rawHost last == $]]]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> hasNonDirectoryPath [
 	^ self hasPath
 		and: [self hasDirectoryPath not]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> hasPath [
 	^ self rawPathSegments isNotEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> hasPort [
 	^ self port isNotNil
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> hasQuery [
 	^ self rawQuery isNotEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> hasRootPath [
 	^ self rawPathSegments size = 2
 		and: [self rawPathSegments allSatisfy: [:each | each isEmpty]]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> hasScheme [
 	^ self scheme isNotEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> hasUserInfo [
 	^ self rawUserInfo isNotEmpty
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 XMLURI >> hash [
 	"ignores user-info and ports"
 	^ ((((self species hash bitXor:
@@ -506,14 +508,14 @@ XMLURI >> hash [
 						self fragment hash
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> haveDirectoryPath [
 	self hasPath
 		ifFalse: [self rawPathSegments addLast: ''].
 	self rawPathSegments addLast: ''.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> host [
 	"Returns the percent-decoded host or IPv6-style host or an empty string
 	if there isn't one"
@@ -523,7 +525,7 @@ XMLURI >> host [
 		ifFalse: [^ (self percentDecode: self rawHost) asLowercase]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> isEmpty [
 	self hasScheme
 		ifTrue: [^ false].
@@ -539,51 +541,51 @@ XMLURI >> isEmpty [
 	^ true.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> isFile [
 	^ self scheme = 'file'
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLURI >> isFileURI [
 	self deprecated: 'use #isFile instead'.
 	^ self isFile.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> isHTTP [
 	^ self scheme = 'http'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> isHTTPS [
 	^ self scheme = 'https'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> isLocal [
 	^ self isFile
 		or: [self isRelative
 			and: [self hasHost not]]
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLURI >> isLocalURI [
 	self deprecated: 'use #isLocal instead'.
 	^ self isLocal
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> isNotEmpty [
 	^ self isEmpty not
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> isRelative [
 	^ self hasScheme not
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> notEmpty [
 
 	self
@@ -593,7 +595,7 @@ XMLURI >> notEmpty [
 	^ self isNotEmpty
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> parseURIStream: aStream [
 	| parser |
 
@@ -618,13 +620,13 @@ XMLURI >> parseURIStream: aStream [
 		rawFragment: parser parseFragment.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> parseURIStringIfUnparsed [
 	scheme
 		ifNil: [self parseURIStream: self uriString readStream]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> path [
 	"Returns the percent-decoded path as a string"
 
@@ -638,20 +640,20 @@ XMLURI >> path [
 		ifFalse: [^ '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> pathSegments [
 	"Returns a temporary OrderedCollection of percent-decoded path segments"
 
 	^ self rawPathSegments collect: [:each | self percentDecode: each]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLURI >> pathSegmentsDo: aBlock [
 	self rawPathSegments do: [:each |
 		aBlock value: (self percentDecode: each)]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> percentAndPlusDecode: aString [
 	| readStream writeStream |
 
@@ -675,7 +677,7 @@ XMLURI >> percentAndPlusDecode: aString [
 	^ writeStream contents.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> percentAndPlusEncode: aString [
 	| writeStream |
 
@@ -694,7 +696,7 @@ XMLURI >> percentAndPlusEncode: aString [
 	^ writeStream contents.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> percentDecode: aString [
 	| readStream writeStream |
 
@@ -714,7 +716,7 @@ XMLURI >> percentDecode: aString [
 	^ writeStream contents.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> percentDecodeNextFrom: aReadStream on: aWriteStream [
 	| readStreamAdapter |
 
@@ -725,7 +727,7 @@ XMLURI >> percentDecodeNextFrom: aReadStream on: aWriteStream [
 		whileFalse: [aWriteStream nextPut: readStreamAdapter next].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> percentEncode: aString [
 	| writeStream |
 
@@ -741,7 +743,7 @@ XMLURI >> percentEncode: aString [
 	^ writeStream contents.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> port [
 	"Returns the integer port or nil if there isn't one"
 
@@ -749,12 +751,12 @@ XMLURI >> port [
 	^ port.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> port: anInteger [
 	port := anInteger
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLURI >> postCopy [
 	"the copyWith* methods modify copies, so any URI string of a copy must be parsed
 	if it hasn't been already and then cleared because it will be obsolete after a
@@ -764,7 +766,7 @@ XMLURI >> postCopy [
 		uriString: nil
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLURI >> printAuthorityOn: aStream [
 	self hasAuthority
 		ifTrue: [
@@ -774,14 +776,14 @@ XMLURI >> printAuthorityOn: aStream [
 				printPortOn: aStream]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLURI >> printAuthorityPrefixOn: aStream [
 	(self hasAuthorityPrefix
 		or: [self hasScheme not and: [self hasAuthority]])
 		ifTrue: [aStream nextPutAll: '//']
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLURI >> printFragmentOn: aStream [
 	self hasFragment
 		ifTrue: [
@@ -790,25 +792,25 @@ XMLURI >> printFragmentOn: aStream [
 				nextPutAll: self rawFragment]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLURI >> printHostOn: aStream [
 	self hasHost
 		ifTrue: [aStream nextPutAll: self rawHost]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLURI >> printOn: aStream [
 	aStream nextPutAll: self asString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLURI >> printPathOn: aStream [
 	self rawPathSegments
 		do: [:each | aStream nextPutAll: each]
 		separatedBy: [aStream nextPut: $/]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLURI >> printPathPrefixOn: aStream [
 	(self hasPath
 		and: [self hasAbsolutePath not
@@ -816,7 +818,7 @@ XMLURI >> printPathPrefixOn: aStream [
 		ifTrue: [aStream nextPut: $/]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLURI >> printPortOn: aStream [
 	self hasPort
 		ifTrue: [
@@ -824,7 +826,7 @@ XMLURI >> printPortOn: aStream [
 			port printOn: aStream]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLURI >> printQueryOn: aStream [
 	| atBeginning |
 
@@ -843,7 +845,7 @@ XMLURI >> printQueryOn: aStream [
 			nextPutAll: each value].
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLURI >> printSchemeOn: aStream [
 	self hasScheme
 		ifTrue: [
@@ -852,7 +854,7 @@ XMLURI >> printSchemeOn: aStream [
 				nextPut: $:]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLURI >> printUserInfoOn: aStream [
 	self hasUserInfo
 		ifTrue: [
@@ -861,7 +863,7 @@ XMLURI >> printUserInfoOn: aStream [
 				nextPut: $@]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> query [
 	"Returns a temporary OrderedCollection of percent/plus-decoded
 	query string key=value pairs"
@@ -871,7 +873,7 @@ XMLURI >> query [
 			(self percentAndPlusDecode: each value)]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> queryAt: aKey [
 	"Returns the last percent/plus-decoded value of the query string
 	parameter aKey or an empty string if there isn't one"
@@ -881,7 +883,7 @@ XMLURI >> queryAt: aKey [
 		ifAbsent: ['']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> queryAt: aKey ifAbsent: aBlock [
 	"Returns the first percent/plus-decoded value of the query string
 	parameter aKey or the value of aBlock if there isn't one"
@@ -892,7 +894,7 @@ XMLURI >> queryAt: aKey ifAbsent: aBlock [
 	^ aBlock value.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLURI >> queryIncludesKey: aKey [
 	self
 		queryAt: aKey
@@ -900,7 +902,7 @@ XMLURI >> queryIncludesKey: aKey [
 	^ true.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> queryKeys [
 	"Returns a SequenceableCollection of the unique percent/plus-decoded
 	query string parameter keys"
@@ -913,7 +915,7 @@ XMLURI >> queryKeys [
 	^ keys.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLURI >> queryKeysAndValuesDo: aTwoArgumentBlock [
 	self rawQuery do: [:each |
 		aTwoArgumentBlock
@@ -921,13 +923,13 @@ XMLURI >> queryKeysAndValuesDo: aTwoArgumentBlock [
 			value: (self percentAndPlusDecode: each value)]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLURI >> queryKeysDo: aBlock [
 	self rawQuery do: [:each |
 		aBlock value: (self percentAndPlusDecode: each key)]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> queryValuesAt: aKey [
 	"Returns the percent/plus-decoded values of the query string parameter
 	aKey or an empty collection if there aren't any"
@@ -937,14 +939,14 @@ XMLURI >> queryValuesAt: aKey [
 		ifAbsent: [OrderedCollection new]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLURI >> queryValuesAt: aKey do: aBlock [
 	self queryKeysAndValuesDo: [:key :value |
 		key = aKey
 			ifTrue: [aBlock value: value]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> queryValuesAt: aKey ifAbsent: aBlock [
 	"Returns the percent/plus-decoded values of the query string parameter
 	aKey or the value of aBlock if there aren't any"
@@ -960,7 +962,7 @@ XMLURI >> queryValuesAt: aKey ifAbsent: aBlock [
 	^ values ifNil: [aBlock value].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> rawFragment [
 	"Returns the raw URI fragment (everything after the '#') without
 	percent-decoding or an empty string if there isn't one"
@@ -969,12 +971,12 @@ XMLURI >> rawFragment [
 	^ rawFragment.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> rawFragment: aString [
 	rawFragment := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> rawHost [
 	"Returns the raw host without percent-decoding or the IPv6-style host
 	or an empty string if there isn't one"
@@ -983,12 +985,12 @@ XMLURI >> rawHost [
 	^ rawHost.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> rawHost: aString [
 	rawHost := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> rawPathSegments [
 	"Returns an OrderedCollection of raw path segments without
 	percent-decoding"
@@ -997,12 +999,12 @@ XMLURI >> rawPathSegments [
 	^ rawPathSegments.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> rawPathSegments: aPathSegmentCollection [
 	rawPathSegments := aPathSegmentCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> rawQuery [
 	"Returns an OrderedCollection of raw query string key=value pairs
 	without percent/plus-decoding"
@@ -1011,33 +1013,33 @@ XMLURI >> rawQuery [
 	^ rawQuery.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> rawQuery: anOrderedCollection [
 	rawQuery := anOrderedCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> rawUserInfo [
 	self parseURIStringIfUnparsed.
 	^ rawUserInfo.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> rawUserInfo: aString [
 	rawUserInfo := aString
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> removeLastRawPathSegment [
 	^ self rawPathSegments removeLast
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> removeRawPathSegments [
 	self rawPathSegments removeAll
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> scheme [
 	"Returns the URI scheme or an empty string if there isn't one"
 
@@ -1045,34 +1047,34 @@ XMLURI >> scheme [
 	^ scheme.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> scheme: aString [
 	scheme := aString
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 XMLURI >> streamGet [
 	^ self asRetrievableResource streamGet
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 XMLURI >> streamGetUpToLimit: aMaxSize decoding: aBoolean [
 	^ self asRetrievableResource
 		streamGetUpToLimit: aMaxSize
 		decoding: aBoolean
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> uriString [
 	^ uriString
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLURI >> uriString: aString [
 	uriString := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLURI >> userInfo [
 	^ self percentDecode: self rawUserInfo
 ]

@@ -2,48 +2,50 @@
 A simple attribute spec that checks for attributes being present and optionally having a specific value.
 "
 Class {
-	#name : #XMLBasicAttributeSpec,
-	#superclass : #XMLAttributeSpec,
+	#name : 'XMLBasicAttributeSpec',
+	#superclass : 'XMLAttributeSpec',
 	#instVars : [
 		'attributeSpec'
 	],
-	#category : #'XML-Parser-Utils'
+	#category : 'XML-Parser-Utils',
+	#package : 'XML-Parser',
+	#tag : 'Utils'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLBasicAttributeSpec class >> attributes: aDictionaryOrCollectionOfAssociationsAndStrings [
 	^ self new setAttributes: aDictionaryOrCollectionOfAssociationsAndStrings
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLBasicAttributeSpec >> addAttribute: anAttribute [
 	^ attributeSpec
 		at: anAttribute
 		ifAbsentPut: [nil]
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLBasicAttributeSpec >> addAttributeAssociation: anAssociation [
 	^ self
 		addAttributeName: anAssociation key
 		value: anAssociation value
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLBasicAttributeSpec >> addAttributeName: aName value: aValue [
 	^ attributeSpec
 		at: aName
 		put: aValue
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLBasicAttributeSpec >> initialize [
 	super initialize.
 
 	attributeSpec := Dictionary new.
 ]
 
-{ #category : #matching }
+{ #category : 'matching' }
 XMLBasicAttributeSpec >> matchesAttributes: anAttributeDictionary [
 	attributeSpec keysAndValuesDo: [:specName :specValue |
 		specValue
@@ -68,7 +70,7 @@ XMLBasicAttributeSpec >> matchesAttributes: anAttributeDictionary [
 	^ true.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLBasicAttributeSpec >> setAttributes: aDictionaryOrCollectionOfAssociationsAndStrings [
 	attributeSpec removeAll.
 

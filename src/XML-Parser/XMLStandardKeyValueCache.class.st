@@ -2,12 +2,14 @@
 This class is the standard key-value cache implementation used on Pharo/Squeak.
 "
 Class {
-	#name : #XMLStandardKeyValueCache,
-	#superclass : #XMLKeyValueCache,
-	#category : #'XML-Parser-Utils'
+	#name : 'XMLStandardKeyValueCache',
+	#superclass : 'XMLKeyValueCache',
+	#category : 'XML-Parser-Utils',
+	#package : 'XML-Parser',
+	#tag : 'Utils'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStandardKeyValueCache class >> isSupportedImplementation [
 	"need some type of reentrant mutex"
 	XMLReentrantMutex hasSupportedImplementation
@@ -24,12 +26,12 @@ XMLStandardKeyValueCache class >> isSupportedImplementation [
 	^ true.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStandardKeyValueCache >> collection [
 	^ collection
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLStandardKeyValueCache >> setCollection: aKeyValueCollection [
 	collection := aKeyValueCollection
 ]

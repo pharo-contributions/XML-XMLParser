@@ -4,15 +4,17 @@ This class represents an ordered list of attribute nodes that also keeps a dicti
 This is the default attribute list class.
 "
 Class {
-	#name : #XMLCachingAttributeList,
-	#superclass : #XMLAttributeList,
+	#name : 'XMLCachingAttributeList',
+	#superclass : 'XMLAttributeList',
 	#instVars : [
 		'attributeNodesByName'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingAttributeList >> afterAdding: aNode at: anIndex [
 	self attributeNodesByName
 		at: aNode name ifPresent: [:duplicate |
@@ -26,7 +28,7 @@ XMLCachingAttributeList >> afterAdding: aNode at: anIndex [
 		ifNotNil: [observer addedAttribute: aNode].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingAttributeList >> afterAddingLast: aNode [
 	self attributeNodesByName
 		at: aNode name ifPresent: [:duplicate |
@@ -40,7 +42,7 @@ XMLCachingAttributeList >> afterAddingLast: aNode [
 		ifNotNil: [observer addedAttribute: aNode].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingAttributeList >> afterAddingToCopyLast: aNode [
 	self attributeNodesByName
 		at: aNode name
@@ -49,27 +51,27 @@ XMLCachingAttributeList >> afterAddingToCopyLast: aNode [
 		ifNotNil: [observer addedAttribute: aNode].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingAttributeList >> afterRemoving: aNode [
 	self attributeNodesByName removeKey: aNode name.
 	observer
 		ifNotNil: [observer removedAttribute: aNode].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingAttributeList >> attributeNodesByName [
 	^ attributeNodesByName
 		ifNil: [attributeNodesByName := Dictionary new: self capacity]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingAttributeList >> attributeValueAt: aName ifAbsent: aBlock [
 	^ (self attributeNodesByName
 		at: aName
 		ifAbsent: [^ aBlock value]) value
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingAttributeList >> attributeValueAt: aName put: aValue [
 	(self attributeNodesByName
 		at: aName
@@ -83,13 +85,13 @@ XMLCachingAttributeList >> attributeValueAt: aName put: aValue [
 	^ aValue.
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLCachingAttributeList >> copyClass [
 	"use the non-caching superclass for copies for performance"
 	^ XMLAttributeList
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLCachingAttributeList >> includes: aNode [
 	^ aNode isAttribute
 		and: [
@@ -98,24 +100,24 @@ XMLCachingAttributeList >> includes: aNode [
 				ifAbsent: [^ false]) = aNode]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLCachingAttributeList >> includesAttribute: aName [
 	^ self attributeNodesByName includesKey: aName
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingAttributeList >> indexOfAttributeValueAt: aName [
 	^ (self attributeNodesByName includesKey: aName)
 		ifTrue: [super indexOfAttributeValueAt: aName]
 		ifFalse: [0]
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLCachingAttributeList >> removeAttribute: aName [
 	^ (self remove: (self attributeNodesByName at: aName)) value
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLCachingAttributeList >> removeAttribute: aName ifAbsent: aBlock [
 	^ (self remove:
 		(self attributeNodesByName
@@ -123,7 +125,7 @@ XMLCachingAttributeList >> removeAttribute: aName ifAbsent: aBlock [
 			ifAbsent: [^ aBlock value])) value
 ]
 
-{ #category : #notifying }
+{ #category : 'notifying' }
 XMLCachingAttributeList >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 	self attributeNodesByName
 		removeKey: anOldName;
@@ -134,7 +136,7 @@ XMLCachingAttributeList >> renamedAttribute: anAttribute from: anOldName to: aNe
 		at: aNewName put: anAttribute
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingAttributeList >> setAttributesFromOrderPreservingDictionary: anOrderPreservingDictionary [
 	"This should only be sent by DOM parsers/builders, not public API users"
 	| orderedKeys |

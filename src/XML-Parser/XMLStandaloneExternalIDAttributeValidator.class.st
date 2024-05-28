@@ -2,12 +2,14 @@
 This class validates standalone externally defined ID attributes that must have unique (not repeated in the same document) values. It disallows attributes that require further value normalization.
 "
 Class {
-	#name : #XMLStandaloneExternalIDAttributeValidator,
-	#superclass : #XMLIDAttributeValidator,
-	#category : #'XML-Parser-Validation-Standalone'
+	#name : 'XMLStandaloneExternalIDAttributeValidator',
+	#superclass : 'XMLIDAttributeValidator',
+	#category : 'XML-Parser-Validation-Standalone',
+	#package : 'XML-Parser',
+	#tag : 'Validation-Standalone'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStandaloneExternalIDAttributeValidator >> isStandaloneExternal [
 	^ true
 ]

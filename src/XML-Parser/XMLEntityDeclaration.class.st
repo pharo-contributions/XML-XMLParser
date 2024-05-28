@@ -2,18 +2,20 @@
 This is an abstract class for general and parameter <!ENTITY> declarations.
 "
 Class {
-	#name : #XMLEntityDeclaration,
-	#superclass : #XMLDeclarationNode,
+	#name : 'XMLEntityDeclaration',
+	#superclass : 'XMLDeclarationNode',
 	#instVars : [
 		'name',
 		'replacement',
 		'publicID',
 		'systemID'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLEntityDeclaration class >> name: aName publicID: aPublicID systemID: aSystemID [
 	^ self new
 		name: aName;
@@ -21,65 +23,65 @@ XMLEntityDeclaration class >> name: aName publicID: aPublicID systemID: aSystemI
 		systemID: aSystemID
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLEntityDeclaration class >> name: aName replacement: aReplacement [
 	^ self new
 		name: aName;
 		replacement: aReplacement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEntityDeclaration >> isExternal [
 	^ self systemID isNotEmpty
 		or: [self publicID isNotEmpty]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEntityDeclaration >> isParameter [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEntityDeclaration >> isUnparsed [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEntityDeclaration >> name [
 	^ name ifNil: [name := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEntityDeclaration >> name: aName [
 	name := aName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEntityDeclaration >> publicID [
 	^ publicID ifNil: [publicID := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEntityDeclaration >> publicID: aPublicID [
 	publicID := aPublicID
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEntityDeclaration >> replacement [
 	^ replacement ifNil: [replacement := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEntityDeclaration >> replacement: aReplacement [
 	replacement := aReplacement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEntityDeclaration >> systemID [
 	^ systemID ifNil: [systemID := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEntityDeclaration >> systemID: aSystemID [
 	systemID := aSystemID
 ]

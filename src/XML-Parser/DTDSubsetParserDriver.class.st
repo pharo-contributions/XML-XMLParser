@@ -2,47 +2,49 @@
 An abstract class for handling internal and external DTD subset events.
 "
 Class {
-	#name : #DTDSubsetParserDriver,
-	#superclass : #XMLParserDriver,
+	#name : 'DTDSubsetParserDriver',
+	#superclass : 'XMLParserDriver',
 	#instVars : [
 		'doctypeDefinition'
 	],
-	#category : #'XML-Parser-Drivers'
+	#category : 'XML-Parser-Drivers',
+	#package : 'XML-Parser',
+	#tag : 'Drivers'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDSubsetParserDriver >> doctypeDefinition [
 	^ doctypeDefinition
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDSubsetParserDriver >> errorImproperParameterEntityNesting [
 	XMLValidationException signal:
 		'Improper nesting of parameter entity replacement within DTD subset'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDSubsetParserDriver >> errorInvalidUndeclaredGeneralEntityReference: aName [
 	XMLValidationException
 		formatSignal: 'Undeclared general entity reference &{1};'
 		with: aName
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDSubsetParserDriver >> errorInvalidUndeclaredParameterEntityReference: aName [
 	XMLValidationException
 		formatSignal: 'Undeclared parameter entity reference %{1};'
 		with: aName
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDSubsetParserDriver >> errorMultipleDeclarationsForElement: aName [
 	XMLValidationException
 		formatSignal: 'Multiple declarations for <{1}> element'
 		with: aName
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDSubsetParserDriver >> errorMultipleDeclarationsForNotation: aName [
 	"Unlike redundant entity declarations which are just ignored,
 	redundant notation declarations are invalid"
@@ -51,7 +53,7 @@ DTDSubsetParserDriver >> errorMultipleDeclarationsForNotation: aName [
 		with: aName
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDSubsetParserDriver >> errorReferenceToStandaloneExternalEntity: anEntity [
 	XMLValidationException
 		formatSignal:
@@ -60,19 +62,19 @@ DTDSubsetParserDriver >> errorReferenceToStandaloneExternalEntity: anEntity [
 		with: anEntity asReference
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDSubsetParserDriver >> errorUndeclaredGeneralEntityReference: aName [
 	XMLWellFormednessException
 		formatSignal: 'Undeclared general entity reference &{1};'
 		with: aName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDSubsetParserDriver >> externalEntityResolver [
 	self subclassResponsibility
 ]
 
-{ #category : #'handling - dtd' }
+{ #category : 'handling - dtd' }
 DTDSubsetParserDriver >> handleAttributeDeclaration: anElement name: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	| newAttributeValidator |
 
@@ -101,7 +103,7 @@ DTDSubsetParserDriver >> handleAttributeDeclaration: anElement name: anAttribute
 		ifTrue: [newAttributeValidator validateAttributeDeclaration].
 ]
 
-{ #category : #'handling - dtd' }
+{ #category : 'handling - dtd' }
 DTDSubsetParserDriver >> handleElementDeclaration: aName contentModel: aContentModel [
 	| newElementValidator |
 
@@ -123,7 +125,7 @@ DTDSubsetParserDriver >> handleElementDeclaration: aName contentModel: aContentM
 			newElementValidator validateElementDeclaration].
 ]
 
-{ #category : #'handling - dtd' }
+{ #category : 'handling - dtd' }
 DTDSubsetParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotation [
 	self mustSkipEntityAndAttributeDeclarations
 		ifTrue: [^ self].
@@ -160,7 +162,7 @@ DTDSubsetParserDriver >> handleGeneralEntityDeclaration: aName publicID: aPublic
 				ndata: aNotation].
 ]
 
-{ #category : #'handling - dtd' }
+{ #category : 'handling - dtd' }
 DTDSubsetParserDriver >> handleGeneralEntityDeclaration: aName replacement: aReplacement [
 	self mustSkipEntityAndAttributeDeclarations
 		ifTrue: [^ self].
@@ -178,7 +180,7 @@ DTDSubsetParserDriver >> handleGeneralEntityDeclaration: aName replacement: aRep
 				baseURI: self baseURI].
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 DTDSubsetParserDriver >> handleGeneralEntityReference: aName [
 	| entity |
 
@@ -218,14 +220,14 @@ DTDSubsetParserDriver >> handleGeneralEntityReference: aName [
 	^ entity.
 ]
 
-{ #category : #'handling - dtd' }
+{ #category : 'handling - dtd' }
 DTDSubsetParserDriver >> handleImproperParameterEntityNesting [
 	"this is a validity constraint and is only checked when validating"
 	self isValidating
 		ifTrue: [self errorImproperParameterEntityNesting]
 ]
 
-{ #category : #'handling - dtd' }
+{ #category : 'handling - dtd' }
 DTDSubsetParserDriver >> handleNotationDeclaration: aName publicID: aPublicID systemID: aSystemID [
 	(self doctypeDefinition
 		addNotation: aName
@@ -236,7 +238,7 @@ DTDSubsetParserDriver >> handleNotationDeclaration: aName publicID: aPublicID sy
 				ifTrue: [self errorMultipleDeclarationsForNotation: aName]]
 ]
 
-{ #category : #'handling - dtd' }
+{ #category : 'handling - dtd' }
 DTDSubsetParserDriver >> handleParameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
 	self mustSkipEntityAndAttributeDeclarations
 		ifFalse: [
@@ -255,7 +257,7 @@ DTDSubsetParserDriver >> handleParameterEntityDeclaration: aName publicID: aPubl
 								addUnresolvableExternalParameterEntity: aName]]]
 ]
 
-{ #category : #'handling - dtd' }
+{ #category : 'handling - dtd' }
 DTDSubsetParserDriver >> handleParameterEntityDeclaration: aName replacement: aReplacement [
 	self mustSkipEntityAndAttributeDeclarations
 		ifFalse: [
@@ -265,7 +267,7 @@ DTDSubsetParserDriver >> handleParameterEntityDeclaration: aName replacement: aR
 				baseURI: self baseURI]
 ]
 
-{ #category : #'handling - dtd' }
+{ #category : 'handling - dtd' }
 DTDSubsetParserDriver >> handleParameterEntityReference: aName [
 	self haveParameterEntityReferences.
 	^ self doctypeDefinition
@@ -277,37 +279,37 @@ DTDSubsetParserDriver >> handleParameterEntityReference: aName [
 			nil]
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 DTDSubsetParserDriver >> handleParseError: aString [
 	XMLWellFormednessException signal: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDSubsetParserDriver >> hasExternalSubset [
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDSubsetParserDriver >> hasParameterEntityReferences [
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDSubsetParserDriver >> hasSkippedParameterEntityReferences [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDSubsetParserDriver >> haveParameterEntityReferences [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDSubsetParserDriver >> haveSkippedParameterEntityReferences [
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDSubsetParserDriver >> isExternal [
 	"Definition: An external markup declaration is defined as a markup
 	declaration occurring in the external subset or in a parameter entity
@@ -317,28 +319,28 @@ DTDSubsetParserDriver >> isExternal [
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDSubsetParserDriver >> isStandalone [
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDSubsetParserDriver >> isStandaloneExternal [
 	^ self isStandalone
 		and: [self isExternal]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDSubsetParserDriver >> isValidating [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDSubsetParserDriver >> maxEntityReplacementDepth [
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDSubsetParserDriver >> mustSkipEntityAndAttributeDeclarations [
 	"'Except when standalone=''yes'', they (non-validating parsers) MUST NOT
 	process entity declarations or attribute-list declarations encountered
@@ -348,17 +350,17 @@ DTDSubsetParserDriver >> mustSkipEntityAndAttributeDeclarations [
 			and: [self hasSkippedParameterEntityReferences]]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDSubsetParserDriver >> preservesUndeclaredEntityReferences [
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDSubsetParserDriver >> replacesContentEntityReferences [
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDSubsetParserDriver >> resolvesExternalEntities [
 	self subclassResponsibility
 ]

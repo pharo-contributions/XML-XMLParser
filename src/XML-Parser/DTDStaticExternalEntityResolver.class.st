@@ -2,20 +2,22 @@
 This class is a resolver that maps entity URIs to string replacements so resolution can be done without HTTP or file access. Used during testing.
 "
 Class {
-	#name : #DTDStaticExternalEntityResolver,
-	#superclass : #DTDExternalEntityResolver,
+	#name : 'DTDStaticExternalEntityResolver',
+	#superclass : 'DTDExternalEntityResolver',
 	#instVars : [
 		'externalEntities'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDStaticExternalEntityResolver class >> externalEntities: anAssociationCollection [
 	^ self new externalEntities: anAssociationCollection
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDStaticExternalEntityResolver >> errorMaxExternalEntitySize: aMaxSize exceededByURI: anXMLURIOrURIString [
 
 	XMLLimitException
@@ -24,7 +26,7 @@ DTDStaticExternalEntityResolver >> errorMaxExternalEntitySize: aMaxSize exceeded
 		with: anXMLURIOrURIString asString
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDStaticExternalEntityResolver >> errorUnresolvableExternalEntityURI: anXMLURIOrURIString [
 
 	XMLParserException
@@ -32,13 +34,13 @@ DTDStaticExternalEntityResolver >> errorUnresolvableExternalEntityURI: anXMLURIO
 		with: anXMLURIOrURIString asString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDStaticExternalEntityResolver >> externalEntities [
 
 	^ externalEntities ifNil: [externalEntities := Dictionary new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDStaticExternalEntityResolver >> externalEntities: anAssociationCollection [
 
 	self hasExternalEntities
@@ -49,7 +51,7 @@ DTDStaticExternalEntityResolver >> externalEntities: anAssociationCollection [
 			put: each value]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString [
 
 	^ self
@@ -57,7 +59,7 @@ DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString [
 		ifAbsent: ['']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString ifAbsent: aBlock [
 
 	^ self externalEntities
@@ -65,7 +67,7 @@ DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString ifAb
 		ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString ifAbsentPut: aBlock [
 
 	^ self externalEntities
@@ -73,7 +75,7 @@ DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString ifAb
 		ifAbsentPut: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString put: aReplacement [
 
 	^ self externalEntities
@@ -81,19 +83,19 @@ DTDStaticExternalEntityResolver >> externalEntityAtURI: anXMLURIOrURIString put:
 		put: aReplacement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDStaticExternalEntityResolver >> hasExternalEntities [
 
 	^ self externalEntities isNotEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDStaticExternalEntityResolver >> includesExternalEntityURI: anXMLURIOrURIString [
 
 	^ self externalEntities includesKey: anXMLURIOrURIString asXMLURI
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 DTDStaticExternalEntityResolver >> postCopy [
 
 	super postCopy.
@@ -102,19 +104,19 @@ DTDStaticExternalEntityResolver >> postCopy [
 		ifNotNil: [externalEntities := externalEntities copy]
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 DTDStaticExternalEntityResolver >> removeExternalEntities [
 
 	self externalEntities removeAll
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 DTDStaticExternalEntityResolver >> removeExternalEntityURI: anXMLURIOrURIString [
 
 	^ self externalEntities removeKey: anXMLURIOrURIString asXMLURI
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 DTDStaticExternalEntityResolver >> removeExternalEntityURI: anXMLURIOrURIString ifAbsent: aBlock [
 
 	^ self externalEntities
@@ -122,7 +124,7 @@ DTDStaticExternalEntityResolver >> removeExternalEntityURI: anXMLURIOrURIString 
 		ifAbsent: aBlock
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 DTDStaticExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
 
 	| replacement |
@@ -143,7 +145,7 @@ DTDStaticExternalEntityResolver >> resolveExternalEntityURI: anXMLURIOrURIString
 	^ DTDUndecodedResolvedExternalParsedEntityReplacement rawContents: replacement
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 DTDStaticExternalEntityResolver >> streamResolveExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
 
 	^ (self

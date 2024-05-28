@@ -2,8 +2,8 @@
 This class parses an attribute definition in an ATTLIST declaration and returns a new XMLAttributeValidator for it. It assumes the type has already been checked for well-formedness by the tokenizer and that it contains a value like ""ID"", ""ENTITY"", or an enumeration list.
 "
 Class {
-	#name : #DTDAttributeDefinitionParser,
-	#superclass : #Object,
+	#name : 'DTDAttributeDefinitionParser',
+	#superclass : 'Object',
 	#instVars : [
 		'element',
 		'attribute',
@@ -11,10 +11,12 @@ Class {
 		'defaultValidator',
 		'enumerationListParserClass'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 DTDAttributeDefinitionParser class >> attributeDefaultValidatorClassForPragma: aDefaultPragma [
 	"the default pragma should have been checked for well-formedness by the
 	tokenizer so it's either empty, 'FIXED', 'REQUIRED', or 'IMPLIED'"
@@ -27,7 +29,7 @@ DTDAttributeDefinitionParser class >> attributeDefaultValidatorClassForPragma: a
 	^ XMLAttributeValueDefaultValidator
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDAttributeDefinitionParser class >> element: anElement attribute: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	^ self new
 		setElement: anElement
@@ -39,7 +41,7 @@ DTDAttributeDefinitionParser class >> element: anElement attribute: anAttribute 
 				value: aDefaultValue)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDAttributeDefinitionParser >> attributeValidatorClassForType [
 	"the tokenizer should have checked the type for well-formedness
 	so it's only one of CDATA, ID, IDREF, IDREFS, etc"
@@ -80,7 +82,7 @@ DTDAttributeDefinitionParser >> attributeValidatorClassForType [
 	^ XMLEnumerationAttributeValidator
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 DTDAttributeDefinitionParser >> parse [
 	| validator |
 
@@ -98,7 +100,7 @@ DTDAttributeDefinitionParser >> parse [
 	^ validator
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DTDAttributeDefinitionParser >> setElement: anElement attribute: anAttribute type: aType defaultValidator: aDefaultValidator [
 
 	element := anElement.

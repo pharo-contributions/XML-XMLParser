@@ -2,26 +2,28 @@
 This class uses Zinc HTTP Components to implement HTTP requests and is the preferred implementation.
 "
 Class {
-	#name : #XMLHTTPZincRequest,
-	#superclass : #XMLHTTPRequest,
+	#name : 'XMLHTTPZincRequest',
+	#superclass : 'XMLHTTPRequest',
 	#instVars : [
 		'zincRequest',
 		'zincClient'
 	],
-	#category : #'XML-Parser-HTTP'
+	#category : 'XML-Parser-HTTP',
+	#package : 'XML-Parser',
+	#tag : 'HTTP'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPZincRequest class >> isSupportedImplementation [
 	^ XMLClassFinder hasClassNamed: #ZnClient
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLHTTPZincRequest >> basicCleanup [
 	self zincClient close
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLHTTPZincRequest >> basicSend [
 	^ self responseClass
 		request: self
@@ -32,7 +34,7 @@ XMLHTTPZincRequest >> basicSend [
 				response)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPZincRequest >> headerAt: aKey ifAbsent: aBlock [
 	self zincRequest headers
 		at: aKey
@@ -43,7 +45,7 @@ XMLHTTPZincRequest >> headerAt: aKey ifAbsent: aBlock [
 	^ aBlock value.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPZincRequest >> headerAt: aKey put: aValue [
 	self zincRequest headers
 		at: aKey
@@ -51,12 +53,12 @@ XMLHTTPZincRequest >> headerAt: aKey put: aValue [
 	^ aValue.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLHTTPZincRequest >> headerKeysAndValuesDo: aTwoArgumentBlock [
 	self zincRequest headersDo: aTwoArgumentBlock
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLHTTPZincRequest >> headerValuesAt: aKey add: aValue [
 	self zincRequest headers
 		at: aKey
@@ -64,7 +66,7 @@ XMLHTTPZincRequest >> headerValuesAt: aKey add: aValue [
 	^ aValue.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLHTTPZincRequest >> headerValuesAt: aKey do: aBlock [
 	self zincRequest headers
 		at: aKey
@@ -74,17 +76,17 @@ XMLHTTPZincRequest >> headerValuesAt: aKey do: aBlock [
 				ifFalse: [aBlock value: value]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPZincRequest >> method [
 	^ self zincRequest method asString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPZincRequest >> method: aString [
 	self zincRequest method: aString asSymbol
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLHTTPZincRequest >> removeHeaderAt: aKey ifAbsent: aBlock [
 	| removedValues |
 
@@ -97,22 +99,22 @@ XMLHTTPZincRequest >> removeHeaderAt: aKey ifAbsent: aBlock [
 		ifFalse: [removedValues asOrderedCollection].
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLHTTPZincRequest >> responseClass [
 	^ XMLHTTPZincResponse
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPZincRequest >> timeout [
 	^ self zincClient timeout
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPZincRequest >> timeout: anInteger [
 	self zincClient timeout: anInteger
 ]
 
-{ #category : #'private ' }
+{ #category : 'private ' }
 XMLHTTPZincRequest >> zincClient [
 	^ zincClient
 		ifNil: [
@@ -122,7 +124,7 @@ XMLHTTPZincRequest >> zincClient [
 					yourself]
 ]
 
-{ #category : #'private ' }
+{ #category : 'private ' }
 XMLHTTPZincRequest >> zincRequest [
 	^ zincRequest
 		ifNil: [

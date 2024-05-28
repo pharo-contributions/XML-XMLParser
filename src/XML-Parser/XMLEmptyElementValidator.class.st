@@ -2,42 +2,44 @@
 This class validates EMPTY elements, which can't contain elements, PCDATA, or even comments or PIs.
 "
 Class {
-	#name : #XMLEmptyElementValidator,
-	#superclass : #XMLElementValidator,
-	#category : #'XML-Parser-Validation'
+	#name : 'XMLEmptyElementValidator',
+	#superclass : 'XMLElementValidator',
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEmptyElementValidator >> atEnd [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEmptyElementValidator >> isEmpty [
 	^ true
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLEmptyElementValidator >> typeName [
 	^ 'EMPTY'
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLEmptyElementValidator >> validateComment: aString [
 	self errorUnexpectedComment
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLEmptyElementValidator >> validatePCData: aString [
 	self errorUnexpectedPCData
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLEmptyElementValidator >> validatePI: aTargetString data: aDataString [
 	self errorUnexpectedPI
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLEmptyElementValidator >> validateStartTag: anElement [
 	self errorUnexpectedElement: anElement
 ]

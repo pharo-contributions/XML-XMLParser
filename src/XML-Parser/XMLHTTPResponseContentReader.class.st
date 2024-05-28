@@ -4,8 +4,8 @@ This is an abstract base class for response content readers. The #readUpToLimit:
 Subclasses need to implement #rawReadWithLength:upToLimit: to read and return the raw response content and signal an error if it exceeds the limit.
 "
 Class {
-	#name : #XMLHTTPResponseContentReader,
-	#superclass : #Object,
+	#name : 'XMLHTTPResponseContentReader',
+	#superclass : 'Object',
 	#instVars : [
 		'response',
 		'rawContent',
@@ -13,15 +13,17 @@ Class {
 		'limitedContentReadStream',
 		'isDecompressing'
 	],
-	#category : #'XML-Parser-HTTP'
+	#category : 'XML-Parser-HTTP',
+	#package : 'XML-Parser',
+	#tag : 'HTTP'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPResponseContentReader class >> response: aResponse [
 	^ self new setResponse: aResponse
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPResponseContentReader >> contentReadStreamUpToEnd [
 	| contentWriteStream |
 
@@ -31,7 +33,7 @@ XMLHTTPResponseContentReader >> contentReadStreamUpToEnd [
 	^ contentWriteStream contents.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPResponseContentReader >> decodedContentReadStreamUpToEndWithCharset: aCharset [
 	| streamConverter |
 
@@ -52,19 +54,19 @@ XMLHTTPResponseContentReader >> decodedContentReadStreamUpToEndWithCharset: aCha
 			error pass].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPResponseContentReader >> ensureContentReadStreamWasNotLimited [
 	(limitedContentReadStream isNotNil
 		and: [limitedContentReadStream atLimitedEnd])
 		ifTrue: [self errorContentLimitExceeded]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPResponseContentReader >> errorContentLimitExceeded [
 	XMLLimitException signal: 'HTTP reponse content limit exceeded'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPResponseContentReader >> errorUnrecognizedContentTypeCharset: aCharset [
 	XMLEncodingException
 		formatSignal:
@@ -72,12 +74,12 @@ XMLHTTPResponseContentReader >> errorUnrecognizedContentTypeCharset: aCharset [
 		with: aCharset
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPResponseContentReader >> handlesDecompression [
 	^ false
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLHTTPResponseContentReader >> initializeDecompressionWithSchemes: aCompressionSchemeSequence upToLimit: aMaxSize [
 	isDecompressing := true.
 	aCompressionSchemeSequence reverseDo: [:each |
@@ -89,7 +91,7 @@ XMLHTTPResponseContentReader >> initializeDecompressionWithSchemes: aCompression
 		ifNotNil: [self limitContentReadStreamUpToLimit: aMaxSize].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPResponseContentReader >> limitContentReadStreamUpToLimit: aMaxSize [
 	limitedContentReadStream :=
 		XMLLimitedReadStreamAdapter
@@ -98,17 +100,17 @@ XMLHTTPResponseContentReader >> limitContentReadStreamUpToLimit: aMaxSize [
 	contentReadStream := limitedContentReadStream.
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLHTTPResponseContentReader >> newContentWriteStream [
 	^ (String new: rawContent size) writeStream
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 XMLHTTPResponseContentReader >> rawReadWithLength: aContentLength upToLimit: aMaxSize [
 	self subclassResponsibility
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 XMLHTTPResponseContentReader >> readUpToLimit: arg1 decoding: arg2 [
 
 	| tmp1 tmp2 tmp3 tmp4 tmp5 |
@@ -134,13 +136,13 @@ XMLHTTPResponseContentReader >> readUpToLimit: arg1 decoding: arg2 [
 	^ tmp5
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLHTTPResponseContentReader >> setResponse: aResponse [
 	response := aResponse.
 	isDecompressing := false.
 ]
 
-{ #category : #streaming }
+{ #category : 'streaming' }
 XMLHTTPResponseContentReader >> undecodedContentReadStreamUpToEnd [
 	^ (isDecompressing
 		or: [limitedContentReadStream isNotNil])

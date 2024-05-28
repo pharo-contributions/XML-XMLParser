@@ -2,15 +2,17 @@
 This is a class for general <!ENTITY> declarations.
 "
 Class {
-	#name : #XMLGeneralEntityDeclaration,
-	#superclass : #XMLEntityDeclaration,
+	#name : 'XMLGeneralEntityDeclaration',
+	#superclass : 'XMLEntityDeclaration',
 	#instVars : [
 		'ndata'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLGeneralEntityDeclaration class >> name: aName publicID: aPublicID systemID: aSystemID ndata: aNotationName [
 	^ self new
 		name: aName;
@@ -19,22 +21,22 @@ XMLGeneralEntityDeclaration class >> name: aName publicID: aPublicID systemID: a
 		ndata: aNotationName
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLGeneralEntityDeclaration >> isUnparsed [
 	^ self ndata isNotEmpty
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLGeneralEntityDeclaration >> ndata [
 	^ ndata ifNil: [ndata := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLGeneralEntityDeclaration >> ndata: aNotationName [
 	ndata := aNotationName
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLGeneralEntityDeclaration >> writeXMLOn: aWriter [
 	aWriter entityDeclaration
 		name: self name;

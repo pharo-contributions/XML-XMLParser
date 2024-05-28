@@ -2,22 +2,24 @@
 This is an immutable class for HTTP MIME types. Adapted from ZnMimeType.
 "
 Class {
-	#name : #XMLHTTPMIMEType,
-	#superclass : #Object,
+	#name : 'XMLHTTPMIMEType',
+	#superclass : 'Object',
 	#instVars : [
 		'mainType',
 		'subType',
 		'parameters'
 	],
-	#category : #'XML-Parser-HTTP'
+	#category : 'XML-Parser-HTTP',
+	#package : 'XML-Parser',
+	#tag : 'HTTP'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLHTTPMIMEType class >> defaultCharset [
 	^ 'ISO-8859-1'
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLHTTPMIMEType class >> fromString: aString [
 	| parser |
 
@@ -28,7 +30,7 @@ XMLHTTPMIMEType class >> fromString: aString [
 		parameters: parser parseParameters.
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLHTTPMIMEType class >> mainType: aMainType subType: aSubType [
 	^ self
 		mainType: aMainType
@@ -36,7 +38,7 @@ XMLHTTPMIMEType class >> mainType: aMainType subType: aSubType [
 		parameters: #()
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLHTTPMIMEType class >> mainType: aMainType subType: aSubType parameters: anAssociationCollection [
 	| parameters attributes totalAttributes |
 
@@ -60,7 +62,7 @@ XMLHTTPMIMEType class >> mainType: aMainType subType: aSubType parameters: anAss
 		parameters: parameters.
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 XMLHTTPMIMEType >> = anObject [
 	self == anObject
 		ifTrue: [^ true].
@@ -76,25 +78,25 @@ XMLHTTPMIMEType >> = anObject [
 					self parameters asSet = anObject parameters asSet]]].
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLHTTPMIMEType >> asString [
 	"don't assume Object>>#asString is defined, for portability"
 	^ self printString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMIMEType >> charset [
 	^ self
 		parameterAt: 'charset'
 		ifAbsent: [self defaultCharset]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLHTTPMIMEType >> defaultCharset [
 	^ self class defaultCharset
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 XMLHTTPMIMEType >> hash [
 	^ self species hash bitXor:
 		(self mainType hash bitXor:
@@ -105,19 +107,19 @@ XMLHTTPMIMEType >> hash [
 				self parameters size hash))
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMIMEType >> mainType [
 	^ mainType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMIMEType >> parameterAt: aKey [
 	^ self
 		parameterAt: aKey
 		ifAbsent: ['']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMIMEType >> parameterAt: aKey ifAbsent: aBlock [
 	self parameterKeysAndValuesDo: [:key :value |
 		key = aKey
@@ -125,7 +127,7 @@ XMLHTTPMIMEType >> parameterAt: aKey ifAbsent: aBlock [
 	^ aBlock value.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLHTTPMIMEType >> parameterKeysAndValuesDo: aTwoArgumentBlock [
 	self parameters do: [:each |
 		aTwoArgumentBlock
@@ -133,18 +135,18 @@ XMLHTTPMIMEType >> parameterKeysAndValuesDo: aTwoArgumentBlock [
 			value: each value]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLHTTPMIMEType >> parameterKeysDo: aBlock [
 	self parameters do: [:each |
 		aBlock value: each key]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPMIMEType >> parameters [
 	^ parameters
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLHTTPMIMEType >> printOn: aStream [
 	aStream
 		nextPutAll: self mainType;
@@ -159,14 +161,14 @@ XMLHTTPMIMEType >> printOn: aStream [
 			nextPutAll: value].
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLHTTPMIMEType >> setMainType: aMainType subType: aSubType parameters: aParameterCollection [
 	mainType := aMainType.
 	subType := aSubType.
 	parameters := aParameterCollection.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMIMEType >> subType [
 	^ subType
 ]

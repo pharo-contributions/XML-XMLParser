@@ -40,8 +40,8 @@ There are security limits on input you can remove with #removeLimits or change w
 #optimizeForLargeDocuments can be used when parsing large documents if you don't care for validating or namespaces.
 "
 Class {
-	#name : #SAXHandler,
-	#superclass : #Object,
+	#name : 'SAXHandler',
+	#superclass : 'Object',
 	#instVars : [
 		'input',
 		'documentURI',
@@ -50,17 +50,18 @@ Class {
 		'isInContent',
 		'isInCDataSection'
 	],
-	#category : #'XML-Parser'
+	#category : 'XML-Parser',
+	#package : 'XML-Parser'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 SAXHandler class >> new [
 	Error signal:
 		'Parsers should be created with #on: or ',
 		'some other "instance creation" message'
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 SAXHandler class >> on: aStringOrStream [
 	"Returns a new parser on the string or stream argument but doesn't parse it.
 
@@ -70,7 +71,7 @@ SAXHandler class >> on: aStringOrStream [
 	^ self basicNew initialize on: aStringOrStream
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 SAXHandler class >> on: aStringOrStream documentURI: aURIString [
 	"Returns a new parser on the string or stream argument treating the
 	specified URI as the base URI of the document but doesn't parse it.
@@ -81,7 +82,7 @@ SAXHandler class >> on: aStringOrStream documentURI: aURIString [
 	^ (self on: aStringOrStream) documentURI: aURIString
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 SAXHandler class >> onFileNamed: aFileName [
 	"Returns a new parser on the specified file but doesn't parse it.
 	If aFileName is a relative path, it will be resolved in the context of
@@ -100,7 +101,7 @@ SAXHandler class >> onFileNamed: aFileName [
 		documentURI: aFileName
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 SAXHandler class >> onURL: aURLString [
 	"Fetches the URL and returns new parser on the response content but doesn't
 	parse it. If the URL has no scheme, it will be treated as a file path.
@@ -113,7 +114,7 @@ SAXHandler class >> onURL: aURLString [
 		upToLimit: XMLParserLimits defaultDocumentReadLimit
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 SAXHandler class >> onURL: aURLString upToLimit: aMaxSize [
 	"Fetches a URL and returns new parser on the response content up to the
 	input limit (use nil to disable) but doesn't parse it. If the URL has
@@ -131,14 +132,14 @@ SAXHandler class >> onURL: aURLString upToLimit: aMaxSize [
 			documentReadLimit: aMaxSize
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 SAXHandler class >> parse: aStringOrStream [
 	"Parses the document in the string or stream argument"
 
 	^ (self on: aStringOrStream) parseDocument
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 SAXHandler class >> parse: aStringOrStream documentURI: aURIString [
 	"Parses the document in the string or stream argument treating the specified
 	URI as the base URI of the document."
@@ -148,7 +149,7 @@ SAXHandler class >> parse: aStringOrStream documentURI: aURIString [
 		documentURI: aURIString) parseDocument
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 SAXHandler class >> parse: aStringOrStream usingNamespaces: aBoolean [
 	"Parses the document in the string or stream argument possibly with namespace
 	checking enabled (default)"
@@ -158,7 +159,7 @@ SAXHandler class >> parse: aStringOrStream usingNamespaces: aBoolean [
 		parseDocument
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean validation: aValidationBoolean [
 	"Parses the document in the string or stream argument possibly with namespace
 	checking (default) and validation (default) enabled."
@@ -169,7 +170,7 @@ SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean va
 		parseDocument
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean validation: aValidationBoolean externalEntities: anEntityResolutionBoolean [
 	"Parses the document in the string or stream argument possibly with namespace
 	checking (default), validation (default), or external entity resolution (not
@@ -182,21 +183,21 @@ SAXHandler class >> parse: aStringOrStream usingNamespaces: aNamespaceBoolean va
 		parseDocument
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 SAXHandler class >> parseDocumentFrom: aStringOrStream [
 	self deprecated: 'Use #parse: instead'.
 
 	^ self parse: aStringOrStream
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 SAXHandler class >> parseDocumentFromFileNamed: aFileName [
 	self deprecated: 'Use #parseFileNamed: instead'.
 
 	^ self parseFileNamed: aFileName
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 SAXHandler class >> parseFileNamed: aFileNameString [
 	"Parses the specified file. If aFileName is a relative path, it will be
 	resolved in the context of the current working directory."
@@ -204,7 +205,7 @@ SAXHandler class >> parseFileNamed: aFileNameString [
 	^ (self onFileNamed: aFileNameString) parseDocument
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 SAXHandler class >> parseURL: aURLString [
 	"Fetches the URL and parses the response content. If the URL has no scheme,
 	it will be treated as a file path."
@@ -212,7 +213,7 @@ SAXHandler class >> parseURL: aURLString [
 	^ (self onURL: aURLString) parseDocument
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 SAXHandler class >> parseURL: aURLString upToLimit: aMaxSize [
 	"Fetches the URL upto the input limit (nil to disable) and parses the
 	response content. If the URL has no scheme, it will be treated as a file
@@ -223,11 +224,11 @@ SAXHandler class >> parseURL: aURLString upToLimit: aMaxSize [
 		upToLimit: aMaxSize) parseDocument
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAXHandler >> attributeDeclaration: anElementName name: anAttributeName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXHandler >> characters: aString [
 	"Handles character data in an element, such as the 'test' in
 	'<characters>test</characters>' or in the CDATA section '<![CDATA[test]]>'.
@@ -239,32 +240,32 @@ SAXHandler >> characters: aString [
 	See #isInCDataSection and #ignorableWhitespace:"
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAXHandler >> comment: aString [
 	"Handles '<!--comment-->' sections in documents."
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandler >> configuration [
 	^ configuration
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandler >> configuration: aConfiguration [
 	(configuration := aConfiguration) parserHandlerClass: self class
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 SAXHandler >> configurationClass [
 	^ XMLConfiguration
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> decodesCharacters [
 	^ self configuration decodesCharacters
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> decodesCharacters: aBoolean [
 	"When enabled, encoding detection and character decoding will be attemped if:
 		1) the input stream or string is binary/external
@@ -276,21 +277,21 @@ SAXHandler >> decodesCharacters: aBoolean [
 	self configuration decodesCharacters: aBoolean
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 SAXHandler >> defaultDocumentURI [
 	^ ''
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SAXHandler >> doctypeDefinition: aDoctypeDefinition [
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> documentReadLimit [
 	^ self configuration documentReadLimit
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> documentReadLimit: anInteger [
 	"change the document read limit (maximum number of chars that can be read)
 	or nil to disable"
@@ -298,47 +299,47 @@ SAXHandler >> documentReadLimit: anInteger [
 	self configuration documentReadLimit: anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandler >> documentURI [
 	"Returns current document base URI string"
 	^ documentURI ifNil: [documentURI := self defaultDocumentURI]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandler >> documentURI: aURIString [
 	documentURI := aURIString
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 SAXHandler >> driverClass [
 	^ SAXParserDriver
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAXHandler >> elementDeclaration: anElementName contentModel: aContentModel [
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAXHandler >> endCData [
 	"Sent after the character data of a '<![CDATA[...]]>' section."
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAXHandler >> endDTD [
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXHandler >> endDocument [
 	"Handles the end of an XML document. No more handlers are invoked after this."
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXHandler >> endElement: aQualifiedName [
 	"Handles the end of an element if a subclass doesn't implement
 	#endElement:prefix:uri:localName: or #endElement:prefix:uri:."
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI [
 	"Handles the end of an element if a subclass doesn't implement
 	#endElement:prefix:uri:localName:. By default it forwards to a simpler
@@ -351,7 +352,7 @@ SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI [
 	self endElement: aQualifiedName
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName [
 	"Handles the end of an element, either an end tag like '</end>' or a
 	self-closed tag like '<empty/>'. By default it forwards to a simpler handler,
@@ -368,14 +369,14 @@ SAXHandler >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aL
 		uri:  aURI
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAXHandler >> endEntity: anEntityName [
 	"Handles the end of some general entity's replacement in content.
 	Not sent if the entity is undeclared or if content entity replacement
 	is disabled."
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXHandler >> endPrefixMapping: aPrefix [
 	"Handles the end of a namespace prefix/URI mapping when namespaces are
 	enabled. After, aPrefix (empty for the default namespace) will be either
@@ -383,39 +384,39 @@ SAXHandler >> endPrefixMapping: aPrefix [
 	and never unmapped."
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SAXHandler >> errorInstancesCannotHaveMultipleParsers [
 	XMLParserException
 		formatSignal: 'Instances of {1} cannot have multiple parsers'
 		with: self class name
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> externalEntityResolver [
 	^ self configuration externalEntityResolver
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> externalEntityResolver: anExternalEntityResolver [
 	"This can be used to set a different DTDExternalEntityResolver"
 
 	self configuration externalEntityResolver: anExternalEntityResolver
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAXHandler >> generalEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotationName [
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAXHandler >> generalEntityDeclaration: aName replacement: aReplacement [
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 SAXHandler >> hasParser [
 	^ hasParser
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXHandler >> ignorableWhitespace: aString [
 	"When validation is enabled and a DTD with ELEMENT declarations is
 	present, this can be used to handle ignorable whitespace in elements
@@ -440,24 +441,24 @@ SAXHandler >> ignorableWhitespace: aString [
 	declarations."
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SAXHandler >> initializeParser: aParser [
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAXHandler >> input [
 	"the input being parsed or to be parsed"
 	^ input
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SAXHandler >> input: aStringOrStream [
 	"here for backwards compatibility; use #on: instead"
 
 	input := aStringOrStream
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 SAXHandler >> interruptParsing [
 	"Can be sent within a handler to stop parsing;
 	will be silently caught within #parseDocument or other parsing methods"
@@ -465,7 +466,7 @@ SAXHandler >> interruptParsing [
 	XMLParsingInterruptException signal
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 SAXHandler >> isInCDataSection [
 	"Can be used by characters: handlers to distinguish ordinary character
 	data from characters within '<![CDATA[...]]>' sections"
@@ -473,24 +474,24 @@ SAXHandler >> isInCDataSection [
 	^ isInCDataSection
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SAXHandler >> isInCDataSection: aBoolean [
 	isInCDataSection := aBoolean
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 SAXHandler >> isInContent [
 	"True if parsing has reached the first element of the document."
 
 	^ isInContent
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> isValidating [
 	^ self configuration isValidating
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> isValidating: aBoolean [
 	"If true and the document has a schema (like a DTD with ELEMENT and ATTLIST
 	declarations) the document will be validated against it. Otherwise only
@@ -506,24 +507,24 @@ SAXHandler >> isValidating: aBoolean [
 	self configuration isValidating: aBoolean
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> maxEntityReplacementDepth [
 	^ self configuration maxEntityReplacementDepth
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> maxEntityReplacementDepth: anInteger [
 	"change the max replacement depth or nil to disable"
 
 	self configuration maxEntityReplacementDepth: anInteger
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAXHandler >> notationDeclaration: aName publicID: aPublicID systemID: aSystemID [
 
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SAXHandler >> on: aStringOrStream [
 	input := aStringOrStream.
 
@@ -538,7 +539,7 @@ SAXHandler >> on: aStringOrStream [
 	isInCDataSection := false.
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> optimizeForLargeDocuments [
 	"use this for faster parsing/less memory use with large documents"
 
@@ -548,15 +549,15 @@ SAXHandler >> optimizeForLargeDocuments [
 		documentReadLimit: nil
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAXHandler >> parameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAXHandler >> parameterEntityDeclaration: aName replacement: aReplacement [
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 SAXHandler >> parseDocument [
 	"Parse the entire input string or stream and return the result"
 
@@ -565,7 +566,7 @@ SAXHandler >> parseDocument [
 	^ self parsingResult.
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 SAXHandler >> parseDocumentUntil: aBlock [
 	"Parse the input string or stream only until aBlock evalautes as true
 	and return the result"
@@ -575,7 +576,7 @@ SAXHandler >> parseDocumentUntil: aBlock [
 	^ self parsingResult.
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 SAXHandler >> parseDocumentWhile: aBlock [
 	"Parse the input string or stream only as long as aBlock evalautes as true
 	and return the result"
@@ -585,7 +586,7 @@ SAXHandler >> parseDocumentWhile: aBlock [
 	^ self parsingResult.
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 SAXHandler >> parser [
 	"returns a new XMLParser object for this handler"
 
@@ -604,24 +605,24 @@ SAXHandler >> parser [
 	^ parser.
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 SAXHandler >> parserClass [
 	^ XMLParser
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 SAXHandler >> parsingResult [
 	"value returned by parseDocument and other parsing methods"
 
 	^ self
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> preservesUndeclaredEntityReferences [
 	^ self configuration preservesUndeclaredEntityReferences
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> preservesUndeclaredEntityReferences: aBoolean [
 	"If true, references to undeclared entities in content are
 	preserved (not default).
@@ -632,7 +633,7 @@ SAXHandler >> preservesUndeclaredEntityReferences: aBoolean [
 	self configuration preservesUndeclaredEntityReferences: aBoolean
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXHandler >> processingInstruction: aTargetString data: aDataString [
 	"Handles processing instructions like '<?name value?>', where 'name' is
 	the target and 'value' is the data.
@@ -641,19 +642,19 @@ SAXHandler >> processingInstruction: aTargetString data: aDataString [
 	with #xmlVersion:encoding:standalone: instead."
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> removeLimits [
 	"remove all input security limits (unsafe)"
 
 	self configuration removeLimits
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> replacesContentEntityReferences [
 	^ self configuration replacesContentEntityReferences
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> replacesContentEntityReferences: aBoolean [
 	"Replace general parsed entity and character references
 	in content (default)"
@@ -661,24 +662,24 @@ SAXHandler >> replacesContentEntityReferences: aBoolean [
 	self configuration replacesContentEntityReferences: aBoolean
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 SAXHandler >> requiresDocumentConstraints [
 	"will be deprecated; use #requiresSchema instead"
 	^ self requiresSchema
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 SAXHandler >> requiresDocumentConstraints: aBoolean [
 	"will be deprecated; use #requiresSchema: instead"
 	self requiresSchema: aBoolean
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> requiresSchema [
 	^ self configuration requiresSchema
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> requiresSchema: aBoolean [
 	"If true, a schema containing constraints on elements and attributes
 	(like a DTD with ELEMENT and ATTLIST declarations) will be required.
@@ -689,12 +690,12 @@ SAXHandler >> requiresSchema: aBoolean [
 	self configuration requiresSchema: aBoolean
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> resolvesExternalEntities [
 	^ self configuration resolvesExternalEntities
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> resolvesExternalEntities: aBoolean [
 	"When true, external DTDs and parsed entities will be
 	fetched (not default)."
@@ -702,29 +703,29 @@ SAXHandler >> resolvesExternalEntities: aBoolean [
 	self configuration resolvesExternalEntities: aBoolean
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SAXHandler >> schema [
 	^ nil
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXHandler >> skippedEntity: anEntityName [
 	"Sent when a general parsed entity reference like '&name;' is
 	unreplaced in content. Only sent when validation is turned off
 	or entity replacement is disabled."
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAXHandler >> startCData [
 	"Sent before the character data of a '<![CDATA[...]]>' section."
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SAXHandler >> startContent [
 	isInContent := true
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAXHandler >> startDTD: aRootElementName publicID: aPublicID systemID: aSystemID [
 	"Handles the start of a '<!DOCTYPE ...>' declaration. Any events
 	after this and until #endDTD is sent are part of the internal subset
@@ -735,12 +736,12 @@ SAXHandler >> startDTD: aRootElementName publicID: aPublicID systemID: aSystemID
 	aSystemID - the URI where the external subset can be found or an empty string"
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXHandler >> startDocument [
 	"Handles the start of an XML document, the first handler invoked."
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXHandler >> startElement: aQualifiedName attributes: anAttributeDictionary [
 	"Handles the start of an element if a subclass doesn't implement
 	#startElement:prefix:uri:localName:attributes: or
@@ -750,7 +751,7 @@ SAXHandler >> startElement: aQualifiedName attributes: anAttributeDictionary [
 	anAttributeDictionary - an XMLAttributeDictionary of attributes"
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes: anAttributeDictionary [
 	"Handles the start of an element if a subclass doesn't implement
 	#startElement:prefix:uri:localName:attributes:. By default it forwards
@@ -766,7 +767,7 @@ SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI attributes:
 		attributes: anAttributeDictionary
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: anAttributeDictionary [
 	"Handles the start of an element, either a start tag like '<start>' or a
 	self-closed tag like '<empty/>'. By default it forwards to a simpler handler,
@@ -785,14 +786,14 @@ SAXHandler >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: 
 		attributes: anAttributeDictionary
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAXHandler >> startEntity: anEntityName [
 	"Handles the start of some general entity's replacement in content.
 	Not sent if the entity is undeclared or if content entity replacement
 	is disabled."
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAXHandler >> startPrefixMapping: aPrefix uri: aURI [
 	"Handles the start of a namespace prefix/URI mapping when namespaces are
 	enabled. The 'xml' prefix is predefined and never remapped.
@@ -801,23 +802,23 @@ SAXHandler >> startPrefixMapping: aPrefix uri: aURI [
 	aURI - the namespace URI"
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SAXHandler >> startScope: aNamespaceScope [
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> usesNamespaces [
 	^ self configuration usesNamespaces
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SAXHandler >> usesNamespaces: aBoolean [
 	"Namespace checking when true (default)"
 
 	self configuration usesNamespaces: aBoolean
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAXHandler >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
 	"Handles the '<?xml ...?>' declaration of a document.
 	

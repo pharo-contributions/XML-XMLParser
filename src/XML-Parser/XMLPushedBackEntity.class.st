@@ -2,75 +2,77 @@
 An abstract base class for decorating pushed-back entities to keep track of the nesting of markup within entity replacements.
 "
 Class {
-	#name : #XMLPushedBackEntity,
-	#superclass : #Object,
+	#name : 'XMLPushedBackEntity',
+	#superclass : 'Object',
 	#instVars : [
 		'entity'
 	],
-	#category : #'XML-Parser-Drivers'
+	#category : 'XML-Parser-Drivers',
+	#package : 'XML-Parser',
+	#tag : 'Drivers'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLPushedBackEntity class >> entity: anEntity [
 	^ self new entity: anEntity
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLPushedBackEntity >> asPushedBackEntity [
 	^ self
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLPushedBackEntity >> asReference [
 	^ entity asReference
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPushedBackEntity >> entity [
 	^ entity
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPushedBackEntity >> entity: anEntity [
 	entity := anEntity
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLPushedBackEntity >> hasReplacement [
 	^ entity hasReplacement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLPushedBackEntity >> isExternal [
 	^ entity isExternal
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLPushedBackEntity >> isParameter [
 	^ entity isParameter
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLPushedBackEntity >> isStandaloneExternal [
 	^ entity isStandaloneExternal
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLPushedBackEntity >> isUnparsed [
 	^ entity isUnparsed
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPushedBackEntity >> name [
 	^ entity name
 ]
 
-{ #category : #nesting }
+{ #category : 'nesting' }
 XMLPushedBackEntity >> poppedByTokenizer: aTokenizer [
 	self subclassResponsibility
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLPushedBackEntity >> printOn: aStream [
 	super printOn: aStream.
 
@@ -80,17 +82,17 @@ XMLPushedBackEntity >> printOn: aStream [
 		nextPut: $).
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPushedBackEntity >> replacement [
 	^ entity replacement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPushedBackEntity >> replacementStream [
 	^ entity replacementStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPushedBackEntity >> uri [
 	^ entity uri
 ]

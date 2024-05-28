@@ -2,38 +2,40 @@
 This class uses the WebClient library to implement HTTP responses. This is used on Squeak when Zinc isn't installed.
 "
 Class {
-	#name : #XMLHTTPWebClientResponse,
-	#superclass : #XMLHTTPResponse,
+	#name : 'XMLHTTPWebClientResponse',
+	#superclass : 'XMLHTTPResponse',
 	#instVars : [
 		'webClientResponse'
 	],
-	#category : #'XML-Parser-HTTP'
+	#category : 'XML-Parser-HTTP',
+	#package : 'XML-Parser',
+	#tag : 'HTTP'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPWebClientResponse class >> isSupportedImplementation [
 	^ XMLClassFinder hasClassNamed: #WebResponse
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLHTTPWebClientResponse class >> request: aRequest webClientResponse: aWebClientResponse [
 	^ (self request: aRequest)
 		setWebClientResponse: aWebClientResponse
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLHTTPWebClientResponse >> contentReaderClass [
 	^ XMLHTTPWebClientResponseContentReader
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPWebClientResponse >> headerAt: aKey ifAbsent: aBlock [
 	^ self webClientResponse
 		headerAt: aKey
 		ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPWebClientResponse >> headerAt: aKey put: aValue [
 	self webClientResponse
 		removeHeader: aKey;
@@ -41,12 +43,12 @@ XMLHTTPWebClientResponse >> headerAt: aKey put: aValue [
 	^ aValue.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLHTTPWebClientResponse >> headerKeysAndValuesDo: aTwoArgumentBlock [
 	self webClientResponse headersDo: aTwoArgumentBlock
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLHTTPWebClientResponse >> headerValuesAt: aKey add: aValue [
 	self webClientResponse
 		addHeader: aKey
@@ -54,24 +56,24 @@ XMLHTTPWebClientResponse >> headerValuesAt: aKey add: aValue [
 	^ aValue.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLHTTPWebClientResponse >> headerValuesAt: aKey do: aBlock [
 	self webClientResponse
 		headersAt: aKey
 		do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPWebClientResponse >> isSuccess [
 	^ self webClientResponse isSuccess
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPWebClientResponse >> protocol [
 	^ self webClientResponse protocol
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLHTTPWebClientResponse >> removeHeaderAt: aKey ifAbsent: aBlock [
 	| removedValues |
 
@@ -83,29 +85,29 @@ XMLHTTPWebClientResponse >> removeHeaderAt: aKey ifAbsent: aBlock [
 	^ removedValues asOrderedCollection.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLHTTPWebClientResponse >> setProtocol: aString statusCode: anInteger [
 	self webClientResponse
 		protocol: aString
 		code: anInteger
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLHTTPWebClientResponse >> setWebClientResponse: aWebClientResponse [
 	webClientResponse := aWebClientResponse
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPWebClientResponse >> statusCode [
 	^ self webClientResponse code
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPWebClientResponse >> statusLine [
 	^ self webClientResponse status
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPWebClientResponse >> webClientResponse [
 	^ webClientResponse
 		ifNil: [

@@ -2,25 +2,27 @@
 A namespace scope is a possibly empty set of mappings from namespace prefixes to URIs and an optional default namespace URI to be used for unprefixed elements. Scopes can be created from other scopes by copying. (Uses copy-on-write to reduce memory use.)
 "
 Class {
-	#name : #XMLNamespaceScope,
-	#superclass : #Object,
+	#name : 'XMLNamespaceScope',
+	#superclass : 'Object',
 	#instVars : [
 		'prefixMappings'
 	],
-	#category : #'XML-Parser-Namespaces'
+	#category : 'XML-Parser-Namespaces',
+	#package : 'XML-Parser',
+	#tag : 'Namespaces'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLNamespaceScope class >> xmlNamespaceURI [
 	^ 'http://www.w3.org/XML/1998/namespace'
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLNamespaceScope class >> xmlnsNamespaceURI [
 	^ 'http://www.w3.org/2000/xmlns/'
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 XMLNamespaceScope >> = anObject [
 	self == anObject
 		ifTrue: [^ true].
@@ -38,7 +40,7 @@ XMLNamespaceScope >> = anObject [
 	^ prefixMappings = anObject prefixMappings.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> copiedPrefixMappings [
 	"replaces current mappings with copy for copy-on-write"
 	prefixMappings
@@ -46,13 +48,13 @@ XMLNamespaceScope >> copiedPrefixMappings [
 		ifNotNil: [^ prefixMappings := prefixMappings copy]
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLNamespaceScope >> copy [
 	"copy-on-write allows copies to share state so no postCopy is needed"
 	^ self shallowCopy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNamespaceScope >> defaultNamespace [
 	^ prefixMappings
 		ifNil: ['']
@@ -62,7 +64,7 @@ XMLNamespaceScope >> defaultNamespace [
 				ifAbsent: ['']]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNamespaceScope >> defaultNamespace: aURI [
 	self
 		validatePrefix: ''
@@ -74,7 +76,7 @@ XMLNamespaceScope >> defaultNamespace: aURI [
 		put: aURI.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> errorAttribute: anAttribute aliasesURI: aURI [
 	XMLNamespaceException
 		formatSignal: 'Attribute "{1}" has alias for namespace URI "{2}"'
@@ -82,7 +84,7 @@ XMLNamespaceScope >> errorAttribute: anAttribute aliasesURI: aURI [
 		with: aURI
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> errorCannotAliasPrefix: aFirstPrefix with: aSecondPrefix [
 	aSecondPrefix isEmpty
 		ifTrue: [
@@ -100,65 +102,65 @@ XMLNamespaceScope >> errorCannotAliasPrefix: aFirstPrefix with: aSecondPrefix [
 				with: aSecondPrefix]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> errorCannotAliasXMLNSPrefixWith: aPrefix [
 	self
 		errorCannotAliasPrefix: 'xmlns'
 		with: aPrefix
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> errorCannotAliasXMLPrefixWith: aPrefix [
 	self
 		errorCannotAliasPrefix: 'xml'
 		with: aPrefix
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> errorCannotMapPrefixToEmptyURI [
 	XMLNamespaceException signal: 'Cannot map namespace prefixes to empty URIs'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> errorCannotMapXMLNSPrefix [
 	XMLNamespaceException signal:
 		'Cannot map "xmlns" prefix to any namespace, even the current "xmlns" namespace'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> errorCannotRemapXMLPrefix [
 	XMLNamespaceException signal: 'Cannot map the "xml" prefix to a new namespace URI'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> errorCannotUnmapPrefix: aPrefix [
 	XMLNamespaceException
 		formatSignal: 'Prefix "{1}" was not mapped and cannot be unmapped'
 		with: aPrefix
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> errorInvalidPrefix: aPrefix [	
 	XMLNamespaceException
 		formatSignal: 'Prefix "{1}" contains ":" character'
 		with: aPrefix
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> errorInvalidUnprefixedAttribute: anAttribute [
 	XMLNamespaceException
 		formatSignal: 'Unprefixed attribute "{1}" contains ":" character'
 		with: anAttribute
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> errorInvalidUnprefixedElement: anElement [
 	XMLNamespaceException
 		formatSignal: 'Unprefixed element <{1}> contains ":" character'
 		with: anElement
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> errorUnmappedPrefix: aPrefix inAttribute: anAttribute [
 	XMLNamespaceException
 		formatSignal: 'Unmapped namespace prefix "{1}" in "{2}" attribute'
@@ -166,7 +168,7 @@ XMLNamespaceScope >> errorUnmappedPrefix: aPrefix inAttribute: anAttribute [
 		with: anAttribute
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> errorUnmappedPrefix: aPrefix inElement: anElement [
 	XMLNamespaceException
 		formatSignal: 'Unmapped namespace prefix "{1}" in <{2}> element'
@@ -174,26 +176,26 @@ XMLNamespaceScope >> errorUnmappedPrefix: aPrefix inElement: anElement [
 		with: anElement
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> errorXMLNSPrefixInAttribute: anAttribute [
 	XMLNamespaceException
 		formatSignal: 'Attribute "{1}" uses reserved "xmlns" namespace prefix'
 		with: anAttribute
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> errorXMLNSPrefixInElement: anElement [
 	XMLNamespaceException
 		formatSignal: 'Element <{1}> uses reserved "xmlns" namespace prefix'
 		with: anElement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNamespaceScope >> hasDefaultNamespace [
 	^ self includesPrefix: ''
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNamespaceScope >> hasNamespaces [
 	"optimized to avoid lazy initialization"
 	prefixMappings == nil
@@ -201,14 +203,14 @@ XMLNamespaceScope >> hasNamespaces [
 	^ prefixMappings size > 0.
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 XMLNamespaceScope >> hash [
 	self hasNamespaces
 		ifTrue: [^ self species hash bitXor: self prefixMappings hash]
 		ifFalse: [^ self species hash]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNamespaceScope >> includesPrefix: aPrefix [
 	self
 		prefixMappingAt: aPrefix
@@ -216,14 +218,14 @@ XMLNamespaceScope >> includesPrefix: aPrefix [
 	^ true.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNamespaceScope >> includesPrefix: aPrefix mappedTo: aURI [
 	^ (self
 		prefixMappingAt: aPrefix
 		ifAbsent: [^ false]) = aURI
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope [
 	anEnclosingScope hasNamespaces
 		ifFalse: [^ self].
@@ -243,7 +245,7 @@ XMLNamespaceScope >> inheritMappingsFrom: anEnclosingScope [
 			prefixMappings := anEnclosingScope prefixMappings].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNamespaceScope >> mapPrefix: aPrefix to: aURI [
 	self
 		validatePrefix: aPrefix
@@ -255,7 +257,7 @@ XMLNamespaceScope >> mapPrefix: aPrefix to: aURI [
 		put: aURI.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNamespaceScope >> mapPrefixesAndURIs: anAssociationCollection [
 	| copiedPrefixMappings |
 
@@ -270,21 +272,21 @@ XMLNamespaceScope >> mapPrefixesAndURIs: anAssociationCollection [
 			put: each value]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNamespaceScope >> mappedPrefixes [
 	^ prefixMappings
 		ifNil: [#()]
 		ifNotNil: [prefixMappings keys]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNamespaceScope >> prefixMappingAt: aPrefix [
 	^ self
 		prefixMappingAt: aPrefix
 		ifAbsent: ['']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNamespaceScope >> prefixMappingAt: aPrefix ifAbsent: aBlock [
 	^ prefixMappings
 		ifNil: [aBlock value]
@@ -294,19 +296,19 @@ XMLNamespaceScope >> prefixMappingAt: aPrefix ifAbsent: aBlock [
 				ifAbsent: aBlock]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> prefixMappings [
 	^ prefixMappings
 		ifNil: [prefixMappings := OrderPreservingStringDictionary new: 5]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNamespaceScope >> prefixesAndURIsDo: aTwoArgumentBlock [
 	prefixMappings
 		ifNotNil: [prefixMappings keysAndValuesDo: aTwoArgumentBlock]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLNamespaceScope >> printDeclarationsOn: aStream [
 	| isFirst |
 
@@ -328,7 +330,7 @@ XMLNamespaceScope >> printDeclarationsOn: aStream [
 			nextPut: $"].
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLNamespaceScope >> printOn: aStream [
 	super printOn: aStream.
 
@@ -337,7 +339,7 @@ XMLNamespaceScope >> printOn: aStream [
 	aStream nextPut: $).
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 XMLNamespaceScope >> resolvePrefix: aPrefix [
 	"Resolves the namespace URI of aPrefix (the defualt namespace URI if aPrefix
 	is empty), including the predefined 'xml' and 'xmlns' prefixes. Returns an
@@ -348,7 +350,7 @@ XMLNamespaceScope >> resolvePrefix: aPrefix [
 		ifUnresolvable: ''
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 XMLNamespaceScope >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 	"Resolves the namespace URI of aPrefix (the defualt namespace URI if aPrefix
 	is empty), including the predefined 'xml' and 'xmlns' prefixes. Returns the
@@ -368,7 +370,7 @@ XMLNamespaceScope >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 		ifAbsent: aBlock.
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 XMLNamespaceScope >> resolvePrefixesOfNamespaceURI: aURI [
 	| prefixes |
 
@@ -385,21 +387,21 @@ XMLNamespaceScope >> resolvePrefixesOfNamespaceURI: aURI [
 	^ prefixes.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNamespaceScope >> size [
 	^ prefixMappings
 		ifNil: [0]
 		ifNotNil: [prefixMappings size]
 ]
 
-{ #category : #unmapping }
+{ #category : 'unmapping' }
 XMLNamespaceScope >> unmapPrefix: aPrefix [
 	^ self
 		unmapPrefix: aPrefix
 		ifAbsent: [self errorCannotUnmapPrefix: aPrefix]
 ]
 
-{ #category : #unmapping }
+{ #category : 'unmapping' }
 XMLNamespaceScope >> unmapPrefix: aPrefix ifAbsent: aBlock [
 	prefixMappings
 		ifNil: [^ aBlock value]
@@ -410,7 +412,7 @@ XMLNamespaceScope >> unmapPrefix: aPrefix ifAbsent: aBlock [
 				ifAbsent: aBlock]
 ]
 
-{ #category : #unmapping }
+{ #category : 'unmapping' }
 XMLNamespaceScope >> unmapPrefixes [
 	self hasNamespaces
 		ifTrue: [
@@ -418,7 +420,7 @@ XMLNamespaceScope >> unmapPrefixes [
 			self copiedPrefixMappings removeAll]
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLNamespaceScope >> validateAndResolvePrefix: aPrefix ofAttribute: anAttribute [
 	"performance critical method"
 	aPrefix size > 0 "optimization"
@@ -450,7 +452,7 @@ XMLNamespaceScope >> validateAndResolvePrefix: aPrefix ofAttribute: anAttribute 
 			^ '']
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLNamespaceScope >> validateAndResolvePrefix: aPrefix ofElement: anElement [
 	aPrefix size > 0 "optimization"
 		ifTrue: [
@@ -474,7 +476,7 @@ XMLNamespaceScope >> validateAndResolvePrefix: aPrefix ofElement: anElement [
 			^ self defaultNamespace]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespaceScope >> validatePrefix: aPrefix beforeMappingTo: aURI [
 	aPrefix size > 0 "optimization"
 		ifTrue: ["non-default namespace"
@@ -499,7 +501,7 @@ XMLNamespaceScope >> validatePrefix: aPrefix beforeMappingTo: aURI [
 		ifTrue: [self errorCannotAliasXMLNSPrefixWith: aPrefix].
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLNamespaceScope >> validatePrefixesOfAttributes: anAttributeCollection [
 	^ self
 		validatePrefixesOfAttributes: anAttributeCollection asArray
@@ -507,7 +509,7 @@ XMLNamespaceScope >> validatePrefixesOfAttributes: anAttributeCollection [
 		to: anAttributeCollection size
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLNamespaceScope >> validatePrefixesOfAttributes: anAttributeCollection from: aStart to: aStop [
 	"performance critical method"
 	| attributeLocalNamesAndURIs |
@@ -535,12 +537,12 @@ XMLNamespaceScope >> validatePrefixesOfAttributes: anAttributeCollection from: a
 							aliasesURI: uri]]]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLNamespaceScope >> xmlNamespaceURI [
 	^ self class xmlNamespaceURI
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLNamespaceScope >> xmlnsNamespaceURI [
 	^ self class xmlnsNamespaceURI
 ]

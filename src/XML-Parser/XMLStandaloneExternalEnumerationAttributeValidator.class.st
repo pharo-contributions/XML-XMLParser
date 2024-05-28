@@ -2,12 +2,14 @@
 This class validates attributes that can have any value taken from a list like ""(one|two|thee)"". It disallows attributes that require further value normalization or substitution with default or fixed default values.
 "
 Class {
-	#name : #XMLStandaloneExternalEnumerationAttributeValidator,
-	#superclass : #XMLEnumerationAttributeValidator,
-	#category : #'XML-Parser-Validation-Standalone'
+	#name : 'XMLStandaloneExternalEnumerationAttributeValidator',
+	#superclass : 'XMLEnumerationAttributeValidator',
+	#category : 'XML-Parser-Validation-Standalone',
+	#package : 'XML-Parser',
+	#tag : 'Validation-Standalone'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStandaloneExternalEnumerationAttributeValidator >> isStandaloneExternal [
 	^ true
 ]

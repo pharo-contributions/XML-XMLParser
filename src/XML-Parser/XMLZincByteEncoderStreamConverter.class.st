@@ -2,8 +2,8 @@
 A stream converter that wraps the ZnByteEncoder legacy byte encoder class. (Requires Zinc.)
 "
 Class {
-	#name : #XMLZincByteEncoderStreamConverter,
-	#superclass : #XMLStreamConverter,
+	#name : 'XMLZincByteEncoderStreamConverter',
+	#superclass : 'XMLStreamConverter',
 	#instVars : [
 		'zincByteEncoder',
 		'stringReadStreamAdapter'
@@ -11,10 +11,12 @@ Class {
 	#classVars : [
 		'NullReadStream'
 	],
-	#category : #'XML-Parser-Streams'
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLZincByteEncoderStreamConverter class >> basicCanConvertEncoding: anEncodingName [
 	^ XMLClassFinder
 		classNamed: #ZnByteEncoder
@@ -23,14 +25,14 @@ XMLZincByteEncoderStreamConverter class >> basicCanConvertEncoding: anEncodingNa
 		ifAbsent: [false]
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLZincByteEncoderStreamConverter class >> initialize [
 	"self initialize"
 
 	NullReadStream := XMLNullReadStream new
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLZincByteEncoderStreamConverter >> initializeForEncoding: anEncodingName [
 	zincByteEncoder :=
 		(XMLClassFinder classNamed: #ZnByteEncoder) newForEncoding: anEncodingName.
@@ -45,7 +47,7 @@ XMLZincByteEncoderStreamConverter >> initializeForEncoding: anEncodingName [
 		XMLStringReadStreamAdapter on: NullReadStream.
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 XMLZincByteEncoderStreamConverter >> nextFromStream: aStream [
 	"ZnByteEncoder does not check for #atEnd before sending #next"
 	aStream atEnd
@@ -58,7 +60,7 @@ XMLZincByteEncoderStreamConverter >> nextFromStream: aStream [
 			^ nextChar]
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 XMLZincByteEncoderStreamConverter >> nextPut: aCharacter toStream: aStream [
 	zincByteEncoder
 		nextPut: aCharacter

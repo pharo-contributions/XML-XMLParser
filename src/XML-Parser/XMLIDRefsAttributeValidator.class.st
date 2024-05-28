@@ -2,22 +2,24 @@
 This class validates attributes with lists of ID ref values separated by spaces.
 "
 Class {
-	#name : #XMLIDRefsAttributeValidator,
-	#superclass : #XMLIDRefAttributeValidator,
-	#category : #'XML-Parser-Validation'
+	#name : 'XMLIDRefsAttributeValidator',
+	#superclass : 'XMLIDRefAttributeValidator',
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLIDRefsAttributeValidator class >> standaloneExternalClass [
 	^ XMLStandaloneExternalIDRefsAttributeValidator
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLIDRefsAttributeValidator >> isIDRefs [
 	^ true
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLIDRefsAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 	self
 		spaceSeparatedListValuesIn: aDefaultValue
@@ -26,7 +28,7 @@ XMLIDRefsAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 				ifFalse: [self errorInvalidDefaultAttributeValue: aDefaultValue]]
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLIDRefsAttributeValidator >> validateAttributeValue: aValue [
 	self
 		spaceSeparatedListValuesIn: aValue

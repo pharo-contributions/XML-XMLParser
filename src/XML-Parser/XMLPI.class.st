@@ -2,63 +2,65 @@
 This class represents a processing instruction node.
 "
 Class {
-	#name : #XMLPI,
-	#superclass : #XMLNode,
+	#name : 'XMLPI',
+	#superclass : 'XMLNode',
 	#instVars : [
 		'target',
 		'data'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLPI class >> target: aTargetString data: aDataString [
 	^ self new
 		target: aTargetString;
 		data: aDataString
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLPI >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitPI: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPI >> data [
 	^ data ifNil: [data := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPI >> data: aString [
 	data := aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLPI >> hasData [
 	^ self data isNotEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLPI >> isPI [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPI >> sortKey [
 	^ self target
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPI >> target [
 	^ target ifNil: [target := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPI >> target: aString [
 	target := aString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLPI >> writeXMLOn: aWriter [
 	aWriter pi
 		target: self target;

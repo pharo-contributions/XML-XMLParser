@@ -1,6 +1,6 @@
-Extension { #name : #Object }
+Extension { #name : 'Object' }
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Object >> isXMLBinaryOrExternalStream [
 	"Not every stream or stream-like object is a subclass of Stream, so this
 	must be defined here.
@@ -15,7 +15,7 @@ Object >> isXMLBinaryOrExternalStream [
 			and: [self isBinary]]
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Object >> isXMLConvertingStreamAdapter [
 	^ false
 ]

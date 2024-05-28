@@ -2,23 +2,25 @@
 This is a base class for DTD content model parsers that turn element declarations into XMLElementValidators.
 "
 Class {
-	#name : #DTDContentModelParser,
-	#superclass : #Object,
+	#name : 'DTDContentModelParser',
+	#superclass : 'Object',
 	#instVars : [
 		'element',
 		'contentModel'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDContentModelParser class >> element: anElement contentModel: aContentModel [
 	^ self new
 		setElement: anElement
 		contentModel: aContentModel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDContentModelParser class >> parserClassForContentModel: aContentModel [
 	"the tokenizer removes all spaces from the content model
 	and checks it for well-formedness"
@@ -30,17 +32,17 @@ DTDContentModelParser class >> parserClassForContentModel: aContentModel [
 		ifFalse: [^ DTDLiteralContentModelParser]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 DTDContentModelParser class >> standaloneExternalClass [
 	^ self
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 DTDContentModelParser >> parse [
 	self subclassResponsibility
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DTDContentModelParser >> setElement: anElement contentModel: aContentModel [
 	element := anElement.
 	contentModel := aContentModel

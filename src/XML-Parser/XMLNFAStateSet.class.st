@@ -2,32 +2,34 @@
 This class is a set of NFA states. It wraps an IdentitySet and keeps track of if any of its states is accepting.
 "
 Class {
-	#name : #XMLNFAStateSet,
-	#superclass : #Collection,
+	#name : 'XMLNFAStateSet',
+	#superclass : 'Collection',
 	#instVars : [
 		'set',
 		'isAccepting'
 	],
-	#category : #'XML-Parser-Validation-DFA'
+	#category : 'XML-Parser-Validation-DFA',
+	#package : 'XML-Parser',
+	#tag : 'Validation-DFA'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNFAStateSet class >> new [
 	^ self new: 5
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNFAStateSet class >> new: aCapacity [
 	^ self basicNew initialize: aCapacity
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNFAStateSet class >> newFrom: aCollection [
 	"for GS portability"
 	^ self withAll: aCollection
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLNFAStateSet >> , aCollection [
 	"GS doesn't define #, for non-Sequenceable collections"
 	^ self copy
@@ -35,7 +37,7 @@ XMLNFAStateSet >> , aCollection [
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 XMLNFAStateSet >> = anObject [
 	self == anObject
 		ifTrue: [^ true].
@@ -52,7 +54,7 @@ XMLNFAStateSet >> = anObject [
 	^ true.
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLNFAStateSet >> add: aState [
 	isAccepting
 		ifFalse: [isAccepting := aState isAccepting].
@@ -60,29 +62,29 @@ XMLNFAStateSet >> add: aState [
 	^ set add: aState.
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLNFAStateSet >> asDFAState [
 	^ self asDFAStateWithStateCache: nil
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLNFAStateSet >> asDFAStateWithStateCache: aDFAStateCache [
 	^ XMLDFAState
 		nfaStates: self
 		dfaStateCache: aDFAStateCache
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFAStateSet >> capacity [
 	^ set capacity
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNFAStateSet >> do: aBlock [
 	set do: aBlock
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 XMLNFAStateSet >> hash [
 	| hash |
 
@@ -94,34 +96,34 @@ XMLNFAStateSet >> hash [
 	^ hash bitXor: self size hash.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNFAStateSet >> includes: aState [
 	^ set includes: aState
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLNFAStateSet >> initialize: aCapacity [
 	set := IdentitySet new: aCapacity.
 	isAccepting := false.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNFAStateSet >> isAccepting [
 	^ isAccepting
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNFAStateSet >> isEmpty [
 	"Squeak's Collection>>#isEmpty is inefficient"
 	^ self size = 0
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLNFAStateSet >> postCopy [
 	set := set copy
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLNFAStateSet >> remove: aState ifAbsent: aBlock [
 	set
 		remove: aState
@@ -133,7 +135,7 @@ XMLNFAStateSet >> remove: aState ifAbsent: aBlock [
 	^ aState.
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLNFAStateSet >> removeAll [
 	"Redefined because Collection>>#removeAll assumes the collection can
 	be safely modified while iterating it with #do:, and 'set removeAll'
@@ -142,12 +144,12 @@ XMLNFAStateSet >> removeAll [
 	self initialize: self capacity
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNFAStateSet >> set [
 	^ set
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFAStateSet >> size [
 	^ set size
 ]

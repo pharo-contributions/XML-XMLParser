@@ -2,30 +2,32 @@
 This state can branch off into two different states without matching against anything.
 "
 Class {
-	#name : #XMLNFABranchingState,
-	#superclass : #XMLNFAState,
+	#name : 'XMLNFABranchingState',
+	#superclass : 'XMLNFAState',
 	#instVars : [
 		'leftBranch',
 		'rightBranch'
 	],
-	#category : #'XML-Parser-Validation-DFA'
+	#category : 'XML-Parser-Validation-DFA',
+	#package : 'XML-Parser',
+	#tag : 'Validation-DFA'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNFABranchingState class >> branch: aLeftBranch [
 	^ self new
 		setLeftBranch: aLeftBranch
 		rightBranch: nil
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNFABranchingState class >> leftBranch: aLeftBranch rightBranch: aRightBranch [
 	^ self new
 		setLeftBranch: aLeftBranch
 		rightBranch: aRightBranch
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLNFABranchingState >> addTo: aStateSet [
 	lastAddedTo == aStateSet
 		ifFalse: [
@@ -42,7 +44,7 @@ XMLNFABranchingState >> addTo: aStateSet [
 				ifNotNil: [rightBranch addTo: aStateSet]]
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 XMLNFABranchingState >> connectToState: aState [
 	leftBranch
 		ifNil: [leftBranch := aState].
@@ -50,12 +52,12 @@ XMLNFABranchingState >> connectToState: aState [
 		ifNil: [rightBranch := aState].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFABranchingState >> leftBranch [
 	^ leftBranch
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNFABranchingState >> nextStatesDo: aBlock [
 	leftBranch
 		ifNotNil: [aBlock value: leftBranch].
@@ -63,7 +65,7 @@ XMLNFABranchingState >> nextStatesDo: aBlock [
 		ifNotNil: [aBlock value: rightBranch].
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLNFABranchingState >> printOn: aStream [
 	super printOn: aStream.
 
@@ -80,12 +82,12 @@ XMLNFABranchingState >> printOn: aStream [
 	aStream nextPutAll: '))'.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFABranchingState >> rightBranch [
 	^ rightBranch
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLNFABranchingState >> setLeftBranch: aLeftBranch rightBranch: aRightBranch [
 	leftBranch := aLeftBranch.
 	rightBranch := aRightBranch.

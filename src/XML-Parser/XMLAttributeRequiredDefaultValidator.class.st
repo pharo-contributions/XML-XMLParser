@@ -2,24 +2,26 @@
 This class makes sure an attribute is present (the #REQUIRED constrant).
 "
 Class {
-	#name : #XMLAttributeRequiredDefaultValidator,
-	#superclass : #XMLAttributeDefaultValidator,
-	#category : #'XML-Parser-Validation'
+	#name : 'XMLAttributeRequiredDefaultValidator',
+	#superclass : 'XMLAttributeDefaultValidator',
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 XMLAttributeRequiredDefaultValidator >> errorRequiredAttributeMissing [
 	XMLValidationException
 		formatSignal: 'Required attribute "{1}" is missing'
 		with: self attribute
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeRequiredDefaultValidator >> isRequired [
 	^ true
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLAttributeRequiredDefaultValidator >> validatedDefaultForAbsentAttributeValue [
 	self errorRequiredAttributeMissing
 ]

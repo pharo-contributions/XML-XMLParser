@@ -2,46 +2,48 @@
 This class places security limits on the number and size of external parsed entities. You can set these using the configuration messages in DTDExternalEntityResolver or remove them using removeLimits.
 "
 Class {
-	#name : #DTDExternalEntityLimits,
-	#superclass : #Object,
+	#name : 'DTDExternalEntityLimits',
+	#superclass : 'Object',
 	#instVars : [
 		'externalSubsetReadLimit',
 		'maxExternalEntities',
 		'maxExternalEntitySize',
 		'resolvesLocalFromNonLocal'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalEntityLimits class >> defaultExternalSubsetReadLimit [
 	^ XMLParserLimits defaultReadLimit
 		ifNotNil: [:limit | (limit / 4) asInteger]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalEntityLimits class >> defaultMaxExternalEntities [
 	^ 20
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalEntityLimits class >> defaultMaxExternalEntitySize [
 	^ 2500000
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalEntityLimits >> externalSubsetReadLimit [
 
 	^ externalSubsetReadLimit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalEntityLimits >> externalSubsetReadLimit: anInteger [
 
 	externalSubsetReadLimit := anInteger
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DTDExternalEntityLimits >> initialize [
 	super initialize.
 
@@ -51,31 +53,31 @@ DTDExternalEntityLimits >> initialize [
 	resolvesLocalFromNonLocal := false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalEntityLimits >> maxExternalEntities [
 
 	^ maxExternalEntities
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalEntityLimits >> maxExternalEntities: anInteger [
 
 	maxExternalEntities := anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalEntityLimits >> maxExternalEntitySize [
 
 	^ maxExternalEntitySize
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalEntityLimits >> maxExternalEntitySize: anInteger [
 
 	maxExternalEntitySize := anInteger
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 DTDExternalEntityLimits >> removeAll [
 
 	externalSubsetReadLimit := nil.
@@ -84,13 +86,13 @@ DTDExternalEntityLimits >> removeAll [
 	resolvesLocalFromNonLocal := true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalEntityLimits >> resolvesLocalFromNonLocal [
 
 	^ resolvesLocalFromNonLocal
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalEntityLimits >> resolvesLocalFromNonLocal: aBoolean [
 
 	resolvesLocalFromNonLocal := aBoolean

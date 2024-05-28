@@ -2,12 +2,14 @@
 This is an abstract base class for parsed entities with replacements that can be inserted into an XML document.
 "
 Class {
-	#name : #DTDParsedEntity,
-	#superclass : #DTDEntity,
-	#category : #'XML-Parser-DTD'
+	#name : 'DTDParsedEntity',
+	#superclass : 'DTDEntity',
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 DTDParsedEntity >> asPushedBackEntity [
 
 	^ self isParameter
@@ -15,19 +17,19 @@ DTDParsedEntity >> asPushedBackEntity [
 		  ifFalse: [ XMLPushedBackGeneralEntity entity: self ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDParsedEntity >> hasReplacement [
 
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDParsedEntity >> replacement [
 
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDParsedEntity >> replacementStream [
 
 	self subclassResponsibility

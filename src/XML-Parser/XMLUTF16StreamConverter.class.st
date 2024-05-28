@@ -2,22 +2,24 @@
 An abstract class for UTF-16 stream converters.
 "
 Class {
-	#name : #XMLUTF16StreamConverter,
-	#superclass : #XMLUTFStreamConverter,
-	#category : #'XML-Parser-Streams'
+	#name : 'XMLUTF16StreamConverter',
+	#superclass : 'XMLUTFStreamConverter',
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLUTF16StreamConverter class >> abstractClass [
 	^ XMLUTF16StreamConverter
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLUTF16StreamConverter >> isBigEndian [
 	self subclassResponsibility
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLUTF16StreamConverter >> nextCodePointFromStream: aStream [
 	| codePoint lowSurrogate |
 
@@ -52,7 +54,7 @@ XMLUTF16StreamConverter >> nextCodePointFromStream: aStream [
 		16r10000.
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 XMLUTF16StreamConverter >> nextPut: aCharacter toStream: aStream [
 	| codePoint |
 
@@ -79,12 +81,12 @@ XMLUTF16StreamConverter >> nextPut: aCharacter toStream: aStream [
 				toStream: aStream]
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLUTF16StreamConverter >> nextPutTwoBytes: anInteger toStream: aStream [
 	self subclassResponsibility
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLUTF16StreamConverter >> nextTwoBytesFromStream: aStream [
 	self subclassResponsibility
 ]

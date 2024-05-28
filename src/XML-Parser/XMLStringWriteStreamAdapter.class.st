@@ -2,17 +2,19 @@
 A write stream adapter that accepts binary input and converts it to character output for string write streams.
 "
 Class {
-	#name : #XMLStringWriteStreamAdapter,
-	#superclass : #XMLWriteStreamAdapter,
-	#category : #'XML-Parser-Streams'
+	#name : 'XMLStringWriteStreamAdapter',
+	#superclass : 'XMLWriteStreamAdapter',
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStringWriteStreamAdapter >> nextPut: anObject [
 	stream nextPut: anObject asCharacter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStringWriteStreamAdapter >> nextPutAll: aCollection [
 	"can't use #to:do: here because other #nextPutAll: implementations
 	support non-sequenceable collection arguments wtih #do:"

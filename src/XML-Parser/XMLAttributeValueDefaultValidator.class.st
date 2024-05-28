@@ -2,46 +2,48 @@
 This class will put a default value for an attribute if the attribute is absent.
 "
 Class {
-	#name : #XMLAttributeValueDefaultValidator,
-	#superclass : #XMLAttributeDefaultValidator,
+	#name : 'XMLAttributeValueDefaultValidator',
+	#superclass : 'XMLAttributeDefaultValidator',
 	#instVars : [
 		'value'
 	],
-	#category : #'XML-Parser-Validation'
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLAttributeValueDefaultValidator class >> standaloneExternalClass [
 	^ XMLStandaloneExternalAttributeValueDefaultValidator
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeValueDefaultValidator >> isValue [
 	^ true
 ]
 
-{ #category : #processing }
+{ #category : 'processing' }
 XMLAttributeValueDefaultValidator >> processedDefaultForAbsentAttributeValue [
 	^ self value
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLAttributeValueDefaultValidator >> setAttribute: anAttribute value: aDefaultValue [
 	attribute := anAttribute.
 	value := aDefaultValue.
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLAttributeValueDefaultValidator >> validatedDefaultForAbsentAttributeValue [
 	^ self value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeValueDefaultValidator >> value [
 	^ value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeValueDefaultValidator >> value: aDefaultValue [
 	value := aDefaultValue
 ]

@@ -2,19 +2,21 @@
 A write stream adapter for percent encoding octets for URIs.
 "
 Class {
-	#name : #XMLPercentEncodingWriteStreamAdapter,
-	#superclass : #XMLWriteStreamAdapter,
-	#category : #'XML-Parser-Streams'
+	#name : 'XMLPercentEncodingWriteStreamAdapter',
+	#superclass : 'XMLWriteStreamAdapter',
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLPercentEncodingWriteStreamAdapter >> isBinary [
 	"this stream is binary, because it accepts binary octet values
 	and percent-encodes them as '%HH' character sequences"
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPercentEncodingWriteStreamAdapter >> nextPut: anObject [
 	| byte |
 
@@ -33,7 +35,7 @@ XMLPercentEncodingWriteStreamAdapter >> nextPut: anObject [
 	^ anObject.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPercentEncodingWriteStreamAdapter >> nextPutAll: aCollection [
 	"can't use #to:do: here because other #nextPutAll: implementations
 	support non-sequenceable collection arguments wtih #do:"

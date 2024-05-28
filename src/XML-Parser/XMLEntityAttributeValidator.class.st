@@ -2,43 +2,45 @@
 This class validates attributes that contain unparsed entity names (that must be declared).
 "
 Class {
-	#name : #XMLEntityAttributeValidator,
-	#superclass : #XMLAttributeValidator,
+	#name : 'XMLEntityAttributeValidator',
+	#superclass : 'XMLAttributeValidator',
 	#instVars : [
 		'unparsedEntityValidator'
 	],
-	#category : #'XML-Parser-Validation'
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLEntityAttributeValidator class >> standaloneExternalClass [
 	^ XMLStandaloneExternalEntityAttributeValidator
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLEntityAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
 	super initializeWithValidatorsFrom: aValidatorContainer.
 
 	unparsedEntityValidator := aValidatorContainer unparsedEntityValidator
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEntityAttributeValidator >> isEntity [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLEntityAttributeValidator >> unparsedEntityValidator [
 	^ unparsedEntityValidator
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLEntityAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 	aDefaultValue isXMLName
 		ifFalse: [self errorInvalidDefaultAttributeValue: aDefaultValue]
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLEntityAttributeValidator >> validateAttributeValue: aValue [
 	self unparsedEntityValidator
 		validateEntityReference: aValue

@@ -2,12 +2,14 @@
 This class will make sure the value of a standalone externally defined attribute is present (the default value is never used).
 "
 Class {
-	#name : #XMLStandaloneExternalAttributeValueDefaultValidator,
-	#superclass : #XMLAttributeValueDefaultValidator,
-	#category : #'XML-Parser-Validation-Standalone'
+	#name : 'XMLStandaloneExternalAttributeValueDefaultValidator',
+	#superclass : 'XMLAttributeValueDefaultValidator',
+	#category : 'XML-Parser-Validation-Standalone',
+	#package : 'XML-Parser',
+	#tag : 'Validation-Standalone'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 XMLStandaloneExternalAttributeValueDefaultValidator >> errorStandaloneExternalAttributeDefaultValueUsed [
 	XMLValidationException
 		formatSignal:
@@ -16,7 +18,7 @@ XMLStandaloneExternalAttributeValueDefaultValidator >> errorStandaloneExternalAt
 		with: self attribute
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLStandaloneExternalAttributeValueDefaultValidator >> validatedDefaultForAbsentAttributeValue [
 	self errorStandaloneExternalAttributeDefaultValueUsed
 ]

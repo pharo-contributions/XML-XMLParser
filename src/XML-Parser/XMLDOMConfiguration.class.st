@@ -2,39 +2,40 @@
 This class stores additional settings and components relevant to the DOM parser and DOM nodes.
 "
 Class {
-	#name : #XMLDOMConfiguration,
-	#superclass : #XMLConfiguration,
+	#name : 'XMLDOMConfiguration',
+	#superclass : 'XMLConfiguration',
 	#instVars : [
 		'preservesCDataNodes',
 		'preservesCommentNodes',
 		'preservesIgnorableWhitespace',
 		'nodeFactory'
 	],
-	#category : #'XML-Parser'
+	#category : 'XML-Parser',
+	#package : 'XML-Parser'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMConfiguration >> attributeListClass [
 	^ self nodeFactory attributeListClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMConfiguration >> attributeListClass: aClass [
 	self nodeFactory:
 		(self nodeFactory asPluggableNodeFactory attributeListClass: aClass)
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLDOMConfiguration >> defaultNodeFactoryClass [
 	^ XMLNodeFactory
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLDOMConfiguration >> defaultParserHandlerClass [
 	^ XMLDOMParser
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLDOMConfiguration >> initialize [
 	super initialize.
 
@@ -45,67 +46,67 @@ XMLDOMConfiguration >> initialize [
 	nodeFactory := self defaultNodeFactoryClass new.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMConfiguration >> isValidating: aBoolean [
 	aBoolean
 		ifFalse: [self preservesIgnorableWhitespace: false].
 	super isValidating: aBoolean.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMConfiguration >> nodeFactory [
 	^ nodeFactory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMConfiguration >> nodeFactory: aFactory [
 	nodeFactory := aFactory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMConfiguration >> nodeListClass [
 	^ self nodeFactory nodeListClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMConfiguration >> nodeListClass: aClass [
 	self nodeFactory:
 		(self nodeFactory asPluggableNodeFactory nodeListClass: aClass)
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLDOMConfiguration >> postCopy [
 	super postCopy.
 
 	nodeFactory := nodeFactory copy.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMConfiguration >> preservesCDataNodes [
 	^ preservesCDataNodes
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMConfiguration >> preservesCDataNodes: aBoolean [
 	preservesCDataNodes := aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMConfiguration >> preservesCommentNodes [
 	^ preservesCommentNodes
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMConfiguration >> preservesCommentNodes: aBoolean [
 	preservesCommentNodes := aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMConfiguration >> preservesIgnorableWhitespace [
 	^ preservesIgnorableWhitespace
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMConfiguration >> preservesIgnorableWhitespace: aBoolean [
 	(preservesIgnorableWhitespace := aBoolean)
 		ifTrue: [self isValidating: true]

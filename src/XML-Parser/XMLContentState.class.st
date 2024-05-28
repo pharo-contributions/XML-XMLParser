@@ -2,17 +2,19 @@
 A state for content tokens, everything from the first stat tag to the end of the document.
 "
 Class {
-	#name : #XMLContentState,
-	#superclass : #XMLTokenizerState,
-	#category : #'XML-Parser-Drivers'
+	#name : 'XMLContentState',
+	#superclass : 'XMLTokenizerState',
+	#category : 'XML-Parser-Drivers',
+	#package : 'XML-Parser',
+	#tag : 'Drivers'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLContentState >> isContentState [
 	^ true
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLContentState >> nextTokenFrom: aTokenizer [
 	^ aTokenizer nextContentToken
 ]

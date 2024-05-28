@@ -2,17 +2,19 @@
 An NFA in this state is considered to accept the input.
 "
 Class {
-	#name : #XMLNFAAcceptingState,
-	#superclass : #XMLNFAState,
-	#category : #'XML-Parser-Validation-DFA'
+	#name : 'XMLNFAAcceptingState',
+	#superclass : 'XMLNFAState',
+	#category : 'XML-Parser-Validation-DFA',
+	#package : 'XML-Parser',
+	#tag : 'Validation-DFA'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNFAAcceptingState >> isAccepting [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLNFAAcceptingState >> printOn: aStream [
 	super printOn: aStream.
 

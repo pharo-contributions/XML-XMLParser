@@ -11,18 +11,19 @@ Each handler can access the SAX2Parser object with #parser and set the parsing r
 SAXHandler is not deprecated and can still be used if you prefer the SAX 1.0 style API.
 "
 Class {
-	#name : #SAX2Parser,
-	#superclass : #SAXHandler,
+	#name : 'SAX2Parser',
+	#superclass : 'SAXHandler',
 	#instVars : [
 		'contentHandler',
 		'lexicalHandler',
 		'declarationHandler',
 		'parsingResult'
 	],
-	#category : #'XML-Parser'
+	#category : 'XML-Parser',
+	#package : 'XML-Parser'
 }
 
-{ #category : #'private ' }
+{ #category : 'private ' }
 SAX2Parser class >> generateHandlerForwardingMethods [
 	"
 	self generateHandlerForwardingMethods
@@ -63,7 +64,7 @@ SAX2Parser class >> generateHandlerForwardingMethods [
 					classified: handlerCategory]]
 ]
 
-{ #category : #'private ' }
+{ #category : 'private ' }
 SAX2Parser class >> generateMethodsInHandlerClasses [
 	"
 	self generateMethodsInHandlerClasses
@@ -83,7 +84,7 @@ SAX2Parser class >> generateMethodsInHandlerClasses [
 					classified: handlerCategory]]
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAX2Parser >> attributeDeclaration: anElementName name: anAttributeName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	self declarationHandler
 		attributeDeclaration: anElementName
@@ -93,84 +94,84 @@ SAX2Parser >> attributeDeclaration: anElementName name: anAttributeName type: aT
 		defaultValue: aDefaultValue
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAX2Parser >> characters: aString [
 	self contentHandler characters: aString
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAX2Parser >> comment: aString [
 	self lexicalHandler comment: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2Parser >> contentHandler [
 	^ contentHandler
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2Parser >> contentHandler: aContentHandler [
 	(contentHandler :=
 		aContentHandler ifNil: [self defaultContentHandlerClass new])
 			parser: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2Parser >> declarationHandler [
 	^ declarationHandler
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2Parser >> declarationHandler: aDeclarationHandler [
 	(declarationHandler :=
 		aDeclarationHandler ifNil: [self defaultDeclarationHandlerClass new])
 			parser: self
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 SAX2Parser >> defaultContentHandlerClass [
 	^ SAX2ContentHandler
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 SAX2Parser >> defaultDeclarationHandlerClass [
 	^ SAX2DeclarationHandler
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 SAX2Parser >> defaultLexicalHandlerClass [
 	^ SAX2LexicalHandler
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 SAX2Parser >> defaultParsingResult [
 	"the default parsing result of SAXHandler"
 	^ self
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAX2Parser >> elementDeclaration: anElementName contentModel: aContentModel [
 	self declarationHandler
 		elementDeclaration: anElementName
 		contentModel: aContentModel
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAX2Parser >> endCData [
 	self lexicalHandler endCData
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAX2Parser >> endDTD [
 	self lexicalHandler endDTD
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAX2Parser >> endDocument [
 	self contentHandler endDocument
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAX2Parser >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName [
 	self contentHandler
 		endElement: aQualifiedName
@@ -179,17 +180,17 @@ SAX2Parser >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aL
 		localName: aLocalName
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAX2Parser >> endEntity: anEntityName [
 	self lexicalHandler endEntity: anEntityName
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAX2Parser >> endPrefixMapping: aPrefix [
 	self contentHandler endPrefixMapping: aPrefix
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAX2Parser >> generalEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotationName [
 	self declarationHandler
 		generalEntityDeclaration: aName
@@ -198,31 +199,31 @@ SAX2Parser >> generalEntityDeclaration: aName publicID: aPublicID systemID: aSys
 		ndata: aNotationName
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAX2Parser >> generalEntityDeclaration: aName replacement: aReplacement [
 	self declarationHandler
 		generalEntityDeclaration: aName
 		replacement: aReplacement
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAX2Parser >> ignorableWhitespace: aString [
 	self contentHandler ignorableWhitespace: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2Parser >> lexicalHandler [
 	^ lexicalHandler
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2Parser >> lexicalHandler: aLexicalHandler [
 	(lexicalHandler :=
 		aLexicalHandler ifNil: [self defaultLexicalHandlerClass new])
 			parser: self
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAX2Parser >> notationDeclaration: aName publicID: aPublicID systemID: aSystemID [
 	self declarationHandler
 		notationDeclaration: aName
@@ -230,7 +231,7 @@ SAX2Parser >> notationDeclaration: aName publicID: aPublicID systemID: aSystemID
 		systemID: aSystemID
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SAX2Parser >> on: aStringOrStream [
 	super on: aStringOrStream.
 
@@ -240,7 +241,7 @@ SAX2Parser >> on: aStringOrStream [
 	parsingResult := self defaultParsingResult
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAX2Parser >> parameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
 	self declarationHandler
 		parameterEntityDeclaration: aName
@@ -248,41 +249,41 @@ SAX2Parser >> parameterEntityDeclaration: aName publicID: aPublicID systemID: aS
 		systemID: aSystemID
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 SAX2Parser >> parameterEntityDeclaration: aName replacement: aReplacement [
 	self declarationHandler
 		parameterEntityDeclaration: aName
 		replacement: aReplacement
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 SAX2Parser >> parsingResult [
 	^ parsingResult
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 SAX2Parser >> parsingResult: anObject [
 	parsingResult := anObject
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAX2Parser >> processingInstruction: aTargetString data: aDataString [
 	self contentHandler
 		processingInstruction: aTargetString
 		data: aDataString
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAX2Parser >> skippedEntity: anEntityName [
 	self contentHandler skippedEntity: anEntityName
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAX2Parser >> startCData [
 	self lexicalHandler startCData
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAX2Parser >> startDTD: aRootElementName publicID: aPublicID systemID: aSystemID [
 	self lexicalHandler
 		startDTD: aRootElementName
@@ -290,12 +291,12 @@ SAX2Parser >> startDTD: aRootElementName publicID: aPublicID systemID: aSystemID
 		systemID: aSystemID
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAX2Parser >> startDocument [
 	self contentHandler startDocument
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAX2Parser >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: aDictionary [
 	self contentHandler
 		startElement: aQualifiedName
@@ -305,19 +306,19 @@ SAX2Parser >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: 
 		attributes: aDictionary
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAX2Parser >> startEntity: anEntityName [
 	self lexicalHandler startEntity: anEntityName
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 SAX2Parser >> startPrefixMapping: aPrefix uri: aURI [
 	self contentHandler
 		startPrefixMapping: aPrefix
 		uri: aURI
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 SAX2Parser >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
 	self lexicalHandler
 		xmlVersion: aVersionFloat

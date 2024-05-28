@@ -1,16 +1,16 @@
-Extension { #name : #Collection }
+Extension { #name : 'Collection' }
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Collection >> asXMLAttributeDictionary [
 	^ XMLAttributeDictionary newFrom: self
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Collection >> asXMLAttributeSpec [
 	^ XMLBasicAttributeSpec attributes: self
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Collection >> includesXMLName: aName [
 	"optimized with do: instead of anySatisfy:"
 	self do: [:each |

@@ -2,32 +2,34 @@
 This class stores the decoded resolved replacement of an external parsed entity.
 "
 Class {
-	#name : #DTDDecodedResolvedExternalParsedEntityReplacement,
-	#superclass : #DTDResolvedExternalParsedEntityReplacement,
+	#name : 'DTDDecodedResolvedExternalParsedEntityReplacement',
+	#superclass : 'DTDResolvedExternalParsedEntityReplacement',
 	#instVars : [
 		'contents'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDDecodedResolvedExternalParsedEntityReplacement class >> contents: aString [
 	^ self new setContents: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDecodedResolvedExternalParsedEntityReplacement >> contents [
 
 	^ contents
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDDecodedResolvedExternalParsedEntityReplacement >> isEmpty [
 
 	^ self contents isEmpty
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 DTDDecodedResolvedExternalParsedEntityReplacement >> printOn: aStream [
 
 	super printOn: aStream.
@@ -38,13 +40,13 @@ DTDDecodedResolvedExternalParsedEntityReplacement >> printOn: aStream [
 		nextPut: $)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDecodedResolvedExternalParsedEntityReplacement >> readStream [
 
 	^ self contents readStream
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DTDDecodedResolvedExternalParsedEntityReplacement >> setContents: aString [
 
 	contents := aString

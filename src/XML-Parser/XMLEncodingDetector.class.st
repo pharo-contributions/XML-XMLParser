@@ -2,8 +2,8 @@
 This is a class for automatic encoding detection of streams that infers encodings from a leading byte order mark (BOM) sequence.
 "
 Class {
-	#name : #XMLEncodingDetector,
-	#superclass : #Object,
+	#name : 'XMLEncodingDetector',
+	#superclass : 'Object',
 	#instVars : [
 		'stream',
 		'startPosition'
@@ -14,10 +14,12 @@ Class {
 		'UTF32LittleEndianBOMBytes',
 		'UTF8BOMBytes'
 	],
-	#category : #'XML-Parser-Streams'
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLEncodingDetector class >> initialize [
 	"self initialize"
 
@@ -32,17 +34,17 @@ XMLEncodingDetector class >> initialize [
 		XMLUTF32LittleEndianStreamConverter byteOrderMarkBytes.
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLEncodingDetector class >> on: aStream [
 	^ self new on: aStream
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLEncodingDetector >> atEnd [
 	^ stream atEnd
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLEncodingDetector >> detectBigEndianUTF16BOM [
 	2 to: UTF16BigEndianBOMBytes size do: [:i |
 		self next == (UTF16BigEndianBOMBytes at: i)
@@ -55,7 +57,7 @@ XMLEncodingDetector >> detectBigEndianUTF16BOM [
 	^ XMLUTF16BigEndianStreamConverter new.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLEncodingDetector >> detectBigEndianUTF32BOMOrImplicitEncoding [
 	2 to: UTF32BigEndianBOMBytes size do: [:i |
 		self peek == (UTF32BigEndianBOMBytes at: i)
@@ -96,7 +98,7 @@ XMLEncodingDetector >> detectBigEndianUTF32BOMOrImplicitEncoding [
 	^ XMLUTF32BigEndianStreamConverter new.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLEncodingDetector >> detectLittleEndianImplicitEncoding [
 	| implicitConverterClass |
 
@@ -124,7 +126,7 @@ XMLEncodingDetector >> detectLittleEndianImplicitEncoding [
 		ifNotNil: [implicitConverterClass new].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLEncodingDetector >> detectLittleEndianUTF32Or16BOM [
 	2 to: UTF32LittleEndianBOMBytes size do: [:i |
 		self peek == (UTF32LittleEndianBOMBytes at: i)
@@ -146,7 +148,7 @@ XMLEncodingDetector >> detectLittleEndianUTF32Or16BOM [
 	^ XMLUTF32LittleEndianStreamConverter new.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLEncodingDetector >> detectUTF8BOM [
 	2 to: UTF8BOMBytes size do: [:i |
 		self peek == (UTF8BOMBytes at: i)
@@ -160,12 +162,12 @@ XMLEncodingDetector >> detectUTF8BOM [
 	^ XMLUTF8StreamConverter new.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEncodingDetector >> detectsImplicitEncodings [
 	^ false
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLEncodingDetector >> isUTF8LeadingByte: aByte [
 	^ aByte < 16r80
 		or: [aByte < 16rF8
@@ -174,27 +176,27 @@ XMLEncodingDetector >> isUTF8LeadingByte: aByte [
 					or: [(aByte bitAnd: 16rF8) == 16rF0]]]]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLEncodingDetector >> next [
 	stream atEnd
 		ifTrue: [^ nil]
 		ifFalse: [^ stream next asInteger]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLEncodingDetector >> on: aStream [
 	stream := aStream.
 	startPosition := aStream position.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLEncodingDetector >> peek [
 	stream atEnd
 		ifTrue: [^ nil]
 		ifFalse: [^ stream peek asInteger]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLEncodingDetector >> peekForASCII [
 	| byte |
 
@@ -206,7 +208,7 @@ XMLEncodingDetector >> peekForASCII [
 		ifFalse: [^ false]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLEncodingDetector >> peekForNull [
 	self peek == 0
 		ifTrue: [
@@ -215,7 +217,7 @@ XMLEncodingDetector >> peekForNull [
 		ifFalse: [^ false]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLEncodingDetector >> peekForUTF8LeadingByte [
 	| byte |
 
@@ -227,7 +229,7 @@ XMLEncodingDetector >> peekForUTF8LeadingByte [
 		ifFalse: [^ false]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLEncodingDetector >> peekForUTF8NonLeadingByte [
 	| byte |
 
@@ -240,12 +242,12 @@ XMLEncodingDetector >> peekForUTF8NonLeadingByte [
 		ifFalse: [^ false]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLEncodingDetector >> resetStreamToStartPosition [
 	stream position: startPosition
 ]
 
-{ #category : #detecting }
+{ #category : 'detecting' }
 XMLEncodingDetector >> streamConverterForEncoding [
 	| byte |
 

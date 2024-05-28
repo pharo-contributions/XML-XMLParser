@@ -2,27 +2,29 @@
 This class validates elements that can only contain element content (no PCDATA) using a regular expression converted to a DFA. It ignores comments, PIs, and whitespace.
 "
 Class {
-	#name : #XMLDFAElementContentElementValidator,
-	#superclass : #XMLDFAElementValidator,
-	#category : #'XML-Parser-Validation'
+	#name : 'XMLDFAElementContentElementValidator',
+	#superclass : 'XMLDFAElementValidator',
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDFAElementContentElementValidator >> ignoresWhitespace [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDFAElementContentElementValidator >> isElementContent [
 	^ true
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLDFAElementContentElementValidator >> typeName [
 	^ 'element content'
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLDFAElementContentElementValidator >> validatePCData: aString [
 	self errorUnexpectedPCData
 ]

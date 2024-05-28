@@ -2,36 +2,38 @@
 A validating node visitor that can validate DOM node trees using XMLDocumentValidators.
 "
 Class {
-	#name : #XMLValidatingNodeVisitor,
-	#superclass : #XMLNodeVisitor,
+	#name : 'XMLValidatingNodeVisitor',
+	#superclass : 'XMLNodeVisitor',
 	#instVars : [
 		'validator'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLValidatingNodeVisitor class >> validator: aValidator [
 	^ self new validator: aValidator
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLValidatingNodeVisitor >> validator [
 	^ validator
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLValidatingNodeVisitor >> validator: aValidator [
 	validator := aValidator
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLValidatingNodeVisitor >> visitComment: aComment [
 	self validator validateComment: aComment.
 	^ aComment.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLValidatingNodeVisitor >> visitDocument: aDocument [
 	aDocument root
 		ifNotNil: [:rootElement |
@@ -41,7 +43,7 @@ XMLValidatingNodeVisitor >> visitDocument: aDocument [
 	^ aDocument.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLValidatingNodeVisitor >> visitElement: anElement [
 	| attributeDictionary |
 
@@ -62,7 +64,7 @@ XMLValidatingNodeVisitor >> visitElement: anElement [
 	^ anElement.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLValidatingNodeVisitor >> visitPI: aPI [
 	self validator
 		validatePI: aPI target
@@ -70,7 +72,7 @@ XMLValidatingNodeVisitor >> visitPI: aPI [
 	^ aPI.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLValidatingNodeVisitor >> visitStringNode: aStringNode [
 	self validator validatePCData: aStringNode string.
 	^ aStringNode.

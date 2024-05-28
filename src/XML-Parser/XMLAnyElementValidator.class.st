@@ -2,22 +2,24 @@
 This class validates elements that can contain any content.
 "
 Class {
-	#name : #XMLAnyElementValidator,
-	#superclass : #XMLElementValidator,
-	#category : #'XML-Parser-Validation'
+	#name : 'XMLAnyElementValidator',
+	#superclass : 'XMLElementValidator',
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAnyElementValidator >> atEnd [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAnyElementValidator >> isAny [
 	^ true
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLAnyElementValidator >> typeName [
 	^ 'ANY'
 ]

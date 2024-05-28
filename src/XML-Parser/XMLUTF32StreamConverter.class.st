@@ -2,22 +2,24 @@
 An abstract class for UTF-32 stream converters.
 "
 Class {
-	#name : #XMLUTF32StreamConverter,
-	#superclass : #XMLUTFStreamConverter,
-	#category : #'XML-Parser-Streams'
+	#name : 'XMLUTF32StreamConverter',
+	#superclass : 'XMLUTFStreamConverter',
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLUTF32StreamConverter class >> abstractClass [
 	^ XMLUTF32StreamConverter
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLUTF32StreamConverter >> isBigEndian [
 	self subclassResponsibility
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLUTF32StreamConverter >> nextCodePointFromStream: aStream [
 	| codePoint |
 
@@ -35,12 +37,12 @@ XMLUTF32StreamConverter >> nextCodePointFromStream: aStream [
 	^ codePoint.
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLUTF32StreamConverter >> nextFourBytesFromStream: aStream [
 	self subclassResponsibility
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 XMLUTF32StreamConverter >> nextPut: aCharacter toStream: aStream [
 	| codePoint |
 
@@ -56,7 +58,7 @@ XMLUTF32StreamConverter >> nextPut: aCharacter toStream: aStream [
 		toStream: aStream.
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLUTF32StreamConverter >> nextPutFourBytes: anInteger toStream: aStream [
 	self subclassResponsibility
 ]

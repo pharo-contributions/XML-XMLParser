@@ -2,8 +2,8 @@
 This class represents the parsed internal and external subset of a DTD taken together.
 "
 Class {
-	#name : #DTDDoctypeDefinition,
-	#superclass : #Object,
+	#name : 'DTDDoctypeDefinition',
+	#superclass : 'Object',
 	#instVars : [
 		'root',
 		'elementValidators',
@@ -15,10 +15,12 @@ Class {
 		'elementIDValidator',
 		'unparsedEntityValidator'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #adding }
+{ #category : 'adding' }
 DTDDoctypeDefinition >> addExternalGeneralEntity: aName resolver: aResolver publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
 
 	(self generalEntities includesKey: aName)
@@ -34,7 +36,7 @@ DTDDoctypeDefinition >> addExternalGeneralEntity: aName resolver: aResolver publ
 				baseURI: aBaseURIString)
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DTDDoctypeDefinition >> addExternalParameterEntity: aName resolver: aResolver publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
 
 	(self parameterEntities includesKey: aName)
@@ -51,7 +53,7 @@ DTDDoctypeDefinition >> addExternalParameterEntity: aName resolver: aResolver pu
 				baseURI: aBaseURIString)
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DTDDoctypeDefinition >> addGeneralEntitiesFrom: aDoctypeDefinition [
 
 	aDoctypeDefinition generalEntities keysAndValuesDo: [:name :entity |
@@ -60,7 +62,7 @@ DTDDoctypeDefinition >> addGeneralEntitiesFrom: aDoctypeDefinition [
 			ifAbsentPut: [entity]]
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DTDDoctypeDefinition >> addInternalGeneralEntity: aName replacement: aReplacement baseURI: aBaseURIString [
 
 	(self generalEntities includesKey: aName)
@@ -75,7 +77,7 @@ DTDDoctypeDefinition >> addInternalGeneralEntity: aName replacement: aReplacemen
 				uri: aBaseURIString)
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DTDDoctypeDefinition >> addInternalParameterEntity: aName replacement: aReplacement baseURI: aBaseURIString [
 
 	(self parameterEntities includesKey: aName)
@@ -90,7 +92,7 @@ DTDDoctypeDefinition >> addInternalParameterEntity: aName replacement: aReplacem
 				uri: aBaseURIString)
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DTDDoctypeDefinition >> addNotation: aName publicID: aPublicID systemID: aSystemID [
 
 	(self notations includesKey: aName)
@@ -105,7 +107,7 @@ DTDDoctypeDefinition >> addNotation: aName publicID: aPublicID systemID: aSystem
 				systemID: aSystemID)
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DTDDoctypeDefinition >> addStandaloneExternalExternalGeneralEntity: aName resolver: aResolver publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
 
 	(self generalEntities includesKey: aName)
@@ -122,7 +124,7 @@ DTDDoctypeDefinition >> addStandaloneExternalExternalGeneralEntity: aName resolv
 				baseURI: aBaseURIString)
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DTDDoctypeDefinition >> addStandaloneExternalInternalGeneralEntity: aName replacement: aReplacement baseURI: aBaseURIString [
 
 	(self generalEntities includesKey: aName)
@@ -137,7 +139,7 @@ DTDDoctypeDefinition >> addStandaloneExternalInternalGeneralEntity: aName replac
 				uri: aBaseURIString)
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DTDDoctypeDefinition >> addStandaloneExternalValidatorForAttributeIn: anElement named: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	| attributes |
 
@@ -159,7 +161,7 @@ DTDDoctypeDefinition >> addStandaloneExternalValidatorForAttributeIn: anElement 
 					initializeWithValidatorsFrom: self)
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DTDDoctypeDefinition >> addStandaloneExternalValidatorForElement: anElement contentModel: aContentModel [
 
 	(self elementValidators includesKey: anElement)
@@ -174,7 +176,7 @@ DTDDoctypeDefinition >> addStandaloneExternalValidatorForElement: anElement cont
 					contentModel: aContentModel) parse
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DTDDoctypeDefinition >> addUnparsedEntity: aName publicID: aPublicID systemID: aSystemID ndata: aNotation [
 
 	(self generalEntities includesKey: aName)
@@ -193,7 +195,7 @@ DTDDoctypeDefinition >> addUnparsedEntity: aName publicID: aPublicID systemID: a
 						ndata: aNotation))
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DTDDoctypeDefinition >> addUnresolvableExternalGeneralEntity: aName [
 
 	(self generalEntities includesKey: aName)
@@ -204,7 +206,7 @@ DTDDoctypeDefinition >> addUnresolvableExternalGeneralEntity: aName [
 		put: (DTDUnresolvableExternalGeneralParsedEntity named: aName)
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DTDDoctypeDefinition >> addUnresolvableExternalParameterEntity: aName [
 	(self parameterEntities includesKey: aName)
 		ifTrue: [^ nil].
@@ -214,7 +216,7 @@ DTDDoctypeDefinition >> addUnresolvableExternalParameterEntity: aName [
 		put: (DTDUnresolvableExternalParameterParsedEntity named: aName)
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: anAttribute type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	| attributes |
 
@@ -236,7 +238,7 @@ DTDDoctypeDefinition >> addValidatorForAttributeIn: anElement named: anAttribute
 					initializeWithValidatorsFrom: self)
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DTDDoctypeDefinition >> addValidatorForElement: anElement contentModel: aContentModel [
 
 	(self elementValidators includesKey: anElement)
@@ -250,13 +252,13 @@ DTDDoctypeDefinition >> addValidatorForElement: anElement contentModel: aContent
 				contentModel: aContentModel) parse
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> attributeValidators [
 
 	^ attributeValidators ifNil: [attributeValidators := Dictionary new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> attributeValidatorsAt: aName [
 
 	^ self
@@ -264,7 +266,7 @@ DTDDoctypeDefinition >> attributeValidatorsAt: aName [
 		ifAbsent: [nil]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> attributeValidatorsAt: aName ifAbsent: aBlock [
 
 	^ self attributeValidators
@@ -272,19 +274,19 @@ DTDDoctypeDefinition >> attributeValidatorsAt: aName ifAbsent: aBlock [
 		ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> elementIDValidator [
 
 	^ elementIDValidator ifNil: [elementIDValidator := XMLElementIDValidator new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> elementValidators [
 
 	^ elementValidators ifNil: [elementValidators := Dictionary new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> elementValidatorsAt: aName [
 
 	^ self
@@ -292,7 +294,7 @@ DTDDoctypeDefinition >> elementValidatorsAt: aName [
 		ifAbsent: [nil]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> elementValidatorsAt: aName ifAbsent: aBlock [
 
 	^ self elementValidators
@@ -300,13 +302,13 @@ DTDDoctypeDefinition >> elementValidatorsAt: aName ifAbsent: aBlock [
 		ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> generalEntities [
 
 	^ generalEntities ifNil: [generalEntities := Dictionary new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> generalEntityAt: aName [
 
 	^ self
@@ -314,7 +316,7 @@ DTDDoctypeDefinition >> generalEntityAt: aName [
 		ifAbsent: [nil]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> generalEntityAt: aName ifAbsent: aBlock [
 
 	^ self generalEntities
@@ -322,7 +324,7 @@ DTDDoctypeDefinition >> generalEntityAt: aName ifAbsent: aBlock [
 		ifAbsent: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDDoctypeDefinition >> hasAttributeValidators [
 	"optimized to avoid lazy initialization"
 
@@ -331,7 +333,7 @@ DTDDoctypeDefinition >> hasAttributeValidators [
 	^ attributeValidators size > 0
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDDoctypeDefinition >> hasElementIDReferences [
 	"direct access to avoid lazy initialization"
 
@@ -339,7 +341,7 @@ DTDDoctypeDefinition >> hasElementIDReferences [
 		and: [elementIDValidator hasIDReferences]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDDoctypeDefinition >> hasElementIDs [
 	"direct access to avoid lazy initialization"
 
@@ -347,7 +349,7 @@ DTDDoctypeDefinition >> hasElementIDs [
 		and: [elementIDValidator hasIDs]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDDoctypeDefinition >> hasElementValidators [
 	"optimized to avoid lazy initialization"
 
@@ -356,7 +358,7 @@ DTDDoctypeDefinition >> hasElementValidators [
 	^ elementValidators size > 0
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDDoctypeDefinition >> hasEntities [
 
 	^ self hasGeneralEntities
@@ -364,7 +366,7 @@ DTDDoctypeDefinition >> hasEntities [
 			or: [self hasUnparsedEntities]]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDDoctypeDefinition >> hasGeneralEntities [
 	"direct access to avoid lazy initialization"
 
@@ -372,71 +374,71 @@ DTDDoctypeDefinition >> hasGeneralEntities [
 		and: [generalEntities isNotEmpty]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDDoctypeDefinition >> hasNotationAttributeValidators [
 
 	^ self hasAttributeValidators
 		and: [self unparsedEntityValidator hasNotationAttributeValidators]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDDoctypeDefinition >> hasNotations [
 	"direct access to avoid lazy initialization"
 
 	^ notations isNotNil and: [ notations isNotEmpty ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDDoctypeDefinition >> hasParameterEntities [
 	"direct access to avoid lazy initialization"
 
 	^ parameterEntities isNotNil and: [ parameterEntities isNotEmpty ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDDoctypeDefinition >> hasRoot [
 
 	^ root isNotNil and: [ root isNotEmpty ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDDoctypeDefinition >> hasUnparsedEntities [
 	"direct access to avoid lazy initialization"
 
 	^ unparsedEntities isNotNil and: [ unparsedEntities isNotEmpty ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDDoctypeDefinition >> newValidator [
 
 	^ DTDDocumentValidator doctypeDefinition: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> notations [
 
 	^ notations ifNil: [ notations := Dictionary new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> parameterEntities [
 
 	^ parameterEntities ifNil: [ parameterEntities := Dictionary new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> parameterEntityAt: aName [
 
 	^ self parameterEntityAt: aName ifAbsent: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> parameterEntityAt: aName ifAbsent: aBlock [
 
 	^ self parameterEntities at: aName ifAbsent: aBlock
 ]
 
-{ #category : #processing }
+{ #category : 'processing' }
 DTDDoctypeDefinition >> processStartTag: anElement attributes: aDictionary [
 
 	self hasAttributeValidators
@@ -448,39 +450,39 @@ DTDDoctypeDefinition >> processStartTag: anElement attributes: aDictionary [
 		valuesDo: [:each | each processAttributes: aDictionary]
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 DTDDoctypeDefinition >> removeElementIDReferences [
 
 	self hasElementIDReferences
 		ifTrue: [self elementIDValidator removeIDReferences]
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 DTDDoctypeDefinition >> removeElementIDs [
 
 	self hasElementIDs
 		ifTrue: [self elementIDValidator removeIDs]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> root [
 
 	^ root ifNil: [ root := '' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> root: aRootElement [
 
 	root := aRootElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> unparsedEntities [
 
 	^ unparsedEntities ifNil: [ unparsedEntities := Dictionary new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDoctypeDefinition >> unparsedEntityValidator [
 
 	^ unparsedEntityValidator
@@ -491,7 +493,7 @@ DTDDoctypeDefinition >> unparsedEntityValidator [
 					notations: self notations]
 ]
 
-{ #category : #validation }
+{ #category : 'validation' }
 DTDDoctypeDefinition >> validateCompletedDefinition [
 
 	self hasUnparsedEntities

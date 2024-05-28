@@ -8,37 +8,38 @@ When a SAX2ElementParser requests the factory for a new element handler, if none
 Instances can be saved and reused for performance and safely modified after copying.
 "
 Class {
-	#name : #SAX2PluggableElementHandlerFactoryMapper,
-	#superclass : #SAX2ElementHandlerFactoryMapper,
+	#name : 'SAX2PluggableElementHandlerFactoryMapper',
+	#superclass : 'SAX2ElementHandlerFactoryMapper',
 	#instVars : [
 		'elementHandlerFactoryMap',
 		'elementHandlerFactory'
 	],
-	#category : #'XML-Parser'
+	#category : 'XML-Parser',
+	#package : 'XML-Parser'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 SAX2PluggableElementHandlerFactoryMapper >> defaultElementHandlerFactoryClass [
 	^ SAX2ElementHandlerFactory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2PluggableElementHandlerFactoryMapper >> elementHandlerFactory [
 	^ elementHandlerFactory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2PluggableElementHandlerFactoryMapper >> elementHandlerFactory: anElementHandlerFactory [
 	"set the default element handler factory"
 	elementHandlerFactory := anElementHandlerFactory
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SAX2PluggableElementHandlerFactoryMapper >> elementHandlerFactoryMap [
 	^ elementHandlerFactoryMap
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2PluggableElementHandlerFactoryMapper >> factoryForElementHandler: anElementHandler ifNone: aBlock [
 	"optimization to skip any unneeded hash lookups"
 	elementHandlerFactoryMap size > 0
@@ -55,7 +56,7 @@ SAX2PluggableElementHandlerFactoryMapper >> factoryForElementHandler: anElementH
 				ifNone: aBlock]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SAX2PluggableElementHandlerFactoryMapper >> initialize [
 	super initialize.
 
@@ -63,14 +64,14 @@ SAX2PluggableElementHandlerFactoryMapper >> initialize [
 	elementHandlerFactory := self defaultElementHandlerFactoryClass new
 ]
 
-{ #category : #mapping }
+{ #category : 'mapping' }
 SAX2PluggableElementHandlerFactoryMapper >> mapElementHandlerClass: aClass toFactory: aFactory [
 	elementHandlerFactoryMap
 		at: aClass
 		put: aFactory
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 SAX2PluggableElementHandlerFactoryMapper >> postCopy [
 	super postCopy.
 

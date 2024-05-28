@@ -2,72 +2,74 @@
 An abstract class for read and write stream adapters.
 "
 Class {
-	#name : #XMLStreamAdapter,
-	#superclass : #Object,
+	#name : 'XMLStreamAdapter',
+	#superclass : 'Object',
 	#instVars : [
 		'stream'
 	],
-	#category : #'XML-Parser-Streams'
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLStreamAdapter class >> basicOn: aStream [
 	^ self basicNew initialize on: aStream
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLStreamAdapter class >> new [
 	self shouldNotImplement
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLStreamAdapter class >> on: aStream [
 	^ self basicOn: aStream
 ]
 
-{ #category : #closing }
+{ #category : 'closing' }
 XMLStreamAdapter >> close [
 	"must use respondsTo: to support streams only implementing the basic protocol"
 	(stream respondsTo: #close)
 		ifTrue: [stream close]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapter >> contents [
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamAdapter >> isBinary [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamAdapter >> isStream [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamAdapter >> isXMLBinaryOrExternalStream [
 	^ self isBinary
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLStreamAdapter >> on: aStream [
 	stream := aStream
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLStreamAdapter >> position [
 	self subclassResponsibility
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLStreamAdapter >> position: anInteger [
 	self subclassResponsibility
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLStreamAdapter >> printOn: aStream [
 	super printOn: aStream.
 
@@ -76,17 +78,17 @@ XMLStreamAdapter >> printOn: aStream [
 	aStream nextPut: $).
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLStreamAdapter >> printStreamOn: aStream [
 	aStream print: stream
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLStreamAdapter >> reset [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamAdapter >> stream [
 	^ stream
 ]

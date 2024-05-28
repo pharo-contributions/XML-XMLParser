@@ -2,17 +2,19 @@
 This class represents a <!DOCTYPE ...> declaration. It stores the root element name, public/system ID, and its nodes are the internal subset.
 "
 Class {
-	#name : #XMLDoctypeDeclaration,
-	#superclass : #XMLNodeWithChildren,
+	#name : 'XMLDoctypeDeclaration',
+	#superclass : 'XMLNodeWithChildren',
 	#instVars : [
 		'root',
 		'publicID',
 		'systemID'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLDoctypeDeclaration class >> root: aRootElementName publicID: aPublicID systemID: aSystemID [
 	^ self new
 		root: aRootElementName;
@@ -20,47 +22,47 @@ XMLDoctypeDeclaration class >> root: aRootElementName publicID: aPublicID system
 		systemID: aSystemID
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLDoctypeDeclaration >> newListForSelect [
 	^ XMLInternalSubsetList new: 10
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLDoctypeDeclaration >> nodeListClass [
 	^ XMLInternalSubsetList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDoctypeDeclaration >> publicID [
 	^ publicID ifNil: [publicID := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDoctypeDeclaration >> publicID: aPublicID [
 	publicID := aPublicID
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDoctypeDeclaration >> root [
 	^ root ifNil: [root := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDoctypeDeclaration >> root: aRootElementName [
 	root := aRootElementName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDoctypeDeclaration >> systemID [
 	^ systemID ifNil: [systemID := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDoctypeDeclaration >> systemID: aSystemID [
 	systemID := aSystemID
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLDoctypeDeclaration >> writeXMLOn: aWriter [
 	aWriter doctype
 		root: self root;

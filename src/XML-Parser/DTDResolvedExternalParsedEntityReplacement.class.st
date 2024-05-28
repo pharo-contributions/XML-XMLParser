@@ -2,36 +2,38 @@
 This is an abstract class for resolved external entity replacements.
 "
 Class {
-	#name : #DTDResolvedExternalParsedEntityReplacement,
-	#superclass : #Object,
-	#category : #'XML-Parser-DTD'
+	#name : 'DTDResolvedExternalParsedEntityReplacement',
+	#superclass : 'Object',
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 DTDResolvedExternalParsedEntityReplacement >> asString [
 
 	^ self contents
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDResolvedExternalParsedEntityReplacement >> contents [
 
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDResolvedExternalParsedEntityReplacement >> isEmpty [
 
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDResolvedExternalParsedEntityReplacement >> isNotEmpty [
 
 	^ self isEmpty not
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDResolvedExternalParsedEntityReplacement >> notEmpty [
 
 	self
@@ -41,7 +43,7 @@ DTDResolvedExternalParsedEntityReplacement >> notEmpty [
 	^ self isNotEmpty
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDResolvedExternalParsedEntityReplacement >> readStream [
 
 	self subclassResponsibility

@@ -4,41 +4,43 @@ This class functions as an OrderedCollection that will not raise exceptions when
 
 "
 Class {
-	#name : #XMLOrderedList,
-	#superclass : #Collection,
+	#name : 'XMLOrderedList',
+	#superclass : 'Collection',
 	#instVars : [
 		'collection'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 XMLOrderedList class >> collection: aCollection [
 	^ self basicNew setCollection: aCollection
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLOrderedList class >> collectionClass [
 	^ OrderedCollection
 ]
 
-{ #category : #inspecting }
+{ #category : 'inspecting' }
 XMLOrderedList class >> inspectorClass [
 	"for pre-GTInspector Pharo"
 	^ self collectionClass inspectorClass
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLOrderedList class >> new [
 	^ self new: 10
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLOrderedList class >> new: aCapacity [
 	^ self basicNew setCollection: (self collectionClass new: aCapacity)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLOrderedList class >> new: aSize withAll: anObject [
 	| newList |
 
@@ -48,19 +50,19 @@ XMLOrderedList class >> new: aSize withAll: anObject [
 	^ newList.
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLOrderedList class >> newFrom: aCollection [
 	^ (self new: aCollection size)
 		addAll: aCollection;
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLOrderedList class >> ofSize: aSize [
 	^ self new: aSize withAll: nil
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLOrderedList >> , aCollection [
 	"GS doesn't define #, for non-Sequenceable collections"
 	^ self copy
@@ -68,7 +70,7 @@ XMLOrderedList >> , aCollection [
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 XMLOrderedList >> = anObject [
 	"Returns true if anObject is any kind of XMLOrderedList (not just the
 	class of the receiver) and it and the receiver have the same items
@@ -92,59 +94,59 @@ XMLOrderedList >> = anObject [
 	^ true.
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLOrderedList >> add: anObject [
 	^ self addLast: anObject
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLOrderedList >> add: anObject after: aPreviousObject [
 	^ collection add: anObject after: aPreviousObject
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLOrderedList >> add: anObject afterIndex: anIndex [
 	^ collection add: anObject afterIndex: anIndex
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLOrderedList >> add: anObject before: aNextObject [
 	^ collection add: anObject before: aNextObject
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLOrderedList >> add: anObject beforeIndex: anIndex [
 	^ collection add: anObject beforeIndex: anIndex
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLOrderedList >> addAll: aCollection [
 	^ self addAllLast: aCollection
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLOrderedList >> addAllFirst: aCollection [
 	aCollection reverseDo: [:each | self addFirst: each].
 	^ aCollection.
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLOrderedList >> addAllLast: aCollection [
 	aCollection do: [:each | self addLast: each].
 	^ aCollection.
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLOrderedList >> addFirst: anObject [
 	^ collection addFirst: anObject
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLOrderedList >> addLast: anObject [
 	^ collection addLast: anObject
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLOrderedList >> addToCopyLast: anObject [
 	"this is used to efficiently append to copies for methods like #copy,
 	#copyWithout:, #select:, and #reject: that create copies with no new elements
@@ -154,74 +156,74 @@ XMLOrderedList >> addToCopyLast: anObject [
 	^ collection addLast: anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> after: anObject [
 	^ self after: anObject ifAbsent: [self defaultValue]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> after: anObject ifAbsent: aBlock [
 	^ collection after: anObject ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> allButFirst [
 	^ self allButFirst: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> allButFirst: anInteger [
 	^ self copyFrom: anInteger + 1 to: self size
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> allButFirstDo: aBlock [
 	"reimplemented for portability"
 	2 to: collection size do: [:i |
 		aBlock value: (collection at: i)]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> allButLast [
 	^ self allButLast: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> allButLast: anInteger [
 	^ self copyFrom: 1 to: self size - anInteger
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> allButLastDo: aBlock [
 	"reimplemented for portability"
 	1 to: collection size - 1 do: [:i |
 		aBlock value: (collection at: i)]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> anyOne [
 	^ self first
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLOrderedList >> asArray [
 	"use withAll: not newFrom: for portability"
 	^ Array withAll: collection
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLOrderedList >> asOrderedCollection [
 	"use withAll: not newFrom: for portability"
 	^ OrderedCollection withAll: collection
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLOrderedList >> asString [
 	"don't assume Object>>#asString is defined, for portability"
 	^ self printString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> at: anIndex [
 	"optimized"
 	(anIndex > 0 and: [anIndex <= collection size])
@@ -229,12 +231,12 @@ XMLOrderedList >> at: anIndex [
 		ifFalse: [^ self defaultValue]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> at: anIndex ifAbsent: aBlock [
 	^ collection at: anIndex ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> at: anIndex put: aValue [
 	"treats index = size + 1 as addLast: gemstone compatibility"
 	anIndex = (collection size + 1)
@@ -242,37 +244,37 @@ XMLOrderedList >> at: anIndex put: aValue [
 		ifFalse: [^ collection at: anIndex put: aValue]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> atLast: anIndexFromEnd [
 	^ self atLast: anIndexFromEnd ifAbsent: [self defaultValue]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> atLast: anIndexFromEnd ifAbsent: aBlock [
 	^ collection atLast: anIndexFromEnd ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> before: anObject [
 	^ self before: anObject ifAbsent: [self defaultValue]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> before: anObject ifAbsent: aBlock [
 	 ^ collection before: anObject ifAbsent: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLOrderedList >> beginsWith: aCollection [
 	^ collection beginsWith: aCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> capacity [
 	^ collection capacity
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> collect: aBlock [
 	| collected |
 
@@ -283,7 +285,7 @@ XMLOrderedList >> collect: aBlock [
 	^ collected.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> collect: aCollectBlock thenSelect: aSelectBlock [
 	| selected |
 
@@ -296,12 +298,12 @@ XMLOrderedList >> collect: aCollectBlock thenSelect: aSelectBlock [
 	^ selected.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLOrderedList >> collection [
 	^ collection
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLOrderedList >> copy [
 	| copy |
 
@@ -312,7 +314,7 @@ XMLOrderedList >> copy [
 	^ copy.
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLOrderedList >> copyAfter: anObject [
 	| copy |
 
@@ -325,7 +327,7 @@ XMLOrderedList >> copyAfter: anObject [
 	^ copy.
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLOrderedList >> copyAfterLast: anObject [
 	| copy |
 
@@ -338,18 +340,18 @@ XMLOrderedList >> copyAfterLast: anObject [
 	^ copy.
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLOrderedList >> copyClass [
 	"the class to use for copies"
 	^ self class
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLOrderedList >> copyEmpty [
 	^ self copyClass collection: collection copyEmpty
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLOrderedList >> copyEmptyForCollect [
 	"collect: methods return instances of the generic ordered list species class
 	because a collect block can return any value, which may not be appropiate to
@@ -358,7 +360,7 @@ XMLOrderedList >> copyEmptyForCollect [
 	^ self species new: self size
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLOrderedList >> copyFrom: aStart to: anEnd [
 	| copy |
 
@@ -369,7 +371,7 @@ XMLOrderedList >> copyFrom: aStart to: anEnd [
 	^ copy.
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLOrderedList >> copyReplaceAll: aSearchCollection with: aReplacementCollection [
 	| copy index size searchCollectionSize |
 
@@ -404,7 +406,7 @@ XMLOrderedList >> copyReplaceAll: aSearchCollection with: aReplacementCollection
 	^ copy.
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLOrderedList >> copyReplaceFrom: aStart to: aStop with: aReplacementCollection [
 	| copy start stop |
 
@@ -430,7 +432,7 @@ XMLOrderedList >> copyReplaceFrom: aStart to: aStop with: aReplacementCollection
 	^ copy.
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLOrderedList >> copyUpTo: anObject [
 	| copy |
 
@@ -444,7 +446,7 @@ XMLOrderedList >> copyUpTo: anObject [
 	^ copy.
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLOrderedList >> copyUpToLast: anObject [
 	| copy |
 
@@ -458,14 +460,14 @@ XMLOrderedList >> copyUpToLast: anObject [
 	^ copy.
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLOrderedList >> copyWith: anObject [
 	^ self copy
 		addLast: anObject;
 		yourself
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLOrderedList >> copyWithFirst: anObject [
 	^ self copyEmpty
 		addLast: anObject;
@@ -473,12 +475,12 @@ XMLOrderedList >> copyWithFirst: anObject [
 		yourself
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLOrderedList >> copyWithout: anObject [
 	^ self reject: [:each | each = anObject]
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLOrderedList >> copyWithoutAll: aCollection [
 	| rejected |
 
@@ -489,47 +491,47 @@ XMLOrderedList >> copyWithoutAll: aCollection [
 	^ self reject: [:each | rejected includes: each].
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLOrderedList >> defaultValue [
 	^ nil
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> detect: aBlock [
 	^ self detect: aBlock ifNone: [self defaultValue]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> detect: aBlock ifNone: anExceptionBlock [
 	^ collection detect: aBlock ifNone: anExceptionBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> do: aBlock [
 	collection do: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> doWithIndex: aBlock [
 	^ self withIndexDo: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> eighth [
 	^ self at: 8
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLOrderedList >> endsWith: aCollection [
 	^ collection endsWith: aCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> fifth [
 	^ self at: 5
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> first [
 	"optimized implementation"
 	^ collection size > 0
@@ -537,17 +539,17 @@ XMLOrderedList >> first [
 		ifFalse: [self defaultValue]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> first: anInteger [
 	^ self copyFrom: 1 to: anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> fourth [
 	^ self at: 4
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 XMLOrderedList >> hash [
 	| hash |
 
@@ -559,29 +561,29 @@ XMLOrderedList >> hash [
 	^ hash bitXor: self size hash.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> identityIndexOf: anObject [
 	^ self identityIndexOf: anObject ifAbsent: [0]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> identityIndexOf: anObject ifAbsent: aBlock [
 	^ collection identityIndexOf: anObject ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> indexOf: anObject [
 	^ self indexOf: anObject ifAbsent: [0]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> indexOf: anObject ifAbsent: aBlock [
 	^ collection
 		indexOf: anObject
 		ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> indexOf: anObject startingAt: anIndex [ 
 	^ self
 		indexOf: anObject
@@ -589,7 +591,7 @@ XMLOrderedList >> indexOf: anObject startingAt: anIndex [
 		ifAbsent: [0]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> indexOf: anObject startingAt: anIndex ifAbsent: aBlock [
 	^ collection
 		indexOf: anObject
@@ -597,7 +599,7 @@ XMLOrderedList >> indexOf: anObject startingAt: anIndex ifAbsent: aBlock [
 		ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> indexOfSubCollection: aSubCollection startingAt: anIndex [
 	^ self
 		indexOfSubCollection: aSubCollection
@@ -605,7 +607,7 @@ XMLOrderedList >> indexOfSubCollection: aSubCollection startingAt: anIndex [
 		ifAbsent: [0]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> indexOfSubCollection: aSubCollection startingAt: anIndex ifAbsent: aBlock [
 	^ collection
 		indexOfSubCollection: aSubCollection
@@ -613,24 +615,24 @@ XMLOrderedList >> indexOfSubCollection: aSubCollection startingAt: anIndex ifAbs
 		ifAbsent: aBlock
 ]
 
-{ #category : #inspecting }
+{ #category : 'inspecting' }
 XMLOrderedList >> inspectorClass [
 	"for Squeak"
 	^ collection inspectorClass
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLOrderedList >> isEmpty [
 	"Squeak's Collection>>#isEmpty is inefficient"
 	^ self size = 0
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLOrderedList >> isSequenceable [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> last [
 	| lastIndex |
 
@@ -640,38 +642,38 @@ XMLOrderedList >> last [
 		ifFalse: [self defaultValue]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> last: anInteger [
 	^ self copyFrom: self size - anInteger + 1 to: self size
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> lastIndexOf: anObject [
 	^ self lastIndexOf: anObject ifAbsent: [0]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> lastIndexOf: anObject ifAbsent: aBlock [
 	^ collection lastIndexOf: anObject ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> ninth [
 	^ self at: 9
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> pairsDo: aBlock [
 	collection pairsDo: aBlock
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLOrderedList >> readStream [
 	"use #readStream to get a 0-based position stream on GS"
 	^ collection readStream
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> reject: aBlock [
 	| selected |
 
@@ -684,7 +686,7 @@ XMLOrderedList >> reject: aBlock [
 	^ selected.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> reject: aRejectBlock thenCollect: aCollectBlock [
 	| collected |
 
@@ -697,12 +699,12 @@ XMLOrderedList >> reject: aRejectBlock thenCollect: aCollectBlock [
 	^ collected.
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLOrderedList >> remove: anObject ifAbsent: aBlock [
 	^ collection remove: anObject ifAbsent: aBlock
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLOrderedList >> removeAll [
 	"Redefined because Collection>>#removeAll assumes the collection can
 	be safely modified while iterating it with #do:"
@@ -710,17 +712,17 @@ XMLOrderedList >> removeAll [
 	self size timesRepeat: [self removeLast]
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLOrderedList >> removeAt: anIndex [
 	^ collection removeAt: anIndex
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLOrderedList >> removeFirst [
 	^ self removeAt: 1
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLOrderedList >> removeFirst: aNumber [
 	| removed |
 
@@ -729,12 +731,12 @@ XMLOrderedList >> removeFirst: aNumber [
 	^ removed.
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLOrderedList >> removeLast [
 	^ self removeAt: self size
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLOrderedList >> removeLast: aNumber [
 	| removed |
 
@@ -743,7 +745,7 @@ XMLOrderedList >> removeLast: aNumber [
 	^ removed.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> replaceFrom: aStart to: aStop with: aReplacementCollection [
 	^ self
 		replaceFrom: aStart
@@ -752,7 +754,7 @@ XMLOrderedList >> replaceFrom: aStart to: aStop with: aReplacementCollection [
 		startingAt: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> replaceFrom: aStart to: aStop with: aReplacementCollection startingAt: aReplacementStart [
 	| offset |
 
@@ -765,12 +767,12 @@ XMLOrderedList >> replaceFrom: aStart to: aStop with: aReplacementCollection sta
 			offset := offset + 1].
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLOrderedList >> reset [
 	collection reset
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLOrderedList >> reverse [
 	"returns a copy like #reversed instead of doing in-place reversal to
 	be compatible with SequenceableCollection>>#reverse"
@@ -778,12 +780,12 @@ XMLOrderedList >> reverse [
 	^ self reversed
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> reverseDo: aBlock [
 	collection reverseDo: aBlock
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLOrderedList >> reversed [
 	| reversed |
 
@@ -792,12 +794,12 @@ XMLOrderedList >> reversed [
 	^ reversed.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> second [
 	^ self at: 2
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> select: aBlock [
 	| selected |
 
@@ -810,7 +812,7 @@ XMLOrderedList >> select: aBlock [
 	^ selected.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> select: aSelectBlock thenCollect: aCollectBlock [
 	| collected |
 
@@ -823,54 +825,54 @@ XMLOrderedList >> select: aSelectBlock thenCollect: aCollectBlock [
 	^ collected.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLOrderedList >> setCollection: aCollection [
 	collection := aCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> seventh [
 	^ self at: 7
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> sixth [
 	^ self at: 6
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> size [
 	^ collection size
 ]
 
-{ #category : #sorting }
+{ #category : 'sorting' }
 XMLOrderedList >> sort [
 	self sort: [:a :b | a <= b]
 ]
 
-{ #category : #sorting }
+{ #category : 'sorting' }
 XMLOrderedList >> sort: aSortBlock [
 	collection sort: aSortBlock
 ]
 
-{ #category : #sorting }
+{ #category : 'sorting' }
 XMLOrderedList >> sorted [
 	^ self copy sort
 ]
 
-{ #category : #sorting }
+{ #category : 'sorting' }
 XMLOrderedList >> sorted: aSortBlock [
 	^ self copy sort: aSortBlock
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLOrderedList >> species [
 	"this makes instances of this class and all subclasses with the same
 	items in the same order be equal"
 	^ XMLOrderedList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> swap: aFirstIndex with: aSecondIndex [
 	"swap positions of the objects at aFirstIndex and aSecondIndex,
 	raising an error if either index is out of bounds"
@@ -886,12 +888,12 @@ XMLOrderedList >> swap: aFirstIndex with: aSecondIndex [
 		put: temp.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> third [
 	^ self at: 3
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> with: aCollection collect: aBlock [
 	| collected |
 
@@ -904,7 +906,7 @@ XMLOrderedList >> with: aCollection collect: aBlock [
 	^ collected.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> with: aCollection do: aBlock [
 	1 to: (collection size min: aCollection size) do: [:i |
 		aBlock
@@ -912,7 +914,7 @@ XMLOrderedList >> with: aCollection do: aBlock [
 			value: (aCollection at: i)]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> withIndexCollect: aTwoArgumentBlock [
 	| collected |
 
@@ -925,12 +927,12 @@ XMLOrderedList >> withIndexCollect: aTwoArgumentBlock [
 	^ collected.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLOrderedList >> withIndexDo: aBlock [
 	collection withIndexDo: aBlock
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLOrderedList >> writeStream [
 	"This is not supported because the collection already supports WriteStream
 	behavior with #addLast: and the Pharo/Squeak WriteStream works by expanding
@@ -940,7 +942,7 @@ XMLOrderedList >> writeStream [
 	self shouldNotImplement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLOrderedList >> xmlLastOrNil [
 	^ self last
 ]

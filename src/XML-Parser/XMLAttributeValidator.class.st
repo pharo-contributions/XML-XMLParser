@@ -2,8 +2,8 @@
 This is a base class for attribute validators.
 "
 Class {
-	#name : #XMLAttributeValidator,
-	#superclass : #Object,
+	#name : 'XMLAttributeValidator',
+	#superclass : 'Object',
 	#instVars : [
 		'element',
 		'attribute',
@@ -12,10 +12,12 @@ Class {
 	#classVars : [
 		'NormalizedSpace'
 	],
-	#category : #'XML-Parser-Validation'
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLAttributeValidator class >> element: anElement attribute: anAttribute defaultValidator: aDefaultValidator [
 	^ self new
 		setElement: anElement
@@ -23,7 +25,7 @@ XMLAttributeValidator class >> element: anElement attribute: anAttribute default
 		defaultValidator: aDefaultValidator
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLAttributeValidator class >> initialize [
 	"self initialize"
 
@@ -31,27 +33,27 @@ XMLAttributeValidator class >> initialize [
 	NormalizedSpace := Character space
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLAttributeValidator class >> standaloneExternalClass [
 	^ self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeValidator >> attribute [
 	^ attribute
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeValidator >> defaultValidator [
 	^ defaultValidator
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAttributeValidator >> element [
 	^ element
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLAttributeValidator >> errorInvalidDefaultAttributeValue: aDefaultValue [
 	XMLValidationException
 		formatSignal:
@@ -62,13 +64,13 @@ XMLAttributeValidator >> errorInvalidDefaultAttributeValue: aDefaultValue [
 		with: self element
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLAttributeValidator >> errorInvalidXMLIDAttributeDeclaration [
 	XMLValidationException signal:
 		'All "xml:id" attributes must be declared to be of ID type'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLAttributeValidator >> errorInvalidXMLSpaceAttributeDeclaration [
 	XMLValidationException
 		formatSignal:
@@ -77,7 +79,7 @@ XMLAttributeValidator >> errorInvalidXMLSpaceAttributeDeclaration [
 		with: self element
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLAttributeValidator >> errorNormalizedStandaloneExternalAttribute [
 	XMLValidationException
 		formatSignal:
@@ -87,7 +89,7 @@ XMLAttributeValidator >> errorNormalizedStandaloneExternalAttribute [
 		with: self element
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLAttributeValidator >> furtherNormalizeAttributeValue: aSemiNormalizedAttributeValue [
 	"The tokenizer normalizes all non-char escaped whitespace in attribute
 	values to spaces (0x20). This further normalizes them by removing leading
@@ -117,7 +119,7 @@ XMLAttributeValidator >> furtherNormalizeAttributeValue: aSemiNormalizedAttribut
 	^ writeStream contents.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
 	(self mustFurtherNormalizeAttributeValue
 		and: [self defaultValidator isValue])
@@ -127,74 +129,74 @@ XMLAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
 					self defaultValidator value)]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeValidator >> isCData [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeValidator >> isEntities [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeValidator >> isEntity [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeValidator >> isEnumeration [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeValidator >> isID [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeValidator >> isIDRef [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeValidator >> isIDRefs [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeValidator >> isNmtoken [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeValidator >> isNmtokens [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeValidator >> isNotationEnumeration [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeValidator >> isStandaloneExternal [
 	"this is overridden in each standalone external subclass to return
 	true instead of just returning a boolean inst var to save memory"
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeValidator >> isXMLID [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeValidator >> mustFurtherNormalizeAttributeValue [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLAttributeValidator >> printOn: aStream [
 	super printOn: aStream.
 
@@ -206,7 +208,7 @@ XMLAttributeValidator >> printOn: aStream [
 	aStream nextPutAll: '>)'.
 ]
 
-{ #category : #processing }
+{ #category : 'processing' }
 XMLAttributeValidator >> processAttributes: aDictionary [
 	| attributeAssociation normalizedValue |
 
@@ -232,21 +234,21 @@ XMLAttributeValidator >> processAttributes: aDictionary [
 			normalizedValue).
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLAttributeValidator >> setElement: anElement attribute: anAttribute defaultValidator: aDefaultValidator [
 	element := anElement.
 	attribute := anAttribute.
 	defaultValidator := aDefaultValidator.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLAttributeValidator >> spaceSeparatedListValuesIn: aSpaceSeparatedList do: aBlock [
 	NormalizedSpace
 		xmlSplit: aSpaceSeparatedList
 		do: aBlock
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLAttributeValidator >> validateAttributeDeclaration [
 	(self attribute at: 1) == $x "optimization"
 		ifTrue: [
@@ -261,19 +263,19 @@ XMLAttributeValidator >> validateAttributeDeclaration [
 				self defaultValidator value].
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 	"This is overridden in subclasses to check default values when validating
 	the declaration, but CDATA types should not be validated, and ID types
 	cannot have default values at all"
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLAttributeValidator >> validateAttributeValue: aValue [
 	"This is overridden in subclasses to check attribute values"
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLAttributeValidator >> validateAttributes: aDictionary [
 	| attributeAssociation wasAbsent |
 
@@ -312,12 +314,12 @@ XMLAttributeValidator >> validateAttributes: aDictionary [
 	self validateAttributeValue: attributeAssociation value.
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLAttributeValidator >> validateXMLIDAttributeDeclaration [
 	self errorInvalidXMLIDAttributeDeclaration
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLAttributeValidator >> validateXMLSpaceAttributeDeclaration [
 	self errorInvalidXMLSpaceAttributeDeclaration
 ]

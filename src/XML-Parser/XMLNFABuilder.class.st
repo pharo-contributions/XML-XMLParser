@@ -2,15 +2,17 @@
 This class builds an NFA using a stack of NFAFragments.
 "
 Class {
-	#name : #XMLNFABuilder,
-	#superclass : #Object,
+	#name : 'XMLNFABuilder',
+	#superclass : 'Object',
 	#instVars : [
 		'fragmentStack'
 	],
-	#category : #'XML-Parser-Validation-DFA'
+	#category : 'XML-Parser-Validation-DFA',
+	#package : 'XML-Parser',
+	#tag : 'Validation-DFA'
 }
 
-{ #category : #applying }
+{ #category : 'applying' }
 XMLNFABuilder >> applyAccepting [
 	| totalFragments |
 
@@ -25,7 +27,7 @@ XMLNFABuilder >> applyAccepting [
 				(XMLNFAFragment firstState: XMLNFAAcceptingState new)]
 ]
 
-{ #category : #applying }
+{ #category : 'applying' }
 XMLNFABuilder >> applyBranch [
 	| leftFragment rightFragment branchState |
 
@@ -43,7 +45,7 @@ XMLNFABuilder >> applyBranch [
 				(leftFragment terminalStatesWithAllFrom: rightFragment)).
 ]
 
-{ #category : #applying }
+{ #category : 'applying' }
 XMLNFABuilder >> applyConcatenation [
 	| firstFragment secondFragment |
 
@@ -54,7 +56,7 @@ XMLNFABuilder >> applyConcatenation [
 	self pushFragment: firstFragment.
 ]
 
-{ #category : #applying }
+{ #category : 'applying' }
 XMLNFABuilder >> applyOptional [
 	| optionalFragment branchingState |
 
@@ -69,7 +71,7 @@ XMLNFABuilder >> applyOptional [
 				(optionalFragment terminalStatesWith: branchingState))
 ]
 
-{ #category : #applying }
+{ #category : 'applying' }
 XMLNFABuilder >> applyPlus [
 	| plusFragment |
 
@@ -78,7 +80,7 @@ XMLNFABuilder >> applyPlus [
 		(XMLNFABranchingState branch: plusFragment firstState).
 ]
 
-{ #category : #applying }
+{ #category : 'applying' }
 XMLNFABuilder >> applyStar [
 	| branchState starFragment |
 
@@ -92,53 +94,53 @@ XMLNFABuilder >> applyStar [
 			terminalState: branchState).
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLNFABuilder >> asAcceptingNFA [
 	^ (self
 		applyAccepting;
 		popFragment) firstState
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNFABuilder >> fragmentStack [
 	^ fragmentStack
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNFABuilder >> hasFragments [
 	^ self totalFragments > 0
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLNFABuilder >> initialize [
 	super initialize.
 
 	fragmentStack := OrderedCollection new.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFABuilder >> popFragment [
 	^ self fragmentStack removeLast
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFABuilder >> pushFragment: aFragment [
 	^ self fragmentStack addLast: aFragment
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFABuilder >> pushFragmentMatching: aMatcher [
 	^ self pushFragment:
 		(XMLNFAFragment firstState:
 			(XMLNFAMatchingState matcher: aMatcher))
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFABuilder >> topFragment [
 	^ self fragmentStack last
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFABuilder >> totalFragments [
 	^ self fragmentStack size
 ]

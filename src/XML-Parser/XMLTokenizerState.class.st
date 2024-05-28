@@ -2,117 +2,119 @@
 This is an abstract class for states to control tokenization. Subclasses must implement #nextTokenFrom: to send a tokenizing message to the argument tokenizer.
 "
 Class {
-	#name : #XMLTokenizerState,
-	#superclass : #Object,
+	#name : 'XMLTokenizerState',
+	#superclass : 'Object',
 	#classInstVars : [
 		'instance'
 	],
-	#category : #'XML-Parser-Drivers'
+	#category : 'XML-Parser-Drivers',
+	#package : 'XML-Parser',
+	#tag : 'Drivers'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLTokenizerState class >> instance [
 	^ instance
 		ifNil: [instance := self basicNew initialize]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLTokenizerState class >> new [
 	"all subclasses are stateless and have a single, immutable, shared instance"
 	^ self instance
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLTokenizerState >> canTerminateInput [
 	^ true
 ]
 
-{ #category : #changing }
+{ #category : 'changing' }
 XMLTokenizerState >> contentState [
 	^ XMLContentState new
 ]
 
-{ #category : #changing }
+{ #category : 'changing' }
 XMLTokenizerState >> doctypeDeclarationState [
 	^ XMLDoctypeDeclarationState new
 ]
 
-{ #category : #changing }
+{ #category : 'changing' }
 XMLTokenizerState >> externalSubsetState [
 	^ XMLExternalSubsetState new
 ]
 
-{ #category : #changing }
+{ #category : 'changing' }
 XMLTokenizerState >> internalSubsetState [
 	^ XMLInternalSubsetState new
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLTokenizerState >> isContentState [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLTokenizerState >> isDoctypeDeclarationState [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLTokenizerState >> isExternalSubsetState [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLTokenizerState >> isInitializedState [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLTokenizerState >> isInternalSubsetState [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLTokenizerState >> isPostDoctypeDeclarationState [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLTokenizerState >> isPrologState [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLTokenizerState >> isTerminatedState [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLTokenizerState >> isXMLDeclarationState [
 	^ false
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLTokenizerState >> nextTokenFrom: aTokenizer [
 	self subclassResponsibility
 ]
 
-{ #category : #changing }
+{ #category : 'changing' }
 XMLTokenizerState >> postDoctypeDeclarationState [
 	^ XMLPostDoctypeDeclarationState new
 ]
 
-{ #category : #changing }
+{ #category : 'changing' }
 XMLTokenizerState >> prologState [
 	^ XMLPrologState new
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLTokenizerState >> supportsEncodingDetection [
 	^ false
 ]
 
-{ #category : #changing }
+{ #category : 'changing' }
 XMLTokenizerState >> terminatedState [
 	^ XMLTerminatedState new
 ]

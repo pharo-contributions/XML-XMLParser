@@ -4,8 +4,8 @@ This class parses element content models. It uses postfix conversion and an XMLN
 It assumes all spaces have been removed from the input and that it's been checked for well-formedness, meaning no missing names or misplaced operators/parentheses.
 "
 Class {
-	#name : #DTDElementContentModelParser,
-	#superclass : #DTDContentModelParser,
+	#name : 'DTDElementContentModelParser',
+	#superclass : 'DTDContentModelParser',
 	#instVars : [
 		'nfaBuilder',
 		'binaryOperatorStack'
@@ -14,10 +14,12 @@ Class {
 		'OperatorApplicators',
 		'SpecialCharacterParsers'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 DTDElementContentModelParser class >> initialize [
 	"self initialize"
 
@@ -26,7 +28,7 @@ DTDElementContentModelParser class >> initialize [
 		initializeOperatorApplicators
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 DTDElementContentModelParser class >> initializeOperatorApplicators [
 	"use an array instead of a dictionary for speed, and
 	assign after with #yourself to avoid possible race
@@ -41,7 +43,7 @@ DTDElementContentModelParser class >> initializeOperatorApplicators [
 			yourself
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 DTDElementContentModelParser class >> initializeSpecialCharacterParsers [
 	"use an array instead of a dictionary for speed, and
 	assign after with #yourself to avoid possible race
@@ -58,37 +60,37 @@ DTDElementContentModelParser class >> initializeSpecialCharacterParsers [
 			yourself
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 DTDElementContentModelParser class >> standaloneExternalClass [
 	^ DTDStandaloneExternalElementContentModelParser
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDElementContentModelParser >> applyBinaryOperatorOnStack [
 
 	self applyOperator: binaryOperatorStack removeLast
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDElementContentModelParser >> applyOperator: aCharacter [
 
 	nfaBuilder perform:
 		(OperatorApplicators at: aCharacter asciiValue)
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 DTDElementContentModelParser >> elementValidatorClass [
 
 	^ XMLDFAElementContentElementValidator
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDElementContentModelParser >> hasBinaryOperatorOnStack [
 
 	^ binaryOperatorStack size > 0 and: [ binaryOperatorStack last ~~ $( ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 DTDElementContentModelParser >> parse [
 	"the tokenizer removes all spaces from the content model and checks
 	it for well-formedness (meaning no missing names or misplaced
@@ -118,13 +120,13 @@ DTDElementContentModelParser >> parse [
 		dfa: nfaBuilder asAcceptingNFA asDFAState
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDElementContentModelParser >> parseBinaryOperator: aCharacter [
 
 	binaryOperatorStack addLast: aCharacter
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDElementContentModelParser >> parseClosingParenthesis: aCharacter [
 
 	self popRemainingBinaryOperators.
@@ -133,19 +135,19 @@ DTDElementContentModelParser >> parseClosingParenthesis: aCharacter [
 		ifTrue: [binaryOperatorStack removeLast]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDElementContentModelParser >> parseOpeningParenthesis: aCharacter [
 
 	binaryOperatorStack addLast: $(
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDElementContentModelParser >> parseUnaryOperator: aCharacter [
 
 	self applyOperator: aCharacter
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDElementContentModelParser >> parserForSpecialCharacter: aCharacter [
 	| asciiValue |
 
@@ -156,7 +158,7 @@ DTDElementContentModelParser >> parserForSpecialCharacter: aCharacter [
 			ifFalse: [^ nil]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDElementContentModelParser >> popRemainingBinaryOperators [
 
 	[self hasBinaryOperatorOnStack]

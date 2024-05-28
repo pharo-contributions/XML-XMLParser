@@ -12,15 +12,17 @@ The precedence of mapping goes:
 -Non-qualified name
 "
 Class {
-	#name : #XMLBasicElementClassMapper,
-	#superclass : #XMLElementClassMapper,
+	#name : 'XMLBasicElementClassMapper',
+	#superclass : 'XMLElementClassMapper',
 	#instVars : [
 		'elementClassMap'
 	],
-	#category : #'XML-Parser-Utils'
+	#category : 'XML-Parser-Utils',
+	#package : 'XML-Parser',
+	#tag : 'Utils'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLBasicElementClassMapper >> classForElement: aQualifiedName attributes: anAssociationCollection ifNone: aBlock [
 	^ self
 		classForElement: aQualifiedName
@@ -29,7 +31,7 @@ XMLBasicElementClassMapper >> classForElement: aQualifiedName attributes: anAsso
 		ifNone: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLBasicElementClassMapper >> classForElement: aQualifiedName ifNone: aBlock [
 	^ self
 		classForElement: aQualifiedName
@@ -38,7 +40,7 @@ XMLBasicElementClassMapper >> classForElement: aQualifiedName ifNone: aBlock [
 		ifNone: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLBasicElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI attributes: anAssociationCollection ifNone: aBlock [
 	| localName attributeDictionary |
 
@@ -80,7 +82,7 @@ XMLBasicElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI
 	^ aBlock value.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLBasicElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI ifNone: aBlock [
 	^ self
 		classForElement: aQualifiedName
@@ -89,7 +91,7 @@ XMLBasicElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI
 		ifNone: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLBasicElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI localName: aLocalName attributes: anAssociationCollection ifNone: aBlock [
 	| attributeDictionary |
 
@@ -129,12 +131,12 @@ XMLBasicElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI
 	^ aBlock value.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLBasicElementClassMapper >> elementClassMap [
 	^ elementClassMap
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLBasicElementClassMapper >> elementClassMapAt: aKey attributes: anAttributeDictionary [
 	| classOrCollection |
 
@@ -154,14 +156,14 @@ XMLBasicElementClassMapper >> elementClassMapAt: aKey attributes: anAttributeDic
 		ifFalse: [^ classOrCollection].
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLBasicElementClassMapper >> initialize [
 	super initialize.
 
 	elementClassMap := Dictionary new.
 ]
 
-{ #category : #mapping }
+{ #category : 'mapping' }
 XMLBasicElementClassMapper >> mapElement: anElement attributeSpec: anAttributeSpec toClass: aClass [
 	| classOrCollection |
 
@@ -183,7 +185,7 @@ XMLBasicElementClassMapper >> mapElement: anElement attributeSpec: anAttributeSp
 						with: classOrCollection)].
 ]
 
-{ #category : #mapping }
+{ #category : 'mapping' }
 XMLBasicElementClassMapper >> mapElement: anElement namespaceURI: aURI attributeSpec: anAttributeSpec toClass: aClass [
 	self
 		mapElement:
@@ -194,7 +196,7 @@ XMLBasicElementClassMapper >> mapElement: anElement namespaceURI: aURI attribute
 		toClass: aClass
 ]
 
-{ #category : #mapping }
+{ #category : 'mapping' }
 XMLBasicElementClassMapper >> mapElement: anElement namespaceURI: aURI toClass: aClass [
 	self
 		mapElement:
@@ -204,7 +206,7 @@ XMLBasicElementClassMapper >> mapElement: anElement namespaceURI: aURI toClass: 
 		toClass: aClass
 ]
 
-{ #category : #mapping }
+{ #category : 'mapping' }
 XMLBasicElementClassMapper >> mapElement: anElement toClass: aClass [
 	| classOrCollection |
 
@@ -224,7 +226,7 @@ XMLBasicElementClassMapper >> mapElement: anElement toClass: aClass [
 				put: aClass].
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLBasicElementClassMapper >> postCopy [
 	super postCopy.
 

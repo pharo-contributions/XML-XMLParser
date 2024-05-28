@@ -4,32 +4,34 @@ This class represents a string (character data) node. Instances are mutable, but
 When printing, XML-escaping of special characters is done.
 "
 Class {
-	#name : #XMLString,
-	#superclass : #XMLNode,
+	#name : 'XMLString',
+	#superclass : 'XMLNode',
 	#instVars : [
 		'string'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLString class >> string: aString [
 	^ self new string: aString
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLString >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitStringNode: self
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLString >> addContent: aStringOrStringNode [
 	"will be deprecated"
 
 	self append: aStringOrStringNode
 ]
 
-{ #category : #'appending/prepending' }
+{ #category : 'appending/prepending' }
 XMLString >> append: aStringOrStringNode [
 	string :=
 		string
@@ -37,107 +39,107 @@ XMLString >> append: aStringOrStringNode [
 			ifNotNil: [string, aStringOrStringNode asString]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLString >> asString [
 	^ self string
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLString >> asXMLEscapedString [
 	^ self string asXMLEscapedString
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLString >> asXMLString [
 	"will be deprecated; use #asXMLStringNode instead"
 
 	^ self asXMLStringNode
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLString >> asXMLStringNode [
 	^ self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLString >> beginsWith: aStringOrStringNode [
 	^ self string beginsWith: aStringOrStringNode asString
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLString >> contentString: aString [
 	"will be deprecated; use #string: instead"
 
 	self string: aString
 ]
 
-{ #category : #replacing }
+{ #category : 'replacing' }
 XMLString >> deleteFrom: aStart to: anEnd [
 	self replaceFrom: aStart to: anEnd with: ''
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLString >> endsWith: aStringOrStringNode [
 	^ self string endsWith: aStringOrStringNode asString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLString >> includesSubstring: aStringOrStringNode [
 	"avoid String>>includesSubstring: for backwards compatibility"
 	^ aStringOrStringNode isEmpty
 		or: [(self indexOfSubstring: aStringOrStringNode) > 0]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLString >> indexOfSubstring: aStringOrStringNode [
 	^ self string
 		findString: aStringOrStringNode asString
 		startingAt: 1
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLString >> isCoalescingStringNode [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLString >> isContentNode [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLString >> isEmpty [
 	^ self string isEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLString >> isNotEmpty [
 	^ self string isNotEmpty
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLString >> isString: aStringOrStringNode [
 	"will be deprecated; use #isStringNode: instead"
 
 	^ self isStringNode: aStringOrStringNode
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLString >> isStringNode [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLString >> isStringNode: aStringOrStringNode [
 	^ self string = aStringOrStringNode asString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLString >> isWhitespace [
 	^ self string isXMLWhitespace
 ]
 
-{ #category : #'splitting/merging' }
+{ #category : 'splitting/merging' }
 XMLString >> mergeAdjacent [
 	"merges a string node with adjacent string nodes in parent"
 	| siblingNodes selfIndex adjacentNode |
@@ -161,7 +163,7 @@ XMLString >> mergeAdjacent [
 			selfIndex := selfIndex - 1].
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLString >> notEmpty [
 
 	self
@@ -171,7 +173,7 @@ XMLString >> notEmpty [
 	^ self isNotEmpty
 ]
 
-{ #category : #'appending/prepending' }
+{ #category : 'appending/prepending' }
 XMLString >> prepend: aStringOrStringNode [
 	string :=
 		string
@@ -179,12 +181,12 @@ XMLString >> prepend: aStringOrStringNode [
 			ifNotNil: [aStringOrStringNode asString, string]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLString >> printRawContentOn: aStream [
 	aStream nextPutAll: self string
 ]
 
-{ #category : #replacing }
+{ #category : 'replacing' }
 XMLString >> replaceAll: aSource with: aReplacement [
 	"works like copyReplaceAll:with:"
 	self string:
@@ -193,7 +195,7 @@ XMLString >> replaceAll: aSource with: aReplacement [
 			with: aReplacement asString)
 ]
 
-{ #category : #replacing }
+{ #category : 'replacing' }
 XMLString >> replaceFrom: aStart to: aStop with: aReplacement [
 	"works like copyReplaceFrom:to:with: and
 	can be used to insert, delete, and replace"
@@ -208,17 +210,17 @@ XMLString >> replaceFrom: aStart to: aStop with: aReplacement [
 			with: aReplacement asString)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLString >> size [
 	^ self string size
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLString >> sortKey [
 	^ self string
 ]
 
-{ #category : #'splitting/merging' }
+{ #category : 'splitting/merging' }
 XMLString >> splitAt: anOffset [
 	| newNode |
 
@@ -232,17 +234,17 @@ XMLString >> splitAt: anOffset [
 	^ newNode.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLString >> string [
 	^ string ifNil: [string := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLString >> string: aString [
 	string := aString asString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLString >> writeXMLOn: aWriter [
 	aWriter string: self string
 ]

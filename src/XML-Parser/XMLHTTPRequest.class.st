@@ -4,45 +4,47 @@ This is an abstract base class for HTTP requests.
 These classes implement the #get/#getUpToLimit:decoding: and #streamGet/#streamGetUpToLimit:decoding: interface of XMLURI.
 "
 Class {
-	#name : #XMLHTTPRequest,
-	#superclass : #XMLHTTPMessage,
+	#name : 'XMLHTTPRequest',
+	#superclass : 'XMLHTTPMessage',
 	#instVars : [
 		'url'
 	],
-	#category : #'XML-Parser-HTTP'
+	#category : 'XML-Parser-HTTP',
+	#package : 'XML-Parser',
+	#tag : 'HTTP'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPRequest class >> canBeImplemented [
 	^ true
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLHTTPRequest class >> new [
 	^ self url: ''
 ]
 
-{ #category : #finding }
+{ #category : 'finding' }
 XMLHTTPRequest class >> noSupportedImplementationFound [
 	XMLHTTPException signal: 'HTTP unsupported; install Zinc or WebClient'
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLHTTPRequest class >> preferredImplementation [
 	^ XMLHTTPZincRequest
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLHTTPRequest class >> url: aURLString [
 	^ self implementationNew setURL: aURLString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPRequest >> acceptEncoding [
 	^ self encodingNamesFromHeaderValuesAt: 'Accept-Encoding'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPRequest >> acceptEncoding: aStringOrCollection [
 	"NOTE: only gzip is currently supported"
 	self
@@ -50,44 +52,44 @@ XMLHTTPRequest >> acceptEncoding: aStringOrCollection [
 		put: aStringOrCollection
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLHTTPRequest >> asXMLHTTPRequest [
 	^ self
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLHTTPRequest >> basicCleanup [
 	"can be overridden to handle cleanup after sending the
 	request and reading the response"
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLHTTPRequest >> basicSend [
 	self subclassResponsibility
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLHTTPRequest >> defaultAcceptEncoding [
 	^ #()
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLHTTPRequest >> defaultMethod [
 	^ 'GET'
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLHTTPRequest >> defaultTimeout [
 	^ 30
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPRequest >> enableCompression [
 	"NOTE: only gzip is currently supported"
 	self acceptEncoding: 'gzip'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPRequest >> errorBadResponse: aResponse [
 	XMLHTTPException
 		formatSignal: '{1} ({2})'
@@ -95,14 +97,14 @@ XMLHTTPRequest >> errorBadResponse: aResponse [
 		with: aResponse statusCode
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 XMLHTTPRequest >> get [
 	^ self
 		getUpToLimit: nil
 		decoding: true
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 XMLHTTPRequest >> getUpToLimit: aMaxSize decoding: aBoolean [
 	self method: 'GET'.
 	^ (self
@@ -110,17 +112,17 @@ XMLHTTPRequest >> getUpToLimit: aMaxSize decoding: aBoolean [
 		decoding: aBoolean) content
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPRequest >> method [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPRequest >> method: aString [
 	self subclassResponsibility
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLHTTPRequest >> printOn: aStream [
 	super printOn: aStream.
 
@@ -132,7 +134,7 @@ XMLHTTPRequest >> printOn: aStream [
 		nextPut: $).
 ]
 
-{ #category : #'resolving - response' }
+{ #category : 'resolving - response' }
 XMLHTTPRequest >> resolve [
 	"Sends and retrieves the response as an XMLHTTPResponse object."
 
@@ -141,7 +143,7 @@ XMLHTTPRequest >> resolve [
 		decoding: true
 ]
 
-{ #category : #'resolving - response' }
+{ #category : 'resolving - response' }
 XMLHTTPRequest >> resolveUpToLimit: aMaxSize decoding: aBoolean [
 	| response |
 
@@ -162,12 +164,12 @@ XMLHTTPRequest >> resolveUpToLimit: aMaxSize decoding: aBoolean [
 	^ response.
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLHTTPRequest >> responseClass [
 	self subclassResponsibility
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLHTTPRequest >> setURL: aURLString [
 	url := aURLString.
 	self
@@ -179,14 +181,14 @@ XMLHTTPRequest >> setURL: aURLString [
 		acceptEncoding: self defaultAcceptEncoding.
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 XMLHTTPRequest >> streamGet [
 	^ self
 		streamGetUpToLimit: nil
 		decoding: true
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 XMLHTTPRequest >> streamGetUpToLimit: aMaxSize decoding: aBoolean [
 	"must be implemented using getUpToLimit:decoding: rather than the other
 	way around like XMLFileHandle does, because HTTP responses must be read
@@ -197,17 +199,17 @@ XMLHTTPRequest >> streamGetUpToLimit: aMaxSize decoding: aBoolean [
 		decoding: aBoolean) readStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPRequest >> timeout [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPRequest >> timeout: anInteger [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPRequest >> url [
 	^ url ifNil: [url := '']
 ]

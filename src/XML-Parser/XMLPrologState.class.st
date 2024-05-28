@@ -2,22 +2,24 @@
 A state for prolog tokens.
 "
 Class {
-	#name : #XMLPrologState,
-	#superclass : #XMLTokenizerState,
-	#category : #'XML-Parser-Drivers'
+	#name : 'XMLPrologState',
+	#superclass : 'XMLTokenizerState',
+	#category : 'XML-Parser-Drivers',
+	#package : 'XML-Parser',
+	#tag : 'Drivers'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLPrologState >> canTerminateInput [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLPrologState >> isPrologState [
 	^ true
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLPrologState >> nextTokenFrom: aTokenizer [
 	^ aTokenizer nextPrologToken
 ]

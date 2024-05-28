@@ -2,37 +2,39 @@
 This class validates elements that can contain a mix of PCDATA and certain elements.
 "
 Class {
-	#name : #XMLMixedContentElementValidator,
-	#superclass : #XMLElementValidator,
+	#name : 'XMLMixedContentElementValidator',
+	#superclass : 'XMLElementValidator',
 	#instVars : [
 		'allowedContent'
 	],
-	#category : #'XML-Parser-Validation'
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLMixedContentElementValidator class >> element: anElement allowedContent: anAllowedContentCollection [
 	^ self new
 		setElement: anElement
 		allowedContent: anAllowedContentCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLMixedContentElementValidator >> allowedContent [
 	^ allowedContent
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLMixedContentElementValidator >> allowedContent: anAllowedContentCollection [
 	allowedContent := anAllowedContentCollection
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLMixedContentElementValidator >> atEnd [
 	^ true
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLMixedContentElementValidator >> errorContentContainsDuplicates [
 	XMLValidationException
 		formatSignal:
@@ -40,23 +42,23 @@ XMLMixedContentElementValidator >> errorContentContainsDuplicates [
 		with: self element
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLMixedContentElementValidator >> isMixedContent [
 	^ true
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLMixedContentElementValidator >> setElement: anElement allowedContent: anAllowedContentCollection [
 	element := anElement.
 	allowedContent := anAllowedContentCollection.
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLMixedContentElementValidator >> typeName [
 	^ 'mixed content'
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLMixedContentElementValidator >> validateElementDeclaration [
 	| oldAllowedContentCollection |
 
@@ -66,7 +68,7 @@ XMLMixedContentElementValidator >> validateElementDeclaration [
 		ifTrue: [self errorContentContainsDuplicates].
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLMixedContentElementValidator >> validateStartTag: anElement [
 	(self allowedContent includes: anElement)
 		ifFalse: [self errorUnexpectedElement: anElement]

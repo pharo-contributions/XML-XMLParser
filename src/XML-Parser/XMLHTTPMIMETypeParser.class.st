@@ -2,22 +2,24 @@
 This is a class to parse MIME types with a main type and sub type separated by a ""/"", like ""text/plain"", and optional name=value parameters separated by "";"" after. Adapted from ZnMimeType.
 "
 Class {
-	#name : #XMLHTTPMIMETypeParser,
-	#superclass : #XMLAbstractReadStreamParser,
+	#name : 'XMLHTTPMIMETypeParser',
+	#superclass : 'XMLAbstractReadStreamParser',
 	#classVars : [
 		'TokenDelimiters'
 	],
-	#category : #'XML-Parser-HTTP'
+	#category : 'XML-Parser-HTTP',
+	#package : 'XML-Parser',
+	#tag : 'HTTP'
 }
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLHTTPMIMETypeParser class >> initialize [
 	"self initialize"
 
 	self initializeTokenDelimiters
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLHTTPMIMETypeParser class >> initializeTokenDelimiters [
 	"String streamContents: [:writeStream | | readStream current previous |
 		readStream := self tspecialsTemplate readStream.
@@ -34,7 +36,7 @@ XMLHTTPMIMETypeParser class >> initializeTokenDelimiters [
 		BitmapCharacterSet newFrom: '()<>@,;:\"/[]?.=', Character xmlWhitespace
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPMIMETypeParser class >> tspecialsTemplate [
 	^ '	tspecials :=  "(" / ")" / "<" / ">" / "@"  ; Must be in
                        /  "," / ";" / ":" / "\" / <">  ; quoted-string,
@@ -42,7 +44,7 @@ XMLHTTPMIMETypeParser class >> tspecialsTemplate [
                        /  "="                        ; parameter values'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPMIMETypeParser >> nextOptionalQuotedString [
 	| isEscaping nextChar |
 
@@ -68,27 +70,27 @@ XMLHTTPMIMETypeParser >> nextOptionalQuotedString [
 		contents.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPMIMETypeParser >> nextToken [
 	readStream skipSeparators.
 	^ self nextDelimitedByAny: TokenDelimiters.
 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPMIMETypeParser >> nextTokenOrQuotedString [
 	^ self nextOptionalQuotedString
 		ifNil: [self nextToken]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 XMLHTTPMIMETypeParser >> parseMainType [
 	"main types are case insensitive and are converted to
 	lowercase for consistentcy"
 	^ self nextToken asLowercase
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 XMLHTTPMIMETypeParser >> parseParameters [
 	| parameters attributes totalAttributes |
 
@@ -124,7 +126,7 @@ XMLHTTPMIMETypeParser >> parseParameters [
 	^ parameters.
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 XMLHTTPMIMETypeParser >> parseSubType [
 	"sub types are case insensitive and are converted to
 	lowercase for consistentcy"

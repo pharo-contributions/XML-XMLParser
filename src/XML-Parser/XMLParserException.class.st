@@ -2,67 +2,69 @@
 A base class for XMLParser exceptions that supports line number error info and can be used with on:do: to catch any XMLParser-related errors.
 "
 Class {
-	#name : #XMLParserException,
-	#superclass : #XMLException,
+	#name : 'XMLParserException',
+	#superclass : 'XMLException',
 	#instVars : [
 		'lineNumber',
 		'columnNumber',
 		'baseURI'
 	],
-	#category : #'XML-Parser-Exceptions'
+	#category : 'XML-Parser-Exceptions',
+	#package : 'XML-Parser',
+	#tag : 'Exceptions'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserException >> baseURI [
 	^ baseURI ifNil: [baseURI := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserException >> baseURI: aURIString [
 	baseURI := aURIString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserException >> columnNumber [
 	^ columnNumber
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserException >> columnNumber: aColumnNumber [
 	columnNumber := aColumnNumber
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLParserException >> hasBaseURI [
 	^ self baseURI isNotEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLParserException >> hasColumnNumber [
 	^ self columnNumber isNotNil
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLParserException >> hasLineNumber [
 	^ self lineNumber isNotNil
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLParserException >> isXMLParserException [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserException >> lineNumber [
 	^ lineNumber
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserException >> lineNumber: aLineNumber [
 	lineNumber := aLineNumber
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserException >> messageText [
 	| rawMessageText messageTextStream |
 
@@ -99,7 +101,7 @@ XMLParserException >> messageText [
 		contents.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLParserException >> shouldPassOnWhenCaught [
 	^ true
 ]

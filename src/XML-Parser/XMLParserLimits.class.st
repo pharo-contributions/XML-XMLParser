@@ -2,8 +2,8 @@
 This class places security limits on input. Setting a limit to nil disables it, and removeAll disables all.
 "
 Class {
-	#name : #XMLParserLimits,
-	#superclass : #Object,
+	#name : 'XMLParserLimits',
+	#superclass : 'Object',
 	#instVars : [
 		'documentReadLimit',
 		'maxEntityReplacementDepth'
@@ -11,42 +11,43 @@ Class {
 	#classVars : [
 		'DefaultReadLimit'
 	],
-	#category : #'XML-Parser'
+	#category : 'XML-Parser',
+	#package : 'XML-Parser'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLParserLimits class >> defaultDocumentReadLimit [
 	^ self defaultReadLimit
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLParserLimits class >> defaultMaxEntityReplacementDepth [
 	^ 10
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserLimits class >> defaultReadLimit [
 	^ DefaultReadLimit
 		ifNil: [DefaultReadLimit := 10000000]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserLimits class >> defaultReadLimit: aDefaultLimit [
 	"can be used to change the default read limit instances start with"
 	DefaultReadLimit := aDefaultLimit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserLimits >> documentReadLimit [
 	^ documentReadLimit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserLimits >> documentReadLimit: anInteger [
 	documentReadLimit := anInteger
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLParserLimits >> initialize [
 	super initialize.
 
@@ -54,17 +55,17 @@ XMLParserLimits >> initialize [
 	maxEntityReplacementDepth := self class defaultMaxEntityReplacementDepth.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserLimits >> maxEntityReplacementDepth [
 	^ maxEntityReplacementDepth
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserLimits >> maxEntityReplacementDepth: anInteger [
 	maxEntityReplacementDepth := anInteger
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLParserLimits >> removeAll [
 	documentReadLimit := nil.
 	maxEntityReplacementDepth := nil.

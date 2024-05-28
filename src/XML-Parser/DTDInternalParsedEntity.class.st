@@ -2,15 +2,17 @@
 This is an abstract base class for internal parsed entities with replacements that can be inserted into an XML document.
 "
 Class {
-	#name : #DTDInternalParsedEntity,
-	#superclass : #DTDParsedEntity,
+	#name : 'DTDInternalParsedEntity',
+	#superclass : 'DTDParsedEntity',
 	#instVars : [
 		'replacement'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDInternalParsedEntity class >> name: aName replacement: aReplacementString [
 	^ self
 		name: aName
@@ -18,7 +20,7 @@ DTDInternalParsedEntity class >> name: aName replacement: aReplacementString [
 		uri: ''
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDInternalParsedEntity class >> name: aName replacement: aReplacementString uri: aURIString [
 	^ self new
 		setName: aName
@@ -26,31 +28,31 @@ DTDInternalParsedEntity class >> name: aName replacement: aReplacementString uri
 		uri: aURIString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDInternalParsedEntity >> hasReplacement [
 
 	^ self replacement isNotEmpty
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDInternalParsedEntity >> replacement [
 
 	^ replacement ifNil: [ replacement := '' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDInternalParsedEntity >> replacement: aReplacementString [
 
 	replacement := aReplacementString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDInternalParsedEntity >> replacementStream [
 
 	^ self replacement readStream
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DTDInternalParsedEntity >> setName: aName replacement: aReplacementString uri: aURIString [
 
 	name := aName.

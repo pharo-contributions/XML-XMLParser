@@ -2,8 +2,8 @@
 This class is a parser that can extract the scheme, user info, host, port, path segments, query (as an OrderedCollection of associations), and fragment of a URI. It does not handle percent decoding and raises no errors.
 "
 Class {
-	#name : #XMLURIParser,
-	#superclass : #XMLAbstractReadStreamParser,
+	#name : 'XMLURIParser',
+	#superclass : 'XMLAbstractReadStreamParser',
 	#classVars : [
 		'HostDelimiters',
 		'PathDelimiters',
@@ -12,10 +12,12 @@ Class {
 		'SchemeDelimiters',
 		'UserInfoDelimiters'
 	],
-	#category : #'XML-Parser-URI'
+	#category : 'XML-Parser-URI',
+	#package : 'XML-Parser',
+	#tag : 'URI'
 }
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLURIParser class >> initialize [
 	"self initialize"
 
@@ -28,38 +30,38 @@ XMLURIParser class >> initialize [
 		initializeQueryValueDelimiters
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLURIParser class >> initializeHostDelimiters [
 	HostDelimiters := BitmapCharacterSet newFrom: ':/?#'
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLURIParser class >> initializePathDelimiters [
 	PathDelimiters := BitmapCharacterSet newFrom: '/?#'
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLURIParser class >> initializeQueryKeyDelimiters [
 	QueryKeyDelimiters := BitmapCharacterSet newFrom: '=&#'
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLURIParser class >> initializeQueryValueDelimiters [
 	QueryValueDelimiters := BitmapCharacterSet newFrom: '&#'
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLURIParser class >> initializeSchemeDelimiters [
 	"including % disallows percent encoding in schemes"
 	SchemeDelimiters := BitmapCharacterSet newFrom: ':@/?#%'
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLURIParser class >> initializeUserInfoDelimiters [
 	UserInfoDelimiters := BitmapCharacterSet newFrom: '@/?#'
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 XMLURIParser >> parseAuthorityPrefix [
 	| oldPosition |
 
@@ -72,14 +74,14 @@ XMLURIParser >> parseAuthorityPrefix [
 			^ false].
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 XMLURIParser >> parseFragment [
 	(readStream peekFor: $#)
 		ifTrue: [^ readStream upToEnd]
 		ifFalse: [^ '']
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 XMLURIParser >> parseHost [
 	| host |
 
@@ -91,7 +93,7 @@ XMLURIParser >> parseHost [
 	^ host.
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 XMLURIParser >> parsePathSegments [
 	| pathSegments segment |
 
@@ -109,7 +111,7 @@ XMLURIParser >> parsePathSegments [
 	^ pathSegments.
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 XMLURIParser >> parsePort [
 	| port |
 
@@ -128,7 +130,7 @@ XMLURIParser >> parsePort [
 	^ port.
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 XMLURIParser >> parseQuery [
 	"parse the query as an OrderedCollection of name=value associations
 	to handle multiple values for the same key and different encoded keys
@@ -155,7 +157,7 @@ XMLURIParser >> parseQuery [
 	^ query.
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 XMLURIParser >> parseScheme [
 	| oldPosition scheme |
 
@@ -168,7 +170,7 @@ XMLURIParser >> parseScheme [
 			^ ''].
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 XMLURIParser >> parseUserInfo [
 	| userInfo oldPosition |
 

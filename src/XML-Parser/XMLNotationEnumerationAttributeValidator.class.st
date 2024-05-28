@@ -2,44 +2,46 @@
 This class validates attributes that can have NOTATION names from a list as values.
 "
 Class {
-	#name : #XMLNotationEnumerationAttributeValidator,
-	#superclass : #XMLEnumerationAttributeValidator,
+	#name : 'XMLNotationEnumerationAttributeValidator',
+	#superclass : 'XMLEnumerationAttributeValidator',
 	#instVars : [
 		'unparedEntityValidator'
 	],
-	#category : #'XML-Parser-Validation'
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLNotationEnumerationAttributeValidator class >> standaloneExternalClass [
 	^ XMLStandaloneExternalNotationEnumerationAttributeValidator
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLNotationEnumerationAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
 	super initializeWithValidatorsFrom: aValidatorContainer.
 
 	unparedEntityValidator := aValidatorContainer unparsedEntityValidator.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNotationEnumerationAttributeValidator >> isNotationEnumeration [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNotationEnumerationAttributeValidator >> unparsedEntityValidator [
 	^ unparedEntityValidator
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLNotationEnumerationAttributeValidator >> validateAttributeDeclaration [
 	self unparsedEntityValidator validateNotationAttributeDeclaration: self.
 
 	super validateAttributeDeclaration.
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLNotationEnumerationAttributeValidator >> validateXMLSpaceAttributeDeclaration [
 	self errorInvalidXMLSpaceAttributeDeclaration
 ]

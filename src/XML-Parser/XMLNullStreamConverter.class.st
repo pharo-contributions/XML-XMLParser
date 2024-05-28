@@ -2,24 +2,26 @@
 A stream converter that does no encoding or decoding.
 "
 Class {
-	#name : #XMLNullStreamConverter,
-	#superclass : #XMLStatelessStreamConverter,
-	#category : #'XML-Parser-Streams'
+	#name : 'XMLNullStreamConverter',
+	#superclass : 'XMLStatelessStreamConverter',
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNullStreamConverter >> isNull [
 	^ true
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 XMLNullStreamConverter >> nextFromStream: aStream [
 	aStream atEnd
 		ifTrue: [^ nil]
 		ifFalse: [^ aStream next asCharacter]
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 XMLNullStreamConverter >> nextPut: aCharacter toStream: aStream [
 	aStream nextPut: aCharacter asInteger
 ]

@@ -2,17 +2,19 @@
 An abstract class for Unicode stream converters.
 "
 Class {
-	#name : #XMLUTFStreamConverter,
-	#superclass : #XMLStatelessStreamConverter,
-	#category : #'XML-Parser-Streams'
+	#name : 'XMLUTFStreamConverter',
+	#superclass : 'XMLStatelessStreamConverter',
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLUTFStreamConverter class >> abstractClass [
 	^ XMLUTFStreamConverter
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLUTFStreamConverter >> errorBadCharacterValue: aValue [
 	XMLEncodingException
 		formatSignal: 'Invalid {1} code point U+{1}'
@@ -20,12 +22,12 @@ XMLUTFStreamConverter >> errorBadCharacterValue: aValue [
 		with: aValue printStringHex
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLUTFStreamConverter >> nextCodePointFromStream: aStream [
 	self subclassResponsibility
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 XMLUTFStreamConverter >> nextFromStream: aStream [
 	| codePoint |
 

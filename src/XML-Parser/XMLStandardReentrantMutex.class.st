@@ -2,15 +2,17 @@
 This class is the standard implementation that uses Pharo and Squeak's Mutex class to implement a reentrant mutex.
 "
 Class {
-	#name : #XMLStandardReentrantMutex,
-	#superclass : #XMLReentrantMutex,
+	#name : 'XMLStandardReentrantMutex',
+	#superclass : 'XMLReentrantMutex',
 	#instVars : [
 		'mutex'
 	],
-	#category : #'XML-Parser-Utils'
+	#category : 'XML-Parser-Utils',
+	#package : 'XML-Parser',
+	#tag : 'Utils'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStandardReentrantMutex class >> isSupportedImplementation [
 	(XMLClassFinder hasClassNamed: #Mutex)
 		ifFalse: [^ false].
@@ -26,12 +28,12 @@ XMLStandardReentrantMutex class >> isSupportedImplementation [
 	^ true.
 ]
 
-{ #category : #'mutual exclusion' }
+{ #category : 'mutual exclusion' }
 XMLStandardReentrantMutex >> critical: aBlock [
 	^ mutex critical: aBlock
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLStandardReentrantMutex >> initialize [
 	super initialize.
 

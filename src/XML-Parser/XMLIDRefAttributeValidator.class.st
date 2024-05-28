@@ -2,43 +2,45 @@
 This class validates attributes that refer to an ID of another element with a ID attribute.
 "
 Class {
-	#name : #XMLIDRefAttributeValidator,
-	#superclass : #XMLAttributeValidator,
+	#name : 'XMLIDRefAttributeValidator',
+	#superclass : 'XMLAttributeValidator',
 	#instVars : [
 		'elementIDValidator'
 	],
-	#category : #'XML-Parser-Validation'
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLIDRefAttributeValidator class >> standaloneExternalClass [
 	^ XMLStandaloneExternalIDRefAttributeValidator
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLIDRefAttributeValidator >> elementIDValidator [
 	^ elementIDValidator
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLIDRefAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
 	super initializeWithValidatorsFrom: aValidatorContainer.
 
 	elementIDValidator := aValidatorContainer elementIDValidator.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLIDRefAttributeValidator >> isIDRef [
 	^ true
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLIDRefAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 	aDefaultValue isXMLName
 		ifFalse: [self errorInvalidDefaultAttributeValue: aDefaultValue]
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLIDRefAttributeValidator >> validateAttributeValue: aValue [
 	self elementIDValidator
 		validateIDReference: aValue

@@ -2,31 +2,33 @@
 This class uses Zinc HTTP Components to implement HTTP responses and is the preferred implementation.
 "
 Class {
-	#name : #XMLHTTPZincResponse,
-	#superclass : #XMLHTTPResponse,
+	#name : 'XMLHTTPZincResponse',
+	#superclass : 'XMLHTTPResponse',
 	#instVars : [
 		'zincResponse'
 	],
-	#category : #'XML-Parser-HTTP'
+	#category : 'XML-Parser-HTTP',
+	#package : 'XML-Parser',
+	#tag : 'HTTP'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPZincResponse class >> isSupportedImplementation [
 	^ XMLClassFinder hasClassNamed: #ZnResponse
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLHTTPZincResponse class >> request: aRequest zincResponse: aZincResponse [
 	^ (self request: aRequest)
 		setZincResponse: aZincResponse
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLHTTPZincResponse >> contentReaderClass [
 	^ XMLHTTPZincResponseContentReader
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPZincResponse >> headerAt: aKey ifAbsent: aBlock [
 	self zincResponse headers
 		at: aKey
@@ -37,7 +39,7 @@ XMLHTTPZincResponse >> headerAt: aKey ifAbsent: aBlock [
 	^ aBlock value.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPZincResponse >> headerAt: aKey put: aValue [
 	self zincResponse headers
 		at: aKey
@@ -45,12 +47,12 @@ XMLHTTPZincResponse >> headerAt: aKey put: aValue [
 	^ aValue.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLHTTPZincResponse >> headerKeysAndValuesDo: aTwoArgumentBlock [
 	self zincResponse headersDo: aTwoArgumentBlock
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLHTTPZincResponse >> headerValuesAt: aKey add: aValue [
 	self zincResponse headers
 		at: aKey
@@ -58,7 +60,7 @@ XMLHTTPZincResponse >> headerValuesAt: aKey add: aValue [
 	^ aValue.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLHTTPZincResponse >> headerValuesAt: aKey do: aBlock [
 	self zincResponse headers
 		at: aKey
@@ -68,17 +70,17 @@ XMLHTTPZincResponse >> headerValuesAt: aKey do: aBlock [
 				ifFalse: [aBlock value: value]]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPZincResponse >> isSuccess [
 	^ self zincResponse isSuccess
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPZincResponse >> protocol [
 	^ self zincResponse statusLine version
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLHTTPZincResponse >> removeHeaderAt: aKey ifAbsent: aBlock [
 	| removedValues |
 
@@ -91,7 +93,7 @@ XMLHTTPZincResponse >> removeHeaderAt: aKey ifAbsent: aBlock [
 		ifFalse: [removedValues asOrderedCollection].
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLHTTPZincResponse >> setProtocol: aString statusCode: anInteger [
 	self zincResponse statusLine:
 		((ZnStatusLine code: anInteger)
@@ -99,17 +101,17 @@ XMLHTTPZincResponse >> setProtocol: aString statusCode: anInteger [
 			yourself)
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLHTTPZincResponse >> setZincResponse: aZincResponse [
 	zincResponse := aZincResponse
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPZincResponse >> statusCode [
 	^ self zincResponse status
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPZincResponse >> statusLine [
 	| statusLine |
 	
@@ -121,7 +123,7 @@ XMLHTTPZincResponse >> statusLine [
 		statusLine printCodeAndReasonOn: stream].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPZincResponse >> zincResponse [
 	^ zincResponse
 		ifNil: [

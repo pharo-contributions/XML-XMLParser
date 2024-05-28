@@ -2,37 +2,39 @@
 This class implements NFA fragments for an XMLNFABuilder. It stores a first state and either a single terminal state or a collection of terminal states (using an OrderedCollection instead of an XMLNFAStateSet), and it can be connected to a state or another fragment.
 "
 Class {
-	#name : #XMLNFAFragment,
-	#superclass : #Object,
+	#name : 'XMLNFAFragment',
+	#superclass : 'Object',
 	#instVars : [
 		'firstState',
 		'terminalStateOrStates'
 	],
-	#category : #'XML-Parser-Validation-DFA'
+	#category : 'XML-Parser-Validation-DFA',
+	#package : 'XML-Parser',
+	#tag : 'Validation-DFA'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNFAFragment class >> firstState: aFirstState [
 	^ self new
 		setFirstState: aFirstState
 		terminalStateOrStates: aFirstState
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNFAFragment class >> firstState: aFirstState terminalState: aTerminalState [
 	^ self new
 		setFirstState: aFirstState
 		terminalStateOrStates: aTerminalState
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNFAFragment class >> firstState: aFirstState terminalStates: aTerminalStateCollection [
 	^ self new
 		setFirstState: aFirstState
 		terminalStateOrStates: aTerminalStateCollection
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNFAFragment >> connectTerminalStatesToState: aState [
 	terminalStateOrStates isCollection
 		ifTrue: [
@@ -42,29 +44,29 @@ XMLNFAFragment >> connectTerminalStatesToState: aState [
 		ifFalse: [terminalStateOrStates connectToState: aState]
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 XMLNFAFragment >> connectToFragment: aFragment [
 	self connectTerminalStatesToState: aFragment firstState.
 	terminalStateOrStates := aFragment terminalStateOrStates.
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 XMLNFAFragment >> connectToState: aState [
 	self connectTerminalStatesToState: aState.
 	terminalStateOrStates := aState.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFAFragment >> firstState [
 	^ firstState
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFAFragment >> firstState: aFirstState [
 	firstState := aFirstState
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNFAFragment >> newTerminalStatesWith: aFirstTerminalState and: aSecondTerminalState [
 	"avoid #with:with: to control the capacity"
 	^ (OrderedCollection new: 4)
@@ -73,35 +75,35 @@ XMLNFAFragment >> newTerminalStatesWith: aFirstTerminalState and: aSecondTermina
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLNFAFragment >> setFirstState: aFirstState terminalStateOrStates: aTerminalStateOrStateCollection [
 	firstState := aFirstState.
 	terminalStateOrStates := aTerminalStateOrStateCollection.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFAFragment >> terminalState: aTerminalState [
 	terminalStateOrStates := aTerminalState
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNFAFragment >> terminalStateOrStates [
 	^ terminalStateOrStates
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFAFragment >> terminalStates [
 	^ terminalStateOrStates isCollection
 		ifTrue: [terminalStateOrStates]
 		ifFalse: [OrderedCollection with: terminalStateOrStates]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNFAFragment >> terminalStates: aTerminalStateCollection [
 	terminalStateOrStates := aTerminalStateCollection
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNFAFragment >> terminalStatesAddedTo: aTerminalStateCollection [
 	terminalStateOrStates isCollection
 		ifTrue: [
@@ -112,7 +114,7 @@ XMLNFAFragment >> terminalStatesAddedTo: aTerminalStateCollection [
 	^ aTerminalStateCollection.
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLNFAFragment >> terminalStatesWith: aTerminalState [
 	terminalStateOrStates isCollection
 		ifTrue: [
@@ -124,7 +126,7 @@ XMLNFAFragment >> terminalStatesWith: aTerminalState [
 				and: aTerminalState]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLNFAFragment >> terminalStatesWithAllFrom: aFragment [
 	terminalStateOrStates isCollection
 		ifTrue: [^ aFragment terminalStatesAddedTo: terminalStateOrStates].

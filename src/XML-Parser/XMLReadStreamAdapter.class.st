@@ -2,24 +2,26 @@
 A base class for read stream adapters for basic streams that support #next, #peek, #atEnd, #position, #position:, and #reset. It adds support for skipping and reading upto a character or the end of the stream, and ensures #next and #peek return nil when the stream is #atEnd instead of raising an error.
 "
 Class {
-	#name : #XMLReadStreamAdapter,
-	#superclass : #XMLStreamAdapter,
-	#category : #'XML-Parser-Streams'
+	#name : 'XMLReadStreamAdapter',
+	#superclass : 'XMLStreamAdapter',
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLReadStreamAdapter class >> onIfBinaryOrExternal: aStream [
 	^ aStream isXMLBinaryOrExternalStream
 		ifTrue: [self on: aStream]
 		ifFalse: [nil]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLReadStreamAdapter >> atEnd [
 	^ stream atEnd
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLReadStreamAdapter >> contents [
 	| oldPosition contents |
 
@@ -30,19 +32,19 @@ XMLReadStreamAdapter >> contents [
 	^ contents.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLReadStreamAdapter >> newWriteStream [
 	^ (self writeStreamCollectionClass new: 128) writeStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLReadStreamAdapter >> next [
 	stream atEnd
 		ifTrue: [^ nil]
 		ifFalse: [^ stream next]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLReadStreamAdapter >> next: anInteger [
 	| writeStream i |
 
@@ -56,14 +58,14 @@ XMLReadStreamAdapter >> next: anInteger [
 	^ writeStream contents.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLReadStreamAdapter >> peek [
 	stream atEnd
 		ifTrue: [^ nil]
 		ifFalse: [^ stream peek]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLReadStreamAdapter >> peekFor: anObject [
 	(self atEnd not
 		and: [self peek = anObject])
@@ -73,22 +75,22 @@ XMLReadStreamAdapter >> peekFor: anObject [
 		ifFalse: [^ false]
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLReadStreamAdapter >> position [
 	^ stream position
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLReadStreamAdapter >> position: anInteger [
 	stream position: anInteger
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLReadStreamAdapter >> reset [
 	stream reset
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLReadStreamAdapter >> skip: anInteger [
 	"only supports skipping forwards"
 	1 to: anInteger do: [:i |
@@ -97,7 +99,7 @@ XMLReadStreamAdapter >> skip: anInteger [
 		self next]
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLReadStreamAdapter >> skipSeparators [
 	"we use #isXMLWhitespace instead of the narrower, XML-specific
 	#isXMLSeparator, because this class supports non-XML input too"
@@ -106,7 +108,7 @@ XMLReadStreamAdapter >> skipSeparators [
 		whileTrue: [self next]
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLReadStreamAdapter >> skipTo: anObject [
 	[self atEnd]
 		whileFalse: [
@@ -115,7 +117,7 @@ XMLReadStreamAdapter >> skipTo: anObject [
 	^ false.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLReadStreamAdapter >> upTo: anObject [
 	| writeStream next |
 
@@ -126,7 +128,7 @@ XMLReadStreamAdapter >> upTo: anObject [
 	^ writeStream contents.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLReadStreamAdapter >> upToEnd [
 	| writeStream |
 
@@ -136,7 +138,7 @@ XMLReadStreamAdapter >> upToEnd [
 	^ writeStream contents.
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLReadStreamAdapter >> writeStreamCollectionClass [
 	self isBinary
 		ifTrue: [^ ByteArray]

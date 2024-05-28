@@ -2,17 +2,19 @@
 A stream converter for ASCII.
 "
 Class {
-	#name : #XMLASCIIStreamConverter,
-	#superclass : #XMLStatelessStreamConverter,
-	#category : #'XML-Parser-Streams'
+	#name : 'XMLASCIIStreamConverter',
+	#superclass : 'XMLStatelessStreamConverter',
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLASCIIStreamConverter class >> basicEncodingNames [
 	^ #('ASCII' 'US-ASCII' 'USASCII')
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 XMLASCIIStreamConverter >> nextFromStream: aStream [
 	| byte |
 
@@ -24,7 +26,7 @@ XMLASCIIStreamConverter >> nextFromStream: aStream [
 	^ byte asCharacter.
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 XMLASCIIStreamConverter >> nextPut: aCharacter toStream: aStream [
 	| codePoint |
 

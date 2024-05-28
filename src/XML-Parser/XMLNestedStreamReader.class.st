@@ -4,8 +4,8 @@ This class represents a stream reader that implements pushBack: using nested str
 (The code in this class is optimized; refactor with care.)
 "
 Class {
-	#name : #XMLNestedStreamReader,
-	#superclass : #Object,
+	#name : 'XMLNestedStreamReader',
+	#superclass : 'Object',
 	#instVars : [
 		'stream',
 		'whenPoppedDo',
@@ -23,10 +23,12 @@ Class {
 		'LFCharacter',
 		'NullReadStream'
 	],
-	#category : #'XML-Parser-Streams'
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLNestedStreamReader class >> initialize [
 	"self initialize"
 
@@ -39,21 +41,21 @@ XMLNestedStreamReader class >> initialize [
 	NullReadStream := XMLNullReadStream new.
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNestedStreamReader class >> on: aStream [
 	^ self
 		on: aStream
 		readLimit: nil
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNestedStreamReader class >> on: aStream readLimit: anInteger [
 	^ self new
 		setStream: aStream
 		readLimit: anInteger
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNestedStreamReader >> atEnd [
 	peekChar
 		ifNotNil: [^ false].
@@ -66,20 +68,20 @@ XMLNestedStreamReader >> atEnd [
 	^ true.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNestedStreamReader >> atQuote [
 	^ self peek == $"
 		or: [peekChar == $']
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNestedStreamReader >> closeStream: aStream [
 	"must use respondsTo: to support streams only implementing the basic protocol"
 	(aStream respondsTo: #close)
 		ifTrue: [aStream close].
 ]
 
-{ #category : #closing }
+{ #category : 'closing' }
 XMLNestedStreamReader >> closeStreams [
 	"close the streams but do not evaluate their callbacks and
 	set the current stream to the null stream sending #closeStreams
@@ -91,7 +93,7 @@ XMLNestedStreamReader >> closeStreams [
 		whileTrue: [self closeStream: nestedStreams removeLast stream].
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 XMLNestedStreamReader >> convertFromEncoding: anEncodingName [
 	"Encoding attributes are ignored unless the stream is a converting adapter
 	that has a null/implicit converter.
@@ -111,7 +113,7 @@ XMLNestedStreamReader >> convertFromEncoding: anEncodingName [
 			self decodeStreamWithConverter: streamConverter]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNestedStreamReader >> currentColumnNumber [
 	"recording the start pos. of the line and subtracting it from the current
 	pos. is faster than an explicit column var that would need to be incremented
@@ -120,17 +122,17 @@ XMLNestedStreamReader >> currentColumnNumber [
 		ifNotNil: [currentPosition - currentLineStartPosition]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNestedStreamReader >> currentLineNumber [
 	^ currentLineNumber
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNestedStreamReader >> currentPosition [
 	^ currentPosition
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 XMLNestedStreamReader >> decodeStreamWithConverter: aStreamConverter [
 	stream isXMLConvertingStreamAdapter
 		ifTrue: [stream streamConverter: aStreamConverter]
@@ -141,7 +143,7 @@ XMLNestedStreamReader >> decodeStreamWithConverter: aStreamConverter [
 					streamConverter: aStreamConverter]
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 XMLNestedStreamReader >> detectEncoding [
 	stream isXMLConvertingStreamAdapter
 		ifTrue: [stream detectEncoding]
@@ -154,12 +156,12 @@ XMLNestedStreamReader >> detectEncoding [
 					self decodeStreamWithConverter: converter]]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNestedStreamReader >> errorNestingLimitExceeded [
 	XMLLimitException signal: 'Cannot further nest input streams'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNestedStreamReader >> errorReadLimitExceeded [
 	XMLLimitException signal:
 		'Security input read limit exceeded; ',
@@ -168,14 +170,14 @@ XMLNestedStreamReader >> errorReadLimitExceeded [
 		'to persistently change/disable it'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNestedStreamReader >> errorUnsupportedEncoding: anEncodingName [
 	XMLEncodingException
 		formatSignal: 'Encoding "{1}" is unsupported'
 		with: anEncodingName
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNestedStreamReader >> hasNextAfterPoppingStreamsAtEnd [
 	"always pop at least one stream, which makes the new current stream
 	the null stream if there aren't any nested streams"
@@ -188,44 +190,44 @@ XMLNestedStreamReader >> hasNextAfterPoppingStreamsAtEnd [
 	^ true.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNestedStreamReader >> hasPushedBackStreams [
 	^ nestedStreams size > 0
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNestedStreamReader >> isBinary [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNestedStreamReader >> isStream [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNestedStreamReader >> isXMLBinaryOrExternalStream [
 	^ self isBinary
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNestedStreamReader >> maxNestedStreams [
 	^ 32
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNestedStreamReader >> nestedStreamsAddLast: aPushedBackStream [
 	nestedStreams size >= self maxNestedStreams
 		ifTrue: [self errorNestingLimitExceeded].
 	nestedStreams addLast: aPushedBackStream.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNestedStreamReader >> newWriteStream [
 	^ (self writeStreamCollectionClass new: 128) writeStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNestedStreamReader >> next [
 	| nextChar |
 
@@ -273,7 +275,7 @@ XMLNestedStreamReader >> next [
 	^ nextChar.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNestedStreamReader >> next: anInteger [
 	| writeStream i |
 
@@ -287,17 +289,17 @@ XMLNestedStreamReader >> next: anInteger [
 	^ writeStream contents.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNestedStreamReader >> normalizedLineEndingChar [
 	^ normalizedLineEndingChar
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNestedStreamReader >> normalizedLineEndingChar: aCharacter [
 	normalizedLineEndingChar := aCharacter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNestedStreamReader >> peek [
 	peekChar
 		ifNotNil: [^ peekChar].
@@ -321,7 +323,7 @@ XMLNestedStreamReader >> peek [
 	^ peekChar.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNestedStreamReader >> peekFor: aCharacter [
 	(self atEnd not
 		and: [self peek = aCharacter])
@@ -331,7 +333,7 @@ XMLNestedStreamReader >> peekFor: aCharacter [
 		ifFalse: [^ false]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNestedStreamReader >> popCurrentStream [
 	| callbackOfPoppedStream |
 
@@ -356,7 +358,7 @@ XMLNestedStreamReader >> popCurrentStream [
 		ifNotNil: [callbackOfPoppedStream value].
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLNestedStreamReader >> printOn: aStream [
 	super printOn: aStream.
 
@@ -370,7 +372,7 @@ XMLNestedStreamReader >> printOn: aStream [
 		nextPut: $).
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLNestedStreamReader >> pushBack: aString [
 	aString size > 1
 		ifTrue: [^ self pushBackStream: aString readStream].
@@ -378,7 +380,7 @@ XMLNestedStreamReader >> pushBack: aString [
 		ifTrue: [self pushBackCharacter: (aString at: 1)]
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLNestedStreamReader >> pushBackCharacter: aCharacter [
 	self
 		pushBackStream: (XMLSingleCharacterReadStream on: aCharacter)
@@ -386,7 +388,7 @@ XMLNestedStreamReader >> pushBackCharacter: aCharacter [
 		isExternal: false
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLNestedStreamReader >> pushBackStream: aStream [
 	self
 		pushBackStream: aStream
@@ -394,7 +396,7 @@ XMLNestedStreamReader >> pushBackStream: aStream [
 		isExternal: false
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLNestedStreamReader >> pushBackStream: aStream whenPoppedDo: aBlock isExternal: aBoolean [
 	self nestedStreamsAddLast:
 		((isExternal
@@ -426,12 +428,12 @@ XMLNestedStreamReader >> pushBackStream: aStream whenPoppedDo: aBlock isExternal
 			currentLineStartPosition := 0].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNestedStreamReader >> readLimit [
 	^ readLimit
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLNestedStreamReader >> setStream: aStream readLimit: anInteger [
 	self stream: aStream.
 	isExternal := true.
@@ -443,7 +445,7 @@ XMLNestedStreamReader >> setStream: aStream readLimit: anInteger [
 	normalizedLineEndingChar := LFCharacter.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNestedStreamReader >> setStreamToNull [
 	stream := NullReadStream.
 	whenPoppedDo := nil.
@@ -451,7 +453,7 @@ XMLNestedStreamReader >> setStreamToNull [
 	and line number, so error messages will be accurate"
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLNestedStreamReader >> skip: anInteger [
 	1 to: anInteger do: [:i |
 		self atEnd
@@ -459,7 +461,7 @@ XMLNestedStreamReader >> skip: anInteger [
 		self next]
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLNestedStreamReader >> skipSeparators [
 	"This code is heavily optimized."
 
@@ -514,7 +516,7 @@ XMLNestedStreamReader >> skipSeparators [
 						ifFalse: [self errorReadLimitExceeded]]]]
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLNestedStreamReader >> skipTo: aCharacter [
 	[self atEnd]
 		whileFalse: [
@@ -523,12 +525,12 @@ XMLNestedStreamReader >> skipTo: aCharacter [
 	^ false.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNestedStreamReader >> stream [
 	^ stream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNestedStreamReader >> stream: aStream [
 	"if the stream is not already a decoding adapter,
 	then only assume it needs one if it's binary"
@@ -540,7 +542,7 @@ XMLNestedStreamReader >> stream: aStream [
 					ifNil: [aStream]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNestedStreamReader >> upTo: aCharacter [
 	| writeStream nextChar |
 
@@ -551,7 +553,7 @@ XMLNestedStreamReader >> upTo: aCharacter [
 	^ writeStream contents.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNestedStreamReader >> upToEnd [
 	| writeStream |
 
@@ -561,7 +563,7 @@ XMLNestedStreamReader >> upToEnd [
 	^ writeStream contents.
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLNestedStreamReader >> writeStreamCollectionClass [
 	^ String
 ]

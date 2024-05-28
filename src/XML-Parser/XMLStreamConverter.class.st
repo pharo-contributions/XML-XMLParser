@@ -6,8 +6,8 @@ Subclasses need to implement #nextFromStream: to use #basicNext on the argument 
 The class #basicEncodingNames method should return a basic list of names for the encoding handled by the class, and #byteOrderMarkBytes can return the bytes of a BOM if the encoding has one.
 "
 Class {
-	#name : #XMLStreamConverter,
-	#superclass : #Object,
+	#name : 'XMLStreamConverter',
+	#superclass : 'Object',
 	#classVars : [
 		'EncodingNamesAndClassesCache',
 		'PreferredClasses'
@@ -15,31 +15,33 @@ Class {
 	#classInstVars : [
 		'encodingNames'
 	],
-	#category : #'XML-Parser-Streams'
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLStreamConverter class >> abstractClass [
 	^ XMLStreamConverter
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLStreamConverter class >> basicByteOrderMarkBytes [
 	^ #[]
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLStreamConverter class >> basicCanConvertEncoding: anEncodingName [
 	^ self encodingNames includes: anEncodingName
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLStreamConverter class >> basicEncodingNames [
 	"encodingNames will have these names + upper/lowercase versions"
 	^ #()
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverter class >> byteOrderMark [
 	"avoid #asString and #newFrom: for GS portability"
 	^ String streamContents: [:stream |
@@ -47,12 +49,12 @@ XMLStreamConverter class >> byteOrderMark [
 			stream nextPut: each asCharacter]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverter class >> byteOrderMarkBytes [
 	^ self basicByteOrderMarkBytes asByteArray
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamConverter class >> canConvertEncoding: anEncodingName [
 	"Returns true if the receiver can decode the encoding anEncodingName.
 	Lookup is case-insensitive."
@@ -65,7 +67,7 @@ XMLStreamConverter class >> canConvertEncoding: anEncodingName [
 		and: [self basicCanConvertEncoding: anEncodingName asLowercase]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverter class >> classForEncoding: anEncodingName [
 	"avoid #at:ifAbsent: and #at:ifAbsentPut: so the cache isn't locked
 	during the class lookup, which could stall other processes"
@@ -79,37 +81,37 @@ XMLStreamConverter class >> classForEncoding: anEncodingName [
 		put: (self findClassForEncoding: anEncodingName).
 ]
 
-{ #category : #convenience }
+{ #category : 'convenience' }
 XMLStreamConverter class >> decode: aStringOrByteArray [
 	^ self new decode: aStringOrByteArray
 ]
 
-{ #category : #convenience }
+{ #category : 'convenience' }
 XMLStreamConverter class >> decodingOn: aReadStream [
 	^ self new decodingOn: aReadStream
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLStreamConverter class >> default [
 	^ self defaultClass new
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLStreamConverter class >> defaultClass [
 	^ XMLImplicitUTF8StreamConverter
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLStreamConverter class >> defaultEncoding [
 	^ self defaultClass primaryEncodingName
 ]
 
-{ #category : #convenience }
+{ #category : 'convenience' }
 XMLStreamConverter class >> encode: aString [
 	^ self new encode: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverter class >> encodingNames [
 	^ encodingNames
 		ifNil: [
@@ -125,14 +127,14 @@ XMLStreamConverter class >> encodingNames [
 					yourself]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverter class >> encodingNames: aCollectionOrNil [
 	encodingNames :=
 		aCollectionOrNil
 			ifNotNil: [aCollectionOrNil asSet]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLStreamConverter class >> encodingNamesAndClassesCache [
 	"a class variable so it's shared by all subclasses, but lazy initialized
 	so it isn't initialized unless needed"
@@ -140,12 +142,12 @@ XMLStreamConverter class >> encodingNamesAndClassesCache [
 		ifNil: [EncodingNamesAndClassesCache := XMLKeyValueCache maxSize: 128]
 ]
 
-{ #category : #convenience }
+{ #category : 'convenience' }
 XMLStreamConverter class >> encodingOn: aReadStream [
 	^ self new encodingOn: aReadStream
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLStreamConverter class >> findClassForEncoding: anEncodingName [
 	"check preferred classes first"
 	self preferredClasses do: [:each |
@@ -162,7 +164,7 @@ XMLStreamConverter class >> findClassForEncoding: anEncodingName [
 	^ nil.
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLStreamConverter class >> initialize [
 	"self initialize"
 
@@ -171,33 +173,33 @@ XMLStreamConverter class >> initialize [
 	EncodingNamesAndClassesCache := nil.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamConverter class >> isAbstractClass [
 	^ self == self abstractClass
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamConverter class >> isDefaultClass [
 	^ self == self defaultClass
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamConverter class >> isImplicit [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamConverter class >> isNonPreferredClassForEncoding: anEncoding [
 	^ self isPreferredClass not
 		and: [self canConvertEncoding: anEncoding]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamConverter class >> isPreferredClass [
 	^ self preferredClasses includes: self
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLStreamConverter class >> newForEncoding: anEncodingName [
 	(self classForEncoding: anEncodingName)
 		ifNil: [^ self null]
@@ -205,17 +207,17 @@ XMLStreamConverter class >> newForEncoding: anEncodingName [
 			^ converterClass new initializeForEncoding: anEncodingName]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLStreamConverter class >> null [
 	^ self nullClass new
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLStreamConverter class >> nullClass [
 	^ XMLNullStreamConverter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverter class >> preferredClasses [
 	"A class var because it should be shared by all subclasses.
 	Assign the fully initialized object with #yourself to avoid
@@ -233,26 +235,26 @@ XMLStreamConverter class >> preferredClasses [
 					yourself]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverter class >> preferredClasses: aCollectionOrNil [
 	PreferredClasses :=
 		aCollectionOrNil
 			ifNotNil: [aCollectionOrNil asSet]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverter class >> primaryEncodingName [
 	^ self basicEncodingNames
 		at: 1
 		ifAbsent: ['']
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLStreamConverter >> asXMLStreamConverter [
 	^ self
 ]
 
-{ #category : #convenience }
+{ #category : 'convenience' }
 XMLStreamConverter >> decode: aStringOrByteArray [
 	^ (XMLDecodingReadStreamAdapter
 		on: aStringOrByteArray readStream
@@ -260,26 +262,26 @@ XMLStreamConverter >> decode: aStringOrByteArray [
 			contents
 ]
 
-{ #category : #convenience }
+{ #category : 'convenience' }
 XMLStreamConverter >> decodingOn: aReadStream [
 	^ XMLDecodingReadStreamAdapter
 		on: aReadStream
 		streamConverter: self
 ]
 
-{ #category : #convenience }
+{ #category : 'convenience' }
 XMLStreamConverter >> encode: aString [
 	^ (self encodingOn: (ByteArray new: aString size) writeStream)
 		nextPutAll: aString;
 		contents
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLStreamConverter >> encoding [
 	^ self class primaryEncodingName
 ]
 
-{ #category : #convenience }
+{ #category : 'convenience' }
 XMLStreamConverter >> encodingOn: aWriteStream [
 	^ (XMLEncodingWriteStreamAdapter
 		on: aWriteStream
@@ -288,14 +290,14 @@ XMLStreamConverter >> encodingOn: aWriteStream [
 			yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLStreamConverter >> errorBadCharacterEncoding [
 	XMLEncodingException
 		formatSignal: 'Invalid {1} encoding for character'
 		with: self encoding
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLStreamConverter >> errorBadCharacterValue: aValue [
 	XMLEncodingException
 		formatSignal: 'Invalid character 0x{1} for {2} encoding'
@@ -303,42 +305,42 @@ XMLStreamConverter >> errorBadCharacterValue: aValue [
 		with: self encoding
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLStreamConverter >> initializeForEncoding: anEncodingName [
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamConverter >> isDefault [
 	^ self class isDefaultClass
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamConverter >> isImplicit [
 	^ self class isImplicit
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStreamConverter >> isNull [
 	^ false
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 XMLStreamConverter >> nextFromStream: aStream [
 	self subclassResponsibility
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 XMLStreamConverter >> nextPut: aCharacter toStream: aStream [
 	self subclassResponsibility
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 XMLStreamConverter >> nextPutByteOrderMarkToStream: aStream [
 	self class byteOrderMarkBytes do: [:each |
 		aStream nextPut: each]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLStreamConverter >> printOn: aStream [
 	super printOn: aStream.
 
@@ -348,7 +350,7 @@ XMLStreamConverter >> printOn: aStream [
 		nextPut: $).
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLStreamConverter >> printWithConvertableStream: aConvertableStream on: aPrintStream [
 	aPrintStream
 		print: self;

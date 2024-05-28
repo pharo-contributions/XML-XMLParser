@@ -2,15 +2,17 @@
 This class allocates namespace scopes with a stack. Sending #enterScope pushes a new scope onto the stack that inherits all mappings from the previous (enclosing) scope, and #exitScop pops it off.
 "
 Class {
-	#name : #XMLNamespaceScopeAllocator,
-	#superclass : #Object,
+	#name : 'XMLNamespaceScopeAllocator',
+	#superclass : 'Object',
 	#instVars : [
 		'scopes'
 	],
-	#category : #'XML-Parser-Namespaces'
+	#category : 'XML-Parser-Namespaces',
+	#package : 'XML-Parser',
+	#tag : 'Namespaces'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNamespaceScopeAllocator >> currentScope [
 	| totalScopes |
 
@@ -19,7 +21,7 @@ XMLNamespaceScopeAllocator >> currentScope [
 		ifFalse: [self newEmptyScope]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNamespaceScopeAllocator >> currentScope: aScope [
 	scopes size > 0
 		ifTrue: [
@@ -29,34 +31,34 @@ XMLNamespaceScopeAllocator >> currentScope: aScope [
 		ifFalse: [scopes addLast: aScope]
 ]
 
-{ #category : #allocating }
+{ #category : 'allocating' }
 XMLNamespaceScopeAllocator >> enterScope [
 	^ scopes addLast: self currentScope copy
 ]
 
-{ #category : #allocating }
+{ #category : 'allocating' }
 XMLNamespaceScopeAllocator >> exitScope [
 	^ scopes removeLast
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNamespaceScopeAllocator >> hasCurentScope [
 	^ scopes isNotEmpty
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLNamespaceScopeAllocator >> initialize [
 	super initialize.
 
 	scopes := OrderedCollection new: 10.
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNamespaceScopeAllocator >> newEmptyScope [
 	^ XMLNamespaceScope new
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLNamespaceScopeAllocator >> printOn: aStream [
 	super printOn: aStream.
 
@@ -68,7 +70,7 @@ XMLNamespaceScopeAllocator >> printOn: aStream [
 				nextPut: $)].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNamespaceScopeAllocator >> scopes [
 	^ scopes
 ]

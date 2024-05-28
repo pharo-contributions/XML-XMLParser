@@ -2,45 +2,47 @@
 This class stores the undecoded resolved replacement of an external parsed entity as well as its likely encoding.
 "
 Class {
-	#name : #DTDUndecodedResolvedExternalParsedEntityReplacement,
-	#superclass : #DTDResolvedExternalParsedEntityReplacement,
+	#name : 'DTDUndecodedResolvedExternalParsedEntityReplacement',
+	#superclass : 'DTDResolvedExternalParsedEntityReplacement',
 	#instVars : [
 		'rawContents',
 		'encoding'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDUndecodedResolvedExternalParsedEntityReplacement class >> rawContents: aString [
 	^ self
 		rawContents: aString
 		encoding: ''
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDUndecodedResolvedExternalParsedEntityReplacement class >> rawContents: aString encoding: anEncodingName [
 	^ self new
 		setRawContents: aString
 		encoding: anEncodingName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDUndecodedResolvedExternalParsedEntityReplacement >> contents [
 	^ self readStream upToEnd
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDUndecodedResolvedExternalParsedEntityReplacement >> encoding [
 	^ encoding
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDUndecodedResolvedExternalParsedEntityReplacement >> isEmpty [
 	^ self rawContents isEmpty
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 DTDUndecodedResolvedExternalParsedEntityReplacement >> printOn: aStream [
 	super printOn: aStream.
 
@@ -50,19 +52,19 @@ DTDUndecodedResolvedExternalParsedEntityReplacement >> printOn: aStream [
 		nextPut: $)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDUndecodedResolvedExternalParsedEntityReplacement >> rawContents [
 	^ rawContents
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDUndecodedResolvedExternalParsedEntityReplacement >> readStream [
 	^ XMLDecodingReadStreamAdapter
 		on: self rawContents readStream
 		streamConverter: self encoding asXMLStreamConverter
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DTDUndecodedResolvedExternalParsedEntityReplacement >> setRawContents: aString encoding: anEncodingName [
 	rawContents := aString.
 	encoding := anEncodingName

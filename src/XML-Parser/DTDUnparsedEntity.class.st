@@ -2,17 +2,19 @@
 A class for unparsed entities. These should never be directly referenced in content with the &name; syntax, but can be named in values of ENTITY and ENTITIES attributes.
 "
 Class {
-	#name : #DTDUnparsedEntity,
-	#superclass : #DTDEntity,
+	#name : 'DTDUnparsedEntity',
+	#superclass : 'DTDEntity',
 	#instVars : [
 		'ndata',
 		'publicID',
 		'systemID'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDUnparsedEntity class >> name: aName publicID: aPublicID systemID: aSystemID ndata: aNotationName [
 	^ self new
 		setName: aName
@@ -21,37 +23,37 @@ DTDUnparsedEntity class >> name: aName publicID: aPublicID systemID: aSystemID n
 		ndata: aNotationName
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDUnparsedEntity >> isUnparsed [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDUnparsedEntity >> ndata [
 
 	^ ndata ifNil: [ ndata := '' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDUnparsedEntity >> ndata: aNotationName [
 
 	ndata := aNotationName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDUnparsedEntity >> publicID [
 
 	^ publicID ifNil: [ publicID := '' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDUnparsedEntity >> publicID: aPublicID [
 
 	publicID := aPublicID
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DTDUnparsedEntity >> setName: aName publicID: aPublicID systemID: aSystemID ndata: aNotationName [
 
 	name := aName.
@@ -60,13 +62,13 @@ DTDUnparsedEntity >> setName: aName publicID: aPublicID systemID: aSystemID ndat
 	ndata := aNotationName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDUnparsedEntity >> systemID [
 
 	^ systemID ifNil: [ systemID := '' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDUnparsedEntity >> systemID: aSystemID [
 
 	systemID := aSystemID

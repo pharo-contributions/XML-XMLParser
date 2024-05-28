@@ -2,64 +2,66 @@
 This class is a null read stream that is already #atEnd and also makes sending #atEnd after #close or sending #close more than once safe, which is needed for the XMLNestedStreamReader null stream.
 "
 Class {
-	#name : #XMLNullReadStream,
-	#superclass : #XMLAbstractReadStream,
+	#name : 'XMLNullReadStream',
+	#superclass : 'XMLAbstractReadStream',
 	#classInstVars : [
 		'instance'
 	],
-	#category : #'XML-Parser-Streams'
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLNullReadStream class >> initialize [
 	"self initialize"
 
 	instance := self basicOn: nil
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNullReadStream class >> new [
 	^ instance
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNullReadStream class >> on: anObject [
 	^ instance
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNullReadStream >> atEnd [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNullReadStream >> contents [
 	^ String new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNullReadStream >> next [
 	^ nil
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLNullReadStream >> on: anObject [
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNullReadStream >> peek [
 	^ nil
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLNullReadStream >> position [
 	^ 0
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLNullReadStream >> position: anInteger [
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLNullReadStream >> reset [
 ]

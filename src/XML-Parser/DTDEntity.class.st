@@ -2,74 +2,76 @@
 This is an abstract base class for internal and external parsed entities with replacements that can be inserted into an XML document.
 "
 Class {
-	#name : #DTDEntity,
-	#superclass : #Object,
+	#name : 'DTDEntity',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'uri'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDEntity class >> name: aName [
 	^ self named: aName
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDEntity class >> named: aName [
 	^ self new name: aName
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 DTDEntity >> asReference [
 
 	^ String streamContents: [:stream | self printReferenceOn: stream]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDEntity >> isExternal [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDEntity >> isParameter [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDEntity >> isStandaloneExternal [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDEntity >> isUnparsed [
 
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDEntity >> name [
 
 	^ name ifNil: [name := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDEntity >> name: aName [
 
 	name := aName
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 DTDEntity >> printNameOn: aStream [
 
 	aStream nextPutAll: self name
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 DTDEntity >> printOn: aStream [
 
 	super printOn: aStream.
@@ -79,7 +81,7 @@ DTDEntity >> printOn: aStream [
 	aStream nextPut: $)
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 DTDEntity >> printReferenceOn: aStream [
 
 	aStream
@@ -88,7 +90,7 @@ DTDEntity >> printReferenceOn: aStream [
 		nextPut: $;
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDEntity >> referencePrefix [
 
 	^ self isParameter
@@ -96,13 +98,13 @@ DTDEntity >> referencePrefix [
 		  ifFalse: [ $& ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDEntity >> uri [
 
 	^ uri ifNil: [ uri := '' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDEntity >> uri: aURIString [
 
 	uri := aURIString

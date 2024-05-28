@@ -2,15 +2,17 @@
 A write stream adapter for writing node content with whitespace insertion if needed between writes.
 "
 Class {
-	#name : #XMLNodeContentWriteStreamAdapter,
-	#superclass : #XMLWriteStreamAdapter,
+	#name : 'XMLNodeContentWriteStreamAdapter',
+	#superclass : 'XMLWriteStreamAdapter',
 	#instVars : [
 		'lastChar'
 	],
-	#category : #'XML-Parser-Streams'
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNodeContentWriteStreamAdapter >> insertSpaceBefore: aCharacter [
 	(lastChar == nil
 		or: [lastChar isXMLWhitespace
@@ -18,14 +20,14 @@ XMLNodeContentWriteStreamAdapter >> insertSpaceBefore: aCharacter [
 		ifFalse: [stream nextPut: SpaceCharacter]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeContentWriteStreamAdapter >> nextPut: aCharacter [
 	self insertSpaceBefore: aCharacter.
 	stream nextPut: aCharacter.
 	^ lastChar := aCharacter.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeContentWriteStreamAdapter >> nextPutAll: aString [
 	aString size > 0 "optimization"
 		ifTrue: [

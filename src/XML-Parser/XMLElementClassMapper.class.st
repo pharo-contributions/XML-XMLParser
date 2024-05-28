@@ -2,12 +2,14 @@
 This is a base class for element class mappers. Subclasses need to implement the abstract methods to register and lookup classes mapped to element names, namespace URIs, and attributes.
 "
 Class {
-	#name : #XMLElementClassMapper,
-	#superclass : #Object,
-	#category : #'XML-Parser-Utils'
+	#name : 'XMLElementClassMapper',
+	#superclass : 'Object',
+	#category : 'XML-Parser-Utils',
+	#package : 'XML-Parser',
+	#tag : 'Utils'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementClassMapper >> camelCasedNameFromClassNameSegments: aNameSegmentCollection [
 	^ String streamContents: [:stream |
 		aNameSegmentCollection withIndexDo: [:each :i |
@@ -17,14 +19,14 @@ XMLElementClassMapper >> camelCasedNameFromClassNameSegments: aNameSegmentCollec
 					ifFalse: [each asLowercase])]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementClassMapper >> classForElement: aQualifiedName [
 	^ self
 		classForElement: aQualifiedName
 		ifNone: [nil]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementClassMapper >> classForElement: aQualifiedName attributes: anAssociationCollection [
 	^ self
 		classForElement: aQualifiedName
@@ -32,17 +34,17 @@ XMLElementClassMapper >> classForElement: aQualifiedName attributes: anAssociati
 		ifNone: [nil]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementClassMapper >> classForElement: aQualifiedName attributes: anAssociationCollection ifNone: aBlock [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementClassMapper >> classForElement: aQualifiedName ifNone: aBlock [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI [
 	^ self
 		classForElement: aQualifiedName
@@ -50,7 +52,7 @@ XMLElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI [
 		ifNone: [nil]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI attributes: anAssociationCollection [
 	^ self
 		classForElement: aQualifiedName
@@ -59,17 +61,17 @@ XMLElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI attr
 		ifNone: [nil]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI attributes: anAssociationCollection ifNone: aBlock [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI ifNone: aBlock [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI localName: aLocalName attributes: anAssociationCollection [
 	^ self
 		classForElement: aQualifiedName
@@ -79,12 +81,12 @@ XMLElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI loca
 		ifNone: [nil]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementClassMapper >> classForElement: aQualifiedName namespaceURI: aURI localName: aLocalName attributes: anAssociationCollection ifNone: aBlock [
 	self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementClassMapper >> classNameFrom: aClass withoutIgnorableSuffixes: aSuffixCollection [
 	| className |
 
@@ -95,7 +97,7 @@ XMLElementClassMapper >> classNameFrom: aClass withoutIgnorableSuffixes: aSuffix
 	^ className.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementClassMapper >> classNameSegmentsFrom: aString [
 	| nameSegments startIndex |
 
@@ -127,7 +129,7 @@ XMLElementClassMapper >> classNameSegmentsFrom: aString [
 	^ nameSegments.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementClassMapper >> hyphenatedNameFromClassNameSegments: aNameSegmentCollection [
 	^ String streamContents: [:stream |
 		aNameSegmentCollection
@@ -135,7 +137,7 @@ XMLElementClassMapper >> hyphenatedNameFromClassNameSegments: aNameSegmentCollec
 			separatedBy: [stream nextPut: $-]]
 ]
 
-{ #category : #mapping }
+{ #category : 'mapping' }
 XMLElementClassMapper >> mapAllMatchingElementsToClass: aClass ignoringSuffixes: aSuffixCollection [
 	| classNameWithoutSuffixes classNameSegments totalClassNameSegments |
 
@@ -168,7 +170,7 @@ XMLElementClassMapper >> mapAllMatchingElementsToClass: aClass ignoringSuffixes:
 		toClass: aClass.
 ]
 
-{ #category : #mapping }
+{ #category : 'mapping' }
 XMLElementClassMapper >> mapAllMatchingElementsToClasses: aClassCollection ignoringSuffixes: aSuffixCollection [
 	aClassCollection do: [:each |
 		self
@@ -176,27 +178,27 @@ XMLElementClassMapper >> mapAllMatchingElementsToClasses: aClassCollection ignor
 			ignoringSuffixes: aSuffixCollection]
 ]
 
-{ #category : #mapping }
+{ #category : 'mapping' }
 XMLElementClassMapper >> mapElement: anElement attributeSpec: anAttributeSpec toClass: aClass [
 	self subclassResponsibility
 ]
 
-{ #category : #mapping }
+{ #category : 'mapping' }
 XMLElementClassMapper >> mapElement: anElement namespaceURI: aURI attributeSpec: anAttributeSpec toClass: aClass [
 	self subclassResponsibility
 ]
 
-{ #category : #mapping }
+{ #category : 'mapping' }
 XMLElementClassMapper >> mapElement: anElement namespaceURI: aURI toClass: aClass [
 	self subclassResponsibility
 ]
 
-{ #category : #mapping }
+{ #category : 'mapping' }
 XMLElementClassMapper >> mapElement: anElement toClass: aClass [
 	self subclassResponsibility
 ]
 
-{ #category : #mapping }
+{ #category : 'mapping' }
 XMLElementClassMapper >> mapElements: anElementCollection namespaceURI: aNamespaceURI toClass: aClass [
 	anElementCollection do: [:each |
 		self
@@ -205,7 +207,7 @@ XMLElementClassMapper >> mapElements: anElementCollection namespaceURI: aNamespa
 			toClass: aClass]
 ]
 
-{ #category : #mapping }
+{ #category : 'mapping' }
 XMLElementClassMapper >> mapElements: anElementCollection toClass: aClass [
 	anElementCollection do: [:each |
 		self
@@ -213,14 +215,14 @@ XMLElementClassMapper >> mapElements: anElementCollection toClass: aClass [
 			toClass: aClass]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementClassMapper >> nameFromClassNameSegments: aNameSegmentCollection [
 	"avoid join: for Squeak/GS portability"
 	^ String streamContents: [:stream |
 		aNameSegmentCollection do: [:each | stream nextPutAll: each]]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementClassMapper >> underscoredNameFromClassNameSegments: aNameSegmentCollection [
 	^ String streamContents: [:stream |
 		aNameSegmentCollection

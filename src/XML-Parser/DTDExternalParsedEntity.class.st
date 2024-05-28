@@ -4,16 +4,18 @@ This is an abstract base class for external parsed entities with external replac
 The external replacements are resolved lazily the first time #replacement or #replacementStream is sent.
 "
 Class {
-	#name : #DTDExternalParsedEntity,
-	#superclass : #DTDParsedEntity,
+	#name : 'DTDExternalParsedEntity',
+	#superclass : 'DTDParsedEntity',
 	#instVars : [
 		'unresolvedReplacement',
 		'resolvedReplacement'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDExternalParsedEntity class >> name: aName resolver: aResolver publicID: aPublicID systemID: aSystemID baseURI: aBaseURIString [
 	^ self new
 		setName: aName
@@ -25,25 +27,25 @@ DTDExternalParsedEntity class >> name: aName resolver: aResolver publicID: aPubl
 				baseURI: aBaseURIString)
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDExternalParsedEntity >> hasReplacement [
 
 	^ self resolvedReplacement isNotEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDExternalParsedEntity >> hasUnresolvedReplacement [
 
 	^ self unresolvedReplacement isNotNil
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDExternalParsedEntity >> isExternal [
 
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 DTDExternalParsedEntity >> printNameOn: aStream [
 
 	aStream
@@ -53,52 +55,52 @@ DTDExternalParsedEntity >> printNameOn: aStream [
 	super printNameOn: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalParsedEntity >> replacement [
 
 	^ self resolvedReplacement contents
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalParsedEntity >> replacementStream [
 
 	^ self resolvedReplacement readStream
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 DTDExternalParsedEntity >> resolveUnresolvedReplacement [
 
 	self hasUnresolvedReplacement ifTrue: [
 		self unresolvedReplacement resolveForExternalEntity: self ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalParsedEntity >> resolvedReplacement [
 
 	self resolveUnresolvedReplacement.
 	^ resolvedReplacement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalParsedEntity >> resolvedReplacement: aResolvedReplacement [
 
 	resolvedReplacement := aResolvedReplacement
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DTDExternalParsedEntity >> setName: aName unresolvedReplacement: anUnresolvedReplacement [
 
 	name := aName.
 	unresolvedReplacement := anUnresolvedReplacement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalParsedEntity >> unresolvedReplacement [
 
 	^ unresolvedReplacement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalParsedEntity >> unresolvedReplacement: anUnresolvedReplacement [
 
 	unresolvedReplacement := anUnresolvedReplacement

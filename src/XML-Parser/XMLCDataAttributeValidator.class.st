@@ -2,22 +2,24 @@
 This class validates CDATA attributes, which are not whitespace-normalized further.
 "
 Class {
-	#name : #XMLCDataAttributeValidator,
-	#superclass : #XMLAttributeValidator,
-	#category : #'XML-Parser-Validation'
+	#name : 'XMLCDataAttributeValidator',
+	#superclass : 'XMLAttributeValidator',
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLCDataAttributeValidator class >> standaloneExternalClass [
 	^ XMLStandaloneExternalCDataAttributeValidator
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLCDataAttributeValidator >> isCData [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLCDataAttributeValidator >> mustFurtherNormalizeAttributeValue [
 	^ false
 ]

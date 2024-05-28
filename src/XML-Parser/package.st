@@ -1,1 +1,1 @@
-Package { #name : #'XML-Parser' }
+Package { #name : 'XML-Parser' }

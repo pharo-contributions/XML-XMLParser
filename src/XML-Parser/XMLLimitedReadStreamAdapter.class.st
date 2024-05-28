@@ -2,55 +2,57 @@
 This class is a limited read stream adapter that will not read beyond a limit. Position changes are limited so you can only move forward as many positions as the limit allows, and moving backwards increases the number of objects that can be read.
 "
 Class {
-	#name : #XMLLimitedReadStreamAdapter,
-	#superclass : #XMLReadStreamAdapter,
+	#name : 'XMLLimitedReadStreamAdapter',
+	#superclass : 'XMLReadStreamAdapter',
 	#instVars : [
 		'limit'
 	],
-	#category : #'XML-Parser-Streams'
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLLimitedReadStreamAdapter class >> defaultLimit [
 	^ 1014
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLLimitedReadStreamAdapter class >> on: aStream [
 	^ self
 		on: aStream
 		limit: self defaultLimit
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLLimitedReadStreamAdapter class >> on: aStream limit: aLimit [
 	^ (self basicOn: aStream)
 		limit: aLimit
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLLimitedReadStreamAdapter >> atEnd [
 	^ stream atEnd
 		or: [limit <= 0]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLLimitedReadStreamAdapter >> atLimitedEnd [
 	^ limit <= 0
 		and: [stream atEnd not]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLLimitedReadStreamAdapter >> limit [
 	^ limit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLLimitedReadStreamAdapter >> limit: anInteger [
 	limit := anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLLimitedReadStreamAdapter >> next [
 	(stream atEnd
 		or: [limit <= 0])
@@ -60,7 +62,7 @@ XMLLimitedReadStreamAdapter >> next [
 			^ stream next]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLLimitedReadStreamAdapter >> peek [
 	(stream atEnd
 		or: [limit <= 0])
@@ -68,7 +70,7 @@ XMLLimitedReadStreamAdapter >> peek [
 		ifFalse: [^ stream peek]
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLLimitedReadStreamAdapter >> position: anInteger [
 	| netPosition |
 
@@ -81,7 +83,7 @@ XMLLimitedReadStreamAdapter >> position: anInteger [
 			stream position: anInteger]
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLLimitedReadStreamAdapter >> reset [
 	| oldPosition |
 

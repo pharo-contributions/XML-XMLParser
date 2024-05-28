@@ -2,19 +2,21 @@
 A simple cross-platform interface for finding classes that may not be in the image.
 "
 Class {
-	#name : #XMLClassFinder,
-	#superclass : #Object,
-	#category : #'XML-Parser-Utils'
+	#name : 'XMLClassFinder',
+	#superclass : 'Object',
+	#category : 'XML-Parser-Utils',
+	#package : 'XML-Parser',
+	#tag : 'Utils'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLClassFinder class >> classNamed: aClassName [
 	^ self
 		classNamed: aClassName
 		ifAbsent: [nil]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLClassFinder class >> classNamed: aClassName ifAbsent: aBlock [
 	"'self environment at:' is the proper way to get a class that may not
 	exist, not 'Smalltalk at:', 'Smalltalk globals at:' or '#ClassName asClass'
@@ -24,7 +26,7 @@ XMLClassFinder class >> classNamed: aClassName ifAbsent: aBlock [
 		ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLClassFinder class >> classNamed: aClassName ifPresent: aBlock [
 	^ aBlock cull:
 		(self
@@ -32,7 +34,7 @@ XMLClassFinder class >> classNamed: aClassName ifPresent: aBlock [
 			ifAbsent: [^ nil])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLClassFinder class >> classNamed: aClassName ifPresent: aPresentBlock ifAbsent: anAbsentBlock [
 	^ aPresentBlock cull:
 		(self
@@ -40,7 +42,7 @@ XMLClassFinder class >> classNamed: aClassName ifPresent: aPresentBlock ifAbsent
 			ifAbsent: [^ anAbsentBlock value])
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLClassFinder class >> hasClassNamed: aClassName [
 	self
 		classNamed: aClassName

@@ -2,40 +2,42 @@
 This is a base class for element validators.
 "
 Class {
-	#name : #XMLElementValidator,
-	#superclass : #Object,
+	#name : 'XMLElementValidator',
+	#superclass : 'Object',
 	#instVars : [
 		'element'
 	],
-	#category : #'XML-Parser-Validation'
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLElementValidator class >> element: anElement [
 	^ self new element: anElement
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLElementValidator >> asReadyElementValidator [
 	^ self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElementValidator >> atEnd [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementValidator >> element [
 	^ element
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementValidator >> element: anElement [
 	element := anElement
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementValidator >> errorUnexpected: aDescription [
 	XMLValidationException
 		formatSignal: 'Unexpected {1} in {2} type element <{3}>'
@@ -44,12 +46,12 @@ XMLElementValidator >> errorUnexpected: aDescription [
 		with: self element
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementValidator >> errorUnexpectedComment [
 	^ self errorUnexpected: 'comment'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementValidator >> errorUnexpectedElement: anElement [
 	XMLValidationException
 		formatSignal: 'Unexpected <{1}> element in {2} type element <{3}>'
@@ -58,42 +60,42 @@ XMLElementValidator >> errorUnexpectedElement: anElement [
 		with: self element
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementValidator >> errorUnexpectedPCData [
 	^ self errorUnexpected: 'PCDATA'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementValidator >> errorUnexpectedPI [
 	^ self errorUnexpected: 'processing instruction'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElementValidator >> ignoresWhitespace [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElementValidator >> isAny [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElementValidator >> isElementContent [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElementValidator >> isEmpty [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElementValidator >> isMixedContent [
 	^ false
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLElementValidator >> printOn: aStream [
 	super printOn: aStream.
 
@@ -103,27 +105,27 @@ XMLElementValidator >> printOn: aStream [
 		nextPutAll: '>)'.
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLElementValidator >> typeName [
 	self subclassResponsibility
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLElementValidator >> validateComment: aString [
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLElementValidator >> validateElementDeclaration [
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLElementValidator >> validatePCData: aString [
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLElementValidator >> validatePI: aTargetString data: aDataString [
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLElementValidator >> validateStartTag: anElement [
 ]

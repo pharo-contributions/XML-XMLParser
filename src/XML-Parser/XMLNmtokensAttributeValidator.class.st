@@ -2,22 +2,24 @@
 This class validates attributes with lists of Nmtoken name values separated by spaces.
 "
 Class {
-	#name : #XMLNmtokensAttributeValidator,
-	#superclass : #XMLNmtokenAttributeValidator,
-	#category : #'XML-Parser-Validation'
+	#name : 'XMLNmtokensAttributeValidator',
+	#superclass : 'XMLNmtokenAttributeValidator',
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLNmtokensAttributeValidator class >> standaloneExternalClass [
 	^ XMLStandaloneExternalNmtokensAttributeValidator
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNmtokensAttributeValidator >> isNmtokens [
 	^ true
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLNmtokensAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 	self
 		spaceSeparatedListValuesIn: aDefaultValue
@@ -26,7 +28,7 @@ XMLNmtokensAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 				ifFalse: [self errorInvalidDefaultAttributeValue: aDefaultValue]]
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLNmtokensAttributeValidator >> validateAttributeValue: aValue [
 	self
 		spaceSeparatedListValuesIn: aValue

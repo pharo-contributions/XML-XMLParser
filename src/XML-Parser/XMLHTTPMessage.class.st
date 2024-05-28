@@ -2,15 +2,17 @@
 This is an abstract class for HTTP messages.
 "
 Class {
-	#name : #XMLHTTPMessage,
-	#superclass : #XMLAbstractFactory,
+	#name : 'XMLHTTPMessage',
+	#superclass : 'XMLAbstractFactory',
 	#instVars : [
 		'content'
 	],
-	#category : #'XML-Parser-HTTP'
+	#category : 'XML-Parser-HTTP',
+	#package : 'XML-Parser',
+	#tag : 'HTTP'
 }
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLHTTPMessage >> addHeader: anAssociation [
 	self
 		headerValuesAt: anAssociation key
@@ -18,7 +20,7 @@ XMLHTTPMessage >> addHeader: anAssociation [
 	^ anAssociation.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessage >> content [
 	"Returns the response content as a String or ByteArray"
 
@@ -26,12 +28,12 @@ XMLHTTPMessage >> content [
 	^ content ifNil: [content := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessage >> content: aStringOrByteArray [
 	content := aStringOrByteArray
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessage >> contentCharset [
 	| contentType charset |
 
@@ -41,7 +43,7 @@ XMLHTTPMessage >> contentCharset [
 		ifFalse: [charset]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessage >> contentEncoding [
 	"Returns the non-identity content encoding compression schemes
 	in the order they were applied"
@@ -49,14 +51,14 @@ XMLHTTPMessage >> contentEncoding [
 	^ self encodingNamesFromHeaderValuesAt: 'Content-Encoding'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessage >> contentEncoding: aStringOrCollection [
 	self
 		encodingNamesFromHeaderValuesAt: 'Content-Encoding'
 		put: aStringOrCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessage >> contentLength [
 	^ XMLIntegerReader
 		readFrom:
@@ -66,7 +68,7 @@ XMLHTTPMessage >> contentLength [
 		withBase: 10
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessage >> contentLength: anInteger [
 	anInteger
 		ifNil: [
@@ -79,7 +81,7 @@ XMLHTTPMessage >> contentLength: anInteger [
 				put: anInteger asString]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessage >> contentType [
 	"Returns an XMLMIMEType object for the Content-Type header value"
 
@@ -89,7 +91,7 @@ XMLHTTPMessage >> contentType [
 			ifAbsent: [^ nil])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessage >> contentType: aMIMETypeOrString [
 	aMIMETypeOrString
 		ifNil: [
@@ -102,12 +104,12 @@ XMLHTTPMessage >> contentType: aMIMETypeOrString [
 				put: aMIMETypeOrString asString]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLHTTPMessage >> defaultContentCharset [
 	^ XMLHTTPMIMEType defaultCharset
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPMessage >> encodingNamesFromHeaderValuesAt: aKey [
 	"Returns the non-identity encoding compression schemes
 	in the order they were applied from the value(s) of the
@@ -130,7 +132,7 @@ XMLHTTPMessage >> encodingNamesFromHeaderValuesAt: aKey [
 	^ encodingNames.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPMessage >> encodingNamesFromHeaderValuesAt: aKey put: aStringOrCollection [
 	aStringOrCollection isEmpty
 		ifTrue: [
@@ -150,37 +152,37 @@ XMLHTTPMessage >> encodingNamesFromHeaderValuesAt: aKey put: aStringOrCollection
 									separatedBy: [stream nextPutAll: ', ']]])]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLHTTPMessage >> errorRemovingAbsentHeader: aKey [
 	XMLHTTPException
 		formatSignal: 'Cannot remove absent HTTP header "{1}" from message'
 		with: aKey
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPMessage >> hasContent [
 	^ self content isNotEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPMessage >> hasHeaders [
 	self headerKeysDo: [:key | ^ true].
 	^ false.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessage >> headerAt: aKey [
 	^ self
 		headerAt: aKey
 		ifAbsent: ['']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessage >> headerAt: aKey ifAbsent: aBlock [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessage >> headerAt: aKey ifAbsentPut: aBlock [
 	^ self
 		headerAt: aKey
@@ -190,12 +192,12 @@ XMLHTTPMessage >> headerAt: aKey ifAbsentPut: aBlock [
 				put: aBlock value]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessage >> headerAt: aKey put: aValue [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessage >> headerKeys [
 	| keys |
 
@@ -205,18 +207,18 @@ XMLHTTPMessage >> headerKeys [
 	^ keys.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLHTTPMessage >> headerKeysAndValuesDo: aTwoArgumentBlock [
 	self subclassResponsibility
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLHTTPMessage >> headerKeysDo: aBlock [
 	self headerKeysAndValuesDo: [:key :value |
 		aBlock value: key]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessage >> headerValuesAt: aKey [
 	| values |
 
@@ -227,17 +229,17 @@ XMLHTTPMessage >> headerValuesAt: aKey [
 	^ values.
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLHTTPMessage >> headerValuesAt: aKey add: aValue [
 	self subclassResponsibility
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLHTTPMessage >> headerValuesAt: aKey do: aBlock [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPMessage >> headers [
 	| headers |
 
@@ -247,7 +249,7 @@ XMLHTTPMessage >> headers [
 	^ headers.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPMessage >> includesHeaderAt: aKey [
 	self
 		headerAt: aKey
@@ -255,19 +257,19 @@ XMLHTTPMessage >> includesHeaderAt: aKey [
 	^ true.
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLHTTPMessage >> removeHeaderAt: aKey [
 	^ self
 		removeHeaderAt: aKey
 		ifAbsent: [self errorRemovingAbsentHeader: aKey]
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLHTTPMessage >> removeHeaderAt: aKey ifAbsent: aBlock [
 	self subclassResponsibility
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLHTTPMessage >> removeHeaders [
 	self headerKeys do: [:each |
 		self

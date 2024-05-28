@@ -2,8 +2,8 @@
 This is a base class for element nesters that are used by parser tokenizers and drivers to keep track of which elements are open while parsing and ensure they are properly nested.
 "
 Class {
-	#name : #XMLElementNester,
-	#superclass : #Object,
+	#name : 'XMLElementNester',
+	#superclass : 'Object',
 	#instVars : [
 		'openElements',
 		'rootElement',
@@ -12,10 +12,12 @@ Class {
 		'wasRootElementEnded',
 		'isInElement'
 	],
-	#category : #'XML-Parser-Drivers'
+	#category : 'XML-Parser-Drivers',
+	#package : 'XML-Parser',
+	#tag : 'Drivers'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementNester >> copiedScopedAttributes [
 	| copiedAttributes |
 
@@ -28,12 +30,12 @@ XMLElementNester >> copiedScopedAttributes [
 	^ copiedAttributes.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementNester >> currentElement [
 	^ self openElements xmlLastOrNil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementNester >> currentElement: anElement [
 	self hasOpenElements
 		ifTrue: [
@@ -43,17 +45,17 @@ XMLElementNester >> currentElement: anElement [
 		ifFalse: [self setExternalRootElement: anElement]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementNester >> currentScopedAttributes [
 	^ self scopedAttributes xmlLastOrNil
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementNester >> elementPrintLimit [
 	^ 5
 ]
 
-{ #category : #nesting }
+{ #category : 'nesting' }
 XMLElementNester >> endCurrentElement [
 	(self openElements
 		removeLast;
@@ -65,27 +67,27 @@ XMLElementNester >> endCurrentElement [
 		ifTrue: [self endScopedAttributes].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementNester >> endScopedAttributes [
 	scopedAttributes removeLast
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElementNester >> hasExternalRootElement [
 	^ hasExternalRootElement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElementNester >> hasOpenElement: anElement [
 	^ self openElements includes: anElement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElementNester >> hasOpenElements [
 	^ self openElements size > 0
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElementNester >> hasScopedAttributes [
 	"optimized to avoid lazy initialization"
 	scopedAttributes == nil
@@ -93,7 +95,7 @@ XMLElementNester >> hasScopedAttributes [
 	^ scopedAttributes size > 0.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLElementNester >> initialize [
 	super initialize.
 
@@ -103,22 +105,22 @@ XMLElementNester >> initialize [
 	isInElement := false.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElementNester >> isInElement [
 	^ isInElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementNester >> openElements [
 	^ openElements
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLElementNester >> openElementsDo: aBlock [
 	self openElements do: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLElementNester >> openElementsReverseDo: aBlock [
 	"implemented for XMLParserHTML so it's always safe to remove at
 	the end while scanning backwards"
@@ -126,14 +128,14 @@ XMLElementNester >> openElementsReverseDo: aBlock [
 			aBlock value: (self openElements at: i)]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLElementNester >> printElementsOn: aStream [
 	self
 		printElementsStartingAt: 1
 		on: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLElementNester >> printElementsStartingAt: aStart on: aStream [
 	self
 		printElementsStartingAt: aStart
@@ -141,7 +143,7 @@ XMLElementNester >> printElementsStartingAt: aStart on: aStream [
 		on: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLElementNester >> printElementsStartingAt: aStart stoppingAt: aStop on: aStream [
 	aStart
 		to: (aStop min: self openElements size)
@@ -158,7 +160,7 @@ XMLElementNester >> printElementsStartingAt: aStart stoppingAt: aStop on: aStrea
 		ifTrue: [aStream nextPutAll: '...'].
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLElementNester >> printOn: aStream [
 	super printOn: aStream.
 
@@ -171,12 +173,12 @@ XMLElementNester >> printOn: aStream [
 			aStream nextPut: $)].
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLElementNester >> printedElements [
 	^ String streamContents: [:stream | self printElementsOn: stream]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLElementNester >> printedElementsEnclosedBy: anElement [
 	^ String streamContents: [:stream |
 		self
@@ -184,19 +186,19 @@ XMLElementNester >> printedElementsEnclosedBy: anElement [
 			on: stream]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementNester >> rootElement [
 	^ rootElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementNester >> scopedAttributeAt: anAttribute [
 	^ self
 		scopedAttributeAt: anAttribute
 		ifAbsent: ['']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementNester >> scopedAttributeAt: anAttribute ifAbsent: aBlock [
 	^ self currentScopedAttributes
 		ifNil: [aBlock value]
@@ -206,19 +208,19 @@ XMLElementNester >> scopedAttributeAt: anAttribute ifAbsent: aBlock [
 				ifAbsent: aBlock]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementNester >> scopedAttributes [
 	^ scopedAttributes ifNil: [scopedAttributes := OrderedCollection new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementNester >> setExternalRootElement: anElement [
 	rootElement := anElement.
 	hasExternalRootElement := true.
 	isInElement := true.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementNester >> setScopedAttributesNamed: anAttributeCollection from: aDictionary [
 	| attributes |
 
@@ -232,7 +234,7 @@ XMLElementNester >> setScopedAttributesNamed: anAttributeCollection from: aDicti
 					put: value]]
 ]
 
-{ #category : #nesting }
+{ #category : 'nesting' }
 XMLElementNester >> startElement: anElement [
 	self openElements addLast: anElement.
 	isInElement
@@ -244,17 +246,17 @@ XMLElementNester >> startElement: anElement [
 		ifTrue: [self startScopedAttributes].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElementNester >> startScopedAttributes [
 	scopedAttributes addLast: self currentScopedAttributes
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementNester >> totalOpenElements [
 	^ self openElements size
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElementNester >> wasRootElementEnded [
 	^ wasRootElementEnded
 ]

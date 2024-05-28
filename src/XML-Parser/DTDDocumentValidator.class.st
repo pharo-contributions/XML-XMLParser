@@ -2,20 +2,22 @@
 This class validates documents using a DTD.
 "
 Class {
-	#name : #DTDDocumentValidator,
-	#superclass : #XMLDocumentValidator,
+	#name : 'DTDDocumentValidator',
+	#superclass : 'XMLDocumentValidator',
 	#instVars : [
 		'doctypeDefinition'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDDocumentValidator class >> doctypeDefinition: aDoctypeDefinition [
 	^ self new doctypeDefinition: aDoctypeDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDocumentValidator >> attributeValidatorsFor: anElement ifNone: aBlock [
 
 	^ self doctypeDefinition
@@ -23,19 +25,19 @@ DTDDocumentValidator >> attributeValidatorsFor: anElement ifNone: aBlock [
 		ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDocumentValidator >> doctypeDefinition [
 
 	^ doctypeDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDocumentValidator >> doctypeDefinition: aDoctypeDefinition [
 
 	doctypeDefinition := aDoctypeDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDDocumentValidator >> elementValidatorFor: anElement ifNone: aBlock [
 
 	^ self doctypeDefinition
@@ -43,7 +45,7 @@ DTDDocumentValidator >> elementValidatorFor: anElement ifNone: aBlock [
 		ifAbsent: aBlock
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDDocumentValidator >> errorInvalidRootElement: anElement [
 
 	XMLValidationException
@@ -53,19 +55,19 @@ DTDDocumentValidator >> errorInvalidRootElement: anElement [
 		with: anElement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDDocumentValidator >> hasAttributeValidators [
 
 	^ self doctypeDefinition hasAttributeValidators
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDDocumentValidator >> hasElementValidators [
 
 	^ self doctypeDefinition hasElementValidators
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 DTDDocumentValidator >> unvalidatedAttributes: anAttributeCollection inElement: anElement [
 
 	XMLValidationException
@@ -74,7 +76,7 @@ DTDDocumentValidator >> unvalidatedAttributes: anAttributeCollection inElement: 
 		with: anElement
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 DTDDocumentValidator >> unvalidatedElement: anElement [
 
 	XMLValidationException
@@ -82,14 +84,14 @@ DTDDocumentValidator >> unvalidatedElement: anElement [
 		with: anElement
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 DTDDocumentValidator >> validateIDReferences [
 
 	self doctypeDefinition hasElementIDReferences
 		ifTrue: [self doctypeDefinition elementIDValidator validateIDReferences]
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 DTDDocumentValidator >> validateRootElement: anElement [
 
 	(self doctypeDefinition hasRoot

@@ -3,17 +3,19 @@ This is class for <!NOTATION> declarations.
 
 "
 Class {
-	#name : #XMLNotationDeclaration,
-	#superclass : #XMLDeclarationNode,
+	#name : 'XMLNotationDeclaration',
+	#superclass : 'XMLDeclarationNode',
 	#instVars : [
 		'name',
 		'publicID',
 		'systemID'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNotationDeclaration class >> name: aName publicID: aPublicID systemID: aSystemID [
 	^ self new
 		name: aName;
@@ -21,37 +23,37 @@ XMLNotationDeclaration class >> name: aName publicID: aPublicID systemID: aSyste
 		systemID: aSystemID
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNotationDeclaration >> name [
 	^ name ifNil: [name := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNotationDeclaration >> name: aName [
 	name := aName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNotationDeclaration >> publicID [
 	^ publicID ifNil: [publicID := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNotationDeclaration >> publicID: aPublicID [
 	publicID := aPublicID
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNotationDeclaration >> systemID [
 	^ systemID ifNil: [systemID := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNotationDeclaration >> systemID: aSystemID [
 	systemID := aSystemID
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLNotationDeclaration >> writeXMLOn: aWriter [
 	aWriter notationDeclaration
 		name: self name;

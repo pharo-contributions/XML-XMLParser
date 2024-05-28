@@ -2,43 +2,45 @@
 This is a class for <!ELEMENT> declarations.
 "
 Class {
-	#name : #XMLElementDeclaration,
-	#superclass : #XMLDeclarationNode,
+	#name : 'XMLElementDeclaration',
+	#superclass : 'XMLDeclarationNode',
 	#instVars : [
 		'element',
 		'contentModel'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLElementDeclaration class >> element: anElementName contentModel: aContentModel [
 	^ self new
 		element: anElementName;
 		contentModel: aContentModel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementDeclaration >> contentModel [
 	^ contentModel ifNil: [contentModel := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementDeclaration >> contentModel: aContentModel [
 	contentModel := aContentModel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementDeclaration >> element [
 	^ element ifNil: [element := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElementDeclaration >> element: anElementName [
 	element := anElementName
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLElementDeclaration >> writeXMLOn: aWriter [
 	aWriter elementDeclaration
 		element: self element;

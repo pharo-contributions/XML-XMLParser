@@ -2,22 +2,24 @@
 This class validates attributes with lists of unparsed entity name values (that must be declared) separated by spaces.
 "
 Class {
-	#name : #XMLEntitiesAttributeValidator,
-	#superclass : #XMLEntityAttributeValidator,
-	#category : #'XML-Parser-Validation'
+	#name : 'XMLEntitiesAttributeValidator',
+	#superclass : 'XMLEntityAttributeValidator',
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLEntitiesAttributeValidator class >> standaloneExternalClass [
 	^ XMLStandaloneExternalEntitiesAttributeValidator
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLEntitiesAttributeValidator >> isEntities [
 	^ true
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLEntitiesAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 	self
 		spaceSeparatedListValuesIn: aDefaultValue
@@ -26,7 +28,7 @@ XMLEntitiesAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 				ifFalse: [self errorInvalidDefaultAttributeValue: aDefaultValue]]
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLEntitiesAttributeValidator >> validateAttributeValue: aValue [
 	self
 		spaceSeparatedListValuesIn: aValue

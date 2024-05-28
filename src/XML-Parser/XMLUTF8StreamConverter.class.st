@@ -2,34 +2,36 @@
 A stream converter for UTF-8 streams. (Rejects overlong encodings.)
 "
 Class {
-	#name : #XMLUTF8StreamConverter,
-	#superclass : #XMLUTFStreamConverter,
-	#category : #'XML-Parser-Streams'
+	#name : 'XMLUTF8StreamConverter',
+	#superclass : 'XMLUTFStreamConverter',
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLUTF8StreamConverter class >> basicByteOrderMarkBytes [
 	^ #[16rEF 16rBB 16rBF]
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLUTF8StreamConverter class >> basicEncodingNames [
 	^ #('UTF-8' 'UTF8')
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLUTF8StreamConverter >> errorOverlongCodePoint: aCodePoint [
 	XMLEncodingException
 		formatSignal: 'Illegal overlong UTF-8 encoding for U+{1} code point'
 		with: aCodePoint printStringHex
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLUTF8StreamConverter >> nextCodePointFromStream: aStream [
 	self shouldNotImplement
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 XMLUTF8StreamConverter >> nextFromStream: aStream [
 	"an attempt was made at porting Bjoern Hoehrmann's DFA-based decoder
 	(with transitions pre-multiplied by 16), but it was slightly slower
@@ -61,7 +63,7 @@ XMLUTF8StreamConverter >> nextFromStream: aStream [
 	^ codePoint asCharacter.
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLUTF8StreamConverter >> nextMultiByteCodePointStartingWith: aFirstByte fromStream: aStream [
 	| secondByte thirdByte codePoint |
 
@@ -122,7 +124,7 @@ XMLUTF8StreamConverter >> nextMultiByteCodePointStartingWith: aFirstByte fromStr
 	self errorBadCharacterEncoding.
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 XMLUTF8StreamConverter >> nextPut: aCharacter toStream: aStream [
 	| codePoint |
 

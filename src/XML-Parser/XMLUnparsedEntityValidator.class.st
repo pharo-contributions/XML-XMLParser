@@ -2,38 +2,40 @@
 Used by attribute validators to validate attribute references to unparsed entities and notations.
 "
 Class {
-	#name : #XMLUnparsedEntityValidator,
-	#superclass : #Object,
+	#name : 'XMLUnparsedEntityValidator',
+	#superclass : 'Object',
 	#instVars : [
 		'unparsedEntities',
 		'notations',
 		'notationAttributeValidators'
 	],
-	#category : #'XML-Parser-Validation'
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLUnparsedEntityValidator class >> unparsedEntities: anUnparsedEntityDictionary notations: aNotationDictionary [
 	^ self new
 		setUnparsedEntities: anUnparsedEntityDictionary
 		notations: aNotationDictionary
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLUnparsedEntityValidator >> errorMultipleDeclarationsForNotation: aNotation [
 	XMLValidationException
 		formatSignal: 'Multiple declarations for notation "{1}"'
 		with: aNotation
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLUnparsedEntityValidator >> errorMultipleNotationAttributesForElement: anElement [
 	XMLValidationException
 		formatSignal: 'Element <{1}> has multiple NOTATION list attributes'
 		with: anElement
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLUnparsedEntityValidator >> errorUndeclaredNotation: aNotation inAttribute: anAttribute [
 	XMLValidationException
 		formatSignal: 'Undeclared notation "{1}" in NOTATION (...) attribute "{2}"'
@@ -41,7 +43,7 @@ XMLUnparsedEntityValidator >> errorUndeclaredNotation: aNotation inAttribute: an
 		with: anAttribute
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLUnparsedEntityValidator >> errorUndeclaredNotation: aNotation inEntity: anEntity [
 	XMLValidationException
 		formatSignal: 'Undeclared notation "{1}" referenced by <!ENTITY {2} ...> declaration'
@@ -49,7 +51,7 @@ XMLUnparsedEntityValidator >> errorUndeclaredNotation: aNotation inEntity: anEnt
 		with: anEntity
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLUnparsedEntityValidator >> errorUndeclaredUnparsedEntityReference: anEntity inAttribute: anAttriubute [
 	XMLValidationException
 		formatSignal: 'Undeclared unparsed entity "{1}" in "{2}" attribute'
@@ -57,35 +59,35 @@ XMLUnparsedEntityValidator >> errorUndeclaredUnparsedEntityReference: anEntity i
 		with: anAttriubute
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLUnparsedEntityValidator >> hasNotationAttributeValidators [
 	"direct access to avoid lazy initialization"
 	^ notationAttributeValidators isNotNil
 		and: [notationAttributeValidators isNotEmpty]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLUnparsedEntityValidator >> notationAttributeValidators [
 	^ notationAttributeValidators ifNil: [notationAttributeValidators := Dictionary new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLUnparsedEntityValidator >> notations [
 	^ notations ifNil: [notations := Dictionary new]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLUnparsedEntityValidator >> setUnparsedEntities: anUnparsedEntityDictionary notations: aNotationDictionary [
 	unparsedEntities := anUnparsedEntityDictionary.
 	notations := aNotationDictionary.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLUnparsedEntityValidator >> unparsedEntities [
 	^ unparsedEntities ifNil: [unparsedEntities := Dictionary new]
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLUnparsedEntityValidator >> validateEntityReference: anEntity inAttribute: anAttribute [
 	(self unparsedEntities includesKey: anEntity)
 		ifFalse: [
@@ -94,7 +96,7 @@ XMLUnparsedEntityValidator >> validateEntityReference: anEntity inAttribute: anA
 				inAttribute: anAttribute]
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLUnparsedEntityValidator >> validateNotationAttributeDeclaration: aNotationAttributeValidator [
 	| oldSize |
 
@@ -109,7 +111,7 @@ XMLUnparsedEntityValidator >> validateNotationAttributeDeclaration: aNotationAtt
 				aNotationAttributeValidator element].
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLUnparsedEntityValidator >> validateNotationAttributeDeclarationDefaults [
 	"this validation has to be delayed until the entire DTD
 	is processed so notation attributes can be declared before
@@ -123,7 +125,7 @@ XMLUnparsedEntityValidator >> validateNotationAttributeDeclarationDefaults [
 						inAttribute: validator attribute]]]
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLUnparsedEntityValidator >> validateUnparsedEntityDeclarations [
 	"this validation has to be delayed until the entire DTD
 	is processed so unparsed entities can be declared before

@@ -2,8 +2,8 @@
 This class reads positive hex or decimal integers from minimal streams supporting #next, #peek, and #atEnd. It returns nil instead of raising errors for invalid integers.
 "
 Class {
-	#name : #XMLIntegerReader,
-	#superclass : #Object,
+	#name : 'XMLIntegerReader',
+	#superclass : 'Object',
 	#instVars : [
 		'readStream',
 		'printStream'
@@ -11,17 +11,19 @@ Class {
 	#classVars : [
 		'CharacterDigitValues'
 	],
-	#category : #'XML-Parser-Utils'
+	#category : 'XML-Parser-Utils',
+	#package : 'XML-Parser',
+	#tag : 'Utils'
 }
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLIntegerReader class >> initialize [
 	"self initialize"
 
 	self initializeCharacterDigitValues
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLIntegerReader class >> initializeCharacterDigitValues [
 	| temp |
 
@@ -43,32 +45,32 @@ XMLIntegerReader class >> initializeCharacterDigitValues [
 	CharacterDigitValues := temp.
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLIntegerReader class >> maxBase [
 	^ 16
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLIntegerReader class >> maxIntegerValue [
 	^ nil
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLIntegerReader class >> on: aStringOrStream [
 	^ self new on: aStringOrStream
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLIntegerReader class >> readFrom: aStream [
 	^ (self on: aStream) nextInteger
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 XMLIntegerReader class >> readFrom: aStream withBase: aBase [
 	^ (self on: aStream) nextIntegerWithBase: aBase
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 XMLIntegerReader class >> readFrom: aStream withBase: aFirstBase andPrefixes: aCharacterCollection orBase: aSecondBase [
 	^ (self on: aStream)
 		nextIntegerWithBase: aFirstBase
@@ -76,7 +78,7 @@ XMLIntegerReader class >> readFrom: aStream withBase: aFirstBase andPrefixes: aC
 		orBase: aSecondBase
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 XMLIntegerReader class >> readFrom: aStream withBase: aFirstBase andPrefixes: aCharacterCollection orBase: aSecondBase upToLimit: aReadLimit [
 	^ (self on: aStream)
 		nextIntegerWithBase: aFirstBase
@@ -85,24 +87,24 @@ XMLIntegerReader class >> readFrom: aStream withBase: aFirstBase andPrefixes: aC
 		upToLimit: aReadLimit
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 XMLIntegerReader class >> readFrom: aStream withBase: aBase upToLimit: aReadLimit [
 	^ (self on: aStream)
 		nextIntegerWithBase: aBase
 		upToLimit: aReadLimit
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLIntegerReader >> atEnd [
 	^ readStream atEnd
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLIntegerReader >> errorUnsupportedBase: aBase [
 	Error signal: 'Unsupported base ', aBase printString
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLIntegerReader >> next [
 	| nextChar |
 
@@ -114,7 +116,7 @@ XMLIntegerReader >> next [
 	^ nextChar.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLIntegerReader >> nextDigitWithBase: aBase [
 	| asciiValue digit |
 
@@ -128,19 +130,19 @@ XMLIntegerReader >> nextDigitWithBase: aBase [
 				ifFalse: [^ nil]
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 XMLIntegerReader >> nextInteger [
 	^ self nextIntegerWithBase: 10
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 XMLIntegerReader >> nextIntegerWithBase: aBase [
 	^ self
 		nextIntegerWithBase: aBase
 		upToLimit: nil
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 XMLIntegerReader >> nextIntegerWithBase: aFirstBase andPrefixes: aCharacterCollection orBase: aSecondBase [
 	^ self
 		nextIntegerWithBase: aFirstBase
@@ -149,7 +151,7 @@ XMLIntegerReader >> nextIntegerWithBase: aFirstBase andPrefixes: aCharacterColle
 		upToLimit: nil
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 XMLIntegerReader >> nextIntegerWithBase: aFirstBase andPrefixes: aCharacterCollection orBase: aSecondBase upToLimit: aReadLimit [
 	^ self
 		nextIntegerWithBase:
@@ -162,7 +164,7 @@ XMLIntegerReader >> nextIntegerWithBase: aFirstBase andPrefixes: aCharacterColle
 		upToLimit: aReadLimit
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 XMLIntegerReader >> nextIntegerWithBase: aBase upToLimit: aReadLimit [
 	| integer maxValue maxBaseValue digitValue readLimit |
 
@@ -204,7 +206,7 @@ XMLIntegerReader >> nextIntegerWithBase: aBase upToLimit: aReadLimit [
 	^ integer
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLIntegerReader >> on: aStringOrStream [
 	readStream :=
 		aStringOrStream isStream
@@ -212,19 +214,19 @@ XMLIntegerReader >> on: aStringOrStream [
 			ifFalse: [aStringOrStream readStream]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLIntegerReader >> overflowed [
 	"can override to raise a warning or error"
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLIntegerReader >> peek [
 	self atEnd
 		ifTrue: [^ nil]
 		ifFalse: [^ readStream peek]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLIntegerReader >> printStream: aStream [
 	printStream := aStream
 ]

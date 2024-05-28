@@ -2,12 +2,14 @@
 A stream converter for ISO Latin-1.
 "
 Class {
-	#name : #XMLLatin1StreamConverter,
-	#superclass : #XMLStatelessStreamConverter,
-	#category : #'XML-Parser-Streams'
+	#name : 'XMLLatin1StreamConverter',
+	#superclass : 'XMLStatelessStreamConverter',
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLLatin1StreamConverter class >> basicEncodingNames [
 	^ #('Latin-1' 'Latin1'
 			'CP-819' 'CP819'
@@ -18,7 +20,7 @@ XMLLatin1StreamConverter class >> basicEncodingNames [
 			'csISOLatin1')
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 XMLLatin1StreamConverter >> nextFromStream: aStream [
 	| byte |
 
@@ -30,7 +32,7 @@ XMLLatin1StreamConverter >> nextFromStream: aStream [
 	^ byte asCharacter.
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 XMLLatin1StreamConverter >> nextPut: aCharacter toStream: aStream [
 	| codePoint |
 

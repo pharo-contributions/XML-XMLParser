@@ -4,17 +4,18 @@ This is a base class for element handler factories used by SAX2ElementParsers to
 This factory just uses the default handler class SAX2ElementHandler for all elements.
 "
 Class {
-	#name : #SAX2ElementHandlerFactory,
-	#superclass : #Object,
-	#category : #'XML-Parser'
+	#name : 'SAX2ElementHandlerFactory',
+	#superclass : 'Object',
+	#category : 'XML-Parser',
+	#package : 'XML-Parser'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2ElementHandlerFactory >> classForElement: aQualifiedName namespaceURI: aURI localName: aLocalName attributes: anAssociationCollection [
 	^ self elementHandlerClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2ElementHandlerFactory >> elementHandlerClass [
 	^ SAX2ElementHandler
 ]

@@ -2,67 +2,69 @@
 This is an abstract base class for HTTP responses.
 "
 Class {
-	#name : #XMLHTTPResponse,
-	#superclass : #XMLHTTPMessage,
+	#name : 'XMLHTTPResponse',
+	#superclass : 'XMLHTTPMessage',
 	#instVars : [
 		'request'
 	],
-	#category : #'XML-Parser-HTTP'
+	#category : 'XML-Parser-HTTP',
+	#package : 'XML-Parser',
+	#tag : 'HTTP'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPResponse class >> canBeImplemented [
 	^ true
 ]
 
-{ #category : #finding }
+{ #category : 'finding' }
 XMLHTTPResponse class >> noSupportedImplementationFound [
 	XMLHTTPRequest noSupportedImplementationFound
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLHTTPResponse class >> preferredImplementation [
 	^ XMLHTTPZincResponse
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLHTTPResponse class >> request: aRequest [
 	^ self new setRequest: aRequest
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLHTTPResponse >> contentReaderClass [
 	self subclassResponsibility
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLHTTPResponse >> defaultProtocol [
 	^ 'HTTP/1.1'
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLHTTPResponse >> defaultStatusCode [
 	^ 200
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPResponse >> isChunked [
 	^ (self
 		headerAt: 'Transfer-Encoding'
 		ifAbsent: [^ false]) beginsWith: 'chunked'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPResponse >> isSuccess [
 	self subclassResponsibility
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLHTTPResponse >> newContentReader [
 	^ self contentReaderClass response: self
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLHTTPResponse >> printOn: aStream [
 	super printOn: aStream.
 
@@ -72,19 +74,19 @@ XMLHTTPResponse >> printOn: aStream [
 		nextPut: $).
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPResponse >> protocol [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPResponse >> protocol: aString [
 	self
 		setProtocol: aString
 		statusCode: self statusCode
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 XMLHTTPResponse >> readContentUpToLimit: aMaxSize decoding: aBoolean [
 	self content:
 		(self newContentReader
@@ -92,43 +94,43 @@ XMLHTTPResponse >> readContentUpToLimit: aMaxSize decoding: aBoolean [
 			decoding: aBoolean)
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLHTTPResponse >> readStream [
 	^ self content readStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPResponse >> request [
 	"Returns the XMLHTTPRequest object that created this response"
 
 	^ request
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLHTTPResponse >> setProtocol: aString statusCode: anInteger [
 	self subclassResponsibility
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLHTTPResponse >> setRequest: aRequest [
 	request := aRequest
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPResponse >> statusCode [
 	"Returns the status code as an integer"
 
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPResponse >> statusCode: anInteger [
 	self
 		setProtocol: self protocol
 		statusCode: anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPResponse >> statusDescription [
 	| delimiter |
 
@@ -137,7 +139,7 @@ XMLHTTPResponse >> statusDescription [
 		copyAfter: delimiter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPResponse >> statusLine [
 	"Returns the status line as a string"
 

@@ -12,8 +12,8 @@ This is a pluggable node factory that can be used to change which classes the DO
 Instances can be saved and reused for performance and safely modified after copying.
 "
 Class {
-	#name : #XMLPluggableNodeFactory,
-	#superclass : #XMLNodeFactory,
+	#name : 'XMLPluggableNodeFactory',
+	#superclass : 'XMLNodeFactory',
 	#instVars : [
 		'documentClass',
 		'elementClass',
@@ -24,65 +24,67 @@ Class {
 		'nodeListClass',
 		'attributeListClass'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLPluggableNodeFactory >> asPluggableNodeFactory [
 	^ self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactory >> attributeListClass [
 	^ attributeListClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactory >> attributeListClass: aClass [
 	attributeListClass := aClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactory >> cdataClass [
 	^ cdataClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactory >> cdataClass: aClass [
 	cdataClass := aClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactory >> commentClass [
 	^ commentClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactory >> commentClass: aClass [
 	commentClass := aClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactory >> documentClass [
 	^ documentClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactory >> documentClass: aClass [
 	documentClass := aClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactory >> elementClass [
 	^ elementClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactory >> elementClass: aClass [
 	elementClass := aClass
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLPluggableNodeFactory >> initialize [
 	super initialize.
 
@@ -96,46 +98,46 @@ XMLPluggableNodeFactory >> initialize [
 	attributeListClass := XMLCachingAttributeList.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactory >> nodeListClass [
 	^ nodeListClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactory >> nodeListClass: aClass [
 	nodeListClass := aClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactory >> piClass [
 	^ piClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactory >> piClass: aClass [
 	piClass := aClass
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLPluggableNodeFactory >> stringClass [
 	"will be deprecated; use #stringNodeClass instead"
 
 	^ stringNodeClass
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLPluggableNodeFactory >> stringClass: aClass [
 	"will be deprecated; use #stringNodeClass: instead"
 
 	stringNodeClass := aClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactory >> stringNodeClass [
 	^ stringNodeClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableNodeFactory >> stringNodeClass: aClass [
 	stringNodeClass := aClass
 ]

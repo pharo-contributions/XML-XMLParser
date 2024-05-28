@@ -4,8 +4,8 @@ This is a base class for parser tokenizers that read tokens from a stream using 
 Be careful changing the code in this class or subclasses because it's optimized.
 "
 Class {
-	#name : #XMLParserTokenizer,
-	#superclass : #Object,
+	#name : 'XMLParserTokenizer',
+	#superclass : 'Object',
 	#instVars : [
 		'state',
 		'driver',
@@ -18,10 +18,12 @@ Class {
 	#classVars : [
 		'PredefinedEntities'
 	],
-	#category : #'XML-Parser-Drivers'
+	#category : 'XML-Parser-Drivers',
+	#package : 'XML-Parser',
+	#tag : 'Drivers'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLParserTokenizer class >> driver: aDriver on: aStringOrStream [
 	^self
 		driver: aDriver
@@ -29,7 +31,7 @@ XMLParserTokenizer class >> driver: aDriver on: aStringOrStream [
 		readLimit: nil
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLParserTokenizer class >> driver: aDriver on: aStringOrStream readLimit: anInteger [
 	^self new
 		setDriver: aDriver
@@ -40,7 +42,7 @@ XMLParserTokenizer class >> driver: aDriver on: aStringOrStream readLimit: anInt
 		readLimit: anInteger
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLParserTokenizer class >> initialize [
 	"self initialize"
 
@@ -56,17 +58,17 @@ XMLParserTokenizer class >> initialize [
 			yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTokenizer class >> predefinedEntities [
 	^ PredefinedEntities
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLParserTokenizer >> atEnd [
 	^ state isTerminatedState
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 XMLParserTokenizer >> characterFromCodePoint: aCodePoint [
 	(aCodePoint isNotNil
 		and: [aCodePoint > 0
@@ -78,48 +80,48 @@ XMLParserTokenizer >> characterFromCodePoint: aCodePoint [
 		ifFalse: [^ nil]
 ]
 
-{ #category : #closing }
+{ #category : 'closing' }
 XMLParserTokenizer >> closeStreams [
 	streamReader closeStreams
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 XMLParserTokenizer >> convertFromEncoding: anEncodingName [
 	driver decodesCharacters
 		ifTrue: [streamReader convertFromEncoding: anEncodingName]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTokenizer >> currentColumnNumber [
 	^ streamReader currentColumnNumber
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTokenizer >> currentLineNumber [
 	^ streamReader currentLineNumber
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTokenizer >> currentPosition [
 	^ streamReader currentPosition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTokenizer >> driver [
 	^ driver
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTokenizer >> elementNester [
 	^ elementNester
 ]
 
-{ #category : #errors }
+{ #category : 'errors' }
 XMLParserTokenizer >> errorExpected: aDescription [
 	self parseError: 'Expected ', aDescription
 ]
 
-{ #category : #errors }
+{ #category : 'errors' }
 XMLParserTokenizer >> errorExpected: aDescription butGot: aCharacterOrString [
 	self
 		formatParseError: 'Expected {1} but got "{2}" instead'
@@ -127,14 +129,14 @@ XMLParserTokenizer >> errorExpected: aDescription butGot: aCharacterOrString [
 		with: aCharacterOrString
 ]
 
-{ #category : #errors }
+{ #category : 'errors' }
 XMLParserTokenizer >> errorExpectedLiteral: aCharacterOrString [
 	self
 		errorExpectedLiteral: aCharacterOrString
 		butGot: nil
 ]
 
-{ #category : #errors }
+{ #category : 'errors' }
 XMLParserTokenizer >> errorExpectedLiteral: anExpectedCharacterOrString butGot: aReceivedCharacterOrString [
 	self
 		formatParseError: 'Expected "{1}" but got "{2}" instead' 
@@ -142,24 +144,24 @@ XMLParserTokenizer >> errorExpectedLiteral: anExpectedCharacterOrString butGot: 
 		with: aReceivedCharacterOrString
 ]
 
-{ #category : #'tokenizing - expecting' }
+{ #category : 'tokenizing - expecting' }
 XMLParserTokenizer >> expectNext: aCharacter [
 	self subclassResponsibility
 ]
 
-{ #category : #'tokenizing - expecting' }
+{ #category : 'tokenizing - expecting' }
 XMLParserTokenizer >> expectNextAll: aString [
 	self subclassResponsibility
 ]
 
-{ #category : #errors }
+{ #category : 'errors' }
 XMLParserTokenizer >> formatParseError: aString with: aFirstValue [
 	self
 		formatParseError: aString
 		withArguments: (Array with: aFirstValue)
 ]
 
-{ #category : #errors }
+{ #category : 'errors' }
 XMLParserTokenizer >> formatParseError: aString with: aFirstValue with: aSecondValue [
 	self
 		formatParseError: aString
@@ -169,7 +171,7 @@ XMLParserTokenizer >> formatParseError: aString with: aFirstValue with: aSecondV
 				with: aSecondValue)
 ]
 
-{ #category : #errors }
+{ #category : 'errors' }
 XMLParserTokenizer >> formatParseError: aString with: aFirstValue with: aSecondValue with: aThirdValue [
 	self
 		formatParseError: aString
@@ -180,7 +182,7 @@ XMLParserTokenizer >> formatParseError: aString with: aFirstValue with: aSecondV
 				with: aThirdValue)
 ]
 
-{ #category : #errors }
+{ #category : 'errors' }
 XMLParserTokenizer >> formatParseError: aString with: aFirstValue with: aSecondValue with: aThirdValue with: aFourthValue [
 	self
 		formatParseError: aString
@@ -192,7 +194,7 @@ XMLParserTokenizer >> formatParseError: aString with: aFirstValue with: aSecondV
 				with: aFourthValue)
 ]
 
-{ #category : #errors }
+{ #category : 'errors' }
 XMLParserTokenizer >> formatParseError: aString withArguments: aValueCollection [
 	self parseError:
 		(aString format:
@@ -202,23 +204,23 @@ XMLParserTokenizer >> formatParseError: aString withArguments: aValueCollection 
 				each ifNil: ['']]))
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLParserTokenizer >> hexCharacterValueLiteralPrefixes [
 	^ 'x'
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextCDataSection [
 	self subclassResponsibility
 
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 XMLParserTokenizer >> nextCharacterValueLiteral [
 	^ self nextCharacterValueLiteralPrintedOn: nil
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 XMLParserTokenizer >> nextCharacterValueLiteralPrintedOn: aStream [
 	"do not limit the number of chars read, because char values can
 	have an arbitrary number of leading zeros"
@@ -229,12 +231,12 @@ XMLParserTokenizer >> nextCharacterValueLiteralPrintedOn: aStream [
 			orBase: 10
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextContentMarkupToken [
 	self subclassResponsibility
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextContentToken [
 	streamReader peek == $<
 		ifTrue: [
@@ -245,7 +247,7 @@ XMLParserTokenizer >> nextContentToken [
 	self nextNonElementWhitespace.
 ]
 
-{ #category : #'tokenizing - dtd' }
+{ #category : 'tokenizing - dtd' }
 XMLParserTokenizer >> nextDoctypeDeclaration [
 	| root publicID systemID |
 
@@ -278,17 +280,17 @@ XMLParserTokenizer >> nextDoctypeDeclaration [
 		ifFalse: [self nextEndDoctypeDeclaration].
 ]
 
-{ #category : #'tokenizing - dtd' }
+{ #category : 'tokenizing - dtd' }
 XMLParserTokenizer >> nextDoctypeDeclarationTerminator [
 	self expectNext: $>
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextElementName [
 	self subclassResponsibility
 ]
 
-{ #category : #'tokenizing - dtd' }
+{ #category : 'tokenizing - dtd' }
 XMLParserTokenizer >> nextEndDoctypeDeclaration [
 	self nextDoctypeDeclarationTerminator.
 	state := state postDoctypeDeclarationState.
@@ -296,7 +298,7 @@ XMLParserTokenizer >> nextEndDoctypeDeclaration [
 	driver handleEndDTD.
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextEndDocument [
 	state isTerminatedState
 		ifFalse: [
@@ -305,7 +307,7 @@ XMLParserTokenizer >> nextEndDocument [
 			driver handleEndDocument]
 ]
 
-{ #category : #'tokenizing - dtd' }
+{ #category : 'tokenizing - dtd' }
 XMLParserTokenizer >> nextEndInternalSubset [
 	"skip ]"
 	streamReader
@@ -314,7 +316,7 @@ XMLParserTokenizer >> nextEndInternalSubset [
 	self nextEndDoctypeDeclaration.
 ]
 
-{ #category : #'tokenizing - dtd' }
+{ #category : 'tokenizing - dtd' }
 XMLParserTokenizer >> nextInternalSubsetToken [
 	streamReader skipSeparators.
 	streamReader peek == $%
@@ -326,46 +328,46 @@ XMLParserTokenizer >> nextInternalSubsetToken [
 	self nextSubsetMarkupToken.
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextNonElementWhitespace [
 	self subclassResponsibility
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextNonPIPrologOrContentMarkupToken [
 	self subclassResponsibility
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextPCDataToken [
 	self subclassResponsibility
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextPI [
 	"skip ?"
 	streamReader next.
 	self nextPIWithTarget: self nextPITarget.
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextPIData [
 	self subclassResponsibility
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextPITarget [
 	"should return a PI target string or nil if it's the start of
 	an '<?xml ...?>' declaration"
 	self subclassResponsibility
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextPITerminator [
 	self expectNext: $>
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextPIWithTarget: aTarget [
 	streamReader peek == $?
 		ifTrue: [
@@ -381,17 +383,17 @@ XMLParserTokenizer >> nextPIWithTarget: aTarget [
 				data: self nextPIData].
 ]
 
-{ #category : #'tokenizing - dtd' }
+{ #category : 'tokenizing - dtd' }
 XMLParserTokenizer >> nextParameterEntityReference [
 	self subclassResponsibility
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextPrologToken [
 	self subclassResponsibility
 ]
 
-{ #category : #'tokenizing - dtd' }
+{ #category : 'tokenizing - dtd' }
 XMLParserTokenizer >> nextPublicID [
 	^ self
 		expectNextAll: 'PUBLIC';
@@ -399,42 +401,42 @@ XMLParserTokenizer >> nextPublicID [
 		nextPublicIDLiteral
 ]
 
-{ #category : #'tokenizing - dtd' }
+{ #category : 'tokenizing - dtd' }
 XMLParserTokenizer >> nextPublicIDLiteral [
 	self subclassResponsibility
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextSeparators [
 	self subclassResponsibility
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextStartContent [
 	state := state contentState.
 	elementNester := driver elementNester.
 	driver handleStartContent.
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextStartDocument [
 	self state: driver newInitialState.
 	driver handleStartDocument.
 ]
 
-{ #category : #'tokenizing - dtd' }
+{ #category : 'tokenizing - dtd' }
 XMLParserTokenizer >> nextStartInternalSubset [
 	"skip ["
 	streamReader next.
 	state := state internalSubsetState.
 ]
 
-{ #category : #'tokenizing - dtd' }
+{ #category : 'tokenizing - dtd' }
 XMLParserTokenizer >> nextSubsetMarkupToken [
 	self subclassResponsibility
 ]
 
-{ #category : #'tokenizing - dtd' }
+{ #category : 'tokenizing - dtd' }
 XMLParserTokenizer >> nextSystemID [
 	^ self
 		expectNextAll: 'SYSTEM';
@@ -442,12 +444,12 @@ XMLParserTokenizer >> nextSystemID [
 		nextSystemIDLiteral
 ]
 
-{ #category : #'tokenizing - dtd' }
+{ #category : 'tokenizing - dtd' }
 XMLParserTokenizer >> nextSystemIDLiteral [
 	self subclassResponsibility
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextToken [
 	streamReader atEnd
 		ifTrue: [
@@ -456,19 +458,19 @@ XMLParserTokenizer >> nextToken [
 	^ state nextTokenFrom: self.
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextXMLAttributeEqualsSeparator [
 	streamReader skipSeparators.
 	self expectNext: $=.
 	streamReader skipSeparators.
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextXMLAttributeName: aName [
 	self expectNextAll: aName
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextXMLDeclaration [
 	| version encoding |
 
@@ -491,7 +493,7 @@ XMLParserTokenizer >> nextXMLDeclaration [
 	state := state prologState.
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextXMLDeclarationOrPrologToken [
 	streamReader peek == $<
 		ifTrue: [
@@ -513,12 +515,12 @@ XMLParserTokenizer >> nextXMLDeclarationOrPrologToken [
 	self nextPrologToken.
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextXMLDeclarationTerminator [
 	self expectNextAll: '?>'
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextXMLEncodingAttributeRequired: aBoolean [
 	(aBoolean
 		or: [streamReader peek == $e])
@@ -530,12 +532,12 @@ XMLParserTokenizer >> nextXMLEncodingAttributeRequired: aBoolean [
 		ifFalse: [^ '']
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextXMLEncodingAttributeValue [
 	self subclassResponsibility
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextXMLStandaloneAttribute [
 	"always optional"
 	(streamReader peek == $s)
@@ -547,12 +549,12 @@ XMLParserTokenizer >> nextXMLStandaloneAttribute [
 		ifFalse: [^ '']
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextXMLStandaloneAttributeValue [
 	self subclassResponsibility
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextXMLVersionAttributeRequired: aBoolean [
 	(aBoolean
 		or: [streamReader peek == $v])
@@ -564,27 +566,27 @@ XMLParserTokenizer >> nextXMLVersionAttributeRequired: aBoolean [
 		ifFalse: [^ '']
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLParserTokenizer >> nextXMLVersionAttributeValue [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTokenizer >> normalizedLineEndingChar [
 	^ streamReader normalizedLineEndingChar
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTokenizer >> normalizedLineEndingChar: aCharacter [
 	streamReader normalizedLineEndingChar: aCharacter
 ]
 
-{ #category : #errors }
+{ #category : 'errors' }
 XMLParserTokenizer >> parseError: aString [
 	driver handleParseError: aString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLParserTokenizer >> printOn: aStream [
 	super printOn: aStream.
 
@@ -596,7 +598,7 @@ XMLParserTokenizer >> printOn: aStream [
 		nextPut: $).
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLParserTokenizer >> setDriver: aDriver stream: aStream readLimit: anInteger [
 	state := XMLUninitializedState new.
 	driver := aDriver.
@@ -617,12 +619,12 @@ XMLParserTokenizer >> setDriver: aDriver stream: aStream readLimit: anInteger [
 	characterStream := (String new: 128) writeStream.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTokenizer >> state [
 	^ state
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTokenizer >> state: aTokenState [
 	(state := aTokenState) isContentState
 		ifTrue: [elementNester := driver elementNester].
@@ -631,12 +633,12 @@ XMLParserTokenizer >> state: aTokenState [
 		ifTrue: [streamReader detectEncoding].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLParserTokenizer >> streamReader [
 	^ streamReader
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLParserTokenizer >> streamReaderClass [
 	^ XMLNestedStreamReader
 ]

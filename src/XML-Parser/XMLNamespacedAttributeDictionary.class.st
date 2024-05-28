@@ -2,32 +2,33 @@
 This subclass is used when namespaces are enabled. It has an extra inst var for namespace scopes.
 "
 Class {
-	#name : #XMLNamespacedAttributeDictionary,
-	#superclass : #XMLAttributeDictionary,
+	#name : 'XMLNamespacedAttributeDictionary',
+	#superclass : 'XMLAttributeDictionary',
 	#instVars : [
 		'namespaceScope'
 	],
-	#category : #'XML-Parser'
+	#category : 'XML-Parser',
+	#package : 'XML-Parser'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespacedAttributeDictionary >> namespaceScope [
 	^ namespaceScope ifNil: [namespaceScope := XMLNamespaceScope new]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNamespacedAttributeDictionary >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 	^ self namespaceScope
 		resolvePrefix: aPrefix
 		ifUnresolvable: aBlock
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLNamespacedAttributeDictionary >> setNamespaceScope: aNamespaceScope [
 	namespaceScope := aNamespaceScope
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNamespacedAttributeDictionary >> usesNamespaces [
 	^ true
 ]

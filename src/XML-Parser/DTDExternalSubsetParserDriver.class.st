@@ -2,68 +2,70 @@
 This class is used by SAXParserDriver for parsing the external subset of a DTD.
 "
 Class {
-	#name : #DTDExternalSubsetParserDriver,
-	#superclass : #DTDSubsetParserDriver,
+	#name : 'DTDExternalSubsetParserDriver',
+	#superclass : 'DTDSubsetParserDriver',
 	#instVars : [
 		'saxDriver',
 		'documentURI'
 	],
-	#category : #'XML-Parser-Drivers'
+	#category : 'XML-Parser-Drivers',
+	#package : 'XML-Parser',
+	#tag : 'Drivers'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDExternalSubsetParserDriver class >> saxDriver: aSAXDriver documentURI: anExternalSubsetURIString [
 	^ self new
 		setSAXDriver: aSAXDriver
 		documentURI: anExternalSubsetURIString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDExternalSubsetParserDriver >> decodesCharacters [
 	^ self saxDriver decodesCharacters
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalSubsetParserDriver >> documentURI [
 	^ documentURI
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalSubsetParserDriver >> externalEntityResolver [
 	^ self saxDriver externalEntityResolver
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDExternalSubsetParserDriver >> hasExternalSubset [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDExternalSubsetParserDriver >> hasParameterEntityReferences [
 	^ self saxDriver hasParameterEntityReferences
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDExternalSubsetParserDriver >> hasSkippedParameterEntityReferences [
 	^ self saxDriver hasSkippedParameterEntityReferences
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalSubsetParserDriver >> haveParameterEntityReferences [
 	self saxDriver haveParameterEntityReferences
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalSubsetParserDriver >> haveSkippedParameterEntityReferences [
 	self saxDriver haveSkippedParameterEntityReferences
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 DTDExternalSubsetParserDriver >> initialStateClass [
 	^ XMLExternalSubsetTextDeclarationState
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDExternalSubsetParserDriver >> isExternal [
 	"Definition: An external markup declaration is defined as a markup
 	declaration occurring in the external subset or in a parameter entity
@@ -73,47 +75,47 @@ DTDExternalSubsetParserDriver >> isExternal [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDExternalSubsetParserDriver >> isStandalone [
 	^ self saxDriver isStandalone
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDExternalSubsetParserDriver >> isValidating [
 	^ self saxDriver isValidating
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalSubsetParserDriver >> maxEntityReplacementDepth [
 	^ self saxDriver maxEntityReplacementDepth
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDExternalSubsetParserDriver >> preservesUndeclaredEntityReferences [
 	^ self saxDriver preservesUndeclaredEntityReferences
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalSubsetParserDriver >> readLimit [
 	^ self externalEntityResolver externalSubsetReadLimit
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDExternalSubsetParserDriver >> replacesContentEntityReferences [
 	^ self saxDriver replacesContentEntityReferences
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDExternalSubsetParserDriver >> resolvesExternalEntities [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalSubsetParserDriver >> saxDriver [
 	^ saxDriver
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DTDExternalSubsetParserDriver >> setSAXDriver: aSAXDriver documentURI: anExternalSubsetURIString [
 	saxDriver := aSAXDriver.
 	documentURI := anExternalSubsetURIString.

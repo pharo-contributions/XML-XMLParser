@@ -9,16 +9,18 @@ This is a node list that caches child elements by name, keeping both an ordered 
 It should only be used when you know the DOM tree will be queried much more often than parsed or modified and the extra memory use is OK.
 "
 Class {
-	#name : #XMLCachingNodeList,
-	#superclass : #XMLNodeList,
+	#name : 'XMLCachingNodeList',
+	#superclass : 'XMLNodeList',
 	#instVars : [
 		'cachedElements',
 		'cachedElementsByName'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingNodeList >> afterAdding: aNode at: anIndex [
 	(aNode hasParentWithNodeList: self)
 		ifTrue: [
@@ -37,7 +39,7 @@ XMLCachingNodeList >> afterAdding: aNode at: anIndex [
 				ifNotNil: [observer addedNode: aNode]]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingNodeList >> afterAddingLast: aNode [
 	(aNode hasParentWithNodeList: self)
 		ifTrue: [
@@ -53,7 +55,7 @@ XMLCachingNodeList >> afterAddingLast: aNode [
 				ifNotNil: [observer addedNode: aNode]]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingNodeList >> afterAddingToCopyLast: aNode [
 	aNode isElement
 		ifTrue: [self cacheElementAddedLast: aNode].
@@ -61,7 +63,7 @@ XMLCachingNodeList >> afterAddingToCopyLast: aNode [
 		ifNotNil: [observer addedNode: aNode].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingNodeList >> afterRemoving: aNode [
 	aNode isElement
 		ifTrue: [self uncacheElement: aNode].
@@ -69,7 +71,7 @@ XMLCachingNodeList >> afterRemoving: aNode [
 		ifNotNil: [observer removedNode: aNode].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingNodeList >> cacheElement: anElement addedAt: anIndex [
 	anIndex = self size
 		ifTrue: [^ self cacheElementAddedLast: anElement].
@@ -92,7 +94,7 @@ XMLCachingNodeList >> cacheElement: anElement addedAt: anIndex [
 				beforeNextAfterIndex: anIndex].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingNodeList >> cacheElementAddedLast: anElement [
 	self cachedElements addLast: anElement.
 	self
@@ -105,17 +107,17 @@ XMLCachingNodeList >> cacheElementAddedLast: anElement [
 				addLast: anElement].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingNodeList >> cachedElements [
 	^ cachedElements ifNil: [cachedElements := OrderedCollection new]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingNodeList >> cachedElementsByName [
 	^ cachedElementsByName ifNil: [cachedElementsByName := Dictionary new]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingNodeList >> cachedElementsByNameAt: aName add: anElement beforeNextAfterIndex: anIndex [
 	| elementAfter elementsWithName |
 
@@ -136,7 +138,7 @@ XMLCachingNodeList >> cachedElementsByNameAt: aName add: anElement beforeNextAft
 				put: (OrderedCollection with: anElement with: elementAfter)].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingNodeList >> cachedElementsByNameAt: aName addLast: anElement [
 	| elementsWithName |
 
@@ -155,7 +157,7 @@ XMLCachingNodeList >> cachedElementsByNameAt: aName addLast: anElement [
 				put: (OrderedCollection with: elementsWithName with: anElement)].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingNodeList >> cachedElementsByNameAt: aName remove: anElement [
 	| elementsWithName |
 
@@ -167,13 +169,13 @@ XMLCachingNodeList >> cachedElementsByNameAt: aName remove: anElement [
 		ifFalse: [self cachedElementsByName removeKey: aName]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLCachingNodeList >> copyClass [
 	"use the non-caching superclass for copies for performance"
 	^ XMLNodeList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCachingNodeList >> elementAt: aName ifAbsent: aBlock [
 	| elementsWithName |
 
@@ -185,14 +187,14 @@ XMLCachingNodeList >> elementAt: aName ifAbsent: aBlock [
 		ifFalse: [^ elementsWithName]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCachingNodeList >> elements [
 	^ self copyEmpty
 		addAll: self cachedElements;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCachingNodeList >> elementsAt: aName [
 	| elementsWithName copiedElements |
 
@@ -209,7 +211,7 @@ XMLCachingNodeList >> elementsAt: aName [
 	^ copiedElements.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLCachingNodeList >> elementsAt: aName do: aBlock [
 	| elementsWithName |
 
@@ -221,12 +223,12 @@ XMLCachingNodeList >> elementsAt: aName do: aBlock [
 		ifFalse: [aBlock value: elementsWithName]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLCachingNodeList >> elementsDo: aBlock [
 	self cachedElements do: aBlock
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingNodeList >> findElementAfterIndex: anIndex [
 	anIndex + 1 to: self size do: [:i | | node |
 		node := self at: i.
@@ -235,7 +237,7 @@ XMLCachingNodeList >> findElementAfterIndex: anIndex [
 	^ nil.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingNodeList >> findElementAfterIndex: anIndex named: aName [
 	anIndex + 1 to: self size do: [:i | | node |
 		node := self at: i.
@@ -245,31 +247,31 @@ XMLCachingNodeList >> findElementAfterIndex: anIndex named: aName [
 	^ nil.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCachingNodeList >> firstElement [
 	^ self cachedElements
 		at: 1
 		ifAbsent: [self defaultValue]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLCachingNodeList >> hasElements [
 	^ cachedElements isNotNil and: [cachedElements isNotEmpty]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLCachingNodeList >> includesElement: aName [
 	^ self cachedElementsByName includesKey: aName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCachingNodeList >> lastElement [
 	^ self cachedElements
 		at: self cachedElements size
 		ifAbsent: [self defaultValue]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingNodeList >> rebuildCachedElements [
 	self cachedElements removeAll.
 	self cachedElementsByName removeAll.
@@ -278,7 +280,7 @@ XMLCachingNodeList >> rebuildCachedElements [
 			ifTrue: [self cacheElementAddedLast: each]].
 ]
 
-{ #category : #notifying }
+{ #category : 'notifying' }
 XMLCachingNodeList >> renamedElement: anElement from: anOldName to: aNewName [
 	| oldPrefix index |
 
@@ -303,7 +305,7 @@ XMLCachingNodeList >> renamedElement: anElement from: anOldName to: aNewName [
 				beforeNextAfterIndex: index].
 ]
 
-{ #category : #sorting }
+{ #category : 'sorting' }
 XMLCachingNodeList >> sort: aSortBlock [
 	super sort: aSortBlock.
 
@@ -313,7 +315,7 @@ XMLCachingNodeList >> sort: aSortBlock [
 			ifTrue: [each sort: aSortBlock]].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLCachingNodeList >> swap: aFirstIndex with: aSecondIndex [
 	super swap: aFirstIndex with: aSecondIndex.
 
@@ -322,7 +324,7 @@ XMLCachingNodeList >> swap: aFirstIndex with: aSecondIndex [
 		ifTrue: [self rebuildCachedElements].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLCachingNodeList >> uncacheElement: anElement [
 	self cachedElements remove: anElement.
 	self

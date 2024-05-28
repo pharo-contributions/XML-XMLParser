@@ -2,56 +2,58 @@
 This class uses the Pharo FileSystem API to implement file IO. The preferred implementation.
 "
 Class {
-	#name : #XMLFileSystemFileHandle,
-	#superclass : #XMLFileHandle,
+	#name : 'XMLFileSystemFileHandle',
+	#superclass : 'XMLFileHandle',
 	#instVars : [
 		'fileReference'
 	],
-	#category : #'XML-Parser-Files'
+	#category : 'XML-Parser-Files',
+	#package : 'XML-Parser',
+	#tag : 'Files'
 }
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLFileSystemFileHandle class >> basicCurrentWorkingDirectory [
 	"avoid the class #workingDirectory message for Pharo1x compatibility"
 	^ (XMLClassFinder classNamed: #FileSystem) disk workingDirectory pathString
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLFileSystemFileHandle class >> fileReference: aFileReference [
 	^ self new setFileReference: aFileReference
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLFileSystemFileHandle class >> isSupportedImplementation [
 	^ XMLClassFinder hasClassNamed: #FileSystem
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLFileSystemFileHandle >> basicDelete [
 	self fileReference delete
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLFileSystemFileHandle >> basicFileSize [
 	^ self fileReference size
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLFileSystemFileHandle >> exists [
 	^ self fileReference exists
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLFileSystemFileHandle >> fileReference [
 	^ fileReference ifNil: [fileReference := self path asFileReference]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLFileSystemFileHandle >> isFile [
 	^ self fileReference isFile
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLFileSystemFileHandle >> newFileReadStreamOnPath [
 	"memory file references need special handling"
 	self usesMemoryStore
@@ -59,7 +61,7 @@ XMLFileSystemFileHandle >> newFileReadStreamOnPath [
 	^ super newFileReadStreamOnPath.
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLFileSystemFileHandle >> newFileWriteStreamOnPath [
 	"memory file references need special handling"
 	self usesMemoryStore
@@ -67,13 +69,13 @@ XMLFileSystemFileHandle >> newFileWriteStreamOnPath [
 	^ super newFileWriteStreamOnPath.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLFileSystemFileHandle >> setFileReference: aFileReference [
 	fileReference := aFileReference.
 	self setPath: aFileReference fullName.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLFileSystemFileHandle >> usesMemoryStore [
 	"Pharo 3.0 has memory stores but lacks #isMemoryFileSystem, so
 	this test is used instead for backwards compatibility"

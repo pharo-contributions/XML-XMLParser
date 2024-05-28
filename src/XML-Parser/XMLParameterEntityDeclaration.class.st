@@ -2,17 +2,19 @@
 This is a class for parameter <!ENTITY> declarations.
 "
 Class {
-	#name : #XMLParameterEntityDeclaration,
-	#superclass : #XMLEntityDeclaration,
-	#category : #'XML-Parser-DOM'
+	#name : 'XMLParameterEntityDeclaration',
+	#superclass : 'XMLEntityDeclaration',
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLParameterEntityDeclaration >> isParameter [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLParameterEntityDeclaration >> writeXMLOn: aWriter [
 	aWriter entityDeclaration
 		name: self name;

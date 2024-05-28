@@ -2,27 +2,29 @@
 A stream converter for little endian UTF-32 streams.
 "
 Class {
-	#name : #XMLUTF32LittleEndianStreamConverter,
-	#superclass : #XMLUTF32StreamConverter,
-	#category : #'XML-Parser-Streams'
+	#name : 'XMLUTF32LittleEndianStreamConverter',
+	#superclass : 'XMLUTF32StreamConverter',
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLUTF32LittleEndianStreamConverter class >> basicByteOrderMarkBytes [
 	^ #[16rFF 16rFE 16r00 16r00]
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLUTF32LittleEndianStreamConverter class >> basicEncodingNames [
 	^ #('UTF-32-LE' 'UTF32-LE' 'UTF-32LE' 'UTF32LE')
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLUTF32LittleEndianStreamConverter >> isBigEndian [
 	^ false
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLUTF32LittleEndianStreamConverter >> nextFourBytesFromStream: aStream [
 	| firstByte secondByte thirdByte |
 
@@ -41,7 +43,7 @@ XMLUTF32LittleEndianStreamConverter >> nextFourBytesFromStream: aStream [
 	^ firstByte + secondByte + thirdByte + (aStream next asInteger bitShift: 24).
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLUTF32LittleEndianStreamConverter >> nextPutFourBytes: anInteger toStream: aStream [
 	aStream
 		nextPut: (anInteger bitAnd: 16rFF);

@@ -2,66 +2,68 @@
 An abstract class for read streams.
 "
 Class {
-	#name : #XMLAbstractReadStream,
-	#superclass : #Object,
-	#category : #'XML-Parser-Streams'
+	#name : 'XMLAbstractReadStream',
+	#superclass : 'Object',
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLAbstractReadStream class >> basicOn: anObject [
 	^ self basicNew initialize on: anObject
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLAbstractReadStream class >> new [
 	self shouldNotImplement
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLAbstractReadStream class >> on: anObject [
 	^ self basicOn: anObject
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAbstractReadStream >> atEnd [
 	self subclassResponsibility
 ]
 
-{ #category : #closing }
+{ #category : 'closing' }
 XMLAbstractReadStream >> close [
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractReadStream >> contents [
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAbstractReadStream >> isBinary [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAbstractReadStream >> isStream [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAbstractReadStream >> isXMLBinaryOrExternalStream [
 	^ self isBinary
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLAbstractReadStream >> newWriteStream [
 	^ (self writeStreamCollectionClass new: 128) writeStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractReadStream >> next [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractReadStream >> next: anInteger [
 	| writeStream i |
 
@@ -75,17 +77,17 @@ XMLAbstractReadStream >> next: anInteger [
 	^ writeStream contents.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLAbstractReadStream >> on: anObject [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractReadStream >> peek [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractReadStream >> peekFor: anObject [
 	(self atEnd not
 		and: [self peek = anObject])
@@ -95,22 +97,22 @@ XMLAbstractReadStream >> peekFor: anObject [
 		ifFalse: [^ false]
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLAbstractReadStream >> position [
 	self subclassResponsibility
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLAbstractReadStream >> position: anInteger [
 	self subclassResponsibility
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLAbstractReadStream >> reset [
 	self subclassResponsibility
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLAbstractReadStream >> skip: anInteger [
 	"only supports skipping forwards"
 	1 to: anInteger do: [:i |
@@ -119,7 +121,7 @@ XMLAbstractReadStream >> skip: anInteger [
 		self next]
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLAbstractReadStream >> skipSeparators [
 	"we use #isXMLWhitespace instead of the narrower, XML-specific
 	#isXMLSeparator, because this class can be used for non-XML
@@ -129,7 +131,7 @@ XMLAbstractReadStream >> skipSeparators [
 		whileTrue: [self next]
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLAbstractReadStream >> skipTo: anObject [
 	[self atEnd]
 		whileFalse: [
@@ -138,7 +140,7 @@ XMLAbstractReadStream >> skipTo: anObject [
 	^ false.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractReadStream >> upTo: anObject [
 	| writeStream next |
 
@@ -149,7 +151,7 @@ XMLAbstractReadStream >> upTo: anObject [
 	^ writeStream contents.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractReadStream >> upToEnd [
 	| writeStream |
 
@@ -159,7 +161,7 @@ XMLAbstractReadStream >> upToEnd [
 	^ writeStream contents.
 ]
 
-{ #category : #writing }
+{ #category : 'writing' }
 XMLAbstractReadStream >> writeStreamCollectionClass [
 	self isBinary
 		ifTrue: [^ ByteArray]

@@ -10,23 +10,25 @@ The #attribute* messages provide a Dictionary-like protocol for manipulating att
 See the superclasses for more info.
 "
 Class {
-	#name : #XMLElement,
-	#superclass : #XMLNodeWithElements,
+	#name : 'XMLElement',
+	#superclass : 'XMLNodeWithElements',
 	#instVars : [
 		'name',
 		'localName',
 		'attributes',
 		'namespaceScope'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLElement class >> name: aLocalName [
 	^ self named: aLocalName
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLElement class >> name: aLocalName attributes: anAssociationCollection [
 	"Returns a new element with the specified name and attributes.
 
@@ -40,7 +42,7 @@ XMLElement class >> name: aLocalName attributes: anAssociationCollection [
 		setAttributes: anAssociationCollection
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLElement class >> name: aQualifiedName namespaceURI: aURI [
 	"Returns a new element with the specified name and namespace URI.
 
@@ -52,7 +54,7 @@ XMLElement class >> name: aQualifiedName namespaceURI: aURI [
 		namespaceURI: aURI
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLElement class >> name: aQualifiedName namespaceURI: aURI attributes: anAssociationCollection [
 	"Returns a new element with the specified name, namespace URI, and attributes.
 
@@ -70,7 +72,7 @@ XMLElement class >> name: aQualifiedName namespaceURI: aURI attributes: anAssoci
 			setAttributes: anAssociationCollection
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLElement class >> name: aQualifiedName namespaces: anAssociationCollection [
 	"Returns a new element with the specified name and namespaces.
 
@@ -86,7 +88,7 @@ XMLElement class >> name: aQualifiedName namespaces: anAssociationCollection [
 		name: aQualifiedName
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLElement class >> name: aQualifiedName namespaces: aNamespaceAssociationCollection attributes: anAttributeAssociationCollection [
 	"Returns a new element with the specified name, namespaces, and attributes.
 
@@ -104,7 +106,7 @@ XMLElement class >> name: aQualifiedName namespaces: aNamespaceAssociationCollec
 			setAttributes: anAttributeAssociationCollection
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLElement class >> named: aLocalName [
 	"Returns a new element with the specified name.
 
@@ -113,12 +115,12 @@ XMLElement class >> named: aLocalName [
 	^ self new name: aLocalName
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLElement >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitElement: self
 ]
 
-{ #category : #notifying }
+{ #category : 'notifying' }
 XMLElement >> addedAttribute: anAttribute [
 	anAttribute element
 		ifNotNil: [:element |
@@ -128,7 +130,7 @@ XMLElement >> addedAttribute: anAttribute [
 	self validateNamespacePrefixOfAttribute: anAttribute.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElement >> addedElement: anElement [
 	(self hasNamespaces
 		and: [self namespaceScope ~= anElement namespaceScope])
@@ -137,7 +139,7 @@ XMLElement >> addedElement: anElement [
 				each namespaceScope inheritMappingsFrom: self namespaceScope]]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLElement >> allElementsDo: aBlock [
 	"evaluates aBlock for the receiver and all descendant elements"
 
@@ -146,7 +148,7 @@ XMLElement >> allElementsDo: aBlock [
 		ifTrue: [self elementsDo: [:each | each allElementsDo: aBlock]].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElement >> allNamespaceScopesRemapPrefix: aPrefix from: anOldURIOrNil to: aNewURI [
 	(self namespaceScope
 		prefixMappingAt: aPrefix
@@ -167,7 +169,7 @@ XMLElement >> allNamespaceScopesRemapPrefix: aPrefix from: anOldURIOrNil to: aNe
 					to: aNewURI]]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElement >> allNamespaceScopesUnmapPrefix: aPrefix mappedTo: aURI [
 	(self namespaceScope
 		includesPrefix: aPrefix
@@ -183,14 +185,14 @@ XMLElement >> allNamespaceScopesUnmapPrefix: aPrefix mappedTo: aURI [
 					mappedTo: aURI]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> attributeAssociations [
 	"returns attribute name->value associations"
 
 	^ self attributeNodes attributeAssociations
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> attributeAt: aName [
 	"returns the value of the attribute whose full name matches aName or an
 	empty string if there isn't any"
@@ -198,7 +200,7 @@ XMLElement >> attributeAt: aName [
 	^ self attributeNodes attributeValueAt: aName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> attributeAt: aName ifAbsent: aBlock [
 	"returns the value of the attribute whose full name matches aName or the
 	value of aBlock if there isn't any"
@@ -208,7 +210,7 @@ XMLElement >> attributeAt: aName ifAbsent: aBlock [
 		ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> attributeAt: aName ifAbsentPut: aBlock [
 	"sets the value of the attribute whose full name matches aName to the value
 	of aBlock if there isn't one already"
@@ -218,7 +220,7 @@ XMLElement >> attributeAt: aName ifAbsentPut: aBlock [
 		ifAbsentPut: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> attributeAt: aName put: aValue [
 	"sets the value of the attribute whose full name matches aName to the value
 	aValue"
@@ -228,27 +230,27 @@ XMLElement >> attributeAt: aName put: aValue [
 		put: aValue
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLElement >> attributeListClass [
 	^ self configuration nodeFactory attributeListClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> attributeNames [
 	^ self attributeNodes attributeNames
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLElement >> attributeNamesAndValuesDo: aTwoArgumentBlock [
 	self attributeNodes attributeNamesAndValuesDo: aTwoArgumentBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLElement >> attributeNamesDo: aBlock [
 	self attributeNodes attributeNamesDo: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> attributeNodeAt: aName [
 	"returns the attribute node whose qualified or local name matches aName
 	(unlike attributeAt:, which matches the full name exactly), or nil if there
@@ -257,7 +259,7 @@ XMLElement >> attributeNodeAt: aName [
 	^ self attributeNodes attributeNodeAt: aName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> attributeNodeAt: aName ifAbsent: aBlock [
 	"returns the attribute node whose qualified or local name matches aName
 	(unlike attributeAt:ifAbsent:, which matches the full name exactly), or
@@ -268,7 +270,7 @@ XMLElement >> attributeNodeAt: aName ifAbsent: aBlock [
 		ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> attributeNodeAt: aName namespaceURI: aURI [
 	"returns the attribute node whose qualified or local name matches aName
 	(unlike attributeAt:, which matches the full name exactly) and whose
@@ -279,7 +281,7 @@ XMLElement >> attributeNodeAt: aName namespaceURI: aURI [
 		namespaceURI: aURI
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> attributeNodeAt: aName namespaceURI: aURI ifAbsent: aBlock [
 	"returns the attribute node whose qualified or local name matches aName
 	(unlike attributeAt:ifAbsent:, which matches the full name exactly) and
@@ -291,7 +293,7 @@ XMLElement >> attributeNodeAt: aName namespaceURI: aURI ifAbsent: aBlock [
 		ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> attributeNodes [
 	"Returns the attribute node list. Can be modified, but adding or removing
 	attributes also adds or removes them from the element. Copy before
@@ -300,19 +302,19 @@ XMLElement >> attributeNodes [
 	^ attributes ifNil: [attributes := self attributeListClass observer: self]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLElement >> attributeNodesDo: aBlock [
 	self attributeNodes do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> attributes [
 	"returns a new order preserving dictionary of attribute names and values"
 
 	^ self attributeNodes attributes
 ]
 
-{ #category : #namespacing }
+{ #category : 'namespacing' }
 XMLElement >> declareNamespaces: anAssociationCollection [
 	self ensureUsesNamespaces.
 	anAssociationCollection associationsDo: [:each |
@@ -321,7 +323,7 @@ XMLElement >> declareNamespaces: anAssociationCollection [
 			uri: each value]
 ]
 
-{ #category : #namespacing }
+{ #category : 'namespacing' }
 XMLElement >> declarePrefix: aPrefix uri: aURI [
 	self ensureUsesNamespaces.
 	self
@@ -333,14 +335,14 @@ XMLElement >> declarePrefix: aPrefix uri: aURI [
 		to: aURI.
 ]
 
-{ #category : #namespacing }
+{ #category : 'namespacing' }
 XMLElement >> declaredPrefixes [
 	^ self usesNamespaces "avoid lazy initializing the scope"
 		ifTrue: [self namespaceScope mappedPrefixes]
 		ifFalse: [#()]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> declaresDefaultNamespace [
 	"Did the receiver declare a new default namespace rather than inheriting one?"
 
@@ -349,7 +351,7 @@ XMLElement >> declaresDefaultNamespace [
 			or: [self defaultNamespace ~= self parent defaultNamespace]]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> declaresPrefix: aPrefix uri: aURI [
 	"Did the receiver declare a new prefix/uri pair rather than inheriting it?"
 
@@ -358,21 +360,21 @@ XMLElement >> declaresPrefix: aPrefix uri: aURI [
 			or: [(self parent isDeclaredPrefix: aPrefix uri: aURI) not]]
 ]
 
-{ #category : #namespacing }
+{ #category : 'namespacing' }
 XMLElement >> defaultNamespace [
 	^ self usesNamespaces "avoid lazy initializing the scope"
 		ifTrue: [self namespaceScope defaultNamespace]
 		ifFalse: ['']
 ]
 
-{ #category : #namespacing }
+{ #category : 'namespacing' }
 XMLElement >> defaultNamespace: aURI [
 	self
 		declarePrefix: ''
 		uri: aURI
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> expandedName [
 	"Returns the expanded name of the element as a string in the form of
 	'{namespaceURI}localName' if there's a namespace URI or 'localName' if there
@@ -381,7 +383,7 @@ XMLElement >> expandedName [
 	^ self localName expandWithXMLNamespaceURI: self namespaceURI
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> hasAttributes [
 	"returns true if this element has attribute"
 
@@ -391,7 +393,7 @@ XMLElement >> hasAttributes [
 	^ attributes size > 0.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> hasID: anID [
 	| document doctypeDefinition attributeValidators |
 
@@ -411,12 +413,12 @@ XMLElement >> hasID: anID [
 		ifFalse: [^ self hasUndeclaredID: anID].
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> hasNamespaceURI [
 	^ self namespaceURI isNotEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> hasNamespaces [
 	"returns true if the receiver declared or inherited namespace declarations"
 
@@ -426,14 +428,14 @@ XMLElement >> hasNamespaces [
 	^ namespaceScope hasNamespaces.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> hasPrefix [
 	"returns true if the receiver's name is a qualified name with a prefix"
 
 	^ self name size > self localName size
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElement >> hasUndeclaredID: anID [
 	"just look for an 'xml:id' attribute if there were no declarations"
 	^ (self
@@ -441,7 +443,7 @@ XMLElement >> hasUndeclaredID: anID [
 		ifAbsent: [^ false]) = anID
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElement >> hasUndeclaredOrDeclaredID: anID declaredWith: anAttributeValidatorDictionary [
 	self attributeNamesAndValuesDo: [:attributeName :attributeValue |
 		"only check its value if it's been declared as an ID attribute
@@ -457,24 +459,24 @@ XMLElement >> hasUndeclaredOrDeclaredID: anID declaredWith: anAttributeValidator
 	^ false.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> includesAttribute: aName [
 	^ self attributeNodes includesAttribute: aName
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> includesAttributeNode: aName [
 	^ self attributeNodes includesAttributeNode: aName
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> includesAttributeNode: aName namespaceURI: aURI [
 	^ self attributeNodes
 		includesAttributeNode: aName
 		namespaceURI: aURI
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> isDeclaredPrefix: aPrefix [
 	"is the namespace prefix aPrefix declared for the receiver and its descendants?"
 
@@ -482,7 +484,7 @@ XMLElement >> isDeclaredPrefix: aPrefix [
 		and: [self namespaceScope includesPrefix: aPrefix]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> isDeclaredPrefix: aPrefix uri: aURI [
 	"is the namespace prefix aPrefix mapped to aURI for the receiver and
 	its descendants?"
@@ -494,19 +496,19 @@ XMLElement >> isDeclaredPrefix: aPrefix uri: aURI [
 				mappedTo: aURI]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> isElement [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> isElementNamed: aName [
 	"returns true if the receiver's qualified name or local name matches aName"
 
 	^ self isNamed: aName
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> isElementNamedAny: aNameCollection [
 	"returns true if the receiver's qualified name or local name matches any
 	name in aNameCollection"
@@ -514,7 +516,7 @@ XMLElement >> isElementNamedAny: aNameCollection [
 	^ self isNamedAny: aNameCollection
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> isInLanguage: aLanguageTag [
 	"Returns true if the receiver or one of its ancestors has an xml:lang
 	attribute, and if the value is an IETF language tag, like 'En-US', that matches
@@ -529,14 +531,14 @@ XMLElement >> isInLanguage: aLanguageTag [
 			matchesLanguage: aLanguageTag
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> isNamed: aName [
 	"Does the receiver's qualified or local name match aName?"
 
 	^ self name isXMLQualifiedOrLocalName: aName
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> isNamedAny: aNameCollection [
 	"Does the receiver's qualified or local name match any of the names
 	in aNameCollection?"
@@ -544,14 +546,14 @@ XMLElement >> isNamedAny: aNameCollection [
 	^ aNameCollection includesXMLName: self name
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLElement >> isRoot [
 	"Is the receiver the root element of a DOM tree?"
 
 	^ (self hasParent and: [self parent isElement]) not
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> localName [
 	"Returns the local name of the receiver, the name minus any leading
 	prefix and colon like 'local' in 'prefix:local'"
@@ -559,7 +561,7 @@ XMLElement >> localName [
 	^ localName ifNil: [localName := self name xmlLocalNameAfterPrefix]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> name [
 	"returns the full name of the element, either a qualified name if it has a
 	prefix or just a local name if it doesn't"
@@ -567,7 +569,7 @@ XMLElement >> name [
 	^ name ifNil: [name := '']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> name: aName [
 	"Renames the element. If aName is a qualified name and namespace checking is
 	enabled (default), then the prefix must already have been declared. This can
@@ -578,7 +580,7 @@ XMLElement >> name: aName [
 		localName := aName xmlLocalNameAfterPrefix]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> name: aName namespaceURI: aURI [
 	"Renames the element and also declares a namespace URI in one step. If aName
 	is qualified, then it declares the prefix to be mapped to aURI. If aName has
@@ -589,24 +591,24 @@ XMLElement >> name: aName namespaceURI: aURI [
 		name: aName
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElement >> namespaceScope [
 	^ namespaceScope ifNil: [namespaceScope := XMLNamespaceScope new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> namespaceURI [
 	^ self resolvePrefix: self prefix
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElement >> newNamespaceScopeForAddedElement [
 	^ self usesNamespaces
 		ifTrue: [self namespaceScope copy]
 		ifFalse: [nil]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> nextElement [
 	"returns the first element after the receiver that is a child of the same
 	parent if there is one, nil otherwise"
@@ -614,7 +616,7 @@ XMLElement >> nextElement [
 	^ self parent ifNotNil: [:node | node elementAfter: self]
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLElement >> postCopy [
 	super postCopy.
 
@@ -627,7 +629,7 @@ XMLElement >> postCopy [
 			attributes := copiedAttributes].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> prefix [
 	"Returns the prefix of the receiver's name or an empty string if there
 	isn't one."
@@ -637,7 +639,7 @@ XMLElement >> prefix [
 	^ self name xmlPrefixBeforeLocalName: self localName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> prefix: aPrefix [
 	"Changes the prefix of the name of the receiver to aPrefix. If namespace
 	checking is enabled (default) and aPrefix is non-empty, then aPrefix must
@@ -646,7 +648,7 @@ XMLElement >> prefix: aPrefix [
 	self renameWith: [name := self localName qualifyWithXMLPrefix:  aPrefix]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> previousElement [
 	"returns the first element before the receiver that is a child of the same
 	parent if there is one, nil otherwise"
@@ -654,7 +656,7 @@ XMLElement >> previousElement [
 	^ self parent ifNotNil: [:node | node elementBefore: self]
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLElement >> removeAttribute: aName [
 	"Removes and returns the value of the attribute whose full name matches
 	aName or raises an error if it's absent."
@@ -662,7 +664,7 @@ XMLElement >> removeAttribute: aName [
 	^ (self attributeNodes removeAttribute: aName) value.
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLElement >> removeAttribute: aName ifAbsent: aBlock [
 	"Removes and returns the value of the attribute whose full name matches
 	aName or returns the value of aBlock if it's absent."
@@ -672,7 +674,7 @@ XMLElement >> removeAttribute: aName ifAbsent: aBlock [
 		ifAbsent: aBlock
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLElement >> removeAttributeNode: aNode [
 	"Removes and returns the attribute node aNode or raises an error if
 	it's absent."
@@ -680,7 +682,7 @@ XMLElement >> removeAttributeNode: aNode [
 	^ self attributeNodes remove: aNode
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLElement >> removeAttributeNode: aNode ifAbsent: aBlock [
 	"Removes and returns the attribute node aNode or returns the value
 	of aBlock if it's absent."
@@ -690,17 +692,17 @@ XMLElement >> removeAttributeNode: aNode ifAbsent: aBlock [
 		ifAbsent: aBlock
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLElement >> removeAttributes [
 	self attributeNodes removeAll
 ]
 
-{ #category : #notifying }
+{ #category : 'notifying' }
 XMLElement >> removedAttribute: anAttribute [
 	anAttribute element: nil
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElement >> renameWith: aBlock [
 	| oldName |
 
@@ -717,7 +719,7 @@ XMLElement >> renameWith: aBlock [
 						to: self name]].
 ]
 
-{ #category : #notifying }
+{ #category : 'notifying' }
 XMLElement >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 	self attributeNodes	
 		renamedAttribute: anAttribute
@@ -726,7 +728,7 @@ XMLElement >> renamedAttribute: anAttribute from: anOldName to: aNewName [
 	self validateNamespacePrefixOfAttribute: anAttribute.
 ]
 
-{ #category : #namespacing }
+{ #category : 'namespacing' }
 XMLElement >> resolvePrefix: aPrefix [
 	"Resolves the namespace URI of aPrefix (the defualt namespace URI if aPrefix
 	is empty), including the predefined 'xml' and 'xmlns' prefixes. Returns an
@@ -737,7 +739,7 @@ XMLElement >> resolvePrefix: aPrefix [
 		ifUnresolvable: ''
 ]
 
-{ #category : #namespacing }
+{ #category : 'namespacing' }
 XMLElement >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 	"Resolves the namespace URI of aPrefix (the defualt namespace URI if aPrefix
 	is empty), including the predefined 'xml' and 'xmlns' prefixes. Returns the
@@ -751,7 +753,7 @@ XMLElement >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 		ifFalse: [aBlock value]
 ]
 
-{ #category : #namespacing }
+{ #category : 'namespacing' }
 XMLElement >> resolvePrefixesOfNamespaceURI: aURI [
 	"returns a set of all the namespace prefixes of aURI"
 	^ self usesNamespaces
@@ -759,12 +761,12 @@ XMLElement >> resolvePrefixesOfNamespaceURI: aURI [
 		ifFalse: [Set new]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLElement >> setAttributes: anAssociationCollection [
 	self attributeNodes setAttributes: anAssociationCollection
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElement >> setConfiguration: aConfiguration name: aName localName: aLocalName attributes: anAttributeDictionary namespaceScope: aNamespaceScope [
 	"This should only be sent by DOM parsers/builders, not public API users"
 
@@ -783,22 +785,22 @@ XMLElement >> setConfiguration: aConfiguration name: aName localName: aLocalName
 	namespaceScope := aNamespaceScope.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElement >> setNamespaceScope: aNamespaceScope [
 	namespaceScope := aNamespaceScope
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLElement >> sortKey [
 	^ self name
 ]
 
-{ #category : #namespacing }
+{ #category : 'namespacing' }
 XMLElement >> undeclareDefaultNamespace [
 	self undeclarePrefix: ''
 ]
 
-{ #category : #namespacing }
+{ #category : 'namespacing' }
 XMLElement >> undeclarePrefix: aPrefix [
 	self ensureUsesNamespaces.
 	self
@@ -809,14 +811,14 @@ XMLElement >> undeclarePrefix: aPrefix [
 				ifAbsent: [^ self]).
 ]
 
-{ #category : #namespacing }
+{ #category : 'namespacing' }
 XMLElement >> undeclarePrefixes [
 	self ensureUsesNamespaces.
 	self declaredPrefixes do: [:each |
 		self undeclarePrefix: each].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElement >> validateNamespacePrefix [
 	(self usesNamespaces
 		and: [self hasPrefix])
@@ -826,7 +828,7 @@ XMLElement >> validateNamespacePrefix [
 				ofElement: self name]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElement >> validateNamespacePrefixOfAttribute: anAttribute [
 	| attributePrefix attributeLocalName attributeNamespaceURI |
 
@@ -858,7 +860,7 @@ XMLElement >> validateNamespacePrefixOfAttribute: anAttribute [
 							aliasesURI: attributeNamespaceURI]]].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLElement >> validateNamespacePrefixesOfAttributes [
 	(self usesNamespaces
 		and: [self hasAttributes])
@@ -867,7 +869,7 @@ XMLElement >> validateNamespacePrefixesOfAttributes [
 				self attributeNames]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLElement >> writeXMLOn: aWriter [
 	| tagWriter |
 

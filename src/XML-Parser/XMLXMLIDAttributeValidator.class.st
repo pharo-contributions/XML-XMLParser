@@ -2,27 +2,29 @@
 This class validates ID attributes for the xml:id spec.
 "
 Class {
-	#name : #XMLXMLIDAttributeValidator,
-	#superclass : #XMLIDAttributeValidator,
-	#category : #'XML-Parser-Validation'
+	#name : 'XMLXMLIDAttributeValidator',
+	#superclass : 'XMLIDAttributeValidator',
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLXMLIDAttributeValidator class >> standaloneExternalClass [
 	^ XMLStandaloneExternalXMLIDAttributeValidator
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLXMLIDAttributeValidator >> isXMLID [
 	^ true
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLXMLIDAttributeValidator >> validateAttributeValue: aValue [
 	self elementIDValidator validateXMLID: aValue
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLXMLIDAttributeValidator >> validateXMLIDAttributeDeclaration [
 
 ]

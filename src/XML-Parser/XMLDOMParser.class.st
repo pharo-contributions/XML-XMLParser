@@ -11,17 +11,18 @@ To control what node classes the parser uses to construct the tree, inject a cus
 See the superclass for more info.
 "
 Class {
-	#name : #XMLDOMParser,
-	#superclass : #SAXHandler,
+	#name : 'XMLDOMParser',
+	#superclass : 'SAXHandler',
 	#instVars : [
 		'document',
 		'nodeStack',
 		'currentScope'
 	],
-	#category : #'XML-Parser'
+	#category : 'XML-Parser',
+	#package : 'XML-Parser'
 }
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 XMLDOMParser >> attributeDeclaration: anElementName name: anAttributeName type: aType defaultPragma: aDefaultPragma defaultValue: aDefaultValue [
 	self topNodeAdd:
 		(self nodeFactory attributeDeclarationClass
@@ -32,7 +33,7 @@ XMLDOMParser >> attributeDeclaration: anElementName name: anAttributeName type: 
 			defaultValue: aDefaultValue)
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 XMLDOMParser >> characters: aString [
 	(self isInCDataSection
 		and: [self preservesCDataNodes])
@@ -40,33 +41,33 @@ XMLDOMParser >> characters: aString [
 		ifFalse: [self topNodeAddString: aString]
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 XMLDOMParser >> comment: aString [
 	self preservesCommentNodes
 		ifTrue: [self topNodeAdd: (self nodeFactory newComment: aString)]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLDOMParser >> configurationClass [
 	^ XMLDOMConfiguration
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDOMParser >> doctypeDefinition: aDoctypeDefinition [
 	self document doctypeDefinition: aDoctypeDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMParser >> document [
 	^ document
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMParser >> document: aDocument [
 	document := aDocument
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 XMLDOMParser >> elementDeclaration: anElementName contentModel: aContentModel [
 	self topNodeAdd:
 		(self nodeFactory elementDeclarationClass
@@ -74,24 +75,24 @@ XMLDOMParser >> elementDeclaration: anElementName contentModel: aContentModel [
 			contentModel: aContentModel)
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 XMLDOMParser >> endDTD [
 	self popNode
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 XMLDOMParser >> endDocument [
 	"nodeStack is not popped here for efficiency because #document keeps
 	a reference to the root too, and there may not be a root to pop
 	anyway if it's an inner XML parser"
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 XMLDOMParser >> endElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName [
 	self popNode
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 XMLDOMParser >> generalEntityDeclaration: aName publicID: aPublicID systemID: aSystemID ndata: aNotationName [
 	self topNodeAdd:
 		(self nodeFactory generalEntityDeclarationClass
@@ -101,7 +102,7 @@ XMLDOMParser >> generalEntityDeclaration: aName publicID: aPublicID systemID: aS
 			ndata: aNotationName)
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 XMLDOMParser >> generalEntityDeclaration: aName replacement: aReplacement [
 	self topNodeAdd:
 		(self nodeFactory generalEntityDeclarationClass
@@ -109,13 +110,13 @@ XMLDOMParser >> generalEntityDeclaration: aName replacement: aReplacement [
 			replacement: aReplacement)
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 XMLDOMParser >> ignorableWhitespace: aString [
 	self preservesIgnorableWhitespace
 		ifTrue: [self characters: aString]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLDOMParser >> initializeInnerXMLParser: aParser [
 	self document
 		ifNotNil: [
@@ -137,7 +138,7 @@ XMLDOMParser >> initializeInnerXMLParser: aParser [
 		ifTrue: [self startContent]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLDOMParser >> initializeParser: aParser [
 	super initializeParser: aParser.
 
@@ -145,7 +146,7 @@ XMLDOMParser >> initializeParser: aParser [
 		ifTrue: [self initializeInnerXMLParser: aParser]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDOMParser >> innerXMLRootNode: aRootNode [
 	self
 		configuration: aRootNode configuration;
@@ -153,34 +154,34 @@ XMLDOMParser >> innerXMLRootNode: aRootNode [
 		pushNode: aRootNode
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 XMLDOMParser >> nodeFactory [
 	^ self configuration nodeFactory
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 XMLDOMParser >> nodeFactory: aNodeFactory [
 	self configuration nodeFactory: aNodeFactory
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLDOMParser >> nodeListClass [
 	"will be deprecated"
 	^ self configuration nodeListClass
 ]
 
-{ #category : #deprecated }
+{ #category : 'deprecated' }
 XMLDOMParser >> nodeListClass: aClass [
 	"will be deprecated"
 	self configuration nodeListClass: aClass
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDOMParser >> nodeStack [
 	^ nodeStack
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 XMLDOMParser >> notationDeclaration: aName publicID: aPublicID systemID: aSystemID [
 	self topNodeAdd:
 		(self nodeFactory notationDeclarationClass
@@ -189,7 +190,7 @@ XMLDOMParser >> notationDeclaration: aName publicID: aPublicID systemID: aSystem
 			systemID: aSystemID)
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLDOMParser >> on: aStringOrStream [
 	super on: aStringOrStream.
 
@@ -198,7 +199,7 @@ XMLDOMParser >> on: aStringOrStream [
 	currentScope := nil
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 XMLDOMParser >> optimizeForLargeDocuments [
 	super optimizeForLargeDocuments.
 
@@ -206,7 +207,7 @@ XMLDOMParser >> optimizeForLargeDocuments [
 	self configuration attributeListClass: XMLAttributeList
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 XMLDOMParser >> parameterEntityDeclaration: aName publicID: aPublicID systemID: aSystemID [
 	self topNodeAdd:
 		(self nodeFactory parameterEntityDeclarationClass
@@ -215,7 +216,7 @@ XMLDOMParser >> parameterEntityDeclaration: aName publicID: aPublicID systemID: 
 			systemID: aSystemID)
 ]
 
-{ #category : #'handling - declaration' }
+{ #category : 'handling - declaration' }
 XMLDOMParser >> parameterEntityDeclaration: aName replacement: aReplacement [
 	self topNodeAdd:
 		(self nodeFactory parameterEntityDeclarationClass
@@ -223,22 +224,22 @@ XMLDOMParser >> parameterEntityDeclaration: aName replacement: aReplacement [
 			replacement: aReplacement)
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 XMLDOMParser >> parsingResult [
 	^ self document
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDOMParser >> popNode [
 	^ self nodeStack removeLast
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 XMLDOMParser >> preservesCDataNodes [
 	^ self configuration preservesCDataNodes
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 XMLDOMParser >> preservesCDataNodes: aBoolean [
 	"if enabled, <![CDATA[...]]> sections will be preserved as CDATA nodes
 	and not ordinary string nodes and won't be merged with adjacent string
@@ -246,23 +247,23 @@ XMLDOMParser >> preservesCDataNodes: aBoolean [
 	self configuration preservesCDataNodes: aBoolean
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 XMLDOMParser >> preservesCommentNodes [
 	^ self configuration preservesCommentNodes
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 XMLDOMParser >> preservesCommentNodes: aBoolean [
 	"if enabled, comments will be preserved as comment nodes (not default)"
 	self configuration preservesCommentNodes: aBoolean
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 XMLDOMParser >> preservesIgnorableWhitespace [
 	^ self configuration preservesIgnorableWhitespace
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 XMLDOMParser >> preservesIgnorableWhitespace: aBoolean [
 	"If enabled, ignorable whitespace (identified by DTD element declarations
 	with element content) will be preserved as string nodes. Enables validation.
@@ -271,7 +272,7 @@ XMLDOMParser >> preservesIgnorableWhitespace: aBoolean [
 	self configuration preservesIgnorableWhitespace: aBoolean
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 XMLDOMParser >> processingInstruction: aTargetString data: aDataString [
 	self topNodeAdd:
 		(self nodeFactory newPI
@@ -279,19 +280,19 @@ XMLDOMParser >> processingInstruction: aTargetString data: aDataString [
 			data: aDataString)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDOMParser >> pushElement: anElement [
 	self topNodeAdd: anElement.
 	^ self pushNode: anElement.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDOMParser >> pushNode: aNode [
 	^ self nodeStack addLast: aNode
 
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 XMLDOMParser >> startDTD: aRootElementName publicID: aPublicID systemID: aSystemID [
 	| doctypeDeclaration |
 
@@ -304,7 +305,7 @@ XMLDOMParser >> startDTD: aRootElementName publicID: aPublicID systemID: aSystem
 	self document doctypeDeclaration: doctypeDeclaration.
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 XMLDOMParser >> startDocument [
 	"inner XML parsers should ignore this event"
 	self nodeStack size > 0
@@ -316,7 +317,7 @@ XMLDOMParser >> startDocument [
 			self document configuration: self configuration]
 ]
 
-{ #category : #'handling - content' }
+{ #category : 'handling - content' }
 XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName: aLocalName attributes: anAttributeDictionary [
 	self pushElement:
 		((self nodeFactory
@@ -331,34 +332,34 @@ XMLDOMParser >> startElement: aQualifiedName prefix: aPrefix uri: aURI localName
 				namespaceScope: currentScope)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDOMParser >> startInnerXMLElement: anElement forParser: aParser [
 	aParser driver currentElement: anElement name.
 	anElement hasNamespaces
 		ifTrue: [aParser driver currentScope: anElement namespaceScope].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDOMParser >> startScope: aNamespaceScope [
 	currentScope := aNamespaceScope
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDOMParser >> topNode [
 	^ self nodeStack xmlLastOrNil
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDOMParser >> topNodeAdd: aNode [
 	^ self nodeStack last addNode: aNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDOMParser >> topNodeAddString: aString [
 	^ self nodeStack last addString: aString
 ]
 
-{ #category : #'handling - lexical' }
+{ #category : 'handling - lexical' }
 XMLDOMParser >> xmlVersion: aVersionFloat encoding: anEncoding standalone: aBoolean [
 	self document ifNotNil: [
 		self document

@@ -6,16 +6,17 @@ You can map combinations of element name, namespace URI, and attributes to speci
 Instances can be saved and reused for performance and safely modified after copying.
 "
 Class {
-	#name : #SAX2PluggableElementHandlerFactory,
-	#superclass : #SAX2ElementHandlerFactory,
+	#name : 'SAX2PluggableElementHandlerFactory',
+	#superclass : 'SAX2ElementHandlerFactory',
 	#instVars : [
 		'elementClassMapper',
 		'elementHandlerClass'
 	],
-	#category : #'XML-Parser'
+	#category : 'XML-Parser',
+	#package : 'XML-Parser'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2PluggableElementHandlerFactory >> classForElement: aQualifiedName namespaceURI: aURI localName: aLocalName attributes: anAssociationCollection [
 	^ elementClassMapper
 		classForElement: aQualifiedName
@@ -24,33 +25,33 @@ SAX2PluggableElementHandlerFactory >> classForElement: aQualifiedName namespaceU
 		ifNone: [self elementHandlerClass]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SAX2PluggableElementHandlerFactory >> elementClassMapper [
 	^ elementClassMapper
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SAX2PluggableElementHandlerFactory >> elementClassMapper: anElementClassMapper [
 	elementClassMapper := anElementClassMapper
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 SAX2PluggableElementHandlerFactory >> elementClassMapperClass [
 	^ XMLBasicElementClassMapper
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2PluggableElementHandlerFactory >> elementHandlerClass [
 	^ elementHandlerClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SAX2PluggableElementHandlerFactory >> elementHandlerClass: aClass [
 	"set the default element handler class"
 	elementHandlerClass := aClass
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 SAX2PluggableElementHandlerFactory >> handleElement: anElementName attributes: aCollectionOrAttributeSpec withClass: aClass [
 	"aCollectionOrAttributeSpec can be some kind of XMLAttributeSpec or a
 	collection of associations of required attribute names and values, and the
@@ -63,7 +64,7 @@ SAX2PluggableElementHandlerFactory >> handleElement: anElementName attributes: a
 		toClass: aClass
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 SAX2PluggableElementHandlerFactory >> handleElement: anElementName namespaceURI: aURI attributes: aCollectionOrAttributeSpec withClass: aClass [
 	"aCollectionOrAttributeSpec can be some kind of XMLAttributeSpec or a
 	collection of associations of required attribute names and values, and the
@@ -77,7 +78,7 @@ SAX2PluggableElementHandlerFactory >> handleElement: anElementName namespaceURI:
 		toClass: aClass
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 SAX2PluggableElementHandlerFactory >> handleElement: anElementName namespaceURI: aURI withClass: aClass [
 	elementClassMapper
 		mapElement: anElementName
@@ -85,14 +86,14 @@ SAX2PluggableElementHandlerFactory >> handleElement: anElementName namespaceURI:
 		toClass: aClass
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 SAX2PluggableElementHandlerFactory >> handleElement: anElementName withClass: aClass [
 	elementClassMapper
 		mapElement: anElementName
 		toClass: aClass
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 SAX2PluggableElementHandlerFactory >> handleElements: anElementNameCollection namespaceURI: aNamespaceURI withClass: aClass [
 	elementClassMapper
 		mapElements: anElementNameCollection
@@ -100,14 +101,14 @@ SAX2PluggableElementHandlerFactory >> handleElements: anElementNameCollection na
 		toClass: aClass
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 SAX2PluggableElementHandlerFactory >> handleElements: anElementNameCollection withClass: aClass [
 	elementClassMapper
 		mapElements: anElementNameCollection
 		toClass: aClass
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 SAX2PluggableElementHandlerFactory >> handleElementsMatchingClass: aClass [
 	"This will handle all elements matching the name of a class with that
 	class, but igoring the class's prefix and any 'Element' or 'ElementHandler'
@@ -124,7 +125,7 @@ SAX2PluggableElementHandlerFactory >> handleElementsMatchingClass: aClass [
 		ignoringSuffixes: self ignorableClassNameSuffixes
 ]
 
-{ #category : #handling }
+{ #category : 'handling' }
 SAX2PluggableElementHandlerFactory >> handleElementsMatchingClasses: aClassCollection [
 	"See the comment in #handleElementsMatchingClass:"
 
@@ -133,12 +134,12 @@ SAX2PluggableElementHandlerFactory >> handleElementsMatchingClasses: aClassColle
 		ignoringSuffixes: self ignorableClassNameSuffixes
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 SAX2PluggableElementHandlerFactory >> ignorableClassNameSuffixes [
 	^ #('Element' 'ElementHandler')
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SAX2PluggableElementHandlerFactory >> initialize [
 	super initialize.
 
@@ -146,7 +147,7 @@ SAX2PluggableElementHandlerFactory >> initialize [
 	elementHandlerClass := SAX2ElementHandler
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 SAX2PluggableElementHandlerFactory >> postCopy [
 	super postCopy.
 

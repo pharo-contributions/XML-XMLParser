@@ -2,15 +2,17 @@
 This is a base class for NFA states.
 "
 Class {
-	#name : #XMLNFAState,
-	#superclass : #Object,
+	#name : 'XMLNFAState',
+	#superclass : 'Object',
 	#instVars : [
 		'lastAddedTo'
 	],
-	#category : #'XML-Parser-Validation-DFA'
+	#category : 'XML-Parser-Validation-DFA',
+	#package : 'XML-Parser',
+	#tag : 'Validation-DFA'
 }
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLNFAState >> addTo: aStateSet [
 	lastAddedTo == aStateSet
 		ifFalse: [
@@ -20,7 +22,7 @@ XMLNFAState >> addTo: aStateSet [
 			aStateSet add: self]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLNFAState >> asDFAState [
 	| nfaStates |
 
@@ -29,25 +31,25 @@ XMLNFAState >> asDFAState [
 	^ nfaStates asDFAState.
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 XMLNFAState >> connectToState: aState [
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNFAState >> isAccepting [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNFAState >> matches: anObject [
 	^ false
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNFAState >> nextStatesDo: aBlock [
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLNFAState >> printLabelOn: aStream [
 	aStream print: self identityHash
 ]

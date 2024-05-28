@@ -2,31 +2,33 @@
 A read stream for single characters. This is faster and uses less memory than converting a char to a string and using a read stream on it.
 "
 Class {
-	#name : #XMLSingleCharacterReadStream,
-	#superclass : #XMLAbstractReadStream,
+	#name : 'XMLSingleCharacterReadStream',
+	#superclass : 'XMLAbstractReadStream',
 	#instVars : [
 		'character',
 		'atEnd'
 	],
-	#category : #'XML-Parser-Streams'
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLSingleCharacterReadStream >> atEnd [
 	^ atEnd
 ]
 
-{ #category : #closing }
+{ #category : 'closing' }
 XMLSingleCharacterReadStream >> close [
 	atEnd := true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLSingleCharacterReadStream >> contents [
 	^ String with: character
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLSingleCharacterReadStream >> next [
 	atEnd
 		ifTrue: [^ nil]
@@ -35,32 +37,32 @@ XMLSingleCharacterReadStream >> next [
 			^ character]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLSingleCharacterReadStream >> on: aCharacter [
 	character := aCharacter.
 	atEnd := false.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLSingleCharacterReadStream >> peek [
 	atEnd
 		ifTrue: [^ nil]
 		ifFalse: [^ character]
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLSingleCharacterReadStream >> position [
 	^ atEnd
 		ifTrue: [1]
 		ifFalse: [0]
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLSingleCharacterReadStream >> position: anInteger [
 	atEnd := anInteger > 0
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 XMLSingleCharacterReadStream >> printOn: aStream [
 	super printOn: aStream.
 
@@ -70,7 +72,7 @@ XMLSingleCharacterReadStream >> printOn: aStream [
 		nextPut: $).
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLSingleCharacterReadStream >> reset [
 	atEnd := false
 ]

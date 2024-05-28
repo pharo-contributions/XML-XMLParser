@@ -2,30 +2,32 @@
 This class validates ID attributes that must have unique (not repeated in the same document) values.
 "
 Class {
-	#name : #XMLIDAttributeValidator,
-	#superclass : #XMLAttributeValidator,
+	#name : 'XMLIDAttributeValidator',
+	#superclass : 'XMLAttributeValidator',
 	#instVars : [
 		'elementIDValidator'
 	],
-	#category : #'XML-Parser-Validation'
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLIDAttributeValidator class >> standaloneExternalClass [
 	^ XMLStandaloneExternalIDAttributeValidator
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLIDAttributeValidator >> elementIDValidator [
 	^ elementIDValidator
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLIDAttributeValidator >> elementIDValidator: anElementIDValidator [
 	elementIDValidator := anElementIDValidator
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLIDAttributeValidator >> errorIDAttributeMustBeRequiredOrImplied [
 	XMLValidationException
 		formatSignal:
@@ -35,19 +37,19 @@ XMLIDAttributeValidator >> errorIDAttributeMustBeRequiredOrImplied [
 		with: self element
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLIDAttributeValidator >> initializeWithValidatorsFrom: aValidatorContainer [
 	super initializeWithValidatorsFrom: aValidatorContainer.
 
 	elementIDValidator := aValidatorContainer elementIDValidator.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLIDAttributeValidator >> isID [
 	^ true
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLIDAttributeValidator >> validateAttributeDeclaration [
 	self elementIDValidator
 		validateIDAttribute: self attribute
@@ -56,12 +58,12 @@ XMLIDAttributeValidator >> validateAttributeDeclaration [
 	super validateAttributeDeclaration.
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLIDAttributeValidator >> validateAttributeDefaultValue: aDefaultValue [
 	self errorIDAttributeMustBeRequiredOrImplied
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLIDAttributeValidator >> validateAttributeValue: aValue [
 	self elementIDValidator
 		validateID: aValue

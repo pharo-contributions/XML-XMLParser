@@ -2,23 +2,25 @@
 This class is a read stream adapter factory for decoding content compressed with compression schemes like GZip and DEFLATE.
 "
 Class {
-	#name : #XMLHTTPDecompressingReadStreamAdapterFactory,
-	#superclass : #Object,
-	#category : #'XML-Parser-HTTP'
+	#name : 'XMLHTTPDecompressingReadStreamAdapterFactory',
+	#superclass : 'Object',
+	#category : 'XML-Parser-HTTP',
+	#package : 'XML-Parser',
+	#tag : 'HTTP'
 }
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLHTTPDecompressingReadStreamAdapterFactory class >> basicCanDecompressCompression: aCompressionScheme [
 	^ self compressionScheme = aCompressionScheme
 		and: [self isSupportedImplementation]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPDecompressingReadStreamAdapterFactory class >> canDecompressCompression: aCompressionScheme [
 	^ self basicCanDecompressCompression: aCompressionScheme asLowercase
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPDecompressingReadStreamAdapterFactory class >> classForCompression: aCompressionScheme [
 	| lowercaseCompressionScheme |
 
@@ -29,34 +31,34 @@ XMLHTTPDecompressingReadStreamAdapterFactory class >> classForCompression: aComp
 	^ nil.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPDecompressingReadStreamAdapterFactory class >> compressionScheme [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPDecompressingReadStreamAdapterFactory class >> decompressingReadStreamAdapterClass [
 	self subclassResponsibility
 ]
 
-{ #category : #'private ' }
+{ #category : 'private ' }
 XMLHTTPDecompressingReadStreamAdapterFactory class >> errorUnsupportedCompression: aCompressionScheme [
 	XMLHTTPException
 		formatSignal: 'Unsupported compression scheme "{1}" for HTTP content'
 		with: aCompressionScheme
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPDecompressingReadStreamAdapterFactory class >> isSupportedImplementation [
 	^ self decompressingReadStreamAdapterClass isNotNil
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLHTTPDecompressingReadStreamAdapterFactory class >> on: aReadStream [
 	^ self decompressingReadStreamAdapterClass on: aReadStream
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLHTTPDecompressingReadStreamAdapterFactory class >> on: aReadStream compression: aCompressionScheme [
 	^ (self classForCompression: aCompressionScheme)
 		ifNil: [self errorUnsupportedCompression: aCompressionScheme]
@@ -64,7 +66,7 @@ XMLHTTPDecompressingReadStreamAdapterFactory class >> on: aReadStream compressio
 			classForCompression on: aReadStream]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLHTTPDecompressingReadStreamAdapterFactory class >> supportedCompressionSchemes [
 	| supportedCompressionSchemes |
 

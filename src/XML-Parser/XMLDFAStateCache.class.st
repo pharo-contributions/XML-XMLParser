@@ -2,21 +2,23 @@
 This class uses a dictionary with NFAStateSet keys to cache DFA states. (Does not use the regular XML key/value  cache for performance)
 "
 Class {
-	#name : #XMLDFAStateCache,
-	#superclass : #Object,
+	#name : 'XMLDFAStateCache',
+	#superclass : 'Object',
 	#instVars : [
 		'firstDFAState',
 		'cachedDFAStates'
 	],
-	#category : #'XML-Parser-Validation-DFA'
+	#category : 'XML-Parser-Validation-DFA',
+	#package : 'XML-Parser',
+	#tag : 'Validation-DFA'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLDFAStateCache class >> firstDFAState: aDFAState [
 	^ self new setFirstDFAState: aDFAState
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDFAStateCache >> addDFAStateForNFAStates: anNFAStateSet [
 	cachedDFAStates size >= self maxCachedDFAStates
 		ifTrue: [self removeDFAStates].
@@ -25,29 +27,29 @@ XMLDFAStateCache >> addDFAStateForNFAStates: anNFAStateSet [
 		put: (anNFAStateSet asDFAStateWithStateCache: self).
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDFAStateCache >> cachedDFAStates [
 	^ cachedDFAStates
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDFAStateCache >> dfaStateForNFAStates: anNFAStateSet [
 	^ cachedDFAStates
 		at: anNFAStateSet
 		ifAbsent: [self addDFAStateForNFAStates: anNFAStateSet]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDFAStateCache >> firstDFAState [
 	^ firstDFAState
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDFAStateCache >> maxCachedDFAStates [
 	^ 64
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDFAStateCache >> removeDFAStates [
 	cachedDFAStates
 		valuesDo: [:each | each removeDFAStateTransitions];
@@ -57,7 +59,7 @@ XMLDFAStateCache >> removeDFAStates [
 		put: firstDFAState.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLDFAStateCache >> setFirstDFAState: aDFAState [
 	firstDFAState := aDFAState.
 	(cachedDFAStates := Dictionary new: 5)

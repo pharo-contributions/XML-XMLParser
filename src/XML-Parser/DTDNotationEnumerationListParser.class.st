@@ -2,12 +2,14 @@
 This class parses notation attribute value lists in the form of ""NOTATION (one|two|...)"". It assumes there is no whitespace around the ""|"" separated list values.
 "
 Class {
-	#name : #DTDNotationEnumerationListParser,
-	#superclass : #DTDEnumerationListParser,
-	#category : #'XML-Parser-DTD'
+	#name : 'DTDNotationEnumerationListParser',
+	#superclass : 'DTDEnumerationListParser',
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 DTDNotationEnumerationListParser >> listStartOffset [
 
 	^ 10 "'NOTATION (' size"

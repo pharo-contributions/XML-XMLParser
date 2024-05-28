@@ -2,37 +2,39 @@
 This is a base class for DOM node tree visitors. Subclasses can implement any of the ""visiting"" messages, and instances can be used by sending a node #acceptNodeVisitor: with it as the argument.
 "
 Class {
-	#name : #XMLNodeVisitor,
-	#superclass : #Object,
-	#category : #'XML-Parser-DOM'
+	#name : 'XMLNodeVisitor',
+	#superclass : 'Object',
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLNodeVisitor >> visitCData: aCData [
 	^ self visitStringNode: aCData
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLNodeVisitor >> visitComment: aComment [
 	^ aComment
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLNodeVisitor >> visitDocument: aDocument [
 	^ self visitNodeWithElements: aDocument
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLNodeVisitor >> visitElement: anElement [
 	^ self visitNodeWithElements: anElement
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLNodeVisitor >> visitNode: aNode [
 	^ aNode acceptNodeVisitor: self
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLNodeVisitor >> visitNodeWithElements: aNodeWithElements [
 	aNodeWithElements hasChildren
 		ifTrue: [
@@ -41,12 +43,12 @@ XMLNodeVisitor >> visitNodeWithElements: aNodeWithElements [
 	^ aNodeWithElements.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLNodeVisitor >> visitPI: aPI [
 	^ aPI
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 XMLNodeVisitor >> visitStringNode: aStringNode [
 	^ aStringNode
 ]

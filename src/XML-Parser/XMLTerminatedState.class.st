@@ -2,17 +2,19 @@
 A state for when tokenizing has stopped.
 "
 Class {
-	#name : #XMLTerminatedState,
-	#superclass : #XMLTokenizerState,
-	#category : #'XML-Parser-Drivers'
+	#name : 'XMLTerminatedState',
+	#superclass : 'XMLTokenizerState',
+	#category : 'XML-Parser-Drivers',
+	#package : 'XML-Parser',
+	#tag : 'Drivers'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLTerminatedState >> isTerminatedState [
 	^ true
 ]
 
-{ #category : #tokenizing }
+{ #category : 'tokenizing' }
 XMLTerminatedState >> nextTokenFrom: aTokenizer [
 	^ aTokenizer nextEndDocument
 ]

@@ -2,43 +2,45 @@
 This class validates elements using a regular expression converted to a DFA. It ignores PCDATA, comments, and PIs.
 "
 Class {
-	#name : #XMLDFAElementValidator,
-	#superclass : #XMLElementValidator,
+	#name : 'XMLDFAElementValidator',
+	#superclass : 'XMLElementValidator',
 	#instVars : [
 		'dfa',
 		'currentState'
 	],
-	#category : #'XML-Parser-Validation'
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLDFAElementValidator class >> element: anElement dfa: aDFA [
 	^ self new
 		setElement: anElement
 		dfa: aDFA
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 XMLDFAElementValidator >> asReadyElementValidator [
 	^ self copy
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLDFAElementValidator >> atEnd [
 	^ currentState isAccepting
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDFAElementValidator >> currentState [
 	^ currentState
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLDFAElementValidator >> dfa [
 	^ dfa
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLDFAElementValidator >> errorNonDeterminismInContentModelAfter: anElement [
 	XMLValidationException
 		formatSignal:
@@ -51,19 +53,19 @@ XMLDFAElementValidator >> errorNonDeterminismInContentModelAfter: anElement [
 		with: '((a,b)|(a,c))'
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 XMLDFAElementValidator >> postCopy [
 	currentState := dfa
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 XMLDFAElementValidator >> setElement: anElement dfa: aDFA [
 	element := anElement.
 	dfa := aDFA.
 	currentState := aDFA.
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLDFAElementValidator >> validateStartTag: anElement [
 	currentState :=
 		currentState

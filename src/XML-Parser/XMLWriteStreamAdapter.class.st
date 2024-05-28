@@ -2,18 +2,20 @@
 A base class for write stream adapters for basic streams that support #nextPut:, #nextPutAll:, #contents, #position, #position:, and #reset. It adds support for writing characters like tabs, spaces, and line endings.
 "
 Class {
-	#name : #XMLWriteStreamAdapter,
-	#superclass : #XMLStreamAdapter,
+	#name : 'XMLWriteStreamAdapter',
+	#superclass : 'XMLStreamAdapter',
 	#classVars : [
 		'CRCharacter',
 		'LFCharacter',
 		'SpaceCharacter',
 		'TabCharacter'
 	],
-	#category : #'XML-Parser-Streams'
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLWriteStreamAdapter class >> initialize [
 	"self initialize"
 
@@ -24,59 +26,59 @@ XMLWriteStreamAdapter class >> initialize [
 	LFCharacter := Character lf.
 ]
 
-{ #category : #basic }
+{ #category : 'basic' }
 XMLWriteStreamAdapter >> basicNextPut: anObject [ 
 	^ self nextPut: anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLWriteStreamAdapter >> contents [
 	^ stream contents
 ]
 
-{ #category : #'character writing' }
+{ #category : 'character writing' }
 XMLWriteStreamAdapter >> cr [
 	^ self nextPut: CRCharacter
 ]
 
-{ #category : #'character writing' }
+{ #category : 'character writing' }
 XMLWriteStreamAdapter >> lf [
 	^ self nextPut: LFCharacter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLWriteStreamAdapter >> nextPut: anObject [
 	stream nextPut: anObject.
 	^ anObject.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLWriteStreamAdapter >> nextPutAll: aCollection [
 	stream nextPutAll: aCollection.
 	^ aCollection.
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLWriteStreamAdapter >> position [
 	^ stream position
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLWriteStreamAdapter >> position: anInteger [
 	stream position: anInteger
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 XMLWriteStreamAdapter >> reset [
 	stream reset
 ]
 
-{ #category : #'character writing' }
+{ #category : 'character writing' }
 XMLWriteStreamAdapter >> space [
 	^ self nextPut: SpaceCharacter
 ]
 
-{ #category : #'character writing' }
+{ #category : 'character writing' }
 XMLWriteStreamAdapter >> tab [
 	^ self nextPut: TabCharacter
 ]

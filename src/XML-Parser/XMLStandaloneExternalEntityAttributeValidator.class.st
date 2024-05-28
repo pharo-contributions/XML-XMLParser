@@ -2,12 +2,14 @@
 This class validates standalone externally defined attributes that contain unparsed entity names (that must be declared). It disallows attributes that require further value normalization or substitution with default or fixed default values.
 "
 Class {
-	#name : #XMLStandaloneExternalEntityAttributeValidator,
-	#superclass : #XMLEntityAttributeValidator,
-	#category : #'XML-Parser-Validation-Standalone'
+	#name : 'XMLStandaloneExternalEntityAttributeValidator',
+	#superclass : 'XMLEntityAttributeValidator',
+	#category : 'XML-Parser-Validation-Standalone',
+	#package : 'XML-Parser',
+	#tag : 'Validation-Standalone'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLStandaloneExternalEntityAttributeValidator >> isStandaloneExternal [
 	^ true
 ]

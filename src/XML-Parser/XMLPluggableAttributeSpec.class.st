@@ -2,30 +2,32 @@
 A block-based pluggable attribute spec that evaluates blocks with the attribute dictionary to test matching.
 "
 Class {
-	#name : #XMLPluggableAttributeSpec,
-	#superclass : #XMLAttributeSpec,
+	#name : 'XMLPluggableAttributeSpec',
+	#superclass : 'XMLAttributeSpec',
 	#instVars : [
 		'block'
 	],
-	#category : #'XML-Parser-Utils'
+	#category : 'XML-Parser-Utils',
+	#package : 'XML-Parser',
+	#tag : 'Utils'
 }
 
-{ #category : #generated }
+{ #category : 'generated' }
 XMLPluggableAttributeSpec class >> block: aOneArgumentBlock [
 	^ self new block: aOneArgumentBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableAttributeSpec >> block [
 	^ block
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLPluggableAttributeSpec >> block: aOneArgumentBlock [
 	block := aOneArgumentBlock
 ]
 
-{ #category : #matching }
+{ #category : 'matching' }
 XMLPluggableAttributeSpec >> matchesAttributes: anAttributeDictionary [
 	"if there's no block, then it automatically matches, similar to an
 	XMLBasicAttributeSpec with no attributes"

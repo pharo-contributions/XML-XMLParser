@@ -4,20 +4,22 @@ An abstract class for dynamically choosing a supported concrete implementation f
 Each root subclass needs to override #preferredImplementation to return the preferred subclass and #noSupportedImplementationFound to signal an error if none are supported, and then each subclass of the root needs to define #isSupportedImplementation to return true if it supports this platform.
 "
 Class {
-	#name : #XMLAbstractFactory,
-	#superclass : #Object,
+	#name : 'XMLAbstractFactory',
+	#superclass : 'Object',
 	#classInstVars : [
 		'implementation'
 	],
-	#category : #'XML-Parser-Utils'
+	#category : 'XML-Parser-Utils',
+	#package : 'XML-Parser',
+	#tag : 'Utils'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAbstractFactory class >> canBeImplemented [
 	^ false
 ]
 
-{ #category : #clearing }
+{ #category : 'clearing' }
 XMLAbstractFactory class >> clearAllImplementations [
 	"self clearAllImplementations"
 
@@ -26,7 +28,7 @@ XMLAbstractFactory class >> clearAllImplementations [
 		allSubclassesDo: [:each | each implementation: nil]
 ]
 
-{ #category : #finding }
+{ #category : 'finding' }
 XMLAbstractFactory class >> findSupportedImplementation [
 	self canBeImplemented
 		ifTrue: [
@@ -43,12 +45,12 @@ XMLAbstractFactory class >> findSupportedImplementation [
 	^ nil
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAbstractFactory class >> hasSupportedImplementation [
 	^ self findSupportedImplementation isNotNil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractFactory class >> implementation [
 	^ implementation
 		ifNil: [
@@ -61,39 +63,39 @@ XMLAbstractFactory class >> implementation [
 			implementation]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLAbstractFactory class >> implementation: aClassOrNil [
 	implementation := aClassOrNil
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLAbstractFactory class >> implementationNew [
 	^ self implementation basicNew initialize
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 XMLAbstractFactory class >> initialize [
 	"self initialize"
 
 	self clearAllImplementations
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAbstractFactory class >> isSupportedImplementation [
 	^ false
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLAbstractFactory class >> new [
 	^ self implementationNew
 ]
 
-{ #category : #finding }
+{ #category : 'finding' }
 XMLAbstractFactory class >> noSupportedImplementationFound [
 	Error signal: 'No implementation available'
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLAbstractFactory class >> preferredImplementation [
 	^ nil
 ]

@@ -1,6 +1,6 @@
-Extension { #name : #String }
+Extension { #name : 'String' }
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> asXMLEscapedString [
 	"returns a copy of self with &, <, and > escaped with &amp;, &lt;, and &gt;"
 	| stream |
@@ -20,39 +20,39 @@ String >> asXMLEscapedString [
 	^ stream contents.
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> asXMLFileHandle [
 	^ XMLFileHandle path: self
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> asXMLHTTPRequest [
 	^ XMLHTTPRequest url: self
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> asXMLStreamConverter [
 	^ XMLStreamConverter newForEncoding: self
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> asXMLString [
 	"will be deprecated; use #asXMLStringNode instead"
 
 	^ self asXMLStringNode
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> asXMLStringNode [
 	^ XMLString string: self
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> asXMLURI [
 	^ XMLURI fromString: self
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> expandWithXMLNamespaceURI: aURI [
 	"optimized"
 	aURI size == 0
@@ -60,7 +60,7 @@ String >> expandWithXMLNamespaceURI: aURI [
 		ifFalse: [^ 'Q{', aURI, '}', self]
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> isXMLNCName [
 	"optimized"
 	self size == 0
@@ -73,7 +73,7 @@ String >> isXMLNCName [
 	^ true.
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> isXMLNSAttributeName [
 	"optimized"
 	self size >= 5
@@ -93,7 +93,7 @@ String >> isXMLNSAttributeName [
 	^ (self at: 6) == $:.
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> isXMLName [
 	"optimized"
 	self size == 0
@@ -106,7 +106,7 @@ String >> isXMLName [
 	^ true.
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> isXMLNmtoken [
 	"optimized"
 	self size == 0
@@ -117,7 +117,7 @@ String >> isXMLNmtoken [
 	^ true.
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> isXMLQualifiedOrLocalName: aQualifiedOrLocalName [
 	"returns true if self and aQualifiedOrLocalName are the
 	same QName or if self is a QName and aQualifiedOrLocalName
@@ -136,7 +136,7 @@ String >> isXMLQualifiedOrLocalName: aQualifiedOrLocalName [
 	^ i == 0.
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> isXMLReservedAttributeName [
 	"optimized"
 	self size > 3
@@ -148,7 +148,7 @@ String >> isXMLReservedAttributeName [
 	^ (self at: 3) == $l.
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> isXMLWhitespace [
 	"optimized"
 	self size == 0
@@ -159,12 +159,12 @@ String >> isXMLWhitespace [
 	^ true.
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> parseXML [
 	^ XMLDOMParser parse: self
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> qualifyWithXMLPrefix: aPrefix [
 	"optimized"
 	aPrefix size == 0
@@ -172,17 +172,17 @@ String >> qualifyWithXMLPrefix: aPrefix [
 		ifFalse: [^ (aPrefix copyWith: $:), self]
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> xmlCopyWithoutWhitespace [
 	^ self reject: [:each | each isXMLWhitespace]
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> xmlLocalNameAfterPrefix [
 	^ self xmlLocalNameAfterPrefix: self xmlPrefixBeforeLocalName
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> xmlLocalNameAfterPrefix: aPrefix [
 	"optimized"
 	| prefixSize |
@@ -192,7 +192,7 @@ String >> xmlLocalNameAfterPrefix: aPrefix [
 		ifFalse: [^ self copyFrom: prefixSize + 2 to: self size]
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> xmlPrefixBeforeLocalName [
 	"optimized"
 	| i |
@@ -206,7 +206,7 @@ String >> xmlPrefixBeforeLocalName [
 	^ ''.
 ]
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 String >> xmlPrefixBeforeLocalName: aLocalName [
 	"optimized"
 	| prefixSize |

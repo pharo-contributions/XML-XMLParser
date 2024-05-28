@@ -2,19 +2,21 @@
 A WebClient content reader.
 "
 Class {
-	#name : #XMLHTTPWebClientResponseContentReader,
-	#superclass : #XMLHTTPResponseContentReader,
-	#category : #'XML-Parser-HTTP'
+	#name : 'XMLHTTPWebClientResponseContentReader',
+	#superclass : 'XMLHTTPResponseContentReader',
+	#category : 'XML-Parser-HTTP',
+	#package : 'XML-Parser',
+	#tag : 'HTTP'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLHTTPWebClientResponseContentReader >> handlesDecompression [
 	"this class needs to handle decompression, since it uses the lower-level
 	WebClient #streamFrom:to:size:progress: interface"
 	^ true
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 XMLHTTPWebClientResponseContentReader >> rawReadWithLength: aContentLength upToLimit: aMaxSize [
 	| socketStream rawContentWriteStream |
 

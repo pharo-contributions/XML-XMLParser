@@ -1,6 +1,6 @@
-Extension { #name : #Error }
+Extension { #name : 'Error' }
 
-{ #category : #'*XML-Parser' }
+{ #category : '*XML-Parser' }
 Error >> isXMLParserException [
 	^ false
 ]

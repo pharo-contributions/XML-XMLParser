@@ -2,12 +2,14 @@
 This is an abstract base class for unresolvable external parsed entities that lazily raises an error when #replacement or #replacementStream is sent, which would normally trigger resolution.
 "
 Class {
-	#name : #DTDUnresolvableExternalParsedEntity,
-	#superclass : #DTDParsedEntity,
-	#category : #'XML-Parser-DTD'
+	#name : 'DTDUnresolvableExternalParsedEntity',
+	#superclass : 'DTDParsedEntity',
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 DTDUnresolvableExternalParsedEntity >> errorUnresolvableExternalEntity [
 
 	XMLParserException
@@ -18,25 +20,25 @@ DTDUnresolvableExternalParsedEntity >> errorUnresolvableExternalEntity [
 		with: self asReference
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDUnresolvableExternalParsedEntity >> hasReplacement [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 DTDUnresolvableExternalParsedEntity >> isExternal [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDUnresolvableExternalParsedEntity >> replacement [
 
 	self errorUnresolvableExternalEntity
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDUnresolvableExternalParsedEntity >> replacementStream [
 
 	self errorUnresolvableExternalEntity

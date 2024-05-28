@@ -2,25 +2,27 @@
 This class is an ordered list that sends notifications to an observer when objects are added to it or removed from it. Subclasses should override the #beforeAdding:, #afterAdding:at:, #afterAddingLast: and #afterRemoving: messages to send custom notifications.
 "
 Class {
-	#name : #XMLObservableList,
-	#superclass : #XMLOrderedList,
+	#name : 'XMLObservableList',
+	#superclass : 'XMLOrderedList',
 	#instVars : [
 		'observer'
 	],
-	#category : #'XML-Parser-DOM'
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLObservableList class >> observer: anObserver [
 	^ self new observer: anObserver
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLObservableList class >> ofSize: aSize [
 	self shouldNotImplement
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLObservableList >> add: anObject after: aPreviousObject [
 	^ self
 		add: anObject
@@ -30,7 +32,7 @@ XMLObservableList >> add: anObject after: aPreviousObject [
 				ifAbsent: [-1])
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLObservableList >> add: anObject afterIndex: anIndex [
 	collection
 		add: anObject
@@ -41,7 +43,7 @@ XMLObservableList >> add: anObject afterIndex: anIndex [
 	^ anObject.
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLObservableList >> add: anObject before: aNextObject [
 	^ self
 		add: anObject
@@ -51,7 +53,7 @@ XMLObservableList >> add: anObject before: aNextObject [
 				ifAbsent: [-1])
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLObservableList >> add: anObject beforeIndex: anIndex [
 	collection
 		add: anObject
@@ -62,28 +64,28 @@ XMLObservableList >> add: anObject beforeIndex: anIndex [
 	^ anObject.
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLObservableList >> addFirst: anObject [
 	collection addFirst: anObject.
 	self afterAdding: anObject at: 1.
 	^ anObject.
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 XMLObservableList >> addLast: anObject [
 	collection addLast: anObject.
 	self afterAddingLast: anObject.
 	^ anObject.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLObservableList >> addToCopyLast: anObject [
 	collection addLast: anObject.
 	self afterAddingToCopyLast: anObject.
 	^ anObject.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLObservableList >> afterAdding: anObject at: anIndex [
 	observer
 		ifNotNil: [
@@ -92,7 +94,7 @@ XMLObservableList >> afterAdding: anObject at: anIndex [
 				to: self]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLObservableList >> afterAddingLast: anObject [
 	"can be used to handle appending separately and more efficiently than
 	insertion"
@@ -102,7 +104,7 @@ XMLObservableList >> afterAddingLast: anObject [
 		at: self size
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLObservableList >> afterAddingToCopyLast: anObject [
 	"can be used to handle appending existing elements to a copy separately and
 	more efficiently than #afterAddingLast: so not as much checking needs to be
@@ -111,7 +113,7 @@ XMLObservableList >> afterAddingToCopyLast: anObject [
 	self afterAddingLast: anObject
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLObservableList >> afterRemoving: anObject [
 	observer
 		ifNotNil: [
@@ -120,7 +122,7 @@ XMLObservableList >> afterRemoving: anObject [
 				from: self]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLObservableList >> at: anIndex put: anObject [
 	| oldObject |
 
@@ -147,7 +149,7 @@ XMLObservableList >> at: anIndex put: anObject [
 	^ anObject.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLObservableList >> duplicateIndexOf: anObject notAt: anIndex [
 	"to:do: for speed because some subclasses need this to be fast"
 	1 to: anIndex - 1 do: [:i |
@@ -162,24 +164,24 @@ XMLObservableList >> duplicateIndexOf: anObject notAt: anIndex [
 	^ 0.
 ]
 
-{ #category : #observing }
+{ #category : 'observing' }
 XMLObservableList >> observer [
 	^ observer
 ]
 
-{ #category : #observing }
+{ #category : 'observing' }
 XMLObservableList >> observer: anObserver [
 	observer := anObserver
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLObservableList >> remove: anObject ifAbsent: aBlock [
 	collection remove: anObject ifAbsent: [^ aBlock value].
 	self afterRemoving: anObject.
 	^ anObject.
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLObservableList >> removeAt: anIndex [
 	| removed |
 
@@ -188,7 +190,7 @@ XMLObservableList >> removeAt: anIndex [
 	^ removed.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLObservableList >> removeDuplicateOf: anObject notAt: anIndex [
 	"Removes a duplicate of anObject at any index besides anIndex and
 	returns the removed duplicate or nil if there isn't one."
@@ -210,7 +212,7 @@ XMLObservableList >> removeDuplicateOf: anObject notAt: anIndex [
 		ifFalse: [^ nil]
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 XMLObservableList >> reset [
 	| removed |
 

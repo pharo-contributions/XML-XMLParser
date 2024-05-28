@@ -2,20 +2,22 @@
 This is a parser of lists in the form of ""(one|two|...)"".  It assumes there is no whitespace around the ""|"" separated list values.
 "
 Class {
-	#name : #DTDEnumerationListParser,
-	#superclass : #Object,
+	#name : 'DTDEnumerationListParser',
+	#superclass : 'Object',
 	#instVars : [
 		'listString'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDEnumerationListParser class >> on: aString [
 	^ self new on: aString
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDEnumerationListParser >> errorDuplicateListValue: aValue [
 
 	XMLValidationException
@@ -23,25 +25,25 @@ DTDEnumerationListParser >> errorDuplicateListValue: aValue [
 		with: aValue
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDEnumerationListParser >> listEndOffset [
 
 	^ 1 "')' size"
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDEnumerationListParser >> listStartOffset [
 
 	^ 1 "'(' size"
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DTDEnumerationListParser >> on: aString [
 
 	listString := aString
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 DTDEnumerationListParser >> parse [
 	"the tokenizer removes all spaces from lists"
 

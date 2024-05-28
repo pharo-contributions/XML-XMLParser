@@ -2,12 +2,14 @@
 A stream converter for implicit big endian UTF-32 streams.
 "
 Class {
-	#name : #XMLImplicitUTF32BigEndianStreamConverter,
-	#superclass : #XMLUTF32BigEndianStreamConverter,
-	#category : #'XML-Parser-Streams'
+	#name : 'XMLImplicitUTF32BigEndianStreamConverter',
+	#superclass : 'XMLUTF32BigEndianStreamConverter',
+	#category : 'XML-Parser-Streams',
+	#package : 'XML-Parser',
+	#tag : 'Streams'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLImplicitUTF32BigEndianStreamConverter class >> isImplicit [
 	^ true
 ]

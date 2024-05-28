@@ -2,17 +2,19 @@
 This class represents an ordered list of child nodes for an XML document or element. Non-modifying accessing messages like #first and #last return nil instead of raising exceptions.
 "
 Class {
-	#name : #XMLNodeList,
-	#superclass : #XMLObservableList,
-	#category : #'XML-Parser-DOM'
+	#name : 'XMLNodeList',
+	#superclass : 'XMLObservableList',
+	#category : 'XML-Parser-DOM',
+	#package : 'XML-Parser',
+	#tag : 'DOM'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 XMLNodeList class >> new [
 	^ self new: 5
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNodeList >> afterAdding: aNode at: anIndex [
 	(aNode hasParentWithNodeList: self)
 		ifTrue: [
@@ -24,7 +26,7 @@ XMLNodeList >> afterAdding: aNode at: anIndex [
 				ifNotNil: [observer addedNode: aNode]]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNodeList >> afterAddingLast: aNode [
 	(aNode hasParentWithNodeList: self)
 		ifTrue: [
@@ -36,38 +38,38 @@ XMLNodeList >> afterAddingLast: aNode [
 				ifNotNil: [observer addedNode: aNode]]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNodeList >> afterAddingToCopyLast: aNode [
 	observer
 		ifNotNil: [observer addedNode: aNode]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLNodeList >> afterRemoving: aNode [
 	observer
 		ifNotNil: [observer removedNode: aNode]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> contentNodes [
 	^ self select: [:each | each isContentNode]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeList >> contentNodesDo: aBlock [
 	self do: [:each |
 		each isContentNode
 			ifTrue: [aBlock value: each]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> contentStringAt: aName [
 	^ (self
 		elementAt: aName
 		ifAbsent: [^ '']) contentString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> elementAfter: anElement [
 	| last |
 
@@ -78,14 +80,14 @@ XMLNodeList >> elementAfter: anElement [
 	^ self defaultValue.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> elementAt: aName [
 	^ self
 		elementAt: aName
 		ifAbsent: [self defaultValue]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> elementAt: aName ifAbsent: aBlock [
 	self elementsDo: [:each |
 		(each isNamed: aName)
@@ -93,7 +95,7 @@ XMLNodeList >> elementAt: aName ifAbsent: aBlock [
 	^ aBlock value.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> elementAt: aName namespaceURI: aURI [
 	^ self
 		elementAt: aName
@@ -101,7 +103,7 @@ XMLNodeList >> elementAt: aName namespaceURI: aURI [
 		ifAbsent: [self defaultValue]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> elementAt: aName namespaceURI: aURI ifAbsent: aBlock [
 	self
 		elementsAt: aName
@@ -111,7 +113,7 @@ XMLNodeList >> elementAt: aName namespaceURI: aURI ifAbsent: aBlock [
 	^ aBlock value.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> elementBefore: anElement [
 	| last |
 
@@ -123,36 +125,36 @@ XMLNodeList >> elementBefore: anElement [
 	^ self defaultValue.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> elementNames [
 	^ self elementsCollect: [:each | each name]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> elements [
 	^ self select: [:each | each isElement]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> elementsAt: aName [
 	^ self elementsSelect: [:each | each isNamed: aName]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeList >> elementsAt: aName do: aBlock [
 	self elementsDo: [:each |
 		(each isNamed: aName)
 			ifTrue: [aBlock value: each]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> elementsAt: aName namespaceURI: aURI [
 	^ self elementsSelect: [:each |
 		(each isNamed: aName)
 			and: [each namespaceURI = aURI]]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeList >> elementsCollect: aBlock [
 	| collectedElements |
 
@@ -164,14 +166,14 @@ XMLNodeList >> elementsCollect: aBlock [
 	^ collectedElements.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeList >> elementsDetect: aBlock [
 	^ self
 		elementsDetect: aBlock
 		ifNone: [self defaultValue]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeList >> elementsDetect: aBlock ifNone: anExceptionBlock [
 	"implementing with #elementsDo: benefits the caching subclass because
 	of its fast #elementsDo: implementation"
@@ -181,7 +183,7 @@ XMLNodeList >> elementsDetect: aBlock ifNone: anExceptionBlock [
 	^ anExceptionBlock value.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeList >> elementsDo: aBlock [
 	"use #to:do: for performance, because so many methods rely on this"
 	1 to: collection size do: [:i | | node |
@@ -189,7 +191,7 @@ XMLNodeList >> elementsDo: aBlock [
 			ifTrue: [aBlock value: node]]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeList >> elementsSelect: aBlock [
 	| selectedElements |
 
@@ -202,28 +204,28 @@ XMLNodeList >> elementsSelect: aBlock [
 	^ selectedElements.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> firstElement [
 	self elementsDo: [:each | ^ each].
 	^ self defaultValue.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNodeList >> hasContentNodes [
 	^ self anySatisfy: [:each | each isContentNode]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNodeList >> hasElements [
 	^ self anySatisfy: [:each | each isElement]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNodeList >> hasStringNodes [
 	^ self anySatisfy: [:each | each isStringNode]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNodeList >> includesElement: aName [
 	self
 		elementAt: aName
@@ -231,7 +233,7 @@ XMLNodeList >> includesElement: aName [
 	^ true.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLNodeList >> includesElement: aName namespaceURI: aURI [
 	self
 		elementAt: aName
@@ -240,7 +242,7 @@ XMLNodeList >> includesElement: aName namespaceURI: aURI [
 	^ true.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> lastElement [
 	self reverseDo: [:each |
 		each isElement
@@ -248,42 +250,42 @@ XMLNodeList >> lastElement [
 	^ self defaultValue.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> rawContentStringAt: aName [
 	^ (self
 		elementAt: aName
 		ifAbsent: [^ '']) rawContentString
 ]
 
-{ #category : #notifying }
+{ #category : 'notifying' }
 XMLNodeList >> renamedElement: anElement from: anOldName to: aNewName [
 ]
 
-{ #category : #sorting }
+{ #category : 'sorting' }
 XMLNodeList >> sort [
 	self sort: [:a :b | a sortKey <= b sortKey]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> stringNodes [
 	^ self select: [:each | each isStringNode]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeList >> stringNodesDo: aBlock [
 	self do: [:each |
 		each isStringNode
 			ifTrue: [aBlock value: each]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 XMLNodeList >> strings [
 	^ self
 		select: [:each | each isStringNode]
 		thenCollect: [:each | each string]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 XMLNodeList >> stringsDo: aBlock [
 	self stringNodesDo: [:each | aBlock value: each string]
 ]

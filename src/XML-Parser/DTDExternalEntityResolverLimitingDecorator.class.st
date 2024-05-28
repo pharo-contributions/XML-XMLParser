@@ -2,27 +2,29 @@
 This class is a decorator for DTDExternalEntityResolvers that limits the number of entities that can be resolved. This is not handled directly by resolvers to make them less stateful and more reusable.
 "
 Class {
-	#name : #DTDExternalEntityResolverLimitingDecorator,
-	#superclass : #Object,
+	#name : 'DTDExternalEntityResolverLimitingDecorator',
+	#superclass : 'Object',
 	#instVars : [
 		'externalEntityResolver',
 		'totalResolvedExternalEntities'
 	],
-	#category : #'XML-Parser-DTD'
+	#category : 'XML-Parser-DTD',
+	#package : 'XML-Parser',
+	#tag : 'DTD'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 DTDExternalEntityResolverLimitingDecorator class >> externalEntityResolver: anExternalEntityResolver [
 	^ self new externalEntityResolver: anExternalEntityResolver
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 DTDExternalEntityResolverLimitingDecorator >> asLimitingExternalEntityResolver [
 
 	^ self
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDExternalEntityResolverLimitingDecorator >> checkExternalEntityLimit [
 
 	| maxExternalEntities |
@@ -32,7 +34,7 @@ DTDExternalEntityResolverLimitingDecorator >> checkExternalEntityLimit [
 		ifTrue: [self errorExternalEntityLimitExceeded]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDExternalEntityResolverLimitingDecorator >> errorExternalEntityLimitExceeded [
 
 	XMLLimitException signal:
@@ -40,31 +42,31 @@ DTDExternalEntityResolverLimitingDecorator >> errorExternalEntityLimitExceeded [
 		'use #maxExternalEntities: to change or disable'
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 DTDExternalEntityResolverLimitingDecorator >> externalEntityLimits [
 
 	^ self externalEntityResolver externalEntityLimits
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 DTDExternalEntityResolverLimitingDecorator >> externalEntityLimits: anExternalEntityLimits [
 
 	self externalEntityResolver externalEntityLimits: anExternalEntityLimits
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalEntityResolverLimitingDecorator >> externalEntityResolver [
 
 	^ externalEntityResolver
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalEntityResolverLimitingDecorator >> externalEntityResolver: anExternalEntityResolver [
 
 	externalEntityResolver := anExternalEntityResolver
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 DTDExternalEntityResolverLimitingDecorator >> externalEntityURIFromPublicID: aPublicID systemID: aSystemID [
 
 	^ self externalEntityResolver
@@ -72,7 +74,7 @@ DTDExternalEntityResolverLimitingDecorator >> externalEntityURIFromPublicID: aPu
 		systemID: aSystemID
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 DTDExternalEntityResolverLimitingDecorator >> externalEntityURIFromPublicID: aPublicID systemID: aSystemID baseURI: aBaseXMLURIOrURIString [
 
 	^ self externalEntityResolver
@@ -81,19 +83,19 @@ DTDExternalEntityResolverLimitingDecorator >> externalEntityURIFromPublicID: aPu
 		baseURI: aBaseXMLURIOrURIString
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 DTDExternalEntityResolverLimitingDecorator >> externalSubsetReadLimit [
 
 	^ self externalEntityResolver externalSubsetReadLimit
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 DTDExternalEntityResolverLimitingDecorator >> externalSubsetReadLimit: anInteger [
 
 	self externalEntityResolver externalSubsetReadLimit: anInteger
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDExternalEntityResolverLimitingDecorator >> incrementTotalResolvedExternalEntities [
 
 	totalResolvedExternalEntities :=
@@ -102,31 +104,31 @@ DTDExternalEntityResolverLimitingDecorator >> incrementTotalResolvedExternalEnti
 			ifNotNil: [totalResolvedExternalEntities + 1]
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 DTDExternalEntityResolverLimitingDecorator >> maxExternalEntities [
 
 	^ self externalEntityResolver maxExternalEntities
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 DTDExternalEntityResolverLimitingDecorator >> maxExternalEntities: anInteger [
 
 	self externalEntityResolver maxExternalEntities: anInteger
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 DTDExternalEntityResolverLimitingDecorator >> maxExternalEntitySize [
 
 	^ self externalEntityResolver maxExternalEntitySize
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 DTDExternalEntityResolverLimitingDecorator >> maxExternalEntitySize: anInteger [
 
 	self externalEntityResolver maxExternalEntitySize: anInteger
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 DTDExternalEntityResolverLimitingDecorator >> printOn: aStream [
 
 	super printOn: aStream.
@@ -137,13 +139,13 @@ DTDExternalEntityResolverLimitingDecorator >> printOn: aStream [
 		nextPut: $)
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 DTDExternalEntityResolverLimitingDecorator >> removeLimits [
 
 	self externalEntityResolver removeLimits
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 DTDExternalEntityResolverLimitingDecorator >> resolveExternalEntityURI: anXMLURIOrURIString [
 
 	^ self resolveExternalEntityWith: [
@@ -151,7 +153,7 @@ DTDExternalEntityResolverLimitingDecorator >> resolveExternalEntityURI: anXMLURI
 			anXMLURIOrURIString]
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 DTDExternalEntityResolverLimitingDecorator >> resolveExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
 
 	^ self resolveExternalEntityWith: [
@@ -160,7 +162,7 @@ DTDExternalEntityResolverLimitingDecorator >> resolveExternalEntityURI: anXMLURI
 			upToLimit: aMaxSize]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DTDExternalEntityResolverLimitingDecorator >> resolveExternalEntityWith: aBlock [
 
 	| result |
@@ -172,19 +174,19 @@ DTDExternalEntityResolverLimitingDecorator >> resolveExternalEntityWith: aBlock 
 	^ result
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 DTDExternalEntityResolverLimitingDecorator >> resolvesLocalFromNonLocal [
 
 	^ self externalEntityResolver resolvesLocalFromNonLocal
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 DTDExternalEntityResolverLimitingDecorator >> resolvesLocalFromNonLocal: aBoolean [
 
 	self externalEntityResolver resolvesLocalFromNonLocal: aBoolean
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 DTDExternalEntityResolverLimitingDecorator >> streamResolveExternalEntityURI: anXMLURIOrURIString [
 
 	^ self resolveExternalEntityWith: [
@@ -192,7 +194,7 @@ DTDExternalEntityResolverLimitingDecorator >> streamResolveExternalEntityURI: an
 			anXMLURIOrURIString]
 ]
 
-{ #category : #resolving }
+{ #category : 'resolving' }
 DTDExternalEntityResolverLimitingDecorator >> streamResolveExternalEntityURI: anXMLURIOrURIString upToLimit: aMaxSize [
 
 	^ self resolveExternalEntityWith: [
@@ -201,7 +203,7 @@ DTDExternalEntityResolverLimitingDecorator >> streamResolveExternalEntityURI: an
 			upToLimit: aMaxSize]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DTDExternalEntityResolverLimitingDecorator >> totalResolvedExternalEntities [
 
 	^ totalResolvedExternalEntities ifNil: [totalResolvedExternalEntities := 0]

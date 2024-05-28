@@ -2,12 +2,14 @@
 This class will make sure the value of a standalone externally defined attribute is present and that it matches a fixed default value (the #FIXED constraint).
 "
 Class {
-	#name : #XMLStandaloneExternalAttributeFixedValueDefaultValidator,
-	#superclass : #XMLAttributeFixedValueDefaultValidator,
-	#category : #'XML-Parser-Validation-Standalone'
+	#name : 'XMLStandaloneExternalAttributeFixedValueDefaultValidator',
+	#superclass : 'XMLAttributeFixedValueDefaultValidator',
+	#category : 'XML-Parser-Validation-Standalone',
+	#package : 'XML-Parser',
+	#tag : 'Validation-Standalone'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 XMLStandaloneExternalAttributeFixedValueDefaultValidator >> errorStandaloneExternalAttributeDefaultFixedValueUsed [
 	XMLValidationException
 		formatSignal:
@@ -16,7 +18,7 @@ XMLStandaloneExternalAttributeFixedValueDefaultValidator >> errorStandaloneExter
 		with: self attribute
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLStandaloneExternalAttributeFixedValueDefaultValidator >> validatedDefaultForAbsentAttributeValue [
 	self errorStandaloneExternalAttributeDefaultFixedValueUsed
 ]

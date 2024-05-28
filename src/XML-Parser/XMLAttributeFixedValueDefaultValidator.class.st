@@ -2,17 +2,19 @@
 This class will put a default value for an attribute if the attribute is absent and also makes sure that any value matches the default (the #FIXED constraint).
 "
 Class {
-	#name : #XMLAttributeFixedValueDefaultValidator,
-	#superclass : #XMLAttributeValueDefaultValidator,
-	#category : #'XML-Parser-Validation'
+	#name : 'XMLAttributeFixedValueDefaultValidator',
+	#superclass : 'XMLAttributeValueDefaultValidator',
+	#category : 'XML-Parser-Validation',
+	#package : 'XML-Parser',
+	#tag : 'Validation'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 XMLAttributeFixedValueDefaultValidator class >> standaloneExternalClass [
 	^ XMLStandaloneExternalAttributeFixedValueDefaultValidator
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 XMLAttributeFixedValueDefaultValidator >> errorFixedAttributeValueCannotChange [
 	XMLValidationException
 		formatSignal: 'Fixed attribute "{1}" can only have "{2}" as its value'
@@ -20,17 +22,17 @@ XMLAttributeFixedValueDefaultValidator >> errorFixedAttributeValueCannotChange [
 		with: self value
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 XMLAttributeFixedValueDefaultValidator >> isFixedValue [
 	^ true
 ]
 
-{ #category : #processing }
+{ #category : 'processing' }
 XMLAttributeFixedValueDefaultValidator >> processedDefaultForPresentAttributeValue: anAttributeValue [
 	^ self value
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 XMLAttributeFixedValueDefaultValidator >> validatedDefaultForPresentAttributeValue: anAttributeValue [
 	anAttributeValue = self value
 		ifFalse: [self errorFixedAttributeValueCannotChange].
