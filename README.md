@@ -54,7 +54,7 @@ xmlString := '<?xml version="1.0" encoding="UTF-8"?>
   <country code="dz" handle="algeria" continent="africa" iso="12">Algeria</country>
 </countries>'.
 
-(XMLDOMParser parse: xmlString) document inspect 
+(XMLDOMParser parse: xmlString) document root nodes inspect
 ```
 
 Check [https://montyos.wordpress.com](https://montyos.wordpress.com) for more
