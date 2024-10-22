@@ -14,7 +14,8 @@ XMLNode >> inspectTreeIn: specBuilder [
 	<inspectorPresentationOrder: 28 title: 'Tree'>
 	
 	| roots |
-	roots := self isDocument ifTrue: [ (Array with: self root) ] ifFalse: [ (Array with: self) ].
+	 
+	roots := self inspectorRoots.
 	^ specBuilder newTree
 		roots: roots;
 		display: [ :aNode | 
@@ -22,9 +23,16 @@ XMLNode >> inspectTreeIn: specBuilder [
 			];
 "		displayIcon: [ :aNode | aNode iconName ifNotNil: [ :aName | self iconNamed: aName ] ];"
 		children: [ :aNode | 
-			aNode isContentNode ifFalse: [ aNode descendantElements ] ifTrue: [ #() ]]
+	 
+			aNode hasChildren ifTrue: [ aNode descendantElements ] ifFalse: [ #() ]]
 		
  
+]
+
+{ #category : '*XML-Parser-Tools' }
+XMLNode >> inspectorRoots [
+
+	^ Array with: self
 ]
 
 { #category : '*XML-Parser-Tools' }
