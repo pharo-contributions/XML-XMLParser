@@ -56,7 +56,7 @@ XMLDecodingReadStreamAdapter >> atEnd [
 XMLDecodingReadStreamAdapter >> detectEncoding [
 	prePeekStreamPosition := nil.
 	peekChar := nil.
-	stream reset.
+	stream position: 0.
 
 	(((self hasNullStreamConverter
 		or: [self hasImplicitStreamConverter])
