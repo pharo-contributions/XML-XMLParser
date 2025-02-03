@@ -18,7 +18,7 @@ XMLNode >> inspectTreeIn: specBuilder [
 	^ specBuilder newTree
 		  roots: roots;
 		  display: [ :aNode | self inspectorTreeStringFor: aNode ];
-		  "		  displayIcon: [ :aNode | aNode iconName ifNotNil: [ :aName | self iconNamed: aName ] ];"
+		  "	displayIcon: [ :aNode | aNode iconName ifNotNil: [ :aName | self iconNamed: aName ] ];"
 		  children: [ :aNode | aNode elements ];
 		  expandRoots
 ]
@@ -38,14 +38,12 @@ XMLNode >> inspectorTreeStringFor: anXMLElement [
 			  nextPut: $<;
 			  nextPutAll: anXMLElement name.
 		  anXMLElement hasAttributes ifTrue: [
-			  s space.
-			  anXMLElement attributes associations
-				  do: [ :association |
-					  s
-						  nextPutAll: association key;
-						  nextPutAll: '="';
-						  nextPutAll: association value;
-						  nextPutAll: '"' ]
-				  separatedBy: [ s space ] ].
+			  anXMLElement attributes associations do: [ :association |
+				  s
+					  space;
+					  nextPutAll: association key;
+					  nextPutAll: '="';
+					  nextPutAll: association value;
+					  nextPutAll: '"' ] ].
 		  s nextPut: $> ]
 ]
