@@ -11,22 +11,16 @@ XMLNode >> inspectSourceIn: specBuilder [
 
 { #category : '*XML-Parser-Tools' }
 XMLNode >> inspectTreeIn: specBuilder [
+
 	<inspectorPresentationOrder: 28 title: 'Tree'>
-	
 	| roots |
-	 
 	roots := self inspectorRoots.
 	^ specBuilder newTree
-		roots: roots;
-		display: [ :aNode | 
-			self inspectorTreeStringFor: aNode 			
-			];
-"		displayIcon: [ :aNode | aNode iconName ifNotNil: [ :aName | self iconNamed: aName ] ];"
-		children: [ :aNode | 
-	 
-			aNode hasChildren ifTrue: [ aNode descendantElements ] ifFalse: [ #() ]]
-		
- 
+		  roots: roots;
+		  display: [ :aNode | self inspectorTreeStringFor: aNode ];
+		  "		  displayIcon: [ :aNode | aNode iconName ifNotNil: [ :aName | self iconNamed: aName ] ];"
+		  children: [ :aNode | aNode elements ];
+		  expandRoots
 ]
 
 { #category : '*XML-Parser-Tools' }
@@ -37,21 +31,21 @@ XMLNode >> inspectorRoots [
 
 { #category : '*XML-Parser-Tools' }
 XMLNode >> inspectorTreeStringFor: anXMLElement [
-	| display |
-	anXMLElement isStringNode ifTrue: [ ^ anXMLElement string ].
-	display := String streamContents: [:s| 
-		s nextPutAll: anXMLElement name. 
-		anXMLElement hasAttributes ifTrue: [ 
-			s space.
-			anXMLElement attributes associations do: [:association |
-				s 
-				  nextPutAll: association key;
-				  nextPutAll: '="';
-				  nextPutAll: association value;				
-				  nextPutAll: '"'.								
-			] separatedBy: [ s space ]	
-		]
-	].
-	anXMLElement descendantElements isEmpty ifFalse: [ ^ '<',display, '>' ].
-	^ anXMLElement asString
+
+	anXMLElement hasElements ifFalse: [ ^ anXMLElement asString ].
+	^ String streamContents: [ :s |
+		  s
+			  nextPut: $<;
+			  nextPutAll: anXMLElement name.
+		  anXMLElement hasAttributes ifTrue: [
+			  s space.
+			  anXMLElement attributes associations
+				  do: [ :association |
+					  s
+						  nextPutAll: association key;
+						  nextPutAll: '="';
+						  nextPutAll: association value;
+						  nextPutAll: '"' ]
+				  separatedBy: [ s space ] ].
+		  s nextPut: $> ]
 ]
