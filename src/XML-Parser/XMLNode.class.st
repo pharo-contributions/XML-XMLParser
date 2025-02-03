@@ -183,6 +183,13 @@ XMLNode >> documentRoot [
 	^ documentRoot.
 ]
 
+{ #category : 'accessing' }
+XMLNode >> elements [
+	"returns a new node list of all of the receiver's elements"
+
+	^ XMLNodeList empty
+]
+
 { #category : 'private' }
 XMLNode >> errorXMLWritingUnsupported [
 	XMLDOMException signal: 'The XMLWriter package is required for writng DOM objects'
@@ -198,6 +205,13 @@ XMLNode >> escapesContentEntitiesWhenWriting [
 { #category : 'testing' }
 XMLNode >> hasChildren [
 	"returns true if the receiver has child nodes"
+
+	^ false
+]
+
+{ #category : 'testing' }
+XMLNode >> hasElements [
+	"returns true if the receiver has element children"
 
 	^ false
 ]
